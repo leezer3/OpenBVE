@@ -27,6 +27,7 @@ using LibRender2.Overlays;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
+using Buffer = System.Buffer;
 using ButtonState = OpenTK.Input.ButtonState;
 
 namespace RouteViewer
@@ -179,7 +180,7 @@ namespace RouteViewer
 		}
 		
 		// load route
-		internal static bool LoadRoute(Bitmap bitmap = null) {
+		internal static bool LoadRoute(byte[] textureBytes = null) {
 			if (string.IsNullOrEmpty(CurrentRouteFile))
 			{
 				return false;
@@ -189,7 +190,7 @@ namespace RouteViewer
 			try
 			{
 				Encoding encoding = TextEncoding.GetSystemEncodingFromFile(CurrentRouteFile);
-				Loading.Load(CurrentRouteFile, encoding, bitmap);
+				Loading.Load(CurrentRouteFile, encoding, textureBytes);
 				result = true;
 			} catch (Exception ex) {
 				MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
@@ -381,25 +382,33 @@ namespace RouteViewer
 					{
 						return;
 					}
+					byte[] textureBytes = {};
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
-						
-						Bitmap bitmap = null;
 						CurrentlyLoading = true;
 						Renderer.OptionInterface = false;
 						if (!Interface.CurrentOptions.LoadingBackground)
 						{
 							Renderer.RenderScene(0.0);
 							currentGameWindow.SwapBuffers();
-							bitmap = new Bitmap(Renderer.Screen.Width, Renderer.Screen.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-							BitmapData bData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
-							GL.ReadPixels(0, 0, Renderer.Screen.Width, Renderer.Screen.Height, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bData.Scan0);
-							bitmap.UnlockBits(bData);
-							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+							textureBytes = new byte[Renderer.Screen.Width * Renderer.Screen.Height * 4];
+							GL.ReadPixels(0, 0, Renderer.Screen.Width, Renderer.Screen.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, textureBytes);
+							// GL.ReadPixels is reversed for what it wants as a texture, so we've got to flip it
+							byte[] tmp = new byte[Renderer.Screen.Width * 4]; // temp row
+							int currentLine = 0;
+							while (currentLine < Renderer.Screen.Height / 2)
+							{
+								int start = currentLine * Renderer.Screen.Width * 4;
+								int flipStart = (Renderer.Screen.Height - currentLine - 1) * Renderer.Screen.Width * 4;
+								Buffer.BlockCopy(textureBytes, start, tmp, 0, Renderer.Screen.Width * 4);
+								Buffer.BlockCopy(textureBytes, flipStart, textureBytes, start, Renderer.Screen.Width * 4);
+								Buffer.BlockCopy(tmp, 0, textureBytes, flipStart, Renderer.Screen.Width * 4);
+								currentLine++;
+							}
 						}
 						Renderer.Reset();
 						CameraAlignment a = Renderer.Camera.Alignment;
-						if (LoadRoute(bitmap))
+						if (LoadRoute(textureBytes))
 						{
 							Renderer.Camera.Alignment = a;
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
@@ -416,10 +425,6 @@ namespace RouteViewer
 						}
 						CurrentlyLoading = false;
 						Renderer.OptionInterface = true;
-						if (bitmap != null)
-						{
-							bitmap.Dispose();
-						}
 						GCSettings.LargeObjectHeapCompactionMode =  GCLargeObjectHeapCompactionMode.CompactOnce; 
 						GC.Collect();
 						
