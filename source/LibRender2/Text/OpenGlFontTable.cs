@@ -19,7 +19,7 @@ namespace LibRender2.Text
 
 		// ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
 		// Must remain, else will be disposed of by the GC as this is a separate assembly
-		private readonly Bitmap bitmap;
+		private readonly byte[] myBytes;
 		/// <summary>The border around glpyhs on the font bitmap</summary>
 		const int drawBorder = 20;
 		/// <summary>The border used when calculating texture co-ordinates</summary>
@@ -36,7 +36,7 @@ namespace LibRender2.Text
 			 * */
 			Vector2[] physicalSizes = new Vector2[256];
 			Vector2[] typographicSizes = new Vector2[256];
-			bitmap = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
+			Bitmap bitmap = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
 			Graphics graphics = Graphics.FromImage(bitmap);
 			graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 			double lineHeight = 0;
@@ -120,7 +120,18 @@ namespace LibRender2.Text
 				Characters[i] = new OpenGlFontChar(new Vector4(x0, y0, x1 - x0, y1 - y0), new Vector2(physicalSizes[i].X + 2.0 * coordinateBorder, physicalSizes[i].Y + 2.0 * coordinateBorder), typographicSizes[i]);
 			}
 			graphics.Dispose();
-			Texture = new Texture(bitmap);
+			BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+			if (data.Stride == 4 * data.Width) {
+				/*
+				 * Copy the data from the bitmap
+				 * to the array in BGRA format.
+				 */
+				myBytes = new byte[data.Stride * data.Height];
+				System.Runtime.InteropServices.Marshal.Copy(data.Scan0, myBytes, 0, data.Stride * data.Height);
+				bitmap.UnlockBits(data);
+			}
+			Texture = new Texture(bitmap.Width, bitmap.Height, 32, myBytes, null);
+			bitmap.Dispose();
 		}
 
 		/// <summary>Rounds the specified value to the next-highest power of two.</summary>
@@ -145,16 +156,7 @@ namespace LibRender2.Text
 
 		public void Dispose()
 		{
-			Dispose(true);
 			GC.SuppressFinalize(this);
-		}
-
-		private void Dispose(bool currentlyDisposing)
-		{
-			if (currentlyDisposing)
-			{
-				bitmap.Dispose();
-			}
 		}
 	}
 }

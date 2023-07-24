@@ -1,4 +1,4 @@
-﻿#pragma warning disable 0659, 0661
+#pragma warning disable 0659, 0661
 
 using System;
 using System.Drawing;
@@ -88,7 +88,9 @@ namespace OpenBveApi.Textures {
 			{
 				throw new ArgumentException("The data bytes are not of the expected length.");
 			}
-
+			this.Origin = new ByteArrayOrigin(width, height, bytes);
+			this.MyOpenGlTextures = new OpenGlTexture[1][];
+			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 			this.MySize.X = width;
 			this.MySize.Y = height;
 			this.MyBitsPerPixel = bitsPerPixel;
