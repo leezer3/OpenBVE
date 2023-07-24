@@ -426,7 +426,7 @@ namespace Plugin.PNG
 													if (ColorType == ColorType.Palleted)
 													{
 														// we're always converting to 4bpp in the output, but need the native bpp to find our position in the array, so don't actually set it
-														int start = (int)(Width * 4 * pixelY + pixelX * 4);
+														int start = Width * 4 * pixelY + pixelX * 4;
 														switch (BitDepth)
 														{
 															case 1:
@@ -499,7 +499,7 @@ namespace Plugin.PNG
 													}
 													else
 													{
-														int start = (int)(Width * BytesPerPixel * pixelY + pixelX * BytesPerPixel);
+														int start = Width * BytesPerPixel * pixelY + pixelX * BytesPerPixel;
 														Buffer.BlockCopy(data, rowStartByte + j * BytesPerPixel, pixelBuffer, start, BytesPerPixel);
 													}
 												}
