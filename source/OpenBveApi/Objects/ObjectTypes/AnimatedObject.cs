@@ -849,6 +849,10 @@ namespace OpenBveApi.Objects
 		{
 			foreach (ObjectState state in States)
 			{
+				if (state.Prototype == null)
+				{
+					continue;
+				}
 				state.Prototype = (StaticObject)state.Prototype.Clone();
 				state.Prototype.ApplyScale(-1.0, 1.0, -1.0);
 				Matrix4D t = state.Translation;
