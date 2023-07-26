@@ -15,18 +15,31 @@ namespace Plugin
 {
 	public partial class Plugin
 	{
-		private static bool IsCommand(string Text)
+		private static bool IsCommand(string Text, bool IsB3d)
 		{
-			switch (Text.Trim(new char[] { }).ToLowerInvariant())
+			B3DCsvCommands command;
+			if (!Enum.TryParse(Text, true, out command))
 			{
-				case "rotate":
-				case "translate":
-				case "vertex":
-				case "face":
-					return true;
-				
+				// not a valid command
+				return false;
 			}
 
+			if (IsB3d)
+			{
+				// Valid command for b3d
+				if ((int)command < 100 || (int)command >= 200)
+				{
+					return true;
+				}
+			}
+			else
+			{
+				// Valid command for csv
+				if ((int)command >= 100)
+				{
+					return true;
+				}
+			}
 			return false;
 		}
 
@@ -221,7 +234,7 @@ namespace Plugin
 						Command = Arguments[0];
 						bool resetArguments = true;
 						if (Arguments.Length != 1) {
-							if (!enabledHacks.BveTsHacks || !IsCommand(Command))
+							if (!enabledHacks.BveTsHacks || !IsCommand(Command, true))
 							{
 								currentHost.AddMessage(MessageType.Error, false, "Invalid syntax at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 							}
