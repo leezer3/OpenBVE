@@ -90,7 +90,7 @@ namespace OpenBveApi.Objects
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
 					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
 					{
-						Textures.Texture tday;
+						Textures.Texture tday = null;
 						if (Materials[i].Text != null)
 						{
 							Bitmap bitmap = null;
@@ -100,7 +100,7 @@ namespace OpenBveApi.Objects
 							}
 
 							Bitmap texture = TextOverlay.AddTextToBitmap(bitmap, Materials[i].Text, Materials[i].Font, 12, Materials[i].BackgroundColor, Materials[i].TextColor, Materials[i].TextPadding);
-							currentHost.RegisterTexture(texture, new TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)), out tday);
+							//currentHost.RegisterTexture(texture, new TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)), out tday);
 						}
 						else
 						{

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using LibRender2.Primitives;
@@ -13,6 +14,7 @@ using OpenBveApi.Packages;
 using OpenBveApi.Textures;
 using RouteManager2;
 using Path = OpenBveApi.Path;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace OpenBve
 {
@@ -62,7 +64,14 @@ namespace OpenBve
 		{
 			if (currentPackage != null)
 			{
-				routePictureBox.Texture = new Texture(new Bitmap(currentPackage.PackageImage));
+				if (currentPackage.PackageImage is Bitmap bitmap)
+				{
+					BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+					byte[] bytes = new byte[data.Stride * data.Height];
+					System.Runtime.InteropServices.Marshal.Copy(data.Scan0, bytes, 0, data.Stride * data.Height);
+					bitmap.UnlockBits(data);
+					routePictureBox.Texture = new Texture(bitmap.Width, bitmap.Height, 32, bytes, null);
+				}
 				routeDescriptionBox.Text = currentPackage.Description;
 				packagePreview = false;
 			}

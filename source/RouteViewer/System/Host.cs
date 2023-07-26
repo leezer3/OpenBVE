@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using OpenBveApi;
 using OpenBveApi.Hosts;
@@ -204,12 +203,6 @@ namespace RouteViewer
 			return true;
 		}
 
-		public override bool RegisterTexture(Bitmap texture, TextureParameters parameters, out Texture handle)
-		{
-			handle = new Texture(texture, parameters);
-			return true;
-		}
-		
 		// --- sound ---
 
 		/// <summary>Loads a sound and returns the sound data.</summary>
@@ -366,15 +359,13 @@ namespace RouteViewer
 										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
 										Object = obj;
 
-										StaticObject staticObject = Object as StaticObject;
-										if (staticObject != null)
+										if (Object is StaticObject staticObject)
 										{
 											StaticObjectCache.Add(ValueTuple.Create(path, false), staticObject);
 											return true;
 										}
 
-										AnimatedObjectCollection aoc = Object as AnimatedObjectCollection;
-										if (aoc != null)
+										if (Object is AnimatedObjectCollection aoc)
 										{
 											AnimatedObjectCollectionCache.Add(path, aoc);
 										}

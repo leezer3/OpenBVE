@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using DavyKager;
 using OpenBveApi.Graphics;
@@ -221,7 +222,12 @@ namespace OpenBve
 									if (icon != null)
 									{
 										Texture t;
-										Program.CurrentHost.RegisterTexture(icon.ToBitmap(), new TextureParameters(null, null), out t);
+										Bitmap b = icon.ToBitmap();
+										BitmapData bd = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadOnly, b.PixelFormat);
+										byte[] bytes = new byte[bd.Stride * bd.Height];
+										System.Runtime.InteropServices.Marshal.Copy(bd.Scan0, bytes, 0, bd.Stride * bd.Height);
+										b.UnlockBits(bd);
+										t = new Texture(b.Width, b.Height, 32, bytes, null);
 										iconCache.Add(ext, t);
 										Items[totalEntries].Icon = t;
 									}

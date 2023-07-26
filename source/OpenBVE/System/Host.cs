@@ -196,12 +196,6 @@ namespace OpenBve {
 			return true;
 		}
 		
-		public override bool RegisterTexture(Bitmap texture, TextureParameters parameters, out Texture handle)
-		{
-			handle = new Texture(texture, parameters);
-			return true;
-		}
-		
 		// --- sound ---
 		
 		/// <summary>Loads a sound and returns the sound data.</summary>

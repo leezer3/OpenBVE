@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using OpenBveApi;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
@@ -494,7 +495,11 @@ namespace OpenBve {
 					{
 						// create texture
 						g.Dispose();
-						timetableTexture = Program.Renderer.TextureManager.RegisterTexture(b);
+						BitmapData data = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadOnly, b.PixelFormat);
+						byte[] bytes = new byte[data.Stride * data.Height];
+						System.Runtime.InteropServices.Marshal.Copy(data.Scan0, bytes, 0, data.Stride * data.Height);
+						b.UnlockBits(data);
+						timetableTexture = new Texture(b.Width, b.Height, 32, bytes, null);
 					}
 				}
 			}

@@ -554,7 +554,7 @@ namespace Train.OpenBve
 			 * done after the end of the loop			 *
 			 */
 			//Assign interior view
-			if (interiorFile != String.Empty)
+			if (!string.IsNullOrEmpty(interiorFile))
 			{
 				if (interiorFile.ToLowerInvariant().EndsWith(".xml"))
 				{

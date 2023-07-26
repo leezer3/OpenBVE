@@ -253,7 +253,6 @@
       <DependentUpon>Textures.cs</DependentUpon>
     </Compile>
     <Compile Include="Textures\Textures.OpenGLWrapMode.cs" />
-    <Compile Include="Textures\Textures.BitmapOrigin.cs" />
     <Compile Include="Textures\Textures.TextureInterface.cs" />
     <Compile Include="Textures\Textures.TextureOrigin.cs" />
     <Compile Include="Textures\Textures.TextureParameters.cs" />

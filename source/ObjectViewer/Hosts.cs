@@ -162,12 +162,6 @@ namespace ObjectViewer {
 			return false;
 		}
 
-		public override bool RegisterTexture(Bitmap texture, TextureParameters parameters, out Texture handle)
-		{
-			handle = new Texture(texture, parameters);
-			return true;
-		}
-
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="texture">The texture data.</param>
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
