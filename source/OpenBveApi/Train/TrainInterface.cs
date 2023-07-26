@@ -39,7 +39,7 @@ namespace OpenBveApi.Trains
 		/// <summary>Gets the image for the selected train</summary>
 		/// <param name="trainPath">The path to the selected train</param>
 		/// <returns>The image</returns>
-		public abstract Image GetImage(string trainPath);
+		public abstract string GetImage(string trainPath);
 
 		/// <summary>Holds whether loading is currently in progress</summary>
 		public bool IsLoading;

@@ -1416,7 +1416,7 @@ namespace OpenBve
 				}
 
 				bool canLoad = false;
-				Image trainImage = null;
+				string trainImage = string.Empty;
 				// ReSharper disable once PossibleNullReferenceException - Already checked when loading plugins
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
@@ -1484,9 +1484,10 @@ namespace OpenBve
 					return;
 				}
 
-				if (trainImage != null)
+				if (!string.IsNullOrEmpty(trainImage))
 				{
-					pictureboxTrainImage.Image = trainImage;
+					Image image = Image.FromFile(trainImage);
+					pictureboxTrainImage.Image = image;
 					pictureboxTrainImage.Enabled = true;
 				}
 				else

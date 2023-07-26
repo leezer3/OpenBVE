@@ -85,7 +85,7 @@ namespace OpenBve.Input
 							//Raildriver controller
 							RailDriver64 newJoystick = new RailDriver64(devices[i])
 							{
-								Name = "RailDriver Desktop Cab Controller (32-bit)",
+								Name = "RailDriver Desktop Cab Controller (64-bit)",
 								Handle = i,
 								wData = new byte[]
 								{
