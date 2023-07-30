@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 
 namespace OpenBveApi.Hosts
 {
@@ -128,9 +129,17 @@ namespace OpenBveApi.Hosts
 			return true;
 		}
 
+		private bool currentlyUnloading;
+
 		/// <summary>Unloads all non-runtime plugins.</summary>
 		public bool UnloadPlugins(out string errorMessage)
 		{
+			while (currentlyUnloading)
+			{
+				// if the unload function has been called from another thread (preview vs. game start?) we don't want to have two at once
+				Thread.Sleep(100);
+			}
+			currentlyUnloading = true;
 			StringBuilder builder = new StringBuilder();
 			if (Plugins != null)
 			{
@@ -149,11 +158,8 @@ namespace OpenBveApi.Hosts
 				Plugins = null;
 			}
 			errorMessage = builder.ToString().Trim(new char[] { });
-			if (errorMessage.Length != 0)
-			{
-				return false;
-			}
-			return true;
+			currentlyUnloading = false;
+			return errorMessage.Length == 0;
 		}
 	}
 }
