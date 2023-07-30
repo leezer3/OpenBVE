@@ -162,7 +162,13 @@ namespace LibRender2.Objects
 							
 						}
 
-						TextureTransparencyType transparencyType = daytimeTexture.GetTransparencyType();
+						TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;
+						if (daytimeTexture != null)
+						{
+							// as loading the cached texture may have failed, e.g. corrupt file etc
+							transparencyType = daytimeTexture.GetTransparencyType();
+						}
+						
 						if (transparencyType == TextureTransparencyType.Alpha)
 						{
 							alpha = true;
@@ -185,7 +191,12 @@ namespace LibRender2.Objects
 							State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin.GetTexture(out nighttimeTexture);
 							TextureManager.textureCache.Add(State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Origin, nighttimeTexture);
 						}
-						TextureTransparencyType transparencyType = nighttimeTexture.GetTransparencyType();
+						TextureTransparencyType transparencyType = TextureTransparencyType.Opaque;
+						if (nighttimeTexture != null)
+						{
+							// as loading the cached texture may have failed, e.g. corrupt file etc
+							transparencyType = nighttimeTexture.GetTransparencyType();
+						}
 						if (transparencyType == TextureTransparencyType.Alpha)
 						{
 							alpha = true;
