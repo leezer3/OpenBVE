@@ -13,7 +13,12 @@ namespace OpenBveApi.Hosts
 		/// <returns>Whether loading all plugins was successful.</returns>
 		public bool LoadPlugins(FileSystem.FileSystem fileSystem, BaseOptions currentOptions, out string errorMessage, object TrainManagerReference = null, object RendererReference = null)
 		{
-			UnloadPlugins(out errorMessage);
+			if (Plugins != null && Plugins.Length != 0)
+			{
+				// plugins already loaded
+				errorMessage = string.Empty;
+				return true;
+			}
 			string folder = fileSystem.GetDataFolder("Plugins");
 			string[] files = {};
 			try
