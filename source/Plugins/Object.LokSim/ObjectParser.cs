@@ -72,7 +72,15 @@ namespace Plugin
 			{
 				try
 				{
-					currentXML.Load(FileName);
+					string s = File.ReadAllText(FileName);
+					/*
+					 * LokSim allows the use of paired quotes within the FileInfo tag
+					 * This is not valid XML, but some stuff (e.g. AndreasZ taurus uses it
+					 */
+					s = s.Replace("\"\"DB AG\"\"" , "DB AG");
+					s = s.Replace("\"\"DHL\"\"" , "DHL");
+					s = s.Replace("\"\"MAV\"\"" , "MAV");
+					currentXML.LoadXml(s);
 				}
 				catch
 				{
