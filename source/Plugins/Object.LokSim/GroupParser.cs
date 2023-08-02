@@ -61,7 +61,8 @@ namespace Plugin
 			};
 			try
 			{
-				currentXML.Load(FileName);
+				string s = File.ReadAllText(FileName);
+				currentXML.LoadXml(Functions.SanitizeXml(s));
 			}
 			catch (Exception ex)
 			{
