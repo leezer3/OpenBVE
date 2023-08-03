@@ -162,7 +162,7 @@ namespace Plugin
 													transtex = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Plugin.LoksimPackageFolder);
 													if (!File.Exists(transtex))
 													{
-														Plugin.currentHost.AddMessage(MessageType.Error, true, "AlphaTexture " + transtex + " could not be found in file " + FileName);
+														Plugin.currentHost.AddMessage(MessageType.Error, true, "AlphaTexture " + attribute.Value + " could not be found in file " + FileName);
 														transtex = null;
 													}												
 													break;
