@@ -27,6 +27,7 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using System.Text;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -61,8 +62,7 @@ namespace Plugin
 			};
 			try
 			{
-				string s = File.ReadAllText(FileName);
-				currentXML.LoadXml(Functions.SanitizeXml(s));
+				currentXML.SanitizeAndLoadXml(FileName);
 			}
 			catch (Exception ex)
 			{

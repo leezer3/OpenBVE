@@ -1,11 +1,38 @@
-﻿using System;
+﻿using System.IO;
+using System.Linq;
 using System.Text;
-using OpenBveApi;
+using System.Xml;
 
 namespace Plugin
 {
 	internal static class Functions
 	{
+		/// <summary>Sanitizes and loads a LokSim3D XML file</summary>
+		/// <param name="currentXML">The XmlDocument to load into</param>
+		/// <param name="fileName">The filename</param>
+		internal static void SanitizeAndLoadXml(this XmlDocument currentXML, string fileName)
+		{
+			string s = File.ReadAllText(fileName);
+			string sanitized = SanitizeXml(s);
+			currentXML.LoadXml(sanitized);
+			XmlDeclaration declaration = currentXML.ChildNodes.OfType<XmlDeclaration>().FirstOrDefault();
+			if (declaration != null)
+			{
+				/*
+				 * Yuck: Handle stuff not encoded in UTF-8 by re-reading with correct encoding
+				 *		 Unfortunately, some stuff uses umlauts in filenames....
+				 *       Non-standard XML means that 
+				 */
+				Encoding e = Encoding.GetEncoding(declaration.Encoding);
+				if (!e.Equals(Encoding.UTF8))
+				{
+					s = File.ReadAllText(fileName, e);
+					sanitized = SanitizeXml(s);
+					currentXML.LoadXml(sanitized);
+				}
+			}
+		}
+
 		/// <summary>Sanitizes a LokSim3D XML file so that the C# XML parser will read it correctly</summary>
 		internal static string SanitizeXml(string s)
 		{
@@ -39,9 +66,7 @@ namespace Plugin
 			}
 			builder.Append(s[s.Length - 2]);
 			builder.Append(s[s.Length - 1]);
-			string sv = builder.ToString();
 			return builder.ToString();
-
 		}
 	}
 }
