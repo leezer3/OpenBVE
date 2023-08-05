@@ -23,7 +23,7 @@ namespace OpenBve
 				return;
 			}
 
-			if (TrainManager.PlayerTrain.Plugin != null)
+			if (TrainManager.PlayerTrain?.Plugin != null)
 			{
 				TrainManager.PlayerTrain.Plugin.RawKeyDown((OpenBveApi.Input.Key)e.Key);
 			}
@@ -100,7 +100,7 @@ namespace OpenBve
 				return;
 			}
 
-			if (TrainManager.PlayerTrain.Plugin != null)
+			if (TrainManager.PlayerTrain?.Plugin != null)
 			{
 				TrainManager.PlayerTrain.Plugin.RawKeyUp((OpenBveApi.Input.Key)e.Key);
 			}
