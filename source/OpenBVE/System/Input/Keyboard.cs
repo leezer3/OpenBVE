@@ -14,8 +14,12 @@ namespace OpenBve
 			{
 				//If in kiosk mode, reset the timer and disable AI on keypress
 				MainLoop.kioskModeTimer = 0;
-				TrainManager.PlayerTrain.AI = null;
+				if (TrainManager.PlayerTrain != null)
+				{
+					TrainManager.PlayerTrain.AI = null;
+				}
 			}
+
 			if (Loading.Complete && e.Key == Key.F4 && e.Alt)
 			{
 				// Catch standard ALT + F4 quit and push confirmation prompt
@@ -23,7 +27,7 @@ namespace OpenBve
 				return;
 			}
 
-			if (TrainManager.PlayerTrain.Plugin != null)
+			if (TrainManager.PlayerTrain?.Plugin != null)
 			{
 				TrainManager.PlayerTrain.Plugin.RawKeyDown((OpenBveApi.Input.Key)e.Key);
 			}
@@ -69,15 +73,15 @@ namespace OpenBve
 					}
 				}
 			}
-			
+
 			if (TrainManager.PlayerTrain != null)
 			{
 				// Attempt to reset handle spring
 				TrainManager.PlayerTrain.Handles.Power.ResetSpring();
 				TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
 			}
-			
-			
+
+
 			BlockKeyRepeat = false;
 			//Remember to reset the keyboard modifier after we're done, else it repeats.....
 			CurrentKeyboardModifier = KeyboardModifier.None;
@@ -90,8 +94,12 @@ namespace OpenBve
 			{
 				//If in kiosk mode, reset the timer and disable AI on keypress
 				MainLoop.kioskModeTimer = 0;
-				TrainManager.PlayerTrain.AI = null;
+				if (TrainManager.PlayerTrain != null)
+				{
+					TrainManager.PlayerTrain.AI = null;
+				}
 			}
+
 			if (Program.Renderer.PreviousInterface == InterfaceType.Menu & Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
 				//Set again to block the first keyup event after the menu has been closed, as this may produce unwanted effects
@@ -100,7 +108,7 @@ namespace OpenBve
 				return;
 			}
 
-			if (TrainManager.PlayerTrain.Plugin != null)
+			if (TrainManager.PlayerTrain?.Plugin != null)
 			{
 				TrainManager.PlayerTrain.Plugin.RawKeyUp((OpenBveApi.Input.Key)e.Key);
 			}
