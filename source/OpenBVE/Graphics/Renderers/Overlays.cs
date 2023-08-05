@@ -163,6 +163,7 @@ namespace OpenBve.Graphics.Renderers
 					break;
 				}
 				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
 					Game.Menu.Draw(TimeElapsed);
 					PauseAnnounced = false;
 					break;

@@ -178,7 +178,7 @@ namespace OpenBve
 		/// <param name="replace">Whether we are replacing the selected menu item</param>
 		public void PushMenu(MenuType type, int data = 0,  bool replace = false)
 		{
-			if (Program.Renderer.CurrentInterface != InterfaceType.Menu)
+			if (Program.Renderer.CurrentInterface < InterfaceType.Menu)
 			{
 				// Deliberately set to the standard cursor, as touch controls may have set to something else
 				Program.currentGameWindow.Cursor = MouseCursor.Default;
@@ -203,7 +203,8 @@ namespace OpenBve
 				Menus[CurrMenu].Selection = 1;
 			}
 			PositionMenu();
-			Program.Renderer.CurrentInterface = InterfaceType.Menu;
+			Program.Renderer.CurrentInterface = TrainManager.PlayerTrain == null ? InterfaceType.Menu : InterfaceType.GLMainMenu;
+			
 		}
 
 		//
@@ -334,7 +335,7 @@ namespace OpenBve
 				return false;
 			}
 			// if not in menu or during control customisation or down outside menu area, do nothing
-			if (Program.Renderer.CurrentInterface != InterfaceType.Menu ||
+			if (Program.Renderer.CurrentInterface < InterfaceType.Menu ||
 				isCustomisingControl)
 				return false;
 
