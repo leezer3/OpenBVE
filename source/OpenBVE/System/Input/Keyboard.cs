@@ -10,7 +10,7 @@ namespace OpenBve
 		/// <summary>Called when a KeyDown event is generated</summary>
 		internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
 		{
-			if (Interface.CurrentOptions.KioskMode)
+			if (Interface.CurrentOptions.KioskMode && Program.Renderer.CurrentInterface != InterfaceType.GLMainMenu)
 			{
 				//If in kiosk mode, reset the timer and disable AI on keypress
 				MainLoop.kioskModeTimer = 0;
@@ -33,7 +33,7 @@ namespace OpenBve
 			if (e.Shift) CurrentKeyboardModifier |= KeyboardModifier.Shift;
 			if (e.Control) CurrentKeyboardModifier |= KeyboardModifier.Ctrl;
 			if (e.Alt) CurrentKeyboardModifier |= KeyboardModifier.Alt;
-			if (Program.Renderer.CurrentInterface == InterfaceType.Menu && Game.Menu.IsCustomizingControl())
+			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu && Game.Menu.IsCustomizingControl())
 			{
 				Game.Menu.SetControlKbdCustomData((OpenBveApi.Input.Key)e.Key, CurrentKeyboardModifier);
 				return;
@@ -86,13 +86,13 @@ namespace OpenBve
 		/// <summary>Called when a KeyUp event is generated</summary>
 		internal static void keyUpEvent(object sender, KeyboardKeyEventArgs e)
 		{
-			if (Interface.CurrentOptions.KioskMode)
+			if (Interface.CurrentOptions.KioskMode && Program.Renderer.CurrentInterface != InterfaceType.GLMainMenu)
 			{
 				//If in kiosk mode, reset the timer and disable AI on keypress
 				MainLoop.kioskModeTimer = 0;
 				TrainManager.PlayerTrain.AI = null;
 			}
-			if (Program.Renderer.PreviousInterface == InterfaceType.Menu & Program.Renderer.CurrentInterface == InterfaceType.Normal)
+			if (Program.Renderer.PreviousInterface >= InterfaceType.Menu & Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
 				//Set again to block the first keyup event after the menu has been closed, as this may produce unwanted effects
 				//if the menu select key is also mapped in-game
