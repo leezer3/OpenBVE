@@ -1141,6 +1141,18 @@ namespace ObjectViewer {
 							}
 						} 
 						s++; break;
+					case Instructions.AmbientTemperature:
+						{
+							if (Train != null)
+							{
+								Function.Stack[s] = Program.CurrentRoute.Atmosphere.GetAirTemperature(Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Y + Program.CurrentRoute.Atmosphere.InitialElevation);
+							}
+							else
+							{
+								Function.Stack[s] = Program.CurrentRoute.Atmosphere.GetAirTemperature(Position.Y + Program.CurrentRoute.Atmosphere.InitialElevation);
+							}
+						} 
+						s++; break;
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
 				}

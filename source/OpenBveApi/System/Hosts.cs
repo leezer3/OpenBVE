@@ -306,7 +306,7 @@ namespace OpenBveApi.Hosts {
 
 			foreach (string extension in SupportedAnimatedObjectExtensions)
 			{
-				string testPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FilePath), $"{System.IO.Path.GetFileName(FilePath)}{extension}");
+				string testPath = Path.CombineFile(Path.GetDirectoryName(FilePath), $"{System.IO.Path.GetFileName(FilePath)}{extension}");
 
 				if (System.IO.File.Exists(testPath))
 				{
@@ -333,7 +333,7 @@ namespace OpenBveApi.Hosts {
 			// Search in the order of .x, .csv, .b3d, etc.
 			foreach (string extension in SupportedStaticObjectExtensions.OrderByDescending(x => Array.IndexOf(new[] { ".b3d", ".csv", ".x" }, x)))
 			{
-				string testPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FilePath), $"{System.IO.Path.GetFileName(FilePath)}{extension}");
+				string testPath = Path.CombineFile(Path.GetDirectoryName(FilePath), $"{System.IO.Path.GetFileName(FilePath)}{extension}");
 
 				if (System.IO.File.Exists(testPath))
 				{

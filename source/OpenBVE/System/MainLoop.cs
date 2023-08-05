@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -42,6 +42,17 @@ namespace OpenBve
 		internal static void StartLoopEx(LaunchParameters result)
 		{
 			Program.Sounds.Initialize(Interface.CurrentOptions.SoundRange);
+
+			Program.FileSystem.AppendToLogFile(@"Attached Joysticks:", false);
+			Program.FileSystem.AppendToLogFile(@"--------------------", false);
+			for (int i = 0; i < Program.Joysticks.AttachedJoysticks.Count; i++)
+			{
+				Guid key = Program.Joysticks.AttachedJoysticks.ElementAt(i).Key;
+				Program.FileSystem.AppendToLogFile(Program.Joysticks.AttachedJoysticks[key].ToString(), false);
+			}
+			Program.FileSystem.AppendToLogFile(@"--------------------", false);
+
+
 			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
 				Tolk.Load();
@@ -319,7 +330,7 @@ namespace OpenBve
 				switch (Interface.CurrentControls[i].Method)
 				{
 					case ControlMethod.Joystick:
-						if (Program.Joysticks.AttachedJoysticks.Count == 0 || !Program.Joysticks.AttachedJoysticks[Interface.CurrentControls[i].Device].IsConnected())
+						if (Program.Joysticks.AttachedJoysticks.Count == 0 || !Program.Joysticks.AttachedJoysticks.ContainsKey(Interface.CurrentControls[i].Device) || !Program.Joysticks.AttachedJoysticks[Interface.CurrentControls[i].Device].IsConnected())
 						{
 							//Not currently connected
 							continue;

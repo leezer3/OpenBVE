@@ -261,7 +261,7 @@ namespace OpenBve
 							int b;
 							if (Math.Abs(Train.CurrentSpeed) < 0.02)
 							{
-								b = (int)Math.Ceiling(0.5 * (double)Train.Handles.Brake.MaximumNotch);
+								b = (int)Math.Ceiling(0.5 * Train.Handles.Brake.MaximumNotch);
 								CurrentInterval = 0.3;
 							}
 							else
@@ -322,7 +322,7 @@ namespace OpenBve
 				else if (Train.Station >= 0 && stopIndex >= 0 && Program.CurrentRoute.Stations[Train.Station].Type != StationType.Normal && Program.CurrentRoute.Stations[Train.Station].Type != StationType.RequestStop && Train.IsPlayerTrain && Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && -Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].ForwardTolerance && Math.Abs(Train.CurrentSpeed) < 0.25)
 				{
 					// player's terminal station (not boarding any longer)
-					if (Train.Plugin != null || Train.Plugin.LastReverser == -2)
+					if (Train.Plugin != null && Train.Plugin.LastReverser == -2)
 					{
 						Train.Handles.Reverser.ApplyState(ReverserPosition.Neutral);
 					}
@@ -440,7 +440,7 @@ namespace OpenBve
 					{
 						decelerationCruise = 0.2 * BrakeDeceleration;
 						decelerationStart = 0.5 * BrakeDeceleration;
-						decelerationStep = BrakeDeceleration / (double)Train.Handles.Brake.MaximumNotch;
+						decelerationStep = BrakeDeceleration / Train.Handles.Brake.MaximumNotch;
 					}
 					if (this.CurrentSpeedFactor >= 1.0)
 					{
@@ -618,7 +618,7 @@ namespace OpenBve
 							}
 							else
 							{
-								double p = (double)Train.Handles.Power.Driver / (double)Train.Handles.Power.MaximumNotch;
+								double p = Train.Handles.Power.Driver / (double)Train.Handles.Power.MaximumNotch;
 								CurrentInterval = 0.3 + 15.0 * p / (powerstart - Train.CurrentSpeed + 1.0);
 							}
 							if (CurrentInterval > 1.3) CurrentInterval = 1.3;

@@ -36,7 +36,10 @@ namespace OpenBve
                 byte* pDestData = (byte*)(void*)bmData.Scan0;
                 byte* pSourceData = (byte*)(void*)smData.Scan0;
                 byte* pMaskData = (byte*)(void*)amData.Scan0;
-
+                if (pSourceData == null || pDestData == null || pMaskData == null)
+                {
+	                return false;
+                }
                 int nDestOffset = bmData.Stride - b.Width * 4;
                 int nSourceOffset = smData.Stride - s.Width * 3;
                 //If a BW mask, then this should be amData.Stride - a.Width

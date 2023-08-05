@@ -898,7 +898,7 @@ namespace CarXmlConvertor
             newLines.Add("</CarSounds>");
             newLines.Add("</openBVE>");
             // ReSharper disable once AssignNullToNotNullAttribute
-            string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "sound.xml");
+            string fileOut = System.IO.Path.Combine(Path.GetDirectoryName(FileName), "sound.xml");
 			try
             {
                 

@@ -692,10 +692,10 @@ namespace OpenBve
 											//Show details
 											Interface.CurrentOptions.TrainFolder = trainDir;
 											routeDescriptionBox.Text = Program.CurrentHost.Plugins[i].Train.GetDescription(trainDir);
-											Image trainImage = Program.CurrentHost.Plugins[i].Train.GetImage(trainDir);
-											if (trainImage != null)
+											string trainImage = Program.CurrentHost.Plugins[i].Train.GetImage(trainDir);
+											if (!string.IsNullOrEmpty(trainImage))
 											{
-												Program.CurrentHost.RegisterTexture(new Bitmap(trainImage), new TextureParameters(null, null), out routePictureBox.Texture);
+												Program.CurrentHost.RegisterTexture(trainImage, new TextureParameters(null, null), out routePictureBox.Texture);
 											}
 											else
 											{

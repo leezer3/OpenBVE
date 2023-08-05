@@ -6,11 +6,6 @@ using System.Security.Cryptography;
 
 namespace OpenBveApi {
 
-	/* ----------------------------------------
-	 * TODO: This part of the API is unstable.
-	 *       Modifications can be made at will.
-	 * ---------------------------------------- */
-
 	/// <summary>Provides path-related functions for accessing files and directories in a cross-platform manner.</summary>
 	public static partial class Path {
 		
@@ -68,7 +63,7 @@ namespace OpenBveApi {
 						 * period, jump one directory up.
 						 * */
 						for (int j = 1; j < parts[i].Length; j++) {
-							absolute = System.IO.Path.GetDirectoryName(absolute);
+							absolute = Path.GetDirectoryName(absolute);
 						}
 					} else {
 						/*
@@ -175,7 +170,7 @@ namespace OpenBveApi {
 						 * period, jump one directory up.
 						 * */
 						for (int j = 1; j < parts[i].Length; j++) {
-							absolute = System.IO.Path.GetDirectoryName(absolute);
+							absolute = Path.GetDirectoryName(absolute);
 						}
 					} else if (i == parts.Length - 1) {
 						/*
@@ -341,6 +336,24 @@ namespace OpenBveApi {
 					return BitConverter.ToString(checksum).Replace("-", string.Empty);
 				}
 			}
+		}
+
+		/*
+		 * Provide easy mirrors to the System.IO.Path functions
+		 */
+
+		/// <summary>Returns the directory information for the specified path string</summary>
+		/// <param name="path">The path string</param>
+		public static string GetDirectoryName(string path)
+		{
+			return System.IO.Path.GetDirectoryName(path);
+		}
+
+		/// <summary>Returns the file name and extension for the specificed path string</summary>
+		/// <param name="path">The path string</param>
+		public static string GetFileName(string path)
+		{
+			return System.IO.Path.GetFileName(path);
 		}
 	}
 }

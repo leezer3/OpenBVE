@@ -2,7 +2,6 @@
 using System.Linq;
 using LibRender2.Screens;
 using OpenBveApi.Colors;
-using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.Routes;
 using RouteManager2;

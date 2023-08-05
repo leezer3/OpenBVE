@@ -156,23 +156,11 @@ namespace OpenBve
 					int i;
 					for (i = 0; i < f.Length; i++)
 					{
-						string g = Path.CombineFile(System.IO.Path.GetDirectoryName(currentFile),
+						string g = Path.CombineFile(Path.GetDirectoryName(currentFile),
 							System.IO.Path.GetFileNameWithoutExtension(currentFile) + f[i]);
-						if (File.Exists(g))
-						{
-							try
-							{
-								using (var fs = new FileStream(g, FileMode.Open, FileAccess.Read))
-								{
-									//pictureboxRouteImage.Image = new Bitmap(fs);
-								}
-							}
-							catch
-							{
-								//pictureboxRouteImage.Image = null;
-							}
-							break;
-						}
+						if (!File.Exists(g)) continue;
+						Program.CurrentHost.RegisterTexture(g, new TextureParameters(null, null), out routePictureBox.Texture);
+						break;
 					}
 					if (i == f.Length)
 					{

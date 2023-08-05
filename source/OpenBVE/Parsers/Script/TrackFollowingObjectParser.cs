@@ -7,12 +7,11 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using TrainManager.Trains;
+using Path = OpenBveApi.Path;
 using TrackFollowingObject = TrainManager.Trains.TrackFollowingObject;
 
 namespace OpenBve
@@ -105,13 +104,13 @@ namespace OpenBve
 			 * First check for a train.ai file- Functionally identical, but allows for differently configured AI
 			 * trains not to show up as drivable
 			 */
-			string TrainData = OpenBveApi.Path.CombineFile(TrainDirectory, "train.ai");
+			string TrainData = Path.CombineFile(TrainDirectory, "train.ai");
 			if (!File.Exists(TrainData))
 			{
 				// Check for the standard drivable train.dat
-				TrainData = OpenBveApi.Path.CombineFile(TrainDirectory, "train.dat");
+				TrainData = Path.CombineFile(TrainDirectory, "train.dat");
 			}
-			string ExteriorFile = OpenBveApi.Path.CombineFile(TrainDirectory, "extensions.cfg");
+			string ExteriorFile = Path.CombineFile(TrainDirectory, "extensions.cfg");
 			if (!File.Exists(TrainData) || !File.Exists(ExteriorFile))
 			{
 				Interface.AddMessage(MessageType.Error, true, $"The supplied train folder in TrackFollowingObject {FileName} did not contain a complete set of data.");
@@ -221,18 +220,18 @@ namespace OpenBve
 				{
 					case "directory":
 						{
-							string TmpPath = OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), Value);
+							string TmpPath = Path.CombineDirectory(Path.GetDirectoryName(FileName), Value);
 							if (!Directory.Exists(TmpPath))
 							{
-								TmpPath = OpenBveApi.Path.CombineFile(Program.FileSystem.InitialTrainFolder, Value);
+								TmpPath = Path.CombineFile(Program.FileSystem.InitialTrainFolder, Value);
 							}
 							if (!Directory.Exists(TmpPath))
 							{
-								TmpPath = OpenBveApi.Path.CombineFile(Program.FileSystem.TrainInstallationDirectory, Value);
+								TmpPath = Path.CombineFile(Program.FileSystem.TrainInstallationDirectory, Value);
 							}
 							if (!Directory.Exists(TmpPath))
 							{
-								TmpPath = OpenBveApi.Path.CombineFile(ObjectPath, Value);
+								TmpPath = Path.CombineFile(ObjectPath, Value);
 							}
 
 							if (!Directory.Exists(TmpPath))

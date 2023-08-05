@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using OpenBveApi;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -106,14 +107,14 @@ namespace Plugin
 										}
 										else
 										{
-											string Folder = System.IO.Path.GetDirectoryName(FileName);
-											if (OpenBveApi.Path.ContainsInvalidChars(Lines[i]))
+											string Folder = Path.GetDirectoryName(FileName);
+											if (Path.ContainsInvalidChars(Lines[i]))
 											{
 												currentHost.AddMessage(MessageType.Error, false, Lines[i] + " contains illegal characters at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 											}
 											else
 											{
-												string file = OpenBveApi.Path.CombineFile(Folder, Lines[i]);
+												string file = Path.CombineFile(Folder, Lines[i]);
 												if (System.IO.File.Exists(file))
 												{
 													if (obj.Length == objCount)
@@ -269,7 +270,7 @@ namespace Plugin
 														string[] s = b.Split(',');
 														if (s.Length >= 1)
 														{
-															string Folder = System.IO.Path.GetDirectoryName(FileName);
+															string Folder = Path.GetDirectoryName(FileName);
 															StateFiles = new string[s.Length];
 															bool NullObject = true;
 															for (int k = 0; k < s.Length; k++)
@@ -277,17 +278,26 @@ namespace Plugin
 																s[k] = s[k].Trim(new char[] { });
 																if (s[k].Length == 0)
 																{
-																	currentHost.AddMessage(MessageType.Error, false, "File " + k.ToString(Culture) + " is an empty string - did you mean something else? - in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-																	StateFiles[k] = null;
+																	if (k == s.Length - 1)
+																	{
+																		// empty final argument, so assume misplaced final coma as empty arguments just get ignored
+																		Array.Resize(ref s, s.Length - 1);
+																	}
+																	else
+																	{
+																		currentHost.AddMessage(MessageType.Error, false, "File " + k.ToString(Culture) + " is an empty string - did you mean something else? - in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+																		StateFiles[k] = null;	
+																	}
+																	
 																}
-																else if (OpenBveApi.Path.ContainsInvalidChars(s[k]))
+																else if (Path.ContainsInvalidChars(s[k]))
 																{
 																	currentHost.AddMessage(MessageType.Error, false, "File " + k.ToString(Culture) + " contains illegal characters in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 																	StateFiles[k] = null;
 																}
 																else
 																{
-																	StateFiles[k] = OpenBveApi.Path.CombineFile(Folder, s[k]);
+																	StateFiles[k] = Path.CombineFile(Folder, s[k]);
 																	if (!System.IO.File.Exists(StateFiles[k]))
 																	{
 																		currentHost.AddMessage(MessageType.Error, true, "File " + StateFiles[k] + " not found in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
@@ -380,7 +390,7 @@ namespace Plugin
 													try
 													{
 														Result.Objects[ObjectCount].TranslateXFunction = new CSAnimationScript(currentHost, 
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -408,7 +418,7 @@ namespace Plugin
 													try
 													{
 														Result.Objects[ObjectCount].TranslateYFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -436,7 +446,7 @@ namespace Plugin
 													try
 													{
 														Result.Objects[ObjectCount].TranslateZFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -549,7 +559,7 @@ namespace Plugin
 												case AnimatedKey.RotateXScript:
 													try {
 														Result.Objects[ObjectCount].RotateXFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													} catch (Exception ex) {
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
@@ -571,7 +581,7 @@ namespace Plugin
 												case AnimatedKey.RotateYScript:
 													try {
 														Result.Objects[ObjectCount].RotateYFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													} catch (Exception ex) {
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
@@ -593,7 +603,7 @@ namespace Plugin
 												case AnimatedKey.RotateZScript:
 													try {
 														Result.Objects[ObjectCount].RotateZFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													} catch (Exception ex) {
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
@@ -659,7 +669,7 @@ namespace Plugin
 													try
 													{
 														Result.Objects[ObjectCount].ScaleXFunction = new CSAnimationScript(currentHost, 
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -681,7 +691,7 @@ namespace Plugin
 													try
 													{
 														Result.Objects[ObjectCount].ScaleYFunction = new CSAnimationScript(currentHost, 
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -703,7 +713,7 @@ namespace Plugin
 													try
 													{
 														Result.Objects[ObjectCount].ScaleXFunction = new CSAnimationScript(currentHost, 
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -755,7 +765,7 @@ namespace Plugin
 												case AnimatedKey.TextureShiftXScript:
 													try {
 														Result.Objects[ObjectCount].TextureShiftXFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													} catch (Exception ex) {
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
@@ -773,7 +783,7 @@ namespace Plugin
 												case AnimatedKey.TextureShiftYScript:
 													try {
 														Result.Objects[ObjectCount].TextureShiftYFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													} catch (Exception ex) {
 														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
@@ -1053,13 +1063,13 @@ namespace Plugin
 													break;
 												case AnimatedKey.FileName:
 													{
-														string Folder = System.IO.Path.GetDirectoryName(FileName);
-														fileName = OpenBveApi.Path.CombineFile(Folder, b);
+														string Folder = Path.GetDirectoryName(FileName);
+														fileName = Path.CombineFile(Folder, b);
 														if (!System.IO.File.Exists(fileName))
 														{
 															if (currentSoundFolder != null)
 															{
-																fileName = OpenBveApi.Path.CombineFile(currentSoundFolder, b);
+																fileName = Path.CombineFile(currentSoundFolder, b);
 															}
 
 															if (!System.IO.File.Exists(fileName))
@@ -1161,7 +1171,7 @@ namespace Plugin
 													try
 													{
 														Result.Objects[ObjectCount].TranslateXFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -1190,7 +1200,7 @@ namespace Plugin
 													try
 													{
 														Result.Objects[ObjectCount].TranslateYFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -1219,7 +1229,7 @@ namespace Plugin
 													try
 													{
 														Result.Objects[ObjectCount].TranslateZFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
@@ -1349,13 +1359,13 @@ namespace Plugin
 												case AnimatedKey.FileName:
 													{
 														singleBuffer = true;
-														string Folder = System.IO.Path.GetDirectoryName(FileName);
-														fileNames = new[] {OpenBveApi.Path.CombineFile(Folder, b)};
+														string Folder = Path.GetDirectoryName(FileName);
+														fileNames = new[] {Path.CombineFile(Folder, b)};
 														if (!System.IO.File.Exists(fileNames[0]))
 														{
 															if (currentSoundFolder != null)
 															{
-																fileNames[0] = OpenBveApi.Path.CombineFile(currentSoundFolder, b);
+																fileNames[0] = Path.CombineFile(currentSoundFolder, b);
 															}
 
 															if (!System.IO.File.Exists(fileNames[0]))
@@ -1368,7 +1378,7 @@ namespace Plugin
 													break;
 												case AnimatedKey.FileNames:
 													{
-														string Folder = System.IO.Path.GetDirectoryName(FileName);
+														string Folder = Path.GetDirectoryName(FileName);
 														string[] splitFiles = b.Split(',');
 														fileNames = new string[splitFiles.Length];
 														for (int k = 0; k < splitFiles.Length; k++)
@@ -1377,12 +1387,12 @@ namespace Plugin
 															{
 																continue;
 															}
-															fileNames[k] = OpenBveApi.Path.CombineFile(Folder, splitFiles[k].Trim(new char[] { }));
+															fileNames[k] = Path.CombineFile(Folder, splitFiles[k].Trim(new char[] { }));
 															if (!System.IO.File.Exists(fileNames[k]))
 															{
 																if (currentSoundFolder != null)
 																{
-																	fileNames[k] = OpenBveApi.Path.CombineFile(currentSoundFolder, splitFiles[k]);
+																	fileNames[k] = Path.CombineFile(currentSoundFolder, splitFiles[k]);
 																}
 																if (!System.IO.File.Exists(fileNames[k]))
 																{

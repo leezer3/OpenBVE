@@ -1,6 +1,5 @@
 ﻿using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -15,40 +14,33 @@ namespace OpenBve
 	/// <summary>Displays an in-game overlay with information about the route, including a map and gradient profile</summary>
 	public class RouteInfoOverlay
 	{
-		//
-		// DEFINITIONS & TYPDEFS
-		//
 		private enum state
 		{
-			none	= 0,
+			none = 0,
 			map,
 			gradient,
 			numOf
 		};
-		// properties of the train position vertical bar in gradient profile
-		private const int			gradientPosWidth= 2;
-		private static readonly Color128	gradientPosBar	= Color128.White;
-		//and of reain dot in route map
-		private const int			trainDotRadius	= 4;
-		private const int			trainDotDiameter= (trainDotRadius * 2);
-		private static readonly Color128	trainDotColour			= Color128.Red;
-		private static readonly Color128	playerTrainDotColour	= Color128.Green;
 
-		//
-		// FIELDS
-		//
+		/// <summary>The width of the gradient position bar in pixels</summary>
+		private const int gradientPosWidth= 2;
+		/// <summary>The color of the gradient position bar</summary>
+		private static readonly Color128 gradientPosBar	= Color128.White;
+		/// <summary>The radius of a train dot in pixels</summary>
+		private const int trainDotRadius = 4;
+		/// <summary>The diameter of a train dot in pixels</summary>
+		private const int trainDotDiameter = trainDotRadius * 2;
+		/// <summary>The color used to render dots for non-player (AI) trains</summary>
+		private static readonly Color128 trainDotColour	= Color128.Red;
+		/// <summary>The color used to render the dot for the player train</summary>
+		private static readonly Color128 playerTrainDotColour = Color128.Green;
+
 		private state currentState	= state.none;
 		private Texture gradientImage;
 		private Vector2	gradientSize;
 		private Texture mapImage;
 		private Vector2 mapSize;
 
-		/********************
-			PUBLIC METHODS
-		*********************/
-		//
-		// PROCESS COMMAND
-		//
 		/// <summary>Processes commands.</summary>
 		/// <returns><c>true</c>, if command was processed, <c>false</c> otherwise.</returns>
 		/// <param name="command">The Translations.Command command to process.</param>
@@ -61,9 +53,6 @@ namespace OpenBve
 			return true;
 		}
 
-		//
-		// SHOW THE OVERLAY
-		//
 		/// <summary>Displays the current state into the simulation window.</summary>
 		public void Show()
 		{
@@ -112,18 +101,6 @@ namespace OpenBve
 			}
 		}
 
-		/// <summary>Returns whether the Route Information display is currently showing on screen</summary>
-		public bool IsActive()
-		{
-			return currentState != state.none;
-		}
-
-		/********************
-			PRIVATE METHODS
-		*********************/
-		//
-		// SET STATE
-		//
 		/// <summary>Sets the state, intializing any required resource.</summary>
 		/// <param name="newState">The new state to set to.</param>
 		private void setState(state newState)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using SoundManager;
@@ -59,7 +60,7 @@ namespace Train.OpenBve
 			XmlDocument currentXML = new XmlDocument();
 			//Load the marker's XML file 
 			currentXML.Load(fileName);
-			currentPath = System.IO.Path.GetDirectoryName(fileName);
+			currentPath = Path.GetDirectoryName(fileName);
 			if (currentXML.DocumentElement != null)
 			{
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/CarSounds");
@@ -714,7 +715,7 @@ namespace Train.OpenBve
 					case "filename":
 						try
 						{
-							fileName = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
+							fileName = Path.CombineFile(currentPath, c.InnerText);
 							if (!System.IO.File.Exists(fileName))
 							{
 								//Valid path, but the file does not exist
@@ -787,7 +788,7 @@ namespace Train.OpenBve
 					case "filename":
 						try
 						{
-							fileName = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
+							fileName = Path.CombineFile(currentPath, c.InnerText);
 							if (!System.IO.File.Exists(fileName))
 							{
 								//Valid path, but the file does not exist

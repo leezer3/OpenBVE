@@ -23,7 +23,7 @@ namespace OpenBve
 				return;
 			}
 
-			if (TrainManager.PlayerTrain.Plugin != null)
+			if (TrainManager.PlayerTrain?.Plugin != null)
 			{
 				TrainManager.PlayerTrain.Plugin.RawKeyDown((OpenBveApi.Input.Key)e.Key);
 			}
@@ -58,7 +58,8 @@ namespace OpenBve
 							if (Interface.CurrentControls[i].Command == Translations.Command.CameraInterior |
 								Interface.CurrentControls[i].Command == Translations.Command.CameraExterior |
 								Interface.CurrentControls[i].Command == Translations.Command.CameraFlyBy |
-								Interface.CurrentControls[i].Command == Translations.Command.CameraTrack)
+								Interface.CurrentControls[i].Command == Translations.Command.CameraTrack |
+								Interface.CurrentControls[i].Command == Translations.Command.MiscFullscreen)
 							{
 								//HACK: We don't want to bounce between camera modes when holding down the mode switch key
 								continue;
@@ -99,7 +100,7 @@ namespace OpenBve
 				return;
 			}
 
-			if (TrainManager.PlayerTrain.Plugin != null)
+			if (TrainManager.PlayerTrain?.Plugin != null)
 			{
 				TrainManager.PlayerTrain.Plugin.RawKeyUp((OpenBveApi.Input.Key)e.Key);
 			}

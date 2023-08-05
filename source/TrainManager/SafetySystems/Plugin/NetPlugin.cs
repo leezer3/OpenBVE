@@ -87,7 +87,7 @@ namespace TrainManager.SafetySystems
 			LastAspects = new int[] { };
 			LastSection = -1;
 			LastException = null;
-			PluginFolder = System.IO.Path.GetDirectoryName(pluginFile);
+			PluginFolder = Path.GetDirectoryName(pluginFile);
 			TrainFolder = trainFolder;
 			if (api is IRawRuntime rawRuntime)
 			{

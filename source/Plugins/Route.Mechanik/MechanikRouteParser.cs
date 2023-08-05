@@ -65,7 +65,7 @@ namespace MechanikRouteParser
 			AvailableTextures = new Dictionary<int, MechanikTexture>();
 			AvailableSounds = new Dictionary<int, SoundHandle>();
 			currentRouteData = new RouteData();
-			RouteFolder = System.IO.Path.GetDirectoryName(routeFile);
+			RouteFolder = Path.GetDirectoryName(routeFile);
 			if(PreviewOnly)
 			{
 				string routeImage = Path.CombineFile(RouteFolder, "laduj_01.jpg");
@@ -1009,7 +1009,7 @@ namespace MechanikRouteParser
 				}
 				if (!String.IsNullOrWhiteSpace(s))
 				{
-					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(tDat), s);
+					string path = Path.CombineFile(Path.GetDirectoryName(tDat), s);
 					if (File.Exists(path))
 					{
 						MechanikTexture t = new MechanikTexture(path, s);
@@ -1050,7 +1050,7 @@ namespace MechanikRouteParser
 				}
 				if (!String.IsNullOrWhiteSpace(s))
 				{
-					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(sDat), s);
+					string path = Path.CombineFile(Path.GetDirectoryName(sDat), s);
 					if (File.Exists(path))
 					{
 						Plugin.CurrentHost.RegisterSound(path, out var handle);

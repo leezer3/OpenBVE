@@ -3,6 +3,7 @@ using System.Xml;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBveApi;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using RouteManager2.MessageManager;
@@ -20,7 +21,7 @@ namespace CsvRwRouteParser
 			XmlDocument currentXML = new XmlDocument();
 			//Load the marker's XML file 
 			currentXML.Load(fileName);
-			string Path = System.IO.Path.GetDirectoryName(fileName);
+			string filePath = Path.GetDirectoryName(fileName);
 			if (currentXML.DocumentElement != null)
 			{
 				bool iM = false;
@@ -68,7 +69,7 @@ namespace CsvRwRouteParser
 												string f;
 												try
 												{
-													f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+													f = Path.CombineFile(filePath, cc.InnerText);
 												}
 												catch
 												{
@@ -118,7 +119,7 @@ namespace CsvRwRouteParser
 												string f;
 												try
 												{
-													f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+													f = Path.CombineFile(filePath, cc.InnerText);
 												}
 												catch
 												{
@@ -165,7 +166,7 @@ namespace CsvRwRouteParser
 												string f;
 												try
 												{
-													f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+													f = Path.CombineFile(filePath, cc.InnerText);
 												}
 												catch
 												{

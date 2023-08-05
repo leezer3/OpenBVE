@@ -29,6 +29,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using AssimpNET.Obj;
+using OpenBveApi;
 
 namespace Plugin
 {
@@ -39,7 +40,7 @@ namespace Plugin
 
 		internal static StaticObject ReadObject(string FileName)
 		{
-			currentFolder = System.IO.Path.GetDirectoryName(FileName);
+			currentFolder = Path.GetDirectoryName(FileName);
 			currentFile = FileName;
 
 #if !DEBUG

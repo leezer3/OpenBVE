@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OpenBve.Graphics;
 using OpenBve.Input;
+using OpenBveApi;
 using OpenTK;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
@@ -156,7 +157,7 @@ namespace OpenBve {
 			
 			Interface.LoadControls(null, out Interface.CurrentControls);
 			folder = Program.FileSystem.GetDataFolder("Controls");
-			string file = OpenBveApi.Path.CombineFile(folder, "Default keyboard assignment.controls");
+			string file = Path.CombineFile(folder, "Default keyboard assignment.controls");
 			Control[] controls;
 			Interface.LoadControls(file, out controls);
 			Interface.AddControls(ref Interface.CurrentControls, controls);
@@ -212,13 +213,13 @@ namespace OpenBve {
 					throw new Exception("No plugins capable of loading routefile " + result.RouteFile + " were found.");
 				}
 				if (!string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
-					folder = System.IO.Path.GetDirectoryName(result.RouteFile);
+					folder = Path.GetDirectoryName(result.RouteFile);
 					while (true) {
-						string trainFolder = OpenBveApi.Path.CombineDirectory(folder, "Train");
+						string trainFolder = Path.CombineDirectory(folder, "Train");
 						if (System.IO.Directory.Exists(trainFolder)) {
 							try
 							{
-								folder = OpenBveApi.Path.CombineDirectory(trainFolder, Interface.CurrentOptions.TrainName);
+								folder = Path.CombineDirectory(trainFolder, Interface.CurrentOptions.TrainName);
 							}
 							catch (Exception ex)
 							{
@@ -228,7 +229,7 @@ namespace OpenBve {
 								}
 							}
 							if (System.IO.Directory.Exists(folder)) {
-								file = OpenBveApi.Path.CombineFile(folder, "train.dat");
+								file = Path.CombineFile(folder, "train.dat");
 								if (System.IO.File.Exists(file)) {
 									result.TrainFolder = folder;
 									result.TrainEncoding = System.Text.Encoding.UTF8;
@@ -372,9 +373,9 @@ namespace OpenBve {
 			Renderer.Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Renderer.Camera.VerticalViewingAngle) * Renderer.Screen.AspectRatio);
 			Renderer.Camera.OriginalVerticalViewingAngle = Renderer.Camera.VerticalViewingAngle;
 			Renderer.Camera.ExtraViewingDistance = 50.0;
-			Renderer.Camera.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Renderer.Camera.ForwardViewingDistance = Interface.CurrentOptions.ViewingDistance;
 			Renderer.Camera.BackwardViewingDistance = 0.0;
-			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
 			string programVersion = @"v" + Application.ProductVersion + OpenBve.Program.VersionSuffix;
 			FileSystem.ClearLogFile(programVersion);
@@ -384,8 +385,7 @@ namespace OpenBve {
 		/// <summary>Deinitializes the program.</summary>
 		private static void Deinitialize()
 		{
-			string error;
-			Program.CurrentHost.UnloadPlugins(out error);
+			Program.CurrentHost.UnloadPlugins(out _);
 			Sounds.DeInitialize();
 			Renderer.DeInitialize();
 			if (currentGameWindow != null)

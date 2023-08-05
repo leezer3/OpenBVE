@@ -33,7 +33,7 @@ namespace Train.OpenBve
 			XmlDocument currentXML = new XmlDocument();
 			//Load the marker's XML file 
 			currentXML.Load(fileName);
-			currentPath = System.IO.Path.GetDirectoryName(fileName);
+			currentPath = Path.GetDirectoryName(fileName);
 			MotorSoundXMLParsed = new bool[Train.Cars.Length];
 			CarObjectsReversed = new bool[Train.Cars.Length];
 			BogieObjectsReversed = new bool[Train.Cars.Length * 2];
@@ -131,7 +131,7 @@ namespace Train.OpenBve
 							XmlNodeList childNodes = childXML.DocumentElement.SelectNodes("/openBVE/Car");
 							//We need to save and restore the current path to make relative paths within the child file work correctly
 							string savedPath = currentPath;
-							currentPath = System.IO.Path.GetDirectoryName(childFile);
+							currentPath = Path.GetDirectoryName(childFile);
 							ParseCarNode(childNodes[0], fileName, carIndex, ref Train, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
 							currentPath = savedPath;
 						}
@@ -232,7 +232,7 @@ namespace Train.OpenBve
 						switch (DocumentNodes[i].Name)
 						{
 							case "Plugin":
-								currentPath = System.IO.Path.GetDirectoryName(fileName); // reset to base path
+								currentPath = Path.GetDirectoryName(fileName); // reset to base path
 								string pluginFile = DocumentNodes[i].InnerText;
 								pluginFile = Path.CombineFile(currentPath, pluginFile);
 								if (File.Exists(pluginFile))

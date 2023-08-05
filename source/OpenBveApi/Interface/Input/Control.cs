@@ -32,5 +32,34 @@ namespace OpenBveApi.Interface
 		public string LastState;
 		/// <summary>The option applied to this control</summary>
 		public int Option;
+
+		/// <summary>Returns the control's representation in string format</summary>
+		public override string ToString()
+		{
+			string s = Method + ", ";
+			switch (Method)
+			{
+				case ControlMethod.Keyboard:
+					s += Key + ", " + (int)Modifier + ", " + Option;
+					break;
+				case ControlMethod.Joystick:
+					s += Component + ", " + Element ;
+					if (Component != JoystickComponent.Button)
+					{
+						s += ", " + Direction;
+					}
+					s += ", " + Option;
+					break;
+				case ControlMethod.RailDriver:
+					s += "0, " + Component + ", " + Element;
+					if (Component != JoystickComponent.Button)
+					{
+						s += ", " + Direction;
+					}
+					s += ", " + Option;
+					break;
+			}
+			return s;
+		}
 	}
 }

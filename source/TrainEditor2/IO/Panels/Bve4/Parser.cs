@@ -20,7 +20,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 
 			CultureInfo culture = CultureInfo.InvariantCulture;
 			string[] lines = File.ReadAllLines(fileName, TextEncoding.GetSystemEncodingFromFile(fileName));
-			string basePath = System.IO.Path.GetDirectoryName(fileName);
+			string basePath = Path.GetDirectoryName(fileName);
 
 			for (int i = 0; i < lines.Length; i++)
 			{

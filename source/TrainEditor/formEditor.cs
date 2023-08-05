@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
 using System.Windows.Forms;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
@@ -446,7 +447,7 @@ namespace TrainEditor {
 					try {
 						FileName = Dialog.FileName;
 						Train = TrainDat.Load(FileName);
-						this.Text = System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(FileName)) + " - " + Application.ProductName;
+						this.Text = System.IO.Path.GetFileName(Path.GetDirectoryName(FileName)) + @" - " + Application.ProductName;
 						buttonSave.Enabled = true;
 					} catch (Exception ex) {
 						MessageBox.Show(ex.Message, "Open", MessageBoxButtons.OK, MessageBoxIcon.Hand);
@@ -485,13 +486,13 @@ namespace TrainEditor {
 		private void ButtonSaveAsClick(object sender, EventArgs e) {
 			if (SaveControlContent()) {
 				using (SaveFileDialog Dialog = new SaveFileDialog()) {
-					Dialog.Filter = "train.dat files|train.dat|All files|*";
+					Dialog.Filter = @"train.dat files|train.dat|All files|*";
 					Dialog.OverwritePrompt = true;
 					if (Dialog.ShowDialog() == DialogResult.OK) {
 						try {
 							FileName = Dialog.FileName;
 							TrainDat.Save(FileName, Train);
-							this.Text = System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(FileName)) + " - " + Application.ProductName;
+							this.Text = System.IO.Path.GetFileName(Path.GetDirectoryName(FileName)) + @" - " + Application.ProductName;
 						} catch (Exception ex) {
 							MessageBox.Show(ex.Message, "Save as", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 						}
@@ -1762,14 +1763,7 @@ namespace TrainEditor {
 			}
 			else
 			{
-				if (Train.Brake.LocoBrakeType != TrainDat.Brake.LocoBrakeTypes.AutomaticAirBrake)
-				{
-					numericUpDownLocoBrakeNotches.Enabled = true;
-				}
-				else
-				{
-					numericUpDownLocoBrakeNotches.Enabled = false;
-				}
+				numericUpDownLocoBrakeNotches.Enabled = Train.Brake.LocoBrakeType != TrainDat.Brake.LocoBrakeTypes.AutomaticAirBrake;
 				buttonLocoBrakeDelayUp.Enabled = true;
 				buttonLocoBrakeDelayDown.Enabled = true;
 				comboBoxLocoBrakeType.Enabled = true;

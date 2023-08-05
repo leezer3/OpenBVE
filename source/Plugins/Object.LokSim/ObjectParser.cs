@@ -33,6 +33,7 @@ using System.Xml;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Linq;
+using System.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
@@ -47,7 +48,7 @@ namespace Plugin
 		/// <returns>The object loaded.</returns>
 		internal static StaticObject ReadObject(string FileName, Vector3 Rotation)
 		{
-			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
+			string BaseDir = Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();
 			//Initialise the object
 			StaticObject Object = new StaticObject(Plugin.currentHost);
@@ -72,7 +73,7 @@ namespace Plugin
 			{
 				try
 				{
-					currentXML.Load(FileName);
+					currentXML.SanitizeAndLoadXml(FileName);
 				}
 				catch
 				{
@@ -161,7 +162,7 @@ namespace Plugin
 													transtex = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Plugin.LoksimPackageFolder);
 													if (!File.Exists(transtex))
 													{
-														Plugin.currentHost.AddMessage(MessageType.Error, true, "AlphaTexture " + transtex + " could not be found in file " + FileName);
+														Plugin.currentHost.AddMessage(MessageType.Error, true, "AlphaTexture " + attribute.Value + " could not be found in file " + FileName);
 														transtex = null;
 													}												
 													break;
