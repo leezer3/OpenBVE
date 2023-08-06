@@ -1,4 +1,4 @@
-﻿#pragma warning disable 0659, 0661
+#pragma warning disable 0659, 0661
 
 using System;
 using System.Drawing;
@@ -88,7 +88,9 @@ namespace OpenBveApi.Textures {
 			{
 				throw new ArgumentException("The data bytes are not of the expected length.");
 			}
-
+			this.Origin = new ByteArrayOrigin(width, height, bytes);
+			this.MyOpenGlTextures = new OpenGlTexture[1][];
+			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 			this.MySize.X = width;
 			this.MySize.Y = height;
 			this.MyBitsPerPixel = bitsPerPixel;
@@ -150,26 +152,7 @@ namespace OpenBveApi.Textures {
 			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 			
 		}
-
-		/// <summary>Creates a new texture.</summary>
-		/// <param name="bitmap">The System.Drawing.Bitmap that contains the texture.</param>
-		public Texture(Bitmap bitmap)
-		{
-			this.Origin = new BitmapOrigin(bitmap);
-			this.MyOpenGlTextures = new OpenGlTexture[1][];
-			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
-		}
-
-		/// <summary>Creates a new texture.</summary>
-		/// <param name="bitmap">The System.Drawing.Bitmap that contains the texture.</param>
-		/// <param name="parameters">The parameters that specify how to process the texture.</param>
-		public Texture(Bitmap bitmap, TextureParameters parameters)
-		{
-			this.Origin = new BitmapOrigin(bitmap, parameters);
-			this.MyOpenGlTextures = new OpenGlTexture[1][];
-			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
-		}
-
+		
 		/// <summary>Creates a new texture.</summary>
 		/// <param name="texture">The texture raw data.</param>
 		public Texture(Texture texture)

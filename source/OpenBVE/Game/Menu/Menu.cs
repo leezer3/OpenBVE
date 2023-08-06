@@ -3,6 +3,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -17,6 +18,7 @@ using OpenBveApi.Textures;
 using OpenTK;
 using TrainManager;
 using Path = OpenBveApi.Path;
+using Rectangle = System.Drawing.Rectangle;
 using Vector2 = OpenBveApi.Math.Vector2;
 
 namespace OpenBve
@@ -628,9 +630,13 @@ namespace OpenBve
 									return;
 								}
 								routeDescriptionBox.Text = currentPackage.Description;
-								if (currentPackage.PackageImage != null)
+								if (currentPackage.PackageImage is Bitmap bitmap)
 								{
-									routePictureBox.Texture = new Texture(currentPackage.PackageImage as Bitmap);
+									BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+									byte[] bytes = new byte[data.Stride * data.Height];
+									System.Runtime.InteropServices.Marshal.Copy(data.Scan0, bytes, 0, data.Stride * data.Height);
+									bitmap.UnlockBits(data);
+									routePictureBox.Texture = new Texture(bitmap.Width, bitmap.Height, 32, bytes, null);
 								}
 								else
 								{

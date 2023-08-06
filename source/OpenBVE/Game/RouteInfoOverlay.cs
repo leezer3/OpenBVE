@@ -1,4 +1,6 @@
-﻿using OpenBveApi.Colors;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
+using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
@@ -110,14 +112,22 @@ namespace OpenBve
 			case state.map:
 				if (mapImage == null)
 				{
-					mapImage	= new Texture(Program.CurrentRoute.Information.RouteMap);
+					BitmapData data = Program.CurrentRoute.Information.RouteMap.LockBits(new Rectangle(0, 0, Program.CurrentRoute.Information.RouteMap.Width, Program.CurrentRoute.Information.RouteMap.Height), ImageLockMode.ReadOnly, Program.CurrentRoute.Information.RouteMap.PixelFormat);
+					byte[] bytes = new byte[data.Stride * data.Height];
+					System.Runtime.InteropServices.Marshal.Copy(data.Scan0, bytes, 0, data.Stride * data.Height);
+					Program.CurrentRoute.Information.RouteMap.UnlockBits(data);
+					mapImage = new Texture(Program.CurrentRoute.Information.RouteMap.Width, Program.CurrentRoute.Information.RouteMap.Height, 32, bytes, null);
 					mapSize		= new Vector2(Program.CurrentRoute.Information.RouteMap.Width, Program.CurrentRoute.Information.RouteMap.Height);
 				}
 				break;
 			case state.gradient:
 				if (gradientImage == null)
 				{
-					gradientImage	= new Texture(Program.CurrentRoute.Information.GradientProfile);
+					BitmapData data = Program.CurrentRoute.Information.GradientProfile.LockBits(new Rectangle(0, 0, Program.CurrentRoute.Information.GradientProfile.Width, Program.CurrentRoute.Information.GradientProfile.Height), ImageLockMode.ReadOnly, Program.CurrentRoute.Information.GradientProfile.PixelFormat);
+					byte[] bytes = new byte[data.Stride * data.Height];
+					System.Runtime.InteropServices.Marshal.Copy(data.Scan0, bytes, 0, data.Stride * data.Height);
+					Program.CurrentRoute.Information.GradientProfile.UnlockBits(data);
+					gradientImage = new Texture(Program.CurrentRoute.Information.GradientProfile.Width, Program.CurrentRoute.Information.GradientProfile.Height, 32, bytes, null);
 					gradientSize	= new Vector2(Program.CurrentRoute.Information.GradientProfile.Width, Program.CurrentRoute.Information.GradientProfile.Height);
 				}
 				break;

@@ -29,10 +29,6 @@ namespace OpenBveApi.Textures
 			{
 				return (PathOrigin)a == (PathOrigin)b;
 			}
-			if (a is BitmapOrigin && b is BitmapOrigin)
-			{
-				return (BitmapOrigin)a == (BitmapOrigin)b;
-			}
 			if (a is RawOrigin && b is RawOrigin)
 			{
 				return (RawOrigin)a == (RawOrigin)b;
@@ -59,10 +55,6 @@ namespace OpenBveApi.Textures
 			{
 				return (PathOrigin)a != (PathOrigin)b;
 			}
-			if (a is BitmapOrigin && b is BitmapOrigin)
-			{
-				return (BitmapOrigin)a != (BitmapOrigin)b;
-			}
 			if (a is RawOrigin && b is RawOrigin)
 			{
 				return (RawOrigin)a != (RawOrigin)b;
@@ -87,10 +79,6 @@ namespace OpenBveApi.Textures
 			if (this is PathOrigin && obj is PathOrigin)
 			{
 				return (PathOrigin)this != (PathOrigin)obj;
-			}
-			if (this is BitmapOrigin && obj is BitmapOrigin)
-			{
-				return (BitmapOrigin)this != (BitmapOrigin)obj;
 			}
 			if (this is RawOrigin && obj is RawOrigin)
 			{
