@@ -203,7 +203,7 @@ namespace OpenBve
 				Menus[CurrMenu].Selection = 1;
 			}
 			PositionMenu();
-			Program.Renderer.CurrentInterface = TrainManager.PlayerTrain == null ? InterfaceType.Menu : InterfaceType.GLMainMenu;
+			Program.Renderer.CurrentInterface = TrainManager.PlayerTrain == null ? InterfaceType.GLMainMenu : InterfaceType.Menu;
 			
 		}
 
