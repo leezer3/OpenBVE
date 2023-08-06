@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using DavyKager;
+using LibRender2.Menu;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -243,9 +244,9 @@ namespace OpenBve
 					case MenuType.Options:
 						Items = new MenuEntry[8];
 						Items[0] = new MenuCaption(Translations.GetInterfaceString("panel_options"));
-						Items[1] = new MenuOption(MenuOptionType.ScreenResolution, Translations.GetInterfaceString("options_resolution"), Program.Renderer.Screen.AvailableResolutions.ToArray());
-						Items[2] = new MenuOption(MenuOptionType.FullScreen, Translations.GetInterfaceString("options_display_mode_fullscreen"), new[] { "true", "false" });
-						Items[3] = new MenuOption(MenuOptionType.Interpolation, Translations.GetInterfaceString("options_quality_interpolation"), new[]
+						Items[1] = new MenuOption(OptionType.ScreenResolution, Translations.GetInterfaceString("options_resolution"), Program.Renderer.Screen.AvailableResolutions.ToArray());
+						Items[2] = new MenuOption(OptionType.FullScreen, Translations.GetInterfaceString("options_display_mode_fullscreen"), new[] { "true", "false" });
+						Items[3] = new MenuOption(OptionType.Interpolation, Translations.GetInterfaceString("options_quality_interpolation"), new[]
 						{
 							Translations.GetInterfaceString("options_quality_interpolation_mode_nearest"),
 							Translations.GetInterfaceString("options_quality_interpolation_mode_bilinear"),
@@ -254,9 +255,9 @@ namespace OpenBve
 							Translations.GetInterfaceString("options_quality_interpolation_mode_trilinearmipmap"),
 							Translations.GetInterfaceString("options_quality_interpolation_mode_anisotropic")
 						});
-						Items[4] = new MenuOption(MenuOptionType.AnisotropicLevel, Translations.GetInterfaceString("options_quality_interpolation_anisotropic_level"), new[] { "0", "2", "4", "8", "16" });
-						Items[5] = new MenuOption(MenuOptionType.AntialiasingLevel, Translations.GetInterfaceString("options_quality_interpolation_antialiasing_level"), new[] { "0", "2", "4", "8", "16" });
-						Items[6] = new MenuOption(MenuOptionType.ViewingDistance, Translations.GetInterfaceString("options_quality_distance_viewingdistance"), new[] { "400", "600", "800", "1000", "1500", "2000" });
+						Items[4] = new MenuOption(OptionType.AnisotropicLevel, Translations.GetInterfaceString("options_quality_interpolation_anisotropic_level"), new[] { "0", "2", "4", "8", "16" });
+						Items[5] = new MenuOption(OptionType.AntialiasingLevel, Translations.GetInterfaceString("options_quality_interpolation_antialiasing_level"), new[] { "0", "2", "4", "8", "16" });
+						Items[6] = new MenuOption(OptionType.ViewingDistance, Translations.GetInterfaceString("options_quality_distance_viewingdistance"), new[] { "400", "600", "800", "1000", "1500", "2000" });
 						Items[7] = new MenuCommand(Translations.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
 						Align = TextAlignment.TopLeft;
 						break;

@@ -1,4 +1,4 @@
-﻿namespace OpenBve
+﻿namespace LibRender2.Menu
 {
 	/// <summary>The list of possible sub-menu types</summary>
 	public enum MenuType
