@@ -276,6 +276,10 @@ namespace OpenBve
 		/// <param name="Scroll">The delta</param>
 		internal void ProcessMouseScroll(int Scroll)
 		{
+			if (Menus.Length == 0)
+			{
+				return;
+			}
 			// Load the current menu
 			SingleMenu menu = Menus[CurrMenu];
 			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall || menu.Type == MenuType.Packages || (int)menu.Type >= 107)
@@ -737,7 +741,6 @@ namespace OpenBve
 									OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
 									// ReSharper disable once PossibleNullReferenceException
 									g.LoadingScreenLoop();
-									Program.Renderer.CurrentInterface = InterfaceType.Normal;
 								}
 								break;
 							case MenuTag.No:

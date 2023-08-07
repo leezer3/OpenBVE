@@ -954,6 +954,7 @@ namespace OpenBve
 			RenderTimeElapsed = 0.0;
 			World.InitializeCameraRestriction();
 			Loading.SimulationSetup = true;
+			Program.Renderer.CurrentInterface = InterfaceType.Normal;
 			if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 			{
 				Program.Renderer.Camera.Alignment.Yaw = 180 / 57.2957795130824;
