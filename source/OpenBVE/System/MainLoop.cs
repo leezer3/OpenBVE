@@ -150,6 +150,11 @@ namespace OpenBve
 		/// <param name="e">The button arguments</param>
 		internal static void mouseDownEvent(object sender, MouseButtonEventArgs e)
 		{
+			if (Program.Renderer.CurrentInterface == InterfaceType.LoadScreen)
+			{
+				// as otherwise right-click can unexpectedly operate camera spin
+				return;
+			}
 			timeSinceLastMouseEvent = 0;
 			if (e.Button == MouseButton.Right)
 			{
@@ -172,6 +177,11 @@ namespace OpenBve
 
 		internal static void mouseUpEvent(object sender, MouseButtonEventArgs e)
 		{
+			if (Program.Renderer.CurrentInterface == InterfaceType.LoadScreen)
+			{
+				// as otherwise right-click can unexpectedly operate camera spin
+				return;
+			}
 			timeSinceLastMouseEvent = 0;
 			if (e.Button == MouseButton.Left)
 			{
