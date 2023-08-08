@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
+<?xml version="1.0" ?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="pl-PL">
 		<body>
 			<group id="language">
@@ -23,75 +23,59 @@
 				<group id="program">
 					<trans-unit id="title">
 						<source>OpenBVE</source>
-						<target>OpenBVE</target>
 					</trans-unit>
 				</group>
 				<group id="about">
 					<trans-unit id="title">
 						<source>About</source>
-						<target>About</target>
 					</trans-unit>
 					<trans-unit id="description">
 						<source>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</source>
-						<target>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</target>
 					</trans-unit>
 					<trans-unit id="open_source_licenses">
 						<source>Open Source Licenses</source>
-						<target>Open Source Licenses</target>
 					</trans-unit>
 					<trans-unit id="open_source_licenses_header">
 						<source>OpenBVE makes use of several open-source libraries, whose licenses are reproduced below:</source>
-						<target>OpenBVE makes use of several open-source libraries, whose licenses are reproduced below:</target>
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
-						<target>Close</target>
+						<target>Zamknij</target>
 					</trans-unit>
 				</group>
 				<group id="bug_report">
 					<trans-unit id="title">
 						<source>Report Problem</source>
-						<target>Report Problem</target>
 					</trans-unit>
 					<trans-unit id="description">
 						<source>This function will create a zip archive on your Desktop, containing the previous Simulation log and Crash log (If any), along with a text file containing the brief description of the problem entered below.\r\n\r\nPlease post this on the discussion board, or create a new issue on Github.</source>
-						<target>This function will create a zip archive on your Desktop, containing the previous Simulation log and Crash log (If any), along with a text file containing the brief description of the problem entered below.\r\n\r\nPlease post this on the discussion board, or create a new issue on Github.</target>
 					</trans-unit>
 					<trans-unit id="view_log_button">
 						<source>View...</source>
-						<target>View...</target>
 					</trans-unit>
 					<trans-unit id="view_log">
 						<source>View the previous log:</source>
-						<target>View the previous log:</target>
 					</trans-unit>
 					<trans-unit id="view_crash_log">
 						<source>View the previous crash log:</source>
-						<target>View the previous crash log:</target>
 					</trans-unit>
 					<trans-unit id="enter_description">
 						<source>Please enter a brief description of the problem:</source>
-						<target>Please enter a brief description of the problem:</target>
 					</trans-unit>
 					<trans-unit id="no_log">
 						<source>No simulation logs were found.</source>
-						<target>No simulation logs were found.</target>
 					</trans-unit>
 					<trans-unit id="no_crash_log">
 						<source>No crash logs were found.</source>
-						<target>No crash logs were found.</target>
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save Bug Report</source>
-						<target>Save Bug Report</target>
 					</trans-unit>
 					<trans-unit id="saved">
-						<source>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
-						<target>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</target>
+						<source>The report has been saved as &quot;[filename]&quot; on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
 					</trans-unit>
 					<trans-unit id="save_failed">
-						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</source>
-						<target>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</target>
+						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the &quot;View...&quot; button, then submit these logs to the discussion board or open an issue on GitHub.</source>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -131,13 +115,12 @@
 						<source>You already have the latest version.</source>
 						<target>Posiadasz aktualną wersję</target>
 					</trans-unit>
+					<trans-unit id="updates_daily">
+						<source>The most recent nightly build from [date] is available for download.</source>
+					</trans-unit>
 					<trans-unit id="updates_new">
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
 						<target>Nowa wersja [version] ([date]) jest dostępna do pobrania z oficjalnej strony.</target>
-					</trans-unit>
-					<trans-unit id="updates_daily">
-						<source>The most recent nightly build from [date] is available for download.</source>
-						<target>The most recent nightly build from [date] is available for download.</target>
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
@@ -753,7 +736,7 @@
 					</trans-unit>
 					<trans-unit id="creation_additems">
 						<source>Add Item(s)</source>
-						<target>Dodaj</target>
+						<target>Dodaj Przedmiot(y)</target>
 					</trans-unit>
 					<trans-unit id="creation_selecteditems">
 						<source>The following files and folders will be packaged:</source>
@@ -1562,7 +1545,6 @@
 					</trans-unit>
 					<trans-unit id="verbosity_accessibilityaids">
 						<source>Accessibility Aids</source>
-						<target>Accessibility Aids</target>
 					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
@@ -1586,7 +1568,6 @@
 					</trans-unit>
 					<trans-unit id="advanced_cursor">
 						<source>Cursor</source>
-						<target>Cursor</target>
 					</trans-unit>
 					<trans-unit id="other">
 						<source>Other</source>
@@ -1670,7 +1651,6 @@
 					</trans-unit>
 					<trans-unit id="font">
 						<source>Font:</source>
-						<target>Font:</target>
 					</trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
@@ -2451,7 +2431,7 @@
 					</trans-unit>
 					<trans-unit id="single_fullaxis">
 						<source>Controls power and brake for trains with one handle on a full joystick axis</source>
-						<target>Kontrola mocy i hamowania dla pociągów z jedna wajchą (kontroler)</target>
+						<target>Kontrola przepustnicy i hamowania dla pociągów z jedna wajchą</target>
 					</trans-unit>
 					<trans-unit id="power_any_notch">
 						<source>Adjusts the power notch directly from a command option value.</source>
@@ -2507,11 +2487,9 @@
 					</trans-unit>
 					<trans-unit id="play_micsounds">
 						<source>Activates or deactivates the system microphone soundsource</source>
-						<target>Activates or deactivates the system microphone soundsource</target>
 					</trans-unit>
 					<trans-unit id="sanders">
 						<source>Activates or deactivates the sanders</source>
-						<target>Activates or deactivates the sanders</target>
 					</trans-unit>
 					<trans-unit id="security_power">
 						<source>Activates or deactivates the security system on some trains</source>
@@ -5550,7 +5528,6 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="description">
 						<source>Description</source>
-						<target>Opis</target>
 					</trans-unit>
 				</group>
 				<group id="message">
