@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender2.Screens;
 using LibRender2.Text;
 using LibRender2.Textures;
 using OpenBveApi.Colors;
@@ -85,6 +86,7 @@ namespace LibRender2.Loadings
 		/// <summary>Draws on OpenGL canvas the route/train loading screen</summary>
 		public void DrawLoadingScreen(OpenGlFont Font, double RouteProgress, double TrainProgress = double.MaxValue)
 		{
+			renderer.CurrentInterface = InterfaceType.LoadScreen;
 			renderer.SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 

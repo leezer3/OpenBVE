@@ -178,7 +178,7 @@ namespace OpenBve
 		/// <param name="replace">Whether we are replacing the selected menu item</param>
 		public void PushMenu(MenuType type, int data = 0,  bool replace = false)
 		{
-			if (Program.Renderer.CurrentInterface != InterfaceType.Menu)
+			if (Program.Renderer.CurrentInterface < InterfaceType.Menu)
 			{
 				// Deliberately set to the standard cursor, as touch controls may have set to something else
 				Program.currentGameWindow.Cursor = MouseCursor.Default;
@@ -203,7 +203,8 @@ namespace OpenBve
 				Menus[CurrMenu].Selection = 1;
 			}
 			PositionMenu();
-			Program.Renderer.CurrentInterface = InterfaceType.Menu;
+			Program.Renderer.CurrentInterface = TrainManager.PlayerTrain == null ? InterfaceType.GLMainMenu : InterfaceType.Menu;
+			
 		}
 
 		//
@@ -275,6 +276,10 @@ namespace OpenBve
 		/// <param name="Scroll">The delta</param>
 		internal void ProcessMouseScroll(int Scroll)
 		{
+			if (Menus.Length == 0)
+			{
+				return;
+			}
 			// Load the current menu
 			SingleMenu menu = Menus[CurrMenu];
 			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall || menu.Type == MenuType.Packages || (int)menu.Type >= 107)
@@ -334,7 +339,7 @@ namespace OpenBve
 				return false;
 			}
 			// if not in menu or during control customisation or down outside menu area, do nothing
-			if (Program.Renderer.CurrentInterface != InterfaceType.Menu ||
+			if (Program.Renderer.CurrentInterface < InterfaceType.Menu ||
 				isCustomisingControl)
 				return false;
 
@@ -736,7 +741,6 @@ namespace OpenBve
 									OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
 									// ReSharper disable once PossibleNullReferenceException
 									g.LoadingScreenLoop();
-									Program.Renderer.CurrentInterface = InterfaceType.Normal;
 								}
 								break;
 							case MenuTag.No:

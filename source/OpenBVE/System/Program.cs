@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -281,6 +281,7 @@ namespace OpenBve {
 				result.Start = true;
 				result.RouteFile = null;
 				result.TrainFolder = null;
+				Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
 			}
 			
 			// --- start the actual program ---

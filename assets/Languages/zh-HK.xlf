@@ -32,7 +32,7 @@
 					</trans-unit>
 					<trans-unit id="description">
 						<source>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</source>
-						<target>OpenBVE 是一款免費，開源及跨平台的火車模擬器，支持 2D / 3D 駕駛室和沿途景色。\r\n\r\n此程式最初由 Michelle 開發，並在合法的情況下發佈到公眾領域 (Public Domain)。</target>
+						<target>OpenBVE 是一款免費，開源及跨平台的火車模擬器，支援 2D / 3D 駕駛室和沿途景色。\r\n\r\n此程式最初由 Michelle 開發，並在合法的情況下發佈到公眾領域 (Public Domain)。</target>
 					</trans-unit>
 					<trans-unit id="open_source_licenses">
 						<source>Open Source Licenses</source>
@@ -126,7 +126,7 @@
 					</trans-unit>
 					<trans-unit id="updates_old">
 						<source>You already have the latest version.</source>
-						<target>你目前的版本已是最新。</target>
+						<target>你目前使用中的版本已是最新。</target>
 					</trans-unit>
 					<trans-unit id="updates_daily">
 						<source>The most recent nightly build from [date] is available for download.</source>
@@ -134,7 +134,7 @@
 					</trans-unit>
 					<trans-unit id="updates_new">
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
-						<target>有最新版本可供下載: [version] ([date])，請到官方網站下載</target>
+						<target>有最新版本可供下載: [version] ([date])，前往官方網站下載</target>
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
@@ -832,7 +832,7 @@
 					</trans-unit>
 					<trans-unit id="creation_replace">
 						<source>Is this to replace an existing package?</source>
-						<target>這是取代另一個的擴展包的嗎？</target>
+						<target>這是取代另一個擴展包的嗎？</target>
 					</trans-unit>
 					<trans-unit id="creation_yes">
 						<source>Yes</source>
@@ -1004,6 +1004,7 @@
 					</trans-unit>
 					<trans-unit id="error_busy_thread">
 						<source>The package worker thread is currently busy. Please wait a moment and try again.</source>
+						<target>擴展包工作線程現正繁忙，請稍等片刻，然後再重試。</target>
 					</trans-unit>
 				</group>
 				<group id="controls">
@@ -1666,7 +1667,7 @@
 					</trans-unit>
 					<trans-unit id="font">
 						<source>Font:</source>
-						<target>字體:</target>
+						<target>界面字體:</target>
 					</trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
@@ -3552,7 +3553,7 @@ to separate buttons to avoid compatibility issues.
 					</trans-unit>
 					<trans-unit id="help_zadig_button">
 						<source>Get Zadig</source>
-						<target>獲取Zadig</target>
+						<target>下載 Zadig</target>
 					</trans-unit>
 					<trans-unit id="help_windows_button">
 						<source>Extract files (Windows)</source>

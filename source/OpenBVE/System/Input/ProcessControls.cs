@@ -195,6 +195,7 @@ namespace OpenBve
 					break;
 */
 				case InterfaceType.Menu:			// MENU
+				case InterfaceType.GLMainMenu:
 					kioskModeTimer = 0;
 					for (int i = 0; i < Interface.CurrentControls.Length; i++)
 					{
