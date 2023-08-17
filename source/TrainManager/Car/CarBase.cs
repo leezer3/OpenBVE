@@ -87,20 +87,22 @@ namespace TrainManager.Car
 		/// <summary>The cargo carried by the car</summary>
 		public CargoBase Cargo;
 
+		private int trainCarIndex;
+
 		public CarBase(TrainBase train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient)
 		{
 			Specs = new CarPhysics();
 			Brightness = new Brightness(this);
 			baseTrain = train;
-			Index = index;
+			trainCarIndex = index;
 			CarSections = new CarSection[] { };
 			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 			FrontAxle.Follower.TriggerType = index == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 			RearAxle.Follower.TriggerType = index == baseTrain.Cars.Length - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
-			FrontBogie = new Bogie(train, this, false);
-			RearBogie = new Bogie(train, this, true);
+			FrontBogie = new Bogie(this, false);
+			RearBogie = new Bogie(this, true);
 			Doors = new Door[2];
 			Horns = new[]
 			{
@@ -119,13 +121,13 @@ namespace TrainManager.Car
 		public CarBase(TrainBase train, int index)
 		{
 			baseTrain = train;
-			Index = index;
+			trainCarIndex = index;
 			CarSections = new CarSection[] { };
 			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
-			FrontBogie = new Bogie(train, this, false);
-			RearBogie = new Bogie(train, this, true);
+			FrontBogie = new Bogie(this, false);
+			RearBogie = new Bogie(this, true);
 			Doors = new Door[2];
 			Horns = new[]
 			{
@@ -241,7 +243,8 @@ namespace TrainManager.Car
 		/// <summary>Backing property for the index of the car within the train</summary>
 		public override int Index
 		{
-			get;
+			get => trainCarIndex;
+			set => trainCarIndex = value;
 		}
 
 		public override void Reverse(bool flipInterior = false)
@@ -381,9 +384,15 @@ namespace TrainManager.Car
 					{
 						newTrain.Cars[i] = baseTrain.Cars[Index + i + 1];
 						newTrain.Cars[i].baseTrain = newTrain;
+						newTrain.Cars[i].Index = i;
+					}
+					for (int i = 0; i < newTrain.Cars.Length; i++)
+					{
 						/*
 						 * Make visible if not part of player train
 						 * Otherwise uncoupling from cab then changing to exterior, they will still be hidden
+						 *
+						 * Need to do this after everything has been done in case objects refer to other bits
 						 */
 						newTrain.Cars[i].ChangeCarSection(CarSectionType.Exterior);
 						newTrain.Cars[i].FrontBogie.ChangeSection(0);

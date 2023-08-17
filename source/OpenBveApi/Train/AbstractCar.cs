@@ -1,3 +1,4 @@
+using System;
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Trains
@@ -71,6 +72,10 @@ namespace OpenBveApi.Trains
 			{
 				// A single car is by itself a train, hence index zero
 				return 0;
+			}
+			set
+			{
+				throw new NotSupportedException("Cannot set the index of a single car");
 			}
 		}
 
