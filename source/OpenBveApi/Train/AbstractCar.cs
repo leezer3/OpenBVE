@@ -85,5 +85,11 @@ namespace OpenBveApi.Trains
 		{
 
 		}
+
+		/// <summary>Uncouples the car</summary>
+		public virtual void Uncouple(bool Front, bool Rear)
+		{
+
+		}
 	}
 }

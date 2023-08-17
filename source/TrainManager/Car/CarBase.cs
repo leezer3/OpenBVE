@@ -15,6 +15,7 @@ using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
 using TrainManager.Cargo;
+using TrainManager.Handles;
 using TrainManager.Power;
 using TrainManager.Trains;
 
@@ -36,7 +37,7 @@ namespace TrainManager.Car
 		/// <summary>The horns attached to this car</summary>
 		public Horn[] Horns;
 		/// <summary>Contains the physics properties for the car</summary>
-		public CarPhysics Specs;
+		public readonly CarPhysics Specs;
 		/// <summary>The car brake for this car</summary>
 		public CarBrake CarBrake;
 		/// <summary>The car sections (objects) attached to the car</summary>
@@ -134,6 +135,7 @@ namespace TrainManager.Car
 			};
 			Brightness = new Brightness(this);
 			Cargo = new Passengers(this);
+			Specs = new CarPhysics();
 		}
 
 		/// <summary>Moves the car</summary>
@@ -345,6 +347,57 @@ namespace TrainManager.Car
 					Doors[i].ReopenCounter++;
 				}
 			}
+		}
+
+		public override void Uncouple(bool Front, bool Rear)
+		{
+			if (!Front && !Rear)
+			{
+				return;
+			}
+			if (Front)
+			{
+				Uncouple(false, true);
+			}
+			// Create new train
+			TrainBase newTrain = new TrainBase(TrainState.Available);
+			newTrain.Handles.Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain)
+			{
+				DelayedChanges = new HandleChange[0]
+			};
+			newTrain.Handles.Brake = new BrakeHandle(0, 0, newTrain.Handles.EmergencyBrake, new double[0], new double[0], newTrain)
+			{
+				DelayedChanges = new HandleChange[0]
+			};
+			newTrain.Handles.HoldBrake = new HoldBrakeHandle(newTrain);
+			if (Rear)
+			{
+				int totalFollowingCars = baseTrain.Cars.Length - (Index + 1);
+				newTrain.Cars = new CarBase[totalFollowingCars];
+				if (totalFollowingCars > 0)
+				{
+					// Move following cars to new train
+					for (int i = 0; i < totalFollowingCars; i++)
+					{
+						newTrain.Cars[i] = baseTrain.Cars[Index + i + 1];
+						newTrain.Cars[i].baseTrain = newTrain;
+						/*
+						 * Make visible if not part of player train
+						 * Otherwise uncoupling from cab then changing to exterior, they will still be hidden
+						 */
+						newTrain.Cars[i].ChangeCarSection(CarSectionType.Exterior);
+						newTrain.Cars[i].FrontBogie.ChangeSection(0);
+						newTrain.Cars[i].RearBogie.ChangeSection(0);
+					}
+					Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalFollowingCars);
+					baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.connectedCar = baseTrain.Cars[baseTrain.Cars.Length - 1];
+				}
+				else
+				{
+					return;
+				}
+			}
+			TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain);
 		}
 
 		/// <summary>Returns the combination of door states what encountered at the specified car in a train.</summary>

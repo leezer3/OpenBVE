@@ -704,6 +704,14 @@ namespace OpenBveApi.Hosts {
 			return null;
 		}
 
+		/// <summary>Adds a new train</summary>
+		/// <param name="PreceedingTrain">The preceeding train, or a null reference to add the train at the end of the queue</param>
+		/// <param name="NewTrain">The new train</param>
+		public virtual void AddTrain(AbstractTrain PreceedingTrain, AbstractTrain NewTrain)
+		{
+
+		}
+
 		/*
 		 * Used for interop with the 32-bit plugin host
 		 */

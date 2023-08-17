@@ -307,7 +307,11 @@ namespace OpenBveApi.Interface {
 			 * Added in 1.8.4.3
 			 */
 			/// <summary>Toggles the sanders if fitted</summary>
-			Sanders
+			Sanders,
+			/// <summary>Uncouples the front coupling of a car</summary>
+			UncoupleFront,
+			/// <summary>Uncouples the rear coupling of a car</summary>
+			UncoupleRear
 		}
 
 		/// <summary>Defines the possible command types</summary>

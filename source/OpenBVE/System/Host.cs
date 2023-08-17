@@ -576,6 +576,36 @@ namespace OpenBve {
 			}
 		}
 
+		public override void AddTrain(AbstractTrain PreceedingTrain, AbstractTrain NewTrain)
+		{
+			Array.Resize(ref Program.TrainManager.Trains, Program.TrainManager.Trains.Length + 1);
+			int trainIndex = -1;
+			// find index of train within trainmanager array
+			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
+			{
+				if (Program.TrainManager.Trains[i] == PreceedingTrain)
+				{
+					trainIndex = i;
+					break;
+				}
+			}
+
+			if (trainIndex == -1)
+			{
+				Program.TrainManager.Trains[Program.TrainManager.Trains.Length - 1] = (TrainBase)NewTrain;
+			}
+			else
+			{
+				for (int i = Program.TrainManager.Trains.Length - 1; i > trainIndex + 1; i--)
+				{
+					Program.TrainManager.Trains[i + 1] = Program.TrainManager.Trains[i];
+				}
+
+				Program.TrainManager.Trains[trainIndex + 1] = (TrainBase)NewTrain;
+			}
+
+		}
+
 		public override AbstractTrain ClosestTrain(AbstractTrain Train)
 		{
 			TrainBase baseTrain = Train as TrainBase;
