@@ -397,6 +397,7 @@ namespace TrainManager.Car
 						newTrain.Cars[i].ChangeCarSection(CarSectionType.Exterior);
 						newTrain.Cars[i].FrontBogie.ChangeSection(0);
 						newTrain.Cars[i].RearBogie.ChangeSection(0);
+						newTrain.Cars[i].Coupler.ChangeSection(0);
 					}
 					Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalFollowingCars);
 					baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.connectedCar = baseTrain.Cars[baseTrain.Cars.Length - 1];
@@ -406,6 +407,8 @@ namespace TrainManager.Car
 					return;
 				}
 			}
+
+			Coupler.UncoupleSound.Play(this, false);
 			TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain);
 		}
 

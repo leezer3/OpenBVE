@@ -3,6 +3,7 @@ using LibRender2.Trains;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
+using SoundManager;
 
 namespace TrainManager.Car
 {
@@ -22,6 +23,9 @@ namespace TrainManager.Car
 		/// <remarks>This is the REAR car when travelling in the notional forwards direction</remarks>
 		internal CarBase connectedCar;
 
+		/// <summary>The sound played when this coupler is uncoupled</summary>
+		public CarSound UncoupleSound;
+
 		internal AbstractTrain baseTrain;
 
 		public Coupler(double minimumDistance, double maximumDistance, CarBase frontCar, CarBase rearCar, AbstractTrain train)
@@ -34,6 +38,7 @@ namespace TrainManager.Car
 			CarSections = new CarSection[] { };
 			baseTrain = train;
 			ChangeSection(-1);
+			UncoupleSound = new CarSound();
 		}
 
 		public void UpdateObjects(double TimeElapsed, bool ForceUpdate)
