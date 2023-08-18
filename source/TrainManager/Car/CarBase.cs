@@ -408,6 +408,35 @@ namespace TrainManager.Car
 				}
 			}
 
+			if (baseTrain.DriverCar >= baseTrain.Cars.Length)
+			{
+				/*
+				 * The driver car is no longer in the train
+				 *
+				 * Look for a car with an interior view to substitute
+				 * If not found, this will stop at Car 0
+				 */
+
+				for (int i = baseTrain.Cars.Length; i > 0; i--)
+				{
+					baseTrain.DriverCar = i - 1;
+					if (!baseTrain.Cars[i - 1].HasInteriorView)
+					{
+						/*
+						 * Set the eye position to something vaguely sensible, rather than leaving it on the rails
+						 * Whilst there will be no cab, at least it's a bit more usable like this
+						 */
+						baseTrain.Cars[i - 1].InteriorCamera = new CameraAlignment()
+						{
+							Position = new Vector3(0, 2, 0.5 * Length)
+						};
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
 			Coupler.UncoupleSound.Play(this, false);
 			TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain);
 		}
