@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using TrainManager.Trains;
@@ -149,6 +150,15 @@ namespace TrainManager.SafetySystems
 				case "hei_ats.dll":
 					SupportsAI = AISupport.Program;
 					AI = new HeiAtsAI(this);
+					break;
+				case "ats.dll":
+					switch (Path.GetFileName(train.TrainFolder.ToLowerInvariant()))
+					{
+						case "mtr sil c-train emu-fao":
+							SupportsAI = AISupport.Program;
+							AI = new MTRAutoAI(this);
+							break;
+					}
 					break;
 			}
 			
