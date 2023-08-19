@@ -1589,7 +1589,7 @@
 						<source>Uncoupling the rear of car number</source>
 					</trans-unit>
 					<trans-unit id="exterior_uncouplefront">
-						<source>Uncoupling the rear of car number</source>
+						<source>Uncoupling the front of car number</source>
 					</trans-unit>
 				</group>
 				<group id="score">

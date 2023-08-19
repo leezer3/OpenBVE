@@ -358,10 +358,6 @@ namespace TrainManager.Car
 			{
 				return;
 			}
-			if (Front)
-			{
-				Uncouple(false, true);
-			}
 			// Create new train
 			TrainBase newTrain = new TrainBase(TrainState.Available);
 			newTrain.Handles.Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain)
@@ -373,12 +369,35 @@ namespace TrainManager.Car
 				DelayedChanges = new HandleChange[0]
 			};
 			newTrain.Handles.HoldBrake = new HoldBrakeHandle(newTrain);
+			if (Front)
+			{
+				int totalPreceedingCars = trainCarIndex;
+				newTrain.Cars = new CarBase[trainCarIndex];
+				for (int i = 0; i < totalPreceedingCars; i++)
+				{
+					newTrain.Cars[i] = baseTrain.Cars[i];
+				}
+
+				for (int i = totalPreceedingCars; i < baseTrain.Cars.Length; i++)
+				{
+					baseTrain.Cars[i - totalPreceedingCars] = baseTrain.Cars[i];
+					baseTrain.Cars[i].Index = i - totalPreceedingCars;
+				}
+				Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalPreceedingCars);
+				TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain, false);
+
+				if (baseTrain.DriverCar - totalPreceedingCars >= 0)
+				{
+					baseTrain.DriverCar -= totalPreceedingCars;
+				}
+			}
+			
 			if (Rear)
 			{
 				int totalFollowingCars = baseTrain.Cars.Length - (Index + 1);
-				newTrain.Cars = new CarBase[totalFollowingCars];
 				if (totalFollowingCars > 0)
 				{
+					newTrain.Cars = new CarBase[totalFollowingCars];
 					// Move following cars to new train
 					for (int i = 0; i < totalFollowingCars; i++)
 					{
@@ -406,6 +425,8 @@ namespace TrainManager.Car
 				{
 					return;
 				}
+				Coupler.UncoupleSound.Play(this, false);
+				TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain, true);
 			}
 
 			if (baseTrain.DriverCar >= baseTrain.Cars.Length)
@@ -437,8 +458,12 @@ namespace TrainManager.Car
 					}
 				}
 			}
-			Coupler.UncoupleSound.Play(this, false);
-			TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain);
+
+			if (baseTrain.CameraCar >= baseTrain.Cars.Length)
+			{
+				baseTrain.CameraCar = baseTrain.DriverCar;
+			}
+			
 		}
 
 		/// <summary>Returns the combination of door states what encountered at the specified car in a train.</summary>

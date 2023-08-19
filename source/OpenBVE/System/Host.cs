@@ -576,18 +576,23 @@ namespace OpenBve {
 			}
 		}
 
-		public override void AddTrain(AbstractTrain PreceedingTrain, AbstractTrain NewTrain)
+		public override void AddTrain(AbstractTrain ReferenceTrain, AbstractTrain NewTrain, bool Preccedes)
 		{
 			Array.Resize(ref Program.TrainManager.Trains, Program.TrainManager.Trains.Length + 1);
 			int trainIndex = -1;
 			// find index of train within trainmanager array
 			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
 			{
-				if (Program.TrainManager.Trains[i] == PreceedingTrain)
+				if (Program.TrainManager.Trains[i] == ReferenceTrain)
 				{
 					trainIndex = i;
 					break;
 				}
+			}
+
+			if (Preccedes && trainIndex > 0)
+			{
+				trainIndex--;
 			}
 
 			if (trainIndex == -1)
@@ -596,7 +601,7 @@ namespace OpenBve {
 			}
 			else
 			{
-				for (int i = Program.TrainManager.Trains.Length - 1; i > trainIndex + 1; i--)
+				for (int i = Program.TrainManager.Trains.Length - 2; i > trainIndex; i--)
 				{
 					Program.TrainManager.Trains[i + 1] = Program.TrainManager.Trains[i];
 				}

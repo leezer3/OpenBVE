@@ -705,9 +705,10 @@ namespace OpenBveApi.Hosts {
 		}
 
 		/// <summary>Adds a new train</summary>
-		/// <param name="PreceedingTrain">The preceeding train, or a null reference to add the train at the end of the queue</param>
+		/// <param name="ReferenceTrain">The reference train, or a null reference to add the train at the end of the queue</param>
 		/// <param name="NewTrain">The new train</param>
-		public virtual void AddTrain(AbstractTrain PreceedingTrain, AbstractTrain NewTrain)
+		/// <param name="Preceedes">Whether this train preceeds or follows the reference train</param>
+		public virtual void AddTrain(AbstractTrain ReferenceTrain, AbstractTrain NewTrain, bool Preceedes)
 		{
 
 		}
