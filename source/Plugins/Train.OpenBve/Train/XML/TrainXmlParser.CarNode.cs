@@ -626,7 +626,12 @@ namespace Train.OpenBve
 					Plugin.currentHost.AddMessage(MessageType.Warning, false, "Interior view file is not supported for Car " + Car + " in XML file " + fileName);
 				}
 			}
-			Train.Cars[Car].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[Car], readhesionDevice);
+
+			if (Train.Cars[Car].ReAdhesionDevice == null)
+			{
+				// if required create default train readhesion device- May have already been setup earlier in the XML
+				Train.Cars[Car].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[Car], readhesionDevice);
+			}
 		}
 	}
 }
