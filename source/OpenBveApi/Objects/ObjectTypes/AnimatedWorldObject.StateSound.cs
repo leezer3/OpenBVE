@@ -47,7 +47,7 @@ namespace OpenBveApi.Objects
 				{
 					double timeDelta = Object.SecondsSinceLastUpdate + TimeElapsed;
 					Object.SecondsSinceLastUpdate = 0.0;
-					Object.Update(NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
+					Object.Update(NearestTrain, NearestTrain?.DriverCar ?? 0, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
 					if (this.Object.CurrentState != this.lastState && currentHost.SimulationState != SimulationState.Loading)
 					{
 						if (SingleBuffer)

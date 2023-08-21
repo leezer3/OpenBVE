@@ -1,3 +1,4 @@
+using System;
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Trains
@@ -72,6 +73,10 @@ namespace OpenBveApi.Trains
 				// A single car is by itself a train, hence index zero
 				return 0;
 			}
+			set
+			{
+				throw new NotSupportedException("Cannot set the index of a single car");
+			}
 		}
 
 		/// <summary>Call this method to reverse (flip) the car</summary>
@@ -82,6 +87,12 @@ namespace OpenBveApi.Trains
 
 		/// <summary>Opens the car doors</summary>
 		public virtual void OpenDoors(bool Left, bool Right)
+		{
+
+		}
+
+		/// <summary>Uncouples the car</summary>
+		public virtual void Uncouple(bool Front, bool Rear)
 		{
 
 		}

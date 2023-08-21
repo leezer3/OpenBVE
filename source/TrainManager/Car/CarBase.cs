@@ -15,6 +15,7 @@ using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
 using TrainManager.Cargo;
+using TrainManager.Handles;
 using TrainManager.Power;
 using TrainManager.Trains;
 
@@ -36,7 +37,7 @@ namespace TrainManager.Car
 		/// <summary>The horns attached to this car</summary>
 		public Horn[] Horns;
 		/// <summary>Contains the physics properties for the car</summary>
-		public CarPhysics Specs;
+		public readonly CarPhysics Specs;
 		/// <summary>The car brake for this car</summary>
 		public CarBrake CarBrake;
 		/// <summary>The car sections (objects) attached to the car</summary>
@@ -86,20 +87,22 @@ namespace TrainManager.Car
 		/// <summary>The cargo carried by the car</summary>
 		public CargoBase Cargo;
 
+		private int trainCarIndex;
+
 		public CarBase(TrainBase train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient)
 		{
 			Specs = new CarPhysics();
 			Brightness = new Brightness(this);
 			baseTrain = train;
-			Index = index;
+			trainCarIndex = index;
 			CarSections = new CarSection[] { };
 			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 			FrontAxle.Follower.TriggerType = index == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 			RearAxle.Follower.TriggerType = index == baseTrain.Cars.Length - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
-			FrontBogie = new Bogie(train, this, false);
-			RearBogie = new Bogie(train, this, true);
+			FrontBogie = new Bogie(this, false);
+			RearBogie = new Bogie(this, true);
 			Doors = new Door[2];
 			Horns = new[]
 			{
@@ -118,13 +121,13 @@ namespace TrainManager.Car
 		public CarBase(TrainBase train, int index)
 		{
 			baseTrain = train;
-			Index = index;
+			trainCarIndex = index;
 			CarSections = new CarSection[] { };
 			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
-			FrontBogie = new Bogie(train, this, false);
-			RearBogie = new Bogie(train, this, true);
+			FrontBogie = new Bogie(this, false);
+			RearBogie = new Bogie(this, true);
 			Doors = new Door[2];
 			Horns = new[]
 			{
@@ -134,6 +137,7 @@ namespace TrainManager.Car
 			};
 			Brightness = new Brightness(this);
 			Cargo = new Passengers(this);
+			Specs = new CarPhysics();
 		}
 
 		/// <summary>Moves the car</summary>
@@ -239,7 +243,8 @@ namespace TrainManager.Car
 		/// <summary>Backing property for the index of the car within the train</summary>
 		public override int Index
 		{
-			get;
+			get => trainCarIndex;
+			set => trainCarIndex = value;
 		}
 
 		public override void Reverse(bool flipInterior = false)
@@ -345,6 +350,120 @@ namespace TrainManager.Car
 					Doors[i].ReopenCounter++;
 				}
 			}
+		}
+
+		public override void Uncouple(bool Front, bool Rear)
+		{
+			if (!Front && !Rear)
+			{
+				return;
+			}
+			// Create new train
+			TrainBase newTrain = new TrainBase(TrainState.Available);
+			newTrain.Handles.Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain)
+			{
+				DelayedChanges = new HandleChange[0]
+			};
+			newTrain.Handles.Brake = new BrakeHandle(0, 0, newTrain.Handles.EmergencyBrake, new double[0], new double[0], newTrain)
+			{
+				DelayedChanges = new HandleChange[0]
+			};
+			newTrain.Handles.HoldBrake = new HoldBrakeHandle(newTrain);
+			if (Front)
+			{
+				int totalPreceedingCars = trainCarIndex;
+				newTrain.Cars = new CarBase[trainCarIndex];
+				for (int i = 0; i < totalPreceedingCars; i++)
+				{
+					newTrain.Cars[i] = baseTrain.Cars[i];
+				}
+
+				for (int i = totalPreceedingCars; i < baseTrain.Cars.Length; i++)
+				{
+					baseTrain.Cars[i - totalPreceedingCars] = baseTrain.Cars[i];
+					baseTrain.Cars[i].Index = i - totalPreceedingCars;
+				}
+				Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalPreceedingCars);
+				TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain, false);
+
+				if (baseTrain.DriverCar - totalPreceedingCars >= 0)
+				{
+					baseTrain.DriverCar -= totalPreceedingCars;
+				}
+			}
+			
+			if (Rear)
+			{
+				int totalFollowingCars = baseTrain.Cars.Length - (Index + 1);
+				if (totalFollowingCars > 0)
+				{
+					newTrain.Cars = new CarBase[totalFollowingCars];
+					// Move following cars to new train
+					for (int i = 0; i < totalFollowingCars; i++)
+					{
+						newTrain.Cars[i] = baseTrain.Cars[Index + i + 1];
+						newTrain.Cars[i].baseTrain = newTrain;
+						newTrain.Cars[i].Index = i;
+					}
+					for (int i = 0; i < newTrain.Cars.Length; i++)
+					{
+						/*
+						 * Make visible if not part of player train
+						 * Otherwise uncoupling from cab then changing to exterior, they will still be hidden
+						 *
+						 * Need to do this after everything has been done in case objects refer to other bits
+						 */
+						newTrain.Cars[i].ChangeCarSection(CarSectionType.Exterior);
+						newTrain.Cars[i].FrontBogie.ChangeSection(0);
+						newTrain.Cars[i].RearBogie.ChangeSection(0);
+						newTrain.Cars[i].Coupler.ChangeSection(0);
+					}
+					Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalFollowingCars);
+					baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.connectedCar = baseTrain.Cars[baseTrain.Cars.Length - 1];
+				}
+				else
+				{
+					return;
+				}
+				Coupler.UncoupleSound.Play(this, false);
+				TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain, true);
+			}
+
+			if (baseTrain.DriverCar >= baseTrain.Cars.Length)
+			{
+				/*
+				 * The driver car is no longer in the train
+				 *
+				 * Look for a car with an interior view to substitute
+				 * If not found, this will stop at Car 0
+				 */
+
+				for (int i = baseTrain.Cars.Length; i > 0; i--)
+				{
+					baseTrain.DriverCar = i - 1;
+					if (!baseTrain.Cars[i - 1].HasInteriorView)
+					{
+						/*
+						 * Set the eye position to something vaguely sensible, rather than leaving it on the rails
+						 * Whilst there will be no cab, at least it's a bit more usable like this
+						 */
+						baseTrain.Cars[i - 1].InteriorCamera = new CameraAlignment()
+						{
+							Position = new Vector3(0, 2, 0.5 * Length)
+						};
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+
+			if (baseTrain.CameraCar >= baseTrain.Cars.Length)
+			{
+				baseTrain.CameraCar = baseTrain.DriverCar;
+			}
+			
 		}
 
 		/// <summary>Returns the combination of door states what encountered at the specified car in a train.</summary>

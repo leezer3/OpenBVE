@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Math;
-using OpenBveApi.Trains;
 using SoundManager;
 using TrainEditor2.Models.Sounds;
 using TrainManager.Car;
@@ -20,7 +19,6 @@ namespace TrainEditor2.Simulation.TrainManager
 			public Car() : base(null, 0)
 			{
 				Sounds = new CarSounds();
-				Specs = new CarPhysics();
 				Specs.IsMotorCar = true;
 			}
 

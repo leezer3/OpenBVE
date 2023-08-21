@@ -39,20 +39,14 @@ namespace TrainManager.Car
 
 		/// <summary>Whether the bogie is the rear bogie</summary>
 		private readonly bool Rear;
-
-		/// <summary>Holds a reference to the base train</summary>
-		// We don't want this to be read-only if we ever manage to uncouple cars...
-		// ReSharper disable once FieldCanBeMadeReadOnly.Local
-		private AbstractTrain baseTrain;
-
-		public Bogie(AbstractTrain train, CarBase car, bool IsRear)
+		
+		public Bogie(CarBase car, bool IsRear)
 		{
-			baseTrain = train;
 			baseCar = car;
 			Rear = IsRear;
 			CarSections = new CarSection[] { };
-			FrontAxle = new Axle(TrainManagerBase.currentHost, train, car);
-			RearAxle = new Axle(TrainManagerBase.currentHost, train, car);
+			FrontAxle = new Axle(TrainManagerBase.currentHost, car.baseTrain, car);
+			RearAxle = new Axle(TrainManagerBase.currentHost, car.baseTrain, car);
 		}
 
 		public void UpdateObjects(double TimeElapsed, bool ForceUpdate)
@@ -200,7 +194,7 @@ namespace TrainManager.Car
 					updatefunctions = true;
 				}
 
-				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(baseTrain, baseCar.Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
+				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(baseCar.baseTrain, baseCar.Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
 			}
 		}
 

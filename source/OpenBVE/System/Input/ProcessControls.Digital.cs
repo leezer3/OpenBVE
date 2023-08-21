@@ -991,6 +991,45 @@ namespace OpenBve
 						}
 
 						break;
+					case Translations.Command.UncoupleFront:
+						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.Exterior)
+						{
+							MessageManager.AddMessage(
+								Translations.GetInterfaceString("notification_switchexterior_uncouple"),
+								MessageDependency.None, GameMode.Expert,
+								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							return;
+						}
+
+						if (TrainManager.PlayerTrain.CameraCar == 0)
+						{
+							MessageManager.AddMessage(
+								Translations.GetInterfaceString("notification_unable_uncouple"),
+								MessageDependency.None, GameMode.Expert,
+								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							return;
+						}
+						MessageManager.AddMessage(
+							Translations.GetInterfaceString("notification_exterior_uncouplefront") + " " +TrainManager.PlayerTrain.CameraCar,
+							MessageDependency.None, GameMode.Expert,
+							MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].Uncouple(true, false);
+						break;
+					case Translations.Command.UncoupleRear:
+						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.Exterior)
+						{
+							MessageManager.AddMessage(
+								Translations.GetInterfaceString("notification_switchexterior_uncouple"),
+								MessageDependency.None, GameMode.Expert,
+								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							return;
+						}
+						MessageManager.AddMessage(
+							Translations.GetInterfaceString("notification_exterior_uncouplerear") + " " + TrainManager.PlayerTrain.CameraCar,
+							MessageDependency.None, GameMode.Expert,
+							MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].Uncouple(false, true);
+						break;
 					case Translations.Command.TimetableToggle:
 						// option: timetable
 						if (Interface.CurrentOptions.TimeTableStyle == TimeTableMode.None)
