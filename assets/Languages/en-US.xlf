@@ -1591,6 +1591,9 @@
 					<trans-unit id="exterior_uncouplefront">
 						<source>Uncoupling the front of car number</source>
 					</trans-unit>
+					<trans-unit id="fixed_uncouple">
+						<source>This coupler is fixed, and cannot uncouple.</source>
+					</trans-unit>
 				</group>
 				<group id="score">
 					<trans-unit id="overspeed">

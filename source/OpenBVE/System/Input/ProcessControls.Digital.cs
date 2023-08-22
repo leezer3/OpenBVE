@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LibRender2.Cameras;
 using LibRender2.Overlays;
 using LibRender2.Screens;
@@ -1009,6 +1009,15 @@ namespace OpenBve
 								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 							return;
 						}
+
+						if (!TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar + 1].Coupler.CanUncouple)
+						{
+							MessageManager.AddMessage(
+								Translations.GetInterfaceString("notification_fixed_uncouple"),
+								MessageDependency.None, GameMode.Expert,
+								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							return;
+						}
 						MessageManager.AddMessage(
 							Translations.GetInterfaceString("notification_exterior_uncouplefront") + " " +TrainManager.PlayerTrain.CameraCar,
 							MessageDependency.None, GameMode.Expert,
@@ -1020,6 +1029,14 @@ namespace OpenBve
 						{
 							MessageManager.AddMessage(
 								Translations.GetInterfaceString("notification_switchexterior_uncouple"),
+								MessageDependency.None, GameMode.Expert,
+								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							return;
+						}
+						if (!TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].Coupler.CanUncouple)
+						{
+							MessageManager.AddMessage(
+								Translations.GetInterfaceString("notification_fixed_uncouple"),
 								MessageDependency.None, GameMode.Expert,
 								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 							return;

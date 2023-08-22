@@ -116,6 +116,14 @@ namespace Train.OpenBve
 											Plugin.currentHost.LoadObject(f, Encoding.Default, out CouplerObjects[carIndex - 1]);
 										}
 										break;
+									case "canuncouple":
+										int nn;
+										NumberFormats.TryParseIntVb6(c.InnerText, out nn);
+										if (c.InnerText.ToLowerInvariant() == "false" || nn == 0)
+										{
+											Train.Cars[carIndex - 1].Coupler.CanUncouple = false;
+										}
+										break;
 								}
 							}
 						}
