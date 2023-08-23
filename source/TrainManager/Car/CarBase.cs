@@ -376,6 +376,7 @@ namespace TrainManager.Car
 				for (int i = 0; i < totalPreceedingCars; i++)
 				{
 					newTrain.Cars[i] = baseTrain.Cars[i];
+					newTrain.Cars[i].baseTrain = newTrain;
 				}
 
 				for (int i = totalPreceedingCars; i < baseTrain.Cars.Length; i++)

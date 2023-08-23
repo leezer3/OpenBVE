@@ -1,4 +1,4 @@
-﻿namespace OpenBveApi.Interface
+namespace OpenBveApi.Interface
 {
 	/// <summary>Contains functions for providing translations</summary>
 	public static partial class Translations
@@ -264,6 +264,9 @@
 			new CommandInfo(Command.AccessibilityCurrentSpeed, CommandType.Digital, "ACCESSIBILITY_CURRENT_SPEED"),
 			new CommandInfo(Command.AccessibilityNextSignal, CommandType.Digital, "ACCESSIBILITY_NEXT_SIGNAL"),
 			new CommandInfo(Command.AccessibilityNextStation, CommandType.Digital, "ACCESSIBILITY_NEXT_STATION"),
+			// Coupling
+			new CommandInfo(Command.UncoupleFront, CommandType.Digital, "UNCOUPLE_FRONT"),
+			new CommandInfo(Command.UncoupleRear, CommandType.Digital, "UNCOUPLE_REAR")
 		};
 	}
 }

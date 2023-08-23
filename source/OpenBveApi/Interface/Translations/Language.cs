@@ -265,6 +265,30 @@ namespace OpenBveApi.Interface
 						InterfaceStrings[i].Name = InterfaceStrings[i].Name.Replace("openbve_", string.Empty);
 					}
 				}
+
+				for (int i = 0; i < myCommandInfos.Length; i++)
+				{
+					// try to set any untranslated commandinfo descriptions to something other than N/A
+					if (myCommandInfos[i].Command != Command.None && myCommandInfos[i].Description == "N/A")
+					{
+						for (int j = 0; j < Translations.AvailableLanguages.Count; j++)
+						{
+							if (Translations.AvailableLanguages[j].LanguageCode == "en-US")
+							{
+								for (int k = 0; k < Translations.AvailableLanguages[j].myCommandInfos.Length; k++)
+								{
+									if (Translations.AvailableLanguages[j].myCommandInfos[k].Command == myCommandInfos[i].Command)
+									{
+										myCommandInfos[i].Description = Translations.AvailableLanguages[j].myCommandInfos[k].Description;
+										break;
+									}
+								}
+								
+							}
+						}
+					}
+
+				}
 			}
 
 			private void ExportUnits(string prefix, XliffFile.Unit[] units, List<InterfaceString> strings)

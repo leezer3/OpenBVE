@@ -2483,7 +2483,7 @@
 						<source>Activates or deactivates the constant speed device</source>
 						<target>Activa o desactiva el dispositiu de velocitat constant.</target>
 					</trans-unit>
-					<trans-unit id="play_micsounds">
+					<trans-unit id="play_mic_sounds">
 						<source>Activates or deactivates the system microphone soundsource</source>
 						<target>Activates or deactivates the system microphone soundsource</target>
 					</trans-unit>

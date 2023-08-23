@@ -2494,7 +2494,7 @@
 						<source>Activates or deactivates the constant speed device</source>
 						<target>开关定速设备</target>
 					</trans-unit>
-					<trans-unit id="play_micsounds">
+					<trans-unit id="play_mic_sounds">
 						<source>Activates or deactivates the system microphone soundsource</source>
 						<target>Activates or deactivates the system microphone soundsource</target>
 					</trans-unit>

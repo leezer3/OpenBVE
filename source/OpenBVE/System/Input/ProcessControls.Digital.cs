@@ -1033,6 +1033,16 @@ namespace OpenBve
 								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 							return;
 						}
+
+						if (TrainManager.PlayerTrain.CameraCar == TrainManager.PlayerTrain.Cars.Length - 1)
+						{
+							MessageManager.AddMessage(
+								Translations.GetInterfaceString("notification_unable_uncouple"),
+								MessageDependency.None, GameMode.Expert,
+								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							return;
+						}
+
 						if (!TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].Coupler.CanUncouple)
 						{
 							MessageManager.AddMessage(

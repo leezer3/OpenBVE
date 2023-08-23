@@ -26,6 +26,8 @@ namespace TrainManager.Car
 		/// <summary>The sound played when this coupler is uncoupled</summary>
 		public CarSound UncoupleSound;
 
+		private bool canUncouple;
+
 		internal AbstractTrain baseTrain;
 
 		public Coupler(double minimumDistance, double maximumDistance, CarBase frontCar, CarBase rearCar, AbstractTrain train)
@@ -39,6 +41,13 @@ namespace TrainManager.Car
 			baseTrain = train;
 			ChangeSection(-1);
 			UncoupleSound = new CarSound();
+			canUncouple = true;
+		}
+
+		public override bool CanUncouple
+		{
+			get => connectedCar != baseCar && canUncouple;
+			set => canUncouple = value;
 		}
 
 		public void UpdateObjects(double TimeElapsed, bool ForceUpdate)
