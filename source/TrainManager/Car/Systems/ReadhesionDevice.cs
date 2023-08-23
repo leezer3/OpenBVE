@@ -67,9 +67,7 @@ namespace TrainManager.Car
 			}
 		}
 
-		/// <summary>Called once a frame to update the re-adhesion device when powering</summary>
-		/// <param name="CurrentAcceleration">The current acceleration output</param>
-		public override void Update(double CurrentAcceleration)
+		public override void Update(double TimeElapsed, double CurrentAcceleration)
 		{
 			if (TrainManagerBase.currentHost.InGameTime < NextUpdateTime)
 			{

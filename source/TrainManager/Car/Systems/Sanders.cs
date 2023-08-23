@@ -36,7 +36,7 @@ namespace TrainManager.Car.Systems
 			Type = type;
 		}
 
-		public override void Update(double timeElapsed)
+		public override void Update(double timeElapsed, double currentAcceleration)
 		{
 			if (Type == SandersType.NotFitted)
 			{
@@ -51,6 +51,13 @@ namespace TrainManager.Car.Systems
 					{
 						LoopSound.Play(Car, true);
 					}
+				}
+			}
+			else
+			{
+				if (LoopSound != null)
+				{
+					LoopSound.Stop();
 				}
 			}
 

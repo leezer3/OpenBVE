@@ -12,8 +12,9 @@
 		}
 
 		/// <summary>Called once a frame to update the re-adhesion device when powering</summary>
+		/// <param name="TimeElapsed">The elapsed time</param>
 		/// <param name="CurrentAcceleration">The current acceleration output</param>
-		public virtual void Update(double CurrentAcceleration)
+		public virtual void Update(double TimeElapsed, double CurrentAcceleration)
 		{
 
 		}

@@ -1350,7 +1350,7 @@ namespace TrainManager.Car
 							}
 
 							// Update readhesion device
-							this.ReAdhesionDevice.Update(a);
+							this.ReAdhesionDevice.Update(TimeElapsed, a);
 							// Update constant speed device
 
 							this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed,
