@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Trains;
 using TrainManager;
 using TrainManager.BrakeSystems;
@@ -45,17 +45,7 @@ namespace ObjectViewer.Trains
 		private static TrainBase CreateDummyTrain()
 		{
 			TrainBase train = new TrainBase(TrainState.Available);
-			train.Handles.Power = new PowerHandle(Specs.PowerNotches, Specs.PowerNotches, new double[] { }, new double[] { }, train);
-			if (Specs.IsAirBrake)
-			{
-				train.Handles.Brake = new AirBrakeHandle(train);
-			}
-			else
-			{
-				train.Handles.Brake = new BrakeHandle(Specs.BrakeNotches, Specs.BrakeNotches, null, new double[] { }, new double[] { }, train);
-				train.Handles.HasHoldBrake = Specs.HasHoldBrake;
-			}
-			train.Handles.HoldBrake = new HoldBrakeHandle(train);
+			
 			train.Specs.HasConstSpeed = Specs.HasConstSpeed;
 
 			Array.Resize(ref train.Cars, Specs.NumberOfCars);
@@ -84,6 +74,20 @@ namespace ObjectViewer.Trains
 				train.Cars[i].Doors[1] = new Door(1, 1000.0, 0.0);
 			}
 
+			CabHandles Handles = new CabHandles(train)
+			{
+				Power = new PowerHandle(Specs.PowerNotches, Specs.PowerNotches, new double[] { }, new double[] { }, train),
+			};
+			if (Specs.IsAirBrake)
+			{
+				Handles.Brake = new AirBrakeHandle(train);
+			}
+			else
+			{
+				Handles.Brake = new BrakeHandle(Specs.BrakeNotches, Specs.BrakeNotches, null, new double[] { }, new double[] { }, train);
+				Handles.HasHoldBrake = Specs.HasHoldBrake;
+			}
+			train.Cars[train.DriverCar].Handles = Handles;
 			return train;
 		}
 

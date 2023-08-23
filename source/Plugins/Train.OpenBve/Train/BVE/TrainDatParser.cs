@@ -230,7 +230,10 @@ namespace Train.OpenBve
 			double DoorTolerance = 0.0;
 			ReadhesionDeviceType ReAdhesionDevice = ReadhesionDeviceType.TypeA;
 			PassAlarmType passAlarm = PassAlarmType.None;
-			Train.Handles.HasLocoBrake = false;
+			CabHandles Handles = new CabHandles(Train)
+			{
+				HasLocoBrake = false
+			};
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
 			double electricBrakeDelayUp = 0, electricBrakeDelayDown = 0;
 			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1, locoBrakeType = 0, driverPowerNotches = 0, driverBrakeNotches = 0;
@@ -603,12 +606,12 @@ namespace Train.OpenBve
 												break;
 											case 1:
 												//Notched air brake
-												Train.Handles.HasLocoBrake = true;
+												Handles.HasLocoBrake = true;
 												locomotiveBrakeType = BrakeSystemType.ElectromagneticStraightAirBrake;
 												break;
 											case 2:
 												//Automatic air brake
-												Train.Handles.HasLocoBrake = true;
+												Handles.HasLocoBrake = true;
 												locomotiveBrakeType = BrakeSystemType.AutomaticAirBrake;
 												break;
 										}
@@ -661,19 +664,19 @@ namespace Train.OpenBve
 										switch (a)
 										{
 											case 0:
-												Train.Handles.HandleType = HandleType.TwinHandle;
+												Handles.HandleType = HandleType.TwinHandle;
 												break;
 											case 1:
-												Train.Handles.HandleType = HandleType.SingleHandle;
+												Handles.HandleType = HandleType.SingleHandle;
 												break;
 											case 2:
-												Train.Handles.HandleType = HandleType.InterlockedTwinHandle;
+												Handles.HandleType = HandleType.InterlockedTwinHandle;
 												break;
 											case 3:
-												Train.Handles.HandleType = HandleType.InterlockedReverserHandle;
+												Handles.HandleType = HandleType.InterlockedReverserHandle;
 												break;
 											default:
-												Train.Handles.HandleType = HandleType.TwinHandle;
+												Handles.HandleType = HandleType.TwinHandle;
 												break;
 										}
 										break;
@@ -865,7 +868,7 @@ namespace Train.OpenBve
 									case 3:
 										Train.Specs.HasConstSpeed = a == 1.0; break;
 									case 4:
-										Train.Handles.HasHoldBrake = a == 1.0; break;
+										Handles.HasHoldBrake = a == 1.0; break;
 									case 5:
 										int dt = (int) Math.Round(a);
 										if (dt < 4 && dt > -1)
@@ -1026,7 +1029,7 @@ namespace Train.OpenBve
 				}
 				driverBrakeNotches = brakeNotches;
 			}
-			Train.Handles.Power = new PowerHandle(powerNotches, driverPowerNotches, powerDelayUp, powerDelayDown, Train);
+			Handles.Power = new PowerHandle(powerNotches, driverPowerNotches, powerDelayUp, powerDelayDown, Train);
 			if (powerReduceSteps != -1)
 			{
 				Train.Handles.Power.ReduceSteps = powerReduceSteps;
@@ -1034,24 +1037,23 @@ namespace Train.OpenBve
 
 			if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
 			{
-				Train.Handles.Brake = new AirBrakeHandle(Train);
+				Handles.Brake = new AirBrakeHandle(Train);
 			}
 			else
 			{
-				Train.Handles.Brake = new BrakeHandle(brakeNotches, driverBrakeNotches, Train.Handles.EmergencyBrake, brakeDelayUp, brakeDelayDown, Train);
+				Handles.Brake = new BrakeHandle(brakeNotches, driverBrakeNotches, Train.Handles.EmergencyBrake, brakeDelayUp, brakeDelayDown, Train);
 				
 			}
 
 			if (locomotiveBrakeType == BrakeSystemType.AutomaticAirBrake)
 			{
-				Train.Handles.LocoBrake = new LocoAirBrakeHandle(Train);
+				Handles.LocoBrake = new LocoAirBrakeHandle(Train);
 			}
 			else
 			{
-				Train.Handles.LocoBrake = new LocoBrakeHandle(locoBrakeNotches, Train.Handles.EmergencyBrake, locoBrakeDelayUp, locoBrakeDelayDown, Train);
+				Handles.LocoBrake = new LocoBrakeHandle(locoBrakeNotches, Train.Handles.EmergencyBrake, locoBrakeDelayUp, locoBrakeDelayDown, Train);
 			}
-			Train.Handles.LocoBrakeType = (LocoBrakeType)locoBrakeType;
-			Train.Handles.HoldBrake = new HoldBrakeHandle(Train);
+			Handles.LocoBrakeType = (LocoBrakeType)locoBrakeType;
 			// apply data
 			if (MotorCars < 1) MotorCars = 1;
 			if (TrailerCars < 0) TrailerCars = 0;
@@ -1256,8 +1258,8 @@ namespace Train.OpenBve
 			Train.Handles.Brake.Safety = 0;
 			Train.Handles.Brake.Actual = 0;
 			if (trainBrakeType == BrakeSystemType.AutomaticAirBrake) {
-				Train.Handles.HandleType = HandleType.TwinHandle;
-				Train.Handles.HasHoldBrake = false;
+				Handles.HandleType = HandleType.TwinHandle;
+				Handles.HasHoldBrake = false;
 			}
 			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm, Train.Cars[DriverCar]);
 			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
@@ -1414,6 +1416,7 @@ namespace Train.OpenBve
 			Train.Cars[Train.DriverCar].Driver.X = Driver.X;
 			Train.Cars[Train.DriverCar].Driver.Y = Driver.Y;
 			Train.Cars[Train.DriverCar].Driver.Z = 0.5 * CarLength + Driver.Z;
+			Train.Cars[Train.DriverCar].Handles = Handles;
 			if (Train.IsPlayerTrain)
 			{
 				Train.Cars[DriverCar].HasInteriorView = true;

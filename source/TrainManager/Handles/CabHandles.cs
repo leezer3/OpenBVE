@@ -1,10 +1,12 @@
-﻿namespace TrainManager.Handles
+﻿using TrainManager.Trains;
+
+namespace TrainManager.Handles
 {
 	/// <summary>The cab handles (controls) of a train</summary>
-	public struct CabHandles
+	public class CabHandles
 	{
 		/// <summary>The Reverser</summary>
-		public ReverserHandle Reverser;
+		public readonly ReverserHandle Reverser;
 		/// <summary>The Power</summary>
 		public PowerHandle Power;
 		/// <summary>The Brake</summary>
@@ -12,9 +14,9 @@
 		/// <summary>The Loco brake handle</summary>
 		public AbstractHandle LocoBrake;
 		/// <summary>The Emergency Brake</summary>
-		public EmergencyHandle EmergencyBrake;
+		public readonly EmergencyHandle EmergencyBrake;
 		/// <summary>The Hold Brake</summary>
-		public HoldBrakeHandle HoldBrake;
+		public readonly HoldBrakeHandle HoldBrake;
 		/// <summary>Whether the train has a combined power and brake handle</summary>
 		public HandleType HandleType;
 		/// <summary>Whether the train has the Hold Brake fitted</summary>
@@ -23,5 +25,12 @@
 		public bool HasLocoBrake;
 		/// <summary>The loco brake type</summary>
 		public LocoBrakeType LocoBrakeType;
+
+		public CabHandles(TrainBase train)
+		{
+			Reverser = new ReverserHandle(train);
+			EmergencyBrake = new EmergencyHandle(train);
+			HoldBrake = new HoldBrakeHandle(train);
+		}
 	}
 }

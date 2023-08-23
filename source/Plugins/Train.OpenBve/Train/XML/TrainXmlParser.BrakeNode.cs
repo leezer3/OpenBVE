@@ -10,7 +10,7 @@ namespace Train.OpenBve
 {
 	partial class TrainXmlParser
 	{
-		private void ParseBrakeNode(XmlNode Node, string fileName, int Car, ref TrainBase Train)
+		private void ParseBrakeNode(XmlNode Node, string fileName, int Car, ref TrainBase Train, ref CabHandles Handles)
 		{
 			double compressorRate = 5000.0, compressorMinimumPressure = 690000.0, compressorMaximumPressure = 780000.0;
 			double auxiliaryReservoirChargeRate = 200000.0;
@@ -228,7 +228,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case "handle":
-						ParseHandleNode(c, ref Train.Handles.Brake, Car, Train, fileName);
+						ParseHandleNode(c, ref Handles.Brake, Car, Train, fileName);
 						break;
 					
 				}

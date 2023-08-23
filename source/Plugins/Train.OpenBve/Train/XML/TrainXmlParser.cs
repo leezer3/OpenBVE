@@ -7,6 +7,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using TrainManager.Handles;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -38,6 +39,7 @@ namespace Train.OpenBve
 			CarObjectsReversed = new bool[Train.Cars.Length];
 			BogieObjectsReversed = new bool[Train.Cars.Length * 2];
 			interiorVisible = new bool[Train.Cars.Length];
+			CabHandles Handles = Train.Cars[Train.DriverCar].Handles;
 			if (currentXML.DocumentElement != null)
 			{
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/DriverCar");
@@ -79,7 +81,7 @@ namespace Train.OpenBve
 					{
 						if (DocumentNodes[i].Name == "Car")
 						{
-							ParseCarNode(DocumentNodes[i], fileName, carIndex, ref Train, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
+							ParseCarNode(DocumentNodes[i], fileName, carIndex, ref Train, ref Handles, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
 						}
 						else
 						{
@@ -140,7 +142,7 @@ namespace Train.OpenBve
 							//We need to save and restore the current path to make relative paths within the child file work correctly
 							string savedPath = currentPath;
 							currentPath = Path.GetDirectoryName(childFile);
-							ParseCarNode(childNodes[0], fileName, carIndex, ref Train, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
+							ParseCarNode(childNodes[0], fileName, carIndex, ref Train, ref Handles, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
 							currentPath = savedPath;
 						}
 						catch(Exception ex)
@@ -267,6 +269,7 @@ namespace Train.OpenBve
 				/*
 				 * Add final properties and stuff
 				 */
+				Train.Cars[Train.DriverCar].Handles = Handles;
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
 					if (CarObjects[i] != null)

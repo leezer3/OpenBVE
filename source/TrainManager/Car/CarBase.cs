@@ -28,6 +28,9 @@ namespace TrainManager.Car
 	{
 		/// <summary>A reference to the base train</summary>
 		public TrainBase baseTrain;
+		/// <summary>The cab handles</summary>
+		/// <remarks>May be null</remarks>
+		public CabHandles Handles;
 		/// <summary>The front bogie</summary>
 		public Bogie FrontBogie;
 		/// <summary>The rear bogie</summary>
@@ -360,15 +363,6 @@ namespace TrainManager.Car
 			}
 			// Create new train
 			TrainBase newTrain = new TrainBase(TrainState.Available);
-			newTrain.Handles.Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain)
-			{
-				DelayedChanges = new HandleChange[0]
-			};
-			newTrain.Handles.Brake = new BrakeHandle(0, 0, newTrain.Handles.EmergencyBrake, new double[0], new double[0], newTrain)
-			{
-				DelayedChanges = new HandleChange[0]
-			};
-			newTrain.Handles.HoldBrake = new HoldBrakeHandle(newTrain);
 			if (Front)
 			{
 				int totalPreceedingCars = trainCarIndex;
@@ -391,6 +385,17 @@ namespace TrainManager.Car
 				{
 					baseTrain.DriverCar -= totalPreceedingCars;
 				}
+
+				newTrain.DriverCar = 0;
+				CabHandles Handles = new CabHandles(newTrain)
+				{
+					Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain)
+					{
+						DelayedChanges = new HandleChange[0]
+					},
+					Brake = new BrakeHandle(0, 0, newTrain.Handles.EmergencyBrake, new double[0], new double[0], newTrain)
+				};
+				newTrain.Cars[0].Handles = Handles;
 			}
 			
 			if (Rear)
