@@ -1,6 +1,6 @@
 # Building openBVE from source
 
-This file is a WIP set of instructions for building openBVE from source.
+This file is a WIP set of instructions for building OpenBVE from source.
 
 ## Prerequisites
 
