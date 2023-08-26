@@ -20,10 +20,7 @@ namespace OpenBveApi.Math
 		/// <summary>A Vector3 representing the X Y and Z components</summary>
 		public Vector3 Xyz
 		{
-			get
-			{
-				return new Vector3(X, Y, Z);
-			}
+			get => new Vector3(X, Y, Z);
 			set
 			{
 				X = value.X;

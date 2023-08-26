@@ -44,10 +44,7 @@ namespace OpenBveApi.Math
 		/// <summary>The first column of the matrix</summary>
 		public Vector4 Column0
 		{
-			get
-			{
-				return new Vector4(Row0.X, Row1.X, Row2.X, Row3.X);
-			}
+			get => new Vector4(Row0.X, Row1.X, Row2.X, Row3.X);
 			set
 			{
 				Row0.X = value.X;
@@ -60,10 +57,7 @@ namespace OpenBveApi.Math
 		/// <summary>The second column of the matrix</summary>
 		public Vector4 Column1
 		{
-			get
-			{
-				return new Vector4(Row0.Y, Row1.Y, Row2.Y, Row3.Y);
-			}
+			get => new Vector4(Row0.Y, Row1.Y, Row2.Y, Row3.Y);
 			set
 			{
 				Row0.Y = value.X;
@@ -76,10 +70,7 @@ namespace OpenBveApi.Math
 		/// <summary>The third column of the matrix</summary>
 		public Vector4 Column2
 		{
-			get
-			{
-				return new Vector4(Row0.Z, Row1.Z, Row2.Z, Row3.Z);
-			}
+			get => new Vector4(Row0.Z, Row1.Z, Row2.Z, Row3.Z);
 			set
 			{
 				Row0.Z = value.X;
@@ -92,10 +83,7 @@ namespace OpenBveApi.Math
 		/// <summary>The fourth column of the matrix</summary>
 		public Vector4 Column3
 		{
-			get
-			{
-				return new Vector4(Row0.W, Row1.W, Row2.W, Row3.W);
-			}
+			get => new Vector4(Row0.W, Row1.W, Row2.W, Row3.W);
 			set
 			{
 				Row0.W = value.X;
@@ -557,21 +545,15 @@ namespace OpenBveApi.Math
 		/// <summary>
 		/// The determinant of this matrix
 		/// </summary>
-		public double Determinant
-		{
-			get
-			{
-				return
-					Row0.X * Row1.Y * Row2.Z * Row3.W - Row0.X * Row1.Y * Row2.W * Row3.Z + Row0.X * Row1.Z * Row2.W * Row3.Y - Row0.X * Row1.Z * Row2.Y * Row3.W
-					+ Row0.X * Row1.W * Row2.Y * Row3.Z - Row0.X * Row1.W * Row2.Z * Row3.Y - Row0.Y * Row1.Z * Row2.W * Row3.X + Row0.Y * Row1.Z * Row2.X * Row3.W
-					- Row0.Y * Row1.W * Row2.X * Row3.Z + Row0.Y * Row1.W * Row2.Z * Row3.X - Row0.Y * Row1.X * Row2.Z * Row3.W + Row0.Y * Row1.X * Row2.W * Row3.Z
-					                                                                                                            + Row0.Z * Row1.W * Row2.X * Row3.Y - Row0.Z * Row1.W * Row2.Y * Row3.X + Row0.Z * Row1.X * Row2.Y * Row3.W - Row0.Z * Row1.X * Row2.W * Row3.Y
-					+ Row0.Z * Row1.Y * Row2.W * Row3.X - Row0.Z * Row1.Y * Row2.X * Row3.W - Row0.W * Row1.X * Row2.Y * Row3.Z + Row0.W * Row1.X * Row2.Z * Row3.Y
-					- Row0.W * Row1.Y * Row2.Z * Row3.X + Row0.W * Row1.Y * Row2.X * Row3.Z - Row0.W * Row1.Z * Row2.X * Row3.Y + Row0.W * Row1.Z * Row2.Y * Row3.X;
-			}
-		}
-		
-        /// <summary>
+		public double Determinant =>
+			Row0.X * Row1.Y * Row2.Z * Row3.W - Row0.X * Row1.Y * Row2.W * Row3.Z + Row0.X * Row1.Z * Row2.W * Row3.Y - Row0.X * Row1.Z * Row2.Y * Row3.W
+			+ Row0.X * Row1.W * Row2.Y * Row3.Z - Row0.X * Row1.W * Row2.Z * Row3.Y - Row0.Y * Row1.Z * Row2.W * Row3.X + Row0.Y * Row1.Z * Row2.X * Row3.W
+			- Row0.Y * Row1.W * Row2.X * Row3.Z + Row0.Y * Row1.W * Row2.Z * Row3.X - Row0.Y * Row1.X * Row2.Z * Row3.W + Row0.Y * Row1.X * Row2.W * Row3.Z
+			                                                                                                            + Row0.Z * Row1.W * Row2.X * Row3.Y - Row0.Z * Row1.W * Row2.Y * Row3.X + Row0.Z * Row1.X * Row2.Y * Row3.W - Row0.Z * Row1.X * Row2.W * Row3.Y
+			+ Row0.Z * Row1.Y * Row2.W * Row3.X - Row0.Z * Row1.Y * Row2.X * Row3.W - Row0.W * Row1.X * Row2.Y * Row3.Z + Row0.W * Row1.X * Row2.Z * Row3.Y
+			- Row0.W * Row1.Y * Row2.Z * Row3.X + Row0.W * Row1.Y * Row2.X * Row3.Z - Row0.W * Row1.Z * Row2.X * Row3.Y + Row0.W * Row1.Z * Row2.Y * Row3.X;
+
+		/// <summary>
         /// Calculate the inverse of the given matrix
         /// </summary>
         /// <param name="mat">The matrix to invert</param>

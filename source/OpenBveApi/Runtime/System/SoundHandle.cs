@@ -13,53 +13,29 @@
 		protected double MyPitch;
 
 		/// <summary>Gets whether the sound is still playing. Once this returns false, the sound handle is invalid.</summary>
-		public bool Playing
-		{
-			get
-			{
-				return this.MyValid;
-			}
-		}
+		public bool Playing => MyValid;
 
 		/// <summary>Gets whether the sound has stopped. Once this returns true, the sound handle is invalid.</summary>
-		public bool Stopped
-		{
-			get
-			{
-				return !this.MyValid;
-			}
-		}
+		public bool Stopped => !MyValid;
 
 		/// <summary>Gets or sets the volume. A value of 1.0 represents nominal volume.</summary>
 		public double Volume
 		{
-			get
-			{
-				return this.MyVolume;
-			}
-			set
-			{
-				this.MyVolume = value;
-			}
+			get => MyVolume;
+			set => MyVolume = value;
 		}
 
 		/// <summary>Gets or sets the pitch. A value of 1.0 represents nominal pitch.</summary>
 		public double Pitch
 		{
-			get
-			{
-				return this.MyPitch;
-			}
-			set
-			{
-				this.MyPitch = value;
-			}
+			get => MyPitch;
+			set => MyPitch = value;
 		}
 
 		/// <summary>Stops the sound and invalidates the handle.</summary>
 		public void Stop()
 		{
-			this.MyValid = false;
+			MyValid = false;
 		}
 	}
 }

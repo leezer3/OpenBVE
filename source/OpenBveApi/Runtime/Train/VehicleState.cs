@@ -49,121 +49,43 @@ namespace OpenBveApi.Runtime
 		private readonly bool MyWheelSlip;
 
 		/// <summary>Gets the location of the front of the train, in meters.</summary>
-		public double Location
-		{
-			get
-			{
-				return this.MyLocation;
-			}
-		}
+		public double Location => MyLocation;
 
 		/// <summary>Gets the speed of the train.</summary>
-		public Speed Speed
-		{
-			get
-			{
-				return this.MySpeed;
-			}
-		}
+		public Speed Speed => MySpeed;
 
 		/// <summary>Gets the pressure in the brake cylinder, in pascal.</summary>
-		public double BcPressure
-		{
-			get
-			{
-				return this.MyBcPressure;
-			}
-		}
+		public double BcPressure => MyBcPressure;
 
 		/// <summary>Gets the pressure in the main reservoir, in pascal.</summary>
-		public double MrPressure
-		{
-			get
-			{
-				return this.MyMrPressure;
-			}
-		}
+		public double MrPressure => MyMrPressure;
 
 		/// <summary>Gets the pressure in the emergency reservoir, in pascal.</summary>
-		public double ErPressure
-		{
-			get
-			{
-				return this.MyErPressure;
-			}
-		}
+		public double ErPressure => MyErPressure;
 
 		/// <summary>Gets the pressure in the brake pipe, in pascal.</summary>
-		public double BpPressure
-		{
-			get
-			{
-				return this.MyBpPressure;
-			}
-		}
+		public double BpPressure => MyBpPressure;
 
 		/// <summary>Gets the pressure in the straight air pipe, in pascal.</summary>
-		public double SapPressure
-		{
-			get
-			{
-				return this.MySapPressure;
-			}
-		}
+		public double SapPressure => MySapPressure;
 
 		/// <summary>Gets the curve radius at the front axle of the driver's car in m.</summary>
-		public double Radius
-		{
-			get
-			{
-				return this.MyRadius;
-			}
-		}
+		public double Radius => MyRadius;
 
 		/// <summary>Gets the curve cant at the front axle of the driver's car in mm.</summary>
-		public double Cant
-		{
-			get
-			{
-				return this.MyCant;
-			}
-		}
+		public double Cant => MyCant;
 
 		/// <summary>Gets the track pitch value at the front axle of the driver's car.</summary>
-		public double Pitch
-		{
-			get
-			{
-				return this.MyPitch;
-			}
-		}
+		public double Pitch => MyPitch;
 
 		/// <summary>Gets the track pitch value at the front axle of the driver's car.</summary>
-		public double RainIntensity
-		{
-			get
-			{
-				return this.MyRainIntensity;
-			}
-		}
+		public double RainIntensity => MyRainIntensity;
 
 		/// <summary>Gets the track pitch value at the front axle of the driver's car.</summary>
-		public double Adhesion
-		{
-			get
-			{
-				return this.MyAdhesion;
-			}
-		}
+		public double Adhesion => MyAdhesion;
 
 		/// <summary>Gets the track pitch value at the front axle of the driver's car.</summary>
-		public bool WheelSlip
-		{
-			get
-			{
-				return this.MyWheelSlip;
-			}
-		}
+		public bool WheelSlip => MyWheelSlip;
 
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="location">The location of the front of the train, in meters.</param>
@@ -177,22 +99,22 @@ namespace OpenBveApi.Runtime
 		/// <param name="Follower"></param>
 		public VehicleState(double location, Speed speed, double bcPressure, double mrPressure, double erPressure, double bpPressure, double sapPressure, bool wheelSlip, TrackFollower Follower)
 		{
-			this.MyRadius = Radius;
-			this.MyCant = Cant;
-			this.MyPitch = Pitch;
-			this.MyLocation = location;
-			this.MySpeed = speed;
-			this.MyBcPressure = bcPressure;
-			this.MyMrPressure = mrPressure;
-			this.MyErPressure = erPressure;
-			this.MyBpPressure = bpPressure;
-			this.MySapPressure = sapPressure;
-			this.MyRadius = Follower.CurveRadius;
-			this.MyCant = Follower.CurveCant;
-			this.MyPitch = Follower.Pitch;
-			this.MyRainIntensity = Follower.RainIntensity;
-			this.MyAdhesion = Follower.AdhesionMultiplier;
-			this.MyWheelSlip = wheelSlip;
+			MyRadius = Radius;
+			MyCant = Cant;
+			MyPitch = Pitch;
+			MyLocation = location;
+			MySpeed = speed;
+			MyBcPressure = bcPressure;
+			MyMrPressure = mrPressure;
+			MyErPressure = erPressure;
+			MyBpPressure = bpPressure;
+			MySapPressure = sapPressure;
+			MyRadius = Follower.CurveRadius;
+			MyCant = Follower.CurveCant;
+			MyPitch = Follower.Pitch;
+			MyRainIntensity = Follower.RainIntensity;
+			MyAdhesion = Follower.AdhesionMultiplier;
+			MyWheelSlip = wheelSlip;
 		}
 
 		/// <summary>Provides the overload for plugins built against versions of the OpenBVE API below 1.8.4.2.</summary>
@@ -224,20 +146,20 @@ namespace OpenBveApi.Runtime
 		/// <param name="Pitch">The pitch value at the front of the train.</param>
 		public VehicleState(double location, Speed speed, double bcPressure, double mrPressure, double erPressure, double bpPressure, double sapPressure, double Radius, double Cant, double Pitch)
 		{
-			this.MyRadius = Radius;
-			this.MyCant = Cant;
-			this.MyPitch = Pitch;
-			this.MyLocation = location;
-			this.MySpeed = speed;
-			this.MyBcPressure = bcPressure;
-			this.MyMrPressure = mrPressure;
-			this.MyErPressure = erPressure;
-			this.MyBpPressure = bpPressure;
-			this.MySapPressure = sapPressure;
-			this.MyRadius = Radius;
-			this.MyCant = Cant;
-			this.MyPitch = Pitch;
-			this.MyWheelSlip = false;
+			MyRadius = Radius;
+			MyCant = Cant;
+			MyPitch = Pitch;
+			MyLocation = location;
+			MySpeed = speed;
+			MyBcPressure = bcPressure;
+			MyMrPressure = mrPressure;
+			MyErPressure = erPressure;
+			MyBpPressure = bpPressure;
+			MySapPressure = sapPressure;
+			MyRadius = Radius;
+			MyCant = Cant;
+			MyPitch = Pitch;
+			MyWheelSlip = false;
 		}
 
 		/// <summary>Provides the overload for plugins built against versions of the OpenBVE API below 1.4.4.0.</summary>

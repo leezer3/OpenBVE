@@ -35,8 +35,7 @@ namespace OpenBveApi.Objects
 		/// <returns></returns>
 		public static double GetDistanceFactor(Matrix4D ModelMatrix, VertexTemplate[] Vertices, ref MeshFace Face, ushort GlowAttenuationData)
 		{
-			GlowAttenuationMode mode;
-			return GetDistanceFactor(ModelMatrix, Vertices, ref Face, GlowAttenuationData, out mode);
+			return GetDistanceFactor(ModelMatrix, Vertices, ref Face, GlowAttenuationData, out _);
 		}
 
 		/// <summary>Gets the current intensity glow intensity, using the glow attenuation factor</summary>

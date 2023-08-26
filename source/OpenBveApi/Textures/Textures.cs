@@ -89,12 +89,12 @@ namespace OpenBveApi.Textures {
 				throw new ArgumentException("The data bytes are not of the expected length.");
 			}
 
-			this.MySize.X = width;
-			this.MySize.Y = height;
-			this.MyBitsPerPixel = bitsPerPixel;
-			this.MyBytes = new byte[1][];
-			this.MyBytes[0] = bytes;
-			this.MyPalette = palette;
+			MySize.X = width;
+			MySize.Y = height;
+			MyBitsPerPixel = bitsPerPixel;
+			MyBytes = new byte[1][];
+			MyBytes[0] = bytes;
+			MyPalette = palette;
 		}
 
 		/// <summary>Creates a new instance of this class.</summary>
@@ -123,16 +123,16 @@ namespace OpenBveApi.Textures {
 				throw new ArgumentException("The data bytes are not of the expected length.");
 			}
 
-			this.Origin = new ByteArrayOrigin(width, height, bytes, frameInterval);
-			this.MySize.X = width;
-			this.MySize.Y = height;
-			this.MyBitsPerPixel = bitsPerPixel;
-			this.MyBytes = bytes;
-			this.MyPalette = null;
-			this.MultipleFrames = true;
-			this.FrameInterval = frameInterval;
-			this.TotalFrames = bytes.Length;
-			this.MyOpenGlTextures = new OpenGlTexture[bytes.Length][];
+			Origin = new ByteArrayOrigin(width, height, bytes, frameInterval);
+			MySize.X = width;
+			MySize.Y = height;
+			MyBitsPerPixel = bitsPerPixel;
+			MyBytes = bytes;
+			MyPalette = null;
+			MultipleFrames = true;
+			FrameInterval = frameInterval;
+			TotalFrames = bytes.Length;
+			MyOpenGlTextures = new OpenGlTexture[bytes.Length][];
 			for (int i = 0; i < bytes.Length; i++)
 			{
 				MyOpenGlTextures[i] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
@@ -145,9 +145,9 @@ namespace OpenBveApi.Textures {
 		/// <param name="currentHost">The callback function to the host application</param>
 		public Texture(string path, TextureParameters parameters, Hosts.HostInterface currentHost)
 		{
-			this.Origin = new PathOrigin(path, parameters, currentHost);
-			this.MyOpenGlTextures = new OpenGlTexture[1][];
-			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			Origin = new PathOrigin(path, parameters, currentHost);
+			MyOpenGlTextures = new OpenGlTexture[1][];
+			MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 			
 		}
 
@@ -155,9 +155,9 @@ namespace OpenBveApi.Textures {
 		/// <param name="bitmap">The System.Drawing.Bitmap that contains the texture.</param>
 		public Texture(Bitmap bitmap)
 		{
-			this.Origin = new BitmapOrigin(bitmap);
-			this.MyOpenGlTextures = new OpenGlTexture[1][];
-			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			Origin = new BitmapOrigin(bitmap);
+			MyOpenGlTextures = new OpenGlTexture[1][];
+			MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		/// <summary>Creates a new texture.</summary>
@@ -165,93 +165,57 @@ namespace OpenBveApi.Textures {
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		public Texture(Bitmap bitmap, TextureParameters parameters)
 		{
-			this.Origin = new BitmapOrigin(bitmap, parameters);
-			this.MyOpenGlTextures = new OpenGlTexture[1][];
-			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			Origin = new BitmapOrigin(bitmap, parameters);
+			MyOpenGlTextures = new OpenGlTexture[1][];
+			MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		/// <summary>Creates a new texture.</summary>
 		/// <param name="texture">The texture raw data.</param>
 		public Texture(Texture texture)
 		{
-			this.Origin = new RawOrigin(texture);
-			this.MyOpenGlTextures = new OpenGlTexture[1][];
-			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			Origin = new RawOrigin(texture);
+			MyOpenGlTextures = new OpenGlTexture[1][];
+			MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		/// <summary>Creates a new texture from a texture origin.</summary>
 		/// <param name="origin">The texture raw data.</param>
 		public Texture(TextureOrigin origin)
 		{
-			this.Origin = origin;
-			this.MyOpenGlTextures = new OpenGlTexture[1][];
-			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			Origin = origin;
+			MyOpenGlTextures = new OpenGlTexture[1][];
+			MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		/// <summary>Gets the width of the texture in pixels.</summary>
 		public int Width
 		{
-			get
-			{
-				return (int)this.MySize.X;
-			}
-			set
-			{
-				this.MySize.X = value;
-			}
+			get => (int)MySize.X;
+			set => MySize.X = value;
 		}
 		/// <summary>Gets the height of the texture in pixels.</summary>
 		public int Height
 		{
-			get
-			{
-				return (int)this.MySize.Y;
-			}
-			set
-			{
-				this.MySize.Y = value;
-			}
+			get => (int)MySize.Y;
+			set => MySize.Y = value;
 		}
 
 		/// <summary>Gets the size of the texture in pixels</summary>
 		public Vector2 Size
 		{
-			get
-			{
-				return MySize;
-			}
-			set
-			{
-				MySize = value;
-			}
+			get => MySize;
+			set => MySize = value;
 		}
 
 		/// <summary>Gets the aspect ratio of the texture</summary>
-		public double AspectRatio
-		{
-			get
-			{
-				return (double)this.MySize.X / this.MySize.Y;
-			}
-		}
+		public double AspectRatio => MySize.X / MySize.Y;
 
 		/// <summary>Gets the number of bits per pixel.</summary>
-		public int BitsPerPixel
-		{
-			get
-			{
-				return this.MyBitsPerPixel;
-			}
-		}
+		public int BitsPerPixel => MyBitsPerPixel;
 
 		/// <summary>Gets the restricted color palette for this texture, or a null reference if not applicable</summary>
-		public Color24[] Palette
-		{
-			get
-			{
-				return this.MyPalette;
-			}
-		}
+		public Color24[] Palette => MyPalette;
 
 		/// <summary>Gets the texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
 		public byte[] Bytes
@@ -260,9 +224,9 @@ namespace OpenBveApi.Textures {
 			{
 				if (MultipleFrames == false)
 				{
-					return this.MyBytes[0];
+					return MyBytes[0];
 				}
-				return this.MyBytes[CurrentFrame];
+				return MyBytes[CurrentFrame];
 			}
 		}
 
@@ -274,9 +238,9 @@ namespace OpenBveApi.Textures {
 			{
 				if (MultipleFrames == false)
 				{
-					return this.MyOpenGlTextures[0];
+					return MyOpenGlTextures[0];
 				}
-				return this.MyOpenGlTextures[CurrentFrame];
+				return MyOpenGlTextures[CurrentFrame];
 			}
 		}
 
@@ -368,13 +332,13 @@ namespace OpenBveApi.Textures {
 			}
 
 			knownTransparencyType = true;
-			for (int i = 3; i < this.MyBytes[CurrentFrame].Length; i += 4)
+			for (int i = 3; i < MyBytes[CurrentFrame].Length; i += 4)
 			{
-				if (this.MyBytes[CurrentFrame][i] != 255)
+				if (MyBytes[CurrentFrame][i] != 255)
 				{
-					for (int j = i; j < this.MyBytes[CurrentFrame].Length; j += 4)
+					for (int j = i; j < MyBytes[CurrentFrame].Length; j += 4)
 					{
-						if (this.MyBytes[CurrentFrame][j] != 0 & this.MyBytes[CurrentFrame][j] != 255)
+						if (MyBytes[CurrentFrame][j] != 0 & MyBytes[CurrentFrame][j] != 255)
 						{
 							transparencyType = TextureTransparencyType.Alpha;
 							return TextureTransparencyType.Alpha;
