@@ -35,6 +35,10 @@
 		public Handles Handles => MyHandles;
 
 		/// <summary>Gets or sets the AI response.</summary>
-		public AIResponse Response => MyResponse;
+		public AIResponse Response
+		{
+			get => MyResponse;
+			set => MyResponse = value;
+		}
 	}
 }
