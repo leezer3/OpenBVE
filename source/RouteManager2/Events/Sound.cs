@@ -79,7 +79,15 @@ namespace RouteManager2.Events
 		/// <param name="trackFollower">The TrackFollower</param>
 		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (SoundsBase.SuppressSoundEvents) return;
+			if (SoundsBase.SuppressSoundEvents)
+			{
+				/*
+				 * SuppressSoundEvents is *only* set whilst the train is processing a jump
+				 * Use this fact to reset the sound event trigger, so single-time announcements work correctly
+				 */
+				DontTriggerAnymore = false;
+				return;
+			}
 			EventTriggerType triggerType = trackFollower.TriggerType;
 			if (triggerType == EventTriggerType.FrontCarFrontAxle | triggerType == EventTriggerType.OtherCarFrontAxle | triggerType == EventTriggerType.OtherCarRearAxle | triggerType == EventTriggerType.RearCarRearAxle)
 			{
