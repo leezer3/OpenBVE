@@ -586,11 +586,7 @@ namespace Train.OpenBve
 								case "coupler":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of brake handle sounds was defined in in XML file " + fileName);
-										break;
-									}
-									if (!isDriverCar)
-									{
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of coupler sounds was defined in in XML file " + fileName);
 										break;
 									}
 									foreach (XmlNode cc in c.ChildNodes)
