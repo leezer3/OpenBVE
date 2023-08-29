@@ -657,7 +657,7 @@ namespace OpenBve.Graphics.Renderers
 					if (Program.CurrentHost.LoadTexture(ref Element.CenterMiddle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						Color128 c = Element.OverlayColor.CreateBackColor(sc, alpha);
-						renderer.Rectangle.Draw(Element.CenterMiddle.BackgroundTexture, new Vector2(x, y), new Vector2(w, h), c);
+						renderer.Rectangle.Draw(Element.CenterMiddle.OverlayTexture, new Vector2(x, y), new Vector2(w, h), c);
 					}
 				}
 			}
