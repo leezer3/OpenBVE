@@ -1003,6 +1003,7 @@ namespace OpenBve
 
 						if (TrainManager.PlayerTrain.CameraCar == 0)
 						{
+							// Unable to uncouple front of first car
 							MessageManager.AddMessage(
 								Translations.GetInterfaceString("notification_unable_uncouple"),
 								MessageDependency.None, GameMode.Expert,
@@ -1010,7 +1011,7 @@ namespace OpenBve
 							return;
 						}
 
-						if (!TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar + 1].Coupler.CanUncouple)
+						if (TrainManager.PlayerTrain.CameraCar + 1 >= TrainManager.PlayerTrain.Cars.Length || !TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar + 1].Coupler.CanUncouple)
 						{
 							MessageManager.AddMessage(
 								Translations.GetInterfaceString("notification_fixed_uncouple"),

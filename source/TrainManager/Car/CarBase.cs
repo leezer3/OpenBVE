@@ -460,10 +460,19 @@ namespace TrainManager.Car
 				}
 			}
 
-			if (baseTrain.CameraCar >= baseTrain.Cars.Length)
+			if (Front)
 			{
-				baseTrain.CameraCar = baseTrain.DriverCar;
+				// Uncoupling the front will always make the car our first
+				baseTrain.CameraCar = 0;
 			}
+			else
+			{
+				if (baseTrain.CameraCar >= baseTrain.Cars.Length)
+				{
+					baseTrain.CameraCar = baseTrain.DriverCar;
+				}	
+			}
+			
 			
 		}
 
