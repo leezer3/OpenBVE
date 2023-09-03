@@ -4,6 +4,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using SoundManager;
+using TrainManager.Brake;
 
 namespace TrainManager.Car
 {
@@ -26,6 +27,9 @@ namespace TrainManager.Car
 		/// <summary>The sound played when this coupler is uncoupled</summary>
 		public CarSound UncoupleSound;
 
+		/// <summary>The brake behaviour when this consist is uncoupled</summary>
+		public UncouplingBehaviour UncouplingBehaviour;
+
 		private bool canUncouple;
 
 		internal AbstractTrain baseTrain;
@@ -42,6 +46,7 @@ namespace TrainManager.Car
 			ChangeSection(-1);
 			UncoupleSound = new CarSound();
 			canUncouple = true;
+			UncouplingBehaviour = UncouplingBehaviour.EmergencyUncoupledConsist;
 		}
 
 		public override bool CanUncouple

@@ -992,6 +992,13 @@ namespace OpenBve
 
 						break;
 					case Translations.Command.UncoupleFront:
+						/*
+						 * Need to remember that the coupler we're talking about here is actually that on the rear of the preceeding car, i.e. IDX - 1
+						 * This connects to the following car and is therefore it's front coupler
+						 *
+						 * However, car indexing is zero-based, so we need to *add* one to get the correct display number
+						 *
+						 */
 						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.Exterior)
 						{
 							MessageManager.AddMessage(
@@ -1011,7 +1018,7 @@ namespace OpenBve
 							return;
 						}
 
-						if (TrainManager.PlayerTrain.CameraCar + 1 >= TrainManager.PlayerTrain.Cars.Length || !TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar + 1].Coupler.CanUncouple)
+						if (TrainManager.PlayerTrain.CameraCar - 1 >= TrainManager.PlayerTrain.Cars.Length || !TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar - 1].Coupler.CanUncouple)
 						{
 							MessageManager.AddMessage(
 								Translations.GetInterfaceString("notification_fixed_uncouple"),
@@ -1020,12 +1027,17 @@ namespace OpenBve
 							return;
 						}
 						MessageManager.AddMessage(
-							Translations.GetInterfaceString("notification_exterior_uncouplefront") + " " +TrainManager.PlayerTrain.CameraCar,
+							Translations.GetInterfaceString("notification_exterior_uncouplefront") + " " + TrainManager.PlayerTrain.CameraCar + 1,
 							MessageDependency.None, GameMode.Expert,
 							MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].Uncouple(true, false);
 						break;
 					case Translations.Command.UncoupleRear:
+						/*
+						 * At least this one is simpler, as the rear coupler is that on our camera car
+						 *
+						 * Still need to add one for the message to display indices however
+						 */
 						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.Exterior)
 						{
 							MessageManager.AddMessage(
@@ -1053,7 +1065,7 @@ namespace OpenBve
 							return;
 						}
 						MessageManager.AddMessage(
-							Translations.GetInterfaceString("notification_exterior_uncouplerear") + " " + TrainManager.PlayerTrain.CameraCar,
+							Translations.GetInterfaceString("notification_exterior_uncouplerear") + " " + TrainManager.PlayerTrain.CameraCar + 1,
 							MessageDependency.None, GameMode.Expert,
 							MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].Uncouple(false, true);

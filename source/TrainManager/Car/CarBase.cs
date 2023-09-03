@@ -12,6 +12,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using SoundManager;
+using TrainManager.Brake;
 using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
 using TrainManager.Cargo;
@@ -360,6 +361,7 @@ namespace TrainManager.Car
 			}
 			// Create new train
 			TrainBase newTrain = new TrainBase(TrainState.Available);
+			UncouplingBehaviour uncouplingBehaviour = UncouplingBehaviour.Emergency;
 			newTrain.Handles.Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain)
 			{
 				DelayedChanges = new HandleChange[0]
@@ -385,6 +387,8 @@ namespace TrainManager.Car
 					baseTrain.Cars[i].Index = i - totalPreceedingCars;
 				}
 				Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalPreceedingCars);
+				baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.UncoupleSound.Play(baseTrain.Cars[baseTrain.Cars.Length - 1], false);
+				uncouplingBehaviour = baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.UncouplingBehaviour;
 				TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain, false);
 
 				if (baseTrain.DriverCar - totalPreceedingCars >= 0)
@@ -406,19 +410,7 @@ namespace TrainManager.Car
 						newTrain.Cars[i].baseTrain = newTrain;
 						newTrain.Cars[i].Index = i;
 					}
-					for (int i = 0; i < newTrain.Cars.Length; i++)
-					{
-						/*
-						 * Make visible if not part of player train
-						 * Otherwise uncoupling from cab then changing to exterior, they will still be hidden
-						 *
-						 * Need to do this after everything has been done in case objects refer to other bits
-						 */
-						newTrain.Cars[i].ChangeCarSection(CarSectionType.Exterior);
-						newTrain.Cars[i].FrontBogie.ChangeSection(0);
-						newTrain.Cars[i].RearBogie.ChangeSection(0);
-						newTrain.Cars[i].Coupler.ChangeSection(0);
-					}
+					
 					Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalFollowingCars);
 					baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.connectedCar = baseTrain.Cars[baseTrain.Cars.Length - 1];
 				}
@@ -427,7 +419,22 @@ namespace TrainManager.Car
 					return;
 				}
 				Coupler.UncoupleSound.Play(this, false);
+				uncouplingBehaviour = Coupler.UncouplingBehaviour;
 				TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain, true);
+			}
+
+			for (int i = 0; i < newTrain.Cars.Length; i++)
+			{
+				/*
+				 * Make visible if not part of player train
+				 * Otherwise uncoupling from cab then changing to exterior, they will still be hidden
+				 *
+				 * Need to do this after everything has been done in case objects refer to other bits
+				 */
+				newTrain.Cars[i].ChangeCarSection(CarSectionType.Exterior);
+				newTrain.Cars[i].FrontBogie.ChangeSection(0);
+				newTrain.Cars[i].RearBogie.ChangeSection(0);
+				newTrain.Cars[i].Coupler.ChangeSection(0);
 			}
 
 			if (baseTrain.DriverCar >= baseTrain.Cars.Length)
@@ -472,8 +479,31 @@ namespace TrainManager.Car
 					baseTrain.CameraCar = baseTrain.DriverCar;
 				}	
 			}
-			
-			
+
+			switch (uncouplingBehaviour)
+			{
+				case UncouplingBehaviour.Emergency:
+					baseTrain.Handles.EmergencyBrake.Apply();
+					newTrain.Handles.EmergencyBrake.Apply();
+					break;
+				case UncouplingBehaviour.EmergencyUncoupledConsist:
+					newTrain.Handles.EmergencyBrake.Apply();
+					break;
+				case UncouplingBehaviour.EmergencyPlayer:
+					baseTrain.Handles.EmergencyBrake.Apply();
+					break;
+				case UncouplingBehaviour.Released:
+					baseTrain.Handles.Brake.ApplyState(0, false);
+					baseTrain.Handles.EmergencyBrake.Release();
+					newTrain.Handles.Brake.ApplyState(0, false);
+					newTrain.Handles.EmergencyBrake.Release();
+					break;
+				case UncouplingBehaviour.ReleasedUncoupledConsist:
+					newTrain.Handles.Brake.ApplyState(0, false);
+					newTrain.Handles.EmergencyBrake.Release();
+					break;
+
+			}
 		}
 
 		/// <summary>Returns the combination of door states what encountered at the specified car in a train.</summary>

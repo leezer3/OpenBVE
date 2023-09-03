@@ -126,6 +126,12 @@ namespace Train.OpenBve
 											Train.Cars[carIndex - 1].Coupler.CanUncouple = false;
 										}
 										break;
+									case "uncouplingbehaviour":
+										if (!Enum.TryParse(c.InnerText, true, out Train.Cars[carIndex -1].Coupler.UncouplingBehaviour))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid uncoupling behaviour " + c.InnerText + " in " + c.Name + " node.");
+										}
+										break;
 								}
 							}
 						}
