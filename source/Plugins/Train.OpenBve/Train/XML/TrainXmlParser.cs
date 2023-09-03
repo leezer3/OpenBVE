@@ -49,10 +49,12 @@ namespace Train.OpenBve
 						switch (DocumentNodes[i].Name)
 						{
 							case "DriverCar":
-								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out Train.DriverCar))
+								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out var driverCar) || driverCar < 0)
 								{
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "DriverCar is invalid in XML file " + fileName);
+									break;
 								}
+								Train.DriverCar = driverCar;
 								break;
 						}
 					}
@@ -160,6 +162,13 @@ namespace Train.OpenBve
 						carIndex++;
 					}
 				}
+
+				if (Train.DriverCar >= Train.Cars.Length)
+				{
+					Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid driver car defined in XML file " + fileName);
+					Train.DriverCar = Train.Cars.Length - 1;
+				}
+
 				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.NotSpecified)
 				{
 					Plugin.Renderer.Camera.CurrentRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
