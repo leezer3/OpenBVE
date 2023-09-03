@@ -26,9 +26,6 @@ namespace RouteViewer {
 		internal class Train : TrainBase {
 			internal Train() : base(TrainState.Pending)
 			{
-				Handles.Power = new PowerHandle(8, 8, new double[] {}, new double[] {}, this);
-				Handles.Brake = new BrakeHandle(8, 8, null, new double[] {}, new double[] {}, this);
-				Handles.HoldBrake = new HoldBrakeHandle(this);
 			}
 			public override int NumberOfCars => this.Cars.Length;
 

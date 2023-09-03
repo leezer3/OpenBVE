@@ -68,7 +68,6 @@ namespace ObjectViewer.Trains
 				car.Doors[1].State = RightDoorState;
 				car.Doors[1].AnticipatedOpen = RightDoorAnticipatedOpen;
 			}
-
 			train.Handles.Reverser.Driver = (ReverserPosition)Reverser;
 			train.Handles.Reverser.Actual = (ReverserPosition)Reverser;
 			train.Handles.Power.Driver = PowerNotch;

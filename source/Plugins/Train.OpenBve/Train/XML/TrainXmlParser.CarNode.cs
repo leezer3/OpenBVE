@@ -22,7 +22,7 @@ namespace Train.OpenBve
 {
 	partial class TrainXmlParser
 	{
-		private void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainBase Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref bool visibleFromInterior)
+		private void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainBase Train, ref CabHandles Handles, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref bool visibleFromInterior)
 		{
 			string interiorFile = string.Empty;
 			ReadhesionDeviceType readhesionDevice = ReadhesionDeviceType.NotFitted;
@@ -85,7 +85,7 @@ namespace Train.OpenBve
 						Train.Cars[Car].CarBrake.brakeType = BrakeType.Auxiliary;
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
-							ParseBrakeNode(c, fileName, Car, ref Train);
+							ParseBrakeNode(c, fileName, Car, ref Train, ref Handles);
 						}
 						else if (!String.IsNullOrEmpty(c.InnerText))
 						{
@@ -98,7 +98,7 @@ namespace Train.OpenBve
 								//We need to save and restore the current path to make relative paths within the child file work correctly
 								string savedPath = currentPath;
 								currentPath = Path.GetDirectoryName(childFile);
-								ParseBrakeNode(childNodes[0], fileName, Car, ref Train);
+								ParseBrakeNode(childNodes[0], fileName, Car, ref Train, ref Handles);
 								currentPath = savedPath;
 							}
 							catch(Exception ex)

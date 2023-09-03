@@ -26,8 +26,7 @@ namespace TrainManager.Trains
 	{
 		/// <summary>Contains information on the specifications of the train</summary>
 		public TrainSpecs Specs;
-		/// <summary>The cab handles</summary>
-		public CabHandles Handles;
+		
 		/// <summary>Holds the safety systems for the train</summary>
 		public TrainSafetySystems SafetySystems;
 		/// <summary>Holds the cars</summary>
@@ -97,6 +96,9 @@ namespace TrainManager.Trains
 		/// <summary>The direction of travel on the current track</summary>
 		public TrackDirection CurrentDirection => TrainManagerBase.CurrentRoute.Tracks[Cars[DriverCar].FrontAxle.Follower.TrackIndex].Direction;
 
+		/// <summary>The cab handles</summary>
+		public CabHandles Handles => Cars[DriverCar].Handles;
+
 		public TrainBase(TrainState state)
 		{
 			State = state;
@@ -110,8 +112,6 @@ namespace TrainManager.Trains
 			Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 			Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
 			DriverBody = new DriverBody(this);
-			Handles.Reverser = new ReverserHandle(this);
-			Handles.EmergencyBrake = new EmergencyHandle(this);
 		}
 
 		/// <summary>Called once when the simulation loads to initalize the train</summary>
