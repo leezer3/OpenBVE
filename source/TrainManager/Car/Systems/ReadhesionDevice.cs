@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using TrainManager.Car.Systems;
 
 namespace TrainManager.Car
@@ -69,7 +70,7 @@ namespace TrainManager.Car
 
 		public override void Update(double TimeElapsed, double CurrentAcceleration)
 		{
-			if (TrainManagerBase.currentHost.InGameTime < NextUpdateTime)
+			if (TrainManagerBase.currentHost.InGameTime < NextUpdateTime || Car.Specs.MaxMotorAcceleration == -1)
 			{
 				return;
 			}
