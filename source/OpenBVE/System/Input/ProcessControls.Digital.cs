@@ -986,7 +986,11 @@ namespace OpenBve
 						{
 							if (TrainManager.PlayerTrain.Cars[c].ReAdhesionDevice is Sanders sanders)
 							{
-								sanders.Toggle();
+								if(sanders.Type == SandersType.PressAndHold) {
+									sanders.SetActive(true);
+								} else {
+									sanders.Toggle();
+								}
 							}
 						}
 
@@ -1479,6 +1483,8 @@ namespace OpenBve
 							{
 								if (sanders.Type == SandersType.PressAndHold)
 								{
+									sanders.SetActive(false);
+								} else {
 									sanders.Toggle();
 								}
 							}
