@@ -2,7 +2,6 @@
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
-using TrainManager.Trains;
 
 namespace TrainManager.BrakeSystems
 {
@@ -73,7 +72,7 @@ namespace TrainManager.BrakeSystems
 		/// <summary>A non-negative floating point number representing the jerk in m/s when the deceleration produced by the electric brake is decreased.</summary>
 		public double JerkDown;
 
-		public CarBrake(CarBase car)
+		protected CarBrake(CarBase car)
 		{
 			Car = car;
 		}

@@ -11,7 +11,6 @@ using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
-using SoundManager;
 using TrainManager.Brake;
 using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
@@ -572,15 +571,14 @@ namespace TrainManager.Car
 				const double maxDistance = 750.0;
 				if (distance > minDistance)
 				{
-					if (Sounds.Run.ContainsKey(FrontAxle.RunIndex))
+					if (Sounds.Run.TryGetValue(FrontAxle.RunIndex, out var runSound))
 					{
-						SoundBuffer buffer = Sounds.Run[FrontAxle.RunIndex].Buffer;
-						if (buffer != null)
+						if (runSound.Buffer != null)
 						{
-							if (buffer.Duration > 0.0)
+							if (runSound.Buffer.Duration > 0.0)
 							{
 								double offset = distance > maxDistance ? 25.0 : 300.0;
-								Sounds.RunNextReasynchronizationPosition = buffer.Duration * Math.Ceiling((baseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / buffer.Duration);
+								Sounds.RunNextReasynchronizationPosition = runSound.Buffer.Duration * Math.Ceiling((baseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / runSound.Buffer.Duration);
 							}
 						}
 					}

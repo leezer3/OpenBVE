@@ -24,10 +24,7 @@ namespace RouteViewer {
 
 		internal static bool Cancel
 		{
-			get
-			{
-				return _cancel;
-			}
+			get => _cancel;
 			set
 			{
 				if (value)

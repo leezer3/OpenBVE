@@ -314,10 +314,10 @@ namespace RouteViewer
 								try {
 									UnifiedObject unifiedObject;
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out unifiedObject)) {
-										if (unifiedObject is StaticObject)
+										if (unifiedObject is StaticObject staticObject)
 										{
-											unifiedObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
-											Object = (StaticObject) unifiedObject;
+											staticObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
+											Object = staticObject;
 											return true;
 										}
 										Object = null;
@@ -366,15 +366,13 @@ namespace RouteViewer
 										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
 										Object = obj;
 
-										StaticObject staticObject = Object as StaticObject;
-										if (staticObject != null)
+										if (Object is StaticObject staticObject)
 										{
 											StaticObjectCache.Add(ValueTuple.Create(path, false), staticObject);
 											return true;
 										}
 
-										AnimatedObjectCollection aoc = Object as AnimatedObjectCollection;
-										if (aoc != null)
+										if (Object is AnimatedObjectCollection aoc)
 										{
 											AnimatedObjectCollectionCache.Add(path, aoc);
 										}
@@ -431,10 +429,7 @@ namespace RouteViewer
 
 		public override int AnimatedWorldObjectsUsed
 		{
-			get
-			{
-				return ObjectManager.AnimatedWorldObjectsUsed;
-			}
+			get => ObjectManager.AnimatedWorldObjectsUsed;
 			set
 			{
 				int a = ObjectManager.AnimatedWorldObjectsUsed;
@@ -453,26 +448,14 @@ namespace RouteViewer
 
 		public override WorldObject[] AnimatedWorldObjects
 		{
-			get
-			{
-				return ObjectManager.AnimatedWorldObjects;
-			}
-			set
-			{
-				ObjectManager.AnimatedWorldObjects = value;
-			}
+			get => ObjectManager.AnimatedWorldObjects;
+			set => ObjectManager.AnimatedWorldObjects = value;
 		}
 
 		public override Dictionary<int, Track> Tracks
 		{
-			get
-			{
-				return Program.CurrentRoute.Tracks;
-			}
-			set
-			{
-				Program.CurrentRoute.Tracks = value;
-			}
+			get => Program.CurrentRoute.Tracks;
+			set => Program.CurrentRoute.Tracks = value;
 		}
 
 		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
