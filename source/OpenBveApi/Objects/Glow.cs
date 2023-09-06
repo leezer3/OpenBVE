@@ -24,7 +24,7 @@ namespace OpenBveApi.Objects
 		/// <param name="HalfDistance">The half distance of glow attenuation.</param>
 		public static void SplitAttenuationData(ushort Data, out GlowAttenuationMode Mode, out double HalfDistance) {
 			Mode = (GlowAttenuationMode)(Data >> 12);
-			HalfDistance = (double)(Data & 4095);
+			HalfDistance = Data & 4095;
 		}
 
 		/// <summary>Gets the current intensity glow intensity, using the glow attenuation factor</summary>

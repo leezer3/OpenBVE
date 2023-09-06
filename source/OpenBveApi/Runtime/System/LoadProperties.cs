@@ -1,4 +1,5 @@
-﻿namespace OpenBveApi.Runtime
+﻿// ReSharper disable UnusedMember.Global
+namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents properties supplied to the plugin on loading.</summary>
 	public class LoadProperties

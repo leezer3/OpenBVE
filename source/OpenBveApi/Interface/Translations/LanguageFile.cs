@@ -101,7 +101,7 @@ namespace OpenBveApi.Interface {
 				if (System.IO.File.Exists(File))
 				{
 					
-					using (var fs = new System.IO.FileStream(File, FileMode.Open, FileAccess.Read)) {
+					using (var fs = new FileStream(File, FileMode.Open, FileAccess.Read)) {
 						LanguageImage = File;
 					}
 				}

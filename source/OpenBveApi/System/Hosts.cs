@@ -89,6 +89,7 @@ namespace OpenBveApi.Hosts {
 				{
 					try
 					{
+						// ReSharper disable once UnusedVariable
 						var version = GetWineVersion();
 						cachedPlatform = HostPlatform.WINE;
 						return cachedPlatform;
@@ -348,15 +349,15 @@ namespace OpenBveApi.Hosts {
 		{
 			ValueTuple<string, bool> key = ValueTuple.Create(Path, false);
 
-			if (StaticObjectCache.ContainsKey(key))
+			if (StaticObjectCache.TryGetValue(key, out var staticObject))
 			{
-				Object = StaticObjectCache[key].Clone();
+				Object = staticObject.Clone();
 				return true;
 			}
 
-			if (AnimatedObjectCollectionCache.ContainsKey(Path))
+			if (AnimatedObjectCollectionCache.TryGetValue(Path, out var animatedObject))
 			{
-				Object = AnimatedObjectCollectionCache[Path].Clone();
+				Object = animatedObject.Clone();
 				return true;
 			}
 
@@ -376,9 +377,9 @@ namespace OpenBveApi.Hosts {
 		{
 			ValueTuple<string, bool> key = ValueTuple.Create(Path, PreserveVertices);
 
-			if (StaticObjectCache.ContainsKey(key))
+			if (StaticObjectCache.TryGetValue(key, out var staticObject))
 			{
-				Object = (StaticObject)StaticObjectCache[key].Clone();
+				Object = (StaticObject)staticObject.Clone();
 				return true;
 			}
 

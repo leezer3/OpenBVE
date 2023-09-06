@@ -401,11 +401,11 @@ namespace OpenBveApi.Colors {
 			}
 			else
 			{
-				c.R = inv255 * (float)this.R;
-				c.G = inv255 * (float)this.G;
-				c.B = inv255 * (float)this.B;
+				c.R = inv255 * R;
+				c.G = inv255 * G;
+				c.B = inv255 * B;
 			}
-			c.A = inv255 * (float)this.A * Alpha;
+			c.A = inv255 * A * Alpha;
 			return c;
 		}
 
@@ -450,11 +450,11 @@ namespace OpenBveApi.Colors {
 			}
 			else
 			{
-				c.R = inv255 * (float)this.R;
-				c.G = inv255 * (float)this.G;
-				c.B = inv255 * (float)this.B;
+				c.R = inv255 * R;
+				c.G = inv255 * G;
+				c.B = inv255 * B;
 			}
-			c.A = inv255 * (float)this.A * Alpha;
+			c.A = inv255 * A * Alpha;
 			return c;
 		}
 

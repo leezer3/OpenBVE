@@ -48,7 +48,7 @@ namespace OpenBveApi.Objects
 					double timeDelta = Object.SecondsSinceLastUpdate + TimeElapsed;
 					Object.SecondsSinceLastUpdate = 0.0;
 					Object.Update(NearestTrain, NearestTrain?.DriverCar ?? 0, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
-					if (this.Object.CurrentState != this.lastState && currentHost.SimulationState != SimulationState.Loading)
+					if (Object.CurrentState != lastState && currentHost.SimulationState != SimulationState.Loading)
 					{
 						if (SingleBuffer)
 						{
@@ -93,23 +93,23 @@ namespace OpenBveApi.Objects
 					Object.SecondsSinceLastUpdate += TimeElapsed;
 				}
 
-				if (!base.Visible)
+				if (!Visible)
 				{
 					currentHost.ShowObject(Object.internalObject, ObjectType.Dynamic);
-					base.Visible = true;
+					Visible = true;
 				}
 			}
 			else
 			{
 				Object.SecondsSinceLastUpdate += TimeElapsed;
-				if (base.Visible)
+				if (Visible)
 				{
 					currentHost.HideObject(Object.internalObject);
-					base.Visible = false;
+					Visible = false;
 				}
 			}
 
-			this.lastState = this.Object.CurrentState;
+			lastState = Object.CurrentState;
 		}
 
 		/// <inheritdoc/>
@@ -161,7 +161,7 @@ namespace OpenBveApi.Objects
 			{
 				for (int j = 0; j < currentObject.Object.States[i].Prototype.Mesh.Vertices.Length; j++)
 				{
-					double t = this.Object.States[i].Prototype.Mesh.Vertices[j].Coordinates.NormSquared();
+					double t = Object.States[i].Prototype.Mesh.Vertices[j].Coordinates.NormSquared();
 					if (t > r) r = t;
 				}
 			}
