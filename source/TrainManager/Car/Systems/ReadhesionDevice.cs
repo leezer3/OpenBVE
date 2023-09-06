@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using TrainManager.Car.Systems;
 
 namespace TrainManager.Car
@@ -68,7 +67,7 @@ namespace TrainManager.Car
 			}
 		}
 
-		public override void Update(double TimeElapsed, double CurrentAcceleration)
+		public override void Update(double TimeElapsed)
 		{
 			if (TrainManagerBase.currentHost.InGameTime < NextUpdateTime || Car.Specs.MaxMotorAcceleration == -1)
 			{
@@ -78,7 +77,7 @@ namespace TrainManager.Car
 			NextUpdateTime = TrainManagerBase.currentHost.InGameTime + this.UpdateInterval;
 			if (Car.FrontAxle.CurrentWheelSlip | Car.RearAxle.CurrentWheelSlip)
 			{
-				MaximumAccelerationOutput = CurrentAcceleration * this.ApplicationFactor;
+				MaximumAccelerationOutput = Car.Specs.MaxMotorAcceleration * this.ApplicationFactor;
 				TimeStable = 0.0;
 			}
 			else
@@ -87,7 +86,7 @@ namespace TrainManager.Car
 				if (TimeStable >= this.ReleaseInterval)
 				{
 					TimeStable -= this.ReleaseInterval;
-					if (this.ReleaseFactor != 0.0 & MaximumAccelerationOutput <= CurrentAcceleration + 1.0)
+					if (this.ReleaseFactor != 0.0 & MaximumAccelerationOutput <= Car.Specs.MaxMotorAcceleration + 1.0)
 					{
 						if (MaximumAccelerationOutput < 0.025)
 						{

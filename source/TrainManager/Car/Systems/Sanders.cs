@@ -36,7 +36,7 @@ namespace TrainManager.Car.Systems
 			Type = type;
 		}
 
-		public override void Update(double timeElapsed, double currentAcceleration)
+		public override void Update(double timeElapsed)
 		{
 			if (Type == SandersType.NotFitted)
 			{
