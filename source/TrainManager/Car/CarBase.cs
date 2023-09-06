@@ -1327,83 +1327,68 @@ namespace TrainManager.Car
 			if (DecelerationDueToMotor == 0.0)
 			{
 				double a;
-				if (Specs.IsMotorCar)
+				if (DecelerationDueToMotor == 0.0 || !Specs.IsMotorCar)
 				{
-					if (DecelerationDueToMotor == 0.0)
+					if (baseTrain.Handles.Reverser.Actual != 0 & baseTrain.Handles.Power.Actual > 0 &
+					    !baseTrain.Handles.HoldBrake.Actual &
+					    !baseTrain.Handles.EmergencyBrake.Actual)
 					{
-						if (baseTrain.Handles.Reverser.Actual != 0 & baseTrain.Handles.Power.Actual > 0 &
-						    !baseTrain.Handles.HoldBrake.Actual &
-						    !baseTrain.Handles.EmergencyBrake.Actual)
+						// target acceleration
+						if (baseTrain.Handles.Power.Actual - 1 < Specs.AccelerationCurves.Length)
 						{
-							// target acceleration
-							if (baseTrain.Handles.Power.Actual - 1 < Specs.AccelerationCurves.Length)
-							{
-								// Load factor is a constant 1.0 for anything prior to BVE5
-								// This will need to be changed when the relevant branch is merged in
-								a = Specs.AccelerationCurves[baseTrain.Handles.Power.Actual - 1]
-									.GetAccelerationOutput(
-										(double) baseTrain.Handles.Reverser.Actual * CurrentSpeed,
-										1.0);
-							}
-							else
-							{
-								a = 0.0;
-							}
-
-							// readhesion device
-							if (ReAdhesionDevice is BveReAdhesionDevice device)
-							{
-								if (a > device.MaximumAccelerationOutput)
-								{
-									a = device.MaximumAccelerationOutput;
-								}
-							}
-							else if (ReAdhesionDevice is Sanders sanders)
-							{
-								wheelSlipAccelerationMotorFront *= 2.0;
-								wheelSlipAccelerationMotorRear *= 2.0;
-								wheelSlipAccelerationBrakeFront *= 2.0;
-								wheelSlipAccelerationBrakeRear *= 2.0;
-							}
-							
-
-							// wheel slip
-							if (a < wheelSlipAccelerationMotorFront)
-							{
-								FrontAxle.CurrentWheelSlip = false;
-							}
-							else
-							{
-								FrontAxle.CurrentWheelSlip = true;
-								wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * CurrentMass;
-							}
-
-							if (a < wheelSlipAccelerationMotorRear)
-							{
-								RearAxle.CurrentWheelSlip = false;
-							}
-							else
-							{
-								RearAxle.CurrentWheelSlip = true;
-								wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * CurrentMass;
-							}
-
-							// Update readhesion device
-							this.ReAdhesionDevice.Update(TimeElapsed, a);
-							// Update constant speed device
-
-							this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed,
-								baseTrain.Handles.Reverser.Actual);
-
-							// finalize
-							if (wheelspin != 0.0) a = 0.0;
+							// Load factor is a constant 1.0 for anything prior to BVE5
+							// This will need to be changed when the relevant branch is merged in
+							a = Specs.AccelerationCurves[baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)baseTrain.Handles.Reverser.Actual * CurrentSpeed, 1.0);
 						}
 						else
 						{
 							a = 0.0;
+						}
+
+						// readhesion device
+						if (ReAdhesionDevice is BveReAdhesionDevice device)
+						{
+							if (a > device.MaximumAccelerationOutput)
+							{
+								a = device.MaximumAccelerationOutput;
+							}
+						}
+						else if (ReAdhesionDevice is Sanders)
+						{
+							wheelSlipAccelerationMotorFront *= 2.0;
+							wheelSlipAccelerationMotorRear *= 2.0;
+							wheelSlipAccelerationBrakeFront *= 2.0;
+							wheelSlipAccelerationBrakeRear *= 2.0;
+						}
+
+
+						// wheel slip
+						if (a < wheelSlipAccelerationMotorFront)
+						{
 							FrontAxle.CurrentWheelSlip = false;
+						}
+						else
+						{
+							FrontAxle.CurrentWheelSlip = true;
+							wheelspin += (double)baseTrain.Handles.Reverser.Actual * a * CurrentMass;
+						}
+
+						if (a < wheelSlipAccelerationMotorRear)
+						{
 							RearAxle.CurrentWheelSlip = false;
 						}
+						else
+						{
+							RearAxle.CurrentWheelSlip = true;
+							wheelspin += (double)baseTrain.Handles.Reverser.Actual * a * CurrentMass;
+						}
+
+						Specs.MaxMotorAcceleration = a;
+						// Update constant speed device
+						this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
+
+						// finalize
+						if (wheelspin != 0.0) a = 0.0;
 					}
 					else
 					{
@@ -1414,10 +1399,13 @@ namespace TrainManager.Car
 				}
 				else
 				{
+					// HACK: Use special value here to inform the BVE readhesion device it shouldn't update this frame
+					Specs.MaxMotorAcceleration = -1;
 					a = 0.0;
 					FrontAxle.CurrentWheelSlip = false;
 					RearAxle.CurrentWheelSlip = false;
 				}
+
 
 				if (!Derailed)
 				{
@@ -1452,6 +1440,7 @@ namespace TrainManager.Car
 				}
 			}
 
+			ReAdhesionDevice.Update(TimeElapsed);
 			// brake
 			bool wheellock = wheelspin == 0.0 & Derailed;
 			if (!Derailed & wheelspin == 0.0)
