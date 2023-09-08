@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using OpenBveApi.Interface;
 
 namespace OpenBveApi.Hosts
 {
@@ -129,7 +130,7 @@ namespace OpenBveApi.Hosts
 			errorMessage = builder.ToString().Trim(new char[] { });
 			if (errorMessage.Length != 0)
 			{
-				return false;
+				AddMessage(MessageType.Error, false, errorMessage);
 			}
 			return true;
 		}
