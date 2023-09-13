@@ -186,6 +186,7 @@ namespace OpenBve
 				this.ForceForwardsCompatibleContext = false;
 				this.IsUseNewRenderer = true;
 				this.DailyBuildUpdates = false;
+				this.UseGDIDecoders = false;
 				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
 				switch (Program.CurrentHost.Platform)
 				{
@@ -822,6 +823,9 @@ namespace OpenBve
 												}
 												break;
 											}
+										case "gdiplus":
+											Interface.CurrentOptions.UseGDIDecoders = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
 									}
 									break;
 								case "touch":
@@ -1061,6 +1065,7 @@ namespace OpenBve
 			Builder.AppendLine("[Parsers]");
 			Builder.AppendLine("xObject = " + (int)Interface.CurrentOptions.CurrentXParser);
 			Builder.AppendLine("objObject = " + (int)Interface.CurrentOptions.CurrentObjParser);
+			Builder.AppendLine("gdiplus = " + (CurrentOptions.UseGDIDecoders ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[Touch]");
 			Builder.AppendLine("cursor = " + CurrentOptions.CursorFileName);

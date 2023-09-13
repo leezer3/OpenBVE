@@ -76,8 +76,10 @@ namespace Plugin {
 						}
 					}
 
-					if (Encoding.ASCII.GetString(buffer, 1, 3) == "PNG")
+					if (Encoding.ASCII.GetString(buffer, 1, 3) == "PNG" && !CurrentOptions.UseGDIDecoders)
 					{
+						// NB: GDI+ decoders are curerntly enabled by default as they are marginally faster (~10ms or so per texture unless massively interlaced which is worse)
+						//     If / when mobile device support is added, these will likely be removed
 						using (PngDecoder decoder = new PngDecoder())
 						{
 							if (decoder.Read(file))

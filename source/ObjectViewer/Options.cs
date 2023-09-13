@@ -160,6 +160,9 @@ namespace ObjectViewer
 											    }
 	                                            break;
                                             }
+										case "gdiplus":
+											Interface.CurrentOptions.UseGDIDecoders = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
 									} break;
 								case "objectoptimization":
 									switch (Key)

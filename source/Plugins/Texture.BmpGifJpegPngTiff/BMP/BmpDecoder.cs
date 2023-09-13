@@ -496,10 +496,7 @@ namespace Plugin.BMP
 										if (Plugin.EnabledHacks.ReduceTransparencyColorDepth)
 										{
 											Color24 c = new Color24(r, g, b);
-											if (!reducedColorTable.Contains(c))
-											{
-												reducedColorTable.Add(c);
-											}
+											reducedColorTable.Add(c);
 										}
 										sourceIdx++;
 										destIdx+= 4;
@@ -525,10 +522,7 @@ namespace Plugin.BMP
 										if (Plugin.EnabledHacks.ReduceTransparencyColorDepth)
 										{
 											Color24 c = new Color24(buffer[sourceIdx + 2], buffer[sourceIdx + 1], buffer[sourceIdx]);
-											if (!reducedColorTable.Contains(c))
-											{
-												reducedColorTable.Add(c);
-											}
+											reducedColorTable.Add(c);
 										}
 										sourceIdx+= 3;
 										if (BitsPerPixel == BitsPerPixel.ThirtyTwoBitRGB)
@@ -678,10 +672,7 @@ namespace Plugin.BMP
 													if (Plugin.EnabledHacks.ReduceTransparencyColorDepth && BitsPerPixel > BitsPerPixel.EightBitPalletized)
 													{
 														Color24 c = new Color24(buffer[sourceIdx + 2], buffer[sourceIdx + 1], buffer[sourceIdx]);
-														if (!reducedColorTable.Contains(c))
-														{
-															reducedColorTable.Add(c);
-														}
+														reducedColorTable.Add(c);
 													}
 													rowPixel++;
 													sourceIdx += 3;
@@ -754,10 +745,7 @@ namespace Plugin.BMP
 											if (Plugin.EnabledHacks.ReduceTransparencyColorDepth && BitsPerPixel > BitsPerPixel.EightBitPalletized)
 											{
 												Color24 c = new Color24(buffer[sourceIdx + 2], buffer[sourceIdx + 1], buffer[sourceIdx]);
-												if (!reducedColorTable.Contains(c))
-												{
-													reducedColorTable.Add(c);
-												}
+												reducedColorTable.Add(c);
 											}
 											rowPixel++;
 										}
