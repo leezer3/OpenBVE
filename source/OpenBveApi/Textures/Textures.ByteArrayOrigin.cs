@@ -37,10 +37,10 @@ namespace OpenBveApi.Textures
 		{
 			if (TextureBytes.Length == 1)
 			{
-				texture = new Texture(Width, Height, 32, TextureBytes[0], new Color24[0]);
+				texture = new Texture(Width, Height, PixelFormat.RGBAlpha, TextureBytes[0], new Color24[0]);
 				return true;
 			}
-			texture = new Texture(Width, Height, 32, TextureBytes, FrameInterval);
+			texture = new Texture(Width, Height, PixelFormat.RGBAlpha, TextureBytes, FrameInterval);
 			return true;
 		}
 

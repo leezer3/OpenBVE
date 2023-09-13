@@ -9,6 +9,8 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using Plugin.BMP;
 using Plugin.GIF;
+using Plugin.PNG;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace Plugin {
 	public partial class Plugin {
@@ -55,7 +57,7 @@ namespace Plugin {
 									Buffer.BlockCopy(framePixels, 0, frameBytes[i], 0, frameBytes[i].Length);
 									duration += decoder.GetDuration(i);
 								}
-								texture = new Texture((int)frameSize.X, (int)frameSize.Y, 32, frameBytes, ((double)duration / frameCount) / 10000000.0);
+								texture = new Texture((int)frameSize.X, (int)frameSize.Y, OpenBveApi.Textures.PixelFormat.RGBAlpha, frameBytes, ((double)duration / frameCount) / 10000000.0);
 								return true;
 							}
 						}
@@ -68,11 +70,24 @@ namespace Plugin {
 						{
 							if (decoder.Read(file))
 							{
-								texture = new Texture(decoder.Width, decoder.Height, 32, decoder.ImageData, decoder.ColorTable);
+								texture = new Texture(decoder.Width, decoder.Height, OpenBveApi.Textures.PixelFormat.RGBAlpha, decoder.ImageData, decoder.ColorTable);
 								return true;
 							}
 						}
-						
+					}
+
+					if (Encoding.ASCII.GetString(buffer, 1, 3) == "PNG" && !CurrentOptions.UseGDIDecoders)
+					{
+						// NB: GDI+ decoders are curerntly enabled by default as they are marginally faster (~10ms or so per texture unless massively interlaced which is worse)
+						//     If / when mobile device support is added, these will likely be removed
+						using (PngDecoder decoder = new PngDecoder())
+						{
+							if (decoder.Read(file))
+							{
+								texture = new Texture(decoder.Width, decoder.Height, (OpenBveApi.Textures.PixelFormat)decoder.BytesPerPixel, decoder.pixelBuffer, null);
+								return true;
+							}
+						}
 					}
 				}
 			}
@@ -92,7 +107,7 @@ namespace Plugin {
 				byte[] raw = GetRawBitmapData(bitmap, out width, out height);
 				if (raw != null)
 				{
-					texture = new Texture(width, height, 32, raw, null);
+					texture = new Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, raw, null);
 					return true;
 				}
 				texture = null;

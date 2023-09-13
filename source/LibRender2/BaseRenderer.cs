@@ -33,6 +33,7 @@ using OpenBveApi.World;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using Path = OpenBveApi.Path;
+using PixelFormat = OpenBveApi.Textures.PixelFormat;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace LibRender2
@@ -356,7 +357,7 @@ namespace LibRender2
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
 			VisibleObjects = new VisibleObjectLibrary(this);
-			whitePixel = new Texture(new Texture(1, 1, 32, new byte[] {255, 255, 255, 255}, null));
+			whitePixel = new Texture(new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] {255, 255, 255, 255}, null));
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.Enable(EnableCap.DepthTest);
