@@ -150,6 +150,11 @@ namespace OpenBve
 		/// <param name="e">The button arguments</param>
 		internal static void mouseDownEvent(object sender, MouseButtonEventArgs e)
 		{
+			if (Program.Renderer.CurrentInterface == InterfaceType.LoadScreen)
+			{
+				// as otherwise right-click can unexpectedly operate camera spin
+				return;
+			}
 			timeSinceLastMouseEvent = 0;
 			if (e.Button == MouseButton.Right)
 			{
@@ -159,7 +164,7 @@ namespace OpenBve
 			if (e.Button == MouseButton.Left)
 			{
 				// if currently in a menu, forward the click to the menu system
-				if (Program.Renderer.CurrentInterface == InterfaceType.Menu)
+				if (Program.Renderer.CurrentInterface >= InterfaceType.Menu)
 				{
 					Game.Menu.ProcessMouseDown(e.X, e.Y);
 				}
@@ -172,6 +177,11 @@ namespace OpenBve
 
 		internal static void mouseUpEvent(object sender, MouseButtonEventArgs e)
 		{
+			if (Program.Renderer.CurrentInterface == InterfaceType.LoadScreen)
+			{
+				// as otherwise right-click can unexpectedly operate camera spin
+				return;
+			}
 			timeSinceLastMouseEvent = 0;
 			if (e.Button == MouseButton.Left)
 			{
@@ -189,7 +199,7 @@ namespace OpenBve
 		{
 			timeSinceLastMouseEvent = 0;
 			// if currently in a menu, forward the click to the menu system
-			if (Program.Renderer.CurrentInterface == InterfaceType.Menu)
+			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu)
 			{
 				Game.Menu.ProcessMouseMove(e.X, e.Y);
 			}
@@ -201,7 +211,7 @@ namespace OpenBve
 		internal static void mouseWheelEvent(object sender, MouseWheelEventArgs e)
 		{
 			timeSinceLastMouseEvent = 0;
-			if (Program.Renderer.CurrentInterface == InterfaceType.Menu)
+			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu)
 			{
 				Game.Menu.ProcessMouseScroll(e.Delta);
 			}
@@ -209,7 +219,7 @@ namespace OpenBve
 
 		internal static void UpdateMouse(double TimeElapsed)
 		{
-			if (Program.Renderer.CurrentInterface != InterfaceType.Menu)
+			if (Program.Renderer.CurrentInterface < InterfaceType.Menu)
 			{
 				timeSinceLastMouseEvent += TimeElapsed;
 			}
@@ -260,7 +270,7 @@ namespace OpenBve
 					Program.Joysticks.AttachedJoysticks[guid].Poll();
 				}
 			}
-			if (Program.Renderer.CurrentInterface == InterfaceType.Menu && Game.Menu.IsCustomizingControl())
+			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu && Game.Menu.IsCustomizingControl())
 			{
 				if (Interface.CurrentOptions.UseJoysticks)
 				{

@@ -476,6 +476,7 @@ namespace OpenBveApi.FileSystem {
 
 		/// <summary>Appends the specified text to the log file.</summary>
 		/// <param name="text">The text.</param>
+		/// <param name="addTimestamp">Whether a timestamp should be added to the log file</param>
 		public void AppendToLogFile(string text, bool addTimestamp = true) {
 			try
 			{

@@ -26,8 +26,6 @@ namespace RouteViewer {
 		internal class Train : TrainBase {
 			internal Train() : base(TrainState.Pending)
 			{
-				Handles.Reverser = new ReverserHandle(this);
-				Handles.EmergencyBrake = new EmergencyHandle(this);
 				Handles.Power = new PowerHandle(8, 8, new double[] {}, new double[] {}, this);
 				Handles.Brake = new BrakeHandle(8, 8, null, new double[] {}, new double[] {}, this);
 				Handles.HoldBrake = new HoldBrakeHandle(this);

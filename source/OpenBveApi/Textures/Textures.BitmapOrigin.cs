@@ -86,9 +86,7 @@ namespace OpenBveApi.Textures
 				 * */
 				for (int i = 0; i < raw.Length; i += 4)
 				{
-					byte temp = raw[i];
-					raw[i] = raw[i + 2];
-					raw[i + 2] = temp;
+					(raw[i], raw[i + 2]) = (raw[i + 2], raw[i]);
 				}
 
 				texture = new Texture(width, height, PixelFormat.RGBAlpha, raw, p);

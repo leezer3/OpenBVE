@@ -36,7 +36,7 @@ namespace OpenBve
 			// game
 			Interface.LogMessages.Clear();
 			Program.CurrentHost.MissingFiles.Clear();
-			if (Program.Renderer.CurrentInterface != InterfaceType.Menu)
+			if (Program.Renderer.CurrentInterface < InterfaceType.Menu)
 			{
 				Program.Renderer.CurrentInterface = InterfaceType.Normal;
 			}

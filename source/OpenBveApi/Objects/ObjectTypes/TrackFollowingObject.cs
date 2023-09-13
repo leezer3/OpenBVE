@@ -47,7 +47,7 @@ namespace OpenBveApi.Objects
 					double timeDelta = Object.SecondsSinceLastUpdate + TimeElapsed;
 					Object.SecondsSinceLastUpdate = 0.0;
 
-					if (base.Visible)
+					if (Visible)
 					{
 						//Calculate the distance travelled
 						double delta = UpdateTrackFollowerScript(false, NearestTrain, NearestTrain?.DriverCar ?? 0, Object.SectionIndex, TrackPosition, Position, true, timeDelta);
@@ -68,19 +68,19 @@ namespace OpenBveApi.Objects
 					Object.SecondsSinceLastUpdate += TimeElapsed;
 				}
 
-				if (!base.Visible)
+				if (!Visible)
 				{
 					currentHost.ShowObject(Object.internalObject, ObjectType.Dynamic);
-					base.Visible = true;
+					Visible = true;
 				}
 			}
 			else
 			{
 				Object.SecondsSinceLastUpdate += TimeElapsed;
-				if (base.Visible)
+				if (Visible)
 				{
 					currentHost.HideObject(Object.internalObject);
-					base.Visible = false;
+					Visible = false;
 				}
 			}
 		}

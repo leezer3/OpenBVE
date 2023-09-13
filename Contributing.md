@@ -16,7 +16,7 @@ Please only contribute code which is licenced under either Public Domain, or loo
 
 ### Backwards Compatibility
 
-- Unless not possible (e.g. Plugin interface changes) , backwards compatibility with versions of openBVE below 1.5.0 should be maintained. An error message is fine, but a program crash is not!
+- Unless not possible (e.g. Plugin interface changes) , backwards compatibility with versions of OpenBVE below 1.5.0 should be maintained. An error message is fine, but a program crash is not!
 - When adding a completely new routefile feature, it is generally preferable to add a new command, rather than extending an existing, as this may be misinterpreted by older versions.
 
 ### List of Contributors
@@ -35,6 +35,7 @@ Please only contribute code which is licenced under either Public Domain, or loo
 - Connor Fitzgerald
 - Marc Riera
 - s520
+- Kenny Hui
 
 ### Third Party Code
 

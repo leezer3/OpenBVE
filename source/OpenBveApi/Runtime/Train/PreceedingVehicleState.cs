@@ -19,31 +19,13 @@ namespace OpenBveApi.Runtime
 		private readonly Speed MySpeed;
 
 		/// <summary>Gets the location of the back of the preceding train, in meters.</summary>
-		public double Location
-		{
-			get
-			{
-				return this.MyLocation;
-			}
-		}
+		public double Location => MyLocation;
 
 		/// <summary>Gets the distance from the front of the current train to the back of the preceding train, in meters.</summary>
-		public double Distance
-		{
-			get
-			{
-				return this.MyDistance;
-			}
-		}
+		public double Distance => MyDistance;
 
 		/// <summary>Gets the speed of the preceding train.</summary>
-		public Speed Speed
-		{
-			get
-			{
-				return this.MySpeed;
-			}
-		}
+		public Speed Speed => MySpeed;
 
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="location">Gets the location of the back of the preceding train, in meters.</param>
@@ -51,9 +33,9 @@ namespace OpenBveApi.Runtime
 		/// <param name="speed">Gets the speed of the preceding train.</param>
 		public PrecedingVehicleState(double location, double distance, Speed speed)
 		{
-			this.MyLocation = location;
-			this.MyDistance = distance;
-			this.MySpeed = speed;
+			MyLocation = location;
+			MyDistance = distance;
+			MySpeed = speed;
 		}
 	}
 }

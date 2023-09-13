@@ -539,6 +539,7 @@ namespace CarXmlConvertor
 				newLines.Add("<Notches>" + ConvertTrainDat.BrakeNotches + "</Notches>");
 				newLines.Add("</Handle>");
 			}
+			newLines.Add("<!-- Pressures are in kPa -->");
 			if (ConvertTrainDat.MotorCars[i])
 			{
 
@@ -589,6 +590,7 @@ namespace CarXmlConvertor
 					newLines.Add("<Coupler>");
 					newLines.Add("<Minimum>" + Couplers[i].Min + "</Minimum>");
 					newLines.Add("<Maximum>" + Couplers[i].Max + "</Maximum>");
+					newLines.Add("<CanUncouple>true</CanUncouple>");
 					if (!string.IsNullOrEmpty(Couplers[i].Object))
 					{
 						newLines.Add("<Object>" + Couplers[i].Object + "</Object>");
@@ -613,11 +615,13 @@ namespace CarXmlConvertor
 				if (ConvertTrainDat.MotorCars[i])
 				{
 					newLines.Add("<MotorCar>True</MotorCar>");
+					newLines.Add("<!-- Masses are in kg -->");
 					newLines.Add("<Mass>" + ConvertTrainDat.MotorCarMass + "</Mass>");
 				}
 				else
 				{
 					newLines.Add("<MotorCar>False</MotorCar>");
+					newLines.Add("<!-- Masses are in kg -->");
 					newLines.Add("<Mass>" + ConvertTrainDat.TrailerCarMass + "</Mass>");
 				}
 				newLines.Add("<FrontAxle>" + 0.4 * ConvertTrainDat.CarLength + "</FrontAxle>");

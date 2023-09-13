@@ -94,8 +94,7 @@ namespace OpenBveApi.Math {
 		/// <returns>True if parsing succeds, false otherwise</returns>
 		public static bool IsValidDouble(string Expression, double[] UnitFactors)
 		{
-			double n;
-			return TryParseDouble(Expression, UnitFactors, out n);
+			return TryParseDouble(Expression, UnitFactors, out _);
 		}
 
 		/// <summary>Parses a double from a string, using the supplied unit conversion factor(s)</summary>

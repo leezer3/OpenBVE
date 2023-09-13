@@ -72,13 +72,7 @@ namespace OpenBveApi.Hosts {
 	public abstract partial class HostInterface {
 
 		/// <summary>Returns whether the current host application is running under Mono</summary>
-		public bool MonoRuntime
-		{
-			get
-			{
-				return Type.GetType("Mono.Runtime") != null;
-			}
-		}
+		public bool MonoRuntime => Type.GetType("Mono.Runtime") != null;
 
 		private HostPlatform cachedPlatform = (HostPlatform)99; // value not in enum
 
@@ -95,6 +89,7 @@ namespace OpenBveApi.Hosts {
 				{
 					try
 					{
+						// ReSharper disable once UnusedVariable
 						var version = GetWineVersion();
 						cachedPlatform = HostPlatform.WINE;
 						return cachedPlatform;
@@ -205,7 +200,7 @@ namespace OpenBveApi.Hosts {
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool LoadTexture(string path, TextureParameters parameters, out Textures.Texture texture) {
+		public virtual bool LoadTexture(string path, TextureParameters parameters, out Texture texture) {
 			texture = null;
 			return false;
 		}
@@ -224,7 +219,7 @@ namespace OpenBveApi.Hosts {
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <param name="loadTexture">Whether the texture should also be pre-loaded</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool RegisterTexture(string path, TextureParameters parameters, out Textures.Texture handle, bool loadTexture = false) {
+		public virtual bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
 			handle = null;
 			return false;
 		}
@@ -234,7 +229,7 @@ namespace OpenBveApi.Hosts {
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool RegisterTexture(Textures.Texture texture, TextureParameters parameters, out Textures.Texture handle) {
+		public virtual bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle) {
 			handle = null;
 			return false;
 		}
@@ -244,7 +239,7 @@ namespace OpenBveApi.Hosts {
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool RegisterTexture(Bitmap texture, TextureParameters parameters, out Textures.Texture handle) {
+		public virtual bool RegisterTexture(Bitmap texture, TextureParameters parameters, out Texture handle) {
 			handle = null;
 			return false;
 		}
@@ -354,15 +349,15 @@ namespace OpenBveApi.Hosts {
 		{
 			ValueTuple<string, bool> key = ValueTuple.Create(Path, false);
 
-			if (StaticObjectCache.ContainsKey(key))
+			if (StaticObjectCache.TryGetValue(key, out var staticObject))
 			{
-				Object = StaticObjectCache[key].Clone();
+				Object = staticObject.Clone();
 				return true;
 			}
 
-			if (AnimatedObjectCollectionCache.ContainsKey(Path))
+			if (AnimatedObjectCollectionCache.TryGetValue(Path, out var animatedObject))
 			{
-				Object = AnimatedObjectCollectionCache[Path].Clone();
+				Object = animatedObject.Clone();
 				return true;
 			}
 
@@ -382,9 +377,9 @@ namespace OpenBveApi.Hosts {
 		{
 			ValueTuple<string, bool> key = ValueTuple.Create(Path, PreserveVertices);
 
-			if (StaticObjectCache.ContainsKey(key))
+			if (StaticObjectCache.TryGetValue(key, out var staticObject))
 			{
-				Object = (StaticObject)StaticObjectCache[key].Clone();
+				Object = (StaticObject)staticObject.Clone();
 				return true;
 			}
 
@@ -511,7 +506,7 @@ namespace OpenBveApi.Hosts {
 		/// <param name="parent">The parent object the sound is attached to, or a null reference.</param>
 		/// <param name="looped">Whether to play the sound in a loop.</param>
 		/// <returns>The sound source.</returns>
-		public virtual object PlaySound(SoundHandle buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, object parent, bool looped)
+		public virtual object PlaySound(SoundHandle buffer, double pitch, double volume, Vector3 position, object parent, bool looped)
 		{
 			return null;
 		}
@@ -520,7 +515,7 @@ namespace OpenBveApi.Hosts {
 		/// <param name="position">The position.</param>
 		/// <param name="backwardTolerance">allowed tolerance in the backward direction</param>
 		/// <param name="forwardTolerance">allowed tolerance in the forward direction</param>
-		public virtual void PlayMicSound(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance)
+		public virtual void PlayMicSound(Vector3 position, double backwardTolerance, double forwardTolerance)
 		{
 
 		}
@@ -544,10 +539,7 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Returns the number of animated world objects used</summary>
 		public virtual int AnimatedWorldObjectsUsed
 		{
-			get
-			{
-				return 0;
-			}
+			get => 0;
 			// ReSharper disable once ValueParameterNotUsed
 			set
 			{
@@ -558,10 +550,7 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Returns the array of animated world objects from the host</summary>
 		public virtual WorldObject[] AnimatedWorldObjects
 		{
-			get
-			{
-				return null;
-			}
+			get => null;
 			// ReSharper disable once ValueParameterNotUsed
 			set
 			{
@@ -572,10 +561,7 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Gets or sets the tracks array within the host application</summary>
 		public virtual Dictionary<int, Track> Tracks
 		{
-			get
-			{
-				return null;
-			}
+			get => null;
 			// ReSharper disable once ValueParameterNotUsed
 			set
 			{
@@ -586,7 +572,7 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Updates the custom timetable texture displayed when triggered by an event</summary>
 		/// <param name="Daytime">The daytime texture</param>
 		/// <param name="Nighttime">The nighttime texture</param>
-		public virtual void UpdateCustomTimetable(Textures.Texture Daytime, Textures.Texture Nighttime)
+		public virtual void UpdateCustomTimetable(Texture Daytime, Texture Nighttime)
 		{
 
 		}
@@ -680,13 +666,7 @@ namespace OpenBveApi.Hosts {
 		}
 
 		/// <summary>Returns the trains within the simulation</summary>
-		public virtual AbstractTrain[] Trains
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public virtual AbstractTrain[] Trains => null;
 
 		/// <summary>Gets the closest train to the specified train</summary>
 		/// <param name="Train">The specified train</param>
@@ -702,6 +682,15 @@ namespace OpenBveApi.Hosts {
 		public virtual AbstractTrain ClosestTrain(double TrackPosition)
 		{
 			return null;
+		}
+
+		/// <summary>Adds a new train</summary>
+		/// <param name="ReferenceTrain">The reference train, or a null reference to add the train at the end of the queue</param>
+		/// <param name="NewTrain">The new train</param>
+		/// <param name="Preceedes">Whether this train preceeds or follows the reference train</param>
+		public virtual void AddTrain(AbstractTrain ReferenceTrain, AbstractTrain NewTrain, bool Preceedes)
+		{
+
 		}
 
 		/*
@@ -721,9 +710,9 @@ namespace OpenBveApi.Hosts {
 		public const string pipeName = @"pipename";
 
 		/// <summary>Base addresses for the hosted service.</summary>
-		public static Uri baseAddress { get { return new Uri(pipeBaseAddress); } }
+		public static Uri baseAddress => new Uri(pipeBaseAddress);
 
 		/// <summary>Complete address of the named pipe endpoint.</summary>
-		public static Uri Win32PluginHostEndpointAddress { get { return new Uri(pipeBaseAddress + '/' + pipeName); } }
+		public static Uri Win32PluginHostEndpointAddress => new Uri(pipeBaseAddress + '/' + pipeName);
 	}
 }

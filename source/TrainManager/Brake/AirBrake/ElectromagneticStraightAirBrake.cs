@@ -1,4 +1,5 @@
 ﻿using System;
+using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
 
@@ -6,12 +7,9 @@ namespace TrainManager.BrakeSystems
 {
 	public class ElectromagneticStraightAirBrake : CarBrake
 	{
-		public ElectromagneticStraightAirBrake(EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, ReverserHandle ReverserHandle, bool IsMotorCar, double BrakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] DecelerationCurves)
+		public ElectromagneticStraightAirBrake(EletropneumaticBrakeType type, CarBase car, double BrakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] DecelerationCurves) : base(car)
 		{
 			electropneumaticBrakeType = type;
-			emergencyHandle = EmergencyHandle;
-			reverserHandle = ReverserHandle;
-			isMotorCar = IsMotorCar;
 			brakeControlSpeed = BrakeControlSpeed;
 			motorDeceleration = MotorDeceleration;
 			motorDecelerationDelayUp = MotorDecelerationDelayUp;
@@ -22,7 +20,7 @@ namespace TrainManager.BrakeSystems
 		public override void Update(double TimeElapsed, double currentSpeed, AbstractHandle brakeHandle, out double deceleration)
 		{
 			airSound = null;
-			if (emergencyHandle.Actual)
+			if (Car.baseTrain.Handles.EmergencyBrake.Actual)
 			{
 				if (brakeType == BrakeType.Main)
 				{
@@ -63,7 +61,7 @@ namespace TrainManager.BrakeSystems
 				if (brakePipe.CurrentPressure > equalizingReservoir.CurrentPressure + Tolerance)
 				{
 					// brake pipe exhaust valve
-					double r = emergencyHandle.Actual ? brakePipe.EmergencyRate : brakePipe.ServiceRate;
+					double r = Car.baseTrain.Handles.EmergencyBrake.Actual ? brakePipe.EmergencyRate : brakePipe.ServiceRate;
 					double d = brakePipe.CurrentPressure - equalizingReservoir.CurrentPressure;
 					double m = equalizingReservoir.NormalPressure;
 					r = (0.5 + 1.5 * d / m) * r * TimeElapsed;
@@ -126,7 +124,7 @@ namespace TrainManager.BrakeSystems
 			}
 
 			// electric command
-			bool emergency = brakePipe.CurrentPressure + Tolerance < auxiliaryReservoir.CurrentPressure || emergencyHandle.Actual;
+			bool emergency = brakePipe.CurrentPressure + Tolerance < auxiliaryReservoir.CurrentPressure || Car.baseTrain.Handles.EmergencyBrake.Actual;
 
 			double targetPressure;
 			if (emergency)
@@ -141,7 +139,7 @@ namespace TrainManager.BrakeSystems
 				targetPressure *= brakeCylinder.ServiceMaximumPressure;
 			}
 
-			if (isMotorCar & !emergencyHandle.Actual & reverserHandle.Actual != 0)
+			if (Car.Specs.IsMotorCar & !Car.baseTrain.Handles.EmergencyBrake.Actual & Car.baseTrain.Handles.Reverser.Actual != 0)
 			{
 				//If we meet the conditions for brake control system to activate
 				if (Math.Abs(currentSpeed) > brakeControlSpeed)
@@ -244,7 +242,7 @@ namespace TrainManager.BrakeSystems
 			}
 
 			double p;
-			if (emergencyHandle.Actual)
+			if (Car.baseTrain.Handles.EmergencyBrake.Actual)
 			{
 				p = 0.0;
 			}
@@ -256,7 +254,7 @@ namespace TrainManager.BrakeSystems
 
 			if (p + Tolerance < straightAirPipe.CurrentPressure)
 			{
-				double r = emergencyHandle.Actual ? straightAirPipe.EmergencyRate : straightAirPipe.ReleaseRate;
+				double r = Car.baseTrain.Handles.EmergencyBrake.Actual ? straightAirPipe.EmergencyRate : straightAirPipe.ReleaseRate;
 				double d = straightAirPipe.CurrentPressure - p;
 				double m = brakeCylinder.EmergencyMaximumPressure;
 				r = GetRate(d / m, r * TimeElapsed);

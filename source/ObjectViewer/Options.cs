@@ -13,7 +13,10 @@ namespace ObjectViewer
     {
         internal static void LoadOptions()
         {
-			Interface.CurrentOptions = new Interface.Options();
+	        Interface.CurrentOptions = new Interface.Options
+	        {
+		        ViewingDistance = 1000, // fixed
+	        };
             string optionsFolder = Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
             if (!System.IO.Directory.Exists(optionsFolder))
             {

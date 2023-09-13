@@ -11,10 +11,11 @@ using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
-using SoundManager;
+using TrainManager.Brake;
 using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
 using TrainManager.Cargo;
+using TrainManager.Handles;
 using TrainManager.Power;
 using TrainManager.Trains;
 
@@ -36,7 +37,7 @@ namespace TrainManager.Car
 		/// <summary>The horns attached to this car</summary>
 		public Horn[] Horns;
 		/// <summary>Contains the physics properties for the car</summary>
-		public CarPhysics Specs;
+		public readonly CarPhysics Specs;
 		/// <summary>The car brake for this car</summary>
 		public CarBrake CarBrake;
 		/// <summary>The car sections (objects) attached to the car</summary>
@@ -86,20 +87,22 @@ namespace TrainManager.Car
 		/// <summary>The cargo carried by the car</summary>
 		public CargoBase Cargo;
 
+		private int trainCarIndex;
+
 		public CarBase(TrainBase train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient)
 		{
 			Specs = new CarPhysics();
 			Brightness = new Brightness(this);
 			baseTrain = train;
-			Index = index;
+			trainCarIndex = index;
 			CarSections = new CarSection[] { };
 			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 			FrontAxle.Follower.TriggerType = index == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 			RearAxle.Follower.TriggerType = index == baseTrain.Cars.Length - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
-			FrontBogie = new Bogie(train, this, false);
-			RearBogie = new Bogie(train, this, true);
+			FrontBogie = new Bogie(this, false);
+			RearBogie = new Bogie(this, true);
 			Doors = new Door[2];
 			Horns = new[]
 			{
@@ -118,13 +121,13 @@ namespace TrainManager.Car
 		public CarBase(TrainBase train, int index)
 		{
 			baseTrain = train;
-			Index = index;
+			trainCarIndex = index;
 			CarSections = new CarSection[] { };
 			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
-			FrontBogie = new Bogie(train, this, false);
-			RearBogie = new Bogie(train, this, true);
+			FrontBogie = new Bogie(this, false);
+			RearBogie = new Bogie(this, true);
 			Doors = new Door[2];
 			Horns = new[]
 			{
@@ -134,6 +137,7 @@ namespace TrainManager.Car
 			};
 			Brightness = new Brightness(this);
 			Cargo = new Passengers(this);
+			Specs = new CarPhysics();
 		}
 
 		/// <summary>Moves the car</summary>
@@ -239,7 +243,8 @@ namespace TrainManager.Car
 		/// <summary>Backing property for the index of the car within the train</summary>
 		public override int Index
 		{
-			get;
+			get => trainCarIndex;
+			set => trainCarIndex = value;
 		}
 
 		public override void Reverse(bool flipInterior = false)
@@ -347,6 +352,159 @@ namespace TrainManager.Car
 			}
 		}
 
+		public override void Uncouple(bool Front, bool Rear)
+		{
+			if (!Front && !Rear)
+			{
+				return;
+			}
+			// Create new train
+			TrainBase newTrain = new TrainBase(TrainState.Available);
+			UncouplingBehaviour uncouplingBehaviour = UncouplingBehaviour.Emergency;
+			newTrain.Handles.Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain)
+			{
+				DelayedChanges = new HandleChange[0]
+			};
+			newTrain.Handles.Brake = new BrakeHandle(0, 0, newTrain.Handles.EmergencyBrake, new double[0], new double[0], newTrain)
+			{
+				DelayedChanges = new HandleChange[0]
+			};
+			newTrain.Handles.HoldBrake = new HoldBrakeHandle(newTrain);
+			if (Front)
+			{
+				int totalPreceedingCars = trainCarIndex;
+				newTrain.Cars = new CarBase[trainCarIndex];
+				for (int i = 0; i < totalPreceedingCars; i++)
+				{
+					newTrain.Cars[i] = baseTrain.Cars[i];
+					newTrain.Cars[i].baseTrain = newTrain;
+				}
+
+				for (int i = totalPreceedingCars; i < baseTrain.Cars.Length; i++)
+				{
+					baseTrain.Cars[i - totalPreceedingCars] = baseTrain.Cars[i];
+					baseTrain.Cars[i].Index = i - totalPreceedingCars;
+				}
+				Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalPreceedingCars);
+				baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.UncoupleSound.Play(baseTrain.Cars[baseTrain.Cars.Length - 1], false);
+				uncouplingBehaviour = baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.UncouplingBehaviour;
+				TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain, false);
+
+				if (baseTrain.DriverCar - totalPreceedingCars >= 0)
+				{
+					baseTrain.DriverCar -= totalPreceedingCars;
+				}
+			}
+			
+			if (Rear)
+			{
+				int totalFollowingCars = baseTrain.Cars.Length - (Index + 1);
+				if (totalFollowingCars > 0)
+				{
+					newTrain.Cars = new CarBase[totalFollowingCars];
+					// Move following cars to new train
+					for (int i = 0; i < totalFollowingCars; i++)
+					{
+						newTrain.Cars[i] = baseTrain.Cars[Index + i + 1];
+						newTrain.Cars[i].baseTrain = newTrain;
+						newTrain.Cars[i].Index = i;
+					}
+					
+					Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalFollowingCars);
+					baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.connectedCar = baseTrain.Cars[baseTrain.Cars.Length - 1];
+				}
+				else
+				{
+					return;
+				}
+				Coupler.UncoupleSound.Play(this, false);
+				uncouplingBehaviour = Coupler.UncouplingBehaviour;
+				TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain, true);
+			}
+
+			for (int i = 0; i < newTrain.Cars.Length; i++)
+			{
+				/*
+				 * Make visible if not part of player train
+				 * Otherwise uncoupling from cab then changing to exterior, they will still be hidden
+				 *
+				 * Need to do this after everything has been done in case objects refer to other bits
+				 */
+				newTrain.Cars[i].ChangeCarSection(CarSectionType.Exterior);
+				newTrain.Cars[i].FrontBogie.ChangeSection(0);
+				newTrain.Cars[i].RearBogie.ChangeSection(0);
+				newTrain.Cars[i].Coupler.ChangeSection(0);
+			}
+
+			if (baseTrain.DriverCar >= baseTrain.Cars.Length)
+			{
+				/*
+				 * The driver car is no longer in the train
+				 *
+				 * Look for a car with an interior view to substitute
+				 * If not found, this will stop at Car 0
+				 */
+
+				for (int i = baseTrain.Cars.Length; i > 0; i--)
+				{
+					baseTrain.DriverCar = i - 1;
+					if (!baseTrain.Cars[i - 1].HasInteriorView)
+					{
+						/*
+						 * Set the eye position to something vaguely sensible, rather than leaving it on the rails
+						 * Whilst there will be no cab, at least it's a bit more usable like this
+						 */
+						baseTrain.Cars[i - 1].InteriorCamera = new CameraAlignment()
+						{
+							Position = new Vector3(0, 2, 0.5 * Length)
+						};
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+
+			if (Front)
+			{
+				// Uncoupling the front will always make the car our first
+				baseTrain.CameraCar = 0;
+			}
+			else
+			{
+				if (baseTrain.CameraCar >= baseTrain.Cars.Length)
+				{
+					baseTrain.CameraCar = baseTrain.DriverCar;
+				}	
+			}
+
+			switch (uncouplingBehaviour)
+			{
+				case UncouplingBehaviour.Emergency:
+					baseTrain.Handles.EmergencyBrake.Apply();
+					newTrain.Handles.EmergencyBrake.Apply();
+					break;
+				case UncouplingBehaviour.EmergencyUncoupledConsist:
+					newTrain.Handles.EmergencyBrake.Apply();
+					break;
+				case UncouplingBehaviour.EmergencyPlayer:
+					baseTrain.Handles.EmergencyBrake.Apply();
+					break;
+				case UncouplingBehaviour.Released:
+					baseTrain.Handles.Brake.ApplyState(0, false);
+					baseTrain.Handles.EmergencyBrake.Release();
+					newTrain.Handles.Brake.ApplyState(0, false);
+					newTrain.Handles.EmergencyBrake.Release();
+					break;
+				case UncouplingBehaviour.ReleasedUncoupledConsist:
+					newTrain.Handles.Brake.ApplyState(0, false);
+					newTrain.Handles.EmergencyBrake.Release();
+					break;
+
+			}
+		}
+
 		/// <summary>Returns the combination of door states what encountered at the specified car in a train.</summary>
 		/// <param name="Left">Whether to include left doors.</param>
 		/// <param name="Right">Whether to include right doors.</param>
@@ -413,15 +571,14 @@ namespace TrainManager.Car
 				const double maxDistance = 750.0;
 				if (distance > minDistance)
 				{
-					if (Sounds.Run.ContainsKey(FrontAxle.RunIndex))
+					if (Sounds.Run.TryGetValue(FrontAxle.RunIndex, out var runSound))
 					{
-						SoundBuffer buffer = Sounds.Run[FrontAxle.RunIndex].Buffer;
-						if (buffer != null)
+						if (runSound.Buffer != null)
 						{
-							if (buffer.Duration > 0.0)
+							if (runSound.Buffer.Duration > 0.0)
 							{
 								double offset = distance > maxDistance ? 25.0 : 300.0;
-								Sounds.RunNextReasynchronizationPosition = buffer.Duration * Math.Ceiling((baseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / buffer.Duration);
+								Sounds.RunNextReasynchronizationPosition = runSound.Buffer.Duration * Math.Ceiling((baseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / runSound.Buffer.Duration);
 							}
 						}
 					}
@@ -1168,83 +1325,68 @@ namespace TrainManager.Car
 			if (DecelerationDueToMotor == 0.0)
 			{
 				double a;
-				if (Specs.IsMotorCar)
+				if (DecelerationDueToMotor == 0.0 || !Specs.IsMotorCar)
 				{
-					if (DecelerationDueToMotor == 0.0)
+					if (baseTrain.Handles.Reverser.Actual != 0 & baseTrain.Handles.Power.Actual > 0 &
+					    !baseTrain.Handles.HoldBrake.Actual &
+					    !baseTrain.Handles.EmergencyBrake.Actual)
 					{
-						if (baseTrain.Handles.Reverser.Actual != 0 & baseTrain.Handles.Power.Actual > 0 &
-						    !baseTrain.Handles.HoldBrake.Actual &
-						    !baseTrain.Handles.EmergencyBrake.Actual)
+						// target acceleration
+						if (baseTrain.Handles.Power.Actual - 1 < Specs.AccelerationCurves.Length)
 						{
-							// target acceleration
-							if (baseTrain.Handles.Power.Actual - 1 < Specs.AccelerationCurves.Length)
-							{
-								// Load factor is a constant 1.0 for anything prior to BVE5
-								// This will need to be changed when the relevant branch is merged in
-								a = Specs.AccelerationCurves[baseTrain.Handles.Power.Actual - 1]
-									.GetAccelerationOutput(
-										(double) baseTrain.Handles.Reverser.Actual * CurrentSpeed,
-										1.0);
-							}
-							else
-							{
-								a = 0.0;
-							}
-
-							// readhesion device
-							if (ReAdhesionDevice is BveReAdhesionDevice device)
-							{
-								if (a > device.MaximumAccelerationOutput)
-								{
-									a = device.MaximumAccelerationOutput;
-								}
-							}
-							else if (ReAdhesionDevice is Sanders sanders)
-							{
-								wheelSlipAccelerationMotorFront *= 2.0;
-								wheelSlipAccelerationMotorRear *= 2.0;
-								wheelSlipAccelerationBrakeFront *= 2.0;
-								wheelSlipAccelerationBrakeRear *= 2.0;
-							}
-							
-
-							// wheel slip
-							if (a < wheelSlipAccelerationMotorFront)
-							{
-								FrontAxle.CurrentWheelSlip = false;
-							}
-							else
-							{
-								FrontAxle.CurrentWheelSlip = true;
-								wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * CurrentMass;
-							}
-
-							if (a < wheelSlipAccelerationMotorRear)
-							{
-								RearAxle.CurrentWheelSlip = false;
-							}
-							else
-							{
-								RearAxle.CurrentWheelSlip = true;
-								wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * CurrentMass;
-							}
-
-							// Update readhesion device
-							this.ReAdhesionDevice.Update(a);
-							// Update constant speed device
-
-							this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed,
-								baseTrain.Handles.Reverser.Actual);
-
-							// finalize
-							if (wheelspin != 0.0) a = 0.0;
+							// Load factor is a constant 1.0 for anything prior to BVE5
+							// This will need to be changed when the relevant branch is merged in
+							a = Specs.AccelerationCurves[baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)baseTrain.Handles.Reverser.Actual * CurrentSpeed, 1.0);
 						}
 						else
 						{
 							a = 0.0;
+						}
+
+						// readhesion device
+						if (ReAdhesionDevice is BveReAdhesionDevice device)
+						{
+							if (a > device.MaximumAccelerationOutput)
+							{
+								a = device.MaximumAccelerationOutput;
+							}
+						}
+						else if (ReAdhesionDevice is Sanders)
+						{
+							wheelSlipAccelerationMotorFront *= 2.0;
+							wheelSlipAccelerationMotorRear *= 2.0;
+							wheelSlipAccelerationBrakeFront *= 2.0;
+							wheelSlipAccelerationBrakeRear *= 2.0;
+						}
+
+
+						// wheel slip
+						if (a < wheelSlipAccelerationMotorFront)
+						{
 							FrontAxle.CurrentWheelSlip = false;
+						}
+						else
+						{
+							FrontAxle.CurrentWheelSlip = true;
+							wheelspin += (double)baseTrain.Handles.Reverser.Actual * a * CurrentMass;
+						}
+
+						if (a < wheelSlipAccelerationMotorRear)
+						{
 							RearAxle.CurrentWheelSlip = false;
 						}
+						else
+						{
+							RearAxle.CurrentWheelSlip = true;
+							wheelspin += (double)baseTrain.Handles.Reverser.Actual * a * CurrentMass;
+						}
+
+						Specs.MaxMotorAcceleration = a;
+						// Update constant speed device
+						this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
+
+						// finalize
+						if (wheelspin != 0.0) a = 0.0;
 					}
 					else
 					{
@@ -1255,10 +1397,13 @@ namespace TrainManager.Car
 				}
 				else
 				{
+					// HACK: Use special value here to inform the BVE readhesion device it shouldn't update this frame
+					Specs.MaxMotorAcceleration = -1;
 					a = 0.0;
 					FrontAxle.CurrentWheelSlip = false;
 					RearAxle.CurrentWheelSlip = false;
 				}
+
 
 				if (!Derailed)
 				{
@@ -1293,6 +1438,7 @@ namespace TrainManager.Car
 				}
 			}
 
+			ReAdhesionDevice.Update(TimeElapsed);
 			// brake
 			bool wheellock = wheelspin == 0.0 & Derailed;
 			if (!Derailed & wheelspin == 0.0)

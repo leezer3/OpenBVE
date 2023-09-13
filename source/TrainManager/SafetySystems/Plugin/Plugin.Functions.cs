@@ -305,7 +305,7 @@ namespace TrainManager.Trains
 					break;
 				default:
 					TrainManagerBase.currentHost.AddMessage(MessageType.Warning, false, "Legacy Win32 train plugins " + pluginTitle + " can only be used on Microsoft Windows or compatible.");
-					break;
+					return false;
 			}
 
 			if (TrainManagerBase.currentHost.Platform == HostPlatform.MicrosoftWindows && !System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\AtsPluginProxy.dll"))

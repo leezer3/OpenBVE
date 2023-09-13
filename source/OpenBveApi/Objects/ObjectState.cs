@@ -22,10 +22,7 @@ namespace OpenBveApi.Objects
 		/// <summary>The translation matrix to be applied</summary>
 		public Matrix4D Translation
 		{
-			get
-			{
-				return _translation;
-			}
+			get => _translation;
 			set
 			{
 				_translation = value;
@@ -35,10 +32,7 @@ namespace OpenBveApi.Objects
 		/// <summary>The scale matrix to be applied</summary>
 		public Matrix4D Scale
 		{
-			get
-			{
-				return _scale;
-			}
+			get => _scale;
 			set
 			{
 				_scale = value;
@@ -48,10 +42,7 @@ namespace OpenBveApi.Objects
 		/// <summary>The rotation matrix to be applied</summary>
 		public Matrix4D Rotate
 		{
-			get
-			{
-				return _rotate;
-			}
+			get => _rotate;
 			set
 			{
 				_rotate = value;

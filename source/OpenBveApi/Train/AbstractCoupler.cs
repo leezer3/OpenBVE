@@ -15,7 +15,15 @@
 
 		/// <summary>The minimum distance that the cars may be apart</summary>
 		public double MinimumDistanceBetweenCars;
+
 		/// <summary>The maximum distance that the cars may be apart</summary>
 		public double MaximumDistanceBetweenCars;
+
+		/// <summary>Whether the coupler can uncouple</summary>
+		public virtual bool CanUncouple
+		{
+			get;
+			set;
+		}
 	}
 }
