@@ -17,6 +17,7 @@ using OpenBveApi.World;
 using RouteManager2.MessageManager;
 using SoundManager;
 using TrainManager.Trains;
+using Path = OpenBveApi.Path;
 
 namespace OpenBve {
 	/// <summary>Represents the host application.</summary>
@@ -373,7 +374,19 @@ namespace OpenBve {
 						}
 					}
 				}
-				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+				string fn = Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
+				switch (fn)
+				{
+					case "empty":
+					case "null":
+					case "nullrail":
+					case "null_rail":
+						// Don't add an error for some common null objects
+						break;
+					default:
+						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+						break;
+				}
 			} else {
 				ReportProblem(ProblemType.PathNotFound, path);
 			}

@@ -13,6 +13,7 @@ using OpenBveApi.Trains;
 using OpenBveApi.World;
 using TrainManager;
 using TrainManager.Trains;
+using Path = OpenBveApi.Path;
 
 namespace ObjectViewer {
 	/// <summary>Represents the host application.</summary>
@@ -289,7 +290,20 @@ namespace ObjectViewer {
 						}
 					}
 				}
-				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+
+				string fn = Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
+				switch (fn)
+				{
+					case "empty":
+					case "null":
+					case "nullrail":
+					case "null_rail":
+						// Don't add an error for some common null objects
+						break;
+					default:
+						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+						break;
+				}
 			} else {
 				ReportProblem(ProblemType.PathNotFound, path);
 			}
