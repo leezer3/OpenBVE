@@ -32,29 +32,13 @@
 		}
 
 		/// <summary>Gets or sets the driver handles.</summary>
-		public Handles Handles
-		{
-			get
-			{
-				return this.MyHandles;
-			}
-			set
-			{
-				this.MyHandles = value;
-			}
-		}
+		public Handles Handles => MyHandles;
 
 		/// <summary>Gets or sets the AI response.</summary>
 		public AIResponse Response
 		{
-			get
-			{
-				return this.MyResponse;
-			}
-			set
-			{
-				this.MyResponse = value;
-			}
+			get => MyResponse;
+			set => MyResponse = value;
 		}
 	}
 }

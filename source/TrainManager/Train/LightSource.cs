@@ -29,7 +29,7 @@
 		/// <param name="newState">The new state</param>
 		public void SetState(int newState)
 		{
-			if (newState >= NumberOfStates)
+			if (newState > NumberOfStates)
 			{
 				CurrentState = 0;
 				return;

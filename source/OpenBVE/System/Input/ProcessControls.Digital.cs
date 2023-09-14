@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LibRender2.Cameras;
 using LibRender2.Overlays;
 using LibRender2.Screens;
@@ -986,10 +986,93 @@ namespace OpenBve
 						{
 							if (TrainManager.PlayerTrain.Cars[c].ReAdhesionDevice is Sanders sanders)
 							{
-								sanders.Toggle();
+								if(sanders.Type == SandersType.PressAndHold) {
+									sanders.SetActive(true);
+								} else {
+									sanders.Toggle();
+								}
 							}
 						}
 
+						break;
+					case Translations.Command.UncoupleFront:
+						/*
+						 * Need to remember that the coupler we're talking about here is actually that on the rear of the preceeding car, i.e. IDX - 1
+						 * This connects to the following car and is therefore it's front coupler
+						 *
+						 * However, car indexing is zero-based, so we need to *add* one to get the correct display number
+						 *
+						 */
+						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.Exterior)
+						{
+							MessageManager.AddMessage(
+								Translations.GetInterfaceString("notification_switchexterior_uncouple"),
+								MessageDependency.None, GameMode.Expert,
+								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							return;
+						}
+
+						if (TrainManager.PlayerTrain.CameraCar == 0)
+						{
+							// Unable to uncouple front of first car
+							MessageManager.AddMessage(
+								Translations.GetInterfaceString("notification_unable_uncouple"),
+								MessageDependency.None, GameMode.Expert,
+								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							return;
+						}
+
+						if (TrainManager.PlayerTrain.CameraCar - 1 >= TrainManager.PlayerTrain.Cars.Length || !TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar - 1].Coupler.CanUncouple)
+						{
+							MessageManager.AddMessage(
+								Translations.GetInterfaceString("notification_fixed_uncouple"),
+								MessageDependency.None, GameMode.Expert,
+								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							return;
+						}
+						MessageManager.AddMessage(
+							Translations.GetInterfaceString("notification_exterior_uncouplefront") + " " + (TrainManager.PlayerTrain.CameraCar + 1),
+							MessageDependency.None, GameMode.Expert,
+							MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].Uncouple(true, false);
+						break;
+					case Translations.Command.UncoupleRear:
+						/*
+						 * At least this one is simpler, as the rear coupler is that on our camera car
+						 *
+						 * Still need to add one for the message to display indices however
+						 */
+						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.Exterior)
+						{
+							MessageManager.AddMessage(
+								Translations.GetInterfaceString("notification_switchexterior_uncouple"),
+								MessageDependency.None, GameMode.Expert,
+								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							return;
+						}
+
+						if (TrainManager.PlayerTrain.CameraCar == TrainManager.PlayerTrain.Cars.Length - 1)
+						{
+							MessageManager.AddMessage(
+								Translations.GetInterfaceString("notification_unable_uncouple"),
+								MessageDependency.None, GameMode.Expert,
+								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							return;
+						}
+
+						if (!TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].Coupler.CanUncouple)
+						{
+							MessageManager.AddMessage(
+								Translations.GetInterfaceString("notification_fixed_uncouple"),
+								MessageDependency.None, GameMode.Expert,
+								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							return;
+						}
+						MessageManager.AddMessage(
+							Translations.GetInterfaceString("notification_exterior_uncouplerear") + " " + (TrainManager.PlayerTrain.CameraCar + 1),
+							MessageDependency.None, GameMode.Expert,
+							MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].Uncouple(false, true);
 						break;
 					case Translations.Command.TimetableToggle:
 						// option: timetable
@@ -1400,6 +1483,8 @@ namespace OpenBve
 							{
 								if (sanders.Type == SandersType.PressAndHold)
 								{
+									sanders.SetActive(false);
+								} else {
 									sanders.Toggle();
 								}
 							}

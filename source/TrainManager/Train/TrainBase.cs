@@ -110,6 +110,8 @@ namespace TrainManager.Trains
 			Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 			Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
 			DriverBody = new DriverBody(this);
+			Handles.Reverser = new ReverserHandle(this);
+			Handles.EmergencyBrake = new EmergencyHandle(this);
 		}
 
 		/// <summary>Called once when the simulation loads to initalize the train</summary>
@@ -514,8 +516,7 @@ namespace TrainManager.Trains
 				{
 					breaker = Handles.Reverser.Actual != 0 & Handles.Power.Safety >= 1 & Handles.Brake.Safety == 0 & !Handles.EmergencyBrake.Safety & !Handles.HoldBrake.Actual;
 				}
-
-				Cars[DriverCar].Breaker.Update(breaker);
+				Cars[DriverCar].Breaker?.Update(breaker);
 			}
 			// signals
 			if (CurrentSectionLimit == 0.0)

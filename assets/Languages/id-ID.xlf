@@ -2487,7 +2487,7 @@
 						<source>Activates or deactivates the constant speed device</source>
 						<target>Kecepatan konstan</target>
 					</trans-unit>
-					<trans-unit id="play_micsounds">
+					<trans-unit id="play_mic_sounds">
 						<source>Activates or deactivates the system microphone soundsource</source>
 					</trans-unit>
 					<trans-unit id="sanders">

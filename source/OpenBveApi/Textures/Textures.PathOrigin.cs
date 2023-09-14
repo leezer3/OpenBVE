@@ -21,9 +21,9 @@ namespace OpenBveApi.Textures
 		/// <param name="Host">The callback function to the host application</param>
 		public PathOrigin(string path, TextureParameters parameters, Hosts.HostInterface Host)
 		{
-			this.Path = path;
-			this.Parameters = parameters;
-			this.currentHost = Host;
+			Path = path;
+			Parameters = parameters;
+			currentHost = Host;
 		}
 
 		// --- functions ---
@@ -32,7 +32,7 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether the texture could be obtained successfully.</returns>
 		public override bool GetTexture(out Texture texture)
 		{
-			if (!currentHost.LoadTexture(this.Path, this.Parameters, out texture))
+			if (!currentHost.LoadTexture(Path, Parameters, out texture))
 			{
 				texture = null;
 				return false;
@@ -48,9 +48,9 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether the two origins are equal.</returns>
 		public static bool operator ==(PathOrigin a, PathOrigin b)
 		{
-			if (object.ReferenceEquals(a, b)) return true;
-			if (object.ReferenceEquals(a, null)) return false;
-			if (object.ReferenceEquals(b, null)) return false;
+			if (ReferenceEquals(a, b)) return true;
+			if (ReferenceEquals(a, null)) return false;
+			if (ReferenceEquals(b, null)) return false;
 			return a.Path == b.Path;
 		}
 
@@ -60,9 +60,9 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether the two origins are unequal.</returns>
 		public static bool operator !=(PathOrigin a, PathOrigin b)
 		{
-			if (object.ReferenceEquals(a, b)) return false;
-			if (object.ReferenceEquals(a, null)) return true;
-			if (object.ReferenceEquals(b, null)) return true;
+			if (ReferenceEquals(a, b)) return false;
+			if (ReferenceEquals(a, null)) return true;
+			if (ReferenceEquals(b, null)) return true;
 			return a.Path != b.Path;
 		}
 
@@ -71,17 +71,17 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether this instance is equal to the specified object.</returns>
 		public override bool Equals(object obj)
 		{
-			if (object.ReferenceEquals(this, obj)) return true;
-			if (object.ReferenceEquals(this, null)) return false;
-			if (object.ReferenceEquals(obj, null)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (ReferenceEquals(this, null)) return false;
+			if (ReferenceEquals(obj, null)) return false;
 			if (!(obj is PathOrigin)) return false;
-			return this.Path == ((PathOrigin) obj).Path;
+			return Path == ((PathOrigin) obj).Path;
 		}
 
 		/// <summary>Returns a string representing the absolute on-disk path of this texture</summary>
 		public override string ToString()
 		{
-			return this.Path;
+			return Path;
 		}
 	}
 }

@@ -45,8 +45,6 @@ namespace ObjectViewer.Trains
 		private static TrainBase CreateDummyTrain()
 		{
 			TrainBase train = new TrainBase(TrainState.Available);
-
-			train.Handles.Reverser = new ReverserHandle(train);
 			train.Handles.Power = new PowerHandle(Specs.PowerNotches, Specs.PowerNotches, new double[] { }, new double[] { }, train);
 			if (Specs.IsAirBrake)
 			{
@@ -57,7 +55,6 @@ namespace ObjectViewer.Trains
 				train.Handles.Brake = new BrakeHandle(Specs.BrakeNotches, Specs.BrakeNotches, null, new double[] { }, new double[] { }, train);
 				train.Handles.HasHoldBrake = Specs.HasHoldBrake;
 			}
-			train.Handles.EmergencyBrake = new EmergencyHandle(train);
 			train.Handles.HoldBrake = new HoldBrakeHandle(train);
 			train.Specs.HasConstSpeed = Specs.HasConstSpeed;
 
@@ -65,16 +62,17 @@ namespace ObjectViewer.Trains
 			for (int i = 0; i < train.Cars.Length; i++)
 			{
 				train.Cars[i] = new CarBase(train, i);
-				train.Cars[i].Specs = new CarPhysics();
 
 				if (Specs.IsAirBrake)
 				{
-					train.Cars[i].CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.None, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0.0, 0.0, new AccelerationCurve[] { });
+					train.Cars[i].CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.None, train.Cars[i], 0.0, 0.0, new AccelerationCurve[] { });
 				}
 				else
 				{
-					train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0.0, 0.0, 0.0, 0.0, new AccelerationCurve[] { });
+					train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, train.Cars[i], 0.0, 0.0, 0.0, 0.0, new AccelerationCurve[] { });
 				}
+
+				train.Cars[i].Specs.IsMotorCar = true;
 				//At the minute, Object Viewer uses dummy brake systems
 				train.Cars[i].CarBrake.mainReservoir = new MainReservoir(Status.MainReservoirPressure * 1000.0);
 				train.Cars[i].CarBrake.equalizingReservoir = new EqualizingReservoir(Status.EqualizingReservoirPressure * 1000.0);

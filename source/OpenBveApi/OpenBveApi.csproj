@@ -112,6 +112,7 @@
     <Compile Include="Interface\Logging\LogMessage.MessageType.cs" />
     <Compile Include="Interface\Time.cs" />
     <Compile Include="Interface\Translations\Language.cs" />
+    <Compile Include="Math\Endianness.cs" />
     <Compile Include="Math\Matrix4.cs" />
     <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Vectors\Vector2f.cs" />
@@ -195,6 +196,7 @@
     <Compile Include="Sounds\Sounds.SoundSourceState.cs" />
     <Compile Include="Sounds\Sounds.SoundType.cs" />
     <Compile Include="System\BaseOptions.cs" />
+    <Compile Include="System\BinaryExtensions.cs" />
     <Compile Include="System\Files.cs" />
     <Compile Include="System\FileSystem.cs" />
     <Compile Include="Graphics\InterpolationModes.cs" />
@@ -218,6 +220,7 @@
     <Compile Include="System\Timers.cs" />
     <Compile Include="Textures\Textures.ByteArrayOrigin.cs" />
     <Compile Include="Textures\Textures.ImageSizeMode.cs" />
+    <Compile Include="Textures\Textures.PixelFormat.cs" />
     <Compile Include="Train\AbstractCar.cs" />
     <Compile Include="Train\AbstractTrain.cs" />
     <Compile Include="Train\Axle.cs" />

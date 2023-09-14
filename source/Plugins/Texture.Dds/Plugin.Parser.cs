@@ -83,7 +83,7 @@ namespace Texture.Dds
 		        textureData[i + 2] = rawData[i + 2]; // blue
 		        textureData[i + 3] = rawData[i + 3]; // alpha
 	        }
-	        myTexture = new OpenBveApi.Textures.Texture(width, height, 32, textureData, null);
+	        myTexture = new OpenBveApi.Textures.Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, textureData, null);
         }
 
         private PixelFormat GetFormat(DdsHeader header, out int blocksize)

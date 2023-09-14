@@ -49,10 +49,12 @@ namespace Train.OpenBve
 						switch (DocumentNodes[i].Name)
 						{
 							case "DriverCar":
-								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out Train.DriverCar))
+								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out var driverCar) || driverCar < 0)
 								{
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "DriverCar is invalid in XML file " + fileName);
+									break;
 								}
+								Train.DriverCar = driverCar;
 								break;
 						}
 					}
@@ -116,6 +118,20 @@ namespace Train.OpenBve
 											Plugin.currentHost.LoadObject(f, Encoding.Default, out CouplerObjects[carIndex - 1]);
 										}
 										break;
+									case "canuncouple":
+										int nn;
+										NumberFormats.TryParseIntVb6(c.InnerText, out nn);
+										if (c.InnerText.ToLowerInvariant() == "false" || nn == 0)
+										{
+											Train.Cars[carIndex - 1].Coupler.CanUncouple = false;
+										}
+										break;
+									case "uncouplingbehaviour":
+										if (!Enum.TryParse(c.InnerText, true, out Train.Cars[carIndex -1].Coupler.UncouplingBehaviour))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid uncoupling behaviour " + c.InnerText + " in " + c.Name + " node.");
+										}
+										break;
 								}
 							}
 						}
@@ -152,6 +168,13 @@ namespace Train.OpenBve
 						carIndex++;
 					}
 				}
+
+				if (Train.DriverCar >= Train.Cars.Length)
+				{
+					Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid driver car defined in XML file " + fileName);
+					Train.DriverCar = Train.Cars.Length - 1;
+				}
+
 				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.NotSpecified)
 				{
 					Plugin.Renderer.Camera.CurrentRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;

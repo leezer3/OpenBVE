@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.World;
+// ReSharper disable UnusedMember.Global
 
 namespace OpenBveApi.Math {
 	/// <summary>Represents a three-dimensional vector.</summary>

@@ -745,10 +745,10 @@ namespace OpenBveApi.Objects
 		/// <param name="Position">The absolute position</param>
 		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
 		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
-		/// <param name="SectionIndex">The index of the section if placed using a SigF command</param>
+		/// <param name="sectionIndex">The index of the section if placed using a SigF command</param>
 		/// <param name="TrackPosition">The absolute track position</param>
 		/// <param name="Brightness">The brightness value at the track position</param>
-		public void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, int SectionIndex, double TrackPosition, double Brightness)
+		public void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, int sectionIndex, double TrackPosition, double Brightness)
 		{
 
 			int a = currentHost.AnimatedWorldObjectsUsed;
@@ -804,7 +804,7 @@ namespace OpenBveApi.Objects
 			{
 				var o = this.Clone();
 				currentHost.CreateDynamicObject(ref o.internalObject);
-				o.SectionIndex = SectionIndex;
+				o.SectionIndex = sectionIndex;
 				AnimatedWorldObject currentObject = new AnimatedWorldObject(currentHost)
 				{
 					Position = Position,
@@ -812,7 +812,7 @@ namespace OpenBveApi.Objects
 					Up = FinalTransformation.Y,
 					Side = FinalTransformation.X,
 					Object = o,
-					SectionIndex = SectionIndex,
+					SectionIndex = sectionIndex,
 					TrackPosition = TrackPosition,
 				};
 				for (int i = 0; i < currentObject.Object.States.Length; i++)

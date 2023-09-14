@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Threading;
 using OpenBveApi;
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -60,7 +59,7 @@ namespace RouteViewer
             if (Program.CurrentRouteFile != null)
             {
 	            DateTime d = DateTime.Now;
-	            Game.SecondsSinceMidnight = (double)(3600 * d.Hour + 60 * d.Minute + d.Second) + 0.001 * (double)d.Millisecond;
+	            Game.SecondsSinceMidnight = 3600 * d.Hour + 60 * d.Minute + d.Second + 0.001 * d.Millisecond;
 	            ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
 	            World.UpdateAbsoluteCamera(TimeElapsed);
 	            Program.Renderer.UpdateVisibility(true);

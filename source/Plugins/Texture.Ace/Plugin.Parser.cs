@@ -395,7 +395,7 @@ namespace Texture.Ace {
 						throw new NotSupportedException();
 					}
 					// --- return texture ---
-					return new OpenBveApi.Textures.Texture(width, height, 32, bytes, null);
+					return new OpenBveApi.Textures.Texture(width, height, PixelFormat.RGBAlpha, bytes, null);
 				}
 			}
 		}

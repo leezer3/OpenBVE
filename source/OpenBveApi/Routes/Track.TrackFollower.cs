@@ -93,13 +93,7 @@ namespace OpenBveApi.Routes
 		}
 
 		/// <summary>Gets the rail gauge for the track this is following</summary>
-		public double RailGauge
-		{
-			get
-			{
-				return currentHost.Tracks[TrackIndex].RailGauge;
-			}
-		}
+		public double RailGauge => currentHost.Tracks[TrackIndex].RailGauge;
 
 		/// <summary>Updates the World Coordinates</summary>
 		/// <param name="AddTrackInaccuracy"></param>

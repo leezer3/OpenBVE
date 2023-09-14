@@ -355,5 +355,12 @@ namespace OpenBveApi {
 		{
 			return System.IO.Path.GetFileName(path);
 		}
+
+		/// <summary>Returns the file name for the specificed path string</summary>
+		/// <param name="path">The path string</param>
+		public static string GetFileNameWithoutExtension(string path)
+		{
+			return System.IO.Path.GetFileNameWithoutExtension(path);
+		}
 	}
 }

@@ -97,5 +97,7 @@ namespace OpenBveApi
 		/// <summary>The object disposal mode in use</summary>
 		/// <remarks>Not saved</remarks>
 		public ObjectDisposalMode ObjectDisposalMode;
+		/// <summary>Uses the native Windows GDI+ decoders for PNG / JPG</summary>
+		public bool UseGDIDecoders;
 	}
 }

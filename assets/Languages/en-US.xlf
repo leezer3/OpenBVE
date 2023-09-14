@@ -1579,6 +1579,21 @@
 					<trans-unit id="mousegrab_off">
 						<source>Mouse grab: off</source>
 					</trans-unit>
+					<trans-unit id="switchexterior_uncouple">
+						<source>Please switch to exterior view to uncouple.</source>
+					</trans-unit>
+					<trans-unit id="unable_uncouple">
+						<source>Unable to uncouple this car.</source>
+					</trans-unit>
+					<trans-unit id="exterior_uncouplerear">
+						<source>Uncoupling the rear of car number</source>
+					</trans-unit>
+					<trans-unit id="exterior_uncouplefront">
+						<source>Uncoupling the front of car number</source>
+					</trans-unit>
+					<trans-unit id="fixed_uncouple">
+						<source>This coupler is fixed, and cannot uncouple.</source>
+					</trans-unit>
 				</group>
 				<group id="score">
 					<trans-unit id="overspeed">
@@ -1910,7 +1925,7 @@
 					<trans-unit id="device_constspeed">
 						<source>Activates or deactivates the constant speed device</source>
 					</trans-unit>
-					<trans-unit id="play_micsounds">
+					<trans-unit id="play_mic_sounds">
 						<source>Activates or deactivates the system microphone soundsource</source>
 					</trans-unit>
 					<trans-unit id="sanders">
@@ -2188,6 +2203,21 @@
 					</trans-unit>
 					<trans-unit id="raildriver_speed_units">
 						<source>Toggles the RailDriver speed display units.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_current_speed">
+						<source>Accessibility: Audibly announces the current speed.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_signal">
+						<source>Accessibility: Audibly announces the next signal distance and aspect.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_station">
+						<source>Accessibility: Audibly announces the the next station name and distance.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_front">
+						<source>Uncouples the front coupler for the selected car.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_rear">
+						<source>Uncouples the rear coupler for the selected car.</source>
 					</trans-unit>
 				</group>
 				<group id="keys">

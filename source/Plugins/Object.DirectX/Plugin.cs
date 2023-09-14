@@ -73,7 +73,7 @@ namespace Plugin
 		    if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32)
 		    {
 			    string potentialPath = System.Text.Encoding.ASCII.GetString(Data);
-			    if (!OpenBveApi.Path.ContainsInvalidChars(potentialPath))
+			    if (!OpenBveApi.Path.ContainsInvalidChars(potentialPath) && !string.IsNullOrEmpty(potentialPath))
 			    {
 				    pathRecursions++;
 				    return CanLoadObject(OpenBveApi.Path.CombineFile(Path.GetDirectoryName(path), potentialPath));

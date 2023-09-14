@@ -77,170 +77,86 @@ namespace OpenBveApi.Runtime
 		/// <param name="destination">The current destination</param>
 		public ElapseData(VehicleState vehicle, PrecedingVehicleState precedingVehicle, Handles handles, DoorInterlockStates doorinterlock, int headlightState, Time totalTime, Time elapsedTime, List<Station> stations, CameraViewMode cameraView, string languageCode, int destination)
 		{
-			this.MyVehicle = vehicle;
-			this.MyPrecedingVehicle = precedingVehicle;
-			this.MyHandles = handles;
-			this.MyDoorInterlockState = doorinterlock;
-			this.MyTotalTime = totalTime;
-			this.MyElapsedTime = elapsedTime;
-			this.MyDebugMessage = null;
-			this.MyStations = stations;
-			this.MyCameraViewMode = cameraView;
-			this.MyLanguageCode = languageCode;
-			this.CurrentDestination = destination;
-			this.MyHeadlightState = headlightState;
-			this.MyBlockingInput = false; // Host application always unblocks input, must be set by plugin each frame to avoid deadlocking
+			MyVehicle = vehicle;
+			MyPrecedingVehicle = precedingVehicle;
+			MyHandles = handles;
+			MyDoorInterlockState = doorinterlock;
+			MyTotalTime = totalTime;
+			MyElapsedTime = elapsedTime;
+			MyDebugMessage = null;
+			MyStations = stations;
+			MyCameraViewMode = cameraView;
+			MyLanguageCode = languageCode;
+			CurrentDestination = destination;
+			MyHeadlightState = headlightState;
+			MyBlockingInput = false; // Host application always unblocks input, must be set by plugin each frame to avoid deadlocking
 		}
 
 
 		/// <summary>Gets the state of the train.</summary>
-		public VehicleState Vehicle
-		{
-			get
-			{
-				return this.MyVehicle;
-			}
-		}
+		public VehicleState Vehicle => MyVehicle;
 
 		/// <summary>Gets the state of the preceding train, or a null reference if there is no preceding train.</summary>
-		public PrecedingVehicleState PrecedingVehicle
-		{
-			get
-			{
-				return this.MyPrecedingVehicle;
-			}
-		}
+		public PrecedingVehicleState PrecedingVehicle => MyPrecedingVehicle;
 
 		/// <summary>Gets or sets the virtual handles.</summary>
 		public Handles Handles
 		{
-			get
-			{
-				return this.MyHandles;
-			}
-			set
-			{
-				this.MyHandles = value;
-			}
+			get => MyHandles;
+			set => MyHandles = value;
 		}
 
 		/// <summary>Gets or sets the state of the door lock.</summary>
 		public DoorInterlockStates DoorInterlockState
 		{
-			get
-			{
-				return this.MyDoorInterlockState;
-			}
-			set
-			{
-				this.MyDoorInterlockState = value;
-			}
+			get => MyDoorInterlockState;
+			set => MyDoorInterlockState = value;
 		}
 
 		/// <summary>Gets the absolute in-game time.</summary>
-		public Time TotalTime
-		{
-			get
-			{
-				return this.MyTotalTime;
-			}
-		}
+		public Time TotalTime => MyTotalTime;
 
 		/// <summary>Gets the time that elapsed since the last call to Elapse.</summary>
-		public Time ElapsedTime
-		{
-			get
-			{
-				return this.MyElapsedTime;
-			}
-		}
+		public Time ElapsedTime => MyElapsedTime;
 
 		/// <summary>Gets or sets the debug message the plugin wants the host application to display.</summary>
 		public string DebugMessage
 		{
-			get
-			{
-				return this.MyDebugMessage;
-			}
-			set
-			{
-				this.MyDebugMessage = value;
-			}
+			get => MyDebugMessage;
+			set => MyDebugMessage = value;
 		}
 
 		/// <summary>Gets or sets the disable time acceleration bool.</summary>
 		public bool DisableTimeAcceleration
 		{
-			get
-			{
-				return this.MyDisableTimeAcceleration;
-			}
-			set
-			{
-				this.MyDisableTimeAcceleration = value;
-			}
+			get => MyDisableTimeAcceleration;
+			set => MyDisableTimeAcceleration = value;
 		}
 
 		/// <summary>Returns the list of stations in the current route.</summary>
-		public List<Station> Stations
-		{
-			get
-			{
-				return this.MyStations;
-			}
-		}
+		public List<Station> Stations => MyStations;
 
 		/// <summary>Gets the current camera view mode.</summary>
-		public CameraViewMode CameraViewMode
-		{
-			get
-			{
-				return this.MyCameraViewMode;
-			}
-		}
+		public CameraViewMode CameraViewMode => MyCameraViewMode;
 
 		/// <summary>Gets the current user interface language code.</summary>
-		public string CurrentLanguageCode
-		{
-			get
-			{
-				return this.MyLanguageCode;
-			}
-		}
+		public string CurrentLanguageCode => MyLanguageCode;
 
 		/// <summary>Gets the destination variable as set by the plugin</summary>
-		public int Destination
-		{
-			get
-			{
-				return this.CurrentDestination;
-			}
-		}
+		public int Destination => CurrentDestination;
 
 		/// <summary>Gets the headlight state variable as set by the plugin</summary>
 		public int HeadlightState
 		{
-			get
-			{
-				return this.MyHeadlightState;
-			}
-			set
-			{
-				this.MyHeadlightState = value;
-			}
+			get => MyHeadlightState;
+			set => MyHeadlightState = value;
 		}
 
 		/// <summary>Gets the input blocking state as set by the plugin</summary>
 		public bool BlockingInput
 		{
-			get
-			{
-				return this.MyBlockingInput;
-			}
-			set
-			{
-				this.MyBlockingInput = value;
-			}
+			get => MyBlockingInput;
+			set => MyBlockingInput = value;
 		}
 	}
 }
