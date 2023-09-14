@@ -396,7 +396,9 @@ namespace LibRender2.Textures
 
 									j += stride - 3 * texture.Width;
 								}
-
+								// send as is
+								// n.b. Must reset the unpack alignment in case of changes
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
 									PixelInternalFormat.Rgb8,
 									texture.Width, texture.Height, 0,
@@ -424,6 +426,8 @@ namespace LibRender2.Textures
 						 * The texture uses its alpha channel, so send the bitmap data
 						 * in 32-bits per channel as-is.
 						 * */
+								// n.b. Must reset the unpack alignment in case of changes
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 								GL.TexImage2D(TextureTarget.Texture2D, 0,
 									PixelInternalFormat.Rgba8,
 									texture.Width, texture.Height, 0,
