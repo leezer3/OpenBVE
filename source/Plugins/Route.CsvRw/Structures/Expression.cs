@@ -167,9 +167,14 @@ namespace CsvRwRouteParser
 											Text = Text.Remove(i, 1).Insert(i, "[");
 											break;
 										}
-										if (Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase))
+										if (Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase) ||
+										    Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
 										{
-											// HACK: In filenames, temp replace with an invalid but known character
+											/*
+											 * HACK: In filenames, temp replace with an invalid but known character
+											 *
+											 * Opening parenthesis are fortunately simpler than closing, see notes below.
+											 */
 											Text = Text.Remove(i, 1).Insert(i, "<");
 											break;
 										}
@@ -206,9 +211,17 @@ namespace CsvRwRouteParser
 										Text = Text.Remove(i, 1).Insert(i, "]");
 										continue;
 									}
-									if ((Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase)) && i != Text.Length)
+									if ((Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase)) && i != Text.Length  ||
+									    Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1 && Text.IndexOf('<') != -1 && i > 18 && i != Text.Length -1)
 									{
-										// HACK: In filenames, temp replace with an invalid but known character
+										/*
+										 * HACK: In filenames, temp replace with an invalid but known character
+										 *
+										 * Note that this is a PITA in object folder names when the creator has used the alternate .Load() format as this contains far more brackets
+										 * e.g.
+										 * .Rail(0).Load(kcrmosr(2009)\rail\c0.csv)
+										 * We must keep the first and last closing parenthesis intact here
+										 */
 										Text = Text.Remove(i, 1).Insert(i, ">");
 										continue;
 									}
@@ -408,7 +421,7 @@ namespace CsvRwRouteParser
 					{
 						Command = Text.Substring(0, i).TrimEnd();
 						ArgumentSequence = Text.Substring(i + 1, Text.Length - i - 2).Trim();
-						if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase))
+						if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase) || Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
 						{
 							// put back any temp removed brackets
 							ArgumentSequence = ArgumentSequence.Replace('<', '(');
