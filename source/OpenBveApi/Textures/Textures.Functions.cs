@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using OpenBveApi.Colors;
 
@@ -155,18 +155,7 @@ namespace OpenBveApi.Textures {
 			switch (pixelFormat)
 			{
 				case PixelFormat.Grayscale:
-					if (source[0] == r && source[0] == g && source[0] == b) {
-						target[0] = 128;
-						target[1] = 128;
-						target[2] = 128;
-						target[3] = 0;
-					} else {
-						target[0] = source[0];
-						target[1] = source[1];
-						target[2] = source[2];
-						target[3] = source[3];
-					}
-					for (int i = 2; i < source.Length; i++, targetIndex += 4) {
+					for (int i = 0; i < source.Length; i++, targetIndex += 4) {
 						if (source[i] == r && source[i] == g && source[i] == b)
 						{
 							target[targetIndex] = 0;
@@ -182,18 +171,7 @@ namespace OpenBveApi.Textures {
 					}
 					break;
 				case PixelFormat.GrayscaleAlpha:
-					if (source[0] == r && source[0] == g && source[0] == b) {
-						target[0] = 128;
-						target[1] = 128;
-						target[2] = 128;
-						target[3] = 0;
-					} else {
-						target[0] = source[0];
-						target[1] = source[1];
-						target[2] = source[2];
-						target[3] = source[3];
-					}
-					for (int i = 2; i < source.Length; i += 2, targetIndex += 4) {
+					for (int i = 0; i < source.Length; i += 2, targetIndex += 4) {
 						if (source[i] == r && source[i] == g && source[i] == b)
 						{
 							target[targetIndex] = 0;
@@ -209,18 +187,7 @@ namespace OpenBveApi.Textures {
 					}
 					break;
 				case PixelFormat.RGB:
-					if (source[0] == r && source[1] == g && source[2] == b) {
-						target[0] = 128;
-						target[1] = 128;
-						target[2] = 128;
-						target[3] = 0;
-					} else {
-						target[0] = source[0];
-						target[1] = source[1];
-						target[2] = source[2];
-						target[3] = source[3];
-					}
-					for (int i = 3; i < source.Length; i += 3, targetIndex += 4) {
+					for (int i = 0; i < source.Length; i += 3, targetIndex += 4) {
 						if (source[i] == r && source[i + 1] == g && source[i + 2] == b)
 						{
 							target[targetIndex] = 0;
