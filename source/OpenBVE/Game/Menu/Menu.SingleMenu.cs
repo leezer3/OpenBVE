@@ -638,14 +638,14 @@ namespace OpenBve
 									{
 										if (currentEvent is SwitchEvent ev)
 										{
-											nextSwitches.Add(ev.Index);
+											nextSwitches.Add(new FoundSwitch(ev.Index, false));
 											currentTrack = Program.CurrentRoute.Tracks[Program.CurrentRoute.Switches[ev.Index].CurrentlySetTrack];
 											maxElement = currentTrack.Elements.Length; // switch cannot be on last element, hence should be safe
 										}
 
 										if (currentEvent is TrailingSwitchEvent tev)
 										{
-											nextSwitches.Add(tev.Index);
+											nextSwitches.Add(new FoundSwitch(tev.Index, true));
 											currentTrack = Program.CurrentRoute.Tracks[Program.CurrentRoute.Switches[tev.Index].CurrentlySetTrack];
 											maxElement = currentTrack.Elements.Length; // switch cannot be on last element, hence should be safe
 										}
@@ -658,13 +658,13 @@ namespace OpenBve
 									{
 										if (currentEvent is SwitchEvent ev)
 										{
-											previousSwitches.Add(ev.Index);
+											previousSwitches.Add(new FoundSwitch(ev.Index, false));
 											currentTrack = Program.CurrentRoute.Tracks[Program.CurrentRoute.Switches[ev.Index].CurrentlySetTrack];
 										}
 
 										if (currentEvent is TrailingSwitchEvent tev)
 										{
-											previousSwitches.Add(tev.Index);
+											previousSwitches.Add(new FoundSwitch(tev.Index, true));
 											currentTrack = Program.CurrentRoute.Tracks[Program.CurrentRoute.Switches[tev.Index].CurrentlySetTrack];
 										}
 									}
@@ -679,8 +679,8 @@ namespace OpenBve
 							if (nextSwitches.Count != 0 && previousSwitches.Count != 0)
 							{
 								// We have both a next and a preceeding switch avaiable for selection if required
-								Guid nextSwitch = nextSwitches[0]; // next switch in nominal forwards direction of travel
-								switchMainPictureBox.Flip(Program.CurrentRoute.Switches[nextSwitch].Type == SwitchType.LeftHanded, false);
+								Guid nextSwitch = nextSwitches[0].guid; // next switch in nominal forwards direction of travel
+								switchMainPictureBox.Flip(Program.CurrentRoute.Switches[nextSwitch].Type == SwitchType.LeftHanded, nextSwitches[0].trailing);
 								Items = new MenuEntry[7];
 								Items[0] = new MenuCaption(Translations.GetInterfaceString(Program.CurrentRoute.Switches[nextSwitch].Name));
 								Items[1] = new MenuCaption("Distance: " + Math.Round(Program.CurrentRoute.Switches[nextSwitch].TrackPosition - Program.Renderer.CameraTrackFollower.TrackPosition, 2, MidpointRounding.AwayFromZero) + "m");
@@ -697,12 +697,13 @@ namespace OpenBve
 								{
 									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-R.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
 								}
+								switchSettingPictureBox.Flip(false, nextSwitches[0].trailing);
 							}
 							else if (nextSwitches.Count != 0)
 							{
 								// No previous switch
-								Guid nextSwitch = nextSwitches[0]; // next switch in nominal forwards direction of travel
-								switchMainPictureBox.Flip(Program.CurrentRoute.Switches[nextSwitch].Type == SwitchType.LeftHanded, false);
+								Guid nextSwitch = nextSwitches[0].guid; // next switch in nominal forwards direction of travel
+								switchMainPictureBox.Flip(Program.CurrentRoute.Switches[nextSwitch].Type == SwitchType.LeftHanded, nextSwitches[0].trailing);
 								Items = new MenuEntry[6];
 								Items[0] = new MenuCaption(Translations.GetInterfaceString(Program.CurrentRoute.Switches[nextSwitch].Name));
 								Items[1] = new MenuCaption("Distance: " + Math.Round(Program.CurrentRoute.Switches[nextSwitch].TrackPosition - Program.Renderer.CameraTrackFollower.TrackPosition, 2, MidpointRounding.AwayFromZero) + "m");
@@ -718,12 +719,13 @@ namespace OpenBve
 								{
 									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-R.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
 								}
+								switchSettingPictureBox.Flip(false, nextSwitches[0].trailing);
 							}
 							else
 							{
 								// No next switch, but previous switch
-								Guid nextSwitch = previousSwitches[0]; // next switch in nominal *reverse* direction of travel as no valid in forwards
-								switchMainPictureBox.Flip(Program.CurrentRoute.Switches[nextSwitch].Type == SwitchType.LeftHanded, false);
+								Guid nextSwitch = previousSwitches[0].guid; // next switch in nominal *reverse* direction of travel as no valid in forwards
+								switchMainPictureBox.Flip(Program.CurrentRoute.Switches[nextSwitch].Type == SwitchType.LeftHanded, previousSwitches[0].trailing);
 								Items = new MenuEntry[6];
 								Items[0] = new MenuCaption(Translations.GetInterfaceString(Program.CurrentRoute.Switches[nextSwitch].Name));
 								Items[1] = new MenuCaption("Distance: " + Math.Round(Program.CurrentRoute.Switches[nextSwitch].TrackPosition - Program.Renderer.CameraTrackFollower.TrackPosition, 2, MidpointRounding.AwayFromZero) + "m");
@@ -739,6 +741,7 @@ namespace OpenBve
 								{
 									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-R.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
 								}
+								switchSettingPictureBox.Flip(false, previousSwitches[0].trailing);
 							}
 
 						}
@@ -787,6 +790,18 @@ namespace OpenBve
 				TopItem = 0;
 			}
 
+		}
+
+		internal class FoundSwitch
+		{
+			internal readonly Guid guid;
+			internal readonly bool trailing;
+
+			internal FoundSwitch(Guid Guid, bool Trailing)
+			{
+				guid = Guid;
+				trailing = Trailing;
+			}
 		}
 	}
 }

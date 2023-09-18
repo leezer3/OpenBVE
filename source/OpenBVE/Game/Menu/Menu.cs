@@ -44,8 +44,8 @@ namespace OpenBve
 		private static readonly Color128 ColourHighlight = Color128.Black;
 		private static readonly Color128 ColourNormal = Color128.White;
 		private static readonly Picturebox LogoPictureBox = new Picturebox(Program.Renderer);
-		internal static List<Guid> nextSwitches = new List<Guid>();
-		internal static List<Guid> previousSwitches = new List<Guid>();
+		internal static List<FoundSwitch> nextSwitches = new List<FoundSwitch>();
+		internal static List<FoundSwitch> previousSwitches = new List<FoundSwitch>();
 		internal static bool switchesFound = false;
 		
 
@@ -790,15 +790,15 @@ namespace OpenBve
 								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.PreviousSwitch:
-								Guid previousGuid = previousSwitches[0];
+								FoundSwitch fs = previousSwitches[0];
 								previousSwitches.RemoveAt(0);
-								nextSwitches.Insert(0, previousGuid);
+								nextSwitches.Insert(0, fs);
 								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.NextSwitch:
-								Guid nextGuid = nextSwitches[0];
+								FoundSwitch ns = nextSwitches[0];
 								nextSwitches.RemoveAt(0);
-								previousSwitches.Insert(0, nextGuid);
+								previousSwitches.Insert(0, ns);
 								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 						}
