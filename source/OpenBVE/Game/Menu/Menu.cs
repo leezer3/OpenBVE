@@ -157,7 +157,7 @@ namespace OpenBve
 			routePictureBox.BackgroundColor = Color128.White;
 			switchMainPictureBox.Location = new Vector2(imageLoc, quarterHeight);
 			switchMainPictureBox.Size = new Vector2(quarterWidth, quarterWidth);
-			switchMainPictureBox.BackgroundColor = Color128.White;
+			switchMainPictureBox.BackgroundColor = Color128.Transparent;
 			switchSettingPictureBox.Location = new Vector2(imageLoc, quarterHeight * 2);
 			switchSettingPictureBox.Size = new Vector2(quarterWidth / 4.0, quarterWidth / 4.0);
 			switchSettingPictureBox.BackgroundColor = Color128.Transparent;
