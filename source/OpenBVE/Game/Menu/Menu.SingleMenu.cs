@@ -71,7 +71,7 @@ namespace OpenBve
 				Type = menuType;
 				int i;
 				int jump = 0;
-				Vector2 size;
+				//Vector2 size;
 				Align = TextAlignment.TopMiddle;
 				Height = Width = 0;
 				Selection = 0;                      // defaults to first menu item
