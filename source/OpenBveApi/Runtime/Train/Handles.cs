@@ -33,79 +33,43 @@ namespace OpenBveApi.Runtime
 		/// <summary>Gets or sets the reverser position.</summary>
 		public int Reverser
 		{
-			get
-			{
-				return this.MyReverser;
-			}
-			set
-			{
-				this.MyReverser = value;
-			}
+			get => MyReverser;
+			set => MyReverser = value;
 		}
 
 		/// <summary>Gets or sets the power notch.</summary>
 		public int PowerNotch
 		{
-			get
-			{
-				return this.MyPowerNotch;
-			}
-			set
-			{
-				this.MyPowerNotch = value;
-			}
+			get => MyPowerNotch;
+			set => MyPowerNotch = value;
 		}
 
 		/// <summary>Gets or sets the brake notch.</summary>
 		public int BrakeNotch
 		{
-			get
-			{
-				return this.MyBrakeNotch;
-			}
-			set
-			{
-				this.MyBrakeNotch = value;
-			}
+			get => MyBrakeNotch;
+			set => MyBrakeNotch = value;
 		}
 
 		/// <summary>Gets or sets the brake notch.</summary>
 		public int LocoBrakeNotch
 		{
-			get
-			{
-				return this.MyLocoBrakeNotch;
-			}
-			set
-			{
-				this.MyLocoBrakeNotch = value;
-			}
+			get => MyLocoBrakeNotch;
+			set => MyLocoBrakeNotch = value;
 		}
 
 		/// <summary>Gets or sets whether the const speed system is enabled.</summary>
 		public bool ConstSpeed
 		{
-			get
-			{
-				return this.MyConstSpeed;
-			}
-			set
-			{
-				this.MyConstSpeed = value;
-			}
+			get => MyConstSpeed;
+			set => MyConstSpeed = value;
 		}
 
 		/// <summary>Gets or sets whether the hold brake system is enabled.</summary>
 		public bool HoldBrake
 		{
-			get
-			{
-				return this.MyHoldBrake;
-			}
-			set
-			{
-				this.MyHoldBrake = value;
-			}
+			get => MyHoldBrake;
+			set => MyHoldBrake = value;
 		}
 
 		/// <summary>Creates a new instance of this class.</summary>
@@ -115,10 +79,10 @@ namespace OpenBveApi.Runtime
 		/// <param name="constSpeed">Whether the const speed system is enabled.</param>
 		public Handles(int reverser, int powerNotch, int brakeNotch, bool constSpeed)
 		{
-			this.MyReverser = reverser;
-			this.MyPowerNotch = powerNotch;
-			this.MyBrakeNotch = brakeNotch;
-			this.MyConstSpeed = constSpeed;
+			MyReverser = reverser;
+			MyPowerNotch = powerNotch;
+			MyBrakeNotch = brakeNotch;
+			MyConstSpeed = constSpeed;
 		}
 
 		/// <summary>Creates a new instance of this class.</summary>
@@ -129,11 +93,11 @@ namespace OpenBveApi.Runtime
 		/// <param name="constSpeed">Whether the const speed system is enabled.</param>
 		public Handles(int reverser, int powerNotch, int brakeNotch, int locoBrakeNotch, bool constSpeed)
 		{
-			this.MyReverser = reverser;
-			this.MyPowerNotch = powerNotch;
-			this.MyBrakeNotch = brakeNotch;
-			this.MyLocoBrakeNotch = locoBrakeNotch;
-			this.MyConstSpeed = constSpeed;
+			MyReverser = reverser;
+			MyPowerNotch = powerNotch;
+			MyBrakeNotch = brakeNotch;
+			MyLocoBrakeNotch = locoBrakeNotch;
+			MyConstSpeed = constSpeed;
 		}
 
 		/// <summary>Creates a new instance of this class.</summary>
@@ -145,12 +109,12 @@ namespace OpenBveApi.Runtime
 		/// <param name="holdBrake">Whether the hold brake system is enabled</param>
 		public Handles(int reverser, int powerNotch, int brakeNotch, int locoBrakeNotch, bool constSpeed, bool holdBrake)
 		{
-			this.MyReverser = reverser;
-			this.MyPowerNotch = powerNotch;
-			this.MyBrakeNotch = brakeNotch;
-			this.MyLocoBrakeNotch = locoBrakeNotch;
-			this.MyConstSpeed = constSpeed;
-			this.MyHoldBrake = holdBrake;
+			MyReverser = reverser;
+			MyPowerNotch = powerNotch;
+			MyBrakeNotch = brakeNotch;
+			MyLocoBrakeNotch = locoBrakeNotch;
+			MyConstSpeed = constSpeed;
+			MyHoldBrake = holdBrake;
 		}
 	}
 }

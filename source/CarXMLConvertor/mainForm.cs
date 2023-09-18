@@ -61,7 +61,7 @@ namespace CarXmlConvertor
 		        }
 	        }
 
-			if (File.Exists(Path.CombineFile(System.IO.Path.GetDirectoryName(ConvertPanelAnimated.FileName), "panel.xml")))
+			if (File.Exists(Path.CombineFile(Path.GetDirectoryName(ConvertPanelAnimated.FileName), "panel.xml")))
 	        {
 		        updateLogBoxText += "INFO: An existing panel.xml file was detected." + Environment.NewLine;
 		        if (MessageBox.Show("The selected folder already contains a panel.xml file. \r\n Do you wish to continue?", "CarXML Convertor", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
@@ -95,7 +95,7 @@ namespace CarXmlConvertor
 				}
 		        
 			}
-	        if (System.IO.File.Exists(Path.CombineFile(System.IO.Path.GetDirectoryName(ConvertSoundCfg.FileName), "sound.xml")))
+	        if (System.IO.File.Exists(Path.CombineFile(Path.GetDirectoryName(ConvertSoundCfg.FileName), "sound.xml")))
 	        {
 		        updateLogBoxText += "INFO: An existing sound.xml file was detected." + Environment.NewLine;
 				if (MessageBox.Show("The selected folder already contains a sound.xml file. \r\n Do you wish to continue?", "CarXML Convertor", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
@@ -107,7 +107,7 @@ namespace CarXmlConvertor
 			}
 	        updateLogBoxText += "Loading existing sound.cfg file " + ConvertSoundCfg.FileName + Environment.NewLine;
 			ConvertSoundCfg.Process(this);
-			string trainXML = Path.CombineFile(System.IO.Path.GetDirectoryName(ConvertExtensionsCfg.FileName), "train.xml");
+			string trainXML = Path.CombineFile(Path.GetDirectoryName(ConvertExtensionsCfg.FileName), "train.xml");
 	        if (File.Exists(trainXML))
 	        {
 		        FileVersionInfo programVersion = null;

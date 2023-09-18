@@ -9,6 +9,7 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace Texture.Tga
 {
@@ -666,7 +667,7 @@ namespace Texture.Tga
 					raw[i] = raw[i + 2];
 					raw[i + 2] = temp;
 				}
-				texture = new OpenBveApi.Textures.Texture(width, height, 32, raw, null);
+				texture = new OpenBveApi.Textures.Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, raw, null);
 				return true;
 			}
 			else

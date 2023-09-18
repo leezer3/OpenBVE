@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using SoundManager;
@@ -50,6 +51,8 @@ namespace Train.OpenBve
 			Vector3 right = new Vector3(1.3, 0.0, 0.0);
 			//Positioned at the front of the car, centered X and Y
 			Vector3 front = new Vector3(0.0, 0.0, 0.5 * car.Length);
+			//Positioned at the rear of the car centered X and Y
+			Vector3 rear = new Vector3(0.0, 0.0, -0.5 * car.Length);
 			//Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
 			Vector3 panel = new Vector3(car.Driver.X, car.Driver.Y, car.Driver.Z + 1.0);
 
@@ -59,7 +62,7 @@ namespace Train.OpenBve
 			XmlDocument currentXML = new XmlDocument();
 			//Load the marker's XML file 
 			currentXML.Load(fileName);
-			currentPath = System.IO.Path.GetDirectoryName(fileName);
+			currentPath = Path.GetDirectoryName(fileName);
 			if (currentXML.DocumentElement != null)
 			{
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/CarSounds");
@@ -580,6 +583,25 @@ namespace Train.OpenBve
 										}
 									}
 									break;
+								case "coupler":
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
+									{
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of coupler sounds was defined in in XML file " + fileName);
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name.ToLowerInvariant())
+										{
+											case "uncouple":
+												ParseNode(cc, out car.Coupler.UncoupleSound, rear, SoundCfgParser.smallRadius);
+												break;
+											default:
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
 							}
 						}
 					}
@@ -714,7 +736,7 @@ namespace Train.OpenBve
 					case "filename":
 						try
 						{
-							fileName = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
+							fileName = Path.CombineFile(currentPath, c.InnerText);
 							if (!System.IO.File.Exists(fileName))
 							{
 								//Valid path, but the file does not exist
@@ -787,7 +809,7 @@ namespace Train.OpenBve
 					case "filename":
 						try
 						{
-							fileName = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
+							fileName = Path.CombineFile(currentPath, c.InnerText);
 							if (!System.IO.File.Exists(fileName))
 							{
 								//Valid path, but the file does not exist

@@ -1,16 +1,14 @@
-﻿using TrainManager.Handles;
+﻿using TrainManager.Car;
+using TrainManager.Handles;
 using TrainManager.Power;
 
 namespace TrainManager.BrakeSystems
 {
 	public class AutomaticAirBrake : CarBrake
 	{
-		public AutomaticAirBrake(EletropneumaticBrakeType type, EmergencyHandle EmergencyHandle, ReverserHandle ReverserHandle, bool IsMotorCar, double BrakeControlSpeed, double MotorDeceleration, AccelerationCurve[] DecelerationCurves)
+		public AutomaticAirBrake(EletropneumaticBrakeType type, CarBase car, double BrakeControlSpeed, double MotorDeceleration, AccelerationCurve[] DecelerationCurves) : base(car)
 		{
 			electropneumaticBrakeType = type;
-			emergencyHandle = EmergencyHandle;
-			reverserHandle = ReverserHandle;
-			isMotorCar = IsMotorCar;
 			brakeControlSpeed = BrakeControlSpeed;
 			motorDeceleration = MotorDeceleration;
 			decelerationCurves = DecelerationCurves;
@@ -19,7 +17,7 @@ namespace TrainManager.BrakeSystems
 		public override void Update(double TimeElapsed, double currentSpeed, AbstractHandle brakeHandle, out double deceleration)
 		{
 			airSound = null;
-			if (emergencyHandle.Actual)
+			if (Car.baseTrain.Handles.EmergencyBrake.Actual)
 			{
 				if (brakeType == BrakeType.Main)
 				{
@@ -89,7 +87,7 @@ namespace TrainManager.BrakeSystems
 				if (brakePipe.CurrentPressure > equalizingReservoir.CurrentPressure + Tolerance)
 				{
 					// brake pipe exhaust valve
-					double r = emergencyHandle.Actual ? brakePipe.EmergencyRate : brakePipe.ServiceRate;
+					double r = Car.baseTrain.Handles.EmergencyBrake.Actual ? brakePipe.EmergencyRate : brakePipe.ServiceRate;
 					double d = brakePipe.CurrentPressure - equalizingReservoir.CurrentPressure;
 					double m = equalizingReservoir.NormalPressure;
 					r = (0.5 + 1.5 * d / m) * r * TimeElapsed;

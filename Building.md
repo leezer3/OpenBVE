@@ -1,6 +1,6 @@
 # Building openBVE from source
 
-This file is a WIP set of instructions for building openBVE from source.
+This file is a WIP set of instructions for building OpenBVE from source.
 
 ## Prerequisites
 
@@ -13,12 +13,12 @@ This file is a WIP set of instructions for building openBVE from source.
 
 #### When to use Mono
 
-- Mono 5.20.1 or later
+- Mono 6.8.0 or later
 - NuGet client 2.16 or later
 
 ### Linux
 
-- Mono 5.20.1 or later
+- Mono 6.8.0 or later
 - NuGet client 2.16 or later
 - OpenAL
 - GNU Make
@@ -72,7 +72,7 @@ NOTE: Depending on the install type you select, Mono will not install all compon
 
 ### Mac
 
-- Mono 5.20.1 or later
+- Mono 6.8.0 or later
 - NuGet client 2.16 or later
 - OpenAL
 - GNU Make

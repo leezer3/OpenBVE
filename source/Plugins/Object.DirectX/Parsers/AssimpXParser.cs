@@ -41,7 +41,7 @@ namespace Plugin
 
 		internal static StaticObject ReadObject(string FileName)
 		{
-			currentFolder = System.IO.Path.GetDirectoryName(FileName);
+			currentFolder = Path.GetDirectoryName(FileName);
 			currentFile = FileName;
 			rootMatrix = Matrix4D.NoTransformation;
 
@@ -57,7 +57,7 @@ namespace Plugin
 					string relativePath = System.Text.Encoding.ASCII.GetString(buffer);
 					if (!OpenBveApi.Path.ContainsInvalidChars(relativePath))
 					{
-						return ReadObject(OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), relativePath));
+						return ReadObject(OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), relativePath));
 					}
 				}
 				XFileParser parser = new XFileParser(buffer);

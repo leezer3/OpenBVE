@@ -55,10 +55,10 @@ namespace Train.OpenBve
 				throw new InvalidDataException(FileName + " does not appear to be a valid XML file.");
 			}
 
-			IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("Panel");
+			List<XElement> DocumentElements = CurrentXML.Root.Elements("Panel").ToList();
 
 			// Check this file actually contains OpenBVE panel definition elements
-			if (DocumentElements == null || !DocumentElements.Any())
+			if (DocumentElements == null || DocumentElements.Count == 0)
 			{
 				// We couldn't find any valid XML, so return false
 				throw new InvalidDataException(FileName + " is not a valid PanelXML file.");
@@ -145,7 +145,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.DaytimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -161,7 +160,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.NighttimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -540,7 +538,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.DaytimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -556,7 +553,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.NighttimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -665,7 +661,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.DaytimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -681,7 +676,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.NighttimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -941,7 +935,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.DaytimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -957,7 +950,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.NighttimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1057,7 +1049,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.DaytimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1073,7 +1064,6 @@ namespace Train.OpenBve
 										}
 										break;
 									case PanelKey.NighttimeImage:
-										if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 										if (Path.ContainsInvalidChars(Value))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);

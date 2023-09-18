@@ -80,9 +80,7 @@ namespace OpenBveApi.Objects
 			{
 				for (int i = 0; i < Vertices.Length; i += 2)
 				{
-					MeshFaceVertex x = Vertices[i];
-					Vertices[i] = Vertices[i + 1];
-					Vertices[i + 1] = x;
+					(Vertices[i], Vertices[i + 1]) = (Vertices[i + 1], Vertices[i]);
 				}
 			}
 			else
@@ -90,9 +88,7 @@ namespace OpenBveApi.Objects
 				int n = Vertices.Length;
 				for (int i = 0; i < (n >> 1); i++)
 				{
-					MeshFaceVertex x = Vertices[i];
-					Vertices[i] = Vertices[n - i - 1];
-					Vertices[n - i - 1] = x;
+					(Vertices[i], Vertices[n - i - 1]) = (Vertices[n - i - 1], Vertices[i]);
 				}
 			}
 		}

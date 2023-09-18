@@ -137,6 +137,9 @@ prequisite-check:
  $(info nuget Version $(NUGET_VERSION) found.)
  ifeq "$(call GreaterVersion, $(NUGET_VERSION), $(MIN_NUGET_VERSION))" "$(NUGET_VERSION)"
  #Nothing
+ else ifeq ($(strip $(NUGET_VERSION)),)
+ $(info Unable to determine the nuget version installed.)
+ $(info OpenBVE requires a minimum nuget version of 2.16- The build will fail with versions below this.)
  else
  $(info OpenBVE requires a minimum nuget version of 2.16)
  $(info Please run $(red)nuget update -self$(reset) with administrative priveledges.)

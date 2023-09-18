@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -422,24 +421,24 @@ namespace Train.OpenBve
 		    return string.Empty;
 	    }
 
-	    public override Image GetImage(string trainPath)
+	    public override string GetImage(string trainPath)
 	    {
 		    try
 		    {
 			    string imageFile = Path.CombineFile(trainPath, "train.png");
 			    if (File.Exists(imageFile))
 			    {
-				    return Image.FromFile(imageFile);
+				    return imageFile;
 			    }
 			    imageFile  = Path.CombineFile(trainPath, "train.gif");
 			    if (File.Exists(imageFile))
 			    {
-				    return Image.FromFile(imageFile);
+				    return imageFile;
 			    }
 			    imageFile  = Path.CombineFile(trainPath, "train.bmp");
 			    if (File.Exists(imageFile))
 			    {
-				    return Image.FromFile(imageFile);
+				    return imageFile;
 			    }
 		    }
 		    catch (Exception ex)
@@ -478,9 +477,8 @@ namespace Train.OpenBve
 				    // Check for null
 				    if (CurrentXML.Root != null)
 				    {
-
-					    IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
-					    if (DocumentElements.Any())
+						List<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated").ToList();
+					    if (DocumentElements.Count != 0)
 					    {
 						    PanelAnimatedXmlParser.ParsePanelAnimatedXml(System.IO.Path.GetFileName(File), Train, Train.DriverCar);
 						    if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
@@ -491,8 +489,8 @@ namespace Train.OpenBve
 							return;
 					    }
 
-					    DocumentElements = CurrentXML.Root.Elements("Panel");
-					    if (DocumentElements.Any())
+					    DocumentElements = CurrentXML.Root.Elements("Panel").ToList();
+					    if (DocumentElements.Count != 0)
 					    {
 						    PanelXmlParser.ParsePanelXml(System.IO.Path.GetFileName(File), Train, Train.DriverCar);
 						    Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;

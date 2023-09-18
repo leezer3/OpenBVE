@@ -99,6 +99,9 @@ namespace OpenBve
 			internal bool KioskMode;
 			/// <summary>The timer before AI controls are enabled in kiosk mode</summary>
 			internal double KioskModeTimer; //5 minutes by default set in ctor
+			/// <summary>The maximum upper limit for FPS</summary>
+			/// https://github.com/leezer3/OpenBVE/issues/941
+			internal int FPSLimit;
 
 			internal bool DailyBuildUpdates;
 			/*
@@ -183,6 +186,7 @@ namespace OpenBve
 				this.ForceForwardsCompatibleContext = false;
 				this.IsUseNewRenderer = true;
 				this.DailyBuildUpdates = false;
+				this.UseGDIDecoders = false;
 				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
 				switch (Program.CurrentHost.Platform)
 				{
@@ -221,6 +225,7 @@ namespace OpenBve
 								this.Font = "Noto Sans CJK JP";
 								break;
 						}
+						this.FPSLimit = 200;
 						break;
 					case HostPlatform.WINE:
 						// WINE reports slightly different font names to native
@@ -534,6 +539,14 @@ namespace OpenBve
 												case "high": Interface.CurrentOptions.MotionBlur = MotionBlurMode.High; break;
 												default: Interface.CurrentOptions.MotionBlur = MotionBlurMode.None; break;
 											} break;
+										case "fpslimit":
+											int limit;
+											if (!int.TryParse(Value, NumberStyles.Integer, Culture, out limit) || limit < 0)
+											{
+												limit = 0;
+											}
+											Interface.CurrentOptions.FPSLimit = limit;
+											break;
 									} break;
 								case "objectoptimization":
 									switch (Key)
@@ -810,6 +823,9 @@ namespace OpenBve
 												}
 												break;
 											}
+										case "gdiplus":
+											Interface.CurrentOptions.UseGDIDecoders = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
 									}
 									break;
 								case "touch":
@@ -943,6 +959,7 @@ namespace OpenBve
 				}
 				Builder.AppendLine("motionBlur = " + t);
 			}
+			Builder.AppendLine("fpslimit = " + CurrentOptions.FPSLimit.ToString(Culture));
 			Builder.AppendLine();
 			Builder.AppendLine("[objectOptimization]");
 			Builder.AppendLine("basicThreshold = " + CurrentOptions.ObjectOptimizationBasicThreshold.ToString(Culture));
@@ -1048,6 +1065,7 @@ namespace OpenBve
 			Builder.AppendLine("[Parsers]");
 			Builder.AppendLine("xObject = " + (int)Interface.CurrentOptions.CurrentXParser);
 			Builder.AppendLine("objObject = " + (int)Interface.CurrentOptions.CurrentObjParser);
+			Builder.AppendLine("gdiplus = " + (CurrentOptions.UseGDIDecoders ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[Touch]");
 			Builder.AppendLine("cursor = " + CurrentOptions.CursorFileName);

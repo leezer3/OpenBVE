@@ -48,7 +48,7 @@ namespace CsvRwRouteParser
 										}
 										break;
 									case "PatchList":
-										string folder = System.IO.Path.GetDirectoryName(databaseFile);
+										string folder = Path.GetDirectoryName(databaseFile);
 										string newFile = Path.CombineFile(folder, childNode.InnerText);
 										if (File.Exists(newFile))
 										{

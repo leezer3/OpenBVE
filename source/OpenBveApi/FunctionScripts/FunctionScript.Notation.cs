@@ -350,9 +350,7 @@ namespace OpenBveApi.FunctionScripting
 										if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
 											// a b <>
 											// b a
-											string t = Stack[StackLength - 1];
-											Stack[StackLength - 1] = Stack[StackLength - 2];
-											Stack[StackLength - 2] = t;
+											(Stack[StackLength - 1], Stack[StackLength - 2]) = (Stack[StackLength - 2], Stack[StackLength - 1]);
 										}
 									}
 								}

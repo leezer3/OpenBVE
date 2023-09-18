@@ -37,7 +37,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						string f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+						string f = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
 						if (!System.IO.File.Exists(f))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -205,7 +205,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						string f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+						string f = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
 						if (!System.IO.File.Exists(f))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -252,7 +252,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						string f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+						string f = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
 						if (!System.IO.File.Exists(f))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -450,7 +450,7 @@ namespace CsvRwRouteParser
 						break;
 					}
 					//Read the lighting XML file
-					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+					string path = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
 					if (System.IO.File.Exists(path))
 					{
 						if (DynamicLightParser.ReadLightingXML(path, out Plugin.CurrentRoute.LightDefinitions))
@@ -515,7 +515,7 @@ namespace CsvRwRouteParser
 				case RouteCommand.TfoXML:
 					if (!PreviewOnly)
 					{
-						string tfoFile = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+						string tfoFile = Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[0]);
 						if (!System.IO.File.Exists(tfoFile))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "TrackFollowingObject XML file " + tfoFile + " not found in Track.TfoXML at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);

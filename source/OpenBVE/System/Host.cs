@@ -17,6 +17,7 @@ using OpenBveApi.World;
 using RouteManager2.MessageManager;
 using SoundManager;
 using TrainManager.Trains;
+using Path = OpenBveApi.Path;
 
 namespace OpenBve {
 	/// <summary>Represents the host application.</summary>
@@ -373,7 +374,19 @@ namespace OpenBve {
 						}
 					}
 				}
-				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+				string fn = Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
+				switch (fn)
+				{
+					case "empty":
+					case "null":
+					case "nullrail":
+					case "null_rail":
+						// Don't add an error for some common null objects
+						break;
+					default:
+						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+						break;
+				}
 			} else {
 				ReportProblem(ProblemType.PathNotFound, path);
 			}
@@ -574,6 +587,41 @@ namespace OpenBve {
 				// ReSharper disable once CoVariantArrayConversion
 				return Program.TrainManager.Trains;
 			}
+		}
+
+		public override void AddTrain(AbstractTrain ReferenceTrain, AbstractTrain NewTrain, bool Preccedes)
+		{
+			Array.Resize(ref Program.TrainManager.Trains, Program.TrainManager.Trains.Length + 1);
+			int trainIndex = -1;
+			// find index of train within trainmanager array
+			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
+			{
+				if (Program.TrainManager.Trains[i] == ReferenceTrain)
+				{
+					trainIndex = i;
+					break;
+				}
+			}
+
+			if (Preccedes && trainIndex > 0)
+			{
+				trainIndex--;
+			}
+
+			if (trainIndex == -1)
+			{
+				Program.TrainManager.Trains[Program.TrainManager.Trains.Length - 1] = (TrainBase)NewTrain;
+			}
+			else
+			{
+				for (int i = Program.TrainManager.Trains.Length - 2; i > trainIndex; i--)
+				{
+					Program.TrainManager.Trains[i + 1] = Program.TrainManager.Trains[i];
+				}
+
+				Program.TrainManager.Trains[trainIndex + 1] = (TrainBase)NewTrain;
+			}
+
 		}
 
 		public override AbstractTrain ClosestTrain(AbstractTrain Train)

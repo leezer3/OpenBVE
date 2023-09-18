@@ -20,7 +20,7 @@ namespace CsvRwRouteParser
 			XmlDocument currentXML = new XmlDocument();
 			//Load the object's XML file 
 			currentXML.Load(fileName);
-			string Path = System.IO.Path.GetDirectoryName(fileName);
+			string filePath = Path.GetDirectoryName(fileName);
 			double[] UnitOfLength = { 1.0 };
 			//Check for null
 			if (currentXML.DocumentElement != null)
@@ -71,7 +71,7 @@ namespace CsvRwRouteParser
 										string f;
 										try
 										{
-											f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), c.InnerText);
+											f = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), c.InnerText);
 										}
 										catch
 										{
@@ -99,7 +99,7 @@ namespace CsvRwRouteParser
 										string file;
 										try
 										{
-											file = OpenBveApi.Path.CombineFile(Path, c.InnerText);
+											file = OpenBveApi.Path.CombineFile(filePath, c.InnerText);
 										}
 										catch
 										{

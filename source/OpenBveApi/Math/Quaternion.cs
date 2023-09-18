@@ -57,40 +57,22 @@ namespace OpenBveApi.Math
 		/// <summary>Gets / sets the X component</summary>
 		public double X
 		{
-			get
-			{
-				return Xyz.X;
-			}
-			set
-			{
-				Xyz.X = value;
-			}
+			get => Xyz.X;
+			set => Xyz.X = value;
 		}
 
 		/// <summary>Gets / sets the Y component</summary>
 		public double Y
 		{
-			get
-			{
-				return Xyz.Y;
-			}
-			set
-			{
-				Xyz.Y = value;
-			}
+			get => Xyz.Y;
+			set => Xyz.Y = value;
 		}
 
 		/// <summary>Gets / sets the Z component</summary>
 		public double Z
 		{
-			get
-			{
-				return Xyz.Z;
-			}
-			set
-			{
-				Xyz.Z = value;
-			}
+			get => Xyz.Z;
+			set => Xyz.Z = value;
 		}
 
 		/// <summary>Creates a new quaternion describing the rotation between two vectors</summary>

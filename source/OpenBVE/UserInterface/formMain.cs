@@ -176,8 +176,9 @@ namespace OpenBve {
 			{
 				flags = Directory.GetFiles(flagsFolder);
 			}
-			catch (Exception)
+			catch
 			{
+				//ignored- not currently used either, hangover from the initial managed content system
 			}
 	#pragma warning restore 0219
 			// route selection
@@ -208,7 +209,7 @@ namespace OpenBve {
 			{
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedRoutes[i])) continue;
 				string RouteFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
-				string RoutePath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
+				string RoutePath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
 				if (string.IsNullOrEmpty(RouteFileName) || string.IsNullOrEmpty(RoutePath)) continue;
 				ListViewItem Item = listviewRouteRecently.Items.Add(RouteFileName);
 				string extension = System.IO.Path.GetExtension(Interface.CurrentOptions.RecentlyUsedRoutes[i]).ToLowerInvariant();
@@ -258,7 +259,7 @@ namespace OpenBve {
 			{
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedTrains[i])) continue;
 				string TrainFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
-				string TrainPath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
+				string TrainPath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
 				if (string.IsNullOrEmpty(TrainFileName) || string.IsNullOrEmpty(TrainPath)) continue;
 				ListViewItem Item = listviewTrainRecently.Items.Add(TrainFileName);
 				Item.ImageKey = @"train";
@@ -578,8 +579,7 @@ namespace OpenBve {
 
 		private void comboBoxFont_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			FontFamily font = comboBoxFont.Items[comboBoxFont.SelectedIndex] as FontFamily;
-			if (font != null)
+			if (comboBoxFont.Items[comboBoxFont.SelectedIndex] is FontFamily font)
 			{
 				string oldFont = Interface.CurrentOptions.Font;
 				try

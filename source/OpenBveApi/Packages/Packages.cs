@@ -256,7 +256,7 @@ namespace OpenBveApi.Packages
 							//We don't want to add directories to the list of files
 							if (!archiveEntry.IsDirectory)
 							{
-								PackageFiles.Add(OpenBveApi.Path.CombineFile(extractionDirectory, archiveEntry.Key));
+								PackageFiles.Add(Path.CombineFile(extractionDirectory, archiveEntry.Key));
 							}
 						}
 						i++;
@@ -270,12 +270,12 @@ namespace OpenBveApi.Packages
 					}
 					packageFiles = Text;
 					//Write out the package file list
-					var fileListDirectory = OpenBveApi.Path.CombineDirectory(databaseFolder, "Installed");
+					var fileListDirectory = Path.CombineDirectory(databaseFolder, "Installed");
 					if (!Directory.Exists(fileListDirectory))
 					{
 						Directory.CreateDirectory(fileListDirectory);
 					}
-					var fileList = OpenBveApi.Path.CombineFile(fileListDirectory, currentPackage.GUID.ToUpper() + ".xml");
+					var fileList = Path.CombineFile(fileListDirectory, currentPackage.GUID.ToUpper() + ".xml");
 					using (StreamWriter sw = new StreamWriter(fileList))
 					{
 						XmlSerializer listWriter = new XmlSerializer(typeof(List<string>));
@@ -306,7 +306,7 @@ namespace OpenBveApi.Packages
 			{
 				using (var zip = File.OpenWrite(packageFile))
 				{
-					SharpCompress.Common.ArchiveType type;
+					ArchiveType type;
 					SharpCompress.Common.CompressionType compression;
 					switch (compressionType)
 					{
@@ -355,7 +355,7 @@ namespace OpenBveApi.Packages
 						}
 						//Create temp directory and XML file
 						var tempXML = System.IO.Path.GetTempPath() + System.IO.Path.GetRandomFileName() + "package.xml";
-						string tempPath = System.IO.Path.GetDirectoryName(tempXML);
+						string tempPath = Path.GetDirectoryName(tempXML);
 						if (tempPath == null)
 						{
 							throw new Exception("Unable to create the temporary directory for package compression.");
@@ -371,7 +371,7 @@ namespace OpenBveApi.Packages
 						//Write out XML
 						zipWriter.Write("Package.xml", tempXML);
 						//Write out image
-						if (System.IO.File.Exists(packageImage))
+						if (File.Exists(packageImage))
 						{
 							zipWriter.Write("Package.png", packageImage);
 						}
@@ -392,7 +392,7 @@ namespace OpenBveApi.Packages
 		/// <returns>True if uninstall succeeded with no errors, false otherwise</returns>
 		public static bool UninstallPackage(Package currentPackage, string databaseFolder, ref string PackageFiles)
 		{
-			var fileList = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(databaseFolder, "Installed"), currentPackage.GUID.ToUpper() + ".xml");
+			var fileList = Path.CombineFile(Path.CombineDirectory(databaseFolder, "Installed"), currentPackage.GUID.ToUpper() + ".xml");
 			if (!File.Exists(fileList))
 			{
 				PackageFiles = null;
@@ -464,7 +464,7 @@ namespace OpenBveApi.Packages
 							XmlSerializer listReader = new XmlSerializer(typeof(SerializedPackage));
 							SerializedPackage newPackage =
 								(SerializedPackage) listReader.Deserialize(
-									XmlReader.Create(OpenBveApi.Path.CombineFile(TempDirectory, "package.xml")));
+									XmlReader.Create(Path.CombineFile(TempDirectory, "package.xml")));
 							currentPackage = newPackage.Package;
 						}
 						if (reader.Entry.Key.ToLowerInvariant() == "packageinfo.xml" &&
@@ -475,7 +475,7 @@ namespace OpenBveApi.Packages
 							try
 							{
 								XmlDocument xml = new XmlDocument();
-								xml.Load(OpenBveApi.Path.CombineFile(TempDirectory, "packageinfo.xml"));
+								xml.Load(Path.CombineFile(TempDirectory, "packageinfo.xml"));
 								currentPackage =
 									LoksimPackage.Parse(xml, System.IO.Path.GetFileNameWithoutExtension(packageFile), ref ImageFile);
 								InfoFound = true;

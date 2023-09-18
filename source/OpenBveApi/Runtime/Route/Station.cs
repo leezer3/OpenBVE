@@ -68,10 +68,7 @@ namespace OpenBveApi.Runtime
 				}
 				return ExpectedTimeStopped;
 			}
-			set
-			{
-				ExpectedTimeStopped = value;
-			}
+			set => ExpectedTimeStopped = value;
 		}
 		/// <summary>Backing property for StopTime</summary>
 		private double ExpectedTimeStopped;

@@ -17,7 +17,7 @@ namespace RouteManager2
 		//GDI Plus is not thread-safe
 		//This object should be locked on when drawing a route illustration / gradient profile
 		/// <summary>Holds the current lock for the illustrations drawing functions</summary>
-		public static readonly object Locker =  new Object();
+		public static readonly object Locker =  new object();
 
 		internal static CurrentRoute CurrentRoute;
 
@@ -82,12 +82,12 @@ namespace RouteManager2
 		private static int	lastGradientMinTrack, lastGradientMaxTrack;
 		private static int	lastRouteMinX, lastRouteMinZ, lastRouteMaxX, lastRouteMaxZ;
 		// access these properties as read-only
-		public  static int	LastGradientMinTrack	{ get { return lastGradientMinTrack; } }
-		public  static int	LastGradientMaxTrack	{ get { return lastGradientMaxTrack; } }
-		public  static int	LastRouteMinX			{ get { return lastRouteMinX; } }
-		public  static int	LastRouteMaxX			{ get { return lastRouteMaxX; } }
-		public  static int	LastRouteMinZ			{ get { return lastRouteMinZ; } }
-		public  static int	LastRouteMaxZ			{ get { return lastRouteMaxZ; } }
+		public  static int	LastGradientMinTrack => lastGradientMinTrack;
+		public  static int	LastGradientMaxTrack => lastGradientMaxTrack;
+		public  static int	LastRouteMinX => lastRouteMinX;
+		public  static int	LastRouteMaxX => lastRouteMaxX;
+		public  static int	LastRouteMinZ => lastRouteMinZ;
+		public  static int	LastRouteMaxZ => lastRouteMaxZ;
 
 		//
 		// CREATE ROUTE MAP

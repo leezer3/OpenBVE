@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -42,6 +42,17 @@ namespace OpenBve
 		internal static void StartLoopEx(LaunchParameters result)
 		{
 			Program.Sounds.Initialize(Interface.CurrentOptions.SoundRange);
+
+			Program.FileSystem.AppendToLogFile(@"Attached Joysticks:", false);
+			Program.FileSystem.AppendToLogFile(@"--------------------", false);
+			for (int i = 0; i < Program.Joysticks.AttachedJoysticks.Count; i++)
+			{
+				Guid key = Program.Joysticks.AttachedJoysticks.ElementAt(i).Key;
+				Program.FileSystem.AppendToLogFile(Program.Joysticks.AttachedJoysticks[key].ToString(), false);
+			}
+			Program.FileSystem.AppendToLogFile(@"--------------------", false);
+
+
 			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
 				Tolk.Load();
@@ -139,6 +150,11 @@ namespace OpenBve
 		/// <param name="e">The button arguments</param>
 		internal static void mouseDownEvent(object sender, MouseButtonEventArgs e)
 		{
+			if (Program.Renderer.CurrentInterface == InterfaceType.LoadScreen)
+			{
+				// as otherwise right-click can unexpectedly operate camera spin
+				return;
+			}
 			timeSinceLastMouseEvent = 0;
 			if (e.Button == MouseButton.Right)
 			{
@@ -148,7 +164,7 @@ namespace OpenBve
 			if (e.Button == MouseButton.Left)
 			{
 				// if currently in a menu, forward the click to the menu system
-				if (Program.Renderer.CurrentInterface == InterfaceType.Menu)
+				if (Program.Renderer.CurrentInterface >= InterfaceType.Menu)
 				{
 					Game.Menu.ProcessMouseDown(e.X, e.Y);
 				}
@@ -161,6 +177,11 @@ namespace OpenBve
 
 		internal static void mouseUpEvent(object sender, MouseButtonEventArgs e)
 		{
+			if (Program.Renderer.CurrentInterface == InterfaceType.LoadScreen)
+			{
+				// as otherwise right-click can unexpectedly operate camera spin
+				return;
+			}
 			timeSinceLastMouseEvent = 0;
 			if (e.Button == MouseButton.Left)
 			{
@@ -178,7 +199,7 @@ namespace OpenBve
 		{
 			timeSinceLastMouseEvent = 0;
 			// if currently in a menu, forward the click to the menu system
-			if (Program.Renderer.CurrentInterface == InterfaceType.Menu)
+			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu)
 			{
 				Game.Menu.ProcessMouseMove(e.X, e.Y);
 			}
@@ -190,7 +211,7 @@ namespace OpenBve
 		internal static void mouseWheelEvent(object sender, MouseWheelEventArgs e)
 		{
 			timeSinceLastMouseEvent = 0;
-			if (Program.Renderer.CurrentInterface == InterfaceType.Menu)
+			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu)
 			{
 				Game.Menu.ProcessMouseScroll(e.Delta);
 			}
@@ -198,7 +219,7 @@ namespace OpenBve
 
 		internal static void UpdateMouse(double TimeElapsed)
 		{
-			if (Program.Renderer.CurrentInterface != InterfaceType.Menu)
+			if (Program.Renderer.CurrentInterface < InterfaceType.Menu)
 			{
 				timeSinceLastMouseEvent += TimeElapsed;
 			}
@@ -249,7 +270,7 @@ namespace OpenBve
 					Program.Joysticks.AttachedJoysticks[guid].Poll();
 				}
 			}
-			if (Program.Renderer.CurrentInterface == InterfaceType.Menu && Game.Menu.IsCustomizingControl())
+			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu && Game.Menu.IsCustomizingControl())
 			{
 				if (Interface.CurrentOptions.UseJoysticks)
 				{
@@ -319,7 +340,7 @@ namespace OpenBve
 				switch (Interface.CurrentControls[i].Method)
 				{
 					case ControlMethod.Joystick:
-						if (Program.Joysticks.AttachedJoysticks.Count == 0 || !Program.Joysticks.AttachedJoysticks[Interface.CurrentControls[i].Device].IsConnected())
+						if (Program.Joysticks.AttachedJoysticks.Count == 0 || !Program.Joysticks.AttachedJoysticks.ContainsKey(Interface.CurrentControls[i].Device) || !Program.Joysticks.AttachedJoysticks[Interface.CurrentControls[i].Device].IsConnected())
 						{
 							//Not currently connected
 							continue;

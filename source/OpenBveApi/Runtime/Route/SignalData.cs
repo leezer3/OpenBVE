@@ -15,30 +15,18 @@ namespace OpenBveApi.Runtime
 		private readonly double MyDistance;
 
 		/// <summary>Gets the aspect of the signal or section.</summary>
-		public int Aspect
-		{
-			get
-			{
-				return this.MyAspect;
-			}
-		}
+		public int Aspect => MyAspect;
 
 		/// <summary>Gets the distance to the signal or section.</summary>
-		public double Distance
-		{
-			get
-			{
-				return this.MyDistance;
-			}
-		}
+		public double Distance => MyDistance;
 
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="aspect">The aspect of the signal or section.</param>
 		/// <param name="distance">The distance to the signal or section.</param>
 		public SignalData(int aspect, double distance)
 		{
-			this.MyAspect = aspect;
-			this.MyDistance = distance;
+			MyAspect = aspect;
+			MyDistance = distance;
 		}
 	}
 }

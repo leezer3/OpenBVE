@@ -110,7 +110,7 @@ namespace CarXmlConvertor
 											{
 												if (!String.IsNullOrEmpty(b) && !Path.ContainsInvalidChars(b))
 												{
-													string File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), b);
+													string File = Path.CombineFile(Path.GetDirectoryName(FileName), b);
 													if (System.IO.File.Exists(File))
 													{
 														CarInfos[n].Object = b;
@@ -148,7 +148,7 @@ namespace CarXmlConvertor
 														case "object":
 															if (!String.IsNullOrEmpty(b) && !Path.ContainsInvalidChars(b))
 															{
-																string File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), b);
+																string File = Path.CombineFile(Path.GetDirectoryName(FileName), b);
 																if (System.IO.File.Exists(File))
 																{
 																	CarInfos[n].Object = b;
@@ -240,7 +240,7 @@ namespace CarXmlConvertor
 														case "object":
 															if (!String.IsNullOrEmpty(b) && !Path.ContainsInvalidChars(b))
 															{
-																string File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), b);
+																string File = Path.CombineFile(Path.GetDirectoryName(FileName), b);
 																if (System.IO.File.Exists(File))
 																{
 																	Couplers[n].Object = b;
@@ -282,7 +282,7 @@ namespace CarXmlConvertor
 														case "object":
 															if (!String.IsNullOrEmpty(b) && !Path.ContainsInvalidChars(b))
 															{
-																string File = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), b);
+																string File = Path.CombineFile(Path.GetDirectoryName(FileName), b);
 																if (System.IO.File.Exists(File))
 																{
 																	if (IsOdd)
@@ -373,7 +373,7 @@ namespace CarXmlConvertor
 					TabbedList carLines = new TabbedList();
 					GenerateCarXML(ref carLines, i);
 					carLines.Add("</openBVE>");
-					string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Car" + i + ".xml");
+					string fileOut = System.IO.Path.Combine(Path.GetDirectoryName(FileName), "Car" + i + ".xml");
 					try
 					{
 						
@@ -394,13 +394,13 @@ namespace CarXmlConvertor
 				
 			}
 
-			string pluginFile = ConvertAts.DllPath(System.IO.Path.GetDirectoryName(FileName));
+			string pluginFile = ConvertAts.DllPath(Path.GetDirectoryName(FileName));
 			if (!string.IsNullOrEmpty(pluginFile))
 			{
 				newLines.Add("<Plugin>" + pluginFile + "</Plugin>");
 			}
 			newLines.Add("<HeadlightStates>1</HeadlightStates>");
-			string trainTxt = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "train.txt");
+			string trainTxt = Path.CombineFile(Path.GetDirectoryName(FileName), "train.txt");
 			if (File.Exists(trainTxt))
 			{
 				string desc = File.ReadAllText(trainTxt, OpenBveApi.TextEncoding.GetSystemEncodingFromFile(trainTxt));
@@ -410,7 +410,7 @@ namespace CarXmlConvertor
 			newLines.Add("</openBVE>");
 			try
 			{
-				string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Train.xml");
+				string fileOut = System.IO.Path.Combine(Path.GetDirectoryName(FileName), "Train.xml");
 				using (StreamWriter sw = new StreamWriter(fileOut))
 				{
 					foreach (String s in newLines.Lines)
@@ -521,12 +521,12 @@ namespace CarXmlConvertor
 			}
 			if (i == ConvertTrainDat.DriverCar)
 			{
-				if(File.Exists(Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "panel.animated")))
+				if(File.Exists(Path.CombineFile(Path.GetDirectoryName(FileName), "panel.animated")))
 				{
 					newLines.Add("<InteriorView>panel.animated</InteriorView>" );
 					newLines.Add("<DriverPosition>" + ConvertSoundCfg.DriverPosition.X + "," + ConvertSoundCfg.DriverPosition.Y + "," + ConvertSoundCfg.DriverPosition.Z + "</DriverPosition>");
 				}
-				else if (File.Exists(Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "panel2.cfg")))
+				else if (File.Exists(Path.CombineFile(Path.GetDirectoryName(FileName), "panel2.cfg")))
 				{
 					newLines.Add("<InteriorView>panel.xml</InteriorView>");
 					newLines.Add("<DriverPosition>" + ConvertSoundCfg.DriverPosition.X + "," + ConvertSoundCfg.DriverPosition.Y + "," + ConvertSoundCfg.DriverPosition.Z + "</DriverPosition>");
@@ -539,6 +539,7 @@ namespace CarXmlConvertor
 				newLines.Add("<Notches>" + ConvertTrainDat.BrakeNotches + "</Notches>");
 				newLines.Add("</Handle>");
 			}
+			newLines.Add("<!-- Pressures are in kPa -->");
 			if (ConvertTrainDat.MotorCars[i])
 			{
 
@@ -589,6 +590,7 @@ namespace CarXmlConvertor
 					newLines.Add("<Coupler>");
 					newLines.Add("<Minimum>" + Couplers[i].Min + "</Minimum>");
 					newLines.Add("<Maximum>" + Couplers[i].Max + "</Maximum>");
+					newLines.Add("<CanUncouple>true</CanUncouple>");
 					if (!string.IsNullOrEmpty(Couplers[i].Object))
 					{
 						newLines.Add("<Object>" + Couplers[i].Object + "</Object>");
@@ -613,11 +615,13 @@ namespace CarXmlConvertor
 				if (ConvertTrainDat.MotorCars[i])
 				{
 					newLines.Add("<MotorCar>True</MotorCar>");
+					newLines.Add("<!-- Masses are in kg -->");
 					newLines.Add("<Mass>" + ConvertTrainDat.MotorCarMass + "</Mass>");
 				}
 				else
 				{
 					newLines.Add("<MotorCar>False</MotorCar>");
+					newLines.Add("<!-- Masses are in kg -->");
 					newLines.Add("<Mass>" + ConvertTrainDat.TrailerCarMass + "</Mass>");
 				}
 				newLines.Add("<FrontAxle>" + 0.4 * ConvertTrainDat.CarLength + "</FrontAxle>");
@@ -625,13 +629,13 @@ namespace CarXmlConvertor
 				newLines.Add("</Car>");
 			}
 			newLines.Add("<DriverCar>" + ConvertTrainDat.DriverCar + "</DriverCar>");
-			string pluginFile = ConvertAts.DllPath(System.IO.Path.GetDirectoryName(FileName));
+			string pluginFile = ConvertAts.DllPath(Path.GetDirectoryName(FileName));
 			if (!string.IsNullOrEmpty(pluginFile))
 			{
 				newLines.Add("<Plugin>" + pluginFile + "</Plugin>");
 			}
 			newLines.Add("<HeadlightStates>1</HeadlightStates>");
-			string trainTxt = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "train.txt");
+			string trainTxt = Path.CombineFile(Path.GetDirectoryName(FileName), "train.txt");
 			if (File.Exists(trainTxt))
 			{
 				string desc = File.ReadAllText(trainTxt);
@@ -640,7 +644,7 @@ namespace CarXmlConvertor
 			newLines.Add("</Train>");
 			newLines.Add("</openBVE>");
 			// ReSharper disable once AssignNullToNotNullAttribute
-			string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Train.xml");
+			string fileOut = System.IO.Path.Combine(Path.GetDirectoryName(FileName), "Train.xml");
 			try
 			{
 				using (StreamWriter sw = new StreamWriter(fileOut))

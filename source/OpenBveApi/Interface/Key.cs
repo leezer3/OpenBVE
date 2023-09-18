@@ -27,6 +27,7 @@
  /*
   *	Hold an internal clone of the OpenTK Key class in order to not need a reference to it in the API
   */
+// ReSharper disable UnusedMember.Global
 namespace OpenBveApi.Input
 {
     /// <summary>

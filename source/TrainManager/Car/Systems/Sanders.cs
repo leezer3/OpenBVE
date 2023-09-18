@@ -53,6 +53,13 @@ namespace TrainManager.Car.Systems
 					}
 				}
 			}
+			else
+			{
+				if (LoopSound != null)
+				{
+					LoopSound.Stop();
+				}
+			}
 
 			if (SandLevel <= 0)
 			{
@@ -87,7 +94,7 @@ namespace TrainManager.Car.Systems
 						timer += timeElapsed;
 						if (timer > ActivationTime && !Active)
 						{
-							Toggle();
+							SetActive(true);
 						}
 					}
 					else
@@ -95,7 +102,7 @@ namespace TrainManager.Car.Systems
 						timer = 0;
 						if (Active)
 						{
-							Toggle();
+							SetActive(false);
 						}
 					}
 					break;
@@ -113,7 +120,7 @@ namespace TrainManager.Car.Systems
 			}
 		}
 
-		public void Toggle()
+		public void SetActive(bool willBeActive)
 		{
 			if (Type == SandersType.NotFitted)
 			{
@@ -130,21 +137,20 @@ namespace TrainManager.Car.Systems
 				}
 				return;
 			}
-			if (Active)
-			{
+
+			// Deactivate
+			if(Active && !willBeActive) {
 				if (Type == SandersType.NumberOfShots && timer > 0)
 				{
 					// Can't cancel shot based
 					return;
 				}
-				Active = false;
+
 				if (DeActivationSound != null)
 				{
-					DeActivationSound.Play(Car, false);	
+					DeActivationSound.Play(Car, false);
 				}
-			}
-			else
-			{
+			} else if(!Active && willBeActive) {
 				if (Type == SandersType.NumberOfShots)
 				{
 					if (NumberOfShots <= 0)
@@ -154,11 +160,22 @@ namespace TrainManager.Car.Systems
 					NumberOfShots--;
 					timer = ApplicationTime;
 				}
-				Active = true;
+
 				if (ActivationSound != null)
 				{
-					ActivationSound.Play(Car, false);	
+					ActivationSound.Play(Car, false);
 				}
+			}
+
+			Active = willBeActive;
+		}
+
+		public void Toggle()
+		{
+			if(Active) {
+				SetActive(false);
+			} else {
+				SetActive(true);
 			}
 		}
 	}

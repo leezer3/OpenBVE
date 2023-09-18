@@ -1,9 +1,9 @@
 using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Drawing.Text;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace LibRender2.Text
 {

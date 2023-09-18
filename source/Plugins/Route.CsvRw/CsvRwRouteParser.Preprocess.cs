@@ -374,7 +374,7 @@ namespace CsvRwRouteParser
 
 										try
 										{
-											files[ia] = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), file);
+											files[ia] = Path.CombineFile(Path.GetDirectoryName(FileName), file);
 										}
 										catch
 										{

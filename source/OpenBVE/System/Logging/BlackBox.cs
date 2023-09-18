@@ -204,8 +204,8 @@ namespace OpenBve
 							Builder.Append(Game.BlackBoxEntries[i].Position.ToString(Culture) + ",");
 							Builder.Append(Game.BlackBoxEntries[i].Speed.ToString(Culture) + ",");
 							Builder.Append(Game.BlackBoxEntries[i].Acceleration.ToString(Culture) + ",");
-							Builder.Append(((short)Game.BlackBoxEntries[i].ReverserDriver).ToString(Culture) + ",");
-							Builder.Append(((short)Game.BlackBoxEntries[i].ReverserSafety).ToString(Culture) + ",");
+							Builder.Append((Game.BlackBoxEntries[i].ReverserDriver).ToString(Culture) + ",");
+							Builder.Append((Game.BlackBoxEntries[i].ReverserSafety).ToString(Culture) + ",");
 							Builder.Append(((short)Game.BlackBoxEntries[i].PowerDriver).ToString(Culture) + ",");
 							Builder.Append(((short)Game.BlackBoxEntries[i].PowerSafety).ToString(Culture) + ",");
 							Builder.Append(((short)Game.BlackBoxEntries[i].BrakeDriver).ToString(Culture) + ",");
