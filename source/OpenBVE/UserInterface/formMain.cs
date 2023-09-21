@@ -1590,6 +1590,7 @@ namespace OpenBve {
 		private void buttonClose_Click(object sender, EventArgs e)
 		{
 			currentlyClosing = true;
+			previewRouteResultQueue.CompleteAdding();
 			if (sender != null)
 			{
 				//Don't cause an infinite loop
