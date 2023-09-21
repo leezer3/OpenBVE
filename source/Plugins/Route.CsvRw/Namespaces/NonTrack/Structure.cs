@@ -499,6 +499,14 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
+				/*
+				 * NOTE:
+				 * -----
+				 * Mackoy's documentation states the following:
+				 * RoofIdxStType: Roof structure index (0: None)
+				 *
+				 * Unfortunately inconsistant with null objects for rails
+				 */
 				case StructureCommand.RoofL:
 				{
 					if (!PreviewOnly)
