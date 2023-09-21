@@ -285,6 +285,8 @@
 		<FileName>Tinsford.csv</FileName>
 		<SignalSet>BritishRail.xml</SignalSet>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<!-- Invalid dike direction accepted by BVE -->
+		<Expression Number="372">.Wall 6;1;1</Expression>
 	</Patch>
 	<!-- Milngavie - Springburn -->
 	<Patch>
