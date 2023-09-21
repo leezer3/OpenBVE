@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using LibRender2.Screens;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -374,18 +375,9 @@ namespace OpenBve {
 						}
 					}
 				}
-				string fn = Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
-				switch (fn)
+				if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()))
 				{
-					case "empty":
-					case "null":
-					case "nullrail":
-					case "null_rail":
-						// Don't add an error for some common null objects
-						break;
-					default:
-						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
-						break;
+					Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 				}
 			} else {
 				ReportProblem(ProblemType.PathNotFound, path);
