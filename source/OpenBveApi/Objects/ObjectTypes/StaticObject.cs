@@ -10,6 +10,8 @@ namespace OpenBveApi.Objects
 	/// <inheritdoc />
 	public class StaticObject : UnifiedObject
 	{
+		/// <summary>Whether the object is optimized</summary>
+		private bool IsOptimized;
 		/// <summary>The mesh of the object</summary>
 		public Mesh Mesh;
 		/// <summary>The starting track position, for static objects only.</summary>
@@ -43,7 +45,8 @@ namespace OpenBveApi.Objects
 				StartingTrackDistance = StartingTrackDistance,
 				EndingTrackDistance = EndingTrackDistance,
 				Dynamic = Dynamic,
-				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]}
+				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]},
+				IsOptimized = IsOptimized
 			};
 			// vertices
 			for (int j = 0; j < Mesh.Vertices.Length; j++)
@@ -91,7 +94,8 @@ namespace OpenBveApi.Objects
 				StartingTrackDistance = StartingTrackDistance,
 				EndingTrackDistance = EndingTrackDistance,
 				Dynamic = Dynamic,
-				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]}
+				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]},
+				IsOptimized = IsOptimized
 			};
 			// vertices
 			for (int j = 0; j < Mesh.Vertices.Length; j++)
@@ -149,6 +153,7 @@ namespace OpenBveApi.Objects
 				}
 				Result.Mesh.Faces[i].Flip();
 			}
+			Result.IsOptimized = IsOptimized;
 			return Result;
 		}
 
@@ -474,6 +479,11 @@ namespace OpenBveApi.Objects
 		/// <inheritdoc />
 		public override void OptimizeObject(bool PreserveVerticies, int Threshold, bool VertexCulling)
 		{
+			if (IsOptimized)
+			{
+				return;
+			}
+			IsOptimized = true;
 			int v = Mesh.Vertices.Length;
 			int m = Mesh.Materials.Length;
 			int f = Mesh.Faces.Length;
