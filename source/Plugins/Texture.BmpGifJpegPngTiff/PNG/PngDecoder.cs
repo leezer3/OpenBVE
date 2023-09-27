@@ -408,7 +408,7 @@ namespace Plugin.PNG
 																break;
 															case ScanlineFilterAlgorithm.Average:
 																leftByte = relativeRowByte >= BytesPerPixel ? data[rowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
-																upByte = data[previousRowStartByte + relativeRowByte];
+																upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + relativeRowByte];
 																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + ((leftByte + upByte) >> 1)) % 256);
 																break;
 															case ScanlineFilterAlgorithm.Paeth:
