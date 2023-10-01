@@ -1054,7 +1054,6 @@ namespace OpenBve
 				using (Process proc = Process.GetCurrentProcess())
 				{
 					long memoryUsed = proc.PrivateMemorySize64;
-					MessageBox.Show(memoryUsed.ToString());
 					if ((memoryUsed > 900000000 && !Interface.CurrentOptions.LoadInAdvance) || memoryUsed > 1600000000)
 					{
 						// Either using ~900mb at the first station or 1.5gb + with all textures loaded is likely to cause critical OOM errors with the 32-bit process memory limit
