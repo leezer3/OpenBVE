@@ -89,15 +89,12 @@ namespace RouteManager2
 		public  static int	LastRouteMinZ => lastRouteMinZ;
 		public  static int	LastRouteMaxZ => lastRouteMaxZ;
 
-		//
-		// CREATE ROUTE MAP
-		//
 		/// <summary>Creates and returns the route map as Bitmap.</summary>
 		/// <returns>The route map.</returns>
 		/// <param name="Width">The width of the bitmap to create.</param>
 		/// <param name="Height">The height of the bitmap to create.</param>
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
-		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame)
+		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, double trackPosition = -1)
 		{
 			if (CurrentRoute.Tracks[0].Elements == null)
 			{
@@ -105,7 +102,15 @@ namespace RouteManager2
 				return new Bitmap(1,1);
 			}
 			int totalElements, firstUsedElement, lastUsedElement;
-			RouteRange(out totalElements, out firstUsedElement, out lastUsedElement);
+			if (trackPosition != -1)
+			{
+				RestrictedRouteRange(trackPosition, 500, out totalElements, out firstUsedElement, out lastUsedElement);
+			}
+			else
+			{
+				TotalRouteRange(out totalElements, out firstUsedElement, out lastUsedElement);	
+			}
+			
 			// find dimensions
 			double x0 = double.PositiveInfinity, z0 = double.PositiveInfinity;
 			double x1 = double.NegativeInfinity, z1 = double.NegativeInfinity;
@@ -374,7 +379,7 @@ namespace RouteManager2
 
 			// HORIZONTAL RANGE: find first and last used element based on stations
 			int totalElements, firstUsedElement, lastUsedElement;
-			RouteRange(out totalElements, out firstUsedElement, out lastUsedElement);
+			TotalRouteRange(out totalElements, out firstUsedElement, out lastUsedElement);
 			// VERTICAL RANGE
 			double y0 = double.PositiveInfinity, y1 = double.NegativeInfinity;
 			for (int i = firstUsedElement; i <= lastUsedElement; i++)
@@ -645,7 +650,7 @@ namespace RouteManager2
 		/// <param name="totalElements">Route total number of elements</param>
 		/// <param name="firstUsedElement">First element in used range</param>
 		/// <param name="lastUsedElement">Last element in used range</param>
-		private static void RouteRange(out int totalElements, out int firstUsedElement, out int lastUsedElement)
+		private static void TotalRouteRange(out int totalElements, out int firstUsedElement, out int lastUsedElement)
 		{
 			// find first and last track element actually used by stations
 			totalElements	= CurrentRoute.Tracks[0].Elements.Length;
@@ -674,5 +679,32 @@ namespace RouteManager2
 				lastUsedElement = firstUsedElement + 1;
 		}
 
+		/// <summary>Finds the route range for the specified track position and draw radius</summary>
+		/// <param name="trackPosition">The track position</param>
+		/// <param name="drawRadius">The draw radius</param>
+		/// <param name="totalElements">The total elements used</param>
+		/// <param name="firstUsedElement">The index of the first used element</param>
+		/// <param name="lastUsedElement">The index of the last used element</param>
+		private static void RestrictedRouteRange(double trackPosition, int drawRadius, out int totalElements, out int firstUsedElement, out int lastUsedElement)
+		{
+			lastUsedElement = 0;
+			firstUsedElement = -1;
+			double st = Math.Max(0, trackPosition - drawRadius);
+			double et = trackPosition + drawRadius;
+			for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++)
+			{
+				if (CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition > st && firstUsedElement == -1)
+				{
+					firstUsedElement = i == 0 ? 0 : i - 1;
+				}
+				if (CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition > et)
+				{
+					lastUsedElement = i == 0 ? 0 : i - 1;
+					break;
+				}
+			}
+
+			totalElements = lastUsedElement - firstUsedElement;
+		}
 	}
 }

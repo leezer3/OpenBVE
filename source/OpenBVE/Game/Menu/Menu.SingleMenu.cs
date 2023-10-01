@@ -11,6 +11,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Packages;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
+using RouteManager2;
 using RouteManager2.Events;
 using RouteManager2.Tracks;
 using TrainManager;
@@ -605,6 +606,8 @@ namespace OpenBve
 						}
 						break;
 					case MenuType.ChangeSwitch:
+						// Create map image
+						Program.CurrentHost.RegisterTexture(Illustrations.CreateRouteMap(500, 500, true, TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition), new TextureParameters(null, null), out switchMapPictureBox.Texture);
 						Align = TextAlignment.TopLeft;
 						if (Program.CurrentRoute.Switches == null || Program.CurrentRoute.Switches.Count == 0)
 						{

@@ -161,7 +161,8 @@ namespace OpenBve
 			switchSettingPictureBox.Location = new Vector2(imageLoc, quarterHeight * 2);
 			switchSettingPictureBox.Size = new Vector2(quarterWidth / 4.0, quarterWidth / 4.0);
 			switchSettingPictureBox.BackgroundColor = Color128.Transparent;
-
+			switchMapPictureBox.Location = new Vector2(imageLoc / 2.0, 0);
+			switchMapPictureBox.Size = new Vector2(quarterWidth * 2.0, Program.Renderer.Screen.Height);
 			LogoPictureBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0);
 			LogoPictureBox.Size = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Width / 2.0);
 			LogoPictureBox.Texture = Program.Renderer.ProgramLogo;
@@ -1049,6 +1050,7 @@ namespace OpenBve
 					switchSettingPictureBox.Location = new Vector2(menu.Width + (MenuItemBorderX * 4) + 80, switchSettingPictureBox.Location.Y);
 					switchMainPictureBox.Draw();
 					switchSettingPictureBox.Draw();
+					switchMapPictureBox.Draw();
 					break;
 			}
 			
