@@ -295,6 +295,34 @@ namespace Formats.OpenBve
 			return false;
 		}
 
+		public override bool GetVector3(TT key, char separator, out Vector3 value)
+		{
+			value = Vector3.Zero;
+			if (keyValuePairs.TryGetValue(key, out var rawValue))
+			{
+				string[] splitStrings = rawValue.Split(separator);
+				if (splitStrings.Length > 3)
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key);
+				}
+				
+				if (!NumberFormats.TryParseDoubleVb6(splitStrings[0], out value.X))
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "X was invalid in " + key + " in Section " + Key);
+				}
+				if (!NumberFormats.TryParseDoubleVb6(splitStrings[1], out value.Y))
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "Y was invalid in " + key + " in Section " + Key);
+				}
+				if (!NumberFormats.TryParseDoubleVb6(splitStrings[2], out value.Z))
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "Z was invalid in " + key + " in Section " + Key);
+				}
+				return true;
+			}
+			return false;
+		}
+
 		public override bool GetIndexedValue(out int index, out string value)
 		{
 			if (indexedValues.Count > 0)

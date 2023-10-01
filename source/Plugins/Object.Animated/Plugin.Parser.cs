@@ -37,6 +37,9 @@ namespace Plugin
 				switch (subBlock.Key)
 				{
 					case AnimatedSection.Include:
+						Vector3 position = Vector3.Zero;
+						block.GetVector3(AnimatedKey.Position, ',', out position);
+
 						break;
 					case AnimatedSection.Object:
 						string[] objectStates;
