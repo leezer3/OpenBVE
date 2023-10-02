@@ -42,7 +42,7 @@ namespace RouteManager2
 		{
 			lock (Illustrations.Locker)
 			{
-				RouteMap = Illustrations.CreateRouteMap(500, 500, true);
+				RouteMap = Illustrations.CreateRouteMap(500, 500, true, out _);
 				RouteMinX = Illustrations.LastRouteMinX;
 				RouteMaxX = Illustrations.LastRouteMaxX;
 				RouteMinZ = Illustrations.LastRouteMinZ;

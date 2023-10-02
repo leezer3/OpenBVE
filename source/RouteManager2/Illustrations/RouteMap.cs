@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -94,8 +95,9 @@ namespace RouteManager2
 		/// <param name="Width">The width of the bitmap to create.</param>
 		/// <param name="Height">The height of the bitmap to create.</param>
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
-		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, double trackPosition = -1)
+		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, out Dictionary<Guid, Vector2> switchPositions, double trackPosition = -1)
 		{
+			switchPositions = null;
 			if (CurrentRoute.Tracks[0].Elements == null)
 			{
 				//Usually caused by selecting another route before preview has finished
@@ -202,7 +204,84 @@ namespace RouteManager2
 				}
 				
 			}
+
 			
+			if (trackPosition != -1)
+			{
+				switchPositions = new Dictionary<Guid, Vector2>();
+				// Find switches
+				for (int t = 0; t < CurrentRoute.Tracks.Count; t++)
+				{
+					int k = CurrentRoute.Tracks.ElementAt(t).Key;
+					for (int i = firstUsedElement; i <= lastUsedElement; i++)
+					{
+						for (int j = 0; j < CurrentRoute.Tracks[k].Elements[i].Events.Length; j++)
+						{
+							// NOTE: key will appear twice, once per track but we only want the first instance
+							if (CurrentRoute.Tracks[k].Elements[i].Events[j] is SwitchEvent se && !switchPositions.ContainsKey(se.Index))
+							{
+								double x = CurrentRoute.Tracks[k].Elements[i].WorldPosition.X;
+								double y = CurrentRoute.Tracks[k].Elements[i].WorldPosition.Z;
+								x = imageOrigin.X + (x - x0) * imageScale.X;
+								y = imageOrigin.Y + (z0 - y) * imageScale.Y + imageSize.Y;
+								switchPositions.Add(se.Index, new Vector2(x, y));
+								// draw circle
+								RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
+									StationDiameter, StationDiameter);
+								g.FillEllipse(mapColors[(int)mode].inactStatnFill, r);
+								g.DrawEllipse(mapColors[(int)mode].inactStatnBrdr, r);
+							}
+
+							if (CurrentRoute.Tracks[k].Elements[i].Events[j] is TrailingSwitchEvent tse && !switchPositions.ContainsKey(tse.Index))
+							{
+								double x = CurrentRoute.Tracks[k].Elements[i].WorldPosition.X;
+								double y = CurrentRoute.Tracks[k].Elements[i].WorldPosition.Z;
+								x = imageOrigin.X + (x - x0) * imageScale.X;
+								y = imageOrigin.Y + (z0 - y) * imageScale.Y + imageSize.Y;
+								switchPositions.Add(tse.Index, new Vector2(x, y));
+								// draw circle
+								RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
+									StationDiameter, StationDiameter);
+								g.FillEllipse(mapColors[(int)mode].inactStatnFill, r);
+								g.DrawEllipse(mapColors[(int)mode].inactStatnBrdr, r);
+							}
+						}
+					}
+				}
+			}
+			
+			for (int i = firstUsedElement; i <= lastUsedElement; i++)
+			{
+				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
+				{
+					if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
+					{
+						StationStartEvent e = (StationStartEvent)CurrentRoute.Tracks[0].Elements[i].Events[j];
+						if (CurrentRoute.Stations[e.StationIndex].Name != string.Empty)
+						{
+							double x = CurrentRoute.Tracks[0].Elements[i].WorldPosition.X;
+							double y = CurrentRoute.Tracks[0].Elements[i].WorldPosition.Z;
+							x = imageOrigin.X + (x - x0) * imageScale.X;
+							y = imageOrigin.Y + (z0 - y) * imageScale.Y + imageSize.Y;
+							// station circle
+							RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
+								StationDiameter, StationDiameter);
+							bool q = CurrentRoute.Stations[e.StationIndex].PlayerStops();
+							g.FillEllipse(q ? mapColors[(int)mode].actStatnFill : mapColors[(int)mode].inactStatnFill, r);
+							g.DrawEllipse(q ? mapColors[(int)mode].actStatnBrdr : mapColors[(int)mode].inactStatnBrdr, r);
+							// adjust bitmap occupied area
+							if (r.Left < xMin)
+								xMin = r.Left;
+							if (r.Top  < zMin)
+								zMin = r.Top;
+							if (r.Right > xMax)
+								xMax = r.Right;
+							if (r.Bottom > zMax)
+								zMax = r.Bottom;
+						}
+					}
+				}
+			}
 
 			// STATION ICONS
 			for (int i = firstUsedElement; i <= lastUsedElement; i++)
@@ -323,7 +402,7 @@ namespace RouteManager2
 				}
 			}
 			// if in-game, trim unused parts of the bitmap
-			if (inGame)
+			if (inGame && trackPosition != -1)
 			{
 				xMin -= LeftPad;
 				xMax += RightPad;

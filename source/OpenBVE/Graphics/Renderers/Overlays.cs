@@ -167,6 +167,9 @@ namespace OpenBve.Graphics.Renderers
 					Game.Menu.Draw(TimeElapsed);
 					PauseAnnounced = false;
 					break;
+				case InterfaceType.SwitchChangeMap:
+					Game.switchChangeDialog.Draw();
+					break;
 				default:
 					PauseAnnounced = false;
 					break;

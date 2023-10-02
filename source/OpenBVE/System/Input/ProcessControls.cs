@@ -186,7 +186,8 @@ namespace OpenBve
 										Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 										break;
 									case Translations.Command.SwitchMenu:
-										Game.Menu.PushMenu(MenuType.ChangeSwitch);
+										Program.Renderer.CurrentInterface = InterfaceType.SwitchChangeMap;
+										Game.switchChangeDialog.Show();
 										break;
 								}
 							}
