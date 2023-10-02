@@ -76,7 +76,15 @@ namespace RouteManager2
 							actNameBrdr=Pens.White,			inactNameBrdr=Pens.LightGray,
 							actNameText=Brushes.White,		inactNameText=Brushes.LightGray,
 							belowSeaFill= new SolidBrush(Color.FromArgb(0x7feee8aa)),	belowSeaBrdr=Pens.Gray,
-							elevFill= new SolidBrush(Color.FromArgb(0x7fd2b48c)),		elevBrdr=Pens.Gray}
+							elevFill= new SolidBrush(Color.FromArgb(0x7fd2b48c)),		elevBrdr=Pens.Gray},
+			new MapColors() {background=Color.FromArgb(0x64000000),	atcMap=Pens.Red,	normalMap=Pens.White,
+			actStatnFill=Brushes.SkyBlue,	inactStatnFill=Brushes.Gray,
+			actStatnBrdr=Pens.White,		inactStatnBrdr=Pens.LightGray,
+			actNameFill=Brushes.Black,		inactNameFill=Brushes.Gray,
+			actNameBrdr=Pens.White,			inactNameBrdr=Pens.LightGray,
+			actNameText=Brushes.White,		inactNameText=Brushes.LightGray,
+			belowSeaFill= new SolidBrush(Color.FromArgb(0x7feee8aa)),	belowSeaBrdr=Pens.Gray,
+			elevFill= new SolidBrush(Color.FromArgb(0x7fd2b48c)),		elevBrdr=Pens.Gray}
 		};
 
 		// data about world ranges of last generated images
@@ -90,13 +98,16 @@ namespace RouteManager2
 		public  static int	LastRouteMinZ => lastRouteMinZ;
 		public  static int	LastRouteMaxZ => lastRouteMaxZ;
 
+		private static int CurrentTrack;
+
 		/// <summary>Creates and returns the route map as Bitmap.</summary>
 		/// <returns>The route map.</returns>
 		/// <param name="Width">The width of the bitmap to create.</param>
 		/// <param name="Height">The height of the bitmap to create.</param>
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
-		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, out Dictionary<Guid, Vector2> switchPositions, double trackPosition = -1)
+		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, out Dictionary<Guid, Vector2> switchPositions, double trackPosition = -1, int currentTrack = 0)
 		{
+			CurrentTrack = currentTrack;
 			switchPositions = null;
 			if (CurrentRoute.Tracks[0].Elements == null)
 			{
@@ -158,7 +169,12 @@ namespace RouteManager2
 			zMin = imageOrigin.Y + (z0 - zMin) * imageScale.Y + imageSize.Y;
 			zMax = imageOrigin.Y + (z0 - zMax) * imageScale.Y + imageSize.Y;
 			// create bitmap
+
 			MapMode mode = inGame ? MapMode.InGame : MapMode.Preview;
+			if (trackPosition != -1)
+			{
+				mode = MapMode.SecondaryTrack;
+			}
 			Bitmap b = new Bitmap(Width, Height, inGame ? System.Drawing.Imaging.PixelFormat.Format32bppArgb
 				: System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 			Graphics g = Graphics.FromImage(b);
@@ -171,7 +187,7 @@ namespace RouteManager2
 				int key = CurrentRoute.Tracks.ElementAt(i).Key;
 				if (i == 0)
 				{
-					DrawRailPath(g, mode, CurrentRoute.Tracks[key], firstUsedElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
+					DrawRailPath(g, mode, key, firstUsedElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
 				}
 				else
 				{
@@ -190,7 +206,7 @@ namespace RouteManager2
 						{
 							if (startElement != -1)
 							{
-								DrawRailPath(g, MapMode.SecondaryTrack, CurrentRoute.Tracks[key], startElement, el, imageOrigin, imageSize, imageScale, x0, z0);
+								DrawRailPath(g, mode, key, startElement, el, imageOrigin, imageSize, imageScale, x0, z0);
 								startElement = -1;
 							}
 						}
@@ -198,11 +214,15 @@ namespace RouteManager2
 
 					if (startElement != -1)
 					{
-						DrawRailPath(g, MapMode.SecondaryTrack, CurrentRoute.Tracks[key], startElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
+						DrawRailPath(g, mode, key, startElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
 					}
 					
 				}
-				
+			}
+
+			if (mode == MapMode.SecondaryTrack)
+			{
+				DrawPlayerPath(g, currentTrack, firstUsedElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
 			}
 
 			
@@ -639,8 +659,42 @@ namespace RouteManager2
 			return b;
 		}
 
-		private static void DrawRailPath(Graphics g, MapMode mode, Track currentTrack, int firstUsedElement, int lastUsedElement, Vector2 imageOrigin, Vector2 imageSize, Vector2 imageScale, double x0, double z0)
+		private static void DrawPlayerPath(Graphics g, int key, int firstUsedElement, int lastUsedElement, Vector2 imageOrigin, Vector2 imageSize, Vector2 imageScale, double x0, double z0)
 		{
+			Track currentTrack = CurrentRoute.Tracks[key];
+			int start = 0;
+			int elementsToDraw = Math.Min(lastUsedElement - firstUsedElement + 1, currentTrack.Elements.Length - firstUsedElement);
+
+			PointF[] p = new PointF[elementsToDraw];
+			for (int i = 0; i < elementsToDraw; i++)
+			{
+				double x = currentTrack.Elements[i + firstUsedElement].WorldPosition.X;
+				double z = currentTrack.Elements[i + firstUsedElement].WorldPosition.Z;
+				x = imageOrigin.X + (x - x0) * imageScale.X;
+				z = imageOrigin.Y + (z0 - z) * imageScale.Y + imageSize.Y;
+				p[i] = new PointF((float)x, (float)z);
+				if (currentTrack.Elements[i].Events == null)
+				{
+					continue;
+				}
+				for (int j = 0; j < currentTrack.Elements[i + firstUsedElement].Events.Length; j++)
+				{
+
+					if (currentTrack.Elements[i + firstUsedElement].Events[j] is SwitchEvent se)
+					{
+						// switch to different track if appropriate
+						currentTrack = CurrentRoute.Tracks[CurrentRoute.Switches[se.Index].CurrentlySetTrack];
+						break;
+					}
+				}
+			}
+
+			DrawSegmentedCurve(g, Pens.LightGray, p, start, elementsToDraw - 1);
+		}
+
+		private static void DrawRailPath(Graphics g, MapMode mode, int key, int firstUsedElement, int lastUsedElement, Vector2 imageOrigin, Vector2 imageSize, Vector2 imageScale, double x0, double z0)
+		{
+			Track currentTrack = CurrentRoute.Tracks[key];
 			int start = 0;
 			bool atc = false;
 			int elementsToDraw = Math.Min(lastUsedElement - firstUsedElement + 1, currentTrack.Elements.Length - firstUsedElement);
@@ -661,6 +715,7 @@ namespace RouteManager2
 				// for each track element, look for a StationStartEvent
 				for (int j = 0; j < currentTrack.Elements[i + firstUsedElement].Events.Length; j++)
 				{
+
 					if (currentTrack.Elements[i + firstUsedElement].Events[j] is StationStartEvent)
 					{
 						StationStartEvent e =
@@ -695,16 +750,13 @@ namespace RouteManager2
 
 			if (mode == MapMode.SecondaryTrack)
 			{
-				//TODO: Store / get color from track
-				DrawSegmentedCurve(g, Pens.Blue, p, start, elementsToDraw - start - 1);
+				DrawSegmentedCurve(g, Pens.LightGray, p, start, elementsToDraw - start - 1);
 			}
 			else
 			{
 				DrawSegmentedCurve(g, atc ? mapColors[(int)mode].atcMap : mapColors[(int)mode].normalMap, p, start, elementsToDraw - start - 1);
 			}
-			
 			// draw all remaining track element not drawn yet
-			
 		}
 
 		/// <summary>Draws a segmented curve from a list of points</summary>
