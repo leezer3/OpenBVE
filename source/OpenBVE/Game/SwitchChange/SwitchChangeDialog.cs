@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LibRender2.Primitives;
+using LibRender2.Screens;
 using LibRender2.Textures;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -29,6 +30,7 @@ namespace OpenBve
 
 		internal void Show()
 		{
+			Program.Renderer.CurrentOutputMode = OutputMode.None; // TEMP
 			MapPicturebox.Size = new Vector2(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height); // as size may have changed between fullscreen etc.
 			TextureManager.UnloadTexture(ref MapPicturebox.Texture);
 			Program.CurrentHost.RegisterTexture(Illustrations.CreateRouteMap(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, true, out AvailableSwitches, TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition), new TextureParameters(null, null), out MapPicturebox.Texture);

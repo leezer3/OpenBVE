@@ -421,8 +421,9 @@ namespace RouteManager2
 					}
 				}
 			}
+
 			// if in-game, trim unused parts of the bitmap
-			if (inGame && trackPosition != -1)
+			if (inGame)
 			{
 				xMin -= LeftPad;
 				xMax += RightPad;
@@ -689,7 +690,7 @@ namespace RouteManager2
 				}
 			}
 
-			DrawSegmentedCurve(g, Pens.LightGray, p, start, elementsToDraw - 1);
+			DrawSegmentedCurve(g, Pens.Black, p, start, elementsToDraw - 1);
 		}
 
 		private static void DrawRailPath(Graphics g, MapMode mode, int key, int firstUsedElement, int lastUsedElement, Vector2 imageOrigin, Vector2 imageSize, Vector2 imageScale, double x0, double z0)
