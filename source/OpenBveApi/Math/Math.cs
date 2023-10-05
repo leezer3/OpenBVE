@@ -31,8 +31,7 @@ namespace OpenBveApi.Math {
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			for (int n = Expression.Length; n > 0; n--)
 			{
-				double a;
-				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out a))
+				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out double a))
 				{
 					Value = a;
 					return true;
@@ -52,8 +51,7 @@ namespace OpenBveApi.Math {
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			for (int n = Expression.Length; n > 0; n--)
 			{
-				float a;
-				if (float.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out a))
+				if (float.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out float a))
 				{
 					Value = a;
 					return true;
@@ -73,8 +71,7 @@ namespace OpenBveApi.Math {
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			for (int n = Expression.Length; n > 0; n--)
 			{
-				double a;
-				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out a))
+				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out double a))
 				{
 					if (a >= -2147483648.0 & a <= 2147483647.0)
 					{
@@ -104,8 +101,7 @@ namespace OpenBveApi.Math {
 		/// <returns>True if parsing succeds, false otherwise</returns>
 		public static bool TryParseDouble(string Expression, double[] UnitFactors, out double Value)
 		{
-			double a;
-			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out a))
+			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out double a))
 			{
 				Value = a * UnitFactors[UnitFactors.Length - 1];
 				return true;
@@ -145,8 +141,7 @@ namespace OpenBveApi.Math {
 		/// <returns>True if parsing succeds, false otherwise</returns>
 		public static bool TryParseDoubleVb6(string Expression, double[] UnitFactors, out double Value)
 		{
-			double a;
-			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out a))
+			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out double a))
 			{
 				Value = a * UnitFactors[UnitFactors.Length - 1];
 				return true;
