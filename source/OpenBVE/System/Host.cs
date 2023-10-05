@@ -343,8 +343,7 @@ namespace OpenBve {
 							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path)) {
 								try
 								{
-									UnifiedObject obj;
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out UnifiedObject obj)) {
 										if (obj == null)
 										{
 											continue;

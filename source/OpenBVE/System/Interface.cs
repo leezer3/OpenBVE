@@ -29,10 +29,10 @@ namespace OpenBve {
 					i = Expression.IndexOf(':');
 				}
 				if (i >= 1) {
-					int h; if (int.TryParse(Expression.Substring(0, i), NumberStyles.Integer, Culture, out h)) {
+					if (int.TryParse(Expression.Substring(0, i), NumberStyles.Integer, Culture, out int h)) {
 						int n = Expression.Length - i - 1;
 						if (n == 1 | n == 2) {
-							uint m; if (uint.TryParse(Expression.Substring(i + 1, n), NumberStyles.None, Culture, out m)) {
+							if (uint.TryParse(Expression.Substring(i + 1, n), NumberStyles.None, Culture, out uint m)) {
 								Value = 3600.0 * h + 60.0 * m;
 								return true;
 							}
@@ -42,8 +42,7 @@ namespace OpenBve {
 								Program.CurrentHost.AddMessage(MessageType.Warning, false, "A maximum of 4 digits of precision are supported in TIME values");
 								n = 4;
 							}
-							uint m; if (uint.TryParse(Expression.Substring(i + 1, 2), NumberStyles.None, Culture, out m)) {
-								uint s;
+							if (uint.TryParse(Expression.Substring(i + 1, 2), NumberStyles.None, Culture, out uint m)) {
 								string ss = Expression.Substring(i + 3, n - 2);
 								if (Interface.CurrentOptions.EnableBveTsHacks)
 								{
@@ -56,7 +55,7 @@ namespace OpenBve {
 										ss = ss.Substring(1, ss.Length - 1);
 									}
 								}
-								if (uint.TryParse(ss, NumberStyles.None, Culture, out s)) {
+								if (uint.TryParse(ss, NumberStyles.None, Culture, out uint s)) {
 									Value = 3600.0 * h + 60.0 * m + s;
 									return true;
 								}
@@ -64,7 +63,7 @@ namespace OpenBve {
 						}
 					}
 				} else if (i == -1) {
-					int h; if (int.TryParse(Expression, NumberStyles.Integer, Culture, out h)) {
+					if (int.TryParse(Expression, NumberStyles.Integer, Culture, out int h)) {
 						Value = 3600.0 * h;
 						return true;
 					}

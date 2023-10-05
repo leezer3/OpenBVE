@@ -40,8 +40,7 @@ namespace OpenBve
 				MessageBox.Show(Translations.GetInterfaceString("packages_database_save_error"));
 			}
 
-			string errorMessage;
-			if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out errorMessage))
+			if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out string errorMessage))
 			{
 				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 				comboBoxPackageType.SelectedIndex = 0;
@@ -1246,8 +1245,7 @@ namespace OpenBve
 						launchLink += "http://";
 					}
 					launchLink += currentPackage.Website;
-					Uri URL;
-					bool result = Uri.TryCreate(launchLink, UriKind.Absolute, out URL) && (URL.Scheme == Uri.UriSchemeHttp || URL.Scheme == Uri.UriSchemeHttps);
+					bool result = Uri.TryCreate(launchLink, UriKind.Absolute, out Uri URL) && (URL.Scheme == Uri.UriSchemeHttp || URL.Scheme == Uri.UriSchemeHttps);
 					if (result)
 					{
 						Process.Start(launchLink);

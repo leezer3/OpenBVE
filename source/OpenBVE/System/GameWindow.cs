@@ -508,9 +508,7 @@ namespace OpenBve
 
 			if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
-				MouseCursor.Status Status;
-				MouseCursor newCursor;
-				if (Program.Renderer.Touch.MoveCheck(new Vector2(e.X, e.Y), out Status, out newCursor))
+				if (Program.Renderer.Touch.MoveCheck(new Vector2(e.X, e.Y), out MouseCursor.Status Status, out MouseCursor newCursor))
 				{
 					if (newCursor != null)
 					{
