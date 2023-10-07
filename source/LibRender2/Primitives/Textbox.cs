@@ -8,10 +8,8 @@ using OpenBveApi.Textures;
 
 namespace LibRender2.Primitives
 {
-	public class Textbox
+	public class Textbox : GLControl
 	{
-		/// <summary>Holds a reference to the base renderer</summary>
-		private readonly BaseRenderer renderer;
 		/// <summary>The font the items in this textbox are to be drawn with</summary>
 		private readonly OpenGlFont myFont;
 		/// <summary>The font color</summary>
@@ -32,10 +30,6 @@ namespace LibRender2.Primitives
 				topLine = 0;
 			}
 		}
-		/// <summary>The background texture</summary>
-		public Texture BackgroundTexture;
-		/// <summary>The background color</summary>
-		public Color128 BackgroundColor;
 		/// <summary>Backing property for the textbox text</summary>
 		private string myText;
 
@@ -43,10 +37,6 @@ namespace LibRender2.Primitives
 		public readonly int Border;
 		/// <summary>The top line to be renderered</summary>
 		private int topLine;
-		/// <summary>The stored location for the textbox</summary>
-		public Vector2 Location;
-		/// <summary>The stored size for the textbox</summary>
-		public Vector2 Size;
 		/// <summary>Whether the textbox is currently selected by the mouse</summary>
 		public bool CurrentlySelected;
 		/// <summary>Whether the textbox can scroll</summary>
@@ -105,14 +95,13 @@ namespace LibRender2.Primitives
 			return wrappedLines;
 		}
 
-		public Textbox(BaseRenderer Renderer, OpenGlFont Font, Color128 FontColor, Color128 backgroundColor)
+		public Textbox(BaseRenderer Renderer, OpenGlFont Font, Color128 FontColor, Color128 backgroundColor) : base(Renderer)
 		{
-			renderer = Renderer;
 			myFont = Font;
 			myFontColor = FontColor;
 			Border = 5;
 			topLine = 0;
-			BackgroundTexture = null;
+			Texture = null;
 			BackgroundColor = backgroundColor;
 			myScrollbarColor = Color128.Orange;
 		}
@@ -126,9 +115,9 @@ namespace LibRender2.Primitives
 			}
 		}
 
-		public void Draw()
+		public override void Draw()
 		{
-			renderer.Rectangle.Draw(BackgroundTexture, Location, Size, BackgroundColor); //Draw the backing rectangle first
+			Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor); //Draw the backing rectangle first
 			if (string.IsNullOrEmpty(Text))
 			{
 				return;
@@ -138,7 +127,7 @@ namespace LibRender2.Primitives
 			if (splitString.Count == 1)
 			{
 				//DRAW SINGLE LINE
-				renderer.OpenGlString.Draw(myFont, Text, new Vector2(Location.X + Border, Location.Y + Border), TextAlignment.TopLeft, myFontColor);
+				Renderer.OpenGlString.Draw(myFont, Text, new Vector2(Location.X + Border, Location.Y + Border), TextAlignment.TopLeft, myFontColor);
 				CanScroll = false;
 			}
 			else
@@ -151,14 +140,14 @@ namespace LibRender2.Primitives
 				CanScroll = maxFittingLines < splitString.Count;
 				if (CanScroll)
 				{
-					renderer.Rectangle.Draw(null, new Vector2(Location.X + Size.X - 12, Location.Y + 2), new Vector2(8, Size.Y - 4), Color128.Grey); //Backing rectangle
+					Renderer.Rectangle.Draw(null, new Vector2(Location.X + Size.X - 12, Location.Y + 2), new Vector2(8, Size.Y - 4), Color128.Grey); //Backing rectangle
 				}
 				//DRAW SPLIT LINES
 				int currentLine = topLine;
 				int bottomLine = Math.Min(maxFittingLines, splitString.Count);
 				for (int i = 0; i < bottomLine; i++)
 				{
-					renderer.OpenGlString.Draw(myFont, splitString[currentLine], new Vector2(Location.X + Border, Location.Y + Border + myFont.FontSize * i), TextAlignment.TopLeft, myFontColor);
+					Renderer.OpenGlString.Draw(myFont, splitString[currentLine], new Vector2(Location.X + Border, Location.Y + Border + myFont.FontSize * i), TextAlignment.TopLeft, myFontColor);
 					currentLine++;
 				}
 
@@ -166,7 +155,7 @@ namespace LibRender2.Primitives
 				{
 					double scrollBarHeight = (Size.Y - 4) * maxFittingLines / splitString.Count;
 					double percentageScroll = topLine / (double)(splitString.Count - maxFittingLines);
-					renderer.Rectangle.Draw(null, new Vector2(Location.X + Size.X - 13, Location.Y + (Size.Y - scrollBarHeight) * percentageScroll), new Vector2(10, scrollBarHeight), myScrollbarColor);
+					Renderer.Rectangle.Draw(null, new Vector2(Location.X + Size.X - 13, Location.Y + (Size.Y - scrollBarHeight) * percentageScroll), new Vector2(10, scrollBarHeight), myScrollbarColor);
 				}
 
 			}
