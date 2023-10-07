@@ -163,14 +163,19 @@ namespace OpenBve
 			}
 			if (e.Button == MouseButton.Left)
 			{
-				// if currently in a menu, forward the click to the menu system
-				if (Program.Renderer.CurrentInterface >= InterfaceType.Menu)
+				switch (Program.Renderer.CurrentInterface)
 				{
-					Game.Menu.ProcessMouseDown(e.X, e.Y);
-				}
-				else if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
-				{
-					Program.Renderer.Touch.TouchCheck(new Vector2(e.X, e.Y));
+					case InterfaceType.Normal:
+						Program.Renderer.Touch.TouchCheck(new Vector2(e.X, e.Y));
+						break;
+					case InterfaceType.Menu:
+					case InterfaceType.GLMainMenu:
+						// if currently in a menu, forward the click to the menu system
+						Game.Menu.ProcessMouseDown(e.X, e.Y);
+						break;
+					case InterfaceType.SwitchChangeMap:
+						Game.switchChangeDialog.ProcessMouseDown(e.X, e.Y);
+						break;
 				}
 			}
 		}

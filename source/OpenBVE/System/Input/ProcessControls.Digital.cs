@@ -1367,8 +1367,16 @@ namespace OpenBve
 
 						break;
 					case Translations.Command.SwitchMenu:
-						Program.Renderer.CurrentInterface = InterfaceType.SwitchChangeMap;
-						Game.switchChangeDialog.Show();
+						switch (Program.Renderer.CurrentInterface)
+						{
+							case InterfaceType.Normal:
+								Program.Renderer.CurrentInterface = InterfaceType.SwitchChangeMap;
+								Game.switchChangeDialog.Show();
+								break;
+							case InterfaceType.SwitchChangeMap:
+								Program.Renderer.CurrentInterface = InterfaceType.Normal;
+								break;
+						}
 						break;
 				}
 			}

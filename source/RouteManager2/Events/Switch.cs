@@ -33,15 +33,14 @@ namespace RouteManager2.Events
 
 			switch (trackFollower.TriggerType)
 			{
-				case EventTriggerType.FrontCarFrontAxle:
-				case EventTriggerType.OtherCarFrontAxle:
-					trackFollower.Car.FrontAxle.Follower.TrackIndex = currentRoute.Switches[Index].CurrentlySetTrack;
-					trackFollower.Car.FrontAxle.Follower.UpdateWorldCoordinates(false);
-					break;
+				case EventTriggerType.FrontBogieAxle:
+				case EventTriggerType.RearBogieAxle:
 				case EventTriggerType.RearCarRearAxle:
 				case EventTriggerType.OtherCarRearAxle:
-					trackFollower.Car.RearAxle.Follower.TrackIndex = currentRoute.Switches[Index].CurrentlySetTrack;
-					trackFollower.Car.RearAxle.Follower.UpdateWorldCoordinates(false);
+				case EventTriggerType.FrontCarFrontAxle:
+				case EventTriggerType.OtherCarFrontAxle:
+					trackFollower.TrackIndex = currentRoute.Switches[Index].CurrentlySetTrack;
+					trackFollower.UpdateWorldCoordinates(false);
 					break;
 				case EventTriggerType.TrainFront:
 					trackFollower.Train.Switch = Index;

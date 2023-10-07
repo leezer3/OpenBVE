@@ -561,12 +561,10 @@ namespace CsvRwRouteParser
 					h = c * p;
 				}
 
-				Transformation TrackTransformation = null;
-				Transformation GroundTransformation = null;
 				double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
 				double TrackPitch = Math.Atan(Data.Blocks[i].Pitch);
-				GroundTransformation = new Transformation(TrackYaw, 0.0, 0.0);
-				TrackTransformation = new Transformation(TrackYaw, TrackPitch, 0.0);
+				Transformation GroundTransformation = new Transformation(TrackYaw, 0.0, 0.0);
+				Transformation TrackTransformation = new Transformation(TrackYaw, TrackPitch, 0.0);
 				
 				// switches
 				if (!PreviewOnly)
@@ -755,6 +753,11 @@ namespace CsvRwRouteParser
 							CurrentRoute.Tracks[j].Elements[n].CurveCant = Data.Blocks[i].Rails[j].CurveCant;
 							CurrentRoute.Tracks[j].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
 							CurrentRoute.Tracks[j].Elements[n].IsDriveable = Data.Blocks[i].Rails[j].IsDriveable;
+
+							if (i > 0 && !Data.Blocks[i].Rails[j].IsDriveable && Data.Blocks[i - 1].Rails[j].IsDriveable)
+							{
+
+							}
 						}
 
 						if (!PreviewOnly)

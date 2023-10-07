@@ -685,12 +685,20 @@ namespace RouteManager2
 					{
 						// switch to different track if appropriate
 						currentTrack = CurrentRoute.Tracks[CurrentRoute.Switches[se.Index].CurrentlySetTrack];
+						key = CurrentRoute.Switches[se.Index].CurrentlySetTrack;
+						break;
+					}
+
+					if (currentTrack.Elements[i + firstUsedElement].Events[j] is TrackEndEvent)
+					{
+						// Playable path has ended [e.g. buffers etc]
+						elementsToDraw = i;
 						break;
 					}
 				}
 			}
-
-			DrawSegmentedCurve(g, Pens.Black, p, start, elementsToDraw - 1);
+			rend:
+			DrawSegmentedCurve(g, Pens.Blue, p, start, elementsToDraw - 1);
 		}
 
 		private static void DrawRailPath(Graphics g, MapMode mode, int key, int firstUsedElement, int lastUsedElement, Vector2 imageOrigin, Vector2 imageSize, Vector2 imageScale, double x0, double z0)

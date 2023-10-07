@@ -83,6 +83,9 @@ namespace OpenBve
 			if (selectedSwitch != Guid.Empty)
 			{
 				Program.CurrentRoute.Switches[selectedSwitch].Toggle();
+				// Unload existing texture and re-create with new path
+				TextureManager.UnloadTexture(ref MapPicturebox.Texture);
+				Program.CurrentHost.RegisterTexture(Illustrations.CreateRouteMap(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, true, out AvailableSwitches, TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition), new TextureParameters(null, null), out MapPicturebox.Texture);
 			}
 		}
 	}

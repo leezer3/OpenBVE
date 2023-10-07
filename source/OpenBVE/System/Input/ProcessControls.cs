@@ -214,6 +214,7 @@ namespace OpenBve
 					break;
 
 				case InterfaceType.Normal:
+				case InterfaceType.SwitchChangeMap:
 					// normal
 					for (int i = 0; i < Interface.CurrentControls.Length; i++)
 					{
