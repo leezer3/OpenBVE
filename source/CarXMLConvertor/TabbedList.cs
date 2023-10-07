@@ -6,9 +6,11 @@ namespace CarXmlConvertor
 	{
 		internal TabbedList()
 		{
-			this.Lines = new List<string>();
-			this.Lines.Add("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-			this.Lines.Add("<openBVE xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">");
+			this.Lines = new List<string>
+			{
+				"<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+				"<openBVE xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">"
+			};
 			this.Tabs = 0;
 		}
 

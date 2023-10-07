@@ -74,8 +74,7 @@ namespace ObjectViewer
                                     {
                                         case "windowwidth":
                                             {
-                                                int a;
-                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300)
+                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300)
                                                 {
                                                     a = 960;
                                                 }
@@ -83,8 +82,7 @@ namespace ObjectViewer
                                             } break;
                                         case "windowheight":
                                             {
-                                                int a;
-                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300)
+                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300)
                                                 {
                                                     a = 600;
                                                 }
@@ -111,14 +109,12 @@ namespace ObjectViewer
                                             } break;
                                         case "anisotropicfilteringlevel":
                                             {
-                                                int a;
-                                                int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+                                                int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
                                                 Interface.CurrentOptions.AnisotropicFilteringLevel = a;
                                             } break;
                                         case "antialiasinglevel":
                                             {
-                                                int a;
-                                                int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+                                                int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
                                                 Interface.CurrentOptions.AntiAliasingLevel = a;
                                             } break;
                                         case "transparencymode":
@@ -128,8 +124,7 @@ namespace ObjectViewer
                                                 case "smooth": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
                                                 default:
                                                     {
-                                                        int a;
-                                                        if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+                                                        if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
                                                         {
                                                             Interface.CurrentOptions.TransparencyMode = (TransparencyMode)a;
                                                         }
@@ -169,8 +164,7 @@ namespace ObjectViewer
 									{
 										case "mode":
 											{
-												ObjectOptimizationMode mode;
-												if (Enum.TryParse(Value, out mode))
+												if (Enum.TryParse(Value, out ObjectOptimizationMode mode))
 												{
 													Interface.CurrentOptions.ObjectOptimizationMode = mode;
 												}
