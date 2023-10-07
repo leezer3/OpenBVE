@@ -204,7 +204,8 @@ namespace RouteManager2
 						}
 						else
 						{
-							if (startElement != -1)
+							// For correct path drawing, the end-point is the second non-drivable element
+							if (el > 0 && !CurrentRoute.Tracks[key].Elements[el -1].IsDriveable && startElement != -1)
 							{
 								DrawRailPath(g, mode, key, startElement, el, imageOrigin, imageSize, imageScale, x0, z0);
 								startElement = -1;
@@ -685,7 +686,6 @@ namespace RouteManager2
 					{
 						// switch to different track if appropriate
 						currentTrack = CurrentRoute.Tracks[CurrentRoute.Switches[se.Index].CurrentlySetTrack];
-						key = CurrentRoute.Switches[se.Index].CurrentlySetTrack;
 						break;
 					}
 
@@ -697,7 +697,6 @@ namespace RouteManager2
 					}
 				}
 			}
-			rend:
 			DrawSegmentedCurve(g, Pens.Blue, p, start, elementsToDraw - 1);
 		}
 
