@@ -63,7 +63,6 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Creates a new MeshFace containing <param name="numVertices">N</param> vertices</summary>
-		/// <param name="numVertices">The number of vertices in the face</param>
 		public MeshFace(int numVertices)
 		{
 			Vertices = new MeshFaceVertex[numVertices];

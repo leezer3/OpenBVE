@@ -1663,5 +1663,12 @@ namespace LibRender2
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PopMatrix();
 		}
+
+		/// <summary>Sets the current MouseCursor</summary>
+		/// <param name="newCursor">The new cursor</param>
+		public virtual void SetCursor(OpenTK.MouseCursor newCursor)
+		{
+
+		}
 	}
 }

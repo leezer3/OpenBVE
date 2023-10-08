@@ -193,7 +193,7 @@ namespace OpenBve
 			if (Program.Renderer.CurrentInterface < InterfaceType.Menu)
 			{
 				// Deliberately set to the standard cursor, as touch controls may have set to something else
-				Program.currentGameWindow.Cursor = MouseCursor.Default;
+				Program.Renderer.SetCursor(MouseCursor.Default);
 			}
 			if (!isInitialized)
 				Init();
@@ -365,16 +365,7 @@ namespace OpenBve
 			}
 			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall  || menu.Type == MenuType.Packages || (int)menu.Type >= 107)
 			{
-				if (x > routeDescriptionBox.Location.X && x < routeDescriptionBox.Location.X + routeDescriptionBox.Size.X && y > routeDescriptionBox.Location.Y && y < routeDescriptionBox.Location.Y + routeDescriptionBox.Size.Y)
-				{
-					routeDescriptionBox.CurrentlySelected = true;
-					Program.currentGameWindow.Cursor = routeDescriptionBox.CanScroll ? Cursors.ScrollCursor : MouseCursor.Default;
-				}
-				else
-				{
-					routeDescriptionBox.CurrentlySelected = false;
-					Program.currentGameWindow.Cursor = MouseCursor.Default;
-				}
+				routeDescriptionBox.MouseMove(x, y);
 				//HACK: Use this to trigger our menu start button!
 				if (x > Program.Renderer.Screen.Width - 200 && x < Program.Renderer.Screen.Width - 10 && y > Program.Renderer.Screen.Height - 40 && y < Program.Renderer.Screen.Height - 10)
 				{

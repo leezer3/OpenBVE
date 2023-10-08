@@ -610,9 +610,7 @@ namespace RouteViewer
 					{
 						OpenGlString.Draw(Fonts.SmallFont, "Jump to track position:", new Vector2(4, 80), TextAlignment.TopLeft, Color128.White, true);
 
-						double distance;
-
-						if (double.TryParse(Program.JumpToPositionValue, out distance))
+						if (double.TryParse(Program.JumpToPositionValue, out double distance))
 						{
 							if (distance < Program.MinimumJumpToPositionValue - 100)
 							{

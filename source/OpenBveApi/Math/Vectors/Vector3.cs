@@ -701,8 +701,7 @@ namespace OpenBveApi.Math {
 		/// <returns>The result of the operation.</returns>
 		public static Vector3 Transform(Vector3 vec, Quaternion quat)
 		{
-			Vector3 result;
-			Transform(ref vec, ref quat, out result);
+			Transform(ref vec, ref quat, out Vector3 result);
 			return result;
 		}
 

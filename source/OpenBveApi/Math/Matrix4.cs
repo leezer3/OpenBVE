@@ -423,8 +423,7 @@ namespace OpenBveApi.Math
 		/// <returns>The resulting Matrix4.</returns>
 		public static Matrix4D CreateTranslation(double x, double y, double z)
 		{
-			Matrix4D result;
-			CreateTranslation(x, y, z, out result);
+			CreateTranslation(x, y, z, out Matrix4D result);
 			return result;
 		}
 
@@ -433,8 +432,7 @@ namespace OpenBveApi.Math
 		/// <returns>The resulting Matrix4.</returns>
 		public static Matrix4D CreateTranslation(Vector3 vector)
 		{
-			Matrix4D result;
-			CreateTranslation(vector.X, vector.Y, vector.Z, out result);
+			CreateTranslation(vector.X, vector.Y, vector.Z, out Matrix4D result);
 			return result;
 		}
 
@@ -487,8 +485,7 @@ namespace OpenBveApi.Math
 		/// <returns>A matrix instance.</returns>
 		public static Matrix4D CreateFromAxisAngle(Vector3 axis, double angle)
 		{
-			Matrix4D result;
-			CreateFromAxisAngle(axis, angle, out result);
+			CreateFromAxisAngle(axis, angle, out Matrix4D result);
 			return result;
 		}
 
@@ -499,9 +496,7 @@ namespace OpenBveApi.Math
 		/// <param name="result">Matrix result.</param>
 		public static void CreateFromQuaternion(ref Quaternion q, out Matrix4D result)
 		{
-			Vector3 axis;
-			double angle;
-			q.ToAxisAngle(out axis, out angle);
+			q.ToAxisAngle(out Vector3 axis, out double angle);
 			CreateFromAxisAngle(axis, angle, out result);
 		}
 
@@ -512,8 +507,7 @@ namespace OpenBveApi.Math
 		/// <returns>A matrix instance.</returns>
 		public static Matrix4D CreateFromQuaternion(Quaternion q)
 		{
-			Matrix4D result;
-			CreateFromQuaternion(ref q, out result);
+			CreateFromQuaternion(ref q, out Matrix4D result);
 			return result;
 		}
 

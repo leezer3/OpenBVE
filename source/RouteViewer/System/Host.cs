@@ -179,8 +179,7 @@ namespace RouteViewer
 		
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
 			if (File.Exists(path) || Directory.Exists(path)) {
-				Texture data;
-				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out data)) {
+				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out Texture data)) {
 					handle = data;
 					if (loadTexture)
 					{
@@ -314,8 +313,7 @@ namespace RouteViewer
 						try {
 							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path)) {
 								try {
-									UnifiedObject unifiedObject;
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out unifiedObject)) {
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out UnifiedObject unifiedObject)) {
 										if (unifiedObject is StaticObject staticObject)
 										{
 											staticObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
@@ -359,8 +357,7 @@ namespace RouteViewer
 							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path)) {
 								try
 								{
-									UnifiedObject obj;
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out UnifiedObject obj)) {
 										if (obj == null)
 										{
 											continue;

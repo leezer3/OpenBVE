@@ -338,8 +338,7 @@ namespace OpenBveApi.Interface {
 			if (cmdname == null) throw new ArgumentNullException("cmd");
 			if (cmdname.StartsWith("Security", StringComparison.Ordinal))
 				cmdname = cmdname.Substring(8).ToUpperInvariant();
-			VirtualKeys key;
-			if (!Enum.TryParse(cmdname, out key))
+			if (!Enum.TryParse(cmdname, out VirtualKeys key))
 				throw new ArgumentException(@"VirtualKeys does not contain the following key: " +
 					cmdname, "cmd");
 			return key;

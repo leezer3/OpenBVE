@@ -158,8 +158,7 @@ namespace OpenBveApi.Hosts {
 		private static string DetectUnixKernel()
 		{
 			Debug.Flush();
-			UName uts;
-			uname(out uts);
+			uname(out UName uts);
 			return uts.sysname;
 		}
 

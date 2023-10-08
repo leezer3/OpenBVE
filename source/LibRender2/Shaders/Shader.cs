@@ -39,7 +39,6 @@ namespace LibRender2.Shaders
 		public Shader(BaseRenderer Renderer, string VertexShaderName, string FragmentShaderName, bool IsFromStream = false)
 		{
 			renderer = Renderer;
-			int status;
 			handle = GL.CreateProgram();
 
 			if (IsFromStream)
@@ -79,7 +78,7 @@ namespace LibRender2.Shaders
 			GL.DeleteShader(fragmentShader);
 			GL.BindFragDataLocation(handle, 0, "fragColor");
 			GL.LinkProgram(handle);
-			GL.GetProgram(handle, GetProgramParameterName.LinkStatus, out status);
+			GL.GetProgram(handle, GetProgramParameterName.LinkStatus, out int status);
 
 			if (status == 0)
 			{

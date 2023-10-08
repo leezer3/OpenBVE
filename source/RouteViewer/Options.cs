@@ -71,16 +71,14 @@ namespace RouteViewer
 											break;
 										case "windowwidth":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300) {
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300) {
 													a = 960;
 												}
 												Interface.CurrentOptions.WindowWidth = a;
 											} break;
 										case "windowheight":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300) {
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300) {
 													a = 600;
 												}
 												Interface.CurrentOptions.WindowHeight = a;
@@ -90,16 +88,14 @@ namespace RouteViewer
 											break;
 										case "viewingdistance":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300) {
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300) {
 													a = 600;
 												}
 												Interface.CurrentOptions.ViewingDistance = a;
 											} break;
 										case "quadleafsize":
 											{
-												int a;
-												if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													if (a >= 50 && a <= 500)
 													{
@@ -123,14 +119,12 @@ namespace RouteViewer
 											} break;
 										case "anisotropicfilteringlevel":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.AnisotropicFilteringLevel = a;
 											} break;
 											case "antialiasinglevel":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.AntiAliasingLevel = a;
 											} break;
 										case "transparencymode":
@@ -138,8 +132,7 @@ namespace RouteViewer
 													case "sharp": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Performance; break;
 													case "smooth": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
 													default: {
-														int a;
-														if (int.TryParse(Value, NumberStyles.Integer, Culture, out a)) {
+														if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a)) {
 															Interface.CurrentOptions.TransparencyMode = (TransparencyMode)a;
 														} else {
 															Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality;

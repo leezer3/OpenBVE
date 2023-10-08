@@ -289,8 +289,7 @@ namespace Plugin
 						Object.Mesh.Materials[mm + i].BlendMode = MeshMaterialBlendMode.Normal;
 						if (materials[i].DaytimeTexture != null)
 						{
-							OpenBveApi.Textures.Texture tday;
-							Plugin.currentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out tday);
+							Plugin.currentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out OpenBveApi.Textures.Texture tday);
 							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 						}
 						else

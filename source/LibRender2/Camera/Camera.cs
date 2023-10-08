@@ -34,10 +34,7 @@ namespace LibRender2.Cameras
 		/// <summary>The absolute in-world camera position</summary>
 		public Vector3 AbsolutePosition
 		{
-			get
-			{
-				return absolutePosition;
-			}
+			get => absolutePosition;
 			set
 			{
 				if (value == absolutePosition)
@@ -60,10 +57,7 @@ namespace LibRender2.Cameras
 		/// <summary>The current relative camera Direction</summary>
 		public CameraAlignment AlignmentDirection
 		{
-			get
-			{
-				return alignmentDirection;
-			}
+			get => alignmentDirection;
 			set
 			{
 				Renderer.UpdateVisibility(true);
@@ -88,10 +82,7 @@ namespace LibRender2.Cameras
 		/// <summary>The current camera mode</summary>
 		public CameraViewMode CurrentMode
 		{
-			get
-			{
-				return currentMode;
-			}
+			get => currentMode;
 			set
 			{
 				if (currentMode == value)
@@ -351,8 +342,7 @@ namespace LibRender2.Cameras
 			/*
 			 * Find the leaf node the camera is currently in.
 			 * */
-			QuadTreeLeafNode currentLeaf;
-			Renderer.VisibleObjects.quadTree.GetLeafNode(AbsolutePosition, out currentLeaf);
+			Renderer.VisibleObjects.quadTree.GetLeafNode(AbsolutePosition, out QuadTreeLeafNode currentLeaf);
 			
 			/*
 			 * Check if the leaf node the camera is in has changed.

@@ -226,8 +226,7 @@ namespace OpenBve
 									Icon icon = Icon.ExtractAssociatedIcon(potentialFiles[j]);
 									if (icon != null)
 									{
-										Texture t;
-										Program.CurrentHost.RegisterTexture(icon.ToBitmap(), new TextureParameters(null, null), out t);
+										Program.CurrentHost.RegisterTexture(icon.ToBitmap(), new TextureParameters(null, null), out Texture t);
 										iconCache.Add(ext, t);
 										Items[totalEntries].Icon = t;
 									}

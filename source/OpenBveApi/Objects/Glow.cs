@@ -53,8 +53,7 @@ namespace OpenBveApi.Objects
 				return 1.0;
 			}
 
-			double halfdistance;
-			SplitAttenuationData(GlowAttenuationData, out mode, out halfdistance);
+			SplitAttenuationData(GlowAttenuationData, out mode, out double halfdistance);
 			int i = Face.Vertices[0].Index;
 			Vector3 d = new Vector3(Vertices[i].Coordinates.X, Vertices[i].Coordinates.Y, -Vertices[i].Coordinates.Z);
 			d.Transform(ModelMatrix, false);

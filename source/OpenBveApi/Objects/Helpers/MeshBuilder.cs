@@ -145,8 +145,7 @@ namespace OpenBveApi.Objects
 
 					if (Materials[i].LightMap != null)
 					{
-						Texture lightMap;
-						currentHost.RegisterTexture(Materials[i].LightMap, new TextureParameters(null, Color24.White), out lightMap);
+						currentHost.RegisterTexture(Materials[i].LightMap, new TextureParameters(null, Color24.White), out Texture lightMap);
 						Object.Mesh.Materials[mm + i].LightMapTexture = lightMap;
 					}
 

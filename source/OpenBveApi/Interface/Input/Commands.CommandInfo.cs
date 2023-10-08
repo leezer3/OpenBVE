@@ -77,9 +77,8 @@ namespace OpenBveApi.Interface
 			/// <remarks>This ignores the translated command description</remarks>
 			public override bool Equals(object obj)
 			{
-				if (obj is CommandInfo)
+				if (obj is CommandInfo newCommandInfo)
 				{
-					CommandInfo newCommandInfo = (CommandInfo) obj;
 					return newCommandInfo.Equals(this);
 				}
 				return false;
