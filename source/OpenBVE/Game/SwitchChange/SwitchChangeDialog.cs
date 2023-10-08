@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LibRender2;
 using LibRender2.Primitives;
 using LibRender2.Screens;
 using LibRender2.Textures;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
-using OpenTK;
 using RouteManager2;
 using TrainManager;
+using MouseCursor = OpenTK.MouseCursor;
 using Vector2 = OpenBveApi.Math.Vector2;
 
 namespace OpenBve
@@ -18,20 +19,27 @@ namespace OpenBve
 	{
 		/// <summary>The picturebox containing the map texture</summary>
 		internal Picturebox MapPicturebox = new Picturebox(Program.Renderer);
-		
+		/// <summary>The close button</summary>
+		internal Button CloseButton = new Button(Program.Renderer, "Close");
+		/// <summary>The GUID of the currently selected switch</summary>
 		private Guid selectedSwitch = Guid.Empty;
-
+		/// <summary>The list of available switches</summary>
 		internal Dictionary<Guid, Vector2> AvailableSwitches;
+		/// <summary>Stores the previous output mode of the renderer</summary>
+		private OutputMode previousOutputMode;
 
 		internal SwitchChangeDialog()
 		{
 			MapPicturebox.Location = new Vector2(0, 0);
+			CloseButton.OnClick += Close;
 		}
 
 		internal void Show()
 		{
-			Program.Renderer.CurrentOutputMode = OutputMode.None; // TEMP
+			previousOutputMode = Program.Renderer.CurrentOutputMode;
+			Program.Renderer.CurrentOutputMode = OutputMode.None;
 			MapPicturebox.Size = new Vector2(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height); // as size may have changed between fullscreen etc.
+			CloseButton.Location = new Vector2(Program.Renderer.Screen.Width * 0.9, Program.Renderer.Screen.Height * 0.9);
 			TextureManager.UnloadTexture(ref MapPicturebox.Texture);
 			Program.CurrentHost.RegisterTexture(Illustrations.CreateRouteMap(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, true, out AvailableSwitches, TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition), new TextureParameters(null, null), out MapPicturebox.Texture);
 		}
@@ -39,6 +47,7 @@ namespace OpenBve
 		internal void Draw()
 		{
 			MapPicturebox.Draw();
+			CloseButton.Draw();
 			if (selectedSwitch != Guid.Empty)
 			{
 				// Switch details
@@ -53,6 +62,7 @@ namespace OpenBve
 		/// <param name="y">The screen-relative y coordinate of the move event</param>
 		internal void ProcessMouseMove(int x, int y)
 		{
+			CloseButton.MouseMove(x, y);
 			selectedSwitch = Guid.Empty;
 			for(int i = 0; i < AvailableSwitches.Count; i++)
 			{
@@ -61,7 +71,7 @@ namespace OpenBve
 				    y > AvailableSwitches[guid].Y - 10 && y < AvailableSwitches[guid].Y + 10)
 				{
 					// Selection radius of 10px either way, so 20px circle
-					Program.currentGameWindow.Cursor = Cursors.CurrentCursor;
+					Program.Renderer.SetCursor(AvailableCursors.CurrentCursor);
 					selectedSwitch = guid;
 					break;
 				}
@@ -87,6 +97,14 @@ namespace OpenBve
 				TextureManager.UnloadTexture(ref MapPicturebox.Texture);
 				Program.CurrentHost.RegisterTexture(Illustrations.CreateRouteMap(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, true, out AvailableSwitches, TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition), new TextureParameters(null, null), out MapPicturebox.Texture);
 			}
+			CloseButton.MouseDown(x, y);
+		}
+
+		internal void Close(object sender, EventArgs e)
+		{
+			TextureManager.UnloadTexture(ref MapPicturebox.Texture);
+			Program.Renderer.CurrentInterface = InterfaceType.Normal;
+			Program.Renderer.CurrentOutputMode = previousOutputMode;
 		}
 	}
 }

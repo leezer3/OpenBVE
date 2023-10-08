@@ -35,5 +35,13 @@ namespace LibRender2.Primitives
 		{
 
 		}
+
+		/// <summary>Passes a mouse down event to the control</summary>
+		/// <param name="x">The absolute screen X co-ordinate</param>
+		/// <param name="y">The absolute screen Y co-ordinate</param>
+		public virtual void MouseDown(int x, int y)
+		{
+			MouseMove(x, y);
+		}
 	}
 }
