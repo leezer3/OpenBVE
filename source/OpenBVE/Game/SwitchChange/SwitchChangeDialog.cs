@@ -36,6 +36,7 @@ namespace OpenBve
 
 		internal void Show()
 		{
+			Program.Renderer.SetCursor(MouseCursor.Default); // as we may have hidden the cursor through inactivity or be over a touch control when triggering
 			previousOutputMode = Program.Renderer.CurrentOutputMode;
 			Program.Renderer.CurrentOutputMode = OutputMode.None;
 			MapPicturebox.Size = new Vector2(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height); // as size may have changed between fullscreen etc.
