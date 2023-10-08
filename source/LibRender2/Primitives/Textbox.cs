@@ -4,7 +4,6 @@ using LibRender2.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
-using OpenBveApi.Textures;
 
 namespace LibRender2.Primitives
 {
@@ -19,10 +18,7 @@ namespace LibRender2.Primitives
 		/// <summary>The string contents of the textbox</summary>
 		public string Text
 		{
-			get
-			{
-				return myText;
-			}
+			get => myText;
 			set
 			{
 				myText = value;
@@ -42,13 +38,7 @@ namespace LibRender2.Primitives
 		/// <summary>Whether the textbox can scroll</summary>
 		public bool CanScroll;
 		/// <summary>Used for internal size calculations</summary>
-		private Vector2 internalSize
-		{
-			get
-			{
-				return CanScroll ? new Vector2(Size.X, Size.Y - 12) : Size;
-			}
-		}
+		private Vector2 internalSize => CanScroll ? new Vector2(Size.X, Size.Y - 12) : Size;
 
 		private List<string> WrappedLines(int width)
 		{
@@ -161,6 +151,18 @@ namespace LibRender2.Primitives
 			}
 		}
 
-		
+		public override void MouseMove(int x, int y)
+		{
+			if (x > Location.X && x < Location.X + Size.X && y > Location.Y && y < Location.Y + Size.Y)
+			{
+				CurrentlySelected = true;
+				Renderer.SetCursor(CanScroll ? AvailableCursors.ScrollCursor : OpenTK.MouseCursor.Default); 
+			}
+			else
+			{
+				Renderer.SetCursor(OpenTK.MouseCursor.Default);
+				CurrentlySelected = false;
+			}
+		}
 	}
 }

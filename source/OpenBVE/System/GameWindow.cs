@@ -34,7 +34,7 @@ using TrainManager.Trains;
 using Path = System.IO.Path;
 using Vector2 = OpenTK.Vector2;
 using Control = OpenBveApi.Interface.Control;
-using MouseCursor = LibRender2.Cursors.MouseCursor;
+using MouseCursor = LibRender2.MouseCursor;
 
 namespace OpenBve
 {
@@ -514,36 +514,36 @@ namespace OpenBve
 					{
 						switch (Status)
 						{
-							case MouseCursor.Status.Default:
-								Cursor = newCursor.MyCursor;
+							case MouseCursor.Status.Default: 
+								Program.Renderer.SetCursor(newCursor.MyCursor);
 								break;
 							case MouseCursor.Status.Plus:
-								Cursor = newCursor.MyCursorPlus;
+								Program.Renderer.SetCursor(newCursor.MyCursorPlus);
 								break;
 							case MouseCursor.Status.Minus:
-								Cursor = newCursor.MyCursorMinus;
+								Program.Renderer.SetCursor(newCursor.MyCursorMinus);
 								break;
 						}
 					}
-					else if (Cursors.CurrentCursor != null)
+					else if (LibRender2.AvailableCursors.CurrentCursor != null)
 					{
 						switch (Status)
 						{
 							case MouseCursor.Status.Default:
-								Cursor = Cursors.CurrentCursor;
+								Program.Renderer.SetCursor(AvailableCursors.CurrentCursor);
 								break;
 							case MouseCursor.Status.Plus:
-								Cursor = Cursors.CurrentCursorPlus;
+								Program.Renderer.SetCursor(AvailableCursors.CurrentCursorPlus);
 								break;
 							case MouseCursor.Status.Minus:
-								Cursor = Cursors.CurrentCursorMinus;
+								Program.Renderer.SetCursor(AvailableCursors.CurrentCursorMinus);
 								break;
 						}
 					}
 				}
 				else
 				{
-					Cursor = OpenTK.MouseCursor.Default;
+					Program.Renderer.SetCursor(OpenTK.MouseCursor.Default);
 				}
 			}
 		}

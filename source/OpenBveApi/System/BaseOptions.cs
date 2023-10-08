@@ -99,5 +99,7 @@ namespace OpenBveApi
 		public ObjectDisposalMode ObjectDisposalMode;
 		/// <summary>Uses the native Windows GDI+ decoders for PNG / JPG</summary>
 		public bool UseGDIDecoders;
+		/// <summary>The filename of the current cursor</summary>
+		public string CursorFileName;
 	}
 }

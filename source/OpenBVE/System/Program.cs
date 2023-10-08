@@ -152,7 +152,7 @@ namespace OpenBve {
 			Translations.LoadLanguageFiles(folder);
 			
 			folder = Program.FileSystem.GetDataFolder("Cursors");
-			Cursors.LoadCursorImages(folder);
+			LibRender2.AvailableCursors.LoadCursorImages(Program.Renderer, folder);
 			
 			Interface.LoadControls(null, out Interface.CurrentControls);
 			folder = Program.FileSystem.GetDataFolder("Controls");

@@ -11,7 +11,7 @@ namespace LibRender2.Primitives
 		internal readonly BaseRenderer Renderer;
 		/// <summary>The background color for the control</summary>
 		public Color128 BackgroundColor;
-		/// <summary>The texture for the picturebox</summary>
+		/// <summary>The texture for the control</summary>
 		public Texture Texture;
 		/// <summary>The stored location for the control</summary>
 		public Vector2 Location;
@@ -23,6 +23,15 @@ namespace LibRender2.Primitives
 			Renderer = renderer;
 		}
 
+		/// <summary>Draws the control</summary>
 		public abstract void Draw();
+
+		/// <summary>Passes a mouse move event to the control</summary>
+		/// <param name="x">The absolute screen X co-ordinate</param>
+		/// <param name="y">The absolute screen Y co-ordinate</param>
+		public virtual void MouseMove(int x, int y)
+		{
+
+		}
 	}
 }
