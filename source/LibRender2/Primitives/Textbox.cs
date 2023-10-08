@@ -33,8 +33,6 @@ namespace LibRender2.Primitives
 		public readonly int Border;
 		/// <summary>The top line to be renderered</summary>
 		private int topLine;
-		/// <summary>Whether the textbox is currently selected by the mouse</summary>
-		public bool CurrentlySelected;
 		/// <summary>Whether the textbox can scroll</summary>
 		public bool CanScroll;
 		/// <summary>Used for internal size calculations</summary>

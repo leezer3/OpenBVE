@@ -17,6 +17,8 @@ namespace LibRender2.Primitives
 		public Vector2 Location;
 		/// <summary>The stored size for the control</summary>
 		public Vector2 Size;
+		/// <summary>Whether the control is currently selected by the mouse</summary>
+		public bool CurrentlySelected;
 
 		protected GLControl(BaseRenderer renderer)
 		{
