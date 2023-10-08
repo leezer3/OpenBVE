@@ -50,7 +50,5 @@ namespace LibRender2.Primitives
 				OnClick?.Invoke(this, EventArgs.Empty);
 			}
 		}
-
-		public EventHandler OnClick;
 	}
 }

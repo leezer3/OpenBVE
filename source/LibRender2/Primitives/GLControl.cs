@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Colors;
+﻿using System;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 
@@ -19,6 +20,8 @@ namespace LibRender2.Primitives
 		public Vector2 Size;
 		/// <summary>Whether the control is currently selected by the mouse</summary>
 		public bool CurrentlySelected;
+		/// <summary>The event handler for the OnClick event</summary>
+		public EventHandler OnClick;
 
 		protected GLControl(BaseRenderer renderer)
 		{
