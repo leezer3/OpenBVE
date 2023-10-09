@@ -114,14 +114,14 @@ namespace RouteManager2
 				//Usually caused by selecting another route before preview has finished
 				return new Bitmap(1,1);
 			}
-			int totalElements, firstUsedElement, lastUsedElement;
+			int firstUsedElement, lastUsedElement;
 			if (trackPosition != -1)
 			{
-				RestrictedRouteRange(trackPosition, 500, out totalElements, out firstUsedElement, out lastUsedElement);
+				RestrictedRouteRange(trackPosition, 500, out firstUsedElement, out lastUsedElement);
 			}
 			else
 			{
-				TotalRouteRange(out totalElements, out firstUsedElement, out lastUsedElement);	
+				TotalRouteRange(out _, out firstUsedElement, out lastUsedElement);	
 			}
 			
 			// find dimensions
@@ -423,21 +423,34 @@ namespace RouteManager2
 				}
 			}
 
-			// if in-game, trim unused parts of the bitmap
+			
 			if (inGame)
 			{
-				xMin -= LeftPad;
-				xMax += RightPad;
-				zMin -= TopPad;
-				zMax += BottomPad;
-				if (xMin < 0)
+				if (trackPosition == -1)
+				{
+					// in-game map shrinks bitmap
+					xMin -= LeftPad;
+					xMax += RightPad;
+					zMin -= TopPad;
+					zMax += BottomPad;
+					if (xMin < 0)
+						xMin = 0;
+					if (xMax >= Width)
+						xMax = Width - 1;
+					if (zMin < 0)
+						zMin = 0;
+					if (zMax >= Height)
+						zMax = Height - 1;
+				}
+				else
+				{
+					// switch change dialog should cover the whole screen
 					xMin = 0;
-				if (xMax >= Width)
-					xMax = Width - 1;
-				if (zMin < 0)
+					xMax = Width;
 					zMin = 0;
-				if (zMax >= Height)
-					zMax = Height - 1;
+					zMax = Height;
+				}
+				
 				Bitmap nb = new Bitmap((int)(xMax - xMin + 1.0), (int)(zMax - zMin + 1.0));	// round up
 				g = Graphics.FromImage(nb);
 				g.DrawImage(b, (int)-xMin, (int)-zMin);										// round down
@@ -824,7 +837,7 @@ namespace RouteManager2
 		/// <param name="totalElements">The total elements used</param>
 		/// <param name="firstUsedElement">The index of the first used element</param>
 		/// <param name="lastUsedElement">The index of the last used element</param>
-		private static void RestrictedRouteRange(double trackPosition, int drawRadius, out int totalElements, out int firstUsedElement, out int lastUsedElement)
+		private static void RestrictedRouteRange(double trackPosition, int drawRadius, out int firstUsedElement, out int lastUsedElement)
 		{
 			lastUsedElement = 0;
 			firstUsedElement = -1;
@@ -842,8 +855,6 @@ namespace RouteManager2
 					break;
 				}
 			}
-
-			totalElements = lastUsedElement - firstUsedElement;
 		}
 	}
 }

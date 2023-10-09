@@ -1,4 +1,28 @@
-﻿using System;
+﻿//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2023, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
@@ -21,6 +45,8 @@ namespace OpenBve
 		internal Picturebox MapPicturebox = new Picturebox(Program.Renderer);
 		/// <summary>The close button</summary>
 		internal Button CloseButton = new Button(Program.Renderer, "Close");
+		/// <summary>The title label</summary>
+		internal Label TitleLabel = new Label(Program.Renderer, "Select a Switch To Change:");
 		/// <summary>The GUID of the currently selected switch</summary>
 		private Guid selectedSwitch = Guid.Empty;
 		/// <summary>The list of available switches</summary>
@@ -43,12 +69,12 @@ namespace OpenBve
 			CloseButton.Location = new Vector2(Program.Renderer.Screen.Width * 0.9, Program.Renderer.Screen.Height * 0.9);
 			TextureManager.UnloadTexture(ref MapPicturebox.Texture);
 			Program.CurrentHost.RegisterTexture(Illustrations.CreateRouteMap(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, true, out AvailableSwitches, TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition), new TextureParameters(null, null), out MapPicturebox.Texture);
+			TitleLabel.Location = new Vector2(Program.Renderer.Screen.Width * 0.5 - TitleLabel.Size.X * 0.5, 5);
 		}
 
 		internal void Draw()
 		{
 			MapPicturebox.Draw();
-			CloseButton.Draw();
 			if (selectedSwitch != Guid.Empty)
 			{
 				// Switch details
@@ -56,6 +82,9 @@ namespace OpenBve
 				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, "Current Setting: Rail " + Program.CurrentRoute.Switches[selectedSwitch].CurrentlySetTrack, new Vector2(10, 30), TextAlignment.CenterLeft, Color128.White);
 				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, "Distance From Player: " + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[selectedSwitch].TrackPosition) + "m", new Vector2(10, 50), TextAlignment.CenterLeft, Color128.White);
 			}
+			// Draw last so they overlay any curves on the map which are OTT
+			CloseButton.Draw();
+			TitleLabel.Draw();
 		}
 
 		/// <summary>Processes a mouse move event</summary>
@@ -65,6 +94,13 @@ namespace OpenBve
 		{
 			CloseButton.MouseMove(x, y);
 			selectedSwitch = Guid.Empty;
+			if (CloseButton.CurrentlySelected)
+			{
+				// don't bother to look for a switch if we've selected the button
+				Program.currentGameWindow.Cursor = MouseCursor.Default;
+				return;
+			}
+			
 			for(int i = 0; i < AvailableSwitches.Count; i++)
 			{
 				Guid guid = AvailableSwitches.ElementAt(i).Key;
@@ -72,6 +108,7 @@ namespace OpenBve
 				    y > AvailableSwitches[guid].Y - 10 && y < AvailableSwitches[guid].Y + 10)
 				{
 					// Selection radius of 10px either way, so 20px circle
+					// This doesn't appear to be quite positioned right, but not sure if this is GDI+ or our drawing being wonky- Ignore for the minute.....
 					Program.Renderer.SetCursor(AvailableCursors.CurrentCursor);
 					selectedSwitch = guid;
 					break;
