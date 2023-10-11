@@ -1739,6 +1739,20 @@
 						<source>Current assignment:</source>
 					</trans-unit>
 				</group>
+				<group id="switchmenu">
+					<trans-unit id="title">
+						<source>Select a Switch To Change: </source>
+					</trans-unit>
+					<trans-unit id="selected">
+						<source>Selected Switch: </source>
+					</trans-unit>
+					<trans-unit id="current">
+						<source>Current Setting: </source>
+					</trans-unit>
+					<trans-unit id="distance">
+						<source>Distance from Player: </source>
+					</trans-unit>
+				</group>
 				<group id="lamps">
 					<trans-unit id="ats">
 						<source>ATS</source>
