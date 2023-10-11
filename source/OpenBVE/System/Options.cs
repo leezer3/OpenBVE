@@ -81,8 +81,6 @@ namespace OpenBve
 			/// <summary>The time in seconds after which the mouse cursor is hidden</summary>
 			/// <remarks>Set to zero to never hide the cursor</remarks>
 			internal double CursorHideDelay;
-			internal string CursorFileName;
-			
 			/// <summary>Whether a screen reader is available</summary>
 			/// <remarks>Not saved, detected on game init</remarks>
 			internal bool ScreenReaderAvailable;
@@ -387,8 +385,7 @@ namespace OpenBve
 											break;
 										case "windowwidth":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													a = 960;
 												}
@@ -396,8 +393,7 @@ namespace OpenBve
 											} break;
 										case "windowheight":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													a = 600;
 												}
@@ -405,8 +401,7 @@ namespace OpenBve
 											} break;
 										case "fullscreenwidth":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													a = 1024;
 												}
@@ -414,8 +409,7 @@ namespace OpenBve
 											} break;
 										case "fullscreenheight":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													a = 768;
 												}
@@ -423,8 +417,7 @@ namespace OpenBve
 											} break;
 										case "fullscreenbits":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													a = 32;
 												}
@@ -432,14 +425,12 @@ namespace OpenBve
 											} break;
 										case "mainmenuwidth":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.MainMenuWidth = a;
 											} break;
 										case "mainmenuheight":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.MainMenuHeight = a;
 											} break;
 										case "loadinadvance":
@@ -471,20 +462,17 @@ namespace OpenBve
 											} break;
 										case "anisotropicfilteringlevel":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.AnisotropicFilteringLevel = a;
 											} break;
 										case "anisotropicfilteringmaximum":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.AnisotropicFilteringMaximum = a;
 											} break;
 										case "antialiasinglevel":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.AntiAliasingLevel = a;
 											} break;
 										case "transparencymode":
@@ -494,8 +482,7 @@ namespace OpenBve
 												case "smooth": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
 												default:
 													{
-														int a;
-														if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+														if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 														{
 															Interface.CurrentOptions.TransparencyMode = (TransparencyMode)a;
 														}
@@ -511,8 +498,7 @@ namespace OpenBve
 											break;
 										case "viewingdistance":
 											{
-												int a;
-												if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													if (a >= 100 && a <= 10000)
 													{
@@ -522,8 +508,7 @@ namespace OpenBve
 											} break;
 										case "quadleafsize":
 											{
-												int a;
-												if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													if (a >= 50 && a <= 500)
 													{
@@ -540,8 +525,7 @@ namespace OpenBve
 												default: Interface.CurrentOptions.MotionBlur = MotionBlurMode.None; break;
 											} break;
 										case "fpslimit":
-											int limit;
-											if (!int.TryParse(Value, NumberStyles.Integer, Culture, out limit) || limit < 0)
+											if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int limit) || limit < 0)
 											{
 												limit = 0;
 											}
@@ -553,14 +537,12 @@ namespace OpenBve
 									{
 										case "basicthreshold":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.ObjectOptimizationBasicThreshold = a;
 											} break;
 										case "fullthreshold":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.ObjectOptimizationFullThreshold = a;
 											} break;
 										case "vertexCulling":
@@ -595,8 +577,7 @@ namespace OpenBve
 												default: Interface.CurrentOptions.GameMode = GameMode.Normal; break;
 											} break;
 										case "acceleratedtimefactor":
-											int tf;
-											int.TryParse(Value, NumberStyles.Integer, Culture, out tf);
+											int.TryParse(Value, NumberStyles.Integer, Culture, out int tf);
 											if (tf <= 0)
 											{
 												tf = 5;
@@ -619,21 +600,18 @@ namespace OpenBve
 											break;
 										case "joystickaxisthreshold":
 											{
-												double a;
-												double.TryParse(Value, NumberStyles.Float, Culture, out a);
+												double.TryParse(Value, NumberStyles.Float, Culture, out double a);
 												Interface.CurrentOptions.JoystickAxisThreshold = a;
 											} break;
 										case "keyrepeatdelay":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												if (a <= 0) a = 500;
 												Interface.CurrentOptions.KeyRepeatDelay = 0.001 * a;
 											} break;
 										case "keyrepeatinterval":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												if (a <= 0) a = 100;
 												Interface.CurrentOptions.KeyRepeatInterval = 0.001 * a;
 											} break;
@@ -642,8 +620,7 @@ namespace OpenBve
 											break;
 										case "cursorhidedelay":
 											{
-												double a;
-												double.TryParse(Value, NumberStyles.Float, Culture, out a);
+												double.TryParse(Value, NumberStyles.Float, Culture, out double a);
 												Interface.CurrentOptions.CursorHideDelay = a;
 											}
 											break;
@@ -669,8 +646,7 @@ namespace OpenBve
 											break;
 										case "number":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.SoundNumber = a < 16 ? 16 : a;
 											} break;
 									} break;
@@ -742,8 +718,7 @@ namespace OpenBve
 									} break;
 								case "routeencodings":
 									{
-										int a;
-										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out a))
+										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out int a))
 										{
 											a = Encoding.UTF8.CodePage;
 										}
@@ -766,8 +741,7 @@ namespace OpenBve
 									} break;
 								case "trainencodings":
 									{
-										int a;
-										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out a))
+										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out int a))
 										{
 											a = Encoding.UTF8.CodePage;
 										}
@@ -799,8 +773,7 @@ namespace OpenBve
 									{
 										case "xobject":
 											{
-												int p;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 3)
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int p) || p < 0 || p > 3)
 												{
 													Interface.CurrentOptions.CurrentXParser = XParsers.Original;
 												}
@@ -812,8 +785,7 @@ namespace OpenBve
 											}
 										case "objobject":
 											{
-												int p;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 2)
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int p) || p < 0 || p > 2)
 												{
 													Interface.CurrentOptions.CurrentObjParser = ObjParsers.Original;
 												}
@@ -839,8 +811,7 @@ namespace OpenBve
 											break;
 										case "panel2extendedminsize":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.Panel2ExtendedMinSize = a;
 											} break;
 									}

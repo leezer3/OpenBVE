@@ -67,7 +67,7 @@ namespace TrainManager.SafetySystems
 					currentStep++;
 					return;
 				case 2:
-					if (Plugin.Sound[2] == 0)
+					if (Plugin.Sound[2] == 0 || Plugin.Sound[2] == -1000)
 					{
 						data.Response = AIResponse.Medium;
 						currentStep++;

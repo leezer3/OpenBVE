@@ -106,7 +106,7 @@ namespace OpenBveApi.FunctionScripting
 			Stack = new double[16]; int m = 0, s = 0;
 			Constants = new double[16]; int c = 0;
 			for (int i = 0; i < Arguments.Length; i++) {
-				double d; if (double.TryParse(Arguments[i], System.Globalization.NumberStyles.Float, Culture, out d)) {
+				if (double.TryParse(Arguments[i], System.Globalization.NumberStyles.Float, Culture, out double d)) {
 					if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 					InstructionSet[n] = Instructions.SystemConstant;
 					if (c >= Constants.Length) Array.Resize(ref Constants, Constants.Length << 1);
@@ -309,8 +309,7 @@ namespace OpenBveApi.FunctionScripting
 							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (Arguments[i - 2].ToLowerInvariant() == "cars")
 							{
-								int nCars;
-								NumberFormats.TryParseIntVb6(Arguments[i - 1], out nCars);
+								NumberFormats.TryParseIntVb6(Arguments[i - 1], out int nCars);
 								if (System.Math.Abs(nCars) != nCars)
 								{
 									//It makes absolutely no sense to test whether there are less than 0 cars in a train, so let's at least throw a broken script error

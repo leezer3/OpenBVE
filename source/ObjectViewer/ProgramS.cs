@@ -83,8 +83,7 @@ namespace ObjectViewer {
 		        Renderer.Screen.Width = 960;
 		        Renderer.Screen.Height = 600;
 	        }
-	        string error;
-	        if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
+	        if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
 	        {
 		        MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		        return;

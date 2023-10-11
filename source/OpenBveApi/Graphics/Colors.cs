@@ -124,7 +124,7 @@ namespace OpenBveApi.Colors {
 			if (Expression.StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 			{
 				string a = Expression.Substring(1).TrimStart();
-				int x; if (int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out x))
+				if (int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int x))
 				{
 					int r = (x >> 16) & 0xFF;
 					int g = (x >> 8) & 0xFF;
@@ -145,9 +145,7 @@ namespace OpenBveApi.Colors {
 		/// <returns>The new Color24</returns>
 		public static Color24 ParseHexColor(string Expression)
 		{
-			Color24 color;
-
-			if (!TryParseHexColor(Expression, out color))
+			if (!TryParseHexColor(Expression, out Color24 color))
 			{
 				throw new FormatException();
 			}
@@ -338,7 +336,7 @@ namespace OpenBveApi.Colors {
 			if (Expression.StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 			{
 				string a = Expression.Substring(1).TrimStart();
-				int x; if (int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out x))
+				if (int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int x))
 				{
 					int r = (x >> 16) & 0xFF;
 					int g = (x >> 8) & 0xFF;

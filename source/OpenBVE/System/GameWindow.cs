@@ -34,7 +34,7 @@ using TrainManager.Trains;
 using Path = System.IO.Path;
 using Vector2 = OpenTK.Vector2;
 using Control = OpenBveApi.Interface.Control;
-using MouseCursor = LibRender2.Cursors.MouseCursor;
+using MouseCursor = LibRender2.MouseCursor;
 
 namespace OpenBve
 {
@@ -508,44 +508,42 @@ namespace OpenBve
 
 			if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
-				MouseCursor.Status Status;
-				MouseCursor newCursor;
-				if (Program.Renderer.Touch.MoveCheck(new Vector2(e.X, e.Y), out Status, out newCursor))
+				if (Program.Renderer.Touch.MoveCheck(new Vector2(e.X, e.Y), out MouseCursor.Status Status, out MouseCursor newCursor))
 				{
 					if (newCursor != null)
 					{
 						switch (Status)
 						{
-							case MouseCursor.Status.Default:
-								Cursor = newCursor.MyCursor;
+							case MouseCursor.Status.Default: 
+								Program.Renderer.SetCursor(newCursor.MyCursor);
 								break;
 							case MouseCursor.Status.Plus:
-								Cursor = newCursor.MyCursorPlus;
+								Program.Renderer.SetCursor(newCursor.MyCursorPlus);
 								break;
 							case MouseCursor.Status.Minus:
-								Cursor = newCursor.MyCursorMinus;
+								Program.Renderer.SetCursor(newCursor.MyCursorMinus);
 								break;
 						}
 					}
-					else if (Cursors.CurrentCursor != null)
+					else if (LibRender2.AvailableCursors.CurrentCursor != null)
 					{
 						switch (Status)
 						{
 							case MouseCursor.Status.Default:
-								Cursor = Cursors.CurrentCursor;
+								Program.Renderer.SetCursor(AvailableCursors.CurrentCursor);
 								break;
 							case MouseCursor.Status.Plus:
-								Cursor = Cursors.CurrentCursorPlus;
+								Program.Renderer.SetCursor(AvailableCursors.CurrentCursorPlus);
 								break;
 							case MouseCursor.Status.Minus:
-								Cursor = Cursors.CurrentCursorMinus;
+								Program.Renderer.SetCursor(AvailableCursors.CurrentCursorMinus);
 								break;
 						}
 					}
 				}
 				else
 				{
-					Cursor = OpenTK.MouseCursor.Default;
+					Program.Renderer.SetCursor(OpenTK.MouseCursor.Default);
 				}
 			}
 		}
@@ -1054,7 +1052,6 @@ namespace OpenBve
 				using (Process proc = Process.GetCurrentProcess())
 				{
 					long memoryUsed = proc.PrivateMemorySize64;
-					MessageBox.Show(memoryUsed.ToString());
 					if ((memoryUsed > 900000000 && !Interface.CurrentOptions.LoadInAdvance) || memoryUsed > 1600000000)
 					{
 						// Either using ~900mb at the first station or 1.5gb + with all textures loaded is likely to cause critical OOM errors with the 32-bit process memory limit

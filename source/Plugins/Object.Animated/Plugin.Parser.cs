@@ -46,8 +46,7 @@ namespace Plugin
 				if (Lines[i].Length != 0)
 				{
 					string sct = Lines[i].Trim().Trim('[', ']');
-					AnimatedSection Section;
-					Enum.TryParse(sct, true, out Section);
+					Enum.TryParse(sct, true, out AnimatedSection Section);
 					switch (Section)
 					{
 						case AnimatedSection.Include:
@@ -65,8 +64,7 @@ namespace Plugin
 										{
 											string a = Lines[i].Substring(0, j).TrimEnd();
 											string b = Lines[i].Substring(j + 1).TrimStart();
-											AnimatedKey key;
-											if (!Enum.TryParse(a, true, out key))
+											if (!Enum.TryParse(a, true, out AnimatedKey key))
 											{
 												continue;
 											}
@@ -228,8 +226,7 @@ namespace Plugin
 										{
 											string a = Lines[i].Substring(0, j).TrimEnd();
 											string b = Lines[i].Substring(j + 1).TrimStart();
-											AnimatedKey key;
-											if(!Enum.TryParse(a, true, out key))
+											if(!Enum.TryParse(a, true, out AnimatedKey key))
 											{
 												currentHost.AddMessage(MessageType.Error, false, "Unknown key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 												i++;

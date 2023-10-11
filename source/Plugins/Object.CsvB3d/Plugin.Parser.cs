@@ -17,8 +17,7 @@ namespace Plugin
 	{
 		private static bool IsCommand(string Text, bool IsB3d)
 		{
-			B3DCsvCommands command;
-			if (!Enum.TryParse(Text, true, out command))
+			if (!Enum.TryParse(Text, true, out B3DCsvCommands command))
 			{
 				// not a valid command
 				return false;
@@ -275,9 +274,7 @@ namespace Plugin
 				// parse terms
 				if (Command != null)
 				{
-					//string cmd = Command.ToLowerInvariant();
-					B3DCsvCommands cmd;
-					Enum.TryParse(Command.TrimStart('[').TrimEnd(']'), true, out cmd);
+					Enum.TryParse(Command.TrimStart('[').TrimEnd(']'), true, out B3DCsvCommands cmd);
 					switch(cmd) {
 						case B3DCsvCommands.CreateMeshBuilder:
 						case B3DCsvCommands.MeshBuilder:
@@ -1364,8 +1361,7 @@ namespace Plugin
 									  "TextPadding is not a supported command - did you mean SetTextPadding? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 
-								Vector2 Padding;
-								if(!Vector2.TryParse(Arguments, out Padding))
+								if(!Vector2.TryParse(Arguments, out Vector2 Padding))
 								{
 									currentHost.AddMessage(MessageType.Warning, false, "Invalid TextPadding at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}

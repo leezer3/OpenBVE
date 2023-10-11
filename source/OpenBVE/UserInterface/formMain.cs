@@ -1278,9 +1278,7 @@ namespace OpenBve {
 			Program.Sounds.DeInitialize();
 			DisposePreviewRouteThread();
 			{
-				// ReSharper disable once NotAccessedVariable
-				string error;
-				Program.CurrentHost.UnloadPlugins(out error);
+				Program.CurrentHost.UnloadPlugins(out _);
 			}
 			if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && Program.CurrentHost.Platform != HostPlatform.FreeBSD)
 			{
@@ -1522,8 +1520,7 @@ namespace OpenBve {
 			if (radioButtonPackages.Checked)
 			{
 				ResetInstallerPanels();
-				string errorMessage;
-				if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out errorMessage))
+				if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out string errorMessage))
 				{
 					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 				}
@@ -1590,6 +1587,7 @@ namespace OpenBve {
 		private void buttonClose_Click(object sender, EventArgs e)
 		{
 			currentlyClosing = true;
+			previewRouteResultQueue.CompleteAdding();
 			if (sender != null)
 			{
 				//Don't cause an infinite loop

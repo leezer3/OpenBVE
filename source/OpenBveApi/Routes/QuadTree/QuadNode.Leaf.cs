@@ -145,9 +145,9 @@ namespace OpenBveApi.Routes
 							CreateVisibilityList(intern.Children[i], nodes, viewingDistance);
 						}
 					}
-					else if (node is QuadTreePopulatedLeafNode)
+					else if (node is QuadTreePopulatedLeafNode leafNode)
 					{
-						nodes.Add((QuadTreePopulatedLeafNode)node);
+						nodes.Add(leafNode);
 					}
 				}
 			}

@@ -192,8 +192,7 @@ namespace Plugin
 														//Defines when the object should be shown
 														try
 														{
-															string func;
-															if (GetAnimatedFunction(attribute.Value, false, out func))
+															if (GetAnimatedFunction(attribute.Value, false, out string func))
 															{
 																Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(func);
 															}
@@ -209,8 +208,7 @@ namespace Plugin
 														//Defines when the object should be hidden
 														try
 														{
-															string func;
-															if (GetAnimatedFunction(attribute.Value, false, out func))
+															if (GetAnimatedFunction(attribute.Value, false, out string func))
 															{
 																Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(func);
 															}

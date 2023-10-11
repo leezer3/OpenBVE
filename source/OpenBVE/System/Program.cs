@@ -101,8 +101,7 @@ namespace OpenBve {
 
 			//Determine the current CPU architecture-
 			//ARM will generally only support OpenGL-ES
-			PortableExecutableKinds peKind;
-			typeof(object).Module.GetPEKind(out peKind, out CurrentCPUArchitecture);
+			typeof(object).Module.GetPEKind(out PortableExecutableKinds peKind, out CurrentCPUArchitecture);
 			
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
@@ -153,13 +152,12 @@ namespace OpenBve {
 			Translations.LoadLanguageFiles(folder);
 			
 			folder = Program.FileSystem.GetDataFolder("Cursors");
-			Cursors.LoadCursorImages(folder);
+			LibRender2.AvailableCursors.LoadCursorImages(Program.Renderer, folder);
 			
 			Interface.LoadControls(null, out Interface.CurrentControls);
 			folder = Program.FileSystem.GetDataFolder("Controls");
 			string file = Path.CombineFile(folder, "Default keyboard assignment.controls");
-			Control[] controls;
-			Interface.LoadControls(file, out controls);
+			Interface.LoadControls(file, out Control[] controls);
 			Interface.AddControls(ref Interface.CurrentControls, controls);
 			
 			InputDevicePlugin.LoadPlugins(Program.FileSystem);
@@ -181,8 +179,7 @@ namespace OpenBve {
 			// --- if a route was provided but no train, try to use the route default ---
 			if (result.RouteFile != null & result.TrainFolder == null)
 			{
-				string error;
-				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
+				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
 				{
 					MessageBox.Show(error, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
@@ -362,8 +359,7 @@ namespace OpenBve {
 		/// <returns>Whether the initialization was successful.</returns>
 		private static bool Initialize()
 		{
-			string error;
-			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer)) {
+			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer)) {
 				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return false;
 			}

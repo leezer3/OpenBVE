@@ -87,8 +87,7 @@ namespace OpenBveApi.Interface {
 			int i = comboboxLanguages.SelectedIndex;
 			if (i != -1)
 			{
-				Language l = comboboxLanguages.Items[i] as Language;
-				if (l == null)
+				if (!(comboboxLanguages.Items[i] is Language l))
 				{
 					return false;
 				}
@@ -118,8 +117,7 @@ namespace OpenBveApi.Interface {
             int i = comboboxLanguages.SelectedIndex;
 			if (i != -1)
 			{
-				Language l = comboboxLanguages.Items[i] as Language;
-				if (l == null)
+				if (!(comboboxLanguages.Items[i] is Language l))
 				{
 					return false;
 				}

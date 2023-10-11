@@ -268,10 +268,10 @@ namespace OpenBveApi.Math
         /// <param name="scalar">The scalar</param>
         public void Multiply(double scalar)
         {
-            W = W * scalar;
-            X = X * scalar;
-            Y = Y * scalar;
-            Z = Z * scalar;
+            W *= scalar;
+            X *= scalar;
+            Y *= scalar;
+            Z *= scalar;
         }
 
         /// <summary>

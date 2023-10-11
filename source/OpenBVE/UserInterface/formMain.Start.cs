@@ -1149,8 +1149,7 @@ namespace OpenBve
 
 				// Gets the last item put into the queue at this time.
 				{
-					LaunchParameters tmp;
-					while (previewRouteResultQueue.TryTake(out tmp))
+					while (previewRouteResultQueue.TryTake(out LaunchParameters tmp))
 					{
 						result = tmp;
 					}

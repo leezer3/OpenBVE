@@ -480,6 +480,11 @@ namespace OpenBve.Graphics
 			OptionLighting = true;
 		}
 
+		public override void SetCursor(OpenTK.MouseCursor newCursor)
+		{
+			Program.currentGameWindow.Cursor = newCursor;
+		}
+
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
 		{
 		}

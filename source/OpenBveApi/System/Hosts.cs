@@ -67,9 +67,10 @@ namespace OpenBveApi.Hosts {
 		WINE = 4
 
 	}
-	
+
 	/// <summary>Represents the host application and functionality it exposes.</summary>
-	public abstract partial class HostInterface {
+	public abstract partial class HostInterface
+	{
 
 		/// <summary>Returns whether the current host application is running under Mono</summary>
 		public bool MonoRuntime => Type.GetType("Mono.Runtime") != null;
@@ -81,10 +82,11 @@ namespace OpenBveApi.Hosts {
 		{
 			get
 			{
-				if((int)cachedPlatform != 99)
+				if ((int)cachedPlatform != 99)
 				{
 					return cachedPlatform;
 				}
+
 				if (Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT)
 				{
 					try
@@ -98,15 +100,18 @@ namespace OpenBveApi.Hosts {
 					{
 						//ignored
 					}
+
 					cachedPlatform = HostPlatform.MicrosoftWindows;
 					return cachedPlatform;
 				}
+
 				if (System.IO.File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
 				{
 					//Mono's platform detection doesn't reliably differentiate between OS-X and Unix
 					cachedPlatform = HostPlatform.AppleOSX;
 					return cachedPlatform;
 				}
+
 				string kernelName = DetectUnixKernel();
 
 				switch (kernelName)
@@ -153,16 +158,15 @@ namespace OpenBveApi.Hosts {
 		private static string DetectUnixKernel()
 		{
 			Debug.Flush();
-			UName uts;
-			uname(out uts);
+			uname(out UName uts);
 			return uts.sysname;
 		}
 
 		[DllImport("libc")]
 		private static extern void uname(out UName uname_struct);
 
-		[DllImport("ntdll.dll", EntryPoint="wine_get_version", CallingConvention=CallingConvention.Cdecl, CharSet=CharSet.Ansi)]
-		private static extern string GetWineVersion ();
+		[DllImport("ntdll.dll", EntryPoint = "wine_get_version", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+		private static extern string GetWineVersion();
 
 		/// <summary>The base host interface constructor</summary>
 		protected HostInterface(HostApplication host)
@@ -179,28 +183,32 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Reports a problem to the host application.</summary>
 		/// <param name="type">The type of problem that is reported.</param>
 		/// <param name="text">The textual message that describes the problem.</param>
-		public virtual void ReportProblem(ProblemType type, string text) { }
+		public virtual void ReportProblem(ProblemType type, string text)
+		{
+		}
 
 		/// <summary>Contains a list of missing files encountered</summary>
 		public readonly List<string> MissingFiles;
-		
+
 		/// <summary>Queries the dimensions of a texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
 		/// <param name="width">Receives the width of the texture.</param>
 		/// <param name="height">Receives the height of the texture.</param>
 		/// <returns>Whether querying the dimensions was successful.</returns>
-		public virtual bool QueryTextureDimensions(string path, out int width, out int height) {
+		public virtual bool QueryTextureDimensions(string path, out int width, out int height)
+		{
 			width = 0;
 			height = 0;
 			return false;
 		}
-		
+
 		/// <summary>Loads a texture and returns the texture data.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool LoadTexture(string path, TextureParameters parameters, out Texture texture) {
+		public virtual bool LoadTexture(string path, TextureParameters parameters, out Texture texture)
+		{
 			texture = null;
 			return false;
 		}
@@ -209,7 +217,8 @@ namespace OpenBveApi.Hosts {
 		/// <param name="texture">Receives the texture.</param>
 		/// <param name="wrapMode">The openGL wrap mode</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool LoadTexture(ref Texture texture, OpenGlTextureWrapMode wrapMode) {
+		public virtual bool LoadTexture(ref Texture texture, OpenGlTextureWrapMode wrapMode)
+		{
 			return false;
 		}
 
@@ -219,17 +228,8 @@ namespace OpenBveApi.Hosts {
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <param name="loadTexture">Whether the texture should also be pre-loaded</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
-			handle = null;
-			return false;
-		}
-		
-		/// <summary>Registers a texture and returns a handle to the texture.</summary>
-		/// <param name="texture">The texture data.</param>
-		/// <param name="parameters">The parameters that specify how to process the texture.</param>
-		/// <param name="handle">Receives the handle to the texture.</param>
-		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle) {
+		public virtual bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false)
+		{
 			handle = null;
 			return false;
 		}
@@ -239,7 +239,19 @@ namespace OpenBveApi.Hosts {
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool RegisterTexture(Bitmap texture, TextureParameters parameters, out Texture handle) {
+		public virtual bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle)
+		{
+			handle = null;
+			return false;
+		}
+
+		/// <summary>Registers a texture and returns a handle to the texture.</summary>
+		/// <param name="texture">The texture data.</param>
+		/// <param name="parameters">The parameters that specify how to process the texture.</param>
+		/// <param name="handle">Receives the handle to the texture.</param>
+		/// <returns>Whether loading the texture was successful.</returns>
+		public virtual bool RegisterTexture(Bitmap texture, TextureParameters parameters, out Texture handle)
+		{
 			handle = null;
 			return false;
 		}
@@ -248,16 +260,18 @@ namespace OpenBveApi.Hosts {
 		/// <param name="path">The path to the file or folder that contains the sound.</param>
 		/// <param name="sound">Receives the sound.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
-		public virtual bool LoadSound(string path, out Sounds.Sound sound) {
+		public virtual bool LoadSound(string path, out Sounds.Sound sound)
+		{
 			sound = null;
 			return false;
 		}
-		
+
 		/// <summary>Registers a sound and returns a handle to the sound.</summary>
 		/// <param name="path">The path to the file or folder that contains the sound.</param>
 		/// <param name="handle">Receives a handle to the sound.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
-		public virtual bool RegisterSound(string path, out SoundHandle handle) {
+		public virtual bool RegisterSound(string path, out SoundHandle handle)
+		{
 			handle = null;
 			return false;
 		}
@@ -272,12 +286,13 @@ namespace OpenBveApi.Hosts {
 			handle = null;
 			return false;
 		}
-		
+
 		/// <summary>Registers a sound and returns a handle to the sound.</summary>
 		/// <param name="sound">The sound data.</param>
 		/// <param name="handle">Receives a handle to the sound.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
-		public virtual bool RegisterSound(Sounds.Sound sound, out SoundHandle handle) {
+		public virtual bool RegisterSound(Sounds.Sound sound, out SoundHandle handle)
+		{
 			handle = null;
 			return false;
 		}
@@ -386,7 +401,7 @@ namespace OpenBveApi.Hosts {
 			Object = null;
 			return false;
 		}
-		
+
 		/// <summary>Executes a function script in the host application</summary>
 		/// <param name="functionScript">The function script to execute</param>
 		/// <param name="train">The train or a null reference</param>
@@ -397,7 +412,9 @@ namespace OpenBveApi.Hosts {
 		/// <param name="IsPartOfTrain">Whether this is part of a train</param>
 		/// <param name="TimeElapsed">The frame time elapsed</param>
 		/// <param name="CurrentState">The current state of the attached object</param>
-		public virtual void ExecuteFunctionScript(FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) { }
+		public virtual void ExecuteFunctionScript(FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
+		{
+		}
 
 		/// <summary>Creates a static object within the world of the host application, and returns the ObjectManager ID</summary>
 		/// <param name="Prototype">The prototype (un-transformed) static object</param>
@@ -440,7 +457,7 @@ namespace OpenBveApi.Hosts {
 		/// <returns>The index of the dynamic object</returns>
 		public virtual void CreateDynamicObject(ref ObjectState internalObject)
 		{
-			
+
 		}
 
 		/// <summary>Adds an object with a custom timetable texture</summary>
@@ -468,8 +485,10 @@ namespace OpenBveApi.Hosts {
 		/// <param name="type">The type of message to be reported.</param>
 		/// <param name="FileNotFound">Whether this message relates to a file not found</param>
 		/// <param name="text">The textual message.</param>
-		public virtual void AddMessage(MessageType type, bool FileNotFound, string text) { }
-		
+		public virtual void AddMessage(MessageType type, bool FileNotFound, string text)
+		{
+		}
+
 		/// <summary>Adds a fully constructed message to the in-game display</summary>
 		/// <param name="AbstractMessage">The message to add</param>
 		public virtual void AddMessage(object AbstractMessage)
@@ -714,5 +733,16 @@ namespace OpenBveApi.Hosts {
 
 		/// <summary>Complete address of the named pipe endpoint.</summary>
 		public static Uri Win32PluginHostEndpointAddress => new Uri(pipeBaseAddress + '/' + pipeName);
+
+		/// <summary>Contains the list of commonly used 'empty' files</summary>
+		/// <remarks>These generally aren't a valid object, and should be ignored for errors</remarks>
+		public static string[] NullFiles =
+		{
+			"empty",
+			"null",
+			"nothing",
+			"nullrail",
+			"null_rail"
+		};
 	}
 }

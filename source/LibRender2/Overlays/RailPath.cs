@@ -65,8 +65,7 @@ namespace LibRender2.Overlays
 		{
 			double halfDistance = (Math.Max(Renderer.currentOptions.ViewingDistance, 1000) / 2.0) * 1.1;
 			int numElements = (int)(halfDistance / BlockLength);
-			int startElement;
-			if (!Display || !Visible(Renderer.CameraTrackFollower.TrackPosition, out startElement))
+			if (!Display || !Visible(Renderer.CameraTrackFollower.TrackPosition, out int startElement))
 			{
 				return;
 			}

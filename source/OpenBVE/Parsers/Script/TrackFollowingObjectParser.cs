@@ -257,9 +257,7 @@ namespace OpenBve
 									break;
 								default:
 									{
-										int n;
-
-										if (!NumberFormats.TryParseIntVb6(Value, out n))
+										if (!NumberFormats.TryParseIntVb6(Value, out int n))
 										{
 											Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
 										}

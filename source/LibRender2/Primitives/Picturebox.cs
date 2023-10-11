@@ -1,33 +1,24 @@
-﻿using OpenBveApi.Colors;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace LibRender2.Primitives
 {
-	public class Picturebox
+	public class Picturebox : GLControl
 	{
-		/// <summary>Holds a reference to the base renderer</summary>
-		private readonly BaseRenderer Renderer;
-		/// <summary>The texture for the picturebox</summary>
-		public Texture Texture;
-		/// <summary>The background color for the picturebox</summary>
-		public Color128 BackgroundColor;
 		/// <summary>The image sizing mode</summary>
 		public ImageSizeMode SizeMode;
-		/// <summary>The stored location for the textbox</summary>
-		public Vector2 Location;
-		/// <summary>The stored size for the textbox</summary>
-		public Vector2 Size;
+		
+		private bool flipX;
+		private bool flipY;
 
-
-		public Picturebox(BaseRenderer renderer)
+		public Picturebox(BaseRenderer renderer) : base(renderer)
 		{
-			Renderer = renderer;
 			SizeMode = ImageSizeMode.Zoom;
 		}
 
-		public void Draw()
+		public override void Draw()
 		{
 			if (!Renderer.currentHost.LoadTexture(ref Texture, OpenGlTextureWrapMode.ClampClamp))
 			{
