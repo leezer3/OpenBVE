@@ -3412,10 +3412,25 @@ namespace CsvRwRouteParser
 						}
 
 						string switchName = string.Empty;
+						string[] trackNames = new string[]
+						{
+							string.Empty,
+							string.Empty
+						};
 
 						if (Arguments.Length >= 5 && Arguments[4].Length > 0)
 						{
 							switchName = Arguments[4];
+						}
+
+						if (Arguments.Length >= 6 && Arguments[5].Length > 0)
+						{
+							trackNames[0] = Arguments[5];
+						}
+
+						if (Arguments.Length >= 7 && Arguments[6].Length > 0)
+						{
+							trackNames[1] = Arguments[6];
 						}
 
 						if (Data.Blocks[BlockIndex].Switches.Length <= idx)
@@ -3429,7 +3444,8 @@ namespace CsvRwRouteParser
 							InitialSetting = initialSetting,
 							Trailing = trailing,
 							SpringReturn = springReturn,
-							Name = switchName
+							Name = switchName,
+							TrackNames = trackNames
 						};
 						if (Command == TrackCommand.Switch)
 						{

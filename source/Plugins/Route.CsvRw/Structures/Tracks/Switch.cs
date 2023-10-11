@@ -12,5 +12,7 @@
 		internal bool SpringReturn = false;
 		/// <summary>The textual name for the switch</summary>
 		internal string Name;
+		/// <summary>The track names</summary>
+		internal string[] TrackNames;
 	}
 }
