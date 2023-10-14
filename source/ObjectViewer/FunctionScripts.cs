@@ -1153,8 +1153,15 @@ namespace ObjectViewer {
 							}
 						} 
 						s++; break;
+					case Instructions.RainDrop:
+					case Instructions.SnowFlake:
+						// Viewers don't simulate weather
+						// Force all these to show to allow the developer to place them
+						// In-game, they'll randomise appropriately....
+						Function.Stack[s - 1] = 1.0;
+						break;
 					default:
-						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
+						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");
 				}
 			}
 			Function.LastResult = Function.Stack[s - 1];

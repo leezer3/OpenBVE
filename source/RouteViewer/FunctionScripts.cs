@@ -1125,6 +1125,11 @@ namespace RouteViewer {
 							}
 						} 
 						s++; break;
+					case Instructions.RainDrop:
+					case Instructions.SnowFlake:
+						// Only shown on the player train, so not helpful here
+						Function.Stack[s - 1] = 0.0;
+						break;
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
 				}

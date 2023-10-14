@@ -301,8 +301,10 @@ namespace OpenBveApi.FunctionScripting
 					}
 					throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 				case "pluginstate":
+				case "raindrop":
+				case "snowflake":
 					if (n == 1) {
-						return a[0] + " pluginstate";
+						return a[0] + " " + f;
 					} 
 					throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 					// not supported
