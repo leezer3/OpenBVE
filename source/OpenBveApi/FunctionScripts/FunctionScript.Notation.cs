@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Globalization;
 
 namespace OpenBveApi.FunctionScripting
 {
@@ -166,6 +167,23 @@ namespace OpenBveApi.FunctionScripting
 					if (n == 2)
 					{
 						return a[0] + " " + a[1] + " " + f;
+					}
+
+					if (n == 3)
+					{
+						// Optional mode parameter to allow for fixed values
+						int mode = int.Parse(a[2]);
+						Random random = new Random();
+						double min = double.Parse(a[0]);
+						double max = double.Parse(a[1]);
+						if (mode == 1)
+						{
+							if (f.ToLowerInvariant() == "randomint")
+							{
+								return random.Next((int)min, (int)max).ToString(CultureInfo.InvariantCulture);
+							}
+							return (min + random.NextDouble() * (max - min)).ToString(CultureInfo.InvariantCulture);
+						}
 					}
 					throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
 				case "quotient":
