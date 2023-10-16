@@ -172,10 +172,19 @@ namespace OpenBveApi.FunctionScripting
 					if (n == 3)
 					{
 						// Optional mode parameter to allow for fixed values
+						// YUCK: Nasty little hack to revert the function notation for minus values
 						int mode = int.Parse(a[2]);
 						Random random = new Random();
+						if (a[0].EndsWith("Minus"))
+						{
+							a[0] = '-' + a[0].Substring(0, a[0].Length - 6);
+						}
 						double min = double.Parse(a[0]);
 						double max = double.Parse(a[1]);
+						if (a[1].EndsWith("Minus"))
+						{
+							a[1] = '-' + a[1].Substring(0, a[1].Length - 6);
+						}
 						if (mode == 1)
 						{
 							if (f.ToLowerInvariant() == "randomint")
