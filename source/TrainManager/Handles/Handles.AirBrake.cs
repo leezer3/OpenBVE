@@ -1,5 +1,7 @@
-﻿using OpenBveApi.Colors;
+﻿using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using RouteManager2.MessageManager;
 using TrainManager.Trains;
 
 namespace TrainManager.Handles
@@ -97,6 +99,19 @@ namespace TrainManager.Handles
 				{
 					baseTrain.Plugin.UpdatePower();
 					baseTrain.Plugin.UpdateBrake();
+				}
+
+				switch (Driver)
+				{
+					case 0:
+						TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleNeutral, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);	
+						break;
+					case 1:
+						TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleLap, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);	
+						break;
+					case 2:
+						TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleService, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);	
+						break;
 				}
 			}
 		}

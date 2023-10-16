@@ -1,6 +1,8 @@
 ﻿using System.Globalization;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using RouteManager2.MessageManager;
 using TrainManager.Trains;
 
 namespace TrainManager.Handles
@@ -143,6 +145,16 @@ namespace TrainManager.Handles
 				baseTrain.Plugin.UpdatePower();
 				baseTrain.Plugin.UpdateBrake();
 			}
+
+			if (Driver == 0)
+			{
+				TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandlePowerNull, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+			}
+			else
+			{
+				TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandlePower + Driver, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+			}
+			
 		}
 
 		public override string GetNotchDescription(out MessageColor color)

@@ -1,6 +1,8 @@
-﻿using OpenBveApi.Colors;
+﻿using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
+using RouteManager2.MessageManager;
 using SoundManager;
 using TrainManager.Trains;
 
@@ -69,6 +71,19 @@ namespace TrainManager.Handles
 				{
 					ReleaseSound.Play(baseTrain.Cars[baseTrain.DriverCar], false);
 				}
+			}
+
+			switch (Driver)
+			{
+				case ReverserPosition.Neutral:
+					TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleNeutral, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+					break;
+				case ReverserPosition.Forwards:
+					TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleForward, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+					break;
+				case ReverserPosition.Reverse:
+					TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleBackward, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+					break;
 			}
 		}
 

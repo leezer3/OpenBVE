@@ -1,4 +1,8 @@
 ﻿using System;
+using OpenBveApi;
+using OpenBveApi.Colors;
+using OpenBveApi.Interface;
+using RouteManager2.MessageManager;
 using SoundManager;
 using TrainManager.Trains;
 
@@ -92,6 +96,11 @@ namespace TrainManager.Handles
 			if (baseTrain.Plugin == null) return;
 			baseTrain.Plugin.UpdatePower();
 			baseTrain.Plugin.UpdateBrake();
+
+			if (Driver)
+			{
+				TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleEmergency, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);	
+			}
 		}
 
 		public void Release()
