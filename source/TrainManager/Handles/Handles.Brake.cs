@@ -70,6 +70,7 @@ namespace TrainManager.Handles
 
 		public override void ApplyState(int BrakeValue, bool BrakeRelative, bool IsOverMaxDriverNotch = false)
 		{
+			int previousDriver = Driver;
 			if (baseTrain.Handles.Power.SpringType > SpringType.Single)
 			{
 				baseTrain.Handles.Power.SpringTimer = TrainManagerBase.currentHost.InGameTime + SpringTime;
@@ -127,13 +128,19 @@ namespace TrainManager.Handles
 			}
 
 			Driver = b;
-			TrainManagerBase.currentHost.AddBlackBoxEntry();
+			
 			// plugin
 			if (baseTrain.Plugin != null)
 			{
 				baseTrain.Plugin.UpdatePower();
 				baseTrain.Plugin.UpdateBrake();
 			}
+
+			if (previousDriver == Driver)
+			{
+				return;
+			}
+			TrainManagerBase.currentHost.AddBlackBoxEntry();
 			if (Driver == 0)
 			{
 				TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleBrakeNull, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);

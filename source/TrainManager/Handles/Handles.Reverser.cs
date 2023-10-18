@@ -1,4 +1,4 @@
-﻿using OpenBveApi;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
@@ -73,6 +73,10 @@ namespace TrainManager.Handles
 				}
 			}
 
+			if (a == (int)Driver)
+			{
+				return;
+			}
 			switch (Driver)
 			{
 				case ReverserPosition.Neutral:
