@@ -1160,6 +1160,9 @@ namespace ObjectViewer {
 						// In-game, they'll randomise appropriately....
 						Function.Stack[s - 1] = 1.0;
 						break;
+					case Instructions.WiperPosition:
+						Function.Stack[s] = 1.0;
+						s++; break;
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");
 				}

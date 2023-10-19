@@ -548,6 +548,10 @@ namespace Train.OpenBve
 						}
 						break;
 					case "windscreen":
+						if (!Train.IsPlayerTrain)
+						{
+							break;
+						}
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
 							int numDrops = 0;
