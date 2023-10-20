@@ -99,10 +99,7 @@ namespace OpenBveApi.Interface {
 				}
 				if (System.IO.File.Exists(File))
 				{
-					
-					using (var fs = new FileStream(File, FileMode.Open, FileAccess.Read)) {
-						LanguageImage = File;
-					}
+					LanguageImage = File;
 				}
 				return true;
 			}

@@ -1,4 +1,5 @@
-﻿namespace OpenBveApi.Graphics
+﻿// ReSharper disable UnusedMember.Global
+namespace OpenBveApi.Graphics
 {
 	/// <summary>Defines the behaviour of the renderer for transparent textures</summary>
 	public enum TransparencyMode

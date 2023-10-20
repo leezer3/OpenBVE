@@ -1,4 +1,5 @@
-﻿namespace OpenBveApi.Sounds
+﻿// ReSharper disable UnusedMember.Global
+namespace OpenBveApi.Sounds
 {
 	/// <summary>Represents the different types of sound</summary>
 	public enum SoundType

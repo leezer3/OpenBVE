@@ -15,7 +15,7 @@
 		/// <summary>Gets the sound from this origin.</summary>
 		/// <param name="sound">Receives the sound.</param>
 		/// <returns>Whether the sound could be obtained successfully.</returns>
-		public override bool GetSound(out OpenBveApi.Sounds.Sound sound) {
+		public override bool GetSound(out Sound sound) {
 			sound = this.Sound;
 			return true;
 		}
