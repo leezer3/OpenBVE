@@ -722,29 +722,45 @@ namespace OpenBve
 								isCustomisingControl = true;
 								CustomControlIdx = (int)((MenuCommand)menu.Items[menu.Selection]).Data;
 								break;
+							case MenuTag.ControlReset:
+								PushMenu(MenuType.ControlReset, (int)((MenuCommand)menu.Items[menu.Selection]).Data);
+								break;
 							case MenuTag.Quit:                  // QUIT PROGRAMME
 								Reset();
 								MainLoop.Quit = MainLoop.QuitMode.QuitProgram;
 								break;
 							case MenuTag.Yes:
-								if (menu.Type == MenuType.TrainDefault)
+								switch (menu.Type)
 								{
-									Reset();
-									//Launch the game!
-									Loading.Complete = false;
-									Loading.LoadAsynchronously(currentFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
-									OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
-									// ReSharper disable once PossibleNullReferenceException
-									g.LoadingScreenLoop();
+									case MenuType.TrainDefault:
+										Reset();
+										//Launch the game!
+										Loading.Complete = false;
+										Loading.LoadAsynchronously(currentFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
+										OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
+										// ReSharper disable once PossibleNullReferenceException
+										g.LoadingScreenLoop();
+										break;
+									case MenuType.ControlReset:
+										Interface.CurrentControls = null;
+										var File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls");
+										Interface.LoadControls(File, out Interface.CurrentControls);
+										Instance.PopMenu();
+										break;
 								}
 								break;
 							case MenuTag.No:
-								if (menu.Type == MenuType.TrainDefault)
+								switch (menu.Type)
 								{
-									SearchDirectory = Program.FileSystem.InitialTrainFolder;
-									Instance.PushMenu(MenuType.TrainList);
-									routeDescriptionBox.Text = Translations.GetInterfaceString("start_train_choose");
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+									case MenuType.TrainDefault:
+										SearchDirectory = Program.FileSystem.InitialTrainFolder;
+										Instance.PushMenu(MenuType.TrainList);
+										routeDescriptionBox.Text = Translations.GetInterfaceString("start_train_choose");
+										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+										break;
+									case MenuType.ControlReset:
+										Instance.PopMenu();
+										break;
 								}
 								break;
 						}

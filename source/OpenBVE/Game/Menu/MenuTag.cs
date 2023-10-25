@@ -28,6 +28,8 @@ namespace OpenBve
 		ExitToMainMenu,
 		/// <summary>Quits the program</summary>
 		Quit,
+		/// <summary>Resets the controls to default</summary>
+		ControlReset,
 		/// <summary>Customises the selected control</summary>
 		Control,
 		/// <summary>Displays a list of routefiles</summary>

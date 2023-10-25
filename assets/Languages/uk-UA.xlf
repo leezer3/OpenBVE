@@ -1044,6 +1044,9 @@
 						<source>Export...</source>
 						<target>Експорт...</target>
 					</trans-unit>
+					<trans-unit id="reset_question">
+						<source>Reset the current control configuration to the defaults?</source>
+					</trans-unit>
 					<trans-unit id="reset">
 						<source>Reset to defaults</source>
 						<target>Reset to defaults</target>
