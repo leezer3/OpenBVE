@@ -96,8 +96,7 @@ namespace Train.OpenBve
 						case "this":
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
 
@@ -292,8 +291,7 @@ namespace Train.OpenBve
 					if (Plugin.Cancel) return;
 				}
 
-				PanelSections Section;
-				Enum.TryParse(SectionElement.Name.LocalName.ToLowerInvariant(), true, out Section);
+				Enum.TryParse(SectionElement.Name.LocalName.ToLowerInvariant(), true, out PanelSections Section);
 
 				switch (Section)
 				{
@@ -305,8 +303,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
 
@@ -350,8 +347,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
@@ -410,7 +406,7 @@ namespace Train.OpenBve
 									case PanelKey.SoundIndex:
 										if (Value.Length != 0)
 										{
-											if (!NumberFormats.TryParseIntVb6(Value, out var SoundIndex))
+											if (!NumberFormats.TryParseIntVb6(Value, out int SoundIndex))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												break;
@@ -507,8 +503,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
@@ -617,8 +612,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
 
@@ -867,8 +861,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
@@ -1018,8 +1011,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
@@ -1191,8 +1183,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
@@ -1374,8 +1365,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
@@ -1473,8 +1463,7 @@ namespace Train.OpenBve
 
 						foreach (XElement KeyNode in SectionElement.Elements())
 						{
-							PanelKey Key;
-							Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+							Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 							string Value = KeyNode.Value;
 							int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 							int k;

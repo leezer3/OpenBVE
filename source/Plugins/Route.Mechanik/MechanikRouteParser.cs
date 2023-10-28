@@ -951,11 +951,13 @@ namespace MechanikRouteParser
 			//Convert texture size to px/m and then multiply by scaleFactor to get the final vertex offset
 			double scaledWidth = t.Width * 5 * scaleFactor;
 			double scaledHeight = t.Height * 5 * scaleFactor;
-			Builder.Vertices = new List<VertexTemplate>();
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft)));
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y, topLeft.Z))); //upper right
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y - scaledHeight, topLeft.Z))); //bottom right
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X, topLeft.Y - scaledHeight, topLeft.Z))); //bottom left
+			Builder.Vertices = new List<VertexTemplate>
+			{
+				new Vertex(new Vector3(topLeft)),
+				new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y, topLeft.Z)), //upper right
+				new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y - scaledHeight, topLeft.Z)), //bottom right
+				new Vertex(new Vector3(topLeft.X, topLeft.Y - scaledHeight, topLeft.Z)) //bottom left
+			};
 			//Possibly change to Face, check this though (Remember that Mechanik was restricted to the cab, wheras we are not)
 			Builder.Faces = new List<MeshFace>();
 			Builder.Faces.Add(new MeshFace { Vertices = new MeshFaceVertex[4], Flags = FaceFlags.Face2Mask });
