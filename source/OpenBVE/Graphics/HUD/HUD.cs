@@ -258,12 +258,11 @@ namespace OpenBve
 										case "textalignment":
 											if (Arguments.Length == 2)
 											{
-												int x, y;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out x))
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int x))
 												{
 													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
-												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out y))
+												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out int y))
 												{
 													Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
@@ -277,8 +276,7 @@ namespace OpenBve
 										case "textsize":
 											if (Arguments.Length == 1)
 											{
-												int s;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out s))
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int s))
 												{
 													Interface.AddMessage(MessageType.Error, false, "SIZE is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
@@ -311,8 +309,7 @@ namespace OpenBve
 										case "textshadow":
 											if (Arguments.Length == 1)
 											{
-												int s;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out s))
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int s))
 												{
 													Interface.AddMessage(MessageType.Error, false, "SHADOW is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
@@ -331,8 +328,7 @@ namespace OpenBve
 										case "value":
 											if (Arguments.Length == 1)
 											{
-												int n;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out n))
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int n))
 												{
 													Interface.AddMessage(MessageType.Error, false, "VALUE1 is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
@@ -343,12 +339,11 @@ namespace OpenBve
 											}
 											else if (Arguments.Length == 2)
 											{
-												float a, b;
-												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out a))
+												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out float a))
 												{
 													Interface.AddMessage(MessageType.Error, false, "VALUE1 is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
-												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out b))
+												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out float b))
 												{
 													Interface.AddMessage(MessageType.Error, false, "VALUE2 is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
@@ -362,8 +357,7 @@ namespace OpenBve
 										case "transition":
 											if (Arguments.Length == 1)
 											{
-												int n;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out n))
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int n))
 												{
 													Interface.AddMessage(MessageType.Error, false, "TRANSITION is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
@@ -376,12 +370,11 @@ namespace OpenBve
 										case "transitionvector":
 											if (Arguments.Length == 2)
 											{
-												float x, y;
-												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out x))
+												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out float x))
 												{
 													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
-												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out y))
+												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out float y))
 												{
 													Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
