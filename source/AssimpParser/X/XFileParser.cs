@@ -1714,7 +1714,7 @@ namespace AssimpNET.X
 					child.Meshes.Clear();
 
 					// transfer the transform as well
-					node.TrafoMatrix = node.TrafoMatrix * child.TrafoMatrix;
+					node.TrafoMatrix *= child.TrafoMatrix;
 
 					// then kill it
 					node.Children.Clear();

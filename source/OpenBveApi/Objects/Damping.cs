@@ -143,7 +143,7 @@ namespace OpenBveApi.Objects
 				OriginalDerivative = newDerivative * r;
 				if (NaturalTime > 0.0)
 				{
-					CurrentTimeDelta = CurrentTimeDelta % NaturalTime;
+					CurrentTimeDelta %= NaturalTime;
 				}
 			}
 
