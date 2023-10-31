@@ -501,15 +501,23 @@ namespace Train.OpenBve
 								switch (cc.Name.ToLowerInvariant())
 								{
 									case "openspeed":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].Specs.DoorOpenFrequency))
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out double os))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
 										}
+										else
+										{
+											Train.Cars[Car].Specs.DoorOpenFrequency = 1.0 / os;
+										}
 										break;
 									case "closespeed":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].Specs.DoorCloseFrequency))
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out double cs))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
+										}
+										else
+										{
+											Train.Cars[Car].Specs.DoorCloseFrequency = 1.0 / cs;
 										}
 										break;
 									case "width":
