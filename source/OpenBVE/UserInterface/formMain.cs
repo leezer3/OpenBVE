@@ -1293,7 +1293,7 @@ namespace OpenBve {
 			try
 			{
 #endif
-				Interface.SaveOptions();
+				Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
 				Program.FileSystem.SaveCurrentFileSystemConfiguration();
 #if !DEBUG
 			}
