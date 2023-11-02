@@ -381,14 +381,14 @@ namespace DenshaDeGoInput
 				{
 					brakeCommands[0] = 0;
 					brakeCommands[1] = 100 + (int)Translations.Command.HoldBrake;
-					for (int i = 2; i < controllerBrakeNotches + 2; i++)
+					for (int i = 2; i <= controllerBrakeNotches + 1; i++)
 					{
 						brakeCommands[i] = i - 1;
 					}
 				}
 				else
 				{
-					for (int i = 0; i < controllerBrakeNotches + 2; i++)
+					for (int i = 0; i <= controllerBrakeNotches + 1; i++)
 					{
 						brakeCommands[i] = i;
 					}
@@ -399,7 +399,7 @@ namespace DenshaDeGoInput
 					brakeCommands[(int)InputTranslator.BrakeNotches.Emergency] = 100 + (int)Translations.Command.BrakeEmergency;
 				}
 				// Power notches
-				for (int i = 0; i < controllerPowerNotches; i++)
+				for (int i = 0; i <= controllerPowerNotches; i++)
 				{
 					powerCommands[i] = i;
 				}
