@@ -132,8 +132,9 @@ namespace OpenBve
 				return;
 			}
 
-			Program.currentGameWindow.TargetUpdateFrequency = Interface.CurrentOptions.FPSLimit;
-			Program.currentGameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit;
+			// BUG: Currently disabled- https://github.com/leezer3/OpenBVE/issues/957
+			//Program.currentGameWindow.TargetUpdateFrequency = Interface.CurrentOptions.FPSLimit;
+			//Program.currentGameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit;
 			Program.currentGameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
 			
 		}
