@@ -530,9 +530,8 @@ namespace OpenBve
 				//			case Translations.Command.MenuBack:	// ESC:	managed above
 				//				break;
 				case Translations.Command.MenuEnter:   // ENTER
-					if (menu.Items[menu.Selection] is MenuCommand)
+					if (menu.Items[menu.Selection] is MenuCommand menuItem)
 					{
-						MenuCommand menuItem = (MenuCommand)menu.Items[menu.Selection];
 						switch (menuItem.Tag)
 						{
 							// menu management commands

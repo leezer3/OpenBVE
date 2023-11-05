@@ -729,19 +729,19 @@ namespace OpenBve
 						if (Train.FrontCarTrackPosition + lookahead <= stp) break;
 						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
 						{
-							if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
+							if (!(Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent stationEvent) || Train.NextStopSkipped != StopSkipMode.None)
 							{
-								StationStartEvent e = (StationStartEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-								if (Program.CurrentRoute.Stations[e.StationIndex].StopsHere(Train) & Train.LastStation != e.StationIndex)
+								continue;
+							}
+							if (Program.CurrentRoute.Stations[stationEvent.StationIndex].StopsHere(Train) & Train.LastStation != stationEvent.StationIndex)
+							{
+								int s = Program.CurrentRoute.Stations[stationEvent.StationIndex].GetStopIndex(Train.NumberOfCars);
+								if (s >= 0)
 								{
-									int s = Program.CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
-									if (s >= 0)
+									double dist = Program.CurrentRoute.Stations[stationEvent.StationIndex].Stops[s].TrackPosition - Train.FrontCarTrackPosition;
+									if (dist > 0.0 & dist < stopDistance)
 									{
-										double dist = Program.CurrentRoute.Stations[e.StationIndex].Stops[s].TrackPosition - Train.FrontCarTrackPosition;
-										if (dist > 0.0 & dist < stopDistance)
-										{
-											stopDistance = dist;
-										}
+										stopDistance = dist;
 									}
 								}
 							}
@@ -758,29 +758,27 @@ namespace OpenBve
 						if (Train.FrontCarTrackPosition + lookahead <= stp) break;
 						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
 						{
-							if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is LimitChangeEvent)
+							if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is LimitChangeEvent limitEvent)
 							{
 								// speed limit
-								LimitChangeEvent e = (LimitChangeEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-								if (e.NextSpeedLimit < Train.CurrentSpeed)
+								if (limitEvent.NextSpeedLimit < Train.CurrentSpeed)
 								{
-									double dist = stp + e.TrackPositionDelta - Train.FrontCarTrackPosition;
-									double edec = (Train.CurrentSpeed * Train.CurrentSpeed - e.NextSpeedLimit * e.NextSpeedLimit * this.CurrentSpeedFactor) / (2.0 * dist);
+									double dist = stp + limitEvent.TrackPositionDelta - Train.FrontCarTrackPosition;
+									double edec = (Train.CurrentSpeed * Train.CurrentSpeed - limitEvent.NextSpeedLimit * limitEvent.NextSpeedLimit * this.CurrentSpeedFactor) / (2.0 * dist);
 									if (edec > dec) dec = edec;
 								}
 							}
-							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is SectionChangeEvent)
+							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is SectionChangeEvent sectionEvent)
 							{
 								// section
-								SectionChangeEvent e = (SectionChangeEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-								if (stp + e.TrackPositionDelta > Train.FrontCarTrackPosition)
+								if (stp + sectionEvent.TrackPositionDelta > Train.FrontCarTrackPosition)
 								{
-									if (!Program.CurrentRoute.Sections[e.NextSectionIndex].Invisible & Program.CurrentRoute.Sections[e.NextSectionIndex].CurrentAspect >= 0)
+									if (!Program.CurrentRoute.Sections[sectionEvent.NextSectionIndex].Invisible & Program.CurrentRoute.Sections[sectionEvent.NextSectionIndex].CurrentAspect >= 0)
 									{
-										double elim = Program.CurrentRoute.Sections[e.NextSectionIndex].Aspects[Program.CurrentRoute.Sections[e.NextSectionIndex].CurrentAspect].Speed * this.CurrentSpeedFactor;
+										double elim = Program.CurrentRoute.Sections[sectionEvent.NextSectionIndex].Aspects[Program.CurrentRoute.Sections[sectionEvent.NextSectionIndex].CurrentAspect].Speed * this.CurrentSpeedFactor;
 										if (elim < Train.CurrentSpeed | Train.CurrentSpeed <= 0.0)
 										{
-											double dist = stp + e.TrackPositionDelta - Train.FrontCarTrackPosition;
+											double dist = stp + sectionEvent.TrackPositionDelta - Train.FrontCarTrackPosition;
 											double edec;
 											if (elim == 0.0)
 											{
@@ -834,12 +832,11 @@ namespace OpenBve
 									}
 								}
 							}
-							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
+							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent e && Train.NextStopSkipped == StopSkipMode.None)
 							{
 								// station start
 								if (Train.Station == -1)
 								{
-									StationStartEvent e = (StationStartEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
 									if (Program.CurrentRoute.Stations[e.StationIndex].StopsHere(Train) & Train.LastStation != e.StationIndex)
 									{
 										int s = Program.CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
@@ -864,19 +861,18 @@ namespace OpenBve
 									}
 								}
 							}
-							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent && Train.NextStopSkipped == StopSkipMode.Decelerate)
+							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent stationEvent && Train.NextStopSkipped == StopSkipMode.Decelerate)
 							{
 								// Brakes the train when passing through a request stop, which is not to be passed at linespeed
 								if (Train.Station == -1)
 								{
-									StationStartEvent e = (StationStartEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-									if (Program.CurrentRoute.Stations[e.StationIndex].StopsHere(Train) & Train.LastStation != e.StationIndex)
+									if (Program.CurrentRoute.Stations[stationEvent.StationIndex].StopsHere(Train) & Train.LastStation != stationEvent.StationIndex)
 									{
-										int s = Program.CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
+										int s = Program.CurrentRoute.Stations[stationEvent.StationIndex].GetStopIndex(Train.NumberOfCars);
 										if (s >= 0)
 										{
-											double dist = Program.CurrentRoute.Stations[e.StationIndex].Stops[s].TrackPosition - Train.FrontCarTrackPosition;
-											if (dist > -Program.CurrentRoute.Stations[e.StationIndex].Stops[s].ForwardTolerance)
+											double dist = Program.CurrentRoute.Stations[stationEvent.StationIndex].Stops[s].TrackPosition - Train.FrontCarTrackPosition;
+											if (dist > -Program.CurrentRoute.Stations[stationEvent.StationIndex].Stops[s].ForwardTolerance)
 											{
 												if (dist < 25.0)
 												{
@@ -898,19 +894,18 @@ namespace OpenBve
 									}
 								}
 							}
-							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationEndEvent && Train.NextStopSkipped == StopSkipMode.None)
+							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationEndEvent stationEndEvent && Train.NextStopSkipped == StopSkipMode.None)
 							{
 								// station end
 								if (Train.Station == -1)
 								{
-									StationEndEvent e = (StationEndEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-									if (Program.CurrentRoute.Stations[e.StationIndex].StopsHere(Train) & Train.LastStation != e.StationIndex)
+									if (Program.CurrentRoute.Stations[stationEndEvent.StationIndex].StopsHere(Train) & Train.LastStation != stationEndEvent.StationIndex)
 									{
-										int s = Program.CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
+										int s = Program.CurrentRoute.Stations[stationEndEvent.StationIndex].GetStopIndex(Train.NumberOfCars);
 										if (s >= 0)
 										{
-											double dist = Program.CurrentRoute.Stations[e.StationIndex].Stops[s].TrackPosition - Train.FrontCarTrackPosition;
-											if (dist > -Program.CurrentRoute.Stations[e.StationIndex].Stops[s].ForwardTolerance)
+											double dist = Program.CurrentRoute.Stations[stationEndEvent.StationIndex].Stops[s].TrackPosition - Train.FrontCarTrackPosition;
+											if (dist > -Program.CurrentRoute.Stations[stationEndEvent.StationIndex].Stops[s].ForwardTolerance)
 											{
 												if (dist < 25.0)
 												{
@@ -928,13 +923,12 @@ namespace OpenBve
 									}
 								}
 							}
-							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is TrackEndEvent)
+							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is TrackEndEvent trackEndEvent)
 							{
 								// track end
 								if (Train.IsPlayerTrain)
 								{
-									TrackEndEvent e = (TrackEndEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-									double dist = stp + e.TrackPositionDelta - Train.FrontCarTrackPosition;
+									double dist = stp + trackEndEvent.TrackPositionDelta - Train.FrontCarTrackPosition;
 									double edec;
 									if (dist >= 15.0)
 									{
@@ -1050,9 +1044,8 @@ namespace OpenBve
 						if (Train.FrontCarTrackPosition + lookahead <= stp) break;
 						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
 						{
-							if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
+							if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent e && Train.NextStopSkipped == StopSkipMode.None)
 							{
-								StationStartEvent e = (StationStartEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
 								if (Program.CurrentRoute.Stations[e.StationIndex].StopsHere(Train) & Train.LastStation != e.StationIndex)
 								{
 									int s = Program.CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
@@ -1079,29 +1072,27 @@ namespace OpenBve
 						if (Train.FrontCarTrackPosition + lookahead <= stp) break;
 						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
 						{
-							if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is LimitChangeEvent)
+							if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is LimitChangeEvent limitEvent)
 							{
 								// speed limit
-								LimitChangeEvent e = (LimitChangeEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-								if (e.NextSpeedLimit < Train.CurrentSpeed)
+								if (limitEvent.NextSpeedLimit < Train.CurrentSpeed)
 								{
-									double dist = stp + Train.FrontCarTrackPosition - e.TrackPositionDelta;
-									double edec = (Train.CurrentSpeed * Train.CurrentSpeed - e.NextSpeedLimit * e.NextSpeedLimit * this.CurrentSpeedFactor) / (2.0 * dist);
+									double dist = stp + Train.FrontCarTrackPosition - limitEvent.TrackPositionDelta;
+									double edec = (Train.CurrentSpeed * Train.CurrentSpeed - limitEvent.NextSpeedLimit * limitEvent.NextSpeedLimit * this.CurrentSpeedFactor) / (2.0 * dist);
 									if (edec > dec) dec = edec;
 								}
 							}
-							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is SectionChangeEvent)
+							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is SectionChangeEvent sectionEvent)
 							{
 								// section
-								SectionChangeEvent e = (SectionChangeEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-								if (stp + Train.FrontCarTrackPosition > e.TrackPositionDelta)
+								if (stp + Train.FrontCarTrackPosition > sectionEvent.TrackPositionDelta)
 								{
-									if (!Program.CurrentRoute.Sections[e.NextSectionIndex].Invisible & Program.CurrentRoute.Sections[e.NextSectionIndex].CurrentAspect >= 0)
+									if (!Program.CurrentRoute.Sections[sectionEvent.NextSectionIndex].Invisible & Program.CurrentRoute.Sections[sectionEvent.NextSectionIndex].CurrentAspect >= 0)
 									{
-										double elim = Program.CurrentRoute.Sections[e.NextSectionIndex].Aspects[Program.CurrentRoute.Sections[e.NextSectionIndex].CurrentAspect].Speed * this.CurrentSpeedFactor;
+										double elim = Program.CurrentRoute.Sections[sectionEvent.NextSectionIndex].Aspects[Program.CurrentRoute.Sections[sectionEvent.NextSectionIndex].CurrentAspect].Speed * this.CurrentSpeedFactor;
 										if (elim < Train.CurrentSpeed | Train.CurrentSpeed <= 0.0)
 										{
-											double dist = stp + Train.FrontCarTrackPosition - e.TrackPositionDelta;
+											double dist = stp + Train.FrontCarTrackPosition - sectionEvent.TrackPositionDelta;
 											double edec;
 											if (elim == 0.0)
 											{
@@ -1155,19 +1146,18 @@ namespace OpenBve
 									}
 								}
 							}
-							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
+							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent stationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
 							{
 								// station start
 								if (Train.Station == -1)
 								{
-									StationStartEvent e = (StationStartEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-									if (Program.CurrentRoute.Stations[e.StationIndex].StopsHere(Train) & Train.LastStation != e.StationIndex)
+									if (Program.CurrentRoute.Stations[stationStartEvent.StationIndex].StopsHere(Train) & Train.LastStation != stationStartEvent.StationIndex)
 									{
-										int s = Program.CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
+										int s = Program.CurrentRoute.Stations[stationStartEvent.StationIndex].GetStopIndex(Train.NumberOfCars);
 										if (s >= 0)
 										{
-											double dist = Train.FrontCarTrackPosition - Program.CurrentRoute.Stations[e.StationIndex].Stops[s].TrackPosition;
-											if (dist > -Program.CurrentRoute.Stations[e.StationIndex].Stops[s].ForwardTolerance)
+											double dist = Train.FrontCarTrackPosition - Program.CurrentRoute.Stations[stationStartEvent.StationIndex].Stops[s].TrackPosition;
+											if (dist > -Program.CurrentRoute.Stations[stationStartEvent.StationIndex].Stops[s].ForwardTolerance)
 											{
 												if (dist < 25.0)
 												{
@@ -1185,12 +1175,11 @@ namespace OpenBve
 									}
 								}
 							}
-							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent && Train.NextStopSkipped == StopSkipMode.Decelerate)
+							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent e && Train.NextStopSkipped == StopSkipMode.Decelerate)
 							{
 								// Brakes the train when passing through a request stop, which is not to be passed at linespeed
 								if (Train.Station == -1)
 								{
-									StationStartEvent e = (StationStartEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
 									if (Program.CurrentRoute.Stations[e.StationIndex].StopsHere(Train) & Train.LastStation != e.StationIndex)
 									{
 										int s = Program.CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
@@ -1219,19 +1208,18 @@ namespace OpenBve
 									}
 								}
 							}
-							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationEndEvent && Train.NextStopSkipped == StopSkipMode.None)
+							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationEndEvent stationEndEvent && Train.NextStopSkipped == StopSkipMode.None)
 							{
 								// station end
 								if (Train.Station == -1)
 								{
-									StationEndEvent e = (StationEndEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-									if (Program.CurrentRoute.Stations[e.StationIndex].StopsHere(Train) & Train.LastStation != e.StationIndex)
+									if (Program.CurrentRoute.Stations[stationEndEvent.StationIndex].StopsHere(Train) & Train.LastStation != stationEndEvent.StationIndex)
 									{
-										int s = Program.CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
+										int s = Program.CurrentRoute.Stations[stationEndEvent.StationIndex].GetStopIndex(Train.NumberOfCars);
 										if (s >= 0)
 										{
-											double dist = Train.FrontCarTrackPosition - Program.CurrentRoute.Stations[e.StationIndex].Stops[s].TrackPosition;
-											if (dist > -Program.CurrentRoute.Stations[e.StationIndex].Stops[s].ForwardTolerance)
+											double dist = Train.FrontCarTrackPosition - Program.CurrentRoute.Stations[stationEndEvent.StationIndex].Stops[s].TrackPosition;
+											if (dist > -Program.CurrentRoute.Stations[stationEndEvent.StationIndex].Stops[s].ForwardTolerance)
 											{
 												if (dist < 25.0)
 												{
@@ -1249,13 +1237,12 @@ namespace OpenBve
 									}
 								}
 							}
-							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is TrackEndEvent)
+							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is TrackEndEvent trackEndEvent)
 							{
 								// track end
 								if (Train.IsPlayerTrain)
 								{
-									TrackEndEvent e = (TrackEndEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-									double dist = stp + Train.FrontCarTrackPosition - e.TrackPositionDelta;
+									double dist = stp + Train.FrontCarTrackPosition - trackEndEvent.TrackPositionDelta;
 									double edec;
 									if (dist >= 15.0)
 									{
