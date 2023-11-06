@@ -101,18 +101,8 @@ namespace TrainManager.Handles
 					baseTrain.Plugin.UpdateBrake();
 				}
 
-				switch (Driver)
-				{
-					case 0:
-						TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleNeutral, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);	
-						break;
-					case 1:
-						TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleLap, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);	
-						break;
-					case 2:
-						TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleService, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);	
-						break;
-				}
+				if (!TrainManagerBase.CurrentOptions.Accessibility) return;
+				TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 			}
 		}
 

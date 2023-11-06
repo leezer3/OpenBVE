@@ -93,10 +93,13 @@ namespace TrainManager.Handles
 			}
 
 			// plugin
-			if (baseTrain.Plugin == null) return;
-			baseTrain.Plugin.UpdatePower();
-			baseTrain.Plugin.UpdateBrake();
-
+			if (baseTrain.Plugin != null)
+			{
+				baseTrain.Plugin.UpdatePower();
+				baseTrain.Plugin.UpdateBrake();
+			}
+			
+			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
 			if (Driver)
 			{
 				TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleEmergency, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);	

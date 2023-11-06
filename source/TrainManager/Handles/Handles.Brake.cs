@@ -141,14 +141,8 @@ namespace TrainManager.Handles
 				return;
 			}
 			TrainManagerBase.currentHost.AddBlackBoxEntry();
-			if (Driver == 0)
-			{
-				TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleBrakeNull, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
-			}
-			else
-			{
-				TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleBrake + Driver, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
-			}
+			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
+			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 		}
 
 		public override string GetNotchDescription(out MessageColor color)

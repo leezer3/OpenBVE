@@ -73,22 +73,10 @@ namespace TrainManager.Handles
 				}
 			}
 
-			if (a == (int)Driver)
-			{
-				return;
-			}
-			switch (Driver)
-			{
-				case ReverserPosition.Neutral:
-					TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleNeutral, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
-					break;
-				case ReverserPosition.Forwards:
-					TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleForward, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
-					break;
-				case ReverserPosition.Reverse:
-					TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleBackward, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
-					break;
-			}
+			if (a == (int)Driver) return;
+
+			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
+			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 		}
 
 		/// <summary>Gets the description string for this notch</summary>

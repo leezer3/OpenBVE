@@ -153,14 +153,9 @@ namespace TrainManager.Handles
 			}
 
 			TrainManagerBase.currentHost.AddBlackBoxEntry();
-			if (Driver == 0)
-			{
-				TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandlePowerNull, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
-			}
-			else
-			{
-				TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandlePower + Driver, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
-			}
+
+			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
+			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 			
 		}
 
