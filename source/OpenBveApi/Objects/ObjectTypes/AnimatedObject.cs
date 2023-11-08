@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Graphics;
@@ -6,11 +7,14 @@ using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 namespace OpenBveApi.Objects
 {
 	/// <summary>The base type for an animated object</summary>
 	public class AnimatedObject
 	{
+		/// <summary>The filename</summary>
+		private readonly string FileName;
 		/// <summary>The array of states</summary>
 		public ObjectState[] States;
 		/// <summary>The function script controlling state changes</summary>
@@ -106,17 +110,18 @@ namespace OpenBveApi.Objects
 		public int SectionIndex;
 
 		/// <summary>Creates a new animated object</summary>
-		public AnimatedObject(HostInterface host)
+		public AnimatedObject(HostInterface host, string fileName = "")
 		{
 			currentHost = host;
 			States = new ObjectState[] { };
+			FileName = fileName;
 		}
 
 		/// <summary>Clones this object</summary>
 		/// <returns>The new object</returns>
 		public AnimatedObject Clone()
 		{
-			AnimatedObject Result = new AnimatedObject(currentHost)
+			AnimatedObject Result = new AnimatedObject(currentHost, FileName)
 			{
 				States = States.Select(x => (ObjectState)x.Clone()).ToArray(),
 				TrackFollowerFunction = TrackFollowerFunction?.Clone(),
@@ -868,5 +873,87 @@ namespace OpenBveApi.Objects
 			TranslateZDirection.Z *= -1.0;
 			//As we are using a rotation matrix, we only need to reverse the translation and not the rotation
 		}
+
+		/// <summary>Checks whether the two specified animated objects are equal</summary>
+		public static bool operator ==(AnimatedObject a, AnimatedObject b)
+		{
+			if (a is null)
+			{
+				return !(b is null);
+			}
+			return a.Equals(b);
+		}
+
+		/// <summary>Checks whether the two specified animated objects are unequal</summary>
+		public static bool operator !=(AnimatedObject a, AnimatedObject b)
+		{
+			if (a is null)
+			{
+				return b is null;
+			}
+			return !a.Equals(b);
+		}
+
+		/// <summary>Indicates whether this instance and a specified instance are equal.</summary>
+		/// <param name="animatedObject">The instance to compare to.</param>
+		/// <returns>True if the instances are equal; false otherwise.</returns>
+		public bool Equals(AnimatedObject animatedObject)
+		{
+			if (animatedObject is null)
+			{
+				return false;
+			}
+			if (animatedObject.FileName != FileName) return false; // fast return hopefully
+			if (animatedObject.States != States) return false;
+			if (animatedObject.StateFunction != StateFunction) return false;
+			if (animatedObject.TranslateXDirection != TranslateXDirection) return false;
+			if (animatedObject.TranslateYDirection != TranslateYDirection) return false;
+			if (animatedObject.TranslateZDirection != TranslateZDirection) return false;
+			if (animatedObject.TranslateXFunction != TranslateXFunction) return false;
+			if (animatedObject.TranslateYFunction != TranslateYFunction) return false;
+			if (animatedObject.TranslateZFunction != TranslateZFunction) return false;
+			if (animatedObject.RotateXDirection != RotateXDirection) return false;
+			if (animatedObject.RotateXDamping != RotateXDamping) return false;
+			if (animatedObject.RotateYDamping != RotateYDamping) return false;
+			if (animatedObject.RotateZDamping != RotateZDamping) return false;
+			if (animatedObject.RotateYDirection != RotateYDirection) return false;
+			if (animatedObject.RotateZDirection != RotateZDirection) return false;
+			if (animatedObject.RotateXFunction != RotateXFunction) return false;
+			if (animatedObject.RotateYFunction != RotateYFunction) return false;
+			if (animatedObject.RotateZFunction != RotateZFunction) return false;
+			if (animatedObject.TextureShiftXDirection != TextureShiftXDirection) return false;
+			if (animatedObject.TextureShiftYDirection != TextureShiftYDirection) return false;
+			if (animatedObject.TextureShiftXFunction != TextureShiftXFunction) return false;
+			if (animatedObject.TextureShiftYFunction != TextureShiftYFunction) return false;
+			if (animatedObject.ScaleXFunction != ScaleXFunction) return false;
+			if (animatedObject.ScaleYFunction != ScaleYFunction) return false;
+			if (animatedObject.ScaleZFunction != ScaleZFunction) return false;
+			if (animatedObject.LEDClockwiseWinding != LEDClockwiseWinding) return false;
+			if (animatedObject.LEDInitialAngle != LEDInitialAngle) return false;
+			if (animatedObject.LEDLastAngle != LEDLastAngle) return false;
+			if (animatedObject.LEDVectors != LEDVectors) return false;
+			if (animatedObject.LEDFunction != LEDFunction) return false;
+			if (animatedObject.RefreshRate != RefreshRate) return false;
+			if (animatedObject.TrackFollowerFunction != TrackFollowerFunction) return false;
+			if (animatedObject.FrontAxlePosition != FrontAxlePosition) return false;
+			if (animatedObject.RearAxlePosition != RearAxlePosition) return false;
+			if (animatedObject.isTimeTableObject != isTimeTableObject) return false;
+			// other fields should be instance related only
+			return true;
+		}
+
+		/// <summary>Indicates whether this instance and a specified object are equal.</summary>
+		/// <param name="obj">The object to compare to.</param>
+		/// <returns>True if the instances are equal; false otherwise.</returns>
+		public override bool Equals(object obj)
+		{
+			if (!(obj is AnimatedObject animatedObject))
+			{
+				return false;
+			}
+
+			return Equals(animatedObject);
+		}
 	}
 }
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
