@@ -392,7 +392,7 @@ namespace OpenBve
 			locks = new Queue<object>(10);
 			Program.Renderer.Initialize();
 			Program.Renderer.DetermineMaxAFLevel();
-			Interface.SaveOptions();
+			Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
 			HUD.LoadHUD();
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
 			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);

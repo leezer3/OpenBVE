@@ -1293,7 +1293,7 @@ namespace OpenBve {
 			try
 			{
 #endif
-				Interface.SaveOptions();
+				Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
 				Program.FileSystem.SaveCurrentFileSystemConfiguration();
 #if !DEBUG
 			}
@@ -2044,13 +2044,13 @@ namespace OpenBve {
 				// If so, resize the image height by 1px
 				if(pictureboxRouteMap.Image != null) {
 					if (pictureboxRouteMap.Image.Size == pictureboxRouteMap.Size) {
-						pictureboxRouteMap.Height = pictureboxRouteMap.Height + 1;
+						pictureboxRouteMap.Height += 1;
 					}
 				}
 
 				if (pictureboxRouteGradient.Image != null) {
 					if (pictureboxRouteGradient.Image.Size == pictureboxRouteGradient.Size) {
-						pictureboxRouteGradient.Height = pictureboxRouteGradient.Height + 1;
+						pictureboxRouteGradient.Height += 1;
 					}
 				}
 			}

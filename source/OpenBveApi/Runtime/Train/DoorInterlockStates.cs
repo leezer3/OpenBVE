@@ -1,4 +1,5 @@
-﻿namespace OpenBveApi.Runtime
+﻿// ReSharper disable UnusedMember.Global
+namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents the states of the door interlock.</summary>
 	public enum DoorInterlockStates

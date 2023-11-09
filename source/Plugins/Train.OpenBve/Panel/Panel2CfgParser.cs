@@ -66,16 +66,14 @@ namespace Train.OpenBve
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						PanelSections Section;
-						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out Section);
+						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out PanelSections Section);
 						switch (Section) {
 								// panel
 							case PanelSections.This:
 								i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 									int j = Lines[i].IndexOf('='); if (j >= 0)
 									{
-										PanelKey Key;
-										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 										string Value = Lines[i].Substring(j + 1).TrimStart();
 										switch (Key) {
 											case PanelKey.Resolution:
@@ -319,8 +317,7 @@ namespace Train.OpenBve
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 					{
-						PanelSections Section;
-						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out Section);
+						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out PanelSections Section);
 						switch (Section) {
 							case PanelSections.PilotLamp:
 								{
@@ -333,8 +330,7 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
@@ -432,8 +428,7 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
@@ -641,8 +636,7 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
@@ -776,8 +770,7 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
@@ -976,8 +969,7 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
@@ -1140,8 +1132,7 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Location:
@@ -1232,8 +1223,7 @@ namespace Train.OpenBve
 										if (j >= 0)
 										{
 											int k;
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key)
 											{

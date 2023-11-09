@@ -18,7 +18,7 @@
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-04</source>
-					<target state="translated">2023-08-27</target>
+					<target state="translated">2023-10-12</target>
 				</trans-unit>
 			</group>
 			<group id="openbve">
@@ -621,7 +621,7 @@
 					</trans-unit>
 					<trans-unit id="install_invalid">
 						<source>This file does not appear to be a valid openBVE package.</source>
-						<target>Este ficheiro não parece ser um pacote válido openBVE.</target>
+						<target state="translated">Este ficheiro não parece ser um pacote válido do openBVE.</target>
 					</trans-unit>
 					<trans-unit id="install_version_error">
 						<source>Package Version Error</source>
@@ -1049,6 +1049,9 @@
 						<source>Export...</source>
 						<target>Exportar...</target>
 					</trans-unit>
+					<trans-unit id="reset_question">
+						<source>Reset the current control configuration to the defaults?</source>
+					</trans-unit>
 					<trans-unit id="reset">
 						<source>Reset to defaults</source>
 						<target>Redefinir</target>
@@ -1293,7 +1296,7 @@
 					</trans-unit>
 					<trans-unit id="calibration_k">
 						<source>Move the wiper switch to OFF and press 'Next'.</source>
-						<target>Desligue o limpa´pára-brisas e carregue em 'Seguinte'.</target>
+						<target state="translated">Desligue o limpa-pára-brisas e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_l">
 						<source>Move the wiper switch to FULL and press 'Next'.</source>
@@ -1547,7 +1550,7 @@
 					</trans-unit>
 					<trans-unit id="verbosity_accessibilityaids">
 						<source>Accessibility Aids</source>
-						<target>Accessibility Aids</target>
+						<target state="translated">Ajudas de acessibilidade</target>
 					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
@@ -1849,11 +1852,11 @@
 					</trans-unit>
 					<trans-unit id="almost_help_filesnotfound">
 						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting "Ignore" from below.</source>
-						<target>Alguns problemas foram encontrados ao carregar a linha e o comboio.\r\n\r\nComo alguns ficheiros não foram encontrados, a linha e/ou comboio podem não aparecer correctamente. Tente obter novamente a linha e/ou o comboio para garantir que dispõe do pacote completo.\r\n\r\nA seguinte lista de problemas pode fornecer informações adicionais. Pode, ainda assim, iniciar a simulação seleccionando "Ignorar" no botão abaixo.</target>
+						<target state="translated">Foram encontrados alguns problemas ao carregar a linha e o comboio.\r\n\r\nComo alguns ficheiros não foram encontrados, a linha e/ou comboio podem não aparecer correctamente. Tente obter novamente a linha e/ou o comboio para garantir que dispõe do pacote completo.\r\n\r\nA seguinte lista de problemas pode fornecer informações adicionais. Pode, ainda assim, iniciar a simulação seleccionando "Ignorar" no botão abaixo.</target>
 					</trans-unit>
 					<trans-unit id="almost_help_general">
 						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select "Ignore" at this point to start the game.</source>
-						<target>Alguns problemas foram encontrados ao carregar a linha e o comboio. Caso seja o autor da linha ou do comboio, talvez valha a pena dar uma olhadela à seguinte lista de problemas.\r\n\r\nComo utilizador pode seleccionar "Ignorar" para poder iniciar a simulação.</target>
+						<target state="translated">Foram encontrados alguns problemas ao carregar a linha e o comboio. Caso seja o autor da linha ou do comboio, talvez valha a pena dar uma olhadela à seguinte lista de problemas.\r\n\r\nComo utilizador pode seleccionar "Ignorar" para poder iniciar a simulação.</target>
 					</trans-unit>
 					<trans-unit id="almost_show">
 						<source>Show issues</source>

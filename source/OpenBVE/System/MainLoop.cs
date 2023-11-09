@@ -364,8 +364,11 @@ namespace OpenBve
 				{
 					case JoystickComponent.Axis:
 						// Assume that a joystick axis fulfills the criteria for the handle to be 'held' in place
-						TrainManager.PlayerTrain.Handles.Power.ResetSpring();
-						TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+						if (TrainManager.PlayerTrain != null)
+						{
+							TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+							TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+						}
 						var axisState = Program.Joysticks.GetAxis(currentDevice, Interface.CurrentControls[i].Element);
 						if (axisState.ToString(CultureInfo.InvariantCulture) != Interface.CurrentControls[i].LastState)
 						{
@@ -452,8 +455,11 @@ namespace OpenBve
 						if (buttonState.ToString() != Interface.CurrentControls[i].LastState)
 						{
 							// Attempt to reset handle spring
-							TrainManager.PlayerTrain.Handles.Power.ResetSpring();
-							TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+							if (TrainManager.PlayerTrain != null)
+							{
+								TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+								TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+							}
 							if (buttonState == ButtonState.Pressed)
 							{
 								Interface.CurrentControls[i].AnalogState = 1.0;
@@ -477,8 +483,11 @@ namespace OpenBve
 						if (hatState.ToString() != Interface.CurrentControls[i].LastState)
 						{
 							// Attempt to reset handle spring
-							TrainManager.PlayerTrain.Handles.Power.ResetSpring();
-							TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+							if (TrainManager.PlayerTrain != null)
+							{
+								TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+								TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+							}
 							if ((int)hatState == Interface.CurrentControls[i].Direction)
 							{
 								Interface.CurrentControls[i].AnalogState = 1.0;

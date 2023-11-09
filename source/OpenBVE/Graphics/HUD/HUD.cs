@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows.Forms;
 using OpenBveApi.Colors;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using SoundManager;
 
@@ -57,7 +57,7 @@ namespace OpenBve
 							}
 							else if (Length == 0)
 							{
-								MessageBox.Show("Line outside of [element] structure encountered at line " + (i + 1).ToString(Culture) + " in " + File);
+								Interface.AddMessage(MessageType.Error, false, "Line outside of [element] structure encountered at line " + (i + 1).ToString(Culture) + " in " + File);
 							}
 							else
 							{
@@ -77,41 +77,32 @@ namespace OpenBve
 											{
 												if (!Enum.TryParse(Arguments[0], true, out CurrentHudElements[Length - 1].Subject))
 												{
-													MessageBox.Show("Unknown HUD Subject supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+													Interface.AddMessage(MessageType.Error, false, "Unknown Subject for HUD element " + (Length - 1) + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
-											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
 										case "position":
 											if (!Vector2.TryParse(Arguments, out CurrentHudElements[Length - 1].Position))
 											{
-												MessageBox.Show("Invalid Vector2 supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+												Interface.AddMessage(MessageType.Error, false, "Invalid Position for HUD element " + (Length - 1) + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
 										case "alignment":
 											if (Arguments.Length == 2)
 											{
-												int x, y;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out x))
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int x))
 												{
-													MessageBox.Show("X is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
-												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out y))
+												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out int y))
 												{
-													MessageBox.Show("Y is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+													Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
 												else
 												{
 													CurrentHudElements[Length - 1].Alignment.X = Math.Sign(x);
 													CurrentHudElements[Length - 1].Alignment.Y = Math.Sign(y);
 												}
-											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
 										case "topleft":
@@ -127,10 +118,6 @@ namespace OpenBve
 													Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].TopLeft.OverlayTexture);
 												}
 											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											}
 											break;
 										case "topmiddle":
 											if (Arguments.Length == 2)
@@ -144,10 +131,6 @@ namespace OpenBve
 												{
 													Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].TopMiddle.OverlayTexture);
 												}
-											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
 										case "topright":
@@ -163,10 +146,6 @@ namespace OpenBve
 													Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].TopRight.OverlayTexture);
 												}
 											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											}
 											break;
 										case "centerleft":
 											if (Arguments.Length == 2)
@@ -180,10 +159,6 @@ namespace OpenBve
 												{
 													Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].CenterLeft.OverlayTexture);
 												}
-											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
 										case "centermiddle":
@@ -199,10 +174,6 @@ namespace OpenBve
 													Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].CenterMiddle.OverlayTexture);
 												}
 											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											}
 											break;
 										case "centerright":
 											if (Arguments.Length == 2)
@@ -216,10 +187,6 @@ namespace OpenBve
 												{
 													Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].CenterRight.OverlayTexture);
 												}
-											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
 										case "bottomleft":
@@ -235,10 +202,6 @@ namespace OpenBve
 													Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].BottomLeft.OverlayTexture);
 												}
 											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											}
 											break;
 										case "bottommiddle":
 											if (Arguments.Length == 2)
@@ -252,10 +215,6 @@ namespace OpenBve
 												{
 													Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].BottomMiddle.OverlayTexture);
 												}
-											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
 										case "bottomright":
@@ -271,144 +230,41 @@ namespace OpenBve
 													Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].BottomRight.OverlayTexture);
 												}
 											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											}
 											break;
 										case "backcolor":
-											if (Arguments.Length == 4)
+											if (!Color32.TryParseColor(Arguments, out CurrentHudElements[Length - 1].BackgroundColor))
 											{
-												int r, g, b, a;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out r))
-												{
-													MessageBox.Show("R is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out g))
-												{
-													MessageBox.Show("G is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else if (!int.TryParse(Arguments[2], NumberStyles.Integer, Culture, out b))
-												{
-													MessageBox.Show("B is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else if (!int.TryParse(Arguments[3], NumberStyles.Integer, Culture, out a))
-												{
-													MessageBox.Show("A is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else
-												{
-													r = r < 0 ? 0 : r > 255 ? 255 : r;
-													g = g < 0 ? 0 : g > 255 ? 255 : g;
-													b = b < 0 ? 0 : b > 255 ? 255 : b;
-													a = a < 0 ? 0 : a > 255 ? 255 : a;
-													CurrentHudElements[Length - 1].BackgroundColor = new Color32((byte) r, (byte) g, (byte) b, (byte) a);
-												}
-
-												break;
+												Interface.AddMessage(MessageType.Error, false, "Invalid BackColor for HUD element " + (Length - 1) + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 											}
-											MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											break;
 										case "overlaycolor":
-											if (Arguments.Length == 4)
+											if (!Color32.TryParseColor(Arguments, out CurrentHudElements[Length - 1].OverlayColor))
 											{
-												int r, g, b, a;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out r))
-												{
-													MessageBox.Show("R is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out g))
-												{
-													MessageBox.Show("G is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else if (!int.TryParse(Arguments[2], NumberStyles.Integer, Culture, out b))
-												{
-													MessageBox.Show("B is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else if (!int.TryParse(Arguments[3], NumberStyles.Integer, Culture, out a))
-												{
-													MessageBox.Show("A is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else
-												{
-													r = r < 0 ? 0 : r > 255 ? 255 : r;
-													g = g < 0 ? 0 : g > 255 ? 255 : g;
-													b = b < 0 ? 0 : b > 255 ? 255 : b;
-													a = a < 0 ? 0 : a > 255 ? 255 : a;
-													CurrentHudElements[Length - 1].OverlayColor = new Color32((byte) r, (byte) g, (byte) b, (byte) a);
-												}
-
-												break;
+												Interface.AddMessage(MessageType.Error, false, "Invalid OverlayColor for HUD element " + (Length - 1) + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 											}
-											MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											break;
 										case "textcolor":
-											if (Arguments.Length == 4)
+											if (!Color32.TryParseColor(Arguments, out CurrentHudElements[Length - 1].TextColor))
 											{
-												int r, g, b, a;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out r))
-												{
-													MessageBox.Show("R is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out g))
-												{
-													MessageBox.Show("G is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else if (!int.TryParse(Arguments[2], NumberStyles.Integer, Culture, out b))
-												{
-													MessageBox.Show("B is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else if (!int.TryParse(Arguments[3], NumberStyles.Integer, Culture, out a))
-												{
-													MessageBox.Show("A is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else
-												{
-													r = r < 0 ? 0 : r > 255 ? 255 : r;
-													g = g < 0 ? 0 : g > 255 ? 255 : g;
-													b = b < 0 ? 0 : b > 255 ? 255 : b;
-													a = a < 0 ? 0 : a > 255 ? 255 : a;
-													CurrentHudElements[Length - 1].TextColor = new Color32((byte) r, (byte) g, (byte) b, (byte) a);
-												}
-
-												break;
+												Interface.AddMessage(MessageType.Error, false, "Invalid TextColor for HUD element " + (Length - 1) + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 											}
-											MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											break;
 										case "textposition":
-											if (Arguments.Length == 2)
+											if (!Vector2.TryParse(Arguments, out CurrentHudElements[Length - 1].TextPosition))
 											{
-												float x, y;
-												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out x))
-												{
-													MessageBox.Show("X is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out y))
-												{
-													MessageBox.Show("Y is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												}
-												else
-												{
-													CurrentHudElements[Length - 1].TextPosition.X = x;
-													CurrentHudElements[Length - 1].TextPosition.Y = y;
-												}
-											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+												Interface.AddMessage(MessageType.Error, false, "Invalid TextPosition for HUD element " + (Length - 1) + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
 										case "textalignment":
 											if (Arguments.Length == 2)
 											{
-												int x, y;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out x))
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int x))
 												{
-													MessageBox.Show("X is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
-												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out y))
+												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out int y))
 												{
-													MessageBox.Show("Y is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+													Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
 												else
 												{
@@ -416,18 +272,13 @@ namespace OpenBve
 													CurrentHudElements[Length - 1].TextAlignment.Y = Math.Sign(y);
 												}
 											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											}
 											break;
 										case "textsize":
 											if (Arguments.Length == 1)
 											{
-												int s;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out s))
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int s))
 												{
-													MessageBox.Show("SIZE is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+													Interface.AddMessage(MessageType.Error, false, "SIZE is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
 												else
 												{
@@ -454,27 +305,18 @@ namespace OpenBve
 													}
 												}
 											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											}
 											break;
 										case "textshadow":
 											if (Arguments.Length == 1)
 											{
-												int s;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out s))
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int s))
 												{
-													MessageBox.Show("SHADOW is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+													Interface.AddMessage(MessageType.Error, false, "SHADOW is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
 												else
 												{
 													CurrentHudElements[Length - 1].TextShadow = s != 0;
 												}
-											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
 										case "text":
@@ -482,18 +324,13 @@ namespace OpenBve
 											{
 												CurrentHudElements[Length - 1].Text = Arguments[0];
 											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											}
 											break;
 										case "value":
 											if (Arguments.Length == 1)
 											{
-												int n;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out n))
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int n))
 												{
-													MessageBox.Show("VALUE1 is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+													Interface.AddMessage(MessageType.Error, false, "VALUE1 is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
 												else
 												{
@@ -502,14 +339,13 @@ namespace OpenBve
 											}
 											else if (Arguments.Length == 2)
 											{
-												float a, b;
-												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out a))
+												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out float a))
 												{
-													MessageBox.Show("VALUE1 is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+													Interface.AddMessage(MessageType.Error, false, "VALUE1 is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
-												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out b))
+												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out float b))
 												{
-													MessageBox.Show("VALUE2 is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+													Interface.AddMessage(MessageType.Error, false, "VALUE2 is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
 												else
 												{
@@ -517,40 +353,30 @@ namespace OpenBve
 													CurrentHudElements[Length - 1].Value2 = b;
 												}
 											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											}
 											break;
 										case "transition":
 											if (Arguments.Length == 1)
 											{
-												int n;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out n))
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int n))
 												{
-													MessageBox.Show("TRANSITION is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+													Interface.AddMessage(MessageType.Error, false, "TRANSITION is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
 												else
 												{
 													CurrentHudElements[Length - 1].Transition = (Transition) n;
 												}
 											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											}
 											break;
 										case "transitionvector":
 											if (Arguments.Length == 2)
 											{
-												float x, y;
-												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out x))
+												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out float x))
 												{
-													MessageBox.Show("X is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
-												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out y))
+												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out float y))
 												{
-													MessageBox.Show("Y is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+													Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 												}
 												else
 												{
@@ -558,20 +384,16 @@ namespace OpenBve
 													CurrentHudElements[Length - 1].TransitionVector.Y = y;
 												}
 											}
-											else
-											{
-												MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											}
 
 											break;
 										default:
-											MessageBox.Show("Invalid command encountered at line " + (i + 1).ToString(Culture) + " in " + File);
+											Interface.AddMessage(MessageType.Error, false, "Invalid command encountered at Line " + (i + 1).ToString(Culture) + " in " + File);
 											break;
 									}
 								}
 								else
 								{
-									MessageBox.Show("Invalid statement encountered at line " + (i + 1).ToString(Culture) + " in " + File);
+									Interface.AddMessage(MessageType.Error, false, "Invalid statement encountered at Line " + (i + 1).ToString(Culture) + " in " + File);
 								}
 							}
 						}

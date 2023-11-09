@@ -601,7 +601,7 @@ namespace OpenBveApi.Objects
 									t = 1.0;
 								}
 
-								t = t - System.Math.Floor(t);
+								t -= System.Math.Floor(t);
 								t = 0.5 * (1.0 - System.Math.Tan(0.25 * (System.Math.PI - 2.0 * System.Math.PI * t)));
 								double cx = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].X + t * LEDVectors[currentEdge].X;
 								double cy = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Y + t * LEDVectors[currentEdge].Y;

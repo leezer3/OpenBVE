@@ -400,7 +400,7 @@ namespace ObjectBender {
 											 * transition.
 											 * */
 											if (f < quadraticThreshold) {
-												f = f * (2.0 - f / quadraticThreshold);
+												f *= (2.0 - f / quadraticThreshold);
 											} else {
 												f = (quadraticThreshold - 2.0 * quadraticThreshold * f + f * f) / (1.0 - quadraticThreshold);
 											}

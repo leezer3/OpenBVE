@@ -387,113 +387,87 @@ namespace Plugin.PNG
 											{
 												ScanlineFilterAlgorithm scanlineFilterAlgorithm = (ScanlineFilterAlgorithm)data[currentByte++];
 												int rowStartByte = currentByte;
+												
+												// find total length of scanline and unfilter data
+												int scanlineLength = pixelsPerScanline * BytesPerPixel;
+												for (int j = 0; j < scanlineLength; j++)
+												{
+													// ReSharper disable once TooWideLocalVariableScope
+													byte leftByte, upByte, upLeftByte;
+													switch (scanlineFilterAlgorithm)
+													{
+														case ScanlineFilterAlgorithm.None:
+															// ignore
+															break;
+														case ScanlineFilterAlgorithm.Sub:
+															leftByte = j >= BytesPerPixel ? data[rowStartByte + j - BytesPerPixel] : (byte)0;
+															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + leftByte) % 256);
+															break;
+														case ScanlineFilterAlgorithm.Up:
+															upByte = data[previousRowStartByte + j];
+															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + upByte) % 256);
+															break;
+														case ScanlineFilterAlgorithm.Average:
+															leftByte = j >= BytesPerPixel ? data[rowStartByte + j - BytesPerPixel] : (byte)0;
+															upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + j];
+															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + ((leftByte + upByte) >> 1)) % 256);
+															break;
+														case ScanlineFilterAlgorithm.Paeth:
+															// NOTE: For Paeth filtered Row0 in any given pass, the previous scanline must be all zeroes
+															// e.g. NWM_Open\Common\buildm0.png
+															leftByte = j - BytesPerPixel >= 0 ? data[rowStartByte + j - BytesPerPixel] : (byte)0;
+															upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + j];
+															upLeftByte = currentScanline == 0 ? (byte)0 : j >= BytesPerPixel ? data[previousRowStartByte + j - BytesPerPixel] : (byte)0;	
+															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + PaethPredictor(leftByte, upByte, upLeftByte)) % 256);
+															break;
+														default:
+															throw new Exception("Decoder error probably...");
+													}
+												}
+
+												int pixelInByte = 0;
 												for (int j = 0; j < pixelsPerScanline; j++)
 												{
 													int pixelX, pixelY; // using two ints as opposed to Vector2 is c. 10% faster
 													Adam7.GetPixelIndexForScanlineInPass(currentPass, currentScanline, j, out pixelX, out pixelY);
-													for (int k = 0; k < BytesPerPixel; k++)
-													{
-														int relativeRowByte = j * BytesPerPixel + k; // relative index of byte within line
-														// ReSharper disable once TooWideLocalVariableScope
-														byte leftByte, upByte, upLeftByte;
-														switch (scanlineFilterAlgorithm)
-														{
-															case ScanlineFilterAlgorithm.Sub:
-																leftByte = relativeRowByte >= BytesPerPixel ? data[rowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
-																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + leftByte) % 256);
-																break;
-															case ScanlineFilterAlgorithm.Up:
-																upByte = data[previousRowStartByte + relativeRowByte];
-																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + upByte) % 256);
-																break;
-															case ScanlineFilterAlgorithm.Average:
-																leftByte = relativeRowByte >= BytesPerPixel ? data[rowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
-																upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + relativeRowByte];
-																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + ((leftByte + upByte) >> 1)) % 256);
-																break;
-															case ScanlineFilterAlgorithm.Paeth:
-																// NOTE: For Paeth filtered Row0 in any given pass, the previous scanline must be all zeroes
-																// e.g. NWM_Open\Common\buildm0.png
-																leftByte = relativeRowByte - BytesPerPixel >= 0 ? data[rowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
-																upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + relativeRowByte];
-																upLeftByte = currentScanline == 0 ? (byte)0 : relativeRowByte >= BytesPerPixel ? data[previousRowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;	
-																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + PaethPredictor(leftByte, upByte, upLeftByte)) % 256);
-																break;
-														}
-														currentByte++;
-													}
-													
 													if (ColorType == ColorType.Palleted)
 													{
 														// we're always converting to 4bpp in the output, but need the native bpp to find our position in the array, so don't actually set it
 														int start = Width * 4 * pixelY + pixelX * 4;
+														byte pixelByte = data[rowStartByte + (j / 2) * BytesPerPixel];
 														switch (BitDepth)
 														{
-															case 1:
-																for (int currentBit = 0; currentBit < 8; currentBit++)
-																{
-																	if ((data[rowStartByte + j * BytesPerPixel] & 1 << (7 - currentBit % 8)) != 0)
-																	{
-																		pixelBuffer[start++] = colorPalette.Colors[1].R;
-																		pixelBuffer[start++] = colorPalette.Colors[1].G;
-																		pixelBuffer[start++] = colorPalette.Colors[1].B;
-																		pixelBuffer[start++] = colorPalette.Colors[1].A;
-																	}
-																	else
-																	{
-																		pixelBuffer[start++] = colorPalette.Colors[0].R;
-																		pixelBuffer[start++] = colorPalette.Colors[0].G;
-																		pixelBuffer[start++] = colorPalette.Colors[0].B;
-																		pixelBuffer[start++] = colorPalette.Colors[0].A;
-																	}
 
-																	if (pixelX + currentBit >= Width)
+															case 4:
+																if (j % 2 != 0)
+																{
+																	byte leftNibble = (byte)((pixelByte & 0xF0) >> 4); // color of left pixel
+																	pixelBuffer[start] = colorPalette.Colors[leftNibble].R;
+																	pixelBuffer[start + 1] = colorPalette.Colors[leftNibble].G;
+																	pixelBuffer[start + 2] = colorPalette.Colors[leftNibble].B;
+																	pixelBuffer[start + 3] = colorPalette.Colors[leftNibble].A;
+																	if (j == pixelsPerScanline)
 																	{
-																		// A single byte contains 8px, but the image may not be of a multiple of this
-																		break;
+																		// second nibble of byte discarded
+																		currentByte++;
 																	}
 																}
-
-																break;
-															case 2:
-																byte firstNibblet = (byte)((data[rowStartByte + j * BytesPerPixel] >> 6) & 0x03); // color of first pix
-																pixelBuffer[start] = colorPalette.Colors[firstNibblet].R;
-																pixelBuffer[start + 01] = colorPalette.Colors[firstNibblet].G;
-																pixelBuffer[start + 02] = colorPalette.Colors[firstNibblet].B;
-																pixelBuffer[start + 03] = colorPalette.Colors[firstNibblet].A;
-																byte secondNibblet = (byte)((data[rowStartByte + j * BytesPerPixel] >> 4) & 0x03); // color of second pix
-																pixelBuffer[start + 04] = colorPalette.Colors[secondNibblet].R;
-																pixelBuffer[start + 05] = colorPalette.Colors[secondNibblet].G;
-																pixelBuffer[start + 06] = colorPalette.Colors[secondNibblet].B;
-																pixelBuffer[start + 07] = colorPalette.Colors[secondNibblet].A;
-																byte thirdNibblet = (byte)((data[rowStartByte + j * BytesPerPixel] >> 2) & 0x03); // color of third pix
-																pixelBuffer[start + 08] = colorPalette.Colors[thirdNibblet].R;
-																pixelBuffer[start + 09] = colorPalette.Colors[thirdNibblet].G;
-																pixelBuffer[start + 10] = colorPalette.Colors[thirdNibblet].B;
-																pixelBuffer[start + 11] = colorPalette.Colors[thirdNibblet].A;
-																byte fourthNibblet = (byte)(data[rowStartByte + j * BytesPerPixel] & 0x03); // color of fourth pix
-																pixelBuffer[start + 12] = colorPalette.Colors[fourthNibblet].R;
-																pixelBuffer[start + 13] = colorPalette.Colors[fourthNibblet].G;
-																pixelBuffer[start + 14] = colorPalette.Colors[fourthNibblet].B;
-																pixelBuffer[start + 15] = colorPalette.Colors[fourthNibblet].A;
-																break;
-															case 4:
-																byte leftNibble = (byte)((data[rowStartByte + j * BytesPerPixel] & 0xF0) >> 4); // color of left pixel
-																pixelBuffer[start] = colorPalette.Colors[leftNibble].R;
-																pixelBuffer[start + 1] = colorPalette.Colors[leftNibble].G;
-																pixelBuffer[start + 2] = colorPalette.Colors[leftNibble].B;
-																pixelBuffer[start + 3] = colorPalette.Colors[leftNibble].A;
-																byte rightNibble = (byte)(data[rowStartByte + j * BytesPerPixel] & 0x0F); // color of right pixel
-																pixelBuffer[start + 4] = colorPalette.Colors[rightNibble].R;
-																pixelBuffer[start + 5] = colorPalette.Colors[rightNibble].G;
-																pixelBuffer[start + 6] = colorPalette.Colors[rightNibble].B;
-																pixelBuffer[start + 7] = colorPalette.Colors[rightNibble].A;
+																else
+																{
+																	byte rightNibble = (byte)(pixelByte & 0x0F); // color of right pixel
+																	pixelBuffer[start] = colorPalette.Colors[rightNibble].R;
+																	pixelBuffer[start + 1] = colorPalette.Colors[rightNibble].G;
+																	pixelBuffer[start + 2] = colorPalette.Colors[rightNibble].B;
+																	pixelBuffer[start + 3] = colorPalette.Colors[rightNibble].A;
+																	currentByte++;
+																}
 																break;
 															case 8:
-																pixelBuffer[start] = colorPalette.Colors[data[rowStartByte + j * BytesPerPixel]].R;
-																pixelBuffer[start + 1] = colorPalette.Colors[data[rowStartByte + j * BytesPerPixel]].G;
-																pixelBuffer[start + 2] = colorPalette.Colors[data[rowStartByte + j * BytesPerPixel]].B;
-																pixelBuffer[start + 3] = colorPalette.Colors[data[rowStartByte + j * BytesPerPixel]].A;
+																pixelBuffer[start] = colorPalette.Colors[pixelByte].R;
+																pixelBuffer[start + 1] = colorPalette.Colors[pixelByte].G;
+																pixelBuffer[start + 2] = colorPalette.Colors[pixelByte].B;
+																pixelBuffer[start + 3] = colorPalette.Colors[pixelByte].A;
+																currentByte++;
 																break;
 														}
 													}
@@ -501,6 +475,7 @@ namespace Plugin.PNG
 													{
 														int start = Width * BytesPerPixel * pixelY + pixelX * BytesPerPixel;
 														Buffer.BlockCopy(data, rowStartByte + j * BytesPerPixel, pixelBuffer, start, BytesPerPixel);
+														currentByte += BytesPerPixel;
 													}
 												}
 												previousRowStartByte = rowStartByte;

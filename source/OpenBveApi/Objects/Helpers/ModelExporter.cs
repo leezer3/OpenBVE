@@ -1,4 +1,5 @@
-﻿namespace OpenBveApi.Objects
+﻿// ReSharper disable UnusedMember.Global
+namespace OpenBveApi.Objects
 {
 	/// <summary>The exporter for any given model</summary>
 	/// <remarks>Some exporters use a different handing / origin for texture co-ordinates and vertices</remarks>

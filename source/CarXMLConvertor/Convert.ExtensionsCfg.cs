@@ -101,10 +101,9 @@ namespace CarXmlConvertor
 									int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 									if (j >= 0)
 									{
-										string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-										string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-										int n;
-										if (int.TryParse(a, NumberStyles.Integer, Culture, out n))
+										string a = Lines[i].Substring(0, j).TrimEnd();
+										string b = Lines[i].Substring(j + 1).TrimStart();
+										if (int.TryParse(a, NumberStyles.Integer, Culture, out int n))
 										{
 											if (n >= 0 & n < ConvertTrainDat.NumberOfCars)
 											{
@@ -129,7 +128,7 @@ namespace CarXmlConvertor
 							{
 								// car
 								string t = Lines[i].Substring(4, Lines[i].Length - 5);
-								int n; if (int.TryParse(t, NumberStyles.Integer, Culture, out n))
+								if (int.TryParse(t, NumberStyles.Integer, Culture, out int n))
 								{
 									if (n >= 0 & n < ConvertTrainDat.NumberOfCars)
 									{
@@ -141,8 +140,8 @@ namespace CarXmlConvertor
 												int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 												if (j >= 0)
 												{
-													string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-													string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+													string a = Lines[i].Substring(0, j).TrimEnd();
+													string b = Lines[i].Substring(j + 1).TrimStart();
 													switch (a.ToLowerInvariant())
 													{
 														case "object":
@@ -157,8 +156,7 @@ namespace CarXmlConvertor
 															break;
 														case "length":
 														{
-															double m;
-															if (double.TryParse(b, NumberStyles.Float, Culture, out m))
+															if (double.TryParse(b, NumberStyles.Float, Culture, out double m))
 															{
 																if (m > 0.0)
 																{
@@ -171,10 +169,9 @@ namespace CarXmlConvertor
 														int k = b.IndexOf(',');
 															if (k >= 0)
 															{
-																string c = b.Substring(0, k).TrimEnd(new char[] { });
-																string d = b.Substring(k + 1).TrimStart(new char[] { });
-																double rear, front;
-																if (double.TryParse(c, NumberStyles.Float, Culture, out rear) && double.TryParse(d, NumberStyles.Float, Culture, out front))
+																string c = b.Substring(0, k).TrimEnd();
+																string d = b.Substring(k + 1).TrimStart();
+																if (double.TryParse(c, NumberStyles.Float, Culture, out double rear) && double.TryParse(d, NumberStyles.Float, Culture, out double front))
 																{
 																	CarInfos[n].RearAxle = rear;
 																	CarInfos[n].FrontAxle = front;
@@ -201,7 +198,7 @@ namespace CarXmlConvertor
 							{
 								// coupler
 								string t = Lines[i].Substring(8, Lines[i].Length - 9);
-								int n; if (int.TryParse(t, NumberStyles.Integer, Culture, out n))
+								if (int.TryParse(t, NumberStyles.Integer, Culture, out int n))
 								{
 									if (n >= 0 & n < Couplers.Length)
 									{
@@ -212,8 +209,8 @@ namespace CarXmlConvertor
 												int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 												if (j >= 0)
 												{
-													string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-													string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+													string a = Lines[i].Substring(0, j).TrimEnd();
+													string b = Lines[i].Substring(j + 1).TrimStart();
 													switch (a.ToLowerInvariant())
 													{
 														case "distances":
@@ -221,13 +218,12 @@ namespace CarXmlConvertor
 															int k = b.IndexOf(',');
 															if (k >= 0)
 															{
-																string c = b.Substring(0, k).TrimEnd(new char[] { });
-																string d = b.Substring(k + 1).TrimStart(new char[] { });
-																double min, max;
-																if (!double.TryParse(c, NumberStyles.Float, Culture, out min))
+																string c = b.Substring(0, k).TrimEnd();
+																string d = b.Substring(k + 1).TrimStart();
+																if (!double.TryParse(c, NumberStyles.Float, Culture, out double min))
 																{
 																}
-																else if (!double.TryParse(d, NumberStyles.Float, Culture, out max))
+																else if (!double.TryParse(d, NumberStyles.Float, Culture, out double max))
 																{
 																}
 																else
@@ -260,7 +256,7 @@ namespace CarXmlConvertor
 							{
 								// car
 								string t = Lines[i].Substring(6, Lines[i].Length - 7);
-								int n; if (int.TryParse(t, NumberStyles.Integer, Culture, out n))
+								if (int.TryParse(t, NumberStyles.Integer, Culture, out int n))
 								{
 									//Assuming that there are two bogies per car
 									bool IsOdd = (n % 2 != 0);
@@ -300,10 +296,9 @@ namespace CarXmlConvertor
 															int k = b.IndexOf(',');
 															if (k >= 0)
 															{
-																string c = b.Substring(0, k).TrimEnd(new char[] { });
-																string d = b.Substring(k + 1).TrimStart(new char[] { });
-																double rear, front;
-																if (double.TryParse(c, NumberStyles.Float, Culture, out rear) && double.TryParse(d, NumberStyles.Float, Culture, out front))
+																string c = b.Substring(0, k).TrimEnd();
+																string d = b.Substring(k + 1).TrimStart();
+																if (double.TryParse(c, NumberStyles.Float, Culture, out double rear) && double.TryParse(d, NumberStyles.Float, Culture, out double front))
 																{
 																	if (IsOdd)
 																	{

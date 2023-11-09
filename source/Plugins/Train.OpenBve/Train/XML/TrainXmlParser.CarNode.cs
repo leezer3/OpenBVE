@@ -501,15 +501,23 @@ namespace Train.OpenBve
 								switch (cc.Name.ToLowerInvariant())
 								{
 									case "openspeed":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].Specs.DoorOpenFrequency))
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out double os))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
 										}
+										else
+										{
+											Train.Cars[Car].Specs.DoorOpenFrequency = 1.0 / os;
+										}
 										break;
 									case "closespeed":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].Specs.DoorCloseFrequency))
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out double cs))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
+										}
+										else
+										{
+											Train.Cars[Car].Specs.DoorCloseFrequency = 1.0 / cs;
 										}
 										break;
 									case "width":
@@ -545,6 +553,95 @@ namespace Train.OpenBve
 							case "none":
 								Train.Cars[Car].Cargo = new EmptyLoad();
 								break;
+						}
+						break;
+					case "windscreen":
+						if (!Train.IsPlayerTrain)
+						{
+							break;
+						}
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							int numDrops = 0;
+							double wipeSpeed = 1.0, holdTime = 1.0, dropLife = 10.0;
+							WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
+
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "numberofdrops":
+										if (!NumberFormats.TryParseIntVb6(cc.InnerText, out numDrops))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid number of drops defined for Windscreen in Car " + Car + " in XML file " + fileName);
+										}
+
+										break;
+									case "wipespeed":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out wipeSpeed))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid wipe speed defined for Windscreen in Car " + Car + " in XML file " + fileName);
+										}
+
+										break;
+									case "holdtime":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out holdTime))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid wiper hold time defined for Windscreen in Car " + Car + " in XML file " + fileName);
+										}
+
+										break;
+									case "droplife":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out dropLife))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid drop life defined for Windscreen in Car " + Car + " in XML file " + fileName);
+										}
+
+										break;
+									case "restposition":
+									case "wiperrestposition":
+										switch (cc.InnerText.ToLowerInvariant())
+										{
+											case "0":
+											case "left":
+												restPosition = WiperPosition.Left;
+												break;
+											case "1":
+											case "right":
+												restPosition = WiperPosition.Right;
+												break;
+											default:
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid for Windscreen in Car " + Car + " in XML file " + fileName);
+												break;
+										}
+
+										break;
+									case "holdposition":
+									case "wiperholdposition":
+										switch (cc.InnerText.ToLowerInvariant())
+										{
+											case "0":
+											case "left":
+												holdPosition = WiperPosition.Left;
+												break;
+											case "1":
+											case "right":
+												holdPosition = WiperPosition.Right;
+												break;
+											default:
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperHoldPosition is invalid for Windscreen in Car " + Car + " in XML file " + fileName);
+												break;
+										}
+
+										break;
+								}
+							}
+
+							if (numDrops > 0)
+							{
+								Train.Cars[Car].Windscreen = new Windscreen(numDrops, dropLife, Train.Cars[Car]);
+								Train.Cars[Car].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Car].Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
+							}
 						}
 						break;
 				}

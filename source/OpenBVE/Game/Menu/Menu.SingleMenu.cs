@@ -473,9 +473,10 @@ namespace OpenBve
 					case MenuType.Controls:
 						//Refresh the joystick list
 						Program.Joysticks.RefreshJoysticks();
-						Items = new MenuEntry[Interface.CurrentControls.Length + 1];
+						Items = new MenuEntry[Interface.CurrentControls.Length + 2];
 						Items[0] = new MenuCommand(Translations.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
-						int ci = 1;
+						Items[1] = new MenuCommand(Translations.GetInterfaceString("controls_reset"), MenuTag.ControlReset, 0);
+						int ci = 2;
 						for (i = 0; i < Interface.CurrentControls.Length; i++)
 						{
 							if (Interface.CurrentControls[i].Command != Translations.Command.None)
@@ -570,6 +571,13 @@ namespace OpenBve
 						Items[1] = new MenuCommand(Translations.GetInterfaceString("menu_assignment_current") + " " + str, MenuTag.None, 0);
 						Items[2] = new MenuCommand(" ", MenuTag.None, 0);
 						Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_assign"), MenuTag.None, 0);
+						break;
+					case MenuType.ControlReset:
+						Items = new MenuEntry[3];
+						Items[0] = new MenuCaption(Translations.GetInterfaceString("controls_reset_question"));
+						Items[1] = new MenuCommand(Translations.GetInterfaceString("start_train_default_yes"), MenuTag.Yes, 0);
+						Items[2] = new MenuCommand(Translations.GetInterfaceString("start_train_default_no"), MenuTag.No, 0);
+						Selection = 1;
 						break;
 					case MenuType.TrainDefault:
 						Interface.CurrentOptions.TrainFolder = Loading.GetDefaultTrainFolder(currentFile);

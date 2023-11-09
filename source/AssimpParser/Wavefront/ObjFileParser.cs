@@ -466,7 +466,7 @@ namespace AssimpNET.Obj
 					{
 						++iStep;
 					}
-					while ((tmp = tmp / 10) != 0)
+					while ((tmp /= 10) != 0)
 					{
 						++iStep;
 					}

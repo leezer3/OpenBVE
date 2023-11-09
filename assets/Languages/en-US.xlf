@@ -810,6 +810,9 @@
 					<trans-unit id="export">
 						<source>Export...</source>
 					</trans-unit>
+					<trans-unit id="reset_question">
+						<source>Reset the current control configuration to the defaults?</source>
+					</trans-unit>
 					<trans-unit id="reset">
 						<source>Reset to defaults</source>
 					</trans-unit>

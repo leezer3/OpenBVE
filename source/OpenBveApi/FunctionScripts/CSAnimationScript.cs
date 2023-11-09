@@ -17,10 +17,11 @@ namespace OpenBveApi.FunctionScripting {
 		/// <summary>The last result returned</summary>
 		public double LastResult { get; set; }
 		/// <summary>The minimum pinned result or NaN to set no minimum</summary>
-		public double Maximum { get; set; } = Double.NaN;
+		public double Maximum { get; set; } = double.NaN;
 		/// <summary>The maximum pinned result or NaN to set no maximum</summary>
-		public double Minimum { get; set; } = Double.NaN;
+		public double Minimum { get; set; } = double.NaN;
 
+		// ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
 		private readonly HostInterface currentHost;
 		private readonly object scriptObject;
 		private readonly MethodInfo executeMethod;

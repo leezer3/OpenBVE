@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2021, Marc Riera, The OpenBVE Project
+//Copyright (c) 2021-2023, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using LibUsbDotNet;
+using LibUsbDotNet.Info;
 using LibUsbDotNet.Main;
 using OpenBveApi;
 using OpenBveApi.Interface;
@@ -61,7 +62,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// The setup packet needed to send data to the controller.
 		/// </summary>
-		private static UsbSetupPacket setupPacket = new UsbSetupPacket(0x40, 0x09, 0x0301, 0x0000, 0x0008);
+		private static UsbSetupPacket setupPacket = new UsbSetupPacket(0x41, 0x09, 0x0201, 0x0000, 0x0008);
 
 		/// <summary>
 		/// Adds the supported controller models to the LibUsb list.
@@ -159,8 +160,21 @@ namespace DenshaDeGoInput
 					{
 						if (!controller.IsConnected)
 						{
-							// Open endpoint reader, if necessary
-							controller.ControllerReader = controller.ControllerDevice.OpenEndpointReader(ReadEndpointID.Ep01);
+							// Search for input endpoint and open endpoint reader
+							ReadEndpointID ep = ReadEndpointID.Ep01;
+							UsbConfigInfo config = controller.ControllerDevice.Configs[0];
+							if (config.InterfaceInfoList[0].Descriptor.Class == LibUsbDotNet.Descriptors.ClassCodeType.Hid)
+							{
+								foreach (UsbEndpointInfo endpoint in config.InterfaceInfoList[0].EndpointInfoList)
+								{
+									if ((endpoint.Descriptor.EndpointID & 0x80) == 0x80)
+									{
+										ep = (ReadEndpointID)endpoint.Descriptor.EndpointID;
+										break;
+									}
+								}
+							}
+							controller.ControllerReader = controller.ControllerDevice.OpenEndpointReader(ep);
 						}
 						// The controller is connected
 						controller.IsConnected = true;

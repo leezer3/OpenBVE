@@ -356,6 +356,138 @@ namespace OpenBveApi.Colors {
 			return false;
 		}
 
+		/// <summary>Parses a Color32 stored in a string</summary>
+		/// <param name="stringToParse">The string to parse</param>
+		/// <param name="separator">The separator character</param>
+		/// <param name="Color">The out Color32</param>
+		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <remarks>This will always return a Color32.
+		/// If any part fails parsing, it will be set to 255</remarks>
+		public static bool TryParseColor(string stringToParse, char separator, out Color32 Color)
+		{
+			Color = White;
+			bool success = true;
+			string[] splitString = stringToParse.Split(separator);
+			int i;
+			for (i = 0; i < splitString.Length; i++)
+			{
+				switch (i)
+				{
+					case 0:
+						if (!double.TryParse(splitString[i], out double r) || r < 0 || r > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.R = (byte)r;
+						}
+						break;
+					case 1:
+						if (!double.TryParse(splitString[i], out double g) || g < 0 || g > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.G = (byte)g;
+						}
+						break;
+					case 2:
+						if (!double.TryParse(splitString[i], out double b) || b < 0 || b > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.B = (byte)b;
+						}
+						break;
+					case 3:
+						if (!double.TryParse(splitString[i], out double a) || a < 0 || a > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.A = (byte)a;
+						}
+						break;
+				}
+			}
+
+			if (i != 3 && i != 4)
+			{
+				success = false;
+			}
+			return success;
+		}
+		
+		/// <summary>Parses a Color32 stored in a string array</summary>
+		/// <param name="arguments">The string array to parse</param>
+		/// <param name="Color">The out Color32</param>
+		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <remarks>This will always return a Color32.
+		/// If any part fails parsing, it will be set to 255</remarks>
+		public static bool TryParseColor(string[] arguments, out Color32 Color)
+		{
+			Color = White;
+			bool success = true;
+			int i;
+			for (i = 0; i < arguments.Length; i++)
+			{
+				switch (i)
+				{
+					case 0:
+						if (!double.TryParse(arguments[i], out double r) || r < 0 || r > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.R = (byte)r;
+						}
+						break;
+					case 1:
+						if (!double.TryParse(arguments[i], out double g) || g < 0 || g > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.G = (byte)g;
+						}
+						break;
+					case 2:
+						if (!double.TryParse(arguments[i], out double b) || b < 0 || b > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.B = (byte)b;
+						}
+						break;
+					case 3:
+						if (!double.TryParse(arguments[i], out double a) || a < 0 || a > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.A = (byte)a;
+						}
+						break;
+				}
+			}
+
+			if (i != 3 && i != 4)
+			{
+				success = false;
+			}
+			return success;
+		}
+
 		private const float inv255 = 1.0f / 255.0f;
 
 		/// <summary>Creates the background color for anti-aliasing text</summary>

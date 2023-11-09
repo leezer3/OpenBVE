@@ -327,6 +327,8 @@ namespace OpenBve {
 			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableRoutePluginCount + " Route loading plugins available.");
 			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableObjectPluginCount + " Object loading plugins available.");
 			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableRoutePluginCount + " Sound loading plugins available.");
+			Program.FileSystem.AppendToLogFile("Load in Advance is " + (Interface.CurrentOptions.LoadInAdvance ? "enabled" : "disabled"));
+			
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
@@ -463,9 +465,8 @@ namespace OpenBve {
 					{
 						for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++)
 						{
-							if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice)
+							if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice trainInputDevice)
 							{
-								ITrainInputDevice trainInputDevice = (ITrainInputDevice)InputDevicePlugin.AvailablePlugins[j];
 								trainInputDevice.SetVehicleSpecs(Program.TrainManager.Trains[i].vehicleSpecs());
 							}
 						}
