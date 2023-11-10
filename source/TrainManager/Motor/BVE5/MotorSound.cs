@@ -57,7 +57,7 @@ namespace TrainManager.Motor
 				int maxSounds = Math.Max(entry.Sounds.Length, SoundSources.Length);
 				for (int i = 0; i < maxSounds; i++)
 				{
-					if (i > entry.Sounds.Length - 1 || i < SoundSources.Length && (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0))
+					if (i >= entry.Sounds.Length || i < SoundSources.Length && (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0))
 					{
 						TrainManagerBase.currentHost.StopSound(SoundSources[i]);
 					}
@@ -126,7 +126,7 @@ namespace TrainManager.Motor
 				int maxSounds = Math.Max(entry.Sounds.Length, SoundSources.Length);
 				for (int i = 0; i < maxSounds; i++)
 				{
-					if (i > entry.Sounds.Length || i < SoundSources.Length && (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0))
+					if (i >= entry.Sounds.Length || i < SoundSources.Length && (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0))
 					{
 						TrainManagerBase.currentHost.StopSound(SoundSources[i]);
 					}
