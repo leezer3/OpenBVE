@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
@@ -966,5 +966,11 @@ namespace TrainEditor2.Views
 		{
 			OpenFileDialog(textBoxSoundFileName);
 		}
+
+		protected override void OnFormClosing(FormClosingEventArgs e)
+		{
+			Program.Renderer.DeInitialize();
+		}
+		
 	}
 }
