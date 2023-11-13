@@ -477,8 +477,8 @@ namespace TrainManager.Trains
 			// delayed handles
 			if (Plugin == null)
 			{
-				Handles.Power.Safety = Handles.Power.Driver;
-				Handles.Brake.Safety = Handles.Brake.Driver;
+				Handles.Power.ApplySafetyState(Handles.Power.Driver);
+				Handles.Brake.ApplySafetyState(Handles.Brake.Driver);
 				Handles.EmergencyBrake.Safety = Handles.EmergencyBrake.Driver;
 			}
 

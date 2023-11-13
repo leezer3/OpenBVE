@@ -311,7 +311,7 @@ namespace OpenBveApi.Interface {
 			/// <summary>Uncouples the front coupling of a car</summary>
 			UncoupleFront,
 			/// <summary>Uncouples the rear coupling of a car</summary>
-			UncoupleRear
+			UncoupleRear,
 			/// <summary>Controls the DSD</summary>
 			DriverSupervisionDevice
 		}
