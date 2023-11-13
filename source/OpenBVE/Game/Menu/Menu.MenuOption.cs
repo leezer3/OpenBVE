@@ -140,9 +140,7 @@ namespace OpenBve
 										//HACK: some resolutions will result in openBVE not appearing on screen in full screen, so restore resolution then change resolution
 										DisplayDevice.Default.RestoreResolution();
 										DisplayDevice.Default.ChangeResolution(currentResolution);
-										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
-										Program.currentGameWindow.X = 0;
-										Program.currentGameWindow.Y = 0;
+										Program.Renderer.SetWindowState(WindowState.Fullscreen);
 										Program.currentGameWindow.Width = (int)(currentResolution.Width * DisplayDevice.Default.ScaleFactor.X);
 										Program.currentGameWindow.Height = (int)(currentResolution.Height * DisplayDevice.Default.ScaleFactor.Y);
 										Program.Renderer.Screen.Width = Program.currentGameWindow.Width;
@@ -159,9 +157,9 @@ namespace OpenBve
 						break;
 					case OptionType.FullScreen:
 						Interface.CurrentOptions.FullscreenMode = !Interface.CurrentOptions.FullscreenMode;
-						if (Program.currentGameWindow.WindowState == WindowState.Fullscreen)
+						if (Interface.CurrentOptions.FullscreenMode)
 						{
-							Program.currentGameWindow.WindowState = WindowState.Normal;
+							Program.Renderer.SetWindowState(WindowState.Fullscreen);
 							DisplayDevice.Default.RestoreResolution();
 						}
 						else
@@ -178,9 +176,7 @@ namespace OpenBve
 										//HACK: some resolutions will result in openBVE not appearing on screen in full screen, so restore resolution then change resolution
 										DisplayDevice.Default.RestoreResolution();
 										DisplayDevice.Default.ChangeResolution(currentResolution);
-										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
-										Program.currentGameWindow.X = 0;
-										Program.currentGameWindow.Y = 0;
+										Program.Renderer.SetWindowState(WindowState.Fullscreen);
 										Program.currentGameWindow.Width = (int)(currentResolution.Width * DisplayDevice.Default.ScaleFactor.X);
 										Program.currentGameWindow.Height = (int)(currentResolution.Height * DisplayDevice.Default.ScaleFactor.Y);
 										Program.Renderer.Screen.Width = Program.currentGameWindow.Width;
