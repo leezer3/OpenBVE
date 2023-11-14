@@ -2397,12 +2397,10 @@
 						<target>Powiększa moc hamowania o jeden poziom dla pociągów z dwoma wajchami</target>
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>Decreases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="locobrake_increase">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>Increases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
@@ -2563,20 +2561,20 @@
 						<target>Funkcja L w systemie bezpieczeństwa</target>
 					</trans-unit>
 					<trans-unit id="security_m">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The M function of the security system</source>
+						<target>Funkcja M w systemie bezpieczeństwa</target>
 					</trans-unit>
 					<trans-unit id="security_n">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The N function of the security system</source>
+						<target>Funkcja N w systemie bezpieczeństwa</target>
 					</trans-unit>
 					<trans-unit id="security_o">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The O function of the security system</source>
+						<target>Funkcja O w systemie bezpieczeństwa</target>
 					</trans-unit>
 					<trans-unit id="security_p">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The P function of the security system</source>
+						<target>Funkcja P w systemie bezpieczeństwa</target>
 					</trans-unit>
 					<trans-unit id="camera_interior">
 						<source>Switches to the train's interior view</source>

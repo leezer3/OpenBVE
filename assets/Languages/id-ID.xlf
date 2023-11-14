@@ -2399,12 +2399,10 @@
 						<target>Tambah rem 1 tingkat untuk kereta 2 tuas</target>
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
-						<source>N/A</source>
-						<target>Tidak Ada</target>
+						<source>Decreases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="locobrake_increase">
-						<source>N/A</source>
-						<target>Tidak ada</target>
+						<source>Increases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
@@ -2565,20 +2563,20 @@
 						<target>Fungsi L</target>
 					</trans-unit>
 					<trans-unit id="security_m">
-						<source>N/A</source>
-						<target>Tidak Ada</target>
+						<source>The M function of the security system</source>
+						<target>Fungsi M</target>
 					</trans-unit>
 					<trans-unit id="security_n">
-						<source>N/A</source>
-						<target>Tidak Ada</target>
+						<source>The N function of the security system</source>
+						<target>Fungsi N</target>
 					</trans-unit>
 					<trans-unit id="security_o">
-						<source>N/A</source>
-						<target>Tidak Ada</target>
+						<source>The O function of the security system</source>
+						<target>Fungsi O</target>
 					</trans-unit>
 					<trans-unit id="security_p">
-						<source>N/A</source>
-						<target>Tidak Ada</target>
+						<source>The P function of the security system</source>
+						<target>Fungsi P</target>
 					</trans-unit>
 					<trans-unit id="camera_interior">
 						<source>Switches to the train's interior view</source>
