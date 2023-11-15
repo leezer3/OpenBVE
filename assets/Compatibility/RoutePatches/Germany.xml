@@ -48,5 +48,10 @@
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
+	<Patch>
+		<Hash>F67912DAEAE1B1013513F5E3196762E7D39C689DD0D3477118717CF051DCFA06</Hash>
+		<FileName>S8.csv</FileName>
+		<SignalSet>DB_New.xml</SignalSet>
+	</Patch>
   </RoutePatches>
 </openBVE>
