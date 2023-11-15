@@ -89,9 +89,6 @@ namespace AssimpNET.Obj
 {
 	public class ObjFileParser : ObjTools
 	{
-		/// Default material name
-		private const string DEFAULT_MATERIAL = Material.AI_DEFAULT_MATERIAL_NAME;
-
 		private const string DefaultObjName = "defaultobject";
 
 		/// Path to the current model, name of the obj file where the buffer comes from
@@ -117,11 +114,6 @@ namespace AssimpNET.Obj
 
 			// Create the model instance to store all the data
 			Model = new Model(modelName);
-
-			// create default material and store it
-			Model.DefaultMaterial = new Material(DEFAULT_MATERIAL);
-			Model.MaterialLib.Add(DEFAULT_MATERIAL);
-			Model.MaterialMap[DEFAULT_MATERIAL] = Model.DefaultMaterial;
 
 			// Start parsing the file
 			ParseFile(lines);

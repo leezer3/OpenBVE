@@ -9,7 +9,7 @@ namespace CsvRwRouteParser
 		/// <summary>The *last* placement position of the object</summary>
 		internal double LastPlacement;
 		/// <summary>The rail</summary>
-		internal int Rail;
+		internal readonly int Rail;
 		/// <summary>The placement interval</summary>
 		internal double Interval;
 		/// <summary>The last type of object placed</summary>
@@ -21,13 +21,19 @@ namespace CsvRwRouteParser
 		/// <summary>Whether the pattern ends this block</summary>
 		internal bool Ends;
 
+		internal PatternObj(int rail)
+		{
+			Rail = rail;
+		}
+
 		internal PatternObj Clone()
 		{
-			PatternObj p = new PatternObj();
-			p.Rail = Rail;
-			p.Interval = Interval;
-			p.Types = Types;
-			p.Position = Position;
+			PatternObj p = new PatternObj(Rail)
+			{
+				Interval = Interval,
+				Types = Types,
+				Position = Position
+			};
 			return p;
 		}
 

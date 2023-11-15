@@ -105,8 +105,7 @@ namespace RouteManager2.SignalManager
 										continue;
 									}
 
-									int aspect;
-									if (!NumberFormats.TryParseIntVb6(n.Attributes["Number"].Value, out aspect))
+									if (!NumberFormats.TryParseIntVb6(n.Attributes["Number"].Value, out int aspect))
 									{
 										currentHost.AddMessage(MessageType.Error, true, "Invalid aspect number " + aspect + " in the signal object list in the compatability signal file " + fileName);
 										continue;
