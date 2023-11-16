@@ -146,5 +146,81 @@
 		<Incompatible>true</Incompatible>
 		<LogMessage>Ground and rail transformations are broken, due to excessive gradients.</LogMessage>
 	</Patch>
+	<!-- Sanford Mace again, variable gauge demo thing -->
+	<!-- 3 Foot -->
+	<Patch>
+		<Hash>E8F10B550A664B576009F2B68DDA9314483DED361CD6E8DCD4482F97C7416927</Hash>
+		<FileName>Inbound Main.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>B6603F8DC487AA5CE92CA4B7CA8D4C1AE8739083C89447C79BDFBA19704AF650</Hash>
+		<FileName>Inbound Tram.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>520D7B846402BEA052BED85795F834CFEF8228AD4D356DA7597856866897EF7C</Hash>
+		<FileName>Outbound Main.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>4CB7740CFE8CF22359597B2DDFA915CFF14440C3A9C1520F2E946F96ED2AB607</Hash>
+		<FileName>Outbound Tram.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<!-- 2 Foot -->
+	<Patch>
+		<Hash>F08FB9B9E31CBD155DA212192F626AA56F3DBC6DE6F60B7E48C9AF739CCF9EB2</Hash>
+		<FileName>Inbound Main.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>E5DC20166FDA9865CDB465DCD37CD09230BA44FAD1FB5B76F49A260C788EBCCC</Hash>
+		<FileName>Inbound Tram.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>3CD04B26B65F34470B704E4E957F5213F4C267C03A17D12041A7F5842E6938F2</Hash>
+		<FileName>Outbound Main.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>A0473B53E604E275F6B7C7B6B63016678124094279330F4A234AEEB5F3D57D77</Hash>
+		<FileName>Outbound Tram.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<!-- 1 Foot -->
+	<Patch>
+		<Hash>247568CAD5D7A02B64BF1B05099E969E43EEDEE69C0A94BDCAF6764985AF8DF7</Hash>
+		<FileName>Inbound Main.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>95599333BDC728AF7D8A7DE33C0D6FBB7F22DCE7EA88360D3FE4108F340012A1</Hash>
+		<FileName>Inbound Tram.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>CCF7B10DD6F949805E9CF44A0653D499A8CDA5B6A2D77E8ABBD069F0787F3BEA</Hash>
+		<FileName>Outbound Main.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>B7517EA13218FCC09ECC487F32B39A003D02C6A3492DD067B7B0934FAD9AB078</Hash>
+		<FileName>Outbound Tram.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
   </RoutePatches>
 </openBVE>

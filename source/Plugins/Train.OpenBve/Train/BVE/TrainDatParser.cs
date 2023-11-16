@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -1246,13 +1246,6 @@ namespace Train.OpenBve
 				Train.Handles.Brake.MaximumNotch--;
 			}
 			// apply train attributes
-			Train.Handles.Reverser.Driver = 0;
-			Train.Handles.Reverser.Actual = 0;
-			Train.Handles.Power.Driver = 0;
-			Train.Handles.Power.Actual = 0;
-			Train.Handles.Power.DelayedChanges = new HandleChange[] { };
-			Train.Handles.Brake.Driver = 0;
-			Train.Handles.Brake.Actual = 0;
 			if (trainBrakeType == BrakeSystemType.AutomaticAirBrake) {
 				Train.Handles.HandleType = HandleType.TwinHandle;
 				Train.Handles.HasHoldBrake = false;

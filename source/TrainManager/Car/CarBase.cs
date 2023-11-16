@@ -364,14 +364,8 @@ namespace TrainManager.Car
 			// Create new train
 			TrainBase newTrain = new TrainBase(TrainState.Available);
 			UncouplingBehaviour uncouplingBehaviour = UncouplingBehaviour.Emergency;
-			newTrain.Handles.Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain)
-			{
-				DelayedChanges = new HandleChange[0]
-			};
-			newTrain.Handles.Brake = new BrakeHandle(0, 0, newTrain.Handles.EmergencyBrake, new double[0], new double[0], newTrain)
-			{
-				DelayedChanges = new HandleChange[0]
-			};
+			newTrain.Handles.Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain);
+			newTrain.Handles.Brake = new BrakeHandle(0, 0, newTrain.Handles.EmergencyBrake, new double[0], new double[0], newTrain);
 			newTrain.Handles.HoldBrake = new HoldBrakeHandle(newTrain);
 			if (Front)
 			{

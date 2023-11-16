@@ -291,6 +291,9 @@ namespace AssimpNET.Obj
 		public Model(string modelName)
 		{
 			ModelName = modelName;
+			DefaultMaterial = new Material(Material.AI_DEFAULT_MATERIAL_NAME);
+			MaterialLib.Add(Material.AI_DEFAULT_MATERIAL_NAME);
+			MaterialMap[Material.AI_DEFAULT_MATERIAL_NAME] = DefaultMaterial;
 		}
 	}
 }

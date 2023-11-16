@@ -3259,8 +3259,8 @@ namespace CsvRwRouteParser
 							break;
 						}
 
-						PatternObj patternObj = new PatternObj();
-						patternObj.Rail = RailIndex;
+						PatternObj patternObj = new PatternObj(RailIndex);
+
 						if (Data.Blocks[BlockIndex].PatternObjs.ContainsKey(idx))
 						{
 							patternObj = Data.Blocks[BlockIndex].PatternObjs[idx];

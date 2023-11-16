@@ -1730,7 +1730,7 @@
 						<source>Joystick</source>
 					</trans-unit>
 					<trans-unit id="joystick_notavailable">
-						<source>N/A</source>
+						<source>Joystick (Not currently connected)</source>
 					</trans-unit>
 					<trans-unit id="joystickdirection_positive">
 						<source>Positive</source>
@@ -1860,10 +1860,10 @@
 						<source>Increases brake by one notch for trains with two handles</source>
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
-						<source>N/A</source>
+						<source>Decreases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="locobrake_increase">
-						<source>N/A</source>
+						<source>Increases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
@@ -1986,16 +1986,16 @@
 						<source>The L function of the security system</source>
 					</trans-unit>
 					<trans-unit id="security_m">
-						<source>N/A</source>
+						<source>The M function of the security system</source>
 					</trans-unit>
 					<trans-unit id="security_n">
-						<source>N/A</source>
+						<source>The N function of the security system</source>
 					</trans-unit>
 					<trans-unit id="security_o">
-						<source>N/A</source>
+						<source>The O function of the security system</source>
 					</trans-unit>
 					<trans-unit id="security_p">
-						<source>N/A</source>
+						<source>The P function of the security system</source>
 					</trans-unit>
 					<trans-unit id="camera_interior">
 						<source>Switches to the train's interior view</source>

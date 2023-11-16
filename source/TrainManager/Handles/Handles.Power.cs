@@ -13,10 +13,11 @@ namespace TrainManager.Handles
 	{
 		public PowerHandle(int max, int driverMax, double[] delayUp, double[] delayDown, TrainBase Train) : base(Train)
 		{
-			this.MaximumNotch = max;
-			this.MaximumDriverNotch = driverMax;
-			this.DelayUp = delayUp;
-			this.DelayDown = delayDown;
+			MaximumNotch = max;
+			MaximumDriverNotch = driverMax;
+			DelayUp = delayUp;
+			DelayDown = delayDown;
+			DelayedChanges = new HandleChange[] { };
 		}
 
 		public override void Update()
