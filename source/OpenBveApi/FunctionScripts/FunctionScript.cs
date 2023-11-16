@@ -850,6 +850,11 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.SandShots;
 							n++; s++; if (s >= m) m = s; break;
+						case "dsd":
+						case "driversupervisiondevice":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.DSD;
+							n++; s++; if (s >= m) m = s; break;
 						case "ambienttemperature":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.AmbientTemperature;

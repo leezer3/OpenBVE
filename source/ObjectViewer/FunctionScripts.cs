@@ -1141,6 +1141,18 @@ namespace ObjectViewer {
 							}
 						} 
 						s++; break;
+					case Instructions.DSD:
+						{
+							if (Train != null && Train.Cars[Train.DriverCar].DSD != null)
+							{
+								Function.Stack[s] = Train.Cars[Train.DriverCar].DSD.Triggered ? 1 : 0;
+							}
+							else
+							{
+								Function.Stack[s] = 0.0;
+							}
+						}
+						s++; break;
 					case Instructions.AmbientTemperature:
 						{
 							if (Train != null)
