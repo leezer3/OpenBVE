@@ -21,7 +21,6 @@ namespace TrainManager.Handles
 
 		public override void Update()
 		{
-			safetyState = MaximumNotch;
 			if (DelayedChanges.Length == 0)
 			{
 				if (Safety < Actual)

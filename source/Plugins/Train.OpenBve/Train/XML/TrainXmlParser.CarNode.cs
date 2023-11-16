@@ -423,7 +423,10 @@ namespace Train.OpenBve
 						}
 						break;
 					case "driversupervisiondevice":
+					case "dsd":
 						DriverSupervisionDeviceTypes driverSupervisionType = DriverSupervisionDeviceTypes.None;
+						DriverSupervisionDeviceMode driverSupervisionMode = DriverSupervisionDeviceMode.Power;
+						DriverSupervisionDeviceTriggerMode triggerMode = DriverSupervisionDeviceTriggerMode.Always;
 						double interventionTime = 0;
 						double requiredStopTime = 0;
 						bool loopingAlarm = false;
@@ -455,9 +458,21 @@ namespace Train.OpenBve
 										loopingAlarm = true;
 									}
 									break;
+								case "mode":
+									if (!Enum.TryParse(cc.InnerText, true, out driverSupervisionMode))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice mode was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "triggermode":
+									if (!Enum.TryParse(cc.InnerText, true, out triggerMode))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice trigger mode was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
 							}
 						}
-						Train.Cars[Car].DSD = new DriverSupervisionDevice(Train.Cars[Car], driverSupervisionType, interventionTime, requiredStopTime, loopingAlarm);
+						Train.Cars[Car].DSD = new DriverSupervisionDevice(Train.Cars[Car], driverSupervisionType, driverSupervisionMode, triggerMode, interventionTime, requiredStopTime, loopingAlarm);
 						break;
 					case "visiblefrominterior":
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")

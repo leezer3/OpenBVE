@@ -487,6 +487,7 @@ namespace TrainManager.Trains
 			Handles.Brake.Update();
 			Handles.EmergencyBrake.Update();
 			Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
+			Cars[DriverCar].DSD?.Update(TimeElapsed);
 			// update speeds
 			UpdateSpeeds(TimeElapsed);
 			// Update Run and Motor sounds

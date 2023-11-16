@@ -26,14 +26,18 @@ namespace TrainManager.SafetySystems
 		/// <summary>The required stop time to reset the DSD</summary>
 		public double RequiredStopTime;
 		/// <summary>The mode of the DSD</summary>
-		public DriverSupervisionDeviceMode Mode;
+		public readonly DriverSupervisionDeviceMode Mode;
+		/// <summary>The trigger mode of the DSD</summary>
+		public readonly DriverSupervisionDeviceTriggerMode TriggerMode;
 
 		private double StopTimer;
 
-		public DriverSupervisionDevice(CarBase Car, DriverSupervisionDeviceTypes type, double interventionTime, double requiredStopTime, bool loopingAlarm)
+		public DriverSupervisionDevice(CarBase Car, DriverSupervisionDeviceTypes type, DriverSupervisionDeviceMode mode, DriverSupervisionDeviceTriggerMode triggerMode, double interventionTime, double requiredStopTime, bool loopingAlarm)
 		{
 			baseCar = Car;
 			Type = type;
+			Mode = mode;
+			TriggerMode = triggerMode;
 			InterventionTime = interventionTime;
 			TriggerSound = new CarSound();
 			ResetSound = new CarSound();
@@ -48,6 +52,29 @@ namespace TrainManager.SafetySystems
 			{
 				Triggered = true;
 				TriggerSound.Play(baseCar, LoopingAlarm);
+			}
+
+			switch (TriggerMode)
+			{
+				case DriverSupervisionDeviceTriggerMode.Always:
+					// nothing to do
+					break;
+				case DriverSupervisionDeviceTriggerMode.TrainMoving:
+					if (baseCar.CurrentSpeed == 0)
+					{
+						// not moving, so reset our timer and return
+						Timer = 0;
+						return;
+					}
+					break;
+				case DriverSupervisionDeviceTriggerMode.DirectionSet:
+					if (baseCar.baseTrain.Handles.Reverser.Actual == 0 && baseCar.CurrentSpeed == 0)
+					{
+						// no direction set, not moving
+						Timer = 0;
+						return;
+					}
+					break;
 			}
 
 			if (Triggered)
