@@ -16,19 +16,19 @@ namespace TrainManager.SafetySystems
 		/// <summary>Whether a DSD intervention has been triggered</summary>
 		public bool Triggered;
 		/// <summary>The type of device</summary>
-		public readonly DriverSupervisionDeviceTypes Type;
+		private readonly DriverSupervisionDeviceTypes Type;
 		/// <summary>The sound played when the device is triggered</summary>
 		public CarSound TriggerSound;
 		/// <summary>Whether the alarm is to loop</summary>
-		public readonly bool LoopingAlarm;
+		private readonly bool LoopingAlarm;
 		/// <summary>The sound played when the device is reset</summary>
 		public CarSound ResetSound;
 		/// <summary>The required stop time to reset the DSD</summary>
-		public double RequiredStopTime;
+		private readonly double RequiredStopTime;
 		/// <summary>The mode of the DSD</summary>
-		public readonly DriverSupervisionDeviceMode Mode;
+		private readonly DriverSupervisionDeviceMode Mode;
 		/// <summary>The trigger mode of the DSD</summary>
-		public readonly DriverSupervisionDeviceTriggerMode TriggerMode;
+		private readonly DriverSupervisionDeviceTriggerMode TriggerMode;
 
 		private double StopTimer;
 
@@ -47,6 +47,10 @@ namespace TrainManager.SafetySystems
 
 		public void Update(double TimeElapsed)
 		{
+			if (Type == DriverSupervisionDeviceTypes.None)
+			{
+				return;
+			}
 			Timer += TimeElapsed;
 			if (Timer > InterventionTime && !Triggered)
 			{
