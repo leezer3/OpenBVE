@@ -77,10 +77,7 @@ namespace LibRender2
 		/// <summary>Holds a reference to the current interface type of the game (Used by the renderer)</summary>
 		public InterfaceType CurrentInterface
 		{
-			get
-			{
-				return currentInterface;
-			}
+			get => currentInterface;
 			set
 			{
 				previousInterface = currentInterface;
