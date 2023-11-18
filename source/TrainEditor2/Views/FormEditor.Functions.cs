@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -428,8 +428,29 @@ namespace TrainEditor2.Views
 			tabPagePanel.Text = Utilities.GetInterfaceString("panel_settings", "name");
 
 			tabPageThis.Text = Utilities.GetInterfaceString("panel_settings", "this", "name");
+			labelThisResolution.Text = Utilities.GetInterfaceString("panel_settings", "this", "resolution");
+			labelThisLeft.Text = Utilities.GetInterfaceString("panel_settings", "this", "left");
+			labelThisRight.Text = Utilities.GetInterfaceString("panel_settings", "this", "right");
+			labelThisTop.Text = Utilities.GetInterfaceString("panel_settings", "this", "top");
+			labelThisBottom.Text = Utilities.GetInterfaceString("panel_settings", "this", "bottom");
+			labelThisDaytimeImage.Text = Utilities.GetInterfaceString("panel_settings", "this", "daytime_image");
+			labelThisNighttimeImage.Text = Utilities.GetInterfaceString("panel_settings", "this", "nighttime_image");
+			labelThisTransparentColor.Text = Utilities.GetInterfaceString("panel_settings", "this", "transparent_color");
+			groupBoxThisCenter.Text = Utilities.GetInterfaceString("panel_settings", "center", "name");
+			labelThisCenterX.Text = Utilities.GetInterfaceString("panel_settings", "center", "x");
+			labelThisCenterY.Text = Utilities.GetInterfaceString("panel_settings", "center", "y");
+			groupBoxThisOrigin.Text = Utilities.GetInterfaceString("panel_settings", "origin", "name");
+			labelThisCenterX.Text = Utilities.GetInterfaceString("panel_settings", "origin", "x");
+			labelThisCenterY.Text = Utilities.GetInterfaceString("panel_settings", "origin", "y");
 
 			tabPageSound.Text = Utilities.GetInterfaceString("sound_settings", "name");
+			groupBoxSoundEntry.Text = Utilities.GetInterfaceString("edit_entry", "name");
+			groupBoxSoundKey.Text = Utilities.GetInterfaceString("edit_entry", "key", "name");
+			checkBoxSoundRadius.Text = Utilities.GetInterfaceString("edit_entry", "value", "radius");
+			checkBoxSoundDefinedPosition.Text = Utilities.GetInterfaceString("edit_entry", "value", "position", "name");
+			labelSoundPositionX.Text = Utilities.GetInterfaceString("edit_entry", "value", "position", "x");
+			labelSoundPositionY.Text = Utilities.GetInterfaceString("edit_entry", "value", "position", "y");
+			labelSoundPositionZ.Text = Utilities.GetInterfaceString("edit_entry", "value", "position", "z");
 
 			tabPageStatus.Text = $@"{Utilities.GetInterfaceString("status", "name")} ({Interface.LogMessages.Count})";
 			toolStripMenuItemError.Text = $@"{Interface.LogMessages.Count(m => m.Type == MessageType.Error || m.Type == MessageType.Critical)} {Utilities.GetInterfaceString("status", "menu", "error")}";
