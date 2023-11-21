@@ -460,6 +460,43 @@ namespace TrainEditor2.Views
 
 			columnHeaderLevel.Text = Utilities.GetInterfaceString("status", "level");
 			columnHeaderText.Text = Utilities.GetInterfaceString("status", "description");
+
+			// misc open buttons etc
+			// N.B. sub-forms are instanced
+			buttonThisTransparentColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonPilotLampTransparentColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonPilotLampSubjectSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonNeedleTransparentColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonNeedleColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonNeedleSubjectSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDigitalNumberTransparentColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDigitalNumberSubjectSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDigitalGaugeColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDigitalGaugeSubjectSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonLinearGaugeTransparentColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonLinearGaugeSubjectSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonTimetableTransparentColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonTouchSoundCommand.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDelayLocoBrakeSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDelayBrakeSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDelayPowerSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonRearBogieSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonFrontBogieSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDelayElectricBrake.Text = Utilities.GetInterfaceString("navigation", "set");
+			
+			buttonSoundFileNameOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonThisNighttimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonThisDaytimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonPilotLampNighttimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonPilotLampDaytimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonNeedleNighttimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonNeedleDaytimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonDigitalNumberNighttimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonDigitalNumberDaytimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonLinearGaugeNighttimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonLinearGaugeDaytimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonCouplerObject.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonObjectOpen.Text = Utilities.GetInterfaceString("navigation", "open");
 		}
 	}
 }
