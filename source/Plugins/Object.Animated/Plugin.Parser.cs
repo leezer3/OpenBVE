@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.FunctionScripting;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -71,33 +72,8 @@ namespace Plugin
 											switch (key)
 											{
 												case AnimatedKey.Position:
-													{
-														string[] s = b.Split(',');
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else
-															{
-																position = new Vector3(x, y, z);
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-														}
-													} break;
+													position = ParseVector3(b, key, i, Section, FileName);
+													break;
 												default:
 													currentHost.AddMessage(MessageType.Error, false, "The attribute " + key + " is not supported in a " + Section + " section at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													break;
@@ -235,33 +211,8 @@ namespace Plugin
 											switch (key)
 											{
 												case AnimatedKey.Position:
-													{
-														string[] s = b.Split(',');
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else
-															{
-																Position = new Vector3(x, y, z);
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-														}
-													} break;
+													Position = ParseVector3(b, key, i, Section, FileName);
+													break;
 												case AnimatedKey.States:
 													{
 														string[] s = b.Split(',');
@@ -327,50 +278,24 @@ namespace Plugin
 												case AnimatedKey.TranslateXDirection:
 												case AnimatedKey.TranslateYDirection:
 												case AnimatedKey.TranslateZDirection:
+													switch (key)
 													{
-														string[] s = b.Split(',');
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else
-															{
-																switch (key)
-																{
-																	case AnimatedKey.TranslateXDirection:
-																		Result.Objects[ObjectCount].TranslateXDirection = new Vector3(x, y, z);
-																		break;
-																	case AnimatedKey.TranslateYDirection:
-																		Result.Objects[ObjectCount].TranslateYDirection = new Vector3(x, y, z);
-																		break;
-																	case AnimatedKey.TranslateZDirection:
-																		Result.Objects[ObjectCount].TranslateZDirection = new Vector3(x, y, z);
-																		break;
-																}
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-														}
-													} break;
+														case AnimatedKey.TranslateXDirection:
+															Result.Objects[ObjectCount].TranslateXDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+														case AnimatedKey.TranslateYDirection:
+															Result.Objects[ObjectCount].TranslateYDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+														case AnimatedKey.TranslateZDirection:
+															Result.Objects[ObjectCount].TranslateZDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+													}
+													break;
 												case AnimatedKey.TranslateXFunction:
 												case AnimatedKey.TranslateXFunctionRPN:
 													try
 													{
-														double X;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out X))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out double X))
 														{
 															Position.X = X;
 															//A function script must be evaluated every frame, no matter if it is a constant value
@@ -397,8 +322,7 @@ namespace Plugin
 												case AnimatedKey.TranslateYFunctionRPN:
 													try
 													{
-														double Y;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out Y))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out double Y))
 														{
 															Position.Y = Y;
 															//A function script must be evaluated every frame, no matter if it is a constant value
@@ -425,8 +349,7 @@ namespace Plugin
 												case AnimatedKey.TranslateZFunctionRPN:
 													try
 													{
-														double Z;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out Z))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out double Z))
 														{
 															Position.Z = Z;
 															//A function script must be evaluated every frame, no matter if it is a constant value
@@ -461,14 +384,12 @@ namespace Plugin
 												case AnimatedKey.Axles:
 													try
 													{
-														double FrontAxlePosition;
-														double RearAxlePosition;
 														var splitValue = b.Split(',');
-														if (!double.TryParse(splitValue[0], out FrontAxlePosition))
+														if (!double.TryParse(splitValue[0], out double FrontAxlePosition))
 														{
 															currentHost.AddMessage(MessageType.Error, false,"Invalid FrontAxlePosition in " + key + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
 														}
-														if(!double.TryParse(splitValue[1], out RearAxlePosition))
+														if(!double.TryParse(splitValue[1], out double RearAxlePosition))
 														{
 															currentHost.AddMessage(MessageType.Error, false,"Invalid RearAxlePosition in " + key + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
 														}
@@ -495,48 +416,18 @@ namespace Plugin
 												case AnimatedKey.RotateXDirection:
 												case AnimatedKey.RotateYDirection:
 												case AnimatedKey.RotateZDirection:
+													switch (key)
 													{
-														string[] s = b.Split(',');
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (x == 0.0 & y == 0.0 & z == 0.0)
-															{
-																currentHost.AddMessage(MessageType.Error, false, "The direction indicated by X, Y and Z is expected to be non-zero in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else
-															{
-																switch (key)
-																{
-																	case AnimatedKey.RotateXDirection:
-																		Result.Objects[ObjectCount].RotateXDirection = new Vector3(x, y, z);
-																		break;
-																	case AnimatedKey.RotateYDirection:
-																		Result.Objects[ObjectCount].RotateYDirection = new Vector3(x, y, z);
-																		break;
-																	case AnimatedKey.RotateZDirection:
-																		Result.Objects[ObjectCount].RotateZDirection = new Vector3(x, y, z);
-																		break;
-																}
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-														}
-													} break;
+														case AnimatedKey.RotateXDirection:
+															Result.Objects[ObjectCount].RotateXDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+														case AnimatedKey.RotateYDirection:
+															Result.Objects[ObjectCount].RotateYDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+														case AnimatedKey.RotateZDirection:
+															Result.Objects[ObjectCount].RotateZDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+													}break;
 												case AnimatedKey.RotateXFunction:
 												case AnimatedKey.RotateXFunctionRPN:
 													try
@@ -612,12 +503,11 @@ namespace Plugin
 														string[] s = b.Split(',');
 														if (s.Length == 2)
 														{
-															double nf, dr;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out nf))
+															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out double nf))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out dr))
+															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out double dr))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "DampingRatio is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															}
@@ -722,12 +612,11 @@ namespace Plugin
 														string[] s = b.Split(',');
 														if (s.Length == 2)
 														{
-															double x, y;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
+															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out double x))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
+															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out double y))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															}
@@ -804,8 +693,7 @@ namespace Plugin
 													break;
 												case AnimatedKey.RefreshRate:
 													{
-														double r;
-														if (!double.TryParse(b, NumberStyles.Float, Culture, out r))
+														if (!double.TryParse(b, NumberStyles.Float, Culture, out double r))
 														{
 															currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 														}
@@ -868,8 +756,7 @@ namespace Plugin
 										Result.Objects[ObjectCount].States[k] = new ObjectState();
 										if (StateFiles[k] != null)
 										{
-											UnifiedObject currentObject;
-											currentHost.LoadObject(StateFiles[k], Encoding, out currentObject);
+											currentHost.LoadObject(StateFiles[k], Encoding, out UnifiedObject currentObject);
 											if (currentObject is StaticObject)
 											{
 												if (Scale != Vector3.One)
@@ -1021,8 +908,7 @@ namespace Plugin
 										{
 											string a = Lines[i].Substring(0, j).TrimEnd();
 											string b = Lines[i].Substring(j + 1).TrimStart();
-											AnimatedKey key;
-											if (!Enum.TryParse(a, true, out key))
+											if (!Enum.TryParse(a, true, out AnimatedKey key))
 											{
 												currentHost.AddMessage(MessageType.Error, false, "Unknown key " + key + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 												continue;
@@ -1030,33 +916,7 @@ namespace Plugin
 											switch (key)
 											{
 												case AnimatedKey.Position:
-													{
-														string[] s = b.Split(',');
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else
-															{
-																Position = new Vector3(x, y, z);
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-														}
-													}
+													Position = ParseVector3(b, key, i, Section, FileName);
 													break;
 												case AnimatedKey.FileName:
 													{
@@ -1107,50 +967,23 @@ namespace Plugin
 												case AnimatedKey.TranslateXDirection:
 												case AnimatedKey.TranslateYDirection:
 												case AnimatedKey.TranslateZDirection:
+													switch (key)
 													{
-														string[] s = b.Split(',');
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else
-															{
-																switch (key)
-																{
-																	case AnimatedKey.TranslateXDirection:
-																		Result.Objects[ObjectCount].TranslateXDirection = new Vector3(x, y, z);
-																		break;
-																	case AnimatedKey.TranslateYDirection:
-																		Result.Objects[ObjectCount].TranslateYDirection = new Vector3(x, y, z);
-																		break;
-																	case AnimatedKey.TranslateZDirection:
-																		Result.Objects[ObjectCount].TranslateZDirection = new Vector3(x, y, z);
-																		break;
-																}
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-														}
+														case AnimatedKey.TranslateXDirection:
+															Result.Objects[ObjectCount].TranslateXDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+														case AnimatedKey.TranslateYDirection:
+															Result.Objects[ObjectCount].TranslateYDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+														case AnimatedKey.TranslateZDirection:
+															Result.Objects[ObjectCount].TranslateZDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
 													}
 													break;
 												case AnimatedKey.TranslateXFunction:
 													try
 													{
-														double X;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out X))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out double X))
 														{
 															Position.X = X;
 															//A function script must be evaluated every frame, no matter if it is a constant value
@@ -1178,8 +1011,7 @@ namespace Plugin
 												case AnimatedKey.TranslateYFunction:
 													try
 													{
-														double Y;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out Y))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out double Y))
 														{
 															Position.Y = Y;
 															//A function script must be evaluated every frame, no matter if it is a constant value
@@ -1207,8 +1039,7 @@ namespace Plugin
 												case AnimatedKey.TranslateZFunction:
 													try
 													{
-														double Z;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out Z))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out double Z))
 														{
 															Position.Z = Z;
 															//A function script must be evaluated every frame, no matter if it is a constant value
@@ -1279,8 +1110,7 @@ namespace Plugin
 								i--;
 								if (fileName != null)
 								{
-									SoundHandle currentSound;
-									currentHost.RegisterSound(fileName, radius, out currentSound);
+									currentHost.RegisterSound(fileName, radius, out SoundHandle currentSound);
 									WorldSound snd = new WorldSound(currentHost, currentSound)
 									{
 										currentPitch = pitch,
@@ -1316,8 +1146,7 @@ namespace Plugin
 										{
 											string a = Lines[i].Substring(0, j).TrimEnd();
 											string b = Lines[i].Substring(j + 1).TrimStart();
-											AnimatedKey key;
-											if (!Enum.TryParse(a, true, out key))
+											if (!Enum.TryParse(a, true, out AnimatedKey key))
 											{
 												currentHost.AddMessage(MessageType.Error, false, "Unknown key " + key + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 												continue;
@@ -1325,33 +1154,7 @@ namespace Plugin
 											switch (key)
 											{
 												case AnimatedKey.Position:
-													{
-														string[] s = b.Split(',');
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-															}
-															else
-															{
-																Position = new Vector3(x, y, z);
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-														}
-													}
+													Position = ParseVector3(b, key, i, Section, FileName);
 													break;
 												case AnimatedKey.FileName:
 													{
@@ -1530,6 +1333,37 @@ namespace Plugin
 			Array.Resize(ref Result.Objects, ObjectCount);
 			return Result;
 		}
+
+		private static Vector3 ParseVector3(string b, AnimatedKey key, int i, AnimatedSection Section, string FileName)
+		{
+			Vector3 v = new Vector3();
+			string[] s = b.Split(',');
+			if (s.Length == 3)
+			{
+				if (!double.TryParse(s[0], NumberStyles.Float, CultureInfo.InvariantCulture, out double x))
+				{
+					currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + key + " at line " + (i + 1).ToString(CultureInfo.InvariantCulture) + " in the Section " + Section + " in file " + FileName);
+				}
+				else if (!double.TryParse(s[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double y))
+				{
+					currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + key + " at line " + (i + 1).ToString(CultureInfo.InvariantCulture) + " in the Section " + Section + " in file " + FileName);
+				}
+				else if (!double.TryParse(s[2], NumberStyles.Float, CultureInfo.InvariantCulture, out double z))
+				{
+					currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + key + " at line " + (i + 1).ToString(CultureInfo.InvariantCulture) + " in the Section " + Section + " in file " + FileName);
+				}
+				else
+				{
+					v = new Vector3(x, y, z);
+				}
+			}
+			else
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + key + " at line " + (i + 1).ToString(CultureInfo.InvariantCulture) + " in the Section " + Section + " in file " + FileName);
+			}
+			return v;
+		}
+
 		private static void ApplyStaticRotation(ref Mesh Mesh, Vector3 RotationDirection, double Angle)
 		{
 			//Update co-ords

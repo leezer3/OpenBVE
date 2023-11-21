@@ -108,7 +108,7 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Gets the vehicle specs for use in safety system plugins</summary>
-		public VehicleSpecs vehicleSpecs()
+		public VehicleSpecs GetVehicleSpecs()
 		{
 			BrakeTypes brakeType;
 			//Figure out the brake system type
@@ -232,7 +232,7 @@ namespace TrainManager.Trains
 						}
 						IRawRuntime api = assembly.CreateInstance(type.FullName) as IRawRuntime;
 						Plugin = new NetPlugin(pluginFile, trainFolder, api, this);
-						if (Plugin.Load(vehicleSpecs(), mode))
+						if (Plugin.Load(GetVehicleSpecs(), mode))
 						{
 							return true;
 						}
@@ -248,7 +248,7 @@ namespace TrainManager.Trains
 						}
 						IRuntime api = assembly.CreateInstance(type.FullName) as IRuntime;
 						Plugin = new NetPlugin(pluginFile, trainFolder, api, this);
-						if (Plugin.Load(vehicleSpecs(), mode))
+						if (Plugin.Load(GetVehicleSpecs(), mode))
 						{
 							return true;
 						}
@@ -293,7 +293,7 @@ namespace TrainManager.Trains
 					{
 						//We can't load the plugin directly on x64 Windows, so use the proxy interface
 						Plugin = new ProxyPlugin(pluginFile, this);
-						if (Plugin.Load(vehicleSpecs(), mode))
+						if (Plugin.Load(GetVehicleSpecs(), mode))
 						{
 							return true;
 						}
@@ -315,7 +315,7 @@ namespace TrainManager.Trains
 			}
 
 			Plugin = new Win32Plugin(pluginFile, this);
-			if (Plugin.Load(vehicleSpecs(), mode))
+			if (Plugin.Load(GetVehicleSpecs(), mode))
 			{
 				return true;
 			}

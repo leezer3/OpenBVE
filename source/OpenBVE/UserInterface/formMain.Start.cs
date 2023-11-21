@@ -467,8 +467,7 @@ namespace OpenBve
 		{
 			if (listviewRouteRecently.SelectedItems.Count == 1)
 			{
-				string t = listviewRouteRecently.SelectedItems[0].Tag as string;
-				if (t == null) return;
+				if (!(listviewRouteRecently.SelectedItems[0].Tag is string t)) return;
 				if (!File.Exists(t)) return;
 				Result.RouteFile = t;
 				ShowRoute(false);

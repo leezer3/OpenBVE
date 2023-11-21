@@ -555,8 +555,7 @@ namespace OpenBve
 								Program.Renderer.CurrentInterface = InterfaceType.Normal;
 								break;
 							case MenuTag.Packages:
-								string errorMessage;
-								if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out errorMessage))
+								if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out _))
 								{
 									Menu.instance.PushMenu(MenuType.Packages);
 								}
@@ -742,7 +741,7 @@ namespace OpenBve
 										break;
 									case MenuType.ControlReset:
 										Interface.CurrentControls = null;
-										var File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls");
+										var File = Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls");
 										Interface.LoadControls(File, out Interface.CurrentControls);
 										Instance.PopMenu();
 										break;
@@ -857,9 +856,8 @@ namespace OpenBve
 					// draw a solid highlight rectangle under the text
 					// HACK! the highlight rectangle has to be shifted a little down to match
 					// the text body. OpenGL 'feature'?
-					MenuCommand command = menu.Items[i] as MenuCommand;
 					Color128 color = highlightColor;
-					if(command != null)
+					if(menu.Items[i] is MenuCommand command)
 					{
 						switch (command.Tag)
 						{
