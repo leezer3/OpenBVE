@@ -398,12 +398,12 @@ namespace TrainEditor2.IO.Trains.Xml
 							}
 						}
 						break;
-					case "controlledcar":
+					case "interiorview":
 						if (value.Any())
 						{
-							if (!bool.TryParse(value, out isControlledCar))
+							if (File.Exists(OpenBveApi.Path.CombineFile(basePath, value)))
 							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a boolean in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+								isControlledCar = true;
 							}
 						}
 						break;
@@ -665,14 +665,24 @@ namespace TrainEditor2.IO.Trains.Xml
 							car.ReAdhesionDevice = result;
 						}
 						break;
-					case "acceleration":
-						if (isMotorCar)
+					case "power":
+						foreach (XElement node in keyNode.Elements())
 						{
-							((MotorCar)car).Acceleration = ParseAccelerationNode(fileName, keyNode);
-						}
-						else
-						{
-							Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in trailer car at line {lineNumber.ToString(culture)} in XML file {fileName}");
+							switch (node.Name.LocalName)
+							{
+								case "AccelerationCurves":
+									if (isMotorCar)
+									{
+										((MotorCar)car).Acceleration = ParseAccelerationNode(fileName, node);
+									}
+									else
+									{
+										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in trailer car at line {lineNumber.ToString(culture)} in XML file {fileName}");
+									}
+									break;
+								case "Notches":
+									break;
+							}
 						}
 						break;
 					case "motor":
@@ -705,7 +715,6 @@ namespace TrainEditor2.IO.Trains.Xml
 						}
 						break;
 					case "motorcar":
-					case "controlledcar":
 						// Ignore
 						break;
 					default:
@@ -1035,72 +1044,75 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static Acceleration ParseAccelerationNode(string fileName, XElement parent)
 		{
 			Acceleration acceleration = new Acceleration();
-
+			int idx = 0;
 			string section = parent.Name.LocalName;
-
 			foreach (XElement keyNode in parent.Elements())
 			{
 				string key = keyNode.Name.LocalName;
-				string value = keyNode.Value;
 				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
 
-				if (key.ToLowerInvariant() != "entry")
+				switch (key)
 				{
-					Interface.AddMessage(MessageType.Error, false, $"Invalid entry node {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-					continue;
+					case "OpenBVE":
+						// supported by editor
+						break;
+					case "BVE5":
+						Interface.AddMessage(MessageType.Error, false, $"BVE5 Acceleration Curves are not currently supported by TE2 in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+						continue;
+					default:
+						Interface.AddMessage(MessageType.Error, false, $"Unrecognised Acceleration Curve format in {section} at line {lineNumber.ToString(culture)} in {fileName}. Please check for a TE2 update.");
+						continue;
 				}
 
-				if (value.Any())
+				
+				double a0_Value = 0, a1_Value = 0, v1 = 0, v2 = 0, e = 0;
+				foreach (XElement c in keyNode.Elements())
 				{
-					string[] values = value.Split(',');
-					string[] unitValues = keyNode.Attributes().FirstOrDefault(x => string.Equals(x.Name.LocalName, "Unit", StringComparison.InvariantCultureIgnoreCase))?.Value.Split(',');
-
-					if (values.Length == 5)
+					switch (c.Name.LocalName)
 					{
-						double a0_Value, a1_Value, v1_Value, v2_Value, e;
-						Unit.Acceleration a0_Unit = Unit.Acceleration.MeterPerSecondSquared, a1_Unit = Unit.Acceleration.MeterPerSecondSquared;
-						Unit.Velocity v1_Unit = Unit.Velocity.MeterPerSecond, v2_Unit = Unit.Velocity.MeterPerSecond;
-
-						if (!NumberFormats.TryParseDoubleVb6(values[0], out a0_Value) || unitValues != null && unitValues.Length > 0 && !Unit.TryParse(unitValues[0], true, out a0_Unit) || new Quantity.Acceleration(a0_Value, a0_Unit).ToDefaultUnit().Value < 0.0)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"A0 must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						else if (!NumberFormats.TryParseDoubleVb6(values[1], out a1_Value) || unitValues != null && unitValues.Length > 1 && !Unit.TryParse(unitValues[1], true, out a1_Unit) || new Quantity.Acceleration(a1_Value, a1_Unit).ToDefaultUnit().Value < 0.0)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"A1 must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						else if (!NumberFormats.TryParseDoubleVb6(values[2], out v1_Value) || unitValues != null && unitValues.Length > 2 && !Unit.TryParse(unitValues[2], true, out v1_Unit) || new Quantity.Velocity(v1_Value, v1_Unit).ToDefaultUnit().Value < 0.0)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"V1 must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						else if (!NumberFormats.TryParseDoubleVb6(values[3], out v2_Value) || unitValues != null && unitValues.Length > 3 && !Unit.TryParse(unitValues[3], true, out v2_Unit) || new Quantity.Velocity(v2_Value, v2_Unit).ToDefaultUnit().Value < 0.0)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"V2 must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						else if (!NumberFormats.TryParseDoubleVb6(values[4], out e))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"E must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						else
-						{
-							Quantity.Velocity v1 = new Quantity.Velocity(v1_Value, v1_Unit);
-							Quantity.Velocity v2 = new Quantity.Velocity(v2_Value, v2_Unit);
-
-							if (v2 < v1)
+						case "StageZeroAcceleration":
+							if (!double.TryParse(c.Value, out a0_Value))
 							{
-								Quantity.Velocity x = v1;
-								v1 = v2;
-								v2 = x;
+								Interface.AddMessage(MessageType.Error, false, $"StageZeroAcceleration must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
-
-							acceleration.Entries.Add(new Acceleration.Entry { A0 = new Quantity.Acceleration(a0_Value, a0_Unit), A1 = new Quantity.Acceleration(a1_Value, a0_Unit), V1 = v1, V2 = v2, E = e });
-						}
-					}
-					else
-					{
-						Interface.AddMessage(MessageType.Error, false, $"Exactly five arguments are expected in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+							break;
+						case "StageOneAcceleration":
+							if (!double.TryParse(c.Value, out a1_Value))
+							{
+								Interface.AddMessage(MessageType.Error, false, $"StageOneAcceleration must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+							}
+							break;
+						case "StageOneSpeed":
+							if (!double.TryParse(c.Value, out v1))
+							{
+								Interface.AddMessage(MessageType.Error, false, $"StageOneSpeed must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+							}
+							break;
+						case "StageTwoSpeed":
+							if (!double.TryParse(c.Value, out v2))
+							{
+								Interface.AddMessage(MessageType.Error, false, $"StageTwoSpeed must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+							}
+							break;
+						case "StageTwoExponent":
+							if (!double.TryParse(c.Value, out e))
+							{
+								Interface.AddMessage(MessageType.Error, false, $"StageTwoExponent must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+							}
+							break;
 					}
 				}
+				// to provide compatability with train.dat and the BVE default 8 power curves
+				Acceleration.Entry en = new Acceleration.Entry { A0 = new Quantity.Acceleration(a0_Value, Unit.Acceleration.KilometerPerHourPerSecond), A1 = new Quantity.Acceleration(a1_Value, Unit.Acceleration.KilometerPerHourPerSecond), V1 = new Quantity.Velocity(v1, Unit.Velocity.KilometerPerHour), V2 = new Quantity.Velocity(v2, Unit.Velocity.KilometerPerHour), E = e };
+				if (idx == acceleration.Entries.Count)
+				{
+					acceleration.Entries.Add(en);
+				}
+				else
+				{
+					acceleration.Entries[idx] = en;
+				}
+				idx++;
 			}
 
 			return acceleration;
