@@ -109,7 +109,7 @@ namespace TrainEditor2.Models.Panels
 			}
 		}
 
-		internal DigitalGaugeElement()
+		public DigitalGaugeElement()
 		{
 			Subject = new Subject();
 			Radius = 16.0;

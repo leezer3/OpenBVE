@@ -40,9 +40,9 @@ namespace TrainEditor2.IO.Sounds.Xml
 			WriteArrayNode(fileName, carSounds, "Breaker", sound.SoundElements.OfType<BreakerElement>());
 			WriteArrayNode(fileName, carSounds, "RequestStop", sound.SoundElements.OfType<RequestStopElement>());
 			WriteArrayNode(fileName, carSounds, "Touch", sound.SoundElements.OfType<TouchElement>());
-			WriteNode(fileName, carSounds, "Noise", sound.SoundElements.OfType<OthersElement>().FirstOrDefault(x => x.Key == OthersKey.Noise));
-			WriteNode(fileName, carSounds, "Shoe", sound.SoundElements.OfType<OthersElement>().FirstOrDefault(x => x.Key == OthersKey.Shoe));
-			WriteNode(fileName, carSounds, "Halt", sound.SoundElements.OfType<OthersElement>().FirstOrDefault(x => x.Key == OthersKey.Halt));
+			WriteNode(fileName, carSounds, "Noise", sound.SoundElements.OfType<OthersElement>().FirstOrDefault(x => x.Key == SoundKey.Others.Noise));
+			WriteNode(fileName, carSounds, "Shoe", sound.SoundElements.OfType<OthersElement>().FirstOrDefault(x => x.Key == SoundKey.Others.Shoe));
+			WriteNode(fileName, carSounds, "Halt", sound.SoundElements.OfType<OthersElement>().FirstOrDefault(x => x.Key == SoundKey.Others.Halt));
 
 			xml.Save(fileName);
 		}
@@ -79,7 +79,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 
 			foreach (SoundElement element in elements)
 			{
-				WriteNode(fileName, newNode, ((Enum)element.Key).GetStringValues().Last(), element);
+				WriteNode(fileName, newNode, SoundKey.GetRewords((Enum)element.Key).Last(), element);
 			}
 
 			if (newNode.HasElements)

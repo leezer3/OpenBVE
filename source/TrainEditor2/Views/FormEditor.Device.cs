@@ -6,24 +6,22 @@ using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.ViewModels.Trains;
-using TrainManager.Car;
-using TrainManager.SafetySystems;
 
 namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToDevice(DeviceViewModel y)
+		private IDisposable BindToDevice(DeviceViewModel device)
 		{
 			CompositeDisposable deviceDisposable = new CompositeDisposable();
 
-			y.Ats
+			device.Ats
 				.BindTo(
 					comboBoxAts,
-					z => z.SelectedIndex,
+					x => x.SelectedIndex,
 					BindingMode.TwoWay,
-					z => (int)z,
-					z => (AtsModes)z,
+					x => (int)x,
+					x => (Device.AtsModes)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxAts.SelectedIndexChanged += h,
@@ -33,13 +31,13 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(deviceDisposable);
 
-			y.Atc
+			device.Atc
 				.BindTo(
 					comboBoxAtc,
-					z => z.SelectedIndex,
+					x => x.SelectedIndex,
 					BindingMode.TwoWay,
-					z => (int)z,
-					z => (AtcModes)z,
+					x => (int)x,
+					x => (Device.AtcModes)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxAtc.SelectedIndexChanged += h,
@@ -49,10 +47,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(deviceDisposable);
 
-			y.Eb
+			device.Eb
 				.BindTo(
 					checkBoxEb,
-					z => z.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -65,10 +63,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(deviceDisposable);
 
-			y.ConstSpeed
+			device.ConstSpeed
 				.BindTo(
 					checkBoxConstSpeed,
-					z => z.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -81,10 +79,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(deviceDisposable);
 
-			y.HoldBrake
+			device.HoldBrake
 				.BindTo(
 					checkBoxHoldBrake,
-					z => z.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -97,33 +95,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(deviceDisposable);
 
-			y.HoldBrake
+			device.HoldBrake
 				.BindToErrorProvider(errorProvider, checkBoxHoldBrake)
 				.AddTo(deviceDisposable);
 
-			y.ReAdhesionDevice
-				.BindTo(
-					comboBoxReAdhesionDevice,
-					z => z.SelectedIndex,
-					BindingMode.TwoWay,
-					z => (int)z,
-					z => (ReadhesionDeviceType)z,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => comboBoxReAdhesionDevice.SelectedIndexChanged += h,
-							h => comboBoxReAdhesionDevice.SelectedIndexChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(deviceDisposable);
-
-			y.PassAlarm
+			device.PassAlarm
 				.BindTo(
 					comboBoxPassAlarm,
-					z => z.SelectedIndex,
+					x => x.SelectedIndex,
 					BindingMode.TwoWay,
-					z => (int)z,
-					z => (PassAlarmType)z,
+					x => (int)x,
+					x => (Device.PassAlarmModes)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxPassAlarm.SelectedIndexChanged += h,
@@ -133,13 +115,13 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(deviceDisposable);
 
-			y.DoorOpenMode
+			device.DoorOpenMode
 				.BindTo(
 					comboBoxDoorOpenMode,
-					z => z.SelectedIndex,
+					x => x.SelectedIndex,
 					BindingMode.TwoWay,
-					z => (int)z,
-					z => (DoorMode)z,
+					x => (int)x,
+					x => (Device.DoorModes)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxDoorOpenMode.SelectedIndexChanged += h,
@@ -149,13 +131,13 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(deviceDisposable);
 
-			y.DoorCloseMode
+			device.DoorCloseMode
 				.BindTo(
 					comboBoxDoorCloseMode,
-					z => z.SelectedIndex,
+					x => x.SelectedIndex,
 					BindingMode.TwoWay,
-					z => (int)z,
-					z => (DoorMode)z,
+					x => (int)x,
+					x => (Device.DoorModes)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxDoorCloseMode.SelectedIndexChanged += h,
@@ -163,46 +145,6 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(deviceDisposable);
-
-			y.DoorWidth
-				.BindTo(
-					textBoxDoorWidth,
-					z => z.Text,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => textBoxDoorWidth.TextChanged += h,
-							h => textBoxDoorWidth.TextChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(deviceDisposable);
-
-			y.DoorWidth
-				.BindToErrorProvider(errorProvider, textBoxDoorWidth)
-				.AddTo(deviceDisposable);
-
-			y.DoorMaxTolerance
-				.BindTo(
-					textBoxDoorMaxTolerance,
-					z => z.Text,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => textBoxDoorMaxTolerance.TextChanged += h,
-							h => textBoxDoorMaxTolerance.TextChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(deviceDisposable);
-
-			y.DoorMaxTolerance
-				.BindToErrorProvider(errorProvider, textBoxDoorMaxTolerance)
 				.AddTo(deviceDisposable);
 
 			return deviceDisposable;

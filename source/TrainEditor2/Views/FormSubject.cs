@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using System.Windows.Forms;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
+using TrainEditor2.Extensions;
 using TrainEditor2.Models.Panels;
 using TrainEditor2.ViewModels.Panels;
 
@@ -90,7 +91,7 @@ namespace TrainEditor2.Views
 
 		private void FormSubject_Load(object sender, EventArgs e)
 		{
-			Icon = FormEditor.GetIcon();
+			Icon = WinFormsUtilities.GetIcon();
 		}
 
 		private void ButtonOK_Click(object sender, EventArgs e)

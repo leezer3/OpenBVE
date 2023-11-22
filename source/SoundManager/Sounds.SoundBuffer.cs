@@ -1,4 +1,5 @@
-﻿using OpenBveApi.FunctionScripting;
+﻿using System;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
 using OpenTK.Audio.OpenAL;
@@ -6,7 +7,7 @@ using OpenTK.Audio.OpenAL;
 namespace SoundManager
 {
 	/// <summary>Represents a sound buffer.</summary>
-	public class SoundBuffer : SoundHandle
+	public class SoundBuffer : SoundHandle, ICloneable
 	{
 		// --- members ---
 		/// <summary>The origin where the sound can be loaded from.</summary>
@@ -107,7 +108,7 @@ namespace SoundManager
 
 		/// <summary>Creates a clone of this sound buffer</summary>
 		/// <returns>The new buffer</returns>
-		public SoundBuffer Clone()
+		public object Clone()
 		{
 			return new SoundBuffer(this.Origin)
 			{

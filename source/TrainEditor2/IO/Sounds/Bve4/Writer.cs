@@ -164,7 +164,7 @@ namespace TrainEditor2.IO.Sounds.Bve4
 		{
 			if (!string.IsNullOrEmpty(element.FilePath))
 			{
-				builder.AppendLine($"{keyPrefix}{(element.Key is Enum ? ((Enum)element.Key).GetStringValues().First() : element.Key.ToString())} = {Utilities.MakeRelativePath(fileName, element.FilePath)}");
+				builder.AppendLine($"{keyPrefix}{(element.Key is Enum ? SoundKey.GetRewords((Enum)element.Key).First() : element.Key.ToString())} = {Utilities.MakeRelativePath(fileName, element.FilePath)}");
 			}
 		}
 	}

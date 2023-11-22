@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Forms;
+using OpenBveApi.World;
 using Reactive.Bindings;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
@@ -26,6 +27,11 @@ namespace TrainEditor2.Views
 			InitializeComponent();
 
 			disposable = new CompositeDisposable();
+
+			string[] timeUnits = Unit.GetAllRewords<Unit.Time>();
+
+			comboBoxUpUnit.Items.AddRange((string[])timeUnits.Clone());
+			comboBoxDownUnit.Items.AddRange((string[])timeUnits.Clone());
 
 			listViewDelay.Items.AddRange(delay.Select((x, i) => new ListViewItem(new[] { (i + 1).ToString(CultureInfo.InvariantCulture), x.Up.Value, x.Down.Value }) { Tag = x }).ToArray());
 
@@ -79,6 +85,22 @@ namespace TrainEditor2.Views
 
 					x.Up.BindToErrorProvider(errorProvider, textBoxUp).AddTo(entryDisposable);
 
+					x.UpUnit
+						.BindTo(
+							comboBoxUpUnit,
+							y => y.SelectedIndex,
+							BindingMode.TwoWay,
+							y => (int)y,
+							y => (Unit.Time)y,
+							Observable.FromEvent<EventHandler, EventArgs>(
+									h => (s, e) => h(e),
+									h => comboBoxUpUnit.SelectedIndexChanged += h,
+									h => comboBoxUpUnit.SelectedIndexChanged -= h
+								)
+								.ToUnit()
+						)
+						.AddTo(entryDisposable);
+
 					x.Down.BindTo(
 							textBoxDown,
 							y => y.Text,
@@ -101,6 +123,22 @@ namespace TrainEditor2.Views
 						.AddTo(entryDisposable);
 
 					x.Down.BindToErrorProvider(errorProvider, textBoxDown).AddTo(entryDisposable);
+
+					x.DownUnit
+						.BindTo(
+							comboBoxDownUnit,
+							y => y.SelectedIndex,
+							BindingMode.TwoWay,
+							y => (int)y,
+							y => (Unit.Time)y,
+							Observable.FromEvent<EventHandler, EventArgs>(
+									h => (s, e) => h(e),
+									h => comboBoxDownUnit.SelectedIndexChanged += h,
+									h => comboBoxDownUnit.SelectedIndexChanged -= h
+								)
+								.ToUnit()
+						)
+						.AddTo(entryDisposable);
 				})
 				.AddTo(disposable);
 
@@ -109,7 +147,7 @@ namespace TrainEditor2.Views
 
 		private void FormDelay_Load(object sender, EventArgs e)
 		{
-			Icon = FormEditor.GetIcon();
+			Icon = WinFormsUtilities.GetIcon();
 		}
 
 		private void ListViewDelay_SelectedIndexChanged(object sender, EventArgs e)

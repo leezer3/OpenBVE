@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Interface;
+using OpenBveApi.World;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
 using Path = OpenBveApi.Path;
@@ -58,7 +59,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 											{
 												for (int k = n; k >= train.Cars.Count; k--)
 												{
-													train.Cars.Add(new TrailerCar());
+													train.Cars.Add(new UncontrolledTrailerCar());
 													train.Couplers.Add(new Coupler());
 
 													train.ApplyPowerNotchesToCar();
@@ -120,7 +121,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 									{
 										for (int j = n; j >= train.Cars.Count; j--)
 										{
-											train.Cars.Add(new TrailerCar());
+											train.Cars.Add(new UncontrolledTrailerCar());
 											train.Couplers.Add(new Coupler());
 
 											train.ApplyPowerNotchesToCar();
@@ -172,7 +173,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 																{
 																	if (m > 0.0)
 																	{
-																		train.Cars[n].Length = m;
+																		train.Cars[n].Length = new Quantity.Length(m);
 																	}
 																	else
 																	{
@@ -208,8 +209,8 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 																}
 																else
 																{
-																	train.Cars[n].RearAxle = rear;
-																	train.Cars[n].FrontAxle = front;
+																	train.Cars[n].RearAxle = new Quantity.Length(rear);
+																	train.Cars[n].FrontAxle = new Quantity.Length(front);
 																	train.Cars[n].DefinedAxles = true;
 																}
 															}
@@ -258,7 +259,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 									{
 										for (int j = n; j >= train.Couplers.Count; j--)
 										{
-											train.Cars.Add(new TrailerCar());
+											train.Cars.Add(new UncontrolledTrailerCar());
 											train.Couplers.Add(new Coupler());
 
 											train.ApplyPowerNotchesToCar();
@@ -305,8 +306,8 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 																	}
 																	else
 																	{
-																		train.Couplers[n].Min = min;
-																		train.Couplers[n].Max = max;
+																		train.Couplers[n].Min = new Quantity.Length(min);
+																		train.Couplers[n].Max = new Quantity.Length(max);
 																	}
 																}
 																else
@@ -378,7 +379,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 									{
 										for (int j = CarIndex; j >= train.Cars.Count; j--)
 										{
-											train.Cars.Add(new TrailerCar());
+											train.Cars.Add(new UncontrolledTrailerCar());
 											train.Couplers.Add(new Coupler());
 
 											train.ApplyPowerNotchesToCar();
@@ -454,14 +455,14 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 																{
 																	if (IsOdd)
 																	{
-																		train.Cars[CarIndex].RearBogie.RearAxle = rear;
-																		train.Cars[CarIndex].RearBogie.FrontAxle = front;
+																		train.Cars[CarIndex].RearBogie.RearAxle = new Quantity.Length(rear);
+																		train.Cars[CarIndex].RearBogie.FrontAxle = new Quantity.Length(front);
 																		train.Cars[CarIndex].RearBogie.DefinedAxles = true;
 																	}
 																	else
 																	{
-																		train.Cars[CarIndex].FrontBogie.RearAxle = rear;
-																		train.Cars[CarIndex].FrontBogie.FrontAxle = front;
+																		train.Cars[CarIndex].FrontBogie.RearAxle = new Quantity.Length(rear);
+																		train.Cars[CarIndex].FrontBogie.FrontAxle = new Quantity.Length(front);
 																		train.Cars[CarIndex].FrontBogie.DefinedAxles = true;
 																	}
 																}

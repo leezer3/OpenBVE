@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using OpenBveApi.Interface;
@@ -88,13 +87,14 @@ namespace TrainEditor2.Models.Panels
 		private int jumpScreen;
 		private int layer;
 
-		private TreeViewItemModel treeItem;
 		private TreeViewItemModel selectedTreeItem;
 
 		private ListViewItemModel selectedListItem;
 
 		internal ObservableCollection<SoundEntry> SoundEntries;
 		internal ObservableCollection<CommandEntry> CommandEntries;
+
+		internal ObservableCollection<TreeViewItemModel> TreeItems;
 
 		internal ObservableCollection<ListViewColumnHeaderModel> ListColumns;
 		internal ObservableCollection<ListViewItemModel> ListItems;
@@ -171,18 +171,6 @@ namespace TrainEditor2.Models.Panels
 			}
 		}
 
-		internal TreeViewItemModel TreeItem
-		{
-			get
-			{
-				return treeItem;
-			}
-			set
-			{
-				SetProperty(ref treeItem, value);
-			}
-		}
-
 		internal TreeViewItemModel SelectedTreeItem
 		{
 			get
@@ -220,11 +208,13 @@ namespace TrainEditor2.Models.Panels
 			CommandEntries = new ObservableCollection<CommandEntry>();
 			Layer = 0;
 
+			TreeItems = new ObservableCollection<TreeViewItemModel>();
+
 			ListColumns = new ObservableCollection<ListViewColumnHeaderModel>();
 			ListItems = new ObservableCollection<ListViewItemModel>();
 
 			CreateTreeItem();
-			SelectedTreeItem = TreeItem;
+			SelectedTreeItem = null;
 		}
 
 		public object Clone()
@@ -237,29 +227,30 @@ namespace TrainEditor2.Models.Panels
 			touch.ListItems = new ObservableCollection<ListViewItemModel>();
 
 			touch.CreateTreeItem();
-			touch.SelectedTreeItem = touch.TreeItem;
+			touch.SelectedTreeItem = null;
 
 			return touch;
 		}
 
 		internal void CreateTreeItem()
 		{
-			treeItem = new TreeViewItemModel(null) { Title = "TouchElement" };
-			treeItem.Children.Add(new TreeViewItemModel(TreeItem) { Title = "Sounds" });
-			treeItem.Children.Add(new TreeViewItemModel(TreeItem) { Title = "Commands" });
-			OnPropertyChanged(new PropertyChangedEventArgs(nameof(TreeItem)));
+			TreeItems.Clear();
+			TreeViewItemModel treeItem = new TreeViewItemModel(null) { Title = "TouchElement" };
+			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = "Sounds" });
+			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = "Commands" });
+			TreeItems.Add(treeItem);
 		}
 
 		internal void CreateListColumns()
 		{
 			ListColumns.Clear();
 
-			if (SelectedTreeItem == TreeItem.Children[0])
+			if (SelectedTreeItem == TreeItems[0].Children[0])
 			{
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Index" });
 			}
 
-			if (SelectedTreeItem == TreeItem.Children[1])
+			if (SelectedTreeItem == TreeItems[0].Children[1])
 			{
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Name" });
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Option" });
@@ -270,21 +261,27 @@ namespace TrainEditor2.Models.Panels
 		{
 			ListItems.Clear();
 
-			if (SelectedTreeItem == TreeItem.Children[0])
+			if (SelectedTreeItem == TreeItems[0].Children[0])
 			{
 				foreach (SoundEntry entry in SoundEntries)
 				{
-					ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[1]), Tag = entry };
+					ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel> { new ListViewSubItemModel() }, Tag = entry };
 					UpdateListItem(newItem);
 					ListItems.Add(newItem);
 				}
 			}
 
-			if (SelectedTreeItem == TreeItem.Children[1])
+			if (SelectedTreeItem == TreeItems[0].Children[1])
 			{
 				foreach (CommandEntry entry in CommandEntries)
 				{
-					ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[2]), Tag = entry };
+					ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = entry };
+
+					for (int i = 0; i < 2; i++)
+					{
+						newItem.SubItems.Add(new ListViewSubItemModel());
+					}
+
 					UpdateListItem(newItem);
 					ListItems.Add(newItem);
 				}
@@ -298,13 +295,13 @@ namespace TrainEditor2.Models.Panels
 
 			if (soundEntry != null)
 			{
-				item.Texts[0] = soundEntry.Index.ToString(culture);
+				item.SubItems[0].Text = soundEntry.Index.ToString(culture);
 			}
 
 			if (commandEntry != null)
 			{
-				item.Texts[0] = commandEntry.Info.Name;
-				item.Texts[1] = commandEntry.Option.ToString(culture);
+				item.SubItems[0].Text = commandEntry.Info.Name;
+				item.SubItems[1].Text = commandEntry.Option.ToString(culture);
 			}
 		}
 
@@ -314,7 +311,7 @@ namespace TrainEditor2.Models.Panels
 
 			SoundEntries.Add(entry);
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[1]), Tag = entry };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel> { new ListViewSubItemModel() }, Tag = entry };
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -327,7 +324,14 @@ namespace TrainEditor2.Models.Panels
 
 			CommandEntries.Add(entry);
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[2]), Tag = entry };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = entry };
+
+			for (int i = 0; i < 2; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
+			UpdateListItem(newItem);
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -340,7 +344,7 @@ namespace TrainEditor2.Models.Panels
 
 			SoundEntries.Add(entry);
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[1]), Tag = entry };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel> { new ListViewSubItemModel() }, Tag = entry };
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -353,7 +357,14 @@ namespace TrainEditor2.Models.Panels
 
 			CommandEntries.Add(entry);
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[2]), Tag = entry };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = entry };
+
+			for (int i = 0; i < 2; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
+			UpdateListItem(newItem);
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 

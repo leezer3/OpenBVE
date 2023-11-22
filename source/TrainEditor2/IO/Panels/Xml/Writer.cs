@@ -16,8 +16,15 @@ namespace TrainEditor2.IO.Panels.Xml
 			openBVE.Add(new XAttribute(XNamespace.Xmlns + "xsd", XNamespace.Get("http://www.w3.org/2001/XMLSchema")));
 			xml.Add(openBVE);
 
+			Write(fileName, openBVE, panel);
+
+			xml.Save(fileName);
+		}
+
+		internal static void Write(string fileName, XElement parent, Panel panel)
+		{
 			XElement panelNode = new XElement("Panel");
-			openBVE.Add(panelNode);
+			parent.Add(panelNode);
 
 			WriteThisNode(fileName, panelNode, panel.This);
 
@@ -30,8 +37,6 @@ namespace TrainEditor2.IO.Panels.Xml
 			{
 				WritePanelElementNode(fileName, panelNode, element);
 			}
-
-			xml.Save(fileName);
 		}
 
 		private static void WriteThisNode(string fileName, XElement parent, This This)

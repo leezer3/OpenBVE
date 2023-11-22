@@ -10,14 +10,14 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToTouch(TouchElementViewModel y)
+		private IDisposable BindToTouch(TouchElementViewModel touch)
 		{
 			CompositeDisposable touchDisposable = new CompositeDisposable();
 
-			y.LocationX
+			touch.LocationX
 				.BindTo(
 					textBoxTouchLocationX,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -30,14 +30,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(touchDisposable);
 
-			y.LocationX
+			touch.LocationX
 				.BindToErrorProvider(errorProvider, textBoxTouchLocationX)
 				.AddTo(touchDisposable);
 
-			y.LocationY
+			touch.LocationY
 				.BindTo(
 					textBoxTouchLocationY,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -50,17 +50,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(touchDisposable);
 
-			y.LocationY
+			touch.LocationY
 				.BindToErrorProvider(errorProvider, textBoxTouchLocationY)
 				.AddTo(touchDisposable);
 
-			y.Layer
+			touch.Layer
 				.BindTo(
 					numericUpDownTouchLayer,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownTouchLayer.ValueChanged += h,
@@ -70,10 +70,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(touchDisposable);
 
-			y.SizeX
+			touch.SizeX
 				.BindTo(
 					textBoxTouchSizeX,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -86,14 +86,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(touchDisposable);
 
-			y.SizeX
+			touch.SizeX
 				.BindToErrorProvider(errorProvider, textBoxTouchSizeX)
 				.AddTo(touchDisposable);
 
-			y.SizeY
+			touch.SizeY
 				.BindTo(
 					textBoxTouchSizeY,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -106,17 +106,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(touchDisposable);
 
-			y.SizeY
+			touch.SizeY
 				.BindToErrorProvider(errorProvider, textBoxTouchSizeY)
 				.AddTo(touchDisposable);
 
-			y.JumpScreen
+			touch.JumpScreen
 				.BindTo(
 					numericUpDownTouchJumpScreen,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownTouchJumpScreen.ValueChanged += h,

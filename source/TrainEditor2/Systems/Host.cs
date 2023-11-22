@@ -6,7 +6,6 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
-using SoundManager;
 
 namespace TrainEditor2.Systems
 {
@@ -32,7 +31,7 @@ namespace TrainEditor2.Systems
 		{
 			if (File.Exists(path) || Directory.Exists(path))
 			{
-				foreach (ContentLoadingPlugin plugin in Program.CurrentHost.Plugins)
+				foreach (ContentLoadingPlugin plugin in Plugins)
 				{
 					if (plugin.Sound != null)
 					{
@@ -63,16 +62,6 @@ namespace TrainEditor2.Systems
 
 			sound = null;
 			return false;
-		}
-
-		public override object PlaySound(SoundHandle buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, object parent, bool looped)
-		{
-			return Program.SoundApi.PlaySound(buffer, pitch, volume, position, parent, looped);
-		}
-
-		public override void StopSound(object SoundSource)
-		{
-			Program.SoundApi.StopSound(SoundSource as SoundSource);
 		}
 
 		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.World;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -12,57 +14,172 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToMotor(MotorViewModel z)
+		private IDisposable BindToMotor(MotorViewModel motor)
 		{
 			CompositeDisposable motorDisposable = new CompositeDisposable();
-			CompositeDisposable messageDisposable = new CompositeDisposable().AddTo(motorDisposable);
-			CompositeDisposable toolTipVertexPitchDisposable = new CompositeDisposable().AddTo(motorDisposable);
-			CompositeDisposable toolTipVertexVolumeDisposable = new CompositeDisposable().AddTo(motorDisposable);
+			CompositeDisposable trackDisposable = new CompositeDisposable().AddTo(motorDisposable);
 
 			CultureInfo culture = CultureInfo.InvariantCulture;
 
-			z.MessageBox
-				.Subscribe(w =>
-				{
-					messageDisposable.Dispose();
-					messageDisposable = new CompositeDisposable().AddTo(motorDisposable);
+			WinFormsBinders.BindToTreeView(treeViewMotor, motor.TreeItems, motor.SelectedTreeItem).AddTo(motorDisposable);
 
-					BindToMessageBox(w).AddTo(messageDisposable);
-				})
-				.AddTo(motorDisposable);
-
-			z.ToolTipVertexPitch
-				.Subscribe(w =>
-				{
-					toolTipVertexPitchDisposable.Dispose();
-					toolTipVertexPitchDisposable = new CompositeDisposable().AddTo(motorDisposable);
-
-					BindToToolTip(w, glControlMotor).AddTo(toolTipVertexPitchDisposable);
-				})
-				.AddTo(motorDisposable);
-
-			z.ToolTipVertexVolume
-				.Subscribe(w =>
-				{
-					toolTipVertexVolumeDisposable.Dispose();
-					toolTipVertexVolumeDisposable = new CompositeDisposable().AddTo(motorDisposable);
-
-					BindToToolTip(w, glControlMotor).AddTo(toolTipVertexVolumeDisposable);
-				})
-				.AddTo(motorDisposable);
-
-			z.CurrentCursorType
+			motor.SelectedTreeItem
 				.BindTo(
 					glControlMotor,
-					w => w.Cursor,
-					CursorTypeToCursor
+					x => x.Enabled,
+					BindingMode.OneWay,
+					x => x != null
 				)
 				.AddTo(motorDisposable);
 
-			z.MinVelocity
+			motor.SelectedTrack
+				.BindTo(
+					toolStripMenuItemEdit,
+					x => x.Enabled,
+					x => x != null)
+				.AddTo(motorDisposable);
+
+			motor.SelectedTrack
+				.BindTo(
+					toolStripMenuItemTool,
+					x => x.Enabled,
+					x => x != null)
+				.AddTo(motorDisposable);
+
+			motor.SelectedTrack
+				.BindTo(
+					toolStripToolBar,
+					x => x.Enabled,
+					x => x != null)
+				.AddTo(motorDisposable);
+
+			motor.SelectedTrack
+				.BindTo(
+					groupBoxTrack,
+					x => x.Enabled,
+					x => x != null
+				)
+				.AddTo(motorDisposable);
+
+			motor.SelectedTrack
+				.BindTo(
+					groupBoxDirect,
+					x => x.Enabled,
+					x => x != null
+				)
+				.AddTo(motorDisposable);
+
+			motor.SelectedTrack
+				.Subscribe(x =>
+				{
+					trackDisposable.Dispose();
+					trackDisposable = new CompositeDisposable().AddTo(motorDisposable);
+
+					if (x != null)
+					{
+						BindToTrack(x).AddTo(trackDisposable);
+					}
+				})
+				.AddTo(motorDisposable);
+
+			motor.StoppedSim
+				.BindTo(
+					panelCars,
+					x => x.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			motor.StoppedSim
+				.BindTo(
+					tabPageCar1,
+					x => x.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			motor.StoppedSim
+				.BindTo(
+					tabPageAccel,
+					x => x.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			motor.StoppedSim
+				.BindTo(
+					toolStripMenuItemFile,
+					x => x.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			motor.StoppedSim
+				.BindTo(
+					groupBoxUnit,
+					x => x.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			motor.StoppedSim
+				.BindTo(
+					groupBoxArea,
+					x => x.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			motor.VelocityUnit
+				.BindTo(
+					comboBoxMotorXUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Velocity)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxMotorXUnit.SelectedIndexChanged += h,
+							h => comboBoxMotorXUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			motor.VelocityUnit
+				.BindTo(
+					labelMotorMinVelocityUnit,
+					x => x.Text,
+					BindingMode.OneWay,
+					x => Unit.GetRewords(x).First()
+				)
+				.AddTo(motorDisposable);
+
+			motor.VelocityUnit
+				.BindTo(
+					labelMotorMaxVelocityUnit,
+					x => x.Text,
+					BindingMode.OneWay,
+					x => Unit.GetRewords(x).First()
+				)
+				.AddTo(motorDisposable);
+
+			motor.VelocityUnit
+				.BindTo(
+					labelDirectXUnit,
+					x => x.Text,
+					BindingMode.OneWay,
+					x => Unit.GetRewords(x).First()
+				)
+				.AddTo(motorDisposable);
+
+			motor.VelocityUnit
+				.BindTo(
+					labelMotorAreaUnit,
+					x => x.Text,
+					BindingMode.OneWay,
+					x => Unit.GetRewords(x).First()
+				)
+				.AddTo(motorDisposable);
+
+			motor.MinVelocity
 				.BindTo(
 					textBoxMotorMinVelocity,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -75,14 +192,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(motorDisposable);
 
-			z.MinVelocity
+			motor.MinVelocity
 				.BindToErrorProvider(errorProvider, textBoxMotorMinVelocity)
 				.AddTo(motorDisposable);
 
-			z.MaxVelocity
+			motor.MaxVelocity
 				.BindTo(
 					textBoxMotorMaxVelocity,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -95,14 +212,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(motorDisposable);
 
-			z.MaxVelocity
+			motor.MaxVelocity
 				.BindToErrorProvider(errorProvider, textBoxMotorMaxVelocity)
 				.AddTo(motorDisposable);
 
-			z.MinPitch
+			motor.MinPitch
 				.BindTo(
 					textBoxMotorMinPitch,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -115,14 +232,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(motorDisposable);
 
-			z.MinPitch
+			motor.MinPitch
 				.BindToErrorProvider(errorProvider, textBoxMotorMinPitch)
 				.AddTo(motorDisposable);
 
-			z.MaxPitch
+			motor.MaxPitch
 				.BindTo(
 					textBoxMotorMaxPitch,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -135,14 +252,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(motorDisposable);
 
-			z.MaxPitch
+			motor.MaxPitch
 				.BindToErrorProvider(errorProvider, textBoxMotorMaxPitch)
 				.AddTo(motorDisposable);
 
-			z.MinVolume
+			motor.MinVolume
 				.BindTo(
 					textBoxMotorMinVolume,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -155,14 +272,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(motorDisposable);
 
-			z.MinVolume
+			motor.MinVolume
 				.BindToErrorProvider(errorProvider, textBoxMotorMinVolume)
 				.AddTo(motorDisposable);
 
-			z.MaxVolume
+			motor.MaxVolume
 				.BindTo(
 					textBoxMotorMaxVolume,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -175,160 +292,100 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(motorDisposable);
 
-			z.MaxVolume
+			motor.MaxVolume
 				.BindToErrorProvider(errorProvider, textBoxMotorMaxVolume)
 				.AddTo(motorDisposable);
 
-			z.NowVelocity
+			motor.NowVelocity
 				.BindTo(
 					toolStripStatusLabelX,
-					w => w.Text,
-					w => $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "xy", "velocity")}: {w.ToString("0.00", culture)} km/h"
+					x => x.Text,
+					x => $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "xy", "velocity")}: {x.ToString(culture)} {Unit.GetRewords(motor.VelocityUnit.Value)}"
 				)
 				.AddTo(motorDisposable);
 
-			z.NowPitch
+			motor.NowPitch
 				.BindTo(
 					toolStripStatusLabelY,
-					w => w.Text,
-					w => z.CurrentInputMode.Value == Motor.InputMode.Pitch ? $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "xy", "pitch")}: {w.ToString("0.00", culture)} " : toolStripStatusLabelY.Text
+					x => x.Text,
+					x => motor.CurrentInputMode.Value == Motor.InputMode.Pitch ? $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "xy", "pitch")}: {x.ToString(culture)} " : toolStripStatusLabelY.Text
 				)
 				.AddTo(motorDisposable);
 
-			z.NowVolume
+			motor.NowVolume
 				.BindTo(
 					toolStripStatusLabelY,
-					w => w.Text,
-					w => z.CurrentInputMode.Value == Motor.InputMode.Volume ? $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "xy", "volume")}: {w.ToString("0.00", culture)} " : toolStripStatusLabelY.Text
+					x => x.Text,
+					x => motor.CurrentInputMode.Value == Motor.InputMode.Volume ? $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "xy", "volume")}: {x.ToString("0.00", culture)} " : toolStripStatusLabelY.Text
 				)
 				.AddTo(motorDisposable);
 
-			z.CurrentSelectedTrack
-				.BindTo(
-					toolStripMenuItemPowerTrack1,
-					w => w.Checked,
-					w => w == Motor.TrackInfo.Power1
-				)
-				.AddTo(motorDisposable);
-
-			z.CurrentSelectedTrack
-				.BindTo(
-					toolStripMenuItemPowerTrack2,
-					w => w.Checked,
-					w => w == Motor.TrackInfo.Power2
-				)
-				.AddTo(motorDisposable);
-
-			z.CurrentSelectedTrack
-				.BindTo(
-					toolStripMenuItemBrakeTrack1,
-					w => w.Checked,
-					w => w == Motor.TrackInfo.Brake1
-				)
-				.AddTo(motorDisposable);
-
-			z.CurrentSelectedTrack
-				.BindTo(
-					toolStripMenuItemBrakeTrack2,
-					w => w.Checked,
-					w => w == Motor.TrackInfo.Brake2
-				)
-				.AddTo(motorDisposable);
-
-			z.CurrentSelectedTrack
-				.BindTo(
-					toolStripStatusLabelType,
-					w => w.Text,
-					w =>
-					{
-						string type = $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "type", "name")}:";
-						string power = Utilities.GetInterfaceString("motor_sound_settings", "status", "type", "power");
-						string brake = Utilities.GetInterfaceString("motor_sound_settings", "status", "type", "brake");
-
-						return $"{type} {(w == Motor.TrackInfo.Power1 || w == Motor.TrackInfo.Power2 ? power : brake)}";
-					}
-				)
-				.AddTo(motorDisposable);
-
-			z.CurrentSelectedTrack
-				.BindTo(
-					toolStripStatusLabelTrack,
-					w => w.Text,
-					w =>
-					{
-						string track = $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "track", "name")}:";
-
-						return $"{track} {(w == Motor.TrackInfo.Power1 || w == Motor.TrackInfo.Brake1 ? 1 : 2)}";
-					}
-				)
-				.AddTo(motorDisposable);
-
-			z.CurrentInputMode
+			motor.CurrentInputMode
 				.BindTo(
 					toolStripMenuItemPitch,
-					w => w.Checked,
-					w => w == Motor.InputMode.Pitch
+					x => x.Checked,
+					x => x == Motor.InputMode.Pitch
 				)
 				.AddTo(motorDisposable);
 
-			z.CurrentInputMode
+			motor.CurrentInputMode
 				.BindTo(
 					toolStripMenuItemVolume,
-					w => w.Checked,
-					w => w == Motor.InputMode.Volume
+					x => x.Checked,
+					x => x == Motor.InputMode.Volume
 				)
 				.AddTo(motorDisposable);
 
-			z.CurrentInputMode
+			motor.CurrentInputMode
 				.BindTo(
 					toolStripMenuItemIndex,
-					w => w.Checked,
-					w => w == Motor.InputMode.SoundIndex
+					x => x.Checked,
+					x => x == Motor.InputMode.SoundIndex
 				)
 				.AddTo(motorDisposable);
 
-			z.CurrentInputMode
+			motor.CurrentInputMode
 				.BindTo(
 					textBoxMotorMinPitch,
-					w => w.Enabled,
-					w => w == Motor.InputMode.Pitch
+					x => x.Enabled,
+					x => x == Motor.InputMode.Pitch
 				)
 				.AddTo(motorDisposable);
 
-			z.CurrentInputMode
+			motor.CurrentInputMode
 				.BindTo(
 					textBoxMotorMaxPitch,
-					w => w.Enabled,
-					w => w == Motor.InputMode.Pitch
+					x => x.Enabled,
+					x => x == Motor.InputMode.Pitch
 				)
 				.AddTo(motorDisposable);
 
-			z.CurrentInputMode
+			motor.CurrentInputMode
 				.BindTo(
 					textBoxMotorMinVolume,
-					w => w.Enabled,
-					w => w == Motor.InputMode.Volume
+					x => x.Enabled,
+					x => x == Motor.InputMode.Volume
 				)
 				.AddTo(motorDisposable);
 
-			z.CurrentInputMode
+			motor.CurrentInputMode
 				.BindTo(
 					textBoxMotorMaxVolume,
-					w => w.Enabled,
-					w => w == Motor.InputMode.Volume
+					x => x.Enabled,
+					x => x == Motor.InputMode.Volume
 				)
 				.AddTo(motorDisposable);
 
-			z.CurrentInputMode
+			motor.CurrentInputMode
 				.BindTo(
 					toolStripStatusLabelMode,
-					w => w.Text,
-					w =>
+					x => x.Text,
+					x =>
 					{
 						string mode = $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "name")}:";
 						string text;
 
-						switch (w)
+						switch (x)
 						{
 							case Motor.InputMode.Pitch:
 								text = $"{mode} {Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "pitch")}";
@@ -337,39 +394,39 @@ namespace TrainEditor2.Views
 								text = $"{mode} {Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "volume")}";
 								break;
 							case Motor.InputMode.SoundIndex:
-								text = $"{mode} {Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "sound_index")}({z.SelectedSoundIndex.Value})";
+								text = $"{mode} {Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "sound_index")}({motor.SelectedSoundIndex.Value})";
 								break;
 							default:
-								throw new ArgumentOutOfRangeException(nameof(w), w, null);
+								throw new ArgumentOutOfRangeException(nameof(x), x, null);
 						}
 
 						return text;
 					})
 				.AddTo(motorDisposable);
 
-			z.CurrentInputMode
+			motor.CurrentInputMode
 				.BindTo(
 					toolStripStatusLabelTool,
-					w => w.Enabled,
-					w => w != Motor.InputMode.SoundIndex
+					x => x.Enabled,
+					x => x != Motor.InputMode.SoundIndex
 				)
 				.AddTo(motorDisposable);
 
-			z.CurrentInputMode
+			motor.CurrentInputMode
 				.BindTo(
 					toolStripStatusLabelY,
-					w => w.Enabled,
-					w => w != Motor.InputMode.SoundIndex
+					x => x.Enabled,
+					x => x != Motor.InputMode.SoundIndex
 				)
 				.AddTo(motorDisposable);
 
-			z.SelectedSoundIndex
+			motor.SelectedSoundIndex
 				.BindTo(
 					toolStripComboBoxIndex,
-					w => w.SelectedIndex,
+					x => x.SelectedIndex,
 					BindingMode.TwoWay,
-					w => w + 1,
-					w => w - 1,
+					x => x + 1,
+					x => x - 1,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => toolStripComboBoxIndex.SelectedIndexChanged += h,
@@ -379,19 +436,19 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(motorDisposable);
 
-			z.SelectedSoundIndex
+			motor.SelectedSoundIndex
 				.BindTo(
 					toolStripStatusLabelMode,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.OneWay,
-					w =>
+					x =>
 					{
 						string mode = $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "name")}:";
 						string text = toolStripStatusLabelMode.Text;
 
-						if (z.CurrentInputMode.Value == Motor.InputMode.SoundIndex)
+						if (motor.CurrentInputMode.Value == Motor.InputMode.SoundIndex)
 						{
-							text = $"{mode} {Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "sound_index")}({w})";
+							text = $"{mode} {Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "sound_index")}({x})";
 						}
 
 						return text;
@@ -399,80 +456,297 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(motorDisposable);
 
-			z.CurrentToolMode
+			motor.IsRefreshGlControl
+				.Where(x => x)
+				.Subscribe(_ => glControlMotor.Invalidate())
+				.AddTo(motorDisposable);
+
+			motor.RunIndex
+				.BindTo(
+					numericUpDownRunIndex,
+					x => x.Value,
+					BindingMode.TwoWay,
+					null,
+					x => (int)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => numericUpDownRunIndex.ValueChanged += h,
+							h => numericUpDownRunIndex.ValueChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			motor.IsLoop
+				.BindTo(
+					checkBoxMotorLoop,
+					x => x.Checked,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => checkBoxMotorLoop.CheckedChanged += h,
+							h => checkBoxMotorLoop.CheckedChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			motor.IsLoop
+				.BindTo(
+					checkBoxMotorConstant,
+					x => x.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			motor.IsConstant
+				.BindTo(
+					checkBoxMotorConstant,
+					x => x.Checked,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => checkBoxMotorConstant.CheckedChanged += h,
+							h => checkBoxMotorConstant.CheckedChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			motor.IsConstant
+				.BindTo(
+					checkBoxMotorLoop,
+					x => x.Enabled,
+					BindingMode.OneWay,
+					x => !x
+				)
+				.AddTo(motorDisposable);
+
+			motor.Acceleration
+				.BindTo(
+					textBoxMotorAccel,
+					x => x.Text,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => textBoxMotorAccel.TextChanged += h,
+							h => textBoxMotorAccel.TextChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			motor.Acceleration
+				.BindToErrorProvider(errorProvider, textBoxMotorAccel)
+				.AddTo(motorDisposable);
+
+			motor.AccelerationUnit
+				.BindTo(
+					comboBoxMotorAccelUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Acceleration)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxMotorAccelUnit.SelectedIndexChanged += h,
+							h => comboBoxMotorAccelUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			motor.StartSpeed
+				.BindTo(
+					textBoxMotorAreaLeft,
+					x => x.Text,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => textBoxMotorAreaLeft.TextChanged += h,
+							h => textBoxMotorAreaLeft.TextChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			motor.StartSpeed
+				.BindToErrorProvider(errorProvider, textBoxMotorAreaLeft)
+				.AddTo(motorDisposable);
+
+			motor.EndSpeed
+				.BindTo(
+					textBoxMotorAreaRight,
+					x => x.Text,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => textBoxMotorAreaRight.TextChanged += h,
+							h => textBoxMotorAreaRight.TextChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			motor.EndSpeed
+				.BindToErrorProvider(errorProvider, textBoxMotorAreaRight)
+				.AddTo(motorDisposable);
+
+			motor.UpTrack.BindToButton(buttonMotorUp).AddTo(motorDisposable);
+			motor.DownTrack.BindToButton(buttonMotorDown).AddTo(motorDisposable);
+			motor.AddTrack.BindToButton(buttonMotorAdd).AddTo(motorDisposable);
+			motor.RemoveTrack.BindToButton(buttonMotorRemove).AddTo(motorDisposable);
+			motor.CopyTrack.BindToButton(buttonMotorCopy).AddTo(motorDisposable);
+
+			motor.ZoomIn.BindToButton(buttonMotorZoomIn).AddTo(motorDisposable);
+			motor.ZoomOut.BindToButton(buttonMotorZoomOut).AddTo(motorDisposable);
+			motor.Reset.BindToButton(buttonMotorReset).AddTo(motorDisposable);
+
+			motor.ChangeInputMode.BindToButton(Motor.InputMode.Pitch, toolStripMenuItemPitch).AddTo(motorDisposable);
+			motor.ChangeInputMode.BindToButton(Motor.InputMode.Volume, toolStripMenuItemVolume).AddTo(motorDisposable);
+			motor.ChangeInputMode.BindToButton(Motor.InputMode.SoundIndex, toolStripMenuItemIndex).AddTo(motorDisposable);
+
+			motor.SwapSpeed.BindToButton(buttonMotorSwap).AddTo(motorDisposable);
+			motor.StartSimulation.BindToButton(buttonPlay).AddTo(motorDisposable);
+			motor.PauseSimulation.BindToButton(buttonPause).AddTo(motorDisposable);
+			motor.StopSimulation.BindToButton(buttonStop).AddTo(motorDisposable);
+
+			return motorDisposable;
+		}
+
+		private IDisposable BindToTrack(MotorViewModel.TrackViewModel track)
+		{
+			CompositeDisposable trackDisposable = new CompositeDisposable();
+
+			track.MessageBox.BindToMessageBox().AddTo(trackDisposable);
+
+			track.ToolTipVertexPitch.BindToToolTip(glControlMotor).AddTo(trackDisposable);
+
+			track.ToolTipVertexVolume.BindToToolTip(glControlMotor).AddTo(trackDisposable);
+
+			track.CurrentCursorType
+				.BindTo(
+					glControlMotor,
+					x => x.Cursor,
+					WinFormsUtilities.CursorTypeToCursor
+				)
+				.AddTo(trackDisposable);
+
+			track.Type
+				.BindTo(
+					comboBoxTrackType,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Motor.TrackType)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxTrackType.SelectedIndexChanged += h,
+							h => comboBoxTrackType.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(trackDisposable);
+
+			track.Type
+				.BindTo(
+					toolStripStatusLabelType,
+					x => x.Text,
+					BindingMode.OneWay,
+					x =>
+					{
+						string type = $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "type", "name")}:";
+						string power = Utilities.GetInterfaceString("motor_sound_settings", "status", "type", "power");
+						string brake = Utilities.GetInterfaceString("motor_sound_settings", "status", "type", "brake");
+
+						return $"{type} {(x == Motor.TrackType.Power ? power : brake)}";
+					}
+				)
+				.AddTo(trackDisposable);
+
+			track.CurrentToolMode
 				.BindTo(
 					toolStripMenuItemSelect,
-					w => w.Checked,
-					w => w == Motor.ToolMode.Select
+					x => x.Checked,
+					x => x == Motor.ToolMode.Select
 				)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.CurrentToolMode
+			track.CurrentToolMode
 				.BindTo(
 					toolStripMenuItemMove,
-					w => w.Checked,
-					w => w == Motor.ToolMode.Move
+					x => x.Checked,
+					x => x == Motor.ToolMode.Move
 				)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.CurrentToolMode
+			track.CurrentToolMode
 				.BindTo(
 					toolStripMenuItemDot,
-					w => w.Checked,
-					w => w == Motor.ToolMode.Dot
+					x => x.Checked,
+					x => x == Motor.ToolMode.Dot
 				)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.CurrentToolMode
+			track.CurrentToolMode
 				.BindTo(
 					toolStripMenuItemLine,
-					w => w.Checked,
-					w => w == Motor.ToolMode.Line
+					x => x.Checked,
+					x => x == Motor.ToolMode.Line
 				)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.CurrentToolMode
+			track.CurrentToolMode
 				.BindTo(
 					toolStripButtonSelect,
-					w => w.Checked,
-					w => w == Motor.ToolMode.Select
+					x => x.Checked,
+					x => x == Motor.ToolMode.Select
 				)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.CurrentToolMode
+			track.CurrentToolMode
 				.BindTo(
 					toolStripButtonMove,
-					w => w.Checked,
-					w => w == Motor.ToolMode.Move
+					x => x.Checked,
+					x => x == Motor.ToolMode.Move
 				)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.CurrentToolMode
+			track.CurrentToolMode
 				.BindTo(
 					toolStripButtonDot,
-					w => w.Checked,
-					w => w == Motor.ToolMode.Dot
+					x => x.Checked,
+					x => x == Motor.ToolMode.Dot
 				)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.CurrentToolMode
+			track.CurrentToolMode
 				.BindTo(
 					toolStripButtonLine,
-					w => w.Checked,
-					w => w == Motor.ToolMode.Line
+					x => x.Checked,
+					x => x == Motor.ToolMode.Line
 				)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.CurrentToolMode
+			track.CurrentToolMode
 				.BindTo(
 					toolStripStatusLabelTool,
-					w => w.Text,
-					w =>
+					x => x.Text,
+					x =>
 					{
 						string tool = $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "tool", "name")}:";
 						string text;
 
-						switch (w)
+						switch (x)
 						{
 							case Motor.ToolMode.Select:
 								text = $"{tool} {Utilities.GetInterfaceString("motor_sound_settings", "status", "tool", "select")}";
@@ -487,216 +761,32 @@ namespace TrainEditor2.Views
 								text = $"{tool} {Utilities.GetInterfaceString("motor_sound_settings", "status", "tool", "line")}";
 								break;
 							default:
-								throw new ArgumentOutOfRangeException(nameof(w), w, null);
+								throw new ArgumentOutOfRangeException(nameof(x), x, null);
 						}
 
 						return text;
 					}
 				)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.StoppedSim
+			track.StoppedSim
 				.BindTo(
-					toolStripMenuItemFile,
-					w => w.Enabled
+					groupBoxTrack,
+					x => x.Enabled
 				)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.StoppedSim
-				.BindTo(
-					panelCars,
-					w => w.Enabled
-				)
-				.AddTo(motorDisposable);
-
-			z.StoppedSim
-				.BindTo(
-					groupBoxArea,
-					w => w.Enabled
-				)
-				.AddTo(motorDisposable);
-
-			z.StoppedSim
-				.BindTo(
-					tabPageCar,
-					w => w.Enabled
-				)
-				.AddTo(motorDisposable);
-
-			z.StoppedSim
-				.BindTo(
-					tabPageAccel,
-					w => w.Enabled
-				)
-				.AddTo(motorDisposable);
-
-			z.RunIndex
-				.BindTo(
-					numericUpDownRunIndex,
-					w => w.Value,
-					BindingMode.TwoWay,
-					null,
-					w => (int)w,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => numericUpDownRunIndex.ValueChanged += h,
-							h => numericUpDownRunIndex.ValueChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(motorDisposable);
-
-			z.IsPlayTrack1
-				.BindTo(
-					checkBoxTrack1,
-					w => w.Checked,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => checkBoxTrack1.CheckedChanged += h,
-							h => checkBoxTrack1.CheckedChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(motorDisposable);
-
-			z.IsPlayTrack2
-				.BindTo(
-					checkBoxTrack2,
-					w => w.Checked,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => checkBoxTrack2.CheckedChanged += h,
-							h => checkBoxTrack2.CheckedChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(motorDisposable);
-
-			z.IsLoop
-				.BindTo(
-					checkBoxMotorLoop,
-					w => w.Checked,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => checkBoxMotorLoop.CheckedChanged += h,
-							h => checkBoxMotorLoop.CheckedChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(motorDisposable);
-
-			z.IsLoop
-				.BindTo(
-					checkBoxMotorConstant,
-					w => w.Enabled
-				)
-				.AddTo(motorDisposable);
-
-			z.IsConstant
-				.BindTo(
-					checkBoxMotorConstant,
-					w => w.Checked,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => checkBoxMotorConstant.CheckedChanged += h,
-							h => checkBoxMotorConstant.CheckedChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(motorDisposable);
-
-			z.IsConstant
-				.BindTo(
-					checkBoxMotorLoop,
-					w => w.Enabled,
-					BindingMode.OneWay,
-					w => !w
-				)
-				.AddTo(motorDisposable);
-
-			z.Acceleration
-				.BindTo(
-					textBoxMotorAccel,
-					w => w.Text,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => textBoxMotorAccel.TextChanged += h,
-							h => textBoxMotorAccel.TextChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(motorDisposable);
-
-			z.Acceleration
-				.BindToErrorProvider(errorProvider, textBoxMotorAccel)
-				.AddTo(motorDisposable);
-
-			z.StartSpeed
-				.BindTo(
-					textBoxMotorAreaLeft,
-					w => w.Text,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => textBoxMotorAreaLeft.TextChanged += h,
-							h => textBoxMotorAreaLeft.TextChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(motorDisposable);
-
-			z.StartSpeed
-				.BindToErrorProvider(errorProvider, textBoxMotorAreaLeft)
-				.AddTo(motorDisposable);
-
-			z.EndSpeed
-				.BindTo(
-					textBoxMotorAreaRight,
-					w => w.Text,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => textBoxMotorAreaRight.TextChanged += h,
-							h => textBoxMotorAreaRight.TextChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(motorDisposable);
-
-			z.EndSpeed
-				.BindToErrorProvider(errorProvider, textBoxMotorAreaRight)
-				.AddTo(motorDisposable);
-
-			z.EnabledDirect
+			track.EnabledDirect
 				.BindTo(
 					groupBoxDirect,
-					w => w.Enabled
+					x => x.Enabled
 				)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.DirectX
+			track.DirectX
 				.BindTo(
 					textBoxDirectX,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -707,16 +797,16 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.DirectX
+			track.DirectX
 				.BindToErrorProvider(errorProvider, textBoxDirectX)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.DirectY
+			track.DirectY
 				.BindTo(
 					textBoxDirectY,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -727,101 +817,36 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.DirectY
+			track.DirectY
 				.BindToErrorProvider(errorProvider, textBoxDirectY)
-				.AddTo(motorDisposable);
+				.AddTo(trackDisposable);
 
-			z.GlControlWidth
-				.BindTo(
-					glControlMotor,
-					w => w.Width,
-					BindingMode.OneWayToSource,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => Resize += h,
-							h => Resize -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(motorDisposable);
+			track.Undo.BindToButton(toolStripMenuItemUndo).AddTo(trackDisposable);
+			track.Redo.BindToButton(toolStripMenuItemRedo).AddTo(trackDisposable);
+			track.Cleanup.BindToButton(toolStripMenuItemCleanup).AddTo(trackDisposable);
+			track.Delete.BindToButton(toolStripMenuItemDelete).AddTo(trackDisposable);
 
-			z.GlControlWidth.Value = glControlMotor.Width;
+			track.Undo.BindToButton(toolStripButtonUndo).AddTo(trackDisposable);
+			track.Redo.BindToButton(toolStripButtonRedo).AddTo(trackDisposable);
+			track.Cleanup.BindToButton(toolStripButtonCleanup).AddTo(trackDisposable);
+			track.Delete.BindToButton(toolStripButtonDelete).AddTo(trackDisposable);
 
-			z.GlControlHeight
-				.BindTo(
-					glControlMotor,
-					w => w.Height,
-					BindingMode.OneWayToSource,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => Resize += h,
-							h => Resize -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(motorDisposable);
+			track.ChangeToolMode.BindToButton(Motor.ToolMode.Select, toolStripMenuItemSelect).AddTo(trackDisposable);
+			track.ChangeToolMode.BindToButton(Motor.ToolMode.Move, toolStripMenuItemMove).AddTo(trackDisposable);
+			track.ChangeToolMode.BindToButton(Motor.ToolMode.Dot, toolStripMenuItemDot).AddTo(trackDisposable);
+			track.ChangeToolMode.BindToButton(Motor.ToolMode.Line, toolStripMenuItemLine).AddTo(trackDisposable);
 
-			z.GlControlHeight.Value = glControlMotor.Height;
+			track.ChangeToolMode.BindToButton(Motor.ToolMode.Select, toolStripButtonSelect).AddTo(trackDisposable);
+			track.ChangeToolMode.BindToButton(Motor.ToolMode.Move, toolStripButtonMove).AddTo(trackDisposable);
+			track.ChangeToolMode.BindToButton(Motor.ToolMode.Dot, toolStripButtonDot).AddTo(trackDisposable);
+			track.ChangeToolMode.BindToButton(Motor.ToolMode.Line, toolStripButtonLine).AddTo(trackDisposable);
 
-			z.IsRefreshGlControl
-				.Where(x => x)
-				.Subscribe(_ => glControlMotor.Invalidate())
-				.AddTo(motorDisposable);
+			track.DirectDot.BindToButton(buttonDirectDot).AddTo(trackDisposable);
+			track.DirectMove.BindToButton(buttonDirectMove).AddTo(trackDisposable);
 
-			z.Undo.BindToButton(toolStripMenuItemUndo).AddTo(motorDisposable);
-			z.Redo.BindToButton(toolStripMenuItemRedo).AddTo(motorDisposable);
-			z.TearingOff.BindToButton(toolStripMenuItemTearingOff).AddTo(motorDisposable);
-			z.Copy.BindToButton(toolStripMenuItemCopy).AddTo(motorDisposable);
-			z.Paste.BindToButton(toolStripMenuItemPaste).AddTo(motorDisposable);
-			z.Cleanup.BindToButton(toolStripMenuItemCleanup).AddTo(motorDisposable);
-			z.Delete.BindToButton(toolStripMenuItemDelete).AddTo(motorDisposable);
-
-			z.Undo.BindToButton(toolStripButtonUndo).AddTo(motorDisposable);
-			z.Redo.BindToButton(toolStripButtonRedo).AddTo(motorDisposable);
-			z.TearingOff.BindToButton(toolStripButtonTearingOff).AddTo(motorDisposable);
-			z.Copy.BindToButton(toolStripButtonCopy).AddTo(motorDisposable);
-			z.Paste.BindToButton(toolStripButtonPaste).AddTo(motorDisposable);
-			z.Cleanup.BindToButton(toolStripButtonCleanup).AddTo(motorDisposable);
-			z.Delete.BindToButton(toolStripButtonDelete).AddTo(motorDisposable);
-
-			z.ChangeSelectedTrack.BindToButton(Motor.TrackInfo.Power1, toolStripMenuItemPowerTrack1).AddTo(motorDisposable);
-			z.ChangeSelectedTrack.BindToButton(Motor.TrackInfo.Power2, toolStripMenuItemPowerTrack2).AddTo(motorDisposable);
-			z.ChangeSelectedTrack.BindToButton(Motor.TrackInfo.Brake1, toolStripMenuItemBrakeTrack1).AddTo(motorDisposable);
-			z.ChangeSelectedTrack.BindToButton(Motor.TrackInfo.Brake2, toolStripMenuItemBrakeTrack2).AddTo(motorDisposable);
-
-			z.ChangeInputMode.BindToButton(Motor.InputMode.Pitch, toolStripMenuItemPitch).AddTo(motorDisposable);
-			z.ChangeInputMode.BindToButton(Motor.InputMode.Volume, toolStripMenuItemVolume).AddTo(motorDisposable);
-			z.ChangeInputMode.BindToButton(Motor.InputMode.SoundIndex, toolStripMenuItemIndex).AddTo(motorDisposable);
-
-			z.ChangeToolMode.BindToButton(Motor.ToolMode.Select, toolStripMenuItemSelect).AddTo(motorDisposable);
-			z.ChangeToolMode.BindToButton(Motor.ToolMode.Move, toolStripMenuItemMove).AddTo(motorDisposable);
-			z.ChangeToolMode.BindToButton(Motor.ToolMode.Dot, toolStripMenuItemDot).AddTo(motorDisposable);
-			z.ChangeToolMode.BindToButton(Motor.ToolMode.Line, toolStripMenuItemLine).AddTo(motorDisposable);
-
-			z.ChangeToolMode.BindToButton(Motor.ToolMode.Select, toolStripButtonSelect).AddTo(motorDisposable);
-			z.ChangeToolMode.BindToButton(Motor.ToolMode.Move, toolStripButtonMove).AddTo(motorDisposable);
-			z.ChangeToolMode.BindToButton(Motor.ToolMode.Dot, toolStripButtonDot).AddTo(motorDisposable);
-			z.ChangeToolMode.BindToButton(Motor.ToolMode.Line, toolStripButtonLine).AddTo(motorDisposable);
-
-			z.ZoomIn.BindToButton(buttonMotorZoomIn).AddTo(motorDisposable);
-			z.ZoomOut.BindToButton(buttonMotorZoomOut).AddTo(motorDisposable);
-			z.Reset.BindToButton(buttonMotorReset).AddTo(motorDisposable);
-
-			z.DirectDot.BindToButton(buttonDirectDot).AddTo(motorDisposable);
-			z.DirectMove.BindToButton(buttonDirectMove).AddTo(motorDisposable);
-
-			z.SwapSpeed.BindToButton(buttonMotorSwap).AddTo(motorDisposable);
-			z.StartSimulation.BindToButton(buttonPlay).AddTo(motorDisposable);
-			z.PauseSimulation.BindToButton(buttonPause).AddTo(motorDisposable);
-			z.StopSimulation.BindToButton(buttonStop).AddTo(motorDisposable);
-
-			return motorDisposable;
+			return trackDisposable;
 		}
 	}
 }

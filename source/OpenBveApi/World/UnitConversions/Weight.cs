@@ -12,7 +12,9 @@ namespace OpenBveApi.World
 		/// <summary>Metric tonnes</summary>
 		MetricTonnes,
 		/// <summary>Imperial tons</summary>
-		ImperialTons
+		ImperialTons,
+		/// <summary>Imperial pounds</summary>
+		Pounds,
 	}
 
 	/// <summary>Implements the length convertor</summary>
@@ -24,6 +26,7 @@ namespace OpenBveApi.World
 			RegisterConversion(UnitOfWeight.Grams, v => v * 100.0, v => v / 100.0);
 			RegisterConversion(UnitOfWeight.MetricTonnes, v => v / 1000.0, v => v * 1000.0);
 			RegisterConversion(UnitOfWeight.ImperialTons, v => v / 1016.05, v => v * 1016.05);
+			RegisterConversion(UnitOfWeight.Pounds, v => v / 2.205, v => v * 2.205);
 			KnownUnits = new Dictionary<string, UnitOfWeight>
 			{
 				{"g", UnitOfWeight.Grams}, {"gram", UnitOfWeight.Grams}, {"grams", UnitOfWeight.Grams},
@@ -34,7 +37,8 @@ namespace OpenBveApi.World
 				 *       the T abbreviation refers to a metric ton for convienence.
 				 */
 				{"t", UnitOfWeight.MetricTonnes}, {"tonne", UnitOfWeight.MetricTonnes}, {"tonnes", UnitOfWeight.MetricTonnes},
-				{"ton", UnitOfWeight.ImperialTons}, {"tons", UnitOfWeight.ImperialTons}
+				{"ton", UnitOfWeight.ImperialTons}, {"tons", UnitOfWeight.ImperialTons},
+				{"lbs", UnitOfWeight.Pounds}, {"lb", UnitOfWeight.Pounds}, {"pound", UnitOfWeight.Pounds}, {"pounds", UnitOfWeight.Pounds}
 				
 			};
 		}

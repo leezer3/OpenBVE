@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.World;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -10,14 +11,14 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToPerformance(PerformanceViewModel z)
+		private IDisposable BindToPerformance(PerformanceViewModel performance)
 		{
 			CompositeDisposable performanceDisposable = new CompositeDisposable();
 
-			z.Deceleration
+			performance.Deceleration
 				.BindTo(
 					textBoxDeceleration,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -30,14 +31,30 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(performanceDisposable);
 
-			z.Deceleration
+			performance.Deceleration
 				.BindToErrorProvider(errorProvider, textBoxDeceleration)
 				.AddTo(performanceDisposable);
 
-			z.CoefficientOfStaticFriction
+			performance.DecelerationUnit
+				.BindTo(
+					comboBoxDecelerationUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Acceleration)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxDecelerationUnit.SelectedIndexChanged += h,
+							h => comboBoxDecelerationUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(performanceDisposable);
+
+			performance.CoefficientOfStaticFriction
 				.BindTo(
 					textBoxCoefficientOfStaticFriction,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -50,14 +67,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(performanceDisposable);
 
-			z.CoefficientOfStaticFriction
+			performance.CoefficientOfStaticFriction
 				.BindToErrorProvider(errorProvider, textBoxCoefficientOfStaticFriction)
 				.AddTo(performanceDisposable);
 
-			z.CoefficientOfRollingResistance
+			performance.CoefficientOfRollingResistance
 				.BindTo(
 					textBoxCoefficientOfRollingResistance,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -70,14 +87,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(performanceDisposable);
 
-			z.CoefficientOfRollingResistance
+			performance.CoefficientOfRollingResistance
 				.BindToErrorProvider(errorProvider, textBoxCoefficientOfRollingResistance)
 				.AddTo(performanceDisposable);
 
-			z.AerodynamicDragCoefficient
+			performance.AerodynamicDragCoefficient
 				.BindTo(
 					textBoxAerodynamicDragCoefficient,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -90,7 +107,7 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(performanceDisposable);
 
-			z.AerodynamicDragCoefficient
+			performance.AerodynamicDragCoefficient
 				.BindToErrorProvider(errorProvider, textBoxAerodynamicDragCoefficient)
 				.AddTo(performanceDisposable);
 

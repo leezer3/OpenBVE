@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
+using TrainEditor2.Models.Sounds;
 using TrainEditor2.ViewModels.Sounds;
 
 namespace TrainEditor2.Views
@@ -194,13 +195,13 @@ namespace TrainEditor2.Views
 			return elementDisposable;
 		}
 
-		private IDisposable BindToSoundElement<T, U>(T element) where T : SoundElementViewModel<U>
+		private IDisposable BindToSoundElement<T, U>(T element) where T : SoundElementViewModel<U> where U : struct
 		{
 			CompositeDisposable elementDisposable = new CompositeDisposable();
 
 			comboBoxSoundKey.Enabled = true;
 			comboBoxSoundKey.Items.Clear();
-			comboBoxSoundKey.Items.AddRange(Enum.GetValues(typeof(U)).OfType<Enum>().Select(x => x.GetStringValues().First()).OfType<object>().ToArray());
+			comboBoxSoundKey.Items.AddRange(Enum.GetValues(typeof(U)).OfType<Enum>().Select(x => SoundKey.GetRewords(x).First()).OfType<object>().ToArray());
 
 			element.Key
 				.BindTo(

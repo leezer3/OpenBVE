@@ -94,7 +94,7 @@ namespace TrainEditor2.ViewModels.Panels
 			get;
 		}
 
-		internal ReactiveProperty<TreeViewItemViewModel> TreeItem
+		internal ReadOnlyReactiveCollection<TreeViewItemViewModel> TreeItems
 		{
 			get;
 		}
@@ -163,7 +163,6 @@ namespace TrainEditor2.ViewModels.Panels
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
 
-			CompositeDisposable treeItemDisposable = new CompositeDisposable();
 			CompositeDisposable listItemDisposable = new CompositeDisposable();
 
 			LocationX = touch
@@ -254,29 +253,12 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactivePropertyAsSynchronized(x => x.Layer)
 				.AddTo(disposable);
 
-			TreeItem = touch
-				.ObserveProperty(x => x.TreeItem)
-				.Do(_ => TreeItem?.Value.Dispose())
-				.Select(x => new TreeViewItemViewModel(x))
-				.ToReactiveProperty()
-				.AddTo(disposable);
-
-			TreeItem.Subscribe(x =>
-				{
-					treeItemDisposable.Dispose();
-					treeItemDisposable = new CompositeDisposable();
-
-					x.PropertyChangedAsObservable()
-						.ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None)
-						.Subscribe(_ => TreeItem.ForceNotify())
-						.AddTo(treeItemDisposable);
-				})
-				.AddTo(disposable);
+			TreeItems = touch.TreeItems.ToReadOnlyReactiveCollection(x => new TreeViewItemViewModel(x, null)).AddTo(disposable);
 
 			SelectedTreeItem = touch
 				.ToReactivePropertyAsSynchronized(
 					x => x.SelectedTreeItem,
-					x => TreeItem.Value.SearchViewModel(x),
+					x => TreeItems.Select(y => y.SearchViewModel(x)).FirstOrDefault(y => y != null),
 					x => x?.Model
 				)
 				.AddTo(disposable);
@@ -347,13 +329,13 @@ namespace TrainEditor2.ViewModels.Panels
 				.AddTo(disposable);
 
 			AddSoundEntry = SelectedTreeItem
-				.Select(x => x == TreeItem.Value.Children[0])
+				.Select(x => x == TreeItems[0].Children[0])
 				.ToReactiveCommand()
 				.WithSubscribe(touch.AddSoundEntry)
 				.AddTo(disposable);
 
 			AddCommandEntry = SelectedTreeItem
-				.Select(x => x == TreeItem.Value.Children[1])
+				.Select(x => x == TreeItems[0].Children[1])
 				.ToReactiveCommand()
 				.WithSubscribe(touch.AddCommandEntry)
 				.AddTo(disposable);

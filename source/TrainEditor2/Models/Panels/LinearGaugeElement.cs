@@ -122,7 +122,7 @@ namespace TrainEditor2.Models.Panels
 			}
 		}
 
-		internal LinearGaugeElement()
+		public LinearGaugeElement()
 		{
 			Subject = new Subject();
 			DaytimeImage = string.Empty;

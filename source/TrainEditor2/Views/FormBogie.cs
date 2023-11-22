@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Forms;
+using OpenBveApi.World;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -18,6 +20,11 @@ namespace TrainEditor2.Views
 			InitializeComponent();
 
 			disposable = new CompositeDisposable();
+
+			string[] lengthUnits = Unit.GetAllRewords<UnitOfLength>();
+
+			comboBoxFrontAxleUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxRearAxleUnit.Items.AddRange((string[])lengthUnits.Clone());
 
 			bogie.DefinedAxles
 				.BindTo(
@@ -62,6 +69,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxFrontAxle)
 				.AddTo(disposable);
 
+			bogie.FrontAxleUnit
+				.BindTo(
+					comboBoxFrontAxleUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (UnitOfLength)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxFrontAxleUnit.SelectedIndexChanged += h,
+							h => comboBoxFrontAxleUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(disposable);
+
 			bogie.RearAxle
 				.BindTo(
 					textBoxRearAxle,
@@ -80,6 +103,22 @@ namespace TrainEditor2.Views
 
 			bogie.RearAxle
 				.BindToErrorProvider(errorProvider, textBoxRearAxle)
+				.AddTo(disposable);
+
+			bogie.RearAxleUnit
+				.BindTo(
+					comboBoxRearAxleUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (UnitOfLength)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxRearAxleUnit.SelectedIndexChanged += h,
+							h => comboBoxRearAxleUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(disposable);
 
 			bogie.Reversed
@@ -117,7 +156,7 @@ namespace TrainEditor2.Views
 
 		private void FormBogie_Load(object sender, EventArgs e)
 		{
-			Icon = FormEditor.GetIcon();
+			Icon = WinFormsUtilities.GetIcon();
 
 			labelDefinedAxles.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "defined_axles")}:";
 			groupBoxAxles.Text = Utilities.GetInterfaceString("car_settings", "general", "axles", "name");
@@ -130,12 +169,17 @@ namespace TrainEditor2.Views
 
 		private void ButtonOpen_Click(object sender, EventArgs e)
 		{
-			FormEditor.OpenFileDialog(textBoxObject);
+			WinFormsUtilities.OpenFileDialog(textBoxObject);
 		}
 
 		private void ButtonOK_Click(object sender, EventArgs e)
 		{
 			Close();
+		}
+
+		private void checkBoxDefinedAxles_CheckedChanged(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

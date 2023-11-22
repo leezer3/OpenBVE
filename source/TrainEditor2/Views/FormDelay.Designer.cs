@@ -42,13 +42,15 @@
 			this.labelDown = new System.Windows.Forms.Label();
 			this.labelUp = new System.Windows.Forms.Label();
 			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+			this.comboBoxUpUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxDownUnit = new System.Windows.Forms.ComboBox();
 			this.groupBoxEntry.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// buttonOK
 			// 
-			this.buttonOK.Location = new System.Drawing.Point(248, 192);
+			this.buttonOK.Location = new System.Drawing.Point(304, 192);
 			this.buttonOK.Name = "buttonOK";
 			this.buttonOK.Size = new System.Drawing.Size(56, 24);
 			this.buttonOK.TabIndex = 40;
@@ -96,13 +98,15 @@
 			// 
 			// groupBoxEntry
 			// 
+			this.groupBoxEntry.Controls.Add(this.comboBoxDownUnit);
+			this.groupBoxEntry.Controls.Add(this.comboBoxUpUnit);
 			this.groupBoxEntry.Controls.Add(this.textBoxDown);
 			this.groupBoxEntry.Controls.Add(this.labelDown);
 			this.groupBoxEntry.Controls.Add(this.labelUp);
 			this.groupBoxEntry.Controls.Add(this.textBoxUp);
 			this.groupBoxEntry.Location = new System.Drawing.Point(184, 112);
 			this.groupBoxEntry.Name = "groupBoxEntry";
-			this.groupBoxEntry.Size = new System.Drawing.Size(120, 72);
+			this.groupBoxEntry.Size = new System.Drawing.Size(176, 72);
 			this.groupBoxEntry.TabIndex = 44;
 			this.groupBoxEntry.TabStop = false;
 			this.groupBoxEntry.Text = "Edit entry";
@@ -136,11 +140,29 @@
 			// 
 			this.errorProvider.ContainerControl = this;
 			// 
+			// comboBoxUpUnit
+			// 
+			this.comboBoxUpUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxUpUnit.FormattingEnabled = true;
+			this.comboBoxUpUnit.Location = new System.Drawing.Point(120, 16);
+			this.comboBoxUpUnit.Name = "comboBoxUpUnit";
+			this.comboBoxUpUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxUpUnit.TabIndex = 57;
+			// 
+			// comboBoxDownUnit
+			// 
+			this.comboBoxDownUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxDownUnit.FormattingEnabled = true;
+			this.comboBoxDownUnit.Location = new System.Drawing.Point(120, 40);
+			this.comboBoxDownUnit.Name = "comboBoxDownUnit";
+			this.comboBoxDownUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxDownUnit.TabIndex = 58;
+			// 
 			// FormDelay
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(314, 221);
+			this.ClientSize = new System.Drawing.Size(369, 225);
 			this.Controls.Add(this.groupBoxEntry);
 			this.Controls.Add(this.listViewDelay);
 			this.Controls.Add(this.buttonOK);
@@ -168,5 +190,7 @@
 		private System.Windows.Forms.TextBox textBoxDown;
 		private System.Windows.Forms.Label labelDown;
 		private System.Windows.Forms.ErrorProvider errorProvider;
+		private System.Windows.Forms.ComboBox comboBoxDownUnit;
+		private System.Windows.Forms.ComboBox comboBoxUpUnit;
 	}
 }

@@ -70,7 +70,7 @@ namespace TrainEditor2.Models.Panels
 			}
 		}
 
-		internal DigitalNumberElement()
+		public DigitalNumberElement()
 		{
 			Subject = new Subject();
 			DaytimeImage = string.Empty;
