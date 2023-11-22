@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using OpenBveApi.Math;
+using OpenBveApi.Trains;
 using SoundManager;
 using TrainEditor2.Models.Sounds;
 using TrainManager.Motor;

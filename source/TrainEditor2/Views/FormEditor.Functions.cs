@@ -320,7 +320,6 @@ namespace TrainEditor2.Views
 			buttonDelayPowerSet.Text = Utilities.GetInterfaceString("navigation", "set");
 			buttonRearBogieSet.Text = Utilities.GetInterfaceString("navigation", "set");
 			buttonFrontBogieSet.Text = Utilities.GetInterfaceString("navigation", "set");
-			buttonDelayElectricBrake.Text = Utilities.GetInterfaceString("navigation", "set");
 			
 			buttonSoundFileNameOpen.Text = Utilities.GetInterfaceString("navigation", "open");
 			buttonThisNighttimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
