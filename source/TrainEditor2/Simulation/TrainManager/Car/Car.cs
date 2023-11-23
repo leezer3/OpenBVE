@@ -75,7 +75,7 @@ namespace TrainEditor2.Simulation.TrainManager
 
 					double gain = baseGain * Sounds.Run[key].TargetVolume;
 
-					if (Sounds.Run[key].IsPlaying)
+					if (Sounds.Run[key].IsPlaying || Sounds.Run[key].IsPaused)
 					{
 						if (pitch > 0.01 & gain > 0.001)
 						{
