@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US">
 		<body>
@@ -3689,6 +3689,9 @@ Please follow the following instructions:
 						<trans-unit id="loco_brake">
 							<source>LocoBrake</source>
 						</trans-unit>
+						<trans-unit id="electric_brake">
+							<source>ElectricBrake</source>
+						</trans-unit>
 						<trans-unit id="notch">
 							<source>Notch</source>
 						</trans-unit>
@@ -4402,8 +4405,14 @@ Please follow the following instructions:
 						<trans-unit id="command">
 							<source>Command</source>
 						</trans-unit>
+						<trans-unit id="sound_command">
+							<source>Sound and Command</source>
+						</trans-unit>
 						<trans-unit id="command_option">
 							<source>CommandOption</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
 						</trans-unit>
 					</group>
 				</group>
