@@ -613,7 +613,7 @@ namespace TrainManager.Car
 					}
 					else
 					{
-						TrainManagerBase.currentHost.StopSound(Sounds.Run[key].Source);
+						Sounds.Run[key].Pause();
 					}
 				}
 				else if (pitch > 0.02 & gain > 0.01)
@@ -1245,7 +1245,7 @@ namespace TrainManager.Car
 						}
 						else
 						{
-							Sounds.Flange[key].Stop();
+							Sounds.Flange[key].Pause();
 						}
 					}
 					else if (pitch > 0.02 & gain > 0.01)
