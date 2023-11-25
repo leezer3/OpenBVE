@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Formats.OpenBve;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -59,749 +60,318 @@ namespace Train.OpenBve
 			Encoding Encoding = TextEncoding.GetSystemEncodingFromFile(FileName);
 
 			// parse configuration file
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
-			int emptyLines = 0;
-			for (int i = Lines.Count - 1; i >= 0; i--)
-			{
-				/*
-				 * Strip comments and remove empty resulting lines etc.
-				 *
-				 * This fixes an error with some NYCTA content, which has
-				 * a copyright notice instead of the file header specified....
-				 */
-				int j = Lines[i].IndexOf(';');
-				if (j >= 0)
-				{
-					Lines[i] = Lines[i].Substring(0, j).Trim();
-				}
-				else
-				{
-					Lines[i] = Lines[i].Trim();
-				}
-				if (string.IsNullOrEmpty(Lines[i]))
-				{
-					emptyLines++;
-				}
-			}
-
-			if (Lines.Count == 0 || emptyLines == Lines.Count)
-			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "Empty sound.cfg encountered in " + FileName + ".");
-			}
-			else if (string.Compare(Lines[0], "version 1.0", StringComparison.OrdinalIgnoreCase) != 0)
-			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid file format encountered in " + FileName + ". The first line is expected to be \"Version 1.0\".");
-			}
+			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			Dictionary<int, string> MotorFiles = new Dictionary<int, string>();
-			double invfac = Lines.Count == 0 ? 0.1 : 0.1 / Lines.Count;
-			for (int i = 0; i < Lines.Count; i++)
+
+			ConfigFile<SoundCfgSection, SoundCfgKey> cfg = new ConfigFile<SoundCfgSection, SoundCfgKey>(Lines, Plugin.currentHost, "Version 1.0");
+			while (cfg.RemainingSubBlocks > 0)
 			{
-				if (string.IsNullOrEmpty(Lines[i]))
+				Block<SoundCfgSection, SoundCfgKey> block = cfg.ReadNextBlock();
+				switch (block.Key)
 				{
-					continue;
-				}
-				Plugin.CurrentProgress = Plugin.LastProgress + invfac * i;
-				if ((i & 7) == 0)
-				{
-					System.Threading.Thread.Sleep(1);
-					if (Plugin.Cancel) return;
-				}
-				switch (Lines[i].ToLowerInvariant())
-				{
-					case "[run]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+					case SoundCfgSection.Run:
+						while (block.RemainingDataValues > 0 && block.GetIndexedValue(out var runIndex, out var fileName))
 						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
+							for (int c = 0; c < train.Cars.Length; c++)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out var k))
+								if (train.Cars[c].Sounds.Run == null)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									train.Cars[c].Sounds.Run = new Dictionary<int, CarSound>();
+								}
+
+								if (train.Cars[c].Sounds.Run.ContainsKey(runIndex))
+								{
+									train.Cars[c].Sounds.Run[runIndex] = new CarSound(Plugin.currentHost, trainFolder, fileName, SoundCfgParser.mediumRadius, center);
 								}
 								else
 								{
-									if (k >= 0)
-									{
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											if(train.Cars[c].Sounds.Run == null)
-											{
-												train.Cars[c].Sounds.Run = new Dictionary<int, CarSound>();
-											}
-
-											if (train.Cars[c].Sounds.Run.ContainsKey(k))
-											{
-												train.Cars[c].Sounds.Run[k] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
-											}
-											else
-											{
-												train.Cars[c].Sounds.Run.Add(k, new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center));
-											}
-										}
-									}
-									else
-									{
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "RunIndex must be greater than or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									}
+									train.Cars[c].Sounds.Run.Add(runIndex, new CarSound(Plugin.currentHost, trainFolder, fileName, SoundCfgParser.mediumRadius, center));
 								}
 							}
-							i++;
 						}
-						i--; break;
-					case "[flange]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						break;
+					case SoundCfgSection.Flange:
+						while (block.RemainingDataValues > 0 && block.GetIndexedValue(out var flangeIndex, out var fileName))
 						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
+							for (int c = 0; c < train.Cars.Length; c++)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out var k))
+								if (train.Cars[c].Sounds.Flange == null)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									train.Cars[c].Sounds.Flange = new Dictionary<int, CarSound>();
+								}
+
+								if (train.Cars[c].Sounds.Flange.ContainsKey(flangeIndex))
+								{
+									train.Cars[c].Sounds.Flange[flangeIndex] = new CarSound(Plugin.currentHost, trainFolder, fileName, SoundCfgParser.mediumRadius, center);
 								}
 								else
 								{
-									if (k >= 0)
-									{
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											if (train.Cars[c].Sounds.Flange.ContainsKey(k))
-											{
-												train.Cars[c].Sounds.Flange[k] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
-											}
-											else
-											{
-												train.Cars[c].Sounds.Flange.Add(k, new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center));
-											}
-										}
-									}
-									else
-									{
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "FlangeIndex must be greater than or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									}
+									train.Cars[c].Sounds.Flange.Add(flangeIndex, new CarSound(Plugin.currentHost, trainFolder, fileName, SoundCfgParser.mediumRadius, center));
 								}
 							}
-							i++;
 						}
-						i--; break;
-					case "[motor]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+
+						break;
+					case SoundCfgSection.Motor:
+						while (block.RemainingDataValues > 0 && block.GetIndexedValue(out var motorIndex, out var fileName))
 						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
+							if (!MotorFiles.ContainsKey(motorIndex))
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out var k))
+								MotorFiles.Add(motorIndex, Path.CombineFile(trainFolder, fileName));
+							}
+							else
+							{
+								MotorFiles[motorIndex] = Path.CombineFile(trainFolder, fileName);
+							}
+
+							if (!System.IO.File.Exists(MotorFiles[motorIndex]))
+							{
+								Plugin.currentHost.AddMessage(MessageType.Error, true, "File " + MotorFiles[motorIndex] + " does not exist in file " + FileName);
+								MotorFiles[motorIndex] = string.Empty;
+							}
+						}
+						break;
+					case SoundCfgSection.Switch:
+						while (block.RemainingDataValues > 0 && block.GetIndexedValue(out var switchIndex, out var fileName))
+						{
+							for (int c = 0; c < train.Cars.Length; c++)
+							{
+								int n = train.Cars[c].FrontAxle.PointSounds.Length;
+								if (switchIndex >= n)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								}
-								else
-								{
-									if (k >= 0)
+									Array.Resize(ref train.Cars[c].FrontAxle.PointSounds, switchIndex + 1);
+									Array.Resize(ref train.Cars[c].RearAxle.PointSounds, switchIndex + 1);
+									for (int h = n; h < switchIndex; h++)
 									{
-										if (!MotorFiles.ContainsKey(k))
-										{
-											MotorFiles.Add(k, Path.CombineFile(trainFolder, b));
-										}
-										else
-										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, true, "A duplicate MotorSound with index " + k + " was declared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-											MotorFiles[k] = Path.CombineFile(trainFolder, b);
-										}
-										
-										if (!System.IO.File.Exists(MotorFiles[k]))
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, true, "File " + MotorFiles[k] + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-											MotorFiles[k] = string.Empty;
-										}
-									}
-									else
-									{
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "MotorIndex must be greater than or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										train.Cars[c].FrontAxle.PointSounds[h] = new CarSound();
+										train.Cars[c].RearAxle.PointSounds[h] = new CarSound();
 									}
 								}
+								Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[c].FrontAxle.Position);
+								Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[c].RearAxle.Position);
+								train.Cars[c].FrontAxle.PointSounds[switchIndex] = new CarSound(Plugin.currentHost, trainFolder, fileName, SoundCfgParser.smallRadius, frontaxle);
+								train.Cars[c].RearAxle.PointSounds[switchIndex] = new CarSound(Plugin.currentHost, trainFolder, fileName, SoundCfgParser.smallRadius, rearaxle);
 							}
-							i++;
 						}
-						i--; break;
-					case "[switch]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						break;
+					case SoundCfgSection.Brake:
+						string bcReleaseHigh, bcRelease, bcReleaseFull, emergency, emergencyRelease, bpDecomp;
+						block.GetValue(SoundCfgKey.BcReleaseHigh, out bcReleaseHigh);
+						block.GetValue(SoundCfgKey.BcRelease, out bcRelease);
+						block.GetValue(SoundCfgKey.BcReleaseFull, out bcReleaseFull);
+						block.GetValue(SoundCfgKey.Emergency, out emergency);
+						block.GetValue(SoundCfgKey.EmergencyRelease, out emergencyRelease);
+						block.GetValue(SoundCfgKey.BpDecomp, out bpDecomp);
+						for (int c = 0; c < train.Cars.Length; c++)
 						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
-							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (NumberFormats.TryParseIntVb6(a, out var switchIndex))
-								{
-									if (switchIndex < 0)
-									{
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "SwitchIndex must be greater than or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										continue;
-									}
-									for (int c = 0; c < train.Cars.Length; c++)
-									{
-										int n = train.Cars[c].FrontAxle.PointSounds.Length;
-										if (switchIndex >= n)
-										{
-											Array.Resize(ref train.Cars[c].FrontAxle.PointSounds, switchIndex + 1);
-											Array.Resize(ref train.Cars[c].RearAxle.PointSounds, switchIndex + 1);
-											for (int h = n; h < switchIndex; h++)
-											{
-												train.Cars[c].FrontAxle.PointSounds[h] = new CarSound();
-												train.Cars[c].RearAxle.PointSounds[h] = new CarSound();
-											}
-										}
-										Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[c].FrontAxle.Position);
-										Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[c].RearAxle.Position);
-										train.Cars[c].FrontAxle.PointSounds[switchIndex] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, frontaxle);
-										train.Cars[c].RearAxle.PointSounds[switchIndex] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, rearaxle);
-									}
-								}
-								else
-								{
-									Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported index " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								}
-							}
-							i++;
+							train.Cars[c].CarBrake.AirHigh = new CarSound(Plugin.currentHost, trainFolder, bcReleaseHigh, SoundCfgParser.smallRadius, center);
+							train.Cars[c].CarBrake.Air = new CarSound(Plugin.currentHost, trainFolder, bcRelease, SoundCfgParser.smallRadius, center);
+							train.Cars[c].CarBrake.AirZero = new CarSound(Plugin.currentHost, trainFolder, bcReleaseFull, SoundCfgParser.smallRadius, center);
+							train.Cars[c].CarBrake.Release = new CarSound(Plugin.currentHost, trainFolder, bpDecomp, SoundCfgParser.smallRadius, center);
+							
 						}
-						i--; break;
-					case "[brake]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Plugin.currentHost, trainFolder, emergency, SoundCfgParser.mediumRadius, center);
+						train.Handles.EmergencyBrake.ReleaseSound = new CarSound(Plugin.currentHost, trainFolder, emergencyRelease, SoundCfgParser.mediumRadius, center);
+						break;
+					case SoundCfgSection.Compressor:
+						string attack, loop, release;
+						block.GetValue(SoundCfgKey.Attack, out attack);
+						block.GetValue(SoundCfgKey.Loop, out loop);
+						block.GetValue(SoundCfgKey.Release, out release);
+						for (int c = 0; c < train.Cars.Length; c++)
 						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
+							if (train.Cars[c].CarBrake.brakeType == BrakeType.Main)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								switch (a.ToLowerInvariant())
-								{
-									case "bc release high":
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											train.Cars[c].CarBrake.AirHigh = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, center);
-										}
-
-										break;
-									case "bc release":
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											train.Cars[c].CarBrake.Air = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, center);
-										}
-
-										break;
-									case "bc release full":
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											train.Cars[c].CarBrake.AirZero = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, center);
-										}
-
-										break;
-									case "emergency":
-										train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
-										break;
-									case "emergencyrelease":
-										train.Handles.EmergencyBrake.ReleaseSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
-										break;
-									case "bp decomp":
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											train.Cars[c].CarBrake.Release = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, center);
-										}
-
-										break;
-									default:
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										break;
-								}
-
+								train.Cars[c].CarBrake.airCompressor.StartSound = new CarSound(Plugin.currentHost, trainFolder, attack, SoundCfgParser.mediumRadius, center);
+								train.Cars[c].CarBrake.airCompressor.LoopSound = new CarSound(Plugin.currentHost, trainFolder, loop, SoundCfgParser.mediumRadius, center);
+								train.Cars[c].CarBrake.airCompressor.EndSound = new CarSound(Plugin.currentHost, trainFolder, release, SoundCfgParser.mediumRadius, center);
 							}
-							i++;
 						}
-						i--; break;
-					case "[compressor]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						break;
+					case SoundCfgSection.Suspension:
+						string springL, springR;
+						block.GetValue(SoundCfgKey.Left, out springL);
+						block.GetValue(SoundCfgKey.Right, out springR);
+						for (int c = 0; c < train.Cars.Length; c++)
 						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
-							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								for (int c = 0; c < train.Cars.Length; c++)
-								{
-									if (train.Cars[c].CarBrake.brakeType == BrakeType.Main)
-									{
-										switch (a.ToLowerInvariant())
-										{
-											case "attack":
-												train.Cars[c].CarBrake.airCompressor.StartSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
-												break;
-											case "loop":
-												train.Cars[c].CarBrake.airCompressor.LoopSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
-												break;
-											case "release":
-												train.Cars[c].CarBrake.airCompressor.EndSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
-												break;
-											default:
-												Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-												break;
-										}
-									}
-								}
-
-							}
-							i++;
+							train.Cars[c].Sounds.SpringL = new CarSound(Plugin.currentHost, trainFolder, springL, SoundCfgParser.smallRadius, left);
+							train.Cars[c].Sounds.SpringR = new CarSound(Plugin.currentHost, trainFolder, springR, SoundCfgParser.smallRadius, left);
 						}
-						i--; break;
-					case "[suspension]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						break;
+					case SoundCfgSection.Horn:
+						string primaryLoop, secondaryLoop, musicLoop;
+						if (block.GetValue(SoundCfgKey.Primary, out primaryLoop) || block.GetValue(SoundCfgKey.PrimaryLoop, out primaryLoop))
 						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
+							Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, primaryLoop), SoundCfgParser.largeRadius, out var sound);
+							train.Cars[train.DriverCar].Horns[0].LoopSound = sound as SoundBuffer;
+							train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
+							train.Cars[train.DriverCar].Horns[0].Loop = false;
+							if (block.GetValue(SoundCfgKey.PrimaryStart, out string primaryStart))
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								switch (a.ToLowerInvariant())
-								{
-									case "left":
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											train.Cars[c].Sounds.SpringL = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, left);
-										}
-
-										break;
-									case "right":
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											train.Cars[c].Sounds.SpringR = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, right);
-										}
-
-										break;
-									default:
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										break;
-								}
+								Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, primaryStart), SoundCfgParser.largeRadius, out var startSound);
+								train.Cars[train.DriverCar].Horns[0].StartSound = startSound as SoundBuffer;
+								train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
 							}
-							i++;
+							if (block.GetValue(SoundCfgKey.PrimaryStart, out string primaryEnd))
+							{
+								Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, primaryEnd), SoundCfgParser.largeRadius, out var endSound);
+								train.Cars[train.DriverCar].Horns[0].StartSound = endSound as SoundBuffer;
+								train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
+							}
 						}
-						i--; break;
-					case "[horn]":
-						i++;
-						while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						if (block.GetValue(SoundCfgKey.Secondary, out secondaryLoop) || block.GetValue(SoundCfgKey.SecondaryLoop, out secondaryLoop))
 						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
+							Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, secondaryLoop), SoundCfgParser.largeRadius, out var sound);
+							train.Cars[train.DriverCar].Horns[1].LoopSound = sound as SoundBuffer;
+							train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
+							train.Cars[train.DriverCar].Horns[1].Loop = false;
+							if (block.GetValue(SoundCfgKey.SecondaryStart, out string secondaryStart))
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								try
-								{
-									switch (a.ToLowerInvariant())
-									{
-										// PRIMARY HORN (Enter)
-										case "primarystart":
-											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var primaryStart);
-											train.Cars[train.DriverCar].Horns[0].StartSound = primaryStart as SoundBuffer;
-											train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
-											train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
-											break;
-										case "primaryend":
-										case "primaryrelease":
-											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var primaryEnd);
-											train.Cars[train.DriverCar].Horns[0].EndSound = primaryEnd as SoundBuffer;
-											train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
-											train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
-											break;
-										case "primaryloop":
-										case "primary":
-											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var primaryLoop);
-											train.Cars[train.DriverCar].Horns[0].LoopSound = primaryLoop as SoundBuffer;
-											train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
-											train.Cars[train.DriverCar].Horns[0].Loop = false;
-											break;
-										// SECONDARY HORN (Numpad Enter)
-										case "secondarystart":
-											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var secondaryStart);
-											train.Cars[train.DriverCar].Horns[1].StartSound = secondaryStart as SoundBuffer;
-											train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
-											train.Cars[train.DriverCar].Horns[1].StartEndSounds = true;
-											break;
-										case "secondaryend":
-										case "secondaryrelease":
-											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var secondaryEnd);
-											train.Cars[train.DriverCar].Horns[1].EndSound = secondaryEnd as SoundBuffer;
-											train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
-											train.Cars[train.DriverCar].Horns[1].StartEndSounds = true;
-											break;
-										case "secondaryloop":
-										case "secondary":
-											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var secondaryLoop);
-											train.Cars[train.DriverCar].Horns[1].LoopSound = secondaryLoop as SoundBuffer;
-											train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
-											train.Cars[train.DriverCar].Horns[1].Loop = false;
-											break;
-										// MUSIC HORN
-										case "musicstart":
-											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius, out var musicStart);
-											train.Cars[train.DriverCar].Horns[2].StartSound = musicStart as SoundBuffer;
-											train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
-											train.Cars[train.DriverCar].Horns[2].StartEndSounds = true;
-											break;
-										case "musicend":
-										case "musicrelease":
-											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius, out var musicEnd);
-											train.Cars[train.DriverCar].Horns[2].EndSound = musicEnd as SoundBuffer;
-											train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
-											train.Cars[train.DriverCar].Horns[2].StartEndSounds = true;
-											break;
-										case "musicloop":
-										case "music":
-											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius, out var musicLoop);
-											train.Cars[train.DriverCar].Horns[2].LoopSound = musicLoop as SoundBuffer;
-											train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
-											train.Cars[train.DriverCar].Horns[2].Loop = true;
-											break;
-										default:
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-											break;
-									}
-								}
-								catch
-								{
-									Plugin.currentHost.AddMessage(MessageType.Warning, false, "FileName contains illegal characters or is empty in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								}
+								Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, secondaryStart), SoundCfgParser.largeRadius, out var startSound);
+								train.Cars[train.DriverCar].Horns[1].StartSound = startSound as SoundBuffer;
+								train.Cars[train.DriverCar].Horns[1].StartEndSounds = true;
+							}
+							if (block.GetValue(SoundCfgKey.SecondaryEnd, out string secondaryEnd))
+							{
+								Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, secondaryEnd), SoundCfgParser.largeRadius, out var endSound);
+								train.Cars[train.DriverCar].Horns[1].EndSound = endSound as SoundBuffer;
+								train.Cars[train.DriverCar].Horns[1].StartEndSounds = true;
 							}
 
-							i++;
 						}
-						i--; break;
-					case "[door]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						if (block.GetValue(SoundCfgKey.Music, out musicLoop) || block.GetValue(SoundCfgKey.MusicLoop, out musicLoop))
 						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
+							Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, musicLoop), SoundCfgParser.mediumRadius, out var sound);
+							train.Cars[train.DriverCar].Horns[0].LoopSound = sound as SoundBuffer;
+							train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
+							train.Cars[train.DriverCar].Horns[0].Loop = false;
+							if (block.GetValue(SoundCfgKey.MusicStart, out string musicStart))
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								switch (a.ToLowerInvariant())
-								{
-									case "open left":
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											train.Cars[c].Doors[0].OpenSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, left);
-										}
-
-										break;
-									case "open right":
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											train.Cars[c].Doors[1].OpenSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, right);
-										}
-
-										break;
-									case "close left":
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											train.Cars[c].Doors[0].CloseSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, left);
-										}
-
-										break;
-									case "close right":
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											train.Cars[c].Doors[1].CloseSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, right);
-										}
-										break;
-									default:
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										break;
-								}
+								Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, musicStart), SoundCfgParser.mediumRadius, out var startSound);
+								train.Cars[train.DriverCar].Horns[0].StartSound = startSound as SoundBuffer;
+								train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
 							}
-							i++;
-						}
-						i--; break;
-					case "[ats]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
+							if (block.GetValue(SoundCfgKey.MusicEnd, out string musicEnd))
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out var k))
-								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								}
-								else
-								{
-									if (k >= 0)
-									{
-										if (!train.Cars[train.DriverCar].Sounds.Plugin.ContainsKey(k))
-										{
-											train.Cars[train.DriverCar].Sounds.Plugin.Add(k, new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel));
-										}
-										else
-										{
-											train.Cars[train.DriverCar].Sounds.Plugin[k] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										}
-									}
-									else
-									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Index must be greater than or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									}
-								}
-
+								Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, musicEnd), SoundCfgParser.mediumRadius, out var endSound);
+								train.Cars[train.DriverCar].Horns[0].EndSound = endSound as SoundBuffer;
+								train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
 							}
 
-							i++;
 						}
-						i--; break;
-					case "[buzzer]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						break;
+					case SoundCfgSection.Door:
+						string openLeft, closeLeft, openRight, closeRight;
+						block.GetValue(SoundCfgKey.OpenLeft, out openLeft);
+						block.GetValue(SoundCfgKey.CloseLeft, out closeLeft);
+						block.GetValue(SoundCfgKey.OpenRight, out openRight);
+						block.GetValue(SoundCfgKey.CloseRight, out closeRight);
+						for (int c = 0; c < train.Cars.Length; c++)
 						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
-							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								switch (a.ToLowerInvariant())
-								{
-									case "correct":
-										train.SafetySystems.StationAdjust.AdjustAlarm = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									default:
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										break;
-								}
-
-							}
-							i++;
+							train.Cars[c].Doors[0].OpenSound = new CarSound(Plugin.currentHost, trainFolder, openLeft, SoundCfgParser.smallRadius, left);
+							train.Cars[c].Doors[0].CloseSound = new CarSound(Plugin.currentHost, trainFolder, closeLeft, SoundCfgParser.smallRadius, left);
+							train.Cars[c].Doors[1].OpenSound = new CarSound(Plugin.currentHost, trainFolder, openRight, SoundCfgParser.smallRadius, right);
+							train.Cars[c].Doors[1].CloseSound = new CarSound(Plugin.currentHost, trainFolder, closeRight, SoundCfgParser.smallRadius, right);
 						}
-						i--; break;
-					case "[pilot lamp]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						break;
+					case SoundCfgSection.ATS:
+						while (block.RemainingDataValues > 0 && block.GetIndexedValue(out var atsIndex, out var fileName))
 						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
+							if (!train.Cars[train.DriverCar].Sounds.Plugin.ContainsKey(atsIndex))
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								switch (a.ToLowerInvariant())
-								{
-									case "on":
-										train.SafetySystems.PilotLamp.OnSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "off":
-										train.SafetySystems.PilotLamp.OffSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									default:
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										break;
-								}
+								train.Cars[train.DriverCar].Sounds.Plugin.Add(atsIndex, new CarSound(Plugin.currentHost, trainFolder, fileName, SoundCfgParser.tinyRadius, panel));
 							}
-							i++;
+							else
+							{
+								train.Cars[train.DriverCar].Sounds.Plugin[atsIndex] = new CarSound(Plugin.currentHost, trainFolder, fileName, SoundCfgParser.tinyRadius, panel);
+							}
 						}
-						i--; break;
-					case "[brake handle]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						break;
+					case SoundCfgSection.Buzzer:
+						string buzzerCorrect;
+						block.GetValue(SoundCfgKey.Correct, out buzzerCorrect);
+						train.SafetySystems.StationAdjust.AdjustAlarm = new CarSound(Plugin.currentHost, trainFolder, buzzerCorrect, SoundCfgParser.tinyRadius, panel);
+						break;
+					case SoundCfgSection.PilotLamp:
+						string lampOn, lampOff;
+						block.GetValue(SoundCfgKey.On, out lampOn);
+						block.GetValue(SoundCfgKey.Off, out lampOff);
+						train.SafetySystems.PilotLamp.OnSound = new CarSound(Plugin.currentHost, trainFolder, lampOn, SoundCfgParser.tinyRadius, panel);
+						train.SafetySystems.PilotLamp.OffSound = new CarSound(Plugin.currentHost, trainFolder, lampOff, SoundCfgParser.tinyRadius, panel);
+						break;
+					case SoundCfgSection.BrakeHandle:
+						string apply, applyFast, brakeRelease, brakeReleaseFast, brakeMin, brakeMax;
+						block.GetValue(SoundCfgKey.Apply, out apply);
+						block.GetValue(SoundCfgKey.ApplyFast, out applyFast);
+						block.GetValue(SoundCfgKey.Release, out brakeRelease);
+						block.GetValue(SoundCfgKey.ReleaseFast, out brakeReleaseFast);
+						block.GetValue(SoundCfgKey.Min, out brakeMin);
+						block.GetValue(SoundCfgKey.Max, out brakeMax);
+						train.Handles.Brake.Increase = new CarSound(Plugin.currentHost, trainFolder, apply, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Brake.IncreaseFast = new CarSound(Plugin.currentHost, trainFolder, applyFast, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Brake.Decrease = new CarSound(Plugin.currentHost, trainFolder, brakeRelease, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Brake.DecreaseFast = new CarSound(Plugin.currentHost, trainFolder, brakeReleaseFast, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Brake.Min = new CarSound(Plugin.currentHost, trainFolder, brakeMin, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Brake.Max = new CarSound(Plugin.currentHost, trainFolder, brakeMax, SoundCfgParser.tinyRadius, panel);
+						break;
+					case SoundCfgSection.MasterController:
+						string up, upFast, down, downFast, powerMin, powerMax;
+						block.GetValue(SoundCfgKey.Up, out up);
+						block.GetValue(SoundCfgKey.UpFast, out upFast);
+						block.GetValue(SoundCfgKey.Down, out down);
+						block.GetValue(SoundCfgKey.DownFast, out downFast);
+						block.GetValue(SoundCfgKey.Min, out powerMin);
+						block.GetValue(SoundCfgKey.Max, out powerMax);
+						train.Handles.Power.Increase = new CarSound(Plugin.currentHost, trainFolder, up, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Power.IncreaseFast = new CarSound(Plugin.currentHost, trainFolder, upFast, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Power.Decrease = new CarSound(Plugin.currentHost, trainFolder, down, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Power.DecreaseFast = new CarSound(Plugin.currentHost, trainFolder, downFast, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Power.Min = new CarSound(Plugin.currentHost, trainFolder, powerMin, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Power.Max = new CarSound(Plugin.currentHost, trainFolder, powerMax, SoundCfgParser.tinyRadius, panel);
+						break;
+					case SoundCfgSection.Reverser:
+						string reverserOn, reverserOff;
+						block.GetValue(SoundCfgKey.On, out reverserOn);
+						block.GetValue(SoundCfgKey.Off, out reverserOff);
+						train.Handles.Reverser.EngageSound = new CarSound(Plugin.currentHost, trainFolder, reverserOn, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Reverser.ReleaseSound = new CarSound(Plugin.currentHost, trainFolder, reverserOff, SoundCfgParser.tinyRadius, panel);
+						break;
+					case SoundCfgSection.Breaker:
+						string breakerOn, breakerOff;
+						block.GetValue(SoundCfgKey.On, out breakerOn);
+						block.GetValue(SoundCfgKey.Off, out breakerOff);
+						train.Cars[train.DriverCar].Breaker.Resume = new CarSound(Plugin.currentHost, trainFolder, breakerOn, SoundCfgParser.smallRadius, panel);
+						train.Cars[train.DriverCar].Breaker.ResumeOrInterrupt = new CarSound(Plugin.currentHost, trainFolder, breakerOff, SoundCfgParser.smallRadius, panel);
+						break;
+					case SoundCfgSection.Others:
+						string noise, rub, halt;
+						block.GetValue(SoundCfgKey.Noise, out noise);
+						block.GetValue(SoundCfgKey.Shoe, out rub);
+						block.GetValue(SoundCfgKey.Halt, out halt);
+						train.SafetySystems.PassAlarm.Sound = new CarSound(Plugin.currentHost, trainFolder, halt, SoundCfgParser.tinyRadius, panel);
+						for (int c = 0; c < train.Cars.Length; c++)
 						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
+							if (train.Cars[c].Specs.IsMotorCar | c == train.DriverCar)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								switch (a.ToLowerInvariant())
-								{
-									case "apply":
-										train.Handles.Brake.Increase = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "applyfast":
-										train.Handles.Brake.IncreaseFast = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "release":
-										train.Handles.Brake.Decrease = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "releasefast":
-										train.Handles.Brake.DecreaseFast = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "min":
-										train.Handles.Brake.Min = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "max":
-										train.Handles.Brake.Max = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									default:
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										break;
-								}
+								train.Cars[c].Sounds.Loop = new CarSound(Plugin.currentHost, trainFolder, noise, SoundCfgParser.mediumRadius, center);
 							}
-							i++;
+							train.Cars[c].CarBrake.Rub = new CarSound(Plugin.currentHost, trainFolder, rub, SoundCfgParser.mediumRadius, center);
 						}
-						i--; break;
-					case "[master controller]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
-							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								switch (a.ToLowerInvariant())
-								{
-									case "up":
-										train.Handles.Power.Increase = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "upfast":
-										train.Handles.Power.IncreaseFast = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "down":
-										train.Handles.Power.Decrease = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "downfast":
-										train.Handles.Power.DecreaseFast = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "min":
-										train.Handles.Power.Min = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "max":
-										train.Handles.Power.Max = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									default:
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										break;
-								}
-							}
-							i++;
-						}
-						i--; break;
-					case "[reverser]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
-							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								switch (a.ToLowerInvariant())
-								{
-									case "on":
-										train.Handles.Reverser.EngageSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "off":
-										train.Handles.Reverser.ReleaseSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									default:
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										break;
-								}
-							}
-							i++;
-						}
-						i--; break;
-					case "[breaker]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
-							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								switch (a.ToLowerInvariant())
-								{
-									case "on":
-										train.Cars[train.DriverCar].Breaker.Resume = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, panel);
-										break;
-									case "off":
-										train.Cars[train.DriverCar].Breaker.ResumeOrInterrupt = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, panel);
-										break;
-									default:
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										break;
-								}
-							}
-							i++;
-						}
-						i--; break;
-					case "[others]":
-						i++;
-						while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
-							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								switch (a.ToLowerInvariant())
-								{
-									case "noise":
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											if (train.Cars[c].Specs.IsMotorCar | c == train.DriverCar)
-											{
-												train.Cars[c].Sounds.Loop = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
-											}
-										}
-
-										break;
-									case "shoe":
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											train.Cars[c].CarBrake.Rub = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
-										}
-
-										break;
-									case "halt":
-										for (int c = 0; c < train.Cars.Length; c++)
-										{
-											train.SafetySystems.PassAlarm.Sound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										}
-
-										break;
-									default:
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										break;
-								}
-							}
-							i++;
-						}
-						i--; break;
-					case "[windscreen]":
-						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-							if (j >= 0)
-							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
-								switch (a.ToLowerInvariant())
-								{
-									case "raindrop":
-										train.Cars[train.DriverCar].Windscreen.DropSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "wetwipe":
-										train.Cars[train.DriverCar].Windscreen.Wipers.WetWipeSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "drywipe":
-										train.Cars[train.DriverCar].Windscreen.Wipers.DryWipeSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									case "switch":
-										train.Cars[train.DriverCar].Windscreen.Wipers.SwitchSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
-										break;
-									default:
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										break;
-								}
-							}
-							i++;
-						}
-						i--; break;
+						break;
+					case SoundCfgSection.Windscreen:
+						string rainDrop, wetWipe, dryWipe, wiperSwitch;
+						block.GetValue(SoundCfgKey.RainDrop, out rainDrop);
+						block.GetValue(SoundCfgKey.WetWipe, out wetWipe);
+						block.GetValue(SoundCfgKey.DryWipe, out dryWipe);
+						block.GetValue(SoundCfgKey.Switch, out wiperSwitch);
+						train.Cars[train.DriverCar].Windscreen.DropSound = new CarSound(Plugin.currentHost, trainFolder, rainDrop, SoundCfgParser.tinyRadius, panel);
+						train.Cars[train.DriverCar].Windscreen.Wipers.WetWipeSound = new CarSound(Plugin.currentHost, trainFolder, wetWipe, SoundCfgParser.tinyRadius, panel);
+						train.Cars[train.DriverCar].Windscreen.Wipers.DryWipeSound = new CarSound(Plugin.currentHost, trainFolder, dryWipe, SoundCfgParser.tinyRadius, panel);
+						train.Cars[train.DriverCar].Windscreen.Wipers.SwitchSound = new CarSound(Plugin.currentHost, trainFolder, wiperSwitch, SoundCfgParser.tinyRadius, panel);
+						break;
 				}
 			}
+			
 			// Assign motor sounds to appropriate cars
 			for (int c = 0; c < train.Cars.Length; c++)
 			{
