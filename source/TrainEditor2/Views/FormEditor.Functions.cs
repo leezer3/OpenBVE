@@ -438,6 +438,7 @@ namespace TrainEditor2.Views
 			labelThisDaytimeImage.Text = Utilities.GetInterfaceString("panel_settings", "this", "daytime_image");
 			labelThisNighttimeImage.Text = Utilities.GetInterfaceString("panel_settings", "this", "nighttime_image");
 			labelThisTransparentColor.Text = Utilities.GetInterfaceString("panel_settings", "this", "transparent_color");
+			groupBoxThisCenter.Text = Utilities.GetInterfaceString("panel_settings", "this", "center", "name");
 			labelThisCenterX.Text = Utilities.GetInterfaceString("panel_settings", "this", "center", "x");
 			labelThisCenterY.Text = Utilities.GetInterfaceString("panel_settings", "this", "center", "y");
 			groupBoxThisOrigin.Text = Utilities.GetInterfaceString("panel_settings", "this", "origin", "name");
@@ -527,6 +528,9 @@ namespace TrainEditor2.Views
 			labelTimetableWidth.Text = Utilities.GetInterfaceString("panel_settings", "timetable", "width");
 			labelTimetableTransparentColor.Text = Utilities.GetInterfaceString("panel_settings", "timetable", "transparent_color");
 			labelTimetableLayer.Text = Utilities.GetInterfaceString("panel_settings", "timetable", "layer");
+			groupBoxTimetableLocation.Text = Utilities.GetInterfaceString("panel_settings", "timetable", "location", "name");
+			labelTimetableLocationX.Text = Utilities.GetInterfaceString("panel_settings", "timetable", "location", "x");
+			labelTimetableLocationY.Text = Utilities.GetInterfaceString("panel_settings", "timetable", "location", "y");
 
 			tabPageTouch.Text = Utilities.GetInterfaceString("panel_settings", "touch", "name");
 			groupBoxTouchLocation.Text = Utilities.GetInterfaceString("panel_settings", "touch", "location", "name");
