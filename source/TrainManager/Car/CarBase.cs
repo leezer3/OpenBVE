@@ -1158,20 +1158,34 @@ namespace TrainManager.Car
 				double a = Specs.RollDueToShakingAngle;
 				double diff = a - Sounds.SpringPlayedAngle;
 				const double angleTolerance = 0.001;
+
+				if (Math.Abs(diff) > angleTolerance)
+				{
+					// Absolute difference in angle shows car has not moved, so pause both sounds
+					Sounds.SpringL?.Pause();
+					Sounds.SpringR?.Pause();
+				}
+
 				if (diff < -angleTolerance)
 				{
+					// Pause the opposite spring sound unconditionally
+					Sounds.SpringR?.Pause();
+
 					if (Sounds.SpringL != null && !Sounds.SpringL.IsPlaying)
 					{
-						Sounds.SpringL.Play(this, false);
+						Sounds.SpringL.Play(this, true);
 					}
 
 					Sounds.SpringPlayedAngle = a;
 				}
 				else if (diff > angleTolerance)
 				{
+					// Pause the opposite spring sound unconditionally
+					Sounds.SpringL?.Pause();
+
 					if (Sounds.SpringR != null && !Sounds.SpringR.IsPlaying)
 					{
-						Sounds.SpringR.Play(this, false);
+						Sounds.SpringR.Play(this, true);
 					}
 
 					Sounds.SpringPlayedAngle = a;
