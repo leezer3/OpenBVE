@@ -105,6 +105,11 @@ namespace TrainEditor2.Views
 				.AddTo(disposable);
 
 			groupBoxEntry.Enabled = listViewDelay.SelectedIndices.Count == 1;
+
+			groupBoxEntry.Text = Utilities.GetInterfaceString("car_settings", "delay", "edit_entry", "name");
+			labelUp.Text = Utilities.GetInterfaceString("car_settings", "delay", "edit_entry", "up");
+			labelDown.Text = Utilities.GetInterfaceString("car_settings", "delay", "edit_entry", "down");
+			buttonOK.Text = Utilities.GetInterfaceString("items", "button_ok");
 		}
 
 		private void FormDelay_Load(object sender, EventArgs e)

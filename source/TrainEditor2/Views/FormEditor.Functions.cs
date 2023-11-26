@@ -600,6 +600,11 @@ namespace TrainEditor2.Views
 			buttonLinearGaugeDaytimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
 			buttonCouplerObject.Text = Utilities.GetInterfaceString("navigation", "open");
 			buttonObjectOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonSoundAdd.Text = Utilities.GetInterfaceString("navigation", "add");
+			buttonSoundRemove.Text = Utilities.GetInterfaceString("navigation", "remove");
+			buttonPanelAdd.Text = Utilities.GetInterfaceString("navigation", "add");
+			buttonPanelCopy.Text = Utilities.GetInterfaceString("navigation", "copy");
+			buttonPanelRemove.Text = Utilities.GetInterfaceString("navigation", "remove");
 		}
 	}
 }

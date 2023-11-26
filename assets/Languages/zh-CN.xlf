@@ -12,7 +12,7 @@
 				</trans-unit>
 				<trans-unit id="contributors">
 					<source>Unknown</source>
-					<target>Alvin Wong, zbx1425, Junmore HB</target>
+					<target>Alvin Wong, zbx1425, HB EHeJMor</target>
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-29</source>
@@ -4567,6 +4567,10 @@ to separate buttons to avoid compatibility issues.
 								<source>RearAxle</source>
 								<target>后轴</target>
 							</trans-unit>
+							<trans-unit id="mustbe_less">
+								<source>RearAxle must be less than FrontAxle.</source>
+								<target>后轴距离必须小于前轴距离。</target>
+							</trans-unit>
 						</group>
 						<trans-unit id="front_bogie">
 							<source>FrontBogie</source>
@@ -5800,6 +5804,18 @@ to separate buttons to avoid compatibility issues.
 					<trans-unit id="invalid_color">
 						<source>invalid_color</source>
 						<target>颜色无效</target>
+					</trans-unit>
+					<trans-unit id="number_exist">
+						<source>The specified number is already set.</source>
+						<target>指定された番号は既に追加されています。</target>
+					</trans-unit>
+					<trans-unit id="mustbe_greater_than">
+						<source>Max must be greater than or equal to Min.</source>
+						<target>最大值必须大于或等于最小值。</target>
+					</trans-unit>
+					<trans-unit id="mustbe_less_than">
+						<source>Min must be less than the Max.</source>
+						<target>最小值必须小于最大值。</target>
 					</trans-unit>
 				</group>
 			</group>

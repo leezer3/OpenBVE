@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using System.Windows.Forms;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
+using TrainEditor2.Extensions;
 using TrainEditor2.Models.Panels;
 using TrainEditor2.ViewModels.Panels;
 
@@ -86,6 +87,12 @@ namespace TrainEditor2.Views
 						.ToUnit()
 				)
 				.AddTo(disposable);
+
+			labelBase.Text = Utilities.GetInterfaceString("panel_settings", "subject", "base");
+			labelBaseOption.Text = Utilities.GetInterfaceString("items", "baseoption");
+			labelSuffix.Text = Utilities.GetInterfaceString("panel_settings", "subject", "suffix");
+			labelSuffixOption.Text = Utilities.GetInterfaceString("panel_settings", "subject", "suffixoption");
+			buttonOK.Text = Utilities.GetInterfaceString("items", "button_ok");
 		}
 
 		private void FormSubject_Load(object sender, EventArgs e)
