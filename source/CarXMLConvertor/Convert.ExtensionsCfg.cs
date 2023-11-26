@@ -607,6 +607,7 @@ namespace CarXmlConvertor
 				newLines.Add("<Length>" + ConvertTrainDat.CarLength + "</Length>");
 				newLines.Add("<Width>" + ConvertTrainDat.CarWidth + "</Width>");
 				newLines.Add("<Height>" + ConvertTrainDat.CarHeight + "</Height>");
+				newLines.Add("<CenterOfGravityHeight>" + ConvertTrainDat.CenterOfGravityHeight + "</CenterOfGravityHeight>");
 				if (ConvertTrainDat.MotorCars[i])
 				{
 					newLines.Add("<MotorCar>True</MotorCar>");

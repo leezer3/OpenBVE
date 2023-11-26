@@ -33,6 +33,7 @@ namespace CarXmlConvertor
 		internal static double DoorTolerance = 0.0;
 		internal static int PowerNotches = 0;
 		internal static int BrakeNotches = 0;
+		internal static double CenterOfGravityHeight = 1.6;
 		private static MainForm mainForm;
 		internal static List<AccelerationCurve> AccelerationCurves = new List<AccelerationCurve>();
 
@@ -132,6 +133,9 @@ namespace CarXmlConvertor
 										{
 											CarHeight = a;
 										}
+										break;
+									case 8:
+										CenterOfGravityHeight = a;
 										break;
 								}
 							}

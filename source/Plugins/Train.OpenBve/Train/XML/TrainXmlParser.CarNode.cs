@@ -168,6 +168,16 @@ namespace Train.OpenBve
 						Train.Cars[Car].EmptyMass = m;
 						Train.Cars[Car].CargoMass = 0;
 						break;
+					case "centerofgravityheight":
+						double cg;
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out cg) | cg <= 0.0)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid CenterOfGravityHeight defined for Car " + Car + " in XML file " + fileName);
+							break;
+						}
+						Train.Cars[Car].Specs.CenterOfGravityHeight = cg;
+
+						break;
 					case "frontaxle":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[Car].FrontAxle.Position))
 						{
@@ -729,6 +739,9 @@ namespace Train.OpenBve
 				// if required create default train readhesion device- May have already been setup earlier in the XML
 				Train.Cars[Car].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[Car], readhesionDevice);
 			}
+
+			//Set toppling angle
+			Train.Cars[Car].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * Train.Cars[Car].Specs.CenterOfGravityHeight / Train.Cars[Car].Width);
 		}
 	}
 }
