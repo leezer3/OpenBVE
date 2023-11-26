@@ -371,14 +371,14 @@ namespace Train.OpenBve
 									case "left":
 										for (int c = 0; c < train.Cars.Length; c++)
 										{
-											train.Cars[c].Sounds.SpringL = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, left);
+											train.Cars[c].Suspension.SpringL = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, left);
 										}
 
 										break;
 									case "right":
 										for (int c = 0; c < train.Cars.Length; c++)
 										{
-											train.Cars[c].Sounds.SpringR = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, right);
+											train.Cars[c].Suspension.SpringR = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, right);
 										}
 
 										break;

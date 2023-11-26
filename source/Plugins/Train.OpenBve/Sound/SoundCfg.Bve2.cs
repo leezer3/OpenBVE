@@ -98,8 +98,8 @@ namespace Train.OpenBve
 				};
 				train.Cars[i].CarBrake.Rub = new CarSound(Plugin.currentHost, train.TrainFolder, "Rub.wav", SoundCfgParser.mediumRadius, center);
 				train.Cars[i].Sounds.Run = SoundCfgParser.TryLoadSoundDictionary(train.TrainFolder, "Run", ".wav", center, SoundCfgParser.mediumRadius);
-				train.Cars[i].Sounds.SpringL = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringL.wav", SoundCfgParser.smallRadius, left);
-				train.Cars[i].Sounds.SpringR = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringR.wav", SoundCfgParser.smallRadius, right);
+				train.Cars[i].Suspension.SpringL = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringL.wav", SoundCfgParser.smallRadius, left);
+				train.Cars[i].Suspension.SpringR = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringR.wav", SoundCfgParser.smallRadius, right);
 				// motor sound
 				if (train.Cars[i].Specs.IsMotorCar)
 				{

@@ -498,11 +498,11 @@ namespace Train.OpenBve
 										{
 											case "left":
 												//Left suspension springs
-												ParseNode(cc, out car.Sounds.SpringL, left, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Suspension.SpringL, left, SoundCfgParser.smallRadius);
 												break;
 											case "right":
 												//right suspension springs
-												ParseNode(cc, out car.Sounds.SpringR, right, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Suspension.SpringR, right, SoundCfgParser.smallRadius);
 												break;
 											default:
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");

@@ -70,6 +70,7 @@
     <Compile Include="Car\Systems\ReadhesionDevice.Types.cs" />
     <Compile Include="Car\Systems\Sanders.cs" />
     <Compile Include="Car\Systems\Sanders.Types.cs" />
+    <Compile Include="Car\Systems\Suspension.cs" />
     <Compile Include="Car\Windscreen\Raindrop.cs" />
     <Compile Include="Car\Windscreen\Windscreen.cs" />
     <Compile Include="Car\Windscreen\Wiper.cs" />

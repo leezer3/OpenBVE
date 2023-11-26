@@ -86,6 +86,8 @@ namespace TrainManager.Car
 		public CarSounds Sounds;
 		/// <summary>The cargo carried by the car</summary>
 		public CargoBase Cargo;
+		/// <summary>The car suspension</summary>
+		public Suspension Suspension;
 
 		private int trainCarIndex;
 
@@ -116,6 +118,7 @@ namespace TrainManager.Car
 			FrontBogie.ChangeSection(-1);
 			RearBogie.ChangeSection(-1);
 			Cargo = new Passengers(this);
+			Suspension = new Suspension(this);
 		}
 
 		public CarBase(TrainBase train, int index)
@@ -138,6 +141,7 @@ namespace TrainManager.Car
 			Brightness = new Brightness(this);
 			Cargo = new Passengers(this);
 			Specs = new CarPhysics();
+			Suspension = new Suspension(this);
 		}
 
 		/// <summary>Moves the car</summary>
@@ -1153,44 +1157,7 @@ namespace TrainManager.Car
 				RearAxle.Follower.WorldPosition += cc;
 			}
 
-			// spring sound
-			{
-				double a = Specs.RollDueToShakingAngle;
-				double diff = a - Sounds.SpringPlayedAngle;
-				const double angleTolerance = 0.001;
-
-				if (Math.Abs(diff) > angleTolerance)
-				{
-					// Absolute difference in angle shows car has not moved, so pause both sounds
-					Sounds.SpringL?.Pause();
-					Sounds.SpringR?.Pause();
-				}
-
-				if (diff < -angleTolerance)
-				{
-					// Pause the opposite spring sound unconditionally
-					Sounds.SpringR?.Pause();
-
-					if (Sounds.SpringL != null && !Sounds.SpringL.IsPlaying)
-					{
-						Sounds.SpringL.Play(this, true);
-					}
-
-					Sounds.SpringPlayedAngle = a;
-				}
-				else if (diff > angleTolerance)
-				{
-					// Pause the opposite spring sound unconditionally
-					Sounds.SpringL?.Pause();
-
-					if (Sounds.SpringR != null && !Sounds.SpringR.IsPlaying)
-					{
-						Sounds.SpringR.Play(this, true);
-					}
-
-					Sounds.SpringPlayedAngle = a;
-				}
-			}
+			Suspension.Update(TimeElapsed);
 			// flange sound
 			if (Sounds.Flange != null && Sounds.Flange.Count != 0)
 			{
