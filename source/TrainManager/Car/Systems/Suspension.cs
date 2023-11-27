@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SoundManager;
 
 namespace TrainManager.Car.Systems
@@ -28,7 +28,7 @@ namespace TrainManager.Car.Systems
 			double diff = a - SpringPlayedAngle;
 			const double angleTolerance = 0.001;
 
-			if (Math.Abs(diff) > angleTolerance && springTimer > 1.0)
+			if (Math.Abs(diff) < angleTolerance && springTimer > 1.0)
 			{
 				// Absolute difference in angle shows car has not moved in the last second, so pause both sounds
 				SpringL?.Pause();
