@@ -91,7 +91,7 @@ namespace TrainEditor2.ViewModels.Trains
 				{
 					if (x && handle.BrakeNotches == 0)
 					{
-						return Utilities.GetInterfaceString("handle", "brake_notches_error_message");
+						return Utilities.GetInterfaceString("general_settings", "handle", "brake_notches_error_message");
 					}
 
 					return null;
