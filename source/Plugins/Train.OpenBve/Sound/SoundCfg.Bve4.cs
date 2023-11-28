@@ -127,18 +127,13 @@ namespace Train.OpenBve
 									{
 										for (int c = 0; c < train.Cars.Length; c++)
 										{
-											if(train.Cars[c].Sounds.Run == null)
+											if (train.Cars[c].Run.Sounds.ContainsKey(k))
 											{
-												train.Cars[c].Sounds.Run = new Dictionary<int, CarSound>();
-											}
-
-											if (train.Cars[c].Sounds.Run.ContainsKey(k))
-											{
-												train.Cars[c].Sounds.Run[k] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
+												train.Cars[c].Run.Sounds[k] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
 											}
 											else
 											{
-												train.Cars[c].Sounds.Run.Add(k, new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center));
+												train.Cars[c].Run.Sounds.Add(k, new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center));
 											}
 										}
 									}

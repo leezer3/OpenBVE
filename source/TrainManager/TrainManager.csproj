@@ -69,6 +69,7 @@
     <Compile Include="Car\Systems\HoldBrake.cs" />
     <Compile Include="Car\Systems\ReadhesionDevice.cs" />
     <Compile Include="Car\Systems\ReadhesionDevice.Types.cs" />
+    <Compile Include="Car\Systems\RunSounds.cs" />
     <Compile Include="Car\Systems\Sanders.cs" />
     <Compile Include="Car\Systems\Sanders.Types.cs" />
     <Compile Include="Car\Systems\Suspension.cs" />

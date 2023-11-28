@@ -492,7 +492,7 @@ namespace TrainManager.Trains
 			// Update Run and Motor sounds
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				Cars[i].UpdateRunSounds(TimeElapsed);
+				Cars[i].Run.Update(TimeElapsed);
 				if (Cars[i].Sounds.Motor != null)
 				{
 					Cars[i].Sounds.Motor.Update(TimeElapsed);
@@ -817,12 +817,7 @@ namespace TrainManager.Trains
 			{
 				TrainManagerBase.currentHost.StopSound(Cars[CarIndex].Sounds.Loop.Source);
 			}
-			
-			for (int j = 0; j < Cars[CarIndex].Sounds.Run.Count; j++)
-			{
-				int key =  Cars[CarIndex].Sounds.Run.ElementAt(j).Key;
-				TrainManagerBase.currentHost.StopSound(Cars[CarIndex].Sounds.Run[key].Source);
-			}
+			Cars[CarIndex].Run.Stop();
 
 			if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
 			{
@@ -841,11 +836,7 @@ namespace TrainManager.Trains
 				{
 					TrainManagerBase.currentHost.StopSound(c.Sounds.Loop.Source);
 				}
-				for (int j = 0; j < c.Sounds.Run.Count; j++)
-				{
-					int key =  c.Sounds.Run.ElementAt(j).Key;
-					TrainManagerBase.currentHost.StopSound(c.Sounds.Run[key].Source);
-				}
+				c.Run.Stop();
 				c.Derailed = true;
 				this.Derailed = true;
 				if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)

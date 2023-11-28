@@ -90,6 +90,8 @@ namespace TrainManager.Car
 		public Suspension Suspension;
 		/// <summary>The flange sounds</summary>
 		public Flange Flange;
+		/// <summary>The run sounds</summary>
+		public RunSounds Run;
 
 		private int trainCarIndex;
 
@@ -122,6 +124,7 @@ namespace TrainManager.Car
 			Cargo = new Passengers(this);
 			Suspension = new Suspension(this);
 			Flange = new Flange(this);
+			Run = new RunSounds(this);
 		}
 
 		public CarBase(TrainBase train, int index)
@@ -146,6 +149,7 @@ namespace TrainManager.Car
 			Specs = new CarPhysics();
 			Suspension = new Suspension(this);
 			Flange = new Flange(this);
+			Run = new RunSounds(this);
 		}
 
 		/// <summary>Moves the car</summary>
@@ -541,94 +545,6 @@ namespace TrainManager.Car
 			if (!opened & closed & !mixed) Result |= TrainDoorState.AllClosed;
 			if (!opened & !closed & mixed) Result |= TrainDoorState.AllMixed;
 			return Result;
-		}
-
-		public void UpdateRunSounds(double TimeElapsed)
-		{
-			if (Sounds.Run == null || Sounds.Run.Count == 0)
-			{
-				return;
-			}
-
-			const double factor = 0.04; // 90 km/h -> m/s -> 1/x
-			double speed = Math.Abs(CurrentSpeed);
-			if (Derailed)
-			{
-				speed = 0.0;
-			}
-
-			double pitch = speed * factor;
-			double basegain;
-			if (CurrentSpeed == 0.0)
-			{
-				if (Index != 0)
-				{
-					Sounds.RunNextReasynchronizationPosition = baseTrain.Cars[0].FrontAxle.Follower.TrackPosition;
-				}
-			}
-			else if (Sounds.RunNextReasynchronizationPosition == double.MaxValue & FrontAxle.RunIndex >= 0)
-			{
-				double distance = Math.Abs(FrontAxle.Follower.TrackPosition - TrainManagerBase.Renderer.CameraTrackFollower.TrackPosition);
-				const double minDistance = 150.0;
-				const double maxDistance = 750.0;
-				if (distance > minDistance)
-				{
-					if (Sounds.Run.TryGetValue(FrontAxle.RunIndex, out var runSound))
-					{
-						if (runSound.Buffer != null)
-						{
-							if (runSound.Buffer.Duration > 0.0)
-							{
-								double offset = distance > maxDistance ? 25.0 : 300.0;
-								Sounds.RunNextReasynchronizationPosition = runSound.Buffer.Duration * Math.Ceiling((baseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / runSound.Buffer.Duration);
-							}
-						}
-					}
-				}
-			}
-
-			if (FrontAxle.Follower.TrackPosition >= Sounds.RunNextReasynchronizationPosition)
-			{
-				Sounds.RunNextReasynchronizationPosition = double.MaxValue;
-				basegain = 0.0;
-			}
-			else
-			{
-				basegain = speed < 2.77777777777778 ? 0.36 * speed : 1.0;
-			}
-
-			for (int j = 0; j < Sounds.Run.Count; j++)
-			{
-				int key = Sounds.Run.ElementAt(j).Key;
-				if (key == FrontAxle.RunIndex | key == RearAxle.RunIndex)
-				{
-					Sounds.Run[key].TargetVolume += 3.0 * TimeElapsed;
-					if (Sounds.Run[key].TargetVolume > 1.0) Sounds.Run[key].TargetVolume = 1.0;
-				}
-				else
-				{
-					Sounds.Run[key].TargetVolume -= 3.0 * TimeElapsed;
-					if (Sounds.Run[key].TargetVolume < 0.0) Sounds.Run[key].TargetVolume = 0.0;
-				}
-
-				double gain = basegain * Sounds.Run[key].TargetVolume;
-				if (Sounds.Run[key].IsPlaying)
-				{
-					if (pitch > 0.01 & gain > 0.001)
-					{
-						Sounds.Run[key].Source.Pitch = pitch;
-						Sounds.Run[key].Source.Volume = gain;
-					}
-					else
-					{
-						Sounds.Run[key].Pause();
-					}
-				}
-				else if (pitch > 0.02 & gain > 0.01)
-				{
-					Sounds.Run[key].Play(pitch, gain, this, true);
-				}
-			}
 		}
 		
 		/// <summary>Loads Car Sections (Exterior objects etc.) for this car</summary>

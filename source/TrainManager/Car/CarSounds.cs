@@ -11,10 +11,8 @@ namespace TrainManager.Car
 		public AbstractMotorSound Motor;
 		/// <summary>The loop sound</summary>
 		public CarSound Loop;
-		/// <summary>The railtype run sounds</summary>
-		public Dictionary<int, CarSound> Run = new Dictionary<int, CarSound>();
-		/// <summary>The next track position at which the run sounds will be faded</summary>
-		public double RunNextReasynchronizationPosition;
+		
+		
 		/// <summary>The sounds triggered by the train's plugin</summary>
 		public Dictionary<int, CarSound> Plugin = new Dictionary<int, CarSound>();
 		/// <summary>The sounds triggered by a request stop</summary>
