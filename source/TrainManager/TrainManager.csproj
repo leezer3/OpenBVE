@@ -62,6 +62,7 @@
     <Compile Include="Car\Door.cs" />
     <Compile Include="Car\Door.DoorModes.cs" />
     <Compile Include="Car\Door.TrainDoorState.cs" />
+    <Compile Include="Car\Systems\FlangeSounds.cs" />
     <Compile Include="Car\Physics.cs" />
     <Compile Include="Car\Systems\AbstractReAdhesionDevice.cs" />
     <Compile Include="Car\Systems\ConstantSpeedDevice.cs" />

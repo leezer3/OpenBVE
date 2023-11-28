@@ -36,7 +36,7 @@ namespace TrainEditor2.Simulation.TrainManager
 			internal void InitializeCarSounds()
 			{
 				Sounds.Run = new Dictionary<int, CarSound>();
-				Sounds.Flange = new Dictionary<int, CarSound>();
+				Flange.Sounds = new Dictionary<int, CarSound>();
 			}
 
 			internal void UpdateRunSounds(double TimeElapsed, int RunIndex)
