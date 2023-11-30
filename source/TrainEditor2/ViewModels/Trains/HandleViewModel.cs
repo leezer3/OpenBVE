@@ -73,7 +73,7 @@ namespace TrainEditor2.ViewModels.Trains
 				{
 					if (x == 0 && train.Device.HoldBrake)
 					{
-						return Utilities.GetInterfaceString("handle", "brake_notches_error_message");
+						return Utilities.GetInterfaceString("general_settings", "handle", "brake_notches_error_message");
 					}
 
 					return null;
@@ -113,7 +113,7 @@ namespace TrainEditor2.ViewModels.Trains
 				{
 					if (x < DriverPowerNotches.Value)
 					{
-						return Utilities.GetInterfaceString("handle", "driver_power_notches_error_message");
+						return Utilities.GetInterfaceString("general_settings", "handle", "driver_power_notches_error_message");
 					}
 
 					return null;
@@ -133,7 +133,7 @@ namespace TrainEditor2.ViewModels.Trains
 				{
 					if (x < DriverBrakeNotches.Value)
 					{
-						return Utilities.GetInterfaceString("handle", "driver_brake_notches_error_message");
+						return Utilities.GetInterfaceString("general_settings", "handle", "driver_brake_notches_error_message");
 					}
 
 					return null;
@@ -153,7 +153,7 @@ namespace TrainEditor2.ViewModels.Trains
 				{
 					if (x > PowerNotches.Value)
 					{
-						return Utilities.GetInterfaceString("handle", "driver_power_notches_error_message");
+						return Utilities.GetInterfaceString("general_settings", "handle", "driver_power_notches_error_message");
 					}
 
 					return null;
@@ -173,7 +173,7 @@ namespace TrainEditor2.ViewModels.Trains
 				{
 					if (x > BrakeNotches.Value)
 					{
-						return Utilities.GetInterfaceString("handle", "driver_brake_notches_error_message");
+						return Utilities.GetInterfaceString("general_settings", "handle", "driver_brake_notches_error_message");
 					}
 
 					return null;

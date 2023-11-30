@@ -89,7 +89,7 @@ namespace TrainEditor2.Views
 				.AddTo(disposable);
 
 			labelBase.Text = Utilities.GetInterfaceString("panel_settings", "subject", "base");
-			labelBaseOption.Text = Utilities.GetInterfaceString("items", "baseoption");
+			labelBaseOption.Text = Utilities.GetInterfaceString("panel_settings", "subject", "baseoption");
 			labelSuffix.Text = Utilities.GetInterfaceString("panel_settings", "subject", "suffix");
 			labelSuffixOption.Text = Utilities.GetInterfaceString("panel_settings", "subject", "suffixoption");
 			buttonOK.Text = Utilities.GetInterfaceString("items", "button_ok");

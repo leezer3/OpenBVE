@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -265,7 +265,7 @@ namespace TrainEditor2.Views
 
 			app.ImportFiles.BindToButton(buttonOK).AddTo(disposable);
 
-			groupBoxOldFormat.Text = Utilities.GetInterfaceString("import_export", "old_format");
+			groupBoxOldFormat.Text = Utilities.GetInterfaceString("import_export", "train", "old_format");
 			groupBoxTrain.Text = Utilities.GetInterfaceString("import_export", "train", "name");
 			groupBoxPanel.Text = Utilities.GetInterfaceString("import_export", "panel", "name");
 			groupBoxSound.Text = Utilities.GetInterfaceString("import_export", "sound", "name");
@@ -282,6 +282,13 @@ namespace TrainEditor2.Views
 			labelPanelType.Text = $@"{Utilities.GetInterfaceString("items", "type")}:";
 			labelSoundType.Text = $@"{Utilities.GetInterfaceString("items", "type")}:";
 
+			comboBoxTrainType.Items[0] = Utilities.GetInterfaceString("import_export", "train", "old_format");
+			comboBoxPanelType.Items[0] = Utilities.GetInterfaceString("import_export", "panel", "panel2cfg");
+			comboBoxPanelType.Items[1] = Utilities.GetInterfaceString("import_export", "panel", "panelxml");
+			comboBoxSoundType.Items[0] = Utilities.GetInterfaceString("import_export", "sound", "no_setting_file");
+			comboBoxSoundType.Items[1] = Utilities.GetInterfaceString("import_export", "sound", "soundcfg");
+			comboBoxSoundType.Items[2] = Utilities.GetInterfaceString("import_export", "sound", "soundxml");
+
 			labelTrainDatFileName.Text = Utilities.GetInterfaceString("items", "filename");
 			labelExtensionsCfgFileName.Text = Utilities.GetInterfaceString("items", "filename");
 			labelPanel2CfgFileName.Text = Utilities.GetInterfaceString("items", "filename");
@@ -297,6 +304,8 @@ namespace TrainEditor2.Views
 			buttonSoundCfgFileNameOpen.Text = Utilities.GetInterfaceString("navigation", "open");
 			buttonSoundXmlFileNameOpen.Text = Utilities.GetInterfaceString("navigation", "open");
 			buttonNoSoundCfgTrainFolderOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			
+			buttonOK.Text = Utilities.GetInterfaceString("items", "button_ok");
 		}
 
 		private void FormImport_Load(object sender, EventArgs e)
