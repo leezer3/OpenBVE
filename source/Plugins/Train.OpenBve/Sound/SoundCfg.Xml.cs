@@ -280,7 +280,7 @@ namespace Train.OpenBve
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of flange sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseDictionaryNode(c, out car.Sounds.Flange, center, SoundCfgParser.mediumRadius);
+									ParseDictionaryNode(c, out car.Flange.Sounds, center, SoundCfgParser.mediumRadius);
 									break;
 								case "horn":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
@@ -479,7 +479,7 @@ namespace Train.OpenBve
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of run sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseDictionaryNode(c, out car.Sounds.Run, center, SoundCfgParser.mediumRadius);
+									ParseDictionaryNode(c, out car.Run.Sounds, center, SoundCfgParser.mediumRadius);
 									break;
 								case "shoe":
 								case "rub":

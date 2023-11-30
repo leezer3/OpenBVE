@@ -88,6 +88,10 @@ namespace TrainManager.Car
 		public CargoBase Cargo;
 		/// <summary>The car suspension</summary>
 		public Suspension Suspension;
+		/// <summary>The flange sounds</summary>
+		public Flange Flange;
+		/// <summary>The run sounds</summary>
+		public RunSounds Run;
 
 		private int trainCarIndex;
 
@@ -119,6 +123,8 @@ namespace TrainManager.Car
 			RearBogie.ChangeSection(-1);
 			Cargo = new Passengers(this);
 			Suspension = new Suspension(this);
+			Flange = new Flange(this);
+			Run = new RunSounds(this);
 		}
 
 		public CarBase(TrainBase train, int index)
@@ -142,6 +148,8 @@ namespace TrainManager.Car
 			Cargo = new Passengers(this);
 			Specs = new CarPhysics();
 			Suspension = new Suspension(this);
+			Flange = new Flange(this);
+			Run = new RunSounds(this);
 		}
 
 		/// <summary>Moves the car</summary>
@@ -537,94 +545,6 @@ namespace TrainManager.Car
 			if (!opened & closed & !mixed) Result |= TrainDoorState.AllClosed;
 			if (!opened & !closed & mixed) Result |= TrainDoorState.AllMixed;
 			return Result;
-		}
-
-		public void UpdateRunSounds(double TimeElapsed)
-		{
-			if (Sounds.Run == null || Sounds.Run.Count == 0)
-			{
-				return;
-			}
-
-			const double factor = 0.04; // 90 km/h -> m/s -> 1/x
-			double speed = Math.Abs(CurrentSpeed);
-			if (Derailed)
-			{
-				speed = 0.0;
-			}
-
-			double pitch = speed * factor;
-			double basegain;
-			if (CurrentSpeed == 0.0)
-			{
-				if (Index != 0)
-				{
-					Sounds.RunNextReasynchronizationPosition = baseTrain.Cars[0].FrontAxle.Follower.TrackPosition;
-				}
-			}
-			else if (Sounds.RunNextReasynchronizationPosition == double.MaxValue & FrontAxle.RunIndex >= 0)
-			{
-				double distance = Math.Abs(FrontAxle.Follower.TrackPosition - TrainManagerBase.Renderer.CameraTrackFollower.TrackPosition);
-				const double minDistance = 150.0;
-				const double maxDistance = 750.0;
-				if (distance > minDistance)
-				{
-					if (Sounds.Run.TryGetValue(FrontAxle.RunIndex, out var runSound))
-					{
-						if (runSound.Buffer != null)
-						{
-							if (runSound.Buffer.Duration > 0.0)
-							{
-								double offset = distance > maxDistance ? 25.0 : 300.0;
-								Sounds.RunNextReasynchronizationPosition = runSound.Buffer.Duration * Math.Ceiling((baseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / runSound.Buffer.Duration);
-							}
-						}
-					}
-				}
-			}
-
-			if (FrontAxle.Follower.TrackPosition >= Sounds.RunNextReasynchronizationPosition)
-			{
-				Sounds.RunNextReasynchronizationPosition = double.MaxValue;
-				basegain = 0.0;
-			}
-			else
-			{
-				basegain = speed < 2.77777777777778 ? 0.36 * speed : 1.0;
-			}
-
-			for (int j = 0; j < Sounds.Run.Count; j++)
-			{
-				int key = Sounds.Run.ElementAt(j).Key;
-				if (key == FrontAxle.RunIndex | key == RearAxle.RunIndex)
-				{
-					Sounds.Run[key].TargetVolume += 3.0 * TimeElapsed;
-					if (Sounds.Run[key].TargetVolume > 1.0) Sounds.Run[key].TargetVolume = 1.0;
-				}
-				else
-				{
-					Sounds.Run[key].TargetVolume -= 3.0 * TimeElapsed;
-					if (Sounds.Run[key].TargetVolume < 0.0) Sounds.Run[key].TargetVolume = 0.0;
-				}
-
-				double gain = basegain * Sounds.Run[key].TargetVolume;
-				if (Sounds.Run[key].IsPlaying)
-				{
-					if (pitch > 0.01 & gain > 0.001)
-					{
-						Sounds.Run[key].Source.Pitch = pitch;
-						Sounds.Run[key].Source.Volume = gain;
-					}
-					else
-					{
-						Sounds.Run[key].Pause();
-					}
-				}
-				else if (pitch > 0.02 & gain > 0.01)
-				{
-					Sounds.Run[key].Play(pitch, gain, this, true);
-				}
-			}
 		}
 		
 		/// <summary>Loads Car Sections (Exterior objects etc.) for this car</summary>
@@ -1158,83 +1078,7 @@ namespace TrainManager.Car
 			}
 
 			Suspension.Update(TimeElapsed);
-			// flange sound
-			if (Sounds.Flange != null && Sounds.Flange.Count != 0)
-			{
-				/*
-				 * This determines the amount of flange noise as a result of the angle at which the
-				 * line that forms between the axles hits the rail, i.e. the less perpendicular that
-				 * line is to the rails, the more flange noise there will be.
-				 * */
-				Vector3 df = FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition;
-				df.Normalize();
-				double b0 = df.X * RearAxle.Follower.WorldSide.X + df.Y * RearAxle.Follower.WorldSide.Y + df.Z * RearAxle.Follower.WorldSide.Z;
-				double b1 = df.X * FrontAxle.Follower.WorldSide.X + df.Y * FrontAxle.Follower.WorldSide.Y + df.Z * FrontAxle.Follower.WorldSide.Z;
-				double spd = Math.Abs(CurrentSpeed);
-				double pitch = 0.5 + 0.04 * spd;
-				double b2 = Math.Abs(b0) + Math.Abs(b1);
-				double basegain = 0.5 * b2 * b2 * spd * spd;
-				/*
-				 * This determines additional flange noise as a result of the roll angle of the car
-				 * compared to the roll angle of the rails, i.e. if the car bounces due to inaccuracies,
-				 * there will be additional flange noise.
-				 * */
-				double cdti = Math.Abs(FrontAxle.Follower.CantDueToInaccuracy) + Math.Abs(RearAxle.Follower.CantDueToInaccuracy);
-				basegain += 0.2 * spd * spd * cdti * cdti;
-				/*
-				 * This applies the settings.
-				 * */
-				if (basegain < 0.0) basegain = 0.0;
-				if (basegain > 0.75) basegain = 0.75;
-				if (pitch > Sounds.FlangePitch)
-				{
-					Sounds.FlangePitch += TimeElapsed;
-					if (Sounds.FlangePitch > pitch) Sounds.FlangePitch = pitch;
-				}
-				else
-				{
-					Sounds.FlangePitch -= TimeElapsed;
-					if (Sounds.FlangePitch < pitch) Sounds.FlangePitch = pitch;
-				}
-
-				pitch = Sounds.FlangePitch;
-				for (int i = 0; i < Sounds.Flange.Count; i++)
-				{
-					int key = Sounds.Flange.ElementAt(i).Key;
-					if(Sounds.Flange[key] == null)
-					{
-						continue;
-					}
-					if (key == this.FrontAxle.FlangeIndex | key == this.RearAxle.FlangeIndex)
-					{
-						Sounds.Flange[key].TargetVolume += TimeElapsed;
-						if (Sounds.Flange[key].TargetVolume > 1.0) Sounds.Flange[key].TargetVolume = 1.0;
-					}
-					else
-					{
-						Sounds.Flange[key].TargetVolume -= TimeElapsed;
-						if (Sounds.Flange[key].TargetVolume < 0.0) Sounds.Flange[key].TargetVolume = 0.0;
-					}
-
-					double gain = basegain * Sounds.Flange[key].TargetVolume;
-					if (Sounds.Flange[key].IsPlaying)
-					{
-						if (pitch > 0.01 & gain > 0.0001)
-						{
-							Sounds.Flange[key].Source.Pitch = pitch;
-							Sounds.Flange[key].Source.Volume = gain;
-						}
-						else
-						{
-							Sounds.Flange[key].Pause();
-						}
-					}
-					else if (pitch > 0.02 & gain > 0.01)
-					{
-						Sounds.Flange[key].Play(pitch, gain, this, true);
-					}
-				}
-			}
+			Flange.Update(TimeElapsed);
 		}
 
 		/// <summary>Updates the position of the camera relative to this car</summary>
