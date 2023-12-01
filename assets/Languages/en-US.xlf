@@ -4060,6 +4060,7 @@
 						<trans-unit id="suffixoption">
 							<source>Suffix option</source>
 						</trans-unit>
+					</group>
 					<group id="this">
 						<trans-unit id="name">
 							<source>This</source>
@@ -4650,6 +4651,7 @@
 					</trans-unit>
 				</group>
 			</group>
+
 		</body>
 	</file>
 </xliff>

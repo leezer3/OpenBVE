@@ -235,7 +235,7 @@ namespace TrainEditor2.Views
 
 			app.ExportFiles.BindToButton(buttonOK).AddTo(disposable);
 
-			groupBoxOldFormat.Text = Utilities.GetInterfaceString("import_export", "old_format");
+			groupBoxOldFormat.Text = Utilities.GetInterfaceString("import_export", "train", "old_format");
 			groupBoxTrain.Text = Utilities.GetInterfaceString("import_export", "train", "name");
 			groupBoxPanel.Text = Utilities.GetInterfaceString("import_export", "panel", "name");
 			groupBoxSound.Text = Utilities.GetInterfaceString("import_export", "sound", "name");

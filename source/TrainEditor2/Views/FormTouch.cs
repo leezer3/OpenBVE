@@ -278,7 +278,7 @@ namespace TrainEditor2.Views
 			buttonTouchAdd.Text = Utilities.GetInterfaceString("navigation", "add");
 			buttonTouchCopy.Text = Utilities.GetInterfaceString("navigation", "copy");
 			buttonTouchRemove.Text = Utilities.GetInterfaceString("navigation", "remove");
-
+			groupBoxTouch.Text = Utilities.GetInterfaceString("edit_entry", "name");
 			buttonOK.Text = Utilities.GetInterfaceString("items", "button_ok");
 		}
 
