@@ -3282,6 +3282,20 @@
 						<source>Open...</source>
 					</trans-unit>
 				</group>
+				<group id="items">
+					<trans-unit id="filename">
+						<source>Filename</source>
+					</trans-unit>
+					<trans-unit id="folder">
+						<source>Folder</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>Type</source>
+					</trans-unit>
+					<trans-unit id="button_ok">
+						<source>OK</source>
+					</trans-unit>
+				</group>
 				<group id="tree_cars">
 					<trans-unit id="train">
 						<source>Train</source>
