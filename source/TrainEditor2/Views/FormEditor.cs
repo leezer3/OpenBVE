@@ -522,11 +522,7 @@ namespace TrainEditor2.Views
 			string folder = Program.FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
 			Translations.ListLanguages(toolStripComboBoxLanguage.ComboBox);
-
-			if (app.CurrentLanguageCode.Value == "en-US")
-			{
-				app.CurrentLanguageCode.ForceNotify();
-			}
+			app.CurrentLanguageCode.ForceNotify();
 		}
 
 		[UIPermission(SecurityAction.Demand, Window = UIPermissionWindow.AllWindows)]
@@ -585,13 +581,12 @@ namespace TrainEditor2.Views
 			ModifierKeysDownUp(e);
 		}
 
-		private void FormEditor_FormClosing(object sender, FormClosingEventArgs e)
+		private bool ShowSaveDialog()
 		{
 			switch (MessageBox.Show(Utilities.GetInterfaceString("menu", "message", "exit"), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
 			{
 				case DialogResult.Cancel:
-					e.Cancel = true;
-					return;
+					return false;
 				case DialogResult.Yes:
 					if (app.SaveFile.CanExecute())
 					{
@@ -601,12 +596,11 @@ namespace TrainEditor2.Views
 					{
 						app.SaveAsFile.Execute();
 					}
-
 					glControlMotor.MakeCurrent();
-					break;
+					return true;
+				default:
+					return true;
 			}
-
-			Interface.CurrentOptions.LanguageCode = app.CurrentLanguageCode.Value;
 		}
 
 		private void ToolStripMenuItemImport_Click(object sender, EventArgs e)
@@ -640,6 +634,7 @@ namespace TrainEditor2.Views
 			}
 
 			app.CurrentLanguageCode.Value = currentLanguageCode;
+			Interface.CurrentOptions.LanguageCode = currentLanguageCode;
 		}
 
 		private void ButtonDelayPowerSet_Click(object sender, EventArgs e)
@@ -969,7 +964,15 @@ namespace TrainEditor2.Views
 
 		protected override void OnFormClosing(FormClosingEventArgs e)
 		{
-			Program.Renderer.DeInitialize();
+			if (ShowSaveDialog())
+			{
+				Program.Renderer.DeInitialize();
+				Interface.SaveOptions();
+			}
+			else
+			{
+				e.Cancel = true;
+			}
 		}
 		
 	}
