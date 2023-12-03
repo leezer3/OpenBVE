@@ -148,8 +148,12 @@ namespace TrainManager.Trains
 			// Update Run and Motor sounds
 			foreach (var Car in Cars)
 			{
-				Car.UpdateRunSounds(TimeElapsed);
-				Car.Sounds.Motor.Update(TimeElapsed);
+				Car.Run.Update(TimeElapsed);
+				if (Car.Sounds.Motor != null)
+				{
+					Car.Sounds.Motor.Update(TimeElapsed);
+				}
+				
 			}
 
 			// infrequent updates

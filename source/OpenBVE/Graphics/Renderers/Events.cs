@@ -103,21 +103,19 @@ namespace OpenBve.Graphics.Renderers
 							dy = 3.5;
 							t = BackgroundChangeTexture;
 						}
-						else if (e is StationStartEvent)
+						else if (e is StationStartEvent startEvent)
 						{
 							s = 0.25;
 							dy = 1.6;
 							t = StationStartTexture;
-							StationStartEvent f = (StationStartEvent)e;
-							sta[f.StationIndex] = true;
+							sta[startEvent.StationIndex] = true;
 						}
-						else if (e is StationEndEvent)
+						else if (e is StationEndEvent endEvent)
 						{
 							s = 0.25;
 							dy = 1.6;
 							t = StationEndTexture;
-							StationEndEvent f = (StationEndEvent)e;
-							sta[f.StationIndex] = true;
+							sta[endEvent.StationIndex] = true;
 						}
 						else if (e is LimitChangeEvent)
 						{
@@ -131,29 +129,25 @@ namespace OpenBve.Graphics.Renderers
 							dy = 0.8;
 							t = SectionTexture;
 						}
-						else if (e is TransponderEvent)
+						else if (e is TransponderEvent transponderEvent)
 						{
 							s = 0.15;
 							dy = 0.4;
-							TransponderEvent ev = e as TransponderEvent;
-							if (ev.Type == 21)
-							{
-								// beacon type 21 is reserved for legacy weather events
-								t = WeatherEventTexture;
-							}
-							else
-							{
-								t = TransponderTexture;
-							}
+							/*
+							 * NOTE:
+							 * Beacon 21 is used by legacy beacon based BVE4 weather events
+							 * e.g. OS_ATS, UK* family of plugins etc.
+							 * Use the weather event texture in this case
+							 */
+							t = transponderEvent.Type == 21 ? WeatherEventTexture : TransponderTexture;
 
 						}
-						else if (e is SoundEvent)
+						else if (e is SoundEvent soundEvent)
 						{
-							SoundEvent f = (SoundEvent)e;
 							s = 0.2;
-							dx = f.Position.X;
-							dy = f.Position.Y < 0.1 ? 0.1 : f.Position.Y;
-							dz = f.Position.Z;
+							dx = soundEvent.Position.X;
+							dy = soundEvent.Position.Y < 0.1 ? 0.1 : soundEvent.Position.Y;
+							dz = soundEvent.Position.Z;
 							t = SoundTexture;
 						}
 						else if (e is PointSoundEvent)

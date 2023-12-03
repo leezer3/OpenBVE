@@ -60,11 +60,10 @@ namespace CsvRwRouteParser {
 			}
 
 			RoutePatchDatabaseParser.LoadRoutePatchDatabase(ref availableRoutefilePatches);
-
+			Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Legacy;
 			RouteData Data = new RouteData
 			{
 				BlockInterval = 25.0,
-				AccurateObjectDisposal = false,
 				FirstUsedBlock = -1,
 				Blocks = new List<Block>()
 			};
@@ -158,8 +157,7 @@ namespace CsvRwRouteParser {
 		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly) {
 			//Read the entire routefile into memory
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
-			Expression[] Expressions;
-			PreprocessSplitIntoExpressions(FileName, Lines, out Expressions, true);
+			PreprocessSplitIntoExpressions(FileName, Lines, out Expression[] Expressions, true);
 			PreprocessChrRndSub(FileName, Encoding, ref Expressions);
 			double[] UnitOfLength = new double[] { 1.0 };
 			//Set units of speed initially to km/h
@@ -184,6 +182,7 @@ namespace CsvRwRouteParser {
 			
 			string Section = ""; bool SectionAlwaysPrefix = false;
 			int BlockIndex = 0;
+			CurrentRoute.Tracks[0].Direction = TrackDirection.Forwards;
 			CurrentRoute.Stations = new RouteStation[] { };
 			Data.RequestStops = new StopRequest[] { };
 			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / Expressions.Length;
@@ -233,8 +232,7 @@ namespace CsvRwRouteParser {
 					}
 					
 					// separate command and arguments
-					string Command, ArgumentSequence;
-					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, false, IsRW, Section);
+					Expressions[j].SeparateCommandsAndArguments(out string Command, out string ArgumentSequence, Culture, false, IsRW, Section);
 					// process command
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
 					if (NumberCheck && NumberFormats.IsValidDouble(Command, UnitOfLength)) {
@@ -436,12 +434,10 @@ namespace CsvRwRouteParser {
 						Expressions[j].ConvertRwToCsv(Section, SectionAlwaysPrefix);
 					}
 					// separate command and arguments
-					string Command, ArgumentSequence;
-					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, false, IsRW, Section);
+					Expressions[j].SeparateCommandsAndArguments(out string Command, out string ArgumentSequence, Culture, false, IsRW, Section);
 					// process command
-					double currentTrackPosition;
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
-					if (NumberCheck && NumberFormats.TryParseDouble(Command, UnitOfLength, out currentTrackPosition)) {
+					if (NumberCheck && NumberFormats.TryParseDouble(Command, UnitOfLength, out double currentTrackPosition)) {
 						// track position
 						if (ArgumentSequence.Length != 0) {
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A track position must not contain any arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);

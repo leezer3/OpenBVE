@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.World;
+// ReSharper disable UnusedMember.Global
 
 namespace OpenBveApi.Math {
 	/// <summary>Represents a three-dimensional vector.</summary>
@@ -48,7 +49,7 @@ namespace OpenBveApi.Math {
 		{
 			bool success = true;
 			v.X = 0; v.Y = 0; v.Z = 0; //Don't generate a new struct- Important in parsing objects with large numbers of verts
-			string[] splitString = stringToParse.Split(new char[] { separator });
+			string[] splitString = stringToParse.Split(separator);
 			int i;
 			for (i = 0; i < splitString.Length; i++)
 			{
@@ -78,6 +79,43 @@ namespace OpenBveApi.Math {
 			if (i != 3)
 			{
 				success = false;
+			}
+			return success;
+		}
+
+		/// <summary>Parses a Vector3 from a list of strings</summary>
+		/// <param name="arguments">The list of strings</param>
+		/// <param name="v">The out Vector</param>
+		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <remarks>This will always return a Vector3.
+		/// If any part fails parsing, it will be set to zero</remarks>
+		public static bool TryParse(string[] arguments, out Vector3 v)
+		{
+			bool success = arguments.Length == 3;
+			v.X = 0; v.Y = 0; v.Z = 0; 
+			for (int i = 0; i < arguments.Length; i++)
+			{
+				switch (i)
+				{
+					case 0:
+						if (!double.TryParse(arguments[i], out v.X))
+						{
+							success = false;
+						}
+						break;
+					case 1:
+						if (!double.TryParse(arguments[i], out v.Y))
+						{
+							success = false;
+						}
+						break;
+					case 2:
+						if (!double.TryParse(arguments[i], out v.Z))
+						{
+							success = false;
+						}
+						break;
+				}
 			}
 			return success;
 		}
@@ -663,8 +701,7 @@ namespace OpenBveApi.Math {
 		/// <returns>The result of the operation.</returns>
 		public static Vector3 Transform(Vector3 vec, Quaternion quat)
 		{
-			Vector3 result;
-			Transform(ref vec, ref quat, out result);
+			Transform(ref vec, ref quat, out Vector3 result);
 			return result;
 		}
 
@@ -733,6 +770,9 @@ namespace OpenBveApi.Math {
 		
 		/// <summary>Represents a vector pointing down.</summary>
 		public static readonly Vector3 Forward = new Vector3(0.0, 0.0, 1.0);
+
+		/// <summary>Represents a unary vector.</summary>
+		public static readonly Vector3 One = new Vector3(1.0, 1.0, 1.0);
 
 		/// <summary>Returns the representation of the vector in string format</summary>
 		public override string ToString()

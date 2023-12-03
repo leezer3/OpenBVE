@@ -187,7 +187,7 @@ namespace AssimpNET.Obj
 		//! Ambient color
 		public Color128 Ambient;
 		//! Diffuse color
-		public Color128 Diffuse = new Color128(1.0f, 1.0f, 1.0f, 1.0f);
+		public Color128 Diffuse = Color128.White;
 		//! Specular color
 		public Color128 Specular;
 		//! Emissive color
@@ -291,6 +291,9 @@ namespace AssimpNET.Obj
 		public Model(string modelName)
 		{
 			ModelName = modelName;
+			DefaultMaterial = new Material(Material.AI_DEFAULT_MATERIAL_NAME);
+			MaterialLib.Add(Material.AI_DEFAULT_MATERIAL_NAME);
+			MaterialMap[Material.AI_DEFAULT_MATERIAL_NAME] = DefaultMaterial;
 		}
 	}
 }

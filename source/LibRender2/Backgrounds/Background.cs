@@ -21,23 +21,17 @@ namespace LibRender2.Backgrounds
 		/// <param name="Scale">The scale</param>
 		public void Render(BackgroundHandle Data, float Scale)
 		{
-			DynamicBackground dynamicBackground = Data as DynamicBackground;
-			StaticBackground staticBackground = Data as StaticBackground;
-			BackgroundObject backgroundObject = Data as BackgroundObject;
-
-			if (dynamicBackground != null)
+			switch (Data)
 			{
-				RenderDynamicBackground(dynamicBackground, Scale);
-			}
-
-			if (staticBackground != null)
-			{
-				RenderStaticBackground(staticBackground, Scale);
-			}
-
-			if (backgroundObject != null)
-			{
-				RenderBackgroundObject(backgroundObject);
+				case DynamicBackground dynamicBackground:
+					RenderDynamicBackground(dynamicBackground, Scale);
+					break;
+				case StaticBackground staticBackground:
+					RenderStaticBackground(staticBackground, Scale);
+					break;
+				case BackgroundObject backgroundObject:
+					RenderBackgroundObject(backgroundObject);
+					break;
 			}
 		}
 
@@ -47,23 +41,17 @@ namespace LibRender2.Backgrounds
 		/// <param name="Scale">The scale</param>
 		public void Render(BackgroundHandle Data, float Alpha, float Scale)
 		{
-			DynamicBackground dynamicBackground = Data as DynamicBackground;
-			StaticBackground staticBackground = Data as StaticBackground;
-			BackgroundObject backgroundObject = Data as BackgroundObject;
-
-			if (dynamicBackground != null)
+			switch (Data)
 			{
-				RenderDynamicBackground(dynamicBackground, Alpha, Scale);
-			}
-
-			if (staticBackground != null)
-			{
-				RenderStaticBackground(staticBackground, Alpha, Scale);
-			}
-
-			if (backgroundObject != null)
-			{
-				RenderBackgroundObject(backgroundObject);
+				case DynamicBackground dynamicBackground:
+					RenderDynamicBackground(dynamicBackground, Alpha, Scale);
+					break;
+				case StaticBackground staticBackground:
+					RenderStaticBackground(staticBackground, Alpha, Scale);
+					break;
+				case BackgroundObject backgroundObject:
+					RenderBackgroundObject(backgroundObject);
+					break;
 			}
 		}
 
@@ -146,6 +134,11 @@ namespace LibRender2.Backgrounds
 				if (data.VAO == null)
 				{
 					data.CreateVAO(renderer.DefaultShader.VertexLayout, renderer);
+					if (data.VAO == null)
+					{
+						// Failed during creation of the VAO
+						return;
+					}
 				}
 
 				renderer.DefaultShader.Activate();
@@ -242,9 +235,7 @@ namespace LibRender2.Backgrounds
 				float y0, y1;
 				if (data.KeepAspectRatio)
 				{
-					int tw = data.Texture.Width;
-					int th = data.Texture.Height;
-					double hh = Math.PI * data.BackgroundImageDistance * th / (tw * data.Repetition);
+					double hh = Math.PI * data.BackgroundImageDistance * data.Texture.Height / (data.Texture.Width * data.Repetition);
 					y0 = (float)(-0.5 * hh);
 					y1 = (float)(1.5 * hh);
 				}

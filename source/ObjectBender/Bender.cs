@@ -53,7 +53,7 @@ namespace ObjectBender {
 						comments = string.Empty;
 						lines[i] = lines[i].Trim(new char[] { });
 					}
-					cells[i] = lines[i].Split(new[] { ',' });
+					cells[i] = lines[i].Split(',');
 					if (isB3d & cells[i].Length != 0) {
 						/*
 						 * In B3D files, the space is the separator between the command and the
@@ -97,8 +97,8 @@ namespace ObjectBender {
 										int equals = command.IndexOf('=');
 										if (equals >= 0)
 										{
-											string arg = command.Substring(equals + 1).TrimStart(new char[] { });
-											command = command.Substring(0, equals).TrimEnd(new char[] { });
+											string arg = command.Substring(equals + 1).TrimStart();
+											command = command.Substring(0, equals).TrimEnd();
 											switch (command.ToLowerInvariant()) {
 												case "x":
 													if (!double.TryParse(arg, NumberStyles.Float, culture, out dx)) {
@@ -400,7 +400,7 @@ namespace ObjectBender {
 											 * transition.
 											 * */
 											if (f < quadraticThreshold) {
-												f = f * (2.0 - f / quadraticThreshold);
+												f *= (2.0 - f / quadraticThreshold);
 											} else {
 												f = (quadraticThreshold - 2.0 * quadraticThreshold * f + f * f) / (1.0 - quadraticThreshold);
 											}
@@ -430,15 +430,15 @@ namespace ObjectBender {
 									}
 									if (isB3d) {
 										if (n.X == 0.0 & n.Y == 0.0 & n.Z == 0.0) {
-											builder.AppendLine("Vertex " + v.X.ToString("0.000", culture) + "," + v.Y.ToString("0.000", culture) + "," + v.Z.ToString("0.000", culture));
+											builder.AppendLine("Vertex " + v);
 										} else {
-											builder.AppendLine("Vertex " + v.X.ToString("0.000", culture) + "," + v.Y.ToString("0.000", culture) + "," + v.Z.ToString("0.000", culture) + "," + n.X.ToString("0.000", culture) + "," + n.Y.ToString("0.000", culture) + "," + n.Z.ToString("0.000", culture));
+											builder.AppendLine("Vertex " + v + "," + n);
 										}
 									} else {
 										if (n.X == 0.0 & n.Y == 0.0 & n.Z == 0.0) {
-											builder.AppendLine("AddVertex," + v.X.ToString("0.000", culture) + "," + v.Y.ToString("0.000", culture) + "," + v.Z.ToString("0.000", culture));
+											builder.AppendLine("AddVertex," + v);
 										} else {
-											builder.AppendLine("AddVertex," + v.X.ToString("0.000", culture) + "," + v.Y.ToString("0.000", culture) + "," + v.Z.ToString("0.000", culture) + "," + n.X.ToString("0.000", culture) + "," + n.Y.ToString("0.000", culture) + "," + n.Z.ToString("0.000", culture));
+											builder.AppendLine("AddVertex," + v + "," + n);
 										}
 									}
 							} 
@@ -596,7 +596,6 @@ namespace ObjectBender {
 				for (int i = 0; i < segments; i++) {
 					cells[cellPointer][1 + i] = (numVertices + 2 * i + 1).ToString(culture);
 				}
-				cellPointer++;
 			}
 			return cells;
 		}

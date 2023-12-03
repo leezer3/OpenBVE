@@ -1,16 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
-using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using Plugin.BMP;
 using Plugin.GIF;
+using Plugin.PNG;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace Plugin {
 	public partial class Plugin {
@@ -41,24 +41,27 @@ namespace Plugin {
 					fs.Close();
 					if (buffer.SequenceEqual(GifDecoder.GIF87Header) || buffer.SequenceEqual(GifDecoder.GIF89Header))
 					{
-						GifDecoder decoder = new GifDecoder();
-						decoder.Read(file);
-						int frameCount = decoder.GetFrameCount();
-						int duration = 0;
-						if (frameCount != 1)
+						using (GifDecoder decoder = new GifDecoder())
 						{
-							Vector2 frameSize = decoder.GetFrameSize();
-							byte[][] frameBytes = new byte[frameCount][];
-							for (int i = 0; i < frameCount; i++)
+							decoder.Read(file);
+							int frameCount = decoder.GetFrameCount();
+							int duration = 0;
+							if (frameCount != 1)
 							{
-								int[] framePixels = decoder.GetFrame(i);
-								frameBytes[i] = new byte[framePixels.Length * sizeof(int)];
-								Buffer.BlockCopy(framePixels, 0, frameBytes[i], 0, frameBytes[i].Length);
-								duration += decoder.GetDuration(i);
+								Vector2 frameSize = decoder.GetFrameSize();
+								byte[][] frameBytes = new byte[frameCount][];
+								for (int i = 0; i < frameCount; i++)
+								{
+									int[] framePixels = decoder.GetFrame(i);
+									frameBytes[i] = new byte[framePixels.Length * sizeof(int)];
+									Buffer.BlockCopy(framePixels, 0, frameBytes[i], 0, frameBytes[i].Length);
+									duration += decoder.GetDuration(i);
+								}
+								texture = new Texture((int)frameSize.X, (int)frameSize.Y, OpenBveApi.Textures.PixelFormat.RGBAlpha, frameBytes, ((double)duration / frameCount) / 10000000.0);
+								return true;
 							}
-							texture = new Texture((int)frameSize.X, (int)frameSize.Y, 32, frameBytes, ((double)duration / frameCount) / 10000000.0);
-							return true;
 						}
+						
 					}
 					
 					if (Encoding.ASCII.GetString(buffer, 0, 2) == "BM")
@@ -67,11 +70,24 @@ namespace Plugin {
 						{
 							if (decoder.Read(file))
 							{
-								texture = new Texture(decoder.Width, decoder.Height, 32, decoder.ImageData, decoder.ColorTable);
+								texture = new Texture(decoder.Width, decoder.Height, OpenBveApi.Textures.PixelFormat.RGBAlpha, decoder.ImageData, decoder.ColorTable);
 								return true;
 							}
 						}
-						
+					}
+
+					if (Encoding.ASCII.GetString(buffer, 1, 3) == "PNG" && !CurrentOptions.UseGDIDecoders)
+					{
+						// NB: GDI+ decoders are curerntly enabled by default as they are marginally faster (~10ms or so per texture unless massively interlaced which is worse)
+						//     If / when mobile device support is added, these will likely be removed
+						using (PngDecoder decoder = new PngDecoder())
+						{
+							if (decoder.Read(file))
+							{
+								texture = new Texture(decoder.Width, decoder.Height, (OpenBveApi.Textures.PixelFormat)decoder.BytesPerPixel, decoder.pixelBuffer, null);
+								return true;
+							}
+						}
 					}
 				}
 			}
@@ -85,106 +101,23 @@ namespace Plugin {
 			 * any format, not necessarily the one that allows
 			 * us to extract the bitmap data easily.
 			 */
-			int width, height;
-			Color24[] palette;
-			Bitmap bitmap = new Bitmap(file);
-			byte[] raw = GetRawBitmapData(bitmap, out width, out height, out palette);
-			if (raw != null)
+			using (Bitmap bitmap = new Bitmap(file))
 			{
-				texture = new Texture(width, height, 32, raw, palette);
-				return true;
+				int width, height;
+				byte[] raw = GetRawBitmapData(bitmap, out width, out height);
+				if (raw != null)
+				{
+					texture = new Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, raw, null);
+					return true;
+				}
+				texture = null;
+				return false;
 			}
-			texture = null;
-			return false;
+			
 		}
 
-		private byte[] GetRawBitmapData(Bitmap bitmap, out int width, out int height, out Color24[] p)
+		private byte[] GetRawBitmapData(Bitmap bitmap, out int width, out int height)
 		{
-			p = null;
-			if (EnabledHacks.ReduceTransparencyColorDepth && (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb))
-			{
-				/*
-				 * Our source bitmap is *not* a 256 color bitmap but has been made for BVE2 / BVE4.
-				 * These process transparency in 256 colors (even if the file is 24bpp / 32bpp), thus:
-				 * Let's open the bitmap, and attempt to construct a reduced color pallette
-				 * If our bitmap contains more than 256 unique colors, we break out of the loop
-				 * and assume that this file is an incorrect match
-				 *
-				 * WARNING NOTE:
-				 * Unfortunately, we can't just pull out the color pallette from the bitmap, as there
-				 * is no native way to remove unused entries. We therefore have to itinerate through
-				 * each pixel.....
-				 * This is *slow* so use with caution!
-				 *
-				 */
-
-				BitmapData inputData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-				HashSet<Color24> reducedPallette = new HashSet<Color24>();
-				unsafe
-				{
-					byte* bmpPtr = (byte*) inputData.Scan0.ToPointer();
-					int ic, oc, r;
-					if (bitmap.PixelFormat == PixelFormat.Format24bppRgb)
-					{
-						for (r = 0; r < inputData.Height; r++)
-						for (ic = oc = 0; oc < inputData.Width; ic += 3, oc++)
-						{
-							byte blue = bmpPtr[r * inputData.Stride + ic];
-							byte green = bmpPtr[r * inputData.Stride + ic + 1];
-							byte red = bmpPtr[r * inputData.Stride + ic + 2];
-							Color24 c = new Color24(red, green, blue);
-							if (!reducedPallette.Contains(c))
-							{
-								reducedPallette.Add(c);
-							}
-							if (reducedPallette.Count > 256)
-							{
-								//as breaking out of nested loops is a pita
-								goto EndLoop;
-							}
-						}
-					}
-					else
-					{
-						for (r = 0; r < inputData.Height; r++)
-						for (ic = oc = 0; oc < inputData.Width; ic += 4, oc++)
-						{
-							byte blue = bmpPtr[r * inputData.Stride + ic];
-							byte green = bmpPtr[r * inputData.Stride + ic + 1];
-							byte red = bmpPtr[r * inputData.Stride + ic + 2];
-							Color24 c = new Color24(red, green, blue);
-							if (!reducedPallette.Contains(c))
-							{
-								reducedPallette.Add(c);
-							}
-							if (reducedPallette.Count > 256)
-							{
-								//as breaking out of nested loops is a pita
-								goto EndLoop;
-							}
-						}
-					}
-				}
-
-				p = reducedPallette.ToArray();
-				EndLoop:
-				bitmap.UnlockBits(inputData);
-			}
-			
-			
-			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb && p == null)
-			{
-				/* Otherwise, only store the color palette data for
-				 * textures using a restricted palette
-				 * With a large number of textures loaded at
-				 * once, this can save a decent chunk of memory
-				 */
-				p = new Color24[bitmap.Palette.Entries.Length];
-				for (int i = 0; i < bitmap.Palette.Entries.Length; i++)
-				{
-					p[i] = bitmap.Palette.Entries[i];
-				}
-			}
 			Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 			/* 
 			 * If the bitmap format is not already 32-bit BGRA,

@@ -94,7 +94,7 @@ namespace OpenBve
 					else if (OpenedDoorsCounter != 0.0)
 					{
 						int x = (int)Math.Ceiling(ScoreFactorOpenedDoors * OpenedDoorsCounter);
-						this.CurrentValue += x;
+						CurrentValue += x;
 						if (x != 0)
 						{
 							AddScore(x, ScoreTextToken.DoorsOpened, 5.0);
@@ -114,7 +114,7 @@ namespace OpenBve
 				else if (OverspeedCounter != 0.0)
 				{
 					int x = (int)Math.Ceiling(ScoreFactorOverspeed * OverspeedCounter);
-					this.CurrentValue += x;
+					CurrentValue += x;
 					if (x != 0)
 					{
 						AddScore(x, ScoreTextToken.Overspeed, 5.0);
@@ -139,7 +139,7 @@ namespace OpenBve
 					else if (TopplingCounter != 0.0)
 					{
 						int x = (int)Math.Ceiling(ScoreFactorToppling * TopplingCounter);
-						this.CurrentValue += x;
+						CurrentValue += x;
 						if (x != 0)
 						{
 							AddScore(x, ScoreTextToken.Toppling, 5.0);
@@ -162,8 +162,8 @@ namespace OpenBve
 					if (q)
 					{
 						int x = ScoreValueDerailment;
-						if (this.CurrentValue > 0) x -= this.CurrentValue;
-						this.CurrentValue += x;
+						if (CurrentValue > 0) x -= CurrentValue;
+						CurrentValue += x;
 						if (x != 0)
 						{
 							AddScore(x, ScoreTextToken.Derailed, 5.0);
@@ -178,11 +178,8 @@ namespace OpenBve
 						if (!RedSignal)
 						{
 							int x = ScoreValueRedSignal;
-							this.CurrentValue += x;
-							if (x != 0)
-							{
-								AddScore(x, ScoreTextToken.PassedRedSignal, 5.0);
-							}
+							CurrentValue += x;
+							AddScore(x, ScoreTextToken.PassedRedSignal, 5.0);
 							RedSignal = true;
 						}
 					}
@@ -202,11 +199,8 @@ namespace OpenBve
 							{
 								// arrival
 								int xa = ScoreValueStationArrival;
-								this.CurrentValue += xa;
-								if (xa != 0)
-								{
-									AddScore(xa, ScoreTextToken.ArrivedAtStation, 10.0);
-								}
+								CurrentValue += xa;
+								AddScore(xa, ScoreTextToken.ArrivedAtStation, 10.0);
 								// early/late
 								int xb;
 								if (Program.CurrentRoute.Stations[j].ArrivalTime >= 0)
@@ -215,13 +209,13 @@ namespace OpenBve
 									if (d >= -5.0 & d <= 0.0)
 									{
 										xb = ScoreValueStationPerfectTime;
-										this.CurrentValue += xb;
+										CurrentValue += xb;
 										AddScore(xb, ScoreTextToken.PerfectTimeBonus, 10.0);
 									}
 									else if (d > 0.0)
 									{
 										xb = (int)Math.Ceiling(ScoreFactorStationLate * (d - 1.0));
-										this.CurrentValue += xb;
+										CurrentValue += xb;
 										if (xb != 0)
 										{
 											AddScore(xb, ScoreTextToken.Late, 10.0);
@@ -256,7 +250,7 @@ namespace OpenBve
 									if (r < 0.01)
 									{
 										xc = ScoreValueStationPerfectStop;
-										this.CurrentValue += xc;
+										CurrentValue += xc;
 										AddScore(xc, ScoreTextToken.PerfectStopBonus, 10.0);
 									}
 									else
@@ -264,7 +258,7 @@ namespace OpenBve
 										if (r > 1.0) r = 1.0;
 										r = (r - 0.01) * 1.01010101010101;
 										xc = (int)Math.Ceiling(ScoreFactorStationStop * r);
-										this.CurrentValue += xc;
+										CurrentValue += xc;
 										if (xc != 0)
 										{
 											AddScore(xc, ScoreTextToken.Stop, 10.0);
@@ -288,7 +282,7 @@ namespace OpenBve
 								{
 									if (Program.CurrentRoute.Stations[j].Type == StationType.Terminal)
 									{
-										double y = (double)this.CurrentValue / (double)Maximum;
+										double y = CurrentValue / (double)Maximum;
 										if (y < 0.0) y = 0.0;
 										if (y > 1.0) y = 1.0;
 										int k = (int)Math.Floor(y * Translations.RatingsCount);
@@ -325,7 +319,7 @@ namespace OpenBve
 							if (r > 0.0)
 							{
 								int x = (int)Math.Ceiling(ScoreFactorStationDeparture * r);
-								this.CurrentValue += x;
+								CurrentValue += x;
 								if (x != 0)
 								{
 									AddScore(x, ScoreTextToken.PrematureDeparture, 5.0);
@@ -353,7 +347,7 @@ namespace OpenBve
 				if (fallenOver & PassengerTimer == 0.0)
 				{
 					int x = ScoreValuePassengerDiscomfort;
-					this.CurrentValue += x;
+					CurrentValue += x;
 					AddScore(x, ScoreTextToken.PassengerDiscomfort, 5.0);
 					PassengerTimer = 5.0;
 				}
@@ -362,14 +356,7 @@ namespace OpenBve
 					PassengerTimer -= TimeElapsed;
 					if (PassengerTimer <= 0.0)
 					{
-						if (fallenOver)
-						{
-							PassengerTimer = 5.0;
-						}
-						else
-						{
-							PassengerTimer = 0.0;
-						}
+						PassengerTimer = fallenOver ? 5.0 : 0.0;
 					}
 				}
 			}
@@ -437,8 +424,7 @@ namespace OpenBve
 		}
 
 		/// <summary>Updates all score messages displayed by the renderer</summary>
-		/// <param name="TimeElapsed">The frame time elapsed</param>
-		internal static void UpdateScoreMessages(double TimeElapsed)
+		internal static void UpdateScoreMessages()
 		{
 			if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 			{

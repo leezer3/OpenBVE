@@ -1,10 +1,15 @@
 ﻿namespace TrainManager.Motor
 {
-	public struct BVE5MotorSoundTableEntry
+	public class BVE5MotorSoundTableEntry
 	{
 		/// <summary>The set speed</summary>
-		public double Speed;
+		public readonly double Speed;
 		/// <summary>The list of sounds to be played</summary>
 		public SoundState[] Sounds;
+
+		public BVE5MotorSoundTableEntry(double speed)
+		{
+			Speed = speed;
+		}
 	}
 }

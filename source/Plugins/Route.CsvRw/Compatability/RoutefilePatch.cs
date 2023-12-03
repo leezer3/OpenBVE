@@ -4,6 +4,7 @@ using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using RouteManager2.SignalManager;
 using CompatabilityHacks = OpenBveApi.Textures.CompatabilityHacks;
 
@@ -37,7 +38,8 @@ namespace CsvRwRouteParser
 
 				EnabledHacks.CylinderHack = patch.CylinderHack;
 				EnabledHacks.DisableSemiTransparentFaces = patch.DisableSemiTransparentFaces;
-				Data.AccurateObjectDisposal = patch.AccurateObjectDisposal;
+				Plugin.CurrentOptions.ObjectDisposalMode = patch.AccurateObjectDisposal ? ObjectDisposalMode.Accurate : ObjectDisposalMode.Legacy;
+
 				for (int i = 0; i < patch.ExpressionFixes.Count; i++)
 				{
 					Expressions[patch.ExpressionFixes.ElementAt(i).Key].Text = patch.ExpressionFixes.ElementAt(i).Value;

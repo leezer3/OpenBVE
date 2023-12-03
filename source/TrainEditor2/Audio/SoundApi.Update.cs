@@ -9,11 +9,6 @@ namespace TrainEditor2.Audio
 {
 	internal partial class SoundApi
 	{
-		protected override void UpdateLinearModel(double timeElapsed)
-		{
-			throw new NotImplementedException();
-		}
-
 		/// <summary>Updates the sound component. Should be called every frame.</summary>
 		/// <param name="timeElapsed">The time in seconds that elapsed since the last call to this function.</param>
 		protected override void UpdateInverseModel(double timeElapsed)
@@ -90,8 +85,7 @@ namespace TrainEditor2.Audio
 					 * */
 					if (Sources[i].State == SoundSourceState.Playing)
 					{
-						int state;
-						AL.GetSource(Sources[i].OpenAlSourceName, ALGetSourcei.SourceState, out state);
+						AL.GetSource(Sources[i].OpenAlSourceName, ALGetSourcei.SourceState, out int state);
 						if (state != (int)ALSourceState.Initial & state != (int)ALSourceState.Playing)
 						{
 							/*

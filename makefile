@@ -137,6 +137,9 @@ prequisite-check:
  $(info nuget Version $(NUGET_VERSION) found.)
  ifeq "$(call GreaterVersion, $(NUGET_VERSION), $(MIN_NUGET_VERSION))" "$(NUGET_VERSION)"
  #Nothing
+ else ifeq ($(strip $(NUGET_VERSION)),)
+ $(info Unable to determine the nuget version installed.)
+ $(info OpenBVE requires a minimum nuget version of 2.16- The build will fail with versions below this.)
  else
  $(info OpenBVE requires a minimum nuget version of 2.16)
  $(info Please run $(red)nuget update -self$(reset) with administrative priveledges.)
@@ -152,6 +155,7 @@ $(MAC_BUILD_RESULT): all-release
 	@rm -rf macbuild.dmg
 	@mkdir mac
 	@tar -C mac -xzf installers/mac/MacBundle.tgz
+	@./VersionCreator.sh
 
 	@echo $(COLOR_RED)Copying build data into $(COLOR_CYAN)OpenBVE.app$(COLOR_END)
 	@cp -r $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/
@@ -189,7 +193,7 @@ $(DEBIAN_BUILD_RESULT): all-release
 	@echo $(COLOR_RED)Copying build into place....$(COLOR_END)
 	@mkdir -p installers/debian/usr/lib/openbve
 #Generate current dpkg control file
-	@./DebianControl.sh
+	@./VersionCreator.sh
 #Mark launch script as executable before packaging
 #Also deliberately chmod assets directory to 755- https://github.com/leezer3/OpenBVE/issues/656#issuecomment-865164917
 	@chmod -R 755 bin_release/Data

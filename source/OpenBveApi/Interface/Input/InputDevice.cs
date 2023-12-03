@@ -17,7 +17,6 @@ namespace OpenBveApi.Interface
 		/// </summary>
 		/// <param name="control">Control's information</param>
 		public InputEventArgs(InputControl control)
-			: base()
 		{
 				this.Control = control;
 		}
@@ -93,7 +92,7 @@ namespace OpenBveApi.Interface
 		/// The function what notify to the plugin that the train existing status
 		/// </summary>
 		/// <param name="data">Data</param>
-		void SetElapseData(Runtime.ElapseData data);
+		void SetElapseData(ElapseData data);
 
 		/// <summary>
 		/// A function that calls each frame

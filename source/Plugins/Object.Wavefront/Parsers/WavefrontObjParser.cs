@@ -27,6 +27,7 @@ using System.IO;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Collections.Generic;
+using Object.Wavefront;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
@@ -122,10 +123,14 @@ namespace Plugin
 				{
 					continue;
 				}
-				switch (Arguments[0].ToLowerInvariant())
+
+				WavefrontObjCommands cmd;
+				Enum.TryParse(Arguments[0], true, out cmd);
+
+
+				switch (cmd)
 				{
-					case "v":
-						//Vertex
+					case WavefrontObjCommands.V:
 						Vector3 vertex = new Vector3();
 						if (!double.TryParse(Arguments[1], out vertex.X))
 						{
@@ -142,8 +147,7 @@ namespace Plugin
 						vertex *= currentScale;
 						tempVertices.Add(vertex);
 						break;
-					case "vt":
-						//Vertex texture co-ords
+					case WavefrontObjCommands.VT:
 						Vector2 coords = new Vector2();
 						if (!double.TryParse(Arguments[1], out coords.X))
 						{
@@ -155,7 +159,7 @@ namespace Plugin
 						}
 						tempCoords.Add(coords);
 						break;
-					case "vn":
+					case WavefrontObjCommands.VN:
 						Vector3 normal = new Vector3();
 						if (!double.TryParse(Arguments[1], out normal.X))
 						{
@@ -170,14 +174,10 @@ namespace Plugin
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Z co-ordinate in Vertex Normal at Line " + i);
 						}
 						tempNormals.Add(normal);
-						//Vertex normals
 						break;
-					case "vp":
-						//Parameter space verticies, not supported
+					case WavefrontObjCommands.VP:
 						throw new NotSupportedException("Parameter space verticies are not supported by this parser");
-					case "f":
-						//Creates a new face
-
+					case WavefrontObjCommands.F:
 						//Create the temp list to hook out the vertices 
 						List<VertexTemplate> vertices = new List<VertexTemplate>();
 						List<Vector3> normals = new List<Vector3>();
@@ -341,14 +341,12 @@ namespace Plugin
 						}
 						Builder.Faces.Add(currentMaterial == string.Empty ? new MeshFace(Vertices, 0) : new MeshFace(Vertices, (ushort)materialIndex));
 						break;
-					case "o":
-						//Starts a new internal object
-					case "g":
-						//Starts a new face group and (normally) applies a new texture
+					case WavefrontObjCommands.O:
+					case WavefrontObjCommands.G:
 						Builder.Apply(ref Object);
 						Builder = new MeshBuilder(Plugin.currentHost);
 						break;
-					case "s":
+					case WavefrontObjCommands.S:
 						/* 
 						 * Changes the smoothing group applied to these vertexes:
 						 * 0- Disabled (Overriden by Vertex normals)
@@ -361,7 +359,7 @@ namespace Plugin
 						 * 
 						 */
 						 break;
-					case "mtllib":
+					case WavefrontObjCommands.MtlLib:
 						//Loads the library of materials used by this file
 						string MaterialsPath = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[1]);
 						if (File.Exists(MaterialsPath))
@@ -369,7 +367,7 @@ namespace Plugin
 							LoadMaterials(MaterialsPath, ref TempMaterials);
 						}
 						break;
-					case "usemtl":
+					case WavefrontObjCommands.UseMtl:
 						currentMaterial = Arguments[1].ToLowerInvariant();
 						if (!TempMaterials.ContainsKey(currentMaterial))
 						{
@@ -414,10 +412,13 @@ namespace Plugin
 				{
 					continue;
 				}
-				
-				switch (Arguments[0].ToLowerInvariant())
+
+				WavefrontMtlCommands cmd;
+				Enum.TryParse(Arguments[0], true, out cmd);
+
+				switch (cmd)
 				{
-					case "newmtl":
+					case WavefrontMtlCommands.NewMtl:
 						currentKey = Arguments[1].ToLowerInvariant(); //store as KVP, but case insensitive
 						if (Materials.ContainsKey(currentKey))
 						{
@@ -428,11 +429,10 @@ namespace Plugin
 							Materials.Add(currentKey, new Material());
 						}
 						break;
-					case "ka":
-						//Ambient color not supported
+					case WavefrontMtlCommands.Ka:
+						// Not yet supported
 						break;
-					case "kd":
-						//Equivilant to SetColor
+					case WavefrontMtlCommands.Kd:
 						double r = 1, g = 1, b = 1;
 						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out r))
 						{
@@ -451,24 +451,21 @@ namespace Plugin
 						b = 255 * b;
 						Materials[currentKey].Color = new Color32((byte)r, (byte)g, (byte)b);
 						break;
-					case "ks":
-						//Specular color not supported
+					case WavefrontMtlCommands.Ks:
+					case WavefrontMtlCommands.Ke:
+						// Not yet supported
 						break;
-					case "ke":
-						//Emissive color not supported
-						break;
-					case "d":
-						//Sets the alpha value for the face
+					case WavefrontMtlCommands.D:
 						double a = 1;
 						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out a))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + currentKey);
 						}
-						Materials[currentKey].Color.A = (byte)((1 - a) * 255);
+						Materials[currentKey].Color.A = (byte)(a * 255);
 						break;
-					case "map_kd":
-					case "map_ka":
-						string tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[Arguments.Count - 1]);
+					case WavefrontMtlCommands.Map_Kd:
+					case WavefrontMtlCommands.Map_Ka:
+						string tday = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[Arguments.Count - 1]);
 						if (File.Exists(tday))
 						{
 							Materials[currentKey].DaytimeTexture = tday;
@@ -479,13 +476,10 @@ namespace Plugin
 						}
 						break;
 					
-					case "map_ke":
-						//Emissive color map not supported
+					case WavefrontMtlCommands.Map_Ke:
+					case WavefrontMtlCommands.Illum:
+						// Not yet supported
 						break;
-					case "illum":
-						//Illumination mode not supported
-						break;
-					
 				}
 			}
 		}

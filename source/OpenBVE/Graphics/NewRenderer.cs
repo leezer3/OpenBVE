@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using LibRender2;
 using LibRender2.MotionBlurs;
 using LibRender2.Objects;
@@ -109,8 +111,7 @@ namespace OpenBve.Graphics
 			switch (CurrentViewportMode)
 			{
 				case ViewportMode.Scenery:
-					BackgroundObject b = Program.CurrentRoute.CurrentBackground as BackgroundObject;
-					double cd = b != null ? Math.Max(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, b.ClipDistance) : Program.CurrentRoute.CurrentBackground.BackgroundImageDistance;
+					double cd = Program.CurrentRoute.CurrentBackground is BackgroundObject b ? Math.Max(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, b.ClipDistance) : Program.CurrentRoute.CurrentBackground.BackgroundImageDistance;
 					CurrentProjectionMatrix = Matrix4D.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, 0.5, cd);
 					break;
 				case ViewportMode.Cab:
@@ -244,21 +245,30 @@ namespace OpenBve.Graphics
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
 			ResetOpenGlState();
-			foreach (FaceState face in VisibleObjects.OpaqueFaces)
+			List<FaceState> opaqueFaces, alphaFaces, overlayOpaqueFaces, overlayAlphaFaces;
+			lock (VisibleObjects.LockObject)
+			{
+				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
+				alphaFaces = VisibleObjects.GetSortedPolygons();
+				overlayOpaqueFaces = VisibleObjects.OverlayOpaqueFaces.ToList();
+				overlayAlphaFaces = VisibleObjects.GetSortedPolygons(true);
+			}
+			
+			foreach (FaceState face in opaqueFaces)
 			{
 				face.Draw();
 			}
 
 			// alpha face
 			ResetOpenGlState();
-			VisibleObjects.SortPolygonsInAlphaFaces();
+			
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{
 				SetBlendFunc();
 				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				GL.DepthMask(false);
 
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
+				foreach (FaceState face in alphaFaces)
 				{
 					face.Draw();
 				}
@@ -269,7 +279,7 @@ namespace OpenBve.Graphics
 				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				GL.DepthMask(true);
 
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
+				foreach (FaceState face in alphaFaces)
 				{
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
 					{
@@ -285,7 +295,7 @@ namespace OpenBve.Graphics
 				GL.DepthMask(false);
 				bool additive = false;
 
-				foreach (FaceState face in VisibleObjects.AlphaFaces)
+				foreach (FaceState face in alphaFaces)
 				{
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
 					{
@@ -338,6 +348,7 @@ namespace OpenBve.Graphics
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
 			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
+			
 			if (Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D)
 			{
 				ResetOpenGlState(); // TODO: inserted
@@ -365,22 +376,20 @@ namespace OpenBve.Graphics
 				
 
 				// overlay opaque face
-				foreach (FaceState face in VisibleObjects.OverlayOpaqueFaces)
+				foreach (FaceState face in overlayOpaqueFaces)
 				{
 					face.Draw();
 				}
 
 				// overlay alpha face
 				ResetOpenGlState();
-				VisibleObjects.SortPolygonsInOverlayAlphaFaces();
-
 				if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 				{
 					SetBlendFunc();
 					SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 					GL.DepthMask(false);
 
-					foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
+					foreach (FaceState face in overlayAlphaFaces)
 					{
 						face.Draw();
 					}
@@ -391,7 +400,7 @@ namespace OpenBve.Graphics
 					SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 					GL.DepthMask(true);
 
-					foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
+					foreach (FaceState face in overlayAlphaFaces)
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
 						{
@@ -407,7 +416,7 @@ namespace OpenBve.Graphics
 					GL.DepthMask(false);
 					bool additive = false;
 
-					foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
+					foreach (FaceState face in overlayAlphaFaces)
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
 						{
@@ -453,8 +462,7 @@ namespace OpenBve.Graphics
 				UnsetAlphaFunc();
 				GL.Disable(EnableCap.DepthTest);
 				GL.DepthMask(false);
-				VisibleObjects.SortPolygonsInOverlayAlphaFaces();
-				foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
+				foreach (FaceState face in overlayAlphaFaces)
 				{
 					face.Draw();
 				}
@@ -470,6 +478,11 @@ namespace OpenBve.Graphics
 			GL.Disable(EnableCap.DepthTest);
 			overlays.Render(RealTimeElapsed);
 			OptionLighting = true;
+		}
+
+		public override void SetCursor(OpenTK.MouseCursor newCursor)
+		{
+			Program.currentGameWindow.Cursor = newCursor;
 		}
 
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)

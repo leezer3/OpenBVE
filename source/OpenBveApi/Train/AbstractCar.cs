@@ -1,3 +1,4 @@
+using System;
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Trains
@@ -34,13 +35,7 @@ namespace OpenBveApi.Trains
 		public double EmptyMass;
 
 		/// <summary>Returns the current mass of the car including cargo</summary>
-		public double CurrentMass
-		{
-			get
-			{
-				return EmptyMass + CargoMass;
-			}
-		}
+		public double CurrentMass => EmptyMass + CargoMass;
 
 		/// <summary>The current mass of any cargo in the car</summary>
 		public double CargoMass;
@@ -56,32 +51,30 @@ namespace OpenBveApi.Trains
 		}
 
 		/// <summary>Gets the track position of this car</summary>
-		public virtual double TrackPosition
-		{
-			get
-			{
-				return 0.0;
-			}
-		}
+		public virtual double TrackPosition => 0.0;
 
 		/// <summary>The index of the car within the train</summary>
 		public virtual int Index
 		{
-			get
-			{
-				// A single car is by itself a train, hence index zero
-				return 0;
-			}
+			// A single car is by itself a train, hence index zero
+			get => 0;
+			set => throw new NotSupportedException("Cannot set the index of a single car");
 		}
 
 		/// <summary>Call this method to reverse (flip) the car</summary>
-		public virtual void Reverse()
+		public virtual void Reverse(bool flipInterior = false)
 		{
 
 		}
 
 		/// <summary>Opens the car doors</summary>
 		public virtual void OpenDoors(bool Left, bool Right)
+		{
+
+		}
+
+		/// <summary>Uncouples the car</summary>
+		public virtual void Uncouple(bool Front, bool Rear)
 		{
 
 		}

@@ -33,6 +33,9 @@ namespace CarXmlConvertor
 		internal static double DoorTolerance = 0.0;
 		internal static int PowerNotches = 0;
 		internal static int BrakeNotches = 0;
+		internal static double CenterOfGravityHeight = 1.6;
+		internal static double ExposedFrontalArea = -1;
+		internal static double UnexposedFrontalArea = -1;
 		private static MainForm mainForm;
 		internal static List<AccelerationCurve> AccelerationCurves = new List<AccelerationCurve>();
 
@@ -60,7 +63,7 @@ namespace CarXmlConvertor
 					case "#cab":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
-							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							if (NumberFormats.TryParseDoubleVb6(Lines[i], out double a))
 							{
 								switch (n)
 								{
@@ -84,7 +87,7 @@ namespace CarXmlConvertor
 					case "#car":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
-							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							if (NumberFormats.TryParseDoubleVb6(Lines[i], out double a))
 							{
 								switch (n)
 								{
@@ -133,6 +136,21 @@ namespace CarXmlConvertor
 											CarHeight = a;
 										}
 										break;
+									case 8:
+										CenterOfGravityHeight = a;
+										break;
+									case 9:
+										if (a <= 0)
+										{
+											ExposedFrontalArea = a;
+										}
+										break;
+									case 10:
+										if (a <= 0)
+										{
+											UnexposedFrontalArea = a;
+										}
+										break;
 								}
 							}
 							i++; n++;
@@ -141,7 +159,7 @@ namespace CarXmlConvertor
 					case "#brake":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
-							int a; if (NumberFormats.TryParseIntVb6(Lines[i], out a))
+							if (NumberFormats.TryParseIntVb6(Lines[i], out int a))
 							{
 								switch (n)
 								{
@@ -154,7 +172,7 @@ namespace CarXmlConvertor
 					case "#move":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
-							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							if (NumberFormats.TryParseDoubleVb6(Lines[i], out double a))
 							{
 								switch (n)
 								{
@@ -167,7 +185,7 @@ namespace CarXmlConvertor
 						i--; break;
 					case "#pressure":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
+							if (NumberFormats.TryParseDoubleVb6(Lines[i], out double a)) {
 								switch (n) {
 									case 0:
 										if (a <= 0.0)
@@ -207,7 +225,7 @@ namespace CarXmlConvertor
 						i++;
 						while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
-							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							if (NumberFormats.TryParseDoubleVb6(Lines[i], out double a))
 							{
 								switch (n)
 								{
@@ -231,7 +249,7 @@ namespace CarXmlConvertor
 								if (j == -1) break;
 								string s = t.Substring(0, j).Trim();
 								t = t.Substring(j + 1);
-								if (NumberFormats.TryParseDoubleVb6(s, out var a)) {
+								if (NumberFormats.TryParseDoubleVb6(s, out double a)) {
 									switch (m) {
 										case 0:
 											if (a <= 0.0) {
@@ -287,7 +305,7 @@ namespace CarXmlConvertor
 						i++;
 						while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
-							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							if (NumberFormats.TryParseDoubleVb6(Lines[i], out double a))
 							{
 								switch (n)
 								{

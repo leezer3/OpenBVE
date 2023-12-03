@@ -39,8 +39,8 @@ namespace OpenBveApi.Objects
 				this.Vertices[i] = new MeshFaceVertex(Vertices[i]);
 			}
 
-			this.Material = 0;
-			this.Flags = 0;
+			Material = 0;
+			Flags = 0;
 			IboStartIndex = 0;
 			NormalsIboStartIndex = 0;
 			if (Type != FaceFlags.NotSet)
@@ -55,9 +55,19 @@ namespace OpenBveApi.Objects
 		[CLSCompliant(false)]
 		public MeshFace(MeshFaceVertex[] verticies, ushort material)
 		{
-			this.Vertices = verticies;
-			this.Material = material;
-			this.Flags = 0;
+			Vertices = verticies;
+			Material = material;
+			Flags = 0;
+			IboStartIndex = 0;
+			NormalsIboStartIndex = 0;
+		}
+
+		/// <summary>Creates a new MeshFace containing <param name="numVertices">N</param> vertices</summary>
+		public MeshFace(int numVertices)
+		{
+			Vertices = new MeshFaceVertex[numVertices];
+			Material = 0;
+			Flags = 0;
 			IboStartIndex = 0;
 			NormalsIboStartIndex = 0;
 		}
@@ -65,23 +75,19 @@ namespace OpenBveApi.Objects
 		/// <summary>Flips the MeshFace</summary>
 		public void Flip()
 		{
-			if (((FaceFlags)Flags & FaceFlags.FaceTypeMask) == FaceFlags.QuadStrip)
+			if ((Flags & FaceFlags.FaceTypeMask) == FaceFlags.QuadStrip)
 			{
-				for (int i = 0; i < this.Vertices.Length; i += 2)
+				for (int i = 0; i < Vertices.Length; i += 2)
 				{
-					MeshFaceVertex x = this.Vertices[i];
-					this.Vertices[i] = this.Vertices[i + 1];
-					this.Vertices[i + 1] = x;
+					(Vertices[i], Vertices[i + 1]) = (Vertices[i + 1], Vertices[i]);
 				}
 			}
 			else
 			{
-				int n = this.Vertices.Length;
+				int n = Vertices.Length;
 				for (int i = 0; i < (n >> 1); i++)
 				{
-					MeshFaceVertex x = this.Vertices[i];
-					this.Vertices[i] = this.Vertices[n - i - 1];
-					this.Vertices[n - i - 1] = x;
+					(Vertices[i], Vertices[n - i - 1]) = (Vertices[n - i - 1], Vertices[i]);
 				}
 			}
 		}

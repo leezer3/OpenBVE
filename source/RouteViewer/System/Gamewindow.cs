@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
-using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Math;
 using OpenTK;
@@ -40,6 +39,7 @@ namespace RouteViewer
 	        {
 		        currentlyLoading = false;
 	        }
+	        
         }
 
         //This renders the frame
@@ -59,10 +59,10 @@ namespace RouteViewer
             if (Program.CurrentRouteFile != null)
             {
 	            DateTime d = DateTime.Now;
-	            Game.SecondsSinceMidnight = (double)(3600 * d.Hour + 60 * d.Minute + d.Second) + 0.001 * (double)d.Millisecond;
+	            Game.SecondsSinceMidnight = 3600 * d.Hour + 60 * d.Minute + d.Second + 0.001 * d.Millisecond;
 	            ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
 	            World.UpdateAbsoluteCamera(TimeElapsed);
-	            Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
+	            Program.Renderer.UpdateVisibility(true);
 	            Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
             }
             Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
@@ -94,7 +94,7 @@ namespace RouteViewer
 
             Program.Renderer.Initialize();
             Program.Renderer.Lighting.Initialize();
-			Program.Sounds.Initialize(Program.CurrentHost, SoundRange.Low);
+			Program.Sounds.Initialize(SoundRange.Low);
 			Program.Renderer.UpdateViewport();
             if (Program.processCommandLineArgs)
             {
@@ -113,6 +113,7 @@ namespace RouteViewer
 			{
 				return;
 			}
+			Program.Renderer.visibilityThread = false;
 			if (!Loading.Complete && Program.CurrentRouteFile != null)
 			{
 				e.Cancel = true;
@@ -168,6 +169,7 @@ namespace RouteViewer
 				if (wait > 0)
 					Thread.Sleep((int)(wait));
 			}
+			Program.Renderer.Loading.CompleteLoading();
 			if (!Loading.Cancel)
 			{
 				Program.Renderer.PopMatrix(MatrixMode.Modelview);
@@ -204,11 +206,6 @@ namespace RouteViewer
 			{
 				Monitor.Wait(locker);
 			}
-		}
-
-		public override void Dispose()
-		{
-			base.Dispose();
 		}
     }
 }

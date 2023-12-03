@@ -13,21 +13,10 @@ namespace OpenBveApi.Textures
 		private readonly Color24? MyTransparentColor;
 		// --- properties ---
 		/// <summary>Gets the region in the texture to be extracted, or a null reference for the entire texture.</summary>
-		public TextureClipRegion ClipRegion
-		{
-			get
-			{
-				return this.MyClipRegion;
-			}
-		}
+		public TextureClipRegion ClipRegion => MyClipRegion;
+
 		/// <summary>Gets the color in the texture that should become transparent, or a null reference for no transparent color.</summary>
-		public Color24? TransparentColor
-		{
-			get
-			{
-				return this.MyTransparentColor;
-			}
-		}
+		public Color24? TransparentColor => MyTransparentColor;
 
 		// --- constructors ---
 		/// <summary>Creates new texture parameters.</summary>
@@ -35,8 +24,8 @@ namespace OpenBveApi.Textures
 		/// <param name="transparentColor">The color in the texture that should become transparent, or a null reference for no transparent color.</param>
 		public TextureParameters(TextureClipRegion clipRegion, Color24? transparentColor)
 		{
-			this.MyClipRegion = clipRegion;
-			this.MyTransparentColor = transparentColor;
+			MyClipRegion = clipRegion;
+			MyTransparentColor = transparentColor;
 		}
 
 		// --- operators ---
@@ -78,8 +67,8 @@ namespace OpenBveApi.Textures
 			if (ReferenceEquals(obj, null)) return false;
 			if (!(obj is TextureParameters)) return false;
 			TextureParameters x = (TextureParameters) obj;
-			if (this.MyClipRegion != x.MyClipRegion) return false;
-			if (this.MyTransparentColor != x.MyTransparentColor) return false;
+			if (MyClipRegion != x.MyClipRegion) return false;
+			if (MyTransparentColor != x.MyTransparentColor) return false;
 			return true;
 		}
 	}

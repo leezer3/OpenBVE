@@ -272,9 +272,7 @@ namespace LibRender2
 
 				if (background.KeepAspectRatio)
 				{
-					int tw = background.Texture.Width;
-					int th = background.Texture.Height;
-					double hh = Math.PI * background.BackgroundImageDistance * th / (tw * background.Repetition);
+					double hh = Math.PI * background.BackgroundImageDistance * background.Texture.Height / (background.Texture.Width * background.Repetition);
 					y0 = (float)(-0.5 * hh);
 					y1 = (float)(1.5 * hh);
 				}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+// ReSharper disable UnusedMember.Global
 
 namespace OpenBveApi.Colors {
 	
@@ -122,8 +123,8 @@ namespace OpenBveApi.Colors {
 			Color = Blue;
 			if (Expression.StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 			{
-				string a = Expression.Substring(1).TrimStart(new char[] { });
-				int x; if (int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out x))
+				string a = Expression.Substring(1).TrimStart();
+				if (int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int x))
 				{
 					int r = (x >> 16) & 0xFF;
 					int g = (x >> 8) & 0xFF;
@@ -144,9 +145,7 @@ namespace OpenBveApi.Colors {
 		/// <returns>The new Color24</returns>
 		public static Color24 ParseHexColor(string Expression)
 		{
-			Color24 color;
-
-			if (!TryParseHexColor(Expression, out color))
+			if (!TryParseHexColor(Expression, out Color24 color))
 			{
 				throw new FormatException();
 			}
@@ -336,8 +335,8 @@ namespace OpenBveApi.Colors {
 		{
 			if (Expression.StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 			{
-				string a = Expression.Substring(1).TrimStart(new char[] { });
-				int x; if (Int32.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out x))
+				string a = Expression.Substring(1).TrimStart();
+				if (int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int x))
 				{
 					int r = (x >> 16) & 0xFF;
 					int g = (x >> 8) & 0xFF;
@@ -355,6 +354,138 @@ namespace OpenBveApi.Colors {
 			}
 			Color = Blue;
 			return false;
+		}
+
+		/// <summary>Parses a Color32 stored in a string</summary>
+		/// <param name="stringToParse">The string to parse</param>
+		/// <param name="separator">The separator character</param>
+		/// <param name="Color">The out Color32</param>
+		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <remarks>This will always return a Color32.
+		/// If any part fails parsing, it will be set to 255</remarks>
+		public static bool TryParseColor(string stringToParse, char separator, out Color32 Color)
+		{
+			Color = White;
+			bool success = true;
+			string[] splitString = stringToParse.Split(separator);
+			int i;
+			for (i = 0; i < splitString.Length; i++)
+			{
+				switch (i)
+				{
+					case 0:
+						if (!double.TryParse(splitString[i], out double r) || r < 0 || r > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.R = (byte)r;
+						}
+						break;
+					case 1:
+						if (!double.TryParse(splitString[i], out double g) || g < 0 || g > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.G = (byte)g;
+						}
+						break;
+					case 2:
+						if (!double.TryParse(splitString[i], out double b) || b < 0 || b > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.B = (byte)b;
+						}
+						break;
+					case 3:
+						if (!double.TryParse(splitString[i], out double a) || a < 0 || a > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.A = (byte)a;
+						}
+						break;
+				}
+			}
+
+			if (i != 3 && i != 4)
+			{
+				success = false;
+			}
+			return success;
+		}
+		
+		/// <summary>Parses a Color32 stored in a string array</summary>
+		/// <param name="arguments">The string array to parse</param>
+		/// <param name="Color">The out Color32</param>
+		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <remarks>This will always return a Color32.
+		/// If any part fails parsing, it will be set to 255</remarks>
+		public static bool TryParseColor(string[] arguments, out Color32 Color)
+		{
+			Color = White;
+			bool success = true;
+			int i;
+			for (i = 0; i < arguments.Length; i++)
+			{
+				switch (i)
+				{
+					case 0:
+						if (!double.TryParse(arguments[i], out double r) || r < 0 || r > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.R = (byte)r;
+						}
+						break;
+					case 1:
+						if (!double.TryParse(arguments[i], out double g) || g < 0 || g > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.G = (byte)g;
+						}
+						break;
+					case 2:
+						if (!double.TryParse(arguments[i], out double b) || b < 0 || b > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.B = (byte)b;
+						}
+						break;
+					case 3:
+						if (!double.TryParse(arguments[i], out double a) || a < 0 || a > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.A = (byte)a;
+						}
+						break;
+				}
+			}
+
+			if (i != 3 && i != 4)
+			{
+				success = false;
+			}
+			return success;
 		}
 
 		private const float inv255 = 1.0f / 255.0f;
@@ -400,11 +531,11 @@ namespace OpenBveApi.Colors {
 			}
 			else
 			{
-				c.R = inv255 * (float)this.R;
-				c.G = inv255 * (float)this.G;
-				c.B = inv255 * (float)this.B;
+				c.R = inv255 * R;
+				c.G = inv255 * G;
+				c.B = inv255 * B;
 			}
-			c.A = inv255 * (float)this.A * Alpha;
+			c.A = inv255 * A * Alpha;
 			return c;
 		}
 
@@ -449,11 +580,11 @@ namespace OpenBveApi.Colors {
 			}
 			else
 			{
-				c.R = inv255 * (float)this.R;
-				c.G = inv255 * (float)this.G;
-				c.B = inv255 * (float)this.B;
+				c.R = inv255 * R;
+				c.G = inv255 * G;
+				c.B = inv255 * B;
 			}
-			c.A = inv255 * (float)this.A * Alpha;
+			c.A = inv255 * A * Alpha;
 			return c;
 		}
 
@@ -664,26 +795,38 @@ namespace OpenBveApi.Colors {
 		}
 
 		// --- read-only fields ---
-		/// <summary>Represents a black color.</summary>
+		/// <summary>Represents a black color</summary>
 		public static readonly Color128 Black = new Color128(0.0f, 0.0f, 0.0f);
-		/// <summary>Represents a black color.</summary>
+		/// <summary>Represents a black color</summary>
 		public static readonly Color128 Grey = new Color128(0.5f, 0.5f, 0.5f);
-		/// <summary>Represents a red color.</summary>
+		/// <summary>Represents a red color</summary>
 		public static readonly Color128 Red = new Color128(1.0f, 0.0f, 0.0f);
-		/// <summary>Represents a green color.</summary>
+		/// <summary>Represents a green color</summary>
 		public static readonly Color128 Green = new Color128(0.0f, 1.0f, 0.0f);
-		/// <summary>Represents a blue color.</summary>
+		/// <summary>Represents a blue color</summary>
 		public static readonly Color128 Blue = new Color128(0.0f, 0.0f, 1.0f);
-		/// <summary>Represents a cyan color.</summary>
+		/// <summary>Represents a cyan color</summary>
 		public static readonly Color128 Cyan = new Color128(0.0f, 1.0f, 1.0f);
-		/// <summary>Represents a magenta color.</summary>
+		/// <summary>Represents a magenta color</summary>
 		public static readonly Color128 Magenta = new Color128(1.0f, 0.0f, 1.0f);
-		/// <summary>Represents a yellow color.</summary>
+		/// <summary>Represents a yellow color</summary>
 		public static readonly Color128 Yellow = new Color128(1.0f, 1.0f, 0.0f);
-		/// <summary>Represents a white color.</summary>
+		/// <summary>Represents a white color</summary>
 		public static readonly Color128 White = new Color128(1.0f, 1.0f, 1.0f);
-		/// <summary>Represents a transparent black color.</summary>
+		/// <summary>Represents a transparent black color</summary>
 		public static readonly Color128 Transparent = new Color128(0.0f, 0.0f, 0.0f, 0.0f);
+		
+		/*
+		 * Colors used by overlays etc.
+		 * Where possible, use the standard web pallette names
+		 */
+		/// <summary>Represents a semi transparent grey color</summary>
+		public static readonly Color128 SemiTransparentGrey = new Color128(0.5f, 0.5f, 0.5f, 0.5f);
+		/// <summary>Represents a deep sky blue color</summary>
+		public static readonly Color128 DeepSkyBlue = new Color128(0.0f, 0.75f, 1.0f);
+		/// <summary>Represents an orange color</summary>
+		public static readonly Color128 Orange = new Color128(1.0f, 0.69f, 0.0f);
+
 		// --- conversions ---
 		/// <summary>Performs a widening conversion from Color96 to Color128.</summary>
 		/// <param name="value">The Color96 value.</param>

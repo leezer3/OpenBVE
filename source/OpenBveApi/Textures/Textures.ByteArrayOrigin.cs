@@ -37,10 +37,10 @@ namespace OpenBveApi.Textures
 		{
 			if (TextureBytes.Length == 1)
 			{
-				texture = new Texture(Width, Height, 32, TextureBytes[0], new Color24[0]);
+				texture = new Texture(Width, Height, PixelFormat.RGBAlpha, TextureBytes[0], new Color24[0]);
 				return true;
 			}
-			texture = new Texture(Width, Height, 32, TextureBytes, FrameInterval);
+			texture = new Texture(Width, Height, PixelFormat.RGBAlpha, TextureBytes, FrameInterval);
 			return true;
 		}
 
@@ -50,9 +50,9 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether the two origins are equal.</returns>
 		public static bool operator ==(ByteArrayOrigin a, ByteArrayOrigin b)
 		{
-			if (object.ReferenceEquals(a, b)) return true;
-			if (object.ReferenceEquals(a, null)) return false;
-			if (object.ReferenceEquals(b, null)) return false;
+			if (ReferenceEquals(a, b)) return true;
+			if (ReferenceEquals(a, null)) return false;
+			if (ReferenceEquals(b, null)) return false;
 			if (a.FrameInterval != b.FrameInterval) return false;
 			if (a.NumberOfFrames != b.NumberOfFrames) return false;
 			if (a.Width != b.Width) return false;
@@ -66,9 +66,9 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether the two origins are unequal.</returns>
 		public static bool operator !=(ByteArrayOrigin a, ByteArrayOrigin b)
 		{
-			if (object.ReferenceEquals(a, b)) return false;
-			if (object.ReferenceEquals(a, null)) return true;
-			if (object.ReferenceEquals(b, null)) return true;
+			if (ReferenceEquals(a, b)) return false;
+			if (ReferenceEquals(a, null)) return true;
+			if (ReferenceEquals(b, null)) return true;
 			if (a.FrameInterval == b.FrameInterval) return false;
 			if (a.NumberOfFrames == b.NumberOfFrames) return false;
 			if (a.Width == b.Width) return false;
@@ -81,9 +81,9 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether this instance is equal to the specified object.</returns>
 		public override bool Equals(object obj)
 		{
-			if (object.ReferenceEquals(this, obj)) return true;
-			if (object.ReferenceEquals(this, null)) return false;
-			if (object.ReferenceEquals(obj, null)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (ReferenceEquals(this, null)) return false;
+			if (ReferenceEquals(obj, null)) return false;
 			if (!(obj is ByteArrayOrigin)) return false;
 			if (FrameInterval == ((ByteArrayOrigin)obj).FrameInterval) return false;
 			if (NumberOfFrames == ((ByteArrayOrigin)obj).NumberOfFrames) return false;

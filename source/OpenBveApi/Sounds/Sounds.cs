@@ -53,44 +53,32 @@ namespace OpenBveApi.Sounds {
 					throw new ArgumentException("The data bytes of the channels are of unequal length.");
 				}
 			}
-			this.MySampleRate = sampleRate;
-			this.MyBitsPerSample = bitsPerSample;
-			this.MyBytes = bytes;
+			MySampleRate = sampleRate;
+			MyBitsPerSample = bitsPerSample;
+			MyBytes = bytes;
 		}
 		// --- properties ---
 		/// <summary>Gets the number of samples per second.</summary>
-		public int SampleRate {
-			get {
-				return this.MySampleRate;
-			}
-		}
+		public int SampleRate => MySampleRate;
+
 		/// <summary>Gets the number of bits per sample. Allowed values are 8 or 16.</summary>
-		public int BitsPerSample {
-			get {
-				return this.MyBitsPerSample;
-			}
-		}
+		public int BitsPerSample => MyBitsPerSample;
+
 		/// <summary>Gets the PCM sound data per channel. For 8 bits per sample, samples are unsigned from 0 to 255. For 16 bits per sample, samples are signed from -32768 to 32767 and in little endian byte order.</summary>
-		public byte[][] Bytes {
-			get {
-				return this.MyBytes;
-			}
-		}
+		public byte[][] Bytes => MyBytes;
+
 		/// <summary>Gets the duration of the sound in seconds.</summary>
-		public double Duration {
-			get {
-				return (double)(8.0 * this.MyBytes[0].Length / this.MyBitsPerSample) / (double)this.MySampleRate;
-			}
-		}
+		public double Duration => 8.0 * MyBytes[0].Length / MyBitsPerSample / MySampleRate;
+
 		// --- operators ---
 		/// <summary>Checks whether two sound are equal.</summary>
 		/// <param name="a">The first sound.</param>
 		/// <param name="b">The second sound.</param>
 		/// <returns>Whether the two sounds are equal.</returns>
 		public static bool operator ==(Sound a, Sound b) {
-			if (object.ReferenceEquals(a, b)) return true;
-			if (object.ReferenceEquals(a, null)) return false;
-			if (object.ReferenceEquals(b, null)) return false;
+			if (ReferenceEquals(a, b)) return true;
+			if (ReferenceEquals(a, null)) return false;
+			if (ReferenceEquals(b, null)) return false;
 			if (a.MySampleRate != b.MySampleRate) return false;
 			if (a.MyBitsPerSample != b.MyBitsPerSample) return false;
 			if (a.MyBytes.Length != b.MyBytes.Length) return false;
@@ -107,9 +95,9 @@ namespace OpenBveApi.Sounds {
 		/// <param name="b">The second sound.</param>
 		/// <returns>Whether the two sounds are unequal.</returns>
 		public static bool operator !=(Sound a, Sound b) {
-			if (object.ReferenceEquals(a, b)) return false;
-			if (object.ReferenceEquals(a, null)) return true;
-			if (object.ReferenceEquals(b, null)) return true;
+			if (ReferenceEquals(a, b)) return false;
+			if (ReferenceEquals(a, null)) return true;
+			if (ReferenceEquals(b, null)) return true;
 			if (a.MySampleRate != b.MySampleRate) return true;
 			if (a.MyBitsPerSample != b.MyBitsPerSample) return true;
 			if (a.MyBytes.Length != b.MyBytes.Length) return true;
@@ -125,18 +113,18 @@ namespace OpenBveApi.Sounds {
 		/// <param name="obj">The object.</param>
 		/// <returns>Whether this instance is equal to the specified object.</returns>
 		public override bool Equals(object obj) {
-			if (object.ReferenceEquals(this, obj)) return true;
-			if (object.ReferenceEquals(this, null)) return false;
-			if (object.ReferenceEquals(obj, null)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (ReferenceEquals(this, null)) return false;
+			if (ReferenceEquals(obj, null)) return false;
 			if (!(obj is Sound)) return false;
 			Sound x = (Sound)obj;
-			if (this.MySampleRate != x.MySampleRate) return false;
-			if (this.MyBitsPerSample != x.MyBitsPerSample) return false;
-			if (this.MyBytes.Length != x.MyBytes.Length) return false;
-			for (int i = 0; i < this.MyBytes.Length; i++) {
-				if (this.MyBytes[i].Length != x.MyBytes[i].Length) return false;
-				for (int j = 0; j < this.MyBytes[i].Length; j++) {
-					if (this.MyBytes[i][j] != x.MyBytes[i][j]) return false;
+			if (MySampleRate != x.MySampleRate) return false;
+			if (MyBitsPerSample != x.MyBitsPerSample) return false;
+			if (MyBytes.Length != x.MyBytes.Length) return false;
+			for (int i = 0; i < MyBytes.Length; i++) {
+				if (MyBytes[i].Length != x.MyBytes[i].Length) return false;
+				for (int j = 0; j < MyBytes[i].Length; j++) {
+					if (MyBytes[i][j] != x.MyBytes[i][j]) return false;
 				}
 			}
 			return true;

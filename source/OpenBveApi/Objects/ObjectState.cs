@@ -22,10 +22,7 @@ namespace OpenBveApi.Objects
 		/// <summary>The translation matrix to be applied</summary>
 		public Matrix4D Translation
 		{
-			get
-			{
-				return _translation;
-			}
+			get => _translation;
 			set
 			{
 				_translation = value;
@@ -35,10 +32,7 @@ namespace OpenBveApi.Objects
 		/// <summary>The scale matrix to be applied</summary>
 		public Matrix4D Scale
 		{
-			get
-			{
-				return _scale;
-			}
+			get => _scale;
 			set
 			{
 				_scale = value;
@@ -48,10 +42,7 @@ namespace OpenBveApi.Objects
 		/// <summary>The rotation matrix to be applied</summary>
 		public Matrix4D Rotate
 		{
-			get
-			{
-				return _rotate;
-			}
+			get => _rotate;
 			set
 			{
 				_rotate = value;
@@ -71,12 +62,10 @@ namespace OpenBveApi.Objects
 				{
 					return modelMatrix;
 				}
-				else
-				{
-					updateModelMatrix = false;
-					modelMatrix = _scale * _rotate * _translation;
-					return modelMatrix;
-				}
+
+				updateModelMatrix = false;
+				modelMatrix = _scale * _rotate * _translation;
+				return modelMatrix;
 			}
 		}
 
@@ -115,6 +104,16 @@ namespace OpenBveApi.Objects
 		public object Clone()
 		{
 			return MemberwiseClone();
+		}
+
+		/// <summary>Reverses this ObjectState</summary>
+		/// <param name="pos">The viewer position</param>
+		public void Reverse(Vector3 pos = new Vector3())
+		{
+			Vector3 translation = Translation.ExtractTranslation();
+			translation.X -= pos.X * 2;
+			translation.Z += pos.Z * 2;
+			Translation = Matrix4D.CreateTranslation(translation);
 		}
 	}
 }

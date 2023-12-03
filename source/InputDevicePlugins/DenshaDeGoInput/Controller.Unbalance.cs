@@ -34,7 +34,7 @@ namespace DenshaDeGoInput
 	internal class UnbalanceController : Controller
 	{
 		/// <summary>A cached list of supported connected controllers.</summary>
-		private static Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
+		private static readonly Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
 
 		/// <summary>The OpenTK joystick index for this controller.</summary>
 		private int joystickIndex;
@@ -128,11 +128,11 @@ namespace DenshaDeGoInput
 					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] = (ButtonState)(dPadLeft ? 1 : 0);
 					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] = (ButtonState)(dPadRight ? 1 : 0);
 					// Disable original buttons if necessary
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] ^ (ButtonState)(dPadAny ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] ^ (ButtonState)(dPadLeft ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] ^ (ButtonState)(dPadDown ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] ^ (ButtonState)(dPadRight ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] ^ (ButtonState)(dPadUp ? 1 : 0);
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] ^= (ButtonState)(dPadAny ? 1 : 0);
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] ^= (ButtonState)(dPadLeft ? 1 : 0);
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] ^= (ButtonState)(dPadDown ? 1 : 0);
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] ^= (ButtonState)(dPadRight ? 1 : 0);
+					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] ^= (ButtonState)(dPadUp ? 1 : 0);
 				}
 				else
 				{
@@ -154,14 +154,14 @@ namespace DenshaDeGoInput
 			for (int i = 0; i < 10; i++)
 			{
 				Guid guid = Joystick.GetGuid(i);
-				string id = GetControllerID(guid);
+				ControllerID id = new ControllerID(guid);
 				string name = Joystick.GetName(i);
 				bool comboDpad = name == "TAITO Densha de Go! Plug & Play";
 
 				if (!cachedControllers.ContainsKey(guid))
 				{
 					// DGC-255/DGOC-44U/P&P
-					if (id == "0ae4:0003")
+					if (id.Type == ControllerType.PCTwoHandle)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D;
 						if (Joystick.GetCapabilities(i).HatCount > 0 || comboDpad)
@@ -183,7 +183,7 @@ namespace DenshaDeGoInput
 						cachedControllers.Add(guid, newcontroller);
 					}
 					// DRC-184/DYC-288
-					if (id == "0ae4:0008")
+					if (id.Type == ControllerType.PCRyojouhen)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						int[] buttonIndices = { 5, 6, 2, 1, 0, -1, 4, 3 };

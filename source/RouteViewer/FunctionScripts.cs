@@ -5,6 +5,7 @@ using OpenBveApi.Runtime;
 using LibRender2.Overlays;
 using TrainManager.BrakeSystems;
 using TrainManager.Handles;
+using TrainManager.Car.Systems;
 
 namespace RouteViewer {
 	internal static class FunctionScripts {
@@ -39,11 +40,8 @@ namespace RouteViewer {
 						Function.Stack[s] = Function.Stack[s - 1];
 						s++; break;
 					case Instructions.StackSwap:
-						{
-							double a = Function.Stack[s - 1];
-							Function.Stack[s - 1] = Function.Stack[s - 2];
-							Function.Stack[s - 2] = a;
-						} break;
+						(Function.Stack[s - 1], Function.Stack[s - 2]) = (Function.Stack[s - 2], Function.Stack[s - 1]);
+						break;
 						// math
 					case Instructions.MathPlus:
 						Function.Stack[s - 2] += Function.Stack[s - 1];
@@ -290,6 +288,13 @@ namespace RouteViewer {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
+					case Instructions.TrainLength:
+						if (Train != null) {
+							Function.Stack[s] = Train.Length;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
 					case Instructions.TrainSpeed:
 						if (Train != null) {
 							Function.Stack[s] = Train.Cars[CarIndex].CurrentSpeed;
@@ -428,8 +433,8 @@ namespace RouteViewer {
 						break;
 					case Instructions.TrainTrackDistance:
 						if (Train != null) {
-							double t0 = Train.FrontCarTrackPosition();
-							double t1 = Train.RearCarTrackPosition();
+							double t0 = Train.FrontCarTrackPosition;
+							double t1 = Train.RearCarTrackPosition;
 							Function.Stack[s] = TrackPosition > t0 ? TrackPosition - t0 : TrackPosition < t1 ? TrackPosition - t1 : 0.0;
 						} else {
 							Function.Stack[s] = 0.0;
@@ -744,6 +749,14 @@ namespace RouteViewer {
 						//Not currently supported in viewers
 						Function.Stack[s] = 0.0;
 						s++; break;
+					case Instructions.Headlights:
+						if (Train != null)
+						{
+							Function.Stack[s] = Train.SafetySystems.Headlights.CurrentState;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
 					// handles
 					case Instructions.ReverserNotch:
 						if (Train != null) {
@@ -994,6 +1007,7 @@ namespace RouteViewer {
 						}
 						s++; break;
 					case Instructions.DistanceNextStation:
+					case Instructions.DistanceLastStation:
 					case Instructions.StopsNextStation:
 					case Instructions.NextStation:
 					case Instructions.NextStationStop:
@@ -1052,6 +1066,73 @@ namespace RouteViewer {
 						}
 						s++;
 						break;
+					case Instructions.WheelSlip:
+						if (Train != null) {
+							Function.Stack[s] = Train.Cars[CarIndex].FrontAxle.CurrentWheelSlip ? 1 : 0;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.WheelSlipCar:
+						if (Train == null) {
+							Function.Stack[s - 1] = 0.0;
+						} else {
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length) {
+								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.CurrentWheelSlip ? 1 : 0;
+							} else {
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						break;
+					case Instructions.Sanders:
+						{
+							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders) {
+								Function.Stack[s] = sanders.Active ? 1 : 0;
+							} else {
+								Function.Stack[s] = 0.0;
+							}
+						}
+						s++; break;
+					case Instructions.SandLevel:
+						{
+							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders) {
+								Function.Stack[s] = sanders.SandLevel;
+							} else {
+								Function.Stack[s] = 0.0;
+							}
+						}
+						s++; break;
+					case Instructions.SandShots:
+						{
+							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders) {
+								Function.Stack[s] = sanders.NumberOfShots;
+							} else {
+								Function.Stack[s] = 0.0;
+							}
+						} 
+						s++; break;
+					case Instructions.AmbientTemperature:
+						{
+							if (Train != null)
+							{
+								Function.Stack[s] = Program.CurrentRoute.Atmosphere.GetAirTemperature(Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Y + Program.CurrentRoute.Atmosphere.InitialElevation);
+							}
+							else
+							{
+								Function.Stack[s] = Program.CurrentRoute.Atmosphere.GetAirTemperature(Position.Y + Program.CurrentRoute.Atmosphere.InitialElevation);
+							}
+						} 
+						s++; break;
+					case Instructions.RainDrop:
+					case Instructions.SnowFlake:
+						// Only shown on the player train, so not helpful here
+						Function.Stack[s - 1] = 0.0;
+						break;
+					case Instructions.WiperPosition:
+						Function.Stack[s] = 1.0;
+						s++; break;
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
 				}

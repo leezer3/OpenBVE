@@ -275,7 +275,7 @@ namespace Plugin
 
 						for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
 						{
-							Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort) mv;
+							Object.Mesh.Faces[mf + i].Vertices[j].Index += mv;
 						}
 
 						Object.Mesh.Faces[mf + i].Material += (ushort) mm;
@@ -289,8 +289,7 @@ namespace Plugin
 						Object.Mesh.Materials[mm + i].BlendMode = MeshMaterialBlendMode.Normal;
 						if (materials[i].DaytimeTexture != null)
 						{
-							OpenBveApi.Textures.Texture tday;
-							Plugin.currentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out tday);
+							Plugin.currentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out OpenBveApi.Textures.Texture tday);
 							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 						}
 						else

@@ -22,8 +22,62 @@
 			<group id="openbve">
 				<group id="program">
 					<trans-unit id="title">
-						<source>openBVE</source>
-						<target>openBVE</target>
+						<source>OpenBVE</source>
+					</trans-unit>
+				</group>
+				<group id="about">
+					<trans-unit id="title">
+						<source>About</source>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</source>
+					</trans-unit>
+					<trans-unit id="open_source_licenses">
+						<source>Open Source Licenses</source>
+					</trans-unit>
+					<trans-unit id="open_source_licenses_header">
+						<source>OpenBVE makes use of several open-source libraries, whose licenses are reproduced below:</source>
+					</trans-unit>
+					<trans-unit id="close">
+						<source>Close</source>
+						<target>Keluar</target>
+					</trans-unit>
+				</group>
+				<group id="bug_report">
+					<trans-unit id="title">
+						<source>Report Problem</source>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>This function will create a zip archive on your Desktop, containing the previous Simulation log and Crash log (If any), along with a text file containing the brief description of the problem entered below.\r\n\r\nPlease post this on the discussion board, or create a new issue on Github.</source>
+					</trans-unit>
+					<trans-unit id="view_log_button">
+						<source>View...</source>
+					</trans-unit>
+					<trans-unit id="view_log">
+						<source>View the previous log:</source>
+					</trans-unit>
+					<trans-unit id="view_crash_log">
+						<source>View the previous crash log:</source>
+					</trans-unit>
+					<trans-unit id="enter_description">
+						<source>Please enter a brief description of the problem:</source>
+					</trans-unit>
+					<trans-unit id="no_log">
+						<source>No simulation logs were found.</source>
+					</trans-unit>
+					<trans-unit id="no_crash_log">
+						<source>No crash logs were found.</source>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save Bug Report</source>
+					</trans-unit>
+					<trans-unit id="saved">
+						<source>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
+						<target>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</target>
+					</trans-unit>
+					<trans-unit id="save_failed">
+						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</source>
+						<target>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</target>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -62,6 +116,9 @@
 					<trans-unit id="updates_old">
 						<source>You already have the latest version.</source>
 						<target>Anda sudah memakai versi terbaru.</target>
+					</trans-unit>
+					<trans-unit id="updates_daily">
+						<source>The most recent nightly build from [date] is available for download.</source>
 					</trans-unit>
 					<trans-unit id="updates_new">
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
@@ -663,6 +720,10 @@
 						<source>Remove</source>
 						<target>Hapus</target>
 					</trans-unit>
+					<trans-unit id="creation_dependancies_skip_if_none">
+						<source>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</source>
+						<target>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</target>
+					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
 						<target>Detail add-on dan pelengkapnya akan terdaftar dengan langkah berikut:</target>
@@ -930,6 +991,9 @@
 						<source>The package database XML was invalid, and has been re-created.</source>
 						<target>Data XML invalid, sistem akan membuat ulang otomatis.</target>
 					</trans-unit>
+					<trans-unit id="error_busy_thread">
+						<source>The package worker thread is currently busy. Please wait a moment and try again.</source>
+					</trans-unit>
 				</group>
 				<group id="controls">
 					<trans-unit id="title">
@@ -981,6 +1045,9 @@
 					<trans-unit id="export">
 						<source>Export...</source>
 						<target>Ekspor...</target>
+					</trans-unit>
+					<trans-unit id="reset_question">
+						<source>Reset the current control configuration to the defaults?</source>
 					</trans-unit>
 					<trans-unit id="reset">
 						<source>Reset to defaults</source>
@@ -1173,7 +1240,7 @@
 						<target>Mulai</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
+						<source>No RailDriver controllers detected.</source>
 						<target>Perangkat RailDriver tidak ditemukan.</target>
 					</trans-unit>
 					<trans-unit id="config_error">
@@ -1481,6 +1548,9 @@
 						<source>Show error messages</source>
 						<target>Lihat error</target>
 					</trans-unit>
+					<trans-unit id="verbosity_accessibilityaids">
+						<source>Accessibility Aids</source>
+					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
 						<target>Lainnya</target>
@@ -1500,6 +1570,9 @@
 					<trans-unit id="advanced_unload_textures">
 						<source>Unload unused textures</source>
 						<target>Jangan muat gambar tidak dipakai</target>
+					</trans-unit>
+					<trans-unit id="advanced_cursor">
+						<source>Cursor</source>
 					</trans-unit>
 					<trans-unit id="other">
 						<source>Other</source>
@@ -1581,6 +1654,9 @@
 						<source>Large</source>
 						<target>Besar</target>
 					</trans-unit>
+					<trans-unit id="font">
+						<source>Font:</source>
+					</trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
 						<target>Coba perbaiki transparansi di konten lawas.</target>
@@ -1640,6 +1716,9 @@
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
 						<target>Gunakan Panel2 Extended</target>
+					</trans-unit>
+					<trans-unit id="object_parser">
+						<source>Object Parser</source>
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>
@@ -2320,12 +2399,10 @@
 						<target>Tambah rem 1 tingkat untuk kereta 2 tuas</target>
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
-						<source>N/A</source>
-						<target>Tidak Ada</target>
+						<source>Decreases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="locobrake_increase">
-						<source>N/A</source>
-						<target>Tidak ada</target>
+						<source>Increases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
@@ -2411,6 +2488,12 @@
 						<source>Activates or deactivates the constant speed device</source>
 						<target>Kecepatan konstan</target>
 					</trans-unit>
+					<trans-unit id="play_mic_sounds">
+						<source>Activates or deactivates the system microphone soundsource</source>
+					</trans-unit>
+					<trans-unit id="sanders">
+						<source>Activates or deactivates the sanders</source>
+					</trans-unit>
 					<trans-unit id="security_power">
 						<source>Activates or deactivates the security system on some trains</source>
 						<target>Sistem keamanan kereta</target>
@@ -2480,20 +2563,20 @@
 						<target>Fungsi L</target>
 					</trans-unit>
 					<trans-unit id="security_m">
-						<source>N/A</source>
-						<target>Tidak Ada</target>
+						<source>The M function of the security system</source>
+						<target>Fungsi M</target>
 					</trans-unit>
 					<trans-unit id="security_n">
-						<source>N/A</source>
-						<target>Tidak Ada</target>
+						<source>The N function of the security system</source>
+						<target>Fungsi N</target>
 					</trans-unit>
 					<trans-unit id="security_o">
-						<source>N/A</source>
-						<target>Tidak Ada</target>
+						<source>The O function of the security system</source>
+						<target>Fungsi O</target>
 					</trans-unit>
 					<trans-unit id="security_p">
-						<source>N/A</source>
-						<target>Tidak Ada</target>
+						<source>The P function of the security system</source>
+						<target>Fungsi P</target>
 					</trans-unit>
 					<trans-unit id="camera_interior">
 						<source>Switches to the train's interior view</source>

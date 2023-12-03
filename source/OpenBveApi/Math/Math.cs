@@ -31,8 +31,7 @@ namespace OpenBveApi.Math {
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			for (int n = Expression.Length; n > 0; n--)
 			{
-				double a;
-				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out a))
+				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out double a))
 				{
 					Value = a;
 					return true;
@@ -52,8 +51,7 @@ namespace OpenBveApi.Math {
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			for (int n = Expression.Length; n > 0; n--)
 			{
-				float a;
-				if (float.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out a))
+				if (float.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out float a))
 				{
 					Value = a;
 					return true;
@@ -73,8 +71,7 @@ namespace OpenBveApi.Math {
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			for (int n = Expression.Length; n > 0; n--)
 			{
-				double a;
-				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out a))
+				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out double a))
 				{
 					if (a >= -2147483648.0 & a <= 2147483647.0)
 					{
@@ -94,8 +91,7 @@ namespace OpenBveApi.Math {
 		/// <returns>True if parsing succeds, false otherwise</returns>
 		public static bool IsValidDouble(string Expression, double[] UnitFactors)
 		{
-			double n;
-			return TryParseDouble(Expression, UnitFactors, out n);
+			return TryParseDouble(Expression, UnitFactors, out _);
 		}
 
 		/// <summary>Parses a double from a string, using the supplied unit conversion factor(s)</summary>
@@ -105,15 +101,14 @@ namespace OpenBveApi.Math {
 		/// <returns>True if parsing succeds, false otherwise</returns>
 		public static bool TryParseDouble(string Expression, double[] UnitFactors, out double Value)
 		{
-			double a;
-			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out a))
+			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out double a))
 			{
 				Value = a * UnitFactors[UnitFactors.Length - 1];
 				return true;
 			}
 			else
 			{
-				string[] parameters = Expression.Split(new[] { ':'});
+				string[] parameters = Expression.Split(':');
 				if (parameters.Length <= UnitFactors.Length)
 				{
 					Value = 0.0;
@@ -146,15 +141,14 @@ namespace OpenBveApi.Math {
 		/// <returns>True if parsing succeds, false otherwise</returns>
 		public static bool TryParseDoubleVb6(string Expression, double[] UnitFactors, out double Value)
 		{
-			double a;
-			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out a))
+			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out double a))
 			{
 				Value = a * UnitFactors[UnitFactors.Length - 1];
 				return true;
 			}
 			else
 			{
-				string[] parameters = Expression.Split(new[] { ':'});
+				string[] parameters = Expression.Split(':');
 				Value = 0.0;
 				if (parameters.Length <= UnitFactors.Length)
 				{

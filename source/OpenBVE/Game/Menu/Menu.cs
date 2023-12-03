@@ -33,8 +33,8 @@ namespace OpenBve
 	{
 		// components of the semi-transparent screen overlay
 		private readonly Color128 overlayColor = new Color128(0.0f, 0.0f, 0.0f, 0.2f);
-		private readonly Color128 backgroundColor = new Color128(0.0f, 0.0f, 0.0f, 1.0f);
-		private readonly Color128 highlightColor = new Color128(1.0f, 0.69f, 0.0f, 1.0f);
+		private readonly Color128 backgroundColor = Color128.Black;
+		private readonly Color128 highlightColor = Color128.Orange;
 		private readonly Color128 folderHighlightColor = new Color128(0.0f, 0.69f, 1.0f, 1.0f);
 		private readonly Color128 routeHighlightColor = new Color128(0.0f, 1.0f, 0.69f, 1.0f);
 		// text colours
@@ -56,7 +56,7 @@ namespace OpenBve
 		private const int SelectionNone = -1;
 
 		private double lastTimeElapsed;
-		private static readonly string currentDatabaseFile = OpenBveApi.Path.CombineFile(Program.FileSystem.PackageDatabaseFolder, "packages.xml");
+		private static readonly string currentDatabaseFile = Path.CombineFile(Program.FileSystem.PackageDatabaseFolder, "packages.xml");
 
 		/********************
 			MENU SYSTEM FIELDS
@@ -75,13 +75,8 @@ namespace OpenBve
 		private double topItemY;           // the top edge of top item
 		private int visibleItems;       // the number of visible items
 										// properties (to allow read-only access to some fields)
-		internal int LineHeight
-		{
-			get
-			{
-				return lineHeight;
-			}
-		}
+		internal int LineHeight => lineHeight;
+
 		internal OpenGlFont MenuFont
 		{
 			get
@@ -105,13 +100,7 @@ namespace OpenBve
 		}
 
 		/// <summary>Returns the current menu instance (If applicable)</summary>
-		public static Menu Instance
-		{
-			get
-			{
-				return instance;
-			}
-		}
+		public static Menu Instance => instance;
 
 		/********************
 			MENU SYSTEM METHODS
@@ -130,6 +119,13 @@ namespace OpenBve
 			else if (Program.Renderer.Screen.Height <= 890) menuFont = Program.Renderer.Fonts.LargeFont;
 			else if (Program.Renderer.Screen.Height <= 1150) menuFont = Program.Renderer.Fonts.VeryLargeFont;
 			else menuFont = Program.Renderer.Fonts.EvenLargerFont;
+
+			if (Interface.CurrentOptions.UserInterfaceFolder == "Large")
+			{
+				// If using the large HUD option, increase the text size in the menu too
+				menuFont = Program.Renderer.Fonts.NextLargestFont(menuFont);
+			}
+
 			em = (int)menuFont.FontSize;
 			lineHeight = (int)(em * LineSpacing);
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
@@ -182,10 +178,10 @@ namespace OpenBve
 		/// <param name="replace">Whether we are replacing the selected menu item</param>
 		public void PushMenu(MenuType type, int data = 0,  bool replace = false)
 		{
-			if (Program.Renderer.CurrentInterface != InterfaceType.Menu)
+			if (Program.Renderer.CurrentInterface < InterfaceType.Menu)
 			{
 				// Deliberately set to the standard cursor, as touch controls may have set to something else
-				Program.currentGameWindow.Cursor = MouseCursor.Default;
+				Program.Renderer.SetCursor(MouseCursor.Default);
 			}
 			if (!isInitialized)
 				Init();
@@ -207,7 +203,8 @@ namespace OpenBve
 				Menus[CurrMenu].Selection = 1;
 			}
 			PositionMenu();
-			Program.Renderer.CurrentInterface = InterfaceType.Menu;
+			Program.Renderer.CurrentInterface = TrainManager.PlayerTrain == null ? InterfaceType.GLMainMenu : InterfaceType.Menu;
+			
 		}
 
 		//
@@ -259,14 +256,7 @@ namespace OpenBve
 		{
 			if (isCustomisingControl && CustomControlIdx < Interface.CurrentControls.Length)
 			{
-				if (Program.Joysticks.AttachedJoysticks[device] is AbstractRailDriver)
-				{
-					Interface.CurrentControls[CustomControlIdx].Method = ControlMethod.RailDriver;
-				}
-				else
-				{
-					Interface.CurrentControls[CustomControlIdx].Method = ControlMethod.Joystick;
-				}
+				Interface.CurrentControls[CustomControlIdx].Method = Program.Joysticks.AttachedJoysticks[device] is AbstractRailDriver ? ControlMethod.RailDriver : ControlMethod.Joystick;
 				Interface.CurrentControls[CustomControlIdx].Device = device;
 				Interface.CurrentControls[CustomControlIdx].Component = component;
 				Interface.CurrentControls[CustomControlIdx].Element = element;
@@ -286,6 +276,10 @@ namespace OpenBve
 		/// <param name="Scroll">The delta</param>
 		internal void ProcessMouseScroll(int Scroll)
 		{
+			if (Menus.Length == 0)
+			{
+				return;
+			}
 			// Load the current menu
 			SingleMenu menu = Menus[CurrMenu];
 			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall || menu.Type == MenuType.Packages || (int)menu.Type >= 107)
@@ -322,6 +316,18 @@ namespace OpenBve
 		}
 
 
+		internal void DragFile(object sender, OpenTK.Input.FileDropEventArgs e)
+		{
+			if (Menus[CurrMenu].Type == MenuType.PackageInstall)
+			{
+				currentFile = e.FileName;
+				if (!packageWorkerThread.IsBusy)
+				{
+					packageWorkerThread.RunWorkerAsync();
+				}
+			}
+		}
+
 		/// <summary>Processes a mouse move event</summary>
 		/// <param name="x">The screen-relative x coordinate of the move event</param>
 		/// <param name="y">The screen-relative y coordinate of the move event</param>
@@ -333,7 +339,7 @@ namespace OpenBve
 				return false;
 			}
 			// if not in menu or during control customisation or down outside menu area, do nothing
-			if (Program.Renderer.CurrentInterface != InterfaceType.Menu ||
+			if (Program.Renderer.CurrentInterface < InterfaceType.Menu ||
 				isCustomisingControl)
 				return false;
 
@@ -347,16 +353,7 @@ namespace OpenBve
 			}
 			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall  || menu.Type == MenuType.Packages || (int)menu.Type >= 107)
 			{
-				if (x > routeDescriptionBox.Location.X && x < routeDescriptionBox.Location.X + routeDescriptionBox.Size.X && y > routeDescriptionBox.Location.Y && y < routeDescriptionBox.Location.Y + routeDescriptionBox.Size.Y)
-				{
-					routeDescriptionBox.CurrentlySelected = true;
-					Program.currentGameWindow.Cursor = routeDescriptionBox.CanScroll ? Cursors.ScrollCursor : MouseCursor.Default;
-				}
-				else
-				{
-					routeDescriptionBox.CurrentlySelected = false;
-					Program.currentGameWindow.Cursor = MouseCursor.Default;
-				}
+				routeDescriptionBox.MouseMove(x, y);
 				//HACK: Use this to trigger our menu start button!
 				if (x > Program.Renderer.Screen.Width - 200 && x < Program.Renderer.Screen.Width - 10 && y > Program.Renderer.Screen.Height - 40 && y < Program.Renderer.Screen.Height - 10)
 				{
@@ -443,12 +440,16 @@ namespace OpenBve
 				switch (menu.Type)
 				{
 					case MenuType.RouteList:
-						if (RoutefileState == RouteState.Error)
+						// Route not fully processed
+						if (RoutefileState != RouteState.Processed)
 							return;
 						Instance.PushMenu(MenuType.TrainDefault);
 						return;
 					case MenuType.TrainDefault:
 					case MenuType.TrainList:
+						// No train selected
+						if (Interface.CurrentOptions.TrainFolder == string.Empty)
+							return;
 						Reset();
 						//Launch the game!
 						Loading.Complete = false;
@@ -529,9 +530,8 @@ namespace OpenBve
 				//			case Translations.Command.MenuBack:	// ESC:	managed above
 				//				break;
 				case Translations.Command.MenuEnter:   // ENTER
-					if (menu.Items[menu.Selection] is MenuCommand)
+					if (menu.Items[menu.Selection] is MenuCommand menuItem)
 					{
-						MenuCommand menuItem = (MenuCommand)menu.Items[menu.Selection];
 						switch (menuItem.Tag)
 						{
 							// menu management commands
@@ -555,8 +555,7 @@ namespace OpenBve
 								Program.Renderer.CurrentInterface = InterfaceType.Normal;
 								break;
 							case MenuTag.Packages:
-								string errorMessage;
-								if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out errorMessage))
+								if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out _))
 								{
 									Menu.instance.PushMenu(MenuType.Packages);
 								}
@@ -691,10 +690,10 @@ namespace OpenBve
 											//Show details
 											Interface.CurrentOptions.TrainFolder = trainDir;
 											routeDescriptionBox.Text = Program.CurrentHost.Plugins[i].Train.GetDescription(trainDir);
-											Image trainImage = Program.CurrentHost.Plugins[i].Train.GetImage(trainDir);
-											if (trainImage != null)
+											string trainImage = Program.CurrentHost.Plugins[i].Train.GetImage(trainDir);
+											if (!string.IsNullOrEmpty(trainImage))
 											{
-												Program.CurrentHost.RegisterTexture(new Bitmap(trainImage), new TextureParameters(null, null), out routePictureBox.Texture);
+												Program.CurrentHost.RegisterTexture(trainImage, new TextureParameters(null, null), out routePictureBox.Texture);
 											}
 											else
 											{
@@ -721,37 +720,51 @@ namespace OpenBve
 								isCustomisingControl = true;
 								CustomControlIdx = (int)((MenuCommand)menu.Items[menu.Selection]).Data;
 								break;
+							case MenuTag.ControlReset:
+								PushMenu(MenuType.ControlReset, (int)((MenuCommand)menu.Items[menu.Selection]).Data);
+								break;
 							case MenuTag.Quit:                  // QUIT PROGRAMME
 								Reset();
 								MainLoop.Quit = MainLoop.QuitMode.QuitProgram;
 								break;
 							case MenuTag.Yes:
-								if (menu.Type == MenuType.TrainDefault)
+								switch (menu.Type)
 								{
-									Reset();
-									//Launch the game!
-									Loading.Complete = false;
-									Loading.LoadAsynchronously(currentFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
-									OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
-									// ReSharper disable once PossibleNullReferenceException
-									g.LoadingScreenLoop();
-									Program.Renderer.CurrentInterface = InterfaceType.Normal;
+									case MenuType.TrainDefault:
+										Reset();
+										//Launch the game!
+										Loading.Complete = false;
+										Loading.LoadAsynchronously(currentFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
+										OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
+										// ReSharper disable once PossibleNullReferenceException
+										g.LoadingScreenLoop();
+										break;
+									case MenuType.ControlReset:
+										Interface.CurrentControls = null;
+										var File = Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls");
+										Interface.LoadControls(File, out Interface.CurrentControls);
+										Instance.PopMenu();
+										break;
 								}
 								break;
 							case MenuTag.No:
-								if (menu.Type == MenuType.TrainDefault)
+								switch (menu.Type)
 								{
-									SearchDirectory = Program.FileSystem.InitialTrainFolder;
-									Instance.PushMenu(MenuType.TrainList);
-									routeDescriptionBox.Text = Translations.GetInterfaceString("start_train_choose");
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+									case MenuType.TrainDefault:
+										SearchDirectory = Program.FileSystem.InitialTrainFolder;
+										Instance.PushMenu(MenuType.TrainList);
+										routeDescriptionBox.Text = Translations.GetInterfaceString("start_train_choose");
+										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+										break;
+									case MenuType.ControlReset:
+										Instance.PopMenu();
+										break;
 								}
 								break;
 						}
 					}
-					else if (menu.Items[menu.Selection] is MenuOption)
+					else if (menu.Items[menu.Selection] is MenuOption opt)
 					{
-						MenuOption opt = menu.Items[menu.Selection] as MenuOption;
 						opt.Flip();
 					}
 					break;
@@ -821,7 +834,7 @@ namespace OpenBve
 				Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - MenuItemBorderX, menuYmin /*-MenuItemBorderY*/), new Vector2(menu.ItemWidth + MenuItemBorderX, em + MenuItemBorderY * 2), highlightColor);
 			}
 			if (menu.TopItem > 0)
-				Program.Renderer.OpenGlString.Draw(MenuFont, "...", new Vector2(itemX, menuYmin),
+				Program.Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, menuYmin),
 					menu.Align, ColourDimmed, false);
 			// draw the items
 			double itemY = topItemY;
@@ -843,9 +856,8 @@ namespace OpenBve
 					// draw a solid highlight rectangle under the text
 					// HACK! the highlight rectangle has to be shifted a little down to match
 					// the text body. OpenGL 'feature'?
-					MenuCommand command = menu.Items[i] as MenuCommand;
 					Color128 color = highlightColor;
-					if(command != null)
+					if(menu.Items[i] is MenuCommand command)
 					{
 						switch (command.Tag)
 						{
@@ -902,7 +914,7 @@ namespace OpenBve
 			}
 			// if not at the end of the menu, draw a dimmed ellipsis item at the bottom
 			if (i < menu.Items.Length - 1)
-				Program.Renderer.OpenGlString.Draw(MenuFont, "...", new Vector2(itemX, itemY),
+				Program.Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, itemY),
 					menu.Align, ColourDimmed, false);
 			switch (menu.Type)
 			{
@@ -921,58 +933,23 @@ namespace OpenBve
 				case MenuType.RouteList:
 				case MenuType.TrainList:
 				{
-					switch (RoutefileState)
-					{
-						case RouteState.NoneSelected:
-							routePictureBox.Draw();
-							routeDescriptionBox.Draw();
-							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
-							break;
-						case RouteState.Loading:
-							routePictureBox.Draw();
-							routeDescriptionBox.Draw();
-							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
-							break;
-						case RouteState.Processed:
-							routePictureBox.Draw();
-							routeDescriptionBox.Draw();
-							//Game start button
-							if (menu.Selection == int.MaxValue) //HACK: Special value to make this work with minimum extra code
-							{
-								Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-								Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-								if (menu.Type == MenuType.RouteList)
-								{
-									Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
-								}
-								else
-								{
-									Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
-								}
-							}
-							else
-							{
-								Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-								if (menu.Type == MenuType.RouteList)
-								{
-									Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
-								}
-								else
-								{
-									Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
-								}
-							}
-							break;
-						case RouteState.Error:
-							routePictureBox.Draw();
-							routeDescriptionBox.Draw();
-							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("start_train_choose"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Grey);
-							break;
-					}
+					routePictureBox.Draw();
+					routeDescriptionBox.Draw();
 
+					//Choose Train and Game start button
+					bool allowNextPhase = (menu.Type == MenuType.RouteList && RoutefileState == RouteState.Processed) || (menu.Type == MenuType.TrainList && Interface.CurrentOptions.TrainFolder != string.Empty);
+					
+					if (menu.Selection == int.MaxValue && allowNextPhase) //HACK: Special value to make this work with minimum extra code
+					{
+						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
+						Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString("start_train_choose") : Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+					}
+					else
+					{
+						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
+						Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString("start_train_choose") : Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, allowNextPhase ? Color128.White : Color128.Grey);
+					}
 					break;
 				}
 				case MenuType.PackageInstall:
@@ -1034,8 +1011,6 @@ namespace OpenBve
 		/// Also sets the menu size</summary>
 		private void PositionMenu()
 		{
-			//			int i;
-
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
 				return;
 

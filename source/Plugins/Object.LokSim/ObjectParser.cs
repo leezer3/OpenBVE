@@ -47,7 +47,7 @@ namespace Plugin
 		/// <returns>The object loaded.</returns>
 		internal static StaticObject ReadObject(string FileName, Vector3 Rotation)
 		{
-			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
+			string BaseDir = Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();
 			//Initialise the object
 			StaticObject Object = new StaticObject(Plugin.currentHost);
@@ -72,7 +72,7 @@ namespace Plugin
 			{
 				try
 				{
-					currentXML.Load(FileName);
+					currentXML.SanitizeAndLoadXml(FileName);
 				}
 				catch
 				{
@@ -161,7 +161,7 @@ namespace Plugin
 													transtex = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Plugin.LoksimPackageFolder);
 													if (!File.Exists(transtex))
 													{
-														Plugin.currentHost.AddMessage(MessageType.Error, true, "AlphaTexture " + transtex + " could not be found in file " + FileName);
+														Plugin.currentHost.AddMessage(MessageType.Error, true, "AlphaTexture " + attribute.Value + " could not be found in file " + FileName);
 														transtex = null;
 													}												
 													break;
@@ -283,13 +283,11 @@ namespace Plugin
 										{
 											//Defines the verticies in this face
 											//**NOTE**: A vertex may appear in multiple faces with different texture co-ordinates
-											if (childNode.Attributes["Points"] != null)
+											if (childNode.Attributes["Points"] != null && !string.IsNullOrEmpty(childNode.Attributes["Points"].Value))
 											{
 												string[] Verticies = childNode.Attributes["Points"].Value.Split(';');
 												//Add 1 to the length of the face array
-												MeshFace f = new MeshFace();
-												//Create the vertex array for the face
-												f.Vertices = new MeshFaceVertex[Verticies.Length];
+												MeshFace f = new MeshFace(Verticies.Length);
 												//Run through the vertices list and grab from the temp array
 
 												int smallestX = TextureWidth;
@@ -297,8 +295,7 @@ namespace Plugin
 												for (int j = 0; j < Verticies.Length; j++)
 												{
 													//This is the position of the vertex in the temp array
-													int currentVertex;
-													if (!int.TryParse(Verticies[j], out currentVertex))
+													if (!int.TryParse(Verticies[j], out int currentVertex))
 													{
 														Plugin.currentHost.AddMessage(MessageType.Error, false, Verticies[j] + " does not parse to a valid Vertex in " + node.Name + " in Loksim3D object file " + FileName);
 														continue;
@@ -307,7 +304,7 @@ namespace Plugin
 													//Set coordinates
 													Builder.Vertices.Add(new Vertex(tempVertices[currentVertex].Coordinates));
 													//Set the vertex index
-													f.Vertices[j].Index = (ushort)(Builder.Vertices.Count - 1);
+													f.Vertices[j].Index = Builder.Vertices.Count - 1;
 													//Set the normals
 													f.Vertices[j].Normal = tempNormals[currentVertex];
 													//Now deal with the texture
@@ -316,15 +313,13 @@ namespace Plugin
 													{
 														string[] TextureCoords = childNode.Attributes["Texture"].Value.Split(';');
 														Vector2 currentCoords;
-														float OpenBVEWidth;
-														float OpenBVEHeight;
 														string[] splitCoords = TextureCoords[j].Split(',');
-														if (!float.TryParse(splitCoords[0], out OpenBVEWidth))
+														if (!float.TryParse(splitCoords[0], out float OpenBVEWidth))
 														{
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid texture width specified in " + node.Name + " in Loksim3D object file " + FileName);
 															continue;
 														}
-														if (!float.TryParse(splitCoords[1], out OpenBVEHeight))
+														if (!float.TryParse(splitCoords[1], out float OpenBVEHeight))
 														{
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid texture height specified in " + node.Name + " in Loksim3D object file " + FileName);
 															continue;

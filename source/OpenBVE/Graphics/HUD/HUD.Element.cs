@@ -8,7 +8,7 @@ namespace OpenBve
 	{
 		internal class Element
 		{
-			internal string Subject;
+			internal HUDSubject Subject;
 			internal Vector2 Position;
 			internal Vector2 Alignment;
 			internal Image TopLeft;
@@ -35,14 +35,14 @@ namespace OpenBve
 			internal double TransitionState;
 			internal Element()
 			{
-				this.Subject = null;
+				this.Subject = HUDSubject.Unknown;
 				this.Position = new Vector2();
 				this.Alignment = new Vector2(-1, -1);
 				this.BackgroundColor = Color32.White;
 				this.OverlayColor = Color32.White;
 				this.TextColor = Color32.White;
 				this.TextPosition = new Vector2();
-				this.TextAlignment = new Vector2(-1, 0);
+				this.TextAlignment = Vector2.Left;
 				this.Font = Program.Renderer.Fonts.VerySmallFont;
 				this.TextShadow = true;
 				this.Text = null;

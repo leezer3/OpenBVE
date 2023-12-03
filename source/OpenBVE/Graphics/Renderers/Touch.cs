@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
@@ -293,21 +293,23 @@ namespace OpenBve.Graphics.Renderers
 			return pickedObjects.Any() ? touchableObject[pickedObjects.OrderBy(x => x.MinDepth).First().Names[0]] : null;
 		}
 
-		internal bool MoveCheck(Vector2 Point, out Cursor.Status Status)
+		internal bool MoveCheck(Vector2 Point, out MouseCursor.Status Status, out MouseCursor NewCursor)
 		{
+			NewCursor = null;
+			
 			if (!Loading.SimulationSetup)
 			{
-				Status = Cursor.Status.Default;
+				Status = MouseCursor.Status.Default;
 				return false;
 			}
 
 			if (renderer.Camera.CurrentMode != CameraViewMode.Interior && renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
-				Status = Cursor.Status.Default;
+				Status = MouseCursor.Status.Default;
 				return false;
 			}
 
-			Status = Cursor.Status.Default;
+			Status = MouseCursor.Status.Default;
 
 			CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 			int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
@@ -328,6 +330,12 @@ namespace OpenBve.Graphics.Renderers
 
 			foreach (TouchElement TouchElement in TouchElements.Where(x => x.Element.internalObject == pickedObject))
 			{
+				if (TouchElement.MouseCursor != null)
+				{
+					Status = MouseCursor.Status.Default;
+					NewCursor = TouchElement.MouseCursor;
+					return true;
+				}
 				foreach (int index in TouchElement.ControlIndices)
 				{
 					switch (Interface.CurrentControls[index].Command)
@@ -335,17 +343,16 @@ namespace OpenBve.Graphics.Renderers
 						case Translations.Command.PowerIncrease:
 						case Translations.Command.BrakeIncrease:
 						case Translations.Command.ReverserForward:
-							Status = Cursor.Status.Plus;
+							Status = MouseCursor.Status.Plus;
 							break;
 						case Translations.Command.PowerDecrease:
 						case Translations.Command.BrakeDecrease:
 						case Translations.Command.ReverserBackward:
-							Status = Cursor.Status.Minus;
+							Status = MouseCursor.Status.Minus;
 							break;
 					}
 				}
 			}
-
 			return pickedObject != null;
 		}
 
@@ -382,6 +389,10 @@ namespace OpenBve.Graphics.Renderers
 			{
 				foreach (int index in TouchElement.ControlIndices)
 				{
+					if (Interface.CurrentControls[index].DigitalState != DigitalControlState.Pressed && TrainManager.PlayerTrain.Plugin != null)
+					{
+						TrainManager.PlayerTrain.Plugin.TouchEvent(add, index);
+					}
 					Interface.CurrentControls[index].AnalogState = 1.0;
 					Interface.CurrentControls[index].DigitalState = DigitalControlState.Pressed;
 					MainLoop.AddControlRepeat(index);
@@ -424,7 +435,8 @@ namespace OpenBve.Graphics.Renderers
 				if (TouchElement.Element.internalObject == pickedObject)
 				{
 					Car.CarSections[0].CurrentAdditionalGroup = TouchElement.JumpScreenIndex;
-					Car.ChangeCarSection(CarSectionType.Interior);
+					// Force a show / hide of the car sections to ensure that the touch stack is correctly updated
+					Car.ChangeCarSection(CarSectionType.Interior, false, true);
 
 					foreach (var index in TouchElement.SoundIndices.Where(x => x >= 0 && Car.Sounds.Touch != null &&  x < Car.Sounds.Touch.Length))
 					{

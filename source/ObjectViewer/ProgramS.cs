@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using LibRender2.Trains;
 using ObjectViewer.Graphics;
 using ObjectViewer.Trains;
+using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -82,8 +83,7 @@ namespace ObjectViewer {
 		        Renderer.Screen.Width = 960;
 		        Renderer.Screen.Height = 600;
 	        }
-	        string error;
-	        if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
+	        if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
 	        {
 		        MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		        return;
@@ -207,7 +207,7 @@ namespace ObjectViewer {
 			Game.Reset();
 			RefreshObjects();
 			Renderer.InitializeVisibility();
-			Renderer.UpdateVisibility(0.0, true);
+			Renderer.UpdateVisibility(true);
 			ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 			Renderer.ApplyBackgroundColor();
 		}
@@ -227,13 +227,13 @@ namespace ObjectViewer {
 		            Renderer.Camera.AbsoluteUp = MouseCameraUp;
 		            Renderer.Camera.AbsoluteSide = MouseCameraSide;
                     {
-                        double dx = 0.0025 * (double)(previousMouseState.X - currentMouseState.X);
+                        double dx = 0.0025 * (previousMouseState.X - currentMouseState.X);
                         Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, dx);
                         Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, dx);
                         Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, dx);
                     }
                     {
-                        double dy = 0.0025 * (double)(previousMouseState.Y - currentMouseState.Y);
+                        double dy = 0.0025 * (previousMouseState.Y - currentMouseState.Y);
                         Renderer.Camera.AbsoluteDirection.Rotate(Renderer.Camera.AbsoluteSide, dy);
                         Renderer.Camera.AbsoluteUp.Rotate(Renderer.Camera.AbsoluteSide, dy);
                     }
@@ -241,17 +241,17 @@ namespace ObjectViewer {
 	            else if(MouseButton == 2)
 	            {
 		            Renderer.Camera.AbsolutePosition = MouseCameraPosition;
-                    double dx = -0.025 * (double)(currentMouseState.X - previousMouseState.X);
+                    double dx = -0.025 * (currentMouseState.X - previousMouseState.X);
                     Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteSide;
-                    double dy = 0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
+                    double dy = 0.025 * (currentMouseState.Y - previousMouseState.Y);
                     Renderer.Camera.AbsolutePosition += dy * Renderer.Camera.AbsoluteUp;
 	            }
 	            else
 	            {
 		            Renderer.Camera.AbsolutePosition = MouseCameraPosition;
-                    double dx = -0.025 * (double)(currentMouseState.X - previousMouseState.X);
+                    double dx = -0.025 * (currentMouseState.X - previousMouseState.X);
                     Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteSide;
-                    double dz = -0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
+                    double dz = -0.025 * (currentMouseState.Y - previousMouseState.Y);
                     Renderer.Camera.AbsolutePosition += dz * Renderer.Camera.AbsoluteDirection;
 	            }
 	        }
@@ -260,6 +260,7 @@ namespace ObjectViewer {
 	    internal static void RefreshObjects()
 	    {
 		    LightingRelative = -1.0;
+			Renderer.Reset();
 		    Game.Reset();
 			formTrain.Instance?.DisableUI();
 		    for (int i = 0; i < Files.Count; i++)
@@ -268,7 +269,7 @@ namespace ObjectViewer {
 			    {
 				    if(Files[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase))
 				    {
-					    string currentTrainFolder = System.IO.Path.GetDirectoryName(Files[i]);
+					    string currentTrainFolder = Path.GetDirectoryName(Files[i]);
 					    bool canLoad = false;
 					    for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					    {
@@ -314,8 +315,7 @@ namespace ObjectViewer {
 				    }
 				    else
 				    {
-					    UnifiedObject o;
-					    if (CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o))
+					    if (CurrentHost.LoadObject(Files[i], Encoding.UTF8, out UnifiedObject o))
 					    {
 						    o.CreateObject(Vector3.Zero, 0.0, 0.0, 0.0);
 					    }
@@ -335,7 +335,7 @@ namespace ObjectViewer {
 
 		    Renderer.InitializeVisibility();
 		    Renderer.UpdateViewingDistances(600);
-		    Renderer.UpdateVisibility(0.0, true);
+		    Renderer.UpdateVisibility(true);
 		    ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 		    Program.TrainManager.UpdateTrainObjects(0.0, true);
 		    Renderer.ApplyBackgroundColor();
@@ -374,7 +374,7 @@ namespace ObjectViewer {
 								if(f[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase))
 								{
 									// only check to see if it's a train if this is a specified filetype, else we'll start loading the full train from an object in it's folder
-									currentTrainFolder = System.IO.Path.GetDirectoryName(f[i]);
+									currentTrainFolder = Path.GetDirectoryName(f[i]);
 								}
 								for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					            {

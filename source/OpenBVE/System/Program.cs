@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OpenBve.Graphics;
 using OpenBve.Input;
+using OpenBveApi;
 using OpenTK;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
@@ -63,6 +64,7 @@ namespace OpenBve {
 		[STAThread]
 		private static void Main(string[] args) {
 			// --- load options and controls ---
+			CurrentHost = new Host();
 			try
 			{
 				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
@@ -75,7 +77,7 @@ namespace OpenBve {
 			}
 			//Switch between SDL2 and native backends; use native backend by default
 			var options = new ToolkitOptions();
-			CurrentHost = new Host();
+			
 			if (CurrentHost.Platform == HostPlatform.FreeBSD)
 			{
 				// The OpenTK X11 backend is broken on FreeBSD, so force SDL2
@@ -99,8 +101,7 @@ namespace OpenBve {
 
 			//Determine the current CPU architecture-
 			//ARM will generally only support OpenGL-ES
-			PortableExecutableKinds peKind;
-			typeof(object).Module.GetPEKind(out peKind, out CurrentCPUArchitecture);
+			typeof(object).Module.GetPEKind(out PortableExecutableKinds peKind, out CurrentCPUArchitecture);
 			
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
@@ -130,15 +131,15 @@ namespace OpenBve {
 			}
 
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
-			Sounds = new Sounds();
+			Sounds = new Sounds(CurrentHost);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			
 			//Platform specific startup checks
 			// --- Check if we're running as root, and prompt not to ---
-			if (CurrentHost.Platform == HostPlatform.GNULinux && (getuid() == 0 || geteuid() == 0))
+			if ((CurrentHost.Platform == HostPlatform.GNULinux || CurrentHost.Platform == HostPlatform.FreeBSD) && (getuid() == 0 || geteuid() == 0))
 			{
 				MessageBox.Show(
-					"You are currently running as the root user, or via the sudo command." + System.Environment.NewLine +
+					"You are currently running as the root user, or via the sudo command." + Environment.NewLine +
 					"This is a bad idea, please dont!", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
 
@@ -151,20 +152,18 @@ namespace OpenBve {
 			Translations.LoadLanguageFiles(folder);
 			
 			folder = Program.FileSystem.GetDataFolder("Cursors");
-			Cursors.LoadCursorImages(folder);
+			LibRender2.AvailableCursors.LoadCursorImages(Program.Renderer, folder);
 			
 			Interface.LoadControls(null, out Interface.CurrentControls);
 			folder = Program.FileSystem.GetDataFolder("Controls");
-			string file = OpenBveApi.Path.CombineFile(folder, "Default keyboard assignment.controls");
-			Control[] controls;
-			Interface.LoadControls(file, out controls);
+			string file = Path.CombineFile(folder, "Default keyboard assignment.controls");
+			Interface.LoadControls(file, out Control[] controls);
 			Interface.AddControls(ref Interface.CurrentControls, controls);
 			
 			InputDevicePlugin.LoadPlugins(Program.FileSystem);
 			
 			// --- check the command-line arguments for route and train ---
-			formMain.MainDialogResult result = new formMain.MainDialogResult();
-			CommandLine.ParseArguments(args, ref result);
+			LaunchParameters result = CommandLine.ParseArguments(args);
 			// --- check whether route and train exist ---
 			if (result.RouteFile != null) {
 				if (!System.IO.File.Exists(result.RouteFile))
@@ -180,10 +179,9 @@ namespace OpenBve {
 			// --- if a route was provided but no train, try to use the route default ---
 			if (result.RouteFile != null & result.TrainFolder == null)
 			{
-				string error;
-				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
+				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
 				{
-					MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show(error, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 				}
 				Game.Reset(false);
@@ -205,20 +203,20 @@ namespace OpenBve {
 
 				if (!CurrentHost.UnloadPlugins(out error))
 				{
-					MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show(error, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 				if (!loaded)
 				{
 					throw new Exception("No plugins capable of loading routefile " + result.RouteFile + " were found.");
 				}
 				if (!string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
-					folder = System.IO.Path.GetDirectoryName(result.RouteFile);
+					folder = Path.GetDirectoryName(result.RouteFile);
 					while (true) {
-						string trainFolder = OpenBveApi.Path.CombineDirectory(folder, "Train");
+						string trainFolder = Path.CombineDirectory(folder, "Train");
 						if (System.IO.Directory.Exists(trainFolder)) {
 							try
 							{
-								folder = OpenBveApi.Path.CombineDirectory(trainFolder, Interface.CurrentOptions.TrainName);
+								folder = Path.CombineDirectory(trainFolder, Interface.CurrentOptions.TrainName);
 							}
 							catch (Exception ex)
 							{
@@ -228,7 +226,7 @@ namespace OpenBve {
 								}
 							}
 							if (System.IO.Directory.Exists(folder)) {
-								file = OpenBveApi.Path.CombineFile(folder, "train.dat");
+								file = Path.CombineFile(folder, "train.dat");
 								if (System.IO.File.Exists(file)) {
 									result.TrainFolder = folder;
 									result.TrainEncoding = System.Text.Encoding.UTF8;
@@ -253,7 +251,7 @@ namespace OpenBve {
 				Game.Reset(false);
 			}
 			
-			// --- show the main menu if necessary ---
+			// --- show the main WinForms menu if necessary ---
 			if (result.RouteFile == null | result.TrainFolder == null) {
 				Joysticks.RefreshJoysticks();
 
@@ -280,6 +278,7 @@ namespace OpenBve {
 				result.Start = true;
 				result.RouteFile = null;
 				result.TrainFolder = null;
+				Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
 			}
 			
 			// --- start the actual program ---
@@ -346,8 +345,12 @@ namespace OpenBve {
 						Environment.Exit(0);
 					}
 				} catch (Exception ex) {
-					MessageBox.Show(ex.Message + "\n\nProcess = " + FileSystem.RestartProcess + "\nArguments = " + arguments, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show(ex.Message + @"\n\nProcess = " + FileSystem.RestartProcess + @"\nArguments = " + arguments, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
+			}
+			else
+			{
+				Deinitialize();
 			}
 		}
 
@@ -356,8 +359,7 @@ namespace OpenBve {
 		/// <returns>Whether the initialization was successful.</returns>
 		private static bool Initialize()
 		{
-			string error;
-			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer)) {
+			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer)) {
 				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return false;
 			}
@@ -368,9 +370,9 @@ namespace OpenBve {
 			Renderer.Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Renderer.Camera.VerticalViewingAngle) * Renderer.Screen.AspectRatio);
 			Renderer.Camera.OriginalVerticalViewingAngle = Renderer.Camera.VerticalViewingAngle;
 			Renderer.Camera.ExtraViewingDistance = 50.0;
-			Renderer.Camera.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Renderer.Camera.ForwardViewingDistance = Interface.CurrentOptions.ViewingDistance;
 			Renderer.Camera.BackwardViewingDistance = 0.0;
-			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
 			string programVersion = @"v" + Application.ProductVersion + OpenBve.Program.VersionSuffix;
 			FileSystem.ClearLogFile(programVersion);
@@ -380,9 +382,9 @@ namespace OpenBve {
 		/// <summary>Deinitializes the program.</summary>
 		private static void Deinitialize()
 		{
-			string error;
-			Program.CurrentHost.UnloadPlugins(out error);
-			Sounds.Deinitialize();
+			Program.CurrentHost.UnloadPlugins(out _);
+			Sounds.DeInitialize();
+			Renderer.DeInitialize();
 			if (currentGameWindow != null)
 			{
 				currentGameWindow.Dispose();

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using NAudio.Wave;
 using NLayer.NAudioSupport;
+using OpenBveApi;
+using OpenBveApi.Math;
 using OpenBveApi.Sounds;
 
 namespace Plugin
@@ -13,34 +14,36 @@ namespace Plugin
 		// --- structures and enumerations ---
 		private abstract class WaveFormatEx
 		{
-			internal ushort wFormatTag;
+			internal readonly ushort wFormatTag;
 			internal ushort nChannels;
 			internal uint nSamplesPerSec;
 			internal uint nAvgBytesPerSec;
 			internal ushort nBlockAlign;
 			internal ushort wBitsPerSample;
 			internal ushort cbSize;
+
+			protected WaveFormatEx(ushort tag)
+			{
+				wFormatTag = tag;
+			}
 		}
 
 		private class WaveFormatPcm : WaveFormatEx
 		{
+			public WaveFormatPcm(ushort tag) : base(tag)
+			{
+			}
 		}
 
 		private class WaveFormatAdPcm : WaveFormatEx
 		{
-			internal struct CoefSet
-			{
-				internal short iCoef1;
-				internal short iCoef2;
-			}
-
 			internal struct BlockData
 			{
 				internal readonly byte[] bPredictor;
 				internal readonly short[] iDelta;
 				internal readonly short[] iSamp1;
 				internal readonly short[] iSamp2;
-				internal readonly CoefSet[] CoefSet;
+				internal readonly Vector2[] CoefSet;
 
 				internal BlockData(int channels)
 				{
@@ -48,23 +51,37 @@ namespace Plugin
 					iDelta = new short[channels];
 					iSamp1 = new short[channels];
 					iSamp2 = new short[channels];
-					CoefSet = new CoefSet[channels];
+					CoefSet = new Vector2[channels];
 				}
 			}
 
 			internal ushort nSamplesPerBlock;
 			internal ushort nNumCoef;
-			internal CoefSet[] aCoeff;
+			internal Vector2[] aCoeff;
 
 			internal static readonly short[] AdaptionTable =
 			{
 				230, 230, 230, 230, 307, 409, 512, 614,
 				768, 614, 512, 409, 307, 230, 230, 230
 			};
+
+			public WaveFormatAdPcm(ushort tag) : base(tag)
+			{
+			}
 		}
 
 		private class WaveFormatMp3 : WaveFormatEx
 		{
+			public WaveFormatMp3(ushort tag) : base(tag)
+			{
+			}
+		}
+
+		private class WaveFormatExtensible : WaveFormatEx
+		{
+			public WaveFormatExtensible(ushort tag) : base(tag)
+			{
+			}
 		}
 
 
@@ -79,18 +96,18 @@ namespace Plugin
 			{
 				using (BinaryReader reader = new BinaryReader(stream))
 				{
-					BinaryReaderExtensions.Endianness endianness;
+					Endianness endianness;
 					uint headerCkID = reader.ReadUInt32();
 
 					// "RIFF"
 					if (headerCkID == 0x46464952)
 					{
-						endianness = BinaryReaderExtensions.Endianness.Little;
+						endianness = Endianness.Little;
 					}
 					// "RIFX"
 					else if (headerCkID == 0x58464952)
 					{
-						endianness = BinaryReaderExtensions.Endianness.Big;
+						endianness = Endianness.Big;
 					}
 					else
 					{
@@ -173,7 +190,7 @@ namespace Plugin
 			}
 		}
 
-		private static Sound WaveLoadFromStream(BinaryReader reader, BinaryReaderExtensions.Endianness endianness, uint fileSize)
+		private static Sound WaveLoadFromStream(BinaryReader reader, Endianness endianness, uint fileSize)
 		{
 			long stopPosition = Math.Min(fileSize, reader.BaseStream.Length);
 			WaveFormatEx format = null;
@@ -194,22 +211,25 @@ namespace Plugin
 
 					ushort wFormatTag = reader.ReadUInt16(endianness);
 
-					if (wFormatTag == 0x0001 || wFormatTag == 0x0003)
+					switch (wFormatTag)
 					{
-						format = new WaveFormatPcm { wFormatTag = wFormatTag };
-					}
-					else if (wFormatTag == 0x0002)
-					{
-						format = new WaveFormatAdPcm { wFormatTag = wFormatTag };
-					}
-					else if (wFormatTag == 0x0050 || wFormatTag == 0x0055)
-					{
-						format = new WaveFormatMp3 { wFormatTag = wFormatTag };
-					}
-					else
-					{
-						// unsupported format
-						throw new InvalidDataException("Unsupported wFormatTag");
+						case 0x0001:
+						case 0x0003:
+							format = new WaveFormatPcm(wFormatTag);
+							break;
+						case 0x0002:
+							format = new WaveFormatAdPcm(wFormatTag);
+							break;
+						case 0x0050:
+						case 0x0055:
+							format = new WaveFormatMp3(wFormatTag);
+							break;
+						case 0xFFFE:
+							format = new WaveFormatExtensible(wFormatTag);
+							break;
+						default:
+							// unsupported format
+							throw new InvalidDataException("Unsupported wFormatTag");
 					}
 
 					format.nChannels = reader.ReadUInt16(endianness);
@@ -265,12 +285,12 @@ namespace Plugin
 
 						adPcmFormat.nSamplesPerBlock = reader.ReadUInt16(endianness);
 						adPcmFormat.nNumCoef = reader.ReadUInt16(endianness);
-						adPcmFormat.aCoeff = new WaveFormatAdPcm.CoefSet[adPcmFormat.nNumCoef];
+						adPcmFormat.aCoeff = new Vector2[adPcmFormat.nNumCoef];
 
 						for (int i = 0; i < adPcmFormat.nNumCoef; i++)
 						{
-							adPcmFormat.aCoeff[i].iCoef1 = reader.ReadInt16(endianness);
-							adPcmFormat.aCoeff[i].iCoef2 = reader.ReadInt16(endianness);
+							adPcmFormat.aCoeff[i].X = reader.ReadInt16(endianness);
+							adPcmFormat.aCoeff[i].Y = reader.ReadInt16(endianness);
 						}
 
 						reader.BaseStream.Position += adPcmFormat.cbSize - (reader.BaseStream.Position - readerPrevPos);
@@ -364,7 +384,7 @@ namespace Plugin
 								{
 									for (int k = 0; k < adPcmFormat.nChannels; k++)
 									{
-										int lPredSamp = (blockData.iSamp1[k] * blockData.CoefSet[k].iCoef1 + blockData.iSamp2[k] * blockData.CoefSet[k].iCoef2) / 256;
+										int lPredSamp = (int)(blockData.iSamp1[k] * blockData.CoefSet[k].X + blockData.iSamp2[k] * blockData.CoefSet[k].Y) / 256;
 										int iErrorDeltaUnsigned;
 
 										if (nibbleFirst)
@@ -491,6 +511,7 @@ namespace Plugin
 			switch (formatTag)
 			{
 				case 0x0001:
+				case 0xFFFE:
 					switch (bytesPerSample)
 					{
 						case 3:
@@ -566,49 +587,6 @@ namespace Plugin
 			}
 
 			return new Sound(samplesPerSec, bytesPerSample * 8, newBuffers);
-		}
-	}
-
-	internal static class BinaryReaderExtensions
-	{
-		/// <summary>Represents the endianness of an integer.</summary>
-		internal enum Endianness
-		{
-			/// <summary>Represents little endian byte order, i.e. least-significant byte first.</summary>
-			Little = 0,
-
-			/// <summary>Represents big endian byte order, i.e. most-significant byte first.</summary>
-			Big = 1
-		}
-
-		private static byte[] Reverse(this byte[] bytes, Endianness endianness)
-		{
-			if (BitConverter.IsLittleEndian ^ endianness == Endianness.Little)
-			{
-				return bytes.Reverse().ToArray();
-			}
-
-			return bytes;
-		}
-
-		internal static ushort ReadUInt16(this BinaryReader reader, Endianness endianness)
-		{
-			return BitConverter.ToUInt16(reader.ReadBytes(sizeof(ushort)).Reverse(endianness), 0);
-		}
-
-		internal static short ReadInt16(this BinaryReader reader, Endianness endianness)
-		{
-			return BitConverter.ToInt16(reader.ReadBytes(sizeof(short)).Reverse(endianness), 0);
-		}
-
-		internal static uint ReadUInt32(this BinaryReader reader, Endianness endianness)
-		{
-			return BitConverter.ToUInt32(reader.ReadBytes(sizeof(uint)).Reverse(endianness), 0);
-		}
-
-		internal static int ReadInt32(this BinaryReader reader, Endianness endianness)
-		{
-			return BitConverter.ToInt32(reader.ReadBytes(sizeof(int)).Reverse(endianness), 0);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Hosts;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 
 namespace RouteManager2.MessageManager.MessageTypes
@@ -24,6 +25,9 @@ namespace RouteManager2.MessageManager.MessageTypes
 		/// <summary>Holds the current texture</summary>
 		/// NOTE: Not worth creating an enum just for this...
 		private int currentTexture;
+		
+		/// <summary>The size</summary>
+		public Vector2 Size = Vector2.Null;
 
 		public TextureMessage(HostInterface Host)
 		{
@@ -47,19 +51,19 @@ namespace RouteManager2.MessageManager.MessageTypes
 			if (currentTime <= MessageEarlyTime)
 			{
 				//We are early
-				currentHost.AddMarker(MessageEarlyTexture);
+				currentHost.AddMarker(MessageEarlyTexture, Size);
 				currentTexture = 0;
 			}
 			else if (currentTime >= MessageLateTime)
 			{
 				//Late
-				currentHost.AddMarker(MessageLateTexture);
+				currentHost.AddMarker(MessageLateTexture, Size);
 				currentTexture = 2;
 			}
 			else
 			{
 				//On time
-				currentHost.AddMarker(MessageOnTimeTexture);
+				currentHost.AddMarker(MessageOnTimeTexture, Size);
 				currentTexture = 1;
 			}
 		}

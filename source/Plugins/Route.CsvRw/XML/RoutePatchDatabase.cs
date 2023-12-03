@@ -48,7 +48,7 @@ namespace CsvRwRouteParser
 										}
 										break;
 									case "PatchList":
-										string folder = System.IO.Path.GetDirectoryName(databaseFile);
+										string folder = Path.GetDirectoryName(databaseFile);
 										string newFile = Path.CombineFile(folder, childNode.InnerText);
 										if (File.Exists(newFile))
 										{
@@ -152,8 +152,7 @@ namespace CsvRwRouteParser
 						string[] splitString = childNode.InnerText.Split(',');
 						for (int i = 0; i < splitString.Length; i++)
 						{
-							int rt;
-							if (NumberFormats.TryParseIntVb6(splitString[i], out rt))
+							if (NumberFormats.TryParseIntVb6(splitString[i], out int rt))
 							{
 								currentPatch.DummyRailTypes.Add(rt);
 							}
@@ -163,8 +162,7 @@ namespace CsvRwRouteParser
 						splitString = childNode.InnerText.Split(',');
 						for (int i = 0; i < splitString.Length; i++)
 						{
-							int gt;
-							if (NumberFormats.TryParseIntVb6(splitString[i], out gt))
+							if (NumberFormats.TryParseIntVb6(splitString[i], out int gt))
 							{
 								currentPatch.DummyGroundTypes.Add(gt);
 							}

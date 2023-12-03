@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
 namespace OpenBveApi
@@ -43,6 +44,8 @@ namespace OpenBveApi
 		public bool OldTransparencyMode;
 		/// <summary>The viewing distance in meters</summary>
 		public int ViewingDistance;
+		/// <summary>The size of a leaf when using QuadTree visibility</summary>
+		public int QuadTreeLeafSize;
 		/// <summary>Whether toppling is enabled</summary>
 		public bool Toppling;
 		/// <summary>Whether derailments are enabled</summary>
@@ -89,5 +92,14 @@ namespace OpenBveApi
 		public int Panel2ExtendedMinSize;
 		/// <summary>Whether various accessibility helpers are enabled</summary>
 		public bool Accessibility;
+		/// <summary>The font to use</summary>
+		public string Font;
+		/// <summary>The object disposal mode in use</summary>
+		/// <remarks>Not saved</remarks>
+		public ObjectDisposalMode ObjectDisposalMode;
+		/// <summary>Uses the native Windows GDI+ decoders for PNG / JPG</summary>
+		public bool UseGDIDecoders;
+		/// <summary>The filename of the current cursor</summary>
+		public string CursorFileName;
 	}
 }

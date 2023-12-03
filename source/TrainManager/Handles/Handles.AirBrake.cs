@@ -1,4 +1,8 @@
-﻿using TrainManager.Trains;
+﻿using OpenBveApi;
+using OpenBveApi.Colors;
+using OpenBveApi.Interface;
+using RouteManager2.MessageManager;
+using TrainManager.Trains;
 
 namespace TrainManager.Handles
 {
@@ -96,7 +100,58 @@ namespace TrainManager.Handles
 					baseTrain.Plugin.UpdatePower();
 					baseTrain.Plugin.UpdateBrake();
 				}
+
+				if (!TrainManagerBase.CurrentOptions.Accessibility) return;
+				TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 			}
+		}
+
+		public override string GetNotchDescription(out MessageColor color)
+		{
+			color = MessageColor.Gray;
+			if (NotchDescriptions == null || Driver >= NotchDescriptions.Length)
+			{
+				if (baseTrain.Handles.EmergencyBrake.Driver)
+				{
+					color = MessageColor.Red;
+					return Translations.QuickReferences.HandleEmergency;
+				}
+
+				switch ((AirBrakeHandleState)Driver)
+				{
+					case AirBrakeHandleState.Release:
+						color = MessageColor.Gray;
+						return Translations.QuickReferences.HandleRelease;
+					case AirBrakeHandleState.Lap:
+						color = MessageColor.Blue;
+						return Translations.QuickReferences.HandleLap;
+					case AirBrakeHandleState.Service:
+						color = MessageColor.Orange;
+						return Translations.QuickReferences.HandleService;
+				}
+			}
+			else
+			{
+				if (baseTrain.Handles.EmergencyBrake.Driver)
+				{
+					color = MessageColor.Red;
+					return NotchDescriptions[0];
+				}
+
+				switch ((AirBrakeHandleState)Driver)
+				{
+					case AirBrakeHandleState.Release:
+						color = MessageColor.Gray;
+						return NotchDescriptions[1];
+					case AirBrakeHandleState.Lap:
+						color = MessageColor.Blue;
+						return NotchDescriptions[2];
+					case AirBrakeHandleState.Service:
+						color = MessageColor.Orange;
+						return NotchDescriptions[3];
+				}
+			}
+			return string.Empty;
 		}
 	}
 }

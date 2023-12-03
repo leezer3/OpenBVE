@@ -2,6 +2,9 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+	<NoWarn>$(NoWarn),IDE1006</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
@@ -101,8 +104,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\dependencies\PIEHid64Net.dll</HintPath>
     </Reference>
-    <Reference Include="SharpCompress, Version=0.30.1.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpCompress.0.30.1\lib\net461\SharpCompress.dll</HintPath>
+    <Reference Include="SharpCompress, Version=0.32.2.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpCompress.0.32.2\lib\net461\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -110,17 +113,17 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Encoding.CodePages, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Text.Encoding.CodePages.5.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+    <Reference Include="System.Text.Encoding.CodePages, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Text.Encoding.CodePages.6.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
     </Reference>
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
@@ -171,6 +174,7 @@
     <Compile Include="Graphics\HUD\HUD.Image.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
+    <Compile Include="Graphics\HUD\HUD.Subject.cs" />
     <Compile Include="Graphics\HUD\HUD.Transitions.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
@@ -215,7 +219,6 @@
     <Compile Include="System\Functions\FolderBrowserDialog.cs" />
     <Compile Include="System\Input\JoystickManager\AbstractJoystick.cs" />
     <Compile Include="System\Input\JoystickManager\AbstractJoystickManager.cs" />
-    <Compile Include="System\Input\Controls.Control.cs" />
     <Compile Include="System\Input\Controls.cs" />
     <Compile Include="System\Input\InputDevicePlugin.cs" />
     <Compile Include="System\Input\JoystickManager\ConfigurationLink.cs" />
@@ -223,10 +226,18 @@
     <Compile Include="System\Input\JoystickManager\JoystickManager64.cs" />
     <Compile Include="System\Input\JoystickManager\RailDriver\AbstractRailDriver.cs" />
     <Compile Include="System\Input\JoystickManager\StandardJoystick.cs" />
+    <Compile Include="System\Input\ProcessControls.Analog.cs" />
+    <Compile Include="System\Input\ProcessControls.Digital.cs" />
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
     <Compile Include="System\Program\CommandLine.cs" />
+    <Compile Include="UserInterface\formViewLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserInterface\formViewLog.Designer.cs">
+      <DependentUpon>formViewLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\formImageExport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -251,12 +262,12 @@
     <Compile Include="UserInterface\formAbout.Designer.cs">
       <DependentUpon>formAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="Parsers\XMLParser.cs" />
     <Compile Include="System\Functions\Extensions.cs" />
     <Compile Include="System\Input\ControlRepeats.cs" />
     <Compile Include="System\Input\Keyboard.cs" />
     <Compile Include="System\Input\ProcessControls.cs" />
     <Compile Include="System\Scripting.cs" />
+    <Compile Include="UserInterface\LaunchParameters.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -269,6 +280,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserInterface\formRaildriverCalibration.resx">
       <DependentUpon>formRaildriverCalibration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserInterface\formViewLog.resx">
+      <DependentUpon>formViewLog.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <Compile Include="Audio\Sounds.cs" />
@@ -310,13 +324,13 @@
     </Compile>
     <Compile Include="Game\ObjectManager\AnimatedObjects\FunctionScripts.cs" />
     <Compile Include="Game\Game.cs" />
-    <Compile Include="OldCode\Interface.cs" />
+    <Compile Include="System\Interface.cs" />
     <Compile Include="System\Loading.cs" />
     <Compile Include="System\MainLoop.cs" />
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="Game\Timetable.cs" />
-    <Compile Include="OldCode\TrainManager.cs" />
-    <Compile Include="OldCode\World.cs" />
+    <Compile Include="Game\TrainManager.cs" />
+    <Compile Include="Game\World.cs" />
     <Compile Include="System\Host.cs" />
     <Compile Include="System\Input\JoystickManager\RailDriver\RailDriver32.cs" />
     <Compile Include="System\Input\JoystickManager\RailDriver\RailDriver64.cs" />
@@ -427,7 +441,7 @@
   </PropertyGroup>
   <Target Name="AfterBuild">
     <!-- Set LBA flag -->
-    <Exec Condition="'$(OS)' != 'Unix'" Command='"$(TargetDir)DevTools\LBAHeader.exe" "$(TargetDir)OpenBve.exe"' />
+    <Exec Condition="'$(OS)' != 'Unix'" Command="&quot;$(TargetDir)DevTools\LBAHeader.exe&quot; &quot;$(TargetDir)OpenBve.exe&quot;" />
     <Exec Condition="'$(OS)' == 'Unix'" Command="mono $(TargetDir)DevTools/LBAHeader.exe $(TargetDir)OpenBve.exe" />
     <!-- Copy in dependancies -->
     <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->

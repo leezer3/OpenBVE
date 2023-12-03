@@ -7,7 +7,6 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using TrainManager.Power;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -25,30 +24,17 @@ namespace Train.OpenBve
 		private static string currentPath;
 		private static bool[] CarObjectsReversed;
 		private static bool[] BogieObjectsReversed;
-		private static BveAccelerationCurve[] AccelerationCurves;
+		
 		private static readonly char[] separatorChars = { ';', ',' };
+		internal static bool[] MotorSoundXMLParsed;
 		internal void Parse(string fileName, TrainBase Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, out bool[] interiorVisible)
 		{
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the marker's XML file 
 			currentXML.Load(fileName);
-			currentPath = System.IO.Path.GetDirectoryName(fileName);
-			if (File.Exists(Path.CombineFile(currentPath, "train.dat")))
-			{
-				for (int i = 0; i < Train.Cars.Length; i++)
-				{
-					if (Train.Cars[i].Specs.IsMotorCar)
-					{
-						AccelerationCurves = new BveAccelerationCurve[Train.Cars[i].Specs.AccelerationCurves.Length];
-						for (int j = 0; j < Train.Cars[i].Specs.AccelerationCurves.Length; j++)
-						{
-							BveAccelerationCurve c = (BveAccelerationCurve)Train.Cars[i].Specs.AccelerationCurves[j];
-							AccelerationCurves[j] = c.Clone();
-						}
-					}
-				}
-			}
+			currentPath = Path.GetDirectoryName(fileName);
+			MotorSoundXMLParsed = new bool[Train.Cars.Length];
 			CarObjectsReversed = new bool[Train.Cars.Length];
 			BogieObjectsReversed = new bool[Train.Cars.Length * 2];
 			interiorVisible = new bool[Train.Cars.Length];
@@ -63,10 +49,12 @@ namespace Train.OpenBve
 						switch (DocumentNodes[i].Name)
 						{
 							case "DriverCar":
-								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out Train.DriverCar))
+								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out var driverCar) || driverCar < 0)
 								{
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "DriverCar is invalid in XML file " + fileName);
+									break;
 								}
+								Train.DriverCar = driverCar;
 								break;
 						}
 					}
@@ -130,6 +118,20 @@ namespace Train.OpenBve
 											Plugin.currentHost.LoadObject(f, Encoding.Default, out CouplerObjects[carIndex - 1]);
 										}
 										break;
+									case "canuncouple":
+										int nn;
+										NumberFormats.TryParseIntVb6(c.InnerText, out nn);
+										if (c.InnerText.ToLowerInvariant() == "false" || nn == 0)
+										{
+											Train.Cars[carIndex - 1].Coupler.CanUncouple = false;
+										}
+										break;
+									case "uncouplingbehaviour":
+										if (!Enum.TryParse(c.InnerText, true, out Train.Cars[carIndex -1].Coupler.UncouplingBehaviour))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid uncoupling behaviour " + c.InnerText + " in " + c.Name + " node.");
+										}
+										break;
 								}
 							}
 						}
@@ -145,7 +147,7 @@ namespace Train.OpenBve
 							XmlNodeList childNodes = childXML.DocumentElement.SelectNodes("/openBVE/Car");
 							//We need to save and restore the current path to make relative paths within the child file work correctly
 							string savedPath = currentPath;
-							currentPath = System.IO.Path.GetDirectoryName(childFile);
+							currentPath = Path.GetDirectoryName(childFile);
 							ParseCarNode(childNodes[0], fileName, carIndex, ref Train, ref CarObjects, ref BogieObjects, ref interiorVisible[carIndex]);
 							currentPath = savedPath;
 						}
@@ -166,6 +168,13 @@ namespace Train.OpenBve
 						carIndex++;
 					}
 				}
+
+				if (Train.DriverCar >= Train.Cars.Length)
+				{
+					Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid driver car defined in XML file " + fileName);
+					Train.DriverCar = Train.Cars.Length - 1;
+				}
+
 				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.NotSpecified)
 				{
 					Plugin.Renderer.Camera.CurrentRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
@@ -237,7 +246,7 @@ namespace Train.OpenBve
 
 					}
 				}
-				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/Plugin");
+				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/*[self::Plugin or self::HeadlightStates]");
 				if (DocumentNodes != null && DocumentNodes.Count > 0)
 				{
 					// More optional, but needs to be loaded after the car list
@@ -246,7 +255,7 @@ namespace Train.OpenBve
 						switch (DocumentNodes[i].Name)
 						{
 							case "Plugin":
-								currentPath = System.IO.Path.GetDirectoryName(fileName); // reset to base path
+								currentPath = Path.GetDirectoryName(fileName); // reset to base path
 								string pluginFile = DocumentNodes[i].InnerText;
 								pluginFile = Path.CombineFile(currentPath, pluginFile);
 								if (File.Exists(pluginFile))
@@ -257,10 +266,22 @@ namespace Train.OpenBve
 									}
 								}
 								break;
+							case "HeadlightStates":
+								int numStates;
+								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out numStates))
+								{
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "NumStates is invalid for HeadlightStates in XML file " + fileName);
+									break;
+								}
+
+								Train.SafetySystems.Headlights = new LightSource(numStates);
+								break;
 						}
 					}
 				}
-
+				/*
+				 * Add final properties and stuff
+				 */
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
 					if (CarObjects[i] != null)

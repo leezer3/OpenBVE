@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -13,6 +14,7 @@ using OpenBveApi.Trains;
 using OpenBveApi.World;
 using TrainManager;
 using TrainManager.Trains;
+using Path = OpenBveApi.Path;
 
 namespace ObjectViewer {
 	/// <summary>Represents the host application.</summary>
@@ -146,8 +148,7 @@ namespace ObjectViewer {
 
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
 			if (File.Exists(path) || Directory.Exists(path)) {
-				Texture data;
-				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out data)) {
+				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out Texture data)) {
 					handle = data;
 					if (loadTexture)
 					{
@@ -255,20 +256,21 @@ namespace ObjectViewer {
 							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path)) {
 								try
 								{
-									UnifiedObject obj;
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out UnifiedObject obj)) {
+										if (obj == null)
+										{
+											continue;
+										}
 										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
 										Object = obj;
 
-										StaticObject staticObject = Object as StaticObject;
-										if (staticObject != null)
+										if (Object is StaticObject staticObject)
 										{
 											StaticObjectCache.Add(ValueTuple.Create(path, false), staticObject);
 											return true;
 										}
 
-										AnimatedObjectCollection aoc = Object as AnimatedObjectCollection;
-										if (aoc != null)
+										if (Object is AnimatedObjectCollection aoc)
 										{
 											AnimatedObjectCollectionCache.Add(path, aoc);
 										}
@@ -285,7 +287,10 @@ namespace ObjectViewer {
 						}
 					}
 				}
-				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+				if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()))
+				{
+					Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+				}
 			} else {
 				ReportProblem(ProblemType.PathNotFound, path);
 			}
@@ -303,9 +308,9 @@ namespace ObjectViewer {
 			return Program.Renderer.CreateStaticObject(Prototype, Position, WorldTransformation, LocalTransformation, ObjectDisposalMode.Accurate, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, 25.0, TrackPosition, Brightness);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
+		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
 		{
-			return Program.Renderer.CreateStaticObject(Prototype, LocalTransformation, Rotate, Translate, ObjectDisposalMode.Accurate, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, 25.0, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, ObjectDisposalMode.Accurate, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, 25.0, TrackPosition, Brightness);
 		}
 
 		public override void CreateDynamicObject(ref ObjectState internalObject)

@@ -315,10 +315,18 @@ namespace OpenBveApi
 						}
 						break;
 					case Encoding.WIN1252:
-						if (fInfo.Length == 62861)
+						switch (fInfo.Length)
 						{
-							//HK tram route. Comes in a non-unicode zip, so filename may be subject to mangling
-							return Encoding.BIG5;
+							case 62861:
+								//HK tram route. Comes in a non-unicode zip, so filename may be subject to mangling
+								return Encoding.BIG5;
+							case 2101:
+							case 2107:
+							case 5330:
+								// railtypes from Lrt720
+							case 506:
+								// HK_LRT
+								return Encoding.BIG5;
 						}
 						break;
 					case Encoding.WIN1255:
@@ -348,6 +356,13 @@ namespace OpenBveApi
 						{
 							//Polish Warsaw metro object file uses diacritics in filenames
 							return Encoding.WIN1252;
+						}
+						break;
+					case Encoding.IBM866:
+						if (fInfo.Length == 348)
+						{
+							// HK_LRT again
+							return Encoding.BIG5;
 						}
 						break;
 				}

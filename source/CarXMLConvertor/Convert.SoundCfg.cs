@@ -66,11 +66,10 @@ namespace CarXmlConvertor
                             int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
                             if (j >= 0)
                             {
-	                            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-	                            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-                                int k;
-                                if (!int.TryParse(a, NumberStyles.Integer,
-                                    CultureInfo.InvariantCulture, out k))
+	                            string a = Lines[i].Substring(0, j).TrimEnd();
+	                            string b = Lines[i].Substring(j + 1).TrimStart();
+	                            if (!int.TryParse(a, NumberStyles.Integer,
+		                                CultureInfo.InvariantCulture, out int k))
                                 {
                                     continue;
                                 }
@@ -101,11 +100,10 @@ namespace CarXmlConvertor
 			                int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 			                if (j >= 0)
 			                {
-				                string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-				                string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-				                int k;
+				                string a = Lines[i].Substring(0, j).TrimEnd();
+				                string b = Lines[i].Substring(j + 1).TrimStart();
 				                if (!int.TryParse(a, NumberStyles.Integer,
-					                CultureInfo.InvariantCulture, out k))
+					                    CultureInfo.InvariantCulture, out int k))
 				                {
 					                continue;
 				                }
@@ -136,11 +134,10 @@ namespace CarXmlConvertor
                             int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
                             if (j >= 0)
                             {
-	                            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-	                            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-                                int k;
-                                if (!int.TryParse(a, NumberStyles.Integer,
-                                    CultureInfo.InvariantCulture, out k))
+	                            string a = Lines[i].Substring(0, j).TrimEnd();
+	                            string b = Lines[i].Substring(j + 1).TrimStart();
+	                            if (!int.TryParse(a, NumberStyles.Integer,
+		                                CultureInfo.InvariantCulture, out int k))
                                 {
                                     continue;
                                 }
@@ -171,11 +168,10 @@ namespace CarXmlConvertor
                             int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
                             if (j >= 0)
                             {
-	                            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-	                            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-                                int k;
-                                if (!int.TryParse(a, NumberStyles.Integer,
-                                    CultureInfo.InvariantCulture, out k))
+	                            string a = Lines[i].Substring(0, j).TrimEnd();
+	                            string b = Lines[i].Substring(j + 1).TrimStart();
+	                            if (!int.TryParse(a, NumberStyles.Integer,
+		                                CultureInfo.InvariantCulture, out int k))
                                 {
                                     continue;
                                 }
@@ -784,11 +780,10 @@ namespace CarXmlConvertor
 		                    int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 		                    if (j >= 0)
 		                    {
-			                    string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-			                    string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-			                    int k;
+			                    string a = Lines[i].Substring(0, j).TrimEnd();
+			                    string b = Lines[i].Substring(j + 1).TrimStart();
 			                    if (!int.TryParse(a, NumberStyles.Integer,
-				                        CultureInfo.InvariantCulture, out k))
+				                        CultureInfo.InvariantCulture, out int k))
 			                    {
 				                    continue;
 			                    }
@@ -898,7 +893,7 @@ namespace CarXmlConvertor
             newLines.Add("</CarSounds>");
             newLines.Add("</openBVE>");
             // ReSharper disable once AssignNullToNotNullAttribute
-            string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "sound.xml");
+            string fileOut = System.IO.Path.Combine(Path.GetDirectoryName(FileName), "sound.xml");
 			try
             {
                 

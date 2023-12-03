@@ -3,7 +3,7 @@
 namespace LibRender2.Cameras
 {
 	/// <summary>Defines a relative camera alignment</summary>
-	public struct CameraAlignment
+	public class CameraAlignment
 	{
 		/// <summary>The absolute world position</summary>
 		public Vector3 Position;
@@ -26,6 +26,11 @@ namespace LibRender2.Cameras
 			this.Roll = Roll;
 			this.TrackPosition = TrackPosition;
 			this.Zoom = Zoom;
+		}
+
+		public CameraAlignment()
+		{
+			Position = Vector3.Zero;
 		}
 	}
 }

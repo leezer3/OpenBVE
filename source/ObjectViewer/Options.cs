@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
 using ObjectViewer.Graphics;
+using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 
@@ -12,25 +13,28 @@ namespace ObjectViewer
     {
         internal static void LoadOptions()
         {
-			Interface.CurrentOptions = new Interface.Options();
-            string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
+	        Interface.CurrentOptions = new Interface.Options
+	        {
+		        ViewingDistance = 1000, // fixed
+	        };
+            string optionsFolder = Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
             if (!System.IO.Directory.Exists(optionsFolder))
             {
                 System.IO.Directory.CreateDirectory(optionsFolder);
             }
             CultureInfo Culture = CultureInfo.InvariantCulture;
-            string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_ov.cfg");
+            string configFile = Path.CombineFile(optionsFolder, "options_ov.cfg");
             if (!System.IO.File.Exists(configFile))
             {
                 //Attempt to load and upgrade a prior configuration file
-                string assemblyFolder = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "options_ov.cfg");
+                string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                configFile = Path.CombineFile(Path.CombineDirectory(Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "options_ov.cfg");
 
                 if (!System.IO.File.Exists(configFile))
                 {
                     //If no route viewer specific configuration file exists, then try the main OpenBVE configuration file
                     //Write out to a new routeviewer specific file though
-                    configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
+                    configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
                 }
             }
 
@@ -70,8 +74,7 @@ namespace ObjectViewer
                                     {
                                         case "windowwidth":
                                             {
-                                                int a;
-                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300)
+                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300)
                                                 {
                                                     a = 960;
                                                 }
@@ -79,8 +82,7 @@ namespace ObjectViewer
                                             } break;
                                         case "windowheight":
                                             {
-                                                int a;
-                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300)
+                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300)
                                                 {
                                                     a = 600;
                                                 }
@@ -107,14 +109,12 @@ namespace ObjectViewer
                                             } break;
                                         case "anisotropicfilteringlevel":
                                             {
-                                                int a;
-                                                int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+                                                int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
                                                 Interface.CurrentOptions.AnisotropicFilteringLevel = a;
                                             } break;
                                         case "antialiasinglevel":
                                             {
-                                                int a;
-                                                int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+                                                int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
                                                 Interface.CurrentOptions.AntiAliasingLevel = a;
                                             } break;
                                         case "transparencymode":
@@ -124,8 +124,7 @@ namespace ObjectViewer
                                                 case "smooth": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
                                                 default:
                                                     {
-                                                        int a;
-                                                        if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+                                                        if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
                                                         {
                                                             Interface.CurrentOptions.TransparencyMode = (TransparencyMode)a;
                                                         }
@@ -156,14 +155,16 @@ namespace ObjectViewer
 											    }
 	                                            break;
                                             }
+										case "gdiplus":
+											Interface.CurrentOptions.UseGDIDecoders = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
 									} break;
 								case "objectoptimization":
 									switch (Key)
 									{
 										case "mode":
 											{
-												ObjectOptimizationMode mode;
-												if (Enum.TryParse(Value, out mode))
+												if (Enum.TryParse(Value, out ObjectOptimizationMode mode))
 												{
 													Interface.CurrentOptions.ObjectOptimizationMode = mode;
 												}
@@ -218,13 +219,13 @@ namespace ObjectViewer
                 Builder.AppendLine();
 				Builder.AppendLine("[objectOptimization]");
 				Builder.AppendLine($"mode = {Interface.CurrentOptions.ObjectOptimizationMode}");
-                string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg");
+                string configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg");
                 System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
             }
             catch
             {
                 MessageBox.Show("An error occured whilst saving the options to disk." + Environment.NewLine +
-                                "Please check you have write permission.");
+                                "Please ensure you have write permission.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

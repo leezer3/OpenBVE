@@ -1,4 +1,4 @@
-﻿namespace OpenBveApi.Interface
+namespace OpenBveApi.Interface
 {
 	/// <summary>Contains functions for providing translations</summary>
 	public static partial class Translations
@@ -77,9 +77,8 @@
 			/// <remarks>This ignores the translated command description</remarks>
 			public override bool Equals(object obj)
 			{
-				if (obj is CommandInfo)
+				if (obj is CommandInfo newCommandInfo)
 				{
-					CommandInfo newCommandInfo = (CommandInfo) obj;
 					return newCommandInfo.Equals(this);
 				}
 				return false;
@@ -155,6 +154,7 @@
 			new CommandInfo(Command.HornMusic, CommandType.Digital, "HORN_MUSIC"),
 			new CommandInfo(Command.DeviceConstSpeed, CommandType.Digital, "DEVICE_CONSTSPEED"),
 			new CommandInfo(Command.PlayMicSounds, CommandType.Digital, "PLAY_MIC_SOUNDS"),
+			new CommandInfo(Command.Sanders, CommandType.Digital, "SANDERS"),
 
 //We only want to mark these as obsolete for new users of the API
 #pragma warning disable 618
@@ -261,6 +261,9 @@
 			new CommandInfo(Command.AccessibilityCurrentSpeed, CommandType.Digital, "ACCESSIBILITY_CURRENT_SPEED"),
 			new CommandInfo(Command.AccessibilityNextSignal, CommandType.Digital, "ACCESSIBILITY_NEXT_SIGNAL"),
 			new CommandInfo(Command.AccessibilityNextStation, CommandType.Digital, "ACCESSIBILITY_NEXT_STATION"),
+			// Coupling
+			new CommandInfo(Command.UncoupleFront, CommandType.Digital, "UNCOUPLE_FRONT"),
+			new CommandInfo(Command.UncoupleRear, CommandType.Digital, "UNCOUPLE_REAR")
 		};
 	}
 }

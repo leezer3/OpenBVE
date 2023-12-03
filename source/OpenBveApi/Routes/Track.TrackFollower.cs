@@ -40,7 +40,7 @@ namespace OpenBveApi.Routes
 		/// <summary>The train the follower is attached to, or a null reference</summary>
 		public AbstractTrain Train;
 		/// <summary>The car the follower is attached to, or a null reference</summary>
-		public AbstractCar Car;
+		public readonly AbstractCar Car;
 		/// <summary>The track index the follower is currently following</summary>
 		public int TrackIndex;
 		/// <summary>The station index at the current location</summary>
@@ -53,15 +53,17 @@ namespace OpenBveApi.Routes
 		/// <summary>Clones the TrackFollower</summary>
 		public TrackFollower Clone()
 		{
-			TrackFollower t = new TrackFollower(currentHost, Train, Car);
-			t.LastTrackElement = LastTrackElement;
-			t.TrackPosition = TrackPosition;
-			t.WorldPosition = new Vector3(WorldPosition);
-			t.WorldDirection = new Vector3(WorldDirection);
-			t.WorldUp = new Vector3(WorldUp);
-			t.WorldSide = new Vector3(WorldSide);
-			t.TriggerType = TriggerType;
-			t.TrackIndex = TrackIndex;
+			TrackFollower t = new TrackFollower(currentHost, Train, Car)
+			{
+				LastTrackElement = LastTrackElement,
+				TrackPosition = TrackPosition,
+				WorldPosition = new Vector3(WorldPosition),
+				WorldDirection = new Vector3(WorldDirection),
+				WorldUp = new Vector3(WorldUp),
+				WorldSide = new Vector3(WorldSide),
+				TriggerType = TriggerType,
+				TrackIndex = TrackIndex
+			};
 			return t;
 		}
 
@@ -91,13 +93,7 @@ namespace OpenBveApi.Routes
 		}
 
 		/// <summary>Gets the rail gauge for the track this is following</summary>
-		public double RailGauge
-		{
-			get
-			{
-				return currentHost.Tracks[TrackIndex].RailGauge;
-			}
-		}
+		public double RailGauge => currentHost.Tracks[TrackIndex].RailGauge;
 
 		/// <summary>Updates the World Coordinates</summary>
 		/// <param name="AddTrackInaccuracy"></param>
@@ -112,6 +108,11 @@ namespace OpenBveApi.Routes
 		/// <param name="AddTrackInaccuracy">Whether to add track innacuracy</param>
 		public void UpdateRelative(double RelativeTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccuracy)
 		{
+			if (RelativeTrackPosition == 0)
+			{
+				// not moved!
+				return;
+			}
 			UpdateAbsolute(TrackPosition + RelativeTrackPosition, UpdateWorldCoordinates, AddTrackInaccuracy);
 		}
 
@@ -211,8 +212,8 @@ namespace OpenBveApi.Routes
 						double h = s * p;
 						double b = s / System.Math.Abs(r);
 						double f = 2.0 * r * r * (1.0 - System.Math.Cos(b));
-						double c = (double)System.Math.Sign(db) * System.Math.Sqrt(f >= 0.0 ? f : 0.0);
-						double a = 0.5 * (double)System.Math.Sign(r) * b;
+						double c = System.Math.Sign(db) * System.Math.Sqrt(f >= 0.0 ? f : 0.0);
+						double a = 0.5 * System.Math.Sign(r) * b;
 						Vector3 D = new Vector3(currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.X, 0.0, currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.Z);
 						D.Normalize();
 						D.Rotate(Vector3.Down, a);
@@ -340,10 +341,8 @@ namespace OpenBveApi.Routes
 						t = 1.0;
 					}
 
-					double x1, y1, c1;
-					double x2, y2, c2;
-					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x1, out y1, out c1);
-					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i + 1].CsvRwAccuracyLevel, out x2, out y2, out c2);
+					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out double x1, out double y1, out double c1);
+					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i + 1].CsvRwAccuracyLevel, out double x2, out double y2, out double c2);
 					x = (1.0 - t) * x1 + t * x2;
 					y = (1.0 - t) * y1 + t * y2;
 					c = (1.0 - t) * c1 + t * c2;

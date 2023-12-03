@@ -6,11 +6,6 @@ using System.Security.Cryptography;
 
 namespace OpenBveApi {
 
-	/* ----------------------------------------
-	 * TODO: This part of the API is unstable.
-	 *       Modifications can be made at will.
-	 * ---------------------------------------- */
-
 	/// <summary>Provides path-related functions for accessing files and directories in a cross-platform manner.</summary>
 	public static partial class Path {
 		
@@ -28,7 +23,15 @@ namespace OpenBveApi {
 		/// <param name="allowQueryStr">If a part similar to a URL query string at the end of the path should be preserved.</param>
 		/// <returns>A platform-specific absolute path to the specified directory.</returns>
 		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
-		public static string CombineDirectory(string absolute, string relative, bool allowQueryStr = false) {
+		public static string CombineDirectory(string absolute, string relative, bool allowQueryStr) {
+			if (string.IsNullOrEmpty(absolute))
+			{
+				throw new ArgumentException("The absolute path was empty.");
+			}
+			if (string.IsNullOrEmpty(relative))
+			{
+				throw new ArgumentException("The relative path was empty.");
+			}
             int index = relative.IndexOf("??", StringComparison.Ordinal);
 			if (index >= 0) {
 				string directory = CombineDirectory(absolute, relative.Substring(0, index).TrimEnd());
@@ -60,7 +63,7 @@ namespace OpenBveApi {
 						 * period, jump one directory up.
 						 * */
 						for (int j = 1; j < parts[i].Length; j++) {
-							absolute = System.IO.Path.GetDirectoryName(absolute);
+							absolute = Path.GetDirectoryName(absolute);
 						}
 					} else {
 						/*
@@ -110,13 +113,30 @@ namespace OpenBveApi {
 			}
 			return absolute + queryString;
 		}
-		
+
+		/// <summary>Combines a platform-specific absolute path with a platform-independent relative path that points to a directory.</summary>
+		/// <param name="absolute">The platform-specific absolute path.</param>
+		/// <param name="relative">The platform-independent relative path.</param>
+		/// <returns>A platform-specific absolute path to the specified directory.</returns>
+		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
+		public static string CombineDirectory(string absolute, string relative) {
+			return CombineDirectory(absolute, relative, false);
+		}
+
 		/// <summary>Combines a platform-specific absolute path with a platform-independent relative path that points to a file.</summary>
 		/// <param name="absolute">The platform-specific absolute path.</param>
 		/// <param name="relative">The platform-independent relative path.</param>
 		/// <returns>Whether the operation succeeded and the specified file was found.</returns>
 		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
 		public static string CombineFile(string absolute, string relative) {
+			if (string.IsNullOrEmpty(absolute))
+			{
+				throw new ArgumentException("The absolute path was empty.");
+			}
+			if (string.IsNullOrEmpty(relative))
+			{
+				throw new ArgumentException("The relative path was empty.");
+			}
             int index = relative.IndexOf("??", StringComparison.Ordinal);
 			if (index >= 0) {
 				string file = CombineFile(absolute, relative.Substring(0, index).TrimEnd());
@@ -150,7 +170,7 @@ namespace OpenBveApi {
 						 * period, jump one directory up.
 						 * */
 						for (int j = 1; j < parts[i].Length; j++) {
-							absolute = System.IO.Path.GetDirectoryName(absolute);
+							absolute = Path.GetDirectoryName(absolute);
 						}
 					} else if (i == parts.Length - 1) {
 						/*
@@ -218,6 +238,17 @@ namespace OpenBveApi {
 		{
 			char[] a = System.IO.Path.GetInvalidFileNameChars();
 			char[] b = System.IO.Path.GetInvalidPathChars();
+
+			if (!IsAbsolutePath(Expression))
+			{
+				if (Expression.IndexOfAny(InvalidPathChars) != -1)
+				{
+					// Check our platform independant list first
+					return true;
+				}
+			}
+			
+
 			for (int i = 0; i < Expression.Length; i++)
 			{
 				for (int j = 0; j < a.Length; j++)
@@ -305,6 +336,31 @@ namespace OpenBveApi {
 					return BitConverter.ToString(checksum).Replace("-", string.Empty);
 				}
 			}
+		}
+
+		/*
+		 * Provide easy mirrors to the System.IO.Path functions
+		 */
+
+		/// <summary>Returns the directory information for the specified path string</summary>
+		/// <param name="path">The path string</param>
+		public static string GetDirectoryName(string path)
+		{
+			return System.IO.Path.GetDirectoryName(path);
+		}
+
+		/// <summary>Returns the file name and extension for the specificed path string</summary>
+		/// <param name="path">The path string</param>
+		public static string GetFileName(string path)
+		{
+			return System.IO.Path.GetFileName(path);
+		}
+
+		/// <summary>Returns the file name for the specificed path string</summary>
+		/// <param name="path">The path string</param>
+		public static string GetFileNameWithoutExtension(string path)
+		{
+			return System.IO.Path.GetFileNameWithoutExtension(path);
 		}
 	}
 }

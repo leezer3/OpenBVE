@@ -79,12 +79,14 @@ namespace OpenBveApi.Interface
 
 				internal XliffFile(TextReader reader, string languageCode)
 				{
+					// ReSharper disable PossibleNullReferenceException
+					// Exceptions will propagate up the load chain anyway
 					XDocument xml = XDocument.Load(reader);
 					XNamespace xmlns = xml.Root.Name.Namespace;
 					XElement body = xml.Root.Element(xmlns + "file").Element(xmlns + "body");
-
 					Groups = body.Elements(xmlns + "group").Select(g => new Group(xmlns, g, languageCode)).ToArray();
 					Units = body.Elements(xmlns + "trans-unit").Select(t => new Unit(xmlns, t, languageCode)).Where(t => !string.IsNullOrEmpty(t.Value)).ToArray();
+					// ReSharper restore PossibleNullReferenceException
 				}
 			}
 
@@ -262,6 +264,30 @@ namespace OpenBveApi.Interface
 					{
 						InterfaceStrings[i].Name = InterfaceStrings[i].Name.Replace("openbve_", string.Empty);
 					}
+				}
+
+				for (int i = 0; i < myCommandInfos.Length; i++)
+				{
+					// try to set any untranslated commandinfo descriptions to something other than N/A
+					if (myCommandInfos[i].Command != Command.None && myCommandInfos[i].Description == "N/A")
+					{
+						for (int j = 0; j < Translations.AvailableLanguages.Count; j++)
+						{
+							if (Translations.AvailableLanguages[j].LanguageCode == "en-US")
+							{
+								for (int k = 0; k < Translations.AvailableLanguages[j].myCommandInfos.Length; k++)
+								{
+									if (Translations.AvailableLanguages[j].myCommandInfos[k].Command == myCommandInfos[i].Command)
+									{
+										myCommandInfos[i].Description = Translations.AvailableLanguages[j].myCommandInfos[k].Description;
+										break;
+									}
+								}
+								
+							}
+						}
+					}
+
 				}
 			}
 

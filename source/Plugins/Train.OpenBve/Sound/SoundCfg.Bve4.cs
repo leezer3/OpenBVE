@@ -27,21 +27,34 @@ namespace Train.OpenBve
 		/// <param name="trainFolder">The absolute on-disk path to the train's folder</param>
 		internal void Parse(string FileName, string trainFolder, TrainBase train)
 		{
-			//Default sound positions and radii
+			/*
+			 * NOTES:
+			 * ------
+			 *
+			 * BVE2 and BVE4 content shares common (hardcoded) sound radii & positions
+			 * Radius is used to define a sphere, in which the sound is audible at full
+			 * volume, attenuated outside
+			 *
+			 * These are terrible for realism (generally much too small, and may well
+			 * be in the 'wrong' position) but need to be retained for legacy purposes
+			 * 
+			 * The sound.xml format should be used if these are to be changed
+			 *
+			 */
 
-			//3D center of the car
+			// 3D center of the car
 			Vector3 center = Vector3.Zero;
-			//Positioned to the left of the car, but centered Y & Z
+			// Positioned to the left of the car, but centered Y & Z
 			Vector3 left = new Vector3(-1.3, 0.0, 0.0);
-			//Positioned to the right of the car, but centered Y & Z
+			// Positioned to the right of the car, but centered Y & Z
 			Vector3 right = new Vector3(1.3, 0.0, 0.0);
-			//Positioned at the front of the car, centered X and Y
+			// Positioned at the front of the car, centered X and Y
 			Vector3 front = new Vector3(0.0, 0.0, 0.5 * train.Cars[train.DriverCar].Length);
-			//Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
+			// Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
 			Vector3 panel = new Vector3(train.Cars[train.DriverCar].Driver.X, train.Cars[train.DriverCar].Driver.Y, train.Cars[train.DriverCar].Driver.Z + 1.0);
 
-			//Radius at which the sound is audible at full volume, presumably in m
-			//TODO: All radii are much too small in external mode, but we can't change them by default.....
+			
+			
 
 			Encoding Encoding = TextEncoding.GetSystemEncodingFromFile(FileName);
 
@@ -80,7 +93,7 @@ namespace Train.OpenBve
 			{
 				Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid file format encountered in " + FileName + ". The first line is expected to be \"Version 1.0\".");
 			}
-			string[] MotorFiles = new string[] { };
+			Dictionary<int, string> MotorFiles = new Dictionary<int, string>();
 			double invfac = Lines.Count == 0 ? 0.1 : 0.1 / Lines.Count;
 			for (int i = 0; i < Lines.Count; i++)
 			{
@@ -114,18 +127,13 @@ namespace Train.OpenBve
 									{
 										for (int c = 0; c < train.Cars.Length; c++)
 										{
-											if(train.Cars[c].Sounds.Run == null)
+											if (train.Cars[c].Run.Sounds.ContainsKey(k))
 											{
-												train.Cars[c].Sounds.Run = new Dictionary<int, CarSound>();
-											}
-
-											if (train.Cars[c].Sounds.Run.ContainsKey(k))
-											{
-												train.Cars[c].Sounds.Run[k] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
+												train.Cars[c].Run.Sounds[k] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
 											}
 											else
 											{
-												train.Cars[c].Sounds.Run.Add(k, new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center));
+												train.Cars[c].Run.Sounds.Add(k, new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center));
 											}
 										}
 									}
@@ -156,13 +164,13 @@ namespace Train.OpenBve
 									{
 										for (int c = 0; c < train.Cars.Length; c++)
 										{
-											if (train.Cars[c].Sounds.Flange.ContainsKey(k))
+											if (train.Cars[c].Flange.Sounds.ContainsKey(k))
 											{
-												train.Cars[c].Sounds.Flange[k] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
+												train.Cars[c].Flange.Sounds[k] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
 											}
 											else
 											{
-												train.Cars[c].Sounds.Flange.Add(k, new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center));
+												train.Cars[c].Flange.Sounds.Add(k, new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center));
 											}
 										}
 									}
@@ -191,15 +199,20 @@ namespace Train.OpenBve
 								{
 									if (k >= 0)
 									{
-										if (k >= MotorFiles.Length)
+										if (!MotorFiles.ContainsKey(k))
 										{
-											Array.Resize(ref MotorFiles, k + 1);
+											MotorFiles.Add(k, Path.CombineFile(trainFolder, b));
 										}
-										MotorFiles[k] = Path.CombineFile(trainFolder, b);
+										else
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, true, "A duplicate MotorSound with index " + k + " was declared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											MotorFiles[k] = Path.CombineFile(trainFolder, b);
+										}
+										
 										if (!System.IO.File.Exists(MotorFiles[k]))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Error, true, "File " + MotorFiles[k] + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-											MotorFiles[k] = null;
+											MotorFiles[k] = string.Empty;
 										}
 									}
 									else
@@ -353,14 +366,14 @@ namespace Train.OpenBve
 									case "left":
 										for (int c = 0; c < train.Cars.Length; c++)
 										{
-											train.Cars[c].Sounds.SpringL = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, left);
+											train.Cars[c].Suspension.SpringL = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, left);
 										}
 
 										break;
 									case "right":
 										for (int c = 0; c < train.Cars.Length; c++)
 										{
-											train.Cars[c].Sounds.SpringR = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, right);
+											train.Cars[c].Suspension.SpringR = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.smallRadius, right);
 										}
 
 										break;
@@ -385,7 +398,7 @@ namespace Train.OpenBve
 								{
 									switch (a.ToLowerInvariant())
 									{
-										//PRIMARY HORN (Enter)
+										// PRIMARY HORN (Enter)
 										case "primarystart":
 											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var primaryStart);
 											train.Cars[train.DriverCar].Horns[0].StartSound = primaryStart as SoundBuffer;
@@ -406,7 +419,7 @@ namespace Train.OpenBve
 											train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
 											train.Cars[train.DriverCar].Horns[0].Loop = false;
 											break;
-										//SECONDARY HORN (Numpad Enter)
+										// SECONDARY HORN (Numpad Enter)
 										case "secondarystart":
 											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.largeRadius, out var secondaryStart);
 											train.Cars[train.DriverCar].Horns[1].StartSound = secondaryStart as SoundBuffer;
@@ -427,7 +440,7 @@ namespace Train.OpenBve
 											train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
 											train.Cars[train.DriverCar].Horns[1].Loop = false;
 											break;
-										//MUSIC HORN
+										// MUSIC HORN
 										case "musicstart":
 											Plugin.currentHost.RegisterSound(Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius, out var musicStart);
 											train.Cars[train.DriverCar].Horns[2].StartSound = musicStart as SoundBuffer;
@@ -523,17 +536,14 @@ namespace Train.OpenBve
 								{
 									if (k >= 0)
 									{
-										int n = train.Cars[train.DriverCar].Sounds.Plugin.Length;
-										if (k >= n)
+										if (!train.Cars[train.DriverCar].Sounds.Plugin.ContainsKey(k))
 										{
-											Array.Resize(ref train.Cars[train.DriverCar].Sounds.Plugin, k + 1);
-											for (int h = n; h < k; h++)
-											{
-												train.Cars[train.DriverCar].Sounds.Plugin[h] = new CarSound();
-											}
+											train.Cars[train.DriverCar].Sounds.Plugin.Add(k, new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel));
 										}
-
-										train.Cars[train.DriverCar].Sounds.Plugin[k] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
+										else
+										{
+											train.Cars[train.DriverCar].Sounds.Plugin[k] = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.tinyRadius, panel);
+										}
 									}
 									else
 									{
@@ -787,14 +797,15 @@ namespace Train.OpenBve
 						i--; break;
 				}
 			}
-			// motor sound
+			// Assign motor sounds to appropriate cars
 			for (int c = 0; c < train.Cars.Length; c++)
 			{
 				if (train.Cars[c].Specs.IsMotorCar)
 				{
-					if (train.Cars[c].Sounds.Motor is BVEMotorSound motorSound)
+					if (train.Cars[c].Sounds.Motor == null)
 					{
-						train.Cars[c].Sounds.Motor.Position = center;
+						BVEMotorSound motorSound = new BVEMotorSound(train.Cars[c], 18.0, Plugin.MotorSoundTables);
+						motorSound.Position = center;
 						for (int i = 0; i < motorSound.Tables.Length; i++)
 						{
 							motorSound.Tables[i].Buffer = null;
@@ -802,13 +813,15 @@ namespace Train.OpenBve
 							for (int j = 0; j < motorSound.Tables[i].Entries.Length; j++)
 							{
 								int index = motorSound.Tables[i].Entries[j].SoundIndex;
-								if (index >= 0 && index < MotorFiles.Length && MotorFiles[index] != null)
+								if (MotorFiles.ContainsKey(index) && !string.IsNullOrEmpty(MotorFiles[index]))
 								{
 									Plugin.currentHost.RegisterSound(MotorFiles[index], SoundCfgParser.mediumRadius, out var mS);
 									motorSound.Tables[i].Entries[j].Buffer = mS as SoundBuffer;
 								}
 							}
 						}
+
+						train.Cars[c].Sounds.Motor = motorSound;
 					}
 					else
 					{

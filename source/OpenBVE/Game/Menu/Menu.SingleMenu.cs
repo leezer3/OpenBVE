@@ -30,8 +30,7 @@ namespace OpenBve
 			/// <summary>The absolute width</summary>
 			public readonly double Width = 0;
 			/// <summary>The absolute height</summary>
-			public readonly double Height = 0; 
-			private readonly double MaxWidth;
+			public readonly double Height = 0;
 
 			private int lastSelection = int.MaxValue;
 			private int currentSelection;
@@ -63,14 +62,11 @@ namespace OpenBve
 			/********************
 				MENU C'TOR
 			*********************/
-			public SingleMenu(MenuType menuType, int data = 0, double maxWidth = 0)
+			public SingleMenu(MenuType menuType, int data = 0, double MaxWidth = 0)
 			{
-				MaxWidth = maxWidth;
 				Type = menuType;
-				int i, menuItem;
+				int i;
 				int jump = 0;
-				Vector2 size;
-
 				Align = TextAlignment.TopMiddle;
 				Height = Width = 0;
 				Selection = 0;                      // defaults to first menu item
@@ -98,7 +94,7 @@ namespace OpenBve
 						if (!Interface.CurrentOptions.KioskMode)
 						{
 							//Don't allow quitting or customisation of the controls in kiosk mode
-							Items[1] = new MenuCommand(Translations.GetInterfaceString("options"), MenuTag.Options, 0);
+							Items[1] = new MenuCommand(Translations.GetInterfaceString("options_title"), MenuTag.Options, 0);
 							Items[2] = new MenuCommand(Translations.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
 							Items[3] = new MenuCommand(Translations.GetInterfaceString("packages_title"), MenuTag.Packages, 0);
 							Items[4] = new MenuCommand(Translations.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
@@ -224,8 +220,7 @@ namespace OpenBve
 									Icon icon = Icon.ExtractAssociatedIcon(potentialFiles[j]);
 									if (icon != null)
 									{
-										Texture t;
-										Program.CurrentHost.RegisterTexture(icon.ToBitmap(), new TextureParameters(null, null), out t);
+										Program.CurrentHost.RegisterTexture(icon.ToBitmap(), new TextureParameters(null, null), out Texture t);
 										iconCache.Add(ext, t);
 										Items[totalEntries].Icon = t;
 									}
@@ -435,7 +430,7 @@ namespace OpenBve
 						break;
 					case MenuType.JumpToStation:    // list of stations to jump to
 													// count the number of available stations
-						menuItem = 0;
+						int menuItem = 0;
 						for (i = 0; i < Program.CurrentRoute.Stations.Length; i++)
 							if (Program.CurrentRoute.Stations[i].PlayerStops() & Program.CurrentRoute.Stations[i].Stops.Length > 0)
 								menuItem++;
@@ -478,9 +473,10 @@ namespace OpenBve
 					case MenuType.Controls:
 						//Refresh the joystick list
 						Program.Joysticks.RefreshJoysticks();
-						Items = new MenuEntry[Interface.CurrentControls.Length + 1];
+						Items = new MenuEntry[Interface.CurrentControls.Length + 2];
 						Items[0] = new MenuCommand(Translations.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
-						int ci = 1;
+						Items[1] = new MenuCommand(Translations.GetInterfaceString("controls_reset"), MenuTag.ControlReset, 0);
+						int ci = 2;
 						for (i = 0; i < Interface.CurrentControls.Length; i++)
 						{
 							if (Interface.CurrentControls[i].Command != Translations.Command.None)
@@ -576,6 +572,13 @@ namespace OpenBve
 						Items[2] = new MenuCommand(" ", MenuTag.None, 0);
 						Items[3] = new MenuCommand(Translations.GetInterfaceString("menu_assign"), MenuTag.None, 0);
 						break;
+					case MenuType.ControlReset:
+						Items = new MenuEntry[3];
+						Items[0] = new MenuCaption(Translations.GetInterfaceString("controls_reset_question"));
+						Items[1] = new MenuCommand(Translations.GetInterfaceString("start_train_default_yes"), MenuTag.Yes, 0);
+						Items[2] = new MenuCommand(Translations.GetInterfaceString("start_train_default_no"), MenuTag.No, 0);
+						Selection = 1;
+						break;
 					case MenuType.TrainDefault:
 						Interface.CurrentOptions.TrainFolder = Loading.GetDefaultTrainFolder(currentFile);
 						bool canLoad = false;
@@ -611,7 +614,7 @@ namespace OpenBve
 					{
 						continue;
 					}
-					size = Game.Menu.MenuFont.MeasureString(Items[i].Text);
+					Vector2 size = Game.Menu.MenuFont.MeasureString(Items[i].Text);
 					if (Items[i].Icon != null)
 					{
 						size.X += size.Y * 1.25;

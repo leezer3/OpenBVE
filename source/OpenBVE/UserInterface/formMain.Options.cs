@@ -16,8 +16,7 @@ namespace OpenBve {
 		private void comboboxLanguages_SelectedIndexChanged(object sender, EventArgs e) {
 			if (this.Tag != null) return;
 			string Folder = Program.FileSystem.GetDataFolder("Flags");
-			string newImage;
-			if (Translations.SelectedLanguage(Folder, ref Interface.CurrentOptions.LanguageCode, comboboxLanguages, out newImage))
+			if (Translations.SelectedLanguage(Folder, ref Interface.CurrentOptions.LanguageCode, comboboxLanguages, out string newImage))
 			{
 				pictureboxLanguage.Image = ImageExtensions.FromFile(newImage);
 				ApplyLanguage();
@@ -65,14 +64,7 @@ namespace OpenBve {
 				UpdateInputDeviceListViewItem(Items[i], i, false);
 			}
 			listviewInputDevice.Items.AddRange(Items);
-			if (Items.Length != 0)
-			{
-				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-			}
-			else
-			{
-				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
-			}
+			listviewInputDevice.AutoResizeColumns(Items.Length != 0 ? ColumnHeaderAutoResizeStyle.ColumnContent : ColumnHeaderAutoResizeStyle.None);
 		}
 
 		private void UpdateInputDeviceListViewItem(ListViewItem Item, int Index, bool ResizeColumns) {
@@ -147,7 +139,7 @@ namespace OpenBve {
 			}
 		}
 		
-		private void listviewInputDevice_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void listviewInputDevice_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
 			if (listviewInputDevice.SelectedIndices.Count == 1)
 			{

@@ -41,8 +41,7 @@ namespace OpenBve
 			{
 				for (int i = 0; i < AnimatedWorldObjects.Length; i++)
 				{
-					var obj = AnimatedWorldObjects[i] as TrackFollowingObject;
-					if (obj != null)
+					if (AnimatedWorldObjects[i] is TrackFollowingObject obj)
 					{
 						//Track followers should be reset if we jump between stations
 						obj.FrontAxleFollower.TrackPosition = ObjectManager.AnimatedWorldObjects[i].TrackPosition + obj.FrontAxlePosition;

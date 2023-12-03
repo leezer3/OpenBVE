@@ -64,7 +64,7 @@ namespace OpenBveApi.Objects
 					Object.Mesh.Faces[mf + i] = Faces[i];
 					for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
 					{
-						Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort) mv;
+						Object.Mesh.Faces[mf + i].Vertices[j].Index += mv;
 					}
 
 					Object.Mesh.Faces[mf + i].Material += (ushort) mm;
@@ -90,7 +90,7 @@ namespace OpenBveApi.Objects
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
 					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
 					{
-						Textures.Texture tday;
+						Texture tday;
 						if (Materials[i].Text != null)
 						{
 							Bitmap bitmap = null;
@@ -126,7 +126,7 @@ namespace OpenBveApi.Objects
 					Object.Mesh.Materials[mm + i].EmissiveColor = Materials[i].EmissiveColor;
 					if (Materials[i].NighttimeTexture != null)
 					{
-						Textures.Texture tnight;
+						Texture tnight;
 						if ((Materials[i].Flags & MaterialFlags.TransparentColor) != 0)
 						{
 							currentHost.RegisterTexture(Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)), out tnight);
@@ -145,8 +145,7 @@ namespace OpenBveApi.Objects
 
 					if (Materials[i].LightMap != null)
 					{
-						Textures.Texture lightMap;
-						currentHost.RegisterTexture(Materials[i].LightMap, new TextureParameters(null, Color24.White), out lightMap);
+						currentHost.RegisterTexture(Materials[i].LightMap, new TextureParameters(null, Color24.White), out Texture lightMap);
 						Object.Mesh.Materials[mm + i].LightMapTexture = lightMap;
 					}
 
@@ -166,6 +165,12 @@ namespace OpenBveApi.Objects
 				Vertices[i].Coordinates.Y += y;
 				Vertices[i].Coordinates.Z += z;
 			}
+		}
+
+		/// <summary>Scales the MeshBuilder by the given value</summary>
+		public void ApplyScale(Vector3 scale)
+		{
+			ApplyScale(scale.X, scale.Y, scale.Z);
 		}
 
 		/// <summary>Scales the MeshBuilder by the given values</summary>
@@ -194,7 +199,7 @@ namespace OpenBveApi.Objects
 					double u = nx2 * rx2 + ny2 * ry2 + nz2 * rz2;
 					if (u != 0.0)
 					{
-						u = (float) System.Math.Sqrt((double) ((nx2 + ny2 + nz2) / u));
+						u = (float) System.Math.Sqrt((nx2 + ny2 + nz2) / u);
 						Faces[i].Vertices[j].Normal.X *= rx * u;
 						Faces[i].Vertices[j].Normal.Y *= ry * u;
 						Faces[i].Vertices[j].Normal.Z *= rz * u;
@@ -308,6 +313,18 @@ namespace OpenBveApi.Objects
 						Faces[j].Vertices[k].Normal -= d * n;
 						Faces[j].Vertices[k].Normal.Normalize();
 					}
+				}
+			}
+		}
+
+		/// <summary>Applies a color to all materials in the MeshBuilder</summary>
+		public void ApplyColor(Color32 color, bool emissive) {
+			for (int i = 0; i < Materials.Length; i++) {
+				if (emissive) {
+					Materials[i].EmissiveColor = (Color24)color;
+					Materials[i].Flags |= MaterialFlags.Emissive;
+				} else {
+					Materials[i].Color = color;
 				}
 			}
 		}

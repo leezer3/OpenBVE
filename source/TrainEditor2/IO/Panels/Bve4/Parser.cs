@@ -20,7 +20,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 
 			CultureInfo culture = CultureInfo.InvariantCulture;
 			string[] lines = File.ReadAllLines(fileName, TextEncoding.GetSystemEncodingFromFile(fileName));
-			string basePath = System.IO.Path.GetDirectoryName(fileName);
+			string basePath = Path.GetDirectoryName(fileName);
 
 			for (int i = 0; i < lines.Length; i++)
 			{
@@ -77,9 +77,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 											case "left":
 												if (value.Any())
 												{
-													double left;
-
-													if (!NumberFormats.TryParseDoubleVb6(value, out left))
+													if (!NumberFormats.TryParseDoubleVb6(value, out double left))
 													{
 														Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line{(i + 1).ToString(culture)} in {fileName}");
 													}
@@ -90,9 +88,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 											case "right":
 												if (value.Any())
 												{
-													double right;
-
-													if (!NumberFormats.TryParseDoubleVb6(value, out right))
+													if (!NumberFormats.TryParseDoubleVb6(value, out double right))
 													{
 														Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
 													}
@@ -103,9 +99,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 											case "top":
 												if (value.Any())
 												{
-													double top;
-
-													if (!NumberFormats.TryParseDoubleVb6(value, out top))
+													if (!NumberFormats.TryParseDoubleVb6(value, out double top))
 													{
 														Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
 													}
@@ -116,9 +110,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 											case "bottom":
 												if (value.Any())
 												{
-													double bottom;
-
-													if (!NumberFormats.TryParseDoubleVb6(value, out bottom))
+													if (!NumberFormats.TryParseDoubleVb6(value, out double bottom))
 													{
 														Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
 													}
@@ -169,9 +161,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 											case "transparentcolor":
 												if (value.Any())
 												{
-													Color24 transparentColor;
-
-													if (!Color24.TryParseHexColor(value, out transparentColor))
+													if (!Color24.TryParseHexColor(value, out Color24 transparentColor))
 													{
 														Interface.AddMessage(MessageType.Error, false, $"HexColor is invalid in {key} in {section} at line {(i + 1).ToString(culture)} in {fileName}");
 													}

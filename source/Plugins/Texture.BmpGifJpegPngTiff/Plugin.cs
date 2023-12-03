@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.IO;
 using OpenBveApi;
+using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 
@@ -8,19 +9,16 @@ namespace Plugin {
 	/// <summary>Implements the texture interface.</summary>
 	public partial class Plugin : TextureInterface {
 		
-		// --- members ---
-		
 		/// <summary>The host that loaded the plugin.</summary>
 		internal static HostInterface CurrentHost;
 		/// <summary>The list of enabled hacks</summary>
 		internal static CompatabilityHacks EnabledHacks;
+
+		internal static BaseOptions CurrentOptions;
 		
-		// --- functions ---
-		
-		/// <summary>Called when the plugin is loaded.</summary>
-		/// <param name="host">The host that loaded the plugin.</param>
-		public override void Load(HostInterface host) {
+		public override void Load(HostInterface host, FileSystem fileSystem, BaseOptions options) {
 			CurrentHost = host;
+			CurrentOptions = options;
 		}
 
 		public override void SetCompatabilityHacks(CompatabilityHacks enabledHacks)
@@ -93,16 +91,24 @@ namespace Plugin {
 						if ((identifier1 & 0xFFFF) == 0x4D42) {
 							/* BMP */
 							return true;
-						} else if (identifier1 == 0x38464947 & ((identifier2 & 0xFFFF) == 0x6137 | (identifier2 & 0xFFFF) == 0x6139)) {
+						}
+
+						if (identifier1 == 0x38464947 & ((identifier2 & 0xFFFF) == 0x6137 | (identifier2 & 0xFFFF) == 0x6139)) {
 							/* GIF */
 							return true;
-						} else if (identifier1 == 0xE0FFD8FF | identifier1 == 0xE1FFD8FF) {
+						}
+
+						if (identifier1 == 0xE0FFD8FF | identifier1 == 0xE1FFD8FF) {
 							/* JPEG */
 							return true;
-						} else if (identifier1 == 0x474E5089 & identifier2 == 0x0A1A0A0D) {
+						}
+
+						if (identifier1 == 0x474E5089 & identifier2 == 0x0A1A0A0D) {
 							/* PNG */
 							return true;
-						} else if (identifier1 == 0x002A4949 | identifier1 == 0x2A004D4D) {
+						}
+
+						if (identifier1 == 0x002A4949 | identifier1 == 0x2A004D4D) {
 							/* TIFF */
 							return true;
 						}

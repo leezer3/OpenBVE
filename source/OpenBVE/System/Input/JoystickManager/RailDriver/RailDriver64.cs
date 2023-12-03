@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using PIEHid64Net;
 
 namespace OpenBve.Input
@@ -86,6 +86,11 @@ namespace OpenBve.Input
 					currentState[r] = data[r];
 				}
 			}
+		}
+
+		public override string ToString()
+		{
+			return "GUID: " + Guid + ", Name: " + Name;
 		}
 	}
 }

@@ -106,7 +106,7 @@ namespace OpenBveApi.FunctionScripting
 			Stack = new double[16]; int m = 0, s = 0;
 			Constants = new double[16]; int c = 0;
 			for (int i = 0; i < Arguments.Length; i++) {
-				double d; if (double.TryParse(Arguments[i], System.Globalization.NumberStyles.Float, Culture, out d)) {
+				if (double.TryParse(Arguments[i], System.Globalization.NumberStyles.Float, Culture, out double d)) {
 					if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 					InstructionSet[n] = Instructions.SystemConstant;
 					if (c >= Constants.Length) Array.Resize(ref Constants, Constants.Length << 1);
@@ -309,8 +309,7 @@ namespace OpenBveApi.FunctionScripting
 							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (Arguments[i - 2].ToLowerInvariant() == "cars")
 							{
-								int nCars;
-								NumberFormats.TryParseIntVb6(Arguments[i - 1], out nCars);
+								NumberFormats.TryParseIntVb6(Arguments[i - 1], out int nCars);
 								if (System.Math.Abs(nCars) != nCars)
 								{
 									//It makes absolutely no sense to test whether there are less than 0 cars in a train, so let's at least throw a broken script error
@@ -420,6 +419,10 @@ namespace OpenBveApi.FunctionScripting
 						case "destination":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.TrainDestination;
+							n++; s++; if (s >= m) m = s; break;
+						case "length":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.TrainLength;
 							n++; s++; if (s >= m) m = s; break;
 						case "speed":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
@@ -575,10 +578,12 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.RightDoorsTargetIndex;
 							n++; break;
+						case "doorbuttonl":
 						case "leftdoorbutton":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.LeftDoorButton;
 							n++; s++; if (s >= m) m = s; break;
+						case "doorbuttonr":
 						case "rightdoorbutton":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.RightDoorButton;
@@ -594,6 +599,10 @@ namespace OpenBveApi.FunctionScripting
 						case "stationadjustalarm":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.StationAdjustAlarm;
+							n++; s++; if (s >= m) m = s; break;
+						case "headlights":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.Headlights;
 							n++; s++; if (s >= m) m = s; break;
 						// train: handles
 						case "reversernotch":
@@ -743,6 +752,10 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.DistanceNextStation;
 							n++; s++; if (s >= m) m = s; break;
+						case "distancelaststation":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.DistanceLastStation;
+							n++; s++; if (s >= m) m = s; break;
 						case "stopsnextstation":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.StopsNextStation;
@@ -809,13 +822,38 @@ namespace OpenBveApi.FunctionScripting
 							n++; s++; if (s >= m) m = s; break;
 						case "wheelradius":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
-							InstructionSet[n] = Instructions.BrakeBrakePipe;
+							InstructionSet[n] = Instructions.WheelRadius;
 							n++; s++; if (s >= m) m = s; break;
 						case "wheelradiusindex":
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
-							InstructionSet[n] = Instructions.BrakeBrakePipeOfCar;
+							InstructionSet[n] = Instructions.WheelRadiusOfCar;
 							n++; break;
+						case "wheelslip":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.WheelSlip;
+							n++; s++; if (s >= m) m = s; break;
+						case "wheelslipindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.WheelSlipCar;
+							n++; break;
+						case "sanders":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.Sanders;
+							n++; s++; if (s >= m) m = s; break;
+						case "sandlevel":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.SandLevel;
+							n++; s++; if (s >= m) m = s; break;
+						case "sandshots":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.SandShots;
+							n++; s++; if (s >= m) m = s; break;
+						case "ambienttemperature":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.AmbientTemperature;
+							n++; s++; if (s >= m) m = s; break;
 						// default
 						default:
 							throw new System.IO.InvalidDataException("Unknown command " + Arguments[i] + " encountered in function script " + Expression);

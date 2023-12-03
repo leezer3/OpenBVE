@@ -44,10 +44,7 @@ namespace OpenBveApi.Math
 		/// <summary>The first column of the matrix</summary>
 		public Vector4 Column0
 		{
-			get
-			{
-				return new Vector4(Row0.X, Row1.X, Row2.X, Row3.X);
-			}
+			get => new Vector4(Row0.X, Row1.X, Row2.X, Row3.X);
 			set
 			{
 				Row0.X = value.X;
@@ -60,10 +57,7 @@ namespace OpenBveApi.Math
 		/// <summary>The second column of the matrix</summary>
 		public Vector4 Column1
 		{
-			get
-			{
-				return new Vector4(Row0.Y, Row1.Y, Row2.Y, Row3.Y);
-			}
+			get => new Vector4(Row0.Y, Row1.Y, Row2.Y, Row3.Y);
 			set
 			{
 				Row0.Y = value.X;
@@ -76,10 +70,7 @@ namespace OpenBveApi.Math
 		/// <summary>The third column of the matrix</summary>
 		public Vector4 Column2
 		{
-			get
-			{
-				return new Vector4(Row0.Z, Row1.Z, Row2.Z, Row3.Z);
-			}
+			get => new Vector4(Row0.Z, Row1.Z, Row2.Z, Row3.Z);
 			set
 			{
 				Row0.Z = value.X;
@@ -92,10 +83,7 @@ namespace OpenBveApi.Math
 		/// <summary>The fourth column of the matrix</summary>
 		public Vector4 Column3
 		{
-			get
-			{
-				return new Vector4(Row0.W, Row1.W, Row2.W, Row3.W);
-			}
+			get => new Vector4(Row0.W, Row1.W, Row2.W, Row3.W);
 			set
 			{
 				Row0.W = value.X;
@@ -288,22 +276,22 @@ namespace OpenBveApi.Math
 			//https://www.cs.rit.edu/usr/local/pub/wrc/graphics/doc/opengl/books/blue/gluPerspective.html
 			if (fieldOfViewY <= 0 || fieldOfViewY > System.Math.PI)
 			{
-				throw new ArgumentOutOfRangeException("fieldOfViewY", "fieldOfViewY must be positive and less than Pi");
+				throw new ArgumentOutOfRangeException("fieldOfViewY", @"fieldOfViewY must be positive and less than Pi");
 			}
 
 			if (aspectRatio <= 0)
 			{
-				throw new ArgumentOutOfRangeException("aspectRatio", "aspectRatio must be positive");
+				throw new ArgumentOutOfRangeException("aspectRatio", @"aspectRatio must be positive");
 			}
 
 			if (zNear <= 0)
 			{
-				throw new ArgumentOutOfRangeException("zNear", "zNear must be positive");
+				throw new ArgumentOutOfRangeException("zNear", @"zNear must be positive");
 			}
 
 			if (zFar <= 0)
 			{
-				throw new ArgumentOutOfRangeException("zFar", "zFar must be positive");
+				throw new ArgumentOutOfRangeException("zFar", @"zFar must be positive");
 			}
 
 			double yMax = zNear * System.Math.Tan(fieldOfViewY * System.Math.PI / 6.28319); //360 degrees in radians
@@ -327,17 +315,17 @@ namespace OpenBveApi.Math
 			//https://www.cs.rit.edu/usr/local/pub/wrc/graphics/doc/opengl/books/blue/glFrustum.html
 			if (zNear <= 0)
 			{
-				throw new ArgumentOutOfRangeException("zNear", "zNear must be positive");
+				throw new ArgumentOutOfRangeException("zNear", @"zNear must be positive");
 			}
 
 			if (zFar <= 0)
 			{
-				throw new ArgumentOutOfRangeException("zFar", "zFar must be positive");
+				throw new ArgumentOutOfRangeException("zFar", @"zFar must be positive");
 			}
 
 			if (zNear >= zFar)
 			{
-				throw new ArgumentOutOfRangeException("zNear", "zNear must be less than or equal to zFar");
+				throw new ArgumentOutOfRangeException("zNear", @"zNear must be less than or equal to zFar");
 			}
 
 			double x = (2.0 * zNear) / (right - left);
@@ -382,11 +370,13 @@ namespace OpenBveApi.Math
 		/// <returns>The final matrix</returns>
 		public static Matrix4D operator +(Matrix4D left, Matrix4D right)
 		{
-			Matrix4D result = new Matrix4D();
-			result.Row0 = left.Row0 + right.Row0;
-			result.Row1 = left.Row1 + right.Row1;
-			result.Row2 = left.Row2 + right.Row2;
-			result.Row3 = left.Row3 + right.Row3;
+			Matrix4D result = new Matrix4D
+			{
+				Row0 = left.Row0 + right.Row0,
+				Row1 = left.Row1 + right.Row1,
+				Row2 = left.Row2 + right.Row2,
+				Row3 = left.Row3 + right.Row3
+			};
 			return result;
 		}
 
@@ -396,11 +386,13 @@ namespace OpenBveApi.Math
 		/// <returns>The final matrix</returns>
 		public static Matrix4D operator -(Matrix4D left, Matrix4D right)
 		{
-			Matrix4D result = new Matrix4D();
-			result.Row0 = left.Row0 - right.Row0;
-			result.Row1 = left.Row1 - right.Row1;
-			result.Row2 = left.Row2 - right.Row2;
-			result.Row3 = left.Row3 - right.Row3;
+			Matrix4D result = new Matrix4D
+			{
+				Row0 = left.Row0 - right.Row0,
+				Row1 = left.Row1 - right.Row1,
+				Row2 = left.Row2 - right.Row2,
+				Row3 = left.Row3 - right.Row3
+			};
 			return result;
 		}
 
@@ -431,8 +423,7 @@ namespace OpenBveApi.Math
 		/// <returns>The resulting Matrix4.</returns>
 		public static Matrix4D CreateTranslation(double x, double y, double z)
 		{
-			Matrix4D result;
-			CreateTranslation(x, y, z, out result);
+			CreateTranslation(x, y, z, out Matrix4D result);
 			return result;
 		}
 
@@ -441,8 +432,7 @@ namespace OpenBveApi.Math
 		/// <returns>The resulting Matrix4.</returns>
 		public static Matrix4D CreateTranslation(Vector3 vector)
 		{
-			Matrix4D result;
-			CreateTranslation(vector.X, vector.Y, vector.Z, out result);
+			CreateTranslation(vector.X, vector.Y, vector.Z, out Matrix4D result);
 			return result;
 		}
 
@@ -495,8 +485,7 @@ namespace OpenBveApi.Math
 		/// <returns>A matrix instance.</returns>
 		public static Matrix4D CreateFromAxisAngle(Vector3 axis, double angle)
 		{
-			Matrix4D result;
-			CreateFromAxisAngle(axis, angle, out result);
+			CreateFromAxisAngle(axis, angle, out Matrix4D result);
 			return result;
 		}
 
@@ -507,9 +496,7 @@ namespace OpenBveApi.Math
 		/// <param name="result">Matrix result.</param>
 		public static void CreateFromQuaternion(ref Quaternion q, out Matrix4D result)
 		{
-			Vector3 axis;
-			double angle;
-			q.ToAxisAngle(out axis, out angle);
+			q.ToAxisAngle(out Vector3 axis, out double angle);
 			CreateFromAxisAngle(axis, angle, out result);
 		}
 
@@ -520,8 +507,7 @@ namespace OpenBveApi.Math
 		/// <returns>A matrix instance.</returns>
 		public static Matrix4D CreateFromQuaternion(Quaternion q)
 		{
-			Matrix4D result;
-			CreateFromQuaternion(ref q, out result);
+			CreateFromQuaternion(ref q, out Matrix4D result);
 			return result;
 		}
 
@@ -553,21 +539,15 @@ namespace OpenBveApi.Math
 		/// <summary>
 		/// The determinant of this matrix
 		/// </summary>
-		public double Determinant
-		{
-			get
-			{
-				return
-					Row0.X * Row1.Y * Row2.Z * Row3.W - Row0.X * Row1.Y * Row2.W * Row3.Z + Row0.X * Row1.Z * Row2.W * Row3.Y - Row0.X * Row1.Z * Row2.Y * Row3.W
-					+ Row0.X * Row1.W * Row2.Y * Row3.Z - Row0.X * Row1.W * Row2.Z * Row3.Y - Row0.Y * Row1.Z * Row2.W * Row3.X + Row0.Y * Row1.Z * Row2.X * Row3.W
-					- Row0.Y * Row1.W * Row2.X * Row3.Z + Row0.Y * Row1.W * Row2.Z * Row3.X - Row0.Y * Row1.X * Row2.Z * Row3.W + Row0.Y * Row1.X * Row2.W * Row3.Z
-					                                                                                                            + Row0.Z * Row1.W * Row2.X * Row3.Y - Row0.Z * Row1.W * Row2.Y * Row3.X + Row0.Z * Row1.X * Row2.Y * Row3.W - Row0.Z * Row1.X * Row2.W * Row3.Y
-					+ Row0.Z * Row1.Y * Row2.W * Row3.X - Row0.Z * Row1.Y * Row2.X * Row3.W - Row0.W * Row1.X * Row2.Y * Row3.Z + Row0.W * Row1.X * Row2.Z * Row3.Y
-					- Row0.W * Row1.Y * Row2.Z * Row3.X + Row0.W * Row1.Y * Row2.X * Row3.Z - Row0.W * Row1.Z * Row2.X * Row3.Y + Row0.W * Row1.Z * Row2.Y * Row3.X;
-			}
-		}
-		
-        /// <summary>
+		public double Determinant =>
+			Row0.X * Row1.Y * Row2.Z * Row3.W - Row0.X * Row1.Y * Row2.W * Row3.Z + Row0.X * Row1.Z * Row2.W * Row3.Y - Row0.X * Row1.Z * Row2.Y * Row3.W
+			+ Row0.X * Row1.W * Row2.Y * Row3.Z - Row0.X * Row1.W * Row2.Z * Row3.Y - Row0.Y * Row1.Z * Row2.W * Row3.X + Row0.Y * Row1.Z * Row2.X * Row3.W
+			- Row0.Y * Row1.W * Row2.X * Row3.Z + Row0.Y * Row1.W * Row2.Z * Row3.X - Row0.Y * Row1.X * Row2.Z * Row3.W + Row0.Y * Row1.X * Row2.W * Row3.Z
+			                                                                                                            + Row0.Z * Row1.W * Row2.X * Row3.Y - Row0.Z * Row1.W * Row2.Y * Row3.X + Row0.Z * Row1.X * Row2.Y * Row3.W - Row0.Z * Row1.X * Row2.W * Row3.Y
+			+ Row0.Z * Row1.Y * Row2.W * Row3.X - Row0.Z * Row1.Y * Row2.X * Row3.W - Row0.W * Row1.X * Row2.Y * Row3.Z + Row0.W * Row1.X * Row2.Z * Row3.Y
+			- Row0.W * Row1.Y * Row2.Z * Row3.X + Row0.W * Row1.Y * Row2.X * Row3.Z - Row0.W * Row1.Z * Row2.X * Row3.Y + Row0.W * Row1.Z * Row2.Y * Row3.X;
+
+		/// <summary>
         /// Calculate the inverse of the given matrix
         /// </summary>
         /// <param name="mat">The matrix to invert</param>

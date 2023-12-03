@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
+using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interop;
 using OpenBveApi.Runtime;
@@ -65,6 +67,15 @@ namespace TrainManager.SafetySystems {
 					SupportsAI = AISupport.Program;
 					AI = new HeiAtsAI(this);
 					break;
+				case "ats.dll":
+					switch (Path.GetFileName(train.TrainFolder.ToLowerInvariant()))
+					{
+						case "mtr sil c-train emu-fao":
+							SupportsAI = AISupport.Program;
+							AI = new MTRAutoAI(this);
+							break;
+					}
+					break;
 			}
 			LastTime = 0.0;
 			LastReverser = -2;
@@ -124,11 +135,12 @@ namespace TrainManager.SafetySystems {
 			if (externalCrashed)
 			{
 				//Yuck
-				for (int i = 0; i < Train.Cars[Train.DriverCar].Sounds.Plugin.Length; i++)
+				for (int i = 0; i < Train.Cars[Train.DriverCar].Sounds.Plugin.Count; i++)
 				{
-					if (Train.Cars[Train.DriverCar].Sounds.Plugin[i].IsPlaying)
+					int k = Train.Cars[Train.DriverCar].Sounds.Plugin.ElementAt(i).Key;
+					if (Train.Cars[Train.DriverCar].Sounds.Plugin[k].IsPlaying)
 					{
-						Train.Cars[Train.DriverCar].Sounds.Plugin[i].Stop();
+						Train.Cars[Train.DriverCar].Sounds.Plugin[k].Stop();
 					}
 				}
 				Train.UnloadPlugin();
@@ -154,14 +166,14 @@ namespace TrainManager.SafetySystems {
 					{
 						if (Sound[i] == SoundInstructions.Stop)
 						{
-							if (i < Train.Cars[Train.DriverCar].Sounds.Plugin.Length)
+							if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(i))
 							{
 								Train.Cars[Train.DriverCar].Sounds.Plugin[i].Stop();
 							}
 						}
 						else if (Sound[i] > SoundInstructions.Stop & Sound[i] <= SoundInstructions.PlayLooping)
 						{
-							if (i < Train.Cars[Train.DriverCar].Sounds.Plugin.Length)
+							if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(i))
 							{
 								SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer;
 								if (buffer != null)
@@ -180,7 +192,7 @@ namespace TrainManager.SafetySystems {
 						}
 						else if (Sound[i] == SoundInstructions.PlayOnce)
 						{
-							if (i < Train.Cars[Train.DriverCar].Sounds.Plugin.Length)
+							if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(i))
 							{
 								SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer;
 								if (buffer != null)

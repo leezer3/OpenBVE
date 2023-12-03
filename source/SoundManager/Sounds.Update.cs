@@ -35,20 +35,9 @@ namespace SoundManager
 				return;
 			}
 
-			if (model == SoundModels.Linear)
-			{
-				UpdateLinearModel(timeElapsed);
-			}
-			else
-			{
-				UpdateInverseModel(timeElapsed);
-			}
+			UpdateInverseModel(timeElapsed);
 		}
-
-		/// <summary>Updates the sound component. Should be called every frame.</summary>
-		/// <param name="timeElapsed">The time in seconds that elapsed since the last call to this function.</param>
-		protected abstract void UpdateLinearModel(double timeElapsed);
-
+		
 		/// <summary>Updates the sound component. Should be called every frame.</summary>
 		/// <param name="timeElapsed">The time in seconds that elapsed since the last call to this function.</param>
 		protected abstract void UpdateInverseModel(double timeElapsed);

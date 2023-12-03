@@ -24,7 +24,7 @@ namespace OpenBveApi.Objects
 		/// <param name="HalfDistance">The half distance of glow attenuation.</param>
 		public static void SplitAttenuationData(ushort Data, out GlowAttenuationMode Mode, out double HalfDistance) {
 			Mode = (GlowAttenuationMode)(Data >> 12);
-			HalfDistance = (double)(Data & 4095);
+			HalfDistance = Data & 4095;
 		}
 
 		/// <summary>Gets the current intensity glow intensity, using the glow attenuation factor</summary>
@@ -35,8 +35,7 @@ namespace OpenBveApi.Objects
 		/// <returns></returns>
 		public static double GetDistanceFactor(Matrix4D ModelMatrix, VertexTemplate[] Vertices, ref MeshFace Face, ushort GlowAttenuationData)
 		{
-			GlowAttenuationMode mode;
-			return GetDistanceFactor(ModelMatrix, Vertices, ref Face, GlowAttenuationData, out mode);
+			return GetDistanceFactor(ModelMatrix, Vertices, ref Face, GlowAttenuationData, out _);
 		}
 
 		/// <summary>Gets the current intensity glow intensity, using the glow attenuation factor</summary>
@@ -54,8 +53,7 @@ namespace OpenBveApi.Objects
 				return 1.0;
 			}
 
-			double halfdistance;
-			SplitAttenuationData(GlowAttenuationData, out mode, out halfdistance);
+			SplitAttenuationData(GlowAttenuationData, out mode, out double halfdistance);
 			int i = Face.Vertices[0].Index;
 			Vector3 d = new Vector3(Vertices[i].Coordinates.X, Vertices[i].Coordinates.Y, -Vertices[i].Coordinates.Z);
 			d.Transform(ModelMatrix, false);

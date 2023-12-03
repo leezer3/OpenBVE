@@ -249,8 +249,7 @@ namespace CsvRwRouteParser
 									if (j != 0) {
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $If directive must not appear within another statement" + Epilog);
 									} else {
-										double num;
-										if (double.TryParse(s, NumberStyles.Float, Culture, out num)) {
+										if (double.TryParse(s, NumberStyles.Float, Culture, out double num)) {
 											openIfs++;
 											Expressions[i].Text = string.Empty;
 											if (num == 0.0) {
@@ -371,7 +370,24 @@ namespace CsvRwRouteParser
 											file = args[2 * ia];
 											offset = 0.0;
 										}
-										files[ia] = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), file);
+
+										try
+										{
+											files[ia] = Path.CombineFile(Path.GetDirectoryName(FileName), file);
+										}
+										catch
+										{
+											continueWithNextExpression = true;
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The filename " + file + " contains invalid characters in " + t + Epilog);
+											for (int ta = i; ta < Expressions.Length - 1; ta++)
+											{
+												Expressions[ta] = Expressions[ta + 1];
+											}
+											Array.Resize(ref Expressions, Expressions.Length - 1);
+											i--;
+											break;
+										}
+										
 										offsets[ia] = offset;
 										if (!System.IO.File.Exists(files[ia])) {
 											continueWithNextExpression = true;
@@ -419,7 +435,6 @@ namespace CsvRwRouteParser
 												break;
 											}
 										}
-										Expression[] expr;
 										//Get the text encoding of our $Include file
 										System.Text.Encoding includeEncoding = TextEncoding.GetSystemEncodingFromFile(files[chosenIndex]);
 										if (!includeEncoding.Equals(Encoding) && includeEncoding.WindowsCodePage != Encoding.WindowsCodePage)
@@ -429,7 +444,7 @@ namespace CsvRwRouteParser
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The text encoding of the $Include file " + files[chosenIndex] + " does not match that of the base routefile.");
 										}
 										List<string> lines = System.IO.File.ReadAllLines(files[chosenIndex], includeEncoding).ToList();
-										PreprocessSplitIntoExpressions(files[chosenIndex], lines, out expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
+										PreprocessSplitIntoExpressions(files[chosenIndex], lines, out Expression[] expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
 										int length = Expressions.Length;
 										if (expr.Length == 0) {
 											for (int ia = i; ia < Expressions.Length - 1; ia++) {
@@ -452,8 +467,7 @@ namespace CsvRwRouteParser
 								case "$chr":
 								case "$chruni":
 									{
-										int x;
-										if (NumberFormats.TryParseIntVb6(s, out x)) {
+										if (NumberFormats.TryParseIntVb6(s, out int x)) {
 											if (x < 0)
 											{
 												//Must be non-negative
@@ -472,8 +486,7 @@ namespace CsvRwRouteParser
 									} break;
 								case "$chrascii":
 								{
-									int x;
-									if (NumberFormats.TryParseIntVb6(s, out x))
+									if (NumberFormats.TryParseIntVb6(s, out int x))
 									{
 										if (x < 0 || x > 127)
 										{
@@ -500,8 +513,8 @@ namespace CsvRwRouteParser
 										{
 											string s1 = s.Substring(0, m).TrimEnd();
 											string s2 = s.Substring(m + 1).TrimStart();
-											int x; if (NumberFormats.TryParseIntVb6(s1, out x)) {
-												int y; if (NumberFormats.TryParseIntVb6(s2, out y)) {
+											if (NumberFormats.TryParseIntVb6(s1, out int x)) {
+												if (NumberFormats.TryParseIntVb6(s2, out int y)) {
 													int z = x + (int)Math.Floor(Plugin.RandomNumberGenerator.NextDouble() * (y - x + 1));
 													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + z.ToString(Culture) + Expressions[i].Text.Substring(h + 1);
 												} else {
@@ -548,8 +561,7 @@ namespace CsvRwRouteParser
 												}
 												if (l < 0) break;
 											}
-											int x;
-											if (NumberFormats.TryParseIntVb6(s, out x)) {
+											if (NumberFormats.TryParseIntVb6(s, out int x)) {
 												if (x >= 0) {
 													while (x >= Subs.Length) {
 														Array.Resize(ref Subs, Subs.Length << 1);
@@ -565,8 +577,7 @@ namespace CsvRwRouteParser
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
 											}
 										} else {
-											int x;
-											if (NumberFormats.TryParseIntVb6(s, out x)) {
+											if (NumberFormats.TryParseIntVb6(s, out int x)) {
 												if (x >= 0 && x < Subs.Length && Subs[x] != null) {
 													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + Subs[x] + Expressions[i].Text.Substring(h + 1);
 												} else {
@@ -630,8 +641,7 @@ namespace CsvRwRouteParser
 						NumberCheck = string.Compare(s, "Railway", StringComparison.OrdinalIgnoreCase) == 0;
 					}
 				}
-				double x;
-				if (NumberCheck && NumberFormats.TryParseDouble(Expressions[i].Text, UnitFactors, out x)) {
+				if (NumberCheck && NumberFormats.TryParseDouble(Expressions[i].Text, UnitFactors, out double x)) {
 					x += Expressions[i].TrackPositionOffset;
 					if (x >= 0.0) {
 						if (Plugin.CurrentOptions.EnableBveTsHacks)

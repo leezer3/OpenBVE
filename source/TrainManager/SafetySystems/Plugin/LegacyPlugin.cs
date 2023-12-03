@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using TrainManager.Trains;
@@ -126,12 +127,12 @@ namespace TrainManager.SafetySystems
 		// --- constructors ---
 		internal Win32Plugin(string pluginFile, TrainBase train)
 		{
-			base.PluginTitle = System.IO.Path.GetFileName(pluginFile);
-			base.PluginValid = true;
-			base.PluginMessage = null;
-			base.Train = train;
-			base.Panel = new int[256];
-			base.SupportsAI = AISupport.None;
+			PluginTitle = System.IO.Path.GetFileName(pluginFile);
+			PluginValid = true;
+			PluginMessage = null;
+			Train = train;
+			Panel = new int[256];
+			SupportsAI = AISupport.None;
 			switch (PluginTitle.ToLowerInvariant())
 			{
 				case "ukdt.dll":
@@ -150,20 +151,29 @@ namespace TrainManager.SafetySystems
 					SupportsAI = AISupport.Program;
 					AI = new HeiAtsAI(this);
 					break;
+				case "ats.dll":
+					switch (Path.GetFileName(train.TrainFolder.ToLowerInvariant()))
+					{
+						case "mtr sil c-train emu-fao":
+							SupportsAI = AISupport.Program;
+							AI = new MTRAutoAI(this);
+							break;
+					}
+					break;
 			}
 			
-			base.LastTime = 0.0;
-			base.LastReverser = -2;
-			base.LastPowerNotch = -1;
-			base.LastBrakeNotch = -1;
-			base.LastAspects = new int[] { };
-			base.LastSection = -1;
-			base.LastException = null;
-			this.PluginFile = pluginFile;
-			this.Sound = new int[256];
-			this.LastSound = new int[256];
-			this.PanelHandle = new GCHandle();
-			this.SoundHandle = new GCHandle();
+			LastTime = 0.0;
+			LastReverser = -2;
+			LastPowerNotch = -1;
+			LastBrakeNotch = -1;
+			LastAspects = new int[] { };
+			LastSection = -1;
+			LastException = null;
+			PluginFile = pluginFile;
+			Sound = new int[256];
+			LastSound = new int[256];
+			PanelHandle = new GCHandle();
+			SoundHandle = new GCHandle();
 		}
 
 		// --- functions ---
@@ -174,11 +184,11 @@ namespace TrainManager.SafetySystems
 			retryLoad:
 			try
 			{
-				result = Win32LoadDLL(this.PluginFile, this.PluginFile);
+				result = Win32LoadDLL(PluginFile, PluginFile);
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 
@@ -207,7 +217,7 @@ namespace TrainManager.SafetySystems
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 
@@ -218,20 +228,20 @@ namespace TrainManager.SafetySystems
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 
 			if (version == 0 && System.IO.Path.GetFileName(PluginFile).ToLowerInvariant() != "ats2.dll" || version != 131072)
 			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + base.PluginTitle + " is of an unsupported version.");
+				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + PluginTitle + " is of an unsupported version.");
 				try
 				{
 					Win32Dispose();
 				}
 				catch (Exception ex)
 				{
-					base.LastException = ex;
+					LastException = ex;
 					throw;
 				}
 
@@ -251,7 +261,7 @@ namespace TrainManager.SafetySystems
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 
@@ -261,7 +271,7 @@ namespace TrainManager.SafetySystems
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 
@@ -301,7 +311,7 @@ namespace TrainManager.SafetySystems
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 		}
@@ -314,7 +324,7 @@ namespace TrainManager.SafetySystems
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 			if (SupportsAI == AISupport.Program)
@@ -348,7 +358,7 @@ namespace TrainManager.SafetySystems
 				win32Handles.Power = data.Handles.PowerNotch;
 				win32Handles.Reverser = data.Handles.Reverser;
 				win32Handles.ConstantSpeed = data.Handles.ConstSpeed ? ConstSpeedInstructions.Enable : ConstSpeedInstructions.Disable;
-				Win32Elapse(ref win32Handles.Brake, ref win32State.Location, ref base.Panel[0], ref this.Sound[0]);
+				Win32Elapse(ref win32Handles.Brake, ref win32State.Location, ref Panel[0], ref Sound[0]);
 				data.Handles.Reverser = win32Handles.Reverser;
 				data.Handles.PowerNotch = win32Handles.Power;
 				data.Handles.BrakeNotch = win32Handles.Brake;
@@ -362,30 +372,31 @@ namespace TrainManager.SafetySystems
 				}
 				else if (win32Handles.ConstantSpeed != ConstSpeedInstructions.Continue)
 				{
-					this.PluginValid = false;
+					PluginValid = false;
 				}
 
 				/*
 				 * Process the sound instructions
 				 * */
-				for (int i = 0; i < this.Sound.Length; i++)
+				for (int i = 0; i < Sound.Length; i++)
 				{
-					if (this.Sound[i] != this.LastSound[i])
+					if (Sound[i] != LastSound[i])
 					{
-						if (this.Sound[i] == SoundInstructions.Stop)
+						if (Sound[i] == SoundInstructions.Stop)
 						{
-							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length)
+							if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(i))
 							{
 								Train.Cars[Train.DriverCar].Sounds.Plugin[i].Stop();
 							}
+							
 						}
-						else if (this.Sound[i] > SoundInstructions.Stop & this.Sound[i] <= SoundInstructions.PlayLooping)
+						else if (Sound[i] > SoundInstructions.Stop & Sound[i] <= SoundInstructions.PlayLooping)
 						{
-							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length)
+							if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(i))
 							{
 								if (Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer != null)
 								{
-									double volume = (this.Sound[i] - SoundInstructions.Stop) / (double)(SoundInstructions.PlayLooping - SoundInstructions.Stop);
+									double volume = (Sound[i] - SoundInstructions.Stop) / (double)(SoundInstructions.PlayLooping - SoundInstructions.Stop);
 									if (Train.Cars[Train.DriverCar].Sounds.Plugin[i].IsPlaying)
 									{
 										Train.Cars[Train.DriverCar].Sounds.Plugin[i].Source.Volume = volume;
@@ -397,9 +408,9 @@ namespace TrainManager.SafetySystems
 								}
 							}
 						}
-						else if (this.Sound[i] == SoundInstructions.PlayOnce)
+						else if (Sound[i] == SoundInstructions.PlayOnce)
 						{
-							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length)
+							if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(i))
 							{
 								if (Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer != null)
 								{
@@ -407,27 +418,27 @@ namespace TrainManager.SafetySystems
 								}
 							}
 
-							this.Sound[i] = SoundInstructions.Continue;
+							Sound[i] = SoundInstructions.Continue;
 						}
-						else if (this.Sound[i] != SoundInstructions.Continue)
+						else if (Sound[i] != SoundInstructions.Continue)
 						{
-							this.PluginValid = false;
+							PluginValid = false;
 						}
 
-						this.LastSound[i] = this.Sound[i];
+						LastSound[i] = Sound[i];
 					}
 					else
 					{
-						if ((this.Sound[i] < SoundInstructions.Stop | this.Sound[i] > SoundInstructions.PlayLooping) && this.Sound[i] != SoundInstructions.PlayOnce & this.Sound[i] != SoundInstructions.Continue)
+						if ((Sound[i] < SoundInstructions.Stop | Sound[i] > SoundInstructions.PlayLooping) && Sound[i] != SoundInstructions.PlayOnce & Sound[i] != SoundInstructions.Continue)
 						{
-							this.PluginValid = false;
+							PluginValid = false;
 						}
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 		}
@@ -440,7 +451,7 @@ namespace TrainManager.SafetySystems
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 		}
@@ -453,7 +464,7 @@ namespace TrainManager.SafetySystems
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 		}
@@ -466,7 +477,7 @@ namespace TrainManager.SafetySystems
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 		}
@@ -479,7 +490,7 @@ namespace TrainManager.SafetySystems
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 		}
@@ -492,7 +503,7 @@ namespace TrainManager.SafetySystems
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 		}
@@ -505,7 +516,7 @@ namespace TrainManager.SafetySystems
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 		}
@@ -520,7 +531,7 @@ namespace TrainManager.SafetySystems
 				}
 				catch (Exception ex)
 				{
-					base.LastException = ex;
+					LastException = ex;
 					throw;
 				}
 			}
@@ -532,7 +543,7 @@ namespace TrainManager.SafetySystems
 				}
 				catch (Exception ex)
 				{
-					base.LastException = ex;
+					LastException = ex;
 					throw;
 				}
 			}
@@ -540,7 +551,7 @@ namespace TrainManager.SafetySystems
 
 		protected override void SetSignal(SignalData[] signal)
 		{
-			if (base.LastAspects.Length == 0 || signal[0].Aspect != base.LastAspects[0])
+			if (LastAspects.Length == 0 || signal[0].Aspect != LastAspects[0])
 			{
 				try
 				{
@@ -548,7 +559,7 @@ namespace TrainManager.SafetySystems
 				}
 				catch (Exception ex)
 				{
-					base.LastException = ex;
+					LastException = ex;
 					throw;
 				}
 			}
@@ -571,7 +582,7 @@ namespace TrainManager.SafetySystems
 			}
 			catch (Exception ex)
 			{
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 		}

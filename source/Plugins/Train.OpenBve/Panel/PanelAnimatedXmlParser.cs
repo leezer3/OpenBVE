@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using LibRender2;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -47,10 +50,10 @@ namespace Train.OpenBve
 				throw new InvalidDataException(FileName + " does not appear to be a valid XML file.");
 			}
 
-			IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
+			List<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated").ToList();
 
 			// Check this file actually contains OpenBVE panel definition elements
-			if (DocumentElements == null || !DocumentElements.Any())
+			if (DocumentElements == null || DocumentElements.Count == 0)
 			{
 				// We couldn't find any valid XML, so return false
 				throw new InvalidDataException(FileName + " is not a valid PanelAnimatedXML file.");
@@ -123,7 +126,7 @@ namespace Train.OpenBve
 							List<int> SoundIndices = new List<int>();
 							List<CommandEntry> CommandEntries = new List<CommandEntry>();
 							CommandEntry CommandEntry = new CommandEntry();
-
+							Bitmap cursorTexture = null;
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
 								string Key = KeyNode.Name.LocalName;
@@ -220,9 +223,20 @@ namespace Train.OpenBve
 
 										ParseTouchCommandEntryNode(FileName, KeyNode, CommandEntries);
 										break;
+									case "cursor":
+										string File = Path.CombineFile(TrainPath, Value);
+										if (System.IO.File.Exists(File))
+										{
+											cursorTexture = (Bitmap)Bitmap.FromFile(File);
+										}
+										break;
 								}
 							}
 							CreateTouchElement(CarSection.Groups[GroupIndex], Position, Size, JumpScreen, SoundIndices.ToArray(), CommandEntries.ToArray());
+							if (cursorTexture != null)
+							{
+								CarSection.Groups[GroupIndex].TouchElements[CarSection.Groups[GroupIndex].TouchElements.Length - 1].MouseCursor = new MouseCursor(Plugin.Renderer, string.Empty, cursorTexture);
+							}
 						}
 						break;
 					case "include":

@@ -22,8 +22,76 @@
 			<group id="openbve">
 				<group id="program">
 					<trans-unit id="title">
-						<source>openBVE</source>
-						<target>openBVE</target>
+						<source>OpenBVE</source>
+						<target>OpenBVE</target>
+					</trans-unit>
+				</group>
+				<group id="about">
+					<trans-unit id="title">
+						<source>About</source>
+						<target>About</target>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</source>
+						<target>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</target>
+					</trans-unit>
+					<trans-unit id="open_source_licenses">
+						<source>Open Source Licenses</source>
+						<target>Open Source Licenses</target>
+					</trans-unit>
+					<trans-unit id="open_source_licenses_header">
+						<source>OpenBVE makes use of several open-source libraries, whose licenses are reproduced below:</source>
+						<target>OpenBVE makes use of several open-source libraries, whose licenses are reproduced below:</target>
+					</trans-unit>
+					<trans-unit id="close">
+						<source>Close</source>
+						<target>Close</target>
+					</trans-unit>
+				</group>
+				<group id="bug_report">
+					<trans-unit id="title">
+						<source>Report Problem</source>
+						<target>Report Problem</target>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>This function will create a zip archive on your Desktop, containing the previous Simulation log and Crash log (If any), along with a text file containing the brief description of the problem entered below.\r\n\r\nPlease post this on the discussion board, or create a new issue on Github.</source>
+						<target>This function will create a zip archive on your Desktop, containing the previous Simulation log and Crash log (If any), along with a text file containing the brief description of the problem entered below.\r\n\r\nPlease post this on the discussion board, or create a new issue on Github.</target>
+					</trans-unit>
+					<trans-unit id="view_log_button">
+						<source>View...</source>
+						<target>View...</target>
+					</trans-unit>
+					<trans-unit id="view_log">
+						<source>View the previous log:</source>
+						<target>View the previous log:</target>
+					</trans-unit>
+					<trans-unit id="view_crash_log">
+						<source>View the previous crash log:</source>
+						<target>View the previous crash log:</target>
+					</trans-unit>
+					<trans-unit id="enter_description">
+						<source>Please enter a brief description of the problem:</source>
+						<target>Please enter a brief description of the problem:</target>
+					</trans-unit>
+					<trans-unit id="no_log">
+						<source>No simulation logs were found.</source>
+						<target>No simulation logs were found.</target>
+					</trans-unit>
+					<trans-unit id="no_crash_log">
+						<source>No crash logs were found.</source>
+						<target>No crash logs were found.</target>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save Bug Report</source>
+						<target>Save Bug Report</target>
+					</trans-unit>
+					<trans-unit id="saved">
+						<source>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
+						<target>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</target>
+					</trans-unit>
+					<trans-unit id="save_failed">
+						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</source>
+						<target>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</target>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -62,6 +130,10 @@
 					<trans-unit id="updates_old">
 						<source>You already have the latest version.</source>
 						<target>You already have the latest version.</target>
+					</trans-unit>
+					<trans-unit id="updates_daily">
+						<source>The most recent nightly build from [date] is available for download.</source>
+						<target>The most recent nightly build from [date] is available for download.</target>
 					</trans-unit>
 					<trans-unit id="updates_new">
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
@@ -211,6 +283,9 @@
 					</trans-unit>
 					<trans-unit id="database_invalid_xml">
 						<source>The package database XML was invalid, and has been re-created.</source>
+					</trans-unit>
+					<trans-unit id="error_busy_thread">
+						<source>The package worker thread is currently busy. Please wait a moment and try again.</source>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -649,6 +724,10 @@
 						<source>Remove</source>
 						<target>Remove</target>
 					</trans-unit>
+					<trans-unit id="creation_dependancies_skip_if_none">
+						<source>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</source>
+						<target>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</target>
+					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
 						<target>Package details and dependancies may be assigned in the following steps.</target>
@@ -963,6 +1042,9 @@
 						<source>Export...</source>
 						<target>Export...</target>
 					</trans-unit>
+					<trans-unit id="reset_question">
+						<source>Reset the current control configuration to the defaults?</source>
+					</trans-unit>
 					<trans-unit id="reset">
 						<source>Reset to defaults</source>
 						<target>Reset to defaults</target>
@@ -1154,8 +1236,8 @@
 						<target>Launch</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
-						<target>No RailDriver conrollers detected.</target>
+						<source>No RailDriver controllers detected.</source>
+						<target>No RailDriver controllers detected.</target>
 					</trans-unit>
 					<trans-unit id="config_error">
 						<source>Error loading RailDriver calibration file.</source>
@@ -1459,6 +1541,10 @@
 						<source>Show error messages</source>
 						<target>Show error messages</target>
 					</trans-unit>
+					<trans-unit id="verbosity_accessibilityaids">
+						<source>Accessibility Aids</source>
+						<target>Accessibility Aids</target>
+					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
 						<target>Advanced Options</target>
@@ -1481,6 +1567,10 @@
 					<trans-unit id="advanced_unload_textures">
 						<source>Unload unused textures</source>
 						<target>Unload unused textures</target>
+					</trans-unit>
+					<trans-unit id="advanced_cursor">
+						<source>Cursor</source>
+						<target>Cursor</target>
 					</trans-unit>
 					<trans-unit id="other">
 						<source>Other</source>
@@ -1562,6 +1652,10 @@
 						<source>Large</source>
 						<target>Large</target>
 					</trans-unit>
+					<trans-unit id="font">
+						<source>Font:</source>
+						<target>Font:</target>
+					</trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
 						<target>Attempt to fix transparency issues in older content.</target>
@@ -1620,6 +1714,9 @@
 					</trans-unit>
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
+					</trans-unit>
+					<trans-unit id="object_parser">
+						<source>Object Parser</source>
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>
@@ -2256,473 +2353,384 @@
 				<group id="commands">
 					<trans-unit id="power_increase">
 						<source>Increases power by one notch for trains with two handles</source>
-						<target>Increases power by one notch for trains with two handles</target>
 					</trans-unit>
 					<trans-unit id="power_decrease">
 						<source>Decreases power by one notch for trains with two handles</source>
-						<target>Decreases power by one notch for trains with two handles</target>
 					</trans-unit>
 					<trans-unit id="power_halfaxis">
 						<source>Controls power for trains with two handles on half of a joystick axis</source>
-						<target>Controls power for trains with two handles on half of a joystick axis</target>
 					</trans-unit>
 					<trans-unit id="power_fullaxis">
 						<source>Controls power for trains with two handles on a full joystick axis</source>
-						<target>Controls power for trains with two handles on a full joystick axis</target>
 					</trans-unit>
 					<trans-unit id="brake_decrease">
 						<source>Decreases brake by one notch for trains with two handles</source>
-						<target>Decreases brake by one notch for trains with two handles</target>
 					</trans-unit>
 					<trans-unit id="brake_increase">
 						<source>Increases brake by one notch for trains with two handles</source>
-						<target>Increases brake by one notch for trains with two handles</target>
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>Decreases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="locobrake_increase">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>Increases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
-						<target>Controls brake for trains with two handles on half of a joystick axis</target>
 					</trans-unit>
 					<trans-unit id="brake_fullaxis">
 						<source>Controls brake for trains with two handles on a full joystick axis</source>
-						<target>Controls brake for trains with two handles on a full joystick axis</target>
 					</trans-unit>
 					<trans-unit id="brake_emergency">
 						<source>Activates emergency brakes for trains with two handles</source>
-						<target>Activates emergency brakes for trains with two handles</target>
 					</trans-unit>
 					<trans-unit id="single_power">
 						<source>Moves handle toward power by one notch for trains with one handle</source>
-						<target>Moves handle towards power by one notch for trains with one handle</target>
 					</trans-unit>
 					<trans-unit id="single_neutral">
 						<source>Moves handle toward neutral by one notch for trains with one handle</source>
-						<target>Moves handle towards neutral by one notch for trains with one handle</target>
 					</trans-unit>
 					<trans-unit id="single_brake">
 						<source>Moves handle toward brake by one notch for trains with one handle</source>
-						<target>Moves handle towards brake by one notch for trains with one handle</target>
 					</trans-unit>
 					<trans-unit id="single_emergency">
 						<source>Activates emergency brake for trains with one handle</source>
-						<target>Activates emergency brake for trains with one handle</target>
 					</trans-unit>
 					<trans-unit id="single_fullaxis">
 						<source>Controls power and brake for trains with one handle on a full joystick axis</source>
-						<target>Controls power and brake for trains with one handle on a full joystick axis</target>
 					</trans-unit>
 					<trans-unit id="power_any_notch">
 						<source>Adjusts the power notch directly from a command option value.</source>
-						<target>Adjusts the power notch directly from a command option value.</target>
 					</trans-unit>
 					<trans-unit id="brake_any_notch">
 						<source>Adjusts the brake notch directly from a command option value.</source>
-						<target>Adjusts the brake notch directly from a command option value.</target>
 					</trans-unit>
 					<trans-unit id="reverser_any_position">
 						<source>Adjusts the reverser directly from a command option value.</source>
-						<target>Adjusts the reverser directly from a command option value.</target>
 					</trans-unit>
 					<trans-unit id="hold_brake">
 						<source>Hold Brake</source>
-						<target>Hold Brake</target>
 					</trans-unit>
 					<trans-unit id="reverser_forward">
 						<source>Moves reverser forward by one notch</source>
-						<target>Moves reverser forwards by one notch</target>
 					</trans-unit>
 					<trans-unit id="reverser_backward">
 						<source>Moves reverser backward by one notch</source>
-						<target>Moves reverser backwards by one notch</target>
 					</trans-unit>
 					<trans-unit id="reverser_fullaxis">
 						<source>Controls reverser on a full joystick axis</source>
-						<target>Controls reverser on a full joystick axis</target>
 					</trans-unit>
 					<trans-unit id="doors_left">
 						<source>Opens or closes the left doors</source>
-						<target>Opens or closes the left doors</target>
 					</trans-unit>
 					<trans-unit id="doors_right">
 						<source>Opens or closes the right doors</source>
-						<target>Opens or closes the right doors</target>
 					</trans-unit>
 					<trans-unit id="horn_primary">
 						<source>Plays the primary horn</source>
-						<target>Plays the primary horn</target>
 					</trans-unit>
 					<trans-unit id="horn_secondary">
 						<source>Plays the secondary horn</source>
-						<target>Plays the secondary horn</target>
 					</trans-unit>
 					<trans-unit id="horn_music">
 						<source>Plays or stops the music horn</source>
-						<target>Plays or stops the music horn</target>
 					</trans-unit>
 					<trans-unit id="device_constspeed">
 						<source>Activates or deactivates the constant speed device</source>
-						<target>Activates or deactivates the constant speed device</target>
+					</trans-unit>
+					<trans-unit id="play_mic_sounds">
+						<source>Activates or deactivates the system microphone soundsource</source>
+					</trans-unit>
+					<trans-unit id="sanders">
+						<source>Activates or deactivates the sanders</source>
 					</trans-unit>
 					<trans-unit id="security_power">
 						<source>Activates or deactivates the security system on some trains</source>
-						<target>Activates or deactivates the security system on some trains</target>
 					</trans-unit>
 					<trans-unit id="security_s">
 						<source>The S function of the security system</source>
-						<target>The S function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_a1">
 						<source>The A1 function of the security system</source>
-						<target>The A1 function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_a2">
 						<source>The A2 function of the security system</source>
-						<target>The A2 function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_b1">
 						<source>The B1 function of the security system</source>
-						<target>The B1 function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_b2">
 						<source>The B2 function of the security system</source>
-						<target>The B2 function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_c1">
 						<source>The C1 function of the security system</source>
-						<target>The C1 function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_c2">
 						<source>The C2 function of the security system</source>
-						<target>The C2 function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_d">
 						<source>The D function of the security system</source>
-						<target>The D function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_e">
 						<source>The E function of the security system</source>
-						<target>The E function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_f">
 						<source>The F function of the security system</source>
-						<target>The F function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_g">
 						<source>The G function of the security system</source>
-						<target>The G function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_h">
 						<source>The H function of the security system</source>
-						<target>The H function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_i">
 						<source>The I function of the security system</source>
-						<target>The I function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_j">
 						<source>The J function of the security system</source>
-						<target>The J function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_k">
 						<source>The K function of the security system</source>
-						<target>The K function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_l">
 						<source>The L function of the security system</source>
-						<target>The L function of the security system</target>
 					</trans-unit>
 					<trans-unit id="security_m">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The M function of the security system</source>
 					</trans-unit>
 					<trans-unit id="security_n">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The N function of the security system</source>
 					</trans-unit>
 					<trans-unit id="security_o">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The O function of the security system</source>
 					</trans-unit>
 					<trans-unit id="security_p">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The P function of the security system</source>
 					</trans-unit>
 					<trans-unit id="camera_interior">
 						<source>Switches to the train's interior view</source>
-						<target>Switches to the train's interior view</target>
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
 						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
 						<source>Switches to the train's exterior view</source>
-						<target>Switches to the train's exterior view</target>
 					</trans-unit>
 					<trans-unit id="camera_track">
 						<source>Switches to the track view</source>
-						<target>Switches to the track view</target>
 					</trans-unit>
 					<trans-unit id="camera_flyby">
 						<source>Switches between different fly-by views</source>
-						<target>Switches between different fly-by views</target>
 					</trans-unit>
 					<trans-unit id="camera_move_forward">
 						<source>Moves the camera forward</source>
-						<target>Moves the camera forwards</target>
 					</trans-unit>
 					<trans-unit id="camera_move_backward">
 						<source>Moves the camera backward</source>
-						<target>Moves the camera backwards</target>
 					</trans-unit>
 					<trans-unit id="camera_move_left">
 						<source>Moves the camera left</source>
-						<target>Moves the camera left</target>
 					</trans-unit>
 					<trans-unit id="camera_move_right">
 						<source>Moves the camera right</source>
-						<target>Moves the camera right</target>
 					</trans-unit>
 					<trans-unit id="camera_move_up">
 						<source>Moves the camera up</source>
-						<target>Moves the camera up</target>
 					</trans-unit>
 					<trans-unit id="camera_move_down">
 						<source>Moves the camera down</source>
-						<target>Moves the camera down</target>
 					</trans-unit>
 					<trans-unit id="camera_rotate_left">
 						<source>Rotates the camera left</source>
-						<target>Rotates the camera left</target>
 					</trans-unit>
 					<trans-unit id="camera_rotate_right">
 						<source>Rotates the camera right</source>
-						<target>Rotates the camera right</target>
 					</trans-unit>
 					<trans-unit id="camera_rotate_up">
 						<source>Rotates the camera up</source>
-						<target>Rotates the camera up</target>
 					</trans-unit>
 					<trans-unit id="camera_rotate_down">
 						<source>Rotates the camera down</source>
-						<target>Rotates the camera down</target>
 					</trans-unit>
 					<trans-unit id="camera_rotate_ccw">
 						<source>Rotates the camera counter-clockwise</source>
-						<target>Rotates the camera counter-clockwise</target>
 					</trans-unit>
 					<trans-unit id="camera_rotate_cw">
 						<source>Rotates the camera clockwise</source>
-						<target>Rotates the camera clockwise</target>
 					</trans-unit>
 					<trans-unit id="camera_zoom_in">
 						<source>Zooms the camera in</source>
-						<target>Zooms the camera in</target>
 					</trans-unit>
 					<trans-unit id="camera_zoom_out">
 						<source>Zooms the camera out</source>
-						<target>Zooms the camera out</target>
 					</trans-unit>
 					<trans-unit id="camera_poi_previous">
 						<source>Jumps to the previous point of interest in the route.</source>
-						<target>Jumps to the previous point of interest in the route.</target>
 					</trans-unit>
 					<trans-unit id="camera_poi_next">
 						<source>Jumps to the next point of interest in the route.</source>
-						<target>Jumps to the next point of interest in the route.</target>
 					</trans-unit>
 					<trans-unit id="camera_reset">
 						<source>Resets the camera view to default values</source>
-						<target>Resets the camera view to default values</target>
 					</trans-unit>
 					<trans-unit id="camera_restriction">
 						<source>Activates or deactivates interior view camera restriction</source>
-						<target>Activates or deactivates interior view camera restriction</target>
 					</trans-unit>
 					<trans-unit id="timetable_toggle">
 						<source>Toggles through different timetable modes</source>
-						<target>Toggles through different timetable modes</target>
 					</trans-unit>
 					<trans-unit id="timetable_up">
 						<source>Scrolls the timetable up</source>
-						<target>Scrolls the timetable up</target>
 					</trans-unit>
 					<trans-unit id="timetable_down">
 						<source>Scrolls the timetable down</source>
-						<target>Scrolls the timetable down</target>
 					</trans-unit>
 					<trans-unit id="menu_activate">
 						<source>Displays the in-game menu</source>
-						<target>Displays the in-game menu</target>
 					</trans-unit>
 					<trans-unit id="menu_up">
 						<source>Moves the cursor up within the in-game menu</source>
-						<target>Moves the cursor up within the in-game menu</target>
 					</trans-unit>
 					<trans-unit id="menu_down">
 						<source>Moves the cursor down within the in-game menu</source>
-						<target>Moves the cursor down within the in-game menu</target>
 					</trans-unit>
 					<trans-unit id="menu_enter">
 						<source>Performs the selected command within the in-game menu</source>
-						<target>Performs the selected command within the in-game menu</target>
 					</trans-unit>
 					<trans-unit id="menu_back">
 						<source>Goes back within the in-game menu</source>
-						<target>Goes back within the in-game menu</target>
 					</trans-unit>
 					<trans-unit id="misc_clock">
 						<source>Shows or hides the clock</source>
-						<target>Shows or hides the clock</target>
 					</trans-unit>
 					<trans-unit id="misc_speed">
 						<source>Toggles through different speed display modes</source>
-						<target>Toggles through different speed display modes</target>
 					</trans-unit>
 					<trans-unit id="misc_gradient">
 						<source>Toggles through different gradient display modes</source>
-						<target>Toggles through different gradient display modes</target>
 					</trans-unit>
 					<trans-unit id="misc_dist_next_station">
 						<source>Toggles through different next station remain distance display modes</source>
-						<target>Toggles through different next station remain distance display modes</target>
 					</trans-unit>
 					<trans-unit id="misc_timefactor">
 						<source>Toggles through different time acceleration factors</source>
-						<target>Toggles through different time acceleration factors</target>
 					</trans-unit>
 					<trans-unit id="misc_fps">
 						<source>Shows or hides the frame rate display</source>
-						<target>Shows or hides the frame rate display</target>
 					</trans-unit>
 					<trans-unit id="misc_ai">
 						<source>Activates or deactivates the virtual driver (AI)</source>
-						<target>Activates or deactivates the virtual driver (AI)</target>
 					</trans-unit>
 					<trans-unit id="misc_pause">
 						<source>Pauses or resumes the simulation</source>
-						<target>Pauses or resumes the simulation</target>
 					</trans-unit>
 					<trans-unit id="misc_fullscreen">
 						<source>Toggles to or from fullscreen mode</source>
-						<target>Toggles to or from fullscreen mode</target>
 					</trans-unit>
 					<trans-unit id="misc_mute">
 						<source>Mutes sound or resumes playing sounds</source>
-						<target>Mutes sound or resumes playing sounds</target>
 					</trans-unit>
 					<trans-unit id="misc_quit">
 						<source>Quits the simulation</source>
-						<target>Quits the simulation</target>
 					</trans-unit>
 					<trans-unit id="misc_interface">
 						<source>Toggles through different interface modes</source>
-						<target>Toggles through different interface modes</target>
 					</trans-unit>
 					<trans-unit id="misc_backface">
 						<source>Activates or deactivates backface culling</source>
-						<target>Activates or deactivates backface culling</target>
 					</trans-unit>
 					<trans-unit id="misc_cpumode">
 						<source>Switches to or from reduced CPU mode</source>
-						<target>Switches to or from reduced CPU mode</target>
 					</trans-unit>
 					<trans-unit id="debug_wireframe">
 						<source>Activates or deactivates wireframe mode</source>
-						<target>Activates or deactivates wireframe mode</target>
 					</trans-unit>
 					<trans-unit id="debug_normals">
 						<source>Shows or hides vertex normals</source>
-						<target>Shows or hides vertex normals</target>
 					</trans-unit>
 					<trans-unit id="debug_brake">
 						<source>Shows or hides brake system debug output</source>
-						<target>Shows or hides brake system debug output</target>
 					</trans-unit>
 					<trans-unit id="debug_ats">
 						<source>Shows or hides plugin debug output</source>
-						<target>Shows or hides plugin debug output</target>
 					</trans-unit>
 					<trans-unit id="debug_touch_mode">
 						<source>Shows or hides the touch range</source>
 					</trans-unit>
 					<trans-unit id="route_information">
 						<source>Shows or hides the route information window</source>
-						<target>Shows or hides the route information window</target>
 					</trans-unit>
 					<trans-unit id="show_events">
 						<source>Shows or hides event markers (For developers)</source>
-						<target>Shows or hides event markers (For developers)</target>
+					</trans-unit>
+					<trans-unit id="debug_renderer_mode">
+						<source>Toggles the renderer</source>
 					</trans-unit>
 					<trans-unit id="wiper_speed_up">
 						<source>Increases the speed of the windscreen wipers</source>
-						<target>Increases the speed of the windscreen wipers</target>
 					</trans-unit>
 					<trans-unit id="wiper_speed_down">
 						<source>Decreases the speed of the windscreen wipers</source>
-						<target>Decreases the speed of the windscreen wipers</target>
 					</trans-unit>
 					<trans-unit id="fill_fuel">
 						<source>Fills fuel</source>
-						<target>Fills fuel</target>
 					</trans-unit>
 					<trans-unit id="headlights">
 						<source>Toggles the train headlights</source>
-						<target>Toggles the train headlights</target>
 					</trans-unit>
 					<trans-unit id="live_steam_injector">
 						<source>Activates or deactivates the live steam injector</source>
-						<target>Activates or deactivates the live steam injector</target>
 					</trans-unit>
 					<trans-unit id="exhaust_steam_injector">
 						<source>Activates or deactivates the exhaust steam injector</source>
-						<target>Activates or deactivates the exhaust steam injector</target>
 					</trans-unit>
 					<trans-unit id="increase_cutoff">
 						<source>Increases the cutoff</source>
-						<target>Increases the cutoff</target>
 					</trans-unit>
 					<trans-unit id="decrease_cutoff">
 						<source>Decreases the cutoff</source>
-						<target>Decreases the cutoff</target>
 					</trans-unit>
 					<trans-unit id="blowers">
 						<source>Activates or deactivates the blowers</source>
-						<target>Activates or deactivates the blowers</target>
 					</trans-unit>
 					<trans-unit id="engine_start">
 						<source>Starts the engine</source>
-						<target>Starts the engine</target>
 					</trans-unit>
 					<trans-unit id="engine_stop">
 						<source>Stops the engine</source>
-						<target>Stops the engine</target>
 					</trans-unit>
 					<trans-unit id="gear_up">
 						<source>Shifts up a gear in a train fitted with a gearbox</source>
-						<target>Shifts up a gear in a train fitted with a gearbox</target>
 					</trans-unit>
 					<trans-unit id="gear_down">
 						<source>Shifts down a gear in a train fitted with a gearbox</source>
-						<target>Shifts down a gear in a train fitted with a gearbox</target>
 					</trans-unit>
 					<trans-unit id="raise_pantograph">
 						<source>Raises the pantograph</source>
-						<target>Raises the pantograph</target>
 					</trans-unit>
 					<trans-unit id="lower_pantograph">
 						<source>Lowers the pantograph</source>
-						<target>Lowers the pantograph</target>
 					</trans-unit>
 					<trans-unit id="main_breaker">
 						<source>Toggles the main breaker</source>
-						<target>Toggles the main breaker</target>
+					</trans-unit>
+					<trans-unit id="raildriver_speed_units">
+						<source>Toggles the RailDriver speed display units.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_current_speed">
+						<source>Accessibility: Audibly announces the current speed.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_signal">
+						<source>Accessibility: Audibly announces the next signal distance and aspect.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_station">
+						<source>Accessibility: Audibly announces the the next station name and distance.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_front">
+						<source>Uncouples the front coupler for the selected car.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_rear">
+						<source>Uncouples the rear coupler for the selected car.</source>
 					</trans-unit>
 				</group>
 				<group id="keys">

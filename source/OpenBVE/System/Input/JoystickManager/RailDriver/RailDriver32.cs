@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using PIEHid32Net;
 
 namespace OpenBve.Input
@@ -71,7 +71,7 @@ namespace OpenBve.Input
 		/// <param name="data">The callback data</param>
 		/// <param name="sourceDevice">The source device</param>
 		/// <param name="error">The last error generated (if any)</param>
-		public void HandlePIEHidData(byte[] data, PIEHid32Net.PIEDevice sourceDevice, int error)
+		public void HandlePIEHidData(byte[] data, PIEDevice sourceDevice, int error)
 		{
 			if (myDevice == sourceDevice)
 			{
@@ -85,8 +85,13 @@ namespace OpenBve.Input
 		/// <summary>Callback function from the PI Engineering DLL, raised if an error is encountered</summary>
 		/// <param name="sourceDevices">The source device</param>
 		/// <param name="error">The error</param>
-		public void HandlePIEHidError(PIEHid32Net.PIEDevice sourceDevices, int error)
+		public void HandlePIEHidError(PIEDevice sourceDevices, int error)
 		{
+		}
+
+		public override string ToString()
+		{
+			return "GUID: " + Guid + ", Name: " + Name;
 		}
 	}
 

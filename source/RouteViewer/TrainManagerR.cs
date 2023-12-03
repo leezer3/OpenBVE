@@ -26,37 +26,17 @@ namespace RouteViewer {
 		internal class Train : TrainBase {
 			internal Train() : base(TrainState.Pending)
 			{
-				Handles.Reverser = new ReverserHandle(this);
-				Handles.EmergencyBrake = new EmergencyHandle(this);
 				Handles.Power = new PowerHandle(8, 8, new double[] {}, new double[] {}, this);
 				Handles.Brake = new BrakeHandle(8, 8, null, new double[] {}, new double[] {}, this);
 				Handles.HoldBrake = new HoldBrakeHandle(this);
 			}
-			public override int NumberOfCars
-			{
-				get
-				{
-					return this.Cars.Length;
-				}
-			}
+			public override int NumberOfCars => this.Cars.Length;
 
-			public override double FrontCarTrackPosition()
-			{
-				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxle.Position + 0.5 * Cars[0].Length;
-			}
+			public override double FrontCarTrackPosition => Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxle.Position + 0.5 * Cars[0].Length;
 
-			public override double RearCarTrackPosition()
-			{
-				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;
-			}
+			public override double RearCarTrackPosition => Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;
 
-			public override bool IsPlayerTrain
-			{
-				get
-				{
-					return true;
-				}
-			}
+			public override bool IsPlayerTrain => true;
 		}
 	}
 }

@@ -1,4 +1,9 @@
-﻿using TrainManager.Trains;
+﻿using System.Globalization;
+using OpenBveApi;
+using OpenBveApi.Colors;
+using OpenBveApi.Interface;
+using RouteManager2.MessageManager;
+using TrainManager.Trains;
 
 namespace TrainManager.Handles
 {
@@ -7,12 +12,12 @@ namespace TrainManager.Handles
 	{
 		public BrakeHandle(int max, int driverMax, EmergencyHandle eb, double[] delayUp, double[] delayDown, TrainBase Train) : base(Train)
 		{
-			this.MaximumNotch = max;
-			this.MaximumDriverNotch = driverMax;
-			this.EmergencyBrake = eb;
-			this.DelayUp = delayUp;
-			this.DelayDown = delayDown;
-			this.DelayedChanges = new HandleChange[] { };
+			MaximumNotch = max;
+			MaximumDriverNotch = driverMax;
+			EmergencyBrake = eb;
+			DelayUp = delayUp;
+			DelayDown = delayDown;
+			DelayedChanges = new HandleChange[] { };
 		}
 
 		/// <summary>Provides a reference to the associated EB handle</summary>
@@ -65,6 +70,7 @@ namespace TrainManager.Handles
 
 		public override void ApplyState(int BrakeValue, bool BrakeRelative, bool IsOverMaxDriverNotch = false)
 		{
+			int previousDriver = Driver;
 			if (baseTrain.Handles.Power.SpringType > SpringType.Single)
 			{
 				baseTrain.Handles.Power.SpringTimer = TrainManagerBase.currentHost.InGameTime + SpringTime;
@@ -122,13 +128,72 @@ namespace TrainManager.Handles
 			}
 
 			Driver = b;
-			TrainManagerBase.currentHost.AddBlackBoxEntry();
+			
 			// plugin
 			if (baseTrain.Plugin != null)
 			{
 				baseTrain.Plugin.UpdatePower();
 				baseTrain.Plugin.UpdateBrake();
 			}
+
+			if (previousDriver == Driver)
+			{
+				return;
+			}
+			TrainManagerBase.currentHost.AddBlackBoxEntry();
+			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
+			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+		}
+
+		public override string GetNotchDescription(out MessageColor color)
+		{
+			color = MessageColor.Gray;
+			int offset = baseTrain.Handles.HasHoldBrake ? 2 : 1;
+
+			if (NotchDescriptions == null || offset + Driver >= NotchDescriptions.Length)
+			{
+				if (baseTrain.Handles.EmergencyBrake.Driver)
+				{
+					color = MessageColor.Red;
+					return Translations.QuickReferences.HandleEmergency;
+				}
+
+				if (baseTrain.Handles.HasHoldBrake && baseTrain.Handles.HoldBrake.Driver)
+				{
+					color = MessageColor.Green;
+					return Translations.QuickReferences.HandleHoldBrake;
+				}
+
+				if (Driver != 0)
+				{
+					color = MessageColor.Orange;
+					return Translations.QuickReferences.HandleBrake + Driver.ToString(CultureInfo.InvariantCulture);
+				}
+
+				return Translations.QuickReferences.HandleBrakeNull;
+			}
+			else
+			{
+				if (baseTrain.Handles.EmergencyBrake.Driver)
+				{
+					color = MessageColor.Red;
+					return NotchDescriptions[0];
+				}
+
+				if (baseTrain.Handles.HasHoldBrake && baseTrain.Handles.HoldBrake.Driver) {
+					color = MessageColor.Green;
+					return NotchDescriptions[1];
+				}
+
+				if (Driver != 0)
+				{
+					color = MessageColor.Orange;
+					return NotchDescriptions[offset + Driver];
+				}
+
+				return NotchDescriptions[offset];
+			}
+
 		}
 	}
 }

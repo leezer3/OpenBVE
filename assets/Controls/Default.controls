@@ -1,7 +1,7 @@
 ﻿; Current control configuration
 ; =============================
 ; This file was automatically generated. Please modify only if you know what you're doing.
-; Default keyconfig version 3- 08.06.2017
+; Default keyconfig version 4- 10.10.2022
 
 POWER_INCREASE, keyboard, Z, 0
 POWER_DECREASE, keyboard, A, 0
@@ -11,6 +11,8 @@ BRAKE_EMERGENCY, keyboard, Slash, 0
 SINGLE_POWER, keyboard, Z, 0
 SINGLE_NEUTRAL, keyboard, A, 0
 SINGLE_BRAKE, keyboard, Q, 0
+LOCOBRAKE_INCREASE, Keyboard, RBracket, 0, 0
+LOCOBRAKE_DECREASE, Keyboard, BracketLeft, 0, 0
 SINGLE_EMERGENCY, keyboard, Number1, 0
 REVERSER_FORWARD, keyboard, F, 0
 REVERSER_BACKWARD, keyboard, V, 0
@@ -35,6 +37,7 @@ ENGINE_START, keyboard, E, 0
 ENGINE_STOP, keyboard, E, 2
 DEVICE_CONSTSPEED, keyboard, BackSpace, 0
 PLAY_MIC_SOUNDS, keyboard, W, 0
+SANDERS, keyboard, S, 0
 SECURITY_S, keyboard, Space, 0
 SECURITY_A1, keyboard, Insert, 0
 SECURITY_A2, keyboard, Delete, 0
@@ -103,6 +106,8 @@ DECREASE_CUTOFF, keyboard, U, 2
 ROUTE_INFORMATION, keyboard, F9, 0
 SHOW_EVENTS, keyboard, E, 3
 DEBUG_ATS, keyboard, F10, 2
-ACCESSIBILITY_CURRENT_SPEED, keyboard, s, 3
-ACCESSIBILITY_NEXT_SIGNAL, keyboard, a, 3
-ACCESSIBILITY_NEXT_STATION, keyboard, t, 3
+ACCESSIBILITY_CURRENT_SPEED, keyboard, S, 3
+ACCESSIBILITY_NEXT_SIGNAL, keyboard, A, 3
+ACCESSIBILITY_NEXT_STATION, keyboard, T, 3
+UNCOUPLE_REAR, keyboard, Semicolon, 2
+UNCOUPLE_FRONT, keyboard, Semicolon, 3

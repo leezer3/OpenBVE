@@ -43,8 +43,7 @@ namespace CsvRwRouteParser
 									}
 									else
 									{
-										UnifiedObject obj;
-										Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
+										Plugin.CurrentHost.LoadObject(f, Encoding, out UnifiedObject obj);
 										if (obj is AnimatedObjectCollection)
 										{
 											AnimatedObjectSignalData Signal = new AnimatedObjectSignalData(obj);
@@ -101,7 +100,7 @@ namespace CsvRwRouteParser
 										BaseObject = LoadStaticObject(f, Encoding, false),
 										GlowObject = null
 									};
-									string Folder = System.IO.Path.GetDirectoryName(f);
+									string Folder = Path.GetDirectoryName(f);
 									if (!System.IO.Directory.Exists(Folder))
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The folder " + Folder + " could not be found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);

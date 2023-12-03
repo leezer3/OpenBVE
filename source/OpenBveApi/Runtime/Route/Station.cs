@@ -68,10 +68,7 @@ namespace OpenBveApi.Runtime
 				}
 				return ExpectedTimeStopped;
 			}
-			set
-			{
-				ExpectedTimeStopped = value;
-			}
+			set => ExpectedTimeStopped = value;
 		}
 		/// <summary>Backing property for StopTime</summary>
 		private double ExpectedTimeStopped;
@@ -92,7 +89,7 @@ namespace OpenBveApi.Runtime
 			Name = s.Name;
 			ArrivalTime = s.ArrivalTime;
 			DepartureTime = s.DepartureTime;
-			StopTime = s.DepartureTime - s.ArrivalTime;
+			ExpectedTimeStopped = s.ExpectedTimeStopped;
 			ForceStopSignal = s.ForceStopSignal;
 			OpenLeftDoors = s.OpenLeftDoors;
 			OpenRightDoors = s.OpenRightDoors;

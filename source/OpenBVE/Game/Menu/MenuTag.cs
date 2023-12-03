@@ -1,4 +1,5 @@
-﻿namespace OpenBve
+﻿// ReSharper disable UnusedMember.Global
+namespace OpenBve
 {
 	/// <summary>The list of possible tags for a menu entry- These define the functionality of a given menu entry</summary>
 	public enum MenuTag
@@ -27,6 +28,8 @@
 		ExitToMainMenu,
 		/// <summary>Quits the program</summary>
 		Quit,
+		/// <summary>Resets the controls to default</summary>
+		ControlReset,
 		/// <summary>Customises the selected control</summary>
 		Control,
 		/// <summary>Displays a list of routefiles</summary>

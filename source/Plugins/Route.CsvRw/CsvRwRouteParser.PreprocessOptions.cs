@@ -1,6 +1,8 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
+using OpenBveApi.Routes;
+
 // ReSharper disable NotAccessedVariable
 
 namespace CsvRwRouteParser
@@ -36,12 +38,10 @@ namespace CsvRwRouteParser
 				{
 					Expressions[j].ConvertRwToCsv(Section, SectionAlwaysPrefix);
 					// separate command and arguments
-					string Command, ArgumentSequence;
-					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, true, IsRW, Section);
+					Expressions[j].SeparateCommandsAndArguments(out string Command, out string ArgumentSequence, Culture, true, IsRW, Section);
 					// process command
-					double Number;
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
-					if (!NumberCheck || !NumberFormats.TryParseDoubleVb6(Command, UnitOfLength, out Number))
+					if (!NumberCheck || !NumberFormats.TryParseDoubleVb6(Command, UnitOfLength, out _))
 					{
 						// split arguments
 						string[] Arguments;
@@ -117,24 +117,22 @@ namespace CsvRwRouteParser
 									string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart();
 									Command = Command.Substring(0, k).TrimEnd();
 									int h = Indices.IndexOf(";", StringComparison.Ordinal);
-									int CommandIndex1;
 									if (h >= 0)
 									{
 										string a = Indices.Substring(0, h).TrimEnd();
 										string b = Indices.Substring(h + 1).TrimStart();
-										if (a.Length > 0 && !NumberFormats.TryParseIntVb6(a, out CommandIndex1))
+										if (a.Length > 0 && !NumberFormats.TryParseIntVb6(a, out _))
 										{
 											Command = null; break;
 										}
-										int CommandIndex2;
-										if (b.Length > 0 && !NumberFormats.TryParseIntVb6(b, out CommandIndex2))
+										if (b.Length > 0 && !NumberFormats.TryParseIntVb6(b, out _))
 										{
 											Command = null;
 										}
 									}
 									else
 									{
-										if (Indices.Length > 0 && !NumberFormats.TryParseIntVb6(Indices, out CommandIndex1))
+										if (Indices.Length > 0 && !NumberFormats.TryParseIntVb6(Indices, out _))
 										{
 											Command = null;
 										}
@@ -222,12 +220,12 @@ namespace CsvRwRouteParser
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											mode = 0;
 										}
-										else if (mode != 0 & mode != 1)
+										else if (mode < 0 || mode > 2)
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The specified Mode is not supported in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											mode = 0;
 										}
-										Data.AccurateObjectDisposal = mode == 1;
+										Plugin.CurrentOptions.ObjectDisposalMode = (ObjectDisposalMode)mode;
 									}
 								}
 									break;

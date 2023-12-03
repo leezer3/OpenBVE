@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
+using System.Threading;
 using LibRender2.Backgrounds;
 using LibRender2.Cameras;
 using LibRender2.Fogs;
@@ -32,6 +33,7 @@ using OpenBveApi.World;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using Path = OpenBveApi.Path;
+using PixelFormat = OpenBveApi.Textures.PixelFormat;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace LibRender2
@@ -60,7 +62,7 @@ namespace LibRender2
 		protected int[] ObjectsSortedByEnd;
 		protected int ObjectsSortedByStartPointer;
 		protected int ObjectsSortedByEndPointer;
-		protected double LastUpdatedTrackPosition;
+		protected internal double LastUpdatedTrackPosition;
 		/// <summary>Whether ReShade is in use</summary>
 		/// <remarks>Don't use OpenGL error checking with ReShade, as this breaks</remarks>
 		public bool ReShadeInUse;
@@ -75,10 +77,7 @@ namespace LibRender2
 		/// <summary>Holds a reference to the current interface type of the game (Used by the renderer)</summary>
 		public InterfaceType CurrentInterface
 		{
-			get
-			{
-				return currentInterface;
-			}
+			get => currentInterface;
 			set
 			{
 				previousInterface = currentInterface;
@@ -87,13 +86,8 @@ namespace LibRender2
 		}
 
 		/// <summary>Holds a reference to the previous interface type of the game</summary>
-		public InterfaceType PreviousInterface
-		{
-			get
-			{
-				return previousInterface;
-			}
-		}
+		public InterfaceType PreviousInterface => previousInterface;
+
 		//Backing properties for the interface values
 		private InterfaceType currentInterface = InterfaceType.Normal;
 		private InterfaceType previousInterface = InterfaceType.Normal;
@@ -283,12 +277,18 @@ namespace LibRender2
 
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
-			Fonts = new Fonts(currentHost, fileSystem);
+			Fonts = new Fonts(currentHost, currentOptions.Font);
+			VisibilityThread = new Thread(vt);
+			VisibilityThread.Start();
 		}
 
-		/// <summary>
-		/// Call this once to initialise the renderer
-		/// </summary>
+		~BaseRenderer()
+		{
+			DeInitialize();
+		}
+
+		/// <summary>Call this once to initialise the renderer</summary>
+		/// <remarks>A call to DeInitialize should be made when closing the progam to release resources</remarks>
 		[HandleProcessCorruptedStateExceptions] //As some graphics cards crash really nastily if we request unsupported features
 		public virtual void Initialize()
 		{
@@ -313,6 +313,23 @@ namespace LibRender2
 					currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
 					currentOptions.IsUseNewRenderer = false;
 					ForceLegacyOpenGL = true;
+					try
+					{
+						/*
+						 * Nasty little edge case with some Intel graphics- They create the shader OK
+						 * but it crashes on use, but remains active
+						 * Deactivate it, otherwise we get a grey screen
+						 */
+						if (DefaultShader != null)
+						{
+							DefaultShader.Deactivate();
+						}
+					}
+					catch 
+					{ 
+						// ignored
+					}
+					
 				}
 
 				if (DefaultShader == null)
@@ -323,7 +340,6 @@ namespace LibRender2
 					ForceLegacyOpenGL = true;
 				}
 			}
-			
 
 			Background = new Background(this);
 			Fog = new Fog();
@@ -337,8 +353,8 @@ namespace LibRender2
 
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
-			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions, this);
-			whitePixel = new Texture(new Texture(1, 1, 32, new byte[] {255, 255, 255, 255}, null));
+			VisibleObjects = new VisibleObjectLibrary(this);
+			whitePixel = new Texture(new Texture(1, 1, PixelFormat.RGBAlpha, new byte[] {255, 255, 255, 255}, null));
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.Enable(EnableCap.DepthTest);
@@ -362,7 +378,7 @@ namespace LibRender2
 			}
 
 			// ReSharper disable once PossibleNullReferenceException
-			string openGLdll = Path.CombineFile(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "opengl32.dll");
+			string openGLdll = Path.CombineFile(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "opengl32.dll");
 
 			if (File.Exists(openGLdll))
 			{
@@ -372,6 +388,13 @@ namespace LibRender2
 					ReShadeInUse = true;
 				}
 			}
+		}
+
+		/// <summary>Deinitializes the renderer</summary>
+		public void DeInitialize()
+		{
+			// terminate spinning thread
+			visibilityThread = false;
 		}
 
 		/// <summary>Should be called when the OpenGL version is switched mid-game</summary>
@@ -484,10 +507,10 @@ namespace LibRender2
 		{
 			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			Matrix4D Rotate = (Matrix4D)new Transformation(LocalTransformation, WorldTransformation);
-			return CreateStaticObject(Prototype, LocalTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
-		public int CreateStaticObject(StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public int CreateStaticObject(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			if (Prototype == null)
 			{
@@ -563,9 +586,10 @@ namespace LibRender2
 				Rotate = Rotate,
 				Brightness = Brightness,
 				StartingDistance = startingDistance,
-				EndingDistance = endingDistance
+				EndingDistance = endingDistance,
+				WorldPosition = Position
 			});
-
+			
 			foreach (MeshFace face in Prototype.Mesh.Faces)
 			{
 				switch (face.Flags & FaceFlags.FaceTypeMask)
@@ -608,22 +632,108 @@ namespace LibRender2
 		/// the required VAO objects</remarks>
 		public void InitializeVisibility()
 		{
+			if (!ForceLegacyOpenGL) // as we might want to switch renderer types
+			{
+				for (int i = 0; i < StaticObjectStates.Count; i++)
+				{
+					VAOExtensions.CreateVAO(ref StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+				}
+				for (int i = 0; i < DynamicObjectStates.Count; i++)
+				{
+					VAOExtensions.CreateVAO(ref DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+				}
+			}
 			ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByEnd = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.EndingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
-
-			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
-
-			foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
+			
+			if (currentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
 			{
-				VisibleObjects.ShowObject(state, ObjectType.Static);
+				foreach (ObjectState state in StaticObjectStates)
+				{
+					VisibleObjects.quadTree.Add(state, Orientation3.Default);
+				}
+				VisibleObjects.quadTree.Initialize(currentOptions.QuadTreeLeafSize);
+				UpdateQuadTreeVisibility();
+			}
+			else
+			{
+				double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
+				foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
+				{
+					VisibleObjects.ShowObject(state, ObjectType.Static);
+				}
 			}
 		}
 
-		public void UpdateVisibility(double TrackPosition)
+		private VisibilityUpdate updateVisibility;
+		
+		public bool visibilityThread = true;
+
+		public Thread VisibilityThread;
+
+		private void vt()
 		{
-			if (ObjectsSortedByStart == null || ObjectsSortedByStart.Length == 0)
+			while (visibilityThread)
+			{
+				if (updateVisibility != VisibilityUpdate.None && CameraTrackFollower != null)
+				{
+					UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);
+					updateVisibility = VisibilityUpdate.None;
+				}
+				else
+				{
+					Thread.Sleep(100);
+				}
+			}
+		}
+
+		public void UpdateVisibility(bool force)
+		{
+			updateVisibility = force ? VisibilityUpdate.Force : VisibilityUpdate.None;
+		}
+
+		private void UpdateVisibility(double TrackPosition)
+		{
+			if (currentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
+			{
+				UpdateQuadTreeVisibility();
+			}
+			else
+			{
+				if (updateVisibility == VisibilityUpdate.Normal)
+				{
+					UpdateLegacyVisibility(TrackPosition);
+				}
+				else
+				{
+					/*
+					 * The original visibility algorithm fails to handle correctly cases where the
+					 * camera angle is rotated, but the track position does not change
+					 *
+					 * Horrible kludge...
+					 */
+					UpdateLegacyVisibility(TrackPosition + 0.01);
+					UpdateLegacyVisibility(TrackPosition - 0.01);
+				}
+				
+			}
+		}
+
+		private void UpdateQuadTreeVisibility()
+		{
+			if (VisibleObjects == null || VisibleObjects.quadTree == null)
+			{
+				Thread.Sleep(10);
+				return;
+			}
+			Camera.UpdateQuadTreeLeaf();
+		}
+
+		private void UpdateLegacyVisibility(double TrackPosition)
+		{
+			if (ObjectsSortedByStart == null || ObjectsSortedByStart.Length == 0 || StaticObjectStates.Count == 0)
 			{
 				return;
 			}
@@ -775,22 +885,7 @@ namespace LibRender2
 			double d = BackgroundImageDistance + Camera.ExtraViewingDistance;
 			Camera.ForwardViewingDistance = d * max;
 			Camera.BackwardViewingDistance = -d * min;
-			UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z, true);
-		}
-
-		public void UpdateVisibility(double TrackPosition, bool ViewingDistanceChanged)
-		{
-			if (ViewingDistanceChanged)
-			{
-				UpdateVisibility(TrackPosition);
-				UpdateVisibility(TrackPosition - 0.001);
-				UpdateVisibility(TrackPosition + 0.001);
-				UpdateVisibility(TrackPosition);
-			}
-			else
-			{
-				UpdateVisibility(TrackPosition);
-			}
+			updateVisibility = VisibilityUpdate.Force;
 		}
 
 		/// <summary>Determines the maximum Anisotropic filtering level the system supports</summary>
@@ -884,7 +979,7 @@ namespace LibRender2
 
 			Screen.AspectRatio = Screen.Width / (double)Screen.Height;
 			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * Screen.AspectRatio);
-			CurrentProjectionMatrix = Matrix4D.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, 0.2, 1000.0);
+			CurrentProjectionMatrix = Matrix4D.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, 0.2, currentOptions.ViewingDistance);
 		}
 
 		public void ResetShader(Shader Shader)
@@ -1032,7 +1127,7 @@ namespace LibRender2
 
 
 		// Cached object state and matricies for shader drawing
-		protected ObjectState lastObjectState;
+		protected internal ObjectState lastObjectState;
 		private Matrix4D lastModelMatrix;
 		private Matrix4D lastModelViewMatrix;
 		private bool sendToShader;
@@ -1056,7 +1151,7 @@ namespace LibRender2
 			lastModelMatrix = ModelMatrix;
 			lastModelViewMatrix = ModelViewMatrix;
 			sendToShader = true;
-			RenderFace(Shader, State, Face);
+			RenderFace(Shader, State, Face, false, true);
 		}
 
 		/// <summary>Draws a face using the specified shader</summary>
@@ -1064,11 +1159,11 @@ namespace LibRender2
 		/// <param name="State">The ObjectState to draw</param>
 		/// <param name="Face">The Face within the ObjectState</param>
 		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
-		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
+		/// <param name="screenSpace">Used when a forced matrix, for items which are in screen space not camera space</param>
+		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false, bool screenSpace = false)
 		{
-			if (State != lastObjectState && !sendToShader || State.Prototype.Dynamic)
+			if ((State != lastObjectState || State.Prototype.Dynamic) && !screenSpace)
 			{
-				lastObjectState = State;
 				lastModelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
 				lastModelViewMatrix = lastModelMatrix * CurrentViewMatrix;
 				sendToShader = true;
@@ -1181,6 +1276,7 @@ namespace LibRender2
 			// daytime polygon
 			{
 				// texture
+				// ReSharper disable once PossibleInvalidOperationException
 				if (material.DaytimeTexture != null && currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 				{
 					if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode])
@@ -1229,7 +1325,7 @@ namespace LibRender2
 			}
 
 			// nighttime polygon
-			if (material.NighttimeTexture != null && material.NighttimeTexture != material.DaytimeTexture && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
+			if (blendFactor != 0 && material.NighttimeTexture != null && material.NighttimeTexture != material.DaytimeTexture && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 			{
 				// texture
 				if (LastBoundTexture != material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode])
@@ -1279,6 +1375,7 @@ namespace LibRender2
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 			}
+			lastObjectState = State;
 		}
 
 		public void RenderFaceImmediateMode(FaceState State, bool IsDebugTouchMode = false)
@@ -1359,14 +1456,7 @@ namespace LibRender2
 				}
 			}
 
-			if ((material.Flags & MaterialFlags.Emissive) != 0)
-			{
-				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(material.EmissiveColor.R, material.EmissiveColor.G, material.EmissiveColor.B, 255));
-			}
-			else
-			{
-				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(0.0f, 0.0f, 0.0f, 1.0f));
-			}
+			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, (material.Flags & MaterialFlags.Emissive) != 0 ? new Color4(material.EmissiveColor.R, material.EmissiveColor.G, material.EmissiveColor.B, 255) : Color4.Black);
 
 			// fog
 			if (OptionFog)
@@ -1417,6 +1507,7 @@ namespace LibRender2
 				// texture
 				if (material.DaytimeTexture != null)
 				{
+					// ReSharper disable once PossibleInvalidOperationException
 					if (currentHost.LoadTexture(ref material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 					{
 						GL.Enable(EnableCap.Texture2D);
@@ -1473,10 +1564,9 @@ namespace LibRender2
 					GL.Normal3(Face.Vertices[i].Normal.X, Face.Vertices[i].Normal.Y, -Face.Vertices[i].Normal.Z);
 					GL.TexCoord2(vertices[Face.Vertices[i].Index].TextureCoordinates.X, vertices[Face.Vertices[i].Index].TextureCoordinates.Y);
 
-					if (vertices[Face.Vertices[i].Index] is ColoredVertex)
+					if (vertices[Face.Vertices[i].Index] is ColoredVertex v)
 					{
-						ColoredVertex v = (ColoredVertex)vertices[Face.Vertices[i].Index];
-						GL.Color3(v.Color.R, v.Color.G, v.Color.B);
+						GL.Color4(v.Color.R, v.Color.G, v.Color.B, v.Color.A);
 					}
 
 					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X, vertices[Face.Vertices[i].Index].Coordinates.Y, -vertices[Face.Vertices[i].Index].Coordinates.Z);
@@ -1486,7 +1576,7 @@ namespace LibRender2
 			}
 
 			// nighttime polygon
-			if (material.NighttimeTexture != null && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
+			if (blendFactor != 0 && material.NighttimeTexture != null && currentHost.LoadTexture(ref material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 			{
 				// texture
 				GL.Enable(EnableCap.Texture2D);
@@ -1570,6 +1660,11 @@ namespace LibRender2
 			GL.PopMatrix();
 		}
 
-		
+		/// <summary>Sets the current MouseCursor</summary>
+		/// <param name="newCursor">The new cursor</param>
+		public virtual void SetCursor(OpenTK.MouseCursor newCursor)
+		{
+
+		}
 	}
 }

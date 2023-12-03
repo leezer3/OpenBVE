@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
@@ -10,6 +10,8 @@ namespace OpenBveApi.Objects
 	/// <inheritdoc />
 	public class StaticObject : UnifiedObject
 	{
+		/// <summary>Whether the object is optimized</summary>
+		private bool IsOptimized;
 		/// <summary>The mesh of the object</summary>
 		public Mesh Mesh;
 		/// <summary>The starting track position, for static objects only.</summary>
@@ -29,12 +31,7 @@ namespace OpenBveApi.Objects
 		public StaticObject(HostInterface Host)
 		{
 			currentHost = Host;
-			Mesh = new Mesh
-			{
-				Faces = new MeshFace[] { },
-				Materials = new MeshMaterial[] { },
-				Vertices = new VertexTemplate[] { }
-			};
+			Mesh = new Mesh();
 		}
 
 		/// <summary>Creates a clone of this object.</summary>
@@ -48,7 +45,8 @@ namespace OpenBveApi.Objects
 				StartingTrackDistance = StartingTrackDistance,
 				EndingTrackDistance = EndingTrackDistance,
 				Dynamic = Dynamic,
-				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]}
+				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]},
+				IsOptimized = IsOptimized
 			};
 			// vertices
 			for (int j = 0; j < Mesh.Vertices.Length; j++)
@@ -96,7 +94,8 @@ namespace OpenBveApi.Objects
 				StartingTrackDistance = StartingTrackDistance,
 				EndingTrackDistance = EndingTrackDistance,
 				Dynamic = Dynamic,
-				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]}
+				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]},
+				IsOptimized = IsOptimized
 			};
 			// vertices
 			for (int j = 0; j < Mesh.Vertices.Length; j++)
@@ -154,6 +153,7 @@ namespace OpenBveApi.Objects
 				}
 				Result.Mesh.Faces[i].Flip();
 			}
+			Result.IsOptimized = IsOptimized;
 			return Result;
 		}
 
@@ -243,7 +243,7 @@ namespace OpenBveApi.Objects
 				Mesh.Faces[mf + i] = Add.Mesh.Faces[i];
 				for (int j = 0; j < Mesh.Faces[mf + i].Vertices.Length; j++)
 				{
-					Mesh.Faces[mf + i].Vertices[j].Index += (ushort) mv;
+					Mesh.Faces[mf + i].Vertices[j].Index += mv;
 				}
 
 				Mesh.Faces[mf + i].Material += (ushort) mm;
@@ -266,6 +266,12 @@ namespace OpenBveApi.Objects
 				}
 
 			}
+		}
+
+		/// <summary>Applys scale</summary>
+		public void ApplyScale(Vector3 scale)
+		{
+			ApplyScale(scale.X, scale.Y, scale.Z);
 		}
 
 		/// <summary>Applys scale</summary>
@@ -473,18 +479,32 @@ namespace OpenBveApi.Objects
 		/// <inheritdoc />
 		public override void OptimizeObject(bool PreserveVerticies, int Threshold, bool VertexCulling)
 		{
+			if (IsOptimized)
+			{
+				return;
+			}
+			IsOptimized = true;
 			int v = Mesh.Vertices.Length;
 			int m = Mesh.Materials.Length;
 			int f = Mesh.Faces.Length;
-			if (f >= Threshold && currentHost.Platform != HostPlatform.AppleOSX)
+			
+			if (f >= Threshold && f < 20000 && currentHost.Platform != HostPlatform.AppleOSX)
 			{
 				/*
 				 * HACK:
 				 * A forwards compatible GL3 context (required on OS-X) only supports tris
 				 * No access to the renderer type here, so let's cheat and assume that OS-X
 				 * requires an optimized object (therefore decomposed into tris) in all circumstances
+				 *
+				 * Also *always* optimise objects with more than 20k faces (some .X as otherwise this kills the renderer)
 				 */
 				return;
+			}
+
+			if (v > 10000)
+			{
+				// Don't attempt to de-duplicate where over 10k vertices
+				PreserveVerticies = true;
 			}
 
 			// eliminate invalid faces and reduce incomplete faces
@@ -682,7 +702,7 @@ namespace OpenBveApi.Objects
 								{
 									if (Mesh.Faces[k].Vertices[h].Index == j)
 									{
-										Mesh.Faces[k].Vertices[h].Index = (ushort) i;
+										Mesh.Faces[k].Vertices[h].Index = i;
 									}
 									else if (Mesh.Faces[k].Vertices[h].Index > j)
 									{

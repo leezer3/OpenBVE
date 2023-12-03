@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -25,6 +25,7 @@ namespace OpenBve
 		private PackageOperation currentOperation = PackageOperation.None;
 		private PackageType newPackageType;
 		private string ImageFile;
+		private string lastSelectedFolder = null;
 		private BackgroundWorker workerThread = new BackgroundWorker();
 		private bool RemoveFromDatabase = true;
 		private Package dependantPackage;
@@ -39,8 +40,7 @@ namespace OpenBve
 				MessageBox.Show(Translations.GetInterfaceString("packages_database_save_error"));
 			}
 
-			string errorMessage;
-			if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out errorMessage))
+			if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out string errorMessage))
 			{
 				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 				comboBoxPackageType.SelectedIndex = 0;
@@ -195,42 +195,68 @@ namespace OpenBve
 				currentPackage = Manipulation.ReadPackage(openPackageFileDialog.FileName);
 				if (currentPackage != null)
 				{
-					buttonNext.Enabled = true;
-					textBoxPackageName.Text = currentPackage.Name;
-					textBoxPackageAuthor.Text = currentPackage.Author;
-					if (currentPackage.Description != null)
-					{
-						textBoxPackageDescription.Text = currentPackage.Description.Replace("\\r\\n", "\r\n");
-					}
-					textBoxPackageVersion.Text = currentPackage.PackageVersion.ToString();
-					if (currentPackage.Website != null)
-					{
-						linkLabelPackageWebsite.Links.Clear();
-						linkLabelPackageWebsite.Text = currentPackage.Website;
-						LinkLabel.Link link = new LinkLabel.Link {LinkData = currentPackage.Website};
-						linkLabelPackageWebsite.Links.Add(link);
-					}
-					else
-					{
-						linkLabelPackageWebsite.Text = Translations.GetInterfaceString("packages_selection_none_website");
-					}
-					if (currentPackage.PackageImage != null)
-					{
-						pictureBoxPackageImage.Image = currentPackage.PackageImage;
-					}
-					else
-					{
-						TryLoadImage(pictureBoxPackageImage, currentPackage.PackageType == 0 ? "route_unknown.png" : "train_unknown.png");
-					}
+					ShowPackageToInstall();
 				}
 				else
 				{
 					//ReadPackage returns null if the file is not a package.....
-
 					MessageBox.Show(Translations.GetInterfaceString("packages_install_invalid"));
 				}
 			}
 		}
+
+		private void panelPackageInstall_DragDrop(object sender, DragEventArgs e)
+		{
+			string[] dropped = (string[])e.Data.GetData(DataFormats.FileDrop);
+			if (dropped == null || dropped.Length == 0)
+			{
+				return;
+			}
+			for (int i = 0; i < dropped.Length; i++)
+			{
+				currentPackage = Manipulation.ReadPackage(dropped[i]);
+				if (currentPackage != null)
+				{
+					ShowPackageToInstall();
+					return;
+				}
+			}
+		}
+
+		private void ShowPackageToInstall()
+		{
+			buttonNext.Enabled = true;
+			textBoxPackageName.Text = currentPackage.Name;
+			textBoxPackageAuthor.Text = currentPackage.Author;
+			if (currentPackage.Description != null)
+			{
+				textBoxPackageDescription.Text = currentPackage.Description.Replace("\\r\\n", "\r\n");
+			}
+
+			textBoxPackageVersion.Text = currentPackage.PackageVersion.ToString();
+			if (currentPackage.Website != null)
+			{
+				linkLabelPackageWebsite.Links.Clear();
+				linkLabelPackageWebsite.Text = currentPackage.Website;
+				LinkLabel.Link link = new LinkLabel.Link { LinkData = currentPackage.Website };
+				linkLabelPackageWebsite.Links.Add(link);
+			}
+			else
+			{
+				linkLabelPackageWebsite.Text = Translations.GetInterfaceString("packages_selection_none_website");
+			}
+
+			if (currentPackage.PackageImage != null)
+			{
+				pictureBoxPackageImage.Image = currentPackage.PackageImage;
+			}
+			else
+			{
+				TryLoadImage(pictureBoxPackageImage, currentPackage.PackageType == 0 ? "route_unknown.png" : "train_unknown.png");
+			}
+		}
+
+	
 
 		private void buttonInstallFinished_Click(object sender, EventArgs e)
 		{
@@ -260,6 +286,11 @@ namespace OpenBve
 
 		private void Extract(Package packageToReplace = null)
 		{
+			if (workerThread.IsBusy)
+			{
+				MessageBox.Show(Translations.GetInterfaceString("packages_error_ busy_thread"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				return;
+			}
 			ProblemEncountered = false;
 			panelPleaseWait.Show();
 			workerThread.DoWork += delegate
@@ -650,7 +681,7 @@ namespace OpenBve
 			}
 			else
 			{
-				MessageBox.Show(Translations.GetInterfaceString("packages_selection_none"));
+				MessageBox.Show(Translations.GetInterfaceString("packages_selection_none"), Translations.GetInterfaceString("packages_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 
@@ -662,7 +693,7 @@ namespace OpenBve
 				//prompt as to whether the user would like to remove the broken package
 				if (RemoveFromDatabase == false)
 				{
-					if (MessageBox.Show(Translations.GetInterfaceString("packages_uninstall_database_remove"), Translations.GetInterfaceString("program_title"), MessageBoxButtons.YesNo) == DialogResult.Yes)
+					if (MessageBox.Show(Translations.GetInterfaceString("packages_uninstall_database_remove"), Translations.GetInterfaceString("packages_title"), MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
 						RemoveFromDatabase = true;
 					}
@@ -842,6 +873,11 @@ namespace OpenBve
 
 		private void buttonCreatePackage_Click(object sender, EventArgs e)
 		{
+			if (workerThread.IsBusy)
+			{
+				MessageBox.Show(Translations.GetInterfaceString("packages_error_ busy_thread"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				return;
+			}
 			var directory = Path.GetDirectoryName(currentPackage.FileName);
 			try
 			{
@@ -922,8 +958,7 @@ namespace OpenBve
 				panelPleaseWait.Hide();
 				panelSuccess.Show();
 			};
-
-			 workerThread.RunWorkerAsync();	
+			workerThread.RunWorkerAsync();	
 		}
 
 		private void buttonCreateProceed_Click(object sender, EventArgs e)
@@ -1210,8 +1245,7 @@ namespace OpenBve
 						launchLink += "http://";
 					}
 					launchLink += currentPackage.Website;
-					Uri URL;
-					bool result = Uri.TryCreate(launchLink, UriKind.Absolute, out URL) && (URL.Scheme == Uri.UriSchemeHttp || URL.Scheme == Uri.UriSchemeHttps);
+					bool result = Uri.TryCreate(launchLink, UriKind.Absolute, out Uri URL) && (URL.Scheme == Uri.UriSchemeHttp || URL.Scheme == Uri.UriSchemeHttps);
 					if (result)
 					{
 						Process.Start(launchLink);
@@ -1245,7 +1279,7 @@ namespace OpenBve
 			{
 				DialogResult = DialogResult.OK,
 				Name = "okButton",
-				Size = new Size(75, 23),
+				Size = new Size(75, 26),
 				Text = Translations.GetInterfaceString("packages_button_ok"),
 				Location = new Point(size.Width - 80 - 80, 39)
 			};
@@ -1255,7 +1289,7 @@ namespace OpenBve
 			{
 				DialogResult = DialogResult.Cancel,
 				Name = "cancelButton",
-				Size = new Size(75, 23),
+				Size = new Size(75, 26),
 				Text = Translations.GetInterfaceString("packages_button_cancel"),
 				Location = new Point(size.Width - 80, 39)
 			};
@@ -1393,16 +1427,19 @@ namespace OpenBve
 		{
 			bool DialogOK = false;
 			string[] files = null;
-			string folder = String.Empty;
-			string folderDisplay = String.Empty;
+			string folder = string.Empty;
+			string folderDisplay = string.Empty;
 			if (OpenTK.Configuration.RunningOnMacOS || OpenTK.Configuration.RunningOnLinux)
 			{
 				//Mono doesn't like our fancy folder selector
 				//Some versions of OS-X crash, and Linux just falls back- Safer to specifically use the old version on these...
 				var MonoDialog = new FolderBrowserDialog();
+				MonoDialog.RootFolder = Environment.SpecialFolder.MyComputer;
+				if (lastSelectedFolder != null) MonoDialog.SelectedPath = lastSelectedFolder;
 				if (MonoDialog.ShowDialog() == DialogResult.OK)
 				{
-					folder = Directory.GetParent(MonoDialog.SelectedPath).ToString();
+					lastSelectedFolder = MonoDialog.SelectedPath;
+					folder = Directory.GetParent(MonoDialog.SelectedPath)?.ToString();
 					folderDisplay = MonoDialog.SelectedPath;
 					files = Directory.GetFiles(folderDisplay, "*.*", SearchOption.AllDirectories);
 					DialogOK = true;
@@ -1412,17 +1449,19 @@ namespace OpenBve
 			{
 				//Use the fancy folder selector dialog on Windows
 				var dialog = new FolderSelectDialog();
+				if (lastSelectedFolder != null) dialog.InitialDirectory = lastSelectedFolder;
 				if (dialog.Show(Handle))
 				{
 					DialogOK = true;
-					folder = Directory.GetParent(dialog.FileName).ToString();
+					lastSelectedFolder = dialog.FileName;
+					folder = Directory.GetParent(dialog.FileName)?.ToString();
 					folderDisplay = dialog.FileName;
 					files = Directory.GetFiles(dialog.FileName, "*.*", SearchOption.AllDirectories);
 				}
 
 			}
 
-			if (DialogOK && files.Length != 0)
+			if (DialogOK && files.Length != 0 && folder != null)
 			{
 
 				filesToPackageBox.Text += folderDisplay + Environment.NewLine;

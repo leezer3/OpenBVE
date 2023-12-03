@@ -39,7 +39,6 @@ namespace LibRender2.Shaders
 		public Shader(BaseRenderer Renderer, string VertexShaderName, string FragmentShaderName, bool IsFromStream = false)
 		{
 			renderer = Renderer;
-			int status;
 			handle = GL.CreateProgram();
 
 			if (IsFromStream)
@@ -79,7 +78,7 @@ namespace LibRender2.Shaders
 			GL.DeleteShader(fragmentShader);
 			GL.BindFragDataLocation(handle, 0, "fragColor");
 			GL.LinkProgram(handle);
-			GL.GetProgram(handle, GetProgramParameterName.LinkStatus, out status);
+			GL.GetProgram(handle, GetProgramParameterName.LinkStatus, out int status);
 
 			if (status == 0)
 			{
@@ -236,6 +235,7 @@ namespace LibRender2.Shaders
 		/// <param name="ProjectionMatrix"></param>
 		public void SetCurrentProjectionMatrix(Matrix4D ProjectionMatrix)
 		{
+			renderer.lastObjectState = null; // clear the cached object state, as otherwise it might be stale
 			Matrix4 matrix = ConvertToMatrix4(ProjectionMatrix);
 			GL.ProgramUniformMatrix4(handle, UniformLayout.CurrentProjectionMatrix, false, ref matrix);
 		}
@@ -249,6 +249,7 @@ namespace LibRender2.Shaders
 		/// </param>
 		public void SetCurrentModelViewMatrix(Matrix4D ModelViewMatrix)
 		{
+			renderer.lastObjectState = null; // clear the cached object state, as otherwise it might be stale
 			Matrix4 matrix = ConvertToMatrix4(ModelViewMatrix);
 
 			// When transpose is false, B is equal to the transposed matrix of A.

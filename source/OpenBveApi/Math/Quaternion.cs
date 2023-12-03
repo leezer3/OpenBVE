@@ -57,40 +57,22 @@ namespace OpenBveApi.Math
 		/// <summary>Gets / sets the X component</summary>
 		public double X
 		{
-			get
-			{
-				return Xyz.X;
-			}
-			set
-			{
-				Xyz.X = value;
-			}
+			get => Xyz.X;
+			set => Xyz.X = value;
 		}
 
 		/// <summary>Gets / sets the Y component</summary>
 		public double Y
 		{
-			get
-			{
-				return Xyz.Y;
-			}
-			set
-			{
-				Xyz.Y = value;
-			}
+			get => Xyz.Y;
+			set => Xyz.Y = value;
 		}
 
 		/// <summary>Gets / sets the Z component</summary>
 		public double Z
 		{
-			get
-			{
-				return Xyz.Z;
-			}
-			set
-			{
-				Xyz.Z = value;
-			}
+			get => Xyz.Z;
+			set => Xyz.Z = value;
 		}
 
 		/// <summary>Creates a new quaternion describing the rotation between two vectors</summary>
@@ -183,8 +165,8 @@ namespace OpenBveApi.Math
 			Quaternion result = Identity;
 			angle *= 0.5f;
 			axis.Normalize();
-			result.Xyz = axis * (double)System.Math.Sin(angle);
-			result.W = (double)System.Math.Cos(angle);
+			result.Xyz = axis * System.Math.Sin(angle);
+			result.W = System.Math.Cos(angle);
 			result.Normalize();
 			return result;
 		}
@@ -193,24 +175,12 @@ namespace OpenBveApi.Math
 		/// Gets the length (magnitude) of the Quaternion.
 		/// </summary>
 		/// <seealso cref="LengthSquared"/>
-		public double Length
-		{
-			get
-			{
-				return (double)System.Math.Sqrt(W * W + Xyz.NormSquared());
-			}
-		}
+		public double Length => System.Math.Sqrt(W * W + Xyz.NormSquared());
 
 		/// <summary>
 		/// Gets the square of the Quaternion length (magnitude).
 		/// </summary>
-		public double LengthSquared
-		{
-			get
-			{
-				return W * W + Xyz.NormSquared();
-			}
-		}
+		public double LengthSquared => W * W + Xyz.NormSquared();
 
 		/// <summary>
 		/// Returns a copy of the Quaternion scaled to unit length.
@@ -298,10 +268,10 @@ namespace OpenBveApi.Math
         /// <param name="scalar">The scalar</param>
         public void Multiply(double scalar)
         {
-            W = W * scalar;
-            X = X * scalar;
-            Y = Y * scalar;
-            Z = Z * scalar;
+            W *= scalar;
+            X *= scalar;
+            Y *= scalar;
+            Z *= scalar;
         }
 
         /// <summary>
@@ -311,11 +281,7 @@ namespace OpenBveApi.Math
         /// <param name="result">The new quaternion</param>
         public void Multiply(double scalar, out Quaternion result)
         {
-	        result = new Quaternion();
-            result.W = W * scalar;
-            result.X = X * scalar;
-            result.Y = Y * scalar;
-            result.Z = Z * scalar;
+	        result = new Quaternion(X * scalar, Y * scalar, Z * scalar, W * scalar);
         }
 
 		/// <summary>
@@ -326,10 +292,7 @@ namespace OpenBveApi.Math
 		/// <param name="result">The new quaternion</param>
         public static void Multiply(ref Quaternion Quaternion, double scalar, out Quaternion result)
         {
-	        result = new Quaternion(Quaternion.X * scalar,
-									Quaternion.Y * scalar,
-									Quaternion.Z * scalar,
-									Quaternion.W * scalar);
+	        result = new Quaternion(Quaternion.X * scalar, Quaternion.Y * scalar, Quaternion.Z * scalar, Quaternion.W * scalar);
         }
 
 		/// <summary>

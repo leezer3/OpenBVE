@@ -53,9 +53,7 @@ namespace LibRender2.Text
 
 				for (int i = 0; i < text.Length; i++)
 				{
-					Texture texture;
-					OpenGlFontChar data;
-					i += font.GetCharacterData(text, i, out texture, out data) - 1;
+					i += font.GetCharacterData(text, i, out _, out OpenGlFontChar data) - 1;
 					width += data.TypographicSize.X;
 				}
 
@@ -81,9 +79,7 @@ namespace LibRender2.Text
 
 				for (int i = 0; i < text.Length; i++)
 				{
-					Texture texture;
-					OpenGlFontChar data;
-					i += font.GetCharacterData(text, i, out texture, out data) - 1;
+					i += font.GetCharacterData(text, i, out _, out OpenGlFontChar data) - 1;
 
 					if (data.TypographicSize.Y > height)
 					{
@@ -142,9 +138,7 @@ namespace LibRender2.Text
 
 			for (int i = 0; i < text.Length; i++)
 			{
-				Texture texture;
-				OpenGlFontChar data;
-				i += font.GetCharacterData(text, i, out texture, out data) - 1;
+				i += font.GetCharacterData(text, i, out Texture texture, out OpenGlFontChar data) - 1;
 
 				if (renderer.currentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp))
 				{
@@ -207,9 +201,7 @@ namespace LibRender2.Text
 
 			for (int i = 0; i < text.Length; i++)
 			{
-				Texture texture;
-				OpenGlFontChar data;
-				i += font.GetCharacterData(text, i, out texture, out data) - 1;
+				i += font.GetCharacterData(text, i, out Texture texture, out OpenGlFontChar data) - 1;
 				if (renderer.currentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);

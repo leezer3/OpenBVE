@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>6</LangVersion>
+    <LangVersion>7</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
@@ -32,7 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>6</LangVersion>
+    <LangVersion>7</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
@@ -53,6 +53,7 @@
     <Compile Include="Camera\Camera.cs" />
     <Compile Include="Camera\CameraAlignment.cs" />
     <Compile Include="Camera\CameraRestriction.cs" />
+    <Compile Include="Cursors\Cursor.cs" />
     <Compile Include="Fog\Fog.cs" />
     <Compile Include="Lighting\Lighting.cs" />
     <Compile Include="Loading\Loading.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="MotionBlur\MotionBlurMode.cs" />
     <Compile Include="Objects\FaceState.cs" />
     <Compile Include="Objects\ObjectLibrary.cs" />
+    <Compile Include="Objects\VisibilityUpdate.cs" />
     <Compile Include="openGL\FrameBufferObject.cs" />
     <Compile Include="openGL\IndexBufferObject.cs" />
     <Compile Include="openGL\ShaderLayout.cs" />
@@ -70,7 +72,9 @@
     <Compile Include="Overlays\Marker.cs" />
     <Compile Include="Overlays\RailPath.cs" />
     <Compile Include="Overlays\TimeTableMode.cs" />
+    <Compile Include="Primitives\Button.cs" />
     <Compile Include="Primitives\Cube.cs" />
+    <Compile Include="Primitives\GLControl.cs" />
     <Compile Include="Primitives\Picturebox.cs" />
     <Compile Include="Primitives\Rectangle.cs" />
     <Compile Include="openGL\Vertex.cs" />
@@ -82,6 +86,7 @@
     <Compile Include="Screen\Screen.cs" />
     <Compile Include="Shaders\Shader.cs" />
     <Compile Include="Textures\TextureManager.cs" />
+    <Compile Include="Text\Fonts.BlockedFonts.cs" />
     <Compile Include="Text\Fonts.cs" />
     <Compile Include="Text\OpenGlFont.cs" />
     <Compile Include="Text\OpenGlFontChar.cs" />

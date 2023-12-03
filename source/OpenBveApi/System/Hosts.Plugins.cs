@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using OpenBveApi.Interface;
 
 namespace OpenBveApi.Hosts
 {
@@ -12,7 +14,12 @@ namespace OpenBveApi.Hosts
 		/// <returns>Whether loading all plugins was successful.</returns>
 		public bool LoadPlugins(FileSystem.FileSystem fileSystem, BaseOptions currentOptions, out string errorMessage, object TrainManagerReference = null, object RendererReference = null)
 		{
-			UnloadPlugins(out errorMessage);
+			if (Plugins != null && Plugins.Length != 0)
+			{
+				// plugins already loaded
+				errorMessage = string.Empty;
+				return true;
+			}
 			string folder = fileSystem.GetDataFolder("Plugins");
 			string[] files = {};
 			try
@@ -117,20 +124,28 @@ namespace OpenBveApi.Hosts
 			Plugins = list.ToArray();
 			if (Plugins.Length == 0)
 			{
-				errorMessage = "No available content loading plugins were found." + Environment.NewLine + " Please re-download openBVE.";
+				errorMessage = "No available content loading plugins were found." + Environment.NewLine + " Please re-download OpenBVE.";
 				return false;
 			}
 			errorMessage = builder.ToString().Trim(new char[] { });
 			if (errorMessage.Length != 0)
 			{
-				return false;
+				AddMessage(MessageType.Error, false, errorMessage);
 			}
 			return true;
 		}
 
+		private bool currentlyUnloading;
+
 		/// <summary>Unloads all non-runtime plugins.</summary>
 		public bool UnloadPlugins(out string errorMessage)
 		{
+			while (currentlyUnloading)
+			{
+				// if the unload function has been called from another thread (preview vs. game start?) we don't want to have two at once
+				Thread.Sleep(100);
+			}
+			currentlyUnloading = true;
 			StringBuilder builder = new StringBuilder();
 			if (Plugins != null)
 			{
@@ -149,11 +164,8 @@ namespace OpenBveApi.Hosts
 				Plugins = null;
 			}
 			errorMessage = builder.ToString().Trim(new char[] { });
-			if (errorMessage.Length != 0)
-			{
-				return false;
-			}
-			return true;
+			currentlyUnloading = false;
+			return errorMessage.Length == 0;
 		}
 	}
 }

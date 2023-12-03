@@ -72,9 +72,9 @@ namespace DenshaDeGoInput
 		{
 			// --- members ---
 			/// <summary>The speed limit.</summary>
-			internal double Limit;
+			internal readonly double Limit;
 			/// <summary>The track position.</summary>
-			internal double Location;
+			internal readonly double Location;
 			// --- constructors ---
 			/// <summary>Creates a new compatibility limit.</summary>
 			/// <param name="limit">The speed limit.</param>
@@ -87,7 +87,7 @@ namespace DenshaDeGoInput
 		}
 
 		/// <summary>A list of track positions and speed limits in the current route.</summary>
-		private static List<CompatibilityLimit> trackLimits = new List<CompatibilityLimit>();
+		private static readonly List<CompatibilityLimit> trackLimits = new List<CompatibilityLimit>();
 
 		/// <summary>
 		/// The specs of the driver's train.
@@ -127,12 +127,12 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// An array with the command indices configured for each brake notch.
 		/// </summary>
-		private static int[] brakeCommands = new int[10];
+		private static readonly int[] brakeCommands = new int[10];
 
 		/// <summary>
 		/// An array with the command indices configured for each power notch.
 		/// </summary>
-		private static int[] powerCommands = new int[14];
+		private static readonly int[] powerCommands = new int[14];
 
 		/// <summary>
 		/// An array with the command for each button.
@@ -381,14 +381,14 @@ namespace DenshaDeGoInput
 				{
 					brakeCommands[0] = 0;
 					brakeCommands[1] = 100 + (int)Translations.Command.HoldBrake;
-					for (int i = 2; i < controllerBrakeNotches + 2; i++)
+					for (int i = 2; i <= controllerBrakeNotches + 1; i++)
 					{
 						brakeCommands[i] = i - 1;
 					}
 				}
 				else
 				{
-					for (int i = 0; i < controllerBrakeNotches + 2; i++)
+					for (int i = 0; i <= controllerBrakeNotches + 1; i++)
 					{
 						brakeCommands[i] = i;
 					}
@@ -399,7 +399,7 @@ namespace DenshaDeGoInput
 					brakeCommands[(int)InputTranslator.BrakeNotches.Emergency] = 100 + (int)Translations.Command.BrakeEmergency;
 				}
 				// Power notches
-				for (int i = 0; i < controllerPowerNotches; i++)
+				for (int i = 0; i <= controllerPowerNotches; i++)
 				{
 					powerCommands[i] = i;
 				}
@@ -554,7 +554,7 @@ namespace DenshaDeGoInput
 							if (j >= 0)
 							{
 								Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-								Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								Value = Lines[i].Substring(j + 1).TrimStart();
 							}
 							else
 							{

@@ -15,6 +15,8 @@
 		Controls,
 		/// <summary>Customises the specified control</summary>
 		Control,
+		/// <summary>Resets the controls to default</summary>
+		ControlReset,
 		/// <summary>Quits the game</summary>
 		Quit,
 		/// <summary>The game start menu</summary>

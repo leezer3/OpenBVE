@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Drawing.Text;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace LibRender2.Text
 {
@@ -20,6 +20,10 @@ namespace LibRender2.Text
 		// ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
 		// Must remain, else will be disposed of by the GC as this is a separate assembly
 		private readonly Bitmap bitmap;
+		/// <summary>The border around glpyhs on the font bitmap</summary>
+		const int drawBorder = 20;
+		/// <summary>The border used when calculating texture co-ordinates</summary>
+		const int coordinateBorder = 1;
 
 		// --- constructors ---
 		/// <summary>Creates a new table of characters.</summary>
@@ -35,7 +39,7 @@ namespace LibRender2.Text
 			bitmap = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
 			Graphics graphics = Graphics.FromImage(bitmap);
 			graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-
+			double lineHeight = 0;
 			for (int i = 0; i < 256; i++)
 			{
 				string character = char.ConvertFromUtf32(offset + i);
@@ -43,6 +47,12 @@ namespace LibRender2.Text
 				SizeF typographicSize = graphics.MeasureString(character, font, int.MaxValue, StringFormat.GenericTypographic);
 				physicalSizes[i] = new Vector2((int)Math.Ceiling(physicalSize.Width), (int)Math.Ceiling(physicalSize.Height));
 				typographicSizes[i] = new Vector2((int)Math.Ceiling(typographicSize.Width == 0.0f ? physicalSize.Width : typographicSize.Width), (int)Math.Ceiling(typographicSize.Height == 0.0f ? physicalSize.Height : typographicSize.Height));
+
+				if (typographicSizes[i].Y + drawBorder > lineHeight)
+				{
+					// Find line height here in case of an oversize glyph in non-zero line
+					lineHeight = typographicSizes[i].Y + drawBorder;
+				}
 			}
 
 			graphics.Dispose();
@@ -50,12 +60,18 @@ namespace LibRender2.Text
 
 			/*
 			 * Find suitable bitmap dimensions.
+			 *
+			 * NOTE:
+			 * Draw the characters with a 20px border around each character to prevent bleeding in some fonts with massive tails (e.g. Miama Nuera)
+			 * however, use a 1px clamp on the texture border
+			 *
+			 * Massive tails may still overlap / glitch, but this gives us no bleed
 			 * */
-			const int border = 1;
-			double width = border;
-			double height = border;
+			
+			double width = drawBorder;
+			double height = drawBorder;
 			double lineWidth = 0;
-			double lineHeight = 0;
+			
 			Vector2[] coordinates = new Vector2[256];
 
 			for (int i = 0; i < 256; i++)
@@ -67,20 +83,14 @@ namespace LibRender2.Text
 					{
 						width = lineWidth;
 					}
-					lineWidth = border;
+					lineWidth = drawBorder;
 
 					height += lineHeight;
-					lineHeight = 0;
 				}
 
 				coordinates[i] = new Vector2(lineWidth, height);
 
-				lineWidth += physicalSizes[i].X + border;
-
-				if (physicalSizes[i].Y + border > lineHeight)
-				{
-					lineHeight = physicalSizes[i].Y + border;
-				}
+				lineWidth += physicalSizes[i].X + drawBorder;
 			}
 
 			if (lineWidth > width)
@@ -103,13 +113,12 @@ namespace LibRender2.Text
 			for (int i = 0; i < 256; i++)
 			{
 				graphics.DrawString(char.ConvertFromUtf32(offset + i), font, Brushes.White, new PointF((float)coordinates[i].X, (float)coordinates[i].Y));
-				double x0 = (coordinates[i].X - border) / width;
-				double x1 = (coordinates[i].X + physicalSizes[i].X + border) / width;
-				double y0 = (coordinates[i].Y - border) / height;
-				double y1 = (coordinates[i].Y + physicalSizes[i].Y + border) / height;
-				Characters[i] = new OpenGlFontChar(new Vector4(x0, y0, x1 - x0, y1 - y0), new Vector2(physicalSizes[i].X + 2 * border, physicalSizes[i].Y + 2 * border), typographicSizes[i]);
+				double x0 = (coordinates[i].X - coordinateBorder) / width;
+				double y0 = (coordinates[i].Y - coordinateBorder) / height;
+				double x1 = (coordinates[i].X + physicalSizes[i].X + coordinateBorder) / width;
+				double y1 = (coordinates[i].Y + physicalSizes[i].Y + coordinateBorder) / height;
+				Characters[i] = new OpenGlFontChar(new Vector4(x0, y0, x1 - x0, y1 - y0), new Vector2(physicalSizes[i].X + 2.0 * coordinateBorder, physicalSizes[i].Y + 2.0 * coordinateBorder), typographicSizes[i]);
 			}
-
 			graphics.Dispose();
 			Texture = new Texture(bitmap);
 		}

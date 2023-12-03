@@ -4,7 +4,7 @@ using System.IO.Compression;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 
-namespace Plugin {
+namespace Texture.Ace {
 	public partial class Plugin : TextureInterface {
 		
 		// --- get colors ---
@@ -168,7 +168,7 @@ namespace Plugin {
 		/// <summary>Loads an ACE texture from the specified file.</summary>
 		/// <param name="file">The path to the file.</param>
 		/// <returns>The texture.</returns>
-		private static Texture LoadFromFile(string file) {
+		private static OpenBveApi.Textures.Texture LoadFromFile(string file) {
 			byte[] bytes = File.ReadAllBytes(file);
 			ulong identifier;
 			using (MemoryStream stream = new MemoryStream(bytes)) {
@@ -178,17 +178,19 @@ namespace Plugin {
 			}
 			if (identifier == 0x40404153494D4953) {
 				return LoadFromUncompressedData(bytes);
-			} else if (identifier == 0x46404153494D4953) {
-				return LoadFromUncompressedData(DecompressAce(bytes));
-			} else {
-				throw new InvalidDataException();
 			}
+
+			if (identifier == 0x46404153494D4953) {
+				return LoadFromUncompressedData(DecompressAce(bytes));
+			}
+
+			throw new InvalidDataException();
 		}
 		
 		/// <summary>Loads an ACE texture from uncompressed data.</summary>
 		/// <param name="data">The uncompressed data.</param>
 		/// <returns>The texture.</returns>
-		private static Texture LoadFromUncompressedData(byte[] data) {
+		private static OpenBveApi.Textures.Texture LoadFromUncompressedData(byte[] data) {
 			using (MemoryStream stream = new MemoryStream(data)) {
 				using (BinaryReader reader = new BinaryReader(stream)) {
 					// --- header ---
@@ -393,7 +395,7 @@ namespace Plugin {
 						throw new NotSupportedException();
 					}
 					// --- return texture ---
-					return new Texture(width, height, 32, bytes, null);
+					return new OpenBveApi.Textures.Texture(width, height, PixelFormat.RGBAlpha, bytes, null);
 				}
 			}
 		}

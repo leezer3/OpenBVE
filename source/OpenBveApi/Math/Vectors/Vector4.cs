@@ -20,10 +20,7 @@ namespace OpenBveApi.Math
 		/// <summary>A Vector3 representing the X Y and Z components</summary>
 		public Vector3 Xyz
 		{
-			get
-			{
-				return new Vector3(X, Y, Z);
-			}
+			get => new Vector3(X, Y, Z);
 			set
 			{
 				X = value.X;
@@ -317,8 +314,7 @@ namespace OpenBveApi.Math
 		/// <returns>The transformed vector</returns>
 		public static Vector4 Transform(Vector4 vec, Matrix4D mat)
 		{
-			Vector4 result;
-			Transform(ref vec, ref mat, out result);
+			Transform(ref vec, ref mat, out Vector4 result);
 			return result;
 		}
 

@@ -10,6 +10,7 @@ using OpenBveApi.Trains;
 using RouteManager2;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
+using Path = OpenBveApi.Path;
 
 namespace CsvRwRouteParser
 {
@@ -29,7 +30,7 @@ namespace CsvRwRouteParser
 			XmlDocument currentXML = new XmlDocument();
 			//Load the object's XML file 
 			currentXML.Load(fileName);
-			string Path = System.IO.Path.GetDirectoryName(fileName);
+			string filePath = Path.GetDirectoryName(fileName);
 			//Check for null
 			if (currentXML.DocumentElement != null)
 			{
@@ -127,7 +128,7 @@ namespace CsvRwRouteParser
 										Direction door = Direction.Both;
 										if (!string.IsNullOrEmpty(c.InnerText))
 										{
-											door = Parser.FindDirection(c.InnerText, "StationXML:Doors", false, -1, System.IO.Path.GetFileName(fileName));
+											door = Parser.FindDirection(c.InnerText, "StationXML:Doors", false, -1, Path.GetFileName(fileName));
 										}
 										station.OpenLeftDoors = door == Direction.Left | door == Direction.Both;
 										station.OpenRightDoors = door == Direction.Right | door == Direction.Both;
@@ -174,7 +175,7 @@ namespace CsvRwRouteParser
 													case "filename":
 														try
 														{
-															arrSound = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+															arrSound = Path.CombineFile(filePath, cc.InnerText);
 														}
 														catch
 														{
@@ -194,7 +195,7 @@ namespace CsvRwRouteParser
 										{
 											try
 											{
-												arrSound = OpenBveApi.Path.CombineFile(Path, c.InnerText);
+												arrSound = Path.CombineFile(filePath, c.InnerText);
 											}
 											catch
 											{
@@ -254,7 +255,7 @@ namespace CsvRwRouteParser
 													case "filename":
 														try
 														{
-															depSound = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+															depSound = Path.CombineFile(filePath, cc.InnerText);
 														}
 														catch
 														{
@@ -274,7 +275,7 @@ namespace CsvRwRouteParser
 										{
 											try
 											{
-												depSound = OpenBveApi.Path.CombineFile(Path, c.InnerText);
+												depSound = Path.CombineFile(filePath, c.InnerText);
 											}
 											catch
 											{
@@ -425,8 +426,7 @@ namespace CsvRwRouteParser
 												case "distance":
 													if (!string.IsNullOrEmpty(cc.InnerText))
 													{
-														double d;
-														if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out d))
+														if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out double d))
 														{
 															Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Request stop distance is invalid in XML file " + fileName);
 															break;

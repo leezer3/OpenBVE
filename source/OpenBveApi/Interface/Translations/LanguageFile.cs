@@ -10,7 +10,7 @@ namespace OpenBveApi.Interface {
         public static void LoadLanguageFiles(string LanguageFolder) {
 			if (!Directory.Exists(LanguageFolder))
 			{
-				MessageBox.Show(@"The default language files have been moved or deleted.");
+				MessageBox.Show(@"The default language files have been moved or deleted.", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				LoadEmbeddedLanguage();
 				return;
 			}
@@ -18,7 +18,7 @@ namespace OpenBveApi.Interface {
 				string[] LanguageFiles = Directory.GetFiles(LanguageFolder, "*.xlf");
 	            if (LanguageFiles.Length == 0)
 	            {
-		            MessageBox.Show(@"No valid language files were found.");
+		            MessageBox.Show(@"No valid language files were found.", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					LoadEmbeddedLanguage();
 		            return;
 	            }
@@ -87,8 +87,7 @@ namespace OpenBveApi.Interface {
 			int i = comboboxLanguages.SelectedIndex;
 			if (i != -1)
 			{
-				Language l = comboboxLanguages.Items[i] as Language;
-				if (l == null)
+				if (!(comboboxLanguages.Items[i] is Language l))
 				{
 					return false;
 				}
@@ -100,10 +99,7 @@ namespace OpenBveApi.Interface {
 				}
 				if (System.IO.File.Exists(File))
 				{
-					
-					using (var fs = new System.IO.FileStream(File, System.IO.FileMode.Open, System.IO.FileAccess.Read)) {
-						LanguageImage = File;
-					}
+					LanguageImage = File;
 				}
 				return true;
 			}
@@ -118,8 +114,7 @@ namespace OpenBveApi.Interface {
             int i = comboboxLanguages.SelectedIndex;
 			if (i != -1)
 			{
-				Language l = comboboxLanguages.Items[i] as Language;
-				if (l == null)
+				if (!(comboboxLanguages.Items[i] is Language l))
 				{
 					return false;
 				}

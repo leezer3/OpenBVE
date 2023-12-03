@@ -1,0 +1,32 @@
+using System.Windows.Forms;
+using OpenBveApi.Interface;
+
+namespace OpenBve.UserInterface
+{
+	/// <summary>Basic class to show logs</summary>
+	public partial class formViewLog : Form
+	{
+		/// <summary>Constructor</summary>
+		/// <param name="text">The log text to show</param>
+		public formViewLog(string text)
+		{
+			InitializeComponent();
+			SetText(text);
+		}
+
+		private void SetText(string text)
+		{
+			var originalTitle = Text;
+			Text += Translations.GetInterfaceString("message_loading");
+			Shown += (sender, e) => {
+				textBoxLog.Text = text;
+				Text = originalTitle;
+			};
+		}
+
+		private void buttonClose_Click(object sender, System.EventArgs e)
+		{
+			Close();
+		}
+	}
+}

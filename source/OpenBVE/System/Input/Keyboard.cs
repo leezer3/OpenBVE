@@ -2,7 +2,6 @@
 using LibRender2.Screens;
 using OpenTK.Input;
 using OpenBveApi.Interface;
-using TrainManager.Handles;
 
 namespace OpenBve
 {
@@ -11,24 +10,30 @@ namespace OpenBve
 		/// <summary>Called when a KeyDown event is generated</summary>
 		internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
 		{
-			if (Interface.CurrentOptions.KioskMode)
+			if (Interface.CurrentOptions.KioskMode && Program.Renderer.CurrentInterface != InterfaceType.GLMainMenu)
 			{
 				//If in kiosk mode, reset the timer and disable AI on keypress
 				MainLoop.kioskModeTimer = 0;
 				TrainManager.PlayerTrain.AI = null;
 			}
-			if (Loading.Complete == true && e.Key == OpenTK.Input.Key.F4 && e.Alt == true)
+			if (Loading.Complete && e.Key == Key.F4 && e.Alt)
 			{
 				// Catch standard ALT + F4 quit and push confirmation prompt
 				Game.Menu.PushMenu(MenuType.Quit);
 				return;
 			}
+
+			if (TrainManager.PlayerTrain?.Plugin != null)
+			{
+				TrainManager.PlayerTrain.Plugin.RawKeyDown((OpenBveApi.Input.Key)e.Key);
+			}
+
 			BlockKeyRepeat = true;
 			//Check for modifiers
 			if (e.Shift) CurrentKeyboardModifier |= KeyboardModifier.Shift;
 			if (e.Control) CurrentKeyboardModifier |= KeyboardModifier.Ctrl;
 			if (e.Alt) CurrentKeyboardModifier |= KeyboardModifier.Alt;
-			if (Program.Renderer.CurrentInterface == InterfaceType.Menu && Game.Menu.IsCustomizingControl())
+			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu && Game.Menu.IsCustomizingControl())
 			{
 				Game.Menu.SetControlKbdCustomData((OpenBveApi.Input.Key)e.Key, CurrentKeyboardModifier);
 				return;
@@ -53,7 +58,8 @@ namespace OpenBve
 							if (Interface.CurrentControls[i].Command == Translations.Command.CameraInterior |
 								Interface.CurrentControls[i].Command == Translations.Command.CameraExterior |
 								Interface.CurrentControls[i].Command == Translations.Command.CameraFlyBy |
-								Interface.CurrentControls[i].Command == Translations.Command.CameraTrack)
+								Interface.CurrentControls[i].Command == Translations.Command.CameraTrack |
+								Interface.CurrentControls[i].Command == Translations.Command.MiscFullscreen)
 							{
 								//HACK: We don't want to bounce between camera modes when holding down the mode switch key
 								continue;
@@ -63,9 +69,14 @@ namespace OpenBve
 					}
 				}
 			}
-			// Attempt to reset handle spring
-			TrainManager.PlayerTrain.Handles.Power.ResetSpring();
-			TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+			
+			if (TrainManager.PlayerTrain != null)
+			{
+				// Attempt to reset handle spring
+				TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+				TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+			}
+			
 			
 			BlockKeyRepeat = false;
 			//Remember to reset the keyboard modifier after we're done, else it repeats.....
@@ -75,18 +86,23 @@ namespace OpenBve
 		/// <summary>Called when a KeyUp event is generated</summary>
 		internal static void keyUpEvent(object sender, KeyboardKeyEventArgs e)
 		{
-			if (Interface.CurrentOptions.KioskMode)
+			if (Interface.CurrentOptions.KioskMode && Program.Renderer.CurrentInterface != InterfaceType.GLMainMenu)
 			{
 				//If in kiosk mode, reset the timer and disable AI on keypress
 				MainLoop.kioskModeTimer = 0;
 				TrainManager.PlayerTrain.AI = null;
 			}
-			if (Program.Renderer.PreviousInterface == InterfaceType.Menu & Program.Renderer.CurrentInterface == InterfaceType.Normal)
+			if (Program.Renderer.PreviousInterface >= InterfaceType.Menu & Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
 				//Set again to block the first keyup event after the menu has been closed, as this may produce unwanted effects
 				//if the menu select key is also mapped in-game
 				Program.Renderer.CurrentInterface = InterfaceType.Normal;
 				return;
+			}
+
+			if (TrainManager.PlayerTrain?.Plugin != null)
+			{
+				TrainManager.PlayerTrain.Plugin.RawKeyUp((OpenBveApi.Input.Key)e.Key);
 			}
 			//We don't need to check for modifiers on key up
 			BlockKeyRepeat = true;
@@ -109,8 +125,11 @@ namespace OpenBve
 			}
 
 			// Attempt to reset handle spring
-			TrainManager.PlayerTrain.Handles.Power.ResetSpring();
-			TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+			if (TrainManager.PlayerTrain != null)
+			{
+				TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+				TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+			}
 			BlockKeyRepeat = false;
 		}
 	}

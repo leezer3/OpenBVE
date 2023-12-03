@@ -35,24 +35,23 @@ namespace TrainManager.Motor
 			{
 				BVE5MotorSoundTableEntry entry = MotorSoundTable[0];
 				BVE5MotorSoundTableEntry nextEntry = MotorSoundTable[0];
-				for (int i = 0; i < MotorSoundTable.Length; i++)
+				for (int i = 0; i < MotorSoundTable.Length - 1; i++)
 				{
-					if (MotorSoundTable[i].Speed <= speed && MotorSoundTable[i + 1].Speed >= speed)
+					double nextSpeed = MotorSoundTable[i + 1].Speed;
+					entry = MotorSoundTable[i];
+					nextEntry = MotorSoundTable[i + 1];
+					if (MotorSoundTable[i].Speed <= speed && nextSpeed >= speed)
 					{
 						break;
 					}
-					entry = MotorSoundTable[i];
-					if (i < MotorSoundTable.Length)
-					{
-						nextEntry = MotorSoundTable[i + 1];
-					}
+					
 				}
 				// Pitch / volume are linearly interpolated to the next entry
 				double interpolate = (nextEntry.Speed - speed) / (nextEntry.Speed - entry.Speed);
 				int maxSounds = Math.Max(entry.Sounds.Length, SoundSources.Length);
 				for (int i = 0; i < maxSounds; i++)
 				{
-					if (i > entry.Sounds.Length || i < SoundSources.Length && (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0))
+					if (i >= entry.Sounds.Length || i < SoundSources.Length && (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0))
 					{
 						TrainManagerBase.currentHost.StopSound(SoundSources[i]);
 					}
@@ -67,6 +66,12 @@ namespace TrainManager.Motor
 
 							double pitch = entry.Sounds[i].Pitch + (nextEntry.Sounds[i].Pitch - entry.Sounds[i].Pitch) * interpolate;
 							double gain = entry.Sounds[i].Gain + (nextEntry.Sounds[i].Gain - entry.Sounds[i].Gain) * interpolate;
+
+							if (pitch <= 0 || gain <= 0)
+							{
+								TrainManagerBase.currentHost.StopSound(SoundSources[i]);
+								continue;
+							}
 							/*
 							 * Initial gain is that specified by the speed step of the current curve
 							 * Now multiply that by the actual acceleration as opposed to the max acceleration to find the absolute
@@ -99,16 +104,14 @@ namespace TrainManager.Motor
 				//Brake
 				BVE5MotorSoundTableEntry entry = BrakeSoundTable[0];
 				BVE5MotorSoundTableEntry nextEntry = BrakeSoundTable[0];
-				for (int i = 0; i < BrakeSoundTable.Length; i++)
+				for (int i = 0; i < BrakeSoundTable.Length - 1; i++)
 				{
-					if (BrakeSoundTable[i].Speed <= speed && BrakeSoundTable[i + 1].Speed >= speed)
+					double nextSpeed = BrakeSoundTable[i + 1].Speed;
+					entry = BrakeSoundTable[i];
+					nextEntry = BrakeSoundTable[i + 1];
+					if (BrakeSoundTable[i].Speed <= speed && nextSpeed >= speed)
 					{
 						break;
-					}
-					entry = BrakeSoundTable[i];
-					if (i > 0)
-					{
-						nextEntry = BrakeSoundTable[i - 1];
 					}
 				}
 				// Pitch / volume are linearly interpolated to the next entry
@@ -116,7 +119,7 @@ namespace TrainManager.Motor
 				int maxSounds = Math.Max(entry.Sounds.Length, SoundSources.Length);
 				for (int i = 0; i < maxSounds; i++)
 				{
-					if (i > entry.Sounds.Length || i < SoundSources.Length && (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0))
+					if (i >= entry.Sounds.Length || i < SoundSources.Length && (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0))
 					{
 						TrainManagerBase.currentHost.StopSound(SoundSources[i]);
 					}
@@ -131,6 +134,12 @@ namespace TrainManager.Motor
 
 							double pitch = entry.Sounds[i].Pitch + (nextEntry.Sounds[i].Pitch - entry.Sounds[i].Pitch) * interpolate;
 							double gain = entry.Sounds[i].Gain + (nextEntry.Sounds[i].Gain - entry.Sounds[i].Gain) * interpolate;
+
+							if (pitch <= 0 || gain <= 0)
+							{
+								TrainManagerBase.currentHost.StopSound(SoundSources[i]);
+								continue;
+							}
 							/*
 							 * Initial gain is that specified by the speed step of the current curve
 							 * Now multiply that by the actual acceleration as opposed to the max acceleration to find the absolute

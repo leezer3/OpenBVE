@@ -78,7 +78,7 @@ namespace OpenBve
 					//Our resolution was not found at all
 					MessageBox.Show(
 						"The graphics card driver reported that the selected resolution was not supported:" + Environment.NewLine +
-						Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight + " " +
+						Interface.CurrentOptions.FullscreenWidth + @" x " + Interface.CurrentOptions.FullscreenHeight + " " +
 						Interface.CurrentOptions.FullscreenBits + "bit color" + Environment.NewLine +
 						"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Program.RestartArguments = " ";
@@ -114,7 +114,7 @@ namespace OpenBve
 				catch
 				{
 					//Windowed mode failed to launch
-					MessageBox.Show("An error occured whilst tring to launch in windowed mode at resolution:" + Environment.NewLine +
+					MessageBox.Show("An error occured whilst trying to launch in windowed mode at resolution:" + Environment.NewLine +
 									Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight + " " +
 									Environment.NewLine +
 									"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK,
@@ -132,8 +132,9 @@ namespace OpenBve
 				return;
 			}
 
-			Program.currentGameWindow.TargetUpdateFrequency = 0;
-			Program.currentGameWindow.TargetRenderFrequency = 0;
+			// BUG: Currently disabled- https://github.com/leezer3/OpenBVE/issues/957
+			//Program.currentGameWindow.TargetUpdateFrequency = Interface.CurrentOptions.FPSLimit;
+			//Program.currentGameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit;
 			Program.currentGameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
 			
 		}

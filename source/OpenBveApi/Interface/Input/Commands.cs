@@ -302,7 +302,16 @@ namespace OpenBveApi.Interface {
 			/// <summary>Triggers a screen reader message with the distance and aspect to the next signal</summary>
 			AccessibilityNextSignal,
 			/// <summary>Triggers a screen reader message with the distance and aspect to the next station</summary>
-			AccessibilityNextStation
+			AccessibilityNextStation,
+			/*
+			 * Added in 1.8.4.3
+			 */
+			/// <summary>Toggles the sanders if fitted</summary>
+			Sanders,
+			/// <summary>Uncouples the front coupling of a car</summary>
+			UncoupleFront,
+			/// <summary>Uncouples the rear coupling of a car</summary>
+			UncoupleRear
 		}
 
 		/// <summary>Defines the possible command types</summary>
@@ -327,9 +336,8 @@ namespace OpenBveApi.Interface {
 			if (cmdname == null) throw new ArgumentNullException("cmd");
 			if (cmdname.StartsWith("Security", StringComparison.Ordinal))
 				cmdname = cmdname.Substring(8).ToUpperInvariant();
-			VirtualKeys key;
-			if (!Enum.TryParse(cmdname, out key))
-				throw new ArgumentException("VirtualKeys does not contain the following key: " +
+			if (!Enum.TryParse(cmdname, out VirtualKeys key))
+				throw new ArgumentException(@"VirtualKeys does not contain the following key: " +
 					cmdname, "cmd");
 			return key;
 		}

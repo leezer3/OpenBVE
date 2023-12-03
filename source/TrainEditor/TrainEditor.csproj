@@ -77,11 +77,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Options.cs" />
+    <Compile Include="System\Host.cs" />
     <Compile Include="TrainDat.cs" />
     <Compile Include="formEditor.cs">
       <SubType>Form</SubType>
@@ -138,6 +140,7 @@
       <Name>TrainManager</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <!-- Copy in dependancies -->

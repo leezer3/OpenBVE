@@ -1,6 +1,8 @@
-﻿using OpenBveApi.Interface;
+﻿using System;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 
 namespace CsvRwRouteParser
 {
@@ -63,11 +65,35 @@ namespace CsvRwRouteParser
 							}
 						}
 					}
-
 					break;
 				case OptionsCommand.UnitOfLength:
 				case OptionsCommand.UnitOfSpeed:
+					break;
 				case OptionsCommand.ObjectVisibility:
+					if (Arguments.Length < 1)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+					}
+					else
+					{
+						if (!NumberFormats.TryParseIntVb6(Arguments[0], out int a))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else if (a < 0 || a > 3)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is expected to be between 0 and 3 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else
+						{
+							Plugin.CurrentOptions.ObjectDisposalMode = (ObjectDisposalMode)a;
+							if (Plugin.CurrentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
+							{
+								Plugin.CurrentOptions.QuadTreeLeafSize = Math.Max(50, (int)Math.Ceiling(Plugin.CurrentOptions.ViewingDistance / 10.0d) * 10);
+							}
+						}
+						
+					}
 					break;
 				case OptionsCommand.SectionBehavior:
 					if (Arguments.Length < 1)
@@ -76,8 +102,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						int a;
-						if (!NumberFormats.TryParseIntVb6(Arguments[0], out a))
+						if (!NumberFormats.TryParseIntVb6(Arguments[0], out int a))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -99,8 +124,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						int a;
-						if (!NumberFormats.TryParseIntVb6(Arguments[0], out a))
+						if (!NumberFormats.TryParseIntVb6(Arguments[0], out int a))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -122,8 +146,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						int a;
-						if (!NumberFormats.TryParseIntVb6(Arguments[0], out a))
+						if (!NumberFormats.TryParseIntVb6(Arguments[0], out int a))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -144,8 +167,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						int a;
-						if (!NumberFormats.TryParseIntVb6(Arguments[0], out a))
+						if (!NumberFormats.TryParseIntVb6(Arguments[0], out int a))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -156,6 +178,27 @@ namespace CsvRwRouteParser
 						else
 						{
 							EnabledHacks.BveTsHacks = a == 1;
+						}
+					}
+					break;
+				case OptionsCommand.ReverseDirection:
+					if (Arguments.Length < 1)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+					}
+					else
+					{
+						if (!NumberFormats.TryParseIntVb6(Arguments[0], out int a))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else if (a != 0 & a != 1)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is expected to be either 0 or 1 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else
+						{
+							CurrentRoute.Tracks[0].Direction = a == 1 ? TrackDirection.Reverse : TrackDirection.Forwards;
 						}
 					}
 					break;

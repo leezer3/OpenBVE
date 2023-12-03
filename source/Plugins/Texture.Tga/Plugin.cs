@@ -3,7 +3,7 @@ using System.IO;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 
-namespace Plugin
+namespace Texture.Tga
 {
 	/// <summary>Implements the texture interface.</summary>
 	public partial class Plugin : TextureInterface, IDisposable
@@ -52,7 +52,7 @@ namespace Plugin
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool LoadTexture(string path, out Texture texture)
+		public override bool LoadTexture(string path, out OpenBveApi.Textures.Texture texture)
 		{
 			try
 			{

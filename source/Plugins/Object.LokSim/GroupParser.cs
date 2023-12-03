@@ -27,6 +27,7 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using System.Text;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -61,7 +62,7 @@ namespace Plugin
 			};
 			try
 			{
-				currentXML.Load(FileName);
+				currentXML.SanitizeAndLoadXml(FileName);
 			}
 			catch (Exception ex)
 			{
@@ -130,7 +131,7 @@ namespace Plugin
 				}
 			}
 
-			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
+			string BaseDir = Path.GetDirectoryName(FileName);
 
 			GruppenObject[] CurrentObjects = new GruppenObject[0];
 			//Check for null
@@ -191,7 +192,11 @@ namespace Plugin
 														//Defines when the object should be shown
 														try
 														{
-															Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, false));
+															if (GetAnimatedFunction(attribute.Value, false, out string func))
+															{
+																Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(func);
+															}
+															
 														}
 														catch
 														{
@@ -203,7 +208,10 @@ namespace Plugin
 														//Defines when the object should be hidden
 														try
 														{
-															Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, true));
+															if (GetAnimatedFunction(attribute.Value, false, out string func))
+															{
+																Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(func);
+															}
 														}
 														catch
 														{
@@ -229,12 +237,7 @@ namespace Plugin
 					//If we use multiples, the Z-sorting throws a wobbly
 					StaticObject staticObject = new StaticObject(Plugin.currentHost)
 					{
-						Mesh = new Mesh
-						{
-							Vertices = new VertexTemplate[0],
-							Faces = new MeshFace[0],
-							Materials = new MeshMaterial[0]
-						}
+						Mesh = new Mesh()
 					};
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{
@@ -329,10 +332,10 @@ namespace Plugin
 			return null;
 		}
 
-		private static string GetAnimatedFunction(string Value, bool Hidden)
+		private static bool GetAnimatedFunction(string Value, bool Hidden, out string script)
 		{
 			string[] splitStrings = Value.Split(new char[] { });
-			string script = string.Empty;
+			script = string.Empty;
 			for (int i = 0; i < splitStrings.Length; i++)
 			{
 				splitStrings[i] = splitStrings[i].Trim(new char[] { }).ToLowerInvariant();
@@ -343,22 +346,22 @@ namespace Plugin
 						//Appears to be HEADLIGHTS (F)
 						script += Hidden ? "reversernotch != -1" : "reversernotch == -1";
 					}
-					if (splitStrings[i].StartsWith("schlusslicht1-an"))
+					else if (splitStrings[i].StartsWith("schlusslicht1-an"))
 					{
 						//Appears to be TAILLIGHTS (F)
 						script += Hidden ? "reversernotch != 1" : "reversernotch == 1";
 					}
-					if (splitStrings[i].StartsWith("spitzenlicht2-an"))
+					else if (splitStrings[i].StartsWith("spitzenlicht2-an"))
 					{
 						//Appears to be HEADLIGHTS (R)
 						script += Hidden ? "reversernotch != 1" : "reversernotch == 1";
 					}
-					if (splitStrings[i].StartsWith("schlusslicht2-an"))
+					else if (splitStrings[i].StartsWith("schlusslicht2-an"))
 					{
 						//Appears to be TAILLIGHTS (R)
 						script += Hidden ? "reversernotch != -1" : "reversernotch == -1";
 					}
-					if (splitStrings[i].StartsWith("tür") && splitStrings[i].EndsWith("offen"))
+					else if (splitStrings[i].StartsWith("tür") && splitStrings[i].EndsWith("offen"))
 					{
 						switch (splitStrings[i][3])
 						{
@@ -380,7 +383,7 @@ namespace Plugin
 								break;
 						}
 					}
-					if (splitStrings[i].StartsWith("rauch"))
+					else if (splitStrings[i].StartsWith("rauch"))
 					{
 						//Smoke (e.g. steam loco)
 						string[] finalStrings = splitStrings[i].Split(new[] { '_'});
@@ -405,6 +408,11 @@ namespace Plugin
 								break;
 						}
 					}
+					else
+					{
+						// not currently supported function
+						return false;
+					}
 				}
 				else
 				{
@@ -419,7 +427,7 @@ namespace Plugin
 					}
 				}
 			}
-			return script;
+			return true;
 		}
 	}
 }

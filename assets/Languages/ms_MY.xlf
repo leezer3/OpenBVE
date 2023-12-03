@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
+<?xml version="1.0" ?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="ms-MY">
 		<body>
 			<group id="language">
@@ -22,8 +22,60 @@
 			<group id="openbve">
 				<group id="program">
 					<trans-unit id="title">
-						<source>openBVE</source>
-						<target>openBVE</target>
+						<source>OpenBVE</source>
+					</trans-unit>
+				</group>
+				<group id="about">
+					<trans-unit id="title">
+						<source>About</source>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</source>
+					</trans-unit>
+					<trans-unit id="open_source_licenses">
+						<source>Open Source Licenses</source>
+					</trans-unit>
+					<trans-unit id="open_source_licenses_header">
+						<source>OpenBVE makes use of several open-source libraries, whose licenses are reproduced below:</source>
+					</trans-unit>
+					<trans-unit id="close">
+						<source>Close</source>
+						<target>Tutup</target>
+					</trans-unit>
+				</group>
+				<group id="bug_report">
+					<trans-unit id="title">
+						<source>Report Problem</source>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>This function will create a zip archive on your Desktop, containing the previous Simulation log and Crash log (If any), along with a text file containing the brief description of the problem entered below.\r\n\r\nPlease post this on the discussion board, or create a new issue on Github.</source>
+					</trans-unit>
+					<trans-unit id="view_log_button">
+						<source>View...</source>
+					</trans-unit>
+					<trans-unit id="view_log">
+						<source>View the previous log:</source>
+					</trans-unit>
+					<trans-unit id="view_crash_log">
+						<source>View the previous crash log:</source>
+					</trans-unit>
+					<trans-unit id="enter_description">
+						<source>Please enter a brief description of the problem:</source>
+					</trans-unit>
+					<trans-unit id="no_log">
+						<source>No simulation logs were found.</source>
+					</trans-unit>
+					<trans-unit id="no_crash_log">
+						<source>No crash logs were found.</source>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save Bug Report</source>
+					</trans-unit>
+					<trans-unit id="saved">
+						<source>The report has been saved as &quot;[filename]&quot; on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
+					</trans-unit>
+					<trans-unit id="save_failed">
+						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the &quot;View...&quot; button, then submit these logs to the discussion board or open an issue on GitHub.</source>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -63,13 +115,15 @@
 						<source>You already have the latest version.</source>
 						<target>Anda sudah mempunyai versi yang terkini.</target>
 					</trans-unit>
+					<trans-unit id="updates_daily">
+						<source>The most recent nightly build from [date] is available for download.</source>
+					</trans-unit>
 					<trans-unit id="updates_new">
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
 						<target>Versi baharu [version] ([date]) sudah tersedia untuk dimuat turun dari Laman utama Rasmi OpenBVE.</target>
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
-						<target>Tutup</target>
 					</trans-unit>
 					<trans-unit id="packages">
 						<source>Package Management</source>
@@ -663,6 +717,9 @@
 						<source>Remove</source>
 						<target>Keluarkan</target>
 					</trans-unit>
+					<trans-unit id="creation_dependancies_skip_if_none">
+						<source>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</source>
+					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
 						<target>Butiran pakej dan tanggungan mungkin ditetapkan dalam langkah berikut.</target>
@@ -930,6 +987,9 @@
 						<source>The package database XML was invalid, and has been re-created.</source>
 						<target>Pangkalan data pakej XML  tidak sah dan telah dibuat semula.</target>
 					</trans-unit>
+					<trans-unit id="error_busy_thread">
+						<source>The package worker thread is currently busy. Please wait a moment and try again.</source>
+					</trans-unit>
 				</group>
 				<group id="controls">
 					<trans-unit id="title">
@@ -981,6 +1041,9 @@
 					<trans-unit id="export">
 						<source>Export...</source>
 						<target>Eksport...</target>
+					</trans-unit>
+					<trans-unit id="reset_question">
+						<source>Reset the current control configuration to the defaults?</source>
 					</trans-unit>
 					<trans-unit id="reset">
 						<source>Reset to defaults</source>
@@ -1173,8 +1236,7 @@
 						<target>Lancar</target>
 					</trans-unit>
 					<trans-unit id="notdetected">
-						<source>No RailDriver conrollers detected.</source>
-						<target>Tiada RailDriver Controller ditemukan.</target>
+						<source>No RailDriver controllers detected.</source>
 					</trans-unit>
 					<trans-unit id="config_error">
 						<source>Error loading RailDriver calibration file.</source>
@@ -1481,6 +1543,9 @@
 						<source>Show error messages</source>
 						<target>Tunjuk mesej ralat</target>
 					</trans-unit>
+					<trans-unit id="verbosity_accessibilityaids">
+						<source>Accessibility Aids</source>
+					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
 						<target>Pilihan Lanjutan</target>
@@ -1500,6 +1565,9 @@
 					<trans-unit id="advanced_unload_textures">
 						<source>Unload unused textures</source>
 						<target>Putuskan tekstur yang tidak digunakan</target>
+					</trans-unit>
+					<trans-unit id="advanced_cursor">
+						<source>Cursor</source>
 					</trans-unit>
 					<trans-unit id="other">
 						<source>Other</source>
@@ -1547,11 +1615,11 @@
 					</trans-unit>
 					<trans-unit id="page_previous">
 						<source>Previous Page...</source>
-						<target>Halaman sebelumnya...</target>
+						<target>sebelumnya...</target>
 					</trans-unit>
 					<trans-unit id="page_next">
 						<source>Next Page...</source>
-						<target>Halaman seterusnya...</target>
+						<target>seterusnya...</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode">
 						<source>Kiosk Mode</source>
@@ -1580,6 +1648,9 @@
 					<trans-unit id="hud_size_large">
 						<source>Large</source>
 						<target>Besar</target>
+					</trans-unit>
+					<trans-unit id="font">
+						<source>Font:</source>
 					</trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
@@ -1640,6 +1711,9 @@
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
 						<target>Dayakan Mod Lanjutan Panel2</target>
+					</trans-unit>
+					<trans-unit id="object_parser">
+						<source>Object Parser</source>
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>
@@ -1786,7 +1860,6 @@
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save report...</source>
-						<target>Simpan laporan...</target>
 					</trans-unit>
 					<trans-unit id="ignore">
 						<source>Ignore</source>
@@ -2320,12 +2393,10 @@
 						<target>Meningkatkan brek sebanyak satu notch untuk kereta api dengan dua pemegang</target>
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>Decreases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="locobrake_increase">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>Increases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
@@ -2411,6 +2482,12 @@
 						<source>Activates or deactivates the constant speed device</source>
 						<target>Mengaktifkan atau menyahaktifkan peranti kelajuan malar</target>
 					</trans-unit>
+					<trans-unit id="play_mic_sounds">
+						<source>Activates or deactivates the system microphone soundsource</source>
+					</trans-unit>
+					<trans-unit id="sanders">
+						<source>Activates or deactivates the sanders</source>
+					</trans-unit>
 					<trans-unit id="security_power">
 						<source>Activates or deactivates the security system on some trains</source>
 						<target>Mengaktifkan atau menyahaktifkan sistem keselamatan pada beberapa kereta api</target>
@@ -2480,20 +2557,20 @@
 						<target>Fungsi L sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_m">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The M function of the security system</source>
+						<target>Fungsi M sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_n">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The N function of the security system</source>
+						<target>Fungsi N sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_o">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The O function of the security system</source>
+						<target>Fungsi O sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="security_p">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The P function of the security system</source>
+						<target>Fungsi P sistem keselamatan</target>
 					</trans-unit>
 					<trans-unit id="camera_interior">
 						<source>Switches to the train's interior view</source>
@@ -5449,7 +5526,6 @@ Sila ikut arahan berikut:
 					</trans-unit>
 					<trans-unit id="description">
 						<source>Description</source>
-						<target>Penerangan</target>
 					</trans-unit>
 				</group>
 				<group id="message">

@@ -4,7 +4,7 @@ using OpenBveApi.Math;
 namespace OpenBveApi.Objects
 {
 	/// <summary>Represents a mesh consisting of a series of vertices, faces and material properties.</summary>
-	public struct Mesh
+	public class Mesh
 	{
 		/// <summary>The shared verticies for the mesh</summary>
 		public VertexTemplate[] Vertices;
@@ -20,6 +20,14 @@ namespace OpenBveApi.Objects
 		/// <summary>The OpenGL/OpenTK VAO for the normals</summary>
 		public object NormalsVAO;
 
+		/// <summary>Creates a new empty mesh</summary>
+		public Mesh()
+		{
+			Faces = new MeshFace[] { };
+			Materials = new MeshMaterial[] { };
+			Vertices = new VertexTemplate[] { };
+		}
+
 		/// <summary>Creates a mesh consisting of one face, which is represented by individual vertices, and a color.</summary>
 		/// <param name="Vertices">The vertices that make up one face.</param>
 		/// <param name="Color">The color to be applied on the face.</param>
@@ -33,7 +41,7 @@ namespace OpenBveApi.Objects
 			this.Faces[0].Vertices = new MeshFaceVertex[Vertices.Length];
 			for (int i = 0; i < Vertices.Length; i++)
 			{
-				this.Faces[0].Vertices[i].Index = (ushort) i;
+				this.Faces[0].Vertices[i].Index = i;
 			}
 
 			this.BoundingBox = new Vector3[2];
@@ -108,7 +116,7 @@ namespace OpenBveApi.Objects
 					{
 						if (Vector3.IsZero(Faces[FaceIndex].Vertices[j].Normal))
 						{
-							Faces[FaceIndex].Vertices[j].Normal = new Vector3(0.0f, 1.0f, 0.0f);
+							Faces[FaceIndex].Vertices[j].Normal = Vector3.Down;
 						}
 					}
 				}

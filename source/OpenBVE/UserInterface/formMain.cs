@@ -1,11 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 using LibRender2.MotionBlurs;
+using LibRender2.Text;
 using OpenBve.Input;
 using OpenBve.UserInterface;
 using OpenBveApi;
@@ -18,6 +21,7 @@ using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using ContentAlignment = System.Drawing.ContentAlignment;
 using Control = System.Windows.Forms.Control;
+using Path = OpenBveApi.Path;
 
 namespace OpenBve {
 	internal partial class formMain : Form
@@ -25,48 +29,21 @@ namespace OpenBve {
 		private formMain()
 		{
 			InitializeComponent();
-			this.Text = Translations.GetInterfaceString("program_title");
 		}
 
 		public sealed override string Text
 		{
-			get { return base.Text; }
-			set { base.Text = value; }
+			get => base.Text;
+			set => base.Text = value;
 		}
-
-		// show main dialog
-		internal struct MainDialogResult
-		{
-			/// <summary>Whether to start the simulation</summary>
-			internal bool Start;
-			/// <summary>The absolute on-disk path of the route file to start the simulation with</summary>
-			internal string RouteFile;
-			/// <summary>The last file an error was encountered on (Used for changing character encodings)</summary>
-			internal string ErrorFile;
-			/// <summary>The text encoding of the selected route file</summary>
-			internal System.Text.Encoding RouteEncoding;
-			/// <summary>The absolute on-disk path of the train folder to start the simulation with</summary>
-			internal string TrainFolder;
-			/// <summary>The text encoding of the selected train</summary>
-			internal System.Text.Encoding TrainEncoding;
-			/// <summary>Whether the consist of the train is to be reversed on start</summary>
-			internal bool ReverseConsist;
-			internal string InitialStation;
-			internal double StartTime;
-			internal bool AIDriver;
-			internal bool FullScreen;
-			internal int Width;
-			internal int Height;
-			/// <summary>Whether to show the experimental GL menu</summary>
-			internal bool ExperimentalGLMenu;
-		}
-		internal static MainDialogResult ShowMainDialog(MainDialogResult initial)
+		
+		internal static LaunchParameters ShowMainDialog(LaunchParameters initial)
 		{
 			using (formMain Dialog = new formMain())
 			{
 				Dialog.Result = initial;
 				Dialog.ShowDialog();
-				MainDialogResult result = Dialog.Result;
+				LaunchParameters result = Dialog.Result;
 				//Dispose of the worker thread when closing the form
 				//If it's still running, it attempts to update a non-existant form and crashes nastily
 				Dialog.DisposePreviewRouteThread();
@@ -81,13 +58,13 @@ namespace OpenBve {
 		}
 
 		// members
-		private MainDialogResult Result;
+		private LaunchParameters Result;
 		private int[] EncodingCodepages = new int[0];
-		private Image JoystickImage = null;
-		private Image RailDriverImage = null;
-		private Image GamepadImage = null;
-		private Image XboxImage = null;
-		private Image ZukiImage = null;
+		private Image JoystickImage;
+		private Image RailDriverImage;
+		private Image GamepadImage;
+		private Image XboxImage;
+		private Image ZukiImage;
 
 		// ====
 		// form
@@ -96,15 +73,15 @@ namespace OpenBve {
 		// load
 		private void formMain_Load(object sender, EventArgs e)
 		{
-			this.MinimumSize = this.Size;
+			MinimumSize = Size;
 			if (Interface.CurrentOptions.MainMenuWidth == -1 & Interface.CurrentOptions.MainMenuHeight == -1)
 			{
-				this.WindowState = FormWindowState.Maximized;
+				WindowState = FormWindowState.Maximized;
 			}
 			else if (Interface.CurrentOptions.MainMenuWidth > 0 & Interface.CurrentOptions.MainMenuHeight > 0)
 			{
-				this.Size = new Size(Interface.CurrentOptions.MainMenuWidth, Interface.CurrentOptions.MainMenuHeight);
-				this.CenterToScreen();
+				Size = new Size(Interface.CurrentOptions.MainMenuWidth, Interface.CurrentOptions.MainMenuHeight);
+				CenterToScreen();
 			}
 			labelVersion.Text = @"v" + Application.ProductVersion + Program.VersionSuffix;
 			if (IntPtr.Size != 4)
@@ -116,9 +93,12 @@ namespace OpenBve {
 			try
 			{
 				string File = Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
-				this.Icon = new Icon(File);
+				Icon = new Icon(File);
 			}
-			catch { }
+			catch
+			{
+				// Ignored
+			}
 			radiobuttonStart.Appearance = Appearance.Button;
 			radiobuttonStart.AutoSize = false;
 			radiobuttonStart.Size = new Size(buttonClose.Width, buttonClose.Height);
@@ -194,10 +174,11 @@ namespace OpenBve {
 			string[] flags = { };
 			try
 			{
-				flags = System.IO.Directory.GetFiles(flagsFolder);
+				flags = Directory.GetFiles(flagsFolder);
 			}
-			catch (Exception)
+			catch
 			{
+				//ignored- not currently used either, hangover from the initial managed content system
 			}
 	#pragma warning restore 0219
 			// route selection
@@ -228,7 +209,7 @@ namespace OpenBve {
 			{
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedRoutes[i])) continue;
 				string RouteFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
-				string RoutePath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
+				string RoutePath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
 				if (string.IsNullOrEmpty(RouteFileName) || string.IsNullOrEmpty(RoutePath)) continue;
 				ListViewItem Item = listviewRouteRecently.Items.Add(RouteFileName);
 				string extension = System.IO.Path.GetExtension(Interface.CurrentOptions.RecentlyUsedRoutes[i]).ToLowerInvariant();
@@ -278,7 +259,7 @@ namespace OpenBve {
 			{
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedTrains[i])) continue;
 				string TrainFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
-				string TrainPath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
+				string TrainPath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
 				if (string.IsNullOrEmpty(TrainFileName) || string.IsNullOrEmpty(TrainPath)) continue;
 				ListViewItem Item = listviewTrainRecently.Items.Add(TrainFileName);
 				Item.ImageKey = @"train";
@@ -290,14 +271,14 @@ namespace OpenBve {
 			}
 			listviewTrainRecently.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 			// text boxes
-			if (Interface.CurrentOptions.RouteFolder.Length != 0 && System.IO.Directory.Exists(Interface.CurrentOptions.RouteFolder))
+			if (Interface.CurrentOptions.RouteFolder.Length != 0 && Directory.Exists(Interface.CurrentOptions.RouteFolder))
 			{
 				textboxRouteFolder.Text = Interface.CurrentOptions.RouteFolder;
 			}
 			else {
 				textboxRouteFolder.Text = Program.FileSystem.InitialRouteFolder;
 			}
-			if (Interface.CurrentOptions.TrainFolder.Length != 0 && System.IO.Directory.Exists(Interface.CurrentOptions.TrainFolder))
+			if (Interface.CurrentOptions.TrainFolder.Length != 0 && Directory.Exists(Interface.CurrentOptions.TrainFolder))
 			{
 				textboxTrainFolder.Text = Interface.CurrentOptions.TrainFolder;
 			}
@@ -343,7 +324,7 @@ namespace OpenBve {
 					radiobuttonReview.Enabled = false;
 				}
 				else {
-					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
+					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
 					if (ratio < 0.0) ratio = 0.0;
 					if (ratio > 1.0) ratio = 1.0;
 					int index = (int)Math.Floor(ratio * Translations.RatingsCount);
@@ -488,7 +469,7 @@ namespace OpenBve {
 			checkboxJoysticksUsed.Checked = Interface.CurrentOptions.UseJoysticks;
 			checkBoxEBAxis.Checked = Interface.CurrentOptions.AllowAxisEB;
 			{
-				double a = (double)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum) * Interface.CurrentOptions.JoystickAxisThreshold + (double)trackbarJoystickAxisThreshold.Minimum;
+				double a = (trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum) * Interface.CurrentOptions.JoystickAxisThreshold + trackbarJoystickAxisThreshold.Minimum;
 				int b = (int)Math.Round(a);
 				if (b < trackbarJoystickAxisThreshold.Minimum) b = trackbarJoystickAxisThreshold.Minimum;
 				if (b > trackbarJoystickAxisThreshold.Maximum) b = trackbarJoystickAxisThreshold.Maximum;
@@ -526,12 +507,116 @@ namespace OpenBve {
 			Cursors.ListCursors(comboboxCursor);
 			checkBoxPanel2Extended.Checked = Interface.CurrentOptions.Panel2ExtendedMode;
 			LoadCompatibilitySignalSets();
-			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX)
+			try
 			{
-				// This gets us a much better Unicode glyph set
-				SetFont(this.Controls, "Arial Unicode MS");
+				SetFont(Controls, Interface.CurrentOptions.Font);
 			}
+			catch
+			{
+				// ignore
+			}
+			
 			radiobuttonStart_CheckedChanged(this, EventArgs.Empty); // Mono mucks up the button colors and selections if non-default color and we don't reset them
+			string defaultFont = comboBoxFont.Font.Name;
+			
+			List<FontFamily> fonts = FontFamily.Families.ToList();
+			List<string> addedFonts = new List<string>();
+			for (int i = fonts.Count - 1; i > 0; i--)
+			{
+				
+				if ((Program.CurrentHost.Platform == HostPlatform.WINE && Fonts.BlockedFonts.Any(f => fonts[i].Name.StartsWith(f))) || (Program.CurrentHost.Platform != HostPlatform.WINE && Fonts.BlockedFonts.Contains(fonts[i].Name)))
+				{
+					fonts.RemoveAt(i);
+					continue;
+				}
+
+				if (Program.CurrentHost.Platform == HostPlatform.WINE && fonts[i].Name.StartsWith("Noto") && !fonts[i].Name.EndsWith("Regular"))
+				{
+					// Dump the bold, italic and stuff from Wine
+					fonts.RemoveAt(i);
+					continue;
+				}
+
+				if (fonts[i].Name.IndexOf("MathJax", 0, StringComparison.OrdinalIgnoreCase) != -1)
+				{
+					// Cross-platform browser Math fonts, useless for general use
+					fonts.RemoveAt(i);
+					continue;
+				}
+				/*
+				 * Under Mono, different font weights are returned as a separate font
+				 * Only use the first one, otherwise our list becomes absolutely massive
+				 *
+				 * We have no way to tell these apart (yuck), but the regular weight seems to be returned first normally
+				 *
+				 * Also avoids duplicates elsewhere, if someone has been installing multiple copies
+				 *
+				 * BUG: for some reason, the *first* Mono font box entry is glitched. We'll assume that this is another unavoidable oddity at present
+				 */
+				if (addedFonts.Contains(fonts[i].Name))
+				{
+					fonts.RemoveAt(i);
+					continue;
+				}
+				addedFonts.Add(fonts[i].Name);
+			}
+			// Fonts can be returned in a random order (no idea why)- sort, ignoring the period that some seem to add at the front
+			fonts.Sort((x, y) => string.Compare(x.Name.TrimStart('.'), y.Name.TrimStart('.'), StringComparison.InvariantCultureIgnoreCase));
+			comboBoxFont.DataSource = fonts;
+			comboBoxFont.DrawMode = DrawMode.OwnerDrawFixed;
+			for (int i = 0; i < comboBoxFont.Items.Count; i++)
+			{
+				if (fonts[i].Name == defaultFont)
+				{
+					comboBoxFont.SelectedIndex = i;
+					break;
+				}
+			}
+
+			panelOptionsPage2.Visible = false; // Deliberately hide, as changing font can glitch this into visibility
+			comboBoxFont.DrawItem += comboBoxFont_DrawItem;
+		}
+
+		private void comboBoxFont_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (comboBoxFont.Items[comboBoxFont.SelectedIndex] is FontFamily font)
+			{
+				string oldFont = Interface.CurrentOptions.Font;
+				try
+				{
+					SetFont(Controls, font.Name);
+					Interface.CurrentOptions.Font = font.Name;
+					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, font.Name);
+				}
+				catch
+				{
+					// setting the font failed, so roll back
+					MessageBox.Show(@"Failed to set font " + font.Name, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					SetFont(Controls, oldFont);
+					Interface.CurrentOptions.Font = oldFont;
+					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, oldFont);
+				}
+				
+			}
+			
+		}
+
+		private void comboBoxFont_DrawItem(object sender, DrawItemEventArgs e)
+		{
+			var comboBox = (ComboBox)sender;
+			var fontFamily = (FontFamily)comboBox.Items[e.Index];
+			var fallback = false;
+			Font font;
+			try {
+				font = new Font(fontFamily, comboBox.Font.SizeInPoints);
+			} catch {
+				// Fallback to render the font name with current font
+				font = new Font(Interface.CurrentOptions.Font, comboBox.Font.SizeInPoints);
+				fallback = true;
+			}
+
+			e.DrawBackground();
+			e.Graphics.DrawString((fallback ? fontFamily.Name : font.Name), font, (fallback ? Brushes.Red : Brushes.Black), e.Bounds.X, e.Bounds.Y);
 		}
 
 		public static void SetFont(Control.ControlCollection ctrls, string fontName)
@@ -539,21 +624,17 @@ namespace OpenBve {
 			foreach (Control ctrl in ctrls)
 			{
 				// recursive
-				if (ctrl.Controls != null)
-				{
-					SetFont(ctrl.Controls, fontName);
-				}
-				if (ctrl != null)
-				{
-					ctrl.Font = new Font(fontName, ctrl.Font.Size);
-				};
-			};
+				SetFont(ctrl.Controls, fontName);
+				ctrl.Font = new Font(fontName, ctrl.Font.Size);
+			}
 		}
 
 		/// <summary>This function is called to change the display language of the program</summary>
 		private void ApplyLanguage()
 		{
 			Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
+			// Main form title bar
+			Text = Translations.GetInterfaceString("program_title");
 			/*
 			 * Localisation for strings in main panel
 			 */
@@ -582,6 +663,7 @@ namespace OpenBve {
 			labelHUDSmall.Text = Translations.GetInterfaceString("options_hud_size_small");
 			labelHUDNormal.Text = Translations.GetInterfaceString("options_hud_size_normal");
 			labelHUDLarge.Text = Translations.GetInterfaceString("options_hud_size_large");
+			labelFontName.Text = Translations.GetInterfaceString("options_font");
 			//Windowed Mode
 			groupboxWindow.Text = Translations.GetInterfaceString("options_display_window");
 			labelWindowWidth.Text = Translations.GetInterfaceString("options_display_window_width");
@@ -634,12 +716,14 @@ namespace OpenBve {
 			groupboxVerbosity.Text = Translations.GetInterfaceString("options_verbosity");
 			checkboxWarningMessages.Text = Translations.GetInterfaceString("options_verbosity_warningmessages");
 			checkboxErrorMessages.Text = Translations.GetInterfaceString("options_verbosity_errormessages");
+			checkBoxAccessibility.Text = Translations.GetInterfaceString("options_verbosity_accessibilityaids");
 			//Advanced Options
 			groupBoxAdvancedOptions.Text = Translations.GetInterfaceString("options_advanced");
 			checkBoxLoadInAdvance.Text = Translations.GetInterfaceString("options_advanced_load_advance");
 			checkBoxUnloadTextures.Text = Translations.GetInterfaceString("options_advanced_unload_textures");
 			checkBoxIsUseNewRenderer.Text = Translations.GetInterfaceString("options_advanced_is_use_new_renderer");
 			labelTimeAcceleration.Text = Translations.GetInterfaceString("options_advanced_timefactor");
+			labelCursor.Text = Translations.GetInterfaceString("options_advanced_cursor");
 			//Other Options
 			groupBoxOther.Text = Translations.GetInterfaceString("options_other");
 			labelTimeTableDisplayMode.Text = Translations.GetInterfaceString("options_other_timetable_mode");
@@ -651,8 +735,6 @@ namespace OpenBve {
 			buttonOptionsPrevious.Text = Translations.GetInterfaceString("options_page_previous");
 			buttonOptionsNext.Text = Translations.GetInterfaceString("options_page_next");
 			checkBoxPanel2Extended.Text = Translations.GetInterfaceString("options_panel2_extended");
-			labelXparser.Text = Translations.GetInterfaceString("options_xobject_parser");
-			labelObjparser.Text = Translations.GetInterfaceString("options_objobject_parser");
 			/*
 			 * Options Page 2
 			 */
@@ -668,6 +750,7 @@ namespace OpenBve {
 			labelTrainInstallDirectory.Text = Translations.GetInterfaceString("options_package_train_directory");
 			labelOtherInstallDirectory.Text = Translations.GetInterfaceString("options_package_other_directory");
 			labelPackageCompression.Text = Translations.GetInterfaceString("options_package_compression");
+			//Kiosk Mode
 			groupBoxKioskMode.Text = Translations.GetInterfaceString("options_kiosk_mode");
 			checkBoxEnableKiosk.Text = Translations.GetInterfaceString("options_kiosk_mode_enable");
 			labelKioskTimeout.Text = Translations.GetInterfaceString("options_kiosk_mode_timer");
@@ -678,6 +761,11 @@ namespace OpenBve {
 			buttonRailDriverCalibration.Text = Translations.GetInterfaceString("raildriver_launch");
 			checkBoxTransparencyFix.Text = Translations.GetInterfaceString("options_transparencyfix");
 			checkBoxHacks.Text = Translations.GetInterfaceString("options_hacks_enable");
+			//Object Parser Options
+			groupBoxObjectParser.Text = Translations.GetInterfaceString("options_object_parser");
+			labelXparser.Text = Translations.GetInterfaceString("options_xobject_parser");
+			labelObjparser.Text = Translations.GetInterfaceString("options_objobject_parser");
+			//Input Device
 			groupBoxInputDevice.Text = Translations.GetInterfaceString("options_input_device_plugin");
 			labelInputDevice.Text = Translations.GetInterfaceString("options_input_device_plugin_warning");
 			listviewInputDevice.Columns[0].Text = Translations.GetInterfaceString("options_input_device_plugin_name");
@@ -759,18 +847,12 @@ namespace OpenBve {
 				default: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_unkown"); break;
 			}
 			{
-				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
+				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / Game.CurrentScore.Maximum;
 				if (ratio < 0.0) ratio = 0.0;
 				if (ratio > 1.0) ratio = 1.0;
 				int index = (int)Math.Floor(ratio * Translations.RatingsCount);
 				if (index >= Translations.RatingsCount) index = Translations.RatingsCount - 1;
-				if (Game.CurrentScore.Maximum == 0)
-				{
-					labelRatingDescription.Text = Translations.GetInterfaceString("rating_unknown");
-				}
-				else {
-					labelRatingDescription.Text = Translations.GetInterfaceString("rating_" + index.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				}
+				labelRatingDescription.Text = Game.CurrentScore.Maximum == 0 ? Translations.GetInterfaceString("rating_unknown") : Translations.GetInterfaceString("rating_" + index.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			}
 			labelRatingAchievedCaption.Text = Translations.GetInterfaceString("review_score_rating_achieved");
 			labelRatingMaximumCaption.Text = Translations.GetInterfaceString("review_score_rating_maximum");
@@ -947,6 +1029,7 @@ namespace OpenBve {
 			dataGridViewTextBoxColumn3.HeaderText = Translations.GetInterfaceString("packages_list_maximum");
 			dataGridViewTextBoxColumn4.HeaderText = Translations.GetInterfaceString("packages_list_packagetype");
 			buttonRemove.Text = Translations.GetInterfaceString("packages_creation_dependancies_remove");
+			labelNoDependencyReminder.Text = Translations.GetInterfaceString("packages_creation_dependancies_skip_if_none");
 			website.HeaderText = Translations.GetInterfaceString("packages_list_website");
 			//Version Error panel
 			labelBrokenDependancies.Text = Translations.GetInterfaceString("packages_install_dependancies_broken");
@@ -983,7 +1066,7 @@ namespace OpenBve {
 			{
 				panelOptionsPage2.Hide();
 			}
-			
+
 
 		}
 
@@ -1001,7 +1084,14 @@ namespace OpenBve {
 			Interface.CurrentOptions.AnisotropicFilteringLevel = (int)Math.Round(updownAnisotropic.Value);
 			Interface.CurrentOptions.AntiAliasingLevel = (int)Math.Round(updownAntiAliasing.Value);
 			Interface.CurrentOptions.TransparencyMode = (TransparencyMode)trackbarTransparency.Value;
-			Interface.CurrentOptions.ViewingDistance = (int)Math.Round(updownDistance.Value);
+			int newViewingDistance = (int)Math.Round(updownDistance.Value);
+			if (newViewingDistance != Interface.CurrentOptions.ViewingDistance)
+			{
+				Interface.CurrentOptions.ViewingDistance = newViewingDistance;
+				Interface.CurrentOptions.QuadTreeLeafSize = Math.Max(50, (int)Math.Ceiling(Interface.CurrentOptions.ViewingDistance / 10.0d) * 10); // quad tree size set to 10% of viewing distance to the nearest 10
+			}
+			
+			
 			Interface.CurrentOptions.MotionBlur = (MotionBlurMode)comboboxMotionBlur.SelectedIndex;
 			Interface.CurrentOptions.Toppling = checkboxToppling.Checked;
 			Interface.CurrentOptions.Collisions = checkboxCollisions.Checked;
@@ -1016,14 +1106,14 @@ namespace OpenBve {
 			Interface.CurrentOptions.LoadingSway = checkBoxLoadingSway.Checked;
 			Interface.CurrentOptions.UseJoysticks = checkboxJoysticksUsed.Checked;
 			Interface.CurrentOptions.AllowAxisEB = checkBoxEBAxis.Checked;
-			Interface.CurrentOptions.JoystickAxisThreshold = ((double)trackbarJoystickAxisThreshold.Value - (double)trackbarJoystickAxisThreshold.Minimum) / (double)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
+			Interface.CurrentOptions.JoystickAxisThreshold = (trackbarJoystickAxisThreshold.Value - (double)trackbarJoystickAxisThreshold.Minimum) / (trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
 			Interface.CurrentOptions.SoundNumber = (int)Math.Round(updownSoundNumber.Value);
 			Interface.CurrentOptions.ShowWarningMessages = checkboxWarningMessages.Checked;
 			Interface.CurrentOptions.ShowErrorMessages = checkboxErrorMessages.Checked;
 			Interface.CurrentOptions.RouteFolder = textboxRouteFolder.Text;
 			Interface.CurrentOptions.TrainFolder = textboxTrainFolder.Text;
-			Interface.CurrentOptions.MainMenuWidth = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Width;
-			Interface.CurrentOptions.MainMenuHeight = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Height;
+			Interface.CurrentOptions.MainMenuWidth = WindowState == FormWindowState.Maximized ? -1 : Size.Width;
+			Interface.CurrentOptions.MainMenuHeight = WindowState == FormWindowState.Maximized ? -1 : Size.Height;
 			Interface.CurrentOptions.KioskMode = checkBoxEnableKiosk.Checked;
 			Interface.CurrentOptions.KioskModeTimer = (double)numericUpDownKioskTimeout.Value;
 			Interface.CurrentOptions.CurrentXParser = (XParsers)comboBoxXparser.SelectedIndex;
@@ -1103,7 +1193,7 @@ namespace OpenBve {
 				string[] a = new string[Interface.CurrentOptions.RecentlyUsedRoutes.Length];
 				for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
 				{
-					if (System.IO.File.Exists(Interface.CurrentOptions.RecentlyUsedRoutes[i]))
+					if (File.Exists(Interface.CurrentOptions.RecentlyUsedRoutes[i]))
 					{
 						a[n] = Interface.CurrentOptions.RecentlyUsedRoutes[i];
 						n++;
@@ -1118,7 +1208,7 @@ namespace OpenBve {
 				string[] a = new string[Interface.CurrentOptions.RecentlyUsedTrains.Length];
 				for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
 				{
-					if (System.IO.Directory.Exists(Interface.CurrentOptions.RecentlyUsedTrains[i]))
+					if (Directory.Exists(Interface.CurrentOptions.RecentlyUsedTrains[i]))
 					{
 						a[n] = Interface.CurrentOptions.RecentlyUsedTrains[i];
 						n++;
@@ -1133,7 +1223,7 @@ namespace OpenBve {
 				TextEncoding.EncodingValue[] a = new TextEncoding.EncodingValue[Interface.CurrentOptions.RouteEncodings.Length];
 				for (int i = 0; i < Interface.CurrentOptions.RouteEncodings.Length; i++)
 				{
-					if (System.IO.File.Exists(Interface.CurrentOptions.RouteEncodings[i].Value))
+					if (File.Exists(Interface.CurrentOptions.RouteEncodings[i].Value))
 					{
 						a[n] = Interface.CurrentOptions.RouteEncodings[i];
 						n++;
@@ -1148,7 +1238,7 @@ namespace OpenBve {
 				TextEncoding.EncodingValue[] a = new TextEncoding.EncodingValue[Interface.CurrentOptions.TrainEncodings.Length];
 				for (int i = 0; i < Interface.CurrentOptions.TrainEncodings.Length; i++)
 				{
-					if (System.IO.Directory.Exists(Interface.CurrentOptions.TrainEncodings[i].Value))
+					if (Directory.Exists(Interface.CurrentOptions.TrainEncodings[i].Value))
 					{
 						a[n] = Interface.CurrentOptions.TrainEncodings[i];
 						n++;
@@ -1168,7 +1258,7 @@ namespace OpenBve {
 						continue;
 					}
 					string PluginPath = Path.CombineFile(Program.FileSystem.GetDataFolder("InputDevicePlugins"), Info.FileName);
-					if (System.IO.File.Exists(PluginPath))
+					if (File.Exists(PluginPath))
 					{
 						a[n] = Info.FileName;
 						n++;
@@ -1185,15 +1275,15 @@ namespace OpenBve {
 					InputDevicePlugin.CallPluginUnload(i);
 				}
 			}
-			Program.Sounds.Deinitialize();
+			Program.Sounds.DeInitialize();
 			DisposePreviewRouteThread();
 			{
-				// ReSharper disable once NotAccessedVariable
-				string error;
-				Program.CurrentHost.UnloadPlugins(out error);
+				Program.CurrentHost.UnloadPlugins(out _);
 			}
-			if (!OpenTK.Configuration.RunningOnMacOS)
+			if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && Program.CurrentHost.Platform != HostPlatform.FreeBSD)
 			{
+				// A FileSystemWatcher may crash when disposed as the game is closing (without launching a route) on these platforms
+				// This is a Mono issue
 				routeWatcher.Dispose();
 				trainWatcher.Dispose();
 			}
@@ -1203,7 +1293,7 @@ namespace OpenBve {
 			try
 			{
 #endif
-				Interface.SaveOptions();
+				Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
 				Program.FileSystem.SaveCurrentFileSystemConfiguration();
 #if !DEBUG
 			}
@@ -1259,7 +1349,11 @@ namespace OpenBve {
 				tabcontrolTrainDetails.Width = groupboxTrainDetails.Width - 2 * tabcontrolTrainDetails.Left;
 				tabcontrolTrainDetails.Height = groupboxTrainDetails.Height - 3 * tabcontrolTrainDetails.Top / 2;
 			}
-			catch { }
+			catch
+			{
+				// Ignored
+			}
+
 			try
 			{
 				int width = Math.Min((panelOptions.Width - 24) / 2, 420);
@@ -1267,7 +1361,11 @@ namespace OpenBve {
 				panelOptionsRight.Left = panelOptionsLeft.Left + width + 8;
 				panelOptionsRight.Width = width;
 			}
-			catch { }
+			catch
+			{
+				// Ignored
+			}
+
 			try
 			{
 				int width = Math.Min((panelReview.Width - 32) / 3, 360);
@@ -1277,7 +1375,10 @@ namespace OpenBve {
 				groupboxReviewDateTime.Left = groupboxReviewTrain.Left + width + 8;
 				groupboxReviewDateTime.Width = width;
 			}
-			catch { }
+			catch
+			{
+				// Ignored
+			}
 		}
 
 		// shown
@@ -1301,12 +1402,12 @@ namespace OpenBve {
 			}
 			//TODO: Needs focus changing when packages tab is selected
 			formMain_Resize(null, null);
-			if (this.WindowState != FormWindowState.Maximized)
+			if (WindowState != FormWindowState.Maximized)
 			{
 				System.Windows.Forms.Screen s = System.Windows.Forms.Screen.FromControl(this);
 				if (Width >= 0.95 * s.WorkingArea.Width | Height >= 0.95 * s.WorkingArea.Height)
 				{
-					this.WindowState = FormWindowState.Maximized;
+					WindowState = FormWindowState.Maximized;
 				}
 			}
 			radiobuttonStart.Focus();
@@ -1342,13 +1443,8 @@ namespace OpenBve {
 			panelControls.Visible = false;
 			panelOptions.Visible = false;
 			panelPackages.Visible = false;
-			panelPanels.BackColor = labelStartTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
-			radiobuttonStart.BackColor = SystemColors.ButtonHighlight;
-			radiobuttonReview.BackColor = SystemColors.ButtonFace;
-			radiobuttonControls.BackColor = SystemColors.ButtonFace;
-			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			UpdatePanelColor();
 			//Update the route/ train displays in case a package has been installed
 			textboxRouteFolder_TextChanged(this, EventArgs.Empty);
 			textboxTrainFolder_TextChanged(this, EventArgs.Empty);
@@ -1367,13 +1463,11 @@ namespace OpenBve {
 			panelControls.Visible = false;
 			panelOptions.Visible = false;
 			panelPackages.Visible = false;
-			panelPanels.BackColor = labelReviewTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
-			radiobuttonStart.BackColor = SystemColors.ButtonFace;
-			radiobuttonReview.BackColor = SystemColors.ButtonHighlight;
-			radiobuttonControls.BackColor = SystemColors.ButtonFace;
-			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			UpdatePanelColor();
+
+			//HACK: Column Header won't appear in Mono without resizing it...
+			listviewScore.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 		}
 		private void radiobuttonControls_CheckedChanged(object sender, EventArgs e)
 		{
@@ -1388,13 +1482,10 @@ namespace OpenBve {
 			panelReview.Visible = false;
 			panelOptions.Visible = false;
 			panelPackages.Visible = false;
-			panelPanels.BackColor = labelControlsTitle.BackColor;
 			pictureboxJoysticks.Visible = true;
-			radiobuttonStart.BackColor = SystemColors.ButtonFace;
-			radiobuttonReview.BackColor = SystemColors.ButtonFace;
-			radiobuttonControls.BackColor = SystemColors.ButtonHighlight;
-			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			UpdatePanelColor();
+			//HACK: Column Header in list view won't appear in Mono without resizing it...
+			listviewControls.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 		}
 		private void radiobuttonOptions_CheckedChanged(object sender, EventArgs e)
 		{
@@ -1409,13 +1500,8 @@ namespace OpenBve {
 			panelReview.Visible = false;
 			panelControls.Visible = false;
 			panelPackages.Visible = false;
-			panelPanels.BackColor = labelOptionsTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
-			radiobuttonStart.BackColor = SystemColors.ButtonFace;
-			radiobuttonReview.BackColor = SystemColors.ButtonFace;
-			radiobuttonControls.BackColor = SystemColors.ButtonFace;
-			radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
-			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			UpdatePanelColor();
 		}
 		private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
 		{
@@ -1428,19 +1514,13 @@ namespace OpenBve {
 			panelReview.Visible = false;
 			panelControls.Visible = false;
 			panelPackages.Visible = true;
-			panelPanels.BackColor = labelPackagesTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
-			radiobuttonStart.BackColor = SystemColors.ButtonFace;
-			radiobuttonReview.BackColor = SystemColors.ButtonFace;
-			radiobuttonControls.BackColor = SystemColors.ButtonFace;
-			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			radioButtonPackages.BackColor = SystemColors.ButtonHighlight;
+			UpdatePanelColor();
 			//Load packages & rest panel states
 			if (radioButtonPackages.Checked)
 			{
 				ResetInstallerPanels();
-				string errorMessage;
-				if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out errorMessage))
+				if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out string errorMessage))
 				{
 					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 				}
@@ -1449,6 +1529,43 @@ namespace OpenBve {
 					MessageBox.Show(Translations.GetInterfaceString(errorMessage));
 				}
 				comboBoxPackageType.SelectedIndex = 0;
+			}
+		}
+
+		private void UpdatePanelColor() {
+			if(panelStart.Visible) {
+				panelPanels.BackColor = labelStartTitle.BackColor;
+				radiobuttonStart.BackColor = Color.White;
+			} else {
+				radiobuttonStart.BackColor = Color.LightGray;
+			}
+
+			if (panelReview.Visible) {
+				panelPanels.BackColor = labelReviewTitle.BackColor;
+				radiobuttonReview.BackColor = Color.White;
+			} else {
+				radiobuttonReview.BackColor = Color.LightGray;
+			}
+
+			if (panelControls.Visible) {
+				panelPanels.BackColor = labelControlsTitle.BackColor;
+				radiobuttonControls.BackColor = Color.White;
+			} else {
+				radiobuttonControls.BackColor = Color.LightGray;
+			}
+
+			if (panelOptions.Visible) {
+				panelPanels.BackColor = labelOptionsTitle.BackColor;
+				radiobuttonOptions.BackColor = Color.White;
+			} else {
+				radiobuttonOptions.BackColor = Color.LightGray;
+			}
+
+			if (panelPackages.Visible) {
+				panelPanels.BackColor = labelPackagesTitle.BackColor;
+				radioButtonPackages.BackColor = Color.White;
+			} else {
+				radioButtonPackages.BackColor = Color.LightGray;
 			}
 		}
 
@@ -1470,10 +1587,11 @@ namespace OpenBve {
 		private void buttonClose_Click(object sender, EventArgs e)
 		{
 			currentlyClosing = true;
+			previewRouteResultQueue.CompleteAdding();
 			if (sender != null)
 			{
 				//Don't cause an infinite loop
-				this.Close();
+				Close();
 			}
 			//HACK: Call Application.DoEvents() to force the message pump to process all pending messages when the form closes
 			//This fixes the main form failing to close on Linux
@@ -1514,7 +1632,7 @@ namespace OpenBve {
 			{
 				currentJoystickStates = new JoystickState[Program.Joysticks.AttachedJoysticks.Values.Count];
 			}	
-			if (radiobuttonJoystick.Checked && textboxJoystickGrab.Focused && this.Tag == null && listviewControls.SelectedIndices.Count == 1)
+			if (radiobuttonJoystick.Checked && textboxJoystickGrab.Focused && Tag == null && listviewControls.SelectedIndices.Count == 1)
 			{
 				int j = listviewControls.SelectedIndices[0];
 
@@ -1618,7 +1736,7 @@ namespace OpenBve {
 		{
 			try
 			{
-				string File = OpenBveApi.Path.CombineFile(Folder, Title);
+				string File = Path.CombineFile(Folder, Title);
 				if (System.IO.File.Exists(File))
 				{
 					try
@@ -1627,6 +1745,7 @@ namespace OpenBve {
 					}
 					catch
 					{
+						return null;
 					}
 				}
 				return null;
@@ -1649,7 +1768,7 @@ namespace OpenBve {
 				}
 				if (System.IO.File.Exists(File))
 				{
-					System.IO.FileInfo f = new System.IO.FileInfo(File);
+					FileInfo f = new FileInfo(File);
 					if (f.Length == 0)
 					{
 						Box.Image = Box.ErrorImage;
@@ -1704,7 +1823,7 @@ namespace OpenBve {
 
 		private void checkForUpdate()
 		{
-			string xmlURL = "http://openbve-project.net/version.xml";
+			string xmlURL = Interface.CurrentOptions.DailyBuildUpdates ? "https://vps.bvecornwall.co.uk/OpenBVE/Builds/version.xml" : "http://openbve-project.net/version.xml";
 			HttpWebRequest hwRequest = (HttpWebRequest)WebRequest.Create(xmlURL);
 			hwRequest.Timeout = 5000;
 			HttpWebResponse hwResponse = null;
@@ -1733,7 +1852,10 @@ namespace OpenBve {
 								switch (elementName)
 								{
 									case "version":
-										newVersion = new Version(reader.Value);
+										if (!Interface.CurrentOptions.DailyBuildUpdates)
+										{
+											newVersion = new Version(reader.Value);
+										}
 										break;
 									case "url":
 										url = reader.Value;
@@ -1751,7 +1873,7 @@ namespace OpenBve {
 			catch (WebException)
 			{
 				//The internet connection is broken.....
-				MessageBox.Show(Translations.GetInterfaceString("panel_updates_invalid"));
+				MessageBox.Show(Translations.GetInterfaceString("panel_updates_invalid"), Translations.GetInterfaceString("panel_updates"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 			finally
@@ -1760,11 +1882,13 @@ namespace OpenBve {
 				if (hwResponse != null) hwResponse.Close();
 			}
 			Version curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-			bool newerVersion = curVersion.CompareTo(newVersion) < 0;
-			if (newerVersion)
+			if (url == null)
 			{
-				string question = Translations.GetInterfaceString("panel_updates_new");
-				question = question.Replace("[version]", newVersion.ToString());
+				return;
+			}
+			if (Interface.CurrentOptions.DailyBuildUpdates)
+			{
+				string question = Translations.GetInterfaceString("panel_updates_daily");
 				question = question.Replace("[date]", date);
 				if (DialogResult.OK == MessageBox.Show(this, question, Translations.GetInterfaceString("panel_updates"), MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
 				{
@@ -1773,18 +1897,29 @@ namespace OpenBve {
 			}
 			else
 			{
-				MessageBox.Show(Translations.GetInterfaceString("panel_updates_old"));
+				bool newerVersion = curVersion.CompareTo(newVersion) < 0;
+				if (newerVersion)
+				{
+					string question = Translations.GetInterfaceString("panel_updates_new");
+					question = question.Replace("[version]", newVersion.ToString());
+					question = question.Replace("[date]", date);
+					if (DialogResult.OK == MessageBox.Show(this, question, Translations.GetInterfaceString("panel_updates"), MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
+					{
+						Process.Start(url);
+					}
+				}
+				else
+				{
+					MessageBox.Show(Translations.GetInterfaceString("panel_updates_old"));
+				}
 			}
+			
 		}
-
-		private formAbout AboutDialog;
 
 		private void aboutLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			if (AboutDialog == null || AboutDialog.Visible == false)
-			{
-				AboutDialog = new formAbout();
-				AboutDialog.Show();
+			using (formAbout f = new formAbout()) {
+				f.ShowDialog();
 			}
 		}
 
@@ -1800,6 +1935,8 @@ namespace OpenBve {
 				panelOptionsLeft.Hide();
 				panelOptionsRight.Hide();
 				panelOptionsPage2.Show();
+				//HACK: Column Header in list view won't appear in Mono without resizing it...
+				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 			}
 			else
 			{
@@ -1900,16 +2037,36 @@ namespace OpenBve {
 
 		private void tabcontrolRouteDetails_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			// MONO issue on some systems means that the map may not draw initially, so force redraw
-			pictureboxRouteMap.Invalidate();
+			if (Program.CurrentHost.MonoRuntime) {
+				// MONO issue on some systems means that the map may not draw initially, so force redraw
+				pictureboxRouteMap.Invalidate();
+				// HACK: On some mono systems, the preview would not appear if it's in the base resolution.
+				// If so, resize the image height by 1px
+				if(pictureboxRouteMap.Image != null) {
+					if (pictureboxRouteMap.Image.Size == pictureboxRouteMap.Size) {
+						pictureboxRouteMap.Height += 1;
+					}
+				}
+
+				if (pictureboxRouteGradient.Image != null) {
+					if (pictureboxRouteGradient.Image.Size == pictureboxRouteGradient.Size) {
+						pictureboxRouteGradient.Height += 1;
+					}
+				}
+			}
 		}
 		
 		private void toolStripExport_Click(object sender, EventArgs e)
 		{
-			System.Windows.Forms.Control sourceControl = ((ContextMenuStrip)((ToolStripItem)sender).Owner).SourceControl;
+			Control sourceControl = ((ContextMenuStrip)((ToolStripItem)sender).Owner).SourceControl;
 			formImageExport exporter = sourceControl == pictureboxRouteMap ? new formImageExport(true, Result.RouteFile) : new formImageExport(false, Result.RouteFile);
 			
 			exporter.ShowDialog();
+		}
+
+		private void panelPackageInstall_DragEnter(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
 		}
 	}
 }

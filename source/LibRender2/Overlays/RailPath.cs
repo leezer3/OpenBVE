@@ -29,13 +29,7 @@ namespace LibRender2.Overlays
 		/// <summary>Whether the path is visible at the current camera location</summary>
 		public bool CurrentlyVisible()
 		{
-			if (Display)
-			{
-				int temp;
-				return Visible(Renderer.CameraTrackFollower.TrackPosition, out temp);
-			}
-
-			return false;
+			return Display && Visible(Renderer.CameraTrackFollower.TrackPosition, out _);
 		}
 
 		/// <summary>Whether the path is visible at the specified location</summary>
@@ -43,13 +37,7 @@ namespace LibRender2.Overlays
 		/// <returns></returns>
 		public bool Visible(double trackPosition)
 		{
-			if (Display)
-			{
-				int temp;
-				return Visible(trackPosition, out temp);
-			}
-
-			return false;
+			return Display && Visible(trackPosition, out _);
 		}
 
 		/// <summary>Whether this path is visible at the specified location</summary>
@@ -77,8 +65,7 @@ namespace LibRender2.Overlays
 		{
 			double halfDistance = (Math.Max(Renderer.currentOptions.ViewingDistance, 1000) / 2.0) * 1.1;
 			int numElements = (int)(halfDistance / BlockLength);
-			int startElement;
-			if (!Display || !Visible(Renderer.CameraTrackFollower.TrackPosition, out startElement))
+			if (!Display || !Visible(Renderer.CameraTrackFollower.TrackPosition, out int startElement))
 			{
 				return;
 			}

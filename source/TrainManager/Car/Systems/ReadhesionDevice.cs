@@ -1,8 +1,11 @@
 ﻿using System;
+using TrainManager.Car.Systems;
 
 namespace TrainManager.Car
 {
-	public class CarReAdhesionDevice
+	/// <summary>Implements a BVE2 / BVE4 readhesion device</summary>
+	/// <remarks>Designed to simulate an electric motor control system reacting to wheelslip</remarks>
+	public class BveReAdhesionDevice : AbstractReAdhesionDevice
 	{
 		/// <summary>The time between updates in seconds</summary>
 		public double UpdateInterval;
@@ -18,14 +21,11 @@ namespace TrainManager.Car
 		private double NextUpdateTime;
 		/// <summary>The amount of time with NO wheelslip occuring</summary>
 		private double TimeStable;
-		/// <summary>Holds a reference to the base car</summary>
-		private readonly CarBase Car;
 		/// <summary>The type of device</summary>
 		public readonly ReadhesionDeviceType DeviceType;
 
-		public CarReAdhesionDevice(CarBase car, ReadhesionDeviceType type)
+		public BveReAdhesionDevice(CarBase car, ReadhesionDeviceType type) : base(car)
 		{
-			this.Car = car;
 			this.DeviceType = type;
 			this.MaximumAccelerationOutput = Double.PositiveInfinity;
 			this.ApplicationFactor = 0.0;
@@ -67,11 +67,9 @@ namespace TrainManager.Car
 			}
 		}
 
-		/// <summary>Called once a frame to update the re-adhesion device when powering</summary>
-		/// <param name="CurrentAcceleration">The current acceleration output</param>
-		public void Update(double CurrentAcceleration)
+		public override void Update(double TimeElapsed)
 		{
-			if (TrainManagerBase.currentHost.InGameTime < NextUpdateTime)
+			if (TrainManagerBase.currentHost.InGameTime < NextUpdateTime || Car.Specs.MaxMotorAcceleration == -1)
 			{
 				return;
 			}
@@ -79,7 +77,7 @@ namespace TrainManager.Car
 			NextUpdateTime = TrainManagerBase.currentHost.InGameTime + this.UpdateInterval;
 			if (Car.FrontAxle.CurrentWheelSlip | Car.RearAxle.CurrentWheelSlip)
 			{
-				MaximumAccelerationOutput = CurrentAcceleration * this.ApplicationFactor;
+				MaximumAccelerationOutput = Car.Specs.MaxMotorAcceleration * this.ApplicationFactor;
 				TimeStable = 0.0;
 			}
 			else
@@ -88,7 +86,7 @@ namespace TrainManager.Car
 				if (TimeStable >= this.ReleaseInterval)
 				{
 					TimeStable -= this.ReleaseInterval;
-					if (this.ReleaseFactor != 0.0 & MaximumAccelerationOutput <= CurrentAcceleration + 1.0)
+					if (this.ReleaseFactor != 0.0 & MaximumAccelerationOutput <= Car.Specs.MaxMotorAcceleration + 1.0)
 					{
 						if (MaximumAccelerationOutput < 0.025)
 						{
@@ -108,7 +106,7 @@ namespace TrainManager.Car
 		}
 
 		/// <summary>Called to reset the readhesion device after a jump</summary>
-		public void Jump()
+		public override void Jump()
 		{
 			NextUpdateTime = 0;
 			MaximumAccelerationOutput = double.PositiveInfinity;

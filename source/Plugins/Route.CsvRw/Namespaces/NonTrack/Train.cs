@@ -20,8 +20,7 @@ namespace CsvRwRouteParser
 						List<double> intervals = new List<double>();
 						for (int k = 0; k < Arguments.Length; k++)
 						{
-							double o;
-							if (!NumberFormats.TryParseDoubleVb6(Arguments[k], out o))
+							if (!NumberFormats.TryParseDoubleVb6(Arguments[k], out double o))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Interval " + k.ToString(Culture) + " is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								continue;

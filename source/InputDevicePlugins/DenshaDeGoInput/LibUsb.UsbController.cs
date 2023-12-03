@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2021, Marc Riera, The OpenBVE Project
+//Copyright (c) 2021-2023, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -88,6 +88,11 @@ namespace DenshaDeGoInput
 						if (ControllerDevice != null)
 						{
 							controllerName = ControllerDevice.Info.ProductString;
+							if (string.IsNullOrEmpty(controllerName))
+							{
+								// The name may be blank, use VID+PID
+								controllerName = VendorID.ToString("X4") + ":" + ProductID.ToString("X4");
+							}
 						}
 					}
 					catch

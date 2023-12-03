@@ -84,7 +84,7 @@ namespace Train.OpenBve
 					train.Cars[i].Doors[1].OpenSound = new CarSound(Plugin.currentHost, train.TrainFolder, "DoorOpn.wav", SoundCfgParser.smallRadius, right);
 				}
 				train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Plugin.currentHost, train.TrainFolder, "EmrBrake.wav", SoundCfgParser.mediumRadius, center);
-				train.Cars[i].Sounds.Flange = SoundCfgParser.TryLoadSoundDictionary(train.TrainFolder, "Flange", ".wav", center, SoundCfgParser.mediumRadius);
+				train.Cars[i].Flange.Sounds = SoundCfgParser.TryLoadSoundDictionary(train.TrainFolder, "Flange", ".wav", center, SoundCfgParser.mediumRadius);
 				train.Cars[i].Sounds.Loop = new CarSound(Plugin.currentHost, train.TrainFolder, "Loop.wav", SoundCfgParser.mediumRadius, center);
 				// ReSharper disable once CoVariantArrayConversion
 				train.Cars[i].FrontAxle.PointSounds = new[]
@@ -97,16 +97,17 @@ namespace Train.OpenBve
 					new CarSound(Plugin.currentHost, train.TrainFolder, "Point.wav", SoundCfgParser.smallRadius, rearaxle)
 				};
 				train.Cars[i].CarBrake.Rub = new CarSound(Plugin.currentHost, train.TrainFolder, "Rub.wav", SoundCfgParser.mediumRadius, center);
-				train.Cars[i].Sounds.Run = SoundCfgParser.TryLoadSoundDictionary(train.TrainFolder, "Run", ".wav", center, SoundCfgParser.mediumRadius);
-				train.Cars[i].Sounds.SpringL = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringL.wav", SoundCfgParser.smallRadius, left);
-				train.Cars[i].Sounds.SpringR = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringR.wav", SoundCfgParser.smallRadius, right);
+				train.Cars[i].Run.Sounds = SoundCfgParser.TryLoadSoundDictionary(train.TrainFolder, "Run", ".wav", center, SoundCfgParser.mediumRadius);
+				train.Cars[i].Suspension.SpringL = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringL.wav", SoundCfgParser.smallRadius, left);
+				train.Cars[i].Suspension.SpringR = new CarSound(Plugin.currentHost, train.TrainFolder, "SpringR.wav", SoundCfgParser.smallRadius, right);
 				// motor sound
 				if (train.Cars[i].Specs.IsMotorCar)
 				{
-					if (train.Cars[i].Sounds.Motor is BVEMotorSound motorSound)
+					if (train.Cars[i].Sounds.Motor == null)
 					{
+						BVEMotorSound motorSound = new BVEMotorSound(train.Cars[i], 18.0, Plugin.MotorSoundTables);
 						System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-						train.Cars[i].Sounds.Motor.Position = center;
+						motorSound.Position = center;
 						for (int j = 0; j < motorSound.Tables.Length; j++)
 						{
 							for (int k = 0; k < motorSound.Tables[j].Entries.Length; k++)
@@ -119,6 +120,8 @@ namespace Train.OpenBve
 								}
 							}
 						}
+
+						train.Cars[i].Sounds.Motor = motorSound;
 					}
 					else
 					{

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OpenBve.Input;
 using OpenBve.UserInterface;
@@ -10,7 +8,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenTK.Input;
 using Key = OpenBveApi.Input.Key;
-using Control = OpenBveApi.Interface.Control;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
@@ -293,9 +290,7 @@ namespace OpenBve {
 			if (listviewControls.SelectedIndices.Count == 1) {
 				int j = listviewControls.SelectedIndices[0];
 				if (j > 0) {
-					Control c = Interface.CurrentControls[j];
-					Interface.CurrentControls[j] = Interface.CurrentControls[j - 1];
-					Interface.CurrentControls[j - 1] = c;
+					(Interface.CurrentControls[j], Interface.CurrentControls[j - 1]) = (Interface.CurrentControls[j - 1], Interface.CurrentControls[j]);
 					ListViewItem v = listviewControls.Items[j];
 					listviewControls.Items.RemoveAt(j);
 					listviewControls.Items.Insert(j - 1, v);
@@ -308,9 +303,7 @@ namespace OpenBve {
 			if (listviewControls.SelectedIndices.Count == 1) {
 				int j = listviewControls.SelectedIndices[0];
 				if (j < Interface.CurrentControls.Length - 1) {
-					Control c = Interface.CurrentControls[j];
-					Interface.CurrentControls[j] = Interface.CurrentControls[j + 1];
-					Interface.CurrentControls[j + 1] = c;
+					(Interface.CurrentControls[j], Interface.CurrentControls[j + 1]) = (Interface.CurrentControls[j + 1], Interface.CurrentControls[j]);
 					ListViewItem v = listviewControls.Items[j];
 					listviewControls.Items.RemoveAt(j);
 					listviewControls.Items.Insert(j + 1, v);
@@ -431,15 +424,8 @@ namespace OpenBve {
 			{
 				textboxJoystickGrab.Enabled = false;
 			}
-			if (radiobuttonJoystick.Checked)
-			{
-				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_joystick_assignment_grab");
-			}
-			else
-			{
-				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_keyboard_assignment_grab");
-			}
 
+			textboxJoystickGrab.Text = Translations.GetInterfaceString(radiobuttonJoystick.Checked ? "controls_selection_joystick_assignment_grab" : "controls_selection_keyboard_assignment_grab");
 		}
 
 		// details
@@ -485,7 +471,7 @@ namespace OpenBve {
 		{
 			try
 			{
-				Interface.LoadControls(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls"), out Interface.CurrentControls);
+				Interface.LoadControls(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls"), out Interface.CurrentControls);
 				for (int i = 0; i < listviewControls.SelectedItems.Count; i++)
 				{
 					listviewControls.SelectedItems[i].Selected = false;
@@ -532,8 +518,8 @@ namespace OpenBve {
 			if (!radiobuttonJoystick.Checked)
 			{
 				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_keyboard_assignment_grabbing");
-				textboxJoystickGrab.BackColor = Color.Crimson;
-				textboxJoystickGrab.ForeColor = Color.White;
+				textboxJoystickGrab.BackColor = Color.LightSkyBlue;
+				textboxJoystickGrab.ForeColor = Color.Black;
 				KeyGrab = true;
 				return;
 
@@ -545,13 +531,10 @@ namespace OpenBve {
 					FullAxis = true;
 				}
 			}
-			if (FullAxis) {
-				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_joystick_assignment_grab_fullaxis");
-			} else {
-				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_joystick_assignment_grab_normal");
-			}
-			textboxJoystickGrab.BackColor = Color.Crimson;
-			textboxJoystickGrab.ForeColor = Color.White;
+
+			textboxJoystickGrab.Text = Translations.GetInterfaceString(FullAxis ? "controls_selection_joystick_assignment_grab_fullaxis" : "controls_selection_joystick_assignment_grab_normal");
+			textboxJoystickGrab.BackColor = Color.LightSkyBlue;
+			textboxJoystickGrab.ForeColor = Color.Black;
 		}
 
 		private void textboxJoystickGrab_KeyDown(object sender, KeyEventArgs e)
@@ -574,20 +557,13 @@ namespace OpenBve {
 				}
 			}
 			textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_keyboard_assignment_grab");
-			textboxJoystickGrab.BackColor = panelControls.BackColor;
+			textboxJoystickGrab.BackColor = Color.White;
 			textboxJoystickGrab.ForeColor = Color.Black;
 			comboboxKeyboardKey.Focus();
 		}
 		private void textboxJoystickGrab_Leave(object sender, EventArgs e) {
-			if (radiobuttonJoystick.Checked)
-			{
-				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_joystick_assignment_grab");
-			}
-			else
-			{
-				textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_keyboard_assignment_grab");
-			}
-			textboxJoystickGrab.BackColor = panelControls.BackColor;
+			textboxJoystickGrab.Text = Translations.GetInterfaceString(radiobuttonJoystick.Checked ? "controls_selection_joystick_assignment_grab" : "controls_selection_keyboard_assignment_grab");
+			textboxJoystickGrab.BackColor = Color.White;
 			textboxJoystickGrab.ForeColor = Color.Black;
 			KeyGrab = false;
 		}
@@ -620,7 +596,7 @@ namespace OpenBve {
 			e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 			Font f = new Font(this.Font.Name, 0.875f * this.Font.Size);
 			float x = 2.0f, y = 2.0f;
-			float threshold = ((float)trackbarJoystickAxisThreshold.Value - (float)trackbarJoystickAxisThreshold.Minimum) / (float)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
+			float threshold = (trackbarJoystickAxisThreshold.Value - (float)trackbarJoystickAxisThreshold.Minimum) / (trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
 			configureLinkLocations = new Vector2[Program.Joysticks.AttachedJoysticks.Count][];
 			for (int i = 0; i < Program.Joysticks.AttachedJoysticks.Count; i++)
 			{
@@ -774,16 +750,12 @@ namespace OpenBve {
 						float v = y + h + 8.0f;
 						{ // axes
 							int n = Program.Joysticks.AttachedJoysticks[guid].AxisCount();
-							float g = (float)pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
+							float g = pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
 							for (int j = 0; j < n; j++) {
 								float r = (float)Program.Joysticks.AttachedJoysticks[guid].GetAxis(j);
 								float r0 = r < 0.0f ? r : 0.0f;
 								float r1 = r > 0.0f ? r : 0.0f;
-								if ((float)Math.Abs((double)r) < threshold) {
-									e.Graphics.FillRectangle(Brushes.RosyBrown, u, v + 0.5f * g - 0.5f * r1 * g, 16.0f, 0.5f * g * (r1 - r0));
-								} else {
-									e.Graphics.FillRectangle(Brushes.Firebrick, u, v + 0.5f * g - 0.5f * r1 * g, 16.0f, 0.5f * g * (r1 - r0));
-								}
+								e.Graphics.FillRectangle((float)Math.Abs((double)r) < threshold ? Brushes.RosyBrown : Brushes.Firebrick, u, v + 0.5f * g - 0.5f * r1 * g, 16.0f, 0.5f * g * (r1 - r0));
 								if (device == i & component == JoystickComponent.Axis & element == j) {
 									if (direction == -1 & type != Translations.CommandType.AnalogFull) {
 										e.Graphics.DrawRectangle(p, u, v, 16.0f, g);
@@ -808,10 +780,10 @@ namespace OpenBve {
 						
 						{ // buttons
 							int n = Program.Joysticks.AttachedJoysticks[guid].ButtonCount();
-							float g = (float)0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
+							float g = 0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
 							for (int j = 0; j < n; j++) {
 								bool q = Program.Joysticks.AttachedJoysticks[guid].GetButton(j) != 0;
-								float dv = (float)(j & 1) * (g + 8.0f);
+								float dv = (j & 1) * (g + 8.0f);
 								if (q) e.Graphics.FillRectangle(Brushes.Firebrick, u, v + dv, g, g);
 								if (device == i & component == JoystickComponent.Button & element == j) {
 									e.Graphics.DrawRectangle(ps, u, v + dv, g, g);

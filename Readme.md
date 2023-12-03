@@ -2,9 +2,9 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/p4d983eclo738hjo?svg=true)](https://ci.appveyor.com/project/leezer3/openbve)
 
-## openBVE Source Code - Readme
+## OpenBVE Source Code - Readme
 
-This source code started out life as a port of openBVE to the OpenTK framework, but now has begun major development work to improve the sim and the possibilities it presents.
+This source code started out life as a port of OpenBVE to the OpenTK framework, but now has begun major development work to improve the sim and the possibilities it presents.
 
 ### Compatibility Changes
 
@@ -24,7 +24,7 @@ Documentation for development of add-ons (update version of docs originally writ
 
 ### Packages
 
-openBVE now supports the installation of 'package files' , which are intended as a replacement for the now defunct managed content. These are described fully [here](http://openbve-project.net/packages/).
+OpenBVE now supports the installation of 'package files' , which are intended as a replacement for the now defunct managed content. These are described fully [here](http://openbve-project.net/packages/).
 
 ### How to build
 
@@ -32,7 +32,7 @@ This build has been tested to compile correctly using Visual Studio 2017 onwards
 
 ### Contributing
 
-Please see the [Contributors File](Contributing.md) for a list of contributors, and basic guidelines for contributing to the development of openBVE.
+Please see the [Contributors File](Contributing.md) for a list of contributors, and basic guidelines for contributing to the development of OpenBVE.
 
 
 ### Links
@@ -60,18 +60,18 @@ Please also see the following issue for further discussion on the topic: https:/
 
 **Third-Party Libraries**
 
-- openBVE uses the [**CoreFX**](https://github.com/dotnet/corefx). This is licensed under the _MIT License_, which may be found in [here](licenses/CoreFX.txt).
-- openBVE uses the [**CS Script**](https://github.com/oleg-shilo/cs-script) for animation scripting. This is licensed under the _MIT License_, which may be found in [here](licenses/CS-Script.txt).
-- openBVE uses the [**DotNetZip**](https://github.com/haf/DotNetZip.Semverd) for loading compressed DirectX file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/DotNetZip.txt).
-- openBVE uses the [**NAudio**](https://github.com/naudio/NAudio) for decoding sound file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/NAudio.txt).
-- openBVE uses the [**NAudio.Vorbis**](https://github.com/naudio/Vorbis) for decoding Vorbis file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/NAudio.Vorbis.txt).
-- openBVE uses the [**NLayer**](https://github.com/naudio/NLayer) for decoding MP3 file. This is licensed under the *MIT License*, which may be found in [here](licenses/NLayer.txt).
-- openBVE uses the [**NVorbis**](https://github.com/NVorbis/NVorbis) for decoding Vorbis file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/NVorbis.txt).
-- openBVE uses the [**OpenTK**](https://github.com/opentk/opentk) library for windowing and input handling. This is licensed under the _Open Toolkit Library License_, which may be found in [here](licenses/OpenTK.txt).
-- openBVE uses the [**Prism**](https://github.com/PrismLibrary/Prism). This is licensed under the *MIT License*, which may be found in [here](licenses/Prism.txt).
-- openBVE uses the [**ReactiveProperty**](https://github.com/runceel/ReactiveProperty) This is licensed under the *MIT License*, which may be found in [here](licenses/ReactiveProperty.txt).
-- openBVE uses the [**SharpCompress**](https://github.com/adamhathcock/sharpcompress) for archive handling. This is licensed under the _MIT License_, which may be found in [here](licenses/SharpCompress.txt).
-- openBVE uses the [**Reactive Extensions**](https://github.com/dotnet/reactive) This is licensed under the *Apache License, Version 2.0*, which may be found in [here](licenses/ReactiveExtensions.txt).
-- openBVE uses the [**Ude**](https://github.com/yinyue200/ude) for character set detection. This is tri-licensed under the _Mozilla Public License v1.1_, _GPL 2.0_ and _LGPL 2.0_, which may be found in [here](licenses/Ude.txt).
-- openBVE uses the [**XamlBehaviors for WPF**](https://github.com/microsoft/XamlBehaviorsWpf) This is licensed under the *MIT License*, which may be found in [here](licenses/XamlBehaviorsForWPF.txt).
-- openBVE uses the [**TOLK**] (https://github.com/dkager/tolk) library for screen reader API access. This is licenced under the *LGPL V3* which may be found in [here](licences/TOLK.txt)
+- OpenBVE uses the [**CoreFX**](https://github.com/dotnet/corefx). This is licensed under the _MIT License_, which may be found in [here](licenses/CoreFX.txt).
+- OpenBVE uses the [**CS Script**](https://github.com/oleg-shilo/cs-script) for animation scripting. This is licensed under the _MIT License_, which may be found in [here](licenses/CS-Script.txt).
+- OpenBVE uses the [**DotNetZip**](https://github.com/haf/DotNetZip.Semverd) for loading compressed DirectX file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/DotNetZip.txt).
+- OpenBVE uses the [**NAudio**](https://github.com/naudio/NAudio) for decoding sound file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/NAudio.txt).
+- OpenBVE uses the [**NAudio.Vorbis**](https://github.com/naudio/Vorbis) for decoding Vorbis file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/NAudio.Vorbis.txt).
+- OpenBVE uses the [**NLayer**](https://github.com/naudio/NLayer) for decoding MP3 file. This is licensed under the *MIT License*, which may be found in [here](licenses/NLayer.txt).
+- OpenBVE uses the [**NVorbis**](https://github.com/NVorbis/NVorbis) for decoding Vorbis file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/NVorbis.txt).
+- OpenBVE uses the [**OpenTK**](https://github.com/opentk/opentk) library for windowing and input handling. This is licensed under the _Open Toolkit Library License_, which may be found in [here](licenses/OpenTK.txt).
+- OpenBVE uses the [**Prism**](https://github.com/PrismLibrary/Prism). This is licensed under the *MIT License*, which may be found in [here](licenses/Prism.txt).
+- OpenBVE uses the [**ReactiveProperty**](https://github.com/runceel/ReactiveProperty) This is licensed under the *MIT License*, which may be found in [here](licenses/ReactiveProperty.txt).
+- OpenBVE uses the [**SharpCompress**](https://github.com/adamhathcock/sharpcompress) for archive handling. This is licensed under the _MIT License_, which may be found in [here](licenses/SharpCompress.txt).
+- OpenBVE uses the [**Reactive Extensions**](https://github.com/dotnet/reactive) This is licensed under the *Apache License, Version 2.0*, which may be found in [here](licenses/ReactiveExtensions.txt).
+- OpenBVE uses the [**Ude**](https://github.com/yinyue200/ude) for character set detection. This is tri-licensed under the _Mozilla Public License v1.1_, _GPL 2.0_ and _LGPL 2.0_, which may be found in [here](licenses/Ude.txt).
+- OpenBVE uses the [**XamlBehaviors for WPF**](https://github.com/microsoft/XamlBehaviorsWpf) This is licensed under the *MIT License*, which may be found in [here](licenses/XamlBehaviorsForWPF.txt).
+- OpenBVE uses the [**TOLK**] (https://github.com/dkager/tolk) library for screen reader API access. This is licenced under the *LGPL V3* which may be found in [here](licences/TOLK.txt)

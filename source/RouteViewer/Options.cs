@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
+using OpenBveApi;
 using OpenBveApi.Graphics;
 
 namespace RouteViewer
@@ -11,24 +12,24 @@ namespace RouteViewer
         internal static void LoadOptions()
         {
 			Interface.CurrentOptions = new Interface.Options();
-            string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
+            string optionsFolder = Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
             if (!System.IO.Directory.Exists(optionsFolder))
             {
                 System.IO.Directory.CreateDirectory(optionsFolder);
             }
             CultureInfo Culture = CultureInfo.InvariantCulture;
-            string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_rv.cfg");
+            string configFile = Path.CombineFile(optionsFolder, "options_rv.cfg");
             if (!System.IO.File.Exists(configFile))
             {
                 //Attempt to load and upgrade a prior configuration file
-                string assemblyFolder = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "options_rv.cfg");
+                string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                configFile = Path.CombineFile(Path.CombineDirectory(Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "options_rv.cfg");
 
                 if (!System.IO.File.Exists(configFile))
                 {
                     //If no route viewer specific configuration file exists, then try the main OpenBVE configuration file
                     //Write out to a new routeviewer specific file though
-                    configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
+                    configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
                 }
             }
 
@@ -54,7 +55,7 @@ namespace RouteViewer
                             if (j >= 0)
                             {
                                 Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-                                Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+                                Value = Lines[i].Substring(j + 1).TrimStart();
                             }
                             else
                             {
@@ -70,16 +71,14 @@ namespace RouteViewer
 											break;
 										case "windowwidth":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300) {
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300) {
 													a = 960;
 												}
 												Interface.CurrentOptions.WindowWidth = a;
 											} break;
 										case "windowheight":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300) {
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300) {
 													a = 600;
 												}
 												Interface.CurrentOptions.WindowHeight = a;
@@ -87,8 +86,25 @@ namespace RouteViewer
 										case "isusenewrenderer":
 											Interface.CurrentOptions.IsUseNewRenderer = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
-									}
-									break;
+										case "viewingdistance":
+											{
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300) {
+													a = 600;
+												}
+												Interface.CurrentOptions.ViewingDistance = a;
+											} break;
+										case "quadleafsize":
+											{
+												if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
+												{
+													if (a >= 50 && a <= 500)
+													{
+														Interface.CurrentOptions.QuadTreeLeafSize = a;
+													}
+												}
+												Interface.CurrentOptions.QuadTreeLeafSize = a;
+											} break;
+					                } break;
 								case "quality":
 									switch (Key) {
 										case "interpolation":
@@ -103,14 +119,12 @@ namespace RouteViewer
 											} break;
 										case "anisotropicfilteringlevel":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.AnisotropicFilteringLevel = a;
 											} break;
 											case "antialiasinglevel":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.AntiAliasingLevel = a;
 											} break;
 										case "transparencymode":
@@ -118,8 +132,7 @@ namespace RouteViewer
 													case "sharp": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Performance; break;
 													case "smooth": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
 													default: {
-														int a;
-														if (int.TryParse(Value, NumberStyles.Integer, Culture, out a)) {
+														if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a)) {
 															Interface.CurrentOptions.TransparencyMode = (TransparencyMode)a;
 														} else {
 															Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality;
@@ -132,34 +145,13 @@ namespace RouteViewer
 									switch(Key)
 									{
 										case "showlogo":
-											if(Value.Trim(new char[] { }).ToLowerInvariant() == "true")
-											{
-												Interface.CurrentOptions.LoadingLogo = true;
-											}
-											else
-											{
-												Interface.CurrentOptions.LoadingLogo = false;
-											}
+											Interface.CurrentOptions.LoadingLogo = Value.Trim().ToLowerInvariant() == "true";
 											break;
 										case "showprogressbar":
-											if (Value.Trim(new char[] { }).ToLowerInvariant() == "true")
-											{
-												Interface.CurrentOptions.LoadingProgressBar = true;
-											}
-											else
-											{
-												Interface.CurrentOptions.LoadingProgressBar = false;
-											}
+											Interface.CurrentOptions.LoadingProgressBar = Value.Trim().ToLowerInvariant() == "true";
 											break;
 										case "showbackground":
-											if (Value.Trim(new char[] { }).ToLowerInvariant() == "true")
-											{
-												Interface.CurrentOptions.LoadingBackground = true;
-											}
-											else
-											{
-												Interface.CurrentOptions.LoadingBackground = false;
-											}
+											Interface.CurrentOptions.LoadingBackground = Value.Trim().ToLowerInvariant() == "true";
 											break;
 
 									}
@@ -187,6 +179,8 @@ namespace RouteViewer
                 Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
                 Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
                 Builder.AppendLine("isUseNewRenderer = " + (Interface.CurrentOptions.IsUseNewRenderer ? "true" : "false"));
+                Builder.AppendLine("viewingdistance = " + Interface.CurrentOptions.ViewingDistance);
+                Builder.AppendLine("quadleafsize = " + Interface.CurrentOptions.QuadTreeLeafSize);
                 Builder.AppendLine();
                 Builder.AppendLine("[quality]");
                 {
@@ -210,12 +204,12 @@ namespace RouteViewer
                 Builder.AppendLine("showlogo = " + (Interface.CurrentOptions.LoadingLogo ? "true" : "false"));
                 Builder.AppendLine("showprogressbar = " + (Interface.CurrentOptions.LoadingProgressBar ? "true" : "false"));
                 Builder.AppendLine("showbackground = " + (Interface.CurrentOptions.LoadingBackground ? "true" : "false"));
-                string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg");
+                string configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg");
                 System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
             }
             catch
             {
-                MessageBox.Show("An error occured whilst saving the options to disk." + System.Environment.NewLine +
+                MessageBox.Show("An error occured whilst saving the options to disk." + Environment.NewLine +
                                 "Please check you have write permission.");
             }
         }

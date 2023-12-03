@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
@@ -26,8 +26,16 @@ namespace Train.OpenBve
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed</remarks>
 		private const double EyeDistance = 1.0;
 
-		private double WorldWidth, WorldHeight, WorldLeft, WorldTop;
-		private double FullWidth = 480, FullHeight = 440, SemiHeight = 240;
+		/// <summary>The panel size</summary>
+		/// <remarks>PanelCfg has a fixed size measured in pixels</remarks>
+		private readonly Vector2 PanelSize = new Vector2(480, 440);
+		/// <summary>The world-size of the panel</summary>
+		/// <remarks>The pixel size must then be translated into an on-screen object</remarks>
+		private Vector2 WorldSize;
+		private const double AspectRatio = 480.0 / 440.0;
+
+		private double WorldLeft, WorldTop;
+		private double SemiHeight = 240;
 
 		/// <summary>Parses a BVE1 panel.cfg file</summary>
 		/// <param name="TrainPath">The on-disk path to the train</param>
@@ -49,24 +57,22 @@ namespace Train.OpenBve
 				}
 			}
 			// initialize
-
-			double AspectRatio = FullWidth / FullHeight;
-
+			
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
 			{
-				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
-				WorldHeight = WorldWidth / AspectRatio;
+				WorldSize.X = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
+				WorldSize.Y = WorldSize.X / AspectRatio;
 			}
 			else
 			{
-				WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance;
-				WorldWidth = WorldHeight * AspectRatio;
+				WorldSize.Y = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance;
+				WorldSize.X = WorldSize.Y * AspectRatio;
 			}
 
-			Car.CameraRestriction.BottomLeft = new Vector3(-0.5 * WorldWidth, -0.5 * WorldHeight, EyeDistance);
-			Car.CameraRestriction.TopRight = new Vector3(0.5 * WorldWidth, 0.5 * WorldHeight, EyeDistance);
-			WorldLeft = Car.Driver.X - 0.5 * WorldWidth;
-			WorldTop = Car.Driver.Y + 0.5 * WorldHeight;
+			Car.CameraRestriction.BottomLeft = new Vector3(-0.5 * WorldSize.X, -0.5 * WorldSize.Y, EyeDistance);
+			Car.CameraRestriction.TopRight = new Vector3(0.5 * WorldSize.X, 0.5 * WorldSize.Y, EyeDistance);
+			WorldLeft = Car.Driver.X - 0.5 * WorldSize.X;
+			WorldTop = Car.Driver.Y + 0.5 * WorldSize.Y;
 			double WorldZ = Car.Driver.Z;
 			const double UpDownAngleConstant = -0.191986217719376;
 			double PanelYaw = 0.0;
@@ -178,7 +184,7 @@ namespace Train.OpenBve
 				else
 				{
 					Plugin.currentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out var t, true);
-					SemiHeight = FullHeight - t.Height;
+					SemiHeight = PanelSize.Y - t.Height;
 					CreateElement(Car, 0, SemiHeight, t.Width, t.Height, WorldZ + EyeDistance, t, Color32.White);
 				}
 			}
@@ -1551,8 +1557,8 @@ namespace Train.OpenBve
 			// create object
 			StaticObject Object = new StaticObject(Plugin.currentHost);
 			Vector3[] v = new Vector3[4];
-			double sx = 0.5 * WorldWidth * Width / FullWidth;
-			double sy = 0.5 * WorldHeight * Height / FullHeight;
+			double sx = 0.5 * WorldSize.X * Width / PanelSize.X;
+			double sy = 0.5 * WorldSize.Y * Height / PanelSize.Y;
 			v[0] = new Vector3(-sx, -sy, 0);
 			v[1] = new Vector3(-sx, sy, 0);
 			v[2] = new Vector3(sx, sy, 0);
@@ -1577,8 +1583,8 @@ namespace Train.OpenBve
 			Object.Dynamic = true;
 			// calculate offset
 			Vector3 o;
-			o.X = WorldLeft + sx + WorldWidth * Left / FullWidth;
-			o.Y = WorldTop - sy - WorldHeight * Top / FullHeight;
+			o.X = WorldLeft + sx + WorldSize.X * Left / PanelSize.X;
+			o.Y = WorldTop - sy - WorldSize.Y * Top / PanelSize.Y;
 			o.Z = WorldZ;
 			// add object
 			if (AddStateToLastElement)

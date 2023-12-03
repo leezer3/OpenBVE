@@ -31,6 +31,7 @@ namespace OpenBveApi
 						//First try a standard path combine
 						return file;
 					}
+
 					try
 					{
 						//Check the Loksim package install directory next
@@ -40,7 +41,9 @@ namespace OpenBveApi
 						}
 					}
 					catch
-					{ }
+					{
+						// ignored
+					}
 					if (relative[0] == '\\')
 					{
 						//We now need to start a fuzzy find.

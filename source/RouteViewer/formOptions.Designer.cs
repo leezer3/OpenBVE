@@ -55,10 +55,13 @@ namespace RouteViewer
 			this.comboBoxNewObjParser = new System.Windows.Forms.ComboBox();
 			this.label12 = new System.Windows.Forms.Label();
 			this.comboBoxNewXParser = new System.Windows.Forms.ComboBox();
+			this.label15 = new System.Windows.Forms.Label();
+			this.numericUpDownViewingDistance = new System.Windows.Forms.NumericUpDown();
 			((System.ComponentModel.ISupportInitialize)(this.width)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.height)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.AnsiotropicLevel)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.AntialiasingLevel)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownViewingDistance)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// InterpolationMode
@@ -136,7 +139,7 @@ namespace RouteViewer
 			// 
 			// button1
 			// 
-			this.button1.Location = new System.Drawing.Point(212, 420);
+			this.button1.Location = new System.Drawing.Point(211, 447);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(75, 23);
 			this.button1.TabIndex = 9;
@@ -355,11 +358,44 @@ namespace RouteViewer
 			this.comboBoxNewXParser.Size = new System.Drawing.Size(121, 21);
 			this.comboBoxNewXParser.TabIndex = 31;
 			// 
+			// label15
+			// 
+			this.label15.AutoSize = true;
+			this.label15.Location = new System.Drawing.Point(12, 412);
+			this.label15.Name = "label15";
+			this.label15.Size = new System.Drawing.Size(109, 13);
+			this.label15.TabIndex = 34;
+			this.label15.Text = "Viewing Distance (m):";
+			// 
+			// numericUpDownViewingDistance
+			// 
+			this.numericUpDownViewingDistance.Location = new System.Drawing.Point(166, 410);
+			this.numericUpDownViewingDistance.Maximum = new decimal(new int[] {
+            4096,
+            0,
+            0,
+            0});
+			this.numericUpDownViewingDistance.Minimum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+			this.numericUpDownViewingDistance.Name = "numericUpDownViewingDistance";
+			this.numericUpDownViewingDistance.Size = new System.Drawing.Size(120, 20);
+			this.numericUpDownViewingDistance.TabIndex = 33;
+			this.numericUpDownViewingDistance.Value = new decimal(new int[] {
+            600,
+            0,
+            0,
+            0});
+			// 
 			// formOptions
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(311, 458);
+			this.ClientSize = new System.Drawing.Size(311, 482);
+			this.Controls.Add(this.label15);
+			this.Controls.Add(this.numericUpDownViewingDistance);
 			this.Controls.Add(this.label12);
 			this.Controls.Add(this.comboBoxNewXParser);
 			this.Controls.Add(this.label14);
@@ -396,6 +432,7 @@ namespace RouteViewer
 			((System.ComponentModel.ISupportInitialize)(this.height)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.AnsiotropicLevel)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.AntialiasingLevel)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownViewingDistance)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -430,5 +467,7 @@ namespace RouteViewer
 		private System.Windows.Forms.ComboBox comboBoxNewObjParser;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.ComboBox comboBoxNewXParser;
+		private System.Windows.Forms.Label label15;
+		private System.Windows.Forms.NumericUpDown numericUpDownViewingDistance;
 	}
 }

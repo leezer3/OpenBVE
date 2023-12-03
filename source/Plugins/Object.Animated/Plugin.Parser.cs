@@ -1,6 +1,8 @@
 using System;
 using System.Globalization;
+using OpenBveApi;
 using OpenBveApi.FunctionScripting;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -44,9 +46,11 @@ namespace Plugin
 			{
 				if (Lines[i].Length != 0)
 				{
-					switch (Lines[i].ToLowerInvariant())
+					string sct = Lines[i].Trim().Trim('[', ']');
+					Enum.TryParse(sct, true, out AnimatedSection Section);
+					switch (Section)
 					{
-						case "[include]":
+						case AnimatedSection.Include:
 							{
 								i++;
 								Vector3 position = Vector3.Zero;
@@ -59,53 +63,32 @@ namespace Plugin
 										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 										if (j > 0)
 										{
-											string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-											switch (a.ToLowerInvariant())
+											string a = Lines[i].Substring(0, j).TrimEnd();
+											string b = Lines[i].Substring(j + 1).TrimStart();
+											if (!Enum.TryParse(a, true, out AnimatedKey key))
 											{
-												case "position":
-													{
-														string[] s = b.Split(new[] { ',' });
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else
-															{
-																position = new Vector3(x, y, z);
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-														}
-													} break;
+												continue;
+											}
+											switch (key)
+											{
+												case AnimatedKey.Position:
+													position = ParseVector3(b, key, i, Section, FileName);
+													break;
 												default:
-													currentHost.AddMessage(MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													currentHost.AddMessage(MessageType.Error, false, "The attribute " + key + " is not supported in a " + Section + " section at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													break;
 											}
 										}
 										else
 										{
-											string Folder = System.IO.Path.GetDirectoryName(FileName);
-											if (OpenBveApi.Path.ContainsInvalidChars(Lines[i]))
+											string Folder = Path.GetDirectoryName(FileName);
+											if (Path.ContainsInvalidChars(Lines[i]))
 											{
-												currentHost.AddMessage(MessageType.Error, false, Lines[i] + " contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												currentHost.AddMessage(MessageType.Error, false, Lines[i] + " contains illegal characters at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 											}
 											else
 											{
-												string file = OpenBveApi.Path.CombineFile(Folder, Lines[i]);
+												string file = Path.CombineFile(Folder, Lines[i]);
 												if (System.IO.File.Exists(file))
 												{
 													if (obj.Length == objCount)
@@ -117,7 +100,7 @@ namespace Plugin
 												}
 												else
 												{
-													currentHost.AddMessage(MessageType.Error, true, "File " + file + " not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													currentHost.AddMessage(MessageType.Error, true, "File " + file + " not found at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 												}
 											}
 										}
@@ -163,12 +146,21 @@ namespace Plugin
 												Result.Objects[ObjectCount] = a.Objects[k];
 												ObjectCount++;
 											}
+											for (int kk = 0; kk < a.Sounds.Length; kk++)
+											{
+												if (SoundCount >= Result.Sounds.Length)
+												{
+													Array.Resize(ref Result.Sounds, Result.Sounds.Length << 1);
+												}
+												Result.Sounds[SoundCount] = a.Sounds[kk];
+												SoundCount++;
+											}
 										}
 									}
 								}
 							}
 							break;
-						case "[object]":
+						case AnimatedSection.Object:
 							{
 								i++;
 								if (Result.Objects.Length == ObjectCount)
@@ -184,8 +176,8 @@ namespace Plugin
 									RotateXDirection = Vector3.Right,
 									RotateYDirection = Vector3.Down,
 									RotateZDirection = Vector3.Forward,
-									TextureShiftXDirection = new Vector2(1.0, 0.0),
-									TextureShiftYDirection = new Vector2(0.0, 1.0),
+									TextureShiftXDirection = Vector2.Right,
+									TextureShiftYDirection = Vector2.Down,
 									RefreshRate = 0.0,
 								};
 								Vector3 Position = Vector3.Zero;
@@ -200,6 +192,7 @@ namespace Plugin
 								string StateFunctionRpn = null;
 								bool StateFunctionIsPostfix = false;
 								int StateFunctionLine = -1;
+								Vector3 Scale = Vector3.One;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
 								{
 									if (Lines[i].Length != 0)
@@ -207,44 +200,25 @@ namespace Plugin
 										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 										if (j > 0)
 										{
-											string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-											switch (a.ToLowerInvariant())
+											string a = Lines[i].Substring(0, j).TrimEnd();
+											string b = Lines[i].Substring(j + 1).TrimStart();
+											if(!Enum.TryParse(a, true, out AnimatedKey key))
 											{
-												case "position":
+												currentHost.AddMessage(MessageType.Error, false, "Unknown key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+												i++;
+												continue;
+											}
+											switch (key)
+											{
+												case AnimatedKey.Position:
+													Position = ParseVector3(b, key, i, Section, FileName);
+													break;
+												case AnimatedKey.States:
 													{
-														string[] s = b.Split(new[] { ',' });
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else
-															{
-																Position = new Vector3(x, y, z);
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-														}
-													} break;
-												case "states":
-													{
-														string[] s = b.Split(new[] { ',' });
+														string[] s = b.Split(',');
 														if (s.Length >= 1)
 														{
-															string Folder = System.IO.Path.GetDirectoryName(FileName);
+															string Folder = Path.GetDirectoryName(FileName);
 															StateFiles = new string[s.Length];
 															bool NullObject = true;
 															for (int k = 0; k < s.Length; k++)
@@ -252,20 +226,29 @@ namespace Plugin
 																s[k] = s[k].Trim(new char[] { });
 																if (s[k].Length == 0)
 																{
-																	currentHost.AddMessage(MessageType.Error, false, "File" + k.ToString(Culture) + " is an empty string - did you mean something else? - in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	StateFiles[k] = null;
+																	if (k == s.Length - 1)
+																	{
+																		// empty final argument, so assume misplaced final coma as empty arguments just get ignored
+																		Array.Resize(ref s, s.Length - 1);
+																	}
+																	else
+																	{
+																		currentHost.AddMessage(MessageType.Error, false, "File " + k.ToString(Culture) + " is an empty string - did you mean something else? - in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+																		StateFiles[k] = null;	
+																	}
+																	
 																}
-																else if (OpenBveApi.Path.ContainsInvalidChars(s[k]))
+																else if (Path.ContainsInvalidChars(s[k]))
 																{
-																	currentHost.AddMessage(MessageType.Error, false, "File" + k.ToString(Culture) + " contains illegal characters in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	currentHost.AddMessage(MessageType.Error, false, "File " + k.ToString(Culture) + " contains illegal characters in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 																	StateFiles[k] = null;
 																}
 																else
 																{
-																	StateFiles[k] = OpenBveApi.Path.CombineFile(Folder, s[k]);
+																	StateFiles[k] = Path.CombineFile(Folder, s[k]);
 																	if (!System.IO.File.Exists(StateFiles[k]))
 																	{
-																		currentHost.AddMessage(MessageType.Error, true, "File " + StateFiles[k] + " not found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		currentHost.AddMessage(MessageType.Error, true, "File " + StateFiles[k] + " not found in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 																		StateFiles[k] = null;
 																	}
 																}
@@ -276,169 +259,139 @@ namespace Plugin
 															}
 															if (NullObject && Result.Objects[0] == null)
 															{
-																currentHost.AddMessage(MessageType.Error, false, "None of the specified files were found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "None of the specified files were found in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 																return null;
 															}
 														}
 														else
 														{
-															currentHost.AddMessage(MessageType.Error, false, "At least one argument is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "At least one argument is expected in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															return null;
 														}
 													} break;
-												case "statefunction":
+												case AnimatedKey.StateFunction:
+												case AnimatedKey.StateFunctionRPN:
 													StateFunctionLine = i;
 													StateFunctionRpn = b;
+													StateFunctionIsPostfix = key == AnimatedKey.StateFunctionRPN;
 													break;
-												case "statefunctionrpn":
-													StateFunctionLine = i;
-													StateFunctionRpn = b;
-													StateFunctionIsPostfix = true;
-													break;
-												case "translatexdirection":
-												case "translateydirection":
-												case "translatezdirection":
+												case AnimatedKey.TranslateXDirection:
+												case AnimatedKey.TranslateYDirection:
+												case AnimatedKey.TranslateZDirection:
+													switch (key)
 													{
-														string[] s = b.Split(new[] { ',' });
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else
-															{
-																switch (a.ToLowerInvariant())
-																{
-																	case "translatexdirection":
-																		Result.Objects[ObjectCount].TranslateXDirection = new Vector3(x, y, z);
-																		break;
-																	case "translateydirection":
-																		Result.Objects[ObjectCount].TranslateYDirection = new Vector3(x, y, z);
-																		break;
-																	case "translatezdirection":
-																		Result.Objects[ObjectCount].TranslateZDirection = new Vector3(x, y, z);
-																		break;
-																}
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-														}
-													} break;
-												case "translatexfunction":
+														case AnimatedKey.TranslateXDirection:
+															Result.Objects[ObjectCount].TranslateXDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+														case AnimatedKey.TranslateYDirection:
+															Result.Objects[ObjectCount].TranslateYDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+														case AnimatedKey.TranslateZDirection:
+															Result.Objects[ObjectCount].TranslateZDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+													}
+													break;
+												case AnimatedKey.TranslateXFunction:
+												case AnimatedKey.TranslateXFunctionRPN:
 													try
 													{
-														double X;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out X))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out double X))
 														{
 															Position.X = X;
 															//A function script must be evaluated every frame, no matter if it is a constant value
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(currentHost, b, true);
+														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(currentHost, b, key == AnimatedKey.TranslateXFunction);
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													} break;
-												case "translatexscript":
+												case AnimatedKey.TranslateXScript:
 													try
 													{
 														Result.Objects[ObjectCount].TranslateXFunction = new CSAnimationScript(currentHost, 
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													} break;
-												case "translateyfunction":
+												case AnimatedKey.TranslateYFunction:
+												case AnimatedKey.TranslateYFunctionRPN:
 													try
 													{
-														double Y;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out Y))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out double Y))
 														{
 															Position.Y = Y;
 															//A function script must be evaluated every frame, no matter if it is a constant value
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(currentHost, b, true);
+														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(currentHost, b, key == AnimatedKey.TranslateYFunction);
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													} break;
-												case "translateyscript":
+												case AnimatedKey.TranslateYScript:
 													try
 													{
 														Result.Objects[ObjectCount].TranslateYFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													} break;
-												case "translatezfunction":
+												case AnimatedKey.TranslateZFunction:
+												case AnimatedKey.TranslateZFunctionRPN:
 													try
 													{
-														double Z;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out Z))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out double Z))
 														{
 															Position.Z = Z;
 															//A function script must be evaluated every frame, no matter if it is a constant value
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(currentHost, b, true);
+														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(currentHost, b, key == AnimatedKey.TranslateZFunction);
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													} break;
-												case "translatezscript":
+												case AnimatedKey.TranslateZScript:
 													try
 													{
 														Result.Objects[ObjectCount].TranslateZFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													} break;
-												case "trackfollowerfunction":
+												case AnimatedKey.TrackFollowerFunction:
 													try
 													{
 														Result.Objects[ObjectCount].TrackFollowerFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													} break;
-												case "axles":
+												case AnimatedKey.Axles:
 													try
 													{
-														double FrontAxlePosition;
-														double RearAxlePosition;
-														var splitValue = b.Split(new[] { ',' });
-														if (!double.TryParse(splitValue[0], out FrontAxlePosition))
+														var splitValue = b.Split(',');
+														if (!double.TryParse(splitValue[0], out double FrontAxlePosition))
 														{
-															currentHost.AddMessage(MessageType.Error, false,"Invalid FrontAxlePosition in " + a + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
+															currentHost.AddMessage(MessageType.Error, false,"Invalid FrontAxlePosition in " + key + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
 														}
-														if(!double.TryParse(splitValue[1], out RearAxlePosition))
+														if(!double.TryParse(splitValue[1], out double RearAxlePosition))
 														{
-															currentHost.AddMessage(MessageType.Error, false,"Invalid RearAxlePosition in " + a + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
+															currentHost.AddMessage(MessageType.Error, false,"Invalid RearAxlePosition in " + key + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
 														}
 														if (FrontAxlePosition > RearAxlePosition)
 														{
@@ -447,97 +400,36 @@ namespace Plugin
 														}
 														else if (FrontAxlePosition < RearAxlePosition)
 														{
-															currentHost.AddMessage(MessageType.Error, false,"Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
+															currentHost.AddMessage(MessageType.Error, false,"Rear is expected to be less than Front in " + key + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
 														}
 														else
 														{
-															currentHost.AddMessage(MessageType.Error, false, "Rear must not equal Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Rear must not equal Front in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 														}
 
 													}
 													catch(Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-													/*
-													 * RPN Functions were added by Michelle, and she stated that they should not be used other than in debugging
-													 * Not aware of any uses, but these should stay there anyway
-													 * 
-													 */
-												case "translatexfunctionrpn":
-													try
+												case AnimatedKey.RotateXDirection:
+												case AnimatedKey.RotateYDirection:
+												case AnimatedKey.RotateZDirection:
+													switch (key)
 													{
-														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(currentHost, b, false);
-													}
-													catch (Exception ex)
-													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
-												case "translateyfunctionrpn":
-													try
-													{
-														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(currentHost, b, false);
-													}
-													catch (Exception ex)
-													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
-												case "translatezfunctionrpn":
-													try
-													{
-														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(currentHost, b, false);
-													}
-													catch (Exception ex)
-													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
-												case "rotatexdirection":
-												case "rotateydirection":
-												case "rotatezdirection":
-													{
-														string[] s = b.Split(new[] { ',' });
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (x == 0.0 & y == 0.0 & z == 0.0)
-															{
-																currentHost.AddMessage(MessageType.Error, false, "The direction indicated by X, Y and Z is expected to be non-zero in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else
-															{
-																switch (a.ToLowerInvariant())
-																{
-																	case "rotatexdirection":
-																		Result.Objects[ObjectCount].RotateXDirection = new Vector3(x, y, z);
-																		break;
-																	case "rotateydirection":
-																		Result.Objects[ObjectCount].RotateYDirection = new Vector3(x, y, z);
-																		break;
-																	case "rotatezdirection":
-																		Result.Objects[ObjectCount].RotateZDirection = new Vector3(x, y, z);
-																		break;
-																}
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-														}
-													} break;
-												case "rotatexfunction":
+														case AnimatedKey.RotateXDirection:
+															Result.Objects[ObjectCount].RotateXDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+														case AnimatedKey.RotateYDirection:
+															Result.Objects[ObjectCount].RotateYDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+														case AnimatedKey.RotateZDirection:
+															Result.Objects[ObjectCount].RotateZDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+													}break;
+												case AnimatedKey.RotateXFunction:
+												case AnimatedKey.RotateXFunctionRPN:
 													try
 													{
 														if (double.TryParse(b, NumberStyles.Float, Culture, out RotateX))
@@ -546,124 +438,98 @@ namespace Plugin
 															//If we add this to the position instead, this gives a minor speedup
 															StaticXRotation = true;
 														}
-														Result.Objects[ObjectCount].RotateXFunction = new FunctionScript(currentHost, b, true);
+														Result.Objects[ObjectCount].RotateXFunction = new FunctionScript(currentHost, b, key == AnimatedKey.RotateXFunction);
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													} break;
-												case "rotatexscript":
+												case AnimatedKey.RotateXScript:
 													try {
 														Result.Objects[ObjectCount].RotateXFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													} catch (Exception ex) {
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-												case "rotateyfunction":
+												case AnimatedKey.RotateYFunction:
+												case AnimatedKey.RotateYFunctionRPN:
 													try
 													{
 														if (double.TryParse(b, NumberStyles.Float, Culture, out RotateY))
 														{
 															StaticYRotation = true;
 														}
-														Result.Objects[ObjectCount].RotateYFunction = new FunctionScript(currentHost, b, true);
+														Result.Objects[ObjectCount].RotateYFunction = new FunctionScript(currentHost, b, key == AnimatedKey.RotateYFunction);
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													} break;
-												case "rotateyscript":
+												case AnimatedKey.RotateYScript:
 													try {
 														Result.Objects[ObjectCount].RotateYFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													} catch (Exception ex) {
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-												case "rotatezfunction":
+												case AnimatedKey.RotateZFunction:
+												case AnimatedKey.RotateZFunctionRPN:
 													try
 													{
 														if (double.TryParse(b, NumberStyles.Float, Culture, out RotateZ))
 														{
 															StaticZRotation = true;
 														}
-														Result.Objects[ObjectCount].RotateZFunction = new FunctionScript(currentHost, b, true);
+														Result.Objects[ObjectCount].RotateZFunction = new FunctionScript(currentHost, b, key == AnimatedKey.RotateZFunction);
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													} break;
-												case "rotatezscript":
+												case AnimatedKey.RotateZScript:
 													try {
 														Result.Objects[ObjectCount].RotateZFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													} catch (Exception ex) {
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-												case "rotatexfunctionrpn":
-													try
+												case AnimatedKey.RotateXDamping:
+												case AnimatedKey.RotateYDamping:
+												case AnimatedKey.RotateZDamping:
 													{
-														Result.Objects[ObjectCount].RotateXFunction = new FunctionScript(currentHost, b, false);
-													}
-													catch (Exception ex)
-													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
-												case "rotateyfunctionrpn":
-													try
-													{
-														Result.Objects[ObjectCount].RotateYFunction = new FunctionScript(currentHost, b, false);
-													}
-													catch (Exception ex)
-													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
-												case "rotatezfunctionrpn":
-													try
-													{
-														Result.Objects[ObjectCount].RotateZFunction = new FunctionScript(currentHost, b, false);
-													}
-													catch (Exception ex)
-													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
-												case "rotatexdamping":
-												case "rotateydamping":
-												case "rotatezdamping":
-													{
-														string[] s = b.Split(new[] { ',' });
+														string[] s = b.Split(',');
 														if (s.Length == 2)
 														{
-															double nf, dr;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out nf))
+															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out double nf))
 															{
-																currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out dr))
+															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out double dr))
 															{
-																currentHost.AddMessage(MessageType.Error, false, "DampingRatio is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "DampingRatio is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															}
 															else if (nf <= 0.0)
 															{
-																currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is expected to be positive in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is expected to be positive in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															}
 															else if (dr <= 0.0)
 															{
-																currentHost.AddMessage(MessageType.Error, false, "DampingRatio is expected to be positive in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "DampingRatio is expected to be positive in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															}
 															else
 															{
-																switch (a.ToLowerInvariant())
+																switch (key)
 																{
-																	case "rotatexdamping":
+																	case AnimatedKey.RotateXDamping:
 																		Result.Objects[ObjectCount].RotateXDamping = new Damping(nf, dr);
 																		break;
-																	case "rotateydamping":
+																	case AnimatedKey.RotateYDamping:
 																		Result.Objects[ObjectCount].RotateYDamping = new Damping(nf, dr);
 																		break;
-																	case "rotatezdamping":
+																	case AnimatedKey.RotateZDamping:
 																		Result.Objects[ObjectCount].RotateZDamping = new Damping(nf, dr);
 																		break;
 																}
@@ -671,32 +537,97 @@ namespace Plugin
 														}
 														else
 														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 														}
 													} break;
-												case "textureshiftxdirection":
-												case "textureshiftydirection":
+												case AnimatedKey.ScaleXFunction:
+													try
 													{
-														string[] s = b.Split(new[] { ',' });
+														if (!double.TryParse(b, NumberStyles.Float, Culture, out Scale.X))
+														{
+															Result.Objects[ObjectCount].ScaleXFunction = new FunctionScript(currentHost, b, true);
+														}
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case AnimatedKey.ScaleXScript:
+													try
+													{
+														Result.Objects[ObjectCount].ScaleXFunction = new CSAnimationScript(currentHost, 
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case AnimatedKey.ScaleYFunction:
+													try
+													{
+														if (!double.TryParse(b, NumberStyles.Float, Culture, out Scale.Y))
+														{
+															Result.Objects[ObjectCount].ScaleYFunction = new FunctionScript(currentHost, b, true);	
+														}
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case AnimatedKey.ScaleYScript:
+													try
+													{
+														Result.Objects[ObjectCount].ScaleYFunction = new CSAnimationScript(currentHost, 
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case AnimatedKey.ScaleZFunction:
+													try
+													{
+														if (!double.TryParse(b, NumberStyles.Float, Culture, out Scale.Z))
+														{
+															Result.Objects[ObjectCount].ScaleXFunction = new FunctionScript(currentHost, b, true);
+														}
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case AnimatedKey.ScaleZScript:
+													try
+													{
+														Result.Objects[ObjectCount].ScaleXFunction = new CSAnimationScript(currentHost, 
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
+													}
+													catch (Exception ex)
+													{
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case AnimatedKey.TextureShiftXDirection:
+												case AnimatedKey.TextureShiftYDirection:
+													{
+														string[] s = b.Split(',');
 														if (s.Length == 2)
 														{
-															double x, y;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
+															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out double x))
 															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
+															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out double y))
 															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															}
 															else
 															{
-																switch (a.ToLowerInvariant())
+																switch (key)
 																{
-																	case "textureshiftxdirection":
+																	case AnimatedKey.TextureShiftXDirection:
 																		Result.Objects[ObjectCount].TextureShiftXDirection = new Vector2(x, y);
 																		break;
-																	case "textureshiftydirection":
+																	case AnimatedKey.TextureShiftYDirection:
 																		Result.Objects[ObjectCount].TextureShiftYDirection = new Vector2(x, y);
 																		break;
 																}
@@ -704,62 +635,46 @@ namespace Plugin
 														}
 														else
 														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 														}
 													} break;
-												case "textureshiftxfunction":
+												case AnimatedKey.TextureShiftXFunction:
+												case AnimatedKey.TextureShiftXFunctionRPN:
 													try
 													{
-														Result.Objects[ObjectCount].TextureShiftXFunction = new FunctionScript(currentHost, b, true);
+														Result.Objects[ObjectCount].TextureShiftXFunction = new FunctionScript(currentHost, b, key == AnimatedKey.TextureShiftXFunction);
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													} break;
-												case "textureshiftxscript":
+												case AnimatedKey.TextureShiftXScript:
 													try {
 														Result.Objects[ObjectCount].TextureShiftXFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													} catch (Exception ex) {
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-												case "textureshiftyfunction":
+												case AnimatedKey.TextureShiftYFunction:
+												case AnimatedKey.TextureShiftYFunctionRPN:
 													try
 													{
-														Result.Objects[ObjectCount].TextureShiftYFunction = new FunctionScript(currentHost, b, true);
+														Result.Objects[ObjectCount].TextureShiftYFunction = new FunctionScript(currentHost, b, key == AnimatedKey.TextureShiftYFunction);
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													} break;
-												case "textureshiftyscript":
+												case AnimatedKey.TextureShiftYScript:
 													try {
 														Result.Objects[ObjectCount].TextureShiftYFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													} catch (Exception ex) {
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-												case "textureshiftxfunctionrpn":
-													try
-													{
-														Result.Objects[ObjectCount].TextureShiftXFunction = new FunctionScript(currentHost, b, false);
-													}
-													catch (Exception ex)
-													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
-												case "textureshiftyfunctionrpn":
-													try
-													{
-														Result.Objects[ObjectCount].TextureShiftYFunction = new FunctionScript(currentHost, b, false);
-													}
-													catch (Exception ex)
-													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
-												case "textureoverride":
+												case AnimatedKey.TextureOverride:
 													switch (b.ToLowerInvariant())
 													{
 														case "none":
@@ -772,20 +687,19 @@ namespace Plugin
 															}
 															break;
 														default:
-															currentHost.AddMessage(MessageType.Error, false, "Unrecognized value in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Unrecognized value in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															break;
 													}
 													break;
-												case "refreshrate":
+												case AnimatedKey.RefreshRate:
 													{
-														double r;
-														if (!double.TryParse(b, NumberStyles.Float, Culture, out r))
+														if (!double.TryParse(b, NumberStyles.Float, Culture, out double r))
 														{
-															currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 														}
 														else if (r < 0.0)
 														{
-															currentHost.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 														}
 														else
 														{
@@ -793,20 +707,20 @@ namespace Plugin
 														}
 													} break;
 												default:
-													currentHost.AddMessage(MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													currentHost.AddMessage(MessageType.Error, false, "The attribute " + key + " is not supported for Objects at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													break;
 											}
 										}
 										else
 										{
-											currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											currentHost.AddMessage(MessageType.Error, false, "A key-value pair was expected at line " + (i + 1).ToString(Culture) + ", but found " + Lines[i] + " in the Section " + Section + " in file " + FileName);
 											return null;
 										}
 									}
 									i++;
 								}
 								i--;
-
+								
 								if (StateFiles != null)
 								{
 									// create the object
@@ -829,7 +743,7 @@ namespace Plugin
 										}
 										catch (Exception ex)
 										{
-											currentHost.AddMessage(MessageType.Error, false, ex.Message + " in StateFunction at line " + (StateFunctionLine + 1).ToString(Culture) + " in file " + FileName);
+											currentHost.AddMessage(MessageType.Error, false, ex.Message + " in StateFunction at line " + (StateFunctionLine + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 										}
 									}
 									Result.Objects[ObjectCount].States = new ObjectState[StateFiles.Length];
@@ -842,15 +756,24 @@ namespace Plugin
 										Result.Objects[ObjectCount].States[k] = new ObjectState();
 										if (StateFiles[k] != null)
 										{
-											UnifiedObject currentObject;
-											currentHost.LoadObject(StateFiles[k], Encoding, out currentObject);
+											currentHost.LoadObject(StateFiles[k], Encoding, out UnifiedObject currentObject);
 											if (currentObject is StaticObject)
 											{
-												Result.Objects[ObjectCount].States[k].Prototype = (StaticObject) currentObject;
+												if (Scale != Vector3.One)
+												{
+													StaticObject obj = (StaticObject)currentObject.Clone();
+													obj.ApplyScale(Scale);
+													Result.Objects[ObjectCount].States[k].Prototype = obj;
+												}
+												else
+												{
+													Result.Objects[ObjectCount].States[k].Prototype = (StaticObject) currentObject;
+												}
+
 											}
 											else if (currentObject is AnimatedObjectCollection)
 											{
-												currentHost.AddMessage(MessageType.Error, false, "Attempted to load the animated object " + StateFiles[k] + " where only static objects are allowed at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												currentHost.AddMessage(MessageType.Error, false, "Attempted to load the animated object " + StateFiles[k] + " where only static objects are allowed at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 												continue;
 											}
 											/*
@@ -963,7 +886,7 @@ namespace Plugin
 								ObjectCount++;
 							}
 							break;
-						case "[sound]":
+						case AnimatedSection.Sound:
 							{
 								double pitch = 1.0, volume = 1.0, radius = 30.0;
 								FunctionScript TrackFollowerFunction = null;
@@ -983,132 +906,84 @@ namespace Plugin
 										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 										if (j > 0)
 										{
-											string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-											switch (a.ToLowerInvariant())
+											string a = Lines[i].Substring(0, j).TrimEnd();
+											string b = Lines[i].Substring(j + 1).TrimStart();
+											if (!Enum.TryParse(a, true, out AnimatedKey key))
 											{
-												case "position":
-													{
-														string[] s = b.Split(new[] { ',' });
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else
-															{
-																Position = new Vector3(x, y, z);
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-														}
-													}
+												currentHost.AddMessage(MessageType.Error, false, "Unknown key " + key + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+												continue;
+											}
+											switch (key)
+											{
+												case AnimatedKey.Position:
+													Position = ParseVector3(b, key, i, Section, FileName);
 													break;
-												case "filename":
+												case AnimatedKey.FileName:
 													{
-														string Folder = System.IO.Path.GetDirectoryName(FileName);
-														fileName = OpenBveApi.Path.CombineFile(Folder, b);
+														string Folder = Path.GetDirectoryName(FileName);
+														fileName = Path.CombineFile(Folder, b);
 														if (!System.IO.File.Exists(fileName))
 														{
 															if (currentSoundFolder != null)
 															{
-																fileName = OpenBveApi.Path.CombineFile(currentSoundFolder, b);
+																fileName = Path.CombineFile(currentSoundFolder, b);
 															}
 
 															if (!System.IO.File.Exists(fileName))
 															{
-																currentHost.AddMessage(MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 																fileName = null;
 															}
 														}
 													}
 													break;
-												case "radius":
+												case AnimatedKey.Radius:
 													{
 														if (!double.TryParse(b, out radius))
 														{
-															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															radius = 30.0;
 														}
 													}
 													break;
-												case "pitch":
+												case AnimatedKey.Pitch:
 													{
 														if (!double.TryParse(b, out pitch))
 														{
-															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															pitch = 1.0;
 														}
 													}
 													break;
-												case "volume":
+												case AnimatedKey.Volume:
 													{
 														if (!double.TryParse(b, out volume))
 														{
-															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															volume = 1.0;
 														}
 													}
 													break;
-												case "translatexdirection":
-												case "translateydirection":
-												case "translatezdirection":
+												case AnimatedKey.TranslateXDirection:
+												case AnimatedKey.TranslateYDirection:
+												case AnimatedKey.TranslateZDirection:
+													switch (key)
 													{
-														string[] s = b.Split(new[] { ',' });
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else
-															{
-																switch (a.ToLowerInvariant())
-																{
-																	case "translatexdirection":
-																		Result.Objects[ObjectCount].TranslateXDirection = new Vector3(x, y, z);
-																		break;
-																	case "translateydirection":
-																		Result.Objects[ObjectCount].TranslateYDirection = new Vector3(x, y, z);
-																		break;
-																	case "translatezdirection":
-																		Result.Objects[ObjectCount].TranslateZDirection = new Vector3(x, y, z);
-																		break;
-																}
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-														}
+														case AnimatedKey.TranslateXDirection:
+															Result.Objects[ObjectCount].TranslateXDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+														case AnimatedKey.TranslateYDirection:
+															Result.Objects[ObjectCount].TranslateYDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
+														case AnimatedKey.TranslateZDirection:
+															Result.Objects[ObjectCount].TranslateZDirection = ParseVector3(b, key, i, Section, FileName);
+															break;
 													}
 													break;
-												case "translatexfunction":
+												case AnimatedKey.TranslateXFunction:
 													try
 													{
-														double X;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out X))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out double X))
 														{
 															Position.X = X;
 															//A function script must be evaluated every frame, no matter if it is a constant value
@@ -1119,25 +994,24 @@ namespace Plugin
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-												case "translatexscript":
+												case AnimatedKey.TranslateXScript:
 													try
 													{
 														Result.Objects[ObjectCount].TranslateXFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-												case "translateyfunction":
+												case AnimatedKey.TranslateYFunction:
 													try
 													{
-														double Y;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out Y))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out double Y))
 														{
 															Position.Y = Y;
 															//A function script must be evaluated every frame, no matter if it is a constant value
@@ -1148,25 +1022,24 @@ namespace Plugin
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-												case "translateyscript":
+												case AnimatedKey.TranslateYScript:
 													try
 													{
 														Result.Objects[ObjectCount].TranslateYFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-												case "translatezfunction":
+												case AnimatedKey.TranslateZFunction:
 													try
 													{
-														double Z;
-														if (double.TryParse(b, NumberStyles.Float, Culture, out Z))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out double Z))
 														{
 															Position.Z = Z;
 															//A function script must be evaluated every frame, no matter if it is a constant value
@@ -1177,58 +1050,58 @@ namespace Plugin
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-												case "translatezscript":
+												case AnimatedKey.TranslateZScript:
 													try
 													{
 														Result.Objects[ObjectCount].TranslateZFunction = new CSAnimationScript(currentHost,
-															OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b, true));
+															Path.CombineDirectory(Path.GetDirectoryName(FileName), b, true));
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-												case "trackfollowerfunction":
+												case AnimatedKey.TrackFollowerFunction:
 													try
 													{
 														TrackFollowerFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-												case "pitchfunction":
+												case AnimatedKey.PitchFunction:
 													try
 													{
 														PitchFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
-												case "volumefunction":
+												case AnimatedKey.VolumeFunction:
 													try
 													{
 														VolumeFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + key + " at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													}
 													break;
 												default:
-													currentHost.AddMessage(MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													currentHost.AddMessage(MessageType.Error, false, "The attribute " + key + " is not supported for Sounds at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													break;
 											}
 										}
 										else
 										{
-											currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 											return null;
 										}
 									}
@@ -1237,8 +1110,7 @@ namespace Plugin
 								i--;
 								if (fileName != null)
 								{
-									SoundHandle currentSound;
-									currentHost.RegisterSound(fileName, radius, out currentSound);
+									currentHost.RegisterSound(fileName, radius, out SoundHandle currentSound);
 									WorldSound snd = new WorldSound(currentHost, currentSound)
 									{
 										currentPitch = pitch,
@@ -1254,7 +1126,7 @@ namespace Plugin
 								
 							}
 							break;
-						case "[statechangesound]":
+						case AnimatedSection.StateChangeSound:
 							{
 								double pitch = 1.0, volume = 1.0, radius = 30.0;
 								bool singleBuffer = false, playOnShow = true, playOnHide = true;
@@ -1272,63 +1144,42 @@ namespace Plugin
 										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 										if (j > 0)
 										{
-											string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-											string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-											switch (a.ToLowerInvariant())
+											string a = Lines[i].Substring(0, j).TrimEnd();
+											string b = Lines[i].Substring(j + 1).TrimStart();
+											if (!Enum.TryParse(a, true, out AnimatedKey key))
 											{
-												case "position":
-													{
-														string[] s = b.Split(new[] { ',' });
-														if (s.Length == 3)
-														{
-															double x, y, z;
-															if (!double.TryParse(s[0], NumberStyles.Float, Culture, out x))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[1], NumberStyles.Float, Culture, out y))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else if (!double.TryParse(s[2], NumberStyles.Float, Culture, out z))
-															{
-																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															else
-															{
-																Position = new Vector3(x, y, z);
-															}
-														}
-														else
-														{
-															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-														}
-													}
+												currentHost.AddMessage(MessageType.Error, false, "Unknown key " + key + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+												continue;
+											}
+											switch (key)
+											{
+												case AnimatedKey.Position:
+													Position = ParseVector3(b, key, i, Section, FileName);
 													break;
-												case "filename":
+												case AnimatedKey.FileName:
 													{
 														singleBuffer = true;
-														string Folder = System.IO.Path.GetDirectoryName(FileName);
-														fileNames = new[] {OpenBveApi.Path.CombineFile(Folder, b)};
+														string Folder = Path.GetDirectoryName(FileName);
+														fileNames = new[] {Path.CombineFile(Folder, b)};
 														if (!System.IO.File.Exists(fileNames[0]))
 														{
 															if (currentSoundFolder != null)
 															{
-																fileNames[0] = OpenBveApi.Path.CombineFile(currentSoundFolder, b);
+																fileNames[0] = Path.CombineFile(currentSoundFolder, b);
 															}
 
 															if (!System.IO.File.Exists(fileNames[0]))
 															{
-																currentHost.AddMessage(MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 																fileNames[0] = null;
 															}
 														}
 													}
 													break;
-												case "filenames":
+												case AnimatedKey.FileNames:
 													{
-														string Folder = System.IO.Path.GetDirectoryName(FileName);
-														string[] splitFiles = b.Split(new[] { ',' });
+														string Folder = Path.GetDirectoryName(FileName);
+														string[] splitFiles = b.Split(',');
 														fileNames = new string[splitFiles.Length];
 														for (int k = 0; k < splitFiles.Length; k++)
 														{
@@ -1336,16 +1187,16 @@ namespace Plugin
 															{
 																continue;
 															}
-															fileNames[k] = OpenBveApi.Path.CombineFile(Folder, splitFiles[k].Trim(new char[] { }));
+															fileNames[k] = Path.CombineFile(Folder, splitFiles[k].Trim(new char[] { }));
 															if (!System.IO.File.Exists(fileNames[k]))
 															{
 																if (currentSoundFolder != null)
 																{
-																	fileNames[k] = OpenBveApi.Path.CombineFile(currentSoundFolder, splitFiles[k]);
+																	fileNames[k] = Path.CombineFile(currentSoundFolder, splitFiles[k]);
 																}
 																if (!System.IO.File.Exists(fileNames[k]))
 																{
-																	currentHost.AddMessage(MessageType.Error, false, "Sound file " + splitFiles[k] + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	currentHost.AddMessage(MessageType.Error, false, "Sound file " + splitFiles[k] + " was not found at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 																	fileNames[k] = null;
 																}
 															}
@@ -1353,34 +1204,34 @@ namespace Plugin
 														
 													}
 													break;
-												case "radius":
+												case AnimatedKey.Radius:
 													{
 														if (!double.TryParse(b, out radius))
 														{
-															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															radius = 30.0;
 														}
 													}
 													break;
-												case "pitch":
+												case AnimatedKey.Pitch:
 													{
 														if (!double.TryParse(b, out pitch))
 														{
-															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															pitch = 1.0;
 														}
 													}
 													break;
-												case "volume":
+												case AnimatedKey.Volume:
 													{
 														if (!double.TryParse(b, out volume))
 														{
-															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 															volume = 1.0;
 														}
 													}
 													break;
-												case "playonshow":
+												case AnimatedKey.PlayOnShow:
 													{
 														if (b.ToLowerInvariant() == "true" || b == "1")
 														{
@@ -1392,7 +1243,7 @@ namespace Plugin
 														}
 													}
 													break;
-												case "playonhide":
+												case AnimatedKey.PlayOnHide:
 													{
 														if (b.ToLowerInvariant() == "true" || b == "1")
 														{
@@ -1405,13 +1256,13 @@ namespace Plugin
 													}
 													break;
 												default:
-													currentHost.AddMessage(MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													currentHost.AddMessage(MessageType.Error, false, "The attribute " + key + " is not supported for StateChangeSounds at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 													break;
 											}
 										}
 										else
 										{
-											currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
 											return null;
 										}
 									}
@@ -1457,14 +1308,62 @@ namespace Plugin
 								 */
 								return ReadObject(FileName, System.Text.Encoding.GetEncoding(1252));
 							}
-							currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-							return null;
+
+							if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
+							{
+								/*
+								 * Unknown section- skip it
+								 * Either going to be a typo, or something introduced in a newer version
+								 */
+								currentHost.AddMessage(MessageType.Error, false, "Unknown section " + sct + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								while (i + 1 < Lines.Length && !(Lines[i + 1].StartsWith("[", StringComparison.Ordinal) & Lines[i + 1].EndsWith("]", StringComparison.Ordinal)))
+								{
+									i++;
+								}
+							}
+							else
+							{
+								currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+								return null;	
+							}
+							break;
 					}
 				}
 			}
 			Array.Resize(ref Result.Objects, ObjectCount);
 			return Result;
 		}
+
+		private static Vector3 ParseVector3(string b, AnimatedKey key, int i, AnimatedSection Section, string FileName)
+		{
+			Vector3 v = new Vector3();
+			string[] s = b.Split(',');
+			if (s.Length == 3)
+			{
+				if (!double.TryParse(s[0], NumberStyles.Float, CultureInfo.InvariantCulture, out double x))
+				{
+					currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + key + " at line " + (i + 1).ToString(CultureInfo.InvariantCulture) + " in the Section " + Section + " in file " + FileName);
+				}
+				else if (!double.TryParse(s[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double y))
+				{
+					currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + key + " at line " + (i + 1).ToString(CultureInfo.InvariantCulture) + " in the Section " + Section + " in file " + FileName);
+				}
+				else if (!double.TryParse(s[2], NumberStyles.Float, CultureInfo.InvariantCulture, out double z))
+				{
+					currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + key + " at line " + (i + 1).ToString(CultureInfo.InvariantCulture) + " in the Section " + Section + " in file " + FileName);
+				}
+				else
+				{
+					v = new Vector3(x, y, z);
+				}
+			}
+			else
+			{
+				currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + key + " at line " + (i + 1).ToString(CultureInfo.InvariantCulture) + " in the Section " + Section + " in file " + FileName);
+			}
+			return v;
+		}
+
 		private static void ApplyStaticRotation(ref Mesh Mesh, Vector3 RotationDirection, double Angle)
 		{
 			//Update co-ords

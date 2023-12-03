@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -13,7 +14,6 @@ using LibRender2.Overlays;
 using LibRender2.Screens;
 using LibRender2.Trains;
 using LibRender2.Viewports;
-using OpenBve;
 using OpenBve.Graphics;
 using OpenBve.Input;
 using OpenBveApi.Colors;
@@ -34,6 +34,7 @@ using TrainManager.Trains;
 using Path = System.IO.Path;
 using Vector2 = OpenTK.Vector2;
 using Control = OpenBveApi.Interface.Control;
+using MouseCursor = LibRender2.MouseCursor;
 
 namespace OpenBve
 {
@@ -170,7 +171,6 @@ namespace OpenBve
 			Program.TrainManager.UpdateTrainObjects(TimeElapsed, false);
 			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 			{
-				Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
 				int d = TrainManager.PlayerTrain.DriverCar;
 				Program.Renderer.Camera.CurrentSpeed = TrainManager.PlayerTrain.Cars[d].CurrentSpeed;
 			}
@@ -210,8 +210,7 @@ namespace OpenBve
 			MainLoop.ProcessControls(TimeElapsed);
 			if (Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
 			{
-				var railDriver = Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] as AbstractRailDriver;
-				if (railDriver != null)
+				if (Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] is AbstractRailDriver railDriver)
 				{
 					if (Interface.CurrentOptions.RailDriverMPH)
 					{
@@ -242,7 +241,10 @@ namespace OpenBve
 			{
 				Interface.SaveLogs();
 			}
-			catch { }
+			catch
+			{
+				Interface.CurrentOptions.BlackBox = false;
+			}
 		}
 
 		protected override void OnUpdateFrame(FrameEventArgs e)
@@ -255,11 +257,16 @@ namespace OpenBve
 			{
 				
 				RealTimeElapsed = CPreciseTimer.GetElapsedTime();
-				TimeElapsed = RealTimeElapsed * (double)TimeFactor;
+				TimeElapsed = RealTimeElapsed * TimeFactor;
 				if (loadComplete && !firstFrame)
 				{
-					//Our current in-game time is equal to or greater than the startup time, but the first frame has not yet been processed
-					//Therefore, reset the timer to zero as time consuming texture loads may cause us to be late at the first station
+					/*
+					 * Our current in-game time is equal to or greater than the startup time, but the first frame has not yet been processed
+					 * Therefore, reset the timer to zero as time consuming texture loads may cause us to be late at the first station
+					 *
+					 * Also update the viewing distances in case of jumps etc.
+					 */
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					RealTimeElapsed = 0.0;
 					TimeElapsed = 0.0;
 					firstFrame = true;
@@ -310,7 +317,7 @@ namespace OpenBve
 					{
 						const int maxChunks = 2;
 						int chunks = Math.Min((int) Math.Round(TimeElapsed/chunkTime), maxChunks);
-						double time = TimeElapsed/(double) chunks;
+						double time = TimeElapsed/chunks;
 						for (int i = 0; i < chunks; i++)
 						{
 							Program.CurrentRoute.SecondsSinceMidnight += time;
@@ -320,7 +327,7 @@ namespace OpenBve
 				}
 				Game.CurrentScore.Update(TimeElapsed);
 				MessageManager.UpdateMessages();
-				Game.UpdateScoreMessages(TimeElapsed);
+				Game.UpdateScoreMessages();
 
 				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 				{
@@ -385,6 +392,7 @@ namespace OpenBve
 			locks = new Queue<object>(10);
 			Program.Renderer.Initialize();
 			Program.Renderer.DetermineMaxAFLevel();
+			Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
 			HUD.LoadHUD();
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
 			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
@@ -410,6 +418,7 @@ namespace OpenBve
 			MouseUp += MainLoop.mouseUpEvent;
 			MouseMove	+= MainLoop.mouseMoveEvent;
 			MouseWheel  += MainLoop.mouseWheelEvent;
+			FileDrop += Menu.Instance.DragFile;
 
 			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 			{
@@ -471,6 +480,7 @@ namespace OpenBve
 				}
 			}
 			Program.Renderer.TextureManager.UnloadAllTextures();
+			Program.Renderer.visibilityThread = false;
 			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 			{
 				InputDevicePlugin.CallPluginUnload(i);
@@ -498,28 +508,42 @@ namespace OpenBve
 
 			if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
-				Cursor.Status Status;
-				if (Program.Renderer.Touch.MoveCheck(new Vector2(e.X, e.Y), out Status))
+				if (Program.Renderer.Touch.MoveCheck(new Vector2(e.X, e.Y), out MouseCursor.Status Status, out MouseCursor newCursor))
 				{
-					if (Cursors.CurrentCursor != null)
+					if (newCursor != null)
 					{
 						switch (Status)
 						{
-							case OpenBve.Cursor.Status.Default:
-								Cursor = Cursors.CurrentCursor;
+							case MouseCursor.Status.Default: 
+								Program.Renderer.SetCursor(newCursor.MyCursor);
 								break;
-							case OpenBve.Cursor.Status.Plus:
-								Cursor = Cursors.CurrentCursorPlus;
+							case MouseCursor.Status.Plus:
+								Program.Renderer.SetCursor(newCursor.MyCursorPlus);
 								break;
-							case OpenBve.Cursor.Status.Minus:
-								Cursor = Cursors.CurrentCursorMinus;
+							case MouseCursor.Status.Minus:
+								Program.Renderer.SetCursor(newCursor.MyCursorMinus);
+								break;
+						}
+					}
+					else if (LibRender2.AvailableCursors.CurrentCursor != null)
+					{
+						switch (Status)
+						{
+							case MouseCursor.Status.Default:
+								Program.Renderer.SetCursor(AvailableCursors.CurrentCursor);
+								break;
+							case MouseCursor.Status.Plus:
+								Program.Renderer.SetCursor(AvailableCursors.CurrentCursorPlus);
+								break;
+							case MouseCursor.Status.Minus:
+								Program.Renderer.SetCursor(AvailableCursors.CurrentCursorMinus);
 								break;
 						}
 					}
 				}
 				else
 				{
-					Cursor = MouseCursor.Default;
+					Program.Renderer.SetCursor(OpenTK.MouseCursor.Default);
 				}
 			}
 		}
@@ -560,7 +584,6 @@ namespace OpenBve
 			}
 			// camera
 			Program.Renderer.InitializeVisibility();
-			TrainManager.PlayerTrain.DriverBody = new DriverBody(TrainManager.PlayerTrain);
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(0.0, true, false);
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-0.1, true, false);
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(0.1, true, false);
@@ -568,39 +591,9 @@ namespace OpenBve
 			// starting time and track position
 			Program.CurrentRoute.SecondsSinceMidnight = 0.0;
 			Game.StartupTime = 0.0;
-			int PlayerFirstStationIndex = -1;
+			int PlayerFirstStationIndex = Program.CurrentRoute.PlayerFirstStationIndex;
 			double PlayerFirstStationPosition;
-			int os = -1;
-			bool f = false;
-			for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++)
-			{
-				if (!String.IsNullOrEmpty(Program.CurrentRoute.InitialStationName))
-				{
-					if (Program.CurrentRoute.InitialStationName.ToLowerInvariant() == Program.CurrentRoute.Stations[i].Name.ToLowerInvariant())
-					{
-						PlayerFirstStationIndex = i;
-					}
-				}
-				if (Program.CurrentRoute.Stations[i].StopMode == StationStopMode.AllStop | Program.CurrentRoute.Stations[i].StopMode == StationStopMode.PlayerStop & Program.CurrentRoute.Stations[i].Stops.Length != 0)
-				{
-					if (f == false)
-					{
-						os = i;
-						f = true;
-					}
-				}
-			}
-			if (PlayerFirstStationIndex == -1)
-			{
-				if (os == -1)
-				{
-					PlayerFirstStationIndex = 0;
-				}
-				else
-				{
-					PlayerFirstStationIndex = os;	
-				}
-			}
+			
 			{
 				int s = Program.CurrentRoute.Stations[PlayerFirstStationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 				if (s >= 0)
@@ -625,14 +618,7 @@ namespace OpenBve
 							//Set the start position to be the buffer position plus the train length plus 1m
 							PlayerFirstStationPosition = Program.CurrentRoute.BufferTrackPositions[j] + TrainLength + 1;
 							//Update the station stop location
-							if (s >= 0)
-							{
-								Program.CurrentRoute.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition = PlayerFirstStationPosition;
-							}
-							else
-							{
-								Program.CurrentRoute.Stations[PlayerFirstStationIndex].DefaultTrackPosition = PlayerFirstStationPosition;
-							}
+							Program.CurrentRoute.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition = PlayerFirstStationPosition;
 							break;
 						}
 					}
@@ -679,14 +665,7 @@ namespace OpenBve
 				{
 					OtherFirstStationIndex = i;
 					int s = Program.CurrentRoute.Stations[i].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
-					if (s >= 0)
-					{
-						OtherFirstStationPosition = Program.CurrentRoute.Stations[i].Stops[s].TrackPosition;
-					}
-					else
-					{
-						OtherFirstStationPosition = Program.CurrentRoute.Stations[i].DefaultTrackPosition;
-					}
+					OtherFirstStationPosition = s >= 0 ? Program.CurrentRoute.Stations[i].Stops[s].TrackPosition : Program.CurrentRoute.Stations[i].DefaultTrackPosition;
 					if (Program.CurrentRoute.Stations[i].ArrivalTime < 0.0)
 					{
 						if (Program.CurrentRoute.Stations[i].DepartureTime < 0.0)
@@ -800,6 +779,22 @@ namespace OpenBve
 				{
 					p = OtherFirstStationPosition;
 				}
+				if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
+				{
+					/*
+					 * Flip the train if running in reverse direction
+					 * We also need to add the length of the train so that the driver car is actually positioned on the platform
+					 *
+					 * Position on routes not specificially designed for reverse running may well be wrong, but that's life
+					 */
+					Program.TrainManager.Trains[i].Reverse(true, true);
+					p += Program.TrainManager.Trains[i].Length;
+					if (Program.TrainManager.Trains[i].IsPlayerTrain)
+					{
+						// HACK!
+						Program.TrainManager.Trains[i].Station = PlayerFirstStationIndex;
+					}
+				}
 				for (int j = 0; j < Program.TrainManager.Trains[i].Cars.Length; j++)
 				{
 					Program.TrainManager.Trains[i].Cars[j].Move(p);
@@ -819,9 +814,19 @@ namespace OpenBve
 			//Place the initial camera in the driver car
 			TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
-			Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
-			Program.Renderer.Camera.SavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
-			Program.Renderer.Camera.SavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].TrackPosition - 10.0, 1.0);
+			Program.Renderer.UpdateVisibility(true);
+			if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
+			{
+				double reverse = 180 / 57.2957795130824;
+				Program.Renderer.Camera.SavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(2.5, 1.5, 15), 0.3 + reverse, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
+				Program.Renderer.Camera.SavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(3.0, 2.5, 0.0), 0.3 + reverse, 0.0, 0.0, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.Cars.Length - 1].TrackPosition, 1.0);
+			}
+			else
+			{
+				Program.Renderer.Camera.SavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
+				Program.Renderer.Camera.SavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].TrackPosition - 10.0, 1.0);
+			}
+			
 			// signalling sections
 			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
 			{
@@ -913,23 +918,23 @@ namespace OpenBve
 				string Messages;
 				if (filesNotFound != 0)
 				{
-					NotFound = filesNotFound.ToString() + " file(s) not found";
+					NotFound = filesNotFound + " file(s) not found";
 					MessageManager.AddMessage(NotFound, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 					
 				}
 				if (errors != 0 & warnings != 0)
 				{
-					Messages = errors.ToString() + " error(s), " + warnings.ToString() + " warning(s)";
+					Messages = errors + " error(s), " + warnings + " warning(s)";
 					MessageManager.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 				else if (errors != 0)
 				{
-					Messages = errors.ToString() + " error(s)";
+					Messages = errors + " error(s)";
 					MessageManager.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 				else
 				{
-					Messages = warnings.ToString() + " warning(s)";
+					Messages = warnings + " warning(s)";
 					MessageManager.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 				Program.CurrentRoute.Information.FilesNotFound = NotFound;
@@ -947,6 +952,11 @@ namespace OpenBve
 			RenderTimeElapsed = 0.0;
 			World.InitializeCameraRestriction();
 			Loading.SimulationSetup = true;
+			Program.Renderer.CurrentInterface = InterfaceType.Normal;
+			if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
+			{
+				Program.Renderer.Camera.Alignment.Yaw = 180 / 57.2957795130824;
+			}
 			switch (Interface.CurrentOptions.InitialViewpoint)
 			{
 				case 0:
@@ -975,7 +985,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-					World.UpdateAbsoluteCamera(0.0);
+					World.UpdateAbsoluteCamera();
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 				case 2:
@@ -994,7 +1004,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-					World.UpdateAbsoluteCamera(0.0);
+					World.UpdateAbsoluteCamera();
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 				case 3:
@@ -1013,7 +1023,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-					World.UpdateAbsoluteCamera(0.0);
+					World.UpdateAbsoluteCamera();
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 				case 4:
@@ -1032,9 +1042,24 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-					World.UpdateAbsoluteCamera(0.0);
+					World.UpdateAbsoluteCamera();
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
+			}
+
+			if (IntPtr.Size == 4)
+			{
+				using (Process proc = Process.GetCurrentProcess())
+				{
+					long memoryUsed = proc.PrivateMemorySize64;
+					if ((memoryUsed > 900000000 && !Interface.CurrentOptions.LoadInAdvance) || memoryUsed > 1600000000)
+					{
+						// Either using ~900mb at the first station or 1.5gb + with all textures loaded is likely to cause critical OOM errors with the 32-bit process memory limit
+						// Turn on UnloadUnusedTextures to try and mitigate
+						Program.FileSystem.AppendToLogFile("Automatically enabling UnloadUnusedTextures due to memory pressure.");
+						Interface.CurrentOptions.UnloadUnusedTextures = true;
+					}
+				}
 			}
 		}
 
@@ -1136,11 +1161,6 @@ namespace OpenBve
 				//A missing texture is probably better than an infinite loadscreen
 				Monitor.Wait(locker, 1000);
 			}
-		}
-		
-		public override void Dispose()
-		{
-			base.Dispose();
 		}
 	}
 }

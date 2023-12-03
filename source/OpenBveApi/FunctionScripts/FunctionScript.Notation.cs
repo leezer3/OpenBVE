@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Globalization;
 
 namespace OpenBveApi.FunctionScripting
 {
@@ -17,12 +18,10 @@ namespace OpenBveApi.FunctionScripting
 				if (Expression.EndsWith("]", StringComparison.InvariantCultureIgnoreCase)) {
 					throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
 				}
-				// ReSharper disable once NotAccessedVariable
 				/*
 				 * If this is a simple number, we can short-circuit the rest of this function
 				 */
-				double value; 
-				if (double.TryParse(Expression, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out value)) {
+				if (double.TryParse(Expression, NumberStyles.Float, CultureInfo.InvariantCulture, out _)) {
 					return Expression;
 				}
 				for (int j = 0; j < Expression.Length; j++) {
@@ -169,6 +168,32 @@ namespace OpenBveApi.FunctionScripting
 					{
 						return a[0] + " " + a[1] + " " + f;
 					}
+
+					if (n == 3)
+					{
+						// Optional mode parameter to allow for fixed values
+						// YUCK: Nasty little hack to revert the function notation for minus values
+						int mode = int.Parse(a[2]);
+						Random random = new Random();
+						if (a[0].EndsWith("Minus"))
+						{
+							a[0] = '-' + a[0].Substring(0, a[0].Length - 6);
+						}
+						double min = double.Parse(a[0]);
+						double max = double.Parse(a[1]);
+						if (a[1].EndsWith("Minus"))
+						{
+							a[1] = '-' + a[1].Substring(0, a[1].Length - 6);
+						}
+						if (mode == 1)
+						{
+							if (f.ToLowerInvariant() == "randomint")
+							{
+								return random.Next((int)min, (int)max).ToString(CultureInfo.InvariantCulture);
+							}
+							return (min + random.NextDouble() * (max - min)).ToString(CultureInfo.InvariantCulture);
+						}
+					}
 					throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
 				case "quotient":
 				case "mod":
@@ -303,8 +328,10 @@ namespace OpenBveApi.FunctionScripting
 					}
 					throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 				case "pluginstate":
+				case "raindrop":
+				case "snowflake":
 					if (n == 1) {
-						return a[0] + " pluginstate";
+						return a[0] + " " + f;
 					} 
 					throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 					// not supported
@@ -316,7 +343,7 @@ namespace OpenBveApi.FunctionScripting
 		/// <summary>Converts a string formatted in infix notation to postfix notation</summary>
 		/// <param name="Expression">The function script string</param>
 		public static string GetPostfixNotationFromInfixNotation(string Expression) {
-			string Function = FunctionScriptNotation.GetFunctionNotationFromInfixNotation(Expression, true);
+			string Function = GetFunctionNotationFromInfixNotation(Expression, true);
 			return GetPostfixNotationFromFunctionNotation(Function);
 		}
 
@@ -329,7 +356,7 @@ namespace OpenBveApi.FunctionScripting
 			string[] Arguments = Expression.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 			string[] Stack = new string[Arguments.Length];
 			int StackLength = 0;
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+			CultureInfo Culture = CultureInfo.InvariantCulture;
 			for (int i = 0; i < Arguments.Length; i++) {
 				switch (Arguments[i].ToLowerInvariant()) {
 					case "<>":
@@ -342,17 +369,11 @@ namespace OpenBveApi.FunctionScripting
 									StackLength--;
 									q = false;
 								} else if (StackLength >= 2) {
-									// ReSharper disable once NotAccessedVariable
-									double b;
-									if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out b)) {
-										// ReSharper disable once NotAccessedVariable
-										double a;
-										if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
+									if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out _)) {
+										if (double.TryParse(Stack[StackLength - 2], NumberStyles.Float, Culture, out _)) {
 											// a b <>
 											// b a
-											string t = Stack[StackLength - 1];
-											Stack[StackLength - 1] = Stack[StackLength - 2];
-											Stack[StackLength - 2] = t;
+											(Stack[StackLength - 1], Stack[StackLength - 2]) = (Stack[StackLength - 2], Stack[StackLength - 1]);
 										}
 									}
 								}
@@ -366,17 +387,15 @@ namespace OpenBveApi.FunctionScripting
 						{
 							bool q = true;
 							if (StackLength >= 2) {
-								double b;
-								if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out b)) {
-									double a;
-									if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
+								if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double b)) {
+									if (double.TryParse(Stack[StackLength - 2], NumberStyles.Float, Culture, out double a)) {
 										// x y +
 										// (x y +)
 										Stack[StackLength - 2] = (a + b).ToString(Culture);
 										StackLength--;
 										q = false;
 									} else if (StackLength >= 3 && Stack[StackLength - 2] == "+") {
-										if (double.TryParse(Stack[StackLength - 3], System.Globalization.NumberStyles.Float, Culture, out a)) {
+										if (double.TryParse(Stack[StackLength - 3], NumberStyles.Float, Culture, out a)) {
 											// A x + y +
 											// A (y x +) +
 											Stack[StackLength - 3] = (a + b).ToString(Culture);
@@ -384,7 +403,7 @@ namespace OpenBveApi.FunctionScripting
 											q = false;
 										}
 									} else if (StackLength >= 3 && Stack[StackLength - 2] == "-") {
-										if (double.TryParse(Stack[StackLength - 3], System.Globalization.NumberStyles.Float, Culture, out a)) {
+										if (double.TryParse(Stack[StackLength - 3], NumberStyles.Float, Culture, out a)) {
 											// A x - y +
 											// A (y x -) +
 											Stack[StackLength - 3] = (b - a).ToString(Culture);
@@ -399,7 +418,7 @@ namespace OpenBveApi.FunctionScripting
 										Stack[StackLength - 1] = "fma";
 										q = false;
 									} else if (Stack[StackLength - 2] == "fma") {
-										if (double.TryParse(Stack[StackLength - 3], System.Globalization.NumberStyles.Float, Culture, out a)) {
+										if (double.TryParse(Stack[StackLength - 3], NumberStyles.Float, Culture, out a)) {
 											// A B y fma z +
 											// A B (y z +) fma
 											Stack[StackLength - 3] = (a + b).ToString(Culture);
@@ -418,17 +437,15 @@ namespace OpenBveApi.FunctionScripting
 						{
 							bool q = true;
 							if (StackLength >= 2) {
-								double b;
-								if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out b)) {
-									double a;
-									if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
+								if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double b)) {
+									if (double.TryParse(Stack[StackLength - 2], NumberStyles.Float, Culture, out double a)) {
 										// x y -
 										// (x y -)
 										Stack[StackLength - 2] = (a - b).ToString(Culture);
 										StackLength--;
 										q = false;
 									} else if (StackLength >= 3 && Stack[StackLength - 2] == "+") {
-										if (double.TryParse(Stack[StackLength - 3], System.Globalization.NumberStyles.Float, Culture, out a)) {
+										if (double.TryParse(Stack[StackLength - 3], NumberStyles.Float, Culture, out a)) {
 											// A x + y -
 											// A (x y -) +
 											Stack[StackLength - 3] = (a - b).ToString(Culture);
@@ -437,7 +454,7 @@ namespace OpenBveApi.FunctionScripting
 											q = false;
 										}
 									} else if (StackLength >= 3 && Stack[StackLength - 2] == "-") {
-										if (double.TryParse(Stack[StackLength - 3], System.Globalization.NumberStyles.Float, Culture, out a)) {
+										if (double.TryParse(Stack[StackLength - 3], NumberStyles.Float, Culture, out a)) {
 											// A x - y -
 											// A (x y + minus) -
 											Stack[StackLength - 3] = (-a - b).ToString(Culture);
@@ -452,7 +469,7 @@ namespace OpenBveApi.FunctionScripting
 										Stack[StackLength - 1] = "fma";
 										q = false;
 									} else if (Stack[StackLength - 2] == "fma") {
-										if (double.TryParse(Stack[StackLength - 3], System.Globalization.NumberStyles.Float, Culture, out a)) {
+										if (double.TryParse(Stack[StackLength - 3], NumberStyles.Float, Culture, out a)) {
 											// A B y fma z -
 											// A B (y z -) fma
 											Stack[StackLength - 3] = (a - b).ToString(Culture);
@@ -477,8 +494,7 @@ namespace OpenBveApi.FunctionScripting
 									StackLength--;
 									q = false;
 								} else {
-									double a;
-									if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out a)) {
+									if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double a)) {
 										// x minus
 										// (x minus)
 										Stack[StackLength - 1] = (-a).ToString(Culture);
@@ -495,17 +511,15 @@ namespace OpenBveApi.FunctionScripting
 						{
 							bool q = true;
 							if (StackLength >= 2) {
-								double b;
-								if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out b)) {
-									double a;
-									if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
+								if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double b)) {
+									if (double.TryParse(Stack[StackLength - 2], NumberStyles.Float, Culture, out double a)) {
 										// x y *
 										// (x y *)
 										Stack[StackLength - 2] = (a * b).ToString(Culture);
 										StackLength--;
 										q = false;
 									} else if (StackLength >= 3 && Stack[StackLength - 2] == "*") {
-										if (double.TryParse(Stack[StackLength - 3], System.Globalization.NumberStyles.Float, Culture, out a)) {
+										if (double.TryParse(Stack[StackLength - 3], NumberStyles.Float, Culture, out a)) {
 											// A x * y *
 											// A (x y *) *
 											Stack[StackLength - 3] = (a * b).ToString(Culture);
@@ -513,7 +527,7 @@ namespace OpenBveApi.FunctionScripting
 											q = false;
 										}
 									} else if (StackLength >= 3 && Stack[StackLength - 2] == "+") {
-										if (double.TryParse(Stack[StackLength - 3], System.Globalization.NumberStyles.Float, Culture, out a)) {
+										if (double.TryParse(Stack[StackLength - 3], NumberStyles.Float, Culture, out a)) {
 											// A x + y *
 											// A y (x y *) fma
 											Stack[StackLength - 3] = Stack[StackLength - 1];
@@ -522,7 +536,7 @@ namespace OpenBveApi.FunctionScripting
 											q = false;
 										}
 									} else if (StackLength >= 3 && Stack[StackLength - 2] == "-") {
-										if (double.TryParse(Stack[StackLength - 3], System.Globalization.NumberStyles.Float, Culture, out a)) {
+										if (double.TryParse(Stack[StackLength - 3], NumberStyles.Float, Culture, out a)) {
 											// A x - y *
 											// A y (x y * minus) fma
 											Stack[StackLength - 3] = Stack[StackLength - 1];
@@ -531,9 +545,8 @@ namespace OpenBveApi.FunctionScripting
 											q = false;
 										}
 									} else if (StackLength >= 4 && Stack[StackLength - 2] == "fma") {
-										if (double.TryParse(Stack[StackLength - 3], System.Globalization.NumberStyles.Float, Culture, out a)) {
-											double c;
-											if (double.TryParse(Stack[StackLength - 4], System.Globalization.NumberStyles.Float, Culture, out c)) {
+										if (double.TryParse(Stack[StackLength - 3], NumberStyles.Float, Culture, out a)) {
+											if (double.TryParse(Stack[StackLength - 4], NumberStyles.Float, Culture, out double c)) {
 												// A x y fma z *
 												// A (x z *) (y z *) fma
 												Stack[StackLength - 4] = (c * b).ToString(Culture);
@@ -569,8 +582,7 @@ namespace OpenBveApi.FunctionScripting
 									StackLength--;
 									q = false;
 								} else {
-									double a;
-									if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out a)) {
+									if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double a)) {
 										// x reciprocal
 										// (x reciprocal)
 										a = a == 0.0 ? 0.0 : 1.0 / a;
@@ -588,18 +600,16 @@ namespace OpenBveApi.FunctionScripting
 						{
 							bool q = true;
 							if (StackLength >= 2) {
-								double b;
-								if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out b)) {
+								if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double b)) {
 									if (b != 0.0) {
-										double a;
-										if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
+										if (double.TryParse(Stack[StackLength - 2], NumberStyles.Float, Culture, out double a)) {
 											// x y /
 											// (x y /)
 											Stack[StackLength - 2] = (a / b).ToString(Culture);
 											StackLength--;
 											q = false;
 										} else if (StackLength >= 3 && Stack[StackLength - 2] == "*") {
-											if (double.TryParse(Stack[StackLength - 3], System.Globalization.NumberStyles.Float, Culture, out a)) {
+											if (double.TryParse(Stack[StackLength - 3], NumberStyles.Float, Culture, out a)) {
 												// A x * y /
 												// A (x y /) *
 												Stack[StackLength - 3] = (a / b).ToString(Culture);
@@ -619,8 +629,7 @@ namespace OpenBveApi.FunctionScripting
 						{
 							bool q = true;
 							if (StackLength >= 1) {
-								double a;
-								if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out a)) {
+								if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double a)) {
 									// x ++
 									// (x ++)
 									Stack[StackLength - 1] = (a + 1).ToString(Culture);
@@ -636,8 +645,7 @@ namespace OpenBveApi.FunctionScripting
 						{
 							bool q = true;
 							if (StackLength >= 1) {
-								double a;
-								if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out a)) {
+								if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double a)) {
 									// x --
 									// (x --)
 									Stack[StackLength - 1] = (a - 1).ToString(Culture);
@@ -675,8 +683,7 @@ namespace OpenBveApi.FunctionScripting
 									Stack[StackLength - 1] = "<";
 									q = false;
 								} else {
-									double a;
-									if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out a)) {
+									if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double a)) {
 										Stack[StackLength - 1] = a == 0.0 ? "1" : "0";
 										q = false;
 									}
@@ -691,10 +698,8 @@ namespace OpenBveApi.FunctionScripting
 						{
 							bool q = true;
 							if (StackLength >= 2) {
-								double b;
-								if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out b)) {
-									double a;
-									if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
+								if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double b)) {
+									if (double.TryParse(Stack[StackLength - 2], NumberStyles.Float, Culture, out double a)) {
 										Stack[StackLength - 2] = a == b ? "1" : "0";
 										StackLength--;
 										q = false;
@@ -710,10 +715,8 @@ namespace OpenBveApi.FunctionScripting
 						{
 							bool q = true;
 							if (StackLength >= 2) {
-								double b;
-								if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out b)) {
-									double a;
-									if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
+								if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double b)) {
+									if (double.TryParse(Stack[StackLength - 2], NumberStyles.Float, Culture, out double a)) {
 										Stack[StackLength - 2] = a != b ? "1" : "0";
 										StackLength--;
 										q = false;
@@ -729,10 +732,8 @@ namespace OpenBveApi.FunctionScripting
 						{
 							bool q = true;
 							if (StackLength >= 2) {
-								double b;
-								if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out b)) {
-									double a;
-									if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
+								if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double b)) {
+									if (double.TryParse(Stack[StackLength - 2], NumberStyles.Float, Culture, out double a)) {
 										Stack[StackLength - 2] = a < b ? "1" : "0";
 										StackLength--;
 										q = false;
@@ -748,10 +749,8 @@ namespace OpenBveApi.FunctionScripting
 						{
 							bool q = true;
 							if (StackLength >= 2) {
-								double b;
-								if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out b)) {
-									double a;
-									if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
+								if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double b)) {
+									if (double.TryParse(Stack[StackLength - 2], NumberStyles.Float, Culture, out double a)) {
 										Stack[StackLength - 2] = a > b ? "1" : "0";
 										StackLength--;
 										q = false;
@@ -767,10 +766,8 @@ namespace OpenBveApi.FunctionScripting
 						{
 							bool q = true;
 							if (StackLength >= 2) {
-								double b;
-								if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out b)) {
-									double a;
-									if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
+								if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double b)) {
+									if (double.TryParse(Stack[StackLength - 2], NumberStyles.Float, Culture, out double a)) {
 										Stack[StackLength - 2] = a <= b ? "1" : "0";
 										StackLength--;
 										q = false;
@@ -786,10 +783,8 @@ namespace OpenBveApi.FunctionScripting
 						{
 							bool q = true;
 							if (StackLength >= 2) {
-								double b;
-								if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out b)) {
-									double a;
-									if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
+								if (double.TryParse(Stack[StackLength - 1], NumberStyles.Float, Culture, out double b)) {
+									if (double.TryParse(Stack[StackLength - 2], NumberStyles.Float, Culture, out double a)) {
 										Stack[StackLength - 2] = a >= b ? "1" : "0";
 										StackLength--;
 										q = false;

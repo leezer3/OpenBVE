@@ -89,6 +89,11 @@ namespace SoundManager
 			this.Buffer = null;
 		}
 
+		public CarSound Clone()
+		{
+			return new CarSound(this.Buffer, this.Position);
+		}
+
 		/// <summary>Plays the sound at the original pitch and volume</summary>
 		/// <param name="Car">The parent car</param>
 		/// <param name="looped">Whether the sound is to be played looped</param>
@@ -104,6 +109,19 @@ namespace SoundManager
 		/// <param name="looped">Whether the sound is to be played looped</param>
 		public void Play(double pitch, double volume, AbstractCar Car, bool looped)
 		{
+			if (looped && IsPaused)
+			{
+				Source.Resume();
+				Source.Volume = volume;
+				Source.Pitch = pitch;
+				return;
+			}
+			if (looped && IsPlaying)
+			{
+				Source.Volume = volume;
+				Source.Pitch = pitch;
+				return;
+			}
 			if (Buffer != null)
 			{
 				if (SoundsBase.Sources.Length == SoundsBase.SourceCount)
@@ -127,6 +145,15 @@ namespace SoundManager
 			Source.Stop();
 		}
 
+		public void Pause()
+		{
+			if (Source == null)
+			{
+				return;
+			}
+			Source.Pause();
+		}
+
 		/// <summary>Whether the sound is currently playing</summary>
 		public bool IsPlaying
 		{
@@ -135,6 +162,19 @@ namespace SoundManager
 				if (Source != null)
 				{
 					return Source.IsPlaying();
+				}
+				return false;
+			}
+		}
+
+		/// <summary>Whether the sound is currently paused</summary>
+		public bool IsPaused
+		{
+			get
+			{
+				if (Source != null)
+				{
+					return Source.IsPaused();
 				}
 				return false;
 			}

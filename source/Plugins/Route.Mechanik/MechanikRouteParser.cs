@@ -65,7 +65,7 @@ namespace MechanikRouteParser
 			AvailableTextures = new Dictionary<int, MechanikTexture>();
 			AvailableSounds = new Dictionary<int, SoundHandle>();
 			currentRouteData = new RouteData();
-			RouteFolder = System.IO.Path.GetDirectoryName(routeFile);
+			RouteFolder = Path.GetDirectoryName(routeFile);
 			if(PreviewOnly)
 			{
 				string routeImage = Path.CombineFile(RouteFolder, "laduj_01.jpg");
@@ -689,9 +689,9 @@ namespace MechanikRouteParser
 			}
 
 			Vector3 worldPosition = new Vector3();
-			Vector2 worldDirection = new Vector2(0.0, 1.0);
-			Vector3 trackPosition = new Vector3(0.0, 0.0, 0.0);
-			Vector2 trackDirection = new Vector2(0.0, 1.0);
+			Vector2 worldDirection = Vector2.Down;
+			Vector3 trackPosition = Vector3.Zero;
+			Vector2 trackDirection = Vector2.Down;
 			Plugin.CurrentRoute.Tracks[0].Elements = new TrackElement[256];
 			
 			int CurrentTrackLength = 0;
@@ -748,7 +748,7 @@ namespace MechanikRouteParser
 						};
 						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
 						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationStartEvent(0, s);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationStartEvent(Plugin.CurrentRoute, 0, s);
 					}
 					else
 					{
@@ -951,11 +951,13 @@ namespace MechanikRouteParser
 			//Convert texture size to px/m and then multiply by scaleFactor to get the final vertex offset
 			double scaledWidth = t.Width * 5 * scaleFactor;
 			double scaledHeight = t.Height * 5 * scaleFactor;
-			Builder.Vertices = new List<VertexTemplate>();
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft)));
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y, topLeft.Z))); //upper right
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y - scaledHeight, topLeft.Z))); //bottom right
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X, topLeft.Y - scaledHeight, topLeft.Z))); //bottom left
+			Builder.Vertices = new List<VertexTemplate>
+			{
+				new Vertex(new Vector3(topLeft)),
+				new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y, topLeft.Z)), //upper right
+				new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y - scaledHeight, topLeft.Z)), //bottom right
+				new Vertex(new Vector3(topLeft.X, topLeft.Y - scaledHeight, topLeft.Z)) //bottom left
+			};
 			//Possibly change to Face, check this though (Remember that Mechanik was restricted to the cab, wheras we are not)
 			Builder.Faces = new List<MeshFace>();
 			Builder.Faces.Add(new MeshFace { Vertices = new MeshFaceVertex[4], Flags = FaceFlags.Face2Mask });
@@ -1009,7 +1011,7 @@ namespace MechanikRouteParser
 				}
 				if (!String.IsNullOrWhiteSpace(s))
 				{
-					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(tDat), s);
+					string path = Path.CombineFile(Path.GetDirectoryName(tDat), s);
 					if (File.Exists(path))
 					{
 						MechanikTexture t = new MechanikTexture(path, s);
@@ -1050,7 +1052,7 @@ namespace MechanikRouteParser
 				}
 				if (!String.IsNullOrWhiteSpace(s))
 				{
-					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(sDat), s);
+					string path = Path.CombineFile(Path.GetDirectoryName(sDat), s);
 					if (File.Exists(path))
 					{
 						Plugin.CurrentHost.RegisterSound(path, out var handle);

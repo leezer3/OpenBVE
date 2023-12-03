@@ -6,6 +6,7 @@ using LibRender2.MotionBlurs;
 using LibRender2.Overlays;
 using OpenBveApi;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using OpenBveApi.Packages;
 using SoundManager;
@@ -24,10 +25,8 @@ namespace OpenBve
 			internal MotionBlurMode MotionBlur;
 			/// <summary>Whether duplicate verticies are culled during loading</summary>
 			internal bool ObjectOptimizationVertexCulling;
-			
 			/// <summary>Whether collisions between trains are enabled</summary>
 			internal bool Collisions;
-			
 			/// <summary>Whether the black-box data logger is enabled</summary>
 			internal bool BlackBox;
 			/// <summary>Whether joystick support is enabled</summary>
@@ -77,14 +76,11 @@ namespace OpenBve
 			internal bool PreferNativeBackend = true;
 			/// <summary>Stores whether the RailDriver speed display is in MPH (true) or KPH (false)</summary>
 			internal bool RailDriverMPH;
-			
 			/// <summary>The list of enable Input Device Plugins</summary>
 			internal string[] EnableInputDevicePlugins;
 			/// <summary>The time in seconds after which the mouse cursor is hidden</summary>
 			/// <remarks>Set to zero to never hide the cursor</remarks>
 			internal double CursorHideDelay;
-			internal string CursorFileName;
-			
 			/// <summary>Whether a screen reader is available</summary>
 			/// <remarks>Not saved, detected on game init</remarks>
 			internal bool ScreenReaderAvailable;
@@ -101,15 +97,12 @@ namespace OpenBve
 			internal bool KioskMode;
 			/// <summary>The timer before AI controls are enabled in kiosk mode</summary>
 			internal double KioskModeTimer; //5 minutes by default set in ctor
-			/*
-			 * Note: The following options were (are) used by the Managed Content system, and are currently non-functional
-			 */
-			/// <summary>The proxy URL to use when retrieving content from the internet</summary>
-			internal string ProxyUrl;
-			/// <summary>The proxy username to use when retrieving content from the internet</summary>
-			internal string ProxyUserName;
-			/// <summary>The proxy password to use when retrieving content from the internet</summary>
-			internal string ProxyPassword;
+			/// <summary>The maximum upper limit for FPS</summary>
+			/// https://github.com/leezer3/OpenBVE/issues/941
+			internal int FPSLimit;
+
+			internal bool DailyBuildUpdates;
+			
 			/// <summary>Creates a new instance of the options class with default values set</summary>
 			internal Options()
 			{
@@ -128,6 +121,7 @@ namespace OpenBve
 				this.AnisotropicFilteringMaximum = 0;
 				this.AntiAliasingLevel = 0;
 				this.ViewingDistance = 600;
+				this.QuadTreeLeafSize = 60;
 				this.MotionBlur = MotionBlurMode.None;
 				this.Toppling = true;
 				this.Collisions = true;
@@ -158,9 +152,6 @@ namespace OpenBve
 				this.MainMenuHeight = 0;
 				this.LoadInAdvance = false;
 				this.UnloadUnusedTextures = false;
-				this.ProxyUrl = string.Empty;
-				this.ProxyUserName = string.Empty;
-				this.ProxyPassword = string.Empty;
 				this.TimeAccelerationFactor = 5;
 				this.AllowAxisEB = true;
 				this.TimeTableStyle = TimeTableMode.Default;
@@ -181,8 +172,355 @@ namespace OpenBve
 				this.ScreenReaderAvailable = false;
 				this.ForceForwardsCompatibleContext = false;
 				this.IsUseNewRenderer = true;
+				this.DailyBuildUpdates = false;
+				this.UseGDIDecoders = false;
+				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
+				switch (Program.CurrentHost.Platform)
+				{
+					case HostPlatform.AppleOSX:
+						// This gets us a much better Unicode glyph set on Apple
+						this.Font = "Arial Unicode MS";
+						break;
+					case HostPlatform.FreeBSD:
+					case HostPlatform.GNULinux:
+						/*
+						 * Font support on Mono / Linux is a real mess, nothing with a full Unicode glyph set installed by default
+						 * Try and detect + select a sensible Noto Sans variant based upon our current locale
+						 */
+						switch (currentCultureInfo.Name)
+						{
+							case "ru-RU":
+							case "uk-UA":
+							case "ro-RO":
+							case "hu-HU":
+								// Plain Noto Sans has better Cyrillic glyphs
+								this.Font = "Noto Sans";
+								break;
+							case "jp-JP":
+							case "zh-TW":
+							case "zh-CN":
+							case "zh-HK":
+								// For JP / CN, use the Japanese version of Noto Sans
+								this.Font = "Noto Sans CJK JP";
+								break;
+							case "ko-KR":
+								// Korean version of Noto Sans
+								this.Font = "Noto Sans CJK KR";
+								break;
+							default:
+								// By default, use the Japanese version of Noto Sans- whilst this lacks some glyphs, it's the best overall
+								this.Font = "Noto Sans CJK JP";
+								break;
+						}
+						this.FPSLimit = 200;
+						break;
+					case HostPlatform.WINE:
+						// WINE reports slightly different font names to native
+						switch (currentCultureInfo.Name)
+						{
+							case "ru-RU":
+							case "uk-UA":
+							case "ro-RO":
+							case "hu-HU":
+								// Plain Noto Sans has better Cyrillic glyphs
+								this.Font = "Noto Sans Regular";
+								break;
+							case "jp-JP":
+							case "zh-TW":
+							case "zh-CN":
+							case "zh-HK":
+								// For JP / CN, use the Japanese version of Noto Sans
+								this.Font = "Noto Sans CJK JP Regular";
+								break;
+							case "ko-KR":
+								// Korean version of Noto Sans
+								this.Font = "Noto Sans CJK KR Regular";
+								break;
+							default:
+								// By default, use the Japanese version of Noto Sans- whilst this lacks some glyphs, it's the best overall
+								this.Font = "Noto Sans CJK JP Regular";
+								break;
+						}
+						break;
+					default:
+						// This is what's set by default for WinForms
+						this.Font = "Microsoft Sans Serif";
+						break;
+				}
+			}
+
+			/// <summary>Saves the options to the specified filename</summary>
+			/// <param name="fileName">The filename to save the options to</param>
+			internal void Save(string fileName)
+			{
+				CultureInfo Culture = CultureInfo.InvariantCulture;
+				StringBuilder Builder = new StringBuilder();
+				Builder.AppendLine("; Options");
+				Builder.AppendLine("; =======");
+				Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
+				Builder.AppendLine();
+				Builder.AppendLine("[language]");
+				Builder.AppendLine("code = " + LanguageCode);
+				Builder.AppendLine();
+				Builder.AppendLine("[interface]");
+				Builder.AppendLine("folder = " + UserInterfaceFolder);
+				{
+					string t;
+					switch (TimeTableStyle)
+					{
+						case TimeTableMode.None:
+							t = "none";
+							break;
+						case TimeTableMode.Default:
+							t = "default";
+							break;
+						case TimeTableMode.AutoGenerated:
+							t = "autogenerated";
+							break;
+						case TimeTableMode.PreferCustom:
+							t = "prefercustom";
+							break;
+						default:
+							t = "default";
+							break;
+					}
+
+					Builder.AppendLine("timetablemode = " + t);
+				}
+				Builder.AppendLine("kioskMode = " + (KioskMode ? "true" : "false"));
+				Builder.AppendLine("kioskModeTimer = " + KioskModeTimer);
+				Builder.AppendLine("accessibility = " + (Accessibility ? "true" : "false"));
+				Builder.AppendLine("font = " + Font);
+				Builder.AppendLine("dailybuildupdates = " + (DailyBuildUpdates ? "true" : "false"));
+				Builder.AppendLine();
+				Builder.AppendLine("[display]");
+				Builder.AppendLine("preferNativeBackend = " + (PreferNativeBackend ? "true" : "false"));
+				Builder.AppendLine("mode = " + (FullscreenMode ? "fullscreen" : "window"));
+				Builder.AppendLine("vsync = " + (VerticalSynchronization ? "true" : "false"));
+				Builder.AppendLine("windowWidth = " + WindowWidth.ToString(Culture));
+				Builder.AppendLine("windowHeight = " + WindowHeight.ToString(Culture));
+				Builder.AppendLine("fullscreenWidth = " + FullscreenWidth.ToString(Culture));
+				Builder.AppendLine("fullscreenHeight = " + FullscreenHeight.ToString(Culture));
+				Builder.AppendLine("fullscreenBits = " + FullscreenBits.ToString(Culture));
+				Builder.AppendLine("mainmenuWidth = " + MainMenuWidth.ToString(Culture));
+				Builder.AppendLine("mainmenuHeight = " + MainMenuHeight.ToString(Culture));
+				Builder.AppendLine("loadInAdvance = " + (LoadInAdvance ? "true" : "false"));
+				Builder.AppendLine("unloadtextures = " + (UnloadUnusedTextures ? "true" : "false"));
+				Builder.AppendLine("isUseNewRenderer = " + (IsUseNewRenderer ? "true" : "false"));
+				Builder.AppendLine("forwardsCompatibleContext = " + (ForceForwardsCompatibleContext ? "true" : "false"));
+				Builder.AppendLine();
+				Builder.AppendLine("[quality]");
+				{
+					string t;
+					switch (Interpolation)
+					{
+						case InterpolationMode.NearestNeighbor:
+							t = "nearestNeighbor";
+							break;
+						case InterpolationMode.Bilinear:
+							t = "bilinear";
+							break;
+						case InterpolationMode.NearestNeighborMipmapped:
+							t = "nearestNeighborMipmapped";
+							break;
+						case InterpolationMode.BilinearMipmapped:
+							t = "bilinearMipmapped";
+							break;
+						case InterpolationMode.TrilinearMipmapped:
+							t = "trilinearMipmapped";
+							break;
+						case InterpolationMode.AnisotropicFiltering:
+							t = "anisotropicFiltering";
+							break;
+						default:
+							t = "bilinearMipmapped";
+							break;
+					}
+
+					Builder.AppendLine("interpolation = " + t);
+				}
+				Builder.AppendLine("anisotropicFilteringLevel = " + AnisotropicFilteringLevel.ToString(Culture));
+				Builder.AppendLine("anisotropicFilteringMaximum = " + AnisotropicFilteringMaximum.ToString(Culture));
+				Builder.AppendLine("antiAliasingLevel = " + AntiAliasingLevel.ToString(Culture));
+				Builder.AppendLine("transparencyMode = " + ((int)TransparencyMode).ToString(Culture));
+				Builder.AppendLine("oldtransparencymode = " + (OldTransparencyMode ? "true" : "false"));
+				Builder.AppendLine("viewingDistance = " + ViewingDistance.ToString(Culture));
+				Builder.AppendLine("quadLeafSize = " + QuadTreeLeafSize.ToString(Culture));
+				{
+					string t;
+					switch (MotionBlur)
+					{
+						case MotionBlurMode.Low:
+							t = "low";
+							break;
+						case MotionBlurMode.Medium:
+							t = "medium";
+							break;
+						case MotionBlurMode.High:
+							t = "high";
+							break;
+						default:
+							t = "none";
+							break;
+					}
+
+					Builder.AppendLine("motionBlur = " + t);
+				}
+				Builder.AppendLine("fpslimit = " + FPSLimit.ToString(Culture));
+				Builder.AppendLine();
+				Builder.AppendLine("[objectOptimization]");
+				Builder.AppendLine("basicThreshold = " + ObjectOptimizationBasicThreshold.ToString(Culture));
+				Builder.AppendLine("fullThreshold = " + ObjectOptimizationFullThreshold.ToString(Culture));
+				Builder.AppendLine("vertexCulling = " + ObjectOptimizationVertexCulling.ToString(Culture));
+				Builder.AppendLine();
+				Builder.AppendLine("[simulation]");
+				Builder.AppendLine("toppling = " + (Toppling ? "true" : "false"));
+				Builder.AppendLine("collisions = " + (Collisions ? "true" : "false"));
+				Builder.AppendLine("derailments = " + (Derailments ? "true" : "false"));
+				Builder.AppendLine("loadingsway = " + (LoadingSway ? "true" : "false"));
+				Builder.AppendLine("blackbox = " + (BlackBox ? "true" : "false"));
+				Builder.Append("mode = ");
+				switch (GameMode)
+				{
+					case GameMode.Arcade:
+						Builder.AppendLine("arcade");
+						break;
+					case GameMode.Normal:
+						Builder.AppendLine("normal");
+						break;
+					case GameMode.Expert:
+						Builder.AppendLine("expert");
+						break;
+					default:
+						Builder.AppendLine("normal");
+						break;
+				}
+
+				Builder.AppendLine("acceleratedtimefactor = " + TimeAccelerationFactor);
+				Builder.AppendLine("enablebvetshacks = " + (EnableBveTsHacks ? "true" : "false"));
+				Builder.AppendLine();
+				Builder.AppendLine("[verbosity]");
+				Builder.AppendLine("showWarningMessages = " + (ShowWarningMessages ? "true" : "false"));
+				Builder.AppendLine("showErrorMessages = " + (ShowErrorMessages ? "true" : "false"));
+				Builder.AppendLine("debugLog = " + (GenerateDebugLogging ? "true" : "false"));
+				Builder.AppendLine();
+				Builder.AppendLine("[controls]");
+				Builder.AppendLine("useJoysticks = " + (UseJoysticks ? "true" : "false"));
+				Builder.AppendLine("joystickAxisEB = " + (AllowAxisEB ? "true" : "false"));
+				Builder.AppendLine("joystickAxisthreshold = " + JoystickAxisThreshold.ToString(Culture));
+				Builder.AppendLine("keyRepeatDelay = " + (1000.0 * KeyRepeatDelay).ToString("0", Culture));
+				Builder.AppendLine("keyRepeatInterval = " + (1000.0 * KeyRepeatInterval).ToString("0", Culture));
+				Builder.AppendLine("raildrivermph = " + (RailDriverMPH ? "true" : "false"));
+				Builder.AppendLine();
+				Builder.AppendLine("[sound]");
+				Builder.Append("model = ");
+				switch (SoundModel)
+				{
+					case SoundModels.Linear:
+						Builder.AppendLine("linear");
+						break;
+					default:
+						Builder.AppendLine("inverse");
+						break;
+				}
+
+				Builder.Append("range = ");
+				switch (SoundRange)
+				{
+					case SoundRange.Low:
+						Builder.AppendLine("low");
+						break;
+					case SoundRange.Medium:
+						Builder.AppendLine("medium");
+						break;
+					case SoundRange.High:
+						Builder.AppendLine("high");
+						break;
+					default:
+						Builder.AppendLine("low");
+						break;
+				}
+
+				Builder.AppendLine("number = " + SoundNumber.ToString(Culture));
+				Builder.AppendLine();
+				Builder.AppendLine("[packages]");
+				Builder.Append("compression = ");
+				switch (packageCompressionType)
+				{
+					case CompressionType.Zip:
+						Builder.AppendLine("zip");
+						break;
+					case CompressionType.TarGZ:
+						Builder.AppendLine("gzip");
+						break;
+					case CompressionType.BZ2:
+						Builder.AppendLine("bzip");
+						break;
+					default:
+						Builder.AppendLine("zip");
+						break;
+				}
+
+				Builder.AppendLine();
+				Builder.AppendLine("[folders]");
+				Builder.AppendLine("route = " + RouteFolder);
+				Builder.AppendLine("train = " + TrainFolder);
+				Builder.AppendLine();
+				Builder.AppendLine("[recentlyUsedRoutes]");
+				for (int i = 0; i < RecentlyUsedRoutes.Length; i++)
+				{
+					Builder.AppendLine(RecentlyUsedRoutes[i]);
+				}
+
+				Builder.AppendLine();
+				Builder.AppendLine("[recentlyUsedTrains]");
+				for (int i = 0; i < RecentlyUsedTrains.Length; i++)
+				{
+					Builder.AppendLine(RecentlyUsedTrains[i]);
+				}
+
+				Builder.AppendLine();
+				Builder.AppendLine("[routeEncodings]");
+				for (int i = 0; i < RouteEncodings.Length; i++)
+				{
+					Builder.AppendLine(RouteEncodings[i].Codepage.ToString(Culture) + " = " + RouteEncodings[i].Value);
+				}
+
+				Builder.AppendLine();
+				Builder.AppendLine("[trainEncodings]");
+				for (int i = 0; i < TrainEncodings.Length; i++)
+				{
+					Builder.AppendLine(TrainEncodings[i].Codepage.ToString(Culture) + " = " + TrainEncodings[i].Value);
+				}
+
+				Builder.AppendLine();
+				Builder.AppendLine("[enableInputDevicePlugins]");
+				for (int i = 0; i < EnableInputDevicePlugins.Length; i++)
+				{
+					Builder.AppendLine(EnableInputDevicePlugins[i]);
+				}
+
+				Builder.AppendLine();
+				Builder.AppendLine("[Parsers]");
+				Builder.AppendLine("xObject = " + (int)CurrentXParser);
+				Builder.AppendLine("objObject = " + (int)CurrentObjParser);
+				Builder.AppendLine("gdiplus = " + (UseGDIDecoders ? "true" : "false"));
+				Builder.AppendLine();
+				Builder.AppendLine("[Touch]");
+				Builder.AppendLine("cursor = " + CursorFileName);
+				Builder.AppendLine("panel2extended = " + (Panel2ExtendedMode ? "true" : "false"));
+				Builder.AppendLine("panel2extendedminsize = " + Panel2ExtendedMinSize.ToString(Culture));
+				try
+				{
+					System.IO.File.WriteAllText(fileName, Builder.ToString(), new UTF8Encoding(true));
+				}
+				catch
+				{
+					MessageBox.Show(@"Failed to write to the Options folder.", @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				}
 			}
 		}
+
 		/// <summary>The current game options</summary>
 		internal static Options CurrentOptions;
 		/// <summary>Loads the options file from disk</summary>
@@ -280,6 +618,19 @@ namespace OpenBve
 										case "accessibility":
 											Interface.CurrentOptions.Accessibility = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
 											break;
+										case "font":
+											Interface.CurrentOptions.Font = Value;
+											break;
+										case "dailybuildupdates":
+											if (Value == "true" || Value == "1")
+											{
+												Interface.CurrentOptions.DailyBuildUpdates = true;
+											}
+											else
+											{
+												Interface.CurrentOptions.DailyBuildUpdates = false;
+											}
+											break;
 									} break;
 								case "display":
 									switch (Key)
@@ -295,8 +646,7 @@ namespace OpenBve
 											break;
 										case "windowwidth":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													a = 960;
 												}
@@ -304,8 +654,7 @@ namespace OpenBve
 											} break;
 										case "windowheight":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													a = 600;
 												}
@@ -313,8 +662,7 @@ namespace OpenBve
 											} break;
 										case "fullscreenwidth":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													a = 1024;
 												}
@@ -322,8 +670,7 @@ namespace OpenBve
 											} break;
 										case "fullscreenheight":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													a = 768;
 												}
@@ -331,8 +678,7 @@ namespace OpenBve
 											} break;
 										case "fullscreenbits":
 											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													a = 32;
 												}
@@ -340,14 +686,12 @@ namespace OpenBve
 											} break;
 										case "mainmenuwidth":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.MainMenuWidth = a;
 											} break;
 										case "mainmenuheight":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.MainMenuHeight = a;
 											} break;
 										case "loadinadvance":
@@ -379,20 +723,17 @@ namespace OpenBve
 											} break;
 										case "anisotropicfilteringlevel":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.AnisotropicFilteringLevel = a;
 											} break;
 										case "anisotropicfilteringmaximum":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.AnisotropicFilteringMaximum = a;
 											} break;
 										case "antialiasinglevel":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.AntiAliasingLevel = a;
 											} break;
 										case "transparencymode":
@@ -402,8 +743,7 @@ namespace OpenBve
 												case "smooth": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
 												default:
 													{
-														int a;
-														if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+														if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 														{
 															Interface.CurrentOptions.TransparencyMode = (TransparencyMode)a;
 														}
@@ -419,12 +759,21 @@ namespace OpenBve
 											break;
 										case "viewingdistance":
 											{
-												int a;
-												if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
 												{
 													if (a >= 100 && a <= 10000)
 													{
 														Interface.CurrentOptions.ViewingDistance = a;
+													}
+												}
+											} break;
+										case "quadleafsize":
+											{
+												if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
+												{
+													if (a >= 50 && a <= 500)
+													{
+														Interface.CurrentOptions.QuadTreeLeafSize = a;
 													}
 												}
 											} break;
@@ -436,20 +785,25 @@ namespace OpenBve
 												case "high": Interface.CurrentOptions.MotionBlur = MotionBlurMode.High; break;
 												default: Interface.CurrentOptions.MotionBlur = MotionBlurMode.None; break;
 											} break;
+										case "fpslimit":
+											if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int limit) || limit < 0)
+											{
+												limit = 0;
+											}
+											Interface.CurrentOptions.FPSLimit = limit;
+											break;
 									} break;
 								case "objectoptimization":
 									switch (Key)
 									{
 										case "basicthreshold":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.ObjectOptimizationBasicThreshold = a;
 											} break;
 										case "fullthreshold":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.ObjectOptimizationFullThreshold = a;
 											} break;
 										case "vertexCulling":
@@ -484,8 +838,7 @@ namespace OpenBve
 												default: Interface.CurrentOptions.GameMode = GameMode.Normal; break;
 											} break;
 										case "acceleratedtimefactor":
-											int tf;
-											int.TryParse(Value, NumberStyles.Integer, Culture, out tf);
+											int.TryParse(Value, NumberStyles.Integer, Culture, out int tf);
 											if (tf <= 0)
 											{
 												tf = 5;
@@ -508,21 +861,18 @@ namespace OpenBve
 											break;
 										case "joystickaxisthreshold":
 											{
-												double a;
-												double.TryParse(Value, NumberStyles.Float, Culture, out a);
+												double.TryParse(Value, NumberStyles.Float, Culture, out double a);
 												Interface.CurrentOptions.JoystickAxisThreshold = a;
 											} break;
 										case "keyrepeatdelay":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												if (a <= 0) a = 500;
 												Interface.CurrentOptions.KeyRepeatDelay = 0.001 * a;
 											} break;
 										case "keyrepeatinterval":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												if (a <= 0) a = 100;
 												Interface.CurrentOptions.KeyRepeatInterval = 0.001 * a;
 											} break;
@@ -531,8 +881,7 @@ namespace OpenBve
 											break;
 										case "cursorhidedelay":
 											{
-												double a;
-												double.TryParse(Value, NumberStyles.Float, Culture, out a);
+												double.TryParse(Value, NumberStyles.Float, Culture, out double a);
 												Interface.CurrentOptions.CursorHideDelay = a;
 											}
 											break;
@@ -558,8 +907,7 @@ namespace OpenBve
 											break;
 										case "number":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.SoundNumber = a < 16 ? 16 : a;
 											} break;
 									} break;
@@ -584,19 +932,6 @@ namespace OpenBve
 											break;
 										case "train":
 											Interface.CurrentOptions.TrainFolder = Value;
-											break;
-									} break;
-								case "proxy":
-									switch (Key)
-									{
-										case "url":
-											Interface.CurrentOptions.ProxyUrl = Value;
-											break;
-										case "username":
-											Interface.CurrentOptions.ProxyUserName = Value;
-											break;
-										case "password":
-											Interface.CurrentOptions.ProxyPassword = Value;
 											break;
 									} break;
 								case "packages":
@@ -631,8 +966,7 @@ namespace OpenBve
 									} break;
 								case "routeencodings":
 									{
-										int a;
-										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out a))
+										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out int a))
 										{
 											a = Encoding.UTF8.CodePage;
 										}
@@ -655,8 +989,7 @@ namespace OpenBve
 									} break;
 								case "trainencodings":
 									{
-										int a;
-										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out a))
+										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out int a))
 										{
 											a = Encoding.UTF8.CodePage;
 										}
@@ -688,8 +1021,7 @@ namespace OpenBve
 									{
 										case "xobject":
 											{
-												int p;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 3)
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int p) || p < 0 || p > 3)
 												{
 													Interface.CurrentOptions.CurrentXParser = XParsers.Original;
 												}
@@ -701,8 +1033,7 @@ namespace OpenBve
 											}
 										case "objobject":
 											{
-												int p;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 2)
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int p) || p < 0 || p > 2)
 												{
 													Interface.CurrentOptions.CurrentObjParser = ObjParsers.Original;
 												}
@@ -712,6 +1043,9 @@ namespace OpenBve
 												}
 												break;
 											}
+										case "gdiplus":
+											Interface.CurrentOptions.UseGDIDecoders = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
 									}
 									break;
 								case "touch":
@@ -725,8 +1059,7 @@ namespace OpenBve
 											break;
 										case "panel2extendedminsize":
 											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
 												Interface.CurrentOptions.Panel2ExtendedMinSize = a;
 											} break;
 									}
@@ -768,200 +1101,6 @@ namespace OpenBve
 				}
 			}
 		}
-		internal static void SaveOptions()
-		{
-			CultureInfo Culture = CultureInfo.InvariantCulture;
-			StringBuilder Builder = new StringBuilder();
-			Builder.AppendLine("; Options");
-			Builder.AppendLine("; =======");
-			Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
-			Builder.AppendLine();
-			Builder.AppendLine("[language]");
-			Builder.AppendLine("code = " + CurrentOptions.LanguageCode);
-			Builder.AppendLine();
-			Builder.AppendLine("[interface]");
-			Builder.AppendLine("folder = " + CurrentOptions.UserInterfaceFolder);
-			{
-				string t; switch (CurrentOptions.TimeTableStyle)
-				{
-					case TimeTableMode.None: t = "none"; break;
-					case TimeTableMode.Default: t = "default"; break;
-					case TimeTableMode.AutoGenerated: t = "autogenerated"; break;
-					case TimeTableMode.PreferCustom: t = "prefercustom"; break;
-					default: t = "default"; break;
-				}
-				Builder.AppendLine("timetablemode = " + t);
-			}
-			Builder.AppendLine("kioskMode = " + (CurrentOptions.KioskMode ? "true" : "false"));
-			Builder.AppendLine("kioskModeTimer = " + CurrentOptions.KioskModeTimer);
-			Builder.AppendLine("accessibility = " + (CurrentOptions.Accessibility ? "true" : "false"));
-			Builder.AppendLine();
-			Builder.AppendLine("[display]");
-			Builder.AppendLine("preferNativeBackend = " + (CurrentOptions.PreferNativeBackend ? "true" : "false"));
-			Builder.AppendLine("mode = " + (CurrentOptions.FullscreenMode ? "fullscreen" : "window"));
-			Builder.AppendLine("vsync = " + (CurrentOptions.VerticalSynchronization ? "true" : "false"));
-			Builder.AppendLine("windowWidth = " + CurrentOptions.WindowWidth.ToString(Culture));
-			Builder.AppendLine("windowHeight = " + CurrentOptions.WindowHeight.ToString(Culture));
-			Builder.AppendLine("fullscreenWidth = " + CurrentOptions.FullscreenWidth.ToString(Culture));
-			Builder.AppendLine("fullscreenHeight = " + CurrentOptions.FullscreenHeight.ToString(Culture));
-			Builder.AppendLine("fullscreenBits = " + CurrentOptions.FullscreenBits.ToString(Culture));
-			Builder.AppendLine("mainmenuWidth = " + CurrentOptions.MainMenuWidth.ToString(Culture));
-			Builder.AppendLine("mainmenuHeight = " + CurrentOptions.MainMenuHeight.ToString(Culture));
-			Builder.AppendLine("loadInAdvance = " + (CurrentOptions.LoadInAdvance ? "true" : "false"));
-			Builder.AppendLine("unloadtextures = " + (CurrentOptions.UnloadUnusedTextures ? "true" : "false"));
-			Builder.AppendLine("isUseNewRenderer = " + (CurrentOptions.IsUseNewRenderer ? "true" : "false"));
-			Builder.AppendLine("forwardsCompatibleContext = " + (CurrentOptions.ForceForwardsCompatibleContext ? "true" : "false"));
-			Builder.AppendLine();
-			Builder.AppendLine("[quality]");
-			{
-				string t; switch (CurrentOptions.Interpolation)
-				{
-					case InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
-					case InterpolationMode.Bilinear: t = "bilinear"; break;
-					case InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
-					case InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
-					case InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
-					case InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
-					default: t = "bilinearMipmapped"; break;
-				}
-				Builder.AppendLine("interpolation = " + t);
-			}
-			Builder.AppendLine("anisotropicFilteringLevel = " + CurrentOptions.AnisotropicFilteringLevel.ToString(Culture));
-			Builder.AppendLine("anisotropicFilteringMaximum = " + CurrentOptions.AnisotropicFilteringMaximum.ToString(Culture));
-			Builder.AppendLine("antiAliasingLevel = " + CurrentOptions.AntiAliasingLevel.ToString(Culture));
-			Builder.AppendLine("transparencyMode = " + ((int)CurrentOptions.TransparencyMode).ToString(Culture));
-			Builder.AppendLine("oldtransparencymode = " + (CurrentOptions.OldTransparencyMode ? "true" : "false"));
-			Builder.AppendLine("viewingDistance = " + CurrentOptions.ViewingDistance.ToString(Culture));
-			{
-				string t; switch (CurrentOptions.MotionBlur)
-				{
-					case MotionBlurMode.Low: t = "low"; break;
-					case MotionBlurMode.Medium: t = "medium"; break;
-					case MotionBlurMode.High: t = "high"; break;
-					default: t = "none"; break;
-				}
-				Builder.AppendLine("motionBlur = " + t);
-			}
-			Builder.AppendLine();
-			Builder.AppendLine("[objectOptimization]");
-			Builder.AppendLine("basicThreshold = " + CurrentOptions.ObjectOptimizationBasicThreshold.ToString(Culture));
-			Builder.AppendLine("fullThreshold = " + CurrentOptions.ObjectOptimizationFullThreshold.ToString(Culture));
-			Builder.AppendLine("vertexCulling = " + CurrentOptions.ObjectOptimizationVertexCulling.ToString(Culture));
-			Builder.AppendLine();
-			Builder.AppendLine("[simulation]");
-			Builder.AppendLine("toppling = " + (CurrentOptions.Toppling ? "true" : "false"));
-			Builder.AppendLine("collisions = " + (CurrentOptions.Collisions ? "true" : "false"));
-			Builder.AppendLine("derailments = " + (CurrentOptions.Derailments ? "true" : "false"));
-			Builder.AppendLine("loadingsway = " + (CurrentOptions.LoadingSway ? "true" : "false"));
-			Builder.AppendLine("blackbox = " + (CurrentOptions.BlackBox ? "true" : "false"));
-			Builder.Append("mode = ");
-			switch (CurrentOptions.GameMode)
-			{
-				case GameMode.Arcade: Builder.AppendLine("arcade"); break;
-				case GameMode.Normal: Builder.AppendLine("normal"); break;
-				case GameMode.Expert: Builder.AppendLine("expert"); break;
-				default: Builder.AppendLine("normal"); break;
-			}
-			Builder.AppendLine("acceleratedtimefactor = " + CurrentOptions.TimeAccelerationFactor);
-			Builder.AppendLine("enablebvetshacks = " + (CurrentOptions.EnableBveTsHacks ? "true" : "false"));
-			Builder.AppendLine();
-			Builder.AppendLine("[verbosity]");
-			Builder.AppendLine("showWarningMessages = " + (CurrentOptions.ShowWarningMessages ? "true" : "false"));
-			Builder.AppendLine("showErrorMessages = " + (CurrentOptions.ShowErrorMessages ? "true" : "false"));
-			Builder.AppendLine("debugLog = " + (CurrentOptions.GenerateDebugLogging ? "true" : "false"));
-			Builder.AppendLine();
-			Builder.AppendLine("[controls]");
-			Builder.AppendLine("useJoysticks = " + (CurrentOptions.UseJoysticks ? "true" : "false"));
-			Builder.AppendLine("joystickAxisEB = " + (CurrentOptions.AllowAxisEB ? "true" : "false"));
-			Builder.AppendLine("joystickAxisthreshold = " + CurrentOptions.JoystickAxisThreshold.ToString(Culture));
-			Builder.AppendLine("keyRepeatDelay = " + (1000.0 * CurrentOptions.KeyRepeatDelay).ToString("0", Culture));
-			Builder.AppendLine("keyRepeatInterval = " + (1000.0 * CurrentOptions.KeyRepeatInterval).ToString("0", Culture));
-			Builder.AppendLine("raildrivermph = " + (CurrentOptions.RailDriverMPH ? "true" : "false"));
-			Builder.AppendLine();
-			Builder.AppendLine("[sound]");
-			Builder.Append("model = ");
-			switch (CurrentOptions.SoundModel)
-			{
-				case SoundModels.Linear: Builder.AppendLine("linear"); break;
-				default: Builder.AppendLine("inverse"); break;
-			}
-			Builder.Append("range = ");
-			switch (CurrentOptions.SoundRange)
-			{
-				case SoundRange.Low: Builder.AppendLine("low"); break;
-				case SoundRange.Medium: Builder.AppendLine("medium"); break;
-				case SoundRange.High: Builder.AppendLine("high"); break;
-				default: Builder.AppendLine("low"); break;
-			}
-			Builder.AppendLine("number = " + CurrentOptions.SoundNumber.ToString(Culture));
-			Builder.AppendLine();
-			Builder.AppendLine("[proxy]");
-			Builder.AppendLine("url = " + CurrentOptions.ProxyUrl);
-			Builder.AppendLine("username = " + CurrentOptions.ProxyUserName);
-			Builder.AppendLine("password = " + CurrentOptions.ProxyPassword);
-			Builder.AppendLine();
-			Builder.AppendLine("[packages]");
-			Builder.Append("compression = ");
-			switch (CurrentOptions.packageCompressionType)
-			{
-				case CompressionType.Zip: Builder.AppendLine("zip"); break;
-				case CompressionType.TarGZ: Builder.AppendLine("gzip"); break;
-				case CompressionType.BZ2: Builder.AppendLine("bzip"); break;
-				default: Builder.AppendLine("zip"); break;
-			}
-			Builder.AppendLine();
-			Builder.AppendLine("[folders]");
-			Builder.AppendLine("route = " + CurrentOptions.RouteFolder);
-			Builder.AppendLine("train = " + CurrentOptions.TrainFolder);
-			Builder.AppendLine();
-			Builder.AppendLine("[recentlyUsedRoutes]");
-			for (int i = 0; i < CurrentOptions.RecentlyUsedRoutes.Length; i++)
-			{
-				Builder.AppendLine(CurrentOptions.RecentlyUsedRoutes[i]);
-			}
-			Builder.AppendLine();
-			Builder.AppendLine("[recentlyUsedTrains]");
-			for (int i = 0; i < CurrentOptions.RecentlyUsedTrains.Length; i++)
-			{
-				Builder.AppendLine(CurrentOptions.RecentlyUsedTrains[i]);
-			}
-			Builder.AppendLine();
-			Builder.AppendLine("[routeEncodings]");
-			for (int i = 0; i < CurrentOptions.RouteEncodings.Length; i++)
-			{
-				Builder.AppendLine(CurrentOptions.RouteEncodings[i].Codepage.ToString(Culture) + " = " + CurrentOptions.RouteEncodings[i].Value);
-			}
-			Builder.AppendLine();
-			Builder.AppendLine("[trainEncodings]");
-			for (int i = 0; i < CurrentOptions.TrainEncodings.Length; i++)
-			{
-				Builder.AppendLine(CurrentOptions.TrainEncodings[i].Codepage.ToString(Culture) + " = " + CurrentOptions.TrainEncodings[i].Value);
-			}
-			Builder.AppendLine();
-			Builder.AppendLine("[enableInputDevicePlugins]");
-			for (int i = 0; i < CurrentOptions.EnableInputDevicePlugins.Length; i++)
-			{
-				Builder.AppendLine(CurrentOptions.EnableInputDevicePlugins[i]);
-			}
-			Builder.AppendLine();
-			Builder.AppendLine("[Parsers]");
-			Builder.AppendLine("xObject = " + (int)Interface.CurrentOptions.CurrentXParser);
-			Builder.AppendLine("objObject = " + (int)Interface.CurrentOptions.CurrentObjParser);
-			Builder.AppendLine();
-			Builder.AppendLine("[Touch]");
-			Builder.AppendLine("cursor = " + CurrentOptions.CursorFileName);
-			Builder.AppendLine("panel2extended = " + (CurrentOptions.Panel2ExtendedMode ? "true" : "false"));
-			Builder.AppendLine("panel2extendedminsize = " + CurrentOptions.Panel2ExtendedMinSize.ToString(Culture));
-			string File = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
-			try
-			{
-				System.IO.File.WriteAllText(File, Builder.ToString(), new UTF8Encoding(true));
-			}
-			catch
-			{
-				MessageBox.Show(@"Failed to write to the Options folder.", @"OpenBVE",  MessageBoxButtons.OK, MessageBoxIcon.Hand);
-			}
-			
-		}
+		
 	}
 }

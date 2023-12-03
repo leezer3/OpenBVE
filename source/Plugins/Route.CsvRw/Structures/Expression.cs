@@ -34,16 +34,14 @@ namespace CsvRwRouteParser
 				string t = Text.Substring(0, Equals);
 				if (Section.ToLowerInvariant() == "cycle" & SectionAlwaysPrefix)
 				{
-					double b;
-					if (NumberFormats.TryParseDoubleVb6(t, out b))
+					if (NumberFormats.TryParseDoubleVb6(t, out double b))
 					{
 						t = ".Ground(" + b + ")";
 					}
 				}
 				else if (Section.ToLowerInvariant() == "signal" & SectionAlwaysPrefix)
 				{
-					double b;
-					if (NumberFormats.TryParseDoubleVb6(t, out b))
+					if (NumberFormats.TryParseDoubleVb6(t, out double b))
 					{
 						t = ".Void(" + b + ")";
 					}
@@ -90,10 +88,8 @@ namespace CsvRwRouteParser
 					int idx = Text.LastIndexOf(')');
 					if (idx != -1 && idx != Text.Length)
 					{
-						// ReSharper disable once NotAccessedVariable
-						double d;
 						string s = this.Text.Substring(idx + 1, this.Text.Length - idx - 1).Trim();
-						if (NumberFormats.TryParseDoubleVb6(s, out d))
+						if (NumberFormats.TryParseDoubleVb6(s, out double _))
 						{
 							this.Text = this.Text.Substring(0, idx).Trim();
 						}
@@ -145,42 +141,96 @@ namespace CsvRwRouteParser
 				if (Text[i] == '(')
 				{
 					bool found = false;
-					bool stationName = false;
-					bool replaced = false;
+					int argumentIndex = 0;
 					i++;
 					while (i < Text.Length)
 					{
 						if (Text[i] == ',' || Text[i] == ';')
 						{
 							//Only check parenthesis in the station name field- The comma and semi-colon are the argument separators
-							stationName = true;
+							argumentIndex++;
 						}
 
 						if (Text[i] == '(')
 						{
 							if (RaiseErrors & !openingerror)
 							{
-								if (stationName)
+								switch (argumentIndex)
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
-									                                                         Column.ToString(Culture) + " in file " + File);
-									openingerror = true;
-								}
-								else
-								{
-									Text = Text.Remove(i, 1).Insert(i, "[");
-									replaced = true;
+									case 0:
+										if (Text.StartsWith("sta"))
+										{
+											Text = Text.Remove(i, 1).Insert(i, "[");
+											break;
+										}
+										if (Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase) ||
+										    Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
+										{
+											/*
+											 * HACK: In filenames, temp replace with an invalid but known character
+											 *
+											 * Opening parenthesis are fortunately simpler than closing, see notes below.
+											 */
+											Text = Text.Remove(i, 1).Insert(i, "<");
+											break;
+										}
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
+										                                                        Column.ToString(Culture) + " in file " + File);
+										openingerror = true;
+										break;
+									case 5: //arrival sound
+									case 10: //departure sound
+										if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase))
+										{
+											Text = Text.Remove(i, 1).Insert(i, "<");
+											break;
+										}
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
+										                                                        Column.ToString(Culture) + " in file " + File);
+										openingerror = true;
+										break;
+									default:
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
+										                                                        Column.ToString(Culture) + " in file " + File);
+										openingerror = true;
+										break;
 								}
 							}
 						}
 						else if (Text[i] == ')')
 						{
-							if (stationName == false && i != Text.Length && replaced)
+							switch (argumentIndex)
 							{
-								Text = Text.Remove(i, 1).Insert(i, "]");
-								continue;
+								case 0:
+									if (Text.StartsWith("sta") && i != Text.Length)
+									{
+										Text = Text.Remove(i, 1).Insert(i, "]");
+										continue;
+									}
+									if ((Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase)) && i != Text.Length  ||
+									    Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1 && Text.IndexOf('<') != -1 && i > 18 && i != Text.Length -1)
+									{
+										/*
+										 * HACK: In filenames, temp replace with an invalid but known character
+										 *
+										 * Note that this is a PITA in object folder names when the creator has used the alternate .Load() format as this contains far more brackets
+										 * e.g.
+										 * .Rail(0).Load(kcrmosr(2009)\rail\c0.csv)
+										 * We must keep the first and last closing parenthesis intact here
+										 */
+										Text = Text.Remove(i, 1).Insert(i, ">");
+										continue;
+									}
+									break;
+								case 5: //arrival sound
+								case 10: //departure sound
+									if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase) && i != Text.Length)
+									{
+										Text = Text.Remove(i, 1).Insert(i, ">");
+										continue;
+									}
+									break;
 							}
-
 							found = true;
 							firstClosingBracket = i;
 							break;
@@ -367,6 +417,16 @@ namespace CsvRwRouteParser
 					{
 						Command = Text.Substring(0, i).TrimEnd();
 						ArgumentSequence = Text.Substring(i + 1, Text.Length - i - 2).Trim();
+						if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase) || Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
+						{
+							// put back any temp removed brackets
+							ArgumentSequence = ArgumentSequence.Replace('<', '(');
+							ArgumentSequence = ArgumentSequence.Replace('>', ')');
+							if (ArgumentSequence.EndsWith(")"))
+							{
+								ArgumentSequence = ArgumentSequence.TrimEnd(')');
+							}
+						}
 					}
 					else
 					{

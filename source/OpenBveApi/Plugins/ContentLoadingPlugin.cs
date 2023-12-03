@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OpenBveApi
+﻿namespace OpenBveApi
 {
 	/// <summary>Represents a plugin for loading content.</summary>
 	public class ContentLoadingPlugin
@@ -41,7 +39,8 @@ namespace OpenBveApi
 		{
 			if (this.Texture != null)
 			{
-				this.Texture.Load(Host);
+				this.Texture.Load(Host); // anything built against original API; nautilus basically, crummy code....
+				this.Texture.Load(Host, FileSystem, Options);
 			}
 
 			if (this.Sound != null)

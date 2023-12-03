@@ -76,7 +76,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 												}
 												else
 												{
-													string file = Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), b);
+													string file = Path.CombineFile(Path.GetDirectoryName(fileName), b);
 
 													if (!File.Exists(file))
 													{
@@ -154,7 +154,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 															}
 															else
 															{
-																string file = Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), b);
+																string file = Path.CombineFile(Path.GetDirectoryName(fileName), b);
 
 																if (!File.Exists(file))
 																{
@@ -326,7 +326,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 															}
 															else
 															{
-																string file = Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), b);
+																string file = Path.CombineFile(Path.GetDirectoryName(fileName), b);
 
 																if (!File.Exists(file))
 																{
@@ -412,7 +412,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 															}
 															else
 															{
-																string file = Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), b);
+																string file = Path.CombineFile(Path.GetDirectoryName(fileName), b);
 
 																if (!File.Exists(file))
 																{

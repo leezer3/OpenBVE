@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,6 +15,8 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
+using TrainManager.Motor;
+using TrainManager.Power;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -59,12 +60,13 @@ namespace Train.OpenBve
 
 	    internal double LastProgress;
 
+	    internal static BVEMotorSoundTable[] MotorSoundTables;
+	    internal static BveAccelerationCurve[] AccelerationCurves;
+	    internal static double MaximumAcceleration;
+
 		public Plugin()
 	    {
-		    if (TrainDatParser == null)
-		    {
-			    TrainDatParser = new TrainDatParser(this);
-		    }
+		    TrainDatParser = new TrainDatParser(this);
 
 		    if (ExtensionsCfgParser == null)
 		    {
@@ -113,7 +115,12 @@ namespace Train.OpenBve
 			}
 			if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
 			{
-				string vehicleTxt = Path.CombineFile(path, "vehicle.txt");
+				string vehicleTxt;
+				try {
+					vehicleTxt = Path.CombineFile(path, "vehicle.txt");
+				} catch {
+					return false;
+				}
 				if (File.Exists(vehicleTxt))
 				{
 					string[] lines = File.ReadAllLines(vehicleTxt);
@@ -260,18 +267,31 @@ namespace Train.OpenBve
 			// add exterior section
 			if (currentTrain.State != TrainState.Bogus)
 			{
-				bool[] VisibleFromInterior;
+				bool[] VisibleFromInterior = null;
 				UnifiedObject[] CarObjects = new UnifiedObject[currentTrain.Cars.Length];
 				UnifiedObject[] BogieObjects = new UnifiedObject[currentTrain.Cars.Length * 2];
 				UnifiedObject[] CouplerObjects = new UnifiedObject[currentTrain.Cars.Length];
 
 				string tXml = Path.CombineFile(currentTrain.TrainFolder, "train.xml");
+
+				bool parseExtensionsCfg = true;
 				if (File.Exists(tXml))
 				{
-					TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior);
+					try
+					{
+						TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior);
+						parseExtensionsCfg = false;
+					}
+					catch(Exception e)
+					{
+						currentHost.ReportProblem(ProblemType.UnexpectedException, "Whilst processing XML file " + tXml + " encountered the following exeception:" + Environment.NewLine + e);
+					}
+					
 				}
-				else
+
+				if(parseExtensionsCfg)
 				{
+					// train.xml is either missing or broken
 					ExtensionsCfgParser.ParseExtensionsConfig(currentTrain.TrainFolder, Encoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior, currentTrain);
 				}
 
@@ -336,7 +356,7 @@ namespace Train.OpenBve
 				if (Cancel) return false;
 				SoundCfgParser.ParseSoundConfig(currentTrain);
 				/*
-				 * Determine door opening / closing speed
+				 * Determine door opening / closing speed & copy in any missing bits (e.g. motor sound tables)
 				 * This *must* be done after the sound configuration has loaded
 				 * (As the original BVE / OpenBVE implimentation calculates this from
 				 * the length of the sound buffer)
@@ -348,6 +368,13 @@ namespace Train.OpenBve
 				for (int i = 0; i < currentTrain.Cars.Length; i++)
 				{
 					currentTrain.Cars[i].DetermineDoorClosingSpeed();
+					if (currentTrain.Cars[i].Specs.IsMotorCar && currentTrain.Cars[i].Sounds.Motor == null && TrainXmlParser.MotorSoundXMLParsed != null)
+					{
+						if(!TrainXmlParser.MotorSoundXMLParsed[i])
+						{
+							currentTrain.Cars[i].Sounds.Motor = new BVEMotorSound(currentTrain.Cars[i], 18.0, MotorSoundTables);
+						}
+					}
 				}
 			}
 			// place cars
@@ -385,6 +412,11 @@ namespace Train.OpenBve
 					// No description, but a readme- Let's try that instead to at least give something
 					descriptionFile = Path.CombineFile(trainPath, "readme.txt");
 			    }
+			    if (!File.Exists(descriptionFile))
+			    {
+				    // another variant on readme
+				    descriptionFile = Path.CombineFile(trainPath, "read me.txt");
+			    }
 			    if (File.Exists(descriptionFile))
 			    {
 				    if (encoding == null)
@@ -402,24 +434,24 @@ namespace Train.OpenBve
 		    return string.Empty;
 	    }
 
-	    public override Image GetImage(string trainPath)
+	    public override string GetImage(string trainPath)
 	    {
 		    try
 		    {
 			    string imageFile = Path.CombineFile(trainPath, "train.png");
 			    if (File.Exists(imageFile))
 			    {
-				    return Image.FromFile(imageFile);
+				    return imageFile;
 			    }
 			    imageFile  = Path.CombineFile(trainPath, "train.gif");
 			    if (File.Exists(imageFile))
 			    {
-				    return Image.FromFile(imageFile);
+				    return imageFile;
 			    }
 			    imageFile  = Path.CombineFile(trainPath, "train.bmp");
 			    if (File.Exists(imageFile))
 			    {
-				    return Image.FromFile(imageFile);
+				    return imageFile;
 			    }
 		    }
 		    catch (Exception ex)
@@ -458,9 +490,8 @@ namespace Train.OpenBve
 				    // Check for null
 				    if (CurrentXML.Root != null)
 				    {
-
-					    IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
-					    if (DocumentElements.Any())
+						List<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated").ToList();
+					    if (DocumentElements.Count != 0)
 					    {
 						    PanelAnimatedXmlParser.ParsePanelAnimatedXml(System.IO.Path.GetFileName(File), Train, Train.DriverCar);
 						    if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
@@ -471,8 +502,8 @@ namespace Train.OpenBve
 							return;
 					    }
 
-					    DocumentElements = CurrentXML.Root.Elements("Panel");
-					    if (DocumentElements.Any())
+					    DocumentElements = CurrentXML.Root.Elements("Panel").ToList();
+					    if (DocumentElements.Count != 0)
 					    {
 						    PanelXmlParser.ParsePanelXml(System.IO.Path.GetFileName(File), Train, Train.DriverCar);
 						    Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;

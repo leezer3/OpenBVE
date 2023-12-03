@@ -24,26 +24,41 @@ namespace RouteViewer
 	        };
 	        string Folder = Program.FileSystem.GetDataFolder("Menu");
 
-            try
-            {
-                Dialog.listviewMessages.SmallImageList.Images.Add("information", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_information.png")));
-            }
-            catch { }
-            try
-            {
-                Dialog.listviewMessages.SmallImageList.Images.Add("warning", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_warning.png")));
-            }
-            catch { }
-            try
-            {
-                Dialog.listviewMessages.SmallImageList.Images.Add("error", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_error.png")));
-            }
-            catch { }
-            try
-            {
-                Dialog.listviewMessages.SmallImageList.Images.Add("critical", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_critical.png")));
-            }
-            catch { }
+	        try
+	        {
+		        Dialog.listviewMessages.SmallImageList.Images.Add("information", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_information.png")));
+	        }
+	        catch
+	        {
+				// ignored
+	        }
+
+	        try
+	        {
+		        Dialog.listviewMessages.SmallImageList.Images.Add("warning", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_warning.png")));
+	        }
+	        catch
+	        {
+				// ignored
+	        }
+
+	        try
+	        {
+		        Dialog.listviewMessages.SmallImageList.Images.Add("error", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_error.png")));
+	        }
+	        catch
+	        {
+				// ignored
+	        }
+
+	        try
+	        {
+		        Dialog.listviewMessages.SmallImageList.Images.Add("critical", Image.FromFile(OpenBveApi.Path.CombineFile(Folder, "icon_critical.png")));
+	        }
+	        catch
+	        {
+				// ignored
+	        }
             for (int i = 0; i < Interface.LogMessages.Count; i++)
             {
                 string t = "Unknown";

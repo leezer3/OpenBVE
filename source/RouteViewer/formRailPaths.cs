@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using LibRender2.Overlays;
-using OpenBveApi.Colors;
 
 namespace RouteViewer
 {
 	public partial class formRailPaths : Form
 	{
+		private readonly int keyColumn = 5;
+
 		public formRailPaths()
 		{
 			InitializeComponent();
@@ -19,16 +19,16 @@ namespace RouteViewer
 			}
 			for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
 			{
-				int key = Program.CurrentRoute.Tracks.ElementAt(i).Key;
-				RailPath path = Program.Renderer.trackColors[key];
+				int railIndex = Program.CurrentRoute.Tracks.ElementAt(i).Key;
+				RailPath path = Program.Renderer.trackColors[railIndex];
 				object[] newRow =
 				{
-					key.ToString(),
+					railIndex.ToString(),
 					path.Description,
 					string.Empty,
 					path.CurrentlyVisible(),
 					path.Display,
-					key
+					railIndex
 				};
 				dataGridViewPaths.Rows.Add(newRow);
 			}
@@ -41,7 +41,7 @@ namespace RouteViewer
 				dataGridViewPaths.Rows[i].Cells[2].Style.BackColor = path.Color;
 				dataGridViewPaths.Rows[i].Cells[2].Style.SelectionBackColor = path.Color;
 			}
-			dataGridViewPaths.Columns[5].Visible = false;
+			dataGridViewPaths.Columns[keyColumn].Visible = false;
 			dataGridViewPaths.RowHeadersVisible = false;
 			dataGridViewPaths.AllowUserToAddRows = false;
 			dataGridViewPaths.AllowUserToDeleteRows = false;
@@ -62,7 +62,7 @@ namespace RouteViewer
 				dataGridViewPaths.CommitEdit(DataGridViewDataErrorContexts.Commit);
 				if (dataGridViewPaths.CurrentRow != null)
 				{
-					Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[dataGridViewPaths.CurrentRow.Index].Cells[5].Value].Display = !Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[dataGridViewPaths.CurrentRow.Index].Cells[5].Value].Display;
+					Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[dataGridViewPaths.CurrentRow.Index].Cells[keyColumn].Value].Display = !Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[dataGridViewPaths.CurrentRow.Index].Cells[keyColumn].Value].Display;
 				}
 			}
 		}
@@ -81,12 +81,20 @@ namespace RouteViewer
 					ColorDialog cd = new ColorDialog();
 					if (cd.ShowDialog() == DialogResult.OK)
 					{
-						Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[dataGridViewPaths.CurrentRow.Index].Cells[5].Value].Color = cd.Color;
+						Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[dataGridViewPaths.CurrentRow.Index].Cells[keyColumn].Value].Color = cd.Color;
 						dataGridViewPaths.CurrentCell.Style.BackColor = cd.Color;
 						dataGridViewPaths.CurrentCell.Style.SelectionBackColor = cd.Color;
 					}
 					
 				}
+			}
+		}
+
+		private void dataGridViewPaths_CellValidated(object sender, DataGridViewCellEventArgs e)
+		{
+			if (dataGridViewPaths.CurrentRow != null && e.ColumnIndex ==  1 && dataGridViewPaths.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
+			{
+				Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[dataGridViewPaths.CurrentRow.Index].Cells[keyColumn].Value].Description = dataGridViewPaths.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
 			}
 		}
 	}

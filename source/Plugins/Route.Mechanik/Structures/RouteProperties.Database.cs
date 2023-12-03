@@ -49,7 +49,7 @@ namespace MechanikRouteParser
 										}
 										break;
 									case "PropertiesList":
-										string folder = System.IO.Path.GetDirectoryName(databaseFile);
+										string folder = Path.GetDirectoryName(databaseFile);
 										string newFile = Path.CombineFile(folder, childNode.InnerText);
 										if (File.Exists(newFile))
 										{
@@ -80,7 +80,7 @@ namespace MechanikRouteParser
 										}
 										break;
 									case "ModuleList":
-										string folder = System.IO.Path.GetDirectoryName(databaseFile);
+										string folder = Path.GetDirectoryName(databaseFile);
 										string newFile = Path.CombineFile(folder, childNode.InnerText);
 										if (File.Exists(newFile))
 										{

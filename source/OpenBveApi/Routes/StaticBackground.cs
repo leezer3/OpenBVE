@@ -39,7 +39,7 @@ namespace OpenBveApi.Routes
 		/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preseved</param>
 		/// <param name="transitionTime">The time taken in seconds for the fade-in transition to occur</param>
 		/// <param name="Mode">The transition mode</param>
-		public StaticBackground(Texture Texture, double Repetition, bool KeepAspectRatio, double transitionTime, BackgroundTransitionMode Mode) : this(Texture, Repetition, KeepAspectRatio, 0.8, BackgroundTransitionMode.FadeIn, -1.0)
+		public StaticBackground(Texture Texture, double Repetition, bool KeepAspectRatio, double transitionTime, BackgroundTransitionMode Mode) : this(Texture, Repetition, KeepAspectRatio, transitionTime, Mode, -1.0)
 		{
 		}
 

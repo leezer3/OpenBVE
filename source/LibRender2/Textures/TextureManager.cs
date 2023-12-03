@@ -9,6 +9,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using InterpolationMode = OpenBveApi.Graphics.InterpolationMode;
+using PixelFormat = OpenBveApi.Textures.PixelFormat;
 
 namespace LibRender2.Textures
 {
@@ -21,6 +22,8 @@ namespace LibRender2.Textures
 
 		/// <summary>Holds all currently registered textures.</summary>
 		public static Texture[] RegisteredTextures;
+		/// <summary>Holds cached texture origins</summary>
+		internal static Dictionary<TextureOrigin, Texture> textureCache = new Dictionary<TextureOrigin, Texture>();
 
 		private static Dictionary<TextureOrigin, Texture> animatedTextures;
 
@@ -264,7 +267,7 @@ namespace LibRender2.Textures
 				{
 					handle.MultipleFrames = true;
 				}
-				if (texture.BitsPerPixel == 32)
+				//if (texture.BitsPerPixel == 32)
 				{
 					int[] names = new int[1];
 					GL.GenTextures(1, names);
@@ -274,9 +277,8 @@ namespace LibRender2.Textures
 					{
 						texture.OpenGlTextures[(int)wrap].Name = names[0];
 					}
-					
-					handle.Width = texture.Width;
-					handle.Height = texture.Height;
+
+					handle.Size = texture.Size;
 					handle.Transparency = texture.GetTransparencyType();
 
 					switch (Interpolation)
@@ -344,52 +346,96 @@ namespace LibRender2.Textures
 
 					if (handle.Transparency == TextureTransparencyType.Opaque)
 					{
-						/*
-						 * If the texture is fully opaque, the alpha channel is not used.
-						 * If the graphics driver and card support 24-bits per channel,
-						 * it is best to convert the bitmap data to that format in order
-						 * to save memory on the card. If the card does not support the
-						 * format, it will likely be upconverted to 32-bits per channel
-						 * again, and this is wasted effort.
-						 * */
-						int width = texture.Width;
-						int height = texture.Height;
-						int stride = (3 * (width + 1) >> 2) << 2;
-						byte[] oldBytes = texture.Bytes;
-						byte[] newBytes = new byte[stride * texture.Height];
-						int i = 0, j = 0;
-
-						for (int y = 0; y < height; y++)
+						switch (texture.PixelFormat)
 						{
-							for (int x = 0; x < width; x++)
-							{
-								newBytes[j + 0] = oldBytes[i + 0];
-								newBytes[j + 1] = oldBytes[i + 1];
-								newBytes[j + 2] = oldBytes[i + 2];
-								i += 4;
-								j += 3;
-							}
+							case PixelFormat.Grayscale:
+								// send as is to the luminance channel [NOTE: deprecated in GL4]
+								// n.b. Make sure to set the unpack alignment as otherwise we corrupt textures where stride > width
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+								GL.TexImage2D(TextureTarget.Texture2D, 0,
+									PixelInternalFormat.Luminance,
+									texture.Width, texture.Height, 0,
+									OpenTK.Graphics.OpenGL.PixelFormat.Luminance,
+									PixelType.UnsignedByte, texture.Bytes);
 
-							j += stride - 3 * width;
+								break;
+							case PixelFormat.RGB:
+								// send as is
+								// n.b. Make sure to set the unpack alignment as otherwise we corrupt textures where stride > width
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+								GL.TexImage2D(TextureTarget.Texture2D, 0,
+									PixelInternalFormat.Rgb8,
+									texture.Width, texture.Height, 0,
+									OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
+									PixelType.UnsignedByte, texture.Bytes);
+								break;
+							case PixelFormat.RGBAlpha:
+								/*
+								* If the texture is fully opaque, the alpha channel is not used.
+								* If the graphics driver and card support 24-bits per channel,
+								* it is best to convert the bitmap data to that format in order
+								* to save memory on the card. If the card does not support the
+								* format, it will likely be upconverted to 32-bits per channel
+								* again, and this is wasted effort.
+								* */
+								int stride = (3 * (texture.Width + 1) >> 2) << 2;
+								byte[] oldBytes = texture.Bytes;
+								byte[] newBytes = new byte[stride * texture.Height];
+								int i = 0, j = 0;
+
+								for (int y = 0; y < texture.Height; y++)
+								{
+									for (int x = 0; x < texture.Width; x++)
+									{
+										newBytes[j + 0] = oldBytes[i + 0];
+										newBytes[j + 1] = oldBytes[i + 1];
+										newBytes[j + 2] = oldBytes[i + 2];
+										i += 4;
+										j += 3;
+									}
+
+									j += stride - 3 * texture.Width;
+								}
+								// send as is
+								// n.b. Must reset the unpack alignment in case of changes
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
+								GL.TexImage2D(TextureTarget.Texture2D, 0,
+									PixelInternalFormat.Rgb8,
+									texture.Width, texture.Height, 0,
+									OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
+									PixelType.UnsignedByte, newBytes);
+								break;
 						}
-
-						GL.TexImage2D(TextureTarget.Texture2D, 0,
-							PixelInternalFormat.Rgb8,
-							texture.Width, texture.Height, 0,
-							OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
-							PixelType.UnsignedByte, newBytes);
+						
 					}
 					else
 					{
-						/*
+						switch (texture.PixelFormat)
+						{
+							case PixelFormat.GrayscaleAlpha:
+								// NOTE: luminance is deprecated in GL4
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+								GL.TexImage2D(TextureTarget.Texture2D, 0,
+									PixelInternalFormat.LuminanceAlpha,
+									texture.Width, texture.Height, 0,
+									OpenTK.Graphics.OpenGL.PixelFormat.LuminanceAlpha,
+									PixelType.UnsignedByte, texture.Bytes);
+								break;
+							case PixelFormat.RGBAlpha:
+								/*
 						 * The texture uses its alpha channel, so send the bitmap data
 						 * in 32-bits per channel as-is.
 						 * */
-						GL.TexImage2D(TextureTarget.Texture2D, 0,
-							PixelInternalFormat.Rgba8,
-							texture.Width, texture.Height, 0,
-							OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
-							PixelType.UnsignedByte, texture.Bytes);
+								// n.b. Must reset the unpack alignment in case of changes
+								GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
+								GL.TexImage2D(TextureTarget.Texture2D, 0,
+									PixelInternalFormat.Rgba8,
+									texture.Width, texture.Height, 0,
+									OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
+									PixelType.UnsignedByte, texture.Bytes);
+								break;
+						}
+						
 					}
 					if (renderer.ForceLegacyOpenGL == false)
 					{
@@ -475,7 +521,7 @@ namespace LibRender2.Textures
 				return texture;
 			}
 
-			if (texture.BitsPerPixel != 32)
+			if (texture.PixelFormat != PixelFormat.RGBAlpha)
 			{
 				throw new NotSupportedException("The number of bits per pixel is not supported.");
 			}
@@ -540,7 +586,7 @@ namespace LibRender2.Textures
 				}
 			}
 
-			Texture result = new Texture(width, height, 32, bytes, texture.Palette);
+			Texture result = new Texture(width, height, PixelFormat.RGBAlpha, bytes, texture.Palette);
 			return result;
 		}
 
@@ -591,6 +637,10 @@ namespace LibRender2.Textures
 				}
 			}
 			handle.Ignore = false;
+			if (handle.Origin != null && textureCache.ContainsKey(handle.Origin))
+			{
+				textureCache.Remove(handle.Origin);
+			}
 		}
 
 		/// <summary>Unloads all registered textures.</summary>
@@ -601,6 +651,7 @@ namespace LibRender2.Textures
 				UnloadTexture(ref RegisteredTextures[i]);
 			}
 			GC.Collect(); //Speculative- https://bveworldwide.forumotion.com/t1873-object-routeviewer-out-of-memory#19423
+			textureCache.Clear();
 		}
 
 
@@ -695,7 +746,6 @@ namespace LibRender2.Textures
 			}
 
 			return value + 1;
-
 		}
 	}
 }
