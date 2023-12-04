@@ -104,20 +104,29 @@ namespace LibRender2.Objects
 				{
 					if (State.Prototype.Mesh.Materials[face.Material].WrapMode == null)
 					{
-						if (State.Prototype.Mesh.Vertices.Length < 5000)
+						/*
+						 * If the object does not have a stored wrapping mode determine it now. However:
+						 * https://github.com/leezer3/OpenBVE/issues/971
+						 *
+						 * Unfortunately, there appear to be X objects in the wild which expect a non-default wrapping mode
+						 * which means the best fast exit we can do is to check for RepeatRepeat....
+						 *
+						 */ 
+						foreach (VertexTemplate vertex in State.Prototype.Mesh.Vertices)
 						{
-							// If the object does not have a stored wrapping mode and has a sensible number of verticies to check, determine it now
-							foreach (VertexTemplate vertex in State.Prototype.Mesh.Vertices)
+							if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
 							{
-								if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
-								{
-									wrap |= OpenGlTextureWrapMode.RepeatClamp;
-								}
+								wrap |= OpenGlTextureWrapMode.RepeatClamp;
+							}
 
-								if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
-								{
-									wrap |= OpenGlTextureWrapMode.ClampRepeat;
-								}
+							if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
+							{
+								wrap |= OpenGlTextureWrapMode.ClampRepeat;
+							}
+
+							if (wrap == OpenGlTextureWrapMode.RepeatRepeat)
+							{
+								break;
 							}
 						}
 						State.Prototype.Mesh.Materials[face.Material].WrapMode = wrap;
