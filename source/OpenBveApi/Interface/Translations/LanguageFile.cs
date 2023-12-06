@@ -31,6 +31,13 @@ namespace OpenBveApi.Interface {
 			                Language l = new Language(reader, System.IO.Path.GetFileNameWithoutExtension(File));
 			                AvailableLanguages.Add(l);
 		                }
+
+		                using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read))
+		                {
+			                NewLanguage nl = new NewLanguage(stream, File);
+			                int b = 0;
+			                b++;
+		                }
 	                }
 	                catch
 	                {

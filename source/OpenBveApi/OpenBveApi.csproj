@@ -112,6 +112,9 @@
     <Compile Include="Interface\Logging\LogMessage.MessageType.cs" />
     <Compile Include="Interface\Time.cs" />
     <Compile Include="Interface\Translations\Language.cs" />
+    <Compile Include="Interface\Translations\Language\Language.cs" />
+    <Compile Include="Interface\Translations\Language\TranslationGroup.cs" />
+    <Compile Include="Interface\Translations\Language\TranslationString.cs" />
     <Compile Include="Math\Endianness.cs" />
     <Compile Include="Math\Matrix4.cs" />
     <Compile Include="Math\Quaternion.cs" />
