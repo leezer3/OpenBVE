@@ -85,7 +85,7 @@ namespace OpenBveApi.Interface
 				}
 				catch
 				{
-					return;
+					// ignore
 				}
 			}
 		}
@@ -103,25 +103,18 @@ namespace OpenBveApi.Interface
 			{
 				return interfaceString;
 			}
-			else
+
+			for (int i = 0; i < FallbackCodes.Count; i++)
 			{
-				
-				for (int i = 0; i < FallbackCodes.Count; i++)
+					
+				if (Translations.AvailableNewLanguages.ContainsKey(FallbackCodes[i]))
 				{
-					/*
-
-					TO IMPLEMENT IN AVAILABLE LANGUAGES
-
-					if (Translations.AvailableLanguages.ContainsKey(FallbackCodes[i]))
+					// don't overwrite the original string from the file in case someone has just translated the source.....
+					string candidateString = Translations.AvailableNewLanguages[FallbackCodes[i]].GetInterfaceString(stringName, out exists);
+					if (exists)
 					{
-						// don't overwrite the original string from the file in case someone has just translated the source.....
-						string candidateString = Translations.AvailableLanguages[FallbackCodes[i]].GetInterfaceString(stringName, out exists);
-						if (exists)
-						{
-							return candidateString;
-						}
+						return candidateString;
 					}
-					*/
 				}
 			}
 

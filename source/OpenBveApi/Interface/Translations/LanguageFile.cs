@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -34,9 +35,7 @@ namespace OpenBveApi.Interface {
 
 		                using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read))
 		                {
-			                NewLanguage nl = new NewLanguage(stream, File);
-			                int b = 0;
-			                b++;
+			                AvailableNewLanguages.Add(System.IO.Path.GetFileNameWithoutExtension(File), new NewLanguage(stream, File));
 		                }
 	                }
 	                catch
@@ -134,6 +133,8 @@ namespace OpenBveApi.Interface {
 
 		private static readonly List<Language> AvailableLanguages = new List<Language>();
 
-	    
-    }
+		internal static readonly Dictionary<string, NewLanguage> AvailableNewLanguages = new Dictionary<string, NewLanguage>();
+
+
+	}
 }

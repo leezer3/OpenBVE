@@ -49,6 +49,13 @@ namespace OpenBveApi.Interface
 		/// <returns>The translated string</returns>
 		public static string GetInterfaceString(string Name)
 		{
+			if (AvailableNewLanguages.Count != 0)
+			{
+				string s = AvailableNewLanguages[CurrentLanguageCode].GetInterfaceString(Name);
+			}
+			
+
+
 			List<string> FallbackLanguages = new List<string>();
 			//First, we need to find the default langauge file
 			for (int i = 0; i < AvailableLanguages.Count; i++)
