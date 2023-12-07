@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using OpenBveApi.Hosts;
 
 namespace OpenBveApi.Interface
 {
@@ -45,13 +46,16 @@ namespace OpenBveApi.Interface
 
 
 		/// <summary>Fetches a translated user interface string</summary>
+		/// <param name="Application"></param>
 		/// <param name="Name">The name of the string to fetch</param>
 		/// <returns>The translated string</returns>
-		public static string GetInterfaceString(string Name)
+		public static string GetInterfaceString(HostApplication Application, string Name)
 		{
 			if (AvailableNewLanguages.Count != 0)
 			{
-				string s = AvailableNewLanguages[CurrentLanguageCode].GetInterfaceString(Name);
+				string s = AvailableNewLanguages[CurrentLanguageCode].GetInterfaceString(Application, Name);
+				int b = 0;
+				b++;
 			}
 			
 

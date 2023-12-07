@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using OpenBveApi.Hosts;
 
 namespace OpenBveApi.Interface
 {
@@ -91,13 +92,14 @@ namespace OpenBveApi.Interface
 		}
 
 		/// <summary>Gets an interface string unconditionally</summary>
+		/// <param name="hostApplication">The host application</param>
 		/// <param name="stringName">The string to retrieve</param>
 		/// <returns>The translated string</returns>
 		/// <remarks>If the translated string does not exist in the current language, this may return a result from a fallback language file</remarks>
-		public string GetInterfaceString(string stringName)
+		public string GetInterfaceString(HostApplication hostApplication, string stringName)
 		{
 			bool exists;
-			string interfaceString = GetInterfaceString(stringName, out exists);
+			string interfaceString = GetInterfaceString(hostApplication, stringName, out exists);
 
 			if (exists)
 			{
@@ -110,7 +112,7 @@ namespace OpenBveApi.Interface
 				if (Translations.AvailableNewLanguages.ContainsKey(FallbackCodes[i]))
 				{
 					// don't overwrite the original string from the file in case someone has just translated the source.....
-					string candidateString = Translations.AvailableNewLanguages[FallbackCodes[i]].GetInterfaceString(stringName, out exists);
+					string candidateString = Translations.AvailableNewLanguages[FallbackCodes[i]].GetInterfaceString(hostApplication, stringName, out exists);
 					if (exists)
 					{
 						return candidateString;
@@ -121,12 +123,26 @@ namespace OpenBveApi.Interface
 			return interfaceString;
 		}
 
-		private string GetInterfaceString(string stringName, out bool translatedStringExists)
+		private string GetInterfaceString(HostApplication hostApplication, string stringName, out bool translatedStringExists)
 		{
 			translatedStringExists = false;
 			string[] splitParts = stringName.Split('_');
-			TranslationGroup translationGroup = TranslationGroups[splitParts[0]]; // initial group is the program ID
-			for (int i = 1; i < splitParts.Length - 1; i++)
+			TranslationGroup translationGroup;
+			switch (hostApplication)
+			{
+				case HostApplication.OpenBve:
+					translationGroup = TranslationGroups["openbve"];
+					break;
+				case HostApplication.TrainEditor:
+					translationGroup = TranslationGroups["train_editor"];
+					break;
+				case HostApplication.TrainEditor2:
+					translationGroup = TranslationGroups["train_editor2"];
+					break;
+				default:
+					throw new Exception("Untranslated program");
+			}
+			for (int i = 0; i < splitParts.Length - 1; i++)
 			{
 				if(translationGroup.SubGroups.ContainsKey(splitParts[i]))
 				{

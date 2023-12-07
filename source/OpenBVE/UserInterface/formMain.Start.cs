@@ -1286,11 +1286,11 @@ namespace OpenBve
 					textboxRouteEncodingPreview.Text = Description.ConvertNewlinesToCrLf();
 					if (Interface.CurrentOptions.TrainName != null)
 					{
-						checkboxTrainDefault.Text = $@"{Translations.GetInterfaceString("start_train_usedefault")} ({Interface.CurrentOptions.TrainName})";
+						checkboxTrainDefault.Text = $@"{Translations.GetInterfaceString(HostApplication.OpenBve, "start_train_usedefault")} ({Interface.CurrentOptions.TrainName})";
 					}
 					else
 					{
-						checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
+						checkboxTrainDefault.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "start_train_usedefault");
 					}
 
 					Result.ErrorFile = null;
@@ -1304,7 +1304,7 @@ namespace OpenBve
 					pictureboxRouteGradient.Image = null;
 					Result.ErrorFile = Result.RouteFile;
 					Result.RouteFile = null;
-					checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
+					checkboxTrainDefault.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "start_train_usedefault");
 				}
 
 				if (checkboxTrainDefault.Checked)
@@ -1354,7 +1354,7 @@ namespace OpenBve
 			this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
 			TryLoadImage(pictureboxRouteImage, "loading.png");
 			groupboxRouteDetails.Visible = true;
-			textboxRouteDescription.Text = Translations.GetInterfaceString("start_route_processing");
+			textboxRouteDescription.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "start_route_processing");
 
 			// determine encoding
 			if (!UserSelectedEncoding)
@@ -1516,7 +1516,7 @@ namespace OpenBve
 			TryLoadImage(pictureboxTrainImage, "train_error.png");
 			lock (previewLock)
 			{
-				textboxTrainDescription.Text = (Translations.GetInterfaceString("start_train_notfound") + Interface.CurrentOptions.TrainName).ConvertNewlinesToCrLf();
+				textboxTrainDescription.Text = (Translations.GetInterfaceString(HostApplication.OpenBve, "start_train_notfound") + Interface.CurrentOptions.TrainName).ConvertNewlinesToCrLf();
 				comboboxTrainEncoding.Tag = new object();
 				comboboxTrainEncoding.SelectedIndex = 0;
 				comboboxTrainEncoding.Tag = null;

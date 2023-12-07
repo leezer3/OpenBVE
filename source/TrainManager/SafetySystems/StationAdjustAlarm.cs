@@ -1,5 +1,6 @@
 ﻿using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using RouteManager2.MessageManager;
 using SoundManager;
@@ -33,7 +34,7 @@ namespace TrainManager.SafetySystems
 					AdjustAlarm.Play(baseTrain.Cars[baseTrain.DriverCar], false);
 					if (baseTrain.IsPlayerTrain)
 					{
-						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_station_correct"), MessageDependency.None, GameMode.Normal, MessageColor.Orange, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, "message_station_correct"), MessageDependency.None, GameMode.Normal, MessageColor.Orange, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 					}
 					Lit = true;
 				}

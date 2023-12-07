@@ -126,7 +126,7 @@ namespace OpenBve {
 				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 				FileSystem.CreateFileSystem();
 			} catch (Exception ex) {
-				MessageBox.Show(Translations.GetInterfaceString("errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString(HostApplication.OpenBve, "program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
 
@@ -140,7 +140,7 @@ namespace OpenBve {
 			{
 				MessageBox.Show(
 					"You are currently running as the root user, or via the sudo command." + Environment.NewLine +
-					"This is a bad idea, please dont!", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					"This is a bad idea, please dont!", Translations.GetInterfaceString(HostApplication.OpenBve, "program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
 
 
@@ -181,7 +181,7 @@ namespace OpenBve {
 			{
 				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
 				{
-					MessageBox.Show(error, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show(error, Translations.GetInterfaceString(HostApplication.OpenBve, "program_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 				}
 				Game.Reset(false);
@@ -203,7 +203,7 @@ namespace OpenBve {
 
 				if (!CurrentHost.UnloadPlugins(out error))
 				{
-					MessageBox.Show(error, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show(error, Translations.GetInterfaceString(HostApplication.OpenBve, "program_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 				if (!loaded)
 				{
