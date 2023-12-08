@@ -97,7 +97,7 @@ namespace TrainManager.Trains
 			bool success = LoadPlugin(file, trainFolder);
 			if (success == false)
 			{
-				TrainManagerBase.PluginError = Translations.GetInterfaceString(HostApplication.OpenBve, "errors_plugin_failure1").Replace("[plugin]", file);
+				TrainManagerBase.PluginError = Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"errors","plugin_failure1"}).Replace("[plugin]", file);
 			}
 			else
 			{
@@ -187,7 +187,7 @@ namespace TrainManager.Trains
 					AssemblyName myAssembly = AssemblyName.GetAssemblyName(pluginFile);
 					if (IntPtr.Size != 4 && myAssembly.ProcessorArchitecture == ProcessorArchitecture.X86)
 					{
-						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " can only be used with the 32-bit version of " + Translations.GetInterfaceString(HostApplication.OpenBve, "program_title"));
+						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " can only be used with the 32-bit version of " + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"program","title"}));
 						return false;
 					}
 				}
@@ -257,7 +257,7 @@ namespace TrainManager.Trains
 					}
 				}
 
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with" + Translations.GetInterfaceString(HostApplication.OpenBve, "program_title") + ".");
+				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with" + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"program","title"}));
 				return false;
 			}
 
@@ -269,7 +269,7 @@ namespace TrainManager.Trains
 			{
 				if (!Win32Plugin.CheckHeader(pluginFile))
 				{
-					TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " is of an unsupported binary format and therefore cannot be used with "  + Translations.GetInterfaceString(HostApplication.OpenBve, "program_title") + ".");
+					TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " is of an unsupported binary format and therefore cannot be used with "  + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"program","title"}));
 					return false;
 				}
 			}
@@ -321,7 +321,7 @@ namespace TrainManager.Trains
 			}
 
 			Plugin = null;
-			TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with" + Translations.GetInterfaceString(HostApplication.OpenBve, "program_title") + ".");
+			TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with" + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"program","title"}));
 			return false;
 		}
 

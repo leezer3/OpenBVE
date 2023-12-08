@@ -125,7 +125,7 @@ namespace OpenBve {
 				if (Folder == null)
 				{
 					// Unlikely to work, but attempt to make the best of it
-					Program.FileSystem.AppendToLogFile("The route file appears to be stored on a root path- Returning the " + Translations.GetInterfaceString(HostApplication.OpenBve, "program_title") + " startup path.");
+					Program.FileSystem.AppendToLogFile("The route file appears to be stored on a root path- Returning the " + Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program_title"}) + " startup path.");
 					return Application.StartupPath;
 				}
 				string candidate = null;
@@ -164,7 +164,7 @@ namespace OpenBve {
 			{
 				// ignored
 			}
-			Program.FileSystem.AppendToLogFile("No Railway folder found- Returning the " + Translations.GetInterfaceString(HostApplication.OpenBve, "program_title") + " startup path.");
+			Program.FileSystem.AppendToLogFile("No Railway folder found- Returning the " + Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program_title"}) + " startup path.");
 			return Application.StartupPath;
 		}
 
@@ -292,10 +292,10 @@ namespace OpenBve {
 					switch (ex.Message)
 					{
 						case "libopenal.so.1":
-							MessageBox.Show("openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, "program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							MessageBox.Show("openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program_title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 							break;
 						default:
-							MessageBox.Show("The required system library " + ex.Message + " was not found on this system.", Translations.GetInterfaceString(HostApplication.OpenBve, "program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							MessageBox.Show("The required system library " + ex.Message + " was not found on this system.", Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program_title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 							break;
 					}
 				}
@@ -345,7 +345,7 @@ namespace OpenBve {
 					}
 					var currentError = Translations.GetInterfaceString(HostApplication.OpenBve, "errors_critical_file");
 					currentError = currentError.Replace("[file]", System.IO.Path.GetFileName(CurrentRouteFile));
-					MessageBox.Show(currentError, Translations.GetInterfaceString(HostApplication.OpenBve, "program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					MessageBox.Show(currentError, Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program_title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + Program.CurrentHost.Plugins[i].Route.LastException.Message);
 					CrashHandler.LoadingCrash(Program.CurrentHost.Plugins[i].Route.LastException.Message, false);
 					Program.RestartArguments = " ";

@@ -93,13 +93,13 @@ namespace OpenBveApi.Interface
 
 		/// <summary>Gets an interface string unconditionally</summary>
 		/// <param name="hostApplication">The host application</param>
-		/// <param name="stringName">The string to retrieve</param>
+		/// <param name="parameters">The string to retrieve</param>
 		/// <returns>The translated string</returns>
 		/// <remarks>If the translated string does not exist in the current language, this may return a result from a fallback language file</remarks>
-		public string GetInterfaceString(HostApplication hostApplication, string stringName)
+		public string GetInterfaceString(HostApplication hostApplication, string[] parameters)
 		{
 			bool exists;
-			string interfaceString = GetInterfaceString(hostApplication, stringName, out exists);
+			string interfaceString = GetInterfaceString(hostApplication, parameters, out exists);
 
 			if (exists)
 			{
@@ -112,7 +112,7 @@ namespace OpenBveApi.Interface
 				if (Translations.AvailableNewLanguages.ContainsKey(FallbackCodes[i]))
 				{
 					// don't overwrite the original string from the file in case someone has just translated the source.....
-					string candidateString = Translations.AvailableNewLanguages[FallbackCodes[i]].GetInterfaceString(hostApplication, stringName, out exists);
+					string candidateString = Translations.AvailableNewLanguages[FallbackCodes[i]].GetInterfaceString(hostApplication, parameters, out exists);
 					if (exists)
 					{
 						return candidateString;
@@ -123,10 +123,9 @@ namespace OpenBveApi.Interface
 			return interfaceString;
 		}
 
-		private string GetInterfaceString(HostApplication hostApplication, string stringName, out bool translatedStringExists)
+		private string GetInterfaceString(HostApplication hostApplication, string[] parameters, out bool translatedStringExists)
 		{
 			translatedStringExists = false;
-			string[] splitParts = stringName.Split('_');
 			TranslationGroup translationGroup;
 			switch (hostApplication)
 			{
@@ -142,12 +141,12 @@ namespace OpenBveApi.Interface
 				default:
 					throw new Exception("Untranslated program");
 			}
-			for (int i = 0; i < splitParts.Length - 1; i++)
+			for (int i = 0; i < parameters.Length - 1; i++)
 			{
-				if(translationGroup.SubGroups.ContainsKey(splitParts[i]))
+				if(translationGroup.SubGroups.ContainsKey(parameters[i]))
 				{
 					// continue to traverse down the sub-group chain
-					translationGroup = translationGroup.SubGroups[splitParts[i]];
+					translationGroup = translationGroup.SubGroups[parameters[i]];
 				}
 				else
 				{
@@ -157,7 +156,7 @@ namespace OpenBveApi.Interface
 				
 			}
 
-			string stringKey = splitParts[splitParts.Length - 1];
+			string stringKey = parameters[parameters.Length - 1];
 			if (translationGroup.Strings.ContainsKey(stringKey))
 			{
 				if (translationGroup.Strings[stringKey].Translation == null)

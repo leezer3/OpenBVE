@@ -591,7 +591,7 @@ namespace OpenBve {
 				catch
 				{
 					// setting the font failed, so roll back
-					MessageBox.Show(@"Failed to set font " + font.Name, Translations.GetInterfaceString(HostApplication.OpenBve, "program_title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					MessageBox.Show(@"Failed to set font " + font.Name, Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program_title"}), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					SetFont(Controls, oldFont);
 					Interface.CurrentOptions.Font = oldFont;
 					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, oldFont);
@@ -634,7 +634,7 @@ namespace OpenBve {
 		{
 			Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
 			// Main form title bar
-			Text = Translations.GetInterfaceString(HostApplication.OpenBve, "program_title");
+			Text = Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program_title"});
 			/*
 			 * Localisation for strings in main panel
 			 */

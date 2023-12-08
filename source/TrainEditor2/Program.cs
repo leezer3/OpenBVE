@@ -46,7 +46,7 @@ namespace TrainEditor2
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.TrainEditor2, "errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString(HostApplication.TrainEditor2, "program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"errors","filesystem_invalid"}) + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString(HostApplication.TrainEditor2, new string[] {"program_title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
 

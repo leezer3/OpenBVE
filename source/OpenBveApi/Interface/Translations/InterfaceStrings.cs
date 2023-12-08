@@ -45,21 +45,23 @@ namespace OpenBveApi.Interface
 		private static int CurrentInterfaceStringIndex = 0;
 
 
+		public static string GetInterfaceString(HostApplication Application, string[] parameters)
+		{
+			if (AvailableNewLanguages.Count != 0)
+			{
+				return AvailableNewLanguages[CurrentLanguageCode].GetInterfaceString(Application, parameters);
+			}
+
+			return string.Empty;
+		}
+
+
 		/// <summary>Fetches a translated user interface string</summary>
 		/// <param name="Application"></param>
 		/// <param name="Name">The name of the string to fetch</param>
 		/// <returns>The translated string</returns>
 		public static string GetInterfaceString(HostApplication Application, string Name)
 		{
-			if (AvailableNewLanguages.Count != 0)
-			{
-				string s = AvailableNewLanguages[CurrentLanguageCode].GetInterfaceString(Application, Name);
-				int b = 0;
-				b++;
-			}
-			
-
-
 			List<string> FallbackLanguages = new List<string>();
 			//First, we need to find the default langauge file
 			for (int i = 0; i < AvailableLanguages.Count; i++)
@@ -132,6 +134,7 @@ namespace OpenBveApi.Interface
 			//If the string does not exist in the current language or any of the fallback options, return the search string
 			return Name;
 		}
+		
 		/// <summary>The quick-reference strings displayed in-game</summary>
 		public struct InterfaceQuickReference
 		{
