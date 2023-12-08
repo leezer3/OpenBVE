@@ -117,6 +117,11 @@ namespace OpenBveApi.Interface
 					{
 						return candidateString;
 					}
+					else if(string.IsNullOrEmpty(interfaceString))
+					{
+						// requested string does not exist in the target language at all, but does untranslated in a fallback
+						interfaceString = candidateString;
+					}
 				}
 			}
 

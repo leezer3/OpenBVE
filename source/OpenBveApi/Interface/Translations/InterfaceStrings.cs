@@ -49,6 +49,12 @@ namespace OpenBveApi.Interface
 		{
 			if (AvailableNewLanguages.Count != 0)
 			{
+				string s = AvailableNewLanguages[CurrentLanguageCode].GetInterfaceString(Application, parameters);
+				if(string.IsNullOrEmpty(s))
+				{
+					int b = 0;
+					b++;
+				}
 				return AvailableNewLanguages[CurrentLanguageCode].GetInterfaceString(Application, parameters);
 			}
 
