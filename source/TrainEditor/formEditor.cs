@@ -1529,7 +1529,7 @@ namespace TrainEditor {
 			labelExposedFrontalArea.Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"car","exposed_frontal_area"});
 			labelUnexposedFrontalArea.Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"car","unexposed_frontal_area"});
 
-			groupboxDevice.Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"de","device"});
+			groupboxDevice.Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"device","device"});
 			labelConstSpeed.Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"device","const_speed"});
 			labelHoldBrake.Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"device","hold_brake"});
 			labelReAdhesionDevice.Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"device","readhesion_device"});
