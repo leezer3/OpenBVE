@@ -81,7 +81,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Interface;
 
 namespace AssimpNET.Obj
 {
@@ -487,6 +489,12 @@ namespace AssimpNET.Obj
 			if (result == null)
 			{
 				result = texture;
+			}
+
+			if (System.IO.Path.IsPathRooted(result))
+			{
+				// rooted path- try looking beside the object instead
+				result = Path.GetFileName(result);
 			}
 		}
 

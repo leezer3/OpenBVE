@@ -465,6 +465,12 @@ namespace Plugin
 						break;
 					case WavefrontMtlCommands.Map_Kd:
 					case WavefrontMtlCommands.Map_Ka:
+						if(Path.IsPathRooted(Arguments[Arguments.Count - 1]))
+						{
+							// Rooted path should not be used- Try looking beside the object instead
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Encountered rooted path for " + currentKey);
+							Arguments[Arguments.Count - 1] = Path.GetFileName(Arguments[Arguments.Count - 1]);
+						}
 						string tday = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[Arguments.Count - 1]);
 						if (File.Exists(tday))
 						{
