@@ -17,15 +17,15 @@ namespace OpenBve.UserInterface
 			main = (Bitmap)ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\raildriver.png"));
 			pictureBox1.Image = main;
 			buttonCalibrationPrevious.Enabled = false;
-			labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_start");
+			labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_start"});
 			if (Program.Joysticks.RailDriverCount == 0)
 			{
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_notdetected"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","notdetected"}), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Load += (s, e) => Close();
 				return;
 			}
-			buttonCalibrationNext.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_button_next");
-			buttonCalibrationPrevious.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_button_back");
+			buttonCalibrationNext.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_next"});
+			buttonCalibrationPrevious.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_back"});
 		}
 
 		private void formRaildriverCalibration_FormClosing(object sender, FormClosingEventArgs e)
@@ -131,7 +131,7 @@ namespace OpenBve.UserInterface
 			{
 				buttonCalibrationPrevious.Enabled = false;
 			}
-			buttonCalibrationNext.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_button_next");
+			buttonCalibrationNext.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_next"});
 			calibrationStage--;
 			paintImage();
 		}
@@ -142,7 +142,7 @@ namespace OpenBve.UserInterface
 			{
 				case 0:
 					pictureBox1.Image = main;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_start");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_start"});
 					break;
 				case 1:
 					Modified = new Bitmap(main);
@@ -152,7 +152,7 @@ namespace OpenBve.UserInterface
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 234, 284);
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_a");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_a"});
 					break;
 				case 2:
 					Modified = new Bitmap(main);
@@ -162,7 +162,7 @@ namespace OpenBve.UserInterface
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 234, 84);
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_b");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_b"});
 					break;
 				case 3:
 					Modified = new Bitmap(main);
@@ -172,7 +172,7 @@ namespace OpenBve.UserInterface
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 314, 284);
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_c");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_c"});
 					break;
 				case 4:
 					Modified = new Bitmap(main);
@@ -182,7 +182,7 @@ namespace OpenBve.UserInterface
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 314, 84);
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_d");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_d"});
 					break;
 				case 5:
 					Modified = new Bitmap(main);
@@ -192,7 +192,7 @@ namespace OpenBve.UserInterface
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 470, 304);
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_e");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_e"});
 					break;
 				case 6:
 					Modified = new Bitmap(main);
@@ -202,7 +202,7 @@ namespace OpenBve.UserInterface
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 470, 79);
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_f");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_f"});
 					break;
 				case 7:
 					Modified = new Bitmap(main);
@@ -212,7 +212,7 @@ namespace OpenBve.UserInterface
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 630, 304);
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_g");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_g"});
 					break;
 				case 8:
 					Modified = new Bitmap(main);
@@ -222,7 +222,7 @@ namespace OpenBve.UserInterface
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 630, 79);
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_h");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_h"});
 					break;
 				case 9:
 					Modified = new Bitmap(main);
@@ -232,7 +232,7 @@ namespace OpenBve.UserInterface
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_left.png")), 560, 175);
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_i");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_i"});
 					break;
 				case 10:
 					Modified = new Bitmap(main);
@@ -242,7 +242,7 @@ namespace OpenBve.UserInterface
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_right.png")), 690, 175);
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_j");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_j"});
 					break;
 				case 11:
 					Modified = new Bitmap(main);
@@ -251,7 +251,7 @@ namespace OpenBve.UserInterface
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(715, 100, 55, 75));
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_k");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_k"});
 					break;
 				case 12:
 					Modified = new Bitmap(main);
@@ -260,7 +260,7 @@ namespace OpenBve.UserInterface
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(715, 100, 55, 75));
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_l");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_l"});
 					break;
 				case 13:
 					Modified = new Bitmap(main);
@@ -269,7 +269,7 @@ namespace OpenBve.UserInterface
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(715, 210, 55, 75));
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_m");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_m"});
 					break;
 				case 14:
 					Modified = new Bitmap(main);
@@ -278,12 +278,12 @@ namespace OpenBve.UserInterface
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(715, 210, 55, 75));
 					}
 					pictureBox1.Image = Modified;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_n");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_n"});
 					break;
 				case 15:
 					pictureBox1.Image = main;
-					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_calibration_o");
-					buttonCalibrationNext.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_success");
+					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_o"});
+					buttonCalibrationNext.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","success"});
 					break;
 			}
 		}

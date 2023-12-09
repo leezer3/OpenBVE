@@ -567,7 +567,7 @@ namespace OpenBve
 								currentOperation = PackageOperation.Installing;
 								packagePreview = true;
 								instance.PushMenu(MenuType.PackageInstall);
-								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none");
+								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
 							case MenuTag.PackageUninstall:
@@ -580,7 +580,7 @@ namespace OpenBve
 									return;
 								}
 								instance.PushMenu(MenuType.UninstallRoute);
-								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none");
+								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
 							case MenuTag.UninstallTrain:
@@ -589,7 +589,7 @@ namespace OpenBve
 									return;
 								}
 								instance.PushMenu(MenuType.UninstallTrain);
-								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none");
+								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
 							case MenuTag.UninstallOther:
@@ -598,7 +598,7 @@ namespace OpenBve
 									return;
 								}
 								instance.PushMenu(MenuType.UninstallOther);
-								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none");
+								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
 							case MenuTag.File:
@@ -640,7 +640,7 @@ namespace OpenBve
 								break;
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
 								Menu.instance.PushMenu(MenuType.RouteList);
-								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "errors_route_please_select");
+								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","route_please_select"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);	
 								break;
 							case MenuTag.Directory:		// SHOWS THE LIST OF FILES IN THE SELECTED DIR
@@ -754,7 +754,7 @@ namespace OpenBve
 									case MenuType.TrainDefault:
 										SearchDirectory = Program.FileSystem.InitialTrainFolder;
 										Instance.PushMenu(MenuType.TrainList);
-										routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "start_train_choose");
+										routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_choose"});
 										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 										break;
 									case MenuType.ControlReset:
@@ -944,12 +944,12 @@ namespace OpenBve
 					{
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-						Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString(HostApplication.OpenBve, "start_train_choose") : Translations.GetInterfaceString(HostApplication.OpenBve, "start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+						Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_choose"}) : Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","start_start"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
 					}
 					else
 					{
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-						Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString(HostApplication.OpenBve, "start_train_choose") : Translations.GetInterfaceString(HostApplication.OpenBve, "start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, allowNextPhase ? Color128.White : Color128.Grey);
+						Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_choose"}) : Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","start_start"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, allowNextPhase ? Color128.White : Color128.Grey);
 					}
 					break;
 				}
@@ -962,12 +962,12 @@ namespace OpenBve
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_button"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
 						}
 						else
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_button"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
 						}
 					}
 					break;
@@ -992,12 +992,12 @@ namespace OpenBve
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, "packages_uninstall_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_button"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
 						}
 						else
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, "packages_uninstall_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_button"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
 						}
 					}
 					break;

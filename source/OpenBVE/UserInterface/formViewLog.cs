@@ -18,7 +18,7 @@ namespace OpenBve.UserInterface
 		private void SetText(string text)
 		{
 			var originalTitle = Text;
-			Text += Translations.GetInterfaceString(HostApplication.OpenBve, "message_loading");
+			Text += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","loading"});
 			Shown += (sender, e) => {
 				textBoxLog.Text = text;
 				Text = originalTitle;

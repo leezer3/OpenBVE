@@ -73,13 +73,13 @@ namespace OpenBve {
 			switch (InputDevicePlugin.AvailablePluginInfos[Index].Status)
 			{
 				case InputDevicePlugin.PluginInfo.PluginStatus.Failure:
-					Item.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, "options_input_device_plugin_status_failure");
+					Item.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_status_failure"});
 					break;
 				case InputDevicePlugin.PluginInfo.PluginStatus.Disable:
-					Item.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, "options_input_device_plugin_status_disable");
+					Item.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_status_disable"});
 					break;
 				case InputDevicePlugin.PluginInfo.PluginStatus.Enable:
-					Item.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, "options_input_device_plugin_status_enable");
+					Item.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_status_enable"});
 					break;
 			}
 			Item.SubItems[2].Text = InputDevicePlugin.AvailablePluginInfos[Index].Version.Version;

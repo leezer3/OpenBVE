@@ -109,11 +109,11 @@ namespace OpenBve
 		}
 
 		private void ApplyLanguage() {
-			this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "about_title");
-			textBoxMain.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "about_description");
-			label1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "about_open_source_licenses");
-			labelOpenSourceHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "about_open_source_licenses_header");
-			buttonClose.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "about_close");
+			this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","title"});
+			textBoxMain.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","description"});
+			label1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","open_source_licenses"});
+			labelOpenSourceHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","open_source_licenses_header"});
+			buttonClose.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","close"});
 		}
 
 		private void buttonClose_Click(object sender, EventArgs e)

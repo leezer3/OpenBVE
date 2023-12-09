@@ -37,7 +37,7 @@ namespace OpenBve
 		{
 			if (Database.SaveDatabase() == false)
 			{
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_database_save_error"));
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","database_save_error"}));
 			}
 
 			if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out string errorMessage))
@@ -60,26 +60,26 @@ namespace OpenBve
 		{
 			if (currentOperation == PackageOperation.Creating)
 			{
-				if (textBoxPackageName.Text == Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none"))
+				if (textBoxPackageName.Text == Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"}))
 				{
-					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_name"));
+					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_name"}));
 					return;
 				}
-				if (textBoxPackageAuthor.Text == Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none"))
+				if (textBoxPackageAuthor.Text == Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"}))
 				{
-					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_author"));
+					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_author"}));
 					return;
 				}
 				//LINK: Doesn't need checking
 
-				if (textBoxPackageDescription.Text == Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none"))
+				if (textBoxPackageDescription.Text == Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"}))
 				{
-					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_description"));
+					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_description"}));
 					return;
 				}
 				if (!Version.TryParse(textBoxPackageVersion.Text, out currentPackage.PackageVersion))
 				{
-					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_version"));
+					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_version"}));
 					return;
 				}
 				//Only set properties after making the checks
@@ -118,8 +118,8 @@ namespace OpenBve
 			{
 				//We are missing a dependancy
 
-				labelDependancyErrorHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_dependancies_unmet_header");
-				labelMissingDependanciesText1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_dependancies_unmet");
+				labelDependancyErrorHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_dependancies_unmet_header"});
+				labelMissingDependanciesText1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_dependancies_unmet"});
 				PopulatePackageList(Dependancies, dataGridViewDependancies, false, false, false);
 				HidePanels();
 				panelDependancyError.Show();
@@ -130,8 +130,8 @@ namespace OpenBve
 			{
 				//We are missing a reccomendation
 
-				labelDependancyErrorHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_reccomends_unmet_header");
-				labelMissingDependanciesText1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_reccomends_unmet");
+				labelDependancyErrorHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_reccomends_unmet_header"});
+				labelMissingDependanciesText1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_reccomends_unmet"});
 				PopulatePackageList(Reccomendations, dataGridViewDependancies, false, false, false);
 				HidePanels();
 				panelDependancyError.Show();
@@ -161,15 +161,15 @@ namespace OpenBve
 				switch (Info)
 				{
 					case VersionInformation.NewerVersion:
-						labelVersionError.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_version_new");
+						labelVersionError.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_version_new"});
 						labelCurrentVersionNumber.Text = oldPackage.PackageVersion.ToString();
 						break;
 					case VersionInformation.SameVersion:
-						labelVersionError.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_version_same");
+						labelVersionError.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_version_same"});
 						labelCurrentVersionNumber.Text = currentPackage.PackageVersion.ToString();
 						break;
 					case VersionInformation.OlderVersion:
-						labelVersionError.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_version_old");
+						labelVersionError.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_version_old"});
 						labelCurrentVersionNumber.Text = oldPackage.PackageVersion.ToString();
 						break;
 				}
@@ -200,7 +200,7 @@ namespace OpenBve
 				else
 				{
 					//ReadPackage returns null if the file is not a package.....
-					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_invalid"));
+					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_invalid"}));
 				}
 			}
 		}
@@ -243,7 +243,7 @@ namespace OpenBve
 			}
 			else
 			{
-				linkLabelPackageWebsite.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none_website");
+				linkLabelPackageWebsite.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none_website"});
 			}
 
 			if (currentPackage.PackageImage != null)
@@ -278,7 +278,7 @@ namespace OpenBve
 			}
 			else
 			{
-				labelMissingDependanciesText1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_dependancies_unmet");
+				labelMissingDependanciesText1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_dependancies_unmet"});
 				Extract(oldPackage);
 			}
 			
@@ -288,7 +288,7 @@ namespace OpenBve
 		{
 			if (workerThread.IsBusy)
 			{
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_error_ busy_thread"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","error_busy_thread"}), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
 				return;
 			}
 			ProblemEncountered = false;
@@ -368,9 +368,9 @@ namespace OpenBve
 							break;
 					}
 					Database.currentDatabase.AddDependancies(currentPackage);
-					labelInstallSuccess1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_success");
-					labelInstallSuccess2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_success_header");
-					labelListFilesInstalled.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_success_files");
+					labelInstallSuccess1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_success"});
+					labelInstallSuccess2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_success_header"});
+					labelListFilesInstalled.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_success_files"});
 				}
 				panelPleaseWait.Hide();
 				panelSuccess.Show();
@@ -410,23 +410,23 @@ namespace OpenBve
 			ProblemEncountered = true;
 			if (currentOperation != PackageOperation.Creating)
 			{
-				labelInstallSuccess1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_failure");
-				labelInstallSuccess2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_failure_header");
+				labelInstallSuccess1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_failure"});
+				labelInstallSuccess2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_failure_header"});
 			}
 			else
 			{
-				labelInstallSuccess1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_failure");
-				labelInstallSuccess2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_failure_header");
+				labelInstallSuccess1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_failure"});
+				labelInstallSuccess2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_failure_header"});
 			}
-			labelListFilesInstalled.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_failure_error");
-			buttonInstallFinish.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_success");
+			labelListFilesInstalled.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_failure_error"});
+			buttonInstallFinish.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","success"});
 			if (e.Exception is UnauthorizedAccessException && currentOperation != PackageOperation.Creating)
 			{
 				//User attempted to install in a directory which requires UAC access
-				textBoxFilesInstalled.Text = e.Exception.Message + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, "errors_security_checkaccess");
+				textBoxFilesInstalled.Text = e.Exception.Message + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","security_checkaccess"});
 				if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 				{
-					textBoxFilesInstalled.Text+= Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, "errors_security_badlocation");
+					textBoxFilesInstalled.Text+= Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors_security_badlocation"});
 				}
 			}
 			else
@@ -479,7 +479,7 @@ namespace OpenBve
 						{
 							packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion,
 							packageList[i].PackageType.ToString(),
-							Translations.GetInterfaceString(HostApplication.OpenBve, "packages_dependancy"), packageList[i].GUID
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","dependancy"}), packageList[i].GUID
 						};
 					}
 					else if (isRecommendation)
@@ -488,7 +488,7 @@ namespace OpenBve
 						{
 							packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion,
 							packageList[i].PackageType.ToString(),
-							Translations.GetInterfaceString(HostApplication.OpenBve, "packages_recommendation"), packageList[i].GUID
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","recommendation"}), packageList[i].GUID
 						};
 					}
 					else
@@ -549,7 +549,7 @@ namespace OpenBve
 			if (brokenDependancies.Count != 0 && force == false)
 			{
 				PopulatePackageList(brokenDependancies, dataGridViewDependancies, false, false, false);
-				labelMissingDependanciesText1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_uninstall_broken");
+				labelMissingDependanciesText1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_broken"});
 				HidePanels();
 				panelDependancyError.Show();
 				return;
@@ -569,20 +569,20 @@ namespace OpenBve
 						DatabaseFunctions.cleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref uninstallResults);
 						break;
 				}
-				labelUninstallSuccess.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_uninstall_success");
-				labelUninstallSuccessHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_uninstall_success_header");
+				labelUninstallSuccess.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_success"});
+				labelUninstallSuccessHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_success_header"});
 				textBoxUninstallResult.Text = uninstallResults;
 				HidePanels();
 				panelUninstallResult.Show();
 			}
 			else
 			{
-				labelUninstallSuccess.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_uninstall_success");
-				labelUninstallSuccessHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_uninstall_success_header");
+				labelUninstallSuccess.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_success"});
+				labelUninstallSuccessHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_success_header"});
 				if (uninstallResults == null)
 				{
 					//Uninstall requires an XML list of files, and these were missing.......
-					textBoxUninstallResult.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_uninstall_missing_xml");
+					textBoxUninstallResult.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_missing_xml"});
 					currentPackage = packageToUninstall;
 					RemoveFromDatabase = false;
 				}
@@ -681,7 +681,7 @@ namespace OpenBve
 			}
 			else
 			{
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none"), Translations.GetInterfaceString(HostApplication.OpenBve, "packages_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 
@@ -693,7 +693,7 @@ namespace OpenBve
 				//prompt as to whether the user would like to remove the broken package
 				if (RemoveFromDatabase == false)
 				{
-					if (MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_uninstall_database_remove"), Translations.GetInterfaceString(HostApplication.OpenBve, "packages_title"), MessageBoxButtons.YesNo) == DialogResult.Yes)
+					if (MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_database_remove"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","title"}), MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
 						RemoveFromDatabase = true;
 					}
@@ -723,8 +723,8 @@ namespace OpenBve
 		private void buttonInstallPackage_Click(object sender, EventArgs e)
 		{
 			currentPackage = null;
-			labelInstallText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_header");
-			buttonBack2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_button_cancel");
+			labelInstallText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_header"});
+			buttonBack2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_cancel"});
 			TryLoadImage(pictureBoxPackageImage, "route_error.png");
 			HidePanels();
 			panelPackageInstall.Show();
@@ -736,21 +736,21 @@ namespace OpenBve
 			switch (dependantPackage.PackageType)
 			{
 				case PackageType.Route:
-					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_dependancies_add")) == DialogResult.OK)
+					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_dependancies_add"})) == DialogResult.OK)
 					{
 						AddDependendsReccomends(dependantPackage, ref currentPackage.Dependancies, false);
 						dependantPackage = null;
 					}
 					break;
 				case PackageType.Train:
-					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_dependancies_add")) == DialogResult.OK)
+					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_dependancies_add"})) == DialogResult.OK)
 					{
 						AddDependendsReccomends(dependantPackage, ref currentPackage.Dependancies, false);
 						dependantPackage = null;
 					}
 					break;
 				case PackageType.Other:
-					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_dependancies_add")) == DialogResult.OK)
+					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_dependancies_add"})) == DialogResult.OK)
 					{
 						AddDependendsReccomends(dependantPackage, ref currentPackage.Dependancies, false);
 						dependantPackage = null;
@@ -764,21 +764,21 @@ namespace OpenBve
 			switch (dependantPackage.PackageType)
 			{
 				case PackageType.Route:
-					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_reccomends_add")) == DialogResult.OK)
+					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_reccomends_add"})) == DialogResult.OK)
 					{
 						AddDependendsReccomends(dependantPackage, ref currentPackage.Reccomendations, true);
 						dependantPackage = null;
 					}
 					break;
 				case PackageType.Train:
-					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_reccomends_add")) == DialogResult.OK)
+					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_reccomends_add"})) == DialogResult.OK)
 					{
 						AddDependendsReccomends(dependantPackage, ref currentPackage.Reccomendations, true);
 						dependantPackage = null;
 					}
 					break;
 				case PackageType.Other:
-					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_reccomends_add")) == DialogResult.OK)
+					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_reccomends_add"})) == DialogResult.OK)
 					{
 						AddDependendsReccomends(dependantPackage, ref currentPackage.Reccomendations, true);
 						dependantPackage = null;
@@ -841,7 +841,7 @@ namespace OpenBve
 				var key = dataGridViewPackages3.Rows[row].Cells[dataGridViewPackages3.ColumnCount - 1].Value.ToString();
 				selectedDependacies.Remove(key);
 
-				if (dataGridViewPackages3.Rows[row].Cells[dataGridViewPackages3.ColumnCount - 2].Value.ToString() == Translations.GetInterfaceString(HostApplication.OpenBve, "packages_dependancy"))
+				if (dataGridViewPackages3.Rows[row].Cells[dataGridViewPackages3.ColumnCount - 2].Value.ToString() == Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","dependancy"}))
 				{
 					currentPackage.Dependancies.Remove(currentPackage.Dependancies.FirstOrDefault(x => x.GUID == key));
 				}
@@ -875,7 +875,7 @@ namespace OpenBve
 		{
 			if (workerThread.IsBusy)
 			{
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_error_ busy_thread"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","error_busy_thread"}), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
 				return;
 			}
 			var directory = Path.GetDirectoryName(currentPackage.FileName);
@@ -909,24 +909,24 @@ namespace OpenBve
 					if (ex.Message == string.Empty)
 					{
 						//Our filename is blank
-						MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_filename_empty"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","filename_empty"}), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					}
 					else
 					{
 						//Directory doesn't exist
-						MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_directory_missing") + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","directory_missing"}) + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					}
 
 				}
 				else if (ex is UnauthorizedAccessException)
 				{
 					//No permissions from access control
-					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_directory_nowrite") + directory, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","directory_nowrite"}) + directory, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				}
 				else
 				{
 					//Generic error
-					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_file_generic") + currentPackage.FileName, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","file_generic"}) + currentPackage.FileName, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				}
 				return;
 			}
@@ -950,10 +950,10 @@ namespace OpenBve
 						}
 					}
 					textBoxFilesInstalled.Text = text;
-					labelInstallSuccess1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_success");
-					labelInstallSuccess2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_success_header");
-					labelListFilesInstalled.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_success_files");
-					buttonInstallFinish.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_success");
+					labelInstallSuccess1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_success"});
+					labelInstallSuccess2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_success_header"});
+					labelListFilesInstalled.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_success_files"});
+					buttonInstallFinish.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","success"});
 				}
 				panelPleaseWait.Hide();
 				panelSuccess.Show();
@@ -971,7 +971,7 @@ namespace OpenBve
 
 			if (filesToPackage == null || filesToPackage.Count == 0)
 			{
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_invalid_nofiles"));
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_invalid_nofiles"}));
 				return;
 			}
 			currentPackage.FileName = textBoxPackageFileName.Text;
@@ -987,7 +987,7 @@ namespace OpenBve
 			if (fi == null)
 			{
 				//The supplied filename was invalid
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_invalid_filename"));
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_invalid_filename"}));
 				return;
 			}
 			try
@@ -997,10 +997,10 @@ namespace OpenBve
 			catch
 			{
 				//The file is locked or otherwise unavailable
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_invalid_filename"));
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_invalid_filename"}));
 				return;
 			}
-			buttonSelectPackage.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_proceed");
+			buttonSelectPackage.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_proceed"});
 			currentOperation = PackageOperation.Creating;
 			switch (newPackageType)
 			{
@@ -1014,7 +1014,7 @@ namespace OpenBve
 					TryLoadImage(pictureBoxPackageImage, "logo.png");
 					break;
 			}
-			labelInstallText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_header");
+			labelInstallText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_header"});
 			textBoxPackageName.Text = currentPackage.Name;
 			textBoxPackageVersion.Text = currentPackage.Version;
 			textBoxPackageAuthor.Text = currentPackage.Author;
@@ -1069,7 +1069,7 @@ namespace OpenBve
 				if (Database.currentDatabase.InstalledRoutes.Count == 0 && Database.currentDatabase.InstalledTrains.Count == 0 && Database.currentDatabase.InstalledOther.Count == 0)
 				{
 					//There are no packages available to replace....
-					string test = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_replace_noneavailable");
+					string test = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","replace_noneavailable"});
 					MessageBox.Show(test);
 					radioButtonQ1No.Checked = true;
 					return;
@@ -1265,7 +1265,7 @@ namespace OpenBve
 				MinimizeBox = false,
 				StartPosition = FormStartPosition.CenterScreen,
 				ClientSize = size,
-				Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_list_website")
+				Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_website"})
 			};
 			TextBox textBox = new TextBox
 			{
@@ -1280,7 +1280,7 @@ namespace OpenBve
 				DialogResult = DialogResult.OK,
 				Name = "okButton",
 				Size = new Size(75, 26),
-				Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_button_ok"),
+				Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_ok"}),
 				Location = new Point(size.Width - 80 - 80, 39)
 			};
 			inputBox.Controls.Add(okButton);
@@ -1290,7 +1290,7 @@ namespace OpenBve
 				DialogResult = DialogResult.Cancel,
 				Name = "cancelButton",
 				Size = new Size(75, 26),
-				Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_button_cancel"),
+				Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_cancel"}),
 				Location = new Point(size.Width - 80, 39)
 			};
 			inputBox.Controls.Add(cancelButton);
@@ -1320,7 +1320,7 @@ namespace OpenBve
 
 			Label minLabel = new Label
 			{
-				Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_list_minimum"),
+				Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_minimum"}),
 				Location = new Point(5, 6),
 			};
 			inputBox.Controls.Add(minLabel);
@@ -1335,7 +1335,7 @@ namespace OpenBve
 
 			Label maxLabel = new Label
 			{
-				Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_list_maximum"),
+				Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_maximum"}),
 				Location = new Point(5, 26),
 			};
 			inputBox.Controls.Add(maxLabel);
@@ -1353,7 +1353,7 @@ namespace OpenBve
 				DialogResult = DialogResult.OK,
 				Name = "okButton",
 				Size = new Size(75, 23),
-				Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_button_ok"),
+				Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_ok"}),
 				Location = new Point(size.Width - 80 - 80, 49)
 			};
 			inputBox.Controls.Add(okButton);
@@ -1363,7 +1363,7 @@ namespace OpenBve
 				DialogResult = DialogResult.Cancel,
 				Name = "cancelButton",
 				Size = new Size(75, 23),
-				Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_button_cancel"),
+				Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_cancel"}),
 				Location = new Point(size.Width - 80, 49)
 			};
 			inputBox.Controls.Add(cancelButton);
@@ -1394,7 +1394,7 @@ namespace OpenBve
 			}
 			catch
 			{
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_version_invalid"));
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_version_invalid"}));
 			}
 			return result;
 		}
@@ -1490,7 +1490,7 @@ namespace OpenBve
 				//Don't crash if we haven't selected a package to replace....
 				return;
 			}
-			labelNewGUID.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_replace_id");
+			labelNewGUID.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_replace_id"});
 			textBoxGUID.Text = currentPackage.GUID;
 			panelNewPackage.Enabled = true;
 			addPackageItemsButton.Enabled = true;
@@ -1505,7 +1505,7 @@ namespace OpenBve
 		{
 			savePackageDialog = new SaveFileDialog
 			{
-				Title = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_save"),
+				Title = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_save"}),
 				CheckPathExists = true,
 				DefaultExt = "zip",
 				Filter = @"ZIP files (*.zip)|*.zip|All files (*.*)|*.*",
@@ -1652,17 +1652,17 @@ namespace OpenBve
 			dataGridViewPackages2.Rows.Clear();
 			dataGridViewPackages3.Rows.Clear();
 			//Reset text
-			textBoxPackageAuthor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none");
-			textBoxPackageName.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none");
-			textBoxPackageDescription.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none");
-			textBoxPackageVersion.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none");
-			buttonSelectPackage.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_install_select");
-			labelNewGUID.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_creation_new_id");
+			textBoxPackageAuthor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
+			textBoxPackageName.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
+			textBoxPackageDescription.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
+			textBoxPackageVersion.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
+			buttonSelectPackage.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_select"});
+			labelNewGUID.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_new_id"});
 			linkLabelPackageWebsite.Links.Clear();
-			linkLabelPackageWebsite.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_selection_none_website");
+			linkLabelPackageWebsite.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none_website"});
 			LinkLabel.Link link = new LinkLabel.Link { LinkData = null };
 			linkLabelPackageWebsite.Links.Add(link);
-			buttonBack2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, "packages_button_back");
+			buttonBack2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_back"});
 			buttonNext.Enabled = false;
 			buttonSelectPackage.Visible = true;
 			//Reset the worker thread

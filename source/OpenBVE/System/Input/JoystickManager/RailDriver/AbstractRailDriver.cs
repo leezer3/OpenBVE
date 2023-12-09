@@ -120,7 +120,7 @@ namespace OpenBve.Input
 					Calibration[i] = new AxisCalibration();
 				}
 
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, "raildriver_config_error"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","config_error"}), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				//Clear the calibration file
 				File.Delete(calibrationFile);
 			}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Hosts;
@@ -12,19 +12,19 @@ namespace OpenBve
 		/// <param name="TextToken">The in-game score event</param>
 		internal static string GetScoreText(Game.ScoreTextToken TextToken) {
 			switch (TextToken) {
-					case Game.ScoreTextToken.Overspeed: return Translations.GetInterfaceString(HostApplication.OpenBve, "score_overspeed");
-					case Game.ScoreTextToken.PassedRedSignal: return Translations.GetInterfaceString(HostApplication.OpenBve, "score_redsignal");
-					case Game.ScoreTextToken.Toppling: return Translations.GetInterfaceString(HostApplication.OpenBve, "score_toppling");
-					case Game.ScoreTextToken.Derailed: return Translations.GetInterfaceString(HostApplication.OpenBve, "score_derailed");
-					case Game.ScoreTextToken.PassengerDiscomfort: return Translations.GetInterfaceString(HostApplication.OpenBve, "score_discomfort");
-					case Game.ScoreTextToken.DoorsOpened: return Translations.GetInterfaceString(HostApplication.OpenBve, "score_doors");
-					case Game.ScoreTextToken.ArrivedAtStation: return Translations.GetInterfaceString(HostApplication.OpenBve, "score_station_arrived");
-					case Game.ScoreTextToken.PerfectTimeBonus: return Translations.GetInterfaceString(HostApplication.OpenBve, "score_station_perfecttime");
-					case Game.ScoreTextToken.Late: return Translations.GetInterfaceString(HostApplication.OpenBve, "score_station_late");
-					case Game.ScoreTextToken.PerfectStopBonus: return Translations.GetInterfaceString(HostApplication.OpenBve, "score_station_perfectstop");
-					case Game.ScoreTextToken.Stop: return Translations.GetInterfaceString(HostApplication.OpenBve, "score_station_stop");
-					case Game.ScoreTextToken.PrematureDeparture: return Translations.GetInterfaceString(HostApplication.OpenBve, "score_station_departure");
-					case Game.ScoreTextToken.Total: return Translations.GetInterfaceString(HostApplication.OpenBve, "score_station_total");
+					case Game.ScoreTextToken.Overspeed: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","overspeed"});
+					case Game.ScoreTextToken.PassedRedSignal: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","redsignal"});
+					case Game.ScoreTextToken.Toppling: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","toppling"});
+					case Game.ScoreTextToken.Derailed: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","derailed"});
+					case Game.ScoreTextToken.PassengerDiscomfort: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","discomfort"});
+					case Game.ScoreTextToken.DoorsOpened: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","doors"});
+					case Game.ScoreTextToken.ArrivedAtStation: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_arrived"});
+					case Game.ScoreTextToken.PerfectTimeBonus: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_perfecttime"});
+					case Game.ScoreTextToken.Late: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_late"});
+					case Game.ScoreTextToken.PerfectStopBonus: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_perfectstop"});
+					case Game.ScoreTextToken.Stop: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_stop"});
+					case Game.ScoreTextToken.PrematureDeparture: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_departure"});
+					case Game.ScoreTextToken.Total: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_total"});
 					default: return "?";
 			}
 		}
@@ -36,11 +36,11 @@ namespace OpenBve
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 			string[][] Lines = new string[Game.ScoreLogCount + 1][];
 			Lines[0] = new[] {
-				Translations.GetInterfaceString(HostApplication.OpenBve, "log_time"),
-				Translations.GetInterfaceString(HostApplication.OpenBve, "log_position"),
-				Translations.GetInterfaceString(HostApplication.OpenBve, "log_value"),
-				Translations.GetInterfaceString(HostApplication.OpenBve, "log_cumulative"),
-				Translations.GetInterfaceString(HostApplication.OpenBve, "log_reason")
+				Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","time"}),
+				Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","position"}),
+				Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","value"}),
+				Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","cumulative"}),
+				Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","reason"})
 			};
 			int Columns = Lines[0].Length;
 			int TotalScore = 0;
@@ -81,11 +81,11 @@ namespace OpenBve
 				Builder.Append("╗\n");
 				{
 					Builder.Append('║');
-					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, "log_route") + " " + Game.LogRouteName).PadRight(TotalWidth, ' '));
+					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","route"}) + " " + Game.LogRouteName).PadRight(TotalWidth, ' '));
 					Builder.Append("║\n║");
-					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, "log_train") + " " + Game.LogTrainName).PadRight(TotalWidth, ' '));
+					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","train"}) + " " + Game.LogTrainName).PadRight(TotalWidth, ' '));
 					Builder.Append("║\n║");
-					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, "log_date") + " " + Game.LogDateTime.ToString("yyyy-MM-dd HH:mm:ss", Culture)).PadRight(TotalWidth, ' '));
+					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","date"}) + " " + Game.LogDateTime.ToString("yyyy-MM-dd HH:mm:ss", Culture)).PadRight(TotalWidth, ' '));
 					Builder.Append("║\n");
 				}
 				Builder.Append('╠');
@@ -99,17 +99,17 @@ namespace OpenBve
 					if (index >= Translations.RatingsCount) index = Translations.RatingsCount - 1;
 					string s;
 					switch (Interface.CurrentOptions.PreviousGameMode) {
-							case GameMode.Arcade: s = Translations.GetInterfaceString(HostApplication.OpenBve, "mode_arcade"); break;
-							case GameMode.Normal: s = Translations.GetInterfaceString(HostApplication.OpenBve, "mode_normal"); break;
-							case GameMode.Expert: s = Translations.GetInterfaceString(HostApplication.OpenBve, "mode_expert"); break;
-							default: s = Translations.GetInterfaceString(HostApplication.OpenBve, "mode_unknown"); break;
+							case GameMode.Arcade: s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","arcade"}); break;
+							case GameMode.Normal: s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","normal"}); break;
+							case GameMode.Expert: s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","expert"}); break;
+							default: s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","unknown"}); break;
 					}
 					Builder.Append('║');
-					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, "log_mode") + " " + s).PadRight(TotalWidth, ' '));
+					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","mode"}) + " " + s).PadRight(TotalWidth, ' '));
 					Builder.Append("║\n║");
-					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, "log_score") + " " + Game.CurrentScore.CurrentValue.ToString(Culture) + " / " + Game.CurrentScore.Maximum.ToString(Culture)).PadRight(TotalWidth, ' '));
+					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","score"}) + " " + Game.CurrentScore.CurrentValue.ToString(Culture) + " / " + Game.CurrentScore.Maximum.ToString(Culture)).PadRight(TotalWidth, ' '));
 					Builder.Append("║\n║");
-					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, "log_rating") + " " + Translations.GetInterfaceString(HostApplication.OpenBve, "rating_" + index.ToString(Culture)) + " (" + (100.0 * ratio).ToString("0.00") + "%)").PadRight(TotalWidth, ' '));
+					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"log","rating"}) + " " + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"rating" , index.ToString(Culture)}) + " (" + (100.0 * ratio).ToString("0.00") + "%)").PadRight(TotalWidth, ' '));
 					Builder.Append("║\n");
 				}
 			}

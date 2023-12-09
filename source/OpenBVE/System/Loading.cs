@@ -343,9 +343,9 @@ namespace OpenBve {
 						loaded = true;
 						break;
 					}
-					var currentError = Translations.GetInterfaceString(HostApplication.OpenBve, "errors_critical_file");
+					var currentError = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","critical_file"});
 					currentError = currentError.Replace("[file]", System.IO.Path.GetFileName(CurrentRouteFile));
-					MessageBox.Show(currentError, Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					MessageBox.Show(currentError, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + Program.CurrentHost.Plugins[i].Route.LastException.Message);
 					CrashHandler.LoadingCrash(Program.CurrentHost.Plugins[i].Route.LastException.Message, false);
 					Program.RestartArguments = " ";

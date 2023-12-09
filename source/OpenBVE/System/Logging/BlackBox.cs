@@ -223,14 +223,14 @@ namespace OpenBve
 						System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 						string[][] Lines = new string[Game.BlackBoxEntryCount + 1][];
 						Lines[0] = new[] {
-							Translations.GetInterfaceString(HostApplication.OpenBve, "log_time"),
-							Translations.GetInterfaceString(HostApplication.OpenBve, "log_position"),
-							Translations.GetInterfaceString(HostApplication.OpenBve, "log_speed"),
-							Translations.GetInterfaceString(HostApplication.OpenBve, "log_acceleration"),
-							Translations.GetInterfaceString(HostApplication.OpenBve, "log_reverser"),
-							Translations.GetInterfaceString(HostApplication.OpenBve, "log_power"),
-							Translations.GetInterfaceString(HostApplication.OpenBve, "log_brake"),
-							Translations.GetInterfaceString(HostApplication.OpenBve, "log_event"),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","time"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","position"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","speed"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","acceleration"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","reverser"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","power"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","brake"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","event"}),
 						};
 						int Columns = Lines[0].Length;
 						for (int i = 0; i < Game.BlackBoxEntryCount; i++)
@@ -348,11 +348,11 @@ namespace OpenBve
 							Builder.Append("╗\r\n");
 							{
 								Builder.Append('║');
-								Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, "log_route") + " " + Game.LogRouteName).PadRight(TotalWidth, ' '));
+								Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","route"}) + " " + Game.LogRouteName).PadRight(TotalWidth, ' '));
 								Builder.Append("║\r\n║");
-								Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, "log_train") + " " + Game.LogTrainName).PadRight(TotalWidth, ' '));
+								Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","train"}) + " " + Game.LogTrainName).PadRight(TotalWidth, ' '));
 								Builder.Append("║\r\n║");
-								Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, "log_date") + " " + Game.LogDateTime.ToString("yyyy-MM-dd HH:mm:ss", Culture)).PadRight(TotalWidth, ' '));
+								Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","date"}) + " " + Game.LogDateTime.ToString("yyyy-MM-dd HH:mm:ss", Culture)).PadRight(TotalWidth, ' '));
 								Builder.Append("║\r\n");
 							}
 						}
