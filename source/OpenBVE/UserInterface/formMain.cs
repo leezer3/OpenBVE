@@ -801,7 +801,7 @@ namespace OpenBve {
 			tabpageRouteGradient.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_gradient"});
 			tabpageRouteSettings.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_settings"});
 			labelRouteEncoding.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_settings_encoding"});
-			comboboxRouteEncoding.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"(UTF-8)"});
+			comboboxRouteEncoding.Items[0] = @"(UTF-8)";
 			labelRouteEncodingPreview.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_settings_encoding_preview"});
 			labelTrain.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train"});
 			groupboxTrainSelection.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_selection"});
@@ -815,7 +815,7 @@ namespace OpenBve {
 			tabpageTrainSettings.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_settings"});
 			labelTrainEncoding.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_settings_encoding"});
 			labelReverseConsist.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_settings_reverseconsist"});
-			comboboxTrainEncoding.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"(UTF-8)"});
+			comboboxTrainEncoding.Items[0] = @"(UTF-8)";
 			labelTrainEncodingPreview.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_settings_encoding_preview"});
 			labelStart.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","start"});
 			labelMode.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","start_mode"});
