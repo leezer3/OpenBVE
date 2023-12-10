@@ -289,8 +289,8 @@ namespace OpenBve
 										int k = (int)Math.Floor(y * Translations.RatingsCount);
 										if (k >= Translations.RatingsCount) k = Translations.RatingsCount - 1;
 										System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-										AddScore(Translations.GetInterfaceString(HostApplication.OpenBve, "score_rating"), 20.0);
-										AddScore(Translations.GetInterfaceString(HostApplication.OpenBve, "rating_" + k.ToString(Culture)) + " (" + (100.0 * y).ToString("0.00", Culture) + "%)", 20.0);
+										AddScore(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","rating"}), 20.0);
+										AddScore(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"rating" , k.ToString(Culture)}) + " (" + (100.0 * y).ToString("0.00", Culture) + "%)", 20.0);
 									}
 								}
 							}

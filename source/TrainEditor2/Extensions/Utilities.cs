@@ -24,7 +24,7 @@ namespace TrainEditor2.Extensions
 
 		internal static string GetInterfaceString(params string[] ids)
 		{
-			return Translations.GetInterfaceString(HostApplication.TrainEditor2, $"train_editor2_{string.Join("_", ids)}");
+			return Translations.GetInterfaceString(HostApplication.TrainEditor2, ids);
 		}
 
 		internal static bool TryParse(string text, NumberRange range, out double result)

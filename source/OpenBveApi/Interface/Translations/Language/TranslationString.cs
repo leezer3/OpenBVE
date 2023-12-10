@@ -46,7 +46,6 @@ namespace OpenBveApi.Interface
 			if (source != null)
 			{
 				Source = ((string)source).Replace("\\r\\n", Environment.NewLine).Replace("\\x20", " ");
-				return;
 			}
 
 			if (target != null)

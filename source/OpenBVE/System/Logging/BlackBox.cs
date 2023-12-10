@@ -282,10 +282,10 @@ namespace OpenBve
 									switch (p)
 									{
 										case Game.BlackBoxPower.PowerNull:
-											power[k] = Translations.GetInterfaceString(HostApplication.OpenBve, Translations.QuickReferences.HandlePowerNull);
+											power[k] = Translations.QuickReferences.HandlePowerNull;
 											break;
 										default:
-											power[k] = Translations.GetInterfaceString(HostApplication.OpenBve, Translations.QuickReferences.HandlePower) + ((short)p).ToString(Culture);
+											power[k] = Translations.QuickReferences.HandlePower + ((short)p).ToString(Culture);
 											break;
 									}
 								}
@@ -299,25 +299,25 @@ namespace OpenBve
 									switch (b)
 									{
 										case Game.BlackBoxBrake.BrakeNull:
-											brake[k] = Translations.GetInterfaceString(HostApplication.OpenBve, Translations.QuickReferences.HandleBrakeNull);
+											brake[k] = Translations.QuickReferences.HandleBrakeNull;
 											break;
 										case Game.BlackBoxBrake.Emergency:
-											brake[k] = Translations.GetInterfaceString(HostApplication.OpenBve, Translations.QuickReferences.HandleEmergency);
+											brake[k] = Translations.QuickReferences.HandleEmergency;
 											break;
 										case Game.BlackBoxBrake.HoldBrake:
-											brake[k] = Translations.GetInterfaceString(HostApplication.OpenBve, Translations.QuickReferences.HandleHoldBrake);
+											brake[k] = Translations.QuickReferences.HandleHoldBrake;
 											break;
 										case Game.BlackBoxBrake.Release:
-											brake[k] = Translations.GetInterfaceString(HostApplication.OpenBve, Translations.QuickReferences.HandleRelease);
+											brake[k] = Translations.QuickReferences.HandleRelease;
 											break;
 										case Game.BlackBoxBrake.Lap:
-											brake[k] = Translations.GetInterfaceString(HostApplication.OpenBve, Translations.QuickReferences.HandleLap);
+											brake[k] = Translations.QuickReferences.HandleLap;
 											break;
 										case Game.BlackBoxBrake.Service:
-											brake[k] = Translations.GetInterfaceString(HostApplication.OpenBve, Translations.QuickReferences.HandleService);
+											brake[k] = Translations.QuickReferences.HandleService;
 											break;
 										default:
-											brake[k] = Translations.GetInterfaceString(HostApplication.OpenBve, Translations.QuickReferences.HandleBrake) + ((short)b).ToString(Culture);
+											brake[k] = Translations.QuickReferences.HandleBrake + ((short)b).ToString(Culture);
 											break;
 									}
 								}

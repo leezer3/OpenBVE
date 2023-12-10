@@ -44,101 +44,19 @@ namespace OpenBveApi.Interface
 		 */
 		private static int CurrentInterfaceStringIndex = 0;
 
-
+		/// <summary>Fetches a translated user interface string</summary>
+		/// <param name="Application">The application string database to search</param>
+		/// <param name="parameters">A string array containing the group tree to retrieve the string</param>
+		/// <returns>The translated string</returns>
 		public static string GetInterfaceString(HostApplication Application, string[] parameters)
 		{
+			// note: languages may be zero at startup before things have spun up- winforms....
 			if (AvailableNewLanguages.Count != 0)
 			{
-				string s = AvailableNewLanguages[CurrentLanguageCode].GetInterfaceString(Application, parameters);
-				if(string.IsNullOrEmpty(s))
-				{
-					int b = 0;
-					b++;
-				}
 				return AvailableNewLanguages[CurrentLanguageCode].GetInterfaceString(Application, parameters);
 			}
 
 			return string.Empty;
-		}
-
-
-		/// <summary>Fetches a translated user interface string</summary>
-		/// <param name="Application"></param>
-		/// <param name="Name">The name of the string to fetch</param>
-		/// <returns>The translated string</returns>
-		public static string GetInterfaceString(HostApplication Application, string Name)
-		{
-			List<string> FallbackLanguages = new List<string>();
-			//First, we need to find the default langauge file
-			for (int i = 0; i < AvailableLanguages.Count; i++)
-			{
-				if (AvailableLanguages[i].LanguageCode == CurrentLanguageCode)
-				{
-					//Set the fallback languages
-					FallbackLanguages = AvailableLanguages[i].FallbackCodes;
-					int n = Name.Length;
-					for (int k = 0; k < AvailableLanguages[i].InterfaceStringCount; k++)
-					{
-						int t;
-						if ((k & 1) == 0)
-						{
-							t = (CurrentInterfaceStringIndex + (k >> 1) + AvailableLanguages[i].InterfaceStringCount) % AvailableLanguages[i].InterfaceStringCount;
-						}
-						else
-						{
-							t = (CurrentInterfaceStringIndex - (k + 1 >> 1) + AvailableLanguages[i].InterfaceStringCount) % AvailableLanguages[i].InterfaceStringCount;
-						}
-						if (AvailableLanguages[i].InterfaceStrings[t].Name.Length == n)
-						{
-							if (AvailableLanguages[i].InterfaceStrings[t].Name == Name)
-							{
-								CurrentInterfaceStringIndex = (t + 1) % AvailableLanguages[i].InterfaceStringCount;
-								return AvailableLanguages[i].InterfaceStrings[t].Text;
-							}
-						}
-					}
-				}
-			}
-			//OK, so that didn't work- Try the fallback languages
-			if (FallbackLanguages == null)
-			{
-				return Name;
-			}
-			for (int m = 0; m < FallbackLanguages.Count; m++)
-			{
-				for (int i = 0; i < AvailableLanguages.Count; i++)
-				{
-					if (AvailableLanguages[i].LanguageCode == FallbackLanguages[m])
-					{
-						int j = Name.Length;
-						for (int k = 0; k < AvailableLanguages[i].InterfaceStringCount; k++)
-						{
-							int l;
-							if ((k & 1) == 0)
-							{
-								l = (CurrentInterfaceStringIndex + (k >> 1) + AvailableLanguages[i].InterfaceStringCount) % AvailableLanguages[i].InterfaceStringCount;
-							}
-							else
-							{
-								l = (CurrentInterfaceStringIndex - (k + 1 >> 1) + AvailableLanguages[i].InterfaceStringCount) % AvailableLanguages[i].InterfaceStringCount;
-							}
-							if (AvailableLanguages[i].InterfaceStrings[l].Name.Length == j)
-							{
-								if (AvailableLanguages[i].InterfaceStrings[l].Name == Name)
-								{
-									CurrentInterfaceStringIndex = (l + 1) % AvailableLanguages[i].InterfaceStringCount;
-									//We found the string in a fallback language, so let's return it!
-									return AvailableLanguages[i].InterfaceStrings[l].Text;
-								}
-							}
-						}
-					}
-				}
-			}
-
-			//Default return type-
-			//If the string does not exist in the current language or any of the fallback options, return the search string
-			return Name;
 		}
 		
 		/// <summary>The quick-reference strings displayed in-game</summary>

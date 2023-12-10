@@ -40,12 +40,12 @@ namespace OpenBve
 				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","database_save_error"}));
 			}
 
-			if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out string errorMessage))
+			if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out string[] errorMessage))
 			{
 				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 				comboBoxPackageType.SelectedIndex = 0;
 			}
-			if (errorMessage != string.Empty)
+			if (errorMessage.Length != 0)
 			{
 				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, errorMessage));
 			}
@@ -1315,7 +1315,7 @@ namespace OpenBve
 				MinimizeBox = false,
 				StartPosition = FormStartPosition.CenterScreen,
 				ClientSize = size,
-				Text = Translations.GetInterfaceString(HostApplication.OpenBve, label),
+				Text = label,
 			};
 
 			Label minLabel = new Label
