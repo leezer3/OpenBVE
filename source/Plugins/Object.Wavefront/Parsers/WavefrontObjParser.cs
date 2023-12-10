@@ -80,6 +80,11 @@ namespace Plugin
 					{
 						Exporter = ModelExporter.BlockBench;
 					}
+
+					if (Lines[i].IndexOf("Blender", StringComparison.InvariantCultureIgnoreCase) != -1)
+					{
+						Exporter = ModelExporter.Blender;
+					}
 					if(hash != -1 && eq != -1)
 					{
 						string afterHash = Lines[i].Substring(hash + 1).Trim();
@@ -255,6 +260,7 @@ namespace Plugin
 											newVertex.TextureCoordinates.X *= -1.0;
 											newVertex.TextureCoordinates.Y *= -1.0;
 											break;
+										case ModelExporter.Blender:
 										case ModelExporter.BlockBench:
 											newVertex.TextureCoordinates.Y *= -1.0;
 											break;
