@@ -48,6 +48,10 @@ namespace OpenBveApi.Interface
 		internal DateTime LastUpdated;
 		/// <summary>The translation groups contained within the language</summary>
 		internal Dictionary<string, TranslationGroup> TranslationGroups = new Dictionary<string, TranslationGroup>();
+		/// <summary>The command infos</summary>
+		internal Dictionary<Translations.Command, Translations.CommandInfo> commandInfos = new Dictionary<Translations.Command, Translations.CommandInfo>();
+		/// <summary>The quick references</summary>
+		internal InterfaceQuickReference QuickReferences;
 
 		/// <summary>Loads a language from a language file</summary>
 		internal NewLanguage(string languageFile) : this(new FileStream(languageFile, FileMode.Open, FileAccess.Read), languageFile)
@@ -89,6 +93,8 @@ namespace OpenBveApi.Interface
 					// ignore
 				}
 			}
+
+			QuickReferences = new InterfaceQuickReference(this);
 		}
 
 		/// <summary>Gets an interface string unconditionally</summary>

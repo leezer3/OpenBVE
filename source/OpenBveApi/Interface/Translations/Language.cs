@@ -16,8 +16,6 @@ namespace OpenBveApi.Interface
 			internal readonly CommandInfo[] myCommandInfos;
 			/// <summary>The key information strings for this language</summary>
 			internal readonly KeyInfo[] KeyInfos;
-			/// <summary>The quick-reference strings for this language</summary>
-			internal readonly InterfaceQuickReference myQuickReferences;
 			/// <summary>Returns the number of translated strings contained in the language</summary>
 			internal int InterfaceStringCount => InterfaceStrings.Length;
 
@@ -100,7 +98,6 @@ namespace OpenBveApi.Interface
 				FallbackCodes = new List<string> { "en-US" };
 				myCommandInfos = new CommandInfo[CommandInfos.Length];
 				KeyInfos = new KeyInfo[TranslatedKeys.Length];
-				myQuickReferences = new InterfaceQuickReference();
 				Array.Copy(CommandInfos, myCommandInfos, myCommandInfos.Length);
 				Array.Copy(TranslatedKeys, KeyInfos, TranslatedKeys.Length);
 
@@ -143,85 +140,6 @@ namespace OpenBveApi.Interface
 
 					switch (section)
 					{
-						case "handles":
-							switch (key)
-							{
-								case "forward":
-									myQuickReferences.HandleForward = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								case "neutral":
-									myQuickReferences.HandleNeutral = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								case "backward":
-									myQuickReferences.HandleBackward = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								case "power":
-									myQuickReferences.HandlePower = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								case "powernull":
-									myQuickReferences.HandlePowerNull = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								case "brake":
-									myQuickReferences.HandleBrake = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								case "locobrake":
-									myQuickReferences.HandleLocoBrake = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								case "brakenull":
-									myQuickReferences.HandleBrakeNull = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								case "release":
-									myQuickReferences.HandleRelease = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								case "lap":
-									myQuickReferences.HandleLap = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								case "service":
-									myQuickReferences.HandleService = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								case "emergency":
-									myQuickReferences.HandleEmergency = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								case "holdbrake":
-									myQuickReferences.HandleHoldBrake = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-							}
-							break;
-						case "doors":
-							switch (key)
-							{
-								case "left":
-									myQuickReferences.DoorsLeft = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								case "right":
-									myQuickReferences.DoorsRight = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-							}
-							break;
-						case "misc":
-							switch (key)
-							{
-								case "score":
-									myQuickReferences.Score = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-							}
-							break;
 						case "commands":
 							for (int k = 0; k < myCommandInfos.Length; k++)
 							{
