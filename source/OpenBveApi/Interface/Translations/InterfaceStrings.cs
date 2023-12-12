@@ -25,7 +25,6 @@ namespace OpenBveApi.Interface
 				//This is a hack, but the commandinfos are used in too many places to twiddle with easily
 				if (AvailableLanguages[i].LanguageCode == Language)
 				{
-					CommandInfos = AvailableLanguages[i].myCommandInfos;
 					TranslatedKeys = AvailableLanguages[i].KeyInfos;
 					QuickReferences = AvailableNewLanguages[Language].QuickReferences;
 					break;

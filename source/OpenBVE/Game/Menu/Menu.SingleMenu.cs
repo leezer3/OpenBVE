@@ -500,15 +500,8 @@ namespace OpenBve
 						Items = new MenuEntry[4];
 						// get code name and description
 						Control loadedControl = Interface.CurrentControls[data];
-						for (int h = 0; h < Translations.CommandInfos.Length; h++)
-						{
-							if (Translations.CommandInfos[h].Command == loadedControl.Command)
-							{
-								Items[0] = new MenuCommand(loadedControl.Command.ToString() + " - " +
-										Translations.CommandInfos[h].Description, MenuTag.None, 0);
-								break;
-							}
-						}
+						Items[0] = new MenuCommand(loadedControl.Command + " - " +
+						                           Translations.newCommandInfos[loadedControl.Command].Description, MenuTag.None, 0);
 						// get assignment
 						String str = "";
 						switch (loadedControl.Method)

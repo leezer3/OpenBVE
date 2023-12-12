@@ -12,8 +12,6 @@ namespace OpenBveApi.Interface
 		{
 			/// <summary>The interface strings for this language</summary>
 			internal readonly InterfaceString[] InterfaceStrings;
-			/// <summary>The command information strings for this language</summary>
-			internal readonly CommandInfo[] myCommandInfos;
 			/// <summary>The key information strings for this language</summary>
 			internal readonly KeyInfo[] KeyInfos;
 			/// <summary>Returns the number of translated strings contained in the language</summary>
@@ -96,9 +94,9 @@ namespace OpenBveApi.Interface
 				Name = "Unknown";
 				LanguageCode = languageCode;
 				FallbackCodes = new List<string> { "en-US" };
-				myCommandInfos = new CommandInfo[CommandInfos.Length];
+				
 				KeyInfos = new KeyInfo[TranslatedKeys.Length];
-				Array.Copy(CommandInfos, myCommandInfos, myCommandInfos.Length);
+				
 				Array.Copy(TranslatedKeys, KeyInfos, TranslatedKeys.Length);
 
 				string prefix = string.Empty;
@@ -140,17 +138,6 @@ namespace OpenBveApi.Interface
 
 					switch (section)
 					{
-						case "commands":
-							for (int k = 0; k < myCommandInfos.Length; k++)
-							{
-								if (string.Compare(myCommandInfos[k].Name, key, StringComparison.OrdinalIgnoreCase) == 0)
-								{
-									myCommandInfos[k].Description = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								}
-							}
-							break;
 						case "keys":
 							for (int k = 0; k < KeyInfos.Length; k++)
 							{
@@ -182,30 +169,6 @@ namespace OpenBveApi.Interface
 					{
 						InterfaceStrings[i].Name = InterfaceStrings[i].Name.Replace("openbve_", string.Empty);
 					}
-				}
-
-				for (int i = 0; i < myCommandInfos.Length; i++)
-				{
-					// try to set any untranslated commandinfo descriptions to something other than N/A
-					if (myCommandInfos[i].Command != Command.None && myCommandInfos[i].Description == "N/A")
-					{
-						for (int j = 0; j < Translations.AvailableLanguages.Count; j++)
-						{
-							if (Translations.AvailableLanguages[j].LanguageCode == "en-US")
-							{
-								for (int k = 0; k < Translations.AvailableLanguages[j].myCommandInfos.Length; k++)
-								{
-									if (Translations.AvailableLanguages[j].myCommandInfos[k].Command == myCommandInfos[i].Command)
-									{
-										myCommandInfos[i].Description = Translations.AvailableLanguages[j].myCommandInfos[k].Description;
-										break;
-									}
-								}
-								
-							}
-						}
-					}
-
 				}
 			}
 

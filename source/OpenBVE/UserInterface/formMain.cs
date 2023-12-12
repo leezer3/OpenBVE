@@ -914,9 +914,10 @@ namespace OpenBve {
 			{
 				listviewControls.Items.Clear();
 				comboboxCommand.Items.Clear();
-				for (int i = 0; i < Translations.CommandInfos.Length; i++)
+				for (int i = 0; i < Translations.newCommandInfos.Count; i++)
 				{
-					comboboxCommand.Items.Add(Translations.CommandInfos[i].Name + " - " + Translations.CommandInfos[i].Description);
+					Translations.Command key = Translations.newCommandInfos.ElementAt(i).Key;
+					comboboxCommand.Items.Add(Translations.newCommandInfos[key].Name + " - " + Translations.newCommandInfos[key].Description);
 				}
 				comboboxKeyboardKey.Items.Clear();
 				for (int i = 0; i < Translations.TranslatedKeys.Length; i++)

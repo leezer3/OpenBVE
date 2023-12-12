@@ -1596,22 +1596,24 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 
 							int i;
+							Translations.CommandInfo info = new Translations.CommandInfo();
 
-							for (i = 0; i < Translations.CommandInfos.Length; i++)
+							for (i = 0; i < Translations.newCommandInfos.Count; i++)
 							{
-								if (string.Compare(value, Translations.CommandInfos[i].Name, StringComparison.OrdinalIgnoreCase) == 0)
+								Translations.Command command = Translations.newCommandInfos.ElementAt(i).Key;
+								if (string.Compare(value, Translations.newCommandInfos[command].Name, StringComparison.OrdinalIgnoreCase) == 0)
 								{
 									break;
 								}
 							}
 
-							if (i == Translations.CommandInfos.Length || Translations.CommandInfos[i].Type != Translations.CommandType.Digital)
+							if (i == Translations.newCommandInfos.Count || info.Type != Translations.CommandType.Digital)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 							else
 							{
-								commandEntry.Info = Translations.CommandInfos[i];
+								commandEntry.Info = info;
 							}
 						}
 						break;
@@ -1744,22 +1746,24 @@ namespace TrainEditor2.IO.Panels.Xml
 								}
 
 								int i;
+								Translations.CommandInfo info = new Translations.CommandInfo();
 
-								for (i = 0; i < Translations.CommandInfos.Length; i++)
+								for (i = 0; i < Translations.newCommandInfos.Count; i++)
 								{
-									if (string.Compare(value, Translations.CommandInfos[i].Name, StringComparison.OrdinalIgnoreCase) == 0)
+									Translations.Command command = Translations.newCommandInfos.ElementAt(i).Key;
+									if (string.Compare(value, Translations.newCommandInfos[command].Name, StringComparison.OrdinalIgnoreCase) == 0)
 									{
 										break;
 									}
 								}
 
-								if (i == Translations.CommandInfos.Length || Translations.CommandInfos[i].Type != Translations.CommandType.Digital)
+								if (i == Translations.newCommandInfos.Count || info.Type != Translations.CommandType.Digital)
 								{
 									Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 								else
 								{
-									entry.Info = Translations.CommandInfos[i];
+									entry.Info = info;
 								}
 								break;
 							case "option":

@@ -251,7 +251,7 @@ namespace TrainEditor2.Views
 				.AddRange(
 					Enum.GetValues(typeof(Translations.Command))
 						.OfType<Translations.Command>()
-						.Select(c => Translations.CommandInfos.TryGetInfo(c).Name)
+						.Select(c => Translations.newCommandInfos.TryGetInfo(c).Name)
 						.OfType<object>()
 						.ToArray()
 				);
@@ -327,7 +327,7 @@ namespace TrainEditor2.Views
 					x => x.SelectedIndex,
 					BindingMode.TwoWay,
 					x => (int)x.Command,
-					x => Translations.CommandInfos.TryGetInfo((Translations.Command)x),
+					x => Translations.newCommandInfos.TryGetInfo((Translations.Command)x),
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxTouchCommandName.SelectedIndexChanged += h,

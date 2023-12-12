@@ -27,7 +27,7 @@ namespace OpenBve
 			Builder.AppendLine("; This file is INCOMPATIBLE with versions older than 1.4.4.");
 			Builder.AppendLine();
 			for (int i = 0; i < controlsToSave.Length; i++) {
-				Translations.CommandInfo Info = Translations.CommandInfos.TryGetInfo(controlsToSave[i].Command);
+				Translations.CommandInfo Info = Translations.newCommandInfos.TryGetInfo(controlsToSave[i].Command);
 				Builder.Append(Info.Name + ", " + controlsToSave[i]);
 				
 				Builder.Append("\n");
@@ -120,12 +120,8 @@ namespace OpenBve
 						}
 
 						int j;
-						for (j = 0; j < Translations.CommandInfos.Length; j++)
-						{
-							if (string.Compare(Translations.CommandInfos[j].Name, Terms[0], StringComparison.OrdinalIgnoreCase) == 0) break;
-						}
-
-						if (j == Translations.CommandInfos.Length)
+						Translations.Command parsedCommand;
+						if (!Enum.TryParse(Terms[0], out parsedCommand))
 						{
 							Controls[Length].Command = Translations.Command.None;
 							Controls[Length].InheritedType = Translations.CommandType.Digital;
@@ -139,8 +135,8 @@ namespace OpenBve
 						}
 						else
 						{
-							Controls[Length].Command = Translations.CommandInfos[j].Command;
-							Controls[Length].InheritedType = Translations.CommandInfos[j].Type;
+							Controls[Length].Command = parsedCommand;
+							Controls[Length].InheritedType = Translations.newCommandInfos[parsedCommand].Type;
 							Enum.TryParse(Terms[1], true, out ControlMethod Method);
 							bool Valid = false;
 							if (Method == ControlMethod.Keyboard & Terms.Length >= 4)

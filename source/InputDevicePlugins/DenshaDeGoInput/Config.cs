@@ -63,22 +63,22 @@ namespace DenshaDeGoInput
 			buttonpedalBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
 			buttonldoorBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
 			buttonrdoorBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			Translations.CommandInfo[] commands = Translations.CommandInfos.OrderBy(o => o.Command).ToArray();
-			for (int i = 0; i < Translations.CommandInfos.Length; i++)
+			for (int i = 0; i < Translations.newCommandInfos.Count; i++)
 			{
-				buttonselectBox.Items.Add(commands[i].Name);
-				buttonstartBox.Items.Add(commands[i].Name);
-				buttonaBox.Items.Add(commands[i].Name);
-				buttonbBox.Items.Add(commands[i].Name);
-				buttoncBox.Items.Add(commands[i].Name);
-				buttondBox.Items.Add(commands[i].Name);
-				buttonupBox.Items.Add(commands[i].Name);
-				buttondownBox.Items.Add(commands[i].Name);
-				buttonleftBox.Items.Add(commands[i].Name);
-				buttonrightBox.Items.Add(commands[i].Name);
-				buttonpedalBox.Items.Add(commands[i].Name);
-				buttonldoorBox.Items.Add(commands[i].Name);
-				buttonrdoorBox.Items.Add(commands[i].Name);
+				Translations.Command key = Translations.newCommandInfos.ElementAt(i).Key;
+				buttonselectBox.Items.Add(Translations.newCommandInfos[key].Name);
+				buttonstartBox.Items.Add(Translations.newCommandInfos[key].Name);
+				buttonaBox.Items.Add(Translations.newCommandInfos[key].Name);
+				buttonbBox.Items.Add(Translations.newCommandInfos[key].Name);
+				buttoncBox.Items.Add(Translations.newCommandInfos[key].Name);
+				buttondBox.Items.Add(Translations.newCommandInfos[key].Name);
+				buttonupBox.Items.Add(Translations.newCommandInfos[key].Name);
+				buttondownBox.Items.Add(Translations.newCommandInfos[key].Name);
+				buttonleftBox.Items.Add(Translations.newCommandInfos[key].Name);
+				buttonrightBox.Items.Add(Translations.newCommandInfos[key].Name);
+				buttonpedalBox.Items.Add(Translations.newCommandInfos[key].Name);
+				buttonldoorBox.Items.Add(Translations.newCommandInfos[key].Name);
+				buttonrdoorBox.Items.Add(Translations.newCommandInfos[key].Name);
 			}
 
 			Timer1 = new Timer {Interval = 100};

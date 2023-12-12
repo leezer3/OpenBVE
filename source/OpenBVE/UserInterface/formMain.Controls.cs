@@ -28,15 +28,16 @@ namespace OpenBve {
 				{
 					this.Tag = new object();
 					{ // command
-						int j; for (j = 0; j < Translations.CommandInfos.Length; j++) {
-							if (Translations.CommandInfos[j].Command == Interface.CurrentControls[i].Command) {
-								comboboxCommand.SelectedIndex = j;
-								updownCommandOption.Value = Interface.CurrentControls[i].Option;
-								labelCommandOption.Enabled = Translations.CommandInfos[j].EnableOption;
-								updownCommandOption.Enabled = Translations.CommandInfos[j].EnableOption;
-								break;
-							}
-						} if (j == Translations.CommandInfos.Length) {
+
+						if (Translations.newCommandInfos.ContainsKey(Interface.CurrentControls[i].Command))
+						{
+							comboboxCommand.SelectedIndex = (int)Interface.CurrentControls[i].Command;
+							updownCommandOption.Value = Interface.CurrentControls[i].Option;
+							labelCommandOption.Enabled = Translations.newCommandInfos[Interface.CurrentControls[i].Command].EnableOption;
+							updownCommandOption.Enabled = Translations.newCommandInfos[Interface.CurrentControls[i].Command].EnableOption;
+						}
+						else
+						{
 							comboboxCommand.SelectedIndex = -1;
 							updownCommandOption.Value = 0;
 							labelCommandOption.Enabled = false;
@@ -108,7 +109,7 @@ namespace OpenBve {
 		}
 		private void UpdateControlListElement(ListViewItem Item, int Index, bool ResizeColumns)
 		{
-			Translations.CommandInfo Info = Translations.CommandInfos.TryGetInfo(Interface.CurrentControls[Index].Command);
+			Translations.CommandInfo Info = Translations.newCommandInfos.TryGetInfo(Interface.CurrentControls[Index].Command);
 			Item.SubItems[0].Text = Info.Name;
 			switch (Info.Type) {
 					case Translations.CommandType.Digital: Item.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","list_type_digital"}); break;
@@ -317,12 +318,14 @@ namespace OpenBve {
 			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				int j = comboboxCommand.SelectedIndex;
-				if (j >= 0) {
-					Interface.CurrentControls[i].Command = Translations.CommandInfos[j].Command;
-					Translations.CommandInfo Info = Translations.CommandInfos.TryGetInfo(Translations.CommandInfos[j].Command);
+				if (j >= 0)
+				{
+					Translations.Command selectedCommand = (Translations.Command)j;
+					Interface.CurrentControls[i].Command = selectedCommand;
+					Translations.CommandInfo Info = Translations.newCommandInfos.TryGetInfo(selectedCommand);
 					Interface.CurrentControls[i].InheritedType = Info.Type;
-					labelCommandOption.Enabled = Translations.CommandInfos[j].EnableOption;
-					updownCommandOption.Enabled = Translations.CommandInfos[j].EnableOption;
+					labelCommandOption.Enabled = Translations.newCommandInfos[selectedCommand].EnableOption;
+					updownCommandOption.Enabled = Translations.newCommandInfos[selectedCommand].EnableOption;
 					UpdateControlListElement(listviewControls.Items[i], i, true);
 				}
 			}
