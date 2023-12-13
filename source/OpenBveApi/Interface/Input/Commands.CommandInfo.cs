@@ -22,6 +22,12 @@ namespace OpenBveApi.Interface
 			/// <summary>Whether to enable command options</summary>
 			public readonly bool EnableOption;
 
+			/// <summary>Gets the string representation of this command</summary>
+			public override string ToString()
+			{
+				return Name + " - " + Description;
+			}
+
 			internal CommandInfo(Command Command, CommandType Type, string Name)
 			{
 				this.Command = Command;

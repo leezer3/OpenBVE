@@ -31,7 +31,7 @@ namespace OpenBve {
 
 						if (Translations.newCommandInfos.ContainsKey(Interface.CurrentControls[i].Command))
 						{
-							comboboxCommand.SelectedIndex = (int)Interface.CurrentControls[i].Command;
+							comboboxCommand.SelectedItem = Interface.CurrentControls[i].Command;
 							updownCommandOption.Value = Interface.CurrentControls[i].Option;
 							labelCommandOption.Enabled = Translations.newCommandInfos[Interface.CurrentControls[i].Command].EnableOption;
 							updownCommandOption.Enabled = Translations.newCommandInfos[Interface.CurrentControls[i].Command].EnableOption;
@@ -320,7 +320,7 @@ namespace OpenBve {
 				int j = comboboxCommand.SelectedIndex;
 				if (j >= 0)
 				{
-					Translations.Command selectedCommand = (Translations.Command)j;
+					Translations.Command selectedCommand = (Translations.Command)comboboxCommand.SelectedValue;
 					Interface.CurrentControls[i].Command = selectedCommand;
 					Translations.CommandInfo Info = Translations.newCommandInfos.TryGetInfo(selectedCommand);
 					Interface.CurrentControls[i].InheritedType = Info.Type;

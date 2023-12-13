@@ -121,7 +121,7 @@ namespace OpenBve
 
 						int j;
 						Translations.Command parsedCommand;
-						if (!Enum.TryParse(Terms[0], out parsedCommand))
+						if (!Enum.TryParse(Terms[0].Replace("_", string.Empty), true, out parsedCommand))
 						{
 							Controls[Length].Command = Translations.Command.None;
 							Controls[Length].InheritedType = Translations.CommandType.Digital;
