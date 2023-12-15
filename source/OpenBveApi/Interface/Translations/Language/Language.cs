@@ -78,6 +78,29 @@ namespace OpenBveApi.Interface
 						if (groupID == "language")
 						{
 							// contains language properties
+							XElement[] strings = groups[i].Elements(xmlns + "trans-unit").ToArray();
+							for (int j = 0; j < strings.Length; j++)
+							{
+								// n.b. we seem to have kept the source identical but translated the target for most languages
+								// possibly ought to redesign things slightly- need to lookup the correct way to do this for XLF
+								// properties which are language specific as I suspect this is not the intended way to do this.....
+								//
+								// To try and maintain full compatability with anything manually edited, use the target in preference to the source
+								switch((string)strings[i].Attribute("id"))
+								{
+									case "name":
+										Name = strings[i].Element(xmlns + "target") != null ? (string)strings[i].Element(xmlns + "target") : (string)strings[i].Element(xmlns + "source");
+										break;
+									case "flag":
+										Flag = strings[i].Element(xmlns + "target") != null ? (string)strings[i].Element(xmlns + "target") : (string)strings[i].Element(xmlns + "source");
+										break;
+									case "contributors":
+										Contributors = strings[i].Element(xmlns + "target") != null ? (string)strings[i].Element(xmlns + "target") : (string)strings[i].Element(xmlns + "source");
+										break;
+									case "last_updated":
+										break;
+								}
+							}
 						}
 						else
 						{
