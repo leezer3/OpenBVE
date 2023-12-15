@@ -113,6 +113,8 @@ namespace TrainEditor2.Views
 						.ToUnit()
 				)
 				.AddTo(disposable);
+
+			buttonOK.Text = Utilities.GetInterfaceString("items", "button_ok");
 		}
 
 		private void FormBogie_Load(object sender, EventArgs e)

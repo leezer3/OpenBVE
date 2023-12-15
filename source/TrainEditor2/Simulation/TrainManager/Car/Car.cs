@@ -35,66 +35,8 @@ namespace TrainEditor2.Simulation.TrainManager
 			/// <summary>Initializes a train with the default (empty) set of car sounds</summary>
 			internal void InitializeCarSounds()
 			{
-				Sounds.Run = new Dictionary<int, CarSound>();
-				Sounds.Flange = new Dictionary<int, CarSound>();
+				Flange.Sounds = new Dictionary<int, CarSound>();
 			}
-
-			internal void UpdateRunSounds(double TimeElapsed, int RunIndex)
-			{
-				if (Sounds.Run == null || Sounds.Run.Count == 0)
-				{
-					return;
-				}
-
-				const double factor = 0.04; // 90 km/h -> m/s -> 1/x
-				double speed = Math.Abs(CurrentSpeed);
-				double pitch = speed * factor;
-				double baseGain = speed < 2.77777777777778 ? 0.36 * speed : 1.0;
-
-				for (int i = 0; i < Sounds.Run.Count; i++)
-				{
-					int key = Sounds.Run.ElementAt(i).Key;
-					if (key == RunIndex)
-					{
-						Sounds.Run[key].TargetVolume += 3.0 * TimeElapsed;
-
-						if (Sounds.Run[key].TargetVolume > 1.0)
-						{
-							Sounds.Run[key].TargetVolume = 1.0;
-						}
-					}
-					else
-					{
-						Sounds.Run[key].TargetVolume -= 3.0 * TimeElapsed;
-
-						if (Sounds.Run[key].TargetVolume < 0.0)
-						{
-							Sounds.Run[key].TargetVolume = 0.0;
-						}
-					}
-
-					double gain = baseGain * Sounds.Run[key].TargetVolume;
-
-					if (Sounds.Run[key].IsPlaying)
-					{
-						if (pitch > 0.01 & gain > 0.001)
-						{
-							Sounds.Run[key].Source.Pitch = pitch;
-							Sounds.Run[key].Source.Volume = gain;
-						}
-						else
-						{
-							Sounds.Run[key].Stop();
-						}
-					}
-					else if (pitch > 0.02 & gain > 0.01)
-					{
-						Sounds.Run[key].Play(pitch, gain, this, true);
-					}
-				}
-			}
-
-
 
 			internal void ApplySounds()
 			{
@@ -107,7 +49,7 @@ namespace TrainEditor2.Simulation.TrainManager
 				// run sound
 				foreach (var element in RunSounds)
 				{
-					Sounds.Run[element.Key] = new CarSound(Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius), center);
+					Run.Sounds[element.Key] = new CarSound(Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius), center);
 				}
 				
 				// motor sound

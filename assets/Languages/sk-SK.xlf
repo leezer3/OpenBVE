@@ -2284,12 +2284,10 @@
 						<target>Zvýšenie brzdného účinku o jeden stupeň pri vlaku s oddelenými kontrolérmi</target>
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>Decreases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="locobrake_increase">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>Increases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
@@ -2441,23 +2439,23 @@
 					</trans-unit>
 					<trans-unit id="security_l">
 						<source>The L function of the security system</source>
-						<target>funkcia zabezpečovacieho systému</target>
+						<target>L funkcia zabezpečovacieho systému</target>
 					</trans-unit>
 					<trans-unit id="security_m">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The M function of the security system</source>
+						<target>M funkcia zabezpečovacieho systému</target>
 					</trans-unit>
 					<trans-unit id="security_n">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The N function of the security system</source>
+						<target>N funkcia zabezpečovacieho systému</target>
 					</trans-unit>
 					<trans-unit id="security_o">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The O function of the security system</source>
+						<target>O funkcia zabezpečovacieho systému</target>
 					</trans-unit>
 					<trans-unit id="security_p">
-						<source>N/A</source>
-						<target>N/A</target>
+						<source>The P function of the security system</source>
+						<target>P funkcia zabezpečovacieho systému</target>
 					</trans-unit>
 					<trans-unit id="camera_interior">
 						<source>Switches to the train's interior view</source>

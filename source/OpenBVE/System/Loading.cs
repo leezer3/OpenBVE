@@ -467,7 +467,7 @@ namespace OpenBve {
 						{
 							if (InputDevicePlugin.AvailablePluginInfos[j].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable && InputDevicePlugin.AvailablePlugins[j] is ITrainInputDevice trainInputDevice)
 							{
-								trainInputDevice.SetVehicleSpecs(Program.TrainManager.Trains[i].vehicleSpecs());
+								trainInputDevice.SetVehicleSpecs(Program.TrainManager.Trains[i].GetVehicleSpecs());
 							}
 						}
 					}

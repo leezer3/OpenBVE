@@ -88,7 +88,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 							if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, NumberRange.Any, out rear) && front <= rear)
 							{
-								message = "RearAxleはFrontAxle未満でなければなりません。";
+								message = Utilities.GetInterfaceString("car_settings", "general", "axles", "mustbe_less");
 							}
 						}
 
@@ -114,7 +114,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 							if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, NumberRange.Any, out front) && rear >= front)
 							{
-								message = "RearAxleはFrontAxle未満でなければなりません。";
+								message = Utilities.GetInterfaceString("car_settings", "general", "axles", "mustbe_less");
 							}
 						}
 
@@ -468,7 +468,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 						if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, NumberRange.Any, out rear) && front <= rear)
 						{
-							message = "RearAxleはFrontAxle未満でなければなりません。";
+							message =  Utilities.GetInterfaceString("car_settings", "general", "axles", "mustbe_less");
 						}
 					}
 
@@ -494,7 +494,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 						if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, NumberRange.Any, out front) && rear >= front)
 						{
-							message = "RearAxleはFrontAxle未満でなければなりません。";
+							message =  Utilities.GetInterfaceString("car_settings", "general", "axles", "mustbe_less");
 						}
 					}
 

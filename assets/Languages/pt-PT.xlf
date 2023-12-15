@@ -2389,12 +2389,10 @@
 						<target>Aumenta um ponto à travagem, em comboios com controladores de dois manípulos</target>
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
-						<source>N/A</source>
-						<target state="translated">Indisponível</target>
+						<source>Decreases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="locobrake_increase">
-						<source>N/A</source>
-						<target state="translated">Indisponível</target>
+						<source>Increases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
@@ -2557,20 +2555,20 @@
 						<target>Função L do sistema de segurança</target>
 					</trans-unit>
 					<trans-unit id="security_m">
-						<source>N/A</source>
-						<target>Indisponível</target>
+						<source>The M function of the security system</source>
+						<target>Função M do sistema de segurança</target>
 					</trans-unit>
 					<trans-unit id="security_n">
-						<source>N/A</source>
-						<target>Indisponível</target>
+						<source>The N function of the security system</source>
+						<target>Função N do sistema de segurança</target>
 					</trans-unit>
 					<trans-unit id="security_o">
-						<source>N/A</source>
-						<target>Indisponível</target>
+						<source>The O function of the security system</source>
+						<target>Função O do sistema de segurança</target>
 					</trans-unit>
 					<trans-unit id="security_p">
-						<source>N/A</source>
-						<target>Indisponível</target>
+						<source>The P function of the security system</source>
+						<target>Função P do sistema de segurança</target>
 					</trans-unit>
 					<trans-unit id="camera_interior">
 						<source>Switches to the train's interior view</source>

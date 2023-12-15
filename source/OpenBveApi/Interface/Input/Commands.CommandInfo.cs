@@ -155,8 +155,6 @@ namespace OpenBveApi.Interface
 			new CommandInfo(Command.DeviceConstSpeed, CommandType.Digital, "DEVICE_CONSTSPEED"),
 			new CommandInfo(Command.PlayMicSounds, CommandType.Digital, "PLAY_MIC_SOUNDS"),
 			new CommandInfo(Command.Sanders, CommandType.Digital, "SANDERS"),
-			new CommandInfo(Command.UncoupleFront, CommandType.Digital, "UNCOUPLE_FRONT"),
-			new CommandInfo(Command.UncoupleRear, CommandType.Digital, "UNCOUPLE_REAR"),
 
 //We only want to mark these as obsolete for new users of the API
 #pragma warning disable 618

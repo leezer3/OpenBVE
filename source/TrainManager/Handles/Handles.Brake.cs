@@ -12,12 +12,12 @@ namespace TrainManager.Handles
 	{
 		public BrakeHandle(int max, int driverMax, EmergencyHandle eb, double[] delayUp, double[] delayDown, TrainBase Train) : base(Train)
 		{
-			this.MaximumNotch = max;
-			this.MaximumDriverNotch = driverMax;
-			this.EmergencyBrake = eb;
-			this.DelayUp = delayUp;
-			this.DelayDown = delayDown;
-			this.DelayedChanges = new HandleChange[] { };
+			MaximumNotch = max;
+			MaximumDriverNotch = driverMax;
+			EmergencyBrake = eb;
+			DelayUp = delayUp;
+			DelayDown = delayDown;
+			DelayedChanges = new HandleChange[] { };
 		}
 
 		/// <summary>Provides a reference to the associated EB handle</summary>

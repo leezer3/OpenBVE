@@ -80,6 +80,11 @@ namespace Plugin
 					{
 						Exporter = ModelExporter.BlockBench;
 					}
+
+					if (Lines[i].IndexOf("Blender", StringComparison.InvariantCultureIgnoreCase) != -1)
+					{
+						Exporter = ModelExporter.Blender;
+					}
 					if(hash != -1 && eq != -1)
 					{
 						string afterHash = Lines[i].Substring(hash + 1).Trim();
@@ -255,6 +260,7 @@ namespace Plugin
 											newVertex.TextureCoordinates.X *= -1.0;
 											newVertex.TextureCoordinates.Y *= -1.0;
 											break;
+										case ModelExporter.Blender:
 										case ModelExporter.BlockBench:
 											newVertex.TextureCoordinates.Y *= -1.0;
 											break;
@@ -465,6 +471,12 @@ namespace Plugin
 						break;
 					case WavefrontMtlCommands.Map_Kd:
 					case WavefrontMtlCommands.Map_Ka:
+						if(Path.IsPathRooted(Arguments[Arguments.Count - 1]))
+						{
+							// Rooted path should not be used- Try looking beside the object instead
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Encountered rooted path for " + currentKey);
+							Arguments[Arguments.Count - 1] = Path.GetFileName(Arguments[Arguments.Count - 1]);
+						}
 						string tday = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[Arguments.Count - 1]);
 						if (File.Exists(tday))
 						{

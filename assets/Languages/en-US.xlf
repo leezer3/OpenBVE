@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US">
 		<body>
@@ -1730,7 +1730,7 @@
 						<source>Joystick</source>
 					</trans-unit>
 					<trans-unit id="joystick_notavailable">
-						<source>N/A</source>
+						<source>Joystick (Not currently connected)</source>
 					</trans-unit>
 					<trans-unit id="joystickdirection_positive">
 						<source>Positive</source>
@@ -1860,10 +1860,10 @@
 						<source>Increases brake by one notch for trains with two handles</source>
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
-						<source>N/A</source>
+						<source>Decreases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="locobrake_increase">
-						<source>N/A</source>
+						<source>Increases the locomotive brake by one notch</source>
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
@@ -1986,16 +1986,16 @@
 						<source>The L function of the security system</source>
 					</trans-unit>
 					<trans-unit id="security_m">
-						<source>N/A</source>
+						<source>The M function of the security system</source>
 					</trans-unit>
 					<trans-unit id="security_n">
-						<source>N/A</source>
+						<source>The N function of the security system</source>
 					</trans-unit>
 					<trans-unit id="security_o">
-						<source>N/A</source>
+						<source>The O function of the security system</source>
 					</trans-unit>
 					<trans-unit id="security_p">
-						<source>N/A</source>
+						<source>The P function of the security system</source>
 					</trans-unit>
 					<trans-unit id="camera_interior">
 						<source>Switches to the train's interior view</source>
@@ -2719,25 +2719,16 @@
 						<source>Linux</source>
 					</trans-unit>
 					<trans-unit id="help_controller1_textbox">
-						<source>If your non-USB controller is not providing correct input:
-
-1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller
-to separate buttons to avoid compatibility issues.
-2. Calibrate the controller from the configuration window, if necessary.</source>
+						<source>If your non-USB controller is not providing correct input:\r\n\r\n1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller to separate buttons to avoid compatibility issues.\r\n2. Calibrate the controller from the configuration window, if necessary.</source>
 					</trans-unit>
 					<trans-unit id="help_controller2_textbox">
 						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
 					</trans-unit>
 					<trans-unit id="help_windows_textbox">
-						<source>1. Extract the Windows drivers.
-2. Download and run Zadig.
-3. Load the appropriate CFG file for your device ("Device &gt; Load Preset Device").
-4. Press "Install Driver" and wait for installation to complete.</source>
+						<source>1. Extract the Windows drivers.\r\n2. Download and run Zadig.\r\n3. Load the appropriate CFG file for your device ("Device &gt; Load Preset Device").\r\n4. Press "Install Driver" and wait for installation to complete.</source>
 					</trans-unit>
 					<trans-unit id="help_linux_textbox">
-						<source>1. Extract the Linux udev file.
-2. Copy the file to "/etc/udev/rules.d/" (root permissions required).
-3. Reboot or reload udev rules manually.</source>
+						<source>1. Extract the Linux udev file.\r\n2. Copy the file to "/etc/udev/rules.d/" (root permissions required).\r\n3. Reboot or reload udev rules manually.</source>
 					</trans-unit>
 					<trans-unit id="help_zadig_button">
 						<source>Get Zadig</source>
@@ -2752,14 +2743,7 @@ to separate buttons to avoid compatibility issues.
 						<source>OK</source>
 					</trans-unit>
 					<trans-unit id="help_libusb_symlink">
-						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.
-Please follow the following instructions:
-
-1. Check that the "libusb-1.0" package is installed.
-2. Find the location of "libusb-1.0.so.0" - On recent Ubuntu and Debian versions, this is likely to be "/lib/x86_64-linux-gnu/"
-3. Open the directory in the terminal.
-4. Check this location to see if "libusb-1.0.so" exists.
-5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: "sudo ln -s libusb-1.0.so.0 libusb-1.0.so"</source>
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.\r\nPlease follow the following instructions:\r\n\r\n1. Check that the "libusb-1.0" package is installed.\r\n2. Find the location of "libusb-1.0.so.0" - On recent Ubuntu and Debian versions, this is likely to be "/lib/x86_64-linux-gnu/"\r\n3. Open the directory in the terminal.\r\n4. Check this location to see if "libusb-1.0.so" exists.\r\n5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: "sudo ln -s libusb-1.0.so.0 libusb-1.0.so"</source>
 					</trans-unit>
 				</group>
 			</group>
@@ -3257,7 +3241,7 @@ Please follow the following instructions:
 							<source>Exit</source>
 						</trans-unit>
 						<trans-unit id="wrongtype">
-							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
+							<source>You have attempted to open a train.\r\nThese cannot be opened directly-\r\nPlease use the import function to import this train into TrainEditor2.</source>
 						</trans-unit>
 					</group>
 					<trans-unit id="language">
@@ -3296,6 +3280,20 @@ Please follow the following instructions:
 					</trans-unit>
 					<trans-unit id="open">
 						<source>Open...</source>
+					</trans-unit>
+				</group>
+				<group id="items">
+					<trans-unit id="filename">
+						<source>Filename</source>
+					</trans-unit>
+					<trans-unit id="folder">
+						<source>Folder</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>Type</source>
+					</trans-unit>
+					<trans-unit id="button_ok">
+						<source>OK</source>
 					</trans-unit>
 				</group>
 				<group id="tree_cars">
@@ -3385,6 +3383,15 @@ Please follow the following instructions:
 						</group>
 						<trans-unit id="loco_brake_notches">
 							<source>LocoBrakeNotches</source>
+						</trans-unit>
+						<trans-unit id="brake_notches_error_message">
+							<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+						</trans-unit>
+						<trans-unit id="driver_power_notches_error_message">
+							<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches_error_message">
+							<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
 						</trans-unit>
 					</group>
 					<group id="cab">
@@ -3549,6 +3556,9 @@ Please follow the following instructions:
 							<trans-unit id="rear">
 								<source>RearAxle</source>
 							</trans-unit>
+							<trans-unit id="mustbe_less">
+								<source>RearAxle must be less than FrontAxle.</source>
+							</trans-unit>
 						</group>
 						<trans-unit id="front_bogie">
 							<source>FrontBogie</source>
@@ -3689,12 +3699,26 @@ Please follow the following instructions:
 						<trans-unit id="loco_brake">
 							<source>LocoBrake</source>
 						</trans-unit>
+						<trans-unit id="electric_brake">
+							<source>ElectricBrake</source>
+						</trans-unit>
 						<trans-unit id="notch">
 							<source>Notch</source>
 						</trans-unit>
 						<trans-unit id="value">
 							<source>Value</source>
 						</trans-unit>
+						<group id="edit_entry">
+							<trans-unit id="name">
+								<source>Edit entry</source>
+							</trans-unit>
+							<trans-unit id="up">
+								<source>Up</source>
+							</trans-unit>
+							<trans-unit id="down">
+								<source>Down</source>
+							</trans-unit>
+						</group>
 					</group>
 				</group>
 				<group id="acceleration_settings">
@@ -3915,7 +3939,7 @@ Please follow the following instructions:
 								<source>Constant speed</source>
 							</trans-unit>
 							<trans-unit id="acceleration">
-								<source>Acceleration:</source>
+								<source>Acceleration</source>
 							</trans-unit>
 							<trans-unit id="swap">
 								<source>Swap</source>
@@ -4034,6 +4058,23 @@ Please follow the following instructions:
 					<trans-unit id="name">
 						<source>Panel settings</source>
 					</trans-unit>
+					<group id="subject">
+						<trans-unit id="name">
+							<source>Subject</source>
+						</trans-unit>
+						<trans-unit id="base">
+							<source>Base</source>
+						</trans-unit>
+						<trans-unit id="baseoption">
+							<source>Base option</source>
+						</trans-unit>
+						<trans-unit id="suffix">
+							<source>Suffix</source>
+						</trans-unit>
+						<trans-unit id="suffixoption">
+							<source>Suffix option</source>
+						</trans-unit>
+					</group>
 					<group id="this">
 						<trans-unit id="name">
 							<source>This</source>
@@ -4064,7 +4105,7 @@ Please follow the following instructions:
 						</trans-unit>
 						<group id="center">
 							<trans-unit id="name">
-								<source>Center</source>
+								<source>Center origin</source>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -4075,7 +4116,7 @@ Please follow the following instructions:
 						</group>
 						<group id="origin">
 							<trans-unit id="name">
-								<source>Origin</source>
+								<source>Track origin</source>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -4396,14 +4437,51 @@ Please follow the following instructions:
 						<trans-unit id="jump_screen">
 							<source>JumpScreen</source>
 						</trans-unit>
-						<trans-unit id="sound_index">
-							<source>SoundIndex</source>
+						<trans-unit id="sound_command">
+							<source>Sound and command</source>
 						</trans-unit>
-						<trans-unit id="command">
-							<source>Command</source>
-						</trans-unit>
-						<trans-unit id="command_option">
-							<source>CommandOption</source>
+						<group id="sound_command">
+							<trans-unit id="name">
+								<source>Sound and command</source>
+							</trans-unit>
+							<group id="tree">
+								<trans-unit id="touch_element">
+									<source>Touch element</source>
+								</trans-unit>
+								<trans-unit id="sounds">
+									<source>Sounds</source>
+								</trans-unit>
+								<trans-unit id="commands">
+									<source>Commands</source>
+								</trans-unit>
+							</group>
+							<group id="edit_entry">
+								<trans-unit id="name">
+									<source>Edit entry</source>
+								</trans-unit>
+								<trans-unit id="sound">
+									<source>Sound</source>
+								</trans-unit>
+								<group id="sound">
+									<trans-unit id="index">
+										<source>Index</source>
+									</trans-unit>
+								</group>
+								<trans-unit id="command">
+									<source>Command</source>
+								</trans-unit>
+								<group id="command">
+									<trans-unit id="name">
+										<source>Key</source>
+									</trans-unit>
+									<trans-unit id="option">
+										<source>Option</source>
+									</trans-unit>
+								</group>
+							</group>
+						</group>
+						<trans-unit id="layer">
+							<source>Layer</source>
 						</trans-unit>
 					</group>
 				</group>
@@ -4455,25 +4533,70 @@ Please follow the following instructions:
 									<source>Position</source>
 								</trans-unit>
 								<trans-unit id="x">
-									<source>x coordinate</source>
+									<source>X</source>
 								</trans-unit>
 								<trans-unit id="y">
-									<source>y coordinate</source>
+									<source>Y</source>
 								</trans-unit>
 								<trans-unit id="z">
-									<source>z coordinate</source>
+									<source>Z</source>
 								</trans-unit>
 							</group>
 						</group>
 					</group>
-					<group id="message">
-						<trans-unit id="empty_filename">
-							<source>File name has not been entered.</source>
+				</group>
+				<group id="import_export">
+					<trans-unit id="import_name">
+						<source>Import</source>
+					</trans-unit>
+					<trans-unit id="export_name">
+						<source>Export</source>
+					</trans-unit>
+					<group id="train">
+						<trans-unit id="name">
+							<source>Train setting file</source>
 						</trans-unit>
-						<trans-unit id="key_exist">
-							<source>The specified key is already set.</source>
+						<trans-unit id="old_format">
+							<source>Old format</source>
+						</trans-unit>
+						<trans-unit id="traindat">
+							<source>Train.dat</source>
+						</trans-unit>
+						<trans-unit id="extensionscfg">
+							<source>Extensions.cfg</source>
 						</trans-unit>
 					</group>
+					<group id="panel">
+						<trans-unit id="name">
+							<source>Panel Setting File</source>
+						</trans-unit>
+						<trans-unit id="panel2cfg">
+							<source>Panel2.cfg</source>
+						</trans-unit>
+						<trans-unit id="panelxml">
+							<source>Panel.xml</source>
+						</trans-unit>
+					</group>
+					<group id="sound">
+						<trans-unit id="name">
+							<source>Sound setting file</source>
+						</trans-unit>
+						<trans-unit id="no_setting_file">
+							<source>No setting file</source>
+						</trans-unit>
+						<trans-unit id="soundcfg">
+							<source>Sound.cfg</source>
+						</trans-unit>
+						<trans-unit id="soundxml">
+							<source>Sound.xml</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="folder">
+						<source>Folder</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>Type</source>
+					</trans-unit>
 				</group>
 				<group id="status">
 					<trans-unit id="name">
@@ -4523,10 +4646,26 @@ Please follow the following instructions:
 						<source>This value must be a {0}floating-point number.</source>
 					</trans-unit>
 					<trans-unit id="invalid_color">
-						<source>invalid_color</source>
+						<source>Invalid HEX color</source>
+					</trans-unit>
+					<!--trans-unit id="empty_filename">
+						<source>File name has not been entered.</source>
+					</trans-unit>
+					<trans-unit id="key_exist">
+						<source>The specified key is already set.</source>
+					</trans-unit-->
+					<trans-unit id="number_exist">
+						<source>The specified number is already set.</source>
+					</trans-unit>
+					<trans-unit id="mustbe_greater_than">
+						<source>Max must be greater than or equal to Min.</source>
+					</trans-unit>
+					<trans-unit id="mustbe_less_than">
+						<source>Min must be less than the Max.</source>
 					</trans-unit>
 				</group>
 			</group>
+
 		</body>
 	</file>
 </xliff>

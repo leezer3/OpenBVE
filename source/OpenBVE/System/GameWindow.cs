@@ -327,7 +327,7 @@ namespace OpenBve
 				}
 				Game.CurrentScore.Update(TimeElapsed);
 				MessageManager.UpdateMessages();
-				Game.UpdateScoreMessages(TimeElapsed);
+				Game.UpdateScoreMessages();
 
 				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 				{

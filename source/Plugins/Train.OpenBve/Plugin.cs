@@ -267,18 +267,31 @@ namespace Train.OpenBve
 			// add exterior section
 			if (currentTrain.State != TrainState.Bogus)
 			{
-				bool[] VisibleFromInterior;
+				bool[] VisibleFromInterior = null;
 				UnifiedObject[] CarObjects = new UnifiedObject[currentTrain.Cars.Length];
 				UnifiedObject[] BogieObjects = new UnifiedObject[currentTrain.Cars.Length * 2];
 				UnifiedObject[] CouplerObjects = new UnifiedObject[currentTrain.Cars.Length];
 
 				string tXml = Path.CombineFile(currentTrain.TrainFolder, "train.xml");
+
+				bool parseExtensionsCfg = true;
 				if (File.Exists(tXml))
 				{
-					TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior);
+					try
+					{
+						TrainXmlParser.Parse(tXml, currentTrain, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior);
+						parseExtensionsCfg = false;
+					}
+					catch(Exception e)
+					{
+						currentHost.ReportProblem(ProblemType.UnexpectedException, "Whilst processing XML file " + tXml + " encountered the following exeception:" + Environment.NewLine + e);
+					}
+					
 				}
-				else
+
+				if(parseExtensionsCfg)
 				{
+					// train.xml is either missing or broken
 					ExtensionsCfgParser.ParseExtensionsConfig(currentTrain.TrainFolder, Encoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior, currentTrain);
 				}
 

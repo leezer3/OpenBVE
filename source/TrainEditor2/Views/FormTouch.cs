@@ -267,6 +267,18 @@ namespace TrainEditor2.Views
 			new[] { touch.RemoveSoundEntry, touch.RemoveCommandEntry }
 				.BindToButton(buttonTouchRemove)
 				.AddTo(disposable);
+
+			groupBoxTouch.Text = Utilities.GetInterfaceString("panel_settings", "sound_command", "edit_entry", "name");
+			groupBoxTouchSound.Text = Utilities.GetInterfaceString("panel_settings", "sound_command", "edit_entry", "sound");
+			labelTouchSoundIndex.Text = Utilities.GetInterfaceString("panel_settings", "sound_command", "edit_entry", "sound", "index");
+			groupBoxTouchCommand.Text = Utilities.GetInterfaceString("panel_settings", "sound_command", "edit_entry", "command");
+			labelTouchCommandName.Text = Utilities.GetInterfaceString("panel_settings", "sound_command", "edit_entry", "command", "name");
+			labelTouchCommandOption.Text = Utilities.GetInterfaceString("panel_settings", "sound_command", "edit_entry", "command", "option");
+
+			buttonTouchAdd.Text = Utilities.GetInterfaceString("navigation", "add");
+			buttonTouchCopy.Text = Utilities.GetInterfaceString("navigation", "copy");
+			buttonTouchRemove.Text = Utilities.GetInterfaceString("navigation", "remove");
+			buttonOK.Text = Utilities.GetInterfaceString("items", "button_ok");
 		}
 
 		private void FormTouch_Load(object sender, EventArgs e)

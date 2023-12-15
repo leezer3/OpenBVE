@@ -1427,8 +1427,8 @@ namespace OpenBve
 		{
 			bool DialogOK = false;
 			string[] files = null;
-			string folder = String.Empty;
-			string folderDisplay = String.Empty;
+			string folder = string.Empty;
+			string folderDisplay = string.Empty;
 			if (OpenTK.Configuration.RunningOnMacOS || OpenTK.Configuration.RunningOnLinux)
 			{
 				//Mono doesn't like our fancy folder selector

@@ -180,6 +180,8 @@ namespace OpenBve
         /// <summary>This function logs an exception caught whilst loading a route/ train to disk</summary>
         internal static void LoadingCrash(string ExceptionText, bool Train)
         {
+			// Attempt to gracefully shutdown the renderer to terminate hanging threads etc.
+			Program.Renderer.DeInitialize();
 			Program.FileSystem.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
 			using (StreamWriter outputFile = new StreamWriter(CrashLog))
             {

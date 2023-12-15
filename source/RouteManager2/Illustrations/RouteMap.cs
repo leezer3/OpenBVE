@@ -101,8 +101,7 @@ namespace RouteManager2
 				//Usually caused by selecting another route before preview has finished
 				return new Bitmap(1,1);
 			}
-			int n, n0, n1;
-			RouteRange(out n, out n0, out n1);
+			RouteRange(out int n, out int n0, out int n1);
 			// find dimensions
 			double x0 = double.PositiveInfinity, z0 = double.PositiveInfinity;
 			double x1 = double.NegativeInfinity, z1 = double.NegativeInfinity;
@@ -387,8 +386,7 @@ namespace RouteManager2
 			// in any 'real world' unit (like m).
 
 			// HORIZONTAL RANGE: find first and last used element based on stations
-			int n, n0, n1;
-			RouteRange(out n, out n0, out n1);
+			RouteRange(out int n, out int n0, out int n1);
 			// VERTICAL RANGE
 			double y0 = double.PositiveInfinity, y1 = double.NegativeInfinity;
 			for (int i = n0; i <= n1; i++)

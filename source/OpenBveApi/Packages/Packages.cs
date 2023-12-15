@@ -551,10 +551,7 @@ namespace OpenBveApi.Packages
 		/// <summary>This is called whenever the progress changes</summary>
 		public static void OnProgressChanged(object sender, ProgressReport progressReport)
 		{
-			if (ProgressChanged != null)
-			{
-				ProgressChanged(null, progressReport);
-			}
+			ProgressChanged?.Invoke(null, progressReport);
 		}
 
 		/// <summary>Reports the current progress of a package installation or uninstallation</summary>
@@ -563,10 +560,7 @@ namespace OpenBveApi.Packages
 		/// <summary>This is called whenever the progress changes</summary>
 		public static void OnProblemReport(object sender, ProblemReport problemReport)
 		{
-			if (ProblemReport != null)
-			{
-				ProblemReport(null, problemReport);
-			}
+			ProblemReport?.Invoke(null, problemReport);
 		}
 
 		/// <summary>Reports the current progress of a package installation or uninstallation</summary>
@@ -575,10 +569,7 @@ namespace OpenBveApi.Packages
 		/// <summary>This is called whenever the progress changes</summary>
 		public static void OnCompletion(object sender, CompletionReport completionReport)
 		{
-			if (OperationCompleted != null)
-			{
-				OperationCompleted(null, completionReport);
-			}
+			OperationCompleted?.Invoke(null, completionReport);
 		}
 
 	}

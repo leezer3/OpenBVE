@@ -424,8 +424,7 @@ namespace OpenBve
 		}
 
 		/// <summary>Updates all score messages displayed by the renderer</summary>
-		/// <param name="TimeElapsed">The frame time elapsed</param>
-		internal static void UpdateScoreMessages(double TimeElapsed)
+		internal static void UpdateScoreMessages()
 		{
 			if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 			{

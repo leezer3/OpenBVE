@@ -607,6 +607,15 @@ namespace CarXmlConvertor
 				newLines.Add("<Length>" + ConvertTrainDat.CarLength + "</Length>");
 				newLines.Add("<Width>" + ConvertTrainDat.CarWidth + "</Width>");
 				newLines.Add("<Height>" + ConvertTrainDat.CarHeight + "</Height>");
+				newLines.Add("<CenterOfGravityHeight>" + ConvertTrainDat.CenterOfGravityHeight + "</CenterOfGravityHeight>");
+				if (ConvertTrainDat.ExposedFrontalArea != -1)
+				{
+					newLines.Add("<ExposedFrontalArea>" + ConvertTrainDat.ExposedFrontalArea + "</ExposedFrontalArea>");
+				}
+				if (ConvertTrainDat.UnexposedFrontalArea != -1)
+				{
+					newLines.Add("<UnexposedFrontalArea>" + ConvertTrainDat.UnexposedFrontalArea + "</UnexposedFrontalArea>");
+				}
 				if (ConvertTrainDat.MotorCars[i])
 				{
 					newLines.Add("<MotorCar>True</MotorCar>");

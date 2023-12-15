@@ -20,6 +20,8 @@ namespace OpenBveApi.Objects
 		/// <summary>Google SketchUp</summary>
 		SketchUp,
 		/// <summary>BlockBench</summary>
-		BlockBench
+		BlockBench,
+		/// <summary>Blender</summary>
+		Blender
 	}
 }

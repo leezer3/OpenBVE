@@ -31,6 +31,8 @@ namespace Train.OpenBve
 				readhesionDevice = device.DeviceType;
 			}
 			bool CopyAccelerationCurves = true;
+			bool exposedFrontalAreaSet = false;
+			bool unexposedFrontalAreaSet = false;
 			foreach (XmlNode c in Node.ChildNodes)
 			{
 				//Note: Don't use the short-circuiting operator, as otherwise we need another if
@@ -109,8 +111,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case "length":
-						double l;
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out l) | l <= 0.0)
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double l) | l <= 0.0)
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid length defined for Car " + Car + " in XML file " + fileName);
 							break;
@@ -118,8 +119,7 @@ namespace Train.OpenBve
 						Train.Cars[Car].Length = l;
 						break;
 					case "width":
-						double w;
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out w) | w <= 0.0)
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double w) | w <= 0.0)
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid width defined for Car " + Car + " in XML file " + fileName);
 							break;
@@ -127,8 +127,7 @@ namespace Train.OpenBve
 						Train.Cars[Car].Width = w;
 						break;
 					case "height":
-						double h;
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out h) | h <= 0.0)
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double h) | h <= 0.0)
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid height defined for Car " + Car + " in XML file " + fileName);
 							break;
@@ -159,14 +158,39 @@ namespace Train.OpenBve
 						}
 						break;
 					case "mass":
-						double m;
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out m) | m <= 0.0)
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double m) | m <= 0.0)
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid mass defined for Car " + Car + " in XML file " + fileName);
 							break;
 						}
 						Train.Cars[Car].EmptyMass = m;
 						Train.Cars[Car].CargoMass = 0;
+						break;
+					case "centerofgravityheight":
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double cg) | cg <= 0.0)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid CenterOfGravityHeight defined for Car " + Car + " in XML file " + fileName);
+							break;
+						}
+						Train.Cars[Car].Specs.CenterOfGravityHeight = cg;
+						break;
+					case "exposedfrontalarea":
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double ef) | ef <= 0.0)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid ExposedFrontalArea defined for Car " + Car + " in XML file " + fileName);
+							break;
+						}
+						Train.Cars[Car].Specs.ExposedFrontalArea = ef;
+						exposedFrontalAreaSet = true;
+						break;
+					case "unexposedfrontalarea":
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double uf) | uf <= 0.0)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid UnexposedFrontalArea defined for Car " + Car + " in XML file " + fileName);
+							break;
+						}
+						Train.Cars[Car].Specs.UnexposedFrontalArea = uf;
+						unexposedFrontalAreaSet = true;
 						break;
 					case "frontaxle":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[Car].FrontAxle.Position))
@@ -193,16 +217,14 @@ namespace Train.OpenBve
 						}
 						break;
 					case "reversed":
-						int n;
-						NumberFormats.TryParseIntVb6(c.InnerText, out n);
+						NumberFormats.TryParseIntVb6(c.InnerText, out int n);
 						if (n == 1 || c.InnerText.ToLowerInvariant() == "true")
 						{
 							CarObjectsReversed[Car] = true;
 						}
 						break;
 					case "loadingsway":
-						int nm;
-						NumberFormats.TryParseIntVb6(c.InnerText, out nm);
+						NumberFormats.TryParseIntVb6(c.InnerText, out int nm);
 						if (nm == 1 || c.InnerText.ToLowerInvariant() == "true")
 						{
 							Train.Cars[Car].EnableLoadingSway = true;
@@ -287,8 +309,7 @@ namespace Train.OpenBve
 										}
 										break;
 									case "reversed":
-										int nn;
-										NumberFormats.TryParseIntVb6(cc.InnerText, out nn);
+										NumberFormats.TryParseIntVb6(cc.InnerText, out int nn);
 										if (cc.InnerText.ToLowerInvariant() == "true" || nn == 1)
 										{
 											BogieObjectsReversed[Car * 2 + 1] = true;
@@ -728,6 +749,17 @@ namespace Train.OpenBve
 			{
 				// if required create default train readhesion device- May have already been setup earlier in the XML
 				Train.Cars[Car].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[Car], readhesionDevice);
+			}
+
+			//Set toppling angle and exposed areas
+			Train.Cars[Car].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * Train.Cars[Car].Specs.CenterOfGravityHeight / Train.Cars[Car].Width);
+			if (!exposedFrontalAreaSet)
+			{
+				Train.Cars[Car].Specs.ExposedFrontalArea = 0.65 * Train.Cars[Car].Width * Train.Cars[Car].Height;
+			}
+			if (!unexposedFrontalAreaSet)
+			{
+				Train.Cars[Car].Specs.UnexposedFrontalArea = 0.2 * Train.Cars[Car].Width * Train.Cars[Car].Height;
 			}
 		}
 	}

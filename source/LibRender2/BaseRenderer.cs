@@ -77,10 +77,7 @@ namespace LibRender2
 		/// <summary>Holds a reference to the current interface type of the game (Used by the renderer)</summary>
 		public InterfaceType CurrentInterface
 		{
-			get
-			{
-				return currentInterface;
-			}
+			get => currentInterface;
 			set
 			{
 				previousInterface = currentInterface;
@@ -1567,9 +1564,8 @@ namespace LibRender2
 					GL.Normal3(Face.Vertices[i].Normal.X, Face.Vertices[i].Normal.Y, -Face.Vertices[i].Normal.Z);
 					GL.TexCoord2(vertices[Face.Vertices[i].Index].TextureCoordinates.X, vertices[Face.Vertices[i].Index].TextureCoordinates.Y);
 
-					if (vertices[Face.Vertices[i].Index] is ColoredVertex)
+					if (vertices[Face.Vertices[i].Index] is ColoredVertex v)
 					{
-						ColoredVertex v = (ColoredVertex)vertices[Face.Vertices[i].Index];
 						GL.Color4(v.Color.R, v.Color.G, v.Color.B, v.Color.A);
 					}
 
