@@ -118,9 +118,9 @@ namespace OpenBve
 						{
 							Array.Resize(ref Controls, Controls.Length << 1);
 						}
-
-						int j;
+						
 						Translations.Command parsedCommand;
+						// note: to get rid of the underscore in the saved commmand file would require a format change, and this isn't a performance sensitive area hence don't bother....
 						if (!Enum.TryParse(Terms[0].Replace("_", string.Empty), true, out parsedCommand))
 						{
 							Controls[Length].Command = Translations.Command.None;
