@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using OpenBveApi.Hosts;
+using OpenBveApi.Input;
 
 namespace OpenBveApi.Interface
 {
@@ -50,6 +51,8 @@ namespace OpenBveApi.Interface
 		internal Dictionary<string, TranslationGroup> TranslationGroups = new Dictionary<string, TranslationGroup>();
 		/// <summary>The quick references</summary>
 		internal InterfaceQuickReference QuickReferences;
+		/// <summary>The key translations</summary>
+		internal Dictionary<Key, Translations.KeyInfo> KeyInfos;
 
 		/// <summary>Loads a language from a language file</summary>
 		internal NewLanguage(string languageFile) : this(new FileStream(languageFile, FileMode.Open, FileAccess.Read), languageFile)
@@ -114,8 +117,76 @@ namespace OpenBveApi.Interface
 					// ignore
 				}
 			}
-
+			// NOTE: These should be loaded *after* the XML
 			QuickReferences = new InterfaceQuickReference(this);
+			KeyInfos = new Dictionary<Key, Translations.KeyInfo>();
+			foreach (Key k in Enum.GetValues(typeof(Key)))
+			{
+				if (KeyInfos.ContainsKey(k) || k == Key.Unknown)
+				{
+					continue;
+				}
+				switch (k)
+				{
+					case Key.Keypad0:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp0"}, out _)));
+						break;
+					case Key.Keypad1:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad1, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp1"}, out _)));
+						break;
+					case Key.Keypad2:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp2"}, out _)));
+						break;
+					case Key.Keypad3:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp3"}, out _)));
+						break;
+					case Key.Keypad4:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp4"}, out _)));
+						break;
+					case Key.Keypad5:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp5"}, out _)));
+						break;
+					case Key.Keypad6:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp6"}, out _)));
+						break;
+					case Key.Keypad7:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp7"}, out _)));
+						break;
+					case Key.Keypad8:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp8"}, out _)));
+						break;
+					case Key.Keypad9:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp9"}, out _)));
+						break;
+					case Key.KeypadDivide:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "keypad_divide"}, out _)));
+						break;
+					case Key.KeypadEnter:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "keypad_enter"}, out _)));
+						break;
+					case Key.KeypadMultiply:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "keypad_multiply"}, out _)));
+						break;
+					case Key.KeypadDecimal:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "keypad_period"}, out _)));
+						break;
+					case Key.KeypadPlus:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "keypad_plus"}, out _)));
+						break;
+					case Key.BracketLeft:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "leftbracket"}, out _)));
+						break;
+					case Key.BracketRight:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "rightbracket"}, out _)));
+						break;
+					case Key.ShiftLeft:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "lshift"}, out _)));
+						break;
+					default:
+						KeyInfos.Add(k, new Translations.KeyInfo(k, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", k.ToString().ToLowerInvariant()}, out _)));
+						break;
+				}
+			}
 		}
 
 		/// <summary>Gets an interface string unconditionally</summary>

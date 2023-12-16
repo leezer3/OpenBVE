@@ -19,16 +19,10 @@ namespace OpenBveApi.Interface
 		/// <param name="Language">The language string to set</param>
 		public static void SetInGameLanguage(string Language)
 		{
-			//Set command infos to the translated strings
-			for (int i = 0; i < AvailableLanguages.Count; i++)
+			if (AvailableNewLanguages.ContainsKey(Language))
 			{
-				//This is a hack, but the commandinfos are used in too many places to twiddle with easily
-				if (AvailableLanguages[i].LanguageCode == Language)
-				{
-					TranslatedKeys = AvailableLanguages[i].KeyInfos;
-					QuickReferences = AvailableNewLanguages[Language].QuickReferences;
-					break;
-				}
+				TranslatedKeys = AvailableNewLanguages[Language].KeyInfos;
+				QuickReferences = AvailableNewLanguages[Language].QuickReferences;
 			}
 		}
 

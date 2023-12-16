@@ -31,7 +31,7 @@ namespace OpenBve {
 
 						if (Translations.newCommandInfos.ContainsKey(Interface.CurrentControls[i].Command))
 						{
-							comboboxCommand.SelectedItem = Interface.CurrentControls[i].Command;
+							comboboxCommand.SelectedValue = Interface.CurrentControls[i].Command;
 							updownCommandOption.Value = Interface.CurrentControls[i].Option;
 							labelCommandOption.Enabled = Translations.newCommandInfos[Interface.CurrentControls[i].Command].EnableOption;
 							updownCommandOption.Enabled = Translations.newCommandInfos[Interface.CurrentControls[i].Command].EnableOption;
@@ -63,13 +63,9 @@ namespace OpenBve {
 					panelKeyboard.Enabled = radiobuttonKeyboard.Checked;
 					if (radiobuttonKeyboard.Checked)
 					{
-						for (int k = 0; k < Translations.TranslatedKeys.Length; k++)
+						if (Translations.TranslatedKeys.ContainsKey(Interface.CurrentControls[i].Key))
 						{
-							if (Interface.CurrentControls[i].Key == Translations.TranslatedKeys[k].Key)
-							{
-								comboboxKeyboardKey.SelectedIndex = k;
-								break;
-							}
+							comboboxKeyboardKey.SelectedValue = Interface.CurrentControls[i].Key;
 						}
 						checkboxKeyboardShift.Checked = (Interface.CurrentControls[i].Modifier & KeyboardModifier.Shift) != 0;
 						checkboxKeyboardCtrl.Checked = (Interface.CurrentControls[i].Modifier & KeyboardModifier.Ctrl) != 0;
@@ -152,13 +148,10 @@ namespace OpenBve {
 					//OpenTK key description
 					if (Interface.CurrentControls[Index].Key != Key.Unknown)
 					{
-						for (int k = 0; k < Translations.TranslatedKeys.Length; k++)
+						if (Translations.TranslatedKeys.ContainsKey(Interface.CurrentControls[Index].Key))
 						{
-							if (Interface.CurrentControls[Index].Key == Translations.TranslatedKeys[k].Key)
-							{
-								t += Translations.TranslatedKeys[k].Description;
-								return t;
-							}
+							t += Translations.TranslatedKeys[Interface.CurrentControls[Index].Key].Description;
+							return t;
 						}
 						t += Interface.CurrentControls[Index].Key;
 						return t;
@@ -550,12 +543,13 @@ namespace OpenBve {
 			{
 				return;
 			}
-			for (int j = 0; j < Translations.TranslatedKeys.Length; j++)
+			for (int j = 0; j < Translations.TranslatedKeys.Count; j++)
 			{
-				if (kbState.IsKeyDown((OpenTK.Input.Key)Translations.TranslatedKeys[j].Key))
+				Key k = Translations.TranslatedKeys.ElementAt(j).Key;
+				if (kbState.IsKeyDown((OpenTK.Input.Key)k))
 				{
 					int i = listviewControls.SelectedIndices[0];
-					Interface.CurrentControls[i].Key = Translations.TranslatedKeys[j].Key;
+					Interface.CurrentControls[i].Key = k;
 					UpdateControlListElement(listviewControls.Items[i], i, true);
 					comboboxKeyboardKey.SelectedIndex = j;
 				}

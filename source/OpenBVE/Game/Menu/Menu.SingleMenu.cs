@@ -508,13 +508,9 @@ namespace OpenBve
 						{
 							case ControlMethod.Keyboard:
 								string keyName = loadedControl.Key.ToString();
-								for (int k = 0; k < Translations.TranslatedKeys.Length; k++)
+								if (Translations.TranslatedKeys.ContainsKey(loadedControl.Key))
 								{
-									if (Translations.TranslatedKeys[k].Key == loadedControl.Key)
-									{
-										keyName = Translations.TranslatedKeys[k].Description;
-										break;
-									}
+									keyName = Translations.TranslatedKeys[loadedControl.Key].Description;
 								}
 								if (loadedControl.Modifier != KeyboardModifier.None)
 								{

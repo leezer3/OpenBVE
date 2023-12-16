@@ -12,8 +12,6 @@ namespace OpenBveApi.Interface
 		{
 			/// <summary>The interface strings for this language</summary>
 			internal readonly InterfaceString[] InterfaceStrings;
-			/// <summary>The key information strings for this language</summary>
-			internal readonly KeyInfo[] KeyInfos;
 			/// <summary>Returns the number of translated strings contained in the language</summary>
 			internal int InterfaceStringCount => InterfaceStrings.Length;
 
@@ -95,10 +93,6 @@ namespace OpenBveApi.Interface
 				LanguageCode = languageCode;
 				FallbackCodes = new List<string> { "en-US" };
 				
-				KeyInfos = new KeyInfo[TranslatedKeys.Length];
-				
-				Array.Copy(TranslatedKeys, KeyInfos, TranslatedKeys.Length);
-
 				string prefix = string.Empty;
 				XliffFile file = new XliffFile(languageReader, languageCode);
 				List<InterfaceString> strings = new List<InterfaceString>();
@@ -138,17 +132,6 @@ namespace OpenBveApi.Interface
 
 					switch (section)
 					{
-						case "keys":
-							for (int k = 0; k < KeyInfos.Length; k++)
-							{
-								if (string.Compare(KeyInfos[k].Name, key, StringComparison.OrdinalIgnoreCase) == 0)
-								{
-									KeyInfos[k].Description = interfaceString.Text;
-									strings.Remove(interfaceString);
-									break;
-								}
-							}
-							break;
 						case "fallback":
 							switch (key)
 							{
