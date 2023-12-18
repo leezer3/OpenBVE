@@ -159,19 +159,22 @@ namespace OpenBveApi.Interface
 						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp9"}, out _)));
 						break;
 					case Key.KeypadDivide:
-						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "keypad_divide"}, out _)));
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp_divide"}, out _)));
 						break;
 					case Key.KeypadEnter:
-						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "keypad_enter"}, out _)));
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp_enter"}, out _)));
 						break;
 					case Key.KeypadMultiply:
-						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "keypad_multiply"}, out _)));
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp_multiply"}, out _)));
 						break;
 					case Key.KeypadDecimal:
-						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "keypad_period"}, out _)));
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp_period"}, out _)));
 						break;
 					case Key.KeypadPlus:
-						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "keypad_plus"}, out _)));
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp_plus"}, out _)));
+						break;
+					case Key.KeypadMinus:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "kp_minus"}, out _)));
 						break;
 					case Key.BracketLeft:
 						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "leftbracket"}, out _)));
@@ -182,8 +185,29 @@ namespace OpenBveApi.Interface
 					case Key.ShiftLeft:
 						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "lshift"}, out _)));
 						break;
+					case Key.ShiftRight:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "rshift"}, out _)));
+						break;
+					case Key.ControlLeft:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "lctrl"}, out _)));
+						break;
+					case Key.ControlRight:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "rctrl"}, out _)));
+						break;
+					case Key.LWin:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "lsuper"}, out _)));
+						break;
+					case Key.RWin:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "rsuper"}, out _)));
+						break;
+					case Key.PrintScreen:
+						KeyInfos.Add(k, new Translations.KeyInfo(Key.Keypad0, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", "print"}, out _)));
+						break;
 					default:
-						KeyInfos.Add(k, new Translations.KeyInfo(k, GetInterfaceString(HostApplication.OpenBve, new []{ "keys", k.ToString().ToLowerInvariant()}, out _)));
+						string ks = k.ToString().Replace("Number", string.Empty);
+						bool keyIsTranslated;
+						string keyName = GetInterfaceString(HostApplication.OpenBve, new[] { "keys", ks.ToLowerInvariant() }, out keyIsTranslated);
+						KeyInfos.Add(k, keyIsTranslated ? new Translations.KeyInfo(k, keyName) : new Translations.KeyInfo(k, ks));
 						break;
 				}
 			}
