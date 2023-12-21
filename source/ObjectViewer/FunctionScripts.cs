@@ -781,6 +781,20 @@ namespace ObjectViewer {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
+					case Instructions.LocoBrakeNotch:
+						if (Train != null && Train.Handles.LocoBrake != null) {
+							Function.Stack[s] = Train.Handles.LocoBrake.Driver;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.LocoBrakeNotches:
+						if (Train != null) {
+							Function.Stack[s] = Train.Handles.LocoBrake.MaximumNotch;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
 					case Instructions.BrakeNotch:
 						if (Train != null) {
 							Function.Stack[s] = (double)Train.Handles.Brake.Driver;

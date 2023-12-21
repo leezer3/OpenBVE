@@ -150,6 +150,15 @@ namespace ObjectViewer
 				numericUpDownPowerNotch.Value = status.PowerNotch;
 				numericUpDownBrakeNotch.Maximum = specs.BrakeNotches;
 				numericUpDownBrakeNotch.Value = status.BrakeNotch;
+				checkBoxLocoBrake.Checked = specs.HasLocoBrake;
+				numericUpDownLocoBrakeNotch.Enabled = specs.HasLocoBrake;
+				numericUpDownLocoBrakeNotches.Enabled = specs.HasLocoBrake;
+				if (specs.HasLocoBrake)
+				{
+					numericUpDownLocoBrakeNotches.Value = specs.LocoBrakeNotches;
+				}
+				numericUpDownLocoBrakeNotch.Maximum = specs.LocoBrakeNotches;
+				numericUpDownLocoBrakeNotch.Value = status.LocoBrakeNotch;
 				checkBoxSetHoldBrake.Enabled = checkBoxHoldBrake.Checked;
 				checkBoxSetHoldBrake.Checked = status.HoldBrake;
 				checkBoxSetEmergency.Checked = status.EmergencyBrake;
@@ -198,6 +207,8 @@ namespace ObjectViewer
 					specs.BrakeNotches = (int)numericUpDownBrakeNotches.Value;
 					specs.HasHoldBrake = checkBoxHoldBrake.Checked;
 					specs.HasConstSpeed = checkBoxConstSpeed.Checked;
+					specs.HasLocoBrake = checkBoxLocoBrake.Checked;
+					specs.LocoBrakeNotches = (int)numericUpDownLocoBrakeNotches.Value;
 				}
 
 				NearestTrainStatus status = NearestTrain.Status;
@@ -226,6 +237,7 @@ namespace ObjectViewer
 				status.Reverser = (int)numericUpDownReverser.Value;
 				status.PowerNotch = (int)numericUpDownPowerNotch.Value;
 				status.BrakeNotch = (int)numericUpDownBrakeNotch.Value;
+				status.LocoBrakeNotch = (int)numericUpDownLocoBrakeNotch.Value;
 				status.HoldBrake = checkBoxSetHoldBrake.Checked;
 				status.EmergencyBrake = checkBoxSetEmergency.Checked;
 				status.ConstSpeed = checkBoxSetConstSpeed.Checked;
@@ -479,6 +491,21 @@ namespace ObjectViewer
 		{
 			ApplyTrain();
 			Close();
+		}
+
+		private void checkBoxLocoBrake_CheckedChanged(object sender, EventArgs e)
+		{
+			numericUpDownLocoBrakeNotch.Enabled = checkBoxLocoBrake.Checked;
+			numericUpDownLocoBrakeNotches.Enabled = checkBoxLocoBrake.Checked;
+		}
+
+		private void numericUpDownLocoBrakeNotches_ValueChanged(object sender, EventArgs e)
+		{
+			if (numericUpDownLocoBrakeNotch.Value > numericUpDownLocoBrakeNotches.Value)
+			{
+				numericUpDownLocoBrakeNotch.Value = numericUpDownLocoBrakeNotches.Value;
+			}
+			numericUpDownLocoBrakeNotch.Maximum = numericUpDownLocoBrakeNotches.Value;
 		}
 	}
 }

@@ -86,6 +86,16 @@ namespace ObjectViewer.Trains
 				train.Cars[i].Doors[1] = new Door(1, 1000.0, 0.0);
 			}
 
+			if (Specs.HasLocoBrake)
+			{
+				train.Handles.HasLocoBrake = true;
+				train.Handles.LocoBrake = new LocoBrakeHandle(Specs.LocoBrakeNotches, train.Handles.EmergencyBrake, new double[] { }, new double[] { }, train);
+			}
+			else
+			{
+				train.Handles.HasLocoBrake = false;
+				train.Handles.LocoBrake = null;
+			}
 			return train;
 		}
 
@@ -109,19 +119,21 @@ namespace ObjectViewer.Trains
 						IsAirBrake = train.Handles.Brake is AirBrakeHandle,
 						BrakeNotches = train.Handles.Brake.MaximumNotch,
 						HasHoldBrake = train.Handles.HasHoldBrake,
-						HasConstSpeed = train.Handles.HasHoldBrake
+						HasConstSpeed = train.Handles.HasHoldBrake,
 					};
+
+					if (train.Handles.HasLocoBrake)
+					{
+						Specs.HasLocoBrake = true;
+						Specs.LocoBrakeNotches = train.Handles.LocoBrake.MaximumNotch;
+					}
 				}
 
-				if (Status.PowerNotch > Specs.PowerNotches)
-				{
-					Status.PowerNotch = Specs.PowerNotches;
-				}
 
-				if (Status.BrakeNotch > Specs.BrakeNotches)
-				{
-					Status.BrakeNotch = Specs.BrakeNotches;
-				}
+				Status.PowerNotch = Math.Min(Status.PowerNotch, Specs.PowerNotches);
+				Status.BrakeNotch = Math.Min(Status.BrakeNotch, Specs.BrakeNotches);
+				Status.LocoBrakeNotch = Math.Min(Status.LocoBrakeNotch, Specs.LocoBrakeNotches);
+				
 
 				if (Specs.IsAirBrake || !Specs.HasHoldBrake)
 				{
@@ -167,7 +179,6 @@ namespace ObjectViewer.Trains
 						Program.TrainManager.Trains[0] = train;
 						TrainManagerBase.PlayerTrain = train;
 					}
-
 					Status.Apply(train);
 				}
 				else

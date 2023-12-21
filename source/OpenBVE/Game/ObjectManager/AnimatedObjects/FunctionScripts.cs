@@ -883,7 +883,7 @@ namespace OpenBve {
 						}
 						s++; break;
 					case Instructions.LocoBrakeNotch:
-						if (Train != null) {
+						if (Train != null  && Train.Handles.LocoBrake != null) {
 							Function.Stack[s] = Train.Handles.LocoBrake.Driver;
 						} else {
 							Function.Stack[s] = 0.0;
