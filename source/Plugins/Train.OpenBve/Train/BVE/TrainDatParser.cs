@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -1268,14 +1268,12 @@ namespace Train.OpenBve
 					if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
 					{
 						Train.Handles.Brake.Driver = (int)AirBrakeHandleState.Service;
-						Train.Handles.Brake.Safety = (int)AirBrakeHandleState.Service;
 						Train.Handles.Brake.Actual = (int)AirBrakeHandleState.Service;
 					}
 					else
 					{
 						int notch = (int)Math.Round(0.7 * Train.Handles.Brake.MaximumNotch);
 						Train.Handles.Brake.Driver = notch;
-						Train.Handles.Brake.Safety = notch;
 						Train.Handles.Brake.Actual = notch;
 					}
 					Train.Handles.EmergencyBrake.Driver = false;
@@ -1295,13 +1293,11 @@ namespace Train.OpenBve
 					if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
 					{
 						Train.Handles.Brake.Driver = (int)AirBrakeHandleState.Service;
-						Train.Handles.Brake.Safety = (int)AirBrakeHandleState.Service;
 						Train.Handles.Brake.Actual = (int)AirBrakeHandleState.Service;
 					}
 					else
 					{
 						Train.Handles.Brake.Driver = Train.Handles.Brake.MaximumNotch;
-						Train.Handles.Brake.Safety = Train.Handles.Brake.MaximumNotch;
 						Train.Handles.Brake.Actual = Train.Handles.Brake.MaximumNotch;
 					}
 				
@@ -1320,13 +1316,11 @@ namespace Train.OpenBve
 					if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
 					{
 						Train.Handles.Brake.Driver = (int)AirBrakeHandleState.Service;
-						Train.Handles.Brake.Safety = (int)AirBrakeHandleState.Service;
 						Train.Handles.Brake.Actual = (int)AirBrakeHandleState.Service;
 					}
 					else
 					{
 						Train.Handles.Brake.Driver = Train.Handles.Brake.MaximumNotch;
-						Train.Handles.Brake.Safety = Train.Handles.Brake.MaximumNotch;
 						Train.Handles.Brake.Actual = Train.Handles.Brake.MaximumNotch;
 					}
 					Train.Handles.EmergencyBrake.Driver = true;

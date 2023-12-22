@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+using System;
+using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
@@ -158,6 +159,11 @@ namespace TrainManager.Handles
 			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
 			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 			
+		}
+
+		public override void ApplySafetyState(int newState)
+		{
+			safetyState = Math.Min(safetyState, newState);
 		}
 
 		public override string GetNotchDescription(out MessageColor color)

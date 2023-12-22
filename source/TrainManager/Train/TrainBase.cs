@@ -477,8 +477,8 @@ namespace TrainManager.Trains
 			// delayed handles
 			if (Plugin == null)
 			{
-				Handles.Power.Safety = Handles.Power.Driver;
-				Handles.Brake.Safety = Handles.Brake.Driver;
+				Handles.Power.ApplySafetyState(Handles.Power.Driver);
+				Handles.Brake.ApplySafetyState(Handles.Brake.Driver);
 				Handles.EmergencyBrake.Safety = Handles.EmergencyBrake.Driver;
 			}
 
@@ -487,6 +487,7 @@ namespace TrainManager.Trains
 			Handles.Brake.Update();
 			Handles.EmergencyBrake.Update();
 			Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
+			Cars[DriverCar].DSD?.Update(TimeElapsed);
 			// update speeds
 			UpdateSpeeds(TimeElapsed);
 			// Update Run and Motor sounds
