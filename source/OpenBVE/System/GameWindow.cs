@@ -30,6 +30,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.MessageManager;
+using SoundManager;
 using TrainManager.Trains;
 using Path = System.IO.Path;
 using Vector2 = OpenTK.Vector2;
@@ -786,7 +787,10 @@ namespace OpenBve
 					 * We also need to add the length of the train so that the driver car is actually positioned on the platform
 					 *
 					 * Position on routes not specificially designed for reverse running may well be wrong, but that's life
+					 *
+					 * We should also suppress any sound events triggered by moving the train into the 'new' position
 					 */
+					SoundsBase.SuppressSoundEvents = true;
 					Program.TrainManager.Trains[i].Reverse(true, true);
 					p += Program.TrainManager.Trains[i].Length;
 					if (Program.TrainManager.Trains[i].IsPlayerTrain)
@@ -795,10 +799,13 @@ namespace OpenBve
 						Program.TrainManager.Trains[i].Station = PlayerFirstStationIndex;
 					}
 				}
+
+				
 				for (int j = 0; j < Program.TrainManager.Trains[i].Cars.Length; j++)
 				{
 					Program.TrainManager.Trains[i].Cars[j].Move(p);
 				}
+				SoundsBase.SuppressSoundEvents = false;
 			}
 			// timetable
 			if (Program.CurrentRoute.Information.DefaultTimetableDescription.Length == 0)
