@@ -33,27 +33,46 @@ namespace LibRender2.Trains
 
 		/// <summary>Reverses the elements group</summary>
 		/// <param name="pos">The drivers eye position</param>
-		public void Reverse(Vector3 pos)
+		public void Reverse(Vector3 pos, bool is3D)
 		{
-			for (int i = 0; i < Elements.Length; i++)
+			if (is3D)
 			{
-				for (int j = 0; j < Elements[i].States.Length; j++)
+				for (int i = 0; i < Elements.Length; i++)
 				{
-					Elements[i].States[j].Reverse(pos);
+					Elements[i].Reverse(true);
+				}
 
+				if (TouchElements == null)
+				{
+					return;
+				}
+			
+				for (int i = 0; i < TouchElements.Length; i++)
+				{
+					TouchElements[i].Element.Reverse(true);
 				}
 			}
-
-			if (TouchElements == null)
+			else
 			{
-				return;
-			}
-			
-			for (int i = 0; i < TouchElements.Length; i++)
-			{
-				for (int j = 0; j < TouchElements[i].Element.States.Length; j++)
+				for (int i = 0; i < Elements.Length; i++)
 				{
-					TouchElements[i].Element.States[j].Reverse(pos);
+					for (int j = 0; j < Elements[i].States.Length; j++)
+					{
+						Elements[i].States[j].Reverse(pos);
+					}
+				}
+
+				if (TouchElements == null)
+				{
+					return;
+				}
+			
+				for (int i = 0; i < TouchElements.Length; i++)
+				{
+					for (int j = 0; j < TouchElements[i].Element.States.Length; j++)
+					{
+						TouchElements[i].Element.States[j].Reverse(pos);
+					}
 				}
 			}
 		}

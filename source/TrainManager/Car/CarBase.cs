@@ -278,7 +278,7 @@ namespace TrainManager.Car
 						{
 							for (int j = 0; j < CarSections[i].Groups.Length; j++)
 							{
-								CarSections[i].Groups[j].Reverse(Driver);
+								CarSections[i].Groups[j].Reverse(Driver, TrainManagerBase.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable); // restriction not available must equal 3D cab
 							}
 						}
 						else
