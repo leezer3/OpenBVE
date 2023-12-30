@@ -33,6 +33,7 @@ namespace LibRender2.Trains
 
 		/// <summary>Reverses the elements group</summary>
 		/// <param name="pos">The drivers eye position</param>
+		/// <param name="is3D">Whether this is a 3D or 2D elements group</param>
 		public void Reverse(Vector3 pos, bool is3D)
 		{
 			if (is3D)

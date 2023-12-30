@@ -111,6 +111,7 @@
     <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.ResetModes.cs" />
     <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.TriggerMode.cs" />
     <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.Types.cs" />
+    <Compile Include="SafetySystems\Overspeed.cs" />
     <Compile Include="SafetySystems\PassAlarm.cs" />
     <Compile Include="SafetySystems\PilotLamp.cs" />
     <Compile Include="SafetySystems\Plugin\AI\PluginAI.cs" />
