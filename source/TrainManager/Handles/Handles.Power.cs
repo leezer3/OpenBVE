@@ -160,12 +160,7 @@ namespace TrainManager.Handles
 			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 			
 		}
-
-		public override void ApplySafetyState(int newState)
-		{
-			safetyState = Math.Min(safetyState, newState);
-		}
-
+		
 		public override string GetNotchDescription(out MessageColor color)
 		{
 			color = MessageColor.Gray;
