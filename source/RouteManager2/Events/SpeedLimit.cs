@@ -10,8 +10,11 @@ namespace RouteManager2.Events
 		public readonly double PreviousSpeedLimit;
 		public readonly double NextSpeedLimit;
 
-		public LimitChangeEvent(double TrackPositionDelta, double PreviousSpeedLimit, double NextSpeedLimit) : base(TrackPositionDelta)
+		private readonly CurrentRoute currentRoute;
+
+		public LimitChangeEvent(CurrentRoute CurrentRoute, double TrackPositionDelta, double PreviousSpeedLimit, double NextSpeedLimit) : base(TrackPositionDelta)
 		{
+			currentRoute = CurrentRoute;
 			DontTriggerAnymore = false;
 			this.PreviousSpeedLimit = PreviousSpeedLimit;
 			this.NextSpeedLimit = NextSpeedLimit;
@@ -19,6 +22,10 @@ namespace RouteManager2.Events
 
 		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
+			if (currentRoute.Tracks[trackFollower.TrackIndex].Direction == TrackDirection.Reverse)
+			{
+				direction = -direction;
+			}
 			AbstractTrain train = trackFollower.Train;
 			EventTriggerType triggerType = trackFollower.TriggerType;
 
