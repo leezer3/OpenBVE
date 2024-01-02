@@ -80,10 +80,7 @@ namespace TrainManager.Handles
 
 		}
 
-		public void ApplySafetyState(int newState)
-		{
-			safetyState = newState;
-		}
+		public abstract void ApplySafetyState(int newState);
 
 		public virtual void ResetSpring()
 		{
