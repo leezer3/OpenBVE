@@ -53,14 +53,10 @@ namespace TrainManager.Trains
 		public readonly DriverBody DriverBody;
 		/// <summary>Whether the train has currently derailed</summary>
 		public bool Derailed;
-		/// <summary>Stores the previous route speed limit</summary>
-		private double previousRouteLimit;
 		/// <summary>Internal timer used for updates</summary>
 		private double InternalTimerTimeElapsed;
 		/// <inheritdoc/>
 		public override bool IsPlayerTrain => this == TrainManagerBase.PlayerTrain;
-
-		private bool currentlyOverspeed;
 
 		/// <inheritdoc/>
 		public override int NumberOfCars => this.Cars.Length;
@@ -327,31 +323,10 @@ namespace TrainManager.Trains
 			{
 				// available train
 				UpdatePhysicsAndControls(TimeElapsed);
-				if (CurrentSpeed > CurrentRouteLimit)
-				{
-					if (!currentlyOverspeed || previousRouteLimit != CurrentRouteLimit || TrainManagerBase.CurrentOptions.GameMode == GameMode.Arcade)
-					{
-						/*
-						 * HACK: If the limit has changed, or we are in arcade mode, notify the player
-						 *       This conforms to the original behaviour, but doesn't need to raise the message from the event.
-						 */
-						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"message","route_overspeed"}), MessageDependency.RouteLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
-					}
-					currentlyOverspeed = true;
-				}
-				else
-				{
-					currentlyOverspeed = false;
-				}
+				SafetySystems.OverspeedDevice.Update();
 
 				if (TrainManagerBase.CurrentOptions.Accessibility)
 				{
-					if (previousRouteLimit != CurrentRouteLimit)
-					{
-						//Show for 10s and announce the current speed limit if screen reader present
-						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"message","route_newlimit"}), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
-					}
-
 					Section nextSection = TrainManagerBase.CurrentRoute.NextSection(FrontCarTrackPosition);
 					if (nextSection != null)
 					{
@@ -379,7 +354,6 @@ namespace TrainManager.Trains
 						}
 					}
 				}
-				previousRouteLimit = CurrentRouteLimit;
 				if (TrainManagerBase.CurrentOptions.GameMode == GameMode.Arcade)
 				{
 					if (CurrentSectionLimit == 0.0)
@@ -478,8 +452,8 @@ namespace TrainManager.Trains
 			// delayed handles
 			if (Plugin == null)
 			{
-				Handles.Power.Safety = Handles.Power.Driver;
-				Handles.Brake.Safety = Handles.Brake.Driver;
+				Handles.Power.ApplySafetyState(Handles.Power.Driver);
+				Handles.Brake.ApplySafetyState(Handles.Brake.Driver);
 				Handles.EmergencyBrake.Safety = Handles.EmergencyBrake.Driver;
 			}
 
@@ -488,6 +462,7 @@ namespace TrainManager.Trains
 			Handles.Brake.Update();
 			Handles.EmergencyBrake.Update();
 			Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
+			Cars[DriverCar].DSD?.Update(TimeElapsed);
 			// update speeds
 			UpdateSpeeds(TimeElapsed);
 			// Update Run and Motor sounds

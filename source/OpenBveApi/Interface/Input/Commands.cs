@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Runtime;
 
 namespace OpenBveApi.Interface {
@@ -311,7 +311,9 @@ namespace OpenBveApi.Interface {
 			/// <summary>Uncouples the front coupling of a car</summary>
 			UncoupleFront,
 			/// <summary>Uncouples the rear coupling of a car</summary>
-			UncoupleRear
+			UncoupleRear,
+			/// <summary>Controls the DSD</summary>
+			DriverSupervisionDevice
 		}
 
 		/// <summary>Defines the possible command types</summary>

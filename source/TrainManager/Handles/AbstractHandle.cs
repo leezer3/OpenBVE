@@ -12,7 +12,10 @@ namespace TrainManager.Handles
 		public int Driver;
 
 		/// <summary>The notch set by the safety sytem</summary>
-		public int Safety;
+		public int Safety => safetyState;
+
+		/// <summary>Backing property for the safety state</summary>
+		protected int safetyState;
 
 		/// <summary>The actual notch, as used by the physics system etc.</summary>
 		public int Actual;
@@ -76,6 +79,8 @@ namespace TrainManager.Handles
 		{
 
 		}
+
+		public abstract void ApplySafetyState(int newState);
 
 		public virtual void ResetSpring()
 		{

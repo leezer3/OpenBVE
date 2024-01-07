@@ -883,7 +883,7 @@ namespace OpenBve {
 						}
 						s++; break;
 					case Instructions.LocoBrakeNotch:
-						if (Train != null) {
+						if (Train != null  && Train.Handles.LocoBrake != null) {
 							Function.Stack[s] = Train.Handles.LocoBrake.Driver;
 						} else {
 							Function.Stack[s] = 0.0;
@@ -1435,7 +1435,8 @@ namespace OpenBve {
 						}
 						s++; break;
 					case Instructions.RainDrop:
-						if (Train == null || !Train.IsPlayerTrain) {
+						// n.b. windscreen may be null if we've changed driver car, or this is used in non XML train
+						if (Train == null || !Train.IsPlayerTrain && Train.Cars[Train.DriverCar].Windscreen != null) {
 							Function.Stack[s - 1] = 0.0;
 						} else {
 							int n = (int)Math.Round(Function.Stack[s - 1]);
@@ -1536,6 +1537,18 @@ namespace OpenBve {
 								Function.Stack[s] = 0.0;
 							}
 						} 
+						s++; break;
+					case Instructions.DSD:
+						{
+							if (Train != null && Train.Cars[Train.DriverCar].DSD != null)
+							{
+								Function.Stack[s] = Train.Cars[Train.DriverCar].DSD.Triggered ? 1 : 0;
+							}
+							else
+							{
+								Function.Stack[s] = 0.0;
+							}
+						}
 						s++; break;
 					case Instructions.AmbientTemperature:
 						{

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+using System;
+using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
@@ -114,6 +115,11 @@ namespace TrainManager.Handles
 				TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 			
 		}
+
+		public override void ApplySafetyState(int newState)
+		{
+			safetyState = newState;
+		}
 	}
 
 	/// <summary>A locomotive air brake handle</summary>
@@ -204,6 +210,11 @@ namespace TrainManager.Handles
 				Actual = (int) newState; //TODO: FIXME
 				TrainManagerBase.currentHost.AddBlackBoxEntry();
 			}
+		}
+
+		public override void ApplySafetyState(int newState)
+		{
+			safetyState = Math.Max(safetyState, newState);
 		}
 
 		public override string GetNotchDescription(out MessageColor color)

@@ -9,14 +9,17 @@
 		internal int PowerNotches;
 		internal bool IsAirBrake;
 		internal int BrakeNotches;
+		internal int LocoBrakeNotches;
 		internal bool HasHoldBrake;
 		internal bool HasConstSpeed;
+		internal bool HasLocoBrake;
 
 		internal NearestTrainSpecs()
 		{
 			NumberOfCars = 1;
 			PowerNotches = 8;
 			BrakeNotches = 8;
+			LocoBrakeNotches = 0;
 		}
 	}
 }

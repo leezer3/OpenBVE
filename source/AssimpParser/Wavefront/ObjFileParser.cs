@@ -148,6 +148,10 @@ namespace AssimpNET.Obj
 				{
 					Model.Exporter = ModelExporter.BlockBench;
 				}
+				if (buffer.IndexOf("Blender", StringComparison.InvariantCultureIgnoreCase) != -1)
+				{
+					Model.Exporter = ModelExporter.Blender;
+				}
 				if(hash != -1)
 				{
 					string afterHash = buffer.Substring(hash + 1).Trim();

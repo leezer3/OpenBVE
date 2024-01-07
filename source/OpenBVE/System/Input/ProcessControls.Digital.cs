@@ -33,6 +33,7 @@ namespace OpenBve
 				// pressed
 				Control.DigitalState =
 					DigitalControlState.PressedAcknowledged;
+				TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DSD?.ControlDown(Control.Command);
 				switch (Control.Command)
 				{
 					case Translations.Command.MiscQuit:
@@ -974,7 +975,6 @@ namespace OpenBve
 							TrainManager.PlayerTrain.Plugin.KeyDown(
 								Translations.SecurityToVirtualKey(Control.Command));
 						}
-
 						break;
 					case Translations.Command.Sanders:
 						if (TrainManager.PlayerTrain.Plugin != null)
@@ -1374,6 +1374,7 @@ namespace OpenBve
 				// released
 				Control.DigitalState =
 					DigitalControlState.ReleasedAcknowledged;
+				TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DSD?.ControlUp(Control.Command);
 				switch (Control.Command)
 				{
 					case Translations.Command.SingleBrake:
