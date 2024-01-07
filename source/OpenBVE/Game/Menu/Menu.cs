@@ -17,6 +17,7 @@ using OpenBveApi.Packages;
 using OpenBveApi.Textures;
 using OpenTK;
 using TrainManager;
+using Control = OpenBveApi.Interface.Control;
 using Path = OpenBveApi.Path;
 using Vector2 = OpenBveApi.Math.Vector2;
 
@@ -155,6 +156,9 @@ namespace OpenBve
 			LogoPictureBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0);
 			LogoPictureBox.Size = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Width / 2.0);
 			LogoPictureBox.Texture = Program.Renderer.ProgramLogo;
+			controlPictureBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0);
+			controlPictureBox.Size = new Vector2(quarterWidth, quarterWidth);
+			controlPictureBox.BackgroundColor = Color128.Transparent;
 			isInitialized = true;
 		}
 
@@ -783,6 +787,8 @@ namespace OpenBve
 
 		private double pluginKeepAliveTimer;
 
+		private ControlMethod lastControlMethod;
+
 		//
 		// DRAW MENU
 		//
@@ -1000,6 +1006,63 @@ namespace OpenBve
 							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_button"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
 						}
 					}
+					break;
+				case MenuType.Controls:
+					if (menu.Selection != menu.LastSelection)
+					{
+						switch (Interface.CurrentControls[menu.Selection].Method)
+						{
+							case ControlMethod.Keyboard:
+								if (lastControlMethod != ControlMethod.Keyboard)
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "keyboard.png"), new TextureParameters(null, null), out controlPictureBox.Texture, true);
+								}
+								lastControlMethod = ControlMethod.Keyboard;
+								break;
+							
+							case ControlMethod.Joystick:
+								if (lastControlMethod != ControlMethod.Joystick)
+								{
+									Guid guid = Interface.CurrentControls[i].Device;
+									
+									if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("gamepad", StringComparison.InvariantCultureIgnoreCase) != -1)
+									{
+										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "gamepad.png"), new TextureParameters(null, null), out controlPictureBox.Texture, true);
+									}
+									else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("xinput", StringComparison.InvariantCultureIgnoreCase) != -1)
+									{
+										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "xbox.png"), new TextureParameters(null, null), out controlPictureBox.Texture, true);
+									}
+									else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("mascon", StringComparison.InvariantCultureIgnoreCase) != -1)
+									{
+										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "zuki.png"), new TextureParameters(null, null), out controlPictureBox.Texture, true);
+									}
+									else
+									{
+										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "joystick.png"), new TextureParameters(null, null), out controlPictureBox.Texture, true);
+									}
+								}
+								lastControlMethod = ControlMethod.Joystick;
+								break;
+							case ControlMethod.RailDriver:
+								if (lastControlMethod != ControlMethod.RailDriver)
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "raildriver.png"), new TextureParameters(null, null), out controlPictureBox.Texture, true);
+								}
+								lastControlMethod = ControlMethod.RailDriver;
+								break;
+							default:
+								// not really supported in the GL menu yet
+								controlPictureBox.Texture = null;
+								lastControlMethod = Interface.CurrentControls[menu.Selection].Method;
+								break;
+						}
+					}
+					if (controlPictureBox.Texture == null)
+					{
+						
+					}
+					controlPictureBox.Draw();
 					break;
 			}
 			

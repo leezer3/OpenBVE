@@ -31,8 +31,9 @@ namespace OpenBve
 			public readonly double Width = 0;
 			/// <summary>The absolute height</summary>
 			public readonly double Height = 0;
+			/// <summary>The previous menu selection</summary>
+			internal int LastSelection = int.MaxValue;
 
-			private int lastSelection = int.MaxValue;
 			private int currentSelection;
 			
 			public int Selection
@@ -43,9 +44,9 @@ namespace OpenBve
 				}
 				set
 				{
-					lastSelection = currentSelection;
+					LastSelection = currentSelection;
 					currentSelection = value;
-					if (currentSelection != lastSelection && Interface.CurrentOptions.ScreenReaderAvailable)
+					if (currentSelection != LastSelection && Interface.CurrentOptions.ScreenReaderAvailable)
 					{
 						if (!Tolk.Output(Items[currentSelection].Text))
 						{
