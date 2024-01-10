@@ -17,6 +17,7 @@ using OpenBveApi.Packages;
 using OpenBveApi.Textures;
 using OpenTK;
 using TrainManager;
+using Control = OpenBveApi.Interface.Control;
 using Path = OpenBveApi.Path;
 using Vector2 = OpenBveApi.Math.Vector2;
 
@@ -161,7 +162,12 @@ namespace OpenBve
 			controlTextBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0 + quarterWidth);
 			controlTextBox.Size = new Vector2(quarterWidth, quarterWidth);
 			controlTextBox.BackgroundColor = Color128.Black;
-
+			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "keyboard.png"), new TextureParameters(null, null), out KeyboardTexture, true);
+			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "gamepad.png"), new TextureParameters(null, null), out GamepadTexture, true);
+			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "xbox.png"), new TextureParameters(null, null), out XInputTexture, true);
+			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "zuki.png"), new TextureParameters(null, null), out MasconTeture, true);
+			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "joystick.png"), new TextureParameters(null, null), out JoystickTexture, true);
+			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "raildriver.png"), new TextureParameters(null, null), out RailDriverTexture, true);
 			isInitialized = true;
 		}
 
@@ -1011,14 +1017,15 @@ namespace OpenBve
 					}
 					break;
 				case MenuType.Controls:
+					int data = (int)((MenuCommand)menu.Items[menu.Selection]).Data;
 					if (menu.Selection != menu.LastSelection)
 					{
-						switch (Interface.CurrentControls[menu.Selection].Method)
+						switch (Interface.CurrentControls[data].Method)
 						{
 							case ControlMethod.Keyboard:
 								if (lastControlMethod != ControlMethod.Keyboard)
 								{
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "keyboard.png"), new TextureParameters(null, null), out controlPictureBox.Texture, true);
+									controlPictureBox.Texture = KeyboardTexture;
 								}
 								lastControlMethod = ControlMethod.Keyboard;
 								break;
@@ -1026,23 +1033,25 @@ namespace OpenBve
 							case ControlMethod.Joystick:
 								if (lastControlMethod != ControlMethod.Joystick)
 								{
-									Guid guid = Interface.CurrentControls[i].Device;
-									
-									if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("gamepad", StringComparison.InvariantCultureIgnoreCase) != -1)
+									Guid guid = Interface.CurrentControls[data].Device;
+									if (Program.Joysticks.AttachedJoysticks.ContainsKey(guid))
 									{
-										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "gamepad.png"), new TextureParameters(null, null), out controlPictureBox.Texture, true);
-									}
-									else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("xinput", StringComparison.InvariantCultureIgnoreCase) != -1)
-									{
-										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "xbox.png"), new TextureParameters(null, null), out controlPictureBox.Texture, true);
-									}
-									else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("mascon", StringComparison.InvariantCultureIgnoreCase) != -1)
-									{
-										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "zuki.png"), new TextureParameters(null, null), out controlPictureBox.Texture, true);
-									}
-									else
-									{
-										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "joystick.png"), new TextureParameters(null, null), out controlPictureBox.Texture, true);
+										if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("gamepad", StringComparison.InvariantCultureIgnoreCase) != -1)
+										{
+											controlPictureBox.Texture = GamepadTexture;
+										}
+										else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("xinput", StringComparison.InvariantCultureIgnoreCase) != -1)
+										{
+											controlPictureBox.Texture = XInputTexture;
+										}
+										else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("mascon", StringComparison.InvariantCultureIgnoreCase) != -1)
+										{
+											controlPictureBox.Texture = MasconTeture;
+										}
+										else
+										{
+											controlPictureBox.Texture = JoystickTexture;
+										}
 									}
 								}
 								lastControlMethod = ControlMethod.Joystick;
@@ -1050,19 +1059,19 @@ namespace OpenBve
 							case ControlMethod.RailDriver:
 								if (lastControlMethod != ControlMethod.RailDriver)
 								{
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "raildriver.png"), new TextureParameters(null, null), out controlPictureBox.Texture, true);
+									controlPictureBox.Texture = RailDriverTexture;
 								}
 								lastControlMethod = ControlMethod.RailDriver;
 								break;
 							default:
 								// not really supported in the GL menu yet
 								controlPictureBox.Texture = null;
-								lastControlMethod = Interface.CurrentControls[menu.Selection].Method;
+								lastControlMethod = Interface.CurrentControls[data].Method;
 								break;
 						}
 					}
 
-					controlTextBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","assignment_current"}) + Environment.NewLine + Environment.NewLine + GetControlDescription(menu.Selection);
+					controlTextBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","assignment_current"}) + Environment.NewLine + Environment.NewLine + GetControlDescription(data);
 					controlTextBox.Draw();
 					controlPictureBox.Draw();
 					break;

@@ -1,10 +1,23 @@
-﻿using OpenBveApi.Hosts;
+﻿using LibRender2.Primitives;
+using OpenBveApi.Colors;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
 	public sealed partial class Menu
 	{
+		private static readonly Picturebox controlPictureBox = new Picturebox(Program.Renderer);
+		private static readonly Textbox controlTextBox = new Textbox(Program.Renderer, Program.Renderer.Fonts.NormalFont, Color128.White, Color128.Black);
+		// Cached textures
+		private static Texture JoystickTexture;
+		private static Texture KeyboardTexture;
+		private static Texture GamepadTexture;
+		private static Texture XInputTexture;
+		private static Texture MasconTeture;
+		private static Texture RailDriverTexture;
+
 		/// <summary>Builds the description string for a control</summary>
 		private static string GetControlDescription(int idx)
 		{
@@ -30,7 +43,7 @@ namespace OpenBve
 					}
 					break;
 				case ControlMethod.Joystick:
-					str = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "joystick" }) + " " + loadedControl.Device + " [" + loadedControl.Component + " " + loadedControl.Element + "]";
+					str = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "joystick" }) + " [" + loadedControl.Component + " " + loadedControl.Element + "]";
 					switch (loadedControl.Component)
 					{
 						case JoystickComponent.FullAxis:
