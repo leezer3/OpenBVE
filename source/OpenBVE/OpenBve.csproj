@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	<NoWarn>$(NoWarn),IDE1006</NoWarn>
+    <NoWarn>$(NoWarn),IDE1006</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -143,6 +143,7 @@
     <Compile Include="Game\AI\AI.SimpleHuman.cs">
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Game\Menu\Menu.Controls.cs" />
     <Compile Include="Game\Menu\Menu.MenuCaption.cs" />
     <Compile Include="Game\Menu\Menu.MenuCommand.cs" />
     <Compile Include="Game\Menu\Menu.MenuEntry.cs" />

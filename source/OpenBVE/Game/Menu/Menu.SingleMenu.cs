@@ -504,60 +504,7 @@ namespace OpenBve
 						Items[0] = new MenuCommand(loadedControl.Command + " - " +
 						                           Translations.newCommandInfos[loadedControl.Command].Description, MenuTag.None, 0);
 						// get assignment
-						String str = "";
-						switch (loadedControl.Method)
-						{
-							case ControlMethod.Keyboard:
-								string keyName = loadedControl.Key.ToString();
-								if (Translations.TranslatedKeys.ContainsKey(loadedControl.Key))
-								{
-									keyName = Translations.TranslatedKeys[loadedControl.Key].Description;
-								}
-								if (loadedControl.Modifier != KeyboardModifier.None)
-								{
-									str = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","keyboard"}) + " [" + loadedControl.Modifier + "-" + keyName + "]";
-								}
-								else
-								{
-									str = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","keyboard"}) + " [" + keyName + "]";
-								}
-								break;
-							case ControlMethod.Joystick:
-								str = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","joystick"}) + " " + loadedControl.Device + " [" + loadedControl.Component + " " + loadedControl.Element + "]";
-								switch (loadedControl.Component)
-								{
-									case JoystickComponent.FullAxis:
-									case JoystickComponent.Axis:
-										str += " " + (loadedControl.Direction == 1 ? Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","joystickdirection_positive"}) : Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","joystickdirection_negative"}));
-										break;
-									//						case Interface.JoystickComponent.Button:	// NOTHING TO DO FOR THIS CASE!
-									//							str = str;
-									//							break;
-									case JoystickComponent.Hat:
-										str += " " + (OpenTK.Input.HatPosition)loadedControl.Direction;
-										break;
-									case JoystickComponent.Invalid:
-										str = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","joystick_notavailable"});
-										break;
-								}
-								break;
-							case ControlMethod.RailDriver:
-								str = "RailDriver [" + loadedControl.Component + " " + loadedControl.Element + "]";
-								switch (loadedControl.Component)
-								{
-									case JoystickComponent.FullAxis:
-									case JoystickComponent.Axis:
-										str += " " + (loadedControl.Direction == 1 ? Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","joystickdirection_positive"}) : Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","joystickdirection_negative"}));
-										break;
-									case JoystickComponent.Invalid:
-										str = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","joystick_notavailable"});
-										break;
-								}
-								break;
-							case ControlMethod.Invalid:
-								str = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","joystick_notavailable"});
-								break;
-						}
+						string str = GetControlDescription(data);
 						Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","assignment_current"}) + " " + str, MenuTag.None, 0);
 						Items[2] = new MenuCommand(" ", MenuTag.None, 0);
 						Items[3] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","assign"}), MenuTag.None, 0);

@@ -17,7 +17,6 @@ using OpenBveApi.Packages;
 using OpenBveApi.Textures;
 using OpenTK;
 using TrainManager;
-using Control = OpenBveApi.Interface.Control;
 using Path = OpenBveApi.Path;
 using Vector2 = OpenBveApi.Math.Vector2;
 
@@ -159,6 +158,10 @@ namespace OpenBve
 			controlPictureBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0);
 			controlPictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			controlPictureBox.BackgroundColor = Color128.Transparent;
+			controlTextBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0 + quarterWidth);
+			controlTextBox.Size = new Vector2(quarterWidth, quarterWidth);
+			controlTextBox.BackgroundColor = Color128.Black;
+
 			isInitialized = true;
 		}
 
@@ -1058,10 +1061,9 @@ namespace OpenBve
 								break;
 						}
 					}
-					if (controlPictureBox.Texture == null)
-					{
-						
-					}
+
+					controlTextBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","assignment_current"}) + Environment.NewLine + Environment.NewLine + GetControlDescription(menu.Selection);
+					controlTextBox.Draw();
 					controlPictureBox.Draw();
 					break;
 			}
