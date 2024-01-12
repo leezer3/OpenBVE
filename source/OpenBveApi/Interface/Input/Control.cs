@@ -43,7 +43,7 @@ namespace OpenBveApi.Interface
 					s += Key + ", " + (int)Modifier + ", " + Option;
 					break;
 				case ControlMethod.Joystick:
-					s += Component + ", " + Element ;
+					s += Device + ", " + Component + ", " + Element;
 					if (Component != JoystickComponent.Button)
 					{
 						s += ", " + Direction;
