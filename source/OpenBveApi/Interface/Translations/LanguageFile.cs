@@ -1,6 +1,7 @@
-using System;
+
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -27,13 +28,6 @@ namespace OpenBveApi.Interface {
 	                try
 	                {
 		                using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read))
-		                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-		                {
-			                Language l = new Language(reader, System.IO.Path.GetFileNameWithoutExtension(File));
-			                AvailableLanguages.Add(l);
-		                }
-
-		                using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read))
 		                {
 			                AvailableNewLanguages.Add(System.IO.Path.GetFileNameWithoutExtension(File), new NewLanguage(stream, File));
 		                }
@@ -52,11 +46,8 @@ namespace OpenBveApi.Interface {
 		/// <summary>Loads the embedded default language</summary>
 		private static void LoadEmbeddedLanguage()
 		{
-			using (TextReader reader = new StringReader(Resource.en_US))
-			{
-				Language l = new Language(reader, "en-US");
-				AvailableLanguages.Add(l);
-			}
+			NewLanguage l = new NewLanguage(Resource.en_US);
+			AvailableNewLanguages.Add("en-US", l);
 			CurrentLanguageCode = "en-US";
 		}
 
@@ -64,14 +55,19 @@ namespace OpenBveApi.Interface {
 		/// <param name="comboboxLanguages">The combobox to populate</param>
         public static void ListLanguages(ComboBox comboboxLanguages) {
             comboboxLanguages.Items.Clear();
+
+            comboboxLanguages.DataSource = new BindingSource(AvailableNewLanguages, null);
+            comboboxLanguages.DisplayMember = "Value";
+            comboboxLanguages.ValueMember = "Key";
             //Load all available languages
 	        int idx = -1;
-			for (int i = 0; i < AvailableLanguages.Count; i++)
+			for (int i = 0; i < AvailableNewLanguages.Count; i++)
 			{
-				comboboxLanguages.Items.Add(AvailableLanguages[i]);
-				if (AvailableLanguages[i].LanguageCode == CurrentLanguageCode)
+				string key = AvailableNewLanguages.ElementAt(i).Key;
+				if (key == CurrentLanguageCode)
 				{
 					idx = i;
+					break;
 				}
 			}
 
@@ -89,27 +85,20 @@ namespace OpenBveApi.Interface {
 		/// <returns>True if we have found and successfully loaded the flag image</returns>
 		public static bool SelectedLanguage(string FlagFolder, ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages, out string LanguageImage)
 		{
-			LanguageImage = null;
-			int i = comboboxLanguages.SelectedIndex;
-			if (i != -1)
+			LanguageImage = Path.CombineFile(FlagFolder, "unknown.png");
+			if (comboboxLanguages.SelectedIndex == -1)
 			{
-				if (!(comboboxLanguages.Items[i] is Language l))
-				{
-					return false;
-				}
-				CurrentLanguageCode = l.LanguageCode;
-				CurrentLanguageCodeArgument = l.LanguageCode;
-				string File = Path.CombineFile(FlagFolder, l.Flag);
-				if (!System.IO.File.Exists(File)) {
-					File = Path.CombineFile(FlagFolder, "unknown.png");
-				}
-				if (System.IO.File.Exists(File))
-				{
-					LanguageImage = File;
-				}
-				return true;
+				return false;
 			}
-            return false;
+			KeyValuePair<string, NewLanguage> kvp = (KeyValuePair<string, NewLanguage>)comboboxLanguages.SelectedItem;
+			CurrentLanguageCode = kvp.Value.Code;
+			CurrentLanguageCodeArgument = kvp.Value.Code;
+			LanguageImage = Path.CombineFile(FlagFolder, kvp.Value.Flag);
+			if (!File.Exists(LanguageImage)) 
+			{
+				LanguageImage = Path.CombineFile(FlagFolder, "unknown.png");
+			}
+			return true;
         }
 
 		/// <summary>Selects a language</summary>
@@ -117,21 +106,15 @@ namespace OpenBveApi.Interface {
 		/// <param name="comboboxLanguages">A reference to the combobox used to select the UI language</param>
 		/// <returns>True if the language was found and selected successfully</returns>
         public static bool SelectedLanguage(ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages) {
-            int i = comboboxLanguages.SelectedIndex;
-			if (i != -1)
+			if (comboboxLanguages.SelectedIndex == -1)
 			{
-				if (!(comboboxLanguages.Items[i] is Language l))
-				{
-					return false;
-				}
-				CurrentLanguageCode = l.LanguageCode;
-				CurrentLanguageCodeArgument = l.LanguageCode;
-				return true;
+				return false;
 			}
-            return false;
-        }
-
-		private static readonly List<Language> AvailableLanguages = new List<Language>();
+			KeyValuePair<string, NewLanguage> kvp = (KeyValuePair<string, NewLanguage>)comboboxLanguages.SelectedItem;
+			CurrentLanguageCode = kvp.Value.Code;
+			CurrentLanguageCodeArgument = kvp.Value.Code;
+			return true;
+		}
 
 		internal static readonly Dictionary<string, NewLanguage> AvailableNewLanguages = new Dictionary<string, NewLanguage>();
 

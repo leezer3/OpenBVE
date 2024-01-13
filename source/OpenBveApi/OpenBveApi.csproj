@@ -111,7 +111,6 @@
     <Compile Include="Interface\Logging\LogMessage.cs" />
     <Compile Include="Interface\Logging\LogMessage.MessageType.cs" />
     <Compile Include="Interface\Time.cs" />
-    <Compile Include="Interface\Translations\Language.cs" />
     <Compile Include="Interface\Translations\Language\InterfaceQuickReference.cs" />
     <Compile Include="Interface\Translations\Language\Language.cs" />
     <Compile Include="Interface\Translations\Language\TranslationGroup.cs" />

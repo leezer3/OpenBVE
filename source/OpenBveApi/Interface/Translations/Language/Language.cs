@@ -89,16 +89,16 @@ namespace OpenBveApi.Interface
 								// properties which are language specific as I suspect this is not the intended way to do this.....
 								//
 								// To try and maintain full compatability with anything manually edited, use the target in preference to the source
-								switch((string)strings[i].Attribute("id"))
+								switch((string)strings[j].Attribute("id"))
 								{
 									case "name":
-										Name = strings[i].Element(xmlns + "target") != null ? (string)strings[i].Element(xmlns + "target") : (string)strings[i].Element(xmlns + "source");
+										Name = strings[j].Element(xmlns + "target") != null ? (string)strings[j].Element(xmlns + "target") : (string)strings[j].Element(xmlns + "source");
 										break;
 									case "flag":
-										Flag = strings[i].Element(xmlns + "target") != null ? (string)strings[i].Element(xmlns + "target") : (string)strings[i].Element(xmlns + "source");
+										Flag = strings[j].Element(xmlns + "target") != null ? (string)strings[j].Element(xmlns + "target") : (string)strings[j].Element(xmlns + "source");
 										break;
 									case "contributors":
-										Contributors = strings[i].Element(xmlns + "target") != null ? (string)strings[i].Element(xmlns + "target") : (string)strings[i].Element(xmlns + "source");
+										Contributors = strings[j].Element(xmlns + "target") != null ? (string)strings[j].Element(xmlns + "target") : (string)strings[j].Element(xmlns + "source");
 										break;
 									case "last_updated":
 										break;
@@ -297,6 +297,12 @@ namespace OpenBveApi.Interface
 				return translationGroup.Strings[stringKey].Translation;
 			}
 			return string.Empty;
+		}
+
+		/// <summary>Returns the name of the language</summary>
+		public override string ToString()
+		{
+			return Name;
 		}
 	}
 }
