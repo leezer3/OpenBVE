@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using LibRender2.Menu;
 using LibRender2.Primitives;
 using OpenBveApi;
 using OpenBveApi.Colors;

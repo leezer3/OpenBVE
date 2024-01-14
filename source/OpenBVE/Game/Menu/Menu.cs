@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using LibRender2.Menu;
 using LibRender2.Primitives;
 using LibRender2.Screens;
 using LibRender2.Text;

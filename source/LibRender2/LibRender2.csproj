@@ -57,6 +57,13 @@
     <Compile Include="Fog\Fog.cs" />
     <Compile Include="Lighting\Lighting.cs" />
     <Compile Include="Loading\Loading.cs" />
+    <Compile Include="Menu\Menu.RouteState.cs" />
+    <Compile Include="Menu\MenuCaption.cs" />
+    <Compile Include="Menu\MenuCommand.cs" />
+    <Compile Include="Menu\MenuEntry.cs" />
+    <Compile Include="Menu\MenuOption.Type.cs" />
+    <Compile Include="Menu\MenuTag.cs" />
+    <Compile Include="Menu\MenuType.cs" />
     <Compile Include="MotionBlur\MotionBlur.cs" />
     <Compile Include="MotionBlur\MotionBlurMode.cs" />
     <Compile Include="Objects\FaceState.cs" />

@@ -193,7 +193,7 @@ namespace OpenBve
 			            Program.currentGameWindow.Height = resolutions[i].Height;
 			            Program.Renderer.Screen.Width = Interface.CurrentOptions.FullscreenWidth;
 			            Program.Renderer.Screen.Height = Interface.CurrentOptions.FullscreenHeight;
-                        Program.currentGameWindow.WindowState = WindowState.Fullscreen;
+			            Program.Renderer.SetWindowState(WindowState.Fullscreen);
 				        break;
 			        }
 			    }
@@ -208,7 +208,7 @@ namespace OpenBve
 			else
 			{
                 DisplayDevice.Default.RestoreResolution();
-                Program.currentGameWindow.WindowState = WindowState.Normal;
+                Program.Renderer.SetWindowState(WindowState.Normal);
                 Program.currentGameWindow.Width = Interface.CurrentOptions.WindowWidth;
                 Program.currentGameWindow.Height = Interface.CurrentOptions.WindowHeight;
 
