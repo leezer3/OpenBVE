@@ -1598,16 +1598,16 @@ namespace TrainEditor2.IO.Panels.Xml
 							int i;
 							Translations.CommandInfo info = new Translations.CommandInfo();
 
-							for (i = 0; i < Translations.newCommandInfos.Count; i++)
+							for (i = 0; i < Translations.CommandInfos.Count; i++)
 							{
-								Translations.Command command = Translations.newCommandInfos.ElementAt(i).Key;
-								if (string.Compare(value, Translations.newCommandInfos[command].Name, StringComparison.OrdinalIgnoreCase) == 0)
+								Translations.Command command = Translations.CommandInfos.ElementAt(i).Key;
+								if (string.Compare(value, Translations.CommandInfos[command].Name, StringComparison.OrdinalIgnoreCase) == 0)
 								{
 									break;
 								}
 							}
 
-							if (i == Translations.newCommandInfos.Count || info.Type != Translations.CommandType.Digital)
+							if (i == Translations.CommandInfos.Count || info.Type != Translations.CommandType.Digital)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1748,16 +1748,16 @@ namespace TrainEditor2.IO.Panels.Xml
 								int i;
 								Translations.CommandInfo info = new Translations.CommandInfo();
 
-								for (i = 0; i < Translations.newCommandInfos.Count; i++)
+								for (i = 0; i < Translations.CommandInfos.Count; i++)
 								{
-									Translations.Command command = Translations.newCommandInfos.ElementAt(i).Key;
-									if (string.Compare(value, Translations.newCommandInfos[command].Name, StringComparison.OrdinalIgnoreCase) == 0)
+									Translations.Command command = Translations.CommandInfos.ElementAt(i).Key;
+									if (string.Compare(value, Translations.CommandInfos[command].Name, StringComparison.OrdinalIgnoreCase) == 0)
 									{
 										break;
 									}
 								}
 
-								if (i == Translations.newCommandInfos.Count || info.Type != Translations.CommandType.Digital)
+								if (i == Translations.CommandInfos.Count || info.Type != Translations.CommandType.Digital)
 								{
 									Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}

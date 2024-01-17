@@ -13,7 +13,7 @@ namespace OpenBve
 					continue;
 				}
 
-				bool enableOption = Translations.newCommandInfos[Interface.CurrentControls[i].Command].EnableOption;
+				bool enableOption = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
 				if (e.Control.Command == Interface.CurrentControls[i].Command)
 				{
 					if (enableOption && e.Control.Option != Interface.CurrentControls[i].Option)
@@ -35,7 +35,7 @@ namespace OpenBve
 				{
 					continue;
 				}
-				bool enableOption = Translations.newCommandInfos[Interface.CurrentControls[i].Command].EnableOption;
+				bool enableOption = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
 				if (e.Control.Command == Interface.CurrentControls[i].Command)
 				{
 					if (enableOption && e.Control.Option != Interface.CurrentControls[i].Option)

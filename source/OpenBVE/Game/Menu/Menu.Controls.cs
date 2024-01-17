@@ -10,13 +10,6 @@ namespace OpenBve
 	{
 		private static readonly Picturebox controlPictureBox = new Picturebox(Program.Renderer);
 		private static readonly Textbox controlTextBox = new Textbox(Program.Renderer, Program.Renderer.Fonts.NormalFont, Color128.White, Color128.Black);
-		// Cached textures
-		private static Texture JoystickTexture;
-		private static Texture KeyboardTexture;
-		private static Texture GamepadTexture;
-		private static Texture XInputTexture;
-		private static Texture MasconTeture;
-		private static Texture RailDriverTexture;
 
 		/// <summary>Builds the description string for a control</summary>
 		private static string GetControlDescription(int idx)

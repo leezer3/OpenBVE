@@ -70,7 +70,7 @@ namespace TrainEditor2.Models.Panels
 
 			internal CommandEntry()
 			{
-				Info = Translations.newCommandInfos.TryGetInfo(Translations.Command.None);
+				Info = Translations.CommandInfos.TryGetInfo(Translations.Command.None);
 				Option = 0;
 			}
 

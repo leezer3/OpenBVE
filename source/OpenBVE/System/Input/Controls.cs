@@ -27,7 +27,7 @@ namespace OpenBve
 			Builder.AppendLine("; This file is INCOMPATIBLE with versions older than 1.4.4.");
 			Builder.AppendLine();
 			for (int i = 0; i < controlsToSave.Length; i++) {
-				Translations.CommandInfo Info = Translations.newCommandInfos.TryGetInfo(controlsToSave[i].Command);
+				Translations.CommandInfo Info = Translations.CommandInfos.TryGetInfo(controlsToSave[i].Command);
 				Builder.Append(Info.Name + ", " + controlsToSave[i]);
 				
 				Builder.Append("\n");
@@ -136,7 +136,7 @@ namespace OpenBve
 						else
 						{
 							Controls[Length].Command = parsedCommand;
-							Controls[Length].InheritedType = Translations.newCommandInfos[parsedCommand].Type;
+							Controls[Length].InheritedType = Translations.CommandInfos[parsedCommand].Type;
 							Enum.TryParse(Terms[1], true, out ControlMethod Method);
 							bool Valid = false;
 							if (Method == ControlMethod.Keyboard & Terms.Length >= 4)

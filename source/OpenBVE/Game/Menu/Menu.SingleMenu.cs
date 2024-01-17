@@ -487,11 +487,8 @@ namespace OpenBve
 							}
 						}
 						Array.Resize(ref Items, ci);
-						if (Instance.Menus[0].Type == MenuType.GameStart)
-						{
-							// If the first menu in the current stack is the GL game menu, use left-align
-							Align = TextAlignment.TopLeft;
-						}
+						// method pictures mean we need top left at all times
+						Align = TextAlignment.TopLeft;
 						break;
 
 					case MenuType.Control:
@@ -502,7 +499,7 @@ namespace OpenBve
 						// get code name and description
 						Control loadedControl = Interface.CurrentControls[data];
 						Items[0] = new MenuCommand(loadedControl.Command + " - " +
-						                           Translations.newCommandInfos[loadedControl.Command].Description, MenuTag.None, 0);
+						                           Translations.CommandInfos[loadedControl.Command].Description, MenuTag.None, 0);
 						// get assignment
 						string str = GetControlDescription(data);
 						Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","assignment_current"}) + " " + str, MenuTag.None, 0);

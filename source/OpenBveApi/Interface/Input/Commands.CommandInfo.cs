@@ -131,7 +131,7 @@ namespace OpenBveApi.Interface
 		}
 
 		/// <summary>Contains the list of all known command infos</summary>
-		public static Dictionary<Command, CommandInfo> newCommandInfos = new Dictionary<Command, CommandInfo>
+		public static Dictionary<Command, CommandInfo> CommandInfos = new Dictionary<Command, CommandInfo>
 		{
 			{ Command.PowerIncrease, new CommandInfo(Command.PowerIncrease, CommandType.Digital, "POWER_INCREASE") },
 			{ Command.PowerDecrease, new CommandInfo(Command.PowerDecrease, CommandType.Digital, "POWER_DECREASE") },

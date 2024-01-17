@@ -516,7 +516,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			{
 				element.CommandEntries.Add(new Models.Panels.TouchElement.CommandEntry
 				{
-					Info = Translations.newCommandInfos.TryGetInfo((Translations.Command)Enum.Parse(typeof(Translations.Command), (string)parent.Element("CommandInfo"))),
+					Info = Translations.CommandInfos.TryGetInfo((Translations.Command)Enum.Parse(typeof(Translations.Command), (string)parent.Element("CommandInfo"))),
 					Option = (int)parent.Element("CommandOption")
 				});
 			}
@@ -540,7 +540,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Models.Panels.TouchElement.CommandEntry
 			{
-				Info = Translations.newCommandInfos.TryGetInfo((Translations.Command)Enum.Parse(typeof(Translations.Command), (string)parent.Element("Info"))),
+				Info = Translations.CommandInfos.TryGetInfo((Translations.Command)Enum.Parse(typeof(Translations.Command), (string)parent.Element("Info"))),
 				Option = (int)parent.Element("Option")
 			};
 		}

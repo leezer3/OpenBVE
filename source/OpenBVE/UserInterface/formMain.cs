@@ -913,7 +913,7 @@ namespace OpenBve {
 			groupboxJoysticks.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","attached"});
 			{
 				listviewControls.Items.Clear();
-				comboboxCommand.DataSource = new BindingSource(Translations.newCommandInfos, null);
+				comboboxCommand.DataSource = new BindingSource(Translations.CommandInfos, null);
 				comboboxCommand.DisplayMember = "Value";
 				comboboxCommand.ValueMember = "Key";
 

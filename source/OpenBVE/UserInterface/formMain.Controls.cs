@@ -29,12 +29,12 @@ namespace OpenBve {
 					this.Tag = new object();
 					{ // command
 
-						if (Translations.newCommandInfos.ContainsKey(Interface.CurrentControls[i].Command))
+						if (Translations.CommandInfos.ContainsKey(Interface.CurrentControls[i].Command))
 						{
 							comboboxCommand.SelectedValue = Interface.CurrentControls[i].Command;
 							updownCommandOption.Value = Interface.CurrentControls[i].Option;
-							labelCommandOption.Enabled = Translations.newCommandInfos[Interface.CurrentControls[i].Command].EnableOption;
-							updownCommandOption.Enabled = Translations.newCommandInfos[Interface.CurrentControls[i].Command].EnableOption;
+							labelCommandOption.Enabled = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
+							updownCommandOption.Enabled = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
 						}
 						else
 						{
@@ -105,7 +105,7 @@ namespace OpenBve {
 		}
 		private void UpdateControlListElement(ListViewItem Item, int Index, bool ResizeColumns)
 		{
-			Translations.CommandInfo Info = Translations.newCommandInfos.TryGetInfo(Interface.CurrentControls[Index].Command);
+			Translations.CommandInfo Info = Translations.CommandInfos.TryGetInfo(Interface.CurrentControls[Index].Command);
 			Item.SubItems[0].Text = Info.Name;
 			switch (Info.Type) {
 					case Translations.CommandType.Digital: Item.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","list_type_digital"}); break;
@@ -315,10 +315,10 @@ namespace OpenBve {
 				{
 					Translations.Command selectedCommand = (Translations.Command)comboboxCommand.SelectedValue;
 					Interface.CurrentControls[i].Command = selectedCommand;
-					Translations.CommandInfo Info = Translations.newCommandInfos.TryGetInfo(selectedCommand);
+					Translations.CommandInfo Info = Translations.CommandInfos.TryGetInfo(selectedCommand);
 					Interface.CurrentControls[i].InheritedType = Info.Type;
-					labelCommandOption.Enabled = Translations.newCommandInfos[selectedCommand].EnableOption;
-					updownCommandOption.Enabled = Translations.newCommandInfos[selectedCommand].EnableOption;
+					labelCommandOption.Enabled = Translations.CommandInfos[selectedCommand].EnableOption;
+					updownCommandOption.Enabled = Translations.CommandInfos[selectedCommand].EnableOption;
 					UpdateControlListElement(listviewControls.Items[i], i, true);
 				}
 			}
