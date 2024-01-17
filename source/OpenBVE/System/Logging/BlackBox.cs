@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using OpenBveApi;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 
 namespace OpenBve
@@ -222,14 +223,14 @@ namespace OpenBve
 						System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 						string[][] Lines = new string[Game.BlackBoxEntryCount + 1][];
 						Lines[0] = new[] {
-							Translations.GetInterfaceString("log_time"),
-							Translations.GetInterfaceString("log_position"),
-							Translations.GetInterfaceString("log_speed"),
-							Translations.GetInterfaceString("log_acceleration"),
-							Translations.GetInterfaceString("log_reverser"),
-							Translations.GetInterfaceString("log_power"),
-							Translations.GetInterfaceString("log_brake"),
-							Translations.GetInterfaceString("log_event"),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","time"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","position"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","speed"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","acceleration"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","reverser"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","power"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","brake"}),
+							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","event"}),
 						};
 						int Columns = Lines[0].Length;
 						for (int i = 0; i < Game.BlackBoxEntryCount; i++)
@@ -281,10 +282,10 @@ namespace OpenBve
 									switch (p)
 									{
 										case Game.BlackBoxPower.PowerNull:
-											power[k] = Translations.GetInterfaceString(Translations.QuickReferences.HandlePowerNull);
+											power[k] = Translations.QuickReferences.HandlePowerNull;
 											break;
 										default:
-											power[k] = Translations.GetInterfaceString(Translations.QuickReferences.HandlePower) + ((short)p).ToString(Culture);
+											power[k] = Translations.QuickReferences.HandlePower + ((short)p).ToString(Culture);
 											break;
 									}
 								}
@@ -298,25 +299,25 @@ namespace OpenBve
 									switch (b)
 									{
 										case Game.BlackBoxBrake.BrakeNull:
-											brake[k] = Translations.GetInterfaceString(Translations.QuickReferences.HandleBrakeNull);
+											brake[k] = Translations.QuickReferences.HandleBrakeNull;
 											break;
 										case Game.BlackBoxBrake.Emergency:
-											brake[k] = Translations.GetInterfaceString(Translations.QuickReferences.HandleEmergency);
+											brake[k] = Translations.QuickReferences.HandleEmergency;
 											break;
 										case Game.BlackBoxBrake.HoldBrake:
-											brake[k] = Translations.GetInterfaceString(Translations.QuickReferences.HandleHoldBrake);
+											brake[k] = Translations.QuickReferences.HandleHoldBrake;
 											break;
 										case Game.BlackBoxBrake.Release:
-											brake[k] = Translations.GetInterfaceString(Translations.QuickReferences.HandleRelease);
+											brake[k] = Translations.QuickReferences.HandleRelease;
 											break;
 										case Game.BlackBoxBrake.Lap:
-											brake[k] = Translations.GetInterfaceString(Translations.QuickReferences.HandleLap);
+											brake[k] = Translations.QuickReferences.HandleLap;
 											break;
 										case Game.BlackBoxBrake.Service:
-											brake[k] = Translations.GetInterfaceString(Translations.QuickReferences.HandleService);
+											brake[k] = Translations.QuickReferences.HandleService;
 											break;
 										default:
-											brake[k] = Translations.GetInterfaceString(Translations.QuickReferences.HandleBrake) + ((short)b).ToString(Culture);
+											brake[k] = Translations.QuickReferences.HandleBrake + ((short)b).ToString(Culture);
 											break;
 									}
 								}
@@ -347,11 +348,11 @@ namespace OpenBve
 							Builder.Append("╗\r\n");
 							{
 								Builder.Append('║');
-								Builder.Append((" " + Translations.GetInterfaceString("log_route") + " " + Game.LogRouteName).PadRight(TotalWidth, ' '));
+								Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","route"}) + " " + Game.LogRouteName).PadRight(TotalWidth, ' '));
 								Builder.Append("║\r\n║");
-								Builder.Append((" " + Translations.GetInterfaceString("log_train") + " " + Game.LogTrainName).PadRight(TotalWidth, ' '));
+								Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","train"}) + " " + Game.LogTrainName).PadRight(TotalWidth, ' '));
 								Builder.Append("║\r\n║");
-								Builder.Append((" " + Translations.GetInterfaceString("log_date") + " " + Game.LogDateTime.ToString("yyyy-MM-dd HH:mm:ss", Culture)).PadRight(TotalWidth, ' '));
+								Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","date"}) + " " + Game.LogDateTime.ToString("yyyy-MM-dd HH:mm:ss", Culture)).PadRight(TotalWidth, ' '));
 								Builder.Append("║\r\n");
 							}
 						}

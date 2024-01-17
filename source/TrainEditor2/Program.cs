@@ -2,6 +2,7 @@ using System;
 using System.Reactive.Concurrency;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using Reactive.Bindings;
 using SoundManager;
@@ -45,7 +46,7 @@ namespace TrainEditor2
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(Translations.GetInterfaceString("errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"errors","filesystem_invalid"}) + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString(HostApplication.TrainEditor2, new string[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
 

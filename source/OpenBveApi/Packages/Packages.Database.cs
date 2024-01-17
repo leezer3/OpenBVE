@@ -158,9 +158,9 @@ namespace OpenBveApi.Packages
 		/// <param name="File">The database file</param>
 		/// <param name="ErrorMessage">The error message to return if failed</param>
 		/// <returns>Whether the loading succeded</returns>
-		public static bool LoadDatabase(string Folder, string File, out string ErrorMessage)
+		public static bool LoadDatabase(string Folder, string File, out string[] ErrorMessage)
 		{
-			ErrorMessage = string.Empty;
+			ErrorMessage = new string[]{ };
 			currentDatabaseFolder = Folder;
 			currentDatabaseFile = File;
 			if (System.IO.File.Exists(currentDatabaseFile))
@@ -174,7 +174,7 @@ namespace OpenBveApi.Packages
 						currentDatabase = (PackageDatabase) listReader.Deserialize(reader);
 						if (currentDatabase.DatabaseVersion > PackageDatabase.ExpectedDatabaseVersion)
 						{
-							ErrorMessage = @"packages_database_newer_expected";
+							ErrorMessage = new [] {"packages","database_newer_expected"};
 						}
 
 						if (currentDatabase.DatabaseVersion < PackageDatabase.ExpectedDatabaseVersion)
@@ -193,7 +193,7 @@ namespace OpenBveApi.Packages
 				catch
 				{
 					//Loading the DB failed, so just create a new one
-					ErrorMessage = @"packages_database_invalid_xml";
+					ErrorMessage = new[] {"packages","database_invalid_xml"};
 					currentDatabase = null;
 				}
 			}

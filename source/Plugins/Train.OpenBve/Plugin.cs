@@ -514,7 +514,7 @@ namespace Train.OpenBve
 			    }
 			    catch
 			    {
-				    var currentError = Translations.GetInterfaceString("errors_critical_file");
+				    var currentError = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","critical_file"});
 				    currentError = currentError.Replace("[file]", "panel.xml");
 				    currentHost.ReportProblem(ProblemType.InvalidData, currentError);
 				    Cancel = true;
@@ -557,7 +557,7 @@ namespace Train.OpenBve
 					    }
 					    catch
 					    {
-						    var currentError = Translations.GetInterfaceString("errors_critical_file");
+						    var currentError = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","critical_file"});
 						    currentError = currentError.Replace("[file]", "panel.animated");
 						    currentHost.ReportProblem(ProblemType.InvalidData, currentError);
 						    Cancel = true;
@@ -599,7 +599,7 @@ namespace Train.OpenBve
 		    }
 		    catch
 		    {
-			    var currentError = Translations.GetInterfaceString("errors_critical_file");
+			    var currentError = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","critical_file"});
 			    currentError = currentError.Replace("[file]", Panel2 ? "panel2.cfg" : "panel.cfg");
 			    currentHost.ReportProblem(ProblemType.InvalidData, currentError);
 			    Cancel = true;

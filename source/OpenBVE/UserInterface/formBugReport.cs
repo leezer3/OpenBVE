@@ -31,14 +31,14 @@ namespace OpenBve
 		}
 
 		private void ApplyLanguage() {
-			this.Text = Translations.GetInterfaceString("bug_report_title");
-			textBoxReportLabel.Text = Translations.GetInterfaceString("bug_report_description");
-			labelViewLog.Text = Translations.GetInterfaceString("bug_report_view_log");
-			labelViewCrash.Text = Translations.GetInterfaceString("bug_report_view_crash_log");
-			label1.Text = Translations.GetInterfaceString("bug_report_enter_description");
-			buttonReportProblem.Text = Translations.GetInterfaceString("bug_report_save");
-			buttonViewLog.Text = Translations.GetInterfaceString("bug_report_view_log_button");
-			buttonViewCrashLog.Text = Translations.GetInterfaceString("bug_report_view_log_button");
+			this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_title"});
+			textBoxReportLabel.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_description"});
+			labelViewLog.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_view_log"});
+			labelViewCrash.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_view_crash_log"});
+			label1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_enter_description"});
+			buttonReportProblem.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_save"});
+			buttonViewLog.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_view_log_button"});
+			buttonViewCrashLog.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_view_log_button"});
 		}
 
 		private void buttonViewLog_Click(object sender, EventArgs e)
@@ -59,13 +59,13 @@ namespace OpenBve
 						log.ShowDialog();
 					}
 				} else {
-					MessageBox.Show(Translations.GetInterfaceString("bug_report_no_log"), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_no_log"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
 			}
 			catch
 			{
 				// Actually failed to load, but same difference
-				MessageBox.Show(Translations.GetInterfaceString("bug_report_no_log"), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_no_log"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 
@@ -87,7 +87,7 @@ namespace OpenBve
 			}
 			catch
 			{
-				MessageBox.Show(Translations.GetInterfaceString("bug_report_no_crash_log"), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_no_crash_log"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 
@@ -138,13 +138,13 @@ namespace OpenBve
 						}
 
 						// Successful, would've thrown into the catch block otherwise.
-						MessageBox.Show(Translations.GetInterfaceString("bug_report_saved").Replace("[filename]", fileName), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+						MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_saved"}).Replace("[filename]", fileName), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
 					}
 				}
 			}
 			catch
 			{
-				MessageBox.Show(Translations.GetInterfaceString("bug_report_save_failed"), Translations.GetInterfaceString("bug_report_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_save_failed"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_title"}), MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 
 			this.Close();

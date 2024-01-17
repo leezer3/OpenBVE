@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 
 namespace OpenBve
@@ -12,7 +13,7 @@ namespace OpenBve
 		{
 			InitializeComponent();
 			ApplyLanguage();
-			labelProductName.Text = Translations.GetInterfaceString("program_title") + @" v" + Application.ProductVersion + Program.VersionSuffix;
+			labelProductName.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program","title"}) + @" v" + Application.ProductVersion + Program.VersionSuffix;
 			try
 			{
 				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "logo.png");
@@ -108,11 +109,11 @@ namespace OpenBve
 		}
 
 		private void ApplyLanguage() {
-			this.Text = Translations.GetInterfaceString("about_title");
-			textBoxMain.Text = Translations.GetInterfaceString("about_description");
-			label1.Text = Translations.GetInterfaceString("about_open_source_licenses");
-			labelOpenSourceHeader.Text = Translations.GetInterfaceString("about_open_source_licenses_header");
-			buttonClose.Text = Translations.GetInterfaceString("about_close");
+			this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","title"});
+			textBoxMain.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","description"});
+			label1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","open_source_licenses"});
+			labelOpenSourceHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","open_source_licenses_header"});
+			buttonClose.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","close"});
 		}
 
 		private void buttonClose_Click(object sender, EventArgs e)

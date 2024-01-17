@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using OpenBveApi.Hosts;
 using OpenTK.Input;
 using OpenBveApi.Interface;
 using Control = OpenBveApi.Interface.Control;
@@ -82,7 +83,7 @@ namespace OpenBve
 					File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls");
 					if (!System.IO.File.Exists(File))
 					{
-						MessageBox.Show(Translations.GetInterfaceString("errors_warning") + Environment.NewLine + Translations.GetInterfaceString("errors_controls_missing"),
+						MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_missing"}),
 							Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					}
 				}
@@ -117,14 +118,10 @@ namespace OpenBve
 						{
 							Array.Resize(ref Controls, Controls.Length << 1);
 						}
-
-						int j;
-						for (j = 0; j < Translations.CommandInfos.Length; j++)
-						{
-							if (string.Compare(Translations.CommandInfos[j].Name, Terms[0], StringComparison.OrdinalIgnoreCase) == 0) break;
-						}
-
-						if (j == Translations.CommandInfos.Length)
+						
+						Translations.Command parsedCommand;
+						// note: to get rid of the underscore in the saved commmand file would require a format change, and this isn't a performance sensitive area hence don't bother....
+						if (!Enum.TryParse(Terms[0].Replace("_", string.Empty), true, out parsedCommand))
 						{
 							Controls[Length].Command = Translations.Command.None;
 							Controls[Length].InheritedType = Translations.CommandType.Digital;
@@ -138,8 +135,8 @@ namespace OpenBve
 						}
 						else
 						{
-							Controls[Length].Command = Translations.CommandInfos[j].Command;
-							Controls[Length].InheritedType = Translations.CommandInfos[j].Type;
+							Controls[Length].Command = parsedCommand;
+							Controls[Length].InheritedType = Translations.CommandInfos[parsedCommand].Type;
 							Enum.TryParse(Terms[1], true, out ControlMethod Method);
 							bool Valid = false;
 							if (Method == ControlMethod.Keyboard & Terms.Length >= 4)
@@ -149,7 +146,7 @@ namespace OpenBve
 									//We've discovered a SDL keybinding is present, so reset the loading process with the default keyconfig & show an appropriate error message
 									if (ControlsReset == false)
 									{
-										MessageBox.Show(Translations.GetInterfaceString("errors_controls_oldversion") + Environment.NewLine + Translations.GetInterfaceString("errors_controls_reset"), Application.ProductName,
+										MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_oldversion"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_reset"}), Application.ProductName,
 											MessageBoxButtons.OK, MessageBoxIcon.Hand);
 									}
 
@@ -163,7 +160,7 @@ namespace OpenBve
 										}
 										else
 										{
-											MessageBox.Show(Translations.GetInterfaceString("errors_warning") + Environment.NewLine + Translations.GetInterfaceString("errors_controls_default_oldversion"),
+											MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_default_oldversion"}),
 												Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 											i = 0;
 											Lines = GetLines(Assembly.GetExecutingAssembly().GetManifestResourceStream("OpenBve.Default.controls"));
@@ -173,7 +170,7 @@ namespace OpenBve
 									}
 									else
 									{
-										MessageBox.Show(Translations.GetInterfaceString("errors_warning") + Environment.NewLine + Translations.GetInterfaceString("errors_controls_default_missing"),
+										MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_default_missing"}),
 											Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 										Controls = new Control[0];
 									}
