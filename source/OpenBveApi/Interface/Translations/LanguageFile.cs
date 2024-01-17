@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace OpenBveApi.Interface {
@@ -10,6 +9,11 @@ namespace OpenBveApi.Interface {
 
 		/// <summary>Loads all available language files from the specificed folder</summary>
         public static void LoadLanguageFiles(string LanguageFolder) {
+			if (AvailableNewLanguages.Count > 2)
+			{
+				// Don't re-load languages if already present, e.g. restart
+				return;
+			}
 			if (!Directory.Exists(LanguageFolder))
 			{
 				MessageBox.Show(@"The default language files have been moved or deleted.", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -53,7 +57,9 @@ namespace OpenBveApi.Interface {
 
 		/// <summary>Populates a list of languages in a combobox</summary>
 		/// <param name="comboboxLanguages">The combobox to populate</param>
-        public static void ListLanguages(ComboBox comboboxLanguages) {
+        public static void ListLanguages(ComboBox comboboxLanguages)
+		{
+			blockComboBox = true;
             comboboxLanguages.Items.Clear();
 
             comboboxLanguages.DataSource = new BindingSource(AvailableNewLanguages, null);
@@ -75,7 +81,11 @@ namespace OpenBveApi.Interface {
 			{
 				comboboxLanguages.SelectedIndex = idx;
 			}
+
+			blockComboBox = false;
 		}
+
+		private static bool blockComboBox = false;
 
 		/// <summary>Attempts to set the flag image for the selected language code</summary>
 		/// <param name="FlagFolder">The folder containing flag images</param>
@@ -91,8 +101,12 @@ namespace OpenBveApi.Interface {
 				return false;
 			}
 			KeyValuePair<string, NewLanguage> kvp = (KeyValuePair<string, NewLanguage>)comboboxLanguages.SelectedItem;
-			CurrentLanguageCode = kvp.Value.Code;
-			CurrentLanguageCodeArgument = kvp.Value.Code;
+			if (!blockComboBox)
+			{
+				CurrentLanguageCode = kvp.Value.Code;
+				CurrentLanguageCodeArgument = kvp.Value.Code;
+			}
+			
 			LanguageImage = Path.CombineFile(FlagFolder, kvp.Value.Flag);
 			if (!File.Exists(LanguageImage)) 
 			{
@@ -111,8 +125,12 @@ namespace OpenBveApi.Interface {
 				return false;
 			}
 			KeyValuePair<string, NewLanguage> kvp = (KeyValuePair<string, NewLanguage>)comboboxLanguages.SelectedItem;
-			CurrentLanguageCode = kvp.Value.Code;
-			CurrentLanguageCodeArgument = kvp.Value.Code;
+			if (!blockComboBox)
+			{
+				CurrentLanguageCode = kvp.Value.Code;
+				CurrentLanguageCodeArgument = kvp.Value.Code;
+			}
+			
 			return true;
 		}
 
