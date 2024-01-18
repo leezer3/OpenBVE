@@ -40,7 +40,9 @@
 		/// <summary>Uninstalls anything else</summary>
 		UninstallOther,
 		/// <summary>The options menu</summary>
-		Options
+		Options,
+		/// <summary>A selectable list of languages</summary>
+		LanguageList
 		
 	}
 }

@@ -134,7 +134,8 @@ namespace OpenBveApi.Interface {
 			return true;
 		}
 
-		internal static readonly Dictionary<string, NewLanguage> AvailableNewLanguages = new Dictionary<string, NewLanguage>();
+		/// <summary>The list of available languages</summary>
+		public static readonly Dictionary<string, NewLanguage> AvailableNewLanguages = new Dictionary<string, NewLanguage>();
 
 
 	}

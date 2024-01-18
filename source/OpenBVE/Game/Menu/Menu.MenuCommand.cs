@@ -1,4 +1,6 @@
-﻿using OpenBveApi.Textures;
+﻿using OpenBveApi.Hosts;
+using OpenBveApi.Interface;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -11,6 +13,16 @@ namespace OpenBve
 			internal readonly MenuTag Tag;
 			/// <summary>The optional data to be passed with the command</summary>
 			internal readonly object Data;
+
+			internal MenuCommand(string[] translationPath, MenuTag Tag, object Data)
+			{
+				TranslationPath = translationPath;
+				Text = Translations.GetInterfaceString(HostApplication.OpenBve, translationPath);
+				languageCode = Interface.CurrentOptions.LanguageCode;
+				this.Tag = Tag;
+				this.Data = Data;
+				this.Icon = null;
+			}
 
 			internal MenuCommand(string Text, MenuTag Tag, object Data)
 			{

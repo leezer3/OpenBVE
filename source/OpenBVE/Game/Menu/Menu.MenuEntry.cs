@@ -1,4 +1,6 @@
-﻿using OpenBveApi.Textures;
+﻿using OpenBveApi.Hosts;
+using OpenBveApi.Interface;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -7,11 +9,21 @@ namespace OpenBve
 		/// <summary>The base abstract Menu Entry class</summary>
 		private abstract class MenuEntry
 		{
+			/// <summary>The translation path</summary>
+			internal string[] TranslationPath;
 			/// <summary>The base text of the menu entry</summary>
 			internal string Text;
+			/// <summary>The language code for the cached string</summary>
+			internal string languageCode;
 			/// <summary>The display text of the menu entry</summary>
 			internal string DisplayText(double TimeElapsed)
 			{
+				if (TranslationPath != null && Interface.CurrentOptions.LanguageCode != languageCode)
+				{
+					// user has changed the in-game language, so we'll need to update our cached string
+					Text = Translations.GetInterfaceString(HostApplication.OpenBve, TranslationPath);
+					languageCode = Interface.CurrentOptions.LanguageCode;
+				}
 				if (DisplayLength == 0)
 				{
 					return Text;

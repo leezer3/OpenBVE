@@ -63,6 +63,10 @@ namespace OpenBve
 		/// <summary>Uninstalls anything else</summary>
 		UninstallOther,
 		/// <summary>Shows the options menu</summary>
-		Options
+		Options,
+		/// <summary>Shows the language list menu</summary>
+		LanguageList,
+		/// <summary>Selects a language</summary>
+		LanguageSelect
 	}
 }

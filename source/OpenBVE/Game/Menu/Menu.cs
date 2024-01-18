@@ -645,6 +645,15 @@ namespace OpenBve
 							case MenuTag.Options:
 								Menu.instance.PushMenu(MenuType.Options);
 								break;
+							case MenuTag.LanguageList:
+								Menu.Instance.PushMenu(MenuType.LanguageList);
+								break;
+							case MenuTag.LanguageSelect:
+								MenuCommand c = menu.Items[menu.Selection] as MenuCommand;
+								Interface.CurrentOptions.LanguageCode = (string)c.Data;
+								Translations.CurrentLanguageCode = (string)c.Data;
+								Menu.Instance.PopMenu();
+								break;
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
 								Menu.instance.PushMenu(MenuType.RouteList);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","route_please_select"});
