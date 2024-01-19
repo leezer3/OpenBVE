@@ -2,7 +2,6 @@
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
-using OpenBveApi.Textures;
 
 namespace OpenBve
 {

@@ -38,10 +38,7 @@ namespace OpenBve
 			
 			public int Selection
 			{
-				get
-				{
-					return currentSelection;
-				}
+				get => currentSelection;
 				set
 				{
 					LastSelection = currentSelection;

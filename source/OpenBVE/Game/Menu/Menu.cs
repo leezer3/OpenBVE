@@ -17,7 +17,6 @@ using OpenBveApi.Packages;
 using OpenBveApi.Textures;
 using OpenTK;
 using TrainManager;
-using Control = OpenBveApi.Interface.Control;
 using Path = OpenBveApi.Path;
 using Vector2 = OpenBveApi.Math.Vector2;
 
@@ -79,13 +78,7 @@ namespace OpenBve
 										// properties (to allow read-only access to some fields)
 		internal int LineHeight => lineHeight;
 
-		internal OpenGlFont MenuFont
-		{
-			get
-			{
-				return menuFont;
-			}
-		}
+		internal OpenGlFont MenuFont => menuFont;
 
 		internal Key MenuBackKey;
 
@@ -938,7 +931,7 @@ namespace OpenBve
 					}
 
 					OpenGlFont versionFont = Program.Renderer.Fonts.NextSmallestFont(MenuFont);
-					Program.Renderer.OpenGlString.Draw(versionFont, currentVersion, new Vector2(Program.Renderer.Screen.Width - Program.Renderer.Screen.Width / 4, Program.Renderer.Screen.Height - versionFont.FontSize * 2), TextAlignment.TopLeft, Color128.Black);
+					Program.Renderer.OpenGlString.Draw(versionFont, currentVersion, new Vector2(Program.Renderer.Screen.Width - Program.Renderer.Screen.Width / 4.0, Program.Renderer.Screen.Height - versionFont.FontSize * 2), TextAlignment.TopLeft, Color128.Black);
 					break;
 				case MenuType.RouteList:
 				case MenuType.TrainList:

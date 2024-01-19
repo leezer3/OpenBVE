@@ -634,7 +634,7 @@ namespace OpenBve {
 		{
 			Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
 			// Main form title bar
-			Text = Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program","title"});
+			Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"});
 			/*
 			 * Localisation for strings in main panel
 			 */
@@ -1290,7 +1290,7 @@ namespace OpenBve {
 			try
 			{
 #endif
-				Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
+				Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
 				Program.FileSystem.SaveCurrentFileSystemConfiguration();
 #if !DEBUG
 			}

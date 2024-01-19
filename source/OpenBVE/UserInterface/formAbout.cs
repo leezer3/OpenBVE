@@ -13,7 +13,7 @@ namespace OpenBve
 		{
 			InitializeComponent();
 			ApplyLanguage();
-			labelProductName.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program","title"}) + @" v" + Application.ProductVersion + Program.VersionSuffix;
+			labelProductName.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}) + @" v" + Application.ProductVersion + Program.VersionSuffix;
 			try
 			{
 				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "logo.png");

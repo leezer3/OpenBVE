@@ -23,10 +23,7 @@ namespace OpenBve {
 		/// <summary>Set this member to true to cancel loading</summary>
 		internal static bool Cancel
 		{
-			get
-			{
-				return _cancel;
-			}
+			get => _cancel;
 			set
 			{
 				if (value)
@@ -125,7 +122,7 @@ namespace OpenBve {
 				if (Folder == null)
 				{
 					// Unlikely to work, but attempt to make the best of it
-					Program.FileSystem.AppendToLogFile("The route file appears to be stored on a root path- Returning the " + Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program","title"}) + " startup path.");
+					Program.FileSystem.AppendToLogFile("The route file appears to be stored on a root path- Returning the " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}) + " startup path.");
 					return Application.StartupPath;
 				}
 				string candidate = null;
@@ -164,7 +161,7 @@ namespace OpenBve {
 			{
 				// ignored
 			}
-			Program.FileSystem.AppendToLogFile("No Railway folder found- Returning the " + Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program","title"}) + " startup path.");
+			Program.FileSystem.AppendToLogFile("No Railway folder found- Returning the " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}) + " startup path.");
 			return Application.StartupPath;
 		}
 
@@ -292,10 +289,10 @@ namespace OpenBve {
 					switch (ex.Message)
 					{
 						case "libopenal.so.1":
-							MessageBox.Show("openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							MessageBox.Show("openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 							break;
 						default:
-							MessageBox.Show("The required system library " + ex.Message + " was not found on this system.", Translations.GetInterfaceString(HostApplication.OpenBve, new string[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							MessageBox.Show("The required system library " + ex.Message + " was not found on this system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 							break;
 					}
 				}

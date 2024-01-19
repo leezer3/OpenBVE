@@ -11,10 +11,10 @@ namespace OpenBve
 
 			//Load all available cursors
 			int idx = -1;
-			for (int i = 0; i < LibRender2.AvailableCursors.CursorList.Count; i++)
+			for (int i = 0; i < AvailableCursors.CursorList.Count; i++)
 			{
-				comboBoxCursor.Items.Add(LibRender2.AvailableCursors.CursorList[i]);
-				if (LibRender2.AvailableCursors.CursorList[i].FileName == Interface.CurrentOptions.CursorFileName)
+				comboBoxCursor.Items.Add(AvailableCursors.CursorList[i]);
+				if (AvailableCursors.CursorList[i].FileName == Interface.CurrentOptions.CursorFileName)
 				{
 					idx = i;
 				}
@@ -39,9 +39,9 @@ namespace OpenBve
 				return;
 			}
 			Interface.CurrentOptions.CursorFileName = c.FileName;
-			LibRender2.AvailableCursors.CurrentCursor = c.MyCursor;
-			LibRender2.AvailableCursors.CurrentCursorPlus = c.MyCursorPlus;
-			LibRender2.AvailableCursors.CurrentCursorMinus = c.MyCursorMinus;
+			AvailableCursors.CurrentCursor = c.MyCursor;
+			AvailableCursors.CurrentCursorPlus = c.MyCursorPlus;
+			AvailableCursors.CurrentCursorMinus = c.MyCursorMinus;
 			pictureboxCursor.Image = c.Image;
 		}
 	}
