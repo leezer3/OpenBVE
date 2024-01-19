@@ -267,7 +267,7 @@ namespace OpenBve
 						Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					}
 						break;
-					case Translations.Command.CameraPreviousPOI:
+					case Translations.Command.CameraPOIPrevious:
 						//If we are in the exterior train view, shift down one car until we hit the last car
 						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 						{
@@ -311,7 +311,7 @@ namespace OpenBve
 						}
 
 						break;
-					case Translations.Command.CameraNextPOI:
+					case Translations.Command.CameraPOINext:
 						//If we are in the exterior train view, shift up one car until we hit index 0
 						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 						{
@@ -1168,7 +1168,7 @@ namespace OpenBve
 						}
 
 						break;
-					case Translations.Command.MiscInterfaceMode:
+					case Translations.Command.MiscInterface:
 						// option: debug
 						switch (Program.Renderer.CurrentOutputMode)
 						{
@@ -1203,7 +1203,7 @@ namespace OpenBve
 						}
 
 						break;
-					case Translations.Command.MiscBackfaceCulling:
+					case Translations.Command.MiscBackface:
 						// option: backface culling
 						Program.Renderer.OptionBackFaceCulling = !Program.Renderer.OptionBackFaceCulling;
 						MessageManager.AddMessage(
@@ -1307,7 +1307,7 @@ namespace OpenBve
 						}
 
 						break;
-					case Translations.Command.MiscDistanceToNextStation:
+					case Translations.Command.MiscDistNextStation:
 						if (Interface.CurrentOptions.GameMode == GameMode.Expert)
 						{
 							MessageManager.AddMessage(

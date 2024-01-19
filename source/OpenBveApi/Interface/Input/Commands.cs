@@ -111,9 +111,9 @@ namespace OpenBveApi.Interface {
 			/// <summary>Zoom the camera out</summary>
 			CameraZoomOut,
 			/// <summary>Shift to the previous Point of Interest camera view</summary>
-			CameraPreviousPOI,
+			CameraPOIPrevious,
 			/// <summary>Shift to the next Point of Interest camera view</summary>
-			CameraNextPOI,
+			CameraPOINext,
 			/// <summary>Reset the camera to pointing immediately forwards at track-level</summary>
 			CameraReset,
 			/// <summary>Toggle camera restriction mode</summary>
@@ -131,15 +131,15 @@ namespace OpenBveApi.Interface {
 			/// <summary>Shows or hides the in-game gradient display</summary>
 			MiscGradient,
 			/// <summary>Show / hide the in-game remain distance of the next station</summary>
-			MiscDistanceToNextStation,
+			MiscDistNextStation,
 			/// <summary>Shows or hides the in-game FPS display</summary>
 			MiscFps,
 			/// <summary>Toggles AI control of the player train</summary>
 			MiscAI,
 			/// <summary>Switches between the different interface modes</summary>
-			MiscInterfaceMode,
+			MiscInterface,
 			/// <summary>Toggles the backface-culling mode</summary>
-			MiscBackfaceCulling,
+			MiscBackface,
 			/// <summary>Switches between low and high CPU modes</summary>
 			MiscCPUMode,
 			/// <summary>Switches between the normal and accelerated time-factors</summary>
