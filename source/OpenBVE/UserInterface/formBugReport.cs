@@ -59,13 +59,13 @@ namespace OpenBve
 						log.ShowDialog();
 					}
 				} else {
-					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_no_log"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
+					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","no_log"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
 			}
 			catch
 			{
 				// Actually failed to load, but same difference
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_no_log"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "bug_report", "no_log"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 
@@ -87,7 +87,7 @@ namespace OpenBve
 			}
 			catch
 			{
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_no_crash_log"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","no_crash_log"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 
@@ -138,13 +138,13 @@ namespace OpenBve
 						}
 
 						// Successful, would've thrown into the catch block otherwise.
-						MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_saved"}).Replace("[filename]", fileName), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
+						MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","saved"}).Replace("[filename]", fileName), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","title"}), MessageBoxButtons.OK, MessageBoxIcon.Information);
 					}
 				}
 			}
 			catch
 			{
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_save_failed"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_title"}), MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","save_failed"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","title"}), MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 
 			this.Close();
