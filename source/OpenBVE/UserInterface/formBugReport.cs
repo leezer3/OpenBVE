@@ -31,14 +31,14 @@ namespace OpenBve
 		}
 
 		private void ApplyLanguage() {
-			this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_title"});
-			textBoxReportLabel.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_description"});
-			labelViewLog.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_view_log"});
-			labelViewCrash.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_view_crash_log"});
-			label1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_enter_description"});
-			buttonReportProblem.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_save"});
-			buttonViewLog.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_view_log_button"});
-			buttonViewCrashLog.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug","report_view_log_button"});
+			this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","title"});
+			textBoxReportLabel.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "bug_report", "description"});
+			labelViewLog.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "bug_report", "view_log"});
+			labelViewCrash.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "bug_report", "view_crash_log"});
+			label1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "bug_report", "enter_description"});
+			buttonReportProblem.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "bug_report", "save"});
+			buttonViewLog.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "bug_report", "view_log_button"});
+			buttonViewCrashLog.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "bug_report", "view_log_button"});
 		}
 
 		private void buttonViewLog_Click(object sender, EventArgs e)
