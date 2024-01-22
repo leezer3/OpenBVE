@@ -37,7 +37,8 @@
 		WheelRadius, WheelRadiusOfCar,
 		WheelSlip, WheelSlipCar,
 		Sanders, SandLevel, SandShots, DSD,
-		AmbientTemperature
+		AmbientTemperature,
+		BillboardX, BillboardY
 #pragma warning restore CS1591
 			
 		}
