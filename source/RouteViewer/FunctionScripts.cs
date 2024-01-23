@@ -257,7 +257,7 @@ namespace RouteViewer {
 					case Instructions.BillboardX:
 						{
 							Vector3 toCamera = Program.Renderer.Camera.AbsolutePosition - Position;
-							Function.Stack[s] = Math.Atan2(-toCamera.Z, toCamera.Y);
+							Function.Stack[s] = Math.Atan2(toCamera.Y, -toCamera.Z);
 							s++;
 						} break;
 					case Instructions.BillboardY:
