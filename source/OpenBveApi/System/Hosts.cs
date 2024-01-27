@@ -229,8 +229,9 @@ namespace OpenBveApi.Hosts {
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <param name="loadTexture">Whether the texture should also be pre-loaded</param>
+		/// <param name="timeout">The timeout for loading the texture</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false)
+		public virtual bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false, int timeout = 1000)
 		{
 			handle = null;
 			return false;

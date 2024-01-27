@@ -1152,7 +1152,8 @@ namespace OpenBve
 		
 		/// <summary>This method is used during loading to run commands requiring an OpenGL context in the main render loop</summary>
 		/// <param name="job">The OpenGL command</param>
-		internal static void RunInRenderThread(ThreadStart job)
+		/// <param name="timeout">The timeout</param>
+		internal static void RunInRenderThread(ThreadStart job, int timeout)
 		{
 			object locker = new object();
 			lock (jobLock)
@@ -1164,9 +1165,9 @@ namespace OpenBve
 			}
 			lock (locker)
 			{
-				//Failsafe: If our job has taken more than a second, terminate it
+				//Failsafe: If our job has taken more than the timeout, stop waiting for it
 				//A missing texture is probably better than an infinite loadscreen
-				Monitor.Wait(locker, 1000);
+				Monitor.Wait(locker, timeout);
 			}
 		}
 	}

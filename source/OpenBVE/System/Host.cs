@@ -165,8 +165,9 @@ namespace OpenBve {
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <param name="loadTexture">Whether the texture is to be pre-loaded</param>
+		/// <param name="timeout">The timeout for loading the texture</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
+		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false, int timeout = 1000) {
 			if (File.Exists(path) || Directory.Exists(path)) {
 				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out var data)) {
 					handle = data;
@@ -175,7 +176,7 @@ namespace OpenBve {
 						OpenBVEGame.RunInRenderThread(() =>
 						{
 							LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
-						});
+						}, timeout);
 
 					}
 					return true;

@@ -177,7 +177,7 @@ namespace RouteViewer
 			return Program.Renderer.TextureManager.LoadTexture(ref Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 		}
 		
-		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {
+		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false, int timeout = 1000) {
 			if (File.Exists(path) || Directory.Exists(path)) {
 				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out Texture data)) {
 					handle = data;
