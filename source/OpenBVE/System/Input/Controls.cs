@@ -27,6 +27,11 @@ namespace OpenBve
 			Builder.AppendLine("; This file is INCOMPATIBLE with versions older than 1.4.4.");
 			Builder.AppendLine();
 			for (int i = 0; i < controlsToSave.Length; i++) {
+				if (controlsToSave[i].Command == Translations.Command.None)
+				{
+					// don't save a control with no command set, just stores up problems for later
+					continue;
+				}
 				Translations.CommandInfo Info = Translations.CommandInfos.TryGetInfo(controlsToSave[i].Command);
 				Builder.Append(Info.Name + ", " + controlsToSave[i]);
 				
