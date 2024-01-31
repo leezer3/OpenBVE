@@ -8,7 +8,7 @@ namespace OpenBve
 		{
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
-				if (Interface.CurrentControls[i].Method != ControlMethod.InputDevicePlugin)
+				if (Interface.CurrentControls[i].Method != ControlMethod.InputDevicePlugin || Interface.CurrentControls[i].Command == Translations.Command.None)
 				{
 					continue;
 				}
@@ -31,7 +31,7 @@ namespace OpenBve
 		{
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
-				if (Interface.CurrentControls[i].Method != ControlMethod.InputDevicePlugin)
+				if (Interface.CurrentControls[i].Method != ControlMethod.InputDevicePlugin || Interface.CurrentControls[i].Command == Translations.Command.None)
 				{
 					continue;
 				}
