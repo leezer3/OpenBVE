@@ -1,6 +1,6 @@
 //Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020-2021, Marc Riera, The OpenBVE Project
+//Copyright (c) 2020-2023, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -101,6 +101,19 @@ namespace DenshaDeGoInput
 		};
 
 		/// <summary>
+		/// Enumeration representing reverser positions.
+		/// </summary>
+		internal enum ReverserPositions
+		{
+			/// <summary>Reverser is set to N</summary>
+			N = 0,
+			/// <summary>Reverser is set to forward</summary>
+			Forward = 1,
+			/// <summary>Reverser is set to backward</summary>
+			Backward = -1,
+		};
+
+		/// <summary>
 		/// Enumeration representing controller buttons.
 		/// </summary>
 		internal enum ControllerButton
@@ -149,6 +162,11 @@ namespace DenshaDeGoInput
 		internal static PowerNotches PowerNotch;
 
 		/// <summary>
+		/// The current reverser position reported by the controller.
+		/// </summary>
+		internal static ReverserPositions ReverserPosition;
+
+		/// <summary>
 		/// The previous brake notch reported by the controller.
 		/// </summary>
 		internal static BrakeNotches PreviousBrakeNotch;
@@ -157,6 +175,11 @@ namespace DenshaDeGoInput
 		/// The previous power notch reported by the controller.
 		/// </summary>
 		internal static PowerNotches PreviousPowerNotch;
+
+		/// <summary>
+		/// The previous reverser position reported by the controller.
+		/// </summary>
+		internal static ReverserPositions PreviousReverserPosition;
 
 		/// <summary>
 		/// The GUID of the active controller.
@@ -173,7 +196,8 @@ namespace DenshaDeGoInput
 		/// </summary>
 		internal static void Load()
 		{
-			Ps2Controller.ConfigureControllers();
+			Ps2DdgoController.ConfigureControllers();
+			Ps2TSController.ConfigureControllers();
 		}
 
 		/// <summary>
@@ -207,8 +231,20 @@ namespace DenshaDeGoInput
 		/// </summary>
 		public static void RefreshControllers()
 		{
-			// PlayStation 2 controllers
-			foreach (KeyValuePair<Guid, Controller> controller in Ps2Controller.GetControllers())
+			// PlayStation 2 Densha de GO! controllers
+			foreach (KeyValuePair<Guid, Controller> controller in Ps2DdgoController.GetControllers())
+			{
+				if (!Controllers.ContainsKey(controller.Key))
+				{
+					Controllers.Add(controller.Key, controller.Value);
+				}
+				else
+				{
+					Controllers[controller.Key] = controller.Value;
+				}
+			}
+			// PlayStation 2 Train Simulator controllers
+			foreach (KeyValuePair<Guid, Controller> controller in Ps2TSController.GetControllers())
 			{
 				if (!Controllers.ContainsKey(controller.Key))
 				{
@@ -291,6 +327,7 @@ namespace DenshaDeGoInput
 			// Store the current notches so we can later tell if they have been moved
 			PreviousBrakeNotch = BrakeNotch;
 			PreviousPowerNotch = PowerNotch;
+			PreviousReverserPosition = ReverserPosition;
 
 			Controllers[ActiveControllerGuid].ReadInput();
 		}

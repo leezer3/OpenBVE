@@ -55,7 +55,6 @@ namespace DenshaDeGoInput
 		{
 			ControllerName = string.Empty;
 			IsConnected = false;
-			RequiresCalibration = false;
 			BrakeNotches = brake.Length / 2 - 2;
 			PowerNotches = power.Length / 2 - 1;
 			brakeBytes = brake;
@@ -131,7 +130,7 @@ namespace DenshaDeGoInput
 				if (!cachedControllers.ContainsKey(guid))
 				{
 					// ZKNS-001
-					if (id.Type == ControllerType.Zuki)
+					if (id.Type == ControllerType.Zuiki)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						int[] buttonIndices = { 8, 9, 0, 1, 2, 3, 4, 5 };

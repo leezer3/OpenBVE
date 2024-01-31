@@ -42,6 +42,8 @@ namespace DenshaDeGoInput
 			internal readonly int VendorID;
 			/// <summary>The USB product ID</summary>
 			internal readonly int ProductID;
+			/// <summary>The USB revision</summary>
+			internal readonly int Revision;
 			/// <summary>Backing property containing the cached controller name</summary>
 			private string controllerName;
 			/// <summary>An array to be sent to the controller upon unload</summary>
@@ -59,13 +61,15 @@ namespace DenshaDeGoInput
 
 			/// <summary>
 			/// Initializes a controller
-			/// <param name="vid">A string representing the vendor ID.</param>
-			/// <param name="pid">A string representing the product ID.</param>
+			/// <param name="vid">An int representing the vendor ID.</param>
+			/// <param name="pid">An int representing the product ID.</param>
+			/// <param name="rev">An int representing the revision.</param>
 			/// </summary>
-			internal UsbController(int vid, int pid)
+			internal UsbController(int vid, int pid, int rev)
 			{
 				VendorID = vid;
 				ProductID = pid;
+				Revision = rev;
 				controllerName = string.Empty;
 				UnloadBuffer = new byte[0];
 				IsConnected = false;
@@ -91,7 +95,7 @@ namespace DenshaDeGoInput
 							if (string.IsNullOrEmpty(controllerName))
 							{
 								// The name may be blank, use VID+PID
-								controllerName = VendorID.ToString("X4") + ":" + ProductID.ToString("X4");
+								controllerName = VendorID.ToString("X4") + ":" + ProductID.ToString("X4") + ":" + Revision.ToString("D4");
 							}
 						}
 					}

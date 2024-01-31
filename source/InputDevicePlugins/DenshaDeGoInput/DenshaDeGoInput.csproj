@@ -69,8 +69,9 @@
     <Compile Include="Controller.cs" />
     <Compile Include="Controller.Classic.cs" />
     <Compile Include="Controller.Unbalance.cs" />
-    <Compile Include="Controller.Ps2.cs" />
+    <Compile Include="Controller.Ps2Ddgo.cs" />
     <Compile Include="Controller.Zuiki.cs" />
+    <Compile Include="Controller.Ps2TS.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Config.resx">
@@ -90,6 +91,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Drivers\Type2.cfg">
       <LogicalName>type2_driver</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Drivers\TrainMascon.cfg">
+      <LogicalName>trainmascon_driver</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Drivers\MTC.cfg">
+      <LogicalName>mtc_driver</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

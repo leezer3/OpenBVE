@@ -1,6 +1,6 @@
 //Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020-2021, Marc Riera, The OpenBVE Project
+//Copyright (c) 2020-2023, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -125,6 +125,11 @@ namespace DenshaDeGoInput
 		private bool powerHandleMoved;
 
 		/// <summary>
+		/// Whether the reverser has been moved.
+		/// </summary>
+		private bool reverserMoved;
+
+		/// <summary>
 		/// An array with the command indices configured for each brake notch.
 		/// </summary>
 		private static readonly int[] brakeCommands = new int[10];
@@ -247,6 +252,13 @@ namespace DenshaDeGoInput
 				KeyUp(this, new InputEventArgs(Controls[50 + powerCommands[(int)InputTranslator.PowerNotch]]));
 				powerHandleMoved = false;
 			}
+			// Reverser (release)
+			if (reverserMoved)
+			{
+				InputControl control = new InputControl { Command = Translations.Command.ReverserAnyPostion };
+				KeyUp(this, new InputEventArgs(control));
+				reverserMoved = false;
+			}
 
 			// Update input from controller
 			InputTranslator.Update();
@@ -279,6 +291,13 @@ namespace DenshaDeGoInput
 				{
 					KeyDown(this, new InputEventArgs(Controls[50 + powerCommands[(int)InputTranslator.PowerNotch]]));
 					powerHandleMoved = true;
+				}
+				// Reverser (apply)
+				if (InputTranslator.ReverserPosition != InputTranslator.PreviousReverserPosition || loading)
+				{
+					InputControl control = new InputControl { Command = Translations.Command.ReverserAnyPostion, Option = (int)InputTranslator.ReverserPosition };
+					KeyDown(this, new InputEventArgs(control));
+					reverserMoved = true;
 				}
 				// Buttons (apply)
 				for (int i = 0; i < ButtonCommands.Length; i++)
