@@ -996,8 +996,12 @@ namespace OpenBve
 						Result.TrainFolder = t;
 						ShowTrain(false);
 						if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
+						return;
 					}
 				}
+				// No plugin reports able to load the selected train
+				groupboxTrainDetails.Visible = false;
+				buttonStart.Enabled = false;
 			}
 		}
 

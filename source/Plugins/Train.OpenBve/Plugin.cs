@@ -109,7 +109,7 @@ namespace Train.OpenBve
 
 		public override bool CanLoadTrain(string path)
 		{
-			if (string.IsNullOrEmpty(path))
+			if (string.IsNullOrEmpty(path) || !Directory.Exists(Path.GetDirectoryName(path)))
 			{
 				return false;
 			}
