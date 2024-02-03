@@ -365,16 +365,35 @@ namespace Train.OpenBve
 				 * this also needs to be done dead last
 				 */
 
+				int numMotorCars = 0;
 				for (int i = 0; i < currentTrain.Cars.Length; i++)
 				{
 					currentTrain.Cars[i].DetermineDoorClosingSpeed();
-					if (currentTrain.Cars[i].Specs.IsMotorCar && currentTrain.Cars[i].Sounds.Motor == null && TrainXmlParser.MotorSoundXMLParsed != null)
+					if (currentTrain.Cars[i].Specs.IsMotorCar)
 					{
-						if(!TrainXmlParser.MotorSoundXMLParsed[i])
+						numMotorCars++;
+						if (currentTrain.Cars[i].Sounds.Motor == null && TrainXmlParser.MotorSoundXMLParsed != null)
 						{
-							currentTrain.Cars[i].Sounds.Motor = new BVEMotorSound(currentTrain.Cars[i], 18.0, MotorSoundTables);
+							if(!TrainXmlParser.MotorSoundXMLParsed[i])
+							{
+								currentTrain.Cars[i].Sounds.Motor = new BVEMotorSound(currentTrain.Cars[i], 18.0, MotorSoundTables);
+							}
 						}
+						
 					}
+				}
+
+				if (currentTrain.IsPlayerTrain && numMotorCars == 0)
+				{
+					/*
+					 * https://bveworldwide.forumotion.com/t2389-engine-sound-in-correct-car-wagon#21789
+					 *
+					 * Workaround for the suspected cause of this one- Malformed XML where all cars are set as trailer
+					 * Speed / physics are likely to be off, but let's at least do something
+					 */
+					currentHost.AddMessage(MessageType.Error, false, "Player train appears to have no motor cars, assigning Car 0 as a motor car.");
+					currentTrain.Cars[0].Specs.IsMotorCar = true;
+					currentTrain.Cars[0].Sounds.Motor = new BVEMotorSound(currentTrain.Cars[0], 18.0, MotorSoundTables);
 				}
 			}
 			// place cars
