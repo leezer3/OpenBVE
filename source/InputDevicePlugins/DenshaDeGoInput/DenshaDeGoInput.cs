@@ -192,7 +192,7 @@ namespace DenshaDeGoInput
 
 			// Define the list of commands
 			// We allocate 50 slots per handle plus one slot per command
-			int commandCount = Translations.CommandInfos.Length;
+			int commandCount = Translations.CommandInfos.Count;
 			Controls = new InputControl[100 + commandCount];
 			// Brake notches
 			for (int i = 0; i < 50; i++)

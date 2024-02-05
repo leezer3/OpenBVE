@@ -161,7 +161,7 @@ namespace SoundManager
 					}
 					catch
 					{
-						MessageBox.Show(Translations.GetInterfaceString("errors_sound_openal_version"), Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve,  new[] {"errors","sound_openal_version"}), Translations.GetInterfaceString(CurrentHost.Application, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					}
 					AL.DistanceModel(ALDistanceModel.None);
 					return;
@@ -173,11 +173,11 @@ namespace SoundManager
 					OpenAlMic.Dispose();
 					OpenAlMic = null;
 				}
-				MessageBox.Show(Translations.GetInterfaceString("errors_sound_openal_context"), Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"errors","sound_openal_context"}), Translations.GetInterfaceString(CurrentHost.Application, new string[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
 			OpenAlContext = ContextHandle.Zero;
-			MessageBox.Show(Translations.GetInterfaceString("errors_sound_openal_device"), Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+			MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"errors","sound_openal_device"}), Translations.GetInterfaceString(CurrentHost.Application, new string[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 		}
 
 		/// <summary>Deinitializes audio.</summary>

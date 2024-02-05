@@ -30,6 +30,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.MessageManager;
+using SoundManager;
 using TrainManager.Trains;
 using Path = System.IO.Path;
 using Vector2 = OpenTK.Vector2;
@@ -49,7 +50,7 @@ namespace OpenBve
 		private double RenderTimeElapsed;
 		private double RenderRealTimeElapsed;
 		//We need to explicitly specify the default constructor
-		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default): base(width, height, currentGraphicsMode, Translations.GetInterfaceString("program_title"), @default)
+		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default): base(width, height, currentGraphicsMode, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), @default)
 		{
 			Program.FileSystem.AppendToLogFile("Creating game window with standard context.");
 			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
@@ -68,7 +69,7 @@ namespace OpenBve
 			}
 		}
 
-		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default, GraphicsContextFlags flags): base(width, height, currentGraphicsMode, Translations.GetInterfaceString("program_title"), @default, DisplayDevice.Default, 3,3, flags)
+		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default, GraphicsContextFlags flags): base(width, height, currentGraphicsMode, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), @default, DisplayDevice.Default, 3,3, flags)
 		{
 			Program.FileSystem.AppendToLogFile("Creating game window with forwards-compatible context.");
 			if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
@@ -525,7 +526,7 @@ namespace OpenBve
 								break;
 						}
 					}
-					else if (LibRender2.AvailableCursors.CurrentCursor != null)
+					else if (AvailableCursors.CurrentCursor != null)
 					{
 						switch (Status)
 						{
@@ -786,7 +787,10 @@ namespace OpenBve
 					 * We also need to add the length of the train so that the driver car is actually positioned on the platform
 					 *
 					 * Position on routes not specificially designed for reverse running may well be wrong, but that's life
+					 *
+					 * We should also suppress any sound events triggered by moving the train into the 'new' position
 					 */
+					SoundsBase.SuppressSoundEvents = true;
 					Program.TrainManager.Trains[i].Reverse(true, true);
 					p += Program.TrainManager.Trains[i].Length;
 					if (Program.TrainManager.Trains[i].IsPlayerTrain)
@@ -795,10 +799,13 @@ namespace OpenBve
 						Program.TrainManager.Trains[i].Station = PlayerFirstStationIndex;
 					}
 				}
+
+				
 				for (int j = 0; j < Program.TrainManager.Trains[i].Cars.Length; j++)
 				{
 					Program.TrainManager.Trains[i].Cars[j].Move(p);
 				}
+				SoundsBase.SuppressSoundEvents = false;
 			}
 			// timetable
 			if (Program.CurrentRoute.Information.DefaultTimetableDescription.Length == 0)
@@ -888,7 +895,7 @@ namespace OpenBve
 				TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
 				if (TrainManager.PlayerTrain.Plugin != null && TrainManager.PlayerTrain.Plugin.SupportsAI == AISupport.None)
 				{
-					MessageManager.AddMessage(Translations.GetInterfaceString("notification_aiunable"),MessageDependency.None, GameMode.Expert,
+					MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","aiunable"}),MessageDependency.None, GameMode.Expert,
 						MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 			}
@@ -944,7 +951,7 @@ namespace OpenBve
 				if (TrainManager.PluginError != null)
 				{
 					MessageManager.AddMessage(TrainManager.PluginError, MessageDependency.None, GameMode.Expert, MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
-					MessageManager.AddMessage(Translations.GetInterfaceString("errors_plugin_failure2"), MessageDependency.None, GameMode.Expert, MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+					MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","plugin_failure2"}), MessageDependency.None, GameMode.Expert, MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 				}
 			}
 			loadComplete = true;
@@ -1145,7 +1152,8 @@ namespace OpenBve
 		
 		/// <summary>This method is used during loading to run commands requiring an OpenGL context in the main render loop</summary>
 		/// <param name="job">The OpenGL command</param>
-		internal static void RunInRenderThread(ThreadStart job)
+		/// <param name="timeout">The timeout</param>
+		internal static void RunInRenderThread(ThreadStart job, int timeout)
 		{
 			object locker = new object();
 			lock (jobLock)
@@ -1157,9 +1165,9 @@ namespace OpenBve
 			}
 			lock (locker)
 			{
-				//Failsafe: If our job has taken more than a second, terminate it
+				//Failsafe: If our job has taken more than the timeout, stop waiting for it
 				//A missing texture is probably better than an infinite loadscreen
-				Monitor.Wait(locker, 1000);
+				Monitor.Wait(locker, timeout);
 			}
 		}
 	}

@@ -256,6 +256,18 @@ namespace ObjectViewer {
 							Function.Stack[s] = Program.Renderer.Camera.AbsolutePosition.Z - Position.Z;
 							s++;
 						} break;
+					case Instructions.BillboardX:
+						{
+							Vector3 toCamera = Program.Renderer.Camera.AbsolutePosition - Position;
+							Function.Stack[s] = Math.Atan2(toCamera.Y, -toCamera.Z);
+							s++;
+						} break;
+					case Instructions.BillboardY:
+						{
+							Vector3 toCamera = Program.Renderer.Camera.AbsolutePosition - Position;
+							Function.Stack[s] = Math.Atan2(-toCamera.Z, toCamera.X);
+							s++;
+						} break;
 					case Instructions.CameraView:
 						//Returns whether the camera is in interior or exterior mode
 						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior)
@@ -781,6 +793,20 @@ namespace ObjectViewer {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
+					case Instructions.LocoBrakeNotch:
+						if (Train != null && Train.Handles.LocoBrake != null) {
+							Function.Stack[s] = Train.Handles.LocoBrake.Driver;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.LocoBrakeNotches:
+						if (Train != null) {
+							Function.Stack[s] = Train.Handles.LocoBrake.MaximumNotch;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
 					case Instructions.BrakeNotch:
 						if (Train != null) {
 							Function.Stack[s] = (double)Train.Handles.Brake.Driver;
@@ -1140,6 +1166,18 @@ namespace ObjectViewer {
 								Function.Stack[s] = 0.0;
 							}
 						} 
+						s++; break;
+					case Instructions.DSD:
+						{
+							if (Train != null && Train.Cars[Train.DriverCar].DSD != null)
+							{
+								Function.Stack[s] = Train.Cars[Train.DriverCar].DSD.Triggered ? 1 : 0;
+							}
+							else
+							{
+								Function.Stack[s] = 0.0;
+							}
+						}
 						s++; break;
 					case Instructions.AmbientTemperature:
 						{

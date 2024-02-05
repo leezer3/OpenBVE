@@ -17,6 +17,7 @@ using TrainManager.Car.Systems;
 using TrainManager.Cargo;
 using TrainManager.Handles;
 using TrainManager.Power;
+using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
 namespace TrainManager.Car
@@ -68,6 +69,8 @@ namespace TrainManager.Car
 		public CarConstSpeed ConstSpeed;
 		/// <summary>The readhesion device for this car</summary>
 		public AbstractReAdhesionDevice ReAdhesionDevice;
+		public DriverSupervisionDevice DSD;
+		/// <summary>The DriverSupervisionDevice for this car</summary>
 		/// <summary>The position of the beacon reciever within the car</summary>
 		public double BeaconReceiverPosition;
 		/// <summary>The beacon reciever</summary>
@@ -275,7 +278,7 @@ namespace TrainManager.Car
 						{
 							for (int j = 0; j < CarSections[i].Groups.Length; j++)
 							{
-								CarSections[i].Groups[j].Reverse(Driver);
+								CarSections[i].Groups[j].Reverse(Driver, TrainManagerBase.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable); // restriction not available must equal 3D cab
 							}
 						}
 						else

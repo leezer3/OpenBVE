@@ -18,7 +18,7 @@
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-04</source>
-					<target state="translated">2023-10-12</target>
+					<target state="translated">2023-12-27</target>
 				</trans-unit>
 			</group>
 			<group id="openbve">
@@ -1051,6 +1051,7 @@
 					</trans-unit>
 					<trans-unit id="reset_question">
 						<source>Reset the current control configuration to the defaults?</source>
+						<target state="translated">Recolocar as actuais configurações de controle na predefinição?</target>
 					</trans-unit>
 					<trans-unit id="reset">
 						<source>Reset to defaults</source>
@@ -2390,9 +2391,11 @@
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
 						<source>Decreases the locomotive brake by one notch</source>
+						<target state="translated">Diminui um ponto à travagem da locomotiva</target>
 					</trans-unit>
 					<trans-unit id="locobrake_increase">
 						<source>Increases the locomotive brake by one notch</source>
+						<target state="translated">Aumenta um ponto à travagem da locomotiva</target>
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
@@ -3534,11 +3537,11 @@
 					</trans-unit>
 					<trans-unit id="smee">
 						<source>Electromagnetic straight air brake</source>
-						<target>Electro-magnético de ar directo</target>
+						<target state="translated">Electromagnético de ar directo</target>
 					</trans-unit>
 					<trans-unit id="ecb">
 						<source>Electro-pneumatic air brake without brake pipe</source>
-						<target>Electro-pneumático sem conduta</target>
+						<target state="translated">Electropneumático sem conduta</target>
 					</trans-unit>
 					<trans-unit id="cl">
 						<source>Air brake with partial release feature</source>
@@ -3550,7 +3553,7 @@
 					</trans-unit>
 					<trans-unit id="lock_out_valve">
 						<source>Closing electromagnetic valve</source>
-						<target>Válvula de fecho electro-magnética</target>
+						<target state="translated">Válvula electromagnética de fecho</target>
 					</trans-unit>
 					<trans-unit id="delay_including_control">
 						<source>Delay-including control</source>

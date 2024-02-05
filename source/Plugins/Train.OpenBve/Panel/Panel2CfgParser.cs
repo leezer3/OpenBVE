@@ -284,7 +284,7 @@ namespace Train.OpenBve
 				if (!File.Exists(PanelDaytimeImage)) {
 					Plugin.currentHost.AddMessage(MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
 				} else {
-					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true);
+					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true, 20000);
 					Texture tnight = null;
 					if (PanelNighttimeImage != null) {
 						if (!File.Exists(PanelNighttimeImage)) {
@@ -391,7 +391,7 @@ namespace Train.OpenBve
 									}
 									// create element
 									if (DaytimeImage != null) {
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
 											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
@@ -564,7 +564,7 @@ namespace Train.OpenBve
 									// create element
 									if (DaytimeImage != null)
 									{
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 										Texture tnight = null;
 										if (NighttimeImage != null)
 										{
@@ -733,7 +733,7 @@ namespace Train.OpenBve
 									}
 									// create element
 									if (DaytimeImage != null) {
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
 											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
@@ -1460,7 +1460,7 @@ namespace Train.OpenBve
 					currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\" + compatabilityString + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
 					TransparentColor = Color24.Blue;
 				}
-				Plugin.currentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true);
+				Plugin.currentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true, 20000);
 				drops.Add(drop);
 			}
 

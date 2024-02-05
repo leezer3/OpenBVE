@@ -11,6 +11,7 @@ using TrainManager.Car;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.Power;
+using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -598,6 +599,31 @@ namespace Train.OpenBve
 												break;
 											default:
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
+								case "driversupervisiondevice":
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
+									{
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of driver supervision device sounds was defined in in XML file " + fileName);
+										break;
+									}
+									DriverSupervisionDevice driverSupervisionDevice = car.DSD as DriverSupervisionDevice;
+									if (driverSupervisionDevice == null)
+									{
+										break;
+									}
+
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name.ToLowerInvariant())
+										{
+											case "alarm":
+												ParseNode(cc, out driverSupervisionDevice.TriggerSound, center, SoundCfgParser.smallRadius);
+												break;
+											case "reset":
+												ParseNode(cc, out driverSupervisionDevice.ResetSound, center, SoundCfgParser.smallRadius);
 												break;
 										}
 									}

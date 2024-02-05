@@ -582,6 +582,17 @@ namespace OpenBve
 						message += "GL_STACK_UNDERFLOW";
 						break;
 					case ErrorCode.OutOfMemory:
+						if (IntPtr.Size == 4)
+						{
+							/*
+							 * Exceeded the 32-bit memory limit (~1.2gb due to CLR overhead)
+							 * Can't try anything fancy with strings etc. here as things
+							 * are most likely falling down. This also means the error logger etc.
+							 * are unlikely to work (or be useful)
+							 */
+							message = @"Total memory usage exceeded the 32-bit memory limit. \r\nPlease use the 64-bit version of OpenBVE to run this content.";
+							Environment.Exit(0);
+						}
 						message += "GL_OUT_OF_MEMORY";
 						break;
 					case ErrorCode.TableTooLargeExt:

@@ -5,6 +5,7 @@ using LibRender2.Screens;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -151,10 +152,10 @@ namespace OpenBve.Graphics.Renderers
 				{
 					//If paused, fade out the screen & write PAUSE
 					renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.0f, 0.0f, 0.0f, 0.5f));
-					renderer.OpenGlString.Draw(renderer.Fonts.VeryLargeFont, Translations.GetInterfaceString("menu_pause_title"), new Vector2(renderer.Screen.Width / 2.0, renderer.Screen.Height / 2.0), TextAlignment.CenterMiddle, Color128.White, true);
+					renderer.OpenGlString.Draw(renderer.Fonts.VeryLargeFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","pause_title"}), new Vector2(renderer.Screen.Width / 2.0, renderer.Screen.Height / 2.0), TextAlignment.CenterMiddle, Color128.White, true);
 					if (!PauseAnnounced && Interface.CurrentOptions.ScreenReaderAvailable)
 					{
-						if (!Tolk.Output(Translations.GetInterfaceString("menu_pause_title")))
+						if (!Tolk.Output(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","pause_title"})))
 						{
 							Interface.CurrentOptions.ScreenReaderAvailable = false;
 						}

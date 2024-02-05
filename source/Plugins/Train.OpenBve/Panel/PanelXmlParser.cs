@@ -423,20 +423,14 @@ namespace Train.OpenBve
 												break;
 											}
 
-											int i;
-											for (i = 0; i < Translations.CommandInfos.Length; i++)
+											if (Enum.TryParse(Value, true, out Translations.Command command))
 											{
-												if (string.Compare(Value, Translations.CommandInfos[i].Name, StringComparison.OrdinalIgnoreCase) == 0)
-												{
-													break;
-												}
+												CommandEntry.Command = command;
 											}
-											if (i == Translations.CommandInfos.Length || Translations.CommandInfos[i].Type != Translations.CommandType.Digital)
+											else
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												break;
 											}
-											CommandEntry.Command = Translations.CommandInfos[i].Command;
 										}
 										break;
 									case PanelKey.CommandOption:
@@ -1741,23 +1735,13 @@ namespace Train.OpenBve
 									break;
 								}
 
-								int i;
-
-								for (i = 0; i < Translations.CommandInfos.Length; i++)
+								if (Enum.TryParse(value, true, out Translations.Command command))
 								{
-									if (string.Compare(value, Translations.CommandInfos[i].Name, StringComparison.OrdinalIgnoreCase) == 0)
-									{
-										break;
-									}
-								}
-
-								if (i == Translations.CommandInfos.Length || Translations.CommandInfos[i].Type != Translations.CommandType.Digital)
-								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									entry.Command = command;
 								}
 								else
 								{
-									entry.Command = Translations.CommandInfos[i].Command;
+									Plugin.currentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 								break;
 							case "option":

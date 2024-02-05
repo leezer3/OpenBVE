@@ -242,6 +242,19 @@ namespace LibRender2
 			}
 		}
 
+		/// <summary>A joystick icon</summary>
+		public Texture JoystickTexture;
+		/// <summary>A keyboard icon</summary>
+		public Texture KeyboardTexture;
+		/// <summary>A generic gamepad icon</summary>
+		public Texture GamepadTexture;
+		/// <summary>An XInput gamepad icon</summary>
+		public Texture XInputTexture;
+		/// <summary>A Mascon 2-Handle controller icon</summary>
+		public Texture MasconTeture;
+		/// <summary>A raildriver icon</summary>
+		public Texture RailDriverTexture;
+
 		public bool LoadLogo()
 		{
 			return currentHost.LoadTexture(ref _programLogo, OpenGlTextureWrapMode.ClampClamp);
@@ -388,6 +401,13 @@ namespace LibRender2
 					ReShadeInUse = true;
 				}
 			}
+			// icons for use in GL menus
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "keyboard.png"), new TextureParameters(null, null), out KeyboardTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "gamepad.png"), new TextureParameters(null, null), out GamepadTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "xbox.png"), new TextureParameters(null, null), out XInputTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "zuki.png"), new TextureParameters(null, null), out MasconTeture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "joystick.png"), new TextureParameters(null, null), out JoystickTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "raildriver.png"), new TextureParameters(null, null), out RailDriverTexture);
 		}
 
 		/// <summary>Deinitializes the renderer</summary>

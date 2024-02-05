@@ -75,7 +75,7 @@ namespace DefaultDisplayPlugin
 			Controls[0].Command = Translations.Command.MiscClock;
 			Controls[1].Command = Translations.Command.MiscSpeed;
 			Controls[2].Command = Translations.Command.MiscGradient;
-			Controls[3].Command = Translations.Command.MiscDistanceToNextStation;
+			Controls[3].Command = Translations.Command.MiscDistNextStation;
 			Controls[4].Command = Translations.Command.MiscFps;
 			LoadConfig();
 			return true;

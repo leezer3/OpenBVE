@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using OpenBveApi;
+using OpenBveApi.Hosts;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using RouteManager2.Events;
 
 namespace OpenBve {
@@ -44,14 +47,14 @@ namespace OpenBve {
 
 		internal struct Table
 		{
-			internal Station[] Stations;
+			internal List<Station> Stations;
 			internal Track[] Tracks;
 
 			/// <summary>Collects the timetable data for the current route</summary>
 			internal void CollectData()
 			{
 				System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-				Stations = new Station[16];
+				Stations = new List<Station>();
 				Tracks = new Track[16];
 				int n = 0;
 				double Limit = -1.0, LastLimit = 6.94444444444444;
@@ -65,15 +68,12 @@ namespace OpenBve {
 						{
 							if (Limit == -1.0) Limit = LastLimit;
 							// update station
-							if (n == Stations.Length)
-							{
-								Array.Resize(ref Stations, Stations.Length << 1);
-							}
+							Station currentStation;
 
-							Stations[n].Name = Program.CurrentRoute.Stations[sse.StationIndex].Name;
-							Stations[n].NameJapanese = Program.CurrentRoute.Stations[sse.StationIndex].Name.IsJapanese();
-							Stations[n].Pass = !Program.CurrentRoute.Stations[sse.StationIndex].PlayerStops();
-							Stations[n].Terminal = Program.CurrentRoute.Stations[sse.StationIndex].Type != StationType.Normal;
+							currentStation.Name = Program.CurrentRoute.Stations[sse.StationIndex].Name;
+							currentStation.NameJapanese = Program.CurrentRoute.Stations[sse.StationIndex].Name.IsJapanese();
+							currentStation.Pass = !Program.CurrentRoute.Stations[sse.StationIndex].PlayerStops();
+							currentStation.Terminal = Program.CurrentRoute.Stations[sse.StationIndex].Type != StationType.Normal;
 							double x;
 							if (Program.CurrentRoute.Stations[sse.StationIndex].ArrivalTime >= 0.0)
 							{
@@ -84,16 +84,16 @@ namespace OpenBve {
 								int minutes = (int) Math.Floor(x / 60.0);
 								x -= 60.0 * minutes;
 								int seconds = (int) Math.Floor(x);
-								Stations[n].Arrival.Hour = hours != LastArrivalHours ? hours.ToString("00", Culture) : "";
-								Stations[n].Arrival.Minute = minutes.ToString("00", Culture);
-								Stations[n].Arrival.Second = seconds.ToString("00", Culture);
+								currentStation.Arrival.Hour = hours != LastArrivalHours ? hours.ToString("00", Culture) : "";
+								currentStation.Arrival.Minute = minutes.ToString("00", Culture);
+								currentStation.Arrival.Second = seconds.ToString("00", Culture);
 								LastArrivalHours = hours;
 							}
 							else
 							{
-								Stations[n].Arrival.Hour = "";
-								Stations[n].Arrival.Minute = "";
-								Stations[n].Arrival.Second = "";
+								currentStation.Arrival.Hour = "";
+								currentStation.Arrival.Minute = "";
+								currentStation.Arrival.Second = "";
 							}
 
 							if (Program.CurrentRoute.Stations[sse.StationIndex].DepartureTime >= 0.0)
@@ -105,16 +105,16 @@ namespace OpenBve {
 								int minutes = (int) Math.Floor(x / 60.0);
 								x -= 60.0 * minutes;
 								int seconds = (int) Math.Floor(x);
-								Stations[n].Departure.Hour = hours != LastDepartureHours ? hours.ToString("00", Culture) : "";
-								Stations[n].Departure.Minute = minutes.ToString("00", Culture);
-								Stations[n].Departure.Second = seconds.ToString("00", Culture);
+								currentStation.Departure.Hour = hours != LastDepartureHours ? hours.ToString("00", Culture) : "";
+								currentStation.Departure.Minute = minutes.ToString("00", Culture);
+								currentStation.Departure.Second = seconds.ToString("00", Culture);
 								LastDepartureHours = hours;
 							}
 							else
 							{
-								Stations[n].Departure.Hour = "";
-								Stations[n].Departure.Minute = "";
-								Stations[n].Departure.Second = "";
+								currentStation.Departure.Hour = "";
+								currentStation.Departure.Minute = "";
+								currentStation.Departure.Second = "";
 							}
 
 							// update track
@@ -186,6 +186,7 @@ namespace OpenBve {
 							LastLimit = Limit;
 							Limit = -1.0;
 							n++;
+							Stations.Add(currentStation);
 						}
 
 						if (n >= 1)
@@ -197,8 +198,7 @@ namespace OpenBve {
 						}
 					}
 				}
-
-				Array.Resize(ref Stations, n);
+				
 				if (n >= 2)
 				{
 					Array.Resize(ref Tracks, n - 1);
@@ -213,6 +213,10 @@ namespace OpenBve {
 			/// <param name="timetableTexture">The texture to create</param>
 			internal void RenderData(ref Texture timetableTexture)
 			{
+				if (Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse)
+				{
+					Stations.Reverse();
+				}
 				// prepare timetable
 				int w = 384, h = 192;
 				int offsetx = 0;
@@ -244,7 +248,7 @@ namespace OpenBve {
 					}
 
 					// highest speed
-					t = Translations.GetInterfaceString("timetable_highestspeed");
+					t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"timetable","highestspeed"});
 					SizeF s = g.MeasureString(t, fs);
 					g.DrawString(t, fs, Brushes.Black, x0, y0);
 					float y0a = y0 + s.Height + 2;
@@ -261,7 +265,7 @@ namespace OpenBve {
 
 					g.DrawLine(Pens.LightGray, new PointF(x1 - 2, 4 + descriptionheight), new PointF(x1 - 2, y0a + 18 * Tracks.Length - 1));
 					// driving time
-					t = Translations.GetInterfaceString("timetable_drivingtime");
+					t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"timetable","drivingtime"});
 					s = g.MeasureString(t, fs);
 					g.DrawString(t, fs, Brushes.Black, x1, y0);
 					float x2 = x1 + s.Width + 4;
@@ -308,11 +312,11 @@ namespace OpenBve {
 					g.DrawLine(Pens.LightGray, new PointF(x2 - 2, 4 + descriptionheight), new PointF(x2 - 2, y0a + 18 * Tracks.Length - 1));
 					// station name
 					float y2 = y0;
-					t = Translations.GetInterfaceString("timetable_stationname");
+					t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"timetable","stationname"});
 					s = g.MeasureString(t, f);
 					g.DrawString(t, f, Brushes.Black, x2, y2);
 					float x3 = x2 + s.Width + 4;
-					for (int i = 0; i < Stations.Length; i++)
+					for (int i = 0; i < Stations.Count; i++)
 					{
 						float y = y0 + 18 * (i + 1) + 2;
 						g.DrawLine(Pens.LightGray, new PointF(x2 - 2, y - 1), new PointF(w - 4, y - 1));
@@ -347,18 +351,18 @@ namespace OpenBve {
 						}
 					}
 
-					g.DrawLine(Pens.LightGray, new PointF(x3 - 2, 4 + descriptionheight), new PointF(x3 - 2, y0 + 18 * (Stations.Length + 1)));
+					g.DrawLine(Pens.LightGray, new PointF(x3 - 2, 4 + descriptionheight), new PointF(x3 - 2, y0 + 18 * (Stations.Count + 1)));
 					if (k == 0)
 					{
 						stationnamewidth = x3 - x2 - 6;
 					}
 
 					// arrival time
-					t = Translations.GetInterfaceString("timetable_arrivaltime");
+					t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"timetable","arrivaltime"});
 					s = g.MeasureString(t, f);
 					g.DrawString(t, f, Brushes.Black, x3, y2);
 					float x4 = x3 + s.Width + 4;
-					for (int i = 0; i < Stations.Length; i++)
+					for (int i = 0; i < Stations.Count; i++)
 					{
 						float y = y0 + 18 * (i + 1) + 2;
 						if (Stations[i].Pass)
@@ -399,13 +403,13 @@ namespace OpenBve {
 						}
 					}
 
-					g.DrawLine(Pens.LightGray, new PointF(x4 - 2, 4 + descriptionheight), new PointF(x4 - 2, y0 + 18 * (Stations.Length + 1)));
+					g.DrawLine(Pens.LightGray, new PointF(x4 - 2, 4 + descriptionheight), new PointF(x4 - 2, y0 + 18 * (Stations.Count + 1)));
 					// departure time
-					t = Translations.GetInterfaceString("timetable_departuretime");
+					t = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"timetable","departuretime"});
 					s = g.MeasureString(t, f);
 					g.DrawString(t, f, Brushes.Black, x4, y2);
 					float x5 = x4 + s.Width + 4;
-					for (int i = 0; i < Stations.Length; i++)
+					for (int i = 0; i < Stations.Count; i++)
 					{
 						float y = y0 + 18 * (i + 1) + 2;
 						if (Stations[i].Terminal)
@@ -447,7 +451,7 @@ namespace OpenBve {
 						}
 					}
 
-					for (int i = 0; i < Stations.Length; i++)
+					for (int i = 0; i < Stations.Count; i++)
 					{
 						float y = y0 + 18 * (i + 1) + 2;
 						g.DrawLine(Pens.LightGray, new PointF(x2 - 2, y - 1), new PointF(w - 4, y - 1));
@@ -460,14 +464,14 @@ namespace OpenBve {
 						g.DrawLine(Pens.Black, new PointF(offsetx + 4, y0a + 18 * Tracks.Length - 1), new PointF(x2 - 2, y0a + 18 * Tracks.Length - 1));
 						g.DrawLine(Pens.Black, new PointF(offsetx + 4, 4), new PointF(w - 4, 4));
 						g.DrawLine(Pens.Black, new PointF(offsetx + 4, 4 + descriptionheight), new PointF(w - 4, 4 + descriptionheight));
-						g.DrawLine(Pens.Black, new PointF(x2 - 2, y0 + 18 * (Stations.Length + 1)), new PointF(w - 4, y0 + 18 * (Stations.Length + 1)));
-						g.DrawLine(Pens.Black, new PointF(w - 4, 4), new PointF(w - 4, y0 + 18 * (Stations.Length + 1)));
-						g.DrawLine(Pens.Black, new PointF(x2 - 2, y0a + 18 * Tracks.Length - 1), new PointF(x2 - 2, y0 + 18 * (Stations.Length + 1)));
+						g.DrawLine(Pens.Black, new PointF(x2 - 2, y0 + 18 * (Stations.Count + 1)), new PointF(w - 4, y0 + 18 * (Stations.Count + 1)));
+						g.DrawLine(Pens.Black, new PointF(w - 4, 4), new PointF(w - 4, y0 + 18 * (Stations.Count + 1)));
+						g.DrawLine(Pens.Black, new PointF(x2 - 2, y0a + 18 * Tracks.Length - 1), new PointF(x2 - 2, y0 + 18 * (Stations.Count + 1)));
 					}
 
 					// measure
 					w = (int) Math.Ceiling(x5 + 1);
-					h = (int) Math.Ceiling(y0 + 18 * (Stations.Length + 1) + 4);
+					h = (int) Math.Ceiling(y0 + 18 * (Stations.Count + 1) + 4);
 					// description
 					if (k == 0)
 					{

@@ -260,7 +260,10 @@ namespace OpenBve {
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedTrains[i])) continue;
 				string TrainFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
 				string TrainPath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
-				if (string.IsNullOrEmpty(TrainFileName) || string.IsNullOrEmpty(TrainPath)) continue;
+				if (!Directory.Exists(TrainPath))
+				{
+					continue;
+				}
 				ListViewItem Item = listviewTrainRecently.Items.Add(TrainFileName);
 				Item.ImageKey = @"train";
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedTrains[i];
@@ -335,15 +338,15 @@ namespace OpenBve {
 					labelReviewTimeValue.Text = Game.LogDateTime.ToString("HH:mm:ss", Culture);
 					switch (Interface.CurrentOptions.PreviousGameMode)
 					{
-						case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
-						case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
-						case GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_expert"); break;
-						default: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_unknown"); break;
+						case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","arcade"}); break;
+						case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","normal"}); break;
+						case GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","expert"}); break;
+						default: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","unknown"}); break;
 					}
 					if (Game.CurrentScore.Maximum == 0)
 					{
 						labelRatingColor.BackColor = Color.Gray;
-						labelRatingDescription.Text = Translations.GetInterfaceString("rating_unknown");
+						labelRatingDescription.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"rating","unknown"});
 					}
 					else {
 						Color[] Colors = { Color.PaleVioletRed, Color.IndianRed, Color.Peru, Color.Goldenrod, Color.DarkKhaki, Color.YellowGreen, Color.MediumSeaGreen, Color.MediumAquamarine, Color.SkyBlue, Color.CornflowerBlue };
@@ -354,7 +357,7 @@ namespace OpenBve {
 						else {
 							labelRatingColor.BackColor = Color.Gray;
 						}
-						labelRatingDescription.Text = Translations.GetInterfaceString("rating_" + index.ToString(Culture));
+						labelRatingDescription.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"rating", index.ToString(Culture)});
 					}
 					labelRatingAchievedValue.Text = Game.CurrentScore.CurrentValue.ToString(Culture);
 					labelRatingMaximumValue.Text = Game.CurrentScore.Maximum.ToString(Culture);
@@ -591,7 +594,7 @@ namespace OpenBve {
 				catch
 				{
 					// setting the font failed, so roll back
-					MessageBox.Show(@"Failed to set font " + font.Name, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					MessageBox.Show(@"Failed to set font " + font.Name, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					SetFont(Controls, oldFont);
 					Interface.CurrentOptions.Font = oldFont;
 					Program.Renderer.Fonts = new Fonts(Program.CurrentHost, oldFont);
@@ -634,145 +637,145 @@ namespace OpenBve {
 		{
 			Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
 			// Main form title bar
-			Text = Translations.GetInterfaceString("program_title");
+			Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"});
 			/*
 			 * Localisation for strings in main panel
 			 */
-			radiobuttonStart.Text = Translations.GetInterfaceString("panel_start");
-			radiobuttonReview.Text = Translations.GetInterfaceString("panel_review");
-			radiobuttonControls.Text = Translations.GetInterfaceString("panel_controls");
-			radiobuttonOptions.Text = Translations.GetInterfaceString("panel_options");
-			linkHomepage.Text = Translations.GetInterfaceString("panel_homepage");
-			buttonClose.Text = Translations.GetInterfaceString("panel_close");
-			radioButtonPackages.Text = Translations.GetInterfaceString("panel_packages");
-			linkLabelCheckUpdates.Text = Translations.GetInterfaceString("panel_updates");
-			linkLabelReportBug.Text = Translations.GetInterfaceString("panel_reportbug");
-			aboutLabel.Text = Translations.GetInterfaceString("panel_about");
+			radiobuttonStart.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","start"});
+			radiobuttonReview.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","review"});
+			radiobuttonControls.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","controls"});
+			radiobuttonOptions.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","options"});
+			linkHomepage.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","homepage"});
+			buttonClose.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","close"});
+			radioButtonPackages.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","packages"});
+			linkLabelCheckUpdates.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","updates"});
+			linkLabelReportBug.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","reportbug"});
+			aboutLabel.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","about"});
 			/*
 			 * Localisation for strings in the options pane
 			 */
-			labelOptionsTitle.Text = Translations.GetInterfaceString("options_title");
+			labelOptionsTitle.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","title"});
 			//Basic display mode settings
-			groupboxDisplayMode.Text = Translations.GetInterfaceString("options_display_mode");
-			radiobuttonWindow.Text = Translations.GetInterfaceString("options_display_mode_window");
-			radiobuttonFullscreen.Text = Translations.GetInterfaceString("options_display_mode_fullscreen");
-			labelVSync.Text = Translations.GetInterfaceString("options_display_vsync");
-			comboboxVSync.Items[0] = Translations.GetInterfaceString("options_display_vsync_off");
-			comboboxVSync.Items[1] = Translations.GetInterfaceString("options_display_vsync_on");
-			labelHUDScale.Text = Translations.GetInterfaceString("options_hud_size");
-			labelHUDSmall.Text = Translations.GetInterfaceString("options_hud_size_small");
-			labelHUDNormal.Text = Translations.GetInterfaceString("options_hud_size_normal");
-			labelHUDLarge.Text = Translations.GetInterfaceString("options_hud_size_large");
-			labelFontName.Text = Translations.GetInterfaceString("options_font");
+			groupboxDisplayMode.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_mode"});
+			radiobuttonWindow.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_mode_window"});
+			radiobuttonFullscreen.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_mode_fullscreen"});
+			labelVSync.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_vsync"});
+			comboboxVSync.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_vsync_off"});
+			comboboxVSync.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_vsync_on"});
+			labelHUDScale.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_size"});
+			labelHUDSmall.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_size_small"});
+			labelHUDNormal.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_size_normal"});
+			labelHUDLarge.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hud_size_large"});
+			labelFontName.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","font"});
 			//Windowed Mode
-			groupboxWindow.Text = Translations.GetInterfaceString("options_display_window");
-			labelWindowWidth.Text = Translations.GetInterfaceString("options_display_window_width");
-			labelWindowHeight.Text = Translations.GetInterfaceString("options_display_window_height");
+			groupboxWindow.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_window"});
+			labelWindowWidth.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_window_width"});
+			labelWindowHeight.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_window_height"});
 			//Fullscreen
-			groupboxFullscreen.Text = Translations.GetInterfaceString("options_display_fullscreen");
-			labelFullscreenWidth.Text = Translations.GetInterfaceString("options_display_fullscreen_width");
-			labelFullscreenHeight.Text = Translations.GetInterfaceString("options_display_fullscreen_height");
-			labelFullscreenBits.Text = Translations.GetInterfaceString("options_display_fullscreen_bits");
+			groupboxFullscreen.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_fullscreen"});
+			labelFullscreenWidth.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_fullscreen_width"});
+			labelFullscreenHeight.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_fullscreen_height"});
+			labelFullscreenBits.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_fullscreen_bits"});
 			//Interpolation, AA and AF
-			groupboxInterpolation.Text = Translations.GetInterfaceString("options_quality_interpolation");
-			labelInterpolation.Text = Translations.GetInterfaceString("options_quality_interpolation_mode");
-			comboboxInterpolation.Items[0] = Translations.GetInterfaceString("options_quality_interpolation_mode_nearest");
-			comboboxInterpolation.Items[1] = Translations.GetInterfaceString("options_quality_interpolation_mode_bilinear");
-			comboboxInterpolation.Items[2] = Translations.GetInterfaceString("options_quality_interpolation_mode_nearestmipmap");
-			comboboxInterpolation.Items[3] = Translations.GetInterfaceString("options_quality_interpolation_mode_bilinearmipmap");
-			comboboxInterpolation.Items[4] = Translations.GetInterfaceString("options_quality_interpolation_mode_trilinearmipmap");
-			comboboxInterpolation.Items[5] = Translations.GetInterfaceString("options_quality_interpolation_mode_anisotropic");
-			labelAnisotropic.Text = Translations.GetInterfaceString("options_quality_interpolation_anisotropic_level");
-			labelAntiAliasing.Text = Translations.GetInterfaceString("options_quality_interpolation_antialiasing_level");
-			labelTransparency.Text = Translations.GetInterfaceString("options_quality_interpolation_transparency");
-			labelTransparencyPerformance.Text = Translations.GetInterfaceString("options_quality_interpolation_transparency_sharp");
-			labelTransparencyQuality.Text = Translations.GetInterfaceString("options_quality_interpolation_transparency_smooth");
-			groupboxDistance.Text = Translations.GetInterfaceString("options_quality_distance");
+			groupboxInterpolation.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation"});
+			labelInterpolation.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_mode"});
+			comboboxInterpolation.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_mode_nearest"});
+			comboboxInterpolation.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_mode_bilinear"});
+			comboboxInterpolation.Items[2] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_mode_nearestmipmap"});
+			comboboxInterpolation.Items[3] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_mode_bilinearmipmap"});
+			comboboxInterpolation.Items[4] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_mode_trilinearmipmap"});
+			comboboxInterpolation.Items[5] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_mode_anisotropic"});
+			labelAnisotropic.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_anisotropic_level"});
+			labelAntiAliasing.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_antialiasing_level"});
+			labelTransparency.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_transparency"});
+			labelTransparencyPerformance.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_transparency_sharp"});
+			labelTransparencyQuality.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_transparency_smooth"});
+			groupboxDistance.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_distance"});
 			//Viewing distance and motion blur
-			labelDistance.Text = Translations.GetInterfaceString("options_quality_distance_viewingdistance");
-			labelDistanceUnit.Text = Translations.GetInterfaceString("options_quality_distance_viewingdistance_meters");
-			labelMotionBlur.Text = Translations.GetInterfaceString("options_quality_distance_motionblur");
-			comboboxMotionBlur.Items[0] = Translations.GetInterfaceString("options_quality_distance_motionblur_none");
-			comboboxMotionBlur.Items[1] = Translations.GetInterfaceString("options_quality_distance_motionblur_low");
-			comboboxMotionBlur.Items[2] = Translations.GetInterfaceString("options_quality_distance_motionblur_medium");
-			comboboxMotionBlur.Items[3] = Translations.GetInterfaceString("options_quality_distance_motionblur_high");
-			labelMotionBlur.Text = Translations.GetInterfaceString("options_quality_distance_motionblur");
+			labelDistance.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_distance_viewingdistance"});
+			labelDistanceUnit.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_distance_viewingdistance_meters"});
+			labelMotionBlur.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_distance_motionblur"});
+			comboboxMotionBlur.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_distance_motionblur_none"});
+			comboboxMotionBlur.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_distance_motionblur_low"});
+			comboboxMotionBlur.Items[2] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_distance_motionblur_medium"});
+			comboboxMotionBlur.Items[3] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_distance_motionblur_high"});
+			labelMotionBlur.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_distance_motionblur"});
 			//Simulation
-			groupboxSimulation.Text = Translations.GetInterfaceString("options_misc_simulation");
-			checkboxToppling.Text = Translations.GetInterfaceString("options_misc_simulation_toppling");
-			checkboxCollisions.Text = Translations.GetInterfaceString("options_misc_simulation_collisions");
-			checkboxDerailments.Text = Translations.GetInterfaceString("options_misc_simulation_derailments");
-			checkboxBlackBox.Text = Translations.GetInterfaceString("options_misc_simulation_blackbox");
-			checkBoxLoadingSway.Text = Translations.GetInterfaceString("options_misc_simulation_loadingsway");
+			groupboxSimulation.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation"});
+			checkboxToppling.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_toppling"});
+			checkboxCollisions.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_collisions"});
+			checkboxDerailments.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_derailments"});
+			checkboxBlackBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_blackbox"});
+			checkBoxLoadingSway.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_simulation_loadingsway"});
 			//Controls
-			groupboxControls.Text = Translations.GetInterfaceString("options_misc_controls");
-			checkboxJoysticksUsed.Text = Translations.GetInterfaceString("options_misc_controls_joysticks");
-			checkBoxEBAxis.Text = Translations.GetInterfaceString("options_misc_controls_ebaxis");
-			labelJoystickAxisThreshold.Text = Translations.GetInterfaceString("options_misc_controls_threshold");
+			groupboxControls.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_controls"});
+			checkboxJoysticksUsed.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_controls_joysticks"});
+			checkBoxEBAxis.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_controls_ebaxis"});
+			labelJoystickAxisThreshold.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_controls_threshold"});
 			//Sound
-			groupboxSound.Text = Translations.GetInterfaceString("options_misc_sound");
-			labelSoundNumber.Text = Translations.GetInterfaceString("options_misc_sound_number");
+			groupboxSound.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_sound"});
+			labelSoundNumber.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","misc_sound_number"});
 			//Verbosity
-			groupboxVerbosity.Text = Translations.GetInterfaceString("options_verbosity");
-			checkboxWarningMessages.Text = Translations.GetInterfaceString("options_verbosity_warningmessages");
-			checkboxErrorMessages.Text = Translations.GetInterfaceString("options_verbosity_errormessages");
-			checkBoxAccessibility.Text = Translations.GetInterfaceString("options_verbosity_accessibilityaids");
+			groupboxVerbosity.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","verbosity"});
+			checkboxWarningMessages.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","verbosity_warningmessages"});
+			checkboxErrorMessages.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","verbosity_errormessages"});
+			checkBoxAccessibility.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","verbosity_accessibilityaids"});
 			//Advanced Options
-			groupBoxAdvancedOptions.Text = Translations.GetInterfaceString("options_advanced");
-			checkBoxLoadInAdvance.Text = Translations.GetInterfaceString("options_advanced_load_advance");
-			checkBoxUnloadTextures.Text = Translations.GetInterfaceString("options_advanced_unload_textures");
-			checkBoxIsUseNewRenderer.Text = Translations.GetInterfaceString("options_advanced_is_use_new_renderer");
-			labelTimeAcceleration.Text = Translations.GetInterfaceString("options_advanced_timefactor");
-			labelCursor.Text = Translations.GetInterfaceString("options_advanced_cursor");
+			groupBoxAdvancedOptions.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced"});
+			checkBoxLoadInAdvance.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_load_advance"});
+			checkBoxUnloadTextures.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_unload_textures"});
+			checkBoxIsUseNewRenderer.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_is_use_new_renderer"});
+			labelTimeAcceleration.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_timefactor"});
+			labelCursor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","advanced_cursor"});
 			//Other Options
-			groupBoxOther.Text = Translations.GetInterfaceString("options_other");
-			labelTimeTableDisplayMode.Text = Translations.GetInterfaceString("options_other_timetable_mode");
-			comboBoxTimeTableDisplayMode.Items[0] = Translations.GetInterfaceString("options_other_timetable_mode_none");
-			comboBoxTimeTableDisplayMode.Items[1] = Translations.GetInterfaceString("options_other_timetable_mode_default");
-			comboBoxTimeTableDisplayMode.Items[2] = Translations.GetInterfaceString("options_other_timetable_mode_autogenerated");
-			comboBoxTimeTableDisplayMode.Items[3] = Translations.GetInterfaceString("options_other_timetable_mode_prefercustom");
+			groupBoxOther.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","other"});
+			labelTimeTableDisplayMode.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","other_timetable_mode"});
+			comboBoxTimeTableDisplayMode.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","other_timetable_mode_none"});
+			comboBoxTimeTableDisplayMode.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","other_timetable_mode_default"});
+			comboBoxTimeTableDisplayMode.Items[2] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","other_timetable_mode_autogenerated"});
+			comboBoxTimeTableDisplayMode.Items[3] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","other_timetable_mode_prefercustom"});
 			//Options Page
-			buttonOptionsPrevious.Text = Translations.GetInterfaceString("options_page_previous");
-			buttonOptionsNext.Text = Translations.GetInterfaceString("options_page_next");
-			checkBoxPanel2Extended.Text = Translations.GetInterfaceString("options_panel2_extended");
+			buttonOptionsPrevious.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","page_previous"});
+			buttonOptionsNext.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","page_next"});
+			checkBoxPanel2Extended.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","panel2_extended"});
 			/*
 			 * Options Page 2
 			 */
 			//Package directories
-			groupBoxPackageOptions.Text = Translations.GetInterfaceString("panel_packages");
-			buttonSetRouteDirectory.Text = Translations.GetInterfaceString("options_package_choose");
-			buttonTrainInstallationDirectory.Text = Translations.GetInterfaceString("options_package_choose");
-			buttonOtherDirectory.Text = Translations.GetInterfaceString("options_package_choose");
+			groupBoxPackageOptions.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","packages"});
+			buttonSetRouteDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_choose"});
+			buttonTrainInstallationDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_choose"});
+			buttonOtherDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_choose"});
 			textBoxRouteDirectory.Text = Program.FileSystem.RouteInstallationDirectory;
 			textBoxTrainDirectory.Text = Program.FileSystem.TrainInstallationDirectory;
 			textBoxOtherDirectory.Text = Program.FileSystem.OtherInstallationDirectory;
-			labelRouteInstallDirectory.Text = Translations.GetInterfaceString("options_package_route_directory");
-			labelTrainInstallDirectory.Text = Translations.GetInterfaceString("options_package_train_directory");
-			labelOtherInstallDirectory.Text = Translations.GetInterfaceString("options_package_other_directory");
-			labelPackageCompression.Text = Translations.GetInterfaceString("options_package_compression");
+			labelRouteInstallDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_route_directory"});
+			labelTrainInstallDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_train_directory"});
+			labelOtherInstallDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_other_directory"});
+			labelPackageCompression.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_compression"});
 			//Kiosk Mode
-			groupBoxKioskMode.Text = Translations.GetInterfaceString("options_kiosk_mode");
-			checkBoxEnableKiosk.Text = Translations.GetInterfaceString("options_kiosk_mode_enable");
-			labelKioskTimeout.Text = Translations.GetInterfaceString("options_kiosk_mode_timer");
-			labelRailDriverSpeedUnits.Text = Translations.GetInterfaceString("raildriver_speedunits");
-			comboBoxRailDriverUnits.Items[0] = Translations.GetInterfaceString("raildriver_milesperhour");
-			comboBoxRailDriverUnits.Items[1] = Translations.GetInterfaceString("raildriver_kilometersperhour");
-			labelRailDriverCalibration.Text = Translations.GetInterfaceString("raildriver_setcalibration");
-			buttonRailDriverCalibration.Text = Translations.GetInterfaceString("raildriver_launch");
-			checkBoxTransparencyFix.Text = Translations.GetInterfaceString("options_transparencyfix");
-			checkBoxHacks.Text = Translations.GetInterfaceString("options_hacks_enable");
+			groupBoxKioskMode.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","kiosk_mode"});
+			checkBoxEnableKiosk.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","kiosk_mode_enable"});
+			labelKioskTimeout.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","kiosk_mode_timer"});
+			labelRailDriverSpeedUnits.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","speedunits"});
+			comboBoxRailDriverUnits.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","milesperhour"});
+			comboBoxRailDriverUnits.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","kilometersperhour"});
+			labelRailDriverCalibration.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","setcalibration"});
+			buttonRailDriverCalibration.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","launch"});
+			checkBoxTransparencyFix.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","transparencyfix"});
+			checkBoxHacks.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","hacks_enable"});
 			//Object Parser Options
-			groupBoxObjectParser.Text = Translations.GetInterfaceString("options_object_parser");
-			labelXparser.Text = Translations.GetInterfaceString("options_xobject_parser");
-			labelObjparser.Text = Translations.GetInterfaceString("options_objobject_parser");
+			groupBoxObjectParser.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","object_parser"});
+			labelXparser.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","xobject_parser"});
+			labelObjparser.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","objobject_parser"});
 			//Input Device
-			groupBoxInputDevice.Text = Translations.GetInterfaceString("options_input_device_plugin");
-			labelInputDevice.Text = Translations.GetInterfaceString("options_input_device_plugin_warning");
-			listviewInputDevice.Columns[0].Text = Translations.GetInterfaceString("options_input_device_plugin_name");
-			listviewInputDevice.Columns[1].Text = Translations.GetInterfaceString("options_input_device_plugin_status");
-			listviewInputDevice.Columns[2].Text = Translations.GetInterfaceString("options_input_device_plugin_version");
-			listviewInputDevice.Columns[3].Text = Translations.GetInterfaceString("options_input_device_plugin_provider");
-			listviewInputDevice.Columns[4].Text = Translations.GetInterfaceString("options_input_device_plugin_file_name");
+			groupBoxInputDevice.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin"});
+			labelInputDevice.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_warning"});
+			listviewInputDevice.Columns[0].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_name"});
+			listviewInputDevice.Columns[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_status"});
+			listviewInputDevice.Columns[2].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_version"});
+			listviewInputDevice.Columns[3].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_provider"});
+			listviewInputDevice.Columns[4].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_file_name"});
 			{
 				listviewInputDevice.Items.Clear();
 				ListViewItem[] Items = new ListViewItem[InputDevicePlugin.AvailablePluginInfos.Count];
@@ -784,67 +787,67 @@ namespace OpenBve {
 				listviewInputDevice.Items.AddRange(Items);
 				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 			}
-			checkBoxInputDeviceEnable.Text = Translations.GetInterfaceString("options_input_device_plugin_switch");
-			buttonInputDeviceConfig.Text = Translations.GetInterfaceString("options_input_device_plugin_config");
+			checkBoxInputDeviceEnable.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_switch"});
+			buttonInputDeviceConfig.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_config"});
 			/*
 			 * Localisation for strings in the game start pane
 			 */
-			labelStartTitle.Text = Translations.GetInterfaceString("start_title");
-			labelRoute.Text = Translations.GetInterfaceString("start_route");
-			groupboxRouteSelection.Text = Translations.GetInterfaceString("start_route_selection");
-			tabpageRouteBrowse.Text = Translations.GetInterfaceString("start_route_browse");
-			tabpageRouteRecently.Text = Translations.GetInterfaceString("start_route_recently");
-			tabPageRoutePackages.Text = Translations.GetInterfaceString("packages_list");
-			groupboxRouteDetails.Text = Translations.GetInterfaceString("start_route_details");
-			tabpageRouteDescription.Text = Translations.GetInterfaceString("start_route_description");
-			tabpageRouteMap.Text = Translations.GetInterfaceString("start_route_map");
-			tabpageRouteGradient.Text = Translations.GetInterfaceString("start_route_gradient");
-			tabpageRouteSettings.Text = Translations.GetInterfaceString("start_route_settings");
-			labelRouteEncoding.Text = Translations.GetInterfaceString("start_route_settings_encoding");
-			comboboxRouteEncoding.Items[0] = Translations.GetInterfaceString("(UTF-8)");
-			labelRouteEncodingPreview.Text = Translations.GetInterfaceString("start_route_settings_encoding_preview");
-			labelTrain.Text = Translations.GetInterfaceString("start_train");
-			groupboxTrainSelection.Text = Translations.GetInterfaceString("start_train_selection");
-			tabpageTrainBrowse.Text = Translations.GetInterfaceString("start_train_browse");
-			tabpageTrainRecently.Text = Translations.GetInterfaceString("start_train_recently");
-			tabpageTrainDefault.Text = Translations.GetInterfaceString("start_train_default");
-			tabPageTrainPackages.Text = Translations.GetInterfaceString("packages_list");
-			checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
-			groupboxTrainDetails.Text = Translations.GetInterfaceString("start_train_details");
-			tabpageTrainDescription.Text = Translations.GetInterfaceString("start_train_description");
-			tabpageTrainSettings.Text = Translations.GetInterfaceString("start_train_settings");
-			labelTrainEncoding.Text = Translations.GetInterfaceString("start_train_settings_encoding");
-			labelReverseConsist.Text = Translations.GetInterfaceString("start_train_settings_reverseconsist");
-			comboboxTrainEncoding.Items[0] = Translations.GetInterfaceString("(UTF-8)");
-			labelTrainEncodingPreview.Text = Translations.GetInterfaceString("start_train_settings_encoding_preview");
-			labelStart.Text = Translations.GetInterfaceString("start_start");
-			labelMode.Text = Translations.GetInterfaceString("start_start_mode");
-			buttonStart.Text = Translations.GetInterfaceString("start_start_start");
-			comboboxMode.Items[0] = Translations.GetInterfaceString("mode_arcade");
-			comboboxMode.Items[1] = Translations.GetInterfaceString("mode_normal");
-			comboboxMode.Items[2] = Translations.GetInterfaceString("mode_expert");
-			labelCompatibilitySignalSet.Text = Translations.GetInterfaceString("options_compatibility_signals");
+			labelStartTitle.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","title"});
+			labelRoute.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route"});
+			groupboxRouteSelection.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_selection"});
+			tabpageRouteBrowse.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_browse"});
+			tabpageRouteRecently.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_recently"});
+			tabPageRoutePackages.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list"});
+			groupboxRouteDetails.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_details"});
+			tabpageRouteDescription.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_description"});
+			tabpageRouteMap.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_map"});
+			tabpageRouteGradient.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_gradient"});
+			tabpageRouteSettings.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_settings"});
+			labelRouteEncoding.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_settings_encoding"});
+			comboboxRouteEncoding.Items[0] = @"(UTF-8)";
+			labelRouteEncodingPreview.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_settings_encoding_preview"});
+			labelTrain.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train"});
+			groupboxTrainSelection.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_selection"});
+			tabpageTrainBrowse.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_browse"});
+			tabpageTrainRecently.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_recently"});
+			tabpageTrainDefault.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_default"});
+			tabPageTrainPackages.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list"});
+			checkboxTrainDefault.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_usedefault"});
+			groupboxTrainDetails.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_details"});
+			tabpageTrainDescription.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_description"});
+			tabpageTrainSettings.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_settings"});
+			labelTrainEncoding.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_settings_encoding"});
+			labelReverseConsist.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_settings_reverseconsist"});
+			comboboxTrainEncoding.Items[0] = @"(UTF-8)";
+			labelTrainEncodingPreview.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_settings_encoding_preview"});
+			labelStart.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","start"});
+			labelMode.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","start_mode"});
+			buttonStart.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","start_start"});
+			comboboxMode.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","arcade"});
+			comboboxMode.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","normal"});
+			comboboxMode.Items[2] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","expert"});
+			labelCompatibilitySignalSet.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","compatibility_signals"});
 			/*
 			 * Localisation for strings in the game review pane
 			 */
-			labelReviewTitle.Text = Translations.GetInterfaceString("review_title");
-			labelConditions.Text = @" " + Translations.GetInterfaceString("review_conditions");
-			groupboxReviewRoute.Text = Translations.GetInterfaceString("review_conditions_route");
-			labelReviewRouteCaption.Text = Translations.GetInterfaceString("review_conditions_route_file");
-			groupboxReviewTrain.Text = Translations.GetInterfaceString("review_conditions_train");
-			labelReviewTrainCaption.Text = Translations.GetInterfaceString("review_conditions_train_folder");
-			groupboxReviewDateTime.Text = Translations.GetInterfaceString("review_conditions_datetime");
-			labelReviewDateCaption.Text = Translations.GetInterfaceString("review_conditions_datetime_date");
-			labelReviewTimeCaption.Text = Translations.GetInterfaceString("review_conditions_datetime_time");
-			labelScore.Text = @" " + Translations.GetInterfaceString("review_score");
-			groupboxRating.Text = Translations.GetInterfaceString("review_score_rating");
-			labelRatingModeCaption.Text = Translations.GetInterfaceString("review_score_rating_mode");
+			labelReviewTitle.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","title"});
+			labelConditions.Text = @" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","conditions"});
+			groupboxReviewRoute.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","conditions_route"});
+			labelReviewRouteCaption.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","conditions_route_file"});
+			groupboxReviewTrain.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","conditions_train"});
+			labelReviewTrainCaption.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","conditions_train_folder"});
+			groupboxReviewDateTime.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","conditions_datetime"});
+			labelReviewDateCaption.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","conditions_datetime_date"});
+			labelReviewTimeCaption.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","conditions_datetime_time"});
+			labelScore.Text = @" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score"});
+			groupboxRating.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score_rating"});
+			labelRatingModeCaption.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score_rating_mode"});
 			switch (Interface.CurrentOptions.PreviousGameMode)
 			{
-				case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
-				case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
-				case GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_expert"); break;
-				default: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_unkown"); break;
+				case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","arcade"}); break;
+				case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","normal"}); break;
+				case GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","expert"}); break;
+				default: labelRatingModeValue.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","unkown"}); break;
 			}
 			{
 				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / Game.CurrentScore.Maximum;
@@ -852,25 +855,25 @@ namespace OpenBve {
 				if (ratio > 1.0) ratio = 1.0;
 				int index = (int)Math.Floor(ratio * Translations.RatingsCount);
 				if (index >= Translations.RatingsCount) index = Translations.RatingsCount - 1;
-				labelRatingDescription.Text = Game.CurrentScore.Maximum == 0 ? Translations.GetInterfaceString("rating_unknown") : Translations.GetInterfaceString("rating_" + index.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				labelRatingDescription.Text = Game.CurrentScore.Maximum == 0 ? Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"rating","unknown"}) : Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"rating",index.ToString(System.Globalization.CultureInfo.InvariantCulture)});
 			}
-			labelRatingAchievedCaption.Text = Translations.GetInterfaceString("review_score_rating_achieved");
-			labelRatingMaximumCaption.Text = Translations.GetInterfaceString("review_score_rating_maximum");
-			labelRatingRatioCaption.Text = Translations.GetInterfaceString("review_score_rating_ratio");
-			groupboxScore.Text = Translations.GetInterfaceString("review_score_log");
-			listviewScore.Columns[0].Text = Translations.GetInterfaceString("review_score_log_list_time");
-			listviewScore.Columns[1].Text = Translations.GetInterfaceString("review_score_log_list_position");
-			listviewScore.Columns[2].Text = Translations.GetInterfaceString("review_score_log_list_value");
-			listviewScore.Columns[3].Text = Translations.GetInterfaceString("review_score_log_list_cumulative");
-			listviewScore.Columns[4].Text = Translations.GetInterfaceString("review_score_log_list_reason");
+			labelRatingAchievedCaption.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score_rating_achieved"});
+			labelRatingMaximumCaption.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score_rating_maximum"});
+			labelRatingRatioCaption.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score_rating_ratio"});
+			groupboxScore.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score_log"});
+			listviewScore.Columns[0].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score_log_list_time"});
+			listviewScore.Columns[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score_log_list_position"});
+			listviewScore.Columns[2].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score_log_list_value"});
+			listviewScore.Columns[3].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score_log_list_cumulative"});
+			listviewScore.Columns[4].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score_log_list_reason"});
 			ShowScoreLog(checkboxScorePenalties.Checked);
-			checkboxScorePenalties.Text = Translations.GetInterfaceString("review_score_log_penalties");
-			buttonScoreExport.Text = Translations.GetInterfaceString("review_score_log_export");
-			labelBlackBox.Text = @" " + Translations.GetInterfaceString("review_blackbox");
-			labelBlackBoxFormat.Text = Translations.GetInterfaceString("review_blackbox_format");
-			comboboxBlackBoxFormat.Items[0] = Translations.GetInterfaceString("review_blackbox_format_csv");
-			comboboxBlackBoxFormat.Items[1] = Translations.GetInterfaceString("review_blackbox_format_text");
-			buttonBlackBoxExport.Text = Translations.GetInterfaceString("review_blackbox_export");
+			checkboxScorePenalties.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score_log_penalties"});
+			buttonScoreExport.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","score_log_export"});
+			labelBlackBox.Text = @" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","blackbox"});
+			labelBlackBoxFormat.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","blackbox_format"});
+			comboboxBlackBoxFormat.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","blackbox_format_csv"});
+			comboboxBlackBoxFormat.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","blackbox_format_text"});
+			buttonBlackBoxExport.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"review","blackbox_export"});
 			/*
 			 * Localisation for strings related to controls (Keyboard etc.)
 			 */
@@ -878,52 +881,49 @@ namespace OpenBve {
 			{
 				listviewControls.SelectedItems[i].Selected = false;
 			}
-			labelControlsTitle.Text = Translations.GetInterfaceString("controls_title");
-			listviewControls.Columns[0].Text = Translations.GetInterfaceString("controls_list_command");
-			listviewControls.Columns[1].Text = Translations.GetInterfaceString("controls_list_type");
-			listviewControls.Columns[2].Text = Translations.GetInterfaceString("controls_list_description");
-			listviewControls.Columns[3].Text = Translations.GetInterfaceString("controls_list_assignment");
-			listviewControls.Columns[4].Text = Translations.GetInterfaceString("controls_list_option");
-			buttonControlAdd.Text = Translations.GetInterfaceString("controls_add");
-			buttonControlRemove.Text = Translations.GetInterfaceString("controls_remove");
-			buttonControlsImport.Text = Translations.GetInterfaceString("controls_import");
-			buttonControlsExport.Text = Translations.GetInterfaceString("controls_export");
-			buttonControlReset.Text = Translations.GetInterfaceString("controls_reset");
-			buttonControlUp.Text = Translations.GetInterfaceString("controls_up");
-			buttonControlDown.Text = Translations.GetInterfaceString("controls_down");
-			groupboxControl.Text = Translations.GetInterfaceString("controls_selection");
-			labelCommand.Text = Translations.GetInterfaceString("controls_selection_command");
-			labelCommandOption.Text = Translations.GetInterfaceString("controls_selection_command_option");
-			radiobuttonKeyboard.Text = Translations.GetInterfaceString("controls_selection_keyboard");
-			labelKeyboardKey.Text = Translations.GetInterfaceString("controls_selection_keyboard_key");
-			labelKeyboardModifier.Text = Translations.GetInterfaceString("controls_selection_keyboard_modifiers");
+			labelControlsTitle.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","title"});
+			listviewControls.Columns[0].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","list_command"});
+			listviewControls.Columns[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","list_type"});
+			listviewControls.Columns[2].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","list_description"});
+			listviewControls.Columns[3].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","list_assignment"});
+			listviewControls.Columns[4].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","list_option"});
+			buttonControlAdd.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","add"});
+			buttonControlRemove.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","remove"});
+			buttonControlsImport.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","import"});
+			buttonControlsExport.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","export"});
+			buttonControlReset.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","reset"});
+			buttonControlUp.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","up"});
+			buttonControlDown.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","down"});
+			groupboxControl.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection"});
+			labelCommand.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_command"});
+			labelCommandOption.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_command_option"});
+			radiobuttonKeyboard.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard"});
+			labelKeyboardKey.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_key"});
+			labelKeyboardModifier.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_modifiers"});
 			//Load text for SHIFT modifier
-			checkboxKeyboardShift.Text = Translations.GetInterfaceString("controls_selection_keyboard_modifiers_shift");
+			checkboxKeyboardShift.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_modifiers_shift"});
 			//Shift CTRL
 			checkboxKeyboardCtrl.Location = new Point(checkboxKeyboardShift.Location.X + (checkboxKeyboardShift.Text.Length + 5) * 5, checkboxKeyboardCtrl.Location.Y);
 			//Load text for CTRL modifier
-			checkboxKeyboardCtrl.Text = Translations.GetInterfaceString("controls_selection_keyboard_modifiers_ctrl");
+			checkboxKeyboardCtrl.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_modifiers_ctrl"});
 			//Shift ALT to suit
 			checkboxKeyboardAlt.Location = new Point(checkboxKeyboardCtrl.Location.X + (checkboxKeyboardCtrl.Text.Length + 5) * 5, checkboxKeyboardAlt.Location.Y);
 			
-			checkboxKeyboardAlt.Text = Translations.GetInterfaceString("controls_selection_keyboard_modifiers_alt");
-			radiobuttonJoystick.Text = Translations.GetInterfaceString("controls_selection_joystick");
-			labelJoystickAssignmentCaption.Text = Translations.GetInterfaceString("controls_selection_joystick_assignment");
-			textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_keyboard_assignment_grab");
-			groupboxJoysticks.Text = Translations.GetInterfaceString("controls_attached");
+			checkboxKeyboardAlt.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_modifiers_alt"});
+			radiobuttonJoystick.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_joystick"});
+			labelJoystickAssignmentCaption.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_joystick_assignment"});
+			textboxJoystickGrab.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","selection_keyboard_assignment_grab"});
+			groupboxJoysticks.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","attached"});
 			{
 				listviewControls.Items.Clear();
-				comboboxCommand.Items.Clear();
-				for (int i = 0; i < Translations.CommandInfos.Length; i++)
-				{
-					comboboxCommand.Items.Add(Translations.CommandInfos[i].Name + " - " + Translations.CommandInfos[i].Description);
-				}
-				comboboxKeyboardKey.Items.Clear();
-				for (int i = 0; i < Translations.TranslatedKeys.Length; i++)
-				{
-					comboboxKeyboardKey.Items.Add(Translations.TranslatedKeys[i]);
-				}
+				comboboxCommand.DataSource = new BindingSource(Translations.CommandInfos, null);
+				comboboxCommand.DisplayMember = "Value";
+				comboboxCommand.ValueMember = "Key";
 
+				comboboxKeyboardKey.DataSource = new BindingSource(Translations.TranslatedKeys, null);
+				comboboxKeyboardKey.DisplayMember = "Value";
+				comboboxKeyboardKey.ValueMember = "Key";
+				
 				ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
 				for (int i = 0; i < Interface.CurrentControls.Length; i++)
 				{
@@ -938,119 +938,119 @@ namespace OpenBve {
 			 * 
 			 */
 			//Navigation buttons
-			buttonBack.Text = Translations.GetInterfaceString("packages_button_back");
-			buttonCreatePackage.Text = Translations.GetInterfaceString("packages_button_create");
-			buttonBack2.Text = Translations.GetInterfaceString("packages_button_back");
-			buttonNext.Text = Translations.GetInterfaceString("packages_button_next");
-			buttonCancel.Text = Translations.GetInterfaceString("packages_button_cancel");
-			buttonProceedAnyway1.Text = Translations.GetInterfaceString("packages_button_install");
-			buttonCancel2.Text = Translations.GetInterfaceString("packages_button_cancel");
-			buttonCreateProceed.Text = Translations.GetInterfaceString("packages_button_next");
-			buttonAbort.Text = Translations.GetInterfaceString("packages_button_abort");
-			buttonProceedAnyway.Text = Translations.GetInterfaceString("packages_button_ignore");
+			buttonBack.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_back"});
+			buttonCreatePackage.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_create"});
+			buttonBack2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_back"});
+			buttonNext.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_next"});
+			buttonCancel.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_cancel"});
+			buttonProceedAnyway1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_install"});
+			buttonCancel2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_cancel"});
+			buttonCreateProceed.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_next"});
+			buttonAbort.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_abort"});
+			buttonProceedAnyway.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_ignore"});
 			//Main display tab
-			labelPackagesTitle.Text = Translations.GetInterfaceString("packages_title");
-			labelInstalledPackages.Text = Translations.GetInterfaceString("packages_list");
-			labelPackageListType.Text = Translations.GetInterfaceString("packages_list_type");
-			buttonInstallPackage.Text = Translations.GetInterfaceString("packages_install_button");
-			buttonUninstallPackage.Text = Translations.GetInterfaceString("packages_uninstall_button");
-			createPackageButton.Text = Translations.GetInterfaceString("packages_creation_button");
-			comboBoxPackageType.Items[0] = Translations.GetInterfaceString("packages_type_route");
-			comboBoxPackageType.Items[1] = Translations.GetInterfaceString("packages_type_train");
-			comboBoxPackageType.Items[2] = Translations.GetInterfaceString("packages_type_other");
-			routeName.HeaderText = Translations.GetInterfaceString("packages_list_name");
-			routeVersion.HeaderText = Translations.GetInterfaceString("packages_list_version");
-			routeAuthor.HeaderText = Translations.GetInterfaceString("packages_list_author");
-			routeWebsite.HeaderText = Translations.GetInterfaceString("packages_list_website");
+			labelPackagesTitle.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","title"});
+			labelInstalledPackages.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list"});
+			labelPackageListType.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_type"});
+			buttonInstallPackage.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_button"});
+			buttonUninstallPackage.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_button"});
+			createPackageButton.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_button"});
+			comboBoxPackageType.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","type_route"});
+			comboBoxPackageType.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","type_train"});
+			comboBoxPackageType.Items[2] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","type_other"});
+			routeName.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_name"});
+			routeVersion.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_version"});
+			routeAuthor.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_author"});
+			routeWebsite.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_website"});
 			//Creation tab 1
-			labelPackageCreationHeader.Text = Translations.GetInterfaceString("packages_creation_header");
-			SaveFileNameButton.Text = Translations.GetInterfaceString("packages_creation_saveas_button");
-			labelSaveAs.Text = Translations.GetInterfaceString("packages_creation_saveas_label");
-			labelDependanciesNextStep.Text = Translations.GetInterfaceString("packages_creation_dependancies_nextstep");
-			newPackageClearSelectionButton.Text = Translations.GetInterfaceString("packages_creation_clearselection");
-			addPackageItemsButton.Text = Translations.GetInterfaceString("packages_creation_additems");
-			labelSelectFiles.Text = Translations.GetInterfaceString("packages_creation_selecteditems");
-			labelNewGUID.Text = Translations.GetInterfaceString("packages_creation_new_guid");
-			dataGridViewTextBoxColumn21.HeaderText = Translations.GetInterfaceString("packages_list_name");
-			dataGridViewTextBoxColumn22.HeaderText = Translations.GetInterfaceString("packages_list_version");
-			dataGridViewTextBoxColumn23.HeaderText = Translations.GetInterfaceString("packages_list_author");
-			dataGridViewTextBoxColumn24.HeaderText = Translations.GetInterfaceString("packages_list_website");
+			labelPackageCreationHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_header"});
+			SaveFileNameButton.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_saveas_button"});
+			labelSaveAs.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_saveas_label"});
+			labelDependanciesNextStep.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_dependancies_nextstep"});
+			newPackageClearSelectionButton.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_clearselection"});
+			addPackageItemsButton.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_additems"});
+			labelSelectFiles.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_selecteditems"});
+			labelNewGUID.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_new_guid"});
+			dataGridViewTextBoxColumn21.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_name"});
+			dataGridViewTextBoxColumn22.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_version"});
+			dataGridViewTextBoxColumn23.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_author"});
+			dataGridViewTextBoxColumn24.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_website"});
 			//Replace package panel of creation tab
-			replacePackageButton.Text = Translations.GetInterfaceString("packages_replace_select");
-			packageToReplaceLabel.Text = Translations.GetInterfaceString("packages_replace_choose");
+			replacePackageButton.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","replace_select"});
+			packageToReplaceLabel.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","replace_choose"});
 			//New package panel
-			radioButtonQ2Other.Text = Translations.GetInterfaceString("packages_type_other");
-			radioButtonQ2Route.Text = Translations.GetInterfaceString("packages_type_route");
-			radioButtonQ2Train.Text = Translations.GetInterfaceString("packages_type_train");
-			labelPackageType.Text = Translations.GetInterfaceString("packages_type_select");
-			labelReplacePackage.Text = Translations.GetInterfaceString("packages_creation_replace");
-			radioButtonQ1Yes.Text = Translations.GetInterfaceString("packages_creation_yes");
-			radioButtonQ1No.Text = Translations.GetInterfaceString("packages_creation_no");
+			radioButtonQ2Other.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","type_other"});
+			radioButtonQ2Route.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","type_route"});
+			radioButtonQ2Train.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","type_train"});
+			labelPackageType.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","type_select"});
+			labelReplacePackage.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_replace"});
+			radioButtonQ1Yes.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_yes"});
+			radioButtonQ1No.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_no"});
 			//Please wait tab
-			labelPleaseWait.Text = Translations.GetInterfaceString("packages_processing");
-			labelProgressFile.Text = Translations.GetInterfaceString("packages_unknown_file");
+			labelPleaseWait.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","processing"});
+			labelProgressFile.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","unknown_file"});
 			//Missing dependancies tab
 			/*
 			 * NOTE: THIS TAB IS MULTI-FUNCTIONAL, AND MAY BE UPDATED AT RUNTIME
 			 * REMEMBER TO RESET AFTERWARDS
 			 * 
 			 */
-			labelMissingDependanciesText1.Text = Translations.GetInterfaceString("packages_install_dependancies_unmet");
-			labelMissingDependanciesText2.Text = Translations.GetInterfaceString("packages_shownlist");
-			labelDependancyErrorHeader.Text = Translations.GetInterfaceString("packages_install_dependancies_unmet_header");
+			labelMissingDependanciesText1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_dependancies_unmet"});
+			labelMissingDependanciesText2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","shownlist"});
+			labelDependancyErrorHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_dependancies_unmet_header"});
 			//Install tab
 			/*
 			 * NOTE: THIS TAB IS MULTI-FUNCTIONAL, AND THE HEADER MAY BE UPDATED AT RUNTIME
 			 * REMEMBER TO RESET AFTERWARDS
 			 * 
 			 */
-			labelPackageName.Text = Translations.GetInterfaceString("packages_install_name");
-			labelPackageAuthor.Text = Translations.GetInterfaceString("packages_install_author");
-			labelPackageVersion.Text = Translations.GetInterfaceString("packages_install_version");
-			labelPackageWebsite.Text = Translations.GetInterfaceString("packages_install_website");
-			labelPackageDescription.Text = Translations.GetInterfaceString("packages_install_description");
+			labelPackageName.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_name"});
+			labelPackageAuthor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_author"});
+			labelPackageVersion.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_version"});
+			labelPackageWebsite.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_website"});
+			labelPackageDescription.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_description"});
 
 			//Add dependancies panel
-			labelDependanciesHeader.Text = Translations.GetInterfaceString("packages_creation_dependancies");
-			labelInstalledDependancies.Text = Translations.GetInterfaceString("packages_list");
-			labelSelectedDependencies.Text = Translations.GetInterfaceString("packages_selected");
-			labelDependancyType.Text = Translations.GetInterfaceString("packages_list_type");
-			comboBoxDependancyType.Items[0] = Translations.GetInterfaceString("packages_type_route");
-			comboBoxDependancyType.Items[1] = Translations.GetInterfaceString("packages_type_train");
-			comboBoxDependancyType.Items[2] = Translations.GetInterfaceString("packages_type_other");
-			buttonDepends.Text = Translations.GetInterfaceString("packages_creation_dependancies_add");
-			buttonReccomends.Text = Translations.GetInterfaceString("packages_creation_reccommends_add");
-			dataGridViewTextBoxColumn13.HeaderText = Translations.GetInterfaceString("packages_list_name");
-			dataGridViewTextBoxColumn14.HeaderText = Translations.GetInterfaceString("packages_list_version");
-			dataGridViewTextBoxColumn15.HeaderText = Translations.GetInterfaceString("packages_list_author");
-			dataGridViewTextBoxColumn16.HeaderText = Translations.GetInterfaceString("packages_list_website");
-			dataGridViewTextBoxColumn1.HeaderText = Translations.GetInterfaceString("packages_list_name");
-			dataGridViewTextBoxColumn2.HeaderText = Translations.GetInterfaceString("packages_list_minimum");
-			dataGridViewTextBoxColumn3.HeaderText = Translations.GetInterfaceString("packages_list_maximum");
-			dataGridViewTextBoxColumn4.HeaderText = Translations.GetInterfaceString("packages_list_packagetype");
-			buttonRemove.Text = Translations.GetInterfaceString("packages_creation_dependancies_remove");
-			labelNoDependencyReminder.Text = Translations.GetInterfaceString("packages_creation_dependancies_skip_if_none");
-			website.HeaderText = Translations.GetInterfaceString("packages_list_website");
+			labelDependanciesHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_dependancies"});
+			labelInstalledDependancies.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list"});
+			labelSelectedDependencies.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selected"});
+			labelDependancyType.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_type"});
+			comboBoxDependancyType.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","type_route"});
+			comboBoxDependancyType.Items[1] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","type_train"});
+			comboBoxDependancyType.Items[2] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","type_other"});
+			buttonDepends.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_dependancies_add"});
+			buttonReccomends.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_reccommends_add"});
+			dataGridViewTextBoxColumn13.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_name"});
+			dataGridViewTextBoxColumn14.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_version"});
+			dataGridViewTextBoxColumn15.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_author"});
+			dataGridViewTextBoxColumn16.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_website"});
+			dataGridViewTextBoxColumn1.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_name"});
+			dataGridViewTextBoxColumn2.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_minimum"});
+			dataGridViewTextBoxColumn3.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_maximum"});
+			dataGridViewTextBoxColumn4.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_packagetype"});
+			buttonRemove.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_dependancies_remove"});
+			labelNoDependencyReminder.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_dependancies_skip_if_none"});
+			website.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_website"});
 			//Version Error panel
-			labelBrokenDependancies.Text = Translations.GetInterfaceString("packages_install_dependancies_broken");
-			labelNewVersion.Text = Translations.GetInterfaceString("packages_version_new");
-			labelCurrentVersion.Text = Translations.GetInterfaceString("packages_version_current");
-			dataGridViewTextBoxColumn5.HeaderText = Translations.GetInterfaceString("packages_list_name");
-			dataGridViewTextBoxColumn6.HeaderText = Translations.GetInterfaceString("packages_list_maximum");
-			dataGridViewTextBoxColumn7.HeaderText = Translations.GetInterfaceString("packages_list_minimum");
-			dataGridViewTextBoxColumn8.HeaderText = Translations.GetInterfaceString("packages_list_author");
-			website.HeaderText = Translations.GetInterfaceString("packages_list_website");
-			groupBoxVersionErrorAction.Text = Translations.GetInterfaceString("packages_error_action");
-			radioButtonOverwrite.Text = Translations.GetInterfaceString("packages_error_overwrite");
-			radioButtonReplace.Text = Translations.GetInterfaceString("packages_error_replace");
+			labelBrokenDependancies.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_dependancies_broken"});
+			labelNewVersion.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","version_new"});
+			labelCurrentVersion.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","version_current"});
+			dataGridViewTextBoxColumn5.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_name"});
+			dataGridViewTextBoxColumn6.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_maximum"});
+			dataGridViewTextBoxColumn7.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_minimum"});
+			dataGridViewTextBoxColumn8.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_author"});
+			website.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_website"});
+			groupBoxVersionErrorAction.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","error_action"});
+			radioButtonOverwrite.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","error_overwrite"});
+			radioButtonReplace.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","error_replace"});
 			// *** labelVersionError.Text is set dynamically at runtime ***
-			labelVersionErrorHeader.Text = Translations.GetInterfaceString("packages_install_version_error");
-			dataGridViewTextBoxColumn9.HeaderText = Translations.GetInterfaceString("packages_list_name");
-			dataGridViewTextBoxColumn10.HeaderText = Translations.GetInterfaceString("packages_list_version");
-			dataGridViewTextBoxColumn11.HeaderText = Translations.GetInterfaceString("packages_list_author");
-			dataGridViewTextBoxColumn12.HeaderText = Translations.GetInterfaceString("packages_list_website");
+			labelVersionErrorHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_version_error"});
+			dataGridViewTextBoxColumn9.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_name"});
+			dataGridViewTextBoxColumn10.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_version"});
+			dataGridViewTextBoxColumn11.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_author"});
+			dataGridViewTextBoxColumn12.HeaderText = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_website"});
 			//Please Wait panel
-			labelPleaseWait.Text = Translations.GetInterfaceString("packages_processing");
+			labelPleaseWait.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","processing"});
 			//Success panel
 			// *** Multi-functional, all labels set at runtime ***
 			//Uninstall result panel
@@ -1293,7 +1293,7 @@ namespace OpenBve {
 			try
 			{
 #endif
-				Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
+				Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
 				Program.FileSystem.SaveCurrentFileSystemConfiguration();
 #if !DEBUG
 			}
@@ -1520,13 +1520,13 @@ namespace OpenBve {
 			if (radioButtonPackages.Checked)
 			{
 				ResetInstallerPanels();
-				if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out string errorMessage))
+				if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out string[] errorMessage))
 				{
 					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 				}
-				if (errorMessage != string.Empty)
+				if (errorMessage.Length != 0)
 				{
-					MessageBox.Show(Translations.GetInterfaceString(errorMessage));
+					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, errorMessage));
 				}
 				comboBoxPackageType.SelectedIndex = 0;
 			}
@@ -1873,7 +1873,7 @@ namespace OpenBve {
 			catch (WebException)
 			{
 				//The internet connection is broken.....
-				MessageBox.Show(Translations.GetInterfaceString("panel_updates_invalid"), Translations.GetInterfaceString("panel_updates"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","updates_invalid"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","updates"}), MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 			finally
@@ -1888,9 +1888,9 @@ namespace OpenBve {
 			}
 			if (Interface.CurrentOptions.DailyBuildUpdates)
 			{
-				string question = Translations.GetInterfaceString("panel_updates_daily");
+				string question = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","updates_daily"});
 				question = question.Replace("[date]", date);
-				if (DialogResult.OK == MessageBox.Show(this, question, Translations.GetInterfaceString("panel_updates"), MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
+				if (DialogResult.OK == MessageBox.Show(this, question, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","updates"}), MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
 				{
 					Process.Start(url);
 				}
@@ -1900,17 +1900,17 @@ namespace OpenBve {
 				bool newerVersion = curVersion.CompareTo(newVersion) < 0;
 				if (newerVersion)
 				{
-					string question = Translations.GetInterfaceString("panel_updates_new");
+					string question = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","updates_new"});
 					question = question.Replace("[version]", newVersion.ToString());
 					question = question.Replace("[date]", date);
-					if (DialogResult.OK == MessageBox.Show(this, question, Translations.GetInterfaceString("panel_updates"), MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
+					if (DialogResult.OK == MessageBox.Show(this, question, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","updates"}), MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
 					{
 						Process.Start(url);
 					}
 				}
 				else
 				{
-					MessageBox.Show(Translations.GetInterfaceString("panel_updates_old"));
+					MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","updates_old"}));
 				}
 			}
 			

@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 
 namespace OpenBve.UserInterface
@@ -17,7 +18,7 @@ namespace OpenBve.UserInterface
 		private void SetText(string text)
 		{
 			var originalTitle = Text;
-			Text += Translations.GetInterfaceString("message_loading");
+			Text += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","loading"});
 			Shown += (sender, e) => {
 				textBoxLog.Text = text;
 				Text = originalTitle;

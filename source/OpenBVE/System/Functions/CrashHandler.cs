@@ -4,7 +4,8 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.Hosts;
-
+// ReSharper disable LocalizableElement
+// Note: Crashes may occur before languages have been loaded, so this file cannot be localised
 namespace OpenBve
 {
     /// <summary>Provides functions for handling crashes, and producing an appropriate error log</summary>

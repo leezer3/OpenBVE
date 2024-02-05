@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using OpenBveApi.Runtime;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Trains;
@@ -31,6 +32,7 @@ namespace ObjectViewer.Trains
 		internal int Reverser;
 		internal int PowerNotch;
 		internal int BrakeNotch;
+		internal int LocoBrakeNotch;
 		internal bool HoldBrake;
 		internal bool EmergencyBrake;
 		internal bool ConstSpeed;
@@ -79,6 +81,16 @@ namespace ObjectViewer.Trains
 			{
 				train.Handles.HoldBrake.Driver = HoldBrake;
 				train.Handles.HoldBrake.Actual = HoldBrake;
+			}
+
+			if (train.Handles.HasLocoBrake)
+			{
+				if (train.Handles.LocoBrake == null)
+				{
+					train.Handles.LocoBrake = new LocoBrakeHandle(8, train.Handles.EmergencyBrake, new double[]{}, new double[]{}, train);
+				}
+				train.Handles.LocoBrake.Driver = LocoBrakeNotch;
+				train.Handles.LocoBrake.Actual = LocoBrakeNotch;
 			}
 			train.Handles.EmergencyBrake.Driver = EmergencyBrake;
 			train.Handles.EmergencyBrake.Actual = EmergencyBrake;
