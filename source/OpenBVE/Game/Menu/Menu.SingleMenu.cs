@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using DavyKager;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
@@ -92,10 +93,10 @@ namespace OpenBve
 						if (!Interface.CurrentOptions.KioskMode)
 						{
 							//Don't allow quitting or customisation of the controls in kiosk mode
-							Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","title"}), MenuTag.Options, 0);
-							Items[2] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","customize_controls"}), MenuTag.MenuControls, 0);
-							Items[3] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","title"}), MenuTag.Packages, 0);
-							Items[4] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","quit"}), MenuTag.MenuQuit, 0);
+							Items[1] = new MenuCommand(new[] {"options","title"}, MenuTag.Options, 0);
+							Items[2] = new MenuCommand(new[] {"menu","customize_controls"}, MenuTag.MenuControls, 0);
+							Items[3] = new MenuCommand(new[] {"packages","title"}, MenuTag.Packages, 0);
+							Items[4] = new MenuCommand(new[] {"menu","quit"}, MenuTag.MenuQuit, 0);
 						}
 						else
 						{
@@ -106,25 +107,25 @@ namespace OpenBve
 						break;
 					case MenuType.Packages:
 						Items = new MenuEntry[4];
-						Items[0] = new MenuCaption(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","title"}));
-						Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_header"}), MenuTag.PackageInstall, 0);
-						Items[2] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_button"}), MenuTag.PackageUninstall, 0);
-						Items[3] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_cancel"}), MenuTag.MenuBack, 0);
+						Items[0] = new MenuCaption(new[] {"packages","title"});
+						Items[1] = new MenuCommand(new[] {"packages","install_header"}, MenuTag.PackageInstall, 0);
+						Items[2] = new MenuCommand(new[] {"packages","uninstall_button"}, MenuTag.PackageUninstall, 0);
+						Items[3] = new MenuCommand(new[] {"packages","button_cancel"}, MenuTag.MenuBack, 0);
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.PackageUninstall:
 						routeDescriptionBox.Text = string.Empty;
 						Items = new MenuEntry[5];
-						Items[0] = new MenuCaption(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list_type"}));
-						Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","type_route"}), MenuTag.UninstallRoute, 0);
-						Items[2] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","type_train"}), MenuTag.UninstallTrain, 0);
-						Items[3] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","type_other"}), MenuTag.UninstallOther, 0);
-						Items[4] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","button_cancel"}), MenuTag.MenuBack, 0);
+						Items[0] = new MenuCaption(new[] {"packages","list_type"});
+						Items[1] = new MenuCommand(new[] {"packages","type_route"}, MenuTag.UninstallRoute, 0);
+						Items[2] = new MenuCommand(new[] {"packages","type_train"}, MenuTag.UninstallTrain, 0);
+						Items[3] = new MenuCommand(new[] {"packages","type_other"}, MenuTag.UninstallOther, 0);
+						Items[4] = new MenuCommand(new[] {"packages","button_cancel"}, MenuTag.MenuBack, 0);
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.UninstallRoute:
 						Items = new MenuEntry[Database.currentDatabase.InstalledRoutes.Count + 1];
-						Items[0] = new MenuCaption(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list"}));
+						Items[0] = new MenuCaption(new[] {"packages","list"});
 						for (int j = 0; j < Database.currentDatabase.InstalledRoutes.Count; j++)
 						{
 							Items[j + 1] = new MenuCommand(Database.currentDatabase.InstalledRoutes[j].Name, MenuTag.Package, Database.currentDatabase.InstalledRoutes[j]);
@@ -133,7 +134,7 @@ namespace OpenBve
 						break;
 					case MenuType.UninstallTrain:
 						Items = new MenuEntry[Database.currentDatabase.InstalledTrains.Count + 1];
-						Items[0] = new MenuCaption(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list"}));
+						Items[0] = new MenuCaption(new[] {"packages","list"});
 						for (int j = 0; j < Database.currentDatabase.InstalledTrains.Count; j++)
 						{
 							Items[j + 1] = new MenuCommand(Database.currentDatabase.InstalledTrains[j].Name, MenuTag.Package, Database.currentDatabase.InstalledTrains[j]);
@@ -142,7 +143,7 @@ namespace OpenBve
 						break;
 					case MenuType.UninstallOther:
 						Items = new MenuEntry[Database.currentDatabase.InstalledOther.Count + 1];
-						Items[0] = new MenuCaption(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","list"}));
+						Items[0] = new MenuCaption(new[] {"packages","list"});
 						for (int j = 0; j < Database.currentDatabase.InstalledOther.Count; j++)
 						{
 							Items[j + 1] = new MenuCommand(Database.currentDatabase.InstalledOther[j].Name, MenuTag.Package, Database.currentDatabase.InstalledOther[j]);
@@ -239,8 +240,8 @@ namespace OpenBve
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.Options:
-						Items = new MenuEntry[8];
-						Items[0] = new MenuCaption(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel","options"}));
+						Items = new MenuEntry[9];
+						Items[0] = new MenuCaption( new[] {"panel","options"});
 						Items[1] = new MenuOption(MenuOptionType.ScreenResolution, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","resolution"}), Program.Renderer.Screen.AvailableResolutions.ToArray());
 						Items[2] = new MenuOption(MenuOptionType.FullScreen, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","display_mode_fullscreen"}), new[] { "true", "false" });
 						Items[3] = new MenuOption(MenuOptionType.Interpolation, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation"}), new[]
@@ -255,7 +256,8 @@ namespace OpenBve
 						Items[4] = new MenuOption(MenuOptionType.AnisotropicLevel, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_anisotropic_level"}), new[] { "0", "2", "4", "8", "16" });
 						Items[5] = new MenuOption(MenuOptionType.AntialiasingLevel, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_interpolation_antialiasing_level"}), new[] { "0", "2", "4", "8", "16" });
 						Items[6] = new MenuOption(MenuOptionType.ViewingDistance, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","quality_distance_viewingdistance"}), new[] { "400", "600", "800", "1000", "1500", "2000" });
-						Items[7] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","back"}), MenuTag.MenuBack, 0);
+						Items[7] = new MenuCommand("Language", MenuTag.LanguageList, 0);
+						Items[8] = new MenuCommand(new[] {"menu","back"}, MenuTag.MenuBack, 0);
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.RouteList:
@@ -411,15 +413,15 @@ namespace OpenBve
 								break;
 							}
 						Items = new MenuEntry[4 + jump];
-						Items[0] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","resume"}), MenuTag.BackToSim, 0);
+						Items[0] = new MenuCommand(new[] {"menu","resume"}, MenuTag.BackToSim, 0);
 						if (jump > 0)
-							Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","jump"}), MenuTag.MenuJumpToStation, 0);
+							Items[1] = new MenuCommand(new[] {"menu","jump"}, MenuTag.MenuJumpToStation, 0);
 						if (!Interface.CurrentOptions.KioskMode)
 						{
 							//Don't allow quitting or customisation of the controls in kiosk mode
-							Items[1 + jump] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","exit"}), MenuTag.MenuExitToMainMenu, 0);
-							Items[2 + jump] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","customize_controls"}), MenuTag.MenuControls, 0);
-							Items[3 + jump] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","quit"}), MenuTag.MenuQuit, 0);
+							Items[1 + jump] = new MenuCommand(new[] {"menu","exit"}, MenuTag.MenuExitToMainMenu, 0);
+							Items[2 + jump] = new MenuCommand(new[] {"menu","customize_controls"}, MenuTag.MenuControls, 0);
+							Items[3 + jump] = new MenuCommand(new[] {"menu","quit"}, MenuTag.MenuQuit, 0);
 						}
 						else
 						{
@@ -435,7 +437,7 @@ namespace OpenBve
 						// list available stations, selecting the next station as predefined choice
 						jump = 0;                           // no jump found yet
 						Items = new MenuEntry[menuItem + 1];
-						Items[0] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","back"}), MenuTag.MenuBack, 0);
+						Items[0] = new MenuCommand(new[] {"menu","back"}, MenuTag.MenuBack, 0);
 						menuItem = 1;
 						for (i = 0; i < Program.CurrentRoute.Stations.Length; i++)
 							if (Program.CurrentRoute.Stations[i].PlayerStops() & Program.CurrentRoute.Stations[i].Stops.Length > 0)
@@ -454,17 +456,17 @@ namespace OpenBve
 
 					case MenuType.ExitToMainMenu:
 						Items = new MenuEntry[3];
-						Items[0] = new MenuCaption(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","exit_question"}));
-						Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","exit_no"}), MenuTag.MenuBack, 0);
-						Items[2] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","exit_yes"}), MenuTag.ExitToMainMenu, 0);
+						Items[0] = new MenuCaption(new[] {"menu","exit_question"});
+						Items[1] = new MenuCommand(new[] {"menu","exit_no"}, MenuTag.MenuBack, 0);
+						Items[2] = new MenuCommand(new[] {"menu","exit_yes"}, MenuTag.ExitToMainMenu, 0);
 						Selection = 1;
 						break;
 
 					case MenuType.Quit:         // ask for quit confirmation
 						Items = new MenuEntry[3];
-						Items[0] = new MenuCaption(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","quit_question"}));
-						Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","quit_no"}), MenuTag.MenuBack, 0);
-						Items[2] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","quit_yes"}), MenuTag.Quit, 0);
+						Items[0] = new MenuCaption(new[] {"menu","quit_question"});
+						Items[1] = new MenuCommand(new[] {"menu","quit_no"}, MenuTag.MenuBack, 0);
+						Items[2] = new MenuCommand(new[] {"menu","quit_yes"}, MenuTag.Quit, 0);
 						Selection = 1;
 						break;
 
@@ -472,8 +474,8 @@ namespace OpenBve
 						//Refresh the joystick list
 						Program.Joysticks.RefreshJoysticks();
 						Items = new MenuEntry[Interface.CurrentControls.Length + 2];
-						Items[0] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","back"}), MenuTag.MenuBack, 0);
-						Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","reset"}), MenuTag.ControlReset, 0);
+						Items[0] = new MenuCommand(new[] {"menu","back"}, MenuTag.MenuBack, 0);
+						Items[1] = new MenuCommand(new[] {"menu","reset"}, MenuTag.ControlReset, 0);
 						int ci = 2;
 						for (i = 0; i < Interface.CurrentControls.Length; i++)
 						{
@@ -487,7 +489,6 @@ namespace OpenBve
 						// method pictures mean we need top left at all times
 						Align = TextAlignment.TopLeft;
 						break;
-
 					case MenuType.Control:
 						//Refresh the joystick list
 						Program.Joysticks.RefreshJoysticks();
@@ -501,13 +502,13 @@ namespace OpenBve
 						string str = GetControlDescription(data);
 						Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","assignment_current"}) + " " + str, MenuTag.None, 0);
 						Items[2] = new MenuCommand(" ", MenuTag.None, 0);
-						Items[3] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","assign"}), MenuTag.None, 0);
+						Items[3] = new MenuCommand(new[] {"menu","assign"}, MenuTag.None, 0);
 						break;
 					case MenuType.ControlReset:
 						Items = new MenuEntry[3];
-						Items[0] = new MenuCaption(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","reset_question"}));
-						Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","train_default_yes"}), MenuTag.Yes, 0);
-						Items[2] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","train_default_no"}), MenuTag.No, 0);
+						Items[0] = new MenuCaption(new[] {"menu","reset_question"});
+						Items[1] = new MenuCommand(new[] {"menu","train_default_yes"}, MenuTag.Yes, 0);
+						Items[2] = new MenuCommand(new[] {"menu","train_default_no"}, MenuTag.No, 0);
 						Selection = 1;
 						break;
 					case MenuType.TrainDefault:
@@ -525,9 +526,9 @@ namespace OpenBve
 						if (canLoad)
 						{
 							Items = new MenuEntry[3];
-							Items[0] = new MenuCaption(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","train_default"}));
-							Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","train_default_yes"}), MenuTag.Yes, 0);
-							Items[2] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","train_default_no"}), MenuTag.No, 0);
+							Items[0] = new MenuCaption(new[] {"menu","train_default"});
+							Items[1] = new MenuCommand(new[] {"menu","train_default_yes"}, MenuTag.Yes, 0);
+							Items[2] = new MenuCommand(new[] {"menu","train_default_no"}, MenuTag.No, 0);
 							Selection = 1;
 						}
 						else
@@ -535,6 +536,15 @@ namespace OpenBve
 							SearchDirectory = Program.FileSystem.InitialTrainFolder;
 							//Default train not found or not valid
 							Instance.PushMenu(MenuType.TrainList);
+						}
+						break;
+					case MenuType.LanguageList:
+						Items = new MenuEntry[Translations.AvailableNewLanguages.Count + 1];
+						Items[0] = new MenuCaption("Select Language:");
+						for (int j = 1; j < Translations.AvailableNewLanguages.Count; j++)
+						{
+							string key = Translations.AvailableNewLanguages.ElementAt(j).Key;
+							Items[j] = new MenuCommand(Translations.AvailableNewLanguages[key].ToString(), MenuTag.LanguageSelect, key);
 						}
 						break;
 				}
