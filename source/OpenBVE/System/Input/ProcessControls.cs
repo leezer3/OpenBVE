@@ -186,6 +186,10 @@ namespace OpenBve
 										Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
 										Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 										break;
+									case Translations.Command.SwitchMenu:
+										Program.Renderer.CurrentInterface = InterfaceType.SwitchChangeMap;
+										Game.switchChangeDialog.Show();
+										break;
 								}
 							}
 						}
@@ -211,6 +215,7 @@ namespace OpenBve
 					break;
 
 				case InterfaceType.Normal:
+				case InterfaceType.SwitchChangeMap:
 					// normal
 					for (int i = 0; i < Interface.CurrentControls.Length; i++)
 					{

@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
 
@@ -55,7 +59,7 @@ namespace RouteManager2
 		};
 
 		// the colours used for the images
-		private static readonly MapColors[]	mapColors = new MapColors[]
+		private static readonly MapColors[]	mapColors =
 		{					// colours for windowed mode display
 			new MapColors() {background=Color.White,		atcMap=Pens.DarkRed,	normalMap=Pens.Black,
 							actStatnFill=Brushes.SkyBlue,	inactStatnFill=Brushes.LightGray,
@@ -73,7 +77,15 @@ namespace RouteManager2
 							actNameBrdr=Pens.White,			inactNameBrdr=Pens.LightGray,
 							actNameText=Brushes.White,		inactNameText=Brushes.LightGray,
 							belowSeaFill= new SolidBrush(Color.FromArgb(0x7feee8aa)),	belowSeaBrdr=Pens.Gray,
-							elevFill= new SolidBrush(Color.FromArgb(0x7fd2b48c)),		elevBrdr=Pens.Gray}
+							elevFill= new SolidBrush(Color.FromArgb(0x7fd2b48c)),		elevBrdr=Pens.Gray},
+			new MapColors() {background=Color.FromArgb(0x64000000),	atcMap=Pens.Red,	normalMap=Pens.White,
+			actStatnFill=Brushes.SkyBlue,	inactStatnFill=Brushes.Gray,
+			actStatnBrdr=Pens.White,		inactStatnBrdr=Pens.LightGray,
+			actNameFill=Brushes.Black,		inactNameFill=Brushes.Gray,
+			actNameBrdr=Pens.White,			inactNameBrdr=Pens.LightGray,
+			actNameText=Brushes.White,		inactNameText=Brushes.LightGray,
+			belowSeaFill= new SolidBrush(Color.FromArgb(0x7feee8aa)),	belowSeaBrdr=Pens.Gray,
+			elevFill= new SolidBrush(Color.FromArgb(0x7fd2b48c)),		elevBrdr=Pens.Gray}
 		};
 
 		// data about world ranges of last generated images
@@ -87,26 +99,36 @@ namespace RouteManager2
 		public  static int	LastRouteMinZ => lastRouteMinZ;
 		public  static int	LastRouteMaxZ => lastRouteMaxZ;
 
-		//
-		// CREATE ROUTE MAP
-		//
+		private static int CurrentTrack;
+
 		/// <summary>Creates and returns the route map as Bitmap.</summary>
 		/// <returns>The route map.</returns>
 		/// <param name="Width">The width of the bitmap to create.</param>
 		/// <param name="Height">The height of the bitmap to create.</param>
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
-		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame)
+		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, out Dictionary<Guid, Vector2> switchPositions, double trackPosition = -1, int currentTrack = 0)
 		{
+			CurrentTrack = currentTrack;
+			switchPositions = null;
 			if (CurrentRoute.Tracks[0].Elements == null)
 			{
 				//Usually caused by selecting another route before preview has finished
 				return new Bitmap(1,1);
 			}
-			RouteRange(out int n, out int n0, out int n1);
+			int firstUsedElement, lastUsedElement;
+			if (trackPosition != -1)
+			{
+				RestrictedRouteRange(trackPosition, 500, out firstUsedElement, out lastUsedElement);
+			}
+			else
+			{
+				TotalRouteRange(out _, out firstUsedElement, out lastUsedElement);	
+			}
+			
 			// find dimensions
 			double x0 = double.PositiveInfinity, z0 = double.PositiveInfinity;
 			double x1 = double.NegativeInfinity, z1 = double.NegativeInfinity;
-			for (int i = n0; i <= n1; i++)
+			for (int i = firstUsedElement; i <= lastUsedElement; i++)
 			{
 				double x = CurrentRoute.Tracks[0].Elements[i].WorldPosition.X;
 				double z = CurrentRoute.Tracks[0].Elements[i].WorldPosition.Z;
@@ -139,79 +161,118 @@ namespace RouteManager2
 				z0 = pz - dz;
 				z1 = pz + dz;
 			}
-			double ox = LeftPad, oy = TopPad;
-			double w = (double)(Width - (LeftPad+RightPad));
-			double h = (double)(Height- (TopPad+BottomPad));
-			// horizontal and vertical scales
-			double xd = w / (x1 - x0);
-			double zd = h / (z1 - z0);
+			Vector2 imageOrigin = new Vector2(LeftPad, TopPad);
+			Vector2 imageSize = new Vector2((Width - (LeftPad + RightPad)), Height - (TopPad + BottomPad));
+			Vector2 imageScale = new Vector2(imageSize.X / (x1 - x0),imageSize.Y / (z1 - z0));
 			// convert bitmap occupied area from world to bitmap coordinates
-			xMin = ox + (xMin - x0) * xd;
-			xMax = ox + (xMax - x0) * xd;
-			zMin = oy + (z0 - zMin) * zd + h;
-			zMax = oy + (z0 - zMax) * zd + h;
+			xMin = imageOrigin.X + (xMin - x0) * imageScale.X;
+			xMax = imageOrigin.X + (xMax - x0) * imageScale.X;
+			zMin = imageOrigin.Y + (z0 - zMin) * imageScale.Y + imageSize.Y;
+			zMax = imageOrigin.Y + (z0 - zMax) * imageScale.Y + imageSize.Y;
 			// create bitmap
-			int		mode = inGame ? 1 : 0;
+
+			MapMode mode = inGame ? MapMode.InGame : MapMode.Preview;
+			if (trackPosition != -1)
+			{
+				mode = MapMode.SecondaryTrack;
+			}
 			Bitmap b = new Bitmap(Width, Height, inGame ? System.Drawing.Imaging.PixelFormat.Format32bppArgb
 				: System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 			Graphics g = Graphics.FromImage(b);
 			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 			g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-			g.Clear(mapColors[mode].background);
+			g.Clear(mapColors[(int)mode].background);
 
-			// ROUTE PATH
+			for (int i = 0; i < CurrentRoute.Tracks.Count; i++)
 			{
-				int start = 0;
-				bool atc = false;
-				n = n1 - n0 + 1;
-				PointF[] p = new PointF[n];
-				for (int i = 0; i < n; i++)
+				int key = CurrentRoute.Tracks.ElementAt(i).Key;
+				if (i == 0)
 				{
-					double x = CurrentRoute.Tracks[0].Elements[i+n0].WorldPosition.X;
-					double z = CurrentRoute.Tracks[0].Elements[i+n0].WorldPosition.Z;
-					x = ox + (x - x0) * xd;
-					z = oy + (z0 - z) * zd + h;
-					p[i] = new PointF((float)x, (float)z);
-					// ATS / ATC
-					// for each track element, look for a StationStartEvent
-					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i+n0].Events.Length; j++)
+					DrawRailPath(g, mode, key, firstUsedElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
+				}
+				else
+				{
+					int startElement = -1;
+					for (int el = firstUsedElement; el < lastUsedElement; el++)
 					{
-						if (CurrentRoute.Tracks[0].Elements[i+n0].Events[j] is StationStartEvent)
+						if (CurrentRoute.Tracks[key].Elements[el].IsDriveable)
 						{
-							StationStartEvent e =
-								(StationStartEvent)CurrentRoute.Tracks[0].Elements[i+n0].Events[j];
-							// if StationStartEvent found, look for a change in ATS/ATC control;
-							// if there is a change, draw all previous track elements
-							// with colour for the previous control state
-							if (CurrentRoute.Stations[e.StationIndex].SafetySystem == SafetySystem.Atc)
+							if (startElement == -1)
 							{
-								if (!atc)
-								{
-									atc = true;
-									if (i - start - 1 > 0)
-										g.DrawCurve(mapColors[mode].normalMap, p, start, i - start - 1);
-									start = i;
-								}
-							} else
-							{
-								if (atc)
-								{
-									atc = false;
-									if (i - start - 1 > 0)
-										g.DrawCurve(mapColors[mode].atcMap, p, start, i - start - 1);
-									start = i;
-								}
+								startElement = el;
 							}
-							break;
+							
+						}
+						else
+						{
+							// For correct path drawing, the end-point is the second non-drivable element
+							if (el > 0 && !CurrentRoute.Tracks[key].Elements[el -1].IsDriveable && startElement != -1)
+							{
+								DrawRailPath(g, mode, key, startElement, el, imageOrigin, imageSize, imageScale, x0, z0);
+								startElement = -1;
+							}
+						}
+					}
+
+					if (startElement != -1)
+					{
+						DrawRailPath(g, mode, key, startElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
+					}
+					
+				}
+			}
+
+			if (mode == MapMode.SecondaryTrack)
+			{
+				DrawPlayerPath(g, currentTrack, firstUsedElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
+			}
+
+			
+			if (trackPosition != -1)
+			{
+				switchPositions = new Dictionary<Guid, Vector2>();
+				// Find switches
+				for (int t = 0; t < CurrentRoute.Tracks.Count; t++)
+				{
+					int k = CurrentRoute.Tracks.ElementAt(t).Key;
+					for (int i = firstUsedElement; i <= lastUsedElement; i++)
+					{
+						for (int j = 0; j < CurrentRoute.Tracks[k].Elements[i].Events.Length; j++)
+						{
+							// NOTE: key will appear twice, once per track but we only want the first instance
+							if (CurrentRoute.Tracks[k].Elements[i].Events[j] is SwitchEvent se && !switchPositions.ContainsKey(se.Index))
+							{
+								double x = CurrentRoute.Tracks[k].Elements[i].WorldPosition.X;
+								double y = CurrentRoute.Tracks[k].Elements[i].WorldPosition.Z;
+								x = imageOrigin.X + (x - x0) * imageScale.X;
+								y = imageOrigin.Y + (z0 - y) * imageScale.Y + imageSize.Y;
+								switchPositions.Add(se.Index, new Vector2(x, y));
+								// draw circle
+								RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
+									StationDiameter, StationDiameter);
+								g.FillEllipse(mapColors[(int)mode].inactStatnFill, r);
+								g.DrawEllipse(mapColors[(int)mode].inactStatnBrdr, r);
+							}
+
+							if (CurrentRoute.Tracks[k].Elements[i].Events[j] is TrailingSwitchEvent tse && !switchPositions.ContainsKey(tse.Index))
+							{
+								double x = CurrentRoute.Tracks[k].Elements[i].WorldPosition.X;
+								double y = CurrentRoute.Tracks[k].Elements[i].WorldPosition.Z;
+								x = imageOrigin.X + (x - x0) * imageScale.X;
+								y = imageOrigin.Y + (z0 - y) * imageScale.Y + imageSize.Y;
+								switchPositions.Add(tse.Index, new Vector2(x, y));
+								// draw circle
+								RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
+									StationDiameter, StationDiameter);
+								g.FillEllipse(mapColors[(int)mode].inactStatnFill, r);
+								g.DrawEllipse(mapColors[(int)mode].inactStatnBrdr, r);
+							}
 						}
 					}
 				}
-				// draw all remaining track element not drawn yet
-				DrawSegmentedCurve(g, atc ? mapColors[mode].atcMap : mapColors[mode].normalMap, p, start, n - start - 1);
 			}
-
-			// STATION ICONS
-			for (int i = n0; i <= n1; i++)
+			
+			for (int i = firstUsedElement; i <= lastUsedElement; i++)
 			{
 				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
 				{
@@ -222,14 +283,48 @@ namespace RouteManager2
 						{
 							double x = CurrentRoute.Tracks[0].Elements[i].WorldPosition.X;
 							double y = CurrentRoute.Tracks[0].Elements[i].WorldPosition.Z;
-							x = ox + (x - x0) * xd;
-							y = oy + (z0 - y) * zd + h;
+							x = imageOrigin.X + (x - x0) * imageScale.X;
+							y = imageOrigin.Y + (z0 - y) * imageScale.Y + imageSize.Y;
 							// station circle
 							RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
 								StationDiameter, StationDiameter);
 							bool q = CurrentRoute.Stations[e.StationIndex].PlayerStops();
-							g.FillEllipse(q ? mapColors[mode].actStatnFill : mapColors[mode].inactStatnFill, r);
-							g.DrawEllipse(q ? mapColors[mode].actStatnBrdr : mapColors[mode].inactStatnBrdr, r);
+							g.FillEllipse(q ? mapColors[(int)mode].actStatnFill : mapColors[(int)mode].inactStatnFill, r);
+							g.DrawEllipse(q ? mapColors[(int)mode].actStatnBrdr : mapColors[(int)mode].inactStatnBrdr, r);
+							// adjust bitmap occupied area
+							if (r.Left < xMin)
+								xMin = r.Left;
+							if (r.Top  < zMin)
+								zMin = r.Top;
+							if (r.Right > xMax)
+								xMax = r.Right;
+							if (r.Bottom > zMax)
+								zMax = r.Bottom;
+						}
+					}
+				}
+			}
+
+			// STATION ICONS
+			for (int i = firstUsedElement; i <= lastUsedElement; i++)
+			{
+				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
+				{
+					if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
+					{
+						StationStartEvent e = (StationStartEvent)CurrentRoute.Tracks[0].Elements[i].Events[j];
+						if (CurrentRoute.Stations[e.StationIndex].Name != string.Empty)
+						{
+							double x = CurrentRoute.Tracks[0].Elements[i].WorldPosition.X;
+							double y = CurrentRoute.Tracks[0].Elements[i].WorldPosition.Z;
+							x = imageOrigin.X + (x - x0) * imageScale.X;
+							y = imageOrigin.Y + (z0 - y) * imageScale.Y + imageSize.Y;
+							// station circle
+							RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
+								StationDiameter, StationDiameter);
+							bool q = CurrentRoute.Stations[e.StationIndex].PlayerStops();
+							g.FillEllipse(q ? mapColors[(int)mode].actStatnFill : mapColors[(int)mode].inactStatnFill, r);
+							g.DrawEllipse(q ? mapColors[(int)mode].actStatnBrdr : mapColors[(int)mode].inactStatnBrdr, r);
 							// adjust bitmap occupied area
 							if (r.Left < xMin)
 								xMin = r.Left;
@@ -246,9 +341,9 @@ namespace RouteManager2
 
 			// STATION NAMES
 			{
-				double wh = w * h;
+				double wh = imageSize.X * imageSize.Y;
 				Font f = new Font(FontFamily.GenericSansSerif, wh < 65536.0 ? 9.0f : 10.0f, GraphicsUnit.Pixel);
-				for (int i = n0; i <= n1; i++)
+				for (int i = firstUsedElement; i <= lastUsedElement; i++)
 				{
 					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
 					{
@@ -259,8 +354,8 @@ namespace RouteManager2
 							{
 								double x = CurrentRoute.Tracks[0].Elements[i].WorldPosition.X;
 								double y = CurrentRoute.Tracks[0].Elements[i].WorldPosition.Z;
-								x = ox + (x - x0) * xd;
-								y = oy + (z0 - y) * zd + h;
+								x = imageOrigin.X + (x - x0) * imageScale.X;
+								y = imageOrigin.Y + (z0 - y) * imageScale.Y + imageSize.Y;
 								bool stop = CurrentRoute.Stations[e.StationIndex].PlayerStops();
 								string t = CurrentRoute.Stations[e.StationIndex].Name;
 								SizeF m = g.MeasureString(t, f, Width, StringFormat.GenericDefault);
@@ -270,7 +365,7 @@ namespace RouteManager2
 								if (Math.Sign(sx) == Math.Sign(sz))
 								{
 									// descending
-									bool o = (x - ox) * (h - y) <= (w - x) * (y - oy);
+									bool o = (x - imageOrigin.X) * (imageSize.Y - y) <= (imageSize.X - x) * (y - imageOrigin.Y);
 									if (o)
 									{
 										// up-right
@@ -285,7 +380,7 @@ namespace RouteManager2
 								} else
 								{
 									// ascending
-									bool o = (h - y) * (w - x) <= (x - ox) * (y - oy);
+									bool o = (imageSize.Y - y) * (imageSize.X - x) <= (x - imageOrigin.X) * (y - imageOrigin.Y);
 									if (o)
 									{
 										// up-left
@@ -299,20 +394,20 @@ namespace RouteManager2
 									}
 								}
 								// constrain text within bitmap edges (taking into account also paddings)
-								if (xt < ox)
-									xt = ox;
-								else if (xt + m.Width > w)
-									xt = w - m.Width;
-								if (yt < oy)
-									yt = oy;
-								else if (yt + m.Height > h)
-									yt = h - m.Height;
+								if (xt < imageOrigin.X)
+									xt = imageOrigin.X;
+								else if (xt + m.Width > imageSize.X)
+									xt = imageSize.X - m.Width;
+								if (yt < imageOrigin.Y)
+									yt = imageOrigin.Y;
+								else if (yt + m.Height > imageSize.Y)
+									yt = imageSize.Y - m.Height;
 								RectangleF r = new RectangleF((float)xt - 1.0f, (float)yt - 1.0f, m.Width + 2.0f, m.Height + 2.0f);
-								g.FillRectangle(stop ? mapColors[mode].actNameFill : mapColors[mode].inactNameFill,
+								g.FillRectangle(stop ? mapColors[(int)mode].actNameFill : mapColors[(int)mode].inactNameFill,
 									r.Left, r.Top, r.Width, r.Height);
-								g.DrawRectangle(stop ? mapColors[mode].actNameBrdr : mapColors[mode].inactNameBrdr,
+								g.DrawRectangle(stop ? mapColors[(int)mode].actNameBrdr : mapColors[(int)mode].inactNameBrdr,
 									r.Left, r.Top, r.Width, r.Height);
-								g.DrawString(t, f, stop ? mapColors[mode].actNameText : mapColors[mode].inactNameText,
+								g.DrawString(t, f, stop ? mapColors[(int)mode].actNameText : mapColors[(int)mode].inactNameText,
 									(float)xt, (float)yt);
 								// adjust bitmap occupied area
 								if (r.Left < xMin)
@@ -328,42 +423,53 @@ namespace RouteManager2
 					}
 				}
 			}
-			// if in-game, trim unused parts of the bitmap
+
+			
 			if (inGame)
 			{
-				xMin -= LeftPad;
-				xMax += RightPad;
-				zMin -= TopPad;
-				zMax += BottomPad;
-				if (xMin < 0)
+				if (trackPosition == -1)
+				{
+					// in-game map shrinks bitmap
+					xMin -= LeftPad;
+					xMax += RightPad;
+					zMin -= TopPad;
+					zMax += BottomPad;
+					if (xMin < 0)
+						xMin = 0;
+					if (xMax >= Width)
+						xMax = Width - 1;
+					if (zMin < 0)
+						zMin = 0;
+					if (zMax >= Height)
+						zMax = Height - 1;
+				}
+				else
+				{
+					// switch change dialog should cover the whole screen
 					xMin = 0;
-				if (xMax >= Width)
-					xMax = Width - 1;
-				if (zMin < 0)
+					xMax = Width;
 					zMin = 0;
-				if (zMax >= Height)
-					zMax = Height - 1;
+					zMax = Height;
+				}
+				
 				Bitmap nb = new Bitmap((int)(xMax - xMin + 1.0), (int)(zMax - zMin + 1.0));	// round up
 				g = Graphics.FromImage(nb);
 				g.DrawImage(b, (int)-xMin, (int)-zMin);										// round down
 				// set total bitmap world X and Z ranges from bitmap ranges
-				lastRouteMinX = (int)((xMin - ox) / xd + x0);
-				lastRouteMaxX = (int)((xMax - ox) / xd + x0);
-				lastRouteMinZ = (int)(z0 - (zMax - oy - h) / zd);
-				lastRouteMaxZ = (int)(z0 - (zMin - oy - h) / zd);
+				lastRouteMinX = (int)((xMin - imageOrigin.X) / imageScale.X + x0);
+				lastRouteMaxX = (int)((xMax - imageOrigin.X) / imageScale.X + x0);
+				lastRouteMinZ = (int)(z0 - (zMax - imageOrigin.Y - imageSize.Y) / imageScale.Y);
+				lastRouteMaxZ = (int)(z0 - (zMin - imageOrigin.Y - imageSize.Y) / imageScale.Y);
 				return nb;
 			}
 			//set total bitmap X and Z ranges
-			lastRouteMinX = (int)(x0 - ox * (x1 - x0) / w);
-			lastRouteMaxX = (int)(x1 + (Width - w - ox) * (x1 - x0) / w);
-			lastRouteMinZ = (int)(z0 - oy * (z1 - z0) / h);
-			lastRouteMaxZ = (int)(z1 + (Height- h - oy) * (z1 - z0) / h);
+			lastRouteMinX = (int)(x0 - imageOrigin.X * (x1 - x0) / imageSize.X);
+			lastRouteMaxX = (int)(x1 + (Width - imageSize.X - imageOrigin.X) * (x1 - x0) / imageSize.X);
+			lastRouteMinZ = (int)(z0 - imageOrigin.Y * (z1 - z0) / imageSize.Y);
+			lastRouteMaxZ = (int)(z1 + (Height- imageSize.Y - imageOrigin.Y) * (z1 - z0) / imageSize.Y);
 			return b;
 		}
 
-		//
-		// CREATE GRADIENT PROFILE
-		//
 		/// <summary>Creates the route gradient profile.</summary>
 		/// <returns>The route gradient profile as Bitmap.</returns>
 		/// <param name="Width">The width of the bitmap to create.</param>
@@ -387,10 +493,11 @@ namespace RouteManager2
 			// in any 'real world' unit (like m).
 
 			// HORIZONTAL RANGE: find first and last used element based on stations
-			RouteRange(out int n, out int n0, out int n1);
+			int totalElements, firstUsedElement, lastUsedElement;
+			TotalRouteRange(out totalElements, out firstUsedElement, out lastUsedElement);
 			// VERTICAL RANGE
 			double y0 = double.PositiveInfinity, y1 = double.NegativeInfinity;
-			for (int i = n0; i <= n1; i++)
+			for (int i = firstUsedElement; i <= lastUsedElement; i++)
 			{
 				double y = CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y;
 				if (y < y0) y0 = y;
@@ -404,13 +511,13 @@ namespace RouteManager2
 			double w = (double)(Width - (LeftPad+RightPad));
 			double h = (double)(Height - (TopPad+BottomPad+TrackOffsPad));
 			// horizontal and vertical scale
-			double nd = w / (double)(n1 - n0);
+			double nd = w / (double)(lastUsedElement - firstUsedElement);
 			double yd = h / (double)(y1 - y0);
 			// set total bitmap track position range; used by in-game profile to place
 			// the current position of the trains; as the train positions are known as track positions,
 			// actual track positions are needed here, rather than indices into the track element array.
-			double minX = CurrentRoute.Tracks[0].Elements[n0].StartingTrackPosition;
-			double maxX = CurrentRoute.Tracks[0].Elements[n1].StartingTrackPosition;
+			double minX = CurrentRoute.Tracks[0].Elements[firstUsedElement].StartingTrackPosition;
+			double maxX = CurrentRoute.Tracks[0].Elements[lastUsedElement].StartingTrackPosition;
 			double offX = ox * (maxX - minX) / w;
 			lastGradientMinTrack = (int)(minX - offX);
 			lastGradientMaxTrack = (int)(maxX + offX);
@@ -429,25 +536,25 @@ namespace RouteManager2
 			{
 				double y = oy + (h - 0.5 * (double)(-CurrentRoute.Atmosphere.InitialElevation - y0) * yd);
 				double x0 = ox - (double)(0) * nd;
-				double x1 = ox + (double)(n1 - n0) * nd;
+				double x1 = ox + (double)(lastUsedElement - firstUsedElement) * nd;
 				g.FillRectangle(mapColors[mode].belowSeaFill, (float)x0, (float)y, (float)x1, (float)(oy + h) - (float)y);
 				g.DrawLine(mapColors[mode].belowSeaBrdr, (float)x0, (float)y, (float)x1, (float)y);
 			}
 			// GRADIENT PROFILE
 			{
-				n = n1 - n0 + 1;
-				PointF[] p = new PointF[n + 2];
+				totalElements = lastUsedElement - firstUsedElement + 1;
+				PointF[] p = new PointF[totalElements + 2];
 				p[0] = new PointF((float)ox, (float)(oy + h));
-				for (int i = n0; i <= n1; i++)
+				for (int i = firstUsedElement; i <= lastUsedElement; i++)
 				{
-					double x = ox + (double)(i - n0) * nd;
+					double x = ox + (double)(i - firstUsedElement) * nd;
 					double y = oy + (h - 0.5 *
 						(double)(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
-					p[i -n0 + 1] = new PointF((float)x, (float)y);
+					p[i -firstUsedElement + 1] = new PointF((float)x, (float)y);
 				}
-				p[n + 1] = new PointF((float)(ox + (double)(n - 1) * nd), (float)(oy + h));
+				p[totalElements + 1] = new PointF((float)(ox + (double)(totalElements - 1) * nd), (float)(oy + h));
 				g.FillPolygon(mapColors[mode].elevFill, p);
-				for (int i = 1; i < n; i++)
+				for (int i = 1; i < totalElements; i++)
 					g.DrawLine(mapColors[mode].elevBrdr, p[i], p[i + 1]);
 				g.DrawLine(mapColors[mode].elevBrdr, 0.0f, (float)(oy + h), (float)Width, (float)(oy + h));
 			}
@@ -455,7 +562,7 @@ namespace RouteManager2
 			{
 				Font f = new Font(FontFamily.GenericSansSerif, 12.0f, GraphicsUnit.Pixel);
 				StringFormat m = new StringFormat();
-				for (int i = n0; i <= n1; i++)
+				for (int i = firstUsedElement; i <= lastUsedElement; i++)
 				{
 					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
 					{
@@ -469,7 +576,7 @@ namespace RouteManager2
 								{
 									m.Alignment = StringAlignment.Near;
 									m.LineAlignment = StringAlignment.Near;
-									double x = ox + (double)(i - n0) * nd;
+									double x = ox + (double)(i - firstUsedElement) * nd;
 									double y = oy + (h - 0.5 *
 										(double)(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
 									string t = CurrentRoute.Stations[e.StationIndex].Name;
@@ -493,7 +600,7 @@ namespace RouteManager2
 								{
 									m.Alignment = StringAlignment.Far;
 									m.LineAlignment = StringAlignment.Near;
-									double x = ox + (double)(i - n0) * nd;
+									double x = ox + (double)(i - firstUsedElement) * nd;
 									double y = oy + (h - 0.5 *
 										(double)(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
 									g.RotateTransform(-90.0f);
@@ -521,7 +628,7 @@ namespace RouteManager2
 					LineAlignment = StringAlignment.Center
 				};
 				System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-				int k = TrackOffDist * n / Width;
+				int k = TrackOffDist * totalElements / Width;
 				if (k == 0)
 				{
 					if (!inGame)
@@ -537,9 +644,9 @@ namespace RouteManager2
 					k = 1;
 				}
 				
-				for (int i = n0; i <= n1; i += k)
+				for (int i = firstUsedElement; i <= lastUsedElement; i += k)
 				{
-					double x = ox + (double)(i - n0) * nd;
+					double x = ox + (double)(i - firstUsedElement) * nd;
 					double y = (double)(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd;
 					// track offset label
 					if (x < w)
@@ -568,7 +675,118 @@ namespace RouteManager2
 			return b;
 		}
 
-		// draw segmented curve
+		private static void DrawPlayerPath(Graphics g, int key, int firstUsedElement, int lastUsedElement, Vector2 imageOrigin, Vector2 imageSize, Vector2 imageScale, double x0, double z0)
+		{
+			Track currentTrack = CurrentRoute.Tracks[key];
+			int start = 0;
+			int elementsToDraw = Math.Min(lastUsedElement - firstUsedElement + 1, currentTrack.Elements.Length - firstUsedElement);
+
+			PointF[] p = new PointF[elementsToDraw];
+			for (int i = 0; i < elementsToDraw; i++)
+			{
+				double x = currentTrack.Elements[i + firstUsedElement].WorldPosition.X;
+				double z = currentTrack.Elements[i + firstUsedElement].WorldPosition.Z;
+				x = imageOrigin.X + (x - x0) * imageScale.X;
+				z = imageOrigin.Y + (z0 - z) * imageScale.Y + imageSize.Y;
+				p[i] = new PointF((float)x, (float)z);
+				if (currentTrack.Elements[i].Events == null)
+				{
+					continue;
+				}
+				for (int j = 0; j < currentTrack.Elements[i + firstUsedElement].Events.Length; j++)
+				{
+
+					if (currentTrack.Elements[i + firstUsedElement].Events[j] is SwitchEvent se)
+					{
+						// switch to different track if appropriate
+						currentTrack = CurrentRoute.Tracks[CurrentRoute.Switches[se.Index].CurrentlySetTrack];
+						break;
+					}
+
+					if (currentTrack.Elements[i + firstUsedElement].Events[j] is TrackEndEvent)
+					{
+						// Playable path has ended [e.g. buffers etc]
+						elementsToDraw = i;
+						break;
+					}
+				}
+			}
+			DrawSegmentedCurve(g, Pens.Blue, p, start, elementsToDraw - 1);
+		}
+
+		private static void DrawRailPath(Graphics g, MapMode mode, int key, int firstUsedElement, int lastUsedElement, Vector2 imageOrigin, Vector2 imageSize, Vector2 imageScale, double x0, double z0)
+		{
+			Track currentTrack = CurrentRoute.Tracks[key];
+			int start = 0;
+			bool atc = false;
+			int elementsToDraw = Math.Min(lastUsedElement - firstUsedElement + 1, currentTrack.Elements.Length - firstUsedElement);
+
+			PointF[] p = new PointF[elementsToDraw];
+			for (int i = 0; i < elementsToDraw; i++)
+			{
+				double x = currentTrack.Elements[i + firstUsedElement].WorldPosition.X;
+				double z = currentTrack.Elements[i + firstUsedElement].WorldPosition.Z;
+				x = imageOrigin.X + (x - x0) * imageScale.X;
+				z = imageOrigin.Y + (z0 - z) * imageScale.Y + imageSize.Y;
+				p[i] = new PointF((float)x, (float)z);
+				if (currentTrack.Elements[i].Events == null)
+				{
+					continue;
+				}
+				// ATS / ATC
+				// for each track element, look for a StationStartEvent
+				for (int j = 0; j < currentTrack.Elements[i + firstUsedElement].Events.Length; j++)
+				{
+
+					if (currentTrack.Elements[i + firstUsedElement].Events[j] is StationStartEvent)
+					{
+						StationStartEvent e =
+							(StationStartEvent)CurrentRoute.Tracks[0].Elements[i + firstUsedElement].Events[j];
+						// if StationStartEvent found, look for a change in ATS/ATC control;
+						// if there is a change, draw all previous track elements
+						// with colour for the previous control state
+						if (CurrentRoute.Stations[e.StationIndex].SafetySystem == SafetySystem.Atc)
+						{
+							if (!atc)
+							{
+								atc = true;
+								if (i - start - 1 > 0)
+									g.DrawCurve(mapColors[(int)mode].normalMap, p, start, i - start - 1);
+								start = i;
+							}
+						}
+						else
+						{
+							if (atc)
+							{
+								atc = false;
+								if (i - start - 1 > 0)
+									g.DrawCurve(mapColors[(int)mode].atcMap, p, start, i - start - 1);
+								start = i;
+							}
+						}
+						break;
+					}
+				}
+			}
+
+			if (mode == MapMode.SecondaryTrack)
+			{
+				DrawSegmentedCurve(g, Pens.LightGray, p, start, elementsToDraw - start - 1);
+			}
+			else
+			{
+				DrawSegmentedCurve(g, atc ? mapColors[(int)mode].atcMap : mapColors[(int)mode].normalMap, p, start, elementsToDraw - start - 1);
+			}
+			// draw all remaining track element not drawn yet
+		}
+
+		/// <summary>Draws a segmented curve from a list of points</summary>
+		/// <param name="Graphics"></param>
+		/// <param name="Pen"></param>
+		/// <param name="Points">The list of points</param>
+		/// <param name="Start">The starting point within the list</param>
+		/// <param name="Length">The number of points (segments) to draw</param>
 		private static void DrawSegmentedCurve(Graphics Graphics, Pen Pen, PointF[] Points, int Start, int Length) {
 			const int Count = 1000;
 			int End = Start + Length - 1;
@@ -580,41 +798,64 @@ namespace RouteManager2
 			}
 		}
 
-		//
-		// FIND USED ROUTE RANGE
-		//
+
 		/// <summary>Finds the route range actually used by stations (with some margin before and after.</summary>
-		/// <param name="n">Route total number of elements</param>
-		/// <param name="n0">First element in used range</param>
-		/// <param name="n1">Last element in used range</param>
-		private static void RouteRange(out int n, out int n0, out int n1)
+		/// <param name="totalElements">Route total number of elements</param>
+		/// <param name="firstUsedElement">First element in used range</param>
+		/// <param name="lastUsedElement">Last element in used range</param>
+		private static void TotalRouteRange(out int totalElements, out int firstUsedElement, out int lastUsedElement)
 		{
 			// find first and last track element actually used by stations
-			n	= CurrentRoute.Tracks[0].Elements.Length;
-			n0	= n - 1;
-			n1	= 0;
+			totalElements	= CurrentRoute.Tracks[0].Elements.Length;
+			firstUsedElement	= totalElements - 1;
+			lastUsedElement	= 0;
 			for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++)
 			{
 				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
 				{
 					if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
 					{
-						if (i < n0) n0 = i;
-						if (i > n1) n1 = i;
+						if (i < firstUsedElement) firstUsedElement = i;
+						if (i > lastUsedElement) lastUsedElement = i;
 						break;
 					}
 				}
 			}
 			// Allow for 4 track units before first station and 8 track units after the last one
-			n0 -= 4;
-			n1 += 8;
+			firstUsedElement -= 4;
+			lastUsedElement += 8;
 			// But not outside of actual track element array!
-			if (n0 < 0) n0 = 0;
-			if (n1 >= CurrentRoute.Tracks[0].Elements.Length)
-				n1 = CurrentRoute.Tracks[0].Elements.Length - 1;
-			if (n1 <= n0)		// neither a 0-length or 'negative' track!
-				n1 = n0 + 1;
+			if (firstUsedElement < 0) firstUsedElement = 0;
+			if (lastUsedElement >= CurrentRoute.Tracks[0].Elements.Length)
+				lastUsedElement = CurrentRoute.Tracks[0].Elements.Length - 1;
+			if (lastUsedElement <= firstUsedElement)		// neither a 0-length or 'negative' track!
+				lastUsedElement = firstUsedElement + 1;
 		}
 
+		/// <summary>Finds the route range for the specified track position and draw radius</summary>
+		/// <param name="trackPosition">The track position</param>
+		/// <param name="drawRadius">The draw radius</param>
+		/// <param name="totalElements">The total elements used</param>
+		/// <param name="firstUsedElement">The index of the first used element</param>
+		/// <param name="lastUsedElement">The index of the last used element</param>
+		private static void RestrictedRouteRange(double trackPosition, int drawRadius, out int firstUsedElement, out int lastUsedElement)
+		{
+			lastUsedElement = 0;
+			firstUsedElement = -1;
+			double st = Math.Max(0, trackPosition - drawRadius);
+			double et = trackPosition + drawRadius;
+			for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++)
+			{
+				if (CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition > st && firstUsedElement == -1)
+				{
+					firstUsedElement = i == 0 ? 0 : i - 1;
+				}
+				if (CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition > et)
+				{
+					lastUsedElement = i == 0 ? 0 : i - 1;
+					break;
+				}
+			}
+		}
 	}
 }

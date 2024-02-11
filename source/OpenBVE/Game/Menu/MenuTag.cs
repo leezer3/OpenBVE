@@ -63,6 +63,12 @@ namespace OpenBve
 		/// <summary>Uninstalls anything else</summary>
 		UninstallOther,
 		/// <summary>Shows the options menu</summary>
-		Options
+		Options,
+		/// <summary>Toggles a switch</summary>
+		ToggleSwitch,
+		/// <summary>Selects the previous switch</summary>
+		PreviousSwitch,
+		/// <summary>Selects the next switch</summary>
+		NextSwitch
 	}
 }

@@ -11,6 +11,7 @@ using RouteManager2.Climate;
 using RouteManager2.SignalManager;
 using RouteManager2.SignalManager.PreTrain;
 using RouteManager2.Stations;
+using RouteManager2.Tracks;
 
 namespace RouteManager2
 {
@@ -94,6 +95,9 @@ namespace RouteManager2
 
 		/// <summary>Controls the object disposal mode</summary>
 		public ObjectDisposalMode AccurateObjectDisposal;
+
+		/// <summary>All switches on the route</summary>
+		public Dictionary<Guid, Switch> Switches;
 
 		public CurrentRoute(HostInterface host, BaseRenderer renderer)
 		{

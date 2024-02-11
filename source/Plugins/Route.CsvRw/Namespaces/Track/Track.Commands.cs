@@ -128,6 +128,10 @@
 		LightDirection,
 		/// <summary>Changes the dynamic lighting set in use</summary>
 		DynamicLight,
+		/// <summary>Creates a facing switch</summary>
+		Switch,
+		/// <summary>Creates a trailing switch</summary>
+		SwitchT,
 
 		/*
 		 * HMMSIM

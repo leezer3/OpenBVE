@@ -74,11 +74,28 @@ namespace LibRender2.Primitives
 					Vector2 ratio = Size / Texture.Size;
 					double newRatio = ratio.X < ratio.Y ? ratio.X : ratio.Y;
 					newSize = new Vector2(Texture.Width, Texture.Height) * newRatio;
-					Renderer.Rectangle.DrawAlpha(Texture, new Vector2(Location.X + (Size.X - newSize.X) / 2,Location.Y + (Size.Y - newSize.Y) / 2), newSize, Color128.White);
+					OpenGlTextureWrapMode wrapMode = OpenGlTextureWrapMode.ClampClamp;
+					if (flipX)
+					{
+						wrapMode = OpenGlTextureWrapMode.RepeatClamp;
+					}
+
+					if (flipY)
+					{
+						wrapMode = wrapMode == OpenGlTextureWrapMode.RepeatClamp ? OpenGlTextureWrapMode.RepeatRepeat : OpenGlTextureWrapMode.ClampRepeat;
+					}
+					Renderer.Rectangle.DrawAlpha(Texture, new Vector2(Location.X + (Size.X - newSize.X) / 2,Location.Y + (Size.Y - newSize.Y) / 2), newSize, Color128.White, new Vector2(flipX ? -1 : 1,flipY ? -1 : 1), wrapMode);
 					break;
 			}
-			
 		}
 
+		/// <summary>Flips the image displayed in the picturebox</summary>
+		/// <param name="FlipX">Whether to flip the X axis</param>
+		/// <param name="FlipY">Whether to flip the Y axis</param>
+		public void Flip(bool FlipX, bool FlipY)
+		{
+			flipX = FlipX;
+			flipY = FlipY;
+		}
 	}
 }

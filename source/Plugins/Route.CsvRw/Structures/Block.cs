@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using OpenBveApi.Routes;
 using RouteManager2.Climate;
+using RouteManager2.Tracks;
 
 namespace CsvRwRouteParser
 {
@@ -16,6 +17,7 @@ namespace CsvRwRouteParser
 		internal RailCycle[] RailCycles;
 		internal double Height;
 		internal Dictionary<int, Rail> Rails;
+		internal Switch[] Switches;
 		internal int[] RailType;
 		internal Dictionary<int, WallDike> RailWall;
 		internal Dictionary<int, WallDike> RailDike;
@@ -55,6 +57,7 @@ namespace CsvRwRouteParser
 			StopPositions = new Stop[] { };
 			Station = -1;
 			StationPassAlarm = false;
+			Switches = new Switch[] { };
 			if (!PreviewOnly)
 			{
 				BrightnessChanges = new Brightness[] { };

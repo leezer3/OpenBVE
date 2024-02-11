@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2023, Christopher Lees, The OpenBVE Project
+//Copyright (c) 2022, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,57 +22,35 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
 using LibRender2.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 
 namespace LibRender2.Primitives
 {
-	public class Button : GLControl
+	public class Label : GLControl
 	{
-		/// <summary>The text displayed on the button</summary>
+		/// <summary>The text for the label</summary>
 		public readonly string Text;
-		/// <summary>The highlight color of the button</summary>
-		public Color128 HighlightColor;
-		/// <summary>The color of the text on the button</summary>
+		/// <summary>The color of the text on the label</summary>
 		public Color128 TextColor;
-		/// <summary>The font for the button</summary>
+		/// <summary>The font for the label</summary>
 		public OpenGlFont Font;
 
-		public Button(BaseRenderer renderer, string text) : base(renderer)
+		public Label(BaseRenderer renderer, string text) : base(renderer)
 		{
 			Text = text;
 			Font = Renderer.Fonts.LargeFont;
 			Size = Font.MeasureString(Text) * 1.5;
 			// default colors to match GLMenu
 			BackgroundColor = Color128.Black;
-			HighlightColor = Color128.Orange;
 			TextColor = Color128.White;
 		}
 
 		public override void Draw()
 		{
 			Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor);
-			if (CurrentlySelected)
-			{
-				Renderer.Rectangle.Draw(Texture, Location + Size * 0.1, Size - (Size * 0.2), HighlightColor);
-			}
 			Renderer.OpenGlString.Draw(Font, Text, Location + (Size * 0.15), TextAlignment.TopLeft, TextColor);
-		}
-
-		public override void MouseMove(int x, int y)
-		{
-			CurrentlySelected = x > Location.X && x < Location.X + Size.X && y > Location.Y && y < Location.Y + Size.Y;
-		}
-
-		public override void MouseDown(int x, int y)
-		{
-			MouseMove(x, y);
-			if (CurrentlySelected)
-			{
-				OnClick?.Invoke(this, EventArgs.Empty);
-			}
 		}
 	}
 }

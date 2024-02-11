@@ -1367,6 +1367,18 @@ namespace OpenBve
 						}
 
 						break;
+					case Translations.Command.SwitchMenu:
+						switch (Program.Renderer.CurrentInterface)
+						{
+							case InterfaceType.Normal:
+								Program.Renderer.CurrentInterface = InterfaceType.SwitchChangeMap;
+								Game.switchChangeDialog.Show();
+								break;
+							case InterfaceType.SwitchChangeMap:
+								Program.Renderer.CurrentInterface = InterfaceType.Normal;
+								break;
+						}
+						break;
 				}
 			}
 			else if (Control.DigitalState == DigitalControlState.Released)

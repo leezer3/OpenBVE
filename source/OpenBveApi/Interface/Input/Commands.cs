@@ -303,6 +303,8 @@ namespace OpenBveApi.Interface {
 			AccessibilityNextSignal,
 			/// <summary>Triggers a screen reader message with the distance and aspect to the next station</summary>
 			AccessibilityNextStation,
+			/// <summary>Shows the change switch menu</summary>
+			SwitchMenu,
 			/*
 			 * Added in 1.8.4.3
 			 */

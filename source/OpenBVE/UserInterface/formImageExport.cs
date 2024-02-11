@@ -32,7 +32,7 @@ namespace OpenBve
 				{
 					if (IsMap)
 					{
-						Image map = Illustrations.CreateRouteMap((int)numericUpDownWidth.Value, (int)numericUpDownHeight.Value, false);
+						Image map = Illustrations.CreateRouteMap((int)numericUpDownWidth.Value, (int)numericUpDownHeight.Value, false, out _);
 						map.Save(textBoxPath.Text + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(routeFileName) + " - Map.png", ImageFormat.Png);
 					}
 					else 
