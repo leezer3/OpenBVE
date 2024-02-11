@@ -32,6 +32,7 @@ using LibRender2.Screens;
 using LibRender2.Textures;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Textures;
 using RouteManager2;
@@ -46,9 +47,9 @@ namespace OpenBve
 		/// <summary>The picturebox containing the map texture</summary>
 		internal Picturebox MapPicturebox = new Picturebox(Program.Renderer);
 		/// <summary>The close button</summary>
-		internal Button CloseButton = new Button(Program.Renderer, Translations.GetInterfaceString("panel_close"));
+		internal Button CloseButton = new Button(Program.Renderer, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel", "close"}));
 		/// <summary>The title label</summary>
-		internal Label TitleLabel = new Label(Program.Renderer, Translations.GetInterfaceString("switchmenu_title"));
+		internal Label TitleLabel = new Label(Program.Renderer, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "title"}));
 		/// <summary>The GUID of the currently selected switch</summary>
 		private Guid selectedSwitch = Guid.Empty;
 		/// <summary>The list of available switches</summary>
@@ -80,9 +81,9 @@ namespace OpenBve
 			if (selectedSwitch != Guid.Empty)
 			{
 				// Switch details
-				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString("switchmenu_selected") + Program.CurrentRoute.Switches[selectedSwitch].Name, new Vector2(10, 30), TextAlignment.CenterLeft, Color128.White);
-				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString("switchmenu_current") + Program.CurrentRoute.Switches[selectedSwitch].CurrentSetting, new Vector2(10, 50), TextAlignment.CenterLeft, Color128.White);
-				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString("switchmenu_distance") + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[selectedSwitch].TrackPosition) + "m", new Vector2(10, 70), TextAlignment.CenterLeft, Color128.White);
+				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "selected"}) + Program.CurrentRoute.Switches[selectedSwitch].Name, new Vector2(10, 30), TextAlignment.CenterLeft, Color128.White);
+				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "current"}) + Program.CurrentRoute.Switches[selectedSwitch].CurrentSetting, new Vector2(10, 50), TextAlignment.CenterLeft, Color128.White);
+				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "distance"}) + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[selectedSwitch].TrackPosition) + "m", new Vector2(10, 70), TextAlignment.CenterLeft, Color128.White);
 			}
 			// Draw last so they overlay any curves on the map which are OTT
 			CloseButton.Draw();

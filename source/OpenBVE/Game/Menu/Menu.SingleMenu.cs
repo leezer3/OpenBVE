@@ -2,18 +2,13 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using DavyKager;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Packages;
-using OpenBveApi.Routes;
 using OpenBveApi.Textures;
-using RouteManager2;
-using RouteManager2.Events;
-using RouteManager2.Tracks;
 using TrainManager;
 using Path = OpenBveApi.Path;
 

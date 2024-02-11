@@ -271,9 +271,10 @@ namespace OpenBveApi.Interface
 			{ Command.AccessibilityNextSignal, new CommandInfo(Command.AccessibilityNextSignal, CommandType.Digital, "ACCESSIBILITY_NEXT_SIGNAL") },
 			{ Command.AccessibilityNextStation, new CommandInfo(Command.AccessibilityNextStation, CommandType.Digital, "ACCESSIBILITY_NEXT_STATION") },
 			// Coupling
-			new CommandInfo(Command.UncoupleFront, CommandType.Digital, "UNCOUPLE_FRONT"),
-			new CommandInfo(Command.UncoupleRear, CommandType.Digital, "UNCOUPLE_REAR"),
-			new CommandInfo(Command.SwitchMenu, CommandType.Digital, "CHANGE_SWITCH"),
+			{ Command.UncoupleFront, new CommandInfo(Command.UncoupleFront, CommandType.Digital, "UNCOUPLE_FRONT") },
+			{ Command.UncoupleRear, new CommandInfo(Command.UncoupleRear, CommandType.Digital, "UNCOUPLE_REAR") },
+			// Switch
+			{ Command.SwitchMenu, new CommandInfo(Command.SwitchMenu, CommandType.Digital, "CHANGE_SWITCH") }
 		};
 
 		
