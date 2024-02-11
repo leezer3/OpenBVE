@@ -1045,6 +1045,9 @@
 					  <source>Export...</source>
 					  <target>Eksporter...</target>
 					</trans-unit>
+					<trans-unit id="reset_question">
+						<source>Reset the current control configuration to the defaults?</source>
+					</trans-unit>
 					<trans-unit id="reset">
 					  <source>Reset to defaults</source>
 					  <target>Tilbakestill</target>
@@ -2328,11 +2331,11 @@
 				    <target>Øk bremsen med et hakk for tog med to håndtak</target>
 				  </trans-unit>
 				  <trans-unit id="locobrake_decrease">
-				    <source>N/A</source>
-				  </trans-unit>
-				  <trans-unit id="locobrake_increase">
-				    <source>N/A</source>
-				  </trans-unit>
+						<source>Decreases the locomotive brake by one notch</source>
+					</trans-unit>
+					<trans-unit id="locobrake_increase">
+						<source>Increases the locomotive brake by one notch</source>
+					</trans-unit>
 				  <trans-unit id="brake_halfaxis">
 				    <source>Controls brake for trains with two handles on half of a joystick axis</source>
 				    <target>Kontrollerer bremsen for tog med to håndtak på en halv joystick akse</target>
@@ -2494,16 +2497,20 @@
 				    <target>L funksjonen på sikkerhetssystemet</target>
 				  </trans-unit>
 				  <trans-unit id="security_m">
-				    <source>N/A</source>
+				    <source>The M function of the security system</source>
+				    <target>M funksjonen på sikkerhetssystemet</target>
 				  </trans-unit>
 				  <trans-unit id="security_n">
-				    <source>N/A</source>
+				    <source>The N function of the security system</source>
+				    <target>N funksjonen på sikkerhetssystemet</target>
 				  </trans-unit>
 				  <trans-unit id="security_o">
-				    <source>N/A</source>
+				    <source>The O function of the security system</source>
+				    <target>O funksjonen på sikkerhetssystemet</target>
 				  </trans-unit>
 				  <trans-unit id="security_p">
-				    <source>N/A</source>
+				    <source>The P function of the security system</source>
+				    <target>P funksjonen på sikkerhetssystemet</target>
 				  </trans-unit>
 				  <trans-unit id="camera_interior">
 				    <source>Switches to the train's interior view</source>

@@ -11,6 +11,8 @@ BRAKE_EMERGENCY, keyboard, Slash, 0
 SINGLE_POWER, keyboard, Z, 0
 SINGLE_NEUTRAL, keyboard, A, 0
 SINGLE_BRAKE, keyboard, Q, 0
+LOCOBRAKE_INCREASE, Keyboard, RBracket, 0, 0
+LOCOBRAKE_DECREASE, Keyboard, BracketLeft, 0, 0
 SINGLE_EMERGENCY, keyboard, Number1, 0
 REVERSER_FORWARD, keyboard, F, 0
 REVERSER_BACKWARD, keyboard, V, 0

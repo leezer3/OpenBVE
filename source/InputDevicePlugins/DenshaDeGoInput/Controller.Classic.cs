@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenTK.Input;
 
@@ -356,7 +357,7 @@ namespace DenshaDeGoInput
 			// Button calibration
 			for (int i = 0; i < 5; i++)
 			{
-				MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_button").Replace("[button]", input[i]));
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","calibrate_button"}).Replace("[button]", input[i]));
 				PreviousButtonState = buttonState;
 				buttonState = GetButtonsState();
 				int index = GetDifferentPressedIndex(PreviousButtonState, buttonState, ignored);
@@ -382,12 +383,12 @@ namespace DenshaDeGoInput
 			}
 
 			// The brake handle needs to be moved to EMG to initialise properly
-			MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_brake").Replace("[notch]", input[5]));
+			MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","calibrate_brake"}).Replace("[notch]", input[5]));
 
 			// Brake handle calibration
 			for (int i = 6; i < 10; i++)
 			{
-				MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_brake").Replace("[notch]", input[i]));
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","calibrate_brake"}).Replace("[notch]", input[i]));
 				PreviousButtonState = buttonState;
 				buttonState = GetButtonsState();
 				int index = GetDifferentPressedIndex(PreviousButtonState, buttonState, ignored);
@@ -410,8 +411,8 @@ namespace DenshaDeGoInput
 			}
 
 			// The power handle needs to be moved to P5 and N to initialise properly
-			MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_power").Replace("[notch]", input[10]));
-			MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_power").Replace("[notch]", input[11]));
+			MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","calibrate_power"}).Replace("[notch]", input[10]));
+			MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","calibrate_power"}).Replace("[notch]", input[11]));
 
 			// Clear previous data before calibrating the power handle
 			ignored.Clear();
@@ -422,7 +423,7 @@ namespace DenshaDeGoInput
 			// Power handle calibration
 			for (int i = 12; i < 15; i++)
 			{
-				MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_power").Replace("[notch]", input[i]));
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","calibrate_power"}).Replace("[notch]", input[i]));
 				PreviousButtonState = buttonState;
 				previousHatPositions = hatPositions;
 				previousAxisValues = axisValues;

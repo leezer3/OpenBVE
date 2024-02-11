@@ -33,8 +33,7 @@ namespace CsvRwRouteParser
 		{
 			double dz = TrackPosition - StartingDistance;
 			WorldPosition += Position.X * RailTransformation.X + Position.Y * RailTransformation.Y + dz * RailTransformation.Z;
-			UnifiedObject obj;
-			FreeObjects.TryGetValue(Type, out obj);
+			FreeObjects.TryGetValue(Type, out UnifiedObject obj);
 			if (obj != null)
 			{
 				obj.CreateObject(WorldPosition, RailTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, TrackPosition);
@@ -45,8 +44,7 @@ namespace CsvRwRouteParser
 		{
 			double d = TrackPosition - StartingDistance;
 			Vector3 wpos = WorldPosition + new Vector3(Direction.X * d + Direction.Y * Position.X, Position.Y - Height, Direction.Y * d - Direction.X * Position.X);
-			UnifiedObject obj;
-			FreeObjects.TryGetValue(Type, out obj);
+			FreeObjects.TryGetValue(Type, out UnifiedObject obj);
 			if (obj != null)
 			{
 				obj.CreateObject(wpos, GroundTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, TrackPosition);

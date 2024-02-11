@@ -138,8 +138,7 @@ namespace RouteManager2
 			 * and use a while loop
 			 * https://github.com/leezer3/OpenBVE/issues/557
 			 */
-			Section nextSectionToUpdate;
-			UpdateSection(Sections.LastOrDefault(), out nextSectionToUpdate);
+			UpdateSection(Sections.LastOrDefault(), out Section nextSectionToUpdate);
 			while (nextSectionToUpdate != null)
 			{
 				UpdateSection(nextSectionToUpdate, out nextSectionToUpdate);
@@ -150,8 +149,7 @@ namespace RouteManager2
 		/// <param name="SectionIndex"></param>
 		public void UpdateSection(int SectionIndex)
 		{
-			Section nextSectionToUpdate;
-			UpdateSection(Sections[SectionIndex], out nextSectionToUpdate);
+			UpdateSection(Sections[SectionIndex], out Section nextSectionToUpdate);
 			while (nextSectionToUpdate != null)
 			{
 				UpdateSection(nextSectionToUpdate, out nextSectionToUpdate);

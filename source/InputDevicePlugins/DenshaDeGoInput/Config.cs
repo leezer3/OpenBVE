@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Drawing;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using Timer = System.Timers.Timer;
 
@@ -49,35 +50,35 @@ namespace DenshaDeGoInput
 			Translations.LoadLanguageFiles(OpenBveApi.Path.CombineDirectory(DenshaDeGoInput.FileSystem.DataFolder, "Languages"));
 
 			// Populate command boxes
-			buttonselectBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttonstartBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttonaBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttonbBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttoncBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttondBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttonupBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttondownBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttonleftBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttonrightBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttonpedalBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttonldoorBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			buttonrdoorBox.Items.Add(Translations.GetInterfaceString("denshadego_command_none"));
-			Translations.CommandInfo[] commands = Translations.CommandInfos.OrderBy(o => o.Command).ToArray();
-			for (int i = 0; i < Translations.CommandInfos.Length; i++)
+			buttonselectBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
+			buttonstartBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
+			buttonaBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
+			buttonbBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
+			buttoncBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
+			buttondBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
+			buttonupBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
+			buttondownBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
+			buttonleftBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
+			buttonrightBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
+			buttonpedalBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
+			buttonldoorBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
+			buttonrdoorBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
+			for (int i = 0; i < Translations.CommandInfos.Count; i++)
 			{
-				buttonselectBox.Items.Add(commands[i].Name);
-				buttonstartBox.Items.Add(commands[i].Name);
-				buttonaBox.Items.Add(commands[i].Name);
-				buttonbBox.Items.Add(commands[i].Name);
-				buttoncBox.Items.Add(commands[i].Name);
-				buttondBox.Items.Add(commands[i].Name);
-				buttonupBox.Items.Add(commands[i].Name);
-				buttondownBox.Items.Add(commands[i].Name);
-				buttonleftBox.Items.Add(commands[i].Name);
-				buttonrightBox.Items.Add(commands[i].Name);
-				buttonpedalBox.Items.Add(commands[i].Name);
-				buttonldoorBox.Items.Add(commands[i].Name);
-				buttonrdoorBox.Items.Add(commands[i].Name);
+				Translations.Command key = Translations.CommandInfos.ElementAt(i).Key;
+				buttonselectBox.Items.Add(Translations.CommandInfos[key].Name);
+				buttonstartBox.Items.Add(Translations.CommandInfos[key].Name);
+				buttonaBox.Items.Add(Translations.CommandInfos[key].Name);
+				buttonbBox.Items.Add(Translations.CommandInfos[key].Name);
+				buttoncBox.Items.Add(Translations.CommandInfos[key].Name);
+				buttondBox.Items.Add(Translations.CommandInfos[key].Name);
+				buttonupBox.Items.Add(Translations.CommandInfos[key].Name);
+				buttondownBox.Items.Add(Translations.CommandInfos[key].Name);
+				buttonleftBox.Items.Add(Translations.CommandInfos[key].Name);
+				buttonrightBox.Items.Add(Translations.CommandInfos[key].Name);
+				buttonpedalBox.Items.Add(Translations.CommandInfos[key].Name);
+				buttonldoorBox.Items.Add(Translations.CommandInfos[key].Name);
+				buttonrdoorBox.Items.Add(Translations.CommandInfos[key].Name);
 			}
 
 			Timer1 = new Timer {Interval = 100};
@@ -124,23 +125,23 @@ namespace DenshaDeGoInput
 				switch (InputTranslator.BrakeNotch)
 				{
 					case InputTranslator.BrakeNotches.Released:
-						label_brake.Text = Translations.GetInterfaceString("denshadego_label_brake").Replace("[notch]", Translations.QuickReferences.HandleBrakeNull);
+						label_brake.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_brake"}).Replace("[notch]", Translations.QuickReferences.HandleBrakeNull);
 						break;
 					case InputTranslator.BrakeNotches.Emergency:
-						label_brake.Text = Translations.GetInterfaceString("denshadego_label_brake").Replace("[notch]", Translations.QuickReferences.HandleEmergency);
+						label_brake.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_brake"}).Replace("[notch]", Translations.QuickReferences.HandleEmergency);
 						break;
 					default:
-						label_brake.Text = Translations.GetInterfaceString("denshadego_label_brake").Replace("[notch]", Translations.QuickReferences.HandleBrake + (int)InputTranslator.BrakeNotch);
+						label_brake.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_brake"}).Replace("[notch]", Translations.QuickReferences.HandleBrake + (int)InputTranslator.BrakeNotch);
 						break;
 				}
 
 				switch (InputTranslator.PowerNotch)
 				{
 					case InputTranslator.PowerNotches.N:
-						label_power.Text = Translations.GetInterfaceString("denshadego_label_power").Replace("[notch]", Translations.QuickReferences.HandlePowerNull);
+						label_power.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_power"}).Replace("[notch]", Translations.QuickReferences.HandlePowerNull);
 						break;
 					default:
-						label_power.Text = Translations.GetInterfaceString("denshadego_label_power").Replace("[notch]", Translations.QuickReferences.HandlePower + (int)InputTranslator.PowerNotch);
+						label_power.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_power"}).Replace("[notch]", Translations.QuickReferences.HandlePower + (int)InputTranslator.PowerNotch);
 						break;
 				}
 
@@ -180,48 +181,48 @@ namespace DenshaDeGoInput
 		/// </summary>
 		private void UpdateTranslation()
 		{
-			Text = Translations.GetInterfaceString("denshadego_config_title");
-			deviceInputBox.Text = Translations.GetInterfaceString("denshadego_input_section");
-			buttonCalibrate.Text = Translations.GetInterfaceString("denshadego_calibration_button");
-			label_device.Text = Translations.GetInterfaceString("denshadego_device");
-			buttonMappingBox.Text = Translations.GetInterfaceString("denshadego_button_section");
-			handleMappingBox.Text = Translations.GetInterfaceString("denshadego_handle_section");
-			convertnotchesCheck.Text = Translations.GetInterfaceString("denshadego_option_convert");
-			minmaxCheck.Text = Translations.GetInterfaceString("denshadego_option_keep_minmax");
-			holdbrakeCheck.Text = Translations.GetInterfaceString("denshadego_option_holdbrake");
-			buttonSave.Text = Translations.GetInterfaceString("denshadego_save_button");
-			buttonCancel.Text = Translations.GetInterfaceString("denshadego_cancel_button");
+			Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","config_title"});
+			deviceInputBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","input_section"});
+			buttonCalibrate.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","calibration_button"});
+			label_device.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","device"});
+			buttonMappingBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","button_section"});
+			handleMappingBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","handle_section"});
+			convertnotchesCheck.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","option_convert"});
+			minmaxCheck.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","option_keep_minmax"});
+			holdbrakeCheck.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","option_holdbrake"});
+			buttonSave.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","save_button"});
+			buttonCancel.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","cancel_button"});
 
-			buttonselectBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-			buttonstartBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-			buttonaBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-			buttonbBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-			buttoncBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-			buttondBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-			buttonupBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-			buttondownBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-			buttonleftBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-			buttonrightBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-			buttonpedalBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-			buttonldoorBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
-			buttonldoorBox.Items[0] = Translations.GetInterfaceString("denshadego_command_none");
+			buttonselectBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
+			buttonstartBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
+			buttonaBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
+			buttonbBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
+			buttoncBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
+			buttondBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
+			buttonupBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
+			buttondownBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
+			buttonleftBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
+			buttonrightBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
+			buttonpedalBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
+			buttonldoorBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
+			buttonldoorBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
 
-			label_up.Text = Translations.GetInterfaceString("denshadego_label_up");
-			label_down.Text = Translations.GetInterfaceString("denshadego_label_down");
-			label_left.Text = Translations.GetInterfaceString("denshadego_label_left");
-			label_right.Text = Translations.GetInterfaceString("denshadego_label_right");
-			label_pedal.Text = Translations.GetInterfaceString("denshadego_label_pedal");
-			label_ldoor.Text = Translations.GetInterfaceString("denshadego_label_ldoor");
-			label_rdoor.Text = Translations.GetInterfaceString("denshadego_label_rdoor");
-			label_buttonup.Text = Translations.GetInterfaceString("denshadego_label_up");
-			label_buttondown.Text = Translations.GetInterfaceString("denshadego_label_down");
-			label_buttonleft.Text = Translations.GetInterfaceString("denshadego_label_left");
-			label_buttonright.Text = Translations.GetInterfaceString("denshadego_label_right");
-			label_buttonpedal.Text = Translations.GetInterfaceString("denshadego_label_pedal");
-			label_buttonldoor.Text = Translations.GetInterfaceString("denshadego_label_ldoor");
-			label_buttonrdoor.Text = Translations.GetInterfaceString("denshadego_label_rdoor");
+			label_up.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_up"});
+			label_down.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_down"});
+			label_left.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_left"});
+			label_right.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_right"});
+			label_pedal.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_pedal"});
+			label_ldoor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_ldoor"});
+			label_rdoor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_rdoor"});
+			label_buttonup.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_up"});
+			label_buttondown.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_down"});
+			label_buttonleft.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_left"});
+			label_buttonright.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_right"});
+			label_buttonpedal.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_pedal"});
+			label_buttonldoor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_ldoor"});
+			label_buttonrdoor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_rdoor"});
 
-			linkLabel_driver.Text = Translations.GetInterfaceString("denshadego_linkLabel_driver");
+			linkLabel_driver.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","linkLabel_driver"});
 		}
 
 		private void Config_Shown(object sender, EventArgs e)

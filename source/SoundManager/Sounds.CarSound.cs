@@ -109,9 +109,15 @@ namespace SoundManager
 		/// <param name="looped">Whether the sound is to be played looped</param>
 		public void Play(double pitch, double volume, AbstractCar Car, bool looped)
 		{
+			if (looped && IsPaused)
+			{
+				Source.Resume();
+				Source.Volume = volume;
+				Source.Pitch = pitch;
+				return;
+			}
 			if (looped && IsPlaying)
 			{
-				// If looped and already playing, update the pitch / volume values
 				Source.Volume = volume;
 				Source.Pitch = pitch;
 				return;
@@ -139,6 +145,15 @@ namespace SoundManager
 			Source.Stop();
 		}
 
+		public void Pause()
+		{
+			if (Source == null)
+			{
+				return;
+			}
+			Source.Pause();
+		}
+
 		/// <summary>Whether the sound is currently playing</summary>
 		public bool IsPlaying
 		{
@@ -147,6 +162,19 @@ namespace SoundManager
 				if (Source != null)
 				{
 					return Source.IsPlaying();
+				}
+				return false;
+			}
+		}
+
+		/// <summary>Whether the sound is currently paused</summary>
+		public bool IsPaused
+		{
+			get
+			{
+				if (Source != null)
+				{
+					return Source.IsPaused();
 				}
 				return false;
 			}

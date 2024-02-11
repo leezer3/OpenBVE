@@ -1,4 +1,5 @@
-﻿namespace TrainManager.Handles
+﻿// ReSharper disable UnusedMember.Global
+namespace TrainManager.Handles
 {
 	/// <summary>Describes the available handle spring types</summary>
 	public enum SpringType

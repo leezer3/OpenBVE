@@ -146,7 +146,6 @@ namespace OpenBveApi.Routes
 											new QuadTreeBounds(left, right, near, far),
 											null
 										);
-										child.BoundingRectangle = QuadTreeBounds.Uninitialized;
 										intern.Children[index] = child;
 										node = child;
 									}

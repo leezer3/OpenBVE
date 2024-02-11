@@ -14,6 +14,7 @@ using RouteManager2.Climate;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
 using RouteManager2.Tracks;
+using OpenBveApi.Hosts;
 
 namespace CsvRwRouteParser
 {
@@ -29,7 +30,7 @@ namespace CsvRwRouteParser
 			if (Data.FirstUsedBlock == -1)
 			{
 				//Not a routefile after all then....
-				throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_noobjects"));
+				throw new Exception(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","route_corrupt_noobjects"}));
 			}
 
 			if (PreviewOnly)
@@ -38,11 +39,11 @@ namespace CsvRwRouteParser
 				{
 					if (missingObjectCount == 0)
 					{
-						throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_missingobjects"));
+						throw new Exception(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","route_corrupt_missingobjects"}));
 					}
 					else
 					{
-						throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_noobjects"));
+						throw new Exception(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","route_corrupt_noobjects"}));
 					}
 				}
 			}

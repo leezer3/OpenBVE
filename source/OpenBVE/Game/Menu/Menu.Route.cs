@@ -80,7 +80,7 @@ namespace OpenBve
 			}
 			RouteEncoding = TextEncoding.GetSystemEncodingFromFile(currentFile);
 			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routePictureBox.Texture);
-			routeDescriptionBox.Text = Translations.GetInterfaceString("start_route_processing");
+			routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_processing"});
 			Game.Reset(false);
 			bool loaded = false;
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
@@ -190,14 +190,14 @@ namespace OpenBve
 
 		private static void OnWorkerReportsProblem(object sender, ProblemReport e)
 		{
-			routeDescriptionBox.Text = Translations.GetInterfaceString("packages_creation_failure_error") + Environment.NewLine;
+			routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_failure_error"}) + Environment.NewLine;
 			if (e.Exception is UnauthorizedAccessException && currentOperation != PackageOperation.Creating)
 			{
 				//User attempted to install in a directory which requires UAC access
-				routeDescriptionBox.Text += e.Exception.Message + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString("errors_security_checkaccess");
+				routeDescriptionBox.Text += e.Exception.Message + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","security_checkaccess"});
 				if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 				{
-					routeDescriptionBox.Text += Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString("errors_security_badlocation");
+					routeDescriptionBox.Text += Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","security_badlocation"});
 				}
 			}
 			else
@@ -215,7 +215,7 @@ namespace OpenBve
 			switch (e.Operation)
 			{
 				case PackageOperation.Installing:
-					routeDescriptionBox.Text = Translations.GetInterfaceString("packages_install_success") + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString("packages_install_success_files") + Environment.NewLine + installedFiles;
+					routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_success"}) + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_success_files"}) + Environment.NewLine + installedFiles;
 					currentFile = string.Empty;
 					installedFiles = string.Empty;
 					switch (currentPackage.PackageType)

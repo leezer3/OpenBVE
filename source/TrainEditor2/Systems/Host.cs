@@ -13,7 +13,7 @@ namespace TrainEditor2.Systems
 	/// <summary>Represents the host application.</summary>
 	internal class Host : HostInterface
 	{
-		public Host() : base(HostApplication.TrainEditor) { }
+		public Host() : base(HostApplication.TrainEditor2) { }
 
 		// --- texture ---
 

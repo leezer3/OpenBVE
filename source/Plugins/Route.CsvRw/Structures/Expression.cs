@@ -34,16 +34,14 @@ namespace CsvRwRouteParser
 				string t = Text.Substring(0, Equals);
 				if (Section.ToLowerInvariant() == "cycle" & SectionAlwaysPrefix)
 				{
-					double b;
-					if (NumberFormats.TryParseDoubleVb6(t, out b))
+					if (NumberFormats.TryParseDoubleVb6(t, out double b))
 					{
 						t = ".Ground(" + b + ")";
 					}
 				}
 				else if (Section.ToLowerInvariant() == "signal" & SectionAlwaysPrefix)
 				{
-					double b;
-					if (NumberFormats.TryParseDoubleVb6(t, out b))
+					if (NumberFormats.TryParseDoubleVb6(t, out double b))
 					{
 						t = ".Void(" + b + ")";
 					}
@@ -90,10 +88,8 @@ namespace CsvRwRouteParser
 					int idx = Text.LastIndexOf(')');
 					if (idx != -1 && idx != Text.Length)
 					{
-						// ReSharper disable once NotAccessedVariable
-						double d;
 						string s = this.Text.Substring(idx + 1, this.Text.Length - idx - 1).Trim();
-						if (NumberFormats.TryParseDoubleVb6(s, out d))
+						if (NumberFormats.TryParseDoubleVb6(s, out double _))
 						{
 							this.Text = this.Text.Substring(0, idx).Trim();
 						}

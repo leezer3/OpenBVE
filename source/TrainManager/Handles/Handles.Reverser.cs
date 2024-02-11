@@ -1,6 +1,8 @@
-﻿using OpenBveApi.Colors;
+using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
+using RouteManager2.MessageManager;
 using SoundManager;
 using TrainManager.Trains;
 
@@ -70,6 +72,11 @@ namespace TrainManager.Handles
 					ReleaseSound.Play(baseTrain.Cars[baseTrain.DriverCar], false);
 				}
 			}
+
+			if (a == (int)Driver) return;
+
+			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
+			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 		}
 
 		/// <summary>Gets the description string for this notch</summary>

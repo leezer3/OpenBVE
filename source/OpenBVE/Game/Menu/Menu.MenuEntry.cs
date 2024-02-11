@@ -46,10 +46,7 @@ namespace OpenBve
 			/// <summary>The length to display</summary>
 			internal int DisplayLength
 			{
-				get
-				{
-					return _displayLength;
-				}
+				get => _displayLength;
 				set
 				{
 					_displayLength = value;

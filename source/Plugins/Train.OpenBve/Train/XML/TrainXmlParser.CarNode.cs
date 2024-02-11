@@ -16,6 +16,7 @@ using TrainManager.Car.Systems;
 using TrainManager.Cargo;
 using TrainManager.Handles;
 using TrainManager.Power;
+using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -31,6 +32,8 @@ namespace Train.OpenBve
 				readhesionDevice = device.DeviceType;
 			}
 			bool CopyAccelerationCurves = true;
+			bool exposedFrontalAreaSet = false;
+			bool unexposedFrontalAreaSet = false;
 			foreach (XmlNode c in Node.ChildNodes)
 			{
 				//Note: Don't use the short-circuiting operator, as otherwise we need another if
@@ -109,8 +112,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case "length":
-						double l;
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out l) | l <= 0.0)
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double l) | l <= 0.0)
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid length defined for Car " + Car + " in XML file " + fileName);
 							break;
@@ -118,8 +120,7 @@ namespace Train.OpenBve
 						Train.Cars[Car].Length = l;
 						break;
 					case "width":
-						double w;
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out w) | w <= 0.0)
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double w) | w <= 0.0)
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid width defined for Car " + Car + " in XML file " + fileName);
 							break;
@@ -127,8 +128,7 @@ namespace Train.OpenBve
 						Train.Cars[Car].Width = w;
 						break;
 					case "height":
-						double h;
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out h) | h <= 0.0)
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double h) | h <= 0.0)
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid height defined for Car " + Car + " in XML file " + fileName);
 							break;
@@ -159,14 +159,39 @@ namespace Train.OpenBve
 						}
 						break;
 					case "mass":
-						double m;
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out m) | m <= 0.0)
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double m) | m <= 0.0)
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid mass defined for Car " + Car + " in XML file " + fileName);
 							break;
 						}
 						Train.Cars[Car].EmptyMass = m;
 						Train.Cars[Car].CargoMass = 0;
+						break;
+					case "centerofgravityheight":
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double cg) | cg <= 0.0)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid CenterOfGravityHeight defined for Car " + Car + " in XML file " + fileName);
+							break;
+						}
+						Train.Cars[Car].Specs.CenterOfGravityHeight = cg;
+						break;
+					case "exposedfrontalarea":
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double ef) | ef <= 0.0)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid ExposedFrontalArea defined for Car " + Car + " in XML file " + fileName);
+							break;
+						}
+						Train.Cars[Car].Specs.ExposedFrontalArea = ef;
+						exposedFrontalAreaSet = true;
+						break;
+					case "unexposedfrontalarea":
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double uf) | uf <= 0.0)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid UnexposedFrontalArea defined for Car " + Car + " in XML file " + fileName);
+							break;
+						}
+						Train.Cars[Car].Specs.UnexposedFrontalArea = uf;
+						unexposedFrontalAreaSet = true;
 						break;
 					case "frontaxle":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[Car].FrontAxle.Position))
@@ -193,16 +218,14 @@ namespace Train.OpenBve
 						}
 						break;
 					case "reversed":
-						int n;
-						NumberFormats.TryParseIntVb6(c.InnerText, out n);
+						NumberFormats.TryParseIntVb6(c.InnerText, out int n);
 						if (n == 1 || c.InnerText.ToLowerInvariant() == "true")
 						{
 							CarObjectsReversed[Car] = true;
 						}
 						break;
 					case "loadingsway":
-						int nm;
-						NumberFormats.TryParseIntVb6(c.InnerText, out nm);
+						NumberFormats.TryParseIntVb6(c.InnerText, out int nm);
 						if (nm == 1 || c.InnerText.ToLowerInvariant() == "true")
 						{
 							Train.Cars[Car].EnableLoadingSway = true;
@@ -287,8 +310,7 @@ namespace Train.OpenBve
 										}
 										break;
 									case "reversed":
-										int nn;
-										NumberFormats.TryParseIntVb6(cc.InnerText, out nn);
+										NumberFormats.TryParseIntVb6(cc.InnerText, out int nn);
 										if (cc.InnerText.ToLowerInvariant() == "true" || nn == 1)
 										{
 											BogieObjectsReversed[Car * 2 + 1] = true;
@@ -420,7 +442,58 @@ namespace Train.OpenBve
 								NumberOfShots = shots
 							};
 						}
-
+						break;
+					case "driversupervisiondevice":
+					case "dsd":
+						DriverSupervisionDeviceTypes driverSupervisionType = DriverSupervisionDeviceTypes.None;
+						DriverSupervisionDeviceMode driverSupervisionMode = DriverSupervisionDeviceMode.Power;
+						DriverSupervisionDeviceTriggerMode triggerMode = DriverSupervisionDeviceTriggerMode.Always;
+						double interventionTime = 0;
+						double requiredStopTime = 0;
+						bool loopingAlarm = false;
+						foreach (XmlNode cc in c.ChildNodes)
+						{
+							switch (cc.Name.ToLowerInvariant())
+							{
+								case "interventiontime":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out activationTime))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice activation time was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "type":
+									if (!Enum.TryParse(cc.InnerText, true, out driverSupervisionType))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice type was invalid for Car " + Car + " in XML file " + fileName);
+									} 
+									break; 
+								case "requiredstoptime":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out requiredStopTime))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice required stop time was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "loopingalarm":
+									if (cc.InnerText.ToLowerInvariant() == "1" || cc.InnerText.ToLowerInvariant() == "true")
+									{
+										loopingAlarm = true;
+									}
+									break;
+								case "mode":
+									if (!Enum.TryParse(cc.InnerText, true, out driverSupervisionMode))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice mode was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "triggermode":
+									if (!Enum.TryParse(cc.InnerText, true, out triggerMode))
+									{
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice trigger mode was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+							}
+						}
+						Train.Cars[Car].DSD = new DriverSupervisionDevice(Train.Cars[Car], driverSupervisionType, driverSupervisionMode, triggerMode, interventionTime, requiredStopTime, loopingAlarm);
 						break;
 					case "visiblefrominterior":
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
@@ -501,15 +574,23 @@ namespace Train.OpenBve
 								switch (cc.Name.ToLowerInvariant())
 								{
 									case "openspeed":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].Specs.DoorOpenFrequency))
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out double os))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
 										}
+										else
+										{
+											Train.Cars[Car].Specs.DoorOpenFrequency = 1.0 / os;
+										}
 										break;
 									case "closespeed":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].Specs.DoorCloseFrequency))
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out double cs))
 										{
 											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
+										}
+										else
+										{
+											Train.Cars[Car].Specs.DoorCloseFrequency = 1.0 / cs;
 										}
 										break;
 									case "width":
@@ -545,6 +626,95 @@ namespace Train.OpenBve
 							case "none":
 								Train.Cars[Car].Cargo = new EmptyLoad();
 								break;
+						}
+						break;
+					case "windscreen":
+						if (!Train.IsPlayerTrain)
+						{
+							break;
+						}
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							int numDrops = 0;
+							double wipeSpeed = 1.0, holdTime = 1.0, dropLife = 10.0;
+							WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
+
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "numberofdrops":
+										if (!NumberFormats.TryParseIntVb6(cc.InnerText, out numDrops))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid number of drops defined for Windscreen in Car " + Car + " in XML file " + fileName);
+										}
+
+										break;
+									case "wipespeed":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out wipeSpeed))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid wipe speed defined for Windscreen in Car " + Car + " in XML file " + fileName);
+										}
+
+										break;
+									case "holdtime":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out holdTime))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid wiper hold time defined for Windscreen in Car " + Car + " in XML file " + fileName);
+										}
+
+										break;
+									case "droplife":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out dropLife))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid drop life defined for Windscreen in Car " + Car + " in XML file " + fileName);
+										}
+
+										break;
+									case "restposition":
+									case "wiperrestposition":
+										switch (cc.InnerText.ToLowerInvariant())
+										{
+											case "0":
+											case "left":
+												restPosition = WiperPosition.Left;
+												break;
+											case "1":
+											case "right":
+												restPosition = WiperPosition.Right;
+												break;
+											default:
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid for Windscreen in Car " + Car + " in XML file " + fileName);
+												break;
+										}
+
+										break;
+									case "holdposition":
+									case "wiperholdposition":
+										switch (cc.InnerText.ToLowerInvariant())
+										{
+											case "0":
+											case "left":
+												holdPosition = WiperPosition.Left;
+												break;
+											case "1":
+											case "right":
+												holdPosition = WiperPosition.Right;
+												break;
+											default:
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperHoldPosition is invalid for Windscreen in Car " + Car + " in XML file " + fileName);
+												break;
+										}
+
+										break;
+								}
+							}
+
+							if (numDrops > 0)
+							{
+								Train.Cars[Car].Windscreen = new Windscreen(numDrops, dropLife, Train.Cars[Car]);
+								Train.Cars[Car].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Car].Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
+							}
 						}
 						break;
 				}
@@ -631,6 +801,17 @@ namespace Train.OpenBve
 			{
 				// if required create default train readhesion device- May have already been setup earlier in the XML
 				Train.Cars[Car].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[Car], readhesionDevice);
+			}
+
+			//Set toppling angle and exposed areas
+			Train.Cars[Car].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * Train.Cars[Car].Specs.CenterOfGravityHeight / Train.Cars[Car].Width);
+			if (!exposedFrontalAreaSet)
+			{
+				Train.Cars[Car].Specs.ExposedFrontalArea = 0.65 * Train.Cars[Car].Width * Train.Cars[Car].Height;
+			}
+			if (!unexposedFrontalAreaSet)
+			{
+				Train.Cars[Car].Specs.UnexposedFrontalArea = 0.2 * Train.Cars[Car].Width * Train.Cars[Car].Height;
 			}
 		}
 	}

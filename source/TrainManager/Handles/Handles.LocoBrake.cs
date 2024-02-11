@@ -1,6 +1,9 @@
-﻿using System.Globalization;
+using System;
+using System.Globalization;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using RouteManager2.MessageManager;
 using TrainManager.Trains;
 
 namespace TrainManager.Handles
@@ -107,7 +110,15 @@ namespace TrainManager.Handles
 				Driver = b;
 				Actual = b; //TODO: FIXME
 				TrainManagerBase.currentHost.AddBlackBoxEntry();
+
+				if (!TrainManagerBase.CurrentOptions.Accessibility) return;
+				TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 			
+		}
+
+		public override void ApplySafetyState(int newState)
+		{
+			safetyState = newState;
 		}
 	}
 
@@ -199,6 +210,11 @@ namespace TrainManager.Handles
 				Actual = (int) newState; //TODO: FIXME
 				TrainManagerBase.currentHost.AddBlackBoxEntry();
 			}
+		}
+
+		public override void ApplySafetyState(int newState)
+		{
+			safetyState = Math.Max(safetyState, newState);
 		}
 
 		public override string GetNotchDescription(out MessageColor color)

@@ -341,10 +341,8 @@ namespace OpenBveApi.Routes
 						t = 1.0;
 					}
 
-					double x1, y1, c1;
-					double x2, y2, c2;
-					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x1, out y1, out c1);
-					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i + 1].CsvRwAccuracyLevel, out x2, out y2, out c2);
+					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out double x1, out double y1, out double c1);
+					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i + 1].CsvRwAccuracyLevel, out double x2, out double y2, out double c2);
 					x = (1.0 - t) * x1 + t * x2;
 					y = (1.0 - t) * y1 + t * y2;
 					c = (1.0 - t) * c1 + t * c2;

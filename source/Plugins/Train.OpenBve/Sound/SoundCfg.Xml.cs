@@ -11,6 +11,7 @@ using TrainManager.Car;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.Power;
+using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -280,7 +281,7 @@ namespace Train.OpenBve
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of flange sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseDictionaryNode(c, out car.Sounds.Flange, center, SoundCfgParser.mediumRadius);
+									ParseDictionaryNode(c, out car.Flange.Sounds, center, SoundCfgParser.mediumRadius);
 									break;
 								case "horn":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
@@ -479,7 +480,7 @@ namespace Train.OpenBve
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of run sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseDictionaryNode(c, out car.Sounds.Run, center, SoundCfgParser.mediumRadius);
+									ParseDictionaryNode(c, out car.Run.Sounds, center, SoundCfgParser.mediumRadius);
 									break;
 								case "shoe":
 								case "rub":
@@ -498,11 +499,11 @@ namespace Train.OpenBve
 										{
 											case "left":
 												//Left suspension springs
-												ParseNode(cc, out car.Sounds.SpringL, left, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Suspension.SpringL, left, SoundCfgParser.smallRadius);
 												break;
 											case "right":
 												//right suspension springs
-												ParseNode(cc, out car.Sounds.SpringR, right, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Suspension.SpringR, right, SoundCfgParser.smallRadius);
 												break;
 											default:
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -598,6 +599,31 @@ namespace Train.OpenBve
 												break;
 											default:
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
+								case "driversupervisiondevice":
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
+									{
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of driver supervision device sounds was defined in in XML file " + fileName);
+										break;
+									}
+									DriverSupervisionDevice driverSupervisionDevice = car.DSD as DriverSupervisionDevice;
+									if (driverSupervisionDevice == null)
+									{
+										break;
+									}
+
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name.ToLowerInvariant())
+										{
+											case "alarm":
+												ParseNode(cc, out driverSupervisionDevice.TriggerSound, center, SoundCfgParser.smallRadius);
+												break;
+											case "reset":
+												ParseNode(cc, out driverSupervisionDevice.ResetSound, center, SoundCfgParser.smallRadius);
 												break;
 										}
 									}

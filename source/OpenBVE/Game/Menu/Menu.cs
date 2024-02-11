@@ -12,6 +12,7 @@ using LibRender2.Screens;
 using LibRender2.Text;
 using OpenBve.Input;
 using OpenBveApi;
+using OpenBveApi.Hosts;
 using OpenBveApi.Input;
 using OpenBveApi.Packages;
 using OpenBveApi.Textures;
@@ -80,13 +81,7 @@ namespace OpenBve
 										// properties (to allow read-only access to some fields)
 		internal int LineHeight => lineHeight;
 
-		internal OpenGlFont MenuFont
-		{
-			get
-			{
-				return menuFont;
-			}
-		}
+		internal OpenGlFont MenuFont => menuFont;
 
 		internal Key MenuBackKey;
 
@@ -166,6 +161,12 @@ namespace OpenBve
 			LogoPictureBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0);
 			LogoPictureBox.Size = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Width / 2.0);
 			LogoPictureBox.Texture = Program.Renderer.ProgramLogo;
+			controlPictureBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0);
+			controlPictureBox.Size = new Vector2(quarterWidth, quarterWidth);
+			controlPictureBox.BackgroundColor = Color128.Transparent;
+			controlTextBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0 + quarterWidth);
+			controlTextBox.Size = new Vector2(quarterWidth, quarterWidth);
+			controlTextBox.BackgroundColor = Color128.Black;
 			isInitialized = true;
 		}
 
@@ -542,9 +543,8 @@ namespace OpenBve
 				//			case Translations.Command.MenuBack:	// ESC:	managed above
 				//				break;
 				case Translations.Command.MenuEnter:   // ENTER
-					if (menu.Items[menu.Selection] is MenuCommand)
+					if (menu.Items[menu.Selection] is MenuCommand menuItem)
 					{
-						MenuCommand menuItem = (MenuCommand)menu.Items[menu.Selection];
 						switch (menuItem.Tag)
 						{
 							// menu management commands
@@ -568,8 +568,7 @@ namespace OpenBve
 								Program.Renderer.CurrentInterface = InterfaceType.Normal;
 								break;
 							case MenuTag.Packages:
-								string errorMessage;
-								if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out errorMessage))
+								if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out _))
 								{
 									Menu.instance.PushMenu(MenuType.Packages);
 								}
@@ -580,7 +579,7 @@ namespace OpenBve
 								currentOperation = PackageOperation.Installing;
 								packagePreview = true;
 								instance.PushMenu(MenuType.PackageInstall);
-								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
+								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
 							case MenuTag.PackageUninstall:
@@ -593,7 +592,7 @@ namespace OpenBve
 									return;
 								}
 								instance.PushMenu(MenuType.UninstallRoute);
-								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
+								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
 							case MenuTag.UninstallTrain:
@@ -602,7 +601,7 @@ namespace OpenBve
 									return;
 								}
 								instance.PushMenu(MenuType.UninstallTrain);
-								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
+								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
 							case MenuTag.UninstallOther:
@@ -611,7 +610,7 @@ namespace OpenBve
 									return;
 								}
 								instance.PushMenu(MenuType.UninstallOther);
-								routeDescriptionBox.Text = Translations.GetInterfaceString("packages_selection_none");
+								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
 							case MenuTag.File:
@@ -653,7 +652,7 @@ namespace OpenBve
 								break;
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
 								Menu.instance.PushMenu(MenuType.RouteList);
-								routeDescriptionBox.Text = Translations.GetInterfaceString("errors_route_please_select");
+								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","route_please_select"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);	
 								break;
 							case MenuTag.Directory:		// SHOWS THE LIST OF FILES IN THE SELECTED DIR
@@ -734,29 +733,45 @@ namespace OpenBve
 								isCustomisingControl = true;
 								CustomControlIdx = (int)((MenuCommand)menu.Items[menu.Selection]).Data;
 								break;
+							case MenuTag.ControlReset:
+								PushMenu(MenuType.ControlReset, (int)((MenuCommand)menu.Items[menu.Selection]).Data);
+								break;
 							case MenuTag.Quit:                  // QUIT PROGRAMME
 								Reset();
 								MainLoop.Quit = MainLoop.QuitMode.QuitProgram;
 								break;
 							case MenuTag.Yes:
-								if (menu.Type == MenuType.TrainDefault)
+								switch (menu.Type)
 								{
-									Reset();
-									//Launch the game!
-									Loading.Complete = false;
-									Loading.LoadAsynchronously(currentFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
-									OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
-									// ReSharper disable once PossibleNullReferenceException
-									g.LoadingScreenLoop();
+									case MenuType.TrainDefault:
+										Reset();
+										//Launch the game!
+										Loading.Complete = false;
+										Loading.LoadAsynchronously(currentFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
+										OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
+										// ReSharper disable once PossibleNullReferenceException
+										g.LoadingScreenLoop();
+										break;
+									case MenuType.ControlReset:
+										Interface.CurrentControls = null;
+										var File = Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls");
+										Interface.LoadControls(File, out Interface.CurrentControls);
+										Instance.PopMenu();
+										break;
 								}
 								break;
 							case MenuTag.No:
-								if (menu.Type == MenuType.TrainDefault)
+								switch (menu.Type)
 								{
-									SearchDirectory = Program.FileSystem.InitialTrainFolder;
-									Instance.PushMenu(MenuType.TrainList);
-									routeDescriptionBox.Text = Translations.GetInterfaceString("start_train_choose");
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+									case MenuType.TrainDefault:
+										SearchDirectory = Program.FileSystem.InitialTrainFolder;
+										Instance.PushMenu(MenuType.TrainList);
+										routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_choose"});
+										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+										break;
+									case MenuType.ControlReset:
+										Instance.PopMenu();
+										break;
 								}
 								break;
 							case MenuTag.ToggleSwitch:
@@ -813,6 +828,8 @@ namespace OpenBve
 		}
 
 		private double pluginKeepAliveTimer;
+
+		private ControlMethod lastControlMethod;
 
 		//
 		// DRAW MENU
@@ -888,9 +905,8 @@ namespace OpenBve
 					// draw a solid highlight rectangle under the text
 					// HACK! the highlight rectangle has to be shifted a little down to match
 					// the text body. OpenGL 'feature'?
-					MenuCommand command = menu.Items[i] as MenuCommand;
 					Color128 color = highlightColor;
-					if(command != null)
+					if(menu.Items[i] is MenuCommand command)
 					{
 						switch (command.Tag)
 						{
@@ -961,7 +977,7 @@ namespace OpenBve
 					}
 
 					OpenGlFont versionFont = Program.Renderer.Fonts.NextSmallestFont(MenuFont);
-					Program.Renderer.OpenGlString.Draw(versionFont, currentVersion, new Vector2(Program.Renderer.Screen.Width - Program.Renderer.Screen.Width / 4, Program.Renderer.Screen.Height - versionFont.FontSize * 2), TextAlignment.TopLeft, Color128.Black);
+					Program.Renderer.OpenGlString.Draw(versionFont, currentVersion, new Vector2(Program.Renderer.Screen.Width - Program.Renderer.Screen.Width / 4.0, Program.Renderer.Screen.Height - versionFont.FontSize * 2), TextAlignment.TopLeft, Color128.Black);
 					break;
 				case MenuType.RouteList:
 				case MenuType.TrainList:
@@ -976,12 +992,12 @@ namespace OpenBve
 					{
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-						Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString("start_train_choose") : Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+						Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_choose"}) : Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","start_start"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
 					}
 					else
 					{
 						Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-						Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString("start_train_choose") : Translations.GetInterfaceString("start_start_start"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, allowNextPhase ? Color128.White : Color128.Grey);
+						Program.Renderer.OpenGlString.Draw(MenuFont, menu.Type == MenuType.RouteList ? Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","train_choose"}) : Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","start_start"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, allowNextPhase ? Color128.White : Color128.Grey);
 					}
 					break;
 				}
@@ -994,12 +1010,12 @@ namespace OpenBve
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_install_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_button"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
 						}
 						else
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_install_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","install_button"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
 						}
 					}
 					break;
@@ -1024,14 +1040,73 @@ namespace OpenBve
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 197, Program.Renderer.Screen.Height - 37), new Vector2(184, 24), highlightColor);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_uninstall_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_button"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.Black);
 						}
 						else
 						{
 							Program.Renderer.Rectangle.Draw(null, new Vector2(Program.Renderer.Screen.Width - 200, Program.Renderer.Screen.Height - 40), new Vector2(190, 30), Color128.Black);
-							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString("packages_uninstall_button"), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
+							Program.Renderer.OpenGlString.Draw(MenuFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_button"}), new Vector2(Program.Renderer.Screen.Width - 180, Program.Renderer.Screen.Height - 35), TextAlignment.TopLeft, Color128.White); 
 						}
 					}
+					break;
+				case MenuType.Controls:
+					int data = (int)((MenuCommand)menu.Items[menu.Selection]).Data;
+					if (menu.Selection != menu.LastSelection)
+					{
+						switch (Interface.CurrentControls[data].Method)
+						{
+							case ControlMethod.Keyboard:
+								if (lastControlMethod != ControlMethod.Keyboard)
+								{
+									controlPictureBox.Texture = Program.Renderer.KeyboardTexture;
+								}
+								lastControlMethod = ControlMethod.Keyboard;
+								break;
+							
+							case ControlMethod.Joystick:
+								if (lastControlMethod != ControlMethod.Joystick)
+								{
+									Guid guid = Interface.CurrentControls[data].Device;
+									if (Program.Joysticks.AttachedJoysticks.ContainsKey(guid))
+									{
+										if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("gamepad", StringComparison.InvariantCultureIgnoreCase) != -1)
+										{
+											controlPictureBox.Texture = Program.Renderer.GamepadTexture;
+										}
+										else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("xinput", StringComparison.InvariantCultureIgnoreCase) != -1)
+										{
+											controlPictureBox.Texture = Program.Renderer.XInputTexture;
+										}
+										else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("mascon", StringComparison.InvariantCultureIgnoreCase) != -1)
+										{
+											controlPictureBox.Texture = Program.Renderer.MasconTeture;
+										}
+										else
+										{
+											controlPictureBox.Texture = Program.Renderer.JoystickTexture;
+										}
+									}
+								}
+								lastControlMethod = ControlMethod.Joystick;
+								break;
+							case ControlMethod.RailDriver:
+								if (lastControlMethod != ControlMethod.RailDriver)
+								{
+									controlPictureBox.Texture = Program.Renderer.RailDriverTexture;
+								}
+								lastControlMethod = ControlMethod.RailDriver;
+								break;
+							default:
+								// not really supported in the GL menu yet
+								controlPictureBox.Texture = null;
+								lastControlMethod = Interface.CurrentControls[data].Method;
+								break;
+						}
+					}
+
+					controlTextBox.Text = Translations.CommandInfos[Interface.CurrentControls[data].Command].Description + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","assignment_current"}) + Environment.NewLine + Environment.NewLine + GetControlDescription(data);
+					controlTextBox.Draw();
+					controlPictureBox.Draw();
 					break;
 				case MenuType.ChangeSwitch:
 					/*

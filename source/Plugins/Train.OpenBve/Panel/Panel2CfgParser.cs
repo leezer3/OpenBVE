@@ -66,16 +66,14 @@ namespace Train.OpenBve
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						PanelSections Section;
-						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out Section);
+						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out PanelSections Section);
 						switch (Section) {
 								// panel
 							case PanelSections.This:
 								i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 									int j = Lines[i].IndexOf('='); if (j >= 0)
 									{
-										PanelKey Key;
-										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 										string Value = Lines[i].Substring(j + 1).TrimStart();
 										switch (Key) {
 											case PanelKey.Resolution:
@@ -286,7 +284,7 @@ namespace Train.OpenBve
 				if (!File.Exists(PanelDaytimeImage)) {
 					Plugin.currentHost.AddMessage(MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
 				} else {
-					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true);
+					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true, 20000);
 					Texture tnight = null;
 					if (PanelNighttimeImage != null) {
 						if (!File.Exists(PanelNighttimeImage)) {
@@ -319,8 +317,7 @@ namespace Train.OpenBve
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 					{
-						PanelSections Section;
-						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out Section);
+						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out PanelSections Section);
 						switch (Section) {
 							case PanelSections.PilotLamp:
 								{
@@ -333,8 +330,7 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
@@ -395,7 +391,7 @@ namespace Train.OpenBve
 									}
 									// create element
 									if (DaytimeImage != null) {
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
 											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
@@ -432,8 +428,7 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
@@ -569,7 +564,7 @@ namespace Train.OpenBve
 									// create element
 									if (DaytimeImage != null)
 									{
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 										Texture tnight = null;
 										if (NighttimeImage != null)
 										{
@@ -641,8 +636,7 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
@@ -739,7 +733,7 @@ namespace Train.OpenBve
 									}
 									// create element
 									if (DaytimeImage != null) {
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
 											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
@@ -776,8 +770,7 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
@@ -976,8 +969,7 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
@@ -1140,8 +1132,7 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Location:
@@ -1232,8 +1223,7 @@ namespace Train.OpenBve
 										if (j >= 0)
 										{
 											int k;
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key)
 											{
@@ -1470,7 +1460,7 @@ namespace Train.OpenBve
 					currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\" + compatabilityString + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
 					TransparentColor = Color24.Blue;
 				}
-				Plugin.currentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true);
+				Plugin.currentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true, 20000);
 				drops.Add(drop);
 			}
 

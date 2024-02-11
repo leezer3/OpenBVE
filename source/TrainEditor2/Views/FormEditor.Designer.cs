@@ -6554,7 +6554,6 @@ namespace TrainEditor2.Views
 			this.MainMenuStrip = this.menuStripMenu;
 			this.Name = "FormEditor";
 			this.Text = "FormEditor";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormEditor_FormClosing);
 			this.Load += new System.EventHandler(this.FormEditor_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormEditor_KeyDown);
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormEditor_KeyUp);

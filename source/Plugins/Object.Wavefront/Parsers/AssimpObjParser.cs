@@ -69,6 +69,7 @@ namespace Plugin
 							textureCoordinate.X *= -1.0;
 							textureCoordinate.Y *= -1.0;
 							break;
+						case ModelExporter.Blender:
 						case ModelExporter.BlockBench:
 							textureCoordinate.Y *= -1.0;
 							break;

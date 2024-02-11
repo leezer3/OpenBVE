@@ -84,8 +84,7 @@ namespace CsvRwRouteParser
 										}
 										else
 										{
-											UnifiedObject obj;
-											Plugin.CurrentHost.LoadObject(f, System.Text.Encoding.Default, out obj);
+											Plugin.CurrentHost.LoadObject(f, System.Text.Encoding.Default, out UnifiedObject obj);
 											o = (StaticObject) obj;
 										}
 										break;

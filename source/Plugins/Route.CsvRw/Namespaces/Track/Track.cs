@@ -114,8 +114,7 @@ namespace CsvRwRouteParser
 						// Ignore the RailStructureIndex in preview mode, obviously not visible!
 						if (!PreviewOnly && Arguments.Length >= 4 && Arguments[3].Length != 0)
 						{
-							int sttype;
-							if (!NumberFormats.TryParseIntVb6(Arguments[3], out sttype))
+							if (!NumberFormats.TryParseIntVb6(Arguments[3], out int sttype))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								sttype = 0;
@@ -1975,8 +1974,7 @@ namespace CsvRwRouteParser
 
 							if (Arguments.Length >= 3 && Arguments[2].Length > 0)
 							{
-								double loc;
-								if (!NumberFormats.TryParseDoubleVb6(Arguments[2], out loc))
+								if (!NumberFormats.TryParseDoubleVb6(Arguments[2], out double loc))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Location is invalid in Track.Pole at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									loc = 0.0;
@@ -1987,8 +1985,7 @@ namespace CsvRwRouteParser
 
 							if (Arguments.Length >= 4 && Arguments[3].Length > 0)
 							{
-								double dist;
-								if (!NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out dist))
+								if (!NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out double dist))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Interval is invalid in Track.Pole at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									dist = Data.BlockInterval;
@@ -2404,7 +2401,6 @@ namespace CsvRwRouteParser
 								else
 								{
 									Color24? transparentColor = new Color24(64, 64, 64);
-									OpenBveApi.Textures.Texture t;
 									if (Plugin.CurrentOptions.EnableBveTsHacks && IsRw)
 									{
 										/*
@@ -2413,7 +2409,7 @@ namespace CsvRwRouteParser
 										 */
 										transparentColor = null;
 									}
-									Plugin.CurrentHost.RegisterTexture(f, new OpenBveApi.Textures.TextureParameters(null, transparentColor), out t);
+									Plugin.CurrentHost.RegisterTexture(f, new OpenBveApi.Textures.TextureParameters(null, transparentColor), out OpenBveApi.Textures.Texture t);
 									
 									message = new MarkerImage(Plugin.CurrentHost, t);
 								}
@@ -2675,8 +2671,7 @@ namespace CsvRwRouteParser
 								{
 									//The initial background for block 0 is always set to zero
 									//This handles the case where background idx #0 is not used
-									BackgroundHandle backgroundZero;
-									if (Data.Backgrounds.TryGetValue(0, out backgroundZero))
+									if (Data.Backgrounds.TryGetValue(0, out BackgroundHandle backgroundZero))
 									{
 										bg = backgroundZero as StaticBackground;
 										if (bg.Texture == null)
@@ -2860,8 +2855,7 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							double time;
-							if (Arguments[0].Length > 0 & !TryParseTime(Arguments[0], out time))
+							if (Arguments[0].Length > 0 & !TryParseTime(Arguments[0], out double time))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Time is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								time = 0.0;
@@ -3036,8 +3030,7 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0)
 						{
-							int currentIntensity;
-							if (!NumberFormats.TryParseIntVb6(Arguments[0], out currentIntensity))
+							if (!NumberFormats.TryParseIntVb6(Arguments[0], out int currentIntensity))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Intensity is invalid in Track.Rain at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
@@ -3049,8 +3042,7 @@ namespace CsvRwRouteParser
 
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 						{
-							int structure;
-							if (!NumberFormats.TryParseIntVb6(Arguments[1], out structure))
+							if (!NumberFormats.TryParseIntVb6(Arguments[1], out int structure))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex is invalid in Track.Rain at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
@@ -3075,8 +3067,7 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0)
 						{
-							int currentIntensity;
-							if (!NumberFormats.TryParseIntVb6(Arguments[0], out currentIntensity))
+							if (!NumberFormats.TryParseIntVb6(Arguments[0], out int currentIntensity))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Intensity is invalid in Track.Snow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
@@ -3088,8 +3079,7 @@ namespace CsvRwRouteParser
 
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 						{
-							int structure;
-							if (!NumberFormats.TryParseIntVb6(Arguments[1], out structure))
+							if (!NumberFormats.TryParseIntVb6(Arguments[1], out int structure))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WeatherStructureIndex is invalid in Track.Snow at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
@@ -3114,8 +3104,7 @@ namespace CsvRwRouteParser
 					{
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0)
 						{
-							int currentLightSet;
-							if (!NumberFormats.TryParseIntVb6(Arguments[0], out currentLightSet))
+							if (!NumberFormats.TryParseIntVb6(Arguments[0], out int currentLightSet))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DynamicLightIndex is invalid in Track.DynamicLight at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
@@ -3286,8 +3275,8 @@ namespace CsvRwRouteParser
 							break;
 						}
 
-						PatternObj patternObj = new PatternObj();
-						patternObj.Rail = RailIndex;
+						PatternObj patternObj = new PatternObj(RailIndex);
+
 						if (Data.Blocks[BlockIndex].PatternObjs.ContainsKey(idx))
 						{
 							patternObj = Data.Blocks[BlockIndex].PatternObjs[idx];

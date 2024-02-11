@@ -99,7 +99,7 @@ namespace CsvRwRouteParser
 					if (a.Length > Name.Length)
 					{
 						string b = a.Substring(Name.Length).TrimStart();
-						int j; if (int.TryParse(b, NumberStyles.Integer, CultureInfo.InvariantCulture, out j))
+						if (int.TryParse(b, NumberStyles.Integer, CultureInfo.InvariantCulture, out int j))
 						{
 							if (j >= 0)
 							{
@@ -127,8 +127,7 @@ namespace CsvRwRouteParser
 										}
 										if (IsGlowTexture)
 										{
-											Texture texture;
-											if (Plugin.CurrentHost.LoadTexture(Files[i], null, out texture))
+											if (Plugin.CurrentHost.LoadTexture(Files[i], null, out Texture texture))
 											{
 												if (texture.PixelFormat == PixelFormat.RGBAlpha)
 												{
@@ -168,10 +167,10 @@ namespace CsvRwRouteParser
 					i = Expression.IndexOf(':');
 				}
 				if (i >= 1) {
-					int h; if (int.TryParse(Expression.Substring(0, i), NumberStyles.Integer, Culture, out h)) {
+					if (int.TryParse(Expression.Substring(0, i), NumberStyles.Integer, Culture, out int h)) {
 						int n = Expression.Length - i - 1;
 						if (n == 1 | n == 2) {
-							uint m; if (uint.TryParse(Expression.Substring(i + 1, n), NumberStyles.None, Culture, out m)) {
+							if (uint.TryParse(Expression.Substring(i + 1, n), NumberStyles.None, Culture, out uint m)) {
 								Value = 3600.0 * h + 60.0 * m;
 								return true;
 							}
@@ -181,8 +180,7 @@ namespace CsvRwRouteParser
 								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "A maximum of 4 digits of precision are supported in TIME values");
 								n = 4;
 							}
-							uint m; if (uint.TryParse(Expression.Substring(i + 1, 2), NumberStyles.None, Culture, out m)) {
-								uint s;
+							if (uint.TryParse(Expression.Substring(i + 1, 2), NumberStyles.None, Culture, out uint m)) {
 								string ss = Expression.Substring(i + 3, n - 2);
 								if (Plugin.CurrentOptions.EnableBveTsHacks)
 								{
@@ -195,7 +193,7 @@ namespace CsvRwRouteParser
 										ss = ss.Substring(1, ss.Length - 1);
 									}
 								}
-								if (uint.TryParse(ss, NumberStyles.None, Culture, out s)) {
+								if (uint.TryParse(ss, NumberStyles.None, Culture, out uint s)) {
 									Value = 3600.0 * h + 60.0 * m + s;
 									return true;
 								}
@@ -203,7 +201,7 @@ namespace CsvRwRouteParser
 						}
 					}
 				} else if (i == -1) {
-					int h; if (int.TryParse(Expression, NumberStyles.Integer, Culture, out h)) {
+					if (int.TryParse(Expression, NumberStyles.Integer, Culture, out int h)) {
 						Value = 3600.0 * h;
 						return true;
 					}
@@ -228,8 +226,7 @@ namespace CsvRwRouteParser
 		{
 			//FIXME: This needs to be removed
 			//Hack to allow loading objects via the API into an array
-			StaticObject staticObject;
-			Plugin.CurrentHost.LoadStaticObject(fileName, encoding, preserveVertices, out staticObject);
+			Plugin.CurrentHost.LoadStaticObject(fileName, encoding, preserveVertices, out StaticObject staticObject);
 			return staticObject;
 		}
 

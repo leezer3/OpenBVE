@@ -8,19 +8,12 @@ namespace OpenBve
 		{
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
-				if (Interface.CurrentControls[i].Method != ControlMethod.InputDevicePlugin)
+				if (Interface.CurrentControls[i].Method != ControlMethod.InputDevicePlugin || Interface.CurrentControls[i].Command == Translations.Command.None)
 				{
 					continue;
 				}
-				bool enableOption = false;
-				for (int j = 0; j < Translations.CommandInfos.Length; j++)
-				{
-					if (Interface.CurrentControls[i].Command == Translations.CommandInfos[j].Command)
-					{
-						enableOption = Translations.CommandInfos[j].EnableOption;
-						break;
-					}
-				}
+
+				bool enableOption = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
 				if (e.Control.Command == Interface.CurrentControls[i].Command)
 				{
 					if (enableOption && e.Control.Option != Interface.CurrentControls[i].Option)
@@ -38,19 +31,11 @@ namespace OpenBve
 		{
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
-				if (Interface.CurrentControls[i].Method != ControlMethod.InputDevicePlugin)
+				if (Interface.CurrentControls[i].Method != ControlMethod.InputDevicePlugin || Interface.CurrentControls[i].Command == Translations.Command.None)
 				{
 					continue;
 				}
-				bool enableOption = false;
-				for (int j = 0; j < Translations.CommandInfos.Length; j++)
-				{
-					if (Interface.CurrentControls[i].Command == Translations.CommandInfos[j].Command)
-					{
-						enableOption = Translations.CommandInfos[j].EnableOption;
-						break;
-					}
-				}
+				bool enableOption = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
 				if (e.Control.Command == Interface.CurrentControls[i].Command)
 				{
 					if (enableOption && e.Control.Option != Interface.CurrentControls[i].Option)
