@@ -13,6 +13,8 @@ namespace CsvRwRouteParser
 	{
 		/// <summary>The track position at which the limit is placed</summary>
 		internal readonly double TrackPosition;
+		/// <summary>The rail index the limit event is placed upon</summary>
+		internal readonly int RailIndex;
 		/// <summary>The speed limit to be enforced</summary>
 		/// <remarks>Stored in km/h, has been transformed by UnitOfSpeed if appropriate</remarks>
 		internal readonly double Speed;
@@ -21,12 +23,13 @@ namespace CsvRwRouteParser
 		/// <summary>The cource (little arrow) on the speed limit post denoting a diverging JA limit</summary>
 		internal readonly int Cource;
 
-		internal Limit(double trackPosition, double speed, int direction, int cource)
+		internal Limit(double trackPosition, double speed, int direction, int cource, int railIndex)
 		{
 			TrackPosition = trackPosition;
 			Speed = speed;
 			Direction = direction;
 			Cource = cource;
+			RailIndex = railIndex;
 		}
 
 		internal void Create(Vector3 wpos, Transformation RailTransformation, double StartingDistance, double EndingDistance, double b, double UnitOfSpeed)

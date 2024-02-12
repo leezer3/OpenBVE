@@ -1149,7 +1149,7 @@ namespace CsvRwRouteParser
 
 					int n = Data.Blocks[BlockIndex].Limits.Length;
 					Array.Resize(ref Data.Blocks[BlockIndex].Limits, n + 1);
-					Data.Blocks[BlockIndex].Limits[n] = new Limit(Data.TrackPosition, limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit, direction, cource);
+					Data.Blocks[BlockIndex].Limits[n] = new Limit(Data.TrackPosition, limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit, direction, cource, 0);
 				}
 					break;
 				case TrackCommand.Stop:
@@ -3494,8 +3494,42 @@ namespace CsvRwRouteParser
 								}
 							}
 						}
+				}
+					break;
+				case TrackCommand.RailLimit:
+				{
+					int railIndex = -1;
+					double limit = 0.0;
+					int direction = 0, cource = 0;
+					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailLimit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						break;
 					}
 
+					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out limit))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Limit is invalid in Track.RailLimit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						break;
+					}
+
+					if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out direction))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Direction is invalid in Track.Limit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						direction = 0;
+					}
+
+					if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out cource))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Cource is invalid in Track.Limit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						cource = 0;
+					}
+
+					int n = Data.Blocks[BlockIndex].Limits.Length;
+					Array.Resize(ref Data.Blocks[BlockIndex].Limits, n + 1);
+					Data.Blocks[BlockIndex].Limits[n] = new Limit(Data.TrackPosition, limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit, direction, cource, railIndex);
+					
+				}
 					break;
 			}
 		}

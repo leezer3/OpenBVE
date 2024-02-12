@@ -132,6 +132,8 @@
 		Switch,
 		/// <summary>Creates a trailing switch</summary>
 		SwitchT,
+		/// <summary>Sets the speed limit for a rail</summary>
+		RailLimit,
 
 		/*
 		 * HMMSIM
