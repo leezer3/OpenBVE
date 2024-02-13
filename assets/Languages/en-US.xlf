@@ -1350,7 +1350,7 @@
 						<source>Speed (m/s)</source>
 					</trans-unit>
 					<trans-unit id="acceleration">
-						<source>Acceleration (m/s虏)</source>
+						<source>Acceleration (m/s²)</source>
 					</trans-unit>
 					<trans-unit id="reverser">
 						<source>Reverser</source>
@@ -1700,7 +1700,7 @@
 						<source>Yes</source>
 					</trans-unit>
 					<trans-unit id="back">
-						<source>鈫� Back</source>
+						<source>← Back</source>
 					</trans-unit>
 					<trans-unit id="customize_controls">
 						<source>Customise controls</source>
