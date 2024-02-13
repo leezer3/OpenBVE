@@ -193,9 +193,6 @@
 					<trans-unit id="route_corrupt_missingobjects">
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
 					</trans-unit>
-					<trans-unit id="route_corrupt_missingobjects">
-						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
-					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
 					</trans-unit>
@@ -269,15 +266,6 @@
 					</trans-unit>
 					<trans-unit id="train_choose">
 						<source>Choose Train...</source>
-					</trans-unit>
-					<trans-unit id="train_default">
-						<source>Do you wish to use the default train?</source>
-					</trans-unit>
-					<trans-unit id="train_default_no">
-						<source>No</source>
-					</trans-unit>
-					<trans-unit id="train_default_yes">
-						<source>Yes</source>
 					</trans-unit>
 					<trans-unit id="train_selection">
 						<source>Selection</source>
@@ -563,7 +551,7 @@
 						<source>Remove</source>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_skip_if_none">
-						<source>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</source>
+						<source>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</source>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
@@ -582,9 +570,6 @@
 					</trans-unit>
 					<trans-unit id="creation_new_guid">
 						<source>The new package has been assigned the following GUID:</source>
-					</trans-unit>
-					<trans-unit id="creation_header">
-						<source>Enter Package Details</source>
 					</trans-unit>
 					<trans-unit id="creation_name">
 						<source>Please enter a package name.</source>
@@ -868,7 +853,7 @@
 						<source>Press a button or move an axis or hat into the desired direction...</source>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab_fullaxis">
-						<source>Move an axis into the direction of "increase" or "power"...</source>
+						<source>Move an axis into the direction of &quot;increase&quot; or &quot;power&quot;...</source>
 					</trans-unit>
 					<trans-unit id="attached">
 						<source>Attached joysticks</source>
@@ -1365,7 +1350,7 @@
 						<source>Speed (m/s)</source>
 					</trans-unit>
 					<trans-unit id="acceleration">
-						<source>Acceleration (m/s²)</source>
+						<source>Acceleration (m/s虏)</source>
 					</trans-unit>
 					<trans-unit id="reverser">
 						<source>Reverser</source>
@@ -1415,10 +1400,10 @@
 						<source>Files not found:</source>
 					</trans-unit>
 					<trans-unit id="almost_help_filesnotfound">
-						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting "Ignore" from below.</source>
+						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting &quot;Ignore&quot; from below.</source>
 					</trans-unit>
 					<trans-unit id="almost_help_general">
-						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select "Ignore" at this point to start the game.</source>
+						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select &quot;Ignore&quot; at this point to start the game.</source>
 					</trans-unit>
 					<trans-unit id="almost_show">
 						<source>Show issues</source>
@@ -1715,7 +1700,7 @@
 						<source>Yes</source>
 					</trans-unit>
 					<trans-unit id="back">
-						<source>← Back</source>
+						<source>鈫� Back</source>
 					</trans-unit>
 					<trans-unit id="customize_controls">
 						<source>Customise controls</source>
@@ -2236,6 +2221,9 @@
 					<trans-unit id="uncouple_rear">
 						<source>Uncouples the rear coupler for the selected car.</source>
 					</trans-unit>
+					<trans-unit id="change_switch">
+						<source>Shows the change switch menu</source>
+					</trans-unit>
 				</group>
 				<group id="keys">
 					<trans-unit id="0">
@@ -2739,10 +2727,13 @@
 						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
 					</trans-unit>
 					<trans-unit id="help_windows_textbox">
-						<source>1. Extract the Windows drivers.\r\n2. Download and run Zadig.\r\n3. Load the appropriate CFG file for your device ("Device &gt; Load Preset Device").\r\n4. Press "Install Driver" and wait for installation to complete.</source>
+						<source>1. Extract the Windows drivers.\r\n2. Download and run Zadig.\r\n3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).\r\n4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
+					</trans-unit>
+					<trans-unit id="help_libusb_symlink">
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.\r\nPlease follow the following instructions:\r\n\r\n1. Check that the &quot;libusb-1.0&quot; package is installed.\r\n2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;\r\n3. Open the directory in the terminal.\r\n4. Check this location to see if &quot;libusb-1.0.so&quot; exists.\r\n5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
 					</trans-unit>
 					<trans-unit id="help_linux_textbox">
-						<source>1. Extract the Linux udev file.\r\n2. Copy the file to "/etc/udev/rules.d/" (root permissions required).\r\n3. Reboot or reload udev rules manually.</source>
+						<source>1. Extract the Linux udev file.\r\n2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).\r\n3. Reboot or reload udev rules manually.</source>
 					</trans-unit>
 					<trans-unit id="help_zadig_button">
 						<source>Get Zadig</source>
@@ -2755,9 +2746,6 @@
 					</trans-unit>
 					<trans-unit id="help_ok_button">
 						<source>OK</source>
-					</trans-unit>
-					<trans-unit id="help_libusb_symlink">
-						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.\r\nPlease follow the following instructions:\r\n\r\n1. Check that the "libusb-1.0" package is installed.\r\n2. Find the location of "libusb-1.0.so.0" - On recent Ubuntu and Debian versions, this is likely to be "/lib/x86_64-linux-gnu/"\r\n3. Open the directory in the terminal.\r\n4. Check this location to see if "libusb-1.0.so" exists.\r\n5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: "sudo ln -s libusb-1.0.so.0 libusb-1.0.so"</source>
 					</trans-unit>
 				</group>
 			</group>
@@ -4119,7 +4107,7 @@
 						</trans-unit>
 						<group id="center">
 							<trans-unit id="name">
-								<source>Center origin</source>
+								<source>Center point</source>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -4454,49 +4442,49 @@
 						<trans-unit id="sound_command">
 							<source>Sound and command</source>
 						</trans-unit>
-						<group id="sound_command">
-							<trans-unit id="name">
-								<source>Sound and command</source>
-							</trans-unit>
-							<group id="tree">
-								<trans-unit id="touch_element">
-									<source>Touch element</source>
-								</trans-unit>
-								<trans-unit id="sounds">
-									<source>Sounds</source>
-								</trans-unit>
-								<trans-unit id="commands">
-									<source>Commands</source>
-								</trans-unit>
-							</group>
-							<group id="edit_entry">
-								<trans-unit id="name">
-									<source>Edit entry</source>
-								</trans-unit>
-								<trans-unit id="sound">
-									<source>Sound</source>
-								</trans-unit>
-								<group id="sound">
-									<trans-unit id="index">
-										<source>Index</source>
-									</trans-unit>
-								</group>
-								<trans-unit id="command">
-									<source>Command</source>
-								</trans-unit>
-								<group id="command">
-									<trans-unit id="name">
-										<source>Key</source>
-									</trans-unit>
-									<trans-unit id="option">
-										<source>Option</source>
-									</trans-unit>
-								</group>
-							</group>
-						</group>
 						<trans-unit id="layer">
 							<source>Layer</source>
 						</trans-unit>
+					</group>
+					<group id="sound_command">
+						<trans-unit id="name">
+							<source>Sound and command</source>
+						</trans-unit>
+						<group id="tree">
+							<trans-unit id="touch_element">
+								<source>Touch element</source>
+							</trans-unit>
+							<trans-unit id="sounds">
+								<source>Sounds</source>
+							</trans-unit>
+							<trans-unit id="commands">
+								<source>Commands</source>
+							</trans-unit>
+						</group>
+						<group id="edit_entry">
+							<trans-unit id="name">
+								<source>Edit entry</source>
+							</trans-unit>
+							<trans-unit id="sound">
+								<source>Sound</source>
+							</trans-unit>
+							<group id="sound">
+								<trans-unit id="index">
+									<source>Index</source>
+								</trans-unit>
+							</group>
+							<trans-unit id="command">
+								<source>Command</source>
+							</trans-unit>
+							<group id="command">
+								<trans-unit id="name">
+									<source>Key</source>
+								</trans-unit>
+								<trans-unit id="option">
+									<source>Option</source>
+								</trans-unit>
+							</group>
+						</group>
 					</group>
 				</group>
 				<group id="sound_settings">
@@ -4679,7 +4667,6 @@
 					</trans-unit>
 				</group>
 			</group>
-
 		</body>
 	</file>
 </xliff>
