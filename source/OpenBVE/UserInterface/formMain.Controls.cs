@@ -14,8 +14,10 @@ using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
 namespace OpenBve {
-	internal partial class formMain {
-		
+	internal partial class formMain
+	{
+
+		private bool blockComboBoxIndexEvent = false;
 		
 		// ========
 		// controls
@@ -360,12 +362,16 @@ namespace OpenBve {
 
 		// key
 		private void comboboxKeyboardKey_SelectedIndexChanged(object sender, EventArgs e) {
+			if (blockComboBoxIndexEvent)
+			{
+				// we've set the key index programatically, don't trigger the event twice
+				blockComboBoxIndexEvent = false;
+				return;
+			}
 			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
-				int j = comboboxKeyboardKey.SelectedIndex;
-
-				Translations.KeyInfo k = comboboxKeyboardKey.Items[j] is Translations.KeyInfo ? (Translations.KeyInfo) comboboxKeyboardKey.Items[j] : new Translations.KeyInfo();
-				Interface.CurrentControls[i].Key = k.Key;
+				Key selectedKey = (Key)comboboxKeyboardKey.SelectedValue;
+				Interface.CurrentControls[i].Key = selectedKey;
 				UpdateControlListElement(listviewControls.Items[i], i, true);
 			}
 		}
@@ -537,6 +543,7 @@ namespace OpenBve {
 		private void textboxJoystickGrab_KeyDown(object sender, KeyEventArgs e)
 		{
 			//Required to avoid race condition with openTK recieving the same event internally
+			blockComboBoxIndexEvent = true;
 			System.Threading.Thread.Sleep(1);
 			var kbState = Keyboard.GetState();
 			if (KeyGrab == false)
