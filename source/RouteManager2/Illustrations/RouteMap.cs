@@ -193,7 +193,8 @@ namespace RouteManager2
 				else
 				{
 					int startElement = -1;
-					for (int el = firstUsedElement; el < lastUsedElement; el++)
+					int finalElement = Math.Min(CurrentRoute.Tracks[key].Elements.Length, lastUsedElement);
+					for (int el = firstUsedElement; el < finalElement; el++)
 					{
 						if (CurrentRoute.Tracks[key].Elements[el].IsDriveable)
 						{
@@ -216,7 +217,7 @@ namespace RouteManager2
 
 					if (startElement != -1)
 					{
-						DrawRailPath(g, mode, key, startElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
+						DrawRailPath(g, mode, key, startElement, finalElement, imageOrigin, imageSize, imageScale, x0, z0);
 					}
 					
 				}
