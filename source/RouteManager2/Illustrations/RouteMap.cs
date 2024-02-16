@@ -32,7 +32,7 @@ namespace RouteManager2
 		private const double	TrackOffsPad	= 16.0;		// how much space to leave for track offsets
 															// at the bottom of the gradient profile
 		private const float		StationRadius	= 4.0f;
-		private const float 	StationDiameter	= (StationRadius*2.0f);
+		private const float 	StationDiameter	= StationRadius * 2.0f;
 		private const double	StationTextPad	= 6.0;
 
 		// a struct for the colours used in the two different graphic contexts, as a GTK+ window and in-game
@@ -56,6 +56,8 @@ namespace RouteManager2
 			public Pen		belowSeaBrdr;		// border for below sea level areas
 			public Brush	elevFill;			// fill for elevation contour
 			public Pen		elevBrdr;			// border for elevation contour
+			public Brush	limitFill;			// fill for elevation contour
+			public Pen		limitBrdr;			// border for elevation contour
 		};
 
 		// the colours used for the images
@@ -68,7 +70,8 @@ namespace RouteManager2
 							actNameBrdr=Pens.Black,			inactNameBrdr=Pens.Gray,
 							actNameText=Brushes.Black,		inactNameText=Brushes.Gray,
 							belowSeaFill=Brushes.PaleGoldenrod,	belowSeaBrdr=Pens.Gray,
-							elevFill=Brushes.Tan,			elevBrdr=Pens.Black},
+							elevFill=Brushes.Tan,			elevBrdr=Pens.Black,
+							limitFill=Brushes.White,			limitBrdr= new Pen(Color.Red, 5f)},
 							// colours for in-game display
 			new MapColors() {background=Color.FromArgb(0x64000000),	atcMap=Pens.Red,	normalMap=Pens.White,
 							actStatnFill=Brushes.SkyBlue,	inactStatnFill=Brushes.Gray,
@@ -77,7 +80,8 @@ namespace RouteManager2
 							actNameBrdr=Pens.White,			inactNameBrdr=Pens.LightGray,
 							actNameText=Brushes.White,		inactNameText=Brushes.LightGray,
 							belowSeaFill= new SolidBrush(Color.FromArgb(0x7feee8aa)),	belowSeaBrdr=Pens.Gray,
-							elevFill= new SolidBrush(Color.FromArgb(0x7fd2b48c)),		elevBrdr=Pens.Gray},
+							elevFill= new SolidBrush(Color.FromArgb(0x7fd2b48c)),		elevBrdr=Pens.Gray,
+							limitFill=Brushes.White,			limitBrdr= new Pen(Color.Red, 5f)},
 			new MapColors() {background=Color.FromArgb(0x64000000),	atcMap=Pens.Red,	normalMap=Pens.White,
 			actStatnFill=Brushes.SkyBlue,	inactStatnFill=Brushes.Gray,
 			actStatnBrdr=Pens.White,		inactStatnBrdr=Pens.LightGray,
@@ -85,7 +89,8 @@ namespace RouteManager2
 			actNameBrdr=Pens.White,			inactNameBrdr=Pens.LightGray,
 			actNameText=Brushes.White,		inactNameText=Brushes.LightGray,
 			belowSeaFill= new SolidBrush(Color.FromArgb(0x7feee8aa)),	belowSeaBrdr=Pens.Gray,
-			elevFill= new SolidBrush(Color.FromArgb(0x7fd2b48c)),		elevBrdr=Pens.Gray}
+			elevFill= new SolidBrush(Color.FromArgb(0x7fd2b48c)),		elevBrdr=Pens.Gray,
+			limitFill=Brushes.White,			limitBrdr= new Pen(Color.Red, 5f)}
 		};
 
 		// data about world ranges of last generated images
@@ -231,6 +236,7 @@ namespace RouteManager2
 			
 			if (trackPosition != -1)
 			{
+				Font f = new Font(FontFamily.GenericSansSerif, 10.0f, GraphicsUnit.Pixel);
 				switchPositions = new Dictionary<Guid, Vector2>();
 				// Find switches
 				for (int t = 0; t < CurrentRoute.Tracks.Count; t++)
@@ -240,13 +246,13 @@ namespace RouteManager2
 					{
 						for (int j = 0; j < CurrentRoute.Tracks[k].Elements[i].Events.Length; j++)
 						{
+							double x = CurrentRoute.Tracks[k].Elements[i].WorldPosition.X;
+							double y = CurrentRoute.Tracks[k].Elements[i].WorldPosition.Z;
+							x = imageOrigin.X + (x - x0) * imageScale.X;
+							y = imageOrigin.Y + (z0 - y) * imageScale.Y + imageSize.Y;
 							// NOTE: key will appear twice, once per track but we only want the first instance
 							if (CurrentRoute.Tracks[k].Elements[i].Events[j] is SwitchEvent se && !switchPositions.ContainsKey(se.Index))
 							{
-								double x = CurrentRoute.Tracks[k].Elements[i].WorldPosition.X;
-								double y = CurrentRoute.Tracks[k].Elements[i].WorldPosition.Z;
-								x = imageOrigin.X + (x - x0) * imageScale.X;
-								y = imageOrigin.Y + (z0 - y) * imageScale.Y + imageSize.Y;
 								switchPositions.Add(se.Index, new Vector2(x, y));
 								// draw circle
 								RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
@@ -257,16 +263,27 @@ namespace RouteManager2
 
 							if (CurrentRoute.Tracks[k].Elements[i].Events[j] is TrailingSwitchEvent tse && !switchPositions.ContainsKey(tse.Index))
 							{
-								double x = CurrentRoute.Tracks[k].Elements[i].WorldPosition.X;
-								double y = CurrentRoute.Tracks[k].Elements[i].WorldPosition.Z;
-								x = imageOrigin.X + (x - x0) * imageScale.X;
-								y = imageOrigin.Y + (z0 - y) * imageScale.Y + imageSize.Y;
 								switchPositions.Add(tse.Index, new Vector2(x, y));
 								// draw circle
 								RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
 									StationDiameter, StationDiameter);
 								g.FillEllipse(mapColors[(int)mode].inactStatnFill, r);
 								g.DrawEllipse(mapColors[(int)mode].inactStatnBrdr, r);
+							}
+
+							if (CurrentRoute.Tracks[k].Elements[i].Events[j] is LimitChangeEvent lim)
+							{
+								// turns out centering text in a circle using System.Drawing is a PITA
+								// numbers are fudges, need to check whether they work OK on non windows....
+								string limitString = Math.Round(lim.NextSpeedLimit, 2).ToString();
+								float radius = g.MeasureString(limitString, f).Width * 0.9f;
+								RectangleF r = new RectangleF((float)x - radius - 20, (float)y - radius,
+									radius * 2.0f, radius * 2.0f);
+								g.FillEllipse(mapColors[(int)mode].limitFill, r);
+								g.DrawEllipse(mapColors[(int)mode].limitBrdr, r);
+								
+								g.DrawString(limitString, f, Brushes.Black,
+									(float)x - 20 - (radius /2), (float)y - (radius * 0.45f));
 							}
 						}
 					}
