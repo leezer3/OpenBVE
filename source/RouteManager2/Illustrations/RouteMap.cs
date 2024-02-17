@@ -236,7 +236,7 @@ namespace RouteManager2
 			
 			if (trackPosition != -1)
 			{
-				Font f = new Font(FontFamily.GenericSansSerif, 10.0f, GraphicsUnit.Pixel);
+				Font boldFont = new Font(FontFamily.GenericSansSerif, 10.0f, FontStyle.Bold, GraphicsUnit.Pixel);
 				switchPositions = new Dictionary<Guid, Vector2>();
 				// Find switches
 				for (int t = 0; t < CurrentRoute.Tracks.Count; t++)
@@ -276,13 +276,13 @@ namespace RouteManager2
 								// turns out centering text in a circle using System.Drawing is a PITA
 								// numbers are fudges, need to check whether they work OK on non windows....
 								string limitString = Math.Round(lim.NextSpeedLimit * 3.6, 2).ToString();
-								float radius = g.MeasureString(limitString, f).Width * 0.9f;
+								float radius = g.MeasureString(limitString, boldFont).Width * 0.9f;
 								RectangleF r = new RectangleF((float)x - radius - 20, (float)y - radius,
 									radius * 2.0f, radius * 2.0f);
 								g.FillEllipse(mapColors[(int)mode].limitFill, r);
 								g.DrawEllipse(mapColors[(int)mode].limitBrdr, r);
 								
-								g.DrawString(limitString, f, Brushes.Black,
+								g.DrawString(limitString, boldFont, Brushes.Black,
 									(float)x - 20 - (radius /2), (float)y - (radius * 0.45f));
 							}
 						}
