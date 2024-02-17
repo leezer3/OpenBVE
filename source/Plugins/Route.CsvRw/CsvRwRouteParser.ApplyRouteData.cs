@@ -756,11 +756,6 @@ namespace CsvRwRouteParser
 							CurrentRoute.Tracks[j].Elements[n].CurveCant = Data.Blocks[i].Rails[j].CurveCant;
 							CurrentRoute.Tracks[j].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
 							CurrentRoute.Tracks[j].Elements[n].IsDriveable = Data.Blocks[i].Rails[j].IsDriveable;
-
-							if (i > 0 && !Data.Blocks[i].Rails[j].IsDriveable && Data.Blocks[i - 1].Rails[j].IsDriveable)
-							{
-
-							}
 						}
 
 						if (!PreviewOnly)
