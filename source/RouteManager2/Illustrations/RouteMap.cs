@@ -275,7 +275,7 @@ namespace RouteManager2
 							{
 								// turns out centering text in a circle using System.Drawing is a PITA
 								// numbers are fudges, need to check whether they work OK on non windows....
-								string limitString = Math.Round(lim.NextSpeedLimit, 2).ToString();
+								string limitString = Math.Round(lim.NextSpeedLimit * 3.6, 2).ToString();
 								float radius = g.MeasureString(limitString, f).Width * 0.9f;
 								RectangleF r = new RectangleF((float)x - radius - 20, (float)y - radius,
 									radius * 2.0f, radius * 2.0f);
@@ -853,7 +853,6 @@ namespace RouteManager2
 		/// <summary>Finds the route range for the specified track position and draw radius</summary>
 		/// <param name="trackPosition">The track position</param>
 		/// <param name="drawRadius">The draw radius</param>
-		/// <param name="totalElements">The total elements used</param>
 		/// <param name="firstUsedElement">The index of the first used element</param>
 		/// <param name="lastUsedElement">The index of the last used element</param>
 		private static void RestrictedRouteRange(double trackPosition, int drawRadius, out int firstUsedElement, out int lastUsedElement)
