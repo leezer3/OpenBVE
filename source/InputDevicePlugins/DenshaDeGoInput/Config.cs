@@ -1,6 +1,6 @@
 //Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020-2021, Marc Riera, The OpenBVE Project
+//Copyright (c) 2020-2024, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -40,45 +40,45 @@ namespace DenshaDeGoInput
 		/// </summary>
 		private readonly List<Guid> controllerList = new List<Guid>();
 
+		/// <summary>
+		/// Internal list of commands.
+		/// </summary>
+		private readonly Translations.Command[] commandList;
+
 		private readonly Timer Timer1;
 
 		public Config()
 		{
 			InitializeComponent();
 
+			// Populate the list of commands
+			commandList = new Translations.Command[Translations.CommandInfos.Count + 1];
+			commandList[0] = Translations.Command.None;
+			for (int i = 0; i < Translations.CommandInfos.Count; i++)
+			{
+				commandList[i+1] = Translations.CommandInfos.Keys.ElementAt(i);
+			}
+
 			// Load language files
 			Translations.LoadLanguageFiles(OpenBveApi.Path.CombineDirectory(DenshaDeGoInput.FileSystem.DataFolder, "Languages"));
 
 			// Populate command boxes
-			buttonselectBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			buttonstartBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			buttonaBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			buttonbBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			buttoncBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			buttondBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			buttonupBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			buttondownBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			buttonleftBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			buttonrightBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			buttonpedalBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			buttonldoorBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			buttonrdoorBox.Items.Add(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"}));
-			for (int i = 0; i < Translations.CommandInfos.Count; i++)
+			for (int i = 0; i < commandList.Length; i++)
 			{
-				Translations.Command key = Translations.CommandInfos.ElementAt(i).Key;
-				buttonselectBox.Items.Add(Translations.CommandInfos[key].Name);
-				buttonstartBox.Items.Add(Translations.CommandInfos[key].Name);
-				buttonaBox.Items.Add(Translations.CommandInfos[key].Name);
-				buttonbBox.Items.Add(Translations.CommandInfos[key].Name);
-				buttoncBox.Items.Add(Translations.CommandInfos[key].Name);
-				buttondBox.Items.Add(Translations.CommandInfos[key].Name);
-				buttonupBox.Items.Add(Translations.CommandInfos[key].Name);
-				buttondownBox.Items.Add(Translations.CommandInfos[key].Name);
-				buttonleftBox.Items.Add(Translations.CommandInfos[key].Name);
-				buttonrightBox.Items.Add(Translations.CommandInfos[key].Name);
-				buttonpedalBox.Items.Add(Translations.CommandInfos[key].Name);
-				buttonldoorBox.Items.Add(Translations.CommandInfos[key].Name);
-				buttonrdoorBox.Items.Add(Translations.CommandInfos[key].Name);
+				string commandName = Translations.CommandInfos.TryGetInfo(commandList[i]).Name;
+				buttonselectBox.Items.Add(commandName);
+				buttonstartBox.Items.Add(commandName);
+				buttonaBox.Items.Add(commandName);
+				buttonbBox.Items.Add(commandName);
+				buttoncBox.Items.Add(commandName);
+				buttondBox.Items.Add(commandName);
+				buttonupBox.Items.Add(commandName);
+				buttondownBox.Items.Add(commandName);
+				buttonleftBox.Items.Add(commandName);
+				buttonrightBox.Items.Add(commandName);
+				buttonpedalBox.Items.Add(commandName);
+				buttonldoorBox.Items.Add(commandName);
+				buttonrdoorBox.Items.Add(commandName);
 			}
 
 			Timer1 = new Timer {Interval = 100};
@@ -193,19 +193,19 @@ namespace DenshaDeGoInput
 			buttonSave.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","save_button"});
 			buttonCancel.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","cancel_button"});
 
-			buttonselectBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
-			buttonstartBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
-			buttonaBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
-			buttonbBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
-			buttoncBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
-			buttondBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
-			buttonupBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
-			buttondownBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
-			buttonleftBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
-			buttonrightBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
-			buttonpedalBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
-			buttonldoorBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
-			buttonldoorBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","command_none"});
+			buttonselectBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttonstartBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttonaBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttonbBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttoncBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttondBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttonupBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttondownBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttonleftBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttonrightBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttonpedalBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttonldoorBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttonrdoorBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
 
 			label_up.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_up"});
 			label_down.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_down"});
@@ -221,7 +221,7 @@ namespace DenshaDeGoInput
 			label_buttonpedal.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_pedal"});
 			label_buttonldoor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_ldoor"});
 			label_buttonrdoor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_rdoor"});
-
+		
 			linkLabel_driver.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","linkLabel_driver"});
 		}
 
@@ -238,19 +238,19 @@ namespace DenshaDeGoInput
 			}
 
 			// Set command boxes
-			buttonselectBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Select];
-			buttonstartBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Start];
-			buttonaBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.A];
-			buttonbBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.B];
-			buttoncBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.C];
-			buttondBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.D];
-			buttonupBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Up];
-			buttondownBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Down];
-			buttonleftBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Left];
-			buttonrightBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Right];
-			buttonpedalBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Pedal];
-			buttonldoorBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.LDoor];
-			buttonrdoorBox.SelectedIndex = DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.RDoor];
+			buttonselectBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Select].Command);
+			buttonstartBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Start].Command);
+			buttonaBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.A].Command);
+			buttonbBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.B].Command);
+			buttoncBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.C].Command);
+			buttondBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.D].Command);
+			buttonupBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Up].Command);
+			buttondownBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Down].Command);
+			buttonleftBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Left].Command);
+			buttonrightBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Right].Command);
+			buttonpedalBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Pedal].Command);
+			buttonldoorBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.LDoor].Command);
+			buttonrdoorBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.RDoor].Command);
 
 
 			// Set checkboxes
@@ -280,65 +280,67 @@ namespace DenshaDeGoInput
 
 		private void buttonselectBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Select] = buttonselectBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Select].Command = buttonselectBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonselectBox.SelectedIndex - 1) : Translations.Command.None;
 		}
 
 		private void buttonstartBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Start] = buttonstartBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Start].Command = buttonstartBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonstartBox.SelectedIndex - 1) : Translations.Command.None;
 		}
 
 		private void buttonaBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.A] = buttonaBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.A].Command = buttonaBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonaBox.SelectedIndex - 1) : Translations.Command.None;
 		}
 
 		private void buttonbBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.B] = buttonbBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.B].Command = buttonbBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonbBox.SelectedIndex - 1) : Translations.Command.None;
 		}
 
 		private void buttoncBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.C] = buttoncBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.C].Command = buttoncBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttoncBox.SelectedIndex - 1) : Translations.Command.None;
 		}
 
 		private void buttondBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.D] = buttondBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.D].Command = buttondBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttondBox.SelectedIndex - 1) : Translations.Command.None;
 		}
 
 		private void buttonupBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Up] = buttonupBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Up].Command = buttonupBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonupBox.SelectedIndex - 1) : Translations.Command.None;
 		}
 
 		private void buttondownBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Down] = buttondownBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Down].Command = buttondownBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttondownBox.SelectedIndex - 1) : Translations.Command.None;
 		}
 
 		private void buttonleftBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Left] = buttonleftBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Left].Command = buttonleftBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonleftBox.SelectedIndex - 1) : Translations.Command.None;
 		}
 
 		private void buttonrightBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Right] = buttonrightBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Right].Command = buttonrightBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonrightBox.SelectedIndex - 1) : Translations.Command.None;
 		}
 
 		private void buttonpedalBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Pedal] = buttonpedalBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Pedal].Command = buttonpedalBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonpedalBox.SelectedIndex - 1) : Translations.Command.None;
 		}
+
 		private void buttonldoorBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.LDoor] = buttonldoorBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.LDoor].Command = buttonldoorBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonldoorBox.SelectedIndex - 1) : Translations.Command.None;
 		}
+
 		private void buttonrdoorBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.RDoor] = buttonrdoorBox.SelectedIndex;
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.RDoor].Command = buttonrdoorBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonrdoorBox.SelectedIndex - 1) : Translations.Command.None;
 		}
 
 		private void convertnotchesCheck_CheckedChanged(object sender, EventArgs e)
