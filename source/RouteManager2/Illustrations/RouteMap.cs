@@ -236,7 +236,6 @@ namespace RouteManager2
 			
 			if (trackPosition != -1)
 			{
-				Font boldFont = new Font(FontFamily.GenericSansSerif, 10.0f, FontStyle.Bold, GraphicsUnit.Pixel);
 				switchPositions = new Dictionary<Guid, Vector2>();
 				// Find switches
 				for (int t = 0; t < CurrentRoute.Tracks.Count; t++)
@@ -269,21 +268,6 @@ namespace RouteManager2
 									StationDiameter, StationDiameter);
 								g.FillEllipse(mapColors[(int)mode].inactStatnFill, r);
 								g.DrawEllipse(mapColors[(int)mode].inactStatnBrdr, r);
-							}
-
-							if (CurrentRoute.Tracks[k].Elements[i].Events[j] is LimitChangeEvent lim)
-							{
-								// turns out centering text in a circle using System.Drawing is a PITA
-								// numbers are fudges, need to check whether they work OK on non windows....
-								string limitString = Math.Round(lim.NextSpeedLimit * 3.6, 2).ToString();
-								float radius = g.MeasureString(limitString, boldFont).Width * 0.9f;
-								RectangleF r = new RectangleF((float)x - radius - 20, (float)y - radius,
-									radius * 2.0f, radius * 2.0f);
-								g.FillEllipse(mapColors[(int)mode].limitFill, r);
-								g.DrawEllipse(mapColors[(int)mode].limitBrdr, r);
-								
-								g.DrawString(limitString, boldFont, Brushes.Black,
-									(float)x - 20 - (radius /2), (float)y - (radius * 0.45f));
 							}
 						}
 					}
@@ -711,14 +695,31 @@ namespace RouteManager2
 				{
 					continue;
 				}
+				Font boldFont = new Font(FontFamily.GenericSansSerif, 10.0f, FontStyle.Bold, GraphicsUnit.Pixel);
+				int nextTrackIndex = -1;
 				for (int j = 0; j < currentTrack.Elements[i + firstUsedElement].Events.Length; j++)
 				{
-
+					if (currentTrack.Elements[i].Events[j] is LimitChangeEvent lim)
+					{
+						// turns out centering text in a circle using System.Drawing is a PITA
+						// numbers are fudges, need to check whether they work OK on non windows....
+						string limitString = Math.Round(lim.NextSpeedLimit * 3.6, 2).ToString();
+						float radius = g.MeasureString(limitString, boldFont).Width * 0.9f;
+						RectangleF r = new RectangleF((float)x - radius - 20, (float)z - radius,
+							radius * 2.0f, radius * 2.0f);
+						g.FillEllipse(mapColors[0].limitFill, r);
+						g.DrawEllipse(mapColors[0].limitBrdr, r);
+								
+						g.DrawString(limitString, boldFont, Brushes.Black,
+							(float)x - 20 - (radius /2), (float)z - (radius * 0.45f));
+					}
 					if (currentTrack.Elements[i + firstUsedElement].Events[j] is SwitchEvent se)
 					{
 						// switch to different track if appropriate
-						currentTrack = CurrentRoute.Tracks[CurrentRoute.Switches[se.Index].CurrentlySetTrack];
-						break;
+						// n.b. use continue as we're using an unsorted array- not guaranteed for something
+						// we want to draw to come after a switch
+						nextTrackIndex = CurrentRoute.Switches[se.Index].CurrentlySetTrack;
+						continue;
 					}
 
 					if (currentTrack.Elements[i + firstUsedElement].Events[j] is TrackEndEvent)
@@ -727,6 +728,11 @@ namespace RouteManager2
 						elementsToDraw = i;
 						break;
 					}
+				}
+
+				if (nextTrackIndex != -1)
+				{
+					currentTrack = CurrentRoute.Tracks[nextTrackIndex];
 				}
 			}
 			DrawSegmentedCurve(g, Pens.Blue, p, start, elementsToDraw - 1);
