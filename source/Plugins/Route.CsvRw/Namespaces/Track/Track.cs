@@ -11,6 +11,7 @@ using RouteManager2.MessageManager;
 using RouteManager2.MessageManager.MessageTypes;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
+using RouteManager2.Tracks;
 
 namespace CsvRwRouteParser
 {
@@ -1826,9 +1827,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						int n = CurrentRoute.BufferTrackPositions.Length;
-						Array.Resize(ref CurrentRoute.BufferTrackPositions, n + 1);
-						CurrentRoute.BufferTrackPositions[n] = Data.TrackPosition;
+						CurrentRoute.BufferTrackPositions.Add(new BufferStop(0, Data.TrackPosition, true));
 					}
 				}
 					break;
@@ -3529,6 +3528,33 @@ namespace CsvRwRouteParser
 					Array.Resize(ref Data.Blocks[BlockIndex].Limits, n + 1);
 					Data.Blocks[BlockIndex].Limits[n] = new Limit(Data.TrackPosition, limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit, direction, cource, railIndex);
 					
+				}
+					break;
+				case TrackCommand.RailBuffer:
+				{
+					if (!PreviewOnly)
+					{
+						int railIndex = -1;
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailBuffer at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							break;
+						}
+
+						int affectsAI = 0;
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out affectsAI))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Limit is invalid in Track.RailLimit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+
+						if (affectsAI != 0 && affectsAI != 1)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "AffectsAI is invalid in Track.RailLimit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							affectsAI = 0;
+						}
+
+						Plugin.CurrentRoute.BufferTrackPositions.Add(new BufferStop(railIndex, Data.TrackPosition, affectsAI != 0));
+					}
 				}
 					break;
 			}

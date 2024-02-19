@@ -82,7 +82,7 @@ namespace RouteManager2
 
 		public Atmosphere Atmosphere;
 
-		public double[] BufferTrackPositions = { };
+		public List<BufferStop> BufferTrackPositions = new List<BufferStop>();
 
 		/// <summary>The current in game time, expressed as the number of seconds since midnight on the first day</summary>
 		public double SecondsSinceMidnight;

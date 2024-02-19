@@ -607,9 +607,14 @@ namespace OpenBve
 						TrainLength += TrainManager.PlayerTrain.Cars[c].Length;
 					}
 
-					for (int j = 0; j < Program.CurrentRoute.BufferTrackPositions.Length; j++)
+					for (int j = 0; j < Program.CurrentRoute.BufferTrackPositions.Count; j++)
 					{
-						if (PlayerFirstStationPosition > Program.CurrentRoute.BufferTrackPositions[j] && PlayerFirstStationPosition - TrainLength < Program.CurrentRoute.BufferTrackPositions[j])
+						if (Program.CurrentRoute.BufferTrackPositions[j].TrackIndex != 0)
+						{
+							// Player currently always starts on Rail0
+							continue;
+						}
+						if (PlayerFirstStationPosition > Program.CurrentRoute.BufferTrackPositions[j].TrackPosition && PlayerFirstStationPosition - TrainLength < Program.CurrentRoute.BufferTrackPositions[j].TrackPosition)
 						{
 							/*
 							 * HACK: The initial start position for the player train is stuck on a set of buffers
@@ -617,7 +622,7 @@ namespace OpenBve
 							 */
 
 							//Set the start position to be the buffer position plus the train length plus 1m
-							PlayerFirstStationPosition = Program.CurrentRoute.BufferTrackPositions[j] + TrainLength + 1;
+							PlayerFirstStationPosition = Program.CurrentRoute.BufferTrackPositions[j].TrackPosition + TrainLength + 1;
 							//Update the station stop location
 							Program.CurrentRoute.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition = PlayerFirstStationPosition;
 							break;
