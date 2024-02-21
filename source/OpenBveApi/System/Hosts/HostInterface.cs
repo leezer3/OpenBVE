@@ -678,7 +678,9 @@ namespace OpenBveApi.Hosts {
 		public const string pipeName = @"pipename";
 
 		/// <summary>Base addresses for the hosted service.</summary>
+#pragma warning disable IDE1006
 		public static Uri baseAddress => new Uri(pipeBaseAddress);
+#pragma warning restore IDE1006
 
 		/// <summary>Complete address of the named pipe endpoint.</summary>
 		public static Uri Win32PluginHostEndpointAddress => new Uri(pipeBaseAddress + '/' + pipeName);
