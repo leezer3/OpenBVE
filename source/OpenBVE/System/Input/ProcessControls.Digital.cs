@@ -1375,7 +1375,7 @@ namespace OpenBve
 								Game.switchChangeDialog.Show();
 								break;
 							case InterfaceType.SwitchChangeMap:
-								Program.Renderer.CurrentInterface = InterfaceType.Normal;
+								Game.switchChangeDialog.Close(null, null);
 								break;
 						}
 						break;
