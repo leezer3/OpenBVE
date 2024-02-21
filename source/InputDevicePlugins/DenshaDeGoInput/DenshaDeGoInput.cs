@@ -147,7 +147,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// An array with the commands configured for each button.
 		/// </summary>
-		internal static InputControl[] ButtonCommands = new InputControl[13];
+		internal static InputControl[] ButtonCommands = new InputControl[15];
 
 
 		/// <summary>
@@ -721,6 +721,22 @@ namespace DenshaDeGoInput
 												if (Enum.TryParse(Value.Replace("_", string.Empty), true, out Translations.Command parsedCommand))
 												{
 													ButtonCommands[(int)InputTranslator.ControllerButton.RDoor].Command = parsedCommand;
+												}
+											}
+											break;
+										case "ats":
+											{
+												if (Enum.TryParse(Value.Replace("_", string.Empty), true, out Translations.Command parsedCommand))
+												{
+													ButtonCommands[(int)InputTranslator.ControllerButton.ATS].Command = parsedCommand;
+												}
+											}
+											break;
+										case "a2":
+											{
+												if (Enum.TryParse(Value.Replace("_", string.Empty), true, out Translations.Command parsedCommand))
+												{
+													ButtonCommands[(int)InputTranslator.ControllerButton.A2].Command = parsedCommand;
 												}
 											}
 											break;

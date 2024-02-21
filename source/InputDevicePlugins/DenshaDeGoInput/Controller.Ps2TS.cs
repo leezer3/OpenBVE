@@ -80,7 +80,7 @@ namespace DenshaDeGoInput
 			// Sync input/output data
 			LibUsb.SyncController(Guid, inputBuffer, outputBuffer);
 
-			ushort buttonData = inputBuffer[2];
+			ushort buttonData = BitConverter.ToUInt16( new byte[2] { inputBuffer[2], inputBuffer[3] }, 0);
 			byte handle = inputBuffer[1];
 			byte reverser = (byte)(handle >> 4 & 0xF);
 
@@ -135,6 +135,22 @@ namespace DenshaDeGoInput
 						break;
 				}
 			}
+
+			// Buttons
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] = (buttonData & buttonMask[(int)InputTranslator.ControllerButton.Select]) != 0 ? ButtonState.Pressed : ButtonState.Released;
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] = (buttonData & buttonMask[(int)InputTranslator.ControllerButton.Start]) != 0 ? ButtonState.Pressed : ButtonState.Released;
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] = (buttonData & buttonMask[(int)InputTranslator.ControllerButton.A]) != 0 ? ButtonState.Pressed : ButtonState.Released;
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] = (buttonData & buttonMask[(int)InputTranslator.ControllerButton.B]) != 0 ? ButtonState.Pressed : ButtonState.Released;
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] = (buttonData & buttonMask[(int)InputTranslator.ControllerButton.C]) != 0 ? ButtonState.Pressed : ButtonState.Released;
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] = (buttonData & buttonMask[(int)InputTranslator.ControllerButton.D]) != 0 ? ButtonState.Pressed : ButtonState.Released;
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.ATS] = (buttonData & buttonMask[(int)InputTranslator.ControllerButton.ATS]) != 0 ? ButtonState.Pressed : ButtonState.Released;
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A2] = (buttonData & buttonMask[(int)InputTranslator.ControllerButton.A2]) != 0 ? ButtonState.Pressed : ButtonState.Released;
+
+			// D-pad
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] = (buttonData & buttonMask[(int)InputTranslator.ControllerButton.Up]) != 0 ? ButtonState.Pressed : ButtonState.Released;
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Down] = (buttonData & buttonMask[(int)InputTranslator.ControllerButton.Down]) != 0 ? ButtonState.Pressed : ButtonState.Released;
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] = (buttonData & buttonMask[(int)InputTranslator.ControllerButton.Left]) != 0 ? ButtonState.Pressed : ButtonState.Released;
+			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] = (buttonData & buttonMask[(int)InputTranslator.ControllerButton.Right]) != 0 ? ButtonState.Pressed : ButtonState.Released;
 		}
 
 		/// <summary>
@@ -163,8 +179,8 @@ namespace DenshaDeGoInput
 					// SOTP-031201 (MTC P4/B7)
 					if (id.Type == ControllerType.PS2MTCP4B7)
 					{
-						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.Pedal | ControllerButtons.DPad;
-						ushort[] buttonMask = { 0x10, 0x20, 0x2, 0x1, 0x4, 0x8, 0x0, 0x0 };
+						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
+						ushort[] buttonMask = { 0x200, 0x100, 0x4, 0x10, 0x20, 0x2, 0x0, 0x0, 0x400, 0x800, 0x1000, 0x2000, 0x0, 0x1, 0x8 };
 						Ps2TSController newcontroller = new Ps2TSController(buttons, buttonMask, 7, 4, true)
 						{
 							// 4 bytes for input
@@ -180,8 +196,8 @@ namespace DenshaDeGoInput
 					// SOTP-031201 (MTC P4/B2-B7)
 					if (id.Type == ControllerType.PS2MTCP4B2B7)
 					{
-						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.Pedal | ControllerButtons.DPad;
-						ushort[] buttonMask = { 0x10, 0x20, 0x2, 0x1, 0x4, 0x8, 0x0, 0x0 };
+						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
+						ushort[] buttonMask = { 0x200, 0x100, 0x4, 0x10, 0x20, 0x2, 0x0, 0x0, 0x400, 0x800, 0x1000, 0x2000, 0x0, 0x1, 0x8 };
 						Ps2TSController newcontroller = new Ps2TSController(buttons, buttonMask, 6, 4, true)
 						{
 							// 4 bytes for input
@@ -197,8 +213,8 @@ namespace DenshaDeGoInput
 					// SOTP-031201 (MTC P5/B7)
 					if (id.Type == ControllerType.PS2MTCP5B7)
 					{
-						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.Pedal | ControllerButtons.DPad;
-						ushort[] buttonMask = { 0x10, 0x20, 0x2, 0x1, 0x4, 0x8, 0x0, 0x0 };
+						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
+						ushort[] buttonMask = { 0x200, 0x100, 0x4, 0x10, 0x20, 0x2, 0x0, 0x0, 0x400, 0x800, 0x1000, 0x2000, 0x0, 0x1, 0x8 };
 						Ps2TSController newcontroller = new Ps2TSController(buttons, buttonMask, 7, 5, true)
 						{
 							// 4 bytes for input
@@ -213,8 +229,8 @@ namespace DenshaDeGoInput
 					// SOTP-031201 (MTC P13/B7)
 					if (id.Type == ControllerType.PS2MTCP13B7)
 					{
-						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.Pedal | ControllerButtons.DPad;
-						ushort[] buttonMask = { 0x10, 0x20, 0x2, 0x1, 0x4, 0x8, 0x0, 0x0 };
+						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
+						ushort[] buttonMask = { 0x200, 0x100, 0x4, 0x10, 0x20, 0x2, 0x0, 0x0, 0x400, 0x800, 0x1000, 0x2000, 0x0, 0x1, 0x8 };
 						Ps2TSController newcontroller = new Ps2TSController(buttons, buttonMask, 13, 4, true)
 						{
 							// 4 bytes for input
@@ -229,8 +245,8 @@ namespace DenshaDeGoInput
 					// COTM-02001 (Train Mascon)
 					if (id.Type == ControllerType.PS2TrainMascon)
 					{
-						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.Pedal | ControllerButtons.DPad;
-						ushort[] buttonMask = { 0x10, 0x20, 0x2, 0x1, 0x4, 0x8, 0x0, 0x0 };
+						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad | ControllerButtons.ATS | ControllerButtons.A2;
+						ushort[] buttonMask = { 0x200, 0x100, 0x4, 0x10, 0x20, 0x2, 0x0, 0x0, 0x400, 0x800, 0x1000, 0x2000, 0x0, 0x1, 0x8 };
 						Ps2TSController newcontroller = new Ps2TSController(buttons, buttonMask, 5, 5, true)
 						{
 							// 4 bytes for input

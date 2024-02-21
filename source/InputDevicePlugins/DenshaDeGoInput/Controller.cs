@@ -56,6 +56,10 @@ namespace DenshaDeGoInput
 			LDoor = 256,
 			/// <summary>The right doors button</summary>
 			RDoor = 512,
+			/// <summary>The ATS button</summary>
+			ATS = 1024,
+			/// <summary>The A2 button</summary>
+			A2 = 2048,
 		}
 
 		/// <summary>The buttons the controller has</summary>

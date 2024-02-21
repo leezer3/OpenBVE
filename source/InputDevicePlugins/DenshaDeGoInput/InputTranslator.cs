@@ -144,12 +144,16 @@ namespace DenshaDeGoInput
 			Right = 11,
 			/// <summary>Pedal button</summary>
 			Pedal = 12,
+			/// <summary>ATS button</summary>
+			ATS = 13,
+			/// <summary>A2 button</summary>
+			A2 = 14,
 		}
 
 		/// <summary>
 		/// The current state of the controller's buttons.
 		/// </summary>
-		internal static ButtonState[] ControllerButtons = new ButtonState[13];
+		internal static ButtonState[] ControllerButtons = new ButtonState[15];
 
 		/// <summary>
 		/// The current brake notch reported by the controller.
