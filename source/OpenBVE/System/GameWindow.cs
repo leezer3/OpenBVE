@@ -358,6 +358,11 @@ namespace OpenBve
 			}
 			Program.Renderer.Screen.Minimized = false;
 			Screen.WindowResize(Width,Height);
+			if (Program.Renderer.CurrentInterface == InterfaceType.SwitchChangeMap)
+			{
+				// call the show method again to trigger resize
+				Game.switchChangeDialog.Show();
+			}
 		}
 
 		[DllImport("user32.dll")]
