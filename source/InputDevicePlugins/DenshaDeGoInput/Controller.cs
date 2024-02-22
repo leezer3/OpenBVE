@@ -196,7 +196,7 @@ namespace DenshaDeGoInput
 							{
 								return ControllerType.Zuiki;
 							}
-							// Something from Zuiki Inc, probably a future mascon
+							// Something from Zuiki Inc, probably a future mascon revision
 							DenshaDeGoInput.CurrentHost.AddMessage("Densha de GO! Input: Unrecognised Zuiki Inc. PID " + PID + " - Please report this.");
 							return ControllerType.Zuiki;
 						case 0x0ae4:

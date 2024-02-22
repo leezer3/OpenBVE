@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020-2021, Marc Riera, The OpenBVE Project
+//Copyright (c) 2020-2024, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -156,8 +156,9 @@ namespace DenshaDeGoInput
 
 				if (!cachedControllers.ContainsKey(guid))
 				{
+					JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
 					// DGC-255/DGOC-44U/P&P
-					if (id.Type == ControllerType.PCTwoHandle)
+					if (id.Type == ControllerType.PCTwoHandle && capabilities.ButtonCount >= 6 && capabilities.AxisCount >= 2)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad;
 						int[] buttonIndices = { 4, 5, 1, 0, 2, 3, -1, -1 };
@@ -174,7 +175,7 @@ namespace DenshaDeGoInput
 						cachedControllers.Add(guid, newcontroller);
 					}
 					// DRC-184/DYC-288
-					if (id.Type == ControllerType.PCRyojouhen)
+					if (id.Type == ControllerType.PCRyojouhen && capabilities.ButtonCount >= 7 && capabilities.AxisCount >= 2)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						int[] buttonIndices = { 5, 6, 2, 1, 0, -1, 4, 3 };
