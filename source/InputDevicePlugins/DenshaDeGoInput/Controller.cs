@@ -192,13 +192,13 @@ namespace DenshaDeGoInput
 							break;
 						case 0x33dd:
 							// Zuiki Inc
-							if (PID == 0x0001 || PID == 0x0002)
+							if (PID >= 0x0001 && PID <= 0x0004)
 							{
 								return ControllerType.Zuiki;
 							}
-							// Zuiki Inc 
+							// Something from Zuiki Inc, probably a future mascon
 							DenshaDeGoInput.CurrentHost.AddMessage("Densha de GO! Input: Unrecognised Zuiki Inc. PID " + PID + " - Please report this.");
-							break;
+							return ControllerType.Zuiki;
 						case 0x0ae4:
 							// Taito Corp
 							switch (PID)
