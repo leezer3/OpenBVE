@@ -52,7 +52,6 @@ namespace DenshaDeGoInput
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.components = new System.ComponentModel.Container();
             this.deviceInputBox = new System.Windows.Forms.GroupBox();
             this.label_rdoor = new System.Windows.Forms.Label();
             this.label_ldoor = new System.Windows.Forms.Label();
@@ -106,6 +105,13 @@ namespace DenshaDeGoInput
             this.deviceBox = new System.Windows.Forms.ComboBox();
             this.label_device = new System.Windows.Forms.Label();
             this.linkLabel_driver = new System.Windows.Forms.LinkLabel();
+            this.label_a2 = new System.Windows.Forms.Label();
+            this.label_ats = new System.Windows.Forms.Label();
+            this.buttona2Box = new System.Windows.Forms.ComboBox();
+            this.label_buttona2 = new System.Windows.Forms.Label();
+            this.buttonatsBox = new System.Windows.Forms.ComboBox();
+            this.label_buttonats = new System.Windows.Forms.Label();
+            this.label_reverser = new System.Windows.Forms.Label();
             this.deviceInputBox.SuspendLayout();
             this.buttonMappingBox.SuspendLayout();
             this.handleMappingBox.SuspendLayout();
@@ -113,6 +119,9 @@ namespace DenshaDeGoInput
             // 
             // deviceInputBox
             // 
+            this.deviceInputBox.Controls.Add(this.label_reverser);
+            this.deviceInputBox.Controls.Add(this.label_ats);
+            this.deviceInputBox.Controls.Add(this.label_a2);
             this.deviceInputBox.Controls.Add(this.label_rdoor);
             this.deviceInputBox.Controls.Add(this.label_ldoor);
             this.deviceInputBox.Controls.Add(this.label_power);
@@ -131,7 +140,7 @@ namespace DenshaDeGoInput
             this.deviceInputBox.Controls.Add(this.label_a);
             this.deviceInputBox.Location = new System.Drawing.Point(12, 37);
             this.deviceInputBox.Name = "deviceInputBox";
-            this.deviceInputBox.Size = new System.Drawing.Size(178, 313);
+            this.deviceInputBox.Size = new System.Drawing.Size(178, 358);
             this.deviceInputBox.TabIndex = 1;
             this.deviceInputBox.TabStop = false;
             this.deviceInputBox.Text = "Device input";
@@ -142,7 +151,7 @@ namespace DenshaDeGoInput
             this.label_rdoor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_rdoor.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_rdoor.ForeColor = System.Drawing.Color.Black;
-            this.label_rdoor.Location = new System.Drawing.Point(92, 215);
+            this.label_rdoor.Location = new System.Drawing.Point(92, 238);
             this.label_rdoor.Margin = new System.Windows.Forms.Padding(3);
             this.label_rdoor.Name = "label_rdoor";
             this.label_rdoor.Size = new System.Drawing.Size(80, 24);
@@ -156,7 +165,7 @@ namespace DenshaDeGoInput
             this.label_ldoor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_ldoor.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_ldoor.ForeColor = System.Drawing.Color.Black;
-            this.label_ldoor.Location = new System.Drawing.Point(92, 185);
+            this.label_ldoor.Location = new System.Drawing.Point(92, 208);
             this.label_ldoor.Margin = new System.Windows.Forms.Padding(3);
             this.label_ldoor.Name = "label_ldoor";
             this.label_ldoor.Size = new System.Drawing.Size(80, 24);
@@ -194,7 +203,7 @@ namespace DenshaDeGoInput
             this.label_pedal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_pedal.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_pedal.ForeColor = System.Drawing.Color.Black;
-            this.label_pedal.Location = new System.Drawing.Point(6, 245);
+            this.label_pedal.Location = new System.Drawing.Point(92, 268);
             this.label_pedal.Margin = new System.Windows.Forms.Padding(3);
             this.label_pedal.Name = "label_pedal";
             this.label_pedal.Size = new System.Drawing.Size(80, 24);
@@ -208,7 +217,7 @@ namespace DenshaDeGoInput
             this.label_right.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_right.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_right.ForeColor = System.Drawing.Color.Black;
-            this.label_right.Location = new System.Drawing.Point(92, 155);
+            this.label_right.Location = new System.Drawing.Point(92, 178);
             this.label_right.Margin = new System.Windows.Forms.Padding(3);
             this.label_right.Name = "label_right";
             this.label_right.Size = new System.Drawing.Size(80, 24);
@@ -222,7 +231,7 @@ namespace DenshaDeGoInput
             this.label_left.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_left.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_left.ForeColor = System.Drawing.Color.Black;
-            this.label_left.Location = new System.Drawing.Point(92, 125);
+            this.label_left.Location = new System.Drawing.Point(92, 148);
             this.label_left.Margin = new System.Windows.Forms.Padding(3);
             this.label_left.Name = "label_left";
             this.label_left.Size = new System.Drawing.Size(80, 24);
@@ -236,7 +245,7 @@ namespace DenshaDeGoInput
             this.label_down.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_down.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_down.ForeColor = System.Drawing.Color.Black;
-            this.label_down.Location = new System.Drawing.Point(92, 95);
+            this.label_down.Location = new System.Drawing.Point(92, 118);
             this.label_down.Margin = new System.Windows.Forms.Padding(3);
             this.label_down.Name = "label_down";
             this.label_down.Size = new System.Drawing.Size(80, 24);
@@ -250,7 +259,7 @@ namespace DenshaDeGoInput
             this.label_up.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_up.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_up.ForeColor = System.Drawing.Color.Black;
-            this.label_up.Location = new System.Drawing.Point(92, 65);
+            this.label_up.Location = new System.Drawing.Point(92, 88);
             this.label_up.Margin = new System.Windows.Forms.Padding(3);
             this.label_up.Name = "label_up";
             this.label_up.Size = new System.Drawing.Size(80, 24);
@@ -260,7 +269,7 @@ namespace DenshaDeGoInput
             // 
             // buttonCalibrate
             // 
-            this.buttonCalibrate.Location = new System.Drawing.Point(6, 275);
+            this.buttonCalibrate.Location = new System.Drawing.Point(6, 328);
             this.buttonCalibrate.Name = "buttonCalibrate";
             this.buttonCalibrate.Size = new System.Drawing.Size(166, 24);
             this.buttonCalibrate.TabIndex = 21;
@@ -274,7 +283,7 @@ namespace DenshaDeGoInput
             this.label_select.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_select.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_select.ForeColor = System.Drawing.Color.Black;
-            this.label_select.Location = new System.Drawing.Point(6, 65);
+            this.label_select.Location = new System.Drawing.Point(6, 88);
             this.label_select.Margin = new System.Windows.Forms.Padding(3);
             this.label_select.Name = "label_select";
             this.label_select.Size = new System.Drawing.Size(80, 24);
@@ -288,7 +297,7 @@ namespace DenshaDeGoInput
             this.label_start.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_start.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_start.ForeColor = System.Drawing.Color.Black;
-            this.label_start.Location = new System.Drawing.Point(6, 95);
+            this.label_start.Location = new System.Drawing.Point(6, 118);
             this.label_start.Margin = new System.Windows.Forms.Padding(3);
             this.label_start.Name = "label_start";
             this.label_start.Size = new System.Drawing.Size(80, 24);
@@ -302,7 +311,7 @@ namespace DenshaDeGoInput
             this.label_d.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_d.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_d.ForeColor = System.Drawing.Color.Black;
-            this.label_d.Location = new System.Drawing.Point(6, 215);
+            this.label_d.Location = new System.Drawing.Point(6, 238);
             this.label_d.Margin = new System.Windows.Forms.Padding(3);
             this.label_d.Name = "label_d";
             this.label_d.Size = new System.Drawing.Size(80, 24);
@@ -316,7 +325,7 @@ namespace DenshaDeGoInput
             this.label_c.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_c.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_c.ForeColor = System.Drawing.Color.Black;
-            this.label_c.Location = new System.Drawing.Point(6, 185);
+            this.label_c.Location = new System.Drawing.Point(6, 208);
             this.label_c.Margin = new System.Windows.Forms.Padding(3);
             this.label_c.Name = "label_c";
             this.label_c.Size = new System.Drawing.Size(80, 24);
@@ -330,7 +339,7 @@ namespace DenshaDeGoInput
             this.label_b.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_b.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_b.ForeColor = System.Drawing.Color.Black;
-            this.label_b.Location = new System.Drawing.Point(6, 155);
+            this.label_b.Location = new System.Drawing.Point(6, 178);
             this.label_b.Margin = new System.Windows.Forms.Padding(3);
             this.label_b.Name = "label_b";
             this.label_b.Size = new System.Drawing.Size(80, 24);
@@ -344,7 +353,7 @@ namespace DenshaDeGoInput
             this.label_a.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label_a.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_a.ForeColor = System.Drawing.Color.Black;
-            this.label_a.Location = new System.Drawing.Point(6, 125);
+            this.label_a.Location = new System.Drawing.Point(6, 148);
             this.label_a.Margin = new System.Windows.Forms.Padding(3);
             this.label_a.Name = "label_a";
             this.label_a.Size = new System.Drawing.Size(80, 24);
@@ -354,6 +363,10 @@ namespace DenshaDeGoInput
             // 
             // buttonMappingBox
             // 
+            this.buttonMappingBox.Controls.Add(this.buttonatsBox);
+            this.buttonMappingBox.Controls.Add(this.label_buttonats);
+            this.buttonMappingBox.Controls.Add(this.buttona2Box);
+            this.buttonMappingBox.Controls.Add(this.label_buttona2);
             this.buttonMappingBox.Controls.Add(this.buttonrdoorBox);
             this.buttonMappingBox.Controls.Add(this.label_buttonrdoor);
             this.buttonMappingBox.Controls.Add(this.buttonldoorBox);
@@ -382,7 +395,7 @@ namespace DenshaDeGoInput
             this.buttonMappingBox.Controls.Add(this.label_buttona);
             this.buttonMappingBox.Location = new System.Drawing.Point(196, 37);
             this.buttonMappingBox.Name = "buttonMappingBox";
-            this.buttonMappingBox.Size = new System.Drawing.Size(499, 212);
+            this.buttonMappingBox.Size = new System.Drawing.Size(500, 257);
             this.buttonMappingBox.TabIndex = 2;
             this.buttonMappingBox.TabStop = false;
             this.buttonMappingBox.Text = "Button mapping";
@@ -391,7 +404,7 @@ namespace DenshaDeGoInput
             // 
             this.buttonrdoorBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.buttonrdoorBox.FormattingEnabled = true;
-            this.buttonrdoorBox.Location = new System.Drawing.Point(306, 182);
+            this.buttonrdoorBox.Location = new System.Drawing.Point(306, 155);
             this.buttonrdoorBox.Name = "buttonrdoorBox";
             this.buttonrdoorBox.Size = new System.Drawing.Size(182, 21);
             this.buttonrdoorBox.TabIndex = 24;
@@ -399,7 +412,7 @@ namespace DenshaDeGoInput
             // 
             // label_buttonrdoor
             // 
-            this.label_buttonrdoor.Location = new System.Drawing.Point(250, 185);
+            this.label_buttonrdoor.Location = new System.Drawing.Point(250, 158);
             this.label_buttonrdoor.Margin = new System.Windows.Forms.Padding(3);
             this.label_buttonrdoor.Name = "label_buttonrdoor";
             this.label_buttonrdoor.Size = new System.Drawing.Size(50, 15);
@@ -410,7 +423,7 @@ namespace DenshaDeGoInput
             // 
             this.buttonldoorBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.buttonldoorBox.FormattingEnabled = true;
-            this.buttonldoorBox.Location = new System.Drawing.Point(306, 155);
+            this.buttonldoorBox.Location = new System.Drawing.Point(306, 128);
             this.buttonldoorBox.Name = "buttonldoorBox";
             this.buttonldoorBox.Size = new System.Drawing.Size(182, 21);
             this.buttonldoorBox.TabIndex = 22;
@@ -418,7 +431,7 @@ namespace DenshaDeGoInput
             // 
             // label_buttonldoor
             // 
-            this.label_buttonldoor.Location = new System.Drawing.Point(250, 158);
+            this.label_buttonldoor.Location = new System.Drawing.Point(250, 131);
             this.label_buttonldoor.Margin = new System.Windows.Forms.Padding(3);
             this.label_buttonldoor.Name = "label_buttonldoor";
             this.label_buttonldoor.Size = new System.Drawing.Size(50, 15);
@@ -468,7 +481,7 @@ namespace DenshaDeGoInput
             // 
             this.buttonpedalBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.buttonpedalBox.FormattingEnabled = true;
-            this.buttonpedalBox.Location = new System.Drawing.Point(306, 128);
+            this.buttonpedalBox.Location = new System.Drawing.Point(306, 182);
             this.buttonpedalBox.Name = "buttonpedalBox";
             this.buttonpedalBox.Size = new System.Drawing.Size(182, 21);
             this.buttonpedalBox.TabIndex = 17;
@@ -514,7 +527,7 @@ namespace DenshaDeGoInput
             // 
             // label_buttonpedal
             // 
-            this.label_buttonpedal.Location = new System.Drawing.Point(250, 131);
+            this.label_buttonpedal.Location = new System.Drawing.Point(250, 185);
             this.label_buttonpedal.Margin = new System.Windows.Forms.Padding(3);
             this.label_buttonpedal.Name = "label_buttonpedal";
             this.label_buttonpedal.Size = new System.Drawing.Size(50, 15);
@@ -637,7 +650,7 @@ namespace DenshaDeGoInput
             // buttonSave
             // 
             this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSave.Location = new System.Drawing.Point(502, 356);
+            this.buttonSave.Location = new System.Drawing.Point(503, 402);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(94, 23);
             this.buttonSave.TabIndex = 3;
@@ -648,7 +661,7 @@ namespace DenshaDeGoInput
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.Location = new System.Drawing.Point(602, 356);
+            this.buttonCancel.Location = new System.Drawing.Point(603, 402);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(93, 23);
             this.buttonCancel.TabIndex = 4;
@@ -661,7 +674,7 @@ namespace DenshaDeGoInput
             this.handleMappingBox.Controls.Add(this.holdbrakeCheck);
             this.handleMappingBox.Controls.Add(this.minmaxCheck);
             this.handleMappingBox.Controls.Add(this.convertnotchesCheck);
-            this.handleMappingBox.Location = new System.Drawing.Point(196, 255);
+            this.handleMappingBox.Location = new System.Drawing.Point(196, 300);
             this.handleMappingBox.Name = "handleMappingBox";
             this.handleMappingBox.Size = new System.Drawing.Size(499, 95);
             this.handleMappingBox.TabIndex = 5;
@@ -722,20 +735,98 @@ namespace DenshaDeGoInput
             // linkLabel_driver
             // 
             this.linkLabel_driver.AutoEllipsis = true;
-            this.linkLabel_driver.Location = new System.Drawing.Point(12, 361);
+            this.linkLabel_driver.Location = new System.Drawing.Point(12, 407);
             this.linkLabel_driver.Name = "linkLabel_driver";
             this.linkLabel_driver.Size = new System.Drawing.Size(484, 21);
             this.linkLabel_driver.TabIndex = 9;
             this.linkLabel_driver.TabStop = true;
             this.linkLabel_driver.Text = "My controller is not detected or does not work properly";
-			this.linkLabel_driver.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_LinkClicked);
+            this.linkLabel_driver.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_LinkClicked);
+            // 
+            // label_a2
+            // 
+            this.label_a2.BackColor = System.Drawing.Color.Plum;
+            this.label_a2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label_a2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_a2.ForeColor = System.Drawing.Color.Black;
+            this.label_a2.Location = new System.Drawing.Point(6, 268);
+            this.label_a2.Margin = new System.Windows.Forms.Padding(3);
+            this.label_a2.Name = "label_a2";
+            this.label_a2.Size = new System.Drawing.Size(80, 24);
+            this.label_a2.TabIndex = 31;
+            this.label_a2.Text = "A2";
+            this.label_a2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label_ats
+            // 
+            this.label_ats.BackColor = System.Drawing.Color.White;
+            this.label_ats.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label_ats.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_ats.ForeColor = System.Drawing.Color.Black;
+            this.label_ats.Location = new System.Drawing.Point(6, 298);
+            this.label_ats.Margin = new System.Windows.Forms.Padding(3);
+            this.label_ats.Name = "label_ats";
+            this.label_ats.Size = new System.Drawing.Size(80, 24);
+            this.label_ats.TabIndex = 32;
+            this.label_ats.Text = "ATS";
+            this.label_ats.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // buttona2Box
+            // 
+            this.buttona2Box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.buttona2Box.FormattingEnabled = true;
+            this.buttona2Box.Location = new System.Drawing.Point(62, 182);
+            this.buttona2Box.Name = "buttona2Box";
+            this.buttona2Box.Size = new System.Drawing.Size(182, 21);
+            this.buttona2Box.TabIndex = 26;
+			this.buttona2Box.SelectedIndexChanged += new System.EventHandler(this.buttona2Box_SelectedIndexChanged);
 
 			// 
-			// Config
+			// label_buttona2
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.label_buttona2.Location = new System.Drawing.Point(6, 185);
+            this.label_buttona2.Margin = new System.Windows.Forms.Padding(3);
+            this.label_buttona2.Name = "label_buttona2";
+            this.label_buttona2.Size = new System.Drawing.Size(50, 15);
+            this.label_buttona2.TabIndex = 25;
+            this.label_buttona2.Text = "A2";
+            // 
+            // buttonatsBox
+            // 
+            this.buttonatsBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.buttonatsBox.FormattingEnabled = true;
+            this.buttonatsBox.Location = new System.Drawing.Point(62, 209);
+            this.buttonatsBox.Name = "buttonatsBox";
+            this.buttonatsBox.Size = new System.Drawing.Size(182, 21);
+            this.buttonatsBox.TabIndex = 28;
+            this.buttonatsBox.SelectedIndexChanged += new System.EventHandler(this.buttonatsBox_SelectedIndexChanged);
+            // 
+            // label_buttonats
+            // 
+            this.label_buttonats.Location = new System.Drawing.Point(6, 212);
+            this.label_buttonats.Margin = new System.Windows.Forms.Padding(3);
+            this.label_buttonats.Name = "label_buttonats";
+            this.label_buttonats.Size = new System.Drawing.Size(50, 15);
+            this.label_buttonats.TabIndex = 27;
+            this.label_buttonats.Text = "ATS";
+            // 
+            // label_reverser
+            // 
+            this.label_reverser.AutoSize = true;
+            this.label_reverser.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_reverser.Location = new System.Drawing.Point(6, 65);
+            this.label_reverser.Margin = new System.Windows.Forms.Padding(3);
+            this.label_reverser.MaximumSize = new System.Drawing.Size(200, 17);
+            this.label_reverser.Name = "label_reverser";
+            this.label_reverser.Size = new System.Drawing.Size(134, 17);
+            this.label_reverser.TabIndex = 33;
+            this.label_reverser.Text = "Reverser: [notch]";
+            // 
+            // Config
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(707, 391);
+            this.ClientSize = new System.Drawing.Size(708, 437);
             this.Controls.Add(this.linkLabel_driver);
             this.Controls.Add(this.label_device);
             this.Controls.Add(this.deviceBox);
@@ -811,5 +902,12 @@ namespace DenshaDeGoInput
 		private System.Windows.Forms.ComboBox buttonldoorBox;
 		private System.Windows.Forms.Label label_buttonldoor;
 		private System.Windows.Forms.LinkLabel linkLabel_driver;
+		private System.Windows.Forms.Label label_a2;
+		private System.Windows.Forms.Label label_ats;
+		private System.Windows.Forms.ComboBox buttonatsBox;
+		private System.Windows.Forms.Label label_buttonats;
+		private System.Windows.Forms.ComboBox buttona2Box;
+		private System.Windows.Forms.Label label_buttona2;
+		private System.Windows.Forms.Label label_reverser;
 	}
 }

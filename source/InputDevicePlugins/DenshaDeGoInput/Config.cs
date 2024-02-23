@@ -76,9 +76,11 @@ namespace DenshaDeGoInput
 				buttondownBox.Items.Add(commandName);
 				buttonleftBox.Items.Add(commandName);
 				buttonrightBox.Items.Add(commandName);
-				buttonpedalBox.Items.Add(commandName);
 				buttonldoorBox.Items.Add(commandName);
 				buttonrdoorBox.Items.Add(commandName);
+				buttonpedalBox.Items.Add(commandName);
+				buttona2Box.Items.Add(commandName);
+				buttonatsBox.Items.Add(commandName);
 			}
 
 			Timer1 = new Timer {Interval = 100};
@@ -120,60 +122,74 @@ namespace DenshaDeGoInput
 		/// </summary>
 		private void UpdateInterface()
 		{
-			if (InputTranslator.IsControllerConnected)
+			switch (InputTranslator.BrakeNotch)
 			{
-				switch (InputTranslator.BrakeNotch)
-				{
-					case InputTranslator.BrakeNotches.Released:
-						label_brake.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_brake"}).Replace("[notch]", Translations.QuickReferences.HandleBrakeNull);
-						break;
-					case InputTranslator.BrakeNotches.Emergency:
-						label_brake.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_brake"}).Replace("[notch]", Translations.QuickReferences.HandleEmergency);
-						break;
-					default:
-						label_brake.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_brake"}).Replace("[notch]", Translations.QuickReferences.HandleBrake + (int)InputTranslator.BrakeNotch);
-						break;
-				}
-
-				switch (InputTranslator.PowerNotch)
-				{
-					case InputTranslator.PowerNotches.N:
-						label_power.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_power"}).Replace("[notch]", Translations.QuickReferences.HandlePowerNull);
-						break;
-					default:
-						label_power.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_power"}).Replace("[notch]", Translations.QuickReferences.HandlePower + (int)InputTranslator.PowerNotch);
-						break;
-				}
-
-				label_select.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
-				label_start.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
-				label_a.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
-				label_b.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
-				label_c.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
-				label_d.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
-				label_up.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
-				label_down.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Down] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
-				label_left.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
-				label_right.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
-				label_pedal.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Pedal] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
-				label_ldoor.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.LDoor] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
-				label_rdoor.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.RDoor] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
-
-				buttonCalibrate.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].RequiresCalibration;
-				label_select.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.Select);
-				label_start.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.Start);
-				label_a.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.A);
-				label_b.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.B);
-				label_c.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.C);
-				label_d.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.D);
-				label_up.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
-				label_down.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
-				label_left.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
-				label_right.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
-				label_pedal.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.Pedal);
-				label_ldoor.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.LDoor);
-				label_rdoor.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.RDoor);
+				case InputTranslator.BrakeNotches.Released:
+					label_brake.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_brake"}).Replace("[notch]", Translations.QuickReferences.HandleBrakeNull);
+					break;
+				case InputTranslator.BrakeNotches.Emergency:
+					label_brake.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_brake"}).Replace("[notch]", Translations.QuickReferences.HandleEmergency);
+					break;
+				default:
+					label_brake.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_brake"}).Replace("[notch]", Translations.QuickReferences.HandleBrake + (int)InputTranslator.BrakeNotch);
+					break;
 			}
+
+			switch (InputTranslator.PowerNotch)
+			{
+				case InputTranslator.PowerNotches.N:
+					label_power.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_power"}).Replace("[notch]", Translations.QuickReferences.HandlePowerNull);
+					break;
+				default:
+					label_power.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_power"}).Replace("[notch]", Translations.QuickReferences.HandlePower + (int)InputTranslator.PowerNotch);
+					break;
+			}
+
+			switch (InputTranslator.ReverserPosition)
+			{
+				case InputTranslator.ReverserPositions.Forward:
+					label_reverser.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "label_reverser" }).Replace("[notch]", Translations.QuickReferences.HandleForward);
+					break;
+				case InputTranslator.ReverserPositions.Backward:
+					label_reverser.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "label_reverser" }).Replace("[notch]", Translations.QuickReferences.HandleBackward);
+					break;
+				default:
+					label_reverser.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "label_reverser" }).Replace("[notch]", Translations.QuickReferences.HandleNeutral);
+					break;
+			}
+
+			label_select.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_start.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_a.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_b.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_c.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_d.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_up.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_down.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Down] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_left.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_right.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_ldoor.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.LDoor] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_rdoor.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.RDoor] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_pedal.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Pedal] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_a2.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A2] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+			label_ats.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.ATS] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
+
+			buttonCalibrate.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].RequiresCalibration;
+			label_select.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.Select);
+			label_start.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.Start);
+			label_a.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.A);
+			label_b.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.B);
+			label_c.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.C);
+			label_d.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.D);
+			label_up.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
+			label_down.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
+			label_left.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
+			label_right.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
+			label_ldoor.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.LDoor);
+			label_rdoor.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.RDoor);
+			label_pedal.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.Pedal);
+			label_a2.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.A2);
+			label_ats.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.ATS);
 		}
 
 		/// <summary>
@@ -203,9 +219,11 @@ namespace DenshaDeGoInput
 			buttondownBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
 			buttonleftBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
 			buttonrightBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
-			buttonpedalBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
 			buttonldoorBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
 			buttonrdoorBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttonpedalBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttona2Box.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
+			buttonatsBox.Items[0] = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "command_none" });
 
 			label_up.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_up"});
 			label_down.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_down"});
@@ -218,10 +236,12 @@ namespace DenshaDeGoInput
 			label_buttondown.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_down"});
 			label_buttonleft.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_left"});
 			label_buttonright.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_right"});
-			label_buttonpedal.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_pedal"});
 			label_buttonldoor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_ldoor"});
 			label_buttonrdoor.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","label_rdoor"});
-		
+			label_buttonpedal.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "label_pedal" });
+			label_buttona2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "label_a2" });
+			label_buttonats.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "denshadego", "label_ats" });
+
 			linkLabel_driver.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","linkLabel_driver"});
 		}
 
@@ -248,9 +268,11 @@ namespace DenshaDeGoInput
 			buttondownBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Down].Command);
 			buttonleftBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Left].Command);
 			buttonrightBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Right].Command);
-			buttonpedalBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Pedal].Command);
 			buttonldoorBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.LDoor].Command);
 			buttonrdoorBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.RDoor].Command);
+			buttonpedalBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Pedal].Command);
+			buttona2Box.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.A2].Command);
+			buttonatsBox.SelectedIndex = Array.IndexOf(commandList, DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.ATS].Command);
 
 
 			// Set checkboxes
@@ -328,11 +350,6 @@ namespace DenshaDeGoInput
 			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Right].Command = buttonrightBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonrightBox.SelectedIndex - 1) : Translations.Command.None;
 		}
 
-		private void buttonpedalBox_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Pedal].Command = buttonpedalBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonpedalBox.SelectedIndex - 1) : Translations.Command.None;
-		}
-
 		private void buttonldoorBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.LDoor].Command = buttonldoorBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonldoorBox.SelectedIndex - 1) : Translations.Command.None;
@@ -341,6 +358,21 @@ namespace DenshaDeGoInput
 		private void buttonrdoorBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.RDoor].Command = buttonrdoorBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonrdoorBox.SelectedIndex - 1) : Translations.Command.None;
+		}
+
+		private void buttonpedalBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.Pedal].Command = buttonpedalBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonpedalBox.SelectedIndex - 1) : Translations.Command.None;
+		}
+
+		private void buttona2Box_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.A2].Command = buttona2Box.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttona2Box.SelectedIndex - 1) : Translations.Command.None;
+		}
+
+		private void buttonatsBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DenshaDeGoInput.ButtonCommands[(int)InputTranslator.ControllerButton.ATS].Command = buttonatsBox.SelectedIndex != 0 ? Translations.CommandInfos.Keys.ElementAt(buttonatsBox.SelectedIndex - 1) : Translations.Command.None;
 		}
 
 		private void convertnotchesCheck_CheckedChanged(object sender, EventArgs e)
