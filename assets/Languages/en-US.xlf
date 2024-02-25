@@ -2654,6 +2654,9 @@
 					<trans-unit id="label_power">
 						<source>Power: [notch]</source>
 					</trans-unit>
+					<trans-unit id="label_reverser">
+						<source>Reverser: [notch]</source>
+					</trans-unit>
 					<trans-unit id="calibration_button">
 						<source>Start calibration</source>
 					</trans-unit>
@@ -2713,6 +2716,12 @@
 					</trans-unit>
 					<trans-unit id="label_rdoor">
 						<source>R DOOR</source>
+					</trans-unit>
+					<trans-unit id="label_a2">
+						<source>A2</source>
+					</trans-unit>
+					<trans-unit id="label_ats">
+						<source>ATS</source>
 					</trans-unit>
 					<trans-unit id="linkLabel_driver">
 						<source>My controller is not detected or does not work properly</source>
