@@ -1388,11 +1388,13 @@ namespace Train.OpenBve
 					{
 						Train.Cars[i].Specs.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
 					}
+					Train.Cars[i].Specs.AccelerationCurveMaximum = MaximumAcceleration;
 				} else {
 					// trailer car
 					Train.Cars[i].EmptyMass = TrailerCarMass;
 					Train.Cars[i].CargoMass = 0;
 					Train.Cars[i].Specs.AccelerationCurves = new AccelerationCurve[] { };
+					Train.Cars[i].Specs.AccelerationCurveMaximum = 0;
 				}
 			}
 			// driver
