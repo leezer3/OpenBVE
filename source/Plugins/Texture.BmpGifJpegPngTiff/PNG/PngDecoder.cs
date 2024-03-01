@@ -162,7 +162,7 @@ namespace Plugin.PNG
 										return false;
 								}
 
-								ScanlineLength = (Width * BytesPerPixel) / ScanlineLength;
+								ScanlineLength = Math.Max(1, (Width * BytesPerPixel) / ScanlineLength); // scanline must be a minumum of 1 byte in length
 
 								pixelBuffer = ColorType != ColorType.Palleted ? new byte[Width * Height * BytesPerPixel] : new byte[Width * Height * 4];
 								
@@ -271,6 +271,7 @@ namespace Plugin.PNG
 											switch (BitDepth)
 											{
 												case 1:
+													int pixelIndex = 0;
 													for (int px = 0; px < scanline.Length; px++)
 													{
 														for (int currentBit = 0; currentBit < 8; currentBit++)
@@ -289,7 +290,9 @@ namespace Plugin.PNG
 																pixelBuffer[pixelsOffset++] = colorPalette.Colors[0].B;
 																pixelBuffer[pixelsOffset++] = colorPalette.Colors[0].A;
 															}
-															if (px >= Width)
+
+															pixelIndex++;
+															if (pixelIndex >= Width)
 															{
 																// A single byte contains 8px, but the image may not be of a multiple of this
 																break;
