@@ -323,7 +323,7 @@ namespace TrainManager.Trains
 			{
 				// available train
 				UpdatePhysicsAndControls(TimeElapsed);
-				SafetySystems.OverspeedDevice.Update();
+				SafetySystems.OverspeedDevice?.Update();
 
 				if (TrainManagerBase.CurrentOptions.Accessibility)
 				{
