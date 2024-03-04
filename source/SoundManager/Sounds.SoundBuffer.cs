@@ -1,4 +1,5 @@
-﻿using OpenBveApi.FunctionScripting;
+﻿using System.Threading;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
 using OpenTK.Audio.OpenAL;
@@ -14,7 +15,7 @@ namespace SoundManager
 		/// <summary>The default effective radius.</summary>
 		internal double Radius;
 		/// <summary>Whether the sound is loaded and the OpenAL sound name is valid.</summary>
-		public bool Loaded;
+		public SoundBufferState Loaded;
 		/// <summary>The OpenAL sound name. Only valid if the sound is loaded.</summary>
 		public int OpenAlBufferName;
 		/// <summary>Backing property for duration</summary>
@@ -24,10 +25,7 @@ namespace SoundManager
 		{
 			get
 			{
-				if (Loaded)
-				{
-					return _duration;
-				}
+				// N.B. This call is actually made on the main thread
 				Load();
 				return _duration;
 			}
@@ -50,7 +48,7 @@ namespace SoundManager
 		{
 			Origin = new PathOrigin(path, host);
 			Radius = radius;
-			Loaded = false;
+			Loaded = SoundBufferState.NotLoaded;
 			OpenAlBufferName = 0;
 			_duration = 0.0;
 			InternalVolumeFactor = 0.5;
@@ -67,7 +65,7 @@ namespace SoundManager
 		{
 			Origin = new RawOrigin(sound);
 			Radius = radius;
-			Loaded = false;
+			Loaded = SoundBufferState.NotLoaded;
 			OpenAlBufferName = 0;
 			_duration = 0.0;
 			InternalVolumeFactor = 0.5;
@@ -81,7 +79,7 @@ namespace SoundManager
 		{
 			Origin = null;
 			Radius = 0.0;
-			Loaded = false;
+			Loaded = SoundBufferState.NotLoaded;
 			OpenAlBufferName = 0;
 			_duration = 0.0;
 			InternalVolumeFactor = 0.5;
@@ -96,7 +94,7 @@ namespace SoundManager
 		{
 			Origin = origin;
 			Radius = 0.0;
-			Loaded = false;
+			Loaded = SoundBufferState.NotLoaded;
 			OpenAlBufferName = 0;
 			_duration = 0.0;
 			InternalVolumeFactor = 0.5;
@@ -112,7 +110,7 @@ namespace SoundManager
 			return new SoundBuffer(this.Origin)
 			{
 				Radius = this.Radius,
-				Loaded = false,
+				Loaded = SoundBufferState.NotLoaded,
 				OpenAlBufferName = 0,
 				_duration = 0.0,
 				InternalVolumeFactor = this.InternalVolumeFactor,
@@ -125,7 +123,7 @@ namespace SoundManager
 		/// <summary>Loads the buffer into OpenAL</summary>
 		public void Load()
 		{
-			if (Loaded)
+			if (Loaded == SoundBufferState.Loaded)
 			{
 				return;
 			}
@@ -143,7 +141,7 @@ namespace SoundManager
 					ALFormat format = sound.BitsPerSample == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
 					AL.BufferData(OpenAlBufferName, format, bytes, bytes.Length, sound.SampleRate);
 					_duration = sound.Duration;
-					Loaded = true;
+					Loaded = SoundBufferState.Loaded;
 					return;
 				}
 			}
