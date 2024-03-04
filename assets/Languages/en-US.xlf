@@ -2233,7 +2233,7 @@
 					<trans-unit id="uncouple_rear">
 						<source>Uncouples the rear coupler for the selected car.</source>
 					</trans-unit>
-					<trans-unit id="switchmenu">
+					<trans-unit id="switch_menu">
 						<source>Shows the change switch menu</source>
 					</trans-unit>
 				</group>

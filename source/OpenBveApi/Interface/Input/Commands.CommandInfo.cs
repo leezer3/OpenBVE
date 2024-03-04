@@ -274,7 +274,7 @@ namespace OpenBveApi.Interface
 			{ Command.UncoupleFront, new CommandInfo(Command.UncoupleFront, CommandType.Digital, "UNCOUPLE_FRONT") },
 			{ Command.UncoupleRear, new CommandInfo(Command.UncoupleRear, CommandType.Digital, "UNCOUPLE_REAR") },
 			// Switch
-			{ Command.SwitchMenu, new CommandInfo(Command.SwitchMenu, CommandType.Digital, "CHANGE_SWITCH") }
+			{ Command.SwitchMenu, new CommandInfo(Command.SwitchMenu, CommandType.Digital, "SWITCH_MENU") }
 		};
 
 		

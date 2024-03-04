@@ -2943,7 +2943,7 @@
 						<source>Uncouples the rear coupler for the selected car.</source>
 						<target>在选定车厢解挂后车</target>
 					</trans-unit>
-					<trans-unit id="switchmenu">
+					<trans-unit id="switch_menu">
 						<source>Shows the change switch menu</source>
 						<target>道岔控制菜单</target>
 					</trans-unit>
