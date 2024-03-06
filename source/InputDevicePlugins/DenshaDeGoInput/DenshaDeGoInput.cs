@@ -494,7 +494,7 @@ namespace DenshaDeGoInput
 
 			for (int i = 0; i < 3; i++)
 			{
-				reverserCommands[i].Command = Translations.Command.ReverserAnyPostion;
+				reverserCommands[i].Command = Translations.Command.ReverserAnyPosition;
 				reverserCommands[i].Option = i - 1;
 			}
 

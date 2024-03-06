@@ -151,7 +151,7 @@ namespace OpenBveApi.Interface
 			{ Command.SingleFullAxis, new CommandInfo(Command.SingleFullAxis, CommandType.AnalogFull, "SINGLE_FULLAXIS") },
 			{ Command.PowerAnyNotch, new CommandInfo(Command.PowerAnyNotch, CommandType.Digital, "POWER_ANY_NOTCH", true) }, 
 			{ Command.BrakeAnyNotch,	new CommandInfo(Command.BrakeAnyNotch, CommandType.Digital, "BRAKE_ANY_NOTCH", true) },
-			{ Command.ReverserAnyPostion, new CommandInfo(Command.ReverserAnyPostion, CommandType.Digital, "REVERSER_ANY_POSITION", true) },
+			{ Command.ReverserAnyPosition, new CommandInfo(Command.ReverserAnyPosition, CommandType.Digital, "REVERSER_ANY_POSITION", true) },
 			{ Command.HoldBrake, new CommandInfo(Command.HoldBrake,CommandType.Digital, "HOLD_BRAKE") },
 			{ Command.ReverserForward, new CommandInfo(Command.ReverserForward, CommandType.Digital, "REVERSER_FORWARD") },
 			{ Command.ReverserBackward, new CommandInfo(Command.ReverserBackward, CommandType.Digital, "REVERSER_BACKWARD") },

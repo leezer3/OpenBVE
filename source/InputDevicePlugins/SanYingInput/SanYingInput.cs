@@ -90,7 +90,7 @@ namespace SanYingInput
 			}
 			for (int i = 16; i < 19; i++)
 			{
-				Controls[i].Command = Translations.Command.ReverserAnyPostion;
+				Controls[i].Command = Translations.Command.ReverserAnyPosition;
 				Controls[i].Option = 17 - i;
 			}
 #pragma warning disable 618

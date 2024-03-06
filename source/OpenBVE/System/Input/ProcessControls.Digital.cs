@@ -786,7 +786,7 @@ namespace OpenBve
 						}
 
 						break;
-					case Translations.Command.ReverserAnyPostion:
+					case Translations.Command.ReverserAnyPosition:
 						TrainManager.PlayerTrain.Handles.Reverser.ApplyState((ReverserPosition)Control.Option);
 						break;
 					case Translations.Command.HoldBrake:
