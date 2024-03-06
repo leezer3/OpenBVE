@@ -2742,7 +2742,7 @@
 						<source>Shows or hides vertex normals</source>
 						<target>Zeigt/Versteckt die Anzeige der Normalenvektoren</target>
 					</trans-unit>
-					<trans-unit id="debug_brake">
+					<trans-unit id="debug_brake_systems">
 						<source>Shows or hides brake system debug output</source>
 						<target>Zeigt/Versteckt die Debug-Anzeige für die Bremsen</target>
 					</trans-unit>

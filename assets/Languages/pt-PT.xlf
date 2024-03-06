@@ -2761,7 +2761,7 @@
 						<source>Shows or hides vertex normals</source>
 						<target>Mostra ou esconde a posição dos "vértices"</target>
 					</trans-unit>
-					<trans-unit id="debug_brake">
+					<trans-unit id="debug_brake_systems">
 						<source>Shows or hides brake system debug output</source>
 						<target>Mostra ou esconde o estado do sistema de travagem</target>
 					</trans-unit>

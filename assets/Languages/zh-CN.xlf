@@ -2831,7 +2831,7 @@
 						<source>Shows or hides vertex normals</source>
 						<target>开关顶点法线</target>
 					</trans-unit>
-					<trans-unit id="debug_brake">
+					<trans-unit id="debug_brake_systems">
 						<source>Shows or hides brake system debug output</source>
 						<target>开关制动调试信息</target>
 					</trans-unit>

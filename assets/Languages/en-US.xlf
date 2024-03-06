@@ -2149,7 +2149,7 @@
 					<trans-unit id="debug_normals">
 						<source>Shows or hides vertex normals</source>
 					</trans-unit>
-					<trans-unit id="debug_brake">
+					<trans-unit id="debug_brake_systems">
 						<source>Shows or hides brake system debug output</source>
 					</trans-unit>
 					<trans-unit id="debug_ats">

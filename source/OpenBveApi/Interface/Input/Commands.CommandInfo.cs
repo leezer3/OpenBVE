@@ -259,7 +259,7 @@ namespace OpenBveApi.Interface
 			{ Command.MiscCPUMode, new CommandInfo(Command.MiscCPUMode, CommandType.Digital, "MISC_CPUMODE") },
 			{ Command.DebugWireframe, new CommandInfo(Command.DebugWireframe, CommandType.Digital, "DEBUG_WIREFRAME") },
 			{ Command.DebugNormals, new CommandInfo(Command.DebugNormals, CommandType.Digital, "DEBUG_NORMALS") },
-			{ Command.DebugBrakeSystems, new CommandInfo(Command.DebugBrakeSystems, CommandType.Digital, "DEBUG_BRAKE") },
+			{ Command.DebugBrakeSystems, new CommandInfo(Command.DebugBrakeSystems, CommandType.Digital, "DEBUG_BRAKE_SYSTEMS") },
 			{ Command.DebugATS, new CommandInfo(Command.DebugATS, CommandType.Digital, "DEBUG_ATS") },
 			{ Command.DebugTouchMode, new CommandInfo(Command.DebugTouchMode, CommandType.Digital, "DEBUG_TOUCH_MODE") },
 			{ Command.RouteInformation, new CommandInfo(Command.RouteInformation, CommandType.Digital, "ROUTE_INFORMATION") },
