@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Math;
+using OpenBveApi.Math;
 
 namespace OpenBveApi.Routes
 {
@@ -37,6 +37,8 @@ namespace OpenBveApi.Routes
 		public GeneralEvent[] Events;
 		/// <summary>Whether the rail is driveable</summary>
 		public bool IsDriveable;
+		/// <summary>Whether the element contains a switch</summary>
+		public bool ContainsSwitch;
 
 		/// <summary>Creates a new track element</summary>
 		/// <param name="StartingTrackPosition">The starting position (relative to zero)</param>
@@ -58,6 +60,7 @@ namespace OpenBveApi.Routes
 			this.WorldSide = Vector3.Right;
 			this.Events = new GeneralEvent[] { };
 			this.IsDriveable = false;
+			this.ContainsSwitch = false;
 		}
 	}
 }

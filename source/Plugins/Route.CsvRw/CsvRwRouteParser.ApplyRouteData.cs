@@ -592,6 +592,7 @@ namespace CsvRwRouteParser
 								l = CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events.Length;
 								Array.Resize(ref CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events, l + 1);
 								CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events[l] = new TrailingSwitchEvent(newSwitch, j, -1, CurrentRoute,  Data.Blocks[i].Switches[j].SpringReturn);
+								CurrentRoute.Tracks[j].Elements[n].ContainsSwitch = true;
 							}
 							else
 							{
@@ -611,6 +612,7 @@ namespace CsvRwRouteParser
 								Array.Resize(ref CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events, l + 2);
 								CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events[l] = new SwitchEvent(newSwitch, -1, CurrentRoute.Tracks[j].Elements[n].StartingTrackPosition, CurrentRoute);
 								CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events[l + 1] = new PointSoundEvent();
+								CurrentRoute.Tracks[j].Elements[n].ContainsSwitch = true;
 							}
 						}
 					}
