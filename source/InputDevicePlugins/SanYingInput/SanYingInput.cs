@@ -184,23 +184,17 @@ namespace SanYingInput
 
 		protected virtual void OnKeyDown(InputEventArgs e)
 		{
-			if (KeyDown != null)
-			{
-				KeyDown(this, e);
-			}
+			KeyDown?.Invoke(this, e);
 		}
 
 		protected virtual void OnKeyUp(InputEventArgs e)
 		{
-			if (KeyUp != null)
-			{
-				KeyUp(this, e);
-			}
+			KeyUp?.Invoke(this, e);
 		}
 
 		private void setSwitchState()
 		{
-			if (JoystickApi.currentDevice == -1)
+			if (JoystickApi.CurrentDevice == -1)
 			{
 				return;
 			}

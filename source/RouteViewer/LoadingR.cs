@@ -169,10 +169,6 @@ namespace RouteViewer {
 			Complete = false;
 			CurrentRouteFile = RouteFile;
 			CurrentRouteEncoding = RouteEncoding;
-
-			//Set the route and train folders in the info class
-			// ReSharper disable once UnusedVariable
-			Task loadThreaded = LoadThreaded();
 		}
 
 		private static void LoadEverythingThreaded() {

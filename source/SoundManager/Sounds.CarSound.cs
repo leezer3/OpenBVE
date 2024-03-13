@@ -45,8 +45,7 @@ namespace SoundManager
 				}
 				return;
 			}
-			SoundHandle handle;
-			currentHost.RegisterSound(absolutePathTosoundFile, radius, out handle);
+			currentHost.RegisterSound(absolutePathTosoundFile, radius, out SoundHandle handle);
 			Buffer = handle as SoundBuffer;
 			this.Position = position;
 		}

@@ -32,9 +32,7 @@ namespace ObjectViewer
 
 		private void CloseButton_Click(object sender, EventArgs e)
 		{
-			InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
 			int previousAntialasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
-			int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
 
 			//Interpolation mode
 			switch (InterpolationMode.SelectedIndex)

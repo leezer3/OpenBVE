@@ -377,8 +377,7 @@ namespace SoundManager
 		{
 			foreach (MicSource source in MicSources)
 			{
-				int state;
-				AL.GetSource(source.OpenAlSourceName, ALGetSourcei.BuffersProcessed, out state);
+				AL.GetSource(source.OpenAlSourceName, ALGetSourcei.BuffersProcessed, out int state);
 				UnloadMicBuffers(source.OpenAlSourceName, state);
 			}
 		}

@@ -130,7 +130,7 @@ namespace AssimpNET.Obj
 		Matrix4D Transformation;
 #pragma warning restore 169
 		//! All sub-objects referenced by this object
-		List<WavefrontObject> SubObjects = new List<WavefrontObject>();
+		readonly List<WavefrontObject> SubObjects = new List<WavefrontObject>();
 		/// Assigned meshes
 		public List<uint> Meshes = new List<uint>();
 		public WavefrontObject(string objName)

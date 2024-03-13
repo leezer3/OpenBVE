@@ -131,8 +131,7 @@ namespace SoundManager
 			{
 				return;
 			}
-			Sound sound;
-			if (Origin.GetSound(out sound))
+			if (Origin.GetSound(out Sound sound))
 			{
 				if (sound.BitsPerSample == 8 | sound.BitsPerSample == 16)
 				{

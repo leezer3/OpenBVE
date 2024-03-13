@@ -501,15 +501,15 @@ namespace OpenBve
 							switch (currentPackage.PackageType)
 							{
 								case PackageType.Route:
-									DatabaseFunctions.cleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref s);
+									DatabaseFunctions.CleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref s);
 									Database.currentDatabase.InstalledRoutes.Remove(currentPackage);
 									break;
 								case PackageType.Train:
-									DatabaseFunctions.cleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref s);
+									DatabaseFunctions.CleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref s);
 									Database.currentDatabase.InstalledTrains.Remove(currentPackage);
 									break;
 								case PackageType.Other:
-									DatabaseFunctions.cleanDirectory(Program.FileSystem.OtherInstallationDirectory, ref s);
+									DatabaseFunctions.CleanDirectory(Program.FileSystem.OtherInstallationDirectory, ref s);
 									Database.currentDatabase.InstalledOther.Remove(currentPackage);
 									break;
 							}

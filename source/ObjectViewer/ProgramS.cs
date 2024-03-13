@@ -74,7 +74,6 @@ namespace ObjectViewer {
 	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 	        Options.LoadOptions();
 	        Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
-	        Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
 	        
 	        
 	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
