@@ -1,6 +1,6 @@
 using System;
 using System.Globalization;
-using OpenBveApi;
+using System.IO;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Input;
 using OpenBveApi.Interface;
@@ -8,6 +8,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
+using Path = OpenBveApi.Path;
 
 namespace Plugin
 {
@@ -120,7 +121,7 @@ namespace Plugin
 											{
 												Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 											}
-											AnimatedObject a = new AnimatedObject(currentHost);
+											AnimatedObject a = new AnimatedObject(currentHost, FileName);
 											ObjectState aos = new ObjectState
 											{
 												Prototype = s,
@@ -167,7 +168,7 @@ namespace Plugin
 								{
 									Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 								}
-								Result.Objects[ObjectCount] = new AnimatedObject(currentHost)
+								Result.Objects[ObjectCount] = new AnimatedObject(currentHost, FileName)
 								{
 									CurrentState = -1,
 									TranslateXDirection = Vector3.Right,

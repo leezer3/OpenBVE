@@ -274,7 +274,7 @@ namespace Plugin
 								obj[obj.Length - 1] = Object;
 								int aL = Result.Objects.Length;
 								Array.Resize(ref Result.Objects, aL + 1);
-								AnimatedObject a = new AnimatedObject(Plugin.currentHost);
+								AnimatedObject a = new AnimatedObject(Plugin.currentHost, FileName);
 								ObjectState aos = new ObjectState
 								{
 									Prototype = Object,
@@ -311,7 +311,7 @@ namespace Plugin
 								}
 								else
 								{
-									Result.Objects[o] = new AnimatedObject(Plugin.currentHost);
+									Result.Objects[o] = new AnimatedObject(Plugin.currentHost, FileName);
 								}
 							}
 						}
@@ -319,7 +319,7 @@ namespace Plugin
 					if (staticObject != null)
 					{
 						Array.Resize(ref Result.Objects, Result.Objects.Length + 1);
-						AnimatedObject a = new AnimatedObject(Plugin.currentHost);
+						AnimatedObject a = new AnimatedObject(Plugin.currentHost, FileName);
 						ObjectState aos = new ObjectState(staticObject);
 						a.States = new [] { aos };
 						Result.Objects[Result.Objects.Length - 1] = a;
