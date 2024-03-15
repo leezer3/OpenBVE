@@ -950,7 +950,7 @@ namespace CsvRwRouteParser
 							// limit
 							for (int k = 0; k < Data.Blocks[i].Limits.Length; k++)
 							{
-								if (j == Data.Blocks[i].Limits[k].RailIndex)
+								if (railKey == Data.Blocks[i].Limits[k].RailIndex)
 								{
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Limits[k].TrackPosition);
 									Data.Blocks[i].Limits[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.UnitOfSpeed);

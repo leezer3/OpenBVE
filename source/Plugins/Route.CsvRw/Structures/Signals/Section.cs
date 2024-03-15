@@ -6,19 +6,17 @@ using RouteManager2.SignalManager;
 
 namespace CsvRwRouteParser
 {
-	internal class Section
+	internal class Section : AbstractStructure
 	{
 
-		internal Section(double trackPosition, int[] aspects, int departureStationIndex, SectionType type, bool invisible = false)
+		internal Section(double trackPosition, int[] aspects, int departureStationIndex, SectionType type, bool invisible = false) : base(trackPosition)
 		{
-			TrackPosition = trackPosition;
 			Aspects = aspects;
 			DepartureStationIndex = departureStationIndex;
 			Type = type;
 			Invisible = invisible;
 		}
 
-		private readonly double TrackPosition;
 		private readonly int[] Aspects;
 		private readonly int DepartureStationIndex;
 		private readonly bool Invisible;
