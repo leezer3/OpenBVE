@@ -151,7 +151,7 @@ namespace OpenBveApi.Interface
 			{ Command.SingleFullAxis, new CommandInfo(Command.SingleFullAxis, CommandType.AnalogFull, "SINGLE_FULLAXIS") },
 			{ Command.PowerAnyNotch, new CommandInfo(Command.PowerAnyNotch, CommandType.Digital, "POWER_ANY_NOTCH", true) }, 
 			{ Command.BrakeAnyNotch,	new CommandInfo(Command.BrakeAnyNotch, CommandType.Digital, "BRAKE_ANY_NOTCH", true) },
-			{ Command.ReverserAnyPostion, new CommandInfo(Command.ReverserAnyPostion, CommandType.Digital, "REVERSER_ANY_POSITION", true) },
+			{ Command.ReverserAnyPosition, new CommandInfo(Command.ReverserAnyPosition, CommandType.Digital, "REVERSER_ANY_POSITION", true) },
 			{ Command.HoldBrake, new CommandInfo(Command.HoldBrake,CommandType.Digital, "HOLD_BRAKE") },
 			{ Command.ReverserForward, new CommandInfo(Command.ReverserForward, CommandType.Digital, "REVERSER_FORWARD") },
 			{ Command.ReverserBackward, new CommandInfo(Command.ReverserBackward, CommandType.Digital, "REVERSER_BACKWARD") },
@@ -259,7 +259,7 @@ namespace OpenBveApi.Interface
 			{ Command.MiscCPUMode, new CommandInfo(Command.MiscCPUMode, CommandType.Digital, "MISC_CPUMODE") },
 			{ Command.DebugWireframe, new CommandInfo(Command.DebugWireframe, CommandType.Digital, "DEBUG_WIREFRAME") },
 			{ Command.DebugNormals, new CommandInfo(Command.DebugNormals, CommandType.Digital, "DEBUG_NORMALS") },
-			{ Command.DebugBrakeSystems, new CommandInfo(Command.DebugBrakeSystems, CommandType.Digital, "DEBUG_BRAKE") },
+			{ Command.DebugBrakeSystems, new CommandInfo(Command.DebugBrakeSystems, CommandType.Digital, "DEBUG_BRAKE_SYSTEMS") },
 			{ Command.DebugATS, new CommandInfo(Command.DebugATS, CommandType.Digital, "DEBUG_ATS") },
 			{ Command.DebugTouchMode, new CommandInfo(Command.DebugTouchMode, CommandType.Digital, "DEBUG_TOUCH_MODE") },
 			{ Command.RouteInformation, new CommandInfo(Command.RouteInformation, CommandType.Digital, "ROUTE_INFORMATION") },
@@ -274,7 +274,7 @@ namespace OpenBveApi.Interface
 			{ Command.UncoupleFront, new CommandInfo(Command.UncoupleFront, CommandType.Digital, "UNCOUPLE_FRONT") },
 			{ Command.UncoupleRear, new CommandInfo(Command.UncoupleRear, CommandType.Digital, "UNCOUPLE_REAR") },
 			// Switch
-			{ Command.SwitchMenu, new CommandInfo(Command.SwitchMenu, CommandType.Digital, "CHANGE_SWITCH") }
+			{ Command.SwitchMenu, new CommandInfo(Command.SwitchMenu, CommandType.Digital, "SWITCH_MENU") }
 		};
 
 		

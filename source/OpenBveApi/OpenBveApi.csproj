@@ -206,7 +206,9 @@
     <Compile Include="Graphics\TextAlignment.cs" />
     <Compile Include="Graphics\TransparencyModes.cs" />
     <Compile Include="System\GameMode.cs" />
-    <Compile Include="System\Hosts.cs" />
+    <Compile Include="System\Hosts\HostApplication.cs" />
+    <Compile Include="System\Hosts\HostPlatform.cs" />
+    <Compile Include="System\Hosts\HostInterface.cs" />
     <Compile Include="Interface\Input\Commands.CommandInfo.cs" />
     <Compile Include="Interface\Input\Commands.cs" />
     <Compile Include="Interface\Translations\InterfaceStrings.cs" />
@@ -217,6 +219,7 @@
     <Compile Include="Objects\Glow.AttenuationMode.cs" />
     <Compile Include="Objects\ObjectType.cs" />
     <Compile Include="System\Hosts.Plugins.cs" />
+    <Compile Include="System\Hosts\ProblemType.cs" />
     <Compile Include="System\Interop.cs" />
     <Compile Include="System\SimulationState.cs" />
     <Compile Include="System\TextEncoding.cs" />

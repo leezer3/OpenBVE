@@ -14,6 +14,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenTK.Graphics.OpenGL;
 
 namespace ObjectViewer.Graphics
@@ -389,6 +390,7 @@ namespace ObjectViewer.Graphics
 		{
 			Screen.Width = CurrentOptions.WindowWidth;
 			Screen.Height = CurrentOptions.WindowHeight;
+			CameraTrackFollower = new TrackFollower(CurrentHost);
 		}
 	}
 }

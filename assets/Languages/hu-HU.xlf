@@ -2748,7 +2748,7 @@
 						<source>Shows or hides vertex normals</source>
 						<target>Normálvektorok megjelenítése/elrejtése</target>
 					</trans-unit>
-					<trans-unit id="debug_brake">
+					<trans-unit id="debug_brake_systems">
 						<source>Shows or hides brake system debug output</source>
 						<target>A fékrendszer hibakereső adatainak megjelenítése/elrejtése</target>
 					</trans-unit>

@@ -213,7 +213,7 @@ namespace SanYingInput
 		{
 			ConfigFormSaveData saveData = new ConfigFormSaveData();
 
-			if (JoystickApi.currentDevice != -1)
+			if (JoystickApi.CurrentDevice != -1)
 			{
 				saveData.guid = JoystickApi.GetGuid();
 			}
@@ -428,7 +428,7 @@ namespace SanYingInput
 		{
 			JoystickApi.Update();
 
-			if (JoystickApi.currentDevice != -1)
+			if (JoystickApi.CurrentDevice != -1)
 			{
 				var buttonsState = JoystickApi.GetButtonsState();
 				var axises = JoystickApi.GetAxises();

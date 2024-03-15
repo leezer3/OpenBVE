@@ -82,12 +82,13 @@ namespace RouteManager2.Events
 
 			switch (trackFollower.TriggerType)
 			{
+				case EventTriggerType.FrontBogieAxle:
 				case EventTriggerType.FrontCarFrontAxle:
 				case EventTriggerType.OtherCarFrontAxle:
-					if (derailments == false || currentRoute.Switches[Index].CurrentlySetTrack == trackFollower.Car.FrontAxle.Follower.TrackIndex)
+					if (derailments == false || currentRoute.Switches[Index].CurrentlySetTrack == trackFollower.TrackIndex)
 					{
-						trackFollower.Car.FrontAxle.Follower.TrackIndex = toeRail;
-						trackFollower.Car.FrontAxle.Follower.UpdateWorldCoordinates(false);
+						trackFollower.TrackIndex = toeRail;
+						trackFollower.UpdateWorldCoordinates(false);
 					}
 					else
 					{
@@ -95,12 +96,13 @@ namespace RouteManager2.Events
 					}
 
 					break;
+				case EventTriggerType.RearBogieAxle:
 				case EventTriggerType.RearCarRearAxle:
 				case EventTriggerType.OtherCarRearAxle:
-					if (derailments == false || currentRoute.Switches[Index].CurrentlySetTrack == trackFollower.Car.RearAxle.Follower.TrackIndex)
+					if (derailments == false || currentRoute.Switches[Index].CurrentlySetTrack == trackFollower.TrackIndex)
 					{
-						trackFollower.Car.RearAxle.Follower.TrackIndex = toeRail;
-						trackFollower.Car.RearAxle.Follower.UpdateWorldCoordinates(false);
+						trackFollower.TrackIndex = toeRail;
+						trackFollower.UpdateWorldCoordinates(false);
 					}
 					else
 					{

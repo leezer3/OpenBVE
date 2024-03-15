@@ -16,60 +16,6 @@ using OpenBveApi.World;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBveApi.Hosts {
-
-	/* ----------------------------------------
-	 * TODO: This part of the API is unstable.
-	 *       Modifications can be made at will.
-	 * ---------------------------------------- */
-
-	/// <summary>Represents the type of problem that is reported to the host.</summary>
-	public enum ProblemType {
-		/// <summary>Indicates that a file could not be found.</summary>
-		FileNotFound = 1,
-		/// <summary>Indicates that a directory could not be found.</summary>
-		DirectoryNotFound = 2,
-		/// <summary>Indicates that a file or directory could not be found.</summary>
-		PathNotFound = 3,
-		/// <summary>Indicates invalid data in a file or directory.</summary>
-		InvalidData = 4,
-		/// <summary>Indicates an invalid operation.</summary>
-		InvalidOperation = 5,
-		/// <summary>Indicates an unexpected exception.</summary>
-		UnexpectedException = 6,
-		/// <summary>Indicates that the data was recognised, but is not supported</summary>
-		UnsupportedData,
-	}
-	/// <summary>The host application</summary>
-	public enum HostApplication
-	{
-		/// <summary>The main game</summary>
-		OpenBve = 0,
-		/// <summary>Route Viewer</summary>
-		RouteViewer = 1,
-		/// <summary>Object Viewer</summary>
-		ObjectViewer = 2,
-		/// <summary>Train Editor</summary>
-		TrainEditor = 3,
-		/// <summary>Train Editor 2</summary>
-		TrainEditor2 = 4
-	}
-
-	/// <summary>The host platform</summary>
-	public enum HostPlatform
-	{
-		/// <summary>Microsoft Windows and compatabiles</summary>
-		MicrosoftWindows = 0,
-		/// <summary>Linux</summary>
-		GNULinux = 1,
-		/// <summary>Mac OS-X</summary>
-		AppleOSX = 2,
-		/// <summary>FreeBSD</summary>
-		FreeBSD = 3,
-		/// <summary>Emulated Windows</summary>
-		WINE = 4
-
-	}
-
 	/// <summary>Represents the host application and functionality it exposes.</summary>
 	public abstract partial class HostInterface
 	{
@@ -732,7 +678,9 @@ namespace OpenBveApi.Hosts {
 		public const string pipeName = @"pipename";
 
 		/// <summary>Base addresses for the hosted service.</summary>
+#pragma warning disable IDE1006
 		public static Uri baseAddress => new Uri(pipeBaseAddress);
+#pragma warning restore IDE1006
 
 		/// <summary>Complete address of the named pipe endpoint.</summary>
 		public static Uri Win32PluginHostEndpointAddress => new Uri(pipeBaseAddress + '/' + pipeName);

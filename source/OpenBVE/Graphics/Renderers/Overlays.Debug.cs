@@ -200,6 +200,8 @@ namespace OpenBve.Graphics.Renderers
 				"curve cant: " + (1000.0 * Math.Abs(Program.Renderer.CameraTrackFollower.CurveCant)).ToString("0.00", Culture) + " mm" + (Program.Renderer.CameraTrackFollower.CurveCant < 0.0 ? " (left)" : Program.Renderer.CameraTrackFollower.CurveCant > 0.0 ? " (right)" : ""),
 				"pitch: " + Program.Renderer.CameraTrackFollower.Pitch.ToString("0.00", Culture),
 				"current anchor car: " + TrainManager.PlayerTrain.CameraCar,
+				"anchor car track index (front axle): " + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].FrontAxle.Follower.TrackIndex,
+				"anchor car track index (rear axle): " + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].RearAxle.Follower.TrackIndex,
 				"",
 				"=sound",
 				"sound buffers: " + soundBuffersLoaded.ToString(Culture) + " loaded / " + soundBuffersRegistered.ToString(Culture) + " total",

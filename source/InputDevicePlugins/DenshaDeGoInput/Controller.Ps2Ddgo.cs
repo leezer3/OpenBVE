@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020-2021, Marc Riera, The OpenBVE Project
+//Copyright (c) 2020-2024, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -29,9 +29,9 @@ using OpenTK.Input;
 namespace DenshaDeGoInput
 {
 	/// <summary>
-	/// Class representing a PlayStation 2 controller
+	/// Class representing a PlayStation 2 Densha de GO! controller
 	/// </summary>
-	internal class Ps2Controller : Controller
+	internal class Ps2DdgoController : Controller
 	{
 		/// <summary>A cached list of supported connected controllers.</summary>
 		private static readonly Dictionary<Guid, Controller> cachedControllers = new Dictionary<Guid, Controller>();
@@ -39,11 +39,11 @@ namespace DenshaDeGoInput
 		private static readonly string[] controllerIds =
 		{
 			// TCPP-20009 (Type II)
-			"0ae4:0004",
+			"0ae4:0004:0000",
 			// TCPP-20011 (Shinkansen)
-			"0ae4:0005",
+			"0ae4:0005:0000",
 			// TCPP-20014 (Ryojouhen)
-			"0ae4:0007"
+			"0ae4:0007:0000"
 		};
 
 		/// <summary>The min/max byte for each brake notch, from Released to Emergency. Each notch consists of two bytes.</summary>
@@ -62,13 +62,12 @@ namespace DenshaDeGoInput
 		private byte[] outputBuffer;
 
 		/// <summary>
-		/// Initializes an Unbalance controller.
+		/// Initializes PS2 Densha de GO! controller.
 		/// </summary>
-		internal Ps2Controller(ControllerButtons buttons, byte[] buttonBytes, byte[] brake, byte[] power)
+		internal Ps2DdgoController(ControllerButtons buttons, byte[] buttonBytes, byte[] brake, byte[] power)
 		{
 			ControllerName = string.Empty;
 			IsConnected = false;
-			RequiresCalibration = false;
 			BrakeNotches = brake.Length / 2 - 2;
 			PowerNotches = power.Length / 2 - 1;
 			brakeBytes = brake;
@@ -233,11 +232,12 @@ namespace DenshaDeGoInput
 			foreach (KeyValuePair<Guid, LibUsb.UsbController> usbController in LibUsb.GetSupportedControllers())
 			{
 				Guid guid = usbController.Key;
-				ControllerID id = new ControllerID(guid);
-				string name = usbController.Value.ControllerName;
 
-				if (!cachedControllers.ContainsKey(guid))
+				if (!cachedControllers.ContainsKey(guid) && usbController.Value.IsConnected)
 				{
+					ControllerID id = new ControllerID(usbController.Value.VendorID, usbController.Value.ProductID, usbController.Value.Revision);
+					string name = usbController.Value.ControllerName;
+
 					// TCPP-20009 (Type II)
 					if (id.Type == ControllerType.PS2TypeII)
 					{
@@ -245,7 +245,7 @@ namespace DenshaDeGoInput
 						byte[] buttonBytes = { 0x10, 0x20, 0x2, 0x1, 0x4, 0x8, 0x0, 0x0 };
 						byte[] brakeBytes = { 0x79, 0x79, 0x8A, 0x8A, 0x94, 0x94, 0x9A, 0x9A, 0xA2, 0xA2, 0xA8, 0xA8, 0xAF, 0xAF, 0xB2, 0xB2, 0xB5, 0xB5, 0xB9, 0xB9 };
 						byte[] powerBytes = { 0x81, 0x81, 0x6D, 0x6D, 0x54, 0x54, 0x3F, 0x3F, 0x21, 0x21, 0x00, 0x00 };
-						Ps2Controller newcontroller = new Ps2Controller(buttons, buttonBytes, brakeBytes, powerBytes)
+						Ps2DdgoController newcontroller = new Ps2DdgoController(buttons, buttonBytes, brakeBytes, powerBytes)
 						{
 							// 6 bytes for input, 2 for output
 							Guid = guid,
@@ -263,7 +263,7 @@ namespace DenshaDeGoInput
 						byte[] buttonBytes = { 0x10, 0x20, 0x8, 0x4, 0x2, 0x1, 0x0, 0x0 };
 						byte[] brakeBytes = { 0x1C, 0x1C, 0x38, 0x38, 0x54, 0x54, 0x70, 0x70, 0x8B, 0x8B, 0xA7, 0xA7, 0xC3, 0xC3, 0xDF, 0xDF, 0xFB, 0xFB };
 						byte[] powerBytes = { 0x12, 0x12, 0x24, 0x24, 0x36, 0x36, 0x48, 0x48, 0x5A, 0x5A, 0x6C, 0x6C, 0x7E, 0x7E, 0x90, 0x90, 0xA2, 0xA2, 0xB4, 0xB4, 0xC6, 0xC6, 0xD7, 0xD7, 0xE9, 0xE9, 0xFB, 0xFB };
-						Ps2Controller newcontroller = new Ps2Controller(buttons, buttonBytes, brakeBytes, powerBytes)
+						Ps2DdgoController newcontroller = new Ps2DdgoController(buttons, buttonBytes, brakeBytes, powerBytes)
 						{
 							// 6 bytes for input, 8 for output
 							Guid = guid,
@@ -281,7 +281,7 @@ namespace DenshaDeGoInput
 						byte[] buttonBytes = { 0x20, 0x40, 0x4, 0x2, 0x1, 0x0, 0x10, 0x8 };
 						byte[] brakeBytes = { 0x23, 0x2C, 0x2D, 0x3E, 0x3F, 0x4E, 0x4F, 0x63, 0x64, 0x8A, 0x8B, 0xB0, 0xB1, 0xD4, 0xD5, 0xDF };
 						byte[] powerBytes = { 0x0, 0x0, 0x3C, 0x3C, 0x78, 0x78, 0xB4, 0xB4, 0xF0, 0xF0 };
-						Ps2Controller newcontroller = new Ps2Controller(buttons, buttonBytes, brakeBytes, powerBytes)
+						Ps2DdgoController newcontroller = new Ps2DdgoController(buttons, buttonBytes, brakeBytes, powerBytes)
 						{
 							// 8 bytes for input, no output
 							Guid = guid,
@@ -293,10 +293,11 @@ namespace DenshaDeGoInput
 						cachedControllers.Add(guid, newcontroller);
 					}
 				}
-
-				// Update connection status and name
-				cachedControllers[guid].IsConnected = usbController.Value.IsConnected;
-				cachedControllers[guid].ControllerName = name;
+				// Update connection status
+				if (cachedControllers.ContainsKey(guid))
+				{
+					cachedControllers[guid].IsConnected = usbController.Value.IsConnected;
+				}
 			}
 			return cachedControllers;
 		}

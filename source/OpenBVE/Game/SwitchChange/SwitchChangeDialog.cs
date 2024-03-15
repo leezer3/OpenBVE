@@ -54,8 +54,6 @@ namespace OpenBve
 		private Guid selectedSwitch = Guid.Empty;
 		/// <summary>The list of available switches</summary>
 		internal Dictionary<Guid, Vector2> AvailableSwitches;
-		/// <summary>Stores the previous output mode of the renderer</summary>
-		private OutputMode previousOutputMode;
 
 		internal SwitchChangeDialog()
 		{
@@ -65,8 +63,8 @@ namespace OpenBve
 
 		internal void Show()
 		{
+			Program.currentGameWindow.CursorVisible = true;
 			Program.Renderer.SetCursor(MouseCursor.Default); // as we may have hidden the cursor through inactivity or be over a touch control when triggering
-			previousOutputMode = Program.Renderer.CurrentOutputMode;
 			Program.Renderer.CurrentOutputMode = OutputMode.None;
 			MapPicturebox.Size = new Vector2(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height); // as size may have changed between fullscreen etc.
 			CloseButton.Location = new Vector2(Program.Renderer.Screen.Width * 0.9, Program.Renderer.Screen.Height * 0.9);
@@ -130,6 +128,7 @@ namespace OpenBve
 		/// <param name="y">The screen-relative y coordinate of the down event</param>
 		internal void ProcessMouseDown(int x, int y)
 		{
+			Program.currentGameWindow.CursorVisible = true;
 			ProcessMouseMove(x, y);
 			if (selectedSwitch != Guid.Empty)
 			{
@@ -144,8 +143,8 @@ namespace OpenBve
 		internal void Close(object sender, EventArgs e)
 		{
 			TextureManager.UnloadTexture(ref MapPicturebox.Texture);
-			Program.Renderer.CurrentInterface = InterfaceType.Normal;
-			Program.Renderer.CurrentOutputMode = previousOutputMode;
+			Program.Renderer.CurrentInterface = Program.Renderer.PreviousInterface;
+			Program.Renderer.CurrentOutputMode = Program.Renderer.PreviousOutputMode;
 		}
 	}
 }

@@ -1014,7 +1014,7 @@ namespace MechanikRouteParser
 					string path = Path.CombineFile(Path.GetDirectoryName(tDat), s);
 					if (File.Exists(path))
 					{
-						MechanikTexture t = new MechanikTexture(path, s);
+						MechanikTexture t = new MechanikTexture(path);
 						AvailableTextures.Add(k, t);
 					}
 

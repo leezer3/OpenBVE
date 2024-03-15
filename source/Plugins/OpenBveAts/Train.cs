@@ -240,7 +240,7 @@ namespace OpenBveAts {
 					this.Panel[101] = 1;
 				}
 				// --- sound ---
-				this.Sounds.Elapse(data);
+				this.Sounds.Elapse();
 			}
 		}
 		

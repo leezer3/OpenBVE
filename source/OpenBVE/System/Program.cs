@@ -139,8 +139,8 @@ namespace OpenBve {
 			if ((CurrentHost.Platform == HostPlatform.GNULinux || CurrentHost.Platform == HostPlatform.FreeBSD) && (getuid() == 0 || geteuid() == 0))
 			{
 				MessageBox.Show(
-					"You are currently running as the root user, or via the sudo command." + Environment.NewLine +
-					"This is a bad idea, please dont!", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					@"You are currently running as the root user, or via the sudo command." + Environment.NewLine +
+					@"This is a bad idea, please dont!", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
 
 
@@ -190,7 +190,7 @@ namespace OpenBve {
 				{
 					if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(result.RouteFile))
 					{
-						object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
+						object Route = Program.CurrentRoute; //must cast to allow us to use the ref keyword.
 						Program.CurrentHost.Plugins[i].Route.LoadRoute(result.RouteFile, result.RouteEncoding, null, null, null, true, ref Route);
 						Program.CurrentRoute = (CurrentRoute) Route;
 						Program.Renderer.Lighting.OptionAmbientColor = CurrentRoute.Atmosphere.AmbientLightColor;

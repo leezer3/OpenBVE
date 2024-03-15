@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -54,7 +55,20 @@ namespace OpenBve {
 
 		public override void AddMessage(object Message)
 		{
-			MessageManager.AddMessage((AbstractMessage)Message);
+			if (Message is string message)
+			{
+				MessageManager.AddMessage(message, MessageDependency.None, GameMode.Expert, MessageColor.Black, InGameTime + 10, null);
+			}
+			else if(Message is AbstractMessage abstractMessage)
+			{
+				MessageManager.AddMessage(abstractMessage);	
+			}
+			else
+			{
+				// This is most probably a buggy plugin or something, but log the trace
+				StackTrace trace = new StackTrace(true);
+				Program.FileSystem.AppendToLogFile("Attempted to add an unrecognised message type from " + trace);
+			}
 		}
 
 		public override void AddMessage(string Message, object MessageDependancy, GameMode Mode, MessageColor MessageColor, double MessageTimeOut, string Key)

@@ -155,6 +155,7 @@ namespace Train.OpenBve
 						else
 						{
 							Train.Cars[Car].Specs.AccelerationCurves = new AccelerationCurve[] { };
+							Train.Cars[Car].Specs.AccelerationCurveMaximum = 0;
 							Train.Cars[Car].Specs.IsMotorCar = false;
 						}
 						break;

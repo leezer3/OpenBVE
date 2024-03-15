@@ -114,8 +114,29 @@ namespace CsvRwRouteParser
 						return true;
 					}
 				}
+				//Wood Lane (2010) looks for BRSigs inside the NWM folder
+				//Later versions don't have these here, so let's try for the 'standard' copy.....
+				if (fileName.StartsWith(@"NWM\brsigs", StringComparison.InvariantCultureIgnoreCase))
+				{
+					fn = "brsigs" + fileName.Substring(10);
+					try
+					{
+						//Catch completely malformed path references
+						n = Path.CombineFile(objectPath, fn);
+					}
+					catch
+					{
+						return false;
+					}
+					if (System.IO.File.Exists(n))
+					{
+						fileName = n;
+						//The object exists, and does not require a compatibility object
+						return true;
+					}
+				}
 
-				
+
 			}
 			//We haven't found the object on-disk, so check the compatibility objects to see if a replacement is available
 			for (int i = 0; i < CompatibilityObjects.AvailableReplacements.Length; i++)

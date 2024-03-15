@@ -340,7 +340,6 @@ namespace Train.OpenBve
 									break;
 								}
 
-								int i;
 								if (Enum.TryParse(value, true, out Translations.Command command))
 								{
 									entry.Command = command;

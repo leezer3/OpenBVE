@@ -786,7 +786,7 @@ namespace OpenBve
 						}
 
 						break;
-					case Translations.Command.ReverserAnyPostion:
+					case Translations.Command.ReverserAnyPosition:
 						TrainManager.PlayerTrain.Handles.Reverser.ApplyState((ReverserPosition)Control.Option);
 						break;
 					case Translations.Command.HoldBrake:
@@ -1375,7 +1375,7 @@ namespace OpenBve
 								Game.switchChangeDialog.Show();
 								break;
 							case InterfaceType.SwitchChangeMap:
-								Program.Renderer.CurrentInterface = InterfaceType.Normal;
+								Game.switchChangeDialog.Close(null, null);
 								break;
 						}
 						break;
