@@ -2,12 +2,8 @@
 
 namespace CsvRwRouteParser
 {
-	internal class PointOfInterest
+	internal class PointOfInterest : AbstractStructure
 	{
-		/// <summary>The track position at which the PointOfInterest is placed</summary>
-		internal readonly double TrackPosition;
-		/// <summary>The rail index to which the PointOfInterest is attached</summary>
-		internal readonly int RailIndex;
 		/// <summary>The relative position to the rail</summary>
 		internal readonly Vector2 Position;
 		/// <summary>The yaw value</summary>
@@ -20,10 +16,8 @@ namespace CsvRwRouteParser
 		/// <remarks>Typically station name etc.</remarks>
 		internal readonly string Text;
 
-		internal PointOfInterest(double trackPosition, int railIndex, string text, Vector2 position, double yaw, double pitch, double roll)
+		internal PointOfInterest(double trackPosition, int railIndex, string text, Vector2 position, double yaw, double pitch, double roll) : base(trackPosition, railIndex)
 		{
-			TrackPosition = trackPosition;
-			RailIndex = railIndex;
 			Text = text;
 			Position = position;
 			Yaw = yaw;

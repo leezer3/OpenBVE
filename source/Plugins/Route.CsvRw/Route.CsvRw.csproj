@@ -52,6 +52,7 @@
     <Compile Include="Namespaces\NonTrack\Structure.Commands.cs" />
     <Compile Include="Namespaces\NonTrack\Train.Commands.cs" />
     <Compile Include="Namespaces\Track\Track.Commands.cs" />
+    <Compile Include="Structures\AbstractStructure.cs" />
     <Compile Include="Structures\Block.cs" />
     <Compile Include="Structures\Direction.cs" />
     <Compile Include="Structures\Expression.cs" />

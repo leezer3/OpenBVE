@@ -63,7 +63,7 @@
 		Station,
 		/// <summary>Adds a station defined in an external XML file</summary>
 		StationXML,
-		/// <summary>Adds a buffer stop</summary>
+		/// <summary>Adds a buffer stop to Rail 0</summary>
 		Buffer,
 		/// <summary>Adds a platform</summary>
 		Form,
@@ -132,6 +132,10 @@
 		Switch,
 		/// <summary>Creates a trailing switch</summary>
 		SwitchT,
+		/// <summary>Sets the speed limit for a rail</summary>
+		RailLimit,
+		/// <summary>Adds a buffer stop</summary>
+		RailBuffer,
 
 		/*
 		 * HMMSIM

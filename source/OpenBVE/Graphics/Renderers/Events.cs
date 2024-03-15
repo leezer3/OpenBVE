@@ -5,6 +5,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.Events;
+using RouteManager2.Tracks;
 
 namespace OpenBve.Graphics.Renderers
 {
@@ -221,9 +222,9 @@ namespace OpenBve.Graphics.Renderers
 			}
 
 			// buffers
-			foreach (double p in Program.CurrentRoute.BufferTrackPositions)
+			foreach (BufferStop stop in Program.CurrentRoute.BufferTrackPositions)
 			{
-				double d = p - Program.Renderer.CameraTrackFollower.TrackPosition;
+				double d = stop.TrackPosition - Program.Renderer.CameraTrackFollower.TrackPosition;
 
 				if (d >= da & d <= db)
 				{
@@ -232,9 +233,10 @@ namespace OpenBve.Graphics.Renderers
 					TrackFollower f = new TrackFollower(Program.CurrentHost)
 					{
 						TriggerType = EventTriggerType.None,
-						TrackPosition = p
+						TrackPosition = stop.TrackPosition,
+						TrackIndex = stop.TrackIndex
 					};
-					f.UpdateAbsolute(p, true, false);
+					f.UpdateAbsolute(stop.TrackPosition, true, false);
 					f.WorldPosition.X += dy * f.WorldUp.X;
 					f.WorldPosition.Y += dy * f.WorldUp.Y;
 					f.WorldPosition.Z += dy * f.WorldUp.Z;

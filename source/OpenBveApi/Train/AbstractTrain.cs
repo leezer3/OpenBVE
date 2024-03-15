@@ -27,6 +27,7 @@ namespace OpenBveApi.Trains
 		/// <summary>The route speed limts</summary>
 		public double[] RouteLimits;
 		/// <summary>The current route limit in effect</summary>
+		/// <remarks>Units are m/s</remarks>
 		public double CurrentRouteLimit;
 		/// <summary>The current speed of the train (as an average of all cars)</summary>
 		/// <remarks>Default units are m/s</remarks>

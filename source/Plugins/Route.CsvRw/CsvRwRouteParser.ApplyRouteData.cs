@@ -468,7 +468,7 @@ namespace CsvRwRouteParser
 				{
 					for (int j = 0; j < Data.Blocks[i].Limits.Length; j++)
 					{
-						Data.Blocks[i].Limits[j].CreateEvent(StartingDistance, ref CurrentSpeedLimit, ref CurrentRoute.Tracks[0].Elements[n]);
+						Data.Blocks[i].Limits[j].CreateEvent(StartingDistance, ref CurrentSpeedLimit, ref CurrentRoute.Tracks[Data.Blocks[i].Limits[j].RailIndex].Elements[n]);
 					}
 				}
 				// marker
@@ -948,9 +948,9 @@ namespace CsvRwRouteParser
 							}
 
 							// limit
-							if (railKey == 0)
+							for (int k = 0; k < Data.Blocks[i].Limits.Length; k++)
 							{
-								for (int k = 0; k < Data.Blocks[i].Limits.Length; k++)
+								if (railKey == Data.Blocks[i].Limits[k].RailIndex)
 								{
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Limits[k].TrackPosition);
 									Data.Blocks[i].Limits[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.UnitOfSpeed);

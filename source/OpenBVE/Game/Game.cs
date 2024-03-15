@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using LibRender2.Screens;
 using OpenBveApi.Colors;
@@ -7,6 +8,7 @@ using OpenBveApi.Routes;
 using RouteManager2;
 using RouteManager2.Climate;
 using RouteManager2.SignalManager.PreTrain;
+using RouteManager2.Tracks;
 using TrainManager.Handles;
 using TrainManager.Trains;
 
@@ -45,7 +47,7 @@ namespace OpenBve
 			Program.CurrentRoute.Image = "";
 			Program.CurrentRoute.Atmosphere = new Atmosphere();
 			Program.CurrentRoute.LightDefinitions = new LightDefinition[] { };
-			Program.CurrentRoute.BufferTrackPositions = new double[] { };
+			Program.CurrentRoute.BufferTrackPositions = new List<BufferStop>();
 			Program.CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			Program.CurrentRoute.PrecedingTrainTimeDeltas = new double[] { };
 			Interface.CurrentOptions.PrecedingTrainSpeedLimit = double.PositiveInfinity;

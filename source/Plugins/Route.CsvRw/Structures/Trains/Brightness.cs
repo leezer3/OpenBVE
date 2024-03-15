@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using RouteManager2;
 using RouteManager2.Events;
@@ -7,17 +7,13 @@ namespace CsvRwRouteParser
 {
 	/// <summary>A legacy Brightness command</summary>
 	/// <remarks>Applies equally to all tracks in a block</remarks>
-	internal class Brightness
+	internal class Brightness : AbstractStructure
 	{
-		/// <summary>The track position for the brightness change</summary>
-		internal readonly double TrackPosition;
-
 		/// <summary>The new brightness value</summary>
 		internal readonly float Value;
 
-		internal Brightness(double trackPosition, float value)
+		internal Brightness(double trackPosition, float value, int railIndex = 0) : base(trackPosition, railIndex)
 		{
-			TrackPosition = trackPosition;
 			Value = value;
 		}
 
