@@ -153,6 +153,7 @@ namespace DenshaDeGoInput
 				switch (DenshaDeGoInput.CurrentHost.Platform)
 				{
 					case OpenBveApi.Hosts.HostPlatform.MicrosoftWindows:
+					case OpenBveApi.Hosts.HostPlatform.WINE:
 						VID = Convert.ToInt32(id.Substring(4, 4), 16);
 						PID = Convert.ToInt32(id.Substring(0, 4), 16);
 						break;
