@@ -214,10 +214,7 @@ namespace TrainManager.Trains
 		/// <inheritdoc/>
 		public override void UpdateBeacon(int transponderType, int sectionIndex, int optional)
 		{
-			if (Plugin != null)
-			{
-				Plugin.UpdateBeacon(transponderType, sectionIndex, optional);
-			}
+			Plugin?.UpdateBeacon(transponderType, sectionIndex, optional);
 		}
 
 		/// <inheritdoc/>
@@ -366,18 +363,12 @@ namespace TrainManager.Trains
 					}
 				}
 
-				if (AI != null)
-				{
-					AI.Trigger(TimeElapsed);
-				}
+				AI?.Trigger(TimeElapsed);
 			}
 			else if (State == TrainState.Bogus)
 			{
 				// bogus train
-				if (AI != null)
-				{
-					AI.Trigger(TimeElapsed);
-				}
+				AI?.Trigger(TimeElapsed);
 			}
 
 			//Trigger point sounds if appropriate
@@ -993,10 +984,7 @@ namespace TrainManager.Trains
 				}
 				if (IsPlayerTrain)
 				{
-					if (Plugin != null)
-					{
-						Plugin.EndJump();
-					}
+					Plugin?.EndJump();
 				}
 
 				StationState = TrainStopState.Pending;

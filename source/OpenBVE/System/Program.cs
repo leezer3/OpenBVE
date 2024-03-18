@@ -385,10 +385,7 @@ namespace OpenBve {
 			Program.CurrentHost.UnloadPlugins(out _);
 			Sounds.DeInitialize();
 			Renderer.DeInitialize();
-			if (currentGameWindow != null)
-			{
-				currentGameWindow.Dispose();
-			}
+			currentGameWindow?.Dispose();
 		}
 
 	}

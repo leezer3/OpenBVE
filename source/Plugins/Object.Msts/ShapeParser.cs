@@ -44,6 +44,8 @@ using SharpCompress.Compressors.Deflate;
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable
 #pragma warning disable 0219
+#pragma warning disable IDE0059
+
 namespace Plugin
 {
 	class MsTsShapeParser

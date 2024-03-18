@@ -268,6 +268,7 @@ namespace RouteViewer
 			if (File.Exists(path) || Directory.Exists(path))
 			{
 				handle = Program.Sounds.RegisterBuffer(path, 0.0);
+				return true;
 			}
 			else
 			{

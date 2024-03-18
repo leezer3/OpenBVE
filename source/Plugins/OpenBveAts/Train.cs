@@ -323,12 +323,6 @@ namespace OpenBveAts {
 			}
 		}
 		
-		/// <summary>Is called when the state of the doors changes.</summary>
-		/// <param name="oldState">The old state of the doors.</param>
-		/// <param name="newState">The new state of the doors.</param>
-		public void DoorChange(DoorStates oldState, DoorStates newState) {
-		}
-		
 		/// <summary>Is called to inform about signals.</summary>
 		/// <param name="signal">The signal data.</param>
 		internal void SetSignal(SignalData[] signal) {
