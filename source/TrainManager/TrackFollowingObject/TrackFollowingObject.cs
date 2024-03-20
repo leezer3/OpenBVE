@@ -165,11 +165,11 @@ namespace TrainManager.Trains
 			}
 		}
 
-		public override void Jump(int stationIndex)
+		public override void Jump(int stationIndex, int trackIndex)
 		{
 			Dispose();
 			State = TrainState.Pending;
-			TrainManagerBase.currentHost.ProcessJump(this, stationIndex);
+			TrainManagerBase.currentHost.ProcessJump(this, stationIndex, 0);
 		}
 	}
 }

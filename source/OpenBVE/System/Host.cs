@@ -540,7 +540,7 @@ namespace OpenBve {
 			Game.AddBlackBoxEntry();
 		}
 
-		public override void ProcessJump(AbstractTrain Train, int StationIndex)
+		public override void ProcessJump(AbstractTrain Train, int StationIndex, int TrackIndex)
 		{
 			ObjectManager.ProcessJump(Train);
 			if (Train.IsPlayerTrain)

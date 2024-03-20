@@ -878,7 +878,7 @@ namespace TrainManager.Trains
 		}
 
 
-		public override void Jump(int stationIndex)
+		public override void Jump(int stationIndex, int trackKey)
 		{
 			if (IsPlayerTrain)
 			{
@@ -904,6 +904,13 @@ namespace TrainManager.Trains
 				for (int h = 0; h < Cars.Length; h++)
 				{
 					Cars[h].CurrentSpeed = 0.0;
+					// Change the track followers to the appropriate track
+					Cars[h].FrontAxle.Follower.TrackIndex = trackKey;
+					Cars[h].RearAxle.Follower.TrackIndex = trackKey;
+					Cars[h].FrontBogie.FrontAxle.Follower.TrackIndex = trackKey;
+					Cars[h].FrontBogie.RearAxle.Follower.TrackIndex = trackKey;
+					Cars[h].RearBogie.FrontAxle.Follower.TrackIndex = trackKey;
+					Cars[h].RearBogie.RearAxle.Follower.TrackIndex = trackKey;
 				}
 
 				double d = TrainManagerBase.CurrentRoute.Stations[stationIndex].Stops[stopIndex].TrackPosition - Cars[0].FrontAxle.Follower.TrackPosition + Cars[0].FrontAxle.Position - 0.5 * Cars[0].Length;
@@ -1005,7 +1012,7 @@ namespace TrainManager.Trains
 
 					}
 				}
-				TrainManagerBase.currentHost.ProcessJump(this, stationIndex);
+				TrainManagerBase.currentHost.ProcessJump(this, stationIndex, 0);
 			}
 		}
 

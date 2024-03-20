@@ -89,7 +89,7 @@ namespace TrainManager
 			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
 			foreach (TrackFollowingObject Train in TFOs) //Must not use var, as otherwise the wrong inferred type
 			{
-				Train.Jump(-1);
+				Train.Jump(-1, 0);
 			}
 		}
 	}

@@ -151,7 +151,8 @@ namespace OpenBveApi.Trains
 
 		/// <summary>Jumps the train to the specified station index</summary>
 		/// <param name="StationIndex">The index of the station to jump to</param>
-		public virtual void Jump(int StationIndex)
+		/// <param name="TrackKey">The key of the track on which the station is placed</param>
+		public virtual void Jump(int StationIndex, int TrackKey)
 		{
 
 		}

@@ -618,7 +618,8 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Processes a jump</summary>
 		/// <param name="Train">The train to be jumped</param>
 		/// <param name="StationIndex">The station to jump to</param>
-		public virtual void ProcessJump(AbstractTrain Train, int StationIndex)
+		/// <param name="TrackKey">The key of the track on which the station is placed</param>
+		public virtual void ProcessJump(AbstractTrain Train, int StationIndex, int TrackKey)
 		{
 
 		}
