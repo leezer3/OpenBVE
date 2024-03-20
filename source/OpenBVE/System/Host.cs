@@ -613,10 +613,9 @@ namespace OpenBve {
 
 		public override AbstractTrain ClosestTrain(AbstractTrain Train)
 		{
-			TrainBase baseTrain = Train as TrainBase;
 			AbstractTrain closestTrain = null;
 			double bestLocation = double.MaxValue;
-			if(baseTrain != null)
+			if(Train is TrainBase baseTrain)
 			{
 				for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
 				{

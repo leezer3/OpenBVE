@@ -1,3 +1,4 @@
+#pragma warning disable IDE0060
 using System;
 using System.Collections.Generic;
 using System.Reflection;

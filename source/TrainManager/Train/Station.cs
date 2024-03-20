@@ -281,10 +281,7 @@ namespace TrainManager.Trains
 							}
 							else
 							{
-								if (SafetySystems.StationAdjust != null)
-								{
-									SafetySystems.StationAdjust.Update(tb, tf);
-								}
+								SafetySystems.StationAdjust?.Update(tb, tf);
 							}
 						}
 					}

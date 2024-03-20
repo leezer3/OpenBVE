@@ -895,10 +895,7 @@ namespace TrainManager.Trains
 			{
 				if (IsPlayerTrain)
 				{
-					if (Plugin != null)
-					{
-						Plugin.BeginJump((InitializationModes) TrainManagerBase.CurrentOptions.TrainStart);
-					}
+					Plugin?.BeginJump((InitializationModes) TrainManagerBase.CurrentOptions.TrainStart);
 				}
 
 				for (int h = 0; h < Cars.Length; h++)
