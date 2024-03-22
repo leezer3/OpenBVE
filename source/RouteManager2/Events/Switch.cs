@@ -85,29 +85,23 @@ namespace RouteManager2.Events
 				case EventTriggerType.FrontBogieAxle:
 				case EventTriggerType.FrontCarFrontAxle:
 				case EventTriggerType.OtherCarFrontAxle:
-					if (derailments == false || currentRoute.Switches[Index].CurrentlySetTrack == trackFollower.TrackIndex)
-					{
-						trackFollower.TrackIndex = toeRail;
-						trackFollower.UpdateWorldCoordinates(false);
-					}
-					else
-					{
-						trackFollower.Car.Derail();
-					}
-
-					break;
 				case EventTriggerType.RearBogieAxle:
 				case EventTriggerType.RearCarRearAxle:
 				case EventTriggerType.OtherCarRearAxle:
 					if (derailments == false || currentRoute.Switches[Index].CurrentlySetTrack == trackFollower.TrackIndex)
 					{
-						trackFollower.TrackIndex = toeRail;
 						trackFollower.UpdateWorldCoordinates(false);
 					}
 					else
 					{
 						trackFollower.Car.Derail();
 					}
+					/*
+					 * Need to set the track index to the toe rail, as otherwise we may be in an invalid
+					 * element (e.g. if a RailEnd / RailStart command has been issued)
+					 * In this case, the world co-oords may be missing causing things to glitch out badly
+					 */
+					trackFollower.TrackIndex = toeRail;
 					break;
 				case EventTriggerType.TrainFront:
 					trackFollower.Train.Switch = Index;
