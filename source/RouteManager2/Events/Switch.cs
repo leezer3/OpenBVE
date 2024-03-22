@@ -55,18 +55,15 @@ namespace RouteManager2.Events
 		/// <summary>The GUID of the switch</summary>
 		public readonly Guid Index;
 
-		private readonly int toeRail;
-
 		private readonly int triggerDirection;
 
 		private readonly CurrentRoute currentRoute;
 
 		private readonly bool derailments;
 
-		public TrailingSwitchEvent(Guid idx, int trackIndex, int direction, CurrentRoute route, bool derail)
+		public TrailingSwitchEvent(Guid idx, int direction, CurrentRoute route, bool derail)
 		{
 			Index = idx;
-			toeRail = trackIndex;
 			triggerDirection = direction;
 			currentRoute = route;
 			derailments = derail;
@@ -97,11 +94,11 @@ namespace RouteManager2.Events
 						trackFollower.Car.Derail();
 					}
 					/*
-					 * Need to set the track index to the toe rail, as otherwise we may be in an invalid
+					 * Need to set the track index to the toe rail even if derailed, as otherwise we may be in an invalid
 					 * element (e.g. if a RailEnd / RailStart command has been issued)
 					 * In this case, the world co-oords may be missing causing things to glitch out badly
 					 */
-					trackFollower.TrackIndex = toeRail;
+					trackFollower.TrackIndex = currentRoute.Switches[Index].ToeRail;
 					break;
 				case EventTriggerType.TrainFront:
 					trackFollower.Train.Switch = Index;

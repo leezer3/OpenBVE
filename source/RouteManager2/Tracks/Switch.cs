@@ -33,6 +33,9 @@ namespace RouteManager2.Tracks
 		/// <summary>The currently set track</summary>
 		public int CurrentlySetTrack => availableTracks[setTrack];
 
+		/// <summary>The toe (root) rail of the switch</summary>
+		public readonly int ToeRail;
+
 		/// <summary>The name of the currently set track</summary>
 		public string CurrentSetting
 		{
@@ -62,10 +65,11 @@ namespace RouteManager2.Tracks
 
 		public readonly string Name;
 
-		public Switch(int[] tracks, string[] trackNames, int initialTrack, double trackPosition, SwitchType type, string name)
+		public Switch(int[] tracks, string[] trackNames, int toeRail, int initialTrack, double trackPosition, SwitchType type, string name)
 		{
 			Type = type;
 			TrackNames = trackNames;
+			ToeRail = toeRail;
 			LeftTrack = type != SwitchType.LeftHanded ? tracks[0] : tracks[1];
 			availableTracks = tracks;
 			TrackPosition = trackPosition;
