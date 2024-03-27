@@ -17,9 +17,11 @@
 		OtherCarRearAxle = 5,
 		/// <summary>This event is triggered by the physical front of the train</summary>
 		TrainFront = 6,
+		/// <summary>This event is triggered by the physical front of the train</summary>
+		TrainRear = 7,
 		/// <summary>This event is triggered by the front axle of a bogie</summary>
-		FrontBogieAxle = 7,
+		FrontBogieAxle = 8,
 		/// <summary>This event is triggered by the rear axle of a bogie</summary>
-		RearBogieAxle = 8
+		RearBogieAxle = 9
 	}
 }

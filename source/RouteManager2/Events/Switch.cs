@@ -43,7 +43,16 @@ namespace RouteManager2.Events
 					trackFollower.UpdateWorldCoordinates(false);
 					break;
 				case EventTriggerType.TrainFront:
-					trackFollower.Train.Switch = Index;
+					if (triggerDirection == 1)
+					{
+						trackFollower.Train.Switch = Index;
+					}
+					break;
+				case EventTriggerType.TrainRear:
+					if (triggerDirection == -1)
+					{
+						trackFollower.Train.Switch = Index;
+					}
 					break;
 			}
 		}
@@ -101,7 +110,16 @@ namespace RouteManager2.Events
 					trackFollower.TrackIndex = currentRoute.Switches[Index].ToeRail;
 					break;
 				case EventTriggerType.TrainFront:
-					trackFollower.Train.Switch = Index;
+					if (triggerDirection == -1)
+					{
+						trackFollower.Train.Switch = Index;
+					}
+					break;
+				case EventTriggerType.TrainRear:
+					if (triggerDirection == 1)
+					{
+						trackFollower.Train.Switch = Index;
+					}
 					break;
 			}
 		}
