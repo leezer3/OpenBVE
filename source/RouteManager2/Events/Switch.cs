@@ -3,34 +3,28 @@ using OpenBveApi.Routes;
 
 namespace RouteManager2.Events
 {
-	/// <summary>Event controlling a facing switch</summary>
+	/// <summary>Event controlling a switch</summary>
 	public class SwitchEvent : GeneralEvent
 	{
 		/// <summary>The GUID of the switch</summary>
 		public readonly Guid Index;
 		/// <summary>The track position of the switch</summary>
 		public readonly double TrackPosition;
-
-		private readonly int triggerDirection;
+		/// <summary>The direction the switch faces</summary>
+		public readonly int SwitchDirection;
 
 		private readonly CurrentRoute currentRoute;
 
 		public SwitchEvent(Guid idx, int direction, double trackPosition, CurrentRoute route)
 		{
 			Index = idx;
-			triggerDirection = direction;
+			SwitchDirection = direction;
 			TrackPosition = trackPosition;
 			currentRoute = route;
 		}
 
 		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (direction != triggerDirection)
-			{
-				//Check traversal direction
-				return;
-			}
-
 			switch (trackFollower.TriggerType)
 			{
 				case EventTriggerType.FrontBogieAxle:
@@ -39,84 +33,32 @@ namespace RouteManager2.Events
 				case EventTriggerType.OtherCarRearAxle:
 				case EventTriggerType.FrontCarFrontAxle:
 				case EventTriggerType.OtherCarFrontAxle:
-					trackFollower.TrackIndex = currentRoute.Switches[Index].CurrentlySetTrack;
-					trackFollower.UpdateWorldCoordinates(false);
-					break;
-				case EventTriggerType.TrainFront:
-					if (triggerDirection == 1)
+					if (direction == (int)currentRoute.Switches[Index].Direction)
 					{
-						trackFollower.Train.Switch = Index;
-					}
-					break;
-				case EventTriggerType.TrainRear:
-					if (triggerDirection == -1)
-					{
-						trackFollower.Train.Switch = Index;
-					}
-					break;
-			}
-		}
-	}
-
-	/// <summary>Event controlling a trailing switch</summary>
-	public class TrailingSwitchEvent : GeneralEvent
-	{
-		/// <summary>The GUID of the switch</summary>
-		public readonly Guid Index;
-
-		private readonly int triggerDirection;
-
-		private readonly CurrentRoute currentRoute;
-
-		private readonly bool derailments;
-
-		public TrailingSwitchEvent(Guid idx, int direction, CurrentRoute route, bool derail)
-		{
-			Index = idx;
-			triggerDirection = direction;
-			currentRoute = route;
-			derailments = derail;
-		}
-
-		public override void Trigger(int direction, TrackFollower trackFollower)
-		{
-			if (direction != triggerDirection)
-			{
-				//Check traversal direction
-				return;
-			}
-
-			switch (trackFollower.TriggerType)
-			{
-				case EventTriggerType.FrontBogieAxle:
-				case EventTriggerType.FrontCarFrontAxle:
-				case EventTriggerType.OtherCarFrontAxle:
-				case EventTriggerType.RearBogieAxle:
-				case EventTriggerType.RearCarRearAxle:
-				case EventTriggerType.OtherCarRearAxle:
-					if (derailments == false || currentRoute.Switches[Index].CurrentlySetTrack == trackFollower.TrackIndex)
-					{
-						trackFollower.UpdateWorldCoordinates(false);
+						// Moving from the toe direction means we are always correct and go to the set track
+						trackFollower.TrackIndex = currentRoute.Switches[Index].CurrentlySetTrack;
 					}
 					else
 					{
-						trackFollower.Car.Derail();
+						if (trackFollower.TrackIndex != currentRoute.Switches[Index].CurrentlySetTrack && trackFollower.TrackIndex != currentRoute.Switches[Index].ToeRail)
+						{
+							// Our track follower is not on the set track or the toe rail, so the switch must be against us
+							// If derailments are off, this will just return in the car derail function
+							trackFollower.Car.Derail();
+							currentRoute.Switches[Index].RunThrough = true;
+						}
+						trackFollower.TrackIndex = currentRoute.Switches[Index].ToeRail;
 					}
-					/*
-					 * Need to set the track index to the toe rail even if derailed, as otherwise we may be in an invalid
-					 * element (e.g. if a RailEnd / RailStart command has been issued)
-					 * In this case, the world co-oords may be missing causing things to glitch out badly
-					 */
-					trackFollower.TrackIndex = currentRoute.Switches[Index].ToeRail;
+					trackFollower.UpdateWorldCoordinates(false);
 					break;
 				case EventTriggerType.TrainFront:
-					if (triggerDirection == -1)
+					if (SwitchDirection == 1)
 					{
 						trackFollower.Train.Switch = Index;
 					}
 					break;
 				case EventTriggerType.TrainRear:
-					if (triggerDirection == 1)
+					if (SwitchDirection == -1)
 					{
 						trackFollower.Train.Switch = Index;
 					}

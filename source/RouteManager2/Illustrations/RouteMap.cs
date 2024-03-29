@@ -254,20 +254,6 @@ namespace RouteManager2
 								g.FillEllipse(mapColors[(int)mode].inactStatnFill, r);
 								g.DrawEllipse(mapColors[(int)mode].inactStatnBrdr, r);
 							}
-
-							if (CurrentRoute.Tracks[k].Elements[i].Events[j] is TrailingSwitchEvent tse && !switchPositions.ContainsKey(tse.Index))
-							{
-								double x = CurrentRoute.Tracks[k].Elements[i].WorldPosition.X;
-								double y = CurrentRoute.Tracks[k].Elements[i].WorldPosition.Z;
-								x = imageOrigin.X + (x - x0) * imageScale.X;
-								y = imageOrigin.Y + (z0 - y) * imageScale.Y + imageSize.Y;
-								switchPositions.Add(tse.Index, new Vector2(x, y));
-								// draw circle
-								RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
-									StationDiameter, StationDiameter);
-								g.FillEllipse(mapColors[(int)mode].inactStatnFill, r);
-								g.DrawEllipse(mapColors[(int)mode].inactStatnBrdr, r);
-							}
 						}
 					}
 				}
@@ -698,8 +684,12 @@ namespace RouteManager2
 					if (currentTrack.Elements[i + firstUsedElement].Events[j] is SwitchEvent se)
 					{
 						// switch to different track if appropriate
-						currentTrack = CurrentRoute.Tracks[CurrentRoute.Switches[se.Index].CurrentlySetTrack];
-						break;
+						if (se.SwitchDirection == 1 && CurrentRoute.Switches[se.Index].CurrentlySetTrack != key)
+						{
+							key = CurrentRoute.Switches[se.Index].CurrentlySetTrack;
+							currentTrack = CurrentRoute.Tracks[key];
+							j = 0;
+						}
 					}
 
 					if (currentTrack.Elements[i + firstUsedElement].Events[j] is TrackEndEvent)
