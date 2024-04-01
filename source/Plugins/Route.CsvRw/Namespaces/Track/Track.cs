@@ -196,6 +196,8 @@ namespace CsvRwRouteParser
 						currentRail.RailStarted = false;
 						currentRail.RailStartRefreshed = false;
 						currentRail.RailEnded = true;
+						currentRail.IsDriveable = false;
+						
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 						{
 							if (!NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out currentRail.RailEnd.X))

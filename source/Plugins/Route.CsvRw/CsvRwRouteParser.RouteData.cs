@@ -104,7 +104,8 @@ namespace CsvRwRouteParser
 								RailStart = new Vector2(Blocks[i -1].Rails[key].RailStart),
 								RailStartRefreshed = false,
 								RailEnded = false,
-								RailEnd = new Vector2(Blocks[i - 1].Rails[key].RailStart)
+								RailEnd = new Vector2(Blocks[i - 1].Rails[key].RailStart),
+								IsDriveable = Blocks[i - 1].Rails[key].IsDriveable,
 							};
 							Blocks[i].Rails.Add(key, rail);
 						}

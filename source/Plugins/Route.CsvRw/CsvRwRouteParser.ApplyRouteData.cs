@@ -238,6 +238,7 @@ namespace CsvRwRouteParser
 				CurrentRoute.Tracks[0].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
 				CurrentRoute.Tracks[0].Elements[n].RainIntensity = Data.Blocks[i].RainIntensity;
 				CurrentRoute.Tracks[0].Elements[n].SnowIntensity = Data.Blocks[i].SnowIntensity;
+				CurrentRoute.Tracks[0].Elements[n].IsDriveable = true; // Current CSV / RW route limitation: Rail 0 is always the player path
 				if (Data.Blocks[i].RainIntensity != lastRainIntensity)
 				{
 					//Insert compatability beacon for OS_ATS et. al

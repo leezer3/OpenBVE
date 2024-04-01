@@ -10,6 +10,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
+using RouteManager2.Tracks;
 
 namespace RouteManager2
 {
@@ -709,10 +710,11 @@ namespace RouteManager2
 							key = CurrentRoute.Switches[se.Index].CurrentlySetTrack;
 							currentTrack = CurrentRoute.Tracks[key];
 							j = 0;
+							continue;
 						}
 					}
-
-					if (currentTrack.Elements[i + firstUsedElement].Events[j] is TrackEndEvent)
+					
+					if (!currentTrack.Elements[i + firstUsedElement].IsDriveable || currentTrack.Elements[i + firstUsedElement].Events[j] is TrackEndEvent)
 					{
 						// Playable path has ended [e.g. buffers etc]
 						elementsToDraw = i;
