@@ -6,6 +6,8 @@ using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.Events;
 using RouteManager2.Tracks;
+using System;
+using System.Collections.Generic;
 
 namespace OpenBve.Graphics.Renderers
 {
@@ -27,6 +29,8 @@ namespace OpenBve.Graphics.Renderers
 		private Texture RunSoundTexture;
 		private Texture LightingEventTexture;
 		private Texture WeatherEventTexture;
+		private Texture SwitchEventTexture;
+		private List<Guid> renderedSwitches = new List<Guid>();
 
 		private bool Initialized;
 
@@ -52,6 +56,7 @@ namespace OpenBve.Graphics.Renderers
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "runsound.png"), out RunSoundTexture);
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "lighting.png"), out LightingEventTexture);
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "weather.png"), out WeatherEventTexture);
+			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "switchevent.png"), out SwitchEventTexture);
 			Initialized = true;
 		}
 
@@ -69,6 +74,7 @@ namespace OpenBve.Graphics.Renderers
 				Init();
 			}
 
+			renderedSwitches.Clear();
 			GL.Enable(EnableCap.CullFace);
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
@@ -176,6 +182,14 @@ namespace OpenBve.Graphics.Renderers
 							s = 0.2;
 							dy = 1.0;
 							t = null;
+						}
+
+						if (e is SwitchEvent sw && !renderedSwitches.Contains(sw.Index))
+						{
+							s = 0.2;
+							dy = 0.8;
+							t = SwitchEventTexture;
+							renderedSwitches.Add(sw.Index); // as otherwise we'll render the cube once for each track and z-fight
 						}
 
 						if (t != null)
