@@ -719,7 +719,7 @@ namespace OpenBve
 								// simulation commands
 							case MenuTag.JumpToStation:         // JUMP TO STATION
 								Reset();
-								TrainManagerBase.PlayerTrain.Jump((int)menuItem.Data);
+								TrainManagerBase.PlayerTrain.Jump((int)menuItem.Data, 0);
 								Program.TrainManager.JumpTFO();
 								break;
 							case MenuTag.ExitToMainMenu:        // BACK TO MAIN MENU

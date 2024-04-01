@@ -281,10 +281,7 @@ namespace TrainManager.Trains
 							}
 							else
 							{
-								if (SafetySystems.StationAdjust != null)
-								{
-									SafetySystems.StationAdjust.Update(tb, tf);
-								}
+								SafetySystems.StationAdjust?.Update(tb, tf);
 							}
 						}
 					}
@@ -494,11 +491,11 @@ namespace TrainManager.Trains
 										break;
 									case StationType.ChangeEnds:
 										// Change ends always jumps to the NEXT station
-										Jump(i + 1);
+										Jump(i + 1, 0);
 										break;
 									case StationType.Jump:
 										// Jumps to an arbritrary station as defined in the routefile
-										Jump(TrainManagerBase.CurrentRoute.Stations[i].JumpIndex);
+										Jump(TrainManagerBase.CurrentRoute.Stations[i].JumpIndex, 0);
 										break;
 								}
 							}

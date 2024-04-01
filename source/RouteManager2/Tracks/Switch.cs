@@ -22,6 +22,8 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBveApi.Routes;
+
 namespace RouteManager2.Tracks
 {
 	/// <summary>Holds the data for a single switch</summary>
@@ -32,6 +34,9 @@ namespace RouteManager2.Tracks
 
 		/// <summary>The currently set track</summary>
 		public int CurrentlySetTrack => availableTracks[setTrack];
+
+		/// <summary>The toe (root) rail of the switch</summary>
+		public readonly int ToeRail;
 
 		/// <summary>The name of the currently set track</summary>
 		public string CurrentSetting
@@ -60,12 +65,21 @@ namespace RouteManager2.Tracks
 		/// <summary>The track position</summary>
 		public readonly double TrackPosition;
 
+		/// <summary>The name of the switch to be displayed in-menu</summary>
 		public readonly string Name;
 
-		public Switch(int[] tracks, string[] trackNames, int initialTrack, double trackPosition, SwitchType type, string name)
+		/// <summary>The nominal direction of the switch</summary>
+		public readonly TrackDirection Direction;
+
+		/// <summary>Whether a train has run through the switch in the wrong direction</summary>
+		/// <remarks>Toggle switch to reset</remarks>
+		public bool RunThrough;
+
+		public Switch(int[] tracks, string[] trackNames, int toeRail, int initialTrack, double trackPosition, SwitchType type, string name, TrackDirection direction)
 		{
 			Type = type;
 			TrackNames = trackNames;
+			ToeRail = toeRail;
 			LeftTrack = type != SwitchType.LeftHanded ? tracks[0] : tracks[1];
 			availableTracks = tracks;
 			TrackPosition = trackPosition;
@@ -78,6 +92,8 @@ namespace RouteManager2.Tracks
 			}
 
 			Name = name;
+			Direction = direction;
+			RunThrough = false;
 		}
 
 		/// <summary>Toggles the switch to the next track</summary>
@@ -88,6 +104,7 @@ namespace RouteManager2.Tracks
 			{
 				setTrack = 0;
 			}
+			RunThrough = false;
 		}
 	}
 }

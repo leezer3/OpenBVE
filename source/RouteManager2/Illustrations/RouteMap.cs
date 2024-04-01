@@ -259,16 +259,6 @@ namespace RouteManager2
 								g.FillEllipse(mapColors[(int)mode].inactStatnFill, r);
 								g.DrawEllipse(mapColors[(int)mode].inactStatnBrdr, r);
 							}
-
-							if (CurrentRoute.Tracks[k].Elements[i].Events[j] is TrailingSwitchEvent tse && !switchPositions.ContainsKey(tse.Index))
-							{
-								switchPositions.Add(tse.Index, new Vector2(x, y));
-								// draw circle
-								RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
-									StationDiameter, StationDiameter);
-								g.FillEllipse(mapColors[(int)mode].inactStatnFill, r);
-								g.DrawEllipse(mapColors[(int)mode].inactStatnBrdr, r);
-							}
 						}
 					}
 				}
@@ -278,9 +268,8 @@ namespace RouteManager2
 			{
 				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
 				{
-					if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
+					if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent e)
 					{
-						StationStartEvent e = (StationStartEvent)CurrentRoute.Tracks[0].Elements[i].Events[j];
 						if (CurrentRoute.Stations[e.StationIndex].Name != string.Empty)
 						{
 							double x = CurrentRoute.Tracks[0].Elements[i].WorldPosition.X;
@@ -312,9 +301,8 @@ namespace RouteManager2
 			{
 				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
 				{
-					if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
+					if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent e)
 					{
-						StationStartEvent e = (StationStartEvent)CurrentRoute.Tracks[0].Elements[i].Events[j];
 						if (CurrentRoute.Stations[e.StationIndex].Name != string.Empty)
 						{
 							double x = CurrentRoute.Tracks[0].Elements[i].WorldPosition.X;
@@ -716,10 +704,12 @@ namespace RouteManager2
 					if (currentTrack.Elements[i + firstUsedElement].Events[j] is SwitchEvent se)
 					{
 						// switch to different track if appropriate
-						// n.b. use continue as we're using an unsorted array- not guaranteed for something
-						// we want to draw to come after a switch
-						nextTrackIndex = CurrentRoute.Switches[se.Index].CurrentlySetTrack;
-						continue;
+						if (se.SwitchDirection == 1 && CurrentRoute.Switches[se.Index].CurrentlySetTrack != key)
+						{
+							key = CurrentRoute.Switches[se.Index].CurrentlySetTrack;
+							currentTrack = CurrentRoute.Tracks[key];
+							j = 0;
+						}
 					}
 
 					if (currentTrack.Elements[i + firstUsedElement].Events[j] is TrackEndEvent)

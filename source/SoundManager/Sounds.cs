@@ -413,9 +413,8 @@ namespace SoundManager
 		/// <returns>The sound source.</returns>
 		public SoundSource PlaySound(SoundHandle buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, object parent, bool looped)
 		{
-			if (buffer is SoundBuffer)
+			if (buffer is SoundBuffer b)
 			{
-				SoundBuffer b = (SoundBuffer)buffer;
 				if (Sources.Length == SourceCount)
 				{
 					Array.Resize(ref Sources, Sources.Length << 1);
@@ -436,9 +435,8 @@ namespace SoundManager
 		/// <returns>The sound source.</returns>
 		public SoundSource PlaySound(SoundHandle buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, bool looped)
 		{
-			if (buffer is SoundBuffer)
+			if (buffer is SoundBuffer b)
 			{
-				SoundBuffer b = (SoundBuffer)buffer;
 				if (Sources.Length == SourceCount)
 				{
 					Array.Resize(ref Sources, Sources.Length << 1);
@@ -528,8 +526,7 @@ namespace SoundManager
 		/// <returns>Whether the sound is playing or supposed to be playing.</returns>
 		public bool IsPlaying(object Source)
 		{
-			SoundSource source = Source as SoundSource;
-			if (source != null)
+			if (Source is SoundSource source)
 			{
 				if (source.State == SoundSourceState.PlayPending | source.State == SoundSourceState.Playing)
 				{

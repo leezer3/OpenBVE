@@ -214,10 +214,7 @@ namespace TrainManager.Trains
 		/// <inheritdoc/>
 		public override void UpdateBeacon(int transponderType, int sectionIndex, int optional)
 		{
-			if (Plugin != null)
-			{
-				Plugin.UpdateBeacon(transponderType, sectionIndex, optional);
-			}
+			Plugin?.UpdateBeacon(transponderType, sectionIndex, optional);
 		}
 
 		/// <inheritdoc/>
@@ -366,18 +363,12 @@ namespace TrainManager.Trains
 					}
 				}
 
-				if (AI != null)
-				{
-					AI.Trigger(TimeElapsed);
-				}
+				AI?.Trigger(TimeElapsed);
 			}
 			else if (State == TrainState.Bogus)
 			{
 				// bogus train
-				if (AI != null)
-				{
-					AI.Trigger(TimeElapsed);
-				}
+				AI?.Trigger(TimeElapsed);
 			}
 
 			//Trigger point sounds if appropriate
@@ -887,7 +878,7 @@ namespace TrainManager.Trains
 		}
 
 
-		public override void Jump(int stationIndex)
+		public override void Jump(int stationIndex, int trackKey)
 		{
 			if (IsPlayerTrain)
 			{
@@ -904,15 +895,19 @@ namespace TrainManager.Trains
 			{
 				if (IsPlayerTrain)
 				{
-					if (Plugin != null)
-					{
-						Plugin.BeginJump((InitializationModes) TrainManagerBase.CurrentOptions.TrainStart);
-					}
+					Plugin?.BeginJump((InitializationModes) TrainManagerBase.CurrentOptions.TrainStart);
 				}
 
 				for (int h = 0; h < Cars.Length; h++)
 				{
 					Cars[h].CurrentSpeed = 0.0;
+					// Change the track followers to the appropriate track
+					Cars[h].FrontAxle.Follower.TrackIndex = trackKey;
+					Cars[h].RearAxle.Follower.TrackIndex = trackKey;
+					Cars[h].FrontBogie.FrontAxle.Follower.TrackIndex = trackKey;
+					Cars[h].FrontBogie.RearAxle.Follower.TrackIndex = trackKey;
+					Cars[h].RearBogie.FrontAxle.Follower.TrackIndex = trackKey;
+					Cars[h].RearBogie.RearAxle.Follower.TrackIndex = trackKey;
 				}
 
 				double d = TrainManagerBase.CurrentRoute.Stations[stationIndex].Stops[stopIndex].TrackPosition - Cars[0].FrontAxle.Follower.TrackPosition + Cars[0].FrontAxle.Position - 0.5 * Cars[0].Length;
@@ -993,10 +988,7 @@ namespace TrainManager.Trains
 				}
 				if (IsPlayerTrain)
 				{
-					if (Plugin != null)
-					{
-						Plugin.EndJump();
-					}
+					Plugin?.EndJump();
 				}
 
 				StationState = TrainStopState.Pending;
@@ -1017,7 +1009,7 @@ namespace TrainManager.Trains
 
 					}
 				}
-				TrainManagerBase.currentHost.ProcessJump(this, stationIndex);
+				TrainManagerBase.currentHost.ProcessJump(this, stationIndex, 0);
 			}
 		}
 

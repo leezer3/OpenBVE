@@ -186,17 +186,12 @@ namespace DefaultDisplayPlugin
 
 		protected virtual void OnKeyDown(InputEventArgs e)
 		{
-			if (KeyDown != null) {
-				KeyDown(this, e);
-			}
+			KeyDown?.Invoke(this, e);
 		}
 
 		protected virtual void OnKeyUp(InputEventArgs e)
 		{
-			if (KeyUp != null)
-			{
-				KeyUp(this, e);
-			}
+			KeyUp?.Invoke(this, e);
 		}
 
 		private void LoadConfig()

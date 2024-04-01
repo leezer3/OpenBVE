@@ -85,6 +85,8 @@ using OpenBveApi.Objects;
 using IndexArray = System.Collections.Generic.List<uint>;
 using GroupMap = System.Collections.Generic.SortedDictionary<string, System.Collections.Generic.List<uint>>;
 
+#pragma warning disable IDE0052
+
 namespace AssimpNET.Obj
 {
 	// ------------------------------------------------------------------------------------------------
@@ -94,7 +96,7 @@ namespace AssimpNET.Obj
 	public class Face
 	{
 		//! Primitive type
-		PrimitiveType PrimitiveType;
+		readonly PrimitiveType PrimitiveType;
 		//! Vertex indices
 		public IndexArray Vertices = new IndexArray();
 		//! Normal indices
