@@ -8,6 +8,7 @@ using RouteManager2.Events;
 using RouteManager2.Tracks;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenBve.Graphics.Renderers
 {
@@ -92,121 +93,131 @@ namespace OpenBve.Graphics.Renderers
 
 				if (d >= da & d <= db)
 				{
-					foreach (GeneralEvent e in Program.CurrentRoute.Tracks[0].Elements[i].Events)
+					for (int j = 0; j < Program.CurrentRoute.Tracks.Count; j++)
 					{
-						double dy, dx = 0.0, dz = 0.0;
-						double s;
-						Texture t;
-
-						if (e is BrightnessChangeEvent)
+						int railKey = Program.CurrentRoute.Tracks.ElementAt(j).Key;
+						// check that element is valid and drivable
+						if (i < Program.CurrentRoute.Tracks[railKey].Elements.Length && Program.CurrentRoute.Tracks[railKey].Elements[i].IsDriveable)
 						{
-							s = 0.15;
-							dy = 4.0;
-							t = BrightnessChangeTexture;
-						}
-						else if (e is BackgroundChangeEvent)
-						{
-							s = 0.25;
-							dy = 3.5;
-							t = BackgroundChangeTexture;
-						}
-						else if (e is StationStartEvent startEvent)
-						{
-							s = 0.25;
-							dy = 1.6;
-							t = StationStartTexture;
-							sta[startEvent.StationIndex] = true;
-						}
-						else if (e is StationEndEvent endEvent)
-						{
-							s = 0.25;
-							dy = 1.6;
-							t = StationEndTexture;
-							sta[endEvent.StationIndex] = true;
-						}
-						else if (e is LimitChangeEvent)
-						{
-							s = 0.2;
-							dy = 1.1;
-							t = LimitTexture;
-						}
-						else if (e is SectionChangeEvent)
-						{
-							s = 0.2;
-							dy = 0.8;
-							t = SectionTexture;
-						}
-						else if (e is TransponderEvent transponderEvent)
-						{
-							s = 0.15;
-							dy = 0.4;
-							/*
-							 * NOTE:
-							 * Beacon 21 is used by legacy beacon based BVE4 weather events
-							 * e.g. OS_ATS, UK* family of plugins etc.
-							 * Use the weather event texture in this case
-							 */
-							t = transponderEvent.Type == 21 ? WeatherEventTexture : TransponderTexture;
-
-						}
-						else if (e is SoundEvent soundEvent)
-						{
-							s = 0.2;
-							dx = soundEvent.Position.X;
-							dy = soundEvent.Position.Y < 0.1 ? 0.1 : soundEvent.Position.Y;
-							dz = soundEvent.Position.Z;
-							t = SoundTexture;
-						}
-						else if (e is PointSoundEvent)
-						{
-							s = 0.2;
-							dx = 0;
-							dy = 0.2;
-							dz = 0;
-							t = PointSoundTexture;
-						}
-						else if (e is RailSoundsChangeEvent)
-						{
-							s = 0.2;
-							dy = 0.8;
-							t = RunSoundTexture;
-						}
-						else if (e is LightingChangeEvent)
-						{
-							s = 0.2;
-							dy = 1.5;
-							t = LightingEventTexture;
-						}
-						else
-						{
-							s = 0.2;
-							dy = 1.0;
-							t = null;
-						}
-
-						if (e is SwitchEvent sw && !renderedSwitches.Contains(sw.Index))
-						{
-							s = 0.2;
-							dy = 0.8;
-							t = SwitchEventTexture;
-							renderedSwitches.Add(sw.Index); // as otherwise we'll render the cube once for each track and z-fight
-						}
-
-						if (t != null)
-						{
-							TrackFollower f = new TrackFollower(Program.CurrentHost)
+							foreach (GeneralEvent e in Program.CurrentRoute.Tracks[railKey].Elements[i].Events)
 							{
-								TriggerType = EventTriggerType.None,
-								TrackPosition = p
-							};
-							f.UpdateAbsolute(p + e.TrackPositionDelta, true, false);
-							f.WorldPosition.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
-							f.WorldPosition.Y += dx * f.WorldSide.Y + dy * f.WorldUp.Y + dz * f.WorldDirection.Y;
-							f.WorldPosition.Z += dx * f.WorldSide.Z + dy * f.WorldUp.Z + dz * f.WorldDirection.Z;
+								double dy, dx = 0.0, dz = 0.0;
+								double s;
+								Texture t;
 
-							renderer.Cube.Draw(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, t);
+								if (e is BrightnessChangeEvent)
+								{
+									s = 0.15;
+									dy = 4.0;
+									t = BrightnessChangeTexture;
+								}
+								else if (e is BackgroundChangeEvent)
+								{
+									s = 0.25;
+									dy = 3.5;
+									t = BackgroundChangeTexture;
+								}
+								else if (e is StationStartEvent startEvent)
+								{
+									s = 0.25;
+									dy = 1.6;
+									t = StationStartTexture;
+									sta[startEvent.StationIndex] = true;
+								}
+								else if (e is StationEndEvent endEvent)
+								{
+									s = 0.25;
+									dy = 1.6;
+									t = StationEndTexture;
+									sta[endEvent.StationIndex] = true;
+								}
+								else if (e is LimitChangeEvent)
+								{
+									s = 0.2;
+									dy = 1.1;
+									t = LimitTexture;
+								}
+								else if (e is SectionChangeEvent)
+								{
+									s = 0.2;
+									dy = 0.8;
+									t = SectionTexture;
+								}
+								else if (e is TransponderEvent transponderEvent)
+								{
+									s = 0.15;
+									dy = 0.4;
+									/*
+									 * NOTE:
+									 * Beacon 21 is used by legacy beacon based BVE4 weather events
+									 * e.g. OS_ATS, UK* family of plugins etc.
+									 * Use the weather event texture in this case
+									 */
+									t = transponderEvent.Type == 21 ? WeatherEventTexture : TransponderTexture;
+
+								}
+								else if (e is SoundEvent soundEvent)
+								{
+									s = 0.2;
+									dx = soundEvent.Position.X;
+									dy = soundEvent.Position.Y < 0.1 ? 0.1 : soundEvent.Position.Y;
+									dz = soundEvent.Position.Z;
+									t = SoundTexture;
+								}
+								else if (e is PointSoundEvent)
+								{
+									s = 0.2;
+									dx = 0;
+									dy = 0.2;
+									dz = 0;
+									t = PointSoundTexture;
+								}
+								else if (e is RailSoundsChangeEvent)
+								{
+									s = 0.2;
+									dy = 0.8;
+									t = RunSoundTexture;
+								}
+								else if (e is LightingChangeEvent)
+								{
+									s = 0.2;
+									dy = 1.5;
+									t = LightingEventTexture;
+								}
+								else
+								{
+									s = 0.2;
+									dy = 1.0;
+									t = null;
+								}
+
+								if (e is SwitchEvent sw && !renderedSwitches.Contains(sw.Index))
+								{
+									s = 0.2;
+									dy = 0.8;
+									t = SwitchEventTexture;
+									renderedSwitches.Add(sw.Index); // as otherwise we'll render the cube once for each track and z-fight
+								}
+
+								if (t != null)
+								{
+									TrackFollower f = new TrackFollower(Program.CurrentHost)
+									{
+										TrackIndex = railKey,
+										TriggerType = EventTriggerType.None,
+										TrackPosition = p
+									};
+									f.UpdateAbsolute(p + e.TrackPositionDelta, true, false);
+									f.WorldPosition.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
+									f.WorldPosition.Y += dx * f.WorldSide.Y + dy * f.WorldUp.Y + dz * f.WorldDirection.Y;
+									f.WorldPosition.Z += dx * f.WorldSide.Z + dy * f.WorldUp.Z + dz * f.WorldDirection.Z;
+
+									renderer.Cube.Draw(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, t);
+								}
+							}
 						}
 					}
+					
 				}
 			}
 
