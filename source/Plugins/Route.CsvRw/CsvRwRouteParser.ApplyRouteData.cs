@@ -404,7 +404,35 @@ namespace CsvRwRouteParser
 								{
 									int m = CurrentRoute.Tracks[j].Elements[n].Events.Length;
 									Array.Resize(ref CurrentRoute.Tracks[j].Elements[n].Events, m + 1);
-									CurrentRoute.Tracks[j].Elements[n].Events[m] = new PointSoundEvent();
+									bool addPointSound = false;
+									if (Data.Blocks[i].Switches != null)
+									{
+										for (int sw = 0; sw < Data.Blocks[i].Switches.Length; sw++)
+										{
+											if (Data.Blocks[i].Switches[sw] != null)
+											{
+												if (sw == j || Data.Blocks[i].Switches[sw].SecondTrack == j)
+												{
+													/*
+													 * Switches are obviously(?) going to be on intersecting tracks
+													 * This means that we don't want to add the default point sound when Rail0 intersects with
+													 * another, but should do it in the switch instead for consistancy
+													 * 
+													 * Longer term, the original point sound method should really be got rid of entirely
+													 * (Parser option??)
+													 */
+													addPointSound = false;
+													break;
+												}
+												
+											}
+										}
+									}
+									if (addPointSound)
+									{
+										CurrentRoute.Tracks[j].Elements[n].Events[m] = new PointSoundEvent();
+									}
+									
 								}
 							}
 						}
