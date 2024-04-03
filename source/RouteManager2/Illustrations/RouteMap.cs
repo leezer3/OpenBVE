@@ -244,7 +244,7 @@ namespace RouteManager2
 					int k = CurrentRoute.Tracks.ElementAt(t).Key;
 					for (int i = firstUsedElement; i <= lastUsedElement; i++)
 					{
-						for (int j = 0; j < CurrentRoute.Tracks[k].Elements[i].Events.Length; j++)
+						for (int j = 0; j < CurrentRoute.Tracks[k].Elements[i].Events.Count; j++)
 						{
 							double x = CurrentRoute.Tracks[k].Elements[i].WorldPosition.X;
 							double y = CurrentRoute.Tracks[k].Elements[i].WorldPosition.Z;
@@ -267,7 +267,7 @@ namespace RouteManager2
 			
 			for (int i = firstUsedElement; i <= lastUsedElement; i++)
 			{
-				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
+				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Count; j++)
 				{
 					if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent e)
 					{
@@ -300,7 +300,7 @@ namespace RouteManager2
 			// STATION ICONS
 			for (int i = firstUsedElement; i <= lastUsedElement; i++)
 			{
-				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
+				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Count; j++)
 				{
 					if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent e)
 					{
@@ -336,7 +336,7 @@ namespace RouteManager2
 				Font f = new Font(FontFamily.GenericSansSerif, wh < 65536.0 ? 9.0f : 10.0f, GraphicsUnit.Pixel);
 				for (int i = firstUsedElement; i <= lastUsedElement; i++)
 				{
-					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
+					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Count; j++)
 					{
 						if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
 						{
@@ -555,7 +555,7 @@ namespace RouteManager2
 				StringFormat m = new StringFormat();
 				for (int i = firstUsedElement; i <= lastUsedElement; i++)
 				{
-					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
+					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Count; j++)
 					{
 						if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
 						{
@@ -686,7 +686,7 @@ namespace RouteManager2
 				}
 				Font boldFont = new Font(FontFamily.GenericSansSerif, 10.0f, FontStyle.Bold, GraphicsUnit.Pixel);
 				int nextTrackIndex = -1;
-				for (int j = 0; j < currentTrack.Elements[i + firstUsedElement].Events.Length; j++)
+				for (int j = 0; j < currentTrack.Elements[i + firstUsedElement].Events.Count; j++)
 				{
 					if (currentTrack.Elements[i].Events[j] is LimitChangeEvent lim)
 					{
@@ -705,7 +705,7 @@ namespace RouteManager2
 					if (currentTrack.Elements[i + firstUsedElement].Events[j] is SwitchEvent se)
 					{
 						// switch to different track if appropriate
-						if (se.SwitchDirection == 1 && CurrentRoute.Switches[se.Index].CurrentlySetTrack != key)
+						if (CurrentRoute.Switches[se.Index].Direction == TrackDirection.Forwards && CurrentRoute.Switches[se.Index].CurrentlySetTrack != key)
 						{
 							key = CurrentRoute.Switches[se.Index].CurrentlySetTrack;
 							currentTrack = CurrentRoute.Tracks[key];
@@ -751,7 +751,7 @@ namespace RouteManager2
 				}
 				// ATS / ATC
 				// for each track element, look for a StationStartEvent
-				for (int j = 0; j < currentTrack.Elements[i + firstUsedElement].Events.Length; j++)
+				for (int j = 0; j < currentTrack.Elements[i + firstUsedElement].Events.Count; j++)
 				{
 
 					if (currentTrack.Elements[i + firstUsedElement].Events[j] is StationStartEvent)
@@ -827,7 +827,7 @@ namespace RouteManager2
 			lastUsedElement	= 0;
 			for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++)
 			{
-				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
+				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Count; j++)
 				{
 					if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
 					{

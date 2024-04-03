@@ -26,22 +26,18 @@ namespace CsvRwRouteParser
 		{
 			if (StartingPosition >= StartingDistance & StartingPosition < EndingDistance)
 			{
-				int m = Element.Events.Length;
-				Array.Resize(ref Element.Events, m + 1);
 				double d = StartingPosition - StartingDistance;
 				if (Message != null)
 				{
-					Element.Events[m] = new MarkerStartEvent(Plugin.CurrentHost, d, Message);
+					Element.Events.Add(new MarkerStartEvent(Plugin.CurrentHost, d, Message));
 				}
 			}
 			if (EndingPosition >= StartingDistance & EndingPosition < EndingDistance)
 			{
-				int m = Element.Events.Length;
-				Array.Resize(ref Element.Events, m + 1);
 				double d = EndingPosition - StartingDistance;
 				if (Message != null)
 				{
-					Element.Events[m] = new MarkerEndEvent(Plugin.CurrentHost, d, Message);
+					Element.Events.Add(new MarkerEndEvent(Plugin.CurrentHost, d, Message));
 				}
 			}
 		}

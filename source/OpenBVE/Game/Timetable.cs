@@ -62,7 +62,7 @@ namespace OpenBve {
 				double LastTime = -1.0;
 				for (int i = 0; i < Program.CurrentRoute.Tracks[0].Elements.Length; i++)
 				{
-					for (int j = 0; j < Program.CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
+					for (int j = 0; j < Program.CurrentRoute.Tracks[0].Elements[i].Events.Count; j++)
 					{
 						if (Program.CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent sse && Program.CurrentRoute.Stations[sse.StationIndex].Name != string.Empty && !Program.CurrentRoute.Stations[sse.StationIndex].Dummy)
 						{

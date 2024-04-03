@@ -1002,7 +1002,7 @@ namespace TrainManager.Trains
 				{
 					for (int i = newTrackElement; i < currentTrackElement; i++)
 					{
-						for (int j = 0; j < TrainManagerBase.currentHost.Tracks[0].Elements[i].Events.Length; j++)
+						for (int j = 0; j < TrainManagerBase.currentHost.Tracks[0].Elements[i].Events.Count; j++)
 						{
 							TrainManagerBase.currentHost.Tracks[0].Elements[i].Events[j].Reset();
 						}

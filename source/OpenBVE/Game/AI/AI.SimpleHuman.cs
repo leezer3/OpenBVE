@@ -728,7 +728,7 @@ namespace OpenBve
 					{
 						double stp = Program.CurrentRoute.Tracks[currentTrack].Elements[i].StartingTrackPosition;
 						if (Train.FrontCarTrackPosition + lookahead <= stp) break;
-						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
+						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Count; j++)
 						{
 							if (!(Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent stationEvent) || Train.NextStopSkipped != StopSkipMode.None)
 							{
@@ -757,7 +757,7 @@ namespace OpenBve
 					{
 						double stp = Program.CurrentRoute.Tracks[currentTrack].Elements[i].StartingTrackPosition;
 						if (Train.FrontCarTrackPosition + lookahead <= stp) break;
-						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
+						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Count; j++)
 						{
 							if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is LimitChangeEvent limitEvent)
 							{
@@ -1048,7 +1048,7 @@ namespace OpenBve
 					{
 						double stp = Program.CurrentRoute.Tracks[currentTrack].Elements[i].StartingTrackPosition;
 						if (Train.FrontCarTrackPosition + lookahead <= stp) break;
-						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
+						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Count; j++)
 						{
 							if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent e && Train.NextStopSkipped == StopSkipMode.None)
 							{
@@ -1076,7 +1076,7 @@ namespace OpenBve
 					{
 						double stp = Program.CurrentRoute.Tracks[currentTrack].Elements[i].StartingTrackPosition;
 						if (Train.FrontCarTrackPosition + lookahead <= stp) break;
-						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
+						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Count; j++)
 						{
 							if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is LimitChangeEvent limitEvent)
 							{

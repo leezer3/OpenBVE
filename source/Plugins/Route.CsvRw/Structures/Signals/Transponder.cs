@@ -105,10 +105,8 @@ namespace CsvRwRouteParser
 				int t = SectionIndex;
 				if (t >= 0 && t < Plugin.CurrentRoute.Sections.Length)
 				{
-					int m = Element.Events.Length;
-					Array.Resize(ref Element.Events, m + 1);
 					double dt = TrackPosition - StartingDistance;
-					Element.Events[m] = new TransponderEvent(Plugin.CurrentRoute, dt, Type, Data, t, ClipToFirstRedSection);
+					Element.Events.Add(new TransponderEvent(Plugin.CurrentRoute, dt, Type, Data, t, ClipToFirstRedSection));
 					Type = -1;
 				}
 			}

@@ -165,10 +165,8 @@ namespace CsvRwRouteParser
 
 		internal void CreateEvent(double StartingDistance, ref double CurrentSpeedLimit, ref TrackElement Element)
 		{
-			int m = Element.Events.Length;
-			Array.Resize(ref Element.Events, m + 1);
 			double d = TrackPosition - StartingDistance;
-			Element.Events[m] = new LimitChangeEvent(Plugin.CurrentRoute, d, CurrentSpeedLimit, Speed);
+			Element.Events.Add(new LimitChangeEvent(Plugin.CurrentRoute, d, CurrentSpeedLimit, Speed));
 			CurrentSpeedLimit = Speed;
 		}
 	}
