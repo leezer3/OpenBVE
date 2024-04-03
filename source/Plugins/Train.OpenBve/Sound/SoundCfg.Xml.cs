@@ -79,10 +79,10 @@ namespace Train.OpenBve
 					{
 						foreach (XmlNode c in n.ChildNodes)
 						{
-							switch (c.Name.ToLowerInvariant())
+							Enum.TryParse(c.Name, true, out SoundCfgSection currentSection);
+							switch (currentSection)
 							{
-								case "ats":
-								case "plugin":
+								case SoundCfgSection.ATS:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of plugin sounds was defined in in XML file " + fileName);
@@ -94,7 +94,7 @@ namespace Train.OpenBve
 									}
 									ParseDictionaryNode(c, out car.Sounds.Plugin, center, SoundCfgParser.mediumRadius);
 									break;
-								case "brake":
+								case SoundCfgSection.Brake:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of brake sounds was defined in in XML file " + fileName);
@@ -134,7 +134,7 @@ namespace Train.OpenBve
 										}
 									}
 									break;
-								case "brakehandle":
+								case SoundCfgSection.BrakeHandle:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of brake handle sounds was defined in in XML file " + fileName);
@@ -174,7 +174,7 @@ namespace Train.OpenBve
 										}
 									}
 									break;
-								case "breaker":
+								case SoundCfgSection.Breaker:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of breaker sounds was defined in in XML file " + fileName);
@@ -201,14 +201,14 @@ namespace Train.OpenBve
 										}
 									}
 									break;
-								case "buzzer":
+								case SoundCfgSection.Buzzer:
 									if (!isDriverCar)
 									{
 										break;
 									}
 									ParseNode(c, out Train.SafetySystems.StationAdjust.AdjustAlarm, panel, SoundCfgParser.tinyRadius);
 									break;
-								case "compressor":
+								case SoundCfgSection.Compressor:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of compressor sounds was defined in in XML file " + fileName);
@@ -243,7 +243,7 @@ namespace Train.OpenBve
 										}
 									}
 									break;
-								case "door":
+								case SoundCfgSection.Door:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of door sounds was defined in in XML file " + fileName);
@@ -275,7 +275,7 @@ namespace Train.OpenBve
 										}
 									}
 									break;
-								case "flange":
+								case SoundCfgSection.Flange:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of flange sounds was defined in in XML file " + fileName);
@@ -283,7 +283,7 @@ namespace Train.OpenBve
 									}
 									ParseDictionaryNode(c, out car.Flange.Sounds, center, SoundCfgParser.mediumRadius);
 									break;
-								case "horn":
+								case SoundCfgSection.Horn:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of horn sounds was defined in in XML file " + fileName);
@@ -316,12 +316,10 @@ namespace Train.OpenBve
 										}
 									}
 									break;
-								case "loop":
-								case "noise":
+								case SoundCfgSection.Loop:
 									ParseNode(c, out car.Sounds.Loop, center, SoundCfgParser.mediumRadius);
 									break;
-								case "mastercontroller":
-								case "powerhandle":
+								case SoundCfgSection.MasterController:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of power handle sounds was defined in in XML file " + fileName);
@@ -365,7 +363,7 @@ namespace Train.OpenBve
 										}
 									}
 									break;
-								case "motor":
+								case SoundCfgSection.Motor:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of motor sounds was defined in in XML file " + fileName);
@@ -383,7 +381,7 @@ namespace Train.OpenBve
 									TrainXmlParser.MotorSoundXMLParsed[car.Index] = true;
 									ParseMotorSoundTableNode(c, car, ref car.Sounds.Motor, center, SoundCfgParser.mediumRadius);
 									break;
-								case "pilotlamp":
+								case SoundCfgSection.PilotLamp:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of pilot-lamp sounds was defined in in XML file " + fileName);
@@ -409,7 +407,7 @@ namespace Train.OpenBve
 										}
 									}
 									break;
-								case "switch":
+								case SoundCfgSection.Switch:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of point front axle sounds was defined in in XML file " + fileName);
@@ -422,8 +420,7 @@ namespace Train.OpenBve
 									// ReSharper disable once CoVariantArrayConversion
 									car.RearAxle.PointSounds = pointSounds;
 									break;
-								case "pointfrontaxle":
-								case "switchfrontaxle":
+								case SoundCfgSection.SwitchFrontAxle:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of point front axle sounds was defined in in XML file " + fileName);
@@ -435,8 +432,7 @@ namespace Train.OpenBve
 									// ReSharper disable once CoVariantArrayConversion
 									car.FrontAxle.PointSounds = frontAxlePointSounds;
 									break;
-								case "pointrearaxle":
-								case "switchrearaxle":
+								case SoundCfgSection.SwitchRearAxle:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
@@ -447,8 +443,7 @@ namespace Train.OpenBve
 									// ReSharper disable once CoVariantArrayConversion
 									car.RearAxle.PointSounds = rearAxlePointSounds;
 									break;
-								case "reverser":
-								case "reverserhandle":
+								case SoundCfgSection.Reverser:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of reverser sounds was defined in in XML file " + fileName);
@@ -474,7 +469,7 @@ namespace Train.OpenBve
 										}
 									}
 									break;
-								case "run":
+								case SoundCfgSection.Run:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of run sounds was defined in in XML file " + fileName);
@@ -482,12 +477,10 @@ namespace Train.OpenBve
 									}
 									ParseDictionaryNode(c, out car.Run.Sounds, center, SoundCfgParser.mediumRadius);
 									break;
-								case "shoe":
-								case "rub":
+								case SoundCfgSection.Shoe:
 									ParseNode(c, out car.CarBrake.Rub, center, SoundCfgParser.mediumRadius);
 									break;
-								case "suspension":
-								case "spring":
+								case SoundCfgSection.Suspension:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of suspension sounds was defined in in XML file " + fileName);
@@ -511,7 +504,7 @@ namespace Train.OpenBve
 										}
 									}
 									break;
-								case "requeststop":
+								case SoundCfgSection.RequestStop:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of request stop sounds was defined in in XML file " + fileName);
@@ -536,7 +529,7 @@ namespace Train.OpenBve
 										}
 									}
 									break;
-								case "touch":
+								case SoundCfgSection.Touch:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of touch sounds was defined in in XML file " + fileName);
@@ -548,7 +541,7 @@ namespace Train.OpenBve
 									}
 									ParseArrayNode(c, out car.Sounds.Touch, center, SoundCfgParser.mediumRadius);
 									break;
-								case "sanders":
+								case SoundCfgSection.Sanders:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of sanders sounds was defined in in XML file " + fileName);
@@ -584,7 +577,7 @@ namespace Train.OpenBve
 										}
 									}
 									break;
-								case "coupler":
+								case SoundCfgSection.Coupler:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of coupler sounds was defined in in XML file " + fileName);
@@ -603,7 +596,7 @@ namespace Train.OpenBve
 										}
 									}
 									break;
-								case "driversupervisiondevice":
+								case SoundCfgSection.DriverSupervisionDevice:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of driver supervision device sounds was defined in in XML file " + fileName);
