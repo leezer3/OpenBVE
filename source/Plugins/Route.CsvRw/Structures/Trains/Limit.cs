@@ -9,10 +9,8 @@ using RouteManager2.Events;
 
 namespace CsvRwRouteParser
 {
-	internal class Limit
+	internal class Limit : AbstractStructure
 	{
-		/// <summary>The track position at which the limit is placed</summary>
-		internal readonly double TrackPosition;
 		/// <summary>The speed limit to be enforced</summary>
 		/// <remarks>Stored in km/h, has been transformed by UnitOfSpeed if appropriate</remarks>
 		internal readonly double Speed;
@@ -21,9 +19,8 @@ namespace CsvRwRouteParser
 		/// <summary>The cource (little arrow) on the speed limit post denoting a diverging JA limit</summary>
 		internal readonly int Cource;
 
-		internal Limit(double trackPosition, double speed, int direction, int cource)
+		internal Limit(double trackPosition, double speed, int direction, int cource, int railIndex) : base(trackPosition, railIndex)
 		{
-			TrackPosition = trackPosition;
 			Speed = speed;
 			Direction = direction;
 			Cource = cource;
@@ -168,10 +165,8 @@ namespace CsvRwRouteParser
 
 		internal void CreateEvent(double StartingDistance, ref double CurrentSpeedLimit, ref TrackElement Element)
 		{
-			int m = Element.Events.Length;
-			Array.Resize(ref Element.Events, m + 1);
 			double d = TrackPosition - StartingDistance;
-			Element.Events[m] = new LimitChangeEvent(Plugin.CurrentRoute, d, CurrentSpeedLimit, Speed);
+			Element.Events.Add(new LimitChangeEvent(Plugin.CurrentRoute, d, CurrentSpeedLimit, Speed));
 			CurrentSpeedLimit = Speed;
 		}
 	}

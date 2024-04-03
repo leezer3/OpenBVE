@@ -6,6 +6,7 @@ using OpenBveApi.Trains;
 using RouteManager2.Events;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
 namespace OpenBve
@@ -727,7 +728,7 @@ namespace OpenBve
 					{
 						double stp = Program.CurrentRoute.Tracks[currentTrack].Elements[i].StartingTrackPosition;
 						if (Train.FrontCarTrackPosition + lookahead <= stp) break;
-						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
+						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Count; j++)
 						{
 							if (!(Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent stationEvent) || Train.NextStopSkipped != StopSkipMode.None)
 							{
@@ -756,7 +757,7 @@ namespace OpenBve
 					{
 						double stp = Program.CurrentRoute.Tracks[currentTrack].Elements[i].StartingTrackPosition;
 						if (Train.FrontCarTrackPosition + lookahead <= stp) break;
-						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
+						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Count; j++)
 						{
 							if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is LimitChangeEvent limitEvent)
 							{
@@ -948,9 +949,14 @@ namespace OpenBve
 				// buffers ahead
 				if (Train.IsPlayerTrain)
 				{
-					for (int i = 0; i < Program.CurrentRoute.BufferTrackPositions.Length; i++)
+					for (int i = 0; i < Program.CurrentRoute.BufferTrackPositions.Count; i++)
 					{
-						double dist = Program.CurrentRoute.BufferTrackPositions[i] - Train.FrontCarTrackPosition;
+						if (Program.CurrentRoute.BufferTrackPositions[i].TrackIndex != Train.Cars[0].FrontAxle.Follower.TrackIndex)
+						{
+							// different rail
+							continue;
+						}
+						double dist = Program.CurrentRoute.BufferTrackPositions[i].TrackPosition - Train.FrontCarTrackPosition;
 						if (dist > 0.0)
 						{
 							double edec;
@@ -1042,7 +1048,7 @@ namespace OpenBve
 					{
 						double stp = Program.CurrentRoute.Tracks[currentTrack].Elements[i].StartingTrackPosition;
 						if (Train.FrontCarTrackPosition + lookahead <= stp) break;
-						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
+						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Count; j++)
 						{
 							if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent e && Train.NextStopSkipped == StopSkipMode.None)
 							{
@@ -1070,7 +1076,7 @@ namespace OpenBve
 					{
 						double stp = Program.CurrentRoute.Tracks[currentTrack].Elements[i].StartingTrackPosition;
 						if (Train.FrontCarTrackPosition + lookahead <= stp) break;
-						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
+						for (int j = 0; j < Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events.Count; j++)
 						{
 							if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is LimitChangeEvent limitEvent)
 							{
@@ -1262,9 +1268,14 @@ namespace OpenBve
 				// buffers ahead
 				if (Train.IsPlayerTrain)
 				{
-					for (int i = 0; i < Program.CurrentRoute.BufferTrackPositions.Length; i++)
+					for (int i = 0; i < Program.CurrentRoute.BufferTrackPositions.Count; i++)
 					{
-						double dist = Train.FrontCarTrackPosition - Program.CurrentRoute.BufferTrackPositions[i];
+						if (Program.CurrentRoute.BufferTrackPositions[i].TrackIndex != Train.Cars[0].FrontAxle.Follower.TrackIndex)
+						{
+							// different rail
+							continue;
+						}
+						double dist = Train.RearCarTrackPosition - Program.CurrentRoute.BufferTrackPositions[i].TrackPosition;
 						if (dist > 0.0)
 						{
 							double edec;

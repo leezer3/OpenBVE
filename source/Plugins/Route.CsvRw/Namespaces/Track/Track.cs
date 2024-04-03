@@ -11,6 +11,7 @@ using RouteManager2.MessageManager;
 using RouteManager2.MessageManager.MessageTypes;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
+using RouteManager2.Tracks;
 
 namespace CsvRwRouteParser
 {
@@ -195,6 +196,8 @@ namespace CsvRwRouteParser
 						currentRail.RailStarted = false;
 						currentRail.RailStartRefreshed = false;
 						currentRail.RailEnded = true;
+						currentRail.IsDriveable = false;
+						
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 						{
 							if (!NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out currentRail.RailEnd.X))
@@ -1149,7 +1152,7 @@ namespace CsvRwRouteParser
 
 					int n = Data.Blocks[BlockIndex].Limits.Length;
 					Array.Resize(ref Data.Blocks[BlockIndex].Limits, n + 1);
-					Data.Blocks[BlockIndex].Limits[n] = new Limit(Data.TrackPosition, limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit, direction, cource);
+					Data.Blocks[BlockIndex].Limits[n] = new Limit(Data.TrackPosition, limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit, direction, cource, 0);
 				}
 					break;
 				case TrackCommand.Stop:
@@ -1826,9 +1829,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						int n = CurrentRoute.BufferTrackPositions.Length;
-						Array.Resize(ref CurrentRoute.BufferTrackPositions, n + 1);
-						CurrentRoute.BufferTrackPositions[n] = Data.TrackPosition;
+						CurrentRoute.BufferTrackPositions.Add(new BufferStop(0, Data.TrackPosition, true));
 					}
 				}
 					break;
@@ -3494,8 +3495,69 @@ namespace CsvRwRouteParser
 								}
 							}
 						}
+				}
+					break;
+				case TrackCommand.RailLimit:
+				{
+					int railIndex = -1;
+					double limit = 0.0;
+					int direction = 0, cource = 0;
+					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailLimit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						break;
 					}
 
+					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out limit))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Limit is invalid in Track.RailLimit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						break;
+					}
+
+					if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out direction))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Direction is invalid in Track.Limit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						direction = 0;
+					}
+
+					if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out cource))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Cource is invalid in Track.Limit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						cource = 0;
+					}
+
+					int n = Data.Blocks[BlockIndex].Limits.Length;
+					Array.Resize(ref Data.Blocks[BlockIndex].Limits, n + 1);
+					Data.Blocks[BlockIndex].Limits[n] = new Limit(Data.TrackPosition, limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit, direction, cource, railIndex);
+					
+				}
+					break;
+				case TrackCommand.RailBuffer:
+				{
+					if (!PreviewOnly)
+					{
+						int railIndex = -1;
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailBuffer at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							break;
+						}
+
+						int affectsAI = 0;
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out affectsAI))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Limit is invalid in Track.RailLimit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+
+						if (affectsAI != 0 && affectsAI != 1)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "AffectsAI is invalid in Track.RailLimit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							affectsAI = 0;
+						}
+
+						Plugin.CurrentRoute.BufferTrackPositions.Add(new BufferStop(railIndex, Data.TrackPosition, affectsAI != 0));
+					}
+				}
 					break;
 			}
 		}

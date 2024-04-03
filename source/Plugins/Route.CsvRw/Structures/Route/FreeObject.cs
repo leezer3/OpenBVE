@@ -4,10 +4,8 @@ using OpenBveApi.World;
 
 namespace CsvRwRouteParser
 {
-	internal class FreeObj
+	internal class FreeObj : AbstractStructure
 	{
-		/// <summary>The track position of the object</summary>
-		private readonly double TrackPosition;
 		/// <summary>The routefile index of the object</summary>
 		private readonly int Type;
 		/// <summary>The position of the object</summary>
@@ -19,9 +17,8 @@ namespace CsvRwRouteParser
 		/// <summary>The roll of the object (radians)</summary>
 		private readonly double Roll;
 
-		internal FreeObj(double trackPosition, int type, Vector2 position, double yaw, double pitch = 0, double roll = 0)
+		internal FreeObj(double trackPosition, int type, Vector2 position, double yaw, double pitch = 0, double roll = 0) : base(trackPosition)
 		{
-			TrackPosition = trackPosition;
 			Type = type;
 			Position = position;
 			Yaw = yaw;

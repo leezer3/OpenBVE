@@ -5,11 +5,10 @@ using RouteManager2.Stations;
 
 namespace CsvRwRouteParser
 {
-	internal class Stop
+	internal class Stop : AbstractStructure
 	{
-		internal Stop(double trackPosition, int stationIndex, int direction, double forwardTolerance, double backwardTolerance, int numberOfCars)
+		internal Stop(double trackPosition, int stationIndex, int direction, double forwardTolerance, double backwardTolerance, int numberOfCars) : base(trackPosition)
 		{
-			TrackPosition = trackPosition;
 			StationIndex = stationIndex;
 			Direction = direction;
 			ForwardTolerance = forwardTolerance;
@@ -17,7 +16,6 @@ namespace CsvRwRouteParser
 			Cars = numberOfCars;
 		}
 
-		internal readonly double TrackPosition;
 		private readonly int StationIndex;
 		internal readonly int Direction;
 		private readonly double ForwardTolerance;

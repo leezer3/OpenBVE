@@ -1,4 +1,5 @@
 using OpenBveApi.Math;
+using System.Collections.Generic;
 
 namespace OpenBveApi.Routes
 {
@@ -34,7 +35,7 @@ namespace OpenBveApi.Routes
 		/// <summary>The side vector</summary>
 		public Vector3 WorldSide;
 		/// <summary>An array containing all events attached to this element</summary>
-		public GeneralEvent[] Events;
+		public List<GeneralEvent> Events;
 		/// <summary>Whether the rail is driveable</summary>
 		public bool IsDriveable;
 		/// <summary>Whether the element contains a switch</summary>
@@ -58,7 +59,7 @@ namespace OpenBveApi.Routes
 			this.WorldDirection = Vector3.Forward;
 			this.WorldUp = Vector3.Down;
 			this.WorldSide = Vector3.Right;
-			this.Events = new GeneralEvent[] { };
+			this.Events = new List<GeneralEvent>();
 			this.IsDriveable = false;
 			this.ContainsSwitch = false;
 		}

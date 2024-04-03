@@ -16,6 +16,7 @@ using RouteManager2.Climate;
 using RouteManager2.SignalManager;
 using RouteManager2.SignalManager.PreTrain;
 using RouteManager2.Stations;
+using RouteManager2.Tracks;
 using TrainManager.Trains;
 
 namespace RouteViewer {
@@ -46,7 +47,7 @@ namespace RouteViewer {
 			Program.CurrentRoute.LightDefinitions = new LightDefinition[] { };
 			Program.CurrentRoute.Stations = new RouteStation[] { };
 			Program.CurrentRoute.Sections = new Section[] { };
-			Program.CurrentRoute.BufferTrackPositions = new double[] { };
+			Program.CurrentRoute.BufferTrackPositions = new List<BufferStop>();
 			Program.CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			Program.CurrentRoute.BogusPreTrainInstructions = new BogusPreTrainInstruction[] { };
 			Interface.CurrentOptions.TrainName = "";

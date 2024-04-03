@@ -10,15 +10,12 @@ namespace RouteManager2.Events
 		public readonly Guid Index;
 		/// <summary>The track position of the switch</summary>
 		public readonly double TrackPosition;
-		/// <summary>The direction the switch faces</summary>
-		public readonly int SwitchDirection;
 
 		private readonly CurrentRoute currentRoute;
 
-		public SwitchEvent(Guid idx, int direction, double trackPosition, CurrentRoute route)
+		public SwitchEvent(Guid idx, double trackPosition, CurrentRoute route)
 		{
 			Index = idx;
-			SwitchDirection = direction;
 			TrackPosition = trackPosition;
 			currentRoute = route;
 		}
@@ -52,15 +49,26 @@ namespace RouteManager2.Events
 					trackFollower.UpdateWorldCoordinates(false);
 					break;
 				case EventTriggerType.TrainFront:
-					if (SwitchDirection == 1)
+					if ((int)currentRoute.Switches[Index].Direction == 1)
 					{
 						trackFollower.Train.Switch = Index;
 					}
 					break;
 				case EventTriggerType.TrainRear:
-					if (SwitchDirection == -1)
+					if ((int)currentRoute.Switches[Index].Direction == -1)
 					{
 						trackFollower.Train.Switch = Index;
+					}
+					break;
+				case EventTriggerType.Camera:
+					// Camera should always follow the track and will just go through switches set against us
+					if (direction == (int)currentRoute.Switches[Index].Direction)
+					{
+						trackFollower.TrackIndex = currentRoute.Switches[Index].CurrentlySetTrack;
+					}
+					else
+					{
+						trackFollower.TrackIndex = currentRoute.Switches[Index].ToeRail;
 					}
 					break;
 			}

@@ -384,7 +384,7 @@ namespace OpenBveApi.Routes
 
 		private void CheckEvents(int ElementIndex, int Direction, double OldDelta, double NewDelta)
 		{
-			if (this.TriggerType == EventTriggerType.None || currentHost.Tracks[TrackIndex].Elements[ElementIndex].Events.Length == 0)
+			if (this.TriggerType == EventTriggerType.None || currentHost.Tracks[TrackIndex].Elements[ElementIndex].Events.Count == 0)
 			{
 				return;
 			}
@@ -392,10 +392,10 @@ namespace OpenBveApi.Routes
 			int Index = TrackIndex;
 			if (Direction < 0)
 			{
-				for (int j = currentHost.Tracks[Index].Elements[ElementIndex].Events.Length - 1; j >= 0; j--)
+				for (int j = currentHost.Tracks[Index].Elements[ElementIndex].Events.Count - 1; j >= 0; j--)
 				{
 					GeneralEvent e = currentHost.Tracks[Index].Elements[ElementIndex].Events[j];
-					if (currentHost.Tracks[Index].Elements[ElementIndex].Events.Length == 0)
+					if (currentHost.Tracks[Index].Elements[ElementIndex].Events.Count == 0)
 					{
 						return;
 					}
@@ -408,7 +408,7 @@ namespace OpenBveApi.Routes
 			}
 			else if (Direction > 0)
 			{
-				for (int j = 0; j < currentHost.Tracks[Index].Elements[ElementIndex].Events.Length; j++)
+				for (int j = 0; j < currentHost.Tracks[Index].Elements[ElementIndex].Events.Count; j++)
 				{
 					GeneralEvent e = currentHost.Tracks[Index].Elements[ElementIndex].Events[j];
 					if (OldDelta < e.TrackPositionDelta & NewDelta >= e.TrackPositionDelta)

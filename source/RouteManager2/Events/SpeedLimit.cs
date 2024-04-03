@@ -7,7 +7,11 @@ namespace RouteManager2.Events
 	/// <summary>Is called when the speed limit upon the track change</summary>
 	public class LimitChangeEvent : GeneralEvent
 	{
+		/// <summary>The previous speed limit</summary>
+		/// <remarks>Units are m/s</remarks>
 		public readonly double PreviousSpeedLimit;
+		/// <summary>The next speed limit</summary>
+		/// <remarks>Units are m/s</remarks>
 		public readonly double NextSpeedLimit;
 
 		private readonly CurrentRoute currentRoute;

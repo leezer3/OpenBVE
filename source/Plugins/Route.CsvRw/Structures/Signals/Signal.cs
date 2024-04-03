@@ -4,11 +4,10 @@ using RouteManager2.SignalManager;
 
 namespace CsvRwRouteParser
 {
-	internal class Signal
+	internal class Signal : AbstractStructure
 	{
-		internal Signal(double trackPosition, int sectionIndex, SignalObject signalObject, Vector2 position, double yaw, double pitch, double roll, bool showObject, bool showPost)
+		internal Signal(double trackPosition, int sectionIndex, SignalObject signalObject, Vector2 position, double yaw, double pitch, double roll, bool showObject, bool showPost) : base(trackPosition)
 		{
-			TrackPosition = trackPosition;
 			SectionIndex = sectionIndex;
 			SignalObject = signalObject;
 			Position = position;
@@ -41,7 +40,6 @@ namespace CsvRwRouteParser
 			}
 		}
 
-		internal readonly double TrackPosition;
 		private readonly int SectionIndex;
 		private readonly SignalObject SignalObject;
 		private readonly Vector2 Position;
