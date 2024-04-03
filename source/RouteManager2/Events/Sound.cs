@@ -107,7 +107,6 @@ namespace RouteManager2.Events
 								this.DontTriggerAnymore = this.Once;
 								return;
 						}
-						return;
 					}
 					double pitch = 1.0;
 					double gain = 1.0;
