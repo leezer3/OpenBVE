@@ -193,6 +193,9 @@
 					<trans-unit id="route_corrupt_missingobjects">
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
 					</trans-unit>
+					<trans-unit id="route_switch_turn">
+						<source>The .Turn command and the .Switch command may not be used in the same route.</source>
+					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
 					</trans-unit>

@@ -33,6 +33,7 @@ namespace CsvRwRouteParser
 			internal bool LineEndingFix;
 			internal bool ValueBasedSections = false;
 			internal bool TurnUsed = false;
+			internal bool SwitchUsed = false;
 			/*
 			 * HMMSIM
 			 */
