@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Hosts;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
@@ -124,7 +125,7 @@ namespace RouteManager2
 			int firstUsedElement, lastUsedElement;
 			if (trackPosition != -1)
 			{
-				RestrictedRouteRange(trackPosition, 500, out firstUsedElement, out lastUsedElement);
+				RestrictedRouteRange(0, trackPosition, 500, out firstUsedElement, out lastUsedElement);
 			}
 			else
 			{
@@ -192,6 +193,7 @@ namespace RouteManager2
 			for (int i = 0; i < CurrentRoute.Tracks.Count; i++)
 			{
 				int key = CurrentRoute.Tracks.ElementAt(i).Key;
+				int finalElement = Math.Min(CurrentRoute.Tracks[key].Elements.Length, lastUsedElement);
 				if (i == 0)
 				{
 					DrawRailPath(g, mode, key, firstUsedElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
@@ -199,7 +201,6 @@ namespace RouteManager2
 				else
 				{
 					int startElement = -1;
-					int finalElement = Math.Min(CurrentRoute.Tracks[key].Elements.Length, lastUsedElement);
 					for (int el = firstUsedElement; el < finalElement; el++)
 					{
 						if (CurrentRoute.Tracks[key].Elements[el].IsDriveable)
@@ -231,7 +232,8 @@ namespace RouteManager2
 
 			if (mode == MapMode.SecondaryTrack)
 			{
-				DrawPlayerPath(g, currentTrack, firstUsedElement, lastUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
+				RestrictedRouteRange(currentTrack, trackPosition, 500, out int firstTrackUsedElement, out int lastTrackUsedElement);
+				DrawPlayerPath(g, currentTrack, firstTrackUsedElement, lastTrackUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
 			}
 
 			
@@ -241,17 +243,18 @@ namespace RouteManager2
 				// Find switches
 				for (int t = 0; t < CurrentRoute.Tracks.Count; t++)
 				{
-					int k = CurrentRoute.Tracks.ElementAt(t).Key;
-					for (int i = firstUsedElement; i <= lastUsedElement; i++)
+					int key = CurrentRoute.Tracks.ElementAt(t).Key;
+					int finalElement = Math.Min(CurrentRoute.Tracks[key].Elements.Length, lastUsedElement);
+					for (int i = firstUsedElement; i <= finalElement; i++)
 					{
-						for (int j = 0; j < CurrentRoute.Tracks[k].Elements[i].Events.Count; j++)
+						for (int j = 0; j < CurrentRoute.Tracks[key].Elements[i].Events.Count; j++)
 						{
-							double x = CurrentRoute.Tracks[k].Elements[i].WorldPosition.X;
-							double y = CurrentRoute.Tracks[k].Elements[i].WorldPosition.Z;
+							double x = CurrentRoute.Tracks[key].Elements[i].WorldPosition.X;
+							double y = CurrentRoute.Tracks[key].Elements[i].WorldPosition.Z;
 							x = imageOrigin.X + (x - x0) * imageScale.X;
 							y = imageOrigin.Y + (z0 - y) * imageScale.Y + imageSize.Y;
 							// NOTE: key will appear twice, once per track but we only want the first instance
-							if (CurrentRoute.Tracks[k].Elements[i].Events[j] is SwitchEvent se && !switchPositions.ContainsKey(se.Index))
+							if (CurrentRoute.Tracks[key].Elements[i].Events[j] is SwitchEvent se && !switchPositions.ContainsKey(se.Index))
 							{
 								switchPositions.Add(se.Index, new Vector2(x, y));
 								// draw circle
@@ -688,7 +691,7 @@ namespace RouteManager2
 				int nextTrackIndex = -1;
 				for (int j = 0; j < currentTrack.Elements[i + firstUsedElement].Events.Count; j++)
 				{
-					if (currentTrack.Elements[i].Events[j] is LimitChangeEvent lim)
+					if (currentTrack.Elements[i + firstUsedElement].Events[j] is LimitChangeEvent lim)
 					{
 						// turns out centering text in a circle using System.Drawing is a PITA
 						// numbers are fudges, need to check whether they work OK on non windows....
@@ -710,6 +713,11 @@ namespace RouteManager2
 							key = CurrentRoute.Switches[se.Index].CurrentlySetTrack;
 							currentTrack = CurrentRoute.Tracks[key];
 							j = 0;
+							if (i + firstUsedElement > currentTrack.Elements.Length)
+							{
+								elementsToDraw = i;
+								goto End;
+							}
 							continue;
 						}
 					}
@@ -727,6 +735,7 @@ namespace RouteManager2
 					currentTrack = CurrentRoute.Tracks[nextTrackIndex];
 				}
 			}
+			End:
 			DrawSegmentedCurve(g, Pens.Blue, p, start, elementsToDraw - 1);
 		}
 
@@ -849,23 +858,24 @@ namespace RouteManager2
 		}
 
 		/// <summary>Finds the route range for the specified track position and draw radius</summary>
+		/// <param name="railIndex">The current rail index</param>
 		/// <param name="trackPosition">The track position</param>
 		/// <param name="drawRadius">The draw radius</param>
 		/// <param name="firstUsedElement">The index of the first used element</param>
 		/// <param name="lastUsedElement">The index of the last used element</param>
-		private static void RestrictedRouteRange(double trackPosition, int drawRadius, out int firstUsedElement, out int lastUsedElement)
+		private static void RestrictedRouteRange(int railIndex, double trackPosition, int drawRadius, out int firstUsedElement, out int lastUsedElement)
 		{
 			lastUsedElement = 0;
 			firstUsedElement = -1;
 			double st = Math.Max(0, trackPosition - drawRadius);
 			double et = trackPosition + drawRadius;
-			for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++)
+			for (int i = 0; i < CurrentRoute.Tracks[railIndex].Elements.Length; i++)
 			{
-				if (CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition > st && firstUsedElement == -1)
+				if (CurrentRoute.Tracks[railIndex].Elements[i].StartingTrackPosition > st && CurrentRoute.Tracks[railIndex].Elements[i].IsDriveable && firstUsedElement == -1)
 				{
 					firstUsedElement = i == 0 ? 0 : i - 1;
 				}
-				if (CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition > et)
+				if (firstUsedElement != -1 && (CurrentRoute.Tracks[railIndex].Elements[i].StartingTrackPosition > et || !CurrentRoute.Tracks[railIndex].Elements[i].IsDriveable))
 				{
 					lastUsedElement = i == 0 ? 0 : i - 1;
 					break;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 
@@ -395,7 +396,7 @@ namespace OpenBveApi.Routes
 			{
 				double startingTrackPosition = Elements[i].StartingTrackPosition;
 				double endingTrackPosition = Elements[i + 1].StartingTrackPosition;
-				foreach (GeneralEvent e in Elements[i].Events)
+				foreach (GeneralEvent e in Elements[i].Events.ToList())
 				{
 					double p = startingTrackPosition + e.TrackPositionDelta;
 					if (p >= endingTrackPosition)
