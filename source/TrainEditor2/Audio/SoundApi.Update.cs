@@ -248,19 +248,19 @@ namespace TrainEditor2.Audio
 					if (source.State != SoundSourceState.Playing)
 					{
 						LoadBuffer(source.Buffer);
-						if (source.Buffer.Loaded)
+						switch (source.Buffer.Loaded)
 						{
-							AL.GenSources(1, out source.OpenAlSourceName);
-							AL.Source(source.OpenAlSourceName, ALSourcei.Buffer, source.Buffer.OpenAlBufferName);
-						}
-						else
-						{
-							/*
-							 * We cannot play the sound because
-							 * the buffer could not be loaded.
-							 * */
-							source.State = SoundSourceState.Stopped;
-							continue;
+							case SoundBufferState.Loaded:
+								AL.GenSources(1, out source.OpenAlSourceName);
+								AL.Source(source.OpenAlSourceName, ALSourcei.Buffer, source.Buffer.OpenAlBufferName);
+								break;
+							case SoundBufferState.Invalid:
+								// We cannot play the sound, as the buffer could not be loaded
+								source.State = SoundSourceState.Stopped;
+								continue;
+							default:
+								// The background thread is still loading our sound- Do not modify source state
+								continue;
 						}
 					}
 

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -81,10 +83,15 @@ namespace SoundManager
 		protected const double MinLogClampFactor = -20.0;
 		protected const double MaxLogClampFactor = -1.0;
 
+		internal readonly Thread SoundLoaderThread;
+
+		private bool soundThread = true;
+		private readonly ConcurrentQueue<ThreadStart> SoundLoaderQueue = new ConcurrentQueue<ThreadStart>();
 
 		protected SoundsBase(HostInterface currentHost)
 		{
 			CurrentHost = currentHost;
+			SoundLoaderThread = new Thread(SoundThread);
 		}
 
 		/// <summary>Initializes audio.</summary>
@@ -148,7 +155,7 @@ namespace SoundManager
 			{
 				OpenAlMic = null;
 			}
-
+			SoundLoaderThread.Start();
 			if (OpenAlDevice != IntPtr.Zero)
 			{
 				OpenAlContext = Alc.CreateContext(OpenAlDevice, (int[])null);
@@ -173,16 +180,17 @@ namespace SoundManager
 					OpenAlMic.Dispose();
 					OpenAlMic = null;
 				}
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"errors","sound_openal_context"}), Translations.GetInterfaceString(CurrentHost.Application, new string[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"errors","sound_openal_context"}), Translations.GetInterfaceString(CurrentHost.Application, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
 			OpenAlContext = ContextHandle.Zero;
-			MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"errors","sound_openal_device"}), Translations.GetInterfaceString(CurrentHost.Application, new string[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+			MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"errors","sound_openal_device"}), Translations.GetInterfaceString(CurrentHost.Application, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 		}
 
 		/// <summary>Deinitializes audio.</summary>
 		public void DeInitialize()
 		{
+			soundThread = false;
 			StopAllSounds();
 			UnloadAllBuffers();
 			UnloadAllMicBuffers();
@@ -203,7 +211,22 @@ namespace SoundManager
 				OpenAlMic = null;
 			}
 		}
-
+		
+		private void SoundThread()
+		{
+			soundThread = true;
+			while (soundThread)
+			{
+				if (SoundLoaderQueue.TryDequeue(out ThreadStart result))
+				{
+					result.Invoke();
+				}
+				else
+				{
+					Thread.Sleep(100);	
+				}
+			}
+		}
 
 		// --- registering buffers ---
 
@@ -300,7 +323,7 @@ namespace SoundManager
 		/// <returns>Whether loading the buffer was successful.</returns>
 		public void LoadBuffer(SoundBuffer buffer)
 		{
-			buffer.Load();
+			SoundLoaderQueue.Enqueue(buffer.Load);
 		}
 
 		/// <summary>Loads all sound buffers immediately.</summary>
@@ -319,11 +342,11 @@ namespace SoundManager
 		/// <param name="buffer"></param>
 		protected void UnloadBuffer(SoundBuffer buffer)
 		{
-			if (buffer.Loaded)
+			if (buffer.Loaded == SoundBufferState.Loaded)
 			{
 				AL.DeleteBuffers(1, ref buffer.OpenAlBufferName);
 				buffer.OpenAlBufferName = 0;
-				buffer.Loaded = false;
+				buffer.Loaded = SoundBufferState.NotLoaded;
 				buffer.Ignore = false;
 			}
 		}
@@ -354,8 +377,7 @@ namespace SoundManager
 		{
 			foreach (MicSource source in MicSources)
 			{
-				int state;
-				AL.GetSource(source.OpenAlSourceName, ALGetSourcei.BuffersProcessed, out state);
+				AL.GetSource(source.OpenAlSourceName, ALGetSourcei.BuffersProcessed, out int state);
 				UnloadMicBuffers(source.OpenAlSourceName, state);
 			}
 		}
@@ -391,9 +413,8 @@ namespace SoundManager
 		/// <returns>The sound source.</returns>
 		public SoundSource PlaySound(SoundHandle buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, object parent, bool looped)
 		{
-			if (buffer is SoundBuffer)
+			if (buffer is SoundBuffer b)
 			{
-				SoundBuffer b = (SoundBuffer)buffer;
 				if (Sources.Length == SourceCount)
 				{
 					Array.Resize(ref Sources, Sources.Length << 1);
@@ -414,9 +435,8 @@ namespace SoundManager
 		/// <returns>The sound source.</returns>
 		public SoundSource PlaySound(SoundHandle buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, bool looped)
 		{
-			if (buffer is SoundBuffer)
+			if (buffer is SoundBuffer b)
 			{
-				SoundBuffer b = (SoundBuffer)buffer;
 				if (Sources.Length == SourceCount)
 				{
 					Array.Resize(ref Sources, Sources.Length << 1);
@@ -506,8 +526,7 @@ namespace SoundManager
 		/// <returns>Whether the sound is playing or supposed to be playing.</returns>
 		public bool IsPlaying(object Source)
 		{
-			SoundSource source = Source as SoundSource;
-			if (source != null)
+			if (Source is SoundSource source)
 			{
 				if (source.State == SoundSourceState.PlayPending | source.State == SoundSourceState.Playing)
 				{
@@ -548,7 +567,7 @@ namespace SoundManager
 			int count = 0;
 			for (int i = 0; i < BufferCount; i++)
 			{
-				if (Buffers[i].Loaded)
+				if (Buffers[i].Loaded == SoundBufferState.Loading || Buffers[i].Loaded == SoundBufferState.Loaded)
 				{
 					count++;
 				}

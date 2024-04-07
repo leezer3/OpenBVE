@@ -7,10 +7,8 @@ using RouteManager2.Events;
 
 namespace CsvRwRouteParser
 {
-	internal class Transponder
+	internal class Transponder : AbstractStructure
 	{
-		/// <summary>The track position at which the transponder is placed</summary>
-		internal readonly double TrackPosition;
 		/// <summary>The type of transponder</summary>
 		/// <remarks>Commonly set to frequency in hz</remarks>
 		internal int Type; //Unable to set as readonly as may be changed in postprocessing
@@ -34,9 +32,8 @@ namespace CsvRwRouteParser
 		/// <summary>The roll of the beacon object if displayed</summary>
 		internal readonly double Roll;
 
-		internal Transponder(double trackPosition, int type, int data, Vector2 position, int sectionIndex, int beaconStructureIndex = -1, bool clipToFirstRedSection = true, double yaw = 0, double pitch = 0, double roll = 0)
+		internal Transponder(double trackPosition, int type, int data, Vector2 position, int sectionIndex, int beaconStructureIndex = -1, bool clipToFirstRedSection = true, double yaw = 0, double pitch = 0, double roll = 0) : base(trackPosition)
 		{
-			TrackPosition = trackPosition;
 			Type = type;
 			Data = data;
 			Position = position;
@@ -48,12 +45,11 @@ namespace CsvRwRouteParser
 			BeaconStructureIndex = beaconStructureIndex;
 		}
 
-		internal Transponder(double trackPosition, TransponderTypes type, int data)
+		internal Transponder(double trackPosition, TransponderTypes type, int data) : base(trackPosition)
 		{
-			TrackPosition = trackPosition;
 			Type = (int)type;
 			Data = data;
-			Position = new Vector2();
+			Position = Vector2.Null;
 			SectionIndex = -1;
 			ClipToFirstRedSection = false;
 			Yaw = 0;
@@ -109,10 +105,8 @@ namespace CsvRwRouteParser
 				int t = SectionIndex;
 				if (t >= 0 && t < Plugin.CurrentRoute.Sections.Length)
 				{
-					int m = Element.Events.Length;
-					Array.Resize(ref Element.Events, m + 1);
 					double dt = TrackPosition - StartingDistance;
-					Element.Events[m] = new TransponderEvent(Plugin.CurrentRoute, dt, Type, Data, t, ClipToFirstRedSection);
+					Element.Events.Add(new TransponderEvent(Plugin.CurrentRoute, dt, Type, Data, t, ClipToFirstRedSection));
 					Type = -1;
 				}
 			}

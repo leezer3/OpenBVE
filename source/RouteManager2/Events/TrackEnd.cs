@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Hosts;
+﻿using OpenBveApi;
+using OpenBveApi.Hosts;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
@@ -28,8 +29,14 @@ namespace RouteManager2.Events
 			{
 				train.Dispose();
 			}
-			else if (train.IsPlayerTrain)
+			else if (train.IsPlayerTrain && currentHost.SimulationState == SimulationState.Running)
 			{
+				if (currentHost.Tracks[trackFollower.TrackIndex].Elements[trackFollower.LastTrackElement].ContainsSwitch)
+				{
+					// Marginal hack: Don't trigger derailment in a block containing switch from a RailEnd command
+					// Assume that anywhere else this should be valid
+					return;
+				}
 				train.Derail(trackFollower.Car, 0.0);
 			}
 

@@ -311,11 +311,8 @@ namespace OpenBveApi.Objects
 				{
 					radianX = RotateXFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
-				
-				if (RotateXDamping != null)
-				{
-					RotateXDamping.Update(TimeElapsed, ref radianX, EnableDamping);
-				}
+
+				RotateXDamping?.Update(TimeElapsed, ref radianX, EnableDamping);
 			}
 
 			double radianY = 0.0;
@@ -326,11 +323,8 @@ namespace OpenBveApi.Objects
 				{
 					radianY = RotateYFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
-				
-				if (RotateYDamping != null)
-				{
-					RotateYDamping.Update(TimeElapsed, ref radianY, EnableDamping);
-				}
+
+				RotateYDamping?.Update(TimeElapsed, ref radianY, EnableDamping);
 			}
 
 			double radianZ = 0.0;
@@ -341,11 +335,8 @@ namespace OpenBveApi.Objects
 				{
 					radianZ = RotateZFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
-				
-				if (RotateZDamping != null)
-				{
-					RotateZDamping.Update(TimeElapsed, ref radianZ, EnableDamping);
-				}
+
+				RotateZDamping?.Update(TimeElapsed, ref radianZ, EnableDamping);
 			}
 
 			bool scaleX = ScaleXFunction != null;

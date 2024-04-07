@@ -114,19 +114,13 @@ namespace TrainManager.Trains
 						}
 					}
 
-					if (AI != null)
-					{
-						AI.Trigger(TimeElapsed);
-					}
+					AI?.Trigger(TimeElapsed);
 				}
 			}
 			else if (State == TrainState.Bogus)
 			{
 				// bogus train
-				if (AI != null)
-				{
-					AI.Trigger(TimeElapsed);
-				}
+				AI?.Trigger(TimeElapsed);
 			}
 		}
 
@@ -149,10 +143,7 @@ namespace TrainManager.Trains
 			foreach (var Car in Cars)
 			{
 				Car.Run.Update(TimeElapsed);
-				if (Car.Sounds.Motor != null)
-				{
-					Car.Sounds.Motor.Update(TimeElapsed);
-				}
+				Car.Sounds.Motor?.Update(TimeElapsed);
 				
 			}
 
@@ -165,11 +156,11 @@ namespace TrainManager.Trains
 			}
 		}
 
-		public override void Jump(int stationIndex)
+		public override void Jump(int stationIndex, int trackIndex)
 		{
 			Dispose();
 			State = TrainState.Pending;
-			TrainManagerBase.currentHost.ProcessJump(this, stationIndex);
+			TrainManagerBase.currentHost.ProcessJump(this, stationIndex, 0);
 		}
 	}
 }

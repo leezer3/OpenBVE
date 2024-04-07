@@ -4,10 +4,8 @@ using OpenBveApi.World;
 
 namespace CsvRwRouteParser
 {
-	internal class FreeObj
+	internal class FreeObj : AbstractStructure
 	{
-		/// <summary>The track position of the object</summary>
-		private readonly double TrackPosition;
 		/// <summary>The routefile index of the object</summary>
 		private readonly int Type;
 		/// <summary>The position of the object</summary>
@@ -19,9 +17,8 @@ namespace CsvRwRouteParser
 		/// <summary>The roll of the object (radians)</summary>
 		private readonly double Roll;
 
-		internal FreeObj(double trackPosition, int type, Vector2 position, double yaw, double pitch = 0, double roll = 0)
+		internal FreeObj(double trackPosition, int type, Vector2 position, double yaw, double pitch = 0, double roll = 0) : base(trackPosition)
 		{
-			TrackPosition = trackPosition;
 			Type = type;
 			Position = position;
 			Yaw = yaw;
@@ -34,10 +31,7 @@ namespace CsvRwRouteParser
 			double dz = TrackPosition - StartingDistance;
 			WorldPosition += Position.X * RailTransformation.X + Position.Y * RailTransformation.Y + dz * RailTransformation.Z;
 			FreeObjects.TryGetValue(Type, out UnifiedObject obj);
-			if (obj != null)
-			{
-				obj.CreateObject(WorldPosition, RailTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, TrackPosition);
-			}
+			obj?.CreateObject(WorldPosition, RailTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, TrackPosition);
 		}
 
 		internal void CreateGroundAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation GroundTransformation, Vector2 Direction, double Height, double StartingDistance, double EndingDistance)
@@ -45,11 +39,7 @@ namespace CsvRwRouteParser
 			double d = TrackPosition - StartingDistance;
 			Vector3 wpos = WorldPosition + new Vector3(Direction.X * d + Direction.Y * Position.X, Position.Y - Height, Direction.Y * d - Direction.X * Position.X);
 			FreeObjects.TryGetValue(Type, out UnifiedObject obj);
-			if (obj != null)
-			{
-				obj.CreateObject(wpos, GroundTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, TrackPosition);
-			}
-			
+			obj?.CreateObject(wpos, GroundTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, TrackPosition);
 		}
 	}
 }

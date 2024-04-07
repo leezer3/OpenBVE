@@ -2,6 +2,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -44,7 +45,9 @@ namespace OpenBve
 		private static readonly Color128 ColourHighlight = Color128.Black;
 		private static readonly Color128 ColourNormal = Color128.White;
 		private static readonly Picturebox LogoPictureBox = new Picturebox(Program.Renderer);
-
+		internal static List<FoundSwitch> nextSwitches = new List<FoundSwitch>();
+		internal static List<FoundSwitch> previousSwitches = new List<FoundSwitch>();
+		internal static bool switchesFound = false;
 		
 
 		// some sizes and constants
@@ -133,6 +136,7 @@ namespace OpenBve
 				}
 			}
 			int quarterWidth = (int) (Program.Renderer.Screen.Width / 4.0);
+			int quarterHeight = (int)(Program.Renderer.Screen.Height / 4.0);
 			int descriptionLoc = Program.Renderer.Screen.Width - quarterWidth - quarterWidth / 2;
 			int descriptionWidth = quarterWidth + quarterWidth / 2;
 			int descriptionHeight = descriptionWidth;
@@ -146,6 +150,14 @@ namespace OpenBve
 			routePictureBox.Location = new Vector2(imageLoc, 0);
 			routePictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			routePictureBox.BackgroundColor = Color128.White;
+			switchMainPictureBox.Location = new Vector2(imageLoc, quarterHeight);
+			switchMainPictureBox.Size = new Vector2(quarterWidth, quarterWidth);
+			switchMainPictureBox.BackgroundColor = Color128.Transparent;
+			switchSettingPictureBox.Location = new Vector2(imageLoc, quarterHeight * 2);
+			switchSettingPictureBox.Size = new Vector2(quarterWidth / 4.0, quarterWidth / 4.0);
+			switchSettingPictureBox.BackgroundColor = Color128.Transparent;
+			switchMapPictureBox.Location = new Vector2(imageLoc / 2.0, 0);
+			switchMapPictureBox.Size = new Vector2(quarterWidth * 2.0, Program.Renderer.Screen.Height);
 			LogoPictureBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0);
 			LogoPictureBox.Size = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Width / 2.0);
 			LogoPictureBox.Texture = Program.Renderer.ProgramLogo;
@@ -489,15 +501,15 @@ namespace OpenBve
 							switch (currentPackage.PackageType)
 							{
 								case PackageType.Route:
-									DatabaseFunctions.cleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref s);
+									DatabaseFunctions.CleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref s);
 									Database.currentDatabase.InstalledRoutes.Remove(currentPackage);
 									break;
 								case PackageType.Train:
-									DatabaseFunctions.cleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref s);
+									DatabaseFunctions.CleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref s);
 									Database.currentDatabase.InstalledTrains.Remove(currentPackage);
 									break;
 								case PackageType.Other:
-									DatabaseFunctions.cleanDirectory(Program.FileSystem.OtherInstallationDirectory, ref s);
+									DatabaseFunctions.CleanDirectory(Program.FileSystem.OtherInstallationDirectory, ref s);
 									Database.currentDatabase.InstalledOther.Remove(currentPackage);
 									break;
 							}
@@ -707,7 +719,7 @@ namespace OpenBve
 								// simulation commands
 							case MenuTag.JumpToStation:         // JUMP TO STATION
 								Reset();
-								TrainManagerBase.PlayerTrain.Jump((int)menuItem.Data);
+								TrainManagerBase.PlayerTrain.Jump((int)menuItem.Data, 0);
 								Program.TrainManager.JumpTFO();
 								break;
 							case MenuTag.ExitToMainMenu:        // BACK TO MAIN MENU
@@ -761,6 +773,40 @@ namespace OpenBve
 										Instance.PopMenu();
 										break;
 								}
+								break;
+							case MenuTag.ToggleSwitch:
+								Guid switchToToggle = (Guid)menuItem.Data;
+								if (switchToToggle == null || !Program.CurrentRoute.Switches.ContainsKey(switchToToggle))
+								{
+									break;
+								}
+								int oldTrack = Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack;
+								Program.CurrentRoute.Switches[switchToToggle].Toggle();
+								Program.CurrentHost.AddMessage(MessageType.Information, false, "Switch " + switchToToggle + " changed from Track " + oldTrack + " to " + Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack);
+								if (Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack == Program.CurrentRoute.Switches[switchToToggle].LeftTrack)
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-L.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
+								}
+								else
+								{
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "In-Game\\Switch-R.png"), new TextureParameters(null, null), out switchSettingPictureBox.Texture);
+								}
+
+								menu.Items[2].Text = "Current Setting: " + Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack;
+								switchesFound = false; // as switch has been toggled, need to recalculate switches along route
+								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								break;
+							case MenuTag.PreviousSwitch:
+								FoundSwitch fs = previousSwitches[0];
+								previousSwitches.RemoveAt(0);
+								nextSwitches.Insert(0, fs);
+								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								break;
+							case MenuTag.NextSwitch:
+								FoundSwitch ns = nextSwitches[0];
+								nextSwitches.RemoveAt(0);
+								previousSwitches.Insert(0, ns);
+								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 						}
 					}
@@ -1061,6 +1107,16 @@ namespace OpenBve
 					controlTextBox.Text = Translations.CommandInfos[Interface.CurrentControls[data].Command].Description + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","assignment_current"}) + Environment.NewLine + Environment.NewLine + GetControlDescription(data);
 					controlTextBox.Draw();
 					controlPictureBox.Draw();
+					break;
+				case MenuType.ChangeSwitch:
+					/*
+					 * Set final image locs, which we don't know till the menu extent has been measured in the render sequence
+					 */
+					switchMainPictureBox.Location = new Vector2(menu.Width + (MenuItemBorderX * 4), switchMainPictureBox.Location.Y);
+					switchSettingPictureBox.Location = new Vector2(menu.Width + (MenuItemBorderX * 4) + 80, switchSettingPictureBox.Location.Y);
+					switchMainPictureBox.Draw();
+					switchSettingPictureBox.Draw();
+					switchMapPictureBox.Draw();
 					break;
 			}
 			

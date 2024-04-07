@@ -4,10 +4,8 @@ using OpenBveApi.Sounds;
 
 namespace CsvRwRouteParser
 {
-	internal class Sound
+	internal class Sound : AbstractStructure
 	{
-		/// <summary>The track position of the sound</summary>
-		internal readonly double TrackPosition;
 		/// <summary>The sound buffer to play</summary>
 		internal readonly SoundHandle SoundBuffer;
 		/// <summary>The type of sound</summary>
@@ -25,7 +23,7 @@ namespace CsvRwRouteParser
 		/// <summary>The backwards tolerance for triggering the sound</summary>
 		internal readonly double BackwardTolerance;
 
-		internal Sound(double trackPosition, string fileName, double speed, Vector2 position = new Vector2(), double forwardTolerance = 0, double backwardTolerance = 0, bool allCars = false)
+		internal Sound(double trackPosition, string fileName, double speed, Vector2 position = new Vector2(), double forwardTolerance = 0, double backwardTolerance = 0, bool allCars = false) : base(trackPosition)
 		{
 			//TODO:
 			//This is always set to a constant 15.0 on loading a sound, and never touched again
@@ -54,7 +52,6 @@ namespace CsvRwRouteParser
 					break;
 			}
 			
-			TrackPosition = trackPosition;
 			Speed = speed;
 			Position = position;
 			ForwardTolerance = forwardTolerance;

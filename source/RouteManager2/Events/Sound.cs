@@ -93,13 +93,20 @@ namespace RouteManager2.Events
 			{
 				if (!PlayerTrainOnly | trackFollower.Train.IsPlayerTrain)
 				{
-					if (AllCars && triggerType == EventTriggerType.OtherCarRearAxle)
+					if (AllCars)
 					{
 						/*
 						 * For a multi-car announce, we only want the front axles to trigger
 						 * However, we also want the rear car, rear axle to run the final processing of DontTriggerAnymore
 						 */
-						return;
+						switch (triggerType)
+						{
+							case EventTriggerType.OtherCarRearAxle:
+								return;
+							case EventTriggerType.RearCarRearAxle:
+								this.DontTriggerAnymore = this.Once;
+								return;
+						}
 					}
 					double pitch = 1.0;
 					double gain = 1.0;
@@ -119,14 +126,12 @@ namespace RouteManager2.Events
 						}
 						if (buffer != null)
 						{
-							if (AllCars || triggerType != EventTriggerType.RearCarRearAxle)
-							{
-								currentHost.PlaySound(buffer, pitch, gain, Position, trackFollower.Car, false);
-							}
+							currentHost.PlaySound(buffer, pitch, gain, Position, trackFollower.Car, false);
 						}
 					}
-					if (!AllCars || triggerType == EventTriggerType.RearCarRearAxle)
+					if (!AllCars)
 					{
+						// All cars case is handled above
 						this.DontTriggerAnymore = this.Once;
 					}
 				}

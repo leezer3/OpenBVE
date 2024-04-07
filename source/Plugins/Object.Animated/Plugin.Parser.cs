@@ -67,6 +67,8 @@ namespace Plugin
 											string b = Lines[i].Substring(j + 1).TrimStart();
 											if (!Enum.TryParse(a, true, out AnimatedKey key))
 											{
+												currentHost.AddMessage(MessageType.Error, false, "Unknown key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+												i++;
 												continue;
 											}
 											switch (key)
@@ -910,7 +912,8 @@ namespace Plugin
 											string b = Lines[i].Substring(j + 1).TrimStart();
 											if (!Enum.TryParse(a, true, out AnimatedKey key))
 											{
-												currentHost.AddMessage(MessageType.Error, false, "Unknown key " + key + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+												currentHost.AddMessage(MessageType.Error, false, "Unknown key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+												i++;
 												continue;
 											}
 											switch (key)
@@ -1149,6 +1152,7 @@ namespace Plugin
 											if (!Enum.TryParse(a, true, out AnimatedKey key))
 											{
 												currentHost.AddMessage(MessageType.Error, false, "Unknown key " + key + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
+												i++;
 												continue;
 											}
 											switch (key)

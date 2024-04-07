@@ -6,19 +6,17 @@ using RouteManager2.SignalManager;
 
 namespace CsvRwRouteParser
 {
-	internal class Section
+	internal class Section : AbstractStructure
 	{
 
-		internal Section(double trackPosition, int[] aspects, int departureStationIndex, SectionType type, bool invisible = false)
+		internal Section(double trackPosition, int[] aspects, int departureStationIndex, SectionType type, bool invisible = false) : base(trackPosition)
 		{
-			TrackPosition = trackPosition;
 			Aspects = aspects;
 			DepartureStationIndex = departureStationIndex;
 			Type = type;
 			Invisible = invisible;
 		}
 
-		private readonly double TrackPosition;
 		private readonly int[] Aspects;
 		private readonly int DepartureStationIndex;
 		private readonly bool Invisible;
@@ -44,10 +42,8 @@ namespace CsvRwRouteParser
 							 */
 							blockIdx = 0;
 						}
-						int o = CurrentRoute.Tracks[0].Elements[blockIdx].Events.Length;
-						Array.Resize(ref CurrentRoute.Tracks[0].Elements[blockIdx].Events, o + 1);
 						double dt = Blocks[g].Transponders[l].TrackPosition - StartingDistance + (CurrentBlock - g) * BlockInterval;
-						CurrentRoute.Tracks[0].Elements[blockIdx].Events[o] = new TransponderEvent(CurrentRoute, dt, Blocks[g].Transponders[l].Type, Blocks[g].Transponders[l].Data, m, Blocks[g].Transponders[l].ClipToFirstRedSection);
+						CurrentRoute.Tracks[0].Elements[blockIdx].Events.Add(new TransponderEvent(CurrentRoute, dt, Blocks[g].Transponders[l].Type, Blocks[g].Transponders[l].Data, m, Blocks[g].Transponders[l].ClipToFirstRedSection));
 						Blocks[g].Transponders[l].Type = -1;
 					}
 				}
@@ -82,9 +78,7 @@ namespace CsvRwRouteParser
 			CurrentRoute.Sections[m].Invisible = Invisible;
 			// create section change event
 			double d = TrackPosition - StartingDistance;
-			int p = CurrentRoute.Tracks[0].Elements[CurrentTrackElement].Events.Length;
-			Array.Resize(ref CurrentRoute.Tracks[0].Elements[CurrentTrackElement].Events, p + 1);
-			CurrentRoute.Tracks[0].Elements[CurrentTrackElement].Events[p] = new SectionChangeEvent(CurrentRoute, d, m - 1, m);
+			CurrentRoute.Tracks[0].Elements[CurrentTrackElement].Events.Add(new SectionChangeEvent(CurrentRoute, d, m - 1, m));
 		}
 	}
 }

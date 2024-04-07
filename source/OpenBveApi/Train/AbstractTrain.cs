@@ -1,4 +1,6 @@
-﻿namespace OpenBveApi.Trains
+using System;
+
+namespace OpenBveApi.Trains
 {
 	/// <summary>An abstract train</summary>
 	public abstract class AbstractTrain
@@ -25,6 +27,7 @@
 		/// <summary>The route speed limts</summary>
 		public double[] RouteLimits;
 		/// <summary>The current route limit in effect</summary>
+		/// <remarks>Units are m/s</remarks>
 		public double CurrentRouteLimit;
 		/// <summary>The current speed of the train (as an average of all cars)</summary>
 		/// <remarks>Default units are m/s</remarks>
@@ -32,6 +35,8 @@
 		/// <summary>The index to the next station at which the train calls</summary>
 		/// <remarks>If stationary at a timetabled station, this will return that station</remarks>
 		public int Station;
+		/// <summary>The last switch the train passed over</summary>
+		public Guid Switch;
 		/// <summary>The timetable delta from the player train</summary>
 		/// <remarks>Is negative for earlier trains, or negative for later trains</remarks>
 		public double TimetableDelta;
@@ -147,7 +152,8 @@
 
 		/// <summary>Jumps the train to the specified station index</summary>
 		/// <param name="StationIndex">The index of the station to jump to</param>
-		public virtual void Jump(int StationIndex)
+		/// <param name="TrackKey">The key of the track on which the station is placed</param>
+		public virtual void Jump(int StationIndex, int TrackKey)
 		{
 
 		}

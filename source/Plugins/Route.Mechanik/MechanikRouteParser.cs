@@ -746,16 +746,13 @@ namespace MechanikRouteParser
 							DefaultTrackPosition = currentRouteData.Blocks[i].StartingTrackPosition,
 							StopTime = 30
 						};
-						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationStartEvent(Plugin.CurrentRoute, 0, s);
+						
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new StationStartEvent(Plugin.CurrentRoute, 0, s));
 					}
 					else
 					{
 						int s = Plugin.CurrentRoute.Stations.Length - 1;
-						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationEndEvent(Plugin.CurrentHost, Plugin.CurrentRoute, 0, s);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new StationEndEvent(Plugin.CurrentHost, Plugin.CurrentRoute, 0, s));
 						Plugin.CurrentRoute.Stations[s].Stops = new[]
 						{
 							new RouteManager2.Stations.StationStop
@@ -779,10 +776,8 @@ namespace MechanikRouteParser
 					foreach (Semaphore signal in currentRouteData.Blocks[i].Signals)
 					{
 
-						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
 						int s = Plugin.CurrentRoute.Sections.Length;
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new SectionChangeEvent(Plugin.CurrentRoute, 0, s, s + 1);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new SectionChangeEvent(Plugin.CurrentRoute, 0, s, s + 1));
 						Array.Resize(ref Plugin.CurrentRoute.Sections, s + 1);
 						SectionAspect[] newAspects = {
 							new SectionAspect(0, 0),
@@ -823,15 +818,11 @@ namespace MechanikRouteParser
 
 					if (currentRouteData.Blocks[i].HornBlow)
 					{
-						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new HornBlowEvent(0, HornTypes.Primary, true);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new HornBlowEvent(0, HornTypes.Primary, true));
 					}
 					if (currentRouteData.Blocks[i].SignalBeacon)
 					{
-						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new TransponderEvent(Plugin.CurrentRoute, 0, 2, 0, Plugin.CurrentRoute.Sections.Length - 1, true);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new TransponderEvent(Plugin.CurrentRoute, 0, 2, 0, Plugin.CurrentRoute.Sections.Length - 1, true));
 					}
 				}
 				
@@ -865,9 +856,7 @@ namespace MechanikRouteParser
 						// For the minute, let's ignore and see how much further we get
 						continue;
 					}
-					int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new RouteManager2.Events.SoundEvent(Plugin.CurrentHost, 0, AvailableSounds[currentRouteData.Blocks[i].Sounds[j].SoundIndex], true, false, currentRouteData.Blocks[i].Sounds[j].Looped, false, currentRouteData.Blocks[i].Sounds[j].Position);
+					Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new RouteManager2.Events.SoundEvent(Plugin.CurrentHost, 0, AvailableSounds[currentRouteData.Blocks[i].Sounds[j].SoundIndex], true, false, currentRouteData.Blocks[i].Sounds[j].Looped, false, currentRouteData.Blocks[i].Sounds[j].Position));
 				}
 			}
 			Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements, CurrentTrackLength);
@@ -879,7 +868,7 @@ namespace MechanikRouteParser
 					Plugin.CurrentRoute.Stations[i].Stops = new RouteManager2.Stations.StationStop[] { };
 				}
 			}
-			Plugin.CurrentRoute.Tracks[0].Elements[CurrentTrackLength -1].Events = new GeneralEvent[] { new TrackEndEvent(Plugin.CurrentHost, 500) }; //Remember that Mechanik often has very long objects
+			Plugin.CurrentRoute.Tracks[0].Elements[CurrentTrackLength -1].Events = new List<GeneralEvent> { new TrackEndEvent(Plugin.CurrentHost, 500) }; //Remember that Mechanik often has very long objects
 
 			
 			string routeHash = Path.GetChecksum(RouteFile);
@@ -1014,7 +1003,7 @@ namespace MechanikRouteParser
 					string path = Path.CombineFile(Path.GetDirectoryName(tDat), s);
 					if (File.Exists(path))
 					{
-						MechanikTexture t = new MechanikTexture(path, s);
+						MechanikTexture t = new MechanikTexture(path);
 						AvailableTextures.Add(k, t);
 					}
 

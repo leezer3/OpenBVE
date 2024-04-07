@@ -509,7 +509,7 @@ namespace OpenBveApi.Packages
 		/// <summary>This function cleans empty subdirectories after the uninstallation of a package</summary>
 		/// <param name="currentDirectory">The directory to clean (Normally the root package install directory)</param>
 		/// <param name="Result">The results output string</param>
-		public static void cleanDirectory(string currentDirectory, ref string Result)
+		public static void CleanDirectory(string currentDirectory, ref string Result)
 		{
 			if (!Directory.Exists(currentDirectory))
 			{
@@ -517,7 +517,7 @@ namespace OpenBveApi.Packages
 			}
 			foreach (var directory in Directory.EnumerateDirectories(currentDirectory))
 			{
-				cleanDirectory(directory, ref Result);		
+				CleanDirectory(directory, ref Result);		
 			}
 			IEnumerable<string> entries = Directory.EnumerateFileSystemEntries(currentDirectory,"*", SearchOption.AllDirectories);
 			if (!entries.Any())

@@ -560,13 +560,13 @@ namespace OpenBve
 				switch (packageToUninstall.PackageType)
 				{
 					case PackageType.Other:
-						DatabaseFunctions.cleanDirectory(Program.FileSystem.OtherInstallationDirectory, ref uninstallResults);
+						DatabaseFunctions.CleanDirectory(Program.FileSystem.OtherInstallationDirectory, ref uninstallResults);
 						break;
 					case PackageType.Route:
-						DatabaseFunctions.cleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref uninstallResults);
+						DatabaseFunctions.CleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref uninstallResults);
 						break;
 					case PackageType.Train:
-						DatabaseFunctions.cleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref uninstallResults);
+						DatabaseFunctions.CleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref uninstallResults);
 						break;
 				}
 				labelUninstallSuccess.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","uninstall_success"});

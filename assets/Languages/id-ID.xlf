@@ -2766,7 +2766,7 @@
 						<source>Shows or hides vertex normals</source>
 						<target>Tampilkan / sembunyikan normals</target>
 					</trans-unit>
-					<trans-unit id="debug_brake">
+					<trans-unit id="debug_brake_systems">
 						<source>Shows or hides brake system debug output</source>
 						<target>Tampilkan / sembunyikan sistem pengereman</target>
 					</trans-unit>

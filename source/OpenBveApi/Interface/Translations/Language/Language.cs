@@ -220,8 +220,7 @@ namespace OpenBveApi.Interface
 		/// <remarks>If the translated string does not exist in the current language, this may return a result from a fallback language file</remarks>
 		public string GetInterfaceString(HostApplication hostApplication, string[] parameters)
 		{
-			bool exists;
-			string interfaceString = GetInterfaceString(hostApplication, parameters, out exists);
+			string interfaceString = GetInterfaceString(hostApplication, parameters, out bool exists);
 
 			if (exists)
 			{

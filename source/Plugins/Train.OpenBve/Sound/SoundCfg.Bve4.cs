@@ -107,9 +107,10 @@ namespace Train.OpenBve
 					System.Threading.Thread.Sleep(1);
 					if (Plugin.Cancel) return;
 				}
-				switch (Lines[i].ToLowerInvariant())
+				Enum.TryParse(Lines[i].TrimStart('[').TrimEnd(']').Replace(" ", string.Empty), true, out SoundCfgSection currentSection);
+				switch (currentSection)
 				{
-					case "[run]":
+					case SoundCfgSection.Run:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -146,7 +147,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[flange]":
+					case SoundCfgSection.Flange:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -183,7 +184,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[motor]":
+					case SoundCfgSection.Motor:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -224,7 +225,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[switch]":
+					case SoundCfgSection.Switch:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -266,7 +267,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[brake]":
+					case SoundCfgSection.Brake:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -319,7 +320,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[compressor]":
+					case SoundCfgSection.Compressor:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -353,7 +354,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[suspension]":
+					case SoundCfgSection.Suspension:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -385,7 +386,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[horn]":
+					case SoundCfgSection.Horn:
 						i++;
 						while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
@@ -475,7 +476,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[door]":
+					case SoundCfgSection.Door:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -520,7 +521,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[ats]":
+					case SoundCfgSection.ATS:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -556,7 +557,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[buzzer]":
+					case SoundCfgSection.Buzzer:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -578,7 +579,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[pilot lamp]":
+					case SoundCfgSection.PilotLamp:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -602,7 +603,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[brake handle]":
+					case SoundCfgSection.BrakeHandle:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -638,7 +639,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[master controller]":
+					case SoundCfgSection.MasterController:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -674,7 +675,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[reverser]":
+					case SoundCfgSection.Reverser:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -698,7 +699,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[breaker]":
+					case SoundCfgSection.Breaker:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -722,7 +723,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[others]":
+					case SoundCfgSection.Others:
 						i++;
 						while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
@@ -765,7 +766,7 @@ namespace Train.OpenBve
 							i++;
 						}
 						i--; break;
-					case "[windscreen]":
+					case SoundCfgSection.Windscreen:
 						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -792,6 +793,16 @@ namespace Train.OpenBve
 										break;
 								}
 							}
+							i++;
+						}
+						i--; break;
+					case SoundCfgSection.Unknown:
+						if (!Lines[i].ToLowerInvariant().StartsWith("version"))
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unknown section " + Lines[i].Trim() + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+						}
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						{
 							i++;
 						}
 						i--; break;

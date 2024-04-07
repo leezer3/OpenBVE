@@ -786,7 +786,7 @@ namespace OpenBve
 						}
 
 						break;
-					case Translations.Command.ReverserAnyPostion:
+					case Translations.Command.ReverserAnyPosition:
 						TrainManager.PlayerTrain.Handles.Reverser.ApplyState((ReverserPosition)Control.Option);
 						break;
 					case Translations.Command.HoldBrake:
@@ -1366,6 +1366,18 @@ namespace OpenBve
 							nextStation.AccessibilityAnnounced = true;
 						}
 
+						break;
+					case Translations.Command.SwitchMenu:
+						switch (Program.Renderer.CurrentInterface)
+						{
+							case InterfaceType.Normal:
+								Program.Renderer.CurrentInterface = InterfaceType.SwitchChangeMap;
+								Game.switchChangeDialog.Show();
+								break;
+							case InterfaceType.SwitchChangeMap:
+								Game.switchChangeDialog.Close(null, null);
+								break;
+						}
 						break;
 				}
 			}

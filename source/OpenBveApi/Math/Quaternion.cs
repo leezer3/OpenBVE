@@ -1,4 +1,5 @@
-﻿/*
+﻿#pragma warning disable IDE0017
+/*
 Some Matrix math code derived from OpenTK-
 
 Copyright (c) 2006 - 2008 The Open Toolkit library.
@@ -19,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma warning disable 660,661
+#pragma warning disable 660, 661
 using System.Runtime.InteropServices;
 
 namespace OpenBveApi.Math
@@ -121,9 +122,9 @@ namespace OpenBveApi.Math
 				q.Normalize();
 			}
 
-			Vector4 result = new Vector4();
 
-			result.W = 2.0f * (float)System.Math.Acos(q.W); // angle
+            Vector4 result = new Vector4();
+            result.W = 2.0f * (float)System.Math.Acos(q.W); // angle
 			float den = (float)System.Math.Sqrt(1.0 - q.W * q.W);
 			if (den > 0.0001f)
 			{

@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2021-2023, Marc Riera, The OpenBVE Project
+//Copyright (c) 2021-2024, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,15 +22,15 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 using LibUsbDotNet;
 using LibUsbDotNet.Info;
 using LibUsbDotNet.Main;
 using OpenBveApi;
 using OpenBveApi.Interface;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading;
 
 namespace DenshaDeGoInput
 {
@@ -74,19 +74,9 @@ namespace DenshaDeGoInput
 			{
 				int vid = int.Parse(id.Substring(0, 4), NumberStyles.HexNumber);
 				int pid = int.Parse(id.Substring(5, 4), NumberStyles.HexNumber);
-				Guid guid;
-				switch (DenshaDeGoInput.CurrentHost.Platform)
-				{
-					case OpenBveApi.Hosts.HostPlatform.MicrosoftWindows:
-						guid = new Guid(id.Substring(5, 4) + id.Substring(0, 4) + "-ffff-ffff-ffff-ffffffffffff");
-						break;
-					default:
-						string vendor = id.Substring(2, 2) + id.Substring(0, 2);
-						string product = id.Substring(7, 2) + id.Substring(5, 2);
-						guid = new Guid("ffffffff-" + vendor + "-ffff-" + product + "-ffffffffffff");
-						break;
-				}
-				UsbController controller = new UsbController(vid, pid);
+				int rev = int.Parse(id.Substring(10, 4), NumberStyles.HexNumber);
+				Guid guid = new Guid(id.Substring(5, 4) + id.Substring(0, 4) + "-" + id.Substring(10, 4) + "-ffff-ffff-ffffffffffff");
+				UsbController controller = new UsbController(vid, pid, rev);
 				if (!supportedUsbControllers.ContainsKey(guid))
 				{
 					// Add new controller
@@ -149,7 +139,14 @@ namespace DenshaDeGoInput
 					if (controller.ControllerDevice == null || !controller.IsConnected)
 					{
 						// The device is not configured, try to find it
-						controller.ControllerDevice = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(controller.VendorID, controller.ProductID));
+						if (controller.Revision != 0)
+						{
+							controller.ControllerDevice = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(controller.VendorID, controller.ProductID, controller.Revision));
+						}
+						else
+						{
+							controller.ControllerDevice = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(controller.VendorID, controller.ProductID));
+						}
 					}
 					if (controller.ControllerDevice == null)
 					{
@@ -163,15 +160,12 @@ namespace DenshaDeGoInput
 							// Search for input endpoint and open endpoint reader
 							ReadEndpointID ep = ReadEndpointID.Ep01;
 							UsbConfigInfo config = controller.ControllerDevice.Configs[0];
-							if (config.InterfaceInfoList[0].Descriptor.Class == LibUsbDotNet.Descriptors.ClassCodeType.Hid)
+							foreach (UsbEndpointInfo endpoint in config.InterfaceInfoList[0].EndpointInfoList)
 							{
-								foreach (UsbEndpointInfo endpoint in config.InterfaceInfoList[0].EndpointInfoList)
+								if ((endpoint.Descriptor.EndpointID & 0x80) == 0x80)
 								{
-									if ((endpoint.Descriptor.EndpointID & 0x80) == 0x80)
-									{
-										ep = (ReadEndpointID)endpoint.Descriptor.EndpointID;
-										break;
-									}
+									ep = (ReadEndpointID)endpoint.Descriptor.EndpointID;
+									break;
 								}
 							}
 							controller.ControllerReader = controller.ControllerDevice.OpenEndpointReader(ep);

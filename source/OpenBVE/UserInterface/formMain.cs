@@ -1878,8 +1878,8 @@ namespace OpenBve {
 			}
 			finally
 			{
-				if (reader != null) reader.Close();
-				if (hwResponse != null) hwResponse.Close();
+				reader?.Close();
+				hwResponse?.Close();
 			}
 			Version curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 			if (url == null)

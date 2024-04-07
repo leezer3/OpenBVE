@@ -1,4 +1,4 @@
-# This rule allows non-root access to Densha de GO! controllers for the Sony PlayStation 2
+# This rule allows non-root access to Densha de GO! and Ongakukan Train Simulator controllers for the Sony PlayStation 2
 
 # Type II controller
 SUBSYSTEM=="usb", ATTR{idVendor}=="0ae4", ATTR{idProduct}=="0004", MODE="0666"
@@ -8,3 +8,9 @@ SUBSYSTEM=="usb", ATTR{idVendor}=="0ae4", ATTR{idProduct}=="0005", MODE="0666"
 
 # Ryojouhen controller
 SUBSYSTEM=="usb", ATTR{idVendor}=="0ae4", ATTR{idProduct}=="0007", MODE="0666"
+
+# Train Mascon
+SUBSYSTEM=="usb", ATTR{idVendor}=="1c06", ATTR{idProduct}=="77a7", MODE="0666"
+
+# Multi Train Controller
+SUBSYSTEM=="usb", ATTR{idVendor}=="0ae4", ATTR{idProduct}=="0101", MODE="0666"

@@ -99,8 +99,7 @@ namespace OpenBveAts {
 		// --- functions ---
 		
 		/// <summary>Is called every frame.</summary>
-		/// <param name="data">The data.</param>
-		internal void Elapse(ElapseData data) {
+		internal void Elapse() {
 			foreach (Sound sound in this.LoopingSounds) {
 				if (sound.IsToBePlayed) {
 					if (sound.Handle == null || sound.Handle.Stopped) {

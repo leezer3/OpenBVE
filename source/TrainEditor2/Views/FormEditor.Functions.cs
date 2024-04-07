@@ -163,8 +163,7 @@ namespace TrainEditor2.Views
 		{
 			using (ColorDialog dialog = new ColorDialog())
 			{
-				Color24 nowColor;
-				Color24.TryParseHexColor(textBox.Text, out nowColor);
+				Color24.TryParseHexColor(textBox.Text, out Color24 nowColor);
 				dialog.Color = nowColor;
 
 				if (dialog.ShowDialog() != DialogResult.OK)

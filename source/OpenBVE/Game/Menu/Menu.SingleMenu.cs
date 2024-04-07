@@ -65,6 +65,7 @@ namespace OpenBve
 				Type = menuType;
 				int i;
 				int jump = 0;
+				//Vector2 size;
 				Align = TextAlignment.TopMiddle;
 				Height = Width = 0;
 				Selection = 0;                      // defaults to first menu item
@@ -581,6 +582,18 @@ namespace OpenBve
 				TopItem = 0;
 			}
 
+		}
+
+		internal class FoundSwitch
+		{
+			internal readonly Guid guid;
+			internal readonly bool trailing;
+
+			internal FoundSwitch(Guid Guid, bool Trailing)
+			{
+				guid = Guid;
+				trailing = Trailing;
+			}
 		}
 	}
 }

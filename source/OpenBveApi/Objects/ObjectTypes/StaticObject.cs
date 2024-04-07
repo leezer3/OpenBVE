@@ -51,9 +51,9 @@ namespace OpenBveApi.Objects
 			// vertices
 			for (int j = 0; j < Mesh.Vertices.Length; j++)
 			{
-				if (Mesh.Vertices[j] is ColoredVertex)
+				if (Mesh.Vertices[j] is ColoredVertex cv)
 				{
-					Result.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex) Mesh.Vertices[j]);
+					Result.Mesh.Vertices[j] = new ColoredVertex(cv);
 				}
 				else
 				{
@@ -79,8 +79,8 @@ namespace OpenBveApi.Objects
 			for (int j = 0; j < Mesh.Materials.Length; j++)
 			{
 				Result.Mesh.Materials[j] = Mesh.Materials[j];
-				Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture != null ? DaytimeTexture : Mesh.Materials[j].DaytimeTexture;
-				Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture != null ? NighttimeTexture : Mesh.Materials[j].NighttimeTexture;
+				Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture ?? Mesh.Materials[j].DaytimeTexture;
+				Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture ?? Mesh.Materials[j].NighttimeTexture;
 			}
 
 			return Result;
@@ -100,13 +100,13 @@ namespace OpenBveApi.Objects
 			// vertices
 			for (int j = 0; j < Mesh.Vertices.Length; j++)
 			{
-				if (Mesh.Vertices[j] is ColoredVertex)
+				if (Mesh.Vertices[j] is ColoredVertex cv)
 				{
-					Result.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex) Mesh.Vertices[j]);
+					Result.Mesh.Vertices[j] = new ColoredVertex(cv);
 				}
-				else if (Mesh.Vertices[j] is LightMappedVertex)
+				else if (Mesh.Vertices[j] is LightMappedVertex lv)
 				{
-					Result.Mesh.Vertices[j] = new LightMappedVertex((LightMappedVertex) Mesh.Vertices[j]);
+					Result.Mesh.Vertices[j] = new LightMappedVertex(lv);
 				}
 				else
 				{

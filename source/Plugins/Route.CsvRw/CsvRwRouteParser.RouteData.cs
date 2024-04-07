@@ -33,6 +33,7 @@ namespace CsvRwRouteParser
 			internal bool LineEndingFix;
 			internal bool ValueBasedSections = false;
 			internal bool TurnUsed = false;
+			internal bool SwitchUsed = false;
 			/*
 			 * HMMSIM
 			 */
@@ -54,14 +55,15 @@ namespace CsvRwRouteParser
 							Blocks[i].Fog = Blocks[i - 1].Fog;
 							Blocks[i].FogDefined = false;
 							Blocks[i].Cycle = Blocks[i - 1].Cycle;
-							Blocks[i].RailCycles = Blocks[i - 1].RailCycles;
 							Blocks[i].Height = double.NaN;
 							Blocks[i].SnowIntensity = Blocks[i - 1].SnowIntensity;
 							Blocks[i].RainIntensity = Blocks[i - 1].RainIntensity;
 							Blocks[i].WeatherObject = Blocks[i - 1].WeatherObject;
 							Blocks[i].LightDefinition = Blocks[i - 1].LightDefinition;
 							Blocks[i].DynamicLightDefinition = Blocks[i -1].DynamicLightDefinition;
+							Blocks[i].Switches = new Switch[] { };
 						}
+						Blocks[i].RailCycles = Blocks[i - 1].RailCycles;
 						Blocks[i].RailType = new int[Blocks[i - 1].RailType.Length];
 						if (!PreviewOnly)
 						{
@@ -103,7 +105,8 @@ namespace CsvRwRouteParser
 								RailStart = new Vector2(Blocks[i -1].Rails[key].RailStart),
 								RailStartRefreshed = false,
 								RailEnded = false,
-								RailEnd = new Vector2(Blocks[i - 1].Rails[key].RailStart)
+								RailEnd = new Vector2(Blocks[i - 1].Rails[key].RailStart),
+								IsDriveable = Blocks[i - 1].Rails[key].IsDriveable,
 							};
 							Blocks[i].Rails.Add(key, rail);
 						}

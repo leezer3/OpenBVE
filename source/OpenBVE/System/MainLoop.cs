@@ -163,14 +163,19 @@ namespace OpenBve
 			}
 			if (e.Button == MouseButton.Left)
 			{
-				// if currently in a menu, forward the click to the menu system
-				if (Program.Renderer.CurrentInterface >= InterfaceType.Menu)
+				switch (Program.Renderer.CurrentInterface)
 				{
-					Game.Menu.ProcessMouseDown(e.X, e.Y);
-				}
-				else if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
-				{
-					Program.Renderer.Touch.TouchCheck(new Vector2(e.X, e.Y));
+					case InterfaceType.Normal:
+						Program.Renderer.Touch.TouchCheck(new Vector2(e.X, e.Y));
+						break;
+					case InterfaceType.Menu:
+					case InterfaceType.GLMainMenu:
+						// if currently in a menu, forward the click to the menu system
+						Game.Menu.ProcessMouseDown(e.X, e.Y);
+						break;
+					case InterfaceType.SwitchChangeMap:
+						Game.switchChangeDialog.ProcessMouseDown(e.X, e.Y);
+						break;
 				}
 			}
 		}
@@ -198,10 +203,16 @@ namespace OpenBve
 		internal static void mouseMoveEvent(object sender, MouseMoveEventArgs e)
 		{
 			timeSinceLastMouseEvent = 0;
-			// if currently in a menu, forward the click to the menu system
-			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu)
+			// Forward movement appropriately
+			switch (Program.Renderer.CurrentInterface)
 			{
-				Game.Menu.ProcessMouseMove(e.X, e.Y);
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.ProcessMouseMove(e.X, e.Y);
+					break;
+				case InterfaceType.SwitchChangeMap:
+					Game.switchChangeDialog.ProcessMouseMove(e.X, e.Y);
+					break;
 			}
 		}
 

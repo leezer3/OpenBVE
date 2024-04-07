@@ -983,8 +983,7 @@ namespace OpenBve
 		// train recently
 		private void listviewTrainRecently_SelectedIndexChanged(object sender, EventArgs e) {
 			if (listviewTrainRecently.SelectedItems.Count == 1) {
-				string t = listviewTrainRecently.SelectedItems[0].Tag as string;
-				if (t == null || !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
+				if (!(listviewTrainRecently.SelectedItems[0].Tag is string t) || !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 				{
 					return;
 				}
@@ -1242,7 +1241,7 @@ namespace OpenBve
 
 					lock (BaseRenderer.GdiPlusLock)
 					{
-						pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false);
+						pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false, out _);
 						pictureboxRouteGradient.Image = Illustrations.CreateRouteGradientProfile(pictureboxRouteGradient.Width,
 							pictureboxRouteGradient.Height, false);
 					}

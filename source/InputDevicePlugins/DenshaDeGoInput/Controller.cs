@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020-2021, Marc Riera, The OpenBVE Project
+//Copyright (c) 2020-2024, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -56,6 +56,10 @@ namespace DenshaDeGoInput
 			LDoor = 256,
 			/// <summary>The right doors button</summary>
 			RDoor = 512,
+			/// <summary>The ATS button</summary>
+			ATS = 1024,
+			/// <summary>The A2 button</summary>
+			A2 = 2048,
 		}
 
 		/// <summary>The buttons the controller has</summary>
@@ -105,6 +109,13 @@ namespace DenshaDeGoInput
 			protected set;
 		}
 
+		/// <summary>Whether the controller has a reverser</summary>
+		protected internal bool HasReverser
+		{
+			get;
+			protected set;
+		}
+
 		internal Controller()
 		{
 			Guid = Guid.Empty;
@@ -112,6 +123,7 @@ namespace DenshaDeGoInput
 			ControllerName = string.Empty;
 			IsConnected = false;
 			RequiresCalibration = false;
+			HasReverser = false;
 			Buttons = ControllerButtons.None;
 		}
 
@@ -126,11 +138,13 @@ namespace DenshaDeGoInput
 		internal class ControllerID
 		{
 			/// <summary>The Vendor ID</summary>
-			internal readonly string VID;
+			internal readonly int VID;
 			/// <summary>The Product ID</summary>
-			internal readonly string PID;
+			internal readonly int PID;
+			/// <summary>The Revision</summary>
+			internal readonly int Rev;
 
-			/// <summary>Gets a controller's vendor and product ID.</summary>
+			/// <summary>Sets a controller's vendor and product ID from an OpenTK GUID.</summary>
 			/// <param name="guid">The OpenTK GUID of the joystick.</param>
 			internal ControllerID(Guid guid)
 			{
@@ -139,20 +153,26 @@ namespace DenshaDeGoInput
 				switch (DenshaDeGoInput.CurrentHost.Platform)
 				{
 					case OpenBveApi.Hosts.HostPlatform.MicrosoftWindows:
-						VID = id.Substring(4, 4);
-						PID = id.Substring(0, 4);
+					case OpenBveApi.Hosts.HostPlatform.WINE:
+						VID = Convert.ToInt32(id.Substring(4, 4), 16);
+						PID = Convert.ToInt32(id.Substring(0, 4), 16);
 						break;
 					default:
-						VID = id.Substring(10, 2) + id.Substring(8, 2);
-						PID = id.Substring(18, 2) + id.Substring(16, 2);
+						VID = Convert.ToInt32(id.Substring(10, 2) + id.Substring(8, 2), 16);
+						PID = Convert.ToInt32(id.Substring(18, 2) + id.Substring(16, 2), 16);
 						break;
 				}
 			}
 
+			internal ControllerID(int vid, int pid, int rev)
+			{
+				VID = vid;
+				PID = pid;
+				Rev = rev;
+			}
+
 			internal ControllerID()
 			{
-				VID = string.Empty;
-				PID = string.Empty;
 			}
 
 
@@ -162,40 +182,62 @@ namespace DenshaDeGoInput
 				{
 					switch (VID)
 					{
-						case "0f0d":
+						case 0x0f0d:
 							// Hori Inc
-							if (PID == "00c1")
+							if (PID == 0x00c1)
 							{
-								return ControllerType.Zuki;
+								return ControllerType.Zuiki;
 							}
 							// May actually be a USB fight stick, but if we get the PIDs for these we can block them
-							DenshaDeGoInput.CurrentHost.AddMessage("Densha DeGo! Input: Unrecognised Hori Inc. PID " + PID + " - Please report this.");
+							DenshaDeGoInput.CurrentHost.AddMessage("Densha de GO! Input: Unrecognised Hori Inc. PID " + PID + " - Please report this.");
 							break;
-						case "33dd":
-							// Zuki Inc
-							if (PID == "0001" || PID == "0002")
+						case 0x33dd:
+							// Zuiki Inc
+							if (PID >= 0x0001 && PID <= 0x0004)
 							{
-								return ControllerType.Zuki;
+								return ControllerType.Zuiki;
 							}
-							// Zuki Inc 
-							DenshaDeGoInput.CurrentHost.AddMessage("Densha DeGo! Input: Unrecognised Zuki Inc. PID " + PID + " - Please report this.");
-							break;
-						case "0ae4":
+							// Something from Zuiki Inc, probably a future mascon revision
+							DenshaDeGoInput.CurrentHost.AddMessage("Densha de GO! Input: Unrecognised Zuiki Inc. PID " + PID + " - Please report this.");
+							return ControllerType.Zuiki;
+						case 0x0ae4:
 							// Taito Corp
 							switch (PID)
 							{
-								case "0003":
+								case 0x0003:
 									return ControllerType.PCTwoHandle;
-								case "0004":
+								case 0x0004:
 									return ControllerType.PS2TypeII;
-								case "0005":
+								case 0x0005:
 									return ControllerType.PS2Shinkansen;
-								case "0007":
+								case 0x0007:
 									return ControllerType.PS2Ryojouhen;
-								case "0008":
+								case 0x0008:
 									return ControllerType.PCRyojouhen;
+								case 0x0101:
+									switch (Rev)
+									{
+										case 300:
+											return ControllerType.PS2MTCP4B7;
+										case 400:
+											return ControllerType.PS2MTCP4B2B7;
+										case 800:
+											return ControllerType.PS2MTCP5B7;
+										case 1000:
+											return ControllerType.PS2MTCP13B7;
+									}
+									break;
 							}
-							DenshaDeGoInput.CurrentHost.AddMessage("Densha DeGo! Input: Unrecognised Taito Corp. PID " + PID + " - Please report this.");
+							DenshaDeGoInput.CurrentHost.AddMessage("Densha de GO! Input: Unrecognised Taito Corp. PID " + PID + " - Please report this.");
+							break;
+						case 0x1c06:
+							// Pony Canyon
+							if (PID == 0x77a7)
+							{
+								return ControllerType.PS2TrainMascon;
+							}
+							// Pony Canyon 
+							DenshaDeGoInput.CurrentHost.AddMessage("Densha de GO! Input: Unrecognised Pony Canyon PID " + PID + " - Please report this.");
 							break;
 
 					}
@@ -205,13 +247,13 @@ namespace DenshaDeGoInput
 			}
 		}
 
-		/// <summary>The types of known controller</summary>
+		/// <summary>The types of known controllers</summary>
 		internal enum ControllerType
 		{
-			/// <summary>Classic controllers, connected via pad adaptor</summary>
+			/// <summary>Classic controllers, connected via USB adapter</summary>
 			GenericUSB,
-			/// <summary>Zuki Controller for Switch</summary>
-			Zuki,
+			/// <summary>Zuiki One Handle Controller for Switch</summary>
+			Zuiki,
 			// ** PS2 USB Controllers **
 			/// <summary>TCPP-20009 (Type II)</summary>
 			PS2TypeII,
@@ -219,8 +261,17 @@ namespace DenshaDeGoInput
 			PS2Shinkansen,
 			/// <summary>TCPP-20014 (Ryojouhen)</summary>
 			PS2Ryojouhen,
+			/// <summary>COTM-02001 (Train Mascon</summary>
+			PS2TrainMascon,
+			/// <summary>SOTP-031201 (MTC with P4/B7 cartridge)</summary>
+			PS2MTCP4B7,
+			/// <summary>SOTP-031201 (MTC with P4/B2-B7 cartridge)</summary>
+			PS2MTCP4B2B7,
+			/// <summary>SOTP-031201 (MTC with P5/B7 cartridge)</summary>
+			PS2MTCP5B7,
+			/// <summary>SOTP-031201 (MTC with P13/B7 cartridge)</summary>
+			PS2MTCP13B7,
 			// ** Unbalance Controllers **
-
 			/// <summary>DGC-255 / DGOC-44U (Normally PC Two-Handle)</summary>
 			PCTwoHandle,
 			/// <summary>DRC-184 / DYC288 (Ryojouhen controller for PC)</summary>
