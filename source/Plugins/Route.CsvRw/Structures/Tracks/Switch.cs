@@ -14,5 +14,7 @@
 		internal string Name;
 		/// <summary>The track names</summary>
 		internal string[] TrackNames;
+		/// <summary>Whether the switch has a fixed route</summary>
+		internal bool FixedRoute;
 	}
 }

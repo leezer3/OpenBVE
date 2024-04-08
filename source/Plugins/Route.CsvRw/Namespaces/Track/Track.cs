@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
@@ -3496,6 +3497,72 @@ namespace CsvRwRouteParser
 								}
 							}
 						}
+				}
+					break;
+				case TrackCommand.PlayerPath:
+				{
+					int idx = 0;
+					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						break;
+					}
+
+					if (idx < 0)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be positive in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						break;
+					}
+
+					int idx1 = 0;
+					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out idx1))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						break;
+					}
+					
+					if (idx1 < 0)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is expected to be positive in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						break;
+					}
+
+						if (idx != 0)
+					{
+						int block = BlockIndex;
+						while (Data.Blocks[block].Rails.ContainsKey(idx))
+						{
+							Data.Blocks[block].Rails[idx].IsDriveable = true;
+							if (Data.Blocks[block].Rails[idx].RailEnded)
+							{
+								break;
+							}
+							block--;
+						}
+					}
+					if (idx1 != 0)
+					{
+						int block = BlockIndex;
+						while (Data.Blocks[block].Rails.ContainsKey(idx1))
+						{
+							Data.Blocks[block].Rails[idx1].IsDriveable = true;
+							if (Data.Blocks[block].Rails[idx1].RailEnded)
+							{
+								break;
+							}
+							block--;
+						}
+					}
+					if (Data.Blocks[BlockIndex].Switches.Length <= idx)
+					{
+						Array.Resize(ref Data.Blocks[BlockIndex].Switches, idx + 1);
+					}
+					Data.Blocks[BlockIndex].Switches[idx] = new Switch
+					{
+						SecondTrack = idx1,
+						FixedRoute = true,
+						InitialSetting = idx1
+					};
 				}
 					break;
 				case TrackCommand.RailLimit:

@@ -71,11 +71,14 @@ namespace RouteManager2.Tracks
 		/// <summary>The nominal direction of the switch</summary>
 		public readonly TrackDirection Direction;
 
+		/// <summary>Whether the switch has a fixed route</summary>
+		public readonly bool FixedRoute;
+
 		/// <summary>Whether a train has run through the switch in the wrong direction</summary>
 		/// <remarks>Toggle switch to reset</remarks>
 		public bool RunThrough;
 
-		public Switch(int[] tracks, string[] trackNames, int toeRail, int initialTrack, double trackPosition, SwitchType type, string name, TrackDirection direction)
+		public Switch(int[] tracks, string[] trackNames, int toeRail, int initialTrack, double trackPosition, SwitchType type, string name, bool fixedRoute, TrackDirection direction)
 		{
 			Type = type;
 			TrackNames = trackNames;
@@ -92,6 +95,7 @@ namespace RouteManager2.Tracks
 			}
 
 			Name = name;
+			FixedRoute = fixedRoute;
 			Direction = direction;
 			RunThrough = false;
 		}
@@ -99,6 +103,10 @@ namespace RouteManager2.Tracks
 		/// <summary>Toggles the switch to the next track</summary>
 		public void Toggle()
 		{
+			if (FixedRoute)
+			{
+				return;
+			}
 			setTrack++;
 			if (setTrack > availableTracks.Length - 1)
 			{
