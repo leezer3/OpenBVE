@@ -24,8 +24,7 @@ namespace OpenBveApi.Objects
 
 			/// <inheritdoc/>
 			public override void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation,
-				int SectionIndex, double StartingDistance, double EndingDistance,
-				double TrackPosition, double Brightness, bool DuplicateMaterials = false)
+				WorldProperties Properties, bool DuplicateMaterials = false)
 			{
 				bool[] free = new bool[Objects.Length];
 				bool anyfree = false;
@@ -67,11 +66,11 @@ namespace OpenBveApi.Objects
 								mat *= transformationMatrix;
 								double zOffset = Objects[i].States[0].Translation.ExtractTranslation().Z * -1.0; //To calculate the Z-offset within the object, we want the untransformed co-ordinates, not the world co-ordinates
 								
-								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, Position, LocalTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), zOffset, StartingDistance, EndingDistance, TrackPosition, Brightness);
+								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, Position, LocalTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), zOffset, Properties);
 							}
 							else
 							{
-								Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition, Brightness);
+								Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, Properties);
 							}
 						}
 					}
@@ -82,7 +81,7 @@ namespace OpenBveApi.Objects
 					{
 						if (Objects[i].States.Length != 0)
 						{
-							Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition, Brightness);
+							Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, Properties);
 						}
 					}
 				}
@@ -100,8 +99,8 @@ namespace OpenBveApi.Objects
 					Vector3 v = Sounds[i].Position;
 					v.Rotate(LocalTransformation);
 					v.Rotate(WorldTransformation);
-					(Sounds[i] as WorldSound)?.CreateSound(Position + v, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
-					(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position + v, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition, Brightness);
+					(Sounds[i] as WorldSound)?.CreateSound(Position + v, WorldTransformation, LocalTransformation, Properties);
+					(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position + v, WorldTransformation, LocalTransformation, Properties);
 				}
 			}
 

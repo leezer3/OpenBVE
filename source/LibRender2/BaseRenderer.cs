@@ -524,14 +524,14 @@ namespace LibRender2
 			Initialize();
 		}
 
-		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, WorldProperties Properties, double BlockLength)
 		{
 			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			Matrix4D Rotate = (Matrix4D)new Transformation(LocalTransformation, WorldTransformation);
-			return CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, Properties, BlockLength);
 		}
 
-		public int CreateStaticObject(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public int CreateStaticObject(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, WorldProperties Properties, double BlockLength)
 		{
 			if (Prototype == null)
 			{
@@ -579,21 +579,21 @@ namespace LibRender2
 			switch (AccurateObjectDisposal)
 			{
 				case ObjectDisposalMode.Accurate:
-					startingDistance += (float)TrackPosition;
-					endingDistance += (float)TrackPosition;
-					double z = BlockLength * Math.Floor(TrackPosition / BlockLength);
-					StartingDistance = Math.Min(z - BlockLength, startingDistance);
-					EndingDistance = Math.Max(z + 2.0 * BlockLength, endingDistance);
-					startingDistance = (float)(BlockLength * Math.Floor(StartingDistance / BlockLength));
-					endingDistance = (float)(BlockLength * Math.Ceiling(EndingDistance / BlockLength));
+					startingDistance += (float)Properties.TrackPosition;
+					endingDistance += (float)Properties.TrackPosition;
+					double z = BlockLength * Math.Floor(Properties.TrackPosition / BlockLength);
+					Properties.StartingDistance = Math.Min(z - BlockLength, startingDistance);
+					Properties.EndingDistance = Math.Max(z + 2.0 * BlockLength, endingDistance);
+					startingDistance = (float)(BlockLength * Math.Floor(Properties.StartingDistance / BlockLength));
+					endingDistance = (float)(BlockLength * Math.Ceiling(Properties.EndingDistance / BlockLength));
 					break;
 				case ObjectDisposalMode.Legacy:
-					startingDistance = (float)StartingDistance;
-					endingDistance = (float)EndingDistance;
+					startingDistance = (float)Properties.StartingDistance;
+					endingDistance = (float)Properties.EndingDistance;
 					break;
 				case ObjectDisposalMode.Mechanik:
-					startingDistance = (float) StartingDistance;
-					endingDistance = (float) EndingDistance + 1500;
+					startingDistance = (float)Properties.StartingDistance;
+					endingDistance = (float)Properties.EndingDistance + 1500;
 					if (startingDistance < 0)
 					{
 						startingDistance = 0;
@@ -605,7 +605,7 @@ namespace LibRender2
 				Prototype = Prototype,
 				Translation = Translate,
 				Rotate = Rotate,
-				Brightness = Brightness,
+				Brightness = Properties.Brightness,
 				StartingDistance = startingDistance,
 				EndingDistance = endingDistance,
 				WorldPosition = Position

@@ -40,7 +40,7 @@ namespace CsvRwRouteParser
 				double dz = TrackPosition - StartingDistance;
 				wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
 				double tpos = TrackPosition;
-				obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, tpos);
+				obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), new WorldProperties(0, tpos, StartingDistance, EndingDistance));
 			}
 		}
 	}

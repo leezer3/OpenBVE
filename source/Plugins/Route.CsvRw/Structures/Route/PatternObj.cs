@@ -37,7 +37,7 @@ namespace CsvRwRouteParser
 			return p;
 		}
 
-		internal bool CreateRailAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation RailTransformation, double StartingDistance, double EndingDistance)
+		internal bool CreateRailAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation RailTransformation, WorldProperties Properties)
 		{
 			if (Types.Length == 0)
 			{
@@ -48,12 +48,12 @@ namespace CsvRwRouteParser
 				LastType = 0;
 			}
 			LastPlacement += Interval;
-			double dz = LastPlacement - StartingDistance;
+			double dz = LastPlacement - Properties.StartingDistance;
 			WorldPosition += Position.X * RailTransformation.X + Position.Y * RailTransformation.Y + dz * RailTransformation.Z;
 			FreeObjects.TryGetValue(Types[LastType], out UnifiedObject obj);
 			if (obj != null)
 			{
-				obj.CreateObject(WorldPosition, RailTransformation, new Transformation(), StartingDistance, EndingDistance, LastPlacement);
+				obj.CreateObject(WorldPosition, RailTransformation, new Transformation(), Properties);
 			}
 
 			if (Types.Length > 1)

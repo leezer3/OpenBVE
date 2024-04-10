@@ -26,20 +26,20 @@ namespace CsvRwRouteParser
 			Roll = roll;
 		}
 
-		internal void CreateRailAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation RailTransformation, double StartingDistance, double EndingDistance)
+		internal void CreateRailAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation RailTransformation, WorldProperties Properties)
 		{
-			double dz = TrackPosition - StartingDistance;
+			double dz = TrackPosition - Properties.StartingDistance;
 			WorldPosition += Position.X * RailTransformation.X + Position.Y * RailTransformation.Y + dz * RailTransformation.Z;
 			FreeObjects.TryGetValue(Type, out UnifiedObject obj);
-			obj?.CreateObject(WorldPosition, RailTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, TrackPosition);
+			obj?.CreateObject(WorldPosition, RailTransformation, new Transformation(Yaw, Pitch, Roll), Properties);
 		}
 
-		internal void CreateGroundAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation GroundTransformation, Vector2 Direction, double Height, double StartingDistance, double EndingDistance)
+		internal void CreateGroundAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation GroundTransformation, Vector2 Direction, double Height, WorldProperties Properties)
 		{
-			double d = TrackPosition - StartingDistance;
+			double d = TrackPosition - Properties.StartingDistance;
 			Vector3 wpos = WorldPosition + new Vector3(Direction.X * d + Direction.Y * Position.X, Position.Y - Height, Direction.Y * d - Direction.X * Position.X);
 			FreeObjects.TryGetValue(Type, out UnifiedObject obj);
-			obj?.CreateObject(wpos, GroundTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, TrackPosition);
+			obj?.CreateObject(wpos, GroundTransformation, new Transformation(Yaw, Pitch, Roll), Properties);
 		}
 	}
 }

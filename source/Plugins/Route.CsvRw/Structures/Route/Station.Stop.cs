@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.World;
 using RouteManager2.Stations;
 
@@ -34,7 +35,7 @@ namespace CsvRwRouteParser
 				{
 					return;
 				}
-				CompatibilityObjects.StopPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+				CompatibilityObjects.StopPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, new WorldProperties(0, tpos, StartingDistance, EndingDistance, -1, b));
 			}
 		}
 

@@ -58,15 +58,15 @@ namespace OpenBveApi.Objects
 		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
 		/// <param name="SectionIndex">The index of the section if placed using a SigF command</param>
 		/// <param name="trackPosition">The absolute track position</param>
-		public void CreateSound(Vector3 position, Transformation WorldTransformation, Transformation LocalTransformation, int SectionIndex, double trackPosition)
+		public void CreateSound(Vector3 position, Transformation WorldTransformation, Transformation LocalTransformation, WorldProperties Properties)
 		{
 			int a = currentHost.AnimatedWorldObjectsUsed;
 			WorldSound snd = (WorldSound)Clone();
 			snd.Position = position;
-			snd.TrackPosition = trackPosition;
-			snd.currentTrackPosition = trackPosition;
+			snd.TrackPosition = Properties.TrackPosition;
+			snd.currentTrackPosition = Properties.TrackPosition;
 			snd.Follower = new TrackFollower(currentHost);
-			snd.Follower.UpdateAbsolute(trackPosition, true, true);
+			snd.Follower.UpdateAbsolute(Properties.TrackPosition, true, true);
 
 			currentHost.AnimatedWorldObjects[a] = snd;
 			currentHost.AnimatedWorldObjectsUsed++;

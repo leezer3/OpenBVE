@@ -42,7 +42,7 @@ namespace CsvRwRouteParser
 				{
 					return;
 				}
-				CompatibilityObjects.LimitPostInfinite.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+				CompatibilityObjects.LimitPostInfinite.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, new WorldProperties(0, tpos,StartingDistance, EndingDistance, -1, b));
 			}
 			else
 			{
@@ -52,7 +52,7 @@ namespace CsvRwRouteParser
 					{
 						return;
 					}
-					CompatibilityObjects.LimitPostLeft.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+					CompatibilityObjects.LimitPostLeft.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, new WorldProperties(0, tpos, StartingDistance, EndingDistance, -1, b));
 				}
 				else if (Cource > 0)
 				{
@@ -60,7 +60,7 @@ namespace CsvRwRouteParser
 					{
 						return;
 					}
-					CompatibilityObjects.LimitPostRight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+					CompatibilityObjects.LimitPostRight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, new WorldProperties(0, tpos, StartingDistance, EndingDistance, -1, b));
 				}
 				else
 				{
@@ -68,7 +68,7 @@ namespace CsvRwRouteParser
 					{
 						return;
 					}
-					CompatibilityObjects.LimitPostStraight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+					CompatibilityObjects.LimitPostStraight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, new WorldProperties(0, tpos, StartingDistance, EndingDistance, -1, b));
 				}
 
 				double lim = Speed / UnitOfSpeed;
@@ -87,7 +87,7 @@ namespace CsvRwRouteParser
 							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[0].DaytimeTexture);
 						}
 
-						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, new WorldProperties(0, tpos, StartingDistance, EndingDistance, -1, b));
 					}
 					else
 					{
@@ -117,7 +117,7 @@ namespace CsvRwRouteParser
 							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[1].DaytimeTexture);
 						}
 
-						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, new WorldProperties(0, tpos, StartingDistance, EndingDistance, -1, b));
 					}
 					else
 					{
@@ -152,7 +152,7 @@ namespace CsvRwRouteParser
 							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[2].DaytimeTexture);
 						}
 
-						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, new WorldProperties(0, tpos, StartingDistance, EndingDistance, -1, b));
 					}
 					else
 					{

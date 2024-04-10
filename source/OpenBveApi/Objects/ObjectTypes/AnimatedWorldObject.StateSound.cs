@@ -141,7 +141,7 @@ namespace OpenBveApi.Objects
 		/// <param name="FinalSectionIndex">The index of the section if placed using a SigF command</param>
 		/// <param name="FinalTrackPosition">The absolute track position</param>
 		/// <param name="Brightness">The brightness value at the track position</param>
-		public void Create(Vector3 WorldPosition, Transformation WorldTransformation, Transformation LocalTransformation, int FinalSectionIndex, double FinalTrackPosition, double Brightness)
+		public void Create(Vector3 WorldPosition, Transformation WorldTransformation, Transformation LocalTransformation, WorldProperties Properties)
 		{
 			int a = currentHost.AnimatedWorldObjectsUsed;
 			Transformation FinalTransformation = new Transformation(LocalTransformation, WorldTransformation);
@@ -151,8 +151,8 @@ namespace OpenBveApi.Objects
 			currentObject.Direction = FinalTransformation.Z;
 			currentObject.Up = FinalTransformation.Y;
 			currentObject.Side = FinalTransformation.X;
-			currentObject.Object.SectionIndex = FinalSectionIndex;
-			currentObject.TrackPosition = FinalTrackPosition;
+			currentObject.Object.SectionIndex = Properties.SectionIndex;
+			currentObject.TrackPosition = Properties.TrackPosition;
 			for (int i = 0; i < currentObject.Object.States.Length; i++)
 			{
 				if (currentObject.Object.States[i].Prototype == null)
@@ -161,7 +161,7 @@ namespace OpenBveApi.Objects
 				}
 			}
 
-			currentObject.Object.internalObject.Brightness = Brightness;
+			currentObject.Object.internalObject.Brightness = Properties.Brightness;
 
 			double r = 0.0;
 			for (int i = 0; i < currentObject.Object.States.Length; i++)

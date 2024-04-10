@@ -126,6 +126,7 @@
     <Compile Include="Objects\Helpers\Material.cs" />
     <Compile Include="Objects\Helpers\MeshBuilder.cs" />
     <Compile Include="Objects\Helpers\ModelExporter.cs" />
+    <Compile Include="Objects\Helpers\WorldProperties.cs" />
     <Compile Include="Objects\Mesh.cs" />
     <Compile Include="Objects\MeshFace.cs" />
     <Compile Include="Objects\MeshFaceVertex.cs" />

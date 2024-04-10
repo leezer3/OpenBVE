@@ -87,7 +87,7 @@ namespace OpenBve.Graphics
 			Program.FileSystem.AppendToLogFile("Renderer initialised successfully.");
 		}
 		
-		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, WorldProperties Properties, double BlockLength)
 		{
 			StaticObject obj = Prototype as StaticObject;
 			if (obj == null)
@@ -95,7 +95,7 @@ namespace OpenBve.Graphics
 				Interface.AddMessage(MessageType.Error, false, "Attempted to use an animated object where only static objects are allowed.");
 				return -1;
 			}
-			return base.CreateStaticObject(obj, Position, WorldTransformation, LocalTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return base.CreateStaticObject(obj, Position, WorldTransformation, LocalTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, Properties, BlockLength);
 		}
 
 		public override void UpdateViewport(int Width, int Height)
