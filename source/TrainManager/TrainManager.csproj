@@ -132,7 +132,7 @@
     <Compile Include="TrackFollowingObject\AI\TravelData.cs" />
     <Compile Include="TrackFollowingObject\AI\TravelPointData.cs" />
     <Compile Include="TrackFollowingObject\AI\TravelStopData.cs" />
-    <Compile Include="TrackFollowingObject\TrackFollowingObject.cs" />
+    <Compile Include="TrackFollowingObject\ScriptedTrain.cs" />
     <Compile Include="TrainManager.cs" />
     <Compile Include="Train\BrakeSystem.cs" />
     <Compile Include="Train\CommandEntry.cs" />

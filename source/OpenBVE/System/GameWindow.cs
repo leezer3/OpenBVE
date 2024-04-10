@@ -738,7 +738,7 @@ namespace OpenBve
 			}
 
 			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
-			foreach (TrackFollowingObject Train in Program.TrainManager.TFOs)  //Must not use var, as otherwise the wrong inferred type
+			foreach (ScriptedTrain Train in Program.TrainManager.TFOs)  //Must not use var, as otherwise the wrong inferred type
 			{
 				Train.Initialize();
 

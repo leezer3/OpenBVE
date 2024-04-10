@@ -6,7 +6,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
 using RouteManager2;
 using TrainManager.Trains;
-using TrackFollowingObject = TrainManager.Trains.TrackFollowingObject;
+using ScriptedTrain = TrainManager.Trains.ScriptedTrain;
 
 namespace TrainManager
 {
@@ -77,7 +77,7 @@ namespace TrainManager
 			}
 
 			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
-			foreach (TrackFollowingObject Train in TFOs) //Must not use var, as otherwise the wrong inferred type
+			foreach (ScriptedTrain Train in TFOs) //Must not use var, as otherwise the wrong inferred type
 			{
 				Train.UpdateObjects(TimeElapsed, ForceUpdate);
 			}
@@ -87,7 +87,7 @@ namespace TrainManager
 		public void JumpTFO()
 		{
 			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
-			foreach (TrackFollowingObject Train in TFOs) //Must not use var, as otherwise the wrong inferred type
+			foreach (ScriptedTrain Train in TFOs) //Must not use var, as otherwise the wrong inferred type
 			{
 				Train.Jump(-1, 0);
 			}

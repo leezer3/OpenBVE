@@ -9,7 +9,7 @@ namespace TrainManager.Trains
 	/// <summary>The AI class used to operate a TFO</summary>
 	public class TrackFollowingObjectAI : GeneralAI
 	{
-		private readonly TrackFollowingObject Train;
+		private readonly ScriptedTrain Train;
 
 		// Time to operate the door
 		private readonly double OpeningDoorsTime;
@@ -24,7 +24,7 @@ namespace TrainManager.Trains
 		private double TimeLastProcessed;
 		private double CurrentPosition;
 
-		public TrackFollowingObjectAI(TrackFollowingObject train, TravelData[] data)
+		public TrackFollowingObjectAI(ScriptedTrain train, TravelData[] data)
 		{
 			Train = train;
 			Data = data;

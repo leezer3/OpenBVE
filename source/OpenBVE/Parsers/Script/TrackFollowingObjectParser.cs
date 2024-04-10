@@ -12,7 +12,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
-using TrackFollowingObject = TrainManager.Trains.TrackFollowingObject;
 
 namespace OpenBve
 {
@@ -23,24 +22,24 @@ namespace OpenBve
 		/// <summary>Parses a track following object</summary>
 		/// <param name="ObjectPath">Absolute path to the object folder of route data</param>
 		/// <param name="FileName">The XML file to parse</param>
-		internal static TrackFollowingObject ParseTrackFollowingObject(string ObjectPath, string FileName)
+		internal static ScriptedTrain ParseTrackFollowingObject(string ObjectPath, string FileName)
 		{
 			// The current XML file to load
 			XDocument CurrentXML = XDocument.Load(FileName, LoadOptions.SetLineInfo);
-			List<XElement> TfoElements = CurrentXML.XPathSelectElements("/openBVE/TrackFollowingObject").ToList();
+			List<XElement> ScriptedTrainElements = CurrentXML.XPathSelectElements("/openBVE/TrackFollowingObject").ToList();
 
 			// Check this file actually contains OpenBVE other train definition elements
-			if (!TfoElements.Any())
+			if (!ScriptedTrainElements.Any())
 			{
 				// We couldn't find any valid XML, so return false
 				throw new InvalidDataException();
 			}
 
-			TrackFollowingObject Train = new TrackFollowingObject(TrainState.Pending);
+			ScriptedTrain Train = new ScriptedTrain(TrainState.Pending);
 
-			foreach (XElement Element in TfoElements)
+			foreach (XElement Element in ScriptedTrainElements)
 			{
-				ParseTrackFollowingObjectNode(ObjectPath, FileName, Element, Train);
+				ParseScriptedTrainNode(ObjectPath, FileName, Element, Train);
 			}
 
 			return Train;
@@ -51,7 +50,7 @@ namespace OpenBve
 		/// <param name="FileName">The filename of the containing XML file</param>
 		/// <param name="SectionElement">The XElement to parse</param>
 		/// <param name="Train">The track following object to parse this node into</param>
-		private static void ParseTrackFollowingObjectNode(string ObjectPath, string FileName, XElement SectionElement, TrackFollowingObject Train)
+		private static void ParseScriptedTrainNode(string ObjectPath, string FileName, XElement SectionElement, ScriptedTrain Train)
 		{
 			string Section = SectionElement.Name.LocalName;
 
@@ -155,7 +154,7 @@ namespace OpenBve
 		/// <param name="FileName">The filename of the containing XML file</param>
 		/// <param name="SectionElement">The XElement to parse</param>
 		/// <param name="Train">The track following object to parse this node into</param>
-		private static void ParseDefinitionNode(string FileName, XElement SectionElement, TrackFollowingObject Train)
+		private static void ParseDefinitionNode(string FileName, XElement SectionElement, ScriptedTrain Train)
 		{
 			string Section = SectionElement.Name.LocalName;
 
