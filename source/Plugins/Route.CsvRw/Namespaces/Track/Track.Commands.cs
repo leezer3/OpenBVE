@@ -136,6 +136,8 @@
 		RailLimit,
 		/// <summary>Adds a buffer stop</summary>
 		RailBuffer,
+		/// <summary>Changes the player path</summary>
+		PlayerPath,
 
 		/*
 		 * HMMSIM

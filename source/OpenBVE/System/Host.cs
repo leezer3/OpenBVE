@@ -615,6 +615,17 @@ namespace OpenBve {
 		{
 			AbstractTrain closestTrain = null;
 			double bestLocation = double.MaxValue;
+
+			/*
+			 * Eventually this should take into account the player path.
+			 * This would mean itinerating backwards / forwards through the elements collection and any resulting switches, so that we ignore trains on the other tracks etc.
+			 * 
+			 * However, this is likely to be a performance issue in this case (a 100km route could have ~400,000 elements)
+			 * Possibly we could update the cached train when a switch is changed (??)
+			 * 
+			 * Sort of thing that will probably want a spinning thread to deal with it possibly
+			 */
+
 			if(Train is TrainBase baseTrain)
 			{
 				for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
@@ -659,6 +670,32 @@ namespace OpenBve {
 					if (distance < trainDistance)
 					{
 						closestTrain = Program.TrainManager.Trains[j];
+						trainDistance = distance;
+					}
+				}
+			}
+
+			for (int j = 0; j < Program.TrainManager.TFOs.Length; j++)
+			{
+				ScriptedTrain scriptedTrain = Program.TrainManager.TFOs[j] as ScriptedTrain;
+				if (scriptedTrain.State == TrainState.Available)
+				{
+					double distance;
+					if (scriptedTrain.Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
+					{
+						distance = TrackPosition - scriptedTrain.Cars[0].TrackPosition;
+					}
+					else if (scriptedTrain.Cars[scriptedTrain.Cars.Length - 1].RearAxle.Follower.TrackPosition > TrackPosition)
+					{
+						distance = scriptedTrain.Cars[scriptedTrain.Cars.Length - 1].RearAxle.Follower.TrackPosition - TrackPosition;
+					}
+					else
+					{
+						distance = 0;
+					}
+					if (distance < trainDistance)
+					{
+						closestTrain = scriptedTrain;
 						trainDistance = distance;
 					}
 				}

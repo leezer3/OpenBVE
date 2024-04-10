@@ -599,7 +599,7 @@ namespace CsvRwRouteParser
 								{
 									type = SwitchType.RightHanded;
 								}
-								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new[] { j, Data.Blocks[i].Switches[j].SecondTrack }, Data.Blocks[i].Switches[j].TrackNames, j, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition, type,  Data.Blocks[i].Switches[j].Name, TrackDirection.Forwards));
+								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new[] { j, Data.Blocks[i].Switches[j].SecondTrack }, Data.Blocks[i].Switches[j].TrackNames, j, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition, type,  Data.Blocks[i].Switches[j].Name, Data.Blocks[i].Switches[j].FixedRoute, TrackDirection.Forwards));
 								//Assign facing switch event
 								CurrentRoute.Tracks[j].Elements[n].Events.Add(new SwitchEvent(newSwitch, CurrentRoute.Tracks[j].Elements[n].StartingTrackPosition, CurrentRoute));
 								CurrentRoute.Tracks[j].Elements[n].Events.Add(new PointSoundEvent());
@@ -614,7 +614,7 @@ namespace CsvRwRouteParser
 								{
 									type = SwitchType.RightHanded;
 								}
-								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new[] { Data.Blocks[i].Switches[j].SecondTrack, j }, Data.Blocks[i].Switches[j].TrackNames, j, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition, type,  Data.Blocks[i].Switches[j].Name, TrackDirection.Reverse));
+								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new[] { Data.Blocks[i].Switches[j].SecondTrack, j }, Data.Blocks[i].Switches[j].TrackNames, j, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition, type,  Data.Blocks[i].Switches[j].Name, Data.Blocks[i].Switches[j].FixedRoute, TrackDirection.Reverse));
 								//Assign facing switch event
 								CurrentRoute.Tracks[j].Elements[n].Events.Add(new SwitchEvent(newSwitch, CurrentRoute.Tracks[j].Elements[n].StartingTrackPosition, CurrentRoute));
 								CurrentRoute.Tracks[j].Elements[n].Events.Add(new PointSoundEvent());

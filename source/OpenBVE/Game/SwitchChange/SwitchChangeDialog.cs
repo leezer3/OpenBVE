@@ -37,6 +37,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Textures;
 using RouteManager2;
 using TrainManager;
+using TrainManager.SafetySystems;
 using MouseCursor = OpenTK.MouseCursor;
 using Vector2 = OpenBveApi.Math.Vector2;
 
@@ -115,7 +116,7 @@ namespace OpenBve
 					break;
 				}
 			}
-			if (selectedSwitch == Guid.Empty)
+			if (selectedSwitch == Guid.Empty || Program.CurrentRoute.Switches[selectedSwitch].FixedRoute)
 			{
 				// Not found an appropriate switch, so set back to default
 				Program.currentGameWindow.Cursor = MouseCursor.Default;

@@ -423,7 +423,7 @@ namespace Train.OpenBve
 												break;
 											}
 
-											if (Enum.TryParse(Value, true, out Translations.Command command))
+											if (Enum.TryParse(Value.Replace("_", string.Empty), true, out Translations.Command command))
 											{
 												CommandEntry.Command = command;
 											}
@@ -1735,7 +1735,7 @@ namespace Train.OpenBve
 									break;
 								}
 
-								if (Enum.TryParse(value, true, out Translations.Command command))
+								if (Enum.TryParse(value.Replace("_", string.Empty), true, out Translations.Command command))
 								{
 									entry.Command = command;
 								}

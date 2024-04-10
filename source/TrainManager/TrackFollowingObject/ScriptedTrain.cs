@@ -4,8 +4,8 @@ using OpenBveApi.Trains;
 
 namespace TrainManager.Trains
 {
-	/// <summary>A more advanced type of AnimatedObject, which follows a rail and a travel plan</summary>
-	public class TrackFollowingObject : TrainBase
+	/// <summary>A scripted train, which follows a rail and a travel plan</summary>
+	public class ScriptedTrain : TrainBase
 	{
 		/// <summary>The time the train appears in-game</summary>
 		public double AppearanceTime;
@@ -17,7 +17,7 @@ namespace TrainManager.Trains
 		public double LeaveTime;
 		private double InternalTimerTimeElapsed;
 
-		public TrackFollowingObject(TrainState state) : base(state)
+		public ScriptedTrain(TrainState state) : base(state)
 		{
 		}
 

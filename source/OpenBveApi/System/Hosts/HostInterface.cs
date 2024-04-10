@@ -642,6 +642,7 @@ namespace OpenBveApi.Hosts {
 		/// <returns>The closest train, or null if no other trains</returns>
 		public virtual AbstractTrain ClosestTrain(AbstractTrain Train)
 		{
+			// NOTE: This copy of the method is used in determining plugin data only
 			return null;
 		}
 
@@ -650,6 +651,7 @@ namespace OpenBveApi.Hosts {
 		/// <returns>The closest train, or null if no other trains</returns>
 		public virtual AbstractTrain ClosestTrain(double TrackPosition)
 		{
+			// NOTE: This copy of the method is used by animated objects
 			return null;
 		}
 

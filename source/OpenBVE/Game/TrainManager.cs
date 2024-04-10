@@ -30,7 +30,7 @@ namespace OpenBve
 			}
 
 			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
-			foreach (TrackFollowingObject Train in TFOs) //Must not use var, as otherwise the wrong inferred type
+			foreach (ScriptedTrain Train in TFOs) //Must not use var, as otherwise the wrong inferred type
 			{
 				Train.Update(TimeElapsed);
 			}
@@ -379,7 +379,7 @@ namespace OpenBve
 			{
 				if (TFOs[i].State != TrainState.Disposed & TFOs[i].State != TrainState.Bogus)
 				{
-					TrackFollowingObject t = (TrackFollowingObject) TFOs[i];
+					ScriptedTrain t = (ScriptedTrain) TFOs[i];
 					foreach (var Car in t.Cars)
 					{
 						Car.FrontAxle.Follower.UpdateWorldCoordinates(true);
