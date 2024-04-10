@@ -111,3 +111,4 @@ ACCESSIBILITY_NEXT_SIGNAL, keyboard, A, 3
 ACCESSIBILITY_NEXT_STATION, keyboard, T, 3
 UNCOUPLE_REAR, keyboard, Semicolon, 2
 UNCOUPLE_FRONT, keyboard, Semicolon, 3
+SWITCH_MENU, Keyboard, F9, 2, 0
