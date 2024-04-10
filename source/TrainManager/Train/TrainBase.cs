@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using LibRender2;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -1073,6 +1074,55 @@ namespace TrainManager.Trains
 				}
 			}
 
+		}
+
+		public override void Couple(AbstractTrain Train, bool Front)
+		{
+			TrainBase trainBase = Train as TrainBase;
+			if (trainBase == null)
+			{
+				throw new Exception("Attempted to couple to something that isn't a train");
+			}
+			int oldCars = Cars.Length;
+			/*
+			 * NOTE: Need to set the speeds to zero for *both* trains on coupling
+			 *       The 'old' train will be disposed of immediately, but if not
+			 *       set to zero, we can get glitched acceleration and the train enters orbit....
+			 */
+
+			if (Front)
+			{
+				CarBase[] newCars = new CarBase[Cars.Length + trainBase.Cars.Length];
+				Array.Copy(Cars, 0, newCars, trainBase.Cars.Length, Cars.Length);
+				Array.Copy(trainBase.Cars, 0, newCars, 0, trainBase.Cars.Length);
+				Cars = newCars;
+				// camera / driver car is now down the train
+				DriverCar += trainBase.Cars.Length;
+				CameraCar += trainBase.Cars.Length;
+			}
+			else
+			{
+				Array.Resize(ref Cars, Cars.Length + trainBase.Cars.Length);
+				// add new cars to end
+				for (int i = 0; i < trainBase.Cars.Length; i++)
+				{
+					Cars[i + oldCars] = trainBase.Cars[i];
+					Cars[i + oldCars].Index = i + oldCars;
+					trainBase.Cars[i].CurrentSpeed = 0;
+				}
+			}
+
+			// set properties
+			for (int i = 0; i < Cars.Length; i++)
+			{
+				Cars[i].baseTrain = this;
+				Cars[i].CurrentSpeed = 0;
+				if ((int)TrainManagerBase.Renderer.Camera.CurrentMode > 1)
+				{
+					Cars[i].ChangeCarSection(CarSectionType.Exterior);
+				}
+					
+			}
 		}
 	}
 }
