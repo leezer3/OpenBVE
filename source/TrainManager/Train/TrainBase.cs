@@ -1121,7 +1121,30 @@ namespace TrainManager.Trains
 				{
 					Cars[i].ChangeCarSection(CarSectionType.Exterior);
 				}
-					
+				Cars[i].FrontAxle.Follower.Train = this;
+				Cars[i].RearAxle.Follower.Train = this;
+				Cars[i].FrontBogie.FrontAxle.Follower.Train = this;
+				Cars[i].FrontBogie.RearAxle.Follower.Train = this;
+				Cars[i].RearBogie.FrontAxle.Follower.Train = this;
+				Cars[i].RearBogie.RearAxle.Follower.Train = this;
+				if (i < Cars.Length - 1)
+				{
+					Cars[i].Coupler.connectedCar = Cars[i + 1];
+				}
+			}
+
+			Cars[0].BeaconReceiver.Train = this;
+
+			/*
+			 * Reset properties for 'old' train to empty cars
+			 * 
+			 * Due to multi-threading, we can't guarantee
+			 * that something isn't trying to access the cars
+			 * array until the *next* complete frame.
+			 */
+			for (int i = 0; i < trainBase.Cars.Length; i++)
+			{
+				trainBase.Cars[i] = new CarBase(trainBase, i);
 			}
 		}
 	}
