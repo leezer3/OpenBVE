@@ -466,7 +466,7 @@ namespace OpenBveApi.FileSystem {
 			try
 			{
 				string file = System.IO.Path.Combine(SettingsFolder, "log.txt");
-				File.WriteAllText(file, @"OpenBVE Log: " + DateTime.Now + Environment.NewLine + @"Program Version: " + version + Environment.NewLine + Environment.NewLine, new UTF8Encoding(true));
+				File.WriteAllText(file, @"OpenBVE Log: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + Environment.NewLine + @"Program Version: " + version + Environment.NewLine + Environment.NewLine, new UTF8Encoding(true));
 			}
 			catch
 			{
