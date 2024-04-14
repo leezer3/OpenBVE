@@ -472,11 +472,19 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.TrainDistance;
 							n++; s++; if (s >= m) m = s; break;
+						case "playerdistance":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.PlayerTrainDistance;
+							n++; s++; if (s >= m) m = s; break;
 						case "distanceindex":
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.TrainDistanceToCar;
 							n++; break;
+						case "playertrackdistance":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.PlayerTrackDistance;
+							n++; s++; if (s >= m) m = s; break;
 						case "trackdistance":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.TrainTrackDistance;
