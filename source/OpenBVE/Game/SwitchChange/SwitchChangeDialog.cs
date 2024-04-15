@@ -80,9 +80,17 @@ namespace OpenBve
 			if (selectedSwitch != Guid.Empty)
 			{
 				// Switch details
-				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "selected"}) + Program.CurrentRoute.Switches[selectedSwitch].Name, new Vector2(10, 30), TextAlignment.CenterLeft, Color128.White);
-				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "current"}) + Program.CurrentRoute.Switches[selectedSwitch].CurrentSetting, new Vector2(10, 50), TextAlignment.CenterLeft, Color128.White);
-				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "distance"}) + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[selectedSwitch].TrackPosition) + "m", new Vector2(10, 70), TextAlignment.CenterLeft, Color128.White);
+
+				Vector2 textLocation = new Vector2(10, 30);
+				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "selected"}) + Program.CurrentRoute.Switches[selectedSwitch].Name, textLocation, TextAlignment.CenterLeft, Color128.White);
+				textLocation.Y += 20;
+				if (Program.CurrentRoute.Switches[selectedSwitch].FixedRoute)
+				{
+					// don't draw alternate path names for player path
+					Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "switchmenu", "current" }) + Program.CurrentRoute.Switches[selectedSwitch].CurrentSetting, textLocation, TextAlignment.CenterLeft, Color128.White);
+					textLocation.Y += 20;
+				}
+				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "switchmenu", "distance" }) + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[selectedSwitch].TrackPosition) + "m", textLocation, TextAlignment.CenterLeft, Color128.White);	
 			}
 			// Draw last so they overlay any curves on the map which are OTT
 			CloseButton.Draw();

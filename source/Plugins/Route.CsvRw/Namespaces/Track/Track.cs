@@ -3527,7 +3527,13 @@ namespace CsvRwRouteParser
 						break;
 					}
 
-						if (idx != 0)
+					string switchName = string.Empty;
+					if (Arguments.Length >= 3 && Arguments[2].Length > 0)
+					{
+						switchName = Arguments[4];
+					}
+
+					if (idx != 0)
 					{
 						int block = BlockIndex;
 						while (Data.Blocks[block].Rails.ContainsKey(idx) && block > 0)
@@ -3561,7 +3567,8 @@ namespace CsvRwRouteParser
 					{
 						SecondTrack = idx1,
 						FixedRoute = true,
-						InitialSetting = idx1
+						InitialSetting = idx1,
+						Name = switchName
 					};
 				}
 					break;

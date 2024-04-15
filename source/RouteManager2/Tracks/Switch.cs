@@ -43,6 +43,10 @@ namespace RouteManager2.Tracks
 		{
 			get
 			{
+				if (TrackNames == null || TrackNames.Length > setTrack)
+				{
+					return setTrack.ToString();
+				}
 				if (string.IsNullOrEmpty(TrackNames[setTrack]))
 				{
 					return "Rail " + CurrentlySetTrack;
