@@ -29,7 +29,7 @@ namespace ObjectViewer {
 			Program.TrainManager.Trains = new TrainBase[] { };
 			TrainManager.PlayerTrain = null;
 			Interface.LogMessages.Clear();
-			Program.CurrentHost.MissingFiles.Clear();
+			Program.CurrentHost.ClearErrors();
 			Program.Renderer.Reset();
 			Program.Renderer.InitializeVisibility();
 			ObjectManager.AnimatedWorldObjects = new WorldObject[4];

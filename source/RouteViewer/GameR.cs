@@ -40,7 +40,7 @@ namespace RouteViewer {
 			Program.TrainManager.Trains = new TrainBase[] { };
 			// game
 			Interface.LogMessages.Clear();
-			Program.CurrentHost.MissingFiles.Clear();
+			Program.CurrentHost.ClearErrors();
 			Program.CurrentRoute.Comment = "";
 			Program.CurrentRoute.Image = "";
 			Program.CurrentRoute.Atmosphere = new Atmosphere();

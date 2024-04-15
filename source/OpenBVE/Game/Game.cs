@@ -37,7 +37,7 @@ namespace OpenBve
 			Program.TrainManager.Trains = new TrainBase[] { };
 			// game
 			Interface.LogMessages.Clear();
-			Program.CurrentHost.MissingFiles.Clear();
+			Program.CurrentHost.ClearErrors();
 			if (Program.Renderer.CurrentInterface < InterfaceType.Menu)
 			{
 				Program.Renderer.CurrentInterface = InterfaceType.Normal;
