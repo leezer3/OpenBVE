@@ -145,7 +145,7 @@ namespace OpenBve {
 								{
 									if (Program.CurrentHost.Plugins[i].Texture.LoadTexture(path, out texture))
 									{
-										texture.CompatibleTransparencyMode = false;
+										texture.CompatibleTransparencyMode = Interface.CurrentOptions.OldTransparencyMode;
 										texture = texture.ApplyParameters(parameters);
 										return true;
 									}
