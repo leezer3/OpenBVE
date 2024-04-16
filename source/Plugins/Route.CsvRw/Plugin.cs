@@ -41,6 +41,7 @@ namespace CsvRwRouteParser
 		    {
 			    TrainManager = _base;
 		    }
+			CurrentOptions.TrainDownloadLocation = string.Empty;
 	    }
 
 	    public override void Unload()
@@ -109,7 +110,8 @@ namespace CsvRwRouteParser
 		    {
 				Encoding = Encoding.UTF8;
 		    }
-		    LastException = null;
+			CurrentOptions.TrainDownloadLocation = string.Empty;
+			LastException = null;
 		    Cancel = false;
 		    CurrentProgress = 0.0;
 		    IsLoading = true;

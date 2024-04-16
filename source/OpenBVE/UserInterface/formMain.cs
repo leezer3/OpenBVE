@@ -2068,5 +2068,10 @@ namespace OpenBve {
 		{
 			if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
 		}
+
+		private void textboxTrainDescription_LinkClicked(object sender, LinkClickedEventArgs e)
+		{
+			Process.Start(e.LinkText);
+		}
 	}
 }

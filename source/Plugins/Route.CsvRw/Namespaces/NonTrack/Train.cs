@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -113,6 +114,23 @@ namespace CsvRwRouteParser
 							{
 								Plugin.CurrentOptions.TrainName = Arguments[0];
 							}
+						}
+					}
+				}
+					break;
+				case TrainCommand.DownloadLocation:
+				{
+					if (Arguments.Length > 0)
+					{
+						if (Arguments[0].StartsWith("www."))
+						{
+							Arguments[0] = "http://" + Arguments[0];
+						}
+						if (Uri.TryCreate(Arguments[0], UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp  || uriResult.Scheme == Uri.UriSchemeHttps) && uriResult.Host.Replace("www.", "").Split('.').Count() > 1 && uriResult.HostNameType == UriHostNameType.Dns && uriResult.Host.Length > uriResult.Host.LastIndexOf(".") + 1 && 100 >= Arguments[0].Length)
+						{
+								// Why not save to the log...
+								Plugin.FileSystem.AppendToLogFile("INFO: Route default train download location " + Arguments[0]);
+								Plugin.CurrentOptions.TrainDownloadLocation = Arguments[0];
 						}
 					}
 				}
