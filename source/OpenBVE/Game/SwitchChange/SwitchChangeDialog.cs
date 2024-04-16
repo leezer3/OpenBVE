@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using LibRender2;
 using LibRender2.Primitives;
@@ -37,7 +36,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Textures;
 using RouteManager2;
 using TrainManager;
-using TrainManager.SafetySystems;
 using MouseCursor = OpenTK.MouseCursor;
 using Vector2 = OpenBveApi.Math.Vector2;
 
@@ -84,7 +82,7 @@ namespace OpenBve
 				Vector2 textLocation = new Vector2(10, 30);
 				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "selected"}) + Program.CurrentRoute.Switches[selectedSwitch].Name, textLocation, TextAlignment.CenterLeft, Color128.White);
 				textLocation.Y += 20;
-				if (Program.CurrentRoute.Switches[selectedSwitch].FixedRoute)
+				if (!Program.CurrentRoute.Switches[selectedSwitch].FixedRoute)
 				{
 					// don't draw alternate path names for player path
 					Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "switchmenu", "current" }) + Program.CurrentRoute.Switches[selectedSwitch].CurrentSetting, textLocation, TextAlignment.CenterLeft, Color128.White);
