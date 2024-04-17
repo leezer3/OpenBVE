@@ -503,11 +503,6 @@ namespace DenshaDeGoInput
 			powerCommands.CopyTo(Controls, brakeCommands.Length);
 			reverserCommands.CopyTo(Controls, brakeCommands.Length + powerCommands.Length);
 			ButtonCommands.CopyTo(Controls, brakeCommands.Length + powerCommands.Length + reverserCommands.Length);
-
-			for (int i = 0; i < Controls.Length; i++)
-			{
-				Console.WriteLine("Command: " + Controls[i].Command.ToString() + ", Option: " + Controls[i].Option.ToString());
-			}
 		}
 
 		/// <summary>
