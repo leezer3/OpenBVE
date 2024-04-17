@@ -43,7 +43,7 @@ namespace RouteManager2.Tracks
 		{
 			get
 			{
-				if (TrackNames == null || TrackNames.Length > setTrack)
+				if (TrackNames == null || setTrack > TrackNames.Length)
 				{
 					return setTrack.ToString();
 				}
@@ -95,6 +95,7 @@ namespace RouteManager2.Tracks
 				if (availableTracks[i] == initialTrack)
 				{
 					setTrack = i;
+					break;
 				}
 			}
 
