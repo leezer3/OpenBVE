@@ -245,12 +245,6 @@ namespace DenshaDeGoInput
 			// Update input from controller
 			InputTranslator.Update();
 
-			// Configure the mappings on the first frame to fit the controller's features
-			if (loading)
-			{
-				ConfigureMappings();
-			}
-
 			// Buttons (release)
 			for (int i = 0; i < ButtonCommands.Length; i++)
 			{
@@ -325,6 +319,7 @@ namespace DenshaDeGoInput
 		public void SetVehicleSpecs(VehicleSpecs specs)
 		{
 			TrainSpecs = specs;
+			InputTranslator.Update();
 			ConfigureMappings();
 		}
 
