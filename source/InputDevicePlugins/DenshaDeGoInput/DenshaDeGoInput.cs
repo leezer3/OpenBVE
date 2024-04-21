@@ -245,12 +245,6 @@ namespace DenshaDeGoInput
 			// Update input from controller
 			InputTranslator.Update();
 
-			// Configure the mappings on the first frame to fit the controller's features
-			if (loading)
-			{
-				ConfigureMappings();
-			}
-
 			// Buttons (release)
 			for (int i = 0; i < ButtonCommands.Length; i++)
 			{
@@ -325,6 +319,7 @@ namespace DenshaDeGoInput
 		public void SetVehicleSpecs(VehicleSpecs specs)
 		{
 			TrainSpecs = specs;
+			InputTranslator.Update();
 			ConfigureMappings();
 		}
 
@@ -503,11 +498,6 @@ namespace DenshaDeGoInput
 			powerCommands.CopyTo(Controls, brakeCommands.Length);
 			reverserCommands.CopyTo(Controls, brakeCommands.Length + powerCommands.Length);
 			ButtonCommands.CopyTo(Controls, brakeCommands.Length + powerCommands.Length + reverserCommands.Length);
-
-			for (int i = 0; i < Controls.Length; i++)
-			{
-				Console.WriteLine("Command: " + Controls[i].Command.ToString() + ", Option: " + Controls[i].Option.ToString());
-			}
 		}
 
 		/// <summary>
