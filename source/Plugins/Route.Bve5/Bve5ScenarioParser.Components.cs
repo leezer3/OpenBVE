@@ -67,12 +67,19 @@ namespace Bve5RouteParser
 				int a = Lines[i].IndexOf(',');
 				string FilePath = Lines[i].Substring(a + 1, Lines[i].Length - a - 1);
 				string Name = Lines[i].Substring(0, a);
+
+				if (string.IsNullOrEmpty(FilePath))
+				{
+					// empty object name
+					continue;
+				}
+
 				try
 				{
 					FilePath = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(ObjectList), FilePath);
 				}
 				catch { }
-				if (!System.IO.File.Exists(FilePath))
+				if (!File.Exists(FilePath))
 				{
 					//If our path does not exist, set it to a null reference in order for the sim to display nothing
 					FilePath = null;
@@ -108,7 +115,7 @@ namespace Bve5RouteParser
 		/// <param name="Encoding">The text encoding to use whilst parsing the file</param>
 		/// <param name="PreviewOnly">Whether this is a preview only</param>
 		
-		private void LoadSounds(string SoundList, ref List<ObjectPointer> SoundListing, ref List<SoundHandle> Sounds, System.Text.Encoding Encoding, bool PreviewOnly)
+		private void LoadSounds(string SoundList, ref List<ObjectPointer> SoundListing, ref Dictionary<int, SoundHandle> Sounds, System.Text.Encoding Encoding, bool PreviewOnly)
 		{
 			//Read object list file into memory
 			string[] Lines = File.ReadAllLines(SoundList, Encoding);
@@ -132,10 +139,18 @@ namespace Bve5RouteParser
 			{
 				double version = 0;
 				NumberFormats.TryParseDoubleVb6(b, out version);
-				if (version > 1.0)
+				switch (version)
 				{
-					throw new Exception(version + " is not a supported BVE5 sound list version");
-				}
+					case 0.1:
+						break;
+					case 1.0:
+						break;
+					case 2.0:
+						break;
+					default:
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unrecognised BVE5 sound list version: " + Lines[0]);
+						break;
+					}
 			}
 			else
 			{
@@ -160,7 +175,7 @@ namespace Bve5RouteParser
 				string[] Arguments = Lines[i].Split(',');
 				if (Arguments.Length < 2)
 				{
-					Plugin.CurrentHost.AddMessage("At least 2 arguments must be supplied in the SoundsList file " + SoundList + " at line " + i);
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "At least 2 arguments must be supplied in the SoundsList file " + SoundList + " at line " + i);
 					return;
 				}
 
@@ -168,7 +183,7 @@ namespace Bve5RouteParser
 				{
 					if (!NumberFormats.TryParseIntVb6(Arguments[2], out maxPlayingBuffers))
 					{
-						Plugin.CurrentHost.AddMessage("Maximum playing buffers is invalid in the SoundsList file " + SoundList + " at line " + i);
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Maximum playing buffers is invalid in the SoundsList file " + SoundList + " at line " + i);
 					}
 				}
 
@@ -176,7 +191,7 @@ namespace Bve5RouteParser
 				if (!System.IO.File.Exists(soundFile))
 				{
 					//If our path does not exist, set it to a null reference in order for the sim to display nothing
-					Plugin.CurrentHost.AddMessage("Sound file file " + Arguments[1] + " does not exist in SoundsList file "+ SoundList + " at line " + i);
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Sound file file " + Arguments[1] + " does not exist in SoundsList file "+ SoundList + " at line " + i);
 					soundFile = string.Empty;
 					
 				}
@@ -190,7 +205,7 @@ namespace Bve5RouteParser
 					{
 						SoundHandle h;
 						Plugin.CurrentHost.RegisterSound(soundFile, 15.0, out h);
-						Sounds.Add(h);
+						Sounds.Add(Sounds.Count, h);
 					}
 				}
 			}

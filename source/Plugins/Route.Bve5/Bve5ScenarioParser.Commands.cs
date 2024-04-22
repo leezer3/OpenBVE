@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -355,7 +355,10 @@ namespace Bve5RouteParser
 			}
 			if (sttype == -1)
 			{
-				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Structure key is invalid in Structure.Put");
+				if (key.ToLowerInvariant() != "null")
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Structure key is invalid in Structure.Put");
+				}
 				return;
 			}
 
@@ -629,7 +632,7 @@ namespace Bve5RouteParser
 			}
 			else
 			{
-				if (sttype == -1 || Data.Structure.Sounds3D[sttype] == null)
+				if (sttype == -1 || !Data.Structure.Sounds3D.ContainsKey(sttype))
 				{
 					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Sound with key " + key + " was not found in Block " + BlockIndex);
 					return;
@@ -1029,6 +1032,14 @@ namespace Bve5RouteParser
 				return;
 			}
 			//Add error message NaN
+		}
+
+		/// <summary>Adds a beacon to the current block</summary>
+		/// <param name="Arguments">The command arguments</param>
+		/// <param name="Data">The RouteData (updated via 'ref')</param>
+		/// <param name="BlockIndex">The index of the current block</param>
+		static void PutBeacon(string[] Arguments, ref RouteData Data, int BlockIndex)
+		{
 		}
 
 		/// <summary>Changes the fog conditions for the current block</summary>

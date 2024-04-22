@@ -94,9 +94,7 @@ namespace Bve5RouteParser
 			CurrentRoute.Sections[m].Invisible = Invisible;
 			// create section change event
 			double d = TrackPosition - StartingDistance;
-			int p = CurrentRoute.Tracks[0].Elements[CurrentTrackElement].Events.Length;
-			Array.Resize(ref CurrentRoute.Tracks[0].Elements[CurrentTrackElement].Events, p + 1);
-			CurrentRoute.Tracks[0].Elements[CurrentTrackElement].Events[p] = new SectionChangeEvent(CurrentRoute, d, m - 1, m);
+			CurrentRoute.Tracks[0].Elements[CurrentTrackElement].Events.Add(new SectionChangeEvent(CurrentRoute, d, m - 1, m));
 		}
 	}
 }

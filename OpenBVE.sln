@@ -1,7 +1,6 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29209.62
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{16553295-E70F-4596-AA78-848EEA576C4A}"
 EndProject
@@ -176,7 +175,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win32PluginProxy", "source\Plugins\Win32PluginProxy\Win32PluginProxy.csproj", "{B9014791-7170-4DCD-B3F1-2B7518A85C83}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Route.Bve5", "Source\Plugins\Route.Bve5\Route.Bve5.csproj", "{59857BBC-F8FB-41B7-ADEF-5DE5041FA98C}"
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Route.Bve5", "source\Plugins\Route.Bve5\Route.Bve5.csproj", "{59857BBC-F8FB-41B7-ADEF-5DE5041FA98C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

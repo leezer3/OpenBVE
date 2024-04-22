@@ -7,6 +7,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using RouteManager2;
@@ -74,8 +75,8 @@ namespace Bve5RouteParser
 				Data.TimetableDaytime = new Texture[] { null, null, null, null };
 				Data.TimetableNighttime = new Texture[] { null, null, null, null };
 				Data.Structure.Objects = new UnifiedObject[] { };
-				Data.Structure.Sounds = new List<SoundHandle>();
-				Data.Structure.Sounds3D = new List<SoundHandle>();
+				Data.Structure.Sounds = new Dictionary<int, OpenBveApi.Sounds.SoundHandle>();
+				Data.Structure.Sounds3D = new Dictionary<int, OpenBveApi.Sounds.SoundHandle>();
 				Data.UnitOfSpeed = 0.277777777777778;
 
 				Data.CompatibilitySignalData = new CompatibilitySignalData[0];
@@ -604,6 +605,12 @@ namespace Bve5RouteParser
 										ChangeFog(Arguments, ref Data, BlockIndex);
 										break;
 								}
+								continue;
+							}
+							if (command == "beacon.put")
+							{
+								// Beacons work as per BVE2 / BVE4, and plugin interface remains identical
+								PutBeacon(Arguments, ref Data, BlockIndex);
 								continue;
 							}
 							if (!PreviewOnly)

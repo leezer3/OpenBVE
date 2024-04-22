@@ -162,8 +162,7 @@ namespace Plugin
 								}
 							}
 							break;
-						case AnimatedSection.Object:
-						case "[curve]":
+						case AnimatedSection.Curve:
 							{
 								i++;
 								double radius = 0;
@@ -295,7 +294,7 @@ namespace Plugin
 								}
 							}
 							break;
-						case "[object]":
+						case AnimatedSection.Object:
 							{
 								i++;
 								if (Result.Objects.Length == ObjectCount)

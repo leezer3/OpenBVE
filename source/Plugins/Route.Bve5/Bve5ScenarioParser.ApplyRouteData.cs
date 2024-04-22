@@ -29,7 +29,7 @@ namespace Bve5RouteParser
 			{
 				string CompatibilityFolder = Plugin.FileSystem.GetDataFolder("Compatibility");
 				// load compatibility objects
-				SignalPath = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Signals");
+				SignalPath = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Signals\\Japanese");
 				Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalPath, "signal_post.csv"), Encoding, false, out SignalPost);
 				
 				LimitPath = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Limits");
@@ -39,8 +39,8 @@ namespace Bve5RouteParser
 				Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_right.csv"), Encoding, false, out LimitPostRight);
 				Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_infinite.csv"), Encoding, false, out LimitPostInfinite);
 				Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_1_digit.csv"), Encoding, false, out LimitOneDigit);
-				Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_2_digit.csv"), Encoding, false, out LimitTwoDigits);
-				Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_3_digit.csv"), Encoding, false, out LimitThreeDigits);
+				Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_2_digits.csv"), Encoding, false, out LimitTwoDigits);
+				Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_3_digits.csv"), Encoding, false, out LimitThreeDigits);
 			}
 			else
 			{
@@ -62,7 +62,7 @@ namespace Bve5RouteParser
 			int BlocksUsed = Data.Blocks.Length;
 			CreateMissingBlocks(ref Data, ref BlocksUsed, LastBlock, PreviewOnly);
 			Array.Resize(ref Data.Blocks, BlocksUsed);
-			CurrentRoute.AccurateObjectDisposal = true;
+			CurrentRoute.AccurateObjectDisposal = ObjectDisposalMode.Accurate;
 			CurrentRoute.BlockLength = 25;
 			// interpolate height
 			if (!PreviewOnly)
@@ -174,7 +174,7 @@ namespace Bve5RouteParser
 				CurrentRoute.Tracks[0].Elements[n].WorldSide = new Vector3(Direction.Y, 0.0, -Direction.X);
 				CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(CurrentRoute.Tracks[0].Elements[n].WorldDirection, CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition = StartingDistance;
-				CurrentRoute.Tracks[0].Elements[n].Events = new GeneralEvent[] { };
+				CurrentRoute.Tracks[0].Elements[n].Events = new List<GeneralEvent>();
 				CurrentRoute.Tracks[0].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
 				CurrentRoute.Tracks[0].Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Accuracy;
 				// background
@@ -201,9 +201,7 @@ namespace Bve5RouteParser
 						}
 						if (typ >= 0 & typ < Data.Backgrounds.Length)
 						{
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							CurrentRoute.Tracks[0].Elements[n].Events[m] = new BackgroundChangeEvent(CurrentRoute, 0.0, Data.Backgrounds[typ].Handle, Data.Backgrounds[Data.Blocks[i].Background].Handle);
+							CurrentRoute.Tracks[0].Elements[n].Events.Add(new BackgroundChangeEvent(CurrentRoute, 0.0, Data.Backgrounds[typ].Handle, Data.Backgrounds[Data.Blocks[i].Background].Handle));
 						}
 					}
 				}
@@ -212,10 +210,8 @@ namespace Bve5RouteParser
 				{
 					for (int j = 0; j < Data.Blocks[i].Brightness.Length; j++)
 					{
-						int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-						Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 						double d = Data.Blocks[i].Brightness[j].TrackPosition - StartingDistance;
-						CurrentRoute.Tracks[0].Elements[n].Events[m] = new BrightnessChangeEvent(d, Data.Blocks[i].Brightness[j].Value, CurrentBrightnessValue, Data.Blocks[i].Brightness[j].TrackPosition - CurrentBrightnessTrackPosition);
+						CurrentRoute.Tracks[0].Elements[n].Events.Add(new BrightnessChangeEvent(d, Data.Blocks[i].Brightness[j].Value, CurrentBrightnessValue, Data.Blocks[i].Brightness[j].TrackPosition - CurrentBrightnessTrackPosition));
 						if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
 						{
 							BrightnessChangeEvent bce = (BrightnessChangeEvent)CurrentRoute.Tracks[0].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
@@ -223,7 +219,7 @@ namespace Bve5RouteParser
 							bce.NextDistance = Data.Blocks[i].Brightness[j].TrackPosition - CurrentBrightnessTrackPosition;
 						}
 						CurrentBrightnessElement = n;
-						CurrentBrightnessEvent = m;
+						CurrentBrightnessEvent = CurrentRoute.Tracks[0].Elements[n].Events.Count - 1;
 						CurrentBrightnessValue = Data.Blocks[i].Brightness[j].Value;
 						CurrentBrightnessTrackPosition = Data.Blocks[i].Brightness[j].TrackPosition;
 					}
@@ -234,9 +230,7 @@ namespace Bve5RouteParser
 					if (Data.Blocks[i].FogDefined)
 					{
 						Data.Blocks[i].Fog.TrackPosition = StartingDistance;
-						int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-						Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-						CurrentRoute.Tracks[0].Elements[n].Events[m] = new FogChangeEvent(CurrentRoute, 0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog);
+						CurrentRoute.Tracks[0].Elements[n].Events.Add(new FogChangeEvent(CurrentRoute, 0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog));
 						if (PreviousFogElement >= 0 & PreviousFogEvent >= 0)
 						{
 							FogChangeEvent e = (FogChangeEvent)CurrentRoute.Tracks[0].Elements[PreviousFogElement].Events[PreviousFogEvent];
@@ -250,7 +244,7 @@ namespace Bve5RouteParser
 						}
 						PreviousFog = Data.Blocks[i].Fog;
 						PreviousFogElement = n;
-						PreviousFogEvent = m;
+						PreviousFogEvent = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Count - 1;
 					}
 				}
 				// rail sounds
@@ -264,15 +258,13 @@ namespace Bve5RouteParser
 						if (r != CurrentRunIndex || f != CurrentFlangeIndex)
 						{
 							//If either of these differ, we first need to resize the array for the current block
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].RunSounds[k].TrackPosition - StartingDistance;
 							if (d > 0.0)
 							{
 								d = 0.0;
 							}
 							//Add event
-							CurrentRoute.Tracks[0].Elements[n].Events[m] = new RailSoundsChangeEvent(d, CurrentRunIndex, CurrentFlangeIndex, r, f);
+							CurrentRoute.Tracks[0].Elements[n].Events.Add(new RailSoundsChangeEvent(d, CurrentRunIndex, CurrentFlangeIndex, r, f));
 							CurrentRunIndex = r;
 							CurrentFlangeIndex = f;
 						}
@@ -285,9 +277,7 @@ namespace Bve5RouteParser
 					{
 						if (Data.Blocks[i].JointNoise)
 						{
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(0.0, null, false, false, true, new Vector3(0.0, 0.0, 0.0), 12.5, Plugin.CurrentHost);
+							CurrentRoute.Tracks[0].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, 0.0, null, false, false, false, true, new Vector3(0.0, 0.0, 0.0), 12.5));
 						}
 					}
 				}
@@ -296,9 +286,7 @@ namespace Bve5RouteParser
 				{
 					// station
 					int s = Data.Blocks[i].Station;
-					int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-					Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-					CurrentRoute.Tracks[0].Elements[n].Events[m] = new StationStartEvent(0.0, s);
+					CurrentRoute.Tracks[0].Elements[n].Events.Add(new StationStartEvent(Plugin.CurrentRoute, 0.0, s));
 					double dx, dy = 3.0;
 					if (CurrentRoute.Stations[s].OpenLeftDoors & !CurrentRoute.Stations[s].OpenRightDoors)
 					{
@@ -326,9 +314,7 @@ namespace Bve5RouteParser
 								int j = b - Data.FirstUsedBlock;
 								if (j >= 0)
 								{
-									m = CurrentRoute.Tracks[0].Elements[j].Events.Length;
-									Array.Resize(ref CurrentRoute.Tracks[0].Elements[j].Events, m + 1);
-									CurrentRoute.Tracks[0].Elements[j].Events[m] = new StationPassAlarmEvent(0.0);
+									CurrentRoute.Tracks[0].Elements[j].Events.Add(new StationPassAlarmEvent(0.0));
 								}
 							}
 						}
@@ -362,10 +348,8 @@ namespace Bve5RouteParser
 				// limit
 				for (int j = 0; j < Data.Blocks[i].Limit.Length; j++)
 				{
-					int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-					Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 					double d = Data.Blocks[i].Limit[j].TrackPosition - StartingDistance;
-					CurrentRoute.Tracks[0].Elements[n].Events[m] = new LimitChangeEvent(d, CurrentSpeedLimit, Data.Blocks[i].Limit[j].Speed);
+					CurrentRoute.Tracks[0].Elements[n].Events.Add(new LimitChangeEvent(Plugin.CurrentRoute, d, CurrentSpeedLimit, Data.Blocks[i].Limit[j].Speed));
 					CurrentSpeedLimit = Data.Blocks[i].Limit[j].Speed;
 				}
 				// turn
@@ -737,16 +721,14 @@ namespace Bve5RouteParser
 								Data.Blocks[i].SoundEvents[k].Create(pos, StartingDistance, Direction, planar, updown);
 								if (Data.Blocks[i].SoundEvents[j].Type == SoundType.TrainStatic | Data.Blocks[i].SoundEvents[j].Type == SoundType.TrainDynamic)
 								{
-									int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-									Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 									double d = Data.Blocks[i].SoundEvents[j].TrackPosition - StartingDistance;
 									switch (Data.Blocks[i].SoundEvents[j].Type)
 									{
 										case SoundType.TrainStatic:
-											CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, false, Vector3.Zero, Plugin.CurrentHost);
+											CurrentRoute.Tracks[0].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, false, true, false, Vector3.Zero));
 											break;
 										case SoundType.TrainDynamic:
-											CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed, Plugin.CurrentHost);
+											CurrentRoute.Tracks[0].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed));
 											break;
 									}
 								}
@@ -919,9 +901,7 @@ namespace Bve5RouteParser
 					if (k >= 0 & k < Data.Blocks.Length)
 					{
 						double d = p - (double)(k + Data.FirstUsedBlock) * (double)Data.BlockInterval;
-						int m = CurrentRoute.Tracks[0].Elements[k].Events.Length;
-						Array.Resize(ref CurrentRoute.Tracks[0].Elements[k].Events, m + 1);
-						CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(d, i, CurrentRoute, Plugin.CurrentHost);
+						CurrentRoute.Tracks[0].Elements[k].Events.Add(new StationEndEvent(Plugin.CurrentHost, Plugin.CurrentRoute, d, i));
 					}
 				}
 			}
@@ -1005,9 +985,7 @@ namespace Bve5RouteParser
 			if (CurrentRoute.Tracks[0].Elements.Length != 0)
 			{
 				int n = CurrentRoute.Tracks[0].Elements.Length - 1;
-				int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-				Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-				CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackEndEvent(Plugin.CurrentHost, Data.BlockInterval);
+				CurrentRoute.Tracks[0].Elements[n].Events.Add(new TrackEndEvent(Plugin.CurrentHost, Data.BlockInterval));
 			}
 			// insert compatibility beacons
 			if (!PreviewOnly)
@@ -1016,7 +994,7 @@ namespace Bve5RouteParser
 				bool atc = false;
 				for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++)
 				{
-					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
+					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Count; j++)
 					{
 						if (!atc)
 						{
@@ -1025,9 +1003,8 @@ namespace Bve5RouteParser
 								StationStartEvent station = (StationStartEvent)CurrentRoute.Tracks[0].Elements[i].Events[j];
 								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
 								{
-									Array.Resize(ref CurrentRoute.Tracks[0].Elements[i].Events, CurrentRoute.Tracks[0].Elements[i].Events.Length + 2);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 0, 0, false);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 1, 0, false);
+									CurrentRoute.Tracks[0].Elements[i].Events.Add(new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 0, 0, false));
+									CurrentRoute.Tracks[0].Elements[i].Events.Add(new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 1, 0, false));
 									atc = true;
 								}
 							}
@@ -1039,9 +1016,8 @@ namespace Bve5RouteParser
 								StationStartEvent station = (StationStartEvent)CurrentRoute.Tracks[0].Elements[i].Events[j];
 								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
 								{
-									Array.Resize(ref CurrentRoute.Tracks[0].Elements[i].Events, CurrentRoute.Tracks[0].Elements[i].Events.Length + 2);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 2, 0, false);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 3, 0, false);
+									CurrentRoute.Tracks[0].Elements[i].Events.Add(new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 2, 0, false));
+									CurrentRoute.Tracks[0].Elements[i].Events.Add(new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 3, 0, false));
 								}
 							}
 							else if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationEndEvent)
@@ -1049,15 +1025,13 @@ namespace Bve5RouteParser
 								StationEndEvent station = (StationEndEvent)CurrentRoute.Tracks[0].Elements[i].Events[j];
 								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
 								{
-									Array.Resize(ref CurrentRoute.Tracks[0].Elements[i].Events, CurrentRoute.Tracks[0].Elements[i].Events.Length + 2);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 1, 0, false);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 2, 0, false);
+									CurrentRoute.Tracks[0].Elements[i].Events.Add(new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 1, 0, false));
+									CurrentRoute.Tracks[0].Elements[i].Events.Add(new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 2, 0, false));
 								}
 								else if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
 								{
-									Array.Resize(ref CurrentRoute.Tracks[0].Elements[i].Events, CurrentRoute.Tracks[0].Elements[i].Events.Length + 2);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 3, 0, false);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 0, 0, false);
+									CurrentRoute.Tracks[0].Elements[i].Events.Add(new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 3, 0, false));
+									CurrentRoute.Tracks[0].Elements[i].Events.Add(new TransponderEvent(CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 0, 0, false));
 									atc = false;
 								}
 							}
@@ -1089,11 +1063,10 @@ namespace Bve5RouteParser
 						}
 					}
 				}
-				int n = CurrentRoute.Tracks[0].Elements[0].Events.Length;
-				Array.Resize(ref CurrentRoute.Tracks[0].Elements[0].Events, n + transponders.Count);
+			
 				for (int i = 0; i < transponders.Count; i++)
 				{
-					CurrentRoute.Tracks[0].Elements[0].Events[n + i] = transponders[i];
+					CurrentRoute.Tracks[0].Elements[0].Events.Add(transponders[i]);
 				}
 			}
 			// cant
