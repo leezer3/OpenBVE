@@ -5,6 +5,8 @@ namespace OpenBveApi.Trains
 	/// <summary>An abstract train</summary>
 	public abstract class AbstractTrain
 	{
+		/// <summary>The type of the train</summary>
+		public TrainType Type;
 		/// <summary>The current state of the train</summary>
 		public TrainState State;
 		/// <summary>Holds the AI controlling the train if any</summary>

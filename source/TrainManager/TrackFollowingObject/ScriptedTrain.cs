@@ -18,7 +18,7 @@ namespace TrainManager.Trains
 		public double LeaveTime;
 		private double InternalTimerTimeElapsed;
 
-		public ScriptedTrain(TrainState state) : base(state)
+		public ScriptedTrain(TrainState state) : base(state, TrainType.ScriptedTrain)
 		{
 			SafetySystems.PassAlarm = new PassAlarm(PassAlarmType.None, null);
 		}

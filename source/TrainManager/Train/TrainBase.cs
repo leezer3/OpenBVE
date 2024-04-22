@@ -97,9 +97,10 @@ namespace TrainManager.Trains
 		/// <summary>The direction of travel on the current track</summary>
 		public TrackDirection CurrentDirection => TrainManagerBase.CurrentRoute.Tracks[Cars[DriverCar].FrontAxle.Follower.TrackIndex].Direction;
 
-		public TrainBase(TrainState state)
+		public TrainBase(TrainState state, TrainType type)
 		{
 			State = state;
+			Type = type;
 			Destination = TrainManagerBase.CurrentOptions.InitialDestination;
 			Station = -1;
 			RouteLimits = new[] { double.PositiveInfinity };

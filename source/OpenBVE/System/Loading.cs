@@ -391,19 +391,19 @@ namespace OpenBve {
 			// initialize trains
 			Thread.Sleep(1); if (Cancel) return;
 			Program.TrainManager.Trains = new TrainBase[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length + 1 + (Program.CurrentRoute.BogusPreTrainInstructions.Length != 0 ? 1 : 0)];
-			for (int k = 0; k < Program.TrainManager.Trains.Length; k++)
+			Program.TrainManager.Trains[0] = new TrainBase(TrainState.Pending, TrainType.LocalPlayerTrain);
+			TrainManagerBase.PlayerTrain = Program.TrainManager.Trains[0];
+			for (int k = 1; k < Program.TrainManager.Trains.Length; k++)
 			{
 				if (k == Program.TrainManager.Trains.Length - 1 & Program.CurrentRoute.BogusPreTrainInstructions.Length != 0)
 				{
-					Program.TrainManager.Trains[k] = new TrainBase(TrainState.Bogus);
+					Program.TrainManager.Trains[k] = new TrainBase(TrainState.Bogus, TrainType.PreTrain);
 				}
 				else
 				{
-					Program.TrainManager.Trains[k] = new TrainBase(TrainState.Pending);
-				}
-				
+					Program.TrainManager.Trains[k] = new TrainBase(TrainState.Pending, TrainType.PreTrain);
+				}			
 			}
-			TrainManagerBase.PlayerTrain = Program.TrainManager.Trains[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length];
 
 
 
@@ -433,7 +433,7 @@ namespace OpenBve {
 				} else if (currentTrain.State != TrainState.Bogus) {
 					TrainBase train = currentTrain as TrainBase;
 					currentTrain.AI = new Game.SimpleHumanDriverAI(train, Interface.CurrentOptions.PrecedingTrainSpeedLimit);
-					currentTrain.TimetableDelta = Program.CurrentRoute.PrecedingTrainTimeDeltas[k];
+					currentTrain.TimetableDelta = Program.CurrentRoute.PrecedingTrainTimeDeltas[k - 1];
 					// ReSharper disable once PossibleNullReferenceException - Will always succeed 
 					train.Specs.DoorOpenMode = DoorMode.Manual;
 					train.Specs.DoorCloseMode = DoorMode.Manual;
