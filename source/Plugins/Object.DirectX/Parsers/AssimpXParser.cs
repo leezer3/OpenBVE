@@ -285,7 +285,11 @@ namespace Plugin
 				}
 				for (int j = 0; j < nVertexNormals; j++)
 				{
-					builder.Faces[i].Vertices[j].Normal = normals[(int)mesh.NormFaces[i].Indices[j]];
+					if ((int)mesh.NormFaces[i].Indices[j] < normals.Length)
+					{
+						// Check normal index is valid
+						builder.Faces[i].Vertices[j].Normal = normals[(int)mesh.NormFaces[i].Indices[j]];
+					}
 				}
 			}
 
