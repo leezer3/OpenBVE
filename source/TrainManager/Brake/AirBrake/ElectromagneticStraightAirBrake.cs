@@ -7,6 +7,15 @@ namespace TrainManager.BrakeSystems
 {
 	public class ElectromagneticStraightAirBrake : CarBrake
 	{
+		public ElectromagneticStraightAirBrake(EletropneumaticBrakeType type, CarBase car) : base(car)
+		{
+			electropneumaticBrakeType = type;
+			brakeControlSpeed = 0;
+			motorDeceleration = 0;
+			motorDecelerationDelayUp = 0;
+			motorDecelerationDelayDown = 0;
+			decelerationCurves = new AccelerationCurve[] { };
+		}
 		public ElectromagneticStraightAirBrake(EletropneumaticBrakeType type, CarBase car, double BrakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] DecelerationCurves) : base(car)
 		{
 			electropneumaticBrakeType = type;
