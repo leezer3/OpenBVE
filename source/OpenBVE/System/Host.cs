@@ -319,7 +319,7 @@ namespace OpenBve {
 		/// <returns>Whether loading the sound was successful.</returns>
 		public override bool RegisterSound(Sound sound, out SoundHandle handle)
 		{
-			handle = Program.Sounds.RegisterBuffer(sound, 0.0);
+			handle = Program.Sounds.RegisterBuffer(sound, 15.0);
 			return true;
 		}
 

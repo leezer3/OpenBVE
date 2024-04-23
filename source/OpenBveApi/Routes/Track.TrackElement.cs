@@ -40,6 +40,7 @@ namespace OpenBveApi.Routes
 		public bool IsDriveable;
 		/// <summary>Whether the element contains a switch</summary>
 		public bool ContainsSwitch;
+		public bool BeginInterpolation;
 
 		/// <summary>Creates a new track element</summary>
 		/// <param name="StartingTrackPosition">The starting position (relative to zero)</param>
@@ -62,6 +63,7 @@ namespace OpenBveApi.Routes
 			this.Events = new List<GeneralEvent>();
 			this.IsDriveable = false;
 			this.ContainsSwitch = false;
+			this.BeginInterpolation = false;
 		}
 	}
 }

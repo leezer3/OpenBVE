@@ -7,6 +7,7 @@
 		Include,
 		Object,
 		Sound,
-		StateChangeSound
+		StateChangeSound,
+		Curve
 	}
 }
