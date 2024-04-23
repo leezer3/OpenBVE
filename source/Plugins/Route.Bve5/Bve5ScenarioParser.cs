@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -117,7 +117,7 @@ namespace Bve5RouteParser
 
 		private void ParseRouteForData(string FileName, Encoding Encoding, string TrainPath, string ObjectPath, string SoundPath, ref RouteData Data, bool PreviewOnly)
 		{
-			if (FileName == String.Empty)
+			if (string.IsNullOrEmpty(FileName))
 			{
 				throw new Exception("The BVE5 scenario did not define a route map");
 			}
@@ -178,10 +178,9 @@ namespace Bve5RouteParser
 				{
 					continue;
 				}
-				double Number;
 				int n = Expressions[e].Text.IndexOf(';');
 				
-				if (n != -1 && NumberFormats.TryParseDoubleVb6(Expressions[e].Text.Substring(0, n), out Number))
+				if (n != -1 && NumberFormats.TryParseDoubleVb6(Expressions[e].Text.Substring(0, n), out double Number))
 				{
 					Expressions[e].Text = Expressions[e].Text.Substring(n, Expressions[e].Text.Length - n);
 					BlockIndex = (int)Math.Floor(Number / Data.BlockInterval + 0.001);
@@ -481,7 +480,7 @@ namespace Bve5RouteParser
 										{
 											break;
 										}
-										if (!NumberFormats.TryParseDoubleVb6(Arguments[0], out Radius))
+										if (!NumberFormats.TryParseDoubleVb6(Arguments[1], out Radius))
 										{
 											break;
 										}
@@ -494,7 +493,7 @@ namespace Bve5RouteParser
 										{
 											break;
 										}
-										if (!NumberFormats.TryParseDoubleVb6(Arguments[0], out Radius))
+										if (!NumberFormats.TryParseDoubleVb6(Arguments[1], out Radius))
 										{
 											break;
 										}

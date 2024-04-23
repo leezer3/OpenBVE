@@ -498,11 +498,9 @@ namespace Bve5RouteParser
 				SecondaryTrack(railkey, new string[] { "0", "0" }, ref Data, BlockIndex, UnitOfLength);
 				idx2 = FindRailIndex(railkey.Trim(), Data.Blocks[BlockIndex].Rail);
 			}
-			double length = 0.0;
-			if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out length))
+			if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out double length))
 			{
 				//Interface.AddMessage(Interface.MessageType.Error, false, "CrackStructureIndex is invalid in Track.Crack at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-				length = 0.0;
 			}
 			else
 			{
@@ -1065,16 +1063,15 @@ namespace Bve5RouteParser
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogDensity value at block " + BlockIndex);
 					}
-					float r = 1.0f, g = 1.0f, b = 1.0f;
-					if (!NumberFormats.TryParseFloatVb6(Arguments[1], out r))
+					if (!NumberFormats.TryParseFloatVb6(Arguments[1], out float r))
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor R value at block " + BlockIndex);
 					}
-					if (!NumberFormats.TryParseFloatVb6(Arguments[2], out g))
+					if (!NumberFormats.TryParseFloatVb6(Arguments[2], out float g))
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor G value at block " + BlockIndex);
 					}
-					if (!NumberFormats.TryParseFloatVb6(Arguments[3], out b))
+					if (!NumberFormats.TryParseFloatVb6(Arguments[3], out float b))
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor B value at block " + BlockIndex);
 					}

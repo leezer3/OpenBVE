@@ -749,28 +749,6 @@ namespace Bve5RouteParser
 
 
 						}
-						
-						/*
-						// stop
-						if (j == 0)
-						{
-							for (int k = 0; k < Data.Blocks[i].Stop.Length; k++)
-							{
-								if (Data.Blocks[i].Stop[k].Direction != 0)
-								{
-									double dx = 1.8 * (double)Data.Blocks[i].Stop[k].Direction;
-									double dz = Data.Blocks[i].Stop[k].TrackPosition - StartingDistance;
-									Vector3 wpos = pos;
-									wpos.X += dx * RailTransformation.X.X + dz * RailTransformation.Z.X;
-									wpos.Y += dx * RailTransformation.X.Y + dz * RailTransformation.Z.Y;
-									wpos.Z += dx * RailTransformation.X.Z + dz * RailTransformation.Z.Z;
-									double tpos = Data.Blocks[i].Stop[k].TrackPosition;
-									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-									ObjectManager.CreateStaticObject(StopPost, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
-								}
-							}
-						}
-						 */
 					}
 				}
 				// finalize block
@@ -782,29 +760,6 @@ namespace Bve5RouteParser
 					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 				}
 			}
-			/*
-			// orphaned transponders
-			if (!PreviewOnly)
-			{
-				for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
-				{
-					for (int j = 0; j < Data.Blocks[i].Transponder.Length; j++)
-					{
-						if (Data.Blocks[i].Transponder[j].Type != -1)
-						{
-							int n = i - Data.FirstUsedBlock;
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							double d = Data.Blocks[i].Transponder[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
-							int s = Data.Blocks[i].Transponder[j].Section;
-							if (s >= 0) s = -1;
-							CurrentRoute.Tracks[0].Elements[n].Events[m] = new TransponderEvent(d, Data.Blocks[i].Transponder[j].Type, Data.Blocks[i].Transponder[j].Data, s, Data.Blocks[i].Transponder[j].ClipToFirstRedSection);
-							Data.Blocks[i].Transponder[j].Type = -1;
-						}
-					}
-				}
-			}
-			 */
 			// insert station end events
 			for (int i = 0; i < CurrentRoute.Stations.Length; i++)
 			{
