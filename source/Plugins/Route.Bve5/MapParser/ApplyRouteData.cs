@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
@@ -126,7 +127,7 @@ namespace Route.Bve5
 				for (int k = 0; k < Plugin.CurrentRoute.Tracks.Count; k++)
 				{
 					int j = Plugin.CurrentRoute.Tracks.ElementAt(k).Key;
-					Plugin.CurrentRoute.Tracks[j].Elements[n].Events = new GeneralEvent[] { };
+					Plugin.CurrentRoute.Tracks[j].Elements[n].Events = new List<GeneralEvent>();
 				}
 
 				// background
@@ -153,9 +154,8 @@ namespace Route.Bve5
 						}
 						if (typ >= 0 & typ < Data.Backgrounds.Count)
 						{
-							int m = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							Plugin.CurrentRoute.Tracks[0].Elements[n].Events[m] = new BackgroundChangeEvent(Plugin.CurrentRoute, 0.0, Data.Backgrounds[typ].Handle, Data.Backgrounds[Data.Blocks[i].Background].Handle);
+							
+							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new BackgroundChangeEvent(Plugin.CurrentRoute, 0.0, Data.Backgrounds[typ].Handle, Data.Backgrounds[Data.Blocks[i].Background].Handle));
 						}
 					}
 				}
@@ -165,13 +165,11 @@ namespace Route.Bve5
 				{
 					for (int j = 0; j < Data.Blocks[i].BrightnessChanges.Count; j++)
 					{
-						int m = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length;
 						for (int l = 0; l < Plugin.CurrentRoute.Tracks.Count; l++)
 						{
 							int k = Plugin.CurrentRoute.Tracks.ElementAt(l).Key;
-							Array.Resize(ref Plugin.CurrentRoute.Tracks[k].Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].BrightnessChanges[j].TrackPosition - StartingDistance;
-							Plugin.CurrentRoute.Tracks[k].Elements[n].Events[m] = new BrightnessChangeEvent(d, Data.Blocks[i].BrightnessChanges[j].Value, CurrentBrightnessValue, Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition);
+							Plugin.CurrentRoute.Tracks[k].Elements[n].Events.Add(new BrightnessChangeEvent(d, Data.Blocks[i].BrightnessChanges[j].Value, CurrentBrightnessValue, Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition));
 							if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
 							{
 								BrightnessChangeEvent bce = (BrightnessChangeEvent)Plugin.CurrentRoute.Tracks[k].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
@@ -180,7 +178,7 @@ namespace Route.Bve5
 							}
 						}
 						CurrentBrightnessElement = n;
-						CurrentBrightnessEvent = m;
+						CurrentBrightnessEvent = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Count - 1;
 						CurrentBrightnessValue = Data.Blocks[i].BrightnessChanges[j].Value;
 						CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
 					}
@@ -197,9 +195,7 @@ namespace Route.Bve5
 							PreviousFog = Data.Blocks[i].Fog;
 						}
 						Data.Blocks[i].Fog.TrackPosition = StartingDistance;
-						int m = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length;
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[m] = new FogChangeEvent(Plugin.CurrentRoute, 0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new FogChangeEvent(Plugin.CurrentRoute, 0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog));
 						if (PreviousFogElement >= 0 & PreviousFogEvent >= 0)
 						{
 							FogChangeEvent e = (FogChangeEvent)Plugin.CurrentRoute.Tracks[0].Elements[PreviousFogElement].Events[PreviousFogEvent];
@@ -213,7 +209,7 @@ namespace Route.Bve5
 						}
 						PreviousFog = Data.Blocks[i].Fog;
 						PreviousFogElement = n;
-						PreviousFogEvent = m;
+						PreviousFogEvent = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Count - 1;
 					}
 				}
 
@@ -225,14 +221,12 @@ namespace Route.Bve5
 						int r = Data.Blocks[i].RunSounds[k].SoundIndex;
 						if (r != CurrentRunIndex)
 						{
-							int m = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].RunSounds[k].TrackPosition - StartingDistance;
 							if (d > 0.0)
 							{
 								d = 0.0;
 							}
-							Plugin.CurrentRoute.Tracks[0].Elements[n].Events[m] = new RailSoundsChangeEvent(d, CurrentRunIndex, CurrentFlangeIndex, r, CurrentFlangeIndex);
+							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new RailSoundsChangeEvent(d, CurrentRunIndex, CurrentFlangeIndex, r, CurrentFlangeIndex));
 							CurrentRunIndex = r;
 						}
 					}
@@ -242,23 +236,19 @@ namespace Route.Bve5
 						int f = Data.Blocks[i].FlangeSounds[k].SoundIndex;
 						if (f != CurrentFlangeIndex)
 						{
-							int m = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].FlangeSounds[k].TrackPosition - StartingDistance;
 							if (d > 0.0)
 							{
 								d = 0.0;
 							}
-							Plugin.CurrentRoute.Tracks[0].Elements[n].Events[m] = new RailSoundsChangeEvent(d, CurrentRunIndex, CurrentFlangeIndex, CurrentRunIndex, f);
+							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new RailSoundsChangeEvent(d, CurrentRunIndex, CurrentFlangeIndex, CurrentRunIndex, f));
 							CurrentFlangeIndex = f;
 						}
 					}
 
 					if (Data.Blocks[i].JointSound)
 					{
-						int m = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length;
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[m] = new PointSoundEvent();
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new PointSoundEvent());
 					}
 				}
 
@@ -266,9 +256,7 @@ namespace Route.Bve5
 				if (Data.Blocks[i].Station >= 0)
 				{
 					int s = Data.Blocks[i].Station;
-					int m = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length;
-					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[m] = new StationStartEvent(0.0, s);
+					Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new StationStartEvent(Plugin.CurrentRoute, 0.0, s));
 					double dx, dy = 3.0;
 					if (Plugin.CurrentRoute.Stations[s].OpenLeftDoors & !Plugin.CurrentRoute.Stations[s].OpenRightDoors)
 					{
@@ -310,10 +298,8 @@ namespace Route.Bve5
 				{
 					for (int k = 0; k < Data.Blocks[i].Limits.Count; k++)
 					{
-						int m = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length;
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 						double d = Data.Blocks[i].Limits[k].TrackPosition - StartingDistance;
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[m] = new LimitChangeEvent(d, CurrentSpeedLimit, Data.Blocks[i].Limits[k].Speed);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new LimitChangeEvent(Plugin.CurrentRoute, d, CurrentSpeedLimit, Data.Blocks[i].Limits[k].Speed));
 						CurrentSpeedLimit = Data.Blocks[i].Limits[k].Speed;
 					}
 				}
@@ -330,10 +316,8 @@ namespace Route.Bve5
 
 							if (buffer != null)
 							{
-								int m = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length;
-								Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 								double d = Data.Blocks[i].SoundEvents[k].TrackPosition - StartingDistance;
-								Plugin.CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(Plugin.CurrentHost, d, buffer, true, true, false, false, Vector3.Zero, 0.0);
+								Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, d, buffer, true, true, false, false, Vector3.Zero, 0.0));
 							}
 						}
 					}
@@ -380,9 +364,7 @@ namespace Route.Bve5
 
 						// create section change event
 						double d = Data.Blocks[i].Sections[k].TrackPosition - StartingDistance;
-						int p = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length;
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, p + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[p] = new SectionChangeEvent(Plugin.CurrentRoute, d, m - 1, m);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new SectionChangeEvent(Plugin.CurrentRoute, d, m - 1, m));
 					}
 				}
 
@@ -706,15 +688,13 @@ namespace Route.Bve5
 						if (Data.Blocks[i].Transponders[k].Type != -1)
 						{
 							int n = i;
-							int m = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].Transponders[k].TrackPosition - Plugin.CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
 							int s = Data.Blocks[i].Transponders[k].SectionIndex;
 							if (s < 0 || s >= Plugin.CurrentRoute.Sections.Length)
 							{
 								s = -1;
 							}
-							Plugin.CurrentRoute.Tracks[0].Elements[n].Events[m] = new TransponderEvent(Plugin.CurrentRoute, d, Data.Blocks[i].Transponders[k].Type, Data.Blocks[i].Transponders[k].Data, s, false);
+							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new TransponderEvent(Plugin.CurrentRoute, d, Data.Blocks[i].Transponders[k].Type, Data.Blocks[i].Transponders[k].Data, s, false));
 							Data.Blocks[i].Transponders[k].Type = -1;
 						}
 					}
@@ -732,9 +712,7 @@ namespace Route.Bve5
 					if (k != -1)
 					{
 						double d = p - Data.Blocks[k].StartingDistance;
-						int m = Plugin.CurrentRoute.Tracks[0].Elements[k].Events.Length;
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[k].Events, m + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(Plugin.CurrentHost, Plugin.CurrentRoute, d, i);
+						Plugin.CurrentRoute.Tracks[0].Elements[k].Events.Add(new StationEndEvent(Plugin.CurrentHost, Plugin.CurrentRoute, d, i));
 					}
 				}
 			}
@@ -835,9 +813,7 @@ namespace Route.Bve5
 			if (Plugin.CurrentRoute.Tracks[0].Elements.Any())
 			{
 				int n = Plugin.CurrentRoute.Tracks[0].Elements.Length - 1;
-				int m = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length;
-				Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-				Plugin.CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackEndEvent(Plugin.CurrentHost, InterpolateInterval);
+				Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new TrackEndEvent(Plugin.CurrentHost, InterpolateInterval));
 			}
 
 			// cant

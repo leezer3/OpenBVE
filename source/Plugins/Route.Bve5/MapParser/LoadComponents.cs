@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using Bve5Parser.MapGrammar;
 using CsvHelper;
 using LibRender2.Trains;
@@ -13,12 +12,10 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
-using TrainManager;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
-using TrackFollowingObject = TrainManager.Trains.TrackFollowingObject;
 
 namespace Route.Bve5
 {
@@ -606,7 +603,7 @@ namespace Route.Bve5
 
 				OtherTrain.CarObjects = OtherTrain.CarObjects.OrderByDescending(Object => Object.Distance).ToList();
 
-				TrackFollowingObject Train = new TrackFollowingObject(TrainState.Pending);
+				ScriptedTrain Train = new ScriptedTrain(TrainState.Pending);
 				Train.Cars = new CarBase[OtherTrain.CarObjects.Count];
 				Train.Handles.Reverser = new ReverserHandle(Train);
 
