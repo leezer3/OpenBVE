@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using Bve5Parser;
-using Bve5Parser.MapGrammar;
-using Bve5Parser.MapGrammar.V1;
-using Bve5Parser.MapGrammar.V2;
+using Bve5_Parsing;
+using Bve5_Parsing.MapGrammar;
+using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
+using static Bve5_Parsing.MapGrammar.MapGrammarParser;
 using Path = OpenBveApi.Path;
 
 namespace Route.Bve5
@@ -23,7 +21,7 @@ namespace Route.Bve5
 			private readonly string FileName;
 			private readonly string Input;
 			private readonly bool IsDisplayErrors;
-			private Bve5Parser.MapGrammar.MapParser Parser;
+			private MapGrammarParser Parser;
 
 			internal MapParser(string fileName, string input, bool isDisplayErrors)
 			{
@@ -32,54 +30,15 @@ namespace Route.Bve5
 				IsDisplayErrors = isDisplayErrors;
 			}
 
-			private Bve5Parser.MapGrammar.MapParser VersionCheck()
-			{
-				using (var reader = new StringReader(Input))
-				{
-					var firstLine = reader.ReadLine() ?? "";
-					var b = string.Empty;
-
-					if (!firstLine.ToLowerInvariant().StartsWith("bvets map"))
-					{
-						return null;
-					}
-
-					for (int i = 10; i < firstLine.Length; i++)
-					{
-						if (char.IsDigit(firstLine[i]) || firstLine[i] == '.')
-						{
-							b += firstLine[i];
-						}
-						else
-						{
-							break;
-						}
-					}
-
-					double version;
-					if (!b.Any() || !NumberFormats.TryParseDoubleVb6(b, out version))
-					{
-						return null;
-					}
-
-					if (version < 2.0)
-					{
-						return new MapV1Parser();
-					}
-
-					return new MapV2Parser();
-
-				}
-			}
 
 			internal MapData Parse()
 			{
 				var Data = new MapData();
-				Parser = VersionCheck();
+				Parser = new MapGrammarParser();
 
 				if (Parser != null)
 				{
-					Data = Parser.Parse(Input);
+					Data = Parser.ParseFromFile(FileName, MapGrammarParserOption.ParseIncludeSyntaxRecursively);
 
 					if (IsDisplayErrors)
 					{
@@ -126,7 +85,6 @@ namespace Route.Bve5
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
 
-			ParseIncludeMap(FileName, InputText, ref RootData);
 
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
@@ -156,75 +114,6 @@ namespace Route.Bve5
 			ApplyRouteData(FileName, PreviewOnly, RouteData);
 		}
 
-		private static void ParseIncludeMap(string FileName, string InputText, ref MapData Data)
-		{
-			bool IsAllInclude = false;
-			int IncludePosition = 0;
-			MapData ModData = Data.Clone();
-			MapParser Parser;
-
-			while (!IsAllInclude)
-			{
-				for (var i = IncludePosition; i < ModData.Statements.Count; i++)
-				{
-					if (ModData.Statements[i].MapElement[0] != "include")
-					{
-						continue;
-					}
-
-					IncludePosition = i;
-
-					object IncludeFileName, StartIndex, StopIndex;
-
-					ModData.Statements[i].Arguments.TryGetValue("path", out IncludeFileName);
-					ModData.Statements[i].Arguments.TryGetValue("startindex", out StartIndex);
-					ModData.Statements[i].Arguments.TryGetValue("stopindex", out StopIndex);
-
-					string LeftInputText = InputText.Substring(0, Convert.ToInt32(StartIndex));
-					string RightInputText = InputText.Substring(Convert.ToInt32(StopIndex) + 1, InputText.Length - (Convert.ToInt32(StopIndex) + 1));
-					LeftInputText = Regex.Replace(LeftInputText, @"i\s*n\s*c\s*l\s*u\s*d\s*e\s*\z", string.Empty, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
-					RightInputText = Regex.Replace(RightInputText, @"^\s*;", string.Empty, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
-
-					IncludeFileName = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Convert.ToString(IncludeFileName));
-					string IncludeText = string.Empty;
-
-					if (File.Exists(Convert.ToString(IncludeFileName)))
-					{
-						System.Text.Encoding Encoding = DetermineFileEncoding(Convert.ToString(IncludeFileName));
-						Parser = new MapParser(Convert.ToString(IncludeFileName), File.ReadAllText(Convert.ToString(IncludeFileName), Encoding), true);
-						Parser.Parse();
-						IncludeText = string.Join(Environment.NewLine, File.ReadAllLines(Convert.ToString(IncludeFileName), Encoding).Skip(1)).Trim('\x1a');
-					}
-					else
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, IncludeFileName + "is not found.");
-					}
-
-					InputText = LeftInputText + IncludeText + RightInputText;
-					break;
-				}
-
-				Parser = new MapParser(string.Empty, InputText, false);
-				ModData = Parser.Parse();
-
-				for (var i = IncludePosition; i < ModData.Statements.Count; i++)
-				{
-					if (ModData.Statements[i].MapElement[0] != "include")
-					{
-						IsAllInclude = true;
-					}
-					else
-					{
-						IsAllInclude = false;
-						break;
-					}
-				}
-			}
-
-			Data = ModData.Clone();
-			Data.Statements = Data.Statements.OrderBy(Statement => Statement.Distance).ToList();
-		}
-
 		private static void ConvertToBlock(string FileName, bool PreviewOnly, MapData ParseData, out RouteData RouteData)
 		{
 			RouteData = new RouteData
@@ -237,7 +126,7 @@ namespace Route.Bve5
 
 			foreach (var Statement in ParseData.Statements)
 			{
-				if (Statement.MapElement[0] != "track")
+				if (Statement.ElementName != MapElementName.Track)
 				{
 					continue;
 				}

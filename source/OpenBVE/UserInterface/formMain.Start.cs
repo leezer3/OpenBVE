@@ -15,7 +15,6 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using RouteManager2;
-using TrainManager.SafetySystems;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve
@@ -293,7 +292,7 @@ namespace OpenBve
 									}
 									break;
 								case ".txt":
-									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 									{
 										throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 									}

@@ -31,6 +31,8 @@ namespace Route.Bve5
 			Plugin.CurrentRoute.Sections[0].CurrentAspect = 0;
 			Plugin.CurrentRoute.Sections[0].StationIndex = -1;
 
+			//FIXME: Quad-tree *should* be better (and we don't require any legacy stuff), but this produces an empty worldspace
+			Plugin.CurrentRoute.AccurateObjectDisposal = ObjectDisposalMode.Accurate;
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
 			// background
@@ -75,6 +77,8 @@ namespace Route.Bve5
 			int PreviousFogElement = -1;
 			int PreviousFogEvent = -1;
 			Fog PreviousFog = new Fog(Plugin.CurrentRoute.NoFogStart, Plugin.CurrentRoute.NoFogEnd, Color24.Grey, -InterpolateInterval);
+			Plugin.CurrentRoute.Tracks[0].Elements = new TrackElement[256];
+			Plugin.CurrentRoute.Tracks[0].Direction = TrackDirection.Forwards;
 			for (int j = 0; j < Data.TrackKeyList.Count; j++)
 			{
 				if (!Plugin.CurrentRoute.Tracks.ContainsKey(j))
@@ -172,7 +176,7 @@ namespace Route.Bve5
 							Plugin.CurrentRoute.Tracks[k].Elements[n].Events.Add(new BrightnessChangeEvent(d, Data.Blocks[i].BrightnessChanges[j].Value, CurrentBrightnessValue, Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition));
 							if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
 							{
-								BrightnessChangeEvent bce = (BrightnessChangeEvent)Plugin.CurrentRoute.Tracks[k].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
+								BrightnessChangeEvent bce = (BrightnessChangeEvent)Plugin.CurrentRoute.Tracks[0].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
 								bce.NextBrightness = Data.Blocks[i].BrightnessChanges[j].Value;
 								bce.NextDistance = Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition;
 							}

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Bve5Parser.MapGrammar;
+using Bve5_Parsing.MapGrammar;
+using Bve5_Parsing.MapGrammar.EvaluateData;
 using CsvHelper;
 using LibRender2.Trains;
 using OpenBveApi;
@@ -30,19 +31,21 @@ namespace Route.Bve5
 				return;
 			}
 
-			if (!File.Exists(ParseData.StationListPath))
+			string stationList = ParseData.StationListPath;
+			
+			if (!File.Exists(stationList))
 			{
-				ParseData.StationListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), ParseData.StationListPath);
+				stationList = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), stationList);
 
-				if (!File.Exists(ParseData.StationListPath))
+				if (!File.Exists(stationList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, ParseData.StationListPath + "is not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, stationList + "is not found.");
 					return;
 				}
 			}
-
-			System.Text.Encoding Encoding = DetermineFileEncoding(ParseData.StationListPath);
-			string[] Lines = File.ReadAllLines(ParseData.StationListPath, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
+			
+			System.Text.Encoding Encoding = DetermineFileEncoding(stationList);
+			string[] Lines = File.ReadAllLines(stationList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
 
 			using (CsvReader Csv = new CsvReader(new StringReader(string.Join(Environment.NewLine, Lines))))
 			{
@@ -182,27 +185,29 @@ namespace Route.Bve5
 		private static void LoadStructureList(string FileName, bool PreviewOnly, MapData ParseData, RouteData RouteData)
 		{
 			RouteData.Objects = new ObjectDictionary();
-
+			
 			if (PreviewOnly || string.IsNullOrEmpty(ParseData.StructureListPath))
 			{
 				return;
 			}
 
-			if (!File.Exists(ParseData.StructureListPath))
-			{
-				ParseData.StructureListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), ParseData.StructureListPath);
+			string structureList = ParseData.StructureListPath;
 
-				if (!File.Exists(ParseData.StructureListPath))
+			if (!File.Exists(structureList))
+			{
+				structureList = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), structureList);
+
+				if (!File.Exists(structureList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, ParseData.StructureListPath + "is not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, structureList + "is not found.");
 					return;
 				}
 			}
 
-			string BaseDirectory = System.IO.Path.GetDirectoryName(ParseData.StructureListPath);
+			string BaseDirectory = System.IO.Path.GetDirectoryName(structureList);
 
-			System.Text.Encoding Encoding = DetermineFileEncoding(ParseData.StructureListPath);
-			string[] Lines = File.ReadAllLines(ParseData.StructureListPath, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
+			System.Text.Encoding Encoding = DetermineFileEncoding(structureList);
+			string[] Lines = File.ReadAllLines(structureList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
 
 			using (CsvReader Csv = new CsvReader(new StringReader(string.Join(Environment.NewLine, Lines))))
 			{
@@ -263,19 +268,21 @@ namespace Route.Bve5
 				return;
 			}
 
-			if (!File.Exists(ParseData.SignalListPath))
-			{
-				ParseData.SignalListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), ParseData.SignalListPath);
+			string signalList = ParseData.SignalListPath;
 
-				if (!File.Exists(ParseData.SignalListPath))
+			if (!File.Exists(signalList))
+			{
+				signalList = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), signalList);
+
+				if (!File.Exists(signalList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, ParseData.SignalListPath + "is not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, signalList + "is not found.");
 					return;
 				}
 			}
-
-			System.Text.Encoding Encoding = DetermineFileEncoding(ParseData.SignalListPath);
-			string[] Lines = File.ReadAllLines(ParseData.SignalListPath, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
+			
+			System.Text.Encoding Encoding = DetermineFileEncoding(signalList);
+			string[] Lines = File.ReadAllLines(signalList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
 
 			using (CsvReader Csv = new CsvReader(new StringReader(string.Join(Environment.NewLine, Lines))))
 			{
@@ -353,21 +360,22 @@ namespace Route.Bve5
 				return;
 			}
 
-			if (!File.Exists(ParseData.SoundListPath))
+			string soundList = ParseData.SoundListPath;
+			if (!File.Exists(soundList))
 			{
-				ParseData.SoundListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), ParseData.SoundListPath);
+				soundList = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), soundList);
 
-				if (!File.Exists(ParseData.SoundListPath))
+				if (!File.Exists(soundList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, ParseData.SoundListPath + "is not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, soundList + "is not found.");
 					return;
 				}
 			}
+			
+			string BaseDirectory = System.IO.Path.GetDirectoryName(soundList);
 
-			string BaseDirectory = System.IO.Path.GetDirectoryName(ParseData.SoundListPath);
-
-			System.Text.Encoding Encoding = DetermineFileEncoding(ParseData.SoundListPath);
-			string[] Lines = File.ReadAllLines(ParseData.SoundListPath, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
+			System.Text.Encoding Encoding = DetermineFileEncoding(soundList);
+			string[] Lines = File.ReadAllLines(soundList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
 
 			using (CsvReader Csv = new CsvReader(new StringReader(string.Join(Environment.NewLine, Lines))))
 			{
@@ -427,21 +435,23 @@ namespace Route.Bve5
 				return;
 			}
 
-			if (!File.Exists(ParseData.Sound3DListPath))
-			{
-				ParseData.Sound3DListPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), ParseData.Sound3DListPath);
+			string sound3DList = ParseData.Sound3DListPath;
 
-				if (!File.Exists(ParseData.Sound3DListPath))
+			if (!File.Exists(sound3DList))
+			{
+				sound3DList = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), sound3DList);
+
+				if (!File.Exists(sound3DList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, ParseData.Sound3DListPath + "is not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, sound3DList + "is not found.");
 					return;
 				}
 			}
+			
+			string BaseDirectory = System.IO.Path.GetDirectoryName(sound3DList);
 
-			string BaseDirectory = System.IO.Path.GetDirectoryName(ParseData.Sound3DListPath);
-
-			System.Text.Encoding Encoding = DetermineFileEncoding(ParseData.Sound3DListPath);
-			string[] Lines = File.ReadAllLines(ParseData.Sound3DListPath, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
+			System.Text.Encoding Encoding = DetermineFileEncoding(sound3DList);
+			string[] Lines = File.ReadAllLines(sound3DList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
 
 			using (CsvReader Csv = new CsvReader(new StringReader(string.Join(Environment.NewLine, Lines))))
 			{
@@ -503,37 +513,48 @@ namespace Route.Bve5
 
 			foreach (var Statement in ParseData.Statements)
 			{
-				if (Statement.MapElement[0] != "train")
+				if (Statement.ElementName != MapElementName.Train)
 				{
 					continue;
 				}
 
-				switch (Statement.Function)
+				switch (Statement.FunctionName)
 				{
-					case "add":
-					case "load":
-						object TrainKey, TrainFilePath, TrackKey, Direction;
+					case MapFunctionName.Add:
+					case MapFunctionName.Load:
+						string TrainKey, TrainFilePath, TrackKey = Statement.Key;
+						int Direction;
 
-						if (Statement.Function == "add")
+						if (Statement.FunctionName == MapFunctionName.Add)
 						{
-							if (!Statement.Arguments.TryGetValue("trainkey", out TrainKey) || TrainKey == null)
+							if (!Statement.HasArgument("trainkey"))
 							{
 								continue;
 							}
+							TrainKey = Statement.GetArgumentValueAsString("trainkey");
 						}
 						else
 						{
 							TrainKey = Statement.Key;
 						}
-						if (!Statement.Arguments.TryGetValue("filepath", out TrainFilePath) || TrainFilePath == null)
+						
+						if (!Statement.HasArgument("trainfilepath", true))
 						{
 							continue;
 						}
-						if (!Statement.Arguments.TryGetValue("trackkey", out TrackKey) || Convert.ToString(TrackKey) == string.Empty)
+
+						TrainFilePath = Statement.GetArgumentValueAsString("trainfilepath");
+						if (string.IsNullOrEmpty(TrainFilePath))
+						{
+							continue;
+						}
+
+						if (!Statement.HasKey || string.IsNullOrEmpty(Statement.Key))
 						{
 							TrackKey = "0";
 						}
-						if (!Statement.Arguments.TryGetValue("direction", out Direction) || Direction == null)
+
+						if (!Statement.HasArgument("direction") || !int.TryParse(Statement.GetArgumentValueAsString("direction"), out Direction))
 						{
 							Direction = 1;
 						}
@@ -559,19 +580,21 @@ namespace Route.Bve5
 
 			foreach (var Statement in ParseData.Statements)
 			{
-				if (Statement.MapElement[0] != "train" || Statement.Function != "settrack")
+				dynamic d = Statement;
+				if (Statement.ElementName != MapElementName.Train || Statement.FunctionName != MapFunctionName.Settrack)
 				{
 					continue;
 				}
 
-				object TrackKey, Direction;
+				string TrackKey = d.TrackKey;
+				int Direction;
 				object TrainKey = Statement.Key;
 
-				if (!Statement.Arguments.TryGetValue("trackkey", out TrackKey) || Convert.ToString(TrackKey) == string.Empty)
+				if (string.IsNullOrEmpty(TrackKey))
 				{
 					TrackKey = "0";
 				}
-				if (!Statement.Arguments.TryGetValue("direction", out Direction) || Direction == null)
+				if (!Statement.HasArgument("direction") || !int.TryParse(Statement.GetArgumentValueAsString("direction"), out Direction))
 				{
 					Direction = 1;
 				}
@@ -650,18 +673,19 @@ namespace Route.Bve5
 
 				foreach (var Statement in ParseData.Statements)
 				{
-					if (Statement.MapElement[0] != "train" || Statement.Key != OtherTrain.Key)
+					double d = Statement.Distance;
+					if (Statement.ElementName != MapElementName.Train || Statement.Key != OtherTrain.Key)
 					{
 						continue;
 					}
 
-					switch (Statement.Function)
+					switch (Statement.FunctionName)
 					{
-						case "enable":
+						case MapFunctionName.Enable:
 							{
 								object TempTime;
 								double Time;
-								Statement.Arguments.TryGetValue("time", out TempTime);
+								TempTime = Statement.GetArgumentValue("time");
 
 								TryParseBve5Time(Convert.ToString(TempTime), out Time);
 
@@ -669,13 +693,13 @@ namespace Route.Bve5
 								Train.AppearanceTime = Time;
 							}
 							break;
-						case "stop":
+						case MapFunctionName.Stop:
 							{
 								object Decelerate, StopTime, Accelerate, Speed;
-								Statement.Arguments.TryGetValue("decelerate", out Decelerate);
-								Statement.Arguments.TryGetValue("stopTime", out StopTime);
-								Statement.Arguments.TryGetValue("accelerate", out Accelerate);
-								Statement.Arguments.TryGetValue("speed", out Speed);
+								Decelerate = Statement.GetArgumentValue("decelerate");
+								StopTime = Statement.GetArgumentValue("stopTime");
+								Accelerate = Statement.GetArgumentValue("accelerate");
+								Speed = Statement.GetArgumentValue("speed");	
 
 								Data.Add(new TravelStopData
 								{
