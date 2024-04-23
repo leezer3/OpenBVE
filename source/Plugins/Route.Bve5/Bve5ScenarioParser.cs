@@ -37,7 +37,6 @@ namespace Bve5RouteParser
 			RouteData Data = new RouteData
 			{
 				BlockInterval = 25.0,
-				AccurateObjectDisposal = true,
 				FirstUsedBlock = -1,
 				Blocks = new Block[1]
 			};
@@ -77,7 +76,6 @@ namespace Bve5RouteParser
 				Data.Structure.Objects = new UnifiedObject[] { };
 				Data.Structure.Sounds = new Dictionary<int, OpenBveApi.Sounds.SoundHandle>();
 				Data.Structure.Sounds3D = new Dictionary<int, OpenBveApi.Sounds.SoundHandle>();
-				Data.UnitOfSpeed = 0.277777777777778;
 
 				Data.CompatibilitySignalData = new CompatibilitySignalData[0];
 				// game data
@@ -117,13 +115,13 @@ namespace Bve5RouteParser
 			ApplyRouteData(FileName, Encoding, ref Data, PreviewOnly);
 		}
 
-		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, string TrainPath, string ObjectPath, string SoundPath, ref RouteData Data, bool PreviewOnly)
+		private void ParseRouteForData(string FileName, Encoding Encoding, string TrainPath, string ObjectPath, string SoundPath, ref RouteData Data, bool PreviewOnly)
 		{
 			if (FileName == String.Empty)
 			{
 				throw new Exception("The BVE5 scenario did not define a route map");
 			}
-			if (!System.IO.File.Exists(FileName))
+			if (!File.Exists(FileName))
 			{
 				throw new Exception("The BVE5 route map file was not found");
 			}
@@ -131,9 +129,8 @@ namespace Bve5RouteParser
 			int BlocksUsed = Data.Blocks.Length;
 			CurrentRoute.Stations = new RouteStation[] { };
 			//Read the entire routefile into memory
-			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
-			Expression[] Expressions;
-			PreprocessSplitIntoExpressions(FileName, false, Lines, out Expressions, 0.0);
+			string[] Lines = File.ReadAllLines(FileName, Encoding);
+			PreprocessSplitIntoExpressions(FileName, false, Lines, out Expression[] Expressions, 0.0);
 			double[] UnitOfLength = new double[] { 1.0 };
 			PreprocessOptions(FileName, Expressions, ref Data, ref UnitOfLength, PreviewOnly, Encoding);
 			int BlockIndex = 0;
@@ -153,13 +150,13 @@ namespace Bve5RouteParser
 					{
 						string[] Arguments = Expressions[e].Text.Substring(idx + 1, Expressions[e].Text.Length - idx - 2).Split(',');
 						string fn = Arguments[0];
-						if (!System.IO.File.Exists(fn))
+						if (!File.Exists(fn))
 						{
-							fn = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), fn);
+							fn = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), fn);
 						}
-						if (System.IO.File.Exists(fn))
+						if (File.Exists(fn))
 						{
-							Lines = System.IO.File.ReadAllLines(fn);
+							Lines = File.ReadAllLines(fn);
 							Expression[] IncludedExpressions;
 							PreprocessSplitIntoExpressions(fn, false, Lines, out IncludedExpressions, 0.0);
 							PreprocessOptions(fn, IncludedExpressions, ref Data, ref UnitOfLength, PreviewOnly, Encoding);
@@ -488,7 +485,7 @@ namespace Bve5RouteParser
 										{
 											break;
 										}
-										InterpolateSecondaryTrack(key, Distance, ref Data, BlockIndex, UnitOfLength, true);
+										InterpolateSecondaryTrack(key, Distance, ref Data, BlockIndex, true);
 										break;
 									case "x.interpolate":
 										//Moves the track in the Y axis, using an interpolated curve
@@ -501,7 +498,7 @@ namespace Bve5RouteParser
 										{
 											break;
 										}
-										InterpolateSecondaryTrack(key, Distance, ref Data, BlockIndex, UnitOfLength, false);
+										InterpolateSecondaryTrack(key, Distance, ref Data, BlockIndex, false);
 										break;
 									default:
 										//Not currently supported....

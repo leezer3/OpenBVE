@@ -3,7 +3,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
@@ -750,91 +749,7 @@ namespace Bve5RouteParser
 
 
 						}
-						// limit
-						if (j == 0)
-						{
-							for (int k = 0; k < Data.Blocks[i].Limit.Length; k++)
-							{
-								if (Data.Blocks[i].Limit[k].Direction != 0)
-								{
-									double dx = 2.2 * (double)Data.Blocks[i].Limit[k].Direction;
-									double dz = Data.Blocks[i].Limit[k].TrackPosition - StartingDistance;
-									Vector3 wpos = pos;
-									wpos.X += dx * RailTransformation.X.X + dz * RailTransformation.Z.X;
-									wpos.Y += dx * RailTransformation.X.Y + dz * RailTransformation.Z.Y;
-									wpos.Z += dx * RailTransformation.X.Z + dz * RailTransformation.Z.Z;
-									double tpos = Data.Blocks[i].Limit[k].TrackPosition;
-									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-									if (Data.Blocks[i].Limit[k].Speed <= 0.0 | Data.Blocks[i].Limit[k].Speed >= 1000.0)
-									{
-										Plugin.CurrentHost.CreateStaticObject(LimitPostInfinite, wpos, RailTransformation, NullTransformation, 0.0, StartingDistance, EndingDistance, tpos, b);
-									}
-									else
-									{
-										if (Data.Blocks[i].Limit[k].Cource < 0)
-										{
-											Plugin.CurrentHost.CreateStaticObject(LimitPostLeft, wpos, RailTransformation, NullTransformation, 0.0, StartingDistance, EndingDistance, tpos, b);
-										}
-										else if (Data.Blocks[i].Limit[k].Cource > 0)
-										{
-											Plugin.CurrentHost.CreateStaticObject(LimitPostRight, wpos, RailTransformation, NullTransformation, 0.0, StartingDistance, EndingDistance, tpos, b);
-										}
-										else
-										{
-											Plugin.CurrentHost.CreateStaticObject(LimitPostStraight, wpos, RailTransformation, NullTransformation, 0.0, StartingDistance, EndingDistance,  tpos, b);
-										}
-										double lim = Data.Blocks[i].Limit[k].Speed / Data.UnitOfSpeed;
-										if (lim < 10.0)
-										{
-											int d0 = (int)Math.Round(lim);
-											StaticObject o = (StaticObject) LimitOneDigit.Clone();
-											if (o.Mesh.Materials.Length >= 1)
-											{
-												Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[0].DaytimeTexture);
-											}
-											o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b, false);
-										}
-										else if (lim < 100.0)
-										{
-											int d1 = (int)Math.Round(lim);
-											int d0 = d1 % 10;
-											d1 /= 10;
-											StaticObject o = (StaticObject) LimitTwoDigits.Clone();
-											if (o.Mesh.Materials.Length >= 1)
-											{
-												Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[0].DaytimeTexture);
-											}
-											if (o.Mesh.Materials.Length >= 2)
-											{
-												Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[1].DaytimeTexture);
-											}
-											o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1,  StartingDistance, EndingDistance,  tpos, b, false);
-										}
-										else
-										{
-											int d2 = (int)Math.Round(lim);
-											int d0 = d2 % 10;
-											int d1 = (d2 / 10) % 10;
-											d2 /= 100;
-											StaticObject o = (StaticObject) LimitThreeDigits.Clone();
-											if (o.Mesh.Materials.Length >= 1)
-											{
-												Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d2 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[0].DaytimeTexture);
-											}
-											if (o.Mesh.Materials.Length >= 2)
-											{
-												Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[1].DaytimeTexture);
-											}
-											if (o.Mesh.Materials.Length >= 3)
-											{
-												Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[2].DaytimeTexture);
-											}
-											o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b, false);
-										}
-									}
-								}
-							}
-						}
+						
 						/*
 						// stop
 						if (j == 0)

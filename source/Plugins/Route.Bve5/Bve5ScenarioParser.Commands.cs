@@ -247,8 +247,7 @@ namespace Bve5RouteParser
 			switch (Arguments.Length)
 			{
 				case 1:
-					double c = 0;
-					if (!NumberFormats.TryParseDoubleVb6(Arguments[0], out c))
+					if (!NumberFormats.TryParseDoubleVb6(Arguments[0], out double c))
 					{
 						//Invalid number
 						return;
@@ -257,10 +256,9 @@ namespace Bve5RouteParser
 					Data.Blocks[BlockIndex].AdhesionMultiplier = (int) (c * 100 / 0.26) / 100.0;
 					break;
 				case 3:
-					double c0 = 0, c1 = 0, c2 = 0;
-					NumberFormats.TryParseDoubleVb6(Arguments[0], out c0);
-					NumberFormats.TryParseDoubleVb6(Arguments[1], out c1);
-					NumberFormats.TryParseDoubleVb6(Arguments[2], out c2);
+					NumberFormats.TryParseDoubleVb6(Arguments[0], out double c0);
+					NumberFormats.TryParseDoubleVb6(Arguments[1], out double c1);
+					NumberFormats.TryParseDoubleVb6(Arguments[2], out double c2);
 					if (c1 == 0 && c0 != 0 && c2 != 0)
 					{
 						if (c0 == 0.35 && c2 == 0.01)
@@ -870,10 +868,8 @@ namespace Bve5RouteParser
 			int n = Data.Blocks[BlockIndex].Limit.Length;
 			Array.Resize(ref Data.Blocks[BlockIndex].Limit, n + 1);
 			Data.Blocks[BlockIndex].Limit[n].TrackPosition = Data.TrackPosition;
-			Data.Blocks[BlockIndex].Limit[n].Speed = Limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed*Limit;
+			Data.Blocks[BlockIndex].Limit[n].Speed = Limit <= 0.0 ? double.PositiveInfinity : 0.277777777777778 * Limit;
 			//NOT USED BY BVE5
-			Data.Blocks[BlockIndex].Limit[n].Direction = 0;
-			Data.Blocks[BlockIndex].Limit[n].Cource = 0;
 
 			//TODO: This only handles ending one enclosing set of limits, really ought to handle multiples......
 			//Set previous speed limit, required for ending the limit
@@ -906,10 +902,6 @@ namespace Bve5RouteParser
 			Array.Resize(ref Data.Blocks[BlockIndex].Limit, n + 1);
 			Data.Blocks[BlockIndex].Limit[n].TrackPosition = Data.TrackPosition;
 			Data.Blocks[BlockIndex].Limit[n].Speed = Data.Blocks[BlockIndex].Limit[n - 1].Speed;
-			//NOT USED BY BVE5
-			Data.Blocks[BlockIndex].Limit[n].Direction = 0;
-			Data.Blocks[BlockIndex].Limit[n].Cource = 0;
-
 			//TODO: This only handles ending one enclosing set of limits, really ought to handle multiples......
 			//Set previous speed limit, required for ending the limit
 			Data.Blocks[BlockIndex].Limit[n].LastSpeed = 0;
@@ -1333,7 +1325,7 @@ namespace Bve5RouteParser
 
 		}
 
-		internal void InterpolateSecondaryTrack(string key, double Distance, ref RouteData Data, int BlockIndex, double[] UnitOfLength, bool Vertical)
+		internal void InterpolateSecondaryTrack(string key, double Distance, ref RouteData Data, int BlockIndex, bool Vertical)
 		{
 			int idx = FindRailIndex(key, Data.Blocks[BlockIndex].Rail);
 			if (idx == -1)
