@@ -25,7 +25,7 @@ namespace Route.Bve5
 		private static void LoadStationList(string FileName, MapData ParseData, RouteData RouteData)
 		{
 			RouteData.StationList = new List<Station>();
-
+			// Everything breaks if no station list
 			if (string.IsNullOrEmpty(ParseData.StationListPath))
 			{
 				return;
