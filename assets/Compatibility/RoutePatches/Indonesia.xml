@@ -1,0 +1,11 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+  <!-- Yogyakarta-Madiun -->
+	<Patch>
+		<Hash>FE894F07B945AB4FE30D1805BAC32B44307D2E08D68492C0C47B9F57506DE2DB</Hash>
+		<FileName>Yogyakarta-Madiun.csv</FileName>
+		<DelayedAnimatedUpdates>true</DelayedAnimatedUpdates>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+  </RoutePatches>
+</openBVE>
