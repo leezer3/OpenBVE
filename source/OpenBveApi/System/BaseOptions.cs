@@ -101,5 +101,8 @@ namespace OpenBveApi
 		public bool UseGDIDecoders;
 		/// <summary>The filename of the current cursor</summary>
 		public string CursorFileName;
+		/// <summary>Whether delayed animated updates based upon track position are used</summary>
+		/// <remarks>Not saved</remarks>
+		public bool DelayedAnimatedUpdates;
 	}
 }

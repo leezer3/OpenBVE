@@ -33,7 +33,7 @@ namespace OpenBve
 
 				if (ForceUpdate)
 				{
-					if (AnimatedWorldObjects[i].TrackPosition - Math.Abs(Program.Renderer.CameraTrackFollower.TrackPosition) <= 5000 || AnimatedWorldObjects[i].Object.TrackFollowerFunction != null)
+					if (Interface.CurrentOptions.DelayedAnimatedUpdates == false || AnimatedWorldObjects[i].TrackPosition - Math.Abs(Program.Renderer.CameraTrackFollower.TrackPosition) <= 5000 || AnimatedWorldObjects[i].Object.TrackFollowerFunction != null)
 					{
 						AnimatedWorldObjects[i].Update(train, TimeElapsed, true, visible);
 					}

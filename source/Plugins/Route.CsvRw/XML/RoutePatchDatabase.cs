@@ -280,6 +280,17 @@ namespace CsvRwRouteParser
 							currentPatch.Incompatible = false;
 						}
 						break;
+					case "DelayedAnimatedUpdates":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.DelayedAnimatedUpdates = true;
+						}
+						else
+						{
+							currentPatch.DelayedAnimatedUpdates = false;
+						}
+						break;
 				}
 			}
 
