@@ -34,8 +34,8 @@
     <Reference Include="Antlr4.Runtime, Version=4.6.0.0, Culture=neutral, PublicKeyToken=09abb75b9ed49849, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Antlr4.Runtime.4.6.6\lib\net45\Antlr4.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Bve5_Parsing, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Bve5_Parsing.1.0.1\lib\net40\Bve5_Parsing.dll</HintPath>
+    <Reference Include="Bve5_Parsing, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Bve5_Parsing.OpenBVE.1.1.2\lib\net45\Bve5_Parsing.dll</HintPath>
     </Reference>
     <Reference Include="CsvHelper">
       <HintPath>..\..\..\dependencies\CsvHelper.dll</HintPath>

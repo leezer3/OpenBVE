@@ -442,19 +442,19 @@ namespace Route.Bve5
 					{
 							dynamic d = Statement; // HACK: as we don't know which type
 							string TrackKey = d.TrackKey;
-							object X, Y, Z, RX, RY, RZ, Tilt, Span;
+							double X, Y, Z, RX, RY, RZ, Tilt, Span;
 							if (string.IsNullOrEmpty(TrackKey))
 							{
 								TrackKey = "0";
 							}
-							X = Statement.GetArgumentValue("x", true);
-							Y = Statement.GetArgumentValue("y", true);
-							Z = Statement.GetArgumentValue("z", true);
-							RX = Statement.GetArgumentValue("rx", true);
-							RY = Statement.GetArgumentValue("ry", true);
-							RZ = Statement.GetArgumentValue("rz", true);
-							Tilt = Statement.GetArgumentValue("tilt", true);
-							Span = Statement.GetArgumentValue("span", true);
+							X = Statement.GetArgumentValueAsDouble("x", true);
+							Y = Statement.GetArgumentValueAsDouble("y", true);
+							Z = Statement.GetArgumentValueAsDouble("z", true);
+							RX = Statement.GetArgumentValueAsDouble("rx", true);
+							RY = Statement.GetArgumentValueAsDouble("ry", true);
+							RZ = Statement.GetArgumentValueAsDouble("rz", true);
+							Tilt = Statement.GetArgumentValueAsDouble("tilt", true);
+							Span = Statement.GetArgumentValueAsDouble("span", true);
 							
 							int RailIndex = RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKey));
 
@@ -471,12 +471,12 @@ namespace Route.Bve5
 								{
 									TrackPosition = Statement.Distance,
 									Key = Statement.Key,
-									X = Convert.ToDouble(X),
-									Y = Convert.ToDouble(Y),
-									Z = Convert.ToDouble(Z),
-									Yaw = Convert.ToDouble(RY) * 0.0174532925199433,
-									Pitch = Convert.ToDouble(RX) * 0.0174532925199433,
-									Roll = RZtoRoll(Convert.ToDouble(RY), Convert.ToDouble(RZ)) * 0.0174532925199433,
+									X = X,
+									Y = Y,
+									Z = Z,
+									Yaw = RY * 0.0174532925199433,
+									Pitch = RX * 0.0174532925199433,
+									Roll = RZtoRoll(RY, RZ) * 0.0174532925199433,
 									Type = Convert.ToInt32(Tilt),
 									Span = Convert.ToDouble(Span)
 								});
@@ -495,7 +495,7 @@ namespace Route.Bve5
 								TrackKeys[1] = "0";
 							}
 
-							int[] RailsIndex = new int[]
+							int[] RailsIndex =
 							{
 								RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKeys[0])),
 								RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKeys[1]))
@@ -567,32 +567,32 @@ namespace Route.Bve5
 
 								dynamic d = Statement; // HACK: as we don't know which type
 								string TrackKey = d.TrackKey;
-								object X, Y, Z, RX, RY, RZ, Tilt, Span, Interval;
+								double X, Y, Z, RX, RY, RZ, Tilt, Span, Interval;
 								if (string.IsNullOrEmpty(TrackKey))
 								{
 									TrackKey = "0";
 								}
-								X = Statement.GetArgumentValue("x", true);
-								Y = Statement.GetArgumentValue("y", true);
-								Z = Statement.GetArgumentValue("z", true);
-								RX = Statement.GetArgumentValue("rx", true);
-								RY = Statement.GetArgumentValue("ry", true);
-								RZ = Statement.GetArgumentValue("rz", true);
-								Tilt = Statement.GetArgumentValue("tilt", true);
-								Span = Statement.GetArgumentValue("span", true);
-								Interval = Statement.GetArgumentValue("interval", true);
+								X = Statement.GetArgumentValueAsDouble("x", true);
+								Y = Statement.GetArgumentValueAsDouble("y", true);
+								Z = Statement.GetArgumentValueAsDouble("z", true);
+								RX = Statement.GetArgumentValueAsDouble("rx", true);
+								RY = Statement.GetArgumentValueAsDouble("ry", true);
+								RZ = Statement.GetArgumentValueAsDouble("rz", true);
+								Tilt = Statement.GetArgumentValueAsDouble("tilt", true);
+								Span = Statement.GetArgumentValueAsDouble("span", true);
+								Interval = Statement.GetArgumentValueAsDouble("interval", true);
 
 								Repeater.StartingDistance = Statement.Distance;
 								Repeater.TrackKey = Convert.ToString(TrackKey);
-								Repeater.X = Convert.ToDouble(X);
-								Repeater.Y = Convert.ToDouble(Y);
-								Repeater.Z = Convert.ToDouble(Z);
-								Repeater.Yaw = Convert.ToDouble(RY) * 0.0174532925199433;
-								Repeater.Pitch = Convert.ToDouble(RX) * 0.0174532925199433;
-								Repeater.Roll = RZtoRoll(Convert.ToDouble(RY), Convert.ToDouble(RZ)) * 0.0174532925199433;
-								Repeater.Type = Convert.ToInt32(Tilt);
-								Repeater.Span = Convert.ToDouble(Span);
-								Repeater.Interval = Convert.ToDouble(Interval);
+								Repeater.X = X;
+								Repeater.Y = Y;
+								Repeater.Z = Z;
+								Repeater.Yaw = RY * 0.0174532925199433;
+								Repeater.Pitch = RX * 0.0174532925199433;
+								Repeater.Roll = RZtoRoll(RY, RZ) * 0.0174532925199433;
+								Repeater.Type = (int)Tilt;
+								Repeater.Span = Span;
+								Repeater.Interval = Interval;
 								Repeater.StartRefreshed = true;
 
 								
@@ -1140,9 +1140,8 @@ namespace Route.Bve5
 					continue;
 				}
 
-				object X, Y;
-				X = Statement.GetArgumentValue("x", true);
-				Y = Statement.GetArgumentValue("y", true);
+				double X = Statement.GetArgumentValueAsDouble("x", true);
+				double Y = Statement.GetArgumentValueAsDouble("y", true);
 
 				int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
 				RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
@@ -1150,8 +1149,8 @@ namespace Route.Bve5
 					TrackPosition = Statement.Distance,
 					Key = Statement.Key,
 					Type = SoundType.World,
-					X = Convert.ToDouble(X),
-					Y = Convert.ToDouble(Y)
+					X = X,
+					Y = Y
 				});
 			}
 		}

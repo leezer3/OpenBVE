@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Colors;
@@ -32,11 +31,17 @@ namespace Route.Bve5
 					case MapFunctionName.Setgauge:
 					case MapFunctionName.Gauge:
 						{
-							object Gauge = Statement.GetArgumentValue("value", true);
+							double Gauge = Statement.GetArgumentValueAsDouble("value", true);
+							if (Gauge <= 0)
+							{
+								// Gauge must be positive and non-zero
+								// Note that zero may also be returned if the gauge value is non-numeric
+								break;
+							}
 							for (int tt = 0; tt < Plugin.CurrentRoute.Tracks.Count; tt++)
 							{
 								int t = Plugin.CurrentRoute.Tracks.ElementAt(tt).Key;
-								Plugin.CurrentRoute.Tracks[t].RailGauge = Convert.ToDouble(Gauge);
+								Plugin.CurrentRoute.Tracks[t].RailGauge = Gauge;
 							}
 						}
 						break;
@@ -509,9 +514,8 @@ namespace Route.Bve5
 								break;
 							case MapFunctionName.Begin:
 								{
-									object Cant = Statement.GetArgumentValue("cant", true);
 									int Index = RouteData.FindOrAddBlock(Statement.Distance);
-									Blocks[Index].Rails[j].CurveCant = Convert.ToDouble(Cant);
+									Blocks[Index].Rails[j].CurveCant = Statement.GetArgumentValueAsDouble("cant", true);
 									Blocks[Index].Rails[j].CurveInterpolateStart = true;
 									Blocks[Index].Rails[j].CurveTransitionEnd = true;
 								}
@@ -899,8 +903,8 @@ namespace Route.Bve5
 				{
 					case MapFunctionName.Fog:
 						{
-							object Start = Statement.GetArgumentValue("start", true);
-							object End = Statement.GetArgumentValue("end", true);
+							double Start = Statement.GetArgumentValueAsDouble("start", true);
+							double End = Statement.GetArgumentValueAsDouble("end", true);
 							double TempRed, TempGreen, TempBlue;
 							if (!Statement.HasArgument("red", true) || !double.TryParse(Statement.GetArgumentValueAsString("red", true), out TempRed))
 							{
@@ -935,8 +939,8 @@ namespace Route.Bve5
 
 							if (Convert.ToSingle(Start) < Convert.ToSingle(End))
 							{
-								Blocks[BlockIndex].Fog.Start = Convert.ToSingle(Start);
-								Blocks[BlockIndex].Fog.End = Convert.ToSingle(End);
+								Blocks[BlockIndex].Fog.Start = (float)Start;
+								Blocks[BlockIndex].Fog.End = (float)End;
 							}
 							else
 							{
@@ -1013,11 +1017,7 @@ namespace Route.Bve5
 					continue;
 				}
 
-				double X;
-				if (!Statement.HasArgument("x", true) || !double.TryParse(Statement.GetArgumentValueAsString("x"), out X))
-				{
-					X = 0.0;
-				}
+				double X = !Statement.HasArgument("x", true) ? 0.0 : Statement.GetArgumentValueAsDouble("x", true);
 
 				double Squaring = 1.0 - 8.0 * (8.0 - Convert.ToDouble(X) * 10000.0);
 				if (Squaring < 0.0)
@@ -1071,23 +1071,18 @@ namespace Route.Bve5
 								//Invalid number
 								continue;
 							}
-							object C = Statement.GetArgumentValue("a", true);
 							
 							int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
 							//Presumably this is just the adhesion coefficent at 0km/h
-							Blocks[BlockIndex].AdhesionMultiplier = (int)(Convert.ToDouble(C) * 100 / 0.26) / 100.0;
+							Blocks[BlockIndex].AdhesionMultiplier = (int)(Statement.GetArgumentValueAsDouble("a", true) * 100 / 0.26) / 100.0;
 							Blocks[BlockIndex].AdhesionMultiplierDefined = true;
 						}
 						break;
 					case 3:
 						{
-							object TempC0 = Statement.GetArgumentValue("a", true);
-							object TempC1 = Statement.GetArgumentValue("b", true);
-							object TempC2 = Statement.GetArgumentValue("c", true);
-
-							double C0 = Convert.ToDouble(TempC0);
-							double C1 = Convert.ToDouble(TempC1);
-							double C2 = Convert.ToDouble(TempC2);
+							double C0 = Statement.GetArgumentValueAsDouble("a", true);
+							double C1 = Statement.GetArgumentValueAsDouble("b", true);
+							double C2 = Statement.GetArgumentValueAsDouble("c", true);
 							if (C0 != 0.0 && C1 == 0.0 && C2 != 0.0)
 							{
 								int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
