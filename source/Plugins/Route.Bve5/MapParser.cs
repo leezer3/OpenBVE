@@ -7,7 +7,6 @@ using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Interface;
 using static Bve5_Parsing.MapGrammar.MapGrammarParser;
-using Path = OpenBveApi.Path;
 
 namespace Route.Bve5
 {
@@ -91,22 +90,6 @@ namespace Route.Bve5
 
 			RouteData RouteData;
 			ConvertToBlock(FileName, PreviewOnly, RootData, out RouteData);
-
-			// Debug
-			//if (!PreviewOnly)
-			//{
-			//    int FreeObjCount = 0;
-			//    foreach (var Block in RouteData.Blocks)
-			//    {
-			//        foreach (var FreeObj in Block.FreeObj)
-			//        {
-			//            if (FreeObj != null)
-			//            {
-			//                FreeObjCount += FreeObj.Count;
-			//            }
-			//        }
-			//    }
-			//}
 
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
