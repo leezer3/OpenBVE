@@ -18,14 +18,12 @@ namespace Route.Bve5
 		internal class MapParser
 		{
 			private readonly string FileName;
-			private readonly string Input;
 			private readonly bool IsDisplayErrors;
 			private MapGrammarParser Parser;
 
-			internal MapParser(string fileName, string input, bool isDisplayErrors)
+			internal MapParser(string fileName, bool isDisplayErrors)
 			{
 				FileName = fileName;
-				Input = input;
 				IsDisplayErrors = isDisplayErrors;
 			}
 
@@ -77,8 +75,7 @@ namespace Route.Bve5
 			}
 
 			System.Text.Encoding Encoding = DetermineFileEncoding(FileName);
-			string InputText = File.ReadAllText(FileName, Encoding);
-			MapParser Parser = new MapParser(FileName, InputText, true);
+			MapParser Parser = new MapParser(FileName, true);
 			MapData RootData = Parser.Parse();
 
 			System.Threading.Thread.Sleep(1);
@@ -104,7 +101,7 @@ namespace Route.Bve5
 				Blocks = new List<Block>(),
 				TrackKeyList = new List<string>()
 			};
-			// Own track
+			// The player track
 			RouteData.TrackKeyList.Add("0");
 
 			foreach (var Statement in ParseData.Statements)
