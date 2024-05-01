@@ -74,7 +74,6 @@ namespace Route.Bve5
 				throw new Exception("The BVE5 route map file: " + FileName + " was not found");
 			}
 
-			System.Text.Encoding Encoding = DetermineFileEncoding(FileName);
 			MapParser Parser = new MapParser(FileName, true);
 			MapData RootData = Parser.Parse();
 
