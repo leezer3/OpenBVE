@@ -60,11 +60,6 @@ namespace DenshaDeGoInput
 		internal static bool LibUsbShouldLoop = true;
 
 		/// <summary>
-		/// The setup packet needed to send data to the controller.
-		/// </summary>
-		private static UsbSetupPacket setupPacket = new UsbSetupPacket(0x41, 0x09, 0x0201, 0x0000, 0x0008);
-
-		/// <summary>
 		/// Adds the supported controller models to the LibUsb list.
 		/// </summary>
 		/// <param name="ids">A list of VID+PID identifiers to search</param>
@@ -203,13 +198,15 @@ namespace DenshaDeGoInput
 		/// <param name="read">An array containing the previous read buffer</param>
 		/// <param name="write">The bytes to be sent to the controller</param>
 		/// <returns>The bytes read from the controller.</returns>
-		internal static byte[] SyncController(Guid guid, byte[] read, byte[] write)
+		internal static byte[] SyncController(Guid guid, byte[] read, byte[] write, UsbSetupPacket setup)
 		{
 			// If the read buffer's length is 0, copy the initial input bytes to get the required read length
 			if (supportedUsbControllers[guid].ReadBuffer.Length == 0)
 			{
 				supportedUsbControllers[guid].ReadBuffer = read;
 			}
+			// Copy the setup packet
+			supportedUsbControllers[guid].SetupPacket = setup;
 			// Copy the output bytes to the write buffer
 			supportedUsbControllers[guid].WriteBuffer = write;
 			// If the length of the byte array to be sent to the controller when unloaded is 0, use the write buffer

@@ -61,6 +61,9 @@ namespace DenshaDeGoInput
 		/// <summary>An array with raw output data for the controller.</summary>
 		private byte[] outputBuffer;
 
+		/// <summary>The setup packet needed to send data to the controller.</summary>
+		private LibUsbDotNet.Main.UsbSetupPacket setupPacket = new LibUsbDotNet.Main.UsbSetupPacket(0x41, 0x09, 0x201, 0x0, 0x8);
+
 		/// <summary>
 		/// Initializes PS2 Densha de GO! controller.
 		/// </summary>
@@ -82,7 +85,7 @@ namespace DenshaDeGoInput
 		internal override void ReadInput()
 		{
 			// Sync input/output data
-			LibUsb.SyncController(Guid, inputBuffer, outputBuffer);
+			LibUsb.SyncController(Guid, inputBuffer, outputBuffer, setupPacket);
 
 			byte brakeData;
 			byte powerData;
