@@ -65,7 +65,7 @@ namespace Route.Bve5
 
 		private static void ParseMap(string FileName, bool PreviewOnly)
 		{
-			if (FileName == String.Empty)
+			if (string.IsNullOrEmpty(FileName))
 			{
 				throw new Exception("The BVE5 scenario did not define a route map");
 			}

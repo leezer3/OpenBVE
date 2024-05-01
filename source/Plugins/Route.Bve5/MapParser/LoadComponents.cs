@@ -28,6 +28,7 @@ namespace Route.Bve5
 			// Everything breaks if no station list
 			if (string.IsNullOrEmpty(ParseData.StationListPath))
 			{
+				Plugin.CurrentHost.AddMessage(MessageType.Error, true, "No BVE5 Station List file was specified.");
 				return;
 			}
 
@@ -39,7 +40,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(stationList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, stationList + "is not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The BVE5 Station List file "+ stationList + " was not found.");
 					return;
 				}
 			}
@@ -199,7 +200,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(structureList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, structureList + "is not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The BVE5 Structure List file " + structureList + " was not found.");
 					return;
 				}
 			}
@@ -247,7 +248,7 @@ namespace Route.Bve5
 
 					if (!File.Exists(ObjectFileName))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, ObjectFileName + "is not found.");
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false,  "The Object File " + ObjectFileName + " with key "+ Key + " was not found.");
 						continue;
 					}
 
@@ -276,7 +277,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(signalList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, signalList + "is not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The BVE5 Signal List file " + signalList + " was not found.");
 					return;
 				}
 			}
@@ -367,7 +368,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(soundList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, soundList + "is not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The BVE5 Sound List file " + soundList + " was not found.");
 					return;
 				}
 			}
@@ -415,7 +416,7 @@ namespace Route.Bve5
 
 					if (!File.Exists(SoundFileName))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, SoundFileName + "is not found.");
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The Sound File " + SoundFileName + " with key " + Key + " was not found.");
 						continue;
 					}
 
@@ -443,7 +444,7 @@ namespace Route.Bve5
 
 				if (!File.Exists(sound3DList))
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, sound3DList + "is not found.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The BVE5 Sound3D List file " + sound3DList + " was not found.");
 					return;
 				}
 			}
@@ -491,7 +492,7 @@ namespace Route.Bve5
 
 					if (!File.Exists(SoundFileName))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, SoundFileName + "is not found.");
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The Sound3D File " + SoundFileName + " with key " + Key + " was not found.");
 						continue;
 					}
 
