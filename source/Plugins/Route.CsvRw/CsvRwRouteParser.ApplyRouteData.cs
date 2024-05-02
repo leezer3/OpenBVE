@@ -181,7 +181,6 @@ namespace CsvRwRouteParser
 						if (!CurrentRoute.Tracks.ContainsKey(item.Key))
 						{
 							CurrentRoute.Tracks.Add(item.Key, new Track());
-							CurrentRoute.Tracks[item.Key].Elements = new TrackElement[256];
 						}
 					}
 				}
@@ -224,10 +223,6 @@ namespace CsvRwRouteParser
 				for (int j = 0; j < CurrentRoute.Tracks.Count; j++)
 				{
 					var key = CurrentRoute.Tracks.ElementAt(j).Key;
-					if (CurrentRoute.Tracks[key].Elements == null || CurrentRoute.Tracks[key].Elements.Length == 0)
-					{
-						CurrentRoute.Tracks[key].Elements = new TrackElement[256];
-					}
 					if (n >= CurrentRoute.Tracks[key].Elements.Length)
 					{
 						Array.Resize(ref CurrentRoute.Tracks[key].Elements, CurrentRoute.Tracks[key].Elements.Length << 1);

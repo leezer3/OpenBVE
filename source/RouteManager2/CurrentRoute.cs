@@ -105,11 +105,7 @@ namespace RouteManager2
 			this.renderer = renderer;
 			
 			Tracks = new Dictionary<int, Track>();
-			Track t = new Track
-			{
-				Elements = new TrackElement[0]
-			};
-			Tracks.Add(0, t);
+			Tracks.Add(0, new Track());
 			Sections = new Section[0];
 			Stations = new RouteStation[0];
 			BogusPreTrainInstructions = new BogusPreTrainInstruction[0];
