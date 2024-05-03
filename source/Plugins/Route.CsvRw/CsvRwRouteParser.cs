@@ -61,20 +61,8 @@ namespace CsvRwRouteParser {
 
 			RoutePatchDatabaseParser.LoadRoutePatchDatabase(ref availableRoutefilePatches);
 			Plugin.CurrentOptions.ObjectDisposalMode = ObjectDisposalMode.Legacy;
-			RouteData Data = new RouteData
-			{
-				BlockInterval = 25.0,
-				FirstUsedBlock = -1,
-				Blocks = new List<Block>()
-			};
-			Data.Blocks.Add(new Block(PreviewOnly));
-			Data.Blocks[0].Rails.Add(0, new Rail { RailStarted =  true });
-			Data.Blocks[0].RailType = new[] { 0 };
-			Data.Blocks[0].Accuracy = 2.0;
-			Data.Blocks[0].AdhesionMultiplier = 1.0;
-			Data.Blocks[0].CurrentTrackState = new TrackElement(0.0);
-			Data.Blocks[0].RailCycles = new RailCycle[1];
-			Data.Blocks[0].RailCycles[0].RailCycleIndex = -1;
+			RouteData Data = new RouteData(PreviewOnly);
+			
 			if (!PreviewOnly)
 			{
 				Data.Blocks[0].Background = 0;

@@ -59,7 +59,7 @@
 		/// <remarks>Used as tunnel internals by some BVE2 content</remarks>
 		public bool CylinderHack;
 		/// <summary>Pure black is used as a transparent color</summary>
-		/// <remarks>Used to provide color-key transparency in BVE4 X format files in </remarks>
+		/// <remarks>Used to provide color-key transparency in BVE4 X format files</remarks>
 		public bool BlackTransparency;
 		/// <summary>Semi-transparent faces are disabled</summary>
 		/// <remarks>BVE2 did not support semi-transparent faces</remarks>
