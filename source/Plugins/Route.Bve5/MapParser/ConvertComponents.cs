@@ -28,7 +28,7 @@ namespace Route.Bve5
 
 				switch (Statement.FunctionName)
 				{
-					case MapFunctionName.Setgauge:
+					case MapFunctionName.SetGauge:
 					case MapFunctionName.Gauge:
 						{
 							double Gauge = Statement.GetArgumentValueAsDouble("value", true);
@@ -45,19 +45,21 @@ namespace Route.Bve5
 							}
 						}
 						break;
-					case MapFunctionName.Begintransition:
+					case MapFunctionName.BeginTransition:
 						{
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							Blocks[Index].Rails[0].CurveInterpolateStart = true;
-							Blocks[Index].Rails[0].CurveTransitionStart = true;
+							int blockIndex = RouteData.FindOrAddBlock(Statement.Distance);
+							Blocks[blockIndex].Rails[0].CurveInterpolateStart = true;
+							Blocks[blockIndex].Rails[0].CurveTransitionStart = true;
 						}
 						break;
 					case MapFunctionName.Begin:
-					case MapFunctionName.Begincircular:
+					case MapFunctionName.BeginCircular:
 					case MapFunctionName.Change:
 					case MapFunctionName.Curve:
 						{
 							object Radius = d.Radius;
+
+							double dd = d.GetArgumentValueAsDouble("radius", true);
 							object Cant = d.Cant;
 							if (Statement.FunctionName == MapFunctionName.Curve)
 							{
@@ -224,7 +226,7 @@ namespace Route.Bve5
 				dynamic d = Statement;
 				switch (Statement.FunctionName)
 				{
-					case MapFunctionName.Begintransition:
+					case MapFunctionName.BeginTransition:
 						{
 							int Index = RouteData.FindOrAddBlock(Statement.Distance);
 							Blocks[Index].GradientInterpolateStart = true;
@@ -232,7 +234,7 @@ namespace Route.Bve5
 						}
 						break;
 					case MapFunctionName.Begin:
-					case MapFunctionName.Beginconst:
+					case MapFunctionName.BeginConst:
 					case MapFunctionName.Pitch:
 						{
 							object Gradient;
@@ -505,7 +507,7 @@ namespace Route.Bve5
 					{
 						switch (Statement.FunctionName)
 						{
-							case MapFunctionName.Begintransition:
+							case MapFunctionName.BeginTransition:
 								{
 									int Index = RouteData.FindOrAddBlock(Statement.Distance);
 									Blocks[Index].Rails[j].CurveInterpolateStart = true;
@@ -1136,7 +1138,7 @@ namespace Route.Bve5
 
 			foreach (var Statement in ParseData.Statements)
 			{
-				if (Statement.ElementName != MapElementName.Jointnoise)
+				if (Statement.ElementName != MapElementName.JointNoise)
 				{
 					continue;
 				}

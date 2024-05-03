@@ -483,7 +483,7 @@ namespace Route.Bve5
 							}
 						}
 						break;
-					case MapFunctionName.Putbetween:
+					case MapFunctionName.PutBetween:
 						{
 							string[] TrackKeys = new string[2];
 							if (!Statement.HasArgument("trackkey1", true) || string.IsNullOrEmpty(TrackKeys[0] = Statement.GetArgumentValueAsString("trackkey1", true)))
@@ -682,7 +682,7 @@ namespace Route.Bve5
 
 			foreach (var Statement in ParseData.Statements)
 			{
-				if (Statement.ElementName != MapElementName.Section && !(Statement.ElementName == MapElementName.Signal && Statement.FunctionName == MapFunctionName.Speedlimit))
+				if (Statement.ElementName != MapElementName.Section && !(Statement.ElementName == MapElementName.Signal && Statement.FunctionName == MapFunctionName.SpeedLimit))
 				{
 					continue;
 				}
@@ -692,10 +692,10 @@ namespace Route.Bve5
 				switch (Statement.FunctionName)
 				{
 					case MapFunctionName.Begin:
-					case MapFunctionName.Beginnew:
+					case MapFunctionName.BeginNew:
 					{
-							double?[] aspects = new double?[d.SignalIndexes.Count];
-							d.SignalIndexes.CopyTo(aspects, 0); // Yuck: Stored as nullable doubles
+							double?[] aspects = new double?[d.SignalAspects.Count];
+							d.SignalAspects.CopyTo(aspects, 0); // Yuck: Stored as nullable doubles
 							int Index = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
 							Blocks[Index].Sections.Add(new Section
 							{
@@ -718,8 +718,8 @@ namespace Route.Bve5
 							}
 						}
 						break;
-					case MapFunctionName.Setspeedlimit:
-					case MapFunctionName.Speedlimit:
+					case MapFunctionName.SetSpeedLimit:
+					case MapFunctionName.SpeedLimit:
 					{
 						double?[] limits = new double?[d.SpeedLimits.Count];
 						d.SpeedLimits.CopyTo(limits, 0); // Yuck: Stored as nullable doubles
@@ -860,7 +860,7 @@ namespace Route.Bve5
 
 			foreach (var Statement in ParseData.Statements)
 			{
-				if (Statement.ElementName != MapElementName.Speedlimit)
+				if (Statement.ElementName != MapElementName.SpeedLimit)
 				{
 					continue;
 				}
@@ -1024,7 +1024,7 @@ namespace Route.Bve5
 
 			foreach (var Statement in ParseData.Statements)
 			{
-				if (Statement.ElementName != MapElementName.Cabilluminance)
+				if (Statement.ElementName != MapElementName.CabIlluminance)
 				{
 					continue;
 				}
@@ -1164,7 +1164,7 @@ namespace Route.Bve5
 
 			foreach (var Statement in ParseData.Statements)
 			{
-				if (Statement.ElementName != MapElementName.Rollingnoise)
+				if (Statement.ElementName != MapElementName.RollingNoise)
 				{
 					continue;
 				}
@@ -1190,7 +1190,7 @@ namespace Route.Bve5
 
 			foreach (var Statement in ParseData.Statements)
 			{
-				if (Statement.ElementName != MapElementName.Flangenoise)
+				if (Statement.ElementName != MapElementName.FlangeNoise)
 				{
 					continue;
 				}

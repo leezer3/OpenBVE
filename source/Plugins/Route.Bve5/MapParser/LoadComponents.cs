@@ -53,7 +53,7 @@ namespace Route.Bve5
 				Csv.Configuration.AllowComments = true;
 				while (Csv.Read())
 				{
-					Station NewStation = new Station();
+					Station newStation = new Station();
 
 					for (int i = 0; i < Csv.CurrentRecord.Length; i++)
 					{
@@ -66,119 +66,113 @@ namespace Route.Bve5
 						switch (i)
 						{
 							case 0:
-								NewStation.Key = Value;
+								newStation.Key = Value;
 								break;
 							case 1:
-								NewStation.Name = Value;
+								newStation.Name = Value;
 								break;
 							case 2:
 								if (Value.Equals("p", StringComparison.InvariantCultureIgnoreCase))
 								{
-									NewStation.StopMode = StationStopMode.AllPass;
+									newStation.StopMode = StationStopMode.AllPass;
 								}
 
-								if (!TryParseBve5Time(Value, out NewStation.ArrivalTime))
+								if (!TryParseBve5Time(Value, out newStation.ArrivalTime))
 								{
-									NewStation.ArrivalTime = -1.0;
+									newStation.ArrivalTime = -1.0;
 								}
 								break;
 							case 3:
 								if (Value.Equals("t", StringComparison.InvariantCultureIgnoreCase))
 								{
-									NewStation.StationType = StationType.Terminal;
+									newStation.StationType = StationType.Terminal;
 								}
 
-								if (!TryParseBve5Time(Value, out NewStation.DepartureTime))
+								if (!TryParseBve5Time(Value, out newStation.DepartureTime))
 								{
-									NewStation.DepartureTime = -1.0;
+									newStation.DepartureTime = -1.0;
 								}
 								break;
 							case 4:
 								{
-									double StopTime;
-									if (!NumberFormats.TryParseDoubleVb6(Value, out StopTime))
+									if (!NumberFormats.TryParseDoubleVb6(Value, out double stopTime))
 									{
-										StopTime = 15.0;
+										stopTime = 15.0;
 									}
-									else if (StopTime < 5.0)
+									else if (stopTime < 5.0)
 									{
-										StopTime = 5.0;
+										stopTime = 5.0;
 									}
 
-									NewStation.StopTime = StopTime;
+									newStation.StopTime = stopTime;
 								}
 								break;
 							case 5:
-								if (!TryParseBve5Time(Value, out NewStation.DefaultTime))
+								if (!TryParseBve5Time(Value, out newStation.DefaultTime))
 								{
-									NewStation.DefaultTime = -1.0;
+									newStation.DefaultTime = -1.0;
 								}
 								break;
 							case 6:
 								{
-									int SignalFlag;
-									if (!NumberFormats.TryParseIntVb6(Value, out SignalFlag))
+									if (!NumberFormats.TryParseIntVb6(Value, out int signalFlag))
 									{
-										SignalFlag = 0;
+										signalFlag = 0;
 									}
 
-									NewStation.ForceStopSignal = SignalFlag == 1;
+									newStation.ForceStopSignal = signalFlag == 1;
 								}
 								break;
 							case 7:
 								{
-									double AlightingTime;
-									if (!NumberFormats.TryParseDoubleVb6(Value, out AlightingTime))
+									if (!NumberFormats.TryParseDoubleVb6(Value, out double alightingTime))
 									{
-										AlightingTime = 0.0;
+										alightingTime = 0.0;
 									}
 
-									NewStation.AlightingTime = AlightingTime;
+									newStation.AlightingTime = alightingTime;
 								}
 								break;
 							case 8:
 								{
-									double PassengerRatio;
-									if (!NumberFormats.TryParseDoubleVb6(Value, out PassengerRatio))
+									if (!NumberFormats.TryParseDoubleVb6(Value, out double passengerRatio))
 									{
-										PassengerRatio = 100.0;
+										passengerRatio = 100.0;
 									}
 
-									NewStation.PassengerRatio = PassengerRatio / 100.0;
+									newStation.PassengerRatio = passengerRatio / 100.0;
 								}
 								break;
 							case 9:
-								NewStation.ArrivalSoundKey = Value;
+								newStation.ArrivalSoundKey = Value;
 								break;
 							case 10:
-								NewStation.DepartureSoundKey = Value;
+								newStation.DepartureSoundKey = Value;
 								break;
 							case 11:
 								{
-									double ReopenDoor;
-									if (!NumberFormats.TryParseDoubleVb6(Value, out ReopenDoor) || ReopenDoor < 0.0)
+									if (!NumberFormats.TryParseDoubleVb6(Value, out double reopenDoor) || reopenDoor < 0.0)
 									{
-										ReopenDoor = 0.0;
+										reopenDoor = 0.0;
 									}
 
-									NewStation.ReopenDoor = ReopenDoor / 100.0;
+									newStation.ReopenDoor = reopenDoor / 100.0;
 								}
 								break;
 							case 12:
 								{
-									double InterferenceInDoor;
-									if (!NumberFormats.TryParseDoubleVb6(Value, out InterferenceInDoor) || InterferenceInDoor < 0.0)
+									if (!NumberFormats.TryParseDoubleVb6(Value, out double interferenceInDoor) || interferenceInDoor < 0.0)
 									{
-										InterferenceInDoor = 0.0;
+										interferenceInDoor = 0.0;
 									}
 
-									NewStation.InterferenceInDoor = InterferenceInDoor;
+									newStation.InterferenceInDoor = interferenceInDoor;
 								}
 								break;
 						}
 					}
 
-					RouteData.StationList.Add(NewStation);
+					RouteData.StationList.Add(newStation);
 				}
 			}
 		}
@@ -582,7 +576,7 @@ namespace Route.Bve5
 			foreach (var Statement in ParseData.Statements)
 			{
 				dynamic d = Statement;
-				if (Statement.ElementName != MapElementName.Train || Statement.FunctionName != MapFunctionName.Settrack)
+				if (Statement.ElementName != MapElementName.Train || Statement.FunctionName != MapFunctionName.SetTrack)
 				{
 					continue;
 				}
