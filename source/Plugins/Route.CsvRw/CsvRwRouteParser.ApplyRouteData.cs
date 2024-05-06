@@ -174,15 +174,12 @@ namespace CsvRwRouteParser
 			Fog CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Count; i++)
 			{
-				if (Data.Blocks[i].Rails.Count > CurrentRoute.Tracks.Count)
+				for (int d = 0; d < Data.Blocks[i].Rails.Count; d++)
 				{
-					for (int d = 0; d < Data.Blocks[i].Rails.Count; d++)
+					var item = Data.Blocks[i].Rails.ElementAt(d);
+					if (!CurrentRoute.Tracks.ContainsKey(item.Key))
 					{
-						var item = Data.Blocks[i].Rails.ElementAt(d);
-						if (!CurrentRoute.Tracks.ContainsKey(item.Key))
-						{
-							CurrentRoute.Tracks.Add(item.Key, new Track());
-						}
+						CurrentRoute.Tracks.Add(item.Key, new Track());
 					}
 				}
 			}
