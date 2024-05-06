@@ -515,7 +515,6 @@ namespace Route.Bve5
 								{
 									if (sd.Numbers.Any())
 									{
-										//double brightness = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
 										AnimatedObjectCollection aoc = new AnimatedObjectCollection(Plugin.CurrentHost);
 										aoc.Objects = new AnimatedObject[2];
 										for (int m = 0; m < aoc.Objects.Length; m++)
@@ -552,7 +551,7 @@ namespace Route.Bve5
 											aoc.Objects[m].StateFunction = new FunctionScript(Plugin.CurrentHost, expr, false);
 											aoc.Objects[m].RefreshRate = refreshRate;
 										}
-										//aoc.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].Signals[j][k].Yaw, Data.Blocks[i].Signals[j][k].Pitch, Data.Blocks[i].Signals[j][k].Roll), Data.Blocks[i].Signals[j][k].SectionIndex, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, BlockInterval, tpos, brightness, false);
+
 										aoc.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].Signals[j][k].Yaw, Data.Blocks[i].Signals[j][k].Pitch, Data.Blocks[i].Signals[j][k].Roll), Data.Blocks[i].Signals[j][k].SectionIndex, StartingDistance, EndingDistance, tpos, 1.0, false);
 									}
 								}

@@ -447,14 +447,14 @@ namespace Route.Bve5
 							{
 								TrackKey = "0";
 							}
-							X = Statement.GetArgumentValueAsDouble("x", true);
-							Y = Statement.GetArgumentValueAsDouble("y", true);
-							Z = Statement.GetArgumentValueAsDouble("z", true);
-							RX = Statement.GetArgumentValueAsDouble("rx", true);
-							RY = Statement.GetArgumentValueAsDouble("ry", true);
-							RZ = Statement.GetArgumentValueAsDouble("rz", true);
-							Tilt = Statement.GetArgumentValueAsDouble("tilt", true);
-							Span = Statement.GetArgumentValueAsDouble("span", true);
+							X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
+							Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
+							Z = Statement.GetArgumentValueAsDouble(ArgumentName.Z);
+							RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
+							RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
+							RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
+							Tilt = Statement.GetArgumentValueAsDouble(ArgumentName.Tilt);
+							Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
 							
 							int RailIndex = RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKey));
 
@@ -486,11 +486,11 @@ namespace Route.Bve5
 					case MapFunctionName.PutBetween:
 						{
 							string[] TrackKeys = new string[2];
-							if (!Statement.HasArgument("trackkey1", true) || string.IsNullOrEmpty(TrackKeys[0] = Statement.GetArgumentValueAsString("trackkey1", true)))
+							if (!Statement.HasArgument(ArgumentName.TrackKey1) || string.IsNullOrEmpty(TrackKeys[0] = Statement.GetArgumentValueAsString(ArgumentName.TrackKey1)))
 							{
 								TrackKeys[0] = "0";
 							}
-							if (!Statement.HasArgument("trackkey2", true) || string.IsNullOrEmpty(TrackKeys[1] = Statement.GetArgumentValueAsString("trackkey2")))
+							if (!Statement.HasArgument(ArgumentName.TrackKey2) || string.IsNullOrEmpty(TrackKeys[1] = Statement.GetArgumentValueAsString(ArgumentName.TrackKey2)))
 							{
 								TrackKeys[1] = "0";
 							}
@@ -572,15 +572,15 @@ namespace Route.Bve5
 								{
 									TrackKey = "0";
 								}
-								X = Statement.GetArgumentValueAsDouble("x", true);
-								Y = Statement.GetArgumentValueAsDouble("y", true);
-								Z = Statement.GetArgumentValueAsDouble("z", true);
-								RX = Statement.GetArgumentValueAsDouble("rx", true);
-								RY = Statement.GetArgumentValueAsDouble("ry", true);
-								RZ = Statement.GetArgumentValueAsDouble("rz", true);
-								Tilt = Statement.GetArgumentValueAsDouble("tilt", true);
-								Span = Statement.GetArgumentValueAsDouble("span", true);
-								Interval = Statement.GetArgumentValueAsDouble("interval", true);
+								X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
+								Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
+								Z = Statement.GetArgumentValueAsDouble(ArgumentName.Z);
+								RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
+								RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
+								RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
+								Tilt = Statement.GetArgumentValueAsDouble(ArgumentName.Tilt);
+								Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
+								Interval = Statement.GetArgumentValueAsDouble(ArgumentName.Interval);
 
 								Repeater.StartingDistance = Statement.Distance;
 								Repeater.TrackKey = Convert.ToString(TrackKey);
@@ -626,9 +626,15 @@ namespace Route.Bve5
 		{
 			int RailIndex = RouteData.TrackKeyList.IndexOf(Repeater.TrackKey);
 
-			if (Repeater.Interval <= 0.0 || RailIndex == -1)
+			if (Repeater.Interval <= 0.0)
 			{
 				return;
+			}
+
+			if (RailIndex == -1)
+			{
+				// at least in converted legacy stuff (2.02 map format) unknown track indexes map to rail 0
+				RailIndex = 0;
 			}
 
 			List<Block> Blocks = RouteData.Blocks;
@@ -866,7 +872,7 @@ namespace Route.Bve5
 				}
 
 				object Speed;
-				Speed = Statement.GetArgumentValue("v", true);
+				Speed = Statement.GetArgumentValue(ArgumentName.V);
 
 				int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
 				Blocks[BlockIndex].Limits.Add(new Limit
@@ -924,15 +930,15 @@ namespace Route.Bve5
 					case MapFunctionName.Ambient:
 						{
 							double TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument("red", true) || !double.TryParse(Statement.GetArgumentValueAsString("red", true), out TempRed))
+							if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
 							{
 								TempRed = 1.0;
 							}
-							if (!Statement.HasArgument("green", true) || !double.TryParse(Statement.GetArgumentValueAsString("green", true), out TempGreen))
+							if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
 							{
 								TempGreen = 1.0;
 							}
-							if (!Statement.HasArgument("blue", true) || !double.TryParse(Statement.GetArgumentValueAsString("blue", true), out TempBlue))
+							if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
 							{
 								TempBlue = 1.0;
 							}
@@ -959,15 +965,15 @@ namespace Route.Bve5
 					case MapFunctionName.Diffuse:
 						{
 							double TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument("red", true) || !double.TryParse(Statement.GetArgumentValueAsString("red", true), out TempRed))
+							if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
 							{
 								TempRed = 1.0;
 							}
-							if (!Statement.HasArgument("green", true) || !double.TryParse(Statement.GetArgumentValueAsString("green", true), out TempGreen))
+							if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
 							{
 								TempGreen = 1.0;
 							}
-							if (!Statement.HasArgument("blue", true) || !double.TryParse(Statement.GetArgumentValueAsString("blue", true), out TempBlue))
+							if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
 							{
 								TempBlue = 1.0;
 							}
@@ -994,11 +1000,11 @@ namespace Route.Bve5
 					case MapFunctionName.Direction:
 						{
 							double Pitch, Yaw;
-							if (!Statement.HasArgument("pitch", true) || !double.TryParse(Statement.GetArgumentValueAsString("pitch", true), out Pitch))
+							if (!Statement.HasArgument(ArgumentName.Pitch) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Pitch), out Pitch))
 							{
 								Pitch = 60.0;
 							}
-							if (!Statement.HasArgument("yaw", true) || !double.TryParse(Statement.GetArgumentValueAsString("yaw", true), out Yaw))
+							if (!Statement.HasArgument(ArgumentName.Yaw) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Yaw), out Yaw))
 							{
 								Yaw = -26.565051177078;
 							}
@@ -1030,7 +1036,7 @@ namespace Route.Bve5
 				}
 
 				double TempValue;
-				if (!Statement.HasArgument("value", true) || !double.TryParse(Statement.GetArgumentValueAsString("value", true), out TempValue) || TempValue == 0.0)
+				if (!Statement.HasArgument(ArgumentName.Value) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Value), out TempValue) || TempValue == 0.0)
 				{
 					TempValue = 1.0;
 				}
@@ -1140,8 +1146,8 @@ namespace Route.Bve5
 					continue;
 				}
 
-				double X = Statement.GetArgumentValueAsDouble("x", true);
-				double Y = Statement.GetArgumentValueAsDouble("y", true);
+				double X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
+				double Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
 
 				int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
 				RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
@@ -1170,7 +1176,7 @@ namespace Route.Bve5
 				}
 
 				object Index;
-				Index = Statement.GetArgumentValue("index", true);
+				Index = Statement.GetArgumentValue(ArgumentName.Index);
 
 				int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
 				RouteData.Blocks[BlockIndex].RunSounds.Add(new TrackSound
@@ -1196,7 +1202,7 @@ namespace Route.Bve5
 				}
 
 				object Index;
-				Index = Statement.GetArgumentValue("index", true);
+				Index = Statement.GetArgumentValue(ArgumentName.Index);
 
 				int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
 				RouteData.Blocks[BlockIndex].FlangeSounds.Add(new TrackSound

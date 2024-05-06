@@ -31,7 +31,7 @@ namespace Route.Bve5
 					case MapFunctionName.SetGauge:
 					case MapFunctionName.Gauge:
 						{
-							double Gauge = Statement.GetArgumentValueAsDouble("value", true);
+							double Gauge = Statement.GetArgumentValueAsDouble(ArgumentName.Value);
 							if (Gauge <= 0)
 							{
 								// Gauge must be positive and non-zero
@@ -58,8 +58,6 @@ namespace Route.Bve5
 					case MapFunctionName.Curve:
 						{
 							object Radius = d.Radius;
-
-							double dd = d.GetArgumentValueAsDouble("radius", true);
 							object Cant = d.Cant;
 							if (Statement.FunctionName == MapFunctionName.Curve)
 							{
@@ -517,7 +515,7 @@ namespace Route.Bve5
 							case MapFunctionName.Begin:
 								{
 									int Index = RouteData.FindOrAddBlock(Statement.Distance);
-									Blocks[Index].Rails[j].CurveCant = Statement.GetArgumentValueAsDouble("cant", true);
+									Blocks[Index].Rails[j].CurveCant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant);
 									Blocks[Index].Rails[j].CurveInterpolateStart = true;
 									Blocks[Index].Rails[j].CurveTransitionEnd = true;
 								}
@@ -905,18 +903,18 @@ namespace Route.Bve5
 				{
 					case MapFunctionName.Fog:
 						{
-							double Start = Statement.GetArgumentValueAsDouble("start", true);
-							double End = Statement.GetArgumentValueAsDouble("end", true);
+							double Start = Statement.GetArgumentValueAsDouble(ArgumentName.Start);
+							double End = Statement.GetArgumentValueAsDouble(ArgumentName.End);
 							double TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument("red", true) || !double.TryParse(Statement.GetArgumentValueAsString("red", true), out TempRed))
+							if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
 							{
 								TempRed = 128;
 							}
-							if (!Statement.HasArgument("green", true) || !double.TryParse(Statement.GetArgumentValueAsString("green", true), out TempGreen))
+							if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
 							{
 								TempGreen = 128;
 							}
-							if (!Statement.HasArgument("blue", true) || !double.TryParse(Statement.GetArgumentValueAsString("red", true), out TempBlue))
+							if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
 							{
 								TempBlue = 128;
 							}
@@ -957,19 +955,19 @@ namespace Route.Bve5
 					case MapFunctionName.Set:
 						{
 							double Density, TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument("density", true) || !double.TryParse(Statement.GetArgumentValueAsString("density", true), out Density))
+							if (!Statement.HasArgument(ArgumentName.Density) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Density), out Density))
 							{
 								Density = 0.001;
 							}
-							if (!Statement.HasArgument("red", true) || !double.TryParse(Statement.GetArgumentValueAsString("red", true), out TempRed))
+							if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
 							{
 								TempRed = 1.0;
 							}
-							if (!Statement.HasArgument("green", true) || !double.TryParse(Statement.GetArgumentValueAsString("green", true), out TempGreen))
+							if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
 							{
 								TempGreen = 1.0;
 							}
-							if (!Statement.HasArgument("blue", true) || !double.TryParse(Statement.GetArgumentValueAsString("red", true), out TempBlue))
+							if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
 							{
 								TempBlue = 1.0;
 							}
@@ -1019,7 +1017,7 @@ namespace Route.Bve5
 					continue;
 				}
 
-				double X = !Statement.HasArgument("x", true) ? 0.0 : Statement.GetArgumentValueAsDouble("x", true);
+				double X = !Statement.HasArgument(ArgumentName.X) ? 0.0 : Statement.GetArgumentValueAsDouble(ArgumentName.X);
 
 				double Squaring = 1.0 - 8.0 * (8.0 - Convert.ToDouble(X) * 10000.0);
 				if (Squaring < 0.0)
@@ -1068,7 +1066,7 @@ namespace Route.Bve5
 				{
 					case 1:
 						{
-							if (!Statement.HasArgument("a", true))
+							if (!Statement.HasArgument(ArgumentName.A))
 							{
 								//Invalid number
 								continue;
@@ -1076,15 +1074,15 @@ namespace Route.Bve5
 							
 							int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
 							//Presumably this is just the adhesion coefficent at 0km/h
-							Blocks[BlockIndex].AdhesionMultiplier = (int)(Statement.GetArgumentValueAsDouble("a", true) * 100 / 0.26) / 100.0;
+							Blocks[BlockIndex].AdhesionMultiplier = (int)(Statement.GetArgumentValueAsDouble(ArgumentName.A) * 100 / 0.26) / 100.0;
 							Blocks[BlockIndex].AdhesionMultiplierDefined = true;
 						}
 						break;
 					case 3:
 						{
-							double C0 = Statement.GetArgumentValueAsDouble("a", true);
-							double C1 = Statement.GetArgumentValueAsDouble("b", true);
-							double C2 = Statement.GetArgumentValueAsDouble("c", true);
+							double C0 = Statement.GetArgumentValueAsDouble(ArgumentName.A);
+							double C1 = Statement.GetArgumentValueAsDouble(ArgumentName.B);
+							double C2 = Statement.GetArgumentValueAsDouble(ArgumentName.C);
 							if (C0 != 0.0 && C1 == 0.0 && C2 != 0.0)
 							{
 								int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);

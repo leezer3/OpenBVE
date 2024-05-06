@@ -414,8 +414,7 @@ namespace Route.Bve5
 						continue;
 					}
 
-					OpenBveApi.Sounds.SoundHandle handle;
-					Plugin.CurrentHost.RegisterSound(SoundFileName, 15.0, out handle);
+					Plugin.CurrentHost.RegisterSound(SoundFileName, 15.0, out OpenBveApi.Sounds.SoundHandle handle);
 					RouteData.Sounds.Add(Key, handle);
 				}
 			}
@@ -490,8 +489,7 @@ namespace Route.Bve5
 						continue;
 					}
 
-					OpenBveApi.Sounds.SoundHandle handle;
-					Plugin.CurrentHost.RegisterSound(SoundFileName, 15.0, out handle);
+					Plugin.CurrentHost.RegisterSound(SoundFileName, 15.0, out OpenBveApi.Sounds.SoundHandle handle);
 					RouteData.Sound3Ds.Add(Key, handle);
 				}
 			}
@@ -522,23 +520,23 @@ namespace Route.Bve5
 
 						if (Statement.FunctionName == MapFunctionName.Add)
 						{
-							if (!Statement.HasArgument("trainkey"))
+							if (!Statement.HasArgument(ArgumentName.TrainKey))
 							{
 								continue;
 							}
-							TrainKey = Statement.GetArgumentValueAsString("trainkey");
+							TrainKey = Statement.GetArgumentValueAsString(ArgumentName.TrainKey);
 						}
 						else
 						{
 							TrainKey = Statement.Key;
 						}
 						
-						if (!Statement.HasArgument("trainfilepath", true))
+						if (!Statement.HasArgument(ArgumentName.TrainFilePath))
 						{
 							continue;
 						}
 
-						TrainFilePath = Statement.GetArgumentValueAsString("trainfilepath");
+						TrainFilePath = Statement.GetArgumentValueAsString(ArgumentName.TrainFilePath);
 						if (string.IsNullOrEmpty(TrainFilePath))
 						{
 							continue;
@@ -549,7 +547,7 @@ namespace Route.Bve5
 							TrackKey = "0";
 						}
 
-						if (!Statement.HasArgument("direction") || !int.TryParse(Statement.GetArgumentValueAsString("direction"), out Direction))
+						if (!Statement.HasArgument(ArgumentName.Direction) || !int.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Direction), out Direction))
 						{
 							Direction = 1;
 						}
@@ -589,7 +587,7 @@ namespace Route.Bve5
 				{
 					TrackKey = "0";
 				}
-				if (!Statement.HasArgument("direction") || !int.TryParse(Statement.GetArgumentValueAsString("direction"), out Direction))
+				if (!Statement.HasArgument(ArgumentName.Direction) || !int.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Direction), out Direction))
 				{
 					Direction = 1;
 				}
@@ -680,7 +678,7 @@ namespace Route.Bve5
 							{
 								object TempTime;
 								double Time;
-								TempTime = Statement.GetArgumentValue("time");
+								TempTime = Statement.GetArgumentValue(ArgumentName.Time);
 
 								TryParseBve5Time(Convert.ToString(TempTime), out Time);
 
@@ -691,10 +689,10 @@ namespace Route.Bve5
 						case MapFunctionName.Stop:
 							{
 								object Decelerate, StopTime, Accelerate, Speed;
-								Decelerate = Statement.GetArgumentValue("decelerate");
-								StopTime = Statement.GetArgumentValue("stopTime");
-								Accelerate = Statement.GetArgumentValue("accelerate");
-								Speed = Statement.GetArgumentValue("speed");	
+								Decelerate = Statement.GetArgumentValue(ArgumentName.Decelerate);
+								StopTime = Statement.GetArgumentValue(ArgumentName.StopTime);
+								Accelerate = Statement.GetArgumentValue(ArgumentName.Accelerate);
+								Speed = Statement.GetArgumentValue(ArgumentName.Speed);	
 
 								Data.Add(new TravelStopData
 								{
