@@ -513,14 +513,7 @@ namespace CsvRwRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "TrackFollowingObject XML file " + tfoFile + " not found in Track.TfoXML at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							break;
 						}
-
-						if (Plugin.TrainManager.TFOs == null)
-						{
-							Plugin.TrainManager.TFOs = new AbstractTrain[] { };
-						}
-						int n = Plugin.TrainManager.TFOs.Length;
-						Array.Resize(ref Plugin.TrainManager.TFOs, n + 1);
-						Plugin.TrainManager.TFOs[n] = Plugin.CurrentHost.ParseTrackFollowingObject(ObjectPath, tfoFile);
+						Data.ScriptedTrainFiles.Add(tfoFile);
 					}
 					break;
 			}

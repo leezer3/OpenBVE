@@ -31,11 +31,7 @@ namespace RouteViewer {
 			Program.Renderer.Reset();
 			// track manager
 			Program.CurrentRoute.Tracks = new Dictionary<int, Track>();
-			Track t = new Track
-			{
-				Elements = new TrackElement[0]
-			};
-			Program.CurrentRoute.Tracks.Add(0, t);
+			Program.CurrentRoute.Tracks.Add(0, new Track());
 			// train manager
 			Program.TrainManager.Trains = new TrainBase[] { };
 			// game

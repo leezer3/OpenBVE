@@ -15,6 +15,7 @@ using RouteManager2.Events;
 using RouteManager2.SignalManager;
 using RouteManager2.Tracks;
 using OpenBveApi.Hosts;
+using OpenBveApi.Trains;
 
 namespace CsvRwRouteParser
 {
@@ -173,16 +174,12 @@ namespace CsvRwRouteParser
 			Fog CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Count; i++)
 			{
-				if (Data.Blocks[i].Rails.Count > CurrentRoute.Tracks.Count)
+				for (int d = 0; d < Data.Blocks[i].Rails.Count; d++)
 				{
-					for (int d = 0; d < Data.Blocks[i].Rails.Count; d++)
+					var item = Data.Blocks[i].Rails.ElementAt(d);
+					if (!CurrentRoute.Tracks.ContainsKey(item.Key))
 					{
-						var item = Data.Blocks[i].Rails.ElementAt(d);
-						if (!CurrentRoute.Tracks.ContainsKey(item.Key))
-						{
-							CurrentRoute.Tracks.Add(item.Key, new Track());
-							CurrentRoute.Tracks[item.Key].Elements = new TrackElement[256];
-						}
+						CurrentRoute.Tracks.Add(item.Key, new Track());
 					}
 				}
 			}
@@ -224,10 +221,6 @@ namespace CsvRwRouteParser
 				for (int j = 0; j < CurrentRoute.Tracks.Count; j++)
 				{
 					var key = CurrentRoute.Tracks.ElementAt(j).Key;
-					if (CurrentRoute.Tracks[key].Elements == null || CurrentRoute.Tracks[key].Elements.Length == 0)
-					{
-						CurrentRoute.Tracks[key].Elements = new TrackElement[256];
-					}
 					if (n >= CurrentRoute.Tracks[key].Elements.Length)
 					{
 						Array.Resize(ref CurrentRoute.Tracks[key].Elements, CurrentRoute.Tracks[key].Elements.Length << 1);
@@ -1274,6 +1267,22 @@ namespace CsvRwRouteParser
 					ComputeCantTangents();
 				}
 			}
+
+			if (!PreviewOnly)
+			{
+				// Create and place all scripted trains *last* to ensure that all required rails etc. are present
+				if (Plugin.TrainManager.TFOs == null)
+				{
+					Plugin.TrainManager.TFOs = new AbstractTrain[] { };
+				}
+				for (int i = 0; i < Data.ScriptedTrainFiles.Count; i++)
+				{
+					int n = Plugin.TrainManager.TFOs.Length;
+					Array.Resize(ref Plugin.TrainManager.TFOs, n + 1);
+					Plugin.TrainManager.TFOs[n] = Plugin.CurrentHost.ParseTrackFollowingObject(ObjectPath, Data.ScriptedTrainFiles[i]);
+				}
+			}
+			
 		}
 
 		private void ComputeCantTangents()

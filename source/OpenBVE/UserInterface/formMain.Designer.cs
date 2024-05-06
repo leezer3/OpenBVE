@@ -73,7 +73,7 @@ namespace OpenBve {
             this.groupboxRouteDetails = new System.Windows.Forms.GroupBox();
             this.tabcontrolRouteDetails = new System.Windows.Forms.TabControl();
             this.tabpageRouteDescription = new System.Windows.Forms.TabPage();
-            this.textboxRouteDescription = new System.Windows.Forms.TextBox();
+            this.textboxRouteDescription = new System.Windows.Forms.RichTextBox();
             this.pictureboxRouteImage = new System.Windows.Forms.PictureBox();
             this.tabpageRouteMap = new System.Windows.Forms.TabPage();
             this.pictureboxRouteMap = new System.Windows.Forms.PictureBox();
@@ -1234,7 +1234,6 @@ namespace OpenBve {
             this.textboxRouteDescription.Multiline = true;
             this.textboxRouteDescription.Name = "textboxRouteDescription";
             this.textboxRouteDescription.ReadOnly = true;
-            this.textboxRouteDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textboxRouteDescription.Size = new System.Drawing.Size(119, 183);
             this.textboxRouteDescription.TabIndex = 0;
             // 
@@ -6137,7 +6136,7 @@ namespace OpenBve {
         private System.Windows.Forms.Label labelTrain;
         private System.Windows.Forms.TabControl tabcontrolRouteDetails;
         private System.Windows.Forms.TabPage tabpageRouteDescription;
-        private System.Windows.Forms.TextBox textboxRouteDescription;
+        private System.Windows.Forms.RichTextBox textboxRouteDescription;
         private System.Windows.Forms.PictureBox pictureboxRouteImage;
         private System.Windows.Forms.TabPage tabpageRouteMap;
         private System.Windows.Forms.TabPage tabpageRouteGradient;

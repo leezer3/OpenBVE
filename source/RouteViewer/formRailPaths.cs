@@ -51,6 +51,15 @@ namespace RouteViewer
 
 		private void buttonClose_Click(object sender, EventArgs e)
 		{
+			if (Program.CurrentHost.MonoRuntime)
+			{
+				// HACK: On some machines, Mono doesn't appear to call CurrentCellDirtyStateChanged
+				// https://github.com/leezer3/OpenBVE/issues/1025
+				for (int i = 0; i < dataGridViewPaths.RowCount; i++)
+				{
+					Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[i].Cells[keyColumn].Value].Display = (bool)dataGridViewPaths.Rows[i].Cells[4].Value;
+				}
+			}
 			Program.pathForm = null;
 			this.Close();
 		}

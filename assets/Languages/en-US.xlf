@@ -1758,6 +1758,12 @@
 					<trans-unit id="distance">
 						<source>Distance from Player: </source>
 					</trans-unit>
+					<trans-unit id="zoom_in">
+						<source>Zoom In</source>
+					</trans-unit>
+					<trans-unit id="zoom_out">
+						<source>Zoom Out</source>
+					</trans-unit>
 				</group>
 				<group id="lamps">
 					<trans-unit id="ats">

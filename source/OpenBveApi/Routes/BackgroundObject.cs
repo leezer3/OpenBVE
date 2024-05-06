@@ -22,12 +22,12 @@ namespace OpenBveApi.Routes
 				double X = System.Math.Abs(Object.Mesh.Vertices[i].Coordinates.X);
 				double Z = System.Math.Abs(Object.Mesh.Vertices[i].Coordinates.Z);
 
-				if (X < ClipDistance)
+				if (X > ClipDistance)
 				{
 					ClipDistance = X;
 				}
 
-				if (Z < ClipDistance)
+				if (Z > ClipDistance)
 				{
 					ClipDistance = Z;
 				}

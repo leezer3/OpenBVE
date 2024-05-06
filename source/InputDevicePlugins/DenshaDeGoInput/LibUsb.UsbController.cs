@@ -58,6 +58,9 @@ namespace DenshaDeGoInput
 			internal byte[] ReadBuffer;
 			/// <summary>Byte array containing the data to be sent to the controller</summary>
 			internal byte[] WriteBuffer;
+			/// <summary>The setup packet needed to send data to the controller.</summary>
+			internal UsbSetupPacket SetupPacket;
+
 
 			/// <summary>
 			/// Initializes a controller
@@ -115,12 +118,9 @@ namespace DenshaDeGoInput
 				{
 					if (ControllerDevice != null)
 					{
-						if (UnloadBuffer.Length > 0)
-						{
-							// Send unload buffer to turn off controller
-							int bytesWritten;
-							ControllerDevice.ControlTransfer(ref setupPacket, UnloadBuffer, UnloadBuffer.Length, out bytesWritten);
-						}
+						// Send unload buffer to turn off controller
+						int bytesWritten;
+						ControllerDevice.ControlTransfer(ref SetupPacket, UnloadBuffer, UnloadBuffer.Length, out bytesWritten);
 						IUsbDevice wholeUsbDevice = ControllerDevice as IUsbDevice;
 						if (!ReferenceEquals(wholeUsbDevice, null))
 						{
@@ -167,11 +167,8 @@ namespace DenshaDeGoInput
 					}
 
 					// Send output buffer
-					if (WriteBuffer.Length > 0)
-					{
-						int bytesWritten;
-						ControllerDevice.ControlTransfer(ref LibUsb.setupPacket, WriteBuffer, WriteBuffer.Length, out bytesWritten);
-					}
+					int bytesWritten;
+					ControllerDevice.ControlTransfer(ref SetupPacket, WriteBuffer, WriteBuffer.Length, out bytesWritten);
 				}
 				catch
 				{

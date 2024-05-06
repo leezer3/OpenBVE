@@ -52,6 +52,7 @@ namespace CsvRwRouteParser
 
 				Plugin.CurrentOptions.Derailments = patch.Derailments;
 				Plugin.CurrentOptions.Toppling = patch.Toppling;
+				Plugin.CurrentOptions.DelayedAnimatedUpdates = patch.DelayedAnimatedUpdates;
 				SplitLineHack = patch.SplitLineHack;
 				AllowTrackPositionArguments = patch.AllowTrackPositionArguments;
 				foreach (int i in patch.DummyRailTypes)
@@ -155,5 +156,7 @@ namespace CsvRwRouteParser
 		internal bool Incompatible = false;
 		/// <summary>Whether aggressive RW bracket fixing is applied</summary>
 		internal bool AggressiveRwBrackets = false;
+		/// <summary>Whether animated object updates are delayed based upon distance</summary>
+		internal bool DelayedAnimatedUpdates = false;
 	}
 }

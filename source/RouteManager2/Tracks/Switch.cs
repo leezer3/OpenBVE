@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System.Linq;
 using OpenBveApi.Routes;
 
 namespace RouteManager2.Tracks
@@ -64,7 +65,7 @@ namespace RouteManager2.Tracks
 		private int setTrack;
 
 		/// <summary>The list of available track indicies</summary>
-		public readonly int[] availableTracks;
+		private readonly int[] availableTracks;
 
 		/// <summary>The track position</summary>
 		public readonly double TrackPosition;
@@ -85,6 +86,10 @@ namespace RouteManager2.Tracks
 		public Switch(int[] tracks, string[] trackNames, int toeRail, int initialTrack, double trackPosition, SwitchType type, string name, bool fixedRoute, TrackDirection direction)
 		{
 			Type = type;
+			if (direction == TrackDirection.Reverse)
+			{
+				trackNames = trackNames.Reverse().ToArray();
+			}
 			TrackNames = trackNames;
 			ToeRail = toeRail;
 			LeftTrack = type != SwitchType.LeftHanded ? tracks[0] : tracks[1];
