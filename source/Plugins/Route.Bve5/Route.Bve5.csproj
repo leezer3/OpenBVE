@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Route.Bve5</RootNamespace>
     <AssemblyName>Route.Bve5</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,7 +36,8 @@
       <HintPath>..\..\..\packages\Antlr4.Runtime.4.6.6\lib\net45\Antlr4.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Bve5_Parsing, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Bve5_Parsing.OpenBVE.1.1.2\lib\net45\Bve5_Parsing.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bve5_Parsing\Bve5_Parsing\bin\Debug\netstandard2.0\Bve5_Parsing.dll</HintPath>
     </Reference>
     <Reference Include="CsvHelper">
       <HintPath>..\..\..\dependencies\CsvHelper.dll</HintPath>
