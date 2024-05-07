@@ -240,9 +240,22 @@ namespace Route.Bve5
 						// ignored
 					}
 
+					if (string.IsNullOrEmpty(Key) || Key[0] == ';')
+					{
+						// Commented line
+						continue;
+					}
+
 					if (!File.Exists(ObjectFileName))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false,  "The Object File " + ObjectFileName + " with key "+ Key + " was not found.");
+						if (string.IsNullOrEmpty(ObjectFileName))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "No object file was specified for key " + Key);
+						}
+						else
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The Object File " + ObjectFileName + " with key " + Key + " was not found.");
+						}
 						continue;
 					}
 
@@ -309,6 +322,12 @@ namespace Route.Bve5
 								}
 								break;
 						}
+					}
+
+					if (string.IsNullOrEmpty(Key) || Key[0] == ';')
+					{
+						// Commented line
+						continue;
 					}
 
 					List<StaticObject> Objects = new List<StaticObject>();
@@ -399,6 +418,12 @@ namespace Route.Bve5
 						}
 					}
 
+					if (string.IsNullOrEmpty(Key) ||Key[0] == ';')
+					{
+						// Commented line
+						continue;
+					}
+
 					try
 					{
 						SoundFileName = Path.CombineFile(BaseDirectory, SoundFileName);
@@ -472,6 +497,12 @@ namespace Route.Bve5
 								SoundFileName = Value;
 								break;
 						}
+					}
+
+					if (string.IsNullOrEmpty(Key) || Key[0] == ';')
+					{
+						// Commented line
+						continue;
 					}
 
 					try
