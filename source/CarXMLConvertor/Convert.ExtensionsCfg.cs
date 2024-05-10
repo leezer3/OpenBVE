@@ -5,6 +5,7 @@ using System.IO;
 using System.Security;
 using System.Threading;
 using System.Windows.Forms;
+using OpenBveApi;
 using Path = OpenBveApi.Path;
 
 namespace CarXmlConvertor
@@ -491,7 +492,7 @@ namespace CarXmlConvertor
 			}
 			if (!String.IsNullOrEmpty(CarInfos[i].Object))
 			{
-				newLines.Add("<Object>" + CarInfos[i].Object + "</Object>");
+				newLines.Add("<Object>" + CarInfos[i].Object.Escape() + "</Object>");
 			}
 			newLines.Add("<Reversed>" + CarInfos[i].Reversed + "</Reversed>");
 			newLines.Add("<LoadingSway>" + CarInfos[i].LoadingSway + "</LoadingSway>");
@@ -500,7 +501,7 @@ namespace CarXmlConvertor
 				newLines.Add("<FrontBogie>");
 				newLines.Add("<FrontAxle>" + CarInfos[i].FrontBogie.FrontAxle + "</FrontAxle>");
 				newLines.Add("<RearAxle>" + CarInfos[i].FrontBogie.RearAxle + "</RearAxle>");
-				newLines.Add("<Object>" + CarInfos[i].FrontBogie.Object + "</Object>");
+				newLines.Add("<Object>" + CarInfos[i].FrontBogie.Object.Escape() + "</Object>");
 				newLines.Add("<Reversed>" + CarInfos[i].FrontBogie.Reversed + "</Reversed>");
 				newLines.Add("</FrontBogie>");
 			}
@@ -510,7 +511,7 @@ namespace CarXmlConvertor
 				newLines.Add("<RearBogie>");
 				newLines.Add("<FrontAxle>" + CarInfos[i].RearBogie.FrontAxle + "</FrontAxle>");
 				newLines.Add("<RearAxle>" + CarInfos[i].RearBogie.RearAxle + "</RearAxle>");
-				newLines.Add("<Object>" + CarInfos[i].RearBogie.Object + "</Object>");
+				newLines.Add("<Object>" + CarInfos[i].RearBogie.Object.Escape() + "</Object>");
 				newLines.Add("<Reversed>" + CarInfos[i].RearBogie.Reversed + "</Reversed>");
 				newLines.Add("</RearBogie>");
 			}
@@ -589,7 +590,7 @@ namespace CarXmlConvertor
 					newLines.Add("<CanUncouple>true</CanUncouple>");
 					if (!string.IsNullOrEmpty(Couplers[i].Object))
 					{
-						newLines.Add("<Object>" + Couplers[i].Object + "</Object>");
+						newLines.Add("<Object>" + Couplers[i].Object.Escape() + "</Object>");
 					}
 					newLines.Add("</Coupler>");
 				}
