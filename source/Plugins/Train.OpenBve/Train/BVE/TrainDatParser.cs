@@ -256,6 +256,11 @@ namespace Train.OpenBve
 				switch (Lines[i].ToLowerInvariant()) {
 					case "#acceleration":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
+							if (string.IsNullOrEmpty(Lines[i]))
+							{
+								i++;
+								continue;
+							}
 							Array.Resize(ref AccelerationCurves, n + 1);
 							AccelerationCurves[n] = new BveAccelerationCurve();
 							string t = Lines[i] + ",";

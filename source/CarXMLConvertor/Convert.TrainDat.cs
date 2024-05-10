@@ -241,6 +241,11 @@ namespace CarXmlConvertor
 					case "#acceleration":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
+							if (string.IsNullOrEmpty(Lines[i]))
+							{
+								i++;
+								continue;
+							}
 							AccelerationCurve curve = new AccelerationCurve();
 							string t = Lines[i] + ",";
 							int m = 0;
