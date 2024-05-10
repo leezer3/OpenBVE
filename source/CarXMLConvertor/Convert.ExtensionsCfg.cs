@@ -572,6 +572,7 @@ namespace CarXmlConvertor
 			newLines.Add("<EmergencyRate>" + ConvertTrainDat.BrakeCylinderEmergencyRate + "</EmergencyRate>");
 			newLines.Add("<ReleaseRate>" + ConvertTrainDat.BrakeCylinderReleaseRate + "</ReleaseRate>");
 			newLines.Add("</BrakeCylinder>");
+			newLines.Add("<LegacyPressureDistribution>true</LegacyPressureDistribution>");
 			newLines.Add("</Brake>");
 			newLines.Add("<Doors>");
 			newLines.Add("<Width>" + ConvertTrainDat.DoorWidth / 1000.0 + "</Width>");
