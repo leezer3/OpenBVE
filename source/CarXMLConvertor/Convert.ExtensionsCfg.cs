@@ -459,6 +459,7 @@ namespace CarXmlConvertor
 				}
 				newLines.Add("<Power>");
 				newLines.Add("<Notches>" + ConvertTrainDat.PowerNotches + "</Notches>");
+				newLines.Add("<!-- Note that XML figures are per-car as opposed to a blended figure for the complete train in Train.dat -->");
 				newLines.Add("<AccelerationCurves>");
 				foreach (ConvertTrainDat.AccelerationCurve curve in ConvertTrainDat.AccelerationCurves)
 				{
@@ -468,6 +469,8 @@ namespace CarXmlConvertor
 					newLines.Add("<StageOneSpeed>" + curve.StageOneSpeed + "</StageOneSpeed>");
 					newLines.Add("<StageTwoSpeed>" + curve.StageTwoSpeed + "</StageTwoSpeed>");
 					newLines.Add("<StageTwoExponent>" + curve.StageTwoExponent + "</StageTwoExponent>");
+					newLines.Add("<!-- If manually setting the acceleration figures per motor car, you will normally want a multiplier of 1.0 -->");
+					newLines.Add("<Multiplier>" + curve.StageTwoExponent + "</Multiplier>");
 					newLines.Add("</OpenBVE>");
 				}
 				newLines.Add("</AccelerationCurves>");
