@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace OpenBveApi
 {
@@ -72,6 +73,12 @@ namespace OpenBveApi
 			}
 			Builder.Append(Text, Start, Text.Length - Start);
 			return Builder.ToString();
+		}
+
+		/// <summary>Provides an escaped copy of a string</summary>
+		public static string Escape(this string text)
+		{
+			return new XElement("t", text).LastNode.ToString();
 		}
 
 		/// <summary>Determines whether the specified string is encoded using Shift_JIS (Japanese)</summary>

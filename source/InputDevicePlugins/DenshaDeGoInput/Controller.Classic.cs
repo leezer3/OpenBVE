@@ -54,6 +54,12 @@ namespace DenshaDeGoInput
 		/// <summary>The OpenTK joystick index for this controller.</summary>
 		private int joystickIndex;
 
+		/// <summary>Hack: Brake handle delay for certain buggy adapters.</summary>
+		private const int BrakeHandleDelay = 5;
+
+		/// <summary>The delay for the emergency brake notch.</summary>
+		private int emergencyNotchDelay = BrakeHandleDelay;
+
 		/// <summary>
 		/// Class for the indices of the buttons used by the controller.
 		/// </summary>
@@ -267,7 +273,16 @@ namespace DenshaDeGoInput
 			if (brakeNotch != BrakeNotchesEnum.Transition && (brakeNotch == BrakeNotchesEnum.Emergency || brakeNotch >= BrakeNotchesEnum.B8))
 			{
 				// Set notch only if it is not a transition nor an unmarked notch
-				InputTranslator.BrakeNotch = BrakeNotchMap[brakeNotch];
+				// Hack for adapters with ghost input: do not trigger emergency unless brake notch is B6 or above
+				if (brakeNotch == BrakeNotchesEnum.Emergency && emergencyNotchDelay > 0)
+				{
+					emergencyNotchDelay--;
+				}
+				else
+				{
+					InputTranslator.BrakeNotch = BrakeNotchMap[brakeNotch];
+					emergencyNotchDelay = BrakeHandleDelay;
+				}
 			}
 			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] = joystick.GetButton(ButtonIndex.Select);
 			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] = joystick.GetButton(ButtonIndex.Start);

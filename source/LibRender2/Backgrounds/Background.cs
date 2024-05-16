@@ -347,7 +347,7 @@ namespace LibRender2.Backgrounds
 						data.Object.Mesh.Materials[face.Material].WrapMode = wrap;
 					}
 				}
-
+				GL.Enable(EnableCap.DepthClamp);
 				if (renderer.AvailableNewRenderer)
 				{
 					renderer.RenderFace(renderer.DefaultShader, new ObjectState(data.Object), face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
@@ -356,6 +356,7 @@ namespace LibRender2.Backgrounds
 				{
 					renderer.RenderFaceImmediateMode(new ObjectState(data.Object), face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
 				}
+				GL.Disable(EnableCap.DepthClamp);
 			}
 		}
 	}

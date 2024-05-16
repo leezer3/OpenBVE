@@ -94,7 +94,7 @@ namespace OpenBve
 			using (StreamWriter outputFile = new StreamWriter(CrashLog))
             {
                 //Basic information
-                outputFile.WriteLine(DateTime.Now);
+                outputFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 outputFile.WriteLine("OpenBVE " + Application.ProductVersion + " Crash Log");
                 var Platform = "Unknown";
                 if (OpenTK.Configuration.RunningOnWindows)
@@ -187,7 +187,7 @@ namespace OpenBve
 			using (StreamWriter outputFile = new StreamWriter(CrashLog))
             {
                 //Basic information
-                outputFile.WriteLine(DateTime.Now);
+                outputFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 outputFile.WriteLine("OpenBVE " + Application.ProductVersion + " Crash Log");
                 var Platform = "Unknown";
                 if (OpenTK.Configuration.RunningOnWindows)

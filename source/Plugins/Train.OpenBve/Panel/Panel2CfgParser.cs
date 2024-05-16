@@ -322,6 +322,7 @@ namespace Train.OpenBve
 							case PanelSections.PilotLamp:
 								{
 									string Subject = "true";
+									string Function = string.Empty;
 									double LocationX = 0.0, LocationY = 0.0;
 									string DaytimeImage = null, NighttimeImage = null;
 									Color24 TransparentColor = Color24.Blue;
@@ -335,6 +336,9 @@ namespace Train.OpenBve
 											switch (Key) {
 												case PanelKey.Subject:
 													Subject = Value;
+													break;
+												case PanelKey.Function: 
+													Function = Value;
 													break;
 												case PanelKey.Location:
 													int k = Value.IndexOf(',');
@@ -402,7 +406,15 @@ namespace Train.OpenBve
 										string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
 										try
 										{
-											Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
+											if (!string.IsNullOrEmpty(Function))
+											{
+												Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, Function, true);
+											}
+											else
+											{
+												Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
+											}
+											
 										}
 										catch
 										{
@@ -413,6 +425,7 @@ namespace Train.OpenBve
 							case PanelSections.Needle:
 								{
 									string Subject = "true";
+									string Function = string.Empty;
 									double LocationX = 0.0, LocationY = 0.0;
 									string DaytimeImage = null, NighttimeImage = null;
 									Color32 Color = Color32.White;
@@ -433,6 +446,9 @@ namespace Train.OpenBve
 											switch (Key) {
 												case PanelKey.Subject:
 													Subject = Value;
+													break;
+												case PanelKey.Function:
+													Function = Value;
 													break;
 												case PanelKey.Location:
 													{
@@ -609,7 +625,14 @@ namespace Train.OpenBve
 										}
 										try
 										{
-											Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
+											if (!string.IsNullOrEmpty(Function))
+											{
+												Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, Function, true);
+											}
+											else
+											{
+												Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
+											}
 										}
 										catch
 										{
@@ -625,6 +648,7 @@ namespace Train.OpenBve
 							case PanelSections.LinearGauge:
 									{
 									string Subject = "true";
+									string Function = string.Empty;
 									int Width = 0;
 									Vector2 Direction = new Vector2(1,0);
 									double LocationX = 0.0, LocationY = 0.0;
@@ -641,6 +665,9 @@ namespace Train.OpenBve
 											switch (Key) {
 												case PanelKey.Subject:
 													Subject = Value;
+													break;
+												case PanelKey.Function:
+													Function = Value;
 													break;
 												case PanelKey.Location:
 													int k = Value.IndexOf(',');
@@ -745,12 +772,19 @@ namespace Train.OpenBve
 											break;
 										}
 										string tf = GetInfixFunction(Car.baseTrain, Subject, Minimum, Maximum, Width, tday.Width, Section + " in " + FileName);
-										if (tf != String.Empty)
+										if (!string.IsNullOrEmpty(tf) || !string.IsNullOrEmpty(Function))
 										{
 											Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
 											try
 											{
-												Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, tf, false);
+												if (!string.IsNullOrEmpty(Function))
+												{
+													Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, Function, true);
+												}
+												else
+												{
+													Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, tf, false);
+												}
 											}
 											catch
 											{
@@ -762,6 +796,7 @@ namespace Train.OpenBve
 							case PanelSections.DigitalNumber:
 								{
 									string Subject = "true";
+									string Function = string.Empty;
 									double LocationX = 0.0, LocationY = 0.0;
 									string DaytimeImage = null, NighttimeImage = null;
 									Color24 TransparentColor = Color24.Blue;
@@ -775,6 +810,9 @@ namespace Train.OpenBve
 											switch (Key) {
 												case PanelKey.Subject:
 													Subject = Value;
+													break;
+												case PanelKey.Function:
+													Function = Value;
 													break;
 												case PanelKey.Location:
 													int k = Value.IndexOf(',');
@@ -922,7 +960,14 @@ namespace Train.OpenBve
 											string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
 											try
 											{
-												Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+												if (!string.IsNullOrEmpty(Function))
+												{
+													Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, Function, true);
+												}
+												else
+												{
+													Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+												}
 											}
 											catch
 											{
@@ -958,6 +1003,7 @@ namespace Train.OpenBve
 							case PanelSections.DigitalGauge:
 								{
 									string Subject = "true";
+									string Function = string.Empty;
 									double LocationX = 0.0, LocationY = 0.0;
 									Color32 Color = Color32.Black;
 									double Radius = 0.0;
@@ -974,6 +1020,9 @@ namespace Train.OpenBve
 											switch (Key) {
 												case PanelKey.Subject:
 													Subject = Value;
+													break;
+												case PanelKey.Function:
+													Function = Value;
 													break;
 												case PanelKey.Location:
 													int k = Value.IndexOf(',');
@@ -1113,7 +1162,14 @@ namespace Train.OpenBve
 										f += " " + a1.ToString(Culture) + " " + a0.ToString(Culture) + " fma";
 										try
 										{
-											Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, f, false);
+											if (!string.IsNullOrEmpty(Function))
+											{
+												Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, Function, true);
+											}
+											else
+											{
+												Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, f, false);
+											}
 										}
 										catch
 										{

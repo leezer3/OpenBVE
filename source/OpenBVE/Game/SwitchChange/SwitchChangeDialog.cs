@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using LibRender2;
 using LibRender2.Primitives;
@@ -34,10 +33,12 @@ using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
+using OpenBveApi.Routes;
+using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using RouteManager2;
 using TrainManager;
-using TrainManager.SafetySystems;
 using MouseCursor = OpenTK.MouseCursor;
 using Vector2 = OpenBveApi.Math.Vector2;
 
@@ -49,6 +50,10 @@ namespace OpenBve
 		internal Picturebox MapPicturebox = new Picturebox(Program.Renderer);
 		/// <summary>The close button</summary>
 		internal Button CloseButton = new Button(Program.Renderer, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"panel", "close"}));
+		/// <summary>The zoom in button</summary>
+		internal Button ZoomInButton = new Button(Program.Renderer, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "switchmenu", "zoom_in" }));
+		/// <summary>The zoom in button</summary>
+		internal Button ZoomOutButton = new Button(Program.Renderer, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "switchmenu", "zoom_out" }));
 		/// <summary>The title label</summary>
 		internal Label TitleLabel = new Label(Program.Renderer, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "title"}));
 		/// <summary>The GUID of the currently selected switch</summary>
@@ -56,22 +61,33 @@ namespace OpenBve
 		/// <summary>The list of available switches</summary>
 		internal Dictionary<Guid, Vector2> AvailableSwitches;
 
+		private TrackFollower trackFollower;
+
+		private int drawRadius;
+
 		internal SwitchChangeDialog()
 		{
 			MapPicturebox.Location = new Vector2(0, 0);
 			CloseButton.OnClick += Close;
+			ZoomInButton.OnClick += ZoomIn;
+			ZoomOutButton.OnClick += ZoomOut;
 		}
 
 		internal void Show()
 		{
+			trackFollower = Program.Renderer.Camera.CurrentMode <= CameraViewMode.Exterior ? TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower : Program.Renderer.CameraTrackFollower;
+			drawRadius = 500;
 			Program.currentGameWindow.CursorVisible = true;
 			Program.Renderer.SetCursor(MouseCursor.Default); // as we may have hidden the cursor through inactivity or be over a touch control when triggering
 			Program.Renderer.CurrentOutputMode = OutputMode.None;
 			MapPicturebox.Size = new Vector2(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height); // as size may have changed between fullscreen etc.
 			CloseButton.Location = new Vector2(Program.Renderer.Screen.Width * 0.9, Program.Renderer.Screen.Height * 0.9);
+			ZoomInButton.Location = new Vector2(Program.Renderer.Screen.Width * 0.7, Program.Renderer.Screen.Height * 0.9);
+			ZoomOutButton.Location = new Vector2(ZoomInButton.Location.X - ZoomOutButton.Size.X - 5, Program.Renderer.Screen.Height * 0.9);
 			TextureManager.UnloadTexture(ref MapPicturebox.Texture);
-			Program.CurrentHost.RegisterTexture(Illustrations.CreateRouteMap(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, true, out AvailableSwitches, TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition), new TextureParameters(null, null), out MapPicturebox.Texture);
+			Program.CurrentHost.RegisterTexture(Illustrations.CreateRouteMap(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, true, out AvailableSwitches, trackFollower, drawRadius), new TextureParameters(null, null), out MapPicturebox.Texture);
 			TitleLabel.Location = new Vector2(Program.Renderer.Screen.Width * 0.5 - TitleLabel.Size.X * 0.5, 5);
+			
 		}
 
 		internal void Draw()
@@ -80,11 +96,21 @@ namespace OpenBve
 			if (selectedSwitch != Guid.Empty)
 			{
 				// Switch details
-				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "selected"}) + Program.CurrentRoute.Switches[selectedSwitch].Name, new Vector2(10, 30), TextAlignment.CenterLeft, Color128.White);
-				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "current"}) + Program.CurrentRoute.Switches[selectedSwitch].CurrentSetting, new Vector2(10, 50), TextAlignment.CenterLeft, Color128.White);
-				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "distance"}) + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[selectedSwitch].TrackPosition) + "m", new Vector2(10, 70), TextAlignment.CenterLeft, Color128.White);
+
+				Vector2 textLocation = new Vector2(10, 30);
+				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"switchmenu", "selected"}) + Program.CurrentRoute.Switches[selectedSwitch].Name, textLocation, TextAlignment.CenterLeft, Color128.White);
+				textLocation.Y += 20;
+				if (!Program.CurrentRoute.Switches[selectedSwitch].FixedRoute)
+				{
+					// don't draw alternate path names for player path
+					Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "switchmenu", "current" }) + Program.CurrentRoute.Switches[selectedSwitch].CurrentSetting, textLocation, TextAlignment.CenterLeft, Color128.White);
+					textLocation.Y += 20;
+				}
+				Program.Renderer.OpenGlString.Draw(Program.Renderer.Fonts.NormalFont, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "switchmenu", "distance" }) + (TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - Program.CurrentRoute.Switches[selectedSwitch].TrackPosition) + "m", textLocation, TextAlignment.CenterLeft, Color128.White);	
 			}
 			// Draw last so they overlay any curves on the map which are OTT
+			ZoomInButton.Draw();
+			ZoomOutButton.Draw();
 			CloseButton.Draw();
 			TitleLabel.Draw();
 		}
@@ -121,7 +147,8 @@ namespace OpenBve
 				// Not found an appropriate switch, so set back to default
 				Program.currentGameWindow.Cursor = MouseCursor.Default;
 			}
-
+			ZoomInButton.MouseMove(x, y);
+			ZoomOutButton.MouseMove(x, y);
 		}
 
 		/// <summary>Processes a mouse down event</summary>
@@ -136,9 +163,39 @@ namespace OpenBve
 				Program.CurrentRoute.Switches[selectedSwitch].Toggle();
 				// Unload existing texture and re-create with new path
 				TextureManager.UnloadTexture(ref MapPicturebox.Texture);
-				Program.CurrentHost.RegisterTexture(Illustrations.CreateRouteMap(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, true, out AvailableSwitches, TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition), new TextureParameters(null, null), out MapPicturebox.Texture);
+				Program.CurrentHost.RegisterTexture(Illustrations.CreateRouteMap(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, true, out AvailableSwitches, trackFollower, drawRadius), new TextureParameters(null, null), out MapPicturebox.Texture);
 			}
 			CloseButton.MouseDown(x, y);
+			ZoomInButton.MouseDown(x, y);
+			ZoomOutButton.MouseDown(x, y);
+		}
+
+		/// <summary>Zooms the map in</summary>
+		internal void ZoomIn(object sender, EventArgs e)
+		{
+			if (drawRadius < 50)
+			{
+				return;
+			}
+
+			drawRadius /= 2;
+			// Unload existing texture and re-create with new path
+			TextureManager.UnloadTexture(ref MapPicturebox.Texture);
+			Program.CurrentHost.RegisterTexture(Illustrations.CreateRouteMap(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, true, out AvailableSwitches, trackFollower, drawRadius), new TextureParameters(null, null), out MapPicturebox.Texture);
+		}
+
+		/// <summary>Zooms the map out</summary>
+		internal void ZoomOut(object sender, EventArgs e)
+		{
+			if (drawRadius > 1000)
+			{
+				return;
+			}
+			
+			drawRadius *= 2;
+			// Unload existing texture and re-create with new path
+			TextureManager.UnloadTexture(ref MapPicturebox.Texture);
+			Program.CurrentHost.RegisterTexture(Illustrations.CreateRouteMap(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, true, out AvailableSwitches, trackFollower, drawRadius), new TextureParameters(null, null), out MapPicturebox.Texture);
 		}
 
 		internal void Close(object sender, EventArgs e)

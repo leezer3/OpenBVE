@@ -407,6 +407,23 @@ namespace RouteViewer {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.PlayerTrainDistance:
+						double playerDist = double.MaxValue;
+						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+						{
+							double fx = TrainManager.PlayerTrain.Cars[j].FrontAxle.Follower.WorldPosition.X - Position.X;
+							double fy = TrainManager.PlayerTrain.Cars[j].FrontAxle.Follower.WorldPosition.Y - Position.Y;
+							double fz = TrainManager.PlayerTrain.Cars[j].FrontAxle.Follower.WorldPosition.Z - Position.Z;
+							double f = fx * fx + fy * fy + fz * fz;
+							if (f < playerDist) playerDist = f;
+							double rx = TrainManager.PlayerTrain.Cars[j].RearAxle.Follower.WorldPosition.X - Position.X;
+							double ry = TrainManager.PlayerTrain.Cars[j].RearAxle.Follower.WorldPosition.Y - Position.Y;
+							double rz = TrainManager.PlayerTrain.Cars[j].RearAxle.Follower.WorldPosition.Z - Position.Z;
+							double r = rx * rx + ry * ry + rz * rz;
+							if (r < playerDist) playerDist = r;
+						}
+						Function.Stack[s] = Math.Sqrt(playerDist);
+						s++; break;
 					case Instructions.TrainDistance:
 						if (Train != null) {
 							double dist = double.MaxValue;
@@ -443,6 +460,11 @@ namespace RouteViewer {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.PlayerTrackDistance:
+						double pt0 = TrainManager.PlayerTrain.FrontCarTrackPosition;
+						double pt1 = TrainManager.PlayerTrain.RearCarTrackPosition;
+						Function.Stack[s] = TrackPosition > pt0 ? TrackPosition - pt0 : TrackPosition < pt1 ? TrackPosition - pt1 : 0.0;
+						s++; break;
 					case Instructions.TrainTrackDistance:
 						if (Train != null) {
 							double t0 = Train.FrontCarTrackPosition;

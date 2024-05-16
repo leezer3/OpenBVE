@@ -136,14 +136,20 @@ namespace RouteViewer
 								{
 									if (Program.CurrentHost.Plugins[i].Texture.LoadTexture(path, out texture))
 									{
-										//texture.CompatibleTransparencyMode = Interface.CurrentOptions.OldTransparencyMode;
+										texture.CompatibleTransparencyMode = false;
 										texture = texture.ApplyParameters(parameters);
 										return true;
 									}
-									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadTexture");
+									if (!FailedTextures.Contains(path))
+									{
+										FailedTextures.Add(path);
+										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadTexture");
+									}
+
 								}
 								catch (Exception ex)
 								{
+									// exception may be transient
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at LoadTexture:" + ex.Message);
 								}
 							}
@@ -157,11 +163,19 @@ namespace RouteViewer
 				FileInfo f = new FileInfo(path);
 				if (f.Length == 0)
 				{
-					Interface.AddMessage(MessageType.Error, false, "Zero-byte texture file encountered at " + path);
+					if (!FailedTextures.Contains(path))
+					{
+						FailedTextures.Add(path);
+						Interface.AddMessage(MessageType.Error, false, "Zero-byte texture file encountered at " + path);
+					}
 				}
 				else
 				{
-					Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading texture " + path);
+					if (!FailedTextures.Contains(path))
+					{
+						FailedTextures.Add(path);
+						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading texture " + path);
+					}
 				}
 			}
 			else
@@ -307,35 +321,67 @@ namespace RouteViewer
 
 		public override bool LoadStaticObject(string path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
 		{
-			Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
-			if (File.Exists(path) || Directory.Exists(path)) {
-				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
-					if (Program.CurrentHost.Plugins[i].Object != null) {
-						try {
-							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path)) {
-								try {
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out UnifiedObject unifiedObject)) {
+			if (base.LoadStaticObject(path, Encoding, PreserveVertices, out Object))
+			{
+				return true;
+			}
+
+			if (File.Exists(path) || Directory.Exists(path))
+			{
+				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
+
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Object != null)
+					{
+						try
+						{
+							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path))
+							{
+								try
+								{
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out var unifiedObject))
+									{
 										if (unifiedObject is StaticObject staticObject)
 										{
 											staticObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
 											Object = staticObject;
+											StaticObjectCache.Add(ValueTuple.Create(path, PreserveVertices), Object);
 											return true;
 										}
+
 										Object = null;
+										// may be trying to load in different places, so leave
 										Interface.AddMessage(MessageType.Error, false, "Attempted to load " + path + " which is an animated object where only static objects are allowed.");
 									}
-									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
-								} catch (Exception ex) {
+									if (!FailedObjects.Contains(path))
+									{
+										FailedObjects.Add(path);
+										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
+									}
+
+								}
+								catch (Exception ex)
+								{
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at LoadObject:" + ex.Message);
 								}
 							}
-						} catch (Exception ex) {
+						}
+						catch (Exception ex)
+						{
 							Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at CanLoadObject:" + ex.Message);
 						}
 					}
 				}
-				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
-			} else {
+				if (!FailedObjects.Contains(path))
+				{
+					FailedObjects.Add(path);
+					Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+				}
+
+			}
+			else
+			{
 				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			Object = null;
@@ -349,16 +395,22 @@ namespace RouteViewer
 				return true;
 			}
 
-			if (File.Exists(path) || Directory.Exists(path)) {
+			if (File.Exists(path) || Directory.Exists(path))
+			{
 				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
 
-				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
-					if (Program.CurrentHost.Plugins[i].Object != null) {
-						try {
-							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path)) {
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Object != null)
+					{
+						try
+						{
+							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path))
+							{
 								try
 								{
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out UnifiedObject obj)) {
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out UnifiedObject obj))
+									{
 										if (obj == null)
 										{
 											continue;
@@ -379,21 +431,46 @@ namespace RouteViewer
 
 										return true;
 									}
-									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
-								} catch (Exception ex) {
+									if (!FailedObjects.Contains(path))
+									{
+										FailedObjects.Add(path);
+										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
+									}
+
+								}
+								catch (Exception ex)
+								{
+									// exception may be transient
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at LoadObject:" + ex.Message);
 								}
 							}
-						} catch (Exception ex) {
+						}
+						catch (Exception ex)
+						{
 							Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at CanLoadObject:" + ex.Message);
 						}
 					}
 				}
-				if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()))
+				FileInfo f = new FileInfo(path);
+				if (f.Length == 0)
 				{
-					Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()) && !FailedObjects.Contains(path))
+					{
+						FailedObjects.Add(path);
+						Interface.AddMessage(MessageType.Error, false, "Zero-byte object file encountered at " + path);
+					}
 				}
-			} else {
+				else
+				{
+					if (!NullFiles.Contains(Path.GetFileNameWithoutExtension(path).ToLowerInvariant()) && !FailedObjects.Contains(path))
+					{
+						FailedObjects.Add(path);
+						Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+					}
+				}
+			}
+			else
+			{
 				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			Object = null;

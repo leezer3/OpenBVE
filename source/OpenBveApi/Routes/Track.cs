@@ -18,6 +18,12 @@ namespace OpenBveApi.Routes
 		/// <summary>The default direction of travel on this track</summary>
 		public TrackDirection Direction;
 
+		/// <summary>Creates a new track</summary>
+		public Track()
+		{
+			Elements = new TrackElement[256];
+		}
+
 		/// <summary>Gets the innacuracy (Gauge spread and track bounce) for a given track position and routefile innacuracy value</summary>
 		/// <param name="position">The track position</param>
 		/// <param name="inaccuracy">The openBVE innacuaracy value</param>

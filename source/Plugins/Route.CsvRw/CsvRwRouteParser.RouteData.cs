@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using RouteManager2.SignalManager;
 
@@ -18,7 +19,7 @@ namespace CsvRwRouteParser
 			internal double UnitOfSpeed;
 			internal bool SignedCant;
 			internal bool FogTransitionMode;
-			internal readonly StructureData Structure = new StructureData();
+			internal readonly StructureData Structure;
 			internal SignalDictionary Signals;
 			internal CompatibilitySignalObject[] CompatibilitySignals;
 			internal Texture[] TimetableDaytime;
@@ -34,10 +35,29 @@ namespace CsvRwRouteParser
 			internal bool ValueBasedSections = false;
 			internal bool TurnUsed = false;
 			internal bool SwitchUsed = false;
+
+			internal List<string> ScriptedTrainFiles;
 			/*
 			 * HMMSIM
 			 */
 			internal readonly Dictionary<string, int> RailKeys = new Dictionary<string, int>();
+
+			internal RouteData(bool previewOnly)
+			{
+				BlockInterval = 25.0;
+				FirstUsedBlock = -1;
+				Blocks = new List<Block>();
+				Structure = new StructureData();
+				ScriptedTrainFiles = new List<string>();
+				Blocks.Add(new Block(previewOnly));
+				Blocks[0].Rails.Add(0, new Rail { RailStarted = true });
+				Blocks[0].RailType = new[] { 0 };
+				Blocks[0].Accuracy = 2.0;
+				Blocks[0].AdhesionMultiplier = 1.0;
+				Blocks[0].CurrentTrackState = new TrackElement(0.0);
+				Blocks[0].RailCycles = new RailCycle[1];
+				Blocks[0].RailCycles[0].RailCycleIndex = -1;
+			}
 
 			/// <summary>Creates any missing blocks</summary>
 			/// <param name="ToIndex">The block index to process until</param>

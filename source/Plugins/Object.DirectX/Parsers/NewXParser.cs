@@ -463,7 +463,12 @@ namespace Plugin
 						}
 						for (int j = 0; j < nVertexNormals; j++)
 						{
-							builder.Faces[i].Vertices[j].Normal = normals[block.ReadUInt()];
+							int normalIdx = block.ReadUInt();
+							if (normalIdx < normals.Length)
+							{
+								// Check normal index is valid
+								builder.Faces[i].Vertices[j].Normal = normals[normalIdx];
+							}
 						}
 					}
 					break;

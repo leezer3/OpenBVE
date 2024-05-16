@@ -3444,7 +3444,7 @@ namespace CsvRwRouteParser
 							if (idx != 0)
 							{
 								int block = BlockIndex;
-								while (Data.Blocks[block].Rails.ContainsKey(idx))
+								while (Data.Blocks[block].Rails.ContainsKey(idx) && block > 0)
 								{
 									Data.Blocks[block].Rails[idx].IsDriveable = true;
 									if (Data.Blocks[block].Rails[idx].RailEnded)
@@ -3457,7 +3457,7 @@ namespace CsvRwRouteParser
 							if (idx1 != 0)
 							{
 								int block = BlockIndex;
-								while (Data.Blocks[block].Rails.ContainsKey(idx1))
+								while (Data.Blocks[block].Rails.ContainsKey(idx1) && block > 0)
 								{
 									Data.Blocks[block].Rails[idx1].IsDriveable = true;
 									if (Data.Blocks[block].Rails[idx1].RailEnded)
@@ -3473,7 +3473,7 @@ namespace CsvRwRouteParser
 							if (idx != 0)
 							{
 								int block = BlockIndex;
-								while (Data.Blocks[block].Rails.ContainsKey(idx))
+								while (Data.Blocks[block].Rails.ContainsKey(idx) && block > 0)
 								{
 									Data.Blocks[block].Rails[idx].IsDriveable = true;
 									if (Data.Blocks[block].Rails[idx].RailStarted)
@@ -3486,7 +3486,7 @@ namespace CsvRwRouteParser
 							if (idx1 != 0)
 							{
 								int block = BlockIndex;
-								while (Data.Blocks[block].Rails.ContainsKey(idx1))
+								while (Data.Blocks[block].Rails.ContainsKey(idx1) && block > 0)
 								{
 									Data.Blocks[block].Rails[idx1].IsDriveable = true;
 									if (Data.Blocks[block].Rails[idx1].RailStarted)
@@ -3527,10 +3527,16 @@ namespace CsvRwRouteParser
 						break;
 					}
 
-						if (idx != 0)
+					string switchName = string.Empty;
+					if (Arguments.Length >= 3 && Arguments[2].Length > 0)
+					{
+						switchName = Arguments[4];
+					}
+
+					if (idx != 0)
 					{
 						int block = BlockIndex;
-						while (Data.Blocks[block].Rails.ContainsKey(idx))
+						while (Data.Blocks[block].Rails.ContainsKey(idx) && block > 0)
 						{
 							Data.Blocks[block].Rails[idx].IsDriveable = true;
 							if (Data.Blocks[block].Rails[idx].RailEnded)
@@ -3543,7 +3549,7 @@ namespace CsvRwRouteParser
 					if (idx1 != 0)
 					{
 						int block = BlockIndex;
-						while (Data.Blocks[block].Rails.ContainsKey(idx1))
+						while (Data.Blocks[block].Rails.ContainsKey(idx1) && block > 0)
 						{
 							Data.Blocks[block].Rails[idx1].IsDriveable = true;
 							if (Data.Blocks[block].Rails[idx1].RailEnded)
@@ -3561,7 +3567,8 @@ namespace CsvRwRouteParser
 					{
 						SecondTrack = idx1,
 						FixedRoute = true,
-						InitialSetting = idx1
+						InitialSetting = idx1,
+						Name = switchName
 					};
 				}
 					break;

@@ -123,6 +123,8 @@ namespace OpenBveApi.Hosts {
 			StaticObjectCache = new Dictionary<ValueTuple<string, bool>, StaticObject>();
 			AnimatedObjectCollectionCache = new Dictionary<string, AnimatedObjectCollection>();
 			MissingFiles = new List<string>();
+			FailedObjects = new List<string>();
+			FailedTextures = new List<string>();
 		}
 
 		/// <summary></summary>
@@ -135,8 +137,18 @@ namespace OpenBveApi.Hosts {
 		{
 		}
 
+		public void ClearErrors()
+		{
+			MissingFiles.Clear();
+
+		}
+
 		/// <summary>Contains a list of missing files encountered</summary>
 		public readonly List<string> MissingFiles;
+		/// <summary>Contains a list of objects which failed to load</summary>
+		public readonly List<string> FailedObjects;
+		/// <summary>Contains a list of textures which failed to load</summary>
+		public readonly List<string> FailedTextures;
 
 		/// <summary>Queries the dimensions of a texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>

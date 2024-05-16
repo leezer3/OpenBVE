@@ -32,5 +32,7 @@
 		/// <remarks>Appears to be a constant acceleration value at all times.
 		/// As we simulate the train fully, it's not really useful.</remarks>
 		Acceleration,
+		/// <summary>Contains a URL where the train may be downloaded if not currently posessed by the player</summary>
+		DownloadLocation
 	}
 }

@@ -57,6 +57,11 @@ namespace OpenBve
 								{
 									if (a > c)
 									{
+										// Train [i] driving in the nominal R direction collides with the front of [j]
+										if (Trains[j].Cars[0].FrontAxle.Follower.TrackIndex != Trains[i].Cars[Trains[i].Cars.Length - 1].RearAxle.Follower.TrackIndex)
+										{
+											continue;
+										}
 										// i > j
 										int k = Trains[i].Cars.Length - 1;
 										if (Trains[i].Cars[k].CurrentSpeed < Trains[j].Cars[0].CurrentSpeed)
@@ -151,6 +156,11 @@ namespace OpenBve
 									}
 									else
 									{
+										// Train [i] driving in the nominal F direction collides with rear of [j]
+										if (Trains[i].Cars[0].FrontAxle.Follower.TrackIndex != Trains[j].Cars[Trains[j].Cars.Length - 1].RearAxle.Follower.TrackIndex)
+										{
+											continue;
+										}
 										// i < j
 										int k = Trains[j].Cars.Length - 1;
 										if (Trains[i].Cars[0].CurrentSpeed > Trains[j].Cars[k].CurrentSpeed)

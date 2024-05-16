@@ -423,7 +423,7 @@ namespace Plugin
 			{
 				for (int j = 0; j < shape.LODs[i].subObjects.Count; j++)
 				{
-					Result.Objects[idx] = new AnimatedObject(Plugin.currentHost);
+					Result.Objects[idx] = new AnimatedObject(Plugin.currentHost, fileName);
 					Result.Objects[idx].States = new ObjectState[1];
 					ObjectState aos = new ObjectState();
 					shape.LODs[i].subObjects[j].Apply(out aos.Prototype);

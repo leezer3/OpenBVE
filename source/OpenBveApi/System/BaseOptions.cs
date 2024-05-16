@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Graphics;
+using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
@@ -101,5 +101,10 @@ namespace OpenBveApi
 		public bool UseGDIDecoders;
 		/// <summary>The filename of the current cursor</summary>
 		public string CursorFileName;
+		/// <summary>The download location for the train required by the current route</summary>
+		public string TrainDownloadLocation = "";
+		/// <summary>Whether delayed animated updates based upon track position are used</summary>
+		/// <remarks>Not saved</remarks>
+		public bool DelayedAnimatedUpdates;
 	}
 }

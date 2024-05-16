@@ -106,16 +106,13 @@ namespace RouteManager2
 		public  static int	LastRouteMinZ => lastRouteMinZ;
 		public  static int	LastRouteMaxZ => lastRouteMaxZ;
 
-		private static int CurrentTrack;
-
 		/// <summary>Creates and returns the route map as Bitmap.</summary>
 		/// <returns>The route map.</returns>
 		/// <param name="Width">The width of the bitmap to create.</param>
 		/// <param name="Height">The height of the bitmap to create.</param>
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
-		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, out Dictionary<Guid, Vector2> switchPositions, double trackPosition = -1, int currentTrack = 0)
+		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, out Dictionary<Guid, Vector2> switchPositions, TrackFollower follower = null, int drawRadius = 500)
 		{
-			CurrentTrack = currentTrack;
 			switchPositions = null;
 			if (CurrentRoute.Tracks[0].Elements == null)
 			{
@@ -123,9 +120,9 @@ namespace RouteManager2
 				return new Bitmap(1,1);
 			}
 			int firstUsedElement, lastUsedElement;
-			if (trackPosition != -1)
+			if (follower != null)
 			{
-				RestrictedRouteRange(0, trackPosition, 500, out firstUsedElement, out lastUsedElement);
+				RestrictedRouteRange(follower, drawRadius, out firstUsedElement, out lastUsedElement);
 			}
 			else
 			{
@@ -179,7 +176,7 @@ namespace RouteManager2
 			// create bitmap
 
 			MapMode mode = inGame ? MapMode.InGame : MapMode.Preview;
-			if (trackPosition != -1)
+			if (follower != null)
 			{
 				mode = MapMode.SecondaryTrack;
 			}
@@ -232,12 +229,12 @@ namespace RouteManager2
 
 			if (mode == MapMode.SecondaryTrack)
 			{
-				RestrictedRouteRange(currentTrack, trackPosition, 500, out int firstTrackUsedElement, out int lastTrackUsedElement);
-				DrawPlayerPath(g, currentTrack, firstTrackUsedElement, lastTrackUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
+				RestrictedRouteRange(follower, drawRadius, out int firstTrackUsedElement, out int lastTrackUsedElement);
+				DrawPlayerPath(g, follower, firstTrackUsedElement, lastTrackUsedElement, imageOrigin, imageSize, imageScale, x0, z0);
 			}
 
 			
-			if (trackPosition != -1)
+			if (follower != null)
 			{
 				switchPositions = new Dictionary<Guid, Vector2>();
 				// Find switches
@@ -421,7 +418,7 @@ namespace RouteManager2
 			
 			if (inGame)
 			{
-				if (trackPosition == -1)
+				if (follower == null)
 				{
 					// in-game map shrinks bitmap
 					xMin -= LeftPad;
@@ -669,8 +666,9 @@ namespace RouteManager2
 			return b;
 		}
 
-		private static void DrawPlayerPath(Graphics g, int key, int firstUsedElement, int lastUsedElement, Vector2 imageOrigin, Vector2 imageSize, Vector2 imageScale, double x0, double z0)
+		private static void DrawPlayerPath(Graphics g, TrackFollower follower, int firstUsedElement, int lastUsedElement, Vector2 imageOrigin, Vector2 imageSize, Vector2 imageScale, double x0, double z0)
 		{
+			int key = follower.TrackIndex;
 			Track currentTrack = CurrentRoute.Tracks[key];
 			int start = 0;
 			int elementsToDraw = Math.Min(lastUsedElement - firstUsedElement + 1, currentTrack.Elements.Length - firstUsedElement);
@@ -857,25 +855,24 @@ namespace RouteManager2
 				lastUsedElement = firstUsedElement + 1;
 		}
 
-		/// <summary>Finds the route range for the specified track position and draw radius</summary>
-		/// <param name="railIndex">The current rail index</param>
-		/// <param name="trackPosition">The track position</param>
+		/// <summary>Finds the route range for the specified track follower and draw radius</summary>
+		/// <param name="follower">The track follower</param>
 		/// <param name="drawRadius">The draw radius</param>
 		/// <param name="firstUsedElement">The index of the first used element</param>
 		/// <param name="lastUsedElement">The index of the last used element</param>
-		private static void RestrictedRouteRange(int railIndex, double trackPosition, int drawRadius, out int firstUsedElement, out int lastUsedElement)
+		private static void RestrictedRouteRange(TrackFollower follower, int drawRadius, out int firstUsedElement, out int lastUsedElement)
 		{
 			lastUsedElement = 0;
 			firstUsedElement = -1;
-			double st = Math.Max(0, trackPosition - drawRadius);
-			double et = trackPosition + drawRadius;
-			for (int i = 0; i < CurrentRoute.Tracks[railIndex].Elements.Length; i++)
+			double st = Math.Max(0, follower.TrackPosition - drawRadius);
+			double et = follower.TrackPosition + drawRadius;
+			for (int i = 0; i < CurrentRoute.Tracks[follower.TrackIndex].Elements.Length; i++)
 			{
-				if (CurrentRoute.Tracks[railIndex].Elements[i].StartingTrackPosition > st && CurrentRoute.Tracks[railIndex].Elements[i].IsDriveable && firstUsedElement == -1)
+				if (CurrentRoute.Tracks[follower.TrackIndex].Elements[i].StartingTrackPosition > st && CurrentRoute.Tracks[follower.TrackIndex].Elements[i].IsDriveable && firstUsedElement == -1)
 				{
 					firstUsedElement = i == 0 ? 0 : i - 1;
 				}
-				if (firstUsedElement != -1 && (CurrentRoute.Tracks[railIndex].Elements[i].StartingTrackPosition > et || !CurrentRoute.Tracks[railIndex].Elements[i].IsDriveable))
+				if (firstUsedElement != -1 && (CurrentRoute.Tracks[follower.TrackIndex].Elements[i].StartingTrackPosition > et || !CurrentRoute.Tracks[follower.TrackIndex].Elements[i].IsDriveable))
 				{
 					lastUsedElement = i == 0 ? 0 : i - 1;
 					break;

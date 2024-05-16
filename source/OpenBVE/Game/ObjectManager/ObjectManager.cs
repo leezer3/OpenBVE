@@ -1,3 +1,4 @@
+using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
@@ -29,7 +30,18 @@ namespace OpenBve
 					//Find the closest train
 					train = Program.CurrentHost.ClosestTrain(AnimatedWorldObjects[i].RelativeTrackPosition);
 				}
-				AnimatedWorldObjects[i].Update(train, TimeElapsed, ForceUpdate, visible);
+
+				if (ForceUpdate)
+				{
+					if (Interface.CurrentOptions.DelayedAnimatedUpdates == false || AnimatedWorldObjects[i].TrackPosition - Math.Abs(Program.Renderer.CameraTrackFollower.TrackPosition) <= 5000 || AnimatedWorldObjects[i].Object.TrackFollowerFunction != null)
+					{
+						AnimatedWorldObjects[i].Update(train, TimeElapsed, true, visible);
+					}
+				}
+				else
+				{
+					AnimatedWorldObjects[i].Update(train, TimeElapsed, false, visible);
+				}
 			}
 		}
 

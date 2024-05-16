@@ -15,6 +15,7 @@ using RouteManager2.Events;
 using RouteManager2.SignalManager;
 using RouteManager2.Tracks;
 using OpenBveApi.Hosts;
+using OpenBveApi.Trains;
 
 namespace CsvRwRouteParser
 {
@@ -173,16 +174,12 @@ namespace CsvRwRouteParser
 			Fog CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Count; i++)
 			{
-				if (Data.Blocks[i].Rails.Count > CurrentRoute.Tracks.Count)
+				for (int d = 0; d < Data.Blocks[i].Rails.Count; d++)
 				{
-					for (int d = 0; d < Data.Blocks[i].Rails.Count; d++)
+					var item = Data.Blocks[i].Rails.ElementAt(d);
+					if (!CurrentRoute.Tracks.ContainsKey(item.Key))
 					{
-						var item = Data.Blocks[i].Rails.ElementAt(d);
-						if (!CurrentRoute.Tracks.ContainsKey(item.Key))
-						{
-							CurrentRoute.Tracks.Add(item.Key, new Track());
-							CurrentRoute.Tracks[item.Key].Elements = new TrackElement[256];
-						}
+						CurrentRoute.Tracks.Add(item.Key, new Track());
 					}
 				}
 			}
@@ -224,10 +221,6 @@ namespace CsvRwRouteParser
 				for (int j = 0; j < CurrentRoute.Tracks.Count; j++)
 				{
 					var key = CurrentRoute.Tracks.ElementAt(j).Key;
-					if (CurrentRoute.Tracks[key].Elements == null || CurrentRoute.Tracks[key].Elements.Length == 0)
-					{
-						CurrentRoute.Tracks[key].Elements = new TrackElement[256];
-					}
 					if (n >= CurrentRoute.Tracks[key].Elements.Length)
 					{
 						Array.Resize(ref CurrentRoute.Tracks[key].Elements, CurrentRoute.Tracks[key].Elements.Length << 1);
@@ -601,10 +594,10 @@ namespace CsvRwRouteParser
 								}
 								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new[] { j, Data.Blocks[i].Switches[j].SecondTrack }, Data.Blocks[i].Switches[j].TrackNames, j, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition, type,  Data.Blocks[i].Switches[j].Name, Data.Blocks[i].Switches[j].FixedRoute, TrackDirection.Forwards));
 								//Assign facing switch event
-								CurrentRoute.Tracks[j].Elements[n].Events.Add(new SwitchEvent(newSwitch, CurrentRoute.Tracks[j].Elements[n].StartingTrackPosition, CurrentRoute));
+								CurrentRoute.Tracks[j].Elements[n].Events.Add(new SwitchEvent(newSwitch, CurrentRoute));
 								CurrentRoute.Tracks[j].Elements[n].Events.Add(new PointSoundEvent());
 								//Assign trailing switch event
-								CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events.Add(new SwitchEvent(newSwitch, CurrentRoute.Tracks[j].Elements[n].StartingTrackPosition, CurrentRoute));
+								CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events.Add(new SwitchEvent(newSwitch,  CurrentRoute));
 								CurrentRoute.Tracks[j].Elements[n].ContainsSwitch = true;
 							}
 							else
@@ -616,10 +609,10 @@ namespace CsvRwRouteParser
 								}
 								CurrentRoute.Switches.Add(newSwitch, new RouteManager2.Tracks.Switch(new[] { Data.Blocks[i].Switches[j].SecondTrack, j }, Data.Blocks[i].Switches[j].TrackNames, j, Data.Blocks[i].Switches[j].InitialSetting, CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition, type,  Data.Blocks[i].Switches[j].Name, Data.Blocks[i].Switches[j].FixedRoute, TrackDirection.Reverse));
 								//Assign facing switch event
-								CurrentRoute.Tracks[j].Elements[n].Events.Add(new SwitchEvent(newSwitch, CurrentRoute.Tracks[j].Elements[n].StartingTrackPosition, CurrentRoute));
+								CurrentRoute.Tracks[j].Elements[n].Events.Add(new SwitchEvent(newSwitch, CurrentRoute));
 								CurrentRoute.Tracks[j].Elements[n].Events.Add(new PointSoundEvent());
 								//Assign trailing switch event
-								CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events.Add(new SwitchEvent(newSwitch, CurrentRoute.Tracks[j].Elements[n].StartingTrackPosition, CurrentRoute));
+								CurrentRoute.Tracks[Data.Blocks[i].Switches[j].SecondTrack].Elements[n].Events.Add(new SwitchEvent(newSwitch, CurrentRoute));
 								CurrentRoute.Tracks[j].Elements[n].ContainsSwitch = true;
 								
 							}
@@ -656,9 +649,11 @@ namespace CsvRwRouteParser
 					for (int railInBlock = 0; railInBlock < Data.Blocks[i].Rails.Count; railInBlock++)
 					{
 						int railKey = Data.Blocks[i].Rails.ElementAt(railInBlock).Key;
-						if (railKey > 0 && !Data.Blocks[i].Rails[railKey].RailStarted)
+						if (railKey > 0 && !Data.Blocks[i].Rails[railKey].RailStarted && !Plugin.CurrentRoute.Tracks[railKey].Elements[n].ContainsSwitch)
 						{
+							// NOTE: If element contains a switch, it must be valid
 							Plugin.CurrentRoute.Tracks[railKey].Elements[n].InvalidElement = true;
+
 						}
 						// rail
 						Vector3 pos;
@@ -772,8 +767,9 @@ namespace CsvRwRouteParser
 						{
 							if (railKey > 0 && !Data.Blocks[i].Rails[railKey].RailStarted)
 							{
-								if (!Data.Blocks[i].Rails[railKey].RailStartRefreshed && Data.Blocks[i].Rails[railKey].RailEnded)
+								if (!Data.Blocks[i].Rails[railKey].RailStartRefreshed && Data.Blocks[i].Rails[railKey].RailEnded && !CurrentRoute.Tracks[railKey].Elements[n].ContainsSwitch)
 								{
+									// NOTE: Can't issue a railend command in the same block as a switch.
 									CurrentRoute.Tracks[railKey].Elements[n].Events.Add(new TrackEndEvent(Plugin.CurrentHost, Data.BlockInterval));
 								}
 
@@ -1271,6 +1267,22 @@ namespace CsvRwRouteParser
 					ComputeCantTangents();
 				}
 			}
+
+			if (!PreviewOnly)
+			{
+				// Create and place all scripted trains *last* to ensure that all required rails etc. are present
+				if (Plugin.TrainManager.TFOs == null)
+				{
+					Plugin.TrainManager.TFOs = new AbstractTrain[] { };
+				}
+				for (int i = 0; i < Data.ScriptedTrainFiles.Count; i++)
+				{
+					int n = Plugin.TrainManager.TFOs.Length;
+					Array.Resize(ref Plugin.TrainManager.TFOs, n + 1);
+					Plugin.TrainManager.TFOs[n] = Plugin.CurrentHost.ParseTrackFollowingObject(ObjectPath, Data.ScriptedTrainFiles[i]);
+				}
+			}
+			
 		}
 
 		private void ComputeCantTangents()

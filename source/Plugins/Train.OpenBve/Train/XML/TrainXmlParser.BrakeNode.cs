@@ -230,6 +230,16 @@ namespace Train.OpenBve
 					case "handle":
 						ParseHandleNode(c, ref Train.Handles.Brake, Car, Train, fileName);
 						break;
+					case "legacypressuredistribution":
+						if (c.InnerText == "1" || c.InnerText.ToLowerInvariant() == "true")
+						{
+							Train.Specs.AveragesPressureDistribution = true;
+						}
+						else
+						{
+							Train.Specs.AveragesPressureDistribution = false;
+						}
+						break;
 					
 				}
 			}

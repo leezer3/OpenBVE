@@ -153,6 +153,11 @@ namespace OpenBve.Formats.DirectX
 				{
 					currentPosition++;
 				}
+				if (currentPosition == text.Length - 1)
+				{
+					// Null rail converted by BVE5 : Contains texture co-ords, but the key is missing...
+					return;
+				}
 				string s = myText.Substring(p, currentPosition - 1);
 				Label = s.Trim(new char[] { });
 			}

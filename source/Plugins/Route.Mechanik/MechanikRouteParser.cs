@@ -692,7 +692,6 @@ namespace MechanikRouteParser
 			Vector2 worldDirection = Vector2.Down;
 			Vector3 trackPosition = Vector3.Zero;
 			Vector2 trackDirection = Vector2.Down;
-			Plugin.CurrentRoute.Tracks[0].Elements = new TrackElement[256];
 			
 			int CurrentTrackLength = 0;
 			double StartingDistance = 0;

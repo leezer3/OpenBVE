@@ -384,7 +384,7 @@ namespace OpenBveApi.Routes
 
 		private void CheckEvents(int ElementIndex, int Direction, double OldDelta, double NewDelta)
 		{
-			if (this.TriggerType == EventTriggerType.None || currentHost.Tracks[TrackIndex].Elements[ElementIndex].Events.Count == 0)
+			if (TriggerType == EventTriggerType.None || currentHost.Tracks[TrackIndex].Elements[ElementIndex].Events == null || currentHost.Tracks[TrackIndex].Elements[ElementIndex].Events.Count == 0)
 			{
 				return;
 			}

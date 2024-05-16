@@ -359,6 +359,12 @@ namespace OpenBve
 							Interface.AddMessage(MessageType.Error, false, $"Value is expected to be a non-negative integer number in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
 							Data.RailIndex = 0;
 						}
+
+						if (!Program.CurrentRoute.Tracks.ContainsKey(Data.RailIndex) || Program.CurrentRoute.Tracks[Data.RailIndex].Elements.Length == 0)
+						{
+							Interface.AddMessage(MessageType.Error, false, $"RailIndex is invalid in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
+							Data.RailIndex = 0;
+						}
 						break;
 				}
 			}

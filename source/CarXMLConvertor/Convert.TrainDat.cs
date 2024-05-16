@@ -241,6 +241,11 @@ namespace CarXmlConvertor
 					case "#acceleration":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
+							if (string.IsNullOrEmpty(Lines[i]))
+							{
+								i++;
+								continue;
+							}
 							AccelerationCurve curve = new AccelerationCurve();
 							string t = Lines[i] + ",";
 							int m = 0;
@@ -433,6 +438,10 @@ namespace CarXmlConvertor
 				}
 			}
 			ConvertSoundCfg.DriverPosition.Z = 0.5 * CarLength + ConvertSoundCfg.DriverPosition.Z;
+			for (int i = 0; i < AccelerationCurves.Count; i++)
+			{
+				AccelerationCurves[i].Multiplier = 1.0 + NumberOfTrailerCars * TrailerCarMass / (NumberOfMotorCars * MotorCarMass);
+			}
 		}
 
 		private static int ParseFormat(string[] lines)
@@ -462,13 +471,14 @@ namespace CarXmlConvertor
 			return 2000000;
 		}
 
-		internal struct AccelerationCurve
+		internal class AccelerationCurve
 		{
 			internal double StageZeroAcceleration;
 			internal double StageOneAcceleration;
 			internal double StageOneSpeed;
 			internal double StageTwoSpeed;
 			internal double StageTwoExponent;
+			internal double Multiplier = 1.0;
 		}
 	}
 }
