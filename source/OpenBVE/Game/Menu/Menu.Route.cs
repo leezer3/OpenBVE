@@ -10,6 +10,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Packages;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using RouteManager2;
 using Path = OpenBveApi.Path;
@@ -92,7 +93,7 @@ namespace OpenBve
 					string RailwayFolder = Loading.GetRailwayFolder(currentFile);
 					string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
 					string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
-					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(currentFile, RouteEncoding, null, ObjectFolder, SoundFolder, true, ref Route))
+					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(currentFile, RouteEncoding, null, ObjectFolder, SoundFolder, LoadingMode.Preview, ref Route))
 					{
 						Program.CurrentRoute = (CurrentRoute) Route;
 					}

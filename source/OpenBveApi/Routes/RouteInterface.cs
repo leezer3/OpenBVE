@@ -25,10 +25,10 @@ namespace OpenBveApi.Routes
 		/// <param name="trainPath">The path to the selected train</param>
 		/// <param name="objectPath">The base object folder path</param>
 		/// <param name="soundPath">The base sound folder path</param>
-		/// <param name="PreviewOnly">Whether this is a preview</param>
+		/// <param name="mode">The loading mode</param>
 		/// <param name="route">Receives the route.</param>
 		/// <returns>Whether loading the route was successful.</returns>
-		public abstract bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route);
+		public abstract bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, LoadingMode mode, ref object route);
 
 		/// <summary>Holds whether loading is currently in progress</summary>
 		public bool IsLoading;

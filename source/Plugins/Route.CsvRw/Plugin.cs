@@ -95,16 +95,16 @@ namespace CsvRwRouteParser
 		    return false;
 	    }
 
-	    /// <summary>Loads the specified route.</summary>
-	    /// <param name="path">The path to the file or folder that contains the route.</param>
-	    /// <param name="Encoding">The user-selected encoding (if appropriate)</param>
-	    /// <param name="trainPath">The path to the selected train</param>
-	    /// <param name="objectPath">The base object folder path</param>
-	    /// <param name="soundPath">The base sound folder path</param>
-	    /// <param name="PreviewOnly">Whether this is a preview</param>
-	    /// <param name="route">Receives the route.</param>
-	    /// <returns>Whether loading the sound was successful.</returns>
-	    public override bool LoadRoute(string path, Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route)
+		/// <summary>Loads the specified route.</summary>
+		/// <param name="path">The path to the file or folder that contains the route.</param>
+		/// <param name="Encoding">The user-selected encoding (if appropriate)</param>
+		/// <param name="trainPath">The path to the selected train</param>
+		/// <param name="objectPath">The base object folder path</param>
+		/// <param name="soundPath">The base sound folder path</param>
+		/// <param name="mode">The loading mode</param>
+		/// <param name="route">Receives the route.</param>
+		/// <returns>Whether loading the sound was successful.</returns>
+		public override bool LoadRoute(string path, Encoding Encoding, string trainPath, string objectPath, string soundPath, LoadingMode mode, ref object route)
 	    {
 		    if (Encoding == null)
 		    {
@@ -125,7 +125,7 @@ namespace CsvRwRouteParser
 		    try
 		    {
 				Parser parser = new Parser();
-				parser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, PreviewOnly, this);
+				parser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, mode == LoadingMode.Preview, this);
 				IsLoading = false;
 			    return true;
 		    }

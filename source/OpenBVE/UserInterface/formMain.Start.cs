@@ -1211,7 +1211,7 @@ namespace OpenBve
 			string objectFolder = Path.CombineDirectory(railwayFolder, "Object");
 			string soundFolder = Path.CombineDirectory(railwayFolder, "Sound");
 
-			if (routeInterface.LoadRoute(result.RouteFile, result.RouteEncoding, null, objectFolder, soundFolder, true, ref route))
+			if (routeInterface.LoadRoute(result.RouteFile, result.RouteEncoding, null, objectFolder, soundFolder, LoadingMode.InGame, ref route))
 			{
 				Program.CurrentRoute = (CurrentRoute)route;
 				return;

@@ -159,6 +159,7 @@
     <Compile Include="Routes\Events.cs" />
     <Compile Include="Routes\Events.TriggerTypes.cs" />
     <Compile Include="Routes\LightDefinition.cs" />
+    <Compile Include="Routes\LoadingMode.cs" />
     <Compile Include="Routes\ObjectDisposalMode.cs" />
     <Compile Include="Routes\QuadTree\QuadNode.cs" />
     <Compile Include="Routes\QuadTree\QuadNode.Internal.cs" />

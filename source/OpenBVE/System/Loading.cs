@@ -332,7 +332,7 @@ namespace OpenBve {
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
 				{
 					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
-					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false, ref Route))
+					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, LoadingMode.InGame, ref Route))
 					{
 						Program.CurrentRoute = (CurrentRoute) Route;
 						Program.CurrentRoute.UpdateLighting();
