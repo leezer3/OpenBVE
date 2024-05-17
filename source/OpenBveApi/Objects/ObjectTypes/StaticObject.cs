@@ -472,7 +472,7 @@ namespace OpenBveApi.Objects
 		public override void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation,
 			WorldProperties Properties, bool DuplicateMaterials = false)
 		{
-			currentHost.CreateStaticObject(this, Position, WorldTransformation, LocalTransformation, 0.0, Properties);
+			currentHost.CreateStaticObject(this, Position, WorldTransformation, LocalTransformation, Properties);
 		}
 
 		/// <inheritdoc />

@@ -75,7 +75,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					Plugin.CurrentHost.CreateStaticObject((StaticObject) Structure.FormCL[FormType], pos, RailTransformation, Transformation.NullTransformation, 0.0, Properties);
+					Plugin.CurrentHost.CreateStaticObject((StaticObject) Structure.FormCL[FormType], pos, RailTransformation, Transformation.NullTransformation, Properties);
 				}
 
 				if (RoofType > 0)
@@ -95,7 +95,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						Plugin.CurrentHost.CreateStaticObject((StaticObject) Structure.RoofCL[RoofType], pos, RailTransformation, Transformation.NullTransformation, 0.0, Properties);
+						Plugin.CurrentHost.CreateStaticObject((StaticObject) Structure.RoofCL[RoofType], pos, RailTransformation, Transformation.NullTransformation, Properties);
 					}
 				}
 			}
@@ -116,7 +116,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					Plugin.CurrentHost.CreateStaticObject((StaticObject) Structure.FormCR[FormType], pos, RailTransformation, Transformation.NullTransformation, 0.0, Properties);
+					Plugin.CurrentHost.CreateStaticObject((StaticObject) Structure.FormCR[FormType], pos, RailTransformation, Transformation.NullTransformation, Properties);
 				}
 
 				if (RoofType > 0)
@@ -136,7 +136,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						Plugin.CurrentHost.CreateStaticObject((StaticObject) Structure.RoofCR[RoofType], pos, RailTransformation, Transformation.NullTransformation, 0.0, Properties);
+						Plugin.CurrentHost.CreateStaticObject((StaticObject) Structure.RoofCR[RoofType], pos, RailTransformation, Transformation.NullTransformation, Properties);
 					}
 				}
 			}
@@ -172,7 +172,7 @@ namespace CsvRwRouteParser
 						else
 						{
 							StaticObject FormC = (StaticObject) Structure.FormCL[FormType].Transform(d0, d1);
-							Plugin.CurrentHost.CreateStaticObject(FormC, pos, RailTransformation, Transformation.NullTransformation, 0.0, Properties);
+							Plugin.CurrentHost.CreateStaticObject(FormC, pos, RailTransformation, Transformation.NullTransformation, Properties);
 						}
 
 						if (RoofType > 0)
@@ -193,7 +193,7 @@ namespace CsvRwRouteParser
 							else
 							{
 								StaticObject RoofC = (StaticObject) Structure.RoofCL[RoofType].Transform(d0, d1);
-								Plugin.CurrentHost.CreateStaticObject(RoofC, pos, RailTransformation, Transformation.NullTransformation, 0.0, Properties);
+								Plugin.CurrentHost.CreateStaticObject(RoofC, pos, RailTransformation, Transformation.NullTransformation, Properties);
 							}
 						}
 					}
@@ -215,7 +215,7 @@ namespace CsvRwRouteParser
 						else
 						{
 							StaticObject FormC = (StaticObject) Structure.FormCR[FormType].Transform(d0, d1);
-							Plugin.CurrentHost.CreateStaticObject(FormC, pos, RailTransformation, Transformation.NullTransformation, 0.0, Properties);
+							Plugin.CurrentHost.CreateStaticObject(FormC, pos, RailTransformation, Transformation.NullTransformation, Properties);
 						}
 
 						if (RoofType > 0)
@@ -236,7 +236,7 @@ namespace CsvRwRouteParser
 							else
 							{
 								StaticObject RoofC = (StaticObject) Structure.RoofCR[RoofType].Transform(d0, d1);
-								Plugin.CurrentHost.CreateStaticObject(RoofC, pos, RailTransformation, Transformation.NullTransformation, 0.0, Properties);
+								Plugin.CurrentHost.CreateStaticObject(RoofC, pos, RailTransformation, Transformation.NullTransformation, Properties);
 							}
 						}
 					}

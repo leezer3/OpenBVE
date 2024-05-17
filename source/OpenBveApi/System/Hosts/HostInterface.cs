@@ -382,13 +382,9 @@ namespace OpenBveApi.Hosts {
 		/// <param name="Position">The world position</param>
 		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
 		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
-		/// <param name="AccurateObjectDisposalZOffset">The offset for accurate Z-disposal</param>
-		/// <param name="StartingDistance">The absolute route based starting distance for the object</param>
-		/// <param name="EndingDistance">The absolute route based ending distance for the object</param>
-		/// <param name="TrackPosition">The absolute route based track position</param>
-		/// <param name="Brightness">The brightness value at this track position</param>
+		/// <param name="Properties">The world properties of the object</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
-		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, double AccurateObjectDisposalZOffset, WorldProperties Properties)
+		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, WorldProperties Properties)
 		{
 			return -1;
 		}
@@ -402,13 +398,9 @@ namespace OpenBveApi.Hosts {
 		/// </param>
 		/// <param name="Rotate">The rotation matrix to apply</param>
 		/// <param name="Translate">The translation matrix to apply</param>
-		/// <param name="AccurateObjectDisposalZOffset">The offset for accurate Z-disposal</param>
-		/// <param name="StartingDistance">The absolute route based starting distance for the object</param>
-		/// <param name="EndingDistance">The absolute route based ending distance for the object</param>
-		/// <param name="TrackPosition">The absolute route based track position</param>
-		/// <param name="Brightness">The brightness value at this track position</param>
+		/// <param name="Properties">The world properties of the object</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
-		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, WorldProperties Properties)
+		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, WorldProperties Properties)
 		{
 			return -1;
 		}

@@ -15,6 +15,9 @@
 		public double Brightness;
 		/// <summary>The index of the signalling section this object is attached to</summary>
 		public int SectionIndex;
+		/// <summary>The Z-Offset used for accurate object disposal</summary>
+		/// <remarks>This is only valid for child objects contained within an animated container</remarks>
+		public double AccurateObjectDisposalZOffset;
 
 		/// <summary>Creates a new instance of this struct</summary>
 		public WorldProperties(int railKey, double trackPosition, double startingDistance, double endingDistance, int sectionIndex = -1, double brightness = 1.0)
@@ -25,6 +28,7 @@
 			EndingDistance = endingDistance;
 			Brightness = brightness;
 			SectionIndex = sectionIndex;
+			AccurateObjectDisposalZOffset = 0;
 		}
 
 		/// <summary>Creates a new instance of this struct</summary>
@@ -37,6 +41,7 @@
 			// Mechanik visibility- not used
 			StartingDistance = 0; 
 			EndingDistance = 0;
+			AccurateObjectDisposalZOffset = 0;
 		}
     }
 }

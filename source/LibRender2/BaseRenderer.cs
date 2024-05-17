@@ -524,14 +524,14 @@ namespace LibRender2
 			Initialize();
 		}
 
-		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, WorldProperties Properties, double BlockLength)
+		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, WorldProperties Properties, double BlockLength)
 		{
 			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			Matrix4D Rotate = (Matrix4D)new Transformation(LocalTransformation, WorldTransformation);
-			return CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, Properties, BlockLength);
+			return CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, AccurateObjectDisposal, Properties, BlockLength);
 		}
 
-		public int CreateStaticObject(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, WorldProperties Properties, double BlockLength)
+		public int CreateStaticObject(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectDisposalMode AccurateObjectDisposal, WorldProperties Properties, double BlockLength)
 		{
 			if (Prototype == null)
 			{
@@ -565,8 +565,8 @@ namespace LibRender2
 					}
 				}
 
-				startingDistance += (float)AccurateObjectDisposalZOffset;
-				endingDistance += (float)AccurateObjectDisposalZOffset;
+				startingDistance += (float)Properties.AccurateObjectDisposalZOffset;
+				endingDistance += (float)Properties.AccurateObjectDisposalZOffset;
 			}
 
 			const double minBlockLength = 20.0;
