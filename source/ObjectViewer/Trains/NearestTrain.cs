@@ -44,7 +44,7 @@ namespace ObjectViewer.Trains
 		/// <returns>A dummy train</returns>
 		private static TrainBase CreateDummyTrain()
 		{
-			TrainBase train = new TrainBase(TrainState.Available);
+			TrainBase train = new TrainBase(TrainState.Available, TrainType.LocalPlayerTrain);
 			train.Handles.Power = new PowerHandle(Specs.PowerNotches, Specs.PowerNotches, new double[] { }, new double[] { }, train);
 			if (Specs.IsAirBrake)
 			{
@@ -65,11 +65,11 @@ namespace ObjectViewer.Trains
 
 				if (Specs.IsAirBrake)
 				{
-					train.Cars[i].CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.None, train.Cars[i], 0.0, 0.0, new AccelerationCurve[] { });
+					train.Cars[i].CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.None, train.Cars[i]);
 				}
 				else
 				{
-					train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, train.Cars[i], 0.0, 0.0, 0.0, 0.0, new AccelerationCurve[] { });
+					train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, train.Cars[i]);
 				}
 
 				train.Cars[i].Specs.IsMotorCar = true;

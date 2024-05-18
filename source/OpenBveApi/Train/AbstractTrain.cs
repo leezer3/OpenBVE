@@ -5,6 +5,8 @@ namespace OpenBveApi.Trains
 	/// <summary>An abstract train</summary>
 	public abstract class AbstractTrain
 	{
+		/// <summary>The type of the train</summary>
+		public TrainType Type;
 		/// <summary>The current state of the train</summary>
 		public TrainState State;
 		/// <summary>Holds the AI controlling the train if any</summary>
@@ -80,6 +82,14 @@ namespace OpenBveApi.Trains
 		public virtual void Derail(AbstractCar Car, double ElapsedTime)
 		{
 
+		}
+
+        /// <summary>Couples another train to this train</summary>
+        /// <param name="Train">The train to couple</param>
+        /// <param name="Front">Whether the new train is coupled to the front</param>
+        public virtual void Couple(AbstractTrain Train, bool Front)
+		{
+		
 		}
 
 		/// <summary>Call this method to reverse (flip) the entire train</summary>
