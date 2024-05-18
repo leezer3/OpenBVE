@@ -880,7 +880,7 @@ namespace OpenBveApi.Objects
 		{
 			if (a is null)
 			{
-				return !(b is null);
+				return b is null;
 			}
 			return a.Equals(b);
 		}
@@ -890,7 +890,7 @@ namespace OpenBveApi.Objects
 		{
 			if (a is null)
 			{
-				return b is null;
+				return !(b is null);
 			}
 			return !a.Equals(b);
 		}
