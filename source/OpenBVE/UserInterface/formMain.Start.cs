@@ -328,7 +328,8 @@ namespace OpenBve
 				case "s80_text.dat":	//S80 Mechanik routefile sounds
 				case "s80_snd.dat":		//S80 Mechanik routefile textures
 				case "gensc.dat":		//Mechanik route generator (?)
-				case "scenerio.dat":	//Mechanik route generator (?)
+				case "scenerio.dat":    //Mechanik route generator (?)
+				case "ntuser.dat":		//Windows user file
 					return true;
 				default:
 					return false;
