@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
@@ -119,18 +120,9 @@ namespace OpenBveApi.Routes
 		/// <summary>Call this method to update a single track follower on an absolute basis</summary>
 		/// <param name="NewTrackPosition">The new absolute track position of the follower</param>
 		/// <param name="UpdateWorldCoordinates">Whether to update the world co-ordinates</param>
-		/// <param name="AddTrackInaccuracy">Whether to add track innacuracy</param>
+		/// <param name="AddTrackInaccuracy">Whether to add track inaccuracy</param>
 		public void UpdateAbsolute(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccuracy)
 		{
-			if (TrackIndex == 0 && (currentHost.Tracks[0].Elements == null || currentHost.Tracks[TrackIndex].Elements.Length == 0))
-			{
-				/*
-				 * Used for displaying trains in Object Viewer
-				 * As we have no track, just update the Z value with the new pos
-				 */
-				WorldPosition.Z = NewTrackPosition;
-				return;
-			}
 			if (!currentHost.Tracks.ContainsKey(TrackIndex) || currentHost.Tracks[TrackIndex].Elements.Length == 0) return;
 			int i = System.Math.Min(currentHost.Tracks[TrackIndex].Elements.Length - 1, LastTrackElement);
 			while (i >= 0)
@@ -203,7 +195,12 @@ namespace OpenBveApi.Routes
 			{
 				if (db != 0.0)
 				{
-					if (currentHost.Tracks[TrackIndex].Elements[i].CurveRadius != 0.0)
+					if (currentHost.Tracks[TrackIndex].Elements[i].WorldDirection == Vector3.Zero && currentHost.Application == HostApplication.ObjectViewer)
+					{
+						// Slightly better bodge, but Object Viewer really needs the track fixing properly
+						WorldPosition = db * Vector3.Forward;
+					}
+					else if (currentHost.Tracks[TrackIndex].Elements[i].CurveRadius != 0.0)
 					{
 						// curve
 						double r = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius;
