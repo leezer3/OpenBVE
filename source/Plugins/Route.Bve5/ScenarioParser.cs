@@ -29,6 +29,7 @@ using System.Text;
 using Bve5_Parsing.ScenarioGrammar;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using RouteManager2.Stations;
 using Path = OpenBveApi.Path;
 
 namespace Route.Bve5
@@ -84,6 +85,7 @@ namespace Route.Bve5
 			ScenarioData Data = Parser.Parse(File.ReadAllText(FileName, Encoding));
 
 			Plugin.CurrentRoute.Comment = Data.Comment;
+			Plugin.CurrentRoute.Stations = new RouteStation[0];
 			if (!string.IsNullOrEmpty(Data.Image))
 			{
 				Plugin.CurrentRoute.Image = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Data.Image);

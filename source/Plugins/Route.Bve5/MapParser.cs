@@ -156,7 +156,6 @@ namespace Route.Bve5
 
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
-			Plugin.CurrentRoute.Stations = new RouteStation[0];
 			RouteData.Backgrounds = new List<Background>();
 
 			/*
