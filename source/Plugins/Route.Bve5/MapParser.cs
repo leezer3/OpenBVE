@@ -30,6 +30,8 @@ using Bve5_Parsing;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Interface;
+using RouteManager2;
+using RouteManager2.Stations;
 using static Bve5_Parsing.MapGrammar.MapGrammarParser;
 
 namespace Route.Bve5
@@ -108,8 +110,7 @@ namespace Route.Bve5
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
 
-			RouteData RouteData;
-			ConvertToBlock(FileName, PreviewOnly, RootData, out RouteData);
+			ConvertToBlock(FileName, PreviewOnly, RootData, out RouteData RouteData);
 
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
@@ -155,17 +156,22 @@ namespace Route.Bve5
 
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
+			Plugin.CurrentRoute.Stations = new RouteStation[0];
+			RouteData.Backgrounds = new List<Background>();
 
-			ConvertCurve(ParseData, RouteData);
-			ConvertGradient(ParseData, RouteData);
+			/*
+			 * NOTE:
+			 * Looping through the statement list multiple times is horrifically slow
+			 * The slowness comes from somewhere within the BVE5 parsing library (to investigate)
+			 *
+			 * Track code currently requires a complete re-work to sort out properly so that only one loop
+			 * is needed
+			 *
+			 */
+
+			ConvertData(ParseData, RouteData, PreviewOnly);
 			ConvertTrack(ParseData, RouteData);
-			ConvertStation(ParseData, RouteData);
-			ConvertBackground(PreviewOnly, ParseData, RouteData);
-			ConvertFog(PreviewOnly, ParseData, RouteData);
-			ConvertIrregularity(PreviewOnly, ParseData, RouteData);
-			ConvertAdhesion(PreviewOnly, ParseData, RouteData);
-			ConvertJointNoise(PreviewOnly, ParseData, RouteData);
-
+			
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
 
@@ -187,6 +193,74 @@ namespace Route.Bve5
 			ConfirmSound3D(PreviewOnly, ParseData, RouteData);
 			ConfirmRollingNoise(PreviewOnly, ParseData, RouteData);
 			ConfirmFlangeNoise(PreviewOnly, ParseData, RouteData);
+		}
+
+		private static void ConvertData(MapData parseData, RouteData routeData, bool previewOnly)
+		{
+			for (int i = 0; i < parseData.Statements.Count; i++)
+			{
+				switch(parseData.Statements[i].ElementName)
+				{
+					case MapElementName.Curve:
+						ConvertCurve(parseData.Statements[i], routeData);
+						break;
+					case MapElementName.Gradient:
+						ConvertGradient(parseData.Statements[i], routeData);
+						break;
+					case MapElementName.Legacy:
+						switch (parseData.Statements[i].FunctionName)
+						{
+							case MapFunctionName.Curve:
+							case MapFunctionName.Turn:
+								ConvertCurve(parseData.Statements[i], routeData);
+								break;
+							case MapFunctionName.Pitch:
+								ConvertGradient(parseData.Statements[i], routeData);
+								break;
+							case MapFunctionName.Fog:
+								if (!previewOnly)
+								{
+									ConvertFog(parseData.Statements[i], routeData);
+								}
+								break;
+						}
+						break;
+					case MapElementName.Station:
+						ConvertStation(parseData.Statements[i], routeData);
+						break;
+					case MapElementName.Background:
+						if (!previewOnly)
+						{
+							ConvertBackground(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.Fog:
+						if (!previewOnly)
+						{
+							ConvertFog(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.Irregularity:
+						if (!previewOnly)
+						{
+							ConvertIrregularity(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.Adhesion:
+						if (!previewOnly)
+						{
+							ConvertAdhesion(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.JointNoise:
+						if (!previewOnly)
+						{
+							ConvertJointNoise(parseData.Statements[i], routeData);
+						}
+						break;
+
+				}
+			}
 		}
 	}
 }
