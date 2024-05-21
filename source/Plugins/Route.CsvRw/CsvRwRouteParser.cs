@@ -147,7 +147,7 @@ namespace CsvRwRouteParser {
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
 			PreprocessSplitIntoExpressions(FileName, Lines, out Expression[] Expressions, true);
 			PreprocessChrRndSub(FileName, Encoding, ref Expressions);
-			double[] UnitOfLength = new double[] { 1.0 };
+			double[] UnitOfLength = { 1.0 };
 			//Set units of speed initially to km/h
 			//This represents 1km/h in m/s
 			Data.UnitOfSpeed = 0.277777777777778;
@@ -316,8 +316,7 @@ namespace CsvRwRouteParser {
 							switch (nameSpace)
 							{
 								case "options":
-									OptionsCommand parsedOptionCommand;
-									if (Enum.TryParse(Command, true, out parsedOptionCommand))
+									if (Enum.TryParse(Command, true, out OptionsCommand parsedOptionCommand))
 									{
 										ParseOptionCommand(parsedOptionCommand, Arguments, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
 									}
@@ -327,8 +326,7 @@ namespace CsvRwRouteParser {
 									}
 									break;
 								case "route":
-									RouteCommand parsedRouteCommand;
-									if (Enum.TryParse(Command, true, out parsedRouteCommand))
+									if (Enum.TryParse(Command, true, out RouteCommand parsedRouteCommand))
 									{
 										ParseRouteCommand(parsedRouteCommand, Arguments, commandIndices[0], FileName, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
 									}
@@ -338,8 +336,7 @@ namespace CsvRwRouteParser {
 									}
 									break;
 								case "train":
-									TrainCommand parsedTrainCommand;
-									if (Enum.TryParse(Command.Split(' ')[0], true, out parsedTrainCommand))
+									if (Enum.TryParse(Command.Split(' ')[0], true, out TrainCommand parsedTrainCommand))
 									{
 										ParseTrainCommand(parsedTrainCommand, Arguments, commandIndices[0], Expressions[j], ref Data, PreviewOnly);
 									}
@@ -350,8 +347,7 @@ namespace CsvRwRouteParser {
 									break;
 								case "structure":
 								case "texture":
-									StructureCommand parsedStructureCommand;
-									if (Enum.TryParse(Command, true, out parsedStructureCommand))
+									if (Enum.TryParse(Command, true, out StructureCommand parsedStructureCommand))
 									{
 										ParseStructureCommand(parsedStructureCommand, Arguments, commandIndices, FileName, Encoding, Expressions[j], ref Data, PreviewOnly);
 									}
@@ -364,8 +360,7 @@ namespace CsvRwRouteParser {
 									ParseSignalCommand(Command, Arguments, commandIndices[0], Encoding, Expressions[j], ref Data, PreviewOnly);
 									break;
 								case "cycle":
-									CycleCommand parsedCycleCommand;
-									if (Enum.TryParse(Command, true, out parsedCycleCommand))
+									if (Enum.TryParse(Command, true, out CycleCommand parsedCycleCommand))
 									{
 										ParseCycleCommand(parsedCycleCommand, Arguments, commandIndices[0], Expressions[j], ref Data, PreviewOnly);
 									}
@@ -489,8 +484,7 @@ namespace CsvRwRouteParser {
 							switch (nameSpace)
 							{
 								case "track":
-									TrackCommand parsedCommand;
-									if (Enum.TryParse(Command, true, out parsedCommand))
+									if (Enum.TryParse(Command, true, out TrackCommand parsedCommand))
 									{
 										ParseTrackCommand(parsedCommand, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, PreviewOnly, IsRW);
 									}

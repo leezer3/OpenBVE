@@ -28,6 +28,13 @@ namespace CarXmlConvertor
 				}
 				switch (Line[i])
 				{
+					case '!':
+						if (Line[i - 1] == '<')
+						{
+							// comment
+							decreaseTabs = true;
+						}
+						break;
 					case '<':
 						//If we find a second opening symbol in our line, it's a single-line declaration
 						found = true;

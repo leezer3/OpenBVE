@@ -227,6 +227,10 @@ namespace OpenBve {
 							}
 							if (System.IO.Directory.Exists(folder)) {
 								file = Path.CombineFile(folder, "train.dat");
+								if (!System.IO.File.Exists(file))
+								{
+									file = Path.CombineFile(folder, "train.xml");
+								}
 								if (System.IO.File.Exists(file)) {
 									result.TrainFolder = folder;
 									result.TrainEncoding = System.Text.Encoding.UTF8;

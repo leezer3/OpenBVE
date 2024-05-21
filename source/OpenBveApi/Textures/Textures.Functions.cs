@@ -45,45 +45,79 @@ namespace OpenBveApi.Textures {
 		    if (region.Left < 0 || region.Top < 0 || region.Width <= 0 || region.Height <= 0 || region.Left + region.Width > texture.Width || region.Top + region.Height > texture.Height) {
 		        throw new ArgumentException();
 		    }
-		    if (texture.PixelFormat == PixelFormat.RGB | texture.PixelFormat == PixelFormat.RGBAlpha) {
-		        int width = texture.Width;
-		        byte[] bytes = texture.Bytes;
-		        int clipLeft = region.Left;
-		        int clipTop = region.Top;
-		        int clipWidth = region.Width;
-		        int clipHeight = region.Height;
-		        if (texture.PixelFormat == PixelFormat.RGB) {
-		            byte[] newBytes = new byte[3 * clipWidth * clipHeight];
-		            int i = 0;
-		            for (int y = 0; y < clipHeight; y++) {
-		                int j = 3 * width * (clipTop + y) + 3 * clipLeft;
-		                for (int x = 0; x < clipWidth; x++) {
-		                    newBytes[i + 0] = bytes[j + 0];
-		                    newBytes[i + 1] = bytes[j + 1];
-		                    newBytes[i + 2] = bytes[j + 2];
-		                    i += 3;
-		                    j += 3;
-		                }
-		            }
-		            return new Texture(clipWidth, clipHeight, PixelFormat.RGB, newBytes, texture.Palette);
-		        } else {
-		            byte[] newBytes = new byte[4 * clipWidth * clipHeight];
-		            int i = 0;
-		            for (int y = 0; y < clipHeight; y++) {
-		                int j = 4 * width * (clipTop + y) + 4 * clipLeft;
-		                for (int x = 0; x < clipWidth; x++) {
-		                    newBytes[i + 0] = bytes[j + 0];
-		                    newBytes[i + 1] = bytes[j + 1];
-		                    newBytes[i + 2] = bytes[j + 2];
-		                    newBytes[i + 3] = bytes[j + 3];
-		                    i += 4;
-		                    j += 4;
-		                }
-		            }
-		            return new Texture(clipWidth, clipHeight, PixelFormat.RGBAlpha, newBytes, texture.Palette);
-		        }
-		    }
-		    throw new NotSupportedException();
+		    int width = texture.Width;
+		    byte[] bytes = texture.Bytes;
+		    int clipLeft = region.Left;
+		    int clipTop = region.Top;
+		    int clipWidth = region.Width;
+		    int clipHeight = region.Height;
+		    byte[] newBytes;
+		    int i = 0;
+		    switch (texture.PixelFormat)
+		    {
+			    case PixelFormat.Grayscale:
+				    newBytes = new byte[clipWidth * clipHeight];
+				    for (int y = 0; y < clipHeight; y++)
+				    {
+					    int j = width * (clipTop + y) + clipLeft;
+					    for (int x = 0; x < clipWidth; x++)
+					    {
+						    newBytes[i] = bytes[j];
+						    i++;
+						    j++;
+					    }
+				    }
+				    return new Texture(clipWidth, clipHeight, PixelFormat.Grayscale, newBytes, texture.Palette);
+				case PixelFormat.GrayscaleAlpha:
+				    newBytes = new byte[2 * clipWidth * clipHeight];
+				    for (int y = 0; y < clipHeight; y++)
+				    {
+					    int j = 2 * width * (clipTop + y) + 2 * clipLeft;
+					    for (int x = 0; x < clipWidth; x++)
+					    {
+						    newBytes[i + 0] = bytes[j + 0];
+						    newBytes[i + 1] = bytes[j + 1];
+							i += 2;
+						    j += 2;
+					    }
+				    }
+				    return new Texture(clipWidth, clipHeight, PixelFormat.Grayscale, newBytes, texture.Palette);
+				case PixelFormat.RGB:
+					newBytes = new byte[3 * clipWidth * clipHeight];
+					for (int y = 0; y < clipHeight; y++)
+					{
+						int j = 3 * width * (clipTop + y) + 3 * clipLeft;
+						for (int x = 0; x < clipWidth; x++)
+						{
+							newBytes[i + 0] = bytes[j + 0];
+							newBytes[i + 1] = bytes[j + 1];
+							newBytes[i + 2] = bytes[j + 2];
+							i += 3;
+							j += 3;
+						}
+					}
+					return new Texture(clipWidth, clipHeight, PixelFormat.RGB, newBytes, texture.Palette);
+				case PixelFormat.RGBAlpha:
+					newBytes = new byte[4 * clipWidth * clipHeight];
+					for (int y = 0; y < clipHeight; y++)
+					{
+						int j = 4 * width * (clipTop + y) + 4 * clipLeft;
+						for (int x = 0; x < clipWidth; x++)
+						{
+							newBytes[i + 0] = bytes[j + 0];
+							newBytes[i + 1] = bytes[j + 1];
+							newBytes[i + 2] = bytes[j + 2];
+							newBytes[i + 3] = bytes[j + 3];
+							i += 4;
+							j += 4;
+						}
+					}
+					return new Texture(clipWidth, clipHeight, PixelFormat.RGBAlpha, newBytes, texture.Palette);
+				
+				default:
+					throw new NotSupportedException();
+			}
+		    
 		}
 
 		private static Color24 GetClosestColor(Color24[] colorArray, Color24 baseColor)

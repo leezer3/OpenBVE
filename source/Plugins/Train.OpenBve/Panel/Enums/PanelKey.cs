@@ -15,6 +15,7 @@ namespace Train.OpenBve
 		Center,
 		Origin,
 		Subject,
+		Function,
 		Location,
 		Layer,
 		Radius,

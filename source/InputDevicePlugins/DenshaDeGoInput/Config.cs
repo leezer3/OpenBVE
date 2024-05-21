@@ -174,22 +174,45 @@ namespace DenshaDeGoInput
 			label_a2.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A2] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
 			label_ats.ForeColor = InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.ATS] == OpenTK.Input.ButtonState.Pressed ? Color.White : Color.Black;
 
-			buttonCalibrate.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].RequiresCalibration;
-			label_select.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.Select);
-			label_start.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.Start);
-			label_a.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.A);
-			label_b.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.B);
-			label_c.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.C);
-			label_d.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.D);
-			label_up.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
-			label_down.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
-			label_left.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
-			label_right.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
-			label_ldoor.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.LDoor);
-			label_rdoor.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.RDoor);
-			label_pedal.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.Pedal);
-			label_a2.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.A2);
-			label_ats.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.ATS);
+			if (!InputTranslator.Controllers.ContainsKey(InputTranslator.ActiveControllerGuid))
+			{
+				buttonCalibrate.Visible = false;
+				label_select.Visible = false;
+				label_start.Visible = false;
+				label_a.Visible = false;
+				label_b.Visible = false;
+				label_c.Visible = false;
+				label_d.Visible = false;
+				label_up.Visible = false;
+				label_down.Visible = false;
+				label_left.Visible = false;
+				label_right.Visible = false;
+				label_ldoor.Visible = false;
+				label_rdoor.Visible = false;
+				label_pedal.Visible = false;
+				label_a2.Visible = false;
+				label_ats.Visible = false;
+			}
+			else
+			{
+				buttonCalibrate.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].RequiresCalibration;
+				label_select.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.Select);
+				label_start.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.Start);
+				label_a.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.A);
+				label_b.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.B);
+				label_c.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.C);
+				label_d.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.D);
+				label_up.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
+				label_down.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
+				label_left.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
+				label_right.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.DPad);
+				label_ldoor.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.LDoor);
+				label_rdoor.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.RDoor);
+				label_pedal.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.Pedal);
+				label_a2.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.A2);
+				label_ats.Visible = InputTranslator.Controllers[InputTranslator.ActiveControllerGuid].Buttons.HasFlag(Controller.ControllerButtons.ATS);
+			}
+			
 		}
 
 		/// <summary>

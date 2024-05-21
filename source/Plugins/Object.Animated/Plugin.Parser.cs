@@ -1290,7 +1290,7 @@ namespace Plugin
 									}
 									snd.currentPitch = pitch;
 									snd.currentVolume = volume;
-									snd.Position = Position;
+									snd.SoundPosition = Position;
 									snd.SingleBuffer = singleBuffer;
 									snd.PlayOnShow = playOnShow;
 									snd.PlayOnHide = playOnHide;

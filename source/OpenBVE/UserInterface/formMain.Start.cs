@@ -343,7 +343,8 @@ namespace OpenBve
 				case "s80_text.dat":	//S80 Mechanik routefile sounds
 				case "s80_snd.dat":		//S80 Mechanik routefile textures
 				case "gensc.dat":		//Mechanik route generator (?)
-				case "scenerio.dat":	//Mechanik route generator (?)
+				case "scenerio.dat":    //Mechanik route generator (?)
+				case "ntuser.dat":		//Windows user file
 					return true;
 				default:
 					return false;
@@ -750,6 +751,10 @@ namespace OpenBve
 									{
 										string File = Path.CombineFile(Folders[i], "train.dat");
 										ListViewItem Item = listView.Items.Add(folderName);
+										if (!System.IO.File.Exists(File))
+										{
+											File = Path.CombineFile(Folders[i], "train.xml");
+										}
 										Item.ImageKey = System.IO.File.Exists(File) ? "train" : "folder";
 										Item.Tag = Folders[i];
 									}
@@ -796,6 +801,11 @@ namespace OpenBve
 						try
 						{
 							string File = Path.CombineFile(t, "train.dat");
+							if (!System.IO.File.Exists(File))
+							{
+								File = Path.CombineFile(t, "train.xml");
+							}
+							
 							if (System.IO.File.Exists(File))
 							{
 								Result.TrainFolder = t;
@@ -957,6 +967,10 @@ namespace OpenBve
 						try
 						{
 							string File = Path.CombineFile(t, "train.dat");
+							if (!System.IO.File.Exists(File))
+							{
+								File = Path.CombineFile(t, "train.xml");
+							}
 							if (System.IO.File.Exists(File))
 							{
 								Result.TrainFolder = t;

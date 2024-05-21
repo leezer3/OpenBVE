@@ -487,6 +487,7 @@ namespace Train.OpenBve
 					case PanelSections.PilotLamp:
 						{
 							string Subject = "true";
+							string Function = string.Empty;
 							double LocationX = 0.0, LocationY = 0.0;
 							string DaytimeImage = null, NighttimeImage = null;
 							Color24 TransparentColor = Color24.Blue;
@@ -502,6 +503,9 @@ namespace Train.OpenBve
 								{
 									case PanelKey.Subject:
 										Subject = Value;
+										break;
+									case PanelKey.Function:
+										Function = Value;
 										break;
 									case PanelKey.Location:
 										int k = Value.IndexOf(',');
@@ -582,13 +586,29 @@ namespace Train.OpenBve
 								}
 								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, tday.Width, tday.Height, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
 								string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
-								CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
+								try
+								{
+									if (!string.IsNullOrEmpty(Function))
+									{
+										CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, Function, true);
+									}
+									else
+									{
+										CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
+									}
+								}
+								catch
+								{
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " in " + FileName);
+								}
+								
 							}
 						}
 						break;
 					case PanelSections.Needle:
 						{
 							string Subject = "true";
+							string Function = string.Empty;
 							double LocationX = 0.0, LocationY = 0.0;
 							string DaytimeImage = null, NighttimeImage = null;
 							Color32 Color = Color32.White;
@@ -611,6 +631,9 @@ namespace Train.OpenBve
 								{
 									case PanelKey.Subject:
 										Subject = Value;
+										break;
+									case PanelKey.Function:
+										Function = Value;
 										break;
 									case PanelKey.Location:
 										{
@@ -830,7 +853,23 @@ namespace Train.OpenBve
 								{
 									CarSection.Groups[GroupIndex].Elements[j].RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
 								}
-								CarSection.Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
+
+								try
+								{
+									if (!string.IsNullOrEmpty(Function))
+									{
+										CarSection.Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, Function, true);
+									}
+									else
+									{
+										CarSection.Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
+									}
+								}
+								catch
+								{
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " in " + FileName);
+								}
+
 								if (Backstop)
 								{
 									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle;
@@ -842,6 +881,7 @@ namespace Train.OpenBve
 					case PanelSections.LinearGauge:
 						{
 							string Subject = "true";
+							string Function = string.Empty;
 							int Width = 0;
 							Vector2 Direction = new Vector2(1, 0);
 							double LocationX = 0.0, LocationY = 0.0;
@@ -860,6 +900,9 @@ namespace Train.OpenBve
 								{
 									case PanelKey.Subject:
 										Subject = Value;
+										break;
+									case PanelKey.Function:
+										Function = Value;
 										break;
 									case PanelKey.Location:
 										int k = Value.IndexOf(',');
@@ -983,10 +1026,24 @@ namespace Train.OpenBve
 									break;
 								}
 								string tf = Plugin.Panel2CfgParser.GetInfixFunction(Train, Subject, Minimum, Maximum, Width, tday.Width, Section + " in " + FileName);
-								if (tf != String.Empty)
+								CarSection.Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
+								try
 								{
-									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
-									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, tf, false);
+									if (!string.IsNullOrEmpty(tf) || !string.IsNullOrEmpty(Function))
+									{
+										if (!string.IsNullOrEmpty(Function))
+										{
+											CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, Function, true);
+										}
+										else
+										{
+											CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, tf, false);
+										}
+									}
+								}
+								catch
+								{
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " in " + FileName);
 								}
 							}
 						}
@@ -994,6 +1051,7 @@ namespace Train.OpenBve
 					case PanelSections.DigitalNumber:
 						{
 							string Subject = "true";
+							string Function = string.Empty;
 							double LocationX = 0.0, LocationY = 0.0;
 							string DaytimeImage = null, NighttimeImage = null;
 							Color24 TransparentColor = Color24.Blue;
@@ -1010,6 +1068,9 @@ namespace Train.OpenBve
 								{
 									case PanelKey.Subject:
 										Subject = Value;
+										break;
+									case PanelKey.Function:
+										Function = Value;
 										break;
 									case PanelKey.Location:
 										int k = Value.IndexOf(',');
@@ -1155,7 +1216,21 @@ namespace Train.OpenBve
 										if (k == 0) j = l;
 									}
 									string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
-									CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+									try
+									{
+										if (!string.IsNullOrEmpty(Function))
+										{
+											CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, Function, true);
+										}
+										else
+										{
+											CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+										}
+									}
+									catch
+									{
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " in " + FileName);
+									}
 								}
 							}
 						}
@@ -1163,6 +1238,7 @@ namespace Train.OpenBve
 					case PanelSections.DigitalGauge:
 						{
 							string Subject = "true";
+							string Function = string.Empty;
 							double LocationX = 0.0, LocationY = 0.0;
 							Color32 Color = Color32.Black;
 							double Radius = 0.0;
@@ -1182,6 +1258,9 @@ namespace Train.OpenBve
 								{
 									case PanelKey.Subject:
 										Subject = Value;
+										break;
+									case PanelKey.Function:
+										Function = Value;
 										break;
 									case PanelKey.Location:
 										int k = Value.IndexOf(',');
@@ -1340,7 +1419,22 @@ namespace Train.OpenBve
 									f += " " + s + " * floor " + t + " *";
 								}
 								f += " " + a1.ToString(Culture) + " " + a0.ToString(Culture) + " fma";
-								CarSection.Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, f, false);
+								try
+								{
+									if (!string.IsNullOrEmpty(Function))
+									{
+										CarSection.Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, Function, true);
+									}
+									else
+									{
+										CarSection.Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, f, false);
+									}
+								}
+								catch
+								{
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " in " + FileName);
+								}
+								
 							}
 							else
 							{

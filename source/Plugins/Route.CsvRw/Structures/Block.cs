@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using OpenBveApi.Routes;
 using RouteManager2.Climate;
-using RouteManager2.Tracks;
-
 namespace CsvRwRouteParser
 {
 	/// <summary>A single parsed block of data from a routefile</summary>

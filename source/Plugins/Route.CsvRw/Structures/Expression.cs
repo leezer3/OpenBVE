@@ -52,7 +52,7 @@ namespace CsvRwRouteParser
 			}
 		}
 
-		/// <summary>Separates an expression into it's consituent command and arguments</summary>
+		/// <summary>Separates an expression into it's constituent command and arguments</summary>
 		/// <param name="Command">The command</param>
 		/// <param name="ArgumentSequence">The sequence of arguments contained within the expression</param>
 		/// <param name="Culture">The current culture</param>
@@ -61,7 +61,7 @@ namespace CsvRwRouteParser
 		/// <param name="CurrentSection">The current section being processed</param>
 		internal void SeparateCommandsAndArguments(out string Command, out string ArgumentSequence, System.Globalization.CultureInfo Culture, bool RaiseErrors, bool IsRw, string CurrentSection)
 		{
-			bool openingerror = false, closingerror = false;
+			bool openingError = false, closingError = false;
 			int i, firstClosingBracket = 0;
 			if (Plugin.CurrentOptions.EnableBveTsHacks)
 			{
@@ -88,22 +88,22 @@ namespace CsvRwRouteParser
 					int idx = Text.LastIndexOf(')');
 					if (idx != -1 && idx != Text.Length)
 					{
-						string s = this.Text.Substring(idx + 1, this.Text.Length - idx - 1).Trim();
+						string s = Text.Substring(idx + 1, Text.Length - idx - 1).Trim();
 						if (NumberFormats.TryParseDoubleVb6(s, out double _))
 						{
-							this.Text = this.Text.Substring(0, idx).Trim();
+							Text = Text.Substring(0, idx).Trim();
 						}
 					}
 				}
 
-				if (IsRw && this.Text.EndsWith("))"))
+				if (IsRw && Text.EndsWith("))"))
 				{
 					int openingBrackets = Text.Count(x => x == '(');
 					int closingBrackets = Text.Count(x => x == ')');
 					//Remove obviously wrong double-ending brackets
-					if (closingBrackets == openingBrackets + 1 && this.Text.EndsWith("))"))
+					if (closingBrackets == openingBrackets + 1 && Text.EndsWith("))"))
 					{
-						this.Text = this.Text.Substring(0, this.Text.Length - 1);
+						Text = Text.Substring(0, Text.Length - 1);
 					}
 				}
 
@@ -153,7 +153,7 @@ namespace CsvRwRouteParser
 
 						if (Text[i] == '(')
 						{
-							if (RaiseErrors & !openingerror)
+							if (RaiseErrors & !openingError)
 							{
 								switch (argumentIndex)
 								{
@@ -176,7 +176,7 @@ namespace CsvRwRouteParser
 										}
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
 										                                                        Column.ToString(Culture) + " in file " + File);
-										openingerror = true;
+										openingError = true;
 										break;
 									case 5: //arrival sound
 									case 10: //departure sound
@@ -187,12 +187,12 @@ namespace CsvRwRouteParser
 										}
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
 										                                                        Column.ToString(Culture) + " in file " + File);
-										openingerror = true;
+										openingError = true;
 										break;
 									default:
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
 										                                                        Column.ToString(Culture) + " in file " + File);
-										openingerror = true;
+										openingError = true;
 										break;
 								}
 							}
@@ -241,10 +241,10 @@ namespace CsvRwRouteParser
 
 					if (!found)
 					{
-						if (RaiseErrors & !closingerror)
+						if (RaiseErrors & !closingError)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
-							closingerror = true;
+							closingError = true;
 						}
 
 						Text += ")";
@@ -252,10 +252,10 @@ namespace CsvRwRouteParser
 				}
 				else if (Text[i] == ')')
 				{
-					if (RaiseErrors & !closingerror)
+					if (RaiseErrors & !closingError)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
-						closingerror = true;
+						closingError = true;
 					}
 				}
 				else if (char.IsWhiteSpace(Text[i]))
@@ -294,7 +294,7 @@ namespace CsvRwRouteParser
 					else if (ArgumentSequence.StartsWith("("))
 					{
 						// only opening parenthesis found
-						if (RaiseErrors & !closingerror)
+						if (RaiseErrors & !closingError)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 						}
@@ -345,10 +345,10 @@ namespace CsvRwRouteParser
 
 								if (!found)
 								{
-									if (RaiseErrors & !openingerror & !closingerror)
+									if (RaiseErrors & !openingError & !closingError)
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid syntax encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
-										closingerror = true;
+										closingError = true;
 									}
 
 									Command = Text;
@@ -363,7 +363,7 @@ namespace CsvRwRouteParser
 								else if (ArgumentSequence.StartsWith("("))
 								{
 									// only opening parenthesis found
-									if (RaiseErrors & !closingerror)
+									if (RaiseErrors & !closingError)
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 									}
@@ -375,7 +375,7 @@ namespace CsvRwRouteParser
 						else
 						{
 							// no closing parenthesis found
-							if (RaiseErrors & !closingerror)
+							if (RaiseErrors & !closingError)
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 							}
@@ -397,7 +397,7 @@ namespace CsvRwRouteParser
 						else if (ArgumentSequence.StartsWith("("))
 						{
 							// only opening parenthesis found
-							if (RaiseErrors & !closingerror)
+							if (RaiseErrors & !closingError)
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 							}
@@ -439,7 +439,7 @@ namespace CsvRwRouteParser
 					i = Text.IndexOf('(');
 					if (i >= 0)
 					{
-						if (RaiseErrors & !closingerror)
+						if (RaiseErrors & !closingError)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 						}
@@ -452,7 +452,7 @@ namespace CsvRwRouteParser
 						if (RaiseErrors)
 						{
 							i = Text.IndexOf(')');
-							if (i >= 0 & !closingerror)
+							if (i >= 0 & !closingError)
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 							}

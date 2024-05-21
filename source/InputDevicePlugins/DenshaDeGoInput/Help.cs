@@ -112,6 +112,12 @@ namespace DenshaDeGoInput
 				resource.SetLength(0);
 				Assembly.GetExecutingAssembly().GetManifestResourceStream("ryojouhen_driver").CopyTo(resource);
 				File.WriteAllBytes(Path.Combine(folderName, "Ryojouhen.cfg"), resource.ToArray());
+				resource.SetLength(0);
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("mtc_driver").CopyTo(resource);
+				File.WriteAllBytes(Path.Combine(folderName, "MTC.cfg"), resource.ToArray());
+				resource.SetLength(0);
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("trainmascon_driver").CopyTo(resource);
+				File.WriteAllBytes(Path.Combine(folderName, "TrainMascon.cfg"), resource.ToArray());
 			}
 		}
 

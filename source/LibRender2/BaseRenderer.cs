@@ -478,7 +478,7 @@ namespace LibRender2
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			UnsetBlendFunc();
 			GL.Enable(EnableCap.DepthTest);
-			GL.Enable(EnableCap.DepthClamp);
+			GL.Disable(EnableCap.DepthClamp);
 			GL.DepthMask(true);
 			SetAlphaFunc(AlphaFunction.Greater, 0.9f);
 		}
