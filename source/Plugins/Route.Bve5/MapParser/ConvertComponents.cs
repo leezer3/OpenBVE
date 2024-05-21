@@ -848,18 +848,13 @@ namespace Route.Bve5
 
 				if (BackgroundIndex == -1)
 				{
-					BackgroundIndex = RouteData.Backgrounds.Count;
-
 					UnifiedObject Object;
 					RouteData.Objects.TryGetValue(Convert.ToString(BackgroundKey), out Object);
 
 					if (Object != null)
 					{
+						BackgroundIndex = RouteData.Backgrounds.Count;
 						RouteData.Backgrounds.Add(new Background(Convert.ToString(BackgroundKey), new BackgroundObject((StaticObject)Object)));
-					}
-					else
-					{
-						RouteData.Backgrounds.Add(new Background(Convert.ToString(BackgroundKey), new StaticBackground(null, 6, false)));
 					}
 				}
 

@@ -68,7 +68,15 @@ namespace Route.Bve5
 				}
 				else
 				{
-					Plugin.CurrentRoute.CurrentBackground = new StaticBackground(null, 6, false);
+					// find first block with valid background
+					for (int i = 0; i < Data.Blocks.Count; i++)
+					{
+						if (Data.Blocks[i].Background >= 0 & Data.Blocks[i].Background < Data.Backgrounds.Count)
+						{
+							Plugin.CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Blocks[i].Background].Handle;
+							break;
+						}
+					}
 				}
 				Plugin.CurrentRoute.TargetBackground = Plugin.CurrentRoute.CurrentBackground;
 			}
