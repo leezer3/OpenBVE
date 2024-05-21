@@ -86,6 +86,7 @@ namespace Route.Bve5
 
 			Plugin.CurrentRoute.Comment = Data.Comment;
 			Plugin.CurrentRoute.Stations = new RouteStation[0];
+			CurrentStation = 0;
 			if (!string.IsNullOrEmpty(Data.Image))
 			{
 				Plugin.CurrentRoute.Image = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Data.Image);
