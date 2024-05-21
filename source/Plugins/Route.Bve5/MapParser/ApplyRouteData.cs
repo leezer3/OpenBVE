@@ -69,6 +69,7 @@ namespace Route.Bve5
 				else
 				{
 					// find first block with valid background
+					// as backgrounds are objects, we *must* have one, as opposed to the BVE2 / BVE4 default cylinder
 					for (int i = 0; i < Data.Blocks.Count; i++)
 					{
 						if (Data.Blocks[i].Background >= 0 & Data.Blocks[i].Background < Data.Backgrounds.Count)
