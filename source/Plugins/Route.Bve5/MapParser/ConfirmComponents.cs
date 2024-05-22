@@ -464,80 +464,79 @@ namespace Route.Bve5
 					case MapFunctionName.Put:
 					case MapFunctionName.Put0:
 					{
-							dynamic d = Statement; // HACK: as we don't know which type
-							string TrackKey = d.TrackKey;
-							double X, Y, Z, RX, RY, RZ, Tilt, Span;
-							if (string.IsNullOrEmpty(TrackKey))
-							{
-								TrackKey = "0";
-							}
-							X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
-							Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
-							Z = Statement.GetArgumentValueAsDouble(ArgumentName.Z);
-							RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
-							RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
-							RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
-							Tilt = Statement.GetArgumentValueAsDouble(ArgumentName.Tilt);
-							Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
-							
-							int RailIndex = RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKey));
-
-							if (RailIndex != -1)
-							{
-								int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
-
-								if (Blocks[BlockIndex].FreeObj[RailIndex] == null)
-								{
-									Blocks[BlockIndex].FreeObj[RailIndex] = new List<FreeObj>();
-								}
-
-								Blocks[BlockIndex].FreeObj[RailIndex].Add(new FreeObj
-								{
-									TrackPosition = Statement.Distance,
-									Key = Statement.Key,
-									X = X,
-									Y = Y,
-									Z = Z,
-									Yaw = RY * 0.0174532925199433,
-									Pitch = RX * 0.0174532925199433,
-									Roll = RZtoRoll(RY, RZ) * 0.0174532925199433,
-									Type = Convert.ToInt32(Tilt),
-									Span = Convert.ToDouble(Span)
-								});
-							}
+						dynamic d = Statement; // HACK: as we don't know which type
+						string TrackKey = d.TrackKey;
+						double X, Y, Z, RX, RY, RZ, Tilt, Span;
+						if (string.IsNullOrEmpty(TrackKey))
+						{
+							TrackKey = "0";
 						}
+						X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
+						Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
+						Z = Statement.GetArgumentValueAsDouble(ArgumentName.Z);
+						RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
+						RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
+						RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
+						Tilt = Statement.GetArgumentValueAsDouble(ArgumentName.Tilt);
+						Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
+						int RailIndex = RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKey));
+
+						if (RailIndex != -1)
+						{
+							int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+
+							if (Blocks[BlockIndex].FreeObj[RailIndex] == null)
+							{
+								Blocks[BlockIndex].FreeObj[RailIndex] = new List<FreeObj>();
+							}
+
+							Blocks[BlockIndex].FreeObj[RailIndex].Add(new FreeObj
+							{
+								TrackPosition = Statement.Distance,
+								Key = Statement.Key,
+								X = X,
+								Y = Y,
+								Z = Z,
+								Yaw = RY * 0.0174532925199433,
+								Pitch = RX * 0.0174532925199433,
+								Roll = RZtoRoll(RY, RZ) * 0.0174532925199433,
+								Type = Convert.ToInt32(Tilt),
+								Span = Convert.ToDouble(Span)
+							});
+						}
+					}
 						break;
 					case MapFunctionName.PutBetween:
+					{
+						string[] TrackKeys = new string[2];
+						if (!Statement.HasArgument(ArgumentName.TrackKey1) || string.IsNullOrEmpty(TrackKeys[0] = Statement.GetArgumentValueAsString(ArgumentName.TrackKey1)))
 						{
-							string[] TrackKeys = new string[2];
-							if (!Statement.HasArgument(ArgumentName.TrackKey1) || string.IsNullOrEmpty(TrackKeys[0] = Statement.GetArgumentValueAsString(ArgumentName.TrackKey1)))
-							{
-								TrackKeys[0] = "0";
-							}
-							if (!Statement.HasArgument(ArgumentName.TrackKey2) || string.IsNullOrEmpty(TrackKeys[1] = Statement.GetArgumentValueAsString(ArgumentName.TrackKey2)))
-							{
-								TrackKeys[1] = "0";
-							}
-
-							int[] RailsIndex =
-							{
-								RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKeys[0])),
-								RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKeys[1]))
-							};
-
-							if (RailsIndex[0] != -1 && RailsIndex[1] > 0)
-							{
-								int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
-
-								Blocks[BlockIndex].Cracks.Add(new Crack
-								{
-									TrackPosition = Statement.Distance,
-									Key = Statement.Key,
-									PrimaryRail = RailsIndex[0],
-									SecondaryRail = RailsIndex[1]
-								});
-							}
+							TrackKeys[0] = "0";
 						}
+						if (!Statement.HasArgument(ArgumentName.TrackKey2) || string.IsNullOrEmpty(TrackKeys[1] = Statement.GetArgumentValueAsString(ArgumentName.TrackKey2)))
+						{
+							TrackKeys[1] = "0";
+						}
+
+						int[] RailsIndex =
+						{
+							RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKeys[0])),
+							RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKeys[1]))
+						};
+
+						if (RailsIndex[0] != -1 && RailsIndex[1] > 0)
+						{
+							int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+
+							Blocks[BlockIndex].Cracks.Add(new Crack
+							{
+								TrackPosition = Statement.Distance,
+								Key = Statement.Key,
+								PrimaryRail = RailsIndex[0],
+								SecondaryRail = RailsIndex[1]
+							});
+						}
+					}
 						break;
 				}
 			}
@@ -895,14 +894,13 @@ namespace Route.Bve5
 					continue;
 				}
 
-				object Speed;
-				Speed = Statement.GetArgumentValue(ArgumentName.V);
+				double Speed = Statement.GetArgumentValueAsDouble(ArgumentName.V);
 
 				int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
 				Blocks[BlockIndex].Limits.Add(new Limit
 				{
 					TrackPosition = Statement.Distance,
-					Speed = Convert.ToDouble(Speed) <= 0.0 ? double.PositiveInfinity : Convert.ToDouble(Speed) * RouteData.UnitOfSpeed
+					Speed = Speed <= 0.0 ? double.PositiveInfinity : Convert.ToDouble(Speed) * RouteData.UnitOfSpeed
 				});
 			}
 		}
@@ -922,10 +920,8 @@ namespace Route.Bve5
 				}
 
 				dynamic d = Statement;
-				object TempTime = d.Time;
 				double Time;
-
-				TryParseBve5Time(Convert.ToString(TempTime), out Time);
+				TryParseBve5Time(Convert.ToString(d.Time), out Time);
 
 				int n = Plugin.CurrentRoute.BogusPreTrainInstructions.Length;
 				Array.Resize(ref Plugin.CurrentRoute.BogusPreTrainInstructions, n + 1);

@@ -35,14 +35,13 @@ namespace Route.Bve5
 			internal List<Station> StationList;
 			internal ObjectDictionary Objects;
 			internal List<Background> Backgrounds;
-			internal bool AccurateObjectDisposal = true;
 			internal List<SignalData> SignalObjects;
 			internal SoundDictionary Sounds;
 			internal SoundDictionary Sound3Ds;
 
 			//Set units of speed initially to km/h
 			//This represents 1km/h in m/s
-			internal double UnitOfSpeed = 0.277777777777778;
+			internal const double UnitOfSpeed = 0.277777777777778;
 
 			internal double[] SignalSpeeds;
 

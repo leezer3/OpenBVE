@@ -230,7 +230,6 @@ namespace Route.Bve5
 		{
 			List<Block> Blocks = RouteData.Blocks;
 
-			//foreach (var Statement in ParseData.Statements)
 			{
 				dynamic d = Statement;
 				switch (Statement.FunctionName)
@@ -409,8 +408,6 @@ namespace Route.Bve5
 						}
 
 						double X;
-
-						var vals = Statement.GetArgumentKeyValuePairs();
 
 						if (d.X == null)
 						{

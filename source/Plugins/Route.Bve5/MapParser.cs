@@ -151,7 +151,7 @@ namespace Route.Bve5
 			LoadSound3DList(FileName, PreviewOnly, ParseData, RouteData);
 			if (Plugin.CurrentOptions.EnableBve5TFO)
 			{
-				LoadOtherTrain(FileName, PreviewOnly, ParseData, RouteData);
+				LoadScriptedTrain(FileName, PreviewOnly, ParseData, RouteData);
 			}
 
 			System.Threading.Thread.Sleep(1);

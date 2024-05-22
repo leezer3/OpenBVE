@@ -54,13 +54,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\SignalList.cs" />
+    <Compile Include="Components\SoundList.cs" />
+    <Compile Include="Components\StationList.cs" />
+    <Compile Include="Components\StructureList.cs" />
     <Compile Include="MapParser.cs" />
     <Compile Include="MapParser\ApplyRouteData.cs" />
     <Compile Include="MapParser\ConfirmComponents.cs" />
     <Compile Include="MapParser\ConvertComponents.cs" />
     <Compile Include="MapParser\CustomDictionary.cs" />
     <Compile Include="MapParser\Functions.cs" />
-    <Compile Include="MapParser\LoadComponents.cs" />
+    <Compile Include="Components\ScriptedTrain.cs" />
     <Compile Include="MapParser\RouteData.cs" />
     <Compile Include="MapParser\Structures.cs" />
     <Compile Include="Plugin.cs" />
@@ -93,6 +97,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>

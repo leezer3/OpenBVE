@@ -257,7 +257,7 @@ namespace Route.Bve5
 			internal StaticObject[] GlowObjects;
 		}
 
-		private class OtherTrain
+		private class ScriptedTrain
 		{
 			internal string Key;
 			internal string FilePath;
