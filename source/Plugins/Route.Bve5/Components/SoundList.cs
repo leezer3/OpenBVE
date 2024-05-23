@@ -27,6 +27,7 @@ using System.Linq;
 using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using Path = OpenBveApi.Path;
 
 namespace Route.Bve5
@@ -134,7 +135,7 @@ namespace Route.Bve5
 			{
 				//Cycle through the list of sounds
 				//A sound index is formatted as follows:
-				// --KEY USED BY ROUTEFILE-- , --PATH TO OBJECT RELATIVE TO SOUND FILE--
+				// --KEY USED BY ROUTEFILE-- , --PATH TO OBJECT RELATIVE TO SOUND FILE-- , --OPTIONAL RADIUS--
 
 				Lines[i] = Lines[i].TrimBVE5Comments();
 				if (string.IsNullOrEmpty(Lines[i]))
@@ -143,16 +144,37 @@ namespace Route.Bve5
 				}
 
 				int a = Lines[i].IndexOf(',');
-				string FilePath = Lines[i].Substring(a + 1, Lines[i].Length - a - 1);
+				if (a == -1)
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "No sound file was specified for key " + Lines[i]);
+					continue;
+				}
+				string[] splitLine = Lines[i].Split(',');
 
-				if (string.IsNullOrEmpty(FilePath) || a == -1)
+				string Key = splitLine[0];
+				string FilePath = splitLine[1];
+
+				double soundRadius = 15;
+
+				if (splitLine.Length > 2)
+				{
+					if (!NumberFormats.TryParseDoubleVb6(splitLine[3], out soundRadius))
+					{
+						soundRadius = 15;
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "An invalid sound radius was specified for key " + Lines[i]);
+					}
+					
+				}
+				if (string.IsNullOrEmpty(splitLine[1]))
 				{
 					// empty object name
 					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "No sound file was specified for key " + Lines[i]);
 					continue;
 				}
 
-				string Key = Lines[i].Substring(0, a);
+				
+
+				
 				try
 				{
 					FilePath = Path.CombineFile(BaseDirectory, FilePath);
@@ -168,7 +190,7 @@ namespace Route.Bve5
 					continue;
 				}
 
-				Plugin.CurrentHost.RegisterSound(FilePath, 15.0, out OpenBveApi.Sounds.SoundHandle handle);
+				Plugin.CurrentHost.RegisterSound(FilePath, soundRadius, out OpenBveApi.Sounds.SoundHandle handle);
 				RouteData.Sound3Ds.Add(Key, handle);
 			}
 		}
