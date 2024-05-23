@@ -29,6 +29,7 @@ using System.Linq;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
 using LibRender2.Trains;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -45,7 +46,7 @@ namespace Route.Bve5
 	{
 		private static void LoadScriptedTrain(string FileName, bool PreviewOnly, MapData ParseData, RouteData RouteData)
 		{
-			if (PreviewOnly)
+			if (PreviewOnly || Plugin.CurrentHost.Application != HostApplication.OpenBve)
 			{
 				return;
 			}
@@ -63,7 +64,7 @@ namespace Route.Bve5
 				{
 					case MapFunctionName.Add:
 					case MapFunctionName.Load:
-						string TrainKey, TrainFilePath, TrackKey = Statement.Key;
+						string TrainKey, TrainFilePath, TrackKey;
 						int Direction;
 
 						if (Statement.FunctionName == MapFunctionName.Add)
@@ -79,18 +80,20 @@ namespace Route.Bve5
 							TrainKey = Statement.Key;
 						}
 						
-						if (!Statement.HasArgument(ArgumentName.TrainFilePath))
+						if (!Statement.HasArgument(ArgumentName.FilePath))
 						{
 							continue;
 						}
 
-						TrainFilePath = Statement.GetArgumentValueAsString(ArgumentName.TrainFilePath);
+						TrainFilePath = Statement.GetArgumentValueAsString(ArgumentName.FilePath);
 						if (string.IsNullOrEmpty(TrainFilePath))
 						{
 							continue;
 						}
 
-						if (!Statement.HasKey || string.IsNullOrEmpty(Statement.Key))
+						TrackKey = !Statement.HasArgument(ArgumentName.TrackKey) ? "0" : Statement.GetArgumentValueAsString(ArgumentName.TrackKey);
+
+						if (string.IsNullOrEmpty(TrackKey))
 						{
 							TrackKey = "0";
 						}
@@ -187,6 +190,7 @@ namespace Route.Bve5
 					Train.Cars[i].Doors[1] = new Door(1, 10000, 10000);
 					Train.Cars[i].Width = 2.6;
 					Train.Cars[i].Height = 3.2;
+					Train.Cars[i].Coupler = new Coupler(0.05, 0.1, Train.Cars[i], i < Train.Cars.Length - 1 ? Train.Cars[i + 1] : null, Train);
 					if (i + 1 < Train.Cars.Length)
 					{
 						Train.Cars[i].Length = OtherTrain.CarObjects[i].Distance - OtherTrain.CarObjects[i + 1].Distance;

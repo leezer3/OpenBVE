@@ -30,8 +30,6 @@ using Bve5_Parsing;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Interface;
-using RouteManager2;
-using RouteManager2.Stations;
 using static Bve5_Parsing.MapGrammar.MapGrammarParser;
 
 namespace Route.Bve5
@@ -149,7 +147,7 @@ namespace Route.Bve5
 			LoadSignalList(FileName, PreviewOnly, ParseData, RouteData);
 			LoadSoundList(FileName, PreviewOnly, ParseData, RouteData);
 			LoadSound3DList(FileName, PreviewOnly, ParseData, RouteData);
-			if (Plugin.CurrentOptions.EnableBve5TFO)
+			if (Plugin.CurrentOptions.EnableBve5ScriptedTrain)
 			{
 				LoadScriptedTrain(FileName, PreviewOnly, ParseData, RouteData);
 			}
