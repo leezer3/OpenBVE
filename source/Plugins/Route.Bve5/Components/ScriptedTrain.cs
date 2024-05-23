@@ -28,7 +28,6 @@ using System.IO;
 using System.Linq;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
-using CsvHelper;
 using LibRender2.Trains;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
