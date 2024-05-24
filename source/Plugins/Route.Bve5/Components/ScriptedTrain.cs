@@ -206,8 +206,7 @@ namespace Route.Bve5
 					Train.Cars[i].Specs.CenterOfGravityHeight = 1.5;
 					Train.Cars[i].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * Train.Cars[i].Specs.CenterOfGravityHeight / Train.Cars[i].Width);
 
-					UnifiedObject CarObject;
-					RouteData.Objects.TryGetValue(OtherTrain.CarObjects[i].Key, out CarObject);
+					RouteData.Objects.TryGetValue(OtherTrain.CarObjects[i].Key, out UnifiedObject CarObject);
 					if (CarObject != null)
 					{
 						Train.Cars[i].LoadCarSections(CarObject, false);
@@ -218,7 +217,6 @@ namespace Route.Bve5
 
 				foreach (var Statement in ParseData.Statements)
 				{
-					double d = Statement.Distance;
 					if (Statement.ElementName != MapElementName.Train || Statement.Key != OtherTrain.Key)
 					{
 						continue;

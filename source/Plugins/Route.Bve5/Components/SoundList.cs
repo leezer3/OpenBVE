@@ -158,7 +158,7 @@ namespace Route.Bve5
 
 				if (splitLine.Length > 2)
 				{
-					if (!NumberFormats.TryParseDoubleVb6(splitLine[3], out soundRadius))
+					if (!NumberFormats.TryParseDoubleVb6(splitLine[2], out soundRadius))
 					{
 						soundRadius = 15;
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "An invalid sound radius was specified for key " + Lines[i]);
