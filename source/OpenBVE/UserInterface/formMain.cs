@@ -152,6 +152,7 @@ namespace OpenBve {
 			Image CsvRouteIcon = LoadImage(MenuFolder, "icon_route.png");
 			Image RwRouteIcon = LoadImage(MenuFolder, "icon_route_outdatedversion.png");
 			Image MechanikRouteIcon = LoadImage(MenuFolder, "icon_mechanik.png");
+			Image Bve5Icon = LoadImage(MenuFolder, "icon_bve5.png");
 			Image TrainIcon = LoadImage(MenuFolder, "icon_train.png");
 			Image KeyboardIcon = LoadImage(MenuFolder, "icon_keyboard.png");
 			Image MouseIcon = LoadImage(MenuFolder, "icon_mouse.png");
@@ -189,10 +190,12 @@ namespace OpenBve {
 			if (CsvRouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("csvroute", CsvRouteIcon);
 			if (RwRouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("rwroute", RwRouteIcon);
 			if (MechanikRouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("mechanik", MechanikRouteIcon);
+			if (Bve5Icon != null) listviewRouteFiles.SmallImageList.Images.Add("bve5", Bve5Icon);
 			if (ParentIcon != null) listViewRoutePackages.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listViewRoutePackages.SmallImageList.Images.Add("folder", FolderIcon);
 			if (CsvRouteIcon != null) listViewRoutePackages.SmallImageList.Images.Add("csvroute", CsvRouteIcon);
 			if (RwRouteIcon != null) listViewRoutePackages.SmallImageList.Images.Add("rwroute", RwRouteIcon);
+			if (Bve5Icon != null) listViewRoutePackages.SmallImageList.Images.Add("bve5", Bve5Icon);
 			if (MechanikRouteIcon != null) listViewRoutePackages.SmallImageList.Images.Add("mechanik", MechanikRouteIcon);
 			if (DiskIcon != null) listviewRouteFiles.SmallImageList.Images.Add("disk", DiskIcon);
 			listviewRouteFiles.Columns.Clear();
@@ -204,6 +207,7 @@ namespace OpenBve {
 			listviewRouteRecently.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (CsvRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("csvroute", CsvRouteIcon);
 			if (RwRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("rwroute", RwRouteIcon);
+			if (RwRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("bve5", Bve5Icon);
 			if (MechanikRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("mechanik", MechanikRouteIcon);
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
 			{
@@ -224,7 +228,9 @@ namespace OpenBve {
 					case ".csv":
 						Item.ImageKey = @"csvroute";
 						break;
-
+					case ".txt":
+						Item.ImageKey = @"bve5";
+						break;
 				}
 
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedRoutes[i];

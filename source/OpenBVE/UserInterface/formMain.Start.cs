@@ -292,6 +292,10 @@ namespace OpenBve
 									}
 									break;
 								case ".txt":
+									if (isInvalidTxtName(Files[i]))
+									{
+										continue;
+									}
 									if (!Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out _, Program.TrainManager, Program.Renderer))
 									{
 										throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
@@ -301,7 +305,7 @@ namespace OpenBve
 										if (Program.CurrentHost.Plugins[j].Route != null && Program.CurrentHost.Plugins[j].Route.CanLoadRoute(Files[i]))
 										{
 											Item = listviewRouteFiles.Items.Add(System.IO.Path.GetFileName(Files[i]));
-											Item.ImageKey = @"csvroute";
+											Item.ImageKey = @"bve5";
 											Item.Tag = Files[i];
 										}
 									}
@@ -349,6 +353,52 @@ namespace OpenBve
 				default:
 					return false;
 			}
+		}
+
+		private bool isInvalidTxtName(string fileName)
+		{
+			/*
+			 * Unfortunately, BVE5 uses plain txt files for routes
+			 *
+			 * Blacklist the following (likely to require expansion):
+			 * > Common route components
+			 * > Legacy train.txt
+			 * > Common readme names
+			 * > Files over 20kb (a BVE5 scenario should be ~1kb, but let's be safe)
+			 */
+			FileInfo f = new FileInfo(fileName);
+			if (f.Length > 20000)
+			{
+				return true;
+			}
+
+			string fn = Path.GetFileName(fileName).ToLowerInvariant();
+			if (string.IsNullOrEmpty(fn))
+			{
+				return true;
+			}
+
+			switch (fn)
+			{
+				case "train":
+				case "stations":
+				case "structures":
+				case "sounds":
+				case "sounds3d":
+				case "signals":
+				case "map":
+					return false;
+			}
+
+			if (fn.IndexOf("readme", StringComparison.InvariantCultureIgnoreCase) != -1)
+			{
+				return true;
+			}
+			if (fn.IndexOf("liesmich", StringComparison.InvariantCultureIgnoreCase) != -1)
+			{
+				return true;
+			}
+			return false;
 		}
 
 		// route files
