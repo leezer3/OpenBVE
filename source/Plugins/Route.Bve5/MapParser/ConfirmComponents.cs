@@ -780,7 +780,7 @@ namespace Route.Bve5
 				string TrackKey = d.TrackKey;
 				object Section, X, Y, Z, RX, RY, RZ, Tilt, Span;
 				Section = d.Section;
-				if (string.IsNullOrEmpty(Statement.Key))
+				if (string.IsNullOrEmpty(TrackKey))
 				{
 					TrackKey = "0";
 				}
