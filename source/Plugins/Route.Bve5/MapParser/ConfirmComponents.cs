@@ -569,6 +569,8 @@ namespace Route.Bve5
 
 			foreach (var Repeater in RepeaterList)
 			{
+				double lastDistance = -1;
+				bool possibleEnd = false;
 				foreach (var Statement in ParseData.Statements)
 				{
 					if (Statement.ElementName != MapElementName.Repeater || !Statement.Key.Equals(Repeater.Key, StringComparison.InvariantCultureIgnoreCase))
@@ -621,17 +623,29 @@ namespace Route.Bve5
 								
 								Repeater.ObjectKeys = new string[d.StructureKeys.Count];
 								d.StructureKeys.CopyTo(Repeater.ObjectKeys, 0);
+								possibleEnd = false;
 							}
 							break;
 						case MapFunctionName.End:
-							if (Repeater.StartRefreshed)
-							{
-								Repeater.EndingDistance = Statement.Distance;
-								PutRepeater(RouteData, Repeater);
-								Repeater.StartRefreshed = false;
-							}
+							possibleEnd = true;
 							break;
 					}
+
+					/*
+					 * HACK: Commands may no longer be in order after sort by TPos (in BVE5_Parsing), but we can
+					 * work around that by triggering the end on the next track position instead
+					 */
+
+					if (possibleEnd && lastDistance != Statement.Distance && Repeater.StartRefreshed)
+					{
+						Repeater.EndingDistance = Statement.Distance;
+						PutRepeater(RouteData, Repeater);
+						Repeater.StartRefreshed = false;
+						possibleEnd = false;
+					}
+
+					lastDistance = Statement.Distance;
+
 				}
 
 				// Hack:
