@@ -74,7 +74,7 @@ namespace Route.Bve5
 				}
 
 				int a = Lines[i].IndexOf(',');
-				string FilePath = Lines[i].Substring(a + 1, Lines[i].Length - a - 1);
+				string FilePath = Lines[i].Substring(a + 1, Lines[i].Length - a - 1).Trim();
 
 				if (string.IsNullOrEmpty(FilePath) || a == -1)
 				{
@@ -83,7 +83,7 @@ namespace Route.Bve5
 					continue;
 				}
 
-				string Key = Lines[i].Substring(0, a);
+				string Key = Lines[i].Substring(0, a).Trim();
 				try
 				{
 					FilePath = Path.CombineFile(BaseDirectory, FilePath);
