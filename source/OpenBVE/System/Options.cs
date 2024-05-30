@@ -174,6 +174,7 @@ namespace OpenBve
 				this.IsUseNewRenderer = true;
 				this.DailyBuildUpdates = false;
 				this.UseGDIDecoders = false;
+				this.EnableBve5ScriptedTrain = true;
 				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
 				switch (Program.CurrentHost.Platform)
 				{
@@ -398,6 +399,7 @@ namespace OpenBve
 
 				Builder.AppendLine("acceleratedtimefactor = " + TimeAccelerationFactor);
 				Builder.AppendLine("enablebvetshacks = " + (EnableBveTsHacks ? "true" : "false"));
+				Builder.AppendLine("enablebve5scriptedtrain = " + (EnableBve5ScriptedTrain ? "true" : "false"));
 				Builder.AppendLine();
 				Builder.AppendLine("[verbosity]");
 				Builder.AppendLine("showWarningMessages = " + (ShowWarningMessages ? "true" : "false"));
@@ -848,7 +850,9 @@ namespace OpenBve
 										case "enablebvetshacks":
 											Interface.CurrentOptions.EnableBveTsHacks = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
-
+										case "enablebve5scriptedtrain":
+											Interface.CurrentOptions.EnableBve5ScriptedTrain = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
 									} break;
 								case "controls":
 									switch (Key)
