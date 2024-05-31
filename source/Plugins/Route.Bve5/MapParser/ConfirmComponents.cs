@@ -370,12 +370,7 @@ namespace Route.Bve5
 						for (int k = StartBlock; k < i; k++)
 						{
 							double CurrentDistance = Blocks[k].StartingDistance;
-							double CurrentRadius;
-							double CurrentCant;
-
-							CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out CurrentRadius, out CurrentCant);
-
-							Blocks[k].Rails[j].CurveCant = CurrentCant;
+							CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out _, out Blocks[k].Rails[j].CurveCant);
 						}
 					}
 				}
@@ -419,12 +414,7 @@ namespace Route.Bve5
 						for (int k = StartBlock + 1; k < i; k++)
 						{
 							double CurrentDistance = Blocks[k].StartingDistance;
-							double CurrentRadius;
-							double CurrentCant;
-
-							CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out CurrentRadius, out CurrentCant);
-
-							Blocks[k].Rails[j].CurveCant = CurrentCant;
+							CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out _, out Blocks[k].Rails[j].CurveCant);
 						}
 					}
 				}
@@ -702,7 +692,7 @@ namespace Route.Bve5
 		private static void ConfirmSection(bool PreviewOnly, MapData ParseData, RouteData RouteData)
 		{
 			// These are the speed limits for the default Japanese signal aspects, and in most cases will be overwritten
-			RouteData.SignalSpeeds = new double[] { 0.0, 6.94444444444444, 15.2777777777778, 20.8333333333333, double.PositiveInfinity, double.PositiveInfinity };
+			RouteData.SignalSpeeds = new[] { 0.0, 6.94444444444444, 15.2777777777778, 20.8333333333333, double.PositiveInfinity, double.PositiveInfinity };
 
 			if (PreviewOnly)
 			{
@@ -725,30 +715,30 @@ namespace Route.Bve5
 					case MapFunctionName.Begin:
 					case MapFunctionName.BeginNew:
 					{
-							double?[] aspects = new double?[d.SignalAspects.Count];
-							d.SignalAspects.CopyTo(aspects, 0); // Yuck: Stored as nullable doubles
-							int Index = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
-							Blocks[Index].Sections.Add(new Section
+						double?[] aspects = new double?[d.SignalAspects.Count];
+						d.SignalAspects.CopyTo(aspects, 0); // Yuck: Stored as nullable doubles
+						int Index = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+						Blocks[Index].Sections.Add(new Section
+						{
+							TrackPosition = Statement.Distance,
+							Aspects = aspects.Select(db => db != null ? (int)db : 0).ToArray(),
+							DepartureStationIndex = -1
+						});
+						int StationIndex = Array.FindLastIndex(Plugin.CurrentRoute.Stations, s => s.Stops.Last().TrackPosition <= Statement.Distance);
+						if (StationIndex != -1)
+						{
+							Station Station = RouteData.StationList.Find(s => s.Name.Equals(Plugin.CurrentRoute.Stations[StationIndex].Name, StringComparison.InvariantCultureIgnoreCase));
+							if (Station != null)
 							{
-								TrackPosition = Statement.Distance,
-								Aspects = aspects.Select(db => db != null ? (int)db : 0).ToArray(),
-								DepartureStationIndex = -1
-							});
-							int StationIndex = Array.FindLastIndex(Plugin.CurrentRoute.Stations, s => s.Stops.Last().TrackPosition <= Statement.Distance);
-							if (StationIndex != -1)
-							{
-								Station Station = RouteData.StationList.Find(s => s.Name.Equals(Plugin.CurrentRoute.Stations[StationIndex].Name, StringComparison.InvariantCultureIgnoreCase));
-								if (Station != null)
+								if (Station.ForceStopSignal && !Station.DepartureSignalUsed)
 								{
-									if (Station.ForceStopSignal && !Station.DepartureSignalUsed)
-									{
-										Blocks[Index].Sections.Last().DepartureStationIndex = StationIndex;
-										Station.DepartureSignalUsed = true;
-									}
+									Blocks[Index].Sections.Last().DepartureStationIndex = StationIndex;
+									Station.DepartureSignalUsed = true;
 								}
 							}
 						}
-						break;
+					}
+					break;
 					case MapFunctionName.SetSpeedLimit:
 					case MapFunctionName.SpeedLimit:
 					{

@@ -72,10 +72,6 @@ namespace Route.Bve5
 		
 	    public override bool LoadRoute(string path, Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route)
 	    {
-		    if (Encoding == null)
-		    {
-			    Encoding = Encoding.UTF8;
-		    }
 		    LastException = null;
 		    Cancel = false;
 		    CurrentProgress = 0.0;

@@ -245,16 +245,7 @@ namespace Route.Bve5
 					case MapFunctionName.BeginConst:
 					case MapFunctionName.Pitch:
 						{
-							object Gradient;
-							if (Statement.FunctionName == MapFunctionName.Pitch)
-							{
-								Gradient = d.Rate;
-							}
-							else
-							{
-								Gradient = d.Gradient;
-							}
-
+							object Gradient = Statement.FunctionName == MapFunctionName.Pitch ? d.Rate : d.Gradient;
 							int Index = RouteData.FindOrAddBlock(Statement.Distance);
 							Blocks[Index].Pitch = Convert.ToDouble(Gradient) / 1000.0;
 							Blocks[Index].GradientInterpolateStart = true;
@@ -428,14 +419,7 @@ namespace Route.Bve5
 						double RadiusH;
 						if (Statement.FunctionName == MapFunctionName.Position)
 						{
-							if (d.RadiusH == null)
-							{
-								RadiusH = 0.0;
-							}
-							else
-							{
-								RadiusH = d.RadiusH;
-							}
+							RadiusH = d.RadiusH == null ? 0.0 : (double)d.RadiusH;
 						}
 						else
 						{
@@ -483,14 +467,7 @@ namespace Route.Bve5
 						double RadiusV;
 						if (Statement.FunctionName == MapFunctionName.Position)
 						{
-							if (d.RadiusV == null)
-							{
-								RadiusV = 0.0;
-							}
-							else
-							{
-								RadiusV = d.RadiusV;
-							}
+							RadiusV = d.RadiusV == null ? 0.0 : (double)d.RadiusV;
 						}
 						else
 						{

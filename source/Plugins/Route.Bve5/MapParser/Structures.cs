@@ -32,18 +32,6 @@ namespace Route.Bve5
 {
 	static partial class Bve5ScenarioParser
 	{
-		private class IncludeInfo
-		{
-			internal bool IsInclude;
-			internal readonly string BaseDirectory;
-
-			internal IncludeInfo(bool isInclude, string baseDirectory)
-			{
-				IsInclude = isInclude;
-				BaseDirectory = baseDirectory;
-			}
-		}
-
 		private struct Rail
 		{
 			internal double RailX;

@@ -32,12 +32,12 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
+using OpenBveApi.Trains;
 using OpenBveApi.World;
 using RouteManager2;
 using RouteManager2.Climate;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
-using TrainManager.Trains;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace Route.Bve5
@@ -51,7 +51,7 @@ namespace Route.Bve5
 			Plugin.CurrentOptions.SpeedConversionFactor = 0.0;
 
 			Plugin.CurrentRoute.Sections = new RouteManager2.SignalManager.Section[1];
-			Plugin.CurrentRoute.Sections[0] = new RouteManager2.SignalManager.Section(0, new SectionAspect[] { new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity) }, SectionType.ValueBased);
+			Plugin.CurrentRoute.Sections[0] = new RouteManager2.SignalManager.Section(0, new[] { new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity) }, SectionType.ValueBased);
 			Plugin.CurrentRoute.Sections[0].CurrentAspect = 0;
 			Plugin.CurrentRoute.Sections[0].StationIndex = -1;
 
@@ -348,7 +348,7 @@ namespace Route.Bve5
 					{
 						if (Data.Blocks[i].SoundEvents[k].Type == SoundType.TrainStatic)
 						{
-							OpenBveApi.Sounds.SoundHandle buffer;
+							SoundHandle buffer;
 							Data.Sounds.TryGetValue(Data.Blocks[i].SoundEvents[k].Key, out buffer);
 
 							if (buffer != null)
@@ -397,7 +397,7 @@ namespace Route.Bve5
 						Plugin.CurrentRoute.Sections[m].CurrentAspect = -1;
 						Plugin.CurrentRoute.Sections[m].StationIndex = Data.Blocks[i].Sections[k].DepartureStationIndex;
 						Plugin.CurrentRoute.Sections[m].Invisible = false;
-						Plugin.CurrentRoute.Sections[m].Trains = new TrainBase[] { };
+						Plugin.CurrentRoute.Sections[m].Trains = new AbstractTrain[] { };
 
 						// create section change event
 						double d = Data.Blocks[i].Sections[k].TrackPosition - StartingDistance;
@@ -449,7 +449,7 @@ namespace Route.Bve5
 								Data.Objects.TryGetValue(key, out obj);
 								if (obj != null)
 								{
-									obj.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObj[j][k].Yaw, Data.Blocks[i].FreeObj[j][k].Pitch, Data.Blocks[i].FreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0, false);
+									obj.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObj[j][k].Yaw, Data.Blocks[i].FreeObj[j][k].Pitch, Data.Blocks[i].FreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
 								}
 							}
 						}
@@ -585,7 +585,7 @@ namespace Route.Bve5
 											aoc.Objects[m].RefreshRate = refreshRate;
 										}
 
-										aoc.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].Signals[j][k].Yaw, Data.Blocks[i].Signals[j][k].Pitch, Data.Blocks[i].Signals[j][k].Roll), Data.Blocks[i].Signals[j][k].SectionIndex, StartingDistance, EndingDistance, tpos, 1.0, false);
+										aoc.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].Signals[j][k].Yaw, Data.Blocks[i].Signals[j][k].Pitch, Data.Blocks[i].Signals[j][k].Roll), Data.Blocks[i].Signals[j][k].SectionIndex, StartingDistance, EndingDistance, tpos, 1.0);
 									}
 								}
 							}
@@ -606,14 +606,7 @@ namespace Route.Bve5
 				}
 
 				//Pitch
-				if (Data.Blocks[i].Pitch != 0.0)
-				{
-					Plugin.CurrentRoute.Tracks[0].Elements[n].Pitch = Data.Blocks[i].Pitch;
-				}
-				else
-				{
-					Plugin.CurrentRoute.Tracks[0].Elements[n].Pitch = 0.0;
-				}
+				Plugin.CurrentRoute.Tracks[0].Elements[n].Pitch = Data.Blocks[i].Pitch;
 
 				// curves
 				CalcTransformation(WorldTrackElement.CurveRadius, Data.Blocks[i].Pitch, BlockInterval, ref Direction, out double a, out double c, out double h);
