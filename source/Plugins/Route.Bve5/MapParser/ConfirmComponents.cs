@@ -92,13 +92,7 @@ namespace Route.Bve5
 					for (int k = StartBlock; k < i; k++)
 					{
 						double CurrentDistance = Blocks[k].StartingDistance;
-						double CurrentRadius;
-						double CurrentCant;
-
-						CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out CurrentRadius, out CurrentCant);
-
-						Blocks[k].CurrentTrackState.CurveRadius = CurrentRadius;
-						Blocks[k].CurrentTrackState.CurveCant = CurrentCant;
+						CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out Blocks[k].CurrentTrackState.CurveRadius, out Blocks[k].CurrentTrackState.CurveCant);
 					}
 				}
 			}
@@ -139,13 +133,7 @@ namespace Route.Bve5
 					for (int k = StartBlock + 1; k < i; k++)
 					{
 						double CurrentDistance = Blocks[k].StartingDistance;
-						double CurrentRadius;
-						double CurrentCant;
-
-						CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out CurrentRadius, out CurrentCant);
-
-						Blocks[k].CurrentTrackState.CurveRadius = CurrentRadius;
-						Blocks[k].CurrentTrackState.CurveCant = CurrentCant;
+						CalcCurveTransition(StartDistance, StartRadius, StartCant, EndDistance, EndRadius, EndCant, CurrentDistance, out Blocks[k].CurrentTrackState.CurveRadius, out Blocks[k].CurrentTrackState.CurveCant);
 					}
 				}
 			}

@@ -240,6 +240,11 @@ namespace Route.Bve5
 
 		private static void CalcTransformation(double CurveRadius, double Pitch, double BlockInterval, ref Vector2 Direction, out double a, out double c, out double h)
 		{
+			if (BlockInterval == 0)
+			{
+				// Attempting to transform a zero-length block will never work- Just use an arbitrary number here (Some objects will trigger this)
+				BlockInterval = 1;
+			}
 			a = 0.0;
 			c = BlockInterval;
 			h = 0.0;
@@ -285,10 +290,9 @@ namespace Route.Bve5
 				Direction.Rotate(cosag, sinag);
 			}
 
-			double a, c, h;
 			ObjectPosition = StartingPosition;
 
-			CalcTransformation(CurveRadius, Pitch, TrackDistance - StartingDistance, ref Direction, out a, out c, out h);
+			CalcTransformation(CurveRadius, Pitch, TrackDistance - StartingDistance, ref Direction, out double a, out double c, out double h);
 
 			ObjectPosition.X += Direction.X * c;
 			ObjectPosition.Y += h;
@@ -298,7 +302,7 @@ namespace Route.Bve5
 				Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 			}
 
-			CalcTransformation(CurveRadius, Pitch, Span, ref Direction, out a, out c, out h);
+			CalcTransformation(CurveRadius, Pitch, Span, ref Direction, out _, out _, out _);
 
 			double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
 			double TrackPitch = Math.Atan(Pitch);
@@ -332,10 +336,9 @@ namespace Route.Bve5
 				Direction.Rotate(cosag, sinag);
 			}
 
-			double a, c, h;
 			Vector3 Position = StartingPosition;
 
-			CalcTransformation(CurveRadius, Pitch, TrackDistance - StartingDistance, ref Direction, out a, out c, out h);
+			CalcTransformation(CurveRadius, Pitch, TrackDistance - StartingDistance, ref Direction, out double a, out double c, out double h);
 
 			Position.X += Direction.X * c;
 			Position.Y += h;
@@ -361,7 +364,7 @@ namespace Route.Bve5
 				Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 			}
 
-			CalcTransformation(CurveRadius, Pitch, Span, ref Direction, out a, out c, out h);
+			CalcTransformation(CurveRadius, Pitch, Span, ref Direction, out _, out _, out _);
 
 			double InterpolateX2 = GetTrackCoordinate(StartingDistance, X, NextStartingDistance, NextX, RadiusH, TrackDistance + Span);
 			double InterpolateY2 = GetTrackCoordinate(StartingDistance, Y, NextStartingDistance, NextY, RadiusV, TrackDistance + Span);

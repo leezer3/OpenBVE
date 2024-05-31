@@ -616,8 +616,7 @@ namespace Route.Bve5
 				}
 
 				// curves
-				double a, c, h;
-				CalcTransformation(WorldTrackElement.CurveRadius, Data.Blocks[i].Pitch, BlockInterval, ref Direction, out a, out c, out h);
+				CalcTransformation(WorldTrackElement.CurveRadius, Data.Blocks[i].Pitch, BlockInterval, ref Direction, out double a, out double c, out double h);
 
 				if (!PreviewOnly)
 				{
@@ -654,8 +653,7 @@ namespace Route.Bve5
 							Direction2.Rotate(cosag, sinag);
 						}
 
-						double a2, c2, h2;
-						CalcTransformation(CurveRadius2, Pitch2, BlockInterval2, ref Direction2, out a2, out c2, out h2);
+						CalcTransformation(CurveRadius2, Pitch2, BlockInterval2, ref Direction2, out _, out _, out _);
 
 						double x2 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[j].RailX : x;
 						double y2 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[j].RailY : y;
