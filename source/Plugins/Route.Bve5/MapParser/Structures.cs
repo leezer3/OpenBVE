@@ -203,11 +203,11 @@ namespace Route.Bve5
 			internal bool GradientInterpolateEnd;
 			internal bool GradientTransitionStart;
 			internal bool GradientTransitionEnd;
-			internal int Station = -1;
+			internal int StationIndex = -1;
 			internal int Stop = -1;
 			internal List<FreeObj>[] FreeObj;
 			internal List<Crack> Cracks;
-			internal int Background = -1;
+			internal int BackgroundIndex = -1;
 			internal List<Section> Sections;
 			internal List<Signal>[] Signals;
 			internal List<Transponder> Transponders;

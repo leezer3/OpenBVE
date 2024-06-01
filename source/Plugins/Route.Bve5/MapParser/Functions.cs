@@ -179,8 +179,9 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void GetCenterOfCircle(double x0, double y0, double x1, double y1, double r, out double x, out double y)
+		private static Vector2 GetCenterOfCircle(double x0, double y0, double x1, double y1, double r)
 		{
+			Vector2 result = Vector2.Null;
 			double x2 = (x0 + x1) / 2.0;
 			double y2 = (y0 + y1) / 2.0;
 			double l = Math.Pow(x1 - x2, 2.0) + Math.Pow(y1 - y2, 2.0);
@@ -191,36 +192,31 @@ namespace Route.Bve5
 				double dy = d * (x1 - x2);
 				if (r >= 0)
 				{
-					x = x2 - dx;
-					y = y2 + dy;
+					result.X = x2 - dx;
+					result.Y = y2 + dy;
 				}
 				else
 				{
-					x = x2 + dx;
-					y = y2 - dy;
+					result.X = x2 + dx;
+					result.Y = y2 - dy;
 				}
 			}
-			else
-			{
-				x = 0.0;
-				y = 0.0;
-			}
+
+			return result;
 		}
 
 		private static double GetTrackCoordinate(double distance0, double xy0, double distance1, double xy1, double radius, double distance)
 		{
-			double center_distance;
-			double center_xy;
-			GetCenterOfCircle(distance0, xy0, distance1, xy1, radius, out center_distance, out center_xy);
-			double squaring = Math.Pow(radius, 2.0) - Math.Pow(distance - center_distance, 2.0);
+			Vector2 center = GetCenterOfCircle(distance0, xy0, distance1, xy1, radius);
+			double squaring = Math.Pow(radius, 2.0) - Math.Pow(distance - center.X, 2.0);
 			if (squaring >= 0.0)
 			{
 				if (radius > 0)
 				{
-					return center_xy - Math.Sqrt(squaring);
+					return center.Y - Math.Sqrt(squaring);
 				}
 
-				return center_xy + Math.Sqrt(squaring);
+				return center.Y + Math.Sqrt(squaring);
 			}
 
 			return LinearInterpolation(distance0, xy0, distance1, xy1, distance);
@@ -391,74 +387,6 @@ namespace Route.Bve5
 				Transformation = new Transformation(Transformation, 0.0, 0.0, Math.Atan(CurveCant));
 			}
 		}
-
-		private static StaticObject GetTransformedStaticObject(StaticObject Prototype, double NearDistance, double FarDistance)
-		{
-			StaticObject Result = (StaticObject)Prototype.Clone();
-			int n = 0;
-			double x2 = 0.0, x3 = 0.0, x6 = 0.0, x7 = 0.0;
-			for (int i = 0; i < Result.Mesh.Vertices.Length; i++)
-			{
-				if (n == 2)
-				{
-					x2 = Result.Mesh.Vertices[i].Coordinates.X;
-				}
-				else if (n == 3)
-				{
-					x3 = Result.Mesh.Vertices[i].Coordinates.X;
-				}
-				else if (n == 6)
-				{
-					x6 = Result.Mesh.Vertices[i].Coordinates.X;
-				}
-				else if (n == 7)
-				{
-					x7 = Result.Mesh.Vertices[i].Coordinates.X;
-				}
-				n++;
-				if (n == 8)
-				{
-					break;
-				}
-			}
-			if (n >= 4)
-			{
-				int m = 0;
-				for (int i = 0; i < Result.Mesh.Vertices.Length; i++)
-				{
-					if (m == 0)
-					{
-						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x3;
-					}
-					else if (m == 1)
-					{
-						Result.Mesh.Vertices[i].Coordinates.X = FarDistance - x2;
-						if (n < 8)
-						{
-							m = 8;
-							break;
-						}
-					}
-					else if (m == 4)
-					{
-						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x7;
-					}
-					else if (m == 5)
-					{
-						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x6;
-						m = 8;
-						break;
-					}
-					m++;
-					if (m == 8)
-					{
-						break;
-					}
-				}
-			}
-			return Result;
-		}
-
 		private static void Normalize(ref double x, ref double y)
 		{
 			double t = x * x + y * y;

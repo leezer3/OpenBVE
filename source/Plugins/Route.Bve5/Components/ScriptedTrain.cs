@@ -64,8 +64,7 @@ namespace Route.Bve5
 				{
 					case MapFunctionName.Add:
 					case MapFunctionName.Load:
-						string TrainKey, TrainFilePath, TrackKey;
-						int Direction;
+						string TrainKey;
 
 						if (Statement.FunctionName == MapFunctionName.Add)
 						{
@@ -85,20 +84,20 @@ namespace Route.Bve5
 							continue;
 						}
 
-						TrainFilePath = Statement.GetArgumentValueAsString(ArgumentName.FilePath);
+						string TrainFilePath = Statement.GetArgumentValueAsString(ArgumentName.FilePath);
 						if (string.IsNullOrEmpty(TrainFilePath))
 						{
 							continue;
 						}
 
-						TrackKey = !Statement.HasArgument(ArgumentName.TrackKey) ? "0" : Statement.GetArgumentValueAsString(ArgumentName.TrackKey);
+						string TrackKey = !Statement.HasArgument(ArgumentName.TrackKey) ? "0" : Statement.GetArgumentValueAsString(ArgumentName.TrackKey);
 
 						if (string.IsNullOrEmpty(TrackKey))
 						{
 							TrackKey = "0";
 						}
 
-						if (!Statement.HasArgument(ArgumentName.Direction) || !int.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Direction), out Direction))
+						if (!Statement.HasArgument(ArgumentName.Direction) || !int.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Direction), out int Direction))
 						{
 							Direction = 1;
 						}
@@ -131,14 +130,13 @@ namespace Route.Bve5
 				}
 
 				string TrackKey = d.TrackKey;
-				int Direction;
 				object TrainKey = Statement.Key;
 
 				if (string.IsNullOrEmpty(TrackKey))
 				{
 					TrackKey = "0";
 				}
-				if (!Statement.HasArgument(ArgumentName.Direction) || !int.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Direction), out Direction))
+				if (!Statement.HasArgument(ArgumentName.Direction) || !int.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Direction), out int Direction))
 				{
 					Direction = 1;
 				}
@@ -226,23 +224,17 @@ namespace Route.Bve5
 					{
 						case MapFunctionName.Enable:
 							{
-								object TempTime;
-								double Time;
-								TempTime = Statement.GetArgumentValue(ArgumentName.Time);
-
-								TryParseBve5Time(Convert.ToString(TempTime), out Time);
-
+								TryParseBve5Time(Convert.ToString(Statement.GetArgumentValue(ArgumentName.Time)), out double Time);
 								Train.AppearanceStartPosition = Statement.Distance;
 								Train.AppearanceTime = Time;
 							}
 							break;
 						case MapFunctionName.Stop:
 							{
-								object Decelerate, StopTime, Accelerate, Speed;
-								Decelerate = Statement.GetArgumentValue(ArgumentName.Decelerate);
-								StopTime = Statement.GetArgumentValue(ArgumentName.StopTime);
-								Accelerate = Statement.GetArgumentValue(ArgumentName.Accelerate);
-								Speed = Statement.GetArgumentValue(ArgumentName.Speed);	
+								object Decelerate = Statement.GetArgumentValue(ArgumentName.Decelerate);
+								object StopTime = Statement.GetArgumentValue(ArgumentName.StopTime);
+								object Accelerate = Statement.GetArgumentValue(ArgumentName.Accelerate);
+								object Speed = Statement.GetArgumentValue(ArgumentName.Speed);	
 
 								Data.Add(new TravelStopData
 								{

@@ -444,19 +444,15 @@ namespace Route.Bve5
 					{
 						dynamic d = Statement; // HACK: as we don't know which type
 						string TrackKey = d.TrackKey;
-						double X, Y, Z, RX, RY, RZ, Tilt, Span;
 						if (string.IsNullOrEmpty(TrackKey))
 						{
 							TrackKey = "0";
 						}
-						X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
-						Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
-						Z = Statement.GetArgumentValueAsDouble(ArgumentName.Z);
-						RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
-						RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
-						RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
-						Tilt = Statement.GetArgumentValueAsDouble(ArgumentName.Tilt);
-						Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
+						double RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
+						double RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
+						double RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
+						double Tilt = Statement.GetArgumentValueAsDouble(ArgumentName.Tilt);
+						double Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
 						int RailIndex = RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKey));
 
 						if (RailIndex != -1)
@@ -472,9 +468,9 @@ namespace Route.Bve5
 							{
 								TrackPosition = Statement.Distance,
 								Key = Statement.Key,
-								X = X,
-								Y = Y,
-								Z = Z,
+								X = Statement.GetArgumentValueAsDouble(ArgumentName.X),
+								Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y),
+								Z = Statement.GetArgumentValueAsDouble(ArgumentName.Z),
 								Yaw = RY * 0.0174532925199433,
 								Pitch = RX * 0.0174532925199433,
 								Roll = RZtoRoll(RY, RZ) * 0.0174532925199433,
@@ -570,26 +566,22 @@ namespace Route.Bve5
 
 								dynamic d = Statement; // HACK: as we don't know which type
 								string TrackKey = d.TrackKey;
-								double X, Y, Z, RX, RY, RZ, Tilt, Span, Interval;
 								if (string.IsNullOrEmpty(TrackKey))
 								{
 									TrackKey = "0";
 								}
-								X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
-								Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
-								Z = Statement.GetArgumentValueAsDouble(ArgumentName.Z);
-								RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
-								RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
-								RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
-								Tilt = Statement.GetArgumentValueAsDouble(ArgumentName.Tilt);
-								Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
-								Interval = Statement.GetArgumentValueAsDouble(ArgumentName.Interval);
+								double RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
+								double RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
+								double RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
+								double Tilt = Statement.GetArgumentValueAsDouble(ArgumentName.Tilt);
+								double Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
+								double Interval = Statement.GetArgumentValueAsDouble(ArgumentName.Interval);
 
 								Repeater.StartingDistance = Statement.Distance;
 								Repeater.TrackKey = Convert.ToString(TrackKey);
-								Repeater.X = X;
-								Repeater.Y = Y;
-								Repeater.Z = Z;
+								Repeater.X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
+								Repeater.Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
+								Repeater.Z = Statement.GetArgumentValueAsDouble(ArgumentName.Z);
 								Repeater.Yaw = RY * 0.0174532925199433;
 								Repeater.Pitch = RX * 0.0174532925199433;
 								Repeater.Roll = RZtoRoll(RY, RZ) * 0.0174532925199433;
@@ -770,21 +762,20 @@ namespace Route.Bve5
 				dynamic d = Statement;
 
 				string TrackKey = d.TrackKey;
-				object Section, X, Y, Z, RX, RY, RZ, Tilt, Span;
-				Section = d.Section;
+				object Section = d.Section;
 				if (string.IsNullOrEmpty(TrackKey))
 				{
 					TrackKey = "0";
 				}
 
-				X = d.X;
-				Y = d.Y;
-				Z = d.Z;
-				RX = d.RX;
-				RY = d.RY;
-				RZ = d.RZ;
-				Tilt = d.Tilt;
-				Span = d.Span;
+				object X = d.X;
+				object Y = d.Y;
+				object Z = d.Z;
+				object RX = d.RX;
+				object RY = d.RY;
+				object RZ = d.RZ;
+				object Tilt = d.Tilt;
+				object Span = d.Span;
 
 				int RailIndex = RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKey));
 
@@ -837,10 +828,9 @@ namespace Route.Bve5
 
 				dynamic d = Statement;
 
-				object Type, TempSection, SendData;
-				Type = d.Type;
-				TempSection = d.Section;
-				SendData = d.Senddata;
+				object Type = d.Type;
+				object TempSection = d.Section;
+				object SendData = d.Senddata;
 
 				int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
 
@@ -1187,8 +1177,7 @@ namespace Route.Bve5
 					continue;
 				}
 
-				object Index;
-				Index = Statement.GetArgumentValue(ArgumentName.Index);
+				object Index = Statement.GetArgumentValue(ArgumentName.Index);
 
 				int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
 				RouteData.Blocks[BlockIndex].RunSounds.Add(new TrackSound
@@ -1213,8 +1202,7 @@ namespace Route.Bve5
 					continue;
 				}
 
-				object Index;
-				Index = Statement.GetArgumentValue(ArgumentName.Index);
+				object Index = Statement.GetArgumentValue(ArgumentName.Index);
 
 				int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
 				RouteData.Blocks[BlockIndex].FlangeSounds.Add(new TrackSound

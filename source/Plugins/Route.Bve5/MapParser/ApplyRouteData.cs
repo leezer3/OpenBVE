@@ -62,9 +62,9 @@ namespace Route.Bve5
 			// background
 			if (!PreviewOnly)
 			{
-				if (Data.Blocks[0].Background >= 0 & Data.Blocks[0].Background < Data.Backgrounds.Count)
+				if (Data.Blocks[0].BackgroundIndex >= 0 & Data.Blocks[0].BackgroundIndex < Data.Backgrounds.Count)
 				{
-					Plugin.CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background].Handle;
+					Plugin.CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Blocks[0].BackgroundIndex].Handle;
 				}
 				else
 				{
@@ -72,9 +72,9 @@ namespace Route.Bve5
 					// as backgrounds are objects, we *must* have one, as opposed to the BVE2 / BVE4 default cylinder
 					for (int i = 0; i < Data.Blocks.Count; i++)
 					{
-						if (Data.Blocks[i].Background >= 0 & Data.Blocks[i].Background < Data.Backgrounds.Count)
+						if (Data.Blocks[i].BackgroundIndex >= 0 & Data.Blocks[i].BackgroundIndex < Data.Backgrounds.Count)
 						{
-							Plugin.CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Blocks[i].Background].Handle;
+							Plugin.CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Blocks[i].BackgroundIndex].Handle;
 							break;
 						}
 					}
@@ -170,21 +170,21 @@ namespace Route.Bve5
 				// background
 				if (!PreviewOnly)
 				{
-					if (Data.Blocks[i].Background >= 0)
+					if (Data.Blocks[i].BackgroundIndex >= 0)
 					{
 						int typ;
 						if (i == 0)
 						{
-							typ = Data.Blocks[i].Background;
+							typ = Data.Blocks[i].BackgroundIndex;
 						}
 						else
 						{
 							typ = Data.Backgrounds.Count > 0 ? 0 : -1;
 							for (int j = i - 1; j >= 0; j--)
 							{
-								if (Data.Blocks[j].Background >= 0)
+								if (Data.Blocks[j].BackgroundIndex >= 0)
 								{
-									typ = Data.Blocks[j].Background;
+									typ = Data.Blocks[j].BackgroundIndex;
 									break;
 								}
 							}
@@ -192,7 +192,7 @@ namespace Route.Bve5
 						if (typ >= 0 & typ < Data.Backgrounds.Count)
 						{
 							
-							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new BackgroundChangeEvent(Plugin.CurrentRoute, 0.0, Data.Backgrounds[typ].Handle, Data.Backgrounds[Data.Blocks[i].Background].Handle));
+							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new BackgroundChangeEvent(Plugin.CurrentRoute, 0.0, Data.Backgrounds[typ].Handle, Data.Backgrounds[Data.Blocks[i].BackgroundIndex].Handle));
 						}
 					}
 				}
@@ -290,9 +290,9 @@ namespace Route.Bve5
 				}
 
 				// station
-				if (Data.Blocks[i].Station >= 0)
+				if (Data.Blocks[i].StationIndex >= 0)
 				{
-					int s = Data.Blocks[i].Station;
+					int s = Data.Blocks[i].StationIndex;
 					Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new StationStartEvent(Plugin.CurrentRoute, 0.0, s));
 					double dx, dy = 3.0;
 					if (Plugin.CurrentRoute.Stations[s].OpenLeftDoors & !Plugin.CurrentRoute.Stations[s].OpenRightDoors)
@@ -445,8 +445,7 @@ namespace Route.Bve5
 									GetTransformation(Position, StartingDistance, turn, curveRadius, pitch, x, y, radiusH, radiusV, curveCant, nextStartingDistance, nextX, nextY, tpos, type, span, Direction, out wpos, out Transformation);
 								}
 								wpos += dx * Transformation.X + dy * Transformation.Y + dz * Transformation.Z;
-								UnifiedObject obj;
-								Data.Objects.TryGetValue(key, out obj);
+								Data.Objects.TryGetValue(key, out UnifiedObject obj);
 								if (obj != null)
 								{
 									obj.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObj[j][k].Yaw, Data.Blocks[i].FreeObj[j][k].Pitch, Data.Blocks[i].FreeObj[j][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
@@ -497,11 +496,10 @@ namespace Route.Bve5
 								double d0 = sInterpolateX0 - pInterpolateX0;
 								double d1 = sInterpolateX1 - pInterpolateX1;
 
-								UnifiedObject obj;
-								Data.Objects.TryGetValue(key, out obj);
+								Data.Objects.TryGetValue(key, out UnifiedObject obj);
 								if (obj != null)
 								{
-									StaticObject crack = GetTransformedStaticObject((StaticObject)obj, d0, d1);
+									UnifiedObject crack = obj.Transform(d0, d1);
 									crack.CreateObject(wpos, Transformation, new Transformation(0.0, 0.0, 0.0), -1, StartingDistance, EndingDistance, BlockInterval, tpos);
 								}
 							}
@@ -813,7 +811,7 @@ namespace Route.Bve5
 			{
 				if (Plugin.CurrentRoute.Stations[i].Stops.Length == 0 & Plugin.CurrentRoute.Stations[i].StopMode != StationStopMode.AllPass)
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Station " + Plugin.CurrentRoute.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + Plugin.CurrentRoute.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "StationIndex " + Plugin.CurrentRoute.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + Plugin.CurrentRoute.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
 					Plugin.CurrentRoute.Stations[i].StopMode = StationStopMode.AllPass;
 				}
 				if (Plugin.CurrentRoute.Stations[i].Type == StationType.ChangeEnds)
@@ -822,13 +820,13 @@ namespace Route.Bve5
 					{
 						if (Plugin.CurrentRoute.Stations[i + 1].StopMode != StationStopMode.AllStop)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Station " + Plugin.CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but the subsequent station does not expect all trains to stop in file " + FileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "StationIndex " + Plugin.CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but the subsequent station does not expect all trains to stop in file " + FileName);
 							Plugin.CurrentRoute.Stations[i + 1].StopMode = StationStopMode.AllStop;
 						}
 					}
 					else
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Station " + Plugin.CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but there is no subsequent station defined in file " + FileName);
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "StationIndex " + Plugin.CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but there is no subsequent station defined in file " + FileName);
 						Plugin.CurrentRoute.Stations[i].Type = StationType.Terminal;
 					}
 				}

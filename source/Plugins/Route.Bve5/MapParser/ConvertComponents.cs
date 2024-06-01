@@ -770,19 +770,14 @@ namespace Route.Bve5
 				{
 					DefaultTrackPosition = 0.0;
 				}
-
-				SoundHandle ArrivalSound;
-				SoundHandle DepartureSound;
-				RouteData.Sounds.TryGetValue(RouteData.StationList[Index].ArrivalSoundKey, out ArrivalSound);
-				RouteData.Sounds.TryGetValue(RouteData.StationList[Index].DepartureSoundKey, out DepartureSound);
-
+				
 				RouteStation NewStation = new RouteStation();
 				NewStation.Name = RouteData.StationList[Index].Name;
 				NewStation.ArrivalTime = RouteData.StationList[Index].ArrivalTime;
-				NewStation.ArrivalSoundBuffer = ArrivalSound;
+				RouteData.Sounds.TryGetValue(RouteData.StationList[Index].ArrivalSoundKey, out NewStation.ArrivalSoundBuffer);
 				NewStation.StopMode = RouteData.StationList[Index].StopMode;
 				NewStation.DepartureTime = RouteData.StationList[Index].DepartureTime;
-				NewStation.DepartureSoundBuffer = DepartureSound;
+				RouteData.Sounds.TryGetValue(RouteData.StationList[Index].DepartureSoundKey, out NewStation.DepartureSoundBuffer);
 				NewStation.Type = RouteData.StationList[Index].StationType;
 				NewStation.StopTime = RouteData.StationList[Index].StopTime;
 				NewStation.ForceStopSignal = RouteData.StationList[Index].ForceStopSignal;
@@ -800,7 +795,7 @@ namespace Route.Bve5
 				NewStation.MaxInterferingObjectRate = Plugin.RandomNumberGenerator.Next(1, 99);
 
 				int StationBlockIndex = RouteData.FindOrAddBlock(DefaultTrackPosition);
-				RouteData.Blocks[StationBlockIndex].Station = CurrentStation;
+				RouteData.Blocks[StationBlockIndex].StationIndex = CurrentStation;
 
 				int StopBlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
 				RouteData.Blocks[StopBlockIndex].Stop = CurrentStation;
@@ -822,8 +817,7 @@ namespace Route.Bve5
 
 				if (BackgroundIndex == -1)
 				{
-					UnifiedObject Object;
-					RouteData.Objects.TryGetValue(Convert.ToString(BackgroundKey), out Object);
+					RouteData.Objects.TryGetValue(Convert.ToString(BackgroundKey), out UnifiedObject Object);
 
 					if (Object != null)
 					{
@@ -835,7 +829,7 @@ namespace Route.Bve5
 				if (BackgroundIndex != -1)
 				{
 					int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
-					RouteData.Blocks[BlockIndex].Background = BackgroundIndex;
+					RouteData.Blocks[BlockIndex].BackgroundIndex = BackgroundIndex;
 				}
 				else
 				{
