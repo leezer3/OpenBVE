@@ -30,7 +30,6 @@ using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
-using OpenBveApi.Sounds;
 using RouteManager2.Stations;
 
 namespace Route.Bve5
@@ -41,7 +40,7 @@ namespace Route.Bve5
 		{
 			{
 				dynamic d = Statement;
-
+				RouteData.FindOrAddBlock(Statement.Distance);
 				switch (Statement.FunctionName)
 				{
 					case MapFunctionName.SetGauge:
@@ -63,9 +62,8 @@ namespace Route.Bve5
 						break;
 					case MapFunctionName.BeginTransition:
 						{
-							int blockIndex = RouteData.FindOrAddBlock(Statement.Distance);
-							RouteData.Blocks[blockIndex].Rails[0].CurveInterpolateStart = true;
-							RouteData.Blocks[blockIndex].Rails[0].CurveTransitionStart = true;
+							RouteData.sortedBlocks[Statement.Distance].Rails[0].CurveInterpolateStart = true;
+							RouteData.sortedBlocks[Statement.Distance].Rails[0].CurveTransitionStart = true;
 						}
 						break;
 					case MapFunctionName.Begin:
@@ -80,18 +78,16 @@ namespace Route.Bve5
 								Cant = Convert.ToDouble(Cant) / 1000.0;
 							}
 
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Convert.ToDouble(Radius);
-							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Math.Abs(Convert.ToDouble(Cant)) * Math.Sign(Convert.ToDouble(Radius));
-							RouteData.Blocks[Index].Rails[0].CurveInterpolateStart = true;
-							RouteData.Blocks[Index].Rails[0].CurveTransitionEnd = true;
+							RouteData.sortedBlocks[Statement.Distance].CurrentTrackState.CurveRadius = Convert.ToDouble(Radius);
+							RouteData.sortedBlocks[Statement.Distance].CurrentTrackState.CurveCant = Math.Abs(Convert.ToDouble(Cant)) * Math.Sign(Convert.ToDouble(Radius));
+							RouteData.sortedBlocks[Statement.Distance].Rails[0].CurveInterpolateStart = true;
+							RouteData.sortedBlocks[Statement.Distance].Rails[0].CurveTransitionEnd = true;
 						}
 						break;
 					case MapFunctionName.End:
 						{
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							RouteData.Blocks[Index].Rails[0].CurveInterpolateStart = true;
-							RouteData.Blocks[Index].Rails[0].CurveTransitionEnd = true;
+							RouteData.sortedBlocks[Statement.Distance].Rails[0].CurveInterpolateStart = true;
+							RouteData.sortedBlocks[Statement.Distance].Rails[0].CurveTransitionEnd = true;
 						}
 						break;
 					case MapFunctionName.Interpolate:
@@ -131,8 +127,7 @@ namespace Route.Bve5
 					case MapFunctionName.Turn:
 						{
 							object Slope = d.Slope;
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							RouteData.Blocks[Index].Turn = Convert.ToDouble(Slope);
+							RouteData.sortedBlocks[Statement.Distance].Turn = Convert.ToDouble(Slope);
 						}
 						break;
 				}
@@ -232,13 +227,13 @@ namespace Route.Bve5
 
 			{
 				dynamic d = Statement;
+				RouteData.FindOrAddBlock(Statement.Distance);
 				switch (Statement.FunctionName)
 				{
 					case MapFunctionName.BeginTransition:
 						{
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							Blocks[Index].GradientInterpolateStart = true;
-							Blocks[Index].GradientTransitionStart = true;
+							RouteData.sortedBlocks[Statement.Distance].GradientInterpolateStart = true;
+							RouteData.sortedBlocks[Statement.Distance].GradientTransitionStart = true;
 						}
 						break;
 					case MapFunctionName.Begin:
@@ -246,17 +241,15 @@ namespace Route.Bve5
 					case MapFunctionName.Pitch:
 						{
 							object Gradient = Statement.FunctionName == MapFunctionName.Pitch ? d.Rate : d.Gradient;
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							Blocks[Index].Pitch = Convert.ToDouble(Gradient) / 1000.0;
-							Blocks[Index].GradientInterpolateStart = true;
-							Blocks[Index].GradientTransitionEnd = true;
+							RouteData.sortedBlocks[Statement.Distance].Pitch = Convert.ToDouble(Gradient) / 1000.0;
+							RouteData.sortedBlocks[Statement.Distance].GradientInterpolateStart = true;
+							RouteData.sortedBlocks[Statement.Distance].GradientTransitionEnd = true;
 						}
 						break;
 					case MapFunctionName.End:
 						{
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							Blocks[Index].GradientInterpolateStart = true;
-							Blocks[Index].GradientTransitionEnd = true;
+							RouteData.sortedBlocks[Statement.Distance].GradientInterpolateStart = true;
+							RouteData.sortedBlocks[Statement.Distance].GradientTransitionEnd = true;
 						}
 						break;
 					case MapFunctionName.Interpolate:
@@ -278,10 +271,10 @@ namespace Route.Bve5
 								Gradient = d.Gradient;
 							}
 
-							Blocks[Index].Pitch = Convert.ToDouble(Gradient) / 1000.0;
-							Blocks[Index].GradientInterpolateStart = true;
-							Blocks[Index].GradientInterpolateEnd = true;
-							Blocks[Index].GradientTransitionEnd = true;
+							RouteData.sortedBlocks[Statement.Distance].Pitch = Convert.ToDouble(Gradient) / 1000.0;
+							RouteData.sortedBlocks[Statement.Distance].GradientInterpolateStart = true;
+							RouteData.sortedBlocks[Statement.Distance].GradientInterpolateEnd = true;
+							RouteData.sortedBlocks[Statement.Distance].GradientTransitionEnd = true;
 						}
 						break;
 				}
