@@ -69,7 +69,7 @@ namespace Route.Bve5
 		/// <returns>True if the parse succeeds, false if it does not</returns>
 		private static bool TryParseBve5Time(string Expression, out double Value)
 		{
-			if (Expression.Length != 0)
+			if (!string.IsNullOrEmpty(Expression))
 			{
 				CultureInfo Culture = CultureInfo.InvariantCulture;
 				string[] Split = Expression.Split(':');
