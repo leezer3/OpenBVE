@@ -34,7 +34,7 @@ namespace Route.Bve5
 {
 	static partial class Bve5ScenarioParser
 	{
-		private static void ConfirmCurve(List<Block> Blocks)
+		private static void ConfirmCurve(IList<Block> Blocks)
 		{
 			// Set a tentative value to a block that has not been decided.
 			for (int i = 1; i < Blocks.Count; i++)
@@ -139,7 +139,7 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void ConfirmGradient(List<Block> Blocks)
+		private static void ConfirmGradient(IList<Block> Blocks)
 		{
 			// Set a tentative value to a block that has not been decided.
 			for (int i = 1; i < Blocks.Count; i++)
@@ -246,7 +246,7 @@ namespace Route.Bve5
 
 		private static void ConfirmTrack(RouteData RouteData)
 		{
-			List<Block> Blocks = RouteData.Blocks;
+			IList<Block> Blocks = RouteData.Blocks;
 
 			for (int j = 0; j < RouteData.TrackKeyList.Count; j++)
 			{
@@ -428,7 +428,7 @@ namespace Route.Bve5
 				return;
 			}
 
-			List<Block> Blocks = RouteData.Blocks;
+			IList<Block> Blocks = RouteData.Blocks;
 
 			foreach (var Statement in ParseData.Statements)
 			{
@@ -457,7 +457,7 @@ namespace Route.Bve5
 
 						if (RailIndex != -1)
 						{
-							int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+							int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 
 							if (Blocks[BlockIndex].FreeObj[RailIndex] == null)
 							{
@@ -500,9 +500,9 @@ namespace Route.Bve5
 
 						if (RailsIndex[0] != -1 && RailsIndex[1] > 0)
 						{
-							int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+							int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 
-							Blocks[BlockIndex].Cracks.Add(new Crack
+								Blocks[BlockIndex].Cracks.Add(new Crack
 							{
 								TrackPosition = Statement.Distance,
 								Key = Statement.Key,
@@ -644,12 +644,12 @@ namespace Route.Bve5
 				RailIndex = 0;
 			}
 
-			List<Block> Blocks = RouteData.Blocks;
+			IList<Block> Blocks = RouteData.Blocks;
 			int LoopCount = 0;
 
 			for (double i = Repeater.StartingDistance; i < Repeater.EndingDistance; i += Repeater.Interval)
 			{
-				int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= i);
+				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(i);
 
 				if (Blocks[BlockIndex].FreeObj[RailIndex] == null)
 				{
@@ -691,7 +691,7 @@ namespace Route.Bve5
 				return;
 			}
 
-			List<Block> Blocks = RouteData.Blocks;
+			IList<Block> Blocks = RouteData.Blocks;
 
 			foreach (var Statement in ParseData.Statements)
 			{
@@ -709,7 +709,7 @@ namespace Route.Bve5
 					{
 						double?[] aspects = new double?[d.SignalAspects.Count];
 						d.SignalAspects.CopyTo(aspects, 0); // Yuck: Stored as nullable doubles
-						int Index = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+						int Index = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 						Blocks[Index].Sections.Add(new Section
 						{
 							TrackPosition = Statement.Distance,
@@ -750,7 +750,7 @@ namespace Route.Bve5
 				return;
 			}
 
-			List<Block> Blocks = RouteData.Blocks;
+			IList<Block> Blocks = RouteData.Blocks;
 
 			foreach (var Statement in ParseData.Statements)
 			{
@@ -781,7 +781,7 @@ namespace Route.Bve5
 
 				if (RailIndex != -1)
 				{
-					int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+					int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 
 					if (Blocks[BlockIndex].Signals[RailIndex] == null)
 					{
@@ -812,7 +812,7 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void ConfirmBeacon(bool PreviewOnly, MapData ParseData, List<Block> Blocks)
+		private static void ConfirmBeacon(bool PreviewOnly, MapData ParseData, RouteData RouteData)
 		{
 			if (PreviewOnly)
 			{
@@ -832,13 +832,13 @@ namespace Route.Bve5
 				object TempSection = d.Section;
 				object SendData = d.Senddata;
 
-				int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 
 				int Section = Convert.ToInt32(TempSection);
 				int CurrentSection = 0;
 				for (int i = BlockIndex; i >= 0; i--)
 				{
-					CurrentSection += Blocks[i].Sections.Count(s => s.TrackPosition <= Statement.Distance);
+					CurrentSection += RouteData.Blocks[i].Sections.Count(s => s.TrackPosition <= Statement.Distance);
 				}
 
 				if (Section < -1)
@@ -850,7 +850,7 @@ namespace Route.Bve5
 					Section += CurrentSection;
 				}
 
-				Blocks[BlockIndex].Transponders.Add(new Transponder
+				RouteData.Blocks[BlockIndex].Transponders.Add(new Transponder
 				{
 					TrackPosition = Statement.Distance,
 					Type = Convert.ToInt32(Type),
@@ -867,7 +867,7 @@ namespace Route.Bve5
 				return;
 			}
 
-			List<Block> Blocks = RouteData.Blocks;
+			IList<Block> Blocks = RouteData.Blocks;
 
 			foreach (var Statement in ParseData.Statements)
 			{
@@ -878,7 +878,7 @@ namespace Route.Bve5
 
 				double Speed = Statement.GetArgumentValueAsDouble(ArgumentName.V);
 
-				int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 				Blocks[BlockIndex].Limits.Add(new Limit
 				{
 					TrackPosition = Statement.Distance,
@@ -1023,7 +1023,7 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void ConfirmCabIlluminance(bool PreviewOnly, MapData ParseData, List<Block> Blocks)
+		private static void ConfirmCabIlluminance(bool PreviewOnly, MapData ParseData, RouteData RouteData)
 		{
 			if (PreviewOnly)
 			{
@@ -1049,8 +1049,8 @@ namespace Route.Bve5
 					Value = Value < 0.0f ? 0.0f : 1.0f;
 				}
 
-				int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
-				Blocks[BlockIndex].BrightnessChanges.Add(new Brightness
+				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
+				RouteData.Blocks[BlockIndex].BrightnessChanges.Add(new Brightness
 				{
 					TrackPosition = Statement.Distance,
 					Value = Value
@@ -1058,7 +1058,7 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void ConfirmIrregularity(bool PreviewOnly, List<Block> Blocks)
+		private static void ConfirmIrregularity(bool PreviewOnly, IList<Block> Blocks)
 		{
 			if (PreviewOnly)
 			{
@@ -1084,7 +1084,7 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void ConfirmAdhesion(bool PreviewOnly, List<Block> Blocks)
+		private static void ConfirmAdhesion(bool PreviewOnly, IList<Block> Blocks)
 		{
 			if (PreviewOnly)
 			{
@@ -1124,7 +1124,7 @@ namespace Route.Bve5
 					continue;
 				}
 
-				int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 				RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
 				{
 					TrackPosition = Statement.Distance,
@@ -1151,7 +1151,7 @@ namespace Route.Bve5
 				double X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
 				double Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
 
-				int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 				RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
 				{
 					TrackPosition = Statement.Distance,
@@ -1179,7 +1179,7 @@ namespace Route.Bve5
 
 				object Index = Statement.GetArgumentValue(ArgumentName.Index);
 
-				int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 				RouteData.Blocks[BlockIndex].RunSounds.Add(new TrackSound
 				{
 					TrackPosition = Statement.Distance,
@@ -1204,7 +1204,7 @@ namespace Route.Bve5
 
 				object Index = Statement.GetArgumentValue(ArgumentName.Index);
 
-				int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 				RouteData.Blocks[BlockIndex].FlangeSounds.Add(new TrackSound
 				{
 					TrackPosition = Statement.Distance,

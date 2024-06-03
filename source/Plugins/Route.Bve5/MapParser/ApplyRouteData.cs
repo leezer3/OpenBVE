@@ -733,7 +733,7 @@ namespace Route.Bve5
 				if (j >= 0)
 				{
 					double p = Plugin.CurrentRoute.Stations[i].Stops[j].TrackPosition + Plugin.CurrentRoute.Stations[i].Stops[j].ForwardTolerance;
-					int k = Data.Blocks.FindLastIndex(Block => Block.StartingDistance <= p);
+					int k = Data.sortedBlocks.FindBlockIndex(p);
 					if (k != -1)
 					{
 						double d = p - Data.Blocks[k].StartingDistance;

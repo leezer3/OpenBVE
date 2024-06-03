@@ -228,7 +228,7 @@ namespace Route.Bve5
 
 		private static void ConvertGradient(Statement Statement, RouteData RouteData)
 		{
-			List<Block> Blocks = RouteData.Blocks;
+			IList<Block> Blocks = RouteData.Blocks;
 
 			{
 				dynamic d = Statement;
@@ -375,7 +375,7 @@ namespace Route.Bve5
 
 		private static void ConvertTrack(MapData ParseData, RouteData RouteData)
 		{
-			List<Block> Blocks = RouteData.Blocks;
+			IList<Block> Blocks = RouteData.Blocks;
 
 			// Own track is excluded.
 			for (int railIndex = 1; railIndex < RouteData.TrackKeyList.Count; railIndex++)
@@ -840,7 +840,7 @@ namespace Route.Bve5
 
 		private static void ConvertFog(Statement Statement, RouteData RouteData)
 		{
-			List<Block> Blocks = RouteData.Blocks;
+			IList<Block> Blocks = RouteData.Blocks;
 
 			{
 				switch (Statement.FunctionName)
@@ -947,7 +947,7 @@ namespace Route.Bve5
 
 		private static void ConvertIrregularity(Statement Statement, RouteData RouteData)
 		{
-			List<Block> Blocks = RouteData.Blocks;
+			IList<Block> Blocks = RouteData.Blocks;
 			{
 
 
@@ -983,7 +983,7 @@ namespace Route.Bve5
 
 		private static void ConvertAdhesion(Statement Statement, RouteData RouteData)
 		{
-			List<Block> Blocks = RouteData.Blocks;
+			IList<Block> Blocks = RouteData.Blocks;
 
 			{
 
