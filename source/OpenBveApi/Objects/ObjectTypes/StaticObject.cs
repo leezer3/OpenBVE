@@ -488,7 +488,7 @@ namespace OpenBveApi.Objects
 			int m = Mesh.Materials.Length;
 			int f = Mesh.Faces.Length;
 			
-			if (f >= Threshold && f < 20000 && currentHost.Platform != HostPlatform.AppleOSX)
+			if (m >= f / 500 && f >= Threshold && f < 20000 && currentHost.Platform != HostPlatform.AppleOSX)
 			{
 				/*
 				 * HACK:
@@ -497,6 +497,7 @@ namespace OpenBveApi.Objects
 				 * requires an optimized object (therefore decomposed into tris) in all circumstances
 				 *
 				 * Also *always* optimise objects with more than 20k faces (some .X as otherwise this kills the renderer)
+				 * Further, always try to squash where there are more than 500 times faces than materials (Some X trees killing the renderer)
 				 */
 				return;
 			}
