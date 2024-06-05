@@ -174,18 +174,7 @@ namespace Route.Bve5
 			ConfirmStructure(PreviewOnly, ParseData, RouteData);
 			ConfirmRepeater(PreviewOnly, ParseData, RouteData);
 			ConfirmSection(PreviewOnly, ParseData, RouteData);
-			ConfirmSignal(PreviewOnly, ParseData, RouteData);
-			ConfirmBeacon(PreviewOnly, ParseData, RouteData);
-			ConfirmSpeedLimit(PreviewOnly, ParseData, RouteData);
-			ConfirmPreTrain(PreviewOnly, ParseData);
-			ConfirmLight(PreviewOnly, ParseData);
-			ConfirmCabIlluminance(PreviewOnly, ParseData, RouteData);
-			ConfirmIrregularity(PreviewOnly, RouteData.Blocks);
-			ConfirmAdhesion(PreviewOnly, RouteData.Blocks);
-			ConfirmSound(PreviewOnly, ParseData, RouteData);
-			ConfirmSound3D(PreviewOnly, ParseData, RouteData);
-			ConfirmRollingNoise(PreviewOnly, ParseData, RouteData);
-			ConfirmFlangeNoise(PreviewOnly, ParseData, RouteData);
+			ConfirmIrregularityAdhesion(PreviewOnly, RouteData.Blocks);
 		}
 
 		private static void ConvertData(MapData parseData, RouteData routeData, bool previewOnly)
@@ -264,6 +253,66 @@ namespace Route.Bve5
 							{
 								routeData.RepeaterList.Add(parseData.Statements[i].Key.ToLowerInvariant(), new Repeater());
 							}
+						}
+						break;
+					case MapElementName.Signal:
+						if (!previewOnly)
+						{
+							ConfirmSignal(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.Beacon:
+						if (!previewOnly)
+						{
+							ConfirmBeacon(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.SpeedLimit:
+						if (!previewOnly)
+						{
+							ConfirmSpeedLimit(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.Pretrain:
+						if (!previewOnly)
+						{
+							ConfirmPreTrain(parseData.Statements[i]);
+						}
+						break;
+					case MapElementName.Light:
+						if (!previewOnly)
+						{
+							ConfirmLight(parseData.Statements[i]);
+						}
+						break;
+					case MapElementName.CabIlluminance:
+						if (!previewOnly)
+						{
+							ConfirmCabIlluminance(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.Sound:
+						if (!previewOnly)
+						{
+							ConfirmSound(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.Sound3d:
+						if (!previewOnly)
+						{
+							ConfirmSound3D(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.RollingNoise:
+						if (!previewOnly)
+						{
+							ConfirmRollingNoise(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.FlangeNoise:
+						if (!previewOnly)
+						{
+							ConfirmFlangeNoise(parseData.Statements[i], routeData);
 						}
 						break;
 				}

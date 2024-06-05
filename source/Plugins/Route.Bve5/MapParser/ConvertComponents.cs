@@ -759,60 +759,57 @@ namespace Route.Bve5
 
 		private static void ConvertStation(Statement Statement, RouteData RouteData)
 		{
-			
+			int Index = RouteData.StationList.FindIndex(Station => Station.Key.Equals(Statement.Key, StringComparison.InvariantCultureIgnoreCase));
+			if (Index == -1)
 			{
-
-				int Index = RouteData.StationList.FindIndex(Station => Station.Key.Equals(Statement.Key, StringComparison.InvariantCultureIgnoreCase));
-				if (Index == -1)
-				{
-					return;
-				}
-
-				dynamic d = Statement;
-
-				object Doors = d.Door;
-				object BackwardTolerance = d.Margin1;
-				object ForwardTolerance = d.Margin2;
-
-				double DefaultTrackPosition = Statement.Distance + StationNoticeDistance;
-				if (DefaultTrackPosition < 0.0)
-				{
-					DefaultTrackPosition = 0.0;
-				}
-				
-				RouteStation NewStation = new RouteStation();
-				NewStation.Name = RouteData.StationList[Index].Name;
-				NewStation.ArrivalTime = RouteData.StationList[Index].ArrivalTime;
-				RouteData.Sounds.TryGetValue(RouteData.StationList[Index].ArrivalSoundKey, out NewStation.ArrivalSoundBuffer);
-				NewStation.StopMode = RouteData.StationList[Index].StopMode;
-				NewStation.DepartureTime = RouteData.StationList[Index].DepartureTime;
-				RouteData.Sounds.TryGetValue(RouteData.StationList[Index].DepartureSoundKey, out NewStation.DepartureSoundBuffer);
-				NewStation.Type = RouteData.StationList[Index].StationType;
-				NewStation.StopTime = RouteData.StationList[Index].StopTime;
-				NewStation.ForceStopSignal = RouteData.StationList[Index].ForceStopSignal;
-				NewStation.OpenLeftDoors = Convert.ToDouble(Doors) < 0.0;
-				NewStation.OpenRightDoors = Convert.ToDouble(Doors) > 0.0;
-				NewStation.Stops = new StationStop[1];
-				NewStation.Stops[0].TrackPosition = Statement.Distance;
-				NewStation.Stops[0].BackwardTolerance = Math.Abs(Convert.ToDouble(BackwardTolerance));
-				NewStation.Stops[0].ForwardTolerance = Convert.ToDouble(ForwardTolerance);
-				NewStation.PassengerRatio = RouteData.StationList[Index].PassengerRatio;
-				NewStation.DefaultTrackPosition = DefaultTrackPosition;
-				NewStation.ReopenDoor = RouteData.StationList[Index].ReopenDoor;
-				NewStation.ReopenStationLimit = 5;
-				NewStation.InterferenceInDoor = RouteData.StationList[Index].InterferenceInDoor;
-				NewStation.MaxInterferingObjectRate = Plugin.RandomNumberGenerator.Next(1, 99);
-
-				int StationBlockIndex = RouteData.FindOrAddBlock(DefaultTrackPosition);
-				RouteData.Blocks[StationBlockIndex].StationIndex = CurrentStation;
-
-				int StopBlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
-				RouteData.Blocks[StopBlockIndex].Stop = CurrentStation;
-
-				Array.Resize(ref Plugin.CurrentRoute.Stations, CurrentStation + 1);
-				Plugin.CurrentRoute.Stations[CurrentStation] = NewStation;
-				CurrentStation++;
+				return;
 			}
+
+			dynamic d = Statement;
+
+			object Doors = d.Door;
+			object BackwardTolerance = d.Margin1;
+			object ForwardTolerance = d.Margin2;
+
+			double DefaultTrackPosition = Statement.Distance + StationNoticeDistance;
+			if (DefaultTrackPosition < 0.0)
+			{
+				DefaultTrackPosition = 0.0;
+			}
+
+			RouteStation NewStation = new RouteStation();
+			NewStation.Name = RouteData.StationList[Index].Name;
+			NewStation.ArrivalTime = RouteData.StationList[Index].ArrivalTime;
+			RouteData.Sounds.TryGetValue(RouteData.StationList[Index].ArrivalSoundKey, out NewStation.ArrivalSoundBuffer);
+			NewStation.StopMode = RouteData.StationList[Index].StopMode;
+			NewStation.DepartureTime = RouteData.StationList[Index].DepartureTime;
+			RouteData.Sounds.TryGetValue(RouteData.StationList[Index].DepartureSoundKey, out NewStation.DepartureSoundBuffer);
+			NewStation.Type = RouteData.StationList[Index].StationType;
+			NewStation.StopTime = RouteData.StationList[Index].StopTime;
+			NewStation.ForceStopSignal = RouteData.StationList[Index].ForceStopSignal;
+			NewStation.OpenLeftDoors = Convert.ToDouble(Doors) < 0.0;
+			NewStation.OpenRightDoors = Convert.ToDouble(Doors) > 0.0;
+			NewStation.Stops = new StationStop[1];
+			NewStation.Stops[0].TrackPosition = Statement.Distance;
+			NewStation.Stops[0].BackwardTolerance = Math.Abs(Convert.ToDouble(BackwardTolerance));
+			NewStation.Stops[0].ForwardTolerance = Convert.ToDouble(ForwardTolerance);
+			NewStation.PassengerRatio = RouteData.StationList[Index].PassengerRatio;
+			NewStation.DefaultTrackPosition = DefaultTrackPosition;
+			NewStation.ReopenDoor = RouteData.StationList[Index].ReopenDoor;
+			NewStation.ReopenStationLimit = 5;
+			NewStation.InterferenceInDoor = RouteData.StationList[Index].InterferenceInDoor;
+			NewStation.MaxInterferingObjectRate = Plugin.RandomNumberGenerator.Next(1, 99);
+
+			int StationBlockIndex = RouteData.FindOrAddBlock(DefaultTrackPosition);
+			RouteData.Blocks[StationBlockIndex].StationIndex = CurrentStation;
+
+			int StopBlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
+			RouteData.Blocks[StopBlockIndex].Stop = CurrentStation;
+
+			Array.Resize(ref Plugin.CurrentRoute.Stations, CurrentStation + 1);
+			Plugin.CurrentRoute.Stations[CurrentStation] = NewStation;
+			CurrentStation++;
+
 		}
 
 		private static void ConvertBackground(Statement Statement, RouteData RouteData)
@@ -848,106 +845,114 @@ namespace Route.Bve5
 
 		private static void ConvertFog(Statement Statement, RouteData RouteData)
 		{
+			switch (Statement.FunctionName)
 			{
-				switch (Statement.FunctionName)
+				case MapFunctionName.Fog:
 				{
-					case MapFunctionName.Fog:
-						{
-							double Start = Statement.GetArgumentValueAsDouble(ArgumentName.Start);
-							double End = Statement.GetArgumentValueAsDouble(ArgumentName.End);
-							double TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
-							{
-								TempRed = 128;
-							}
-							if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
-							{
-								TempGreen = 128;
-							}
-							if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
-							{
-								TempBlue = 128;
-							}
+					double Start = Statement.GetArgumentValueAsDouble(ArgumentName.Start);
+					double End = Statement.GetArgumentValueAsDouble(ArgumentName.End);
+					double TempRed, TempGreen, TempBlue;
+					if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
+					{
+						TempRed = 128;
+					}
 
-							int Red = Convert.ToInt32(TempRed);
-							int Green = Convert.ToInt32(TempGreen);
-							int Blue = Convert.ToInt32(TempBlue);
-							if (Red < 0 || Red > 255)
-							{
-								Red = Red < 0 ? 0 : 255;
-							}
-							if (Green < 0 || Green > 255)
-							{
-								Green = Green < 0 ? 0 : 255;
-							}
-							if (Blue < 0 || Blue > 255)
-							{
-								Blue = Blue < 0 ? 0 : 255;
-							}
+					if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
+					{
+						TempGreen = 128;
+					}
 
-							int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
+					if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
+					{
+						TempBlue = 128;
+					}
 
-							if (Convert.ToSingle(Start) < Convert.ToSingle(End))
-							{
-								RouteData.Blocks[BlockIndex].Fog.Start = (float)Start;
-								RouteData.Blocks[BlockIndex].Fog.End = (float)End;
-							}
-							else
-							{
-								RouteData.Blocks[BlockIndex].Fog.Start = Plugin.CurrentRoute.NoFogStart;
-								RouteData.Blocks[BlockIndex].Fog.End = Plugin.CurrentRoute.NoFogEnd;
-							}
-							RouteData.Blocks[BlockIndex].Fog.Color = new Color24((byte)Red, (byte)Green, (byte)Blue);
-							RouteData.Blocks[BlockIndex].FogDefined = true;
-						}
-						break;
-					case MapFunctionName.Interpolate:
-					case MapFunctionName.Set:
-						{
-							double Density, TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument(ArgumentName.Density) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Density), out Density))
-							{
-								Density = 0.001;
-							}
-							if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
-							{
-								TempRed = 1.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
-							{
-								TempGreen = 1.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
-							{
-								TempBlue = 1.0;
-							}
-							
+					int Red = Convert.ToInt32(TempRed);
+					int Green = Convert.ToInt32(TempGreen);
+					int Blue = Convert.ToInt32(TempBlue);
+					if (Red < 0 || Red > 255)
+					{
+						Red = Red < 0 ? 0 : 255;
+					}
 
-							double Red = Convert.ToDouble(TempRed);
-							double Green = Convert.ToDouble(TempGreen);
-							double Blue = Convert.ToDouble(TempBlue);
-							if (Red < 0.0 || Red > 1.0)
-							{
-								Red = Red < 0.0 ? 0.0 : 1.0;
-							}
-							if (Green < 0.0 || Green > 1.0)
-							{
-								Green = Green < 0.0 ? 0.0 : 1.0;
-							}
-							if (Blue < 0.0 || Blue > 1.0)
-							{
-								Blue = Blue < 0.0 ? 0.0 : 1.0;
-							}
+					if (Green < 0 || Green > 255)
+					{
+						Green = Green < 0 ? 0 : 255;
+					}
 
-							int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
+					if (Blue < 0 || Blue > 255)
+					{
+						Blue = Blue < 0 ? 0 : 255;
+					}
 
-							RouteData.Blocks[BlockIndex].Fog.Start = 0.0f;
-							RouteData.Blocks[BlockIndex].Fog.End = 1.0f / Convert.ToSingle(Density);
-							RouteData.Blocks[BlockIndex].Fog.Color = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
-							RouteData.Blocks[BlockIndex].FogDefined = true;
-						}
-						break;
+					int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
+
+					if (Convert.ToSingle(Start) < Convert.ToSingle(End))
+					{
+						RouteData.Blocks[BlockIndex].Fog.Start = (float)Start;
+						RouteData.Blocks[BlockIndex].Fog.End = (float)End;
+					}
+					else
+					{
+						RouteData.Blocks[BlockIndex].Fog.Start = Plugin.CurrentRoute.NoFogStart;
+						RouteData.Blocks[BlockIndex].Fog.End = Plugin.CurrentRoute.NoFogEnd;
+					}
+
+					RouteData.Blocks[BlockIndex].Fog.Color = new Color24((byte)Red, (byte)Green, (byte)Blue);
+					RouteData.Blocks[BlockIndex].FogDefined = true;
 				}
+					break;
+				case MapFunctionName.Interpolate:
+				case MapFunctionName.Set:
+				{
+					double Density, TempRed, TempGreen, TempBlue;
+					if (!Statement.HasArgument(ArgumentName.Density) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Density), out Density))
+					{
+						Density = 0.001;
+					}
+
+					if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
+					{
+						TempRed = 1.0;
+					}
+
+					if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
+					{
+						TempGreen = 1.0;
+					}
+
+					if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
+					{
+						TempBlue = 1.0;
+					}
+
+
+					double Red = Convert.ToDouble(TempRed);
+					double Green = Convert.ToDouble(TempGreen);
+					double Blue = Convert.ToDouble(TempBlue);
+					if (Red < 0.0 || Red > 1.0)
+					{
+						Red = Red < 0.0 ? 0.0 : 1.0;
+					}
+
+					if (Green < 0.0 || Green > 1.0)
+					{
+						Green = Green < 0.0 ? 0.0 : 1.0;
+					}
+
+					if (Blue < 0.0 || Blue > 1.0)
+					{
+						Blue = Blue < 0.0 ? 0.0 : 1.0;
+					}
+
+					int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
+
+					RouteData.Blocks[BlockIndex].Fog.Start = 0.0f;
+					RouteData.Blocks[BlockIndex].Fog.End = 1.0f / Convert.ToSingle(Density);
+					RouteData.Blocks[BlockIndex].Fog.Color = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
+					RouteData.Blocks[BlockIndex].FogDefined = true;
+				}
+					break;
 			}
 		}
 
@@ -986,7 +991,6 @@ namespace Route.Bve5
 
 		private static void ConvertAdhesion(Statement Statement, RouteData RouteData)
 		{
-
 			switch (Statement.GetArgumentNames().Count())
 			{
 				case 1:

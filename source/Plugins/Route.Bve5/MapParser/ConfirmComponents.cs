@@ -727,322 +727,244 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void ConfirmSignal(bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void ConfirmSignal(Statement Statement, RouteData RouteData)
 		{
-			if (PreviewOnly)
+			if (Statement.FunctionName != MapFunctionName.Put)
 			{
 				return;
 			}
 
-			IList<Block> Blocks = RouteData.Blocks;
+			dynamic d = Statement;
 
-			foreach (var Statement in ParseData.Statements)
+			string TrackKey = d.TrackKey;
+			object Section = d.Section;
+			if (string.IsNullOrEmpty(TrackKey))
 			{
-				if (Statement.ElementName != MapElementName.Signal || Statement.FunctionName != MapFunctionName.Put)
-				{
-					continue;
-				}
-
-				dynamic d = Statement;
-
-				string TrackKey = d.TrackKey;
-				object Section = d.Section;
-				if (string.IsNullOrEmpty(TrackKey))
-				{
-					TrackKey = "0";
-				}
-
-				object X = d.X;
-				object Y = d.Y;
-				object Z = d.Z;
-				object RX = d.RX;
-				object RY = d.RY;
-				object RZ = d.RZ;
-				object Tilt = d.Tilt;
-				object Span = d.Span;
-
-				int RailIndex = RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKey));
-
-				if (RailIndex != -1)
-				{
-					int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-
-					if (Blocks[BlockIndex].Signals[RailIndex] == null)
-					{
-						Blocks[BlockIndex].Signals[RailIndex] = new List<Signal>();
-					}
-
-					int CurrentSection = 0;
-					for (int i = BlockIndex; i >= 0; i--)
-					{
-						CurrentSection += Blocks[i].Sections.Count(s => s.TrackPosition <= Statement.Distance);
-					}
-
-					Blocks[BlockIndex].Signals[RailIndex].Add(new Signal
-					{
-						TrackPosition = Statement.Distance,
-						SignalObjectKey = Statement.Key,
-						SectionIndex = CurrentSection + Convert.ToInt32(Section),
-						X = Convert.ToDouble(X),
-						Y = Convert.ToDouble(Y),
-						Z = Convert.ToDouble(Z),
-						Yaw = Convert.ToDouble(RY) * 0.0174532925199433,
-						Pitch = Convert.ToDouble(RX) * 0.0174532925199433,
-						Roll = RZtoRoll(Convert.ToDouble(RY), Convert.ToDouble(RZ)) * 0.0174532925199433,
-						Type = Convert.ToInt32(Tilt),
-						Span = Convert.ToDouble(Span)
-					});
-				}
-			}
-		}
-
-		private static void ConfirmBeacon(bool PreviewOnly, MapData ParseData, RouteData RouteData)
-		{
-			if (PreviewOnly)
-			{
-				return;
+				TrackKey = "0";
 			}
 
-			foreach (var Statement in ParseData.Statements)
+			object X = d.X;
+			object Y = d.Y;
+			object Z = d.Z;
+			object RX = d.RX;
+			object RY = d.RY;
+			object RZ = d.RZ;
+			object Tilt = d.Tilt;
+			object Span = d.Span;
+
+			int RailIndex = RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKey));
+
+			if (RailIndex != -1)
 			{
-				if (Statement.ElementName != MapElementName.Beacon)
-				{
-					continue;
-				}
-
-				dynamic d = Statement;
-
-				object Type = d.Type;
-				object TempSection = d.Section;
-				object SendData = d.Senddata;
-
 				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 
-				int Section = Convert.ToInt32(TempSection);
+				if (RouteData.Blocks[BlockIndex].Signals[RailIndex] == null)
+				{
+					RouteData.Blocks[BlockIndex].Signals[RailIndex] = new List<Signal>();
+				}
+
 				int CurrentSection = 0;
 				for (int i = BlockIndex; i >= 0; i--)
 				{
 					CurrentSection += RouteData.Blocks[i].Sections.Count(s => s.TrackPosition <= Statement.Distance);
 				}
 
-				if (Section < -1)
-				{
-					Section = CurrentSection + 1;
-				}
-				else if (Section > -1)
-				{
-					Section += CurrentSection;
-				}
-
-				RouteData.Blocks[BlockIndex].Transponders.Add(new Transponder
+				RouteData.Blocks[BlockIndex].Signals[RailIndex].Add(new Signal
 				{
 					TrackPosition = Statement.Distance,
-					Type = Convert.ToInt32(Type),
-					SectionIndex = Section,
-					Data = Convert.ToInt32(SendData)
+					SignalObjectKey = Statement.Key,
+					SectionIndex = CurrentSection + Convert.ToInt32(Section),
+					X = Convert.ToDouble(X),
+					Y = Convert.ToDouble(Y),
+					Z = Convert.ToDouble(Z),
+					Yaw = Convert.ToDouble(RY) * 0.0174532925199433,
+					Pitch = Convert.ToDouble(RX) * 0.0174532925199433,
+					Roll = RZtoRoll(Convert.ToDouble(RY), Convert.ToDouble(RZ)) * 0.0174532925199433,
+					Type = Convert.ToInt32(Tilt),
+					Span = Convert.ToDouble(Span)
 				});
 			}
 		}
 
-		private static void ConfirmSpeedLimit(bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void ConfirmBeacon(Statement Statement, RouteData RouteData)
 		{
-			if (PreviewOnly)
+			dynamic d = Statement;
+
+			object Type = d.Type;
+			object TempSection = d.Section;
+			object SendData = d.Senddata;
+
+			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
+
+			int Section = Convert.ToInt32(TempSection);
+			int CurrentSection = 0;
+			for (int i = BlockIndex; i >= 0; i--)
 			{
-				return;
+				CurrentSection += RouteData.Blocks[i].Sections.Count(s => s.TrackPosition <= Statement.Distance);
 			}
 
-			IList<Block> Blocks = RouteData.Blocks;
-
-			foreach (var Statement in ParseData.Statements)
+			if (Section < -1)
 			{
-				if (Statement.ElementName != MapElementName.SpeedLimit)
-				{
-					continue;
-				}
-
-				double Speed = Statement.GetArgumentValueAsDouble(ArgumentName.V);
-
-				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-				Blocks[BlockIndex].Limits.Add(new Limit
-				{
-					TrackPosition = Statement.Distance,
-					Speed = Speed <= 0.0 ? double.PositiveInfinity : Convert.ToDouble(Speed) * RouteData.UnitOfSpeed
-				});
+				Section = CurrentSection + 1;
 			}
+			else if (Section > -1)
+			{
+				Section += CurrentSection;
+			}
+
+			RouteData.Blocks[BlockIndex].Transponders.Add(new Transponder
+			{
+				TrackPosition = Statement.Distance,
+				Type = Convert.ToInt32(Type),
+				SectionIndex = Section,
+				Data = Convert.ToInt32(SendData)
+			});
 		}
 
-		private static void ConfirmPreTrain(bool PreviewOnly, MapData ParseData)
+		private static void ConfirmSpeedLimit(Statement Statement, RouteData RouteData)
 		{
-			if (PreviewOnly)
+			double Speed = Statement.GetArgumentValueAsDouble(ArgumentName.V);
+
+			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
+			RouteData.Blocks[BlockIndex].Limits.Add(new Limit
 			{
-				return;
-			}
-
-			foreach (var Statement in ParseData.Statements)
-			{
-				if (Statement.ElementName != MapElementName.Pretrain)
-				{
-					continue;
-				}
-
-				dynamic d = Statement;
-				double Time;
-				TryParseBve5Time(Convert.ToString(d.Time), out Time);
-
-				int n = Plugin.CurrentRoute.BogusPreTrainInstructions.Length;
-				Array.Resize(ref Plugin.CurrentRoute.BogusPreTrainInstructions, n + 1);
-
-				Plugin.CurrentRoute.BogusPreTrainInstructions[n].TrackPosition = Statement.Distance;
-				Plugin.CurrentRoute.BogusPreTrainInstructions[n].Time = Time;
-			}
+				TrackPosition = Statement.Distance,
+				Speed = Speed <= 0.0 ? double.PositiveInfinity : Convert.ToDouble(Speed) * RouteData.UnitOfSpeed
+			});
 		}
 
-		private static void ConfirmLight(bool PreviewOnly, MapData ParseData)
+		private static void ConfirmPreTrain(Statement Statement)
 		{
-			if (PreviewOnly)
-			{
-				return;
-			}
+			dynamic d = Statement;
+			double Time;
+			TryParseBve5Time(Convert.ToString(d.Time), out Time);
 
-			foreach (var Statement in ParseData.Statements)
-			{
-				if (Statement.ElementName != MapElementName.Light)
-				{
-					continue;
-				}
+			int n = Plugin.CurrentRoute.BogusPreTrainInstructions.Length;
+			Array.Resize(ref Plugin.CurrentRoute.BogusPreTrainInstructions, n + 1);
 
-				switch (Statement.FunctionName)
-				{
-					case MapFunctionName.Ambient:
+			Plugin.CurrentRoute.BogusPreTrainInstructions[n].TrackPosition = Statement.Distance;
+			Plugin.CurrentRoute.BogusPreTrainInstructions[n].Time = Time;
+		}
+
+		private static void ConfirmLight(Statement Statement)
+		{
+			switch (Statement.FunctionName)
+			{
+				case MapFunctionName.Ambient:
+					{
+						double TempRed, TempGreen, TempBlue;
+						if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
 						{
-							double TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
-							{
-								TempRed = 1.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
-							{
-								TempGreen = 1.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
-							{
-								TempBlue = 1.0;
-							}
-
-							double Red = Convert.ToDouble(TempRed);
-							double Green = Convert.ToDouble(TempGreen);
-							double Blue = Convert.ToDouble(TempBlue);
-							if (Red < 0.0 || Red > 1.0)
-							{
-								Red = Red < 0.0 ? 0.0 : 1.0;
-							}
-							if (Green < 0.0 || Green > 1.0)
-							{
-								Green = Green < 0.0 ? 0.0 : 1.0;
-							}
-							if (Blue < 0.0 || Blue > 1.0)
-							{
-								Blue = Blue < 0.0 ? 0.0 : 1.0;
-							}
-
-							Plugin.CurrentRoute.Atmosphere.AmbientLightColor = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
+							TempRed = 1.0;
 						}
-						break;
-					case MapFunctionName.Diffuse:
+						if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
 						{
-							double TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
-							{
-								TempRed = 1.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
-							{
-								TempGreen = 1.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
-							{
-								TempBlue = 1.0;
-							}
-
-							double Red = Convert.ToDouble(TempRed);
-							double Green = Convert.ToDouble(TempGreen);
-							double Blue = Convert.ToDouble(TempBlue);
-							if (Red < 0.0 || Red > 1.0)
-							{
-								Red = Red < 0.0 ? 0.0 : 1.0;
-							}
-							if (Green < 0.0 || Green > 1.0)
-							{
-								Green = Green < 0.0 ? 0.0 : 1.0;
-							}
-							if (Blue < 0.0 || Blue > 1.0)
-							{
-								Blue = Blue < 0.0 ? 0.0 : 1.0;
-							}
-
-							Plugin.CurrentRoute.Atmosphere.DiffuseLightColor = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
+							TempGreen = 1.0;
 						}
-						break;
-					case MapFunctionName.Direction:
+						if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
 						{
-							double Pitch, Yaw;
-							if (!Statement.HasArgument(ArgumentName.Pitch) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Pitch), out Pitch))
-							{
-								Pitch = 60.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Yaw) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Yaw), out Yaw))
-							{
-								Yaw = -26.565051177078;
-							}
-
-							double Theta = Convert.ToDouble(Pitch) * 0.0174532925199433;
-							double Phi =Convert.ToDouble(Yaw) * 0.0174532925199433;
-							double dx = Math.Cos(Theta) * Math.Sin(Phi);
-							double dy = -Math.Sin(Theta);
-							double dz = Math.Cos(Theta) * Math.Cos(Phi);
-							Plugin.CurrentRoute.Atmosphere.LightPosition = new Vector3((float)-dx, (float)-dy, (float)-dz);
+							TempBlue = 1.0;
 						}
-						break;
-				}
+
+						double Red = Convert.ToDouble(TempRed);
+						double Green = Convert.ToDouble(TempGreen);
+						double Blue = Convert.ToDouble(TempBlue);
+						if (Red < 0.0 || Red > 1.0)
+						{
+							Red = Red < 0.0 ? 0.0 : 1.0;
+						}
+						if (Green < 0.0 || Green > 1.0)
+						{
+							Green = Green < 0.0 ? 0.0 : 1.0;
+						}
+						if (Blue < 0.0 || Blue > 1.0)
+						{
+							Blue = Blue < 0.0 ? 0.0 : 1.0;
+						}
+
+						Plugin.CurrentRoute.Atmosphere.AmbientLightColor = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
+					}
+					break;
+				case MapFunctionName.Diffuse:
+					{
+						double TempRed, TempGreen, TempBlue;
+						if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
+						{
+							TempRed = 1.0;
+						}
+						if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
+						{
+							TempGreen = 1.0;
+						}
+						if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
+						{
+							TempBlue = 1.0;
+						}
+
+						double Red = Convert.ToDouble(TempRed);
+						double Green = Convert.ToDouble(TempGreen);
+						double Blue = Convert.ToDouble(TempBlue);
+						if (Red < 0.0 || Red > 1.0)
+						{
+							Red = Red < 0.0 ? 0.0 : 1.0;
+						}
+						if (Green < 0.0 || Green > 1.0)
+						{
+							Green = Green < 0.0 ? 0.0 : 1.0;
+						}
+						if (Blue < 0.0 || Blue > 1.0)
+						{
+							Blue = Blue < 0.0 ? 0.0 : 1.0;
+						}
+
+						Plugin.CurrentRoute.Atmosphere.DiffuseLightColor = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
+					}
+					break;
+				case MapFunctionName.Direction:
+					{
+						double Pitch, Yaw;
+						if (!Statement.HasArgument(ArgumentName.Pitch) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Pitch), out Pitch))
+						{
+							Pitch = 60.0;
+						}
+						if (!Statement.HasArgument(ArgumentName.Yaw) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Yaw), out Yaw))
+						{
+							Yaw = -26.565051177078;
+						}
+
+						double Theta = Convert.ToDouble(Pitch) * 0.0174532925199433;
+						double Phi = Convert.ToDouble(Yaw) * 0.0174532925199433;
+						double dx = Math.Cos(Theta) * Math.Sin(Phi);
+						double dy = -Math.Sin(Theta);
+						double dz = Math.Cos(Theta) * Math.Cos(Phi);
+						Plugin.CurrentRoute.Atmosphere.LightPosition = new Vector3((float)-dx, (float)-dy, (float)-dz);
+					}
+					break;
 			}
 		}
 
-		private static void ConfirmCabIlluminance(bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void ConfirmCabIlluminance(Statement Statement, RouteData RouteData)
 		{
-			if (PreviewOnly)
+			if (!Statement.HasArgument(ArgumentName.Value) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Value), out double TempValue) || TempValue == 0.0)
 			{
-				return;
+				TempValue = 1.0;
 			}
 
-			foreach (var Statement in ParseData.Statements)
+			float Value = Convert.ToSingle(TempValue);
+			if (Value < 0.0f || Value > 1.0f)
 			{
-				if (Statement.ElementName != MapElementName.CabIlluminance)
-				{
-					continue;
-				}
-
-				double TempValue;
-				if (!Statement.HasArgument(ArgumentName.Value) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Value), out TempValue) || TempValue == 0.0)
-				{
-					TempValue = 1.0;
-				}
-
-				float Value = Convert.ToSingle(TempValue);
-				if (Value < 0.0f || Value > 1.0f)
-				{
-					Value = Value < 0.0f ? 0.0f : 1.0f;
-				}
-
-				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-				RouteData.Blocks[BlockIndex].BrightnessChanges.Add(new Brightness
-				{
-					TrackPosition = Statement.Distance,
-					Value = Value
-				});
+				Value = Value < 0.0f ? 0.0f : 1.0f;
 			}
+
+			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
+			RouteData.Blocks[BlockIndex].BrightnessChanges.Add(new Brightness
+			{
+				TrackPosition = Statement.Distance,
+				Value = Value
+			});
 		}
 
-		private static void ConfirmIrregularity(bool PreviewOnly, IList<Block> Blocks)
+		private static void ConfirmIrregularityAdhesion(bool PreviewOnly, IList<Block> Blocks)
 		{
 			if (PreviewOnly)
 			{
@@ -1051,150 +973,84 @@ namespace Route.Bve5
 
 			for (int i = 1; i < Blocks.Count; i++)
 			{
-				if (!Blocks[i].AccuracyDefined)
+				if (Blocks[i].AccuracyDefined)
 				{
-					continue;
-				}
+					int StartBlock = Blocks.FindLastIndex(i - 1, i, Block => Block.AccuracyDefined);
 
-				int StartBlock = Blocks.FindLastIndex(i - 1, i, Block => Block.AccuracyDefined);
-
-				if (StartBlock != -1)
-				{
-					for (int j = StartBlock+1; j < i; j++)
+					if (StartBlock != -1)
 					{
-						Blocks[j].Accuracy = Blocks[StartBlock].Accuracy;
+						for (int j = StartBlock + 1; j < i; j++)
+						{
+							Blocks[j].Accuracy = Blocks[StartBlock].Accuracy;
+						}
 					}
 				}
-			}
-		}
 
-		private static void ConfirmAdhesion(bool PreviewOnly, IList<Block> Blocks)
-		{
-			if (PreviewOnly)
-			{
-				return;
-			}
-
-			for (int i = 1; i < Blocks.Count; i++)
-			{
-				if (!Blocks[i].AdhesionMultiplierDefined)
+				if (Blocks[i].AdhesionMultiplierDefined)
 				{
-					continue;
-				}
+					int StartBlock = Blocks.FindLastIndex(i - 1, i, Block => Block.AdhesionMultiplierDefined);
 
-				int StartBlock = Blocks.FindLastIndex(i - 1, i, Block => Block.AdhesionMultiplierDefined);
-
-				if (StartBlock != -1)
-				{
-					for (int j = StartBlock + 1; j < i; j++)
+					if (StartBlock != -1)
 					{
-						Blocks[j].AdhesionMultiplier = Blocks[StartBlock].AdhesionMultiplier;
+						for (int j = StartBlock + 1; j < i; j++)
+						{
+							Blocks[j].AdhesionMultiplier = Blocks[StartBlock].AdhesionMultiplier;
+						}
 					}
 				}
+				
 			}
 		}
 
-		private static void ConfirmSound(bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void ConfirmSound(Statement Statement, RouteData RouteData)
 		{
-			if (PreviewOnly)
+			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
+			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
 			{
-				return;
-			}
-
-			foreach (var Statement in ParseData.Statements)
-			{
-				if (Statement.ElementName != MapElementName.Sound)
-				{
-					continue;
-				}
-
-				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-				RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
-				{
-					TrackPosition = Statement.Distance,
-					Key = Statement.Key,
-					Type = SoundType.TrainStatic
-				});
-			}
+				TrackPosition = Statement.Distance,
+				Key = Statement.Key,
+				Type = SoundType.TrainStatic
+			});
 		}
 
-		private static void ConfirmSound3D(bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void ConfirmSound3D(Statement Statement, RouteData RouteData)
 		{
-			if (PreviewOnly)
+			double X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
+			double Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
+
+			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
+			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
 			{
-				return;
-			}
-
-			foreach (var Statement in ParseData.Statements)
-			{
-				if (Statement.ElementName != MapElementName.Sound3d)
-				{
-					continue;
-				}
-
-				double X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
-				double Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
-
-				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-				RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
-				{
-					TrackPosition = Statement.Distance,
-					Key = Statement.Key,
-					Type = SoundType.World,
-					X = X,
-					Y = Y
-				});
-			}
+				TrackPosition = Statement.Distance,
+				Key = Statement.Key,
+				Type = SoundType.World,
+				X = X,
+				Y = Y
+			});
 		}
 
-		private static void ConfirmRollingNoise(bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void ConfirmRollingNoise(Statement Statement, RouteData RouteData)
 		{
-			if (PreviewOnly)
+			object Index = Statement.GetArgumentValue(ArgumentName.Index);
+
+			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
+			RouteData.Blocks[BlockIndex].RunSounds.Add(new TrackSound
 			{
-				return;
-			}
-
-			foreach (var Statement in ParseData.Statements)
-			{
-				if (Statement.ElementName != MapElementName.RollingNoise)
-				{
-					continue;
-				}
-
-				object Index = Statement.GetArgumentValue(ArgumentName.Index);
-
-				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-				RouteData.Blocks[BlockIndex].RunSounds.Add(new TrackSound
-				{
-					TrackPosition = Statement.Distance,
-					SoundIndex = Convert.ToInt32(Index)
-				});
-			}
+				TrackPosition = Statement.Distance,
+				SoundIndex = Convert.ToInt32(Index)
+			});
 		}
 
-		private static void ConfirmFlangeNoise(bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void ConfirmFlangeNoise(Statement Statement, RouteData RouteData)
 		{
-			if (PreviewOnly)
+			object Index = Statement.GetArgumentValue(ArgumentName.Index);
+
+			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
+			RouteData.Blocks[BlockIndex].FlangeSounds.Add(new TrackSound
 			{
-				return;
-			}
-
-			foreach (var Statement in ParseData.Statements)
-			{
-				if (Statement.ElementName != MapElementName.FlangeNoise)
-				{
-					continue;
-				}
-
-				object Index = Statement.GetArgumentValue(ArgumentName.Index);
-
-				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-				RouteData.Blocks[BlockIndex].FlangeSounds.Add(new TrackSound
-				{
-					TrackPosition = Statement.Distance,
-					SoundIndex = Convert.ToInt32(Index)
-				});
-			}
+				TrackPosition = Statement.Distance,
+				SoundIndex = Convert.ToInt32(Index)
+			});
 		}
 	}
 }
