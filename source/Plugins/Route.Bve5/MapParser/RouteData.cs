@@ -32,6 +32,7 @@ namespace Route.Bve5
 		private class RouteData
 		{
 			internal readonly List<string> TrackKeyList;
+			internal readonly Dictionary<string, Repeater> RepeaterList;
 			internal readonly SortedList<double, Block> sortedBlocks;
 
 			internal IList<Block> Blocks => sortedBlocks.Values;
@@ -52,6 +53,7 @@ namespace Route.Bve5
 			{
 				sortedBlocks = new SortedList<double, Block>();
 				TrackKeyList = new List<string>();
+				RepeaterList = new Dictionary<string, Repeater>();
 			}
 
 			internal int FindOrAddBlock(double Distance)

@@ -523,31 +523,15 @@ namespace Route.Bve5
 				return;
 			}
 
-			List<Repeater> RepeaterList = new List<Repeater>();
-
-			foreach (var Statement in ParseData.Statements)
+			for(int repeaterIndex = 0; repeaterIndex < RouteData.RepeaterList.Count; repeaterIndex++)
 			{
-				if (Statement.ElementName != MapElementName.Repeater)
-				{
-					continue;
-				}
-
-				if (!RepeaterList.Exists(Repeater => Repeater.Key.Equals(Statement.Key, StringComparison.InvariantCultureIgnoreCase)))
-				{
-					RepeaterList.Add(new Repeater
-					{
-						Key = Statement.Key
-					});
-				}
-			}
-
-			foreach (var Repeater in RepeaterList)
-			{
+				string key = RouteData.RepeaterList.ElementAt(repeaterIndex).Key;
+				Repeater Repeater = RouteData.RepeaterList[key];
 				double lastDistance = -1;
 				bool possibleEnd = false;
 				foreach (var Statement in ParseData.Statements)
 				{
-					if (Statement.ElementName != MapElementName.Repeater || !Statement.Key.Equals(Repeater.Key, StringComparison.InvariantCultureIgnoreCase))
+					if (Statement.ElementName != MapElementName.Repeater || !Statement.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase))
 					{
 						continue;
 					}
@@ -621,7 +605,7 @@ namespace Route.Bve5
 				// Hack:
 				if (Repeater.StartRefreshed)
 				{
-					double EndTrackPosition = Plugin.CurrentRoute.Stations.Last().Stops.First().TrackPosition + Plugin.CurrentOptions.ViewingDistance;
+					double EndTrackPosition = Plugin.CurrentRoute.Stations.Last().Stops[0].TrackPosition + Plugin.CurrentOptions.ViewingDistance;
 					Repeater.EndingDistance = EndTrackPosition;
 					PutRepeater(RouteData, Repeater);
 					Repeater.StartRefreshed = false;

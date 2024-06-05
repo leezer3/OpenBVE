@@ -163,11 +163,11 @@ namespace Route.Bve5
 			 */
 
 			ConvertData(ParseData, RouteData, PreviewOnly);
-			ConvertTrack(ParseData, RouteData);
+			
 			
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
-
+			ConvertTrack(RouteData);
 			ConfirmCurve(RouteData.Blocks);
 			ConfirmGradient(RouteData.Blocks);
 			ConfirmTrack(RouteData);
@@ -251,7 +251,21 @@ namespace Route.Bve5
 							ConvertJointNoise(parseData.Statements[i], routeData);
 						}
 						break;
-
+					case MapElementName.Track:
+						if (!previewOnly)
+						{
+							ConvertTrack(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.Repeater:
+						if (!previewOnly)
+						{
+							if (!routeData.RepeaterList.ContainsKey(parseData.Statements[i].Key.ToLowerInvariant()))
+							{
+								routeData.RepeaterList.Add(parseData.Statements[i].Key.ToLowerInvariant(), new Repeater());
+							}
+						}
+						break;
 				}
 			}
 		}

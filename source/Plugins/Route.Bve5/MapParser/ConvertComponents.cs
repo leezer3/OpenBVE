@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, S520, The OpenBVE Project
 //
@@ -373,225 +373,224 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void ConvertTrack(MapData ParseData, RouteData RouteData)
+		private static void ConvertTrack(Statement Statement, RouteData RouteData)
 		{
-			IList<Block> Blocks = RouteData.Blocks;
-
-			// Own track is excluded.
-			for (int railIndex = 1; railIndex < RouteData.TrackKeyList.Count; railIndex++)
+			
+			int railIndex = RouteData.TrackKeyList.IndexOf(Statement.Key);
+			if (railIndex <= 0)
 			{
-				foreach (var Statement in ParseData.Statements)
+				// Track 0 or not in the key list
+				return;
+			}
+			dynamic d = Statement;
+			if (Statement.FunctionName == MapFunctionName.Position || (Statement.HasSubElement && Statement.SubElementName == MapSubElementName.X))
+			{
+				int Index = RouteData.FindOrAddBlock(Statement.Distance);
+				int LastInterpolateIndex = -1;
+				if (Index > 0)
 				{
-					if (Statement.ElementName != MapElementName.Track || !Statement.Key.Equals(RouteData.TrackKeyList[railIndex], StringComparison.InvariantCultureIgnoreCase))
+					LastInterpolateIndex = RouteData.Blocks.FindLastIndex(Index - 1, Index, Block => Block.Rails[railIndex].InterpolateX);
+				}
+
+				double X;
+
+				if (d.X == null)
+				{
+					if (Statement.FunctionName == MapFunctionName.Position)
 					{
-						continue;
+						X = 0.0;
 					}
-
-					dynamic d = Statement;
-
-					if (Statement.FunctionName == MapFunctionName.Position || (Statement.HasSubElement && Statement.SubElementName == MapSubElementName.X))
+					else
 					{
-						int Index = RouteData.FindOrAddBlock(Statement.Distance);
-						int LastInterpolateIndex = -1;
-						if (Index > 0)
-						{
-							LastInterpolateIndex = Blocks.FindLastIndex(Index - 1, Index, Block => Block.Rails[railIndex].InterpolateX);
-						}
-
-						double X;
-
-						if (d.X == null)
-						{
-							if (Statement.FunctionName == MapFunctionName.Position)
-							{
-								X = 0.0;
-							}
-							else
-							{
-								X = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RailX : 0.0;
-							}
-						}
-						else
-						{
-							X = d.X;
-						}
-
-						double RadiusH;
-						if (Statement.FunctionName == MapFunctionName.Position)
-						{
-							RadiusH = d.RadiusH == null ? 0.0 : (double)d.RadiusH;
-						}
-						else
-						{
-							if (d.Radius == null)
-							{
-								RadiusH = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RadiusH : 0.0;
-							}
-							else
-							{
-								RadiusH = d.Radius;
-							}
-						}
-
-						Blocks[Index].Rails[railIndex].RailX = Convert.ToDouble(X);
-						Blocks[Index].Rails[railIndex].RadiusH = Convert.ToDouble(RadiusH);
-						Blocks[Index].Rails[railIndex].InterpolateX = true;
+						X = LastInterpolateIndex != -1 ? RouteData.Blocks[LastInterpolateIndex].Rails[railIndex].RailX : 0.0;
 					}
+				}
+				else
+				{
+					X = d.X;
+				}
 
-					if (Statement.FunctionName == MapFunctionName.Position || (Statement.HasSubElement && Statement.SubElementName == MapSubElementName.Y))
+				double RadiusH;
+				if (Statement.FunctionName == MapFunctionName.Position)
+				{
+					RadiusH = d.RadiusH == null ? 0.0 : (double)d.RadiusH;
+				}
+				else
+				{
+					if (d.Radius == null)
 					{
-						int Index = RouteData.FindOrAddBlock(Statement.Distance);
-						int LastInterpolateIndex = -1;
-						if (Index > 0)
-						{
-							LastInterpolateIndex = Blocks.FindLastIndex(Index - 1, Index, Block => Block.Rails[railIndex].InterpolateY);
-						}
-
-						double Y;
-						if (d.Y == null)
-						{
-							if (Statement.FunctionName == MapFunctionName.Position)
-							{
-								Y = 0.0;
-							}
-							else
-							{
-								Y = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RailY : 0.0;
-							}
-						}
-						else
-						{
-							Y = d.Y;
-						}
-
-						double RadiusV;
-						if (Statement.FunctionName == MapFunctionName.Position)
-						{
-							RadiusV = d.RadiusV == null ? 0.0 : (double)d.RadiusV;
-						}
-						else
-						{
-							if (d.Radius == null)
-							{
-								RadiusV = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RadiusV : 0.0;
-							}
-							else
-							{
-								RadiusV = d.Radius;
-							}
-						}
-
-						Blocks[Index].Rails[railIndex].RailY = Convert.ToDouble(Y);
-						Blocks[Index].Rails[railIndex].RadiusV = Convert.ToDouble(RadiusV);
-						Blocks[Index].Rails[railIndex].InterpolateY = true;
+						RadiusH = LastInterpolateIndex != -1 ? RouteData.Blocks[LastInterpolateIndex].Rails[railIndex].RadiusH : 0.0;
 					}
-
-					if (Statement.HasSubElement && Statement.SubElementName == MapSubElementName.Cant)
+					else
 					{
-						switch (Statement.FunctionName)
-						{
-							case MapFunctionName.BeginTransition:
-								{
-									int Index = RouteData.FindOrAddBlock(Statement.Distance);
-									Blocks[Index].Rails[railIndex].CurveInterpolateStart = true;
-									Blocks[Index].Rails[railIndex].CurveTransitionStart = true;
-								}
-								break;
-							case MapFunctionName.Begin:
-								{
-									int Index = RouteData.FindOrAddBlock(Statement.Distance);
-									Blocks[Index].Rails[railIndex].CurveCant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant);
-									Blocks[Index].Rails[railIndex].CurveInterpolateStart = true;
-									Blocks[Index].Rails[railIndex].CurveTransitionEnd = true;
-								}
-								break;
-							case MapFunctionName.End:
-								{
-									int Index = RouteData.FindOrAddBlock(Statement.Distance);
-									Blocks[Index].Rails[railIndex].CurveInterpolateStart = true;
-									Blocks[Index].Rails[railIndex].CurveTransitionEnd = true;
-								}
-								break;
-							case MapFunctionName.Interpolate:
-								{
-									int Index = RouteData.FindOrAddBlock(Statement.Distance);
-									int LastInterpolateIndex = -1;
-									if (Index > 0)
-									{
-										LastInterpolateIndex = Blocks.FindLastIndex(Index - 1, Index, Block => Block.Rails[railIndex].CurveInterpolateEnd);
-									}
-
-									double Cant;
-									if (d.Cant == null)
-									{
-										Cant = LastInterpolateIndex != -1
-											? Blocks[LastInterpolateIndex].Rails[railIndex].CurveCant
-											: 0.0;
-									}
-									else
-									{
-										Cant = d.Cant;
-									}
-
-									Blocks[Index].Rails[railIndex].CurveCant = Convert.ToDouble(Cant);
-									Blocks[Index].Rails[railIndex].CurveInterpolateStart = true;
-									Blocks[Index].Rails[railIndex].CurveInterpolateEnd = true;
-									Blocks[Index].Rails[railIndex].CurveTransitionEnd = true;
-								}
-								break;
-						}
+						RadiusH = d.Radius;
 					}
 				}
 
-				if (!Blocks.First().Rails[railIndex].InterpolateX)
+				RouteData.Blocks[Index].Rails[railIndex].RailX = Convert.ToDouble(X);
+				RouteData.Blocks[Index].Rails[railIndex].RadiusH = Convert.ToDouble(RadiusH);
+				RouteData.Blocks[Index].Rails[railIndex].InterpolateX = true;
+			}
+
+			if (Statement.FunctionName == MapFunctionName.Position || (Statement.HasSubElement && Statement.SubElementName == MapSubElementName.Y))
+			{
+				int Index = RouteData.FindOrAddBlock(Statement.Distance);
+				int LastInterpolateIndex = -1;
+				if (Index > 0)
 				{
-					int FirstInterpolateIndex = -1;
-					if (Blocks.Count > 1)
-					{
-						FirstInterpolateIndex = Blocks.FindIndex(1, Block => Block.Rails[railIndex].InterpolateX);
-					}
-					Blocks.First().Rails[railIndex].RailX = FirstInterpolateIndex != -1 ? Blocks[FirstInterpolateIndex].Rails[railIndex].RailX : 0.0;
-					//Blocks.First().Rails[j].RadiusH = FirstInterpolateIndex != -1 ? Blocks[FirstInterpolateIndex].Rails[j].RadiusH : 0.0;
-					Blocks.First().Rails[railIndex].InterpolateX = true;
+					LastInterpolateIndex = RouteData.Blocks.FindLastIndex(Index - 1, Index, Block => Block.Rails[railIndex].InterpolateY);
 				}
 
-				if (!Blocks.First().Rails[railIndex].InterpolateY)
+				double Y;
+				if (d.Y == null)
 				{
-					int FirstInterpolateIndex = -1;
-					if (Blocks.Count > 1)
+					if (Statement.FunctionName == MapFunctionName.Position)
 					{
-						FirstInterpolateIndex = Blocks.FindIndex(1, Block => Block.Rails[railIndex].InterpolateY);
+						Y = 0.0;
 					}
-					Blocks.First().Rails[railIndex].RailY = FirstInterpolateIndex != -1 ? Blocks[FirstInterpolateIndex].Rails[railIndex].RailY : 0.0;
-					//Blocks.First().Rails[j].RadiusV = FirstInterpolateIndex != -1 ? Blocks[FirstInterpolateIndex].Rails[j].RadiusV : 0.0;
-					Blocks.First().Rails[railIndex].InterpolateY = true;
+					else
+					{
+						Y = LastInterpolateIndex != -1 ? RouteData.Blocks[LastInterpolateIndex].Rails[railIndex].RailY : 0.0;
+					}
+				}
+				else
+				{
+					Y = d.Y;
 				}
 
-				if (!Blocks.Last().Rails[railIndex].InterpolateX)
+				double RadiusV;
+				if (Statement.FunctionName == MapFunctionName.Position)
 				{
-					int LastInterpolateIndex = -1;
-					if (Blocks.Count > 1)
+					RadiusV = d.RadiusV == null ? 0.0 : (double)d.RadiusV;
+				}
+				else
+				{
+					if (d.Radius == null)
 					{
-						LastInterpolateIndex = Blocks.FindLastIndex(Blocks.Count - 2, Blocks.Count - 1, Block => Block.Rails[railIndex].InterpolateX);
+						RadiusV = LastInterpolateIndex != -1 ? RouteData.Blocks[LastInterpolateIndex].Rails[railIndex].RadiusV : 0.0;
 					}
-					Blocks.Last().Rails[railIndex].RailX = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RailX : 0.0;
-					Blocks.Last().Rails[railIndex].RadiusH = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RadiusH : 0.0;
-					Blocks.Last().Rails[railIndex].InterpolateX = true;
+					else
+					{
+						RadiusV = d.Radius;
+					}
 				}
 
-				if (!Blocks.Last().Rails[railIndex].InterpolateY)
+				RouteData.Blocks[Index].Rails[railIndex].RailY = Convert.ToDouble(Y);
+				RouteData.Blocks[Index].Rails[railIndex].RadiusV = Convert.ToDouble(RadiusV);
+				RouteData.Blocks[Index].Rails[railIndex].InterpolateY = true;
+			}
+
+			if (Statement.HasSubElement && Statement.SubElementName == MapSubElementName.Cant)
+			{
+				switch (Statement.FunctionName)
 				{
-					int LastInterpolateIndex = -1;
-					if (Blocks.Count > 1)
-					{
-						LastInterpolateIndex = Blocks.FindLastIndex(Blocks.Count - 2, Blocks.Count - 1, Block => Block.Rails[railIndex].InterpolateY);
-					}
-					Blocks.Last().Rails[railIndex].RailY = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RailY : 0.0;
-					Blocks.Last().Rails[railIndex].RadiusV = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RadiusV : 0.0;
-					Blocks.Last().Rails[railIndex].InterpolateY = true;
+					case MapFunctionName.BeginTransition:
+						{
+							int Index = RouteData.FindOrAddBlock(Statement.Distance);
+							RouteData.Blocks[Index].Rails[railIndex].CurveInterpolateStart = true;
+							RouteData.Blocks[Index].Rails[railIndex].CurveTransitionStart = true;
+						}
+						break;
+					case MapFunctionName.Begin:
+						{
+							int Index = RouteData.FindOrAddBlock(Statement.Distance);
+							RouteData.Blocks[Index].Rails[railIndex].CurveCant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant);
+							RouteData.Blocks[Index].Rails[railIndex].CurveInterpolateStart = true;
+							RouteData.Blocks[Index].Rails[railIndex].CurveTransitionEnd = true;
+						}
+						break;
+					case MapFunctionName.End:
+						{
+							int Index = RouteData.FindOrAddBlock(Statement.Distance);
+							RouteData.Blocks[Index].Rails[railIndex].CurveInterpolateStart = true;
+							RouteData.Blocks[Index].Rails[railIndex].CurveTransitionEnd = true;
+						}
+						break;
+					case MapFunctionName.Interpolate:
+						{
+							int Index = RouteData.FindOrAddBlock(Statement.Distance);
+							int LastInterpolateIndex = -1;
+							if (Index > 0)
+							{
+								LastInterpolateIndex = RouteData.Blocks.FindLastIndex(Index - 1, Index, Block => Block.Rails[railIndex].CurveInterpolateEnd);
+							}
+
+							double Cant;
+							if (d.Cant == null)
+							{
+								Cant = LastInterpolateIndex != -1
+									? RouteData.Blocks[LastInterpolateIndex].Rails[railIndex].CurveCant
+									: 0.0;
+							}
+							else
+							{
+								Cant = d.Cant;
+							}
+
+							RouteData.Blocks[Index].Rails[railIndex].CurveCant = Convert.ToDouble(Cant);
+							RouteData.Blocks[Index].Rails[railIndex].CurveInterpolateStart = true;
+							RouteData.Blocks[Index].Rails[railIndex].CurveInterpolateEnd = true;
+							RouteData.Blocks[Index].Rails[railIndex].CurveTransitionEnd = true;
+						}
+						break;
 				}
 			}
 
+			if (!RouteData.Blocks[0].Rails[railIndex].InterpolateX)
+			{
+				int FirstInterpolateIndex = -1;
+				if (RouteData.Blocks.Count > 1)
+				{
+					FirstInterpolateIndex = RouteData.Blocks.FindIndex(1, Block => Block.Rails[railIndex].InterpolateX);
+				}
+				RouteData.Blocks[0].Rails[railIndex].RailX = FirstInterpolateIndex != -1 ? RouteData.Blocks[FirstInterpolateIndex].Rails[railIndex].RailX : 0.0;
+				//Blocks[0].Rails[j].RadiusH = FirstInterpolateIndex != -1 ? Blocks[FirstInterpolateIndex].Rails[j].RadiusH : 0.0;
+				RouteData.Blocks[0].Rails[railIndex].InterpolateX = true;
+			}
+
+			if (!RouteData.Blocks[0].Rails[railIndex].InterpolateY)
+			{
+				int FirstInterpolateIndex = -1;
+				if (RouteData.Blocks.Count > 1)
+				{
+					FirstInterpolateIndex = RouteData.Blocks.FindIndex(1, Block => Block.Rails[railIndex].InterpolateY);
+				}
+				RouteData.Blocks[0].Rails[railIndex].RailY = FirstInterpolateIndex != -1 ? RouteData.Blocks[FirstInterpolateIndex].Rails[railIndex].RailY : 0.0;
+				//Blocks[0].Rails[j].RadiusV = FirstInterpolateIndex != -1 ? Blocks[FirstInterpolateIndex].Rails[j].RadiusV : 0.0;
+				RouteData.Blocks[0].Rails[railIndex].InterpolateY = true;
+			}
+
+			if (!RouteData.Blocks.Last().Rails[railIndex].InterpolateX)
+			{
+				int LastInterpolateIndex = -1;
+				if (RouteData.Blocks.Count > 1)
+				{
+					LastInterpolateIndex = RouteData.Blocks.FindLastIndex(RouteData.Blocks.Count - 2, RouteData.Blocks.Count - 1, Block => Block.Rails[railIndex].InterpolateX);
+				}
+				RouteData.Blocks.Last().Rails[railIndex].RailX = LastInterpolateIndex != -1 ? RouteData.Blocks[LastInterpolateIndex].Rails[railIndex].RailX : 0.0;
+				RouteData.Blocks.Last().Rails[railIndex].RadiusH = LastInterpolateIndex != -1 ? RouteData.Blocks[LastInterpolateIndex].Rails[railIndex].RadiusH : 0.0;
+				RouteData.Blocks.Last().Rails[railIndex].InterpolateX = true;
+			}
+
+			if (!RouteData.Blocks.Last().Rails[railIndex].InterpolateY)
+			{
+				int LastInterpolateIndex = -1;
+				if (RouteData.Blocks.Count > 1)
+				{
+					LastInterpolateIndex = RouteData.Blocks.FindLastIndex(RouteData.Blocks.Count - 2, RouteData.Blocks.Count - 1, Block => Block.Rails[railIndex].InterpolateY);
+				}
+				RouteData.Blocks.Last().Rails[railIndex].RailY = LastInterpolateIndex != -1 ? RouteData.Blocks[LastInterpolateIndex].Rails[railIndex].RailY : 0.0;
+				RouteData.Blocks.Last().Rails[railIndex].RadiusV = LastInterpolateIndex != -1 ? RouteData.Blocks[LastInterpolateIndex].Rails[railIndex].RadiusV : 0.0;
+				RouteData.Blocks.Last().Rails[railIndex].InterpolateY = true;
+			}
+
+		}
+
+
+
+		private static void ConvertTrack(RouteData RouteData)
+		{
+			// Own track is excluded.
 			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
 			{
 				for (int i = 1; i < RouteData.Blocks.Count; i++)
@@ -629,7 +628,7 @@ namespace Route.Bve5
 
 			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
 			{
-				
+
 
 				for (int i = 1; i < RouteData.Blocks.Count; i++)
 				{
@@ -818,40 +817,37 @@ namespace Route.Bve5
 
 		private static void ConvertBackground(Statement Statement, RouteData RouteData)
 		{
+			dynamic d = Statement;
+
+			object BackgroundKey = d.StructureKey;
+
+			int BackgroundIndex = RouteData.Backgrounds.FindIndex(Background => Background.Key.Equals(Convert.ToString(BackgroundKey), StringComparison.InvariantCultureIgnoreCase));
+
+			if (BackgroundIndex == -1)
 			{
-				dynamic d = Statement;
+				RouteData.Objects.TryGetValue(Convert.ToString(BackgroundKey), out UnifiedObject Object);
 
-				object BackgroundKey = d.StructureKey;
-
-				int BackgroundIndex = RouteData.Backgrounds.FindIndex(Background => Background.Key.Equals(Convert.ToString(BackgroundKey), StringComparison.InvariantCultureIgnoreCase));
-
-				if (BackgroundIndex == -1)
+				if (Object != null)
 				{
-					RouteData.Objects.TryGetValue(Convert.ToString(BackgroundKey), out UnifiedObject Object);
-
-					if (Object != null)
-					{
-						BackgroundIndex = RouteData.Backgrounds.Count;
-						RouteData.Backgrounds.Add(new Background(Convert.ToString(BackgroundKey), new BackgroundObject((StaticObject)Object)));
-					}
-				}
-
-				if (BackgroundIndex != -1)
-				{
-					int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
-					RouteData.Blocks[BlockIndex].BackgroundIndex = BackgroundIndex;
-				}
-				else
-				{
-					//Failed to load the background
+					BackgroundIndex = RouteData.Backgrounds.Count;
+					RouteData.Backgrounds.Add(new Background(Convert.ToString(BackgroundKey), new BackgroundObject((StaticObject)Object)));
 				}
 			}
+
+			if (BackgroundIndex != -1)
+			{
+				int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
+				RouteData.Blocks[BlockIndex].BackgroundIndex = BackgroundIndex;
+			}
+			else
+			{
+				//Failed to load the background
+			}
+
 		}
 
 		private static void ConvertFog(Statement Statement, RouteData RouteData)
 		{
-			IList<Block> Blocks = RouteData.Blocks;
-
 			{
 				switch (Statement.FunctionName)
 				{
@@ -893,16 +889,16 @@ namespace Route.Bve5
 
 							if (Convert.ToSingle(Start) < Convert.ToSingle(End))
 							{
-								Blocks[BlockIndex].Fog.Start = (float)Start;
-								Blocks[BlockIndex].Fog.End = (float)End;
+								RouteData.Blocks[BlockIndex].Fog.Start = (float)Start;
+								RouteData.Blocks[BlockIndex].Fog.End = (float)End;
 							}
 							else
 							{
-								Blocks[BlockIndex].Fog.Start = Plugin.CurrentRoute.NoFogStart;
-								Blocks[BlockIndex].Fog.End = Plugin.CurrentRoute.NoFogEnd;
+								RouteData.Blocks[BlockIndex].Fog.Start = Plugin.CurrentRoute.NoFogStart;
+								RouteData.Blocks[BlockIndex].Fog.End = Plugin.CurrentRoute.NoFogEnd;
 							}
-							Blocks[BlockIndex].Fog.Color = new Color24((byte)Red, (byte)Green, (byte)Blue);
-							Blocks[BlockIndex].FogDefined = true;
+							RouteData.Blocks[BlockIndex].Fog.Color = new Color24((byte)Red, (byte)Green, (byte)Blue);
+							RouteData.Blocks[BlockIndex].FogDefined = true;
 						}
 						break;
 					case MapFunctionName.Interpolate:
@@ -945,10 +941,10 @@ namespace Route.Bve5
 
 							int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
 
-							Blocks[BlockIndex].Fog.Start = 0.0f;
-							Blocks[BlockIndex].Fog.End = 1.0f / Convert.ToSingle(Density);
-							Blocks[BlockIndex].Fog.Color = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
-							Blocks[BlockIndex].FogDefined = true;
+							RouteData.Blocks[BlockIndex].Fog.Start = 0.0f;
+							RouteData.Blocks[BlockIndex].Fog.End = 1.0f / Convert.ToSingle(Density);
+							RouteData.Blocks[BlockIndex].Fog.Color = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
+							RouteData.Blocks[BlockIndex].FogDefined = true;
 						}
 						break;
 				}
@@ -957,95 +953,90 @@ namespace Route.Bve5
 
 		private static void ConvertIrregularity(Statement Statement, RouteData RouteData)
 		{
-			IList<Block> Blocks = RouteData.Blocks;
+			double X = !Statement.HasArgument(ArgumentName.X) ? 0.0 : Statement.GetArgumentValueAsDouble(ArgumentName.X);
+
+			double Squaring = 1.0 - 8.0 * (8.0 - Convert.ToDouble(X) * 10000.0);
+			if (Squaring < 0.0)
 			{
-
-
-				double X = !Statement.HasArgument(ArgumentName.X) ? 0.0 : Statement.GetArgumentValueAsDouble(ArgumentName.X);
-
-				double Squaring = 1.0 - 8.0 * (8.0 - Convert.ToDouble(X) * 10000.0);
-				if (Squaring < 0.0)
-				{
-					Squaring = 0.0;
-				}
-				double Accuracy = (-1.0 + Math.Sqrt(Squaring)) / 4.0;
-				if (Accuracy < 0.0 || Accuracy > 4.0)
-				{
-					Accuracy = Accuracy < 0.0 ? 0.0 : 4.0;
-				}
-
-				int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
-				Blocks[BlockIndex].Accuracy = Accuracy;
-				Blocks[BlockIndex].AccuracyDefined = true;
+				Squaring = 0.0;
 			}
 
-			if (!Blocks.Last().AccuracyDefined)
+			double Accuracy = (-1.0 + Math.Sqrt(Squaring)) / 4.0;
+			if (Accuracy < 0.0 || Accuracy > 4.0)
+			{
+				Accuracy = Accuracy < 0.0 ? 0.0 : 4.0;
+			}
+
+			int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
+			RouteData.Blocks[BlockIndex].Accuracy = Accuracy;
+			RouteData.Blocks[BlockIndex].AccuracyDefined = true;
+
+			if (!RouteData.Blocks.Last().AccuracyDefined)
 			{
 				int LastDefinedIndex = -1;
-				if (Blocks.Count > 1)
+				if (RouteData.Blocks.Count > 1)
 				{
-					LastDefinedIndex = Blocks.FindLastIndex(Blocks.Count - 2, Blocks.Count - 1, Block => Block.AccuracyDefined);
+					LastDefinedIndex = RouteData.Blocks.FindLastIndex(RouteData.Blocks.Count - 2, RouteData.Blocks.Count - 1, Block => Block.AccuracyDefined);
 				}
-				Blocks.Last().Accuracy = LastDefinedIndex != -1 ? Blocks[LastDefinedIndex].Accuracy : 2.0;
-				Blocks.Last().AccuracyDefined = true;
+
+				RouteData.Blocks.Last().Accuracy = LastDefinedIndex != -1 ? RouteData.Blocks[LastDefinedIndex].Accuracy : 2.0;
+				RouteData.Blocks.Last().AccuracyDefined = true;
 			}
 		}
 
 		private static void ConvertAdhesion(Statement Statement, RouteData RouteData)
 		{
+
+			switch (Statement.GetArgumentNames().Count())
 			{
-
-				switch (Statement.GetArgumentNames().Count())
+				case 1:
 				{
-					case 1:
-						{
-							if (!Statement.HasArgument(ArgumentName.A))
-							{
-								//Invalid number
-								return;
-							}
-							
-							int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
-							//Presumably this is just the adhesion coefficent at 0km/h
-							RouteData.Blocks[BlockIndex].AdhesionMultiplier = (int)(Statement.GetArgumentValueAsDouble(ArgumentName.A) * 100 / 0.26) / 100.0;
-							RouteData.Blocks[BlockIndex].AdhesionMultiplierDefined = true;
-						}
-						break;
-					case 3:
-						{
-							double C0 = Statement.GetArgumentValueAsDouble(ArgumentName.A);
-							double C1 = Statement.GetArgumentValueAsDouble(ArgumentName.B);
-							double C2 = Statement.GetArgumentValueAsDouble(ArgumentName.C);
-							if (C0 != 0.0 && C1 == 0.0 && C2 != 0.0)
-							{
-								int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
-								RouteData.Blocks[BlockIndex].AdhesionMultiplierDefined = true;
+					if (!Statement.HasArgument(ArgumentName.A))
+					{
+						//Invalid number
+						return;
+					}
 
-								if (C0 == 0.35 && C2 == 0.01)
-								{
-									//Default adhesion value of 100
-									RouteData.Blocks[BlockIndex].AdhesionMultiplier = 1;
-									return;
-								}
-
-								int CA = (int)(C0 * 100 / 0.26);
-								double CB = 1.0 / (300 * (CA / 100.0 * 0.259999990463257));
-
-								if (Math.Round(CB, 8) == C2)
-								{
-									//BVE2 / 4 converted value, so let's use that
-									RouteData.Blocks[BlockIndex].AdhesionMultiplier = CA / 100.0;
-									return;
-								}
-
-								//They don't match.....
-								//Use an average of the two to get something reasonable
-								//TODO: Implement adhesion based upon speed formula
-								RouteData.Blocks[BlockIndex].AdhesionMultiplier = (CA + CB) / 2 / 100;
-							}
-						}
-						break;
+					int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
+					//Presumably this is just the adhesion coefficent at 0km/h
+					RouteData.Blocks[BlockIndex].AdhesionMultiplier = (int)(Statement.GetArgumentValueAsDouble(ArgumentName.A) * 100 / 0.26) / 100.0;
+					RouteData.Blocks[BlockIndex].AdhesionMultiplierDefined = true;
 				}
+					break;
+				case 3:
+				{
+					double C0 = Statement.GetArgumentValueAsDouble(ArgumentName.A);
+					double C1 = Statement.GetArgumentValueAsDouble(ArgumentName.B);
+					double C2 = Statement.GetArgumentValueAsDouble(ArgumentName.C);
+					if (C0 != 0.0 && C1 == 0.0 && C2 != 0.0)
+					{
+						int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
+						RouteData.Blocks[BlockIndex].AdhesionMultiplierDefined = true;
+
+						if (C0 == 0.35 && C2 == 0.01)
+						{
+							//Default adhesion value of 100
+							RouteData.Blocks[BlockIndex].AdhesionMultiplier = 1;
+							return;
+						}
+
+						int CA = (int)(C0 * 100 / 0.26);
+						double CB = 1.0 / (300 * (CA / 100.0 * 0.259999990463257));
+
+						if (Math.Round(CB, 8) == C2)
+						{
+							//BVE2 / 4 converted value, so let's use that
+							RouteData.Blocks[BlockIndex].AdhesionMultiplier = CA / 100.0;
+							return;
+						}
+
+						//They don't match.....
+						//Use an average of the two to get something reasonable
+						//TODO: Implement adhesion based upon speed formula
+						RouteData.Blocks[BlockIndex].AdhesionMultiplier = (CA + CB) / 2 / 100;
+					}
+				}
+					break;
 			}
 
 			if (!RouteData.Blocks.Last().AdhesionMultiplierDefined)
