@@ -410,7 +410,7 @@ namespace Route.Bve5
 				{
 					for (int j = 0; j < Data.Blocks[i].Rails.Length; j++)
 					{
-						// free objects
+						// free objects (including placed repeaters)
 						if (Data.Blocks[i].FreeObj.Length > j && Data.Blocks[i].FreeObj[j] != null)
 						{
 							double turn = Data.Blocks[i].Turn;
@@ -434,6 +434,65 @@ namespace Route.Bve5
 								double dy = Data.Blocks[i].FreeObj[j][k].Y;
 								double dz = Data.Blocks[i].FreeObj[j][k].Z;
 								double tpos = Data.Blocks[i].FreeObj[j][k].TrackPosition;
+
+								double averageTurn = 0;
+								double averageRadius = 0;
+								double averageCant = 0;
+								int nextBlock = i + 1;
+								bool useAverages = false;
+								if (nextBlock < Data.Blocks.Count - 1 && Data.Blocks[nextBlock].StartingDistance < Data.Blocks[i].StartingDistance + span)
+								{
+									/*
+									 * The object spans multiple blocks
+									 *
+									 * This is a pain to actually get positioned right (I suspect BVE5 is doing some interesting interpolation somewhere)....
+									 *
+									 * Currently:
+									 * Cycle through the next N blocks
+									 * Average the radius and cant
+									 * Use the pitch from the *last* block
+									 * Convert these to a transformation
+									 *
+									 * This gets the best results currently, but it's odd as pitch really ought to be averaged too :/
+									 */
+									double totalDistance = 0;
+									while (nextBlock < Data.Blocks.Count)
+									{
+										if (Data.Blocks[nextBlock].StartingDistance > Data.Blocks[i].StartingDistance + span)
+										{
+											break;
+										}
+										double distance = Data.Blocks[nextBlock].StartingDistance - Data.Blocks[nextBlock - 1].StartingDistance;
+										if (Data.Blocks[nextBlock].CurrentTrackState.CurveRadius != Data.Blocks[i].CurrentTrackState.CurveRadius || Data.Blocks[nextBlock].CurrentTrackState.CurveCant != Data.Blocks[i].CurrentTrackState.CurveCant || Data.Blocks[nextBlock].Pitch != Data.Blocks[i].Pitch)
+										{
+											useAverages = true;
+										}
+
+										if (totalDistance + distance > span)
+										{
+											distance = span - totalDistance;
+										}
+
+										totalDistance += distance;
+										averageTurn += Data.Blocks[nextBlock - 1].Turn;
+										averageRadius += Data.Blocks[nextBlock - 1].CurrentTrackState.CurveRadius * distance;
+										averageCant += (j == 0 ? Data.Blocks[nextBlock - 1].CurrentTrackState.CurveCant : Data.Blocks[nextBlock - 1].Rails[j].CurveCant) * distance;
+										pitch = Data.Blocks[nextBlock - 1].Pitch;
+										nextBlock++;
+									}
+
+									if (useAverages)
+									{
+										averageTurn /= totalDistance;
+										averageRadius /= totalDistance;
+										averageCant /= totalDistance;
+										curveRadius = averageRadius;
+										curveCant = averageCant;
+										turn = averageTurn;
+									}
+
+								}
+
 								Vector3 wpos;
 								Transformation Transformation;
 								if (j == 0)
