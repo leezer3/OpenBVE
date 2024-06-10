@@ -84,8 +84,9 @@ namespace Route.Bve5
 			    Bve5ScenarioParser.ParseScenario(path, PreviewOnly);
 			    route = CurrentRoute;
 		    }
-		    catch
+		    catch(Exception ex)
 		    {
+			    LastException = ex;
 			    return false;
 		    }
 
