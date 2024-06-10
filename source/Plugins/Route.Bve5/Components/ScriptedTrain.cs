@@ -29,6 +29,7 @@ using System.Linq;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
 using LibRender2.Trains;
+using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -297,7 +298,7 @@ namespace Route.Bve5
 			scriptedTrain.CarObjects = new List<CarObject>();
 			scriptedTrain.CarSounds = new List<CarSound>();
 
-			System.Text.Encoding Encoding = DetermineFileEncoding(scriptedTrain.FilePath);
+			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(scriptedTrain.FilePath);
 
 			string[] Lines = File.ReadAllLines(scriptedTrain.FilePath, Encoding).Skip(1).ToArray();
 			List<Dictionary<string, string>> Structures = new List<Dictionary<string, string>>();
@@ -377,13 +378,7 @@ namespace Route.Bve5
 					Z = 0.0;
 				}
 
-				scriptedTrain.CarObjects.Add(new CarObject
-				{
-					Key = Key,
-					Distance = Distance,
-					Span = Span,
-					Z = Z
-				});
+				scriptedTrain.CarObjects.Add(new CarObject(Key, Distance, Span, Z));
 			}
 
 			foreach (var Sound3d in Sound3ds)
@@ -406,13 +401,7 @@ namespace Route.Bve5
 					Distance2 = 0.0;
 				}
 
-				scriptedTrain.CarSounds.Add(new CarSound
-				{
-					Key = Key,
-					Distance1 = Distance1,
-					Distance2 = Distance2,
-					Function = Function
-				});
+				scriptedTrain.CarSounds.Add(new CarSound(Key, Distance1, Distance2, Function));
 			}
 		}
 	}

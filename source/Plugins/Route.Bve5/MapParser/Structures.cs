@@ -255,20 +255,36 @@ namespace Route.Bve5
 			internal List<CarSound> CarSounds;
 		}
 
-		private struct CarObject
+		private class CarObject
 		{
-			internal string Key;
-			internal double Distance;
-			internal double Span;
-			internal double Z;
+			internal readonly string Key;
+			internal readonly double Distance;
+			internal readonly double Span;
+			internal readonly double Z;
+
+			internal CarObject(string key, double distance, double span, double z)
+			{
+				Key = key;
+				Distance= distance;
+				Span= span;
+				Z= z;
+			}
 		}
 
-		private struct CarSound
+		private class CarSound
 		{
-			internal string Key;
-			internal double Distance1;
-			internal double Distance2;
-			internal string Function;
+			internal readonly string Key;
+			internal readonly double Distance1;
+			internal readonly double Distance2;
+			internal readonly string Function;
+
+			internal CarSound(string key, double distance1, double distance2, string function)
+			{
+				Key = key;
+				Distance1 = distance1;
+				Distance2 = distance2;
+				Function = function;
+			}
 		}
 	}
 }

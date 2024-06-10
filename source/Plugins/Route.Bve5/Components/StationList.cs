@@ -60,7 +60,7 @@ namespace Route.Bve5
 				}
 			}
 
-			System.Text.Encoding Encoding = DetermineFileEncoding(stationList);
+			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(stationList);
 			string[] Lines = File.ReadAllLines(stationList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
 
 			for (int currentLine = 1; currentLine < Lines.Length; currentLine++)

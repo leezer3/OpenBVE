@@ -57,7 +57,7 @@ namespace Route.Bve5
 				}
 			}
 
-			System.Text.Encoding Encoding = DetermineFileEncoding(signalList);
+			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(signalList);
 			string[] Lines = File.ReadAllLines(signalList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
 
 			for (int currentLine = 1; currentLine < Lines.Length; currentLine++)

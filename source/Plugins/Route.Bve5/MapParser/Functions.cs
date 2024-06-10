@@ -24,45 +24,13 @@
 
 using System;
 using System.Globalization;
-using System.IO;
-using System.Text;
 using OpenBveApi.Math;
-using OpenBveApi.Objects;
 using OpenBveApi.World;
 
 namespace Route.Bve5
 {
 	static partial class Bve5ScenarioParser
 	{
-		/// <summary>Attempts to determine the System.Text.Encoding value for a given BVE5 file</summary>
-		/// <param name="FileName">The filename</param>
-		/// <returns>The detected encoding, or UTF-8 if this is not found</returns>
-		internal static Encoding DetermineFileEncoding(string FileName)
-		{
-			using (StreamReader reader = new StreamReader(FileName))
-			{
-				var firstLine = reader.ReadLine();
-				if (firstLine != null)
-				{
-					string[] Header = firstLine.Split(':');
-					if (Header.Length == 1)
-					{
-						return Encoding.UTF8;
-					}
-					string[] Arguments = Header[1].Split(',');
-					try
-					{
-						return Encoding.GetEncoding(Arguments[0].ToLowerInvariant().Trim());
-					}
-					catch
-					{
-						return Encoding.UTF8;
-					}
-				}
-				return Encoding.UTF8;
-			}
-		}
-
 		/// <summary>Parses a BVE5 format time into OpenBVE's internal time representation</summary>
 		/// <param name="Expression">The time to parse</param>
 		/// <param name="Value">The number of seconds since midnight on the first day this represents, updated via 'out'</param>

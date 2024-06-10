@@ -27,6 +27,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Bve5_Parsing.ScenarioGrammar;
+using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using RouteManager2.Stations;
@@ -79,7 +80,7 @@ namespace Route.Bve5
 		{
 			Plugin.CurrentOptions.CurrentXParser = XParsers.Assimp;
 
-			Encoding Encoding = DetermineFileEncoding(FileName);
+			Encoding Encoding = Text.DetermineBVE5FileEncoding(FileName);
 
 			ScenarioGrammarParser Parser = new ScenarioGrammarParser();
 			ScenarioData Data = Parser.Parse(File.ReadAllText(FileName, Encoding));

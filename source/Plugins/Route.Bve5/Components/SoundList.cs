@@ -58,7 +58,7 @@ namespace Route.Bve5
 
 			string BaseDirectory = System.IO.Path.GetDirectoryName(soundList);
 
-			System.Text.Encoding Encoding = DetermineFileEncoding(soundList);
+			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(soundList);
 			string[] Lines = File.ReadAllLines(soundList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
 
 			for (int i = 1; i < Lines.Length; i++)
@@ -128,7 +128,7 @@ namespace Route.Bve5
 
 			string BaseDirectory = System.IO.Path.GetDirectoryName(sound3DList);
 
-			System.Text.Encoding Encoding = DetermineFileEncoding(sound3DList);
+			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(sound3DList);
 			string[] Lines = File.ReadAllLines(sound3DList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
 
 			for (int i = 1; i < Lines.Length; i++)

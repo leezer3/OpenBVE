@@ -58,7 +58,7 @@ namespace Route.Bve5
 
 			string BaseDirectory = System.IO.Path.GetDirectoryName(structureList);
 
-			System.Text.Encoding Encoding = DetermineFileEncoding(structureList);
+			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(structureList);
 			string[] Lines = File.ReadAllLines(structureList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
 
 			for (int i = 1; i < Lines.Length; i++)
