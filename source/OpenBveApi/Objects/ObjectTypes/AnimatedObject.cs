@@ -737,14 +737,15 @@ namespace OpenBveApi.Objects
 			}
 		}
 
-		/// <summary>Creates the animated object within the game world</summary>
-		/// <param name="Position">The absolute position</param>
-		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
-		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
-		/// <param name="sectionIndex">The index of the section if placed using a SigF command</param>
-		/// <param name="TrackPosition">The absolute track position</param>
-		/// <param name="Brightness">The brightness value at the track position</param>
-		public void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, int sectionIndex, double TrackPosition, double Brightness)
+        /// <summary>Creates the animated object within the game world</summary>
+        /// <param name="Position">The absolute position</param>
+        /// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
+        /// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
+        /// <param name="sectionIndex">The index of the section if placed using a SigF command</param>
+        /// <param name="railIndex">The rail index the object is placed on</param>
+        /// <param name="TrackPosition">The absolute track position</param>
+        /// <param name="Brightness">The brightness value at the track position</param>
+        public void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, WorldProperties Properties)
 		{
 
 			int a = currentHost.AnimatedWorldObjectsUsed;
@@ -762,11 +763,11 @@ namespace OpenBveApi.Objects
 					Up = FinalTransformation.Y,
 					Side = FinalTransformation.X,
 					Object = o,
-					TrackPosition = TrackPosition,
+					TrackPosition = Properties.TrackPosition,
 				};
 
-				currentObject.FrontAxleFollower.TrackPosition = TrackPosition + FrontAxlePosition;
-				currentObject.RearAxleFollower.TrackPosition = TrackPosition + RearAxlePosition;
+				currentObject.FrontAxleFollower.TrackPosition = Properties.TrackPosition + FrontAxlePosition;
+				currentObject.RearAxleFollower.TrackPosition = Properties.TrackPosition + RearAxlePosition;
 				currentObject.FrontAxlePosition = FrontAxlePosition;
 				currentObject.RearAxlePosition = RearAxlePosition;
 				currentObject.FrontAxleFollower.UpdateWorldCoordinates(false);
@@ -779,7 +780,7 @@ namespace OpenBveApi.Objects
 					}
 				}
 
-				currentObject.Object.internalObject.Brightness = Brightness;
+				currentObject.Object.internalObject.Brightness = Properties.Brightness;
 
 				double r = 0.0;
 				for (int i = 0; i < currentObject.Object.States.Length; i++)
@@ -800,7 +801,7 @@ namespace OpenBveApi.Objects
 			{
 				var o = this.Clone();
 				currentHost.CreateDynamicObject(ref o.internalObject);
-				o.SectionIndex = sectionIndex;
+				o.SectionIndex = Properties.SectionIndex;
 				AnimatedWorldObject currentObject = new AnimatedWorldObject(currentHost)
 				{
 					Position = Position,
@@ -808,8 +809,8 @@ namespace OpenBveApi.Objects
 					Up = FinalTransformation.Y,
 					Side = FinalTransformation.X,
 					Object = o,
-					SectionIndex = sectionIndex,
-					TrackPosition = TrackPosition,
+					SectionIndex = Properties.SectionIndex,
+					TrackPosition = Properties.TrackPosition,
 				};
 				for (int i = 0; i < currentObject.Object.States.Length; i++)
 				{
@@ -819,7 +820,7 @@ namespace OpenBveApi.Objects
 					}
 				}
 
-				currentObject.Object.internalObject.Brightness = Brightness;
+				currentObject.Object.internalObject.Brightness = Properties.Brightness;
 
 				double r = 0.0;
 				for (int i = 0; i < currentObject.Object.States.Length; i++)

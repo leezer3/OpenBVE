@@ -470,10 +470,9 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Callback function to create the object within the world</summary>
 		public override void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation,
-			int SectionIndex, double StartingDistance, double EndingDistance,
-			double TrackPosition, double Brightness, bool DuplicateMaterials = false)
+			WorldProperties Properties, bool DuplicateMaterials = false)
 		{
-			currentHost.CreateStaticObject(this, Position, WorldTransformation, LocalTransformation, 0.0, StartingDistance, EndingDistance, TrackPosition, Brightness);
+			currentHost.CreateStaticObject(this, Position, WorldTransformation, LocalTransformation, Properties);
 		}
 
 		/// <inheritdoc />

@@ -32,12 +32,12 @@ namespace CsvRwRouteParser
 				{
 					if (Location <= 0.0)
 					{
-						Poles[0][Type].CreateObject(WorldPosition, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
+						Poles[0][Type].CreateObject(WorldPosition, RailTransformation, new WorldProperties(0, StartingDistance, StartingDistance, EndingDistance));
 					}
 					else
 					{
 						UnifiedObject Pole = Poles[0][Type].Mirror();
-						Pole.CreateObject(WorldPosition, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
+						Pole.CreateObject(WorldPosition, RailTransformation, new WorldProperties(0, StartingDistance, StartingDistance, EndingDistance));
 					}
 				}
 				else
@@ -52,7 +52,7 @@ namespace CsvRwRouteParser
 					double sz = -Direction.X;
 					Vector3 wpos = WorldPosition + new Vector3(sx * dx + w.X * dz, sy * dx + w.Y * dz, sz * dx + w.Z * dz);
 					int type = Type;
-					Poles[m][type].CreateObject(wpos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
+					Poles[m][type].CreateObject(wpos, RailTransformation, new WorldProperties(0, StartingDistance, StartingDistance, EndingDistance));
 				}
 			}
 		}

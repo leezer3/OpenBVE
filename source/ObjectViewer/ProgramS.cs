@@ -316,7 +316,7 @@ namespace ObjectViewer {
 				    {
 					    if (CurrentHost.LoadObject(Files[i], Encoding.UTF8, out UnifiedObject o))
 					    {
-						    o.CreateObject(Vector3.Zero, 0.0, 0.0, 0.0);
+						    o.CreateObject(Vector3.Zero, new WorldProperties());
 					    }
 					    
 				    }
