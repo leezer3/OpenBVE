@@ -116,7 +116,7 @@ namespace Route.Bve5
 			{
 				if (!Plugin.CurrentRoute.Tracks.ContainsKey(j))
 				{
-					Plugin.CurrentRoute.Tracks.Add(j, new Track());
+					Plugin.CurrentRoute.Tracks.Add(j, new Track(Data.TrackKeyList[j]));
 				}
 				if (Plugin.CurrentRoute.Tracks[j].Elements == null)
 				{

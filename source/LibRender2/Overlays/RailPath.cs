@@ -115,6 +115,7 @@ namespace LibRender2.Overlays
 			Color = color;
 			LineWidth = 2;
 			Display = true;
+			Description = host.Tracks[RailKey].Name;
 		}
 
 	}

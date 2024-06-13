@@ -17,11 +17,15 @@ namespace OpenBveApi.Routes
 
 		/// <summary>The default direction of travel on this track</summary>
 		public TrackDirection Direction;
+		
+		/// <summary>The textual name of the track for display purposes</summary>
+		public string Name;
 
 		/// <summary>Creates a new track</summary>
-		public Track()
+		public Track(string trackName = "")
 		{
 			Elements = new TrackElement[256];
+			Name = trackName;
 		}
 
 		/// <summary>Gets the innacuracy (Gauge spread and track bounce) for a given track position and routefile innacuracy value</summary>
