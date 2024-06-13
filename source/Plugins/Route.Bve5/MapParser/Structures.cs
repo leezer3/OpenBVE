@@ -93,7 +93,6 @@ namespace Route.Bve5
 
 		private class Repeater
 		{
-			internal string Key;
 			internal string TrackKey;
 			internal double StartingDistance;
 			internal bool StartRefreshed;
