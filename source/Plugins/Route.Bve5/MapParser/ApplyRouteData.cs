@@ -559,7 +559,7 @@ namespace Route.Bve5
 								if (obj != null)
 								{
 									UnifiedObject crack = obj.Transform(d0, d1);
-									crack.CreateObject(wpos, Transformation, new Transformation(0.0, 0.0, 0.0), -1, StartingDistance, EndingDistance, BlockInterval, tpos);
+									crack.CreateObject(wpos, Transformation, new Transformation(0.0, 0.0, 0.0), -1, StartingDistance, EndingDistance, tpos, 1.0);
 								}
 							}
 						}
