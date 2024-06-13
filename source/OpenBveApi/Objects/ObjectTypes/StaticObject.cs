@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
@@ -161,66 +163,51 @@ namespace OpenBveApi.Objects
 		public override UnifiedObject Transform(double NearDistance, double FarDistance)
 		{
 			StaticObject Result = (StaticObject)this.Clone();
-			int n = 0;
-			double x2 = 0.0, x3 = 0.0, x6 = 0.0, x7 = 0.0;
+			if (Mesh.Vertices.Length <= 3)
+			{
+				// Cannot transform a mesh with less than 4 vertices
+				return Result;
+			}
+
+			// cache the list used in linq
+			List<VertexTemplate> tempList = Mesh.Vertices.ToList();
+			// find vertices to base transform on
+			int bottomLeft = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
+			int bottomRight = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
+			int topRight = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
+			int topLeft = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
+
+			double minDistance = double.MaxValue, maxDistance = double.MinValue;
+			// find total length of the object
 			for (int i = 0; i < Result.Mesh.Vertices.Length; i++)
 			{
-				if (n == 2)
-				{
-					x2 = Result.Mesh.Vertices[i].Coordinates.X;
-				}
-				else if (n == 3)
-				{
-					x3 = Result.Mesh.Vertices[i].Coordinates.X;
-				}
-				else if (n == 6)
-				{
-					x6 = Result.Mesh.Vertices[i].Coordinates.X;
-				}
-				else if (n == 7)
-				{
-					x7 = Result.Mesh.Vertices[i].Coordinates.X;
-				}
-				n++;
-				if (n == 8)
-				{
-					break;
-				}
+				minDistance = System.Math.Min(Result.Mesh.Vertices[i].Coordinates.Z, minDistance);
+				maxDistance = System.Math.Max(Result.Mesh.Vertices[i].Coordinates.Z, maxDistance);
 			}
-			if (n >= 4)
+
+			double topWidth = Result.Mesh.Vertices[topRight].Coordinates.X - Result.Mesh.Vertices[topLeft].Coordinates.X;
+			double bottomWidth = Result.Mesh.Vertices[bottomRight].Coordinates.X - Result.Mesh.Vertices[bottomLeft].Coordinates.X;
+			double modelLength = maxDistance - minDistance;
+
+			// transform vertices
+			for (int i = 0; i < Result.Mesh.Vertices.Length; i++)
 			{
-				int m = 0;
-				for (int i = 0; i < Result.Mesh.Vertices.Length; i++)
-				{
-					if (m == 0)
-					{
-						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x3;
-					}
-					else if (m == 1)
-					{
-						Result.Mesh.Vertices[i].Coordinates.X = FarDistance - x2;
-						if (n < 8)
-						{
-							break;
-						}
-					}
-					else if (m == 4)
-					{
-						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x7;
-					}
-					else if (m == 5)
-					{
-						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x6;
-						break;
-					}
-					m++;
-					if (m == 8)
-					{
-						break;
-					}
-				}
+				double zPerc = Result.Mesh.Vertices[i].Coordinates.Z / modelLength;
+				// assuming an absolute linear line, this is the X-move required at the current Z for LEFT coordinates
+				double interpolatedMove = LinearInterpolation(0, NearDistance, modelLength, FarDistance, zPerc);
+				// therefore, we now need the left and right interpolated figures to determine where our vert is positioned
+				double interpolatedLeft = LinearInterpolation(0, Mesh.Vertices[bottomLeft].Coordinates.X, 0, Mesh.Vertices[topLeft].Coordinates.X, zPerc);
+				double interpolatedRight = LinearInterpolation(0, Mesh.Vertices[bottomRight].Coordinates.X, 0, Mesh.Vertices[topRight].Coordinates.X, zPerc);
+				double perc = (Result.Mesh.Vertices[i].Coordinates.X - interpolatedLeft) / (interpolatedRight - interpolatedLeft);
+				Result.Mesh.Vertices[i].Coordinates.X += perc * interpolatedMove;
 			}
+
 			return Result;
+		}
+
+		private static double LinearInterpolation(double x0, double y0, double x1, double y1, double x)
+		{
+			return x0 == x1 ? y0 : y0 + (y1 - y0) * (x - x0) / (x1 - x0);
 		}
 
 		/// <summary>Joins two static objects</summary>
