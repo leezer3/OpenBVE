@@ -145,6 +145,10 @@ namespace OpenBve.Graphics
 					GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 				}
 			}
+			else
+			{
+				GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
+			}
 
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
