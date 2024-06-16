@@ -39,7 +39,7 @@ namespace Route.Bve5
 	{
 		private static void LoadStationList(string FileName, MapData ParseData, RouteData RouteData)
 		{
-			RouteData.StationList = new List<Station>();
+			RouteData.StationList = new Dictionary<string, Station>();
 			// Everything breaks if no station list
 			if (string.IsNullOrEmpty(ParseData.StationListPath))
 			{
@@ -71,15 +71,23 @@ namespace Route.Bve5
 					continue;
 				}
 
-				Station newStation = new Station();
+				
 				string[] splitLine = Lines[currentLine].Split(',');
-				for (int i = 0; i < splitLine.Length; i++)
+				if (splitLine.Length < 2)
+				{
+					// Need at least the key and name for this to be a sensibly valid station
+					continue;
+				}
+
+				string stationKey = string.Empty;
+				Station newStation = new Station();
+				for (int i = 1; i < splitLine.Length; i++)
 				{
 					splitLine[i] = splitLine[i].Trim();
 					switch (i)
 					{
 						case 0:
-							newStation.Key = splitLine[i];
+							stationKey = splitLine[i].ToLowerInvariant();
 							break;
 						case 1:
 							newStation.Name = splitLine[i];
@@ -188,10 +196,19 @@ namespace Route.Bve5
 					}
 				}
 
-				if (!string.IsNullOrEmpty(newStation.Key) && !string.IsNullOrEmpty(newStation.Name))
+				if (!string.IsNullOrEmpty(stationKey) && !string.IsNullOrEmpty(newStation.Name))
 				{
 					// Key and name *must* be set, everything else can be ignored
-					RouteData.StationList.Add(newStation);
+					if (RouteData.StationList.ContainsKey(stationKey))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The station with key " + stationKey + " has been declared twice in BVE5 station list file " + ParseData.StationListPath);
+						RouteData.StationList[stationKey] = newStation;
+					}
+					else
+					{
+						RouteData.StationList.Add(stationKey, newStation);
+					}
+					
 				}
 
 			}

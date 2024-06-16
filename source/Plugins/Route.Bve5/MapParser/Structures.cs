@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, S520, The OpenBVE Project
 //
@@ -49,7 +49,6 @@ namespace Route.Bve5
 
 		private class Station
 		{
-			internal string Key;
 			internal string Name;
 			internal StationStopMode StopMode;
 			internal StationType StationType;
@@ -93,7 +92,7 @@ namespace Route.Bve5
 
 		private class Repeater
 		{
-			internal string Key;
+			internal readonly string Key;
 			internal string TrackKey;
 			internal double StartingDistance;
 			internal bool StartRefreshed;
@@ -116,6 +115,11 @@ namespace Route.Bve5
 			internal int Type;
 
 			internal double Span;
+
+			internal Repeater(string key)
+			{
+				Key = key;
+			}
 		}
 
 		private struct Crack

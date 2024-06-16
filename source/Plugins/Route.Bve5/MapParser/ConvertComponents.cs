@@ -28,6 +28,7 @@ using System.Linq;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Colors;
+using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Sounds;
@@ -750,12 +751,12 @@ namespace Route.Bve5
 
 		private static void ConvertStation(Statement Statement, RouteData RouteData)
 		{
-			
-			{
 
-				int Index = RouteData.StationList.FindIndex(Station => Station.Key.Equals(Statement.Key, StringComparison.InvariantCultureIgnoreCase));
-				if (Index == -1)
+			{
+				string stationKey = Statement.Key.ToLowerInvariant();
+				if (!RouteData.StationList.ContainsKey(stationKey))
 				{
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unable to find a station with key " + Statement.Key + " in the BVE5 station list.");
 					return;
 				}
 
@@ -772,27 +773,28 @@ namespace Route.Bve5
 				}
 				
 				RouteStation NewStation = new RouteStation();
-				NewStation.Name = RouteData.StationList[Index].Name;
-				NewStation.ArrivalTime = RouteData.StationList[Index].ArrivalTime;
-				RouteData.Sounds.TryGetValue(RouteData.StationList[Index].ArrivalSoundKey, out NewStation.ArrivalSoundBuffer);
-				NewStation.StopMode = RouteData.StationList[Index].StopMode;
-				NewStation.DepartureTime = RouteData.StationList[Index].DepartureTime;
-				RouteData.Sounds.TryGetValue(RouteData.StationList[Index].DepartureSoundKey, out NewStation.DepartureSoundBuffer);
-				NewStation.Type = RouteData.StationList[Index].StationType;
-				NewStation.StopTime = RouteData.StationList[Index].StopTime;
-				NewStation.ForceStopSignal = RouteData.StationList[Index].ForceStopSignal;
+				NewStation.Name = RouteData.StationList[stationKey].Name;
+				NewStation.ArrivalTime = RouteData.StationList[stationKey].ArrivalTime;
+				RouteData.Sounds.TryGetValue(RouteData.StationList[stationKey].ArrivalSoundKey, out NewStation.ArrivalSoundBuffer);
+				NewStation.StopMode = RouteData.StationList[stationKey].StopMode;
+				NewStation.DepartureTime = RouteData.StationList[stationKey].DepartureTime;
+				RouteData.Sounds.TryGetValue(RouteData.StationList[stationKey].DepartureSoundKey, out NewStation.DepartureSoundBuffer);
+				NewStation.Type = RouteData.StationList[stationKey].StationType;
+				NewStation.StopTime = RouteData.StationList[stationKey].StopTime;
+				NewStation.ForceStopSignal = RouteData.StationList[stationKey].ForceStopSignal;
 				NewStation.OpenLeftDoors = Convert.ToDouble(Doors) < 0.0;
 				NewStation.OpenRightDoors = Convert.ToDouble(Doors) > 0.0;
 				NewStation.Stops = new StationStop[1];
 				NewStation.Stops[0].TrackPosition = Statement.Distance;
 				NewStation.Stops[0].BackwardTolerance = Math.Abs(Convert.ToDouble(BackwardTolerance));
 				NewStation.Stops[0].ForwardTolerance = Convert.ToDouble(ForwardTolerance);
-				NewStation.PassengerRatio = RouteData.StationList[Index].PassengerRatio;
+				NewStation.PassengerRatio = RouteData.StationList[stationKey].PassengerRatio;
 				NewStation.DefaultTrackPosition = DefaultTrackPosition;
-				NewStation.ReopenDoor = RouteData.StationList[Index].ReopenDoor;
+				NewStation.ReopenDoor = RouteData.StationList[stationKey].ReopenDoor;
 				NewStation.ReopenStationLimit = 5;
-				NewStation.InterferenceInDoor = RouteData.StationList[Index].InterferenceInDoor;
+				NewStation.InterferenceInDoor = RouteData.StationList[stationKey].InterferenceInDoor;
 				NewStation.MaxInterferingObjectRate = Plugin.RandomNumberGenerator.Next(1, 99);
+				NewStation.Key = stationKey;
 
 				int StationBlockIndex = RouteData.FindOrAddBlock(DefaultTrackPosition);
 				RouteData.Blocks[StationBlockIndex].StationIndex = CurrentStation;

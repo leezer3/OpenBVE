@@ -32,7 +32,7 @@ namespace Route.Bve5
 		{
 			internal List<string> TrackKeyList;
 			internal List<Block> Blocks;
-			internal List<Station> StationList;
+			internal Dictionary<string, Station> StationList;
 			internal ObjectDictionary Objects;
 			internal List<Background> Backgrounds;
 			internal List<SignalData> SignalObjects;

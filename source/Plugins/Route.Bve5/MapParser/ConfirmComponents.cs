@@ -534,10 +534,7 @@ namespace Route.Bve5
 
 				if (!RepeaterList.Exists(Repeater => Repeater.Key.Equals(Statement.Key, StringComparison.InvariantCultureIgnoreCase)))
 				{
-					RepeaterList.Add(new Repeater
-					{
-						Key = Statement.Key
-					});
+					RepeaterList.Add(new Repeater(Statement.Key));
 				}
 			}
 
@@ -719,7 +716,7 @@ namespace Route.Bve5
 						int StationIndex = Array.FindLastIndex(Plugin.CurrentRoute.Stations, s => s.Stops.Last().TrackPosition <= Statement.Distance);
 						if (StationIndex != -1)
 						{
-							Station Station = RouteData.StationList.Find(s => s.Name.Equals(Plugin.CurrentRoute.Stations[StationIndex].Name, StringComparison.InvariantCultureIgnoreCase));
+							Station Station = RouteData.StationList[Plugin.CurrentRoute.Stations[StationIndex].Key];
 							if (Station != null)
 							{
 								if (Station.ForceStopSignal && !Station.DepartureSignalUsed)
