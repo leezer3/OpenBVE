@@ -136,6 +136,10 @@
 		RailLimit,
 		/// <summary>Adds a buffer stop</summary>
 		RailBuffer,
+		/// <summary>Sets the accuracy value for a rail</summary>
+		RailAccuracy,
+		/// <summary>Sets the adhesion value for a rail</summary>
+		RailAdhesion,
 		/// <summary>Changes the player path</summary>
 		PlayerPath,
 

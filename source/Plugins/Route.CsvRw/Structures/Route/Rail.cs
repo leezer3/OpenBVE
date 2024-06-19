@@ -19,8 +19,18 @@ namespace CsvRwRouteParser
 		internal double CurveCant;
 		/// <summary>Whether the rail is driveable by the player</summary>
 		internal bool IsDriveable;
+		/// <summary>The accuracy level of the rail (affects cab sway) </summary>
+		internal double Accuracy;
+		/// <summary>The adhesion multiplier applying to the rail</summary>
+		internal double AdhesionMultiplier;
 
 		/// <summary>Gets the mid point of the rail</summary>
 		internal Vector2 MidPoint => new Vector2(RailEnd - RailStart);
+
+		internal Rail(double accuracy, double adhesionMultiplier)
+		{
+			Accuracy = accuracy;
+			AdhesionMultiplier = adhesionMultiplier;
+		}
 	}
 }

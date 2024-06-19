@@ -51,7 +51,7 @@ namespace CsvRwRouteParser
 
 						if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx))
 						{
-							Data.Blocks[BlockIndex].Rails.Add(idx, new Rail());
+							Data.Blocks[BlockIndex].Rails.Add(idx, new Rail(2.0, 1.0));
 
 							if (idx >= Data.Blocks[BlockIndex].RailCycles.Length)
 							{
@@ -189,7 +189,7 @@ namespace CsvRwRouteParser
 
 						if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx))
 						{
-							Data.Blocks[BlockIndex].Rails.Add(idx, new Rail());
+							Data.Blocks[BlockIndex].Rails.Add(idx, new Rail(2.0, 1.0));
 						}
 
 						Rail currentRail = Data.Blocks[BlockIndex].Rails[idx];
@@ -304,7 +304,7 @@ namespace CsvRwRouteParser
 						acc = 4.0;
 					}
 
-					Data.Blocks[BlockIndex].Accuracy = acc;
+					Data.Blocks[BlockIndex].Rails[0].Accuracy = acc;
 				}
 					break;
 				case TrackCommand.Pitch:
@@ -384,7 +384,7 @@ namespace CsvRwRouteParser
 						a = 100.0;
 					}
 
-					Data.Blocks[BlockIndex].AdhesionMultiplier = 0.01 * a;
+					Data.Blocks[BlockIndex].Rails[0].AdhesionMultiplier = 0.01 * a;
 				}
 					break;
 				case TrackCommand.Brightness:
@@ -3631,6 +3631,61 @@ namespace CsvRwRouteParser
 
 						Plugin.CurrentRoute.BufferTrackPositions.Add(new BufferStop(railIndex, Data.TrackPosition, affectsAI != 0));
 					}
+				}
+					break;
+				case TrackCommand.RailAccuracy:
+				{
+					double acc = 2.0;
+					int railIndex = -1;
+
+					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailAccuracy at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						break;
+					}
+
+					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out acc))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						acc = 2.0;
+					}
+					
+					if (acc < 0.0)
+					{
+						acc = 0.0;
+					}
+					else if (acc > 4.0)
+					{
+						acc = 4.0;
+					}
+					Data.Blocks[BlockIndex].Rails[RailIndex].Accuracy = acc;
+				}
+					break;
+				case TrackCommand.RailAdhesion:
+				{
+					double a = 100.0;
+					int railIndex = -1;
+
+
+					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailAccuracy at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						break;
+					}
+
+					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out a))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						a = 100;
+					}
+
+					if (a < 0.0)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						a = 100.0;
+					}
+
+					Data.Blocks[BlockIndex].Rails[railIndex].AdhesionMultiplier = 0.01 * a;
 				}
 					break;
 			}

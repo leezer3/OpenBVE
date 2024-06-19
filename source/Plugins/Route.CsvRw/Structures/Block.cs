@@ -38,8 +38,6 @@ namespace CsvRwRouteParser
 		internal double Turn;
 		internal int Station;
 		internal bool StationPassAlarm;
-		internal double Accuracy;
-		internal double AdhesionMultiplier;
 		internal int SnowIntensity;
 		internal int RainIntensity;
 		internal int WeatherObject;
