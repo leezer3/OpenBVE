@@ -813,29 +813,24 @@ namespace Route.Bve5
 			{
 				dynamic d = Statement;
 
-				object BackgroundKey = d.StructureKey;
+				string BackgroundKey = Convert.ToString(d.StructureKey);
+				BackgroundKey = BackgroundKey.ToLowerInvariant();
 
-				int BackgroundIndex = RouteData.Backgrounds.FindIndex(Background => Background.Key.Equals(Convert.ToString(BackgroundKey), StringComparison.InvariantCultureIgnoreCase));
 
-				if (BackgroundIndex == -1)
+				if (!RouteData.Backgrounds.ContainsKey(BackgroundKey))
 				{
 					RouteData.Objects.TryGetValue(Convert.ToString(BackgroundKey), out UnifiedObject Object);
 
 					if (Object != null)
 					{
-						BackgroundIndex = RouteData.Backgrounds.Count;
-						RouteData.Backgrounds.Add(new Background(Convert.ToString(BackgroundKey), new BackgroundObject((StaticObject)Object)));
+						RouteData.Backgrounds.Add(Convert.ToString(BackgroundKey), Object);
 					}
 				}
 
-				if (BackgroundIndex != -1)
+				if (RouteData.Backgrounds.ContainsKey(BackgroundKey))
 				{
 					int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
-					RouteData.Blocks[BlockIndex].BackgroundIndex = BackgroundIndex;
-				}
-				else
-				{
-					//Failed to load the background
+					RouteData.Blocks[BlockIndex].Background = BackgroundKey;
 				}
 			}
 		}

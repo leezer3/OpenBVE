@@ -211,7 +211,7 @@ namespace Route.Bve5
 			internal int Stop = -1;
 			internal List<FreeObj>[] FreeObj;
 			internal List<Crack> Cracks;
-			internal int BackgroundIndex = -1;
+			internal string Background = string.Empty;
 			internal List<Section> Sections;
 			internal List<Signal>[] Signals;
 			internal List<Transponder> Transponders;

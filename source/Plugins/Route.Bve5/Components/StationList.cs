@@ -81,7 +81,7 @@ namespace Route.Bve5
 
 				string stationKey = string.Empty;
 				Station newStation = new Station();
-				for (int i = 1; i < splitLine.Length; i++)
+				for (int i = 0; i < splitLine.Length; i++)
 				{
 					splitLine[i] = splitLine[i].Trim();
 					switch (i)

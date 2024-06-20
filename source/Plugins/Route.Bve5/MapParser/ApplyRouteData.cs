@@ -59,12 +59,14 @@ namespace Route.Bve5
 			Plugin.CurrentRoute.AccurateObjectDisposal = ObjectDisposalMode.Accurate;
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
+			BackgroundHandle currentBackground = null;
+
 			// background
 			if (!PreviewOnly)
 			{
-				if (Data.Blocks[0].BackgroundIndex >= 0 & Data.Blocks[0].BackgroundIndex < Data.Backgrounds.Count)
+				if (!string.IsNullOrEmpty(Data.Blocks[0].Background))
 				{
-					Plugin.CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Blocks[0].BackgroundIndex].Handle;
+					Plugin.CurrentRoute.CurrentBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[0].Background]);
 				}
 				else
 				{
@@ -72,14 +74,15 @@ namespace Route.Bve5
 					// as backgrounds are objects, we *must* have one, as opposed to the BVE2 / BVE4 default cylinder
 					for (int i = 0; i < Data.Blocks.Count; i++)
 					{
-						if (Data.Blocks[i].BackgroundIndex >= 0 & Data.Blocks[i].BackgroundIndex < Data.Backgrounds.Count)
+						if (!string.IsNullOrEmpty(Data.Blocks[i].Background))
 						{
-							Plugin.CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Blocks[i].BackgroundIndex].Handle;
+							Plugin.CurrentRoute.CurrentBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[i].Background]);
 							break;
 						}
 					}
 				}
 				Plugin.CurrentRoute.TargetBackground = Plugin.CurrentRoute.CurrentBackground;
+				currentBackground = Plugin.CurrentRoute.CurrentBackground;
 			}
 
 			// brightness
@@ -170,29 +173,12 @@ namespace Route.Bve5
 				// background
 				if (!PreviewOnly)
 				{
-					if (Data.Blocks[i].BackgroundIndex >= 0)
+					if (!string.IsNullOrEmpty(Data.Blocks[i].Background))
 					{
-						int typ;
-						if (i == 0)
+						if (Data.Backgrounds.ContainsKey(Data.Blocks[i].Background))
 						{
-							typ = Data.Blocks[i].BackgroundIndex;
-						}
-						else
-						{
-							typ = Data.Backgrounds.Count > 0 ? 0 : -1;
-							for (int j = i - 1; j >= 0; j--)
-							{
-								if (Data.Blocks[j].BackgroundIndex >= 0)
-								{
-									typ = Data.Blocks[j].BackgroundIndex;
-									break;
-								}
-							}
-						}
-						if (typ >= 0 & typ < Data.Backgrounds.Count)
-						{
-							
-							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new BackgroundChangeEvent(Plugin.CurrentRoute, 0.0, Data.Backgrounds[typ].Handle, Data.Backgrounds[Data.Blocks[i].BackgroundIndex].Handle));
+							BackgroundHandle nextBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[i].Background]);
+							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new BackgroundChangeEvent(Plugin.CurrentRoute, 0.0, currentBackground, nextBackground));
 						}
 					}
 				}

@@ -154,7 +154,7 @@ namespace Route.Bve5
 
 			System.Threading.Thread.Sleep(1);
 			if (plugin.Cancel) return;
-			RouteData.Backgrounds = new List<Background>();
+			RouteData.Backgrounds = new ObjectDictionary();
 
 			/*
 			 * NOTE:

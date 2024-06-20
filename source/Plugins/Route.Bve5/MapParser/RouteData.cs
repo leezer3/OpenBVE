@@ -34,7 +34,7 @@ namespace Route.Bve5
 			internal List<Block> Blocks;
 			internal Dictionary<string, Station> StationList;
 			internal ObjectDictionary Objects;
-			internal List<Background> Backgrounds;
+			internal ObjectDictionary Backgrounds;
 			internal List<SignalData> SignalObjects;
 			internal SoundDictionary Sounds;
 			internal SoundDictionary Sound3Ds;
