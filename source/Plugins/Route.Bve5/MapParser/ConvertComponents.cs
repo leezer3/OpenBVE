@@ -74,16 +74,11 @@ namespace Route.Bve5
 					case MapFunctionName.Change:
 					case MapFunctionName.Curve:
 						{
-							object Radius = d.Radius;
-							object Cant = d.Cant;
-							if (Statement.FunctionName == MapFunctionName.Curve)
-							{
-								Cant = Convert.ToDouble(Cant) / 1000.0;
-							}
-
+							double Radius = d.Radius;
+							double Cant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant) / 1000.0;
 							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Convert.ToDouble(Radius);
-							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Math.Abs(Convert.ToDouble(Cant)) * Math.Sign(Convert.ToDouble(Radius));
+							RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Radius;
+							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
 							RouteData.Blocks[Index].Rails[0].CurveInterpolateStart = true;
 							RouteData.Blocks[Index].Rails[0].CurveTransitionEnd = true;
 						}
@@ -119,7 +114,7 @@ namespace Route.Bve5
 							}
 							else
 							{
-								Cant = d.Cant;
+								Cant = d.Cant / 1000.0;
 							}
 
 							RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Convert.ToDouble(Radius);
@@ -501,7 +496,7 @@ namespace Route.Bve5
 							case MapFunctionName.Begin:
 								{
 									int Index = RouteData.FindOrAddBlock(Statement.Distance);
-									Blocks[Index].Rails[railIndex].CurveCant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant);
+									Blocks[Index].Rails[railIndex].CurveCant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant) / 1000.0;
 									Blocks[Index].Rails[railIndex].CurveInterpolateStart = true;
 									Blocks[Index].Rails[railIndex].CurveTransitionEnd = true;
 								}
@@ -531,10 +526,10 @@ namespace Route.Bve5
 									}
 									else
 									{
-										Cant = d.Cant;
+										Cant = d.Cant / 1000.0;
 									}
 
-									Blocks[Index].Rails[railIndex].CurveCant = Convert.ToDouble(Cant);
+									Blocks[Index].Rails[railIndex].CurveCant = Cant;
 									Blocks[Index].Rails[railIndex].CurveInterpolateStart = true;
 									Blocks[Index].Rails[railIndex].CurveInterpolateEnd = true;
 									Blocks[Index].Rails[railIndex].CurveTransitionEnd = true;
