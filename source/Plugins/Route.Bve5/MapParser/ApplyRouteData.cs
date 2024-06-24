@@ -66,7 +66,7 @@ namespace Route.Bve5
 			{
 				if (!string.IsNullOrEmpty(Data.Blocks[0].Background))
 				{
-					Plugin.CurrentRoute.CurrentBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[0].Background], true);
+					Plugin.CurrentRoute.CurrentBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[0].Background], Data.Blocks[0].Background.IndexOf("dome", StringComparison.InvariantCultureIgnoreCase) == -1);
 				}
 				else
 				{
@@ -76,7 +76,7 @@ namespace Route.Bve5
 					{
 						if (!string.IsNullOrEmpty(Data.Blocks[i].Background))
 						{
-							Plugin.CurrentRoute.CurrentBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[i].Background], true);
+							Plugin.CurrentRoute.CurrentBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[i].Background], Data.Blocks[0].Background.IndexOf("dome", StringComparison.InvariantCultureIgnoreCase) == -1);
 							break;
 						}
 					}
@@ -177,7 +177,8 @@ namespace Route.Bve5
 					{
 						if (Data.Backgrounds.ContainsKey(Data.Blocks[i].Background))
 						{
-							BackgroundHandle nextBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[i].Background], true);
+							// HACK: Assume that backgrounds containing DOME in the filename have a complete dome, and so do not need caps generated
+							BackgroundHandle nextBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[i].Background], Data.Blocks[0].Background.IndexOf("dome", StringComparison.InvariantCultureIgnoreCase) == -1);
 							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new BackgroundChangeEvent(Plugin.CurrentRoute, 0.0, currentBackground, nextBackground));
 						}
 					}
