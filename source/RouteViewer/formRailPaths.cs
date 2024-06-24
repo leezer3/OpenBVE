@@ -106,5 +106,23 @@ namespace RouteViewer
 				Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[dataGridViewPaths.CurrentRow.Index].Cells[keyColumn].Value].Description = dataGridViewPaths.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
 			}
 		}
+
+		private void buttonSelectAll_Click(object sender, EventArgs e)
+		{
+			for (int i = 0; i < dataGridViewPaths.Rows.Count; i++)
+			{
+				dataGridViewPaths.Rows[i].Cells[4].Value = true;
+				Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[i].Cells[keyColumn].Value].Display = true;
+			}
+		}
+
+		private void buttonSelectNone_Click(object sender, EventArgs e)
+		{
+			for (int i = 0; i < dataGridViewPaths.Rows.Count; i++)
+			{
+				dataGridViewPaths.Rows[i].Cells[4].Value = false;
+				Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[i].Cells[keyColumn].Value].Display = false;
+			}
+		}
 	}
 }
