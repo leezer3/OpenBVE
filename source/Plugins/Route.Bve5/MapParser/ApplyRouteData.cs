@@ -544,7 +544,17 @@ namespace Route.Bve5
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
 								if (obj != null)
 								{
-									UnifiedObject crack = obj.Transform(d0, d1);
+									UnifiedObject crack;
+									if (d0 < 0.0)
+									{
+										crack = obj.TransformRight(d0, d1);
+									}
+									else
+									{
+										crack = obj.TransformLeft(d0, d1);
+									}
+
+									
 									crack.CreateObject(wpos, Transformation, new Transformation(0.0, 0.0, 0.0), -1, StartingDistance, EndingDistance, tpos, 1.0);
 								}
 							}
