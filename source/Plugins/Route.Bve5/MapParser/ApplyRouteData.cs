@@ -66,7 +66,7 @@ namespace Route.Bve5
 			{
 				if (!string.IsNullOrEmpty(Data.Blocks[0].Background))
 				{
-					Plugin.CurrentRoute.CurrentBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[0].Background]);
+					Plugin.CurrentRoute.CurrentBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[0].Background], true);
 				}
 				else
 				{
@@ -76,7 +76,7 @@ namespace Route.Bve5
 					{
 						if (!string.IsNullOrEmpty(Data.Blocks[i].Background))
 						{
-							Plugin.CurrentRoute.CurrentBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[i].Background]);
+							Plugin.CurrentRoute.CurrentBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[i].Background], true);
 							break;
 						}
 					}
@@ -177,7 +177,7 @@ namespace Route.Bve5
 					{
 						if (Data.Backgrounds.ContainsKey(Data.Blocks[i].Background))
 						{
-							BackgroundHandle nextBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[i].Background]);
+							BackgroundHandle nextBackground = new BackgroundObject((StaticObject)Data.Backgrounds[Data.Blocks[i].Background], true);
 							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new BackgroundChangeEvent(Plugin.CurrentRoute, 0.0, currentBackground, nextBackground));
 						}
 					}
