@@ -929,15 +929,15 @@ namespace Route.Bve5
 					case MapFunctionName.Ambient:
 						{
 							double TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
+							if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
 							{
 								TempRed = 1.0;
 							}
-							if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
+							if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
 							{
 								TempGreen = 1.0;
 							}
-							if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
+							if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
 							{
 								TempBlue = 1.0;
 							}
@@ -964,15 +964,15 @@ namespace Route.Bve5
 					case MapFunctionName.Diffuse:
 						{
 							double TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument(ArgumentName.Red) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
+							if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
 							{
 								TempRed = 1.0;
 							}
-							if (!Statement.HasArgument(ArgumentName.Green) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
+							if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
 							{
 								TempGreen = 1.0;
 							}
-							if (!Statement.HasArgument(ArgumentName.Blue) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
+							if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
 							{
 								TempBlue = 1.0;
 							}
@@ -999,11 +999,11 @@ namespace Route.Bve5
 					case MapFunctionName.Direction:
 						{
 							double Pitch, Yaw;
-							if (!Statement.HasArgument(ArgumentName.Pitch) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Pitch), out Pitch))
+							if (!Statement.HasArgument(ArgumentName.Pitch) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Pitch), out Pitch))
 							{
 								Pitch = 60.0;
 							}
-							if (!Statement.HasArgument(ArgumentName.Yaw) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Yaw), out Yaw))
+							if (!Statement.HasArgument(ArgumentName.Yaw) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Yaw), out Yaw))
 							{
 								Yaw = -26.565051177078;
 							}
@@ -1035,7 +1035,7 @@ namespace Route.Bve5
 				}
 
 				double TempValue;
-				if (!Statement.HasArgument(ArgumentName.Value) || !double.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Value), out TempValue) || TempValue == 0.0)
+				if (!Statement.HasArgument(ArgumentName.Value) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Value), out TempValue) || TempValue == 0.0)
 				{
 					TempValue = 1.0;
 				}

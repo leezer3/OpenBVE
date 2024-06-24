@@ -98,7 +98,7 @@ namespace Route.Bve5
 							TrackKey = "0";
 						}
 
-						if (!Statement.HasArgument(ArgumentName.Direction) || !int.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Direction), out int Direction))
+						if (!Statement.HasArgument(ArgumentName.Direction) || !NumberFormats.TryParseIntVb6(Statement.GetArgumentValueAsString(ArgumentName.Direction), out int Direction))
 						{
 							Direction = 1;
 						}
@@ -137,7 +137,7 @@ namespace Route.Bve5
 				{
 					TrackKey = "0";
 				}
-				if (!Statement.HasArgument(ArgumentName.Direction) || !int.TryParse(Statement.GetArgumentValueAsString(ArgumentName.Direction), out int Direction))
+				if (!Statement.HasArgument(ArgumentName.Direction) || !NumberFormats.TryParseIntVb6(Statement.GetArgumentValueAsString(ArgumentName.Direction), out int Direction))
 				{
 					Direction = 1;
 				}
