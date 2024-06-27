@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, S520, The OpenBVE Project
 //
@@ -425,6 +425,8 @@ namespace Route.Bve5
 								double averageTurn = 0;
 								double averageRadius = 0;
 								double averageCant = 0;
+								double averageRadiusH = 0;
+								double averageRadiusV = 0;
 								int nextBlock = i + 1;
 								bool useAverages = false;
 								if (nextBlock < Data.Blocks.Count - 1 && Data.Blocks[nextBlock].StartingDistance < Data.Blocks[i].StartingDistance + span)
@@ -463,6 +465,8 @@ namespace Route.Bve5
 										totalDistance += distance;
 										averageTurn += Data.Blocks[nextBlock - 1].Turn;
 										averageRadius += Data.Blocks[nextBlock - 1].CurrentTrackState.CurveRadius * distance;
+										averageRadiusH += Data.Blocks[nextBlock - 1].Rails[j].RadiusH * distance;
+										averageRadiusV += Data.Blocks[nextBlock - 1].Rails[j].RadiusV * distance;
 										averageCant += (j == 0 ? Data.Blocks[nextBlock - 1].CurrentTrackState.CurveCant : Data.Blocks[nextBlock - 1].Rails[j].CurveCant) * distance;
 										pitch = Data.Blocks[nextBlock - 1].Pitch;
 										nextBlock++;
@@ -473,6 +477,10 @@ namespace Route.Bve5
 										averageTurn /= totalDistance;
 										averageRadius /= totalDistance;
 										averageCant /= totalDistance;
+										averageRadiusH /= totalDistance;
+										averageRadiusV /= totalDistance;
+										radiusH = averageRadiusH;
+										radiusV = averageRadiusV;
 										curveRadius = averageRadius;
 										curveCant = averageCant;
 										turn = averageTurn;
