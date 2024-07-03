@@ -405,7 +405,7 @@ namespace Route.Bve5
 							}
 							else
 							{
-								X = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RailX : 0.0;
+								X = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].Position.X : 0.0;
 							}
 						}
 						else
@@ -430,7 +430,7 @@ namespace Route.Bve5
 							}
 						}
 
-						Blocks[Index].Rails[railIndex].RailX = Convert.ToDouble(X);
+						Blocks[Index].Rails[railIndex].Position.X = Convert.ToDouble(X);
 						Blocks[Index].Rails[railIndex].RadiusH = Convert.ToDouble(RadiusH);
 						Blocks[Index].Rails[railIndex].InterpolateX = true;
 					}
@@ -453,7 +453,7 @@ namespace Route.Bve5
 							}
 							else
 							{
-								Y = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RailY : 0.0;
+								Y = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].Position.Y : 0.0;
 							}
 						}
 						else
@@ -478,7 +478,7 @@ namespace Route.Bve5
 							}
 						}
 
-						Blocks[Index].Rails[railIndex].RailY = Convert.ToDouble(Y);
+						Blocks[Index].Rails[railIndex].Position.Y = Convert.ToDouble(Y);
 						Blocks[Index].Rails[railIndex].RadiusV = Convert.ToDouble(RadiusV);
 						Blocks[Index].Rails[railIndex].InterpolateY = true;
 					}
@@ -547,7 +547,7 @@ namespace Route.Bve5
 					{
 						FirstInterpolateIndex = Blocks.FindIndex(1, Block => Block.Rails[railIndex].InterpolateX);
 					}
-					Blocks.First().Rails[railIndex].RailX = FirstInterpolateIndex != -1 ? Blocks[FirstInterpolateIndex].Rails[railIndex].RailX : 0.0;
+					Blocks.First().Rails[railIndex].Position.X = FirstInterpolateIndex != -1 ? Blocks[FirstInterpolateIndex].Rails[railIndex].Position.X : 0.0;
 					//Blocks.First().Rails[j].RadiusH = FirstInterpolateIndex != -1 ? Blocks[FirstInterpolateIndex].Rails[j].RadiusH : 0.0;
 					Blocks.First().Rails[railIndex].InterpolateX = true;
 				}
@@ -559,7 +559,7 @@ namespace Route.Bve5
 					{
 						FirstInterpolateIndex = Blocks.FindIndex(1, Block => Block.Rails[railIndex].InterpolateY);
 					}
-					Blocks.First().Rails[railIndex].RailY = FirstInterpolateIndex != -1 ? Blocks[FirstInterpolateIndex].Rails[railIndex].RailY : 0.0;
+					Blocks.First().Rails[railIndex].Position.Y = FirstInterpolateIndex != -1 ? Blocks[FirstInterpolateIndex].Rails[railIndex].Position.Y : 0.0;
 					//Blocks.First().Rails[j].RadiusV = FirstInterpolateIndex != -1 ? Blocks[FirstInterpolateIndex].Rails[j].RadiusV : 0.0;
 					Blocks.First().Rails[railIndex].InterpolateY = true;
 				}
@@ -571,7 +571,7 @@ namespace Route.Bve5
 					{
 						LastInterpolateIndex = Blocks.FindLastIndex(Blocks.Count - 2, Blocks.Count - 1, Block => Block.Rails[railIndex].InterpolateX);
 					}
-					Blocks.Last().Rails[railIndex].RailX = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RailX : 0.0;
+					Blocks.Last().Rails[railIndex].Position.X = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].Position.X : 0.0;
 					Blocks.Last().Rails[railIndex].RadiusH = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RadiusH : 0.0;
 					Blocks.Last().Rails[railIndex].InterpolateX = true;
 				}
@@ -583,7 +583,7 @@ namespace Route.Bve5
 					{
 						LastInterpolateIndex = Blocks.FindLastIndex(Blocks.Count - 2, Blocks.Count - 1, Block => Block.Rails[railIndex].InterpolateY);
 					}
-					Blocks.Last().Rails[railIndex].RailY = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RailY : 0.0;
+					Blocks.Last().Rails[railIndex].Position.Y = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].Position.Y : 0.0;
 					Blocks.Last().Rails[railIndex].RadiusV = LastInterpolateIndex != -1 ? Blocks[LastInterpolateIndex].Rails[railIndex].RadiusV : 0.0;
 					Blocks.Last().Rails[railIndex].InterpolateY = true;
 				}
@@ -605,9 +605,9 @@ namespace Route.Bve5
 					if (StartBlock != -1)
 					{
 						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double StartX = TempBlocks[StartBlock].Rails[j].RailX;
+						double StartX = TempBlocks[StartBlock].Rails[j].Position.X;
 						double EndDistance = TempBlocks[i].StartingDistance;
-						double EndX = TempBlocks[i].Rails[j].RailX;
+						double EndX = TempBlocks[i].Rails[j].Position.X;
 
 						if (StartX == EndX)
 						{
@@ -638,9 +638,9 @@ namespace Route.Bve5
 					if (StartBlock != -1)
 					{
 						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double StartY = TempBlocks[StartBlock].Rails[j].RailY;
+						double StartY = TempBlocks[StartBlock].Rails[j].Position.Y;
 						double EndDistance = TempBlocks[i].StartingDistance;
-						double EndY = TempBlocks[i].Rails[j].RailY;
+						double EndY = TempBlocks[i].Rails[j].Position.Y;
 
 						if (StartY == EndY)
 						{

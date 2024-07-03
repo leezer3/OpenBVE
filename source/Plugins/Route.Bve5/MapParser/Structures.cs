@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System.Collections.Generic;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
@@ -34,8 +35,7 @@ namespace Route.Bve5
 	{
 		private struct Rail
 		{
-			internal double RailX;
-			internal double RailY;
+			internal Vector2 Position;
 			internal double CurveCant;
 			internal double RadiusH;
 			internal double RadiusV;

@@ -400,18 +400,6 @@ namespace Route.Bve5
 						// free objects (including placed repeaters)
 						if (Data.Blocks[i].FreeObj.Length > j && Data.Blocks[i].FreeObj[j] != null)
 						{
-							double turn = Data.Blocks[i].Turn;
-							double curveRadius = Data.Blocks[i].CurrentTrackState.CurveRadius;
-							double curveCant = j == 0 ? Data.Blocks[i].CurrentTrackState.CurveCant : Data.Blocks[i].Rails[j].CurveCant;
-							double pitch = Data.Blocks[i].Pitch;
-							double x = Data.Blocks[i].Rails[j].RailX;
-							double y = Data.Blocks[i].Rails[j].RailY;
-							double radiusH = Data.Blocks[i].Rails[j].RadiusH;
-							double radiusV = Data.Blocks[i].Rails[j].RadiusV;
-							double nextStartingDistance = StartingDistance + BlockInterval;
-							double nextX = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[j].RailX : x;
-							double nextY = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[j].RailY : y;
-
 							for (int k = 0; k < Data.Blocks[i].FreeObj[j].Count; k++)
 							{
 								string key = Data.Blocks[i].FreeObj[j][k].Key;
@@ -421,15 +409,10 @@ namespace Route.Bve5
 								double dy = Data.Blocks[i].FreeObj[j][k].Y;
 								double dz = Data.Blocks[i].FreeObj[j][k].Z;
 								double tpos = Data.Blocks[i].FreeObj[j][k].TrackPosition;
-
-								double averageTurn = 0;
-								double averageRadius = 0;
-								double averageCant = 0;
-								double averageRadiusH = 0;
-								double averageRadiusV = 0;
 								int nextBlock = i + 1;
 								bool useAverages = false;
-								if (nextBlock < Data.Blocks.Count - 1 && Data.Blocks[nextBlock].StartingDistance < Data.Blocks[i].StartingDistance + span)
+								
+								if (span > BlockInterval)
 								{
 									/*
 									 * The object spans multiple blocks
@@ -444,59 +427,38 @@ namespace Route.Bve5
 									 *
 									 * This gets the best results currently, but it's odd as pitch really ought to be averaged too :/
 									 */
-									double totalDistance = 0;
 									while (nextBlock < Data.Blocks.Count)
 									{
-										if (Data.Blocks[nextBlock].StartingDistance > Data.Blocks[i].StartingDistance + span)
+										if (Data.Blocks[nextBlock].StartingDistance > Data.Blocks[i].StartingDistance + span + dx)
 										{
 											break;
 										}
-										double distance = Data.Blocks[nextBlock].StartingDistance - Data.Blocks[nextBlock - 1].StartingDistance;
 										if (Data.Blocks[nextBlock].CurrentTrackState.CurveRadius != Data.Blocks[i].CurrentTrackState.CurveRadius || Data.Blocks[nextBlock].CurrentTrackState.CurveCant != Data.Blocks[i].CurrentTrackState.CurveCant || Data.Blocks[nextBlock].Pitch != Data.Blocks[i].Pitch)
 										{
 											useAverages = true;
 										}
 
-										if (totalDistance + distance > span)
-										{
-											distance = span - totalDistance;
-										}
-
-										totalDistance += distance;
-										averageTurn += Data.Blocks[nextBlock - 1].Turn;
-										averageRadius += Data.Blocks[nextBlock - 1].CurrentTrackState.CurveRadius * distance;
-										averageRadiusH += Data.Blocks[nextBlock - 1].Rails[j].RadiusH * distance;
-										averageRadiusV += Data.Blocks[nextBlock - 1].Rails[j].RadiusV * distance;
-										averageCant += (j == 0 ? Data.Blocks[nextBlock - 1].CurrentTrackState.CurveCant : Data.Blocks[nextBlock - 1].Rails[j].CurveCant) * distance;
-										pitch = Data.Blocks[nextBlock - 1].Pitch;
 										nextBlock++;
 									}
-
-									if (useAverages)
-									{
-										averageTurn /= totalDistance;
-										averageRadius /= totalDistance;
-										averageCant /= totalDistance;
-										averageRadiusH /= totalDistance;
-										averageRadiusV /= totalDistance;
-										radiusH = averageRadiusH;
-										radiusV = averageRadiusV;
-										curveRadius = averageRadius;
-										curveCant = averageCant;
-										turn = averageTurn;
-									}
-
 								}
 
 								Vector3 wpos;
 								Transformation Transformation;
 								if (j == 0)
 								{
-									GetTransformation(Position, StartingDistance, turn, curveRadius, curveCant, pitch, tpos, type, span, Direction, out wpos, out Transformation);
+									GetTransformation(Position, Data.Blocks, i, tpos, type, span, Direction, out wpos, out Transformation);
 								}
 								else
 								{
-									GetTransformation(Position, StartingDistance, turn, curveRadius, pitch, x, y, radiusH, radiusV, curveCant, nextStartingDistance, nextX, nextY, tpos, type, span, Direction, out wpos, out Transformation);
+									if (useAverages)
+									{
+										GetTransformation(Position, Direction, Data.Blocks, i, j, k, out wpos, out Transformation);
+									}
+									else
+									{
+										GetTransformation(Position, Data.Blocks[i], i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1] : Data.Blocks[i], j, tpos, type, span, Direction, out wpos, out Transformation);
+									}
+									
 								}
 								wpos += dx * Transformation.X + dy * Transformation.Y + dz * Transformation.Z;
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
@@ -516,19 +478,18 @@ namespace Route.Bve5
 								double curveRadius = Data.Blocks[i].CurrentTrackState.CurveRadius;
 								double pitch = Data.Blocks[i].Pitch;
 								double nextStartingDistance = StartingDistance + BlockInterval;
-
 								int p = Data.Blocks[i].Cracks[k].PrimaryRail;
-								double px0 = Data.Blocks[i].Rails[p].RailX;
-								double py0 = Data.Blocks[i].Rails[p].RailY;
+								double py0 = Data.Blocks[i].Rails[p].Position.Y;
+								double px0 = Data.Blocks[i].Rails[p].Position.X;
 								double pRadiusH = Data.Blocks[i].Rails[p].RadiusH;
 								double pRadiusV = Data.Blocks[i].Rails[p].RadiusV;
-								double py1 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[p].RailY : py0;
-								double px1 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[p].RailX : px0;
+								double py1 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[p].Position.Y : py0;
+								double px1 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[p].Position.X : px0;
 
 								int s = Data.Blocks[i].Cracks[k].SecondaryRail;
-								double sx0 = Data.Blocks[i].Rails[s].RailX;
+								double sx0 = Data.Blocks[i].Rails[s].Position.X;
 								double sRadiusH = Data.Blocks[i].Rails[s].RadiusH;
-								double sx1 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[s].RailX : sx0;
+								double sx1 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[s].Position.X : sx0;
 
 								string key = Data.Blocks[i].Cracks[k].Key;
 								double tpos = Data.Blocks[i].Cracks[k].TrackPosition;
@@ -536,11 +497,11 @@ namespace Route.Bve5
 								Transformation Transformation;
 								if (j == 0)
 								{
-									GetTransformation(Position, StartingDistance, turn, curveRadius, 0.0, pitch, tpos, 1, InterpolateInterval, Direction, out wpos, out Transformation);
+									GetTransformation(Position, Data.Blocks, i, tpos, 1, InterpolateInterval, Direction, out wpos, out Transformation);
 								}
 								else
 								{
-									GetTransformation(Position, StartingDistance, turn, curveRadius, pitch, px0, py0, pRadiusH, pRadiusV, 0.0, nextStartingDistance, px1, py1, tpos, 1, InterpolateInterval, Direction, out wpos, out Transformation);
+									GetTransformation(Position, Data.Blocks[i], i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1] : Data.Blocks[i], p, tpos, 1, InterpolateInterval, Direction, out wpos, out Transformation);
 								}
 
 								double pInterpolateX0 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, tpos);
@@ -576,13 +537,13 @@ namespace Route.Bve5
 							double curveRadius = Data.Blocks[i].CurrentTrackState.CurveRadius;
 							double curveCant = j == 0 ? Data.Blocks[i].CurrentTrackState.CurveCant : Data.Blocks[i].Rails[j].CurveCant;
 							double pitch = Data.Blocks[i].Pitch;
-							double x = Data.Blocks[i].Rails[j].RailX;
-							double y = Data.Blocks[i].Rails[j].RailY;
+							double x = Data.Blocks[i].Rails[j].Position.X;
+							double y = Data.Blocks[i].Rails[j].Position.Y;
 							double radiusH = Data.Blocks[i].Rails[j].RadiusH;
 							double radiusV = Data.Blocks[i].Rails[j].RadiusV;
 							double nextStartingDistance = StartingDistance + BlockInterval;
-							double nextX = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[j].RailX : x;
-							double nextY = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[j].RailY : y;
+							double nextX = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[j].Position.X : x;
+							double nextY = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[j].Position.Y : y;
 
 							for (int k = 0; k < Data.Blocks[i].Signals[j].Count; k++)
 							{
@@ -597,11 +558,11 @@ namespace Route.Bve5
 								Transformation Transformation;
 								if (j == 0)
 								{
-									GetTransformation(Position, StartingDistance, turn, curveRadius, curveCant, pitch, tpos, type, span, Direction, out wpos, out Transformation);
+									GetTransformation(Position, Data.Blocks, i, tpos, type, span, Direction, out wpos, out Transformation);
 								}
 								else
 								{
-									GetTransformation(Position, StartingDistance, turn, curveRadius, pitch, x, y, radiusH, radiusV, curveCant, nextStartingDistance, nextX, nextY, tpos, type, span, Direction, out wpos, out Transformation);
+									GetTransformation(Position, Data.Blocks[i], i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1] : Data.Blocks[i], j, tpos, type, span, Direction, out wpos, out Transformation);
 								}
 								wpos += dx * Transformation.X + dy * Transformation.Y + dz * Transformation.Z;
 
@@ -677,8 +638,8 @@ namespace Route.Bve5
 				{
 					for (int j = 1; j < Data.Blocks[i].Rails.Length; j++)
 					{
-						double x = Data.Blocks[i].Rails[j].RailX;
-						double y = Data.Blocks[i].Rails[j].RailY;
+						double x = Data.Blocks[i].Rails[j].Position.X;
+						double y = Data.Blocks[i].Rails[j].Position.Y;
 						Vector3 offset = new Vector3(Direction.Y * x, y, -Direction.X * x);
 						Vector3 pos = Position + offset;
 
@@ -710,8 +671,8 @@ namespace Route.Bve5
 
 						CalcTransformation(CurveRadius2, Pitch2, BlockInterval2, ref Direction2, out _, out _, out _);
 
-						double x2 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[j].RailX : x;
-						double y2 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[j].RailY : y;
+						double x2 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[j].Position.X : x;
+						double y2 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[j].Position.Y : y;
 						Vector3 offset2 = new Vector3(Direction2.Y * x2, y2, -Direction2.X * x2);
 						Vector3 pos2 = Position2 + offset2;
 						Vector3 r = new Vector3(pos2.X - pos.X, pos2.Y - pos.Y, pos2.Z - pos.Z);

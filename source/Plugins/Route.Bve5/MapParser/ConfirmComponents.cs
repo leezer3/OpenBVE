@@ -262,9 +262,9 @@ namespace Route.Bve5
 					if (StartBlock != -1)
 					{
 						double StartDistance = Blocks[StartBlock].StartingDistance;
-						double StartX = Blocks[StartBlock].Rails[j].RailX;
+						double StartX = Blocks[StartBlock].Rails[j].Position.X;
 						double EndDistance = Blocks[i].StartingDistance;
-						double EndX = Blocks[i].Rails[j].RailX;
+						double EndX = Blocks[i].Rails[j].Position.X;
 						double RadiusH = Blocks[StartBlock].Rails[j].RadiusH;
 
 						for (int k = StartBlock + 1; k < i; k++)
@@ -272,7 +272,7 @@ namespace Route.Bve5
 							double CurrentDistance = Blocks[k].StartingDistance;
 							double CurrentX = GetTrackCoordinate(StartDistance, StartX, EndDistance, EndX, RadiusH, CurrentDistance);
 
-							Blocks[k].Rails[j].RailX = CurrentX;
+							Blocks[k].Rails[j].Position.X = CurrentX;
 							Blocks[k].Rails[j].RadiusH = RadiusH;
 						}
 					}
@@ -293,9 +293,9 @@ namespace Route.Bve5
 					if (StartBlock != -1)
 					{
 						double StartDistance = Blocks[StartBlock].StartingDistance;
-						double StartY = Blocks[StartBlock].Rails[j].RailY;
+						double StartY = Blocks[StartBlock].Rails[j].Position.Y;
 						double EndDistance = Blocks[i].StartingDistance;
-						double EndY = Blocks[i].Rails[j].RailY;
+						double EndY = Blocks[i].Rails[j].Position.Y;
 						double RadiusV = Blocks[StartBlock].Rails[j].RadiusV;
 
 						for (int k = StartBlock + 1; k < i; k++)
@@ -303,7 +303,7 @@ namespace Route.Bve5
 							double CurrentDistance = Blocks[k].StartingDistance;
 							double CurrentY = GetTrackCoordinate(StartDistance, StartY, EndDistance, EndY, RadiusV, CurrentDistance);
 
-							Blocks[k].Rails[j].RailY = CurrentY;
+							Blocks[k].Rails[j].Position.Y = CurrentY;
 							Blocks[k].Rails[j].RadiusV = RadiusV;
 						}
 					}
