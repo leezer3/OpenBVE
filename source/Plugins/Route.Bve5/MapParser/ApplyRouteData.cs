@@ -456,7 +456,7 @@ namespace Route.Bve5
 									}
 									else
 									{
-										GetTransformation(Position, Data.Blocks[i], i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1] : Data.Blocks[i], j, tpos, type, span, Direction, out wpos, out Transformation);
+										GetTransformation(Position, Data.Blocks[i], i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1] : Data.Blocks[i], j, Data.Blocks[i].Pitch, tpos, type, span, Direction, out wpos, out Transformation);
 									}
 									
 								}
@@ -501,7 +501,7 @@ namespace Route.Bve5
 								}
 								else
 								{
-									GetTransformation(Position, Data.Blocks[i], i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1] : Data.Blocks[i], p, tpos, 1, InterpolateInterval, Direction, out wpos, out Transformation);
+									GetTransformation(Position, Data.Blocks[i], i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1] : Data.Blocks[i], p, Data.Blocks[i].Pitch, tpos, 1, InterpolateInterval, Direction, out wpos, out Transformation);
 								}
 
 								double pInterpolateX0 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, tpos);
@@ -562,7 +562,7 @@ namespace Route.Bve5
 								}
 								else
 								{
-									GetTransformation(Position, Data.Blocks[i], i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1] : Data.Blocks[i], j, tpos, type, span, Direction, out wpos, out Transformation);
+									GetTransformation(Position, Data.Blocks[i], i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1] : Data.Blocks[i], j, Data.Blocks[i].Pitch, tpos, type, span, Direction, out wpos, out Transformation);
 								}
 								wpos += dx * Transformation.X + dy * Transformation.Y + dz * Transformation.Z;
 

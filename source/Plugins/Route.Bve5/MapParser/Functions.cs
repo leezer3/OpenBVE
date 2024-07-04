@@ -257,7 +257,43 @@ namespace Route.Bve5
 
 			ObjectPosition = StartingPosition;
 
-			CalcTransformation(Blocks[StartingBlock].CurrentTrackState.CurveRadius, Blocks[StartingBlock].CurrentTrackState.Pitch, TrackDistance - Blocks[StartingBlock].StartingDistance, ref Direction, out double a, out double c, out double h);
+			double radius = 0;
+			double pitch = 0;
+			double cant = 0;
+			if (Span == 0)
+			{
+				radius = Blocks[StartingBlock].CurrentTrackState.CurveRadius;
+				pitch = Blocks[StartingBlock].Pitch;
+				cant = Blocks[StartingBlock].CurrentTrackState.CurveCant;
+			}
+			else
+			{
+				
+				int currentBlock = StartingBlock + 1;
+				double remainingDistance = Span;
+				while (currentBlock < Blocks.Count - 1)
+				{
+					double blockLength = currentBlock != 0 ? Blocks[currentBlock].StartingDistance - Blocks[currentBlock - 1].StartingDistance : 0;
+					double blockSpan = Math.Min(remainingDistance, blockLength);
+					radius += blockSpan * Blocks[currentBlock].CurrentTrackState.CurveRadius;
+					cant += blockSpan * Blocks[currentBlock].CurrentTrackState.CurveCant;
+					pitch += blockSpan * Blocks[currentBlock].Pitch;
+					remainingDistance -= blockSpan;
+					if (remainingDistance <= 0.01)
+					{
+						break;
+					}
+
+					currentBlock++;
+				}
+
+				radius /= Span;
+				pitch /= Span;
+				cant /= Span;
+			}
+			
+
+			CalcTransformation(radius, pitch, TrackDistance - Blocks[StartingBlock].StartingDistance, ref Direction, out double a, out double c, out double h);
 			ObjectPosition.X += Direction.X * c;
 			ObjectPosition.Y += h;
 			ObjectPosition.Z += Direction.Y * c;
@@ -266,11 +302,11 @@ namespace Route.Bve5
 				Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 			}
 
-			CalcTransformation(Blocks[StartingBlock].CurrentTrackState.CurveRadius, Blocks[StartingBlock].CurrentTrackState.Pitch, Span, ref Direction, out _, out _, out _);
+			CalcTransformation(radius, pitch, Span, ref Direction, out _, out _, out _);
 
 			double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
-			double TrackPitch = Math.Atan(Blocks[StartingBlock].CurrentTrackState.Pitch);
-			double TrackRoll = Math.Atan(Blocks[StartingBlock].CurrentTrackState.CurveCant);
+			double TrackPitch = Math.Atan(pitch);
+			double TrackRoll = Math.Atan(cant);
 
 			switch (Type)
 			{
@@ -297,17 +333,17 @@ namespace Route.Bve5
 			t = new Transformation();
 			if (f.Type == 0)
 			{
-				GetTransformation(StartingPosition, Blocks[StartingBlock], Blocks[StartingBlock], RailIndex, f.TrackPosition, f.Type, f.Span, StartingDirection, out pos, out t);
+				GetTransformation(StartingPosition, Blocks[StartingBlock], Blocks[StartingBlock], RailIndex, Blocks[StartingBlock].Pitch, f.TrackPosition, f.Type, f.Span, StartingDirection, out pos, out t);
 				return;
 			}
 			double remainingDistance = f.Span;
 			int currentBlock = StartingBlock;
-
+			// FIXME: Pitch seems to need to be inverted for secondary tracks, which seems wrong
 			while (currentBlock < Blocks.Count - 1)
 			{
-				double blockLength = Blocks[currentBlock].StartingDistance - Blocks[currentBlock - 1].StartingDistance;
+				double blockLength = currentBlock != 0 ? Blocks[currentBlock].StartingDistance - Blocks[currentBlock - 1].StartingDistance : 0;
 				double blockSpan = Math.Min(remainingDistance, blockLength);
-				GetTransformation(pos2, Blocks[currentBlock], Blocks[currentBlock + 1], RailIndex, f.TrackPosition, f.Type, remainingDistance, StartingDirection, out pos, out t);
+				GetTransformation(pos2, Blocks[currentBlock], Blocks[currentBlock + 1], RailIndex, -Blocks[StartingBlock].Pitch, f.TrackPosition, f.Type, remainingDistance, StartingDirection, out pos, out t);
 				remainingDistance -= blockSpan;
 				if (remainingDistance <= 0.01)
 				{
@@ -315,7 +351,7 @@ namespace Route.Bve5
 				}
 
 				// calculate starting point of *next* block
-				CalcTransformation(Blocks[currentBlock].CurrentTrackState.CurveRadius, Blocks[currentBlock].Pitch, blockLength, ref StartingDirection, out double a, out double c, out double h);
+				CalcTransformation(Blocks[currentBlock].CurrentTrackState.CurveRadius, Blocks[StartingBlock].Pitch, blockLength, ref StartingDirection, out double a, out double c, out double h);
 				pos2.X += StartingDirection.X * c;
 				pos2.Y += h;
 				pos2.Z += StartingDirection.Y * c;
@@ -327,7 +363,7 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void GetTransformation(Vector3 StartingPosition, Block FirstBlock, Block SecondBlock, int RailIndex, double TrackDistance, int Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
+		private static void GetTransformation(Vector3 StartingPosition, Block FirstBlock, Block SecondBlock, int RailIndex, double Pitch, double TrackDistance, int Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
 			Transformation = new Transformation();
 			if (FirstBlock.Turn != 0.0)
@@ -340,7 +376,7 @@ namespace Route.Bve5
 
 			Vector3 Position = StartingPosition;
 
-			CalcTransformation(FirstBlock.CurrentTrackState.CurveRadius, FirstBlock.CurrentTrackState.Pitch, TrackDistance - FirstBlock.StartingDistance, ref Direction, out double a, out double c, out double h);
+			CalcTransformation(FirstBlock.CurrentTrackState.CurveRadius, Pitch, TrackDistance - FirstBlock.StartingDistance, ref Direction, out double a, out double c, out double h);
 
 			Position.X += Direction.X * c;
 			Position.Y += h;
@@ -350,7 +386,7 @@ namespace Route.Bve5
 				Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 			}
 
-			CalcTransformation(FirstBlock.CurrentTrackState.CurveRadius, FirstBlock.CurrentTrackState.Pitch, Span, ref Direction, out a, out c, out h);
+			CalcTransformation(FirstBlock.CurrentTrackState.CurveRadius, Pitch, Span, ref Direction, out a, out c, out h);
 
 			double InterpolateX = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailIndex].Position.X, SecondBlock.StartingDistance,SecondBlock.Rails[RailIndex].Position.X, FirstBlock.Rails[RailIndex].RadiusH, TrackDistance);
 			double InterpolateY = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailIndex].Position.Y, SecondBlock.StartingDistance, SecondBlock.Rails[RailIndex].Position.Y, FirstBlock.Rails[RailIndex].RadiusV, TrackDistance);
@@ -366,7 +402,7 @@ namespace Route.Bve5
 				Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 			}
 
-			CalcTransformation(FirstBlock.CurrentTrackState.CurveRadius, FirstBlock.CurrentTrackState.Pitch, Span, ref Direction, out _, out _, out _);
+			CalcTransformation(FirstBlock.CurrentTrackState.CurveRadius, Pitch, Span, ref Direction, out _, out _, out _);
 
 			double InterpolateX2 = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailIndex].Position.X, SecondBlock.StartingDistance, SecondBlock.Rails[RailIndex].Position.X, FirstBlock.Rails[RailIndex].RadiusH, TrackDistance + Span);
 			double InterpolateY2 = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailIndex].Position.Y, SecondBlock.StartingDistance, SecondBlock.Rails[RailIndex].Position.Y, FirstBlock.Rails[RailIndex].RadiusV, TrackDistance + Span);
