@@ -884,139 +884,119 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void ConfirmPreTrain(bool PreviewOnly, MapData ParseData)
+		private static void ConfirmPreTrain(Statement Statement)
 		{
-			if (PreviewOnly)
-			{
-				return;
-			}
-
-			foreach (var Statement in ParseData.Statements)
-			{
-				if (Statement.ElementName != MapElementName.Pretrain)
-				{
-					continue;
-				}
-
-				dynamic d = Statement;
-				double Time;
-				TryParseBve5Time(Convert.ToString(d.Time), out Time);
-
-				int n = Plugin.CurrentRoute.BogusPreTrainInstructions.Length;
-				Array.Resize(ref Plugin.CurrentRoute.BogusPreTrainInstructions, n + 1);
-
-				Plugin.CurrentRoute.BogusPreTrainInstructions[n].TrackPosition = Statement.Distance;
-				Plugin.CurrentRoute.BogusPreTrainInstructions[n].Time = Time;
-			}
+			dynamic d = Statement;
+			TryParseBve5Time(Convert.ToString(d.Time), out double Time);
+			int n = Plugin.CurrentRoute.BogusPreTrainInstructions.Length;
+			Array.Resize(ref Plugin.CurrentRoute.BogusPreTrainInstructions, n + 1);
+			Plugin.CurrentRoute.BogusPreTrainInstructions[n].TrackPosition = Statement.Distance;
+			Plugin.CurrentRoute.BogusPreTrainInstructions[n].Time = Time;
 		}
 
-		private static void ConfirmLight(bool PreviewOnly, MapData ParseData)
+		private static void ConfirmLight(Statement Statement)
 		{
-			if (PreviewOnly)
+			switch (Statement.FunctionName)
 			{
-				return;
-			}
-
-			foreach (var Statement in ParseData.Statements)
-			{
-				if (Statement.ElementName != MapElementName.Light)
+				case MapFunctionName.Ambient:
 				{
-					continue;
-				}
+					double TempRed, TempGreen, TempBlue;
+					if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
+					{
+						TempRed = 1.0;
+					}
 
-				switch (Statement.FunctionName)
+					if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
+					{
+						TempGreen = 1.0;
+					}
+
+					if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
+					{
+						TempBlue = 1.0;
+					}
+
+					double Red = Convert.ToDouble(TempRed);
+					double Green = Convert.ToDouble(TempGreen);
+					double Blue = Convert.ToDouble(TempBlue);
+					if (Red < 0.0 || Red > 1.0)
+					{
+						Red = Red < 0.0 ? 0.0 : 1.0;
+					}
+
+					if (Green < 0.0 || Green > 1.0)
+					{
+						Green = Green < 0.0 ? 0.0 : 1.0;
+					}
+
+					if (Blue < 0.0 || Blue > 1.0)
+					{
+						Blue = Blue < 0.0 ? 0.0 : 1.0;
+					}
+
+					Plugin.CurrentRoute.Atmosphere.AmbientLightColor = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
+				}
+					break;
+				case MapFunctionName.Diffuse:
 				{
-					case MapFunctionName.Ambient:
-						{
-							double TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
-							{
-								TempRed = 1.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
-							{
-								TempGreen = 1.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
-							{
-								TempBlue = 1.0;
-							}
+					double TempRed, TempGreen, TempBlue;
+					if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
+					{
+						TempRed = 1.0;
+					}
 
-							double Red = Convert.ToDouble(TempRed);
-							double Green = Convert.ToDouble(TempGreen);
-							double Blue = Convert.ToDouble(TempBlue);
-							if (Red < 0.0 || Red > 1.0)
-							{
-								Red = Red < 0.0 ? 0.0 : 1.0;
-							}
-							if (Green < 0.0 || Green > 1.0)
-							{
-								Green = Green < 0.0 ? 0.0 : 1.0;
-							}
-							if (Blue < 0.0 || Blue > 1.0)
-							{
-								Blue = Blue < 0.0 ? 0.0 : 1.0;
-							}
+					if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
+					{
+						TempGreen = 1.0;
+					}
 
-							Plugin.CurrentRoute.Atmosphere.AmbientLightColor = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
-						}
-						break;
-					case MapFunctionName.Diffuse:
-						{
-							double TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
-							{
-								TempRed = 1.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
-							{
-								TempGreen = 1.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
-							{
-								TempBlue = 1.0;
-							}
+					if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
+					{
+						TempBlue = 1.0;
+					}
 
-							double Red = Convert.ToDouble(TempRed);
-							double Green = Convert.ToDouble(TempGreen);
-							double Blue = Convert.ToDouble(TempBlue);
-							if (Red < 0.0 || Red > 1.0)
-							{
-								Red = Red < 0.0 ? 0.0 : 1.0;
-							}
-							if (Green < 0.0 || Green > 1.0)
-							{
-								Green = Green < 0.0 ? 0.0 : 1.0;
-							}
-							if (Blue < 0.0 || Blue > 1.0)
-							{
-								Blue = Blue < 0.0 ? 0.0 : 1.0;
-							}
+					double Red = Convert.ToDouble(TempRed);
+					double Green = Convert.ToDouble(TempGreen);
+					double Blue = Convert.ToDouble(TempBlue);
+					if (Red < 0.0 || Red > 1.0)
+					{
+						Red = Red < 0.0 ? 0.0 : 1.0;
+					}
 
-							Plugin.CurrentRoute.Atmosphere.DiffuseLightColor = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
-						}
-						break;
-					case MapFunctionName.Direction:
-						{
-							double Pitch, Yaw;
-							if (!Statement.HasArgument(ArgumentName.Pitch) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Pitch), out Pitch))
-							{
-								Pitch = 60.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Yaw) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Yaw), out Yaw))
-							{
-								Yaw = -26.565051177078;
-							}
+					if (Green < 0.0 || Green > 1.0)
+					{
+						Green = Green < 0.0 ? 0.0 : 1.0;
+					}
 
-							double Theta = Convert.ToDouble(Pitch) * 0.0174532925199433;
-							double Phi =Convert.ToDouble(Yaw) * 0.0174532925199433;
-							double dx = Math.Cos(Theta) * Math.Sin(Phi);
-							double dy = -Math.Sin(Theta);
-							double dz = Math.Cos(Theta) * Math.Cos(Phi);
-							Plugin.CurrentRoute.Atmosphere.LightPosition = new Vector3((float)-dx, (float)-dy, (float)-dz);
-						}
-						break;
+					if (Blue < 0.0 || Blue > 1.0)
+					{
+						Blue = Blue < 0.0 ? 0.0 : 1.0;
+					}
+
+					Plugin.CurrentRoute.Atmosphere.DiffuseLightColor = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
 				}
+					break;
+				case MapFunctionName.Direction:
+				{
+					double Pitch, Yaw;
+					if (!Statement.HasArgument(ArgumentName.Pitch) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Pitch), out Pitch))
+					{
+						Pitch = 60.0;
+					}
+
+					if (!Statement.HasArgument(ArgumentName.Yaw) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Yaw), out Yaw))
+					{
+						Yaw = -26.565051177078;
+					}
+
+					double Theta = Convert.ToDouble(Pitch) * 0.0174532925199433;
+					double Phi = Convert.ToDouble(Yaw) * 0.0174532925199433;
+					double dx = Math.Cos(Theta) * Math.Sin(Phi);
+					double dy = -Math.Sin(Theta);
+					double dz = Math.Cos(Theta) * Math.Cos(Phi);
+					Plugin.CurrentRoute.Atmosphere.LightPosition = new Vector3((float)-dx, (float)-dy, (float)-dz);
+				}
+					break;
 			}
 		}
 
@@ -1107,57 +1087,31 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void ConfirmSound(bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void ConfirmSound(Statement Statement, RouteData RouteData)
 		{
-			if (PreviewOnly)
+			int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
 			{
-				return;
-			}
-
-			foreach (var Statement in ParseData.Statements)
-			{
-				if (Statement.ElementName != MapElementName.Sound)
-				{
-					continue;
-				}
-
-				int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
-				RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
-				{
-					TrackPosition = Statement.Distance,
-					Key = Statement.Key,
-					Type = SoundType.TrainStatic
-				});
-			}
+				TrackPosition = Statement.Distance,
+				Key = Statement.Key,
+				Type = SoundType.TrainStatic
+			});
 		}
 
-		private static void ConfirmSound3D(bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void ConfirmSound3D(Statement Statement, RouteData RouteData)
 		{
-			if (PreviewOnly)
+			double X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
+			double Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
+
+			int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
 			{
-				return;
-			}
-
-			foreach (var Statement in ParseData.Statements)
-			{
-				if (Statement.ElementName != MapElementName.Sound3d)
-				{
-					continue;
-				}
-
-				double X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
-				double Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
-
-				int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
-				RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
-				{
-					TrackPosition = Statement.Distance,
-					Key = Statement.Key,
-					Type = SoundType.World,
-					X = X,
-					Y = Y
-				});
-			}
+				TrackPosition = Statement.Distance,
+				Key = Statement.Key,
+				Type = SoundType.World,
+				X = X,
+				Y = Y
+			});
 		}
 
 		private static void ConfirmRollingNoise(bool PreviewOnly, MapData ParseData, RouteData RouteData)

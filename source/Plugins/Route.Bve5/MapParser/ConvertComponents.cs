@@ -31,8 +31,6 @@ using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.Routes;
-using OpenBveApi.Sounds;
 using RouteManager2.Stations;
 
 namespace Route.Bve5

@@ -181,13 +181,10 @@ namespace Route.Bve5
 			ConfirmSignal(PreviewOnly, ParseData, RouteData);
 			ConfirmBeacon(PreviewOnly, ParseData, RouteData.Blocks);
 			ConfirmSpeedLimit(PreviewOnly, ParseData, RouteData);
-			ConfirmPreTrain(PreviewOnly, ParseData);
-			ConfirmLight(PreviewOnly, ParseData);
+			// these require looping through existing blocks, so need to be here at the minute
 			ConfirmCabIlluminance(PreviewOnly, ParseData, RouteData.Blocks);
 			ConfirmIrregularity(PreviewOnly, RouteData.Blocks);
 			ConfirmAdhesion(PreviewOnly, RouteData.Blocks);
-			ConfirmSound(PreviewOnly, ParseData, RouteData);
-			ConfirmSound3D(PreviewOnly, ParseData, RouteData);
 			ConfirmRollingNoise(PreviewOnly, ParseData, RouteData);
 			ConfirmFlangeNoise(PreviewOnly, ParseData, RouteData);
 		}
@@ -255,7 +252,30 @@ namespace Route.Bve5
 							ConvertJointNoise(parseData.Statements[i], routeData);
 						}
 						break;
-
+					case MapElementName.Pretrain:
+						if (!previewOnly)
+						{
+							ConfirmPreTrain(parseData.Statements[i]);
+						}
+						break;
+					case MapElementName.Light:
+						if (!previewOnly)
+						{
+							ConfirmLight(parseData.Statements[i]);
+						}
+						break;
+					case MapElementName.Sound:
+						if (!previewOnly)
+						{
+							ConfirmSound(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.Sound3d:
+						if (!previewOnly)
+						{
+							ConfirmSound3D(parseData.Statements[i], routeData);
+						}
+						break;
 				}
 			}
 		}
