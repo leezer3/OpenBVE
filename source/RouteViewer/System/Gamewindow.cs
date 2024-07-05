@@ -99,7 +99,8 @@ namespace RouteViewer
             if (Program.processCommandLineArgs)
             {
                 Program.processCommandLineArgs = false;
-                Program.LoadRoute();
+                Program.UpdateCaption();
+				Program.LoadRoute();
                 Program.UpdateCaption();
             }
         }
