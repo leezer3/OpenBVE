@@ -550,6 +550,13 @@ namespace Plugin
 			}
 			builder.Apply(ref obj);
 			obj.Mesh.CreateNormals();
+			if (rootMatrix != Matrix4D.NoTransformation)
+			{
+				for (int i = transformStart; i < obj.Mesh.Vertices.Length; i++)
+				{
+					obj.Mesh.Vertices[i].Coordinates.Transform(rootMatrix, false);
+				}
+			}
 			return obj;
 		}
 	}
