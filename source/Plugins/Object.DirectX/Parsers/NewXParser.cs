@@ -361,23 +361,43 @@ namespace Plugin
 					{
 						throw new Exception("nFaceIndices must match the number of faces in the mesh");
 					}
-					for (int i = 0; i < nMaterials; i++)
+
+					if (block is BinaryBlock && block.ReadString() == "{")
 					{
-						try
+						// reference based materials
+						for (int i = 0; i < nMaterials; i++)
 						{
-							subBlock = block.ReadSubBlock(new[] { TemplateID.Material, TemplateID.TextureKey });
-							ParseSubBlock(subBlock, ref obj, ref builder, ref material);
-						}
-						catch(Exception ex)
-						{
-							if (ex is EndOfStreamException)
+							// YUCKY: skip bracket strings
+							string materialName = block.ReadString();
+							builder.Materials[i + 1] = rootMaterials[materialName];
+							block.ReadString();
+							if (i < nMaterials - 1)
 							{
-								Plugin.currentHost.AddMessage(MessageType.Information, false, nMaterials + $" materials expected, but " + i + " found in DirectX binary file " + currentFile);
+								block.ReadString();
 							}
-							break;
+							
 						}
-						
 					}
+					else
+					{
+						for (int i = 0; i < nMaterials; i++)
+						{
+							try
+							{
+								subBlock = block.ReadSubBlock(new[] { TemplateID.Material, TemplateID.TextureKey });
+								ParseSubBlock(subBlock, ref obj, ref builder, ref material);
+							}
+							catch (Exception ex)
+							{
+								if (ex is EndOfStreamException)
+								{
+									Plugin.currentHost.AddMessage(MessageType.Information, false, nMaterials + $" materials expected, but " + i + " found in DirectX binary file " + currentFile);
+								}
+								break;
+							}
+						}
+					}
+					
 					break;
 				case TemplateID.Material:
 					int m = builder.Materials.Length;

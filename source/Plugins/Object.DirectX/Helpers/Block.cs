@@ -843,6 +843,7 @@ namespace OpenBve.Formats.DirectX
 							myStream.Position -= newBlockLength;
 							byte[] newBlockBytes = myReader.ReadBytes((int)newBlockLength);
 							BinaryBlock b = new BinaryBlock(newBlockBytes, newToken, FloatingPointSize);
+							b.Label = Label;
 							return b;
 						}
 						break;
@@ -862,6 +863,12 @@ namespace OpenBve.Formats.DirectX
 								break;
 							default:
 								throw new Exception("Unsupported Floating Point Size");
+						}
+						break;
+					default:
+						if (currentLevel == 0 && newToken == TemplateID.Material)
+						{
+							Label = currentToken;
 						}
 						break;
 				}
