@@ -135,6 +135,9 @@ namespace Plugin.PNG
 									case 8:
 										ScanlineLength = 1;
 										break;
+									case 16:
+										Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "16-bit PNG files are not currently supported by this decoder in file " + fileName);
+										return false;
 									default:
 										Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Invalid or unsupported BitDepth in PNG file " + fileName);
 										return false;
