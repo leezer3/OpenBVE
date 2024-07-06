@@ -363,8 +363,20 @@ namespace Plugin
 					}
 					for (int i = 0; i < nMaterials; i++)
 					{
-						subBlock = block.ReadSubBlock(new[] { TemplateID.Material, TemplateID.TextureKey });
-						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
+						try
+						{
+							subBlock = block.ReadSubBlock(new[] { TemplateID.Material, TemplateID.TextureKey });
+							ParseSubBlock(subBlock, ref obj, ref builder, ref material);
+						}
+						catch(Exception ex)
+						{
+							if (ex is EndOfStreamException)
+							{
+								Plugin.currentHost.AddMessage(MessageType.Information, false, nMaterials + $" materials expected, but " + i + " found in DirectX binary file " + currentFile);
+							}
+							break;
+						}
+						
 					}
 					break;
 				case TemplateID.Material:

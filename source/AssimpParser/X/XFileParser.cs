@@ -594,6 +594,10 @@ namespace AssimpNET.X
 					case "skinweights":
 						ParseDataObjectSkinWeights(ref mesh);
 						break;
+					case "fvfdata":
+						ParseUnknownDataObject(true);
+						// ignore
+						break;
 					default:
 						Debug.WriteLine("Unknown data object in mesh in x file");
 						ParseUnknownDataObject();
@@ -1120,13 +1124,13 @@ namespace AssimpNET.X
 			name = name.Replace("\\\\", "\\");
 		}
 
-		protected void ParseUnknownDataObject()
+		protected void ParseUnknownDataObject(bool allowEmptyName = false)
 		{
 			// find opening delimiter
 			while (true)
 			{
 				string t = GetNextToken();
-				if (t.Length == 0)
+				if (t.Length == 0 && !allowEmptyName) // fvfdata allows empty name
 				{
 					ThrowException("Unexpected end of file while parsing unknown segment.");
 				}
