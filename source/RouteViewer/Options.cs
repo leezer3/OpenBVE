@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using OpenBveApi;
 using OpenBveApi.Graphics;
+using OpenBveApi.Objects;
 
 namespace RouteViewer
 {
@@ -156,6 +157,35 @@ namespace RouteViewer
 
 									}
 									break;
+								case "parsers":
+									switch (Key)
+									{
+										case "xobject":
+										{
+											if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int p) || p < 0 || p > 3)
+											{
+												Interface.CurrentOptions.CurrentXParser = XParsers.Original;
+											}
+											else
+											{
+												Interface.CurrentOptions.CurrentXParser = (XParsers)p;
+											}
+											break;
+										}
+										case "objobject":
+										{
+											if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int p) || p < 0 || p > 2)
+											{
+												Interface.CurrentOptions.CurrentObjParser = ObjParsers.Original;
+											}
+											else
+											{
+												Interface.CurrentOptions.CurrentObjParser = (ObjParsers)p;
+											}
+											break;
+										}
+									}
+									break;
 							}
                         }
                     }
@@ -204,7 +234,10 @@ namespace RouteViewer
                 Builder.AppendLine("showlogo = " + (Interface.CurrentOptions.LoadingLogo ? "true" : "false"));
                 Builder.AppendLine("showprogressbar = " + (Interface.CurrentOptions.LoadingProgressBar ? "true" : "false"));
                 Builder.AppendLine("showbackground = " + (Interface.CurrentOptions.LoadingBackground ? "true" : "false"));
-                string configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg");
+                Builder.AppendLine("[parsers]");
+                Builder.AppendLine("xObject = " + (int)Interface.CurrentOptions.CurrentXParser);
+                Builder.AppendLine("objObject = " + (int)Interface.CurrentOptions.CurrentObjParser);
+				string configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg");
                 System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
             }
             catch

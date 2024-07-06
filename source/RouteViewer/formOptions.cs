@@ -113,6 +113,14 @@ namespace RouteViewer
 			Interface.CurrentOptions.ViewingDistance = (int)numericUpDownViewingDistance.Value;
 			Interface.CurrentOptions.QuadTreeLeafSize = Math.Max(50, (int)Math.Ceiling(Interface.CurrentOptions.ViewingDistance / 10.0d) * 10); // quad tree size set to 10% of viewing distance to the nearest 10
 			Options.SaveOptions();
+			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+			{
+				if (Program.CurrentHost.Plugins[i].Object != null)
+				{
+					Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+					Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+				}
+			}
 			//Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
 			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || GraphicsModeChanged || Interface.CurrentOptions.ViewingDistance != previousViewingDistance)
 			{
