@@ -502,13 +502,7 @@ namespace Route.Bve5
 						{
 							int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
 
-							Blocks[BlockIndex].Cracks.Add(new Crack
-							{
-								TrackPosition = Statement.Distance,
-								Key = Statement.Key,
-								PrimaryRail = RailsIndex[0],
-								SecondaryRail = RailsIndex[1]
-							});
+							Blocks[BlockIndex].Cracks.Add(new Crack(Statement.Key, Statement.Distance, RailsIndex[0], RailsIndex[1]));
 						}
 					}
 						break;
@@ -857,31 +851,12 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void ConfirmSpeedLimit(bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void ConfirmSpeedLimit(Statement Statement, RouteData RouteData)
 		{
-			if (PreviewOnly)
-			{
-				return;
-			}
+			double Speed = Statement.GetArgumentValueAsDouble(ArgumentName.V);
 
-			List<Block> Blocks = RouteData.Blocks;
-
-			foreach (var Statement in ParseData.Statements)
-			{
-				if (Statement.ElementName != MapElementName.SpeedLimit)
-				{
-					continue;
-				}
-
-				double Speed = Statement.GetArgumentValueAsDouble(ArgumentName.V);
-
-				int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
-				Blocks[BlockIndex].Limits.Add(new Limit
-				{
-					TrackPosition = Statement.Distance,
-					Speed = Speed <= 0.0 ? double.PositiveInfinity : Convert.ToDouble(Speed) * RouteData.UnitOfSpeed
-				});
-			}
+			int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+			RouteData.Blocks[BlockIndex].Limits.Add(new Limit(Statement.Distance, Speed <= 0.0 ? double.PositiveInfinity : Convert.ToDouble(Speed) * RouteData.UnitOfSpeed));
 		}
 
 		private static void ConfirmPreTrain(Statement Statement)
@@ -1000,39 +975,22 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void ConfirmCabIlluminance(bool PreviewOnly, MapData ParseData, List<Block> Blocks)
+		private static void ConfirmCabIlluminance(Statement Statement, RouteData RouteData)
 		{
-			if (PreviewOnly)
+			double TempValue;
+			if (!Statement.HasArgument(ArgumentName.Value) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Value), out TempValue) || TempValue == 0.0)
 			{
-				return;
+				TempValue = 1.0;
 			}
 
-			foreach (var Statement in ParseData.Statements)
+			float Value = Convert.ToSingle(TempValue);
+			if (Value < 0.0f || Value > 1.0f)
 			{
-				if (Statement.ElementName != MapElementName.CabIlluminance)
-				{
-					continue;
-				}
-
-				double TempValue;
-				if (!Statement.HasArgument(ArgumentName.Value) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Value), out TempValue) || TempValue == 0.0)
-				{
-					TempValue = 1.0;
-				}
-
-				float Value = Convert.ToSingle(TempValue);
-				if (Value < 0.0f || Value > 1.0f)
-				{
-					Value = Value < 0.0f ? 0.0f : 1.0f;
-				}
-
-				int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
-				Blocks[BlockIndex].BrightnessChanges.Add(new Brightness
-				{
-					TrackPosition = Statement.Distance,
-					Value = Value
-				});
+				Value = Value < 0.0f ? 0.0f : 1.0f;
 			}
+
+			int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+			RouteData.Blocks[BlockIndex].BrightnessChanges.Add(new Brightness(Statement.Distance, Value));
 		}
 
 		private static void ConfirmIrregularity(bool PreviewOnly, List<Block> Blocks)

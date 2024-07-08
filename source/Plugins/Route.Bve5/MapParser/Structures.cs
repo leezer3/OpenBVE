@@ -122,15 +122,23 @@ namespace Route.Bve5
 			}
 		}
 
-		private struct Crack
+		private class Crack
 		{
 			/// <summary>The track position of the object</summary>
-			internal double TrackPosition;
+			internal readonly double TrackPosition;
 			/// <summary>The routefile key of the object</summary>
-			internal string Key;
+			internal readonly string Key;
 
-			internal int PrimaryRail;
-			internal int SecondaryRail;
+			internal readonly int PrimaryRail;
+			internal readonly int SecondaryRail;
+
+			internal Crack(string key, double trackPosition, int primaryRail, int secondaryRail)
+			{
+				Key = key;
+				TrackPosition = trackPosition;
+				PrimaryRail = primaryRail;
+				SecondaryRail = secondaryRail;
+			}
 		}
 
 		private class Section
@@ -163,16 +171,29 @@ namespace Route.Bve5
 			internal int SectionIndex;
 		}
 
-		private struct Limit
+		private class Limit
 		{
-			internal double TrackPosition;
-			internal double Speed;
+			internal readonly double TrackPosition;
+			internal readonly double Speed;
+
+			internal Limit(double trackPosition, double speed)
+			{
+				TrackPosition = trackPosition;
+				Speed = speed;
+			}
+
 		}
 
-		private struct Brightness
+		private class Brightness
 		{
-			internal double TrackPosition;
-			internal float Value;
+			internal readonly double TrackPosition;
+			internal readonly float Value;
+
+			internal Brightness(double trackPosition, float value)
+			{
+				TrackPosition = trackPosition;
+				Value = value;
+			}
 		}
 
 		private enum SoundType
@@ -228,19 +249,7 @@ namespace Route.Bve5
 			internal List<TrackSound> FlangeSounds;
 			internal bool JointSound;
 		}
-
-		private class Background
-		{
-			internal readonly string Key;
-			internal readonly BackgroundHandle Handle;
-
-			internal Background(string key, BackgroundHandle handle)
-			{
-				Key = key;
-				Handle = handle;
-			}
-		}
-
+		
 		private class SignalData
 		{
 			internal string Key;
