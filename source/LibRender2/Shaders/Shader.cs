@@ -53,6 +53,10 @@ namespace LibRender2.Shaders
 							LoadShader(reader.ReadToEnd(), ShaderType.VertexShader);
 						}
 					}
+					else
+					{
+						throw new ApplicationException("Attempted to load unknown vertex shader " + VertexShaderName + " from stream.");
+					}
 				}
 				using (Stream stream = thisAssembly.GetManifestResourceStream($"LibRender2.{FragmentShaderName}.frag"))
 				{
@@ -62,6 +66,10 @@ namespace LibRender2.Shaders
 						{
 							LoadShader(reader.ReadToEnd(), ShaderType.FragmentShader);
 						}
+					}
+					else
+					{
+						throw new ApplicationException("Attempted to load unknown fragment shader " + VertexShaderName + " from stream.");
 					}
 				}
 			}
@@ -76,12 +84,13 @@ namespace LibRender2.Shaders
 
 			GL.DeleteShader(vertexShader);
 			GL.DeleteShader(fragmentShader);
-			GL.BindFragDataLocation(handle, 0, "fragColor");
+			//GL.BindFragDataLocation(handle, 0, "fragColor");
 			GL.LinkProgram(handle);
 			GL.GetProgram(handle, GetProgramParameterName.LinkStatus, out int status);
 
 			if (status == 0)
 			{
+				string s = GL.GetProgramInfoLog(handle);
 				throw new ApplicationException(GL.GetProgramInfoLog(handle));
 			}
 
@@ -191,6 +200,8 @@ namespace LibRender2.Shaders
 				Coordinates = (short)GL.GetUniformLocation(handle, "uCoordinates"),
 				AtlasLocation = (short)GL.GetUniformLocation(handle, "uAtlasLocation"),
 				AlphaFunction = (short)GL.GetUniformLocation(handle, "uAlphaTest"),
+				AccumTexture =  (short)GL.GetUniformLocation(handle, "AccumTexture"),
+				RevealTexture = (short)GL.GetUniformLocation(handle, "RevealTexture"),
 			};
 		}
 
@@ -436,6 +447,22 @@ namespace LibRender2.Shaders
 			{
 				GL.ProgramUniform2(handle, UniformLayout.AlphaFunction, (int)AlphaFunction.Never, 1.0f);
 			}
+		}
+
+		public void SetScreenTexture()
+		{
+			GL.ProgramUniform1(handle, UniformLayout.ScreenTexture, 0);
+		}
+
+		public void SetAccumTexture()
+		{
+			GL.ProgramUniform1(handle, UniformLayout.AccumTexture, 0);
+
+		}
+
+		public void SetRevealTexture()
+		{
+			GL.ProgramUniform1(handle, UniformLayout.RevealTexture, 1);
 		}
 
 		#endregion

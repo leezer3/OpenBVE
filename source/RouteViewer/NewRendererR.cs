@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
+using LibRender2.Shaders;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
@@ -12,13 +15,13 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.Events;
 using RouteManager2.Tracks;
+using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using Vector2 = OpenBveApi.Math.Vector2;
 using Vector3 = OpenBveApi.Math.Vector3;
 
@@ -50,6 +53,17 @@ namespace RouteViewer
 		private Texture LightingEventTexture;
 		private Texture WeatherEventTexture;
 
+		private int opaqueFBO;
+		private int transparentFBO;
+		private int opaqueTexture;
+		private int depthTexture;
+		private int accumTexture;
+		private int revealTexture;
+		private Shader transparencyShader;
+		private Shader compositeShader;
+		private Shader screenShader;
+		uint quadVAO, quadVBO;
+
 		public override void Initialize()
 		{
 			base.Initialize();
@@ -69,6 +83,94 @@ namespace RouteViewer
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "runsound.png"), out RunSoundTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "lighting.png"), out LightingEventTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "weather.png"), out WeatherEventTexture);
+			GenNewBuffers();
+		}
+
+		private bool init = false;
+
+		private void GenNewBuffers()
+		{
+			if (init)
+			{
+				return;
+			}
+			init = true;
+			transparencyShader = new Shader(this, "transparency", "transparency", true);
+			compositeShader = new Shader(this, "composite", "composite", true);
+			screenShader = new Shader(this, "screen", "screen", true);
+			//https://learnopengl.com/Guest-Articles/2020/OIT/Weighted-Blended
+
+			// set up framebuffers and their texture attachments
+			// ------------------------------------------------------------------
+			opaqueFBO = GL.GenFramebuffer();
+			transparentFBO = GL.GenFramebuffer();
+
+			// set up attachments for opaque framebuffer
+			GL.GenTextures(1, out opaqueTexture);
+			GL.BindTexture(TextureTarget.Texture2D, opaqueTexture);
+			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba16f, Screen.Width, Screen.Height, 0, PixelFormat.Rgba, PixelType.HalfFloat, IntPtr.Zero);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMagFilter.Linear);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+			GL.BindTexture(TextureTarget.Texture2D, 0);
+
+			GL.GenTextures(1, out depthTexture);
+			GL.BindTexture(TextureTarget.Texture2D, depthTexture);
+			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent, Screen.Width, Screen.Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+			GL.BindTexture(TextureTarget.Texture2D, 0);
+
+			GL.BindFramebuffer(FramebufferTarget.Framebuffer, opaqueFBO);
+			GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, opaqueTexture, 0);
+			GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, depthTexture, 0);
+
+			GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
+			// set up attachments for transparent framebuffer
+			GL.GenTextures(1, out accumTexture);
+			GL.BindTexture(TextureTarget.Texture2D, accumTexture);
+			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba16f, Screen.Width, Screen.Height, 0, PixelFormat.Rgba, PixelType.HalfFloat, IntPtr.Zero);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMagFilter.Linear);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+			GL.BindTexture(TextureTarget.Texture2D, 0);
+
+			GL.GenTextures(1, out revealTexture);
+			GL.BindTexture(TextureTarget.Texture2D, revealTexture);
+			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.R8, Screen.Width, Screen.Height, 0, PixelFormat.Red, PixelType.Float, IntPtr.Zero);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMagFilter.Linear);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+			GL.BindTexture(TextureTarget.Texture2D, 0);
+
+			GL.BindFramebuffer(FramebufferTarget.Framebuffer, transparentFBO);
+			GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, accumTexture, 0);
+			GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment1, TextureTarget.Texture2D, revealTexture, 0);
+			GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, depthTexture, 0); // opaque framebuffer's depth texture
+
+			DrawBuffersEnum[] transparentDrawBuffers = { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment1 };
+			GL.DrawBuffers(2, transparentDrawBuffers);
+
+			GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
+			float[] quadVertices = {
+				// positions        // uv
+				-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+				1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+
+				1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+				-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+				-1.0f, -1.0f, 0.0f, 0.0f, 0.0f
+			};
+
+			
+			GL.GenVertexArrays(1, out quadVAO);
+			GL.GenBuffers(1, out quadVBO);
+			GL.BindVertexArray(quadVAO);
+			GL.BindBuffer(BufferTarget.ArrayBuffer, quadVBO);
+			GL.BufferData(BufferTarget.ArrayBuffer, quadVertices.Length * sizeof(float), quadVertices, BufferUsageHint.StaticDraw);
+			GL.EnableVertexArrayAttrib(quadVBO, 0);
+			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+			GL.EnableVertexArrayAttrib(quadVBO, 1);
+			GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+			GL.BindVertexArray(0);
 		}
 
 		// render scene
@@ -209,73 +311,89 @@ namespace RouteViewer
 				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
 				alphaFaces = VisibleObjects.GetSortedPolygons();
 			}
-			
+
+			// configure render states
+			GL.Enable(EnableCap.DepthTest);
+			GL.DepthFunc(DepthFunction.Less);
+			GL.DepthMask(true);
+			GL.Disable(EnableCap.Blend);
+			GL.ClearColor(0,0,0,0);
+			GL.BindFramebuffer(FramebufferTarget.Framebuffer, opaqueFBO);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			foreach (FaceState face in opaqueFaces)
 			{
 				face.Draw();
 			}
 
 			// alpha face
+			transparencyShader.Activate();
+			GL.DepthMask(false);
+			GL.Enable(EnableCap.Blend);
+			GL.BlendFunc(0, BlendingFactorSrc.One, BlendingFactorDest.One);
+			GL.BlendEquation(0, BlendEquationMode.FuncAdd);
+			GL.BlendFunc(1, BlendingFactorSrc.Zero, BlendingFactorDest.OneMinusSrcColor);
+			GL.BlendEquation(1, BlendEquationMode.FuncAdd);
+			//GL.BlendEquation(BlendEquationMode.FuncAdd);
+			
+			// bind transparent framebuffer to render transparent objects
+			GL.BindFramebuffer(FramebufferTarget.Framebuffer, transparentFBO);
+			GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0, 0, 0 });
+			GL.ClearBuffer(ClearBuffer.Color, 1, new float[] { 1, 1, 1, 1 });
+
+			foreach (FaceState face in alphaFaces)
+			{
+				face.Draw();
+			}
+
+			// draw composite image (composite pass)
+			// -----
+
+			// set render states
+
+			GL.DepthFunc(DepthFunction.Always);
+			GL.Enable(EnableCap.Blend);
+			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			
+			// bind opaque framebuffer
+			GL.BindFramebuffer(FramebufferTarget.Framebuffer, opaqueFBO);
+			// use composite shader
+			compositeShader.Activate();
+
+			// draw screen quad
+			GL.ActiveTexture(TextureUnit.Texture0);
+			GL.BindTexture(TextureTarget.Texture2D, accumTexture);
+			GL.ActiveTexture(TextureUnit.Texture1);
+			GL.BindTexture(TextureTarget.Texture2D, revealTexture);
+			compositeShader.SetAccumTexture();
+			compositeShader.SetRevealTexture();
+			
+			GL.BindVertexArray(quadVAO);
+			GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
+
+			// draw to backbuffer (final pass)
+			// -----
+
+			// set render states
+			GL.Disable(EnableCap.DepthTest);
+			GL.DepthMask(true); // enable depth writes so glClear won't ignore clearing the depth buffer
+			GL.Disable(EnableCap.Blend);
+
+			// bind backbuffer
+			GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+			GL.ClearColor(0, 0, 0, 0);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+
+			// use screen shader
+			screenShader.Activate();
+			screenShader.SetScreenTexture();
+			// draw final screen quad
+			GL.ActiveTexture(TextureUnit.Texture0);
+			GL.BindTexture(TextureTarget.Texture2D, opaqueTexture);
+			GL.BindVertexArray(quadVAO);
+			GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
 			ResetOpenGlState();
 
-			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
-			{
-				SetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-				GL.DepthMask(false);
-
-				foreach (FaceState face in alphaFaces)
-				{
-					face.Draw();
-				}
-			}
-			else
-			{
-				UnsetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-				GL.DepthMask(true);
-
-				foreach (FaceState face in alphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
-					{
-						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
-						{
-							face.Draw();
-						}
-					}
-				}
-
-				SetBlendFunc();
-				SetAlphaFunc(AlphaFunction.Less, 1.0f);
-				GL.DepthMask(false);
-				bool additive = false;
-
-				foreach (FaceState face in alphaFaces)
-				{
-					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
-					{
-						if (!additive)
-						{
-							UnsetAlphaFunc();
-							additive = true;
-						}
-
-						face.Draw();
-					}
-					else
-					{
-						if (additive)
-						{
-							SetAlphaFunc();
-							additive = false;
-						}
-
-						face.Draw();
-					}
-				}
-			}
-
+			//return;
 			if (OptionPaths)
 			{
 				// TODO: Write a shader to draw point list....

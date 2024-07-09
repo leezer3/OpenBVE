@@ -107,6 +107,12 @@
     <EmbeddedResource Include="..\..\assets\Shaders\rectangle.frag" />
     <EmbeddedResource Include="..\..\assets\Shaders\rectangle.vert" />
     <EmbeddedResource Include="..\..\assets\Shaders\text.vert" />
+	<EmbeddedResource Include="..\..\assets\Shaders\transparency.frag" />
+	<EmbeddedResource Include="..\..\assets\Shaders\transparency.vert" />
+	<EmbeddedResource Include="..\..\assets\Shaders\composite.frag" />
+	<EmbeddedResource Include="..\..\assets\Shaders\composite.vert" />
+	<EmbeddedResource Include="..\..\assets\Shaders\screen.frag" />
+	<EmbeddedResource Include="..\..\assets\Shaders\screen.vert" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">

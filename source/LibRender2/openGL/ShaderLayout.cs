@@ -192,5 +192,11 @@
 		/// The handle of "uAlphaComparison" within the shader
 		/// </summary>
 		public short AlphaComparison;
+
+		public short AccumTexture;
+
+		public short RevealTexture;
+
+		public short ScreenTexture;
 	}
 }

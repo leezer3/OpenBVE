@@ -54,7 +54,7 @@ namespace OpenBve
 							else
 							{
 								Program.currentGameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, currentGraphicsMode,
-									GameWindowFlags.Default)
+									GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
 								{
 									Visible = true,
 									WindowState = WindowState.Fullscreen,
