@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Route.Bve5
 {
@@ -52,13 +53,13 @@ namespace Route.Bve5
 				{
 					Block NewBlock = new Block
 					{
-						Rails = new Rail[TrackKeyList.Count],
+						Rails = TrackKeyList.ToDictionary(x => x, x => new Rail()),
 						StartingDistance = Distance,
 						CurrentTrackState =
 						{
 							StartingTrackPosition = Distance
 						},
-						FreeObj = new List<FreeObj>[TrackKeyList.Count],
+						FreeObj = new Dictionary<string, List<FreeObj>>(),
 						Cracks = new List<Crack>(),
 						Sections = new List<Section>(),
 						Signals = new List<Signal>[TrackKeyList.Count],

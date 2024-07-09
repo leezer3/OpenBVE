@@ -154,12 +154,11 @@ namespace Route.Bve5
 
 			foreach (var OtherTrain in OtherTrains)
 			{
-				int RailIndex = RouteData.TrackKeyList.IndexOf(OtherTrain.TrackKey);
-				if (RailIndex == -1)
+				if (!RouteData.TrackKeyList.Contains(OtherTrain.TrackKey))
 				{
 					continue;
 				}
-
+				
 				ParseScriptedTrain(OtherTrain);
 
 				if (!OtherTrain.CarObjects.Any())
@@ -245,7 +244,7 @@ namespace Route.Bve5
 									Accelerate = Convert.ToDouble(Accelerate) / 3.6,
 									TargetSpeed = Convert.ToDouble(Speed) / 3.6,
 									Direction = (TravelDirection)OtherTrain.Direction,
-									RailIndex = RailIndex
+									RailIndex = RouteData.TrackKeyList.IndexOf(OtherTrain.TrackKey)
 								});
 							}
 							break;

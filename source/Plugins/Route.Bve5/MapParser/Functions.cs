@@ -325,15 +325,15 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void GetTransformation(Vector3 StartingPosition, Vector2 StartingDirection, List<Block> Blocks, int StartingBlock, int RailIndex, int ObjectIndex, out Vector3 pos, out Transformation t)
+		private static void GetTransformation(Vector3 StartingPosition, Vector2 StartingDirection, List<Block> Blocks, int StartingBlock, string RailKey, int ObjectIndex, out Vector3 pos, out Transformation t)
 		{
-			FreeObj f = Blocks[StartingBlock].FreeObj[RailIndex][ObjectIndex];
+			FreeObj f = Blocks[StartingBlock].FreeObj[RailKey][ObjectIndex];
 			pos = StartingPosition;
 			Vector3 pos2 = new Vector3(StartingPosition); // starting point of block
 			t = new Transformation();
 			if (f.Type == 0)
 			{
-				GetTransformation(StartingPosition, Blocks[StartingBlock], Blocks[StartingBlock], RailIndex, Blocks[StartingBlock].Pitch, f.TrackPosition, f.Type, f.Span, StartingDirection, out pos, out t);
+				GetTransformation(StartingPosition, Blocks[StartingBlock], Blocks[StartingBlock], RailKey, Blocks[StartingBlock].Pitch, f.TrackPosition, f.Type, f.Span, StartingDirection, out pos, out t);
 				return;
 			}
 			double remainingDistance = f.Span;
@@ -343,7 +343,7 @@ namespace Route.Bve5
 			{
 				double blockLength = currentBlock != 0 ? Blocks[currentBlock].StartingDistance - Blocks[currentBlock - 1].StartingDistance : 0;
 				double blockSpan = Math.Min(remainingDistance, blockLength);
-				GetTransformation(pos2, Blocks[currentBlock], Blocks[currentBlock + 1], RailIndex, -Blocks[StartingBlock].Pitch, f.TrackPosition, f.Type, remainingDistance, StartingDirection, out pos, out t);
+				GetTransformation(pos2, Blocks[currentBlock], Blocks[currentBlock + 1], RailKey, -Blocks[StartingBlock].Pitch, f.TrackPosition, f.Type, remainingDistance, StartingDirection, out pos, out t);
 				remainingDistance -= blockSpan;
 				if (remainingDistance <= 0.01)
 				{
@@ -363,7 +363,7 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void GetTransformation(Vector3 StartingPosition, Block FirstBlock, Block SecondBlock, int RailIndex, double Pitch, double TrackDistance, int Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
+		private static void GetTransformation(Vector3 StartingPosition, Block FirstBlock, Block SecondBlock, string RailKey, double Pitch, double TrackDistance, int Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
 			Transformation = new Transformation();
 			if (FirstBlock.Turn != 0.0)
@@ -388,8 +388,8 @@ namespace Route.Bve5
 
 			CalcTransformation(FirstBlock.CurrentTrackState.CurveRadius, Pitch, Span, ref Direction, out a, out c, out h);
 
-			double InterpolateX = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailIndex].Position.X, SecondBlock.StartingDistance,SecondBlock.Rails[RailIndex].Position.X, FirstBlock.Rails[RailIndex].RadiusH, TrackDistance);
-			double InterpolateY = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailIndex].Position.Y, SecondBlock.StartingDistance, SecondBlock.Rails[RailIndex].Position.Y, FirstBlock.Rails[RailIndex].RadiusV, TrackDistance);
+			double InterpolateX = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailKey].Position.X, SecondBlock.StartingDistance,SecondBlock.Rails[RailKey].Position.X, FirstBlock.Rails[RailKey].RadiusH, TrackDistance);
+			double InterpolateY = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailKey].Position.Y, SecondBlock.StartingDistance, SecondBlock.Rails[RailKey].Position.Y, FirstBlock.Rails[RailKey].RadiusV, TrackDistance);
 
 			Vector3 Offset = new Vector3(Direction.Y * InterpolateX, InterpolateY, -Direction.X * InterpolateX);
 			ObjectPosition = Position + Offset;
@@ -404,8 +404,8 @@ namespace Route.Bve5
 
 			CalcTransformation(FirstBlock.CurrentTrackState.CurveRadius, Pitch, Span, ref Direction, out _, out _, out _);
 
-			double InterpolateX2 = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailIndex].Position.X, SecondBlock.StartingDistance, SecondBlock.Rails[RailIndex].Position.X, FirstBlock.Rails[RailIndex].RadiusH, TrackDistance + Span);
-			double InterpolateY2 = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailIndex].Position.Y, SecondBlock.StartingDistance, SecondBlock.Rails[RailIndex].Position.Y, FirstBlock.Rails[RailIndex].RadiusV, TrackDistance + Span);
+			double InterpolateX2 = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailKey].Position.X, SecondBlock.StartingDistance, SecondBlock.Rails[RailKey].Position.X, FirstBlock.Rails[RailKey].RadiusH, TrackDistance + Span);
+			double InterpolateY2 = GetTrackCoordinate(FirstBlock.StartingDistance, FirstBlock.Rails[RailKey].Position.Y, SecondBlock.StartingDistance, SecondBlock.Rails[RailKey].Position.Y, FirstBlock.Rails[RailKey].RadiusV, TrackDistance + Span);
 
 			Vector3 Offset2 = new Vector3(Direction.Y * InterpolateX2, InterpolateY2, -Direction.X * InterpolateX2);
 			Vector3 ObjectPosition2 = Position + Offset2;

@@ -33,7 +33,7 @@ namespace Route.Bve5
 {
 	static partial class Bve5ScenarioParser
 	{
-		private struct Rail
+		private class Rail
 		{
 			internal Vector2 Position;
 			internal double CurveCant;
@@ -66,7 +66,7 @@ namespace Route.Bve5
 			internal double InterferenceInDoor;
 		}
 
-		private struct FreeObj
+		private class FreeObj
 		{
 			/// <summary>The track position of the object</summary>
 			internal double TrackPosition;
@@ -129,10 +129,10 @@ namespace Route.Bve5
 			/// <summary>The routefile key of the object</summary>
 			internal readonly string Key;
 
-			internal readonly int PrimaryRail;
-			internal readonly int SecondaryRail;
+			internal readonly string PrimaryRail;
+			internal readonly string SecondaryRail;
 
-			internal Crack(string key, double trackPosition, int primaryRail, int secondaryRail)
+			internal Crack(string key, double trackPosition, string primaryRail, string secondaryRail)
 			{
 				Key = key;
 				TrackPosition = trackPosition;
@@ -148,7 +148,7 @@ namespace Route.Bve5
 			internal int DepartureStationIndex = -1;
 		}
 
-		private struct Signal
+		private class Signal
 		{
 			internal double TrackPosition;
 			internal string SignalObjectKey;
@@ -220,7 +220,7 @@ namespace Route.Bve5
 		private class Block
 		{
 			internal double StartingDistance;
-			internal Rail[] Rails;
+			internal Dictionary<string, Rail> Rails;
 			internal TrackElement CurrentTrackState;
 			internal double Turn;
 			internal double Pitch;
@@ -230,7 +230,7 @@ namespace Route.Bve5
 			internal bool GradientTransitionEnd;
 			internal int StationIndex = -1;
 			internal int Stop = -1;
-			internal List<FreeObj>[] FreeObj;
+			internal Dictionary<string, List<FreeObj>> FreeObj;
 			internal List<Crack> Cracks;
 			internal string Background = string.Empty;
 			internal List<Section> Sections;
