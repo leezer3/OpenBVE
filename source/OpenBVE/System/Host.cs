@@ -343,7 +343,7 @@ namespace OpenBve {
 										{
 											staticObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
 											Object = staticObject;
-											StaticObjectCache.Add(ValueTuple.Create(path, PreserveVertices), Object);
+											StaticObjectCache.Add(ValueTuple.Create(path, PreserveVertices, File.GetLastWriteTime(path)), Object);
 											return true;
 										}
 
@@ -411,7 +411,7 @@ namespace OpenBve {
 
 										if (Object is StaticObject staticObject)
 										{
-											StaticObjectCache.Add(ValueTuple.Create(path, false), staticObject);
+											StaticObjectCache.Add(ValueTuple.Create(path, false, File.GetLastWriteTime(path)), staticObject);
 											return true;
 										}
 

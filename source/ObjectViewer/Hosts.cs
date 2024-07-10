@@ -286,7 +286,7 @@ namespace ObjectViewer {
 
 										if (Object is StaticObject staticObject)
 										{
-											StaticObjectCache.Add(ValueTuple.Create(path, false), staticObject);
+											StaticObjectCache.Add(ValueTuple.Create(path, false, File.GetLastWriteTime(path)), staticObject);
 											return true;
 										}
 

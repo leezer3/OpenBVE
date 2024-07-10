@@ -346,7 +346,7 @@ namespace RouteViewer
 										{
 											staticObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
 											Object = staticObject;
-											StaticObjectCache.Add(ValueTuple.Create(path, PreserveVertices), Object);
+											StaticObjectCache.Add(ValueTuple.Create(path, PreserveVertices, File.GetLastWriteTime(path)), Object);
 											return true;
 										}
 
@@ -420,7 +420,7 @@ namespace RouteViewer
 
 										if (Object is StaticObject staticObject)
 										{
-											StaticObjectCache.Add(ValueTuple.Create(path, false), staticObject);
+											StaticObjectCache.Add(ValueTuple.Create(path, false, File.GetLastWriteTime(path)), staticObject);
 											return true;
 										}
 

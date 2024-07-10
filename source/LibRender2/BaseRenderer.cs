@@ -518,7 +518,14 @@ namespace LibRender2
 		public void Reset()
 		{
 			currentHost.AnimatedObjectCollectionCache.Clear();
-			currentHost.StaticObjectCache.Clear();
+			List<ValueTuple<string, bool, DateTime>> keys = currentHost.StaticObjectCache.Keys.ToList();
+			for (int i = 0; i < keys.Count; i++)
+			{
+				if (File.GetLastWriteTime(keys[i].Item1) != keys[i].Item3)
+				{
+					currentHost.StaticObjectCache.Remove(keys[i]);
+				}
+			}
 			TextureManager.UnloadAllTextures();
 
 			Initialize();

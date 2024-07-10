@@ -120,7 +120,7 @@ namespace OpenBveApi.Hosts {
 		protected HostInterface(HostApplication host)
 		{
 			Application = host;
-			StaticObjectCache = new Dictionary<ValueTuple<string, bool>, StaticObject>();
+			StaticObjectCache = new Dictionary<ValueTuple<string, bool, DateTime>, StaticObject>();
 			AnimatedObjectCollectionCache = new Dictionary<string, AnimatedObjectCollection>();
 			MissingFiles = new List<string>();
 			FailedObjects = new List<string>();
@@ -323,7 +323,7 @@ namespace OpenBveApi.Hosts {
 		/// <returns>Whether loading the object was successful</returns>
 		public virtual bool LoadObject(string Path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
-			ValueTuple<string, bool> key = ValueTuple.Create(Path, false);
+			ValueTuple<string, bool, DateTime> key = ValueTuple.Create(Path, false, System.IO.File.GetLastWriteTime(Path));
 
 			if (StaticObjectCache.TryGetValue(key, out var staticObject))
 			{
@@ -351,7 +351,7 @@ namespace OpenBveApi.Hosts {
 		/// Selecting to preserve vertices may be useful if using the object as a deformable.</remarks>
 		public virtual bool LoadStaticObject(string Path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
 		{
-			ValueTuple<string, bool> key = ValueTuple.Create(Path, PreserveVertices);
+			ValueTuple<string, bool, DateTime> key = ValueTuple.Create(Path, PreserveVertices, System.IO.File.GetLastWriteTime(Path));
 
 			if (StaticObjectCache.TryGetValue(key, out var staticObject))
 			{
@@ -588,7 +588,7 @@ namespace OpenBveApi.Hosts {
 		/// <summary>
 		/// Dictionary of StaticObject with Path and PreserveVertices as keys.
 		/// </summary>
-		public readonly Dictionary<ValueTuple<string, bool>, StaticObject> StaticObjectCache;
+		public readonly Dictionary<ValueTuple<string, bool, DateTime>, StaticObject> StaticObjectCache;
 
 		/// <summary>
 		/// Dictionary of AnimatedObjectCollection with Path as key.
