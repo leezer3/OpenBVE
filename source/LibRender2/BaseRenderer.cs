@@ -526,7 +526,7 @@ namespace LibRender2
 					currentHost.StaticObjectCache.Remove(keys[i]);
 				}
 			}
-			TextureManager.UnloadAllTextures();
+			TextureManager.UnloadAllTextures(true);
 
 			Initialize();
 		}

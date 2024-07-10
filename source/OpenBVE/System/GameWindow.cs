@@ -485,7 +485,7 @@ namespace OpenBve
 					Program.TrainManager.Trains[i].UnloadPlugin();
 				}
 			}
-			Program.Renderer.TextureManager.UnloadAllTextures();
+			Program.Renderer.TextureManager.UnloadAllTextures(false);
 			Program.Renderer.visibilityThread = false;
 			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 			{
@@ -586,7 +586,7 @@ namespace OpenBve
 			}
 			else
 			{
-				Program.Renderer.TextureManager.UnloadAllTextures();
+				Program.Renderer.TextureManager.UnloadAllTextures(false);
 			}
 			// camera
 			Program.Renderer.InitializeVisibility();

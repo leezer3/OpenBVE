@@ -160,7 +160,7 @@ namespace ObjectViewer {
 	        };
 	        currentGameWindow.Run();
 			// quit
-			Renderer.TextureManager.UnloadAllTextures();
+			Renderer.TextureManager.UnloadAllTextures(false);
 
 			formTrain.WaitTaskFinish();
 	    }

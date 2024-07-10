@@ -644,14 +644,32 @@ namespace LibRender2.Textures
 		}
 
 		/// <summary>Unloads all registered textures.</summary>
-		public void UnloadAllTextures()
+		public void UnloadAllTextures(bool currentlyReloading)
 		{
 			for (int i = 0; i < RegisteredTexturesCount; i++)
 			{
 				UnloadTexture(ref RegisteredTextures[i]);
 			}
+			if (currentlyReloading)
+			{
+				foreach(TextureOrigin origin in textureCache.Keys.ToList())
+				{
+					if (origin is PathOrigin pathOrigin)
+					{
+						if (pathOrigin.FileSize != new System.IO.FileInfo(pathOrigin.Path).Length || pathOrigin.LastModificationTime != System.IO.File.GetLastWriteTime(pathOrigin.Path))
+						{
+							textureCache.Remove(origin);
+						}
+					}
+				}
+			}
+			else
+			{
+				textureCache.Clear();
+			}
+			
 			GC.Collect(); //Speculative- https://bveworldwide.forumotion.com/t1873-object-routeviewer-out-of-memory#19423
-			textureCache.Clear();
+			
 		}
 
 
