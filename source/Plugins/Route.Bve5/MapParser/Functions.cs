@@ -338,12 +338,11 @@ namespace Route.Bve5
 			}
 			double remainingDistance = f.Span;
 			int currentBlock = StartingBlock;
-			// FIXME: Pitch seems to need to be inverted for secondary tracks, which seems wrong
 			while (currentBlock < Blocks.Count - 1)
 			{
 				double blockLength = currentBlock != 0 ? Blocks[currentBlock].StartingDistance - Blocks[currentBlock - 1].StartingDistance : 0;
 				double blockSpan = Math.Min(remainingDistance, blockLength);
-				GetTransformation(pos2, Blocks[currentBlock], Blocks[currentBlock + 1], RailKey, -Blocks[StartingBlock].Pitch, f.TrackPosition, f.Type, remainingDistance, StartingDirection, out pos, out t);
+				GetTransformation(pos2, Blocks[currentBlock], Blocks[currentBlock + 1], RailKey, Blocks[StartingBlock].Pitch, f.TrackPosition, f.Type, remainingDistance, StartingDirection, out pos, out t);
 				remainingDistance -= blockSpan;
 				if (remainingDistance <= 0.01)
 				{

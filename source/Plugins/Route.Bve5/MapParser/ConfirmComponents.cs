@@ -477,7 +477,7 @@ namespace Route.Bve5
 								Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y),
 								Z = Statement.GetArgumentValueAsDouble(ArgumentName.Z),
 								Yaw = RY * 0.0174532925199433,
-								Pitch = RX * 0.0174532925199433,
+								Pitch = -RX * 0.0174532925199433,
 								Roll = RZtoRoll(RY, RZ) * 0.0174532925199433,
 								Type = Convert.ToInt32(Tilt),
 								Span = Convert.ToDouble(Span)
@@ -574,7 +574,7 @@ namespace Route.Bve5
 								Repeater.Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
 								Repeater.Z = Statement.GetArgumentValueAsDouble(ArgumentName.Z);
 								Repeater.Yaw = RY * 0.0174532925199433;
-								Repeater.Pitch = RX * 0.0174532925199433;
+								Repeater.Pitch = -RX * 0.0174532925199433;
 								Repeater.Roll = RZtoRoll(RY, RZ) * 0.0174532925199433;
 								Repeater.Type = (int)Tilt;
 								Repeater.Span = Span;
@@ -794,7 +794,7 @@ namespace Route.Bve5
 						Y = Convert.ToDouble(Y),
 						Z = Convert.ToDouble(Z),
 						Yaw = Convert.ToDouble(RY) * 0.0174532925199433,
-						Pitch = Convert.ToDouble(RX) * 0.0174532925199433,
+						Pitch = -Convert.ToDouble(RX) * 0.0174532925199433,
 						Roll = RZtoRoll(Convert.ToDouble(RY), Convert.ToDouble(RZ)) * 0.0174532925199433,
 						Type = Convert.ToInt32(Tilt),
 						Span = Convert.ToDouble(Span)
