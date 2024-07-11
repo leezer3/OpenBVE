@@ -143,7 +143,7 @@ namespace Plugin
 				Block subBlock = block.ReadSubBlock();
 				ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 			}
-			builder.Apply(ref obj);
+			builder.Apply(ref obj, false, false);
 			obj.Mesh.CreateNormals();
 			if (rootMatrix != Matrix4D.NoTransformation)
 			{
@@ -222,7 +222,7 @@ namespace Plugin
 					currentLevel++;
 					if (builder.Vertices.Count != 0)
 					{
-						builder.Apply(ref obj);
+						builder.Apply(ref obj, false, false);
 						if (rootMatrix != Matrix4D.NoTransformation)
 						{
 							for (int i = transformStart; i < obj.Mesh.Vertices.Length; i++)
@@ -268,7 +268,7 @@ namespace Plugin
 				case TemplateID.Mesh:
 					if (builder.Vertices.Count != 0)
 					{
-						builder.Apply(ref obj);
+						builder.Apply(ref obj, false, false);
 						builder = new MeshBuilder(Plugin.currentHost);
 					}
 					int nVerts = block.ReadUInt();
@@ -568,7 +568,7 @@ namespace Plugin
 				Block subBlock = block.ReadSubBlock();
 				ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 			}
-			builder.Apply(ref obj);
+			builder.Apply(ref obj, false, false);
 			obj.Mesh.CreateNormals();
 			if (rootMatrix != Matrix4D.NoTransformation)
 			{
