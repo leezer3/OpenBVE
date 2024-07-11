@@ -153,6 +153,14 @@ namespace OpenBve.Formats.DirectX
 				{
 					currentPosition++;
 				}
+
+				if (currentPosition - 1 - p > 0)
+				{
+					// reference based material name in textual X
+					string l = myText.Substring(p, currentPosition - 1);
+					Label = l.Trim(new char[] { });
+					return;
+				}
 				if (currentPosition == text.Length - 1)
 				{
 					// Null rail converted by BVE5 : Contains texture co-ords, but the key is missing...

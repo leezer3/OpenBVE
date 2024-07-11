@@ -266,6 +266,7 @@ namespace Plugin
 					}
 					break;
 				case TemplateID.Mesh:
+					currentLevel++;
 					if (builder.Vertices.Count != 0)
 					{
 						builder.Apply(ref obj, false, false);
@@ -332,6 +333,8 @@ namespace Plugin
 						subBlock = block.ReadSubBlock();
 						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 					}
+
+					currentLevel--;
 					break;
 				case TemplateID.MeshMaterialList:
 					int nMaterials = block.ReadUInt();
@@ -365,11 +368,21 @@ namespace Plugin
 					if (block is BinaryBlock && block.ReadString() == "{")
 					{
 						// reference based materials
+						Array.Resize(ref builder.Materials, nMaterials + 1);
 						for (int i = 0; i < nMaterials; i++)
 						{
 							// YUCKY: skip bracket strings
 							string materialName = block.ReadString();
-							builder.Materials[i + 1] = rootMaterials[materialName];
+							if (rootMaterials.ContainsKey(materialName))
+							{
+								builder.Materials[i + 1] = rootMaterials[materialName];
+							}
+							else
+							{
+								Plugin.currentHost.AddMessage(MessageType.Information, false, "Material "+ materialName  + " was not found in DirectX binary file " + currentFile);
+								builder.Materials[i + 1] = new Material();
+							}
+							
 							block.ReadString();
 							if (i < nMaterials - 1)
 							{
@@ -400,18 +413,22 @@ namespace Plugin
 					
 					break;
 				case TemplateID.Material:
-					int m = builder.Materials.Length;
-					Array.Resize(ref builder.Materials, m + 1);
-					builder.Materials[m] = new Material();
-					builder.Materials[m].Color = new Color32((byte)(255 * block.ReadSingle()), (byte)(255 * block.ReadSingle()), (byte)(255 * block.ReadSingle()),(byte)(255 * block.ReadSingle()));
+					Material newMaterial = new Material();
+					newMaterial.Color = new Color32((byte)(255 * block.ReadSingle()), (byte)(255 * block.ReadSingle()), (byte)(255 * block.ReadSingle()),(byte)(255 * block.ReadSingle()));
 					double mPower = block.ReadSingle(); //TODO: Unsure what this does...
 					Color24 mSpecular = new Color24((byte)block.ReadSingle(), (byte)block.ReadSingle(), (byte)block.ReadSingle());
-					builder.Materials[m].EmissiveColor = new Color24((byte)(255 *block.ReadSingle()), (byte)(255 * block.ReadSingle()), (byte)(255 * block.ReadSingle()));
-					builder.Materials[m].Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
+					newMaterial.EmissiveColor = new Color24((byte)(255 *block.ReadSingle()), (byte)(255 * block.ReadSingle()), (byte)(255 * block.ReadSingle()));
+					newMaterial.Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
 					if (Plugin.EnabledHacks.BlackTransparency)
 					{
-						builder.Materials[m].TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
-						builder.Materials[m].Flags |= MaterialFlags.TransparentColor;
+						newMaterial.TransparentColor = Color24.Black; //TODO: Check, also can we optimise which faces have the transparent color set?
+						newMaterial.Flags |= MaterialFlags.TransparentColor;
+					}
+					
+					if (block.Position() < block.Length() - 5)
+					{
+						subBlock = block.ReadSubBlock(TemplateID.TextureFilename);
+						ParseSubBlock(subBlock, ref obj, ref builder, ref newMaterial);
 					}
 					if (currentLevel == 0)
 					{
@@ -420,18 +437,19 @@ namespace Plugin
 						{
 							if (rootMaterials.ContainsKey(block.Label))
 							{
-								rootMaterials[block.Label] = builder.Materials[m];
+								rootMaterials[block.Label] = newMaterial;
 							}
 							else
 							{
-								rootMaterials.Add(block.Label, builder.Materials[m]);	
+								rootMaterials.Add(block.Label, newMaterial);
 							}
 						}
 					}
-					if (block.Position() < block.Length() - 5)
+					else
 					{
-						subBlock = block.ReadSubBlock(TemplateID.TextureFilename);
-						ParseSubBlock(subBlock, ref obj, ref builder, ref builder.Materials[m]);
+						int m = builder.Materials.Length;
+						Array.Resize(ref builder.Materials, m + 1);
+						builder.Materials[m] = newMaterial;
 					}
 					break;
 				case TemplateID.TextureFilename:
