@@ -245,7 +245,7 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void GetTransformation(Vector3 StartingPosition, List<Block> Blocks, int StartingBlock, double TrackDistance, int Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
+		private static void GetTransformation(Vector3 StartingPosition, List<Block> Blocks, int StartingBlock, double TrackDistance, ObjectTransformType Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
 			if (Blocks[StartingBlock].Turn != 0.0)
 			{
@@ -310,18 +310,20 @@ namespace Route.Bve5
 
 			switch (Type)
 			{
-				case 1:
+				case ObjectTransformType.FollowsGradient:
 					Transformation = new Transformation(TrackYaw, TrackPitch, 0.0);
 					break;
-				case 2:
+				case ObjectTransformType.FollowsCant:
 					Transformation = new Transformation(TrackYaw, 0.0, TrackRoll);
 					break;
-				case 3:
+				case ObjectTransformType.FollowsGradientAndCant:
 					Transformation = new Transformation(TrackYaw, TrackPitch, TrackRoll);
 					break;
-				default:
+				case ObjectTransformType.Horizontal:
 					Transformation = new Transformation(TrackYaw, 0.0, 0.0);
 					break;
+				default:
+					throw new NotSupportedException("Unknown transform type.");
 			}
 		}
 
@@ -362,7 +364,7 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void GetTransformation(Vector3 StartingPosition, Block FirstBlock, Block SecondBlock, string RailKey, double Pitch, double TrackDistance, int Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
+		private static void GetTransformation(Vector3 StartingPosition, Block FirstBlock, Block SecondBlock, string RailKey, double Pitch, double TrackDistance, ObjectTransformType Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
 			Transformation = new Transformation();
 			if (FirstBlock.Turn != 0.0)
@@ -410,7 +412,7 @@ namespace Route.Bve5
 			Vector3 ObjectPosition2 = Position + Offset2;
 
 			Vector3 r;
-			if (Type == 1 || Type == 3)
+			if (Type == ObjectTransformType.FollowsGradient || Type == ObjectTransformType.FollowsGradientAndCant)
 			{
 				r = new Vector3(ObjectPosition2.X - ObjectPosition.X, ObjectPosition2.Y - ObjectPosition.Y, ObjectPosition2.Z - ObjectPosition.Z);
 			}
@@ -423,7 +425,7 @@ namespace Route.Bve5
 			Transformation.X = new Vector3(r.Z, 0.0, -r.X);
 			Normalize(ref Transformation.X.X, ref Transformation.X.Z);
 			Transformation.Y = Vector3.Cross(Transformation.Z, Transformation.X);
-			if (Type == 2 || Type == 3)
+			if (Type == ObjectTransformType.FollowsCant || Type == ObjectTransformType.FollowsGradientAndCant)
 			{
 				Transformation = new Transformation(Transformation, 0.0, 0.0, Math.Atan(FirstBlock.CurrentTrackState.CurveCant));
 			}

@@ -29,7 +29,6 @@ using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
 
 namespace Route.Bve5
 {
@@ -457,7 +456,7 @@ namespace Route.Bve5
 						double RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
 						double RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
 						double RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
-						double Tilt = Statement.GetArgumentValueAsDouble(ArgumentName.Tilt);
+						int Tilt = Statement.GetArgumentValueAsInt(ArgumentName.Tilt);
 						double Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
 
 						if (RouteData.TrackKeyList.Contains(TrackKey))
@@ -469,19 +468,7 @@ namespace Route.Bve5
 								Blocks[BlockIndex].FreeObj.Add(TrackKey, new List<FreeObj>());
 							}
 
-							Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj
-							{
-								TrackPosition = Statement.Distance,
-								Key = Statement.Key,
-								X = Statement.GetArgumentValueAsDouble(ArgumentName.X),
-								Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y),
-								Z = Statement.GetArgumentValueAsDouble(ArgumentName.Z),
-								Yaw = RY * 0.0174532925199433,
-								Pitch = -RX * 0.0174532925199433,
-								Roll = RZtoRoll(RY, RZ) * 0.0174532925199433,
-								Type = Convert.ToInt32(Tilt),
-								Span = Convert.ToDouble(Span)
-							});
+							Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z), RY * 0.0174532925199433, -RX * 0.0174532925199433, RZtoRoll(RY, RZ) * 0.0174532925199433, (ObjectTransformType)Tilt, Span));
 						}
 					}
 						break;
@@ -564,7 +551,7 @@ namespace Route.Bve5
 								double RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
 								double RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
 								double RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
-								double Tilt = Statement.GetArgumentValueAsDouble(ArgumentName.Tilt);
+								int Tilt = Statement.GetArgumentValueAsInt(ArgumentName.Tilt);
 								double Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
 								double Interval = Statement.GetArgumentValueAsDouble(ArgumentName.Interval);
 
@@ -576,7 +563,7 @@ namespace Route.Bve5
 								Repeater.Yaw = RY * 0.0174532925199433;
 								Repeater.Pitch = -RX * 0.0174532925199433;
 								Repeater.Roll = RZtoRoll(RY, RZ) * 0.0174532925199433;
-								Repeater.Type = (int)Tilt;
+								Repeater.Type = (ObjectTransformType)Tilt;
 								Repeater.Span = Span;
 								Repeater.Interval = Interval;
 								Repeater.StartRefreshed = true;
@@ -647,19 +634,7 @@ namespace Route.Bve5
 					Blocks[BlockIndex].FreeObj.Add(TrackKey, new List<FreeObj>());
 				}
 
-				Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj
-				{
-					TrackPosition = i,
-					Key = Repeater.ObjectKeys[LoopCount],
-					X = Repeater.X,
-					Y = Repeater.Y,
-					Z = Repeater.Z,
-					Yaw = Repeater.Yaw,
-					Pitch = Repeater.Pitch,
-					Roll = Repeater.Roll,
-					Type = Repeater.Type,
-					Span = Repeater.Span
-				});
+				Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(i, Repeater.ObjectKeys[LoopCount], Repeater.X, Repeater.Y, Repeater.Z, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, Repeater.Type, Repeater.Span));
 
 				if (LoopCount >= Repeater.ObjectKeys.Length - 1)
 				{
@@ -796,7 +771,7 @@ namespace Route.Bve5
 						Yaw = Convert.ToDouble(RY) * 0.0174532925199433,
 						Pitch = -Convert.ToDouble(RX) * 0.0174532925199433,
 						Roll = RZtoRoll(Convert.ToDouble(RY), Convert.ToDouble(RZ)) * 0.0174532925199433,
-						Type = Convert.ToInt32(Tilt),
+						Type = (ObjectTransformType)Convert.ToInt32(Tilt),
 						Span = Convert.ToDouble(Span)
 					});
 				}
@@ -1048,12 +1023,8 @@ namespace Route.Bve5
 		private static void ConfirmSound(Statement Statement, RouteData RouteData)
 		{
 			int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
-			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
-			{
-				TrackPosition = Statement.Distance,
-				Key = Statement.Key,
-				Type = SoundType.TrainStatic
-			});
+			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound(Statement.Distance, Statement.Key, SoundType.World));
+			
 		}
 
 		private static void ConfirmSound3D(Statement Statement, RouteData RouteData)
@@ -1062,39 +1033,19 @@ namespace Route.Bve5
 			double Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
 
 			int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
-			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound
-			{
-				TrackPosition = Statement.Distance,
-				Key = Statement.Key,
-				Type = SoundType.World,
-				X = X,
-				Y = Y
-			});
+			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound(Statement.Distance, Statement.Key, SoundType.World, X, Y));
 		}
 
-		private static void ConfirmRollingNoise(bool PreviewOnly, MapData ParseData, RouteData RouteData)
+		private static void ConfirmRollingNoise(Statement Statement, RouteData RouteData)
 		{
-			if (PreviewOnly)
+			object Index = Statement.GetArgumentValue(ArgumentName.Index);
+
+			int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+			RouteData.Blocks[BlockIndex].RunSounds.Add(new TrackSound
 			{
-				return;
-			}
-
-			foreach (var Statement in ParseData.Statements)
-			{
-				if (Statement.ElementName != MapElementName.RollingNoise)
-				{
-					continue;
-				}
-
-				object Index = Statement.GetArgumentValue(ArgumentName.Index);
-
-				int BlockIndex = RouteData.Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
-				RouteData.Blocks[BlockIndex].RunSounds.Add(new TrackSound
-				{
-					TrackPosition = Statement.Distance,
-					SoundIndex = Convert.ToInt32(Index)
-				});
-			}
+				TrackPosition = Statement.Distance,
+				SoundIndex = Convert.ToInt32(Index)
+			});
 		}
 
 		private static void ConfirmFlangeNoise(bool PreviewOnly, MapData ParseData, RouteData RouteData)

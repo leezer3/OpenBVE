@@ -62,6 +62,7 @@
     <Compile Include="MapParser\CustomDictionary.cs" />
     <Compile Include="MapParser\Functions.cs" />
     <Compile Include="Components\ScriptedTrain.cs" />
+    <Compile Include="MapParser\ObjectTransformType.cs" />
     <Compile Include="MapParser\RouteData.cs" />
     <Compile Include="MapParser\Structures.cs" />
     <Compile Include="Plugin.cs" />

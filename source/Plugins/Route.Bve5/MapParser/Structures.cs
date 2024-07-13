@@ -69,25 +69,39 @@ namespace Route.Bve5
 		private class FreeObj
 		{
 			/// <summary>The track position of the object</summary>
-			internal double TrackPosition;
+			internal readonly double TrackPosition;
 			/// <summary>The routefile key of the object</summary>
-			internal string Key;
+			internal readonly string Key;
 			/// <summary>The X position of the object (m)</summary>
-			internal double X;
+			internal readonly double X;
 			/// <summary>The Y position of the object (m)</summary>
-			internal double Y;
+			internal readonly double Y;
 			/// <summary>The Z position of the object (m)</summary>
-			internal double Z;
+			internal readonly double Z;
 			/// <summary>The yaw of the object (radians)</summary>
-			internal double Yaw;
+			internal readonly double Yaw;
 			/// <summary>The pitch of the object (radians)</summary>
-			internal double Pitch;
+			internal readonly double Pitch;
 			/// <summary>The roll of the object (radians)</summary>
-			internal double Roll;
+			internal readonly double Roll;
 
-			internal int Type;
+			internal readonly ObjectTransformType Type;
 
-			internal double Span;
+			internal readonly double Span;
+
+			internal FreeObj(double trackPosition, string key, double x, double y, double z, double yaw, double pitch, double roll, ObjectTransformType type, double span)
+			{
+				TrackPosition = trackPosition;
+				Key = key;
+				X = x; 
+				Y = y;
+				Z = z;
+				Yaw= yaw;
+				Pitch = pitch;
+				Roll = roll;
+				Type = type;
+				Span = span;
+			}
 		}
 
 		private class Repeater
@@ -112,7 +126,7 @@ namespace Route.Bve5
 			/// <summary>The roll of the object (radians)</summary>
 			internal double Roll;
 
-			internal int Type;
+			internal ObjectTransformType Type;
 
 			internal double Span;
 
@@ -158,7 +172,7 @@ namespace Route.Bve5
 			internal double Yaw;
 			internal double Pitch;
 			internal double Roll;
-			internal int Type;
+			internal ObjectTransformType Type;
 			internal double Span;
 			internal int SectionIndex;
 		}
@@ -202,13 +216,22 @@ namespace Route.Bve5
 			TrainStatic
 		}
 
-		private struct Sound
+		private class Sound
 		{
-			internal double TrackPosition;
-			internal string Key;
-			internal SoundType Type;
-			internal double X;
-			internal double Y;
+			internal readonly double TrackPosition;
+			internal readonly string Key;
+			internal readonly SoundType Type;
+			internal readonly double X;
+			internal readonly double Y;
+
+			internal Sound(double trackPosition, string key, SoundType type, double x = 0, double y = 0)
+			{
+				TrackPosition = trackPosition;
+				Key = key;
+				Type = type;
+				X = x;
+				Y = y;
+			}
 		}
 
 		private struct TrackSound

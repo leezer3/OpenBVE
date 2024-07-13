@@ -405,7 +405,7 @@ namespace Route.Bve5
 							{
 								string key = Data.Blocks[i].FreeObj[railKey][k].Key;
 								double span = Data.Blocks[i].FreeObj[railKey][k].Span;
-								int type = Data.Blocks[i].FreeObj[railKey][k].Type;
+								ObjectTransformType type = Data.Blocks[i].FreeObj[railKey][k].Type;
 								double dx = Data.Blocks[i].FreeObj[railKey][k].X;
 								double dy = Data.Blocks[i].FreeObj[railKey][k].Y;
 								double dz = Data.Blocks[i].FreeObj[railKey][k].Z;
@@ -498,11 +498,11 @@ namespace Route.Bve5
 								Transformation Transformation;
 								if (j == 0)
 								{
-									GetTransformation(Position, Data.Blocks, i, tpos, 1, InterpolateInterval, Direction, out wpos, out Transformation);
+									GetTransformation(Position, Data.Blocks, i, tpos, ObjectTransformType.FollowsGradient, InterpolateInterval, Direction, out wpos, out Transformation);
 								}
 								else
 								{
-									GetTransformation(Position, Data.Blocks[i], i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1] : Data.Blocks[i], p, Data.Blocks[i].Pitch, tpos, 1, InterpolateInterval, Direction, out wpos, out Transformation);
+									GetTransformation(Position, Data.Blocks[i], i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1] : Data.Blocks[i], p, Data.Blocks[i].Pitch, tpos, ObjectTransformType.FollowsGradient, InterpolateInterval, Direction, out wpos, out Transformation);
 								}
 
 								double pInterpolateX0 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, tpos);
@@ -550,7 +550,7 @@ namespace Route.Bve5
 							{
 								string key = Data.Blocks[i].Signals[j][k].SignalObjectKey;
 								double span = Data.Blocks[i].Signals[j][k].Span;
-								int type = Data.Blocks[i].Signals[j][k].Type;
+								ObjectTransformType type = Data.Blocks[i].Signals[j][k].Type;
 								double dx = Data.Blocks[i].Signals[j][k].X;
 								double dy = Data.Blocks[i].Signals[j][k].Y;
 								double dz = Data.Blocks[i].Signals[j][k].Z;
@@ -702,8 +702,7 @@ namespace Route.Bve5
 					if (Data.Blocks[i].SoundEvents[k].Type == SoundType.World)
 					{
 						var SoundEvent = Data.Blocks[i].SoundEvents[k];
-						SoundHandle buffer;
-						Data.Sound3Ds.TryGetValue(SoundEvent.Key, out buffer);
+						Data.Sound3Ds.TryGetValue(SoundEvent.Key, out SoundHandle buffer);
 						double d = SoundEvent.TrackPosition - StartingDistance;
 						double dx = SoundEvent.X;
 						double dy = SoundEvent.Y;
@@ -840,22 +839,6 @@ namespace Route.Bve5
 				{
 					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "StationIndex " + Plugin.CurrentRoute.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + Plugin.CurrentRoute.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
 					Plugin.CurrentRoute.Stations[i].StopMode = StationStopMode.AllPass;
-				}
-				if (Plugin.CurrentRoute.Stations[i].Type == StationType.ChangeEnds)
-				{
-					if (i < Plugin.CurrentRoute.Stations.Length - 1)
-					{
-						if (Plugin.CurrentRoute.Stations[i + 1].StopMode != StationStopMode.AllStop)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "StationIndex " + Plugin.CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but the subsequent station does not expect all trains to stop in file " + FileName);
-							Plugin.CurrentRoute.Stations[i + 1].StopMode = StationStopMode.AllStop;
-						}
-					}
-					else
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "StationIndex " + Plugin.CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but there is no subsequent station defined in file " + FileName);
-						Plugin.CurrentRoute.Stations[i].Type = StationType.Terminal;
-					}
 				}
 			}
 			if (Plugin.CurrentRoute.Stations.Any())

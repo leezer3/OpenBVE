@@ -183,7 +183,6 @@ namespace Route.Bve5
 			// these require looping through existing blocks, so need to be here at the minute
 			ConfirmIrregularity(PreviewOnly, RouteData.Blocks);
 			ConfirmAdhesion(PreviewOnly, RouteData.Blocks);
-			ConfirmRollingNoise(PreviewOnly, ParseData, RouteData);
 			ConfirmFlangeNoise(PreviewOnly, ParseData, RouteData);
 		}
 
@@ -284,6 +283,12 @@ namespace Route.Bve5
 						if (!previewOnly)
 						{
 							ConfirmCabIlluminance(parseData.Statements[i], routeData);
+						}
+						break;
+					case MapElementName.RollingNoise:
+						if (!previewOnly)
+						{
+							ConfirmRollingNoise(parseData.Statements[i], routeData);
 						}
 						break;
 				}
