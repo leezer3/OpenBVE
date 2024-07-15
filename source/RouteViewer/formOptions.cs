@@ -108,8 +108,23 @@ namespace RouteViewer
 			Interface.CurrentOptions.LoadingLogo = checkBoxLogo.Checked;
 			Interface.CurrentOptions.LoadingBackground = checkBoxBackgrounds.Checked;
 			Interface.CurrentOptions.LoadingProgressBar = checkBoxProgressBar.Checked;
-			Interface.CurrentOptions.CurrentXParser = (XParsers) comboBoxNewXParser.SelectedIndex;
-			Interface.CurrentOptions.CurrentObjParser = (ObjParsers) comboBoxNewObjParser.SelectedIndex;
+			XParsers xParser = (XParsers)comboBoxNewXParser.SelectedIndex;
+			ObjParsers objParser = (ObjParsers)comboBoxNewObjParser.SelectedIndex;
+
+			if (Interface.CurrentOptions.CurrentXParser != xParser || Interface.CurrentOptions.CurrentObjParser != objParser)
+			{
+				Interface.CurrentOptions.CurrentXParser = xParser;
+				Interface.CurrentOptions.CurrentObjParser = objParser;
+				Program.CurrentHost.StaticObjectCache.Clear(); // as a different parser may interpret differently
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Object != null)
+					{
+						Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+						Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+					}
+				}
+			}
 			Interface.CurrentOptions.ViewingDistance = (int)numericUpDownViewingDistance.Value;
 			Interface.CurrentOptions.QuadTreeLeafSize = Math.Max(50, (int)Math.Ceiling(Interface.CurrentOptions.ViewingDistance / 10.0d) * 10); // quad tree size set to 10% of viewing distance to the nearest 10
 			Options.SaveOptions();
