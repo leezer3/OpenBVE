@@ -61,7 +61,6 @@ namespace RouteViewer
 		private int revealTexture;
 		private Shader transparencyShader;
 		private Shader compositeShader;
-		private Shader screenShader;
 		uint quadVAO, quadVBO;
 
 		public override void Initialize()
@@ -97,7 +96,6 @@ namespace RouteViewer
 			init = true;
 			transparencyShader = new Shader(this, "transparency", "transparency", true);
 			compositeShader = new Shader(this, "composite", "composite", true);
-			screenShader = new Shader(this, "screen", "screen", true);
 			//https://learnopengl.com/Guest-Articles/2020/OIT/Weighted-Blended
 
 			// set up framebuffers and their texture attachments
@@ -309,7 +307,7 @@ namespace RouteViewer
 			lock (VisibleObjects.LockObject)
 			{
 				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
-				alphaFaces = VisibleObjects.GetSortedPolygons();
+				alphaFaces = VisibleObjects.AlphaFaces.ToList();
 			}
 
 			// configure render states
@@ -326,7 +324,28 @@ namespace RouteViewer
 			}
 
 			// alpha face
-			transparencyShader.Activate();
+			
+			if (AvailableNewRenderer)
+			{
+				//Setup the shader for rendering the scene
+				transparencyShader.Activate();
+				if (OptionLighting)
+				{
+					transparencyShader.SetIsLight(true);
+					transparencyShader.SetLightPosition(TransformedLightPosition);
+					transparencyShader.SetLightAmbient(Lighting.OptionAmbientColor);
+					transparencyShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+					transparencyShader.SetLightSpecular(Lighting.OptionSpecularColor);
+					transparencyShader.SetLightModel(Lighting.LightModel);
+				}
+				if (OptionFog)
+				{
+					transparencyShader.SetIsFog(true);
+					transparencyShader.SetFog(Fog);
+				}
+				transparencyShader.SetTexture(0);
+				transparencyShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
+			}
 			GL.DepthMask(false);
 			GL.Enable(EnableCap.Blend);
 			GL.BlendFunc(0, BlendingFactorSrc.One, BlendingFactorDest.One);
@@ -345,6 +364,7 @@ namespace RouteViewer
 				face.Draw();
 			}
 
+
 			// draw composite image (composite pass)
 			// -----
 
@@ -353,22 +373,19 @@ namespace RouteViewer
 			GL.DepthFunc(DepthFunction.Always);
 			GL.Enable(EnableCap.Blend);
 			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-			
+
 			// bind opaque framebuffer
 			GL.BindFramebuffer(FramebufferTarget.Framebuffer, opaqueFBO);
-			// use composite shader
-			compositeShader.Activate();
-
-			// draw screen quad
-			GL.ActiveTexture(TextureUnit.Texture0);
-			GL.BindTexture(TextureTarget.Texture2D, accumTexture);
-			GL.ActiveTexture(TextureUnit.Texture1);
-			GL.BindTexture(TextureTarget.Texture2D, revealTexture);
-			compositeShader.SetAccumTexture();
-			compositeShader.SetRevealTexture();
 			
-			GL.BindVertexArray(quadVAO);
-			GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
+			// draw screen quad
+			
+			PushMatrix(MatrixMode.Projection);
+			Matrix4D.CreateOrthographicOffCenter(0.0f, Screen.Width, Screen.Height, 0.0f, -1.0f, 1.0f, out CurrentProjectionMatrix);
+			PushMatrix(MatrixMode.Modelview);
+			CurrentViewMatrix = Matrix4D.Identity;
+			Rectangle.Draw(accumTexture, revealTexture, Vector2.Null, new Vector2(Screen.Width, Screen.Height));
+		
+
 
 			// draw to backbuffer (final pass)
 			// -----
@@ -380,20 +397,18 @@ namespace RouteViewer
 
 			// bind backbuffer
 			GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-			GL.ClearColor(0, 0, 0, 0);
+			GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
 			// use screen shader
-			screenShader.Activate();
-			screenShader.SetScreenTexture();
-			// draw final screen quad
-			GL.ActiveTexture(TextureUnit.Texture0);
-			GL.BindTexture(TextureTarget.Texture2D, opaqueTexture);
-			GL.BindVertexArray(quadVAO);
-			GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
+
+			Rectangle.Draw(opaqueTexture, Vector2.Null, new Vector2(Screen.Width, Screen.Height));
+
+			PopMatrix(MatrixMode.Modelview);
+			PopMatrix(MatrixMode.Projection);
+
 			ResetOpenGlState();
 
-			//return;
 			if (OptionPaths)
 			{
 				// TODO: Write a shader to draw point list....

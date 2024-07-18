@@ -1,4 +1,4 @@
-#version 150 core
+#version 420 core
 in vec4 oViewPos;
 in vec2 oUv;
 in vec4 oColor;
@@ -14,8 +14,8 @@ uniform float uFogEnd;
 uniform vec3  uFogColor;
 uniform float uFogDensity;
 uniform bool uFogIsLinear;
-//out vec4 fragColor;
-
+layout (location = 0) out vec4 accum;
+layout (location = 1) out float reveal;
 
 
 void main(void)
@@ -88,12 +88,11 @@ void main(void)
 
 	vec4 finalColor2 = vec4(mix(uFogColor, finalColor.rgb, fogFactor), finalColor.a);
 
-	float weight =  max(min(1.0, max(max(finalColor2.r, finalColor2.g), finalColor2.b) * finalColor2.a), finalColor2.a) *
-    clamp(0.03 / (1e-5 + pow(gl_FragCoord.z / 200, 4.0)), 1e-2, 3e3);
+	float weight = clamp(pow(min(1.0, finalColor2.a * 10.0) + 0.01, 3.0) * 1e8 * pow(1.0 - gl_FragCoord.z * 0.9, 3.0), 1e-2, 3e3);
 
 	// Blend Func: GL_ONE, GL_ONE
 	// Switch to premultiplied alpha and weight
-	gl_FragData[0] = vec4(finalColor2.rgb * finalColor2.a, finalColor2.a) * weight;
-	gl_FragData[1].a = finalColor2.a;
+	accum = vec4(finalColor2.rgb * finalColor2.a, finalColor2.a) * weight;
+	reveal = finalColor2.a;
 
 }

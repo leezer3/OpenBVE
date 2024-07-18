@@ -37,12 +37,15 @@ namespace LibRender2.Primitives
 		/// <summary>If using GL3, the shader to draw the rectangle with</summary>
 		private readonly Shader Shader;
 
+		private readonly Shader CompositeShader;
+
 		internal Rectangle(BaseRenderer renderer)
 		{
 			this.renderer = renderer;
 			try
 			{
 				Shader = new Shader(renderer, "rectangle", "rectangle", true);
+				CompositeShader = new Shader(renderer, "composite", "composite", true);
 			}
 			catch
 			{
@@ -229,6 +232,58 @@ namespace LibRender2.Primitives
 
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PopMatrix();
+		}
+		
+		public void Draw(int texture, Vector2 point, Vector2 size)
+		{
+			Shader.Activate();
+			GL.ActiveTexture(TextureUnit.Texture0);
+			
+			GL.BindTexture(TextureTarget.Texture2D, texture);
+			renderer.LastBoundTexture = null;
+			Shader.SetColor(Color128.White);
+			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
+			Shader.SetCurrentModelViewMatrix(renderer.CurrentViewMatrix);
+			Shader.SetPoint(point);
+			Shader.SetSize(size);
+			Shader.SetCoordinates(new Vector2(1, -1));
+			/*
+			 * In order to call GL.DrawArrays with procedural data within the shader,
+			 * we first need to bind a dummy VAO
+			 * If this is not done, it will generate an InvalidOperation error code
+			 */
+			renderer.dummyVao.Bind();
+			GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 6);
+		}
+
+		public void Draw(int accumTexture, int revealTexture, Vector2 point, Vector2 size)
+		{
+			CompositeShader.Activate();
+			GL.DepthFunc(DepthFunction.Always);
+			GL.ActiveTexture(TextureUnit.Texture0);
+			GL.BindTexture(TextureTarget.Texture2D, accumTexture);
+			GL.ActiveTexture(TextureUnit.Texture1);
+			GL.BindTexture(TextureTarget.Texture2D, revealTexture);
+			CompositeShader.SetAccumTexture();
+			CompositeShader.SetRevealTexture();
+			GL.Enable(EnableCap.Blend);
+			GL.BlendFunc(0, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+			GL.BlendFunc(1, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+			
+			renderer.LastBoundTexture = null;
+			CompositeShader.SetColor(Color128.White);
+			CompositeShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
+			CompositeShader.SetCurrentModelViewMatrix(renderer.CurrentViewMatrix);
+			CompositeShader.SetPoint(point);
+			CompositeShader.SetSize(size);
+			CompositeShader.SetCoordinates(new Vector2(1, -1));
+			/*
+			 * In order to call GL.DrawArrays with procedural data within the shader,
+			 * we first need to bind a dummy VAO
+			 * If this is not done, it will generate an InvalidOperation error code
+			 */
+			renderer.dummyVao.Bind();
+			GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 6);
 		}
 
 		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 coordinates, OpenGlTextureWrapMode? wrapMode = null)
