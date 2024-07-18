@@ -37,6 +37,8 @@ namespace OpenBveApi.Hosts {
 
 				if (Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT)
 				{
+#if !DEBUG
+// Assume that if we're running under a debugger it's *not* WINE to avoid an exception every time we launch
 					try
 					{
 						// ReSharper disable once UnusedVariable
@@ -48,7 +50,7 @@ namespace OpenBveApi.Hosts {
 					{
 						//ignored
 					}
-
+#endif
 					cachedPlatform = HostPlatform.MicrosoftWindows;
 					return cachedPlatform;
 				}
