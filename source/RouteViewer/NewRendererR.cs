@@ -604,7 +604,7 @@ namespace RouteViewer
 					Keys.Render(4, Screen.Height - 40, 16, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { null, "↑", null }, new[] { "←", "↓", "→" } };
-					Keys.Render(0 * Screen.Width - 48, Screen.Height - 40, 16, Fonts.SmallFont, keys);
+					Keys.Render((int)(0.5 * Screen.Width - 48), Screen.Height - 40, 16, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { "P↑" }, new[] { "P↓" } };
 					Keys.Render((int)(0.5 * Screen.Width + 32), Screen.Height - 40, 24, Fonts.SmallFont, keys);
