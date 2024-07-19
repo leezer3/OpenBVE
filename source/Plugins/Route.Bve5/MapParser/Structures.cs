@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System.Collections.Generic;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -66,41 +67,20 @@ namespace Route.Bve5
 			internal double InterferenceInDoor;
 		}
 
-		private class FreeObj
+		private class FreeObj : AbstractStructure
 		{
-			/// <summary>The track position of the object</summary>
-			internal readonly double TrackPosition;
-			/// <summary>The routefile key of the object</summary>
-			internal readonly string Key;
-			/// <summary>The X position of the object (m)</summary>
-			internal readonly double X;
-			/// <summary>The Y position of the object (m)</summary>
-			internal readonly double Y;
-			/// <summary>The Z position of the object (m)</summary>
-			internal readonly double Z;
 			/// <summary>The yaw of the object (radians)</summary>
 			internal readonly double Yaw;
 			/// <summary>The pitch of the object (radians)</summary>
 			internal readonly double Pitch;
 			/// <summary>The roll of the object (radians)</summary>
 			internal readonly double Roll;
-
-			internal readonly ObjectTransformType Type;
-
-			internal readonly double Span;
-
-			internal FreeObj(double trackPosition, string key, double x, double y, double z, double yaw, double pitch, double roll, ObjectTransformType type, double span)
+			
+			internal FreeObj(double trackPosition, string key, Vector3 position, double yaw, double pitch, double roll, ObjectTransformType type, double span) : base(trackPosition, key, type, span, position)
 			{
-				TrackPosition = trackPosition;
-				Key = key;
-				X = x; 
-				Y = y;
-				Z = z;
 				Yaw= yaw;
 				Pitch = pitch;
 				Roll = roll;
-				Type = type;
-				Span = span;
 			}
 		}
 
@@ -113,12 +93,7 @@ namespace Route.Bve5
 			internal double EndingDistance;
 			internal double Interval;
 			internal string[] ObjectKeys;
-			/// <summary>The X position of the object (m)</summary>
-			internal double X;
-			/// <summary>The Y position of the object (m)</summary>
-			internal double Y;
-			/// <summary>The Z position of the object (m)</summary>
-			internal double Z;
+			internal Vector3 Position;
 			/// <summary>The yaw of the object (radians)</summary>
 			internal double Yaw;
 			/// <summary>The pitch of the object (radians)</summary>
@@ -136,20 +111,13 @@ namespace Route.Bve5
 			}
 		}
 
-		private class Crack
+		private class Crack : AbstractStructure
 		{
-			/// <summary>The track position of the object</summary>
-			internal readonly double TrackPosition;
-			/// <summary>The routefile key of the object</summary>
-			internal readonly string Key;
-
 			internal readonly string PrimaryRail;
 			internal readonly string SecondaryRail;
 
-			internal Crack(string key, double trackPosition, string primaryRail, string secondaryRail)
+			internal Crack(string key, double trackPosition, string primaryRail, string secondaryRail) : base(trackPosition, key, ObjectTransformType.FollowsGradient, 0, Vector3.Zero)
 			{
-				Key = key;
-				TrackPosition = trackPosition;
 				PrimaryRail = primaryRail;
 				SecondaryRail = secondaryRail;
 			}
@@ -162,19 +130,17 @@ namespace Route.Bve5
 			internal int DepartureStationIndex = -1;
 		}
 
-		private class Signal
+		private class Signal : AbstractStructure
 		{
-			internal double TrackPosition;
-			internal string SignalObjectKey;
-			internal double X;
-			internal double Y;
-			internal double Z;
 			internal double Yaw;
 			internal double Pitch;
 			internal double Roll;
-			internal ObjectTransformType Type;
-			internal double Span;
 			internal int SectionIndex;
+
+			internal Signal(string key, double trackPosition, ObjectTransformType type, double span, Vector3 position) : base(trackPosition, key, type, span, position)
+			{
+
+			}
 		}
 
 		private class Transponder

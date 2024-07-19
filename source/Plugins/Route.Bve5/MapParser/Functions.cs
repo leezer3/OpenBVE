@@ -245,7 +245,7 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void GetTransformation(Vector3 StartingPosition, List<Block> Blocks, int StartingBlock, double TrackDistance, ObjectTransformType Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
+		private static void GetTransformation(Vector3 StartingPosition, List<Block> Blocks, int StartingBlock, AbstractStructure Structure, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
 			if (Blocks[StartingBlock].Turn != 0.0)
 			{
@@ -260,7 +260,7 @@ namespace Route.Bve5
 			double radius = 0;
 			double pitch = 0;
 			double cant = 0;
-			if (Span == 0)
+			if (Structure.Span == 0)
 			{
 				radius = Blocks[StartingBlock].CurrentTrackState.CurveRadius;
 				pitch = Blocks[StartingBlock].Pitch;
@@ -270,7 +270,8 @@ namespace Route.Bve5
 			{
 				
 				int currentBlock = StartingBlock + 1;
-				double remainingDistance = Span;
+				double remainingDistance = Structure.Span;
+				bool averages = false;
 				while (currentBlock < Blocks.Count - 1)
 				{
 					double blockLength = currentBlock != 0 ? Blocks[currentBlock].StartingDistance - Blocks[currentBlock - 1].StartingDistance : 0;
@@ -284,16 +285,29 @@ namespace Route.Bve5
 						break;
 					}
 
+					if (Blocks[currentBlock].CurrentTrackState.CurveRadius != Blocks[StartingBlock].CurrentTrackState.CurveRadius || Blocks[currentBlock].CurrentTrackState.CurveCant != Blocks[StartingBlock].CurrentTrackState.CurveCant || Blocks[currentBlock].Pitch != Blocks[StartingBlock].Pitch)
+					{
+						averages = true;
+					}
 					currentBlock++;
 				}
 
-				radius /= Span;
-				pitch /= Span;
-				cant /= Span;
+				if (averages)
+				{
+					radius /= Structure.Span;
+					pitch /= Structure.Span;
+					cant /= Structure.Span;
+				}
+				else
+				{
+					radius = Blocks[StartingBlock].CurrentTrackState.CurveRadius;
+					pitch = Blocks[StartingBlock].Pitch;
+					cant = Blocks[StartingBlock].CurrentTrackState.CurveCant;
+				}
+				
 			}
 			
-
-			CalcTransformation(radius, pitch, TrackDistance - Blocks[StartingBlock].StartingDistance, ref Direction, out double a, out double c, out double h);
+			CalcTransformation(radius, pitch, Structure.TrackPosition - Blocks[StartingBlock].StartingDistance, ref Direction, out double a, out double c, out double h);
 			ObjectPosition.X += Direction.X * c;
 			ObjectPosition.Y += h;
 			ObjectPosition.Z += Direction.Y * c;
@@ -302,13 +316,13 @@ namespace Route.Bve5
 				Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 			}
 
-			CalcTransformation(radius, pitch, Span, ref Direction, out _, out _, out _);
+			CalcTransformation(radius, pitch, Structure.Span, ref Direction, out _, out _, out _);
 
 			double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
 			double TrackPitch = Math.Atan(pitch);
 			double TrackRoll = Math.Atan(cant);
 
-			switch (Type)
+			switch (Structure.Type)
 			{
 				case ObjectTransformType.FollowsGradient:
 					Transformation = new Transformation(TrackYaw, TrackPitch, 0.0);

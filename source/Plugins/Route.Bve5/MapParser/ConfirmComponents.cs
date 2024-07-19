@@ -468,7 +468,8 @@ namespace Route.Bve5
 								Blocks[BlockIndex].FreeObj.Add(TrackKey, new List<FreeObj>());
 							}
 
-							Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z), RY * 0.0174532925199433, -RX * 0.0174532925199433, RZtoRoll(RY, RZ) * 0.0174532925199433, (ObjectTransformType)Tilt, Span));
+							Vector3 position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
+							Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, position, RY * 0.0174532925199433, -RX * 0.0174532925199433, RZtoRoll(RY, RZ) * 0.0174532925199433, (ObjectTransformType)Tilt, Span));
 						}
 					}
 						break;
@@ -557,9 +558,7 @@ namespace Route.Bve5
 
 								Repeater.StartingDistance = Statement.Distance;
 								Repeater.TrackKey = Convert.ToString(TrackKey);
-								Repeater.X = Statement.GetArgumentValueAsDouble(ArgumentName.X);
-								Repeater.Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
-								Repeater.Z = Statement.GetArgumentValueAsDouble(ArgumentName.Z);
+								Repeater.Position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
 								Repeater.Yaw = RY * 0.0174532925199433;
 								Repeater.Pitch = -RX * 0.0174532925199433;
 								Repeater.Roll = RZtoRoll(RY, RZ) * 0.0174532925199433;
@@ -634,7 +633,7 @@ namespace Route.Bve5
 					Blocks[BlockIndex].FreeObj.Add(TrackKey, new List<FreeObj>());
 				}
 
-				Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(i, Repeater.ObjectKeys[LoopCount], Repeater.X, Repeater.Y, Repeater.Z, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, Repeater.Type, Repeater.Span));
+				Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(i, Repeater.ObjectKeys[LoopCount], Repeater.Position, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, Repeater.Type, Repeater.Span));
 
 				if (LoopCount >= Repeater.ObjectKeys.Length - 1)
 				{
@@ -734,14 +733,11 @@ namespace Route.Bve5
 					TrackKey = "0";
 				}
 
-				object X = d.X;
-				object Y = d.Y;
-				object Z = d.Z;
 				object RX = d.RX;
 				object RY = d.RY;
 				object RZ = d.RZ;
-				object Tilt = d.Tilt;
-				object Span = d.Span;
+				ObjectTransformType Tilt = (ObjectTransformType)d.Tilt;
+				double Span = (double)d.Span;
 
 				int RailIndex = RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKey));
 
@@ -760,19 +756,13 @@ namespace Route.Bve5
 						CurrentSection += Blocks[i].Sections.Count(s => s.TrackPosition <= Statement.Distance);
 					}
 
-					Blocks[BlockIndex].Signals[RailIndex].Add(new Signal
+					Vector3 Position = new Vector3((double)d.X, (double)d.Y, (double)d.Z);
+					Blocks[BlockIndex].Signals[RailIndex].Add(new Signal(Statement.Key, Statement.Distance, Tilt, Span, Position)
 					{
-						TrackPosition = Statement.Distance,
-						SignalObjectKey = Statement.Key,
 						SectionIndex = CurrentSection + Convert.ToInt32(Section),
-						X = Convert.ToDouble(X),
-						Y = Convert.ToDouble(Y),
-						Z = Convert.ToDouble(Z),
 						Yaw = Convert.ToDouble(RY) * 0.0174532925199433,
 						Pitch = -Convert.ToDouble(RX) * 0.0174532925199433,
 						Roll = RZtoRoll(Convert.ToDouble(RY), Convert.ToDouble(RZ)) * 0.0174532925199433,
-						Type = (ObjectTransformType)Convert.ToInt32(Tilt),
-						Span = Convert.ToDouble(Span)
 					});
 				}
 			}

@@ -68,6 +68,7 @@
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScenarioParser.cs" />
+    <Compile Include="Structures\AbstractStructure.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\LibRender2\LibRender2.csproj">

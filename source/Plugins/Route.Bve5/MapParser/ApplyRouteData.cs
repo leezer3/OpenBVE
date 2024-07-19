@@ -406,9 +406,9 @@ namespace Route.Bve5
 								string key = Data.Blocks[i].FreeObj[railKey][k].Key;
 								double span = Data.Blocks[i].FreeObj[railKey][k].Span;
 								ObjectTransformType type = Data.Blocks[i].FreeObj[railKey][k].Type;
-								double dx = Data.Blocks[i].FreeObj[railKey][k].X;
-								double dy = Data.Blocks[i].FreeObj[railKey][k].Y;
-								double dz = Data.Blocks[i].FreeObj[railKey][k].Z;
+								double dx = Data.Blocks[i].FreeObj[railKey][k].Position.X;
+								double dy = Data.Blocks[i].FreeObj[railKey][k].Position.Y;
+								double dz = Data.Blocks[i].FreeObj[railKey][k].Position.Z;
 								double tpos = Data.Blocks[i].FreeObj[railKey][k].TrackPosition;
 								int nextBlock = i + 1;
 								bool useAverages = false;
@@ -427,6 +427,9 @@ namespace Route.Bve5
 									 * Convert these to a transformation
 									 *
 									 * This gets the best results currently, but it's odd as pitch really ought to be averaged too :/
+									 *
+									 * NOTES:
+									 * The averages calculation still isn't right on s
 									 */
 									while (nextBlock < Data.Blocks.Count)
 									{
@@ -447,7 +450,7 @@ namespace Route.Bve5
 								Transformation Transformation;
 								if (j == 0)
 								{
-									GetTransformation(Position, Data.Blocks, i, tpos, type, span, Direction, out wpos, out Transformation);
+									GetTransformation(Position, Data.Blocks, i, Data.Blocks[i].FreeObj[railKey][k], Direction, out wpos, out Transformation);
 								}
 								else
 								{
@@ -498,7 +501,7 @@ namespace Route.Bve5
 								Transformation Transformation;
 								if (j == 0)
 								{
-									GetTransformation(Position, Data.Blocks, i, tpos, ObjectTransformType.FollowsGradient, InterpolateInterval, Direction, out wpos, out Transformation);
+									GetTransformation(Position, Data.Blocks, i, Data.Blocks[i].Cracks[k], Direction, out wpos, out Transformation);
 								}
 								else
 								{
@@ -548,18 +551,18 @@ namespace Route.Bve5
 
 							for (int k = 0; k < Data.Blocks[i].Signals[j].Count; k++)
 							{
-								string key = Data.Blocks[i].Signals[j][k].SignalObjectKey;
+								string key = Data.Blocks[i].Signals[j][k].Key;
 								double span = Data.Blocks[i].Signals[j][k].Span;
 								ObjectTransformType type = Data.Blocks[i].Signals[j][k].Type;
-								double dx = Data.Blocks[i].Signals[j][k].X;
-								double dy = Data.Blocks[i].Signals[j][k].Y;
-								double dz = Data.Blocks[i].Signals[j][k].Z;
+								double dx = Data.Blocks[i].Signals[j][k].Position.X;
+								double dy = Data.Blocks[i].Signals[j][k].Position.Y;
+								double dz = Data.Blocks[i].Signals[j][k].Position.Z;
 								double tpos = Data.Blocks[i].Signals[j][k].TrackPosition;
 								Vector3 wpos;
 								Transformation Transformation;
 								if (j == 0)
 								{
-									GetTransformation(Position, Data.Blocks, i, tpos, type, span, Direction, out wpos, out Transformation);
+									GetTransformation(Position, Data.Blocks, i, Data.Blocks[i].Signals[j][k], Direction, out wpos, out Transformation);
 								}
 								else
 								{
