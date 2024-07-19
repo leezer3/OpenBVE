@@ -111,7 +111,7 @@ namespace OpenBveApi.FileSystem {
 				try
 				{
 					RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Loksim-Group\\Install");
-					LoksimDataDirectory = key.GetValue("InstallDataDirPath").ToString();
+					LoksimDataDirectory = key != null ? key.GetValue("InstallDataDirPath").ToString() : LoksimPackageInstallationDirectory;
 				}
 				catch
 				{
