@@ -13,6 +13,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using SharpCompress.Common;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBveApi.Hosts {
@@ -127,6 +128,17 @@ namespace OpenBveApi.Hosts {
 			MissingFiles = new List<string>();
 			FailedObjects = new List<string>();
 			FailedTextures = new List<string>();
+
+			if (Platform == HostPlatform.GNULinux)
+            {
+				/*
+                 * MESA multithreading on Linux appears to be broken.
+                 *
+                 * This is probably a driver issue
+                 *https://github.com/leezer3/OpenBVE/issues/1050
+                 */
+				Environment.SetEnvironmentVariable(@"mesa_glthread", "false");
+			}
 		}
 
 		/// <summary></summary>
