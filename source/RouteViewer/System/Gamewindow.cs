@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
@@ -152,15 +153,11 @@ namespace RouteViewer
 				{
 					while (jobs.Count > 0)
 					{
-						lock (jobLock)
+						jobs.TryDequeue(out ThreadStart currentJob);
+						currentJob();
+						lock (currentJob)
 						{
-							var currentJob = jobs.Dequeue();
-							var locker = locks.Dequeue();
-							currentJob();
-							lock (locker)
-							{
-								Monitor.Pulse(locker);
-							}
+							Monitor.Pulse(currentJob);
 						}
 					}
 					Loading.JobAvailable = false;
@@ -184,29 +181,25 @@ namespace RouteViewer
 			}
 		}
 
-		internal static readonly object LoadingLock = new object();
-
-		private static readonly object jobLock = new object();
 #pragma warning disable 0649
-		private static Queue<ThreadStart> jobs;
-		private static Queue<object> locks;
-#pragma warning restore 0649
+		private static ConcurrentQueue<ThreadStart> jobs;
+#pragma warning enable 0649
 
 		/// <summary>This method is used during loading to run commands requiring an OpenGL context in the main render loop</summary>
 		/// <param name="job">The OpenGL command</param>
-		internal static void RunInRenderThread(ThreadStart job)
+		/// <param name="timeout">The timeout</param>
+		internal static void RunInRenderThread(ThreadStart job, int timeout)
 		{
 			object locker = new object();
-			lock (jobLock)
+			jobs.Enqueue(job);
+			//Don't set the job to available until after it's been loaded into the queue
+			Loading.JobAvailable = true;
+			//Failsafe: If our job has taken more than the timeout, stop waiting for it
+			//A missing texture is probably better than an infinite loadscreen
+			lock (job)
 			{
-				Loading.JobAvailable = true;
-				jobs.Enqueue(job);
-				locks.Enqueue(locker);
-			}
-			lock (locker)
-			{
-				Monitor.Wait(locker);
+				Monitor.Wait(job, timeout);
 			}
 		}
-    }
+	}
 }
