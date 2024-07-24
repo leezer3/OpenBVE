@@ -415,7 +415,7 @@ namespace OpenBve
 				Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
 				LoadingScreenLoop();
 			}
-
+			TrainManager.PlayerTrain.PreloadTextures();
 			//Add event handler hooks for keyboard and mouse buttons
 			//Do this after the renderer has init and the loop has started to prevent timing issues
 			KeyDown	+= MainLoop.keyDownEvent;
@@ -1063,7 +1063,7 @@ namespace OpenBve
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 			}
-
+			
 			if (IntPtr.Size == 4)
 			{
 				using (Process proc = Process.GetCurrentProcess())

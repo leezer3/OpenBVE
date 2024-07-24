@@ -160,6 +160,21 @@ namespace TrainManager.Trains
 			Cars[this.DriverCar].UpdateObjects(0.0, true, false);
 		}
 
+		public void PreloadTextures()
+		{
+			for (int i = 0; i < Cars.Length; i++)
+			{
+				for (int j = 0; j < Cars[i].CarSections.Length; j++)
+				{
+					for (int k = 0; k < Cars[i].CarSections[j].Groups.Length; k++)
+					{
+						Cars[i].CarSections[j].Groups[k].PreloadTextures();
+					}
+					
+				}
+			}
+		}
+
 		/// <summary>Places the cars</summary>
 		/// <param name="TrackPosition">The track position of the front car</param>
 		public void PlaceCars(double TrackPosition)

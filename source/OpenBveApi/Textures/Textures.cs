@@ -24,6 +24,8 @@ namespace OpenBveApi.Textures {
 		/// <summary>The last access of this texture in clockticks</summary>
 		/// <remarks>Used by the engine when deciding to unload unused textures</remarks>
 		public int LastAccess;
+		/// <summary>Whether the texture is available to unload</summary>
+		public bool AvailableToUnload;
 		/// <summary>Holds the OpenGL textures</summary>
 		/// <remarks>An 3D array containing the OpenGL texture array for each frame</remarks>
 		private readonly OpenGlTexture[][] MyOpenGlTextures;

@@ -82,5 +82,6 @@ namespace OpenBveApi.Objects
 		/// <param name="FarDistance">The object's width at the end of the block</param>
 		/// <returns>The transformed clone</returns>
 		public abstract UnifiedObject TransformRight(double NearDistance, double FarDistance);
+
 	}
 }
