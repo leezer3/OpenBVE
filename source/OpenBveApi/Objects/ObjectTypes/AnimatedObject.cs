@@ -4,8 +4,10 @@ using OpenBveApi.FunctionScripting;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
+using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using static System.Windows.Forms.AxHost;
 
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 namespace OpenBveApi.Objects
@@ -873,6 +875,63 @@ namespace OpenBveApi.Objects
 				RotateZDirection.X *= -1.0;
 				RotateZDirection.Z *= -1.0;
 			}
+		}
+
+		/// <summary>Loads all textures associated with this object</summary>
+		public void LoadTextures()
+		{
+			for (int i = 0; i < States.Length; i++)
+			{
+				foreach (MeshFace face in States[i].Prototype.Mesh.Faces)
+				{
+					OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
+					if (States[i].Prototype.Mesh.Materials[face.Material].DaytimeTexture != null || States[i].Prototype.Mesh.Materials[face.Material].NighttimeTexture != null)
+					{
+						if (States[i].Prototype.Mesh.Materials[face.Material].WrapMode == null)
+						{
+							/*
+							 * If the object does not have a stored wrapping mode determine it now. However:
+							 * https://github.com/leezer3/OpenBVE/issues/971
+							 *
+							 * Unfortunately, there appear to be X objects in the wild which expect a non-default wrapping mode
+							 * which means the best fast exit we can do is to check for RepeatRepeat....
+							 *
+							 */
+							foreach (VertexTemplate vertex in States[i].Prototype.Mesh.Vertices)
+							{
+								if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
+								{
+									wrap |= OpenGlTextureWrapMode.RepeatClamp;
+								}
+
+								if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
+								{
+									wrap |= OpenGlTextureWrapMode.ClampRepeat;
+								}
+
+								if (wrap == OpenGlTextureWrapMode.RepeatRepeat)
+								{
+									break;
+								}
+							}
+						}
+
+						States[i].Prototype.Mesh.Materials[face.Material].WrapMode = wrap;
+						if (States[i].Prototype.Mesh.Materials[face.Material].DaytimeTexture != null)
+						{
+							currentHost.LoadTexture(ref States[i].Prototype.Mesh.Materials[face.Material].DaytimeTexture, wrap);
+							States[i].Prototype.Mesh.Materials[face.Material].DaytimeTexture.AvailableToUnload = false;
+						}
+						if (States[i].Prototype.Mesh.Materials[face.Material].NighttimeTexture != null)
+						{
+							currentHost.LoadTexture(ref States[i].Prototype.Mesh.Materials[face.Material].NighttimeTexture, wrap);
+							States[i].Prototype.Mesh.Materials[face.Material].NighttimeTexture.AvailableToUnload = false;
+						}
+					}
+				}
+			}
+
+
 		}
 
 		/// <summary>Checks whether the two specified animated objects are equal</summary>

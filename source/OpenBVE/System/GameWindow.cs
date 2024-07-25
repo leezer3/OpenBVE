@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -394,8 +395,7 @@ namespace OpenBve
 			}
 			Program.FileSystem.AppendToLogFile("Game window initialised successfully.");
 			//Initialise the loader thread queues
-			jobs = new Queue<ThreadStart>(10);
-			locks = new Queue<object>(10);
+			jobs = new ConcurrentQueue<ThreadStart>();
 			Program.Renderer.Initialize();
 			Program.Renderer.DetermineMaxAFLevel();
 			Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
@@ -415,7 +415,7 @@ namespace OpenBve
 				Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
 				LoadingScreenLoop();
 			}
-
+			TrainManager.PlayerTrain.PreloadTextures();
 			//Add event handler hooks for keyboard and mouse buttons
 			//Do this after the renderer has init and the loop has started to prevent timing issues
 			KeyDown	+= MainLoop.keyDownEvent;
@@ -485,7 +485,7 @@ namespace OpenBve
 					Program.TrainManager.Trains[i].UnloadPlugin();
 				}
 			}
-			Program.Renderer.TextureManager.UnloadAllTextures();
+			Program.Renderer.TextureManager.UnloadAllTextures(false);
 			Program.Renderer.visibilityThread = false;
 			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 			{
@@ -586,7 +586,7 @@ namespace OpenBve
 			}
 			else
 			{
-				Program.Renderer.TextureManager.UnloadAllTextures();
+				Program.Renderer.TextureManager.UnloadAllTextures(false);
 			}
 			// camera
 			Program.Renderer.InitializeVisibility();
@@ -1063,7 +1063,7 @@ namespace OpenBve
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 			}
-
+			
 			if (IntPtr.Size == 4)
 			{
 				using (Process proc = Process.GetCurrentProcess())
@@ -1126,18 +1126,15 @@ namespace OpenBve
 				
 				if (Loading.JobAvailable)
 				{
-					while (jobs.Count > 0)
+					while (!jobs.IsEmpty)
 					{
-						lock (jobLock)
+						jobs.TryDequeue(out ThreadStart currentJob);
+						currentJob();
+						lock (currentJob)
 						{
-							var currentJob = jobs.Dequeue();
-							var locker = locks.Dequeue();
-							currentJob();
-							lock (locker)
-							{
-								Monitor.Pulse(locker);
-							}
+							Monitor.Pulse(currentJob);
 						}
+						
 					}
 					Loading.JobAvailable = false;
 				}
@@ -1156,9 +1153,7 @@ namespace OpenBve
 			}
 		}
 
-		private static readonly object jobLock = new object();
-		private static Queue<ThreadStart> jobs;
-		private static Queue<object> locks;
+		private static ConcurrentQueue<ThreadStart> jobs;
 		
 		/// <summary>This method is used during loading to run commands requiring an OpenGL context in the main render loop</summary>
 		/// <param name="job">The OpenGL command</param>
@@ -1166,18 +1161,14 @@ namespace OpenBve
 		internal static void RunInRenderThread(ThreadStart job, int timeout)
 		{
 			object locker = new object();
-			lock (jobLock)
+			jobs.Enqueue(job);
+			//Don't set the job to available until after it's been loaded into the queue
+			Loading.JobAvailable = true;
+			//Failsafe: If our job has taken more than the timeout, stop waiting for it
+			//A missing texture is probably better than an infinite loadscreen
+			lock (job)
 			{
-				jobs.Enqueue(job);
-				locks.Enqueue(locker);
-				//Don't set the job to available until after it's been loaded into the queue
-				Loading.JobAvailable = true;
-			}
-			lock (locker)
-			{
-				//Failsafe: If our job has taken more than the timeout, stop waiting for it
-				//A missing texture is probably better than an infinite loadscreen
-				Monitor.Wait(locker, timeout);
+				Monitor.Wait(job, timeout);
 			}
 		}
 	}

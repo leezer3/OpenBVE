@@ -153,6 +153,7 @@ namespace TrainManager.Car
 			Suspension = new Suspension(this);
 			Flange = new Flange(this);
 			Run = new RunSounds(this);
+			Sounds = new CarSounds();
 		}
 
 		/// <summary>Moves the car</summary>

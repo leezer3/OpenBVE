@@ -106,5 +106,7 @@ namespace OpenBveApi
 		/// <summary>Whether delayed animated updates based upon track position are used</summary>
 		/// <remarks>Not saved</remarks>
 		public bool DelayedAnimatedUpdates;
+		/// <summary>Enables scripted trains on BVE5 routes</summary>
+		public bool EnableBve5ScriptedTrain;
 	}
 }

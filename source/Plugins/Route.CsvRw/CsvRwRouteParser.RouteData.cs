@@ -50,10 +50,8 @@ namespace CsvRwRouteParser
 				Structure = new StructureData();
 				ScriptedTrainFiles = new List<string>();
 				Blocks.Add(new Block(previewOnly));
-				Blocks[0].Rails.Add(0, new Rail { RailStarted = true });
+				Blocks[0].Rails.Add(0, new Rail(2.0, 1.0) { RailStarted = true });
 				Blocks[0].RailType = new[] { 0 };
-				Blocks[0].Accuracy = 2.0;
-				Blocks[0].AdhesionMultiplier = 1.0;
 				Blocks[0].CurrentTrackState = new TrackElement(0.0);
 				Blocks[0].RailCycles = new RailCycle[1];
 				Blocks[0].RailCycles[0].RailCycleIndex = -1;
@@ -119,7 +117,7 @@ namespace CsvRwRouteParser
 						for (int j = 0; j < Blocks[i - 1].Rails.Count; j++)
 						{
 							int key = Blocks[i - 1].Rails.ElementAt(j).Key;
-							Rail rail = new Rail
+							Rail rail = new Rail(Blocks[i - 1].Rails[key].Accuracy,Blocks[i - 1].Rails[key].AdhesionMultiplier)
 							{
 								RailStarted = Blocks[i -1].Rails[key].RailStarted,
 								RailStart = new Vector2(Blocks[i -1].Rails[key].RailStart),
@@ -171,8 +169,6 @@ namespace CsvRwRouteParser
 						Blocks[i].Pitch = Blocks[i - 1].Pitch;
 						Blocks[i].CurrentTrackState = Blocks[i - 1].CurrentTrackState;
 						Blocks[i].Turn = 0.0;
-						Blocks[i].Accuracy = Blocks[i - 1].Accuracy;
-						Blocks[i].AdhesionMultiplier = Blocks[i - 1].AdhesionMultiplier;
 					}
 				}
 			}

@@ -233,7 +233,7 @@ namespace CsvRwRouteParser
 				CurrentRoute.Tracks[0].Elements[n].WorldSide = new Vector3(Direction.Y, 0.0, -Direction.X);
 				CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(CurrentRoute.Tracks[0].Elements[n].WorldDirection, CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition = StartingDistance;
-				CurrentRoute.Tracks[0].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
+				CurrentRoute.Tracks[0].Elements[n].AdhesionMultiplier = Data.Blocks[i].Rails[0].AdhesionMultiplier;
 				CurrentRoute.Tracks[0].Elements[n].RainIntensity = Data.Blocks[i].RainIntensity;
 				CurrentRoute.Tracks[0].Elements[n].SnowIntensity = Data.Blocks[i].SnowIntensity;
 				CurrentRoute.Tracks[0].Elements[n].IsDriveable = true; // Current CSV / RW route limitation: Rail 0 is always the player path
@@ -242,7 +242,7 @@ namespace CsvRwRouteParser
 					//Insert compatability beacon for OS_ATS et. al
 					CurrentRoute.Tracks[0].Elements[n].Events.Add(new TransponderEvent(Plugin.CurrentRoute, 0.0, 21, Data.Blocks[i].RainIntensity, -1, false));
 				}
-				CurrentRoute.Tracks[0].Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Accuracy;
+				CurrentRoute.Tracks[0].Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Rails[0].Accuracy;
 				for (int j = 0; j < CurrentRoute.Tracks.Count; j++)
 				{
 					if (PreviewOnly && j != 0)
@@ -759,7 +759,7 @@ namespace CsvRwRouteParser
 							CurrentRoute.Tracks[railKey].Elements[n].WorldSide = RailTransformation.X;
 							CurrentRoute.Tracks[railKey].Elements[n].WorldUp = RailTransformation.Y;
 							CurrentRoute.Tracks[railKey].Elements[n].CurveCant = Data.Blocks[i].Rails[railKey].CurveCant;
-							CurrentRoute.Tracks[railKey].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
+							CurrentRoute.Tracks[railKey].Elements[n].AdhesionMultiplier = Data.Blocks[i].Rails[railKey].AdhesionMultiplier;
 							CurrentRoute.Tracks[railKey].Elements[n].IsDriveable = Data.Blocks[i].Rails[railKey].IsDriveable;
 						}
 

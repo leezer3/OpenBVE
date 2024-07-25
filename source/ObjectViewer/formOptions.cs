@@ -95,16 +95,24 @@ namespace ObjectViewer
 				Program.Renderer.UpdateViewport();
 			}
 
-			Interface.CurrentOptions.CurrentXParser = (XParsers) comboBoxNewXParser.SelectedIndex;
-			Interface.CurrentOptions.CurrentObjParser = (ObjParsers) comboBoxNewObjParser.SelectedIndex;
-			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+			XParsers xParser = (XParsers)comboBoxNewXParser.SelectedIndex;
+			ObjParsers objParser = (ObjParsers)comboBoxNewObjParser.SelectedIndex;
+
+			if (Interface.CurrentOptions.CurrentXParser != xParser || Interface.CurrentOptions.CurrentObjParser != objParser)
 			{
-				if (Program.CurrentHost.Plugins[i].Object != null)
+				Interface.CurrentOptions.CurrentXParser = xParser;
+				Interface.CurrentOptions.CurrentObjParser = objParser;
+				Program.CurrentHost.StaticObjectCache.Clear(); // as a different parser may interpret differently
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
-					Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
-					Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+					if (Program.CurrentHost.Plugins[i].Object != null)
+					{
+						Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+						Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+					}
 				}
 			}
+			
 
 			Interface.CurrentOptions.ObjectOptimizationMode = (ObjectOptimizationMode)comboBoxOptimizeObjects.SelectedIndex;
 

@@ -1,4 +1,6 @@
-﻿#pragma warning disable 0659, 0661
+﻿using System;
+
+#pragma warning disable 0659, 0661
 
 namespace OpenBveApi.Textures
 {
@@ -13,6 +15,10 @@ namespace OpenBveApi.Textures
 		public readonly TextureParameters Parameters;
 
 		private readonly Hosts.HostInterface currentHost;
+		/// <summary>The last modification time (on load) of this texture</summary>
+		public DateTime LastModificationTime;
+		/// <summary>The file size (on load) of this texture</summary>
+		public long FileSize;
 
 		// --- constructors ---
 		/// <summary>Creates a new path origin.</summary>
@@ -24,6 +30,8 @@ namespace OpenBveApi.Textures
 			Path = path;
 			Parameters = parameters;
 			currentHost = Host;
+			LastModificationTime = System.IO.File.GetLastWriteTime(path);
+			FileSize = new System.IO.FileInfo(path).Length;
 		}
 
 		// --- functions ---

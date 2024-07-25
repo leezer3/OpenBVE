@@ -31,6 +31,14 @@ namespace LibRender2.Trains
 			}
 		}
 
+		public void PreloadTextures()
+		{
+			for (int i = 0; i < Elements.Length; i++)
+			{
+				Elements[i].LoadTextures();
+			}
+		}
+
 		/// <summary>Reverses the elements group</summary>
 		/// <param name="pos">The drivers eye position</param>
 		/// <param name="is3D">Whether this is a 3D or 2D elements group</param>

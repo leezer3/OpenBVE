@@ -54,10 +54,7 @@ namespace OpenBveApi.Objects
 				Array.Resize(ref Object.Mesh.Faces, mf + Faces.Count);
 				Array.Resize(ref Object.Mesh.Materials, mm + Materials.Length);
 				Array.Resize(ref Object.Mesh.Vertices, mv + Vertices.Count);
-				for (int i = 0; i < Vertices.Count; i++)
-				{
-					Object.Mesh.Vertices[mv + i] = Vertices[i];
-				}
+				Vertices.CopyTo(0, Object.Mesh.Vertices, mv, Vertices.Count);
 
 				for (int i = 0; i < Faces.Count; i++)
 				{

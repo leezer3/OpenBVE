@@ -118,7 +118,7 @@ namespace Plugin
 					}
 				}
 
-				builder.Apply(ref obj);
+				builder.Apply(ref obj, false, false);
 				obj.Mesh.CreateNormals();
 				if (rootMatrix != Matrix4D.NoTransformation)
 				{

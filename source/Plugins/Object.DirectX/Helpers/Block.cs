@@ -153,6 +153,14 @@ namespace OpenBve.Formats.DirectX
 				{
 					currentPosition++;
 				}
+
+				if (currentPosition - 1 - p > 0)
+				{
+					// reference based material name in textual X
+					string l = myText.Substring(p, currentPosition - 1);
+					Label = l.Trim(new char[] { });
+					return;
+				}
 				if (currentPosition == text.Length - 1)
 				{
 					// Null rail converted by BVE5 : Contains texture co-ords, but the key is missing...
@@ -843,6 +851,7 @@ namespace OpenBve.Formats.DirectX
 							myStream.Position -= newBlockLength;
 							byte[] newBlockBytes = myReader.ReadBytes((int)newBlockLength);
 							BinaryBlock b = new BinaryBlock(newBlockBytes, newToken, FloatingPointSize);
+							b.Label = Label;
 							return b;
 						}
 						break;
@@ -862,6 +871,12 @@ namespace OpenBve.Formats.DirectX
 								break;
 							default:
 								throw new Exception("Unsupported Floating Point Size");
+						}
+						break;
+					default:
+						if (currentLevel == 0 && newToken == TemplateID.Material)
+						{
+							Label = currentToken;
 						}
 						break;
 				}

@@ -351,6 +351,7 @@ namespace RouteViewer
 			Application.DoEvents();
 			CurrentlyLoading = true;
 			CurrentRouteFile = e.FileName;
+			UpdateCaption();
 			LoadRoute();
 			ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 			CurrentlyLoading = false;
@@ -431,13 +432,13 @@ namespace RouteViewer
 					}
 					OpenFileDialog Dialog = new OpenFileDialog();
 					Dialog.CheckFileExists = true;
-					Dialog.Filter = @"All Supported Routes|*.csv;*.rw;*.dat|CSV/RW files|*.csv;*.rw|Mechanik Routes|*.dat|All files|*";
+					Dialog.Filter = @"All Supported Routes|*.csv;*.rw;*.dat;*.txt|CSV/RW files|*.csv;*.rw|Mechanik Routes|*.dat|BVE5 Routes|*.txt|All files|*";
 					if (Dialog.ShowDialog() == DialogResult.OK)
 					{
-						
 						Application.DoEvents();
 						CurrentlyLoading = true;
 						CurrentRouteFile = Dialog.FileName;
+						UpdateCaption();
 						bool canLoad = false;
 						for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 						{
@@ -786,8 +787,9 @@ namespace RouteViewer
 
 		// update caption
 		internal static void UpdateCaption() {
-			if (CurrentRouteFile != null) {
-				currentGameWindow.Title = System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName;
+			if (CurrentRouteFile != null)
+			{
+				currentGameWindow.Title = Program.CurrentlyLoading ? @"Loading: " + System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName : System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName;
 			} else
 			{
 				currentGameWindow.Title = Application.ProductName;

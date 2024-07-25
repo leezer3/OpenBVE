@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
@@ -52,7 +51,7 @@ namespace CsvRwRouteParser
 
 						if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx))
 						{
-							Data.Blocks[BlockIndex].Rails.Add(idx, new Rail());
+							Data.Blocks[BlockIndex].Rails.Add(idx, new Rail(2.0, 1.0));
 
 							if (idx >= Data.Blocks[BlockIndex].RailCycles.Length)
 							{
@@ -190,7 +189,7 @@ namespace CsvRwRouteParser
 
 						if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx))
 						{
-							Data.Blocks[BlockIndex].Rails.Add(idx, new Rail());
+							Data.Blocks[BlockIndex].Rails.Add(idx, new Rail(2.0, 1.0));
 						}
 
 						Rail currentRail = Data.Blocks[BlockIndex].Rails[idx];
@@ -305,7 +304,7 @@ namespace CsvRwRouteParser
 						acc = 4.0;
 					}
 
-					Data.Blocks[BlockIndex].Accuracy = acc;
+					Data.Blocks[BlockIndex].Rails[0].Accuracy = acc;
 				}
 					break;
 				case TrackCommand.Pitch:
@@ -385,7 +384,7 @@ namespace CsvRwRouteParser
 						a = 100.0;
 					}
 
-					Data.Blocks[BlockIndex].AdhesionMultiplier = 0.01 * a;
+					Data.Blocks[BlockIndex].Rails[0].AdhesionMultiplier = 0.01 * a;
 				}
 					break;
 				case TrackCommand.Brightness:
@@ -426,7 +425,7 @@ namespace CsvRwRouteParser
 							end = 0.0;
 						}
 
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out r))
+						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[2], out r))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							r = 128;
@@ -437,7 +436,7 @@ namespace CsvRwRouteParser
 							r = r < 0 ? 0 : 255;
 						}
 
-						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out g))
+						if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[3], out g))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							g = 128;
@@ -448,7 +447,7 @@ namespace CsvRwRouteParser
 							g = g < 0 ? 0 : 255;
 						}
 
-						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[4], out b))
+						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[4], out b))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							b = 128;
@@ -3132,7 +3131,7 @@ namespace CsvRwRouteParser
 						}
 
 						int r = 255, g = 255, b = 255;
-						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r))
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[0], out r))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -3142,7 +3141,7 @@ namespace CsvRwRouteParser
 							r = r < 0 ? 0 : 255;
 						}
 
-						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g))
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[1], out g))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -3152,7 +3151,7 @@ namespace CsvRwRouteParser
 							g = g < 0 ? 0 : 255;
 						}
 
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b))
+						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[2], out b))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -3181,7 +3180,7 @@ namespace CsvRwRouteParser
 						}
 
 						int r = 255, g = 255, b = 255;
-						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out r))
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[0], out r))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -3191,7 +3190,7 @@ namespace CsvRwRouteParser
 							r = r < 0 ? 0 : 255;
 						}
 
-						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out g))
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[1], out g))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -3201,7 +3200,7 @@ namespace CsvRwRouteParser
 							g = g < 0 ? 0 : 255;
 						}
 
-						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out b))
+						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[2], out b))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -3621,17 +3620,72 @@ namespace CsvRwRouteParser
 						int affectsAI = 0;
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out affectsAI))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Limit is invalid in Track.RailLimit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Limit is invalid in Track.RailBuffer at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 
 						if (affectsAI != 0 && affectsAI != 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "AffectsAI is invalid in Track.RailLimit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "AffectsAI is invalid in Track.RailBuffer at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							affectsAI = 0;
 						}
 
 						Plugin.CurrentRoute.BufferTrackPositions.Add(new BufferStop(railIndex, Data.TrackPosition, affectsAI != 0));
 					}
+				}
+					break;
+				case TrackCommand.RailAccuracy:
+				{
+					double acc = 2.0;
+					int railIndex = -1;
+
+					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailAccuracy at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						break;
+					}
+
+					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out acc))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						acc = 2.0;
+					}
+					
+					if (acc < 0.0)
+					{
+						acc = 0.0;
+					}
+					else if (acc > 4.0)
+					{
+						acc = 4.0;
+					}
+					Data.Blocks[BlockIndex].Rails[RailIndex].Accuracy = acc;
+				}
+					break;
+				case TrackCommand.RailAdhesion:
+				{
+					double a = 100.0;
+					int railIndex = -1;
+
+
+					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out railIndex) || railIndex == -1)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.RailAccuracy at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						break;
+					}
+
+					if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out a))
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						a = 100;
+					}
+
+					if (a < 0.0)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						a = 100.0;
+					}
+
+					Data.Blocks[BlockIndex].Rails[railIndex].AdhesionMultiplier = 0.01 * a;
 				}
 					break;
 			}

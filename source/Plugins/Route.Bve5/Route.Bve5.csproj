@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C4BE7A1F-9CCD-4E78-8341-741ABDA8E026}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Route.Bve5</RootNamespace>
+    <AssemblyName>Route.Bve5</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\bin_debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\bin_release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr4.Runtime, Version=4.6.0.0, Culture=neutral, PublicKeyToken=09abb75b9ed49849, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Antlr4.Runtime.4.6.6\lib\net45\Antlr4.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Bve5_Parsing, Version=1.1.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Bve5_Parsing.OpenBVE.1.1.15\lib\net45\Bve5_Parsing.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Ude.NetStandard, Version=1.0.2.0, Culture=neutral, PublicKeyToken=103cb45fc06c90e4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Ude.NetStandard.1.2.0\lib\net45\Ude.NetStandard.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\SignalList.cs" />
+    <Compile Include="Components\SoundList.cs" />
+    <Compile Include="Components\StationList.cs" />
+    <Compile Include="Components\StructureList.cs" />
+    <Compile Include="MapParser.cs" />
+    <Compile Include="MapParser\ApplyRouteData.cs" />
+    <Compile Include="MapParser\ConfirmComponents.cs" />
+    <Compile Include="MapParser\ConvertComponents.cs" />
+    <Compile Include="MapParser\CustomDictionary.cs" />
+    <Compile Include="MapParser\Functions.cs" />
+    <Compile Include="Components\ScriptedTrain.cs" />
+    <Compile Include="MapParser\ObjectTransformType.cs" />
+    <Compile Include="MapParser\RouteData.cs" />
+    <Compile Include="MapParser\Structures.cs" />
+    <Compile Include="Plugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScenarioParser.cs" />
+    <Compile Include="Structures\AbstractStructure.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\LibRender2\LibRender2.csproj">
+      <Project>{68215476-302C-49F2-9F7E-AAE20A2B6B12}</Project>
+      <Name>LibRender2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OpenBveApi\OpenBveApi.csproj">
+      <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
+      <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RouteManager2\RouteManager2.csproj">
+      <Project>{4EF680D7-DF17-4978-9872-133EDC169B4B}</Project>
+      <Name>RouteManager2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SoundManager\SoundManager.csproj">
+      <Project>{90ABFA0C-ABCA-444E-ADEF-9A299AED6524}</Project>
+      <Name>SoundManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TrainManager\TrainManager.csproj">
+      <Project>{D0FCA2C5-FF75-42D8-AE80-310280A61FB1}</Project>
+      <Name>TrainManager</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <OutputFiles Include="$(TargetDir)$(TargetName).*" />
+    </ItemGroup>
+    <Move SourceFiles="@(OutputFiles)" DestinationFolder="$(TargetDir)Data\Plugins\" />
+  </Target>
+</Project>
