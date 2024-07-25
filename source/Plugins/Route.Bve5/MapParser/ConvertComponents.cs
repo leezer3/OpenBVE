@@ -54,6 +54,18 @@ namespace Route.Bve5
 								// Note that zero may also be returned if the gauge value is non-numeric
 								break;
 							}
+
+							if (Gauge > 1000)
+							{
+								/*
+								 * BVE5 documentation states that gauge should be in M
+								 *
+								 * However, some routes actually use MM.
+								 * No practical effect (other than basically zero roll) but correct.
+								 */
+								Gauge /= 1000;
+							}
+
 							for (int tt = 0; tt < Plugin.CurrentRoute.Tracks.Count; tt++)
 							{
 								int t = Plugin.CurrentRoute.Tracks.ElementAt(tt).Key;
