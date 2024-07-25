@@ -459,6 +459,12 @@ namespace Route.Bve5
 						int Tilt = Statement.GetArgumentValueAsInt(ArgumentName.Tilt);
 						double Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
 
+						if (Tilt > 3)
+						{
+							Plugin.CurrentHost.AddMessage("Invalid ObjectTransformType for Structure " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+							Tilt = 0;
+						}
+
 						if (RouteData.TrackKeyList.Contains(TrackKey))
 						{
 							int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
@@ -555,6 +561,12 @@ namespace Route.Bve5
 								int Tilt = Statement.GetArgumentValueAsInt(ArgumentName.Tilt);
 								double Span = Statement.GetArgumentValueAsDouble(ArgumentName.Span);
 								double Interval = Statement.GetArgumentValueAsDouble(ArgumentName.Interval);
+
+								if (Tilt > 3)
+								{
+									Plugin.CurrentHost.AddMessage("Invalid ObjectTransformType for Repeater " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+									Tilt = 0;
+								}
 
 								Repeater.StartingDistance = Statement.Distance;
 								Repeater.TrackKey = Convert.ToString(TrackKey);
@@ -736,8 +748,14 @@ namespace Route.Bve5
 				object RX = d.RX;
 				object RY = d.RY;
 				object RZ = d.RZ;
-				ObjectTransformType Tilt = (ObjectTransformType)d.Tilt;
-				double Span = (double)d.Span;
+				ObjectTransformType Tilt = d.Tilt != null ? (ObjectTransformType)d.Tilt : ObjectTransformType.Horizontal;
+				double Span = d.Span != null ? (double)d.Span : 0.0;
+
+				if ((int)Tilt > 3)
+				{
+					Plugin.CurrentHost.AddMessage("Invalid ObjectTransformType for Signal " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+					Tilt = 0;
+				}
 
 				int RailIndex = RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKey));
 
@@ -756,7 +774,7 @@ namespace Route.Bve5
 						CurrentSection += Blocks[i].Sections.Count(s => s.TrackPosition <= Statement.Distance);
 					}
 
-					Vector3 Position = new Vector3((double)d.X, (double)d.Y, (double)d.Z);
+					Vector3 Position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
 					Blocks[BlockIndex].Signals[RailIndex].Add(new Signal(Statement.Key, Statement.Distance, Tilt, Span, Position)
 					{
 						SectionIndex = CurrentSection + Convert.ToInt32(Section),
