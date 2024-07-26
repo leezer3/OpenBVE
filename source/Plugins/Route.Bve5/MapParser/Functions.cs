@@ -256,89 +256,74 @@ namespace Route.Bve5
 			}
 
 			ObjectPosition = StartingPosition;
-
-			double radius = 0;
-			double pitch = 0;
-			double cant = 0;
+			Transformation = new Transformation();
 			if (Structure.Span == 0)
 			{
-				radius = Blocks[StartingBlock].CurrentTrackState.CurveRadius;
-				pitch = Blocks[StartingBlock].Pitch;
-				cant = Blocks[StartingBlock].CurrentTrackState.CurveCant;
+				double radius = Blocks[StartingBlock].CurrentTrackState.CurveRadius;
+				double pitch = Blocks[StartingBlock].Pitch;
+				double cant = Blocks[StartingBlock].CurrentTrackState.CurveCant;
+				CalcTransformation(radius, pitch, Structure.TrackPosition - Blocks[StartingBlock].StartingDistance, ref Direction, out double a, out double c, out double h);
+				ObjectPosition.X += Direction.X * c;
+				ObjectPosition.Y += h;
+				ObjectPosition.Z += Direction.Y * c;
+				if (a != 0.0)
+				{
+					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
+				}
+
+				CalcTransformation(radius, pitch, Structure.Span, ref Direction, out _, out _, out _);
+				double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
+				double TrackPitch = Math.Atan(pitch);
+				double TrackRoll = Math.Atan(cant);
+
+				switch (Structure.Type)
+				{
+					case ObjectTransformType.FollowsGradient:
+						Transformation = new Transformation(TrackYaw, TrackPitch, 0.0);
+						break;
+					case ObjectTransformType.FollowsCant:
+						Transformation = new Transformation(TrackYaw, 0.0, TrackRoll);
+						break;
+					case ObjectTransformType.FollowsGradientAndCant:
+						Transformation = new Transformation(TrackYaw, TrackPitch, TrackRoll);
+						break;
+					case ObjectTransformType.Horizontal:
+						Transformation = new Transformation(TrackYaw, 0.0, 0.0);
+						break;
+					default:
+						throw new NotSupportedException("Unknown transform type.");
+				}
 			}
 			else
 			{
-				
 				int currentBlock = StartingBlock + 1;
 				double remainingDistance = Structure.Span;
-				bool averages = false;
+				Vector3 pos2 = StartingPosition;
 				while (currentBlock < Blocks.Count - 1)
 				{
 					double blockLength = currentBlock != 0 ? Blocks[currentBlock].StartingDistance - Blocks[currentBlock - 1].StartingDistance : 0;
 					double blockSpan = Math.Min(remainingDistance, blockLength);
-					radius += blockSpan * Blocks[currentBlock].CurrentTrackState.CurveRadius;
-					cant += blockSpan * Blocks[currentBlock].CurrentTrackState.CurveCant;
-					pitch += blockSpan * Blocks[currentBlock].Pitch;
+					GetTransformation(pos2, Blocks[currentBlock], Blocks[currentBlock + 1], "0", Blocks[StartingBlock].Pitch, Structure.TrackPosition, Structure.Type, remainingDistance, Direction, out ObjectPosition, out Transformation);
 					remainingDistance -= blockSpan;
 					if (remainingDistance <= 0.01)
 					{
 						break;
 					}
 
-					if (Blocks[currentBlock].CurrentTrackState.CurveRadius != Blocks[StartingBlock].CurrentTrackState.CurveRadius || Blocks[currentBlock].CurrentTrackState.CurveCant != Blocks[StartingBlock].CurrentTrackState.CurveCant || Blocks[currentBlock].Pitch != Blocks[StartingBlock].Pitch)
+					// calculate starting point of *next* block
+					CalcTransformation(Blocks[currentBlock].CurrentTrackState.CurveRadius, Blocks[StartingBlock].Pitch, blockLength, ref Direction, out double a, out double c, out double h);
+					pos2.X += Direction.X * c;
+					pos2.Y += h;
+					pos2.Z += Direction.Y * c;
+					if (a != 0.0)
 					{
-						averages = true;
+						Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 					}
 					currentBlock++;
 				}
-
-				if (averages)
-				{
-					radius /= Structure.Span;
-					pitch /= Structure.Span;
-					cant /= Structure.Span;
-				}
-				else
-				{
-					radius = Blocks[StartingBlock].CurrentTrackState.CurveRadius;
-					pitch = Blocks[StartingBlock].Pitch;
-					cant = Blocks[StartingBlock].CurrentTrackState.CurveCant;
-				}
-				
 			}
 			
-			CalcTransformation(radius, pitch, Structure.TrackPosition - Blocks[StartingBlock].StartingDistance, ref Direction, out double a, out double c, out double h);
-			ObjectPosition.X += Direction.X * c;
-			ObjectPosition.Y += h;
-			ObjectPosition.Z += Direction.Y * c;
-			if (a != 0.0)
-			{
-				Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
-			}
-
-			CalcTransformation(radius, pitch, Structure.Span, ref Direction, out _, out _, out _);
-
-			double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
-			double TrackPitch = Math.Atan(pitch);
-			double TrackRoll = Math.Atan(cant);
-
-			switch (Structure.Type)
-			{
-				case ObjectTransformType.FollowsGradient:
-					Transformation = new Transformation(TrackYaw, TrackPitch, 0.0);
-					break;
-				case ObjectTransformType.FollowsCant:
-					Transformation = new Transformation(TrackYaw, 0.0, TrackRoll);
-					break;
-				case ObjectTransformType.FollowsGradientAndCant:
-					Transformation = new Transformation(TrackYaw, TrackPitch, TrackRoll);
-					break;
-				case ObjectTransformType.Horizontal:
-					Transformation = new Transformation(TrackYaw, 0.0, 0.0);
-					break;
-				default:
-					throw new NotSupportedException("Unknown transform type.");
-			}
+			
 		}
 
 		private static void GetTransformation(Vector3 StartingPosition, Vector2 StartingDirection, List<Block> Blocks, int StartingBlock, string RailKey, int ObjectIndex, out Vector3 pos, out Transformation t)
