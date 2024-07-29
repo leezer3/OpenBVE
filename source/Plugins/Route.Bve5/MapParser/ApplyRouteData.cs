@@ -417,7 +417,7 @@ namespace Route.Bve5
 								}
 								else
 								{
-									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, k, out wpos, out Transformation);
+									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].FreeObj[railKey][k], out wpos, out Transformation);
 								}
 								wpos += dx * Transformation.X + dy * Transformation.Y + dz * Transformation.Z;
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
@@ -454,7 +454,7 @@ namespace Route.Bve5
 								}
 								else
 								{
-									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, k, out wpos, out Transformation);
+									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].Cracks[k], out wpos, out Transformation);
 								}
 
 								double pInterpolateX0 = GetTrackCoordinate(StartingDistance, px0, nextStartingDistance, px1, pRadiusH, tpos);
@@ -504,7 +504,7 @@ namespace Route.Bve5
 								}
 								else
 								{
-									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, k, out wpos, out Transformation);
+									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].Signals[j][k], out wpos, out Transformation);
 								}
 								wpos += dx * Transformation.X + dy * Transformation.Y + dz * Transformation.Z;
 
