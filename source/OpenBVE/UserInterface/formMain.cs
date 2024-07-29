@@ -207,7 +207,7 @@ namespace OpenBve {
 			listviewRouteRecently.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (CsvRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("csvroute", CsvRouteIcon);
 			if (RwRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("rwroute", RwRouteIcon);
-			if (RwRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("bve5", Bve5Icon);
+			if (Bve5Icon != null) listviewRouteRecently.SmallImageList.Images.Add("bve5", Bve5Icon);
 			if (MechanikRouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("mechanik", MechanikRouteIcon);
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
 			{
