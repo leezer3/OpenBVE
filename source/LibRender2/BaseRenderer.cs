@@ -844,6 +844,7 @@ namespace LibRender2
 						break;
 					}
 				}
+				n = ObjectsSortedByStart.Length;
 
 				// introduce
 				while (ObjectsSortedByStartPointer < n)
