@@ -116,7 +116,7 @@ namespace Route.Bve5
 			internal readonly string PrimaryRail;
 			internal readonly string SecondaryRail;
 
-			internal Crack(string key, double trackPosition, string primaryRail, string secondaryRail) : base(trackPosition, key, ObjectTransformType.FollowsGradient, 0, Vector3.Zero)
+			internal Crack(string key, double trackPosition, string primaryRail, string secondaryRail) : base(trackPosition, key, ObjectTransformType.FollowsGradient, 5.0, Vector3.Zero)
 			{
 				PrimaryRail = primaryRail;
 				SecondaryRail = secondaryRail;

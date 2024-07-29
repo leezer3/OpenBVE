@@ -245,6 +245,7 @@ namespace Route.Bve5
 			}
 		}
 
+		/// <summary>Gets the transformation for an object on the primary rail</summary>
 		private static void GetPrimaryRailTransformation(Vector3 StartingPosition, List<Block> Blocks, int StartingBlock, AbstractStructure Structure, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
 			if (Blocks[StartingBlock].Turn != 0.0)
@@ -326,6 +327,7 @@ namespace Route.Bve5
 			
 		}
 
+		/// <summary>Gets the transformation for an object on a secondary rail</summary>
 		private static void GetSecondaryRailTransformation(Vector3 StartingPosition, Vector2 StartingDirection, List<Block> Blocks, int StartingBlock, string RailKey, int ObjectIndex, out Vector3 pos, out Transformation t)
 		{
 			FreeObj f = Blocks[StartingBlock].FreeObj[RailKey][ObjectIndex];
@@ -363,6 +365,7 @@ namespace Route.Bve5
 			}
 		}
 
+		/// <summary>Gets the transformation between two blocks</summary>
 		private static void GetTransformation(Vector3 StartingPosition, Block FirstBlock, Block SecondBlock, string RailKey, double Pitch, double TrackDistance, ObjectTransformType Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
 			Transformation = new Transformation();
