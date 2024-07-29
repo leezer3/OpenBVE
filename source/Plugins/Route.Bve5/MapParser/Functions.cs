@@ -245,7 +245,7 @@ namespace Route.Bve5
 			}
 		}
 
-		private static void GetTransformation(Vector3 StartingPosition, List<Block> Blocks, int StartingBlock, AbstractStructure Structure, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
+		private static void GetPrimaryRailTransformation(Vector3 StartingPosition, List<Block> Blocks, int StartingBlock, AbstractStructure Structure, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
 			if (Blocks[StartingBlock].Turn != 0.0)
 			{
@@ -296,7 +296,7 @@ namespace Route.Bve5
 			}
 			else
 			{
-				int currentBlock = StartingBlock + 1;
+				int currentBlock = StartingBlock;
 				double remainingDistance = Structure.Span;
 				Vector3 pos2 = StartingPosition;
 				while (currentBlock < Blocks.Count - 1)
@@ -326,7 +326,7 @@ namespace Route.Bve5
 			
 		}
 
-		private static void GetTransformation(Vector3 StartingPosition, Vector2 StartingDirection, List<Block> Blocks, int StartingBlock, string RailKey, int ObjectIndex, out Vector3 pos, out Transformation t)
+		private static void GetSecondaryRailTransformation(Vector3 StartingPosition, Vector2 StartingDirection, List<Block> Blocks, int StartingBlock, string RailKey, int ObjectIndex, out Vector3 pos, out Transformation t)
 		{
 			FreeObj f = Blocks[StartingBlock].FreeObj[RailKey][ObjectIndex];
 			pos = StartingPosition;

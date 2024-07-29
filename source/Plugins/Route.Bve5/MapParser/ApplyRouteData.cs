@@ -450,13 +450,13 @@ namespace Route.Bve5
 								Transformation Transformation;
 								if (j == 0)
 								{
-									GetTransformation(Position, Data.Blocks, i, Data.Blocks[i].FreeObj[railKey][k], Direction, out wpos, out Transformation);
+									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].FreeObj[railKey][k], Direction, out wpos, out Transformation);
 								}
 								else
 								{
 									if (useAverages)
 									{
-										GetTransformation(Position, Direction, Data.Blocks, i, railKey, k, out wpos, out Transformation);
+										GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, k, out wpos, out Transformation);
 									}
 									else
 									{
@@ -501,7 +501,7 @@ namespace Route.Bve5
 								Transformation Transformation;
 								if (j == 0)
 								{
-									GetTransformation(Position, Data.Blocks, i, Data.Blocks[i].Cracks[k], Direction, out wpos, out Transformation);
+									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].Cracks[k], Direction, out wpos, out Transformation);
 								}
 								else
 								{
@@ -562,7 +562,7 @@ namespace Route.Bve5
 								Transformation Transformation;
 								if (j == 0)
 								{
-									GetTransformation(Position, Data.Blocks, i, Data.Blocks[i].Signals[j][k], Direction, out wpos, out Transformation);
+									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].Signals[j][k], Direction, out wpos, out Transformation);
 								}
 								else
 								{
