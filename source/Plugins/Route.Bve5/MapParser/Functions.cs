@@ -302,7 +302,7 @@ namespace Route.Bve5
 				Vector3 pos2 = StartingPosition;
 				while (currentBlock < Blocks.Count - 1)
 				{
-					double blockLength = currentBlock != 0 ? Blocks[currentBlock].StartingDistance - Blocks[currentBlock - 1].StartingDistance : 0;
+					double blockLength = currentBlock < Blocks.Count - 1 ? Blocks[currentBlock + 1].StartingDistance - Blocks[currentBlock].StartingDistance : 5;
 					double blockSpan = Math.Min(remainingDistance, blockLength);
 					GetTransformation(pos2, Blocks[currentBlock], Blocks[currentBlock + 1], "0", Blocks[StartingBlock].Pitch, Structure.TrackPosition, Structure.Type, remainingDistance, Direction, out ObjectPosition, out Transformation);
 					remainingDistance -= blockSpan;
@@ -342,7 +342,7 @@ namespace Route.Bve5
 			int currentBlock = StartingBlock;
 			while (currentBlock < Blocks.Count - 1)
 			{
-				double blockLength = currentBlock != 0 ? Blocks[currentBlock].StartingDistance - Blocks[currentBlock - 1].StartingDistance : 0;
+				double blockLength = currentBlock < Blocks.Count - 1 ? Blocks[currentBlock + 1].StartingDistance - Blocks[currentBlock].StartingDistance : 5;
 				double blockSpan = Math.Min(remainingDistance, blockLength);
 				GetTransformation(pos2, Blocks[currentBlock], Blocks[currentBlock + 1], RailKey, Blocks[StartingBlock].Pitch, Structure.TrackPosition, Structure.Type, remainingDistance, StartingDirection, out pos, out t);
 				remainingDistance -= blockSpan;
