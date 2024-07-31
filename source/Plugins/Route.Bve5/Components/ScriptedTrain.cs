@@ -98,6 +98,12 @@ namespace Route.Bve5
 							TrackKey = "0";
 						}
 
+						if (!RouteData.TrackKeyList.Contains(TrackKey))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place ScriptedTrain " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
+							TrackKey = "0";
+						}
+
 						if (!Statement.HasArgument(ArgumentName.Direction) || !NumberFormats.TryParseIntVb6(Statement.GetArgumentValueAsString(ArgumentName.Direction), out int Direction))
 						{
 							Direction = 1;
@@ -137,6 +143,13 @@ namespace Route.Bve5
 				{
 					TrackKey = "0";
 				}
+
+				if (!RouteData.TrackKeyList.Contains(TrackKey))
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place waypoint for ScriptedTrain " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
+					TrackKey = "0";
+				}
+
 				if (!Statement.HasArgument(ArgumentName.Direction) || !NumberFormats.TryParseIntVb6(Statement.GetArgumentValueAsString(ArgumentName.Direction), out int Direction))
 				{
 					Direction = 1;

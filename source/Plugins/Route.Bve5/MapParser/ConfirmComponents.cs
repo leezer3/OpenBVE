@@ -28,6 +28,7 @@ using System.Linq;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Colors;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 
 namespace Route.Bve5
@@ -453,6 +454,13 @@ namespace Route.Bve5
 						{
 							TrackKey = "0";
 						}
+
+						if (!RouteData.TrackKeyList.Contains(TrackKey))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place Structure " + Statement.Key + " on the non-existent track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+							TrackKey = "0";
+						}
+						
 						double RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
 						double RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
 						double RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
@@ -461,23 +469,20 @@ namespace Route.Bve5
 
 						if (Tilt > 3)
 						{
-							Plugin.CurrentHost.AddMessage("Invalid ObjectTransformType for Structure " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid ObjectTransformType for Structure " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
 							Tilt = 0;
 						}
 
-						if (RouteData.TrackKeyList.Contains(TrackKey))
+						int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
+
+						if (!Blocks[BlockIndex].FreeObj.ContainsKey(TrackKey))
 						{
-							int BlockIndex = Blocks.FindLastIndex(Block => Block.StartingDistance <= Statement.Distance);
-
-							if (!Blocks[BlockIndex].FreeObj.ContainsKey(TrackKey))
-							{
-								Blocks[BlockIndex].FreeObj.Add(TrackKey, new List<FreeObj>());
-							}
-
-							Vector3 position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
-							Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, position, RY * 0.0174532925199433, -RX * 0.0174532925199433, RZtoRoll(RY, RZ) * 0.0174532925199433, (ObjectTransformType)Tilt, Span));
+							Blocks[BlockIndex].FreeObj.Add(TrackKey, new List<FreeObj>());
 						}
-					}
+
+						Vector3 position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
+						Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, position, RY * 0.0174532925199433, -RX * 0.0174532925199433, RZtoRoll(RY, RZ) * 0.0174532925199433, (ObjectTransformType)Tilt, Span));
+						}
 						break;
 					case MapFunctionName.PutBetween:
 					{
@@ -555,6 +560,12 @@ namespace Route.Bve5
 								{
 									TrackKey = "0";
 								}
+
+								if (!RouteData.TrackKeyList.Contains(TrackKey))
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place Repeater " + Statement.Key + " on the non-existent track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+									TrackKey = "0";
+								}
 								double RX = Statement.GetArgumentValueAsDouble(ArgumentName.RX);
 								double RY = Statement.GetArgumentValueAsDouble(ArgumentName.RY);
 								double RZ = Statement.GetArgumentValueAsDouble(ArgumentName.RZ);
@@ -564,7 +575,7 @@ namespace Route.Bve5
 
 								if (Tilt > 3)
 								{
-									Plugin.CurrentHost.AddMessage("Invalid ObjectTransformType for Repeater " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid ObjectTransformType for Repeater " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
 									Tilt = 0;
 								}
 
@@ -626,12 +637,6 @@ namespace Route.Bve5
 			}
 
 			string TrackKey = Repeater.TrackKey;
-
-			if (!RouteData.TrackKeyList.Contains(Repeater.TrackKey))
-			{
-				// at least in converted legacy stuff (2.02 map format) unknown track indexes map to rail 0
-				TrackKey = "0";
-			}
 
 			List<Block> Blocks = RouteData.Blocks;
 			int LoopCount = 0;
@@ -745,6 +750,12 @@ namespace Route.Bve5
 					TrackKey = "0";
 				}
 
+				if (!RouteData.TrackKeyList.Contains(TrackKey))
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place Signal " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
+					TrackKey = "0";
+				}
+
 				object RX = d.RX;
 				object RY = d.RY;
 				object RZ = d.RZ;
@@ -753,7 +764,7 @@ namespace Route.Bve5
 
 				if ((int)Tilt > 3)
 				{
-					Plugin.CurrentHost.AddMessage("Invalid ObjectTransformType for Signal " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid ObjectTransformType for Signal " + Statement.Key + " on track " + d.TrackKey + " at track position " + Statement.Distance + "m");
 					Tilt = 0;
 				}
 
