@@ -277,12 +277,14 @@ namespace OpenBveApi.Objects
 
 			StaticObject Result = (StaticObject)this.Clone();
 
-			if (vertical)
+			if (vertical || System.Math.Abs(NearDistance - FarDistance) > 0.1)
 			{
+				// If vertical, or both distances are within 0.1m use scale instead (this works for all object types)
 				double width = maxX - minX;
 				Result.ApplyScale(width / (NearDistance + width), 1,1);
 				return Result;
 			}
+
 
 			for (int i = 0; i < Mesh.Vertices.Length; i += 4)
 			{
@@ -319,7 +321,7 @@ namespace OpenBveApi.Objects
 
 			StaticObject Result = (StaticObject)this.Clone();
 
-			if (vertical)
+			if (vertical || System.Math.Abs(NearDistance - FarDistance) > 0.1)
 			{
 				double width = maxX - minX;
 				Result.ApplyScale(width / (NearDistance + width), 1, 1);
