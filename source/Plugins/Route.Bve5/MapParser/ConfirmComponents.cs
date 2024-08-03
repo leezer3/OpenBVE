@@ -650,7 +650,12 @@ namespace Route.Bve5
 					Blocks[BlockIndex].FreeObj.Add(TrackKey, new List<FreeObj>());
 				}
 
-				Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(i, Repeater.ObjectKeys[LoopCount], Repeater.Position, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, Repeater.Type, Repeater.Span));
+				/*
+				 * The relationship between span and interval is an absolute pain in the neck
+				 *
+				 * This seems to get stuff on Chuo Rapid Line looking OK in terms of the gradients
+				 */
+				RouteData.Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(i, Repeater.ObjectKeys[LoopCount], Repeater.Position, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, Repeater.Type, Math.Max(Repeater.Interval, Repeater.Span)));
 
 				if (LoopCount >= Repeater.ObjectKeys.Length - 1)
 				{
