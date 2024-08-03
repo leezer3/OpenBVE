@@ -55,6 +55,7 @@
     <Compile Include="Components\SoundList.cs" />
     <Compile Include="Components\StationList.cs" />
     <Compile Include="Components\StructureList.cs" />
+    <Compile Include="ListExtensions.cs" />
     <Compile Include="MapParser.cs" />
     <Compile Include="MapParser\ApplyRouteData.cs" />
     <Compile Include="MapParser\ConfirmComponents.cs" />

@@ -118,13 +118,7 @@ namespace Route.Bve5
 
 		private static void ConvertToBlock(string FileName, bool PreviewOnly, MapData ParseData, out RouteData RouteData)
 		{
-			RouteData = new RouteData
-			{
-				Blocks = new List<Block>(),
-				TrackKeyList = new List<string>()
-			};
-			// The player track
-			RouteData.TrackKeyList.Add("0");
+			RouteData = new RouteData();
 
 			foreach (var Statement in ParseData.Statements)
 			{
@@ -179,10 +173,10 @@ namespace Route.Bve5
 			ConfirmRepeater(PreviewOnly, ParseData, RouteData);
 			ConfirmSection(PreviewOnly, ParseData, RouteData);
 			ConfirmSignal(PreviewOnly, ParseData, RouteData);
-			ConfirmBeacon(PreviewOnly, ParseData, RouteData.Blocks);
+			ConfirmBeacon(PreviewOnly, ParseData, RouteData);
 			// these require looping through existing blocks, so need to be here at the minute
-			ConfirmIrregularity(PreviewOnly, RouteData.Blocks);
-			ConfirmAdhesion(PreviewOnly, RouteData.Blocks);
+			ConfirmIrregularity(PreviewOnly, RouteData);
+			ConfirmAdhesion(PreviewOnly, RouteData);
 			ConfirmFlangeNoise(PreviewOnly, ParseData, RouteData);
 		}
 

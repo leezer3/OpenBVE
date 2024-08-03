@@ -31,14 +31,21 @@ namespace Route.Bve5
 	{
 		private class RouteData
 		{
-			internal List<string> TrackKeyList;
-			internal List<Block> Blocks;
+			internal readonly List<string> TrackKeyList;
+			internal readonly SortedList<double, Block> sortedBlocks;
+			internal IList<Block> Blocks => sortedBlocks.Values;
 			internal Dictionary<string, Station> StationList;
 			internal ObjectDictionary Objects;
 			internal ObjectDictionary Backgrounds;
 			internal List<SignalData> SignalObjects;
 			internal SoundDictionary Sounds;
 			internal SoundDictionary Sound3Ds;
+
+			internal RouteData()
+			{
+				sortedBlocks = new SortedList<double, Block>();
+				TrackKeyList= new List<string> { "0" };
+			}
 
 			//Set units of speed initially to km/h
 			//This represents 1km/h in m/s
@@ -48,32 +55,31 @@ namespace Route.Bve5
 
 			internal int FindOrAddBlock(double Distance)
 			{
-				int Index = Blocks.FindIndex(x => x.StartingDistance == Distance);
-				if (Index == -1)
+				if (sortedBlocks.ContainsKey(Distance))
 				{
-					Block NewBlock = new Block
-					{
-						Rails = TrackKeyList.ToDictionary(x => x, x => new Rail()),
-						StartingDistance = Distance,
-						CurrentTrackState =
-						{
-							StartingTrackPosition = Distance
-						},
-						FreeObj = new Dictionary<string, List<FreeObj>>(),
-						Cracks = new List<Crack>(),
-						Sections = new List<Section>(),
-						Signals = new List<Signal>[TrackKeyList.Count],
-						Transponders = new List<Transponder>(),
-						Limits = new List<Limit>(),
-						BrightnessChanges = new List<Brightness>(),
-						SoundEvents = new List<Sound>(),
-						RunSounds = new List<TrackSound>(),
-						FlangeSounds = new List<TrackSound>()
-					};
-					Index = Blocks.FindLastIndex(x => x.StartingDistance < Distance) + 1;
-					Blocks.Insert(Index, NewBlock);
+					return sortedBlocks.IndexOfKey(Distance);
 				}
-				return Index;
+				Block NewBlock = new Block
+				{
+					Rails = TrackKeyList.ToDictionary(x => x, x => new Rail()),
+					StartingDistance = Distance,
+					CurrentTrackState =
+					{
+						StartingTrackPosition = Distance
+					},
+					FreeObj = new Dictionary<string, List<FreeObj>>(),
+					Cracks = new List<Crack>(),
+					Sections = new List<Section>(),
+					Signals = new List<Signal>[TrackKeyList.Count],
+					Transponders = new List<Transponder>(),
+					Limits = new List<Limit>(),
+					BrightnessChanges = new List<Brightness>(),
+					SoundEvents = new List<Sound>(),
+					RunSounds = new List<TrackSound>(),
+					FlangeSounds = new List<TrackSound>()
+				};
+				sortedBlocks.Add(Distance, NewBlock);
+				return sortedBlocks.IndexOfKey(Distance);
 			}
 		}
 	}

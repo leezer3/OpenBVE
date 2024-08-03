@@ -246,7 +246,7 @@ namespace Route.Bve5
 		}
 
 		/// <summary>Gets the transformation for an object on the primary rail</summary>
-		private static void GetPrimaryRailTransformation(Vector3 StartingPosition, List<Block> Blocks, int StartingBlock, AbstractStructure Structure, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
+		private static void GetPrimaryRailTransformation(Vector3 StartingPosition, IList<Block> Blocks, int StartingBlock, AbstractStructure Structure, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
 			if (Blocks[StartingBlock].Turn != 0.0)
 			{
@@ -297,38 +297,15 @@ namespace Route.Bve5
 			}
 			else
 			{
-				int currentBlock = StartingBlock;
-				double remainingDistance = Structure.Span;
-				Vector3 pos2 = StartingPosition;
-				while (currentBlock < Blocks.Count - 1)
-				{
-					double blockLength = currentBlock < Blocks.Count - 1 ? Blocks[currentBlock + 1].StartingDistance - Blocks[currentBlock].StartingDistance : 5;
-					double blockSpan = Math.Min(remainingDistance, blockLength);
-					GetTransformation(pos2, Blocks[currentBlock], Blocks[currentBlock + 1], "0", Blocks[currentBlock].Pitch, Structure.TrackPosition, Structure.Type, remainingDistance, Direction, out ObjectPosition, out Transformation);
-					remainingDistance -= blockSpan;
-					if (remainingDistance <= 0.01)
-					{
-						break;
-					}
-
-					// calculate starting point of *next* block
-					CalcTransformation(Blocks[currentBlock].CurrentTrackState.CurveRadius, Blocks[currentBlock].Pitch, blockLength, ref Direction, out double a, out double c, out double h);
-					pos2.X += Direction.X * c;
-					pos2.Y += h;
-					pos2.Z += Direction.Y * c;
-					if (a != 0.0)
-					{
-						Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
-					}
-					currentBlock++;
-				}
+				int nextBlock = StartingBlock < Blocks.Count - 1 ? StartingBlock + 1 : StartingBlock;
+				GetTransformation(StartingPosition, Blocks[StartingBlock], Blocks[nextBlock], "0", Blocks[StartingBlock].Pitch, Structure.TrackPosition, Structure.Type, Structure.Span, Direction, out ObjectPosition, out Transformation);
 			}
 			
 			
 		}
 
 		/// <summary>Gets the transformation for an object on a secondary rail</summary>
-		private static void GetSecondaryRailTransformation(Vector3 StartingPosition, Vector2 StartingDirection, List<Block> Blocks, int StartingBlock, string RailKey, AbstractStructure Structure, out Vector3 pos, out Transformation t)
+		private static void GetSecondaryRailTransformation(Vector3 StartingPosition, Vector2 StartingDirection, IList<Block> Blocks, int StartingBlock, string RailKey, AbstractStructure Structure, out Vector3 pos, out Transformation t)
 		{
 			pos = StartingPosition;
 			Vector3 pos2 = new Vector3(StartingPosition); // starting point of block
@@ -338,50 +315,9 @@ namespace Route.Bve5
 				GetTransformation(StartingPosition, Blocks[StartingBlock], Blocks[StartingBlock], RailKey, Blocks[StartingBlock].Pitch, Structure.TrackPosition, Structure.Type, Structure.Span, StartingDirection, out pos, out t);
 				return;
 			}
-			double remainingDistance = Structure.Span;
 			int currentBlock = StartingBlock;
-			
-			while (currentBlock < Blocks.Count - 1)
-			{
-				double blockLength = currentBlock < Blocks.Count - 1 ? Blocks[currentBlock + 1].StartingDistance - Blocks[currentBlock].StartingDistance : 5;
-				double blockSpan = Math.Min(remainingDistance, blockLength);
-
-				double railPitch;
-				if (currentBlock < Blocks.Count - 1 && RailKey != "0")
-				{
-					double yChange = Blocks[currentBlock+ 1].Rails[RailKey].Position.Y - Blocks[currentBlock].Rails[RailKey].Position.Y;
-					if (yChange == 0)
-					{
-						railPitch = 0;
-					}
-					else
-					{
-						railPitch = yChange / blockLength;
-					}
-				}
-				else
-				{
-					railPitch = 0;
-				}
-
-				GetTransformation(pos2, Blocks[currentBlock], Blocks[currentBlock + 1], RailKey, railPitch + Blocks[currentBlock].Pitch, Structure.TrackPosition, Structure.Type, remainingDistance, StartingDirection, out pos, out t);
-				remainingDistance -= blockSpan;
-				if (remainingDistance <= 0.01)
-				{
-					break;
-				}
-
-				// calculate starting point of *next* block
-				CalcTransformation(Blocks[currentBlock].CurrentTrackState.CurveRadius, Blocks[currentBlock].Pitch, blockLength, ref StartingDirection, out double a, out double c, out double h);
-				pos2.X += StartingDirection.X * c;
-				pos2.Y += h;
-				pos2.Z += StartingDirection.Y * c;
-				if (a != 0.0)
-				{
-					StartingDirection.Rotate(Math.Cos(-a), Math.Sin(-a));
-				}
-				currentBlock++;
-			}
+			int nextBlock = StartingBlock < Blocks.Count - 1 ? StartingBlock + 1 : StartingBlock;
+			GetTransformation(pos2, Blocks[StartingBlock], Blocks[nextBlock], RailKey, Blocks[currentBlock].Pitch, Structure.TrackPosition, Structure.Type, Structure.Span, StartingDirection, out pos, out t);
 		}
 
 		/// <summary>Gets the transformation between two blocks</summary>
