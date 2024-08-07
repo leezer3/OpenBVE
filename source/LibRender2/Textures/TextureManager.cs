@@ -656,7 +656,7 @@ namespace LibRender2.Textures
 				{
 					if (origin is PathOrigin pathOrigin)
 					{
-						if (pathOrigin.FileSize != new System.IO.FileInfo(pathOrigin.Path).Length || pathOrigin.LastModificationTime != System.IO.File.GetLastWriteTime(pathOrigin.Path))
+						if (!System.IO.File.Exists(pathOrigin.Path) || pathOrigin.FileSize != new System.IO.FileInfo(pathOrigin.Path).Length || pathOrigin.LastModificationTime != System.IO.File.GetLastWriteTime(pathOrigin.Path))
 						{
 							textureCache.Remove(origin);
 						}

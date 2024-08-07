@@ -80,3 +80,4 @@ Please also see the following issue for further discussion on the topic: https:/
 - OpenBVE uses [**Ude**](https://github.com/yinyue200/ude) for character set detection. This is tri-licensed under the _Mozilla Public License v1.1_, _GPL 2.0_ and _LGPL 2.0_, which may be found in [here](licenses/Ude.txt).
 - OpenBVE uses [**XamlBehaviors for WPF**](https://github.com/microsoft/XamlBehaviorsWpf) This is licensed under the *MIT License*, which may be found in [here](licenses/XamlBehaviorsForWPF.txt).
 - OpenBVE uses [**TOLK**](https://github.com/dkager/tolk) for screen reader API access. This is licenced under the *LGPL V3* which may be found in [here](licences/TOLK.txt)
+- OpenBVE uses [**BVE_Parsing**](https://github.com/leezer3/bve5_parsing) for parsing BVE5 map grammar. This is licenced under the *MIT Licence* which may be found in [here](licences/BVE5.txt)

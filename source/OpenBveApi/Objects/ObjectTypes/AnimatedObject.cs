@@ -915,6 +915,10 @@ namespace OpenBveApi.Objects
 								}
 							}
 						}
+						else
+						{
+							wrap = (OpenGlTextureWrapMode)States[i].Prototype.Mesh.Materials[face.Material].WrapMode;
+						}
 
 						States[i].Prototype.Mesh.Materials[face.Material].WrapMode = wrap;
 						if (States[i].Prototype.Mesh.Materials[face.Material].DaytimeTexture != null)

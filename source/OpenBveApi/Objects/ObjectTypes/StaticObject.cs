@@ -262,7 +262,30 @@ namespace OpenBveApi.Objects
 			 * To be improved.....
 			 */
 
+			bool vertical = true;
+			double zPos = Mesh.Vertices[0].Coordinates.Z;
+			double minX = double.MaxValue, maxX = double.MinValue;
+			for (int i = 0; i < Mesh.Vertices.Length; i++)
+			{
+				minX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, minX);
+				maxX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, maxX);
+				if (System.Math.Abs(Mesh.Vertices[i].Coordinates.Z - zPos) > 0.1)
+				{
+					vertical = false;
+				}
+			}
+
 			StaticObject Result = (StaticObject)this.Clone();
+
+			if (vertical || System.Math.Abs(NearDistance - FarDistance) > 0.1)
+			{
+				// If vertical, or both distances are within 0.1m use scale instead (this works for all object types)
+				double width = maxX - minX;
+				Result.ApplyScale(width / (NearDistance + width), 1,1);
+				return Result;
+			}
+
+
 			for (int i = 0; i < Mesh.Vertices.Length; i += 4)
 			{
 				List<VertexTemplate> tempList = Mesh.Vertices.Skip(i).Take(4).ToList();
@@ -283,7 +306,28 @@ namespace OpenBveApi.Objects
 		/// <inheritdoc/>
 		public override UnifiedObject TransformRight(double NearDistance, double FarDistance)
 		{
+			bool vertical = true;
+			double zPos = Mesh.Vertices[0].Coordinates.Z;
+			double minX = double.MaxValue, maxX = double.MinValue;
+			for (int i = 0; i < Mesh.Vertices.Length; i++)
+			{
+				minX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, minX);
+				maxX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, maxX);
+				if (System.Math.Abs(Mesh.Vertices[i].Coordinates.Z - zPos) > 0.1)
+				{
+					vertical = false;
+				}
+			}
+
 			StaticObject Result = (StaticObject)this.Clone();
+
+			if (vertical || System.Math.Abs(NearDistance - FarDistance) > 0.1)
+			{
+				double width = maxX - minX;
+				Result.ApplyScale(width / (NearDistance + width), 1, 1);
+				return Result;
+			}
+
 			for (int i = 0; i < Mesh.Vertices.Length; i += 4)
 			{
 				List<VertexTemplate> tempList = Mesh.Vertices.Skip(i).Take(4).ToList();
