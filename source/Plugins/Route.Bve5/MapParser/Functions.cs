@@ -397,5 +397,14 @@ namespace Route.Bve5
 				y *= t;
 			}
 		}
+
+		public static int IndexOf<T>(this List<string> source, T value, StringComparison stringComparison)
+		{
+			if (typeof(T) == typeof(string))
+			{
+				return source.FindIndex(x => x.Equals(value as string, stringComparison));
+			}
+			return -1;
+		}
 	}
 }

@@ -128,7 +128,7 @@ namespace Route.Bve5
 				}
 
 				string TrackKey = Statement.Key;
-				if (!RouteData.TrackKeyList.Contains(TrackKey))
+				if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 				{
 					RouteData.TrackKeyList.Add(TrackKey);
 				}

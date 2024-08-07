@@ -98,7 +98,7 @@ namespace Route.Bve5
 							TrackKey = "0";
 						}
 
-						if (!RouteData.TrackKeyList.Contains(TrackKey))
+						if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place ScriptedTrain " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
 							TrackKey = "0";
@@ -144,7 +144,7 @@ namespace Route.Bve5
 					TrackKey = "0";
 				}
 
-				if (!RouteData.TrackKeyList.Contains(TrackKey))
+				if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 				{
 					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place waypoint for ScriptedTrain " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
 					TrackKey = "0";
@@ -167,7 +167,7 @@ namespace Route.Bve5
 
 			foreach (var OtherTrain in OtherTrains)
 			{
-				if (!RouteData.TrackKeyList.Contains(OtherTrain.TrackKey))
+				if (!RouteData.TrackKeyList.Contains(OtherTrain.TrackKey, StringComparer.OrdinalIgnoreCase))
 				{
 					continue;
 				}
@@ -257,7 +257,7 @@ namespace Route.Bve5
 									Accelerate = Convert.ToDouble(Accelerate) / 3.6,
 									TargetSpeed = Convert.ToDouble(Speed) / 3.6,
 									Direction = (TravelDirection)OtherTrain.Direction,
-									RailIndex = RouteData.TrackKeyList.IndexOf(OtherTrain.TrackKey)
+									RailIndex = RouteData.TrackKeyList.IndexOf(OtherTrain.TrackKey, StringComparison.OrdinalIgnoreCase)
 								});
 							}
 							break;

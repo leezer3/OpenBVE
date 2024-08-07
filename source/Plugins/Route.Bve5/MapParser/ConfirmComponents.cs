@@ -455,7 +455,7 @@ namespace Route.Bve5
 							TrackKey = "0";
 						}
 
-						if (!RouteData.TrackKeyList.Contains(TrackKey))
+						if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place Structure " + Statement.Key + " on the non-existent track " + d.TrackKey + " at track position " + Statement.Distance + "m");
 							TrackKey = "0";
@@ -497,7 +497,7 @@ namespace Route.Bve5
 						}
 
 						
-						if (RouteData.TrackKeyList.Contains(TrackKeys[0]) && RouteData.TrackKeyList.Contains(TrackKeys[1]))
+						if (RouteData.TrackKeyList.Contains(TrackKeys[0], StringComparer.OrdinalIgnoreCase) && RouteData.TrackKeyList.Contains(TrackKeys[1]))
 						{
 							int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 							Blocks[BlockIndex].Cracks.Add(new Crack(Statement.Key, Statement.Distance, TrackKeys[0], TrackKeys[1]));
@@ -560,7 +560,7 @@ namespace Route.Bve5
 									TrackKey = "0";
 								}
 
-								if (!RouteData.TrackKeyList.Contains(TrackKey))
+								if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place Repeater " + Statement.Key + " on the non-existent track " + d.TrackKey + " at track position " + Statement.Distance + "m");
 									TrackKey = "0";
@@ -750,7 +750,7 @@ namespace Route.Bve5
 					TrackKey = "0";
 				}
 
-				if (!RouteData.TrackKeyList.Contains(TrackKey))
+				if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 				{
 					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Attempted to place Signal " + Statement.Key + " on the non-existent track " + TrackKey + " at track position " + Statement.Distance + "m");
 					TrackKey = "0";
@@ -768,7 +768,7 @@ namespace Route.Bve5
 					Tilt = 0;
 				}
 
-				int RailIndex = RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKey));
+				int RailIndex = RouteData.TrackKeyList.IndexOf(Convert.ToString(TrackKey), StringComparison.OrdinalIgnoreCase);
 
 				if (RailIndex != -1)
 				{
