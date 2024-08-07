@@ -79,7 +79,12 @@ namespace Route.Bve5
 					FlangeSounds = new List<TrackSound>()
 				};
 				sortedBlocks.Add(Distance, NewBlock);
-				return sortedBlocks.IndexOfKey(Distance);
+				int newIndex = sortedBlocks.IndexOfKey(Distance);
+				if (newIndex > 0)
+				{
+					Blocks[newIndex].Fog = Blocks[newIndex - 1].Fog;
+				}
+				return newIndex;
 			}
 		}
 	}

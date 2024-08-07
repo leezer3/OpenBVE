@@ -31,6 +31,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using RouteManager2.Climate;
 using RouteManager2.Stations;
 
 namespace Route.Bve5
@@ -880,66 +881,67 @@ namespace Route.Bve5
 
 							int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
 
-							if (Convert.ToSingle(Start) < Convert.ToSingle(End))
+							if (Start > End)
 							{
-								RouteData.Blocks[BlockIndex].Fog.Start = (float)Start;
-								RouteData.Blocks[BlockIndex].Fog.End = (float)End;
+								Start = Plugin.CurrentRoute.NoFogStart;
+								End = Plugin.CurrentRoute.NoFogEnd;
 							}
-							else
-							{
-								RouteData.Blocks[BlockIndex].Fog.Start = Plugin.CurrentRoute.NoFogStart;
-								RouteData.Blocks[BlockIndex].Fog.End = Plugin.CurrentRoute.NoFogEnd;
-							}
-							RouteData.Blocks[BlockIndex].Fog.Color = new Color24((byte)Red, (byte)Green, (byte)Blue);
+
+							RouteData.Blocks[BlockIndex].Fog = new Fog((float)Start, (float)End, new Color24((byte)Red, (byte)Green, (byte)Blue), Statement.Distance);
 							RouteData.Blocks[BlockIndex].FogDefined = true;
 						}
 						break;
 					case MapFunctionName.Interpolate:
 					case MapFunctionName.Set:
+					{
+						int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
+						float Density = 1.0f, r = 1.0f, g = 1.0f, b = 1.0f;
+						if (!Statement.HasArgument(ArgumentName.Red) && !Statement.HasArgument(ArgumentName.Green) && !Statement.HasArgument(ArgumentName.Blue))
 						{
-							double Density, TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument(ArgumentName.Density) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Density), out Density))
+							if (!Statement.HasArgument(ArgumentName.Density))
 							{
-								Density = 0.001;
+								// Has the same effect as setting the fog value twice, hence no interpolation
+								RouteData.Blocks[BlockIndex].FogDefined = true;
+								RouteData.Blocks[BlockIndex].Fog.TrackPosition = Statement.Distance;
 							}
-							if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
+							else
 							{
-								TempRed = 1.0;
+								// Changes the density, but not the color
+								if (!NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Density), out Density))
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogDensity value at track position " + Statement.Distance);
+									break;
+								}
+								RouteData.Blocks[BlockIndex].FogDefined = true;
+								RouteData.Blocks[BlockIndex].Fog.TrackPosition = Statement.Distance;
+								RouteData.Blocks[BlockIndex].Fog.Density = Density;
 							}
-							if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
-							{
-								TempGreen = 1.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
-							{
-								TempBlue = 1.0;
-							}
-							
-
-							double Red = Convert.ToDouble(TempRed);
-							double Green = Convert.ToDouble(TempGreen);
-							double Blue = Convert.ToDouble(TempBlue);
-							if (Red < 0.0 || Red > 1.0)
-							{
-								Red = Red < 0.0 ? 0.0 : 1.0;
-							}
-							if (Green < 0.0 || Green > 1.0)
-							{
-								Green = Green < 0.0 ? 0.0 : 1.0;
-							}
-							if (Blue < 0.0 || Blue > 1.0)
-							{
-								Blue = Blue < 0.0 ? 0.0 : 1.0;
-							}
-
-							int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
-
-							RouteData.Blocks[BlockIndex].Fog.Start = 0.0f;
-							RouteData.Blocks[BlockIndex].Fog.End = 1.0f / Convert.ToSingle(Density);
-							RouteData.Blocks[BlockIndex].Fog.Color = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
-							RouteData.Blocks[BlockIndex].FogDefined = true;
 						}
-						break;
+						else
+						{
+							if (!NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Density), out Density))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogDensity value at track position " + Statement.Distance);
+								break;
+							}
+							if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out r))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor R value at track position " + Statement.Distance);
+							}
+							if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out g))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor G value at track position " + Statement.Distance);
+							}
+							if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out b))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor B value at track position " + Statement.Distance);
+							}
+						}
+
+						RouteData.Blocks[BlockIndex].Fog = new Fog(0, 1, new Color24((byte)(r * 255), (byte)(g * 255), (byte)(b * 255)), Statement.Distance, false, Density);
+						RouteData.Blocks[BlockIndex].FogDefined = true;
+					}
+					break;
 				}
 			}
 		}

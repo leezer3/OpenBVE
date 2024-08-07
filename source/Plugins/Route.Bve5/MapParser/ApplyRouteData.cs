@@ -112,7 +112,7 @@ namespace Route.Bve5
 			int CurrentTrackLength = 0;
 			int PreviousFogElement = -1;
 			int PreviousFogEvent = -1;
-			Fog PreviousFog = new Fog(Plugin.CurrentRoute.NoFogStart, Plugin.CurrentRoute.NoFogEnd, Color24.Grey, -InterpolateInterval);
+			Fog PreviousFog = new Fog(Plugin.CurrentRoute.NoFogStart, Plugin.CurrentRoute.NoFogEnd, Color24.Grey, -InterpolateInterval, false);
 			Plugin.CurrentRoute.Tracks[0].Elements = new TrackElement[256];
 			Plugin.CurrentRoute.Tracks[0].Direction = TrackDirection.Forwards;
 			for (int j = 0; j < Data.TrackKeyList.Count; j++)

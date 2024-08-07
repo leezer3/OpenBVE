@@ -137,7 +137,7 @@ namespace RouteViewer
 				Program.CurrentRoute.CurrentFog.Color.B = (byte)(Program.CurrentRoute.PreviousFog.Color.B * frc + Program.CurrentRoute.NextFog.Color.B * fr);
 				if (!Program.CurrentRoute.CurrentFog.IsLinear)
 				{
-					Program.CurrentRoute.CurrentFog.Density = (byte)(Program.CurrentRoute.PreviousFog.Density * frc + Program.CurrentRoute.NextFog.Density * fr);
+					Program.CurrentRoute.CurrentFog.Density = Program.CurrentRoute.PreviousFog.Density * frc + Program.CurrentRoute.NextFog.Density * fr;
 				}
 				
 			}
