@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, S520, The OpenBVE Project
 //
@@ -25,6 +25,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Antlr4.Runtime.Atn;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Colors;
@@ -234,6 +236,8 @@ namespace Route.Bve5
 			}
 		}
 
+		private static double lastLegacyGradientPosition = Double.MinValue;
+
 		private static void ConvertGradient(Statement Statement, RouteData RouteData)
 		{
 			{
@@ -251,11 +255,39 @@ namespace Route.Bve5
 					case MapFunctionName.BeginConst:
 					case MapFunctionName.Pitch:
 						{
-							object Gradient = Statement.FunctionName == MapFunctionName.Pitch ? d.Rate : d.Gradient;
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							RouteData.Blocks[Index].Pitch = Convert.ToDouble(Gradient) / 1000.0;
-							RouteData.Blocks[Index].GradientInterpolateStart = true;
-							RouteData.Blocks[Index].GradientTransitionEnd = true;
+							object newGradientValue = Statement.FunctionName == MapFunctionName.Pitch ? d.Rate : d.Gradient;
+							if (Statement.ElementName == MapElementName.Legacy && Statement.Distance - lastLegacyGradientPosition >= 15)
+							{
+								int firstIndex = RouteData.FindOrAddBlock(Math.Max(0, Statement.Distance - 10));
+								int secondIndex = RouteData.FindOrAddBlock(Statement.Distance + 15);
+
+								int LastInterpolateIndex = -1;
+								if (firstIndex > 0)
+								{
+									LastInterpolateIndex = RouteData.Blocks.FindLastIndex(firstIndex - 1, firstIndex, Block => Block.GradientInterpolateEnd);
+								}
+
+								double oldGradientValue = LastInterpolateIndex != -1 ? RouteData.Blocks[LastInterpolateIndex].Pitch * 1000.0 : 0.0;
+
+								RouteData.Blocks[firstIndex].Pitch = Convert.ToDouble(newGradientValue) / 1000.0;
+								RouteData.Blocks[firstIndex].GradientInterpolateStart = true;
+								RouteData.Blocks[firstIndex].GradientInterpolateEnd = true;
+								RouteData.Blocks[secondIndex].GradientInterpolateEnd = true;
+								RouteData.Blocks[secondIndex].GradientTransitionEnd = true;
+							}
+							else
+							{
+								int Index = RouteData.FindOrAddBlock(Statement.Distance);
+								RouteData.Blocks[Index].Pitch = Convert.ToDouble(newGradientValue) / 1000.0;
+								RouteData.Blocks[Index].GradientInterpolateStart = true;
+								RouteData.Blocks[Index].GradientTransitionEnd = true;
+							}
+
+							if (Statement.ElementName == MapElementName.Legacy)
+							{
+								lastLegacyGradientPosition = Statement.Distance;
+							}
+
 						}
 						break;
 					case MapFunctionName.End:
