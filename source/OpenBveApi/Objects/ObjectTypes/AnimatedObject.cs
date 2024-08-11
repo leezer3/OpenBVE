@@ -882,6 +882,10 @@ namespace OpenBveApi.Objects
 		{
 			for (int i = 0; i < States.Length; i++)
 			{
+				if (States[i].Prototype == null || States[i].Prototype.Mesh == null)
+				{
+					continue;
+				}
 				foreach (MeshFace face in States[i].Prototype.Mesh.Faces)
 				{
 					OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
