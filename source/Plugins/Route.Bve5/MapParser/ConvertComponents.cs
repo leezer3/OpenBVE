@@ -176,11 +176,9 @@ namespace Route.Bve5
 			}
 
 			{
-				List<Block> TempBlocks = new List<Block>(RouteData.Blocks);
-
-				for (int i = 0; i < TempBlocks.Count; i++)
+				for (int i = 0; i < RouteData.Blocks.Count; i++)
 				{
-					if (!TempBlocks[i].Rails["0"].CurveTransitionEnd)
+					if (!RouteData.Blocks[i].Rails["0"].CurveTransitionEnd)
 					{
 						continue;
 					}
@@ -189,37 +187,40 @@ namespace Route.Bve5
 
 					for (int k = i - 1; k >= 0; k--)
 					{
-						if (TempBlocks[k].Rails["0"].CurveTransitionEnd)
+						if (RouteData.Blocks[k].Rails["0"].CurveTransitionEnd)
 						{
 							break;
 						}
 
-						if (TempBlocks[k].Rails["0"].CurveTransitionStart)
+						if (RouteData.Blocks[k].Rails["0"].CurveTransitionStart)
 						{
 							StartBlock = k;
 							break;
 						}
 					}
 
+					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
+
 					if (StartBlock != i)
 					{
-						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double EndDistance = TempBlocks[i].StartingDistance;
+						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
+						double EndDistance = RouteData.Blocks[i].StartingDistance;
 
 						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
 						{
 							RouteData.FindOrAddBlock(k);
 						}
 					}
+
+					i = RouteData.sortedBlocks.IndexOfKey(dist);
 				}
 			}
 
 			{
-				List<Block> TempBlocks = new List<Block>(RouteData.Blocks);
 
-				for (int i = 0; i < TempBlocks.Count; i++)
+				for (int i = 0; i < RouteData.Blocks.Count; i++)
 				{
-					if (!TempBlocks[i].Rails["0"].CurveInterpolateEnd)
+					if (!RouteData.Blocks[i].Rails["0"].CurveInterpolateEnd)
 					{
 						continue;
 					}
@@ -228,26 +229,28 @@ namespace Route.Bve5
 
 					for (int k = i - 1; k >= 0; k--)
 					{
-						if (TempBlocks[k].Rails["0"].CurveInterpolateEnd && !TempBlocks[k].Rails["0"].CurveInterpolateStart)
+						if (RouteData.Blocks[k].Rails["0"].CurveInterpolateEnd && !RouteData.Blocks[k].Rails["0"].CurveInterpolateStart)
 						{
 							break;
 						}
 
-						if (TempBlocks[k].Rails["0"].CurveInterpolateStart)
+						if (RouteData.Blocks[k].Rails["0"].CurveInterpolateStart)
 						{
 							StartBlock = k;
 							break;
 						}
 					}
 
+					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
+
 					if (StartBlock != i)
 					{
-						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double StartRadius = TempBlocks[StartBlock].CurrentTrackState.CurveRadius;
-						double StartCant = TempBlocks[StartBlock].CurrentTrackState.CurveCant;
-						double EndDistance = TempBlocks[i].StartingDistance;
-						double EndRadius = TempBlocks[i].CurrentTrackState.CurveRadius;
-						double EndCant = TempBlocks[i].CurrentTrackState.CurveCant;
+						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
+						double StartRadius = RouteData.Blocks[StartBlock].CurrentTrackState.CurveRadius;
+						double StartCant = RouteData.Blocks[StartBlock].CurrentTrackState.CurveCant;
+						double EndDistance = RouteData.Blocks[i].StartingDistance;
+						double EndRadius = RouteData.Blocks[i].CurrentTrackState.CurveRadius;
+						double EndCant = RouteData.Blocks[i].CurrentTrackState.CurveCant;
 
 						if (StartRadius == EndRadius && StartCant == EndCant)
 						{
@@ -259,6 +262,8 @@ namespace Route.Bve5
 							RouteData.FindOrAddBlock(k);
 						}
 					}
+
+					i = RouteData.sortedBlocks.IndexOfKey(dist);
 				}
 			}
 		}
@@ -349,11 +354,10 @@ namespace Route.Bve5
 			}
 
 			{
-				List<Block> TempBlocks = new List<Block>(RouteData.Blocks);
 
-				for (int i = 0; i < TempBlocks.Count; i++)
+				for (int i = 0; i < RouteData.Blocks.Count; i++)
 				{
-					if (!TempBlocks[i].GradientTransitionEnd)
+					if (!RouteData.Blocks[i].GradientTransitionEnd)
 					{
 						continue;
 					}
@@ -362,37 +366,39 @@ namespace Route.Bve5
 
 					for (int k = i - 1; k >= 0; k--)
 					{
-						if (TempBlocks[k].GradientTransitionEnd)
+						if (RouteData.Blocks[k].GradientTransitionEnd)
 						{
 							break;
 						}
 
-						if (TempBlocks[k].GradientTransitionStart)
+						if (RouteData.Blocks[k].GradientTransitionStart)
 						{
 							StartBlock = k;
 							break;
 						}
 					}
 
+					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
+
 					if (StartBlock != i)
 					{
-						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double EndDistance = TempBlocks[i].StartingDistance;
+						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
+						double EndDistance = RouteData.Blocks[i].StartingDistance;
 
 						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
 						{
 							RouteData.FindOrAddBlock(k);
 						}
 					}
+
+					i = RouteData.sortedBlocks.IndexOfKey(dist);
 				}
 			}
 
 			{
-				List<Block> TempBlocks = new List<Block>(RouteData.Blocks);
-
-				for (int i = 0; i < TempBlocks.Count; i++)
+				for (int i = 0; i < RouteData.Blocks.Count; i++)
 				{
-					if (!TempBlocks[i].GradientInterpolateEnd)
+					if (!RouteData.Blocks[i].GradientInterpolateEnd)
 					{
 						continue;
 					}
@@ -401,24 +407,26 @@ namespace Route.Bve5
 
 					for (int k = i - 1; k >= 0; k--)
 					{
-						if (TempBlocks[k].GradientInterpolateEnd && !TempBlocks[k].GradientInterpolateStart)
+						if (RouteData.Blocks[k].GradientInterpolateEnd && !RouteData.Blocks[k].GradientInterpolateStart)
 						{
 							break;
 						}
 
-						if (TempBlocks[k].GradientInterpolateStart)
+						if (RouteData.Blocks[k].GradientInterpolateStart)
 						{
 							StartBlock = k;
 							break;
 						}
 					}
 
+					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
+
 					if (StartBlock != i)
 					{
-						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double StartPitch = TempBlocks[StartBlock].Pitch;
-						double EndDistance = TempBlocks[i].StartingDistance;
-						double EndPitch = TempBlocks[i].Pitch;
+						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
+						double StartPitch = RouteData.Blocks[StartBlock].Pitch;
+						double EndDistance = RouteData.Blocks[i].StartingDistance;
+						double EndPitch = RouteData.Blocks[i].Pitch;
 
 						if (StartPitch == EndPitch)
 						{
@@ -430,6 +438,8 @@ namespace Route.Bve5
 							RouteData.FindOrAddBlock(k);
 						}
 					}
+
+					i = RouteData.sortedBlocks.IndexOfKey(dist);
 				}
 			}
 		}
@@ -761,11 +771,10 @@ namespace Route.Bve5
 
 			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
 			{
-				List<Block> TempBlocks = new List<Block>(RouteData.Blocks);
 				string railKey = RouteData.TrackKeyList[j];
-				for (int i = 0; i < TempBlocks.Count; i++)
+				for (int i = 0; i < RouteData.Blocks.Count; i++)
 				{
-					if (!TempBlocks[i].Rails[railKey].CurveInterpolateEnd)
+					if (!RouteData.Blocks[i].Rails[railKey].CurveInterpolateEnd)
 					{
 						continue;
 					}
@@ -774,24 +783,26 @@ namespace Route.Bve5
 
 					for (int k = i - 1; k >= 0; k--)
 					{
-						if (TempBlocks[k].Rails[railKey].CurveInterpolateEnd && !TempBlocks[k].Rails[railKey].CurveInterpolateStart)
+						if (RouteData.Blocks[k].Rails[railKey].CurveInterpolateEnd && !RouteData.Blocks[k].Rails[railKey].CurveInterpolateStart)
 						{
 							break;
 						}
 
-						if (TempBlocks[k].Rails[railKey].CurveInterpolateStart)
+						if (RouteData.Blocks[k].Rails[railKey].CurveInterpolateStart)
 						{
 							StartBlock = k;
 							break;
 						}
 					}
 
+					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
+
 					if (StartBlock != i)
 					{
-						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double StartCant = TempBlocks[StartBlock].Rails[railKey].CurveCant;
-						double EndDistance = TempBlocks[i].StartingDistance;
-						double EndCant = TempBlocks[i].Rails[railKey].CurveCant;
+						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
+						double StartCant = RouteData.Blocks[StartBlock].Rails[railKey].CurveCant;
+						double EndDistance = RouteData.Blocks[i].StartingDistance;
+						double EndCant = RouteData.Blocks[i].Rails[railKey].CurveCant;
 
 						if (StartCant == EndCant)
 						{
@@ -803,6 +814,8 @@ namespace Route.Bve5
 							RouteData.FindOrAddBlock(k);
 						}
 					}
+
+					i = RouteData.sortedBlocks.IndexOfKey(i);
 				}
 			}
 		}
