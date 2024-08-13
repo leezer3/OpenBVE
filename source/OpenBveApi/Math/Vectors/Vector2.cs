@@ -33,6 +33,13 @@ namespace OpenBveApi.Math {
 			this.Y = v.Y;
 		}
 
+		/// <summary>Converts a Vector2 to a Vector2f</summary>
+		///	<remarks>This discards the double precision</remarks>
+		public static implicit operator Vector2f(Vector2 v)
+		{
+			return new Vector2f(v.X, v.Y);
+		}
+
 		/// <summary>Parses a Vector2 from a list of strings</summary>
 		/// <param name="arguments">The list of strings</param>
 		/// <param name="v">The out Vector</param>
