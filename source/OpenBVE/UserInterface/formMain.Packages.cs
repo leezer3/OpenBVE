@@ -1014,7 +1014,7 @@ namespace OpenBve
 					TryLoadImage(pictureBoxPackageImage, "logo.png");
 					break;
 			}
-			labelInstallText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","creation_header"});
+			labelInstallText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","enter_details_header"});
 			textBoxPackageName.Text = currentPackage.Name;
 			textBoxPackageVersion.Text = currentPackage.Version;
 			textBoxPackageAuthor.Text = currentPackage.Author;
