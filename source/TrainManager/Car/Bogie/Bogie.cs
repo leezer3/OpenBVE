@@ -46,6 +46,7 @@ namespace TrainManager.Car
 			baseCar = car;
 			Rear = IsRear;
 			CarSections = new CarSection[] { };
+			CurrentCarSection = -1;
 			FrontAxle = new Axle(TrainManagerBase.currentHost, car.baseTrain, car);
 			FrontAxle.Follower.TriggerType = EventTriggerType.FrontBogieAxle;
 			RearAxle = new Axle(TrainManagerBase.currentHost, car.baseTrain, car);

@@ -28,7 +28,6 @@ using System.IO;
 using System.Linq;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
-using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -117,10 +116,10 @@ namespace Route.Bve5
 
 						OtherTrains.Add(new ScriptedTrain
 						{
-							Key = Convert.ToString(TrainKey),
-							FilePath = Convert.ToString(TrainFilePath),
-							TrackKey = Convert.ToString(TrackKey),
-							Direction = Convert.ToInt32(Direction)
+							Key = TrainKey,
+							FilePath = TrainFilePath,
+							TrackKey = TrackKey,
+							Direction = Direction
 						});
 						break;
 					default:
@@ -161,8 +160,8 @@ namespace Route.Bve5
 					continue;
 				}
 
-				OtherTrains[TrainIndex].TrackKey = Convert.ToString(TrackKey);
-				OtherTrains[TrainIndex].Direction = Convert.ToInt32(Direction);
+				OtherTrains[TrainIndex].TrackKey = TrackKey;
+				OtherTrains[TrainIndex].Direction = Direction;
 			}
 
 			foreach (var OtherTrain in OtherTrains)
@@ -188,10 +187,6 @@ namespace Route.Bve5
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
 					Train.Cars[i] = new CarBase(Train, i);
-					Train.Cars[i].CurrentCarSection = -1;
-					Train.Cars[i].ChangeCarSection(CarSectionType.NotVisible);
-					Train.Cars[i].FrontBogie.ChangeSection(-1);
-					Train.Cars[i].RearBogie.ChangeSection(-1);
 					Train.Cars[i].FrontAxle.Follower.TriggerType = i == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
 					Train.Cars[i].RearAxle.Follower.TriggerType = i == OtherTrain.CarObjects.Count - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 					Train.Cars[i].BeaconReceiver.TriggerType = i == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;
@@ -369,12 +364,10 @@ namespace Route.Bve5
 
 			foreach (var Structure in Structures)
 			{
-				string Key, TempDistance, TempSpan, TempZ;
-
-				Structure.TryGetValue("key", out Key);
-				Structure.TryGetValue("distance", out TempDistance);
-				Structure.TryGetValue("span", out TempSpan);
-				Structure.TryGetValue("z", out TempZ);
+				Structure.TryGetValue("key", out string Key);
+				Structure.TryGetValue("distance", out string TempDistance);
+				Structure.TryGetValue("span", out string TempSpan);
+				Structure.TryGetValue("z", out string TempZ);
 
 				double Distance, Span, Z;
 				if (string.IsNullOrEmpty(TempDistance) || !NumberFormats.TryParseDoubleVb6(TempDistance, out Distance))
@@ -395,12 +388,10 @@ namespace Route.Bve5
 
 			foreach (var Sound3d in Sound3ds)
 			{
-				string Key, TempDistance1, TempDistance2, Function;
-
-				Sound3d.TryGetValue("key", out Key);
-				Sound3d.TryGetValue("distance1", out TempDistance1);
-				Sound3d.TryGetValue("distance2", out TempDistance2);
-				Sound3d.TryGetValue("function", out Function);
+				Sound3d.TryGetValue("key", out string Key);
+				Sound3d.TryGetValue("distance1", out string TempDistance1);
+				Sound3d.TryGetValue("distance2", out string TempDistance2);
+				Sound3d.TryGetValue("function", out string Function);
 
 				double Distance1;
 				double Distance2;

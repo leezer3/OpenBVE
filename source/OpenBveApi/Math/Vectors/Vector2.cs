@@ -286,7 +286,20 @@ namespace OpenBveApi.Math {
 			double y = sineOfAngle * this.X + cosineOfAngle * this.Y;
 			this = new Vector2(x, y);
 		}
-		
+
+		/// <summary>Rotates the vector by the specified angle.</summary>
+		/// <param name="angle">The angle.</param>
+		public void Rotate(double angle)
+		{
+			if (angle == 0)
+			{
+				return;
+			}
+			double cosineOfAngle = System.Math.Cos(angle);
+			double sineOfAngle = System.Math.Sin(angle);
+			Rotate(cosineOfAngle, sineOfAngle);
+		}
+
 		/// <summary>Checks whether the vector is a null vector.</summary>
 		/// <returns>A boolean indicating whether the vector is a null vector.</returns>
 		public bool IsNullVector() {

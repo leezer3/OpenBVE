@@ -44,8 +44,6 @@ namespace CsvRwRouteParser
 						{
 							foreach (XmlNode c in n.ChildNodes)
 							{
-
-								//string[] Arguments = c.InnerText.Split(new[] { ',' });
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "name":
@@ -213,8 +211,7 @@ namespace CsvRwRouteParser
 										}
 										break;
 									case "stopduration":
-										double stopDuration;
-										if (!double.TryParse(c.InnerText, out stopDuration))
+										if (!double.TryParse(c.InnerText, out double stopDuration))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Stop duration is invalid in XML file " + fileName);
 										}
@@ -228,8 +225,7 @@ namespace CsvRwRouteParser
 										}
 										break;
 									case "passengerratio":
-										double ratio;
-										if (!double.TryParse(c.InnerText, out ratio))
+										if (!double.TryParse(c.InnerText, out double ratio))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Passenger ratio is invalid in XML file " + fileName);
 										}
@@ -331,8 +327,7 @@ namespace CsvRwRouteParser
 										}
 										break;
 									case "reopendoor":
-										double reopenDoor;
-										if (!double.TryParse(c.InnerText, out reopenDoor))
+										if (!double.TryParse(c.InnerText, out double reopenDoor))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ReopenDoor is invalid in XML file " + fileName);
 											reopenDoor = 0.0;
@@ -348,8 +343,7 @@ namespace CsvRwRouteParser
 										station.ReopenDoor = 0.01 * reopenDoor;
 										break;
 									case "reopenstationlimit":
-										int reopenStationLimit;
-										if (!int.TryParse(c.InnerText, out reopenStationLimit))
+										if (!int.TryParse(c.InnerText, out int reopenStationLimit))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ReopenStationLimit is invalid in XML file " + fileName);
 											reopenStationLimit = 5;
@@ -365,8 +359,7 @@ namespace CsvRwRouteParser
 										station.ReopenStationLimit = reopenStationLimit;
 										break;
 									case "interferenceindoor":
-										double interferenceInDoor;
-										if (!double.TryParse(c.InnerText, out interferenceInDoor))
+										if (!double.TryParse(c.InnerText, out double interferenceInDoor))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "InterferenceInDoor is invalid in XML file " + fileName);
 											interferenceInDoor = 0.0;
@@ -382,8 +375,7 @@ namespace CsvRwRouteParser
 										station.InterferenceInDoor = interferenceInDoor;
 										break;
 									case "maxinterferingobjectrate":
-										int maxInterferingObjectRate;
-										if (!int.TryParse(c.InnerText, out maxInterferingObjectRate))
+										if (!int.TryParse(c.InnerText, out int maxInterferingObjectRate))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MaxInterferingObjectRate is invalid in XML file " + fileName);
 											maxInterferingObjectRate = Plugin.RandomNumberGenerator.Next(1, 99);
@@ -477,7 +469,7 @@ namespace CsvRwRouteParser
 																		stopRequest.Late.StopMessage = cd.InnerText;
 																	}
 																	break;
-																case "#text":
+																case "text":
 																	stopRequest.Early.StopMessage = cc.InnerText;
 																	stopRequest.OnTime.StopMessage = cc.InnerText;
 																	stopRequest.Late.StopMessage = cc.InnerText;
@@ -511,7 +503,7 @@ namespace CsvRwRouteParser
 																		stopRequest.Late.PassMessage = cd.InnerText;
 																	}
 																	break;
-																case "#text":
+																case "text":
 																	stopRequest.Early.PassMessage = cc.InnerText;
 																	stopRequest.OnTime.PassMessage = cc.InnerText;
 																	stopRequest.Late.PassMessage = cc.InnerText;
@@ -554,7 +546,7 @@ namespace CsvRwRouteParser
 																	}
 																}
 																break;
-															case "#text":
+															case "text":
 																if (!NumberFormats.TryParseIntVb6(cd.InnerText, out stopRequest.OnTime.Probability))
 																{
 

@@ -135,6 +135,7 @@ namespace TrainManager.Car
 			baseTrain = train;
 			trainCarIndex = index;
 			CarSections = new CarSection[] { };
+			CurrentCarSection = -1;
 			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
