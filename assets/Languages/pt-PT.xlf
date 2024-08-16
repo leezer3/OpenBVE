@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<xliff version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="pt-PT">
 		<body>
 			<group id="language">
@@ -17,8 +17,8 @@
 					<note from="translator">Esta tradução não segue o ilegal e estúpido Acordo Ortográfico de 1990 e respeita a Convenção Ortográfica de 1945 (Decreto 35228 de 08-12-1945).</note>
 				</trans-unit>
 				<trans-unit id="last_updated">
-					<source>2019-06-04</source>
-					<target state="translated">2023-12-27</target>
+					<source>2019-06-29</source>
+					<target>2023-12-27</target>
 				</trans-unit>
 			</group>
 			<group id="openbve">
@@ -31,69 +31,69 @@
 				<group id="about">
 					<trans-unit id="title">
 						<source>About</source>
-						<target state="translated">Acerca de</target>
+						<target>Acerca de</target>
 					</trans-unit>
 					<trans-unit id="description">
 						<source>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</source>
-						<target state="translated">O OpenBVE é um simulador grátis de código aberto e multiplataforma de condução de comboios, que incorpora suporte para cenários e cabinas 2D e 3D.\r\n\r\nEste programa foi inicialmente desenvolvido por Michelle e está disponível ao público onde legalmente possível.</target>
+						<target>O OpenBVE é um simulador grátis de código aberto e multiplataforma de condução de comboios, que incorpora suporte para cenários e cabinas 2D e 3D.\r\n\r\nEste programa foi inicialmente desenvolvido por Michelle e está disponível ao público onde legalmente possível.</target>
 					</trans-unit>
 					<trans-unit id="open_source_licenses">
 						<source>Open Source Licenses</source>
-						<target state="translated">Licença de Código Aberto</target>
+						<target>Licença de Código Aberto</target>
 					</trans-unit>
 					<trans-unit id="open_source_licenses_header">
 						<source>OpenBVE makes use of several open-source libraries, whose licenses are reproduced below:</source>
-						<target state="translated">O OpenBVE utiliza várias bibliotecas de código aberto, cujas licenças são reproduzidas abaixo:</target>
+						<target>O OpenBVE utiliza várias bibliotecas de código aberto, cujas licenças são reproduzidas abaixo:</target>
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
-						<target state="translated">Fechar</target>
+						<target>Fechar</target>
 					</trans-unit>
 				</group>
 				<group id="bug_report">
 					<trans-unit id="title">
 						<source>Report Problem</source>
-						<target state="translated">Reportar Problema</target>
+						<target>Reportar Problema</target>
 					</trans-unit>
 					<trans-unit id="description">
 						<source>This function will create a zip archive on your Desktop, containing the previous Simulation log and Crash log (If any), along with a text file containing the brief description of the problem entered below.\r\n\r\nPlease post this on the discussion board, or create a new issue on Github.</source>
-						<target state="translated">Esta função vai criar um arquivo ZIP na sua Área de Trabalho, contendo os anteriores relatórios da Simulação e das Avarias (se existentes), juntamente com um ficheiro de texto contendo uma breve descrição do problema indicado abaixo.\r\n\r\nPor favor publique isto na área de discussão, ou crie uma nova entrada no Github.</target>
+						<target>Esta função vai criar um arquivo ZIP na sua Área de Trabalho, contendo os anteriores relatórios da Simulação e das Avarias (se existentes), juntamente com um ficheiro de texto contendo uma breve descrição do problema indicado abaixo.\r\n\r\nPor favor publique isto na área de discussão, ou crie uma nova entrada no Github.</target>
 					</trans-unit>
 					<trans-unit id="view_log_button">
 						<source>View...</source>
-						<target state="translated">Ver...</target>
+						<target>Ver...</target>
 					</trans-unit>
 					<trans-unit id="view_log">
 						<source>View the previous log:</source>
-						<target state="translated">Ver o registo anterior:</target>
+						<target>Ver o registo anterior:</target>
 					</trans-unit>
 					<trans-unit id="view_crash_log">
 						<source>View the previous crash log:</source>
-						<target state="translated">Ver o registo anterior de avaria:</target>
+						<target>Ver o registo anterior de avaria:</target>
 					</trans-unit>
 					<trans-unit id="enter_description">
 						<source>Please enter a brief description of the problem:</source>
-						<target state="translated">Por favor descreva brevemente o problema:</target>
+						<target>Por favor descreva brevemente o problema:</target>
 					</trans-unit>
 					<trans-unit id="no_log">
 						<source>No simulation logs were found.</source>
-						<target state="translated">Não foram encontrados registos da simulação.</target>
+						<target>Não foram encontrados registos da simulação.</target>
 					</trans-unit>
 					<trans-unit id="no_crash_log">
 						<source>No crash logs were found.</source>
-						<target state="translated">Não foram encontrados registos de avarias.</target>
+						<target>Não foram encontrados registos de avarias.</target>
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save Bug Report</source>
-						<target state="translated">Guardar Relatório do Erro</target>
+						<target>Guardar Relatório do Erro</target>
 					</trans-unit>
 					<trans-unit id="saved">
-						<source>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
-						<target state="translated">O relatório foi guardado como "[filename]" na sua Área de Trabalho. \r\n\r\nAgora pode submeter um relatório de erro na área de discussão, ou colocando uma questão no GitHub com este ficheiro ZIP anexado.</target>
+						<source>The report has been saved as &quot;[filename]&quot; on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
+						<target>O relatório foi guardado como &quot;[filename]&quot; na sua Área de Trabalho. \r\n\r\nAgora pode submeter um relatório de erro na área de discussão, ou colocando uma questão no GitHub com este ficheiro ZIP anexado.</target>
 					</trans-unit>
 					<trans-unit id="save_failed">
-						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</source>
-						<target state="translated">Impossível criar o relatório de erro! \r\n\r\nPode aceder ao Registo e Registo de Avaria directamente clicando no botão "Ver..." , submetendo depois estes registos à área de discussão ou colocando uma questão no GitHub.</target>
+						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the &quot;View...&quot; button, then submit these logs to the discussion board or open an issue on GitHub.</source>
+						<target>Impossível criar o relatório de erro! \r\n\r\nPode aceder ao Registo e Registo de Avaria directamente clicando no botão &quot;Ver...&quot; , submetendo depois estes registos à área de discussão ou colocando uma questão no GitHub.</target>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -139,7 +139,7 @@
 					</trans-unit>
 					<trans-unit id="updates_daily">
 						<source>The most recent nightly build from [date] is available for download.</source>
-						<target state="translated">A versão nocturna mais recente de [date] está disponível para baixar.</target>
+						<target>A versão nocturna mais recente de [date] está disponível para baixar.</target>
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
@@ -247,7 +247,7 @@
 					</trans-unit>
 					<trans-unit id="route_corrupt_missingobjects">
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
-						<target state="translated">A linha seleccionada está corrompida: \r\n Não é possível localizar todos os objectos definidos.</target>
+						<target>A linha seleccionada está corrompida: \r\n Não é possível localizar todos os objectos definidos.</target>
 					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
@@ -283,15 +283,21 @@
 					</trans-unit>
 					<trans-unit id="database_newer_expected">
 						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
-						<target state="translated">A versão da base de dados do pacote parece ser mais recente que a suportada por esta edição do OpenBVE.</target>
+						<target>A versão da base de dados do pacote parece ser mais recente que a suportada por esta edição do OpenBVE.</target>
 					</trans-unit>
 					<trans-unit id="database_invalid_xml">
 						<source>The package database XML was invalid, and has been re-created.</source>
-						<target state="translated">A base de dados XML do pacote é inválida e foi recreada.</target>
+						<target>A base de dados XML do pacote é inválida e foi recreada.</target>
 					</trans-unit>
 					<trans-unit id="error_busy_thread">
 						<source>The package worker thread is currently busy. Please wait a moment and try again.</source>
-						<target state="translated">Actualmente ocupado a trabalhar no pacote. Por favor aguarde um momento e tente de novo.</target>
+						<target>Actualmente ocupado a trabalhar no pacote. Por favor aguarde um momento e tente de novo.</target>
+					</trans-unit>
+					<trans-unit id="route_please_select">
+						<source>Please first select a route file to begin.</source>
+					</trans-unit>
+					<trans-unit id="route_switch_turn">
+						<source>The .Turn command and the .Switch command may not be used in the same route.</source>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -371,10 +377,6 @@
 						<source>Recently used</source>
 						<target>Utilizado recentemente</target>
 					</trans-unit>
-					<trans-unit id="train_default">
-						<source>Route default</source>
-						<target>Pré-definido</target>
-					</trans-unit>
 					<trans-unit id="train_usedefault">
 						<source>Use the train suggested by the route</source>
 						<target>Utiliza o comboio pré-definido na linha</target>
@@ -397,14 +399,14 @@
 					</trans-unit>
 					<trans-unit id="train_settings_reverseconsist">
 						<source>Reverse Consist:</source>
-						<target state="translated">Inverter composição:</target>
+						<target>Inverter composição:</target>
 					</trans-unit>
 					<trans-unit id="train_settings_encoding_preview">
 						<source>Preview:</source>
 						<target>Pré-visualização:</target>
 					</trans-unit>
 					<trans-unit id="train_notfound">
-						<source>The default train could not be found:\n\n</source>
+						<source>The default train could not be found:\r\n\r\n</source>
 						<target>O comboio associado à linha não foi encontrado:\n\n</target>
 					</trans-unit>
 					<trans-unit id="train_pluginnotsupported">
@@ -422,6 +424,15 @@
 					<trans-unit id="start_start">
 						<source>Start</source>
 						<target>Iniciar</target>
+					</trans-unit>
+					<trans-unit id="train_choose">
+						<source>Choose Train...</source>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Route default</source>
+					</trans-unit>
+					<trans-unit id="train_notfound_download">
+						<source>The default train is not currently installed:\r\n\r\n [train]\r\n\r\n It may be downloaded at:\r\n\r\n</source>
 					</trans-unit>
 				</group>
 				<group id="review">
@@ -620,8 +631,8 @@
 						<target>Instala um pacote</target>
 					</trans-unit>
 					<trans-unit id="install_invalid">
-						<source>This file does not appear to be a valid openBVE package.</source>
-						<target state="translated">Este ficheiro não parece ser um pacote válido do openBVE.</target>
+						<source>This file does not appear to be a valid OpenBVE package.</source>
+						<target>Este ficheiro não parece ser um pacote válido do OpenBVE.</target>
 					</trans-unit>
 					<trans-unit id="install_version_error">
 						<source>Package Version Error</source>
@@ -732,8 +743,8 @@
 						<target>Remover</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_skip_if_none">
-						<source>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</source>
-						<target state="translated">Se o seu pacote não assenta noutras dependências pode prosseguir clicando no botão "Criar".</target>
+						<source>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</source>
+						<target>Se o seu pacote não assenta noutras dependências pode prosseguir clicando no botão &quot;Criar&quot;.</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
@@ -759,7 +770,7 @@
 						<source>The new package has been assigned the following GUID:</source>
 						<target>Foi atribuído o seguinte GUID ao novo pacote:</target>
 					</trans-unit>
-					<trans-unit id="creation_header">
+					<trans-unit id="enter_details_header">
 						<source>Enter Package Details</source>
 						<target>Criar um pacote</target>
 					</trans-unit>
@@ -995,6 +1006,15 @@
 						<source>Failed to create the following file: \r \n</source>
 						<target>Falhou a criação do seguinte ficheiro: \r \n</target>
 					</trans-unit>
+					<trans-unit id="database_newer_expected">
+						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+					</trans-unit>
+					<trans-unit id="database_invalid_xml">
+						<source>The package database XML was invalid, and has been re-created.</source>
+					</trans-unit>
+					<trans-unit id="error_busy_thread">
+						<source>The package worker thread is currently busy. Please wait a moment and try again.</source>
+					</trans-unit>
 				</group>
 				<group id="controls">
 					<trans-unit id="title">
@@ -1051,7 +1071,7 @@
 					</trans-unit>
 					<trans-unit id="reset_question">
 						<source>Reset the current control configuration to the defaults?</source>
-						<target state="translated">Recolocar as actuais configurações de controle na predefinição?</target>
+						<target>Recolocar as actuais configurações de controle na predefinição?</target>
 					</trans-unit>
 					<trans-unit id="reset">
 						<source>Reset to defaults</source>
@@ -1126,8 +1146,8 @@
 						<target>Carregue em qualquer tecla ou desloque o eixo na direcção desejada...</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab_fullaxis">
-						<source>Move an axis into the direction of "increase" or "power"...</source>
-						<target>Desloque um eixo qualquer na direcção de "aumentar" ou "força"...</target>
+						<source>Move an axis into the direction of &quot;increase&quot; or &quot;power&quot;...</source>
+						<target>Desloque um eixo qualquer na direcção de &quot;aumentar&quot; ou &quot;força&quot;...</target>
 					</trans-unit>
 					<trans-unit id="attached">
 						<source>Attached joysticks</source>
@@ -1245,71 +1265,71 @@
 					</trans-unit>
 					<trans-unit id="notdetected">
 						<source>No RailDriver controllers detected.</source>
-						<target>Não foram encontrados controladores do "RailDriver".</target>
+						<target>Não foram encontrados controladores do &quot;RailDriver&quot;.</target>
 					</trans-unit>
 					<trans-unit id="config_error">
 						<source>Error loading RailDriver calibration file.</source>
 						<target>Erro ao carregar o ficheiro de calibragem do RailDriver.</target>
 					</trans-unit>
 					<trans-unit id="calibration_start">
-						<source>Please press 'Next' to start calibration.</source>
-						<target>Carregue em 'Seguinte' para iniciar a calibragem.</target>
+						<source>Please press &apos;Next&apos; to start calibration.</source>
+						<target>Carregue em &apos;Seguinte&apos; para iniciar a calibragem.</target>
 					</trans-unit>
 					<trans-unit id="calibration_a">
-						<source>Move the reverser lever to the full reverse position and press 'Next'.</source>
-						<target>Mova o inversor para marcha-atrás e carregue em 'Seguinte'.</target>
+						<source>Move the reverser lever to the full reverse position and press &apos;Next&apos;.</source>
+						<target>Mova o inversor para marcha-atrás e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_b">
-						<source>Move the reverser lever to the full forward position and press 'Next'.</source>
-						<target>Mova o inversor para marcha-à-frente e carregue em 'Seguinte'.</target>
+						<source>Move the reverser lever to the full forward position and press &apos;Next&apos;.</source>
+						<target>Mova o inversor para marcha-à-frente e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_c">
-						<source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
-						<target>Mova o combinador para a potência máxima e carregue em 'Seguinte'.</target>
+						<source>Move the combined brake / throttle lever to the full power position and press &apos;Next&apos;.</source>
+						<target>Mova o combinador para a potência máxima e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_d">
-						<source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
-						<target>Mova o combinador para a travagem máxima e carregue em 'Seguinte'.</target>
+						<source>Move the combined brake / throttle lever to the full brake position and press &apos;Next&apos;.</source>
+						<target>Mova o combinador para a travagem máxima e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_e">
-						<source>Move the dynamic brake lever to the release position and press 'Next'.</source>
-						<target>Mova o travão dinâmico para neutro e carregue em 'Seguinte'.</target>
+						<source>Move the dynamic brake lever to the release position and press &apos;Next&apos;.</source>
+						<target>Mova o travão dinâmico para neutro e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_f">
-						<source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
-						<target>Mova o travão dinâmico para emergência e carregue em 'Seguinte'.</target>
+						<source>Move the dynamic brake lever to the emergency position and press &apos;Next&apos;.</source>
+						<target>Mova o travão dinâmico para emergência e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_g">
-						<source>Move the independant brake lever to the release position and press 'Next'.</source>
-						<target>Mova o travão independente para neutro e carregue em 'Seguinte'.</target>
+						<source>Move the independant brake lever to the release position and press &apos;Next&apos;.</source>
+						<target>Mova o travão independente para neutro e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_h">
-						<source>Move the independant brake lever to the full position and press 'Next'.</source>
-						<target>Mova o travão independente para a máxima travagem e carregue em 'Seguinte'.</target>
+						<source>Move the independant brake lever to the full position and press &apos;Next&apos;.</source>
+						<target>Mova o travão independente para a máxima travagem e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_i">
-						<source>Move the bail-off lever to the release position and press 'Next'.</source>
-						<target>Mova a manete do travão do comboio para neutro e carregue em 'Seguinte'.</target>
+						<source>Move the bail-off lever to the release position and press &apos;Next&apos;.</source>
+						<target>Mova a manete do travão do comboio para neutro e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_j">
-						<source>Move and hold the bail-off lever into the full position and press 'Next'.</source>
-						<target>Mova a manete do travão do comboio para máximo e carregue em 'Seguinte'.</target>
+						<source>Move and hold the bail-off lever into the full position and press &apos;Next&apos;.</source>
+						<target>Mova a manete do travão do comboio para máximo e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_k">
-						<source>Move the wiper switch to OFF and press 'Next'.</source>
-						<target state="translated">Desligue o limpa-pára-brisas e carregue em 'Seguinte'.</target>
+						<source>Move the wiper switch to OFF and press &apos;Next&apos;.</source>
+						<target>Desligue o limpa-pára-brisas e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_l">
-						<source>Move the wiper switch to FULL and press 'Next'.</source>
-						<target>Ligue o limpa-pára-brisas e carregue em 'Seguinte'.</target>
+						<source>Move the wiper switch to FULL and press &apos;Next&apos;.</source>
+						<target>Ligue o limpa-pára-brisas e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_m">
-						<source>Move the lights switch to OFF and press 'Next'.</source>
-						<target>Desligue os faróis e carregue em 'Seguinte'.</target>
+						<source>Move the lights switch to OFF and press &apos;Next&apos;.</source>
+						<target>Desligue os faróis e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_n">
-						<source>Move the lights switch to FULL and press 'Next'.</source>
-						<target>Ligue os faróis e carregue em 'Seguinte'.</target>
+						<source>Move the lights switch to FULL and press &apos;Next&apos;.</source>
+						<target>Ligue os faróis e carregue em &apos;Seguinte&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_o">
 						<source>Calibration complete.</source>
@@ -1379,7 +1399,7 @@
 					</trans-unit>
 					<trans-unit id="display_fullscreen_bits">
 						<source>Bits per pixel:</source>
-						<target state="translated">Bites por pixel:</target>
+						<target>Bites por pixel:</target>
 					</trans-unit>
 					<trans-unit id="quality">
 						<source>Quality</source>
@@ -1551,7 +1571,7 @@
 					</trans-unit>
 					<trans-unit id="verbosity_accessibilityaids">
 						<source>Accessibility Aids</source>
-						<target state="translated">Ajudas de acessibilidade</target>
+						<target>Ajudas de acessibilidade</target>
 					</trans-unit>
 					<trans-unit id="advanced">
 						<source>Advanced Options</source>
@@ -1563,7 +1583,7 @@
 					</trans-unit>
 					<trans-unit id="advanced_is_use_new_renderer">
 						<source>Enable the new renderer</source>
-					<target>Activar o novo renderizador</target>
+						<target>Activar o novo renderizador</target>
 					</trans-unit>
 					<trans-unit id="advanced_disable_displaylists">
 						<source>Disable OpenGL display lists</source>
@@ -1723,23 +1743,26 @@
 					</trans-unit>
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
-						<target state="translated">Activar o modo extendido do Panel2</target>
+						<target>Activar o modo extendido do Panel2</target>
 					</trans-unit>
 					<trans-unit id="object_parser">
 						<source>Object Parser</source>
-						<target state="translated">Analisador de Objectos</target>
+						<target>Analisador de Objectos</target>
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>
-						<target state="translated">Objecto X</target>
+						<target>Objecto X</target>
 					</trans-unit>
 					<trans-unit id="objobject_parser">
 						<source>OBJ Object Parser</source>
-						<target state="translated">Objecto OBJ</target>
+						<target>Objecto OBJ</target>
 					</trans-unit>
 					<trans-unit id="compatibility_signals">
 						<source>Default Signals:</source>
-						<target state="translated">Sinais pré-definidos:</target>
+						<target>Sinais pré-definidos:</target>
+					</trans-unit>
+					<trans-unit id="resolution">
+						<source>Resolution:</source>
 					</trans-unit>
 				</group>
 				<group id="dialog">
@@ -1852,12 +1875,12 @@
 						<target>Ficheiros não encontrados:</target>
 					</trans-unit>
 					<trans-unit id="almost_help_filesnotfound">
-						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting "Ignore" from below.</source>
-						<target state="translated">Foram encontrados alguns problemas ao carregar a linha e o comboio.\r\n\r\nComo alguns ficheiros não foram encontrados, a linha e/ou comboio podem não aparecer correctamente. Tente obter novamente a linha e/ou o comboio para garantir que dispõe do pacote completo.\r\n\r\nA seguinte lista de problemas pode fornecer informações adicionais. Pode, ainda assim, iniciar a simulação seleccionando "Ignorar" no botão abaixo.</target>
+						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting &quot;Ignore&quot; from below.</source>
+						<target>Foram encontrados alguns problemas ao carregar a linha e o comboio.\r\n\r\nComo alguns ficheiros não foram encontrados, a linha e/ou comboio podem não aparecer correctamente. Tente obter novamente a linha e/ou o comboio para garantir que dispõe do pacote completo.\r\n\r\nA seguinte lista de problemas pode fornecer informações adicionais. Pode, ainda assim, iniciar a simulação seleccionando &quot;Ignorar&quot; no botão abaixo.</target>
 					</trans-unit>
 					<trans-unit id="almost_help_general">
-						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select "Ignore" at this point to start the game.</source>
-						<target state="translated">Foram encontrados alguns problemas ao carregar a linha e o comboio. Caso seja o autor da linha ou do comboio, talvez valha a pena dar uma olhadela à seguinte lista de problemas.\r\n\r\nComo utilizador pode seleccionar "Ignorar" para poder iniciar a simulação.</target>
+						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select &quot;Ignore&quot; at this point to start the game.</source>
+						<target>Foram encontrados alguns problemas ao carregar a linha e o comboio. Caso seja o autor da linha ou do comboio, talvez valha a pena dar uma olhadela à seguinte lista de problemas.\r\n\r\nComo utilizador pode seleccionar &quot;Ignorar&quot; para poder iniciar a simulação.</target>
 					</trans-unit>
 					<trans-unit id="almost_show">
 						<source>Show issues</source>
@@ -1921,7 +1944,7 @@
 					</trans-unit>
 					<trans-unit id="signal_stop">
 						<source>You have passed a stop signal. Please apply the emergency brakes immediately and come to a complete hold.</source>
-						<target state="translated">Passou um sinal de paragem. Por favor accione imediatamente os travões de emergência e pare.</target>
+						<target>Passou um sinal de paragem. Por favor accione imediatamente os travões de emergência e pare.</target>
 					</trans-unit>
 					<trans-unit id="signal_overspeed">
 						<source>The signal indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
@@ -1986,6 +2009,21 @@
 					<trans-unit id="loading">
 						<source>Loading. Please wait...</source>
 						<target>A carregar. Por favor aguarde...</target>
+					</trans-unit>
+					<trans-unit id="route_newlimit">
+						<source>New speed limit: [limit] [unit].</source>
+					</trans-unit>
+					<trans-unit id="route_nextsection">
+						<source>Next signal in [distance]</source>
+					</trans-unit>
+					<trans-unit id="route_nextsection_aspect">
+						<source>Next signal in [distance], with aspect [aspect]</source>
+					</trans-unit>
+					<trans-unit id="route_nextstation">
+						<source>Next station is [name] in [distance]</source>
+					</trans-unit>
+					<trans-unit id="train_currentspeed">
+						<source>The train&apos;s current speed is [speed]</source>
 					</trans-unit>
 				</group>
 				<group id="notification">
@@ -2052,6 +2090,21 @@
 					<trans-unit id="mousegrab_off">
 						<source>Mouse grab: off</source>
 						<target>Agarrar com o rato: Desligado</target>
+					</trans-unit>
+					<trans-unit id="switchexterior_uncouple">
+						<source>Please switch to exterior view to uncouple.</source>
+					</trans-unit>
+					<trans-unit id="unable_uncouple">
+						<source>Unable to uncouple this car.</source>
+					</trans-unit>
+					<trans-unit id="exterior_uncouplerear">
+						<source>Uncoupling the rear of car number</source>
+					</trans-unit>
+					<trans-unit id="exterior_uncouplefront">
+						<source>Uncoupling the front of car number</source>
+					</trans-unit>
+					<trans-unit id="fixed_uncouple">
+						<source>This coupler is fixed, and cannot uncouple.</source>
 					</trans-unit>
 				</group>
 				<group id="score">
@@ -2220,7 +2273,7 @@
 						<target>Joystick</target>
 					</trans-unit>
 					<trans-unit id="joystick_notavailable">
-						<source>N/A</source>
+						<source>Joystick (Not currently connected)</source>
 						<target>Indisponível</target>
 					</trans-unit>
 					<trans-unit id="joystickdirection_positive">
@@ -2235,6 +2288,22 @@
 						<source>Current assignment:</source>
 						<target>Actual atribuição:</target>
 					</trans-unit>
+					<trans-unit id="title">
+						<source>In-Game Menu</source>
+					</trans-unit>
+					<trans-unit id="pause_title">
+						<source>PAUSE</source>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Do you wish to use the default train?</source>
+						<target>Pré-definido</target>
+					</trans-unit>
+					<trans-unit id="train_default_no">
+						<source>No</source>
+					</trans-unit>
+					<trans-unit id="train_default_yes">
+						<source>Yes</source>
+					</trans-unit>
 				</group>
 				<group id="lamps">
 					<trans-unit id="ats">
@@ -2247,7 +2316,7 @@
 					</trans-unit>
 					<trans-unit id="atsppower">
 						<source>P POWER</source>
-						<target state="translated">P - FORÇA</target>
+						<target>P - FORÇA</target>
 					</trans-unit>
 					<trans-unit id="atsppattern">
 						<source>PTN APPROACH</source>
@@ -2275,7 +2344,7 @@
 					</trans-unit>
 					<trans-unit id="atcpower">
 						<source>ATC POWER</source>
-						<target state="translated">ATC - FORÇA</target>
+						<target>ATC - FORÇA</target>
 					</trans-unit>
 					<trans-unit id="atcuse">
 						<source>ATC SRV</source>
@@ -2287,7 +2356,7 @@
 					</trans-unit>
 					<trans-unit id="eb">
 						<source>EB</source>
-						<target state="translated">HOMEM-MORTO</target>
+						<target>HOMEM-MORTO</target>
 					</trans-unit>
 					<trans-unit id="constspeed">
 						<source>CONST SPEED</source>
@@ -2391,11 +2460,11 @@
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
 						<source>Decreases the locomotive brake by one notch</source>
-						<target state="translated">Diminui um ponto à travagem da locomotiva</target>
+						<target>Diminui um ponto à travagem da locomotiva</target>
 					</trans-unit>
 					<trans-unit id="locobrake_increase">
 						<source>Increases the locomotive brake by one notch</source>
-						<target state="translated">Aumenta um ponto à travagem da locomotiva</target>
+						<target>Aumenta um ponto à travagem da locomotiva</target>
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
@@ -2574,15 +2643,15 @@
 						<target>Função P do sistema de segurança</target>
 					</trans-unit>
 					<trans-unit id="camera_interior">
-						<source>Switches to the train's interior view</source>
+						<source>Switches to the train&apos;s interior view</source>
 						<target>Muda para a vista interior do comboio</target>
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
-						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
+						<source>Switches to the train&apos;s interior view. However, the panel is not displayed.</source>
 						<target>Muda para a vista interior do comboio. No entanto, o painel não é mostrado.</target>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
-						<source>Switches to the train's exterior view</source>
+						<source>Switches to the train&apos;s exterior view</source>
 						<target>Muda para a vista exterior do comboio</target>
 					</trans-unit>
 					<trans-unit id="camera_track">
@@ -2755,11 +2824,11 @@
 					</trans-unit>
 					<trans-unit id="debug_wireframe">
 						<source>Activates or deactivates wireframe mode</source>
-						<target>Activa ou desactiva o modo "vêr grelha"</target>
+						<target>Activa ou desactiva o modo &quot;vêr grelha&quot;</target>
 					</trans-unit>
 					<trans-unit id="debug_normals">
 						<source>Shows or hides vertex normals</source>
-						<target>Mostra ou esconde a posição dos "vértices"</target>
+						<target>Mostra ou esconde a posição dos &quot;vértices&quot;</target>
 					</trans-unit>
 					<trans-unit id="debug_brake_systems">
 						<source>Shows or hides brake system debug output</source>
@@ -2843,7 +2912,31 @@
 					</trans-unit>
 					<trans-unit id="main_breaker">
 						<source>Toggles the main breaker</source>
-						<target state="translated">Disjuntor principal</target>
+						<target>Disjuntor principal</target>
+					</trans-unit>
+					<trans-unit id="debug_renderer_mode">
+						<source>Toggles the renderer</source>
+					</trans-unit>
+					<trans-unit id="raildriver_speed_units">
+						<source>Toggles the RailDriver speed display units.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_current_speed">
+						<source>Accessibility: Audibly announces the current speed.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_signal">
+						<source>Accessibility: Audibly announces the next signal distance and aspect.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_station">
+						<source>Accessibility: Audibly announces the the next station name and distance.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_front">
+						<source>Uncouples the front coupler for the selected car.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_rear">
+						<source>Uncouples the rear coupler for the selected car.</source>
+					</trans-unit>
+					<trans-unit id="switch_menu">
+						<source>Shows the change switch menu</source>
 					</trans-unit>
 				</group>
 				<group id="keys">
@@ -3384,6 +3477,154 @@
 						<target>Z</target>
 					</trans-unit>
 				</group>
+				<group id="switchmenu">
+					<trans-unit id="title">
+						<source>Select a Switch To Change: </source>
+					</trans-unit>
+					<trans-unit id="selected">
+						<source>Selected Switch: </source>
+					</trans-unit>
+					<trans-unit id="current">
+						<source>Current Setting: </source>
+					</trans-unit>
+					<trans-unit id="distance">
+						<source>Distance from Player: </source>
+					</trans-unit>
+					<trans-unit id="zoom_in">
+						<source>Zoom In</source>
+					</trans-unit>
+					<trans-unit id="zoom_out">
+						<source>Zoom Out</source>
+					</trans-unit>
+				</group>
+				<group id="denshadego">
+					<trans-unit id="config_title">
+						<source>Densha de GO! controller configuration</source>
+					</trans-unit>
+					<trans-unit id="input_section">
+						<source>Device input</source>
+					</trans-unit>
+					<trans-unit id="label_brake">
+						<source>Brake: [notch]</source>
+					</trans-unit>
+					<trans-unit id="label_power">
+						<source>Power: [notch]</source>
+					</trans-unit>
+					<trans-unit id="label_reverser">
+						<source>Reverser: [notch]</source>
+					</trans-unit>
+					<trans-unit id="calibration_button">
+						<source>Start calibration</source>
+					</trans-unit>
+					<trans-unit id="device">
+						<source>Device:</source>
+					</trans-unit>
+					<trans-unit id="button_section">
+						<source>Button mapping</source>
+					</trans-unit>
+					<trans-unit id="command_none">
+						<source>None</source>
+					</trans-unit>
+					<trans-unit id="handle_section">
+						<source>Handle mapping</source>
+					</trans-unit>
+					<trans-unit id="option_convert">
+						<source>Convert notches</source>
+					</trans-unit>
+					<trans-unit id="option_keep_minmax">
+						<source>Keep minimum and maximum</source>
+					</trans-unit>
+					<trans-unit id="option_holdbrake">
+						<source>Map hold brake to B1</source>
+					</trans-unit>
+					<trans-unit id="save_button">
+						<source>Save</source>
+					</trans-unit>
+					<trans-unit id="cancel_button">
+						<source>Cancel</source>
+					</trans-unit>
+					<trans-unit id="calibrate_button">
+						<source>Hold the [button] button in the controller and press OK.</source>
+					</trans-unit>
+					<trans-unit id="calibrate_brake">
+						<source>Move the brake handle to [notch] and press OK.</source>
+					</trans-unit>
+					<trans-unit id="calibrate_power">
+						<source>Move the power handle to [notch] and press OK.</source>
+					</trans-unit>
+					<trans-unit id="label_up">
+						<source>UP</source>
+					</trans-unit>
+					<trans-unit id="label_down">
+						<source>DOWN</source>
+					</trans-unit>
+					<trans-unit id="label_left">
+						<source>LEFT</source>
+					</trans-unit>
+					<trans-unit id="label_right">
+						<source>RIGHT</source>
+					</trans-unit>
+					<trans-unit id="label_pedal">
+						<source>PEDAL</source>
+					</trans-unit>
+					<trans-unit id="label_ldoor">
+						<source>L DOOR</source>
+					</trans-unit>
+					<trans-unit id="label_rdoor">
+						<source>R DOOR</source>
+					</trans-unit>
+					<trans-unit id="label_a2">
+						<source>A2</source>
+					</trans-unit>
+					<trans-unit id="label_ats">
+						<source>ATS</source>
+					</trans-unit>
+					<trans-unit id="linkLabel_driver">
+						<source>My controller is not detected or does not work properly</source>
+					</trans-unit>
+					<trans-unit id="help_title">
+						<source>Help</source>
+					</trans-unit>
+					<trans-unit id="help_controller1_label">
+						<source>My controller is not working correctly</source>
+					</trans-unit>
+					<trans-unit id="help_controller2_label">
+						<source>My PS2 controller is not detected</source>
+					</trans-unit>
+					<trans-unit id="help_windows_label">
+						<source>Windows</source>
+					</trans-unit>
+					<trans-unit id="help_linux_label">
+						<source>Linux</source>
+					</trans-unit>
+					<trans-unit id="help_controller1_textbox">
+						<source>If your non-USB controller is not providing correct input:\r\n\r\n1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller to separate buttons to avoid compatibility issues.\r\n2. Calibrate the controller from the configuration window, if necessary.</source>
+					</trans-unit>
+					<trans-unit id="help_controller2_textbox">
+						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
+					</trans-unit>
+					<trans-unit id="help_windows_textbox">
+						<source>1. Extract the Windows drivers.\r\n2. Download and run Zadig.\r\n3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).\r\n4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
+					</trans-unit>
+					<trans-unit id="help_libusb_symlink">
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.\r\nPlease follow the following instructions:\r\n\r\n1. Check that the &quot;libusb-1.0&quot; package is installed.\r\n2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;\r\n3. Open the directory in the terminal.\r\n4. Check this location to see if &quot;libusb-1.0.so&quot; exists.\r\n5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
+					</trans-unit>
+					<trans-unit id="help_linux_textbox">
+						<source>1. Extract the Linux udev file.\r\n2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).\r\n3. Reboot or reload udev rules manually.</source>
+					</trans-unit>
+					<trans-unit id="help_zadig_button">
+						<source>Get Zadig</source>
+					</trans-unit>
+					<trans-unit id="help_windows_button">
+						<source>Extract files (Windows)</source>
+					</trans-unit>
+					<trans-unit id="help_linux_button">
+						<source>Extract files (Linux)</source>
+					</trans-unit>
+					<trans-unit id="help_ok_button">
+						<source>OK</source>
+					</trans-unit>
+				</group>
 			</group>
 			<group id="train_editor">
 				<group id="general">
@@ -3511,11 +3752,11 @@
 					</trans-unit>
 					<trans-unit id="brake_cylinder_up">
 						<source>BrakeCylinderUp:</source>
-						<target state="translated">Máximo cil. dos travões:</target>
+						<target>Máximo cil. dos travões:</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_down">
 						<source>BrakeCylinderDown:</source>
-						<target state="translated">Mínimo cil. dos travões:</target>
+						<target>Mínimo cil. dos travões:</target>
 					</trans-unit>
 				</group>
 				<group id="brake">
@@ -3537,11 +3778,11 @@
 					</trans-unit>
 					<trans-unit id="smee">
 						<source>Electromagnetic straight air brake</source>
-						<target state="translated">Electromagnético de ar directo</target>
+						<target>Electromagnético de ar directo</target>
 					</trans-unit>
 					<trans-unit id="ecb">
 						<source>Electro-pneumatic air brake without brake pipe</source>
-						<target state="translated">Electropneumático sem conduta</target>
+						<target>Electropneumático sem conduta</target>
 					</trans-unit>
 					<trans-unit id="cl">
 						<source>Air brake with partial release feature</source>
@@ -3553,7 +3794,7 @@
 					</trans-unit>
 					<trans-unit id="lock_out_valve">
 						<source>Closing electromagnetic valve</source>
-						<target state="translated">Válvula electromagnética de fecho</target>
+						<target>Válvula electromagnética de fecho</target>
 					</trans-unit>
 					<trans-unit id="delay_including_control">
 						<source>Delay-including control</source>
@@ -3605,11 +3846,11 @@
 					</trans-unit>
 					<trans-unit id="driver_power_notches">
 						<source>DriverPowerNotches:</source>
-						<target state="translated">Pontos de força do maquinista:</target>
+						<target>Pontos de força do maquinista:</target>
 					</trans-unit>
 					<trans-unit id="driver_brake_notches">
 						<source>DriverBrakeNotches:</source>
-						<target state="translated">Pts travagem do maquinista:</target>
+						<target>Pts travagem do maquinista:</target>
 					</trans-unit>
 					<trans-unit id="power_notch_reduce_steps">
 						<source>PowerNotchReduceSteps:</source>
@@ -3634,6 +3875,12 @@
 					<trans-unit id="driver_brake_notches_error_message">
 						<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
 						<target>Os Pontos de travagem do maquinista devem ser menores ou iguais aos Pontos de travagem.</target>
+					</trans-unit>
+					<trans-unit id="separated_interlocked">
+						<source>Separated (Interlocked)</source>
+					</trans-unit>
+					<trans-unit id="separated_interlocked_reverser">
+						<source>Separated (Reverser Interlocked)</source>
 					</trans-unit>
 				</group>
 				<group id="cab">
@@ -3701,7 +3948,7 @@
 					</trans-unit>
 					<trans-unit id="number_of_trailer_cars_error_message">
 						<source>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</source>
-						<target>Nº de reboques deve ser pelo menos 1, se não está definido "Carruagem da frente é Motora".</target>
+						<target>Nº de reboques deve ser pelo menos 1, se não está definido &quot;Carruagem da frente é Motora&quot;.</target>
 					</trans-unit>
 				</group>
 				<group id="device">
@@ -3719,7 +3966,7 @@
 					</trans-unit>
 					<trans-unit id="readhesion_device">
 						<source>ReAdhesionDevice:</source>
-						<target state="translated">Dispositivo de readerência:</target>
+						<target>Dispositivo de readerência:</target>
 					</trans-unit>
 					<trans-unit id="pass_alarm">
 						<source>PassAlarm:</source>
@@ -3809,7 +4056,7 @@
 					</trans-unit>
 					<trans-unit id="subtract_deceleration">
 						<source>Subtract deceleration due to air and rolling resistance</source>
-						<target state="translated">Resistência ao ar e à deslocação</target>
+						<target>Resistência ao ar e à deslocação</target>
 					</trans-unit>
 					<trans-unit id="max_x">
 						<source>Xmax:</source>
@@ -3896,8 +4143,8 @@
 						<target>Outras funcionalidades</target>
 					</trans-unit>
 					<trans-unit id="note">
-						<source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
-						<target>Nota: As funcionalidades desta página podem requerer a seguinte versão mínima do openBVE:</target>
+						<source>Please note: Features found on this page may require the following minimum version of OpenBVE:</source>
+						<target>Nota: As funcionalidades desta página podem requerer a seguinte versão mínima do OpenBVE:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake">
 						<source>Locomotive Brake</source>
@@ -3965,7 +4212,7 @@
 					</trans-unit>
 					<trans-unit id="misc_eb">
 						<source>Handle behaviour on EB:</source>
-						<target state="translated">Homem-morto:</target>
+						<target>Homem-morto:</target>
 					</trans-unit>
 					<trans-unit id="misc_eb_no">
 						<source>No Action</source>
@@ -3994,1664 +4241,1835 @@
 					<group id="file">
 						<trans-unit id="name">
 							<source>File</source>
-							<target state="translated">Ficheiro</target>
+							<target>Ficheiro</target>
 						</trans-unit>
 						<trans-unit id="new">
 							<source>New</source>
-							<target state="translated">Novo</target>
+							<target>Novo</target>
 						</trans-unit>
 						<trans-unit id="open">
 							<source>Open...</source>
-							<target state="translated">Abrir...</target>
+							<target>Abrir...</target>
 						</trans-unit>
 						<trans-unit id="save">
 							<source>Save</source>
-							<target state="translated">Guardar</target>
+							<target>Guardar</target>
 						</trans-unit>
 						<trans-unit id="save_as">
 							<source>Save as...</source>
-							<target state="translated">Guardar como...</target>
+							<target>Guardar como...</target>
 						</trans-unit>
 						<trans-unit id="import">
 							<source>Import...</source>
-							<target state="translated">Importar...</target>
+							<target>Importar...</target>
 						</trans-unit>
 						<trans-unit id="export">
 							<source>Export...</source>
-							<target state="translated">Exportar...</target>
+							<target>Exportar...</target>
 						</trans-unit>
 						<trans-unit id="exit">
 							<source>Exit</source>
-							<target state="translated">Sair</target>
+							<target>Sair</target>
 						</trans-unit>
 						<trans-unit id="wrongtype">
-							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
-							<target state="translated">Tentou abrir um comboio. \n\n Estes não podem ser abertos directamente-\n\n Por favor utilize a função de importação para importar este comboio para o TrainEditor2.</target>
+							<source>You have attempted to open a train.\r\nThese cannot be opened directly-\r\nPlease use the import function to import this train into TrainEditor2.</source>
+							<target>Tentou abrir um comboio. \n\n Estes não podem ser abertos directamente-\n\n Por favor utilize a função de importação para importar este comboio para o TrainEditor2.</target>
+						</trans-unit>
+					</group>
+					<group id="message">
+						<trans-unit id="new">
+							<source>Do you want to save the current file before creating a new one?</source>
+							<target>Pretende guardar o actual ficheiro antes de criar outro?</target>
+						</trans-unit>
+						<trans-unit id="open">
+							<source>Do you want to save the current file before opening another file?</source>
+							<target>Pretende guardar o actual ficheiro antes de abrir outro?</target>
+						</trans-unit>
+						<trans-unit id="exit">
+							<source>Do you want to save the current file before closing?</source>
+							<target>Pretende guardar o actual ficheiro antes de fechar?</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="language">
 						<source>Language</source>
-						<target state="translated">Idioma</target>
+						<target>Idioma</target>
 					</trans-unit>
-					<group id="message">
-						<trans-unit id="new">
-							<source>Do you want to save the current file before creating a new one?</source>
-							<target state="translated">Pretende guardar o actual ficheiro antes de criar outro?</target>
-						</trans-unit>
-						<trans-unit id="open">
-							<source>Do you want to save the current file before opening another file?</source>
-							<target state="translated">Pretende guardar o actual ficheiro antes de abrir outro?</target>
-						</trans-unit>
-						<trans-unit id="exit">
-							<source>Do you want to save the current file before closing?</source>
-							<target state="translated">Pretende guardar o actual ficheiro antes de fechar?</target>
-						</trans-unit>
-					</group>
 				</group>
 				<group id="navigation">
 					<trans-unit id="up">
 						<source>Up</source>
-						<target state="translated">Cima</target>
+						<target>Cima</target>
 					</trans-unit>
 					<trans-unit id="down">
 						<source>Down</source>
-						<target state="translated">Baixo</target>
+						<target>Baixo</target>
 					</trans-unit>
 					<trans-unit id="add">
 						<source>Add</source>
-						<target state="translated">Adicionar</target>
+						<target>Adicionar</target>
 					</trans-unit>
 					<trans-unit id="remove">
 						<source>Remove</source>
-						<target state="translated">Remover</target>
+						<target>Remover</target>
 					</trans-unit>
 					<trans-unit id="copy">
 						<source>Copy</source>
-						<target state="translated">Copiar</target>
+						<target>Copiar</target>
 					</trans-unit>
 					<trans-unit id="set">
 						<source>Set...</source>
-						<target state="translated">Definir...</target>
+						<target>Definir...</target>
 					</trans-unit>
 					<trans-unit id="open">
 						<source>Open...</source>
-						<target state="translated">Abrir...</target>
+						<target>Abrir...</target>
 					</trans-unit>
 				</group>
 				<group id="tree_cars">
 					<trans-unit id="train">
 						<source>Train</source>
-						<target state="translated">Comboio</target>
+						<target>Comboio</target>
 					</trans-unit>
 					<trans-unit id="general">
 						<source>General</source>
-						<target state="translated">Geral</target>
+						<target>Geral</target>
 					</trans-unit>
 					<trans-unit id="cars">
 						<source>Cars</source>
-						<target state="translated">Carruagens</target>
+						<target>Carruagens</target>
 					</trans-unit>
 					<trans-unit id="couplers">
 						<source>Couplers</source>
-						<target state="translated">Engates</target>
+						<target>Engates</target>
 					</trans-unit>
 				</group>
 				<group id="general_settings">
-					<trans-unit id="name">
-						<source>General settings</source>
-						<target state="translated">Definições gerais</target>
-					</trans-unit>
 					<group id="handle">
-						<trans-unit id="name">
-							<source>Handle</source>
-							<target state="translated">Manípulo</target>
-						</trans-unit>
 						<group id="handle_type">
 							<trans-unit id="name">
 								<source>HandleType</source>
-								<target state="translated">Tipo de manípulo</target>
+								<target>Tipo de manípulo</target>
 							</trans-unit>
 							<trans-unit id="separated">
 								<source>Separated</source>
-								<target state="translated">Separados</target>
+								<target>Separados</target>
 							</trans-unit>
 							<trans-unit id="combined">
 								<source>Combined</source>
-								<target state="translated">Combinados</target>
+								<target>Combinados</target>
+							</trans-unit>
+							<trans-unit id="separated_interlocked">
+								<source>Separated (Interlocked)</source>
+							</trans-unit>
+							<trans-unit id="separated_interlocked_reverser">
+								<source>Separated (Reverser Interlocked)</source>
 							</trans-unit>
 						</group>
-						<trans-unit id="power_notches">
-							<source>PowerNotches</source>
-							<target state="translated">Pontos de força</target>
-						</trans-unit>
-						<trans-unit id="brake_notches">
-							<source>BrakeNotches</source>
-							<target state="translated">Pontos de travagem</target>
-						</trans-unit>
-						<trans-unit id="power_notch_reduce_steps">
-							<source>PowerNotchReduceSteps</source>
-							<target state="translated">Redução de pontos de força</target>
-						</trans-unit>
-						<trans-unit id="driver_power_notches">
-							<source>DriverPowerNotches</source>
-							<target state="translated">Pontos de força do maquinista</target>
-						</trans-unit>
-						<trans-unit id="driver_brake_notches">
-							<source>DriverBrakeNotches</source>
-							<target state="translated">Pontos de travagem</target>
-						</trans-unit>
 						<group id="eb_handle_behaviour">
 							<trans-unit id="name">
 								<source>EbHandleBehaviour</source>
-								<target state="translated">Comportamento do Homem-morto</target>
+								<target>Comportamento do Homem-morto</target>
 							</trans-unit>
 							<trans-unit id="no">
 								<source>No action</source>
-								<target state="translated">Sem acção</target>
+								<target>Sem acção</target>
 							</trans-unit>
 							<trans-unit id="power">
 								<source>Return power to neutral</source>
-								<target state="translated">Retornar a força a zero</target>
+								<target>Retornar a força a zero</target>
 							</trans-unit>
 							<trans-unit id="reverser">
 								<source>Return reverser to neutral</source>
-								<target state="translated">Retornar o inversor a zero</target>
+								<target>Retornar o inversor a zero</target>
 							</trans-unit>
 							<trans-unit id="power_reverser">
 								<source>Return power and reverser to neutral</source>
-								<target state="translated">Retornar a força e o inversor a zero</target>
+								<target>Retornar a força e o inversor a zero</target>
 							</trans-unit>
 						</group>
 						<group id="loco_brake_handle_type">
 							<trans-unit id="name">
 								<source>LocoBrakeHandleType</source>
-								<target state="translated">Manípulo do travão da locomotiva</target>
+								<target>Manípulo do travão da locomotiva</target>
 							</trans-unit>
 							<trans-unit id="combined">
 								<source>Combined</source>
-								<target state="translated">Combinado</target>
+								<target>Combinado</target>
 							</trans-unit>
 							<trans-unit id="independent">
 								<source>Independent</source>
-								<target state="translated">Independente</target>
+								<target>Independente</target>
 							</trans-unit>
 							<trans-unit id="blocking">
 								<source>Blocking</source>
-								<target state="translated">Bloqueador</target>
+								<target>Bloqueador</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Handle</source>
+							<target>Manípulo</target>
+						</trans-unit>
+						<trans-unit id="power_notches">
+							<source>PowerNotches</source>
+							<target>Pontos de força</target>
+						</trans-unit>
+						<trans-unit id="brake_notches">
+							<source>BrakeNotches</source>
+							<target>Pontos de travagem</target>
+						</trans-unit>
+						<trans-unit id="power_notch_reduce_steps">
+							<source>PowerNotchReduceSteps</source>
+							<target>Redução de pontos de força</target>
+						</trans-unit>
+						<trans-unit id="driver_power_notches">
+							<source>DriverPowerNotches</source>
+							<target>Pontos de força do maquinista</target>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches">
+							<source>DriverBrakeNotches</source>
+							<target>Pontos de travagem</target>
+						</trans-unit>
 						<trans-unit id="loco_brake_notches">
 							<source>LocoBrakeNotches</source>
-							<target state="translated">Pontos de travagem da locomotiva</target>
+							<target>Pontos de travagem da locomotiva</target>
+						</trans-unit>
+						<trans-unit id="brake_notches_error_message">
+							<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+						</trans-unit>
+						<trans-unit id="driver_power_notches_error_message">
+							<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches_error_message">
+							<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
 						</trans-unit>
 					</group>
 					<group id="cab">
 						<trans-unit id="name">
 							<source>Cab</source>
-							<target state="translated">Cabina</target>
+							<target>Cabina</target>
 						</trans-unit>
 						<trans-unit id="x">
 							<source>X</source>
-							<target state="translated">X</target>
+							<target>X</target>
 						</trans-unit>
 						<trans-unit id="y">
 							<source>Y</source>
-							<target state="translated">Y</target>
+							<target>Y</target>
 						</trans-unit>
 						<trans-unit id="z">
 							<source>Z</source>
-							<target state="translated">Z</target>
+							<target>Z</target>
 						</trans-unit>
 						<trans-unit id="driver_car">
 							<source>DriverCar</source>
-							<target state="translated">Veículo-piloto</target>
+							<target>Veículo-piloto</target>
 						</trans-unit>
 					</group>
 					<group id="device">
-						<trans-unit id="name">
-							<source>Device</source>
-							<target state="translated">Dispositivo</target>
-						</trans-unit>
 						<group id="ats">
 							<trans-unit id="name">
 								<source>Ats</source>
-								<target state="translated">Ats</target>
+								<target>Ats</target>
 							</trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
-								<target state="translated">Nenhum</target>
+								<target>Nenhum</target>
 							</trans-unit>
 							<trans-unit id="ats_sn">
 								<source>ATS-SN</source>
-								<target state="translated">ATS-SN</target>
+								<target>ATS-SN</target>
 							</trans-unit>
 							<trans-unit id="ats_sn_ats_p">
 								<source>ATS-SN / ATS-P</source>
-								<target state="translated">ATS-SN / ATS-P</target>
+								<target>ATS-SN / ATS-P</target>
 							</trans-unit>
 						</group>
 						<group id="atc">
 							<trans-unit id="name">
 								<source>Atc</source>
-								<target state="translated">Atc</target>
+								<target>Atc</target>
 							</trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
-								<target state="translated">Nenhum</target>
+								<target>Nenhum</target>
 							</trans-unit>
 							<trans-unit id="manual">
 								<source>Manual switching</source>
-								<target state="translated">Comutação manual</target>
+								<target>Comutação manual</target>
 							</trans-unit>
 							<trans-unit id="automatic">
 								<source>Automatic switching</source>
-								<target state="translated">Comutação automática</target>
+								<target>Comutação automática</target>
 							</trans-unit>
 						</group>
-						<trans-unit id="eb">
-							<source>Eb</source>
-							<target state="translated">Homem-morto</target>
-						</trans-unit>
-						<trans-unit id="const_speed">
-							<source>ConstSpeed</source>
-							<target state="translated">Velocidade constante</target>
-						</trans-unit>
-						<trans-unit id="hold_brake">
-							<source>HoldBrake</source>
-							<target state="translated">Mantém o travão</target>
-						</trans-unit>
 						<group id="re_adhesion_device">
 							<trans-unit id="name">
 								<source>ReAdhesionDevice</source>
-								<target state="translated">Readerência</target>
+								<target>Readerência</target>
 							</trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
-								<target state="translated">Nenhum</target>
+								<target>Nenhum</target>
 							</trans-unit>
 							<trans-unit id="type_a">
 								<source>Type A (instant)</source>
-								<target state="translated">Tipo A (momentâneo)</target>
+								<target>Tipo A (momentâneo)</target>
 							</trans-unit>
 							<trans-unit id="type_b">
 								<source>Type B (slow)</source>
-								<target state="translated">Tipo B (lento)</target>
+								<target>Tipo B (lento)</target>
 							</trans-unit>
 							<trans-unit id="type_c">
 								<source>Type C (medium)</source>
-								<target state="translated">Tipo C (médio)</target>
+								<target>Tipo C (médio)</target>
 							</trans-unit>
 							<trans-unit id="type_d">
 								<source>Type D (fast)</source>
-								<target state="translated">Tipo D (rápido)</target>
+								<target>Tipo D (rápido)</target>
 							</trans-unit>
 						</group>
 						<group id="pass_alarm">
 							<trans-unit id="name">
 								<source>PassAlarm</source>
-								<target state="translated">Alarme de passagem</target>
+								<target>Alarme de passagem</target>
 							</trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
-								<target state="translated">Nenhum</target>
+								<target>Nenhum</target>
 							</trans-unit>
 							<trans-unit id="single">
 								<source>Single</source>
-								<target state="translated">Único</target>
+								<target>Único</target>
 							</trans-unit>
 							<trans-unit id="looping">
 								<source>Looping</source>
-								<target state="translated">Contínuo</target>
+								<target>Contínuo</target>
 							</trans-unit>
 						</group>
 						<group id="door_mode">
 							<trans-unit id="open">
 								<source>DoorOpenMode</source>
-								<target state="translated">Abertura de portas</target>
+								<target>Abertura de portas</target>
 							</trans-unit>
 							<trans-unit id="close">
 								<source>DoorCloseMode</source>
-								<target state="translated">Fecho de portas</target>
+								<target>Fecho de portas</target>
 							</trans-unit>
 							<trans-unit id="semi_automatic">
 								<source>Semi-automatic</source>
-								<target state="translated">Semi-automático</target>
+								<target>Semi-automático</target>
 							</trans-unit>
 							<trans-unit id="automatic">
 								<source>Automatic</source>
-								<target state="translated">Automático</target>
+								<target>Automático</target>
 							</trans-unit>
 							<trans-unit id="manual">
 								<source>Manual</source>
-								<target state="translated">Manual</target>
+								<target>Manual</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Device</source>
+							<target>Dispositivo</target>
+						</trans-unit>
+						<trans-unit id="eb">
+							<source>Eb</source>
+							<target>Homem-morto</target>
+						</trans-unit>
+						<trans-unit id="const_speed">
+							<source>ConstSpeed</source>
+							<target>Velocidade constante</target>
+						</trans-unit>
+						<trans-unit id="hold_brake">
+							<source>HoldBrake</source>
+							<target>Mantém o travão</target>
+						</trans-unit>
 						<trans-unit id="door_width">
 							<source>DoorWidth</source>
-							<target state="translated">Largura de porta</target>
+							<target>Largura de porta</target>
 						</trans-unit>
 						<trans-unit id="door_max_tolerance">
 							<source>DoorMaxTolerance</source>
-							<target state="translated">Máxima tolerância</target>
+							<target>Máxima tolerância</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>General settings</source>
+						<target>Definições gerais</target>
+					</trans-unit>
 				</group>
 				<group id="car_settings">
-					<trans-unit id="name">
-						<source>Car settings</source>
-						<target state="translated">Definições do veículo</target>
-					</trans-unit>
 					<group id="general">
-						<trans-unit id="name">
-							<source>General</source>
-							<target state="translated">Geral</target>
-						</trans-unit>
-						<trans-unit id="is_motor_car">
-							<source>IsMotorCar</source>
-							<target state="translated">É motora</target>
-						</trans-unit>
-						<trans-unit id="mass">
-							<source>Mass</source>
-							<target state="translated">Massa</target>
-						</trans-unit>
-						<trans-unit id="length">
-							<source>Length</source>
-							<target state="translated">Comprimento</target>
-						</trans-unit>
-						<trans-unit id="width">
-							<source>Width</source>
-							<target state="translated">Largura</target>
-						</trans-unit>
-						<trans-unit id="height">
-							<source>Height</source>
-							<target state="translated">Altura</target>
-						</trans-unit>
-						<trans-unit id="center_of_gravity_height">
-							<source>CenterOfGravityHeight</source>
-							<target state="translated">Alt. centro gravidade</target>
-						</trans-unit>
-						<trans-unit id="exposed_frontal_area">
-							<source>ExposedFrontalArea</source>
-							<target state="translated">Área frontal exposta</target>
-						</trans-unit>
-						<trans-unit id="unexposed_frontal_area">
-							<source>UnexposedFrontalArea</source>
-							<target state="translated">Área frontal não exposta</target>
-						</trans-unit>
-						<trans-unit id="defined_axles">
-							<source>DefinedAxles</source>
-							<target state="translated">Eixos definidos</target>
-						</trans-unit>
 						<group id="axles">
 							<trans-unit id="name">
 								<source>Axles</source>
-								<target state="translated">Eixos</target>
+								<target>Eixos</target>
 							</trans-unit>
 							<trans-unit id="front">
 								<source>FrontAxle</source>
-								<target state="translated">Eixo dianteiro</target>
+								<target>Eixo dianteiro</target>
 							</trans-unit>
 							<trans-unit id="rear">
 								<source>RearAxle</source>
-								<target state="translated">Eixo traseiro</target>
+								<target>Eixo traseiro</target>
+							</trans-unit>
+							<trans-unit id="mustbe_less">
+								<source>RearAxle must be less than FrontAxle.</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>General</source>
+							<target>Geral</target>
+						</trans-unit>
+						<trans-unit id="is_motor_car">
+							<source>IsMotorCar</source>
+							<target>É motora</target>
+						</trans-unit>
+						<trans-unit id="mass">
+							<source>Mass</source>
+							<target>Massa</target>
+						</trans-unit>
+						<trans-unit id="length">
+							<source>Length</source>
+							<target>Comprimento</target>
+						</trans-unit>
+						<trans-unit id="width">
+							<source>Width</source>
+							<target>Largura</target>
+						</trans-unit>
+						<trans-unit id="height">
+							<source>Height</source>
+							<target>Altura</target>
+						</trans-unit>
+						<trans-unit id="center_of_gravity_height">
+							<source>CenterOfGravityHeight</source>
+							<target>Alt. centro gravidade</target>
+						</trans-unit>
+						<trans-unit id="exposed_frontal_area">
+							<source>ExposedFrontalArea</source>
+							<target>Área frontal exposta</target>
+						</trans-unit>
+						<trans-unit id="unexposed_frontal_area">
+							<source>UnexposedFrontalArea</source>
+							<target>Área frontal não exposta</target>
+						</trans-unit>
+						<trans-unit id="defined_axles">
+							<source>DefinedAxles</source>
+							<target>Eixos definidos</target>
+						</trans-unit>
 						<trans-unit id="front_bogie">
 							<source>FrontBogie</source>
-							<target state="translated">Bogie dianteiro</target>
+							<target>Bogie dianteiro</target>
 						</trans-unit>
 						<trans-unit id="rear_bogie">
 							<source>RearBogie</source>
-							<target state="translated">Bogie traseiro</target>
+							<target>Bogie traseiro</target>
 						</trans-unit>
 						<trans-unit id="loading_sway">
 							<source>LoadingSway</source>
-							<target state="translated">Balanceamento ao carregar</target>
+							<target>Balanceamento ao carregar</target>
 						</trans-unit>
 						<trans-unit id="reversed">
 							<source>Reversed</source>
-							<target state="translated">Invertido</target>
+							<target>Invertido</target>
 						</trans-unit>
 						<trans-unit id="object">
 							<source>Object</source>
-							<target state="translated">Objecto</target>
+							<target>Objecto</target>
 						</trans-unit>
 					</group>
 					<group id="performance">
 						<trans-unit id="name">
 							<source>Performance</source>
-							<target state="translated">Desempenho</target>
+							<target>Desempenho</target>
 						</trans-unit>
 						<trans-unit id="deceleration">
 							<source>Deceleration</source>
-							<target state="translated">Desaceleração</target>
+							<target>Desaceleração</target>
 						</trans-unit>
 						<trans-unit id="static_friction">
 							<source>CoefficientOfStaticFriction</source>
-							<target state="translated">Coef. fricção estática</target>
+							<target>Coef. fricção estática</target>
 						</trans-unit>
 						<trans-unit id="rolling_resistance">
 							<source>CoefficientOfRollingResistance</source>
-							<target state="translated">Coef. resistência à deslocação</target>
+							<target>Coef. resistência à deslocação</target>
 						</trans-unit>
 						<trans-unit id="aerodynamic_drag">
 							<source>AerodynamicDragCoefficient</source>
-							<target state="translated">Coef. arrastamento aerodinâmico</target>
+							<target>Coef. arrastamento aerodinâmico</target>
 						</trans-unit>
 					</group>
 					<group id="move">
 						<trans-unit id="name">
 							<source>Move</source>
-							<target state="translated">Mover</target>
+							<target>Mover</target>
 						</trans-unit>
 						<trans-unit id="jerk_power_up">
 							<source>JerkPowerUp</source>
-							<target state="translated">Impulso à aceleração</target>
+							<target>Impulso à aceleração</target>
 						</trans-unit>
 						<trans-unit id="jerk_power_down">
 							<source>JerkPowerDown</source>
-							<target state="translated">Impulso à desaceleração</target>
+							<target>Impulso à desaceleração</target>
 						</trans-unit>
 						<trans-unit id="jerk_brake_up">
 							<source>JerkBrakeUp</source>
-							<target state="translated">Impulso à travagem</target>
+							<target>Impulso à travagem</target>
 						</trans-unit>
 						<trans-unit id="jerk_brake_down">
 							<source>JerkBrakeDown</source>
-							<target state="translated">Impulso à destravagem</target>
+							<target>Impulso à destravagem</target>
 						</trans-unit>
 						<trans-unit id="brake_cylinder_up">
 							<source>BrakeCylinderUp</source>
-							<target state="translated">Máx. cilindro dos travões</target>
+							<target>Máx. cilindro dos travões</target>
 						</trans-unit>
 						<trans-unit id="brake_cylinder_down">
 							<source>BrakeCylinderDown</source>
-							<target state="translated">Mín. cilindro dos travões</target>
+							<target>Mín. cilindro dos travões</target>
 						</trans-unit>
 					</group>
 					<group id="brake">
-						<trans-unit id="name">
-							<source>Brake</source>
-							<target state="translated">Travão</target>
-						</trans-unit>
 						<group id="brake_type">
 							<trans-unit id="name">
 								<source>BrakeType</source>
-								<target state="translated">Tipo de travão</target>
+								<target>Tipo de travão</target>
 							</trans-unit>
 							<trans-unit id="smee">
 								<source>Electromagnetic straight air brake</source>
-								<target state="translated">Electromagnético de ar directo</target>
+								<target>Electromagnético de ar directo</target>
 							</trans-unit>
 							<trans-unit id="ecb">
 								<source>Electro-pneumatic air brake without brake pipe</source>
-								<target state="translated">Electropneumático sem conduta</target>
+								<target>Electropneumático sem conduta</target>
 							</trans-unit>
 							<trans-unit id="cl">
 								<source>Air brake with partial release feature</source>
-								<target state="translated">Pneumático com dispositivo de relaxamento parcial</target>
+								<target>Pneumático com dispositivo de relaxamento parcial</target>
 							</trans-unit>
 						</group>
 						<group id="loco_brake_type">
 							<trans-unit id="name">
 								<source>LocoBrakeType</source>
-								<target state="translated">Locomotiva</target>
+								<target>Locomotiva</target>
 							</trans-unit>
 							<trans-unit id="none">
 								<source>Not fitted</source>
-								<target state="translated">Não equipado</target>
+								<target>Não equipado</target>
 							</trans-unit>
 							<trans-unit id="notched_air_brake">
 								<source>Notched air brake</source>
-								<target state="translated">Travão a ar por pontos</target>
+								<target>Travão a ar por pontos</target>
 							</trans-unit>
 							<trans-unit id="cl">
 								<source>Air brake with partial release</source>
-								<target state="translated">Travão a ar com relaxamento parcial</target>
+								<target>Travão a ar com relaxamento parcial</target>
 							</trans-unit>
 						</group>
 						<group id="brake_control_system">
 							<trans-unit id="name">
 								<source>BrakeControlSystem</source>
-								<target state="translated">Controlo de travagem</target>
+								<target>Controlo de travagem</target>
 							</trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
-								<target state="translated">Nenhum</target>
+								<target>Nenhum</target>
 							</trans-unit>
 							<trans-unit id="lock_out_valve">
 								<source>Closing electromagnetic valve</source>
-								<target state="translated">Válvula electromagnética de fecho</target>
+								<target>Válvula electromagnética de fecho</target>
 							</trans-unit>
 							<trans-unit id="delay_including_control">
 								<source>Delay-including control</source>
-								<target state="translated">Controlo de inclusão de atraso</target>
+								<target>Controlo de inclusão de atraso</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Brake</source>
+							<target>Travão</target>
+						</trans-unit>
 						<trans-unit id="brake_control_speed">
 							<source>BrakeControlSpeed</source>
-							<target state="translated">Controlo da velocidade de travagem</target>
+							<target>Controlo da velocidade de travagem</target>
 						</trans-unit>
 					</group>
 					<group id="pressure">
 						<trans-unit id="name">
 							<source>Pressure</source>
-							<target state="translated">Pressão</target>
+							<target>Pressão</target>
 						</trans-unit>
 						<trans-unit id="brake_cylinder_service_max">
 							<source>BrakeCylinderServiceMaximumPressure</source>
-							<target state="translated">Pressão máx. de serviço do cilindro</target>
+							<target>Pressão máx. de serviço do cilindro</target>
 						</trans-unit>
 						<trans-unit id="brake_cylinder_emergency_max">
 							<source>BrakeCylinderEmergencyMaximumPressure</source>
-							<target state="translated">Pressão máx. de emergência do cilindro</target>
+							<target>Pressão máx. de emergência do cilindro</target>
 						</trans-unit>
 						<trans-unit id="main_reservoir_min">
 							<source>MainReservoirMinimumPressure</source>
-							<target state="translated">Pressão mínima do tanque principal</target>
+							<target>Pressão mínima do tanque principal</target>
 						</trans-unit>
 						<trans-unit id="main_reservoir_max">
 							<source>MainReservoirMaximumPressure</source>
-							<target state="translated">Pressão máxima do tanque principal</target>
+							<target>Pressão máxima do tanque principal</target>
 						</trans-unit>
 						<trans-unit id="brake_pipe_normal">
 							<source>BrakePipeNormalPressure</source>
-							<target state="translated">Pressão normal da conduta</target>
+							<target>Pressão normal da conduta</target>
 						</trans-unit>
 					</group>
 					<group id="delay">
+						<group id="edit_entry">
+							<trans-unit id="name">
+								<source>Edit entry</source>
+							</trans-unit>
+							<trans-unit id="up">
+								<source>Up</source>
+							</trans-unit>
+							<trans-unit id="down">
+								<source>Down</source>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
 							<source>Delay</source>
-							<target state="translated">Atraso</target>
+							<target>Atraso</target>
 						</trans-unit>
 						<trans-unit id="power">
 							<source>Power</source>
-							<target state="translated">Acelerador</target>
+							<target>Acelerador</target>
 						</trans-unit>
 						<trans-unit id="brake">
 							<source>Brake</source>
-							<target state="translated">Travão</target>
+							<target>Travão</target>
 						</trans-unit>
 						<trans-unit id="loco_brake">
 							<source>LocoBrake</source>
-							<target state="translated">Travão da locomotiva</target>
+							<target>Travão da locomotiva</target>
 						</trans-unit>
 						<trans-unit id="notch">
 							<source>Notch</source>
-							<target state="translated">Ponto</target>
+							<target>Ponto</target>
 						</trans-unit>
 						<trans-unit id="value">
 							<source>Value</source>
-							<target state="translated">Valor</target>
+							<target>Valor</target>
+						</trans-unit>
+						<trans-unit id="electric_brake">
+							<source>ElectricBrake</source>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Car settings</source>
+						<target>Definições do veículo</target>
+					</trans-unit>
 				</group>
 				<group id="acceleration_settings">
-					<trans-unit id="name">
-						<source>Acceleration settings</source>
-						<target state="translated">Definições de aceleração</target>
-					</trans-unit>
-					<trans-unit id="notch">
-						<source>Notch</source>
-						<target state="translated">Ponto</target>
-					</trans-unit>
 					<group id="parameter">
 						<trans-unit id="name">
 							<source>Parameter</source>
-							<target state="translated">Parâmetro</target>
+							<target>Parâmetro</target>
 						</trans-unit>
 						<trans-unit id="a0">
 							<source>a0</source>
-							<target state="translated">a0</target>
+							<target>a0</target>
 						</trans-unit>
 						<trans-unit id="a1">
 							<source>a1</source>
-							<target state="translated">a1</target>
+							<target>a1</target>
 						</trans-unit>
 						<trans-unit id="v1">
 							<source>v1</source>
-							<target state="translated">v1</target>
+							<target>v1</target>
 						</trans-unit>
 						<trans-unit id="v2">
 							<source>v2</source>
-							<target state="translated">v2</target>
+							<target>v2</target>
 						</trans-unit>
 						<trans-unit id="e">
 							<source>e (2.0)</source>
-							<target state="translated">e(2.0)</target>
+							<target>e(2.0)</target>
 						</trans-unit>
 					</group>
 					<group id="preview">
 						<trans-unit id="name">
 							<source>Preview</source>
-							<target state="translated">Pré-visualização</target>
+							<target>Pré-visualização</target>
 						</trans-unit>
 						<trans-unit id="subtract_deceleration">
 							<source>Subtract deceleration due to air and rolling resistance</source>
-							<target state="translated">Subtrair desaceleração devido à resistência ao ar e à deslocação</target>
+							<target>Subtrair desaceleração devido à resistência ao ar e à deslocação</target>
 						</trans-unit>
 						<trans-unit id="x">
 							<source>X</source>
-							<target state="translated">X</target>
+							<target>X</target>
 						</trans-unit>
 						<trans-unit id="y">
 							<source>Y</source>
-							<target state="translated">Y</target>
+							<target>Y</target>
 						</trans-unit>
 						<trans-unit id="x_min">
 							<source>x-min</source>
-							<target state="translated">x-mín</target>
+							<target>x-mín</target>
 						</trans-unit>
 						<trans-unit id="x_max">
 							<source>x-max</source>
-							<target state="translated">x-máx</target>
+							<target>x-máx</target>
 						</trans-unit>
 						<trans-unit id="y_min">
 							<source>y-min</source>
-							<target state="translated">y-mín</target>
+							<target>y-mín</target>
 						</trans-unit>
 						<trans-unit id="y_max">
 							<source>y-max</source>
-							<target state="translated">y-máx</target>
+							<target>y-máx</target>
 						</trans-unit>
 						<trans-unit id="zoom_in">
 							<source>Zoom In</source>
-							<target state="translated">Aproximar</target>
+							<target>Aproximar</target>
 						</trans-unit>
 						<trans-unit id="zoom_out">
 							<source>Zoom Out</source>
-							<target state="translated">Afastar</target>
+							<target>Afastar</target>
 						</trans-unit>
 						<trans-unit id="reset">
 							<source>Reset</source>
-							<target state="translated">Redefinir</target>
+							<target>Redefinir</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Acceleration settings</source>
+						<target>Definições de aceleração</target>
+					</trans-unit>
+					<trans-unit id="notch">
+						<source>Notch</source>
+						<target>Ponto</target>
+					</trans-unit>
 				</group>
 				<group id="motor_sound_settings">
-					<trans-unit id="name">
-						<source>Motor sound settings</source>
-						<target state="translated">Definições do som do motor</target>
-					</trans-unit>
 					<group id="menu">
 						<group id="edit">
 							<trans-unit id="name">
 								<source>Edit</source>
-								<target state="translated">Editar</target>
+								<target>Editar</target>
 							</trans-unit>
 							<trans-unit id="undo">
 								<source>Undo</source>
-								<target state="translated">Desfazer</target>
+								<target>Desfazer</target>
 							</trans-unit>
 							<trans-unit id="redo">
 								<source>Redo</source>
-								<target state="translated">Refazer</target>
+								<target>Refazer</target>
 							</trans-unit>
 							<trans-unit id="cut">
 								<source>Cut</source>
-								<target state="translated">Cortar</target>
+								<target>Cortar</target>
 							</trans-unit>
 							<trans-unit id="copy">
 								<source>Copy</source>
-								<target state="translated">Copiar</target>
+								<target>Copiar</target>
 							</trans-unit>
 							<trans-unit id="paste">
 								<source>Paste</source>
-								<target state="translated">Colar</target>
+								<target>Colar</target>
 							</trans-unit>
 							<trans-unit id="cleanup">
 								<source>Cleanup</source>
-								<target state="translated">Limpar</target>
+								<target>Limpar</target>
 							</trans-unit>
 							<trans-unit id="delete">
 								<source>Delete</source>
-								<target state="translated">Apagar</target>
+								<target>Apagar</target>
 							</trans-unit>
 						</group>
 						<group id="view">
 							<trans-unit id="name">
 								<source>View</source>
-								<target state="translated">Ver</target>
+								<target>Ver</target>
 							</trans-unit>
 							<trans-unit id="power">
 								<source>Power</source>
-								<target state="translated">Acelerador</target>
+								<target>Acelerador</target>
 							</trans-unit>
 							<trans-unit id="brake">
 								<source>Brake</source>
-								<target state="translated">Travão</target>
+								<target>Travão</target>
 							</trans-unit>
 							<trans-unit id="track">
 								<source>Track</source>
-								<target state="translated">Faixa</target>
+								<target>Faixa</target>
 							</trans-unit>
 						</group>
 						<group id="input">
 							<trans-unit id="name">
 								<source>Input</source>
-								<target state="translated">Entrada</target>
+								<target>Entrada</target>
 							</trans-unit>
 							<trans-unit id="pitch">
 								<source>Pitch</source>
-								<target state="translated">Timbre</target>
+								<target>Timbre</target>
 							</trans-unit>
 							<trans-unit id="volume">
 								<source>Volume</source>
-								<target state="translated">Volume</target>
+								<target>Volume</target>
 							</trans-unit>
 							<trans-unit id="sound_index">
 								<source>Sound source index</source>
-								<target state="translated">Índice da fonte sonora</target>
+								<target>Índice da fonte sonora</target>
 							</trans-unit>
 							<trans-unit id="sound_index_none">
 								<source>None</source>
-								<target state="translated">Nenhum</target>
+								<target>Nenhum</target>
 							</trans-unit>
 						</group>
 						<group id="tool">
 							<trans-unit id="name">
 								<source>Tool</source>
-								<target state="translated">Ferramenta</target>
+								<target>Ferramenta</target>
 							</trans-unit>
 							<trans-unit id="select">
 								<source>Select</source>
-								<target state="translated">Seleccionar</target>
+								<target>Seleccionar</target>
 							</trans-unit>
 							<trans-unit id="move">
 								<source>Move</source>
-								<target state="translated">Mover</target>
+								<target>Mover</target>
 							</trans-unit>
 							<trans-unit id="dot">
 								<source>Dot</source>
-								<target state="translated">Ponto</target>
+								<target>Ponto</target>
 							</trans-unit>
 							<trans-unit id="line">
 								<source>Line</source>
-								<target state="translated">Linha</target>
+								<target>Linha</target>
 							</trans-unit>
 						</group>
 					</group>
 					<group id="view_setting">
 						<trans-unit id="name">
 							<source>View setting</source>
-							<target state="translated">Definição de visualização</target>
+							<target>Definição de visualização</target>
 						</trans-unit>
 						<trans-unit id="min_velocity">
 							<source>x-min(Velocity)</source>
-							<target state="translated">x-mín. (Velocidade)</target>
+							<target>x-mín. (Velocidade)</target>
 						</trans-unit>
 						<trans-unit id="max_velocity">
 							<source>x-max(Velocity)</source>
-							<target state="translated">x-máx. (Velocidade)</target>
+							<target>x-máx. (Velocidade)</target>
 						</trans-unit>
 						<trans-unit id="min_pitch">
 							<source>y-min(Pitch)</source>
-							<target state="translated">y-mín. (Timbre)</target>
+							<target>y-mín. (Timbre)</target>
 						</trans-unit>
 						<trans-unit id="max_pitch">
 							<source>y-max(Pitch)</source>
-							<target state="translated">y-máx. (Timbre)</target>
+							<target>y-máx. (Timbre)</target>
 						</trans-unit>
 						<trans-unit id="min_volume">
 							<source>y-min(Volume)</source>
-							<target state="translated">y-mín. (Volume)</target>
+							<target>y-mín. (Volume)</target>
 						</trans-unit>
 						<trans-unit id="max_volume">
 							<source>y-max(Volume)</source>
-							<target state="translated">y-máx. (Volume)</target>
+							<target>y-máx. (Volume)</target>
 						</trans-unit>
 						<trans-unit id="zoom_in">
 							<source>Zoom In</source>
-							<target state="translated">Aproximar</target>
+							<target>Aproximar</target>
 						</trans-unit>
 						<trans-unit id="zoom_out">
 							<source>Zoom Out</source>
-							<target state="translated">Afastar</target>
+							<target>Afastar</target>
 						</trans-unit>
 						<trans-unit id="reset">
 							<source>Reset</source>
-							<target state="translated">Redefinir</target>
+							<target>Redefinir</target>
 						</trans-unit>
 					</group>
 					<group id="direct_input">
 						<trans-unit id="name">
 							<source>Direct input</source>
-							<target state="translated">Entrada directa</target>
+							<target>Entrada directa</target>
 						</trans-unit>
 						<trans-unit id="x">
 							<source>x coordinate</source>
-							<target state="translated">coordenada x</target>
+							<target>coordenada x</target>
 						</trans-unit>
 						<trans-unit id="y">
 							<source>y coordinate</source>
-							<target state="translated">coordenada y</target>
+							<target>coordenada y</target>
 						</trans-unit>
 						<trans-unit id="dot">
 							<source>Dot</source>
-							<target state="translated">Ponto</target>
+							<target>Ponto</target>
 						</trans-unit>
 						<trans-unit id="move">
 							<source>Move</source>
-							<target state="translated">Mover</target>
+							<target>Mover</target>
 						</trans-unit>
 					</group>
 					<group id="play_setting">
-						<trans-unit id="name">
-							<source>Playback setting</source>
-							<target state="translated">Definição de reprodução</target>
-						</trans-unit>
 						<group id="source">
 							<trans-unit id="name">
 								<source>Sound source setting</source>
-								<target state="translated">Definição da fonte sonora</target>
+								<target>Definição da fonte sonora</target>
 							</trans-unit>
 							<trans-unit id="run">
 								<source>Running sound</source>
-								<target state="translated">Som actual</target>
+								<target>Som actual</target>
 							</trans-unit>
 							<trans-unit id="track">
 								<source>Track</source>
-								<target state="translated">Faixa</target>
+								<target>Faixa</target>
 							</trans-unit>
 						</group>
 						<group id="area">
 							<trans-unit id="name">
 								<source>Area setting</source>
-								<target state="translated">Definição de área</target>
+								<target>Definição de área</target>
 							</trans-unit>
 							<trans-unit id="loop">
 								<source>Loop playback</source>
-								<target state="translated">Reprodução contínua</target>
+								<target>Reprodução contínua</target>
 							</trans-unit>
 							<trans-unit id="constant">
 								<source>Constant speed</source>
-								<target state="translated">Velocidade constante</target>
+								<target>Velocidade constante</target>
 							</trans-unit>
 							<trans-unit id="acceleration">
-								<source>Acceleration:</source>
-								<target state="translated">Aceleração:</target>
+								<source>Acceleration</source>
+								<target>Aceleração:</target>
 							</trans-unit>
 							<trans-unit id="swap">
 								<source>Swap</source>
-								<target state="translated">Troca</target>
+								<target>Troca</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Playback setting</source>
+							<target>Definição de reprodução</target>
+						</trans-unit>
 						<trans-unit id="play">
 							<source>Playback</source>
-							<target state="translated">Reprodução</target>
+							<target>Reprodução</target>
 						</trans-unit>
 						<trans-unit id="pause">
 							<source>Pause</source>
-							<target state="translated">Pausa</target>
+							<target>Pausa</target>
 						</trans-unit>
 						<trans-unit id="stop">
 							<source>Stop</source>
-							<target state="translated">Parar</target>
+							<target>Parar</target>
 						</trans-unit>
 					</group>
 					<group id="vertex_info">
 						<trans-unit id="name">
 							<source>Vertex information</source>
-							<target state="translated">Informação do vértice</target>
+							<target>Informação do vértice</target>
 						</trans-unit>
 						<trans-unit id="velocity">
 							<source>Velocity</source>
-							<target state="translated">Velocidade</target>
+							<target>Velocidade</target>
 						</trans-unit>
 						<trans-unit id="pitch">
 							<source>Pitch</source>
-							<target state="translated">Timbre</target>
+							<target>Timbre</target>
 						</trans-unit>
 						<trans-unit id="volume">
 							<source>Volume</source>
-							<target state="translated">Volume</target>
+							<target>Volume</target>
 						</trans-unit>
 						<trans-unit id="sound_index">
 							<source>Sound source index</source>
-							<target state="translated">Índice da fonte sonora</target>
+							<target>Índice da fonte sonora</target>
 						</trans-unit>
 					</group>
 					<group id="status">
 						<group id="type">
 							<trans-unit id="name">
 								<source>Type</source>
-								<target state="translated">Tipo</target>
+								<target>Tipo</target>
 							</trans-unit>
 							<trans-unit id="power">
 								<source>Power</source>
-								<target state="translated">Acelerador</target>
+								<target>Acelerador</target>
 							</trans-unit>
 							<trans-unit id="brake">
 								<source>Brake</source>
-								<target state="translated">Travão</target>
+								<target>Travão</target>
 							</trans-unit>
 						</group>
 						<group id="track">
 							<trans-unit id="name">
 								<source>Track</source>
-								<target state="translated">Faixa</target>
+								<target>Faixa</target>
 							</trans-unit>
 						</group>
 						<group id="mode">
 							<trans-unit id="name">
 								<source>Mode</source>
-								<target state="translated">Modo</target>
+								<target>Modo</target>
 							</trans-unit>
 							<trans-unit id="pitch">
 								<source>Pitch</source>
-								<target state="translated">Timbre</target>
+								<target>Timbre</target>
 							</trans-unit>
 							<trans-unit id="volume">
 								<source>Volume</source>
-								<target state="translated">Volume</target>
+								<target>Volume</target>
 							</trans-unit>
 							<trans-unit id="sound_index">
 								<source>Sound source index</source>
-								<target state="translated">Índice da fonte sonora</target>
+								<target>Índice da fonte sonora</target>
 							</trans-unit>
 						</group>
 						<group id="tool">
 							<trans-unit id="name">
 								<source>Tool</source>
-								<target state="translated">Ferramenta</target>
+								<target>Ferramenta</target>
 							</trans-unit>
 							<trans-unit id="select">
 								<source>Select</source>
-								<target state="translated">Seleccionar</target>
+								<target>Seleccionar</target>
 							</trans-unit>
 							<trans-unit id="move">
 								<source>Move</source>
-								<target state="translated">Mover</target>
+								<target>Mover</target>
 							</trans-unit>
 							<trans-unit id="dot">
 								<source>Dot</source>
-								<target state="translated">Ponto</target>
+								<target>Ponto</target>
 							</trans-unit>
 							<trans-unit id="line">
 								<source>Line</source>
-								<target state="translated">Linha</target>
+								<target>Linha</target>
 							</trans-unit>
 						</group>
 						<group id="xy">
 							<trans-unit id="velocity">
 								<source>Velocity</source>
-								<target state="translated">Velocidade</target>
+								<target>Velocidade</target>
 							</trans-unit>
 							<trans-unit id="pitch">
 								<source>Pitch</source>
-								<target state="translated">Timbre</target>
+								<target>Timbre</target>
 							</trans-unit>
 							<trans-unit id="volume">
 								<source>Volume</source>
-								<target state="translated">Volume</target>
+								<target>Volume</target>
 							</trans-unit>
 						</group>
 					</group>
 					<group id="message">
 						<trans-unit id="vertex_exist">
 							<source>A point already exists at the same x coordinate, do you want to overwrite it?</source>
-							<target state="translated">Já existe um ponto com a mesma coordenada x. Pretende reescrever?</target>
+							<target>Já existe um ponto com a mesma coordenada x. Pretende reescrever?</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Motor sound settings</source>
+						<target>Definições do som do motor</target>
+					</trans-unit>
 				</group>
 				<group id="coupler_settings">
-					<trans-unit id="name">
-						<source>Coupler settings</source>
-						<target state="translated">Definições de engate</target>
-					</trans-unit>
 					<group id="general">
 						<trans-unit id="name">
 							<source>General</source>
-							<target state="translated">Geral</target>
+							<target>Geral</target>
 						</trans-unit>
 						<trans-unit id="min">
 							<source>Min</source>
-							<target state="translated">Mínimo</target>
+							<target>Mínimo</target>
 						</trans-unit>
 						<trans-unit id="max">
 							<source>Max</source>
-							<target state="translated">Máximo</target>
+							<target>Máximo</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Coupler settings</source>
+						<target>Definições de engate</target>
+					</trans-unit>
 				</group>
 				<group id="panel_settings">
-					<trans-unit id="name">
-						<source>Panel settings</source>
-						<target state="translated">Definições do painel</target>
-					</trans-unit>
 					<group id="this">
-						<trans-unit id="name">
-							<source>This</source>
-							<target state="translated">Este</target>
-						</trans-unit>
-						<trans-unit id="resolution">
-							<source>Resolution</source>
-							<target state="translated">Resolução</target>
-						</trans-unit>
-						<trans-unit id="left">
-							<source>Left</source>
-							<target state="translated">Esquerda</target>
-						</trans-unit>
-						<trans-unit id="right">
-							<source>Right</source>
-							<target state="translated">Direita</target>
-						</trans-unit>
-						<trans-unit id="top">
-							<source>Top</source>
-							<target state="translated">Topo</target>
-						</trans-unit>
-						<trans-unit id="bottom">
-							<source>Bottom</source>
-							<target state="translated">Base</target>
-						</trans-unit>
-						<trans-unit id="daytime_image">
-							<source>DaytimeImage</source>
-							<target state="translated">Imagem Diurna</target>
-						</trans-unit>
-						<trans-unit id="nighttime_image">
-							<source>NighttimeImage</source>
-							<target state="translated">Imagem nocturna</target>
-						</trans-unit>
-						<trans-unit id="transparent_color">
-							<source>TransparentColor</source>
-							<target state="translated">Cor transparente</target>
-						</trans-unit>
 						<group id="center">
 							<trans-unit id="name">
-								<source>Center</source>
-								<target state="translated">Centro</target>
+								<source>Center origin</source>
+								<target>Centro</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-								<target state="translated">X</target>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-								<target state="translated">Y</target>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<group id="origin">
 							<trans-unit id="name">
-								<source>Origin</source>
-								<target state="translated">Origem</target>
+								<source>Track origin</source>
+								<target>Origem</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-								<target state="translated">X</target>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-								<target state="translated">Y</target>
+								<target>Y</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>This</source>
+							<target>Este</target>
+						</trans-unit>
+						<trans-unit id="resolution">
+							<source>Resolution</source>
+							<target>Resolução</target>
+						</trans-unit>
+						<trans-unit id="left">
+							<source>Left</source>
+							<target>Esquerda</target>
+						</trans-unit>
+						<trans-unit id="right">
+							<source>Right</source>
+							<target>Direita</target>
+						</trans-unit>
+						<trans-unit id="top">
+							<source>Top</source>
+							<target>Topo</target>
+						</trans-unit>
+						<trans-unit id="bottom">
+							<source>Bottom</source>
+							<target>Base</target>
+						</trans-unit>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+							<target>Imagem Diurna</target>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+							<target>Imagem nocturna</target>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+							<target>Cor transparente</target>
+						</trans-unit>
 					</group>
 					<group id="screen">
 						<trans-unit id="name">
 							<source>Screen</source>
-							<target state="translated">Tela</target>
+							<target>Tela</target>
 						</trans-unit>
 						<trans-unit id="number">
 							<source>Number</source>
-							<target state="translated">Número</target>
+							<target>Número</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
-							<target state="translated">Camada</target>
+							<target>Camada</target>
 						</trans-unit>
 					</group>
 					<group id="pilot_lamp">
-						<trans-unit id="name">
-							<source>PilotLamp</source>
-							<target state="translated">Luz-piloto</target>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-							<target state="translated">Assunto</target>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
-								<target state="translated">Localização</target>
+								<target>Localização</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-								<target state="translated">X</target>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-								<target state="translated">Y</target>
+								<target>Y</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>PilotLamp</source>
+							<target>Luz-piloto</target>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+							<target>Assunto</target>
+						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
-							<target state="translated">Imagem diurna</target>
+							<target>Imagem diurna</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
-							<target state="translated">Imagem nocturna</target>
+							<target>Imagem nocturna</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
-							<target state="translated">Cor transparente</target>
+							<target>Cor transparente</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
-							<target state="translated">Camada</target>
+							<target>Camada</target>
 						</trans-unit>
 					</group>
 					<group id="needle">
-						<trans-unit id="name">
-							<source>Needle</source>
-							<target state="translated">Ponteiro</target>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-							<target state="translated">Assunto</target>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
-								<target state="translated">Localização</target>
+								<target>Localização</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-								<target state="translated">X</target>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-								<target state="translated">Y</target>
+								<target>Y</target>
 							</trans-unit>
 						</group>
-						<trans-unit id="defined_radius">
-							<source>DefinedRadius</source>
-							<target state="translated">Raio definido</target>
-						</trans-unit>
-						<trans-unit id="radius">
-							<source>Radius</source>
-							<target state="translated">Raio</target>
-						</trans-unit>
-						<trans-unit id="daytime_image">
-							<source>DaytimeImage</source>
-							<target state="translated">Imagem diurna</target>
-						</trans-unit>
-						<trans-unit id="nighttime_image">
-							<source>NighttimeImage</source>
-							<target state="translated">Imagem nocturna</target>
-						</trans-unit>
-						<trans-unit id="color">
-							<source>Color</source>
-							<target state="translated">Cor</target>
-						</trans-unit>
-						<trans-unit id="transparent_color">
-							<source>TransparentColor</source>
-							<target state="translated">Cor transparente</target>
-						</trans-unit>
-						<trans-unit id="defined_origin">
-							<source>DefinedOrigin</source>
-							<target state="translated">Origem definida</target>
-						</trans-unit>
 						<group id="origin">
 							<trans-unit id="name">
 								<source>Origin</source>
-								<target state="translated">Origem</target>
+								<target>Origem</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-								<target state="translated">X</target>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-								<target state="translated">Y</target>
+								<target>Y</target>
 							</trans-unit>
 						</group>
-						<trans-unit id="initial_angle">
-							<source>InitialAngle</source>
-							<target state="translated">Ângulo inicial</target>
-						</trans-unit>
-						<trans-unit id="last_angle">
-							<source>LastAngle</source>
-							<target state="translated">Ângulo final</target>
-						</trans-unit>
-						<trans-unit id="minimum">
-							<source>Minimum</source>
-							<target state="translated">Mínimo</target>
-						</trans-unit>
-						<trans-unit id="maximum">
-							<source>Maximum</source>
-							<target state="translated">Máximo</target>
-						</trans-unit>
-						<trans-unit id="defined_natural_freq">
-							<source>DefinedNaturalFreq</source>
-							<target state="translated">Frequência natural definida</target>
-						</trans-unit>
-						<trans-unit id="natural_freq">
-							<source>NaturalFreq</source>
-							<target state="translated">Frequência natural</target>
-						</trans-unit>
-						<trans-unit id="defined_damping_ratio">
-							<source>DefiedDampingRatio</source>
-							<target state="translated">Relação definida de amortecimento</target>
-						</trans-unit>
-						<trans-unit id="damping_ratio">
-							<source>DampingRatio</source>
-							<target state="translated">Relação de amortecimento</target>
-						</trans-unit>
-						<trans-unit id="backstop">
-							<source>Backstop</source>
-							<target state="translated">Espera</target>
-						</trans-unit>
-						<trans-unit id="smoothed">
-							<source>smoothed</source>
-							<target state="translated">esbatido</target>
-						</trans-unit>
-						<trans-unit id="layer">
-							<source>Layer</source>
-							<target state="translated">Camada</target>
-						</trans-unit>
-					</group>
-					<group id="digital_number">
 						<trans-unit id="name">
-							<source>DigitalNumber</source>
-							<target state="translated">Número digital</target>
+							<source>Needle</source>
+							<target>Ponteiro</target>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
-							<target state="translated">Assunto</target>
+							<target>Assunto</target>
 						</trans-unit>
-						<group id="location">
-							<trans-unit id="name">
-								<source>Location</source>
-								<target state="translated">Localização</target>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-								<target state="translated">X</target>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-								<target state="translated">Y</target>
-							</trans-unit>
-						</group>
+						<trans-unit id="defined_radius">
+							<source>DefinedRadius</source>
+							<target>Raio definido</target>
+						</trans-unit>
+						<trans-unit id="radius">
+							<source>Radius</source>
+							<target>Raio</target>
+						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
-							<target state="translated">Imagem diurna</target>
+							<target>Imagem diurna</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
-							<target state="translated">Imagem nocturna</target>
-						</trans-unit>
-						<trans-unit id="transparent_color">
-							<source>TransparentColor</source>
-							<target state="translated">Cor transparente</target>
-						</trans-unit>
-						<trans-unit id="layer">
-							<source>Layer</source>
-							<target state="translated">Camada</target>
-						</trans-unit>
-						<trans-unit id="interval">
-							<source>Interval</source>
-							<target state="translated">Inervalo</target>
-						</trans-unit>
-					</group>
-					<group id="digital_gauge">
-						<trans-unit id="name">
-							<source>DigitalGauge</source>
-							<target state="translated">Mostrador digital</target>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-							<target state="translated">Assunto</target>
-						</trans-unit>
-						<group id="location">
-							<trans-unit id="name">
-								<source>Location</source>
-								<target state="translated">Localização</target>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-								<target state="translated">X</target>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-								<target state="translated">Y</target>
-							</trans-unit>
-						</group>
-						<trans-unit id="radius">
-							<source>Radius</source>
-							<target state="translated">Raio</target>
+							<target>Imagem nocturna</target>
 						</trans-unit>
 						<trans-unit id="color">
 							<source>Color</source>
-							<target state="translated">Cor</target>
+							<target>Cor</target>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+							<target>Cor transparente</target>
+						</trans-unit>
+						<trans-unit id="defined_origin">
+							<source>DefinedOrigin</source>
+							<target>Origem definida</target>
 						</trans-unit>
 						<trans-unit id="initial_angle">
 							<source>InitialAngle</source>
-							<target state="translated">Ângulo inicial</target>
+							<target>Ângulo inicial</target>
 						</trans-unit>
 						<trans-unit id="last_angle">
 							<source>LastAngle</source>
-							<target state="translated">Ângulo final</target>
+							<target>Ângulo final</target>
 						</trans-unit>
 						<trans-unit id="minimum">
 							<source>Minimum</source>
-							<target state="translated">Mínimo</target>
+							<target>Mínimo</target>
 						</trans-unit>
 						<trans-unit id="maximum">
 							<source>Maximum</source>
-							<target state="translated">Máximo</target>
+							<target>Máximo</target>
 						</trans-unit>
-						<trans-unit id="step">
-							<source>Step</source>
-							<target state="translated">Passo</target>
+						<trans-unit id="defined_natural_freq">
+							<source>DefinedNaturalFreq</source>
+							<target>Frequência natural definida</target>
+						</trans-unit>
+						<trans-unit id="natural_freq">
+							<source>NaturalFreq</source>
+							<target>Frequência natural</target>
+						</trans-unit>
+						<trans-unit id="defined_damping_ratio">
+							<source>DefiedDampingRatio</source>
+							<target>Relação definida de amortecimento</target>
+						</trans-unit>
+						<trans-unit id="damping_ratio">
+							<source>DampingRatio</source>
+							<target>Relação de amortecimento</target>
+						</trans-unit>
+						<trans-unit id="backstop">
+							<source>Backstop</source>
+							<target>Espera</target>
+						</trans-unit>
+						<trans-unit id="smoothed">
+							<source>smoothed</source>
+							<target>esbatido</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
-							<target state="translated">Camada</target>
+							<target>Camada</target>
 						</trans-unit>
 					</group>
-					<group id="linear_gauge">
+					<group id="digital_number">
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+								<target>Localização</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+								<target>X</target>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+								<target>Y</target>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
-							<source>LinearGauge</source>
-							<target state="translated">Mostrador linear</target>
+							<source>DigitalNumber</source>
+							<target>Número digital</target>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
-							<target state="translated">Assunto</target>
+							<target>Assunto</target>
 						</trans-unit>
-						<group id="location">
-							<trans-unit id="name">
-								<source>Location</source>
-								<target state="translated">Localização</target>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-								<target state="translated">X</target>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-								<target state="translated">Y</target>
-							</trans-unit>
-						</group>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
-							<target state="translated">Imagem diurna</target>
+							<target>Imagem diurna</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
-							<target state="translated">Imagem nocturna</target>
+							<target>Imagem nocturna</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
-							<target state="translated">Cor transparente</target>
+							<target>Cor transparente</target>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+							<target>Camada</target>
+						</trans-unit>
+						<trans-unit id="interval">
+							<source>Interval</source>
+							<target>Inervalo</target>
+						</trans-unit>
+					</group>
+					<group id="digital_gauge">
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+								<target>Localização</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+								<target>X</target>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+								<target>Y</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>DigitalGauge</source>
+							<target>Mostrador digital</target>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+							<target>Assunto</target>
+						</trans-unit>
+						<trans-unit id="radius">
+							<source>Radius</source>
+							<target>Raio</target>
+						</trans-unit>
+						<trans-unit id="color">
+							<source>Color</source>
+							<target>Cor</target>
+						</trans-unit>
+						<trans-unit id="initial_angle">
+							<source>InitialAngle</source>
+							<target>Ângulo inicial</target>
+						</trans-unit>
+						<trans-unit id="last_angle">
+							<source>LastAngle</source>
+							<target>Ângulo final</target>
 						</trans-unit>
 						<trans-unit id="minimum">
 							<source>Minimum</source>
-							<target state="translated">Mínimo</target>
+							<target>Mínimo</target>
 						</trans-unit>
 						<trans-unit id="maximum">
 							<source>Maximum</source>
-							<target state="translated">Máximo</target>
+							<target>Máximo</target>
 						</trans-unit>
+						<trans-unit id="step">
+							<source>Step</source>
+							<target>Passo</target>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+							<target>Camada</target>
+						</trans-unit>
+					</group>
+					<group id="linear_gauge">
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+								<target>Localização</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+								<target>X</target>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+								<target>Y</target>
+							</trans-unit>
+						</group>
 						<group id="direction">
 							<trans-unit id="name">
 								<source>Direction</source>
-								<target state="translated">Direcção</target>
+								<target>Direcção</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-								<target state="translated">X</target>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-								<target state="translated">Y</target>
+								<target>Y</target>
 							</trans-unit>
 						</group>
-						<trans-unit id="width">
-							<source>Width</source>
-							<target state="translated">Largura</target>
-						</trans-unit>
-						<trans-unit id="layer">
-							<source>Layer</source>
-							<target state="translated">Camada</target>
-						</trans-unit>
-					</group>
-					<group id="timetable">
 						<trans-unit id="name">
-							<source>Timetable</source>
-							<target state="translated">Horário</target>
+							<source>LinearGauge</source>
+							<target>Mostrador linear</target>
 						</trans-unit>
-						<group id="location">
-							<trans-unit id="name">
-								<source>Location</source>
-								<target state="translated">Localização</target>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-								<target state="translated">X</target>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-								<target state="translated">Y</target>
-							</trans-unit>
-						</group>
-						<trans-unit id="height">
-							<source>Height</source>
-							<target state="translated">Altura</target>
+						<trans-unit id="subject">
+							<source>Subject</source>
+							<target>Assunto</target>
 						</trans-unit>
-						<trans-unit id="width">
-							<source>Width</source>
-							<target state="translated">Largura</target>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+							<target>Imagem diurna</target>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+							<target>Imagem nocturna</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
-							<target state="translated">Cor transparente</target>
+							<target>Cor transparente</target>
+						</trans-unit>
+						<trans-unit id="minimum">
+							<source>Minimum</source>
+							<target>Mínimo</target>
+						</trans-unit>
+						<trans-unit id="maximum">
+							<source>Maximum</source>
+							<target>Máximo</target>
+						</trans-unit>
+						<trans-unit id="width">
+							<source>Width</source>
+							<target>Largura</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
-							<target state="translated">Camada</target>
+							<target>Camada</target>
 						</trans-unit>
 					</group>
-					<group id="touch">
-						<trans-unit id="name">
-							<source>Touch</source>
-							<target state="translated">Toque</target>
-						</trans-unit>
+					<group id="timetable">
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
-								<target state="translated">Localização</target>
+								<target>Localização</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-								<target state="translated">X</target>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-								<target state="translated">Y</target>
+								<target>Y</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>Timetable</source>
+							<target>Horário</target>
+						</trans-unit>
+						<trans-unit id="height">
+							<source>Height</source>
+							<target>Altura</target>
+						</trans-unit>
+						<trans-unit id="width">
+							<source>Width</source>
+							<target>Largura</target>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+							<target>Cor transparente</target>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+							<target>Camada</target>
+						</trans-unit>
+					</group>
+					<group id="touch">
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+								<target>Localização</target>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+								<target>X</target>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<group id="size">
 							<trans-unit id="name">
 								<source>Size</source>
-								<target state="translated">Tamanho</target>
+								<target>Tamanho</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
-								<target state="translated">X</target>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
-								<target state="translated">Y</target>
+								<target>Y</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Touch</source>
+							<target>Toque</target>
+						</trans-unit>
 						<trans-unit id="jump_screen">
 							<source>JumpScreen</source>
-							<target state="translated">Tela de salto</target>
+							<target>Tela de salto</target>
 						</trans-unit>
 						<trans-unit id="sound_index">
 							<source>SoundIndex</source>
-							<target state="translated">Índice do som</target>
+							<target>Índice do som</target>
 						</trans-unit>
 						<trans-unit id="command">
 							<source>Command</source>
-							<target state="translated">Comando</target>
+							<target>Comando</target>
 						</trans-unit>
 						<trans-unit id="command_option">
 							<source>CommandOption</source>
-							<target state="translated">Opção de comando</target>
+							<target>Opção de comando</target>
+						</trans-unit>
+						<trans-unit id="sound_command">
+							<source>Sound and command</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
 						</trans-unit>
 					</group>
+					<group id="subject">
+						<trans-unit id="name">
+							<source>Subject</source>
+						</trans-unit>
+						<trans-unit id="base">
+							<source>Base</source>
+						</trans-unit>
+						<trans-unit id="baseoption">
+							<source>Base option</source>
+						</trans-unit>
+						<trans-unit id="suffix">
+							<source>Suffix</source>
+						</trans-unit>
+						<trans-unit id="suffixoption">
+							<source>Suffix option</source>
+						</trans-unit>
+					</group>
+					<group id="sound_command">
+						<group id="tree">
+							<trans-unit id="touch_element">
+								<source>Touch element</source>
+							</trans-unit>
+							<trans-unit id="sounds">
+								<source>Sounds</source>
+							</trans-unit>
+							<trans-unit id="commands">
+								<source>Commands</source>
+							</trans-unit>
+						</group>
+						<group id="edit_entry">
+							<group id="sound">
+								<trans-unit id="index">
+									<source>Index</source>
+								</trans-unit>
+							</group>
+							<group id="command">
+								<trans-unit id="name">
+									<source>Key</source>
+								</trans-unit>
+								<trans-unit id="option">
+									<source>Option</source>
+								</trans-unit>
+							</group>
+							<trans-unit id="name">
+								<source>Edit entry</source>
+							</trans-unit>
+							<trans-unit id="sound">
+								<source>Sound</source>
+							</trans-unit>
+							<trans-unit id="command">
+								<source>Command</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>Sound and command</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="name">
+						<source>Panel settings</source>
+						<target>Definições do painel</target>
+					</trans-unit>
 				</group>
 				<group id="sound_settings">
-					<trans-unit id="name">
-						<source>Sound settings</source>
-						<target state="translated">Definições de som</target>
-					</trans-unit>
-					<trans-unit id="key">
-						<source>Key</source>
-						<target state="translated">Tecla</target>
-					</trans-unit>
-					<trans-unit id="filename">
-						<source>Filename</source>
-						<target state="translated">Nome do ficheiro</target>
-					</trans-unit>
-					<trans-unit id="position">
-						<source>Position</source>
-						<target state="translated">Posição</target>
-					</trans-unit>
-					<trans-unit id="radius">
-						<source>Radius</source>
-						<target state="translated">Raio</target>
-					</trans-unit>
 					<group id="edit_entry">
-						<trans-unit id="name">
-							<source>Edit entry</source>
-							<target state="translated">Editar a entrada</target>
-						</trans-unit>
 						<group id="section">
 							<trans-unit id="name">
 								<source>Section select</source>
-								<target state="translated">Seleccionar a secção</target>
+								<target>Seleccionar a secção</target>
 							</trans-unit>
 						</group>
 						<group id="key">
 							<trans-unit id="name">
 								<source>Key type select</source>
-								<target state="translated">Seleccionar o tipo de tecla</target>
+								<target>Seleccionar o tipo de tecla</target>
 							</trans-unit>
 						</group>
 						<group id="value">
-							<trans-unit id="name">
-								<source>Input value</source>
-								<target state="translated">Valor da entrada</target>
-							</trans-unit>
-							<trans-unit id="filename">
-								<source>Filename</source>
-								<target state="translated">Nome do ficheiro</target>
-							</trans-unit>
-							<trans-unit id="radius">
-								<source>Radius</source>
-								<target state="translated">Raio</target>
-							</trans-unit>
-							<trans-unit id="position">
-								<source>Position setting</source>
-								<target state="translated">Definição da posição</target>
-							</trans-unit>
 							<group id="position">
 								<trans-unit id="name">
 									<source>Position</source>
-									<target state="translated">Posição</target>
+									<target>Posição</target>
 								</trans-unit>
 								<trans-unit id="x">
-									<source>x coordinate</source>
-									<target state="translated">coordenada x</target>
+									<source>X</source>
+									<target>coordenada x</target>
 								</trans-unit>
 								<trans-unit id="y">
-									<source>y coordinate</source>
-									<target state="translated">coordenada y</target>
+									<source>Y</source>
+									<target>coordenada y</target>
 								</trans-unit>
 								<trans-unit id="z">
-									<source>z coordinate</source>
-									<target state="translated">coordenada z</target>
+									<source>Z</source>
+									<target>coordenada z</target>
 								</trans-unit>
 							</group>
+							<trans-unit id="name">
+								<source>Input value</source>
+								<target>Valor da entrada</target>
+							</trans-unit>
+							<trans-unit id="filename">
+								<source>Filename</source>
+								<target>Nome do ficheiro</target>
+							</trans-unit>
+							<trans-unit id="radius">
+								<source>Radius</source>
+								<target>Raio</target>
+							</trans-unit>
+							<trans-unit id="position">
+								<source>Position setting</source>
+								<target>Definição da posição</target>
+							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Edit entry</source>
+							<target>Editar a entrada</target>
+						</trans-unit>
 					</group>
 					<group id="message">
 						<trans-unit id="empty_filename">
 							<source>File name has not been entered.</source>
-							<target state="translated">O nome do ficheiro não deu entrada.</target>
+							<target>O nome do ficheiro não deu entrada.</target>
 						</trans-unit>
 						<trans-unit id="key_exist">
 							<source>The specified key is already set.</source>
-							<target state="translated">A tecla especificada já está definida.</target>
+							<target>A tecla especificada já está definida.</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Sound settings</source>
+						<target>Definições de som</target>
+					</trans-unit>
+					<trans-unit id="key">
+						<source>Key</source>
+						<target>Tecla</target>
+					</trans-unit>
+					<trans-unit id="filename">
+						<source>Filename</source>
+						<target>Nome do ficheiro</target>
+					</trans-unit>
+					<trans-unit id="position">
+						<source>Position</source>
+						<target>Posição</target>
+					</trans-unit>
+					<trans-unit id="radius">
+						<source>Radius</source>
+						<target>Raio</target>
+					</trans-unit>
 				</group>
 				<group id="status">
-					<trans-unit id="name">
-						<source>Status</source>
-						<target state="translated">Estado</target>
-					</trans-unit>
 					<group id="menu">
 						<trans-unit id="error">
 							<source>Error</source>
-							<target state="translated">Erro</target>
+							<target>Erro</target>
 						</trans-unit>
 						<trans-unit id="warning">
 							<source>Warning</source>
-							<target state="translated">Aviso</target>
+							<target>Aviso</target>
 						</trans-unit>
 						<trans-unit id="info">
 							<source>Information</source>
-							<target state="translated">Informação</target>
+							<target>Informação</target>
 						</trans-unit>
 						<trans-unit id="clear">
 							<source>Clear</source>
-							<target state="translated">Limpar</target>
+							<target>Limpar</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Status</source>
+						<target>Estado</target>
+					</trans-unit>
 					<trans-unit id="level">
 						<source>Level</source>
-						<target state="translated">Nível</target>
+						<target>Nível</target>
 					</trans-unit>
 					<trans-unit id="description">
 						<source>Description</source>
-						<target state="translated">Descrição</target>
+						<target>Descrição</target>
 					</trans-unit>
 				</group>
 				<group id="message">
 					<trans-unit id="error">
 						<source>Error</source>
-						<target state="translated">Erro</target>
+						<target>Erro</target>
 					</trans-unit>
 					<trans-unit id="warning">
 						<source>Warning</source>
-						<target state="translated">Aviso</target>
+						<target>Aviso</target>
 					</trans-unit>
 					<trans-unit id="info">
 						<source>Information</source>
-						<target state="translated">Informação</target>
+						<target>Informação</target>
 					</trans-unit>
 					<trans-unit id="positive">
 						<source>positive</source>
-						<target state="translated">positivo</target>
+						<target>positivo</target>
 					</trans-unit>
 					<trans-unit id="non_negative">
 						<source>non-negative</source>
-						<target state="translated">não negativo</target>
+						<target>não negativo</target>
 					</trans-unit>
 					<trans-unit id="non_zero">
 						<source>non-zero</source>
-						<target state="translated">diferente de zero</target>
+						<target>diferente de zero</target>
 					</trans-unit>
 					<trans-unit id="invalid_float">
 						<source>This value must be a {0}floating-point number.</source>
-						<target state="translated">Este valor deve ser um {0} número decimal.</target>
+						<target>Este valor deve ser um {0} número decimal.</target>
 					</trans-unit>
 					<trans-unit id="invalid_color">
-						<source>invalid_color</source>
-						<target state="translated">cor inválida</target>
+						<source>Invalid HEX color</source>
+						<target>cor inválida</target>
+					</trans-unit>
+					<trans-unit id="number_exist">
+						<source>The specified number is already set.</source>
+					</trans-unit>
+					<trans-unit id="mustbe_greater_than">
+						<source>Max must be greater than or equal to Min.</source>
+					</trans-unit>
+					<trans-unit id="mustbe_less_than">
+						<source>Min must be less than the Max.</source>
+					</trans-unit>
+				</group>
+				<group id="items">
+					<trans-unit id="filename">
+						<source>Filename</source>
+					</trans-unit>
+					<trans-unit id="folder">
+						<source>Folder</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>Type</source>
+					</trans-unit>
+					<trans-unit id="button_ok">
+						<source>OK</source>
+					</trans-unit>
+				</group>
+				<group id="import_export">
+					<group id="train">
+						<trans-unit id="name">
+							<source>Train setting file</source>
+						</trans-unit>
+						<trans-unit id="old_format">
+							<source>Old format</source>
+						</trans-unit>
+						<trans-unit id="traindat">
+							<source>Train.dat</source>
+						</trans-unit>
+						<trans-unit id="extensionscfg">
+							<source>Extensions.cfg</source>
+						</trans-unit>
+					</group>
+					<group id="panel">
+						<trans-unit id="name">
+							<source>Panel Setting File</source>
+						</trans-unit>
+						<trans-unit id="panel2cfg">
+							<source>Panel2.cfg</source>
+						</trans-unit>
+						<trans-unit id="panelxml">
+							<source>Panel.xml</source>
+						</trans-unit>
+					</group>
+					<group id="sound">
+						<trans-unit id="name">
+							<source>Sound setting file</source>
+						</trans-unit>
+						<trans-unit id="no_setting_file">
+							<source>No setting file</source>
+						</trans-unit>
+						<trans-unit id="soundcfg">
+							<source>Sound.cfg</source>
+						</trans-unit>
+						<trans-unit id="soundxml">
+							<source>Sound.xml</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="import_name">
+						<source>Import</source>
+					</trans-unit>
+					<trans-unit id="export_name">
+						<source>Export</source>
+					</trans-unit>
+					<trans-unit id="folder">
+						<source>Folder</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>Type</source>
 					</trans-unit>
 				</group>
 			</group>

@@ -1,4 +1,5 @@
-<?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="ca-ES">
 		<body>
 			<group id="language">
@@ -86,12 +87,12 @@
 						<target>Save Bug Report</target>
 					</trans-unit>
 					<trans-unit id="saved">
-						<source>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
-						<target>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</target>
+						<source>The report has been saved as &quot;[filename]&quot; on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
+						<target>The report has been saved as &quot;[filename]&quot; on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</target>
 					</trans-unit>
 					<trans-unit id="save_failed">
-						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</source>
-						<target>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</target>
+						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the &quot;View...&quot; button, then submit these logs to the discussion board or open an issue on GitHub.</source>
+						<target>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the &quot;View...&quot; button, then submit these logs to the discussion board or open an issue on GitHub.</target>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -125,7 +126,7 @@
 					</trans-unit>
 					<trans-unit id="updates_invalid">
 						<source>A connection to the server could be established. Unfortunately, the version information could not be retrieved.</source>
-						<target>S'ha pogut establir la connexió amb el servidor, però no s'ha pogut obtenir la informació de la versió.</target>
+						<target>S&apos;ha pogut establir la connexió amb el servidor, però no s&apos;ha pogut obtenir la informació de la versió.</target>
 					</trans-unit>
 					<trans-unit id="updates_old">
 						<source>You already have the latest version.</source>
@@ -149,11 +150,11 @@
 					</trans-unit>
 					<trans-unit id="reportbug">
 						<source>Report Problem</source>
-						<target>Informa d'un error</target>
+						<target>Informa d&apos;un error</target>
 					</trans-unit>
 					<trans-unit id="about">
 						<source>About</source>
-						<target>Quant a l'OpenBVE</target>
+						<target>Quant a l&apos;OpenBVE</target>
 					</trans-unit>
 				</group>
 				<group id="mode">
@@ -177,7 +178,7 @@
 				<group id="errors">
 					<trans-unit id="critical_file">
 						<source>A critical error occured whilst parsing the [file] file</source>
-						<target>S'ha produït un error crític en processar el fitxer «[file]»</target>
+						<target>S&apos;ha produït un error crític en processar el fitxer «[file]»</target>
 					</trans-unit>
 					<trans-unit id="filesystem_invalid">
 						<source>The file system configuration could not be accessed or is invalid due to the following reason:</source>
@@ -189,19 +190,19 @@
 					</trans-unit>
 					<trans-unit id="controls_missing">
 						<source>No control configuration files found.</source>
-						<target>No s'han trobat fitxers de configuració de controls.</target>
+						<target>No s&apos;han trobat fitxers de configuració de controls.</target>
 					</trans-unit>
 					<trans-unit id="controls_oldversion">
 						<source>An older key-configuration file was found.</source>
-						<target>S'ha trobat un fitxer antic de configuració de controls.</target>
+						<target>S&apos;ha trobat un fitxer antic de configuració de controls.</target>
 					</trans-unit>
 					<trans-unit id="controls_reset">
 						<source>The current key-configuration has been reset to defaults.</source>
-						<target>S'ha reinicialitzat la configuració de controls actual als valors per defecte.</target>
+						<target>S&apos;ha reinicialitzat la configuració de controls actual als valors per defecte.</target>
 					</trans-unit>
 					<trans-unit id="controls_default_oldversion">
 						<source>The default key assingment file is an older version or corrupt.</source>
-						<target>El fitxer de configuració de controls per defecte és d'una versió anterior o està malmès.</target>
+						<target>El fitxer de configuració de controls per defecte és d&apos;una versió anterior o està malmès.</target>
 					</trans-unit>
 					<trans-unit id="controls_default_missing">
 						<source>The default key assignment file does not exist.</source>
@@ -209,23 +210,23 @@
 					</trans-unit>
 					<trans-unit id="controls_ingame">
 						<source>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</source>
-						<target>Esteu executant l'OpenBVE amb [platform]. Utilitzeu el menú intern del simulador per configurar els controls amb una palanca de control.</target>
+						<target>Esteu executant l&apos;OpenBVE amb [platform]. Utilitzeu el menú intern del simulador per configurar els controls amb una palanca de control.</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_version">
 						<source>OpenAL 1.1 is required. You seem to have version 1.0.</source>
-						<target>Es requereix l'OpenAL 1.1. Sembla que teniu instal·lada la versió 1.0.</target>
+						<target>Es requereix l&apos;OpenAL 1.1. Sembla que teniu instal·lada la versió 1.0.</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_context">
 						<source>The OpenAL context could not be created.</source>
-						<target>No s'ha pogut crear el context de l'OpenAL.</target>
+						<target>No s&apos;ha pogut crear el context de l&apos;OpenAL.</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_device">
 						<source>The OpenAL sound device could not be opened.</source>
-						<target>No s'ha pogut obrir el dispositiu de so de l'OpenAL.</target>
+						<target>No s&apos;ha pogut obrir el dispositiu de so de l&apos;OpenAL.</target>
 					</trans-unit>
 					<trans-unit id="fullscreen_switch1">
 						<source>An error occured whilst attempting to switch to fullscreen mode.</source>
-						<target>S'ha produït un error en canviar al mode de pantalla completa.</target>
+						<target>S&apos;ha produït un error en canviar al mode de pantalla completa.</target>
 					</trans-unit>
 					<trans-unit id="fullscreen_switch2">
 						<source>Please check your fullscreen resolution settings.</source>
@@ -233,30 +234,27 @@
 					</trans-unit>
 					<trans-unit id="route_corrupt_withtrack">
 						<source>The selected route is corrupt: \r\n WithTrack section missing.</source>
-						<target>La ruta seleccionada està malmesa: \r\n No s'ha trobat la secció «WithTrack».</target>
+						<target>La ruta seleccionada està malmesa: \r\n No s&apos;ha trobat la secció «WithTrack».</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_nostations">
 						<source>The selected route is corrupt: \r\n No stations defined.</source>
-						<target>La ruta seleccionada està malmesa: \r\n No s'ha definit cap estació.</target>
+						<target>La ruta seleccionada està malmesa: \r\n No s&apos;ha definit cap estació.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_noobjects">
 						<source>The selected route is corrupt: \r\n No objects defined.</source>
-						<target>La ruta seleccionada està malmesa: \r\n No s'ha definit cap objecte.</target>
+						<target>La ruta seleccionada està malmesa: \r\n No s&apos;ha definit cap objecte.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_missingobjects">
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
-						<target>La ruta seleccionada està malmesa. \r\n No s'han pogut trobar tots els objectes definits.</target>
-					</trans-unit>
-					<trans-unit id="route_corrupt_missingobjects">
-						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
+						<target>La ruta seleccionada està malmesa. \r\n No s&apos;han pogut trobar tots els objectes definits.</target>
 					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
-						<target>No s'ha pogut carregar l'extensió del tren «[plugin]».</target>
+						<target>No s&apos;ha pogut carregar l&apos;extensió del tren «[plugin]».</target>
 					</trans-unit>
 					<trans-unit id="plugin_failure2">
 						<source>The built-in ATS/ ATC systems will be used instead, which may cause issues.</source>
-						<target>S'utilitzaran els sistemes ATS/ATC per defecte, que podrien ser incompatibles.</target>
+						<target>S&apos;utilitzaran els sistemes ATS/ATC per defecte, que podrien ser incompatibles.</target>
 					</trans-unit>
 					<trans-unit id="package_filename_empty">
 						<source>Attempted to create a package with an empty filename.</source>
@@ -272,7 +270,7 @@
 					</trans-unit>
 					<trans-unit id="package_file_generic">
 						<source>Failed to create the following file: \r \n</source>
-						<target>No s'ha pogut crear el fitxer següent: \r \n</target>
+						<target>No s&apos;ha pogut crear el fitxer següent: \r \n</target>
 					</trans-unit>
 					<trans-unit id="security_checkaccess">
 						<source>Please check that this path is accessible.</source>
@@ -280,7 +278,13 @@
 					</trans-unit>
 					<trans-unit id="security_badlocation">
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
-						<target>Si intenteu instal·lar extensions en la carpeta «Fitxers del programa» o «ProgramData», pot ser que necessiteu permisos d'administrador. \r\n\r\n No es recomana per raons de seguretat.</target>
+						<target>Si intenteu instal·lar extensions en la carpeta «Fitxers del programa» o «ProgramData», pot ser que necessiteu permisos d&apos;administrador. \r\n\r\n No es recomana per raons de seguretat.</target>
+					</trans-unit>
+					<trans-unit id="route_please_select">
+						<source>Please first select a route file to begin.</source>
+					</trans-unit>
+					<trans-unit id="route_switch_turn">
+						<source>The .Turn command and the .Switch command may not be used in the same route.</source>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -337,7 +341,7 @@
 					</trans-unit>
 					<trans-unit id="route_processing">
 						<source>Processing route, please wait.....</source>
-						<target>S'està processant la ruta, espereu...</target>
+						<target>S&apos;està processant la ruta, espereu...</target>
 					</trans-unit>
 					<trans-unit id="train">
 						<source>Train</source>
@@ -358,10 +362,6 @@
 					<trans-unit id="train_recently">
 						<source>Recently used</source>
 						<target>Recents</target>
-					</trans-unit>
-					<trans-unit id="train_default">
-						<source>Route default</source>
-						<target>Tren per defecte</target>
 					</trans-unit>
 					<trans-unit id="train_usedefault">
 						<source>Use the train suggested by the route</source>
@@ -393,11 +393,11 @@
 					</trans-unit>
 					<trans-unit id="train_notfound">
 						<source>The default train could not be found:\r\n\r\n</source>
-						<target>No s'ha trobat el tren per defecte:\r\n\r\n</target>
+						<target>No s&apos;ha trobat el tren per defecte:\r\n\r\n</target>
 					</trans-unit>
 					<trans-unit id="train_pluginnotsupported">
 						<source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
-						<target>--- Aquest tren utilitza una extensió de sistemes de seguretat incompatible amb el vostre sistema operatiu. S'utilitzaran els sistemes ATS/ATC per defecte, que podrien ser incompatibles. ---</target>
+						<target>--- Aquest tren utilitza una extensió de sistemes de seguretat incompatible amb el vostre sistema operatiu. S&apos;utilitzaran els sistemes ATS/ATC per defecte, que podrien ser incompatibles. ---</target>
 					</trans-unit>
 					<trans-unit id="start">
 						<source>Start</source>
@@ -409,6 +409,15 @@
 					<trans-unit id="start_start">
 						<source>Start</source>
 						<target>Inicia</target>
+					</trans-unit>
+					<trans-unit id="train_choose">
+						<source>Choose Train...</source>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Route default</source>
+					</trans-unit>
+					<trans-unit id="train_notfound_download">
+						<source>The default train is not currently installed:\r\n\r\n [train]\r\n\r\n It may be downloaded at:\r\n\r\n</source>
 					</trans-unit>
 				</group>
 				<group id="review">
@@ -538,7 +547,7 @@
 					</trans-unit>
 					<trans-unit id="processing">
 						<source>Processing, please wait...</source>
-						<target>S'està processant el paquet, espereu...</target>
+						<target>S&apos;està processant el paquet, espereu...</target>
 					</trans-unit>
 					<trans-unit id="unknown_file">
 						<source>Unknown File...</source>
@@ -602,11 +611,11 @@
 					</trans-unit>
 					<trans-unit id="install_header">
 						<source>Install a Package</source>
-						<target>Instal·lació d'un paquet</target>
+						<target>Instal·lació d&apos;un paquet</target>
 					</trans-unit>
 					<trans-unit id="install_invalid">
-						<source>This file does not appear to be a valid openBVE package.</source>
-						<target>Aquest fitxer no és un paquet vàlid per a l'OpenBVE.</target>
+						<source>This file does not appear to be a valid OpenBVE package.</source>
+						<target>Aquest fitxer no és un paquet vàlid per a l&apos;OpenBVE.</target>
 					</trans-unit>
 					<trans-unit id="install_version_error">
 						<source>Package Version Error</source>
@@ -626,7 +635,7 @@
 					</trans-unit>
 					<trans-unit id="install_success">
 						<source>Package installation was successful.</source>
-						<target>S'ha instal·lat el paquet correctament.</target>
+						<target>S&apos;ha instal·lat el paquet correctament.</target>
 					</trans-unit>
 					<trans-unit id="install_success_header">
 						<source>Installation Successful</source>
@@ -638,11 +647,11 @@
 					</trans-unit>
 					<trans-unit id="install_failure">
 						<source>Unfortunately, package installation failed.</source>
-						<target>S'ha produït un error en instal·lar el paquet.</target>
+						<target>S&apos;ha produït un error en instal·lar el paquet.</target>
 					</trans-unit>
 					<trans-unit id="install_failure_header">
 						<source>Package Installation Failed</source>
-						<target>Error d'instal·lació</target>
+						<target>Error d&apos;instal·lació</target>
 					</trans-unit>
 					<trans-unit id="install_select">
 						<source>Select Package......</source>
@@ -694,7 +703,7 @@
 					</trans-unit>
 					<trans-unit id="creation_header">
 						<source>Create a Package</source>
-						<target>Creació d'un paquet</target>
+						<target>Creació d&apos;un paquet</target>
 					</trans-unit>
 					<trans-unit id="creation_saveas_button">
 						<source>Save As...</source>
@@ -717,8 +726,8 @@
 						<target>Suprimeix</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_skip_if_none">
-						<source>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</source>
-						<target>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</target>
+						<source>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</source>
+						<target>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
@@ -742,9 +751,9 @@
 					</trans-unit>
 					<trans-unit id="creation_new_guid">
 						<source>The new package has been assigned the following GUID:</source>
-						<target>S'ha assignat l'identificador següent al paquet nou:</target>
+						<target>S&apos;ha assignat l&apos;identificador següent al paquet nou:</target>
 					</trans-unit>
-					<trans-unit id="creation_header">
+					<trans-unit id="enter_details_header">
 						<source>Enter Package Details</source>
 					</trans-unit>
 					<trans-unit id="creation_name">
@@ -769,7 +778,7 @@
 					</trans-unit>
 					<trans-unit id="creation_success">
 						<source>Package creation was successful.</source>
-						<target>S'ha creat el paquet correctament.</target>
+						<target>S&apos;ha creat el paquet correctament.</target>
 					</trans-unit>
 					<trans-unit id="creation_success_header">
 						<source>Package Creation Successful</source>
@@ -777,11 +786,11 @@
 					</trans-unit>
 					<trans-unit id="creation_success_files">
 						<source>The following files were added to your package:</source>
-						<target>S'han afegit els fitxers següents al paquet:</target>
+						<target>S&apos;han afegit els fitxers següents al paquet:</target>
 					</trans-unit>
 					<trans-unit id="creation_failure">
 						<source>Unfortunately, creation of your package failed.</source>
-						<target>S'ha produït un error en crear el paquet.</target>
+						<target>S&apos;ha produït un error en crear el paquet.</target>
 					</trans-unit>
 					<trans-unit id="creation_failure_header">
 						<source>Package Creation Failed</source>
@@ -789,7 +798,7 @@
 					</trans-unit>
 					<trans-unit id="creation_failure_error">
 						<source>The following error was encountered:</source>
-						<target>S'ha trobat el problema següent:</target>
+						<target>S&apos;ha trobat el problema següent:</target>
 					</trans-unit>
 					<trans-unit id="creation_proceed">
 						<source>Proceed......</source>
@@ -805,11 +814,11 @@
 					</trans-unit>
 					<trans-unit id="creation_new_id">
 						<source>The new package has been assigned the following GUID:</source>
-						<target>S'ha assignat l'identificador següent al paquet nou:</target>
+						<target>S&apos;ha assignat l&apos;identificador següent al paquet nou:</target>
 					</trans-unit>
 					<trans-unit id="creation_replace_id">
 						<source>Replacing the package with the following GUID:</source>
-						<target>Es reemplaçarà el paquet amb l'identificador següent:</target>
+						<target>Es reemplaçarà el paquet amb l&apos;identificador següent:</target>
 					</trans-unit>
 					<trans-unit id="creation_save">
 						<source>Save Package</source>
@@ -857,7 +866,7 @@
 					</trans-unit>
 					<trans-unit id="uninstall_failure">
 						<source>Unfortunately, uninstallation of this package failed.</source>
-						<target>S'ha produït un error en desinstal·lar el paquet.</target>
+						<target>S&apos;ha produït un error en desinstal·lar el paquet.</target>
 					</trans-unit>
 					<trans-unit id="uninstall_failure_header">
 						<source>Uninstallation Failed</source>
@@ -865,7 +874,7 @@
 					</trans-unit>
 					<trans-unit id="uninstall_success">
 						<source>Uninstallation of this package was successful.</source>
-						<target>S'ha desinstal·lat el paquet correctament.</target>
+						<target>S&apos;ha desinstal·lat el paquet correctament.</target>
 					</trans-unit>
 					<trans-unit id="uninstall_success_header">
 						<source>Uninstallation Successful</source>
@@ -885,7 +894,7 @@
 					</trans-unit>
 					<trans-unit id="uninstall_missing_xml">
 						<source>Unable to uninstall the selected package. \r\n XML file list missing.</source>
-						<target>No s'ha pogut desinstal·lar el paquet seleccionat. \r\n No s'ha trobat la llista de fitxers XML.</target>
+						<target>No s&apos;ha pogut desinstal·lar el paquet seleccionat. \r\n No s&apos;ha trobat la llista de fitxers XML.</target>
 					</trans-unit>
 					<trans-unit id="uninstall_database_remove">
 						<source>Do you wish to remove this package from the database?</source>
@@ -893,7 +902,7 @@
 					</trans-unit>
 					<trans-unit id="database_save_error">
 						<source>An error occured whilst saving the package database. \r\n Please check for write permissions.</source>
-						<target>S'ha produït un error en desar la base de dades de paquets. \r\n Comproveu els permisos d'escriptura.</target>
+						<target>S&apos;ha produït un error en desar la base de dades de paquets. \r\n Comproveu els permisos d&apos;escriptura.</target>
 					</trans-unit>
 					<trans-unit id="version_new">
 						<source>New version:</source>
@@ -929,7 +938,7 @@
 					</trans-unit>
 					<trans-unit id="error_replace">
 						<source>Replace</source>
-						<target>Reemplaça'l</target>
+						<target>Reemplaça&apos;l</target>
 					</trans-unit>
 					<trans-unit id="button_next">
 						<source>Next &gt;</source>
@@ -945,7 +954,7 @@
 					</trans-unit>
 					<trans-unit id="button_ok">
 						<source>OK</source>
-						<target>D'acord</target>
+						<target>D&apos;acord</target>
 					</trans-unit>
 					<trans-unit id="button_install">
 						<source>Install</source>
@@ -977,15 +986,15 @@
 					</trans-unit>
 					<trans-unit id="file_generic">
 						<source>Failed to create the following file: \r \n</source>
-						<target>No s'ha pogut crear el fitxer següent: \r \n</target>
+						<target>No s&apos;ha pogut crear el fitxer següent: \r \n</target>
 					</trans-unit>
 					<trans-unit id="database_newer_expected">
 						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
-						<target>Sembla que la versió de la base de dades de paquets és més recent que l'admesa per aquesta còpia de l'OpenBVE.</target>
+						<target>Sembla que la versió de la base de dades de paquets és més recent que l&apos;admesa per aquesta còpia de l&apos;OpenBVE.</target>
 					</trans-unit>
 					<trans-unit id="database_invalid_xml">
 						<source>The package database XML was invalid, and has been re-created.</source>
-						<target>El format XML de la base de dades de paquets no era vàlid i s'ha recreat.</target>
+						<target>El format XML de la base de dades de paquets no era vàlid i s&apos;ha recreat.</target>
 					</trans-unit>
 					<trans-unit id="error_busy_thread">
 						<source>The package worker thread is currently busy. Please wait a moment and try again.</source>
@@ -1111,7 +1120,7 @@
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab">
 						<source>Click here to enable joystick grab to automatically select the desired axis, button or hat.</source>
-						<target>Feu clic aquí per a habilitar la captura de la palanca de control i seleccionar automàticament l'eix, el botó o el control direccional desitjat.</target>
+						<target>Feu clic aquí per a habilitar la captura de la palanca de control i seleccionar automàticament l&apos;eix, el botó o el control direccional desitjat.</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab_normal">
 						<source>Press a button or move an axis or hat into the desired direction...</source>
@@ -1237,75 +1246,75 @@
 					</trans-unit>
 					<trans-unit id="notdetected">
 						<source>No RailDriver controllers detected.</source>
-						<target>No s'ha detectat cap dispositiu RailDriver.</target>
+						<target>No s&apos;ha detectat cap dispositiu RailDriver.</target>
 					</trans-unit>
 					<trans-unit id="config_error">
 						<source>Error loading RailDriver calibration file.</source>
-						<target>S'ha produït un error en carregar el fitxer de calibratge de RailDriver.</target>
+						<target>S&apos;ha produït un error en carregar el fitxer de calibratge de RailDriver.</target>
 					</trans-unit>
 					<trans-unit id="calibration_start">
-						<source>Please press 'Next' to start calibration.</source>
+						<source>Please press &apos;Next&apos; to start calibration.</source>
 						<target>Seleccioneu «Següent» per a iniciar el calibratge.</target>
 					</trans-unit>
 					<trans-unit id="calibration_a">
-						<source>Move the reverser lever to the full reverse position and press 'Next'.</source>
-						<target>Moveu la palanca de l'inversor a la posició màxima de marxa enrere i seleccioneu «Següent».</target>
+						<source>Move the reverser lever to the full reverse position and press &apos;Next&apos;.</source>
+						<target>Moveu la palanca de l&apos;inversor a la posició màxima de marxa enrere i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_b">
-						<source>Move the reverser lever to the full forward position and press 'Next'.</source>
-						<target>Moveu la palanca de l'inversor a la posició màxima de marxa endavant i seleccioneu «Següent».</target>
+						<source>Move the reverser lever to the full forward position and press &apos;Next&apos;.</source>
+						<target>Moveu la palanca de l&apos;inversor a la posició màxima de marxa endavant i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_c">
-						<source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
+						<source>Move the combined brake / throttle lever to the full power position and press &apos;Next&apos;.</source>
 						<target>Moveu el regulador combinat a la posició màxima de tracció i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_d">
-						<source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
+						<source>Move the combined brake / throttle lever to the full brake position and press &apos;Next&apos;.</source>
 						<target>Moveu el regulador combinat a la posició màxima de fre i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_e">
-						<source>Move the dynamic brake lever to the release position and press 'Next'.</source>
-						<target>Moveu la palanca de fre dinàmic a la posició d'alliberament i seleccioneu «Següent».</target>
+						<source>Move the dynamic brake lever to the release position and press &apos;Next&apos;.</source>
+						<target>Moveu la palanca de fre dinàmic a la posició d&apos;alliberament i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_f">
-						<source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
-						<target>Moveu la palanca de fre dinàmic a la posició d'emergència i seleccioneu «Següent».</target>
+						<source>Move the dynamic brake lever to the emergency position and press &apos;Next&apos;.</source>
+						<target>Moveu la palanca de fre dinàmic a la posició d&apos;emergència i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_g">
-						<source>Move the independant brake lever to the release position and press 'Next'.</source>
-						<target>Moveu la palanca de fre independent a la posició d'alliberament i seleccioneu «Següent».</target>
+						<source>Move the independant brake lever to the release position and press &apos;Next&apos;.</source>
+						<target>Moveu la palanca de fre independent a la posició d&apos;alliberament i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_h">
-						<source>Move the independant brake lever to the full position and press 'Next'.</source>
+						<source>Move the independant brake lever to the full position and press &apos;Next&apos;.</source>
 						<target>Moveu la palanca de fre independent a la posició màxima de fre i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_i">
-						<source>Move the bail-off lever to the release position and press 'Next'.</source>
-						<target>Moveu la palanca d'alliberament de frens a la posició d'alliberament i seleccioneu «Següent».</target>
+						<source>Move the bail-off lever to the release position and press &apos;Next&apos;.</source>
+						<target>Moveu la palanca d&apos;alliberament de frens a la posició d&apos;alliberament i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_j">
-						<source>Move and hold the bail-off lever into the full position and press 'Next'.</source>
-						<target>Moveu i manteniu la palanca d'alliberament de frens a la posició màxima de fre i seleccioneu «Següent».</target>
+						<source>Move and hold the bail-off lever into the full position and press &apos;Next&apos;.</source>
+						<target>Moveu i manteniu la palanca d&apos;alliberament de frens a la posició màxima de fre i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_k">
-						<source>Move the wiper switch to OFF and press 'Next'.</source>
-						<target>Apagueu l'interruptor de l'eixugaparabrisa i seleccioneu «Següent».</target>
+						<source>Move the wiper switch to OFF and press &apos;Next&apos;.</source>
+						<target>Apagueu l&apos;interruptor de l&apos;eixugaparabrisa i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_l">
-						<source>Move the wiper switch to FULL and press 'Next'.</source>
-						<target>Enceneu l'interruptor de l'eixugaparabrisa i seleccioneu «Següent».</target>
+						<source>Move the wiper switch to FULL and press &apos;Next&apos;.</source>
+						<target>Enceneu l&apos;interruptor de l&apos;eixugaparabrisa i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_m">
-						<source>Move the lights switch to OFF and press 'Next'.</source>
-						<target>Apagueu l'interruptor dels fars i seleccioneu «Següent».</target>
+						<source>Move the lights switch to OFF and press &apos;Next&apos;.</source>
+						<target>Apagueu l&apos;interruptor dels fars i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_n">
-						<source>Move the lights switch to FULL and press 'Next'.</source>
-						<target>Enceneu l'interruptor dels fars i seleccioneu «Següent».</target>
+						<source>Move the lights switch to FULL and press &apos;Next&apos;.</source>
+						<target>Enceneu l&apos;interruptor dels fars i seleccioneu «Següent».</target>
 					</trans-unit>
 					<trans-unit id="calibration_o">
 						<source>Calibration complete.</source>
-						<target>S'ha completat el calibratge.</target>
+						<target>S&apos;ha completat el calibratge.</target>
 					</trans-unit>
 				</group>
 				<group id="options">
@@ -1502,7 +1511,7 @@
 					</trans-unit>
 					<trans-unit id="misc_controls_ebaxis">
 						<source>Allow EB on brake axis</source>
-						<target>Fre d'emergència en l'eix del fre</target>
+						<target>Fre d&apos;emergència en l&apos;eix del fre</target>
 					</trans-unit>
 					<trans-unit id="misc_sound">
 						<source>Sound</source>
@@ -1534,11 +1543,11 @@
 					</trans-unit>
 					<trans-unit id="verbosity_warningmessages">
 						<source>Show warning messages</source>
-						<target>Mostra els missatges d'avís</target>
+						<target>Mostra els missatges d&apos;avís</target>
 					</trans-unit>
 					<trans-unit id="verbosity_errormessages">
 						<source>Show error messages</source>
-						<target>Mostra els missatges d'error</target>
+						<target>Mostra els missatges d&apos;error</target>
 					</trans-unit>
 					<trans-unit id="verbosity_accessibilityaids">
 						<source>Accessibility Aids</source>
@@ -1574,7 +1583,7 @@
 					</trans-unit>
 					<trans-unit id="other_timetable_mode">
 						<source>Timetable mode:</source>
-						<target>Mode d'horari:</target>
+						<target>Mode d&apos;horari:</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_none">
 						<source>None</source>
@@ -1590,7 +1599,7 @@
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_prefercustom">
 						<source>Prefer custom timetable</source>
-						<target>Prefereix l'horari personalitzat</target>
+						<target>Prefereix l&apos;horari personalitzat</target>
 					</trans-unit>
 					<trans-unit id="package_choose">
 						<source>Choose...</source>
@@ -1598,15 +1607,15 @@
 					</trans-unit>
 					<trans-unit id="package_route_directory">
 						<source>Route installation directory:</source>
-						<target>Carpeta d'instal·lació de rutes:</target>
+						<target>Carpeta d&apos;instal·lació de rutes:</target>
 					</trans-unit>
 					<trans-unit id="package_train_directory">
 						<source>Train installation directory:</source>
-						<target>Carpeta d'instal·lació de trens:</target>
+						<target>Carpeta d&apos;instal·lació de trens:</target>
 					</trans-unit>
 					<trans-unit id="package_other_directory">
 						<source>Other items installation directory:</source>
-						<target>Carpeta d'instal·lació d'altres paquets:</target>
+						<target>Carpeta d&apos;instal·lació d&apos;altres paquets:</target>
 					</trans-unit>
 					<trans-unit id="package_compression">
 						<source>Package compression format:</source>
@@ -1630,7 +1639,7 @@
 					</trans-unit>
 					<trans-unit id="kiosk_mode_timer">
 						<source>Control Timeout (s)</source>
-						<target>Temps d'espera dels controls (segons)</target>
+						<target>Temps d&apos;espera dels controls (segons)</target>
 					</trans-unit>
 					<trans-unit id="hud_size">
 						<source>HUD Size</source>
@@ -1662,11 +1671,11 @@
 					</trans-unit>
 					<trans-unit id="input_device_plugin">
 						<source>Input Device Plugin</source>
-						<target>Extensions de dispositius d'entrada</target>
+						<target>Extensions de dispositius d&apos;entrada</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_warning">
 						<source>WARNING: If you enable Input Device Plugin(s), these may conflict with one or more controls.</source>
-						<target>AVÍS: si habiliteu les extensions de dispositius d'entrada, poden entrar en conflicte amb un o més controls.</target>
+						<target>AVÍS: si habiliteu les extensions de dispositius d&apos;entrada, poden entrar en conflicte amb un o més controls.</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_name">
 						<source>Name</source>
@@ -1702,7 +1711,7 @@
 					</trans-unit>
 					<trans-unit id="input_device_plugin_switch">
 						<source>Enable this Input Device Plugin</source>
-						<target>Habilita aquesta extensió de dispositiu d'entrada</target>
+						<target>Habilita aquesta extensió de dispositiu d&apos;entrada</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_config">
 						<source>Config</source>
@@ -1718,15 +1727,18 @@
 					</trans-unit>
 					<trans-unit id="xobject_parser">
 						<source>X Object Parser</source>
-						<target>Processador d'objectes X</target>
+						<target>Processador d&apos;objectes X</target>
 					</trans-unit>
 					<trans-unit id="objobject_parser">
 						<source>OBJ Object Parser</source>
-						<target>Processador d'objectes OBJ</target>
+						<target>Processador d&apos;objectes OBJ</target>
 					</trans-unit>
 					<trans-unit id="compatibility_signals">
 						<source>Default Signals:</source>
 						<target>Senyals per defecte:</target>
+					</trans-unit>
+					<trans-unit id="resolution">
+						<source>Resolution:</source>
 					</trans-unit>
 				</group>
 				<group id="dialog">
@@ -1817,15 +1829,15 @@
 				<group id="loading">
 					<trans-unit id="loading">
 						<source>Loading</source>
-						<target>S'està carregant...</target>
+						<target>S&apos;està carregant...</target>
 					</trans-unit>
 					<trans-unit id="loading_route">
 						<source>Loading route...</source>
-						<target>S'està carregant la ruta...</target>
+						<target>S&apos;està carregant la ruta...</target>
 					</trans-unit>
 					<trans-unit id="loading_train">
 						<source>Loading train...</source>
-						<target>S'està carregant el tren...</target>
+						<target>S&apos;està carregant el tren...</target>
 					</trans-unit>
 					<trans-unit id="almost">
 						<source>Almost ready to start</source>
@@ -1833,15 +1845,15 @@
 					</trans-unit>
 					<trans-unit id="almost_filesnotfound">
 						<source>Files not found:</source>
-						<target>No s'han trobat els fitxers següents:</target>
+						<target>No s&apos;han trobat els fitxers següents:</target>
 					</trans-unit>
 					<trans-unit id="almost_help_filesnotfound">
 						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting &quot;Ignore&quot; from below.</source>
-						<target>S'han detectat alguns problemes en carregar la ruta i el tren.\r\n\r\nCom que no s'han trobat alguns fitxers, pot ser que la ruta o el tren no apareguin de la manera desitjada. Proveu de tornar a baixar la ruta i el tren per comprovar que teniu una distribució completa.\r\n\r\nLa llista de conflictes següent us pot proporcionar informació addicional. Feu clic en el botó «Ignora» per a iniciar la ruta igualment.</target>
+						<target>S&apos;han detectat alguns problemes en carregar la ruta i el tren.\r\n\r\nCom que no s&apos;han trobat alguns fitxers, pot ser que la ruta o el tren no apareguin de la manera desitjada. Proveu de tornar a baixar la ruta i el tren per comprovar que teniu una distribució completa.\r\n\r\nLa llista de conflictes següent us pot proporcionar informació addicional. Feu clic en el botó «Ignora» per a iniciar la ruta igualment.</target>
 					</trans-unit>
 					<trans-unit id="almost_help_general">
 						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select &quot;Ignore&quot; at this point to start the game.</source>
-						<target>S'han detectat alguns problemes en carregar la ruta i el tren. Si en sou el creador, valdria la pena fer una ullada a la llista de conflictes següent.\r\n\r\nSi sou un usuari normal, podeu fer clic en «Ignora» per a iniciar la simulació.</target>
+						<target>S&apos;han detectat alguns problemes en carregar la ruta i el tren. Si en sou el creador, valdria la pena fer una ullada a la llista de conflictes següent.\r\n\r\nSi sou un usuari normal, podeu fer clic en «Ignora» per a iniciar la simulació.</target>
 					</trans-unit>
 					<trans-unit id="almost_show">
 						<source>Show issues</source>
@@ -1883,7 +1895,7 @@
 					</trans-unit>
 					<trans-unit id="stationname">
 						<source>Station name</source>
-						<target>Nom de l'estació</target>
+						<target>Nom de l&apos;estació</target>
 					</trans-unit>
 					<trans-unit id="arrivaltime">
 						<source>Arrival</source>
@@ -1905,7 +1917,7 @@
 					</trans-unit>
 					<trans-unit id="signal_stop">
 						<source>You have passed a stop signal. Please apply the emergency brakes immediately and come to a complete hold.</source>
-						<target>Heu ultrapassat un senyal d'aturada. Apliqueu immediatament els frens d'emergència i atureu completament el tren.</target>
+						<target>Heu ultrapassat un senyal d&apos;aturada. Apliqueu immediatament els frens d&apos;emergència i atureu completament el tren.</target>
 					</trans-unit>
 					<trans-unit id="signal_overspeed">
 						<source>The signal indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
@@ -1925,7 +1937,7 @@
 					</trans-unit>
 					<trans-unit id="route_nextsection_aspect">
 						<source>Next signal in [distance], with aspect [aspect]</source>
-						<target>Pròxim senyal en [distance] amb l'aspecte [aspect]</target>
+						<target>Pròxim senyal en [distance] amb l&apos;aspecte [aspect]</target>
 					</trans-unit>
 					<trans-unit id="route_nextstation">
 						<source>Next station is [name] in [distance]</source>
@@ -1941,7 +1953,7 @@
 					</trans-unit>
 					<trans-unit id="station_arrival_early">
 						<source>You have arrived at [name] and are [time] early.</source>
-						<target>Heu arribat a [name] amb [time] d'antelació.</target>
+						<target>Heu arribat a [name] amb [time] d&apos;antelació.</target>
 					</trans-unit>
 					<trans-unit id="station_overrun">
 						<source>Overrun: [difference] m.</source>
@@ -1953,7 +1965,7 @@
 					</trans-unit>
 					<trans-unit id="station_terminal">
 						<source>This is the terminal station.</source>
-						<target>Aquesta és l'estació terminal.</target>
+						<target>Aquesta és l&apos;estació terminal.</target>
 					</trans-unit>
 					<trans-unit id="station_deadline">
 						<source>Departure is expected in [time].</source>
@@ -1969,11 +1981,11 @@
 					</trans-unit>
 					<trans-unit id="station_depart_closedoors">
 						<source>Boarding complete. You may close the doors now.</source>
-						<target>S'ha completat l'embarcament. Ara podeu tancar les portes.</target>
+						<target>S&apos;ha completat l&apos;embarcament. Ara podeu tancar les portes.</target>
 					</trans-unit>
 					<trans-unit id="station_depart">
 						<source>Boarding complete.</source>
-						<target>S'ha completat l'embarcament.</target>
+						<target>S&apos;ha completat l&apos;embarcament.</target>
 					</trans-unit>
 					<trans-unit id="station_passed">
 						<source>You have passed [name] where you should have stopped.</source>
@@ -1984,7 +1996,7 @@
 						<target>Heu sortit de [name] amb les portes obertes. Atureu-vos immediatament.</target>
 					</trans-unit>
 					<trans-unit id="train_currentspeed">
-						<source>The train's current speed is [speed]</source>
+						<source>The train&apos;s current speed is [speed]</source>
 						<target>La velocitat actual del tren és de [speed]</target>
 					</trans-unit>
 					<trans-unit id="loading">
@@ -2056,6 +2068,21 @@
 						<source>Mouse grab: off</source>
 						<target>Rotació de la càmera amb el ratolí: desactivada</target>
 					</trans-unit>
+					<trans-unit id="switchexterior_uncouple">
+						<source>Please switch to exterior view to uncouple.</source>
+					</trans-unit>
+					<trans-unit id="unable_uncouple">
+						<source>Unable to uncouple this car.</source>
+					</trans-unit>
+					<trans-unit id="exterior_uncouplerear">
+						<source>Uncoupling the rear of car number</source>
+					</trans-unit>
+					<trans-unit id="exterior_uncouplefront">
+						<source>Uncoupling the front of car number</source>
+					</trans-unit>
+					<trans-unit id="fixed_uncouple">
+						<source>This coupler is fixed, and cannot uncouple.</source>
+					</trans-unit>
 				</group>
 				<group id="score">
 					<trans-unit id="overspeed">
@@ -2084,7 +2111,7 @@
 					</trans-unit>
 					<trans-unit id="station_arrived">
 						<source>Arrived at station</source>
-						<target>Arribada a l'estació</target>
+						<target>Arribada a l&apos;estació</target>
 					</trans-unit>
 					<trans-unit id="station_perfecttime">
 						<source>Perfect time bonus</source>
@@ -2104,7 +2131,7 @@
 					</trans-unit>
 					<trans-unit id="station_departure">
 						<source>Premature departure</source>
-						<target>Sortida abans d'hora</target>
+						<target>Sortida abans d&apos;hora</target>
 					</trans-unit>
 					<trans-unit id="station_total">
 						<source>Total</source>
@@ -2217,7 +2244,7 @@
 					</trans-unit>
 					<trans-unit id="assign">
 						<source>Please press any key or move a joystick axis to set this control...</source>
-						<target>Premeu qualsevol tecla o moveu un eix d'una palanca de control per a configurar aquest control...</target>
+						<target>Premeu qualsevol tecla o moveu un eix d&apos;una palanca de control per a configurar aquest control...</target>
 					</trans-unit>
 					<trans-unit id="keyboard">
 						<source>Keyboard</source>
@@ -2242,6 +2269,16 @@
 					<trans-unit id="assignment_current">
 						<source>Current assignment:</source>
 						<target>Assignació actual:</target>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Do you wish to use the default train?</source>
+						<target>Tren per defecte</target>
+					</trans-unit>
+					<trans-unit id="train_default_no">
+						<source>No</source>
+					</trans-unit>
+					<trans-unit id="train_default_yes">
+						<source>Yes</source>
 					</trans-unit>
 				</group>
 				<group id="lamps">
@@ -2295,7 +2332,7 @@
 					</trans-unit>
 					<trans-unit id="eb">
 						<source>EB</source>
-						<target>FRE D'EMERGÈNCIA</target>
+						<target>FRE D&apos;EMERGÈNCIA</target>
 					</trans-unit>
 					<trans-unit id="constspeed">
 						<source>CONST SPEED</source>
@@ -2380,11 +2417,11 @@
 					</trans-unit>
 					<trans-unit id="power_halfaxis">
 						<source>Controls power for trains with two handles on half of a joystick axis</source>
-						<target>Controla el regulador en els trens amb dues manetes amb la meitat de l'eix d'una palanca de control.</target>
+						<target>Controla el regulador en els trens amb dues manetes amb la meitat de l&apos;eix d&apos;una palanca de control.</target>
 					</trans-unit>
 					<trans-unit id="power_fullaxis">
 						<source>Controls power for trains with two handles on a full joystick axis</source>
-						<target>Controla el regulador en els trens amb dues manetes amb l'eix complet d'una palanca de control.</target>
+						<target>Controla el regulador en els trens amb dues manetes amb l&apos;eix complet d&apos;una palanca de control.</target>
 					</trans-unit>
 					<trans-unit id="brake_decrease">
 						<source>Decreases brake by one notch for trains with two handles</source>
@@ -2402,15 +2439,15 @@
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
-						<target>Controla el fre en els trens amb dues manetes amb la meitat de l'eix d'una palanca de control.</target>
+						<target>Controla el fre en els trens amb dues manetes amb la meitat de l&apos;eix d&apos;una palanca de control.</target>
 					</trans-unit>
 					<trans-unit id="brake_fullaxis">
 						<source>Controls brake for trains with two handles on a full joystick axis</source>
-						<target>Controla el fre en els trens amb dues manetes amb l'eix complet d'una palanca de control.</target>
+						<target>Controla el fre en els trens amb dues manetes amb l&apos;eix complet d&apos;una palanca de control.</target>
 					</trans-unit>
 					<trans-unit id="brake_emergency">
 						<source>Activates emergency brakes for trains with two handles</source>
-						<target>Activa el fre d'emergència en els trens amb dues manetes.</target>
+						<target>Activa el fre d&apos;emergència en els trens amb dues manetes.</target>
 					</trans-unit>
 					<trans-unit id="single_power">
 						<source>Moves handle toward power by one notch for trains with one handle</source>
@@ -2426,23 +2463,23 @@
 					</trans-unit>
 					<trans-unit id="single_emergency">
 						<source>Activates emergency brake for trains with one handle</source>
-						<target>Activa el fre d'emergència en els trens amb una maneta.</target>
+						<target>Activa el fre d&apos;emergència en els trens amb una maneta.</target>
 					</trans-unit>
 					<trans-unit id="single_fullaxis">
 						<source>Controls power and brake for trains with one handle on a full joystick axis</source>
-						<target>Controla el regulador i el fre en els trens amb una maneta amb l'eix complet d'una palanca de control.</target>
+						<target>Controla el regulador i el fre en els trens amb una maneta amb l&apos;eix complet d&apos;una palanca de control.</target>
 					</trans-unit>
 					<trans-unit id="power_any_notch">
 						<source>Adjusts the power notch directly from a command option value.</source>
-						<target>Ajusta la posició de tracció del regulador directament a partir del valor d'una opció d'ordre.</target>
+						<target>Ajusta la posició de tracció del regulador directament a partir del valor d&apos;una opció d&apos;ordre.</target>
 					</trans-unit>
 					<trans-unit id="brake_any_notch">
 						<source>Adjusts the brake notch directly from a command option value.</source>
-						<target>Ajusta la posició de fre del regulador directament a partir del valor d'una opció d'ordre.</target>
+						<target>Ajusta la posició de fre del regulador directament a partir del valor d&apos;una opció d&apos;ordre.</target>
 					</trans-unit>
 					<trans-unit id="reverser_any_position">
 						<source>Adjusts the reverser directly from a command option value.</source>
-						<target>Ajusta la posició de l'inversor directament a partir del valor d'una opció d'ordre.</target>
+						<target>Ajusta la posició de l&apos;inversor directament a partir del valor d&apos;una opció d&apos;ordre.</target>
 					</trans-unit>
 					<trans-unit id="hold_brake">
 						<source>Hold Brake</source>
@@ -2450,19 +2487,19 @@
 					</trans-unit>
 					<trans-unit id="reverser_forward">
 						<source>Moves reverser forward by one notch</source>
-						<target>Mou l'inversor una posició endavant.</target>
+						<target>Mou l&apos;inversor una posició endavant.</target>
 					</trans-unit>
 					<trans-unit id="reverser_backward">
 						<source>Moves reverser backward by one notch</source>
-						<target>Mou l'inversor una posició enrere.</target>
+						<target>Mou l&apos;inversor una posició enrere.</target>
 					</trans-unit>
 					<trans-unit id="reverser_fullaxis">
 						<source>Controls reverser on a full joystick axis</source>
-						<target>Controla l'inversor amb l'eix complet d'una palanca de control.</target>
+						<target>Controla l&apos;inversor amb l&apos;eix complet d&apos;una palanca de control.</target>
 					</trans-unit>
 					<trans-unit id="doors_left">
 						<source>Opens or closes the left doors</source>
-						<target>Obre o tanca les portes de l'esquerra.</target>
+						<target>Obre o tanca les portes de l&apos;esquerra.</target>
 					</trans-unit>
 					<trans-unit id="doors_right">
 						<source>Opens or closes the right doors</source>
@@ -2577,15 +2614,15 @@
 						<target>Funció P del sistema de seguretat.</target>
 					</trans-unit>
 					<trans-unit id="camera_interior">
-						<source>Switches to the train's interior view</source>
+						<source>Switches to the train&apos;s interior view</source>
 						<target>Canvia a la vista interior del tren.</target>
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
-						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
+						<source>Switches to the train&apos;s interior view. However, the panel is not displayed.</source>
 						<target>Canvia a la vista interior del tren, però sense mostrar la cabina.</target>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
-						<source>Switches to the train's exterior view</source>
+						<source>Switches to the train&apos;s exterior view</source>
 						<target>Canvia a la vista exterior del tren.</target>
 					</trans-unit>
 					<trans-unit id="camera_track">
@@ -2606,7 +2643,7 @@
 					</trans-unit>
 					<trans-unit id="camera_move_left">
 						<source>Moves the camera left</source>
-						<target>Mou la càmera a l'esquerra.</target>
+						<target>Mou la càmera a l&apos;esquerra.</target>
 					</trans-unit>
 					<trans-unit id="camera_move_right">
 						<source>Moves the camera right</source>
@@ -2622,7 +2659,7 @@
 					</trans-unit>
 					<trans-unit id="camera_rotate_left">
 						<source>Rotates the camera left</source>
-						<target>Gira la càmera a l'esquerra.</target>
+						<target>Gira la càmera a l&apos;esquerra.</target>
 					</trans-unit>
 					<trans-unit id="camera_rotate_right">
 						<source>Rotates the camera right</source>
@@ -2654,11 +2691,11 @@
 					</trans-unit>
 					<trans-unit id="camera_poi_previous">
 						<source>Jumps to the previous point of interest in the route.</source>
-						<target>Salta al punt d'interès anterior de la ruta.</target>
+						<target>Salta al punt d&apos;interès anterior de la ruta.</target>
 					</trans-unit>
 					<trans-unit id="camera_poi_next">
 						<source>Jumps to the next point of interest in the route.</source>
-						<target>Salta al punt d'interès següent de la ruta.</target>
+						<target>Salta al punt d&apos;interès següent de la ruta.</target>
 					</trans-unit>
 					<trans-unit id="camera_reset">
 						<source>Resets the camera view to default values</source>
@@ -2670,15 +2707,15 @@
 					</trans-unit>
 					<trans-unit id="timetable_toggle">
 						<source>Toggles through different timetable modes</source>
-						<target>Canvia entre els diferents modes d'horari.</target>
+						<target>Canvia entre els diferents modes d&apos;horari.</target>
 					</trans-unit>
 					<trans-unit id="timetable_up">
 						<source>Scrolls the timetable up</source>
-						<target>Mou l'horari amunt.</target>
+						<target>Mou l&apos;horari amunt.</target>
 					</trans-unit>
 					<trans-unit id="timetable_down">
 						<source>Scrolls the timetable down</source>
-						<target>Mou l'horari avall.</target>
+						<target>Mou l&apos;horari avall.</target>
 					</trans-unit>
 					<trans-unit id="menu_activate">
 						<source>Displays the in-game menu</source>
@@ -2694,7 +2731,7 @@
 					</trans-unit>
 					<trans-unit id="menu_enter">
 						<source>Performs the selected command within the in-game menu</source>
-						<target>Realitza l'ordre seleccionada en el menú intern.</target>
+						<target>Realitza l&apos;ordre seleccionada en el menú intern.</target>
 					</trans-unit>
 					<trans-unit id="menu_back">
 						<source>Goes back within the in-game menu</source>
@@ -2718,7 +2755,7 @@
 					</trans-unit>
 					<trans-unit id="misc_timefactor">
 						<source>Toggles through different time acceleration factors</source>
-						<target>Canvia entre diferents factors d'acceleració temporal.</target>
+						<target>Canvia entre diferents factors d&apos;acceleració temporal.</target>
 					</trans-unit>
 					<trans-unit id="misc_fps">
 						<source>Shows or hides the frame rate display</source>
@@ -2746,7 +2783,7 @@
 					</trans-unit>
 					<trans-unit id="misc_interface">
 						<source>Toggles through different interface modes</source>
-						<target>Canvia entre diferents modes d'interfície.</target>
+						<target>Canvia entre diferents modes d&apos;interfície.</target>
 					</trans-unit>
 					<trans-unit id="misc_backface">
 						<source>Activates or deactivates backface culling</source>
@@ -2770,7 +2807,7 @@
 					</trans-unit>
 					<trans-unit id="debug_ats">
 						<source>Shows or hides plugin debug output</source>
-						<target>Mostra o oculta la sortida de depuració de l'extensió.</target>
+						<target>Mostra o oculta la sortida de depuració de l&apos;extensió.</target>
 					</trans-unit>
 					<trans-unit id="debug_touch_mode">
 						<source>Shows or hides the touch range</source>
@@ -2778,11 +2815,11 @@
 					</trans-unit>
 					<trans-unit id="route_information">
 						<source>Shows or hides the route information window</source>
-						<target>Mostra o amaga la finestra d'informació de la ruta.</target>
+						<target>Mostra o amaga la finestra d&apos;informació de la ruta.</target>
 					</trans-unit>
 					<trans-unit id="show_events">
 						<source>Shows or hides event markers (For developers)</source>
-						<target>Mostra o amaga els marcadors d'esdeveniment (per a desenvolupadors).</target>
+						<target>Mostra o amaga els marcadors d&apos;esdeveniment (per a desenvolupadors).</target>
 					</trans-unit>
 					<trans-unit id="debug_renderer_mode">
 						<source>Toggles the renderer</source>
@@ -2790,11 +2827,11 @@
 					</trans-unit>
 					<trans-unit id="wiper_speed_up">
 						<source>Increases the speed of the windscreen wipers</source>
-						<target>Incrementa la velocitat de l'eixugaparabrisa.</target>
+						<target>Incrementa la velocitat de l&apos;eixugaparabrisa.</target>
 					</trans-unit>
 					<trans-unit id="wiper_speed_down">
 						<source>Decreases the speed of the windscreen wipers</source>
-						<target>Redueix la velocitat de l'eixugaparabrisa.</target>
+						<target>Redueix la velocitat de l&apos;eixugaparabrisa.</target>
 					</trans-unit>
 					<trans-unit id="fill_fuel">
 						<source>Fills fuel</source>
@@ -2806,11 +2843,11 @@
 					</trans-unit>
 					<trans-unit id="live_steam_injector">
 						<source>Activates or deactivates the live steam injector</source>
-						<target>Activa o desactiva l'injector de vapor viu.</target>
+						<target>Activa o desactiva l&apos;injector de vapor viu.</target>
 					</trans-unit>
 					<trans-unit id="exhaust_steam_injector">
 						<source>Activates or deactivates the exhaust steam injector</source>
-						<target>Activa o desactiva l'injector de vapor d'escapament.</target>
+						<target>Activa o desactiva l&apos;injector de vapor d&apos;escapament.</target>
 					</trans-unit>
 					<trans-unit id="increase_cutoff">
 						<source>Increases the cutoff</source>
@@ -2855,6 +2892,24 @@
 					<trans-unit id="raildriver_speed_units">
 						<source>Toggles the RailDriver speed display units.</source>
 						<target>Canvia les unitats de visualització de la velocitat de RailDriver.</target>
+					</trans-unit>
+					<trans-unit id="accessibility_current_speed">
+						<source>Accessibility: Audibly announces the current speed.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_signal">
+						<source>Accessibility: Audibly announces the next signal distance and aspect.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_station">
+						<source>Accessibility: Audibly announces the the next station name and distance.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_front">
+						<source>Uncouples the front coupler for the selected car.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_rear">
+						<source>Uncouples the rear coupler for the selected car.</source>
+					</trans-unit>
+					<trans-unit id="switch_menu">
+						<source>Shows the change switch menu</source>
 					</trans-unit>
 				</group>
 				<group id="keys">
@@ -3438,15 +3493,15 @@
 					</trans-unit>
 					<trans-unit id="calibrate_button">
 						<source>Hold the [button] button in the controller and press OK.</source>
-						<target>Manteniu premut el botó [button] del comandament i premeu «D'acord».</target>
+						<target>Manteniu premut el botó [button] del comandament i premeu «D&apos;acord».</target>
 					</trans-unit>
 					<trans-unit id="calibrate_brake">
 						<source>Move the brake handle to [notch] and press OK.</source>
-						<target>Moveu la maneta de fre a [notch] i premeu «D'acord».</target>
+						<target>Moveu la maneta de fre a [notch] i premeu «D&apos;acord».</target>
 					</trans-unit>
 					<trans-unit id="calibrate_power">
 						<source>Move the power handle to [notch] and press OK.</source>
-						<target>Moveu la maneta de tracció a [notch] i premeu «D'acord».</target>
+						<target>Moveu la maneta de tracció a [notch] i premeu «D&apos;acord».</target>
 					</trans-unit>
 					<trans-unit id="label_up">
 						<source>UP</source>
@@ -3478,7 +3533,7 @@
 					</trans-unit>
 					<trans-unit id="linkLabel_driver">
 						<source>My controller is not detected or does not work properly</source>
-						<target>No s'ha detectat el meu comandament o no funciona correctament</target>
+						<target>No s&apos;ha detectat el meu comandament o no funciona correctament</target>
 					</trans-unit>
 					<trans-unit id="help_title">
 						<source>Help</source>
@@ -3490,7 +3545,7 @@
 					</trans-unit>
 					<trans-unit id="help_controller2_label">
 						<source>My PS2 controller is not detected</source>
-						<target>No s'ha detectat el meu comandament per a PS2</target>
+						<target>No s&apos;ha detectat el meu comandament per a PS2</target>
 					</trans-unit>
 					<trans-unit id="help_windows_label">
 						<source>Windows</source>
@@ -3501,15 +3556,11 @@
 						<target>Linux</target>
 					</trans-unit>
 					<trans-unit id="help_controller1_textbox">
-						<source>If your non-USB controller is not providing correct input:
-
-1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller
-to separate buttons to avoid compatibility issues.
-2. Calibrate the controller from the configuration window, if necessary.</source>
+						<source>If your non-USB controller is not providing correct input:\r\n\r\n1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller to separate buttons to avoid compatibility issues.\r\n2. Calibrate the controller from the configuration window, if necessary.</source>
 						<target>Si el vostre comandament no USB no proporciona una entrada correcta:
 
-1. Assegureu-vos que l'adaptador USB funcioni. Idealment, l'adaptador hauria d'assignar els botons de direcció
-d'un comandament estàndard a botons independents per evitar problemes de compatibilitat.
+1. Assegureu-vos que l&apos;adaptador USB funcioni. Idealment, l&apos;adaptador hauria d&apos;assignar els botons de direcció
+d&apos;un comandament estàndard a botons independents per evitar problemes de compatibilitat.
 2. Calibreu el comandament des de la finestra de configuració, si cal.</target>
 					</trans-unit>
 					<trans-unit id="help_controller2_textbox">
@@ -3517,22 +3568,17 @@ d'un comandament estàndard a botons independents per evitar problemes de compat
 						<target>Si el comandament per a PS2 no apareix a la llista, seguiu els passos següents:</target>
 					</trans-unit>
 					<trans-unit id="help_windows_textbox">
-						<source>1. Extract the Windows drivers.
-2. Download and run Zadig.
-3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).
-4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
+						<source>1. Extract the Windows drivers.\r\n2. Download and run Zadig.\r\n3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).\r\n4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
 						<target>1. Extraieu els controladors per al Windows.
 2. Baixeu i executeu el Zadig.
 3. Carregueu el fitxer CFG corresponent per al vostre dispositiu («Device &gt; Load Preset Device»).
 4. Premeu «Install Driver» i espereu que finalitzi la instal·lació.</target>
 					</trans-unit>
 					<trans-unit id="help_linux_textbox">
-						<source>1. Extract the Linux udev file.
-2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).
-3. Reboot or reload udev rules manually.</source>
+						<source>1. Extract the Linux udev file.\r\n2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).\r\n3. Reboot or reload udev rules manually.</source>
 						<target>1. Extraieu el fitxer udev per al Linux.
 2. Copieu el fitxer a «/etc/udev/rules.d/» (es necessiten permisos de root).
-3. Reinicieu l'ordinador o torneu a carregar les regles udev manualment.</target>
+3. Reinicieu l&apos;ordinador o torneu a carregar les regles udev manualment.</target>
 					</trans-unit>
 					<trans-unit id="help_zadig_button">
 						<source>Get Zadig</source>
@@ -3548,25 +3594,47 @@ d'un comandament estàndard a botons independents per evitar problemes de compat
 					</trans-unit>
 					<trans-unit id="help_ok_button">
 						<source>OK</source>
-						<target>D'acord</target>
+						<target>D&apos;acord</target>
 					</trans-unit>
 					<trans-unit id="help_libusb_symlink">
-						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.
-Please follow the following instructions:
-
-1. Check that the &quot;libusb-1.0&quot; package is installed.
-2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;
-3. Open the directory in the terminal.
-4. Check this location to see if &quot;libusb-1.0.so&quot; exists.
-5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
-						<target>Sembla que no teniu el LibUsb o que no s'ha creat un enllaç simbòlic correcte per a la càrrega en temps d'execució.
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.\r\nPlease follow the following instructions:\r\n\r\n1. Check that the &quot;libusb-1.0&quot; package is installed.\r\n2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;\r\n3. Open the directory in the terminal.\r\n4. Check this location to see if &quot;libusb-1.0.so&quot; exists.\r\n5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
+						<target>Sembla que no teniu el LibUsb o que no s&apos;ha creat un enllaç simbòlic correcte per a la càrrega en temps d&apos;execució.
 Seguiu les instruccions següents:
 
 1. Comproveu que tingueu instal·lat el paquet «libusb-1.0».
-2. Cerqueu la ubicació del fitxer «libusb-1.0.so.0». En les versions recents de l'Ubuntu i el Debian és probable que sigui «/lib/x86_64-linu-gnu/».
+2. Cerqueu la ubicació del fitxer «libusb-1.0.so.0». En les versions recents de l&apos;Ubuntu i el Debian és probable que sigui «/lib/x86_64-linu-gnu/».
 3. Obriu el directori en el terminal.
 4. Comproveu si en aquesta ubicació existeix el fitxer |libusb-1.0.so».
-5. Si el fitxer no existeix, cal crear l'enllaç simbòlic adequat executant l'ordre següent des del terminal: «sudo ln -s libusb-1.0.so.0 libusb-1.0.so».</target>
+5. Si el fitxer no existeix, cal crear l&apos;enllaç simbòlic adequat executant l&apos;ordre següent des del terminal: «sudo ln -s libusb-1.0.so.0 libusb-1.0.so».</target>
+					</trans-unit>
+					<trans-unit id="label_reverser">
+						<source>Reverser: [notch]</source>
+					</trans-unit>
+					<trans-unit id="label_a2">
+						<source>A2</source>
+					</trans-unit>
+					<trans-unit id="label_ats">
+						<source>ATS</source>
+					</trans-unit>
+				</group>
+				<group id="switchmenu">
+					<trans-unit id="title">
+						<source>Select a Switch To Change: </source>
+					</trans-unit>
+					<trans-unit id="selected">
+						<source>Selected Switch: </source>
+					</trans-unit>
+					<trans-unit id="current">
+						<source>Current Setting: </source>
+					</trans-unit>
+					<trans-unit id="distance">
+						<source>Distance from Player: </source>
+					</trans-unit>
+					<trans-unit id="zoom_in">
+						<source>Zoom In</source>
+					</trans-unit>
+					<trans-unit id="zoom_out">
+						<source>Zoom Out</source>
 					</trans-unit>
 				</group>
 			</group>
@@ -3596,7 +3664,7 @@ Seguiu les instruccions següents:
 					</trans-unit>
 					<trans-unit id="open_message">
 						<source>Do you want to save data before opening another train?</source>
-						<target>Voleu desar les dades abans d'obrir un altre tren?</target>
+						<target>Voleu desar les dades abans d&apos;obrir un altre tren?</target>
 					</trans-unit>
 					<trans-unit id="close_message">
 						<source>Do you want to save data before closing?</source>
@@ -3808,7 +3876,7 @@ Seguiu les instruccions següents:
 					</trans-unit>
 					<trans-unit id="separated_interlocked_reverser">
 						<source>Separated (Reverser Interlocked)</source>
-						<target>Independent (bloquejat amb l'inversor)</target>
+						<target>Independent (bloquejat amb l&apos;inversor)</target>
 					</trans-unit>
 					<trans-unit id="brake_notches_error_message">
 						<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
@@ -3912,7 +3980,7 @@ Seguiu les instruccions següents:
 					</trans-unit>
 					<trans-unit id="door_open_mode">
 						<source>DoorOpenMode:</source>
-						<target>Mode d'obertura de portes:</target>
+						<target>Mode d&apos;obertura de portes:</target>
 					</trans-unit>
 					<trans-unit id="door_close_mode">
 						<source>DoorCloseMode:</source>
@@ -4010,7 +4078,7 @@ Seguiu les instruccions següents:
 					</trans-unit>
 					<trans-unit id="edit">
 						<source>Edit mode</source>
-						<target>Mode d'edició</target>
+						<target>Mode d&apos;edició</target>
 					</trans-unit>
 					<trans-unit id="sound_index">
 						<source>SoundIndex:</source>
@@ -4075,8 +4143,8 @@ Seguiu les instruccions següents:
 						<target>Extended Features</target>
 					</trans-unit>
 					<trans-unit id="note">
-						<source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
-						<target>Nota: Pot ser que les funcions d'aquesta pàgina requereixin com a mínim aquesta versió de l'openBVE:</target>
+						<source>Please note: Features found on this page may require the following minimum version of OpenBVE:</source>
+						<target>Nota: Pot ser que les funcions d&apos;aquesta pàgina requereixin com a mínim aquesta versió de l&apos;OpenBVE:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake">
 						<source>Locomotive Brake</source>
@@ -4143,7 +4211,7 @@ Seguiu les instruccions següents:
 					</trans-unit>
 					<trans-unit id="misc_eb">
 						<source>Handle behaviour on EB:</source>
-						<target>Comportament dels controls quan s'aplica el fre d'emergència:</target>
+						<target>Comportament dels controls quan s&apos;aplica el fre d&apos;emergència:</target>
 					</trans-unit>
 					<trans-unit id="misc_eb_no">
 						<source>No Action</source>
@@ -4194,13 +4262,10 @@ Seguiu les instruccions següents:
 							<source>Exit</source>
 						</trans-unit>
 						<trans-unit id="wrongtype">
-							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
-							<target>Heu intentat obrir un tren. \n\n No es poden obrir directament.\n\n Utilitzeu la funció d'importació per a importar aquest tren al TrainEditor2.</target>
+							<source>You have attempted to open a train.\r\nThese cannot be opened directly-\r\nPlease use the import function to import this train into TrainEditor2.</source>
+							<target>Heu intentat obrir un tren. \n\n No es poden obrir directament.\n\n Utilitzeu la funció d&apos;importació per a importar aquest tren al TrainEditor2.</target>
 						</trans-unit>
 					</group>
-					<trans-unit id="language">
-						<source>Language</source>
-					</trans-unit>
 					<group id="message">
 						<trans-unit id="new">
 							<source>Do you want to save the current file before creating a new one?</source>
@@ -4212,6 +4277,9 @@ Seguiu les instruccions següents:
 							<source>Do you want to save the current file before closing?</source>
 						</trans-unit>
 					</group>
+					<trans-unit id="language">
+						<source>Language</source>
+					</trans-unit>
 				</group>
 				<group id="navigation">
 					<trans-unit id="up">
@@ -4255,13 +4323,7 @@ Seguiu les instruccions següents:
 					</trans-unit>
 				</group>
 				<group id="general_settings">
-					<trans-unit id="name">
-						<source>General settings</source>
-					</trans-unit>
 					<group id="handle">
-						<trans-unit id="name">
-							<source>Handle</source>
-						</trans-unit>
 						<group id="handle_type">
 							<trans-unit id="name">
 								<source>HandleType</source>
@@ -4279,21 +4341,6 @@ Seguiu les instruccions següents:
 								<source>Separated (Reverser Interlocked)</source>
 							</trans-unit>
 						</group>
-						<trans-unit id="power_notches">
-							<source>PowerNotches</source>
-						</trans-unit>
-						<trans-unit id="brake_notches">
-							<source>BrakeNotches</source>
-						</trans-unit>
-						<trans-unit id="power_notch_reduce_steps">
-							<source>PowerNotchReduceSteps</source>
-						</trans-unit>
-						<trans-unit id="driver_power_notches">
-							<source>DriverPowerNotches</source>
-						</trans-unit>
-						<trans-unit id="driver_brake_notches">
-							<source>DriverBrakeNotches</source>
-						</trans-unit>
 						<group id="eb_handle_behaviour">
 							<trans-unit id="name">
 								<source>EbHandleBehaviour</source>
@@ -4329,8 +4376,35 @@ Seguiu les instruccions següents:
 								<target>Blocking</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Handle</source>
+						</trans-unit>
+						<trans-unit id="power_notches">
+							<source>PowerNotches</source>
+						</trans-unit>
+						<trans-unit id="brake_notches">
+							<source>BrakeNotches</source>
+						</trans-unit>
+						<trans-unit id="power_notch_reduce_steps">
+							<source>PowerNotchReduceSteps</source>
+						</trans-unit>
+						<trans-unit id="driver_power_notches">
+							<source>DriverPowerNotches</source>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches">
+							<source>DriverBrakeNotches</source>
+						</trans-unit>
 						<trans-unit id="loco_brake_notches">
 							<source>LocoBrakeNotches</source>
+						</trans-unit>
+						<trans-unit id="brake_notches_error_message">
+							<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+						</trans-unit>
+						<trans-unit id="driver_power_notches_error_message">
+							<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches_error_message">
+							<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
 						</trans-unit>
 					</group>
 					<group id="cab">
@@ -4351,9 +4425,6 @@ Seguiu les instruccions següents:
 						</trans-unit>
 					</group>
 					<group id="device">
-						<trans-unit id="name">
-							<source>Device</source>
-						</trans-unit>
 						<group id="ats">
 							<trans-unit id="name">
 								<source>Ats</source>
@@ -4384,15 +4455,6 @@ Seguiu les instruccions següents:
 								<source>Automatic switching</source>
 							</trans-unit>
 						</group>
-						<trans-unit id="eb">
-							<source>Eb</source>
-						</trans-unit>
-						<trans-unit id="const_speed">
-							<source>ConstSpeed</source>
-						</trans-unit>
-						<trans-unit id="hold_brake">
-							<source>HoldBrake</source>
-						</trans-unit>
 						<group id="re_adhesion_device">
 							<trans-unit id="name">
 								<source>ReAdhesionDevice</source>
@@ -4444,6 +4506,18 @@ Seguiu les instruccions següents:
 								<source>Manual</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Device</source>
+						</trans-unit>
+						<trans-unit id="eb">
+							<source>Eb</source>
+						</trans-unit>
+						<trans-unit id="const_speed">
+							<source>ConstSpeed</source>
+						</trans-unit>
+						<trans-unit id="hold_brake">
+							<source>HoldBrake</source>
+						</trans-unit>
 						<trans-unit id="door_width">
 							<source>DoorWidth</source>
 						</trans-unit>
@@ -4451,12 +4525,28 @@ Seguiu les instruccions següents:
 							<source>DoorMaxTolerance</source>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>General settings</source>
+					</trans-unit>
 				</group>
 				<group id="car_settings">
-					<trans-unit id="name">
-						<source>Car settings</source>
-					</trans-unit>
 					<group id="general">
+						<group id="axles">
+							<trans-unit id="name">
+								<source>Axles</source>
+							</trans-unit>
+							<trans-unit id="front">
+								<source>FrontAxle</source>
+								<target>FrontAxle</target>
+							</trans-unit>
+							<trans-unit id="rear">
+								<source>RearAxle</source>
+								<target>RearAxle</target>
+							</trans-unit>
+							<trans-unit id="mustbe_less">
+								<source>RearAxle must be less than FrontAxle.</source>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
 							<source>General</source>
 						</trans-unit>
@@ -4493,19 +4583,6 @@ Seguiu les instruccions següents:
 							<source>DefinedAxles</source>
 							<target>DefinedAxles</target>
 						</trans-unit>
-						<group id="axles">
-							<trans-unit id="name">
-								<source>Axles</source>
-							</trans-unit>
-							<trans-unit id="front">
-								<source>FrontAxle</source>
-								<target>FrontAxle</target>
-							</trans-unit>
-							<trans-unit id="rear">
-								<source>RearAxle</source>
-								<target>RearAxle</target>
-							</trans-unit>
-						</group>
 						<trans-unit id="front_bogie">
 							<source>FrontBogie</source>
 							<target>FrontBogie</target>
@@ -4568,9 +4645,6 @@ Seguiu les instruccions següents:
 						</trans-unit>
 					</group>
 					<group id="brake">
-						<trans-unit id="name">
-							<source>Brake</source>
-						</trans-unit>
 						<group id="brake_type">
 							<trans-unit id="name">
 								<source>BrakeType</source>
@@ -4614,6 +4688,9 @@ Seguiu les instruccions següents:
 								<source>Delay-including control</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Brake</source>
+						</trans-unit>
 						<trans-unit id="brake_control_speed">
 							<source>BrakeControlSpeed</source>
 							<target>BrakeControlSpeed</target>
@@ -4640,6 +4717,17 @@ Seguiu les instruccions següents:
 						</trans-unit>
 					</group>
 					<group id="delay">
+						<group id="edit_entry">
+							<trans-unit id="name">
+								<source>Edit entry</source>
+							</trans-unit>
+							<trans-unit id="up">
+								<source>Up</source>
+							</trans-unit>
+							<trans-unit id="down">
+								<source>Down</source>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
 							<source>Delay</source>
 						</trans-unit>
@@ -4658,15 +4746,15 @@ Seguiu les instruccions següents:
 						<trans-unit id="value">
 							<source>Value</source>
 						</trans-unit>
+						<trans-unit id="electric_brake">
+							<source>ElectricBrake</source>
+						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Car settings</source>
+					</trans-unit>
 				</group>
 				<group id="acceleration_settings">
-					<trans-unit id="name">
-						<source>Acceleration settings</source>
-					</trans-unit>
-					<trans-unit id="notch">
-						<source>Notch</source>
-					</trans-unit>
 					<group id="parameter">
 						<trans-unit id="name">
 							<source>Parameter</source>
@@ -4732,11 +4820,14 @@ Seguiu les instruccions següents:
 							<source>Reset</source>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Acceleration settings</source>
+					</trans-unit>
+					<trans-unit id="notch">
+						<source>Notch</source>
+					</trans-unit>
 				</group>
 				<group id="motor_sound_settings">
-					<trans-unit id="name">
-						<source>Motor sound settings</source>
-					</trans-unit>
 					<group id="menu">
 						<group id="edit">
 							<trans-unit id="name">
@@ -4878,9 +4969,6 @@ Seguiu les instruccions següents:
 						</trans-unit>
 					</group>
 					<group id="play_setting">
-						<trans-unit id="name">
-							<source>Playback setting</source>
-						</trans-unit>
 						<group id="source">
 							<trans-unit id="name">
 								<source>Sound source setting</source>
@@ -4906,13 +4994,16 @@ Seguiu les instruccions següents:
 								<target>Constant speed</target>
 							</trans-unit>
 							<trans-unit id="acceleration">
-								<source>Acceleration:</source>
+								<source>Acceleration</source>
 							</trans-unit>
 							<trans-unit id="swap">
 								<source>Swap</source>
 								<target>Swap</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Playback setting</source>
+						</trans-unit>
 						<trans-unit id="play">
 							<source>Playback</source>
 							<target>Playback</target>
@@ -5009,11 +5100,11 @@ Seguiu les instruccions següents:
 							<target>A point already exists at the same x coordinate, do you want to overwrite it?</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Motor sound settings</source>
+					</trans-unit>
 				</group>
 				<group id="coupler_settings">
-					<trans-unit id="name">
-						<source>Coupler settings</source>
-					</trans-unit>
 					<group id="general">
 						<trans-unit id="name">
 							<source>General</source>
@@ -5027,12 +5118,34 @@ Seguiu les instruccions següents:
 							<target>Max</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Coupler settings</source>
+					</trans-unit>
 				</group>
 				<group id="panel_settings">
-					<trans-unit id="name">
-						<source>Panel settings</source>
-					</trans-unit>
 					<group id="this">
+						<group id="center">
+							<trans-unit id="name">
+								<source>Center origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<group id="origin">
+							<trans-unit id="name">
+								<source>Track origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
 							<source>This</source>
 						</trans-unit>
@@ -5066,9 +5179,56 @@ Seguiu les instruccions següents:
 							<source>TransparentColor</source>
 							<target>TransparentColor</target>
 						</trans-unit>
-						<group id="center">
+					</group>
+					<group id="screen">
+						<trans-unit id="name">
+							<source>Screen</source>
+						</trans-unit>
+						<trans-unit id="number">
+							<source>Number</source>
+							<target>Number</target>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+							<target>Capa</target>
+						</trans-unit>
+					</group>
+					<group id="pilot_lamp">
+						<group id="location">
 							<trans-unit id="name">
-								<source>Center</source>
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>PilotLamp</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+							<target>Subject</target>
+						</trans-unit>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="needle">
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -5088,70 +5248,12 @@ Seguiu les instruccions següents:
 								<source>Y</source>
 							</trans-unit>
 						</group>
-					</group>
-					<group id="screen">
-						<trans-unit id="name">
-							<source>Screen</source>
-						</trans-unit>
-						<trans-unit id="number">
-							<source>Number</source>
-							<target>Number</target>
-						</trans-unit>
-						<trans-unit id="layer">
-							<source>Layer</source>
-							<target>Capa</target>
-						</trans-unit>
-					</group>
-					<group id="pilot_lamp">
-						<trans-unit id="name">
-							<source>PilotLamp</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-							<target>Subject</target>
-						</trans-unit>
-						<group id="location">
-							<trans-unit id="name">
-								<source>Location</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
-						<trans-unit id="daytime_image">
-							<source>DaytimeImage</source>
-						</trans-unit>
-						<trans-unit id="nighttime_image">
-							<source>NighttimeImage</source>
-						</trans-unit>
-						<trans-unit id="transparent_color">
-							<source>TransparentColor</source>
-						</trans-unit>
-						<trans-unit id="layer">
-							<source>Layer</source>
-						</trans-unit>
-					</group>
-					<group id="needle">
 						<trans-unit id="name">
 							<source>Needle</source>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
 						</trans-unit>
-						<group id="location">
-							<trans-unit id="name">
-								<source>Location</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
 						<trans-unit id="defined_radius">
 							<source>DefinedRadius</source>
 							<target>DefinedRadius</target>
@@ -5177,17 +5279,6 @@ Seguiu les instruccions següents:
 							<source>DefinedOrigin</source>
 							<target>DefinedOrigin</target>
 						</trans-unit>
-						<group id="origin">
-							<trans-unit id="name">
-								<source>Origin</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
 						<trans-unit id="initial_angle">
 							<source>InitialAngle</source>
 							<target>InitialAngle</target>
@@ -5233,12 +5324,6 @@ Seguiu les instruccions següents:
 						</trans-unit>
 					</group>
 					<group id="digital_number">
-						<trans-unit id="name">
-							<source>DigitalNumber</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5250,6 +5335,12 @@ Seguiu les instruccions següents:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>DigitalNumber</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
 						</trans-unit>
@@ -5268,12 +5359,6 @@ Seguiu les instruccions següents:
 						</trans-unit>
 					</group>
 					<group id="digital_gauge">
-						<trans-unit id="name">
-							<source>DigitalGauge</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5285,6 +5370,12 @@ Seguiu les instruccions següents:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>DigitalGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
 						<trans-unit id="radius">
 							<source>Radius</source>
 						</trans-unit>
@@ -5312,12 +5403,6 @@ Seguiu les instruccions següents:
 						</trans-unit>
 					</group>
 					<group id="linear_gauge">
-						<trans-unit id="name">
-							<source>LinearGauge</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5329,6 +5414,23 @@ Seguiu les instruccions següents:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<group id="direction">
+							<trans-unit id="name">
+								<source>Direction</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>LinearGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
 						</trans-unit>
@@ -5344,17 +5446,6 @@ Seguiu les instruccions següents:
 						<trans-unit id="maximum">
 							<source>Maximum</source>
 						</trans-unit>
-						<group id="direction">
-							<trans-unit id="name">
-								<source>Direction</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
 						<trans-unit id="width">
 							<source>Width</source>
 						</trans-unit>
@@ -5363,9 +5454,6 @@ Seguiu les instruccions següents:
 						</trans-unit>
 					</group>
 					<group id="timetable">
-						<trans-unit id="name">
-							<source>Timetable</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5377,6 +5465,9 @@ Seguiu les instruccions següents:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Timetable</source>
+						</trans-unit>
 						<trans-unit id="height">
 							<source>Height</source>
 						</trans-unit>
@@ -5391,9 +5482,6 @@ Seguiu les instruccions següents:
 						</trans-unit>
 					</group>
 					<group id="touch">
-						<trans-unit id="name">
-							<source>Touch</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5416,6 +5504,9 @@ Seguiu les instruccions següents:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Touch</source>
+						</trans-unit>
 						<trans-unit id="jump_screen">
 							<source>JumpScreen</source>
 							<target>JumpScreen</target>
@@ -5431,9 +5522,128 @@ Seguiu les instruccions següents:
 							<source>CommandOption</source>
 							<target>CommandOption</target>
 						</trans-unit>
+						<trans-unit id="sound_command">
+							<source>Sound and command</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
 					</group>
+					<group id="subject">
+						<trans-unit id="name">
+							<source>Subject</source>
+						</trans-unit>
+						<trans-unit id="base">
+							<source>Base</source>
+						</trans-unit>
+						<trans-unit id="baseoption">
+							<source>Base option</source>
+						</trans-unit>
+						<trans-unit id="suffix">
+							<source>Suffix</source>
+						</trans-unit>
+						<trans-unit id="suffixoption">
+							<source>Suffix option</source>
+						</trans-unit>
+					</group>
+					<group id="sound_command">
+						<group id="tree">
+							<trans-unit id="touch_element">
+								<source>Touch element</source>
+							</trans-unit>
+							<trans-unit id="sounds">
+								<source>Sounds</source>
+							</trans-unit>
+							<trans-unit id="commands">
+								<source>Commands</source>
+							</trans-unit>
+						</group>
+						<group id="edit_entry">
+							<group id="sound">
+								<trans-unit id="index">
+									<source>Index</source>
+								</trans-unit>
+							</group>
+							<group id="command">
+								<trans-unit id="name">
+									<source>Key</source>
+								</trans-unit>
+								<trans-unit id="option">
+									<source>Option</source>
+								</trans-unit>
+							</group>
+							<trans-unit id="name">
+								<source>Edit entry</source>
+							</trans-unit>
+							<trans-unit id="sound">
+								<source>Sound</source>
+							</trans-unit>
+							<trans-unit id="command">
+								<source>Command</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>Sound and command</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="name">
+						<source>Panel settings</source>
+					</trans-unit>
 				</group>
 				<group id="sound_settings">
+					<group id="edit_entry">
+						<group id="section">
+							<trans-unit id="name">
+								<source>Section select</source>
+							</trans-unit>
+						</group>
+						<group id="key">
+							<trans-unit id="name">
+								<source>Key type select</source>
+							</trans-unit>
+						</group>
+						<group id="value">
+							<group id="position">
+								<trans-unit id="name">
+									<source>Position</source>
+								</trans-unit>
+								<trans-unit id="x">
+									<source>X</source>
+								</trans-unit>
+								<trans-unit id="y">
+									<source>Y</source>
+								</trans-unit>
+								<trans-unit id="z">
+									<source>Z</source>
+								</trans-unit>
+							</group>
+							<trans-unit id="name">
+								<source>Input value</source>
+							</trans-unit>
+							<trans-unit id="filename">
+								<source>Filename</source>
+							</trans-unit>
+							<trans-unit id="radius">
+								<source>Radius</source>
+							</trans-unit>
+							<trans-unit id="position">
+								<source>Position setting</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>Edit entry</source>
+						</trans-unit>
+					</group>
+					<group id="message">
+						<trans-unit id="empty_filename">
+							<source>File name has not been entered.</source>
+							<target>File name has not been entered.</target>
+						</trans-unit>
+						<trans-unit id="key_exist">
+							<source>The specified key is already set.</source>
+							<target>The specified key is already set.</target>
+						</trans-unit>
+					</group>
 					<trans-unit id="name">
 						<source>Sound settings</source>
 					</trans-unit>
@@ -5451,64 +5661,8 @@ Seguiu les instruccions següents:
 					<trans-unit id="radius">
 						<source>Radius</source>
 					</trans-unit>
-					<group id="edit_entry">
-						<trans-unit id="name">
-							<source>Edit entry</source>
-						</trans-unit>
-						<group id="section">
-							<trans-unit id="name">
-								<source>Section select</source>
-							</trans-unit>
-						</group>
-						<group id="key">
-							<trans-unit id="name">
-								<source>Key type select</source>
-							</trans-unit>
-						</group>
-						<group id="value">
-							<trans-unit id="name">
-								<source>Input value</source>
-							</trans-unit>
-							<trans-unit id="filename">
-								<source>Filename</source>
-							</trans-unit>
-							<trans-unit id="radius">
-								<source>Radius</source>
-							</trans-unit>
-							<trans-unit id="position">
-								<source>Position setting</source>
-							</trans-unit>
-							<group id="position">
-								<trans-unit id="name">
-									<source>Position</source>
-								</trans-unit>
-								<trans-unit id="x">
-									<source>x coordinate</source>
-								</trans-unit>
-								<trans-unit id="y">
-									<source>y coordinate</source>
-								</trans-unit>
-								<trans-unit id="z">
-									<source>z coordinate</source>
-								</trans-unit>
-							</group>
-						</group>
-					</group>
-					<group id="message">
-						<trans-unit id="empty_filename">
-							<source>File name has not been entered.</source>
-							<target>File name has not been entered.</target>
-						</trans-unit>
-						<trans-unit id="key_exist">
-							<source>The specified key is already set.</source>
-							<target>The specified key is already set.</target>
-						</trans-unit>
-					</group>
 				</group>
 				<group id="status">
-					<trans-unit id="name">
-						<source>Status</source>
-					</trans-unit>
 					<group id="menu">
 						<trans-unit id="error">
 							<source>Error</source>
@@ -5525,6 +5679,9 @@ Seguiu les instruccions següents:
 							<source>Clear</source>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Status</source>
+					</trans-unit>
 					<trans-unit id="level">
 						<source>Level</source>
 						<target>Nivell</target>
@@ -5561,8 +5718,84 @@ Seguiu les instruccions següents:
 						<target>This value must be a {0}floating-point number.</target>
 					</trans-unit>
 					<trans-unit id="invalid_color">
-						<source>invalid_color</source>
+						<source>Invalid HEX color</source>
 						<target>invalid_color</target>
+					</trans-unit>
+					<trans-unit id="number_exist">
+						<source>The specified number is already set.</source>
+					</trans-unit>
+					<trans-unit id="mustbe_greater_than">
+						<source>Max must be greater than or equal to Min.</source>
+					</trans-unit>
+					<trans-unit id="mustbe_less_than">
+						<source>Min must be less than the Max.</source>
+					</trans-unit>
+				</group>
+				<group id="items">
+					<trans-unit id="filename">
+						<source>Filename</source>
+					</trans-unit>
+					<trans-unit id="folder">
+						<source>Folder</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>Type</source>
+					</trans-unit>
+					<trans-unit id="button_ok">
+						<source>OK</source>
+					</trans-unit>
+				</group>
+				<group id="import_export">
+					<group id="train">
+						<trans-unit id="name">
+							<source>Train setting file</source>
+						</trans-unit>
+						<trans-unit id="old_format">
+							<source>Old format</source>
+						</trans-unit>
+						<trans-unit id="traindat">
+							<source>Train.dat</source>
+						</trans-unit>
+						<trans-unit id="extensionscfg">
+							<source>Extensions.cfg</source>
+						</trans-unit>
+					</group>
+					<group id="panel">
+						<trans-unit id="name">
+							<source>Panel Setting File</source>
+						</trans-unit>
+						<trans-unit id="panel2cfg">
+							<source>Panel2.cfg</source>
+						</trans-unit>
+						<trans-unit id="panelxml">
+							<source>Panel.xml</source>
+						</trans-unit>
+					</group>
+					<group id="sound">
+						<trans-unit id="name">
+							<source>Sound setting file</source>
+						</trans-unit>
+						<trans-unit id="no_setting_file">
+							<source>No setting file</source>
+						</trans-unit>
+						<trans-unit id="soundcfg">
+							<source>Sound.cfg</source>
+						</trans-unit>
+						<trans-unit id="soundxml">
+							<source>Sound.xml</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="import_name">
+						<source>Import</source>
+					</trans-unit>
+					<trans-unit id="export_name">
+						<source>Export</source>
+					</trans-unit>
+					<trans-unit id="folder">
+						<source>Folder</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>Type</source>
 					</trans-unit>
 				</group>
 			</group>

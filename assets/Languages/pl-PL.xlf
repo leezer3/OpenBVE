@@ -1,4 +1,5 @@
-<?xml version="1.0" ?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="pl-PL">
 		<body>
 			<group id="language">
@@ -234,9 +235,6 @@
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
 						<target>Wybrana trasa jest uszkodzona: \r\n Nie można zlokalizować wszystkich zdefiniowanych obiektów.</target>
 					</trans-unit>
-					<trans-unit id="route_corrupt_missingobjects">
-						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
-					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
 						<target>Wtyczka pociągu [plugin] nie załadowała się.</target>
@@ -268,6 +266,9 @@
 					<trans-unit id="security_badlocation">
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
 						<target>Jeśli próbujesz zainstalować dodatki w folderach Program Files lub ProgramData, może wymagać to uprawnień administratora. \r\n\r\n Nie jest to zalecane ze względów bezpieczeństwa.</target>
+					</trans-unit>
+					<trans-unit id="route_switch_turn">
+						<source>The .Turn command and the .Switch command may not be used in the same route.</source>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -334,18 +335,6 @@
 						<source>Choose Train...</source>
 						<target>Wybierz Skład...</target>
 					</trans-unit>
-					<trans-unit id="train_default">
-						<source>Do you wish to use the default train?</source>
-						<target>Czy chcesz użyć domyślnego składu?</target>
-					</trans-unit>
-					<trans-unit id="train_default_no">
-						<source>No</source>
-						<target>Nie</target>
-					</trans-unit>
-					<trans-unit id="train_default_yes">
-						<source>Yes</source>
-						<target>Tak</target>
-					</trans-unit>
 					<trans-unit id="train_selection">
 						<source>Selection</source>
 						<target>Wybór pociągu</target>
@@ -411,6 +400,9 @@
 					<trans-unit id="start_start">
 						<source>Start</source>
 						<target>Start</target>
+					</trans-unit>
+					<trans-unit id="train_notfound_download">
+						<source>The default train is not currently installed:\r\n\r\n [train]\r\n\r\n It may be downloaded at:\r\n\r\n</source>
 					</trans-unit>
 				</group>
 				<group id="review">
@@ -607,8 +599,8 @@
 						<target>Instaluj pakiet</target>
 					</trans-unit>
 					<trans-unit id="install_invalid">
-						<source>This file does not appear to be a valid openBVE package.</source>
-						<target>Ten plik nie wygląda na plik pakietu openBVE</target>
+						<source>This file does not appear to be a valid OpenBVE package.</source>
+						<target>Ten plik nie wygląda na plik pakietu OpenBVE</target>
 					</trans-unit>
 					<trans-unit id="install_version_error">
 						<source>Package Version Error</source>
@@ -719,8 +711,8 @@
 						<target>Usuń</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_skip_if_none">
-						<source>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</source>
-						<target>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</target>
+						<source>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</source>
+						<target>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
@@ -746,7 +738,7 @@
 						<source>The new package has been assigned the following GUID:</source>
 						<target>Do nowego pakietu przypisano następujący identyfikator GUID:</target>
 					</trans-unit>
-					<trans-unit id="creation_header">
+					<trans-unit id="enter_details_header">
 						<source>Enter Package Details</source>
 					</trans-unit>
 					<trans-unit id="creation_name">
@@ -1246,64 +1238,64 @@
 						<target>Błąd wczytywania pliku kalibracji RailDriver.</target>
 					</trans-unit>
 					<trans-unit id="calibration_start">
-						<source>Please press 'Next' to start calibration.</source>
-						<target>Wciśnij 'Dalej' aby rozpocząć kalibrację.</target>
+						<source>Please press &apos;Next&apos; to start calibration.</source>
+						<target>Wciśnij &apos;Dalej&apos; aby rozpocząć kalibrację.</target>
 					</trans-unit>
 					<trans-unit id="calibration_a">
-						<source>Move the reverser lever to the full reverse position and press 'Next'.</source>
-						<target>Przesuń dźwignię nawrotnika na wsteczny kierunek i naciśnij 'Dalej'.</target>
+						<source>Move the reverser lever to the full reverse position and press &apos;Next&apos;.</source>
+						<target>Przesuń dźwignię nawrotnika na wsteczny kierunek i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_b">
-						<source>Move the reverser lever to the full forward position and press 'Next'.</source>
-						<target>Przesuń dźwignię nawrotnika na kierunek do przodu i naciśnij 'Dalej'.</target>
+						<source>Move the reverser lever to the full forward position and press &apos;Next&apos;.</source>
+						<target>Przesuń dźwignię nawrotnika na kierunek do przodu i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_c">
-						<source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
-						<target>Przesuń wspólną dźwignię hamulca / nastawnika na pełną moc i naciśnij 'Dalej'.</target>
+						<source>Move the combined brake / throttle lever to the full power position and press &apos;Next&apos;.</source>
+						<target>Przesuń wspólną dźwignię hamulca / nastawnika na pełną moc i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_d">
-						<source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
-						<target>Przesuń wspólną dźwignię hamulca / nastawnika na pełne hamowanie i naciśnij 'Dalej'.</target>
+						<source>Move the combined brake / throttle lever to the full brake position and press &apos;Next&apos;.</source>
+						<target>Przesuń wspólną dźwignię hamulca / nastawnika na pełne hamowanie i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_e">
-						<source>Move the dynamic brake lever to the release position and press 'Next'.</source>
-						<target>Przesuń dźwignię hamulca dynamicznego na odhamowany i naciśnij 'Dalej'.</target>
+						<source>Move the dynamic brake lever to the release position and press &apos;Next&apos;.</source>
+						<target>Przesuń dźwignię hamulca dynamicznego na odhamowany i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_f">
-						<source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
-						<target>Przesuń dźwignię hamulca dynamicznego na hamowanie nagłe i naciśnij 'Dalej'.</target>
+						<source>Move the dynamic brake lever to the emergency position and press &apos;Next&apos;.</source>
+						<target>Przesuń dźwignię hamulca dynamicznego na hamowanie nagłe i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_g">
-						<source>Move the independant brake lever to the release position and press 'Next'.</source>
-						<target>Przesuń dźwignię hamulca niezależnego na odhamowany i naciśnij 'Dalej'.</target>
+						<source>Move the independant brake lever to the release position and press &apos;Next&apos;.</source>
+						<target>Przesuń dźwignię hamulca niezależnego na odhamowany i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_h">
-						<source>Move the independant brake lever to the full position and press 'Next'.</source>
-						<target>Przesuń dźwignię hamulca niezależnego na zahamowany i naciśnij 'Dalej'.</target>
+						<source>Move the independant brake lever to the full position and press &apos;Next&apos;.</source>
+						<target>Przesuń dźwignię hamulca niezależnego na zahamowany i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_i">
-						<source>Move the bail-off lever to the release position and press 'Next'.</source>
-						<target>Przesuń dźwignię bail-off do pozycji zwolnienia i naciśnij 'Dalej'.</target>
+						<source>Move the bail-off lever to the release position and press &apos;Next&apos;.</source>
+						<target>Przesuń dźwignię bail-off do pozycji zwolnienia i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_j">
-						<source>Move and hold the bail-off lever into the full position and press 'Next'.</source>
-						<target>Przesuń i przytrzymaj dźwignię bail-off do pozycji pełny i naciśnij 'Dalej'.</target>
+						<source>Move and hold the bail-off lever into the full position and press &apos;Next&apos;.</source>
+						<target>Przesuń i przytrzymaj dźwignię bail-off do pozycji pełny i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_k">
-						<source>Move the wiper switch to OFF and press 'Next'.</source>
-						<target>Przełącz wycieraczki w pozycję OFF  i naciśnij 'Dalej'.</target>
+						<source>Move the wiper switch to OFF and press &apos;Next&apos;.</source>
+						<target>Przełącz wycieraczki w pozycję OFF  i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_l">
-						<source>Move the wiper switch to FULL and press 'Next'.</source>
-						<target>Przełącz wycieraczki w pozycję FULL  i naciśnij 'Dalej'.</target>
+						<source>Move the wiper switch to FULL and press &apos;Next&apos;.</source>
+						<target>Przełącz wycieraczki w pozycję FULL  i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_m">
-						<source>Move the lights switch to OFF and press 'Next'.</source>
-						<target>Przełącz światła w pozycję OFF  i naciśnij 'Dalej'.</target>
+						<source>Move the lights switch to OFF and press &apos;Next&apos;.</source>
+						<target>Przełącz światła w pozycję OFF  i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_n">
-						<source>Move the lights switch to FULL and press 'Next'.</source>
-						<target>Przełącz światła w pozycję FULL  i naciśnij 'Dalej'.</target>
+						<source>Move the lights switch to FULL and press &apos;Next&apos;.</source>
+						<target>Przełącz światła w pozycję FULL  i naciśnij &apos;Dalej&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_o">
 						<source>Calibration complete.</source>
@@ -1986,7 +1978,7 @@
 						<target>Ruszyłeś ze stacji [name] gdy ludzie wsiadali. Proszę zatrzymać pociąg.</target>
 					</trans-unit>
 					<trans-unit id="train_currentspeed">
-						<source>The train's current speed is [speed]</source>
+						<source>The train&apos;s current speed is [speed]</source>
 						<target>Aktualna prędkość składu to [speed]</target>
 					</trans-unit>
 					<trans-unit id="loading">
@@ -2057,6 +2049,21 @@
 					<trans-unit id="mousegrab_off">
 						<source>Mouse grab: off</source>
 						<target>Przechwycenie myszy: Wył</target>
+					</trans-unit>
+					<trans-unit id="switchexterior_uncouple">
+						<source>Please switch to exterior view to uncouple.</source>
+					</trans-unit>
+					<trans-unit id="unable_uncouple">
+						<source>Unable to uncouple this car.</source>
+					</trans-unit>
+					<trans-unit id="exterior_uncouplerear">
+						<source>Uncoupling the rear of car number</source>
+					</trans-unit>
+					<trans-unit id="exterior_uncouplefront">
+						<source>Uncoupling the front of car number</source>
+					</trans-unit>
+					<trans-unit id="fixed_uncouple">
+						<source>This coupler is fixed, and cannot uncouple.</source>
 					</trans-unit>
 				</group>
 				<group id="score">
@@ -2230,7 +2237,7 @@
 						<target>Kontroler</target>
 					</trans-unit>
 					<trans-unit id="joystick_notavailable">
-						<source>N/A</source>
+						<source>Joystick (Not currently connected)</source>
 						<target>N/A</target>
 					</trans-unit>
 					<trans-unit id="joystickdirection_positive">
@@ -2244,6 +2251,18 @@
 					<trans-unit id="assignment_current">
 						<source>Current assignment:</source>
 						<target>Aktualne przypisanie:</target>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Do you wish to use the default train?</source>
+						<target>Czy chcesz użyć domyślnego składu?</target>
+					</trans-unit>
+					<trans-unit id="train_default_no">
+						<source>No</source>
+						<target>Nie</target>
+					</trans-unit>
+					<trans-unit id="train_default_yes">
+						<source>Yes</source>
+						<target>Tak</target>
 					</trans-unit>
 				</group>
 				<group id="lamps">
@@ -2577,15 +2596,15 @@
 						<target>Funkcja P w systemie bezpieczeństwa</target>
 					</trans-unit>
 					<trans-unit id="camera_interior">
-						<source>Switches to the train's interior view</source>
+						<source>Switches to the train&apos;s interior view</source>
 						<target>Przełącza do wewnętrznego widoku pociągu</target>
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
-						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
+						<source>Switches to the train&apos;s interior view. However, the panel is not displayed.</source>
 						<target>Przełącza na widok wnętrza pociągu. Jednak panel nie jest wyświetlany.</target>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
-						<source>Switches to the train's exterior view</source>
+						<source>Switches to the train&apos;s exterior view</source>
 						<target>Przełącza do zewnętrznego widoku pociągu</target>
 					</trans-unit>
 					<trans-unit id="camera_track">
@@ -2855,6 +2874,24 @@
 					<trans-unit id="raildriver_speed_units">
 						<source>Toggles the RailDriver speed display units.</source>
 						<target>Przełącza jednostki wyświetlania prędkości RailDriver.</target>
+					</trans-unit>
+					<trans-unit id="accessibility_current_speed">
+						<source>Accessibility: Audibly announces the current speed.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_signal">
+						<source>Accessibility: Audibly announces the next signal distance and aspect.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_station">
+						<source>Accessibility: Audibly announces the the next station name and distance.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_front">
+						<source>Uncouples the front coupler for the selected car.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_rear">
+						<source>Uncouples the rear coupler for the selected car.</source>
+					</trans-unit>
+					<trans-unit id="switch_menu">
+						<source>Shows the change switch menu</source>
 					</trans-unit>
 				</group>
 				<group id="keys">
@@ -3501,11 +3538,7 @@
 						<target>Linux</target>
 					</trans-unit>
 					<trans-unit id="help_controller1_textbox">
-						<source>If your non-USB controller is not providing correct input:
-
-1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller
-to separate buttons to avoid compatibility issues.
-2. Calibrate the controller from the configuration window, if necessary.</source>
+						<source>If your non-USB controller is not providing correct input:\r\n\r\n1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller to separate buttons to avoid compatibility issues.\r\n2. Calibrate the controller from the configuration window, if necessary.</source>
 						<target>Jeśli kontroler inny niż USB nie działa prawidłowo:
 
 1. Upewnij się, że adapter USB działa. Adapter powinien mapować przyciski kierunkowe ze standardowego kontrolera
@@ -3517,19 +3550,14 @@ na oddzielne przyciski, aby uniknąć problemów ze zgodnością.
 						<target>Jeśli kontrolera PS2 nie ma na liście, wykonaj następujące kroki:</target>
 					</trans-unit>
 					<trans-unit id="help_windows_textbox">
-						<source>1. Extract the Windows drivers.
-2. Download and run Zadig.
-3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).
-4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
+						<source>1. Extract the Windows drivers.\r\n2. Download and run Zadig.\r\n3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).\r\n4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
 						<target>1. Rozpakuj sterowniki dla Windowsa.
 2. Pobierz i uruchom Zadig.
 3. Wczytaj odpowiedni plik CFG dla twojego urządzenia (&quot;Device &gt; Load Preset Device&quot;&quot;)
 4. Naciśnij &quot;Install Driver&quot; i poczekaj na zakończenie instalacji.</target>
 					</trans-unit>
 					<trans-unit id="help_linux_textbox">
-						<source>1. Extract the Linux udev file.
-2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).
-3. Reboot or reload udev rules manually.</source>
+						<source>1. Extract the Linux udev file.\r\n2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).\r\n3. Reboot or reload udev rules manually.</source>
 						<target>1. Wypakuj Linuxowy plik udev.
 2. Skopiuj ten plik do &quot;/etc/udev/rules.d/&quot; (wymagane uprawnienia roota).
 3. Uruchom ponownie lub przeładuj udev.</target>
@@ -3551,14 +3579,7 @@ na oddzielne przyciski, aby uniknąć problemów ze zgodnością.
 						<target>OK</target>
 					</trans-unit>
 					<trans-unit id="help_libusb_symlink">
-						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.
-Please follow the following instructions:
-
-1. Check that the &quot;libusb-1.0&quot; package is installed.
-2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;
-3. Open the directory in the terminal.
-4. Check this location to see if &quot;libusb-1.0.so&quot; exists.
-5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.\r\nPlease follow the following instructions:\r\n\r\n1. Check that the &quot;libusb-1.0&quot; package is installed.\r\n2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;\r\n3. Open the directory in the terminal.\r\n4. Check this location to see if &quot;libusb-1.0.so&quot; exists.\r\n5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
 						<target>Wygląda na to, że brakuje LibUsb, albo nie zostało poprawnie połączone. Postępuj zgodnie z poniższymi instrukcjami:
 
 1. Sprawdź, czy zainstalowano pakiet „libusb-1.0”.
@@ -3566,6 +3587,35 @@ Please follow the following instructions:
 3. Otwórz katalog w konsoli.
 4. Sprawdź tę lokalizację, aby zobaczyć, czy istnieje &quot;libusb-1.0.so&quot;.
 5. Jeśli plik nie istnieje, musimy utworzyć odpowiedni symlink, wykonując następujące polecenie z konsoli: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</target>
+					</trans-unit>
+					<trans-unit id="label_reverser">
+						<source>Reverser: [notch]</source>
+					</trans-unit>
+					<trans-unit id="label_a2">
+						<source>A2</source>
+					</trans-unit>
+					<trans-unit id="label_ats">
+						<source>ATS</source>
+					</trans-unit>
+				</group>
+				<group id="switchmenu">
+					<trans-unit id="title">
+						<source>Select a Switch To Change: </source>
+					</trans-unit>
+					<trans-unit id="selected">
+						<source>Selected Switch: </source>
+					</trans-unit>
+					<trans-unit id="current">
+						<source>Current Setting: </source>
+					</trans-unit>
+					<trans-unit id="distance">
+						<source>Distance from Player: </source>
+					</trans-unit>
+					<trans-unit id="zoom_in">
+						<source>Zoom In</source>
+					</trans-unit>
+					<trans-unit id="zoom_out">
+						<source>Zoom Out</source>
 					</trans-unit>
 				</group>
 			</group>
@@ -4074,8 +4124,8 @@ Please follow the following instructions:
 						<target>Extended Features</target>
 					</trans-unit>
 					<trans-unit id="note">
-						<source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
-						<target>Please note: Features found on this page may require the following minimum version of openBVE:</target>
+						<source>Please note: Features found on this page may require the following minimum version of OpenBVE:</source>
+						<target>Please note: Features found on this page may require the following minimum version of OpenBVE:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake">
 						<source>Locomotive Brake</source>
@@ -4193,13 +4243,10 @@ Please follow the following instructions:
 							<source>Exit</source>
 						</trans-unit>
 						<trans-unit id="wrongtype">
-							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
+							<source>You have attempted to open a train.\r\nThese cannot be opened directly-\r\nPlease use the import function to import this train into TrainEditor2.</source>
 							<target>Próbowałeś otworzyć skład. \n\n Nie można ich otworzyć bezpośrednio- \n\n Użyj funkcji importu, aby zaimportować ten skład do TrainEditor2.</target>
 						</trans-unit>
 					</group>
-					<trans-unit id="language">
-						<source>Language</source>
-					</trans-unit>
 					<group id="message">
 						<trans-unit id="new">
 							<source>Do you want to save the current file before creating a new one?</source>
@@ -4211,6 +4258,9 @@ Please follow the following instructions:
 							<source>Do you want to save the current file before closing?</source>
 						</trans-unit>
 					</group>
+					<trans-unit id="language">
+						<source>Language</source>
+					</trans-unit>
 				</group>
 				<group id="navigation">
 					<trans-unit id="up">
@@ -4254,13 +4304,7 @@ Please follow the following instructions:
 					</trans-unit>
 				</group>
 				<group id="general_settings">
-					<trans-unit id="name">
-						<source>General settings</source>
-					</trans-unit>
 					<group id="handle">
-						<trans-unit id="name">
-							<source>Handle</source>
-						</trans-unit>
 						<group id="handle_type">
 							<trans-unit id="name">
 								<source>HandleType</source>
@@ -4278,21 +4322,6 @@ Please follow the following instructions:
 								<source>Separated (Reverser Interlocked)</source>
 							</trans-unit>
 						</group>
-						<trans-unit id="power_notches">
-							<source>PowerNotches</source>
-						</trans-unit>
-						<trans-unit id="brake_notches">
-							<source>BrakeNotches</source>
-						</trans-unit>
-						<trans-unit id="power_notch_reduce_steps">
-							<source>PowerNotchReduceSteps</source>
-						</trans-unit>
-						<trans-unit id="driver_power_notches">
-							<source>DriverPowerNotches</source>
-						</trans-unit>
-						<trans-unit id="driver_brake_notches">
-							<source>DriverBrakeNotches</source>
-						</trans-unit>
 						<group id="eb_handle_behaviour">
 							<trans-unit id="name">
 								<source>EbHandleBehaviour</source>
@@ -4328,8 +4357,35 @@ Please follow the following instructions:
 								<target>Blocking</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Handle</source>
+						</trans-unit>
+						<trans-unit id="power_notches">
+							<source>PowerNotches</source>
+						</trans-unit>
+						<trans-unit id="brake_notches">
+							<source>BrakeNotches</source>
+						</trans-unit>
+						<trans-unit id="power_notch_reduce_steps">
+							<source>PowerNotchReduceSteps</source>
+						</trans-unit>
+						<trans-unit id="driver_power_notches">
+							<source>DriverPowerNotches</source>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches">
+							<source>DriverBrakeNotches</source>
+						</trans-unit>
 						<trans-unit id="loco_brake_notches">
 							<source>LocoBrakeNotches</source>
+						</trans-unit>
+						<trans-unit id="brake_notches_error_message">
+							<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+						</trans-unit>
+						<trans-unit id="driver_power_notches_error_message">
+							<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches_error_message">
+							<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
 						</trans-unit>
 					</group>
 					<group id="cab">
@@ -4350,9 +4406,6 @@ Please follow the following instructions:
 						</trans-unit>
 					</group>
 					<group id="device">
-						<trans-unit id="name">
-							<source>Device</source>
-						</trans-unit>
 						<group id="ats">
 							<trans-unit id="name">
 								<source>Ats</source>
@@ -4383,15 +4436,6 @@ Please follow the following instructions:
 								<source>Automatic switching</source>
 							</trans-unit>
 						</group>
-						<trans-unit id="eb">
-							<source>Eb</source>
-						</trans-unit>
-						<trans-unit id="const_speed">
-							<source>ConstSpeed</source>
-						</trans-unit>
-						<trans-unit id="hold_brake">
-							<source>HoldBrake</source>
-						</trans-unit>
 						<group id="re_adhesion_device">
 							<trans-unit id="name">
 								<source>ReAdhesionDevice</source>
@@ -4443,6 +4487,18 @@ Please follow the following instructions:
 								<source>Manual</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Device</source>
+						</trans-unit>
+						<trans-unit id="eb">
+							<source>Eb</source>
+						</trans-unit>
+						<trans-unit id="const_speed">
+							<source>ConstSpeed</source>
+						</trans-unit>
+						<trans-unit id="hold_brake">
+							<source>HoldBrake</source>
+						</trans-unit>
 						<trans-unit id="door_width">
 							<source>DoorWidth</source>
 						</trans-unit>
@@ -4450,12 +4506,28 @@ Please follow the following instructions:
 							<source>DoorMaxTolerance</source>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>General settings</source>
+					</trans-unit>
 				</group>
 				<group id="car_settings">
-					<trans-unit id="name">
-						<source>Car settings</source>
-					</trans-unit>
 					<group id="general">
+						<group id="axles">
+							<trans-unit id="name">
+								<source>Axles</source>
+							</trans-unit>
+							<trans-unit id="front">
+								<source>FrontAxle</source>
+								<target>FrontAxle</target>
+							</trans-unit>
+							<trans-unit id="rear">
+								<source>RearAxle</source>
+								<target>RearAxle</target>
+							</trans-unit>
+							<trans-unit id="mustbe_less">
+								<source>RearAxle must be less than FrontAxle.</source>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
 							<source>General</source>
 						</trans-unit>
@@ -4492,19 +4564,6 @@ Please follow the following instructions:
 							<source>DefinedAxles</source>
 							<target>DefinedAxles</target>
 						</trans-unit>
-						<group id="axles">
-							<trans-unit id="name">
-								<source>Axles</source>
-							</trans-unit>
-							<trans-unit id="front">
-								<source>FrontAxle</source>
-								<target>FrontAxle</target>
-							</trans-unit>
-							<trans-unit id="rear">
-								<source>RearAxle</source>
-								<target>RearAxle</target>
-							</trans-unit>
-						</group>
 						<trans-unit id="front_bogie">
 							<source>FrontBogie</source>
 							<target>FrontBogie</target>
@@ -4567,9 +4626,6 @@ Please follow the following instructions:
 						</trans-unit>
 					</group>
 					<group id="brake">
-						<trans-unit id="name">
-							<source>Brake</source>
-						</trans-unit>
 						<group id="brake_type">
 							<trans-unit id="name">
 								<source>BrakeType</source>
@@ -4613,6 +4669,9 @@ Please follow the following instructions:
 								<source>Delay-including control</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Brake</source>
+						</trans-unit>
 						<trans-unit id="brake_control_speed">
 							<source>BrakeControlSpeed</source>
 							<target>BrakeControlSpeed</target>
@@ -4639,6 +4698,17 @@ Please follow the following instructions:
 						</trans-unit>
 					</group>
 					<group id="delay">
+						<group id="edit_entry">
+							<trans-unit id="name">
+								<source>Edit entry</source>
+							</trans-unit>
+							<trans-unit id="up">
+								<source>Up</source>
+							</trans-unit>
+							<trans-unit id="down">
+								<source>Down</source>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
 							<source>Delay</source>
 						</trans-unit>
@@ -4657,15 +4727,15 @@ Please follow the following instructions:
 						<trans-unit id="value">
 							<source>Value</source>
 						</trans-unit>
+						<trans-unit id="electric_brake">
+							<source>ElectricBrake</source>
+						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Car settings</source>
+					</trans-unit>
 				</group>
 				<group id="acceleration_settings">
-					<trans-unit id="name">
-						<source>Acceleration settings</source>
-					</trans-unit>
-					<trans-unit id="notch">
-						<source>Notch</source>
-					</trans-unit>
 					<group id="parameter">
 						<trans-unit id="name">
 							<source>Parameter</source>
@@ -4731,11 +4801,14 @@ Please follow the following instructions:
 							<source>Reset</source>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Acceleration settings</source>
+					</trans-unit>
+					<trans-unit id="notch">
+						<source>Notch</source>
+					</trans-unit>
 				</group>
 				<group id="motor_sound_settings">
-					<trans-unit id="name">
-						<source>Motor sound settings</source>
-					</trans-unit>
 					<group id="menu">
 						<group id="edit">
 							<trans-unit id="name">
@@ -4877,9 +4950,6 @@ Please follow the following instructions:
 						</trans-unit>
 					</group>
 					<group id="play_setting">
-						<trans-unit id="name">
-							<source>Playback setting</source>
-						</trans-unit>
 						<group id="source">
 							<trans-unit id="name">
 								<source>Sound source setting</source>
@@ -4905,13 +4975,16 @@ Please follow the following instructions:
 								<target>Stała prędkość</target>
 							</trans-unit>
 							<trans-unit id="acceleration">
-								<source>Acceleration:</source>
+								<source>Acceleration</source>
 							</trans-unit>
 							<trans-unit id="swap">
 								<source>Swap</source>
 								<target>Swap</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Playback setting</source>
+						</trans-unit>
 						<trans-unit id="play">
 							<source>Playback</source>
 							<target>Playback</target>
@@ -5008,11 +5081,11 @@ Please follow the following instructions:
 							<target>Punkt już istnieje na tej samej współrzędnej x, czy chcesz go zastąpić?</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Motor sound settings</source>
+					</trans-unit>
 				</group>
 				<group id="coupler_settings">
-					<trans-unit id="name">
-						<source>Coupler settings</source>
-					</trans-unit>
 					<group id="general">
 						<trans-unit id="name">
 							<source>General</source>
@@ -5026,12 +5099,34 @@ Please follow the following instructions:
 							<target>Max</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Coupler settings</source>
+					</trans-unit>
 				</group>
 				<group id="panel_settings">
-					<trans-unit id="name">
-						<source>Panel settings</source>
-					</trans-unit>
 					<group id="this">
+						<group id="center">
+							<trans-unit id="name">
+								<source>Center origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<group id="origin">
+							<trans-unit id="name">
+								<source>Track origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
 							<source>This</source>
 						</trans-unit>
@@ -5064,9 +5159,56 @@ Please follow the following instructions:
 							<source>TransparentColor</source>
 							<target>TransparentColor</target>
 						</trans-unit>
-						<group id="center">
+					</group>
+					<group id="screen">
+						<trans-unit id="name">
+							<source>Screen</source>
+						</trans-unit>
+						<trans-unit id="number">
+							<source>Number</source>
+							<target>Number</target>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+							<target>Warstwa</target>
+						</trans-unit>
+					</group>
+					<group id="pilot_lamp">
+						<group id="location">
 							<trans-unit id="name">
-								<source>Center</source>
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>PilotLamp</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+							<target>Temat</target>
+						</trans-unit>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="needle">
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -5086,70 +5228,12 @@ Please follow the following instructions:
 								<source>Y</source>
 							</trans-unit>
 						</group>
-					</group>
-					<group id="screen">
-						<trans-unit id="name">
-							<source>Screen</source>
-						</trans-unit>
-						<trans-unit id="number">
-							<source>Number</source>
-							<target>Number</target>
-						</trans-unit>
-						<trans-unit id="layer">
-							<source>Layer</source>
-							<target>Warstwa</target>
-						</trans-unit>
-					</group>
-					<group id="pilot_lamp">
-						<trans-unit id="name">
-							<source>PilotLamp</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-							<target>Temat</target>
-						</trans-unit>
-						<group id="location">
-							<trans-unit id="name">
-								<source>Location</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
-						<trans-unit id="daytime_image">
-							<source>DaytimeImage</source>
-						</trans-unit>
-						<trans-unit id="nighttime_image">
-							<source>NighttimeImage</source>
-						</trans-unit>
-						<trans-unit id="transparent_color">
-							<source>TransparentColor</source>
-						</trans-unit>
-						<trans-unit id="layer">
-							<source>Layer</source>
-						</trans-unit>
-					</group>
-					<group id="needle">
 						<trans-unit id="name">
 							<source>Needle</source>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
 						</trans-unit>
-						<group id="location">
-							<trans-unit id="name">
-								<source>Location</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
 						<trans-unit id="defined_radius">
 							<source>DefinedRadius</source>
 							<target>DefinedRadius</target>
@@ -5175,17 +5259,6 @@ Please follow the following instructions:
 							<source>DefinedOrigin</source>
 							<target>DefinedOrigin</target>
 						</trans-unit>
-						<group id="origin">
-							<trans-unit id="name">
-								<source>Origin</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
 						<trans-unit id="initial_angle">
 							<source>InitialAngle</source>
 							<target>InitialAngle</target>
@@ -5231,12 +5304,6 @@ Please follow the following instructions:
 						</trans-unit>
 					</group>
 					<group id="digital_number">
-						<trans-unit id="name">
-							<source>DigitalNumber</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5248,6 +5315,12 @@ Please follow the following instructions:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>DigitalNumber</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
 						</trans-unit>
@@ -5266,12 +5339,6 @@ Please follow the following instructions:
 						</trans-unit>
 					</group>
 					<group id="digital_gauge">
-						<trans-unit id="name">
-							<source>DigitalGauge</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5283,6 +5350,12 @@ Please follow the following instructions:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>DigitalGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
 						<trans-unit id="radius">
 							<source>Radius</source>
 						</trans-unit>
@@ -5310,12 +5383,6 @@ Please follow the following instructions:
 						</trans-unit>
 					</group>
 					<group id="linear_gauge">
-						<trans-unit id="name">
-							<source>LinearGauge</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5327,6 +5394,23 @@ Please follow the following instructions:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<group id="direction">
+							<trans-unit id="name">
+								<source>Direction</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>LinearGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
 						</trans-unit>
@@ -5342,17 +5426,6 @@ Please follow the following instructions:
 						<trans-unit id="maximum">
 							<source>Maximum</source>
 						</trans-unit>
-						<group id="direction">
-							<trans-unit id="name">
-								<source>Direction</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
 						<trans-unit id="width">
 							<source>Width</source>
 						</trans-unit>
@@ -5361,9 +5434,6 @@ Please follow the following instructions:
 						</trans-unit>
 					</group>
 					<group id="timetable">
-						<trans-unit id="name">
-							<source>Timetable</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5375,6 +5445,9 @@ Please follow the following instructions:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Timetable</source>
+						</trans-unit>
 						<trans-unit id="height">
 							<source>Height</source>
 						</trans-unit>
@@ -5389,9 +5462,6 @@ Please follow the following instructions:
 						</trans-unit>
 					</group>
 					<group id="touch">
-						<trans-unit id="name">
-							<source>Touch</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5414,6 +5484,9 @@ Please follow the following instructions:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Touch</source>
+						</trans-unit>
 						<trans-unit id="jump_screen">
 							<source>JumpScreen</source>
 							<target>JumpScreen</target>
@@ -5429,9 +5502,128 @@ Please follow the following instructions:
 							<source>CommandOption</source>
 							<target>CommandOption</target>
 						</trans-unit>
+						<trans-unit id="sound_command">
+							<source>Sound and command</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
 					</group>
+					<group id="subject">
+						<trans-unit id="name">
+							<source>Subject</source>
+						</trans-unit>
+						<trans-unit id="base">
+							<source>Base</source>
+						</trans-unit>
+						<trans-unit id="baseoption">
+							<source>Base option</source>
+						</trans-unit>
+						<trans-unit id="suffix">
+							<source>Suffix</source>
+						</trans-unit>
+						<trans-unit id="suffixoption">
+							<source>Suffix option</source>
+						</trans-unit>
+					</group>
+					<group id="sound_command">
+						<group id="tree">
+							<trans-unit id="touch_element">
+								<source>Touch element</source>
+							</trans-unit>
+							<trans-unit id="sounds">
+								<source>Sounds</source>
+							</trans-unit>
+							<trans-unit id="commands">
+								<source>Commands</source>
+							</trans-unit>
+						</group>
+						<group id="edit_entry">
+							<group id="sound">
+								<trans-unit id="index">
+									<source>Index</source>
+								</trans-unit>
+							</group>
+							<group id="command">
+								<trans-unit id="name">
+									<source>Key</source>
+								</trans-unit>
+								<trans-unit id="option">
+									<source>Option</source>
+								</trans-unit>
+							</group>
+							<trans-unit id="name">
+								<source>Edit entry</source>
+							</trans-unit>
+							<trans-unit id="sound">
+								<source>Sound</source>
+							</trans-unit>
+							<trans-unit id="command">
+								<source>Command</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>Sound and command</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="name">
+						<source>Panel settings</source>
+					</trans-unit>
 				</group>
 				<group id="sound_settings">
+					<group id="edit_entry">
+						<group id="section">
+							<trans-unit id="name">
+								<source>Section select</source>
+							</trans-unit>
+						</group>
+						<group id="key">
+							<trans-unit id="name">
+								<source>Key type select</source>
+							</trans-unit>
+						</group>
+						<group id="value">
+							<group id="position">
+								<trans-unit id="name">
+									<source>Position</source>
+								</trans-unit>
+								<trans-unit id="x">
+									<source>X</source>
+								</trans-unit>
+								<trans-unit id="y">
+									<source>Y</source>
+								</trans-unit>
+								<trans-unit id="z">
+									<source>Z</source>
+								</trans-unit>
+							</group>
+							<trans-unit id="name">
+								<source>Input value</source>
+							</trans-unit>
+							<trans-unit id="filename">
+								<source>Filename</source>
+							</trans-unit>
+							<trans-unit id="radius">
+								<source>Radius</source>
+							</trans-unit>
+							<trans-unit id="position">
+								<source>Position setting</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>Edit entry</source>
+						</trans-unit>
+					</group>
+					<group id="message">
+						<trans-unit id="empty_filename">
+							<source>File name has not been entered.</source>
+							<target>Nie podano nazwy pliku.</target>
+						</trans-unit>
+						<trans-unit id="key_exist">
+							<source>The specified key is already set.</source>
+							<target>Wybrany przycisk jest już przypisany.</target>
+						</trans-unit>
+					</group>
 					<trans-unit id="name">
 						<source>Sound settings</source>
 					</trans-unit>
@@ -5449,64 +5641,8 @@ Please follow the following instructions:
 					<trans-unit id="radius">
 						<source>Radius</source>
 					</trans-unit>
-					<group id="edit_entry">
-						<trans-unit id="name">
-							<source>Edit entry</source>
-						</trans-unit>
-						<group id="section">
-							<trans-unit id="name">
-								<source>Section select</source>
-							</trans-unit>
-						</group>
-						<group id="key">
-							<trans-unit id="name">
-								<source>Key type select</source>
-							</trans-unit>
-						</group>
-						<group id="value">
-							<trans-unit id="name">
-								<source>Input value</source>
-							</trans-unit>
-							<trans-unit id="filename">
-								<source>Filename</source>
-							</trans-unit>
-							<trans-unit id="radius">
-								<source>Radius</source>
-							</trans-unit>
-							<trans-unit id="position">
-								<source>Position setting</source>
-							</trans-unit>
-							<group id="position">
-								<trans-unit id="name">
-									<source>Position</source>
-								</trans-unit>
-								<trans-unit id="x">
-									<source>x coordinate</source>
-								</trans-unit>
-								<trans-unit id="y">
-									<source>y coordinate</source>
-								</trans-unit>
-								<trans-unit id="z">
-									<source>z coordinate</source>
-								</trans-unit>
-							</group>
-						</group>
-					</group>
-					<group id="message">
-						<trans-unit id="empty_filename">
-							<source>File name has not been entered.</source>
-							<target>Nie podano nazwy pliku.</target>
-						</trans-unit>
-						<trans-unit id="key_exist">
-							<source>The specified key is already set.</source>
-							<target>Wybrany przycisk jest już przypisany.</target>
-						</trans-unit>
-					</group>
 				</group>
 				<group id="status">
-					<trans-unit id="name">
-						<source>Status</source>
-					</trans-unit>
 					<group id="menu">
 						<trans-unit id="error">
 							<source>Error</source>
@@ -5523,6 +5659,9 @@ Please follow the following instructions:
 							<source>Clear</source>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Status</source>
+					</trans-unit>
 					<trans-unit id="level">
 						<source>Level</source>
 						<target>Poziom</target>
@@ -5558,8 +5697,84 @@ Please follow the following instructions:
 						<target>This value must be a {0}floating-point number.</target>
 					</trans-unit>
 					<trans-unit id="invalid_color">
-						<source>invalid_color</source>
+						<source>Invalid HEX color</source>
 						<target>invalid_color</target>
+					</trans-unit>
+					<trans-unit id="number_exist">
+						<source>The specified number is already set.</source>
+					</trans-unit>
+					<trans-unit id="mustbe_greater_than">
+						<source>Max must be greater than or equal to Min.</source>
+					</trans-unit>
+					<trans-unit id="mustbe_less_than">
+						<source>Min must be less than the Max.</source>
+					</trans-unit>
+				</group>
+				<group id="items">
+					<trans-unit id="filename">
+						<source>Filename</source>
+					</trans-unit>
+					<trans-unit id="folder">
+						<source>Folder</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>Type</source>
+					</trans-unit>
+					<trans-unit id="button_ok">
+						<source>OK</source>
+					</trans-unit>
+				</group>
+				<group id="import_export">
+					<group id="train">
+						<trans-unit id="name">
+							<source>Train setting file</source>
+						</trans-unit>
+						<trans-unit id="old_format">
+							<source>Old format</source>
+						</trans-unit>
+						<trans-unit id="traindat">
+							<source>Train.dat</source>
+						</trans-unit>
+						<trans-unit id="extensionscfg">
+							<source>Extensions.cfg</source>
+						</trans-unit>
+					</group>
+					<group id="panel">
+						<trans-unit id="name">
+							<source>Panel Setting File</source>
+						</trans-unit>
+						<trans-unit id="panel2cfg">
+							<source>Panel2.cfg</source>
+						</trans-unit>
+						<trans-unit id="panelxml">
+							<source>Panel.xml</source>
+						</trans-unit>
+					</group>
+					<group id="sound">
+						<trans-unit id="name">
+							<source>Sound setting file</source>
+						</trans-unit>
+						<trans-unit id="no_setting_file">
+							<source>No setting file</source>
+						</trans-unit>
+						<trans-unit id="soundcfg">
+							<source>Sound.cfg</source>
+						</trans-unit>
+						<trans-unit id="soundxml">
+							<source>Sound.xml</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="import_name">
+						<source>Import</source>
+					</trans-unit>
+					<trans-unit id="export_name">
+						<source>Export</source>
+					</trans-unit>
+					<trans-unit id="folder">
+						<source>Folder</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>Type</source>
 					</trans-unit>
 				</group>
 			</group>
