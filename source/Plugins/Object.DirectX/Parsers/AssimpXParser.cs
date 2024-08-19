@@ -173,6 +173,7 @@ namespace Plugin
 			{
 				//Some null objects contain an empty mesh
 				Plugin.currentHost.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + mesh.Name);
+				return;
 			}
 			for (int i = 0; i < nVerts; i++)
 			{
@@ -180,13 +181,14 @@ namespace Plugin
 			}
 
 			int nFaces = mesh.PosFaces.Count;
+			if (nFaces == 0)
+			{
+				Plugin.currentHost.AddMessage(MessageType.Warning, false, "nFaces should be greater than zero in Mesh " + mesh.Name);
+				return;
+			}
 			for (int i = 0; i < nFaces; i++)
 			{
 				int fVerts = mesh.PosFaces[i].Indices.Count;
-				if (nFaces == 0)
-				{
-					throw new Exception("fVerts must be greater than zero");
-				}
 				MeshFace f = new MeshFace(fVerts);
 				for (int j = 0; j < fVerts; j++)
 				{
@@ -249,7 +251,7 @@ namespace Plugin
 
 					if (builder.Materials[m].DaytimeTexture != null && !System.IO.File.Exists(builder.Materials[m].DaytimeTexture))
 					{
-						Plugin.currentHost.AddMessage(MessageType.Error, true, "Texure " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);
+						Plugin.currentHost.AddMessage(MessageType.Error, true, "Texture " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);
 						builder.Materials[m].DaytimeTexture = null;
 					}
 				}
@@ -302,16 +304,21 @@ namespace Plugin
 
 		private static void ChildrenNode(ref StaticObject obj, ref MeshBuilder builder, Node child)
 		{
-			builder.TransformMatrix = new Matrix4D(child.TrafoMatrix);
-
 			foreach (var mesh in child.Meshes)
 			{
+				builder.TransformMatrix = child.TrafoMatrix;
 				MeshBuilder(ref obj, ref builder, mesh);
+				if (builder.Vertices.Count != 0)
+				{
+					builder.Apply(ref obj, false, false);
+					builder = new MeshBuilder(Plugin.currentHost);
+				}
 			}
 			foreach (var grandchild in child.Children)
 			{
 				ChildrenNode(ref obj, ref builder, grandchild);
 			}
+
 		}
 	}
 }

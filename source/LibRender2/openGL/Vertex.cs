@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace LibRender2
 {
@@ -24,5 +25,23 @@ namespace LibRender2
 
 		/// <summary>Size in bytes</summary>
 		public static int SizeInBytes => Marshal.SizeOf(typeof(LibRenderVertex));
+
+		/// <summary>Creates a LibRenderVertex from a position value</summary>
+		public LibRenderVertex(Vector3f position)
+		{
+			Position = position;
+			Normal = Vector3f.Zero;
+			UV = Vector2f.Null;
+			Color = Color128.White;
+		}
+
+		/// <summary>Creates a LibRenderVertex from a template vertex and a normal</summary>
+		public LibRenderVertex(VertexTemplate template, Vector3f normal)
+		{
+			Position = template.Coordinates;
+			Normal = normal;
+			UV = template.TextureCoordinates;
+			Color = (template as ColoredVertex)?.Color ?? Color128.White;
+		}
 	}
 }

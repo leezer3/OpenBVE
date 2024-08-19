@@ -100,6 +100,7 @@
     <Compile Include="XML\DynamicBackground.cs" />
     <Compile Include="XML\DynamicLight.cs" />
     <Compile Include="XML\MarkerScript.cs" />
+    <Compile Include="XML\StationXml.Commands.cs" />
     <Compile Include="XML\StationXml.cs" />
   </ItemGroup>
   <ItemGroup>

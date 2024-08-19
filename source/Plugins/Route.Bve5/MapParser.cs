@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, S520, The OpenBVE Project
 //
@@ -29,7 +29,9 @@ using System.Linq;
 using Bve5_Parsing;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
+using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using RouteManager2.Climate;
 using static Bve5_Parsing.MapGrammar.MapGrammarParser;
 
 namespace Route.Bve5
@@ -128,12 +130,13 @@ namespace Route.Bve5
 				}
 
 				string TrackKey = Statement.Key;
-				if (!RouteData.TrackKeyList.Contains(TrackKey))
+				if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
 				{
 					RouteData.TrackKeyList.Add(TrackKey);
 				}
 			}
-
+			RouteData.FindOrAddBlock(0);
+			RouteData.Blocks[0].Fog = new Fog(0, 1, Color24.Grey, 0, false);
 			RouteData.FindOrAddBlock(ParseData.Statements[0].Distance);
 
 			LoadStationList(FileName, ParseData, RouteData);

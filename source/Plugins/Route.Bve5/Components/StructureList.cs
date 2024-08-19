@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, S520, The OpenBVE Project
 //
@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using System.IO;
 using System.Linq;
 using Bve5_Parsing.MapGrammar.EvaluateData;
@@ -60,7 +61,11 @@ namespace Route.Bve5
 
 			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(structureList);
 			string[] Lines = File.ReadAllLines(structureList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
-
+			if (structureList.IndexOf("Tn_E235", StringComparison.InvariantCultureIgnoreCase) != -1)
+			{
+				// This route uses some 5m track segments with over 1000 faces, which kill FPS, so set the optimisation threshold a little higher here
+				Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 5000;
+			}
 			for (int i = 1; i < Lines.Length; i++)
 			{
 				//Cycle through the list of objects

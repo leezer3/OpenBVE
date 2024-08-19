@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, S520, The OpenBVE Project
 //
@@ -31,12 +31,15 @@ using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using RouteManager2.Climate;
 using RouteManager2.Stations;
 
 namespace Route.Bve5
 {
 	static partial class Bve5ScenarioParser
 	{
+		private static double lastLegacyCurvePosition = double.MinValue;
+		private static double lastLegacyGradientPosition = double.MinValue;
 		private static void ConvertCurve(Statement Statement, RouteData RouteData)
 		{
 			{
@@ -85,13 +88,40 @@ namespace Route.Bve5
 					case MapFunctionName.Change:
 					case MapFunctionName.Curve:
 						{
+							/*
+							 * NOTE: The behaviour of Legacy commands is not properly documented, and *does not* match prior versions of BVE.
+							 *		 From observation of BVE5 behavior:
+							 *		 * When the distance between curves is greater than 25m, interpolation is used from -10m to +15m of the statement position
+							 *		 * Otherwise, it's somewhat glitchy, e.g. https://github.com/leezer3/OpenBVE/issues/1045#issuecomment-2275286076
+							 *         For the minute, let's assume that is fundamentally bugged, and just issue an immediate change in this case
+							 */
 							double Radius = d.Radius;
 							double Cant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant) / 1000.0;
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Radius;
-							RouteData.Blocks[Index].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
-							RouteData.Blocks[Index].Rails["0"].CurveInterpolateStart = true;
-							RouteData.Blocks[Index].Rails["0"].CurveTransitionEnd = true;
+							if (Statement.ElementName == MapElementName.Legacy && Statement.Distance - lastLegacyCurvePosition >= 15)
+							{
+								int firstIndex = RouteData.FindOrAddBlock(Math.Max(0, Statement.Distance - 10));
+								int secondIndex = RouteData.FindOrAddBlock(Statement.Distance + 15);
+								RouteData.Blocks[secondIndex].CurrentTrackState.CurveRadius = Radius;
+								RouteData.Blocks[secondIndex].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
+								RouteData.Blocks[firstIndex].Rails["0"].CurveInterpolateStart = true;
+								RouteData.Blocks[firstIndex].Rails["0"].CurveInterpolateEnd = true;
+								RouteData.Blocks[secondIndex].Rails["0"].CurveInterpolateEnd = true;
+								RouteData.Blocks[secondIndex].Rails["0"].CurveTransitionEnd = true;
+							}
+							else
+							{
+								int Index = RouteData.FindOrAddBlock(Statement.Distance);
+								RouteData.Blocks[Index].CurrentTrackState.CurveRadius = Radius;
+								RouteData.Blocks[Index].CurrentTrackState.CurveCant = Math.Abs(Cant) * Math.Sign(Radius);
+								RouteData.Blocks[Index].Rails["0"].CurveInterpolateStart = true;
+								RouteData.Blocks[Index].Rails["0"].CurveTransitionEnd = true;
+							}
+
+							if (Statement.ElementName == MapElementName.Legacy)
+							{
+								lastLegacyCurvePosition = Statement.Distance;
+							}
+
 						}
 						break;
 					case MapFunctionName.End:
@@ -146,11 +176,9 @@ namespace Route.Bve5
 			}
 
 			{
-				List<Block> TempBlocks = new List<Block>(RouteData.Blocks);
-
-				for (int i = 0; i < TempBlocks.Count; i++)
+				for (int i = 0; i < RouteData.Blocks.Count; i++)
 				{
-					if (!TempBlocks[i].Rails["0"].CurveTransitionEnd)
+					if (!RouteData.Blocks[i].Rails["0"].CurveTransitionEnd)
 					{
 						continue;
 					}
@@ -159,37 +187,40 @@ namespace Route.Bve5
 
 					for (int k = i - 1; k >= 0; k--)
 					{
-						if (TempBlocks[k].Rails["0"].CurveTransitionEnd)
+						if (RouteData.Blocks[k].Rails["0"].CurveTransitionEnd)
 						{
 							break;
 						}
 
-						if (TempBlocks[k].Rails["0"].CurveTransitionStart)
+						if (RouteData.Blocks[k].Rails["0"].CurveTransitionStart)
 						{
 							StartBlock = k;
 							break;
 						}
 					}
 
+					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
+
 					if (StartBlock != i)
 					{
-						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double EndDistance = TempBlocks[i].StartingDistance;
+						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
+						double EndDistance = RouteData.Blocks[i].StartingDistance;
 
 						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
 						{
 							RouteData.FindOrAddBlock(k);
 						}
 					}
+
+					i = RouteData.sortedBlocks.IndexOfKey(dist);
 				}
 			}
 
 			{
-				List<Block> TempBlocks = new List<Block>(RouteData.Blocks);
 
-				for (int i = 0; i < TempBlocks.Count; i++)
+				for (int i = 0; i < RouteData.Blocks.Count; i++)
 				{
-					if (!TempBlocks[i].Rails["0"].CurveInterpolateEnd)
+					if (!RouteData.Blocks[i].Rails["0"].CurveInterpolateEnd)
 					{
 						continue;
 					}
@@ -198,26 +229,28 @@ namespace Route.Bve5
 
 					for (int k = i - 1; k >= 0; k--)
 					{
-						if (TempBlocks[k].Rails["0"].CurveInterpolateEnd && !TempBlocks[k].Rails["0"].CurveInterpolateStart)
+						if (RouteData.Blocks[k].Rails["0"].CurveInterpolateEnd && !RouteData.Blocks[k].Rails["0"].CurveInterpolateStart)
 						{
 							break;
 						}
 
-						if (TempBlocks[k].Rails["0"].CurveInterpolateStart)
+						if (RouteData.Blocks[k].Rails["0"].CurveInterpolateStart)
 						{
 							StartBlock = k;
 							break;
 						}
 					}
 
+					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
+
 					if (StartBlock != i)
 					{
-						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double StartRadius = TempBlocks[StartBlock].CurrentTrackState.CurveRadius;
-						double StartCant = TempBlocks[StartBlock].CurrentTrackState.CurveCant;
-						double EndDistance = TempBlocks[i].StartingDistance;
-						double EndRadius = TempBlocks[i].CurrentTrackState.CurveRadius;
-						double EndCant = TempBlocks[i].CurrentTrackState.CurveCant;
+						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
+						double StartRadius = RouteData.Blocks[StartBlock].CurrentTrackState.CurveRadius;
+						double StartCant = RouteData.Blocks[StartBlock].CurrentTrackState.CurveCant;
+						double EndDistance = RouteData.Blocks[i].StartingDistance;
+						double EndRadius = RouteData.Blocks[i].CurrentTrackState.CurveRadius;
+						double EndCant = RouteData.Blocks[i].CurrentTrackState.CurveCant;
 
 						if (StartRadius == EndRadius && StartCant == EndCant)
 						{
@@ -229,6 +262,8 @@ namespace Route.Bve5
 							RouteData.FindOrAddBlock(k);
 						}
 					}
+
+					i = RouteData.sortedBlocks.IndexOfKey(dist);
 				}
 			}
 		}
@@ -250,11 +285,37 @@ namespace Route.Bve5
 					case MapFunctionName.BeginConst:
 					case MapFunctionName.Pitch:
 						{
-							object Gradient = Statement.FunctionName == MapFunctionName.Pitch ? d.Rate : d.Gradient;
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							RouteData.Blocks[Index].Pitch = Convert.ToDouble(Gradient) / 1000.0;
-							RouteData.Blocks[Index].GradientInterpolateStart = true;
-							RouteData.Blocks[Index].GradientTransitionEnd = true;
+							object newGradientValue = Statement.FunctionName == MapFunctionName.Pitch ? d.Rate : d.Gradient;
+							/*
+							 * NOTE: The behaviour of Legacy commands is not properly documented, and *does not* match prior versions of BVE.
+							 *		 From observation of BVE5 behavior:
+							 *		 * When the distance between gradients is greater than 25m, interpolation is used from -10m to +15m of the statement position
+							 *		 * Otherwise, it's somewhat glitchy, e.g. https://github.com/leezer3/OpenBVE/issues/1045#issuecomment-2275286076
+							 *         For the minute, let's assume that is fundamentally bugged, and just issue an immediate change in this case
+							 */
+							if (Statement.ElementName == MapElementName.Legacy && Statement.Distance - lastLegacyGradientPosition >= 15)
+							{
+								int firstIndex = RouteData.FindOrAddBlock(Math.Max(0, Statement.Distance - 10));
+								int secondIndex = RouteData.FindOrAddBlock(Statement.Distance + 15);
+								RouteData.Blocks[secondIndex].Pitch = Convert.ToDouble(newGradientValue) / 1000.0;
+								RouteData.Blocks[firstIndex].GradientInterpolateStart = true;
+								RouteData.Blocks[firstIndex].GradientInterpolateEnd = true;
+								RouteData.Blocks[secondIndex].GradientInterpolateEnd = true;
+								RouteData.Blocks[secondIndex].GradientTransitionEnd = true;
+							}
+							else
+							{
+								int Index = RouteData.FindOrAddBlock(Statement.Distance);
+								RouteData.Blocks[Index].Pitch = Convert.ToDouble(newGradientValue) / 1000.0;
+								RouteData.Blocks[Index].GradientInterpolateStart = true;
+								RouteData.Blocks[Index].GradientTransitionEnd = true;
+							}
+
+							if (Statement.ElementName == MapElementName.Legacy)
+							{
+								lastLegacyGradientPosition = Statement.Distance;
+							}
+
 						}
 						break;
 					case MapFunctionName.End:
@@ -293,11 +354,10 @@ namespace Route.Bve5
 			}
 
 			{
-				List<Block> TempBlocks = new List<Block>(RouteData.Blocks);
 
-				for (int i = 0; i < TempBlocks.Count; i++)
+				for (int i = 0; i < RouteData.Blocks.Count; i++)
 				{
-					if (!TempBlocks[i].GradientTransitionEnd)
+					if (!RouteData.Blocks[i].GradientTransitionEnd)
 					{
 						continue;
 					}
@@ -306,37 +366,39 @@ namespace Route.Bve5
 
 					for (int k = i - 1; k >= 0; k--)
 					{
-						if (TempBlocks[k].GradientTransitionEnd)
+						if (RouteData.Blocks[k].GradientTransitionEnd)
 						{
 							break;
 						}
 
-						if (TempBlocks[k].GradientTransitionStart)
+						if (RouteData.Blocks[k].GradientTransitionStart)
 						{
 							StartBlock = k;
 							break;
 						}
 					}
 
+					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
+
 					if (StartBlock != i)
 					{
-						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double EndDistance = TempBlocks[i].StartingDistance;
+						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
+						double EndDistance = RouteData.Blocks[i].StartingDistance;
 
 						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
 						{
 							RouteData.FindOrAddBlock(k);
 						}
 					}
+
+					i = RouteData.sortedBlocks.IndexOfKey(dist);
 				}
 			}
 
 			{
-				List<Block> TempBlocks = new List<Block>(RouteData.Blocks);
-
-				for (int i = 0; i < TempBlocks.Count; i++)
+				for (int i = 0; i < RouteData.Blocks.Count; i++)
 				{
-					if (!TempBlocks[i].GradientInterpolateEnd)
+					if (!RouteData.Blocks[i].GradientInterpolateEnd)
 					{
 						continue;
 					}
@@ -345,24 +407,26 @@ namespace Route.Bve5
 
 					for (int k = i - 1; k >= 0; k--)
 					{
-						if (TempBlocks[k].GradientInterpolateEnd && !TempBlocks[k].GradientInterpolateStart)
+						if (RouteData.Blocks[k].GradientInterpolateEnd && !RouteData.Blocks[k].GradientInterpolateStart)
 						{
 							break;
 						}
 
-						if (TempBlocks[k].GradientInterpolateStart)
+						if (RouteData.Blocks[k].GradientInterpolateStart)
 						{
 							StartBlock = k;
 							break;
 						}
 					}
 
+					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
+
 					if (StartBlock != i)
 					{
-						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double StartPitch = TempBlocks[StartBlock].Pitch;
-						double EndDistance = TempBlocks[i].StartingDistance;
-						double EndPitch = TempBlocks[i].Pitch;
+						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
+						double StartPitch = RouteData.Blocks[StartBlock].Pitch;
+						double EndDistance = RouteData.Blocks[i].StartingDistance;
+						double EndPitch = RouteData.Blocks[i].Pitch;
 
 						if (StartPitch == EndPitch)
 						{
@@ -374,6 +438,8 @@ namespace Route.Bve5
 							RouteData.FindOrAddBlock(k);
 						}
 					}
+
+					i = RouteData.sortedBlocks.IndexOfKey(dist);
 				}
 			}
 		}
@@ -705,11 +771,10 @@ namespace Route.Bve5
 
 			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
 			{
-				List<Block> TempBlocks = new List<Block>(RouteData.Blocks);
 				string railKey = RouteData.TrackKeyList[j];
-				for (int i = 0; i < TempBlocks.Count; i++)
+				for (int i = 0; i < RouteData.Blocks.Count; i++)
 				{
-					if (!TempBlocks[i].Rails[railKey].CurveInterpolateEnd)
+					if (!RouteData.Blocks[i].Rails[railKey].CurveInterpolateEnd)
 					{
 						continue;
 					}
@@ -718,24 +783,26 @@ namespace Route.Bve5
 
 					for (int k = i - 1; k >= 0; k--)
 					{
-						if (TempBlocks[k].Rails[railKey].CurveInterpolateEnd && !TempBlocks[k].Rails[railKey].CurveInterpolateStart)
+						if (RouteData.Blocks[k].Rails[railKey].CurveInterpolateEnd && !RouteData.Blocks[k].Rails[railKey].CurveInterpolateStart)
 						{
 							break;
 						}
 
-						if (TempBlocks[k].Rails[railKey].CurveInterpolateStart)
+						if (RouteData.Blocks[k].Rails[railKey].CurveInterpolateStart)
 						{
 							StartBlock = k;
 							break;
 						}
 					}
 
+					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
+
 					if (StartBlock != i)
 					{
-						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double StartCant = TempBlocks[StartBlock].Rails[railKey].CurveCant;
-						double EndDistance = TempBlocks[i].StartingDistance;
-						double EndCant = TempBlocks[i].Rails[railKey].CurveCant;
+						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
+						double StartCant = RouteData.Blocks[StartBlock].Rails[railKey].CurveCant;
+						double EndDistance = RouteData.Blocks[i].StartingDistance;
+						double EndCant = RouteData.Blocks[i].Rails[railKey].CurveCant;
 
 						if (StartCant == EndCant)
 						{
@@ -747,6 +814,8 @@ namespace Route.Bve5
 							RouteData.FindOrAddBlock(k);
 						}
 					}
+
+					i = RouteData.sortedBlocks.IndexOfKey(i);
 				}
 			}
 		}
@@ -880,66 +949,67 @@ namespace Route.Bve5
 
 							int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
 
-							if (Convert.ToSingle(Start) < Convert.ToSingle(End))
+							if (Start > End)
 							{
-								RouteData.Blocks[BlockIndex].Fog.Start = (float)Start;
-								RouteData.Blocks[BlockIndex].Fog.End = (float)End;
+								Start = Plugin.CurrentRoute.NoFogStart;
+								End = Plugin.CurrentRoute.NoFogEnd;
 							}
-							else
-							{
-								RouteData.Blocks[BlockIndex].Fog.Start = Plugin.CurrentRoute.NoFogStart;
-								RouteData.Blocks[BlockIndex].Fog.End = Plugin.CurrentRoute.NoFogEnd;
-							}
-							RouteData.Blocks[BlockIndex].Fog.Color = new Color24((byte)Red, (byte)Green, (byte)Blue);
+
+							RouteData.Blocks[BlockIndex].Fog = new Fog((float)Start, (float)End, new Color24((byte)Red, (byte)Green, (byte)Blue), Statement.Distance);
 							RouteData.Blocks[BlockIndex].FogDefined = true;
 						}
 						break;
 					case MapFunctionName.Interpolate:
 					case MapFunctionName.Set:
+					{
+						int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
+						float Density = 1.0f, r = 1.0f, g = 1.0f, b = 1.0f;
+						if (!Statement.HasArgument(ArgumentName.Red) && !Statement.HasArgument(ArgumentName.Green) && !Statement.HasArgument(ArgumentName.Blue))
 						{
-							double Density, TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument(ArgumentName.Density) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Density), out Density))
+							if (!Statement.HasArgument(ArgumentName.Density))
 							{
-								Density = 0.001;
+								// Has the same effect as setting the fog value twice, hence no interpolation
+								RouteData.Blocks[BlockIndex].FogDefined = true;
+								RouteData.Blocks[BlockIndex].Fog.TrackPosition = Statement.Distance;
 							}
-							if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
+							else
 							{
-								TempRed = 1.0;
+								// Changes the density, but not the color
+								if (!NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Density), out Density))
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogDensity value at track position " + Statement.Distance);
+									break;
+								}
+								RouteData.Blocks[BlockIndex].FogDefined = true;
+								RouteData.Blocks[BlockIndex].Fog.TrackPosition = Statement.Distance;
+								RouteData.Blocks[BlockIndex].Fog.Density = Density;
 							}
-							if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
-							{
-								TempGreen = 1.0;
-							}
-							if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
-							{
-								TempBlue = 1.0;
-							}
-							
-
-							double Red = Convert.ToDouble(TempRed);
-							double Green = Convert.ToDouble(TempGreen);
-							double Blue = Convert.ToDouble(TempBlue);
-							if (Red < 0.0 || Red > 1.0)
-							{
-								Red = Red < 0.0 ? 0.0 : 1.0;
-							}
-							if (Green < 0.0 || Green > 1.0)
-							{
-								Green = Green < 0.0 ? 0.0 : 1.0;
-							}
-							if (Blue < 0.0 || Blue > 1.0)
-							{
-								Blue = Blue < 0.0 ? 0.0 : 1.0;
-							}
-
-							int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
-
-							RouteData.Blocks[BlockIndex].Fog.Start = 0.0f;
-							RouteData.Blocks[BlockIndex].Fog.End = 1.0f / Convert.ToSingle(Density);
-							RouteData.Blocks[BlockIndex].Fog.Color = new Color24((byte)(Red * 255), (byte)(Green * 255), (byte)(Blue * 255));
-							RouteData.Blocks[BlockIndex].FogDefined = true;
 						}
-						break;
+						else
+						{
+							if (!NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Density), out Density))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogDensity value at track position " + Statement.Distance);
+								break;
+							}
+							if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out r))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor R value at track position " + Statement.Distance);
+							}
+							if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out g))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor G value at track position " + Statement.Distance);
+							}
+							if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseFloatVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out b))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogColor B value at track position " + Statement.Distance);
+							}
+						}
+
+						RouteData.Blocks[BlockIndex].Fog = new Fog(0, 1, new Color24((byte)(r * 255), (byte)(g * 255), (byte)(b * 255)), Statement.Distance, false, Density);
+						RouteData.Blocks[BlockIndex].FogDefined = true;
+					}
+					break;
 				}
 			}
 		}

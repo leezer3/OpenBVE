@@ -247,6 +247,10 @@ namespace Plugin
 						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 					}
 					currentLevel--;
+					if (builder.Vertices.Count == 0)
+					{
+						builder.TransformMatrix = Matrix4D.NoTransformation;
+					}
 					break;
 				case TemplateID.FrameTransformMatrix:
 					double[] matrixValues = new double[16];
@@ -257,7 +261,7 @@ namespace Plugin
 
 					if (currentLevel > 1)
 					{
-						builder.TransformMatrix = new Matrix4D(matrixValues);
+						builder.TransformMatrix = new Matrix4D(matrixValues) * builder.TransformMatrix;
 					}
 					else
 					{

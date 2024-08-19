@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<xliff version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="ja-JP">
 		<body>
 			<group id="language">
@@ -87,12 +87,12 @@
 						<target>Save Bug Report</target>
 					</trans-unit>
 					<trans-unit id="saved">
-						<source>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
-						<target>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</target>
+						<source>The report has been saved as &quot;[filename]&quot; on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
+						<target>The report has been saved as &quot;[filename]&quot; on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</target>
 					</trans-unit>
 					<trans-unit id="save_failed">
-						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</source>
-						<target>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</target>
+						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the &quot;View...&quot; button, then submit these logs to the discussion board or open an issue on GitHub.</source>
+						<target>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the &quot;View...&quot; button, then submit these logs to the discussion board or open an issue on GitHub.</target>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -253,7 +253,7 @@
 					</trans-unit>
 					<trans-unit id="plugin_failure2">
 						<source>The built-in ATS/ ATC systems will be used instead, which may cause issues.</source>
-						<target>代わりにopenBVE付属のATS/ ATCプラグインを使用しますが、問題が起きる可能性があります。</target>
+						<target>代わりにOpenBVE付属のATS/ ATCプラグインを使用しますが、問題が起きる可能性があります。</target>
 					</trans-unit>
 					<trans-unit id="package_filename_empty">
 						<source>Attempted to create a package with an empty filename.</source>
@@ -287,6 +287,12 @@
 					</trans-unit>
 					<trans-unit id="error_busy_thread">
 						<source>The package worker thread is currently busy. Please wait a moment and try again.</source>
+					</trans-unit>
+					<trans-unit id="route_please_select">
+						<source>Please first select a route file to begin.</source>
+					</trans-unit>
+					<trans-unit id="route_switch_turn">
+						<source>The .Turn command and the .Switch command may not be used in the same route.</source>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -366,10 +372,6 @@
 						<source>Recently used</source>
 						<target>前回使用</target>
 					</trans-unit>
-					<trans-unit id="train_default">
-						<source>Route default</source>
-						<target>デフォルト</target>
-					</trans-unit>
 					<trans-unit id="train_usedefault">
 						<source>Use the train suggested by the route</source>
 						<target>路線指定車両</target>
@@ -398,7 +400,7 @@
 						<target>プレビュー:</target>
 					</trans-unit>
 					<trans-unit id="train_notfound">
-						<source>The default train could not be found:\n\n</source>
+						<source>The default train could not be found:\r\n\r\n</source>
 						<target>指定された車両がありません:\x20</target>
 					</trans-unit>
 					<trans-unit id="train_pluginnotsupported">
@@ -416,6 +418,15 @@
 					<trans-unit id="start_start">
 						<source>Start</source>
 						<target>スタート</target>
+					</trans-unit>
+					<trans-unit id="train_choose">
+						<source>Choose Train...</source>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Route default</source>
+					</trans-unit>
+					<trans-unit id="train_notfound_download">
+						<source>The default train is not currently installed:\r\n\r\n [train]\r\n\r\n It may be downloaded at:\r\n\r\n</source>
 					</trans-unit>
 				</group>
 				<group id="review">
@@ -614,7 +625,7 @@
 						<target>パッケージをインストールする</target>
 					</trans-unit>
 					<trans-unit id="install_invalid">
-						<source>This file does not appear to be a valid openBVE package.</source>
+						<source>This file does not appear to be a valid OpenBVE package.</source>
 						<target>選択されたファイルは、OpenBVEの有効なパッケージではありません。</target>
 					</trans-unit>
 					<trans-unit id="install_version_error">
@@ -726,8 +737,8 @@
 						<target>リストから削除</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_skip_if_none">
-						<source>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</source>
-						<target>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</target>
+						<source>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</source>
+						<target>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
@@ -753,7 +764,7 @@
 						<source>The new package has been assigned the following GUID:</source>
 						<target>新しいパッケージは次のGUIDに割り当てられます:</target>
 					</trans-unit>
-					<trans-unit id="creation_header">
+					<trans-unit id="enter_details_header">
 						<source>Enter Package Details</source>
 						<target>パッケージの作成</target>
 					</trans-unit>
@@ -989,6 +1000,15 @@
 						<source>Failed to create the following file: \r \n</source>
 						<target>次のファイルの生成に失敗しました: \r \n</target>
 					</trans-unit>
+					<trans-unit id="database_newer_expected">
+						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+					</trans-unit>
+					<trans-unit id="database_invalid_xml">
+						<source>The package database XML was invalid, and has been re-created.</source>
+					</trans-unit>
+					<trans-unit id="error_busy_thread">
+						<source>The package worker thread is currently busy. Please wait a moment and try again.</source>
+					</trans-unit>
 				</group>
 				<group id="controls">
 					<trans-unit id="title">
@@ -1119,7 +1139,7 @@
 						<target>設定したいボタンを押すか軸を設定したい方向に動かしてください...</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab_fullaxis">
-						<source>Move an axis into the direction of "increase" or "power"...</source>
+						<source>Move an axis into the direction of &quot;increase&quot; or &quot;power&quot;...</source>
 						<target>設定したい軸を「増加する方向」に動かしてください...</target>
 					</trans-unit>
 					<trans-unit id="attached">
@@ -1245,63 +1265,63 @@
 						<target>RailDriverのキャリブレーションファイルの読み込み中にエラーが発生しました。</target>
 					</trans-unit>
 					<trans-unit id="calibration_start">
-						<source>Please press 'Next' to start calibration.</source>
+						<source>Please press &apos;Next&apos; to start calibration.</source>
 						<target>「次へ」をクリックするとキャリブレーションを開始します。.</target>
 					</trans-unit>
 					<trans-unit id="calibration_a">
-						<source>Move the reverser lever to the full reverse position and press 'Next'.</source>
+						<source>Move the reverser lever to the full reverse position and press &apos;Next&apos;.</source>
 						<target>逆転器をREVERSEの位置に動かしてから「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_b">
-						<source>Move the reverser lever to the full forward position and press 'Next'.</source>
+						<source>Move the reverser lever to the full forward position and press &apos;Next&apos;.</source>
 						<target>逆転器をFORWARDの位置に動かしてから「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_c">
-						<source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
+						<source>Move the combined brake / throttle lever to the full power position and press &apos;Next&apos;.</source>
 						<target>スロットルレバーをFULL(出力側)の位置にしてから「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_d">
-						<source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
+						<source>Move the combined brake / throttle lever to the full brake position and press &apos;Next&apos;.</source>
 						<target>スロットルレバーをFULL(ブレーキ側)の位置にしてから「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_e">
-						<source>Move the dynamic brake lever to the release position and press 'Next'.</source>
+						<source>Move the dynamic brake lever to the release position and press &apos;Next&apos;.</source>
 						<target>自弁ブレーキレバーをRELEASEの位置にしてから「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_f">
-						<source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
+						<source>Move the dynamic brake lever to the emergency position and press &apos;Next&apos;.</source>
 						<target>自弁ブレーキレバーをEMERGENCYの位置にしてから「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_g">
-						<source>Move the independant brake lever to the release position and press 'Next'.</source>
+						<source>Move the independant brake lever to the release position and press &apos;Next&apos;.</source>
 						<target>単弁ブレーキレバーをRELEASEの位置にしてから「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_h">
-						<source>Move the independant brake lever to the full position and press 'Next'.</source>
+						<source>Move the independant brake lever to the full position and press &apos;Next&apos;.</source>
 						<target>単弁ブレーキレバーをFULLの位置にしてから「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_i">
-						<source>Move the bail-off lever to the release position and press 'Next'.</source>
+						<source>Move the bail-off lever to the release position and press &apos;Next&apos;.</source>
 						<target>Bail-off レバーをRELEASEにした状態を保って「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_j">
-						<source>Move and hold the bail-off lever into the full position and press 'Next'.</source>
+						<source>Move and hold the bail-off lever into the full position and press &apos;Next&apos;.</source>
 						<target>Bail-off レバーをFULLにした状態を保って「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_k">
-						<source>Move the wiper switch to OFF and press 'Next'.</source>
+						<source>Move the wiper switch to OFF and press &apos;Next&apos;.</source>
 						<target>ワイパースイッチをOFFにしてから「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_l">
-						<source>Move the wiper switch to FULL and press 'Next'.</source>
+						<source>Move the wiper switch to FULL and press &apos;Next&apos;.</source>
 						<target>ワイパースイッチをFULLにしてから「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_m">
-						<source>Move the lights switch to OFF and press 'Next'.</source>
+						<source>Move the lights switch to OFF and press &apos;Next&apos;.</source>
 						<target>前照灯スイッチをOFFにしてから「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_n">
-						<source>Move the lights switch to FULL and press 'Next'.</source>
+						<source>Move the lights switch to FULL and press &apos;Next&apos;.</source>
 						<target>前照灯スイッチをFULLにしてから「次へ」をクリックしてください。</target>
 					</trans-unit>
 					<trans-unit id="calibration_o">
@@ -1728,6 +1748,9 @@
 					<trans-unit id="compatibility_signals">
 						<source>Default Signals:</source>
 					</trans-unit>
+					<trans-unit id="resolution">
+						<source>Resolution:</source>
+					</trans-unit>
 				</group>
 				<group id="dialog">
 					<trans-unit id="csvfiles">
@@ -1839,11 +1862,11 @@
 						<target>ファイルがありません:</target>
 					</trans-unit>
 					<trans-unit id="almost_help_filesnotfound">
-						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting "Ignore" from below.</source>
+						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting &quot;Ignore&quot; from below.</source>
 						<target>ロード中に問題が発生しました。\r\n\r\n一部のファイルが見つからない場合、路線や車両が意図したように表示されない場合があります。路線や車両データをダウンロードし直して全てが揃っていることを確かめてください。\r\n\r\n以下のリストが問題解決の参考になります。無視をクリックして先に進むこともできます。</target>
 					</trans-unit>
 					<trans-unit id="almost_help_general">
-						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select "Ignore" at this point to start the game.</source>
+						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select &quot;Ignore&quot; at this point to start the game.</source>
 						<target>路線と車両のロード中に問題が発生しました。開発者の場合は以下のリストが参考になりますが、\r\n\r\n一般ユーザの場合、この段階では無視を選択してゲームをスタートしてください。</target>
 					</trans-unit>
 					<trans-unit id="almost_show">
@@ -1900,7 +1923,6 @@
 				<group id="message">
 					<trans-unit id="delimiter">
 						<source>\x20</source>
-						<target></target>
 					</trans-unit>
 					<trans-unit id="signal_proceed">
 						<source>You may proceed at [speed] [unit] with extreme caution.</source>
@@ -1974,6 +1996,21 @@
 						<source>Loading. Please wait...</source>
 						<target>ロード中。 しばらくお待ちください。</target>
 					</trans-unit>
+					<trans-unit id="route_newlimit">
+						<source>New speed limit: [limit] [unit].</source>
+					</trans-unit>
+					<trans-unit id="route_nextsection">
+						<source>Next signal in [distance]</source>
+					</trans-unit>
+					<trans-unit id="route_nextsection_aspect">
+						<source>Next signal in [distance], with aspect [aspect]</source>
+					</trans-unit>
+					<trans-unit id="route_nextstation">
+						<source>Next station is [name] in [distance]</source>
+					</trans-unit>
+					<trans-unit id="train_currentspeed">
+						<source>The train&apos;s current speed is [speed]</source>
+					</trans-unit>
 				</group>
 				<group id="notification">
 					<trans-unit id="interior">
@@ -2039,6 +2076,21 @@
 					<trans-unit id="mousegrab_off">
 						<source>Mouse grab: off</source>
 						<target>マウス操作: オフ</target>
+					</trans-unit>
+					<trans-unit id="switchexterior_uncouple">
+						<source>Please switch to exterior view to uncouple.</source>
+					</trans-unit>
+					<trans-unit id="unable_uncouple">
+						<source>Unable to uncouple this car.</source>
+					</trans-unit>
+					<trans-unit id="exterior_uncouplerear">
+						<source>Uncoupling the rear of car number</source>
+					</trans-unit>
+					<trans-unit id="exterior_uncouplefront">
+						<source>Uncoupling the front of car number</source>
+					</trans-unit>
+					<trans-unit id="fixed_uncouple">
+						<source>This coupler is fixed, and cannot uncouple.</source>
 					</trans-unit>
 				</group>
 				<group id="score">
@@ -2207,7 +2259,7 @@
 						<target>ジョイスティック</target>
 					</trans-unit>
 					<trans-unit id="joystick_notavailable">
-						<source>N/A</source>
+						<source>Joystick (Not currently connected)</source>
 						<target>利用不可</target>
 					</trans-unit>
 					<trans-unit id="joystickdirection_positive">
@@ -2221,6 +2273,22 @@
 					<trans-unit id="assignment_current">
 						<source>Current assignment:</source>
 						<target>現在の割り当て:</target>
+					</trans-unit>
+					<trans-unit id="title">
+						<source>In-Game Menu</source>
+					</trans-unit>
+					<trans-unit id="pause_title">
+						<source>PAUSE</source>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Do you wish to use the default train?</source>
+						<target>デフォルト</target>
+					</trans-unit>
+					<trans-unit id="train_default_no">
+						<source>No</source>
+					</trans-unit>
+					<trans-unit id="train_default_yes">
+						<source>Yes</source>
 					</trans-unit>
 				</group>
 				<group id="lamps">
@@ -2559,14 +2627,14 @@
 						<target>運転保安装置機能P(車両に依存)</target>
 					</trans-unit>
 					<trans-unit id="camera_interior">
-						<source>Switches to the train's interior view</source>
+						<source>Switches to the train&apos;s interior view</source>
 						<target>車内カメラ</target>
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
-						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
+						<source>Switches to the train&apos;s interior view. However, the panel is not displayed.</source>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
-						<source>Switches to the train's exterior view</source>
+						<source>Switches to the train&apos;s exterior view</source>
 						<target>車外カメラ</target>
 					</trans-unit>
 					<trans-unit id="camera_track">
@@ -2827,6 +2895,30 @@
 					<trans-unit id="main_breaker">
 						<source>Toggles the main breaker</source>
 						<target>主回路断流器のON/OFF</target>
+					</trans-unit>
+					<trans-unit id="debug_renderer_mode">
+						<source>Toggles the renderer</source>
+					</trans-unit>
+					<trans-unit id="raildriver_speed_units">
+						<source>Toggles the RailDriver speed display units.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_current_speed">
+						<source>Accessibility: Audibly announces the current speed.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_signal">
+						<source>Accessibility: Audibly announces the next signal distance and aspect.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_station">
+						<source>Accessibility: Audibly announces the the next station name and distance.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_front">
+						<source>Uncouples the front coupler for the selected car.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_rear">
+						<source>Uncouples the rear coupler for the selected car.</source>
+					</trans-unit>
+					<trans-unit id="switch_menu">
+						<source>Shows the change switch menu</source>
 					</trans-unit>
 				</group>
 				<group id="keys">
@@ -3367,6 +3459,154 @@
 						<target>Z</target>
 					</trans-unit>
 				</group>
+				<group id="switchmenu">
+					<trans-unit id="title">
+						<source>Select a Switch To Change: </source>
+					</trans-unit>
+					<trans-unit id="selected">
+						<source>Selected Switch: </source>
+					</trans-unit>
+					<trans-unit id="current">
+						<source>Current Setting: </source>
+					</trans-unit>
+					<trans-unit id="distance">
+						<source>Distance from Player: </source>
+					</trans-unit>
+					<trans-unit id="zoom_in">
+						<source>Zoom In</source>
+					</trans-unit>
+					<trans-unit id="zoom_out">
+						<source>Zoom Out</source>
+					</trans-unit>
+				</group>
+				<group id="denshadego">
+					<trans-unit id="config_title">
+						<source>Densha de GO! controller configuration</source>
+					</trans-unit>
+					<trans-unit id="input_section">
+						<source>Device input</source>
+					</trans-unit>
+					<trans-unit id="label_brake">
+						<source>Brake: [notch]</source>
+					</trans-unit>
+					<trans-unit id="label_power">
+						<source>Power: [notch]</source>
+					</trans-unit>
+					<trans-unit id="label_reverser">
+						<source>Reverser: [notch]</source>
+					</trans-unit>
+					<trans-unit id="calibration_button">
+						<source>Start calibration</source>
+					</trans-unit>
+					<trans-unit id="device">
+						<source>Device:</source>
+					</trans-unit>
+					<trans-unit id="button_section">
+						<source>Button mapping</source>
+					</trans-unit>
+					<trans-unit id="command_none">
+						<source>None</source>
+					</trans-unit>
+					<trans-unit id="handle_section">
+						<source>Handle mapping</source>
+					</trans-unit>
+					<trans-unit id="option_convert">
+						<source>Convert notches</source>
+					</trans-unit>
+					<trans-unit id="option_keep_minmax">
+						<source>Keep minimum and maximum</source>
+					</trans-unit>
+					<trans-unit id="option_holdbrake">
+						<source>Map hold brake to B1</source>
+					</trans-unit>
+					<trans-unit id="save_button">
+						<source>Save</source>
+					</trans-unit>
+					<trans-unit id="cancel_button">
+						<source>Cancel</source>
+					</trans-unit>
+					<trans-unit id="calibrate_button">
+						<source>Hold the [button] button in the controller and press OK.</source>
+					</trans-unit>
+					<trans-unit id="calibrate_brake">
+						<source>Move the brake handle to [notch] and press OK.</source>
+					</trans-unit>
+					<trans-unit id="calibrate_power">
+						<source>Move the power handle to [notch] and press OK.</source>
+					</trans-unit>
+					<trans-unit id="label_up">
+						<source>UP</source>
+					</trans-unit>
+					<trans-unit id="label_down">
+						<source>DOWN</source>
+					</trans-unit>
+					<trans-unit id="label_left">
+						<source>LEFT</source>
+					</trans-unit>
+					<trans-unit id="label_right">
+						<source>RIGHT</source>
+					</trans-unit>
+					<trans-unit id="label_pedal">
+						<source>PEDAL</source>
+					</trans-unit>
+					<trans-unit id="label_ldoor">
+						<source>L DOOR</source>
+					</trans-unit>
+					<trans-unit id="label_rdoor">
+						<source>R DOOR</source>
+					</trans-unit>
+					<trans-unit id="label_a2">
+						<source>A2</source>
+					</trans-unit>
+					<trans-unit id="label_ats">
+						<source>ATS</source>
+					</trans-unit>
+					<trans-unit id="linkLabel_driver">
+						<source>My controller is not detected or does not work properly</source>
+					</trans-unit>
+					<trans-unit id="help_title">
+						<source>Help</source>
+					</trans-unit>
+					<trans-unit id="help_controller1_label">
+						<source>My controller is not working correctly</source>
+					</trans-unit>
+					<trans-unit id="help_controller2_label">
+						<source>My PS2 controller is not detected</source>
+					</trans-unit>
+					<trans-unit id="help_windows_label">
+						<source>Windows</source>
+					</trans-unit>
+					<trans-unit id="help_linux_label">
+						<source>Linux</source>
+					</trans-unit>
+					<trans-unit id="help_controller1_textbox">
+						<source>If your non-USB controller is not providing correct input:\r\n\r\n1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller to separate buttons to avoid compatibility issues.\r\n2. Calibrate the controller from the configuration window, if necessary.</source>
+					</trans-unit>
+					<trans-unit id="help_controller2_textbox">
+						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
+					</trans-unit>
+					<trans-unit id="help_windows_textbox">
+						<source>1. Extract the Windows drivers.\r\n2. Download and run Zadig.\r\n3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).\r\n4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
+					</trans-unit>
+					<trans-unit id="help_libusb_symlink">
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.\r\nPlease follow the following instructions:\r\n\r\n1. Check that the &quot;libusb-1.0&quot; package is installed.\r\n2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;\r\n3. Open the directory in the terminal.\r\n4. Check this location to see if &quot;libusb-1.0.so&quot; exists.\r\n5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
+					</trans-unit>
+					<trans-unit id="help_linux_textbox">
+						<source>1. Extract the Linux udev file.\r\n2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).\r\n3. Reboot or reload udev rules manually.</source>
+					</trans-unit>
+					<trans-unit id="help_zadig_button">
+						<source>Get Zadig</source>
+					</trans-unit>
+					<trans-unit id="help_windows_button">
+						<source>Extract files (Windows)</source>
+					</trans-unit>
+					<trans-unit id="help_linux_button">
+						<source>Extract files (Linux)</source>
+					</trans-unit>
+					<trans-unit id="help_ok_button">
+						<source>OK</source>
+					</trans-unit>
+				</group>
 			</group>
 			<group id="train_editor">
 				<group id="general">
@@ -3617,6 +3857,12 @@
 					<trans-unit id="driver_brake_notches_error_message">
 						<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
 						<target>運転者が扱えるブレーキノッチ段数は、ブレーキノッチ段数以下でなければなりません。</target>
+					</trans-unit>
+					<trans-unit id="separated_interlocked">
+						<source>Separated (Interlocked)</source>
+					</trans-unit>
+					<trans-unit id="separated_interlocked_reverser">
+						<source>Separated (Reverser Interlocked)</source>
 					</trans-unit>
 				</group>
 				<group id="cab">
@@ -3879,8 +4125,8 @@
 						<target>拡張機能</target>
 					</trans-unit>
 					<trans-unit id="note">
-						<source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
-						<target>注意: このページの機能を使用するには、openBVEが次のバージョン以上である必要があります。:</target>
+						<source>Please note: Features found on this page may require the following minimum version of OpenBVE:</source>
+						<target>注意: このページの機能を使用するには、OpenBVEが次のバージョン以上である必要があります。:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake">
 						<source>Locomotive Brake</source>
@@ -4007,11 +4253,10 @@
 							<source>Exit</source>
 							<target>終了</target>
 						</trans-unit>
+						<trans-unit id="wrongtype">
+							<source>You have attempted to open a train.\r\nThese cannot be opened directly-\r\nPlease use the import function to import this train into TrainEditor2.</source>
+						</trans-unit>
 					</group>
-					<trans-unit id="language">
-						<source>Language</source>
-						<target>言語</target>
-					</trans-unit>
 					<group id="message">
 						<trans-unit id="new">
 							<source>Do you want to save the current file before creating a new one?</source>
@@ -4026,6 +4271,10 @@
 							<target>閉じる前に現在のデータを保存しますか?</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="language">
+						<source>Language</source>
+						<target>言語</target>
+					</trans-unit>
 				</group>
 				<group id="navigation">
 					<trans-unit id="up">
@@ -4076,15 +4325,7 @@
 					</trans-unit>
 				</group>
 				<group id="general_settings">
-					<trans-unit id="name">
-						<source>General settings</source>
-						<target>全般設定</target>
-					</trans-unit>
 					<group id="handle">
-						<trans-unit id="name">
-							<source>Handle</source>
-							<target>ハンドル</target>
-						</trans-unit>
 						<group id="handle_type">
 							<trans-unit id="name">
 								<source>HandleType</source>
@@ -4098,27 +4339,13 @@
 								<source>Combined</source>
 								<target>ワンハンドル</target>
 							</trans-unit>
+							<trans-unit id="separated_interlocked">
+								<source>Separated (Interlocked)</source>
+							</trans-unit>
+							<trans-unit id="separated_interlocked_reverser">
+								<source>Separated (Reverser Interlocked)</source>
+							</trans-unit>
 						</group>
-						<trans-unit id="power_notches">
-							<source>PowerNotches</source>
-							<target>力行ノッチ段数</target>
-						</trans-unit>
-						<trans-unit id="brake_notches">
-							<source>BrakeNotches</source>
-							<target>ブレーキノッチ段数</target>
-						</trans-unit>
-						<trans-unit id="power_notch_reduce_steps">
-							<source>PowerNotchReduceSteps</source>
-							<target>戻しノッチ段数</target>
-						</trans-unit>
-						<trans-unit id="driver_power_notches">
-							<source>DriverPowerNotches</source>
-							<target>運転者が扱える力行ノッチ段数</target>
-						</trans-unit>
-						<trans-unit id="driver_brake_notches">
-							<source>DriverBrakeNotches</source>
-							<target>運転者が扱えるブレーキノッチ段数</target>
-						</trans-unit>
 						<group id="eb_handle_behaviour">
 							<trans-unit id="name">
 								<source>EbHandleBehaviour</source>
@@ -4130,15 +4357,15 @@
 							</trans-unit>
 							<trans-unit id="power">
 								<source>Return power to neutral</source>
-								<target>マスコンを"切"位置に戻す</target>
+								<target>マスコンを&quot;切&quot;位置に戻す</target>
 							</trans-unit>
 							<trans-unit id="reverser">
 								<source>Return reverser to neutral</source>
-								<target>レバーサを"切"位置に戻す</target>
+								<target>レバーサを&quot;切&quot;位置に戻す</target>
 							</trans-unit>
 							<trans-unit id="power_reverser">
 								<source>Return power and reverser to neutral</source>
-								<target>マスコンとレバーサを"切"位置に戻す</target>
+								<target>マスコンとレバーサを&quot;切&quot;位置に戻す</target>
 							</trans-unit>
 						</group>
 						<group id="loco_brake_handle_type">
@@ -4159,9 +4386,42 @@
 								<target>客車からは遮断</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Handle</source>
+							<target>ハンドル</target>
+						</trans-unit>
+						<trans-unit id="power_notches">
+							<source>PowerNotches</source>
+							<target>力行ノッチ段数</target>
+						</trans-unit>
+						<trans-unit id="brake_notches">
+							<source>BrakeNotches</source>
+							<target>ブレーキノッチ段数</target>
+						</trans-unit>
+						<trans-unit id="power_notch_reduce_steps">
+							<source>PowerNotchReduceSteps</source>
+							<target>戻しノッチ段数</target>
+						</trans-unit>
+						<trans-unit id="driver_power_notches">
+							<source>DriverPowerNotches</source>
+							<target>運転者が扱える力行ノッチ段数</target>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches">
+							<source>DriverBrakeNotches</source>
+							<target>運転者が扱えるブレーキノッチ段数</target>
+						</trans-unit>
 						<trans-unit id="loco_brake_notches">
 							<source>LocoBrakeNotches</source>
 							<target>機関車のブレーキノッチ段数</target>
+						</trans-unit>
+						<trans-unit id="brake_notches_error_message">
+							<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+						</trans-unit>
+						<trans-unit id="driver_power_notches_error_message">
+							<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches_error_message">
+							<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
 						</trans-unit>
 					</group>
 					<group id="cab">
@@ -4187,10 +4447,6 @@
 						</trans-unit>
 					</group>
 					<group id="device">
-						<trans-unit id="name">
-							<source>Device</source>
-							<target>装置</target>
-						</trans-unit>
 						<group id="ats">
 							<trans-unit id="name">
 								<source>Ats</source>
@@ -4227,18 +4483,6 @@
 								<target>自動切替</target>
 							</trans-unit>
 						</group>
-						<trans-unit id="eb">
-							<source>Eb</source>
-							<target>Eb</target>
-						</trans-unit>
-						<trans-unit id="const_speed">
-							<source>ConstSpeed</source>
-							<target>定速</target>
-						</trans-unit>
-						<trans-unit id="hold_brake">
-							<source>HoldBrake</source>
-							<target>抑速</target>
-						</trans-unit>
 						<group id="re_adhesion_device">
 							<trans-unit id="name">
 								<source>ReAdhesionDevice</source>
@@ -4305,6 +4549,22 @@
 								<target>手動</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Device</source>
+							<target>装置</target>
+						</trans-unit>
+						<trans-unit id="eb">
+							<source>Eb</source>
+							<target>Eb</target>
+						</trans-unit>
+						<trans-unit id="const_speed">
+							<source>ConstSpeed</source>
+							<target>定速</target>
+						</trans-unit>
+						<trans-unit id="hold_brake">
+							<source>HoldBrake</source>
+							<target>抑速</target>
+						</trans-unit>
 						<trans-unit id="door_width">
 							<source>DoorWidth</source>
 							<target>ドアの幅</target>
@@ -4314,13 +4574,31 @@
 							<target>干渉物の最小幅</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>General settings</source>
+						<target>全般設定</target>
+					</trans-unit>
 				</group>
 				<group id="car_settings">
-					<trans-unit id="name">
-						<source>Car settings</source>
-						<target>車両設定</target>
-					</trans-unit>
 					<group id="general">
+						<group id="axles">
+							<trans-unit id="name">
+								<source>Axles</source>
+							</trans-unit>
+							<trans-unit id="front">
+								<source>FrontAxle</source>
+							</trans-unit>
+							<trans-unit id="rear">
+								<source>RearAxle</source>
+							</trans-unit>
+							<trans-unit id="axle_mustbe_less">
+								<source>RearAxle must be less than FrontAxle.</source>
+								<target>後車軸は前車軸未満でなければなりません。</target>
+							</trans-unit>
+							<trans-unit id="mustbe_less">
+								<source>RearAxle must be less than FrontAxle.</source>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
 							<source>General</source>
 							<target>全般</target>
@@ -4360,21 +4638,6 @@
 						<trans-unit id="defined_axles">
 							<source>DefinedAxles</source>
 						</trans-unit>
-						<group id="axles">
-							<trans-unit id="name">
-								<source>Axles</source>
-							</trans-unit>
-							<trans-unit id="front">
-								<source>FrontAxle</source>
-							</trans-unit>
-							<trans-unit id="rear">
-								<source>RearAxle</source>
-							</trans-unit>
-							<trans-unit id="axle_mustbe_less">
-								<source>RearAxle must be less than FrontAxle.</source>
-								<target>後車軸は前車軸未満でなければなりません。</target>
-							</trans-unit>							
-						</group>
 						<trans-unit id="front_bogie">
 							<source>FrontBogie</source>
 						</trans-unit>
@@ -4444,10 +4707,6 @@
 						</trans-unit>
 					</group>
 					<group id="brake">
-						<trans-unit id="name">
-							<source>Brake</source>
-							<target>ブレーキ</target>
-						</trans-unit>
 						<group id="brake_type">
 							<trans-unit id="name">
 								<source>BrakeType</source>
@@ -4502,6 +4761,10 @@
 								<target>遅れ込め制御</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Brake</source>
+							<target>ブレーキ</target>
+						</trans-unit>
 						<trans-unit id="brake_control_speed">
 							<source>BrakeControlSpeed</source>
 							<target>電制速度</target>
@@ -4534,6 +4797,17 @@
 						</trans-unit>
 					</group>
 					<group id="delay">
+						<group id="edit_entry">
+							<trans-unit id="name">
+								<source>Edit entry</source>
+							</trans-unit>
+							<trans-unit id="up">
+								<source>Up</source>
+							</trans-unit>
+							<trans-unit id="down">
+								<source>Down</source>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
 							<source>Delay</source>
 							<target>遅れ時間</target>
@@ -4558,17 +4832,16 @@
 							<source>Value</source>
 							<target>値</target>
 						</trans-unit>
+						<trans-unit id="electric_brake">
+							<source>ElectricBrake</source>
+						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Car settings</source>
+						<target>車両設定</target>
+					</trans-unit>
 				</group>
 				<group id="acceleration_settings">
-					<trans-unit id="name">
-						<source>Acceleration settings</source>
-						<target>加速度設定</target>
-					</trans-unit>
-					<trans-unit id="notch">
-						<source>Notch</source>
-						<target>ノッチ</target>
-					</trans-unit>
 					<group id="parameter">
 						<trans-unit id="name">
 							<source>Parameter</source>
@@ -4641,12 +4914,16 @@
 							<target>リセット</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Acceleration settings</source>
+						<target>加速度設定</target>
+					</trans-unit>
+					<trans-unit id="notch">
+						<source>Notch</source>
+						<target>ノッチ</target>
+					</trans-unit>
 				</group>
 				<group id="motor_sound_settings">
-					<trans-unit id="name">
-						<source>Motor sound settings</source>
-						<target>モーター音設定</target>
-					</trans-unit>
 					<group id="menu">
 						<group id="edit">
 							<trans-unit id="name">
@@ -4810,10 +5087,6 @@
 						</trans-unit>
 					</group>
 					<group id="play_setting">
-						<trans-unit id="name">
-							<source>Playback setting</source>
-							<target>再生設定</target>
-						</trans-unit>
 						<group id="source">
 							<trans-unit id="name">
 								<source>Sound source setting</source>
@@ -4842,7 +5115,7 @@
 								<target>等速運動</target>
 							</trans-unit>
 							<trans-unit id="acceleration">
-								<source>Acceleration:</source>
+								<source>Acceleration</source>
 								<target>加速度</target>
 							</trans-unit>
 							<trans-unit id="swap">
@@ -4850,6 +5123,10 @@
 								<target>入れ替え</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Playback setting</source>
+							<target>再生設定</target>
+						</trans-unit>
 						<trans-unit id="play">
 							<source>Playback</source>
 							<target>再生</target>
@@ -4967,12 +5244,12 @@
 							<target>既に同じx座標に点が存在しますが、上書きしますか?</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Motor sound settings</source>
+						<target>モーター音設定</target>
+					</trans-unit>
 				</group>
 				<group id="coupler_settings">
-					<trans-unit id="name">
-						<source>Coupler settings</source>
-						<target>連結器設定</target>
-					</trans-unit>
 					<group id="general">
 						<trans-unit id="name">
 							<source>General</source>
@@ -4987,13 +5264,35 @@
 							<target>最大</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Coupler settings</source>
+						<target>連結器設定</target>
+					</trans-unit>
 				</group>
 				<group id="panel_settings">
-					<trans-unit id="name">
-						<source>Panel settings</source>
-						<target>パネル設定</target>
-					</trans-unit>
 					<group id="this">
+						<group id="center">
+							<trans-unit id="name">
+								<source>Center origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<group id="origin">
+							<trans-unit id="name">
+								<source>Track origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
 							<source>This</source>
 						</trans-unit>
@@ -5021,9 +5320,53 @@
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
 						</trans-unit>
-						<group id="center">
+					</group>
+					<group id="screen">
+						<trans-unit id="name">
+							<source>Screen</source>
+						</trans-unit>
+						<trans-unit id="number">
+							<source>Number</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="pilot_lamp">
+						<group id="location">
 							<trans-unit id="name">
-								<source>Center</source>
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>PilotLamp</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="needle">
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -5043,67 +5386,12 @@
 								<source>Y</source>
 							</trans-unit>
 						</group>
-					</group>
-					<group id="screen">
-						<trans-unit id="name">
-							<source>Screen</source>
-						</trans-unit>
-						<trans-unit id="number">
-							<source>Number</source>
-						</trans-unit>
-						<trans-unit id="layer">
-							<source>Layer</source>
-						</trans-unit>
-					</group>
-					<group id="pilot_lamp">
-						<trans-unit id="name">
-							<source>PilotLamp</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-						</trans-unit>
-						<group id="location">
-							<trans-unit id="name">
-								<source>Location</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
-						<trans-unit id="daytime_image">
-							<source>DaytimeImage</source>
-						</trans-unit>
-						<trans-unit id="nighttime_image">
-							<source>NighttimeImage</source>
-						</trans-unit>
-						<trans-unit id="transparent_color">
-							<source>TransparentColor</source>
-						</trans-unit>
-						<trans-unit id="layer">
-							<source>Layer</source>
-						</trans-unit>
-					</group>
-					<group id="needle">
 						<trans-unit id="name">
 							<source>Needle</source>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
 						</trans-unit>
-						<group id="location">
-							<trans-unit id="name">
-								<source>Location</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
 						<trans-unit id="defined_radius">
 							<source>DefinedRadius</source>
 						</trans-unit>
@@ -5125,17 +5413,6 @@
 						<trans-unit id="defined_origin">
 							<source>DefinedOrigin</source>
 						</trans-unit>
-						<group id="origin">
-							<trans-unit id="name">
-								<source>Origin</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
 						<trans-unit id="initial_angle">
 							<source>InitialAngle</source>
 						</trans-unit>
@@ -5171,12 +5448,6 @@
 						</trans-unit>
 					</group>
 					<group id="digital_number">
-						<trans-unit id="name">
-							<source>DigitalNumber</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5188,6 +5459,12 @@
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>DigitalNumber</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
 						</trans-unit>
@@ -5205,12 +5482,6 @@
 						</trans-unit>
 					</group>
 					<group id="digital_gauge">
-						<trans-unit id="name">
-							<source>DigitalGauge</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5222,6 +5493,12 @@
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>DigitalGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
 						<trans-unit id="radius">
 							<source>Radius</source>
 						</trans-unit>
@@ -5248,12 +5525,6 @@
 						</trans-unit>
 					</group>
 					<group id="linear_gauge">
-						<trans-unit id="name">
-							<source>LinearGauge</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5265,6 +5536,23 @@
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<group id="direction">
+							<trans-unit id="name">
+								<source>Direction</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>LinearGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
 						</trans-unit>
@@ -5280,17 +5568,6 @@
 						<trans-unit id="maximum">
 							<source>Maximum</source>
 						</trans-unit>
-						<group id="direction">
-							<trans-unit id="name">
-								<source>Direction</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
 						<trans-unit id="width">
 							<source>Width</source>
 						</trans-unit>
@@ -5299,9 +5576,6 @@
 						</trans-unit>
 					</group>
 					<group id="timetable">
-						<trans-unit id="name">
-							<source>Timetable</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5313,6 +5587,9 @@
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Timetable</source>
+						</trans-unit>
 						<trans-unit id="height">
 							<source>Height</source>
 						</trans-unit>
@@ -5327,9 +5604,6 @@
 						</trans-unit>
 					</group>
 					<group id="touch">
-						<trans-unit id="name">
-							<source>Touch</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5352,6 +5626,9 @@
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Touch</source>
+						</trans-unit>
 						<trans-unit id="jump_screen">
 							<source>JumpScreen</source>
 						</trans-unit>
@@ -5364,9 +5641,139 @@
 						<trans-unit id="command_option">
 							<source>CommandOption</source>
 						</trans-unit>
+						<trans-unit id="sound_command">
+							<source>Sound and command</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
 					</group>
+					<group id="subject">
+						<trans-unit id="name">
+							<source>Subject</source>
+						</trans-unit>
+						<trans-unit id="base">
+							<source>Base</source>
+						</trans-unit>
+						<trans-unit id="baseoption">
+							<source>Base option</source>
+						</trans-unit>
+						<trans-unit id="suffix">
+							<source>Suffix</source>
+						</trans-unit>
+						<trans-unit id="suffixoption">
+							<source>Suffix option</source>
+						</trans-unit>
+					</group>
+					<group id="sound_command">
+						<group id="tree">
+							<trans-unit id="touch_element">
+								<source>Touch element</source>
+							</trans-unit>
+							<trans-unit id="sounds">
+								<source>Sounds</source>
+							</trans-unit>
+							<trans-unit id="commands">
+								<source>Commands</source>
+							</trans-unit>
+						</group>
+						<group id="edit_entry">
+							<group id="sound">
+								<trans-unit id="index">
+									<source>Index</source>
+								</trans-unit>
+							</group>
+							<group id="command">
+								<trans-unit id="name">
+									<source>Key</source>
+								</trans-unit>
+								<trans-unit id="option">
+									<source>Option</source>
+								</trans-unit>
+							</group>
+							<trans-unit id="name">
+								<source>Edit entry</source>
+							</trans-unit>
+							<trans-unit id="sound">
+								<source>Sound</source>
+							</trans-unit>
+							<trans-unit id="command">
+								<source>Command</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>Sound and command</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="name">
+						<source>Panel settings</source>
+						<target>パネル設定</target>
+					</trans-unit>
 				</group>
 				<group id="sound_settings">
+					<group id="edit_entry">
+						<group id="section">
+							<trans-unit id="name">
+								<source>Section select</source>
+								<target>セクション選択</target>
+							</trans-unit>
+						</group>
+						<group id="key">
+							<trans-unit id="name">
+								<source>Key type select</source>
+								<target>キー選択</target>
+							</trans-unit>
+						</group>
+						<group id="value">
+							<group id="position">
+								<trans-unit id="name">
+									<source>Position</source>
+									<target>位置</target>
+								</trans-unit>
+								<trans-unit id="x">
+									<source>X</source>
+									<target>x座標</target>
+								</trans-unit>
+								<trans-unit id="y">
+									<source>Y</source>
+									<target>y座標</target>
+								</trans-unit>
+								<trans-unit id="z">
+									<source>Z</source>
+									<target>z座標</target>
+								</trans-unit>
+							</group>
+							<trans-unit id="name">
+								<source>Input value</source>
+								<target>値入力</target>
+							</trans-unit>
+							<trans-unit id="filename">
+								<source>Filename</source>
+								<target>ファイル名</target>
+							</trans-unit>
+							<trans-unit id="radius">
+								<source>Radius</source>
+							</trans-unit>
+							<trans-unit id="position">
+								<source>Position setting</source>
+								<target>位置設定</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>Edit entry</source>
+							<target>エントリー編集</target>
+						</trans-unit>
+					</group>
+					<group id="message">
+						<trans-unit id="empty_filename">
+							<source>File name has not been entered.</source>
+							<target>ファイル名は空欄にできません。</target>
+						</trans-unit>
+						<trans-unit id="key_exist">
+							<source>The specified key is already set.</source>
+							<target>指定したキーは既に設定されています。</target>
+						</trans-unit>
+					</group>
 					<trans-unit id="name">
 						<source>Sound settings</source>
 						<target>サウンド設定</target>
@@ -5386,75 +5793,8 @@
 					<trans-unit id="radius">
 						<source>Radius</source>
 					</trans-unit>
-					<group id="edit_entry">
-						<trans-unit id="name">
-							<source>Edit entry</source>
-							<target>エントリー編集</target>
-						</trans-unit>
-						<group id="section">
-							<trans-unit id="name">
-								<source>Section select</source>
-								<target>セクション選択</target>
-							</trans-unit>
-						</group>
-						<group id="key">
-							<trans-unit id="name">
-								<source>Key type select</source>
-								<target>キー選択</target>
-							</trans-unit>
-						</group>
-						<group id="value">
-							<trans-unit id="name">
-								<source>Input value</source>
-								<target>値入力</target>
-							</trans-unit>
-							<trans-unit id="filename">
-								<source>Filename</source>
-								<target>ファイル名</target>
-							</trans-unit>
-							<trans-unit id="radius">
-								<source>Radius</source>
-							</trans-unit>
-							<trans-unit id="position">
-								<source>Position setting</source>
-								<target>位置設定</target>
-							</trans-unit>
-							<group id="position">
-								<trans-unit id="name">
-									<source>Position</source>
-									<target>位置</target>
-								</trans-unit>
-								<trans-unit id="x">
-									<source>x coordinate</source>
-									<target>x座標</target>
-								</trans-unit>
-								<trans-unit id="y">
-									<source>y coordinate</source>
-									<target>y座標</target>
-								</trans-unit>
-								<trans-unit id="z">
-									<source>z coordinate</source>
-									<target>z座標</target>
-								</trans-unit>
-							</group>
-						</group>
-					</group>
-					<group id="message">
-						<trans-unit id="empty_filename">
-							<source>File name has not been entered.</source>
-							<target>ファイル名は空欄にできません。</target>
-						</trans-unit>
-						<trans-unit id="key_exist">
-							<source>The specified key is already set.</source>
-							<target>指定したキーは既に設定されています。</target>
-						</trans-unit>
-					</group>
 				</group>
 				<group id="status">
-					<trans-unit id="name">
-						<source>Status</source>
-						<target>ステータス</target>
-					</trans-unit>
 					<group id="menu">
 						<trans-unit id="error">
 							<source>Error</source>
@@ -5473,6 +5813,10 @@
 							<target>クリア</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Status</source>
+						<target>ステータス</target>
+					</trans-unit>
 					<trans-unit id="level">
 						<source>Level</source>
 						<target>レベル</target>
@@ -5508,7 +5852,7 @@
 						<source>This value must be a {0}floating-point number.</source>
 					</trans-unit>
 					<trans-unit id="invalid_color">
-						<source>invalid_color</source>
+						<source>Invalid HEX color</source>
 						<target>{0}は16進数色を表していません。</target>
 					</trans-unit>
 					<trans-unit id="number_exist">
@@ -5516,12 +5860,79 @@
 						<target>指定された番号は既に追加されています。</target>
 					</trans-unit>
 					<trans-unit id="mustbe_greater_than">
-						<source>Max must be greater than or equal to the Min.</source>
+						<source>Max must be greater than or equal to Min.</source>
 						<target>MaxはMin以上でなければなりません。</target>
 					</trans-unit>
 					<trans-unit id="mustbe_less_than">
 						<source>Min must be less than the Max.</source>
 						<target>MinはMax未満でなければなりません。</target>
+					</trans-unit>
+				</group>
+				<group id="items">
+					<trans-unit id="filename">
+						<source>Filename</source>
+					</trans-unit>
+					<trans-unit id="folder">
+						<source>Folder</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>Type</source>
+					</trans-unit>
+					<trans-unit id="button_ok">
+						<source>OK</source>
+					</trans-unit>
+				</group>
+				<group id="import_export">
+					<group id="train">
+						<trans-unit id="name">
+							<source>Train setting file</source>
+						</trans-unit>
+						<trans-unit id="old_format">
+							<source>Old format</source>
+						</trans-unit>
+						<trans-unit id="traindat">
+							<source>Train.dat</source>
+						</trans-unit>
+						<trans-unit id="extensionscfg">
+							<source>Extensions.cfg</source>
+						</trans-unit>
+					</group>
+					<group id="panel">
+						<trans-unit id="name">
+							<source>Panel Setting File</source>
+						</trans-unit>
+						<trans-unit id="panel2cfg">
+							<source>Panel2.cfg</source>
+						</trans-unit>
+						<trans-unit id="panelxml">
+							<source>Panel.xml</source>
+						</trans-unit>
+					</group>
+					<group id="sound">
+						<trans-unit id="name">
+							<source>Sound setting file</source>
+						</trans-unit>
+						<trans-unit id="no_setting_file">
+							<source>No setting file</source>
+						</trans-unit>
+						<trans-unit id="soundcfg">
+							<source>Sound.cfg</source>
+						</trans-unit>
+						<trans-unit id="soundxml">
+							<source>Sound.xml</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="import_name">
+						<source>Import</source>
+					</trans-unit>
+					<trans-unit id="export_name">
+						<source>Export</source>
+					</trans-unit>
+					<trans-unit id="folder">
+						<source>Folder</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>Type</source>
 					</trans-unit>
 				</group>
 			</group>

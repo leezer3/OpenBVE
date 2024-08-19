@@ -224,7 +224,7 @@ namespace Route.Bve5
 				//c = Math.Sqrt(2.0 * r * r * (1.0 - Math.Cos(b)));
 				c = 2.0 * Math.Abs(r) * Math.Sin(b / 2.0);
 				a = 0.5 * Math.Sign(r) * b;
-				Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
+				Direction.Rotate(-a);
 			}
 			else if (CurveRadius != 0.0)
 			{
@@ -234,7 +234,7 @@ namespace Route.Bve5
 				//c = Math.Sqrt(2.0 * r * r * (1.0 - Math.Cos(b)));
 				c = 2.0 * Math.Abs(r) * Math.Sin(b / 2.0);
 				a = 0.5 * Math.Sign(r) * b;
-				Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
+				Direction.Rotate(-a);
 			}
 			else if (Pitch != 0.0)
 			{
@@ -248,13 +248,7 @@ namespace Route.Bve5
 		/// <summary>Gets the transformation for an object on the primary rail</summary>
 		private static void GetPrimaryRailTransformation(Vector3 StartingPosition, IList<Block> Blocks, int StartingBlock, AbstractStructure Structure, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
-			if (Blocks[StartingBlock].Turn != 0.0)
-			{
-				double ag = -Math.Atan(Blocks[StartingBlock].Turn);
-				double cosag = Math.Cos(ag);
-				double sinag = Math.Sin(ag);
-				Direction.Rotate(cosag, sinag);
-			}
+			Direction.Rotate(-Math.Atan(Blocks[StartingBlock].Turn));
 
 			ObjectPosition = StartingPosition;
 			Transformation = new Transformation();
@@ -267,10 +261,7 @@ namespace Route.Bve5
 				ObjectPosition.X += Direction.X * c;
 				ObjectPosition.Y += h;
 				ObjectPosition.Z += Direction.Y * c;
-				if (a != 0.0)
-				{
-					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
-				}
+				Direction.Rotate(-a);
 
 				CalcTransformation(radius, pitch, Structure.Span, ref Direction, out _, out _, out _);
 				double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
@@ -324,13 +315,7 @@ namespace Route.Bve5
 		private static void GetTransformation(Vector3 StartingPosition, Block FirstBlock, Block SecondBlock, string RailKey, double Pitch, double TrackDistance, ObjectTransformType Type, double Span, Vector2 Direction, out Vector3 ObjectPosition, out Transformation Transformation)
 		{
 			Transformation = new Transformation();
-			if (FirstBlock.Turn != 0.0)
-			{
-				double ag = -Math.Atan(FirstBlock.Turn);
-				double cosag = Math.Cos(ag);
-				double sinag = Math.Sin(ag);
-				Direction.Rotate(cosag, sinag);
-			}
+			Direction.Rotate(-Math.Atan(FirstBlock.Turn));
 
 			Vector3 Position = StartingPosition;
 
@@ -339,10 +324,7 @@ namespace Route.Bve5
 			Position.X += Direction.X * c;
 			Position.Y += h;
 			Position.Z += Direction.Y * c;
-			if (a != 0.0)
-			{
-				Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
-			}
+			Direction.Rotate(-a);
 
 			CalcTransformation(FirstBlock.CurrentTrackState.CurveRadius, Pitch, Span, ref Direction, out a, out c, out h);
 
@@ -355,10 +337,7 @@ namespace Route.Bve5
 			Position.X += Direction.X * c;
 			Position.Y += h;
 			Position.Z += Direction.Y * c;
-			if (a != 0.0)
-			{
-				Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
-			}
+			Direction.Rotate(-a);
 
 			CalcTransformation(FirstBlock.CurrentTrackState.CurveRadius, Pitch, Span, ref Direction, out _, out _, out _);
 
@@ -396,6 +375,15 @@ namespace Route.Bve5
 				x *= t;
 				y *= t;
 			}
+		}
+
+		public static int IndexOf<T>(this List<string> source, T value, StringComparison stringComparison)
+		{
+			if (typeof(T) == typeof(string))
+			{
+				return source.FindIndex(x => x.Equals(value as string, stringComparison));
+			}
+			return -1;
 		}
 	}
 }

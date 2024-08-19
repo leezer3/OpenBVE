@@ -33,6 +33,13 @@ namespace OpenBveApi.Math {
 			this.Y = v.Y;
 		}
 
+		/// <summary>Converts a Vector2 to a Vector2f</summary>
+		///	<remarks>This discards the double precision</remarks>
+		public static implicit operator Vector2f(Vector2 v)
+		{
+			return new Vector2f(v.X, v.Y);
+		}
+
 		/// <summary>Parses a Vector2 from a list of strings</summary>
 		/// <param name="arguments">The list of strings</param>
 		/// <param name="v">The out Vector</param>
@@ -279,7 +286,20 @@ namespace OpenBveApi.Math {
 			double y = sineOfAngle * this.X + cosineOfAngle * this.Y;
 			this = new Vector2(x, y);
 		}
-		
+
+		/// <summary>Rotates the vector by the specified angle.</summary>
+		/// <param name="angle">The angle.</param>
+		public void Rotate(double angle)
+		{
+			if (angle == 0)
+			{
+				return;
+			}
+			double cosineOfAngle = System.Math.Cos(angle);
+			double sineOfAngle = System.Math.Sin(angle);
+			Rotate(cosineOfAngle, sineOfAngle);
+		}
+
 		/// <summary>Checks whether the vector is a null vector.</summary>
 		/// <returns>A boolean indicating whether the vector is a null vector.</returns>
 		public bool IsNullVector() {

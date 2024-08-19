@@ -442,6 +442,15 @@ namespace OpenBveApi.Math {
 		}
 
 		/// <summary>Rotates the vector on the perpendicular world plane (Used by the .Turn command)</summary>
+		/// <param name="angle">The angle.</param>
+		public void RotatePlane(double angle)
+		{
+			double cosa = System.Math.Cos(angle);
+			double sina = System.Math.Sin(angle);
+			RotatePlane(cosa, sina);
+		}
+
+		/// <summary>Rotates the vector on the perpendicular world plane (Used by the .Turn command)</summary>
 		/// <param name="cosa">The cosine of the angle.</param>
 		/// <param name="sina">The sine of the angle.</param>
 		public void RotatePlane(double cosa, double sina)

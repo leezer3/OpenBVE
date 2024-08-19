@@ -415,7 +415,6 @@ namespace OpenBve
 				Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
 				LoadingScreenLoop();
 			}
-			TrainManager.PlayerTrain.PreloadTextures();
 			//Add event handler hooks for keyboard and mouse buttons
 			//Do this after the renderer has init and the loop has started to prevent timing issues
 			KeyDown	+= MainLoop.keyDownEvent;
@@ -970,6 +969,7 @@ namespace OpenBve
 			World.InitializeCameraRestriction();
 			Loading.SimulationSetup = true;
 			Program.Renderer.CurrentInterface = InterfaceType.Normal;
+			TrainManager.PlayerTrain.PreloadTextures();
 			if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 			{
 				Program.Renderer.Camera.Alignment.Yaw = 180 / 57.2957795130824;

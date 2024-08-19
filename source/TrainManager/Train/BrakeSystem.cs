@@ -74,7 +74,7 @@ namespace TrainManager.Trains
 					if (Cars[i].CarBrake.brakeType == BrakeType.Main)
 					{
 						// If at the end of the train or a compressor we don't need to flow into it
-						bool nextCarIsMainBrake = i == Cars.Length || Cars[i + 1].CarBrake.brakeType == BrakeType.Main;
+						bool nextCarIsMainBrake = i == Cars.Length - 1 || Cars[i + 1].CarBrake.brakeType == BrakeType.Main;
 						
 						if (i > 0)
 						{

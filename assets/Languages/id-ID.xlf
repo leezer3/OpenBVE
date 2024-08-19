@@ -1,4 +1,5 @@
-<?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="id-ID">
 		<body>
 			<group id="language">
@@ -72,12 +73,12 @@
 						<source>Save Bug Report</source>
 					</trans-unit>
 					<trans-unit id="saved">
-						<source>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
-						<target>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</target>
+						<source>The report has been saved as &quot;[filename]&quot; on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
+						<target>The report has been saved as &quot;[filename]&quot; on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</target>
 					</trans-unit>
 					<trans-unit id="save_failed">
-						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</source>
-						<target>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</target>
+						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the &quot;View...&quot; button, then submit these logs to the discussion board or open an issue on GitHub.</source>
+						<target>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the &quot;View...&quot; button, then submit these logs to the discussion board or open an issue on GitHub.</target>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -236,9 +237,6 @@
 						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
 						<target>Rute yang dipilih tidak dapat dibuka: \r\n Objek rute tidak dapat ditemukan.</target>
 					</trans-unit>
-					<trans-unit id="route_corrupt_missingobjects">
-						<source>The selected route is corrupt: \r\n Unable to locate all defined objects.</source>
-					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
 						<target>Tidak dapat membaca plugin [plugin].</target>
@@ -270,6 +268,9 @@
 					<trans-unit id="security_badlocation">
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
 						<target>Saat menginstal add-on di folder Program Files atau ProgramData, sistem mungkin meminta izin administrator. \r\n\r\n Tidak direkomendasikan untuk melakukannya.</target>
+					</trans-unit>
+					<trans-unit id="route_switch_turn">
+						<source>The .Turn command and the .Switch command may not be used in the same route.</source>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -336,18 +337,6 @@
 						<source>Choose Train...</source>
 						<target>Pilih rangkaian kereta...</target>
 					</trans-unit>
-					<trans-unit id="train_default">
-						<source>Do you wish to use the default train?</source>
-						<target>Gunakan rangkaian yang dianjurkan?</target>
-					</trans-unit>
-					<trans-unit id="train_default_no">
-						<source>No</source>
-						<target>Tidak</target>
-					</trans-unit>
-					<trans-unit id="train_default_yes">
-						<source>Yes</source>
-						<target>Ya</target>
-					</trans-unit>
 					<trans-unit id="train_selection">
 						<source>Selection</source>
 						<target>Pilihan:</target>
@@ -413,6 +402,9 @@
 					<trans-unit id="start_start">
 						<source>Start</source>
 						<target>Mulai</target>
+					</trans-unit>
+					<trans-unit id="train_notfound_download">
+						<source>The default train is not currently installed:\r\n\r\n [train]\r\n\r\n It may be downloaded at:\r\n\r\n</source>
 					</trans-unit>
 				</group>
 				<group id="review">
@@ -609,7 +601,7 @@
 						<target>Instal add-on baru</target>
 					</trans-unit>
 					<trans-unit id="install_invalid">
-						<source>This file does not appear to be a valid openBVE package.</source>
+						<source>This file does not appear to be a valid OpenBVE package.</source>
 						<target>File ini tidak terlihat seperti file add-ons untuk OpenBVE.</target>
 					</trans-unit>
 					<trans-unit id="install_version_error">
@@ -721,8 +713,8 @@
 						<target>Hapus</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_skip_if_none">
-						<source>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</source>
-						<target>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</target>
+						<source>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</source>
+						<target>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
@@ -748,7 +740,7 @@
 						<source>The new package has been assigned the following GUID:</source>
 						<target>Add-on baru telah dibuat dengan GUID:</target>
 					</trans-unit>
-					<trans-unit id="creation_header">
+					<trans-unit id="enter_details_header">
 						<source>Enter Package Details</source>
 					</trans-unit>
 					<trans-unit id="creation_name">
@@ -1248,64 +1240,64 @@
 						<target>Error saat membuka file kalibrasi RailDriver.</target>
 					</trans-unit>
 					<trans-unit id="calibration_start">
-						<source>Please press 'Next' to start calibration.</source>
-						<target>Tekan 'Lanjut' untuk mulai kalibrasi.</target>
+						<source>Please press &apos;Next&apos; to start calibration.</source>
+						<target>Tekan &apos;Lanjut&apos; untuk mulai kalibrasi.</target>
 					</trans-unit>
 					<trans-unit id="calibration_a">
-						<source>Move the reverser lever to the full reverse position and press 'Next'.</source>
-						<target>Ubah reverser ke arah mundur dan pilih 'lanjut'.</target>
+						<source>Move the reverser lever to the full reverse position and press &apos;Next&apos;.</source>
+						<target>Ubah reverser ke arah mundur dan pilih &apos;lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_b">
-						<source>Move the reverser lever to the full forward position and press 'Next'.</source>
-						<target>Ubah reverser ke arah maju dan pilih 'lanjut'.</target>
+						<source>Move the reverser lever to the full forward position and press &apos;Next&apos;.</source>
+						<target>Ubah reverser ke arah maju dan pilih &apos;lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_c">
-						<source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
-						<target>Ubah tuas single ke arah full power lalu pilih 'Lanjut'.</target>
+						<source>Move the combined brake / throttle lever to the full power position and press &apos;Next&apos;.</source>
+						<target>Ubah tuas single ke arah full power lalu pilih &apos;Lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_d">
-						<source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
-						<target>Ubah tuas single ke arah rem penuh lalu pilih 'Lanjut'.</target>
+						<source>Move the combined brake / throttle lever to the full brake position and press &apos;Next&apos;.</source>
+						<target>Ubah tuas single ke arah rem penuh lalu pilih &apos;Lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_e">
-						<source>Move the dynamic brake lever to the release position and press 'Next'.</source>
-						<target>Geser tuas rem dinamis ke arah RELEASE lalu pilih 'Lanjut'.</target>
+						<source>Move the dynamic brake lever to the release position and press &apos;Next&apos;.</source>
+						<target>Geser tuas rem dinamis ke arah RELEASE lalu pilih &apos;Lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_f">
-						<source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
-						<target>Geser tuas rem dinamis ke arah EMEREGENCY lalu pilih 'Lanjut'.</target>
+						<source>Move the dynamic brake lever to the emergency position and press &apos;Next&apos;.</source>
+						<target>Geser tuas rem dinamis ke arah EMEREGENCY lalu pilih &apos;Lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_g">
-						<source>Move the independant brake lever to the release position and press 'Next'.</source>
-						<target>Geser tuas rem independen ke arah RELEASE lalu pilih 'Lanjut'.</target>
+						<source>Move the independant brake lever to the release position and press &apos;Next&apos;.</source>
+						<target>Geser tuas rem independen ke arah RELEASE lalu pilih &apos;Lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_h">
-						<source>Move the independant brake lever to the full position and press 'Next'.</source>
-						<target>Geser tuas rem independen ke arah FULL lalu pilih 'Lanjut'.</target>
+						<source>Move the independant brake lever to the full position and press &apos;Next&apos;.</source>
+						<target>Geser tuas rem independen ke arah FULL lalu pilih &apos;Lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_i">
-						<source>Move the bail-off lever to the release position and press 'Next'.</source>
-						<target>Geser tuas bail-off ke arah RELEASE lalu pilih 'Lanjut'.</target>
+						<source>Move the bail-off lever to the release position and press &apos;Next&apos;.</source>
+						<target>Geser tuas bail-off ke arah RELEASE lalu pilih &apos;Lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_j">
-						<source>Move and hold the bail-off lever into the full position and press 'Next'.</source>
-						<target>Geser dan tahan tuas bail-off ke arah FULL lalu pilih 'Lanjut'.</target>
+						<source>Move and hold the bail-off lever into the full position and press &apos;Next&apos;.</source>
+						<target>Geser dan tahan tuas bail-off ke arah FULL lalu pilih &apos;Lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_k">
-						<source>Move the wiper switch to OFF and press 'Next'.</source>
-						<target>Ubah posisi wiper ker arah MATI lalu pilih 'Lanjut'.</target>
+						<source>Move the wiper switch to OFF and press &apos;Next&apos;.</source>
+						<target>Ubah posisi wiper ker arah MATI lalu pilih &apos;Lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_l">
-						<source>Move the wiper switch to FULL and press 'Next'.</source>
-						<target>Ubah posisi wiper ke posisi FULL lalu pilih 'Lanjut'.</target>
+						<source>Move the wiper switch to FULL and press &apos;Next&apos;.</source>
+						<target>Ubah posisi wiper ke posisi FULL lalu pilih &apos;Lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_m">
-						<source>Move the lights switch to OFF and press 'Next'.</source>
-						<target>Ubah posisi lampu ke posisi OFF lalu pilih 'Lanjut'.</target>
+						<source>Move the lights switch to OFF and press &apos;Next&apos;.</source>
+						<target>Ubah posisi lampu ke posisi OFF lalu pilih &apos;Lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_n">
-						<source>Move the lights switch to FULL and press 'Next'.</source>
-						<target>Ubah posisi lampu ke posisi FULL lalu pilih 'Lanjut'.</target>
+						<source>Move the lights switch to FULL and press &apos;Next&apos;.</source>
+						<target>Ubah posisi lampu ke posisi FULL lalu pilih &apos;Lanjut&apos;.</target>
 					</trans-unit>
 					<trans-unit id="calibration_o">
 						<source>Calibration complete.</source>
@@ -1841,11 +1833,11 @@
 					</trans-unit>
 					<trans-unit id="almost_help_filesnotfound">
 						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting &quot;Ignore&quot; from below.</source>
-						<target>Error saat mencoba loading rute dan kereta. \r\n\r\nBeberapa file hilang sehingga mungkin rute atau kereta tidak muncul seperti yang seharusnya. Cobalah download rute dan kereta lagi untuk memastikan tidak ada file yang tertinggal. \r\n\r\nTekan 'Abaikan' untuk tetap memainkan rute dan kereta ini.</target>
+						<target>Error saat mencoba loading rute dan kereta. \r\n\r\nBeberapa file hilang sehingga mungkin rute atau kereta tidak muncul seperti yang seharusnya. Cobalah download rute dan kereta lagi untuk memastikan tidak ada file yang tertinggal. \r\n\r\nTekan &apos;Abaikan&apos; untuk tetap memainkan rute dan kereta ini.</target>
 					</trans-unit>
 					<trans-unit id="almost_help_general">
 						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select &quot;Ignore&quot; at this point to start the game.</source>
-						<target>Error saat mencoba loading rute dan kereta. \r\n\r\nBeberapa file tidak ditemukan. Jika anda kreator add-on ini, cek pesan error yang tersedia. \r\n\r\nTekan 'Abaikan' untuk tetap memainkan rute dan kereta ini.</target>
+						<target>Error saat mencoba loading rute dan kereta. \r\n\r\nBeberapa file tidak ditemukan. Jika anda kreator add-on ini, cek pesan error yang tersedia. \r\n\r\nTekan &apos;Abaikan&apos; untuk tetap memainkan rute dan kereta ini.</target>
 					</trans-unit>
 					<trans-unit id="almost_show">
 						<source>Show issues</source>
@@ -1988,7 +1980,7 @@
 						<target>Berangkat dari [name] saat masih naik-turun penumpang. Hentikan kereta sekarang!</target>
 					</trans-unit>
 					<trans-unit id="train_currentspeed">
-						<source>The train's current speed is [speed]</source>
+						<source>The train&apos;s current speed is [speed]</source>
 						<target>Kecepatan kereta [speed]</target>
 					</trans-unit>
 					<trans-unit id="loading">
@@ -2059,6 +2051,21 @@
 					<trans-unit id="mousegrab_off">
 						<source>Mouse grab: off</source>
 						<target>Kamera mouse nonaktif</target>
+					</trans-unit>
+					<trans-unit id="switchexterior_uncouple">
+						<source>Please switch to exterior view to uncouple.</source>
+					</trans-unit>
+					<trans-unit id="unable_uncouple">
+						<source>Unable to uncouple this car.</source>
+					</trans-unit>
+					<trans-unit id="exterior_uncouplerear">
+						<source>Uncoupling the rear of car number</source>
+					</trans-unit>
+					<trans-unit id="exterior_uncouplefront">
+						<source>Uncoupling the front of car number</source>
+					</trans-unit>
+					<trans-unit id="fixed_uncouple">
+						<source>This coupler is fixed, and cannot uncouple.</source>
 					</trans-unit>
 				</group>
 				<group id="score">
@@ -2232,7 +2239,7 @@
 						<target>Joystick</target>
 					</trans-unit>
 					<trans-unit id="joystick_notavailable">
-						<source>N/A</source>
+						<source>Joystick (Not currently connected)</source>
 						<target>TidakAda</target>
 					</trans-unit>
 					<trans-unit id="joystickdirection_positive">
@@ -2246,6 +2253,18 @@
 					<trans-unit id="assignment_current">
 						<source>Current assignment:</source>
 						<target>Perintah:</target>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Do you wish to use the default train?</source>
+						<target>Gunakan rangkaian yang dianjurkan?</target>
+					</trans-unit>
+					<trans-unit id="train_default_no">
+						<source>No</source>
+						<target>Tidak</target>
+					</trans-unit>
+					<trans-unit id="train_default_yes">
+						<source>Yes</source>
+						<target>Ya</target>
 					</trans-unit>
 				</group>
 				<group id="lamps">
@@ -2579,15 +2598,15 @@
 						<target>Fungsi P</target>
 					</trans-unit>
 					<trans-unit id="camera_interior">
-						<source>Switches to the train's interior view</source>
+						<source>Switches to the train&apos;s interior view</source>
 						<target>Mode interior</target>
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
-						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
+						<source>Switches to the train&apos;s interior view. However, the panel is not displayed.</source>
 						<target>Mode interior (tanpa panel)</target>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
-						<source>Switches to the train's exterior view</source>
+						<source>Switches to the train&apos;s exterior view</source>
 						<target>Mode eksterior</target>
 					</trans-unit>
 					<trans-unit id="camera_track">
@@ -2857,6 +2876,24 @@
 					<trans-unit id="raildriver_speed_units">
 						<source>Toggles the RailDriver speed display units.</source>
 						<target>Ganti satuan kecepatan di RailDriver</target>
+					</trans-unit>
+					<trans-unit id="accessibility_current_speed">
+						<source>Accessibility: Audibly announces the current speed.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_signal">
+						<source>Accessibility: Audibly announces the next signal distance and aspect.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_station">
+						<source>Accessibility: Audibly announces the the next station name and distance.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_front">
+						<source>Uncouples the front coupler for the selected car.</source>
+					</trans-unit>
+					<trans-unit id="uncouple_rear">
+						<source>Uncouples the rear coupler for the selected car.</source>
+					</trans-unit>
+					<trans-unit id="switch_menu">
+						<source>Shows the change switch menu</source>
 					</trans-unit>
 				</group>
 				<group id="keys">
@@ -3503,11 +3540,7 @@
 						<target>Linux</target>
 					</trans-unit>
 					<trans-unit id="help_controller1_textbox">
-						<source>If your non-USB controller is not providing correct input:
-
-1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller
-to separate buttons to avoid compatibility issues.
-2. Calibrate the controller from the configuration window, if necessary.</source>
+						<source>If your non-USB controller is not providing correct input:\r\n\r\n1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller to separate buttons to avoid compatibility issues.\r\n2. Calibrate the controller from the configuration window, if necessary.</source>
 						<target>Jika controller selain input USB tidak bekerja dengan baik:
 
 1. Pastikan adapter USB berfungsi. Adapter seharusnya dapat menyesuaikan tombol dengan kontroller standar
@@ -3519,19 +3552,14 @@ untuk mengatur tombol dan menghindari masalah perangkat..
 						<target>Jika joypad PS2 tidak muncul, ikuti langkah berikut:</target>
 					</trans-unit>
 					<trans-unit id="help_windows_textbox">
-						<source>1. Extract the Windows drivers.
-2. Download and run Zadig.
-3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).
-4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
+						<source>1. Extract the Windows drivers.\r\n2. Download and run Zadig.\r\n3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).\r\n4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
 						<target>1. Extract driver untuk Windows.
 2. Download dan install Zadig.
 3. Pilih file CFG yang tersedia untuk perangkat anda (&quot;Device &gt; Load Preset Device&quot;).
 4. Tekan &quot;Install Driver&quot; dan tunggu sampai selesai.</target>
 					</trans-unit>
 					<trans-unit id="help_linux_textbox">
-						<source>1. Extract the Linux udev file.
-2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).
-3. Reboot or reload udev rules manually.</source>
+						<source>1. Extract the Linux udev file.\r\n2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).\r\n3. Reboot or reload udev rules manually.</source>
 						<target>1. Extract file Linux udev.
 2. Salin ke &quot;/etc/udev/rules.d/&quot; (wajib root).
 3. Nyalakan ulang udev rules.</target>
@@ -3553,14 +3581,7 @@ untuk mengatur tombol dan menghindari masalah perangkat..
 						<target>OK</target>
 					</trans-unit>
 					<trans-unit id="help_libusb_symlink">
-						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.
-Please follow the following instructions:
-
-1. Check that the &quot;libusb-1.0&quot; package is installed.
-2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;
-3. Open the directory in the terminal.
-4. Check this location to see if &quot;libusb-1.0.so&quot; exists.
-5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.\r\nPlease follow the following instructions:\r\n\r\n1. Check that the &quot;libusb-1.0&quot; package is installed.\r\n2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;\r\n3. Open the directory in the terminal.\r\n4. Check this location to see if &quot;libusb-1.0.so&quot; exists.\r\n5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
 						<target>LibUsb mungkin hilang, atau tidak dapat digunakan dengan baik.
 Ikuti langkah berikut untuk mengatasinya:
 
@@ -3569,6 +3590,35 @@ Ikuti langkah berikut untuk mengatasinya:
 3. Buka direktori pada terminal.
 4. Cek pada folder tersebut apakah ada file &quot;libusb-1.0.so&quot;.
 5. Jika tidak ada, buat symlink dengan meng-input perintah berikut dari terminal : &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</target>
+					</trans-unit>
+					<trans-unit id="label_reverser">
+						<source>Reverser: [notch]</source>
+					</trans-unit>
+					<trans-unit id="label_a2">
+						<source>A2</source>
+					</trans-unit>
+					<trans-unit id="label_ats">
+						<source>ATS</source>
+					</trans-unit>
+				</group>
+				<group id="switchmenu">
+					<trans-unit id="title">
+						<source>Select a Switch To Change: </source>
+					</trans-unit>
+					<trans-unit id="selected">
+						<source>Selected Switch: </source>
+					</trans-unit>
+					<trans-unit id="current">
+						<source>Current Setting: </source>
+					</trans-unit>
+					<trans-unit id="distance">
+						<source>Distance from Player: </source>
+					</trans-unit>
+					<trans-unit id="zoom_in">
+						<source>Zoom In</source>
+					</trans-unit>
+					<trans-unit id="zoom_out">
+						<source>Zoom Out</source>
 					</trans-unit>
 				</group>
 			</group>
@@ -4077,8 +4127,8 @@ Ikuti langkah berikut untuk mengatasinya:
 						<target>Fitur tambahan</target>
 					</trans-unit>
 					<trans-unit id="note">
-						<source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
-						<target>Catatan: Fitur ini hanya bisa dipakai di openBVE versi minimal:</target>
+						<source>Please note: Features found on this page may require the following minimum version of OpenBVE:</source>
+						<target>Catatan: Fitur ini hanya bisa dipakai di OpenBVE versi minimal:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake">
 						<source>Locomotive Brake</source>
@@ -4196,13 +4246,10 @@ Ikuti langkah berikut untuk mengatasinya:
 							<source>Exit</source>
 						</trans-unit>
 						<trans-unit id="wrongtype">
-							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
-							<target>Anda mencoba membuka sebuah kereta. \n\n Tidak dapat membuka file ini. \n\n Gunakan perintah 'impor' untuk membuka file ini ke TrainEditor2.</target>
+							<source>You have attempted to open a train.\r\nThese cannot be opened directly-\r\nPlease use the import function to import this train into TrainEditor2.</source>
+							<target>Anda mencoba membuka sebuah kereta. \n\n Tidak dapat membuka file ini. \n\n Gunakan perintah &apos;impor&apos; untuk membuka file ini ke TrainEditor2.</target>
 						</trans-unit>
 					</group>
-					<trans-unit id="language">
-						<source>Language</source>
-					</trans-unit>
 					<group id="message">
 						<trans-unit id="new">
 							<source>Do you want to save the current file before creating a new one?</source>
@@ -4214,6 +4261,9 @@ Ikuti langkah berikut untuk mengatasinya:
 							<source>Do you want to save the current file before closing?</source>
 						</trans-unit>
 					</group>
+					<trans-unit id="language">
+						<source>Language</source>
+					</trans-unit>
 				</group>
 				<group id="navigation">
 					<trans-unit id="up">
@@ -4257,13 +4307,7 @@ Ikuti langkah berikut untuk mengatasinya:
 					</trans-unit>
 				</group>
 				<group id="general_settings">
-					<trans-unit id="name">
-						<source>General settings</source>
-					</trans-unit>
 					<group id="handle">
-						<trans-unit id="name">
-							<source>Handle</source>
-						</trans-unit>
 						<group id="handle_type">
 							<trans-unit id="name">
 								<source>HandleType</source>
@@ -4281,21 +4325,6 @@ Ikuti langkah berikut untuk mengatasinya:
 								<source>Separated (Reverser Interlocked)</source>
 							</trans-unit>
 						</group>
-						<trans-unit id="power_notches">
-							<source>PowerNotches</source>
-						</trans-unit>
-						<trans-unit id="brake_notches">
-							<source>BrakeNotches</source>
-						</trans-unit>
-						<trans-unit id="power_notch_reduce_steps">
-							<source>PowerNotchReduceSteps</source>
-						</trans-unit>
-						<trans-unit id="driver_power_notches">
-							<source>DriverPowerNotches</source>
-						</trans-unit>
-						<trans-unit id="driver_brake_notches">
-							<source>DriverBrakeNotches</source>
-						</trans-unit>
 						<group id="eb_handle_behaviour">
 							<trans-unit id="name">
 								<source>EbHandleBehaviour</source>
@@ -4331,8 +4360,35 @@ Ikuti langkah berikut untuk mengatasinya:
 								<target>Blocking</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Handle</source>
+						</trans-unit>
+						<trans-unit id="power_notches">
+							<source>PowerNotches</source>
+						</trans-unit>
+						<trans-unit id="brake_notches">
+							<source>BrakeNotches</source>
+						</trans-unit>
+						<trans-unit id="power_notch_reduce_steps">
+							<source>PowerNotchReduceSteps</source>
+						</trans-unit>
+						<trans-unit id="driver_power_notches">
+							<source>DriverPowerNotches</source>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches">
+							<source>DriverBrakeNotches</source>
+						</trans-unit>
 						<trans-unit id="loco_brake_notches">
 							<source>LocoBrakeNotches</source>
+						</trans-unit>
+						<trans-unit id="brake_notches_error_message">
+							<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+						</trans-unit>
+						<trans-unit id="driver_power_notches_error_message">
+							<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches_error_message">
+							<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
 						</trans-unit>
 					</group>
 					<group id="cab">
@@ -4353,9 +4409,6 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 					</group>
 					<group id="device">
-						<trans-unit id="name">
-							<source>Device</source>
-						</trans-unit>
 						<group id="ats">
 							<trans-unit id="name">
 								<source>Ats</source>
@@ -4386,15 +4439,6 @@ Ikuti langkah berikut untuk mengatasinya:
 								<source>Automatic switching</source>
 							</trans-unit>
 						</group>
-						<trans-unit id="eb">
-							<source>Eb</source>
-						</trans-unit>
-						<trans-unit id="const_speed">
-							<source>ConstSpeed</source>
-						</trans-unit>
-						<trans-unit id="hold_brake">
-							<source>HoldBrake</source>
-						</trans-unit>
 						<group id="re_adhesion_device">
 							<trans-unit id="name">
 								<source>ReAdhesionDevice</source>
@@ -4446,6 +4490,18 @@ Ikuti langkah berikut untuk mengatasinya:
 								<source>Manual</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Device</source>
+						</trans-unit>
+						<trans-unit id="eb">
+							<source>Eb</source>
+						</trans-unit>
+						<trans-unit id="const_speed">
+							<source>ConstSpeed</source>
+						</trans-unit>
+						<trans-unit id="hold_brake">
+							<source>HoldBrake</source>
+						</trans-unit>
 						<trans-unit id="door_width">
 							<source>DoorWidth</source>
 						</trans-unit>
@@ -4453,12 +4509,28 @@ Ikuti langkah berikut untuk mengatasinya:
 							<source>DoorMaxTolerance</source>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>General settings</source>
+					</trans-unit>
 				</group>
 				<group id="car_settings">
-					<trans-unit id="name">
-						<source>Car settings</source>
-					</trans-unit>
 					<group id="general">
+						<group id="axles">
+							<trans-unit id="name">
+								<source>Axles</source>
+							</trans-unit>
+							<trans-unit id="front">
+								<source>FrontAxle</source>
+								<target>Ujung roda depan</target>
+							</trans-unit>
+							<trans-unit id="rear">
+								<source>RearAxle</source>
+								<target>Ujung roda belakang</target>
+							</trans-unit>
+							<trans-unit id="mustbe_less">
+								<source>RearAxle must be less than FrontAxle.</source>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
 							<source>General</source>
 						</trans-unit>
@@ -4495,19 +4567,6 @@ Ikuti langkah berikut untuk mengatasinya:
 							<source>DefinedAxles</source>
 							<target>Atur ujung roda</target>
 						</trans-unit>
-						<group id="axles">
-							<trans-unit id="name">
-								<source>Axles</source>
-							</trans-unit>
-							<trans-unit id="front">
-								<source>FrontAxle</source>
-								<target>Ujung roda depan</target>
-							</trans-unit>
-							<trans-unit id="rear">
-								<source>RearAxle</source>
-								<target>Ujung roda belakang</target>
-							</trans-unit>
-						</group>
 						<trans-unit id="front_bogie">
 							<source>FrontBogie</source>
 							<target>Bogie depan</target>
@@ -4570,9 +4629,6 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 					</group>
 					<group id="brake">
-						<trans-unit id="name">
-							<source>Brake</source>
-						</trans-unit>
 						<group id="brake_type">
 							<trans-unit id="name">
 								<source>BrakeType</source>
@@ -4616,6 +4672,9 @@ Ikuti langkah berikut untuk mengatasinya:
 								<source>Delay-including control</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Brake</source>
+						</trans-unit>
 						<trans-unit id="brake_control_speed">
 							<source>BrakeControlSpeed</source>
 							<target>Kecepatan kontrol rem</target>
@@ -4642,6 +4701,17 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 					</group>
 					<group id="delay">
+						<group id="edit_entry">
+							<trans-unit id="name">
+								<source>Edit entry</source>
+							</trans-unit>
+							<trans-unit id="up">
+								<source>Up</source>
+							</trans-unit>
+							<trans-unit id="down">
+								<source>Down</source>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
 							<source>Delay</source>
 						</trans-unit>
@@ -4660,15 +4730,15 @@ Ikuti langkah berikut untuk mengatasinya:
 						<trans-unit id="value">
 							<source>Value</source>
 						</trans-unit>
+						<trans-unit id="electric_brake">
+							<source>ElectricBrake</source>
+						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Car settings</source>
+					</trans-unit>
 				</group>
 				<group id="acceleration_settings">
-					<trans-unit id="name">
-						<source>Acceleration settings</source>
-					</trans-unit>
-					<trans-unit id="notch">
-						<source>Notch</source>
-					</trans-unit>
 					<group id="parameter">
 						<trans-unit id="name">
 							<source>Parameter</source>
@@ -4734,11 +4804,14 @@ Ikuti langkah berikut untuk mengatasinya:
 							<source>Reset</source>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Acceleration settings</source>
+					</trans-unit>
+					<trans-unit id="notch">
+						<source>Notch</source>
+					</trans-unit>
 				</group>
 				<group id="motor_sound_settings">
-					<trans-unit id="name">
-						<source>Motor sound settings</source>
-					</trans-unit>
 					<group id="menu">
 						<group id="edit">
 							<trans-unit id="name">
@@ -4880,9 +4953,6 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 					</group>
 					<group id="play_setting">
-						<trans-unit id="name">
-							<source>Playback setting</source>
-						</trans-unit>
 						<group id="source">
 							<trans-unit id="name">
 								<source>Sound source setting</source>
@@ -4908,13 +4978,16 @@ Ikuti langkah berikut untuk mengatasinya:
 								<target>Kec. tetap</target>
 							</trans-unit>
 							<trans-unit id="acceleration">
-								<source>Acceleration:</source>
+								<source>Acceleration</source>
 							</trans-unit>
 							<trans-unit id="swap">
 								<source>Swap</source>
 								<target>Tukar</target>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Playback setting</source>
+						</trans-unit>
 						<trans-unit id="play">
 							<source>Playback</source>
 							<target>Playback</target>
@@ -5011,11 +5084,11 @@ Ikuti langkah berikut untuk mengatasinya:
 							<target>Ada titik yang sama di posisi x, timpa saja?</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Motor sound settings</source>
+					</trans-unit>
 				</group>
 				<group id="coupler_settings">
-					<trans-unit id="name">
-						<source>Coupler settings</source>
-					</trans-unit>
 					<group id="general">
 						<trans-unit id="name">
 							<source>General</source>
@@ -5029,12 +5102,34 @@ Ikuti langkah berikut untuk mengatasinya:
 							<target>Maks</target>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Coupler settings</source>
+					</trans-unit>
 				</group>
 				<group id="panel_settings">
-					<trans-unit id="name">
-						<source>Panel settings</source>
-					</trans-unit>
 					<group id="this">
+						<group id="center">
+							<trans-unit id="name">
+								<source>Center origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<group id="origin">
+							<trans-unit id="name">
+								<source>Track origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
 						<trans-unit id="name">
 							<source>This</source>
 						</trans-unit>
@@ -5067,9 +5162,56 @@ Ikuti langkah berikut untuk mengatasinya:
 							<source>TransparentColor</source>
 							<target>Warna transparan</target>
 						</trans-unit>
-						<group id="center">
+					</group>
+					<group id="screen">
+						<trans-unit id="name">
+							<source>Screen</source>
+						</trans-unit>
+						<trans-unit id="number">
+							<source>Number</source>
+							<target>Angka</target>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+							<target>Layer</target>
+						</trans-unit>
+					</group>
+					<group id="pilot_lamp">
+						<group id="location">
 							<trans-unit id="name">
-								<source>Center</source>
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>PilotLamp</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+							<target>Subjek</target>
+						</trans-unit>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="needle">
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
@@ -5089,70 +5231,12 @@ Ikuti langkah berikut untuk mengatasinya:
 								<source>Y</source>
 							</trans-unit>
 						</group>
-					</group>
-					<group id="screen">
-						<trans-unit id="name">
-							<source>Screen</source>
-						</trans-unit>
-						<trans-unit id="number">
-							<source>Number</source>
-							<target>Angka</target>
-						</trans-unit>
-						<trans-unit id="layer">
-							<source>Layer</source>
-							<target>Layer</target>
-						</trans-unit>
-					</group>
-					<group id="pilot_lamp">
-						<trans-unit id="name">
-							<source>PilotLamp</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-							<target>Subjek</target>
-						</trans-unit>
-						<group id="location">
-							<trans-unit id="name">
-								<source>Location</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
-						<trans-unit id="daytime_image">
-							<source>DaytimeImage</source>
-						</trans-unit>
-						<trans-unit id="nighttime_image">
-							<source>NighttimeImage</source>
-						</trans-unit>
-						<trans-unit id="transparent_color">
-							<source>TransparentColor</source>
-						</trans-unit>
-						<trans-unit id="layer">
-							<source>Layer</source>
-						</trans-unit>
-					</group>
-					<group id="needle">
 						<trans-unit id="name">
 							<source>Needle</source>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
 						</trans-unit>
-						<group id="location">
-							<trans-unit id="name">
-								<source>Location</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
 						<trans-unit id="defined_radius">
 							<source>DefinedRadius</source>
 							<target>DefinedRadius</target>
@@ -5178,17 +5262,6 @@ Ikuti langkah berikut untuk mengatasinya:
 							<source>DefinedOrigin</source>
 							<target>DefinedOrigin</target>
 						</trans-unit>
-						<group id="origin">
-							<trans-unit id="name">
-								<source>Origin</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
 						<trans-unit id="initial_angle">
 							<source>InitialAngle</source>
 							<target>Rotasi Awal</target>
@@ -5234,12 +5307,6 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 					</group>
 					<group id="digital_number">
-						<trans-unit id="name">
-							<source>DigitalNumber</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5251,6 +5318,12 @@ Ikuti langkah berikut untuk mengatasinya:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>DigitalNumber</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
 						</trans-unit>
@@ -5269,12 +5342,6 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 					</group>
 					<group id="digital_gauge">
-						<trans-unit id="name">
-							<source>DigitalGauge</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5286,6 +5353,12 @@ Ikuti langkah berikut untuk mengatasinya:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>DigitalGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
 						<trans-unit id="radius">
 							<source>Radius</source>
 						</trans-unit>
@@ -5313,12 +5386,6 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 					</group>
 					<group id="linear_gauge">
-						<trans-unit id="name">
-							<source>LinearGauge</source>
-						</trans-unit>
-						<trans-unit id="subject">
-							<source>Subject</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5330,6 +5397,23 @@ Ikuti langkah berikut untuk mengatasinya:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<group id="direction">
+							<trans-unit id="name">
+								<source>Direction</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>LinearGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
 						</trans-unit>
@@ -5345,17 +5429,6 @@ Ikuti langkah berikut untuk mengatasinya:
 						<trans-unit id="maximum">
 							<source>Maximum</source>
 						</trans-unit>
-						<group id="direction">
-							<trans-unit id="name">
-								<source>Direction</source>
-							</trans-unit>
-							<trans-unit id="x">
-								<source>X</source>
-							</trans-unit>
-							<trans-unit id="y">
-								<source>Y</source>
-							</trans-unit>
-						</group>
 						<trans-unit id="width">
 							<source>Width</source>
 						</trans-unit>
@@ -5364,9 +5437,6 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 					</group>
 					<group id="timetable">
-						<trans-unit id="name">
-							<source>Timetable</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5378,6 +5448,9 @@ Ikuti langkah berikut untuk mengatasinya:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Timetable</source>
+						</trans-unit>
 						<trans-unit id="height">
 							<source>Height</source>
 						</trans-unit>
@@ -5392,9 +5465,6 @@ Ikuti langkah berikut untuk mengatasinya:
 						</trans-unit>
 					</group>
 					<group id="touch">
-						<trans-unit id="name">
-							<source>Touch</source>
-						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
@@ -5417,6 +5487,9 @@ Ikuti langkah berikut untuk mengatasinya:
 								<source>Y</source>
 							</trans-unit>
 						</group>
+						<trans-unit id="name">
+							<source>Touch</source>
+						</trans-unit>
 						<trans-unit id="jump_screen">
 							<source>JumpScreen</source>
 							<target>JumpScreen</target>
@@ -5432,9 +5505,128 @@ Ikuti langkah berikut untuk mengatasinya:
 							<source>CommandOption</source>
 							<target>Opsi perintah</target>
 						</trans-unit>
+						<trans-unit id="sound_command">
+							<source>Sound and command</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
 					</group>
+					<group id="subject">
+						<trans-unit id="name">
+							<source>Subject</source>
+						</trans-unit>
+						<trans-unit id="base">
+							<source>Base</source>
+						</trans-unit>
+						<trans-unit id="baseoption">
+							<source>Base option</source>
+						</trans-unit>
+						<trans-unit id="suffix">
+							<source>Suffix</source>
+						</trans-unit>
+						<trans-unit id="suffixoption">
+							<source>Suffix option</source>
+						</trans-unit>
+					</group>
+					<group id="sound_command">
+						<group id="tree">
+							<trans-unit id="touch_element">
+								<source>Touch element</source>
+							</trans-unit>
+							<trans-unit id="sounds">
+								<source>Sounds</source>
+							</trans-unit>
+							<trans-unit id="commands">
+								<source>Commands</source>
+							</trans-unit>
+						</group>
+						<group id="edit_entry">
+							<group id="sound">
+								<trans-unit id="index">
+									<source>Index</source>
+								</trans-unit>
+							</group>
+							<group id="command">
+								<trans-unit id="name">
+									<source>Key</source>
+								</trans-unit>
+								<trans-unit id="option">
+									<source>Option</source>
+								</trans-unit>
+							</group>
+							<trans-unit id="name">
+								<source>Edit entry</source>
+							</trans-unit>
+							<trans-unit id="sound">
+								<source>Sound</source>
+							</trans-unit>
+							<trans-unit id="command">
+								<source>Command</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>Sound and command</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="name">
+						<source>Panel settings</source>
+					</trans-unit>
 				</group>
 				<group id="sound_settings">
+					<group id="edit_entry">
+						<group id="section">
+							<trans-unit id="name">
+								<source>Section select</source>
+							</trans-unit>
+						</group>
+						<group id="key">
+							<trans-unit id="name">
+								<source>Key type select</source>
+							</trans-unit>
+						</group>
+						<group id="value">
+							<group id="position">
+								<trans-unit id="name">
+									<source>Position</source>
+								</trans-unit>
+								<trans-unit id="x">
+									<source>X</source>
+								</trans-unit>
+								<trans-unit id="y">
+									<source>Y</source>
+								</trans-unit>
+								<trans-unit id="z">
+									<source>Z</source>
+								</trans-unit>
+							</group>
+							<trans-unit id="name">
+								<source>Input value</source>
+							</trans-unit>
+							<trans-unit id="filename">
+								<source>Filename</source>
+							</trans-unit>
+							<trans-unit id="radius">
+								<source>Radius</source>
+							</trans-unit>
+							<trans-unit id="position">
+								<source>Position setting</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="name">
+							<source>Edit entry</source>
+						</trans-unit>
+					</group>
+					<group id="message">
+						<trans-unit id="empty_filename">
+							<source>File name has not been entered.</source>
+							<target>Nama file belum ditambahkan.</target>
+						</trans-unit>
+						<trans-unit id="key_exist">
+							<source>The specified key is already set.</source>
+							<target>Tombol sudah dipakai.</target>
+						</trans-unit>
+					</group>
 					<trans-unit id="name">
 						<source>Sound settings</source>
 					</trans-unit>
@@ -5452,64 +5644,8 @@ Ikuti langkah berikut untuk mengatasinya:
 					<trans-unit id="radius">
 						<source>Radius</source>
 					</trans-unit>
-					<group id="edit_entry">
-						<trans-unit id="name">
-							<source>Edit entry</source>
-						</trans-unit>
-						<group id="section">
-							<trans-unit id="name">
-								<source>Section select</source>
-							</trans-unit>
-						</group>
-						<group id="key">
-							<trans-unit id="name">
-								<source>Key type select</source>
-							</trans-unit>
-						</group>
-						<group id="value">
-							<trans-unit id="name">
-								<source>Input value</source>
-							</trans-unit>
-							<trans-unit id="filename">
-								<source>Filename</source>
-							</trans-unit>
-							<trans-unit id="radius">
-								<source>Radius</source>
-							</trans-unit>
-							<trans-unit id="position">
-								<source>Position setting</source>
-							</trans-unit>
-							<group id="position">
-								<trans-unit id="name">
-									<source>Position</source>
-								</trans-unit>
-								<trans-unit id="x">
-									<source>x coordinate</source>
-								</trans-unit>
-								<trans-unit id="y">
-									<source>y coordinate</source>
-								</trans-unit>
-								<trans-unit id="z">
-									<source>z coordinate</source>
-								</trans-unit>
-							</group>
-						</group>
-					</group>
-					<group id="message">
-						<trans-unit id="empty_filename">
-							<source>File name has not been entered.</source>
-							<target>Nama file belum ditambahkan.</target>
-						</trans-unit>
-						<trans-unit id="key_exist">
-							<source>The specified key is already set.</source>
-							<target>Tombol sudah dipakai.</target>
-						</trans-unit>
-					</group>
 				</group>
 				<group id="status">
-					<trans-unit id="name">
-						<source>Status</source>
-					</trans-unit>
 					<group id="menu">
 						<trans-unit id="error">
 							<source>Error</source>
@@ -5526,6 +5662,9 @@ Ikuti langkah berikut untuk mengatasinya:
 							<source>Clear</source>
 						</trans-unit>
 					</group>
+					<trans-unit id="name">
+						<source>Status</source>
+					</trans-unit>
 					<trans-unit id="level">
 						<source>Level</source>
 						<target>Level</target>
@@ -5562,8 +5701,84 @@ Ikuti langkah berikut untuk mengatasinya:
 						<target>This value must be a {0}floating-point number.</target>
 					</trans-unit>
 					<trans-unit id="invalid_color">
-						<source>invalid_color</source>
+						<source>Invalid HEX color</source>
 						<target>Warna_tidak_valid</target>
+					</trans-unit>
+					<trans-unit id="number_exist">
+						<source>The specified number is already set.</source>
+					</trans-unit>
+					<trans-unit id="mustbe_greater_than">
+						<source>Max must be greater than or equal to Min.</source>
+					</trans-unit>
+					<trans-unit id="mustbe_less_than">
+						<source>Min must be less than the Max.</source>
+					</trans-unit>
+				</group>
+				<group id="items">
+					<trans-unit id="filename">
+						<source>Filename</source>
+					</trans-unit>
+					<trans-unit id="folder">
+						<source>Folder</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>Type</source>
+					</trans-unit>
+					<trans-unit id="button_ok">
+						<source>OK</source>
+					</trans-unit>
+				</group>
+				<group id="import_export">
+					<group id="train">
+						<trans-unit id="name">
+							<source>Train setting file</source>
+						</trans-unit>
+						<trans-unit id="old_format">
+							<source>Old format</source>
+						</trans-unit>
+						<trans-unit id="traindat">
+							<source>Train.dat</source>
+						</trans-unit>
+						<trans-unit id="extensionscfg">
+							<source>Extensions.cfg</source>
+						</trans-unit>
+					</group>
+					<group id="panel">
+						<trans-unit id="name">
+							<source>Panel Setting File</source>
+						</trans-unit>
+						<trans-unit id="panel2cfg">
+							<source>Panel2.cfg</source>
+						</trans-unit>
+						<trans-unit id="panelxml">
+							<source>Panel.xml</source>
+						</trans-unit>
+					</group>
+					<group id="sound">
+						<trans-unit id="name">
+							<source>Sound setting file</source>
+						</trans-unit>
+						<trans-unit id="no_setting_file">
+							<source>No setting file</source>
+						</trans-unit>
+						<trans-unit id="soundcfg">
+							<source>Sound.cfg</source>
+						</trans-unit>
+						<trans-unit id="soundxml">
+							<source>Sound.xml</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="import_name">
+						<source>Import</source>
+					</trans-unit>
+					<trans-unit id="export_name">
+						<source>Export</source>
+					</trans-unit>
+					<trans-unit id="folder">
+						<source>Folder</source>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>Type</source>
 					</trans-unit>
 				</group>
 			</group>

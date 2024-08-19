@@ -112,7 +112,7 @@ namespace Route.Bve5
 			int CurrentTrackLength = 0;
 			int PreviousFogElement = -1;
 			int PreviousFogEvent = -1;
-			Fog PreviousFog = new Fog(Plugin.CurrentRoute.NoFogStart, Plugin.CurrentRoute.NoFogEnd, Color24.Grey, -InterpolateInterval);
+			Fog PreviousFog = new Fog(Plugin.CurrentRoute.NoFogStart, Plugin.CurrentRoute.NoFogEnd, Color24.Grey, -InterpolateInterval, false);
 			Plugin.CurrentRoute.Tracks[0].Elements = new TrackElement[256];
 			Plugin.CurrentRoute.Tracks[0].Direction = TrackDirection.Forwards;
 			for (int j = 0; j < Data.TrackKeyList.Count; j++)
@@ -404,7 +404,6 @@ namespace Route.Bve5
 							for (int k = 0; k < Data.Blocks[i].FreeObj[railKey].Count; k++)
 							{
 								string key = Data.Blocks[i].FreeObj[railKey][k].Key;
-								ObjectTransformType type = Data.Blocks[i].FreeObj[railKey][k].Type;
 								double dx = Data.Blocks[i].FreeObj[railKey][k].Position.X;
 								double dy = Data.Blocks[i].FreeObj[railKey][k].Position.Y;
 								double dz = Data.Blocks[i].FreeObj[railKey][k].Position.Z;
@@ -435,7 +434,6 @@ namespace Route.Bve5
 							{
 								double nextStartingDistance = StartingDistance + BlockInterval;
 								string p = Data.Blocks[i].Cracks[k].PrimaryRail;
-								double py0 = Data.Blocks[i].Rails[p].Position.Y;
 								double px0 = Data.Blocks[i].Rails[p].Position.X;
 								double pRadiusH = Data.Blocks[i].Rails[p].RadiusH;
 								double px1 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Rails[p].Position.X : px0;
@@ -486,9 +484,6 @@ namespace Route.Bve5
 						// signals
 						if (Data.Blocks[i].Signals.Length > j && Data.Blocks[i].Signals[j] != null)
 						{
-							double x = Data.Blocks[i].Rails[railKey].Position.X;
-							double y = Data.Blocks[i].Rails[railKey].Position.Y;
-
 							for (int k = 0; k < Data.Blocks[i].Signals[j].Count; k++)
 							{
 								string key = Data.Blocks[i].Signals[j][k].Key;
@@ -562,11 +557,9 @@ namespace Route.Bve5
 				if (Data.Blocks[i].Turn != 0.0)
 				{
 					double ag = -Math.Atan(Data.Blocks[i].Turn);
-					double cosag = Math.Cos(ag);
-					double sinag = Math.Sin(ag);
-					Direction.Rotate(cosag, sinag);
-					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection.RotatePlane(cosag, sinag);
-					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide.RotatePlane(cosag, sinag);
+					Direction.Rotate(ag);
+					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection.RotatePlane(ag);
+					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide.RotatePlane(ag);
 					Plugin.CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(Plugin.CurrentRoute.Tracks[0].Elements[n].WorldDirection, Plugin.CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				}
 
@@ -592,10 +585,7 @@ namespace Route.Bve5
 						Position2.X += Direction.X * c;
 						Position2.Y += h;
 						Position2.Z += Direction.Y * c;
-						if (a != 0.0)
-						{
-							Direction2.Rotate(Math.Cos(-a), Math.Sin(-a));
-						}
+						Direction2.Rotate(-a);
 
 						double StartingDistance2 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].StartingDistance : StartingDistance + InterpolateInterval;
 						double EndingDistance2 = i < Data.Blocks.Count - 2 ? Data.Blocks[i + 2].StartingDistance : StartingDistance2 + InterpolateInterval;
@@ -604,13 +594,7 @@ namespace Route.Bve5
 						double CurveRadius2 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].CurrentTrackState.CurveRadius : 0.0;
 						double Pitch2 = i < Data.Blocks.Count - 1 ? Data.Blocks[i + 1].Pitch : 0.0;
 
-						if (Turn2 != 0.0)
-						{
-							double ag = -Math.Atan(Turn2);
-							double cosag = Math.Cos(ag);
-							double sinag = Math.Sin(ag);
-							Direction2.Rotate(cosag, sinag);
-						}
+						Direction2.Rotate(-Math.Atan(Turn2));
 
 						CalcTransformation(CurveRadius2, Pitch2, BlockInterval2, ref Direction2, out _, out _, out _);
 
@@ -621,9 +605,7 @@ namespace Route.Bve5
 						Vector3 r = new Vector3(pos2.X - pos.X, pos2.Y - pos.Y, pos2.Z - pos.Z);
 						r.Normalize();
 
-						Transformation RailTransformation = new Transformation();
-						RailTransformation.Z = r;
-						RailTransformation.X = new Vector3(r.Z, 0.0, -r.X);
+						Transformation RailTransformation = new Transformation(r, Vector3.Down, new Vector3(r.Z, 0.0, -r.X));
 						Normalize(ref RailTransformation.X.X, ref RailTransformation.X.Z);
 						RailTransformation.Y = Vector3.Cross(RailTransformation.Z, RailTransformation.X);
 						RailTransformation = new Transformation(RailTransformation, 0.0, 0.0, Math.Atan(Data.Blocks[i].Rails[railKey].CurveCant));
@@ -664,10 +646,7 @@ namespace Route.Bve5
 				Position.X += Direction.X * c;
 				Position.Y += h;
 				Position.Z += Direction.Y * c;
-				if (a != 0.0)
-				{
-					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
-				}
+				Direction.Rotate(-a);
 			}
 
 			// transponders
