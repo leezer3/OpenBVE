@@ -1695,5 +1695,12 @@ namespace LibRender2
 		{
 
 		}
+
+		/// <summary>Sets the window state</summary>
+		/// <param name="windowState">The new window state</param>
+		public virtual void SetWindowState(OpenTK.WindowState windowState)
+		{
+
+		}
 	}
 }

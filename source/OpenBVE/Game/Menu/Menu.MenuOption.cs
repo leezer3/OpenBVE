@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using LibRender2.Menu;
 using LibRender2.Screens;
 using OpenBveApi.Graphics;
 using OpenTK;
@@ -11,7 +12,7 @@ namespace OpenBve
 	{
 		private class MenuOption : MenuEntry
 		{
-			private readonly MenuOptionType Type;
+			private readonly OptionType Type;
 
 			/// <summary>Holds the entries for all options</summary>
 			private readonly object[] Entries;
@@ -21,14 +22,14 @@ namespace OpenBve
 
 			private int CurrentlySelectedOption;
 
-			internal MenuOption(MenuOptionType type, string text, object[] entries)
+			internal MenuOption(OptionType type, string text, object[] entries)
 			{
 				Type = type;
 				Text = text;
 				Entries = entries;
 				switch (type)
 				{
-					case MenuOptionType.ScreenResolution:
+					case OptionType.ScreenResolution:
 						if (entries is ScreenResolution[] castEntries)
 						{
 							for (int i = 0; i < castEntries.Length; i++)
@@ -46,13 +47,13 @@ namespace OpenBve
 						}
 
 						break;
-					case MenuOptionType.FullScreen:
+					case OptionType.FullScreen:
 						CurrentlySelectedOption = Interface.CurrentOptions.FullscreenMode ? 0 : 1;
 						return;
-					case MenuOptionType.Interpolation:
+					case OptionType.Interpolation:
 						CurrentlySelectedOption = (int)Interface.CurrentOptions.Interpolation;
 						return;
-					case MenuOptionType.AnisotropicLevel:
+					case OptionType.AnisotropicLevel:
 						for (int i = 0; i < Entries.Length; i++)
 						{
 							int level = int.Parse(entries[i] as string ?? string.Empty, NumberStyles.Integer);
@@ -63,7 +64,7 @@ namespace OpenBve
 							}
 						}
 						break;
-					case MenuOptionType.AntialiasingLevel:
+					case OptionType.AntialiasingLevel:
 						for (int i = 0; i < Entries.Length; i++)
 						{
 							int level = int.Parse(entries[i] as string ?? string.Empty, NumberStyles.Integer);
@@ -74,7 +75,7 @@ namespace OpenBve
 							}
 						}
 						break;
-					case MenuOptionType.ViewingDistance:
+					case OptionType.ViewingDistance:
 						switch (Interface.CurrentOptions.ViewingDistance)
 						{
 							case 400:
@@ -116,7 +117,7 @@ namespace OpenBve
 				//Apply
 				switch (Type)
 				{
-					case MenuOptionType.ScreenResolution:
+					case OptionType.ScreenResolution:
 						if (!(CurrentOption is ScreenResolution res))
 						{
 							return;
@@ -139,9 +140,7 @@ namespace OpenBve
 										//HACK: some resolutions will result in openBVE not appearing on screen in full screen, so restore resolution then change resolution
 										DisplayDevice.Default.RestoreResolution();
 										DisplayDevice.Default.ChangeResolution(currentResolution);
-										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
-										Program.currentGameWindow.X = 0;
-										Program.currentGameWindow.Y = 0;
+										Program.Renderer.SetWindowState(WindowState.Fullscreen);
 										Program.currentGameWindow.Width = (int)(currentResolution.Width * DisplayDevice.Default.ScaleFactor.X);
 										Program.currentGameWindow.Height = (int)(currentResolution.Height * DisplayDevice.Default.ScaleFactor.Y);
 										Program.Renderer.Screen.Width = Program.currentGameWindow.Width;
@@ -156,11 +155,11 @@ namespace OpenBve
 							}
 						}
 						break;
-					case MenuOptionType.FullScreen:
+					case OptionType.FullScreen:
 						Interface.CurrentOptions.FullscreenMode = !Interface.CurrentOptions.FullscreenMode;
-						if (Program.currentGameWindow.WindowState == WindowState.Fullscreen)
+						if (Interface.CurrentOptions.FullscreenMode)
 						{
-							Program.currentGameWindow.WindowState = WindowState.Normal;
+							Program.Renderer.SetWindowState(WindowState.Fullscreen);
 							DisplayDevice.Default.RestoreResolution();
 						}
 						else
@@ -177,9 +176,7 @@ namespace OpenBve
 										//HACK: some resolutions will result in openBVE not appearing on screen in full screen, so restore resolution then change resolution
 										DisplayDevice.Default.RestoreResolution();
 										DisplayDevice.Default.ChangeResolution(currentResolution);
-										Program.currentGameWindow.WindowState = WindowState.Fullscreen;
-										Program.currentGameWindow.X = 0;
-										Program.currentGameWindow.Y = 0;
+										Program.Renderer.SetWindowState(WindowState.Fullscreen);
 										Program.currentGameWindow.Width = (int)(currentResolution.Width * DisplayDevice.Default.ScaleFactor.X);
 										Program.currentGameWindow.Height = (int)(currentResolution.Height * DisplayDevice.Default.ScaleFactor.Y);
 										Program.Renderer.Screen.Width = Program.currentGameWindow.Width;
@@ -194,17 +191,17 @@ namespace OpenBve
 							}
 						}
 						break;
-					case MenuOptionType.Interpolation:
+					case OptionType.Interpolation:
 						Interface.CurrentOptions.Interpolation = (InterpolationMode)CurrentlySelectedOption;
 						break;
 					//HACK: We can't store plain ints due to to boxing, so store strings and parse instead
-					case MenuOptionType.AnisotropicLevel:
+					case OptionType.AnisotropicLevel:
 						Interface.CurrentOptions.AnisotropicFilteringLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
 						break;
-					case MenuOptionType.AntialiasingLevel:
+					case OptionType.AntialiasingLevel:
 						Interface.CurrentOptions.AntiAliasingLevel = int.Parse((string)CurrentOption, NumberStyles.Integer);
 						break;
-					case MenuOptionType.ViewingDistance:
+					case OptionType.ViewingDistance:
 						Interface.CurrentOptions.ViewingDistance = int.Parse((string)CurrentOption, NumberStyles.Integer);
 						break;
 					

@@ -202,14 +202,14 @@ namespace OpenBve
 			    {
                     MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","fullscreen_switch1"}) + Environment.NewLine +
                         Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","fullscreen_switch2"}), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                    Program.Renderer.Screen.Fullscreen = false;
-			    }
+					Program.Renderer.SetWindowState(WindowState.Fullscreen);
+				}
 			}
 			else
 			{
                 DisplayDevice.Default.RestoreResolution();
-                Program.currentGameWindow.WindowState = WindowState.Normal;
-                Program.currentGameWindow.Width = Interface.CurrentOptions.WindowWidth;
+				Program.Renderer.SetWindowState(WindowState.Normal);
+				Program.currentGameWindow.Width = Interface.CurrentOptions.WindowWidth;
                 Program.currentGameWindow.Height = Interface.CurrentOptions.WindowHeight;
 
                 Program.Renderer.Screen.Width = Interface.CurrentOptions.WindowWidth;

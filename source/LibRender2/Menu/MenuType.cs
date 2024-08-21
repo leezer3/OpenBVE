@@ -1,4 +1,4 @@
-﻿namespace OpenBve
+﻿namespace LibRender2.Menu
 {
 	/// <summary>The list of possible sub-menu types</summary>
 	public enum MenuType
@@ -43,6 +43,6 @@
 		Options,
 		/// <summary>A menu allowing switch settings to be changed</summary>
 		ChangeSwitch
-		
+
 	}
 }

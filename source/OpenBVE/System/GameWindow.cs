@@ -11,6 +11,7 @@ using System.Threading;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Cameras;
+using LibRender2.Menu;
 using LibRender2.Overlays;
 using LibRender2.Screens;
 using LibRender2.Trains;
