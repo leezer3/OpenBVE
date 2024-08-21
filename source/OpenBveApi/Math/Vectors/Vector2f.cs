@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable IDE0064
+using System;
 
 namespace OpenBveApi.Math {
 	/// <summary>Represents a two-dimensional vector.</summary>
