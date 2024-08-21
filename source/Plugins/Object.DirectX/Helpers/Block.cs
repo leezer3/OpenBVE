@@ -41,7 +41,7 @@ namespace OpenBve.Formats.DirectX
 		/// <remarks>Normally blank</remarks>
 		public string Label;
 
-		public int FloatingPointSize;
+		public readonly int FloatingPointSize;
 
 		/// <summary>Reads an integer from the block</summary>
 		public abstract int ReadUInt();
@@ -64,16 +64,6 @@ namespace OpenBve.Formats.DirectX
 
 		/// <summary>Returns the position of the reader within the block</summary>
 		public abstract long Position();
-
-		/// <summary>Creates a new block from the supplied byte array</summary>
-		/// <param name="bytes">The block of data</param>
-		/// <param name="token">The token for the new block</param>
-		/// <returns>The new block</returns>
-		/// <remarks>Always creates a BinaryBlock</remarks>
-		public static Block ReadBlock(byte[] bytes, TemplateID token)
-		{
-			return new BinaryBlock(bytes, token);
-		}
 
 		/// <summary>Creates a new block from the supplied string</summary>
 		/// <param name="text">The string</param>
@@ -101,6 +91,11 @@ namespace OpenBve.Formats.DirectX
 		/// <returns>The new block</returns>
 		/// <remarks>The type of the new block will always match that of the base block</remarks>
 		public abstract Block ReadSubBlock();
+
+		public Block(int floatingPointSize = -1)
+		{
+			FloatingPointSize = floatingPointSize;
+		}
 	}
 
 	/// <inheritdoc />
@@ -110,13 +105,13 @@ namespace OpenBve.Formats.DirectX
 
 		private int currentPosition;
 
-		public TextualBlock(string text)
+		public TextualBlock(string text) : base(-1)
 		{
 			myText = text;
 			currentPosition = 0;
 		}
 
-		public TextualBlock(string text, TemplateID token)
+		public TextualBlock(string text, TemplateID token) : base(-1)
 		{
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < text.Length; i++)
@@ -597,52 +592,8 @@ namespace OpenBve.Formats.DirectX
 		private readonly List<double> cachedFloats = new List<double>();
 		private readonly List<string> cachedStrings = new List<string>();
 
-		public BinaryBlock(byte[] bytes, TemplateID token)
+		public BinaryBlock(byte[] bytes, int floatingPointSize) : base(floatingPointSize)
 		{
-			myStream = new MemoryStream(bytes);
-			myReader = new BinaryReader(myStream);
-			while (myStream.Position < myStream.Length)
-			{
-				string currentToken = getNextToken();
-				switch (currentToken)
-				{
-					case "int_list":
-						int integerCount = (int) myReader.ReadInt32();
-						for (int i = 0; i < integerCount; i++)
-						{
-							cachedIntegers.Add(myReader.ReadInt16());
-						}
-						myStream.Position += integerCount * 4;
-						break;
-					case "float_list":
-						int floatCount = (int) myReader.ReadInt32();
-						switch (FloatingPointSize)
-						{
-							case 32:
-								for (int i = 0; i < floatCount; i++)
-								{
-									cachedFloats.Add(myReader.ReadSingle());
-								}
-
-								break;
-							case 64:
-								for (int i = 0; i < floatCount; i++)
-								{
-									cachedFloats.Add(myReader.ReadDouble());
-								}
-								break;
-							default:
-								throw new Exception("Unsupported Floating Point Size");
-						}
-						break;
-
-				}
-			}
-		}
-
-		public BinaryBlock(byte[] bytes, int floatingPointSize)
-		{
-			FloatingPointSize = floatingPointSize;
 			myStream = new MemoryStream(bytes);
 			myReader = new BinaryReader(myStream);
 			long startPosition;
@@ -694,9 +645,8 @@ namespace OpenBve.Formats.DirectX
 			}
 		}
 
-		private BinaryBlock(byte[] bytes, TemplateID token, int floatingPointSize)
+		private BinaryBlock(byte[] bytes, TemplateID token, int floatingPointSize) : base(floatingPointSize)
 		{
-			FloatingPointSize = floatingPointSize;
 			myStream = new MemoryStream(bytes);
 			myReader = new BinaryReader(myStream);
 			Token = token;
