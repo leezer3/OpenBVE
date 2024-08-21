@@ -847,10 +847,9 @@ namespace AssimpNET.X
 				{
 					// template materials
 					string matName = GetNextToken();
-					Material material = new Material(true);
+					Material material = new Material(true, matName);
 					//Use default BVE white color so this is visible if the global material is missing, otherwise will be overwritten
 					material.Diffuse = Color128.White;
-					material.Name = matName;
 					mesh.Materials.Add(material);
 
 					CheckForClosingBrace(); // skip }
@@ -875,15 +874,12 @@ namespace AssimpNET.X
 
 		protected void ParseDataObjectMaterial(out Material material)
 		{
-			material = new Material(false);
-
-			string matName;
-			ReadHeadOfDataObject(out matName);
+			ReadHeadOfDataObject(out string matName);
 			if (matName.Length == 0)
 			{
 				matName = "material" + LineNumber;
 			}
-			material.Name = matName;
+			material = new Material(false, matName);
 
 			// read material values
 			material.Diffuse = ReadRGBA();
