@@ -47,7 +47,6 @@ namespace OpenBveApi.Routes
 				}
 
 				newObject.Mesh.Faces[f] = new MeshFace(vertexIndicies.ToArray(), FaceFlags.Face2Mask);
-				newObject.Mesh.Faces[f].Material = 0;
 				this.Object = newObject;
 			}
 			else
