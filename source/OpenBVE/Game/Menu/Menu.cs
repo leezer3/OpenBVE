@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
 using LibRender2.Menu;
 using LibRender2.Primitives;
 using LibRender2.Screens;
@@ -32,27 +31,13 @@ namespace OpenBve
 	Keeps a stack of menus, allowing navigating forward and back */
 
 	/// <summary>Implements the in-game menu system; manages addition and removal of individual menus.</summary>
-	public sealed partial class Menu
+	public sealed partial class GameMenu : AbstractMenu
 	{
-		// components of the semi-transparent screen overlay
-		private readonly Color128 overlayColor = new Color128(0.0f, 0.0f, 0.0f, 0.2f);
-		private readonly Color128 backgroundColor = Color128.Black;
-		private readonly Color128 highlightColor = Color128.Orange;
-		private readonly Color128 folderHighlightColor = new Color128(0.0f, 0.69f, 1.0f, 1.0f);
-		private readonly Color128 routeHighlightColor = new Color128(0.0f, 1.0f, 0.69f, 1.0f);
-		// text colours
-		private static readonly Color128 ColourCaption = new Color128(0.750f, 0.750f, 0.875f, 1.0f);
-		private static readonly Color128 ColourDimmed = new Color128(1.000f, 1.000f, 1.000f, 0.5f);
-		private static readonly Color128 ColourHighlight = Color128.Black;
-		private static readonly Color128 ColourNormal = Color128.White;
 		private static readonly Picturebox LogoPictureBox = new Picturebox(Program.Renderer);
 		internal static List<FoundSwitch> nextSwitches = new List<FoundSwitch>();
 		internal static List<FoundSwitch> previousSwitches = new List<FoundSwitch>();
 		internal static bool switchesFound = false;
 		
-
-		// some sizes and constants
-		// TODO: make borders Menu fields dependent on font size
 		private const int MenuBorderX = 16;
 		private const int MenuBorderY = 16;
 		private const int MenuItemBorderX = 8;
@@ -73,13 +58,9 @@ namespace OpenBve
 		private bool isInitialized = false;
 		// the total line height from the top of an item to the top of the item below (in pixels)
 		private int lineHeight;
-		private SingleMenu[] Menus = { };
-		private OpenGlFont menuFont = null;
-		// area occupied by the items of the current menu in screen coordinates
-		private double menuXmin, menuXmax, menuYmin, menuYmax;
+
 		private double topItemY;           // the top edge of top item
-		private int visibleItems;       // the number of visible items
-										// properties (to allow read-only access to some fields)
+
 		internal int LineHeight => lineHeight;
 
 		internal OpenGlFont MenuFont => menuFont;
@@ -89,17 +70,17 @@ namespace OpenBve
 		/********************
 			MENU SYSTEM SINGLETON C'TOR
 		*********************/
-		private static readonly Menu instance = new Menu();
+		private static readonly GameMenu instance = new GameMenu();
 		// Explicit static constructor to tell C# compiler not to mark type as beforefieldinit
-		static Menu()
+		static GameMenu()
 		{
 		}
-		private Menu()
+		private GameMenu()
 		{
 		}
 
 		/// <summary>Returns the current menu instance (If applicable)</summary>
-		public static Menu Instance => instance;
+		public static GameMenu Instance => instance;
 
 		/********************
 			MENU SYSTEM METHODS
@@ -295,7 +276,7 @@ namespace OpenBve
 				return;
 			}
 			// Load the current menu
-			SingleMenu menu = Menus[CurrMenu];
+			MenuBase menu = Menus[CurrMenu];
 			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall || menu.Type == MenuType.Packages || (int)menu.Type >= 107)
 			{
 				if (routeDescriptionBox.CurrentlySelected)
@@ -358,8 +339,8 @@ namespace OpenBve
 				return false;
 
 			// Load the current menu
-			SingleMenu menu = Menus[CurrMenu];
-			if (menu.TopItem > 1 && y < topItemY && y > menuYmin)
+			MenuBase menu = Menus[CurrMenu];
+			if (menu.TopItem > 1 && y < topItemY && y > menuMin.Y)
 			{
 				//Item is the scroll up ellipsis
 				menu.Selection = menu.TopItem - 1;
@@ -375,7 +356,7 @@ namespace OpenBve
 					return true;
 				}
 			}
-			if (x < menuXmin || x > menuXmax || y < menuYmin || y > menuYmax)
+			if (x < menuMin.X || x > menuMax.X || y < menuMin.Y || y > menuMax.Y)
 			{
 				return false;
 			}
@@ -391,7 +372,6 @@ namespace OpenBve
 					return true;
 				}
 			}
-			
 			return false;
 		}
 
@@ -432,7 +412,7 @@ namespace OpenBve
 			{
 				return;
 			}
-			SingleMenu menu = Menus[CurrMenu];
+			MenuBase menu = Menus[CurrMenu];
 			// MenuBack is managed independently from single menu data
 			if (cmd == Translations.Command.MenuBack)
 			{
@@ -550,19 +530,19 @@ namespace OpenBve
 						{
 							// menu management commands
 							case MenuTag.MenuBack:              // BACK TO PREVIOUS MENU
-								Menu.instance.PopMenu();
+								GameMenu.instance.PopMenu();
 								break;
 							case MenuTag.MenuJumpToStation:     // TO STATIONS MENU
-								Menu.instance.PushMenu(MenuType.JumpToStation);
+								GameMenu.instance.PushMenu(MenuType.JumpToStation);
 								break;
 							case MenuTag.MenuExitToMainMenu:    // TO EXIT MENU
-								Menu.instance.PushMenu(MenuType.ExitToMainMenu);
+								GameMenu.instance.PushMenu(MenuType.ExitToMainMenu);
 								break;
 							case MenuTag.MenuQuit:              // TO QUIT MENU
-								Menu.instance.PushMenu(MenuType.Quit);
+								GameMenu.instance.PushMenu(MenuType.Quit);
 								break;
 							case MenuTag.MenuControls:          // TO CONTROLS MENU
-								Menu.instance.PushMenu(MenuType.Controls);
+								GameMenu.instance.PushMenu(MenuType.Controls);
 								break;
 							case MenuTag.BackToSim:             // OUT OF MENU BACK TO SIMULATION
 								Reset();
@@ -571,7 +551,7 @@ namespace OpenBve
 							case MenuTag.Packages:
 								if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out _))
 								{
-									Menu.instance.PushMenu(MenuType.Packages);
+									GameMenu.instance.PushMenu(MenuType.Packages);
 								}
 								
 								break;
@@ -649,16 +629,16 @@ namespace OpenBve
 								}
 								break;
 							case MenuTag.Options:
-								Menu.instance.PushMenu(MenuType.Options);
+								GameMenu.instance.PushMenu(MenuType.Options);
 								break;
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
-								Menu.instance.PushMenu(MenuType.RouteList);
+								GameMenu.instance.PushMenu(MenuType.RouteList);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","route_please_select"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);	
 								break;
 							case MenuTag.Directory:		// SHOWS THE LIST OF FILES IN THE SELECTED DIR
 								SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
-								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								GameMenu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.ParentDirectory:		// SHOWS THE LIST OF FILES IN THE PARENT DIR
 								if (string.IsNullOrEmpty(SearchDirectory))
@@ -677,7 +657,7 @@ namespace OpenBve
 									SearchDirectory = oldSearchDirectory;
 									return;
 								}
-								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								GameMenu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.RouteFile:
 								RoutefileState = RouteState.Loading;
@@ -697,7 +677,7 @@ namespace OpenBve
 										{
 											//enter folder
 											SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
-											Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+											GameMenu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 										}
 										else
 										{
@@ -795,19 +775,19 @@ namespace OpenBve
 
 								menu.Items[2].Text = "Current Setting: " + Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack;
 								switchesFound = false; // as switch has been toggled, need to recalculate switches along route
-								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								GameMenu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.PreviousSwitch:
 								FoundSwitch fs = previousSwitches[0];
 								previousSwitches.RemoveAt(0);
 								nextSwitches.Insert(0, fs);
-								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								GameMenu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.NextSwitch:
 								FoundSwitch ns = nextSwitches[0];
 								nextSwitches.RemoveAt(0);
 								previousSwitches.Insert(0, ns);
-								Menu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								GameMenu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 						}
 					}
@@ -851,7 +831,7 @@ namespace OpenBve
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
 				return;
 
-			SingleMenu menu = Menus[CurrMenu];
+			MenuBase menu = Menus[CurrMenu];
 			// overlay background
 			Program.Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height), overlayColor);
 
@@ -861,14 +841,14 @@ namespace OpenBve
 			{
 				itemLeft = 0;
 				itemX = 16;
-				Program.Renderer.Rectangle.Draw(null, new Vector2(0, menuYmin - MenuBorderY), new Vector2(menuXmax - menuXmin + 2.0f * MenuBorderX, menuYmax - menuYmin + 2.0f * MenuBorderY), backgroundColor);
+				Program.Renderer.Rectangle.Draw(null, new Vector2(0, menuMin.Y - MenuBorderY), new Vector2(menuMax.X - menuMin.X + 2.0f * MenuBorderX, menuMax.Y - menuMin.Y + 2.0f * MenuBorderY), backgroundColor);
 			}
 			else
 			{
 				itemLeft = (Program.Renderer.Screen.Width - menu.ItemWidth) / 2; // item left edge
 				// if menu alignment is left, left-align items, otherwise centre them in the screen
 				itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : Program.Renderer.Screen.Width / 2.0;
-				Program.Renderer.Rectangle.Draw(null, new Vector2(menuXmin - MenuBorderX, menuYmin - MenuBorderY), new Vector2(menuXmax - menuXmin + 2.0f * MenuBorderX, menuYmax - menuYmin + 2.0f * MenuBorderY), backgroundColor);	
+				Program.Renderer.Rectangle.Draw(null, new Vector2(menuMin.X - MenuBorderX, menuMin.Y - MenuBorderY), new Vector2(menuMax.X - menuMin.X + 2.0f * MenuBorderX, menuMax.Y - menuMin.Y + 2.0f * MenuBorderY), backgroundColor);	
 			}
 			
 			// draw the menu background
@@ -881,10 +861,10 @@ namespace OpenBve
 			// if not starting from the top of the menu, draw a dimmed ellipsis item
 			if (menu.Selection == menu.TopItem - 1 && !isCustomisingControl)
 			{
-				Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - MenuItemBorderX, menuYmin /*-MenuItemBorderY*/), new Vector2(menu.ItemWidth + MenuItemBorderX, em + MenuItemBorderY * 2), highlightColor);
+				Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - MenuItemBorderX, menuMin.Y /*-MenuItemBorderY*/), new Vector2(menu.ItemWidth + MenuItemBorderX, em + MenuItemBorderY * 2), highlightColor);
 			}
 			if (menu.TopItem > 0)
-				Program.Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, menuYmin),
+				Program.Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, menuMin.Y),
 					menu.Align, ColourDimmed, false);
 			// draw the items
 			double itemY = topItemY;
@@ -945,7 +925,7 @@ namespace OpenBve
 						menu.Align, ColourNormal, false);
 				if (menu.Items[i] is MenuOption)
 				{
-					Program.Renderer.OpenGlString.Draw(MenuFont, (menu.Items[i] as MenuOption).CurrentOption.ToString(), new Vector2((menuXmax - menuXmin + 2.0f * MenuBorderX) + 4.0f, itemY),
+					Program.Renderer.OpenGlString.Draw(MenuFont, (menu.Items[i] as MenuOption).CurrentOption.ToString(), new Vector2((menuMax.X - menuMin.X + 2.0f * MenuBorderX) + 4.0f, itemY),
 						menu.Align, backgroundColor, false);
 				}
 				itemY += lineHeight;
@@ -971,7 +951,7 @@ namespace OpenBve
 				case MenuType.GameStart:
 				case MenuType.Packages:
 					LogoPictureBox.Draw();
-					string currentVersion =  @"v" + Application.ProductVersion + Program.VersionSuffix;
+					string currentVersion =  @"v" + System.Windows.Forms.Application.ProductVersion + Program.VersionSuffix;
 					if (IntPtr.Size != 4)
 					{
 						currentVersion += @" 64-bit";
@@ -1133,7 +1113,7 @@ namespace OpenBve
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
 				return;
 
-			SingleMenu menu = Menus[CurrMenu];
+			MenuBase menu = Menus[CurrMenu];
 			for (int i = 0; i < menu.Items.Length; i++)
 			{
 				/*
@@ -1151,25 +1131,25 @@ namespace OpenBve
 			{
 				case TextAlignment.TopLeft:
 					// Left aligned
-					menuXmin = 0;
+					menuMin.X = 0;
 					break;
 				default:
 					// Centered in window
-					menuXmin = (Program.Renderer.Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)	
+					menuMin.X = (Program.Renderer.Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)	
 					break;
 			}
 
-			menuXmax = menuXmin + menu.Width;               // menu right edge (border excluded)
+			menuMax.X = menuMin.X + menu.Width;               // menu right edge (border excluded)
 															// VERTICAL PLACEMENT: centre the menu in the main window
-			menuYmin = (Program.Renderer.Screen.Height - menu.Height) / 2;       // menu top edge (border excluded)
-			menuYmax = menuYmin + menu.Height;              // menu bottom edge (border excluded)
-			topItemY = menuYmin;                                // top edge of top item
+			menuMin.Y = (Program.Renderer.Screen.Height - menu.Height) / 2;       // menu top edge (border excluded)
+			menuMax.Y = menuMin.Y + menu.Height;              // menu bottom edge (border excluded)
+			topItemY = menuMin.Y;                                // top edge of top item
 																// assume all items fit in the screen
 			visibleItems = menu.Items.Length;
 
 			// if there are more items than can fit in the screen height,
 			// (there should be at least room for the menu top border)
-			if (menuYmin < MenuBorderY)
+			if (menuMin.Y < MenuBorderY)
 			{
 				// the number of lines which fit in the screen
 				int numOfLines = (Program.Renderer.Screen.Height - MenuBorderY * 2) / lineHeight;
@@ -1179,11 +1159,11 @@ namespace OpenBve
 				menu.TopItem = menu.Selection - (menu.Selection % visibleItems);
 				visibleItems = menu.Items.Length - menu.TopItem < visibleItems ?    // in the last chunk,
 					menu.Items.Length - menu.TopItem : visibleItems;                // display remaining items only
-				menuYmin = (Program.Renderer.Screen.Height - numOfLines * lineHeight) / 2.0;
-				menuYmax = menuYmin + numOfLines * lineHeight;
+				menuMin.Y = (Program.Renderer.Screen.Height - numOfLines * lineHeight) / 2.0;
+				menuMax.Y = menuMin.Y + numOfLines * lineHeight;
 				// first menu item is drawn on second line (first line is empty
 				// on first screen and contains an ellipsis on following screens
-				topItemY = menuYmin + lineHeight;
+				topItemY = menuMin.Y + lineHeight;
 			}
 		}
 

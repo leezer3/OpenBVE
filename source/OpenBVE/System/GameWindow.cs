@@ -424,7 +424,7 @@ namespace OpenBve
 			MouseUp += MainLoop.mouseUpEvent;
 			MouseMove	+= MainLoop.mouseMoveEvent;
 			MouseWheel  += MainLoop.mouseWheelEvent;
-			FileDrop += Menu.Instance.DragFile;
+			FileDrop += GameMenu.Instance.DragFile;
 
 			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 			{

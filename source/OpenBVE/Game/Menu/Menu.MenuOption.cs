@@ -8,7 +8,7 @@ using OpenTK;
 
 namespace OpenBve
 {
-	public sealed partial class Menu
+	public sealed partial class GameMenu
 	{
 		private class MenuOption : MenuEntry
 		{

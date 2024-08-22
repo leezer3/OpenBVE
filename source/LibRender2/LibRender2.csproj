@@ -59,6 +59,8 @@
     <Compile Include="Loading\Loading.cs" />
     <Compile Include="Menu\Menu.OptionType.cs" />
     <Compile Include="Menu\Menu.RouteState.cs" />
+    <Compile Include="Menu\AbstractMenu.cs" />
+    <Compile Include="Menu\MenuBase.cs" />
     <Compile Include="Menu\MenuEntries\MenuEntry.Caption.cs" />
     <Compile Include="Menu\MenuEntries\MenuEntry.Command.cs" />
     <Compile Include="Menu\MenuEntries\MenuEntry.cs" />

@@ -22,69 +22,53 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using OpenBveApi.Textures;
+using OpenBveApi.Graphics;
 
 namespace LibRender2.Menu
 {
-	/// <summary>The base abstract Menu Entry class</summary>
-	public abstract class MenuEntry
+	/// <summary>The base class for a single menu within the menu stack</summary>
+	public class MenuBase
 	{
-		/// <summary>The base text of the menu entry</summary>
-		public string Text;
-		/// <summary>The display text of the menu entry</summary>
-		public string DisplayText(double TimeElapsed)
+		/// <summary>The text alignment for the menu</summary>
+		public TextAlignment Align;
+
+		/// <summary>The list of items to be shown</summary>
+		public MenuEntry[] Items = { };
+
+		/// <summary>The smaller of the width of the largest item, and the absolute width</summary>
+		public double ItemWidth = 0;
+
+		/// <summary>The absolute width</summary>
+		public double Width = 0;
+
+		/// <summary>The absolute height</summary>
+		public double Height = 0;
+
+		/// <summary>The previous menu selection</summary>
+		public int LastSelection = int.MaxValue;
+
+		private int currentSelection;
+
+		/// <summary>The currently displayed top item</summary>
+		public int TopItem;
+
+		/// <summary>The type of menu</summary>
+		public readonly MenuType Type;
+
+		/// <summary>Gets the currently selected menu item</summary>
+		public virtual int Selection
 		{
-			if (DisplayLength == 0)
-			{
-				return Text;
-			}
-			timer += TimeElapsed;
-			if (timer > 0.5)
-			{
-				if (pause)
-				{
-					pause = false;
-					return _displayText;
-				}
-				timer = 0;
-				scroll++;
-				if (scroll == Text.Length)
-				{
-					scroll = 0;
-					pause = true;
-				}
-				_displayText = Text.Substring(scroll);
-				if (_displayText.Length > _displayLength)
-				{
-					_displayText = _displayText.Substring(0, _displayLength);
-				}
-			}
-			return _displayText;
-		}
-		/// <summary>Backing property for display text</summary>
-		private string _displayText;
-		/// <summary>Backing property for display length</summary>
-		private int _displayLength;
-		/// <summary>The length to display</summary>
-		public int DisplayLength
-		{
-			get
-			{
-				return _displayLength;
-			}
+			get => currentSelection;
 			set
 			{
-				_displayLength = value;
-				_displayText = Text.Substring(0, value);
-				timer = 0;
+				LastSelection = currentSelection;
+				currentSelection = value;
 			}
 		}
-		/// <summary>The icon to draw for this menu entry</summary>
-		public Texture Icon;
-		//Properties used for controlling the scrolling text if overlong
-		private double timer;
-		private int scroll;
-		private bool pause;
 
+		public MenuBase(MenuType type)
+		{
+			Type = type;
+		}
 	}
 }

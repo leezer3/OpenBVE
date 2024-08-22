@@ -15,29 +15,19 @@ using Path = OpenBveApi.Path;
 
 namespace OpenBve
 {
-	public sealed partial class Menu
+	public sealed partial class GameMenu
 	{
-		/// <summary>Describes a single menu of the menu stack.
-		/// The class is private to Menu, but all its fields are public to allow 'quick-and-dirty'
-		/// access from Menu itself.</summary>
-		private class SingleMenu
+		/// <summary>Provides implementation for a single menu of the menu stack.</summary>
+		/// <remarks>The class is private to Menu, but all its fields are public to allow 'quick-and-dirty'
+		/// access from Menu itself.</remarks>
+		private class SingleMenu : MenuBase
 		{
-			/// <summary>The text alignment for the menu</summary>
-			public readonly TextAlignment Align;
-			/// <summary>The list of items to be shown</summary>
-			public readonly MenuEntry[] Items = { };
-			/// <summary>The smaller of the width of the largest item, and the absolute width</summary>
-			public readonly double ItemWidth = 0;
-			/// <summary>The absolute width</summary>
-			public readonly double Width = 0;
-			/// <summary>The absolute height</summary>
-			public readonly double Height = 0;
 			/// <summary>The previous menu selection</summary>
 			internal int LastSelection = int.MaxValue;
 
 			private int currentSelection;
 			
-			public int Selection
+			public sealed override int Selection
 			{
 				get => currentSelection;
 				set
@@ -54,16 +44,9 @@ namespace OpenBve
 					}
 				}
 			}
-			public int TopItem;         // the top displayed menu item
-			internal readonly MenuType Type;
 			
-
-			/********************
-				MENU C'TOR
-			*********************/
-			public SingleMenu(MenuType menuType, int data = 0, double MaxWidth = 0)
+			public SingleMenu(MenuType menuType, int data = 0, double MaxWidth = 0) : base(menuType)
 			{
-				Type = menuType;
 				int i;
 				int jump = 0;
 				//Vector2 size;
@@ -582,7 +565,6 @@ namespace OpenBve
 				Height = Items.Length * Game.Menu.LineHeight;
 				TopItem = 0;
 			}
-
 		}
 
 		internal class FoundSwitch

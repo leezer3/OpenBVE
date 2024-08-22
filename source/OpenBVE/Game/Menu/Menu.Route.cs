@@ -17,7 +17,7 @@ using Path = OpenBveApi.Path;
 
 namespace OpenBve
 {
-	public partial class Menu
+	public partial class GameMenu
 	{
 		private static BackgroundWorker routeWorkerThread;
 		private static BackgroundWorker packageWorkerThread;
