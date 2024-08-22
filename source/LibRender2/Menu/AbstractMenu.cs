@@ -22,9 +22,13 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using LibRender2.Screens;
 using LibRender2.Text;
 using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
 using OpenBveApi.Math;
+using System.Collections.Generic;
+using LibRender2.Primitives;
 
 namespace LibRender2.Menu
 {
@@ -72,5 +76,124 @@ namespace LibRender2.Menu
 
 		/// <summary>The screen co-ordinates of the bottom-right of the menu</summary>
 		public Vector2 menuMax;
+
+		/// <summary>Holds a reference to the base renderer</summary>
+		private readonly BaseRenderer Renderer;
+
+		/// <summary>The index of the current menu within the stack</summary>
+		public int CurrMenu = -1;
+
+		/// <summary>The border for the menu in pixels</summary>
+		public static readonly Vector2 Border = new Vector2(16, 16);
+
+		/// <summary>The border for each menu item in pixels</summary>
+		public static readonly Vector2 ItemBorder = new Vector2(8, 2);
+
+		/// <summary>The height of the top item in the current menu in pixels</summary>
+		public double topItemY;
+
+		/// <summary>The total height of one rendered menu item in pixels</summary>
+		public int lineHeight;
+
+		/// <summary>The controls within the menu</summary>
+		public List<GLControl> menuControls = new List<GLControl>();
+
+		/// <summary>Creates a new menu instance</summary>
+		protected AbstractMenu(BaseRenderer renderer)
+		{
+			Renderer = renderer;
+		}
+
+		/// <summary>Resets the menu system to it's initial condition</summary>
+		public virtual void Reset()
+		{
+			CurrMenu = -1;
+			Menus = new MenuBase[] { };
+		}
+
+		/// <summary>Pushes a menu into the menu stack</summary>
+		/// <param name= "type">The type of menu to push</param>
+		/// <param name= "data">The index of the menu in the menu stack (If pushing an existing higher level menu)</param>
+		/// <param name="replace">Whether we are replacing the selected menu item</param>
+		public abstract void PushMenu(MenuType type, int data = 0, bool replace = false);
+
+		/// <summary>Pops the previous menu in the menu stack</summary>
+		public void PopMenu()
+		{
+			if (CurrMenu > 0)           // if more than one menu remaining...
+			{
+				CurrMenu--;             // ...back to previous menu
+				ComputePosition();
+			}
+			else
+			{                           // if only one menu remaining...
+				Reset();
+				Renderer.CurrentInterface = InterfaceType.Normal;  // return to simulation
+			}
+		}
+
+
+
+		/// <summary>Computes the position in the screen of the current menu.</summary>
+		/// <remarks>Also sets the menu size</remarks>
+		public void ComputePosition()
+		{
+			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
+				return;
+
+			MenuBase menu = Menus[CurrMenu];
+			for (int i = 0; i < menu.Items.Length; i++)
+			{
+				/*
+				 * HACK: This is a property method, and is also used to
+				 * reset the timer and display string back to the starting values
+				 */
+				if (menu.Items[i] != null)
+				{
+					menu.Items[i].DisplayLength = menu.Items[i].DisplayLength;
+				}
+			}
+
+			// HORIZONTAL PLACEMENT
+			switch (menu.Align)
+			{
+				case TextAlignment.TopLeft:
+					// Left aligned
+					menuMin.X = 0;
+					break;
+				default:
+					// Centered in window
+					menuMin.X = (Renderer.Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)	
+					break;
+			}
+
+			menuMax.X = menuMin.X + menu.Width;               // menu right edge (border excluded)
+															  // VERTICAL PLACEMENT: centre the menu in the main window
+			menuMin.Y = (Renderer.Screen.Height - menu.Height) / 2;       // menu top edge (border excluded)
+			menuMax.Y = menuMin.Y + menu.Height;              // menu bottom edge (border excluded)
+			topItemY = menuMin.Y;                                // top edge of top item
+																 // assume all items fit in the screen
+			visibleItems = menu.Items.Length;
+
+			// if there are more items than can fit in the screen height,
+			// (there should be at least room for the menu top border)
+			if (menuMin.Y < Border.Y)
+			{
+				// the number of lines which fit in the screen
+				int numOfLines = (int)(Renderer.Screen.Height - Border.Y * 2) / lineHeight;
+				visibleItems = numOfLines - 2;                  // at least an empty line at the top and at the bottom
+																// split the menu in chunks of 'visibleItems' items
+																// and display the chunk which contains the currently selected item
+				menu.TopItem = menu.Selection - (menu.Selection % visibleItems);
+				visibleItems = menu.Items.Length - menu.TopItem < visibleItems ?    // in the last chunk,
+					menu.Items.Length - menu.TopItem : visibleItems;                // display remaining items only
+				menuMin.Y = (Renderer.Screen.Height - numOfLines * lineHeight) / 2.0;
+				menuMax.Y = menuMin.Y + numOfLines * lineHeight;
+				// first menu item is drawn on second line (first line is empty
+				// on first screen and contains an ellipsis on following screens
+				topItemY = menuMin.Y + lineHeight;
+			}
+		}
+
 	}
 }

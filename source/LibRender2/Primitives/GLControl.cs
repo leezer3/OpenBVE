@@ -46,6 +46,8 @@ namespace LibRender2.Primitives
 		public bool CurrentlySelected;
 		/// <summary>The event handler for the OnClick event</summary>
 		public EventHandler OnClick;
+		/// <summary>Whether the control is currently visible</summary>
+		public bool IsVisible;
 
 		protected GLControl(BaseRenderer renderer)
 		{

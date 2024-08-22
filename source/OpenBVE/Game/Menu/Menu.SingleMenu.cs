@@ -562,7 +562,7 @@ namespace OpenBve
 					if (!(Items[i] is MenuCaption && menuType!= MenuType.RouteList && menuType != MenuType.GameStart && menuType != MenuType.Packages) && size.X > ItemWidth)
 						ItemWidth = size.X;
 				}
-				Height = Items.Length * Game.Menu.LineHeight;
+				Height = Items.Length * Game.Menu.lineHeight;
 				TopItem = 0;
 			}
 		}
