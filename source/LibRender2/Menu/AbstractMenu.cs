@@ -29,6 +29,8 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using System.Collections.Generic;
 using LibRender2.Primitives;
+using System;
+using OpenBveApi.Interface;
 
 namespace LibRender2.Menu
 {
@@ -132,6 +134,60 @@ namespace LibRender2.Menu
 			}
 		}
 
+		/// <summary>Processes a scroll wheel event</summary>
+		/// <param name="Scroll">The delta</param>
+		public virtual void ProcessMouseScroll(int Scroll)
+		{
+			if (Menus.Length == 0)
+			{
+				return;
+			}
+			// Load the current menu
+			Menus[CurrMenu].ProcessScroll(Scroll, visibleItems);
+		}
+
+		/// <summary>Processes a mouse move event</summary>
+		/// <param name="x">The screen-relative x coordinate of the move event</param>
+		/// <param name="y">The screen-relative y coordinate of the move event</param>
+		public virtual bool ProcessMouseMove(int x, int y)
+		{
+			return true;
+		}
+
+		/// <summary>Processes a mouse down event</summary>
+		/// <param name="x">The screen-relative x coordinate of the down event</param>
+		/// <param name="y">The screen-relative y coordinate of the down event</param>
+		public void ProcessMouseDown(int x, int y)
+		{
+			if (ProcessMouseMove(x, y))
+			{
+				if (Menus[CurrMenu].Selection == Menus[CurrMenu].TopItem + visibleItems)
+				{
+					ProcessCommand(Translations.Command.MenuDown, 0);
+					return;
+				}
+				if (Menus[CurrMenu].Selection == Menus[CurrMenu].TopItem - 1)
+				{
+					ProcessCommand(Translations.Command.MenuUp, 0);
+					return;
+				}
+				ProcessCommand(Translations.Command.MenuEnter, 0);
+			}
+		}
+
+		/// <summary>Processes a user command for the current menu</summary>
+		/// <param name="cmd">The command to apply to the current menu</param>
+		/// <param name="timeElapsed">The time elapsed since previous frame</param>
+		public virtual void ProcessCommand(Translations.Command cmd, double timeElapsed)
+		{
+
+		}
+
+		/// <summary>Processes a file drop event</summary>
+		public virtual void DragFile(object sender, OpenTK.Input.FileDropEventArgs e)
+		{
+
+		}
 
 
 		/// <summary>Computes the position in the screen of the current menu.</summary>

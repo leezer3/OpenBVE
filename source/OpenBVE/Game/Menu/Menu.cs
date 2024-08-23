@@ -236,14 +236,9 @@ namespace OpenBve
 			}
 		}
 
-
-		//
-		// PROCESS MOUSE EVENTS
-		//
-
 		/// <summary>Processes a scroll wheel event</summary>
 		/// <param name="Scroll">The delta</param>
-		internal void ProcessMouseScroll(int Scroll)
+		public override void ProcessMouseScroll(int Scroll)
 		{
 			if (Menus.Length == 0)
 			{
@@ -266,26 +261,10 @@ namespace OpenBve
 					return;
 				}
 			}
-			if (Math.Abs(Scroll) == Scroll)
-			{
-				//Negative
-				if (menu.TopItem > 0)
-				{
-					menu.TopItem--;
-				}
-			}
-			else
-			{
-				//Positive
-				if (menu.Items.Length - menu.TopItem > visibleItems)
-				{
-					menu.TopItem++;
-				}
-			}
+			base.ProcessMouseScroll(Scroll);
 		}
 
-
-		internal void DragFile(object sender, OpenTK.Input.FileDropEventArgs e)
+		public override void DragFile(object sender, OpenTK.Input.FileDropEventArgs e)
 		{
 			if (Menus[CurrMenu].Type == MenuType.PackageInstall)
 			{
@@ -297,10 +276,7 @@ namespace OpenBve
 			}
 		}
 
-		/// <summary>Processes a mouse move event</summary>
-		/// <param name="x">The screen-relative x coordinate of the move event</param>
-		/// <param name="y">The screen-relative y coordinate of the move event</param>
-		internal bool ProcessMouseMove(int x, int y)
+		public override bool ProcessMouseMove(int x, int y)
 		{
 			Program.currentGameWindow.CursorVisible = true;
 			if (CurrMenu < 0)
@@ -348,38 +324,11 @@ namespace OpenBve
 			}
 			return false;
 		}
-
-		//
-		// PROCESS MOUSE DOWN EVENTS
-		//
-		/// <summary>Processes a mouse down event</summary>
-		/// <param name="x">The screen-relative x coordinate of the down event</param>
-		/// <param name="y">The screen-relative y coordinate of the down event</param>
-		internal void ProcessMouseDown(int x, int y)
-		{
-			if (ProcessMouseMove(x, y))
-			{
-				if (Menus[CurrMenu].Selection == Menus[CurrMenu].TopItem + visibleItems)
-				{
-					ProcessCommand(Translations.Command.MenuDown, 0);
-					return;
-				}
-				if (Menus[CurrMenu].Selection == Menus[CurrMenu].TopItem - 1)
-				{
-					ProcessCommand(Translations.Command.MenuUp, 0);
-					return;
-				}
-				ProcessCommand(Translations.Command.MenuEnter, 0);
-			}
-		}
-
-		//
-		// PROCESS MENU COMMAND
-		//
+		
 		/// <summary>Processes a user command for the current menu</summary>
 		/// <param name="cmd">The command to apply to the current menu</param>
 		/// <param name="timeElapsed">The time elapsed since previous frame</param>
-		internal void ProcessCommand(Translations.Command cmd, double timeElapsed)
+		public override void ProcessCommand(Translations.Command cmd, double timeElapsed)
 		{
 
 			if (CurrMenu < 0)
@@ -897,9 +846,9 @@ namespace OpenBve
 				else
 					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourNormal, false);
-				if (menu.Items[i] is MenuOption)
+				if (menu.Items[i] is MenuOption opt)
 				{
-					Program.Renderer.OpenGlString.Draw(MenuFont, (menu.Items[i] as MenuOption).CurrentOption.ToString(), new Vector2((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f, itemY),
+					Program.Renderer.OpenGlString.Draw(MenuFont, opt.CurrentOption.ToString(), new Vector2((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f, itemY),
 						menu.Align, backgroundColor, false);
 				}
 				itemY += lineHeight;

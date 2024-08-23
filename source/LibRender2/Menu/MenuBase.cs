@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenBveApi.Graphics;
+using System;
 
 namespace LibRender2.Menu
 {
@@ -63,6 +64,26 @@ namespace LibRender2.Menu
 			{
 				LastSelection = currentSelection;
 				currentSelection = value;
+			}
+		}
+
+		public void ProcessScroll(int Scroll, int VisibleItems)
+		{
+			if (Math.Abs(Scroll) == Scroll)
+			{
+				//Negative
+				if (TopItem > 0)
+				{
+					TopItem--;
+				}
+			}
+			else
+			{
+				//Positive
+				if (Items.Length - TopItem > VisibleItems)
+				{
+					TopItem++;
+				}
 			}
 		}
 
