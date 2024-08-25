@@ -49,18 +49,14 @@ namespace OpenBve
 		
 		private int CustomControlIdx;   // the index of the control being customized
 		private bool isCustomisingControl = false;
-		private bool isInitialized = false;
+		
 
-		internal Key MenuBackKey;
+		
 
 		/********************
 			MENU SYSTEM SINGLETON C'TOR
 		*********************/
 
-		// Explicit static constructor to tell C# compiler not to mark type as beforefieldinit
-		static GameMenu()
-		{
-		}
 		private GameMenu() : base(Program.Renderer)
 		{
 		}
@@ -71,10 +67,7 @@ namespace OpenBve
 		/********************
 			MENU SYSTEM METHODS
 		*********************/
-		//
-		// INITIALIZE THE MENU SYSTEM
-		//
-		private void Init()
+		public override void Initialize()
 		{
 			Reset();
 			// choose the text font size according to screen height
@@ -134,7 +127,7 @@ namespace OpenBve
 			controlTextBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0 + quarterWidth);
 			controlTextBox.Size = new Vector2(quarterWidth, quarterWidth);
 			controlTextBox.BackgroundColor = Color128.Black;
-			isInitialized = true;
+			IsInitialized = true;
 
 			// add controls to list so we can itinerate them on mouse calls etc.
 			menuControls.Add(routePictureBox);
@@ -167,8 +160,8 @@ namespace OpenBve
 				// Deliberately set to the standard cursor, as touch controls may have set to something else
 				Program.Renderer.SetCursor(MouseCursor.Default);
 			}
-			if (!isInitialized)
-				Init();
+			if (!IsInitialized)
+				Initialize();
 			if (!replace)
 			{
 				CurrMenu++;
@@ -325,7 +318,6 @@ namespace OpenBve
 		/// <param name="timeElapsed">The time elapsed since previous frame</param>
 		public override void ProcessCommand(Translations.Command cmd, double timeElapsed)
 		{
-
 			if (CurrMenu < 0)
 			{
 				return;
@@ -730,11 +722,7 @@ namespace OpenBve
 
 		private ControlMethod lastControlMethod;
 
-		//
-		// DRAW MENU
-		//
-		/// <summary>Draws the current menu as a screen overlay</summary>
-		internal void Draw(double RealTimeElapsed)
+		public override void Draw(double RealTimeElapsed)
 		{
 			pluginKeepAliveTimer += RealTimeElapsed;
 			if (pluginKeepAliveTimer > 100000 && TrainManager.PlayerTrain != null && TrainManager.PlayerTrain.Plugin != null)

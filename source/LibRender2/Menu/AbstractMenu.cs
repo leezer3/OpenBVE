@@ -30,6 +30,7 @@ using OpenBveApi.Math;
 using System.Collections.Generic;
 using LibRender2.Primitives;
 using System;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 
 namespace LibRender2.Menu
@@ -103,11 +104,20 @@ namespace LibRender2.Menu
 		/// <summary>The controls within the menu</summary>
 		public List<GLControl> menuControls = new List<GLControl>();
 
+		/// <summary>Whether the menu system is initialized</summary>
+		public bool IsInitialized = false;
+
+		/// <summary>The key used to go back within the menu stack</summary>
+		public Key MenuBackKey;
+
 		/// <summary>Creates a new menu instance</summary>
 		protected AbstractMenu(BaseRenderer renderer)
 		{
 			Renderer = renderer;
 		}
+
+		/// <summary>Initializes the menu system upon first use</summary>
+		public abstract void Initialize();
 
 		/// <summary>Resets the menu system to it's initial condition</summary>
 		public virtual void Reset()
@@ -253,6 +263,11 @@ namespace LibRender2.Menu
 				topItemY = menuMin.Y + lineHeight;
 			}
 		}
+
+		/// <summary>Draws the current menu</summary>
+		/// <param name="RealTimeElapsed">The real time elapsed since the last draw call</param>
+		/// <remarks>Note that the real time elapsed may be different to the game time elapsed</remarks>
+		public abstract void Draw(double RealTimeElapsed);
 
 	}
 }
