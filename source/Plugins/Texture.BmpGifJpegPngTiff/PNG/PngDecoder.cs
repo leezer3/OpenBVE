@@ -462,7 +462,7 @@ namespace Plugin.PNG
 															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + leftByte) % 256);
 															break;
 														case ScanlineFilterAlgorithm.Up:
-															upByte = data[previousRowStartByte + j];
+															upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + j];
 															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + upByte) % 256);
 															break;
 														case ScanlineFilterAlgorithm.Average:
