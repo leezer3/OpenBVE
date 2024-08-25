@@ -38,7 +38,6 @@ namespace OpenBve
 		internal static List<FoundSwitch> previousSwitches = new List<FoundSwitch>();
 		internal static bool switchesFound = false;
 		
-		private const float LineSpacing = 1.75f;    // the ratio between the font size and line distance
 		private const int SelectionNone = -1;
 
 		private double lastTimeElapsed;
@@ -49,18 +48,15 @@ namespace OpenBve
 		*********************/
 		
 		private int CustomControlIdx;   // the index of the control being customized
-		private int em;                 // the size of menu font (in pixels)
 		private bool isCustomisingControl = false;
 		private bool isInitialized = false;
-
-		internal OpenGlFont MenuFont => menuFont;
 
 		internal Key MenuBackKey;
 
 		/********************
 			MENU SYSTEM SINGLETON C'TOR
 		*********************/
-		private static readonly GameMenu instance = new GameMenu();
+
 		// Explicit static constructor to tell C# compiler not to mark type as beforefieldinit
 		static GameMenu()
 		{
@@ -70,7 +66,7 @@ namespace OpenBve
 		}
 
 		/// <summary>Returns the current menu instance (If applicable)</summary>
-		public static GameMenu Instance => instance;
+		public static readonly GameMenu Instance = new GameMenu();
 
 		/********************
 			MENU SYSTEM METHODS
@@ -84,20 +80,19 @@ namespace OpenBve
 			// choose the text font size according to screen height
 			// the boundaries follow approximately the progression
 			// of font sizes defined in Graphics/Fonts.cs
-			if (Program.Renderer.Screen.Height <= 512) menuFont = Program.Renderer.Fonts.SmallFont;
-			else if (Program.Renderer.Screen.Height <= 680) menuFont = Program.Renderer.Fonts.NormalFont;
-			else if (Program.Renderer.Screen.Height <= 890) menuFont = Program.Renderer.Fonts.LargeFont;
-			else if (Program.Renderer.Screen.Height <= 1150) menuFont = Program.Renderer.Fonts.VeryLargeFont;
-			else menuFont = Program.Renderer.Fonts.EvenLargerFont;
+			if (Program.Renderer.Screen.Height <= 512) MenuFont = Program.Renderer.Fonts.SmallFont;
+			else if (Program.Renderer.Screen.Height <= 680) MenuFont = Program.Renderer.Fonts.NormalFont;
+			else if (Program.Renderer.Screen.Height <= 890) MenuFont = Program.Renderer.Fonts.LargeFont;
+			else if (Program.Renderer.Screen.Height <= 1150) MenuFont = Program.Renderer.Fonts.VeryLargeFont;
+			else MenuFont = Program.Renderer.Fonts.EvenLargerFont;
 
 			if (Interface.CurrentOptions.UserInterfaceFolder == "Large")
 			{
 				// If using the large HUD option, increase the text size in the menu too
-				menuFont = Program.Renderer.Fonts.NextLargestFont(menuFont);
+				MenuFont = Program.Renderer.Fonts.NextLargestFont(MenuFont);
 			}
 
-			em = (int)menuFont.FontSize;
-			lineHeight = (int)(em * LineSpacing);
+			lineHeight = (int)(MenuFont.FontSize * LineSpacing);
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
 				//Find the current menu back key- It's unlikely that we want to set a new key to this
@@ -453,19 +448,19 @@ namespace OpenBve
 						{
 							// menu management commands
 							case MenuTag.MenuBack:              // BACK TO PREVIOUS MENU
-								GameMenu.instance.PopMenu();
+								GameMenu.Instance.PopMenu();
 								break;
 							case MenuTag.MenuJumpToStation:     // TO STATIONS MENU
-								GameMenu.instance.PushMenu(MenuType.JumpToStation);
+								GameMenu.Instance.PushMenu(MenuType.JumpToStation);
 								break;
 							case MenuTag.MenuExitToMainMenu:    // TO EXIT MENU
-								GameMenu.instance.PushMenu(MenuType.ExitToMainMenu);
+								GameMenu.Instance.PushMenu(MenuType.ExitToMainMenu);
 								break;
 							case MenuTag.MenuQuit:              // TO QUIT MENU
-								GameMenu.instance.PushMenu(MenuType.Quit);
+								GameMenu.Instance.PushMenu(MenuType.Quit);
 								break;
 							case MenuTag.MenuControls:          // TO CONTROLS MENU
-								GameMenu.instance.PushMenu(MenuType.Controls);
+								GameMenu.Instance.PushMenu(MenuType.Controls);
 								break;
 							case MenuTag.BackToSim:             // OUT OF MENU BACK TO SIMULATION
 								Reset();
@@ -474,7 +469,7 @@ namespace OpenBve
 							case MenuTag.Packages:
 								if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out _))
 								{
-									GameMenu.instance.PushMenu(MenuType.Packages);
+									GameMenu.Instance.PushMenu(MenuType.Packages);
 								}
 								
 								break;
@@ -482,20 +477,20 @@ namespace OpenBve
 							case MenuTag.PackageInstall:
 								currentOperation = PackageOperation.Installing;
 								packagePreview = true;
-								instance.PushMenu(MenuType.PackageInstall);
+								Instance.PushMenu(MenuType.PackageInstall);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\package.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
 							case MenuTag.PackageUninstall:
 								currentOperation = PackageOperation.Uninstalling;
-								instance.PushMenu(MenuType.PackageUninstall);
+								Instance.PushMenu(MenuType.PackageUninstall);
 								break;
 							case MenuTag.UninstallRoute:
 								if (Database.currentDatabase.InstalledRoutes.Count == 0)
 								{
 									return;
 								}
-								instance.PushMenu(MenuType.UninstallRoute);
+								Instance.PushMenu(MenuType.UninstallRoute);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
@@ -504,7 +499,7 @@ namespace OpenBve
 								{
 									return;
 								}
-								instance.PushMenu(MenuType.UninstallTrain);
+								Instance.PushMenu(MenuType.UninstallTrain);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
@@ -513,7 +508,7 @@ namespace OpenBve
 								{
 									return;
 								}
-								instance.PushMenu(MenuType.UninstallOther);
+								Instance.PushMenu(MenuType.UninstallOther);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","selection_none"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 								break;
@@ -552,16 +547,16 @@ namespace OpenBve
 								}
 								break;
 							case MenuTag.Options:
-								GameMenu.instance.PushMenu(MenuType.Options);
+								GameMenu.Instance.PushMenu(MenuType.Options);
 								break;
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
-								GameMenu.instance.PushMenu(MenuType.RouteList);
+								GameMenu.Instance.PushMenu(MenuType.RouteList);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","route_please_select"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);	
 								break;
 							case MenuTag.Directory:		// SHOWS THE LIST OF FILES IN THE SELECTED DIR
 								SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
-								GameMenu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.ParentDirectory:		// SHOWS THE LIST OF FILES IN THE PARENT DIR
 								if (string.IsNullOrEmpty(SearchDirectory))
@@ -580,7 +575,7 @@ namespace OpenBve
 									SearchDirectory = oldSearchDirectory;
 									return;
 								}
-								GameMenu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.RouteFile:
 								RoutefileState = RouteState.Loading;
@@ -600,7 +595,7 @@ namespace OpenBve
 										{
 											//enter folder
 											SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
-											GameMenu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+											GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 										}
 										else
 										{
@@ -698,19 +693,19 @@ namespace OpenBve
 
 								menu.Items[2].Text = "Current Setting: " + Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack;
 								switchesFound = false; // as switch has been toggled, need to recalculate switches along route
-								GameMenu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.PreviousSwitch:
 								FoundSwitch fs = previousSwitches[0];
 								previousSwitches.RemoveAt(0);
 								nextSwitches.Insert(0, fs);
-								GameMenu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.NextSwitch:
 								FoundSwitch ns = nextSwitches[0];
 								nextSwitches.RemoveAt(0);
 								previousSwitches.Insert(0, ns);
-								GameMenu.instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 						}
 					}
@@ -784,7 +779,7 @@ namespace OpenBve
 			// if not starting from the top of the menu, draw a dimmed ellipsis item
 			if (menu.Selection == menu.TopItem - 1 && !isCustomisingControl)
 			{
-				Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, menuMin.Y /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + ItemBorder.X, em + ItemBorder.Y * 2), highlightColor);
+				Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, menuMin.Y /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), highlightColor);
 			}
 			if (menu.TopItem > 0)
 				Program.Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, menuMin.Y),
@@ -829,11 +824,11 @@ namespace OpenBve
 
 					if (itemLeft == 0)
 					{
-						Program.Renderer.Rectangle.Draw(null, new Vector2(ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.Width + 2.0f * ItemBorder.X, em + ItemBorder.Y * 2), color);
+						Program.Renderer.Rectangle.Draw(null, new Vector2(ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.Width + 2.0f * ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), color);
 					}
 					else
 					{
-						Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + 2.0f * ItemBorder.X, em + ItemBorder.Y * 2), color);
+						Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + 2.0f * ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), color);
 					}
 					
 					// draw the text
@@ -863,7 +858,7 @@ namespace OpenBve
 
 			if (menu.Selection == menu.TopItem + visibleItems)
 			{
-				Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + 2.0f * ItemBorder.X, em + ItemBorder.Y * 2), highlightColor);
+				Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + 2.0f * ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), highlightColor);
 			}
 			// if not at the end of the menu, draw a dimmed ellipsis item at the bottom
 			if (i < menu.Items.Length - 1)

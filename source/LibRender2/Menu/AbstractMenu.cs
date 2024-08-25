@@ -68,7 +68,10 @@ namespace LibRender2.Menu
 		public MenuBase[] Menus = { };
 
 		/// <summary>The font currently used for drawing menu items</summary>
-		public OpenGlFont menuFont = null;
+		public OpenGlFont MenuFont = null;
+
+		/// <summary>The ratio between the menu font size and the line spacing</summary>
+		public const float LineSpacing = 1.75f;
 
 		/// <summary>The number of visible items in the menu</summary>
 		public int visibleItems;
