@@ -10,19 +10,25 @@ using OpenBveApi.Math;
 
 namespace ObjectViewer
 {
-	public sealed class GameMenu: AbstractMenu
+	public sealed partial class GameMenu: AbstractMenu
 	{
 
 		internal Picturebox filePictureBox;
 		internal Textbox fileTextBox;
 		private double lastTimeElapsed;
+		private static string SearchDirectory;
 
-		public GameMenu(BaseRenderer renderer) : base(renderer)
+		/// <summary>Returns the current menu instance (If applicable)</summary>
+		public static readonly GameMenu Instance = new GameMenu();
+
+		public GameMenu() : base(Program.Renderer)
 		{
 		}
 
 		public override void Initialize()
 		{
+			filePictureBox = new Picturebox(Program.Renderer);
+			fileTextBox = new Textbox(Program.Renderer, Program.Renderer.Fonts.NormalFont, Color128.White, Color128.Black);
 			Reset();
 			// choose the text font size according to screen height
 			// the boundaries follow approximately the progression
@@ -73,7 +79,7 @@ namespace ObjectViewer
 			{
 				MaxWidth = Program.Renderer.Screen.Width / 2;
 			}
-//			Menus[CurrMenu] = new SingleMenu(type, data, MaxWidth);
+			Menus[CurrMenu] = new SingleMenu(type, data, MaxWidth);
 			if (replace)
 			{
 				Menus[CurrMenu].Selection = 1;

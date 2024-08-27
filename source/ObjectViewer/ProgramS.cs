@@ -9,11 +9,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using LibRender2.Menu;
+using LibRender2.Screens;
 using LibRender2.Trains;
 using ObjectViewer.Graphics;
 using ObjectViewer.Trains;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -62,8 +65,11 @@ namespace ObjectViewer {
 
 		internal static TrainManager TrainManager;
 
+		/// <summary>The in-game menu system</summary>
+		internal static readonly GameMenu Menu = GameMenu.Instance;
+
 		// main
-	    [STAThread]
+		[STAThread]
 	    internal static void Main(string[] args)
 	    {
 		    CurrentHost = new Host();
@@ -357,6 +363,15 @@ namespace ObjectViewer {
 	                break;
 	            case Key.F7:
 					{
+						if (/* Program.CurrentHost.Platform == HostPlatform.AppleOSX &&  **TEMP** */IntPtr.Size != 4)
+						{
+							if (Program.Renderer.CurrentInterface != InterfaceType.Menu)
+							{
+								Program.Renderer.CurrentInterface = InterfaceType.Menu;
+								Program.Menu.PushMenu(MenuType.GameStart);
+							}
+							return;
+						}
 						OpenFileDialog Dialog = new OpenFileDialog
 					    {
 				            CheckFileExists = true,

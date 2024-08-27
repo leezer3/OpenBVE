@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
 using LibRender2.Primitives;
+using LibRender2.Screens;
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -384,6 +385,11 @@ namespace ObjectViewer.Graphics
 			// finalize
 			PopMatrix(MatrixMode.Projection);
 			PopMatrix(MatrixMode.Modelview);
+
+			if (CurrentInterface == InterfaceType.Menu)
+			{
+				Program.Menu.Draw(0);
+			}
 		}
 
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
