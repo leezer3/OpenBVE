@@ -381,15 +381,15 @@ namespace ObjectViewer.Graphics
 					}
 				}
 			}
-
+			if (CurrentInterface == InterfaceType.Menu)
+			{
+				Game.Menu.Draw(0);
+			}
 			// finalize
 			PopMatrix(MatrixMode.Projection);
 			PopMatrix(MatrixMode.Modelview);
 
-			if (CurrentInterface == InterfaceType.Menu)
-			{
-				Program.Menu.Draw(0);
-			}
+			
 		}
 
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)

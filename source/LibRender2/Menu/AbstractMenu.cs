@@ -29,7 +29,6 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using System.Collections.Generic;
 using LibRender2.Primitives;
-using System;
 using OpenBveApi.Input;
 using OpenBveApi.Interface;
 

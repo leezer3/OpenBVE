@@ -1,10 +1,3 @@
-// ╔══════════════════════════════════════════════════════════════╗
-// ║ Interface.cs and TrainManager.cs for the Structure Viewer    ║
-// ╠══════════════════════════════════════════════════════════════╣
-// ║ This file cannot be used in the openBVE main program.        ║
-// ║ The files from the openBVE main program cannot be used here. ║
-// ╚══════════════════════════════════════════════════════════════╝
-
 using System.Collections.Generic;
 using ObjectViewer.Graphics;
 using OpenBveApi;
@@ -35,6 +28,9 @@ namespace ObjectViewer {
 			ObjectManager.AnimatedWorldObjects = new WorldObject[4];
 			ObjectManager.AnimatedWorldObjectsUsed = 0;
 		}
+
+		/// <summary>The in-game menu system</summary>
+		internal static readonly GameMenu Menu = GameMenu.Instance;
 	}
 	
 	// --- Interface.cs ---

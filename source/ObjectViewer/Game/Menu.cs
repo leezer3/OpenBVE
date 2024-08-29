@@ -1,5 +1,4 @@
 ﻿using System;
-using LibRender2;
 using LibRender2.Menu;
 using LibRender2.Primitives;
 using LibRender2.Screens;
@@ -19,14 +18,15 @@ namespace ObjectViewer
 		private static string SearchDirectory;
 
 		/// <summary>Returns the current menu instance (If applicable)</summary>
-		public static readonly GameMenu Instance = new GameMenu();
+		public static GameMenu Instance;
 
-		public GameMenu() : base(Program.Renderer)
+		internal GameMenu() : base(Program.Renderer)
 		{
 		}
 
 		public override void Initialize()
 		{
+			Instance = new GameMenu();
 			filePictureBox = new Picturebox(Program.Renderer);
 			fileTextBox = new Textbox(Program.Renderer, Program.Renderer.Fonts.NormalFont, Color128.White, Color128.Black);
 			Reset();

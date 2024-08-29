@@ -64,10 +64,7 @@ namespace ObjectViewer {
 		internal static CurrentRoute CurrentRoute;
 
 		internal static TrainManager TrainManager;
-
-		/// <summary>The in-game menu system</summary>
-		internal static readonly GameMenu Menu = GameMenu.Instance;
-
+		
 		// main
 		[STAThread]
 	    internal static void Main(string[] args)
@@ -154,9 +151,12 @@ namespace ObjectViewer {
 		        Backend = PlatformBackend.PreferX11
 	        };
 	        Toolkit.Init(options);
-	        // initialize camera
-
-	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
+	        // --- load language ---
+	        string folder = Program.FileSystem.GetDataFolder("Languages");
+	        Translations.LoadLanguageFiles(folder);
+			GameMenu.Instance = new GameMenu();
+			// initialize camera
+			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
 	        currentGameWindow = new ObjectViewer(Renderer.Screen.Width, Renderer.Screen.Height, currentGraphicsMode, "Object Viewer", GameWindowFlags.Default)
 	        {
 		        Visible = true,
@@ -368,7 +368,7 @@ namespace ObjectViewer {
 							if (Program.Renderer.CurrentInterface != InterfaceType.Menu)
 							{
 								Program.Renderer.CurrentInterface = InterfaceType.Menu;
-								Program.Menu.PushMenu(MenuType.GameStart);
+								Game.Menu.PushMenu(MenuType.GameStart);
 							}
 							return;
 						}
