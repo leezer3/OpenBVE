@@ -288,6 +288,7 @@ namespace ObjectViewer
             MouseDown += Program.MouseEvent;
             MouseUp += Program.MouseEvent;
 			MouseWheel += Program.MouseWheelEvent;
+			MouseMove += Program.MouseMoveEvent;
 	        FileDrop += Program.DragFile;
 	        Program.Renderer.Camera.Reset(new Vector3(-5.0, 2.5, -25.0));
             Program.Renderer.Initialize();

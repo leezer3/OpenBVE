@@ -88,6 +88,54 @@ namespace ObjectViewer
 			Program.Renderer.CurrentInterface = InterfaceType.Menu;
 		}
 
+		public override bool ProcessMouseMove(int x, int y)
+		{
+			Program.currentGameWindow.CursorVisible = true;
+			if (CurrMenu < 0)
+			{
+				return false;
+			}
+			// if not in menu or during control customisation or down outside menu area, do nothing
+			if (Program.Renderer.CurrentInterface < InterfaceType.Menu)
+				return false;
+
+			// Load the current menu
+			MenuBase menu = Menus[CurrMenu];
+			if (menu.TopItem > 1 && y < topItemY && y > menuMin.Y)
+			{
+				//Item is the scroll up ellipsis
+				menu.Selection = menu.TopItem - 1;
+				return true;
+			}
+			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall || menu.Type == MenuType.Packages || (int)menu.Type >= 107)
+			{
+				fileTextBox.MouseMove(x, y);
+				//HACK: Use this to trigger our menu start button!
+				if (x > Program.Renderer.Screen.Width - 200 && x < Program.Renderer.Screen.Width - 10 && y > Program.Renderer.Screen.Height - 40 && y < Program.Renderer.Screen.Height - 10)
+				{
+					menu.Selection = int.MaxValue;
+					return true;
+				}
+			}
+			if (x < menuMin.X || x > menuMax.X || y < menuMin.Y || y > menuMax.Y)
+			{
+				return false;
+			}
+
+			int item = (int)((y - topItemY) / lineHeight + menu.TopItem);
+			// if the mouse is above a command item, select it
+			if (item >= 0 && item < menu.Items.Length && menu.Items[item] is MenuCommand /* || menu.Items[item] is MenuOption) */)
+			{
+				if (item < visibleItems + menu.TopItem + 1)
+				{
+					//Item is a standard menu entry or the scroll down elipsis
+					menu.Selection = item;
+					return true;
+				}
+			}
+			return false;
+		}
+
 		public override void Draw(double RealTimeElapsed)
 		{
 			double TimeElapsed = RealTimeElapsed - lastTimeElapsed;

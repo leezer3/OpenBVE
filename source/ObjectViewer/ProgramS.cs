@@ -183,25 +183,46 @@ namespace ObjectViewer {
 			}
 		}
 
-	    internal static void MouseEvent(object sender, MouseButtonEventArgs e)
+		internal static void MouseMoveEvent(object sender, MouseMoveEventArgs e)
+		{
+			switch (Program.Renderer.CurrentInterface)
+			{
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.ProcessMouseMove(e.X, e.Y);
+					break;
+			}
+		}
+
+		internal static void MouseEvent(object sender, MouseButtonEventArgs e)
 	    {
-            MouseCameraPosition = Renderer.Camera.AbsolutePosition;
-            MouseCameraDirection = Renderer.Camera.AbsoluteDirection;
-            MouseCameraUp = Renderer.Camera.AbsoluteUp;
-            MouseCameraSide = Renderer.Camera.AbsoluteSide;
-	        if (e.Button == OpenTK.Input.MouseButton.Left)
-	        {
-	            MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
-	        }
-	        if (e.Button == OpenTK.Input.MouseButton.Right)
-	        {
-	            MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 2 : 0;
-	        }
-	        if (e.Button == OpenTK.Input.MouseButton.Middle)
-	        {
-                MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
-	        }
-            previousMouseState = Mouse.GetState();
+		    switch (Program.Renderer.CurrentInterface)
+		    {
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.ProcessMouseDown(e.X, e.Y);
+					break;
+				default:
+					MouseCameraPosition = Renderer.Camera.AbsolutePosition;
+					MouseCameraDirection = Renderer.Camera.AbsoluteDirection;
+					MouseCameraUp = Renderer.Camera.AbsoluteUp;
+					MouseCameraSide = Renderer.Camera.AbsoluteSide;
+					if (e.Button == OpenTK.Input.MouseButton.Left)
+					{
+						MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
+					}
+					if (e.Button == OpenTK.Input.MouseButton.Right)
+					{
+						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 2 : 0;
+					}
+					if (e.Button == OpenTK.Input.MouseButton.Middle)
+					{
+						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
+					}
+					previousMouseState = Mouse.GetState();
+					break;
+		    }
+            
 	    }
 
 		internal static void DragFile(object sender, FileDropEventArgs e)
@@ -222,7 +243,7 @@ namespace ObjectViewer {
 
 	    internal static void MouseMovement()
 	    {
-	        if (MouseButton == 0) return;
+	        if (MouseButton == 0 || Program.Renderer.CurrentInterface != InterfaceType.Normal) return;
 	        currentMouseState = Mouse.GetState();
 	        if (currentMouseState != previousMouseState)
 	        {
