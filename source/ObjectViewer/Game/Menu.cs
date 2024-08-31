@@ -1,11 +1,16 @@
 ﻿using System;
+using System.IO;
 using LibRender2.Menu;
 using LibRender2.Primitives;
 using LibRender2.Screens;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Input;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Textures;
+using Path = OpenBveApi.Path;
 
 namespace ObjectViewer
 {
@@ -16,6 +21,7 @@ namespace ObjectViewer
 		internal Textbox fileTextBox;
 		private double lastTimeElapsed;
 		private static string SearchDirectory;
+		private static string currentFile;
 
 		/// <summary>Returns the current menu instance (If applicable)</summary>
 		public static GameMenu Instance;
@@ -26,7 +32,6 @@ namespace ObjectViewer
 
 		public override void Initialize()
 		{
-			Instance = new GameMenu();
 			filePictureBox = new Picturebox(Program.Renderer);
 			fileTextBox = new Textbox(Program.Renderer, Program.Renderer.Fonts.NormalFont, Color128.White, Color128.Black);
 			Reset();
@@ -56,6 +61,7 @@ namespace ObjectViewer
 			filePictureBox.Location = new Vector2(imageLoc, 0);
 			filePictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			filePictureBox.BackgroundColor = Color128.White;
+			IsInitialized = true;
 		}
 
 		public override void PushMenu(MenuType type, int data = 0, bool replace = false)
@@ -86,6 +92,113 @@ namespace ObjectViewer
 			}
 			ComputePosition();
 			Program.Renderer.CurrentInterface = InterfaceType.Menu;
+		}
+
+		public override void ProcessCommand(Translations.Command cmd, double timeElapsed)
+		{
+			if (CurrMenu < 0)
+			{
+				return;
+			}
+			MenuBase menu = Menus[CurrMenu];
+			// MenuBack is managed independently from single menu data
+			if (cmd == Translations.Command.MenuBack)
+			{
+				if (menu.Type == MenuType.GameStart)
+				{
+					Reset();
+					Program.Renderer.CurrentInterface = InterfaceType.Normal;
+				}
+				else
+				{
+					PopMenu();
+				}
+				return;
+			}
+			if (menu.Selection == -1)    // if menu has no selection, do nothing
+				return;
+			switch (cmd)
+			{
+				case Translations.Command.MenuUp: // UP
+					if (menu.Selection > 0 &&
+					    !(menu.Items[menu.Selection - 1] is MenuCaption))
+					{
+						menu.Selection--;
+						ComputePosition();
+					}
+
+					break;
+				case Translations.Command.MenuDown: // DOWN
+					if (menu.Selection < menu.Items.Length - 1)
+					{
+						menu.Selection++;
+						ComputePosition();
+					}
+
+					break;
+				//			case Translations.Command.MenuBack:	// ESC:	managed above
+				//				break;
+				case Translations.Command.MenuEnter: // ENTER
+					if (menu.Items[menu.Selection] is MenuCommand menuItem)
+					{
+						switch (menuItem.Tag)
+						{
+							// menu management commands
+							case MenuTag.MenuBack: // BACK TO PREVIOUS MENU
+								GameMenu.Instance.PopMenu();
+								break;
+							case MenuTag.MenuJumpToStation: // TO STATIONS MENU
+								GameMenu.Instance.PushMenu(MenuType.JumpToStation);
+								break;
+							case MenuTag.MenuExitToMainMenu: // TO EXIT MENU
+								GameMenu.Instance.PushMenu(MenuType.ExitToMainMenu);
+								break;
+							case MenuTag.MenuQuit: // TO QUIT MENU
+								GameMenu.Instance.PushMenu(MenuType.Quit);
+								break;
+							case MenuTag.MenuControls: // TO CONTROLS MENU
+								GameMenu.Instance.PushMenu(MenuType.Controls);
+								break;
+							case MenuTag.BackToSim: // OUT OF MENU BACK TO SIMULATION
+								Reset();
+								Program.Renderer.CurrentInterface = InterfaceType.Normal;
+								break;
+							case MenuTag.ObjectList:             // TO OBJECT LIST MENU
+								GameMenu.Instance.PushMenu(MenuType.ObjectList);
+								fileTextBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "errors", "route_please_select" });
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out filePictureBox.Texture);
+								break;
+							case MenuTag.Directory:     // SHOWS THE LIST OF FILES IN THE SELECTED DIR
+								SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
+								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								break;
+							case MenuTag.ParentDirectory:       // SHOWS THE LIST OF FILES IN THE PARENT DIR
+								if (string.IsNullOrEmpty(SearchDirectory))
+								{
+									return;
+								}
+
+								string oldSearchDirectory = SearchDirectory;
+								try
+								{
+									DirectoryInfo newDirectory = Directory.GetParent(SearchDirectory);
+									SearchDirectory = newDirectory == null ? string.Empty : Directory.GetParent(SearchDirectory)?.ToString();
+								}
+								catch
+								{
+									SearchDirectory = oldSearchDirectory;
+									return;
+								}
+								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								break;
+							case MenuTag.ObjectFile:
+								currentFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);
+								break;
+						}
+					}
+					break;
+			}
+		
 		}
 
 		public override bool ProcessMouseMove(int x, int y)

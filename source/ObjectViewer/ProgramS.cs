@@ -470,10 +470,24 @@ namespace ObjectViewer {
 	                RotateX = 1;
 	                break;
 	            case Key.Up:
-	                RotateY = -1;
+		            if (Renderer.CurrentInterface == InterfaceType.Normal)
+		            {
+			            RotateY = -1;
+					}
+		            else
+		            {
+			            Game.Menu.ProcessCommand(Translations.Command.MenuUp, 0);
+		            }
 	                break;
 	            case Key.Down:
-	                RotateY = 1;
+		            if (Renderer.CurrentInterface == InterfaceType.Normal)
+		            {
+			            RotateY = 1;
+					}
+		            else
+		            {
+						Game.Menu.ProcessCommand(Translations.Command.MenuDown, 0);
+					}
 	                break;
 	            case Key.A:
 	            case Key.Keypad4:
@@ -554,6 +568,18 @@ namespace ObjectViewer {
 					break;
 				case Key.F11:
 					Renderer.RenderStatsOverlay = !Renderer.RenderStatsOverlay;
+					break;
+				case Key.Enter:
+					if (Renderer.CurrentInterface != InterfaceType.Normal)
+					{
+						Game.Menu.ProcessCommand(Translations.Command.MenuEnter, 0);
+					}
+					break;
+				case Key.Escape:
+					if (Renderer.CurrentInterface != InterfaceType.Normal)
+					{
+						Game.Menu.ProcessCommand(Translations.Command.MenuBack, 0);
+					}
 					break;
 	        }
 	    }
