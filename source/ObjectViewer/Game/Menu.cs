@@ -193,6 +193,11 @@ namespace ObjectViewer
 								break;
 							case MenuTag.ObjectFile:
 								currentFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);
+								Program.Files.Add(currentFile);
+								Game.Reset();
+								Program.RefreshObjects();
+								Reset();
+								Program.Renderer.CurrentInterface = InterfaceType.Normal;
 								break;
 						}
 					}
