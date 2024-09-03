@@ -175,12 +175,22 @@ namespace ObjectViewer {
 	    
 
 		internal static void MouseWheelEvent(object sender, MouseWheelEventArgs e)
-		{	
-			if(e.Delta != 0)
+		{
+			switch (Program.Renderer.CurrentInterface)
 			{
-				double dx = -0.025 * e.Delta;
-				Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteDirection;
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.ProcessMouseScroll(e.Delta);
+					break;
+				default:
+					if (e.Delta != 0)
+					{
+						double dx = -0.025 * e.Delta;
+						Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteDirection;
+					}
+					break;
 			}
+			
 		}
 
 		internal static void MouseMoveEvent(object sender, MouseMoveEventArgs e)
@@ -200,7 +210,11 @@ namespace ObjectViewer {
 		    {
 				case InterfaceType.Menu:
 				case InterfaceType.GLMainMenu:
-					Game.Menu.ProcessMouseDown(e.X, e.Y);
+					if (e.IsPressed)
+					{
+						// viewer hooks up and down to same event
+						Game.Menu.ProcessMouseDown(e.X, e.Y);
+					}
 					break;
 				default:
 					MouseCameraPosition = Renderer.Camera.AbsolutePosition;
