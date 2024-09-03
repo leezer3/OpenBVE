@@ -32,7 +32,10 @@ namespace ObjectViewer
 						Items[0] = new MenuCommand("Open Object File", MenuTag.ObjectList, 0);
 						Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "title" }), MenuTag.Options, 0);
 						Items[2] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "quit" }), MenuTag.MenuQuit, 0);
-						SearchDirectory = Program.FileSystem.InitialRouteFolder;
+						if (string.IsNullOrEmpty(SearchDirectory))
+						{
+							SearchDirectory = Program.FileSystem.InitialRouteFolder;
+						}
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.ObjectList:

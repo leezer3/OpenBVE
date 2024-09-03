@@ -61,6 +61,7 @@ namespace ObjectViewer
 			filePictureBox.Location = new Vector2(imageLoc, 0);
 			filePictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			filePictureBox.BackgroundColor = Color128.White;
+			SearchDirectory = Interface.CurrentOptions.ObjectSearchDirectory;
 			IsInitialized = true;
 		}
 
@@ -198,6 +199,7 @@ namespace ObjectViewer
 								Program.RefreshObjects();
 								Reset();
 								Program.Renderer.CurrentInterface = InterfaceType.Normal;
+								Interface.CurrentOptions.ObjectSearchDirectory = SearchDirectory;
 								break;
 						}
 					}

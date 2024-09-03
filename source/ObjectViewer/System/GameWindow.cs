@@ -302,7 +302,8 @@ namespace ObjectViewer
 
         protected override void OnClosing(CancelEventArgs e)
         {
-	        Program.Renderer.visibilityThread = false;
+	        Options.SaveOptions();
+			Program.Renderer.visibilityThread = false;
         }
 
         protected override void OnUnload(EventArgs e)

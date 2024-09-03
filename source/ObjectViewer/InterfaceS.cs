@@ -37,6 +37,7 @@ namespace ObjectViewer {
 	internal static class Interface {
 
 		internal static readonly List<LogMessage> LogMessages = new List<LogMessage>();
+
 		internal static void AddMessage(MessageType Type, bool FileNotFound, string Text) {
 			LogMessages.Add(new LogMessage(Type, FileNotFound, Text));
 		}
@@ -44,6 +45,8 @@ namespace ObjectViewer {
 		internal class Options : BaseOptions
 		{
 			private ObjectOptimizationMode objectOptimizationMode;
+
+			internal string ObjectSearchDirectory;
 
 			/// <summary>
 			/// The mode of optimization to be performed on an object
