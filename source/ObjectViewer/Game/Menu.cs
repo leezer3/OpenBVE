@@ -192,6 +192,9 @@ namespace ObjectViewer
 								}
 								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
+							case MenuTag.Options:
+								Instance.PushMenu(MenuType.Options);
+								break;
 							case MenuTag.ObjectFile:
 								currentFile = Path.CombineFile(SearchDirectory, menu.Items[menu.Selection].Text);
 								Program.Files.Add(currentFile);
@@ -202,6 +205,10 @@ namespace ObjectViewer
 								Interface.CurrentOptions.ObjectSearchDirectory = SearchDirectory;
 								break;
 						}
+					}
+					else if (menu.Items[menu.Selection] is MenuOption opt)
+					{
+						opt.Flip();
 					}
 					break;
 			}
@@ -357,11 +364,11 @@ namespace ObjectViewer
 				else
 					Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourNormal, false);
-//				if (menu.Items[i] is MenuOption opt)
-//				{
-//					Renderer.OpenGlString.Draw(MenuFont, opt.CurrentOption.ToString(), new Vector2((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f, itemY),
-//						menu.Align, backgroundColor, false);
-//				}
+				if (menu.Items[i] is MenuOption opt)
+				{
+					Renderer.OpenGlString.Draw(MenuFont, opt.CurrentOption.ToString(), new Vector2((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f, itemY),
+						menu.Align, backgroundColor, false);
+				}
 				itemY += lineHeight;
 				if (menu.Items[i].Icon != null)
 				{

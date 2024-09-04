@@ -145,12 +145,13 @@ namespace LibRender2.Menu
 							}
 						}
 					}
+					BaseMenu.ComputePosition();
 					break;
 				case OptionType.FullScreen:
 					BaseMenu.CurrentOptions.FullscreenMode = !BaseMenu.CurrentOptions.FullscreenMode;
-					if (BaseMenu.CurrentOptions.FullscreenMode)
+					if (!BaseMenu.CurrentOptions.FullscreenMode)
 					{
-						BaseMenu.Renderer.SetWindowState(WindowState.Fullscreen);
+						BaseMenu.Renderer.SetWindowState(WindowState.Normal);
 						DisplayDevice.Default.RestoreResolution();
 					}
 					else
@@ -178,6 +179,7 @@ namespace LibRender2.Menu
 							}
 						}
 					}
+					BaseMenu.ComputePosition();
 					break;
 				case OptionType.Interpolation:
 					BaseMenu.CurrentOptions.Interpolation = (InterpolationMode)CurrentlySelectedOption;
