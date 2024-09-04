@@ -17,7 +17,7 @@ namespace ObjectViewer
 		/// access from Menu itself.</remarks>
 		private class SingleMenu : MenuBase
 		{
-			public SingleMenu(MenuType menuType, int data = 0, double MaxWidth = 0) : base(menuType)
+			public SingleMenu(AbstractMenu menu, MenuType menuType, int data = 0, double MaxWidth = 0) : base(menuType)
 			{
 				int i;
 				int jump = 0;
@@ -29,9 +29,9 @@ namespace ObjectViewer
 				{
 					case MenuType.GameStart: // top level menu
 						Items = new MenuEntry[3];
-						Items[0] = new MenuCommand("Open Object File", MenuTag.ObjectList, 0);
-						Items[1] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "title" }), MenuTag.Options, 0);
-						Items[2] = new MenuCommand(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "quit" }), MenuTag.MenuQuit, 0);
+						Items[0] = new MenuCommand(menu, "Open Object File", MenuTag.ObjectList, 0);
+						Items[1] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "title" }), MenuTag.Options, 0);
+						Items[2] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "quit" }), MenuTag.MenuQuit, 0);
 						if (string.IsNullOrEmpty(SearchDirectory))
 						{
 							SearchDirectory = Program.FileSystem.InitialRouteFolder;
@@ -66,8 +66,8 @@ namespace ObjectViewer
 						}
 
 						Items = new MenuEntry[potentialFiles.Length + directoryList.Length + 2];
-						Items[0] = new MenuCaption(SearchDirectory);
-						Items[1] = new MenuCommand("...", MenuTag.ParentDirectory, 0);
+						Items[0] = new MenuCaption(menu, SearchDirectory);
+						Items[1] = new MenuCommand(menu, "...", MenuTag.ParentDirectory, 0);
 						int totalEntries = 2;
 						for (int j = 0; j < directoryList.Length; j++)
 						{
@@ -76,7 +76,7 @@ namespace ObjectViewer
 							{
 								continue;
 							}
-							Items[totalEntries] = new MenuCommand(directoryInfo.Name, MenuTag.Directory, 0);
+							Items[totalEntries] = new MenuCommand(menu, directoryInfo.Name, MenuTag.Directory, 0);
 							if (drives)
 							{
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
@@ -98,7 +98,7 @@ namespace ObjectViewer
 							}
 							if (fileName.ToLowerInvariant().EndsWith(".csv") || fileName.ToLowerInvariant().EndsWith(".b3d") || fileName.ToLowerInvariant().EndsWith(".x") || fileName.ToLowerInvariant().EndsWith(".animated"))
 							{
-								Items[totalEntries] = new MenuCommand(fileName, MenuTag.ObjectFile, 0);
+								Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.ObjectFile, 0);
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_object.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
 								totalEntries++;
 							}

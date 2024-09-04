@@ -29,6 +29,8 @@ namespace LibRender2.Menu
 	/// <summary>The base abstract Menu Entry class</summary>
 	public abstract class MenuEntry
 	{
+		/// <summary>Holds a reference to the containing base menu</summary>
+		public readonly AbstractMenu BaseMenu;
 		/// <summary>The base text of the menu entry</summary>
 		public string Text;
 		/// <summary>The display text of the menu entry</summary>
@@ -85,6 +87,11 @@ namespace LibRender2.Menu
 		private double timer;
 		private int scroll;
 		private bool pause;
+
+		public MenuEntry(AbstractMenu menu)
+		{
+			BaseMenu = menu;
+		}
 
 	}
 }

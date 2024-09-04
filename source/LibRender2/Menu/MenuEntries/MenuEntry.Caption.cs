@@ -27,7 +27,7 @@ namespace LibRender2.Menu
 	/// <summary>A caption to be rendered at the top of the menu</summary>
 	public class MenuCaption : MenuEntry
 	{
-		public MenuCaption(string Text)
+		public MenuCaption(AbstractMenu menu, string Text) : base(menu)
 		{
 			this.Text = Text;
 		}

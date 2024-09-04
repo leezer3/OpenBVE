@@ -26,38 +26,38 @@ namespace ObjectViewer
 		/// <summary>Returns the current menu instance (If applicable)</summary>
 		public static GameMenu Instance;
 
-		internal GameMenu() : base(Program.Renderer)
+		internal GameMenu() : base(Program.Renderer, Interface.CurrentOptions)
 		{
 		}
 
 		public override void Initialize()
 		{
-			filePictureBox = new Picturebox(Program.Renderer);
-			fileTextBox = new Textbox(Program.Renderer, Program.Renderer.Fonts.NormalFont, Color128.White, Color128.Black);
+			filePictureBox = new Picturebox(Renderer);
+			fileTextBox = new Textbox(Renderer, Renderer.Fonts.NormalFont, Color128.White, Color128.Black);
 			Reset();
 			// choose the text font size according to screen height
 			// the boundaries follow approximately the progression
 			// of font sizes defined in Graphics/Fonts.cs
-			if (Program.Renderer.Screen.Height <= 512) MenuFont = Program.Renderer.Fonts.SmallFont;
-			else if (Program.Renderer.Screen.Height <= 680) MenuFont = Program.Renderer.Fonts.NormalFont;
-			else if (Program.Renderer.Screen.Height <= 890) MenuFont = Program.Renderer.Fonts.LargeFont;
-			else if (Program.Renderer.Screen.Height <= 1150) MenuFont = Program.Renderer.Fonts.VeryLargeFont;
-			else MenuFont = Program.Renderer.Fonts.EvenLargerFont;
+			if (Renderer.Screen.Height <= 512) MenuFont = Renderer.Fonts.SmallFont;
+			else if (Renderer.Screen.Height <= 680) MenuFont = Renderer.Fonts.NormalFont;
+			else if (Renderer.Screen.Height <= 890) MenuFont = Renderer.Fonts.LargeFont;
+			else if (Renderer.Screen.Height <= 1150) MenuFont = Renderer.Fonts.VeryLargeFont;
+			else MenuFont = Renderer.Fonts.EvenLargerFont;
 
 			lineHeight = (int)(MenuFont.FontSize * LineSpacing);
 			MenuBackKey = Key.Escape; // fixed in viewers
-			int quarterWidth = (int)(Program.Renderer.Screen.Width / 4.0);
-			int quarterHeight = (int)(Program.Renderer.Screen.Height / 4.0);
-			int descriptionLoc = Program.Renderer.Screen.Width - quarterWidth - quarterWidth / 2;
+			int quarterWidth = (int)(Renderer.Screen.Width / 4.0);
+			int quarterHeight = (int)(Renderer.Screen.Height / 4.0);
+			int descriptionLoc = Renderer.Screen.Width - quarterWidth - quarterWidth / 2;
 			int descriptionWidth = quarterWidth + quarterWidth / 2;
 			int descriptionHeight = descriptionWidth;
-			if (descriptionHeight + quarterWidth > Program.Renderer.Screen.Height - 50)
+			if (descriptionHeight + quarterWidth > Renderer.Screen.Height - 50)
 			{
-				descriptionHeight = Program.Renderer.Screen.Height - quarterWidth - 50;
+				descriptionHeight = Renderer.Screen.Height - quarterWidth - 50;
 			}
 			fileTextBox.Location = new Vector2(descriptionLoc, quarterWidth);
 			fileTextBox.Size = new Vector2(descriptionWidth, descriptionHeight);
-			int imageLoc = Program.Renderer.Screen.Width - quarterWidth - quarterWidth / 4;
+			int imageLoc = Renderer.Screen.Width - quarterWidth - quarterWidth / 4;
 			filePictureBox.Location = new Vector2(imageLoc, 0);
 			filePictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			filePictureBox.BackgroundColor = Color128.White;
@@ -67,10 +67,10 @@ namespace ObjectViewer
 
 		public override void PushMenu(MenuType type, int data = 0, bool replace = false)
 		{
-			if (Program.Renderer.CurrentInterface < InterfaceType.Menu)
+			if (Renderer.CurrentInterface < InterfaceType.Menu)
 			{
 				// Deliberately set to the standard cursor, as touch controls may have set to something else
-				Program.Renderer.SetCursor(OpenTK.MouseCursor.Default);
+				Renderer.SetCursor(OpenTK.MouseCursor.Default);
 			}
 			if (!IsInitialized)
 				Initialize();
@@ -84,15 +84,15 @@ namespace ObjectViewer
 			int MaxWidth = 0;
 			if ((int)type >= 100)
 			{
-				MaxWidth = Program.Renderer.Screen.Width / 2;
+				MaxWidth = Renderer.Screen.Width / 2;
 			}
-			Menus[CurrMenu] = new SingleMenu(type, data, MaxWidth);
+			Menus[CurrMenu] = new SingleMenu(this, type, data, MaxWidth);
 			if (replace)
 			{
 				Menus[CurrMenu].Selection = 1;
 			}
 			ComputePosition();
-			Program.Renderer.CurrentInterface = InterfaceType.Menu;
+			Renderer.CurrentInterface = InterfaceType.Menu;
 		}
 
 		public override void ProcessCommand(Translations.Command cmd, double timeElapsed)
@@ -108,7 +108,7 @@ namespace ObjectViewer
 				if (menu.Type == MenuType.GameStart)
 				{
 					Reset();
-					Program.Renderer.CurrentInterface = InterfaceType.Normal;
+					Renderer.CurrentInterface = InterfaceType.Normal;
 				}
 				else
 				{
@@ -162,7 +162,7 @@ namespace ObjectViewer
 								break;
 							case MenuTag.BackToSim: // OUT OF MENU BACK TO SIMULATION
 								Reset();
-								Program.Renderer.CurrentInterface = InterfaceType.Normal;
+								Renderer.CurrentInterface = InterfaceType.Normal;
 								break;
 							case MenuTag.ObjectList:             // TO OBJECT LIST MENU
 								GameMenu.Instance.PushMenu(MenuType.ObjectList);
@@ -198,7 +198,7 @@ namespace ObjectViewer
 								Game.Reset();
 								Program.RefreshObjects();
 								Reset();
-								Program.Renderer.CurrentInterface = InterfaceType.Normal;
+								Renderer.CurrentInterface = InterfaceType.Normal;
 								Interface.CurrentOptions.ObjectSearchDirectory = SearchDirectory;
 								break;
 						}
@@ -216,7 +216,7 @@ namespace ObjectViewer
 				return false;
 			}
 			// if not in menu or during control customisation or down outside menu area, do nothing
-			if (Program.Renderer.CurrentInterface < InterfaceType.Menu)
+			if (Renderer.CurrentInterface < InterfaceType.Menu)
 				return false;
 
 			// Load the current menu
@@ -231,7 +231,7 @@ namespace ObjectViewer
 			{
 				fileTextBox.MouseMove(x, y);
 				//HACK: Use this to trigger our menu start button!
-				if (x > Program.Renderer.Screen.Width - 200 && x < Program.Renderer.Screen.Width - 10 && y > Program.Renderer.Screen.Height - 40 && y < Program.Renderer.Screen.Height - 10)
+				if (x > Renderer.Screen.Width - 200 && x < Renderer.Screen.Width - 10 && y > Renderer.Screen.Height - 40 && y < Renderer.Screen.Height - 10)
 				{
 					menu.Selection = int.MaxValue;
 					return true;
@@ -267,7 +267,7 @@ namespace ObjectViewer
 
 			MenuBase menu = Menus[CurrMenu];
 			// overlay background
-			Program.Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height), overlayColor);
+			Renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(Renderer.Screen.Width, Renderer.Screen.Height), overlayColor);
 
 
 			double itemLeft, itemX;
@@ -275,14 +275,14 @@ namespace ObjectViewer
 			{
 				itemLeft = 0;
 				itemX = 16;
-				Program.Renderer.Rectangle.Draw(null, new Vector2(0, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				Renderer.Rectangle.Draw(null, new Vector2(0, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
 			}
 			else
 			{
-				itemLeft = (Program.Renderer.Screen.Width - menu.ItemWidth) / 2; // item left edge
+				itemLeft = (Renderer.Screen.Width - menu.ItemWidth) / 2; // item left edge
 																				 // if menu alignment is left, left-align items, otherwise centre them in the screen
-				itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : Program.Renderer.Screen.Width / 2.0;
-				Program.Renderer.Rectangle.Draw(null, new Vector2(menuMin.X - Border.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
+				itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : Renderer.Screen.Width / 2.0;
+				Renderer.Rectangle.Draw(null, new Vector2(menuMin.X - Border.X, menuMin.Y - Border.Y), new Vector2(menuMax.X - menuMin.X + 2.0f * Border.X, menuMax.Y - menuMin.Y + 2.0f * Border.Y), backgroundColor);
 			}
 
 			// draw the menu background
@@ -295,10 +295,10 @@ namespace ObjectViewer
 			// if not starting from the top of the menu, draw a dimmed ellipsis item
 			if (menu.Selection == menu.TopItem - 1)
 			{
-				Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, menuMin.Y /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), highlightColor);
+				Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, menuMin.Y /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), highlightColor);
 			}
 			if (menu.TopItem > 0)
-				Program.Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, menuMin.Y),
+				Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, menuMin.Y),
 					menu.Align, ColourDimmed, false);
 			// draw the items
 			double itemY = topItemY;
@@ -340,32 +340,32 @@ namespace ObjectViewer
 
 					if (itemLeft == 0)
 					{
-						Program.Renderer.Rectangle.Draw(null, new Vector2(ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.Width + 2.0f * ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), color);
+						Renderer.Rectangle.Draw(null, new Vector2(ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.Width + 2.0f * ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), color);
 					}
 					else
 					{
-						Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + 2.0f * ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), color);
+						Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + 2.0f * ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), color);
 					}
 
 					// draw the text
-					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
+					Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourHighlight, false);
 				}
 				else if (menu.Items[i] is MenuCaption)
-					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
+					Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourCaption, false);
 				else
-					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
+					Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourNormal, false);
 //				if (menu.Items[i] is MenuOption opt)
 //				{
-//					Program.Renderer.OpenGlString.Draw(MenuFont, opt.CurrentOption.ToString(), new Vector2((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f, itemY),
+//					Renderer.OpenGlString.Draw(MenuFont, opt.CurrentOption.ToString(), new Vector2((menuMax.X - menuMin.X + 2.0f * Border.X) + 4.0f, itemY),
 //						menu.Align, backgroundColor, false);
 //				}
 				itemY += lineHeight;
 				if (menu.Items[i].Icon != null)
 				{
-					Program.Renderer.Rectangle.DrawAlpha(menu.Items[i].Icon, new Vector2(iconX, itemY - itemHeight * 1.5), new Vector2(itemHeight, itemHeight), Color128.White);
+					Renderer.Rectangle.DrawAlpha(menu.Items[i].Icon, new Vector2(iconX, itemY - itemHeight * 1.5), new Vector2(itemHeight, itemHeight), Color128.White);
 					itemX = iconX;
 				}
 
@@ -374,11 +374,11 @@ namespace ObjectViewer
 
 			if (menu.Selection == menu.TopItem + visibleItems)
 			{
-				Program.Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + 2.0f * ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), highlightColor);
+				Renderer.Rectangle.Draw(null, new Vector2(itemLeft - ItemBorder.X, itemY /*-ItemBorder.Y*/), new Vector2(menu.ItemWidth + 2.0f * ItemBorder.X, MenuFont.FontSize + ItemBorder.Y * 2), highlightColor);
 			}
 			// if not at the end of the menu, draw a dimmed ellipsis item at the bottom
 			if (i < menu.Items.Length - 1)
-				Program.Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, itemY),
+				Renderer.OpenGlString.Draw(MenuFont, @"...", new Vector2(itemX, itemY),
 					menu.Align, ColourDimmed, false);
 		}
 	}

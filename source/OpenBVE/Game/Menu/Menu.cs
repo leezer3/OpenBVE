@@ -57,7 +57,7 @@ namespace OpenBve
 			MENU SYSTEM SINGLETON C'TOR
 		*********************/
 
-		private GameMenu() : base(Program.Renderer)
+		private GameMenu() : base(Program.Renderer, Interface.CurrentOptions)
 		{
 		}
 
@@ -174,7 +174,7 @@ namespace OpenBve
 			{
 				MaxWidth = Program.Renderer.Screen.Width / 2;
 			}
-			Menus[CurrMenu] = new SingleMenu(type, data, MaxWidth);
+			Menus[CurrMenu] = new SingleMenu(this, type, data, MaxWidth);
 			if (replace)
 			{
 				Menus[CurrMenu].Selection = 1;

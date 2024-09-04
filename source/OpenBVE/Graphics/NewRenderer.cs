@@ -501,6 +501,14 @@ namespace OpenBve.Graphics
 			}
 		}
 
+		public override void SetWindowSize(int width, int height)
+		{
+			Program.currentGameWindow.Width = width;
+			Program.currentGameWindow.Height = height;
+			Screen.Width = width; 
+			Screen.Height = height;
+		}
+
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
 		{
 		}

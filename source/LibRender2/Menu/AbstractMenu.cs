@@ -29,6 +29,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using System.Collections.Generic;
 using LibRender2.Primitives;
+using OpenBveApi;
 using OpenBveApi.Input;
 using OpenBveApi.Interface;
 
@@ -83,8 +84,11 @@ namespace LibRender2.Menu
 		public Vector2 menuMax;
 
 		/// <summary>Holds a reference to the base renderer</summary>
-		private readonly BaseRenderer Renderer;
+		public readonly BaseRenderer Renderer;
 
+		/// <summary>Holds a reference to the options</summary>
+		public readonly BaseOptions CurrentOptions;
+		
 		/// <summary>The index of the current menu within the stack</summary>
 		public int CurrMenu = -1;
 
@@ -110,9 +114,10 @@ namespace LibRender2.Menu
 		public Key MenuBackKey;
 
 		/// <summary>Creates a new menu instance</summary>
-		protected AbstractMenu(BaseRenderer renderer)
+		protected AbstractMenu(BaseRenderer renderer, BaseOptions currentOptions)
 		{
 			Renderer = renderer;
+			CurrentOptions = currentOptions;
 		}
 
 		/// <summary>Initializes the menu system upon first use</summary>
