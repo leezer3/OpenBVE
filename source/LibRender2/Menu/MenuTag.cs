@@ -99,6 +99,8 @@ namespace LibRender2.Menu
 		/// <summary>Displays a list of objects</summary>
 		ObjectList,
 		/// <summary>Selects an object file to load</summary>
-		ObjectFile
+		ObjectFile,
+		/// <summary>Shows the list of current errors</summary>
+		ErrorList
 	}
 }

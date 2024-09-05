@@ -28,10 +28,11 @@ namespace ObjectViewer
 				switch (menuType)
 				{
 					case MenuType.GameStart: // top level menu
-						Items = new MenuEntry[3];
+						Items = new MenuEntry[4];
 						Items[0] = new MenuCommand(menu, "Open Object File", MenuTag.ObjectList, 0);
 						Items[1] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "title" }), MenuTag.Options, 0);
-						Items[2] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "quit" }), MenuTag.MenuQuit, 0);
+						Items[2] = new MenuCommand(menu, "Show Errors", MenuTag.ErrorList, 0);
+						Items[3] = new MenuCommand(menu, "Close", MenuTag.BackToSim, 0);
 						if (string.IsNullOrEmpty(SearchDirectory))
 						{
 							SearchDirectory = Program.FileSystem.InitialRouteFolder;
@@ -138,6 +139,29 @@ namespace ObjectViewer
 						Items[5] = new MenuOption(menu, OptionType.AntialiasingLevel, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "quality_interpolation_antialiasing_level" }), new[] { "0", "2", "4", "8", "16" });
 						Items[6] = new MenuOption(menu, OptionType.ViewingDistance, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "quality_distance_viewingdistance" }), new[] { "400", "600", "800", "1000", "1500", "2000" });
 						Items[7] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "back" }), MenuTag.MenuBack, 0);
+						Align = TextAlignment.TopLeft;
+						break;
+					case MenuType.ErrorList:
+						Items = new MenuEntry[Interface.LogMessages.Count + 2];
+						Items[0] = Interface.LogMessages.Count == 0 ? new MenuCaption(menu, "No current errors / warnings.") : new MenuCaption(menu, Interface.LogMessages.Count + " total errors / warnings.");
+
+						for (int j = 0; j < Interface.LogMessages.Count; j++)
+						{
+							Items[j + 1] = new MenuErrorDisplay(menu, Interface.LogMessages[j].Text);
+							switch (Interface.LogMessages[j].Type)
+							{
+								case MessageType.Information:
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_information.png"), new TextureParameters(null, null), out Items[j + 1].Icon);
+									break;
+								case MessageType.Warning:
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_warning.png"), new TextureParameters(null, null), out Items[j + 1].Icon);
+									break;
+								case MessageType.Error:
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_error.png"), new TextureParameters(null, null), out Items[j + 1].Icon);
+									break;
+							}
+						}
+						Items[Items.Length -1] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "back" }), MenuTag.MenuBack, 0);
 						Align = TextAlignment.TopLeft;
 						break;
 				}

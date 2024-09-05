@@ -146,32 +146,35 @@ namespace ObjectViewer
 						{
 							// menu management commands
 							case MenuTag.MenuBack: // BACK TO PREVIOUS MENU
-								GameMenu.Instance.PopMenu();
+								Instance.PopMenu();
 								break;
 							case MenuTag.MenuJumpToStation: // TO STATIONS MENU
-								GameMenu.Instance.PushMenu(MenuType.JumpToStation);
+								Instance.PushMenu(MenuType.JumpToStation);
 								break;
 							case MenuTag.MenuExitToMainMenu: // TO EXIT MENU
-								GameMenu.Instance.PushMenu(MenuType.ExitToMainMenu);
+								Instance.PushMenu(MenuType.ExitToMainMenu);
 								break;
 							case MenuTag.MenuQuit: // TO QUIT MENU
-								GameMenu.Instance.PushMenu(MenuType.Quit);
+								Instance.PushMenu(MenuType.Quit);
 								break;
 							case MenuTag.MenuControls: // TO CONTROLS MENU
-								GameMenu.Instance.PushMenu(MenuType.Controls);
+								Instance.PushMenu(MenuType.Controls);
 								break;
 							case MenuTag.BackToSim: // OUT OF MENU BACK TO SIMULATION
 								Reset();
 								Renderer.CurrentInterface = InterfaceType.Normal;
 								break;
 							case MenuTag.ObjectList:             // TO OBJECT LIST MENU
-								GameMenu.Instance.PushMenu(MenuType.ObjectList);
+								Instance.PushMenu(MenuType.ObjectList);
 								fileTextBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "errors", "route_please_select" });
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out filePictureBox.Texture);
 								break;
+							case MenuTag.ErrorList:
+								Instance.PushMenu(MenuType.ErrorList);
+								break;
 							case MenuTag.Directory:     // SHOWS THE LIST OF FILES IN THE SELECTED DIR
 								SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
-								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.ParentDirectory:       // SHOWS THE LIST OF FILES IN THE PARENT DIR
 								if (string.IsNullOrEmpty(SearchDirectory))
@@ -190,7 +193,7 @@ namespace ObjectViewer
 									SearchDirectory = oldSearchDirectory;
 									return;
 								}
-								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.Options:
 								Instance.PushMenu(MenuType.Options);
@@ -251,7 +254,7 @@ namespace ObjectViewer
 
 			int item = (int)((y - topItemY) / lineHeight + menu.TopItem);
 			// if the mouse is above a command item, select it
-			if (item >= 0 && item < menu.Items.Length && menu.Items[item] is MenuCommand || menu.Items[item] is MenuOption)
+			if (item >= 0 && item < menu.Items.Length && (menu.Items[item] is MenuCommand || menu.Items[item] is MenuOption))
 			{
 				if (item < visibleItems + menu.TopItem + 1)
 				{

@@ -68,6 +68,8 @@ namespace LibRender2.Menu
 		/// <summary>A menu allowing switch settings to be changed</summary>
 		ChangeSwitch,
 		/// <summary>Displays a list of object files</summary>
-		ObjectList
+		ObjectList,
+		/// <summary>Displays the current list of errors</summary>
+		ErrorList
 	}
 }
