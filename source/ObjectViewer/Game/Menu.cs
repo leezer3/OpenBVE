@@ -251,7 +251,7 @@ namespace ObjectViewer
 
 			int item = (int)((y - topItemY) / lineHeight + menu.TopItem);
 			// if the mouse is above a command item, select it
-			if (item >= 0 && item < menu.Items.Length && menu.Items[item] is MenuCommand /* || menu.Items[item] is MenuOption) */)
+			if (item >= 0 && item < menu.Items.Length && menu.Items[item] is MenuCommand || menu.Items[item] is MenuOption)
 			{
 				if (item < visibleItems + menu.TopItem + 1)
 				{

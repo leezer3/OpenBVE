@@ -96,11 +96,25 @@ namespace ObjectViewer
 							{
 								continue;
 							}
-							if (fileName.ToLowerInvariant().EndsWith(".csv") || fileName.ToLowerInvariant().EndsWith(".b3d") || fileName.ToLowerInvariant().EndsWith(".x") || fileName.ToLowerInvariant().EndsWith(".animated"))
+							FileInfo fi = new FileInfo(fileName);
+							switch (fi.Extension.ToLowerInvariant())
 							{
-								Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.ObjectFile, 0);
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_object.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
-								totalEntries++;
+								case ".csv":
+								case ".b3d":
+									Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.ObjectFile, 0);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_object.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
+									totalEntries++;
+									break;
+								case ".obj":
+									Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.ObjectFile, 0);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_wavefront.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
+									totalEntries++;
+									break;
+								case ".x":
+									Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.ObjectFile, 0);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_xobject.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
+									totalEntries++;
+									break;
 							}
 						}
 						Array.Resize(ref Items, totalEntries);
