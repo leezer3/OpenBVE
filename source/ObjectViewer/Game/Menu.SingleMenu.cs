@@ -102,6 +102,7 @@ namespace ObjectViewer
 							{
 								case ".csv":
 								case ".b3d":
+								case ".animated":
 									Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.ObjectFile, 0);
 									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_object.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
 									totalEntries++;

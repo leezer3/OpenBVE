@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -269,38 +270,52 @@ namespace ObjectViewer.Graphics
 
 				if (VisibleObjects.Objects.Count == 0 && ObjectManager.AnimatedWorldObjectsUsed == 0)
 				{
-					keys = new[] { new[] { "F7" }, new[] { "F8" }, new[] { "F10" } };
-					Keys.Render(4, 4, 20, Fonts.SmallFont, keys);
-					OpenGlString.Draw(Fonts.SmallFont, "Open one or more objects", new Vector2(32, 4), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 24), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Display the train settings window", new Vector2(32, 44), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"v{Application.ProductVersion}", new Vector2(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, TextColor);
+					int errorPos;
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						keys = new[] { new[] { "esc" }};
+						Keys.Render(4, 4, 20, Fonts.SmallFont, keys);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the menu", new Vector2(32, 4), TextAlignment.TopLeft, TextColor);
+						OpenGlString.Draw(Fonts.SmallFont, $"v{Application.ProductVersion}", new Vector2(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, TextColor);
+						errorPos = 24;
+					}
+					else
+					{
+						keys = new[] { new[] { "F7" }, new[] { "F8" }, new[] { "F10" } };
+						Keys.Render(4, 4, 20, Fonts.SmallFont, keys);
+						OpenGlString.Draw(Fonts.SmallFont, "Open one or more objects", new Vector2(32, 4), TextAlignment.TopLeft, TextColor);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 24), TextAlignment.TopLeft, TextColor);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the train settings window", new Vector2(32, 44), TextAlignment.TopLeft, TextColor);
+						OpenGlString.Draw(Fonts.SmallFont, $"v{Application.ProductVersion}", new Vector2(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, TextColor);
+						errorPos = 64;
+					}
+					
 					if (Interface.LogMessages.Count == 1)
 					{
-						Keys.Render(4, 64, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
+						Keys.Render(4, errorPos, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
 
 						if (Interface.LogMessages[0].Type != MessageType.Information)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Vector2(32, 64), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Vector2(32, errorPos), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
 						else
 						{
 							//If all of our messages are information, then print the message text in grey
-							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Vector2(32, 64), TextAlignment.TopLeft, TextColor);
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Vector2(32, errorPos), TextAlignment.TopLeft, TextColor);
 						}
 					}
 					else if (Interface.LogMessages.Count > 1)
 					{
-						Keys.Render(4, 64, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
+						Keys.Render(4, errorPos, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
 						bool error = Interface.LogMessages.Any(x => x.Type != MessageType.Information);
 
 						if (error)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} error messages recently generated.", new Vector2(32, 64), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} error messages recently generated.", new Vector2(32, errorPos), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
 						else
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Vector2(32, 64), TextAlignment.TopLeft, TextColor);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Vector2(32, errorPos), TextAlignment.TopLeft, TextColor);
 						}
 					}
 				}
@@ -308,13 +323,31 @@ namespace ObjectViewer.Graphics
 				{
 					OpenGlString.Draw(Fonts.SmallFont, $"Position: {Camera.AbsolutePosition.X.ToString("0.00", culture)}, {Camera.AbsolutePosition.Y.ToString("0.00", culture)}, {Camera.AbsolutePosition.Z.ToString("0.00", culture)}", new Vector2((int)(0.5 * Screen.Width - 88), 4), TextAlignment.TopLeft, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, ForceLegacyOpenGL ? $"Renderer: Old (GL 1.2)- GL 3.0 not available" : $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
-					keys = new[] { new[] { "F5" }, new[] { "F7" }, new[] { "del" }, new[] { "F8" }, new[] { "F10" } };
-					Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
-					OpenGlString.Draw(Fonts.SmallFont, "Reload the currently open objects", new Vector2(32, 4), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Open additional objects", new Vector2(32, 24), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Clear currently open objects", new Vector2(32, 44), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 64), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Display the train settings window", new Vector2(32, 84), TextAlignment.TopLeft, TextColor);
+
+					int errorPos;
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						keys = new[] { new[] { "F5" }, new[] { "esc" }, new[] { "del" }};
+						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
+						OpenGlString.Draw(Fonts.SmallFont, "Reload the currently open objects", new Vector2(32, 4), TextAlignment.TopLeft, TextColor);
+						OpenGlString.Draw(Fonts.SmallFont, "Show the menu", new Vector2(32, 24), TextAlignment.TopLeft, TextColor);
+						OpenGlString.Draw(Fonts.SmallFont, "Clear currently open objects", new Vector2(32, 44), TextAlignment.TopLeft, TextColor);
+						errorPos = 72;
+					}
+					else
+					{
+						OpenGlString.Draw(Fonts.SmallFont, $"Position: {Camera.AbsolutePosition.X.ToString("0.00", culture)}, {Camera.AbsolutePosition.Y.ToString("0.00", culture)}, {Camera.AbsolutePosition.Z.ToString("0.00", culture)}", new Vector2((int)(0.5 * Screen.Width - 88), 4), TextAlignment.TopLeft, TextColor);
+						OpenGlString.Draw(Fonts.SmallFont, ForceLegacyOpenGL ? $"Renderer: Old (GL 1.2)- GL 3.0 not available" : $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
+						keys = new[] { new[] { "F5" }, new[] { "F7" }, new[] { "del" }, new[] { "F8" }, new[] { "F10" } };
+						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
+						OpenGlString.Draw(Fonts.SmallFont, "Reload the currently open objects", new Vector2(32, 4), TextAlignment.TopLeft, TextColor);
+						OpenGlString.Draw(Fonts.SmallFont, "Open additional objects", new Vector2(32, 24), TextAlignment.TopLeft, TextColor);
+						OpenGlString.Draw(Fonts.SmallFont, "Clear currently open objects", new Vector2(32, 44), TextAlignment.TopLeft, TextColor);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 64), TextAlignment.TopLeft, TextColor);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the train settings window", new Vector2(32, 84), TextAlignment.TopLeft, TextColor);
+						errorPos = 112;
+					}
+					
 
 					keys = new[] { new[] { "F" }, new[] { "N" }, new[] { "L" }, new[] { "G" }, new[] { "B" }, new[] { "I" }, new[] { "R" } };
 					Keys.Render(Screen.Width - 20, 4, 16, Fonts.SmallFont, keys);
@@ -346,30 +379,30 @@ namespace ObjectViewer.Graphics
 
 					if (Interface.LogMessages.Count == 1)
 					{
-						Keys.Render(4, 112, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
+						Keys.Render(4, errorPos, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
 
 						if (Interface.LogMessages[0].Type != MessageType.Information)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Vector2(32, 112), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Vector2(32, errorPos), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
 						else
 						{
 							//If all of our messages are information, then print the message text in grey
-							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Vector2(32, 112), TextAlignment.TopLeft, TextColor);
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Vector2(32, errorPos), TextAlignment.TopLeft, TextColor);
 						}
 					}
 					else if (Interface.LogMessages.Count > 1)
 					{
-						Keys.Render(4, 112, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
+						Keys.Render(4, errorPos, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
 						bool error = Interface.LogMessages.Any(x => x.Type != MessageType.Information);
 
 						if (error)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} error messages recently generated.", new Vector2(32, 112), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} error messages recently generated.", new Vector2(32, errorPos), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
 						else
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Vector2(32, 112), TextAlignment.TopLeft, TextColor);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count.ToString(culture)} messages recently generated.", new Vector2(32, errorPos), TextAlignment.TopLeft, TextColor);
 						}
 					}
 

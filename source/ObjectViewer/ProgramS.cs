@@ -387,7 +387,6 @@ namespace ObjectViewer {
 	    {
 	        switch (e.Key)
 	        {
-
 	            case Key.LShift:
 	            case Key.RShift:
 	                ShiftPressed = true;
@@ -398,13 +397,8 @@ namespace ObjectViewer {
 	                break;
 	            case Key.F7:
 					{
-						if (/* Program.CurrentHost.Platform == HostPlatform.AppleOSX &&  **TEMP** */IntPtr.Size != 4)
+						if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 						{
-							if (Program.Renderer.CurrentInterface != InterfaceType.Menu)
-							{
-								Program.Renderer.CurrentInterface = InterfaceType.Menu;
-								Game.Menu.PushMenu(MenuType.GameStart);
-							}
 							return;
 						}
 						OpenFileDialog Dialog = new OpenFileDialog
@@ -464,7 +458,13 @@ namespace ObjectViewer {
 					} 
 					break;
 	            case Key.F9:
-	                if (Interface.LogMessages.Count != 0)
+		            if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+		            {
+						Program.Renderer.CurrentInterface = InterfaceType.Menu;
+						Game.Menu.PushMenu(MenuType.ErrorList);
+						return;
+		            }
+					if (Interface.LogMessages.Count != 0)
 	                {
 	                    formMessages.ShowMessages();
                         Application.DoEvents();
@@ -545,11 +545,19 @@ namespace ObjectViewer {
 	                Renderer.OptionInterface = !Renderer.OptionInterface;
 	                break;
                 case Key.F8:
-                    formOptions.ShowOptions();
+	                if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+	                {
+		                return;
+	                }
+					formOptions.ShowOptions();
                     Application.DoEvents();
                     break;
                 case Key.F10:
-                    formTrain.ShowTrainSettings();
+	                if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+	                {
+		                return;
+	                }
+					formTrain.ShowTrainSettings();
                     break;
 	            case Key.G:
 	            case Key.C:
@@ -590,10 +598,19 @@ namespace ObjectViewer {
 					}
 					break;
 				case Key.Escape:
-					if (Renderer.CurrentInterface != InterfaceType.Normal)
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 					{
-						Game.Menu.ProcessCommand(Translations.Command.MenuBack, 0);
+						if (Renderer.CurrentInterface != InterfaceType.Normal)
+						{
+							Game.Menu.ProcessCommand(Translations.Command.MenuBack, 0);
+						}
+						else
+						{
+							Program.Renderer.CurrentInterface = InterfaceType.Menu;
+							Game.Menu.PushMenu(MenuType.GameStart);
+						}
 					}
+					
 					break;
 	        }
 	    }
