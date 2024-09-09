@@ -95,7 +95,7 @@ namespace ObjectViewer.Graphics
 		}
 
 		// render scene
-		internal void RenderScene()
+		internal void RenderScene(double timeElapsed)
 		{
 			lastObjectState = null;
 			if (AvailableNewRenderer)
@@ -249,11 +249,11 @@ namespace ObjectViewer.Graphics
 			UnsetAlphaFunc();
 			GL.Disable(EnableCap.DepthTest);
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
-			RenderOverlays();
+			RenderOverlays(timeElapsed);
 			OptionLighting = true;
 		}
 
-		private void RenderOverlays()
+		private void RenderOverlays(double timeElapsed)
 		{
 			//Initialize openGL
 			SetBlendFunc();
@@ -419,7 +419,7 @@ namespace ObjectViewer.Graphics
 			}
 			if (CurrentInterface == InterfaceType.Menu)
 			{
-				Game.Menu.Draw(0);
+				Game.Menu.Draw(timeElapsed);
 			}
 			// finalize
 			PopMatrix(MatrixMode.Projection);
