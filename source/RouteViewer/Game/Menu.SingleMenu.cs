@@ -30,7 +30,7 @@ namespace RouteViewer
 				{
 					case MenuType.GameStart: // top level menu
 						Items = new MenuEntry[4];
-						Items[0] = new MenuCommand(menu, "Open Object File", MenuTag.ObjectList, 0);
+						Items[0] = new MenuCommand(menu, "Open Route File", MenuTag.RouteList, 0);
 						Items[1] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "title" }), MenuTag.Options, 0);
 						Items[2] = new MenuCommand(menu, "Show Errors", MenuTag.ErrorList, 0);
 						Items[3] = new MenuCommand(menu, "Close", MenuTag.BackToSim, 0);
@@ -40,9 +40,9 @@ namespace RouteViewer
 						}
 						Align = TextAlignment.TopLeft;
 						break;
-					case MenuType.ObjectList:
-						string[] potentialFiles = { };
-						string[] directoryList = { };
+					case MenuType.RouteList:
+						string[] potentialFiles = new string[] { };
+						string[] directoryList = new string[] { };
 						bool drives = false;
 						if (SearchDirectory != string.Empty)
 						{
@@ -98,26 +98,11 @@ namespace RouteViewer
 							{
 								continue;
 							}
-							FileInfo fi = new FileInfo(fileName);
-							switch (fi.Extension.ToLowerInvariant())
+							if (fileName.ToLowerInvariant().EndsWith(".csv") || fileName.ToLowerInvariant().EndsWith(".rw"))
 							{
-								case ".csv":
-								case ".b3d":
-								case ".animated":
-									Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.ObjectFile, 0);
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_object.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
-									totalEntries++;
-									break;
-								case ".obj":
-									Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.ObjectFile, 0);
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_wavefront.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
-									totalEntries++;
-									break;
-								case ".x":
-									Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.ObjectFile, 0);
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_xobject.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
-									totalEntries++;
-									break;
+								Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.RouteFile, 0);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_route.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
+								totalEntries++;
 							}
 						}
 						Array.Resize(ref Items, totalEntries);

@@ -165,8 +165,8 @@ namespace RouteViewer
 								Reset();
 								Renderer.CurrentInterface = InterfaceType.Normal;
 								break;
-							case MenuTag.ObjectList:             // TO OBJECT LIST MENU
-								Instance.PushMenu(MenuType.ObjectList);
+							case MenuTag.RouteList:             // TO ROUTE LIST MENU
+								Instance.PushMenu(MenuType.RouteList);
 								fileTextBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "errors", "route_please_select" });
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out filePictureBox.Texture);
 								break;

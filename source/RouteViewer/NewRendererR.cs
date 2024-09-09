@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
+using LibRender2.Screens;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
@@ -72,7 +73,7 @@ namespace RouteViewer
 		}
 
 		// render scene
-		internal void RenderScene(double TimeElapsed)
+		internal void RenderScene(double timeElapsed)
 		{
 			lastObjectState = null;
 			ReleaseResources();
@@ -148,7 +149,7 @@ namespace RouteViewer
 
 			// render background
 			GL.Disable(EnableCap.DepthTest);
-			Program.CurrentRoute.UpdateBackground(TimeElapsed, false);
+			Program.CurrentRoute.UpdateBackground(timeElapsed, false);
 
 			if (OptionEvents)
 			{
@@ -331,7 +332,7 @@ namespace RouteViewer
 			UnsetAlphaFunc();
 			GL.Disable(EnableCap.DepthTest);
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
-			RenderOverlays();
+			RenderOverlays(timeElapsed);
 			OptionLighting = true;
 		}
 
@@ -515,7 +516,7 @@ namespace RouteViewer
 			OptionLighting = true;
 		}
 
-		private void RenderOverlays()
+		private void RenderOverlays(double timeElapsed)
 		{
 			//Initialize openGL
 			SetBlendFunc();
@@ -746,6 +747,11 @@ namespace RouteViewer
 						
 					}
 				}
+			}
+
+			if (CurrentInterface == InterfaceType.Menu)
+			{
+				Game.Menu.Draw(timeElapsed);
 			}
 
 			// finalize

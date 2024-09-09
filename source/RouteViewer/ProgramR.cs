@@ -28,6 +28,8 @@ using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using ButtonState = OpenTK.Input.ButtonState;
+using LibRender2.Menu;
+using LibRender2.Screens;
 
 namespace RouteViewer
 {
@@ -84,7 +86,7 @@ namespace RouteViewer
 				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
-			
+			GameMenu.Instance = new GameMenu();
 			// command line arguments
 			string objectsToLoad = string.Empty;
 			if (args.Length != 0)
@@ -291,28 +293,64 @@ namespace RouteViewer
 			}
 		}
 
+		internal static void MouseWheelEvent(object sender, MouseWheelEventArgs e)
+		{
+			switch (Program.Renderer.CurrentInterface)
+			{
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.ProcessMouseScroll(e.Delta);
+					break;
+			}
+		}
+
+		internal static void MouseMoveEvent(object sender, MouseMoveEventArgs e)
+		{
+			switch (Program.Renderer.CurrentInterface)
+			{
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.ProcessMouseMove(e.X, e.Y);
+					break;
+			}
+		}
+
 		internal static void MouseEvent(object sender, MouseButtonEventArgs e)
 		{
-			if (e.Button == OpenTK.Input.MouseButton.Left)
+			switch (Renderer.CurrentInterface)
 			{
-				MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					if (e.IsPressed)
+					{
+						// viewer hooks up and down to same event
+						Game.Menu.ProcessMouseDown(e.X, e.Y);
+					}
+					break;
+				default:
+					if (e.Button == OpenTK.Input.MouseButton.Left)
+					{
+						MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
+					}
+					if (e.Button == OpenTK.Input.MouseButton.Right)
+					{
+						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 2 : 0;
+					}
+					if (e.Button == OpenTK.Input.MouseButton.Middle)
+					{
+						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
+					}
+					previousMouseState = Mouse.GetState();
+					if (MouseButton == 0)
+					{
+						Renderer.Camera.AlignmentDirection.Yaw = 0.0;
+						Renderer.Camera.AlignmentDirection.Pitch = 0.0;
+						Renderer.Camera.AlignmentDirection.Position.X = 0.0;
+						Renderer.Camera.AlignmentDirection.Position.Y = 0.0;
+					}
+					break;
 			}
-			if (e.Button == OpenTK.Input.MouseButton.Right)
-			{
-				MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 2 : 0;
-			}
-			if (e.Button == OpenTK.Input.MouseButton.Middle)
-			{
-				MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
-			}
-			previousMouseState = Mouse.GetState();
-			if (MouseButton == 0)
-			{
-				Renderer.Camera.AlignmentDirection.Yaw = 0.0;
-				Renderer.Camera.AlignmentDirection.Pitch = 0.0;
-				Renderer.Camera.AlignmentDirection.Position.X = 0.0;
-				Renderer.Camera.AlignmentDirection.Position.Y = 0.0;
-			}
+			
 		}
 
 		internal static MouseState currentMouseState;
@@ -320,10 +358,8 @@ namespace RouteViewer
 
 		internal static void MouseMovement()
 		{
-			if (MouseButton == 0)
-			{
-				return;
-			}
+			if (MouseButton == 0 || Program.Renderer.CurrentInterface != InterfaceType.Normal) return;
+
 			currentMouseState = Mouse.GetState();
 			if (currentMouseState != previousMouseState)
 			{
@@ -700,7 +736,18 @@ namespace RouteViewer
 					JumpToPositionEnabled = false;
 					break;
 				case Key.Escape:
-					JumpToPositionEnabled = false;
+					if (JumpToPositionEnabled)
+					{
+						JumpToPositionEnabled = false;
+					}
+					else
+					{
+						if (IntPtr.Size != 4)
+						{
+							Program.Renderer.CurrentInterface = InterfaceType.Menu;
+							Game.Menu.PushMenu(MenuType.GameStart);
+						}
+					}
 					break;
 				case Key.R:
 					Renderer.SwitchOpenGLVersion();

@@ -190,7 +190,6 @@ namespace ObjectViewer {
 					}
 					break;
 			}
-			
 		}
 
 		internal static void MouseMoveEvent(object sender, MouseMoveEventArgs e)
