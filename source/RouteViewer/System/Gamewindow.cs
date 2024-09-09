@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using OpenBveApi;
@@ -183,7 +182,7 @@ namespace RouteViewer
 
 #pragma warning disable 0649
 		private static ConcurrentQueue<ThreadStart> jobs;
-#pragma warning enable 0649
+#pragma warning restore 0649
 
 		/// <summary>This method is used during loading to run commands requiring an OpenGL context in the main render loop</summary>
 		/// <param name="job">The OpenGL command</param>

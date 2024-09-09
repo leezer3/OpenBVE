@@ -236,9 +236,7 @@ namespace AssimpNET.Obj
 						break;
 					case 'u': // Parse a material desc. setter
 						{
-							string name;
-
-							GetNameNoSpace(DataIt, DataEnd, out name);
+							GetNameNoSpace(DataIt, DataEnd, out string name);
 
 							int nextSpace = name.IndexOf(" ", StringComparison.OrdinalIgnoreCase);
 							if (nextSpace != -1)
@@ -254,9 +252,7 @@ namespace AssimpNET.Obj
 						break;
 					case 'm': // Parse a material library or merging group ('mg')
 						{
-							string name;
-
-							GetNameNoSpace(DataIt, DataEnd, out name);
+							GetNameNoSpace(DataIt, DataEnd, out string name);
 
 							int nextSpace = name.IndexOf(" ", StringComparison.OrdinalIgnoreCase);
 							if (nextSpace != -1)
@@ -336,8 +332,7 @@ namespace AssimpNET.Obj
 		protected void GetVector3(List<Vector3> point3dArray)
 		{
 			Vector3 v;
-			string tmp;
-			CopyNextWord(out tmp);
+			CopyNextWord(out string tmp);
 			v.X = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
@@ -353,8 +348,7 @@ namespace AssimpNET.Obj
 		protected void GetHomogeneousVector3(List<Vector3> point3dArray)
 		{
 			Vector3 v;
-			string tmp;
-			CopyNextWord(out tmp);
+			CopyNextWord(out string tmp);
 			v.X = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
@@ -376,8 +370,7 @@ namespace AssimpNET.Obj
 		protected void GetTwoVectors3(List<Vector3> point3dArrayA, List<Vector3> point3dArrayB)
 		{
 			Vector3 a;
-			string tmp;
-			CopyNextWord(out tmp);
+			CopyNextWord(out string tmp);
 			a.X = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
@@ -642,8 +635,7 @@ namespace AssimpNET.Obj
 			if (!skip)
 			{
 				// Search for material
-				Material tmp;
-				if (!Model.MaterialMap.TryGetValue(name, out tmp))
+				if (!Model.MaterialMap.TryGetValue(name, out Material tmp))
 				{
 					// Not found, so we don't know anything about the material except for its name.
 					// This may be the case if the material library is missing. We don't want to lose all
@@ -765,11 +757,9 @@ namespace AssimpNET.Obj
 		//  Getter for a group name.
 		protected void GetGroupName()
 		{
-			string groupName;
-
 			// here we skip 'g ' from line
 			DataIt = GetNextToken(DataIt, DataEnd);
-			DataIt = GetName(DataIt, DataEnd, out groupName);
+			DataIt = GetName(DataIt, DataEnd, out string groupName);
 			if (IsEndOfBuffer(DataIt, DataEnd))
 			{
 				return;
@@ -783,8 +773,7 @@ namespace AssimpNET.Obj
 
 				// Search for already existing entry
 				// New group name, creating a new entry
-				List<uint> tmp;
-				if (!Model.Groups.TryGetValue(groupName, out tmp))
+				if (!Model.Groups.TryGetValue(groupName, out List<uint> tmp))
 				{
 					List<uint> faceIDArray = new List<uint>();
 					Model.Groups[groupName] = faceIDArray;

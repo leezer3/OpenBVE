@@ -279,8 +279,7 @@ namespace AssimpNET.Obj
 		//  Loads a single float value.
 		private void GetFloatValue(out float result)
 		{
-			string tmp;
-			CopyNextWord(out tmp);
+			CopyNextWord(out string tmp);
 			result = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 		}
 
@@ -389,8 +388,7 @@ namespace AssimpNET.Obj
 				if (string.Compare(Buffer, DataIt, ClampOption, 0, ClampOption.Length, StringComparison.OrdinalIgnoreCase) == 0)
 				{
 					DataIt = GetNextToken(DataIt, DataEnd);
-					string tmp;
-					CopyNextWord(out tmp);
+					CopyNextWord(out string tmp);
 					if (string.Compare(tmp, 0, "on", 0, 2, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						clamp = true;
@@ -401,8 +399,7 @@ namespace AssimpNET.Obj
 				else if (string.Compare(Buffer, DataIt, TypeOption, 0, TypeOption.Length, StringComparison.OrdinalIgnoreCase) == 0)
 				{
 					DataIt = GetNextToken(DataIt, DataEnd);
-					string tmp;
-					CopyNextWord(out tmp);
+					CopyNextWord(out string tmp);
 					if (string.Compare(tmp, 0, "cube_top", 0, 8, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						clampIndex = (int)Material.TextureType.TextureReflectionCubeTopType;
@@ -484,8 +481,7 @@ namespace AssimpNET.Obj
 
 		private void GetTextureName(ref string result)
 		{
-			string texture;
-			DataIt = GetName(DataIt, DataEnd, out texture);
+			DataIt = GetName(DataIt, DataEnd, out string texture);
 			if (result == null)
 			{
 				result = texture;
@@ -501,8 +497,7 @@ namespace AssimpNET.Obj
 		//  Creates a material from loaded data.
 		private void CreateMaterial()
 		{
-			List<string> token;
-			int numToken = Tokenize(Buffer, out token, " \t");
+			int numToken = Tokenize(Buffer, out List<string> token, " \t");
 			string name;
 			if (numToken <= 1)
 			{
@@ -515,8 +510,7 @@ namespace AssimpNET.Obj
 			}
 			name = name.Trim(new char[] { });
 
-			Material tmp;
-			if (!Model.MaterialMap.TryGetValue(name, out tmp))
+			if (!Model.MaterialMap.TryGetValue(name, out Material tmp))
 			{
 				// New Material created
 				Model.CurrentMaterial = new Material(name);
@@ -537,8 +531,7 @@ namespace AssimpNET.Obj
 		//  Loads the kind of illumination model.
 		private void GetIlluminationModel(out int illumModel)
 		{
-			string tmp;
-			CopyNextWord(out tmp);
+			CopyNextWord(out string tmp);
 			illumModel = int.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 		}
 	}

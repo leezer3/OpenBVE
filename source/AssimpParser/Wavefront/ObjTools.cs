@@ -246,8 +246,7 @@ namespace AssimpNET.Obj
 
 		protected void GetFloat(out float result)
 		{
-			string tmp;
-			CopyNextWord(out tmp);
+			CopyNextWord(out string tmp);
 			result = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 		}
 
