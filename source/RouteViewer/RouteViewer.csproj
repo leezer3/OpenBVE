@@ -94,6 +94,8 @@
       <DependentUpon>formRailPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="FunctionScripts.cs" />
+    <Compile Include="Game\Menu.cs" />
+    <Compile Include="Game\Menu.SingleMenu.cs" />
     <Compile Include="Game\MessageManager.cs" />
     <Compile Include="LoadingR.cs" />
     <Compile Include="GameR.cs" />

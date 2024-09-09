@@ -19,6 +19,7 @@ namespace RouteViewer {
 			internal bool LoadingProgressBar;
 			internal bool LoadingLogo;
 			internal bool LoadingBackground;
+			internal string RouteSearchDirectory;
 
 			internal Options()
 			{

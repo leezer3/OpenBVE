@@ -523,45 +523,8 @@ namespace OpenBve
 						}
 						break;
 				}
-				// compute menu extent
-				for (i = 0; i < Items.Length; i++)
-				{
-					if (Items[i] == null)
-					{
-						continue;
-					}
-					Vector2 size = Game.Menu.MenuFont.MeasureString(Items[i].Text);
-					if (Items[i].Icon != null)
-					{
-						size.X += size.Y * 1.25;
-					}
-					if (size.X > Width)
-					{
-						Width = size.X;
-					}
-					
-					if (MaxWidth != 0 && size.X > MaxWidth)
-					{
-						for (int j = Items[i].Text.Length - 1; j > 0; j--)
-						{
-							string trimmedText = Items[i].Text.Substring(0, j);
-							size = Game.Menu.MenuFont.MeasureString(trimmedText);
-							double mwi = MaxWidth;
-							if (Items[i].Icon != null)
-							{
-								mwi -= size.Y * 1.25;
-							}
-							if (size.X < mwi)
-							{
-								Items[i].DisplayLength = trimmedText.Length;
-								break;
-							}
-						}
-						Width = MaxWidth;
-					}
-					if (!(Items[i] is MenuCaption && menuType!= MenuType.RouteList && menuType != MenuType.GameStart && menuType != MenuType.Packages) && size.X > ItemWidth)
-						ItemWidth = size.X;
-				}
+				
+				ComputeExtent(menuType, Game.Menu.MenuFont, MaxWidth);
 				Height = Items.Length * Game.Menu.lineHeight;
 				TopItem = 0;
 			}

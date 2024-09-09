@@ -24,6 +24,8 @@ namespace RouteViewer {
 
 		// date and time
 		internal static double SecondsSinceMidnight = 0.0;
+		/// <summary>The in-game menu system</summary>
+		internal static readonly GameMenu Menu = GameMenu.Instance;
 
 		// ================================
 

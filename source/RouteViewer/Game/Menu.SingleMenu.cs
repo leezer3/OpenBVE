@@ -7,8 +7,9 @@ using System;
 using System.IO;
 using OpenBveApi.Math;
 using Path = OpenBveApi.Path;
+using RouteViewer;
 
-namespace ObjectViewer
+namespace RouteViewer
 {
 	public sealed partial class GameMenu
 	{
@@ -162,7 +163,7 @@ namespace ObjectViewer
 									break;
 							}
 						}
-						Items[Items.Length -1] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "back" }), MenuTag.MenuBack, 0);
+						Items[Items.Length - 1] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "back" }), MenuTag.MenuBack, 0);
 						Align = TextAlignment.TopLeft;
 						break;
 				}

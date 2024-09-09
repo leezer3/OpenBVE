@@ -24,6 +24,8 @@
 
 using OpenBveApi.Graphics;
 using System;
+using LibRender2.Text;
+using OpenBveApi.Math;
 
 namespace LibRender2.Menu
 {
@@ -90,6 +92,49 @@ namespace LibRender2.Menu
 		public MenuBase(MenuType type)
 		{
 			Type = type;
+		}
+
+		/// <summary>Computes the on-screen extent of the menu</summary>
+		public void ComputeExtent(MenuType menuType, OpenGlFont menuFont, double MaxWidth)
+		{
+			for (int i = 0; i < Items.Length; i++)
+			{
+				if (Items[i] == null)
+				{
+					continue;
+				}
+				Vector2 size = menuFont.MeasureString(Items[i].Text);
+				if (Items[i].Icon != null)
+				{
+					size.X += size.Y * 1.25;
+				}
+				if (size.X > Width)
+				{
+					Width = size.X;
+				}
+
+				if (MaxWidth != 0 && size.X > MaxWidth)
+				{
+					for (int j = Items[i].Text.Length - 1; j > 0; j--)
+					{
+						string trimmedText = Items[i].Text.Substring(0, j);
+						size = menuFont.MeasureString(trimmedText);
+						double mwi = MaxWidth;
+						if (Items[i].Icon != null)
+						{
+							mwi -= size.Y * 1.25;
+						}
+						if (size.X < mwi)
+						{
+							Items[i].DisplayLength = trimmedText.Length;
+							break;
+						}
+					}
+					Width = MaxWidth;
+				}
+				if (!(Items[i] is MenuCaption && menuType != MenuType.RouteList && menuType != MenuType.GameStart && menuType != MenuType.Packages) && size.X > ItemWidth)
+					ItemWidth = size.X;
+			}
 		}
 	}
 }
