@@ -8,6 +8,8 @@ using System.IO;
 using OpenBveApi.Math;
 using Path = OpenBveApi.Path;
 using RouteViewer;
+using OpenBveApi.Packages;
+using System.ComponentModel;
 
 namespace RouteViewer
 {
@@ -29,6 +31,15 @@ namespace RouteViewer
 				switch (menuType)
 				{
 					case MenuType.GameStart: // top level menu
+						if (routeWorkerThread == null)
+						{
+							//Create the worker threads on first launch of main menu
+							routeWorkerThread = new BackgroundWorker();
+							routeWorkerThread.DoWork += routeWorkerThread_doWork;
+							routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
+							//Load texture
+							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+						}
 						Items = new MenuEntry[4];
 						Items[0] = new MenuCommand(menu, "Open Route File", MenuTag.RouteList, 0);
 						Items[1] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "title" }), MenuTag.Options, 0);
