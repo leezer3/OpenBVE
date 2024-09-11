@@ -86,7 +86,9 @@ namespace RouteViewer
 			MouseDown += Program.MouseEvent;
 			MouseUp += Program.MouseEvent;
 	        FileDrop += Program.FileDrop;
-            Program.Renderer.Camera.Reset(new Vector3(0.0, 2.5, -5.0));
+	        MouseMove += Program.MouseMoveEvent;
+	        MouseWheel += Program.MouseWheelEvent;
+			Program.Renderer.Camera.Reset(new Vector3(0.0, 2.5, -5.0));
             Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = 600.0;
             Program.Renderer.Camera.ForwardViewingDistance = 600.0;
             Program.Renderer.Camera.BackwardViewingDistance = 0.0;

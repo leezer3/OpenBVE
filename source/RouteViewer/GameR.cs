@@ -24,11 +24,17 @@ namespace RouteViewer {
 
 		// date and time
 		internal static double SecondsSinceMidnight = 0.0;
+		/// <summary>The in-game menu system</summary>
+		internal static readonly GameMenu Menu = GameMenu.Instance;
 
 		// ================================
 
-		internal static void Reset() {
-			Program.Renderer.Reset();
+		internal static void Reset(bool resetRenderer = true) {
+			if (resetRenderer)
+			{
+				Program.Renderer.Reset();
+			}
+			
 			// track manager
 			Program.CurrentRoute.Tracks = new Dictionary<int, Track>();
 			Program.CurrentRoute.Tracks.Add(0, new Track());

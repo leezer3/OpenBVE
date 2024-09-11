@@ -144,7 +144,6 @@
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\Menu\Menu.Controls.cs" />
-    <Compile Include="Game\Menu\Menu.MenuOption.cs" />
     <Compile Include="Game\Menu\Menu.Route.cs" />
     <Compile Include="Game\Menu\Menu.SingleMenu.cs" />
     <Compile Include="Game\MessageManager.cs" />

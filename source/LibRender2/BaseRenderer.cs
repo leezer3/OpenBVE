@@ -1702,5 +1702,13 @@ namespace LibRender2
 		{
 
 		}
+
+		/// <summary>Sets the size of the window</summary>
+		/// <param name="width">The new width</param>
+		/// <param name="height">The new height</param>
+		public virtual void SetWindowSize(int width, int height)
+		{
+
+		}
 	}
 }

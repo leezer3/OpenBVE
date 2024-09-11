@@ -66,7 +66,10 @@ namespace LibRender2.Menu
 		/// <summary>The options menu</summary>
 		Options,
 		/// <summary>A menu allowing switch settings to be changed</summary>
-		ChangeSwitch
-
+		ChangeSwitch,
+		/// <summary>Displays a list of object files</summary>
+		ObjectList,
+		/// <summary>Displays the current list of errors</summary>
+		ErrorList
 	}
 }

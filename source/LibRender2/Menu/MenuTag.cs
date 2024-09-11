@@ -93,6 +93,14 @@ namespace LibRender2.Menu
 		/// <summary>Selects the previous switch</summary>
 		PreviousSwitch,
 		/// <summary>Selects the next switch</summary>
-		NextSwitch
+		NextSwitch,
+
+		// OBJECT VIEWER
+		/// <summary>Displays a list of objects</summary>
+		ObjectList,
+		/// <summary>Selects an object file to load</summary>
+		ObjectFile,
+		/// <summary>Shows the list of current errors</summary>
+		ErrorList
 	}
 }

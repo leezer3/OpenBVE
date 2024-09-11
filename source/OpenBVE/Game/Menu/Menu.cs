@@ -49,19 +49,15 @@ namespace OpenBve
 		
 		private int CustomControlIdx;   // the index of the control being customized
 		private bool isCustomisingControl = false;
-		private bool isInitialized = false;
+		
 
-		internal Key MenuBackKey;
+		
 
 		/********************
 			MENU SYSTEM SINGLETON C'TOR
 		*********************/
 
-		// Explicit static constructor to tell C# compiler not to mark type as beforefieldinit
-		static GameMenu()
-		{
-		}
-		private GameMenu() : base(Program.Renderer)
+		private GameMenu() : base(Program.Renderer, Interface.CurrentOptions)
 		{
 		}
 
@@ -71,10 +67,7 @@ namespace OpenBve
 		/********************
 			MENU SYSTEM METHODS
 		*********************/
-		//
-		// INITIALIZE THE MENU SYSTEM
-		//
-		private void Init()
+		public override void Initialize()
 		{
 			Reset();
 			// choose the text font size according to screen height
@@ -134,7 +127,7 @@ namespace OpenBve
 			controlTextBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0 + quarterWidth);
 			controlTextBox.Size = new Vector2(quarterWidth, quarterWidth);
 			controlTextBox.BackgroundColor = Color128.Black;
-			isInitialized = true;
+			IsInitialized = true;
 
 			// add controls to list so we can itinerate them on mouse calls etc.
 			menuControls.Add(routePictureBox);
@@ -167,8 +160,8 @@ namespace OpenBve
 				// Deliberately set to the standard cursor, as touch controls may have set to something else
 				Program.Renderer.SetCursor(MouseCursor.Default);
 			}
-			if (!isInitialized)
-				Init();
+			if (!IsInitialized)
+				Initialize();
 			if (!replace)
 			{
 				CurrMenu++;
@@ -181,13 +174,13 @@ namespace OpenBve
 			{
 				MaxWidth = Program.Renderer.Screen.Width / 2;
 			}
-			Menus[CurrMenu] = new SingleMenu(type, data, MaxWidth);
+			Menus[CurrMenu] = new SingleMenu(this, type, data, MaxWidth);
 			if (replace)
 			{
 				Menus[CurrMenu].Selection = 1;
 			}
 			ComputePosition();
-			Program.Renderer.CurrentInterface = TrainManager.PlayerTrain == null ? InterfaceType.GLMainMenu : InterfaceType.Menu;
+			Program.Renderer.CurrentInterface = TrainManagerBase.PlayerTrain == null ? InterfaceType.GLMainMenu : InterfaceType.Menu;
 			
 		}
 		
@@ -325,7 +318,6 @@ namespace OpenBve
 		/// <param name="timeElapsed">The time elapsed since previous frame</param>
 		public override void ProcessCommand(Translations.Command cmd, double timeElapsed)
 		{
-
 			if (CurrMenu < 0)
 			{
 				return;
@@ -448,19 +440,19 @@ namespace OpenBve
 						{
 							// menu management commands
 							case MenuTag.MenuBack:              // BACK TO PREVIOUS MENU
-								GameMenu.Instance.PopMenu();
+								Instance.PopMenu();
 								break;
 							case MenuTag.MenuJumpToStation:     // TO STATIONS MENU
-								GameMenu.Instance.PushMenu(MenuType.JumpToStation);
+								Instance.PushMenu(MenuType.JumpToStation);
 								break;
 							case MenuTag.MenuExitToMainMenu:    // TO EXIT MENU
-								GameMenu.Instance.PushMenu(MenuType.ExitToMainMenu);
+								Instance.PushMenu(MenuType.ExitToMainMenu);
 								break;
 							case MenuTag.MenuQuit:              // TO QUIT MENU
-								GameMenu.Instance.PushMenu(MenuType.Quit);
+								Instance.PushMenu(MenuType.Quit);
 								break;
 							case MenuTag.MenuControls:          // TO CONTROLS MENU
-								GameMenu.Instance.PushMenu(MenuType.Controls);
+								Instance.PushMenu(MenuType.Controls);
 								break;
 							case MenuTag.BackToSim:             // OUT OF MENU BACK TO SIMULATION
 								Reset();
@@ -469,7 +461,7 @@ namespace OpenBve
 							case MenuTag.Packages:
 								if (Database.LoadDatabase(Program.FileSystem.PackageDatabaseFolder, currentDatabaseFile, out _))
 								{
-									GameMenu.Instance.PushMenu(MenuType.Packages);
+									Instance.PushMenu(MenuType.Packages);
 								}
 								
 								break;
@@ -547,16 +539,16 @@ namespace OpenBve
 								}
 								break;
 							case MenuTag.Options:
-								GameMenu.Instance.PushMenu(MenuType.Options);
+								Instance.PushMenu(MenuType.Options);
 								break;
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
-								GameMenu.Instance.PushMenu(MenuType.RouteList);
+								Instance.PushMenu(MenuType.RouteList);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","route_please_select"});
 								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);	
 								break;
 							case MenuTag.Directory:		// SHOWS THE LIST OF FILES IN THE SELECTED DIR
 								SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
-								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.ParentDirectory:		// SHOWS THE LIST OF FILES IN THE PARENT DIR
 								if (string.IsNullOrEmpty(SearchDirectory))
@@ -575,7 +567,7 @@ namespace OpenBve
 									SearchDirectory = oldSearchDirectory;
 									return;
 								}
-								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.RouteFile:
 								RoutefileState = RouteState.Loading;
@@ -595,7 +587,7 @@ namespace OpenBve
 										{
 											//enter folder
 											SearchDirectory = SearchDirectory == string.Empty ? menu.Items[menu.Selection].Text : Path.CombineDirectory(SearchDirectory, menu.Items[menu.Selection].Text);
-											GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+											Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 										}
 										else
 										{
@@ -693,19 +685,19 @@ namespace OpenBve
 
 								menu.Items[2].Text = "Current Setting: " + Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack;
 								switchesFound = false; // as switch has been toggled, need to recalculate switches along route
-								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.PreviousSwitch:
 								FoundSwitch fs = previousSwitches[0];
 								previousSwitches.RemoveAt(0);
 								nextSwitches.Insert(0, fs);
-								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.NextSwitch:
 								FoundSwitch ns = nextSwitches[0];
 								nextSwitches.RemoveAt(0);
 								previousSwitches.Insert(0, ns);
-								GameMenu.Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 						}
 					}
@@ -730,16 +722,12 @@ namespace OpenBve
 
 		private ControlMethod lastControlMethod;
 
-		//
-		// DRAW MENU
-		//
-		/// <summary>Draws the current menu as a screen overlay</summary>
-		internal void Draw(double RealTimeElapsed)
+		public override void Draw(double RealTimeElapsed)
 		{
 			pluginKeepAliveTimer += RealTimeElapsed;
-			if (pluginKeepAliveTimer > 100000 && TrainManager.PlayerTrain != null && TrainManager.PlayerTrain.Plugin != null)
+			if (pluginKeepAliveTimer > 100000 && TrainManagerBase.PlayerTrain != null && TrainManagerBase.PlayerTrain.Plugin != null)
 			{
-				TrainManager.PlayerTrain.Plugin.KeepAlive();
+				TrainManagerBase.PlayerTrain.Plugin.KeepAlive();
 				pluginKeepAliveTimer = 0;
 			}
 			double TimeElapsed = RealTimeElapsed - lastTimeElapsed;

@@ -64,6 +64,8 @@
     <Compile Include="Menu\MenuEntries\MenuEntry.Caption.cs" />
     <Compile Include="Menu\MenuEntries\MenuEntry.Command.cs" />
     <Compile Include="Menu\MenuEntries\MenuEntry.cs" />
+    <Compile Include="Menu\MenuEntries\MenuEntry.Error.cs" />
+    <Compile Include="Menu\MenuEntries\MenuOption.cs" />
     <Compile Include="Menu\MenuTag.cs" />
     <Compile Include="Menu\MenuType.cs" />
     <Compile Include="MotionBlur\MotionBlur.cs" />

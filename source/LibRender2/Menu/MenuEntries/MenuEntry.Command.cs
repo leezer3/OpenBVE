@@ -34,7 +34,7 @@ namespace LibRender2.Menu
 		/// <summary>The optional data to be passed with the command</summary>
 		public readonly object Data;
 
-		public MenuCommand(string Text, MenuTag Tag, object Data)
+		public MenuCommand(AbstractMenu menu, string Text, MenuTag Tag, object Data) : base(menu)
 		{
 			this.Text = Text;
 			this.Tag = Tag;
@@ -42,7 +42,7 @@ namespace LibRender2.Menu
 			this.Icon = null;
 		}
 
-		public MenuCommand(string Text, MenuTag Tag, object Data, Texture Icon)
+		public MenuCommand(AbstractMenu menu, string Text, MenuTag Tag, object Data, Texture Icon) : base(menu)
 		{
 			this.Text = Text;
 			this.Tag = Tag;
