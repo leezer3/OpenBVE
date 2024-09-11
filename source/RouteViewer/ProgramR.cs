@@ -462,6 +462,11 @@ namespace RouteViewer
 					}
 					break;
 				case Key.F7:
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						return;
+					}
+					
 					if (CurrentlyLoading)
 					{
 						break;
@@ -539,6 +544,11 @@ namespace RouteViewer
 					Dialog.Dispose();
 					break;
 				case Key.F8:
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						return;
+					}
+
 					if (CurrentlyLoading)
 					{
 						//Don't allow the user to update the settings during loading, bad idea..
@@ -554,6 +564,13 @@ namespace RouteViewer
 					Renderer.Camera.AlignmentDirection.Position.Y = 0;
 					break;
 				case Key.F9:
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						Program.Renderer.CurrentInterface = InterfaceType.Menu;
+						Game.Menu.PushMenu(MenuType.ErrorList);
+						return;
+					}
+
 					if (Interface.LogMessages.Count != 0)
 					{
 						formMessages.ShowMessages();
@@ -742,7 +759,7 @@ namespace RouteViewer
 					}
 					else
 					{
-						if (IntPtr.Size != 4)
+						if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 						{
 							Program.Renderer.CurrentInterface = InterfaceType.Menu;
 							Game.Menu.PushMenu(MenuType.GameStart);

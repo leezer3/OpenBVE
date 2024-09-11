@@ -567,11 +567,22 @@ namespace RouteViewer
 				else if (OptionInterface)
 				{
 					// keys
-					keys = new[] { new[] { "F5" }, new[] { "F7" }, new[] { "F8" } };
-					Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
-					OpenGlString.Draw(Fonts.SmallFont, "Reload route", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, "Open route", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 44), TextAlignment.TopLeft, Color128.White, true);
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						keys = new[] { new[] { "F5" }, new[] { "esc" } };
+						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
+						OpenGlString.Draw(Fonts.SmallFont, "Reload route", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the menu", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White, true);
+					}
+					else
+					{
+						keys = new[] { new[] { "F5" }, new[] { "F7" }, new[] { "F8" } };
+						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
+						OpenGlString.Draw(Fonts.SmallFont, "Reload route", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, "Open route", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 44), TextAlignment.TopLeft, Color128.White, true);
+					}
+					
 
 					keys = new[] { new[] { "F" }, new[] { "N" }, new[] { "E" }, new[] { "M" }, new[] { "I" } };
 					Keys.Render(Screen.Width - 20, 4, 16, Fonts.SmallFont, keys);

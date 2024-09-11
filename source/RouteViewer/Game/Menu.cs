@@ -269,10 +269,7 @@ namespace RouteViewer
 					menu.Selection = int.MaxValue;
 					return true;
 				}
-				else
-				{
-					menu.Selection = int.MinValue;
-				}
+				menu.Selection = int.MinValue;
 			}
 			if (x < menuMin.X || x > menuMax.X || y < menuMin.Y || y > menuMax.Y)
 			{
