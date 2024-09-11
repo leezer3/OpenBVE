@@ -294,15 +294,11 @@ namespace TrainEditor2.Models.Panels
 
 		internal void UpdateListItem(ListViewItemModel item)
 		{
-			SoundEntry soundEntry = item.Tag as SoundEntry;
-			CommandEntry commandEntry = item.Tag as CommandEntry;
-
-			if (soundEntry != null)
+			if (item.Tag is SoundEntry soundEntry)
 			{
 				item.Texts[0] = soundEntry.Index.ToString(culture);
 			}
-
-			if (commandEntry != null)
+			else if (item.Tag is CommandEntry commandEntry)
 			{
 				item.Texts[0] = commandEntry.Info.Name;
 				item.Texts[1] = commandEntry.Option.ToString(culture);

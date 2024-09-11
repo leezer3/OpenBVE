@@ -903,18 +903,13 @@ namespace TrainEditor2.Models
 
 		internal void ChangeCarClass(int carIndex)
 		{
-			MotorCar motorCar = Train.Cars[carIndex] as MotorCar;
-			TrailerCar trailerCar = Train.Cars[carIndex] as TrailerCar;
-
-			if (motorCar != null)
+			if (Train.Cars[carIndex] is MotorCar motorCar)
 			{
 				Train.Cars[carIndex] = new TrailerCar(motorCar);
 			}
-
-			if (trailerCar != null)
+			else if (Train.Cars[carIndex] is TrailerCar trailerCar)
 			{
 				Train.Cars[carIndex] = new MotorCar(trailerCar);
-
 				Train.ApplyPowerNotchesToCar();
 			}
 

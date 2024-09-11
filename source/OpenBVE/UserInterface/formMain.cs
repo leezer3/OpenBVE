@@ -52,7 +52,6 @@ namespace OpenBve {
 					Dialog.trainWatcher.Dispose();
 					Dialog.routeWatcher.Dispose();
 				}
-				Dialog.Dispose();
 				return result;
 			}
 		}

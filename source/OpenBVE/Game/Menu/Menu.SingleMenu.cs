@@ -22,9 +22,6 @@ namespace OpenBve
 		/// access from Menu itself.</remarks>
 		private class SingleMenu : MenuBase
 		{
-			/// <summary>The previous menu selection</summary>
-			internal int LastSelection = int.MaxValue;
-
 			private int currentSelection;
 			
 			public sealed override int Selection

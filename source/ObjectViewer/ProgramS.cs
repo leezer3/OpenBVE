@@ -565,8 +565,9 @@ namespace ObjectViewer {
 	            case Key.B:
 	                if (ShiftPressed)
 	                {
-		                using (ColorDialog dialog = new ColorDialog {FullOpen = true})
+		                using (ColorDialog dialog = new ColorDialog())
 		                {
+			                dialog.FullOpen = true;
 			                if (dialog.ShowDialog() == DialogResult.OK)
 			                {
 				                Renderer.BackgroundColor = -1;

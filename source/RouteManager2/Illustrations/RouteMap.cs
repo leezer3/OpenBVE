@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using OpenBveApi;
@@ -693,7 +694,7 @@ namespace RouteManager2
 					{
 						// turns out centering text in a circle using System.Drawing is a PITA
 						// numbers are fudges, need to check whether they work OK on non windows....
-						string limitString = Math.Round(lim.NextSpeedLimit * 3.6, 2).ToString();
+						string limitString = Math.Round(lim.NextSpeedLimit * 3.6, 2).ToString(CultureInfo.InvariantCulture);
 						float radius = g.MeasureString(limitString, boldFont).Width * 0.9f;
 						RectangleF r = new RectangleF((float)x - radius - 20, (float)z - radius,
 							radius * 2.0f, radius * 2.0f);

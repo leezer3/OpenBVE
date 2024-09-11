@@ -22,8 +22,6 @@ namespace RouteViewer
 		{
 			public SingleMenu(AbstractMenu menu, MenuType menuType, int data = 0, double MaxWidth = 0) : base(menuType)
 			{
-				int i;
-				int jump = 0;
 				//Vector2 size;
 				Align = TextAlignment.TopMiddle;
 				Height = Width = 0;

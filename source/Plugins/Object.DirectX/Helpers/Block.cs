@@ -92,7 +92,7 @@ namespace OpenBve.Formats.DirectX
 		/// <remarks>The type of the new block will always match that of the base block</remarks>
 		public abstract Block ReadSubBlock();
 
-		public Block(int floatingPointSize = -1)
+		protected Block(int floatingPointSize = -1)
 		{
 			FloatingPointSize = floatingPointSize;
 		}

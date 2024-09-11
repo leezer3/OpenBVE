@@ -119,12 +119,6 @@ namespace AssimpNET.Obj
 	// ------------------------------------------------------------------------------------------------
 	public class WavefrontObject
 	{
-		enum ObjectType
-		{
-			ObjType,
-			GroupType
-		};
-
 		//! Object name
 		public readonly string ObjName;
 		//! Transformation matrix, stored in OpenGL format

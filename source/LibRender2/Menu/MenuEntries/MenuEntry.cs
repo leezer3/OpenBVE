@@ -88,7 +88,7 @@ namespace LibRender2.Menu
 		private int scroll;
 		private bool pause;
 
-		public MenuEntry(AbstractMenu menu)
+		protected MenuEntry(AbstractMenu menu)
 		{
 			BaseMenu = menu;
 		}
