@@ -217,6 +217,15 @@ namespace Train.OpenBve
 																		}
 																	}
 																	break;
+																case 483:
+																	switch (trainName.ToUpperInvariant())
+																	{
+																		case "[HOSHIRAIL] KCIC CR400-AF":
+																			PanelCenter.X = 517;
+																			PanelCenter.Y = 300;
+																			break;
+																	}
+																	break;
 															}
 															
 														}
@@ -246,6 +255,13 @@ namespace Train.OpenBve
 																	{
 																		// 81-71: Bust panel origin means a flying cab....
 																		PanelOrigin.Y = 0;
+																	}
+																	break;
+																case "[HOSHIRAIL] KCIC CR400-AF":
+																	if (PanelResolution == 826 && PanelOrigin.X == 350)
+																	{
+																		PanelOrigin.X = 517;
+																		PanelOrigin.Y = 300;
 																	}
 																	break;
 															}

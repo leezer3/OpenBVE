@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using OpenBveApi;
@@ -87,7 +86,9 @@ namespace RouteViewer
 			MouseDown += Program.MouseEvent;
 			MouseUp += Program.MouseEvent;
 	        FileDrop += Program.FileDrop;
-            Program.Renderer.Camera.Reset(new Vector3(0.0, 2.5, -5.0));
+	        MouseMove += Program.MouseMoveEvent;
+	        MouseWheel += Program.MouseWheelEvent;
+			Program.Renderer.Camera.Reset(new Vector3(0.0, 2.5, -5.0));
             Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = 600.0;
             Program.Renderer.Camera.ForwardViewingDistance = 600.0;
             Program.Renderer.Camera.BackwardViewingDistance = 0.0;
@@ -183,7 +184,7 @@ namespace RouteViewer
 
 #pragma warning disable 0649
 		private static ConcurrentQueue<ThreadStart> jobs;
-#pragma warning enable 0649
+#pragma warning restore 0649
 
 		/// <summary>This method is used during loading to run commands requiring an OpenGL context in the main render loop</summary>
 		/// <param name="job">The OpenGL command</param>

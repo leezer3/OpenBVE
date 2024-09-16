@@ -346,8 +346,7 @@ namespace AssimpNET.X
 					case "mesh":
 						{
 							// some meshes have no frames at all
-							Mesh mesh;
-							ParseDataObjectMesh(out mesh);
+							ParseDataObjectMesh(out Mesh mesh);
 							Scene.GlobalMeshes.Add(mesh);
 							break;
 						}
@@ -360,8 +359,7 @@ namespace AssimpNET.X
 					case "material":
 						{
 							// Material outside of a mesh or node
-							Material material;
-							ParseDataObjectMaterial(out material);
+							ParseDataObjectMaterial(out Material material);
 							Scene.GlobalMaterials.Add(material);
 							break;
 						}
@@ -382,8 +380,7 @@ namespace AssimpNET.X
 		{
 			// parse a template data object. Currently not stored.
 			// ReSharper disable once NotAccessedVariable
-			string name;
-			ReadHeadOfDataObject(out name);
+			ReadHeadOfDataObject(out string name);
 
 			// read GUID
 			string guid = GetNextToken();
@@ -412,8 +409,7 @@ namespace AssimpNET.X
 			// mesh-loading functions recognize Mesh, FrameTransformMatrix, and
 			// Frame template instances as child objects when loading a Frame
 			// instance.
-			string name;
-			ReadHeadOfDataObject(out name);
+			ReadHeadOfDataObject(out string name);
 
 			// create a named node and place it at its parent, if given
 			Node node = new Node(name, parent);
@@ -470,8 +466,7 @@ namespace AssimpNET.X
 						break;
 					case "mesh":
 						{
-							Mesh mesh;
-							ParseDataObjectMesh(out mesh);
+							ParseDataObjectMesh(out Mesh mesh);
 							node.Meshes.Add(mesh);
 							break;
 						}
@@ -521,8 +516,7 @@ namespace AssimpNET.X
 			mesh = new Mesh();
 
 			// ReSharper disable once NotAccessedVariable
-			string name;
-			ReadHeadOfDataObject(out name);
+			ReadHeadOfDataObject(out string name);
 
 			// read vertex count
 			uint numVertices = ReadInt();
@@ -614,8 +608,7 @@ namespace AssimpNET.X
 		{
 			ReadHeadOfDataObject();
 
-			string transformNodeName;
-			GetNextTokenAsString(out transformNodeName);
+			GetNextTokenAsString(out string transformNodeName);
 
 			Bone bone = new Bone(transformNodeName);
 
@@ -847,18 +840,16 @@ namespace AssimpNET.X
 				{
 					// template materials
 					string matName = GetNextToken();
-					Material material = new Material(true);
+					Material material = new Material(true, matName);
 					//Use default BVE white color so this is visible if the global material is missing, otherwise will be overwritten
 					material.Diffuse = Color128.White;
-					material.Name = matName;
 					mesh.Materials.Add(material);
 
 					CheckForClosingBrace(); // skip }
 				}
 				else if (objectName == "Material")
 				{
-					Material material;
-					ParseDataObjectMaterial(out material);
+					ParseDataObjectMaterial(out Material material);
 					mesh.Materials.Add(material);
 				}
 				else if (objectName == ";")
@@ -875,15 +866,12 @@ namespace AssimpNET.X
 
 		protected void ParseDataObjectMaterial(out Material material)
 		{
-			material = new Material(false);
-
-			string matName;
-			ReadHeadOfDataObject(out matName);
+			ReadHeadOfDataObject(out string matName);
 			if (matName.Length == 0)
 			{
 				matName = "material" + LineNumber;
 			}
-			material.Name = matName;
+			material = new Material(false, matName);
 
 			// read material values
 			material.Diffuse = ReadRGBA();
@@ -906,15 +894,13 @@ namespace AssimpNET.X
 				else if (objectName == "TextureFilename" || objectName == "TextureFileName")
 				{
 					// some exporters write "TextureFileName" instead.
-					string texname;
-					ParseDataObjectTextureFilename(out texname);
+					ParseDataObjectTextureFilename(out string texname);
 					material.Textures.Add(new TexEntry(texname));
 				}
 				else if (objectName == "NormalmapFilename" || objectName == "NormalmapFileName")
 				{
 					// one exporter writes out the normal map in a separate filename tag
-					string texname;
-					ParseDataObjectTextureFilename(out texname);
+					ParseDataObjectTextureFilename(out string texname);
 					material.Textures.Add(new TexEntry(texname, true));
 				}
 				else
@@ -934,8 +920,7 @@ namespace AssimpNET.X
 
 		protected void ParseDataObjectAnimationSet()
 		{
-			string animName;
-			ReadHeadOfDataObject(out animName);
+			ReadHeadOfDataObject(out string animName);
 
 			Animation anim = new Animation(animName);
 

@@ -581,7 +581,6 @@ namespace Plugin
 		private static StaticObject LoadBinaryX(byte[] Data, int FloatingPointSize)
 		{
 			Block block = new BinaryBlock(Data, FloatingPointSize);
-			block.FloatingPointSize = FloatingPointSize;
 			StaticObject obj = new StaticObject(Plugin.currentHost);
 			MeshBuilder builder = new MeshBuilder(Plugin.currentHost);
 			Material material = new Material();

@@ -5,7 +5,7 @@ using OpenBveApi.Interface;
 
 namespace OpenBve
 {
-	public sealed partial class Menu
+	public sealed partial class GameMenu
 	{
 		private static readonly Picturebox controlPictureBox = new Picturebox(Program.Renderer);
 		private static readonly Textbox controlTextBox = new Textbox(Program.Renderer, Program.Renderer.Fonts.NormalFont, Color128.White, Color128.Black);

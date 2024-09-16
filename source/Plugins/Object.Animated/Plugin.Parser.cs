@@ -115,9 +115,8 @@ namespace Plugin
 								{
 									if (obj[j] != null)
 									{
-										if (obj[j] is StaticObject)
+										if (obj[j] is StaticObject s)
 										{
-											StaticObject s = (StaticObject)obj[j];
 											s.Dynamic = true;
 											if (ObjectCount >= Result.Objects.Length)
 											{
@@ -760,17 +759,17 @@ namespace Plugin
 										if (StateFiles[k] != null)
 										{
 											currentHost.LoadObject(StateFiles[k], Encoding, out UnifiedObject currentObject);
-											if (currentObject is StaticObject)
+											if (currentObject is StaticObject staticObject)
 											{
 												if (Scale != Vector3.One)
 												{
-													StaticObject obj = (StaticObject)currentObject.Clone();
+													StaticObject obj = (StaticObject)staticObject.Clone();
 													obj.ApplyScale(Scale);
 													Result.Objects[ObjectCount].States[k].Prototype = obj;
 												}
 												else
 												{
-													Result.Objects[ObjectCount].States[k].Prototype = (StaticObject) currentObject;
+													Result.Objects[ObjectCount].States[k].Prototype = staticObject;
 												}
 
 											}

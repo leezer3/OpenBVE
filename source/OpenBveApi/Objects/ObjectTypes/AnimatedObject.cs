@@ -7,9 +7,8 @@ using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
-using static System.Windows.Forms.AxHost;
 
-#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+#pragma warning disable CS0659, CS0661 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 namespace OpenBveApi.Objects
 {
 	/// <summary>The base type for an animated object</summary>

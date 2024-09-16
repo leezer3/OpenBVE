@@ -13,7 +13,6 @@ using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
-using SharpCompress.Common;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBveApi.Hosts {
@@ -151,9 +150,12 @@ namespace OpenBveApi.Hosts {
 		{
 		}
 
+		/// <summary>Clears the error log</summary>
 		public void ClearErrors()
 		{
 			MissingFiles.Clear();
+			FailedObjects.Clear();
+			FailedTextures.Clear();
 
 		}
 

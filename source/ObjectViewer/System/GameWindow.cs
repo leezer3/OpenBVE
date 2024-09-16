@@ -251,7 +251,7 @@ namespace ObjectViewer
 				
             }
             Program.Renderer.Lighting.Initialize();
-            Program.Renderer.RenderScene();
+            Program.Renderer.RenderScene(timeElapsed);
             SwapBuffers();
 
 			RenderRealTimeElapsed = 0.0;
@@ -288,6 +288,7 @@ namespace ObjectViewer
             MouseDown += Program.MouseEvent;
             MouseUp += Program.MouseEvent;
 			MouseWheel += Program.MouseWheelEvent;
+			MouseMove += Program.MouseMoveEvent;
 	        FileDrop += Program.DragFile;
 	        Program.Renderer.Camera.Reset(new Vector3(-5.0, 2.5, -25.0));
             Program.Renderer.Initialize();
@@ -301,7 +302,8 @@ namespace ObjectViewer
 
         protected override void OnClosing(CancelEventArgs e)
         {
-	        Program.Renderer.visibilityThread = false;
+	        Options.SaveOptions();
+			Program.Renderer.visibilityThread = false;
         }
 
         protected override void OnUnload(EventArgs e)

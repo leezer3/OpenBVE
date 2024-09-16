@@ -30,6 +30,7 @@
 				<group id="about">
 					<trans-unit id="title">
 						<source>About</source>
+						<target>關於OpenBVE</target>
 					</trans-unit>
 					<trans-unit id="description">
 						<source>OpenBVE is a free and open-source multi-platform train simulator, featuring support for 2D and 3D cabs and scenery.\r\n\r\nThis program was initially developed by Michelle, and is released into the public domain where legally possible.</source>
@@ -51,9 +52,11 @@
 				<group id="bug_report">
 					<trans-unit id="title">
 						<source>Report Problem</source>
+						<target>回報問題</target>
 					</trans-unit>
 					<trans-unit id="description">
 						<source>This function will create a zip archive on your Desktop, containing the previous Simulation log and Crash log (If any), along with a text file containing the brief description of the problem entered below.\r\n\r\nPlease post this on the discussion board, or create a new issue on Github.</source>
+						<target>此功能將在你的桌面上建立一個 zip 檔案，當中包含上次的模擬日誌和崩潰日誌（如有），以及下面輸入的簡要描述。儲存後請將此檔案發佈到討論區，或在 Github 上建立新Issue。</target>
 					</trans-unit>
 					<trans-unit id="view_log_button">
 						<source>View...</source>
@@ -115,7 +118,7 @@
 					</trans-unit>
 					<trans-unit id="homepage">
 						<source>Visit official homepage</source>
-						<target>官方網站</target>
+						<target>前往官方網站</target>
 					</trans-unit>
 					<trans-unit id="updates">
 						<source>Check for updates</source>
@@ -139,6 +142,7 @@
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
+						<target>關閉</target>
 					</trans-unit>
 					<trans-unit id="packages">
 						<source>Package Management</source>
@@ -282,11 +286,13 @@
 					</trans-unit>
 					<trans-unit id="route_switch_turn">
 						<source>The .Turn command and the .Switch command may not be used in the same route.</source>
+						<target>.Turn 和 .Switch 指令不能在同一路線中使用。</target>
 					</trans-unit>
 				</group>
 				<group id="start">
 					<trans-unit id="title">
 						<source>Start new game</source>
+						<target>開始新遊戲</target>
 					</trans-unit>
 					<trans-unit id="route">
 						<source>Route</source>
@@ -366,6 +372,7 @@
 					</trans-unit>
 					<trans-unit id="train_default">
 						<source>Route default</source>
+						<target>路線預設設定</target>
 					</trans-unit>
 					<trans-unit id="train_usedefault">
 						<source>Use the train suggested by the route</source>
@@ -405,6 +412,7 @@
 					</trans-unit>
 					<trans-unit id="start">
 						<source>Start</source>
+						<target>開始遊戲</target>
 					</trans-unit>
 					<trans-unit id="start_mode">
 						<source>Mode of driving:</source>
@@ -416,11 +424,13 @@
 					</trans-unit>
 					<trans-unit id="train_notfound_download">
 						<source>The default train is not currently installed:\r\n\r\n [train]\r\n\r\n It may be downloaded at:\r\n\r\n</source>
+						<target>未能找到此路線的預設列車: [train]\r\n\r\n你可在以下連結下載:\r\n\r\n</target>
 					</trans-unit>
 				</group>
 				<group id="review">
 					<trans-unit id="title">
 						<source>Review last game</source>
+						<target>回顧上次遊戲</target>
 					</trans-unit>
 					<trans-unit id="conditions">
 						<source>Conditions</source>
@@ -472,7 +482,7 @@
 					</trans-unit>
 					<trans-unit id="score_rating_maximum">
 						<source>Maximum:</source>
-						<target>最高：</target>
+						<target>最高得分：</target>
 					</trans-unit>
 					<trans-unit id="score_rating_ratio">
 						<source>Ratio:</source>
@@ -534,6 +544,7 @@
 				<group id="packages">
 					<trans-unit id="title">
 						<source>Package Management</source>
+						<target>擴展包管理</target>
 					</trans-unit>
 					<trans-unit id="proceed">
 						<source>Proceed...</source>
@@ -753,6 +764,7 @@
 					</trans-unit>
 					<trans-unit id="enter_details_header">
 						<source>Enter Package Details</source>
+						<target>輸入擴展包的資料</target>
 					</trans-unit>
 					<trans-unit id="creation_name">
 						<source>Please enter a package name.</source>
@@ -1002,6 +1014,7 @@
 				<group id="controls">
 					<trans-unit id="title">
 						<source>Customize controls</source>
+						<target>控制設定</target>
 					</trans-unit>
 					<trans-unit id="list_command">
 						<source>Command</source>
@@ -1009,6 +1022,7 @@
 					</trans-unit>
 					<trans-unit id="list_type">
 						<source>Type</source>
+						<target>類型</target>
 					</trans-unit>
 					<trans-unit id="list_type_digital">
 						<source>Digital</source>
@@ -1052,6 +1066,7 @@
 					</trans-unit>
 					<trans-unit id="reset_question">
 						<source>Reset the current control configuration to the defaults?</source>
+						<target>要重設控制設定嗎?</target>
 					</trans-unit>
 					<trans-unit id="reset">
 						<source>Reset to defaults</source>
@@ -1323,6 +1338,7 @@
 					</trans-unit>
 					<trans-unit id="title">
 						<source>Options</source>
+						<target>選項</target>
 					</trans-unit>
 					<trans-unit id="language">
 						<source>Language</source>
@@ -1586,7 +1602,7 @@
 					</trans-unit>
 					<trans-unit id="other_timetable_mode">
 						<source>Timetable mode:</source>
-						<target>時間表模式:</target>
+						<target>時間表模式：</target>
 					</trans-unit>
 					<trans-unit id="other_timetable_mode_none">
 						<source>None</source>
@@ -1806,9 +1822,11 @@
 					</trans-unit>
 					<trans-unit id="route">
 						<source>Route:</source>
+						<target>路線：</target>
 					</trans-unit>
 					<trans-unit id="train">
 						<source>Train:</source>
+						<target>列車：</target>
 					</trans-unit>
 					<trans-unit id="date">
 						<source>Date:</source>
@@ -1820,6 +1838,7 @@
 					</trans-unit>
 					<trans-unit id="score">
 						<source>Score:</source>
+						<target>分數：</target>
 					</trans-unit>
 					<trans-unit id="rating">
 						<source>Rating:</source>
@@ -1873,6 +1892,7 @@
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save report...</source>
+						<target>儲存報告</target>
 					</trans-unit>
 					<trans-unit id="ignore">
 						<source>Ignore</source>
@@ -2000,6 +2020,7 @@
 					</trans-unit>
 					<trans-unit id="loading">
 						<source>Loading. Please wait...</source>
+						<target>載入中，請稍候……</target>
 					</trans-unit>
 				</group>
 				<group id="notification">
@@ -2069,18 +2090,23 @@
 					</trans-unit>
 					<trans-unit id="switchexterior_uncouple">
 						<source>Please switch to exterior view to uncouple.</source>
+						<target>請切換至車外視覺以脱鈎車廂。</target>
 					</trans-unit>
 					<trans-unit id="unable_uncouple">
 						<source>Unable to uncouple this car.</source>
+						<target>未能脱鈎此車廂。</target>
 					</trans-unit>
 					<trans-unit id="exterior_uncouplerear">
 						<source>Uncoupling the rear of car number</source>
+						<target>已脱離後方車鈎，在車卡</target>
 					</trans-unit>
 					<trans-unit id="exterior_uncouplefront">
 						<source>Uncoupling the front of car number</source>
+						<target>已脱鈎前方車鈎，在車卡</target>
 					</trans-unit>
 					<trans-unit id="fixed_uncouple">
 						<source>This coupler is fixed, and cannot uncouple.</source>
+						<target>此車鈎是固定的，不能脱鈎。</target>
 					</trans-unit>
 				</group>
 				<group id="score">
@@ -2138,6 +2164,7 @@
 					</trans-unit>
 					<trans-unit id="rating">
 						<source>Your rating:</source>
+						<target>你的評分：</target>
 					</trans-unit>
 				</group>
 				<group id="rating">
@@ -2183,11 +2210,13 @@
 					</trans-unit>
 					<trans-unit id="unknown">
 						<source>Unknown</source>
+						<target>未知</target>
 					</trans-unit>
 				</group>
 				<group id="menu">
 					<trans-unit id="title">
 						<source>In-Game Menu</source>
+						<target>遊戲菜單</target>
 					</trans-unit>
 					<trans-unit id="pause_title">
 						<source>PAUSE</source>
@@ -2255,7 +2284,7 @@
 					</trans-unit>
 					<trans-unit id="joystick_notavailable">
 						<source>Joystick (Not currently connected)</source>
-						<target>N/A</target>
+						<target>控制桿 (未連接)</target>
 					</trans-unit>
 					<trans-unit id="joystickdirection_positive">
 						<source>Positive</source>
@@ -2267,7 +2296,7 @@
 					</trans-unit>
 					<trans-unit id="assignment_current">
 						<source>Current assignment:</source>
-						<target>目前分配:</target>
+						<target>目前分配：</target>
 					</trans-unit>
 					<trans-unit id="train_default">
 						<source>Do you wish to use the default train?</source>
@@ -2355,6 +2384,7 @@
 					</trans-unit>
 					<trans-unit id="power">
 						<source>P</source>
+						<target>P</target>
 					</trans-unit>
 					<trans-unit id="powernull">
 						<source>N</source>
@@ -2362,6 +2392,7 @@
 					</trans-unit>
 					<trans-unit id="brake">
 						<source>B</source>
+						<target>B</target>
 					</trans-unit>
 					<trans-unit id="locobrake">
 						<source>L</source>
@@ -2405,6 +2436,7 @@
 				<group id="misc">
 					<trans-unit id="score">
 						<source>Score:\x20</source>
+						<target>分數:\x20</target>
 					</trans-unit>
 				</group>
 				<group id="commands">
@@ -2434,9 +2466,11 @@
 					</trans-unit>
 					<trans-unit id="locobrake_decrease">
 						<source>Decreases the locomotive brake by one notch</source>
+						<target>把機動列車的制動減少一級</target>
 					</trans-unit>
 					<trans-unit id="locobrake_increase">
 						<source>Increases the locomotive brake by one notch</source>
+						<target>把機動列車的制動增加一級</target>
 					</trans-unit>
 					<trans-unit id="brake_halfaxis">
 						<source>Controls brake for trains with two handles on half of a joystick axis</source>
@@ -2484,7 +2518,7 @@
 					</trans-unit>
 					<trans-unit id="hold_brake">
 						<source>Hold Brake</source>
-						<target>Hold Brake</target>
+						<target>抑速制動</target>
 					</trans-unit>
 					<trans-unit id="reverser_forward">
 						<source>Moves reverser forward by one notch</source>
@@ -2896,53 +2930,69 @@
 					</trans-unit>
 					<trans-unit id="accessibility_current_speed">
 						<source>Accessibility: Audibly announces the current speed.</source>
+						<target>無障礙: 廣播現時速度</target>
 					</trans-unit>
 					<trans-unit id="accessibility_next_signal">
 						<source>Accessibility: Audibly announces the next signal distance and aspect.</source>
+						<target>無障礙: 廣播下一盞訊號燈的燈號和距離</target>
 					</trans-unit>
 					<trans-unit id="accessibility_next_station">
 						<source>Accessibility: Audibly announces the the next station name and distance.</source>
+						<target>無障礙: 廣播下一站名稱和距離</target>
 					</trans-unit>
 					<trans-unit id="uncouple_front">
 						<source>Uncouples the front coupler for the selected car.</source>
+						<target>脱離目前車卡的前車鈎</target>
 					</trans-unit>
 					<trans-unit id="uncouple_rear">
 						<source>Uncouples the rear coupler for the selected car.</source>
+						<target>脱離目前車卡的後車鈎</target>
 					</trans-unit>
 					<trans-unit id="switch_menu">
 						<source>Shows the change switch menu</source>
+						<target>顯示道岔切換菜單</target>
 					</trans-unit>
 				</group>
 				<group id="keys">
 					<trans-unit id="0">
 						<source>0</source>
+						<target>0</target>
 					</trans-unit>
 					<trans-unit id="1">
 						<source>1</source>
+						<target>1</target>
 					</trans-unit>
 					<trans-unit id="2">
 						<source>2</source>
+						<target>2</target>
 					</trans-unit>
 					<trans-unit id="3">
 						<source>3</source>
+						<target>3</target>
 					</trans-unit>
 					<trans-unit id="4">
 						<source>4</source>
+						<target>4</target>
 					</trans-unit>
 					<trans-unit id="5">
 						<source>5</source>
+						<target>5</target>
 					</trans-unit>
 					<trans-unit id="6">
 						<source>6</source>
+						<target>6</target>
 					</trans-unit>
 					<trans-unit id="7">
 						<source>7</source>
+						<target>7</target>
 					</trans-unit>
 					<trans-unit id="8">
 						<source>8</source>
+						<target>8</target>
 					</trans-unit>
 					<trans-unit id="9">
 						<source>9</source>
+						<target>9</target>
 					</trans-unit>
 					<trans-unit id="ampersand">
 						<source>Ampersand</source>
@@ -2958,11 +3008,11 @@
 					</trans-unit>
 					<trans-unit id="backquote">
 						<source>Backquote</source>
-						<target>Backquote (`)</target>
+						<target>`</target>
 					</trans-unit>
 					<trans-unit id="backslash">
 						<source>Backslash</source>
-						<target>Backslash (\\)</target>
+						<target>\\</target>
 					</trans-unit>
 					<trans-unit id="backspace">
 						<source>Backspace</source>
@@ -2974,7 +3024,7 @@
 					</trans-unit>
 					<trans-unit id="capslock">
 						<source>Capslock</source>
-						<target>Capslock</target>
+						<target>Caps Lock</target>
 					</trans-unit>
 					<trans-unit id="caret">
 						<source>Caret</source>
@@ -3002,6 +3052,7 @@
 					</trans-unit>
 					<trans-unit id="down">
 						<source>Down</source>
+						<target>Down</target>
 					</trans-unit>
 					<trans-unit id="end">
 						<source>End</source>
@@ -3177,38 +3228,39 @@
 					</trans-unit>
 					<trans-unit id="lalt">
 						<source>Left Alt</source>
-						<target>Left Alt</target>
+						<target>左 Alt</target>
 					</trans-unit>
 					<trans-unit id="lctrl">
 						<source>Left Ctrl</source>
-						<target>Left Ctrl</target>
+						<target>左 Ctrl</target>
 					</trans-unit>
 					<trans-unit id="left">
 						<source>Left</source>
+						<target>Left</target>
 					</trans-unit>
 					<trans-unit id="leftbracket">
 						<source>Left bracket</source>
-						<target>Left bracket ([)</target>
+						<target>[</target>
 					</trans-unit>
 					<trans-unit id="leftparen">
 						<source>Left parenthesis</source>
-						<target>Left parantheses (()</target>
+						<target>(</target>
 					</trans-unit>
 					<trans-unit id="less">
 						<source>Less</source>
-						<target>Less (&lt;)</target>
+						<target>&lt;</target>
 					</trans-unit>
 					<trans-unit id="lmeta">
 						<source>Left Meta</source>
-						<target>Left Meta (◇)</target>
+						<target>左 Meta (◇)</target>
 					</trans-unit>
 					<trans-unit id="lshift">
 						<source>Left Shift</source>
-						<target>Left Shift</target>
+						<target>左 Shift</target>
 					</trans-unit>
 					<trans-unit id="lsuper">
 						<source>Left Application</source>
-						<target>Left Application</target>
+						<target>左 Application</target>
 					</trans-unit>
 					<trans-unit id="menu">
 						<source>Menu</source>
@@ -3216,22 +3268,23 @@
 					</trans-unit>
 					<trans-unit id="minus">
 						<source>Minus</source>
-						<target>Minus (-)</target>
+						<target>-</target>
 					</trans-unit>
 					<trans-unit id="mode">
 						<source>Alt Gr</source>
+						<target>Alt Gr</target>
 					</trans-unit>
 					<trans-unit id="numlock">
 						<source>Numlock</source>
-						<target>Numlock</target>
+						<target>Num Lock</target>
 					</trans-unit>
 					<trans-unit id="pagedown">
 						<source>Page down</source>
-						<target>下頁</target>
+						<target>Page down</target>
 					</trans-unit>
 					<trans-unit id="pageup">
 						<source>Page up</source>
-						<target>上頁</target>
+						<target>Page up</target>
 					</trans-unit>
 					<trans-unit id="pause">
 						<source>Pause</source>
@@ -3239,14 +3292,15 @@
 					</trans-unit>
 					<trans-unit id="period">
 						<source>Period</source>
-						<target>Period (.)</target>
+						<target>.</target>
 					</trans-unit>
 					<trans-unit id="plus">
 						<source>Plus</source>
-						<target>Plus (+)</target>
+						<target>+</target>
 					</trans-unit>
 					<trans-unit id="power">
 						<source>Power</source>
+						<target>Power</target>
 					</trans-unit>
 					<trans-unit id="print">
 						<source>Print</source>
@@ -3254,23 +3308,23 @@
 					</trans-unit>
 					<trans-unit id="question">
 						<source>Question</source>
-						<target>Question (?)</target>
+						<target>?</target>
 					</trans-unit>
 					<trans-unit id="quote">
 						<source>Quote</source>
-						<target>Quote (&apos;)</target>
+						<target>&apos;</target>
 					</trans-unit>
 					<trans-unit id="quotedbl">
 						<source>Quote double</source>
-						<target>Quote double (&apos;&apos;)</target>
+						<target>&quot;</target>
 					</trans-unit>
 					<trans-unit id="ralt">
 						<source>Right Alt</source>
-						<target>Right Alt</target>
+						<target>右 Alt</target>
 					</trans-unit>
 					<trans-unit id="rctrl">
 						<source>Right Ctrl</source>
-						<target>Right Ctrl</target>
+						<target>右 Ctrl</target>
 					</trans-unit>
 					<trans-unit id="return">
 						<source>Return</source>
@@ -3278,38 +3332,39 @@
 					</trans-unit>
 					<trans-unit id="right">
 						<source>Right</source>
+						<target>Right</target>
 					</trans-unit>
 					<trans-unit id="rightbracket">
 						<source>Right bracket</source>
-						<target>Right bracket (])</target>
+						<target>]</target>
 					</trans-unit>
 					<trans-unit id="rightparen">
 						<source>Right parenthesis</source>
-						<target>Right parentheses ())</target>
+						<target>)</target>
 					</trans-unit>
 					<trans-unit id="rmeta">
 						<source>Right Meta</source>
-						<target>Right Meta (◇)</target>
+						<target>右 Meta (◇)</target>
 					</trans-unit>
 					<trans-unit id="rshift">
 						<source>Right Shift</source>
-						<target>Right Shift</target>
+						<target>右 Shift</target>
 					</trans-unit>
 					<trans-unit id="rsuper">
 						<source>Right Application</source>
-						<target>Right Application</target>
+						<target>右 Application</target>
 					</trans-unit>
 					<trans-unit id="scrolllock">
 						<source>Scrolllock</source>
-						<target>Scrolllock</target>
+						<target>Scroll Lock</target>
 					</trans-unit>
 					<trans-unit id="semicolon">
 						<source>Semicolon</source>
-						<target>Semicolon</target>
+						<target>;</target>
 					</trans-unit>
 					<trans-unit id="slash">
 						<source>Slash</source>
-						<target>Slash (/)</target>
+						<target>/</target>
 					</trans-unit>
 					<trans-unit id="space">
 						<source>Space</source>
@@ -3325,10 +3380,11 @@
 					</trans-unit>
 					<trans-unit id="underscore">
 						<source>Underscore</source>
-						<target>Underscore (_)</target>
+						<target>_</target>
 					</trans-unit>
 					<trans-unit id="up">
 						<source>Up</source>
+						<target>Up</target>
 					</trans-unit>
 					<trans-unit id="a">
 						<source>A</source>
@@ -3609,32 +3665,41 @@
 					</trans-unit>
 					<trans-unit id="label_reverser">
 						<source>Reverser: [notch]</source>
+						<target>方向控制桿: [notch]</target>
 					</trans-unit>
 					<trans-unit id="label_a2">
 						<source>A2</source>
+						<target>A2</target>
 					</trans-unit>
 					<trans-unit id="label_ats">
 						<source>ATS</source>
+						<target>ATS</target>
 					</trans-unit>
 				</group>
 				<group id="switchmenu">
 					<trans-unit id="title">
 						<source>Select a Switch To Change: </source>
+						<target>請選擇道岔: </target>
 					</trans-unit>
 					<trans-unit id="selected">
 						<source>Selected Switch: </source>
+						<target>已選擇道岔: </target>
 					</trans-unit>
 					<trans-unit id="current">
 						<source>Current Setting: </source>
+						<target>開通方向: </target>
 					</trans-unit>
 					<trans-unit id="distance">
 						<source>Distance from Player: </source>
+						<target>與玩家的距離: </target>
 					</trans-unit>
 					<trans-unit id="zoom_in">
 						<source>Zoom In</source>
+						<target>放大</target>
 					</trans-unit>
 					<trans-unit id="zoom_out">
 						<source>Zoom Out</source>
+						<target>縮小</target>
 					</trans-unit>
 				</group>
 			</group>
@@ -3646,10 +3711,11 @@
 					</trans-unit>
 					<trans-unit id="open">
 						<source>Open...</source>
-						<target>打開...</target>
+						<target>開啓...</target>
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save</source>
+						<target>儲存</target>
 					</trans-unit>
 					<trans-unit id="save_as">
 						<source>Save as...</source>
@@ -3657,6 +3723,7 @@
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
+						<target>關閉</target>
 					</trans-unit>
 					<trans-unit id="new_message">
 						<source>Do you want to save data before creating a new train?</source>
@@ -3690,98 +3757,101 @@
 					</trans-unit>
 					<trans-unit id="static_friction">
 						<source>CoefficientOfStaticFriction:</source>
-						<target>CoefficientOfStaticFriction:</target>
+						<target>靜摩擦係數:</target>
 					</trans-unit>
 					<trans-unit id="rolling_resistance">
 						<source>CoefficientOfRollingResistance:</source>
-						<target>CoefficientOfRollingResistance:</target>
+						<target>滾動摩擦係數:</target>
 					</trans-unit>
 					<trans-unit id="aerodynamic_drag">
 						<source>AerodynamicDragCoefficient:</source>
-						<target>AerodynamicDragCoefficient:</target>
+						<target>空氣阻力係數:</target>
 					</trans-unit>
 				</group>
 				<group id="delay">
 					<trans-unit id="delay">
 						<source>Delay</source>
-						<target>Delay</target>
+						<target>延遲</target>
 					</trans-unit>
 					<trans-unit id="power_up">
 						<source>DelayPowerUp</source>
-						<target>DelayPowerUp</target>
+						<target>動力增加</target>
 					</trans-unit>
 					<trans-unit id="power_down">
 						<source>DelayPowerDown</source>
-						<target>DelayPowerDown</target>
+						<target>動力减少</target>
 					</trans-unit>
 					<trans-unit id="brake_up">
 						<source>DelayBrakeUp</source>
-						<target>DelayBrakeUp</target>
+						<target>煞車增加</target>
 					</trans-unit>
 					<trans-unit id="brake_down">
 						<source>DelayBrakeDown</source>
-						<target>DelayBrakeDown</target>
+						<target>煞車減少</target>
 					</trans-unit>
 					<trans-unit id="set">
 						<source>Set</source>
-						<target>Set</target>
+						<target>設定</target>
 					</trans-unit>
 					<trans-unit id="notch">
 						<source>Notch</source>
-						<target>Notch</target>
+						<target>級位</target>
 					</trans-unit>
 					<trans-unit id="save">
 						<source>Save</source>
+						<target>儲存</target>
 					</trans-unit>
 					<trans-unit id="cancel">
 						<source>Cancel</source>
+						<target>取消</target>
 					</trans-unit>
 				</group>
 				<group id="move">
 					<trans-unit id="move">
 						<source>Move</source>
-						<target>Move</target>
+						<target>速率</target>
 					</trans-unit>
 					<trans-unit id="jerk_power_up">
 						<source>JerkPowerUp:</source>
-						<target>JerkPowerUp:</target>
+						<target>動力增加:</target>
 					</trans-unit>
 					<trans-unit id="jerk_power_down">
 						<source>JerkPowerDown:</source>
-						<target>JerkPowerDown:</target>
+						<target>動力減少:</target>
 					</trans-unit>
 					<trans-unit id="jerk_brake_up">
 						<source>JerkBrakeUp:</source>
-						<target>JerkBrakeUp:</target>
+						<target>煞車增加:</target>
 					</trans-unit>
 					<trans-unit id="jerk_brake_down">
 						<source>JerkBrakeDown:</source>
-						<target>JerkBrakeDown:</target>
+						<target>煞車減少:</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_up">
 						<source>BrakeCylinderUp:</source>
-						<target>BrakeCylinderUp:</target>
+						<target>煞車風缸充氣:</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_down">
 						<source>BrakeCylinderDown:</source>
-						<target>BrakeCylinderDown:</target>
+						<target>煞車風缸充氣:</target>
 					</trans-unit>
 				</group>
 				<group id="brake">
 					<trans-unit id="brake">
 						<source>Brake</source>
+						<target>制動</target>
 					</trans-unit>
 					<trans-unit id="type">
 						<source>BrakeType:</source>
-						<target>BrakeType:</target>
+						<target>煞車類型:</target>
 					</trans-unit>
 					<trans-unit id="control_system">
 						<source>BrakeControlSystem:</source>
-						<target>BrakeControlSystem:</target>
+						<target>煞車控制系统:</target>
 					</trans-unit>
 					<trans-unit id="control_speed">
 						<source>BrakeControlSpeed:</source>
-						<target>BrakeControlSpeed:</target>
+						<target>煞車控制速度:</target>
 					</trans-unit>
 					<trans-unit id="smee">
 						<source>Electromagnetic straight air brake</source>
@@ -3815,23 +3885,23 @@
 					</trans-unit>
 					<trans-unit id="brake_cylinder_service_max">
 						<source>BrakeCylinderServiceMaximumPressure:</source>
-						<target>BrakeCylinderServiceMaximumPressure:</target>
+						<target>煞車風缸常用最大壓力:</target>
 					</trans-unit>
 					<trans-unit id="brake_cylinder_emergency_max">
 						<source>BrakeCylinderEmergencyMaximumPressure:</source>
-						<target>BrakeCylinderEmergencyMaximumPressure:</target>
+						<target>煞車風缸緊急煞車最大壓力:</target>
 					</trans-unit>
 					<trans-unit id="main_reservoir_min">
 						<source>MainReservoirMinimumPressure:</source>
-						<target>MainReservoirMinimumPressure:</target>
+						<target>主風缸最小壓力:</target>
 					</trans-unit>
 					<trans-unit id="main_reservoir_max">
 						<source>MainReservoirMaximumPressure:</source>
-						<target>MainReservoirMaximumPressure:</target>
+						<target>主風缸最大壓力:</target>
 					</trans-unit>
 					<trans-unit id="brake_pipe_normal">
 						<source>BrakePipeNormalPressure:</source>
-						<target>BrakePipeNormalPressure:</target>
+						<target>煞車管正常壓力:</target>
 					</trans-unit>
 				</group>
 				<group id="handle">
@@ -3841,26 +3911,27 @@
 					</trans-unit>
 					<trans-unit id="type">
 						<source>HandleType:</source>
+						<target>控制桿類型:</target>
 					</trans-unit>
 					<trans-unit id="power_notches">
 						<source>PowerNotches:</source>
-						<target>PowerNotches:</target>
+						<target>動力控制級數:</target>
 					</trans-unit>
 					<trans-unit id="brake_notches">
 						<source>BrakeNotches:</source>
-						<target>BrakeNotches:</target>
+						<target>煞車控制級數:</target>
 					</trans-unit>
 					<trans-unit id="driver_power_notches">
 						<source>DriverPowerNotches:</source>
-						<target>DriverPowerNotches:</target>
+						<target>司機可用的動力級數:</target>
 					</trans-unit>
 					<trans-unit id="driver_brake_notches">
 						<source>DriverBrakeNotches:</source>
-						<target>DriverBrakeNotches:</target>
+						<target>司機可用的煞車級數:</target>
 					</trans-unit>
 					<trans-unit id="power_notch_reduce_steps">
 						<source>PowerNotchReduceSteps:</source>
-						<target>PowerNotchReduceSteps:</target>
+						<target>動力控制桿動作分段:</target>
 					</trans-unit>
 					<trans-unit id="separated">
 						<source>Separated</source>
@@ -3876,127 +3947,129 @@
 					</trans-unit>
 					<trans-unit id="separated_interlocked_reverser">
 						<source>Separated (Reverser Interlocked)</source>
-						<target>分隔 (反向器連鎖)</target>
+						<target>分隔 (方向控制桿連鎖)</target>
 					</trans-unit>
 					<trans-unit id="brake_notches_error_message">
 						<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
-						<target>如果HoldBrake沒有設置, BrakeNotches 一定至少為1 </target>
+						<target>如有安裝抑速煞車, 就必須至少有1個煞車級位。</target>
 					</trans-unit>
 					<trans-unit id="driver_power_notches_error_message">
 						<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
-						<target>DriverPowerNotches 一定要少過或等於 PowerNotches。</target>
+						<target>&quot;司機可用的動力級數&quot; 一定要少過或等於 &quot;動力控制級數&quot;。</target>
 					</trans-unit>
 					<trans-unit id="driver_brake_notches_error_message">
 						<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
-						<target>DriverBrakeNotches 一定要少過或等於 BrakeNotches。</target>
+						<target>&quot;司機可用的煞車級數&quot; 一定要少過或等於 &quot;煞車控制級數&quot;。</target>
 					</trans-unit>
 				</group>
 				<group id="cab">
 					<trans-unit id="cab">
 						<source>Cab</source>
-						<target>Cab</target>
+						<target>駕駛室</target>
 					</trans-unit>
 					<trans-unit id="driver_car">
 						<source>DriverCar:</source>
-						<target>DriverCar:</target>
+						<target>駕駛室所在車卡:</target>
 					</trans-unit>
 					<trans-unit id="driver_car_error_message">
 						<source>DriverCar must be less than NumberOfMotorCars + NumberOfTrailerCars.</source>
-						<target>DriverCar 一定要少過 NumberOfMotorCars + NumberOfTrailerCars.</target>
+						<target>DriverCar 數值要少過 NumberOfMotorCars + NumberOfTrailerCars.</target>
 					</trans-unit>
 				</group>
 				<group id="car">
 					<trans-unit id="car">
 						<source>Car</source>
-						<target>Car</target>
+						<target>車輛</target>
 					</trans-unit>
 					<trans-unit id="motor_car_mass">
 						<source>MotorCarMass:</source>
-						<target>MotorCarMass:</target>
+						<target>動力車卡重量:</target>
 					</trans-unit>
 					<trans-unit id="number_of_motor_cars">
 						<source>NumberOfMotorCars:</source>
-						<target>NumberOfMotorCars:</target>
+						<target>動力車卡數量:</target>
 					</trans-unit>
 					<trans-unit id="trailer_car_mass">
 						<source>TrailerCarMass:</source>
-						<target>TrailerCarMass:</target>
+						<target>無動力車卡重量:</target>
 					</trans-unit>
 					<trans-unit id="number_of_trailer_cars">
 						<source>NumberOfTrailerCars:</source>
-						<target>NumberOfTrailerCars:</target>
+						<target>無動力車卡數量:</target>
 					</trans-unit>
 					<trans-unit id="length_of_a_car">
 						<source>LengthOfACar:</source>
-						<target>LengthOfACar:</target>
+						<target>車卡長度:</target>
 					</trans-unit>
 					<trans-unit id="front_car_is_motor_car">
 						<source>FrontCarIsMotorCar:</source>
-						<target>FrontCarIsMotorCar:</target>
+						<target>第一卡是動力車卡:</target>
 					</trans-unit>
 					<trans-unit id="width_of_a_car">
 						<source>WidthOfACar:</source>
-						<target>WidthOfACar:</target>
+						<target>車廂寬度:</target>
 					</trans-unit>
 					<trans-unit id="height_of_a_car">
 						<source>HeightOfACar:</source>
-						<target>HeightOfACar:</target>
+						<target>車廂高度:</target>
 					</trans-unit>
 					<trans-unit id="center_of_gravity_height">
 						<source>CenterOfGravityHeight:</source>
-						<target>CenterOfGravityHeight:</target>
+						<target>重心高度:</target>
 					</trans-unit>
 					<trans-unit id="exposed_frontal_area">
 						<source>ExposedFrontalArea:</source>
-						<target>ExposedFrontalArea:</target>
+						<target>暴露的前端面積:</target>
 					</trans-unit>
 					<trans-unit id="unexposed_frontal_area">
 						<source>UnexposedFrontalArea:</source>
-						<target>UnexposedFrontalArea:</target>
+						<target>未暴露的前端面積</target>
 					</trans-unit>
 					<trans-unit id="number_of_trailer_cars_error_message">
 						<source>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</source>
-						<target>如果FrontCarIsAMotorCar沒有設置, NumberOfTrailerCars 一定至少為1 </target>
+						<target>如果沒有設定FrontCarIsAMotorCar, NumberOfTrailerCars 一定至少為1 。</target>
 					</trans-unit>
 				</group>
 				<group id="device">
 					<trans-unit id="device">
 						<source>Device</source>
+						<target>裝置:</target>
 					</trans-unit>
 					<trans-unit id="const_speed">
 						<source>ConstSpeed:</source>
-						<target>ConstSpeed:</target>
+						<target>定速設備:</target>
 					</trans-unit>
 					<trans-unit id="hold_brake">
 						<source>HoldBrake:</source>
+						<target>抑速煞車:</target>
 					</trans-unit>
 					<trans-unit id="readhesion_device">
 						<source>ReAdhesionDevice:</source>
-						<target>ReAdhesionDevice:</target>
+						<target>防滑設備:</target>
 					</trans-unit>
 					<trans-unit id="pass_alarm">
 						<source>PassAlarm:</source>
-						<target>PassAlarm:</target>
+						<target>停車鈴:</target>
 					</trans-unit>
 					<trans-unit id="door_open_mode">
 						<source>DoorOpenMode:</source>
-						<target>DoorOpenMode:</target>
+						<target>車門開啟模式:</target>
 					</trans-unit>
 					<trans-unit id="door_close_mode">
 						<source>DoorCloseMode:</source>
-						<target>DoorCloseMode:</target>
+						<target>車門關閉模式:</target>
 					</trans-unit>
 					<trans-unit id="door_width">
 						<source>DoorWidth:</source>
-						<target>DoorWidth:</target>
+						<target>車門闊度:</target>
 					</trans-unit>
 					<trans-unit id="door_max_tolerance">
 						<source>DoorMaxTolerance:</source>
-						<target>DoorMaxTolerance:</target>
+						<target>車門最大偏差:</target>
 					</trans-unit>
 					<trans-unit id="none">
 						<source>None</source>
-						<target>None</target>
+						<target>沒有</target>
 					</trans-unit>
 					<trans-unit id="manual_switching">
 						<source>Manual switching</source>
@@ -4046,9 +4119,11 @@
 				<group id="acceleration">
 					<trans-unit id="acceleration">
 						<source>Acceleration</source>
+						<target>加速</target>
 					</trans-unit>
 					<trans-unit id="notch">
 						<source>Notch:</source>
+						<target>級位:</target>
 					</trans-unit>
 					<trans-unit id="data">
 						<source>Data</source>
@@ -4082,30 +4157,31 @@
 					</trans-unit>
 					<trans-unit id="sound_index">
 						<source>SoundIndex:</source>
-						<target>SoundIndex:</target>
+						<target>聲音索引:</target>
 					</trans-unit>
 					<trans-unit id="pitch">
 						<source>Pitch</source>
-						<target>Pitch</target>
+						<target>音調</target>
 					</trans-unit>
 					<trans-unit id="volume">
 						<source>Volume</source>
-						<target>Volume</target>
+						<target>音量</target>
 					</trans-unit>
 					<trans-unit id="sound_none">
 						<source>None</source>
-						<target>None</target>
+						<target>沒有</target>
 					</trans-unit>
 					<trans-unit id="preview">
 						<source>Preview</source>
+						<target>預覽</target>
 					</trans-unit>
 					<trans-unit id="y_pitch">
 						<source>Ypitch</source>
-						<target>Ypitch</target>
+						<target>Y 音調</target>
 					</trans-unit>
 					<trans-unit id="y_volume">
 						<source>Yvolume</source>
-						<target>Yvolume</target>
+						<target>Y 音量</target>
 					</trans-unit>
 					<trans-unit id="min_x">
 						<source>Xmin:</source>
@@ -4113,28 +4189,31 @@
 					</trans-unit>
 					<trans-unit id="max_x">
 						<source>Xmax:</source>
+						<target>Xmax:</target>
 					</trans-unit>
 					<trans-unit id="left">
 						<source>Left</source>
+						<target>左</target>
 					</trans-unit>
 					<trans-unit id="right">
 						<source>Right</source>
+						<target>右</target>
 					</trans-unit>
 					<trans-unit id="in">
 						<source>In</source>
-						<target>In</target>
+						<target>放大</target>
 					</trans-unit>
 					<trans-unit id="out">
 						<source>Out</source>
-						<target>Out</target>
+						<target>縮小</target>
 					</trans-unit>
 					<trans-unit id="max_y_pitch">
 						<source>YmaxPitch:</source>
-						<target>YmaxPitch:</target>
+						<target>Ymax 音調:</target>
 					</trans-unit>
 					<trans-unit id="max_y_volume">
 						<source>YmaxVolume:</source>
-						<target>YmaxVolume:</target>
+						<target>Ymax 聲量:</target>
 					</trans-unit>
 				</group>
 				<group id="extended">
@@ -4144,93 +4223,95 @@
 					</trans-unit>
 					<trans-unit id="note">
 						<source>Please note: Features found on this page may require the following minimum version of OpenBVE:</source>
-						<target>注意: 本頁看到的功能至少需要以下的OpenBVE版本:</target>
+						<target>請注意: 本頁顯示的功能需要至少以下的OpenBVE版本:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake">
 						<source>Locomotive Brake</source>
-						<target>Locomotive Brake</target>
+						<target>機車制動</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_system_type">
 						<source>BrakeType:</source>
-						<target>BrakeType:</target>
+						<target>煞車類型:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_notches">
 						<source>Notches:</source>
-						<target>Notches:</target>
+						<target>動力控制級數:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_delay_up">
 						<source>DelayUp:</source>
-						<target>DelayUp:</target>
+						<target>增加延遲:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_delay_down">
 						<source>DelayDown:</source>
-						<target>DelayDown:</target>
+						<target>減少延遲:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_type">
 						<source>Type:</source>
-						<target>Type:</target>
+						<target>類型:</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_set">
 						<source>Set</source>
-						<target>Set</target>
+						<target>設置</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_none">
 						<source>Not fitted</source>
-						<target>Not fitted</target>
+						<target>沒有安裝</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_notched_air_brake">
 						<source>Notched air brake</source>
-						<target>Notched air brake</target>
+						<target>等级空氣製動器</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_cl">
 						<source>Air brake with partial release</source>
-						<target>Air brake with partial release</target>
+						<target>三壓力機構自動空氣製動</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_combined">
 						<source>Combined</source>
-						<target>Combined</target>
+						<target>聯控</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_independant">
 						<source>Independent</source>
-						<target>Independent</target>
+						<target>獨立</target>
 					</trans-unit>
 					<trans-unit id="loco_brake_blocking">
 						<source>Blocking</source>
-						<target>Blocking</target>
+						<target>阻塞</target>
 					</trans-unit>
 					<trans-unit id="delay_loco_brake_up">
 						<source>DelayLocoBrakeUp</source>
-						<target>DelayLocoBrakeUp</target>
+						<target>機車煞車增加延遲</target>
 					</trans-unit>
 					<trans-unit id="delay_loco_brake_down">
 						<source>DelayLocoBrakeDown</source>
-						<target>DelayLocoBrakeDown</target>
+						<target>機車煞車減少延遲</target>
 					</trans-unit>
 					<trans-unit id="misc">
 						<source>Miscellaneous Features</source>
+						<target>雜項</target>
 					</trans-unit>
 					<trans-unit id="misc_eb">
 						<source>Handle behaviour on EB:</source>
-						<target>Handle behaviour on EB:</target>
+						<target>緊急制動時控制桿的動作:</target>
 					</trans-unit>
 					<trans-unit id="misc_eb_no">
 						<source>No Action</source>
-						<target>No Action</target>
+						<target>無動作</target>
 					</trans-unit>
 					<trans-unit id="misc_eb_power">
 						<source>Return Power to neutral</source>
-						<target>Return Power to neutral</target>
+						<target>將電源和反向器恢復至中性</target>
 					</trans-unit>
 					<trans-unit id="misc_eb_reverser">
 						<source>Return Reverser to neutral</source>
-						<target>Return Reverser to neutral</target>
+						<target>將電源和反向器恢復至中性</target>
 					</trans-unit>
 					<trans-unit id="misc_eb_power_reverser">
 						<source>Return Power and Reverser to neutral</source>
-						<target>Return Power and Reverser to neutral</target>
+						<target>將電源和反向器恢復至中性</target>
 					</trans-unit>
 					<trans-unit id="language">
 						<source>Language</source>
+						<target>語言</target>
 					</trans-unit>
 				</group>
 			</group>
@@ -4239,60 +4320,76 @@
 					<group id="file">
 						<trans-unit id="name">
 							<source>File</source>
+							<target>檔案</target>
 						</trans-unit>
 						<trans-unit id="new">
 							<source>New</source>
+							<target>新</target>
 						</trans-unit>
 						<trans-unit id="open">
 							<source>Open...</source>
+							<target>開啓...</target>
 						</trans-unit>
 						<trans-unit id="save">
 							<source>Save</source>
+							<target>儲存</target>
 						</trans-unit>
 						<trans-unit id="save_as">
 							<source>Save as...</source>
+							<target>另存為...</target>
 						</trans-unit>
 						<trans-unit id="import">
 							<source>Import...</source>
+							<target>匯入...</target>
 						</trans-unit>
 						<trans-unit id="export">
 							<source>Export...</source>
+							<target>匯出...</target>
 						</trans-unit>
 						<trans-unit id="exit">
 							<source>Exit</source>
+							<target>關閉</target>
 						</trans-unit>
 						<trans-unit id="wrongtype">
 							<source>You have attempted to open a train.\r\nThese cannot be opened directly-\r\nPlease use the import function to import this train into TrainEditor2.</source>
-							<target>您嘗試打開列車數據。 \n\n  但TrainEditor2不能直接讀取列車資料。 \n\n  請使用導入(Import)功能將列車資料導入到TrainEditor2格式。</target>
+							<target>TrainEditor2不能直接讀取列車資料。 \n\n  請使用導入(Import)功能將列車資料導入到TrainEditor2格式。</target>
 						</trans-unit>
 					</group>
 					<group id="message">
 						<trans-unit id="new">
 							<source>Do you want to save the current file before creating a new one?</source>
+							<target>您要在創建新列車前儲存目前的檔案嗎？</target>
 						</trans-unit>
 						<trans-unit id="open">
 							<source>Do you want to save the current file before opening another file?</source>
+							<target>您要在開啓其他列車前儲存目前的檔案嗎？</target>
 						</trans-unit>
 						<trans-unit id="exit">
 							<source>Do you want to save the current file before closing?</source>
+							<target>您要在關閉本程式前儲存目前的檔案嗎？</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="language">
 						<source>Language</source>
+						<target>語言</target>
 					</trans-unit>
 				</group>
 				<group id="navigation">
 					<trans-unit id="up">
 						<source>Up</source>
+						<target>上</target>
 					</trans-unit>
 					<trans-unit id="down">
 						<source>Down</source>
+						<target>下</target>
 					</trans-unit>
 					<trans-unit id="add">
 						<source>Add</source>
+						<target>添加</target>
 					</trans-unit>
 					<trans-unit id="remove">
 						<source>Remove</source>
+						<target>移除</target>
 					</trans-unit>
 					<trans-unit id="copy">
 						<source>Copy</source>
@@ -4300,14 +4397,17 @@
 					</trans-unit>
 					<trans-unit id="set">
 						<source>Set...</source>
+						<target>設定...</target>
 					</trans-unit>
 					<trans-unit id="open">
 						<source>Open...</source>
+						<target>開啓...</target>
 					</trans-unit>
 				</group>
 				<group id="tree_cars">
 					<trans-unit id="train">
 						<source>Train</source>
+						<target>列車</target>
 					</trans-unit>
 					<trans-unit id="general">
 						<source>General</source>
@@ -4327,23 +4427,29 @@
 						<group id="handle_type">
 							<trans-unit id="name">
 								<source>HandleType</source>
+								<target>控制桿類型</target>
 							</trans-unit>
 							<trans-unit id="separated">
 								<source>Separated</source>
+								<target>分開</target>
 							</trans-unit>
 							<trans-unit id="combined">
 								<source>Combined</source>
+								<target>聯控</target>
 							</trans-unit>
 							<trans-unit id="separated_interlocked">
 								<source>Separated (Interlocked)</source>
+								<target>分隔 (連鎖)</target>
 							</trans-unit>
 							<trans-unit id="separated_interlocked_reverser">
 								<source>Separated (Reverser Interlocked)</source>
+								<target>分隔 (方向控制桿連鎖)</target>
 							</trans-unit>
 						</group>
 						<group id="eb_handle_behaviour">
 							<trans-unit id="name">
 								<source>EbHandleBehaviour</source>
+								<target>緊急制動時控制桿的動作:</target>
 							</trans-unit>
 							<trans-unit id="no">
 								<source>No action</source>
@@ -4351,21 +4457,25 @@
 							</trans-unit>
 							<trans-unit id="power">
 								<source>Return power to neutral</source>
+								<target>將動力回復至中性</target>
 							</trans-unit>
 							<trans-unit id="reverser">
 								<source>Return reverser to neutral</source>
+								<target>將方向控制桿回復至中性</target>
 							</trans-unit>
 							<trans-unit id="power_reverser">
 								<source>Return power and reverser to neutral</source>
-								<target>將電源和反向器恢復至中性</target>
+								<target>將動力和方向控制桿回復至中性</target>
 							</trans-unit>
 						</group>
 						<group id="loco_brake_handle_type">
 							<trans-unit id="name">
 								<source>LocoBrakeHandleType</source>
+								<target>機車煞車類型</target>
 							</trans-unit>
 							<trans-unit id="combined">
 								<source>Combined</source>
+								<target>聯控</target>
 							</trans-unit>
 							<trans-unit id="independent">
 								<source>Independent</source>
@@ -4378,59 +4488,76 @@
 						</group>
 						<trans-unit id="name">
 							<source>Handle</source>
+							<target>控制桿</target>
 						</trans-unit>
 						<trans-unit id="power_notches">
 							<source>PowerNotches</source>
+							<target>動力控制級數</target>
 						</trans-unit>
 						<trans-unit id="brake_notches">
 							<source>BrakeNotches</source>
+							<target>煞車控制級數</target>
 						</trans-unit>
 						<trans-unit id="power_notch_reduce_steps">
 							<source>PowerNotchReduceSteps</source>
+							<target>動力控制桿動作分段</target>
 						</trans-unit>
 						<trans-unit id="driver_power_notches">
 							<source>DriverPowerNotches</source>
+							<target>司機可用的動力級數</target>
 						</trans-unit>
 						<trans-unit id="driver_brake_notches">
 							<source>DriverBrakeNotches</source>
+							<target>司機可用的煞車級數</target>
 						</trans-unit>
 						<trans-unit id="loco_brake_notches">
 							<source>LocoBrakeNotches</source>
+							<target>機車煞車級數</target>
 						</trans-unit>
 						<trans-unit id="brake_notches_error_message">
 							<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+							<target>如有安裝抑速煞車, 就必須至少有1個煞車級位。</target>
 						</trans-unit>
 						<trans-unit id="driver_power_notches_error_message">
 							<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+							<target>&quot;司機可用的動力級數&quot; 一定要少過或等於 &quot;動力控制級數&quot;。</target>
 						</trans-unit>
 						<trans-unit id="driver_brake_notches_error_message">
 							<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
+							<target>&quot;司機可用的煞車級數&quot; 一定要少過或等於 &quot;煞車控制級數&quot;。</target>
 						</trans-unit>
 					</group>
 					<group id="cab">
 						<trans-unit id="name">
 							<source>Cab</source>
+							<target>駕駛室</target>
 						</trans-unit>
 						<trans-unit id="x">
 							<source>X</source>
+							<target>X</target>
 						</trans-unit>
 						<trans-unit id="y">
 							<source>Y</source>
+							<target>Y</target>
 						</trans-unit>
 						<trans-unit id="z">
 							<source>Z</source>
+							<target>Z</target>
 						</trans-unit>
 						<trans-unit id="driver_car">
 							<source>DriverCar</source>
+							<target>駕駛室所在車卡</target>
 						</trans-unit>
 					</group>
 					<group id="device">
 						<group id="ats">
 							<trans-unit id="name">
 								<source>Ats</source>
+								<target>Ats</target>
 							</trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
+								<target>沒有</target>
 							</trans-unit>
 							<trans-unit id="ats_sn">
 								<source>ATS-SN</source>
@@ -4444,89 +4571,115 @@
 						<group id="atc">
 							<trans-unit id="name">
 								<source>Atc</source>
+								<target>Atc</target>
 							</trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
+								<target>沒有</target>
 							</trans-unit>
 							<trans-unit id="manual">
 								<source>Manual switching</source>
+								<target>手動切換</target>
 							</trans-unit>
 							<trans-unit id="automatic">
 								<source>Automatic switching</source>
+								<target>自動切換</target>
 							</trans-unit>
 						</group>
 						<group id="re_adhesion_device">
 							<trans-unit id="name">
 								<source>ReAdhesionDevice</source>
+								<target>防滑設備</target>
 							</trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
+								<target>沒有</target>
 							</trans-unit>
 							<trans-unit id="type_a">
 								<source>Type A (instant)</source>
+								<target>Type A (即時)</target>
 							</trans-unit>
 							<trans-unit id="type_b">
 								<source>Type B (slow)</source>
+								<target>Type B (緩慢)</target>
 							</trans-unit>
 							<trans-unit id="type_c">
 								<source>Type C (medium)</source>
+								<target>Type C (適中)</target>
 							</trans-unit>
 							<trans-unit id="type_d">
 								<source>Type D (fast)</source>
+								<target>Type D (快速)</target>
 							</trans-unit>
 						</group>
 						<group id="pass_alarm">
 							<trans-unit id="name">
 								<source>PassAlarm</source>
+								<target>停車鈴:</target>
 							</trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
+								<target>沒有</target>
 							</trans-unit>
 							<trans-unit id="single">
 								<source>Single</source>
+								<target>單一</target>
 							</trans-unit>
 							<trans-unit id="looping">
 								<source>Looping</source>
+								<target>重複</target>
 							</trans-unit>
 						</group>
 						<group id="door_mode">
 							<trans-unit id="open">
 								<source>DoorOpenMode</source>
+								<target>車門開啟模式</target>
 							</trans-unit>
 							<trans-unit id="close">
 								<source>DoorCloseMode</source>
+								<target>車門關閉模式</target>
 							</trans-unit>
 							<trans-unit id="semi_automatic">
 								<source>Semi-automatic</source>
+								<target>半自動</target>
 							</trans-unit>
 							<trans-unit id="automatic">
 								<source>Automatic</source>
+								<target>全自動</target>
 							</trans-unit>
 							<trans-unit id="manual">
 								<source>Manual</source>
+								<target>手動</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Device</source>
+							<target>裝置</target>
 						</trans-unit>
 						<trans-unit id="eb">
 							<source>Eb</source>
+							<target>列車警醒設備 (Deadman)</target>
 						</trans-unit>
 						<trans-unit id="const_speed">
 							<source>ConstSpeed</source>
+							<target>定速設備</target>
 						</trans-unit>
 						<trans-unit id="hold_brake">
 							<source>HoldBrake</source>
+							<target>抑速煞車</target>
 						</trans-unit>
 						<trans-unit id="door_width">
 							<source>DoorWidth</source>
+							<target>車門闊度</target>
 						</trans-unit>
 						<trans-unit id="door_max_tolerance">
 							<source>DoorMaxTolerance</source>
+							<target>車門最大偏差</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="name">
 						<source>General settings</source>
+						<target>一般設定</target>
 					</trans-unit>
 				</group>
 				<group id="car_settings">
@@ -4534,29 +4687,32 @@
 						<group id="axles">
 							<trans-unit id="name">
 								<source>Axles</source>
+								<target>軸</target>
 							</trans-unit>
 							<trans-unit id="front">
 								<source>FrontAxle</source>
-								<target>FrontAxle</target>
+								<target>前軸距離</target>
 							</trans-unit>
 							<trans-unit id="rear">
 								<source>RearAxle</source>
-								<target>RearAxle</target>
+								<target>後軸距離</target>
 							</trans-unit>
 							<trans-unit id="mustbe_less">
 								<source>RearAxle must be less than FrontAxle.</source>
+								<target>&quot;後軸距離&quot; 必須小過 &quot;前軸距離&quot;</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>General</source>
+							<target>一般</target>
 						</trans-unit>
 						<trans-unit id="is_motor_car">
 							<source>IsMotorCar</source>
-							<target>IsMotorCar</target>
+							<target>是動力車卡</target>
 						</trans-unit>
 						<trans-unit id="mass">
 							<source>Mass</source>
-							<target>質量</target>
+							<target>重量</target>
 						</trans-unit>
 						<trans-unit id="length">
 							<source>Length</source>
@@ -4572,28 +4728,31 @@
 						</trans-unit>
 						<trans-unit id="center_of_gravity_height">
 							<source>CenterOfGravityHeight</source>
+							<target>重心高度</target>
 						</trans-unit>
 						<trans-unit id="exposed_frontal_area">
 							<source>ExposedFrontalArea</source>
+							<target>暴露的前端面積</target>
 						</trans-unit>
 						<trans-unit id="unexposed_frontal_area">
 							<source>UnexposedFrontalArea</source>
+							<target>未暴露的前端面積</target>
 						</trans-unit>
 						<trans-unit id="defined_axles">
 							<source>DefinedAxles</source>
-							<target>DefinedAxles</target>
+							<target>應用軸</target>
 						</trans-unit>
 						<trans-unit id="front_bogie">
 							<source>FrontBogie</source>
-							<target>FrontBogie</target>
+							<target>前轉向架</target>
 						</trans-unit>
 						<trans-unit id="rear_bogie">
 							<source>RearBogie</source>
-							<target>RearBogie</target>
+							<target>後轉向架</target>
 						</trans-unit>
 						<trans-unit id="loading_sway">
 							<source>LoadingSway</source>
-							<target>LoadingSway</target>
+							<target>裝載時搖擺</target>
 						</trans-unit>
 						<trans-unit id="reversed">
 							<source>Reversed</source>
@@ -4607,64 +4766,82 @@
 					<group id="performance">
 						<trans-unit id="name">
 							<source>Performance</source>
+							<target>性能</target>
 						</trans-unit>
 						<trans-unit id="deceleration">
 							<source>Deceleration</source>
+							<target>減速</target>
 						</trans-unit>
 						<trans-unit id="static_friction">
 							<source>CoefficientOfStaticFriction</source>
+							<target>靜摩擦係數</target>
 						</trans-unit>
 						<trans-unit id="rolling_resistance">
 							<source>CoefficientOfRollingResistance</source>
+							<target>滾動摩擦係數</target>
 						</trans-unit>
 						<trans-unit id="aerodynamic_drag">
 							<source>AerodynamicDragCoefficient</source>
+							<target>空氣阻力係數</target>
 						</trans-unit>
 					</group>
 					<group id="move">
 						<trans-unit id="name">
 							<source>Move</source>
+							<target>速率</target>
 						</trans-unit>
 						<trans-unit id="jerk_power_up">
 							<source>JerkPowerUp</source>
+							<target>功率增加</target>
 						</trans-unit>
 						<trans-unit id="jerk_power_down">
 							<source>JerkPowerDown</source>
+							<target>功率減少</target>
 						</trans-unit>
 						<trans-unit id="jerk_brake_up">
 							<source>JerkBrakeUp</source>
+							<target>煞車增加</target>
 						</trans-unit>
 						<trans-unit id="jerk_brake_down">
 							<source>JerkBrakeDown</source>
+							<target>煞車減少</target>
 						</trans-unit>
 						<trans-unit id="brake_cylinder_up">
 							<source>BrakeCylinderUp</source>
+							<target>煞車風缸充氣</target>
 						</trans-unit>
 						<trans-unit id="brake_cylinder_down">
 							<source>BrakeCylinderDown</source>
+							<target>煞車風缸充氣</target>
 						</trans-unit>
 					</group>
 					<group id="brake">
 						<group id="brake_type">
 							<trans-unit id="name">
 								<source>BrakeType</source>
+								<target>煞車類型</target>
 							</trans-unit>
 							<trans-unit id="smee">
 								<source>Electromagnetic straight air brake</source>
+								<target>直通式空氣製動</target>
 							</trans-unit>
 							<trans-unit id="ecb">
 								<source>Electro-pneumatic air brake without brake pipe</source>
+								<target>電控空氣製動</target>
 							</trans-unit>
 							<trans-unit id="cl">
 								<source>Air brake with partial release feature</source>
+								<target>三壓力機構自動空氣製動</target>
 							</trans-unit>
 						</group>
 						<group id="loco_brake_type">
 							<trans-unit id="name">
 								<source>LocoBrakeType</source>
+								<target>機車煞車類型</target>
 							</trans-unit>
 							<trans-unit id="none">
 								<source>Not fitted</source>
+								<target>沒有安裝</target>
 							</trans-unit>
 							<trans-unit id="notched_air_brake">
 								<source>Notched air brake</source>
@@ -4672,92 +4849,116 @@
 							</trans-unit>
 							<trans-unit id="cl">
 								<source>Air brake with partial release</source>
+								<target>三壓力機構自動空氣製動</target>
 							</trans-unit>
 						</group>
 						<group id="brake_control_system">
 							<trans-unit id="name">
 								<source>BrakeControlSystem</source>
+								<target>煞車控制系统</target>
 							</trans-unit>
 							<trans-unit id="none">
 								<source>None</source>
+								<target>沒有</target>
 							</trans-unit>
 							<trans-unit id="lock_out_valve">
 								<source>Closing electromagnetic valve</source>
+								<target>電磁關斷閥</target>
 							</trans-unit>
 							<trans-unit id="delay_including_control">
 								<source>Delay-including control</source>
+								<target>延遲補償控制</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Brake</source>
+							<target>煞車</target>
 						</trans-unit>
 						<trans-unit id="brake_control_speed">
 							<source>BrakeControlSpeed</source>
-							<target>BrakeControlSpeed</target>
+							<target>煞車控制速度</target>
 						</trans-unit>
 					</group>
 					<group id="pressure">
 						<trans-unit id="name">
 							<source>Pressure</source>
+							<target>壓力</target>
 						</trans-unit>
 						<trans-unit id="brake_cylinder_service_max">
 							<source>BrakeCylinderServiceMaximumPressure</source>
+							<target>煞車風缸常用最大壓力</target>
 						</trans-unit>
 						<trans-unit id="brake_cylinder_emergency_max">
 							<source>BrakeCylinderEmergencyMaximumPressure</source>
+							<target>煞車風缸緊急煞車最大壓力</target>
 						</trans-unit>
 						<trans-unit id="main_reservoir_min">
 							<source>MainReservoirMinimumPressure</source>
+							<target>主風缸最小壓力</target>
 						</trans-unit>
 						<trans-unit id="main_reservoir_max">
 							<source>MainReservoirMaximumPressure</source>
+							<target>主風缸最大壓力</target>
 						</trans-unit>
 						<trans-unit id="brake_pipe_normal">
 							<source>BrakePipeNormalPressure</source>
+							<target>煞車管正常壓力</target>
 						</trans-unit>
 					</group>
 					<group id="delay">
 						<group id="edit_entry">
 							<trans-unit id="name">
 								<source>Edit entry</source>
+								<target>編輯項目</target>
 							</trans-unit>
 							<trans-unit id="up">
 								<source>Up</source>
+								<target>上</target>
 							</trans-unit>
 							<trans-unit id="down">
 								<source>Down</source>
+								<target>下</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Delay</source>
+							<target>延遲</target>
 						</trans-unit>
 						<trans-unit id="power">
 							<source>Power</source>
+							<target>動力</target>
 						</trans-unit>
 						<trans-unit id="brake">
 							<source>Brake</source>
+							<target>煞車</target>
 						</trans-unit>
 						<trans-unit id="loco_brake">
 							<source>LocoBrake</source>
+							<target>機車煞車</target>
 						</trans-unit>
 						<trans-unit id="notch">
 							<source>Notch</source>
+							<target>級位:</target>
 						</trans-unit>
 						<trans-unit id="value">
 							<source>Value</source>
+							<target>數值</target>
 						</trans-unit>
 						<trans-unit id="electric_brake">
 							<source>ElectricBrake</source>
+							<target>電動煞車</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="name">
 						<source>Car settings</source>
+						<target>車卡設定</target>
 					</trans-unit>
 				</group>
 				<group id="acceleration_settings">
 					<group id="parameter">
 						<trans-unit id="name">
 							<source>Parameter</source>
+							<target>參數</target>
 						</trans-unit>
 						<trans-unit id="a0">
 							<source>a0</source>
@@ -4777,36 +4978,41 @@
 						</trans-unit>
 						<trans-unit id="e">
 							<source>e (2.0)</source>
+							<target>指數 (2.0)</target>
 						</trans-unit>
 					</group>
 					<group id="preview">
 						<trans-unit id="name">
 							<source>Preview</source>
+							<target>預覽</target>
 						</trans-unit>
 						<trans-unit id="subtract_deceleration">
 							<source>Subtract deceleration due to air and rolling resistance</source>
+							<target>減去由於空氣與滾動摩擦產生的阻力</target>
 						</trans-unit>
 						<trans-unit id="x">
 							<source>X</source>
+							<target>X</target>
 						</trans-unit>
 						<trans-unit id="y">
 							<source>Y</source>
+							<target>Y</target>
 						</trans-unit>
 						<trans-unit id="x_min">
 							<source>x-min</source>
-							<target>x-最低</target>
+							<target>x-min</target>
 						</trans-unit>
 						<trans-unit id="x_max">
 							<source>x-max</source>
-							<target>x-最高</target>
+							<target>x-max</target>
 						</trans-unit>
 						<trans-unit id="y_min">
 							<source>y-min</source>
-							<target>y-最低</target>
+							<target>y-min</target>
 						</trans-unit>
 						<trans-unit id="y_max">
 							<source>y-max</source>
-							<target>y-最高</target>
+							<target>y-max</target>
 						</trans-unit>
 						<trans-unit id="zoom_in">
 							<source>Zoom In</source>
@@ -4818,13 +5024,16 @@
 						</trans-unit>
 						<trans-unit id="reset">
 							<source>Reset</source>
+							<target>重置</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="name">
 						<source>Acceleration settings</source>
+						<target>加速度設定</target>
 					</trans-unit>
 					<trans-unit id="notch">
 						<source>Notch</source>
+						<target>級位</target>
 					</trans-unit>
 				</group>
 				<group id="motor_sound_settings">
@@ -4832,6 +5041,7 @@
 						<group id="edit">
 							<trans-unit id="name">
 								<source>Edit</source>
+								<target>編輯</target>
 							</trans-unit>
 							<trans-unit id="undo">
 								<source>Undo</source>
@@ -4847,6 +5057,7 @@
 							</trans-unit>
 							<trans-unit id="copy">
 								<source>Copy</source>
+								<target>複製</target>
 							</trans-unit>
 							<trans-unit id="paste">
 								<source>Paste</source>
@@ -4858,34 +5069,43 @@
 							</trans-unit>
 							<trans-unit id="delete">
 								<source>Delete</source>
+								<target>刪除</target>
 							</trans-unit>
 						</group>
 						<group id="view">
 							<trans-unit id="name">
 								<source>View</source>
+								<target>顯示</target>
 							</trans-unit>
 							<trans-unit id="power">
 								<source>Power</source>
+								<target>動力</target>
 							</trans-unit>
 							<trans-unit id="brake">
 								<source>Brake</source>
+								<target>煞車</target>
 							</trans-unit>
 							<trans-unit id="track">
 								<source>Track</source>
+								<target>音軌</target>
 							</trans-unit>
 						</group>
 						<group id="input">
 							<trans-unit id="name">
 								<source>Input</source>
+								<target>編輯器</target>
 							</trans-unit>
 							<trans-unit id="pitch">
 								<source>Pitch</source>
+								<target>音調</target>
 							</trans-unit>
 							<trans-unit id="volume">
 								<source>Volume</source>
+								<target>音量</target>
 							</trans-unit>
 							<trans-unit id="sound_index">
 								<source>Sound source index</source>
+								<target>聲音索引</target>
 							</trans-unit>
 							<trans-unit id="sound_index_none">
 								<source>None</source>
@@ -4895,6 +5115,7 @@
 						<group id="tool">
 							<trans-unit id="name">
 								<source>Tool</source>
+								<target>工具</target>
 							</trans-unit>
 							<trans-unit id="select">
 								<source>Select</source>
@@ -4902,6 +5123,7 @@
 							</trans-unit>
 							<trans-unit id="move">
 								<source>Move</source>
+								<target>移動</target>
 							</trans-unit>
 							<trans-unit id="dot">
 								<source>Dot</source>
@@ -4916,6 +5138,7 @@
 					<group id="view_setting">
 						<trans-unit id="name">
 							<source>View setting</source>
+							<target>顯示設定</target>
 						</trans-unit>
 						<trans-unit id="min_velocity">
 							<source>x-min(Velocity)</source>
@@ -4943,35 +5166,44 @@
 						</trans-unit>
 						<trans-unit id="zoom_in">
 							<source>Zoom In</source>
+							<target>放大</target>
 						</trans-unit>
 						<trans-unit id="zoom_out">
 							<source>Zoom Out</source>
+							<target>縮小</target>
 						</trans-unit>
 						<trans-unit id="reset">
 							<source>Reset</source>
+							<target>重置</target>
 						</trans-unit>
 					</group>
 					<group id="direct_input">
 						<trans-unit id="name">
 							<source>Direct input</source>
+							<target>放置頂點</target>
 						</trans-unit>
 						<trans-unit id="x">
 							<source>x coordinate</source>
+							<target>X 位置</target>
 						</trans-unit>
 						<trans-unit id="y">
 							<source>y coordinate</source>
+							<target>Y 位置</target>
 						</trans-unit>
 						<trans-unit id="dot">
 							<source>Dot</source>
+							<target>點</target>
 						</trans-unit>
 						<trans-unit id="move">
 							<source>Move</source>
+							<target>移動</target>
 						</trans-unit>
 					</group>
 					<group id="play_setting">
 						<group id="source">
 							<trans-unit id="name">
 								<source>Sound source setting</source>
+								<target>聲源設定</target>
 							</trans-unit>
 							<trans-unit id="run">
 								<source>Running sound</source>
@@ -4979,11 +5211,13 @@
 							</trans-unit>
 							<trans-unit id="track">
 								<source>Track</source>
+								<target>音軌</target>
 							</trans-unit>
 						</group>
 						<group id="area">
 							<trans-unit id="name">
 								<source>Area setting</source>
+								<target>播放範圍設定</target>
 							</trans-unit>
 							<trans-unit id="loop">
 								<source>Loop playback</source>
@@ -4995,6 +5229,7 @@
 							</trans-unit>
 							<trans-unit id="acceleration">
 								<source>Acceleration</source>
+								<target>加速</target>
 							</trans-unit>
 							<trans-unit id="swap">
 								<source>Swap</source>
@@ -5003,6 +5238,7 @@
 						</group>
 						<trans-unit id="name">
 							<source>Playback setting</source>
+							<target>電機音播放</target>
 						</trans-unit>
 						<trans-unit id="play">
 							<source>Playback</source>
@@ -5010,6 +5246,7 @@
 						</trans-unit>
 						<trans-unit id="pause">
 							<source>Pause</source>
+							<target>暫停</target>
 						</trans-unit>
 						<trans-unit id="stop">
 							<source>Stop</source>
@@ -5019,6 +5256,7 @@
 					<group id="vertex_info">
 						<trans-unit id="name">
 							<source>Vertex information</source>
+							<target>頂點參數</target>
 						</trans-unit>
 						<trans-unit id="velocity">
 							<source>Velocity</source>
@@ -5026,71 +5264,90 @@
 						</trans-unit>
 						<trans-unit id="pitch">
 							<source>Pitch</source>
+							<target>音調</target>
 						</trans-unit>
 						<trans-unit id="volume">
 							<source>Volume</source>
+							<target>音量</target>
 						</trans-unit>
 						<trans-unit id="sound_index">
 							<source>Sound source index</source>
+							<target>聲音索引</target>
 						</trans-unit>
 					</group>
 					<group id="status">
 						<group id="type">
 							<trans-unit id="name">
 								<source>Type</source>
+								<target>類型</target>
 							</trans-unit>
 							<trans-unit id="power">
 								<source>Power</source>
+								<target>動力</target>
 							</trans-unit>
 							<trans-unit id="brake">
 								<source>Brake</source>
+								<target>煞車</target>
 							</trans-unit>
 						</group>
 						<group id="track">
 							<trans-unit id="name">
 								<source>Track</source>
+								<target>音軌</target>
 							</trans-unit>
 						</group>
 						<group id="mode">
 							<trans-unit id="name">
 								<source>Mode</source>
+								<target>模式</target>
 							</trans-unit>
 							<trans-unit id="pitch">
 								<source>Pitch</source>
+								<target>音調</target>
 							</trans-unit>
 							<trans-unit id="volume">
 								<source>Volume</source>
+								<target>音量</target>
 							</trans-unit>
 							<trans-unit id="sound_index">
 								<source>Sound source index</source>
+								<target>聲音索引</target>
 							</trans-unit>
 						</group>
 						<group id="tool">
 							<trans-unit id="name">
 								<source>Tool</source>
+								<target>工具</target>
 							</trans-unit>
 							<trans-unit id="select">
 								<source>Select</source>
+								<target>選擇</target>
 							</trans-unit>
 							<trans-unit id="move">
 								<source>Move</source>
+								<target>速率</target>
 							</trans-unit>
 							<trans-unit id="dot">
 								<source>Dot</source>
+								<target>點</target>
 							</trans-unit>
 							<trans-unit id="line">
 								<source>Line</source>
+								<target>線</target>
 							</trans-unit>
 						</group>
 						<group id="xy">
 							<trans-unit id="velocity">
 								<source>Velocity</source>
+								<target>速率</target>
 							</trans-unit>
 							<trans-unit id="pitch">
 								<source>Pitch</source>
+								<target>音調</target>
 							</trans-unit>
 							<trans-unit id="volume">
 								<source>Volume</source>
+								<target>音量</target>
 							</trans-unit>
 						</group>
 					</group>
@@ -5102,12 +5359,14 @@
 					</group>
 					<trans-unit id="name">
 						<source>Motor sound settings</source>
+						<target>編輯馬達音</target>
 					</trans-unit>
 				</group>
 				<group id="coupler_settings">
 					<group id="general">
 						<trans-unit id="name">
 							<source>General</source>
+							<target>一般</target>
 						</trans-unit>
 						<trans-unit id="min">
 							<source>Min</source>
@@ -5120,6 +5379,7 @@
 					</group>
 					<trans-unit id="name">
 						<source>Coupler settings</source>
+						<target>車鉤設定</target>
 					</trans-unit>
 				</group>
 				<group id="panel_settings">
@@ -5127,36 +5387,46 @@
 						<group id="center">
 							<trans-unit id="name">
 								<source>Center origin</source>
+								<target>中心點</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<group id="origin">
 							<trans-unit id="name">
 								<source>Track origin</source>
+								<target>軌道交點</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>This</source>
+							<target>駕駛室</target>
 						</trans-unit>
 						<trans-unit id="resolution">
 							<source>Resolution</source>
+							<target>解像度</target>
 						</trans-unit>
 						<trans-unit id="left">
 							<source>Left</source>
+							<target>左邊</target>
 						</trans-unit>
 						<trans-unit id="right">
 							<source>Right</source>
+							<target>右邊</target>
 						</trans-unit>
 						<trans-unit id="top">
 							<source>Top</source>
@@ -5168,20 +5438,21 @@
 						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
-							<target>DaytimeImage</target>
+							<target>日間圖片</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
-							<target>NighttimeImage</target>
+							<target>夜間圖片</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
-							<target>TransparentColor</target>
+							<target>去地顏色</target>
 						</trans-unit>
 					</group>
 					<group id="screen">
 						<trans-unit id="name">
 							<source>Screen</source>
+							<target>屏幕</target>
 						</trans-unit>
 						<trans-unit id="number">
 							<source>Number</source>
@@ -5196,66 +5467,82 @@
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
+								<target>位置</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>PilotLamp</source>
+							<target>指示燈</target>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
-							<target>Subject</target>
+							<target>物件</target>
 						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
+							<target>日間圖片</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
+							<target>夜間圖片</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
+							<target>去地顏色</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
+							<target>圖層</target>
 						</trans-unit>
 					</group>
 					<group id="needle">
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
+								<target>位置</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<group id="origin">
 							<trans-unit id="name">
 								<source>Origin</source>
+								<target>源點</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Needle</source>
+							<target>指示針</target>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
+							<target>物件</target>
 						</trans-unit>
 						<trans-unit id="defined_radius">
 							<source>DefinedRadius</source>
-							<target>DefinedRadius</target>
+							<target>應用半徑</target>
 						</trans-unit>
 						<trans-unit id="radius">
 							<source>Radius</source>
@@ -5263,9 +5550,11 @@
 						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
+							<target>日間圖片</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
+							<target>夜間圖片</target>
 						</trans-unit>
 						<trans-unit id="color">
 							<source>Color</source>
@@ -5273,18 +5562,19 @@
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
+							<target>去地顏色</target>
 						</trans-unit>
 						<trans-unit id="defined_origin">
 							<source>DefinedOrigin</source>
-							<target>DefinedOrigin</target>
+							<target>應用原點</target>
 						</trans-unit>
 						<trans-unit id="initial_angle">
 							<source>InitialAngle</source>
-							<target>InitialAngle</target>
+							<target>開始角度</target>
 						</trans-unit>
 						<trans-unit id="last_angle">
 							<source>LastAngle</source>
-							<target>LastAngle</target>
+							<target>終止角度</target>
 						</trans-unit>
 						<trans-unit id="minimum">
 							<source>Minimum</source>
@@ -5296,19 +5586,19 @@
 						</trans-unit>
 						<trans-unit id="defined_natural_freq">
 							<source>DefinedNaturalFreq</source>
-							<target>DefinedNaturalFreq</target>
+							<target>使用自然頻率</target>
 						</trans-unit>
 						<trans-unit id="natural_freq">
 							<source>NaturalFreq</source>
-							<target>NaturalFreq</target>
+							<target>自然頻率</target>
 						</trans-unit>
 						<trans-unit id="defined_damping_ratio">
 							<source>DefiedDampingRatio</source>
-							<target>DefiedDampingRatio</target>
+							<target>使用阻尼</target>
 						</trans-unit>
 						<trans-unit id="damping_ratio">
 							<source>DampingRatio</source>
-							<target>DampingRatio</target>
+							<target>阻尼比值</target>
 						</trans-unit>
 						<trans-unit id="backstop">
 							<source>Backstop</source>
@@ -5320,37 +5610,47 @@
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
+							<target>圖層</target>
 						</trans-unit>
 					</group>
 					<group id="digital_number">
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
+								<target>位置</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>DigitalNumber</source>
+							<target>數碼數字</target>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
+							<target>物件</target>
 						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
+							<target>日間圖片</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
+							<target>夜間圖片</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
+							<target>去地顏色</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
+							<target>圖層</target>
 						</trans-unit>
 						<trans-unit id="interval">
 							<source>Interval</source>
@@ -5361,37 +5661,48 @@
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
+								<target>位置</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>DigitalGauge</source>
+							<target>數碼測量儀</target>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
+							<target>物件</target>
 						</trans-unit>
 						<trans-unit id="radius">
 							<source>Radius</source>
+							<target>半徑</target>
 						</trans-unit>
 						<trans-unit id="color">
 							<source>Color</source>
+							<target>顏色</target>
 						</trans-unit>
 						<trans-unit id="initial_angle">
 							<source>InitialAngle</source>
+							<target>開始角度</target>
 						</trans-unit>
 						<trans-unit id="last_angle">
 							<source>LastAngle</source>
+							<target>終止角度</target>
 						</trans-unit>
 						<trans-unit id="minimum">
 							<source>Minimum</source>
+							<target>最低</target>
 						</trans-unit>
 						<trans-unit id="maximum">
 							<source>Maximum</source>
+							<target>最高</target>
 						</trans-unit>
 						<trans-unit id="step">
 							<source>Step</source>
@@ -5399,119 +5710,151 @@
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
+							<target>圖層</target>
 						</trans-unit>
 					</group>
 					<group id="linear_gauge">
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
+								<target>位置</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<group id="direction">
 							<trans-unit id="name">
 								<source>Direction</source>
+								<target>方向</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>LinearGauge</source>
+							<target>線性測量儀</target>
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
+							<target>物件</target>
 						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
+							<target>日間圖片</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
+							<target>夜間圖片</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
+							<target>去地顏色</target>
 						</trans-unit>
 						<trans-unit id="minimum">
 							<source>Minimum</source>
+							<target>最低</target>
 						</trans-unit>
 						<trans-unit id="maximum">
 							<source>Maximum</source>
+							<target>最高</target>
 						</trans-unit>
 						<trans-unit id="width">
 							<source>Width</source>
+							<target>寬度</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
+							<target>圖層</target>
 						</trans-unit>
 					</group>
 					<group id="timetable">
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
+								<target>位置</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Timetable</source>
+							<target>時間表</target>
 						</trans-unit>
 						<trans-unit id="height">
 							<source>Height</source>
+							<target>高度</target>
 						</trans-unit>
 						<trans-unit id="width">
 							<source>Width</source>
+							<target>寬度</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
+							<target>去地顏色</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
+							<target>圖層</target>
 						</trans-unit>
 					</group>
 					<group id="touch">
 						<group id="location">
 							<trans-unit id="name">
 								<source>Location</source>
+								<target>位置</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<group id="size">
 							<trans-unit id="name">
 								<source>Size</source>
+								<target>大小</target>
 							</trans-unit>
 							<trans-unit id="x">
 								<source>X</source>
+								<target>X</target>
 							</trans-unit>
 							<trans-unit id="y">
 								<source>Y</source>
+								<target>Y</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Touch</source>
+							<target>觸按範圍</target>
 						</trans-unit>
 						<trans-unit id="jump_screen">
 							<source>JumpScreen</source>
-							<target>JumpScreen</target>
+							<target>跳轉螢幕</target>
 						</trans-unit>
 						<trans-unit id="sound_index">
 							<source>SoundIndex</source>
+							<target>聲音索引</target>
 						</trans-unit>
 						<trans-unit id="command">
 							<source>Command</source>
@@ -5519,74 +5862,92 @@
 						</trans-unit>
 						<trans-unit id="command_option">
 							<source>CommandOption</source>
-							<target>CommandOption</target>
+							<target>指令選項</target>
 						</trans-unit>
 						<trans-unit id="sound_command">
 							<source>Sound and command</source>
+							<target>聲音及指令</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
+							<target>圖層</target>
 						</trans-unit>
 					</group>
 					<group id="subject">
 						<trans-unit id="name">
 							<source>Subject</source>
+							<target>物件</target>
 						</trans-unit>
 						<trans-unit id="base">
 							<source>Base</source>
+							<target>基礎</target>
 						</trans-unit>
 						<trans-unit id="baseoption">
 							<source>Base option</source>
+							<target>基礎選項</target>
 						</trans-unit>
 						<trans-unit id="suffix">
 							<source>Suffix</source>
+							<target>後綴</target>
 						</trans-unit>
 						<trans-unit id="suffixoption">
 							<source>Suffix option</source>
+							<target>後綴選項</target>
 						</trans-unit>
 					</group>
 					<group id="sound_command">
 						<group id="tree">
 							<trans-unit id="touch_element">
 								<source>Touch element</source>
+								<target>觸按物件</target>
 							</trans-unit>
 							<trans-unit id="sounds">
 								<source>Sounds</source>
+								<target>聲效</target>
 							</trans-unit>
 							<trans-unit id="commands">
 								<source>Commands</source>
+								<target>指令</target>
 							</trans-unit>
 						</group>
 						<group id="edit_entry">
 							<group id="sound">
 								<trans-unit id="index">
 									<source>Index</source>
+									<target>索引</target>
 								</trans-unit>
 							</group>
 							<group id="command">
 								<trans-unit id="name">
 									<source>Key</source>
+									<target>鍵</target>
 								</trans-unit>
 								<trans-unit id="option">
 									<source>Option</source>
+									<target>選項</target>
 								</trans-unit>
 							</group>
 							<trans-unit id="name">
 								<source>Edit entry</source>
+								<target>編輯項目</target>
 							</trans-unit>
 							<trans-unit id="sound">
 								<source>Sound</source>
+								<target>聲效</target>
 							</trans-unit>
 							<trans-unit id="command">
 								<source>Command</source>
+								<target>控制</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Sound and command</source>
+							<target>聲音及指令</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="name">
 						<source>Panel settings</source>
+						<target>駕駛室設定</target>
 					</trans-unit>
 				</group>
 				<group id="sound_settings">
@@ -5594,43 +5955,54 @@
 						<group id="section">
 							<trans-unit id="name">
 								<source>Section select</source>
+								<target>部分選擇</target>
 							</trans-unit>
 						</group>
 						<group id="key">
 							<trans-unit id="name">
 								<source>Key type select</source>
+								<target>鍵值類型</target>
 							</trans-unit>
 						</group>
 						<group id="value">
 							<group id="position">
 								<trans-unit id="name">
 									<source>Position</source>
+									<target>位置</target>
 								</trans-unit>
 								<trans-unit id="x">
 									<source>X</source>
+									<target>X</target>
 								</trans-unit>
 								<trans-unit id="y">
 									<source>Y</source>
+									<target>Y</target>
 								</trans-unit>
 								<trans-unit id="z">
 									<source>Z</source>
+									<target>Z</target>
 								</trans-unit>
 							</group>
 							<trans-unit id="name">
 								<source>Input value</source>
+								<target>參數</target>
 							</trans-unit>
 							<trans-unit id="filename">
 								<source>Filename</source>
+								<target>檔案名</target>
 							</trans-unit>
 							<trans-unit id="radius">
 								<source>Radius</source>
+								<target>半徑</target>
 							</trans-unit>
 							<trans-unit id="position">
 								<source>Position setting</source>
+								<target>位置設定</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Edit entry</source>
+							<target>編輯項目</target>
 						</trans-unit>
 					</group>
 					<group id="message">
@@ -5645,6 +6017,7 @@
 					</group>
 					<trans-unit id="name">
 						<source>Sound settings</source>
+						<target>電機音設定</target>
 					</trans-unit>
 					<trans-unit id="key">
 						<source>Key</source>
@@ -5656,9 +6029,11 @@
 					</trans-unit>
 					<trans-unit id="position">
 						<source>Position</source>
+						<target>位置</target>
 					</trans-unit>
 					<trans-unit id="radius">
 						<source>Radius</source>
+						<target>半徑</target>
 					</trans-unit>
 				</group>
 				<group id="status">
@@ -5669,6 +6044,7 @@
 						</trans-unit>
 						<trans-unit id="warning">
 							<source>Warning</source>
+							<target>警告</target>
 						</trans-unit>
 						<trans-unit id="info">
 							<source>Information</source>
@@ -5676,10 +6052,12 @@
 						</trans-unit>
 						<trans-unit id="clear">
 							<source>Clear</source>
+							<target>清除</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="name">
 						<source>Status</source>
+						<target>狀態</target>
 					</trans-unit>
 					<trans-unit id="level">
 						<source>Level</source>
@@ -5687,17 +6065,21 @@
 					</trans-unit>
 					<trans-unit id="description">
 						<source>Description</source>
+						<target>描述</target>
 					</trans-unit>
 				</group>
 				<group id="message">
 					<trans-unit id="error">
 						<source>Error</source>
+						<target>錯誤</target>
 					</trans-unit>
 					<trans-unit id="warning">
 						<source>Warning</source>
+						<target>警告</target>
 					</trans-unit>
 					<trans-unit id="info">
 						<source>Information</source>
+						<target>資訊</target>
 					</trans-unit>
 					<trans-unit id="positive">
 						<source>positive</source>
@@ -5721,79 +6103,101 @@
 					</trans-unit>
 					<trans-unit id="number_exist">
 						<source>The specified number is already set.</source>
+						<target>指定的數值已被使用。</target>
 					</trans-unit>
 					<trans-unit id="mustbe_greater_than">
 						<source>Max must be greater than or equal to Min.</source>
+						<target>最大值必須大於或等於最小值。</target>
 					</trans-unit>
 					<trans-unit id="mustbe_less_than">
 						<source>Min must be less than the Max.</source>
+						<target>最小值必須小於最大值。</target>
 					</trans-unit>
 				</group>
 				<group id="items">
 					<trans-unit id="filename">
 						<source>Filename</source>
+						<target>檔案名</target>
 					</trans-unit>
 					<trans-unit id="folder">
 						<source>Folder</source>
+						<target>資料夾</target>
 					</trans-unit>
 					<trans-unit id="type">
 						<source>Type</source>
+						<target>類型</target>
 					</trans-unit>
 					<trans-unit id="button_ok">
 						<source>OK</source>
+						<target>確定</target>
 					</trans-unit>
 				</group>
 				<group id="import_export">
 					<group id="train">
 						<trans-unit id="name">
 							<source>Train setting file</source>
+							<target>列車設定檔案</target>
 						</trans-unit>
 						<trans-unit id="old_format">
 							<source>Old format</source>
+							<target>舊格式</target>
 						</trans-unit>
 						<trans-unit id="traindat">
 							<source>Train.dat</source>
+							<target>Train.dat</target>
 						</trans-unit>
 						<trans-unit id="extensionscfg">
 							<source>Extensions.cfg</source>
+							<target>Extensions.cfg</target>
 						</trans-unit>
 					</group>
 					<group id="panel">
 						<trans-unit id="name">
 							<source>Panel Setting File</source>
+							<target>駕駛室設定檔案</target>
 						</trans-unit>
 						<trans-unit id="panel2cfg">
 							<source>Panel2.cfg</source>
+							<target>Panel2.cfg</target>
 						</trans-unit>
 						<trans-unit id="panelxml">
 							<source>Panel.xml</source>
+							<target>Panel.xml</target>
 						</trans-unit>
 					</group>
 					<group id="sound">
 						<trans-unit id="name">
 							<source>Sound setting file</source>
+							<target>電機音設定檔案</target>
 						</trans-unit>
 						<trans-unit id="no_setting_file">
 							<source>No setting file</source>
+							<target>沒有設定檔案</target>
 						</trans-unit>
 						<trans-unit id="soundcfg">
 							<source>Sound.cfg</source>
+							<target>Sound.cfg</target>
 						</trans-unit>
 						<trans-unit id="soundxml">
 							<source>Sound.xml</source>
+							<target>Sound.xml</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="import_name">
 						<source>Import</source>
+						<target>匯入</target>
 					</trans-unit>
 					<trans-unit id="export_name">
 						<source>Export</source>
+						<target>匯出</target>
 					</trans-unit>
 					<trans-unit id="folder">
 						<source>Folder</source>
+						<target>資料夾</target>
 					</trans-unit>
 					<trans-unit id="type">
 						<source>Type</source>
+						<target>類型</target>
 					</trans-unit>
 				</group>
 			</group>

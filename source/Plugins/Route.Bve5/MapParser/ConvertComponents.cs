@@ -815,7 +815,7 @@ namespace Route.Bve5
 						}
 					}
 
-					i = RouteData.sortedBlocks.IndexOfKey(i);
+					i = RouteData.sortedBlocks.IndexOfKey(dist);
 				}
 			}
 		}

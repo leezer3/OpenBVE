@@ -197,9 +197,9 @@ namespace OpenBve
 			}
 		}
 
-		/// <summary>Called when a mouse button is released</summary>
+		/// <summary>Called when the mouse is moved</summary>
 		/// <param name="sender">The sender</param>
-		/// <param name="e">The button arguments</param>
+		/// <param name="e">The move arguments</param>
 		internal static void mouseMoveEvent(object sender, MouseMoveEventArgs e)
 		{
 			timeSinceLastMouseEvent = 0;

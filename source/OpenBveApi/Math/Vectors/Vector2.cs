@@ -1,4 +1,5 @@
 ﻿using System;
+#pragma warning disable IDE0064
 using System.Runtime.InteropServices;
 
 namespace OpenBveApi.Math {

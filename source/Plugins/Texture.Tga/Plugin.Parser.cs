@@ -13,7 +13,7 @@ using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace Texture.Tga
 {
-	public partial class Plugin : TextureInterface
+	public partial class Plugin
 	{
 		//Extension area information
 		private int ExtensionAreaSize;

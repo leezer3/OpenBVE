@@ -1695,5 +1695,20 @@ namespace LibRender2
 		{
 
 		}
+
+		/// <summary>Sets the window state</summary>
+		/// <param name="windowState">The new window state</param>
+		public virtual void SetWindowState(OpenTK.WindowState windowState)
+		{
+
+		}
+
+		/// <summary>Sets the size of the window</summary>
+		/// <param name="width">The new width</param>
+		/// <param name="height">The new height</param>
+		public virtual void SetWindowSize(int width, int height)
+		{
+
+		}
 	}
 }

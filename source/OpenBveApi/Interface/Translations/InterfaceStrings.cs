@@ -6,14 +6,6 @@ namespace OpenBveApi.Interface
 	{
 		/// <summary>Stores the current language-code</summary>
 		public static string CurrentLanguageCode = "en-GB";
-
-		internal struct InterfaceString
-		{
-			/// <summary>The name of the string</summary>
-			internal string Name;
-			/// <summary>The translated string text</summary>
-			internal string Text;
-		}
 		
 		/// <summary>Sets the in-game language</summary>
 		/// <param name="Language">The language string to set</param>

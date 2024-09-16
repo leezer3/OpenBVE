@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
+using Path = OpenBveApi.Path;
 
 namespace RouteViewer
 {
@@ -186,6 +187,17 @@ namespace RouteViewer
 										}
 									}
 									break;
+								case "folders":
+									switch (Key)
+									{
+										case "routesearch":
+											if (Directory.Exists(Value))
+											{
+												Interface.CurrentOptions.RouteSearchDirectory = Value;
+											}
+											break;
+									}
+									break;
 							}
                         }
                     }
@@ -237,6 +249,9 @@ namespace RouteViewer
                 Builder.AppendLine("[parsers]");
                 Builder.AppendLine("xObject = " + (int)Interface.CurrentOptions.CurrentXParser);
                 Builder.AppendLine("objObject = " + (int)Interface.CurrentOptions.CurrentObjParser);
+                Builder.AppendLine();
+                Builder.AppendLine("[Folders]");
+                Builder.AppendLine($"routesearch = {Interface.CurrentOptions.RouteSearchDirectory}");
 				string configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg");
                 System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
             }

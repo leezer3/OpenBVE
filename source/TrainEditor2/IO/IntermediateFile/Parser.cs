@@ -126,9 +126,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			car.Brake = ParseBrakeNode(parent.Element("Brake"));
 			car.Pressure = ParsePressureNode(parent.Element("Pressure"));
 
-			MotorCar motorCar = car as MotorCar;
-
-			if (motorCar != null)
+			if (car is MotorCar motorCar)
 			{
 				motorCar.Acceleration = ParseAccelerationNode(parent.Element("Acceleration"));
 				motorCar.Motor = ParseMotorNode(parent.Element("Motor"));

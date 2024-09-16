@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
-	<NoWarn>$(NoWarn),IDE1006</NoWarn>
+    <NoWarn>$(NoWarn),IDE1006</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -27,7 +27,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin_debug\</OutputPath>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -39,7 +39,7 @@
     <DebugType>None</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin_release\</OutputPath>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -88,6 +88,8 @@
       <DependentUpon>formTrain.cs</DependentUpon>
     </Compile>
     <Compile Include="FunctionScripts.cs" />
+    <Compile Include="Game\Menu.cs" />
+    <Compile Include="Game\Menu.SingleMenu.cs" />
     <Compile Include="Graphics\NewRendererS.cs" />
     <Compile Include="Graphics\ObjectOptimizationMode.cs" />
     <Compile Include="Hosts.cs" />

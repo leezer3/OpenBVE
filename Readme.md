@@ -6,7 +6,10 @@
 
 This repository contains the source code for the Train Simulator OpenBVE, a 3D cab based simulator.
 
-The simulator supports both native CSV / RW routes, and routes built for the legacy DOS based simulator Mechanik.
+The simulator supports the following route formats:
+* Native CSV / RW.
+* BVE5 TXT format.
+* Mechanik DAT format.
 
 OpenBVE is built in OpenGL, using the OpenTK framework for windowing.
 
@@ -53,7 +56,7 @@ http://bveworldwide.forumotion.com/f14-the-sim-in-time-general-discussion
 ### License
 
 The original founder of this project, Michelle intended for this program to be placed in the public domain. 
-In practice over the last 10 years I've been maintaining this, we've found that whilst public domain was a noble idea, having no recognised licence and attempting to disclaim copyright tends to produce many of it's own challenges.
+In practice over the last 10+ years I've been maintaining this, we've found that whilst public domain was a noble idea, having no recognised licence and attempting to disclaim copyright tends to produce many of it's own challenges.
 
 As a result, all new code is licenced under BSD-2 or a similar permissive licence (as appropriate)- Please see the source headers.
 

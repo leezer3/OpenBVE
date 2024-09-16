@@ -119,18 +119,12 @@ namespace AssimpNET.Obj
 	// ------------------------------------------------------------------------------------------------
 	public class WavefrontObject
 	{
-		enum ObjectType
-		{
-			ObjType,
-			GroupType
-		};
-
 		//! Object name
 		public readonly string ObjName;
 		//! Transformation matrix, stored in OpenGL format
-#pragma warning disable 169
+#pragma warning disable 169, IDE0051
 		Matrix4D Transformation;
-#pragma warning restore 169
+#pragma warning restore 169, IDE0051
 		//! All sub-objects referenced by this object
 		readonly List<WavefrontObject> SubObjects = new List<WavefrontObject>();
 		/// Assigned meshes
@@ -223,7 +217,7 @@ namespace AssimpNET.Obj
 
 		public const uint NoMaterial = ~0u;
 		/// The name for the mesh
-		string Name;
+		readonly string Name;
 		/// Array with pointer to all stored faces
 		public List<Face> Faces = new List<Face>();
 		/// Assigned material

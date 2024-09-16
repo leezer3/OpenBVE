@@ -18,6 +18,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.World;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
 
@@ -487,6 +488,25 @@ namespace OpenBve.Graphics
 		public override void SetCursor(OpenTK.MouseCursor newCursor)
 		{
 			Program.currentGameWindow.Cursor = newCursor;
+		}
+
+		public override void SetWindowState(OpenTK.WindowState windowState)
+		{
+			Program.currentGameWindow.WindowState = windowState;
+			if (windowState == WindowState.Fullscreen)
+			{
+				// move origin appropriately
+				Program.currentGameWindow.X = 0;
+				Program.currentGameWindow.Y = 0;
+			}
+		}
+
+		public override void SetWindowSize(int width, int height)
+		{
+			Program.currentGameWindow.Width = width;
+			Program.currentGameWindow.Height = height;
+			Screen.Width = width; 
+			Screen.Height = height;
 		}
 
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)

@@ -31,7 +31,7 @@ namespace OpenBve.Graphics.Renderers
 		private Texture LightingEventTexture;
 		private Texture WeatherEventTexture;
 		private Texture SwitchEventTexture;
-		private List<Guid> renderedSwitches = new List<Guid>();
+		private readonly List<Guid> renderedSwitches = new List<Guid>();
 
 		private bool Initialized;
 

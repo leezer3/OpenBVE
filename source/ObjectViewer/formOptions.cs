@@ -35,6 +35,7 @@ namespace ObjectViewer
 			int previousAntialasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
 
 			//Interpolation mode
+			InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
 			switch (InterpolationMode.SelectedIndex)
 			{
 				case 0:
@@ -55,6 +56,12 @@ namespace ObjectViewer
 				case 5:
 					Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering;
 					break;
+			}
+
+			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation)
+			{
+				// We have changed interpolation level, so the texture cache needs totally clearing (as opposed to changed files)
+				Program.Renderer.TextureManager.UnloadAllTextures(false);
 			}
 
 			//Ansiotropic filtering level

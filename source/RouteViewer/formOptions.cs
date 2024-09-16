@@ -46,11 +46,9 @@ namespace RouteViewer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
-            
-
-            //Interpolation mode
-            switch (InterpolationMode.SelectedIndex)
+			//Interpolation mode
+			InterpolationMode prevInterpolationMode = Interface.CurrentOptions.Interpolation;
+			switch (InterpolationMode.SelectedIndex)
             {
                 case 0:
                     Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.NearestNeighbor;
@@ -71,8 +69,15 @@ namespace RouteViewer
                     Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering;
                     break;
             }
-            //Ansiotropic filtering level
-            Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnsiotropicLevel.Value;
+
+            if (previousInterpolationMode != Interface.CurrentOptions.Interpolation)
+            {
+	            // We have changed interpolation level, so the texture cache needs totally clearing (as opposed to changed files)
+	            Program.Renderer.TextureManager.UnloadAllTextures(false);
+            }
+
+			//Ansiotropic filtering level
+			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnsiotropicLevel.Value;
             //Antialiasing level
             Interface.CurrentOptions.AntiAliasingLevel = (int)AntialiasingLevel.Value;
             if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialasingLevel)

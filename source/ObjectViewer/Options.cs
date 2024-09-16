@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using ObjectViewer.Graphics;
-using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
+using Path = OpenBveApi.Path;
 
 namespace ObjectViewer
 {
@@ -172,6 +173,17 @@ namespace ObjectViewer
 											break;
 									}
 									break;
+								case "folders":
+									switch (Key)
+									{
+										case "objectsearch":
+											if (Directory.Exists(Value))
+											{
+												Interface.CurrentOptions.ObjectSearchDirectory = Value;
+											}
+											break;
+									}
+									break;
                             }
                         }
                     }
@@ -219,7 +231,10 @@ namespace ObjectViewer
                 Builder.AppendLine();
 				Builder.AppendLine("[objectOptimization]");
 				Builder.AppendLine($"mode = {Interface.CurrentOptions.ObjectOptimizationMode}");
-                string configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg");
+				Builder.AppendLine();
+				Builder.AppendLine("[Folders]");
+				Builder.AppendLine($"objectsearch = {Interface.CurrentOptions.ObjectSearchDirectory}");
+				string configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg");
                 System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
             }
             catch
