@@ -35,6 +35,11 @@ namespace OpenBve
 		private static readonly Picturebox switchMainPictureBox = new Picturebox(Program.Renderer);
 		private static readonly Picturebox switchSettingPictureBox = new Picturebox(Program.Renderer);
 		private static readonly Picturebox switchMapPictureBox = new Picturebox(Program.Renderer);
+		private static readonly Button nextImageButton = new Button(Program.Renderer, "->");
+		private static readonly Button previousImageButton = new Button(Program.Renderer, "<-");
+
+		private static Texture routeImageTexture;
+		private static Texture routeMapTexture;
 
 		private static void packageWorkerThread_doWork(object sender, DoWorkEventArgs e)
 		{
@@ -62,6 +67,11 @@ namespace OpenBve
 			}
 		}
 
+		private static void nextImageButton_Click(object sender, EventArgs e)
+		{
+			routePictureBox.Texture = routePictureBox.Texture == routeImageTexture ? routeMapTexture : routeImageTexture;
+		}
+
 		private static void packageWorkerThread_completed(object sender, RunWorkerCompletedEventArgs e)
 		{
 			if (currentPackage != null)
@@ -79,6 +89,9 @@ namespace OpenBve
 			{
 				return;
 			}
+
+			nextImageButton.IsVisible = false;
+			previousImageButton.IsVisible = false;
 			RouteEncoding = TextEncoding.GetSystemEncodingFromFile(currentFile);
 			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routePictureBox.Texture);
 			routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_processing"});
@@ -141,17 +154,18 @@ namespace OpenBve
 					{
 						if (File.Exists(Program.CurrentRoute.Image))
 						{
-							Program.CurrentHost.RegisterTexture(Program.CurrentRoute.Image, new TextureParameters(null, null), out routePictureBox.Texture);
+							Program.CurrentHost.RegisterTexture(Program.CurrentRoute.Image, new TextureParameters(null, null), out routeImageTexture);
 						}
 						else
 						{
-							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_unknown.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_unknown.png"), new TextureParameters(null, null), out routeImageTexture);
 						}
+
 						
 					}
 					catch
 					{
-						routePictureBox.Texture = null;
+						routeImageTexture = null;
 					}
 				}
 				else
@@ -163,14 +177,19 @@ namespace OpenBve
 						string g = Path.CombineFile(Path.GetDirectoryName(currentFile),
 							System.IO.Path.GetFileNameWithoutExtension(currentFile) + f[i]);
 						if (!File.Exists(g)) continue;
-						Program.CurrentHost.RegisterTexture(g, new TextureParameters(null, null), out routePictureBox.Texture);
+						Program.CurrentHost.RegisterTexture(g, new TextureParameters(null, null), out routeImageTexture);
 						break;
 					}
 					if (i == f.Length)
 					{
-						Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_unknown.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+						Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_unknown.png"), new TextureParameters(null, null), out routeImageTexture);
 					}
 				}
+
+				routeMapTexture = new Texture(Illustrations.CreateRouteMap((int)routePictureBox.Size.X, (int)routePictureBox.Size.Y, false, out _));
+				nextImageButton.IsVisible = true;
+				previousImageButton.IsVisible = true;
+				routePictureBox.Texture = routeImageTexture;
 
 				// description
 				string Description = Program.CurrentRoute.Comment.ConvertNewlinesToCrLf();

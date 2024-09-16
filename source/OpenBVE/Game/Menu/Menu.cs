@@ -110,6 +110,10 @@ namespace OpenBve
 			routePictureBox.Location = new Vector2(imageLoc, 0);
 			routePictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			routePictureBox.BackgroundColor = Color128.White;
+			nextImageButton.Location = new Vector2(imageLoc + quarterWidth + nextImageButton.Size.X, quarterWidth / 2.0);
+			nextImageButton.IsVisible = false;
+			previousImageButton.Location = new Vector2(imageLoc - previousImageButton.Size.X * 2, quarterWidth / 2.0);
+			previousImageButton.IsVisible = false;
 			switchMainPictureBox.Location = new Vector2(imageLoc, quarterHeight);
 			switchMainPictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			switchMainPictureBox.BackgroundColor = Color128.Transparent;
@@ -138,6 +142,8 @@ namespace OpenBve
 			menuControls.Add(LogoPictureBox);
 			menuControls.Add(controlTextBox);
 			menuControls.Add(routeDescriptionBox);
+			menuControls.Add(nextImageButton);
+			menuControls.Add(previousImageButton);
 		}
 
 		public override void Reset()
@@ -286,6 +292,8 @@ namespace OpenBve
 			}
 			if (menu.Type == MenuType.RouteList || menu.Type == MenuType.TrainList || menu.Type == MenuType.PackageInstall  || menu.Type == MenuType.Packages || (int)menu.Type >= 107)
 			{
+				nextImageButton.MouseMove(x, y);
+				previousImageButton.MouseMove(x, y);
 				routeDescriptionBox.MouseMove(x, y);
 				//HACK: Use this to trigger our menu start button!
 				if (x > Program.Renderer.Screen.Width - 200 && x < Program.Renderer.Screen.Width - 10 && y > Program.Renderer.Screen.Height - 40 && y < Program.Renderer.Screen.Height - 10)
@@ -869,6 +877,8 @@ namespace OpenBve
 				case MenuType.RouteList:
 				case MenuType.TrainList:
 				{
+					nextImageButton.Draw();
+					previousImageButton.Draw();
 					routePictureBox.Draw();
 					routeDescriptionBox.Draw();
 

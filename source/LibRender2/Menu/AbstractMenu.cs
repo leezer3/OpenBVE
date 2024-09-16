@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using LibRender2.Screens;
 using LibRender2.Text;
 using OpenBveApi.Colors;
@@ -176,6 +177,13 @@ namespace LibRender2.Menu
 		/// <param name="y">The screen-relative y coordinate of the down event</param>
 		public void ProcessMouseDown(int x, int y)
 		{
+			for (int i = 0; i < menuControls.Count; i++)
+			{
+				if (menuControls[i].IsVisible)
+				{
+					menuControls[i].MouseDown(x, y);
+				}
+			}
 			if (ProcessMouseMove(x, y))
 			{
 				if (Menus[CurrMenu].Selection == Menus[CurrMenu].TopItem + visibleItems)

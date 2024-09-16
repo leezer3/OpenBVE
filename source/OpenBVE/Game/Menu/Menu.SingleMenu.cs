@@ -44,6 +44,8 @@ namespace OpenBve
 			
 			public SingleMenu(AbstractMenu menu, MenuType menuType, int data = 0, double MaxWidth = 0) : base(menuType)
 			{
+				nextImageButton.IsVisible = false;
+				previousImageButton.IsVisible = false;
 				int i;
 				int jump = 0;
 				//Vector2 size;
@@ -67,6 +69,9 @@ namespace OpenBve
 							Manipulation.OperationCompleted += OnPackageOperationCompleted;
 							//Load texture
 							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+							// n.b. only cycling between two images at the minute, so use the same method
+							nextImageButton.OnClick += nextImageButton_Click;
+							previousImageButton.OnClick += nextImageButton_Click;
 						}
 						Items = new MenuEntry[5];
 						Items[0] = new MenuCommand(menu, "Open Route File", MenuTag.RouteList, 0);

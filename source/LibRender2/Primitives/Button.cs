@@ -53,6 +53,10 @@ namespace LibRender2.Primitives
 
 		public override void Draw()
 		{
+			if (!IsVisible)
+			{
+				return;
+			}
 			Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor);
 			if (CurrentlySelected)
 			{
