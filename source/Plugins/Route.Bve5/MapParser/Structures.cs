@@ -22,13 +22,16 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using System.Collections.Generic;
-using OpenBveApi.Interface;
+using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using RouteManager2.Climate;
+using RouteManager2.Stations;
+using TrainManager.Car;
 
 namespace Route.Bve5
 {
@@ -56,7 +59,7 @@ namespace Route.Bve5
 			internal double ArrivalTime;
 			internal double DepartureTime;
 			internal double StopTime;
-			internal double DefaultTime;
+			internal double DefaultTime = -1;
 			internal bool ForceStopSignal;
 			internal bool DepartureSignalUsed;
 			internal double AlightingTime;
@@ -65,6 +68,23 @@ namespace Route.Bve5
 			internal string DepartureSoundKey;
 			internal double ReopenDoor;
 			internal double InterferenceInDoor;
+
+			internal void Create(ref RouteStation newStation)
+			{
+				newStation.Name = Name;
+				newStation.ArrivalTime = ArrivalTime;
+				newStation.StopMode = StopMode;
+				newStation.DepartureTime = DepartureTime;
+				newStation.JumpTime = DefaultTime;
+				newStation.Type = StationType;
+				newStation.StopTime = StopTime;
+				newStation.ForceStopSignal = ForceStopSignal;
+				newStation.PassengerRatio = PassengerRatio;
+				newStation.ReopenDoor = ReopenDoor;
+				newStation.ReopenStationLimit = 5;
+				newStation.InterferenceInDoor = InterferenceInDoor;
+				newStation.MaxInterferingObjectRate = Plugin.RandomNumberGenerator.Next(1, 99);
+			}
 		}
 
 		private class FreeObj : AbstractStructure

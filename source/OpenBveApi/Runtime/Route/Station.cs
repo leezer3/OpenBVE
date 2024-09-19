@@ -15,6 +15,11 @@ namespace OpenBveApi.Runtime
 		/// <summary>The expected departure time.</summary>
 		[DataMember]
 		public double DepartureTime;
+		/// <summary>If set, the time when jumping to this station</summary>
+		/// <remarks>May be different to the expected arrival time if driven by the player / AI.
+		/// NOTE: This is not shown in the timetable</remarks>
+		[DataMember]
+		public double JumpTime;
 		/// <summary>Whether the next signal is held red until departure.</summary>
 		[DataMember]
 		public bool ForceStopSignal;
@@ -89,6 +94,7 @@ namespace OpenBveApi.Runtime
 			Name = s.Name;
 			ArrivalTime = s.ArrivalTime;
 			DepartureTime = s.DepartureTime;
+			JumpTime = s.JumpTime;
 			ExpectedTimeStopped = s.ExpectedTimeStopped;
 			ForceStopSignal = s.ForceStopSignal;
 			OpenLeftDoors = s.OpenLeftDoors;

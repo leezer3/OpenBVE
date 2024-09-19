@@ -727,6 +727,7 @@ namespace MechanikRouteParser
 							OpenRightDoors = true,
 							ArrivalTime = -1,
 							DepartureTime = -1,
+							JumpTime = -1,
 							DefaultTrackPosition = currentRouteData.Blocks[i].StartingTrackPosition,
 							StopTime = 30
 						};

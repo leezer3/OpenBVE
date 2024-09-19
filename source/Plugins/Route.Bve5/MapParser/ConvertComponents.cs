@@ -845,30 +845,17 @@ namespace Route.Bve5
 					DefaultTrackPosition = 0.0;
 				}
 				
-				RouteStation NewStation = new RouteStation();
-				NewStation.Name = RouteData.StationList[stationKey].Name;
-				NewStation.ArrivalTime = RouteData.StationList[stationKey].ArrivalTime;
+				RouteStation NewStation = new RouteStation(stationKey);
+				RouteData.StationList[stationKey].Create(ref NewStation);
 				RouteData.Sounds.TryGetValue(RouteData.StationList[stationKey].ArrivalSoundKey, out NewStation.ArrivalSoundBuffer);
-				NewStation.StopMode = RouteData.StationList[stationKey].StopMode;
-				NewStation.DepartureTime = RouteData.StationList[stationKey].DepartureTime;
 				RouteData.Sounds.TryGetValue(RouteData.StationList[stationKey].DepartureSoundKey, out NewStation.DepartureSoundBuffer);
-				NewStation.Type = RouteData.StationList[stationKey].StationType;
-				NewStation.StopTime = RouteData.StationList[stationKey].StopTime;
-				NewStation.ForceStopSignal = RouteData.StationList[stationKey].ForceStopSignal;
 				NewStation.OpenLeftDoors = Convert.ToDouble(Doors) < 0.0;
 				NewStation.OpenRightDoors = Convert.ToDouble(Doors) > 0.0;
 				NewStation.Stops = new StationStop[1];
 				NewStation.Stops[0].TrackPosition = Statement.Distance;
 				NewStation.Stops[0].BackwardTolerance = Math.Abs(Convert.ToDouble(BackwardTolerance));
 				NewStation.Stops[0].ForwardTolerance = Convert.ToDouble(ForwardTolerance);
-				NewStation.PassengerRatio = RouteData.StationList[stationKey].PassengerRatio;
 				NewStation.DefaultTrackPosition = DefaultTrackPosition;
-				NewStation.ReopenDoor = RouteData.StationList[stationKey].ReopenDoor;
-				NewStation.ReopenStationLimit = 5;
-				NewStation.InterferenceInDoor = RouteData.StationList[stationKey].InterferenceInDoor;
-				NewStation.MaxInterferingObjectRate = Plugin.RandomNumberGenerator.Next(1, 99);
-				NewStation.Key = stationKey;
-
 				int StationBlockIndex = RouteData.FindOrAddBlock(DefaultTrackPosition);
 				RouteData.Blocks[StationBlockIndex].StationIndex = CurrentStation;
 

@@ -1593,6 +1593,7 @@ namespace CsvRwRouteParser
 					CurrentRoute.Stations[CurrentStation].ReopenStationLimit = reopenStationLimit;
 					CurrentRoute.Stations[CurrentStation].InterferenceInDoor = interferenceInDoor;
 					CurrentRoute.Stations[CurrentStation].MaxInterferingObjectRate = maxInterferingObjectRate;
+					CurrentRoute.Stations[CurrentStation].JumpTime = -1;
 					Data.Blocks[BlockIndex].Station = CurrentStation;
 					Data.Blocks[BlockIndex].StationPassAlarm = passalarm == 1;
 					CurrentStop = -1;
