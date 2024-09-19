@@ -62,7 +62,7 @@ namespace DenshaDeGoInput
 		private byte[] outputBuffer;
 
 		/// <summary>The setup packet needed to send data to the controller.</summary>
-		private LibUsbDotNet.Main.UsbSetupPacket setupPacket = new LibUsbDotNet.Main.UsbSetupPacket(0x41, 0x09, 0x201, 0x0, 0x8);
+		private readonly LibUsbDotNet.Main.UsbSetupPacket setupPacket = new LibUsbDotNet.Main.UsbSetupPacket(0x41, 0x09, 0x201, 0x0, 0x8);
 
 		/// <summary>
 		/// Initializes PS2 Densha de GO! controller.

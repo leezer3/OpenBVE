@@ -997,7 +997,12 @@ namespace TrainManager.Trains
 
 				if (IsPlayerTrain)
 				{
-					if (TrainManagerBase.CurrentRoute.Stations[stationIndex].ArrivalTime >= 0.0)
+					if (TrainManagerBase.CurrentRoute.Stations[stationIndex].JumpTime > 0.0)
+					{
+						// jump time is set, so use that (BVE5)
+						TrainManagerBase.CurrentRoute.SecondsSinceMidnight = TrainManagerBase.CurrentRoute.Stations[stationIndex].JumpTime;
+					}
+					else if (TrainManagerBase.CurrentRoute.Stations[stationIndex].ArrivalTime >= 0.0)
 					{
 						TrainManagerBase.CurrentRoute.SecondsSinceMidnight = TrainManagerBase.CurrentRoute.Stations[stationIndex].ArrivalTime;
 					}

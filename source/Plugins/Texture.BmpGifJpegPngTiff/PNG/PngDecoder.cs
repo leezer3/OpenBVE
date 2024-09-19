@@ -562,7 +562,7 @@ namespace Plugin.PNG
                                                             break;
                                                         }
                                                 }
-                                            }
+												}
 												previousRowStartByte = rowStartByte;
 											}
 										}
