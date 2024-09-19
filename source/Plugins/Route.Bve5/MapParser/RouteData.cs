@@ -67,7 +67,7 @@ namespace Route.Bve5
 					{
 						StartingTrackPosition = Distance
 					},
-					FreeObj = new Dictionary<string, List<FreeObj>>(),
+					FreeObjects = new Dictionary<string, List<FreeObj>>(),
 					Cracks = new List<Crack>(),
 					Sections = new List<Section>(),
 					Signals = new List<Signal>[TrackKeyList.Count],

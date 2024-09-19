@@ -22,16 +22,14 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
 using System.Collections.Generic;
-using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using RouteManager2.Climate;
 using RouteManager2.Stations;
-using TrainManager.Car;
+using TrainManager.Motor;
 
 namespace Route.Bve5
 {
@@ -239,7 +237,7 @@ namespace Route.Bve5
 			internal bool GradientTransitionEnd;
 			internal int StationIndex = -1;
 			internal int Stop = -1;
-			internal Dictionary<string, List<FreeObj>> FreeObj;
+			internal Dictionary<string, List<FreeObj>> FreeObjects;
 			internal List<Crack> Cracks;
 			internal string Background = string.Empty;
 			internal List<Section> Sections;
@@ -298,9 +296,9 @@ namespace Route.Bve5
 			internal readonly string Key;
 			internal readonly double Distance1;
 			internal readonly double Distance2;
-			internal readonly string Function;
+			internal readonly BVE5AISoundControl Function;
 
-			internal CarSound(string key, double distance1, double distance2, string function)
+			internal CarSound(string key, double distance1, double distance2, BVE5AISoundControl function)
 			{
 				Key = key;
 				Distance1 = distance1;

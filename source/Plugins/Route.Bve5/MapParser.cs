@@ -23,7 +23,6 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Bve5_Parsing;
@@ -79,10 +78,10 @@ namespace Route.Bve5
 					switch (error.ErrorLevel)
 					{
 						case ParseErrorLevel.Error:
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, string.Format("[{0}:{1}] {2}: {3} in {4}", error.Line, error.Column, error.ErrorLevel, error.Message, FileName));
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"[{error.Line}:{error.Column}] {error.ErrorLevel}: {error.Message} in {FileName}");
 							break;
 						case ParseErrorLevel.Warning:
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, string.Format("[{0}:{1}] {2}: {3} in {4}", error.Line, error.Column, error.ErrorLevel, error.Message, FileName));
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, $"[{error.Line}:{error.Column}] {error.ErrorLevel}: {error.Message} in {FileName}");
 							break;
 					}
 				}

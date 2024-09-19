@@ -54,22 +54,6 @@ namespace Route.Bve5
 					base.Add(key, unifiedObject);
 				}
 			}
-
-			/// <summary>Adds a new Static Object to the dictionary</summary>
-			/// <param name="key">The object index</param>
-			/// <param name="staticObject">The object</param>
-			internal void Add(string key, StaticObject staticObject)
-			{
-				if (ContainsKey(key))
-				{
-					base[key] = staticObject;
-					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The structure " + key + " has been declared twice: The most recent declaration will be used.");
-				}
-				else
-				{
-					base.Add(key, staticObject);
-				}
-			}
 		}
 
 		private class SoundDictionary : Dictionary<string, SoundHandle>

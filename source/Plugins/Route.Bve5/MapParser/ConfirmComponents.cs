@@ -475,13 +475,13 @@ namespace Route.Bve5
 
 						int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 
-						if (!Blocks[BlockIndex].FreeObj.ContainsKey(TrackKey))
+						if (!Blocks[BlockIndex].FreeObjects.ContainsKey(TrackKey))
 						{
-							Blocks[BlockIndex].FreeObj.Add(TrackKey, new List<FreeObj>());
+							Blocks[BlockIndex].FreeObjects.Add(TrackKey, new List<FreeObj>());
 						}
 
 						Vector3 position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
-						Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, position, RY * 0.0174532925199433, -RX * 0.0174532925199433, RZtoRoll(RY, RZ) * 0.0174532925199433, (ObjectTransformType)Tilt, Span));
+						Blocks[BlockIndex].FreeObjects[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, position, RY * 0.0174532925199433, -RX * 0.0174532925199433, RZtoRoll(RY, RZ) * 0.0174532925199433, (ObjectTransformType)Tilt, Span));
 						}
 						break;
 					case MapFunctionName.PutBetween:
@@ -643,9 +643,9 @@ namespace Route.Bve5
 			{
 				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(i);
 
-				if (!RouteData.Blocks[BlockIndex].FreeObj.ContainsKey(TrackKey))
+				if (!RouteData.Blocks[BlockIndex].FreeObjects.ContainsKey(TrackKey))
 				{
-					RouteData.Blocks[BlockIndex].FreeObj.Add(TrackKey, new List<FreeObj>());
+					RouteData.Blocks[BlockIndex].FreeObjects.Add(TrackKey, new List<FreeObj>());
 				}
 
 				/*
@@ -653,7 +653,7 @@ namespace Route.Bve5
 				 *
 				 * This seems to get stuff on Chuo Rapid Line looking OK in terms of the gradients
 				 */
-				RouteData.Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(i, Repeater.ObjectKeys[LoopCount], Repeater.Position, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, Repeater.Type, Math.Max(Repeater.Interval, Repeater.Span)));
+				RouteData.Blocks[BlockIndex].FreeObjects[TrackKey].Add(new FreeObj(i, Repeater.ObjectKeys[LoopCount], Repeater.Position, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, Repeater.Type, Math.Max(Repeater.Interval, Repeater.Span)));
 
 				if (LoopCount >= Repeater.ObjectKeys.Length - 1)
 				{
@@ -971,20 +971,18 @@ namespace Route.Bve5
 
 		private static void ConfirmCabIlluminance(Statement Statement, RouteData RouteData)
 		{
-			double TempValue;
-			if (!Statement.HasArgument(ArgumentName.Value) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Value), out TempValue) || TempValue == 0.0)
+			if (!Statement.HasArgument(ArgumentName.Value) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Value), out double illuminanceValue) || illuminanceValue == 0.0)
 			{
-				TempValue = 1.0;
+				illuminanceValue = 1.0;
 			}
 
-			float Value = Convert.ToSingle(TempValue);
-			if (Value < 0.0f || Value > 1.0f)
+			if (illuminanceValue < 0.0f || illuminanceValue > 1.0f)
 			{
-				Value = Value < 0.0f ? 0.0f : 1.0f;
+				illuminanceValue = illuminanceValue < 0.0f ? 0.0f : 1.0f;
 			}
 
 			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-			RouteData.Blocks[BlockIndex].BrightnessChanges.Add(new Brightness(Statement.Distance, Value));
+			RouteData.Blocks[BlockIndex].BrightnessChanges.Add(new Brightness(Statement.Distance, (float)illuminanceValue));
 		}
 
 		private static void ConfirmIrregularity(bool PreviewOnly, RouteData RouteData)

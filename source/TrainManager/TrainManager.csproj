@@ -98,6 +98,8 @@
     <Compile Include="Motor\BVE4\MotorSound.cs" />
     <Compile Include="Motor\BVE4\MotorSoundTable.cs" />
     <Compile Include="Motor\BVE4\MotorSoundTable.Entry.cs" />
+    <Compile Include="Motor\BVE5\AISoundEntry.cs" />
+    <Compile Include="Motor\BVE5\AITrainSound.cs" />
     <Compile Include="Motor\BVE5\MotorSound.cs" />
     <Compile Include="Motor\BVE5\MotorSoundTableEntry.cs" />
     <Compile Include="Motor\BVE5\SoundState.cs" />

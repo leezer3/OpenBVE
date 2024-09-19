@@ -57,9 +57,9 @@ namespace Route.Bve5
 		    CurrentHost = host;
 		    FileSystem = fileSystem;
 		    CurrentOptions = Options;
-		    if (trainManagerReference is TrainManagerBase)
+		    if (trainManagerReference is TrainManagerBase trainManagerBase)
 		    {
-			    TrainManager = (TrainManagerBase)trainManagerReference;
+			    TrainManager = trainManagerBase;
 		    }
 
 		    Bve5ScenarioParser.plugin = this;

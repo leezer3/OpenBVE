@@ -34,9 +34,12 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
+using SoundManager;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -219,6 +222,19 @@ namespace Route.Bve5
 					}
 				}
 
+				for (int i = 0; i < Train.Cars.Length; i++)
+				{
+					Train.Cars[i].Specs.IsMotorCar = true;
+					BVE5AITrainSounds carSounds = new BVE5AITrainSounds(Train.Cars[i], new BVE5AISoundEntry[OtherTrain.CarSounds.Count]);
+					for (int j = 0; j < carSounds.SoundEntries.Length; j++)
+					{
+						RouteData.Sound3Ds.TryGetValue(OtherTrain.CarSounds[j].Key, out SoundHandle soundHandle);
+						carSounds.SoundEntries[j] = new BVE5AISoundEntry(soundHandle as SoundBuffer, OtherTrain.CarSounds[j].Function);
+					}
+
+					Train.Cars[i].Sounds.Motor = carSounds;
+				}
+
 				List<TravelData> Data = new List<TravelData>();
 
 				foreach (var Statement in ParseData.Statements)
@@ -369,16 +385,15 @@ namespace Route.Bve5
 				Structure.TryGetValue("span", out string TempSpan);
 				Structure.TryGetValue("z", out string TempZ);
 
-				double Distance, Span, Z;
-				if (string.IsNullOrEmpty(TempDistance) || !NumberFormats.TryParseDoubleVb6(TempDistance, out Distance))
+				if (string.IsNullOrEmpty(TempDistance) || !NumberFormats.TryParseDoubleVb6(TempDistance, out double Distance))
 				{
 					Distance = 0.0;
 				}
-				if (string.IsNullOrEmpty(TempSpan) || !NumberFormats.TryParseDoubleVb6(TempSpan, out Span))
+				if (string.IsNullOrEmpty(TempSpan) || !NumberFormats.TryParseDoubleVb6(TempSpan, out double Span))
 				{
 					Span = 0.0;
 				}
-				if (string.IsNullOrEmpty(TempZ) || !NumberFormats.TryParseDoubleVb6(TempZ, out Z))
+				if (string.IsNullOrEmpty(TempZ) || !NumberFormats.TryParseDoubleVb6(TempZ, out double Z))
 				{
 					Z = 0.0;
 				}
@@ -393,18 +408,18 @@ namespace Route.Bve5
 				Sound3d.TryGetValue("distance2", out string TempDistance2);
 				Sound3d.TryGetValue("function", out string Function);
 
-				double Distance1;
-				double Distance2;
-				if (string.IsNullOrEmpty(TempDistance1) || !NumberFormats.TryParseDoubleVb6(TempDistance1, out Distance1))
+				Enum.TryParse(Function, true, out BVE5AISoundControl function);
+
+				if (string.IsNullOrEmpty(TempDistance1) || !NumberFormats.TryParseDoubleVb6(TempDistance1, out double Distance1))
 				{
 					Distance1 = 0.0;
 				}
-				if (string.IsNullOrEmpty(TempDistance2) || !NumberFormats.TryParseDoubleVb6(TempDistance2, out Distance2))
+				if (string.IsNullOrEmpty(TempDistance2) || !NumberFormats.TryParseDoubleVb6(TempDistance2, out double Distance2))
 				{
 					Distance2 = 0.0;
 				}
 
-				scriptedTrain.CarSounds.Add(new CarSound(Key, Distance1, Distance2, Function));
+				scriptedTrain.CarSounds.Add(new CarSound(Key, Distance1, Distance2, function));
 			}
 		}
 	}

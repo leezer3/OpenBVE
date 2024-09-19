@@ -335,8 +335,7 @@ namespace Route.Bve5
 					{
 						if (Data.Blocks[i].SoundEvents[k].Type == SoundType.TrainStatic)
 						{
-							SoundHandle buffer;
-							Data.Sounds.TryGetValue(Data.Blocks[i].SoundEvents[k].Key, out buffer);
+							Data.Sounds.TryGetValue(Data.Blocks[i].SoundEvents[k].Key, out SoundHandle buffer);
 
 							if (buffer != null)
 							{
@@ -399,30 +398,30 @@ namespace Route.Bve5
 					{
 						// free objects (including placed repeaters)
 						string railKey = Data.Blocks[i].Rails.ElementAt(j).Key;
-						if (Data.Blocks[i].FreeObj.ContainsKey(railKey))
+						if (Data.Blocks[i].FreeObjects.ContainsKey(railKey))
 						{
-							for (int k = 0; k < Data.Blocks[i].FreeObj[railKey].Count; k++)
+							for (int k = 0; k < Data.Blocks[i].FreeObjects[railKey].Count; k++)
 							{
-								string key = Data.Blocks[i].FreeObj[railKey][k].Key;
-								double dx = Data.Blocks[i].FreeObj[railKey][k].Position.X;
-								double dy = Data.Blocks[i].FreeObj[railKey][k].Position.Y;
-								double dz = Data.Blocks[i].FreeObj[railKey][k].Position.Z;
-								double tpos = Data.Blocks[i].FreeObj[railKey][k].TrackPosition;
+								string key = Data.Blocks[i].FreeObjects[railKey][k].Key;
+								double dx = Data.Blocks[i].FreeObjects[railKey][k].Position.X;
+								double dy = Data.Blocks[i].FreeObjects[railKey][k].Position.Y;
+								double dz = Data.Blocks[i].FreeObjects[railKey][k].Position.Z;
+								double tpos = Data.Blocks[i].FreeObjects[railKey][k].TrackPosition;
 								Vector3 wpos;
 								Transformation Transformation;
 								if (j == 0)
 								{
-									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].FreeObj[railKey][k], Direction, out wpos, out Transformation);
+									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].FreeObjects[railKey][k], Direction, out wpos, out Transformation);
 								}
 								else
 								{
-									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].FreeObj[railKey][k], out wpos, out Transformation);
+									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].FreeObjects[railKey][k], out wpos, out Transformation);
 								}
 								wpos += dx * Transformation.X + dy * Transformation.Y + dz * Transformation.Z;
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
 								if (obj != null)
 								{
-									obj.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObj[railKey][k].Yaw, Data.Blocks[i].FreeObj[railKey][k].Pitch, Data.Blocks[i].FreeObj[railKey][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
+									obj.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObjects[railKey][k].Yaw, Data.Blocks[i].FreeObjects[railKey][k].Pitch, Data.Blocks[i].FreeObjects[railKey][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
 								}
 							}
 						}
@@ -465,17 +464,7 @@ namespace Route.Bve5
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
 								if (obj != null)
 								{
-									UnifiedObject crack;
-									if (d0 < 0.0)
-									{
-										crack = obj.TransformRight(d0, d1);
-									}
-									else
-									{
-										crack = obj.TransformLeft(d0, d1);
-									}
-
-									
+									UnifiedObject crack = d0 < 0.0 ? obj.TransformRight(d0, d1) : obj.TransformLeft(d0, d1);
 									crack.CreateObject(wpos, Transformation, new Transformation(0.0, 0.0, 0.0), -1, StartingDistance, EndingDistance, tpos, 1.0);
 								}
 							}
