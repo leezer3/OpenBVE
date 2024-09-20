@@ -694,12 +694,7 @@ namespace Route.Bve5
 						double?[] aspects = new double?[d.SignalAspects.Count];
 						d.SignalAspects.CopyTo(aspects, 0); // Yuck: Stored as nullable doubles
 						int Index = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-						RouteData.Blocks[Index].Sections.Add(new Section
-						{
-							TrackPosition = Statement.Distance,
-							Aspects = aspects.Select(db => db != null ? (int)db : 0).ToArray(),
-							DepartureStationIndex = -1
-						});
+						RouteData.Blocks[Index].Sections.Add(new Section(Statement.Distance, aspects.Select(db => db != null ? (int)db : 0).ToArray()));
 						int StationIndex = Array.FindLastIndex(Plugin.CurrentRoute.Stations, s => s.Stops.Last().TrackPosition <= Statement.Distance);
 						if (StationIndex != -1)
 						{
@@ -835,13 +830,7 @@ namespace Route.Bve5
 					Section += CurrentSection;
 				}
 
-				RouteData.Blocks[BlockIndex].Transponders.Add(new Transponder
-				{
-					TrackPosition = Statement.Distance,
-					Type = Convert.ToInt32(Type),
-					SectionIndex = Section,
-					Data = Convert.ToInt32(SendData)
-				});
+				RouteData.Blocks[BlockIndex].Transponders.Add(new Transponder(Statement.Distance, (int)Type, (int)SendData, Section));
 			}
 		}
 

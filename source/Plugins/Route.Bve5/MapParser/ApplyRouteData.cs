@@ -51,9 +51,11 @@ namespace Route.Bve5
 			Plugin.CurrentOptions.SpeedConversionFactor = 0.0;
 
 			Plugin.CurrentRoute.Sections = new RouteManager2.SignalManager.Section[1];
-			Plugin.CurrentRoute.Sections[0] = new RouteManager2.SignalManager.Section(0, new[] { new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity) }, SectionType.ValueBased);
-			Plugin.CurrentRoute.Sections[0].CurrentAspect = 0;
-			Plugin.CurrentRoute.Sections[0].StationIndex = -1;
+			Plugin.CurrentRoute.Sections[0] = new RouteManager2.SignalManager.Section(0, new[] { new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity) }, SectionType.ValueBased)
+			{
+				CurrentAspect = 0,
+				StationIndex = -1
+			};
 
 			//FIXME: Quad-tree *should* be better (and we don't require any legacy stuff), but this produces an empty worldspace
 			Plugin.CurrentRoute.AccurateObjectDisposal = ObjectDisposalMode.Accurate;
