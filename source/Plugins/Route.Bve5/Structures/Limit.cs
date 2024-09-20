@@ -22,6 +22,8 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using RouteManager2.Events;
+
 namespace Route.Bve5
 {
 	internal class Limit
@@ -35,6 +37,13 @@ namespace Route.Bve5
 		{
 			TrackPosition = trackPosition;
 			Speed = speed;
+		}
+
+		internal void Create(int currentElement, double startingDistance, ref double currentSpeedLimit)
+		{
+			double d = TrackPosition - startingDistance;
+			Plugin.CurrentRoute.Tracks[0].Elements[currentElement].Events.Add(new LimitChangeEvent(Plugin.CurrentRoute, d, currentSpeedLimit, Speed));
+			currentSpeedLimit = Speed;
 		}
 	}
 }

@@ -22,6 +22,11 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBveApi.Trains;
+using RouteManager2.Events;
+using RouteManager2.SignalManager;
+using System;
+
 namespace Route.Bve5
 {
 	internal class Section
@@ -37,6 +42,46 @@ namespace Route.Bve5
 		{
 			TrackPosition = trackPosition;
 			Aspects = aspects;
+		}
+
+		internal void Create(RouteData Data, int currentElement, double startingDistance)
+		{
+			int m = Plugin.CurrentRoute.Sections.Length;
+			Array.Resize(ref Plugin.CurrentRoute.Sections, m + 1);
+			RouteManager2.SignalManager.Section previousSection = null;
+			if (m > 0)
+			{
+				previousSection = Plugin.CurrentRoute.Sections[m - 1];
+			}
+
+			Plugin.CurrentRoute.Sections[m] = new RouteManager2.SignalManager.Section(TrackPosition, new SectionAspect[Aspects.Length], SectionType.IndexBased, previousSection);
+
+			if (m > 0)
+			{
+				Plugin.CurrentRoute.Sections[m - 1].NextSection = Plugin.CurrentRoute.Sections[m];
+			}
+			// create section
+
+			for (int l = 0; l < Aspects.Length; l++)
+			{
+				Plugin.CurrentRoute.Sections[m].Aspects[l].Number = Aspects[l];
+				if (Aspects[l] >= 0 & Aspects[l] < Data.SignalSpeeds.Length)
+				{
+					Plugin.CurrentRoute.Sections[m].Aspects[l].Speed = Data.SignalSpeeds[Aspects[l]];
+				}
+				else
+				{
+					Plugin.CurrentRoute.Sections[m].Aspects[l].Speed = double.PositiveInfinity;
+				}
+			}
+			Plugin.CurrentRoute.Sections[m].CurrentAspect = -1;
+			Plugin.CurrentRoute.Sections[m].StationIndex = DepartureStationIndex;
+			Plugin.CurrentRoute.Sections[m].Invisible = false;
+			Plugin.CurrentRoute.Sections[m].Trains = new AbstractTrain[] { };
+
+			// create section change event
+			double d = TrackPosition - startingDistance;
+			Plugin.CurrentRoute.Tracks[0].Elements[currentElement].Events.Add(new SectionChangeEvent(Plugin.CurrentRoute, d, m - 1, m));
 		}
 	}
 }

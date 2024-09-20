@@ -32,6 +32,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
+using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using RouteManager2;
@@ -324,29 +325,10 @@ namespace Route.Bve5
 				{
 					for (int k = 0; k < Data.Blocks[i].Limits.Count; k++)
 					{
-						double d = Data.Blocks[i].Limits[k].TrackPosition - StartingDistance;
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new LimitChangeEvent(Plugin.CurrentRoute, d, CurrentSpeedLimit, Data.Blocks[i].Limits[k].Speed));
-						CurrentSpeedLimit = Data.Blocks[i].Limits[k].Speed;
+						Data.Blocks[i].Limits[k].Create(n, StartingDistance, ref CurrentSpeedLimit);
 					}
 				}
 
-				// sound
-				if (!PreviewOnly)
-				{
-					for (int k = 0; k < Data.Blocks[i].SoundEvents.Count; k++)
-					{
-						if (Data.Blocks[i].SoundEvents[k].Type == SoundType.TrainStatic)
-						{
-							Data.Sounds.TryGetValue(Data.Blocks[i].SoundEvents[k].Key, out SoundHandle buffer);
-
-							if (buffer != null)
-							{
-								double d = Data.Blocks[i].SoundEvents[k].TrackPosition - StartingDistance;
-								Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, d, buffer, true, true, false, false, Vector3.Zero, 0.0));
-							}
-						}
-					}
-				}
 
 				// sections
 				if (!PreviewOnly)
@@ -354,42 +336,7 @@ namespace Route.Bve5
 					// sections
 					for (int k = 0; k < Data.Blocks[i].Sections.Count; k++)
 					{
-						int m = Plugin.CurrentRoute.Sections.Length;
-						Array.Resize(ref Plugin.CurrentRoute.Sections, m + 1);
-						RouteManager2.SignalManager.Section previousSection = null;
-						if (m > 0)
-						{
-							previousSection = Plugin.CurrentRoute.Sections[m - 1];
-						}
-
-						Plugin.CurrentRoute.Sections[m] = new RouteManager2.SignalManager.Section(Data.Blocks[i].Sections[k].TrackPosition, new SectionAspect[Data.Blocks[i].Sections[k].Aspects.Length], SectionType.IndexBased, previousSection);
-
-						if (m > 0)
-						{
-							Plugin.CurrentRoute.Sections[m - 1].NextSection = Plugin.CurrentRoute.Sections[m];
-						}
-						// create section
-						
-						for (int l = 0; l < Data.Blocks[i].Sections[k].Aspects.Length; l++)
-						{
-							Plugin.CurrentRoute.Sections[m].Aspects[l].Number = Data.Blocks[i].Sections[k].Aspects[l];
-							if (Data.Blocks[i].Sections[k].Aspects[l] >= 0 & Data.Blocks[i].Sections[k].Aspects[l] < Data.SignalSpeeds.Length)
-							{
-								Plugin.CurrentRoute.Sections[m].Aspects[l].Speed = Data.SignalSpeeds[Data.Blocks[i].Sections[k].Aspects[l]];
-							}
-							else
-							{
-								Plugin.CurrentRoute.Sections[m].Aspects[l].Speed = double.PositiveInfinity;
-							}
-						}
-						Plugin.CurrentRoute.Sections[m].CurrentAspect = -1;
-						Plugin.CurrentRoute.Sections[m].StationIndex = Data.Blocks[i].Sections[k].DepartureStationIndex;
-						Plugin.CurrentRoute.Sections[m].Invisible = false;
-						Plugin.CurrentRoute.Sections[m].Trains = new AbstractTrain[] { };
-
-						// create section change event
-						double d = Data.Blocks[i].Sections[k].TrackPosition - StartingDistance;
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new SectionChangeEvent(Plugin.CurrentRoute, d, m - 1, m));
+						Data.Blocks[i].Sections[k].Create(Data, n, StartingDistance);
 					}
 				}
 
@@ -613,24 +560,7 @@ namespace Route.Bve5
 				// world sounds
 				for (int k = 0; k < Data.Blocks[i].SoundEvents.Count; k++)
 				{
-					if (Data.Blocks[i].SoundEvents[k].Type == SoundType.World)
-					{
-						var SoundEvent = Data.Blocks[i].SoundEvents[k];
-						Data.Sound3Ds.TryGetValue(SoundEvent.Key, out SoundHandle buffer);
-						double d = SoundEvent.TrackPosition - StartingDistance;
-						double dx = SoundEvent.X;
-						double dy = SoundEvent.Y;
-						double wa = Math.Atan2(Direction.Y, Direction.X);
-						Vector3 w = new Vector3(Math.Cos(wa), Math.Tan(0.0), Math.Sin(wa));
-						w.Normalize();
-						Vector3 s = new Vector3(Direction.Y, 0.0, -Direction.X);
-						Vector3 u = Vector3.Cross(w, s);
-						Vector3 wpos = Position + new Vector3(s.X * dx + u.X * dy + w.X * d, s.Y * dx + u.Y * dy + w.Y * d, s.Z * dx + u.Z * dy + w.Z * d);
-						if (buffer != null)
-						{
-							Plugin.CurrentHost.PlaySound(buffer, 1.0, 1.0, wpos, null, true);
-						}
-					}
+					Data.Blocks[i].SoundEvents[k].Create(Data, n, StartingDistance, Position, Direction);
 				}
 
 				// finalize block

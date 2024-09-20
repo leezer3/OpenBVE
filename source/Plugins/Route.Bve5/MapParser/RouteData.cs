@@ -27,65 +27,62 @@ using System.Linq;
 
 namespace Route.Bve5
 {
-	static partial class Bve5ScenarioParser
+	internal class RouteData
 	{
-		private class RouteData
+		internal readonly List<string> TrackKeyList;
+		internal readonly SortedList<double, Bve5ScenarioParser.Block> sortedBlocks;
+		internal IList<Bve5ScenarioParser.Block> Blocks => sortedBlocks.Values;
+		internal Dictionary<string, Station> StationList;
+		internal Bve5ScenarioParser.ObjectDictionary Objects;
+		internal Bve5ScenarioParser.ObjectDictionary Backgrounds;
+		internal List<Bve5ScenarioParser.SignalData> SignalObjects;
+		internal Bve5ScenarioParser.SoundDictionary Sounds;
+		internal Bve5ScenarioParser.SoundDictionary Sound3Ds;
+
+		internal RouteData()
 		{
-			internal readonly List<string> TrackKeyList;
-			internal readonly SortedList<double, Block> sortedBlocks;
-			internal IList<Block> Blocks => sortedBlocks.Values;
-			internal Dictionary<string, Station> StationList;
-			internal ObjectDictionary Objects;
-			internal ObjectDictionary Backgrounds;
-			internal List<SignalData> SignalObjects;
-			internal SoundDictionary Sounds;
-			internal SoundDictionary Sound3Ds;
+			sortedBlocks = new SortedList<double, Bve5ScenarioParser.Block>();
+			TrackKeyList = new List<string> { "0" };
+		}
 
-			internal RouteData()
+		//Set units of speed initially to km/h
+		//This represents 1km/h in m/s
+		internal const double UnitOfSpeed = 0.277777777777778;
+
+		internal double[] SignalSpeeds;
+
+		internal int FindOrAddBlock(double Distance)
+		{
+			if (sortedBlocks.ContainsKey(Distance))
 			{
-				sortedBlocks = new SortedList<double, Block>();
-				TrackKeyList= new List<string> { "0" };
+				return sortedBlocks.IndexOfKey(Distance);
 			}
-
-			//Set units of speed initially to km/h
-			//This represents 1km/h in m/s
-			internal const double UnitOfSpeed = 0.277777777777778;
-
-			internal double[] SignalSpeeds;
-
-			internal int FindOrAddBlock(double Distance)
+			Bve5ScenarioParser.Block NewBlock = new Bve5ScenarioParser.Block
 			{
-				if (sortedBlocks.ContainsKey(Distance))
+				Rails = TrackKeyList.ToDictionary(x => x, x => new Rail()),
+				StartingDistance = Distance,
+				CurrentTrackState =
 				{
-					return sortedBlocks.IndexOfKey(Distance);
-				}
-				Block NewBlock = new Block
-				{
-					Rails = TrackKeyList.ToDictionary(x => x, x => new Rail()),
-					StartingDistance = Distance,
-					CurrentTrackState =
-					{
-						StartingTrackPosition = Distance
-					},
-					FreeObjects = new Dictionary<string, List<FreeObj>>(),
-					Cracks = new List<Crack>(),
-					Sections = new List<Section>(),
-					Signals = new List<Signal>[TrackKeyList.Count],
-					Transponders = new List<Transponder>(),
-					Limits = new List<Limit>(),
-					BrightnessChanges = new List<Brightness>(),
-					SoundEvents = new List<Sound>(),
-					RunSounds = new List<TrackSound>(),
-					FlangeSounds = new List<TrackSound>()
-				};
-				sortedBlocks.Add(Distance, NewBlock);
-				int newIndex = sortedBlocks.IndexOfKey(Distance);
-				if (newIndex > 0)
-				{
-					Blocks[newIndex].Fog = Blocks[newIndex - 1].Fog;
-				}
-				return newIndex;
+					StartingTrackPosition = Distance
+				},
+				FreeObjects = new Dictionary<string, List<FreeObj>>(),
+				Cracks = new List<Crack>(),
+				Sections = new List<Section>(),
+				Signals = new List<Signal>[TrackKeyList.Count],
+				Transponders = new List<Transponder>(),
+				Limits = new List<Limit>(),
+				BrightnessChanges = new List<Brightness>(),
+				SoundEvents = new List<Sound>(),
+				RunSounds = new List<Bve5ScenarioParser.TrackSound>(),
+				FlangeSounds = new List<Bve5ScenarioParser.TrackSound>()
+			};
+			sortedBlocks.Add(Distance, NewBlock);
+			int newIndex = sortedBlocks.IndexOfKey(Distance);
+			if (newIndex > 0)
+			{
+				Blocks[newIndex].Fog = Blocks[newIndex - 1].Fog;
 			}
+			return newIndex;
 		}
 	}
 }

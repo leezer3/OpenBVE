@@ -33,7 +33,7 @@ namespace Route.Bve5
 	static partial class Bve5ScenarioParser
 	{
 		/// <summary>Defines a dictionary of objects</summary>
-		private class ObjectDictionary : Dictionary<string, UnifiedObject>
+		internal class ObjectDictionary : Dictionary<string, UnifiedObject>
 		{
 			internal ObjectDictionary() : base(StringComparer.InvariantCultureIgnoreCase)
 			{
@@ -56,7 +56,7 @@ namespace Route.Bve5
 			}
 		}
 
-		private class SoundDictionary : Dictionary<string, SoundHandle>
+		internal class SoundDictionary : Dictionary<string, SoundHandle>
 		{
 			internal SoundDictionary() : base(StringComparer.InvariantCultureIgnoreCase)
 			{

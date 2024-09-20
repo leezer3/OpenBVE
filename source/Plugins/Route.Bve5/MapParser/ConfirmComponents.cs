@@ -30,6 +30,7 @@ using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Sounds;
 
 namespace Route.Bve5
 {
@@ -1029,8 +1030,7 @@ namespace Route.Bve5
 		private static void ConfirmSound(Statement Statement, RouteData RouteData)
 		{
 			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound(Statement.Distance, Statement.Key, SoundType.World));
-			
+			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound(Statement.Distance, Statement.Key, SoundType.Ambient, Vector2.Null));
 		}
 
 		private static void ConfirmSound3D(Statement Statement, RouteData RouteData)
@@ -1039,7 +1039,7 @@ namespace Route.Bve5
 			double Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
 
 			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound(Statement.Distance, Statement.Key, SoundType.World, X, Y));
+			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound(Statement.Distance, Statement.Key, SoundType.Ambient, new Vector2(X, Y)));
 		}
 
 		private static void ConfirmRollingNoise(Statement Statement, RouteData RouteData)

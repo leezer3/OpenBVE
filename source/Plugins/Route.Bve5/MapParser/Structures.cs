@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using OpenBveApi.Sounds;
 using RouteManager2.Climate;
 using TrainManager.Motor;
 
@@ -60,39 +61,13 @@ namespace Route.Bve5
 			}
 		}
 
-		
-
-		private enum SoundType
-		{
-			World,
-			TrainStatic
-		}
-
-		private class Sound
-		{
-			internal readonly double TrackPosition;
-			internal readonly string Key;
-			internal readonly SoundType Type;
-			internal readonly double X;
-			internal readonly double Y;
-
-			internal Sound(double trackPosition, string key, SoundType type, double x = 0, double y = 0)
-			{
-				TrackPosition = trackPosition;
-				Key = key;
-				Type = type;
-				X = x;
-				Y = y;
-			}
-		}
-
-		private struct TrackSound
+		internal struct TrackSound
 		{
 			internal double TrackPosition;
 			internal int SoundIndex;
 		}
 
-		private class Block
+		internal class Block
 		{
 			internal double StartingDistance;
 			internal Dictionary<string, Rail> Rails;
@@ -124,8 +99,8 @@ namespace Route.Bve5
 			internal List<TrackSound> FlangeSounds;
 			internal bool JointSound;
 		}
-		
-		private class SignalData
+
+		internal class SignalData
 		{
 			internal string Key;
 			internal int[] Numbers;
