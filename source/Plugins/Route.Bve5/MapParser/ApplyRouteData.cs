@@ -192,22 +192,7 @@ namespace Route.Bve5
 				{
 					for (int j = 0; j < Data.Blocks[i].BrightnessChanges.Count; j++)
 					{
-						for (int l = 0; l < Plugin.CurrentRoute.Tracks.Count; l++)
-						{
-							int k = Plugin.CurrentRoute.Tracks.ElementAt(l).Key;
-							double d = Data.Blocks[i].BrightnessChanges[j].TrackPosition - StartingDistance;
-							Plugin.CurrentRoute.Tracks[k].Elements[n].Events.Add(new BrightnessChangeEvent(d, Data.Blocks[i].BrightnessChanges[j].Value, CurrentBrightnessValue, Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition));
-							if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
-							{
-								BrightnessChangeEvent bce = (BrightnessChangeEvent)Plugin.CurrentRoute.Tracks[0].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
-								bce.NextBrightness = Data.Blocks[i].BrightnessChanges[j].Value;
-								bce.NextDistance = Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition;
-							}
-						}
-						CurrentBrightnessElement = n;
-						CurrentBrightnessEvent = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Count - 1;
-						CurrentBrightnessValue = Data.Blocks[i].BrightnessChanges[j].Value;
-						CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
+						Data.Blocks[i].BrightnessChanges[j].Create(n, StartingDistance, ref CurrentBrightnessElement, ref CurrentBrightnessEvent, ref CurrentBrightnessValue, ref CurrentBrightnessTrackPosition);
 					}
 				}
 
@@ -245,32 +230,12 @@ namespace Route.Bve5
 				{
 					for (int k = 0; k < Data.Blocks[i].RunSounds.Count; k++)
 					{
-						int r = Data.Blocks[i].RunSounds[k].SoundIndex;
-						if (r != CurrentRunIndex)
-						{
-							double d = Data.Blocks[i].RunSounds[k].TrackPosition - StartingDistance;
-							if (d > 0.0)
-							{
-								d = 0.0;
-							}
-							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new RailSoundsChangeEvent(d, CurrentRunIndex, CurrentFlangeIndex, r, CurrentFlangeIndex));
-							CurrentRunIndex = r;
-						}
+						Data.Blocks[i].RunSounds[k].Create(n, StartingDistance, ref CurrentRunIndex, CurrentFlangeIndex);
 					}
 
 					for (int k = 0; k < Data.Blocks[i].FlangeSounds.Count; k++)
 					{
-						int f = Data.Blocks[i].FlangeSounds[k].SoundIndex;
-						if (f != CurrentFlangeIndex)
-						{
-							double d = Data.Blocks[i].FlangeSounds[k].TrackPosition - StartingDistance;
-							if (d > 0.0)
-							{
-								d = 0.0;
-							}
-							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new RailSoundsChangeEvent(d, CurrentRunIndex, CurrentFlangeIndex, CurrentRunIndex, f));
-							CurrentFlangeIndex = f;
-						}
+						Data.Blocks[i].FlangeSounds[k].Create(n, StartingDistance, CurrentRunIndex, ref CurrentFlangeIndex);
 					}
 
 					if (Data.Blocks[i].JointSound)

@@ -73,8 +73,8 @@ namespace Route.Bve5
 				Limits = new List<Limit>(),
 				BrightnessChanges = new List<Brightness>(),
 				SoundEvents = new List<Sound>(),
-				RunSounds = new List<Bve5ScenarioParser.TrackSound>(),
-				FlangeSounds = new List<Bve5ScenarioParser.TrackSound>()
+				RunSounds = new List<RunSound>(),
+				FlangeSounds = new List<FlangeSound>()
 			};
 			sortedBlocks.Add(Distance, NewBlock);
 			int newIndex = sortedBlocks.IndexOfKey(Distance);

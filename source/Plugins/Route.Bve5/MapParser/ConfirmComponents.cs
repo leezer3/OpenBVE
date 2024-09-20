@@ -1047,11 +1047,7 @@ namespace Route.Bve5
 			object Index = Statement.GetArgumentValue(ArgumentName.Index);
 
 			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-			RouteData.Blocks[BlockIndex].RunSounds.Add(new TrackSound
-			{
-				TrackPosition = Statement.Distance,
-				SoundIndex = Convert.ToInt32(Index)
-			});
+			RouteData.Blocks[BlockIndex].RunSounds.Add(new RunSound(Statement.Distance, Convert.ToInt32(Index)));
 		}
 
 		private static void ConfirmFlangeNoise(bool PreviewOnly, MapData ParseData, RouteData RouteData)
@@ -1071,11 +1067,7 @@ namespace Route.Bve5
 				object Index = Statement.GetArgumentValue(ArgumentName.Index);
 
 				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-				RouteData.Blocks[BlockIndex].FlangeSounds.Add(new TrackSound
-				{
-					TrackPosition = Statement.Distance,
-					SoundIndex = Convert.ToInt32(Index)
-				});
+				RouteData.Blocks[BlockIndex].FlangeSounds.Add(new FlangeSound(Statement.Distance, Convert.ToInt32(Index)));
 			}
 		}
 	}

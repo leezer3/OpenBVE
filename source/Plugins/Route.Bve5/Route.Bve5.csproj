@@ -75,10 +75,12 @@
     <Compile Include="Structures\FreeObj.cs" />
     <Compile Include="Structures\Limit.cs" />
     <Compile Include="Structures\Rail.cs" />
+    <Compile Include="Structures\Repeater.cs" />
     <Compile Include="Structures\Section.cs" />
     <Compile Include="Structures\Signal.cs" />
     <Compile Include="Structures\Sound.cs" />
     <Compile Include="Structures\Station.cs" />
+    <Compile Include="Structures\TrackSound.cs" />
     <Compile Include="Structures\Transponder.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
-using OpenBveApi.Sounds;
 using RouteManager2.Climate;
 using TrainManager.Motor;
 
@@ -34,39 +33,6 @@ namespace Route.Bve5
 {
 	static partial class Bve5ScenarioParser
 	{
-		private class Repeater
-		{
-			internal readonly string Key;
-			internal string TrackKey;
-			internal double StartingDistance;
-			internal bool StartRefreshed;
-			internal double EndingDistance;
-			internal double Interval;
-			internal string[] ObjectKeys;
-			internal Vector3 Position;
-			/// <summary>The yaw of the object (radians)</summary>
-			internal double Yaw;
-			/// <summary>The pitch of the object (radians)</summary>
-			internal double Pitch;
-			/// <summary>The roll of the object (radians)</summary>
-			internal double Roll;
-
-			internal ObjectTransformType Type;
-
-			internal double Span;
-
-			internal Repeater(string key)
-			{
-				Key = key;
-			}
-		}
-
-		internal struct TrackSound
-		{
-			internal double TrackPosition;
-			internal int SoundIndex;
-		}
-
 		internal class Block
 		{
 			internal double StartingDistance;
@@ -95,8 +61,8 @@ namespace Route.Bve5
 			internal double AdhesionMultiplier = 1.0;
 			internal bool AdhesionMultiplierDefined;
 			internal List<Sound> SoundEvents;
-			internal List<TrackSound> RunSounds;
-			internal List<TrackSound> FlangeSounds;
+			internal List<RunSound> RunSounds;
+			internal List<FlangeSound> FlangeSounds;
 			internal bool JointSound;
 		}
 

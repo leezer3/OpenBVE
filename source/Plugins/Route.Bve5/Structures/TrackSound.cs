@@ -23,42 +23,62 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using RouteManager2.Events;
-using System.Linq;
 
 namespace Route.Bve5
 {
-	internal class Brightness
+	internal class RunSound
 	{
-		/// <summary>The track position of the brightness value</summary>
+		/// <summary>The track position this sound applies from</summary>
 		internal readonly double TrackPosition;
-		/// <summary>The absolute brightness value</summary>
-		/// <remarks>Interpolation will be done between adjoining values</remarks>
-		internal readonly float Value;
+		/// <summary>The sound index to be used</summary>
+		internal readonly int SoundIndex;
 
-		internal Brightness(double trackPosition, float value)
+		internal RunSound(double trackPosition, int soundIndex)
 		{
 			TrackPosition = trackPosition;
-			Value = value;
+			SoundIndex = soundIndex;
 		}
 
-		internal void Create(int currentElement, double startingDistance, ref int CurrentBrightnessElement, ref int CurrentBrightnessEvent, ref float CurrentBrightnessValue, ref double CurrentBrightnessTrackPosition)
+		internal void Create(int currentElement, double startingDistance, ref int currentRunIndex, int currentFlangeIndex)
 		{
-			for (int i = 0; i < Plugin.CurrentRoute.Tracks.Count; i++)
+			if (SoundIndex != currentRunIndex)
 			{
-				int k = Plugin.CurrentRoute.Tracks.ElementAt(i).Key;
 				double d = TrackPosition - startingDistance;
-				Plugin.CurrentRoute.Tracks[k].Elements[currentElement].Events.Add(new BrightnessChangeEvent(d, Value, CurrentBrightnessValue, TrackPosition - CurrentBrightnessTrackPosition));
-				if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
+				if (d > 0.0)
 				{
-					BrightnessChangeEvent bce = (BrightnessChangeEvent)Plugin.CurrentRoute.Tracks[0].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
-					bce.NextBrightness = Value;
-					bce.NextDistance = TrackPosition - CurrentBrightnessTrackPosition;
+					d = 0.0;
 				}
+				Plugin.CurrentRoute.Tracks[0].Elements[currentElement].Events.Add(new RailSoundsChangeEvent(d, currentRunIndex, currentFlangeIndex, SoundIndex, currentFlangeIndex));
+				currentRunIndex = SoundIndex;
 			}
-			CurrentBrightnessElement = currentElement;
-			CurrentBrightnessEvent = Plugin.CurrentRoute.Tracks[0].Elements[currentElement].Events.Count - 1;
-			CurrentBrightnessValue = Value;
-			CurrentBrightnessTrackPosition = TrackPosition;
+		}
+	}
+
+	internal class FlangeSound
+	{
+		/// <summary>The track position this sound applies from</summary>
+		internal readonly double TrackPosition;
+		/// <summary>The sound index to be used</summary>
+		internal readonly int SoundIndex;
+
+		internal FlangeSound(double trackPosition, int soundIndex)
+		{
+			TrackPosition = trackPosition;
+			SoundIndex = soundIndex;
+		}
+
+		internal void Create(int currentElement, double startingDistance, int currentRunIndex, ref int currentFlangeIndex)
+		{
+			if (SoundIndex != currentFlangeIndex)
+			{
+				double d = TrackPosition - startingDistance;
+				if (d > 0.0)
+				{
+					d = 0.0;
+				}
+				Plugin.CurrentRoute.Tracks[0].Elements[currentElement].Events.Add(new RailSoundsChangeEvent(d, currentRunIndex, currentFlangeIndex, currentRunIndex, SoundIndex));
+				currentFlangeIndex = SoundIndex;
+			}
 		}
 	}
 }
