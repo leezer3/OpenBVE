@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ObjectViewer.Graphics;
 using OpenBveApi;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using TrainManager.Trains;
@@ -9,7 +10,7 @@ namespace ObjectViewer {
 	// --- PluginManager.cs ---
 	internal static class PluginManager {
 		internal static class CurrentPlugin {
-			internal static int[] Panel = new int[] { };
+			internal static int[] Panel = { };
 		}
 	}
 
@@ -48,15 +49,24 @@ namespace ObjectViewer {
 
 			internal string ObjectSearchDirectory;
 
+			internal Key CameraMoveLeft;
+
+			internal Key CameraMoveRight;
+
+			internal Key CameraMoveUp;
+
+			internal Key CameraMoveDown;
+
+			internal Key CameraMoveForward;
+
+			internal Key CameraMoveBackward;
+
 			/// <summary>
 			/// The mode of optimization to be performed on an object
 			/// </summary>
 			internal ObjectOptimizationMode ObjectOptimizationMode
 			{
-				get
-				{
-					return objectOptimizationMode;
-				}
+				get => objectOptimizationMode;
 				set
 				{
 					objectOptimizationMode = value;

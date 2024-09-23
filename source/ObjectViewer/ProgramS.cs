@@ -384,6 +384,7 @@ namespace ObjectViewer {
 	    // process events
 	    internal static void KeyDown(object sender, KeyboardKeyEventArgs e)
 	    {
+
 	        switch (e.Key)
 	        {
 	            case Key.LShift:
@@ -502,26 +503,28 @@ namespace ObjectViewer {
 						Game.Menu.ProcessCommand(Translations.Command.MenuDown, 0);
 					}
 	                break;
-	            case Key.A:
+	            case var value when value == (Key)Interface.CurrentOptions.CameraMoveLeft:
 	            case Key.Keypad4:
 	                MoveX = -1;
 	                break;
-	            case Key.D:
-	            case Key.Keypad6:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveRight:
+				case Key.Keypad6:
 	                MoveX = 1;
 	                break;
-	            case Key.Keypad8:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveUp:
+				case Key.Keypad8:
 	                MoveY = 1;
 	                break;
-	            case Key.Keypad2:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveDown:
+				case Key.Keypad2:
 	                MoveY = -1;
 	                break;
-	            case Key.W:
-	            case Key.Keypad9:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveForward:
+				case Key.Keypad9:
 	                MoveZ = 1;
 	                break;
-	            case Key.S:
-	            case Key.Keypad3:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveBackward:
+				case Key.Keypad3:
 	                MoveZ = -1;
 	                break;
 	            case Key.Keypad5:
