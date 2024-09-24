@@ -565,6 +565,12 @@ namespace TrainManager.SafetySystems
 			// Ignored other than by .Net plugins
 		}
 
+		/// <summary>Called when a score event occurs</summary>
+		public virtual void ScoreEvent(int Value, ScoreEventToken TextToken, double Duration)
+		{
+			// Ignored other than by .Net plugins
+		}
+
 		/// <summary>Called when a horn is played or stopped.</summary>
 		public abstract void HornBlow(HornTypes type);
 

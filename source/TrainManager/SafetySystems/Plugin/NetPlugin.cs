@@ -55,11 +55,18 @@ namespace TrainManager.SafetySystems
 				{
 					return RawApi;
 				}
+
+				if (ScoreApi != null)
+				{
+					return ScoreApi;
+				}
 				return BaseApi;
 			}
 		}
 
 		private readonly IRawRuntime RawApi;
+
+		private readonly IScoreRuntime ScoreApi;
 
 		/// <summary>An array containing all of the plugin's current sound handles</summary>
 		private SoundHandleEx[] SoundHandles;
@@ -93,6 +100,10 @@ namespace TrainManager.SafetySystems
 			if (api is IRawRuntime rawRuntime)
 			{
 				RawApi = rawRuntime;
+			}
+			else if (api is IScoreRuntime scoreRuntime)
+			{
+				ScoreApi = scoreRuntime;
 			}
 			else if(api is IRuntime runtime)
 			{
@@ -404,6 +415,24 @@ namespace TrainManager.SafetySystems
 				RawApi.RawKeyUp(key);
 			}
 			
+#if !DEBUG
+			} catch (Exception ex) {
+				base.LastException = ex;
+				throw;
+			}
+#endif
+		}
+
+		public override void ScoreEvent(int Value, ScoreEventToken TextToken, double Duration)
+		{
+#if !DEBUG
+			try {
+#endif
+			if (ScoreApi != null)
+			{
+				ScoreApi.ScoreEvent(Value, TextToken, Duration);
+			}
+
 #if !DEBUG
 			} catch (Exception ex) {
 				base.LastException = ex;

@@ -172,6 +172,7 @@
     <Compile Include="Routes\Track.TrackElement.cs" />
     <Compile Include="Routes\Track.TrackFollower.cs" />
     <Compile Include="Runtime\ElapseProxy.cs" />
+    <Compile Include="Runtime\ScoreToken.cs" />
     <Compile Include="Runtime\Train\AIData.cs" />
     <Compile Include="Runtime\Train\AIResponse.cs" />
     <Compile Include="Runtime\Train\AISupport.cs" />

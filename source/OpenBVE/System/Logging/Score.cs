@@ -3,6 +3,7 @@ using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Runtime;
 
 namespace OpenBve
 {
@@ -10,21 +11,21 @@ namespace OpenBve
 	{
 		/// <summary>Gets the formatted text for an in-game score event</summary>
 		/// <param name="TextToken">The in-game score event</param>
-		internal static string GetScoreText(Game.ScoreTextToken TextToken) {
+		internal static string GetScoreText(ScoreEventToken TextToken) {
 			switch (TextToken) {
-					case Game.ScoreTextToken.Overspeed: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","overspeed"});
-					case Game.ScoreTextToken.PassedRedSignal: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","redsignal"});
-					case Game.ScoreTextToken.Toppling: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","toppling"});
-					case Game.ScoreTextToken.Derailed: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","derailed"});
-					case Game.ScoreTextToken.PassengerDiscomfort: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","discomfort"});
-					case Game.ScoreTextToken.DoorsOpened: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","doors"});
-					case Game.ScoreTextToken.ArrivedAtStation: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_arrived"});
-					case Game.ScoreTextToken.PerfectTimeBonus: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_perfecttime"});
-					case Game.ScoreTextToken.Late: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_late"});
-					case Game.ScoreTextToken.PerfectStopBonus: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_perfectstop"});
-					case Game.ScoreTextToken.Stop: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_stop"});
-					case Game.ScoreTextToken.PrematureDeparture: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_departure"});
-					case Game.ScoreTextToken.Total: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_total"});
+					case ScoreEventToken.Overspeed: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","overspeed"});
+					case ScoreEventToken.PassedRedSignal: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","redsignal"});
+					case ScoreEventToken.Toppling: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","toppling"});
+					case ScoreEventToken.Derailed: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","derailed"});
+					case ScoreEventToken.PassengerDiscomfort: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","discomfort"});
+					case ScoreEventToken.DoorsOpened: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","doors"});
+					case ScoreEventToken.ArrivedAtStation: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_arrived"});
+					case ScoreEventToken.PerfectTimeBonus: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_perfecttime"});
+					case ScoreEventToken.Late: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_late"});
+					case ScoreEventToken.PerfectStopBonus: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_perfectstop"});
+					case ScoreEventToken.Stop: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_stop"});
+					case ScoreEventToken.PrematureDeparture: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_departure"});
+					case ScoreEventToken.Total: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","station_total"});
 					default: return "?";
 			}
 		}

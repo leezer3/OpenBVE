@@ -4,6 +4,7 @@ using System.IO;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Runtime;
 
 namespace OpenBve
 {
@@ -66,7 +67,7 @@ namespace OpenBve
 								Game.ScoreLogs[i].Time = Reader.ReadDouble();
 								Game.ScoreLogs[i].Position = Reader.ReadDouble();
 								Game.ScoreLogs[i].Value = Reader.ReadInt32();
-								Game.ScoreLogs[i].TextToken = (Game.ScoreTextToken) Reader.ReadInt16();
+								Game.ScoreLogs[i].TextToken = (ScoreEventToken) Reader.ReadInt16();
 								Game.CurrentScore.CurrentValue += Game.ScoreLogs[i].Value;
 							}
 

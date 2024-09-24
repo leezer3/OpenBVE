@@ -140,4 +140,11 @@ namespace OpenBveApi.Runtime {
 		void TouchEvent(int groupIndex, int commandIndex);
 	}
 
+	/// <summary>Represents the runtime interface for plugins consuming the score</summary>
+	public interface IScoreRuntime : IRuntime
+	{
+		/// <summary>Called when a score event occurs in the game</summary>
+		void ScoreEvent(int Value, ScoreEventToken TextToken, double Duration);
+	}
+
 }

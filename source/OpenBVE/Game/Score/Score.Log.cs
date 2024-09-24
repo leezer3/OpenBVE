@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Runtime;
 
 namespace OpenBve
 {
@@ -21,7 +22,7 @@ namespace OpenBve
 			/// <summary>The value for the score event</summary>
 			internal int Value;
 			/// <summary>The token for the score event which triggered this log message</summary>
-			internal ScoreTextToken TextToken;
+			internal ScoreEventToken TextToken;
 			/// <summary>The absolute track position (Front axle of the front car) which this log message was generated at</summary>
 			internal double Position;
 			/// <summary>The in-game time at which this log message was generated at</summary>

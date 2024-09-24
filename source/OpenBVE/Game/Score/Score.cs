@@ -6,6 +6,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
+using SharpCompress.Common;
 
 namespace OpenBve
 {
@@ -98,7 +99,7 @@ namespace OpenBve
 						CurrentValue += x;
 						if (x != 0)
 						{
-							AddScore(x, ScoreTextToken.DoorsOpened, 5.0);
+							AddScore(x, ScoreEventToken.DoorsOpened, 5.0);
 						}
 						OpenedDoorsCounter = 0.0;
 					}
@@ -118,7 +119,7 @@ namespace OpenBve
 					CurrentValue += x;
 					if (x != 0)
 					{
-						AddScore(x, ScoreTextToken.Overspeed, 5.0);
+						AddScore(x, ScoreEventToken.Overspeed, 5.0);
 					}
 					OverspeedCounter = 0.0;
 				}
@@ -143,7 +144,7 @@ namespace OpenBve
 						CurrentValue += x;
 						if (x != 0)
 						{
-							AddScore(x, ScoreTextToken.Toppling, 5.0);
+							AddScore(x, ScoreEventToken.Toppling, 5.0);
 						}
 						TopplingCounter = 0.0;
 					}
@@ -167,7 +168,7 @@ namespace OpenBve
 						CurrentValue += x;
 						if (x != 0)
 						{
-							AddScore(x, ScoreTextToken.Derailed, 5.0);
+							AddScore(x, ScoreEventToken.Derailed, 5.0);
 						}
 						Derailed = true;
 					}
@@ -180,7 +181,7 @@ namespace OpenBve
 						{
 							int x = ScoreValueRedSignal;
 							CurrentValue += x;
-							AddScore(x, ScoreTextToken.PassedRedSignal, 5.0);
+							AddScore(x, ScoreEventToken.PassedRedSignal, 5.0);
 							RedSignal = true;
 						}
 					}
@@ -201,7 +202,7 @@ namespace OpenBve
 								// arrival
 								int xa = ScoreValueStationArrival;
 								CurrentValue += xa;
-								AddScore(xa, ScoreTextToken.ArrivedAtStation, 10.0);
+								AddScore(xa, ScoreEventToken.ArrivedAtStation, 10.0);
 								// early/late
 								int xb;
 								if (Program.CurrentRoute.Stations[j].ArrivalTime >= 0)
@@ -211,7 +212,7 @@ namespace OpenBve
 									{
 										xb = ScoreValueStationPerfectTime;
 										CurrentValue += xb;
-										AddScore(xb, ScoreTextToken.PerfectTimeBonus, 10.0);
+										AddScore(xb, ScoreEventToken.PerfectTimeBonus, 10.0);
 									}
 									else if (d > 0.0)
 									{
@@ -219,7 +220,7 @@ namespace OpenBve
 										CurrentValue += xb;
 										if (xb != 0)
 										{
-											AddScore(xb, ScoreTextToken.Late, 10.0);
+											AddScore(xb, ScoreEventToken.Late, 10.0);
 										}
 									}
 									else
@@ -252,7 +253,7 @@ namespace OpenBve
 									{
 										xc = ScoreValueStationPerfectStop;
 										CurrentValue += xc;
-										AddScore(xc, ScoreTextToken.PerfectStopBonus, 10.0);
+										AddScore(xc, ScoreEventToken.PerfectStopBonus, 10.0);
 									}
 									else
 									{
@@ -262,7 +263,7 @@ namespace OpenBve
 										CurrentValue += xc;
 										if (xc != 0)
 										{
-											AddScore(xc, ScoreTextToken.Stop, 10.0);
+											AddScore(xc, ScoreEventToken.Stop, 10.0);
 										}
 									}
 								}
@@ -275,7 +276,7 @@ namespace OpenBve
 								{
 									int xs = xa + xb + xc;
 									AddScore("", 10.0);
-									AddScore(xs, ScoreTextToken.Total, 10.0, false);
+									AddScore(xs, ScoreEventToken.Total, 10.0, false);
 									AddScore(" ", 10.0);
 								}
 								// evaluation
@@ -323,7 +324,7 @@ namespace OpenBve
 								CurrentValue += x;
 								if (x != 0)
 								{
-									AddScore(x, ScoreTextToken.PrematureDeparture, 5.0);
+									AddScore(x, ScoreEventToken.PrematureDeparture, 5.0);
 								}
 							}
 							DepartureStation = -1;
@@ -349,7 +350,7 @@ namespace OpenBve
 				{
 					int x = ScoreValuePassengerDiscomfort;
 					CurrentValue += x;
-					AddScore(x, ScoreTextToken.PassengerDiscomfort, 5.0);
+					AddScore(x, ScoreEventToken.PassengerDiscomfort, 5.0);
 					PassengerTimer = 5.0;
 				}
 				else
@@ -367,8 +368,12 @@ namespace OpenBve
 			/// <param name="TextToken">The token type which caused the score event</param>
 			/// <param name="Duration">The duration of the score event (e.g. overspeed)</param>
 			/// <param name="Count">Whether this should be counted as a unique event (NOTE: Scheduled stops are the only case which are not)</param>
-			private void AddScore(int Value, ScoreTextToken TextToken, double Duration, bool Count = true)
+			private void AddScore(int Value, ScoreEventToken TextToken, double Duration, bool Count = true)
 			{
+				if (Count)
+				{
+					TrainManager.PlayerTrain.Plugin.ScoreEvent(Value, TextToken, Duration);
+				}
 				if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 				{
 					int n = ScoreMessages.Length;
@@ -410,6 +415,7 @@ namespace OpenBve
 			/// <param name="Duration">The duration of the score event (e.g. overspeed)</param>
 			private void AddScore(string Text, double Duration)
 			{
+				TrainManager.PlayerTrain.Plugin.ScoreEvent(0, ScoreEventToken.Total, Duration);
 				if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 				{
 					int n = ScoreMessages.Length;
