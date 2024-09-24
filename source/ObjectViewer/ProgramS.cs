@@ -634,19 +634,18 @@ namespace ObjectViewer {
 	            case Key.Down:
 	                RotateY = 0;
 	                break;
-	            case Key.A:
-	            case Key.D:
-	            case Key.Keypad4:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveLeft || value == (Key)Interface.CurrentOptions.CameraMoveRight:
+				case Key.Keypad4:
 	            case Key.Keypad6:
 	                MoveX = 0;
 	                break;
-	            case Key.Keypad8:
+	            case var value when value == (Key)Interface.CurrentOptions.CameraMoveUp || value == (Key)Interface.CurrentOptions.CameraMoveDown:
+				case Key.Keypad8:
 	            case Key.Keypad2:
 	                MoveY = 0;
 	                break;
-	            case Key.W:
-	            case Key.S:
-	            case Key.Keypad9:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveForward || value == (Key)Interface.CurrentOptions.CameraMoveBackward:
+				case Key.Keypad9:
 	            case Key.Keypad3:
 	                MoveZ = 0;
 	                break;

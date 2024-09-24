@@ -203,31 +203,31 @@ namespace ObjectViewer
 										case "right":
 											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveRight))
 											{
-												Interface.CurrentOptions.CameraMoveLeft = OpenBveApi.Input.Key.D;
+												Interface.CurrentOptions.CameraMoveRight = OpenBveApi.Input.Key.D;
 											}
 											break;
 										case "up":
 											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveUp))
 											{
-												Interface.CurrentOptions.CameraMoveLeft = OpenBveApi.Input.Key.W;
+												Interface.CurrentOptions.CameraMoveUp = OpenBveApi.Input.Key.W;
 											}
 											break;
 										case "down":
 											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveDown))
 											{
-												Interface.CurrentOptions.CameraMoveLeft = OpenBveApi.Input.Key.S;
+												Interface.CurrentOptions.CameraMoveDown = OpenBveApi.Input.Key.S;
 											}
 											break;
 										case "forward":
 											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveForward))
 											{
-												Interface.CurrentOptions.CameraMoveLeft = OpenBveApi.Input.Key.Q;
+												Interface.CurrentOptions.CameraMoveForward = OpenBveApi.Input.Key.Q;
 											}
 											break;
 										case "backward":
 											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveBackward))
 											{
-												Interface.CurrentOptions.CameraMoveLeft = OpenBveApi.Input.Key.E;
+												Interface.CurrentOptions.CameraMoveBackward = OpenBveApi.Input.Key.E;
 											}
 											break;
 									}
