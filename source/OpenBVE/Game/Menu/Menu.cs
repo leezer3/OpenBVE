@@ -3,6 +3,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -462,6 +463,9 @@ namespace OpenBve
 							case MenuTag.MenuControls:          // TO CONTROLS MENU
 								Instance.PushMenu(MenuType.Controls);
 								break;
+							case MenuTag.MenuTools:          // TO CONTROLS MENU
+								Instance.PushMenu(MenuType.Tools);
+								break;
 							case MenuTag.BackToSim:             // OUT OF MENU BACK TO SIMULATION
 								Reset();
 								Program.Renderer.CurrentInterface = InterfaceType.Normal;
@@ -548,6 +552,9 @@ namespace OpenBve
 								break;
 							case MenuTag.Options:
 								Instance.PushMenu(MenuType.Options);
+								break;
+							case MenuTag.Tools:
+								Instance.PushMenu(MenuType.Tools);
 								break;
 							case MenuTag.RouteList:				// TO ROUTE LIST MENU
 								Instance.PushMenu(MenuType.RouteList);
@@ -706,6 +713,32 @@ namespace OpenBve
 								nextSwitches.RemoveAt(0);
 								previousSwitches.Insert(0, ns);
 								Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
+								break;
+							case MenuTag.ObjectViewer:
+								string dir = AppDomain.CurrentDomain.BaseDirectory;
+								string runCmd = Path.CombineFile(dir, "ObjectViewer.exe");
+
+								if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows)
+								{
+									Process.Start("mono", runCmd);
+								}
+								else
+								{
+									Process.Start(runCmd);
+								}
+								break;
+							case MenuTag.RouteViewer:
+								dir = AppDomain.CurrentDomain.BaseDirectory;
+								runCmd = Path.CombineFile(dir, "RouteViewer.exe");
+
+								if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows)
+								{
+									Process.Start("mono", runCmd);
+								}
+								else
+								{
+									Process.Start(runCmd);
+								}
 								break;
 						}
 					}

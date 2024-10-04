@@ -81,7 +81,7 @@ namespace OpenBve
 							//Don't allow quitting or customisation of the controls in kiosk mode
 							Items[1] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","title"}), MenuTag.Options, 0);
 							Items[2] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","customize_controls"}), MenuTag.MenuControls, 0);
-							Items[3] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"packages","title"}), MenuTag.Packages, 0);
+							Items[3] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","tools"}), MenuTag.Tools, 0);
 							Items[4] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"menu","quit"}), MenuTag.MenuQuit, 0);
 						}
 						else
@@ -479,7 +479,16 @@ namespace OpenBve
 						// method pictures mean we need top left at all times
 						Align = TextAlignment.TopLeft;
 						break;
-
+					case MenuType.Tools:         // ask for quit confirmation
+						Items = new MenuEntry[5];
+						Items[0] = new MenuCaption(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "tools" }));
+						Items[1] = new MenuCommand(menu, "Object Viewer", MenuTag.ObjectViewer, 0);
+						Items[2] = new MenuCommand(menu, "Route Viewer", MenuTag.RouteViewer, 0);
+						Items[3] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "packages", "title" }), MenuTag.Packages, 0);
+						Items[4] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu","back" }), MenuTag.MenuBack, 0);
+						Selection = 1;
+						Align = TextAlignment.TopLeft;
+						break;
 					case MenuType.Control:
 						//Refresh the joystick list
 						Program.Joysticks.RefreshJoysticks();
