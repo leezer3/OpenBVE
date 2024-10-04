@@ -73,7 +73,7 @@ namespace TrainEditor2
 			CurrentHost.UnloadPlugins(out error);
 			SoundApi.DeInitialize();
 
-			Interface.SaveOptions();
+			Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_te2.cfg"));
 		}
 	}
 }
