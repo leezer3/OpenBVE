@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using ObjectViewer.Graphics;
+using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Input;
 using OpenBveApi.Objects;
@@ -141,7 +142,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.CameraMoveDown = (Key)comboBoxDown.SelectedItem;
 			Interface.CurrentOptions.CameraMoveForward = (Key)comboBoxForwards.SelectedItem;
 			Interface.CurrentOptions.CameraMoveBackward = (Key)comboBoxBackwards.SelectedItem;
-			Options.SaveOptions();
+			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.RefreshObjects();
 			Close();
 		}

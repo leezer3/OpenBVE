@@ -302,7 +302,7 @@ namespace ObjectViewer
 
         protected override void OnClosing(CancelEventArgs e)
         {
-	        Options.SaveOptions();
+	        Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.Renderer.visibilityThread = false;
         }
 

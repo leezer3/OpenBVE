@@ -71,22 +71,7 @@ namespace OpenBve
 		public override void Initialize()
 		{
 			Reset();
-			// choose the text font size according to screen height
-			// the boundaries follow approximately the progression
-			// of font sizes defined in Graphics/Fonts.cs
-			if (Program.Renderer.Screen.Height <= 512) MenuFont = Program.Renderer.Fonts.SmallFont;
-			else if (Program.Renderer.Screen.Height <= 680) MenuFont = Program.Renderer.Fonts.NormalFont;
-			else if (Program.Renderer.Screen.Height <= 890) MenuFont = Program.Renderer.Fonts.LargeFont;
-			else if (Program.Renderer.Screen.Height <= 1150) MenuFont = Program.Renderer.Fonts.VeryLargeFont;
-			else MenuFont = Program.Renderer.Fonts.EvenLargerFont;
-
-			if (Interface.CurrentOptions.UserInterfaceFolder == "Large")
-			{
-				// If using the large HUD option, increase the text size in the menu too
-				MenuFont = Program.Renderer.Fonts.NextLargestFont(MenuFont);
-			}
-
-			lineHeight = (int)(MenuFont.FontSize * LineSpacing);
+			OnResize();
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
 				//Find the current menu back key- It's unlikely that we want to set a new key to this
@@ -96,7 +81,41 @@ namespace OpenBve
 					break;
 				}
 			}
-			int quarterWidth = (int) (Program.Renderer.Screen.Width / 4.0);
+			
+			IsInitialized = true;
+
+			// add controls to list so we can itinerate them on mouse calls etc.
+			menuControls.Add(routePictureBox);
+			menuControls.Add(controlPictureBox);
+			menuControls.Add(switchMainPictureBox);
+			menuControls.Add(switchSettingPictureBox);
+			menuControls.Add(switchMapPictureBox);
+			menuControls.Add(LogoPictureBox);
+			menuControls.Add(controlTextBox);
+			menuControls.Add(routeDescriptionBox);
+			menuControls.Add(nextImageButton);
+			menuControls.Add(previousImageButton);
+		}
+
+		/// <summary>Should be called when the screen resolution changes to re-position all items on the menu appropriately</summary>
+		private void OnResize()
+		{
+			if (Interface.CurrentOptions.UserInterfaceFolder == "Large")
+			{
+				// If using the large HUD option, increase the text size in the menu too
+				MenuFont = Program.Renderer.Fonts.NextLargestFont(MenuFont);
+			}
+			// choose the text font size according to screen height
+			// the boundaries follow approximately the progression
+			// of font sizes defined in Graphics/Fonts.cs
+			if (Program.Renderer.Screen.Height <= 512) MenuFont = Program.Renderer.Fonts.SmallFont;
+			else if (Program.Renderer.Screen.Height <= 680) MenuFont = Program.Renderer.Fonts.NormalFont;
+			else if (Program.Renderer.Screen.Height <= 890) MenuFont = Program.Renderer.Fonts.LargeFont;
+			else if (Program.Renderer.Screen.Height <= 1150) MenuFont = Program.Renderer.Fonts.VeryLargeFont;
+			else MenuFont = Program.Renderer.Fonts.EvenLargerFont;
+
+			lineHeight = (int)(MenuFont.FontSize * LineSpacing);
+			int quarterWidth = (int)(Program.Renderer.Screen.Width / 4.0);
 			int quarterHeight = (int)(Program.Renderer.Screen.Height / 4.0);
 			int descriptionLoc = Program.Renderer.Screen.Width - quarterWidth - quarterWidth / 2;
 			int descriptionWidth = quarterWidth + quarterWidth / 2;
@@ -132,19 +151,6 @@ namespace OpenBve
 			controlTextBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0 + quarterWidth);
 			controlTextBox.Size = new Vector2(quarterWidth, quarterWidth);
 			controlTextBox.BackgroundColor = Color128.Black;
-			IsInitialized = true;
-
-			// add controls to list so we can itinerate them on mouse calls etc.
-			menuControls.Add(routePictureBox);
-			menuControls.Add(controlPictureBox);
-			menuControls.Add(switchMainPictureBox);
-			menuControls.Add(switchSettingPictureBox);
-			menuControls.Add(switchMapPictureBox);
-			menuControls.Add(LogoPictureBox);
-			menuControls.Add(controlTextBox);
-			menuControls.Add(routeDescriptionBox);
-			menuControls.Add(nextImageButton);
-			menuControls.Add(previousImageButton);
 		}
 
 		public override void Reset()
@@ -449,7 +455,18 @@ namespace OpenBve
 						{
 							// menu management commands
 							case MenuTag.MenuBack:              // BACK TO PREVIOUS MENU
+								if (Menus[CurrMenu].Type == MenuType.Options)
+								{
+									Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
+									Program.FileSystem.SaveCurrentFileSystemConfiguration();
+									// re-position our stuff in case of screen resolution change
+									
+								}
 								Instance.PopMenu();
+								OnResize();
+								Menus[CurrMenu].ComputeExtent(Menus[CurrMenu].Type, MenuFont, 0);
+								Menus[CurrMenu].Height = Menus[CurrMenu].Items.Length * lineHeight;
+								ComputePosition();
 								break;
 							case MenuTag.MenuJumpToStation:     // TO STATIONS MENU
 								Instance.PushMenu(MenuType.JumpToStation);

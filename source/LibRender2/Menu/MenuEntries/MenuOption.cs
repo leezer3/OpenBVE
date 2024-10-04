@@ -160,6 +160,8 @@ namespace LibRender2.Menu
 									DisplayDevice.Default.ChangeResolution(currentResolution);
 									BaseMenu.Renderer.SetWindowState(WindowState.Fullscreen);
 									BaseMenu.Renderer.SetWindowSize((int)(currentResolution.Width * DisplayDevice.Default.ScaleFactor.X), (int)(currentResolution.Height * DisplayDevice.Default.ScaleFactor.Y));
+									BaseMenu.CurrentOptions.FullscreenWidth = currentResolution.Width;
+									BaseMenu.CurrentOptions.FullscreenHeight = currentResolution.Height;
 									return;
 								}
 								catch
@@ -168,6 +170,11 @@ namespace LibRender2.Menu
 								}
 							}
 						}
+					}
+					else
+					{
+						BaseMenu.CurrentOptions.WindowWidth = res.Width;
+						BaseMenu.CurrentOptions.WindowHeight = res.Height;
 					}
 					BaseMenu.ComputePosition();
 					break;

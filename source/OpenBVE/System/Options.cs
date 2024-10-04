@@ -252,7 +252,7 @@ namespace OpenBve
 
 			/// <summary>Saves the options to the specified filename</summary>
 			/// <param name="fileName">The filename to save the options to</param>
-			internal void Save(string fileName)
+			public override void Save(string fileName)
 			{
 				CultureInfo Culture = CultureInfo.InvariantCulture;
 				StringBuilder Builder = new StringBuilder();

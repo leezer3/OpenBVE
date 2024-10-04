@@ -108,5 +108,9 @@ namespace OpenBveApi
 		public bool DelayedAnimatedUpdates;
 		/// <summary>Enables scripted trains on BVE5 routes</summary>
 		public bool EnableBve5ScriptedTrain;
+
+		/// <summary>Saves the options to the specified filename</summary>
+		/// <param name="fileName">The filename to save the options to</param>
+		public abstract void Save(string fileName);
 	}
 }
