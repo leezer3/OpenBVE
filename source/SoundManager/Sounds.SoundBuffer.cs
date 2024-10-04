@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using OpenBveApi.FunctionScripting;
+﻿using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
 using OpenTK.Audio.OpenAL;

@@ -425,7 +425,15 @@ namespace RouteViewer
 							dx = soundEvent.Position.X;
 							dy = soundEvent.Position.Y < 0.1 ? 0.1 : soundEvent.Position.Y;
 							dz = soundEvent.Position.Z;
-							t = soundEvent.SoundBuffer == null ? PointSoundTexture : SoundTexture;
+							t = SoundTexture;
+						}
+						else if (e is PointSoundEvent)
+						{
+							s = 0.2;
+							dx = 0;
+							dy = 0.2;
+							dz = 0;
+							t = PointSoundTexture;
 						}
 						else if (e is RailSoundsChangeEvent)
 						{

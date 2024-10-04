@@ -30,6 +30,7 @@ using Bve5_Parsing.MapGrammar.EvaluateData;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Sounds;
 
 namespace Route.Bve5
 {
@@ -475,13 +476,13 @@ namespace Route.Bve5
 
 						int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 
-						if (!Blocks[BlockIndex].FreeObj.ContainsKey(TrackKey))
+						if (!Blocks[BlockIndex].FreeObjects.ContainsKey(TrackKey))
 						{
-							Blocks[BlockIndex].FreeObj.Add(TrackKey, new List<FreeObj>());
+							Blocks[BlockIndex].FreeObjects.Add(TrackKey, new List<FreeObj>());
 						}
 
 						Vector3 position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
-						Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, position, RY * 0.0174532925199433, -RX * 0.0174532925199433, RZtoRoll(RY, RZ) * 0.0174532925199433, (ObjectTransformType)Tilt, Span));
+						Blocks[BlockIndex].FreeObjects[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, position, RY * 0.0174532925199433, -RX * 0.0174532925199433, RZtoRoll(RY, RZ) * 0.0174532925199433, (ObjectTransformType)Tilt, Span));
 						}
 						break;
 					case MapFunctionName.PutBetween:
@@ -643,9 +644,9 @@ namespace Route.Bve5
 			{
 				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(i);
 
-				if (!RouteData.Blocks[BlockIndex].FreeObj.ContainsKey(TrackKey))
+				if (!RouteData.Blocks[BlockIndex].FreeObjects.ContainsKey(TrackKey))
 				{
-					RouteData.Blocks[BlockIndex].FreeObj.Add(TrackKey, new List<FreeObj>());
+					RouteData.Blocks[BlockIndex].FreeObjects.Add(TrackKey, new List<FreeObj>());
 				}
 
 				/*
@@ -653,7 +654,7 @@ namespace Route.Bve5
 				 *
 				 * This seems to get stuff on Chuo Rapid Line looking OK in terms of the gradients
 				 */
-				RouteData.Blocks[BlockIndex].FreeObj[TrackKey].Add(new FreeObj(i, Repeater.ObjectKeys[LoopCount], Repeater.Position, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, Repeater.Type, Math.Max(Repeater.Interval, Repeater.Span)));
+				RouteData.Blocks[BlockIndex].FreeObjects[TrackKey].Add(new FreeObj(i, Repeater.ObjectKeys[LoopCount], Repeater.Position, Repeater.Yaw, Repeater.Pitch, Repeater.Roll, Repeater.Type, Math.Max(Repeater.Interval, Repeater.Span)));
 
 				if (LoopCount >= Repeater.ObjectKeys.Length - 1)
 				{
@@ -694,12 +695,7 @@ namespace Route.Bve5
 						double?[] aspects = new double?[d.SignalAspects.Count];
 						d.SignalAspects.CopyTo(aspects, 0); // Yuck: Stored as nullable doubles
 						int Index = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-						RouteData.Blocks[Index].Sections.Add(new Section
-						{
-							TrackPosition = Statement.Distance,
-							Aspects = aspects.Select(db => db != null ? (int)db : 0).ToArray(),
-							DepartureStationIndex = -1
-						});
+						RouteData.Blocks[Index].Sections.Add(new Section(Statement.Distance, aspects.Select(db => db != null ? (int)db : 0).ToArray()));
 						int StationIndex = Array.FindLastIndex(Plugin.CurrentRoute.Stations, s => s.Stops.Last().TrackPosition <= Statement.Distance);
 						if (StationIndex != -1)
 						{
@@ -835,13 +831,7 @@ namespace Route.Bve5
 					Section += CurrentSection;
 				}
 
-				RouteData.Blocks[BlockIndex].Transponders.Add(new Transponder
-				{
-					TrackPosition = Statement.Distance,
-					Type = Convert.ToInt32(Type),
-					SectionIndex = Section,
-					Data = Convert.ToInt32(SendData)
-				});
+				RouteData.Blocks[BlockIndex].Transponders.Add(new Transponder(Statement.Distance, (int)Type, (int)SendData, Section));
 			}
 		}
 
@@ -971,20 +961,18 @@ namespace Route.Bve5
 
 		private static void ConfirmCabIlluminance(Statement Statement, RouteData RouteData)
 		{
-			double TempValue;
-			if (!Statement.HasArgument(ArgumentName.Value) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Value), out TempValue) || TempValue == 0.0)
+			if (!Statement.HasArgument(ArgumentName.Value) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Value), out double illuminanceValue) || illuminanceValue == 0.0)
 			{
-				TempValue = 1.0;
+				illuminanceValue = 1.0;
 			}
 
-			float Value = Convert.ToSingle(TempValue);
-			if (Value < 0.0f || Value > 1.0f)
+			if (illuminanceValue < 0.0f || illuminanceValue > 1.0f)
 			{
-				Value = Value < 0.0f ? 0.0f : 1.0f;
+				illuminanceValue = illuminanceValue < 0.0f ? 0.0f : 1.0f;
 			}
 
 			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-			RouteData.Blocks[BlockIndex].BrightnessChanges.Add(new Brightness(Statement.Distance, Value));
+			RouteData.Blocks[BlockIndex].BrightnessChanges.Add(new Brightness(Statement.Distance, (float)illuminanceValue));
 		}
 
 		private static void ConfirmIrregularity(bool PreviewOnly, RouteData RouteData)
@@ -1042,8 +1030,7 @@ namespace Route.Bve5
 		private static void ConfirmSound(Statement Statement, RouteData RouteData)
 		{
 			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound(Statement.Distance, Statement.Key, SoundType.World));
-			
+			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound(Statement.Distance, Statement.Key, SoundType.Ambient, Vector2.Null));
 		}
 
 		private static void ConfirmSound3D(Statement Statement, RouteData RouteData)
@@ -1052,7 +1039,7 @@ namespace Route.Bve5
 			double Y = Statement.GetArgumentValueAsDouble(ArgumentName.Y);
 
 			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound(Statement.Distance, Statement.Key, SoundType.World, X, Y));
+			RouteData.Blocks[BlockIndex].SoundEvents.Add(new Sound(Statement.Distance, Statement.Key, SoundType.Ambient, new Vector2(X, Y)));
 		}
 
 		private static void ConfirmRollingNoise(Statement Statement, RouteData RouteData)
@@ -1060,11 +1047,7 @@ namespace Route.Bve5
 			object Index = Statement.GetArgumentValue(ArgumentName.Index);
 
 			int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-			RouteData.Blocks[BlockIndex].RunSounds.Add(new TrackSound
-			{
-				TrackPosition = Statement.Distance,
-				SoundIndex = Convert.ToInt32(Index)
-			});
+			RouteData.Blocks[BlockIndex].RunSounds.Add(new RunSound(Statement.Distance, Convert.ToInt32(Index)));
 		}
 
 		private static void ConfirmFlangeNoise(bool PreviewOnly, MapData ParseData, RouteData RouteData)
@@ -1084,11 +1067,7 @@ namespace Route.Bve5
 				object Index = Statement.GetArgumentValue(ArgumentName.Index);
 
 				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
-				RouteData.Blocks[BlockIndex].FlangeSounds.Add(new TrackSound
-				{
-					TrackPosition = Statement.Distance,
-					SoundIndex = Convert.ToInt32(Index)
-				});
+				RouteData.Blocks[BlockIndex].FlangeSounds.Add(new FlangeSound(Statement.Distance, Convert.ToInt32(Index)));
 			}
 		}
 	}

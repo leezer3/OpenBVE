@@ -1,4 +1,6 @@
-﻿namespace OpenBveApi.Routes
+﻿using System;
+
+namespace OpenBveApi.Routes
 {
 	/// <summary>Represents some rectangular bounds on the grid.</summary>
 	public struct QuadTreeBounds
@@ -22,9 +24,25 @@
 		/// <param name="far">The far edge, i.e. the highest z-coordinate.</param>
 		internal QuadTreeBounds(double left, double right, double near, double far)
 		{
+			if (double.IsInfinity(left))
+			{
+				throw new Exception("Cannot create a grid with infinity bounds: Left");
+			}
 			Left = left;
+			if (double.IsInfinity(right))
+			{
+				throw new Exception("Cannot create a grid with infinity bounds: Right");
+			}
 			Right = right;
+			if (double.IsInfinity(near))
+			{
+				throw new Exception("Cannot create a grid with infinity bounds: Near");
+			}
 			Near = near;
+			if (double.IsInfinity(far))
+			{
+				throw new Exception("Cannot create a grid with infinity bounds: Far");
+			}
 			Far = far;
 		}
 

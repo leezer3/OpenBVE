@@ -100,6 +100,7 @@ namespace SanYingInput
 			}
 			catch
 			{
+				// ignored
 			}
 		}
 

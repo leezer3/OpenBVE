@@ -70,6 +70,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScenarioParser.cs" />
     <Compile Include="Structures\AbstractStructure.cs" />
+    <Compile Include="Structures\Brightness.cs" />
+    <Compile Include="Structures\Crack.cs" />
+    <Compile Include="Structures\FreeObj.cs" />
+    <Compile Include="Structures\Limit.cs" />
+    <Compile Include="Structures\Rail.cs" />
+    <Compile Include="Structures\Repeater.cs" />
+    <Compile Include="Structures\Section.cs" />
+    <Compile Include="Structures\Signal.cs" />
+    <Compile Include="Structures\Sound.cs" />
+    <Compile Include="Structures\Station.cs" />
+    <Compile Include="Structures\TrackSound.cs" />
+    <Compile Include="Structures\Transponder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\LibRender2\LibRender2.csproj">

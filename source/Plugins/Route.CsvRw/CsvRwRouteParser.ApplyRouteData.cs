@@ -390,7 +390,7 @@ namespace CsvRwRouteParser
 								}
 								if (q)
 								{
-									bool addPointSound = false;
+									bool addPointSound = true;
 									if (Data.Blocks[i].Switches != null)
 									{
 										for (int sw = 0; sw < Data.Blocks[i].Switches.Length; sw++)

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using ObjectViewer.Graphics;
 using OpenBveApi.Graphics;
+using OpenBveApi.Input;
 using OpenBveApi.Objects;
 using Path = OpenBveApi.Path;
 
@@ -17,21 +18,27 @@ namespace ObjectViewer
 	        Interface.CurrentOptions = new Interface.Options
 	        {
 		        ViewingDistance = 1000, // fixed
+				CameraMoveLeft = Key.A,
+				CameraMoveRight = Key.D,
+				CameraMoveUp = Key.W,
+				CameraMoveDown = Key.S,
+				CameraMoveForward = Key.Q,
+				CameraMoveBackward = Key.E
 	        };
             string optionsFolder = Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
-            if (!System.IO.Directory.Exists(optionsFolder))
+            if (!Directory.Exists(optionsFolder))
             {
-                System.IO.Directory.CreateDirectory(optionsFolder);
+                Directory.CreateDirectory(optionsFolder);
             }
             CultureInfo Culture = CultureInfo.InvariantCulture;
             string configFile = Path.CombineFile(optionsFolder, "options_ov.cfg");
-            if (!System.IO.File.Exists(configFile))
+            if (!File.Exists(configFile))
             {
                 //Attempt to load and upgrade a prior configuration file
                 string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 configFile = Path.CombineFile(Path.CombineDirectory(Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "options_ov.cfg");
 
-                if (!System.IO.File.Exists(configFile))
+                if (!File.Exists(configFile))
                 {
                     //If no route viewer specific configuration file exists, then try the main OpenBVE configuration file
                     //Write out to a new routeviewer specific file though
@@ -39,10 +46,10 @@ namespace ObjectViewer
                 }
             }
 
-            if (System.IO.File.Exists(configFile))
+            if (File.Exists(configFile))
             {
                 // load options
-                string[] Lines = System.IO.File.ReadAllLines(configFile, new System.Text.UTF8Encoding());
+                string[] Lines = File.ReadAllLines(configFile, new System.Text.UTF8Encoding());
                 string Section = "";
                 for (int i = 0; i < Lines.Length; i++)
                 {
@@ -184,6 +191,47 @@ namespace ObjectViewer
 											break;
 									}
 									break;
+								case "keys":
+									switch (Key)
+									{
+										case "left":
+											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveLeft))
+											{
+												Interface.CurrentOptions.CameraMoveLeft = OpenBveApi.Input.Key.A;
+											}
+											break;
+										case "right":
+											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveRight))
+											{
+												Interface.CurrentOptions.CameraMoveRight = OpenBveApi.Input.Key.D;
+											}
+											break;
+										case "up":
+											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveUp))
+											{
+												Interface.CurrentOptions.CameraMoveUp = OpenBveApi.Input.Key.W;
+											}
+											break;
+										case "down":
+											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveDown))
+											{
+												Interface.CurrentOptions.CameraMoveDown = OpenBveApi.Input.Key.S;
+											}
+											break;
+										case "forward":
+											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveForward))
+											{
+												Interface.CurrentOptions.CameraMoveForward = OpenBveApi.Input.Key.Q;
+											}
+											break;
+										case "backward":
+											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveBackward))
+											{
+												Interface.CurrentOptions.CameraMoveBackward = OpenBveApi.Input.Key.E;
+											}
+											break;
+									}
+									break;
                             }
                         }
                     }
@@ -234,8 +282,15 @@ namespace ObjectViewer
 				Builder.AppendLine();
 				Builder.AppendLine("[Folders]");
 				Builder.AppendLine($"objectsearch = {Interface.CurrentOptions.ObjectSearchDirectory}");
+				Builder.AppendLine("[Keys]");
+				Builder.AppendLine("left = " + Interface.CurrentOptions.CameraMoveLeft);
+				Builder.AppendLine("right = " + Interface.CurrentOptions.CameraMoveRight);
+				Builder.AppendLine("up = " + Interface.CurrentOptions.CameraMoveUp);
+				Builder.AppendLine("down = " + Interface.CurrentOptions.CameraMoveDown);
+				Builder.AppendLine("forward = " + Interface.CurrentOptions.CameraMoveForward);
+				Builder.AppendLine("backward = " + Interface.CurrentOptions.CameraMoveBackward);
 				string configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg");
-                System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
+                File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
             }
             catch
             {

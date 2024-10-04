@@ -27,6 +27,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using OpenBveApi.Math;
 using OpenBveApi.World;
+// ReSharper disable TooWideLocalVariableScope
+// ReSharper disable InlineOutVariableDeclaration
 
 namespace Route.Bve5
 {
@@ -42,6 +44,7 @@ namespace Route.Bve5
 			{
 				CultureInfo Culture = CultureInfo.InvariantCulture;
 				string[] Split = Expression.Split(':');
+
 				int h, m, s;
 				switch (Split.Length)
 				{

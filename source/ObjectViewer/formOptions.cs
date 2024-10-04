@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using ObjectViewer.Graphics;
 using OpenBveApi.Graphics;
+using OpenBveApi.Input;
 using OpenBveApi.Objects;
 using OpenTK.Graphics;
 
@@ -21,6 +22,18 @@ namespace ObjectViewer
 			comboBoxNewXParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentXParser;
 			comboBoxNewObjParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentObjParser;
 			comboBoxOptimizeObjects.SelectedIndex = (int)Interface.CurrentOptions.ObjectOptimizationMode;
+			comboBoxLeft.DataSource = Enum.GetValues(typeof(Key));
+			comboBoxLeft.SelectedItem = Interface.CurrentOptions.CameraMoveLeft;
+			comboBoxRight.DataSource = Enum.GetValues(typeof(Key));
+			comboBoxRight.SelectedItem = Interface.CurrentOptions.CameraMoveRight;
+			comboBoxUp.DataSource = Enum.GetValues(typeof(Key));
+			comboBoxUp.SelectedItem = Interface.CurrentOptions.CameraMoveUp;
+			comboBoxDown.DataSource = Enum.GetValues(typeof(Key));
+			comboBoxDown.SelectedItem = Interface.CurrentOptions.CameraMoveDown;
+			comboBoxForwards.DataSource = Enum.GetValues(typeof(Key));
+			comboBoxForwards.SelectedItem = Interface.CurrentOptions.CameraMoveForward;
+			comboBoxBackwards.DataSource = Enum.GetValues(typeof(Key));
+			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveForward;
 		}
 
 		internal static DialogResult ShowOptions()
@@ -122,10 +135,15 @@ namespace ObjectViewer
 			
 
 			Interface.CurrentOptions.ObjectOptimizationMode = (ObjectOptimizationMode)comboBoxOptimizeObjects.SelectedIndex;
-
+			Interface.CurrentOptions.CameraMoveLeft = (Key)comboBoxLeft.SelectedItem;
+			Interface.CurrentOptions.CameraMoveRight = (Key)comboBoxRight.SelectedItem;
+			Interface.CurrentOptions.CameraMoveUp = (Key)comboBoxUp.SelectedItem;
+			Interface.CurrentOptions.CameraMoveDown = (Key)comboBoxDown.SelectedItem;
+			Interface.CurrentOptions.CameraMoveForward = (Key)comboBoxForwards.SelectedItem;
+			Interface.CurrentOptions.CameraMoveBackward = (Key)comboBoxBackwards.SelectedItem;
 			Options.SaveOptions();
 			Program.RefreshObjects();
-			this.Close();
+			Close();
 		}
 	}
 }

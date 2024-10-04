@@ -32,6 +32,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
+using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using RouteManager2;
@@ -51,9 +52,11 @@ namespace Route.Bve5
 			Plugin.CurrentOptions.SpeedConversionFactor = 0.0;
 
 			Plugin.CurrentRoute.Sections = new RouteManager2.SignalManager.Section[1];
-			Plugin.CurrentRoute.Sections[0] = new RouteManager2.SignalManager.Section(0, new[] { new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity) }, SectionType.ValueBased);
-			Plugin.CurrentRoute.Sections[0].CurrentAspect = 0;
-			Plugin.CurrentRoute.Sections[0].StationIndex = -1;
+			Plugin.CurrentRoute.Sections[0] = new RouteManager2.SignalManager.Section(0, new[] { new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity) }, SectionType.ValueBased)
+			{
+				CurrentAspect = 0,
+				StationIndex = -1
+			};
 
 			//FIXME: Quad-tree *should* be better (and we don't require any legacy stuff), but this produces an empty worldspace
 			Plugin.CurrentRoute.AccurateObjectDisposal = ObjectDisposalMode.Accurate;
@@ -189,22 +192,7 @@ namespace Route.Bve5
 				{
 					for (int j = 0; j < Data.Blocks[i].BrightnessChanges.Count; j++)
 					{
-						for (int l = 0; l < Plugin.CurrentRoute.Tracks.Count; l++)
-						{
-							int k = Plugin.CurrentRoute.Tracks.ElementAt(l).Key;
-							double d = Data.Blocks[i].BrightnessChanges[j].TrackPosition - StartingDistance;
-							Plugin.CurrentRoute.Tracks[k].Elements[n].Events.Add(new BrightnessChangeEvent(d, Data.Blocks[i].BrightnessChanges[j].Value, CurrentBrightnessValue, Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition));
-							if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
-							{
-								BrightnessChangeEvent bce = (BrightnessChangeEvent)Plugin.CurrentRoute.Tracks[0].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
-								bce.NextBrightness = Data.Blocks[i].BrightnessChanges[j].Value;
-								bce.NextDistance = Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition;
-							}
-						}
-						CurrentBrightnessElement = n;
-						CurrentBrightnessEvent = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Count - 1;
-						CurrentBrightnessValue = Data.Blocks[i].BrightnessChanges[j].Value;
-						CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
+						Data.Blocks[i].BrightnessChanges[j].Create(n, StartingDistance, ref CurrentBrightnessElement, ref CurrentBrightnessEvent, ref CurrentBrightnessValue, ref CurrentBrightnessTrackPosition);
 					}
 				}
 
@@ -242,32 +230,12 @@ namespace Route.Bve5
 				{
 					for (int k = 0; k < Data.Blocks[i].RunSounds.Count; k++)
 					{
-						int r = Data.Blocks[i].RunSounds[k].SoundIndex;
-						if (r != CurrentRunIndex)
-						{
-							double d = Data.Blocks[i].RunSounds[k].TrackPosition - StartingDistance;
-							if (d > 0.0)
-							{
-								d = 0.0;
-							}
-							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new RailSoundsChangeEvent(d, CurrentRunIndex, CurrentFlangeIndex, r, CurrentFlangeIndex));
-							CurrentRunIndex = r;
-						}
+						Data.Blocks[i].RunSounds[k].Create(n, StartingDistance, ref CurrentRunIndex, CurrentFlangeIndex);
 					}
 
 					for (int k = 0; k < Data.Blocks[i].FlangeSounds.Count; k++)
 					{
-						int f = Data.Blocks[i].FlangeSounds[k].SoundIndex;
-						if (f != CurrentFlangeIndex)
-						{
-							double d = Data.Blocks[i].FlangeSounds[k].TrackPosition - StartingDistance;
-							if (d > 0.0)
-							{
-								d = 0.0;
-							}
-							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new RailSoundsChangeEvent(d, CurrentRunIndex, CurrentFlangeIndex, CurrentRunIndex, f));
-							CurrentFlangeIndex = f;
-						}
+						Data.Blocks[i].FlangeSounds[k].Create(n, StartingDistance, CurrentRunIndex, ref CurrentFlangeIndex);
 					}
 
 					if (Data.Blocks[i].JointSound)
@@ -322,30 +290,10 @@ namespace Route.Bve5
 				{
 					for (int k = 0; k < Data.Blocks[i].Limits.Count; k++)
 					{
-						double d = Data.Blocks[i].Limits[k].TrackPosition - StartingDistance;
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new LimitChangeEvent(Plugin.CurrentRoute, d, CurrentSpeedLimit, Data.Blocks[i].Limits[k].Speed));
-						CurrentSpeedLimit = Data.Blocks[i].Limits[k].Speed;
+						Data.Blocks[i].Limits[k].Create(n, StartingDistance, ref CurrentSpeedLimit);
 					}
 				}
 
-				// sound
-				if (!PreviewOnly)
-				{
-					for (int k = 0; k < Data.Blocks[i].SoundEvents.Count; k++)
-					{
-						if (Data.Blocks[i].SoundEvents[k].Type == SoundType.TrainStatic)
-						{
-							SoundHandle buffer;
-							Data.Sounds.TryGetValue(Data.Blocks[i].SoundEvents[k].Key, out buffer);
-
-							if (buffer != null)
-							{
-								double d = Data.Blocks[i].SoundEvents[k].TrackPosition - StartingDistance;
-								Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, d, buffer, true, true, false, false, Vector3.Zero, 0.0));
-							}
-						}
-					}
-				}
 
 				// sections
 				if (!PreviewOnly)
@@ -353,42 +301,7 @@ namespace Route.Bve5
 					// sections
 					for (int k = 0; k < Data.Blocks[i].Sections.Count; k++)
 					{
-						int m = Plugin.CurrentRoute.Sections.Length;
-						Array.Resize(ref Plugin.CurrentRoute.Sections, m + 1);
-						RouteManager2.SignalManager.Section previousSection = null;
-						if (m > 0)
-						{
-							previousSection = Plugin.CurrentRoute.Sections[m - 1];
-						}
-
-						Plugin.CurrentRoute.Sections[m] = new RouteManager2.SignalManager.Section(Data.Blocks[i].Sections[k].TrackPosition, new SectionAspect[Data.Blocks[i].Sections[k].Aspects.Length], SectionType.IndexBased, previousSection);
-
-						if (m > 0)
-						{
-							Plugin.CurrentRoute.Sections[m - 1].NextSection = Plugin.CurrentRoute.Sections[m];
-						}
-						// create section
-						
-						for (int l = 0; l < Data.Blocks[i].Sections[k].Aspects.Length; l++)
-						{
-							Plugin.CurrentRoute.Sections[m].Aspects[l].Number = Data.Blocks[i].Sections[k].Aspects[l];
-							if (Data.Blocks[i].Sections[k].Aspects[l] >= 0 & Data.Blocks[i].Sections[k].Aspects[l] < Data.SignalSpeeds.Length)
-							{
-								Plugin.CurrentRoute.Sections[m].Aspects[l].Speed = Data.SignalSpeeds[Data.Blocks[i].Sections[k].Aspects[l]];
-							}
-							else
-							{
-								Plugin.CurrentRoute.Sections[m].Aspects[l].Speed = double.PositiveInfinity;
-							}
-						}
-						Plugin.CurrentRoute.Sections[m].CurrentAspect = -1;
-						Plugin.CurrentRoute.Sections[m].StationIndex = Data.Blocks[i].Sections[k].DepartureStationIndex;
-						Plugin.CurrentRoute.Sections[m].Invisible = false;
-						Plugin.CurrentRoute.Sections[m].Trains = new AbstractTrain[] { };
-
-						// create section change event
-						double d = Data.Blocks[i].Sections[k].TrackPosition - StartingDistance;
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new SectionChangeEvent(Plugin.CurrentRoute, d, m - 1, m));
+						Data.Blocks[i].Sections[k].Create(Data, n, StartingDistance);
 					}
 				}
 
@@ -399,30 +312,30 @@ namespace Route.Bve5
 					{
 						// free objects (including placed repeaters)
 						string railKey = Data.Blocks[i].Rails.ElementAt(j).Key;
-						if (Data.Blocks[i].FreeObj.ContainsKey(railKey))
+						if (Data.Blocks[i].FreeObjects.ContainsKey(railKey))
 						{
-							for (int k = 0; k < Data.Blocks[i].FreeObj[railKey].Count; k++)
+							for (int k = 0; k < Data.Blocks[i].FreeObjects[railKey].Count; k++)
 							{
-								string key = Data.Blocks[i].FreeObj[railKey][k].Key;
-								double dx = Data.Blocks[i].FreeObj[railKey][k].Position.X;
-								double dy = Data.Blocks[i].FreeObj[railKey][k].Position.Y;
-								double dz = Data.Blocks[i].FreeObj[railKey][k].Position.Z;
-								double tpos = Data.Blocks[i].FreeObj[railKey][k].TrackPosition;
+								string key = Data.Blocks[i].FreeObjects[railKey][k].Key;
+								double dx = Data.Blocks[i].FreeObjects[railKey][k].Position.X;
+								double dy = Data.Blocks[i].FreeObjects[railKey][k].Position.Y;
+								double dz = Data.Blocks[i].FreeObjects[railKey][k].Position.Z;
+								double tpos = Data.Blocks[i].FreeObjects[railKey][k].TrackPosition;
 								Vector3 wpos;
 								Transformation Transformation;
 								if (j == 0)
 								{
-									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].FreeObj[railKey][k], Direction, out wpos, out Transformation);
+									GetPrimaryRailTransformation(Position, Data.Blocks, i, Data.Blocks[i].FreeObjects[railKey][k], Direction, out wpos, out Transformation);
 								}
 								else
 								{
-									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].FreeObj[railKey][k], out wpos, out Transformation);
+									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].FreeObjects[railKey][k], out wpos, out Transformation);
 								}
 								wpos += dx * Transformation.X + dy * Transformation.Y + dz * Transformation.Z;
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
 								if (obj != null)
 								{
-									obj.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObj[railKey][k].Yaw, Data.Blocks[i].FreeObj[railKey][k].Pitch, Data.Blocks[i].FreeObj[railKey][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
+									obj.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObjects[railKey][k].Yaw, Data.Blocks[i].FreeObjects[railKey][k].Pitch, Data.Blocks[i].FreeObjects[railKey][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
 								}
 							}
 						}
@@ -465,17 +378,7 @@ namespace Route.Bve5
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
 								if (obj != null)
 								{
-									UnifiedObject crack;
-									if (d0 < 0.0)
-									{
-										crack = obj.TransformRight(d0, d1);
-									}
-									else
-									{
-										crack = obj.TransformLeft(d0, d1);
-									}
-
-									
+									UnifiedObject crack = d0 < 0.0 ? obj.TransformRight(d0, d1) : obj.TransformLeft(d0, d1);
 									crack.CreateObject(wpos, Transformation, new Transformation(0.0, 0.0, 0.0), -1, StartingDistance, EndingDistance, tpos, 1.0);
 								}
 							}
@@ -622,24 +525,7 @@ namespace Route.Bve5
 				// world sounds
 				for (int k = 0; k < Data.Blocks[i].SoundEvents.Count; k++)
 				{
-					if (Data.Blocks[i].SoundEvents[k].Type == SoundType.World)
-					{
-						var SoundEvent = Data.Blocks[i].SoundEvents[k];
-						Data.Sound3Ds.TryGetValue(SoundEvent.Key, out SoundHandle buffer);
-						double d = SoundEvent.TrackPosition - StartingDistance;
-						double dx = SoundEvent.X;
-						double dy = SoundEvent.Y;
-						double wa = Math.Atan2(Direction.Y, Direction.X);
-						Vector3 w = new Vector3(Math.Cos(wa), Math.Tan(0.0), Math.Sin(wa));
-						w.Normalize();
-						Vector3 s = new Vector3(Direction.Y, 0.0, -Direction.X);
-						Vector3 u = Vector3.Cross(w, s);
-						Vector3 wpos = Position + new Vector3(s.X * dx + u.X * dy + w.X * d, s.Y * dx + u.Y * dy + w.Y * d, s.Z * dx + u.Z * dy + w.Z * d);
-						if (buffer != null)
-						{
-							Plugin.CurrentHost.PlaySound(buffer, 1.0, 1.0, wpos, null, true);
-						}
-					}
+					Data.Blocks[i].SoundEvents[k].Create(Data, n, StartingDistance, Position, Direction);
 				}
 
 				// finalize block

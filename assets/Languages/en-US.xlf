@@ -1711,6 +1711,9 @@
 					<trans-unit id="back">
 						<source>← Back</source>
 					</trans-unit>
+					<trans-unit id="tools">
+						<source>Tools</source>
+					</trans-unit>
 					<trans-unit id="customize_controls">
 						<source>Customise controls</source>
 					</trans-unit>

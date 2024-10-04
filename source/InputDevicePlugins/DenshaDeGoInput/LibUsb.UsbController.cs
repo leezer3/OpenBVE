@@ -104,6 +104,7 @@ namespace DenshaDeGoInput
 					}
 					catch
 					{
+						// ignored
 					}
 					return controllerName;
 				}
@@ -119,8 +120,7 @@ namespace DenshaDeGoInput
 					if (ControllerDevice != null)
 					{
 						// Send unload buffer to turn off controller
-						int bytesWritten;
-						ControllerDevice.ControlTransfer(ref SetupPacket, UnloadBuffer, UnloadBuffer.Length, out bytesWritten);
+						ControllerDevice.ControlTransfer(ref SetupPacket, UnloadBuffer, UnloadBuffer.Length, out int _);
 						IUsbDevice wholeUsbDevice = ControllerDevice as IUsbDevice;
 						if (!ReferenceEquals(wholeUsbDevice, null))
 						{
@@ -156,8 +156,7 @@ namespace DenshaDeGoInput
 					// Ask for input
 					if (ReadBuffer.Length > 0)
 					{
-						int readCount;
-						ErrorCode readError = ControllerReader.Read(ReadBuffer, 0, ReadBuffer.Length, 100, out readCount);
+						ErrorCode readError = ControllerReader.Read(ReadBuffer, 0, ReadBuffer.Length, 100, out int _);
 
 						if (readError == ErrorCode.DeviceNotFound || readError == ErrorCode.Win32Error || readError == ErrorCode.MonoApiError)
 						{
@@ -167,8 +166,7 @@ namespace DenshaDeGoInput
 					}
 
 					// Send output buffer
-					int bytesWritten;
-					ControllerDevice.ControlTransfer(ref SetupPacket, WriteBuffer, WriteBuffer.Length, out bytesWritten);
+					ControllerDevice.ControlTransfer(ref SetupPacket, WriteBuffer, WriteBuffer.Length, out int _);
 				}
 				catch
 				{

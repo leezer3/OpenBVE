@@ -277,6 +277,8 @@ namespace OpenBve {
 				Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
 			}
 
+			result.ExperimentalGLMenu = true;
+
 			if (result.ExperimentalGLMenu)
 			{
 				result.Start = true;

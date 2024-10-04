@@ -42,6 +42,8 @@ namespace LibRender2.Menu
 		MenuExitToMainMenu,
 		/// <summary>Enters the submenu for customising controls</summary>
 		MenuControls,
+		/// <summary>Enters the submenu for tools</summary>
+		MenuTools,
 		/// <summary>Enters the submenu for quitting the program</summary>
 		MenuQuit,
 		/// <summary>Returns to the simulation</summary>
@@ -88,12 +90,18 @@ namespace LibRender2.Menu
 		UninstallOther,
 		/// <summary>Shows the options menu</summary>
 		Options,
+		/// <summary>Shows the tools menu</summary>
+		Tools,
 		/// <summary>Toggles a switch</summary>
 		ToggleSwitch,
 		/// <summary>Selects the previous switch</summary>
 		PreviousSwitch,
 		/// <summary>Selects the next switch</summary>
 		NextSwitch,
+		/// <summary>Launches Object Viewer</summary>
+		ObjectViewer,
+		/// <summary>Launches Route Viewer</summary>
+		RouteViewer,
 
 		// OBJECT VIEWER
 		/// <summary>Displays a list of objects</summary>

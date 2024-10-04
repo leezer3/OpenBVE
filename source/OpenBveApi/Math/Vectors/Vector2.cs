@@ -306,7 +306,14 @@ namespace OpenBveApi.Math {
 		public bool IsNullVector() {
 			return this.X == 0.0 & this.Y == 0.0;
 		}
-		
+
+		/// <summary>Tests to see whether the vector is finite (no components are double or infinity.</summary>
+		/// <returns>A boolean indicating whether the vector is finite</returns>
+		public static bool IsFinite(Vector2 Vector)
+		{
+			return !double.IsNaN(Vector.X) && !double.IsInfinity(Vector.X) && !double.IsNaN(Vector.Y) && !double.IsInfinity(Vector.Y);
+		}
+
 		/// <summary>Checks whether the vector is considered a null vector.</summary>
 		/// <param name="tolerance">The highest absolute value that each component of the vector may have before the vector is not considered a null vector.</param>
 		/// <returns>A boolean indicating whether the vector is considered a null vector.</returns>

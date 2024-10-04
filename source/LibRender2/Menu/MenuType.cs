@@ -41,6 +41,8 @@ namespace LibRender2.Menu
 		Control,
 		/// <summary>Resets the controls to default</summary>
 		ControlReset,
+		/// <summary>Provides a list of tools</summary>
+		Tools,
 		/// <summary>Quits the game</summary>
 		Quit,
 		/// <summary>The game start menu</summary>

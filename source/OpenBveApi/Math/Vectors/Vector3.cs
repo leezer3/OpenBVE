@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.World;
+using SharpCompress.Common;
 // ReSharper disable UnusedMember.Global
 
 namespace OpenBveApi.Math {
@@ -656,10 +657,17 @@ namespace OpenBveApi.Math {
 		public static bool IsNullVector(Vector3 vector) {
 			return vector.X == 0.0 & vector.Y == 0.0 & vector.Z == 0.0;
 		}
-		
-		/// <summary>Gets the euclidean norm of the specified vector.</summary>
-		/// <param name="vector">The vector.</param>
-		/// <returns>The euclidean norm.</returns>
+
+		/// <summary>Tests to see whether the vector is finite (no components are double or infinity.</summary>
+		/// <returns>A boolean indicating whether the vector is finite</returns>
+		public static bool IsFinite(Vector3 Vector)
+        {
+            return !double.IsNaN(Vector.X) && !double.IsInfinity(Vector.X) && !double.IsNaN(Vector.Y) && !double.IsInfinity(Vector.Y) && !double.IsNaN(Vector.Z) && !double.IsInfinity(Vector.Z);
+        }
+
+        /// <summary>Gets the euclidean norm of the specified vector.</summary>
+        /// <param name="vector">The vector.</param>
+        /// <returns>The euclidean norm.</returns>
 		public static double Norm(Vector3 vector) {
 			return System.Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z);
 		}
