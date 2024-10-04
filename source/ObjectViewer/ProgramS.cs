@@ -470,6 +470,7 @@ namespace ObjectViewer {
                         Application.DoEvents();
 	                }
 	                break;
+				case Key.BackSpace:
 	            case Key.Delete:
 		            LightingRelative = -1.0;
 	                Game.Reset();
