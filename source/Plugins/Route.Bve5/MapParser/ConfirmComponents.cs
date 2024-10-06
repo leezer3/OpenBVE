@@ -809,10 +809,7 @@ namespace Route.Bve5
 
 				dynamic d = Statement;
 
-				object Type = d.Type;
-				object TempSection = d.Section;
-				object SendData = d.Senddata;
-
+				int TempSection = Convert.ToInt32(d.Section);
 				int BlockIndex = RouteData.sortedBlocks.FindBlockIndex(Statement.Distance);
 
 				int Section = Convert.ToInt32(TempSection);
@@ -831,7 +828,7 @@ namespace Route.Bve5
 					Section += CurrentSection;
 				}
 
-				RouteData.Blocks[BlockIndex].Transponders.Add(new Transponder(Statement.Distance, (int)Type, (int)SendData, Section));
+				RouteData.Blocks[BlockIndex].Transponders.Add(new Transponder(Statement.Distance, Convert.ToInt32(d.Type), Convert.ToInt32(d.Senddata), Section));
 			}
 		}
 
