@@ -2,6 +2,7 @@
 using OpenBveApi.World;
 using SharpCompress.Common;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MergeCastWithTypeCheck
 
 namespace OpenBveApi.Math {
 	/// <summary>Represents a three-dimensional vector.</summary>

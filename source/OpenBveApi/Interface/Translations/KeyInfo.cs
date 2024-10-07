@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using OpenBveApi.Input;
+// ReSharper disable MergeCastWithTypeCheck
 
 namespace OpenBveApi.Interface
 {
@@ -69,7 +70,7 @@ namespace OpenBveApi.Interface
 			/// <remarks>This ignores the translated key description</remarks>
 			public override bool Equals(object obj)
 			{
-				if (ReferenceEquals(null, obj)) return false;
+				if (obj is null) return false;
 				return obj is KeyInfo && Equals((KeyInfo) obj);
 			}
 

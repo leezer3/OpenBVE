@@ -519,7 +519,7 @@ namespace OpenBveApi.Packages
 			{
 				CleanDirectory(directory, ref Result);		
 			}
-			IEnumerable<string> entries = Directory.EnumerateFileSystemEntries(currentDirectory,"*", SearchOption.AllDirectories);
+			string[] entries = Directory.EnumerateFileSystemEntries(currentDirectory,"*", SearchOption.AllDirectories).ToArray();
 			if (!entries.Any())
 			{
 				Directory.Delete(currentDirectory, false);
@@ -527,7 +527,7 @@ namespace OpenBveApi.Packages
 			}
 			else
 			{
-				if (entries.Count() == 1)
+				if (entries.Length == 1)
 				{
 					if (File.Exists(currentDirectory + "thumbs.db"))
 					{

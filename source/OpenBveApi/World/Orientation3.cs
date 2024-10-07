@@ -1,4 +1,5 @@
-﻿namespace OpenBveApi.Math
+﻿// ReSharper disable MergeCastWithTypeCheck
+namespace OpenBveApi.Math
 {
 	/// <summary>Represents an orientation in three-dimensional space.</summary>
 	public struct Orientation3
@@ -49,7 +50,7 @@
 		/// <summary>Tests whether the given object is equal to this Orientation3</summary>
 		public override bool Equals(object obj)
 		{
-			if (ReferenceEquals(null, obj)) return false;
+			if (obj is null) return false;
 			return obj is Orientation3 && Equals((Orientation3) obj);
 		}
 

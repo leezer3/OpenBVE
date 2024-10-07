@@ -345,8 +345,7 @@ namespace OpenBveApi.FileSystem {
 
 								break;
 							case "version":
-								int v;
-								if (!int.TryParse(value, out v))
+								if (!int.TryParse(value, out int v))
 								{
 									system.AppendToLogFile("WARNING: Invalid filesystem.cfg version detected.");
 								}
