@@ -6,7 +6,6 @@ using OpenBveApi.Trains;
 using RouteManager2.Events;
 using TrainManager.Car;
 using TrainManager.Handles;
-using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
 namespace OpenBve

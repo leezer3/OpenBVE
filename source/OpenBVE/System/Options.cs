@@ -606,8 +606,7 @@ namespace OpenBve
 											Interface.CurrentOptions.KioskMode = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
 											break;
 										case "kioskmodetimer":
-											double d;
-											if (!double.TryParse(Value, NumberStyles.Number, Culture, out d))
+											if (!double.TryParse(Value, NumberStyles.Number, Culture, out double d))
 											{
 												d = 300;
 											}

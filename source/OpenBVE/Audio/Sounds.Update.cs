@@ -291,9 +291,8 @@ namespace OpenBve
 					switch (source.Type)
 					{
 						case SoundType.TrainCar:
-							Vector3 direction;
 							var Car = (AbstractCar)source.Parent;
-							Car.CreateWorldCoordinates(source.Position, out position, out direction);
+							Car.CreateWorldCoordinates(source.Position, out position, out Vector3 direction);
 							velocity = Car.CurrentSpeed * direction;
 							break;
 						case SoundType.AnimatedObject:

@@ -20,6 +20,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.World;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using MouseCursor = OpenTK.MouseCursor;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve.Graphics
@@ -485,12 +486,12 @@ namespace OpenBve.Graphics
 			OptionLighting = true;
 		}
 
-		public override void SetCursor(OpenTK.MouseCursor newCursor)
+		public override void SetCursor(MouseCursor newCursor)
 		{
 			Program.currentGameWindow.Cursor = newCursor;
 		}
 
-		public override void SetWindowState(OpenTK.WindowState windowState)
+		public override void SetWindowState(WindowState windowState)
 		{
 			Program.currentGameWindow.WindowState = windowState;
 			if (windowState == WindowState.Fullscreen)
