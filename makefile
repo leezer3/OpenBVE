@@ -6,6 +6,7 @@ MIN_NUGET_VERSION:= "2.16.0"
 NUGET_VERSION:= $(shell nuget help 2> /dev/null | awk '/Version:/ { print $$3; exit 0}')
 GreaterVersion = $(shell printf '%s\n' $(1) $(2) | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr | head -n 1)
 PROGRAM_VERSION = $(shell git describe --tags --exact-match 2> /dev/null)
+ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 # Directories
 DEBUG_DIR   := bin_debug
@@ -209,5 +210,5 @@ ifeq (, $(PROGRAM_VERSION))
 else
 	@echo This is a $(COLOR_YELLOW)Tagged Release build$(COLOR_END)
 	@echo Final filename: $(COLOR_RED)OpenBVE-$(PROGRAM_VERSION).deb(COLOR_END)
-	@mv installers/debian.deb OpenBVE-$(PROGRAM_VERSION).deb
+	@mv "$(ROOT_DIR)/installers/debian.deb" OpenBVE-$(PROGRAM_VERSION).deb
 endif
