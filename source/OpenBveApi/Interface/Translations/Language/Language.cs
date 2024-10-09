@@ -205,8 +205,7 @@ namespace OpenBveApi.Interface
 						break;
 					default:
 						string ks = k.ToString().Replace("Number", string.Empty);
-						bool keyIsTranslated;
-						string keyName = GetInterfaceString(HostApplication.OpenBve, new[] { "keys", ks.ToLowerInvariant() }, out keyIsTranslated);
+						string keyName = GetInterfaceString(HostApplication.OpenBve, new[] { "keys", ks.ToLowerInvariant() }, out bool keyIsTranslated);
 						KeyInfos.Add(k, keyIsTranslated ? new Translations.KeyInfo(k, keyName) : new Translations.KeyInfo(k, ks));
 						break;
 				}

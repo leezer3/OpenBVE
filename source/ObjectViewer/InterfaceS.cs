@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using ObjectViewer.Graphics;
-using OpenBveApi;
-using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using TrainManager.Trains;
@@ -42,59 +39,7 @@ namespace ObjectViewer {
 		internal static void AddMessage(MessageType Type, bool FileNotFound, string Text) {
 			LogMessages.Add(new LogMessage(Type, FileNotFound, Text));
 		}
-		/// <summary>Holds the program specific options</summary>
-		internal class Options : BaseOptions
-		{
-			private ObjectOptimizationMode objectOptimizationMode;
-
-			internal string ObjectSearchDirectory;
-
-			internal Key CameraMoveLeft;
-
-			internal Key CameraMoveRight;
-
-			internal Key CameraMoveUp;
-
-			internal Key CameraMoveDown;
-
-			internal Key CameraMoveForward;
-
-			internal Key CameraMoveBackward;
-
-			/// <summary>
-			/// The mode of optimization to be performed on an object
-			/// </summary>
-			internal ObjectOptimizationMode ObjectOptimizationMode
-			{
-				get => objectOptimizationMode;
-				set
-				{
-					objectOptimizationMode = value;
-
-					switch (value)
-					{
-						case ObjectOptimizationMode.None:
-							ObjectOptimizationBasicThreshold = 0;
-							ObjectOptimizationFullThreshold = 0;
-							break;
-						case ObjectOptimizationMode.Low:
-							ObjectOptimizationBasicThreshold = 1000;
-							ObjectOptimizationFullThreshold = 250;
-							break;
-						case ObjectOptimizationMode.High:
-							ObjectOptimizationBasicThreshold = 10000;
-							ObjectOptimizationFullThreshold = 1000;
-							break;
-					}
-				}
-			}
-
-			internal Options()
-			{
-				ObjectOptimizationMode = ObjectOptimizationMode.Low;
-			}
-		}
-
+		
 		/// <summary>The current options in use</summary>
 		internal static Options CurrentOptions;
 	}

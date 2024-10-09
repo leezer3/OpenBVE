@@ -770,6 +770,11 @@ namespace RouteViewer
 					Renderer.SwitchOpenGLVersion();
 					break;
 				case Key.P:
+					if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						// no WinForms support
+						return;
+					}
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
 						if (pathForm == null || pathForm.IsDisposed)

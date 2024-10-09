@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MergeCastWithTypeCheck
 
 namespace OpenBveApi.Colors {
 	
@@ -172,7 +173,7 @@ namespace OpenBveApi.Colors {
 		/// <summary>Returns a string representation of this Color24</summary>
 		public override string ToString()
 		{
-			return string.Format("#{0}", BitConverter.ToString(new[] { R, G, B }).Replace("-", string.Empty));
+			return $"#{BitConverter.ToString(new[] { R, G, B }).Replace("-", string.Empty)}";
 		}
 	}
 	

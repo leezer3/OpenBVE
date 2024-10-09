@@ -249,10 +249,7 @@ namespace OpenBveApi.Routes
 				}
 			}
 
-			if (Parent != null)
-			{
-				Parent.UpdateBoundingRectangle();
-			}
+			Parent?.UpdateBoundingRectangle();
 		}
 
 		/// <summary>Ensures that all textures that are used by the static objects in this leaf node have been loaded.</summary>

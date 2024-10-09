@@ -22,6 +22,7 @@ SOFTWARE.
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+// ReSharper disable MergeCastWithTypeCheck
 
 namespace OpenBveApi.Math
 {

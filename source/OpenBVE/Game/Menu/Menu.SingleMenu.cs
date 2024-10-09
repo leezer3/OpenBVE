@@ -7,7 +7,6 @@ using LibRender2.Menu;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using OpenBveApi.Packages;
 using OpenBveApi.Textures;
 using TrainManager;

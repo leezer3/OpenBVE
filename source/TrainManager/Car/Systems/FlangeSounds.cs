@@ -94,7 +94,15 @@ namespace TrainManager.Car.Systems
 					}
 					else
 					{
-						Sounds[key].Pause();
+						if (key == baseCar.FrontAxle.FlangeIndex)
+						{
+							Sounds[key].Pause();
+						}
+						else
+						{
+							Sounds[key].Stop();
+						}
+						
 					}
 				}
 				else if (pitch > 0.02 & gain > 0.01)

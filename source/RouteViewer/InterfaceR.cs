@@ -6,27 +6,12 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System.Collections.Generic;
-using OpenBveApi;
 using OpenBveApi.Interface;
 
 namespace RouteViewer {
 	// --- Interface.cs ---
 	internal static class Interface {
-
-		/// <summary>Holds the program specific options</summary>
-		internal class Options : BaseOptions
-		{
-			internal bool LoadingProgressBar;
-			internal bool LoadingLogo;
-			internal bool LoadingBackground;
-			internal string RouteSearchDirectory;
-
-			internal Options()
-			{
-				ViewingDistance = 600;
-			}
-		}
-
+		
 		/// <summary>The current options in use</summary>
 		internal static Options CurrentOptions;
 

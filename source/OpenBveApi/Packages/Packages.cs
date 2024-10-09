@@ -356,7 +356,7 @@ namespace OpenBveApi.Packages
 						//Create temp directory and XML file
 						var tempXML = System.IO.Path.GetTempPath() + System.IO.Path.GetRandomFileName() + "package.xml";
 						string tempPath = Path.GetDirectoryName(tempXML);
-						if (tempPath == null)
+						if (tempPath is null)
 						{
 							throw new Exception("Unable to create the temporary directory for package compression.");
 						}

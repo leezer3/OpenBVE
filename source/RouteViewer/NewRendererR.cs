@@ -605,15 +605,23 @@ namespace RouteViewer
 						OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
 						keys = new[] { new[] { "R" } };
 						Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
-						OpenGlString.Draw(Fonts.SmallFont, $"Draw Rail Paths:", new Vector2(Screen.Width - 32, 144), TextAlignment.TopRight, Color128.White, true);
-						keys = new[] { new[] { "P" } };
-						Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
+						if (Program.CurrentHost.Platform != HostPlatform.AppleOSX || IntPtr.Size == 4)
+						{
+							// only works on WinForms supporting systems
+							OpenGlString.Draw(Fonts.SmallFont, $"Draw Rail Paths:", new Vector2(Screen.Width - 32, 144), TextAlignment.TopRight, Color128.White, true);
+							keys = new[] { new[] { "P" } };
+							Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
+						}
 					}
 					else
 					{
-						OpenGlString.Draw(Fonts.SmallFont, $"Rail Paths:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
-						keys = new[] { new[] { "P" } };
-						Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
+						if (Program.CurrentHost.Platform != HostPlatform.AppleOSX || IntPtr.Size == 4)
+						{
+							// only works on WinForms supporting systems
+							OpenGlString.Draw(Fonts.SmallFont, $"Rail Paths:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
+							keys = new[] { new[] { "P" } };
+							Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
+						}
 					}
 					
 

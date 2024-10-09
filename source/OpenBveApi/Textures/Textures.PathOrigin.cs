@@ -1,4 +1,5 @@
 ﻿using System;
+// ReSharper disable MergeCastWithTypeCheck
 
 #pragma warning disable 0659, 0661
 
@@ -57,8 +58,8 @@ namespace OpenBveApi.Textures
 		public static bool operator ==(PathOrigin a, PathOrigin b)
 		{
 			if (ReferenceEquals(a, b)) return true;
-			if (ReferenceEquals(a, null)) return false;
-			if (ReferenceEquals(b, null)) return false;
+			if (a is null) return false;
+			if (b is null) return false;
 			return a.Path == b.Path;
 		}
 
@@ -69,8 +70,8 @@ namespace OpenBveApi.Textures
 		public static bool operator !=(PathOrigin a, PathOrigin b)
 		{
 			if (ReferenceEquals(a, b)) return false;
-			if (ReferenceEquals(a, null)) return true;
-			if (ReferenceEquals(b, null)) return true;
+			if (a is null) return true;
+			if (b is null) return true;
 			return a.Path != b.Path;
 		}
 
@@ -80,8 +81,7 @@ namespace OpenBveApi.Textures
 		public override bool Equals(object obj)
 		{
 			if (ReferenceEquals(this, obj)) return true;
-			if (ReferenceEquals(this, null)) return false;
-			if (ReferenceEquals(obj, null)) return false;
+			if (obj is null) return false;
 			if (!(obj is PathOrigin)) return false;
 			return Path == ((PathOrigin) obj).Path;
 		}

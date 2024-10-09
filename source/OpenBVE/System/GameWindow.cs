@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -1161,7 +1160,6 @@ namespace OpenBve
 		/// <param name="timeout">The timeout</param>
 		internal static void RunInRenderThread(ThreadStart job, int timeout)
 		{
-			object locker = new object();
 			jobs.Enqueue(job);
 			//Don't set the job to available until after it's been loaded into the queue
 			Loading.JobAvailable = true;

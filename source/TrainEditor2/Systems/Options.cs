@@ -16,6 +16,27 @@ namespace TrainEditor2.Systems
 			{
 				LanguageCode = "en-US";
 			}
+
+
+			public override void Save(string fileName)
+			{
+				try
+				{
+					StringBuilder Builder = new StringBuilder();
+					Builder.AppendLine("; Options");
+					Builder.AppendLine("; =======");
+					Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
+					Builder.AppendLine("; TrainEditor2 specific options file");
+					Builder.AppendLine();
+					Builder.AppendLine("[language]");
+					Builder.AppendLine("code = " + LanguageCode);
+					File.WriteAllText(fileName, Builder.ToString(), new UTF8Encoding(true));
+				}
+				catch
+				{
+					MessageBox.Show($@"An error occured whilst saving the options to disk.{Environment.NewLine}Please check you have write permission.");
+				}
+			}
 		}
 
 		/// <summary>The current game options</summary>
@@ -128,26 +149,6 @@ namespace TrainEditor2.Systems
 			}
 		}
 
-		internal static void SaveOptions()
-		{
-			try
-			{
-				StringBuilder Builder = new StringBuilder();
-				Builder.AppendLine("; Options");
-				Builder.AppendLine("; =======");
-				Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
-				Builder.AppendLine("; TrainEditor2 specific options file");
-				Builder.AppendLine();
-				Builder.AppendLine("[language]");
-				Builder.AppendLine("code = " + CurrentOptions.LanguageCode);
-
-				string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_te2.cfg");
-				File.WriteAllText(configFile, Builder.ToString(), new UTF8Encoding(true));
-			}
-			catch
-			{
-				MessageBox.Show($@"An error occured whilst saving the options to disk.{Environment.NewLine}Please check you have write permission.");
-			}
-		}
+		
 	}
 }

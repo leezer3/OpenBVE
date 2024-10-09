@@ -1,5 +1,6 @@
 ﻿#pragma warning disable IDE0064
 using System;
+// ReSharper disable MergeCastWithTypeCheck
 
 namespace OpenBveApi.Math {
 	/// <summary>Represents a two-dimensional vector.</summary>

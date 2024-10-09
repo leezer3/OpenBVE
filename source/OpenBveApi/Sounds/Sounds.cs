@@ -1,6 +1,7 @@
 ﻿#pragma warning disable 0659, 0661
 
 using System;
+// ReSharper disable MergeCastWithTypeCheck
 
 namespace OpenBveApi.Sounds {
 
@@ -77,8 +78,8 @@ namespace OpenBveApi.Sounds {
 		/// <returns>Whether the two sounds are equal.</returns>
 		public static bool operator ==(Sound a, Sound b) {
 			if (ReferenceEquals(a, b)) return true;
-			if (ReferenceEquals(a, null)) return false;
-			if (ReferenceEquals(b, null)) return false;
+			if (a is null) return false;
+			if (b is null) return false;
 			if (a.MySampleRate != b.MySampleRate) return false;
 			if (a.MyBitsPerSample != b.MyBitsPerSample) return false;
 			if (a.MyBytes.Length != b.MyBytes.Length) return false;
@@ -96,8 +97,8 @@ namespace OpenBveApi.Sounds {
 		/// <returns>Whether the two sounds are unequal.</returns>
 		public static bool operator !=(Sound a, Sound b) {
 			if (ReferenceEquals(a, b)) return false;
-			if (ReferenceEquals(a, null)) return true;
-			if (ReferenceEquals(b, null)) return true;
+			if (a is null) return true;
+			if (b is null) return true;
 			if (a.MySampleRate != b.MySampleRate) return true;
 			if (a.MyBitsPerSample != b.MyBitsPerSample) return true;
 			if (a.MyBytes.Length != b.MyBytes.Length) return true;
@@ -114,8 +115,7 @@ namespace OpenBveApi.Sounds {
 		/// <returns>Whether this instance is equal to the specified object.</returns>
 		public override bool Equals(object obj) {
 			if (ReferenceEquals(this, obj)) return true;
-			if (ReferenceEquals(this, null)) return false;
-			if (ReferenceEquals(obj, null)) return false;
+			if (obj is null) return false;
 			if (!(obj is Sound)) return false;
 			Sound x = (Sound)obj;
 			if (MySampleRate != x.MySampleRate) return false;

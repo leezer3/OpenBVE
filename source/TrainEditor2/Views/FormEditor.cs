@@ -967,7 +967,7 @@ namespace TrainEditor2.Views
 			if (ShowSaveDialog())
 			{
 				Program.Renderer.DeInitialize();
-				Interface.SaveOptions();
+				Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_te2.cfg"));
 			}
 			else
 			{
