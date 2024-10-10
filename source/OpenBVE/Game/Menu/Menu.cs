@@ -347,6 +347,10 @@ namespace OpenBve
 				}
 				else
 				{
+					if (!string.IsNullOrEmpty(PreviousSearchDirectory))
+					{
+						SearchDirectory = PreviousSearchDirectory;
+					}
 					PopMenu();	
 				}
 				return;
@@ -458,6 +462,7 @@ namespace OpenBve
 								if (Menus[CurrMenu].Type == MenuType.Options)
 								{
 									Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
+									HUD.LoadHUD();
 									Program.FileSystem.SaveCurrentFileSystemConfiguration();
 									// re-position our stuff in case of screen resolution change
 									

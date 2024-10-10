@@ -38,6 +38,8 @@ namespace LibRender2.Menu
 		/// <summary>Sets the anisotropic filtering level</summary>
 		AnisotropicLevel,
 		/// <summary>Sets the antialiasing level</summary>
-		AntialiasingLevel
+		AntialiasingLevel,
+		/// <summary>Sets the UI scale factor</summary>
+		UIScaleFactor
 	}
 }

@@ -2,8 +2,9 @@
 using System.Globalization;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
+using OpenTK;
 using SoundManager;
+using Vector2 = OpenBveApi.Math.Vector2;
 
 namespace OpenBve
 {
@@ -282,6 +283,7 @@ namespace OpenBve
 												}
 												else
 												{
+													s += Interface.CurrentOptions.UserInterfaceScaleFactor - 1;
 													switch (s)
 													{
 														case 0:
@@ -298,6 +300,9 @@ namespace OpenBve
 															break;
 														case 4:
 															CurrentHudElements[Length - 1].Font = Program.Renderer.Fonts.VeryLargeFont;
+															break;
+														case 5:
+															CurrentHudElements[Length - 1].Font = Program.Renderer.Fonts.EvenLargerFont;
 															break;
 														default:
 															CurrentHudElements[Length - 1].Font = Program.Renderer.Fonts.NormalFont;

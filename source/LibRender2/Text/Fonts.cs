@@ -21,6 +21,7 @@ namespace LibRender2.Text
 		/// <summary>Represents a very large sans serif font.</summary>
 		public readonly OpenGlFont VeryLargeFont;
 
+		/// <summary>Represents the largest sans serif font.</summary>
 		public readonly OpenGlFont EvenLargerFont;
 
 		private static HostInterface currentHost;
