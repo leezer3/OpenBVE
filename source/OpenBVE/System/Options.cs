@@ -175,6 +175,7 @@ namespace OpenBve
 				this.DailyBuildUpdates = false;
 				this.UseGDIDecoders = false;
 				this.EnableBve5ScriptedTrain = true;
+				this.UserInterfaceScaleFactor = 1;
 				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
 				switch (Program.CurrentHost.Platform)
 				{
@@ -309,6 +310,7 @@ namespace OpenBve
 				Builder.AppendLine("unloadtextures = " + (UnloadUnusedTextures ? "true" : "false"));
 				Builder.AppendLine("isUseNewRenderer = " + (IsUseNewRenderer ? "true" : "false"));
 				Builder.AppendLine("forwardsCompatibleContext = " + (ForceForwardsCompatibleContext ? "true" : "false"));
+				Builder.AppendLine("uiscalefactor = " + UserInterfaceScaleFactor);
 				Builder.AppendLine();
 				Builder.AppendLine("[quality]");
 				{
@@ -706,6 +708,10 @@ namespace OpenBve
 											break;
 										case "forwardscompatiblecontext":
 											Interface.CurrentOptions.ForceForwardsCompatibleContext = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
+										case "uiscalefactor":
+											int.TryParse(Value, NumberStyles.Integer, Culture, out int s);
+											Interface.CurrentOptions.UserInterfaceScaleFactor = s;
 											break;
 									} break;
 								case "quality":

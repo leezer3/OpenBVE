@@ -119,6 +119,9 @@ namespace LibRender2.Menu
 							break;
 					}
 					return;
+				case OptionType.UIScaleFactor:
+					CurrentlySelectedOption = BaseMenu.CurrentOptions.UserInterfaceScaleFactor;
+					return;
 			}
 			CurrentlySelectedOption = 0;
 		}
@@ -224,6 +227,11 @@ namespace LibRender2.Menu
 					break;
 				case OptionType.ViewingDistance:
 					BaseMenu.CurrentOptions.ViewingDistance = int.Parse((string)CurrentOption, NumberStyles.Integer);
+					break;
+				case OptionType.UIScaleFactor:
+					string currentOption = (string)CurrentOption;
+					currentOption = currentOption.Trim('x');
+					BaseMenu.CurrentOptions.UserInterfaceScaleFactor = int.Parse(currentOption, NumberStyles.Integer);
 					break;
 
 			}

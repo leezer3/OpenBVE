@@ -1324,6 +1324,9 @@
 					<trans-unit id="compatibility_signals">
 						<source>Default Signals:</source>
 					</trans-unit>
+					<trans-unit id="ui_scalefactor">
+						<source>UI Scale Factor:</source>
+					</trans-unit>
 				</group>
 				<group id="dialog">
 					<trans-unit id="csvfiles">

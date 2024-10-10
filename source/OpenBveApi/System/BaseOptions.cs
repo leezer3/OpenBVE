@@ -108,6 +108,8 @@ namespace OpenBveApi
 		public bool DelayedAnimatedUpdates;
 		/// <summary>Enables scripted trains on BVE5 routes</summary>
 		public bool EnableBve5ScriptedTrain;
+		/// <summary>The scale factor for the user interface</summary>
+		public int UserInterfaceScaleFactor;
 
 		/// <summary>Saves the options to the specified filename</summary>
 		/// <param name="fileName">The filename to save the options to</param>

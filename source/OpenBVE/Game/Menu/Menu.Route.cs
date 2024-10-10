@@ -22,6 +22,7 @@ namespace OpenBve
 		private static BackgroundWorker routeWorkerThread;
 		private static BackgroundWorker packageWorkerThread;
 		private static string SearchDirectory;
+		private static string PreviousSearchDirectory;
 		private static string currentFile;
 		private static Encoding RouteEncoding;
 		private static RouteState RoutefileState;

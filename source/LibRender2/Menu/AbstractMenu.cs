@@ -143,6 +143,13 @@ namespace LibRender2.Menu
 			if (CurrMenu > 0)           // if more than one menu remaining...
 			{
 				CurrMenu--;             // ...back to previous menu
+				if (CurrMenu > 0 && Menus[CurrMenu] == null)
+				{
+					// HACK: choose train dialog with not found train, needs special reset to get back to route list correctly
+					CurrMenu--;
+					Menus[CurrMenu].TopItem = 1;
+					Menus[CurrMenu].Selection = -1;
+				}
 				ComputePosition();
 			}
 			else
