@@ -27,7 +27,7 @@ namespace RouteManager2.Events
 
 			trackFollower.EnterStation(StationIndex, direction);
 
-			if (trackFollower.TriggerType == EventTriggerType.TrainFront)
+			if (trackFollower.TriggerType == EventTriggerType.TrainFront || trackFollower.TriggerType == EventTriggerType.SingleCarTrain)
 			{
 				trackFollower.Train.EnterStation(StationIndex, direction);
 			}

@@ -46,6 +46,7 @@ namespace RouteManager2.Events
 					trackFollower.UpdateWorldCoordinates(false);
 					break;
 				case EventTriggerType.TrainFront:
+				case EventTriggerType.SingleCarTrain:
 					if ((int)currentRoute.Switches[Index].Direction == 1)
 					{
 						trackFollower.Train.Switch = Index;
