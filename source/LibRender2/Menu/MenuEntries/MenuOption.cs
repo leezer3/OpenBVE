@@ -120,7 +120,7 @@ namespace LibRender2.Menu
 					}
 					return;
 				case OptionType.UIScaleFactor:
-					CurrentlySelectedOption = BaseMenu.CurrentOptions.UserInterfaceScaleFactor;
+					CurrentlySelectedOption = BaseMenu.CurrentOptions.UserInterfaceScaleFactor - 1;
 					return;
 			}
 			CurrentlySelectedOption = 0;
