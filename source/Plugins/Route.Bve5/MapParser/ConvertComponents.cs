@@ -78,9 +78,9 @@ namespace Route.Bve5
 						break;
 					case MapFunctionName.BeginTransition:
 						{
-							int blockIndex = RouteData.FindOrAddBlock(Statement.Distance);
-							RouteData.Blocks[blockIndex].Rails["0"].CurveInterpolateStart = true;
-							RouteData.Blocks[blockIndex].Rails["0"].CurveTransitionStart = true;
+							RouteData.TryAddBlock(Statement.Distance);
+							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveInterpolateStart = true;
+							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveTransitionStart = true;
 						}
 						break;
 					case MapFunctionName.Begin:
@@ -126,9 +126,9 @@ namespace Route.Bve5
 						break;
 					case MapFunctionName.End:
 						{
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							RouteData.Blocks[Index].Rails["0"].CurveInterpolateStart = true;
-							RouteData.Blocks[Index].Rails["0"].CurveTransitionEnd = true;
+							RouteData.TryAddBlock(Statement.Distance);
+							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveInterpolateStart = true;
+							RouteData.sortedBlocks[Statement.Distance].Rails["0"].CurveTransitionEnd = true;
 						}
 						break;
 					case MapFunctionName.Interpolate:
@@ -168,18 +168,20 @@ namespace Route.Bve5
 					case MapFunctionName.Turn:
 						{
 							object Slope = d.Slope;
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							RouteData.Blocks[Index].Turn = Convert.ToDouble(Slope);
+							RouteData.TryAddBlock(Statement.Distance);
+							RouteData.sortedBlocks[Statement.Distance].Turn = Convert.ToDouble(Slope);
 						}
 						break;
 				}
 			}
 
 			{
-				for (int i = 0; i < RouteData.Blocks.Count; i++)
+				int i = 0;
+				while (i < RouteData.Blocks.Count)
 				{
 					if (!RouteData.Blocks[i].Rails["0"].CurveTransitionEnd)
 					{
+						i++;
 						continue;
 					}
 
@@ -199,6 +201,7 @@ namespace Route.Bve5
 						}
 					}
 
+					// save distance of current block idx
 					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
 
 					if (StartBlock != i)
@@ -212,16 +215,19 @@ namespace Route.Bve5
 						}
 					}
 
-					i = RouteData.sortedBlocks.IndexOfKey(dist);
+					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
+					i = RouteData.sortedBlocks.IndexOfKey(dist) + 1;
 				}
 			}
 
 			{
 
-				for (int i = 0; i < RouteData.Blocks.Count; i++)
+				int i = 0;
+				while (i < RouteData.Blocks.Count)
 				{
 					if (!RouteData.Blocks[i].Rails["0"].CurveInterpolateEnd)
 					{
+						i++;
 						continue;
 					}
 
@@ -241,6 +247,7 @@ namespace Route.Bve5
 						}
 					}
 
+					// save distance of current block idx
 					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
 
 					if (StartBlock != i)
@@ -259,11 +266,12 @@ namespace Route.Bve5
 
 						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
 						{
-							RouteData.FindOrAddBlock(k);
+							RouteData.TryAddBlock(k);
 						}
 					}
 
-					i = RouteData.sortedBlocks.IndexOfKey(dist);
+					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
+					i = RouteData.sortedBlocks.IndexOfKey(dist) + 1;
 				}
 			}
 		}
@@ -276,9 +284,9 @@ namespace Route.Bve5
 				{
 					case MapFunctionName.BeginTransition:
 						{
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							RouteData.Blocks[Index].GradientInterpolateStart = true;
-							RouteData.Blocks[Index].GradientTransitionStart = true;
+							RouteData.TryAddBlock(Statement.Distance);
+							RouteData.sortedBlocks[Statement.Distance].GradientInterpolateStart = true;
+							RouteData.sortedBlocks[Statement.Distance].GradientTransitionStart = true;
 						}
 						break;
 					case MapFunctionName.Begin:
@@ -320,9 +328,9 @@ namespace Route.Bve5
 						break;
 					case MapFunctionName.End:
 						{
-							int Index = RouteData.FindOrAddBlock(Statement.Distance);
-							RouteData.Blocks[Index].GradientInterpolateStart = true;
-							RouteData.Blocks[Index].GradientTransitionEnd = true;
+							RouteData.TryAddBlock(Statement.Distance);
+							RouteData.sortedBlocks[Statement.Distance].GradientInterpolateStart = true;
+							RouteData.sortedBlocks[Statement.Distance].GradientTransitionEnd = true;
 						}
 						break;
 					case MapFunctionName.Interpolate:
@@ -355,10 +363,12 @@ namespace Route.Bve5
 
 			{
 
-				for (int i = 0; i < RouteData.Blocks.Count; i++)
+				int i = 0;
+				while (i < RouteData.Blocks.Count)
 				{
 					if (!RouteData.Blocks[i].GradientTransitionEnd)
 					{
+						i++;
 						continue;
 					}
 
@@ -378,6 +388,7 @@ namespace Route.Bve5
 						}
 					}
 
+					// save distance of current block idx
 					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
 
 					if (StartBlock != i)
@@ -391,15 +402,18 @@ namespace Route.Bve5
 						}
 					}
 
-					i = RouteData.sortedBlocks.IndexOfKey(dist);
+					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
+					i = RouteData.sortedBlocks.IndexOfKey(dist) + 1;
 				}
 			}
 
 			{
-				for (int i = 0; i < RouteData.Blocks.Count; i++)
+				int i = 0;
+				while (i < RouteData.Blocks.Count)
 				{
 					if (!RouteData.Blocks[i].GradientInterpolateEnd)
 					{
+						i++;
 						continue;
 					}
 
@@ -419,6 +433,7 @@ namespace Route.Bve5
 						}
 					}
 
+					// save distance of current block idx
 					double dist = RouteData.sortedBlocks.ElementAt(i).Key;
 
 					if (StartBlock != i)
@@ -439,7 +454,8 @@ namespace Route.Bve5
 						}
 					}
 
-					i = RouteData.sortedBlocks.IndexOfKey(dist);
+					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
+					i = RouteData.sortedBlocks.IndexOfKey(dist) + 1;
 				}
 			}
 		}
@@ -563,24 +579,24 @@ namespace Route.Bve5
 						{
 							case MapFunctionName.BeginTransition:
 								{
-									int Index = RouteData.FindOrAddBlock(Statement.Distance);
-									RouteData.Blocks[Index].Rails[railKey].CurveInterpolateStart = true;
-									RouteData.Blocks[Index].Rails[railKey].CurveTransitionStart = true;
+									RouteData.TryAddBlock(Statement.Distance);
+									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveInterpolateStart = true;
+									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveTransitionStart = true;
 								}
 								break;
 							case MapFunctionName.Begin:
 								{
-									int Index = RouteData.FindOrAddBlock(Statement.Distance);
-									RouteData.Blocks[Index].Rails[railKey].CurveCant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant) / 1000.0;
-									RouteData.Blocks[Index].Rails[railKey].CurveInterpolateStart = true;
-									RouteData.Blocks[Index].Rails[railKey].CurveTransitionEnd = true;
+									RouteData.TryAddBlock(Statement.Distance);
+									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveCant = Statement.GetArgumentValueAsDouble(ArgumentName.Cant) / 1000.0;
+									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveInterpolateStart = true;
+									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveTransitionEnd = true;
 								}
 								break;
 							case MapFunctionName.End:
 								{
-									int Index = RouteData.FindOrAddBlock(Statement.Distance);
-									RouteData.Blocks[Index].Rails[railKey].CurveInterpolateStart = true;
-									RouteData.Blocks[Index].Rails[railKey].CurveTransitionEnd = true;
+									RouteData.TryAddBlock(Statement.Distance);
+									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveInterpolateStart = true;
+									RouteData.sortedBlocks[Statement.Distance].Rails[railKey].CurveTransitionEnd = true;
 								}
 								break;
 							case MapFunctionName.Interpolate:
@@ -665,26 +681,31 @@ namespace Route.Bve5
 
 			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
 			{
-				List<Block> TempBlocks = new List<Block>(RouteData.Blocks);
 				string railKey = RouteData.TrackKeyList[j];
-				for (int i = 1; i < TempBlocks.Count; i++)
+				int i = 1;
+				while (i < RouteData.Blocks.Count)
 				{
-					if (!TempBlocks[i].Rails[railKey].InterpolateX)
+					if (!RouteData.Blocks[i].Rails[railKey].InterpolateX)
 					{
+						i++;
 						continue;
 					}
 
-					int StartBlock = TempBlocks.FindLastIndex(i - 1, i, Block => Block.Rails[railKey].InterpolateX);
+					int StartBlock = RouteData.Blocks.FindLastIndex(i - 1, i, Block => Block.Rails[railKey].InterpolateX);
+
+					// save distance of current block idx
+					double dist = RouteData.sortedBlocks.Keys[i];
 
 					if (StartBlock != -1)
 					{
-						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double StartX = TempBlocks[StartBlock].Rails[railKey].Position.X;
-						double EndDistance = TempBlocks[i].StartingDistance;
-						double EndX = TempBlocks[i].Rails[railKey].Position.X;
+						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
+						double StartX = RouteData.Blocks[StartBlock].Rails[railKey].Position.X;
+						double EndDistance = RouteData.Blocks[i].StartingDistance;
+						double EndX = RouteData.Blocks[i].Rails[railKey].Position.X;
 
 						if (StartX == EndX)
 						{
+							i++;
 							continue;
 						}
 
@@ -693,31 +714,39 @@ namespace Route.Bve5
 							RouteData.FindOrAddBlock(k);
 						}
 					}
+
+					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
+					i = RouteData.sortedBlocks.IndexOfKey(dist) + 1;
 				}
 			}
 
 			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
 			{
-				List<Block> TempBlocks = new List<Block>(RouteData.Blocks);
 				string railKey = RouteData.TrackKeyList[j];
-				for (int i = 1; i < TempBlocks.Count; i++)
+				int i = 1;
+				while(i < RouteData.Blocks.Count)
 				{
-					if (!TempBlocks[i].Rails[railKey].InterpolateY)
+					if (!RouteData.Blocks[i].Rails[railKey].InterpolateY)
 					{
+						i++;
 						continue;
 					}
 
-					int StartBlock = TempBlocks.FindLastIndex(i - 1, i, Block => Block.Rails[railKey].InterpolateY);
+					int StartBlock = RouteData.Blocks.FindLastIndex(i - 1, i, Block => Block.Rails[railKey].InterpolateY);
+
+					// save distance of current block idx
+					double dist = RouteData.sortedBlocks.Keys[i];
 
 					if (StartBlock != -1)
 					{
-						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double StartY = TempBlocks[StartBlock].Rails[railKey].Position.Y;
-						double EndDistance = TempBlocks[i].StartingDistance;
-						double EndY = TempBlocks[i].Rails[railKey].Position.Y;
+						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
+						double StartY = RouteData.Blocks[StartBlock].Rails[railKey].Position.Y;
+						double EndDistance = RouteData.Blocks[i].StartingDistance;
+						double EndY = RouteData.Blocks[i].Rails[railKey].Position.Y;
 
 						if (StartY == EndY)
 						{
+							i++;
 							continue;
 						}
 
@@ -726,30 +755,37 @@ namespace Route.Bve5
 							RouteData.FindOrAddBlock(k);
 						}
 					}
+
+					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
+					i = RouteData.sortedBlocks.IndexOfKey(dist) + 1;
 				}
 			}
 
 			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
 			{
-				List<Block> TempBlocks = new List<Block>(RouteData.Blocks);
 				string railKey = RouteData.TrackKeyList[j];
-				for (int i = 0; i < TempBlocks.Count; i++)
+				int i = 0;
+				while(i < RouteData.Blocks.Count)
 				{
-					if (!TempBlocks[i].Rails[railKey].CurveTransitionEnd)
+					if (!RouteData.Blocks[i].Rails[railKey].CurveTransitionEnd)
 					{
+						i++;
 						continue;
 					}
 
 					int StartBlock = i;
 
+					// save distance of current block idx
+					double dist = RouteData.sortedBlocks.Keys[i];
+
 					for (int k = i - 1; k >= 0; k--)
 					{
-						if (TempBlocks[k].Rails[railKey].CurveTransitionEnd)
+						if (RouteData.Blocks[k].Rails[railKey].CurveTransitionEnd)
 						{
 							break;
 						}
 
-						if (TempBlocks[k].Rails[railKey].CurveTransitionStart)
+						if (RouteData.Blocks[k].Rails[railKey].CurveTransitionStart)
 						{
 							StartBlock = k;
 							break;
@@ -758,24 +794,29 @@ namespace Route.Bve5
 
 					if (StartBlock != i)
 					{
-						double StartDistance = Multiple(TempBlocks[StartBlock].StartingDistance, InterpolateInterval);
-						double EndDistance = TempBlocks[i].StartingDistance;
+						double StartDistance = Multiple(RouteData.Blocks[StartBlock].StartingDistance, InterpolateInterval);
+						double EndDistance = RouteData.Blocks[i].StartingDistance;
 
 						for (double k = StartDistance; k < EndDistance; k += InterpolateInterval)
 						{
 							RouteData.FindOrAddBlock(k);
 						}
 					}
+
+					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
+					i = RouteData.sortedBlocks.IndexOfKey(dist) + 1;
 				}
 			}
 
 			for (int j = 1; j < RouteData.TrackKeyList.Count; j++)
 			{
 				string railKey = RouteData.TrackKeyList[j];
-				for (int i = 0; i < RouteData.Blocks.Count; i++)
+				int i = 0;
+				while (i < RouteData.Blocks.Count)
 				{
 					if (!RouteData.Blocks[i].Rails[railKey].CurveInterpolateEnd)
 					{
+						i++;
 						continue;
 					}
 
@@ -815,7 +856,8 @@ namespace Route.Bve5
 						}
 					}
 
-					i = RouteData.sortedBlocks.IndexOfKey(dist);
+					// now use distance to retrieve the *new* index of said block after insertions (+1 to carry on with loop)
+					i = RouteData.sortedBlocks.IndexOfKey(dist) + 1;
 				}
 			}
 		}
@@ -889,8 +931,8 @@ namespace Route.Bve5
 
 				if (RouteData.Backgrounds.ContainsKey(BackgroundKey))
 				{
-					int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
-					RouteData.Blocks[BlockIndex].Background = BackgroundKey;
+					RouteData.TryAddBlock(Statement.Distance);
+					RouteData.sortedBlocks[Statement.Distance].Background = BackgroundKey;
 				}
 			}
 		}
@@ -949,15 +991,15 @@ namespace Route.Bve5
 					case MapFunctionName.Interpolate:
 					case MapFunctionName.Set:
 					{
-						int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
+						RouteData.TryAddBlock(Statement.Distance);
 						float Density = 1.0f, r = 1.0f, g = 1.0f, b = 1.0f;
 						if (!Statement.HasArgument(ArgumentName.Red) && !Statement.HasArgument(ArgumentName.Green) && !Statement.HasArgument(ArgumentName.Blue))
 						{
 							if (!Statement.HasArgument(ArgumentName.Density))
 							{
 								// Has the same effect as setting the fog value twice, hence no interpolation
-								RouteData.Blocks[BlockIndex].FogDefined = true;
-								RouteData.Blocks[BlockIndex].Fog.TrackPosition = Statement.Distance;
+								RouteData.sortedBlocks[Statement.Distance].FogDefined = true;
+								RouteData.sortedBlocks[Statement.Distance].Fog.TrackPosition = Statement.Distance;
 							}
 							else
 							{
@@ -967,9 +1009,9 @@ namespace Route.Bve5
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FogDensity value at track position " + Statement.Distance);
 									break;
 								}
-								RouteData.Blocks[BlockIndex].FogDefined = true;
-								RouteData.Blocks[BlockIndex].Fog.TrackPosition = Statement.Distance;
-								RouteData.Blocks[BlockIndex].Fog.Density = Density;
+								RouteData.sortedBlocks[Statement.Distance].FogDefined = true;
+								RouteData.sortedBlocks[Statement.Distance].Fog.TrackPosition = Statement.Distance;
+								RouteData.sortedBlocks[Statement.Distance].Fog.Density = Density;
 							}
 						}
 						else
@@ -993,8 +1035,8 @@ namespace Route.Bve5
 							}
 						}
 
-						RouteData.Blocks[BlockIndex].Fog = new Fog(0, 1, new Color24((byte)(r * 255), (byte)(g * 255), (byte)(b * 255)), Statement.Distance, false, Density);
-						RouteData.Blocks[BlockIndex].FogDefined = true;
+						RouteData.sortedBlocks[Statement.Distance].Fog = new Fog(0, 1, new Color24((byte)(r * 255), (byte)(g * 255), (byte)(b * 255)), Statement.Distance, false, Density);
+						RouteData.sortedBlocks[Statement.Distance].FogDefined = true;
 					}
 					break;
 				}

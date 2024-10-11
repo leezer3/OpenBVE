@@ -32,8 +32,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
-using OpenBveApi.Sounds;
-using OpenBveApi.Trains;
 using OpenBveApi.World;
 using RouteManager2;
 using RouteManager2.Climate;
