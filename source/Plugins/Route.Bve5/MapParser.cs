@@ -119,24 +119,10 @@ namespace Route.Bve5
 
 		private static void ConvertToBlock(string FileName, bool PreviewOnly, MapData ParseData, out RouteData RouteData)
 		{
-			RouteData = new RouteData();
-
-			foreach (var Statement in ParseData.Statements)
-			{
-				if (Statement.ElementName != MapElementName.Track)
-				{
-					continue;
-				}
-
-				string TrackKey = Statement.Key;
-				if (!RouteData.TrackKeyList.Contains(TrackKey, StringComparer.OrdinalIgnoreCase))
-				{
-					RouteData.TrackKeyList.Add(TrackKey);
-				}
-			}
-			RouteData.FindOrAddBlock(0);
+			RouteData = new RouteData(ParseData.TrackKeys);
+			RouteData.TryAddBlock(0);
 			RouteData.Blocks[0].Fog = new Fog(0, 1, Color24.Grey, 0, false);
-			RouteData.FindOrAddBlock(ParseData.Statements[0].Distance);
+			RouteData.TryAddBlock(ParseData.Statements[0].Distance);
 
 			LoadStationList(FileName, ParseData, RouteData);
 			LoadStructureList(FileName, PreviewOnly, ParseData, RouteData);
