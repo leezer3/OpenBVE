@@ -253,6 +253,10 @@ namespace Route.Bve5
 			for (int j = 0; j < RouteData.TrackKeyList.Count; j++)
 			{
 				string railKey = RouteData.TrackKeyList[j];
+
+				// last block in which interpolation has been done, hence starting point for next
+				int lastInterpolateX = 0, lastInterpolateY = 0;
+
 				for (int i = 1; i < Blocks.Count; i++)
 				{
 					if (!Blocks[i].Rails[railKey].InterpolateX)
@@ -260,17 +264,15 @@ namespace Route.Bve5
 						continue;
 					}
 
-					int StartBlock = Blocks.FindLastIndex(i - 1, i, Block => Block.Rails[railKey].InterpolateX);
-
-					if (StartBlock != -1)
+					if (Blocks[i].Rails[railKey].InterpolateX)
 					{
-						double StartDistance = Blocks[StartBlock].StartingDistance;
-						double StartX = Blocks[StartBlock].Rails[railKey].Position.X;
+						double StartDistance = Blocks[lastInterpolateX].StartingDistance;
+						double StartX = Blocks[lastInterpolateX].Rails[railKey].Position.X;
 						double EndDistance = Blocks[i].StartingDistance;
 						double EndX = Blocks[i].Rails[railKey].Position.X;
-						double RadiusH = Blocks[StartBlock].Rails[railKey].RadiusH;
+						double RadiusH = Blocks[lastInterpolateX].Rails[railKey].RadiusH;
 
-						for (int k = StartBlock + 1; k < i; k++)
+						for (int k = lastInterpolateX + 1; k < i; k++)
 						{
 							double CurrentDistance = Blocks[k].StartingDistance;
 							double CurrentX = GetTrackCoordinate(StartDistance, StartX, EndDistance, EndX, RadiusH, CurrentDistance);
@@ -278,31 +280,19 @@ namespace Route.Bve5
 							Blocks[k].Rails[railKey].Position.X = CurrentX;
 							Blocks[k].Rails[railKey].RadiusH = RadiusH;
 						}
-					}
-				}
-			}
 
-			for (int j = 0; j < RouteData.TrackKeyList.Count; j++)
-			{
-				string railKey = RouteData.TrackKeyList[j];
-				for (int i = 1; i < Blocks.Count; i++)
-				{
-					if (!Blocks[i].Rails[railKey].InterpolateY)
-					{
-						continue;
+						lastInterpolateX = i;
 					}
 
-					int StartBlock = Blocks.FindLastIndex(i - 1, i, Block => Block.Rails[railKey].InterpolateY);
-
-					if (StartBlock != -1)
+					if (Blocks[i].Rails[railKey].InterpolateY)
 					{
-						double StartDistance = Blocks[StartBlock].StartingDistance;
-						double StartY = Blocks[StartBlock].Rails[railKey].Position.Y;
+						double StartDistance = Blocks[lastInterpolateY].StartingDistance;
+						double StartY = Blocks[lastInterpolateY].Rails[railKey].Position.Y;
 						double EndDistance = Blocks[i].StartingDistance;
 						double EndY = Blocks[i].Rails[railKey].Position.Y;
-						double RadiusV = Blocks[StartBlock].Rails[railKey].RadiusV;
+						double RadiusV = Blocks[lastInterpolateY].Rails[railKey].RadiusV;
 
-						for (int k = StartBlock + 1; k < i; k++)
+						for (int k = lastInterpolateY + 1; k < i; k++)
 						{
 							double CurrentDistance = Blocks[k].StartingDistance;
 							double CurrentY = GetTrackCoordinate(StartDistance, StartY, EndDistance, EndY, RadiusV, CurrentDistance);
@@ -310,6 +300,8 @@ namespace Route.Bve5
 							Blocks[k].Rails[railKey].Position.Y = CurrentY;
 							Blocks[k].Rails[railKey].RadiusV = RadiusV;
 						}
+
+						lastInterpolateY = i;
 					}
 				}
 			}
