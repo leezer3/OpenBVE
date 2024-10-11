@@ -122,6 +122,28 @@ namespace LibRender2.Menu
 				case OptionType.UIScaleFactor:
 					CurrentlySelectedOption = BaseMenu.CurrentOptions.UserInterfaceScaleFactor - 1;
 					return;
+				case OptionType.NumberOfSounds:
+					switch (BaseMenu.CurrentOptions.SoundNumber)
+					{
+						case 16:
+							CurrentlySelectedOption = 0;
+							break;
+						case 32:
+							CurrentlySelectedOption = 1;
+							break;
+						case 64:
+							CurrentlySelectedOption = 2;
+							break;
+						case 128:
+							CurrentlySelectedOption = 3;
+							break;
+						default:
+							// n.b. This resets the sound number if edited manually in the file
+							BaseMenu.CurrentOptions.SoundNumber = 16;
+							CurrentlySelectedOption = 0;
+							break;
+					}
+					return;
 			}
 			CurrentlySelectedOption = 0;
 		}
@@ -232,6 +254,9 @@ namespace LibRender2.Menu
 					string currentOption = (string)CurrentOption;
 					currentOption = currentOption.Trim('x');
 					BaseMenu.CurrentOptions.UserInterfaceScaleFactor = int.Parse(currentOption, NumberStyles.Integer);
+					break;
+				case OptionType.NumberOfSounds:
+					BaseMenu.CurrentOptions.SoundNumber = int.Parse((string)CurrentOption, NumberStyles.Integer);
 					break;
 
 			}

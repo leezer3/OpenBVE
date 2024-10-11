@@ -40,6 +40,8 @@ namespace LibRender2.Menu
 		/// <summary>Sets the antialiasing level</summary>
 		AntialiasingLevel,
 		/// <summary>Sets the UI scale factor</summary>
-		UIScaleFactor
+		UIScaleFactor,
+		/// <summary>Sets the total number of valid sounds</summary>
+		NumberOfSounds
 	}
 }
