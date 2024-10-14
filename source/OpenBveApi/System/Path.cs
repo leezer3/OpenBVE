@@ -231,13 +231,33 @@ namespace OpenBveApi {
 			throw new ArgumentException("The reference to the file is malformed.");
 		}
 
+		
+		internal static char[] GetInvalidPathChars() => new char[]
+		{
+			/* Licensed to the .NET Foundation under one or more agreements.
+			 * The .NET Foundation licenses this file to you under the MIT license.
+			 *
+			 * https://github.com/dotnet/runtime/blob/5535e31a712343a63f5d7d796cd874e563e5ac14/src/libraries/System.Private.CoreLib/src/System/IO/Path.Windows.cs
+			 *
+			 * Use the Windows invalid path characters for a greater subset
+			 * Mono only returns '\0'
+			 *
+			 * https://github.com/leezer3/OpenBVE/issues/1073
+			 */
+			'|', '\0',
+			(char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7, (char)8, (char)9, (char)10,
+			(char)11, (char)12, (char)13, (char)14, (char)15, (char)16, (char)17, (char)18, (char)19, (char)20,
+			(char)21, (char)22, (char)23, (char)24, (char)25, (char)26, (char)27, (char)28, (char)29, (char)30,
+			(char)31
+		};
+
 		/// <summary>Tests whether a string contains characters invalid for use in a file name or path</summary>
 		/// <param name="Expression">The string to test</param>
 		/// <returns>True if this string contains invalid characters, false otherwise</returns>
 		public static bool ContainsInvalidChars(string Expression)
 		{
 			char[] a = System.IO.Path.GetInvalidFileNameChars();
-			char[] b = System.IO.Path.GetInvalidPathChars();
+			char[] b = GetInvalidPathChars();
 
 			if (!IsAbsolutePath(Expression))
 			{
