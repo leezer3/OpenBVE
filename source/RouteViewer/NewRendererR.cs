@@ -566,11 +566,21 @@ namespace RouteViewer
 
 				if (totalObjects == 0)
 				{
-					keys = new[] { new[] { "F7" }, new[] { "F8" } };
-					Keys.Render(4, 4, 20, Fonts.SmallFont, keys);
-					OpenGlString.Draw(Fonts.SmallFont, "Open route", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White);
-					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White);
-					OpenGlString.Draw(Fonts.SmallFont, $"v{Application.ProductVersion}", new Vector2(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, Color128.White);
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						keys = new[] { new[] { "esc" } };
+						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the menu", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White, true);
+					}
+					else
+					{
+						keys = new[] { new[] { "F7" }, new[] { "F8" } };
+						Keys.Render(4, 4, 20, Fonts.SmallFont, keys);
+						OpenGlString.Draw(Fonts.SmallFont, "Open route", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White);
+						OpenGlString.Draw(Fonts.SmallFont, $"v{Application.ProductVersion}", new Vector2(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, Color128.White);
+					}
+					
 				}
 				else if (OptionInterface)
 				{
