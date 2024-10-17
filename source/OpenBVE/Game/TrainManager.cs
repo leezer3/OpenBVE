@@ -95,13 +95,13 @@ namespace OpenBve
 											}
 											else
 											{
-												if (Trains[i].IsPlayerTrain)
+												if (Trains[i].IsPlayerTrain && Trains[j].Type == TrainType.StaticCars)
 												{
 													Trains[i].Couple(Trains[j], false);
 													Trains[j].Dispose();
 													continue;
 												}
-												else if (Trains[j].IsPlayerTrain)
+												if (Trains[j].IsPlayerTrain && Trains[i].Type == TrainType.StaticCars)
 												{
 													Trains[j].Couple(Trains[i], true);
 													Trains[i].Dispose();
@@ -216,13 +216,13 @@ namespace OpenBve
 											}
 											else
 											{
-												if (Trains[i].IsPlayerTrain)
+												if (Trains[i].IsPlayerTrain && Trains[j].Type == TrainType.StaticCars)
 												{
 													Trains[i].Couple(Trains[j], true);
 													Trains[j].Dispose();
 													continue;
 												}
-												else if (Trains[j].IsPlayerTrain)
+												if (Trains[j].IsPlayerTrain && Trains[i].Type == TrainType.StaticCars)
 												{
 													Trains[j].Couple(Trains[i], false);
 													Trains[i].Dispose();
