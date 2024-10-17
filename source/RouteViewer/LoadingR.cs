@@ -56,6 +56,7 @@ namespace RouteViewer {
 		// load
 		internal static void Load(string RouteFile, Encoding RouteEncoding, Bitmap bitmap = null)
 		{
+			Program.currentGameWindow.TargetRenderFrequency = 0;
 			// reset
 			Game.Reset();
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);

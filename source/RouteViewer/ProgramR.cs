@@ -780,6 +780,7 @@ namespace RouteViewer
 					{
 						if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 						{
+							Program.currentGameWindow.TargetRenderFrequency = 0;
 							Program.Renderer.CurrentInterface = InterfaceType.Menu;
 							Game.Menu.PushMenu(MenuType.GameStart);
 						}

@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Threading;
 using OpenBveApi;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics;
@@ -26,6 +27,13 @@ namespace RouteViewer
             {
 				// Ignored- Just an icon
             }
+
+            if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+            {
+	            // attempted workaround for massive CPU usage when idle
+	            TargetRenderFrequency = 5.0;
+			}
+			
         }
 
         //Default Properties
