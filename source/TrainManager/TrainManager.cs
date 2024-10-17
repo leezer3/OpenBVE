@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using LibRender2;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
@@ -22,7 +23,7 @@ namespace TrainManager
 		internal static Random RandomNumberGenerator = new Random();
 
 		/// <summary>The list of trains available in the simulation.</summary>
-		public TrainBase[] Trains = { };
+		public List<TrainBase> Trains = new List<TrainBase>();
 		/// <summary>A reference to the train of the Trains element that corresponds to the player's train.</summary>
 		public static TrainBase PlayerTrain = null;
 		/// <summary>The list of TrackFollowingObject available on other tracks in the simulation.</summary>
@@ -43,7 +44,7 @@ namespace TrainManager
 		/// <summary>Un-derails all trains within the simulation</summary>
 		public void UnderailTrains()
 		{
-			System.Threading.Tasks.Parallel.For(0, Trains.Length, i =>
+			System.Threading.Tasks.Parallel.For(0, Trains.Count, i =>
 			{
 				UnderailTrain(Trains[i]);
 			});
@@ -71,7 +72,7 @@ namespace TrainManager
 		/// <param name="ForceUpdate">Whether this is a forced update</param>
 		public void UpdateTrainObjects(double TimeElapsed, bool ForceUpdate)
 		{
-			for (int i = 0; i < Trains.Length; i++)
+			for (int i = 0; i < Trains.Count; i++)
 			{
 				Trains[i].UpdateObjects(TimeElapsed, ForceUpdate);
 			}

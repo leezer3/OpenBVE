@@ -375,25 +375,10 @@ namespace TrainManager.Car
 			lock (baseTrain.updateLock)
 			{
 				if (!Front && !Rear)
-				return;
-			}
-			// Create new train
-			TrainBase newTrain = new TrainBase(TrainState.Available, TrainType.StaticCars);
-			UncouplingBehaviour uncouplingBehaviour = UncouplingBehaviour.Emergency;
-			newTrain.Handles.Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain);
-			newTrain.Handles.Brake = new BrakeHandle(0, 0, newTrain.Handles.EmergencyBrake, new double[0], new double[0], newTrain);
-			newTrain.Handles.HoldBrake = new HoldBrakeHandle(newTrain);
-			if (Front)
-			{
-				int totalPreceedingCars = trainCarIndex;
-				newTrain.Cars = new CarBase[trainCarIndex];
-				for (int i = 0; i < totalPreceedingCars; i++)
-				{
 					return;
-				}
 
 				// Create new train
-				TrainBase newTrain = new TrainBase(TrainState.Available);
+				TrainBase newTrain = new TrainBase(TrainState.Available, TrainType.StaticCars);
 				UncouplingBehaviour uncouplingBehaviour = UncouplingBehaviour.Emergency;
 				newTrain.Handles.Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain);
 				newTrain.Handles.Brake = new BrakeHandle(0, 0, newTrain.Handles.EmergencyBrake, new double[0], new double[0], newTrain);

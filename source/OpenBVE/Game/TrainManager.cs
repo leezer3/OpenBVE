@@ -25,7 +25,7 @@ namespace OpenBve
 			{
 				return;
 			}
-			for (int i = 0; i < Trains.Length; i++) {
+			for (int i = 0; i < Trains.Count; i++) {
 				Trains[i].Update(TimeElapsed);
 			}
 
@@ -39,15 +39,13 @@ namespace OpenBve
 			if (!Game.MinimalisticSimulation & Interface.CurrentOptions.Collisions)
 			{
 				
-				//for (int i = 0; i < Trains.Length; i++) {
-				System.Threading.Tasks.Parallel.For(0, Trains.Length, i =>
-				{
+				for (int i = 0; i < Trains.Count; i++) {
 					// with other trains
 					if (Trains[i].State == TrainState.Available)
 					{
 						double a = Trains[i].FrontCarTrackPosition;
 						double b = Trains[i].RearCarTrackPosition;
-						for (int j = i + 1; j < Trains.Length; j++)
+						for (int j = i + 1; j < Trains.Count; j++)
 						{
 							if (Trains[j].State == TrainState.Available)
 							{
@@ -397,11 +395,20 @@ namespace OpenBve
 						}
 					}
 
-				});
+				}
 			}
+
+			for (int i = Trains.Count; i > 0; i--)
+			{
+				if (Trains[i].State == TrainState.Disposed)
+				{
+					Trains.RemoveAt(i);
+				}
+			}
+
 			// compute final angles and positions
 			//for (int i = 0; i < Trains.Length; i++) {
-			System.Threading.Tasks.Parallel.For(0, Trains.Length, i =>
+			System.Threading.Tasks.Parallel.For(0, Trains.Count, i =>
 			{
 				if (Trains[i].State != TrainState.Disposed & Trains[i].State != TrainState.Bogus)
 				{
