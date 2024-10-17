@@ -545,7 +545,7 @@ namespace RouteViewer
 		}
 
 		// ReSharper disable once CoVariantArrayConversion
-		public override AbstractTrain[] Trains => Program.TrainManager.Trains;
+		public override IEnumerable<AbstractTrain> Trains => Program.TrainManager.Trains;
 
 		public override AbstractTrain ClosestTrain(AbstractTrain Train)
 		{
@@ -553,7 +553,7 @@ namespace RouteViewer
 			double bestLocation = double.MaxValue;
 			if(Train is TrainBase baseTrain)
 			{
-				for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
+				for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
 				{
 					if (Program.TrainManager.Trains[i] != baseTrain & Program.TrainManager.Trains[i].State == TrainState.Available & baseTrain.Cars.Length > 0)
 					{
@@ -574,7 +574,7 @@ namespace RouteViewer
 		{
 			AbstractTrain closestTrain = null;
 			double trainDistance = double.MaxValue;
-			for (int j = 0; j < Program.TrainManager.Trains.Length; j++)
+			for (int j = 0; j < Program.TrainManager.Trains.Count; j++)
 			{
 				if (Program.TrainManager.Trains[j].State == TrainState.Available)
 				{

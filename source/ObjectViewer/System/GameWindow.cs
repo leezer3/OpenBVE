@@ -51,7 +51,7 @@ namespace ObjectViewer
 
 			ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
 
-			if (Program.TrainManager.Trains.Length != 0)
+			if (Program.TrainManager.Trains.Count != 0)
 			{
 				Program.TrainManager.Trains[0].UpdateObjects(timeElapsed, false);
 			}
