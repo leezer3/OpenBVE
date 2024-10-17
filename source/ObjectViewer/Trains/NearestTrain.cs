@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using OpenBveApi.Trains;
 using TrainManager;
 using TrainManager.BrakeSystems;
@@ -107,7 +108,7 @@ namespace ObjectViewer.Trains
 		{
 			lock (LockObj)
 			{
-				IsExtensionsCfg = Program.TrainManager.Trains.Length != 0;
+				IsExtensionsCfg = Program.TrainManager.Trains.Count != 0;
 
 				if (IsExtensionsCfg)
 				{
@@ -175,8 +176,8 @@ namespace ObjectViewer.Trains
 					else
 					{
 						train = CreateDummyTrain();
-						Array.Resize(ref Program.TrainManager.Trains, 1);
-						Program.TrainManager.Trains[0] = train;
+						Program.TrainManager.Trains.Clear();
+						Program.TrainManager.Trains.Add(train);
 						TrainManagerBase.PlayerTrain = train;
 					}
 					Status.Apply(train);
@@ -190,7 +191,7 @@ namespace ObjectViewer.Trains
 					}
 					else
 					{
-						Program.TrainManager.Trains = new TrainBase[0];
+						Program.TrainManager.Trains = new List<TrainBase>();
 						TrainManagerBase.PlayerTrain = null;
 					}
 

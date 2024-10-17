@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -272,7 +273,7 @@ namespace OpenBve {
 			try {
 				LoadEverythingThreaded();
 			} catch (Exception ex) {
-				for (int i = 0; i < Program.TrainManager.Trains.Length; i++) {
+				for (int i = 0; i < Program.TrainManager.Trains.Count; i++) {
 					if (Program.TrainManager.Trains[i] != null && Program.TrainManager.Trains[i].Plugin != null) {
 						if (Program.TrainManager.Trains[i].Plugin.LastException != null) {
 							Interface.AddMessage(MessageType.Critical, false, "The train plugin " + Program.TrainManager.Trains[i].Plugin.PluginTitle + " caused a critical error in the route and train loader: " + Program.TrainManager.Trains[i].Plugin.LastException.Message);
@@ -390,25 +391,28 @@ namespace OpenBve {
 			Program.FileSystem.AppendToLogFile("Route file loaded successfully.");
 			// initialize trains
 			Thread.Sleep(1); if (Cancel) return;
-			Program.TrainManager.Trains = new TrainBase[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length + 1 + (Program.CurrentRoute.BogusPreTrainInstructions.Length != 0 ? 1 : 0)];
-			Program.TrainManager.Trains[0] = new TrainBase(TrainState.Pending, TrainType.LocalPlayerTrain);
-			TrainManagerBase.PlayerTrain = Program.TrainManager.Trains[0];
-			for (int k = 1; k < Program.TrainManager.Trains.Length; k++)
+			Program.TrainManager.Trains = new List<TrainBase>
 			{
-				if (k == Program.TrainManager.Trains.Length - 1 & Program.CurrentRoute.BogusPreTrainInstructions.Length != 0)
+				new TrainBase(TrainState.Pending, TrainType.LocalPlayerTrain)
+			};
+			TrainManagerBase.PlayerTrain = Program.TrainManager.Trains[0];
+
+			int totalAdditionalTrains = Program.CurrentRoute.PrecedingTrainTimeDeltas.Length + Program.CurrentRoute.BogusPreTrainInstructions.Length;
+
+			for (int i = 0; i < totalAdditionalTrains; i++)
+			{
+				if (i == Program.TrainManager.Trains.Count & Program.CurrentRoute.BogusPreTrainInstructions.Length != 0)
 				{
-					Program.TrainManager.Trains[k] = new TrainBase(TrainState.Bogus, TrainType.PreTrain);
+					Program.TrainManager.Trains[i] = new TrainBase(TrainState.Bogus, TrainType.PreTrain);
 				}
 				else
 				{
-					Program.TrainManager.Trains[k] = new TrainBase(TrainState.Pending, TrainType.PreTrain);
-				}			
+					Program.TrainManager.Trains[i] = new TrainBase(TrainState.Pending, TrainType.PreTrain);
+				}
 			}
-
-
-
+			
 			// load trains
-			for (int k = 0; k < Program.TrainManager.Trains.Length; k++) {
+			for (int k = 0; k < Program.TrainManager.Trains.Count; k++) {
 
 				AbstractTrain currentTrain = Program.TrainManager.Trains[k];
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
@@ -450,7 +454,7 @@ namespace OpenBve {
 
 
 			CurrentTrain = 0;
-			for (int i = 0; i < Program.TrainManager.Trains.Length; i++) {
+			for (int i = 0; i < Program.TrainManager.Trains.Count; i++) {
 				if ( Program.TrainManager.Trains[i].State != TrainState.Bogus) {
 					if ( Program.TrainManager.Trains[i].IsPlayerTrain) {
 						if (Program.TrainManager.Trains[i].Plugin == null && !Program.TrainManager.Trains[i].LoadCustomPlugin(Program.TrainManager.Trains[i].TrainFolder, CurrentTrainEncoding)) {

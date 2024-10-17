@@ -477,7 +477,7 @@ namespace OpenBve
 			{
 				//Saving black-box failed, not really important
 			}
-			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
+			for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
 			{
 				if (Program.TrainManager.Trains[i].State != TrainState.Bogus)
 				{
@@ -703,7 +703,7 @@ namespace OpenBve
 				}
 			}
 			// initialize trains
-			for (int i = 0; i <  Program.TrainManager.Trains.Length; i++)
+			for (int i = 0; i <  Program.TrainManager.Trains.Count; i++)
 			{
 				Program.TrainManager.Trains[i].Initialize();
 				int s = Program.TrainManager.Trains[i].IsPlayerTrain ? PlayerFirstStationIndex : OtherFirstStationIndex;
@@ -773,7 +773,7 @@ namespace OpenBve
 				Program.CurrentRoute.UpdateAllSections();
 			}
 			// move train in position
-			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
+			for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
 			{
 				double p;
 				if (Program.TrainManager.Trains[i].IsPlayerTrain)
@@ -844,7 +844,7 @@ namespace OpenBve
 			}
 			
 			// signalling sections
-			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
+			for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
 			{
 				int s = Program.TrainManager.Trains[i].CurrentSectionIndex;
 				if (Program.CurrentRoute.Sections.Length > Program.TrainManager.Trains[i].CurrentSectionIndex)
@@ -1108,9 +1108,9 @@ namespace OpenBve
 						trainProgress = Program.CurrentHost.Plugins[i].Train.CurrentProgress;
 					}
 				}
-				double trainProgressWeight = 1.0 / Program.TrainManager.Trains.Length;
+				double trainProgressWeight = 1.0 / Program.TrainManager.Trains.Count;
 				double finalTrainProgress;
-				if (Program.TrainManager.Trains.Length != 0)
+				if (Program.TrainManager.Trains.Count != 0)
 				{
 					//Trains are not loaded until after the route
 					finalTrainProgress = (Loading.CurrentTrain * trainProgressWeight) + trainProgressWeight * trainProgress;

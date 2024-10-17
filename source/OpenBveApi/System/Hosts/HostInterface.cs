@@ -663,7 +663,7 @@ namespace OpenBveApi.Hosts {
 		}
 
 		/// <summary>Returns the trains within the simulation</summary>
-		public virtual AbstractTrain[] Trains => null;
+		public virtual IEnumerable<AbstractTrain> Trains => null;
 
 		/// <summary>Gets the closest train to the specified train</summary>
 		/// <param name="Train">The specified train</param>

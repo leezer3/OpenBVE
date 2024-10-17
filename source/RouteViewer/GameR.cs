@@ -39,7 +39,7 @@ namespace RouteViewer {
 			Program.CurrentRoute.Tracks = new Dictionary<int, Track>();
 			Program.CurrentRoute.Tracks.Add(0, new Track());
 			// train manager
-			Program.TrainManager.Trains = new TrainBase[] { };
+			Program.TrainManager.Trains = new List<TrainBase>();
 			// game
 			Interface.LogMessages.Clear();
 			Program.CurrentHost.ClearErrors();
