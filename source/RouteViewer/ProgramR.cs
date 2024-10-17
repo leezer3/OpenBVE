@@ -612,10 +612,24 @@ namespace RouteViewer
 					Renderer.Camera.AlignmentDirection.Yaw = CameraProperties.ExteriorTopAngularSpeed * speedModified;
 					break;
 				case Key.Up:
-					Renderer.Camera.AlignmentDirection.Pitch = CameraProperties.ExteriorTopAngularSpeed * speedModified;
+					if (Renderer.CurrentInterface != InterfaceType.Normal)
+					{
+						Game.Menu.ProcessCommand(Translations.Command.MenuUp, 0);
+					}
+					else
+					{
+						Renderer.Camera.AlignmentDirection.Pitch = CameraProperties.ExteriorTopAngularSpeed * speedModified;
+					}
 					break;
 				case Key.Down:
-					Renderer.Camera.AlignmentDirection.Pitch = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
+					if (Renderer.CurrentInterface != InterfaceType.Normal)
+					{
+						Game.Menu.ProcessCommand(Translations.Command.MenuDown, 0);
+					}
+					else
+					{
+						Renderer.Camera.AlignmentDirection.Pitch = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
+					}
 					break;
 				case Key.KeypadDivide:
 					Renderer.Camera.AlignmentDirection.Roll = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
@@ -713,6 +727,11 @@ namespace RouteViewer
 					}
 					break;
 				case Key.Enter:
+					if (Renderer.CurrentInterface != InterfaceType.Normal)
+					{
+						Game.Menu.ProcessCommand(Translations.Command.MenuEnter, 0);
+						return;
+					}
 					if (JumpToPositionEnabled)
 					{
 						if (JumpToPositionValue.Length != 0)
