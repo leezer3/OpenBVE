@@ -288,14 +288,11 @@ namespace OpenBve {
 			// --- start the actual program ---
 			if (result.Start) {
 				if (Initialize()) {
-					#if !DEBUG
 					try {
-						#endif
 						MainLoop.StartLoopEx(result);
-						#if !DEBUG
 					} catch (Exception ex) {
 						bool found = false;
-						for (int i = 0; i < TrainManager.Trains.Length; i++) {
+						for (int i = 0; i < TrainManager.Trains.Count; i++) {
 							if (TrainManager.Trains[i] != null && TrainManager.Trains[i].Plugin != null) {
 								if (TrainManager.Trains[i].Plugin.LastException != null) {
 									CrashHandler.LoadingCrash(ex.Message, true);
@@ -329,7 +326,6 @@ namespace OpenBve {
 							RestartArguments = "";
 						}
 					}
-#endif
 				}
 				Deinitialize();
 			}
