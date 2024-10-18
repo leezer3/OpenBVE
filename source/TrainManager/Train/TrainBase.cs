@@ -1084,6 +1084,7 @@ namespace TrainManager.Trains
 			{
 				throw new Exception("Attempted to couple to something that isn't a train");
 			}
+
 			int oldCars = Cars.Length;
 			/*
 			 * NOTE: Need to set the speeds to zero for *both* trains on coupling
@@ -1147,6 +1148,10 @@ namespace TrainManager.Trains
 			{
 				trainBase.Cars[i] = new CarBase(trainBase, i);
 			}
+
+
+			string message = Translations.GetInterfaceString(HostApplication.OpenBve, Front ? new[] { "notification", "couple_front" } : new[] { "notification", "couple_rear" }).Replace("[number]", trainBase.Cars.Length.ToString());
+			TrainManagerBase.currentHost.AddMessage(message, MessageDependency.None, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 		}
 	}
 }
