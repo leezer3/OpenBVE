@@ -162,17 +162,17 @@ namespace TrainManager.Car
 		/// <param name="Delta">The delta to move</param>
 		public void Move(double Delta)
 		{
-			if (baseTrain.State != TrainState.Disposed)
+			if (baseTrain.State < TrainState.DisposePending)
 			{
 				FrontAxle.Follower.UpdateRelative(Delta, true, true);
 				FrontBogie.FrontAxle.Follower.UpdateRelative(Delta, true, true);
 				FrontBogie.RearAxle.Follower.UpdateRelative(Delta, true, true);
-				if (baseTrain.State != TrainState.Disposed)
+				if (baseTrain.State < TrainState.DisposePending)
 				{
 					RearAxle.Follower.UpdateRelative(Delta, true, true);
 					RearBogie.FrontAxle.Follower.UpdateRelative(Delta, true, true);
 					RearBogie.RearAxle.Follower.UpdateRelative(Delta, true, true);
-					if (baseTrain.State != TrainState.Disposed)
+					if (baseTrain.State < TrainState.DisposePending)
 					{
 						BeaconReceiver.UpdateRelative(Delta, true, false);
 					}

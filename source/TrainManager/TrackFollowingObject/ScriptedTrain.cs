@@ -26,7 +26,7 @@ namespace TrainManager.Trains
 		/// <summary>Disposes of the train</summary>
 		public override void Dispose()
 		{
-			State = TrainState.Disposed;
+			State = TrainState.DisposePending;
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].ChangeCarSection(CarSectionType.NotVisible);

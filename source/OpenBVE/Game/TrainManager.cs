@@ -400,9 +400,14 @@ namespace OpenBve
 
 			for (int i = Trains.Count; i > 0; i--)
 			{
-				if (Trains[i].State == TrainState.Disposed)
+				switch (Trains[i].State)
 				{
-					Trains.RemoveAt(i);
+					case TrainState.DisposePending:
+						Trains[i].State = TrainState.Disposed;
+						break;
+					case TrainState.Disposed:
+						Trains.RemoveAt(i);
+						break;
 				}
 			}
 
@@ -410,7 +415,7 @@ namespace OpenBve
 			//for (int i = 0; i < Trains.Length; i++) {
 			System.Threading.Tasks.Parallel.For(0, Trains.Count, i =>
 			{
-				if (Trains[i].State != TrainState.Disposed & Trains[i].State != TrainState.Bogus)
+				if (Trains[i].State < TrainState.DisposePending) 
 				{
 					for (int j = 0; j < Trains[i].Cars.Length; j++)
 					{
@@ -434,7 +439,7 @@ namespace OpenBve
 
 			System.Threading.Tasks.Parallel.For(0, TFOs.Length, i =>
 			{
-				if (TFOs[i].State != TrainState.Disposed & TFOs[i].State != TrainState.Bogus)
+				if (TFOs[i].State < TrainState.DisposePending)
 				{
 					ScriptedTrain t = (ScriptedTrain) TFOs[i];
 					foreach (var Car in t.Cars)
