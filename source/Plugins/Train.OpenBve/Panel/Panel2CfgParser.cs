@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Formats.OpenBve;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -62,221 +64,52 @@ namespace Train.OpenBve
 			string PanelDaytimeImage = null;
 			string PanelNighttimeImage = null;
 			Color24 PanelTransparentColor = Color24.Blue;
-			// parse lines for panel
-			for (int i = 0; i < Lines.Length; i++) {
-				if (Lines[i].Length > 0) {
-					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out PanelSections Section);
-						switch (Section) {
-								// panel
-							case PanelSections.This:
-								i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-									int j = Lines[i].IndexOf('='); if (j >= 0)
-									{
-										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
-										string Value = Lines[i].Substring(j + 1).TrimStart();
-										switch (Key) {
-											case PanelKey.Resolution:
-												double pr = 0.0;
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out pr)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
-												if (pr > 100)
-												{
-													PanelResolution = pr;
-												}
-												else
-												{
-													//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
-													//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
-												break;
-											case PanelKey.Left:
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelLeft)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line" + (i + 1).ToString(Culture) + " in " + FileName);
-												} break;
-											case PanelKey.Right:
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelRight)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
 
-												if (Plugin.CurrentOptions.EnableBveTsHacks)
-												{
-													switch ((int) PanelRight)
-													{
-														case 1696:
-															if (PanelResolution == 1024 && trainName == "TOQ2000CN1EXP10" || trainName == "TOQ8500CS8EXP10")
-															{
-																PanelRight = 1024;
-															}
-															break;
-													}
-												}
-												break;
-											case PanelKey.Top:
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelTop)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} break;
-											case PanelKey.Bottom:
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelBottom)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} break;
-											case PanelKey.DaytimeImage:
-												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-												if (Path.ContainsInvalidChars(Value)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} else {
-													PanelDaytimeImage = Path.CombineFile(TrainPath, Value);
-													if (!File.Exists(PanelDaytimeImage)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + PanelDaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														PanelDaytimeImage = null;
-													}
-												}
-												break;
-											case PanelKey.NighttimeImage:
-												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-												if (Path.ContainsInvalidChars(Value)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} else {
-													PanelNighttimeImage = Path.CombineFile(TrainPath, Value);
-													if (!File.Exists(PanelNighttimeImage)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + PanelNighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														PanelNighttimeImage = null;
-													}
-												}
-												break;
-											case PanelKey.TransparentColor:
-												if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out PanelTransparentColor)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} break;
-											case PanelKey.Center:
-												{
-													int k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelCenter.X)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelCenter.Y)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-														if (Plugin.CurrentOptions.EnableBveTsHacks)
-														{
-															switch ((int)PanelCenter.Y)
-															{
-																case 180:
-																	switch (trainName.ToUpperInvariant())
-																	{
-																		case "LT_C69_77":
-																		case "LT_C69_77_V2":
-																			// Broken initial zoom
-																			PanelCenter.Y = 350;
-																			break;
-																	}
-																	break;
-																case 200:
-																	switch (trainName.ToUpperInvariant())
-																	{
-																		case "HM05":
-																			// Broken initial zoom
-																			PanelCenter.Y = 350;
-																			break;
-																	}
-																	break;
-																case 229:
-																	if (PanelBottom == 768 && PanelResolution == 1024)
-																	{
-																		// Martin Finken's BVE4 trams: Broken initial zoom
-																		PanelCenter.Y = 350;
-																	}
-																	break;
-																case 255:
-																	if (PanelBottom == 1024 && PanelResolution == 1024)
-																	{
-																		switch (trainName.ToUpperInvariant())
-																		{
-																			case "PARIS_MF67":
-																			case "PARIS_MF88":
-																			case "PARIS_MP73":
-																			case "PARIS_MP89":
-																			case "PARIS_MP89AUTO":
-																			case "LT1938":
-																			case "LT1973 UNREFURB":
-																				// Broken initial zoom
-																				PanelCenter.Y = 350;
-																				break;
-																			case "LT_A60_62":
-																			case "LT1972 MKII":
-																				// Broken initial zoom and black patch at bottom of panel
-																				PanelCenter.Y = 350;
-																				PanelBottom = 792;
-																				break;
-																		}
-																	}
-																	break;
-																case 483:
-																	switch (trainName.ToUpperInvariant())
-																	{
-																		case "[HOSHIRAIL] KCIC CR400-AF":
-																			PanelCenter.X = 517;
-																			PanelCenter.Y = 300;
-																			break;
-																	}
-																	break;
-															}
-															
-														}
-													} else {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												}
-											case PanelKey.Origin:
-												{
-													int k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelOrigin.X)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelOrigin.Y)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-														if (Plugin.CurrentOptions.EnableBveTsHacks)
-														{
-															switch (trainName)
-															{
-																case "8171BETA":
-																	if (PanelResolution == 768 && PanelOrigin.Y == 256)
-																	{
-																		// 81-71: Bust panel origin means a flying cab....
-																		PanelOrigin.Y = 0;
-																	}
-																	break;
-																case "[HOSHIRAIL] KCIC CR400-AF":
-																	if (PanelResolution == 826 && PanelOrigin.X == 350)
-																	{
-																		PanelOrigin.X = 517;
-																		PanelOrigin.Y = 300;
-																	}
-																	break;
-															}
-														}
-													} else {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												}
-										}
-									} i++;
-								} i--; break;
-						}
+
+			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(Lines, Plugin.currentHost);
+
+			if (cfg.ReadBlock(PanelSections.This, out var Block))
+			{
+				Block.GetValue(PanelKey.Resolution, out PanelResolution);
+				if (PanelResolution < 100)
+				{
+					//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
+					//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given in " + FileName);
+				}
+
+				Block.GetValue(PanelKey.Left, out PanelLeft);
+				Block.GetValue(PanelKey.Right, out PanelRight);
+
+				if (Plugin.CurrentOptions.EnableBveTsHacks)
+				{
+					switch ((int)PanelRight)
+					{
+						case 1696:
+							if (PanelResolution == 1024 && trainName == "TOQ2000CN1EXP10" || trainName == "TOQ8500CS8EXP10")
+							{
+								PanelRight = 1024;
+							}
+							break;
 					}
 				}
+
+				Block.GetValue(PanelKey.Top, out PanelTop);
+				Block.GetValue(PanelKey.Bottom, out PanelBottom);
+				Block.GetPath(PanelKey.DaytimeImage, TrainPath, out PanelDaytimeImage);
+				Block.GetPath(PanelKey.NighttimeImage, TrainPath, out PanelNighttimeImage);
+				Block.GetColor24(PanelKey.TransparentColor, out PanelTransparentColor);
+				Block.GetVector2(PanelKey.Center, ',', out PanelCenter);
+				Block.GetVector2(PanelKey.Origin, ',', out PanelOrigin);
 			}
+			else
+			{
+				// no main panel image, so invalid
+				Plugin.currentHost.AddMessage(MessageType.Error, false, "Panel2.cfg file " + FileName + " does not contain a [This] section.");
+				return;
+			}
+
+			
 			{ // camera restriction
 				double WorldWidth, WorldHeight;
 				if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {

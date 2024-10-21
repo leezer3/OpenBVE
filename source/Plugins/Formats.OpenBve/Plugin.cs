@@ -24,17 +24,23 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using Path = OpenBveApi.Path;
 
 namespace Formats.OpenBve
 {
 	public abstract class Block <T, TT> where T : struct, Enum where TT : struct, Enum
     {
 		public abstract Block<T, TT> ReadNextBlock();
+
+		public abstract bool ReadBlock(T blockToRead, out Block<T, TT> block);
 
 	    public virtual int RemainingSubBlocks => 0;
 
@@ -45,7 +51,7 @@ namespace Formats.OpenBve
 	    public readonly int Index;
 		
 	    internal readonly HostInterface currentHost;
-
+		
 	    public virtual bool GetValue(TT key, out bool value)
 	    {
 		    value = false;
@@ -58,7 +64,13 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
-	    public virtual bool GetValue(TT key, out string value)
+	    public virtual bool GetPath(TT key, string absolutePath, out string finalPath)
+	    {
+		    finalPath = string.Empty;
+		    return false;
+	    }
+
+		public virtual bool GetValue(TT key, out string value)
 	    {
 		    value = string.Empty;
 		    return false;
@@ -81,6 +93,12 @@ namespace Formats.OpenBve
 	    {
 		    value = Vector3.Zero;
 		    return false;
+	    }
+
+	    public virtual bool GetColor24(TT key, out Color24 value)
+	    {
+			value = Color24.Blue;
+			return false;
 	    }
 
 	    public virtual bool GetStringArray(TT key, char separator, out string[] values)
@@ -210,6 +228,22 @@ namespace Formats.OpenBve
 			return b;
 		}
 
+		public override bool ReadBlock(T blockToRead, out Block<T, TT> block)
+		{
+			for (int i = 0; i < subBlocks.Count; i++)
+			{
+				if (EqualityComparer<T>.Default.Equals(subBlocks[i].Key, blockToRead))
+				{
+					block = subBlocks[i];
+					subBlocks.RemoveAt(i);
+					return true;
+				}
+			}
+
+			block = null;
+			return false;
+		}
+
 		public override int RemainingSubBlocks => subBlocks.Count;
 	}
 
@@ -222,6 +256,13 @@ namespace Formats.OpenBve
 		{
 			currentHost.AddMessage(MessageType.Error, false, "A section in a CFG file cannot contain sub-blocks.");
 			return null;
+		}
+
+		public override bool ReadBlock(T blockToRead, out Block<T, TT> block)
+		{
+			currentHost.AddMessage(MessageType.Error, false, "A section in a CFG file cannot contain sub-blocks.");
+			block = null;
+			return false;
 		}
 
 		public override int RemainingDataValues => keyValuePairs.Count + indexedValues.Count;
@@ -361,13 +402,46 @@ namespace Formats.OpenBve
 				}
 				catch
 				{
-					currentHost.AddMessage(MessageType.Warning, false, "Function Script " + script + " was invalid in Key "+ Key + " in Section " + Key + " at Line " + script.Key);
+					currentHost.AddMessage(MessageType.Warning, false, "Function Script " + script + " was invalid in Key "+ key + " in Section " + Key + " at Line " + script.Key);
 					function = null;
 					return false;
 				}
 			}
 			currentHost.AddMessage(MessageType.Warning, false, "Key " + key + " was not found in Section " + Key);
 			function = null;
+			return false;
+		}
+
+		public override bool GetPath(TT key, string absolutePath, out string finalPath)
+		{
+			if (keyValuePairs.TryGetValue(key, out var value))
+			{
+				if (!Path.ContainsInvalidChars(value.Value))
+				{
+					string relativePath = value.Value;
+					if (!System.IO.Path.HasExtension(relativePath))
+					{
+						// HACK: BVE allows bmp without extension
+						relativePath += ".bmp";
+					}
+					finalPath = Path.CombineFile(absolutePath, relativePath);
+					if (File.Exists(finalPath))
+					{
+						return true;
+					}
+
+					currentHost.AddMessage(MessageType.Warning, false, "File " + value.Value + " was not found in Key " + key + " in Section " + Key + " at Line " + value.Key);
+					finalPath = string.Empty;
+					return false;
+
+				}
+
+				currentHost.AddMessage(MessageType.Warning, false, "Path contains invalid characters for " + key + " in Section " + Key + " at Line " + value.Key);
+				finalPath = string.Empty;
+				return false;
+
+			}
+			finalPath = string.Empty;
 			return false;
 		}
 
@@ -410,6 +484,21 @@ namespace Formats.OpenBve
 				}
 			}
 			value = false;
+			return false;
+		}
+
+		public override bool GetColor24(TT key, out Color24 value)
+		{
+			if (keyValuePairs.TryGetValue(key, out var color))
+			{
+				if (Color24.TryParseHexColor(color.Value, out value))
+				{
+					return true;
+				}
+				currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + key + " in " + Key + " at line " + color.Key);
+			}
+
+			value = Color24.Blue;
 			return false;
 		}
 	}
