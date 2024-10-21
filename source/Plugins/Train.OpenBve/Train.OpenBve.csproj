@@ -45,6 +45,7 @@
     <Compile Include="Panel\Enums\PanelKey.cs" />
     <Compile Include="Panel\Enums\PanelSections.cs" />
     <Compile Include="Panel\Panel2CfgParser.cs" />
+    <Compile Include="Panel\Panel2CfgParser.Hacks.cs" />
     <Compile Include="Panel\PanelAnimatedXmlParser.cs" />
     <Compile Include="Panel\PanelCfgParser.cs" />
     <Compile Include="Panel\PanelXmlParser.cs" />

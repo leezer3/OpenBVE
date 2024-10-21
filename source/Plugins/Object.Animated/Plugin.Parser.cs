@@ -30,32 +30,6 @@ namespace Plugin
 			int SoundCount = 0;
 			// load file
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
-
-			ConfigFile<AnimatedSection, AnimatedKey> block = new ConfigFile<AnimatedSection, AnimatedKey>(Lines, currentHost);
-			while (block.RemainingSubBlocks > 0)
-			{
-				Block<AnimatedSection, AnimatedKey> subBlock = block.ReadNextBlock();
-				switch (subBlock.Key)
-				{
-					case AnimatedSection.Include:
-						Vector3 position = Vector3.Zero;
-						block.GetVector3(AnimatedKey.Position, ',', out position);
-
-						break;
-					case AnimatedSection.Object:
-						string[] objectStates;
-						if (!subBlock.GetStringArray(AnimatedKey.States, ',', out objectStates))
-						{
-							Plugin.currentHost.AddMessage("A list of states must be provided in section " + subBlock.Key);
-							break;
-						}
-						break;
-					case AnimatedSection.StateChangeSound:
-						break;
-					case AnimatedSection.Sound:
-						break;
-				}
-			}
 			bool rpnUsed = false;
 			for (int i = 0; i < Lines.Length; i++)
 			{

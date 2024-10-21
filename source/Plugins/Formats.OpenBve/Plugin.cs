@@ -26,7 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
@@ -174,10 +173,12 @@ namespace Formats.OpenBve
 					if (char.IsDigit(sct[sct.Length - 1]))
 					{
 						int c = sct.Length - 1;
-						while (!char.IsDigit(sct[c]) && c > 0)
+						while (char.IsDigit(sct[c]) && c > 0)
 						{
 							c--;
 						}
+
+						c++;
 
 						
 						if (!int.TryParse(sct.Substring(c, sct.Length - c), out idx) || idx < 0)
@@ -299,13 +300,13 @@ namespace Formats.OpenBve
 						}
 						
 					}
-					else if (Enum.TryParse(a, true, out TT key))
+					else if (Enum.TryParse(a.Replace(" ", ""), true, out TT key))
 					{
 						keyValuePairs.Add(key, new KeyValuePair<int, string>(i + startingLine, b));
 					}
 					else
 					{
-						currentHost.AddMessage(MessageType.Error, false, "Unknown Key " + key + " encountered in Section " + myKey + " at Line " + i + startingLine);
+						currentHost.AddMessage(MessageType.Error, false, "Unknown Key " + a + " encountered in Section " + myKey + " at Line " + i + startingLine);
 					}
 				}
 			}

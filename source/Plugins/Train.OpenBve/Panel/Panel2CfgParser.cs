@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,7 +20,7 @@ using Path = OpenBveApi.Path;
 
 namespace Train.OpenBve
 {
-	internal class Panel2CfgParser
+	internal partial class Panel2CfgParser
 	{
 		internal readonly Plugin Plugin;
 
@@ -34,6 +34,16 @@ namespace Train.OpenBve
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
 		private const double EyeDistance = 1.0;
 
+		double PanelResolution = 1024.0;
+		double PanelLeft = 0.0, PanelRight = 1024.0;
+		double PanelTop = 0.0, PanelBottom = 1024.0;
+		Vector2 PanelCenter = new Vector2(0, 512);
+		Vector2 PanelOrigin = new Vector2(0, 512);
+		string PanelDaytimeImage = null;
+		string PanelNighttimeImage = null;
+		Color24 PanelTransparentColor = Color24.Blue;
+		private string trainName;
+
 		/// <summary>Parses a BVE2 / openBVE panel.cfg file</summary>
 		/// <param name="PanelFile">The relative path of the panel configuration file from the train</param>
 		/// <param name="TrainPath">The on-disk path to the train</param>
@@ -42,7 +52,7 @@ namespace Train.OpenBve
 		{
 			Encoding Encoding = TextEncoding.GetSystemEncodingFromFile(PanelFile);
 			//Train name, used for hacks detection
-			string trainName = new DirectoryInfo(TrainPath).Name.ToUpperInvariant();
+			trainName = new DirectoryInfo(TrainPath).Name.ToUpperInvariant();
 			// read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string FileName = Path.CombineFile(TrainPath, PanelFile);
@@ -55,52 +65,60 @@ namespace Train.OpenBve
 					Lines[i] = Lines[i].Substring(0, j).TrimEnd();
 				}
 			}
-			// initialize
-			double PanelResolution = 1024.0;
-			double PanelLeft = 0.0, PanelRight = 1024.0;
-			double PanelTop = 0.0, PanelBottom = 1024.0;
-			Vector2 PanelCenter = new Vector2(0, 512);
-			Vector2 PanelOrigin = new Vector2(0, 512);
-			string PanelDaytimeImage = null;
-			string PanelNighttimeImage = null;
-			Color24 PanelTransparentColor = Color24.Blue;
-
 
 			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(Lines, Plugin.currentHost);
 
 			if (cfg.ReadBlock(PanelSections.This, out var Block))
 			{
-				Block.GetValue(PanelKey.Resolution, out PanelResolution);
-				if (PanelResolution < 100)
+				// NOTE: Only able to create a panel with a daytime image available!
+				if (Block.GetPath(PanelKey.DaytimeImage, TrainPath, out PanelDaytimeImage))
 				{
-					//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
-					//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
-					Plugin.currentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given in " + FileName);
-				}
-
-				Block.GetValue(PanelKey.Left, out PanelLeft);
-				Block.GetValue(PanelKey.Right, out PanelRight);
-
-				if (Plugin.CurrentOptions.EnableBveTsHacks)
-				{
-					switch ((int)PanelRight)
+					Block.GetValue(PanelKey.Resolution, out PanelResolution);
+					if (PanelResolution < 100)
 					{
-						case 1696:
-							if (PanelResolution == 1024 && trainName == "TOQ2000CN1EXP10" || trainName == "TOQ8500CS8EXP10")
-							{
-								PanelRight = 1024;
-							}
-							break;
+						//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
+						//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
+						Plugin.currentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given in " + FileName);
 					}
-				}
 
-				Block.GetValue(PanelKey.Top, out PanelTop);
-				Block.GetValue(PanelKey.Bottom, out PanelBottom);
-				Block.GetPath(PanelKey.DaytimeImage, TrainPath, out PanelDaytimeImage);
-				Block.GetPath(PanelKey.NighttimeImage, TrainPath, out PanelNighttimeImage);
-				Block.GetColor24(PanelKey.TransparentColor, out PanelTransparentColor);
-				Block.GetVector2(PanelKey.Center, ',', out PanelCenter);
-				Block.GetVector2(PanelKey.Origin, ',', out PanelOrigin);
+					Block.GetValue(PanelKey.Left, out PanelLeft);
+					Block.GetValue(PanelKey.Right, out PanelRight);
+					Block.GetValue(PanelKey.Top, out PanelTop);
+					Block.GetValue(PanelKey.Bottom, out PanelBottom);
+					Block.GetColor24(PanelKey.TransparentColor, out PanelTransparentColor);
+					Block.GetVector2(PanelKey.Center, ',', out PanelCenter);
+					Block.GetVector2(PanelKey.Origin, ',', out PanelOrigin);
+					ApplyGlobalHacks();
+					double WorldWidth, WorldHeight;
+					if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
+					{
+						WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
+						WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
+					}
+					else
+					{
+						WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
+						WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
+					}
+					double x0 = (PanelLeft - PanelCenter.X) / PanelResolution;
+					double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
+					double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
+					double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
+					Car.CameraRestriction.BottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
+					Car.CameraRestriction.TopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
+					Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
+					Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
+					// only valid with daytime texture
+					Block.GetPath(PanelKey.NighttimeImage, TrainPath, out PanelNighttimeImage);
+					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true, 20000);
+					Plugin.currentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out var tnight, true, 20000);
+					CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight);
+				}
+				else
+				{
+					// error already added in the block
+					return;
+				}
 			}
 			else
 			{
@@ -108,44 +126,7 @@ namespace Train.OpenBve
 				Plugin.currentHost.AddMessage(MessageType.Error, false, "Panel2.cfg file " + FileName + " does not contain a [This] section.");
 				return;
 			}
-
 			
-			{ // camera restriction
-				double WorldWidth, WorldHeight;
-				if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {
-					WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
-					WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
-				} else {
-					WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
-					WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
-				}
-				double x0 = (PanelLeft - PanelCenter.X) / PanelResolution;
-				double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
-				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-				Car.CameraRestriction.BottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
-				Car.CameraRestriction.TopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
-				Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
-				Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
-			}
-			// create panel
-			if (PanelDaytimeImage != null) {
-				if (!File.Exists(PanelDaytimeImage)) {
-					Plugin.currentHost.AddMessage(MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
-				} else {
-					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true, 20000);
-					Texture tnight = null;
-					if (PanelNighttimeImage != null) {
-						if (!File.Exists(PanelNighttimeImage)) {
-							Plugin.currentHost.AddMessage(MessageType.Error, true, "The nighttime panel bitmap could not be found in " + FileName);
-						} else {
-							Plugin.currentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out tnight);
-						}
-					}
-					CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight);
-				}
-			}
-
 			int GroupIndex = 0;
 
 			if (Plugin.CurrentOptions.Panel2ExtendedMode)

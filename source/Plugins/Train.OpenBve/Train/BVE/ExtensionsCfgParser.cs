@@ -127,10 +127,11 @@ namespace Train.OpenBve
 							}
 							break;
 						case ExtensionCfgSection.Coupler:
-							if (block.GetVector2(ExtensionCfgKey.Axles, ',', out Vector2 distances))
+							if (block.GetVector2(ExtensionCfgKey.Distances, ',', out Vector2 distances))
 							{
-								if (distances.X >= distances.Y)
+								if (distances.X > distances.Y)
 								{
+									// NOTE: Current error is misleading...
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Minimum is expected to be less than Maximum in for Coupler " + block.Index + " in file " + FileName);
 								}
 								else
