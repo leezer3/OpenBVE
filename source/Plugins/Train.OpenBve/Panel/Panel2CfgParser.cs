@@ -108,7 +108,6 @@ namespace Train.OpenBve
 					Car.CameraRestriction.TopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
 					Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
 					Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
-					// only valid with daytime texture
 					Block.GetPath(PanelKey.NighttimeImage, TrainPath, out PanelNighttimeImage);
 					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true, 20000);
 					Plugin.currentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out var tnight, true, 20000);
@@ -126,7 +125,7 @@ namespace Train.OpenBve
 				Plugin.currentHost.AddMessage(MessageType.Error, false, "Panel2.cfg file " + FileName + " does not contain a [This] section.");
 				return;
 			}
-			
+
 			int GroupIndex = 0;
 
 			if (Plugin.CurrentOptions.Panel2ExtendedMode)
@@ -135,6 +134,81 @@ namespace Train.OpenBve
 				Array.Resize(ref Car.CarSections[0].Groups, GroupIndex + 1);
 				Car.CarSections[0].Groups[GroupIndex] = new ElementsGroup();
 			}
+
+			while (cfg.RemainingSubBlocks > 0)
+			{
+				Block<PanelSections, PanelKey> subBlock = cfg.ReadNextBlock();
+				string Subject = "true";
+				string Function = string.Empty, DaytimeImage;
+				switch (subBlock.Key)
+				{
+					case PanelSections.PilotLamp:
+						if (Block.GetPath(PanelKey.DaytimeImage, TrainPath, out DaytimeImage))
+						{
+							Block.TryGetValue(PanelKey.Subject, ref Subject);
+							Block.TryGetValue(PanelKey.Function, ref Function);
+							Block.GetVector2(PanelKey.Location, ',', out Vector2 Location);
+							Block.GetPath(PanelKey.NighttimeImage, TrainPath, out string NighttimeImage);
+							Block.GetValue(PanelKey.Layer, out int Layer);
+							Block.GetColor24(PanelKey.TransparentColor, out Color24 TransparentColor);
+
+							Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
+							Texture tnight = null;
+							if (NighttimeImage != null)
+							{
+								Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
+							}
+							int w = tday.Width;
+							int h = tday.Height;
+							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, w, h, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
+							string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, subBlock.Key + " in " + FileName);
+							try
+							{
+								Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = !string.IsNullOrEmpty(Function) ? new FunctionScript(Plugin.currentHost, Function, true) : new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
+							}
+							catch
+							{
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + subBlock.Key + " in " + FileName);
+							}
+						}
+						break;
+					case PanelSections.Needle:
+						if (Block.GetPath(PanelKey.DaytimeImage, TrainPath, out DaytimeImage))
+						{
+							double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
+							double Minimum = 0.0, Maximum = 1000.0;
+							double NaturalFrequency = -1.0, DampingRatio = -1.0;
+							Vector2 Origin = new Vector2(-1, -1);
+							Block.TryGetValue(PanelKey.Subject, ref Subject);
+							Block.TryGetValue(PanelKey.Function, ref Function);
+							Block.GetVector2(PanelKey.Location, ',', out Vector2 Location);
+							bool OriginDefined = false;
+							if (Block.TryGetVector2(PanelKey.Origin, ',', ref Origin))
+							{
+								OriginDefined = true;
+							}
+							else
+							{
+								
+							}
+							Block.GetValue(PanelKey.Radius, out double Radius);
+							Block.TryGetValue(PanelKey.InitialAngle, ref InitialAngle);
+							Block.TryGetValue(PanelKey.LastAngle, ref LastAngle);
+							Block.TryGetValue(PanelKey.Minimum, ref Minimum);
+							Block.TryGetValue(PanelKey.Maximum, ref Maximum);
+							Block.TryGetValue(PanelKey.NaturalFreq, ref NaturalFrequency);
+							Block.TryGetValue(PanelKey.DampingRatio, ref DampingRatio);
+							Block.GetValue(PanelKey.Backstop, out bool Backstop);
+							Block.GetValue(PanelKey.Smoothed, out bool Smoothed);
+							Block.GetPath(PanelKey.NighttimeImage, TrainPath, out string NighttimeImage);
+							Block.GetValue(PanelKey.Layer, out int Layer);
+							Block.GetColor24(PanelKey.TransparentColor, out Color24 TransparentColor);
+						}
+						break;
+				}
+			}
+			
+			
 
 			// parse lines for rest
 			double invfac = Lines.Length == 0 ? 0.4 : 0.4 / Lines.Length;
@@ -149,109 +223,6 @@ namespace Train.OpenBve
 					{
 						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out PanelSections Section);
 						switch (Section) {
-							case PanelSections.PilotLamp:
-								{
-									string Subject = "true";
-									string Function = string.Empty;
-									double LocationX = 0.0, LocationY = 0.0;
-									string DaytimeImage = null, NighttimeImage = null;
-									Color24 TransparentColor = Color24.Blue;
-									int Layer = 0;
-									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-										int j = Lines[i].IndexOf('=');
-										if (j >= 0)
-										{
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
-											string Value = Lines[i].Substring(j + 1).TrimStart();
-											switch (Key) {
-												case PanelKey.Subject:
-													Subject = Value;
-													break;
-												case PanelKey.Function: 
-													Function = Value;
-													break;
-												case PanelKey.Location:
-													int k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													} else {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case PanelKey.DaytimeImage:
-													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Path.ContainsInvalidChars(Value)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														DaytimeImage = Path.CombineFile(TrainPath, Value);
-														if (!File.Exists(DaytimeImage)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															DaytimeImage = null;
-														}
-													}
-													break;
-												case PanelKey.NighttimeImage:
-													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Path.ContainsInvalidChars(Value)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														NighttimeImage = Path.CombineFile(TrainPath, Value);
-														if (!File.Exists(NighttimeImage)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															NighttimeImage = null;
-														}
-													}
-													break;
-												case PanelKey.TransparentColor:
-													if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case PanelKey.Layer:
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-											}
-										} i++;
-									} i--;
-									if (DaytimeImage == null) {
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "DaytimeImage is required to be specified in " + Section + " in " + FileName);
-									}
-									// create element
-									if (DaytimeImage != null) {
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
-										Texture tnight = null;
-										if (NighttimeImage != null) {
-											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
-										}
-										int w = tday.Width;
-										int h = tday.Height;
-										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
-										string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
-										try
-										{
-											if (!string.IsNullOrEmpty(Function))
-											{
-												Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, Function, true);
-											}
-											else
-											{
-												Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
-											}
-											
-										}
-										catch
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-										}
-									}
-								} break;
 							case PanelSections.Needle:
 								{
 									string Subject = "true";

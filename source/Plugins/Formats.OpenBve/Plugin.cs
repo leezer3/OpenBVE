@@ -63,15 +63,30 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
-	    public virtual bool GetPath(TT key, string absolutePath, out string finalPath)
+	    public virtual bool TryGetValue(TT key, ref double value)
+	    {
+		    return false;
+	    }
+
+		public virtual bool GetValue(TT key, out int value)
+	    {
+		    value = 0;
+		    return false;
+	    }
+
+	    public virtual bool TryGetValue(TT key, ref int value)
+	    {
+		    return false;
+	    }
+
+		public virtual bool GetPath(TT key, string absolutePath, out string finalPath)
 	    {
 		    finalPath = string.Empty;
 		    return false;
 	    }
 
-		public virtual bool GetValue(TT key, out string value)
+		public virtual bool TryGetValue(TT key, ref string value)
 	    {
-		    value = string.Empty;
 		    return false;
 	    }
 
@@ -82,13 +97,18 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
-	    public virtual bool GetVector2(TT key, char separator, out Vector2 value)
+		public virtual bool GetVector2(TT key, char separator, out Vector2 value)
 	    {
 			value = Vector2.Null;
 			return false;
 	    }
 
-	    public virtual bool GetVector3(TT key, char separator, out Vector3 value)
+	    public virtual bool TryGetVector2(TT key, char separator, ref Vector2 value)
+	    {
+		    return false;
+	    }
+
+		public virtual bool GetVector3(TT key, char separator, out Vector3 value)
 	    {
 		    value = Vector3.Zero;
 		    return false;
@@ -336,6 +356,41 @@ namespace Formats.OpenBve
 			return false;
 		}
 
+		public override bool TryGetVector2(TT key, char separator, ref Vector2 value)
+		{
+			if (keyValuePairs.TryGetValue(key, out var rawValue))
+			{
+				string[] splitStrings = rawValue.Value.Split(separator);
+				if (splitStrings.Length > 2)
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key + " at Line " + rawValue.Key);
+				}
+
+				bool error = false;
+
+				if (!NumberFormats.TryParseDoubleVb6(splitStrings[0], out double X))
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "X was invalid in " + key + " in Section " + Key + " at Line " + rawValue.Key);
+					error = true;
+				}
+				else
+				{
+					value.X = X;
+				}
+				if (!NumberFormats.TryParseDoubleVb6(splitStrings[1], out double Y))
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "Y was invalid in " + key + " in Section " + Key + " at Line " + rawValue.Key);
+					error = true;
+				}
+				else
+				{
+					value.Y = Y;
+				}
+				return !error;
+			}
+			return false;
+		}
+
 		public override bool GetVector3(TT key, char separator, out Vector3 value)
 		{
 			value = Vector3.Zero;
@@ -446,14 +501,13 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-		public override bool GetValue(TT key, out string stringValue)
+		public override bool TryGetValue(TT key, ref string stringValue)
 		{
 			if (keyValuePairs.TryGetValue(key, out var value))
 			{
 				stringValue = value.Value;
 				return true;
 			}
-			stringValue = string.Empty;
 			return false;
 		}
 
@@ -470,6 +524,54 @@ namespace Formats.OpenBve
 
 			}
 			value = 0;
+			return false;
+		}
+
+		public override bool TryGetValue(TT key, ref double value)
+		{
+			if (keyValuePairs.TryGetValue(key, out var s))
+			{
+				if (double.TryParse(s.Value, out double newValue))
+				{
+					value = newValue;
+					return true;
+				}
+				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid double in Key " + Key + " in Section " + Key + " at Line " + s.Key);
+				return false;
+
+			}
+			return false;
+		}
+
+		public override bool GetValue(TT key, out int value)
+		{
+			if (keyValuePairs.TryGetValue(key, out var s))
+			{
+				if (int.TryParse(s.Value, out value))
+				{
+					return true;
+				}
+				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid integer in Key " + Key + " in Section " + Key + " at Line " + s.Key);
+				return false;
+
+			}
+			value = 0;
+			return false;
+		}
+
+		public override bool TryGetValue(TT key, ref int value)
+		{
+			if (keyValuePairs.TryGetValue(key, out var s))
+			{
+				if (int.TryParse(s.Value, out int newValue))
+				{
+					value = newValue;
+					return true;
+				}
+				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid integer in Key " + Key + " in Section " + Key + " at Line " + s.Key);
+				return false;
+
+			}
 			return false;
 		}
 
