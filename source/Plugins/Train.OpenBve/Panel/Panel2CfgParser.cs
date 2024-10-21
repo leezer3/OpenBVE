@@ -18,7 +18,7 @@ using Path = OpenBveApi.Path;
 
 namespace Train.OpenBve
 {
-	internal class Panel2CfgParser
+	internal partial class Panel2CfgParser
 	{
 		internal readonly Plugin Plugin;
 
@@ -32,6 +32,16 @@ namespace Train.OpenBve
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
 		private const double EyeDistance = 1.0;
 
+		double PanelResolution = 1024.0;
+		double PanelLeft = 0.0, PanelRight = 1024.0;
+		double PanelTop = 0.0, PanelBottom = 1024.0;
+		Vector2 PanelCenter = new Vector2(0, 512);
+		Vector2 PanelOrigin = new Vector2(0, 512);
+		string PanelDaytimeImage = null;
+		string PanelNighttimeImage = null;
+		Color24 PanelTransparentColor = Color24.Blue;
+		private string trainName;
+
 		/// <summary>Parses a BVE2 / openBVE panel.cfg file</summary>
 		/// <param name="PanelFile">The relative path of the panel configuration file from the train</param>
 		/// <param name="TrainPath">The on-disk path to the train</param>
@@ -40,7 +50,7 @@ namespace Train.OpenBve
 		{
 			Encoding Encoding = TextEncoding.GetSystemEncodingFromFile(PanelFile);
 			//Train name, used for hacks detection
-			string trainName = new DirectoryInfo(TrainPath).Name.ToUpperInvariant();
+			trainName = new DirectoryInfo(TrainPath).Name.ToUpperInvariant();
 			// read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string FileName = Path.CombineFile(TrainPath, PanelFile);
@@ -54,14 +64,7 @@ namespace Train.OpenBve
 				}
 			}
 			// initialize
-			double PanelResolution = 1024.0;
-			double PanelLeft = 0.0, PanelRight = 1024.0;
-			double PanelTop = 0.0, PanelBottom = 1024.0;
-			Vector2 PanelCenter = new Vector2(0, 512);
-			Vector2 PanelOrigin = new Vector2(0, 512);
-			string PanelDaytimeImage = null;
-			string PanelNighttimeImage = null;
-			Color24 PanelTransparentColor = Color24.Blue;
+			
 			// parse lines for panel
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
@@ -99,19 +102,6 @@ namespace Train.OpenBve
 											case PanelKey.Right:
 												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelRight)) {
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
-
-												if (Plugin.CurrentOptions.EnableBveTsHacks)
-												{
-													switch ((int) PanelRight)
-													{
-														case 1696:
-															if (PanelResolution == 1024 && trainName == "TOQ2000CN1EXP10" || trainName == "TOQ8500CS8EXP10")
-															{
-																PanelRight = 1024;
-															}
-															break;
-													}
 												}
 												break;
 											case PanelKey.Top:
@@ -163,72 +153,6 @@ namespace Train.OpenBve
 														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelCenter.Y)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (Plugin.CurrentOptions.EnableBveTsHacks)
-														{
-															switch ((int)PanelCenter.Y)
-															{
-																case 180:
-																	switch (trainName.ToUpperInvariant())
-																	{
-																		case "LT_C69_77":
-																		case "LT_C69_77_V2":
-																			// Broken initial zoom
-																			PanelCenter.Y = 350;
-																			break;
-																	}
-																	break;
-																case 200:
-																	switch (trainName.ToUpperInvariant())
-																	{
-																		case "HM05":
-																			// Broken initial zoom
-																			PanelCenter.Y = 350;
-																			break;
-																	}
-																	break;
-																case 229:
-																	if (PanelBottom == 768 && PanelResolution == 1024)
-																	{
-																		// Martin Finken's BVE4 trams: Broken initial zoom
-																		PanelCenter.Y = 350;
-																	}
-																	break;
-																case 255:
-																	if (PanelBottom == 1024 && PanelResolution == 1024)
-																	{
-																		switch (trainName.ToUpperInvariant())
-																		{
-																			case "PARIS_MF67":
-																			case "PARIS_MF88":
-																			case "PARIS_MP73":
-																			case "PARIS_MP89":
-																			case "PARIS_MP89AUTO":
-																			case "LT1938":
-																			case "LT1973 UNREFURB":
-																				// Broken initial zoom
-																				PanelCenter.Y = 350;
-																				break;
-																			case "LT_A60_62":
-																			case "LT1972 MKII":
-																				// Broken initial zoom and black patch at bottom of panel
-																				PanelCenter.Y = 350;
-																				PanelBottom = 792;
-																				break;
-																		}
-																	}
-																	break;
-																case 483:
-																	switch (trainName.ToUpperInvariant())
-																	{
-																		case "[HOSHIRAIL] KCIC CR400-AF":
-																			PanelCenter.X = 517;
-																			PanelCenter.Y = 300;
-																			break;
-																	}
-																	break;
-															}
-															
-														}
 													} else {
 														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
@@ -246,26 +170,6 @@ namespace Train.OpenBve
 														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelOrigin.Y)) {
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (Plugin.CurrentOptions.EnableBveTsHacks)
-														{
-															switch (trainName)
-															{
-																case "8171BETA":
-																	if (PanelResolution == 768 && PanelOrigin.Y == 256)
-																	{
-																		// 81-71: Bust panel origin means a flying cab....
-																		PanelOrigin.Y = 0;
-																	}
-																	break;
-																case "[HOSHIRAIL] KCIC CR400-AF":
-																	if (PanelResolution == 826 && PanelOrigin.X == 350)
-																	{
-																		PanelOrigin.X = 517;
-																		PanelOrigin.Y = 300;
-																	}
-																	break;
-															}
-														}
 													} else {
 														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
@@ -277,6 +181,7 @@ namespace Train.OpenBve
 					}
 				}
 			}
+			ApplyGlobalHacks();
 			{ // camera restriction
 				double WorldWidth, WorldHeight;
 				if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {
