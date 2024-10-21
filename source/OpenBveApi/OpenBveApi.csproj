@@ -221,6 +221,7 @@
     <Compile Include="System\Hosts.Plugins.cs" />
     <Compile Include="System\Hosts\ProblemType.cs" />
     <Compile Include="System\Interop.cs" />
+    <Compile Include="System\Path.Filenames.cs" />
     <Compile Include="System\SimulationState.cs" />
     <Compile Include="System\TextEncoding.cs" />
     <Compile Include="System\Timers.cs" />

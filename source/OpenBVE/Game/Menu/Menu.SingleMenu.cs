@@ -304,16 +304,25 @@ namespace OpenBve
 							{
 								continue;
 							}
-							if (fileName.ToLowerInvariant().EndsWith(".csv") || fileName.ToLowerInvariant().EndsWith(".rw") || fileName.EndsWith(".txt"))
+							if (fileName.ToLowerInvariant().EndsWith(".csv") || fileName.ToLowerInvariant().EndsWith(".rw") || fileName.EndsWith(".txt") || fileName.EndsWith(".dat"))
 							{
-								if (fileName.IndexOf("readme", StringComparison.CurrentCultureIgnoreCase) != -1)
+								if(Path.IsInvalidDatName(fileName) || Path.IsInvalidTxtName(fileName))
 								{
-									// block most readme files from trying to be shown as a route
+									// block most junk files from trying to be shown as a route
 									continue;
 								}
-								Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.RouteFile, 0);
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_route.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
-								totalEntries++;
+
+								for (int k = 0; k < Program.CurrentHost.Plugins.Length; k++)
+								{
+									// check to see if valid
+									if (Program.CurrentHost.Plugins[k].Route != null && Program.CurrentHost.Plugins[k].Route.CanLoadRoute(potentialFiles[j]))
+									{
+										Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.RouteFile, 0);
+										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_route.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
+										totalEntries++;
+										break;
+									}
+								}
 							}
 						}
 						Array.Resize(ref Items, totalEntries);
