@@ -1,4 +1,5 @@
-﻿namespace OpenBveApi.Routes
+﻿// ReSharper disable UnusedMember.Global
+namespace OpenBveApi.Routes
 {
 	/// <summary>The default direction of travel on a track</summary>
 	public enum TrackDirection

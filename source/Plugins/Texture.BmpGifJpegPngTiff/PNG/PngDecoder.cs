@@ -135,6 +135,9 @@ namespace Plugin.PNG
 									case 8:
 										ScanlineLength = 1;
 										break;
+									case 16:
+										Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "16-bit PNG files are not currently supported by this decoder in file " + fileName);
+										return false;
 									default:
 										Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Invalid or unsupported BitDepth in PNG file " + fileName);
 										return false;
@@ -157,15 +160,17 @@ namespace Plugin.PNG
 									case ColorType.Rgba:
 										BytesPerPixel = 4;
 										break;
+									case ColorType.GrayscaleAlpha:
+										BytesPerPixel = 2;
+										break;
 									default:
 										Plugin.CurrentHost.ReportProblem(ProblemType.UnsupportedData, "This decoder does not currently support " + ColorType + " in PNG file " + fileName);
 										return false;
 								}
 
-								ScanlineLength = (Width * BytesPerPixel) / ScanlineLength;
+								ScanlineLength = Math.Max(1, (Width * BytesPerPixel) / ScanlineLength); // scanline must be a minumum of 1 byte in length
 
-								pixelBuffer = ColorType != ColorType.Palleted ? new byte[Width * Height * BytesPerPixel] : new byte[Width * Height * 4];
-								
+								pixelBuffer = ColorType != ColorType.Palleted && ColorType != ColorType.GrayscaleAlpha ? new byte[Width * Height * BytesPerPixel] : new byte[Width * Height * 4];
 								break;
 							case ChunkType.PLTE:
 								colorPalette = new Palette(chunkBuffer);
@@ -221,7 +226,6 @@ namespace Plugin.PNG
 						chunkDataStream.Seek(2, SeekOrigin.Begin);
 
 						int pixelsOffset = 0;
-
 						using (DeflateStream deflate = new DeflateStream(chunkDataStream, CompressionMode.Decompress))
 						{
 							switch (interlaceMethod)
@@ -239,7 +243,7 @@ namespace Plugin.PNG
 										}
 										
 										for (int x = 0; x < scanline.Length; x++)
-										{
+										{										
 											// ReSharper disable once TooWideLocalVariableScope
 											byte leftByte, upByte, upLeftByte;
 											switch (scanlineFilterAlgorithm)
@@ -266,97 +270,151 @@ namespace Plugin.PNG
 											}
 										}
 
-										if (ColorType == ColorType.Palleted)
-										{
-											switch (BitDepth)
-											{
-												case 1:
-													for (int px = 0; px < scanline.Length; px++)
-													{
-														for (int currentBit = 0; currentBit < 8; currentBit++)
-														{
-															if ((scanline[px] & 1 << (7 - currentBit % 8)) != 0)
-															{
-																pixelBuffer[pixelsOffset++] = colorPalette.Colors[1].R;
-																pixelBuffer[pixelsOffset++] = colorPalette.Colors[1].G;
-																pixelBuffer[pixelsOffset++] = colorPalette.Colors[1].B;
-																pixelBuffer[pixelsOffset++] = colorPalette.Colors[1].A;
-															}
-															else
-															{
-																pixelBuffer[pixelsOffset++] = colorPalette.Colors[0].R;
-																pixelBuffer[pixelsOffset++] = colorPalette.Colors[0].G;
-																pixelBuffer[pixelsOffset++] = colorPalette.Colors[0].B;
-																pixelBuffer[pixelsOffset++] = colorPalette.Colors[0].A;
-															}
-															if (px >= Width)
-															{
-																// A single byte contains 8px, but the image may not be of a multiple of this
-																break;
-															}
-														}
-													}
-													break;
-												case 2:
-													for (int px = 0; px < scanline.Length; px++)
-													{
-														byte firstNibblet = (byte)((scanline[px] >> 6) & 0x03); // color of first pix
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[firstNibblet].R;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[firstNibblet].G;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[firstNibblet].B;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[firstNibblet].A;
-														byte secondNibblet = (byte)((scanline[px] >> 4) & 0x03); // color of second pix
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[secondNibblet].R;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[secondNibblet].G;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[secondNibblet].B;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[secondNibblet].A;
-														byte thirdNibblet = (byte)((scanline[px] >> 2) & 0x03); // color of third pix
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[thirdNibblet].R;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[thirdNibblet].G;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[thirdNibblet].B;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[thirdNibblet].A;
-														byte fourthNibblet = (byte)(scanline[px] & 0x03); // color of fourth pix
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[fourthNibblet].R;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[fourthNibblet].G;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[fourthNibblet].B;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[fourthNibblet].A;
-													}
-													break;
-												case 4:
-													for (int px = 0; px < scanline.Length; px++)
-													{
-														byte leftNibble = (byte)((scanline[px] & 0xF0) >> 4); // color of left pixel
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[leftNibble].R;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[leftNibble].G;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[leftNibble].B;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[leftNibble].A;
-														byte rightNibble = (byte) (scanline[px] & 0x0F); // color of right pixel
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[rightNibble].R;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[rightNibble].G;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[rightNibble].B;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[rightNibble].A;
-													}
-													break;
-												case 8:
-													for (int px = 0; px < scanline.Length; px++)
-													{
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].R;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].G;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].B;
-														pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].A;
-													}
-													break;
-											}
-											
-										}
-										else
-										{
-											// just copy raw data into the pixel buffer
-											Buffer.BlockCopy(scanline, 0, pixelBuffer, pixelsOffset, scanline.Length);
-											pixelsOffset += scanline.Length;
-										}
+                                        switch (ColorType)
+                                        {
+                                            case ColorType.Palleted:
+                                                {
+                                                    int pixelIndex = 0;
+                                                    switch (BitDepth)
+                                                    {
+                                                        case 1:
 
-										Buffer.BlockCopy(scanline, 0, previousScanline, 0, scanline.Length);
+                                                            for (int px = 0; px < scanline.Length; px++)
+                                                            {
+                                                                for (int currentBit = 0; currentBit < 8; currentBit++)
+                                                                {
+                                                                    if ((scanline[px] & 1 << (7 - currentBit % 8)) != 0)
+                                                                    {
+                                                                        pixelBuffer[pixelsOffset++] = colorPalette.Colors[1].R;
+                                                                        pixelBuffer[pixelsOffset++] = colorPalette.Colors[1].G;
+                                                                        pixelBuffer[pixelsOffset++] = colorPalette.Colors[1].B;
+                                                                        pixelBuffer[pixelsOffset++] = colorPalette.Colors[1].A;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        pixelBuffer[pixelsOffset++] = colorPalette.Colors[0].R;
+                                                                        pixelBuffer[pixelsOffset++] = colorPalette.Colors[0].G;
+                                                                        pixelBuffer[pixelsOffset++] = colorPalette.Colors[0].B;
+                                                                        pixelBuffer[pixelsOffset++] = colorPalette.Colors[0].A;
+                                                                    }
+
+                                                                    pixelIndex++;
+                                                                    if (pixelIndex >= Width)
+                                                                    {
+                                                                        // A single byte contains 8px, but the image may not be of a multiple of this
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+                                                            break;
+                                                        case 2:
+
+                                                            for (int px = 0; px < scanline.Length; px++)
+                                                            {
+                                                                byte firstNibblet = (byte)((scanline[px] >> 6) & 0x03); // color of first pix
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[firstNibblet].R;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[firstNibblet].G;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[firstNibblet].B;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[firstNibblet].A;
+                                                                pixelIndex++;
+                                                                if (pixelIndex >= Width)
+                                                                {
+                                                                    // A single byte contains 4px, but the image may not be of a multiple of this
+                                                                    break;
+                                                                }
+                                                                byte secondNibblet = (byte)((scanline[px] >> 4) & 0x03); // color of second pix
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[secondNibblet].R;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[secondNibblet].G;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[secondNibblet].B;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[secondNibblet].A;
+                                                                pixelIndex++;
+                                                                if (pixelIndex >= Width)
+                                                                {
+                                                                    // A single byte contains 4px, but the image may not be of a multiple of this
+                                                                    break;
+                                                                }
+                                                                byte thirdNibblet = (byte)((scanline[px] >> 2) & 0x03); // color of third pix
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[thirdNibblet].R;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[thirdNibblet].G;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[thirdNibblet].B;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[thirdNibblet].A;
+                                                                pixelIndex++;
+                                                                if (pixelIndex >= Width)
+                                                                {
+                                                                    // A single byte contains 4px, but the image may not be of a multiple of this
+                                                                    break;
+                                                                }
+                                                                byte fourthNibblet = (byte)(scanline[px] & 0x03); // color of fourth pix
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[fourthNibblet].R;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[fourthNibblet].G;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[fourthNibblet].B;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[fourthNibblet].A;
+                                                            }
+                                                            break;
+                                                        case 4:
+                                                            for (int px = 0; px < scanline.Length; px++)
+                                                            {
+                                                                byte leftNibble = (byte)((scanline[px] & 0xF0) >> 4); // color of left pixel
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[leftNibble].R;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[leftNibble].G;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[leftNibble].B;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[leftNibble].A;
+                                                                pixelIndex++;
+                                                                if (pixelIndex >= Width)
+                                                                {
+                                                                    // A single byte contains 2px, but the image may not be of a multiple of this
+                                                                    break;
+                                                                }
+                                                                byte rightNibble = (byte)(scanline[px] & 0x0F); // color of right pixel
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[rightNibble].R;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[rightNibble].G;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[rightNibble].B;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[rightNibble].A;
+                                                            }
+                                                            break;
+                                                        case 8:
+                                                            for (int px = 0; px < scanline.Length; px++)
+                                                            {
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].R;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].G;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].B;
+                                                                pixelBuffer[pixelsOffset++] = colorPalette.Colors[scanline[px]].A;
+                                                            }
+                                                            break;
+                                                    }
+                                                    break;
+                                                }
+											case ColorType.GrayscaleAlpha:
+												switch (BitDepth)
+												{
+													case 8:
+														int pixelIndex = 0;
+														for (int px = 0; px < scanline.Length; px++)
+														{
+															pixelBuffer[pixelsOffset++] = scanline[px];
+															pixelBuffer[pixelsOffset++] = scanline[px];
+															pixelBuffer[pixelsOffset++] = scanline[px];
+															pixelBuffer[pixelsOffset++] = scanline[px + 1];
+															pixelIndex++;
+															px++;
+														}
+														break;
+													case 16:
+														Plugin.CurrentHost.ReportProblem(ProblemType.UnsupportedData, "16-bit GrayscaleAlpha PNG has not yet been implemented " + fileName);
+														return false;
+													default:
+														Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "A GrayscaleAlpha PNG must have a bit-depth of 8 or 16 in file " + fileName);
+														return false;
+												}
+												break;
+                                            default:
+                                                // just copy raw data into the pixel buffer
+                                                Buffer.BlockCopy(scanline, 0, pixelBuffer, pixelsOffset, scanline.Length);
+                                                pixelsOffset += scanline.Length;
+                                                break;
+                                        }
+
+                                        Buffer.BlockCopy(scanline, 0, previousScanline, 0, scanline.Length);
 									}
 									break;
 									case InterlaceMethod.Adam7:
@@ -387,121 +445,123 @@ namespace Plugin.PNG
 											{
 												ScanlineFilterAlgorithm scanlineFilterAlgorithm = (ScanlineFilterAlgorithm)data[currentByte++];
 												int rowStartByte = currentByte;
+												
+												// find total length of scanline and unfilter data
+												int scanlineLength = pixelsPerScanline * BytesPerPixel;
+												for (int j = 0; j < scanlineLength; j++)
+												{
+													// ReSharper disable once TooWideLocalVariableScope
+													byte leftByte, upByte, upLeftByte;
+													switch (scanlineFilterAlgorithm)
+													{
+														case ScanlineFilterAlgorithm.None:
+															// ignore
+															break;
+														case ScanlineFilterAlgorithm.Sub:
+															leftByte = j >= BytesPerPixel ? data[rowStartByte + j - BytesPerPixel] : (byte)0;
+															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + leftByte) % 256);
+															break;
+														case ScanlineFilterAlgorithm.Up:
+															upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + j];
+															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + upByte) % 256);
+															break;
+														case ScanlineFilterAlgorithm.Average:
+															leftByte = j >= BytesPerPixel ? data[rowStartByte + j - BytesPerPixel] : (byte)0;
+															upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + j];
+															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + ((leftByte + upByte) >> 1)) % 256);
+															break;
+														case ScanlineFilterAlgorithm.Paeth:
+															// NOTE: For Paeth filtered Row0 in any given pass, the previous scanline must be all zeroes
+															// e.g. NWM_Open\Common\buildm0.png
+															leftByte = j - BytesPerPixel >= 0 ? data[rowStartByte + j - BytesPerPixel] : (byte)0;
+															upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + j];
+															upLeftByte = currentScanline == 0 ? (byte)0 : j >= BytesPerPixel ? data[previousRowStartByte + j - BytesPerPixel] : (byte)0;	
+															data[rowStartByte + j] = (byte)((data[rowStartByte + j] + PaethPredictor(leftByte, upByte, upLeftByte)) % 256);
+															break;
+														default:
+															throw new Exception("Decoder error probably...");
+													}
+												}
+
 												for (int j = 0; j < pixelsPerScanline; j++)
 												{
 													int pixelX, pixelY; // using two ints as opposed to Vector2 is c. 10% faster
 													Adam7.GetPixelIndexForScanlineInPass(currentPass, currentScanline, j, out pixelX, out pixelY);
-													for (int k = 0; k < BytesPerPixel; k++)
-													{
-														int relativeRowByte = j * BytesPerPixel + k; // relative index of byte within line
-														// ReSharper disable once TooWideLocalVariableScope
-														byte leftByte, upByte, upLeftByte;
-														switch (scanlineFilterAlgorithm)
-														{
-															case ScanlineFilterAlgorithm.Sub:
-																leftByte = relativeRowByte >= BytesPerPixel ? data[rowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
-																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + leftByte) % 256);
-																break;
-															case ScanlineFilterAlgorithm.Up:
-																upByte = data[previousRowStartByte + relativeRowByte];
-																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + upByte) % 256);
-																break;
-															case ScanlineFilterAlgorithm.Average:
-																leftByte = relativeRowByte >= BytesPerPixel ? data[rowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
-																upByte = data[previousRowStartByte + relativeRowByte];
-																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + ((leftByte + upByte) >> 1)) % 256);
-																break;
-															case ScanlineFilterAlgorithm.Paeth:
-																// NOTE: For Paeth filtered Row0 in any given pass, the previous scanline must be all zeroes
-																// e.g. NWM_Open\Common\buildm0.png
-																leftByte = relativeRowByte - BytesPerPixel >= 0 ? data[rowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;
-																upByte = currentScanline == 0 ? (byte)0 : data[previousRowStartByte + relativeRowByte];
-																upLeftByte = currentScanline == 0 ? (byte)0 : relativeRowByte >= BytesPerPixel ? data[previousRowStartByte + relativeRowByte - BytesPerPixel] : (byte)0;	
-																data[rowStartByte + relativeRowByte] = (byte)((data[rowStartByte + relativeRowByte] + PaethPredictor(leftByte, upByte, upLeftByte)) % 256);
-																break;
-														}
-														currentByte++;
-													}
-													
-													if (ColorType == ColorType.Palleted)
-													{
-														// we're always converting to 4bpp in the output, but need the native bpp to find our position in the array, so don't actually set it
-														int start = Width * 4 * pixelY + pixelX * 4;
+                                                switch (ColorType)
+                                                {
+                                                    case ColorType.Palleted:
+                                                        {
+                                                            // we're always converting to 4bpp in the output, but need the native bpp to find our position in the array, so don't actually set it
+                                                            int start = Width * 4 * pixelY + pixelX * 4;
+                                                            byte pixelByte = data[rowStartByte + (j * BytesPerPixel)];
+                                                            switch (BitDepth)
+                                                            {
+
+                                                                case 4:
+                                                                    if (j % 2 != 0)
+                                                                    {
+                                                                        byte leftNibble = (byte)((pixelByte & 0xF0) >> 4); // color of left pixel
+                                                                        pixelBuffer[start] = colorPalette.Colors[leftNibble].R;
+                                                                        pixelBuffer[start + 1] = colorPalette.Colors[leftNibble].G;
+                                                                        pixelBuffer[start + 2] = colorPalette.Colors[leftNibble].B;
+                                                                        pixelBuffer[start + 3] = colorPalette.Colors[leftNibble].A;
+                                                                        if (j == pixelsPerScanline)
+                                                                        {
+                                                                            // second nibble of byte discarded
+                                                                            currentByte++;
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        byte rightNibble = (byte)(pixelByte & 0x0F); // color of right pixel
+                                                                        pixelBuffer[start] = colorPalette.Colors[rightNibble].R;
+                                                                        pixelBuffer[start + 1] = colorPalette.Colors[rightNibble].G;
+                                                                        pixelBuffer[start + 2] = colorPalette.Colors[rightNibble].B;
+                                                                        pixelBuffer[start + 3] = colorPalette.Colors[rightNibble].A;
+                                                                        currentByte++;
+                                                                    }
+                                                                    break;
+                                                                case 8:
+                                                                    pixelBuffer[start] = colorPalette.Colors[pixelByte].R;
+                                                                    pixelBuffer[start + 1] = colorPalette.Colors[pixelByte].G;
+                                                                    pixelBuffer[start + 2] = colorPalette.Colors[pixelByte].B;
+                                                                    pixelBuffer[start + 3] = colorPalette.Colors[pixelByte].A;
+                                                                    currentByte++;
+                                                                    break;
+                                                            }
+
+                                                            break;
+                                                        }
+													case ColorType.GrayscaleAlpha:
 														switch (BitDepth)
 														{
-															case 1:
-																for (int currentBit = 0; currentBit < 8; currentBit++)
-																{
-																	if ((data[rowStartByte + j * BytesPerPixel] & 1 << (7 - currentBit % 8)) != 0)
-																	{
-																		pixelBuffer[start++] = colorPalette.Colors[1].R;
-																		pixelBuffer[start++] = colorPalette.Colors[1].G;
-																		pixelBuffer[start++] = colorPalette.Colors[1].B;
-																		pixelBuffer[start++] = colorPalette.Colors[1].A;
-																	}
-																	else
-																	{
-																		pixelBuffer[start++] = colorPalette.Colors[0].R;
-																		pixelBuffer[start++] = colorPalette.Colors[0].G;
-																		pixelBuffer[start++] = colorPalette.Colors[0].B;
-																		pixelBuffer[start++] = colorPalette.Colors[0].A;
-																	}
-
-																	if (pixelX + currentBit >= Width)
-																	{
-																		// A single byte contains 8px, but the image may not be of a multiple of this
-																		break;
-																	}
-																}
-
-																break;
-															case 2:
-																byte firstNibblet = (byte)((data[rowStartByte + j * BytesPerPixel] >> 6) & 0x03); // color of first pix
-																pixelBuffer[start] = colorPalette.Colors[firstNibblet].R;
-																pixelBuffer[start + 01] = colorPalette.Colors[firstNibblet].G;
-																pixelBuffer[start + 02] = colorPalette.Colors[firstNibblet].B;
-																pixelBuffer[start + 03] = colorPalette.Colors[firstNibblet].A;
-																byte secondNibblet = (byte)((data[rowStartByte + j * BytesPerPixel] >> 4) & 0x03); // color of second pix
-																pixelBuffer[start + 04] = colorPalette.Colors[secondNibblet].R;
-																pixelBuffer[start + 05] = colorPalette.Colors[secondNibblet].G;
-																pixelBuffer[start + 06] = colorPalette.Colors[secondNibblet].B;
-																pixelBuffer[start + 07] = colorPalette.Colors[secondNibblet].A;
-																byte thirdNibblet = (byte)((data[rowStartByte + j * BytesPerPixel] >> 2) & 0x03); // color of third pix
-																pixelBuffer[start + 08] = colorPalette.Colors[thirdNibblet].R;
-																pixelBuffer[start + 09] = colorPalette.Colors[thirdNibblet].G;
-																pixelBuffer[start + 10] = colorPalette.Colors[thirdNibblet].B;
-																pixelBuffer[start + 11] = colorPalette.Colors[thirdNibblet].A;
-																byte fourthNibblet = (byte)(data[rowStartByte + j * BytesPerPixel] & 0x03); // color of fourth pix
-																pixelBuffer[start + 12] = colorPalette.Colors[fourthNibblet].R;
-																pixelBuffer[start + 13] = colorPalette.Colors[fourthNibblet].G;
-																pixelBuffer[start + 14] = colorPalette.Colors[fourthNibblet].B;
-																pixelBuffer[start + 15] = colorPalette.Colors[fourthNibblet].A;
-																break;
-															case 4:
-																byte leftNibble = (byte)((data[rowStartByte + j * BytesPerPixel] & 0xF0) >> 4); // color of left pixel
-																pixelBuffer[start] = colorPalette.Colors[leftNibble].R;
-																pixelBuffer[start + 1] = colorPalette.Colors[leftNibble].G;
-																pixelBuffer[start + 2] = colorPalette.Colors[leftNibble].B;
-																pixelBuffer[start + 3] = colorPalette.Colors[leftNibble].A;
-																byte rightNibble = (byte)(data[rowStartByte + j * BytesPerPixel] & 0x0F); // color of right pixel
-																pixelBuffer[start + 4] = colorPalette.Colors[rightNibble].R;
-																pixelBuffer[start + 5] = colorPalette.Colors[rightNibble].G;
-																pixelBuffer[start + 6] = colorPalette.Colors[rightNibble].B;
-																pixelBuffer[start + 7] = colorPalette.Colors[rightNibble].A;
-																break;
 															case 8:
-																pixelBuffer[start] = colorPalette.Colors[data[rowStartByte + j * BytesPerPixel]].R;
-																pixelBuffer[start + 1] = colorPalette.Colors[data[rowStartByte + j * BytesPerPixel]].G;
-																pixelBuffer[start + 2] = colorPalette.Colors[data[rowStartByte + j * BytesPerPixel]].B;
-																pixelBuffer[start + 3] = colorPalette.Colors[data[rowStartByte + j * BytesPerPixel]].A;
+																// we're always converting to 4bpp in the output, but need the native bpp to find our position in the array, so don't actually set it
+																int start = Width * 4 * pixelY + pixelX * 4;
+																byte pixelByte = data[rowStartByte + (j * BytesPerPixel)];
+																byte alphaByte = data[(rowStartByte + (j * BytesPerPixel)) + 1];
+																pixelBuffer[start] = pixelByte;
+																pixelBuffer[start + 1] = pixelByte;
+																pixelBuffer[start + 2] = pixelByte;
+																pixelBuffer[start + 3] = alphaByte;
+																currentByte += 2;
 																break;
+															case 16:
+																Plugin.CurrentHost.ReportProblem(ProblemType.UnsupportedData, "16-bit GrayscaleAlpha PNG has not yet been implemented " + fileName);
+																return false;
+															default:
+																Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "A GrayscaleAlpha PNG must have a bit-depth of 8 or 16 in file " + fileName);
+																return false;
 														}
-													}
-													else
-													{
-														int start = Width * BytesPerPixel * pixelY + pixelX * BytesPerPixel;
-														Buffer.BlockCopy(data, rowStartByte + j * BytesPerPixel, pixelBuffer, start, BytesPerPixel);
-													}
+														break;
+                                                    default:
+                                                        {
+                                                            int start = Width * BytesPerPixel * pixelY + pixelX * BytesPerPixel;
+                                                            Buffer.BlockCopy(data, rowStartByte + j * BytesPerPixel, pixelBuffer, start, BytesPerPixel);
+                                                            currentByte += BytesPerPixel;
+                                                            break;
+                                                        }
+                                                }
 												}
 												previousRowStartByte = rowStartByte;
 											}
@@ -514,7 +574,7 @@ namespace Plugin.PNG
 						}
 					}
 
-					if (ColorType == ColorType.Palleted)
+					if (ColorType == ColorType.Palleted || ColorType == ColorType.GrayscaleAlpha)
 					{
 						// need the final bpp to reflect what we've converted the image to, not the bpp in the file used whilst loading
 						BytesPerPixel = 4;

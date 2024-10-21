@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2021, Marc Riera, The OpenBVE Project
+//Copyright (c) 2021-2024, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -42,6 +42,8 @@ namespace DenshaDeGoInput
 			internal readonly int VendorID;
 			/// <summary>The USB product ID</summary>
 			internal readonly int ProductID;
+			/// <summary>The USB revision</summary>
+			internal readonly int Revision;
 			/// <summary>Backing property containing the cached controller name</summary>
 			private string controllerName;
 			/// <summary>An array to be sent to the controller upon unload</summary>
@@ -56,16 +58,21 @@ namespace DenshaDeGoInput
 			internal byte[] ReadBuffer;
 			/// <summary>Byte array containing the data to be sent to the controller</summary>
 			internal byte[] WriteBuffer;
+			/// <summary>The setup packet needed to send data to the controller.</summary>
+			internal UsbSetupPacket SetupPacket;
+
 
 			/// <summary>
 			/// Initializes a controller
-			/// <param name="vid">A string representing the vendor ID.</param>
-			/// <param name="pid">A string representing the product ID.</param>
+			/// <param name="vid">An int representing the vendor ID.</param>
+			/// <param name="pid">An int representing the product ID.</param>
+			/// <param name="rev">An int representing the revision.</param>
 			/// </summary>
-			internal UsbController(int vid, int pid)
+			internal UsbController(int vid, int pid, int rev)
 			{
 				VendorID = vid;
 				ProductID = pid;
+				Revision = rev;
 				controllerName = string.Empty;
 				UnloadBuffer = new byte[0];
 				IsConnected = false;
@@ -88,10 +95,16 @@ namespace DenshaDeGoInput
 						if (ControllerDevice != null)
 						{
 							controllerName = ControllerDevice.Info.ProductString;
+							if (string.IsNullOrEmpty(controllerName))
+							{
+								// The name may be blank, use VID+PID
+								controllerName = VendorID.ToString("X4") + ":" + ProductID.ToString("X4") + ":" + Revision.ToString("D4");
+							}
 						}
 					}
 					catch
 					{
+						// ignored
 					}
 					return controllerName;
 				}
@@ -106,12 +119,8 @@ namespace DenshaDeGoInput
 				{
 					if (ControllerDevice != null)
 					{
-						if (UnloadBuffer.Length > 0)
-						{
-							// Send unload buffer to turn off controller
-							int bytesWritten;
-							ControllerDevice.ControlTransfer(ref setupPacket, UnloadBuffer, UnloadBuffer.Length, out bytesWritten);
-						}
+						// Send unload buffer to turn off controller
+						ControllerDevice.ControlTransfer(ref SetupPacket, UnloadBuffer, UnloadBuffer.Length, out int _);
 						IUsbDevice wholeUsbDevice = ControllerDevice as IUsbDevice;
 						if (!ReferenceEquals(wholeUsbDevice, null))
 						{
@@ -147,8 +156,7 @@ namespace DenshaDeGoInput
 					// Ask for input
 					if (ReadBuffer.Length > 0)
 					{
-						int readCount;
-						ErrorCode readError = ControllerReader.Read(ReadBuffer, 0, ReadBuffer.Length, 100, out readCount);
+						ErrorCode readError = ControllerReader.Read(ReadBuffer, 0, ReadBuffer.Length, 100, out int _);
 
 						if (readError == ErrorCode.DeviceNotFound || readError == ErrorCode.Win32Error || readError == ErrorCode.MonoApiError)
 						{
@@ -158,11 +166,7 @@ namespace DenshaDeGoInput
 					}
 
 					// Send output buffer
-					if (WriteBuffer.Length > 0)
-					{
-						int bytesWritten;
-						ControllerDevice.ControlTransfer(ref LibUsb.setupPacket, WriteBuffer, WriteBuffer.Length, out bytesWritten);
-					}
+					ControllerDevice.ControlTransfer(ref SetupPacket, WriteBuffer, WriteBuffer.Length, out int _);
 				}
 				catch
 				{

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
@@ -10,6 +12,8 @@ namespace OpenBveApi.Objects
 	/// <inheritdoc />
 	public class StaticObject : UnifiedObject
 	{
+		/// <summary>Whether the object is optimized</summary>
+		private bool IsOptimized;
 		/// <summary>The mesh of the object</summary>
 		public Mesh Mesh;
 		/// <summary>The starting track position, for static objects only.</summary>
@@ -43,14 +47,15 @@ namespace OpenBveApi.Objects
 				StartingTrackDistance = StartingTrackDistance,
 				EndingTrackDistance = EndingTrackDistance,
 				Dynamic = Dynamic,
-				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]}
+				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]},
+				IsOptimized = IsOptimized
 			};
 			// vertices
 			for (int j = 0; j < Mesh.Vertices.Length; j++)
 			{
-				if (Mesh.Vertices[j] is ColoredVertex)
+				if (Mesh.Vertices[j] is ColoredVertex cv)
 				{
-					Result.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex) Mesh.Vertices[j]);
+					Result.Mesh.Vertices[j] = new ColoredVertex(cv);
 				}
 				else
 				{
@@ -76,8 +81,8 @@ namespace OpenBveApi.Objects
 			for (int j = 0; j < Mesh.Materials.Length; j++)
 			{
 				Result.Mesh.Materials[j] = Mesh.Materials[j];
-				Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture != null ? DaytimeTexture : Mesh.Materials[j].DaytimeTexture;
-				Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture != null ? NighttimeTexture : Mesh.Materials[j].NighttimeTexture;
+				Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture ?? Mesh.Materials[j].DaytimeTexture;
+				Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture ?? Mesh.Materials[j].NighttimeTexture;
 			}
 
 			return Result;
@@ -91,18 +96,19 @@ namespace OpenBveApi.Objects
 				StartingTrackDistance = StartingTrackDistance,
 				EndingTrackDistance = EndingTrackDistance,
 				Dynamic = Dynamic,
-				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]}
+				Mesh = {Vertices = new VertexTemplate[Mesh.Vertices.Length]},
+				IsOptimized = IsOptimized
 			};
 			// vertices
 			for (int j = 0; j < Mesh.Vertices.Length; j++)
 			{
-				if (Mesh.Vertices[j] is ColoredVertex)
+				if (Mesh.Vertices[j] is ColoredVertex cv)
 				{
-					Result.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex) Mesh.Vertices[j]);
+					Result.Mesh.Vertices[j] = new ColoredVertex(cv);
 				}
-				else if (Mesh.Vertices[j] is LightMappedVertex)
+				else if (Mesh.Vertices[j] is LightMappedVertex lv)
 				{
-					Result.Mesh.Vertices[j] = new LightMappedVertex((LightMappedVertex) Mesh.Vertices[j]);
+					Result.Mesh.Vertices[j] = new LightMappedVertex(lv);
 				}
 				else
 				{
@@ -149,12 +155,38 @@ namespace OpenBveApi.Objects
 				}
 				Result.Mesh.Faces[i].Flip();
 			}
+			Result.IsOptimized = IsOptimized;
 			return Result;
 		}
 
 		/// <inheritdoc/>
 		public override UnifiedObject Transform(double NearDistance, double FarDistance)
 		{
+			/* ** ORIGINAL ALGORITHM**
+			 *
+			 * A brief description on how this works:
+			 *
+			 * Objects are implicitly assumed to be left or right handed.
+			 * They must follow the following vertex windings, having a total of 4 or 8 vertices:
+			 *
+			 * LEFT-HANDED
+			 * ============
+			 *
+			 * TopLeft, BottomLeft, BottomRight, TopRight
+			 *
+			 * RIGHT-HANDED
+			 * ============
+			 *
+			 * BottomRight, TopRight, TopLeft, BottomLeft
+			 *
+			 * We then go through the vertex list, and our first two vertices in each are transformed.
+			 * The *new* position is now the corresponding X of the other vertex MINUS the distance.
+			 *
+			 * NOTES:
+			 * This algorithm is totally broken for anything other than objects containing 4 / 8 vertices
+			 * If our vertex windings do not conform, it's also broken.
+			 *
+			 */
 			StaticObject Result = (StaticObject)this.Clone();
 			int n = 0;
 			double x2 = 0.0, x3 = 0.0, x6 = 0.0, x7 = 0.0;
@@ -205,7 +237,7 @@ namespace OpenBveApi.Objects
 					}
 					else if (m == 5)
 					{
-						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x6;
+						Result.Mesh.Vertices[i].Coordinates.X = FarDistance - x6;
 						break;
 					}
 					m++;
@@ -215,6 +247,101 @@ namespace OpenBveApi.Objects
 					}
 				}
 			}
+			return Result;
+		}
+
+		/// <inheritdoc/>
+		public override UnifiedObject TransformLeft(double NearDistance, double FarDistance)
+		{
+			/*
+			 * **NEW ALGORITHM**
+			 *
+			 * This works *better* than the original algorithm, but is still not happy with objects
+			 * not conforming to 4-vertex faces.
+			 *
+			 * To be improved.....
+			 */
+
+			bool vertical = true;
+			double zPos = Mesh.Vertices[0].Coordinates.Z;
+			double minX = double.MaxValue, maxX = double.MinValue;
+			for (int i = 0; i < Mesh.Vertices.Length; i++)
+			{
+				minX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, minX);
+				maxX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, maxX);
+				if (System.Math.Abs(Mesh.Vertices[i].Coordinates.Z - zPos) > 0.1)
+				{
+					vertical = false;
+				}
+			}
+
+			StaticObject Result = (StaticObject)this.Clone();
+
+			if (vertical || System.Math.Abs(NearDistance - FarDistance) > 0.1)
+			{
+				// If vertical, or both distances are within 0.1m use scale instead (this works for all object types)
+				double width = maxX - minX;
+				Result.ApplyScale(width / (NearDistance + width), 1,1);
+				return Result;
+			}
+
+
+			for (int i = 0; i < Mesh.Vertices.Length; i += 4)
+			{
+				List<VertexTemplate> tempList = Mesh.Vertices.Skip(i).Take(4).ToList();
+				// find vertices to base transform on
+				int bottomLeft = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
+				int bottomRight = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
+				int topRight = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
+				int topLeft = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
+
+				// for a left-handed transform, we need to transform the right-side coords
+				Result.Mesh.Vertices[i + bottomRight].Coordinates.X = FarDistance - Result.Mesh.Vertices[i + bottomLeft].Coordinates.X;
+				Result.Mesh.Vertices[i + topRight].Coordinates.X = NearDistance - Result.Mesh.Vertices[i + topLeft].Coordinates.X;
+			}
+
+			return Result;
+		}
+
+		/// <inheritdoc/>
+		public override UnifiedObject TransformRight(double NearDistance, double FarDistance)
+		{
+			bool vertical = true;
+			double zPos = Mesh.Vertices[0].Coordinates.Z;
+			double minX = double.MaxValue, maxX = double.MinValue;
+			for (int i = 0; i < Mesh.Vertices.Length; i++)
+			{
+				minX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, minX);
+				maxX = System.Math.Min(Mesh.Vertices[i].Coordinates.X, maxX);
+				if (System.Math.Abs(Mesh.Vertices[i].Coordinates.Z - zPos) > 0.1)
+				{
+					vertical = false;
+				}
+			}
+
+			StaticObject Result = (StaticObject)this.Clone();
+
+			if (vertical || System.Math.Abs(NearDistance - FarDistance) > 0.1)
+			{
+				double width = maxX - minX;
+				Result.ApplyScale(width / (NearDistance + width), 1, 1);
+				return Result;
+			}
+
+			for (int i = 0; i < Mesh.Vertices.Length; i += 4)
+			{
+				List<VertexTemplate> tempList = Mesh.Vertices.Skip(i).Take(4).ToList();
+				// find vertices to base transform on
+				int bottomLeft = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
+				int bottomRight = tempList.IndexOf(tempList.OrderByDescending(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
+				int topRight = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenByDescending(c => c.Coordinates.X).First());
+				int topLeft = tempList.IndexOf(tempList.OrderBy(c => c.Coordinates.Z).ThenBy(c => c.Coordinates.X).First());
+
+				// for a right-handed transform, we need to transform the left-side coords
+				Result.Mesh.Vertices[i + bottomLeft].Coordinates.X = FarDistance - Result.Mesh.Vertices[i + bottomRight].Coordinates.X;
+				Result.Mesh.Vertices[i + topLeft].Coordinates.X = NearDistance - Result.Mesh.Vertices[i + topRight].Coordinates.X;
+			}
+
 			return Result;
 		}
 
@@ -474,11 +601,16 @@ namespace OpenBveApi.Objects
 		/// <inheritdoc />
 		public override void OptimizeObject(bool PreserveVerticies, int Threshold, bool VertexCulling)
 		{
+			if (IsOptimized)
+			{
+				return;
+			}
+			IsOptimized = true;
 			int v = Mesh.Vertices.Length;
 			int m = Mesh.Materials.Length;
 			int f = Mesh.Faces.Length;
 			
-			if (f >= Threshold && f < 20000 && currentHost.Platform != HostPlatform.AppleOSX)
+			if (m >= f / 500 && f >= Threshold && f < 20000 && currentHost.Platform != HostPlatform.AppleOSX)
 			{
 				/*
 				 * HACK:
@@ -487,6 +619,7 @@ namespace OpenBveApi.Objects
 				 * requires an optimized object (therefore decomposed into tris) in all circumstances
 				 *
 				 * Also *always* optimise objects with more than 20k faces (some .X as otherwise this kills the renderer)
+				 * Further, always try to squash where there are more than 500 times faces than materials (Some X trees killing the renderer)
 				 */
 				return;
 			}

@@ -1,0 +1,31 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+  <!-- Jasło - Mierzwice route -->
+	<Patch>
+		<Hash>7802444DAA75DD1B109FE04032FC52FE069F0B25CD54B24CFB2F6651A481F8E3</Hash>
+		<FileName>VIRTUAL2.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<!-- Koduchy - Mumole route -->
+	<Patch>
+		<Hash>A706EB6A6C7E4394FFD876666FE48365E36AC7156C24F883BF51E4457F1296D0</Hash>
+		<FileName>POC_os.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>ED3AADB683C0FE44CBC7AFD46F20F057909E2E73FF4C10E68D2ECA7B354AAC7C</Hash>
+		<FileName>POC_osp.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<!-- Leszno-Krotoszyn -->
+		<Patch>
+		<Hash>1C600BA5074BF9C8B3E1BD045E544C123C919EAA82E676E04EBFBDAE971B0A03</Hash>
+		<FileName>Leszno-Krotoszyn.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+  </RoutePatches>
+</openBVE>

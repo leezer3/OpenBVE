@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
+using LibRender2.Screens;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
@@ -18,6 +19,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.Events;
+using RouteManager2.Tracks;
 using Vector2 = OpenBveApi.Math.Vector2;
 using Vector3 = OpenBveApi.Math.Vector3;
 
@@ -71,7 +73,7 @@ namespace RouteViewer
 		}
 
 		// render scene
-		internal void RenderScene(double TimeElapsed)
+		internal void RenderScene(double timeElapsed)
 		{
 			lastObjectState = null;
 			ReleaseResources();
@@ -93,6 +95,10 @@ namespace RouteViewer
 				{
 					GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 				}
+			}
+			else
+			{
+				GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			}
 
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -132,7 +138,7 @@ namespace RouteViewer
 				Program.CurrentRoute.CurrentFog.Color.B = (byte)(Program.CurrentRoute.PreviousFog.Color.B * frc + Program.CurrentRoute.NextFog.Color.B * fr);
 				if (!Program.CurrentRoute.CurrentFog.IsLinear)
 				{
-					Program.CurrentRoute.CurrentFog.Density = (byte)(Program.CurrentRoute.PreviousFog.Density * frc + Program.CurrentRoute.NextFog.Density * fr);
+					Program.CurrentRoute.CurrentFog.Density = Program.CurrentRoute.PreviousFog.Density * frc + Program.CurrentRoute.NextFog.Density * fr;
 				}
 				
 			}
@@ -143,7 +149,7 @@ namespace RouteViewer
 
 			// render background
 			GL.Disable(EnableCap.DepthTest);
-			Program.CurrentRoute.UpdateBackground(TimeElapsed, false);
+			Program.CurrentRoute.UpdateBackground(timeElapsed, false);
 
 			if (OptionEvents)
 			{
@@ -326,7 +332,7 @@ namespace RouteViewer
 			UnsetAlphaFunc();
 			GL.Disable(EnableCap.DepthTest);
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
-			RenderOverlays();
+			RenderOverlays(timeElapsed);
 			OptionLighting = true;
 		}
 
@@ -419,7 +425,15 @@ namespace RouteViewer
 							dx = soundEvent.Position.X;
 							dy = soundEvent.Position.Y < 0.1 ? 0.1 : soundEvent.Position.Y;
 							dz = soundEvent.Position.Z;
-							t = soundEvent.SoundBuffer == null ? PointSoundTexture : SoundTexture;
+							t = SoundTexture;
+						}
+						else if (e is PointSoundEvent)
+						{
+							s = 0.2;
+							dx = 0;
+							dy = 0.2;
+							dz = 0;
+							t = PointSoundTexture;
 						}
 						else if (e is RailSoundsChangeEvent)
 						{
@@ -484,9 +498,9 @@ namespace RouteViewer
 			}
 
 			// buffers
-			foreach (double p in Program.CurrentRoute.BufferTrackPositions)
+			foreach (BufferStop stop in Program.CurrentRoute.BufferTrackPositions)
 			{
-				double d = p - CameraTrackFollower.TrackPosition;
+				double d = stop.TrackPosition - Program.Renderer.CameraTrackFollower.TrackPosition;
 
 				if (d >= da & d <= db)
 				{
@@ -495,9 +509,10 @@ namespace RouteViewer
 					TrackFollower f = new TrackFollower(Program.CurrentHost)
 					{
 						TriggerType = EventTriggerType.None,
-						TrackPosition = p
+						TrackPosition = stop.TrackPosition,
+						TrackIndex = stop.TrackIndex
 					};
-					f.UpdateAbsolute(p, true, false);
+					f.UpdateAbsolute(stop.TrackPosition, true, false);
 					f.WorldPosition.X += dy * f.WorldUp.X;
 					f.WorldPosition.Y += dy * f.WorldUp.Y;
 					f.WorldPosition.Z += dy * f.WorldUp.Z;
@@ -509,7 +524,7 @@ namespace RouteViewer
 			OptionLighting = true;
 		}
 
-		private void RenderOverlays()
+		private void RenderOverlays(double timeElapsed)
 		{
 			//Initialize openGL
 			SetBlendFunc();
@@ -551,20 +566,41 @@ namespace RouteViewer
 
 				if (totalObjects == 0)
 				{
-					keys = new[] { new[] { "F7" }, new[] { "F8" } };
-					Keys.Render(4, 4, 20, Fonts.SmallFont, keys);
-					OpenGlString.Draw(Fonts.SmallFont, "Open route", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White);
-					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White);
-					OpenGlString.Draw(Fonts.SmallFont, $"v{Application.ProductVersion}", new Vector2(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, Color128.White);
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						keys = new[] { new[] { "esc" } };
+						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the menu", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White, true);
+					}
+					else
+					{
+						keys = new[] { new[] { "F7" }, new[] { "F8" } };
+						Keys.Render(4, 4, 20, Fonts.SmallFont, keys);
+						OpenGlString.Draw(Fonts.SmallFont, "Open route", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White);
+						OpenGlString.Draw(Fonts.SmallFont, $"v{Application.ProductVersion}", new Vector2(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, Color128.White);
+					}
+					
 				}
 				else if (OptionInterface)
 				{
 					// keys
-					keys = new[] { new[] { "F5" }, new[] { "F7" }, new[] { "F8" } };
-					Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
-					OpenGlString.Draw(Fonts.SmallFont, "Reload route", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, "Open route", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 44), TextAlignment.TopLeft, Color128.White, true);
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						keys = new[] { new[] { "F5" }, new[] { "esc" } };
+						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
+						OpenGlString.Draw(Fonts.SmallFont, "Reload route", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the menu", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White, true);
+					}
+					else
+					{
+						keys = new[] { new[] { "F5" }, new[] { "F7" }, new[] { "F8" } };
+						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
+						OpenGlString.Draw(Fonts.SmallFont, "Reload route", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, "Open route", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 44), TextAlignment.TopLeft, Color128.White, true);
+					}
+					
 
 					keys = new[] { new[] { "F" }, new[] { "N" }, new[] { "E" }, new[] { "M" }, new[] { "I" } };
 					Keys.Render(Screen.Width - 20, 4, 16, Fonts.SmallFont, keys);
@@ -579,15 +615,23 @@ namespace RouteViewer
 						OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
 						keys = new[] { new[] { "R" } };
 						Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
-						OpenGlString.Draw(Fonts.SmallFont, $"Draw Rail Paths:", new Vector2(Screen.Width - 32, 144), TextAlignment.TopRight, Color128.White, true);
-						keys = new[] { new[] { "P" } };
-						Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
+						if (Program.CurrentHost.Platform != HostPlatform.AppleOSX || IntPtr.Size == 4)
+						{
+							// only works on WinForms supporting systems
+							OpenGlString.Draw(Fonts.SmallFont, $"Draw Rail Paths:", new Vector2(Screen.Width - 32, 144), TextAlignment.TopRight, Color128.White, true);
+							keys = new[] { new[] { "P" } };
+							Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
+						}
 					}
 					else
 					{
-						OpenGlString.Draw(Fonts.SmallFont, $"Rail Paths:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
-						keys = new[] { new[] { "P" } };
-						Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
+						if (Program.CurrentHost.Platform != HostPlatform.AppleOSX || IntPtr.Size == 4)
+						{
+							// only works on WinForms supporting systems
+							OpenGlString.Draw(Fonts.SmallFont, $"Rail Paths:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
+							keys = new[] { new[] { "P" } };
+							Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
+						}
 					}
 					
 
@@ -598,7 +642,7 @@ namespace RouteViewer
 					Keys.Render(4, Screen.Height - 40, 16, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { null, "↑", null }, new[] { "←", "↓", "→" } };
-					Keys.Render(0 * Screen.Width - 48, Screen.Height - 40, 16, Fonts.SmallFont, keys);
+					Keys.Render((int)(0.5 * Screen.Width - 48), Screen.Height - 40, 16, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { "P↑" }, new[] { "P↓" } };
 					Keys.Render((int)(0.5 * Screen.Width + 32), Screen.Height - 40, 24, Fonts.SmallFont, keys);
@@ -610,9 +654,7 @@ namespace RouteViewer
 					{
 						OpenGlString.Draw(Fonts.SmallFont, "Jump to track position:", new Vector2(4, 80), TextAlignment.TopLeft, Color128.White, true);
 
-						double distance;
-
-						if (double.TryParse(Program.JumpToPositionValue, out distance))
+						if (double.TryParse(Program.JumpToPositionValue, out double distance))
 						{
 							if (distance < Program.MinimumJumpToPositionValue - 100)
 							{
@@ -630,7 +672,7 @@ namespace RouteViewer
 					double x = 0.5 * Screen.Width - 256.0;
 					double Yaw = Camera.Alignment.Yaw * 57.2957795130824;
 					OpenGlString.Draw(Fonts.SmallFont, $"Position: {GetLengthString(Camera.Alignment.TrackPosition)} (X={GetLengthString(Camera.Alignment.Position.X)}, Y={GetLengthString(Camera.Alignment.Position.Y)}), Orientation: (Yaw={Yaw.ToString("0.00", culture)}°, Pitch={(Camera.Alignment.Pitch * 57.2957795130824).ToString("0.00", culture)}°, Roll={(Camera.Alignment.Roll * 57.2957795130824).ToString("0.00", culture)}°)", new Vector2((int)x, 4), TextAlignment.TopLeft, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, $"Radius: {GetLengthString(CameraTrackFollower.CurveRadius)}, Cant: {(1000.0 * CameraTrackFollower.CurveCant).ToString("0", culture)} mm, Adhesion={(100.0 * CameraTrackFollower.AdhesionMultiplier).ToString("0", culture)}" + " , Rain intensity= " + CameraTrackFollower.RainIntensity +"%", new Vector2((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, $"Radius: {GetLengthString(CameraTrackFollower.CurveRadius)}, Cant: {(1000.0 * CameraTrackFollower.CurveCant).ToString("0", culture)} mm, Pitch: {CameraTrackFollower.Pitch.ToString("0", culture)} ‰, Adhesion={(100.0 * CameraTrackFollower.AdhesionMultiplier).ToString("0", culture)}" + " , Rain intensity= " + CameraTrackFollower.RainIntensity +"%", new Vector2((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, ForceLegacyOpenGL ? $"Renderer: Old (GL 1.2)- GL 3.0 not available" : $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Vector2((int)x, 40), TextAlignment.TopLeft, Color128.White, true);
 
 
@@ -742,6 +784,11 @@ namespace RouteViewer
 						
 					}
 				}
+			}
+
+			if (CurrentInterface == InterfaceType.Menu)
+			{
+				Game.Menu.Draw(timeElapsed);
 			}
 
 			// finalize

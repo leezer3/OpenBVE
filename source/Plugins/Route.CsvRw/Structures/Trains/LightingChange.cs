@@ -44,15 +44,11 @@ namespace CsvRwRouteParser
 					// Light set not available
 					return;
 				}
-				int m = Element.Events.Length;
-				Array.Resize(ref Element.Events, m + 1);
-				Element.Events[m] = new LightingChangeEvent(Plugin.CurrentRoute, LightDefinitions[previousDynamicLightSet], LightDefinitions[currentDynamicLightSet]);
+				Element.Events.Add(new LightingChangeEvent(Plugin.CurrentRoute, LightDefinitions[previousDynamicLightSet], LightDefinitions[currentDynamicLightSet]));
 			}
 			else
 			{
-				int m = Element.Events.Length;
-				Array.Resize(ref Element.Events, m + 1);
-				Element.Events[m] = new LightingChangeEvent(Plugin.CurrentRoute, previousLightDefinition, currentLightDefinition);
+				Element.Events.Add(new LightingChangeEvent(Plugin.CurrentRoute, previousLightDefinition, currentLightDefinition));
 			}
 		}
 

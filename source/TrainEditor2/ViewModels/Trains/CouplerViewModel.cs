@@ -69,7 +69,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 						if (Utilities.TryParse(Max.Value, NumberRange.Any, out max) && min > max)
 						{
-							message = "MaxはMin以上でなければなりません。";
+							message = Utilities.GetInterfaceString("message", "mustbe_greater_than");
 						}
 					}
 
@@ -95,7 +95,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 						if (Utilities.TryParse(Min.Value, NumberRange.Any, out min) && max < min)
 						{
-							message = "MaxはMin以上でなければなりません。";
+							message = Utilities.GetInterfaceString("message", "mustbe_greater_than");
 						}
 					}
 

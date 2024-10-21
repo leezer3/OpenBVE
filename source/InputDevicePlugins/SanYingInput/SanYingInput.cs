@@ -90,7 +90,7 @@ namespace SanYingInput
 			}
 			for (int i = 16; i < 19; i++)
 			{
-				Controls[i].Command = Translations.Command.ReverserAnyPostion;
+				Controls[i].Command = Translations.Command.ReverserAnyPosition;
 				Controls[i].Option = 17 - i;
 			}
 #pragma warning disable 618
@@ -184,23 +184,17 @@ namespace SanYingInput
 
 		protected virtual void OnKeyDown(InputEventArgs e)
 		{
-			if (KeyDown != null)
-			{
-				KeyDown(this, e);
-			}
+			KeyDown?.Invoke(this, e);
 		}
 
 		protected virtual void OnKeyUp(InputEventArgs e)
 		{
-			if (KeyUp != null)
-			{
-				KeyUp(this, e);
-			}
+			KeyUp?.Invoke(this, e);
 		}
 
 		private void setSwitchState()
 		{
-			if (JoystickApi.currentDevice == -1)
+			if (JoystickApi.CurrentDevice == -1)
 			{
 				return;
 			}

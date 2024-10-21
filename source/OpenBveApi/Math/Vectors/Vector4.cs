@@ -1,4 +1,5 @@
 ﻿using System;
+// ReSharper disable MergeCastWithTypeCheck
 
 namespace OpenBveApi.Math
 {
@@ -314,8 +315,7 @@ namespace OpenBveApi.Math
 		/// <returns>The transformed vector</returns>
 		public static Vector4 Transform(Vector4 vec, Matrix4D mat)
 		{
-			Vector4 result;
-			Transform(ref vec, ref mat, out result);
+			Transform(ref vec, ref mat, out Vector4 result);
 			return result;
 		}
 

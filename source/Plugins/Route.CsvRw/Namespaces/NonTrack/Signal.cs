@@ -43,8 +43,7 @@ namespace CsvRwRouteParser
 									}
 									else
 									{
-										UnifiedObject obj;
-										Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
+										Plugin.CurrentHost.LoadObject(f, Encoding, out UnifiedObject obj);
 										if (obj is AnimatedObjectCollection)
 										{
 											AnimatedObjectSignalData Signal = new AnimatedObjectSignalData(obj);

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using OpenBveApi.Colors;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 
 namespace TrainEditor2.Extensions
@@ -23,7 +24,7 @@ namespace TrainEditor2.Extensions
 
 		internal static string GetInterfaceString(params string[] ids)
 		{
-			return Translations.GetInterfaceString($"train_editor2_{string.Join("_", ids)}");
+			return Translations.GetInterfaceString(HostApplication.TrainEditor2, ids);
 		}
 
 		internal static bool TryParse(string text, NumberRange range, out double result)

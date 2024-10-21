@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Graphics;
+using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
@@ -99,5 +99,20 @@ namespace OpenBveApi
 		public ObjectDisposalMode ObjectDisposalMode;
 		/// <summary>Uses the native Windows GDI+ decoders for PNG / JPG</summary>
 		public bool UseGDIDecoders;
+		/// <summary>The filename of the current cursor</summary>
+		public string CursorFileName;
+		/// <summary>The download location for the train required by the current route</summary>
+		public string TrainDownloadLocation = "";
+		/// <summary>Whether delayed animated updates based upon track position are used</summary>
+		/// <remarks>Not saved</remarks>
+		public bool DelayedAnimatedUpdates;
+		/// <summary>Enables scripted trains on BVE5 routes</summary>
+		public bool EnableBve5ScriptedTrain;
+		/// <summary>The scale factor for the user interface</summary>
+		public int UserInterfaceScaleFactor;
+
+		/// <summary>Saves the options to the specified filename</summary>
+		/// <param name="fileName">The filename to save the options to</param>
+		public abstract void Save(string fileName);
 	}
 }

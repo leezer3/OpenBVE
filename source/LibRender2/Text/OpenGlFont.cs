@@ -67,10 +67,7 @@ namespace LibRender2.Text
 			{
 				for (int i = 0; i < text.Length; i++)
 				{
-					// ReSharper disable once NotAccessedVariable
-					Texture texture;
-					OpenGlFontChar data;
-					i += GetCharacterData(text, i, out texture, out data) - 1;
+					i += GetCharacterData(text, i, out Texture _, out OpenGlFontChar data) - 1;
 					width += data.TypographicSize.X;
 
 					if (data.TypographicSize.Y > height)

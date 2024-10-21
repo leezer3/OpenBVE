@@ -111,7 +111,7 @@ namespace OpenBveApi.FileSystem {
 				try
 				{
 					RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Loksim-Group\\Install");
-					LoksimDataDirectory = key.GetValue("InstallDataDirPath").ToString();
+					LoksimDataDirectory = key != null ? key.GetValue("InstallDataDirPath").ToString() : LoksimPackageInstallationDirectory;
 				}
 				catch
 				{
@@ -345,8 +345,7 @@ namespace OpenBveApi.FileSystem {
 
 								break;
 							case "version":
-								int v;
-								if (!int.TryParse(value, out v))
+								if (!int.TryParse(value, out int v))
 								{
 									system.AppendToLogFile("WARNING: Invalid filesystem.cfg version detected.");
 								}
@@ -466,7 +465,7 @@ namespace OpenBveApi.FileSystem {
 			try
 			{
 				string file = System.IO.Path.Combine(SettingsFolder, "log.txt");
-				File.WriteAllText(file, @"OpenBVE Log: " + DateTime.Now + Environment.NewLine + @"Program Version: " + version + Environment.NewLine + Environment.NewLine, new UTF8Encoding(true));
+				File.WriteAllText(file, @"OpenBVE Log: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + Environment.NewLine + @"Program Version: " + version + Environment.NewLine + Environment.NewLine, new UTF8Encoding(true));
 			}
 			catch
 			{

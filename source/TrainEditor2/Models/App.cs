@@ -809,7 +809,7 @@ namespace TrainEditor2.Models
 			}
 
 			StringBuilder builder = new StringBuilder();
-			builder.AppendLine($"TrainEditor2 Log: {DateTime.Now}");
+			builder.AppendLine($"TrainEditor2 Log: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}");
 
 			foreach (string message in Interface.LogMessages.Select(x => $"{x.Type.ToString()}: {x.Text}"))
 			{
@@ -903,18 +903,13 @@ namespace TrainEditor2.Models
 
 		internal void ChangeCarClass(int carIndex)
 		{
-			MotorCar motorCar = Train.Cars[carIndex] as MotorCar;
-			TrailerCar trailerCar = Train.Cars[carIndex] as TrailerCar;
-
-			if (motorCar != null)
+			if (Train.Cars[carIndex] is MotorCar motorCar)
 			{
 				Train.Cars[carIndex] = new TrailerCar(motorCar);
 			}
-
-			if (trailerCar != null)
+			else if (Train.Cars[carIndex] is TrailerCar trailerCar)
 			{
 				Train.Cars[carIndex] = new MotorCar(trailerCar);
-
 				Train.ApplyPowerNotchesToCar();
 			}
 

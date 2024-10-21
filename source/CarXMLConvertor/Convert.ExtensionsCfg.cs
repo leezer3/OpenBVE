@@ -5,6 +5,7 @@ using System.IO;
 using System.Security;
 using System.Threading;
 using System.Windows.Forms;
+using OpenBveApi;
 using Path = OpenBveApi.Path;
 
 namespace CarXmlConvertor
@@ -101,10 +102,9 @@ namespace CarXmlConvertor
 									int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 									if (j >= 0)
 									{
-										string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-										string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-										int n;
-										if (int.TryParse(a, NumberStyles.Integer, Culture, out n))
+										string a = Lines[i].Substring(0, j).TrimEnd();
+										string b = Lines[i].Substring(j + 1).TrimStart();
+										if (int.TryParse(a, NumberStyles.Integer, Culture, out int n))
 										{
 											if (n >= 0 & n < ConvertTrainDat.NumberOfCars)
 											{
@@ -129,7 +129,7 @@ namespace CarXmlConvertor
 							{
 								// car
 								string t = Lines[i].Substring(4, Lines[i].Length - 5);
-								int n; if (int.TryParse(t, NumberStyles.Integer, Culture, out n))
+								if (int.TryParse(t, NumberStyles.Integer, Culture, out int n))
 								{
 									if (n >= 0 & n < ConvertTrainDat.NumberOfCars)
 									{
@@ -141,8 +141,8 @@ namespace CarXmlConvertor
 												int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 												if (j >= 0)
 												{
-													string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-													string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+													string a = Lines[i].Substring(0, j).TrimEnd();
+													string b = Lines[i].Substring(j + 1).TrimStart();
 													switch (a.ToLowerInvariant())
 													{
 														case "object":
@@ -157,8 +157,7 @@ namespace CarXmlConvertor
 															break;
 														case "length":
 														{
-															double m;
-															if (double.TryParse(b, NumberStyles.Float, Culture, out m))
+															if (double.TryParse(b, NumberStyles.Float, Culture, out double m))
 															{
 																if (m > 0.0)
 																{
@@ -171,10 +170,9 @@ namespace CarXmlConvertor
 														int k = b.IndexOf(',');
 															if (k >= 0)
 															{
-																string c = b.Substring(0, k).TrimEnd(new char[] { });
-																string d = b.Substring(k + 1).TrimStart(new char[] { });
-																double rear, front;
-																if (double.TryParse(c, NumberStyles.Float, Culture, out rear) && double.TryParse(d, NumberStyles.Float, Culture, out front))
+																string c = b.Substring(0, k).TrimEnd();
+																string d = b.Substring(k + 1).TrimStart();
+																if (double.TryParse(c, NumberStyles.Float, Culture, out double rear) && double.TryParse(d, NumberStyles.Float, Culture, out double front))
 																{
 																	CarInfos[n].RearAxle = rear;
 																	CarInfos[n].FrontAxle = front;
@@ -201,7 +199,7 @@ namespace CarXmlConvertor
 							{
 								// coupler
 								string t = Lines[i].Substring(8, Lines[i].Length - 9);
-								int n; if (int.TryParse(t, NumberStyles.Integer, Culture, out n))
+								if (int.TryParse(t, NumberStyles.Integer, Culture, out int n))
 								{
 									if (n >= 0 & n < Couplers.Length)
 									{
@@ -212,8 +210,8 @@ namespace CarXmlConvertor
 												int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 												if (j >= 0)
 												{
-													string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-													string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+													string a = Lines[i].Substring(0, j).TrimEnd();
+													string b = Lines[i].Substring(j + 1).TrimStart();
 													switch (a.ToLowerInvariant())
 													{
 														case "distances":
@@ -221,13 +219,12 @@ namespace CarXmlConvertor
 															int k = b.IndexOf(',');
 															if (k >= 0)
 															{
-																string c = b.Substring(0, k).TrimEnd(new char[] { });
-																string d = b.Substring(k + 1).TrimStart(new char[] { });
-																double min, max;
-																if (!double.TryParse(c, NumberStyles.Float, Culture, out min))
+																string c = b.Substring(0, k).TrimEnd();
+																string d = b.Substring(k + 1).TrimStart();
+																if (!double.TryParse(c, NumberStyles.Float, Culture, out double min))
 																{
 																}
-																else if (!double.TryParse(d, NumberStyles.Float, Culture, out max))
+																else if (!double.TryParse(d, NumberStyles.Float, Culture, out double max))
 																{
 																}
 																else
@@ -260,7 +257,7 @@ namespace CarXmlConvertor
 							{
 								// car
 								string t = Lines[i].Substring(6, Lines[i].Length - 7);
-								int n; if (int.TryParse(t, NumberStyles.Integer, Culture, out n))
+								if (int.TryParse(t, NumberStyles.Integer, Culture, out int n))
 								{
 									//Assuming that there are two bogies per car
 									bool IsOdd = (n % 2 != 0);
@@ -300,10 +297,9 @@ namespace CarXmlConvertor
 															int k = b.IndexOf(',');
 															if (k >= 0)
 															{
-																string c = b.Substring(0, k).TrimEnd(new char[] { });
-																string d = b.Substring(k + 1).TrimStart(new char[] { });
-																double rear, front;
-																if (double.TryParse(c, NumberStyles.Float, Culture, out rear) && double.TryParse(d, NumberStyles.Float, Culture, out front))
+																string c = b.Substring(0, k).TrimEnd();
+																string d = b.Substring(k + 1).TrimStart();
+																if (double.TryParse(c, NumberStyles.Float, Culture, out double rear) && double.TryParse(d, NumberStyles.Float, Culture, out double front))
 																{
 																	if (IsOdd)
 																	{
@@ -463,6 +459,7 @@ namespace CarXmlConvertor
 				}
 				newLines.Add("<Power>");
 				newLines.Add("<Notches>" + ConvertTrainDat.PowerNotches + "</Notches>");
+				newLines.Add("<!-- Note that XML figures are per-car as opposed to a blended figure for the complete train in Train.dat -->");
 				newLines.Add("<AccelerationCurves>");
 				foreach (ConvertTrainDat.AccelerationCurve curve in ConvertTrainDat.AccelerationCurves)
 				{
@@ -472,6 +469,8 @@ namespace CarXmlConvertor
 					newLines.Add("<StageOneSpeed>" + curve.StageOneSpeed + "</StageOneSpeed>");
 					newLines.Add("<StageTwoSpeed>" + curve.StageTwoSpeed + "</StageTwoSpeed>");
 					newLines.Add("<StageTwoExponent>" + curve.StageTwoExponent + "</StageTwoExponent>");
+					newLines.Add("<!-- If manually setting the acceleration figures per motor car, you will normally want a multiplier of 1.0 -->");
+					newLines.Add("<Multiplier>" + curve.StageTwoExponent + "</Multiplier>");
 					newLines.Add("</OpenBVE>");
 				}
 				newLines.Add("</AccelerationCurves>");
@@ -496,7 +495,7 @@ namespace CarXmlConvertor
 			}
 			if (!String.IsNullOrEmpty(CarInfos[i].Object))
 			{
-				newLines.Add("<Object>" + CarInfos[i].Object + "</Object>");
+				newLines.Add("<Object>" + CarInfos[i].Object.Escape() + "</Object>");
 			}
 			newLines.Add("<Reversed>" + CarInfos[i].Reversed + "</Reversed>");
 			newLines.Add("<LoadingSway>" + CarInfos[i].LoadingSway + "</LoadingSway>");
@@ -505,7 +504,7 @@ namespace CarXmlConvertor
 				newLines.Add("<FrontBogie>");
 				newLines.Add("<FrontAxle>" + CarInfos[i].FrontBogie.FrontAxle + "</FrontAxle>");
 				newLines.Add("<RearAxle>" + CarInfos[i].FrontBogie.RearAxle + "</RearAxle>");
-				newLines.Add("<Object>" + CarInfos[i].FrontBogie.Object + "</Object>");
+				newLines.Add("<Object>" + CarInfos[i].FrontBogie.Object.Escape() + "</Object>");
 				newLines.Add("<Reversed>" + CarInfos[i].FrontBogie.Reversed + "</Reversed>");
 				newLines.Add("</FrontBogie>");
 			}
@@ -515,7 +514,7 @@ namespace CarXmlConvertor
 				newLines.Add("<RearBogie>");
 				newLines.Add("<FrontAxle>" + CarInfos[i].RearBogie.FrontAxle + "</FrontAxle>");
 				newLines.Add("<RearAxle>" + CarInfos[i].RearBogie.RearAxle + "</RearAxle>");
-				newLines.Add("<Object>" + CarInfos[i].RearBogie.Object + "</Object>");
+				newLines.Add("<Object>" + CarInfos[i].RearBogie.Object.Escape() + "</Object>");
 				newLines.Add("<Reversed>" + CarInfos[i].RearBogie.Reversed + "</Reversed>");
 				newLines.Add("</RearBogie>");
 			}
@@ -577,6 +576,7 @@ namespace CarXmlConvertor
 			newLines.Add("<EmergencyRate>" + ConvertTrainDat.BrakeCylinderEmergencyRate + "</EmergencyRate>");
 			newLines.Add("<ReleaseRate>" + ConvertTrainDat.BrakeCylinderReleaseRate + "</ReleaseRate>");
 			newLines.Add("</BrakeCylinder>");
+			newLines.Add("<LegacyPressureDistribution>true</LegacyPressureDistribution>");
 			newLines.Add("</Brake>");
 			newLines.Add("<Doors>");
 			newLines.Add("<Width>" + ConvertTrainDat.DoorWidth / 1000.0 + "</Width>");
@@ -593,7 +593,7 @@ namespace CarXmlConvertor
 					newLines.Add("<CanUncouple>true</CanUncouple>");
 					if (!string.IsNullOrEmpty(Couplers[i].Object))
 					{
-						newLines.Add("<Object>" + Couplers[i].Object + "</Object>");
+						newLines.Add("<Object>" + Couplers[i].Object.Escape() + "</Object>");
 					}
 					newLines.Add("</Coupler>");
 				}
@@ -612,6 +612,15 @@ namespace CarXmlConvertor
 				newLines.Add("<Length>" + ConvertTrainDat.CarLength + "</Length>");
 				newLines.Add("<Width>" + ConvertTrainDat.CarWidth + "</Width>");
 				newLines.Add("<Height>" + ConvertTrainDat.CarHeight + "</Height>");
+				newLines.Add("<CenterOfGravityHeight>" + ConvertTrainDat.CenterOfGravityHeight + "</CenterOfGravityHeight>");
+				if (ConvertTrainDat.ExposedFrontalArea != -1)
+				{
+					newLines.Add("<ExposedFrontalArea>" + ConvertTrainDat.ExposedFrontalArea + "</ExposedFrontalArea>");
+				}
+				if (ConvertTrainDat.UnexposedFrontalArea != -1)
+				{
+					newLines.Add("<UnexposedFrontalArea>" + ConvertTrainDat.UnexposedFrontalArea + "</UnexposedFrontalArea>");
+				}
 				if (ConvertTrainDat.MotorCars[i])
 				{
 					newLines.Add("<MotorCar>True</MotorCar>");

@@ -1,33 +1,24 @@
-﻿using OpenBveApi.Colors;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace LibRender2.Primitives
 {
-	public class Picturebox
+	public class Picturebox : GLControl
 	{
-		/// <summary>Holds a reference to the base renderer</summary>
-		private readonly BaseRenderer Renderer;
-		/// <summary>The texture for the picturebox</summary>
-		public Texture Texture;
-		/// <summary>The background color for the picturebox</summary>
-		public Color128 BackgroundColor;
 		/// <summary>The image sizing mode</summary>
 		public ImageSizeMode SizeMode;
-		/// <summary>The stored location for the textbox</summary>
-		public Vector2 Location;
-		/// <summary>The stored size for the textbox</summary>
-		public Vector2 Size;
+		
+		private bool flipX;
+		private bool flipY;
 
-
-		public Picturebox(BaseRenderer renderer)
+		public Picturebox(BaseRenderer renderer) : base(renderer)
 		{
-			Renderer = renderer;
 			SizeMode = ImageSizeMode.Zoom;
 		}
 
-		public void Draw()
+		public override void Draw()
 		{
 			if (!Renderer.currentHost.LoadTexture(ref Texture, OpenGlTextureWrapMode.ClampClamp))
 			{
@@ -83,11 +74,28 @@ namespace LibRender2.Primitives
 					Vector2 ratio = Size / Texture.Size;
 					double newRatio = ratio.X < ratio.Y ? ratio.X : ratio.Y;
 					newSize = new Vector2(Texture.Width, Texture.Height) * newRatio;
-					Renderer.Rectangle.DrawAlpha(Texture, new Vector2(Location.X + (Size.X - newSize.X) / 2,Location.Y + (Size.Y - newSize.Y) / 2), newSize, Color128.White);
+					OpenGlTextureWrapMode wrapMode = OpenGlTextureWrapMode.ClampClamp;
+					if (flipX)
+					{
+						wrapMode = OpenGlTextureWrapMode.RepeatClamp;
+					}
+
+					if (flipY)
+					{
+						wrapMode = wrapMode == OpenGlTextureWrapMode.RepeatClamp ? OpenGlTextureWrapMode.RepeatRepeat : OpenGlTextureWrapMode.ClampRepeat;
+					}
+					Renderer.Rectangle.DrawAlpha(Texture, new Vector2(Location.X + (Size.X - newSize.X) / 2,Location.Y + (Size.Y - newSize.Y) / 2), newSize, Color128.White, new Vector2(flipX ? -1 : 1,flipY ? -1 : 1), wrapMode);
 					break;
 			}
-			
 		}
 
+		/// <summary>Flips the image displayed in the picturebox</summary>
+		/// <param name="FlipX">Whether to flip the X axis</param>
+		/// <param name="FlipY">Whether to flip the Y axis</param>
+		public void Flip(bool FlipX, bool FlipY)
+		{
+			flipX = FlipX;
+			flipY = FlipY;
+		}
 	}
 }

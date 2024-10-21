@@ -4,6 +4,7 @@ using System.Linq;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
@@ -52,14 +53,12 @@ namespace TrainManager.Trains
 		public readonly DriverBody DriverBody;
 		/// <summary>Whether the train has currently derailed</summary>
 		public bool Derailed;
-		/// <summary>Stores the previous route speed limit</summary>
-		private double previousRouteLimit;
 		/// <summary>Internal timer used for updates</summary>
 		private double InternalTimerTimeElapsed;
 		/// <inheritdoc/>
 		public override bool IsPlayerTrain => this == TrainManagerBase.PlayerTrain;
-
-		private bool currentlyOverspeed;
+		/// <summary>The lock to be held whilst operations potentially affecting the makeup of the train are performed</summary>
+		internal object updateLock = new object();
 
 		/// <inheritdoc/>
 		public override int NumberOfCars => this.Cars.Length;
@@ -163,6 +162,21 @@ namespace TrainManager.Trains
 			Cars[this.DriverCar].UpdateObjects(0.0, true, false);
 		}
 
+		public void PreloadTextures()
+		{
+			for (int i = 0; i < Cars.Length; i++)
+			{
+				for (int j = 0; j < Cars[i].CarSections.Length; j++)
+				{
+					for (int k = 0; k < Cars[i].CarSections[j].Groups.Length; k++)
+					{
+						Cars[i].CarSections[j].Groups[k].PreloadTextures();
+					}
+					
+				}
+			}
+		}
+
 		/// <summary>Places the cars</summary>
 		/// <param name="TrackPosition">The track position of the front car</param>
 		public void PlaceCars(double TrackPosition)
@@ -217,230 +231,204 @@ namespace TrainManager.Trains
 		/// <inheritdoc/>
 		public override void UpdateBeacon(int transponderType, int sectionIndex, int optional)
 		{
-			if (Plugin != null)
-			{
-				Plugin.UpdateBeacon(transponderType, sectionIndex, optional);
-			}
+			Plugin?.UpdateBeacon(transponderType, sectionIndex, optional);
 		}
 
 		/// <inheritdoc/>
 		public override void Update(double TimeElapsed)
 		{
-			if (State == TrainState.Pending)
+			lock (updateLock)
 			{
-				// pending train
-				bool forceIntroduction = !IsPlayerTrain && TrainManagerBase.currentHost.SimulationState != SimulationState.MinimalisticSimulation;
-				double time = 0.0;
-				if (!forceIntroduction)
+				if (State == TrainState.Pending)
 				{
-					for (int i = 0; i < TrainManagerBase.CurrentRoute.Stations.Length; i++)
-					{
-						if (TrainManagerBase.CurrentRoute.Stations[i].StopMode == StationStopMode.AllStop | TrainManagerBase.CurrentRoute.Stations[i].StopMode == StationStopMode.PlayerPass)
-						{
-							if (TrainManagerBase.CurrentRoute.Stations[i].ArrivalTime >= 0.0)
-							{
-								time = TrainManagerBase.CurrentRoute.Stations[i].ArrivalTime;
-							}
-							else if (TrainManagerBase.CurrentRoute.Stations[i].DepartureTime >= 0.0)
-							{
-								time = TrainManagerBase.CurrentRoute.Stations[i].DepartureTime - TrainManagerBase.CurrentRoute.Stations[i].StopTime;
-							}
-
-							break;
-						}
-					}
-
-					time -= TimetableDelta;
-				}
-
-				if (TrainManagerBase.CurrentRoute.SecondsSinceMidnight >= time | forceIntroduction)
-				{
-					bool introduce = true;
+					// pending train
+					bool forceIntroduction = !IsPlayerTrain && TrainManagerBase.currentHost.SimulationState != SimulationState.MinimalisticSimulation;
+					double time = 0.0;
 					if (!forceIntroduction)
 					{
-						if (CurrentSectionIndex >= 0  && TrainManagerBase.CurrentRoute.Sections.Length > CurrentSectionIndex)
+						for (int i = 0; i < TrainManagerBase.CurrentRoute.Stations.Length; i++)
 						{
-							if (!TrainManagerBase.CurrentRoute.Sections[CurrentSectionIndex].IsFree())
+							if (TrainManagerBase.CurrentRoute.Stations[i].StopMode == StationStopMode.AllStop | TrainManagerBase.CurrentRoute.Stations[i].StopMode == StationStopMode.PlayerPass)
 							{
-								introduce = false;
+								if (TrainManagerBase.CurrentRoute.Stations[i].ArrivalTime >= 0.0)
+								{
+									time = TrainManagerBase.CurrentRoute.Stations[i].ArrivalTime;
+								}
+								else if (TrainManagerBase.CurrentRoute.Stations[i].DepartureTime >= 0.0)
+								{
+									time = TrainManagerBase.CurrentRoute.Stations[i].DepartureTime - TrainManagerBase.CurrentRoute.Stations[i].StopTime;
+								}
+
+								break;
 							}
 						}
+
+						time -= TimetableDelta;
 					}
 
-					if (this == TrainManagerBase.PlayerTrain && TrainManagerBase.currentHost.SimulationState != SimulationState.Loading)
+					if (TrainManagerBase.CurrentRoute.SecondsSinceMidnight >= time | forceIntroduction)
 					{
-						/* Loading has finished, but we still have an AI train in the current section
-						 * This may be caused by an iffy RunInterval value, or simply by having no sections							 *
-						 *
-						 * We must introduce the player's train as otherwise the cab and loop sounds are missing
-						 * NOTE: In this case, the signalling cannot prevent the player from colliding with
-						 * the AI train
-						 */
-
-						introduce = true;
-					}
-
-					if (introduce)
-					{
-						// train is introduced
-						State = TrainState.Available;
-						for (int j = 0; j < Cars.Length; j++)
+						bool introduce = true;
+						if (!forceIntroduction)
 						{
-							if (Cars[j].CarSections.Length != 0)
+							if (CurrentSectionIndex >= 0 && TrainManagerBase.CurrentRoute.Sections.Length > CurrentSectionIndex)
 							{
-								if (j == DriverCar && IsPlayerTrain && TrainManagerBase.CurrentOptions.InitialViewpoint == 0)
+								if (!TrainManagerBase.CurrentRoute.Sections[CurrentSectionIndex].IsFree())
 								{
-									Cars[j].ChangeCarSection(CarSectionType.Interior);
+									introduce = false;
 								}
-								else
+							}
+						}
+
+						if (this == TrainManagerBase.PlayerTrain && TrainManagerBase.currentHost.SimulationState != SimulationState.Loading)
+						{
+							/* Loading has finished, but we still have an AI train in the current section
+							 * This may be caused by an iffy RunInterval value, or simply by having no sections							 *
+							 *
+							 * We must introduce the player's train as otherwise the cab and loop sounds are missing
+							 * NOTE: In this case, the signalling cannot prevent the player from colliding with
+							 * the AI train
+							 */
+
+							introduce = true;
+						}
+
+						if (introduce)
+						{
+							// train is introduced
+							State = TrainState.Available;
+							for (int j = 0; j < Cars.Length; j++)
+							{
+								if (Cars[j].CarSections.Length != 0)
 								{
-									/*
-									 * HACK: Load in exterior mode first to ensure everything is cached
-									 * before switching immediately to not visible
-									 * https://github.com/leezer3/OpenBVE/issues/226
-									 * Stuff like the R142A really needs to downsize the textures supplied,
-									 * but we have no control over external factors....
-									 */
-									Cars[j].ChangeCarSection(CarSectionType.Exterior);
-									if (IsPlayerTrain && TrainManagerBase.CurrentOptions.InitialViewpoint == 0)
+									if (j == DriverCar && IsPlayerTrain && TrainManagerBase.CurrentOptions.InitialViewpoint == 0)
 									{
-										Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
+										Cars[j].ChangeCarSection(CarSectionType.Interior);
 									}
+									else
+									{
+										/*
+										 * HACK: Load in exterior mode first to ensure everything is cached
+										 * before switching immediately to not visible
+										 * https://github.com/leezer3/OpenBVE/issues/226
+										 * Stuff like the R142A really needs to downsize the textures supplied,
+										 * but we have no control over external factors....
+										 */
+										Cars[j].ChangeCarSection(CarSectionType.Exterior);
+										if (IsPlayerTrain && TrainManagerBase.CurrentOptions.InitialViewpoint == 0)
+										{
+											Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
+										}
+									}
+
 								}
 
+								Cars[j].FrontBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
+								Cars[j].RearBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
+								Cars[j].Coupler.ChangeSection(!IsPlayerTrain ? 0 : -1);
+
+								if (Cars[j].Specs.IsMotorCar && Cars[j].Sounds.Loop != null)
+								{
+									Cars[j].Sounds.Loop.Play(Cars[j], true);
+								}
 							}
+						}
+					}
+				}
+				else if (State == TrainState.Available)
+				{
+					// available train
+					UpdatePhysicsAndControls(TimeElapsed);
+					SafetySystems.OverspeedDevice?.Update();
 
-							Cars[j].FrontBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
-							Cars[j].RearBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
-							Cars[j].Coupler.ChangeSection(!IsPlayerTrain ? 0 : -1);
-
-							if (Cars[j].Specs.IsMotorCar && Cars[j].Sounds.Loop != null)
+					if (TrainManagerBase.CurrentOptions.Accessibility)
+					{
+						Section nextSection = TrainManagerBase.CurrentRoute.NextSection(FrontCarTrackPosition);
+						if (nextSection != null)
+						{
+							//If we find an appropriate signal, and the distance to it is less than 500m, announce if screen reader is present
+							//Aspect announce to be triggered via a separate keybind
+							double tPos = nextSection.TrackPosition - FrontCarTrackPosition;
+							if (!nextSection.AccessibilityAnnounced && tPos < 500)
 							{
-								Cars[j].Sounds.Loop.Play(Cars[j], true);
+								string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "route_nextsection" }).Replace("[distance]", $"{tPos:0.0}") + "m";
+								TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+								nextSection.AccessibilityAnnounced = true;
+							}
+						}
+
+						RouteStation nextStation = TrainManagerBase.CurrentRoute.NextStation(FrontCarTrackPosition);
+						if (nextStation != null)
+						{
+							//If we find an appropriate signal, and the distance to it is less than 500m, announce if screen reader is present
+							//Aspect announce to be triggered via a separate keybind
+							double tPos = nextStation.DefaultTrackPosition - FrontCarTrackPosition;
+							if (!nextStation.AccessibilityAnnounced && tPos < 500)
+							{
+								string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "route_nextstation" }).Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[name]", nextStation.Name);
+								TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+								nextStation.AccessibilityAnnounced = true;
 							}
 						}
 					}
-				}
-			}
-			else if (State == TrainState.Available)
-			{
-				// available train
-				UpdatePhysicsAndControls(TimeElapsed);
-				if (CurrentSpeed > CurrentRouteLimit)
-				{
-					if (!currentlyOverspeed || previousRouteLimit != CurrentRouteLimit || TrainManagerBase.CurrentOptions.GameMode == GameMode.Arcade)
-					{
-						/*
-						 * HACK: If the limit has changed, or we are in arcade mode, notify the player
-						 *       This conforms to the original behaviour, but doesn't need to raise the message from the event.
-						 */
-						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_route_overspeed"), MessageDependency.RouteLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
-					}
-					currentlyOverspeed = true;
-				}
-				else
-				{
-					currentlyOverspeed = false;
-				}
 
-				if (TrainManagerBase.CurrentOptions.Accessibility)
-				{
-					if (previousRouteLimit != CurrentRouteLimit)
+					if (TrainManagerBase.CurrentOptions.GameMode == GameMode.Arcade)
 					{
-						//Show for 10s and announce the current speed limit if screen reader present
-						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_route_newlimit"), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
-					}
-
-					Section nextSection = TrainManagerBase.CurrentRoute.NextSection(FrontCarTrackPosition);
-					if (nextSection != null)
-					{
-						//If we find an appropriate signal, and the distance to it is less than 500m, announce if screen reader is present
-						//Aspect announce to be triggered via a separate keybind
-						double tPos = nextSection.TrackPosition - FrontCarTrackPosition;
-						if (!nextSection.AccessibilityAnnounced && tPos < 500)
+						if (CurrentSectionLimit == 0.0)
 						{
-							string s = Translations.GetInterfaceString("message_route_nextsection").Replace("[distance]", $"{tPos:0.0}") + "m";
-							TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
-							nextSection.AccessibilityAnnounced = true;
+							TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_stop" }), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
+						}
+						else if (CurrentSpeed > CurrentSectionLimit)
+						{
+							TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_overspeed" }), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 						}
 					}
-					RouteStation nextStation = TrainManagerBase.CurrentRoute.NextStation(FrontCarTrackPosition);
-					if (nextStation != null)
+
+					AI?.Trigger(TimeElapsed);
+				}
+				else if (State == TrainState.Bogus)
+				{
+					// bogus train
+					AI?.Trigger(TimeElapsed);
+				}
+
+				//Trigger point sounds if appropriate
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					CarSound c = null;
+					if (Cars[i].FrontAxle.PointSoundTriggered)
 					{
-						//If we find an appropriate signal, and the distance to it is less than 500m, announce if screen reader is present
-						//Aspect announce to be triggered via a separate keybind
-						double tPos = nextStation.DefaultTrackPosition - FrontCarTrackPosition;
-						if (!nextStation.AccessibilityAnnounced && tPos < 500)
+						Cars[i].FrontAxle.PointSoundTriggered = false;
+						int bufferIndex = Cars[i].FrontAxle.RunIndex;
+						if (bufferIndex > Cars[i].FrontAxle.PointSounds.Length - 1)
 						{
-							string s = Translations.GetInterfaceString("message_route_nextstation").Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[name]", nextStation.Name);
-							TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
-							nextStation.AccessibilityAnnounced = true;
+							//If the switch sound does not exist, return zero
+							//Required to handle legacy trains which don't have idx specific run sounds defined
+							bufferIndex = 0;
+						}
+
+						if (Cars[i].FrontAxle.PointSounds == null || Cars[i].FrontAxle.PointSounds.Length == 0)
+						{
+							//No point sounds defined at all
+							continue;
+						}
+
+						c = (CarSound)Cars[i].FrontAxle.PointSounds[bufferIndex];
+						if (c.Buffer == null)
+						{
+							c = (CarSound)Cars[i].FrontAxle.PointSounds[0];
 						}
 					}
-				}
-				previousRouteLimit = CurrentRouteLimit;
-				if (TrainManagerBase.CurrentOptions.GameMode == GameMode.Arcade)
-				{
-					if (CurrentSectionLimit == 0.0)
-					{
-						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
-					}
-					else if (CurrentSpeed > CurrentSectionLimit)
-					{
-						TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
-					}
-				}
 
-				if (AI != null)
-				{
-					AI.Trigger(TimeElapsed);
-				}
-			}
-			else if (State == TrainState.Bogus)
-			{
-				// bogus train
-				if (AI != null)
-				{
-					AI.Trigger(TimeElapsed);
-				}
-			}
-
-			//Trigger point sounds if appropriate
-			for (int i = 0; i < Cars.Length; i++)
-			{
-				CarSound c = null;
-				if (Cars[i].FrontAxle.PointSoundTriggered)
-				{
-					Cars[i].FrontAxle.PointSoundTriggered = false;
-					int bufferIndex = Cars[i].FrontAxle.RunIndex;
-					if (bufferIndex > Cars[i].FrontAxle.PointSounds.Length - 1)
+					if (c != null)
 					{
-						//If the switch sound does not exist, return zero
-						//Required to handle legacy trains which don't have idx specific run sounds defined
-						bufferIndex = 0;
-					}
-
-					if (Cars[i].FrontAxle.PointSounds == null || Cars[i].FrontAxle.PointSounds.Length == 0)
-					{
-						//No point sounds defined at all
-						continue;
-					}
-
-					c = (CarSound) Cars[i].FrontAxle.PointSounds[bufferIndex];
-					if (c.Buffer == null)
-					{
-						c = (CarSound) Cars[i].FrontAxle.PointSounds[0];
-					}
-				}
-
-				if (c != null)
-				{
-					double spd = Math.Abs(CurrentSpeed);
-					double pitch = spd / 12.5;
-					double gain = pitch < 0.5 ? 2.0 * pitch : 1.0;
-					if (pitch > 0.2 && gain > 0.2)
-					{
-						c.Play(pitch, gain, Cars[i], false);
+						double spd = Math.Abs(CurrentSpeed);
+						double pitch = spd / 12.5;
+						double gain = pitch < 0.5 ? 2.0 * pitch : 1.0;
+						if (pitch > 0.2 && gain > 0.2)
+						{
+							c.Play(pitch, gain, Cars[i], false);
+						}
 					}
 				}
 			}
@@ -477,8 +465,8 @@ namespace TrainManager.Trains
 			// delayed handles
 			if (Plugin == null)
 			{
-				Handles.Power.Safety = Handles.Power.Driver;
-				Handles.Brake.Safety = Handles.Brake.Driver;
+				Handles.Power.ApplySafetyState(Handles.Power.Driver);
+				Handles.Brake.ApplySafetyState(Handles.Brake.Driver);
 				Handles.EmergencyBrake.Safety = Handles.EmergencyBrake.Driver;
 			}
 
@@ -487,12 +475,13 @@ namespace TrainManager.Trains
 			Handles.Brake.Update();
 			Handles.EmergencyBrake.Update();
 			Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
+			Cars[DriverCar].DSD?.Update(TimeElapsed);
 			// update speeds
 			UpdateSpeeds(TimeElapsed);
 			// Update Run and Motor sounds
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				Cars[i].UpdateRunSounds(TimeElapsed);
+				Cars[i].Run.Update(TimeElapsed);
 				if (Cars[i].Sounds.Motor != null)
 				{
 					Cars[i].Sounds.Motor.Update(TimeElapsed);
@@ -526,7 +515,7 @@ namespace TrainManager.Trains
 					CurrentSectionLimit = 6.94444444444444;
 					if (IsPlayerTrain)
 					{
-						string s = Translations.GetInterfaceString("message_signal_proceed");
+						string s = Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"message","signal_proceed"});
 						double a = (3.6 * CurrentSectionLimit) * TrainManagerBase.CurrentOptions.SpeedConversionFactor;
 						s = s.Replace("[speed]", a.ToString("0", CultureInfo.InvariantCulture));
 						s = s.Replace("[unit]", TrainManagerBase.CurrentOptions.UnitOfSpeed);
@@ -817,12 +806,7 @@ namespace TrainManager.Trains
 			{
 				TrainManagerBase.currentHost.StopSound(Cars[CarIndex].Sounds.Loop.Source);
 			}
-			
-			for (int j = 0; j < Cars[CarIndex].Sounds.Run.Count; j++)
-			{
-				int key =  Cars[CarIndex].Sounds.Run.ElementAt(j).Key;
-				TrainManagerBase.currentHost.StopSound(Cars[CarIndex].Sounds.Run[key].Source);
-			}
+			Cars[CarIndex].Run.Stop();
 
 			if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
 			{
@@ -841,11 +825,7 @@ namespace TrainManager.Trains
 				{
 					TrainManagerBase.currentHost.StopSound(c.Sounds.Loop.Source);
 				}
-				for (int j = 0; j < c.Sounds.Run.Count; j++)
-				{
-					int key =  c.Sounds.Run.ElementAt(j).Key;
-					TrainManagerBase.currentHost.StopSound(c.Sounds.Run[key].Source);
-				}
+				c.Run.Stop();
 				c.Derailed = true;
 				this.Derailed = true;
 				if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
@@ -858,24 +838,29 @@ namespace TrainManager.Trains
 		/// <inheritdoc/>
 		public override void Reverse(bool flipInterior = false, bool flipDriver = false)
 		{
-			double trackPosition = Cars[0].TrackPosition;
-			Cars = Cars.Reverse().ToArray();
-			for (int i = 0; i < Cars.Length; i++)
+			lock (updateLock)
 			{
-				Cars[i].Reverse(flipInterior);
-				// Re-create the coupler with appropriate distances between the cars
-				double minDistance = 0, maxDistance = 0;
-				if (i < Cars.Length - 1)
+				double trackPosition = Cars[0].TrackPosition;
+				Cars = Cars.Reverse().ToArray();
+				for (int i = 0; i < Cars.Length; i++)
 				{
-					minDistance = Cars[i + 1].Coupler.MinimumDistanceBetweenCars;
-					maxDistance = Cars[i + 1].Coupler.MaximumDistanceBetweenCars;
+					Cars[i].Reverse(flipInterior);
+					// Re-create the coupler with appropriate distances between the cars
+					double minDistance = 0, maxDistance = 0;
+					if (i < Cars.Length - 1)
+					{
+						minDistance = Cars[i + 1].Coupler.MinimumDistanceBetweenCars;
+						maxDistance = Cars[i + 1].Coupler.MaximumDistanceBetweenCars;
+					}
+
+					Cars[i].Coupler = new Coupler(minDistance, maxDistance, Cars[i], i < Cars.Length - 1 ? Cars[i + 1] : null, this);
 				}
-				Cars[i].Coupler = new Coupler(minDistance, maxDistance, Cars[i], i < Cars.Length - 1 ? Cars[i + 1] : null, this);
+
+				PlaceCars(trackPosition);
+				DriverCar = Cars.Length - 1 - DriverCar;
+				CameraCar = Cars.Length - 1 - CameraCar;
+				UpdateCabObjects();
 			}
-			PlaceCars(trackPosition);
-			DriverCar = Cars.Length - 1 - DriverCar;
-			CameraCar = Cars.Length - 1 - CameraCar;
-			UpdateCabObjects();
 		}
 
 
@@ -911,16 +896,16 @@ namespace TrainManager.Trains
 		{
 			if (CurrentSectionLimit == 0.0 && TrainManagerBase.currentHost.SimulationState != SimulationState.MinimalisticSimulation)
 			{
-				TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
+				TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"message","signal_stop"}), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
 			}
 			else if (CurrentSpeed > CurrentSectionLimit)
 			{
-				TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
+				TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"message","signal_overspeed"}), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 			}
 		}
 
 
-		public override void Jump(int stationIndex)
+		public override void Jump(int stationIndex, int trackKey)
 		{
 			if (IsPlayerTrain)
 			{
@@ -937,15 +922,19 @@ namespace TrainManager.Trains
 			{
 				if (IsPlayerTrain)
 				{
-					if (Plugin != null)
-					{
-						Plugin.BeginJump((InitializationModes) TrainManagerBase.CurrentOptions.TrainStart);
-					}
+					Plugin?.BeginJump((InitializationModes) TrainManagerBase.CurrentOptions.TrainStart);
 				}
 
 				for (int h = 0; h < Cars.Length; h++)
 				{
 					Cars[h].CurrentSpeed = 0.0;
+					// Change the track followers to the appropriate track
+					Cars[h].FrontAxle.Follower.TrackIndex = trackKey;
+					Cars[h].RearAxle.Follower.TrackIndex = trackKey;
+					Cars[h].FrontBogie.FrontAxle.Follower.TrackIndex = trackKey;
+					Cars[h].FrontBogie.RearAxle.Follower.TrackIndex = trackKey;
+					Cars[h].RearBogie.FrontAxle.Follower.TrackIndex = trackKey;
+					Cars[h].RearBogie.RearAxle.Follower.TrackIndex = trackKey;
 				}
 
 				double d = TrainManagerBase.CurrentRoute.Stations[stationIndex].Stops[stopIndex].TrackPosition - Cars[0].FrontAxle.Follower.TrackPosition + Cars[0].FrontAxle.Position - 0.5 * Cars[0].Length;
@@ -1008,7 +997,12 @@ namespace TrainManager.Trains
 
 				if (IsPlayerTrain)
 				{
-					if (TrainManagerBase.CurrentRoute.Stations[stationIndex].ArrivalTime >= 0.0)
+					if (TrainManagerBase.CurrentRoute.Stations[stationIndex].JumpTime > 0.0)
+					{
+						// jump time is set, so use that (BVE5)
+						TrainManagerBase.CurrentRoute.SecondsSinceMidnight = TrainManagerBase.CurrentRoute.Stations[stationIndex].JumpTime;
+					}
+					else if (TrainManagerBase.CurrentRoute.Stations[stationIndex].ArrivalTime >= 0.0)
 					{
 						TrainManagerBase.CurrentRoute.SecondsSinceMidnight = TrainManagerBase.CurrentRoute.Stations[stationIndex].ArrivalTime;
 					}
@@ -1026,10 +1020,7 @@ namespace TrainManager.Trains
 				}
 				if (IsPlayerTrain)
 				{
-					if (Plugin != null)
-					{
-						Plugin.EndJump();
-					}
+					Plugin?.EndJump();
 				}
 
 				StationState = TrainStopState.Pending;
@@ -1043,14 +1034,14 @@ namespace TrainManager.Trains
 				{
 					for (int i = newTrackElement; i < currentTrackElement; i++)
 					{
-						for (int j = 0; j < TrainManagerBase.currentHost.Tracks[0].Elements[i].Events.Length; j++)
+						for (int j = 0; j < TrainManagerBase.currentHost.Tracks[0].Elements[i].Events.Count; j++)
 						{
 							TrainManagerBase.currentHost.Tracks[0].Elements[i].Events[j].Reset();
 						}
 
 					}
 				}
-				TrainManagerBase.currentHost.ProcessJump(this, stationIndex);
+				TrainManagerBase.currentHost.ProcessJump(this, stationIndex, 0);
 			}
 		}
 
@@ -1069,7 +1060,7 @@ namespace TrainManager.Trains
 				if (CameraCar < Cars.Length - 1)
 				{
 					CameraCar++;
-					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"notification","exterior"}) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
 						MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 				}
 			}
@@ -1078,8 +1069,7 @@ namespace TrainManager.Trains
 				if (CameraCar > 0)
 				{
 					CameraCar--;
-					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
-						MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"notification","exterior"}) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 				}
 			}
 

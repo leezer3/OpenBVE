@@ -1,12 +1,14 @@
 using System;
 using System.Linq;
 using LibRender2.Cameras;
+using LibRender2.Menu;
 using LibRender2.Screens;
 using LibRender2.Trains;
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Hosts;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using RouteManager2.MessageManager;
@@ -65,14 +67,14 @@ namespace OpenBve
 					bool lookahead = false;
 					if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D))
 					{
-						MessageManager.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
+						MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","interior_lookahead"}),
 							MessageDependency.CameraView, GameMode.Expert,
 							MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 						lookahead = true;
 					}
 					else
 					{
-						MessageManager.AddMessage(Translations.GetInterfaceString("notification_interior"),
+						MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","interior"}),
 							MessageDependency.CameraView, GameMode.Expert,
 							MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 					}
@@ -137,7 +139,7 @@ namespace OpenBve
 					TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
 					if (TrainManager.PlayerTrain.Plugin != null && TrainManager.PlayerTrain.Plugin.SupportsAI == AISupport.None)
 					{
-						MessageManager.AddMessage(Translations.GetInterfaceString("notification_aiunable"), MessageDependency.None, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+						MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","aiunable"}), MessageDependency.None, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 					}
 
 				}
@@ -185,6 +187,10 @@ namespace OpenBve
 										Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
 										Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 										break;
+									case Translations.Command.SwitchMenu:
+										Program.Renderer.CurrentInterface = InterfaceType.SwitchChangeMap;
+										Game.switchChangeDialog.Show();
+										break;
 								}
 							}
 						}
@@ -210,6 +216,7 @@ namespace OpenBve
 					break;
 
 				case InterfaceType.Normal:
+				case InterfaceType.SwitchChangeMap:
 					// normal
 					for (int i = 0; i < Interface.CurrentControls.Length; i++)
 					{

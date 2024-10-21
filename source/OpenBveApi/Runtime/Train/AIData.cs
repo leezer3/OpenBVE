@@ -4,6 +4,7 @@
 	public class AIData
 	{
 		/// <summary>The driver handles.</summary>
+		// ReSharper disable once FieldCanBeMadeReadOnly.Local - Modifiable by plugins
 		private Handles MyHandles;
 
 		/// <summary>The AI response.</summary>

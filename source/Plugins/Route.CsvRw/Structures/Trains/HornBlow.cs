@@ -5,9 +5,8 @@ using OpenBveApi.World;
 
 namespace CsvRwRouteParser
 {
-	internal class HornBlowEvent
+	internal class HornBlowEvent : AbstractStructure
 	{
-		internal readonly double TrackPosition;
 		internal readonly HornTypes Type;
 		internal readonly bool TriggerOnce;
 		internal readonly int BeaconStructureIndex;
@@ -16,9 +15,8 @@ namespace CsvRwRouteParser
 		internal readonly double Pitch;
 		internal readonly double Roll;
 
-		internal HornBlowEvent(double trackPosition, HornTypes type, bool triggerOnce, int beaconStructureIndex, Vector2 position, double yaw, double pitch, double roll)
+		internal HornBlowEvent(double trackPosition, HornTypes type, bool triggerOnce, int beaconStructureIndex, Vector2 position, double yaw, double pitch, double roll) : base(trackPosition)
 		{
-			TrackPosition = trackPosition;
 			Type = type;
 			TriggerOnce = triggerOnce;
 			BeaconStructureIndex = beaconStructureIndex;

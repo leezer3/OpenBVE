@@ -17,6 +17,7 @@ using TrainManager.Car.Systems;
 using TrainManager.Cargo;
 using TrainManager.Handles;
 using TrainManager.Power;
+using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
 namespace TrainManager.Car
@@ -68,6 +69,8 @@ namespace TrainManager.Car
 		public CarConstSpeed ConstSpeed;
 		/// <summary>The readhesion device for this car</summary>
 		public AbstractReAdhesionDevice ReAdhesionDevice;
+		public DriverSupervisionDevice DSD;
+		/// <summary>The DriverSupervisionDevice for this car</summary>
 		/// <summary>The position of the beacon reciever within the car</summary>
 		public double BeaconReceiverPosition;
 		/// <summary>The beacon reciever</summary>
@@ -86,6 +89,12 @@ namespace TrainManager.Car
 		public CarSounds Sounds;
 		/// <summary>The cargo carried by the car</summary>
 		public CargoBase Cargo;
+		/// <summary>The car suspension</summary>
+		public Suspension Suspension;
+		/// <summary>The flange sounds</summary>
+		public Flange Flange;
+		/// <summary>The run sounds</summary>
+		public RunSounds Run;
 
 		private int trainCarIndex;
 
@@ -116,6 +125,9 @@ namespace TrainManager.Car
 			FrontBogie.ChangeSection(-1);
 			RearBogie.ChangeSection(-1);
 			Cargo = new Passengers(this);
+			Suspension = new Suspension(this);
+			Flange = new Flange(this);
+			Run = new RunSounds(this);
 		}
 
 		public CarBase(TrainBase train, int index)
@@ -123,6 +135,7 @@ namespace TrainManager.Car
 			baseTrain = train;
 			trainCarIndex = index;
 			CarSections = new CarSection[] { };
+			CurrentCarSection = -1;
 			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			RearAxle = new Axle(TrainManagerBase.currentHost, train, this);
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
@@ -138,6 +151,10 @@ namespace TrainManager.Car
 			Brightness = new Brightness(this);
 			Cargo = new Passengers(this);
 			Specs = new CarPhysics();
+			Suspension = new Suspension(this);
+			Flange = new Flange(this);
+			Run = new RunSounds(this);
+			Sounds = new CarSounds();
 		}
 
 		/// <summary>Moves the car</summary>
@@ -263,7 +280,7 @@ namespace TrainManager.Car
 						{
 							for (int j = 0; j < CarSections[i].Groups.Length; j++)
 							{
-								CarSections[i].Groups[j].Reverse(Driver);
+								CarSections[i].Groups[j].Reverse(Driver, TrainManagerBase.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable); // restriction not available must equal 3D cab
 							}
 						}
 						else
@@ -354,154 +371,154 @@ namespace TrainManager.Car
 
 		public override void Uncouple(bool Front, bool Rear)
 		{
-			if (!Front && !Rear)
+			lock (baseTrain.updateLock)
 			{
-				return;
-			}
-			// Create new train
-			TrainBase newTrain = new TrainBase(TrainState.Available);
-			UncouplingBehaviour uncouplingBehaviour = UncouplingBehaviour.Emergency;
-			newTrain.Handles.Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain)
-			{
-				DelayedChanges = new HandleChange[0]
-			};
-			newTrain.Handles.Brake = new BrakeHandle(0, 0, newTrain.Handles.EmergencyBrake, new double[0], new double[0], newTrain)
-			{
-				DelayedChanges = new HandleChange[0]
-			};
-			newTrain.Handles.HoldBrake = new HoldBrakeHandle(newTrain);
-			if (Front)
-			{
-				int totalPreceedingCars = trainCarIndex;
-				newTrain.Cars = new CarBase[trainCarIndex];
-				for (int i = 0; i < totalPreceedingCars; i++)
-				{
-					newTrain.Cars[i] = baseTrain.Cars[i];
-					newTrain.Cars[i].baseTrain = newTrain;
-				}
-
-				for (int i = totalPreceedingCars; i < baseTrain.Cars.Length; i++)
-				{
-					baseTrain.Cars[i - totalPreceedingCars] = baseTrain.Cars[i];
-					baseTrain.Cars[i].Index = i - totalPreceedingCars;
-				}
-				Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalPreceedingCars);
-				baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.UncoupleSound.Play(baseTrain.Cars[baseTrain.Cars.Length - 1], false);
-				uncouplingBehaviour = baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.UncouplingBehaviour;
-				TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain, false);
-
-				if (baseTrain.DriverCar - totalPreceedingCars >= 0)
-				{
-					baseTrain.DriverCar -= totalPreceedingCars;
-				}
-			}
-			
-			if (Rear)
-			{
-				int totalFollowingCars = baseTrain.Cars.Length - (Index + 1);
-				if (totalFollowingCars > 0)
-				{
-					newTrain.Cars = new CarBase[totalFollowingCars];
-					// Move following cars to new train
-					for (int i = 0; i < totalFollowingCars; i++)
-					{
-						newTrain.Cars[i] = baseTrain.Cars[Index + i + 1];
-						newTrain.Cars[i].baseTrain = newTrain;
-						newTrain.Cars[i].Index = i;
-					}
-					
-					Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalFollowingCars);
-					baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.connectedCar = baseTrain.Cars[baseTrain.Cars.Length - 1];
-				}
-				else
+				if (!Front && !Rear)
 				{
 					return;
 				}
-				Coupler.UncoupleSound.Play(this, false);
-				uncouplingBehaviour = Coupler.UncouplingBehaviour;
-				TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain, true);
-			}
 
-			for (int i = 0; i < newTrain.Cars.Length; i++)
-			{
-				/*
-				 * Make visible if not part of player train
-				 * Otherwise uncoupling from cab then changing to exterior, they will still be hidden
-				 *
-				 * Need to do this after everything has been done in case objects refer to other bits
-				 */
-				newTrain.Cars[i].ChangeCarSection(CarSectionType.Exterior);
-				newTrain.Cars[i].FrontBogie.ChangeSection(0);
-				newTrain.Cars[i].RearBogie.ChangeSection(0);
-				newTrain.Cars[i].Coupler.ChangeSection(0);
-			}
-
-			if (baseTrain.DriverCar >= baseTrain.Cars.Length)
-			{
-				/*
-				 * The driver car is no longer in the train
-				 *
-				 * Look for a car with an interior view to substitute
-				 * If not found, this will stop at Car 0
-				 */
-
-				for (int i = baseTrain.Cars.Length; i > 0; i--)
+				// Create new train
+				TrainBase newTrain = new TrainBase(TrainState.Available);
+				UncouplingBehaviour uncouplingBehaviour = UncouplingBehaviour.Emergency;
+				newTrain.Handles.Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain);
+				newTrain.Handles.Brake = new BrakeHandle(0, 0, newTrain.Handles.EmergencyBrake, new double[0], new double[0], newTrain);
+				newTrain.Handles.HoldBrake = new HoldBrakeHandle(newTrain);
+				if (Front)
 				{
-					baseTrain.DriverCar = i - 1;
-					if (!baseTrain.Cars[i - 1].HasInteriorView)
+					int totalPreceedingCars = trainCarIndex;
+					newTrain.Cars = new CarBase[trainCarIndex];
+					for (int i = 0; i < totalPreceedingCars; i++)
 					{
-						/*
-						 * Set the eye position to something vaguely sensible, rather than leaving it on the rails
-						 * Whilst there will be no cab, at least it's a bit more usable like this
-						 */
-						baseTrain.Cars[i - 1].InteriorCamera = new CameraAlignment()
+						newTrain.Cars[i] = baseTrain.Cars[i];
+						newTrain.Cars[i].baseTrain = newTrain;
+					}
+
+					for (int i = totalPreceedingCars; i < baseTrain.Cars.Length; i++)
+					{
+						baseTrain.Cars[i - totalPreceedingCars] = baseTrain.Cars[i];
+						baseTrain.Cars[i].Index = i - totalPreceedingCars;
+					}
+
+					Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalPreceedingCars);
+					baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.UncoupleSound.Play(baseTrain.Cars[baseTrain.Cars.Length - 1], false);
+					uncouplingBehaviour = baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.UncouplingBehaviour;
+					TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain, false);
+
+					if (baseTrain.DriverCar - totalPreceedingCars >= 0)
+					{
+						baseTrain.DriverCar -= totalPreceedingCars;
+					}
+				}
+
+				if (Rear)
+				{
+					int totalFollowingCars = baseTrain.Cars.Length - (Index + 1);
+					if (totalFollowingCars > 0)
+					{
+						newTrain.Cars = new CarBase[totalFollowingCars];
+						// Move following cars to new train
+						for (int i = 0; i < totalFollowingCars; i++)
 						{
-							Position = new Vector3(0, 2, 0.5 * Length)
-						};
+							newTrain.Cars[i] = baseTrain.Cars[Index + i + 1];
+							newTrain.Cars[i].baseTrain = newTrain;
+							newTrain.Cars[i].Index = i;
+						}
+
+						Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalFollowingCars);
+						baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.connectedCar = baseTrain.Cars[baseTrain.Cars.Length - 1];
 					}
 					else
 					{
-						break;
+						return;
+					}
+
+					Coupler.UncoupleSound.Play(this, false);
+					uncouplingBehaviour = Coupler.UncouplingBehaviour;
+					TrainManagerBase.currentHost.AddTrain(baseTrain, newTrain, true);
+				}
+
+				for (int i = 0; i < newTrain.Cars.Length; i++)
+				{
+					/*
+					 * Make visible if not part of player train
+					 * Otherwise uncoupling from cab then changing to exterior, they will still be hidden
+					 *
+					 * Need to do this after everything has been done in case objects refer to other bits
+					 */
+					newTrain.Cars[i].ChangeCarSection(CarSectionType.Exterior);
+					newTrain.Cars[i].FrontBogie.ChangeSection(0);
+					newTrain.Cars[i].RearBogie.ChangeSection(0);
+					newTrain.Cars[i].Coupler.ChangeSection(0);
+				}
+
+				if (baseTrain.DriverCar >= baseTrain.Cars.Length)
+				{
+					/*
+					 * The driver car is no longer in the train
+					 *
+					 * Look for a car with an interior view to substitute
+					 * If not found, this will stop at Car 0
+					 */
+
+					for (int i = baseTrain.Cars.Length; i > 0; i--)
+					{
+						baseTrain.DriverCar = i - 1;
+						if (!baseTrain.Cars[i - 1].HasInteriorView)
+						{
+							/*
+							 * Set the eye position to something vaguely sensible, rather than leaving it on the rails
+							 * Whilst there will be no cab, at least it's a bit more usable like this
+							 */
+							baseTrain.Cars[i - 1].InteriorCamera = new CameraAlignment()
+							{
+								Position = new Vector3(0, 2, 0.5 * Length)
+							};
+						}
+						else
+						{
+							break;
+						}
 					}
 				}
-			}
 
-			if (Front)
-			{
-				// Uncoupling the front will always make the car our first
-				baseTrain.CameraCar = 0;
-			}
-			else
-			{
-				if (baseTrain.CameraCar >= baseTrain.Cars.Length)
+				if (Front)
 				{
-					baseTrain.CameraCar = baseTrain.DriverCar;
-				}	
-			}
+					// Uncoupling the front will always make the car our first
+					baseTrain.CameraCar = 0;
+				}
+				else
+				{
+					if (baseTrain.CameraCar >= baseTrain.Cars.Length)
+					{
+						baseTrain.CameraCar = baseTrain.DriverCar;
+					}
+				}
 
-			switch (uncouplingBehaviour)
-			{
-				case UncouplingBehaviour.Emergency:
-					baseTrain.Handles.EmergencyBrake.Apply();
-					newTrain.Handles.EmergencyBrake.Apply();
-					break;
-				case UncouplingBehaviour.EmergencyUncoupledConsist:
-					newTrain.Handles.EmergencyBrake.Apply();
-					break;
-				case UncouplingBehaviour.EmergencyPlayer:
-					baseTrain.Handles.EmergencyBrake.Apply();
-					break;
-				case UncouplingBehaviour.Released:
-					baseTrain.Handles.Brake.ApplyState(0, false);
-					baseTrain.Handles.EmergencyBrake.Release();
-					newTrain.Handles.Brake.ApplyState(0, false);
-					newTrain.Handles.EmergencyBrake.Release();
-					break;
-				case UncouplingBehaviour.ReleasedUncoupledConsist:
-					newTrain.Handles.Brake.ApplyState(0, false);
-					newTrain.Handles.EmergencyBrake.Release();
-					break;
+				switch (uncouplingBehaviour)
+				{
+					case UncouplingBehaviour.Emergency:
+						baseTrain.Handles.EmergencyBrake.Apply();
+						newTrain.Handles.EmergencyBrake.Apply();
+						break;
+					case UncouplingBehaviour.EmergencyUncoupledConsist:
+						newTrain.Handles.EmergencyBrake.Apply();
+						break;
+					case UncouplingBehaviour.EmergencyPlayer:
+						baseTrain.Handles.EmergencyBrake.Apply();
+						break;
+					case UncouplingBehaviour.Released:
+						baseTrain.Handles.Brake.ApplyState(0, false);
+						baseTrain.Handles.EmergencyBrake.Release();
+						newTrain.Handles.Brake.ApplyState(0, false);
+						newTrain.Handles.EmergencyBrake.Release();
+						break;
+					case UncouplingBehaviour.ReleasedUncoupledConsist:
+						newTrain.Handles.Brake.ApplyState(0, false);
+						newTrain.Handles.EmergencyBrake.Release();
+						break;
 
+				}
 			}
 		}
 
@@ -539,94 +556,6 @@ namespace TrainManager.Car
 			if (!opened & closed & !mixed) Result |= TrainDoorState.AllClosed;
 			if (!opened & !closed & mixed) Result |= TrainDoorState.AllMixed;
 			return Result;
-		}
-
-		public void UpdateRunSounds(double TimeElapsed)
-		{
-			if (Sounds.Run == null || Sounds.Run.Count == 0)
-			{
-				return;
-			}
-
-			const double factor = 0.04; // 90 km/h -> m/s -> 1/x
-			double speed = Math.Abs(CurrentSpeed);
-			if (Derailed)
-			{
-				speed = 0.0;
-			}
-
-			double pitch = speed * factor;
-			double basegain;
-			if (CurrentSpeed == 0.0)
-			{
-				if (Index != 0)
-				{
-					Sounds.RunNextReasynchronizationPosition = baseTrain.Cars[0].FrontAxle.Follower.TrackPosition;
-				}
-			}
-			else if (Sounds.RunNextReasynchronizationPosition == double.MaxValue & FrontAxle.RunIndex >= 0)
-			{
-				double distance = Math.Abs(FrontAxle.Follower.TrackPosition - TrainManagerBase.Renderer.CameraTrackFollower.TrackPosition);
-				const double minDistance = 150.0;
-				const double maxDistance = 750.0;
-				if (distance > minDistance)
-				{
-					if (Sounds.Run.TryGetValue(FrontAxle.RunIndex, out var runSound))
-					{
-						if (runSound.Buffer != null)
-						{
-							if (runSound.Buffer.Duration > 0.0)
-							{
-								double offset = distance > maxDistance ? 25.0 : 300.0;
-								Sounds.RunNextReasynchronizationPosition = runSound.Buffer.Duration * Math.Ceiling((baseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / runSound.Buffer.Duration);
-							}
-						}
-					}
-				}
-			}
-
-			if (FrontAxle.Follower.TrackPosition >= Sounds.RunNextReasynchronizationPosition)
-			{
-				Sounds.RunNextReasynchronizationPosition = double.MaxValue;
-				basegain = 0.0;
-			}
-			else
-			{
-				basegain = speed < 2.77777777777778 ? 0.36 * speed : 1.0;
-			}
-
-			for (int j = 0; j < Sounds.Run.Count; j++)
-			{
-				int key = Sounds.Run.ElementAt(j).Key;
-				if (key == FrontAxle.RunIndex | key == RearAxle.RunIndex)
-				{
-					Sounds.Run[key].TargetVolume += 3.0 * TimeElapsed;
-					if (Sounds.Run[key].TargetVolume > 1.0) Sounds.Run[key].TargetVolume = 1.0;
-				}
-				else
-				{
-					Sounds.Run[key].TargetVolume -= 3.0 * TimeElapsed;
-					if (Sounds.Run[key].TargetVolume < 0.0) Sounds.Run[key].TargetVolume = 0.0;
-				}
-
-				double gain = basegain * Sounds.Run[key].TargetVolume;
-				if (Sounds.Run[key].IsPlaying)
-				{
-					if (pitch > 0.01 & gain > 0.001)
-					{
-						Sounds.Run[key].Source.Pitch = pitch;
-						Sounds.Run[key].Source.Volume = gain;
-					}
-					else
-					{
-						TrainManagerBase.currentHost.StopSound(Sounds.Run[key].Source);
-					}
-				}
-				else if (pitch > 0.02 & gain > 0.01)
-				{
-					Sounds.Run[key].Play(pitch, gain, this, true);
-				}
-			}
 		}
 		
 		/// <summary>Loads Car Sections (Exterior objects etc.) for this car</summary>
@@ -1159,107 +1088,8 @@ namespace TrainManager.Car
 				RearAxle.Follower.WorldPosition += cc;
 			}
 
-			// spring sound
-			{
-				double a = Specs.RollDueToShakingAngle;
-				double diff = a - Sounds.SpringPlayedAngle;
-				const double angleTolerance = 0.001;
-				if (diff < -angleTolerance)
-				{
-					if (Sounds.SpringL != null && !Sounds.SpringL.IsPlaying)
-					{
-						Sounds.SpringL.Play(this, false);
-					}
-
-					Sounds.SpringPlayedAngle = a;
-				}
-				else if (diff > angleTolerance)
-				{
-					if (Sounds.SpringR != null && !Sounds.SpringR.IsPlaying)
-					{
-						Sounds.SpringR.Play(this, false);
-					}
-
-					Sounds.SpringPlayedAngle = a;
-				}
-			}
-			// flange sound
-			if (Sounds.Flange != null && Sounds.Flange.Count != 0)
-			{
-				/*
-				 * This determines the amount of flange noise as a result of the angle at which the
-				 * line that forms between the axles hits the rail, i.e. the less perpendicular that
-				 * line is to the rails, the more flange noise there will be.
-				 * */
-				Vector3 df = FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition;
-				df.Normalize();
-				double b0 = df.X * RearAxle.Follower.WorldSide.X + df.Y * RearAxle.Follower.WorldSide.Y + df.Z * RearAxle.Follower.WorldSide.Z;
-				double b1 = df.X * FrontAxle.Follower.WorldSide.X + df.Y * FrontAxle.Follower.WorldSide.Y + df.Z * FrontAxle.Follower.WorldSide.Z;
-				double spd = Math.Abs(CurrentSpeed);
-				double pitch = 0.5 + 0.04 * spd;
-				double b2 = Math.Abs(b0) + Math.Abs(b1);
-				double basegain = 0.5 * b2 * b2 * spd * spd;
-				/*
-				 * This determines additional flange noise as a result of the roll angle of the car
-				 * compared to the roll angle of the rails, i.e. if the car bounces due to inaccuracies,
-				 * there will be additional flange noise.
-				 * */
-				double cdti = Math.Abs(FrontAxle.Follower.CantDueToInaccuracy) + Math.Abs(RearAxle.Follower.CantDueToInaccuracy);
-				basegain += 0.2 * spd * spd * cdti * cdti;
-				/*
-				 * This applies the settings.
-				 * */
-				if (basegain < 0.0) basegain = 0.0;
-				if (basegain > 0.75) basegain = 0.75;
-				if (pitch > Sounds.FlangePitch)
-				{
-					Sounds.FlangePitch += TimeElapsed;
-					if (Sounds.FlangePitch > pitch) Sounds.FlangePitch = pitch;
-				}
-				else
-				{
-					Sounds.FlangePitch -= TimeElapsed;
-					if (Sounds.FlangePitch < pitch) Sounds.FlangePitch = pitch;
-				}
-
-				pitch = Sounds.FlangePitch;
-				for (int i = 0; i < Sounds.Flange.Count; i++)
-				{
-					int key = Sounds.Flange.ElementAt(i).Key;
-					if(Sounds.Flange[key] == null)
-					{
-						continue;
-					}
-					if (key == this.FrontAxle.FlangeIndex | key == this.RearAxle.FlangeIndex)
-					{
-						Sounds.Flange[key].TargetVolume += TimeElapsed;
-						if (Sounds.Flange[key].TargetVolume > 1.0) Sounds.Flange[key].TargetVolume = 1.0;
-					}
-					else
-					{
-						Sounds.Flange[key].TargetVolume -= TimeElapsed;
-						if (Sounds.Flange[key].TargetVolume < 0.0) Sounds.Flange[key].TargetVolume = 0.0;
-					}
-
-					double gain = basegain * Sounds.Flange[key].TargetVolume;
-					if (Sounds.Flange[key].IsPlaying)
-					{
-						if (pitch > 0.01 & gain > 0.0001)
-						{
-							Sounds.Flange[key].Source.Pitch = pitch;
-							Sounds.Flange[key].Source.Volume = gain;
-						}
-						else
-						{
-							Sounds.Flange[key].Stop();
-						}
-					}
-					else if (pitch > 0.02 & gain > 0.01)
-					{
-						Sounds.Flange[key].Play(pitch, gain, this, true);
-					}
-				}
-			}
+			Suspension.Update(TimeElapsed);
+			Flange.Update(TimeElapsed);
 		}
 
 		/// <summary>Updates the position of the camera relative to this car</summary>
@@ -1686,6 +1516,11 @@ namespace TrainManager.Car
 			 * */
 			Specs.DoorOpenPitch = 1.0;
 			Specs.DoorClosePitch = 1.0;
+		}
+
+		public override void Derail()
+		{
+			baseTrain.Derail(this, 0.0);
 		}
 	}
 }

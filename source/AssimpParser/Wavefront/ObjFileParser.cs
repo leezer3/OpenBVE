@@ -89,9 +89,6 @@ namespace AssimpNET.Obj
 {
 	public class ObjFileParser : ObjTools
 	{
-		/// Default material name
-		private const string DEFAULT_MATERIAL = Material.AI_DEFAULT_MATERIAL_NAME;
-
 		private const string DefaultObjName = "defaultobject";
 
 		/// Path to the current model, name of the obj file where the buffer comes from
@@ -117,11 +114,6 @@ namespace AssimpNET.Obj
 
 			// Create the model instance to store all the data
 			Model = new Model(modelName);
-
-			// create default material and store it
-			Model.DefaultMaterial = new Material(DEFAULT_MATERIAL);
-			Model.MaterialLib.Add(DEFAULT_MATERIAL);
-			Model.MaterialMap[DEFAULT_MATERIAL] = Model.DefaultMaterial;
 
 			// Start parsing the file
 			ParseFile(lines);
@@ -155,6 +147,10 @@ namespace AssimpNET.Obj
 				if (buffer.IndexOf("BlockBench", StringComparison.InvariantCultureIgnoreCase) != -1)
 				{
 					Model.Exporter = ModelExporter.BlockBench;
+				}
+				if (buffer.IndexOf("Blender", StringComparison.InvariantCultureIgnoreCase) != -1)
+				{
+					Model.Exporter = ModelExporter.Blender;
 				}
 				if(hash != -1)
 				{
@@ -240,9 +236,7 @@ namespace AssimpNET.Obj
 						break;
 					case 'u': // Parse a material desc. setter
 						{
-							string name;
-
-							GetNameNoSpace(DataIt, DataEnd, out name);
+							GetNameNoSpace(DataIt, DataEnd, out string name);
 
 							int nextSpace = name.IndexOf(" ", StringComparison.OrdinalIgnoreCase);
 							if (nextSpace != -1)
@@ -258,9 +252,7 @@ namespace AssimpNET.Obj
 						break;
 					case 'm': // Parse a material library or merging group ('mg')
 						{
-							string name;
-
-							GetNameNoSpace(DataIt, DataEnd, out name);
+							GetNameNoSpace(DataIt, DataEnd, out string name);
 
 							int nextSpace = name.IndexOf(" ", StringComparison.OrdinalIgnoreCase);
 							if (nextSpace != -1)
@@ -340,8 +332,7 @@ namespace AssimpNET.Obj
 		protected void GetVector3(List<Vector3> point3dArray)
 		{
 			Vector3 v;
-			string tmp;
-			CopyNextWord(out tmp);
+			CopyNextWord(out string tmp);
 			v.X = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
@@ -357,8 +348,7 @@ namespace AssimpNET.Obj
 		protected void GetHomogeneousVector3(List<Vector3> point3dArray)
 		{
 			Vector3 v;
-			string tmp;
-			CopyNextWord(out tmp);
+			CopyNextWord(out string tmp);
 			v.X = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
@@ -380,8 +370,7 @@ namespace AssimpNET.Obj
 		protected void GetTwoVectors3(List<Vector3> point3dArrayA, List<Vector3> point3dArrayB)
 		{
 			Vector3 a;
-			string tmp;
-			CopyNextWord(out tmp);
+			CopyNextWord(out string tmp);
 			a.X = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
@@ -466,7 +455,7 @@ namespace AssimpNET.Obj
 					{
 						++iStep;
 					}
-					while ((tmp = tmp / 10) != 0)
+					while ((tmp /= 10) != 0)
 					{
 						++iStep;
 					}
@@ -646,8 +635,7 @@ namespace AssimpNET.Obj
 			if (!skip)
 			{
 				// Search for material
-				Material tmp;
-				if (!Model.MaterialMap.TryGetValue(name, out tmp))
+				if (!Model.MaterialMap.TryGetValue(name, out Material tmp))
 				{
 					// Not found, so we don't know anything about the material except for its name.
 					// This may be the case if the material library is missing. We don't want to lose all
@@ -769,11 +757,9 @@ namespace AssimpNET.Obj
 		//  Getter for a group name.
 		protected void GetGroupName()
 		{
-			string groupName;
-
 			// here we skip 'g ' from line
 			DataIt = GetNextToken(DataIt, DataEnd);
-			DataIt = GetName(DataIt, DataEnd, out groupName);
+			DataIt = GetName(DataIt, DataEnd, out string groupName);
 			if (IsEndOfBuffer(DataIt, DataEnd))
 			{
 				return;
@@ -787,8 +773,7 @@ namespace AssimpNET.Obj
 
 				// Search for already existing entry
 				// New group name, creating a new entry
-				List<uint> tmp;
-				if (!Model.Groups.TryGetValue(groupName, out tmp))
+				if (!Model.Groups.TryGetValue(groupName, out List<uint> tmp))
 				{
 					List<uint> faceIDArray = new List<uint>();
 					Model.Groups[groupName] = faceIDArray;

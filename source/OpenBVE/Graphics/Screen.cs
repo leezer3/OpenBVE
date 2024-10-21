@@ -132,8 +132,9 @@ namespace OpenBve
 				return;
 			}
 
-			Program.currentGameWindow.TargetUpdateFrequency = Interface.CurrentOptions.FPSLimit;
-			Program.currentGameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit;
+			// BUG: Currently disabled- https://github.com/leezer3/OpenBVE/issues/957
+			//Program.currentGameWindow.TargetUpdateFrequency = Interface.CurrentOptions.FPSLimit;
+			//Program.currentGameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit;
 			Program.currentGameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
 			
 		}
@@ -199,16 +200,16 @@ namespace OpenBve
 			    System.Threading.Thread.Sleep(20);
 			    if (Program.currentGameWindow.WindowState != WindowState.Fullscreen)
 			    {
-                    MessageBox.Show(Translations.GetInterfaceString("errors_fullscreen_switch1") + Environment.NewLine +
-                        Translations.GetInterfaceString("errors_fullscreen_switch2"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                    Program.Renderer.Screen.Fullscreen = false;
-			    }
+                    MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","fullscreen_switch1"}) + Environment.NewLine +
+                        Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","fullscreen_switch2"}), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					Program.Renderer.SetWindowState(WindowState.Fullscreen);
+				}
 			}
 			else
 			{
                 DisplayDevice.Default.RestoreResolution();
-                Program.currentGameWindow.WindowState = WindowState.Normal;
-                Program.currentGameWindow.Width = Interface.CurrentOptions.WindowWidth;
+				Program.Renderer.SetWindowState(WindowState.Normal);
+				Program.currentGameWindow.Width = Interface.CurrentOptions.WindowWidth;
                 Program.currentGameWindow.Height = Interface.CurrentOptions.WindowHeight;
 
                 Program.Renderer.Screen.Width = Interface.CurrentOptions.WindowWidth;

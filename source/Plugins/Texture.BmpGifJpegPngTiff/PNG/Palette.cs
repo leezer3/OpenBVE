@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenBveApi.Colors;
+using System;
 
 namespace Plugin.PNG
 {
@@ -47,7 +48,9 @@ namespace Plugin.PNG
 		/// <param name="chunkBytes">The tRNS chunk</param>
 		internal void SetAlphaValues(byte[] chunkBytes)
 		{
-			for (int i = 0; i < chunkBytes.Length; i++)
+			// Alpha chunk length can be greater than the number of colors in a pallette
+			// e.g. BveTs\Scenarios\t5\structures\markers\ATS0.png
+			for (int i = 0; i < Math.Min(chunkBytes.Length, Colors.Length); i++)
 			{
 				Colors[i].A = chunkBytes[i];
 			}

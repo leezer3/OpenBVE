@@ -12,6 +12,8 @@
 		/// <summary>The game is currently showing a menu</summary>
 		Menu,
 		/// <summary>The game is currently showing the OpenGL main menu</summary>
-		GLMainMenu
+		GLMainMenu,
+		/// <summary>The game is currently showing the switch change map</summary>
+		SwitchChangeMap
 	}
 }

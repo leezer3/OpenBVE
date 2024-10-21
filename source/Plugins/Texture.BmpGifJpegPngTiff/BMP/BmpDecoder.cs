@@ -464,11 +464,29 @@ namespace Plugin.BMP
 									}
 									for (int currentPixel = 0; currentPixel < Width; currentPixel++)
 									{
-										int colorIndex = Math.Min(buffer[sourceIdx], ColorTable.Length -1);
-										ImageData[destIdx] = ColorTable[colorIndex].R;
-										ImageData[destIdx + 1] = ColorTable[colorIndex].G;
-										ImageData[destIdx + 2] = ColorTable[colorIndex].B;
-										ImageData[destIdx + 3] = byte.MaxValue;
+										if (buffer[sourceIdx] >= ColorTable.Length && Plugin.CurrentOptions.EnableBveTsHacks)
+										{
+											/*
+											 * The BMP specification is unclear as to what should happen here
+											 *
+											 * Windows appears to interpret this case as pure black, but other decoders (Photoshop, GIMP)
+											 * interpret this as the *last* color in the color table
+											 *
+											 * https://github.com/leezer3/OpenBVE/issues/1042
+											 */
+											ImageData[destIdx] = 0;
+											ImageData[destIdx + 1] = 0;
+											ImageData[destIdx + 2] = 0;
+											ImageData[destIdx + 3] = byte.MaxValue;
+										}
+										else
+										{
+											int colorIndex = Math.Min(buffer[sourceIdx], ColorTable.Length - 1);
+											ImageData[destIdx] = ColorTable[colorIndex].R;
+											ImageData[destIdx + 1] = ColorTable[colorIndex].G;
+											ImageData[destIdx + 2] = ColorTable[colorIndex].B;
+											ImageData[destIdx + 3] = byte.MaxValue;
+										}
 										sourceIdx++;
 										destIdx+= 4;
 									}

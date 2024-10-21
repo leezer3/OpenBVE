@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+using OpenBveApi.Math;
+using System.Collections.Generic;
 
 namespace OpenBveApi.Routes
 {
@@ -34,27 +35,33 @@ namespace OpenBveApi.Routes
 		/// <summary>The side vector</summary>
 		public Vector3 WorldSide;
 		/// <summary>An array containing all events attached to this element</summary>
-		public GeneralEvent[] Events;
+		public List<GeneralEvent> Events;
+		/// <summary>Whether the rail is driveable</summary>
+		public bool IsDriveable;
+		/// <summary>Whether the element contains a switch</summary>
+		public bool ContainsSwitch;
 
 		/// <summary>Creates a new track element</summary>
-		/// <param name="StartingTrackPosition">The starting position (relative to zero)</param>
-		public TrackElement(double StartingTrackPosition)
+		/// <param name="startingTrackPosition">The starting position (relative to zero)</param>
+		public TrackElement(double startingTrackPosition)
 		{
-			this.InvalidElement = false;
-			this.StartingTrackPosition = StartingTrackPosition;
-			this.Pitch = 0.0;
-			this.CurveRadius = 0.0;
-			this.CurveCant = 0.0;
-			this.CurveCantTangent = 0.0;
-			this.AdhesionMultiplier = 1.0;
-			this.RainIntensity = 0;
-			this.SnowIntensity = 0;
-			this.CsvRwAccuracyLevel = 2.0;
-			this.WorldPosition = Vector3.Zero;
-			this.WorldDirection = Vector3.Forward;
-			this.WorldUp = Vector3.Down;
-			this.WorldSide = Vector3.Right;
-			this.Events = new GeneralEvent[] { };
+			InvalidElement = false;
+			this.StartingTrackPosition = startingTrackPosition;
+			Pitch = 0.0;
+			CurveRadius = 0.0;
+			CurveCant = 0.0;
+			CurveCantTangent = 0.0;
+			AdhesionMultiplier = 1.0;
+			RainIntensity = 0;
+			SnowIntensity = 0;
+			CsvRwAccuracyLevel = 2.0;
+			WorldPosition = Vector3.Zero;
+			WorldDirection = Vector3.Forward;
+			WorldUp = Vector3.Down;
+			WorldSide = Vector3.Right;
+			Events = new List<GeneralEvent>();
+			IsDriveable = false;
+			ContainsSwitch = false;
 		}
 	}
 }

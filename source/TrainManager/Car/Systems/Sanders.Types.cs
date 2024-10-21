@@ -1,4 +1,5 @@
-﻿namespace TrainManager.Car.Systems
+﻿// ReSharper disable UnusedMember.Global
+namespace TrainManager.Car.Systems
 {
 	public enum SandersType
 	{

@@ -1,4 +1,5 @@
-﻿namespace OpenBveApi.Runtime
+﻿// ReSharper disable UnusedMember.Global
+namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents the mode in which the plugin should initialize.</summary>
 	public enum InitializationModes

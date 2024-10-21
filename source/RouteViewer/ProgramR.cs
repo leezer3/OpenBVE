@@ -28,6 +28,8 @@ using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using ButtonState = OpenTK.Input.ButtonState;
+using LibRender2.Menu;
+using LibRender2.Screens;
 
 namespace RouteViewer
 {
@@ -79,13 +81,12 @@ namespace RouteViewer
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
-			string error;
-			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
+			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
 			{
 				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
-			
+			GameMenu.Instance = new GameMenu();
 			// command line arguments
 			string objectsToLoad = string.Empty;
 			if (args.Length != 0)
@@ -292,28 +293,64 @@ namespace RouteViewer
 			}
 		}
 
+		internal static void MouseWheelEvent(object sender, MouseWheelEventArgs e)
+		{
+			switch (Program.Renderer.CurrentInterface)
+			{
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.ProcessMouseScroll(e.Delta);
+					break;
+			}
+		}
+
+		internal static void MouseMoveEvent(object sender, MouseMoveEventArgs e)
+		{
+			switch (Program.Renderer.CurrentInterface)
+			{
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.ProcessMouseMove(e.X, e.Y);
+					break;
+			}
+		}
+
 		internal static void MouseEvent(object sender, MouseButtonEventArgs e)
 		{
-			if (e.Button == OpenTK.Input.MouseButton.Left)
+			switch (Renderer.CurrentInterface)
 			{
-				MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					if (e.IsPressed)
+					{
+						// viewer hooks up and down to same event
+						Game.Menu.ProcessMouseDown(e.X, e.Y);
+					}
+					break;
+				default:
+					if (e.Button == OpenTK.Input.MouseButton.Left)
+					{
+						MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
+					}
+					if (e.Button == OpenTK.Input.MouseButton.Right)
+					{
+						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 2 : 0;
+					}
+					if (e.Button == OpenTK.Input.MouseButton.Middle)
+					{
+						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
+					}
+					previousMouseState = Mouse.GetState();
+					if (MouseButton == 0)
+					{
+						Renderer.Camera.AlignmentDirection.Yaw = 0.0;
+						Renderer.Camera.AlignmentDirection.Pitch = 0.0;
+						Renderer.Camera.AlignmentDirection.Position.X = 0.0;
+						Renderer.Camera.AlignmentDirection.Position.Y = 0.0;
+					}
+					break;
 			}
-			if (e.Button == OpenTK.Input.MouseButton.Right)
-			{
-				MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 2 : 0;
-			}
-			if (e.Button == OpenTK.Input.MouseButton.Middle)
-			{
-				MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
-			}
-			previousMouseState = Mouse.GetState();
-			if (MouseButton == 0)
-			{
-				Renderer.Camera.AlignmentDirection.Yaw = 0.0;
-				Renderer.Camera.AlignmentDirection.Pitch = 0.0;
-				Renderer.Camera.AlignmentDirection.Position.X = 0.0;
-				Renderer.Camera.AlignmentDirection.Position.Y = 0.0;
-			}
+			
 		}
 
 		internal static MouseState currentMouseState;
@@ -321,10 +358,8 @@ namespace RouteViewer
 
 		internal static void MouseMovement()
 		{
-			if (MouseButton == 0)
-			{
-				return;
-			}
+			if (MouseButton == 0 || Program.Renderer.CurrentInterface != InterfaceType.Normal) return;
+
 			currentMouseState = Mouse.GetState();
 			if (currentMouseState != previousMouseState)
 			{
@@ -352,6 +387,7 @@ namespace RouteViewer
 			Application.DoEvents();
 			CurrentlyLoading = true;
 			CurrentRouteFile = e.FileName;
+			UpdateCaption();
 			LoadRoute();
 			ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 			CurrentlyLoading = false;
@@ -426,19 +462,24 @@ namespace RouteViewer
 					}
 					break;
 				case Key.F7:
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						return;
+					}
+					
 					if (CurrentlyLoading)
 					{
 						break;
 					}
 					OpenFileDialog Dialog = new OpenFileDialog();
 					Dialog.CheckFileExists = true;
-					Dialog.Filter = @"All Supported Routes|*.csv;*.rw;*.dat|CSV/RW files|*.csv;*.rw|Mechanik Routes|*.dat|All files|*";
+					Dialog.Filter = @"All Supported Routes|*.csv;*.rw;*.dat;*.txt|CSV/RW files|*.csv;*.rw|Mechanik Routes|*.dat|BVE5 Routes|*.txt|All files|*";
 					if (Dialog.ShowDialog() == DialogResult.OK)
 					{
-						
 						Application.DoEvents();
 						CurrentlyLoading = true;
 						CurrentRouteFile = Dialog.FileName;
+						UpdateCaption();
 						bool canLoad = false;
 						for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 						{
@@ -503,6 +544,11 @@ namespace RouteViewer
 					Dialog.Dispose();
 					break;
 				case Key.F8:
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						return;
+					}
+
 					if (CurrentlyLoading)
 					{
 						//Don't allow the user to update the settings during loading, bad idea..
@@ -518,6 +564,13 @@ namespace RouteViewer
 					Renderer.Camera.AlignmentDirection.Position.Y = 0;
 					break;
 				case Key.F9:
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						Program.Renderer.CurrentInterface = InterfaceType.Menu;
+						Game.Menu.PushMenu(MenuType.ErrorList);
+						return;
+					}
+
 					if (Interface.LogMessages.Count != 0)
 					{
 						formMessages.ShowMessages();
@@ -559,10 +612,24 @@ namespace RouteViewer
 					Renderer.Camera.AlignmentDirection.Yaw = CameraProperties.ExteriorTopAngularSpeed * speedModified;
 					break;
 				case Key.Up:
-					Renderer.Camera.AlignmentDirection.Pitch = CameraProperties.ExteriorTopAngularSpeed * speedModified;
+					if (Renderer.CurrentInterface != InterfaceType.Normal)
+					{
+						Game.Menu.ProcessCommand(Translations.Command.MenuUp, 0);
+					}
+					else
+					{
+						Renderer.Camera.AlignmentDirection.Pitch = CameraProperties.ExteriorTopAngularSpeed * speedModified;
+					}
 					break;
 				case Key.Down:
-					Renderer.Camera.AlignmentDirection.Pitch = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
+					if (Renderer.CurrentInterface != InterfaceType.Normal)
+					{
+						Game.Menu.ProcessCommand(Translations.Command.MenuDown, 0);
+					}
+					else
+					{
+						Renderer.Camera.AlignmentDirection.Pitch = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
+					}
 					break;
 				case Key.KeypadDivide:
 					Renderer.Camera.AlignmentDirection.Roll = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
@@ -660,6 +727,11 @@ namespace RouteViewer
 					}
 					break;
 				case Key.Enter:
+					if (Renderer.CurrentInterface != InterfaceType.Normal)
+					{
+						Game.Menu.ProcessCommand(Translations.Command.MenuEnter, 0);
+						return;
+					}
 					if (JumpToPositionEnabled)
 					{
 						if (JumpToPositionValue.Length != 0)
@@ -679,8 +751,7 @@ namespace RouteViewer
 							{
 								direction = 0;
 							}
-							double value;
-							if (double.TryParse(JumpToPositionValue, NumberStyles.Float, CultureInfo.InvariantCulture,out value))
+							if (double.TryParse(JumpToPositionValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double value))
 							{
 								if (value < CurrentRoute.Tracks[0].Elements[CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition + 100 && value > MinimumJumpToPositionValue - 100)
 								{
@@ -701,12 +772,29 @@ namespace RouteViewer
 					JumpToPositionEnabled = false;
 					break;
 				case Key.Escape:
-					JumpToPositionEnabled = false;
+					if (JumpToPositionEnabled)
+					{
+						JumpToPositionEnabled = false;
+					}
+					else
+					{
+						if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+						{
+							Program.currentGameWindow.TargetRenderFrequency = 0;
+							Program.Renderer.CurrentInterface = InterfaceType.Menu;
+							Game.Menu.PushMenu(MenuType.GameStart);
+						}
+					}
 					break;
 				case Key.R:
 					Renderer.SwitchOpenGLVersion();
 					break;
 				case Key.P:
+					if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						// no WinForms support
+						return;
+					}
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
 						if (pathForm == null || pathForm.IsDisposed)
@@ -788,8 +876,9 @@ namespace RouteViewer
 
 		// update caption
 		internal static void UpdateCaption() {
-			if (CurrentRouteFile != null) {
-				currentGameWindow.Title = System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName;
+			if (CurrentRouteFile != null)
+			{
+				currentGameWindow.Title = Program.CurrentlyLoading ? @"Loading: " + System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName : System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName;
 			} else
 			{
 				currentGameWindow.Title = Application.ProductName;

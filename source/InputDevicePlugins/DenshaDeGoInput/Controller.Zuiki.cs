@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020-2021, Marc Riera, The OpenBVE Project
+//Copyright (c) 2020-2024, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -55,7 +55,6 @@ namespace DenshaDeGoInput
 		{
 			ControllerName = string.Empty;
 			IsConnected = false;
-			RequiresCalibration = false;
 			BrakeNotches = brake.Length / 2 - 2;
 			PowerNotches = power.Length / 2 - 1;
 			brakeBytes = brake;
@@ -130,8 +129,9 @@ namespace DenshaDeGoInput
 
 				if (!cachedControllers.ContainsKey(guid))
 				{
+					JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
 					// ZKNS-001
-					if (id.Type == ControllerType.Zuki)
+					if (id.Type == ControllerType.Zuiki && capabilities.ButtonCount == 14 && capabilities.AxisCount == 4 && capabilities.HatCount >= 1)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						int[] buttonIndices = { 8, 9, 0, 1, 2, 3, 4, 5 };

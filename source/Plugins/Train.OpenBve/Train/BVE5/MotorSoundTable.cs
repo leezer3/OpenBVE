@@ -75,8 +75,7 @@ namespace Train.OpenBve
 				if (!string.IsNullOrEmpty(Lines[i]))
 				{
 					string[] splitString = Lines[i].TrimEnd(',', ' ').Split(',');
-					double speed;
-					if (!double.TryParse(splitString[0], out speed))
+					if (!double.TryParse(splitString[0], out double speed))
 					{
 						Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid speed encountered at Line " + i + " in BveTs Motor Noise table " + pitchFile);
 						continue;
@@ -157,8 +156,7 @@ namespace Train.OpenBve
 				if (!string.IsNullOrEmpty(Lines[i]))
 				{
 					string[] splitString = Lines[i].TrimEnd(',', ' ').Split(',');
-					double speed;
-					if (!double.TryParse(splitString[0], out speed))
+					if (!double.TryParse(splitString[0], out double speed))
 					{
 						Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid speed encountered at Line " + i + " in BveTs Motor Noise table " + volumeFile);
 						continue;

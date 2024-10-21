@@ -15,6 +15,11 @@ namespace OpenBveApi.Runtime
 		/// <summary>The expected departure time.</summary>
 		[DataMember]
 		public double DepartureTime;
+		/// <summary>If set, the time when jumping to this station</summary>
+		/// <remarks>May be different to the expected arrival time if driven by the player / AI.
+		/// NOTE: This is not shown in the timetable</remarks>
+		[DataMember]
+		public double JumpTime;
 		/// <summary>Whether the next signal is held red until departure.</summary>
 		[DataMember]
 		public bool ForceStopSignal;
@@ -30,6 +35,12 @@ namespace OpenBveApi.Runtime
 		/// <summary>The stop position applicable to the current train.</summary>
 		[DataMember]
 		public double StopPosition;
+		/// <summary>The forward tolerance applicable to the stop position.</summary>
+		[DataMember]
+		public double ForwardTolerance;
+		/// <summary>The backward tolerance applicable to the stop position.</summary>
+		[DataMember]
+		public double BackwardTolerance;
 		/// <summary>The stop mode for this station</summary>
 		[DataMember]
 		public StationStopMode StopMode;
@@ -89,12 +100,37 @@ namespace OpenBveApi.Runtime
 			Name = s.Name;
 			ArrivalTime = s.ArrivalTime;
 			DepartureTime = s.DepartureTime;
+			JumpTime = s.JumpTime;
 			ExpectedTimeStopped = s.ExpectedTimeStopped;
 			ForceStopSignal = s.ForceStopSignal;
 			OpenLeftDoors = s.OpenLeftDoors;
 			OpenRightDoors = s.OpenRightDoors;
 			DefaultTrackPosition = s.DefaultTrackPosition;
 			StopPosition = stopPosition;
+			ForwardTolerance = s.ForwardTolerance;
+			BackwardTolerance = s.BackwardTolerance;
+			StopMode = s.StopMode;
+			Type = s.Type;
+		}
+
+		/// <summary>Creates a train-specific station with stop tolerance values</summary>
+		/// <param name="s">The base station</param>
+		/// <param name="stopPosition">The stop position applicable to our train</param>
+		/// <param name="forwardTolerance">The forward tolerance applicable to the stop point</param>
+		/// <param name="backwardTolerance">The backward tolerance applicable to the stop point</param>
+		public Station(Station s, double stopPosition, double forwardTolerance, double backwardTolerance)
+		{
+			Name = s.Name;
+			ArrivalTime = s.ArrivalTime;
+			DepartureTime = s.DepartureTime;
+			ExpectedTimeStopped = s.ExpectedTimeStopped;
+			ForceStopSignal = s.ForceStopSignal;
+			OpenLeftDoors = s.OpenLeftDoors;
+			OpenRightDoors = s.OpenRightDoors;
+			DefaultTrackPosition = s.DefaultTrackPosition;
+			StopPosition = stopPosition;
+			ForwardTolerance = forwardTolerance;
+			BackwardTolerance = backwardTolerance;
 			StopMode = s.StopMode;
 			Type = s.Type;
 		}

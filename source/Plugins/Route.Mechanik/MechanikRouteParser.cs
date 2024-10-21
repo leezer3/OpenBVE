@@ -202,8 +202,7 @@ namespace MechanikRouteParser
 						 * => Texture IDX
 						 * => Furthest point: Determines when this vanishes (When the cab passes?)
 						 */
-						int numPoints, firstPoint;
-						if (!int.TryParse(Arguments[2], out numPoints))
+						if (!int.TryParse(Arguments[2], out int numPoints))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid NumberOfPoints encountered in " + Arguments[0] + " at line " + i);
 							continue;
@@ -237,7 +236,7 @@ namespace MechanikRouteParser
 							}
 							points.Add(currentPoint);
 						}
-						if (Arguments.Length < 25 || !int.TryParse(Arguments[24], out firstPoint))
+						if (Arguments.Length < 25 || !int.TryParse(Arguments[24], out int firstPoint))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid FirstPoint encountered in " + Arguments[0] + " at line " + i);
 							continue;
@@ -307,7 +306,6 @@ namespace MechanikRouteParser
 						break;
 					case "'o":
 						//Rotation marker for the player track, roughly equivilant to .turn
-						double radians;
 						Vector2 turnPoint = new Vector2();
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out turnPoint.X))
 						{
@@ -319,7 +317,7 @@ namespace MechanikRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid TurnPoint Y encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						if (Arguments.Length < 5 || !double.TryParse(Arguments[4], out radians))
+						if (Arguments.Length < 5 || !double.TryParse(Arguments[4], out double radians))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid TurnRaidus encountered in " + Arguments[0] + " at line " + i);
 							continue;
@@ -369,10 +367,6 @@ namespace MechanikRouteParser
 							continue;
 						}
 						//Sound marker
-						int soundNumber;
-						bool looped;
-						bool speedDependant;
-						int volume;
 						Vector3 soundPosition = new Vector3();
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out soundPosition.X))
 						{
@@ -386,28 +380,28 @@ namespace MechanikRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Z encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						if (Arguments.Length < 5 || !int.TryParse(Arguments[4], out soundNumber))
+						if (Arguments.Length < 5 || !int.TryParse(Arguments[4], out int soundNumber))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid SoundNumber encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						int valueCheck; //Documentation states this value must be 5, unclear as to purpose
-						if (Arguments.Length < 6 || !int.TryParse(Arguments[5], out valueCheck) || valueCheck != 5)
+						//Documentation states this value must be 5, unclear as to purpose
+						if (Arguments.Length < 6 || !int.TryParse(Arguments[5], out int valueCheck) || valueCheck != 5)
 						{
 							//Add message
 							continue;
 						}
-						if (Arguments.Length < 7 || !TryParseBool(Arguments[6], out looped))
+						if (Arguments.Length < 7 || !TryParseBool(Arguments[6], out bool looped))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Looped encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						if (Arguments.Length < 8 || !TryParseBool(Arguments[7], out speedDependant))
+						if (Arguments.Length < 8 || !TryParseBool(Arguments[7], out bool speedDependant))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid SpeedDependant encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						if (Arguments.Length < 9 || !int.TryParse(Arguments[8], out volume))
+						if (Arguments.Length < 9 || !int.TryParse(Arguments[8], out int volume))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Volume encountered in " + Arguments[0] + " at line " + i);
 							continue;
@@ -429,7 +423,6 @@ namespace MechanikRouteParser
 						break;
 					case "'z_p":
 						//Speed limit
-						double kph;
 						// ReSharper disable once NotAccessedVariable
 						Vector2 limitPos = new Vector2();
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out limitPos.X))
@@ -442,7 +435,7 @@ namespace MechanikRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Y encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						if (Arguments.Length < 5 || !double.TryParse(Arguments[4], out kph))
+						if (Arguments.Length < 5 || !double.TryParse(Arguments[4], out double kph))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Speed encountered in " + Arguments[0] + " at line " + i);
 							continue;
@@ -459,20 +452,18 @@ namespace MechanikRouteParser
 						 * => Z position of marker
 						 * => TRUE if start of stop zone, FALSE for end of stop zone
 						 */
-						bool isStart;
-						double stopPosX, stopPosZ;
-						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out stopPosX))
+						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out double stopPosX))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position X encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out stopPosZ))
+						if (Arguments.Length < 4 || !TryParseDistance(Arguments[3], out double stopPosZ))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Z encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 						trackPosition += stopPosZ;
-						if (Arguments.Length < 5 || !TryParseBool(Arguments[4], out isStart))
+						if (Arguments.Length < 5 || !TryParseBool(Arguments[4], out bool isStart))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid IsStart encountered in " + Arguments[0] + " at line " + i);
 							continue;
@@ -507,7 +498,6 @@ namespace MechanikRouteParser
 						 * => Signal Type
 						 */
 						Vector3 signalPosition = new Vector3();
-						int firstAspect, secondAspect;
 						if (Arguments.Length < 3 || !TryParseDistance(Arguments[2], out signalPosition.X))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position X encountered in " + Arguments[0] + " at line " + i);
@@ -523,39 +513,36 @@ namespace MechanikRouteParser
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid Position Z encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						if (Arguments.Length < 6 || !int.TryParse(Arguments[5], out firstAspect))
+						if (Arguments.Length < 6 || !int.TryParse(Arguments[5], out int firstAspect))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid CurrentAspect encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						if (Arguments.Length < 7 || !int.TryParse(Arguments[6], out secondAspect))
+						if (Arguments.Length < 7 || !int.TryParse(Arguments[6], out int secondAspect))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid NextAspect encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
 
-						int signalType;
 						bool heldAtRed;
-						if (Arguments.Length < 8 || !int.TryParse(Arguments[7], out signalType))
+						if (Arguments.Length < 8 || !int.TryParse(Arguments[7], out int signalType))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid HeldAtRed encountered in " + Arguments[0] + " at line " + i);
 							continue;
 						}
-						else
+
+						switch (signalType)
 						{
-							switch (signalType)
-							{
-								case 1:
-									heldAtRed = true;
-									break;
-								case 3:
-									heldAtRed = false;
-									break;
-								default:
-									heldAtRed = false;
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid HeldAtRed encountered in " + Arguments[0] + " at line " + i);
-									break;
-							}
+							case 1:
+								heldAtRed = true;
+								break;
+							case 3:
+								heldAtRed = false;
+								break;
+							default:
+								heldAtRed = false;
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid HeldAtRed encountered in " + Arguments[0] + " at line " + i);
+								break;
 						}
 						blockIndex = currentRouteData.FindBlock(trackPosition + signalPosition.Z);
 						signalPosition.Y = -signalPosition.Y;
@@ -573,8 +560,7 @@ namespace MechanikRouteParser
 						 * => Location X, Z
 						 * => Control- 1 for start, 0 for stop
 						 */
-						bool shouldBlow;
-						if (Arguments.Length < 6 || !TryParseBool(Arguments[5], out shouldBlow))
+						if (Arguments.Length < 6 || !TryParseBool(Arguments[5], out bool shouldBlow))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid HornControl variable encountered in " + Arguments[0] + " at line " + i);
 							continue;
@@ -597,8 +583,7 @@ namespace MechanikRouteParser
 						 * => Location X, Z
 						 * => Control- Must be 1
 						 */
-						int control;
-						if (Arguments.Length < 6 || !int.TryParse(Arguments[5], out control) || control != 1)
+						if (Arguments.Length < 6 || !int.TryParse(Arguments[5], out int control) || control != 1)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid AutoBrake Control variable encountered in " + Arguments[0] + " at line " + i);
 							continue;
@@ -692,7 +677,6 @@ namespace MechanikRouteParser
 			Vector2 worldDirection = Vector2.Down;
 			Vector3 trackPosition = Vector3.Zero;
 			Vector2 trackDirection = Vector2.Down;
-			Plugin.CurrentRoute.Tracks[0].Elements = new TrackElement[256];
 			
 			int CurrentTrackLength = 0;
 			double StartingDistance = 0;
@@ -743,19 +727,17 @@ namespace MechanikRouteParser
 							OpenRightDoors = true,
 							ArrivalTime = -1,
 							DepartureTime = -1,
+							JumpTime = -1,
 							DefaultTrackPosition = currentRouteData.Blocks[i].StartingTrackPosition,
 							StopTime = 30
 						};
-						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationStartEvent(Plugin.CurrentRoute, 0, s);
+						
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new StationStartEvent(Plugin.CurrentRoute, 0, s));
 					}
 					else
 					{
 						int s = Plugin.CurrentRoute.Stations.Length - 1;
-						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new StationEndEvent(Plugin.CurrentHost, Plugin.CurrentRoute, 0, s);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new StationEndEvent(Plugin.CurrentHost, Plugin.CurrentRoute, 0, s));
 						Plugin.CurrentRoute.Stations[s].Stops = new[]
 						{
 							new RouteManager2.Stations.StationStop
@@ -779,10 +761,8 @@ namespace MechanikRouteParser
 					foreach (Semaphore signal in currentRouteData.Blocks[i].Signals)
 					{
 
-						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
 						int s = Plugin.CurrentRoute.Sections.Length;
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new SectionChangeEvent(Plugin.CurrentRoute, 0, s, s + 1);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new SectionChangeEvent(Plugin.CurrentRoute, 0, s, s + 1));
 						Array.Resize(ref Plugin.CurrentRoute.Sections, s + 1);
 						SectionAspect[] newAspects = {
 							new SectionAspect(0, 0),
@@ -823,15 +803,11 @@ namespace MechanikRouteParser
 
 					if (currentRouteData.Blocks[i].HornBlow)
 					{
-						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new HornBlowEvent(0, HornTypes.Primary, true);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new HornBlowEvent(0, HornTypes.Primary, true));
 					}
 					if (currentRouteData.Blocks[i].SignalBeacon)
 					{
-						int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-						Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-						Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new TransponderEvent(Plugin.CurrentRoute, 0, 2, 0, Plugin.CurrentRoute.Sections.Length - 1, true);
+						Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new TransponderEvent(Plugin.CurrentRoute, 0, 2, 0, Plugin.CurrentRoute.Sections.Length - 1, true));
 					}
 				}
 				
@@ -865,9 +841,7 @@ namespace MechanikRouteParser
 						// For the minute, let's ignore and see how much further we get
 						continue;
 					}
-					int e = Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Length; 
-					Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements[n].Events, e + 1);
-					Plugin.CurrentRoute.Tracks[0].Elements[n].Events[e] = new RouteManager2.Events.SoundEvent(Plugin.CurrentHost, 0, AvailableSounds[currentRouteData.Blocks[i].Sounds[j].SoundIndex], true, false, currentRouteData.Blocks[i].Sounds[j].Looped, false, currentRouteData.Blocks[i].Sounds[j].Position);
+					Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new RouteManager2.Events.SoundEvent(Plugin.CurrentHost, 0, AvailableSounds[currentRouteData.Blocks[i].Sounds[j].SoundIndex], true, false, currentRouteData.Blocks[i].Sounds[j].Looped, false, currentRouteData.Blocks[i].Sounds[j].Position));
 				}
 			}
 			Array.Resize(ref Plugin.CurrentRoute.Tracks[0].Elements, CurrentTrackLength);
@@ -879,7 +853,7 @@ namespace MechanikRouteParser
 					Plugin.CurrentRoute.Stations[i].Stops = new RouteManager2.Stations.StationStop[] { };
 				}
 			}
-			Plugin.CurrentRoute.Tracks[0].Elements[CurrentTrackLength -1].Events = new GeneralEvent[] { new TrackEndEvent(Plugin.CurrentHost, 500) }; //Remember that Mechanik often has very long objects
+			Plugin.CurrentRoute.Tracks[0].Elements[CurrentTrackLength -1].Events = new List<GeneralEvent> { new TrackEndEvent(Plugin.CurrentHost, 500) }; //Remember that Mechanik often has very long objects
 
 			
 			string routeHash = Path.GetChecksum(RouteFile);
@@ -951,11 +925,13 @@ namespace MechanikRouteParser
 			//Convert texture size to px/m and then multiply by scaleFactor to get the final vertex offset
 			double scaledWidth = t.Width * 5 * scaleFactor;
 			double scaledHeight = t.Height * 5 * scaleFactor;
-			Builder.Vertices = new List<VertexTemplate>();
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft)));
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y, topLeft.Z))); //upper right
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y - scaledHeight, topLeft.Z))); //bottom right
-			Builder.Vertices.Add(new Vertex(new Vector3(topLeft.X, topLeft.Y - scaledHeight, topLeft.Z))); //bottom left
+			Builder.Vertices = new List<VertexTemplate>
+			{
+				new Vertex(new Vector3(topLeft)),
+				new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y, topLeft.Z)), //upper right
+				new Vertex(new Vector3(topLeft.X + scaledWidth, topLeft.Y - scaledHeight, topLeft.Z)), //bottom right
+				new Vertex(new Vector3(topLeft.X, topLeft.Y - scaledHeight, topLeft.Z)) //bottom left
+			};
 			//Possibly change to Face, check this though (Remember that Mechanik was restricted to the cab, wheras we are not)
 			Builder.Faces = new List<MeshFace>();
 			Builder.Faces.Add(new MeshFace { Vertices = new MeshFaceVertex[4], Flags = FaceFlags.Face2Mask });
@@ -1012,7 +988,7 @@ namespace MechanikRouteParser
 					string path = Path.CombineFile(Path.GetDirectoryName(tDat), s);
 					if (File.Exists(path))
 					{
-						MechanikTexture t = new MechanikTexture(path, s);
+						MechanikTexture t = new MechanikTexture(path);
 						AvailableTextures.Add(k, t);
 					}
 

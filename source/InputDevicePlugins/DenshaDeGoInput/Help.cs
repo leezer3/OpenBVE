@@ -61,19 +61,19 @@ namespace DenshaDeGoInput
 		/// </summary>
 		private void UpdateTranslation()
 		{
-			Text = Translations.GetInterfaceString("denshadego_help_title");
-			labelController1.Text = Translations.GetInterfaceString("denshadego_help_controller1_label");
-			labelController2.Text = Translations.GetInterfaceString("denshadego_help_controller2_label");
-			labelWindows.Text = Translations.GetInterfaceString("denshadego_help_windows_label");
-			labelLinux.Text = Translations.GetInterfaceString("denshadego_help_linux_label");
-			textBoxController1.Text = Translations.GetInterfaceString("denshadego_help_controller1_textbox");
-			textBoxController2.Text = Translations.GetInterfaceString("denshadego_help_controller2_textbox");
-			textBoxWindows.Text = Translations.GetInterfaceString("denshadego_help_windows_textbox");
-			textBoxLinux.Text = Translations.GetInterfaceString(DenshaDeGoInput.LibUsbIssue ? "denshadego_help_libusb_symlink" : "denshadego_help_linux_textbox");
-			buttonZadig.Text = Translations.GetInterfaceString("denshadego_help_zadig_button");
-			buttonWindows.Text = Translations.GetInterfaceString("denshadego_help_windows_button");
-			buttonLinux.Text = Translations.GetInterfaceString("denshadego_help_linux_button");
-			buttonOk.Text = Translations.GetInterfaceString("denshadego_help_ok_button");
+			Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","help_title"});
+			labelController1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","help_controller1_label"});
+			labelController2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","help_controller2_label"});
+			labelWindows.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","help_windows_label"});
+			labelLinux.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","help_linux_label"});
+			textBoxController1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","help_controller1_textbox"});
+			textBoxController2.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","help_controller2_textbox"});
+			textBoxWindows.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","help_windows_textbox"});
+			textBoxLinux.Text = Translations.GetInterfaceString(HostApplication.OpenBve, DenshaDeGoInput.LibUsbIssue ? new[] {"denshadego","help_libusb_symlink"} : new[] {"denshadego","help_linux_textbox"});
+			buttonZadig.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","help_zadig_button"});
+			buttonWindows.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","help_windows_button"});
+			buttonLinux.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","help_linux_button"});
+			buttonOk.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","help_ok_button"});
 		}
 
 		private void Help_Shown(object sender, EventArgs e)
@@ -112,6 +112,12 @@ namespace DenshaDeGoInput
 				resource.SetLength(0);
 				Assembly.GetExecutingAssembly().GetManifestResourceStream("ryojouhen_driver").CopyTo(resource);
 				File.WriteAllBytes(Path.Combine(folderName, "Ryojouhen.cfg"), resource.ToArray());
+				resource.SetLength(0);
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("mtc_driver").CopyTo(resource);
+				File.WriteAllBytes(Path.Combine(folderName, "MTC.cfg"), resource.ToArray());
+				resource.SetLength(0);
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("trainmascon_driver").CopyTo(resource);
+				File.WriteAllBytes(Path.Combine(folderName, "TrainMascon.cfg"), resource.ToArray());
 			}
 		}
 

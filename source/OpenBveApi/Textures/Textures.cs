@@ -24,6 +24,8 @@ namespace OpenBveApi.Textures {
 		/// <summary>The last access of this texture in clockticks</summary>
 		/// <remarks>Used by the engine when deciding to unload unused textures</remarks>
 		public int LastAccess;
+		/// <summary>Whether the texture is available to unload</summary>
+		public bool AvailableToUnload;
 		/// <summary>Holds the OpenGL textures</summary>
 		/// <remarks>An 3D array containing the OpenGL texture array for each frame</remarks>
 		private readonly OpenGlTexture[][] MyOpenGlTextures;
@@ -241,8 +243,8 @@ namespace OpenBveApi.Textures {
 		public static bool operator ==(Texture a, Texture b)
 		{
 			if (ReferenceEquals(a, b)) return true;
-			if (ReferenceEquals(a, null)) return false;
-			if (ReferenceEquals(b, null)) return false;
+			if (a is null) return false;
+			if (b is null) return false;
 			if (a.MultipleFrames != b.MultipleFrames) return false;
 			if (a.Origin != b.Origin) return false;
 			if (a.MySize.X != b.MySize.X) return false;
@@ -263,8 +265,8 @@ namespace OpenBveApi.Textures {
 		public static bool operator !=(Texture a, Texture b)
 		{
 			if (ReferenceEquals(a, b)) return false;
-			if (ReferenceEquals(a, null)) return true;
-			if (ReferenceEquals(b, null)) return true;
+			if (a is null) return true;
+			if (b is null) return true;
 			if (a.MultipleFrames != b.MultipleFrames) return true;
 			if (a.Origin != b.Origin) return true;
 			if (a.MySize.X != b.MySize.X) return true;

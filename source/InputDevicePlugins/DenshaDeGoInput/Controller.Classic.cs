@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenTK.Input;
 
@@ -52,6 +53,12 @@ namespace DenshaDeGoInput
 
 		/// <summary>The OpenTK joystick index for this controller.</summary>
 		private int joystickIndex;
+
+		/// <summary>Hack: Brake handle delay for certain buggy adapters.</summary>
+		private const int BrakeHandleDelay = 5;
+
+		/// <summary>The delay for the emergency brake notch.</summary>
+		private int emergencyNotchDelay = BrakeHandleDelay;
 
 		/// <summary>
 		/// Class for the indices of the buttons used by the controller.
@@ -266,7 +273,16 @@ namespace DenshaDeGoInput
 			if (brakeNotch != BrakeNotchesEnum.Transition && (brakeNotch == BrakeNotchesEnum.Emergency || brakeNotch >= BrakeNotchesEnum.B8))
 			{
 				// Set notch only if it is not a transition nor an unmarked notch
-				InputTranslator.BrakeNotch = BrakeNotchMap[brakeNotch];
+				// Hack for adapters with ghost input: do not trigger emergency unless brake notch is B6 or above
+				if (brakeNotch == BrakeNotchesEnum.Emergency && emergencyNotchDelay > 0)
+				{
+					emergencyNotchDelay--;
+				}
+				else
+				{
+					InputTranslator.BrakeNotch = BrakeNotchMap[brakeNotch];
+					emergencyNotchDelay = BrakeHandleDelay;
+				}
 			}
 			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] = joystick.GetButton(ButtonIndex.Select);
 			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Start] = joystick.GetButton(ButtonIndex.Start);
@@ -356,7 +372,7 @@ namespace DenshaDeGoInput
 			// Button calibration
 			for (int i = 0; i < 5; i++)
 			{
-				MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_button").Replace("[button]", input[i]));
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","calibrate_button"}).Replace("[button]", input[i]));
 				PreviousButtonState = buttonState;
 				buttonState = GetButtonsState();
 				int index = GetDifferentPressedIndex(PreviousButtonState, buttonState, ignored);
@@ -382,12 +398,12 @@ namespace DenshaDeGoInput
 			}
 
 			// The brake handle needs to be moved to EMG to initialise properly
-			MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_brake").Replace("[notch]", input[5]));
+			MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","calibrate_brake"}).Replace("[notch]", input[5]));
 
 			// Brake handle calibration
 			for (int i = 6; i < 10; i++)
 			{
-				MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_brake").Replace("[notch]", input[i]));
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","calibrate_brake"}).Replace("[notch]", input[i]));
 				PreviousButtonState = buttonState;
 				buttonState = GetButtonsState();
 				int index = GetDifferentPressedIndex(PreviousButtonState, buttonState, ignored);
@@ -410,8 +426,8 @@ namespace DenshaDeGoInput
 			}
 
 			// The power handle needs to be moved to P5 and N to initialise properly
-			MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_power").Replace("[notch]", input[10]));
-			MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_power").Replace("[notch]", input[11]));
+			MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","calibrate_power"}).Replace("[notch]", input[10]));
+			MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","calibrate_power"}).Replace("[notch]", input[11]));
 
 			// Clear previous data before calibrating the power handle
 			ignored.Clear();
@@ -422,7 +438,7 @@ namespace DenshaDeGoInput
 			// Power handle calibration
 			for (int i = 12; i < 15; i++)
 			{
-				MessageBox.Show(Translations.GetInterfaceString("denshadego_calibrate_power").Replace("[notch]", input[i]));
+				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"denshadego","calibrate_power"}).Replace("[notch]", input[i]));
 				PreviousButtonState = buttonState;
 				previousHatPositions = hatPositions;
 				previousAxisValues = axisValues;

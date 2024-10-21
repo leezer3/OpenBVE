@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
-using LibRender2.Cursors;
 using LibRender2.Trains;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;

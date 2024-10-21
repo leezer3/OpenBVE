@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2021, Marc Riera, The OpenBVE Project
+//Copyright (c) 2021-2024, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,14 +22,15 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using LibUsbDotNet;
-using LibUsbDotNet.Main;
-using OpenBveApi;
-using OpenBveApi.Interface;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
+using LibUsbDotNet;
+using LibUsbDotNet.Info;
+using LibUsbDotNet.Main;
+using OpenBveApi;
+using OpenBveApi.Interface;
 
 namespace DenshaDeGoInput
 {
@@ -59,11 +60,6 @@ namespace DenshaDeGoInput
 		internal static bool LibUsbShouldLoop = true;
 
 		/// <summary>
-		/// The setup packet needed to send data to the controller.
-		/// </summary>
-		private static UsbSetupPacket setupPacket = new UsbSetupPacket(0x40, 0x09, 0x0301, 0x0000, 0x0008);
-
-		/// <summary>
 		/// Adds the supported controller models to the LibUsb list.
 		/// </summary>
 		/// <param name="ids">A list of VID+PID identifiers to search</param>
@@ -73,19 +69,9 @@ namespace DenshaDeGoInput
 			{
 				int vid = int.Parse(id.Substring(0, 4), NumberStyles.HexNumber);
 				int pid = int.Parse(id.Substring(5, 4), NumberStyles.HexNumber);
-				Guid guid;
-				switch (DenshaDeGoInput.CurrentHost.Platform)
-				{
-					case OpenBveApi.Hosts.HostPlatform.MicrosoftWindows:
-						guid = new Guid(id.Substring(5, 4) + id.Substring(0, 4) + "-ffff-ffff-ffff-ffffffffffff");
-						break;
-					default:
-						string vendor = id.Substring(2, 2) + id.Substring(0, 2);
-						string product = id.Substring(7, 2) + id.Substring(5, 2);
-						guid = new Guid("ffffffff-" + vendor + "-ffff-" + product + "-ffffffffffff");
-						break;
-				}
-				UsbController controller = new UsbController(vid, pid);
+				int rev = int.Parse(id.Substring(10, 4), NumberStyles.HexNumber);
+				Guid guid = new Guid(id.Substring(5, 4) + id.Substring(0, 4) + "-" + id.Substring(10, 4) + "-ffff-ffff-ffffffffffff");
+				UsbController controller = new UsbController(vid, pid, rev);
 				if (!supportedUsbControllers.ContainsKey(guid))
 				{
 					// Add new controller
@@ -148,7 +134,14 @@ namespace DenshaDeGoInput
 					if (controller.ControllerDevice == null || !controller.IsConnected)
 					{
 						// The device is not configured, try to find it
-						controller.ControllerDevice = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(controller.VendorID, controller.ProductID));
+						if (controller.Revision != 0)
+						{
+							controller.ControllerDevice = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(controller.VendorID, controller.ProductID, controller.Revision));
+						}
+						else
+						{
+							controller.ControllerDevice = UsbDevice.OpenUsbDevice(new UsbDeviceFinder(controller.VendorID, controller.ProductID));
+						}
 					}
 					if (controller.ControllerDevice == null)
 					{
@@ -159,8 +152,18 @@ namespace DenshaDeGoInput
 					{
 						if (!controller.IsConnected)
 						{
-							// Open endpoint reader, if necessary
-							controller.ControllerReader = controller.ControllerDevice.OpenEndpointReader(ReadEndpointID.Ep01);
+							// Search for input endpoint and open endpoint reader
+							ReadEndpointID ep = ReadEndpointID.Ep01;
+							UsbConfigInfo config = controller.ControllerDevice.Configs[0];
+							foreach (UsbEndpointInfo endpoint in config.InterfaceInfoList[0].EndpointInfoList)
+							{
+								if ((endpoint.Descriptor.EndpointID & 0x80) == 0x80)
+								{
+									ep = (ReadEndpointID)endpoint.Descriptor.EndpointID;
+									break;
+								}
+							}
+							controller.ControllerReader = controller.ControllerDevice.OpenEndpointReader(ep);
 						}
 						// The controller is connected
 						controller.IsConnected = true;
@@ -195,13 +198,15 @@ namespace DenshaDeGoInput
 		/// <param name="read">An array containing the previous read buffer</param>
 		/// <param name="write">The bytes to be sent to the controller</param>
 		/// <returns>The bytes read from the controller.</returns>
-		internal static byte[] SyncController(Guid guid, byte[] read, byte[] write)
+		internal static byte[] SyncController(Guid guid, byte[] read, byte[] write, UsbSetupPacket setup)
 		{
 			// If the read buffer's length is 0, copy the initial input bytes to get the required read length
 			if (supportedUsbControllers[guid].ReadBuffer.Length == 0)
 			{
 				supportedUsbControllers[guid].ReadBuffer = read;
 			}
+			// Copy the setup packet
+			supportedUsbControllers[guid].SetupPacket = setup;
 			// Copy the output bytes to the write buffer
 			supportedUsbControllers[guid].WriteBuffer = write;
 			// If the length of the byte array to be sent to the controller when unloaded is 0, use the write buffer

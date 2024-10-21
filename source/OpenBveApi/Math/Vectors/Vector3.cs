@@ -1,6 +1,8 @@
 ﻿using System;
 using OpenBveApi.World;
+using SharpCompress.Common;
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MergeCastWithTypeCheck
 
 namespace OpenBveApi.Math {
 	/// <summary>Represents a three-dimensional vector.</summary>
@@ -442,6 +444,15 @@ namespace OpenBveApi.Math {
 		}
 
 		/// <summary>Rotates the vector on the perpendicular world plane (Used by the .Turn command)</summary>
+		/// <param name="angle">The angle.</param>
+		public void RotatePlane(double angle)
+		{
+			double cosa = System.Math.Cos(angle);
+			double sina = System.Math.Sin(angle);
+			RotatePlane(cosa, sina);
+		}
+
+		/// <summary>Rotates the vector on the perpendicular world plane (Used by the .Turn command)</summary>
 		/// <param name="cosa">The cosine of the angle.</param>
 		/// <param name="sina">The sine of the angle.</param>
 		public void RotatePlane(double cosa, double sina)
@@ -647,10 +658,17 @@ namespace OpenBveApi.Math {
 		public static bool IsNullVector(Vector3 vector) {
 			return vector.X == 0.0 & vector.Y == 0.0 & vector.Z == 0.0;
 		}
-		
-		/// <summary>Gets the euclidean norm of the specified vector.</summary>
-		/// <param name="vector">The vector.</param>
-		/// <returns>The euclidean norm.</returns>
+
+		/// <summary>Tests to see whether the vector is finite (no components are double or infinity.</summary>
+		/// <returns>A boolean indicating whether the vector is finite</returns>
+		public static bool IsFinite(Vector3 Vector)
+        {
+            return !double.IsNaN(Vector.X) && !double.IsInfinity(Vector.X) && !double.IsNaN(Vector.Y) && !double.IsInfinity(Vector.Y) && !double.IsNaN(Vector.Z) && !double.IsInfinity(Vector.Z);
+        }
+
+        /// <summary>Gets the euclidean norm of the specified vector.</summary>
+        /// <param name="vector">The vector.</param>
+        /// <returns>The euclidean norm.</returns>
 		public static double Norm(Vector3 vector) {
 			return System.Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z);
 		}
@@ -701,8 +719,7 @@ namespace OpenBveApi.Math {
 		/// <returns>The result of the operation.</returns>
 		public static Vector3 Transform(Vector3 vec, Quaternion quat)
 		{
-			Vector3 result;
-			Transform(ref vec, ref quat, out result);
+			Transform(ref vec, ref quat, out Vector3 result);
 			return result;
 		}
 

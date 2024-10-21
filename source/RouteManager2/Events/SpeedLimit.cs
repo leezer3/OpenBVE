@@ -7,11 +7,18 @@ namespace RouteManager2.Events
 	/// <summary>Is called when the speed limit upon the track change</summary>
 	public class LimitChangeEvent : GeneralEvent
 	{
+		/// <summary>The previous speed limit</summary>
+		/// <remarks>Units are m/s</remarks>
 		public readonly double PreviousSpeedLimit;
+		/// <summary>The next speed limit</summary>
+		/// <remarks>Units are m/s</remarks>
 		public readonly double NextSpeedLimit;
 
-		public LimitChangeEvent(double TrackPositionDelta, double PreviousSpeedLimit, double NextSpeedLimit) : base(TrackPositionDelta)
+		private readonly CurrentRoute currentRoute;
+
+		public LimitChangeEvent(CurrentRoute CurrentRoute, double TrackPositionDelta, double PreviousSpeedLimit, double NextSpeedLimit) : base(TrackPositionDelta)
 		{
+			currentRoute = CurrentRoute;
 			DontTriggerAnymore = false;
 			this.PreviousSpeedLimit = PreviousSpeedLimit;
 			this.NextSpeedLimit = NextSpeedLimit;
@@ -19,6 +26,10 @@ namespace RouteManager2.Events
 
 		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
+			if (currentRoute.Tracks[trackFollower.TrackIndex].Direction == TrackDirection.Reverse)
+			{
+				direction = -direction;
+			}
 			AbstractTrain train = trackFollower.Train;
 			EventTriggerType triggerType = trackFollower.TriggerType;
 

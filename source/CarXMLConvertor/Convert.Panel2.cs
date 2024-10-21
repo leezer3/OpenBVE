@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using OpenBveApi;
+using Path = System.IO.Path;
 
 namespace CarXmlConvertor
 {
@@ -57,7 +59,7 @@ namespace CarXmlConvertor
 	            {
 		            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
 		            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-					newLines.Add("<" + a + ">" + b + "</"+ a + ">");
+					newLines.Add("<" + a + ">" + b.Escape() + "</"+ a + ">");
 	            }
             }
             newLines.Add("</"+currentSection + ">");

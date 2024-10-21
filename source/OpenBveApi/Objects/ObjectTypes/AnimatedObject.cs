@@ -1,16 +1,21 @@
+using System;
 using System.Linq;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
+using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 
+#pragma warning disable CS0659, CS0661 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 namespace OpenBveApi.Objects
 {
 	/// <summary>The base type for an animated object</summary>
 	public class AnimatedObject
 	{
+		/// <summary>The filename</summary>
+		private readonly string FileName;
 		/// <summary>The array of states</summary>
 		public ObjectState[] States;
 		/// <summary>The function script controlling state changes</summary>
@@ -106,17 +111,18 @@ namespace OpenBveApi.Objects
 		public int SectionIndex;
 
 		/// <summary>Creates a new animated object</summary>
-		public AnimatedObject(HostInterface host)
+		public AnimatedObject(HostInterface host, string fileName = "")
 		{
 			currentHost = host;
 			States = new ObjectState[] { };
+			FileName = fileName;
 		}
 
 		/// <summary>Clones this object</summary>
 		/// <returns>The new object</returns>
 		public AnimatedObject Clone()
 		{
-			AnimatedObject Result = new AnimatedObject(currentHost)
+			AnimatedObject Result = new AnimatedObject(currentHost, FileName)
 			{
 				States = States.Select(x => (ObjectState)x.Clone()).ToArray(),
 				TrackFollowerFunction = TrackFollowerFunction?.Clone(),
@@ -311,11 +317,8 @@ namespace OpenBveApi.Objects
 				{
 					radianX = RotateXFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
-				
-				if (RotateXDamping != null)
-				{
-					RotateXDamping.Update(TimeElapsed, ref radianX, EnableDamping);
-				}
+
+				RotateXDamping?.Update(TimeElapsed, ref radianX, EnableDamping);
 			}
 
 			double radianY = 0.0;
@@ -326,11 +329,8 @@ namespace OpenBveApi.Objects
 				{
 					radianY = RotateYFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
-				
-				if (RotateYDamping != null)
-				{
-					RotateYDamping.Update(TimeElapsed, ref radianY, EnableDamping);
-				}
+
+				RotateYDamping?.Update(TimeElapsed, ref radianY, EnableDamping);
 			}
 
 			double radianZ = 0.0;
@@ -341,11 +341,8 @@ namespace OpenBveApi.Objects
 				{
 					radianZ = RotateZFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				}
-				
-				if (RotateZDamping != null)
-				{
-					RotateZDamping.Update(TimeElapsed, ref radianZ, EnableDamping);
-				}
+
+				RotateZDamping?.Update(TimeElapsed, ref radianZ, EnableDamping);
 			}
 
 			bool scaleX = ScaleXFunction != null;
@@ -601,7 +598,7 @@ namespace OpenBveApi.Objects
 									t = 1.0;
 								}
 
-								t = t - System.Math.Floor(t);
+								t -= System.Math.Floor(t);
 								t = 0.5 * (1.0 - System.Math.Tan(0.25 * (System.Math.PI - 2.0 * System.Math.PI * t)));
 								double cx = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].X + t * LEDVectors[currentEdge].X;
 								double cy = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Y + t * LEDVectors[currentEdge].Y;
@@ -845,7 +842,7 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Reverses the object</summary>
-		public void Reverse()
+		public void Reverse(bool Interior = false)
 		{
 			foreach (ObjectState state in States)
 			{
@@ -866,7 +863,164 @@ namespace OpenBveApi.Objects
 			TranslateYDirection.Z *= -1.0;
 			TranslateZDirection.X *= -1.0;
 			TranslateZDirection.Z *= -1.0;
-			//As we are using a rotation matrix, we only need to reverse the translation and not the rotation
+			// If our object is an interior, we need to reverse the rotation of objects
+			// This does not apply to exterior / general objects, as we're using a translation matrix
+			if (Interior)
+			{
+				RotateXDirection.X *= -1.0;
+				RotateXDirection.Z *= -1.0;
+				RotateYDirection.X *= -1.0;
+				RotateYDirection.Z *= -1.0;
+				RotateZDirection.X *= -1.0;
+				RotateZDirection.Z *= -1.0;
+			}
+		}
+
+		/// <summary>Loads all textures associated with this object</summary>
+		public void LoadTextures()
+		{
+			for (int i = 0; i < States.Length; i++)
+			{
+				if (States[i].Prototype == null || States[i].Prototype.Mesh == null)
+				{
+					continue;
+				}
+				foreach (MeshFace face in States[i].Prototype.Mesh.Faces)
+				{
+					OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
+					if (States[i].Prototype.Mesh.Materials[face.Material].DaytimeTexture != null || States[i].Prototype.Mesh.Materials[face.Material].NighttimeTexture != null)
+					{
+						if (States[i].Prototype.Mesh.Materials[face.Material].WrapMode == null)
+						{
+							/*
+							 * If the object does not have a stored wrapping mode determine it now. However:
+							 * https://github.com/leezer3/OpenBVE/issues/971
+							 *
+							 * Unfortunately, there appear to be X objects in the wild which expect a non-default wrapping mode
+							 * which means the best fast exit we can do is to check for RepeatRepeat....
+							 *
+							 */
+							foreach (VertexTemplate vertex in States[i].Prototype.Mesh.Vertices)
+							{
+								if (vertex.TextureCoordinates.X < 0.0f || vertex.TextureCoordinates.X > 1.0f)
+								{
+									wrap |= OpenGlTextureWrapMode.RepeatClamp;
+								}
+
+								if (vertex.TextureCoordinates.Y < 0.0f || vertex.TextureCoordinates.Y > 1.0f)
+								{
+									wrap |= OpenGlTextureWrapMode.ClampRepeat;
+								}
+
+								if (wrap == OpenGlTextureWrapMode.RepeatRepeat)
+								{
+									break;
+								}
+							}
+						}
+						else
+						{
+							wrap = (OpenGlTextureWrapMode)States[i].Prototype.Mesh.Materials[face.Material].WrapMode;
+						}
+
+						States[i].Prototype.Mesh.Materials[face.Material].WrapMode = wrap;
+						if (States[i].Prototype.Mesh.Materials[face.Material].DaytimeTexture != null)
+						{
+							currentHost.LoadTexture(ref States[i].Prototype.Mesh.Materials[face.Material].DaytimeTexture, wrap);
+							States[i].Prototype.Mesh.Materials[face.Material].DaytimeTexture.AvailableToUnload = false;
+						}
+						if (States[i].Prototype.Mesh.Materials[face.Material].NighttimeTexture != null)
+						{
+							currentHost.LoadTexture(ref States[i].Prototype.Mesh.Materials[face.Material].NighttimeTexture, wrap);
+							States[i].Prototype.Mesh.Materials[face.Material].NighttimeTexture.AvailableToUnload = false;
+						}
+					}
+				}
+			}
+
+
+		}
+
+		/// <summary>Checks whether the two specified animated objects are equal</summary>
+		public static bool operator ==(AnimatedObject a, AnimatedObject b)
+		{
+			if (a is null)
+			{
+				return b is null;
+			}
+			return a.Equals(b);
+		}
+
+		/// <summary>Checks whether the two specified animated objects are unequal</summary>
+		public static bool operator !=(AnimatedObject a, AnimatedObject b)
+		{
+			if (a is null)
+			{
+				return !(b is null);
+			}
+			return !a.Equals(b);
+		}
+
+		/// <summary>Indicates whether this instance and a specified instance are equal.</summary>
+		/// <param name="animatedObject">The instance to compare to.</param>
+		/// <returns>True if the instances are equal; false otherwise.</returns>
+		public bool Equals(AnimatedObject animatedObject)
+		{
+			if (animatedObject is null)
+			{
+				return false;
+			}
+			if (animatedObject.FileName != FileName) return false; // fast return hopefully
+			if (animatedObject.States != States) return false;
+			if (animatedObject.StateFunction != StateFunction) return false;
+			if (animatedObject.TranslateXDirection != TranslateXDirection) return false;
+			if (animatedObject.TranslateYDirection != TranslateYDirection) return false;
+			if (animatedObject.TranslateZDirection != TranslateZDirection) return false;
+			if (animatedObject.TranslateXFunction != TranslateXFunction) return false;
+			if (animatedObject.TranslateYFunction != TranslateYFunction) return false;
+			if (animatedObject.TranslateZFunction != TranslateZFunction) return false;
+			if (animatedObject.RotateXDirection != RotateXDirection) return false;
+			if (animatedObject.RotateXDamping != RotateXDamping) return false;
+			if (animatedObject.RotateYDamping != RotateYDamping) return false;
+			if (animatedObject.RotateZDamping != RotateZDamping) return false;
+			if (animatedObject.RotateYDirection != RotateYDirection) return false;
+			if (animatedObject.RotateZDirection != RotateZDirection) return false;
+			if (animatedObject.RotateXFunction != RotateXFunction) return false;
+			if (animatedObject.RotateYFunction != RotateYFunction) return false;
+			if (animatedObject.RotateZFunction != RotateZFunction) return false;
+			if (animatedObject.TextureShiftXDirection != TextureShiftXDirection) return false;
+			if (animatedObject.TextureShiftYDirection != TextureShiftYDirection) return false;
+			if (animatedObject.TextureShiftXFunction != TextureShiftXFunction) return false;
+			if (animatedObject.TextureShiftYFunction != TextureShiftYFunction) return false;
+			if (animatedObject.ScaleXFunction != ScaleXFunction) return false;
+			if (animatedObject.ScaleYFunction != ScaleYFunction) return false;
+			if (animatedObject.ScaleZFunction != ScaleZFunction) return false;
+			if (animatedObject.LEDClockwiseWinding != LEDClockwiseWinding) return false;
+			if (animatedObject.LEDInitialAngle != LEDInitialAngle) return false;
+			if (animatedObject.LEDLastAngle != LEDLastAngle) return false;
+			if (animatedObject.LEDVectors != LEDVectors) return false;
+			if (animatedObject.LEDFunction != LEDFunction) return false;
+			if (animatedObject.RefreshRate != RefreshRate) return false;
+			if (animatedObject.TrackFollowerFunction != TrackFollowerFunction) return false;
+			if (animatedObject.FrontAxlePosition != FrontAxlePosition) return false;
+			if (animatedObject.RearAxlePosition != RearAxlePosition) return false;
+			if (animatedObject.isTimeTableObject != isTimeTableObject) return false;
+			// other fields should be instance related only
+			return true;
+		}
+
+		/// <summary>Indicates whether this instance and a specified object are equal.</summary>
+		/// <param name="obj">The object to compare to.</param>
+		/// <returns>True if the instances are equal; false otherwise.</returns>
+		public override bool Equals(object obj)
+		{
+			if (!(obj is AnimatedObject animatedObject))
+			{
+				return false;
+			}
+
+			return Equals(animatedObject);
 		}
 	}
 }
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

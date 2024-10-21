@@ -19,7 +19,7 @@ namespace OpenBveApi.Sounds
 			if (a is PathOrigin & b is PathOrigin) {
 				return (PathOrigin)a == (PathOrigin)b;
 			}
-			return object.ReferenceEquals(a, b);
+			return ReferenceEquals(a, b);
 		}
 
 		/// <summary>Checks whether two origins are unequal.</summary>
@@ -31,7 +31,7 @@ namespace OpenBveApi.Sounds
 			if (a is PathOrigin & b is PathOrigin) {
 				return (PathOrigin)a != (PathOrigin)b;
 			}
-			return !object.ReferenceEquals(a, b);
+			return !ReferenceEquals(a, b);
 		}
 
 		/// <summary>Checks whether this instance is equal to the specified object.</summary>
@@ -42,7 +42,7 @@ namespace OpenBveApi.Sounds
 			if (this is PathOrigin & obj is PathOrigin) {
 				return (PathOrigin)this == (PathOrigin)obj;
 			}
-			return object.ReferenceEquals(this, obj);
+			return ReferenceEquals(this, obj);
 		}
 	}
 }

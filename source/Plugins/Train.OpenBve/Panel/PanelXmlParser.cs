@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using LibRender2.Cursors;
+using LibRender2;
 using LibRender2.Trains;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
@@ -72,9 +72,6 @@ namespace Train.OpenBve
 
 		private void ParsePanelNode(XElement Element, string FileName, TrainBase Train, int Car, ref CarSection CarSection, int GroupIndex, int OffsetLayer, double PanelResolution = 1024.0, double PanelLeft = 0.0, double PanelRight = 1024.0, double PanelTop = 0.0, double PanelBottom = 1024.0, double PanelCenterX = 0, double PanelCenterY = 512, double PanelOriginX = 0, double PanelOriginY = 512)
 		{
-			//Train name, used for hacks detection
-			string trainName = new DirectoryInfo(Train.TrainFolder).Name.ToUpperInvariant();
-
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
 			// initialize
@@ -96,8 +93,7 @@ namespace Train.OpenBve
 						case "this":
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
 
@@ -292,8 +288,7 @@ namespace Train.OpenBve
 					if (Plugin.Cancel) return;
 				}
 
-				PanelSections Section;
-				Enum.TryParse(SectionElement.Name.LocalName.ToLowerInvariant(), true, out Section);
+				Enum.TryParse(SectionElement.Name.LocalName.ToLowerInvariant(), true, out PanelSections Section);
 
 				switch (Section)
 				{
@@ -305,8 +300,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
 
@@ -350,8 +344,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
@@ -410,7 +403,7 @@ namespace Train.OpenBve
 									case PanelKey.SoundIndex:
 										if (Value.Length != 0)
 										{
-											if (!NumberFormats.TryParseIntVb6(Value, out var SoundIndex))
+											if (!NumberFormats.TryParseIntVb6(Value, out int SoundIndex))
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												break;
@@ -430,20 +423,14 @@ namespace Train.OpenBve
 												break;
 											}
 
-											int i;
-											for (i = 0; i < Translations.CommandInfos.Length; i++)
+											if (Enum.TryParse(Value.Replace("_", string.Empty), true, out Translations.Command command))
 											{
-												if (string.Compare(Value, Translations.CommandInfos[i].Name, StringComparison.OrdinalIgnoreCase) == 0)
-												{
-													break;
-												}
+												CommandEntry.Command = command;
 											}
-											if (i == Translations.CommandInfos.Length || Translations.CommandInfos[i].Type != Translations.CommandType.Digital)
+											else
 											{
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												break;
 											}
-											CommandEntry.Command = Translations.CommandInfos[i].Command;
 										}
 										break;
 									case PanelKey.CommandOption:
@@ -500,6 +487,7 @@ namespace Train.OpenBve
 					case PanelSections.PilotLamp:
 						{
 							string Subject = "true";
+							string Function = string.Empty;
 							double LocationX = 0.0, LocationY = 0.0;
 							string DaytimeImage = null, NighttimeImage = null;
 							Color24 TransparentColor = Color24.Blue;
@@ -507,8 +495,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
@@ -516,6 +503,9 @@ namespace Train.OpenBve
 								{
 									case PanelKey.Subject:
 										Subject = Value;
+										break;
+									case PanelKey.Function:
+										Function = Value;
 										break;
 									case PanelKey.Location:
 										int k = Value.IndexOf(',');
@@ -596,13 +586,29 @@ namespace Train.OpenBve
 								}
 								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, tday.Width, tday.Height, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
 								string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
-								CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
+								try
+								{
+									if (!string.IsNullOrEmpty(Function))
+									{
+										CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, Function, true);
+									}
+									else
+									{
+										CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
+									}
+								}
+								catch
+								{
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " in " + FileName);
+								}
+								
 							}
 						}
 						break;
 					case PanelSections.Needle:
 						{
 							string Subject = "true";
+							string Function = string.Empty;
 							double LocationX = 0.0, LocationY = 0.0;
 							string DaytimeImage = null, NighttimeImage = null;
 							Color32 Color = Color32.White;
@@ -617,8 +623,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
 
@@ -626,6 +631,9 @@ namespace Train.OpenBve
 								{
 									case PanelKey.Subject:
 										Subject = Value;
+										break;
+									case PanelKey.Function:
+										Function = Value;
 										break;
 									case PanelKey.Location:
 										{
@@ -845,7 +853,23 @@ namespace Train.OpenBve
 								{
 									CarSection.Groups[GroupIndex].Elements[j].RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
 								}
-								CarSection.Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
+
+								try
+								{
+									if (!string.IsNullOrEmpty(Function))
+									{
+										CarSection.Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, Function, true);
+									}
+									else
+									{
+										CarSection.Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
+									}
+								}
+								catch
+								{
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " in " + FileName);
+								}
+
 								if (Backstop)
 								{
 									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle;
@@ -857,6 +881,7 @@ namespace Train.OpenBve
 					case PanelSections.LinearGauge:
 						{
 							string Subject = "true";
+							string Function = string.Empty;
 							int Width = 0;
 							Vector2 Direction = new Vector2(1, 0);
 							double LocationX = 0.0, LocationY = 0.0;
@@ -867,8 +892,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
@@ -876,6 +900,9 @@ namespace Train.OpenBve
 								{
 									case PanelKey.Subject:
 										Subject = Value;
+										break;
+									case PanelKey.Function:
+										Function = Value;
 										break;
 									case PanelKey.Location:
 										int k = Value.IndexOf(',');
@@ -999,10 +1026,24 @@ namespace Train.OpenBve
 									break;
 								}
 								string tf = Plugin.Panel2CfgParser.GetInfixFunction(Train, Subject, Minimum, Maximum, Width, tday.Width, Section + " in " + FileName);
-								if (tf != String.Empty)
+								CarSection.Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
+								try
 								{
-									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
-									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, tf, false);
+									if (!string.IsNullOrEmpty(tf) || !string.IsNullOrEmpty(Function))
+									{
+										if (!string.IsNullOrEmpty(Function))
+										{
+											CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, Function, true);
+										}
+										else
+										{
+											CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, tf, false);
+										}
+									}
+								}
+								catch
+								{
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " in " + FileName);
 								}
 							}
 						}
@@ -1010,6 +1051,7 @@ namespace Train.OpenBve
 					case PanelSections.DigitalNumber:
 						{
 							string Subject = "true";
+							string Function = string.Empty;
 							double LocationX = 0.0, LocationY = 0.0;
 							string DaytimeImage = null, NighttimeImage = null;
 							Color24 TransparentColor = Color24.Blue;
@@ -1018,8 +1060,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
@@ -1027,6 +1068,9 @@ namespace Train.OpenBve
 								{
 									case PanelKey.Subject:
 										Subject = Value;
+										break;
+									case PanelKey.Function:
+										Function = Value;
 										break;
 									case PanelKey.Location:
 										int k = Value.IndexOf(',');
@@ -1172,7 +1216,21 @@ namespace Train.OpenBve
 										if (k == 0) j = l;
 									}
 									string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
-									CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+									try
+									{
+										if (!string.IsNullOrEmpty(Function))
+										{
+											CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, Function, true);
+										}
+										else
+										{
+											CarSection.Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+										}
+									}
+									catch
+									{
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " in " + FileName);
+									}
 								}
 							}
 						}
@@ -1180,6 +1238,7 @@ namespace Train.OpenBve
 					case PanelSections.DigitalGauge:
 						{
 							string Subject = "true";
+							string Function = string.Empty;
 							double LocationX = 0.0, LocationY = 0.0;
 							Color32 Color = Color32.Black;
 							double Radius = 0.0;
@@ -1191,8 +1250,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
@@ -1200,6 +1258,9 @@ namespace Train.OpenBve
 								{
 									case PanelKey.Subject:
 										Subject = Value;
+										break;
+									case PanelKey.Function:
+										Function = Value;
 										break;
 									case PanelKey.Location:
 										int k = Value.IndexOf(',');
@@ -1358,7 +1419,22 @@ namespace Train.OpenBve
 									f += " " + s + " * floor " + t + " *";
 								}
 								f += " " + a1.ToString(Culture) + " " + a0.ToString(Culture) + " fma";
-								CarSection.Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, f, false);
+								try
+								{
+									if (!string.IsNullOrEmpty(Function))
+									{
+										CarSection.Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, Function, true);
+									}
+									else
+									{
+										CarSection.Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, f, false);
+									}
+								}
+								catch
+								{
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " in " + FileName);
+								}
+								
 							}
 							else
 							{
@@ -1374,8 +1450,7 @@ namespace Train.OpenBve
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								PanelKey Key;
-								Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+								Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
@@ -1473,8 +1548,7 @@ namespace Train.OpenBve
 
 						foreach (XElement KeyNode in SectionElement.Elements())
 						{
-							PanelKey Key;
-							Enum.TryParse(KeyNode.Name.LocalName, true, out Key);
+							Enum.TryParse(KeyNode.Name.LocalName, true, out PanelKey Key);
 							string Value = KeyNode.Value;
 							int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 							int k;
@@ -1755,23 +1829,13 @@ namespace Train.OpenBve
 									break;
 								}
 
-								int i;
-
-								for (i = 0; i < Translations.CommandInfos.Length; i++)
+								if (Enum.TryParse(value.Replace("_", string.Empty), true, out Translations.Command command))
 								{
-									if (string.Compare(value, Translations.CommandInfos[i].Name, StringComparison.OrdinalIgnoreCase) == 0)
-									{
-										break;
-									}
-								}
-
-								if (i == Translations.CommandInfos.Length || Translations.CommandInfos[i].Type != Translations.CommandType.Digital)
-								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									entry.Command = command;
 								}
 								else
 								{
-									entry.Command = Translations.CommandInfos[i].Command;
+									Plugin.currentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 								break;
 							case "option":

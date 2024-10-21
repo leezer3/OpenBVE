@@ -33,6 +33,9 @@ namespace CarXmlConvertor
 		internal static double DoorTolerance = 0.0;
 		internal static int PowerNotches = 0;
 		internal static int BrakeNotches = 0;
+		internal static double CenterOfGravityHeight = 1.6;
+		internal static double ExposedFrontalArea = -1;
+		internal static double UnexposedFrontalArea = -1;
 		private static MainForm mainForm;
 		internal static List<AccelerationCurve> AccelerationCurves = new List<AccelerationCurve>();
 
@@ -60,7 +63,7 @@ namespace CarXmlConvertor
 					case "#cab":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
-							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							if (NumberFormats.TryParseDoubleVb6(Lines[i], out double a))
 							{
 								switch (n)
 								{
@@ -84,7 +87,7 @@ namespace CarXmlConvertor
 					case "#car":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
-							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							if (NumberFormats.TryParseDoubleVb6(Lines[i], out double a))
 							{
 								switch (n)
 								{
@@ -133,6 +136,21 @@ namespace CarXmlConvertor
 											CarHeight = a;
 										}
 										break;
+									case 8:
+										CenterOfGravityHeight = a;
+										break;
+									case 9:
+										if (a <= 0)
+										{
+											ExposedFrontalArea = a;
+										}
+										break;
+									case 10:
+										if (a <= 0)
+										{
+											UnexposedFrontalArea = a;
+										}
+										break;
 								}
 							}
 							i++; n++;
@@ -141,7 +159,7 @@ namespace CarXmlConvertor
 					case "#brake":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
-							int a; if (NumberFormats.TryParseIntVb6(Lines[i], out a))
+							if (NumberFormats.TryParseIntVb6(Lines[i], out int a))
 							{
 								switch (n)
 								{
@@ -154,7 +172,7 @@ namespace CarXmlConvertor
 					case "#move":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
-							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							if (NumberFormats.TryParseDoubleVb6(Lines[i], out double a))
 							{
 								switch (n)
 								{
@@ -167,7 +185,7 @@ namespace CarXmlConvertor
 						i--; break;
 					case "#pressure":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
+							if (NumberFormats.TryParseDoubleVb6(Lines[i], out double a)) {
 								switch (n) {
 									case 0:
 										if (a <= 0.0)
@@ -207,7 +225,7 @@ namespace CarXmlConvertor
 						i++;
 						while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
-							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							if (NumberFormats.TryParseDoubleVb6(Lines[i], out double a))
 							{
 								switch (n)
 								{
@@ -223,6 +241,11 @@ namespace CarXmlConvertor
 					case "#acceleration":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
+							if (string.IsNullOrEmpty(Lines[i]))
+							{
+								i++;
+								continue;
+							}
 							AccelerationCurve curve = new AccelerationCurve();
 							string t = Lines[i] + ",";
 							int m = 0;
@@ -231,7 +254,7 @@ namespace CarXmlConvertor
 								if (j == -1) break;
 								string s = t.Substring(0, j).Trim();
 								t = t.Substring(j + 1);
-								if (NumberFormats.TryParseDoubleVb6(s, out var a)) {
+								if (NumberFormats.TryParseDoubleVb6(s, out double a)) {
 									switch (m) {
 										case 0:
 											if (a <= 0.0) {
@@ -287,7 +310,7 @@ namespace CarXmlConvertor
 						i++;
 						while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
 						{
-							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							if (NumberFormats.TryParseDoubleVb6(Lines[i], out double a))
 							{
 								switch (n)
 								{
@@ -415,6 +438,10 @@ namespace CarXmlConvertor
 				}
 			}
 			ConvertSoundCfg.DriverPosition.Z = 0.5 * CarLength + ConvertSoundCfg.DriverPosition.Z;
+			for (int i = 0; i < AccelerationCurves.Count; i++)
+			{
+				AccelerationCurves[i].Multiplier = 1.0 + NumberOfTrailerCars * TrailerCarMass / (NumberOfMotorCars * MotorCarMass);
+			}
 		}
 
 		private static int ParseFormat(string[] lines)
@@ -444,13 +471,14 @@ namespace CarXmlConvertor
 			return 2000000;
 		}
 
-		internal struct AccelerationCurve
+		internal class AccelerationCurve
 		{
 			internal double StageZeroAcceleration;
 			internal double StageOneAcceleration;
 			internal double StageOneSpeed;
 			internal double StageTwoSpeed;
 			internal double StageTwoExponent;
+			internal double Multiplier = 1.0;
 		}
 	}
 }

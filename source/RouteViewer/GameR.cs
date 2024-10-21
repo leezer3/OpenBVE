@@ -16,6 +16,7 @@ using RouteManager2.Climate;
 using RouteManager2.SignalManager;
 using RouteManager2.SignalManager.PreTrain;
 using RouteManager2.Stations;
+using RouteManager2.Tracks;
 using TrainManager.Trains;
 
 namespace RouteViewer {
@@ -23,30 +24,32 @@ namespace RouteViewer {
 
 		// date and time
 		internal static double SecondsSinceMidnight = 0.0;
+		/// <summary>The in-game menu system</summary>
+		internal static readonly GameMenu Menu = GameMenu.Instance;
 
 		// ================================
 
-		internal static void Reset() {
-			Program.Renderer.Reset();
+		internal static void Reset(bool resetRenderer = true) {
+			if (resetRenderer)
+			{
+				Program.Renderer.Reset();
+			}
+			
 			// track manager
 			Program.CurrentRoute.Tracks = new Dictionary<int, Track>();
-			Track t = new Track
-			{
-				Elements = new TrackElement[0]
-			};
-			Program.CurrentRoute.Tracks.Add(0, t);
+			Program.CurrentRoute.Tracks.Add(0, new Track());
 			// train manager
 			Program.TrainManager.Trains = new TrainBase[] { };
 			// game
 			Interface.LogMessages.Clear();
-			Program.CurrentHost.MissingFiles.Clear();
+			Program.CurrentHost.ClearErrors();
 			Program.CurrentRoute.Comment = "";
 			Program.CurrentRoute.Image = "";
 			Program.CurrentRoute.Atmosphere = new Atmosphere();
 			Program.CurrentRoute.LightDefinitions = new LightDefinition[] { };
 			Program.CurrentRoute.Stations = new RouteStation[] { };
 			Program.CurrentRoute.Sections = new Section[] { };
-			Program.CurrentRoute.BufferTrackPositions = new double[] { };
+			Program.CurrentRoute.BufferTrackPositions = new List<BufferStop>();
 			Program.CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			Program.CurrentRoute.BogusPreTrainInstructions = new BogusPreTrainInstruction[] { };
 			Interface.CurrentOptions.TrainName = "";

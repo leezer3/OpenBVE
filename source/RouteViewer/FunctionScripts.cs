@@ -254,6 +254,18 @@ namespace RouteViewer {
 							Function.Stack[s] = Program.Renderer.Camera.AbsolutePosition.Z - Position.Z;
 							s++;
 						} break;
+					case Instructions.BillboardX:
+						{
+							Vector3 toCamera = Program.Renderer.Camera.AbsolutePosition - Position;
+							Function.Stack[s] = Math.Atan2(toCamera.Y, -toCamera.Z);
+							s++;
+						} break;
+					case Instructions.BillboardY:
+						{
+							Vector3 toCamera = Program.Renderer.Camera.AbsolutePosition - Position;
+							Function.Stack[s] = Math.Atan2(-toCamera.Z, toCamera.X);
+							s++;
+						} break;
 					case Instructions.CameraView:
 						//Returns whether the camera is in interior or exterior mode
 						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior)
@@ -395,6 +407,23 @@ namespace RouteViewer {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.PlayerTrainDistance:
+						double playerDist = double.MaxValue;
+						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+						{
+							double fx = TrainManager.PlayerTrain.Cars[j].FrontAxle.Follower.WorldPosition.X - Position.X;
+							double fy = TrainManager.PlayerTrain.Cars[j].FrontAxle.Follower.WorldPosition.Y - Position.Y;
+							double fz = TrainManager.PlayerTrain.Cars[j].FrontAxle.Follower.WorldPosition.Z - Position.Z;
+							double f = fx * fx + fy * fy + fz * fz;
+							if (f < playerDist) playerDist = f;
+							double rx = TrainManager.PlayerTrain.Cars[j].RearAxle.Follower.WorldPosition.X - Position.X;
+							double ry = TrainManager.PlayerTrain.Cars[j].RearAxle.Follower.WorldPosition.Y - Position.Y;
+							double rz = TrainManager.PlayerTrain.Cars[j].RearAxle.Follower.WorldPosition.Z - Position.Z;
+							double r = rx * rx + ry * ry + rz * rz;
+							if (r < playerDist) playerDist = r;
+						}
+						Function.Stack[s] = Math.Sqrt(playerDist);
+						s++; break;
 					case Instructions.TrainDistance:
 						if (Train != null) {
 							double dist = double.MaxValue;
@@ -431,6 +460,11 @@ namespace RouteViewer {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.PlayerTrackDistance:
+						double pt0 = TrainManager.PlayerTrain.FrontCarTrackPosition;
+						double pt1 = TrainManager.PlayerTrain.RearCarTrackPosition;
+						Function.Stack[s] = TrackPosition > pt0 ? TrackPosition - pt0 : TrackPosition < pt1 ? TrackPosition - pt1 : 0.0;
+						s++; break;
 					case Instructions.TrainTrackDistance:
 						if (Train != null) {
 							double t0 = Train.FrontCarTrackPosition;
@@ -1113,6 +1147,18 @@ namespace RouteViewer {
 							}
 						} 
 						s++; break;
+					case Instructions.DSD:
+						{
+							if (Train != null && Train.Cars[Train.DriverCar].DSD != null)
+							{
+								Function.Stack[s] = Train.Cars[Train.DriverCar].DSD.Triggered ? 1 : 0;
+							}
+							else
+							{
+								Function.Stack[s] = 0.0;
+							}
+						}
+						s++; break;
 					case Instructions.AmbientTemperature:
 						{
 							if (Train != null)
@@ -1124,6 +1170,14 @@ namespace RouteViewer {
 								Function.Stack[s] = Program.CurrentRoute.Atmosphere.GetAirTemperature(Position.Y + Program.CurrentRoute.Atmosphere.InitialElevation);
 							}
 						} 
+						s++; break;
+					case Instructions.RainDrop:
+					case Instructions.SnowFlake:
+						// Only shown on the player train, so not helpful here
+						Function.Stack[s - 1] = 0.0;
+						break;
+					case Instructions.WiperPosition:
+						Function.Stack[s] = 1.0;
 						s++; break;
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");

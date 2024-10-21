@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using OpenBveApi.Interface;
 using Prism.Mvvm;
+using TrainEditor2.Extensions;
 using TrainEditor2.Models.Others;
 
 namespace TrainEditor2.Models.Panels
@@ -244,9 +245,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void CreateTreeItem()
 		{
-			treeItem = new TreeViewItemModel(null) { Title = "TouchElement" };
-			treeItem.Children.Add(new TreeViewItemModel(TreeItem) { Title = "Sounds" });
-			treeItem.Children.Add(new TreeViewItemModel(TreeItem) { Title = "Commands" });
+			treeItem = new TreeViewItemModel(null) { Title = Utilities.GetInterfaceString("panel_settings", "sound_command", "tree", "touch_element") };
+			treeItem.Children.Add(new TreeViewItemModel(TreeItem) { Title = Utilities.GetInterfaceString("panel_settings", "sound_command", "tree", "sounds") });
+			treeItem.Children.Add(new TreeViewItemModel(TreeItem) { Title = Utilities.GetInterfaceString("panel_settings", "sound_command", "tree", "commands") });
 			OnPropertyChanged(new PropertyChangedEventArgs(nameof(TreeItem)));
 		}
 
@@ -293,15 +294,11 @@ namespace TrainEditor2.Models.Panels
 
 		internal void UpdateListItem(ListViewItemModel item)
 		{
-			SoundEntry soundEntry = item.Tag as SoundEntry;
-			CommandEntry commandEntry = item.Tag as CommandEntry;
-
-			if (soundEntry != null)
+			if (item.Tag is SoundEntry soundEntry)
 			{
 				item.Texts[0] = soundEntry.Index.ToString(culture);
 			}
-
-			if (commandEntry != null)
+			else if (item.Tag is CommandEntry commandEntry)
 			{
 				item.Texts[0] = commandEntry.Info.Name;
 				item.Texts[1] = commandEntry.Option.ToString(culture);

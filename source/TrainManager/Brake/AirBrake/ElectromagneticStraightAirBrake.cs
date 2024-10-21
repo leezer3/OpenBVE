@@ -234,6 +234,10 @@ namespace TrainManager.BrakeSystems
 				brakeCylinder.CurrentPressure += 0.5 * s;
 				// air sound
 				brakeCylinder.SoundPlayedForPressure = brakeCylinder.EmergencyMaximumPressure;
+				// as the pressure is now *increasing* stop our decrease sounds
+				AirHigh?.Stop();
+				Air?.Stop();
+				AirZero?.Stop();
 			}
 			else
 			{

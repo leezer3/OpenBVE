@@ -44,6 +44,8 @@ using SharpCompress.Compressors.Deflate;
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable
 #pragma warning disable 0219
+#pragma warning disable IDE0059
+
 namespace Plugin
 {
 	class MsTsShapeParser
@@ -289,8 +291,7 @@ namespace Plugin
 						Object.Mesh.Materials[mm + i].BlendMode = MeshMaterialBlendMode.Normal;
 						if (materials[i].DaytimeTexture != null)
 						{
-							OpenBveApi.Textures.Texture tday;
-							Plugin.currentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out tday);
+							Plugin.currentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out OpenBveApi.Textures.Texture tday);
 							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 						}
 						else
@@ -422,7 +423,7 @@ namespace Plugin
 			{
 				for (int j = 0; j < shape.LODs[i].subObjects.Count; j++)
 				{
-					Result.Objects[idx] = new AnimatedObject(Plugin.currentHost);
+					Result.Objects[idx] = new AnimatedObject(Plugin.currentHost, fileName);
 					Result.Objects[idx].States = new ObjectState[1];
 					ObjectState aos = new ObjectState();
 					shape.LODs[i].subObjects[j].Apply(out aos.Prototype);

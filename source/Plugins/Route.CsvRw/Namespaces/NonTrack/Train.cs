@@ -20,8 +20,7 @@ namespace CsvRwRouteParser
 						List<double> intervals = new List<double>();
 						for (int k = 0; k < Arguments.Length; k++)
 						{
-							double o;
-							if (!NumberFormats.TryParseDoubleVb6(Arguments[k], out o))
+							if (!NumberFormats.TryParseDoubleVb6(Arguments[k], out double o))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Interval " + k.ToString(Culture) + " is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								continue;
@@ -114,6 +113,23 @@ namespace CsvRwRouteParser
 							{
 								Plugin.CurrentOptions.TrainName = Arguments[0];
 							}
+						}
+					}
+				}
+					break;
+				case TrainCommand.DownloadLocation:
+				{
+					if (Arguments.Length > 0)
+					{
+						if (Arguments[0].StartsWith("www."))
+						{
+							Arguments[0] = "http://" + Arguments[0];
+						}
+						if (Uri.TryCreate(Arguments[0], UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp  || uriResult.Scheme == Uri.UriSchemeHttps) && uriResult.Host.Replace("www.", "").Split('.').Length > 1 && uriResult.HostNameType == UriHostNameType.Dns && uriResult.Host.Length > uriResult.Host.LastIndexOf(".", StringComparison.InvariantCulture) + 1 && 100 >= Arguments[0].Length)
+						{
+								// Why not save to the log...
+								Plugin.FileSystem.AppendToLogFile("INFO: Route default train download location " + Arguments[0]);
+								Plugin.CurrentOptions.TrainDownloadLocation = Arguments[0];
 						}
 					}
 				}

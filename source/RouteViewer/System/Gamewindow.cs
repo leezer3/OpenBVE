@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Threading;
 using OpenBveApi;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics;
@@ -26,6 +27,13 @@ namespace RouteViewer
             {
 				// Ignored- Just an icon
             }
+
+            if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+            {
+	            // attempted workaround for massive CPU usage when idle
+	            TargetRenderFrequency = 5.0;
+			}
+			
         }
 
         //Default Properties
@@ -86,7 +94,9 @@ namespace RouteViewer
 			MouseDown += Program.MouseEvent;
 			MouseUp += Program.MouseEvent;
 	        FileDrop += Program.FileDrop;
-            Program.Renderer.Camera.Reset(new Vector3(0.0, 2.5, -5.0));
+	        MouseMove += Program.MouseMoveEvent;
+	        MouseWheel += Program.MouseWheelEvent;
+			Program.Renderer.Camera.Reset(new Vector3(0.0, 2.5, -5.0));
             Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = 600.0;
             Program.Renderer.Camera.ForwardViewingDistance = 600.0;
             Program.Renderer.Camera.BackwardViewingDistance = 0.0;
@@ -99,7 +109,8 @@ namespace RouteViewer
             if (Program.processCommandLineArgs)
             {
                 Program.processCommandLineArgs = false;
-                Program.LoadRoute();
+                Program.UpdateCaption();
+				Program.LoadRoute();
                 Program.UpdateCaption();
             }
         }
@@ -151,15 +162,11 @@ namespace RouteViewer
 				{
 					while (jobs.Count > 0)
 					{
-						lock (jobLock)
+						jobs.TryDequeue(out ThreadStart currentJob);
+						currentJob();
+						lock (currentJob)
 						{
-							var currentJob = jobs.Dequeue();
-							var locker = locks.Dequeue();
-							currentJob();
-							lock (locker)
-							{
-								Monitor.Pulse(locker);
-							}
+							Monitor.Pulse(currentJob);
 						}
 					}
 					Loading.JobAvailable = false;
@@ -183,29 +190,25 @@ namespace RouteViewer
 			}
 		}
 
-		internal static readonly object LoadingLock = new object();
-
-		private static readonly object jobLock = new object();
 #pragma warning disable 0649
-		private static Queue<ThreadStart> jobs;
-		private static Queue<object> locks;
+		private static ConcurrentQueue<ThreadStart> jobs;
 #pragma warning restore 0649
 
 		/// <summary>This method is used during loading to run commands requiring an OpenGL context in the main render loop</summary>
 		/// <param name="job">The OpenGL command</param>
-		internal static void RunInRenderThread(ThreadStart job)
+		/// <param name="timeout">The timeout</param>
+		internal static void RunInRenderThread(ThreadStart job, int timeout)
 		{
 			object locker = new object();
-			lock (jobLock)
+			jobs.Enqueue(job);
+			//Don't set the job to available until after it's been loaded into the queue
+			Loading.JobAvailable = true;
+			//Failsafe: If our job has taken more than the timeout, stop waiting for it
+			//A missing texture is probably better than an infinite loadscreen
+			lock (job)
 			{
-				Loading.JobAvailable = true;
-				jobs.Enqueue(job);
-				locks.Enqueue(locker);
-			}
-			lock (locker)
-			{
-				Monitor.Wait(locker);
+				Monitor.Wait(job, timeout);
 			}
 		}
-    }
+	}
 }

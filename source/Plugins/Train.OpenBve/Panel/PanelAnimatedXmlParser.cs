@@ -5,14 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using LibRender2.Cursors;
+using LibRender2;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.Textures;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -176,21 +175,13 @@ namespace Train.OpenBve
 												break;
 											}
 
-											int i;
-											for (i = 0; i < Translations.CommandInfos.Length; i++)
+											if (Enum.TryParse(Value.Replace("_", string.Empty), true, out Translations.Command command))
 											{
-												if (string.Compare(Value, Translations.CommandInfos[i].Name, StringComparison.OrdinalIgnoreCase) == 0)
-												{
-													break;
-												}
-											}
-											if (i == Translations.CommandInfos.Length || Translations.CommandInfos[i].Type != Translations.CommandType.Digital)
-											{
-												Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+												CommandEntry.Command = command;
 											}
 											else
 											{
-												CommandEntry.Command = Translations.CommandInfos[i].Command;
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 											}
 										}
 										break;
@@ -349,23 +340,13 @@ namespace Train.OpenBve
 									break;
 								}
 
-								int i;
-
-								for (i = 0; i < Translations.CommandInfos.Length; i++)
+								if (Enum.TryParse(value.Replace("_", string.Empty), true, out Translations.Command command))
 								{
-									if (string.Compare(value, Translations.CommandInfos[i].Name, StringComparison.OrdinalIgnoreCase) == 0)
-									{
-										break;
-									}
-								}
-
-								if (i == Translations.CommandInfos.Length || Translations.CommandInfos[i].Type != Translations.CommandType.Digital)
-								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									entry.Command = command;
 								}
 								else
 								{
-									entry.Command = Translations.CommandInfos[i].Command;
+									Plugin.currentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 								break;
 							case "option":

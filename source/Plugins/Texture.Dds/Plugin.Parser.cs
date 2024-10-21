@@ -1411,10 +1411,10 @@ namespace Texture.Dds
             bluePad = 16 - CountBitsFromMask(header.pixelFormat.bbitmask);
             alphaPad = 16 - CountBitsFromMask(header.pixelFormat.alphabitmask);
 
-            redL = redL + redPad;
-            greenL = greenL + greenPad;
-            blueL = blueL + bluePad;
-            alphaL = alphaL + alphaPad;
+            redL += redPad;
+            greenL += greenPad;
+            blueL += bluePad;
+            alphaL += alphaPad;
 
             uint tempBpp = (uint)(header.pixelFormat.rgbbitcount / 8);
             fixed (byte* bytePtr = data)

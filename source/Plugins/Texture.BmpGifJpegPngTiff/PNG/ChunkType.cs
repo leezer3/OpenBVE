@@ -35,6 +35,10 @@
 		/// <summary>Compressed textual data</summary>
 		zTXt,
 		/// <summary>Apple proprietary PNG for iPhone</summary>
-		CgBI
+		CgBI,
+		/// <summary>Embedded color profile</summary>
+		iCCP,
+		/// <summary>Embedded textual information</summary>
+		iTXt
 	}
 }

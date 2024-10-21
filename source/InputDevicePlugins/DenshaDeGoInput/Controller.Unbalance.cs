@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020-2021, Marc Riera, The OpenBVE Project
+//Copyright (c) 2020-2024, Marc Riera, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -39,8 +39,8 @@ namespace DenshaDeGoInput
 		/// <summary>The OpenTK joystick index for this controller.</summary>
 		private int joystickIndex;
 
-		/// <summary>Whether the controller supports a D-Pad using Select+A/B/C/D.</summary>
-		private readonly bool comboDpad;
+		/// <summary>Whether the controller has a hat switch.</summary>
+		private readonly bool hasHat;
 
 		/// <summary>The min/max byte for each brake notch, from Released to Emergency. Each notch consists of two bytes.</summary>
 		private readonly byte[] brakeBytes;
@@ -54,18 +54,17 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// Initializes an Unbalance controller.
 		/// </summary>
-		internal UnbalanceController(ControllerButtons buttons, int[] buttonIndices, bool combo, byte[] brake, byte[] power)
+		internal UnbalanceController(ControllerButtons buttons, int[] buttonIndices, bool hat, byte[] brake, byte[] power)
 		{
 			ControllerName = string.Empty;
 			IsConnected = false;
-			RequiresCalibration = false;
 			BrakeNotches = brake.Length / 2 - 2;
 			PowerNotches = power.Length / 2 - 1;
 			brakeBytes = brake;
 			powerBytes = power;
 			Buttons = buttons;
 			buttonIndex = buttonIndices;
-			comboDpad = combo;
+			hasHat = hat;
 		}
 
 		/// <summary>
@@ -113,35 +112,32 @@ namespace DenshaDeGoInput
 			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.LDoor] = joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.LDoor]);
 			InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.RDoor] = joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.RDoor]);
 
-			if (Buttons.HasFlag(ControllerButtons.DPad))
+			if (hasHat)
 			{
-				if (comboDpad)
-				{
-					// On some controllers, check for Select+A/B/C/D combo
-					bool dPadUp = Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.Select])) && Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.D]));
-					bool dPadDown = Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.Select])) && Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.B]));
-					bool dPadLeft = Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.Select])) && Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.A]));
-					bool dPadRight = Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.Select])) && Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.C]));
-					bool dPadAny = dPadUp || dPadDown || dPadLeft || dPadRight;
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] = (ButtonState)(dPadUp ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Down] = (ButtonState)(dPadDown ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] = (ButtonState)(dPadLeft ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] = (ButtonState)(dPadRight ? 1 : 0);
-					// Disable original buttons if necessary
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] ^= (ButtonState)(dPadAny ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] ^= (ButtonState)(dPadLeft ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] ^= (ButtonState)(dPadDown ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] ^= (ButtonState)(dPadRight ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] ^= (ButtonState)(dPadUp ? 1 : 0);
-				}
-				else
-				{
-					// On other controllers, read the first hat
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsUp ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Down] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsDown ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsLeft ? 1 : 0);
-					InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsRight ? 1 : 0);
-				}
+				// Read the first hat
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsUp ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Down] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsDown ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsLeft ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] = (ButtonState)(joystick.GetHat(JoystickHat.Hat0).IsRight ? 1 : 0);
+			}
+			else
+			{
+				// Check for Select+A/B/C/D combo
+				bool dPadUp = Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.Select])) && Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.D]));
+				bool dPadDown = Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.Select])) && Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.B]));
+				bool dPadLeft = Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.Select])) && Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.A]));
+				bool dPadRight = Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.Select])) && Convert.ToBoolean(joystick.GetButton(buttonIndex[(int)InputTranslator.ControllerButton.C]));
+				bool dPadAny = dPadUp || dPadDown || dPadLeft || dPadRight;
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Up] = (ButtonState)(dPadUp ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Down] = (ButtonState)(dPadDown ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Left] = (ButtonState)(dPadLeft ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Right] = (ButtonState)(dPadRight ? 1 : 0);
+				// Disable original buttons if necessary
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.Select] ^= (ButtonState)(dPadAny ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.A] ^= (ButtonState)(dPadLeft ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.B] ^= (ButtonState)(dPadDown ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.C] ^= (ButtonState)(dPadRight ? 1 : 0);
+				InputTranslator.ControllerButtons[(int)InputTranslator.ControllerButton.D] ^= (ButtonState)(dPadUp ? 1 : 0);
 			}
 		}
 
@@ -156,23 +152,19 @@ namespace DenshaDeGoInput
 				Guid guid = Joystick.GetGuid(i);
 				ControllerID id = new ControllerID(guid);
 				string name = Joystick.GetName(i);
-				bool comboDpad = name == "TAITO Densha de Go! Plug & Play";
+				bool hasHat = Joystick.GetCapabilities(i).HatCount > 0;
 
 				if (!cachedControllers.ContainsKey(guid))
 				{
+					JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
 					// DGC-255/DGOC-44U/P&P
-					if (id.Type == ControllerType.PCTwoHandle)
+					if (id.Type == ControllerType.PCTwoHandle && capabilities.ButtonCount >= 6 && capabilities.AxisCount >= 2)
 					{
-						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D;
-						if (Joystick.GetCapabilities(i).HatCount > 0 || comboDpad)
-						{
-							// DGC-255 and P&P have a D-pad
-							buttons = buttons | ControllerButtons.DPad;
-						}
+						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.DPad;
 						int[] buttonIndices = { 4, 5, 1, 0, 2, 3, -1, -1 };
 						byte[] brakeBytes = { 0x78, 0x7A, 0x89, 0x8B, 0x93, 0x95, 0x99, 0x9B, 0xA1, 0xA3, 0xA7, 0xA9, 0xAE, 0xB0, 0xB1, 0xB3, 0xB4, 0xB6, 0xB8, 0xBA };
 						byte[] powerBytes = { 0x80, 0x82, 0x6C, 0x6E, 0x53, 0x55, 0x3E, 0x40, 0x20, 0x22, 0x0, 0x2 };
-						UnbalanceController newcontroller = new UnbalanceController(buttons, buttonIndices, comboDpad, brakeBytes, powerBytes)
+						UnbalanceController newcontroller = new UnbalanceController(buttons, buttonIndices, hasHat, brakeBytes, powerBytes)
 						{
 							Guid = guid,
 							Id = id,
@@ -183,13 +175,13 @@ namespace DenshaDeGoInput
 						cachedControllers.Add(guid, newcontroller);
 					}
 					// DRC-184/DYC-288
-					if (id.Type == ControllerType.PCRyojouhen)
+					if (id.Type == ControllerType.PCRyojouhen && capabilities.ButtonCount >= 7 && capabilities.AxisCount >= 2)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						int[] buttonIndices = { 5, 6, 2, 1, 0, -1, 4, 3 };
 						byte[] brakeBytes = { 0x23, 0x2C, 0x2D, 0x3E, 0x3F, 0x4E, 0x4F, 0x63, 0x64, 0x8A, 0x8B, 0xB0, 0xB1, 0xD4, 0xD5, 0xDF };
 						byte[] powerBytes = { 0x0, 0x2, 0x3B, 0x3D, 0x77, 0x79, 0xB3, 0xB5, 0xEF, 0xF1 };
-						UnbalanceController newcontroller = new UnbalanceController(buttons, buttonIndices, comboDpad, brakeBytes, powerBytes)
+						UnbalanceController newcontroller = new UnbalanceController(buttons, buttonIndices, hasHat, brakeBytes, powerBytes)
 						{
 							Guid = guid,
 							Id = id,

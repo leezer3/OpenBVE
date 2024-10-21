@@ -58,8 +58,7 @@ namespace OpenBveApi.Packages
 							case "VersionInfo":
 								try
 								{
-									int v;
-									int.TryParse(node.Attributes["Code"].Value, out v);
+									int.TryParse(node.Attributes["Code"].Value, out int v);
 									currentPackage.PackageVersion = new Version(0,0,v);
 								}
 								catch

@@ -37,7 +37,7 @@ namespace OpenBve.Graphics
 			{
 				for(int i= 0; i < TextureManager.RegisteredTextures.Length; i++)
 				{
-					if (TextureManager.RegisteredTextures[i] != null && (CPreciseTimer.GetClockTicks() - TextureManager.RegisteredTextures[i].LastAccess) > 20000)
+					if (TextureManager.RegisteredTextures[i] != null && TextureManager.RegisteredTextures[i].AvailableToUnload && (CPreciseTimer.GetClockTicks() - TextureManager.RegisteredTextures[i].LastAccess) > 20000)
 					{
 						TextureManager.UnloadTexture(ref TextureManager.RegisteredTextures[i]);
 					}

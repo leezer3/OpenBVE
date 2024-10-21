@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -163,8 +163,7 @@ namespace TrainEditor2.Views
 		{
 			using (ColorDialog dialog = new ColorDialog())
 			{
-				Color24 nowColor;
-				Color24.TryParseHexColor(textBox.Text, out nowColor);
+				Color24.TryParseHexColor(textBox.Text, out Color24 nowColor);
 				dialog.Color = nowColor;
 
 				if (dialog.ShowDialog() != DialogResult.OK)
@@ -231,6 +230,7 @@ namespace TrainEditor2.Views
 			comboBoxLocoBrakeHandleType.Items[1] = Utilities.GetInterfaceString("general_settings", "handle", "loco_brake_handle_type", "independent");
 			comboBoxLocoBrakeHandleType.Items[2] = Utilities.GetInterfaceString("general_settings", "handle", "loco_brake_handle_type", "blocking");
 			labelLocoBrakeNotches.Text = $@"{Utilities.GetInterfaceString("general_settings", "handle", "loco_brake_notches")}:";
+			labelDelayElectricBrake.Text = $@"{Utilities.GetInterfaceString("car_settings", "delay", "electric_brake")}:";
 
 			groupBoxCab.Text = Utilities.GetInterfaceString("general_settings", "cab", "name");
 			labelCabX.Text = $@"{Utilities.GetInterfaceString("general_settings", "cab", "x")}:";
@@ -287,13 +287,10 @@ namespace TrainEditor2.Views
 			labelFrontAxle.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "axles", "front")}:";
 			labelRearAxle.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "axles", "rear")}:";
 			labelFrontBogie.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "front_bogie")}:";
-			buttonFrontBogieSet.Text = Utilities.GetInterfaceString("navigation", "set");
 			labelRearBogie.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "rear_bogie")}:";
-			buttonRearBogieSet.Text = Utilities.GetInterfaceString("navigation", "set");
 			labelLoadingSway.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "loading_sway")}:";
 			labelReversed.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "reversed")}:";
 			labelObject.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "object")}:";
-			buttonObjectOpen.Text = Utilities.GetInterfaceString("navigation", "open");
 
 			groupBoxPerformance.Text = Utilities.GetInterfaceString("car_settings", "performance", "name");
 			labelDeceleration.Text = $@"{Utilities.GetInterfaceString("car_settings", "performance", "deceleration")}:";
@@ -424,12 +421,140 @@ namespace TrainEditor2.Views
 			groupBoxCouplerGeneral.Text = Utilities.GetInterfaceString("coupler_settings", "general", "name");
 			labelCouplerMin.Text = $@"{Utilities.GetInterfaceString("coupler_settings", "general", "min")}:";
 			labelCouplerMax.Text = $@"{Utilities.GetInterfaceString("coupler_settings", "general", "max")}:";
+			labelCouplerObject.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "object")}:";
 
 			tabPagePanel.Text = Utilities.GetInterfaceString("panel_settings", "name");
 
 			tabPageThis.Text = Utilities.GetInterfaceString("panel_settings", "this", "name");
+			labelThisResolution.Text = $@"{Utilities.GetInterfaceString("panel_settings", "this", "resolution")}:";
+			labelThisLeft.Text = $@"{Utilities.GetInterfaceString("panel_settings", "this", "left")}:";
+			labelThisRight.Text = $@"{Utilities.GetInterfaceString("panel_settings", "this", "right")}:";
+			labelThisTop.Text = $@"{Utilities.GetInterfaceString("panel_settings", "this", "top")}:";
+			labelThisBottom.Text = $@"{Utilities.GetInterfaceString("panel_settings", "this", "bottom")}:";
+			labelThisDaytimeImage.Text = $@"{Utilities.GetInterfaceString("panel_settings", "this", "daytime_image")}:";
+			labelThisNighttimeImage.Text = $@"{Utilities.GetInterfaceString("panel_settings", "this", "nighttime_image")}:";
+			labelThisTransparentColor.Text = $@"{Utilities.GetInterfaceString("panel_settings", "this", "transparent_color")}:";
+			groupBoxThisCenter.Text = Utilities.GetInterfaceString("panel_settings", "this", "center", "name");
+			labelThisCenterX.Text = $@"{Utilities.GetInterfaceString("panel_settings", "this", "center", "x")}:";
+			labelThisCenterY.Text = $@"{Utilities.GetInterfaceString("panel_settings", "this", "center", "y")}:";
+			groupBoxThisOrigin.Text = Utilities.GetInterfaceString("panel_settings", "this", "origin", "name");
+			labelThisOriginX.Text = $@"{Utilities.GetInterfaceString("panel_settings", "this", "origin", "x")}:";
+			labelThisOriginY.Text = $@"{Utilities.GetInterfaceString("panel_settings", "this", "origin", "y")}:";
+
+			tabPageScreen.Text = Utilities.GetInterfaceString("panel_settings", "screen", "name");
+			labelScreenNumber.Text = $@"{Utilities.GetInterfaceString("panel_settings", "screen", "number")}:";
+			labelScreenLayer.Text = $@"{Utilities.GetInterfaceString("panel_settings", "screen", "layer")}:";
+
+			tabPagePilotLamp.Text = Utilities.GetInterfaceString("panel_settings", "pilot_lamp", "name");
+			labelPilotLampSubject.Text = $@"{Utilities.GetInterfaceString("panel_settings", "pilot_lamp", "subject")}:";
+			groupBoxPilotLampLocation.Text = Utilities.GetInterfaceString("panel_settings", "pilot_lamp", "location", "name");
+			labelPilotLampLocationX.Text = $@"{Utilities.GetInterfaceString("panel_settings", "pilot_lamp", "location", "x")}:";
+			labelPilotLampLocationY.Text = $@"{Utilities.GetInterfaceString("panel_settings", "pilot_lamp", "location", "y")}:";
+			labelPilotLampDaytimeImage.Text = $@"{Utilities.GetInterfaceString("panel_settings", "pilot_lamp", "daytime_image")}:";
+			labelPilotLampNighttimeImage.Text = $@"{Utilities.GetInterfaceString("panel_settings", "pilot_lamp", "nighttime_image")}:";
+			labelPilotLampTransparentColor.Text = $@"{Utilities.GetInterfaceString("panel_settings", "pilot_lamp", "transparent_color")}:";
+			labelPilotLampLayer.Text = $@"{Utilities.GetInterfaceString("panel_settings", "pilot_lamp", "layer")}:";
+
+			tabPageNeedle.Text = Utilities.GetInterfaceString("panel_settings", "needle", "name");
+			labelNeedleSubject.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "subject")}:";
+			groupBoxNeedleLocation.Text = Utilities.GetInterfaceString("panel_settings", "needle", "location", "name");
+			labelNeedleLocationX.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "location", "x")}:";
+			labelNeedleLocationY.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "location", "y")}:";
+			labelNeedleDefinedRadius.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "defined_radius")}:";
+			labelNeedleRadius.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "radius")}:";
+			labelNeedleDaytimeImage.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "daytime_image")}:";
+			labelNeedleNighttimeImage.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "nighttime_image")}:";
+			labelNeedleColor.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "color")}:";
+			labelNeedleTransparentColor.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "transparent_color")}:";
+			labelNeedleDefinedOrigin.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "defined_origin")}:";
+			groupBoxNeedleOrigin.Text = Utilities.GetInterfaceString("panel_settings", "needle", "origin", "name");
+			labelNeedleOriginX.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "origin", "x")}:";
+			labelNeedleOriginY.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "origin", "y")}:";
+			labelNeedleInitialAngle.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "initial_angle")}:";
+			labelNeedleLastAngle.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "last_angle")}:";
+			labelNeedleMinimum.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "minimum")}:";
+			labelNeedleMaximum.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "maximum")}:";
+			labelNeedleDefinedDampingRatio.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "defined_natural_freq")}:";
+			labelNeedleDampingRatio.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "natural_freq")}:";
+			labelNeedleDefinedNaturalFreq.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "defined_damping_ratio")}:";
+			labelNeedleNaturalFreq.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "damping_ratio")}:";
+			labelNeedleBackstop.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "backstop")}:";
+			labelNeedleSmoothed.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "smoothed")}:";
+			labelNeedleLayer.Text = $@"{Utilities.GetInterfaceString("panel_settings", "needle", "layer")}:";
+
+			tabPageDigitalNumber.Text = Utilities.GetInterfaceString("panel_settings", "digital_number", "name");
+			labelDigitalNumberSubject.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_number", "subject")}:";
+			groupBoxDigitalNumberLocation.Text = Utilities.GetInterfaceString("panel_settings", "digital_number", "location", "name");
+			labelDigitalNumberLocationX.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_number", "location", "x")}:";
+			labelDigitalNumberLocationY.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_number", "location", "y")}:";
+			labelDigitalNumberDaytimeImage.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_number", "daytime_image")}:";
+			labelDigitalNumberNighttimeImage.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_number", "nighttime_image")}:";
+			labelDigitalNumberTransparentColor.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_number", "transparent_color")}:";
+			labelDigitalNumberInterval.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_number", "interval")}:";
+			labelDigitalNumberLayer.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_number", "layer")}:";
+
+			tabPageDigitalGauge.Text = Utilities.GetInterfaceString("panel_settings", "digital_gauge", "name");
+			labelDigitalGaugeSubject.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_gauge", "subject")}:";
+			groupBoxDigitalGaugeLocation.Text = Utilities.GetInterfaceString("panel_settings", "digital_gauge", "location", "name");
+			labelDigitalGaugeLocationX.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_gauge", "location", "x")}:";
+			labelDigitalGaugeLocationY.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_gauge", "location", "y")}:";
+			labelDigitalGaugeRadius.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_gauge", "radius")}:";
+			labelDigitalGaugeColor.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_gauge", "color")}:";
+			labelDigitalGaugeInitialAngle.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_gauge", "initial_angle")}:";
+			labelDigitalGaugeLastAngle.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_gauge", "last_angle")}:";
+			labelDigitalGaugeMinimum.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_gauge", "minimum")}:";
+			labelDigitalGaugeMaximum.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_gauge", "maximum")}:";
+			labelDigitalGaugeStep.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_gauge", "step")}:";
+			labelDigitalGaugeLayer.Text = $@"{Utilities.GetInterfaceString("panel_settings", "digital_gauge", "layer")}:";
+
+			tabPageLinearGauge.Text = Utilities.GetInterfaceString("panel_settings", "linear_gauge", "name");
+			labelLinearGaugeSubject.Text = $@"{Utilities.GetInterfaceString("panel_settings", "linear_gauge", "subject")}:";
+			groupBoxLinearGaugeLocation.Text = Utilities.GetInterfaceString("panel_settings", "linear_gauge", "location", "name");
+			labelLinearGaugeLocationX.Text = $@"{Utilities.GetInterfaceString("panel_settings", "linear_gauge", "location", "x")}:";
+			labelLinearGaugeLocationY.Text = $@"{Utilities.GetInterfaceString("panel_settings", "linear_gauge", "location", "y")}:";
+			labelLinearGaugeDaytimeImage.Text = $@"{Utilities.GetInterfaceString("panel_settings", "linear_gauge", "daytime_image")}:";
+			labelLinearGaugeNighttimeImage.Text = $@"{Utilities.GetInterfaceString("panel_settings", "linear_gauge", "nighttime_image")}:";
+			labelLinearGaugeMinimum.Text = $@"{Utilities.GetInterfaceString("panel_settings", "linear_gauge", "minimum")}:";
+			labelLinearGaugeMaximum.Text = $@"{Utilities.GetInterfaceString("panel_settings", "linear_gauge", "maximum")}:";
+			groupBoxLinearGaugeDirection.Text = Utilities.GetInterfaceString("panel_settings", "linear_gauge", "direction", "name");
+			labelLinearGaugeDirectionX.Text = $@"{Utilities.GetInterfaceString("panel_settings", "linear_gauge", "direction", "x")}:";
+			labelLinearGaugeDirectionY.Text = $@"{Utilities.GetInterfaceString("panel_settings", "linear_gauge", "direction", "y")}:";
+			labelLinearGaugeTransparentColor.Text = $@"{Utilities.GetInterfaceString("panel_settings", "linear_gauge", "transparent_color")}:";
+			labelLinearGaugeWidth.Text = $@"{Utilities.GetInterfaceString("panel_settings", "linear_gauge", "width")}:";
+			labelLinearGaugeLayer.Text = $@"{Utilities.GetInterfaceString("panel_settings", "linear_gauge", "layer")}:";
+
+			tabPageTimetable.Text = Utilities.GetInterfaceString("panel_settings", "timetable", "name");
+			labelTimetableHeight.Text = $@"{Utilities.GetInterfaceString("panel_settings", "timetable", "height")}:";
+			labelTimetableWidth.Text = $@"{Utilities.GetInterfaceString("panel_settings", "timetable", "width")}:";
+			labelTimetableTransparentColor.Text = $@"{Utilities.GetInterfaceString("panel_settings", "timetable", "transparent_color")}:";
+			labelTimetableLayer.Text = $@"{Utilities.GetInterfaceString("panel_settings", "timetable", "layer")}:";
+			groupBoxTimetableLocation.Text = Utilities.GetInterfaceString("panel_settings", "timetable", "location", "name");
+			labelTimetableLocationX.Text = $@"{Utilities.GetInterfaceString("panel_settings", "timetable", "location", "x")}:";
+			labelTimetableLocationY.Text = $@"{Utilities.GetInterfaceString("panel_settings", "timetable", "location", "y")}:";
+
+			tabPageTouch.Text = Utilities.GetInterfaceString("panel_settings", "touch", "name");
+			groupBoxTouchLocation.Text = Utilities.GetInterfaceString("panel_settings", "touch", "location", "name");
+			labelTouchLocationX.Text = $@"{Utilities.GetInterfaceString("panel_settings", "touch", "location", "x")}:";
+			labelTouchLocationY.Text = $@"{Utilities.GetInterfaceString("panel_settings", "touch", "location", "y")}:";
+			groupBoxTouchSize.Text = Utilities.GetInterfaceString("panel_settings", "touch", "size", "name");
+			labelTouchSizeX.Text = $@"{Utilities.GetInterfaceString("panel_settings", "touch", "size", "x")}:";
+			labelTouchSizeY.Text = $@"{Utilities.GetInterfaceString("panel_settings", "touch", "size", "y")}:";
+			labelTouchJumpScreen.Text = $@"{Utilities.GetInterfaceString("panel_settings", "touch", "jump_screen")}:";
+			labelTouchSoundCommand.Text = $@"{Utilities.GetInterfaceString("panel_settings", "touch", "sound_command")}:";
+			labelTouchLayer.Text = $@"{Utilities.GetInterfaceString("panel_settings", "touch", "layer")}:";
 
 			tabPageSound.Text = Utilities.GetInterfaceString("sound_settings", "name");
+
+			labelSoundFileName.Text = Utilities.GetInterfaceString("sound_settings", "edit_entry", "value", "filename");
+			groupBoxSoundValue.Text = Utilities.GetInterfaceString("sound_settings", "edit_entry", "value", "name");
+			groupBoxSoundEntry.Text = Utilities.GetInterfaceString("sound_settings", "edit_entry", "name");
+			groupBoxSoundKey.Text = Utilities.GetInterfaceString("sound_settings", "edit_entry", "key", "name");
+			checkBoxSoundRadius.Text = Utilities.GetInterfaceString("sound_settings", "edit_entry", "value", "radius");
+			groupBoxSoundPosition.Text = Utilities.GetInterfaceString("sound_settings", "edit_entry", "value", "position", "name");
+			checkBoxSoundDefinedPosition.Text = Utilities.GetInterfaceString("sound_settings", "edit_entry", "value", "position");
+			labelSoundPositionX.Text = $@"{Utilities.GetInterfaceString("sound_settings", "edit_entry", "value", "position", "x")}:";
+			labelSoundPositionY.Text = $@"{Utilities.GetInterfaceString("sound_settings", "edit_entry", "value", "position", "y")}:";
+			labelSoundPositionZ.Text = $@"{Utilities.GetInterfaceString("sound_settings", "edit_entry", "value", "position", "z")}:";
 
 			tabPageStatus.Text = $@"{Utilities.GetInterfaceString("status", "name")} ({Interface.LogMessages.Count})";
 			toolStripMenuItemError.Text = $@"{Interface.LogMessages.Count(m => m.Type == MessageType.Error || m.Type == MessageType.Critical)} {Utilities.GetInterfaceString("status", "menu", "error")}";
@@ -439,6 +564,48 @@ namespace TrainEditor2.Views
 
 			columnHeaderLevel.Text = Utilities.GetInterfaceString("status", "level");
 			columnHeaderText.Text = Utilities.GetInterfaceString("status", "description");
+
+			// misc open buttons etc
+			// N.B. sub-forms are instanced
+			buttonRearBogieSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonFrontBogieSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDelayPowerSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDelayBrakeSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDelayLocoBrakeSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDelayElectricBrake.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonThisTransparentColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonPilotLampTransparentColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonPilotLampSubjectSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonNeedleTransparentColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonNeedleColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonNeedleSubjectSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDigitalNumberTransparentColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDigitalNumberSubjectSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDigitalGaugeColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonDigitalGaugeSubjectSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonLinearGaugeTransparentColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonLinearGaugeSubjectSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonTimetableTransparentColorSet.Text = Utilities.GetInterfaceString("navigation", "set");
+			buttonTouchSoundCommand.Text = Utilities.GetInterfaceString("navigation", "set");
+
+			buttonObjectOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonCouplerObject.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonThisNighttimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonThisDaytimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonPilotLampNighttimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonPilotLampDaytimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonNeedleNighttimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonNeedleDaytimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonDigitalNumberNighttimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonDigitalNumberDaytimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonLinearGaugeNighttimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonLinearGaugeDaytimeImageOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonSoundFileNameOpen.Text = Utilities.GetInterfaceString("navigation", "open");
+			buttonSoundAdd.Text = Utilities.GetInterfaceString("navigation", "add");
+			buttonSoundRemove.Text = Utilities.GetInterfaceString("navigation", "remove");
+			buttonPanelAdd.Text = Utilities.GetInterfaceString("navigation", "add");
+			buttonPanelCopy.Text = Utilities.GetInterfaceString("navigation", "copy");
+			buttonPanelRemove.Text = Utilities.GetInterfaceString("navigation", "remove");
 		}
 	}
 }

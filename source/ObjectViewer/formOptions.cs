@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
 using ObjectViewer.Graphics;
+using OpenBveApi;
 using OpenBveApi.Graphics;
+using OpenBveApi.Input;
 using OpenBveApi.Objects;
 using OpenTK.Graphics;
 
@@ -21,6 +23,18 @@ namespace ObjectViewer
 			comboBoxNewXParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentXParser;
 			comboBoxNewObjParser.SelectedIndex = (int) Interface.CurrentOptions.CurrentObjParser;
 			comboBoxOptimizeObjects.SelectedIndex = (int)Interface.CurrentOptions.ObjectOptimizationMode;
+			comboBoxLeft.DataSource = Enum.GetValues(typeof(Key));
+			comboBoxLeft.SelectedItem = Interface.CurrentOptions.CameraMoveLeft;
+			comboBoxRight.DataSource = Enum.GetValues(typeof(Key));
+			comboBoxRight.SelectedItem = Interface.CurrentOptions.CameraMoveRight;
+			comboBoxUp.DataSource = Enum.GetValues(typeof(Key));
+			comboBoxUp.SelectedItem = Interface.CurrentOptions.CameraMoveUp;
+			comboBoxDown.DataSource = Enum.GetValues(typeof(Key));
+			comboBoxDown.SelectedItem = Interface.CurrentOptions.CameraMoveDown;
+			comboBoxForwards.DataSource = Enum.GetValues(typeof(Key));
+			comboBoxForwards.SelectedItem = Interface.CurrentOptions.CameraMoveForward;
+			comboBoxBackwards.DataSource = Enum.GetValues(typeof(Key));
+			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveForward;
 		}
 
 		internal static DialogResult ShowOptions()
@@ -32,11 +46,10 @@ namespace ObjectViewer
 
 		private void CloseButton_Click(object sender, EventArgs e)
 		{
-			InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
 			int previousAntialasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
-			int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
 
 			//Interpolation mode
+			InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
 			switch (InterpolationMode.SelectedIndex)
 			{
 				case 0:
@@ -57,6 +70,12 @@ namespace ObjectViewer
 				case 5:
 					Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering;
 					break;
+			}
+
+			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation)
+			{
+				// We have changed interpolation level, so the texture cache needs totally clearing (as opposed to changed files)
+				Program.Renderer.TextureManager.UnloadAllTextures(false);
 			}
 
 			//Ansiotropic filtering level
@@ -97,22 +116,35 @@ namespace ObjectViewer
 				Program.Renderer.UpdateViewport();
 			}
 
-			Interface.CurrentOptions.CurrentXParser = (XParsers) comboBoxNewXParser.SelectedIndex;
-			Interface.CurrentOptions.CurrentObjParser = (ObjParsers) comboBoxNewObjParser.SelectedIndex;
-			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+			XParsers xParser = (XParsers)comboBoxNewXParser.SelectedIndex;
+			ObjParsers objParser = (ObjParsers)comboBoxNewObjParser.SelectedIndex;
+
+			if (Interface.CurrentOptions.CurrentXParser != xParser || Interface.CurrentOptions.CurrentObjParser != objParser)
 			{
-				if (Program.CurrentHost.Plugins[i].Object != null)
+				Interface.CurrentOptions.CurrentXParser = xParser;
+				Interface.CurrentOptions.CurrentObjParser = objParser;
+				Program.CurrentHost.StaticObjectCache.Clear(); // as a different parser may interpret differently
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
-					Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
-					Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+					if (Program.CurrentHost.Plugins[i].Object != null)
+					{
+						Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+						Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+					}
 				}
 			}
+			
 
 			Interface.CurrentOptions.ObjectOptimizationMode = (ObjectOptimizationMode)comboBoxOptimizeObjects.SelectedIndex;
-
-			Options.SaveOptions();
+			Interface.CurrentOptions.CameraMoveLeft = (Key)comboBoxLeft.SelectedItem;
+			Interface.CurrentOptions.CameraMoveRight = (Key)comboBoxRight.SelectedItem;
+			Interface.CurrentOptions.CameraMoveUp = (Key)comboBoxUp.SelectedItem;
+			Interface.CurrentOptions.CameraMoveDown = (Key)comboBoxDown.SelectedItem;
+			Interface.CurrentOptions.CameraMoveForward = (Key)comboBoxForwards.SelectedItem;
+			Interface.CurrentOptions.CameraMoveBackward = (Key)comboBoxBackwards.SelectedItem;
+			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.RefreshObjects();
-			this.Close();
+			Close();
 		}
 	}
 }

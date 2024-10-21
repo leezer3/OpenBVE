@@ -59,124 +59,141 @@ namespace OpenBve
 			 * and ensure that all others are stopped.
 			 * */
 			List<SoundSourceAttenuation> toBePlayed = new List<SoundSourceAttenuation>();
-			for (int i = 0; i < SourceCount; i++) {
-				if (Sources[i].State == SoundSourceState.StopPending) {
-					/*
-					 * The sound is still playing but is to be stopped.
-					 * Stop the sound, then remove it from the list of
-					 * sound sources.
-					 * */
-					AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
-					Sources[i].State = SoundSourceState.Stopped;
-					Sources[i].OpenAlSourceName = 0;
-					Sources[i] = Sources[SourceCount - 1];
-					SourceCount--;
-					i--;
-				} else if (Sources[i].State == SoundSourceState.Stopped) {
-					/*
-					 * The sound was already stopped. Remove it from
-					 * the list of sound sources.
-					 * */
-					Sources[i] = Sources[SourceCount - 1];
-					SourceCount--;
-					i--;
-				} else if (GlobalMute) {
-					/*
-					 * The sound is playing or about to be played, but
-					 * the global mute option is enabled. Stop the sound
-					 * sound if necessary, then remove it from the list
-					 * of sound sources if the sound is not looping.
-					 * */
-					if (Sources[i].State == SoundSourceState.Playing) {
+			for (int i = 0; i < SourceCount; i++)
+			{
+				switch (Sources[i].State)
+				{
+					case SoundSourceState.StopPending:
+						/*
+						 * The sound is still playing but is to be stopped.
+						 * Stop the sound, then remove it from the list of
+						 * sound sources.
+						 * */
 						AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
-						Sources[i].State = SoundSourceState.PlayPending;
-						Sources[i].OpenAlSourceName = 0;
-					}
-					if (!Sources[i].Looped) {
 						Sources[i].State = SoundSourceState.Stopped;
 						Sources[i].OpenAlSourceName = 0;
 						Sources[i] = Sources[SourceCount - 1];
 						SourceCount--;
 						i--;
-					}
-				} else {
-					/*
-					 * The sound is to be played or is already playing.
-					 * */
-					if (Sources[i].State == SoundSourceState.Playing) {
-						int state;
-						AL.GetSource(Sources[i].OpenAlSourceName, ALGetSourcei.SourceState, out state);
-						if (state != (int)ALSourceState.Initial & state != (int)ALSourceState.Playing) {
-							/*
-							 * The sound is not playing any longer.
-							 * Remove it from the list of sound sources.
-							 * */
-							AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
-							Sources[i].State = SoundSourceState.Stopped;
-							Sources[i].OpenAlSourceName = 0;
-							Sources[i] = Sources[SourceCount - 1];
-							SourceCount--;
-							i--;
-							continue;
-						}
-					}
-					/*
-					 * Calculate the gain, then add the sound
-					 * to the list of sounds to be played.
-					 * */
-					Vector3 position;
-					switch (Sources[i].Type)
+						break;
+					case SoundSourceState.PausePending:
+						AL.SourcePause(Sources[i].OpenAlSourceName);
+						Sources[i].State = SoundSourceState.Paused;
+						break;
+					case SoundSourceState.ResumePending:
+						AL.SourcePlay(Sources[i].OpenAlSourceName);
+						Sources[i].State = SoundSourceState.Playing;
+						break;
+					case SoundSourceState.Stopped:
+						/*
+						 * The sound was already stopped. Remove it from
+						 * the list of sound sources.
+						 * */
+						Sources[i] = Sources[SourceCount - 1];
+						SourceCount--;
+						i--;
+						break;
+					default:
 					{
-						case SoundType.TrainCar:
-							Vector3 direction;
-							var Car = (AbstractCar)Sources[i].Parent;
-							Car.CreateWorldCoordinates(Sources[i].Position, out position, out direction);
-							break;
-						case SoundType.AnimatedObject:
-							var WorldSound = (WorldSound)Sources[i].Parent;
-							position = WorldSound.Follower.WorldPosition + WorldSound.Position;
-							break;
-						default:
-							position = Sources[i].Position;
-							break;
-					}
-					Vector3 positionDifference = position - listenerPosition;
-					double distance = positionDifference.Norm();
-					double radius = Sources[i].Radius;
-					if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
-						if (Sources[i].Parent != TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]) {
-							radius *= 0.5;
+						if (GlobalMute) {
+							/*
+							 * The sound is playing or about to be played, but
+							 * the global mute option is enabled. Stop the sound
+							 * sound if necessary, then remove it from the list
+							 * of sound sources if the sound is not looping.
+							 * */
+							if (Sources[i].State == SoundSourceState.Playing) {
+								AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
+								Sources[i].State = SoundSourceState.PlayPending;
+								Sources[i].OpenAlSourceName = 0;
+							}
+							if (!Sources[i].Looped) {
+								Sources[i].State = SoundSourceState.Stopped;
+								Sources[i].OpenAlSourceName = 0;
+								Sources[i] = Sources[SourceCount - 1];
+								SourceCount--;
+								i--;
+							}
+						} else {
+							/*
+							 * The sound is to be played or is already playing.
+							 * */
+							if (Sources[i].State == SoundSourceState.Playing) {
+								AL.GetSource(Sources[i].OpenAlSourceName, ALGetSourcei.SourceState, out int state);
+								if (state != (int)ALSourceState.Initial & state != (int)ALSourceState.Playing) {
+									/*
+									 * The sound is not playing any longer.
+									 * Remove it from the list of sound sources.
+									 * */
+									AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
+									Sources[i].State = SoundSourceState.Stopped;
+									Sources[i].OpenAlSourceName = 0;
+									Sources[i] = Sources[SourceCount - 1];
+									SourceCount--;
+									i--;
+									continue;
+								}
+							}
+							/*
+							 * Calculate the gain, then add the sound
+							 * to the list of sounds to be played.
+							 * */
+							Vector3 position;
+							switch (Sources[i].Type)
+							{
+								case SoundType.TrainCar:
+									var Car = (AbstractCar)Sources[i].Parent;
+									Car.CreateWorldCoordinates(Sources[i].Position, out position, out _);
+									break;
+								case SoundType.AnimatedObject:
+									var WorldSound = (WorldSound)Sources[i].Parent;
+									position = WorldSound.Follower.WorldPosition + WorldSound.Position;
+									break;
+								default:
+									position = Sources[i].Position;
+									break;
+							}
+							Vector3 positionDifference = position - listenerPosition;
+							double distance = positionDifference.Norm();
+							double radius = Sources[i].Radius;
+							if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
+								if (Sources[i].Parent != TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]) {
+									radius *= 0.5;
+								}
+							}
+							double gain;
+							if (distance < 2.0 * radius) {
+								gain = 1.0 - distance * distance * (4.0 * radius - distance) / (16.0 * radius * radius * radius);
+							} else {
+								gain = radius / distance;
+							}
+							gain *= Sources[i].Volume;
+							if (gain <= 0.0) {
+								/*
+								 * The gain is too low. Stop the sound if playing,
+								 * but keep looping sounds pending.
+								 * */
+								if (Sources[i].State == SoundSourceState.Playing) {
+									AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
+									Sources[i].State = SoundSourceState.PlayPending;
+									Sources[i].OpenAlSourceName = 0;
+								}
+								if (!Sources[i].Looped) {
+									Sources[i].State = SoundSourceState.Stopped;
+									Sources[i].OpenAlSourceName = 0;
+									Sources[i] = Sources[SourceCount - 1];
+									SourceCount--;
+									i--;
+								}
+							} else {
+								/*
+								 * Add the source.
+								 * */
+								toBePlayed.Add(new SoundSourceAttenuation(Sources[i], gain, distance));
+							}
 						}
-					}
-					double gain;
-					if (distance < 2.0 * radius) {
-						gain = 1.0 - distance * distance * (4.0 * radius - distance) / (16.0 * radius * radius * radius);
-					} else {
-						gain = radius / distance;
-					}
-					gain *= Sources[i].Volume;
-					if (gain <= 0.0) {
-						/*
-						 * The gain is too low. Stop the sound if playing,
-						 * but keep looping sounds pending.
-						 * */
-						if (Sources[i].State == SoundSourceState.Playing) {
-							AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
-							Sources[i].State = SoundSourceState.PlayPending;
-							Sources[i].OpenAlSourceName = 0;
-						}
-						if (!Sources[i].Looped) {
-							Sources[i].State = SoundSourceState.Stopped;
-							Sources[i].OpenAlSourceName = 0;
-							Sources[i] = Sources[SourceCount - 1];
-							SourceCount--;
-							i--;
-						}
-					} else {
-						/*
-						 * Add the source.
-						 * */
-						toBePlayed.Add(new SoundSourceAttenuation(Sources[i], gain, distance));
+
+						break;
 					}
 				}
 			}
@@ -239,7 +256,7 @@ namespace OpenBve
 					/*
 					 * Stop the sound.
 					 * */
-					if (source.State == SoundSourceState.Playing) {
+					if (source.State == SoundSourceState.Playing && source.State != SoundSourceState.Paused && source.State != SoundSourceState.PausePending) {
 						AL.DeleteSources(1, ref source.OpenAlSourceName);
 						source.State = SoundSourceState.PlayPending;
 						source.OpenAlSourceName = 0;
@@ -252,18 +269,21 @@ namespace OpenBve
 					/*
 					 * Ensure the buffer is loaded, then play the sound.
 					 * */
-					if (source.State != SoundSourceState.Playing) {
+					if (source.State != SoundSourceState.Playing && source.State != SoundSourceState.Paused && source.State != SoundSourceState.PausePending) {
 						LoadBuffer(source.Buffer);
-						if (source.Buffer.Loaded) {
-							AL.GenSources(1, out source.OpenAlSourceName);
-							AL.Source(source.OpenAlSourceName, ALSourcei.Buffer, source.Buffer.OpenAlBufferName);
-						} else {
-							/*
-							 * We cannot play the sound because
-							 * the buffer could not be loaded.
-							 * */
-							source.State = SoundSourceState.Stopped;
-							continue;
+						switch (source.Buffer.Loaded)
+						{
+							case SoundBufferState.Loaded:
+								AL.GenSources(1, out source.OpenAlSourceName);
+								AL.Source(source.OpenAlSourceName, ALSourcei.Buffer, source.Buffer.OpenAlBufferName);
+								break;
+							case SoundBufferState.Invalid:
+								// We cannot play the sound, as the buffer could not be loaded
+								source.State = SoundSourceState.Stopped;
+								continue;
+							default:
+								// The background thread is still loading our sound- Do not modify source state
+								continue;
 						}
 					}
 					Vector3 position;
@@ -271,9 +291,8 @@ namespace OpenBve
 					switch (source.Type)
 					{
 						case SoundType.TrainCar:
-							Vector3 direction;
 							var Car = (AbstractCar)source.Parent;
-							Car.CreateWorldCoordinates(source.Position, out position, out direction);
+							Car.CreateWorldCoordinates(source.Position, out position, out Vector3 direction);
 							velocity = Car.CurrentSpeed * direction;
 							break;
 						case SoundType.AnimatedObject:
@@ -291,7 +310,7 @@ namespace OpenBve
 					AL.Source(source.OpenAlSourceName, ALSource3f.Velocity, (float)velocity.X, (float)velocity.Y, (float)velocity.Z);
 					AL.Source(source.OpenAlSourceName, ALSourcef.Pitch, (float)source.Pitch);
 					AL.Source(source.OpenAlSourceName, ALSourcef.Gain, (float)gain);
-					if (source.State != SoundSourceState.Playing) {
+					if (source.State != SoundSourceState.Playing && source.State != SoundSourceState.Paused && source.State != SoundSourceState.PausePending) {
 						AL.Source(source.OpenAlSourceName, ALSourceb.Looping, source.Looped);
 						AL.SourcePlay(source.OpenAlSourceName);
 						source.State = SoundSourceState.Playing;

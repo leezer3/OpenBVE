@@ -1,10 +1,11 @@
+#pragma warning disable IDE1006
 using OpenBveApi.Math;
 
 namespace OpenBveApi.FunctionScripting
 {
-	/// <summary>Interfaces with the CS Script Library </summary>
-	public interface AnimationScript
-	{
+    /// <summary>Interfaces with the CS Script Library </summary>
+	    public interface AnimationScript
+    {
 		/// <summary> Call to execute this script </summary>
 		/// <param name="Train">A reference to the nearest train</param>
 		/// <param name="CarIndex">The object's car index in a train, if is a car object</param>

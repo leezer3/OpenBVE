@@ -77,10 +77,7 @@ namespace LibRender2
 		/// <summary>Holds a reference to the current interface type of the game (Used by the renderer)</summary>
 		public InterfaceType CurrentInterface
 		{
-			get
-			{
-				return currentInterface;
-			}
+			get => currentInterface;
 			set
 			{
 				previousInterface = currentInterface;
@@ -245,6 +242,19 @@ namespace LibRender2
 			}
 		}
 
+		/// <summary>A joystick icon</summary>
+		public Texture JoystickTexture;
+		/// <summary>A keyboard icon</summary>
+		public Texture KeyboardTexture;
+		/// <summary>A generic gamepad icon</summary>
+		public Texture GamepadTexture;
+		/// <summary>An XInput gamepad icon</summary>
+		public Texture XInputTexture;
+		/// <summary>A Mascon 2-Handle controller icon</summary>
+		public Texture MasconTeture;
+		/// <summary>A raildriver icon</summary>
+		public Texture RailDriverTexture;
+
 		public bool LoadLogo()
 		{
 			return currentHost.LoadTexture(ref _programLogo, OpenGlTextureWrapMode.ClampClamp);
@@ -391,6 +401,13 @@ namespace LibRender2
 					ReShadeInUse = true;
 				}
 			}
+			// icons for use in GL menus
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "keyboard.png"), new TextureParameters(null, null), out KeyboardTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "gamepad.png"), new TextureParameters(null, null), out GamepadTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "xbox.png"), new TextureParameters(null, null), out XInputTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "zuki.png"), new TextureParameters(null, null), out MasconTeture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "joystick.png"), new TextureParameters(null, null), out JoystickTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "raildriver.png"), new TextureParameters(null, null), out RailDriverTexture);
 		}
 
 		/// <summary>Deinitializes the renderer</summary>
@@ -461,6 +478,7 @@ namespace LibRender2
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			UnsetBlendFunc();
 			GL.Enable(EnableCap.DepthTest);
+			GL.Disable(EnableCap.DepthClamp);
 			GL.DepthMask(true);
 			SetAlphaFunc(AlphaFunction.Greater, 0.9f);
 		}
@@ -500,8 +518,15 @@ namespace LibRender2
 		public void Reset()
 		{
 			currentHost.AnimatedObjectCollectionCache.Clear();
-			currentHost.StaticObjectCache.Clear();
-			TextureManager.UnloadAllTextures();
+			List<ValueTuple<string, bool, DateTime>> keys = currentHost.StaticObjectCache.Keys.ToList();
+			for (int i = 0; i < keys.Count; i++)
+			{
+				if (!File.Exists(keys[i].Item1) || File.GetLastWriteTime(keys[i].Item1) != keys[i].Item3)
+				{
+					currentHost.StaticObjectCache.Remove(keys[i]);
+				}
+			}
+			TextureManager.UnloadAllTextures(true);
 
 			Initialize();
 		}
@@ -819,6 +844,7 @@ namespace LibRender2
 						break;
 					}
 				}
+				n = ObjectsSortedByStart.Length;
 
 				// introduce
 				while (ObjectsSortedByStartPointer < n)
@@ -1567,9 +1593,8 @@ namespace LibRender2
 					GL.Normal3(Face.Vertices[i].Normal.X, Face.Vertices[i].Normal.Y, -Face.Vertices[i].Normal.Z);
 					GL.TexCoord2(vertices[Face.Vertices[i].Index].TextureCoordinates.X, vertices[Face.Vertices[i].Index].TextureCoordinates.Y);
 
-					if (vertices[Face.Vertices[i].Index] is ColoredVertex)
+					if (vertices[Face.Vertices[i].Index] is ColoredVertex v)
 					{
-						ColoredVertex v = (ColoredVertex)vertices[Face.Vertices[i].Index];
 						GL.Color4(v.Color.R, v.Color.G, v.Color.B, v.Color.A);
 					}
 
@@ -1662,6 +1687,28 @@ namespace LibRender2
 
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PopMatrix();
+		}
+
+		/// <summary>Sets the current MouseCursor</summary>
+		/// <param name="newCursor">The new cursor</param>
+		public virtual void SetCursor(OpenTK.MouseCursor newCursor)
+		{
+
+		}
+
+		/// <summary>Sets the window state</summary>
+		/// <param name="windowState">The new window state</param>
+		public virtual void SetWindowState(OpenTK.WindowState windowState)
+		{
+
+		}
+
+		/// <summary>Sets the size of the window</summary>
+		/// <param name="width">The new width</param>
+		/// <param name="height">The new height</param>
+		public virtual void SetWindowSize(int width, int height)
+		{
+
 		}
 	}
 }

@@ -11,8 +11,21 @@ This file is a work in progress, and is intended to serve as a general set of gu
 
 #### Code Licencing
 
-The basic licence for openBVE is Public Domain.
-Please only contribute code which is licenced under either Public Domain, or loose permissive licences (e.g. BSD-2 and compatible)
+The original codebase for OpenBVE is licenced under the public domain. (Please see https://github.com/leezer3/OpenBVE/issues/305  for further details and discussion)
+
+However, over the last 10+ years, we've found that not having a recognised OSS licence can be more of a hindrance than a help.
+
+
+With this in mind, we've chosen to move to using the BSD-2 clause licence for newer code contributions.
+
+We're also happy to accept code under similar loose, permissive licences that maintain the spirit of the original public domain aims. 
+
+
+New code should clearly state the author and licence (if applicable) in the file header.
+
+
+Please do not contribute code under the GPL or simiar 'viral' or restrictive licences.
+
 
 ### Backwards Compatibility
 

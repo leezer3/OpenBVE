@@ -126,7 +126,6 @@ namespace OpenBveAts {
 		/// <param name="newState">The new state of the doors.</param>
 		public void DoorChange(DoorStates oldState, DoorStates newState) {
 			this.Train.Doors = newState;
-			this.Train.DoorChange(oldState, newState);
 		}
 		
 		/// <summary>Is called when the aspect in the current or in any of the upcoming sections changes, or when passing section boundaries.</summary>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 
@@ -15,6 +17,16 @@ namespace OpenBveApi.Routes
 
 		/// <summary>The default direction of travel on this track</summary>
 		public TrackDirection Direction;
+		
+		/// <summary>The textual name of the track for display purposes</summary>
+		public string Name;
+
+		/// <summary>Creates a new track</summary>
+		public Track(string trackName = "")
+		{
+			Elements = new TrackElement[256];
+			Name = trackName;
+		}
 
 		/// <summary>Gets the innacuracy (Gauge spread and track bounce) for a given track position and routefile innacuracy value</summary>
 		/// <param name="position">The track position</param>
@@ -144,7 +156,7 @@ namespace OpenBveApi.Routes
 					int q = i / subdivisions;
 					int j = q * subdivisions;
 					Elements[i] = Elements[j];
-					Elements[i].Events = new GeneralEvent[] { };
+					Elements[i].Events = new List<GeneralEvent>();
 					Elements[i].StartingTrackPosition = midpointsTrackPositions[i];
 					Elements[i].WorldPosition = midpointsWorldPositions[i];
 					Elements[i].WorldDirection = midpointsWorldDirections[i];
@@ -394,25 +406,14 @@ namespace OpenBveApi.Routes
 			{
 				double startingTrackPosition = Elements[i].StartingTrackPosition;
 				double endingTrackPosition = Elements[i + 1].StartingTrackPosition;
-				for (int j = 0; j < Elements[i].Events.Length; j++)
+				foreach (GeneralEvent e in Elements[i].Events.ToList())
 				{
-					GeneralEvent e = Elements[i].Events[j];
 					double p = startingTrackPosition + e.TrackPositionDelta;
 					if (p >= endingTrackPosition)
 					{
-						int len = Elements[i + 1].Events.Length;
-						Array.Resize(ref Elements[i + 1].Events, len + 1);
-						Elements[i + 1].Events[len] = Elements[i].Events[j];
-						e = Elements[i + 1].Events[len];
+						Elements[i].Events.Remove(e);
 						e.TrackPositionDelta += startingTrackPosition - endingTrackPosition;
-						for (int k = j; k < Elements[i].Events.Length - 1; k++)
-						{
-							Elements[i].Events[k] = Elements[i].Events[k + 1];
-						}
-
-						len = Elements[i].Events.Length;
-						Array.Resize(ref Elements[i].Events, len - 1);
-						j--;
+						Elements[i + 1].Events.Add(e);
 					}
 				}
 			}

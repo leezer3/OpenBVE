@@ -78,5 +78,11 @@ namespace OpenBveApi.Trains
 		{
 
 		}
+
+		/// <summary>Derails this car</summary>
+		public virtual void Derail()
+		{
+
+		}
 	}
 }

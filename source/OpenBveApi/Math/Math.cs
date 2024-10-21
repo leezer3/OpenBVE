@@ -1,3 +1,4 @@
+using OpenBveApi.Interface;
 using System.Globalization;
 using System.Linq;
 
@@ -31,8 +32,7 @@ namespace OpenBveApi.Math {
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			for (int n = Expression.Length; n > 0; n--)
 			{
-				double a;
-				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out a))
+				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out double a))
 				{
 					Value = a;
 					return true;
@@ -52,8 +52,7 @@ namespace OpenBveApi.Math {
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			for (int n = Expression.Length; n > 0; n--)
 			{
-				float a;
-				if (float.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out a))
+				if (float.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out float a))
 				{
 					Value = a;
 					return true;
@@ -73,10 +72,38 @@ namespace OpenBveApi.Math {
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			for (int n = Expression.Length; n > 0; n--)
 			{
-				double a;
-				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out a))
+				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out double a))
 				{
 					if (a >= -2147483648.0 & a <= 2147483647.0)
+					{
+						Value = (int)System.Math.Round(a);
+						return true;
+					}
+					else break;
+				}
+			}
+			Value = 0;
+			return false;
+		}
+
+		/// <summary>Parses a byte bounded number formatted as a Visual Basic 6 string</summary>
+		/// <param name="Expression">The expression to parse</param>
+		/// <param name="Value">The value to return (Default 0.0)</param>
+		/// <returns>True if parsing succeds, false otherwise</returns>
+		public static bool TryParseByteVb6(string Expression, out int Value)
+		{
+			if (Expression.IndexOf(',') != -1)
+			{
+				Value = 0;
+				return false;
+			}
+			Expression = TrimInside(Expression);
+			CultureInfo Culture = CultureInfo.InvariantCulture;
+			for (int n = Expression.Length; n > 0; n--)
+			{
+				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out double a))
+				{
+					if (a >= 0 & a <= 255)
 					{
 						Value = (int)System.Math.Round(a);
 						return true;
@@ -104,8 +131,7 @@ namespace OpenBveApi.Math {
 		/// <returns>True if parsing succeds, false otherwise</returns>
 		public static bool TryParseDouble(string Expression, double[] UnitFactors, out double Value)
 		{
-			double a;
-			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out a))
+			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out double a))
 			{
 				Value = a * UnitFactors[UnitFactors.Length - 1];
 				return true;
@@ -145,8 +171,7 @@ namespace OpenBveApi.Math {
 		/// <returns>True if parsing succeds, false otherwise</returns>
 		public static bool TryParseDoubleVb6(string Expression, double[] UnitFactors, out double Value)
 		{
-			double a;
-			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out a))
+			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out double a))
 			{
 				Value = a * UnitFactors[UnitFactors.Length - 1];
 				return true;

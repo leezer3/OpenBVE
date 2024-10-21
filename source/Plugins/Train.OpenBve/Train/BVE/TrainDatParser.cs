@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -231,6 +231,7 @@ namespace Train.OpenBve
 			ReadhesionDeviceType ReAdhesionDevice = ReadhesionDeviceType.TypeA;
 			PassAlarmType passAlarm = PassAlarmType.None;
 			Train.Handles.HasLocoBrake = false;
+			Train.Specs.AveragesPressureDistribution = true;
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
 			double electricBrakeDelayUp = 0, electricBrakeDelayDown = 0;
 			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1, locoBrakeType = 0, driverPowerNotches = 0, driverBrakeNotches = 0;
@@ -255,6 +256,11 @@ namespace Train.OpenBve
 				switch (Lines[i].ToLowerInvariant()) {
 					case "#acceleration":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
+							if (string.IsNullOrEmpty(Lines[i]))
+							{
+								i++;
+								continue;
+							}
 							Array.Resize(ref AccelerationCurves, n + 1);
 							AccelerationCurves[n] = new BveAccelerationCurve();
 							string t = Lines[i] + ",";
@@ -1246,21 +1252,13 @@ namespace Train.OpenBve
 				Train.Handles.Brake.MaximumNotch--;
 			}
 			// apply train attributes
-			Train.Handles.Reverser.Driver = 0;
-			Train.Handles.Reverser.Actual = 0;
-			Train.Handles.Power.Driver = 0;
-			Train.Handles.Power.Safety = 0;
-			Train.Handles.Power.Actual = 0;
-			Train.Handles.Power.DelayedChanges = new HandleChange[] { };
-			Train.Handles.Brake.Driver = 0;
-			Train.Handles.Brake.Safety = 0;
-			Train.Handles.Brake.Actual = 0;
 			if (trainBrakeType == BrakeSystemType.AutomaticAirBrake) {
 				Train.Handles.HandleType = HandleType.TwinHandle;
 				Train.Handles.HasHoldBrake = false;
 			}
 			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm, Train.Cars[DriverCar]);
 			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
+			Train.SafetySystems.OverspeedDevice = new OverspeedDevice(Train);
 			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
 			Train.SafetySystems.Headlights = new LightSource(1);
 			switch (Plugin.CurrentOptions.TrainStart)
@@ -1277,14 +1275,12 @@ namespace Train.OpenBve
 					if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
 					{
 						Train.Handles.Brake.Driver = (int)AirBrakeHandleState.Service;
-						Train.Handles.Brake.Safety = (int)AirBrakeHandleState.Service;
 						Train.Handles.Brake.Actual = (int)AirBrakeHandleState.Service;
 					}
 					else
 					{
 						int notch = (int)Math.Round(0.7 * Train.Handles.Brake.MaximumNotch);
 						Train.Handles.Brake.Driver = notch;
-						Train.Handles.Brake.Safety = notch;
 						Train.Handles.Brake.Actual = notch;
 					}
 					Train.Handles.EmergencyBrake.Driver = false;
@@ -1304,13 +1300,11 @@ namespace Train.OpenBve
 					if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
 					{
 						Train.Handles.Brake.Driver = (int)AirBrakeHandleState.Service;
-						Train.Handles.Brake.Safety = (int)AirBrakeHandleState.Service;
 						Train.Handles.Brake.Actual = (int)AirBrakeHandleState.Service;
 					}
 					else
 					{
 						Train.Handles.Brake.Driver = Train.Handles.Brake.MaximumNotch;
-						Train.Handles.Brake.Safety = Train.Handles.Brake.MaximumNotch;
 						Train.Handles.Brake.Actual = Train.Handles.Brake.MaximumNotch;
 					}
 				
@@ -1329,13 +1323,11 @@ namespace Train.OpenBve
 					if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
 					{
 						Train.Handles.Brake.Driver = (int)AirBrakeHandleState.Service;
-						Train.Handles.Brake.Safety = (int)AirBrakeHandleState.Service;
 						Train.Handles.Brake.Actual = (int)AirBrakeHandleState.Service;
 					}
 					else
 					{
 						Train.Handles.Brake.Driver = Train.Handles.Brake.MaximumNotch;
-						Train.Handles.Brake.Safety = Train.Handles.Brake.MaximumNotch;
 						Train.Handles.Brake.Actual = Train.Handles.Brake.MaximumNotch;
 					}
 					Train.Handles.EmergencyBrake.Driver = true;
@@ -1384,6 +1376,16 @@ namespace Train.OpenBve
 				Train.Cars[i].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * Train.Cars[i].Specs.CenterOfGravityHeight / Train.Cars[i].Width);
 			}
 
+			if (Cars == 1)
+			{
+				Train.Cars[Train.Cars.Length - 1].BeaconReceiver.TriggerType = EventTriggerType.SingleCarTrain;
+			}
+			else
+			{
+				Train.Cars[Train.Cars.Length - 1].BeaconReceiver.TriggerType = EventTriggerType.TrainRear;
+			}
+			
+
 			Plugin.MotorSoundTables = Tables;
 			Plugin.AccelerationCurves = AccelerationCurves;
 			Plugin.MaximumAcceleration = MaximumAcceleration;
@@ -1402,11 +1404,13 @@ namespace Train.OpenBve
 					{
 						Train.Cars[i].Specs.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
 					}
+					Train.Cars[i].Specs.AccelerationCurveMaximum = MaximumAcceleration;
 				} else {
 					// trailer car
 					Train.Cars[i].EmptyMass = TrailerCarMass;
 					Train.Cars[i].CargoMass = 0;
 					Train.Cars[i].Specs.AccelerationCurves = new AccelerationCurve[] { };
+					Train.Cars[i].Specs.AccelerationCurveMaximum = 0;
 				}
 			}
 			// driver

@@ -254,9 +254,7 @@ namespace TrainEditor2.Models.Panels
 
 			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[0]) || SelectedTreeItem == TreeItem.Children[2].Children[0])
 			{
-				Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-
-				IEnumerable<PilotLampElement> pilotLamps = screen != null ? screen.PanelElements.OfType<PilotLampElement>() : PanelElements.OfType<PilotLampElement>();
+				IEnumerable<PilotLampElement> pilotLamps = SelectedTreeItem.Parent.Parent.Tag is Screen screen ? screen.PanelElements.OfType<PilotLampElement>() : PanelElements.OfType<PilotLampElement>();
 
 				foreach (PilotLampElement pilotLamp in pilotLamps)
 				{
@@ -268,9 +266,7 @@ namespace TrainEditor2.Models.Panels
 
 			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[1]) || SelectedTreeItem == TreeItem.Children[2].Children[1])
 			{
-				Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-
-				IEnumerable<NeedleElement> needles = screen != null ? screen.PanelElements.OfType<NeedleElement>() : PanelElements.OfType<NeedleElement>();
+				IEnumerable<NeedleElement> needles = SelectedTreeItem.Parent.Parent.Tag is Screen screen ? screen.PanelElements.OfType<NeedleElement>() : PanelElements.OfType<NeedleElement>();
 
 				foreach (NeedleElement needle in needles)
 				{
@@ -282,9 +278,7 @@ namespace TrainEditor2.Models.Panels
 
 			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[2]) || SelectedTreeItem == TreeItem.Children[2].Children[2])
 			{
-				Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-
-				IEnumerable<DigitalNumberElement> digitalNumbers = screen != null ? screen.PanelElements.OfType<DigitalNumberElement>() : PanelElements.OfType<DigitalNumberElement>();
+				IEnumerable<DigitalNumberElement> digitalNumbers = SelectedTreeItem.Parent.Parent.Tag is Screen screen ? screen.PanelElements.OfType<DigitalNumberElement>() : PanelElements.OfType<DigitalNumberElement>();
 
 				foreach (DigitalNumberElement digitalNumber in digitalNumbers)
 				{
@@ -296,9 +290,7 @@ namespace TrainEditor2.Models.Panels
 
 			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[3]) || SelectedTreeItem == TreeItem.Children[2].Children[3])
 			{
-				Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-
-				IEnumerable<DigitalGaugeElement> digitalGauges = screen != null ? screen.PanelElements.OfType<DigitalGaugeElement>() : PanelElements.OfType<DigitalGaugeElement>();
+				IEnumerable<DigitalGaugeElement> digitalGauges = SelectedTreeItem.Parent.Parent.Tag is Screen screen ? screen.PanelElements.OfType<DigitalGaugeElement>() : PanelElements.OfType<DigitalGaugeElement>();
 
 				foreach (DigitalGaugeElement digitalGauge in digitalGauges)
 				{
@@ -310,9 +302,7 @@ namespace TrainEditor2.Models.Panels
 
 			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[4]) || SelectedTreeItem == TreeItem.Children[2].Children[4])
 			{
-				Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-
-				IEnumerable<LinearGaugeElement> linearGauges = screen != null ? screen.PanelElements.OfType<LinearGaugeElement>() : PanelElements.OfType<LinearGaugeElement>();
+				IEnumerable<LinearGaugeElement> linearGauges = SelectedTreeItem.Parent.Parent.Tag is Screen screen ? screen.PanelElements.OfType<LinearGaugeElement>() : PanelElements.OfType<LinearGaugeElement>();
 
 				foreach (LinearGaugeElement linearGauge in linearGauges)
 				{
@@ -324,9 +314,7 @@ namespace TrainEditor2.Models.Panels
 
 			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[5]) || SelectedTreeItem == TreeItem.Children[2].Children[5])
 			{
-				Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-
-				IEnumerable<TimetableElement> timetables = screen != null ? screen.PanelElements.OfType<TimetableElement>() : PanelElements.OfType<TimetableElement>();
+				IEnumerable<TimetableElement> timetables = SelectedTreeItem.Parent.Parent.Tag is Screen screen ? screen.PanelElements.OfType<TimetableElement>() : PanelElements.OfType<TimetableElement>();
 
 				foreach (TimetableElement timetable in timetables)
 				{
@@ -351,7 +339,6 @@ namespace TrainEditor2.Models.Panels
 
 		internal void UpdateListItem(ListViewItemModel item)
 		{
-			Screen screen = item.Tag as Screen;
 			PilotLampElement pilotLamp = item.Tag as PilotLampElement;
 			NeedleElement needle = item.Tag as NeedleElement;
 			DigitalNumberElement digitalNumber = item.Tag as DigitalNumberElement;
@@ -360,7 +347,7 @@ namespace TrainEditor2.Models.Panels
 			TimetableElement timetable = item.Tag as TimetableElement;
 			TouchElement touch = item.Tag as TouchElement;
 
-			if (screen != null)
+			if (item.Tag is Screen screen)
 			{
 				item.Texts[0] = screen.Number.ToString(culture);
 				item.Texts[1] = screen.Layer.ToString(culture);

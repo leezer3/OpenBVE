@@ -33,7 +33,6 @@ using System.Xml;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Linq;
-using System.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
@@ -296,8 +295,7 @@ namespace Plugin
 												for (int j = 0; j < Verticies.Length; j++)
 												{
 													//This is the position of the vertex in the temp array
-													int currentVertex;
-													if (!int.TryParse(Verticies[j], out currentVertex))
+													if (!int.TryParse(Verticies[j], out int currentVertex))
 													{
 														Plugin.currentHost.AddMessage(MessageType.Error, false, Verticies[j] + " does not parse to a valid Vertex in " + node.Name + " in Loksim3D object file " + FileName);
 														continue;
@@ -315,15 +313,13 @@ namespace Plugin
 													{
 														string[] TextureCoords = childNode.Attributes["Texture"].Value.Split(';');
 														Vector2 currentCoords;
-														float OpenBVEWidth;
-														float OpenBVEHeight;
 														string[] splitCoords = TextureCoords[j].Split(',');
-														if (!float.TryParse(splitCoords[0], out OpenBVEWidth))
+														if (!float.TryParse(splitCoords[0], out float OpenBVEWidth))
 														{
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid texture width specified in " + node.Name + " in Loksim3D object file " + FileName);
 															continue;
 														}
-														if (!float.TryParse(splitCoords[1], out OpenBVEHeight))
+														if (!float.TryParse(splitCoords[1], out float OpenBVEHeight))
 														{
 															Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid texture height specified in " + node.Name + " in Loksim3D object file " + FileName);
 															continue;

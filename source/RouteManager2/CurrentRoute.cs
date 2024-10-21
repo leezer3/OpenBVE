@@ -11,6 +11,7 @@ using RouteManager2.Climate;
 using RouteManager2.SignalManager;
 using RouteManager2.SignalManager.PreTrain;
 using RouteManager2.Stations;
+using RouteManager2.Tracks;
 
 namespace RouteManager2
 {
@@ -81,7 +82,7 @@ namespace RouteManager2
 
 		public Atmosphere Atmosphere;
 
-		public double[] BufferTrackPositions = { };
+		public List<BufferStop> BufferTrackPositions = new List<BufferStop>();
 
 		/// <summary>The current in game time, expressed as the number of seconds since midnight on the first day</summary>
 		public double SecondsSinceMidnight;
@@ -95,17 +96,16 @@ namespace RouteManager2
 		/// <summary>Controls the object disposal mode</summary>
 		public ObjectDisposalMode AccurateObjectDisposal;
 
+		/// <summary>All switches on the route</summary>
+		public Dictionary<Guid, Switch> Switches;
+
 		public CurrentRoute(HostInterface host, BaseRenderer renderer)
 		{
 			currentHost = host;
 			this.renderer = renderer;
 			
 			Tracks = new Dictionary<int, Track>();
-			Track t = new Track
-			{
-				Elements = new TrackElement[0]
-			};
-			Tracks.Add(0, t);
+			Tracks.Add(0, new Track());
 			Sections = new Section[0];
 			Stations = new RouteStation[0];
 			BogusPreTrainInstructions = new BogusPreTrainInstruction[0];
@@ -134,8 +134,7 @@ namespace RouteManager2
 			 * and use a while loop
 			 * https://github.com/leezer3/OpenBVE/issues/557
 			 */
-			Section nextSectionToUpdate;
-			UpdateSection(Sections.LastOrDefault(), out nextSectionToUpdate);
+			UpdateSection(Sections.LastOrDefault(), out Section nextSectionToUpdate);
 			while (nextSectionToUpdate != null)
 			{
 				UpdateSection(nextSectionToUpdate, out nextSectionToUpdate);
@@ -146,8 +145,7 @@ namespace RouteManager2
 		/// <param name="SectionIndex"></param>
 		public void UpdateSection(int SectionIndex)
 		{
-			Section nextSectionToUpdate;
-			UpdateSection(Sections[SectionIndex], out nextSectionToUpdate);
+			UpdateSection(Sections[SectionIndex], out Section nextSectionToUpdate);
 			while (nextSectionToUpdate != null)
 			{
 				UpdateSection(nextSectionToUpdate, out nextSectionToUpdate);

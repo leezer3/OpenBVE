@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
@@ -119,18 +120,9 @@ namespace OpenBveApi.Routes
 		/// <summary>Call this method to update a single track follower on an absolute basis</summary>
 		/// <param name="NewTrackPosition">The new absolute track position of the follower</param>
 		/// <param name="UpdateWorldCoordinates">Whether to update the world co-ordinates</param>
-		/// <param name="AddTrackInaccuracy">Whether to add track innacuracy</param>
+		/// <param name="AddTrackInaccuracy">Whether to add track inaccuracy</param>
 		public void UpdateAbsolute(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccuracy)
 		{
-			if (TrackIndex == 0 && (currentHost.Tracks[0].Elements == null || currentHost.Tracks[TrackIndex].Elements.Length == 0))
-			{
-				/*
-				 * Used for displaying trains in Object Viewer
-				 * As we have no track, just update the Z value with the new pos
-				 */
-				WorldPosition.Z = NewTrackPosition;
-				return;
-			}
 			if (!currentHost.Tracks.ContainsKey(TrackIndex) || currentHost.Tracks[TrackIndex].Elements.Length == 0) return;
 			int i = System.Math.Min(currentHost.Tracks[TrackIndex].Elements.Length - 1, LastTrackElement);
 			while (i >= 0)
@@ -203,7 +195,12 @@ namespace OpenBveApi.Routes
 			{
 				if (db != 0.0)
 				{
-					if (currentHost.Tracks[TrackIndex].Elements[i].CurveRadius != 0.0)
+					if (currentHost.Tracks[TrackIndex].Elements[i].WorldDirection == Vector3.Zero && currentHost.Application == HostApplication.ObjectViewer)
+					{
+						// Slightly better bodge, but Object Viewer really needs the track fixing properly
+						WorldPosition = db * Vector3.Forward;
+					}
+					else if (currentHost.Tracks[TrackIndex].Elements[i].CurveRadius != 0.0)
 					{
 						// curve
 						double r = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius;
@@ -341,10 +338,8 @@ namespace OpenBveApi.Routes
 						t = 1.0;
 					}
 
-					double x1, y1, c1;
-					double x2, y2, c2;
-					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x1, out y1, out c1);
-					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i + 1].CsvRwAccuracyLevel, out x2, out y2, out c2);
+					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out double x1, out double y1, out double c1);
+					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i + 1].CsvRwAccuracyLevel, out double x2, out double y2, out double c2);
 					x = (1.0 - t) * x1 + t * x2;
 					y = (1.0 - t) * y1 + t * y2;
 					c = (1.0 - t) * c1 + t * c2;
@@ -386,7 +381,7 @@ namespace OpenBveApi.Routes
 
 		private void CheckEvents(int ElementIndex, int Direction, double OldDelta, double NewDelta)
 		{
-			if (this.TriggerType == EventTriggerType.None || currentHost.Tracks[TrackIndex].Elements[ElementIndex].Events.Length == 0)
+			if (TriggerType == EventTriggerType.None || currentHost.Tracks[TrackIndex].Elements[ElementIndex].Events == null || currentHost.Tracks[TrackIndex].Elements[ElementIndex].Events.Count == 0)
 			{
 				return;
 			}
@@ -394,10 +389,10 @@ namespace OpenBveApi.Routes
 			int Index = TrackIndex;
 			if (Direction < 0)
 			{
-				for (int j = currentHost.Tracks[Index].Elements[ElementIndex].Events.Length - 1; j >= 0; j--)
+				for (int j = currentHost.Tracks[Index].Elements[ElementIndex].Events.Count - 1; j >= 0; j--)
 				{
 					GeneralEvent e = currentHost.Tracks[Index].Elements[ElementIndex].Events[j];
-					if (currentHost.Tracks[Index].Elements[ElementIndex].Events.Length == 0)
+					if (currentHost.Tracks[Index].Elements[ElementIndex].Events.Count == 0)
 					{
 						return;
 					}
@@ -410,7 +405,7 @@ namespace OpenBveApi.Routes
 			}
 			else if (Direction > 0)
 			{
-				for (int j = 0; j < currentHost.Tracks[Index].Elements[ElementIndex].Events.Length; j++)
+				for (int j = 0; j < currentHost.Tracks[Index].Elements[ElementIndex].Events.Count; j++)
 				{
 					GeneralEvent e = currentHost.Tracks[Index].Elements[ElementIndex].Events[j];
 					if (OldDelta < e.TrackPositionDelta & NewDelta >= e.TrackPositionDelta)

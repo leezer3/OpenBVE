@@ -1,4 +1,4 @@
-﻿#pragma warning disable 169, 414 //We don't use a bunch of fields, but keep them in case required later
+﻿#pragma warning disable 169, 414, IDE0052 //We don't use a bunch of fields, but keep them in case required later
 // ReSharper disable NotAccessedField.Local
 // ReSharper disable UnusedMember.Local
 using System;
@@ -13,14 +13,14 @@ using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace Texture.Tga
 {
-	public partial class Plugin : TextureInterface
+	public partial class Plugin
 	{
 		//Extension area information
 		private int ExtensionAreaSize;
-		//Date, time, author name, job name, job time and comments not needed....
-		//Version number
-		private Color ExtensionAreaKeyColor;
-		private int PixelAspectRatioNumerator;
+        //Date, time, author name, job name, job time and comments not needed....
+        //Version number
+        private Color ExtensionAreaKeyColor;
+        private int PixelAspectRatioNumerator;
 		private int PixelAspectRatioDenominator;
 		private int GammaNumerator;
 		private int GammaDenominator;

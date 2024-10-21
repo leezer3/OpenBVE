@@ -40,7 +40,7 @@ namespace Texture.Dds
 		public PixelFormat pixelFormat;
 
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-		public struct ddscapsstruct
+		public struct DdsCaps
 		{
 			public uint caps1;
 			public uint caps2;
@@ -48,7 +48,7 @@ namespace Texture.Dds
 			public uint caps4;
 		}
 
-		public ddscapsstruct ddscaps;
+		public DdsCaps ddscaps;
 		public uint texturestage;
 
 		internal bool Check16BitComponents()

@@ -158,9 +158,9 @@ namespace OpenBveApi.Packages
 		/// <param name="File">The database file</param>
 		/// <param name="ErrorMessage">The error message to return if failed</param>
 		/// <returns>Whether the loading succeded</returns>
-		public static bool LoadDatabase(string Folder, string File, out string ErrorMessage)
+		public static bool LoadDatabase(string Folder, string File, out string[] ErrorMessage)
 		{
-			ErrorMessage = string.Empty;
+			ErrorMessage = new string[]{ };
 			currentDatabaseFolder = Folder;
 			currentDatabaseFile = File;
 			if (System.IO.File.Exists(currentDatabaseFile))
@@ -174,7 +174,7 @@ namespace OpenBveApi.Packages
 						currentDatabase = (PackageDatabase) listReader.Deserialize(reader);
 						if (currentDatabase.DatabaseVersion > PackageDatabase.ExpectedDatabaseVersion)
 						{
-							ErrorMessage = @"packages_database_newer_expected";
+							ErrorMessage = new [] {"packages","database_newer_expected"};
 						}
 
 						if (currentDatabase.DatabaseVersion < PackageDatabase.ExpectedDatabaseVersion)
@@ -193,7 +193,7 @@ namespace OpenBveApi.Packages
 				catch
 				{
 					//Loading the DB failed, so just create a new one
-					ErrorMessage = @"packages_database_invalid_xml";
+					ErrorMessage = new[] {"packages","database_invalid_xml"};
 					currentDatabase = null;
 				}
 			}
@@ -509,7 +509,7 @@ namespace OpenBveApi.Packages
 		/// <summary>This function cleans empty subdirectories after the uninstallation of a package</summary>
 		/// <param name="currentDirectory">The directory to clean (Normally the root package install directory)</param>
 		/// <param name="Result">The results output string</param>
-		public static void cleanDirectory(string currentDirectory, ref string Result)
+		public static void CleanDirectory(string currentDirectory, ref string Result)
 		{
 			if (!Directory.Exists(currentDirectory))
 			{
@@ -517,9 +517,9 @@ namespace OpenBveApi.Packages
 			}
 			foreach (var directory in Directory.EnumerateDirectories(currentDirectory))
 			{
-				cleanDirectory(directory, ref Result);		
+				CleanDirectory(directory, ref Result);		
 			}
-			IEnumerable<string> entries = Directory.EnumerateFileSystemEntries(currentDirectory,"*", SearchOption.AllDirectories);
+			string[] entries = Directory.EnumerateFileSystemEntries(currentDirectory,"*", SearchOption.AllDirectories).ToArray();
 			if (!entries.Any())
 			{
 				Directory.Delete(currentDirectory, false);
@@ -527,7 +527,7 @@ namespace OpenBveApi.Packages
 			}
 			else
 			{
-				if (entries.Count() == 1)
+				if (entries.Length == 1)
 				{
 					if (File.Exists(currentDirectory + "thumbs.db"))
 					{

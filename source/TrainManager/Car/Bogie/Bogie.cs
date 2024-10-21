@@ -2,6 +2,7 @@
 using LibRender2.Trains;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
 namespace TrainManager.Car
@@ -45,8 +46,11 @@ namespace TrainManager.Car
 			baseCar = car;
 			Rear = IsRear;
 			CarSections = new CarSection[] { };
+			CurrentCarSection = -1;
 			FrontAxle = new Axle(TrainManagerBase.currentHost, car.baseTrain, car);
+			FrontAxle.Follower.TriggerType = EventTriggerType.FrontBogieAxle;
 			RearAxle = new Axle(TrainManagerBase.currentHost, car.baseTrain, car);
+			RearAxle.Follower.TriggerType = EventTriggerType.RearBogieAxle;
 		}
 
 		public void UpdateObjects(double TimeElapsed, bool ForceUpdate)

@@ -37,9 +37,9 @@ namespace OpenBveApi.Routes
 		/// <param name="orientation">The absolute world orientation of the object.</param>
 		public void Add(ObjectState objectState, Orientation3 orientation)
 		{
-			if (Objects.Contains(objectState))
+			if (Objects.Contains(objectState) || !Vector3.IsFinite(objectState.WorldPosition))
 			{
-				// object state is already in the quad tree
+				// object state is already in the quad tree, or has an invalid world position
 				return;
 			}
 			Objects.Add(objectState);
@@ -146,7 +146,6 @@ namespace OpenBveApi.Routes
 											new QuadTreeBounds(left, right, near, far),
 											null
 										);
-										child.BoundingRectangle = QuadTreeBounds.Uninitialized;
 										intern.Children[index] = child;
 										node = child;
 									}

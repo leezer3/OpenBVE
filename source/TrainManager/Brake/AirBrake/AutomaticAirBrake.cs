@@ -182,6 +182,10 @@ namespace TrainManager.BrakeSystems
 
 					auxiliaryReservoir.CurrentPressure -= 0.5 * r;
 					brakeCylinder.CurrentPressure += 0.5 * s;
+					// as the pressure is now *increasing* stop our decrease sounds
+					AirHigh?.Stop();
+					Air?.Stop();
+					AirZero?.Stop();
 				}
 
 				// air sound

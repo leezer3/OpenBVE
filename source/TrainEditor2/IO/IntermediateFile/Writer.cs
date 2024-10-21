@@ -121,10 +121,8 @@ namespace TrainEditor2.IO.IntermediateFile
 			WriteMoveNode(carNode, car.Move);
 			WriteBrakeNode(carNode, car.Brake);
 			WritePressureNode(carNode, car.Pressure);
-
-			MotorCar motorCar = car as MotorCar;
-
-			if (motorCar != null)
+			
+			if (car is MotorCar motorCar)
 			{
 				WriteAccelerationNode(carNode, motorCar.Acceleration);
 				WriteMotorNode(carNode, motorCar.Motor);

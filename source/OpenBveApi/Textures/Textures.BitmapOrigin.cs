@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using OpenBveApi.Colors;
-using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace OpenBveApi.Textures
 {

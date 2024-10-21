@@ -838,7 +838,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 						if (Utilities.TryParse(MaxVelocity.Value, NumberRange.NonNegative, out max) && min >= max)
 						{
-							message = "MinはMax未満でなければなりません。";
+							message = Utilities.GetInterfaceString("message", "mustbe_less_than");
 						}
 					}
 
@@ -865,7 +865,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 						if (Utilities.TryParse(MinVelocity.Value, NumberRange.NonNegative, out min) && max <= min)
 						{
-							message = "MinはMax未満でなければなりません。";
+							message = Utilities.GetInterfaceString("message", "mustbe_less_than");
 						}
 					}
 
@@ -892,7 +892,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 						if (Utilities.TryParse(MaxPitch.Value, NumberRange.NonNegative, out max) && min >= max)
 						{
-							message = "MinはMax未満でなければなりません。";
+							message = Utilities.GetInterfaceString("message", "mustbe_less_than");
 						}
 					}
 
@@ -919,7 +919,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 						if (Utilities.TryParse(MinPitch.Value, NumberRange.NonNegative, out min) && max <= min)
 						{
-							message = "MinはMax未満でなければなりません。";
+							message = Utilities.GetInterfaceString("message", "mustbe_less_than");
 						}
 					}
 
@@ -946,7 +946,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 						if (Utilities.TryParse(MaxVolume.Value, NumberRange.NonNegative, out max) && min >= max)
 						{
-							message = "MinはMax未満でなければなりません。";
+							message = Utilities.GetInterfaceString("message", "mustbe_less_than");
 						}
 					}
 
@@ -973,7 +973,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 						if (Utilities.TryParse(MinVolume.Value, NumberRange.NonNegative, out min) && max <= min)
 						{
-							message = "MinはMax未満でなければなりません。";
+							message = Utilities.GetInterfaceString("message", "mustbe_less_than");
 						}
 					}
 

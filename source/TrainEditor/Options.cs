@@ -28,7 +28,6 @@ namespace TrainEditor
 				System.IO.Directory.CreateDirectory(optionsFolder);
 			}
 			CurrentOptions = new Options();
-			CultureInfo Culture = CultureInfo.InvariantCulture;
 			string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_te.cfg");
 			if (!System.IO.File.Exists(configFile))
 			{

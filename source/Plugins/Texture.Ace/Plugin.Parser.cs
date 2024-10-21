@@ -5,7 +5,8 @@ using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 
 namespace Texture.Ace {
-	public partial class Plugin : TextureInterface {
+	public partial class Plugin
+	{
 		
 		// --- get colors ---
 		

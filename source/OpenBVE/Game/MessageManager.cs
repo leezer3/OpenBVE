@@ -25,6 +25,11 @@ namespace OpenBve
 		/// <param name="key">The textual key identifiying this message</param>
 		internal static void AddMessage(string Text, MessageDependency Depencency, GameMode Mode, MessageColor Color, double Timeout, string key)
 		{
+			if (TrainManagerBase.PlayerTrain == null)
+			{
+				Program.FileSystem.AppendToLogFile(Text);
+				return;
+			}
 			if (Interface.CurrentOptions.GameMode <= Mode)
 			{
 				GameMessage message = new GameMessage

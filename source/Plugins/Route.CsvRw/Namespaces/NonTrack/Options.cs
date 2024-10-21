@@ -76,8 +76,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						int a;
-						if (!NumberFormats.TryParseIntVb6(Arguments[0], out a))
+						if (!NumberFormats.TryParseIntVb6(Arguments[0], out int a))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -103,8 +102,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						int a;
-						if (!NumberFormats.TryParseIntVb6(Arguments[0], out a))
+						if (!NumberFormats.TryParseIntVb6(Arguments[0], out int a))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -126,8 +124,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						int a;
-						if (!NumberFormats.TryParseIntVb6(Arguments[0], out a))
+						if (!NumberFormats.TryParseIntVb6(Arguments[0], out int a))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -149,8 +146,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						int a;
-						if (!NumberFormats.TryParseIntVb6(Arguments[0], out a))
+						if (!NumberFormats.TryParseIntVb6(Arguments[0], out int a))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -171,8 +167,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						int a;
-						if (!NumberFormats.TryParseIntVb6(Arguments[0], out a))
+						if (!NumberFormats.TryParseIntVb6(Arguments[0], out int a))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -193,8 +188,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						int a;
-						if (!NumberFormats.TryParseIntVb6(Arguments[0], out a))
+						if (!NumberFormats.TryParseIntVb6(Arguments[0], out int a))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}

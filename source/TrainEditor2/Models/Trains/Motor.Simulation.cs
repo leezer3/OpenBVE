@@ -118,7 +118,7 @@ namespace TrainEditor2.Models.Trains
 			Simulation.TrainManager.TrainManager.PlayerTrain.Car.CurrentSpeed = Simulation.TrainManager.TrainManager.PlayerTrain.Car.Specs.PerceivedSpeed = nowSpeed / 3.6;
 			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Specs.MotorAcceleration = outputAcceleration / 3.6;
 
-			Simulation.TrainManager.TrainManager.PlayerTrain.Car.UpdateRunSounds(deltaTime, RunIndex);
+			Simulation.TrainManager.TrainManager.PlayerTrain.Car.Run.Update(deltaTime, RunIndex);
 
 			if (Simulation.TrainManager.TrainManager.PlayerTrain.Car.Sounds.Motor is BVEMotorSound motorSound)
 			{

@@ -56,6 +56,7 @@ namespace RouteViewer {
 		// load
 		internal static void Load(string RouteFile, Encoding RouteEncoding, Bitmap bitmap = null)
 		{
+			Program.currentGameWindow.TargetRenderFrequency = 0;
 			// reset
 			Game.Reset();
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);
@@ -172,7 +173,10 @@ namespace RouteViewer {
 
 			//Set the route and train folders in the info class
 			// ReSharper disable once UnusedVariable
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
 			Task loadThreaded = LoadThreaded();
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
+
 		}
 
 		private static void LoadEverythingThreaded() {

@@ -66,16 +66,14 @@ namespace Train.OpenBve
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						PanelSections Section;
-						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out Section);
+						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out PanelSections Section);
 						switch (Section) {
 								// panel
 							case PanelSections.This:
 								i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 									int j = Lines[i].IndexOf('='); if (j >= 0)
 									{
-										PanelKey Key;
-										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 										string Value = Lines[i].Substring(j + 1).TrimStart();
 										switch (Key) {
 											case PanelKey.Resolution:
@@ -219,6 +217,15 @@ namespace Train.OpenBve
 																		}
 																	}
 																	break;
+																case 483:
+																	switch (trainName.ToUpperInvariant())
+																	{
+																		case "[HOSHIRAIL] KCIC CR400-AF":
+																			PanelCenter.X = 517;
+																			PanelCenter.Y = 300;
+																			break;
+																	}
+																	break;
 															}
 															
 														}
@@ -248,6 +255,13 @@ namespace Train.OpenBve
 																	{
 																		// 81-71: Bust panel origin means a flying cab....
 																		PanelOrigin.Y = 0;
+																	}
+																	break;
+																case "[HOSHIRAIL] KCIC CR400-AF":
+																	if (PanelResolution == 826 && PanelOrigin.X == 350)
+																	{
+																		PanelOrigin.X = 517;
+																		PanelOrigin.Y = 300;
 																	}
 																	break;
 															}
@@ -286,7 +300,7 @@ namespace Train.OpenBve
 				if (!File.Exists(PanelDaytimeImage)) {
 					Plugin.currentHost.AddMessage(MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
 				} else {
-					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true);
+					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true, 20000);
 					Texture tnight = null;
 					if (PanelNighttimeImage != null) {
 						if (!File.Exists(PanelNighttimeImage)) {
@@ -319,12 +333,12 @@ namespace Train.OpenBve
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 					{
-						PanelSections Section;
-						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out Section);
+						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out PanelSections Section);
 						switch (Section) {
 							case PanelSections.PilotLamp:
 								{
 									string Subject = "true";
+									string Function = string.Empty;
 									double LocationX = 0.0, LocationY = 0.0;
 									string DaytimeImage = null, NighttimeImage = null;
 									Color24 TransparentColor = Color24.Blue;
@@ -333,12 +347,14 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
 													Subject = Value;
+													break;
+												case PanelKey.Function: 
+													Function = Value;
 													break;
 												case PanelKey.Location:
 													int k = Value.IndexOf(',');
@@ -395,7 +411,7 @@ namespace Train.OpenBve
 									}
 									// create element
 									if (DaytimeImage != null) {
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
 											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
@@ -406,7 +422,15 @@ namespace Train.OpenBve
 										string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
 										try
 										{
-											Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
+											if (!string.IsNullOrEmpty(Function))
+											{
+												Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, Function, true);
+											}
+											else
+											{
+												Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
+											}
+											
 										}
 										catch
 										{
@@ -417,6 +441,7 @@ namespace Train.OpenBve
 							case PanelSections.Needle:
 								{
 									string Subject = "true";
+									string Function = string.Empty;
 									double LocationX = 0.0, LocationY = 0.0;
 									string DaytimeImage = null, NighttimeImage = null;
 									Color32 Color = Color32.White;
@@ -432,12 +457,14 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
 													Subject = Value;
+													break;
+												case PanelKey.Function:
+													Function = Value;
 													break;
 												case PanelKey.Location:
 													{
@@ -569,7 +596,7 @@ namespace Train.OpenBve
 									// create element
 									if (DaytimeImage != null)
 									{
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 										Texture tnight = null;
 										if (NighttimeImage != null)
 										{
@@ -614,7 +641,14 @@ namespace Train.OpenBve
 										}
 										try
 										{
-											Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
+											if (!string.IsNullOrEmpty(Function))
+											{
+												Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, Function, true);
+											}
+											else
+											{
+												Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
+											}
 										}
 										catch
 										{
@@ -630,6 +664,7 @@ namespace Train.OpenBve
 							case PanelSections.LinearGauge:
 									{
 									string Subject = "true";
+									string Function = string.Empty;
 									int Width = 0;
 									Vector2 Direction = new Vector2(1,0);
 									double LocationX = 0.0, LocationY = 0.0;
@@ -641,12 +676,14 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
 													Subject = Value;
+													break;
+												case PanelKey.Function:
+													Function = Value;
 													break;
 												case PanelKey.Location:
 													int k = Value.IndexOf(',');
@@ -739,7 +776,7 @@ namespace Train.OpenBve
 									}
 									// create element
 									if (DaytimeImage != null) {
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true);
+										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
 											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
@@ -751,12 +788,19 @@ namespace Train.OpenBve
 											break;
 										}
 										string tf = GetInfixFunction(Car.baseTrain, Subject, Minimum, Maximum, Width, tday.Width, Section + " in " + FileName);
-										if (tf != String.Empty)
+										if (!string.IsNullOrEmpty(tf) || !string.IsNullOrEmpty(Function))
 										{
 											Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
 											try
 											{
-												Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, tf, false);
+												if (!string.IsNullOrEmpty(Function))
+												{
+													Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, Function, true);
+												}
+												else
+												{
+													Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, tf, false);
+												}
 											}
 											catch
 											{
@@ -768,6 +812,7 @@ namespace Train.OpenBve
 							case PanelSections.DigitalNumber:
 								{
 									string Subject = "true";
+									string Function = string.Empty;
 									double LocationX = 0.0, LocationY = 0.0;
 									string DaytimeImage = null, NighttimeImage = null;
 									Color24 TransparentColor = Color24.Blue;
@@ -776,12 +821,14 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
 													Subject = Value;
+													break;
+												case PanelKey.Function:
+													Function = Value;
 													break;
 												case PanelKey.Location:
 													int k = Value.IndexOf(',');
@@ -929,7 +976,14 @@ namespace Train.OpenBve
 											string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
 											try
 											{
-												Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+												if (!string.IsNullOrEmpty(Function))
+												{
+													Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, Function, true);
+												}
+												else
+												{
+													Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+												}
 											}
 											catch
 											{
@@ -965,6 +1019,7 @@ namespace Train.OpenBve
 							case PanelSections.DigitalGauge:
 								{
 									string Subject = "true";
+									string Function = string.Empty;
 									double LocationX = 0.0, LocationY = 0.0;
 									Color32 Color = Color32.Black;
 									double Radius = 0.0;
@@ -976,12 +1031,14 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Subject:
 													Subject = Value;
+													break;
+												case PanelKey.Function:
+													Function = Value;
 													break;
 												case PanelKey.Location:
 													int k = Value.IndexOf(',');
@@ -1121,7 +1178,14 @@ namespace Train.OpenBve
 										f += " " + a1.ToString(Culture) + " " + a0.ToString(Culture) + " fma";
 										try
 										{
-											Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, f, false);
+											if (!string.IsNullOrEmpty(Function))
+											{
+												Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, Function, true);
+											}
+											else
+											{
+												Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, f, false);
+											}
 										}
 										catch
 										{
@@ -1140,8 +1204,7 @@ namespace Train.OpenBve
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0)
 										{
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key) {
 												case PanelKey.Location:
@@ -1232,8 +1295,7 @@ namespace Train.OpenBve
 										if (j >= 0)
 										{
 											int k;
-											PanelKey Key;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Key);
+											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 											string Value = Lines[i].Substring(j + 1).TrimStart();
 											switch (Key)
 											{
@@ -1470,7 +1532,7 @@ namespace Train.OpenBve
 					currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\" + compatabilityString + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
 					TransparentColor = Color24.Blue;
 				}
-				Plugin.currentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true);
+				Plugin.currentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true, 20000);
 				drops.Add(drop);
 			}
 

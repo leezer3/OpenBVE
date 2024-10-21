@@ -1,5 +1,4 @@
-﻿using LibRender2.Cursors;
-using OpenBveApi.Objects;
+﻿using OpenBveApi.Objects;
 
 namespace LibRender2.Trains
 {

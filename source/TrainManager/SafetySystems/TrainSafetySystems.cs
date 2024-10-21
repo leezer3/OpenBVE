@@ -9,6 +9,8 @@ namespace TrainManager.SafetySystems
 		public PassAlarm PassAlarm;
 		/// <summary>The PilotLamp</summary>
 		public PilotLamp PilotLamp;
+		/// <summary>The overspeed device</summary>
+		public OverspeedDevice OverspeedDevice;
 		/// <summary>The station adjust alarm</summary>
 		public StationAdjustAlarm StationAdjust;
 		/// <summary>The state of the door interlock</summary>

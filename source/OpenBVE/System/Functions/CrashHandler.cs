@@ -4,7 +4,8 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.Hosts;
-
+// ReSharper disable LocalizableElement
+// Note: Crashes may occur before languages have been loaded, so this file cannot be localised
 namespace OpenBve
 {
     /// <summary>Provides functions for handling crashes, and producing an appropriate error log</summary>
@@ -93,7 +94,7 @@ namespace OpenBve
 			using (StreamWriter outputFile = new StreamWriter(CrashLog))
             {
                 //Basic information
-                outputFile.WriteLine(DateTime.Now);
+                outputFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 outputFile.WriteLine("OpenBVE " + Application.ProductVersion + " Crash Log");
                 var Platform = "Unknown";
                 if (OpenTK.Configuration.RunningOnWindows)
@@ -180,11 +181,13 @@ namespace OpenBve
         /// <summary>This function logs an exception caught whilst loading a route/ train to disk</summary>
         internal static void LoadingCrash(string ExceptionText, bool Train)
         {
+			// Attempt to gracefully shutdown the renderer to terminate hanging threads etc.
+			Program.Renderer.DeInitialize();
 			Program.FileSystem.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
 			using (StreamWriter outputFile = new StreamWriter(CrashLog))
             {
                 //Basic information
-                outputFile.WriteLine(DateTime.Now);
+                outputFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 outputFile.WriteLine("OpenBVE " + Application.ProductVersion + " Crash Log");
                 var Platform = "Unknown";
                 if (OpenTK.Configuration.RunningOnWindows)

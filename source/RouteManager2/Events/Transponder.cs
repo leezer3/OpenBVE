@@ -38,7 +38,7 @@ namespace RouteManager2.Events
 
 		public override void Trigger(int direction, TrackFollower trackFollower)
 		{
-			if (trackFollower.TriggerType == EventTriggerType.TrainFront)
+			if (trackFollower.TriggerType == EventTriggerType.TrainFront || trackFollower.TriggerType == EventTriggerType.SingleCarTrain)
 			{
 				int s = SectionIndex;
 

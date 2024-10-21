@@ -41,7 +41,7 @@ namespace RouteManager2.Events
 				return;
 			}
 
-			if (trackFollower.TriggerType == EventTriggerType.TrainFront)
+			if (trackFollower.TriggerType == EventTriggerType.TrainFront || trackFollower.TriggerType == EventTriggerType.SingleCarTrain)
 			{
 				if (direction > 0)
 				{

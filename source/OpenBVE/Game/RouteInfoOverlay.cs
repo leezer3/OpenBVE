@@ -58,11 +58,7 @@ namespace OpenBve
 		{
 			if (currentState == state.none)
 				return;
-			double xPos, zPos;
-			// size the image to half of the smallest screen size, but not larger than default size
-			// NO: compressing the image below its original size makes texs hard to read
-//			int		width		= Math.Min(Math.Min(Screen.Height, Screen.Width) / 2,
-//						Game.RouteInformation.DefaultRouteInfoSize);
+			Vector2 Pos = Vector2.Null;
 			Vector2	origin = Vector2.Null;
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 			// draw the relevant image
@@ -77,12 +73,12 @@ namespace OpenBve
 					int trainX = (int)Program.TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.X;
 					int trainZ = (int)Program.TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.Z;
 					// convert to route map coordinates
-					xPos = mapSize.X * (trainX - Program.CurrentRoute.Information.RouteMinX) /
+					Pos.X = mapSize.X * (trainX - Program.CurrentRoute.Information.RouteMinX) /
 							(Program.CurrentRoute.Information.RouteMaxX - Program.CurrentRoute.Information.RouteMinX) - trainDotRadius;
-					zPos = mapSize.Y - mapSize.Y * (trainZ - Program.CurrentRoute.Information.RouteMinZ) /
+					Pos.Y = mapSize.Y - mapSize.Y * (trainZ - Program.CurrentRoute.Information.RouteMinZ) /
 							(Program.CurrentRoute.Information.RouteMaxZ - Program.CurrentRoute.Information.RouteMinZ) - trainDotRadius;
 						// draw a dot at current train position
-						Program.Renderer.Rectangle.Draw(null, new Vector2(xPos, zPos),
+						Program.Renderer.Rectangle.Draw(null, Pos,
 							new Vector2(trainDotDiameter, trainDotDiameter),
 							Program.TrainManager.Trains[i].IsPlayerTrain ? playerTrainDotColour : trainDotColour);
 				}
@@ -92,10 +88,10 @@ namespace OpenBve
 				// get current train position in track
 				int trackPos	= (int)(TrainManager.PlayerTrain.FrontCarTrackPosition);
 				// convert to gradient profile offset
-				xPos = gradientSize.Y * (trackPos - Program.CurrentRoute.Information.GradientMinTrack) /
+				Pos.X = gradientSize.Y * (trackPos - Program.CurrentRoute.Information.GradientMinTrack) /
 						(Program.CurrentRoute.Information.GradientMaxTrack - Program.CurrentRoute.Information.GradientMinTrack);
 				// draw a vertical bar at the current train position
-				Program.Renderer.Rectangle.Draw(null, new Vector2(xPos, gradientSize.Y / 2),
+				Program.Renderer.Rectangle.Draw(null, new Vector2(Pos.X, gradientSize.Y / 2),
 					new Vector2(gradientPosWidth, gradientSize.Y / 2), gradientPosBar);
 				break;
 			}

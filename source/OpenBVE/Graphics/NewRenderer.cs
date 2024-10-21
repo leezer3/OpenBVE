@@ -18,7 +18,9 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.World;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using MouseCursor = OpenTK.MouseCursor;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve.Graphics
@@ -145,6 +147,10 @@ namespace OpenBve.Graphics
 					GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 				}
 			}
+			else
+			{
+				GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
+			}
 
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -184,7 +190,7 @@ namespace OpenBve.Graphics
 				Program.CurrentRoute.CurrentFog.Color.B = (byte)(Program.CurrentRoute.PreviousFog.Color.B * frc + Program.CurrentRoute.NextFog.Color.B * fr);
 				if (!Program.CurrentRoute.CurrentFog.IsLinear)
 				{
-					Program.CurrentRoute.CurrentFog.Density = (byte)(Program.CurrentRoute.PreviousFog.Density * frc + Program.CurrentRoute.NextFog.Density * fr);
+					Program.CurrentRoute.CurrentFog.Density = Program.CurrentRoute.PreviousFog.Density * frc + Program.CurrentRoute.NextFog.Density * fr;
 				}
 			}
 			else
@@ -478,6 +484,30 @@ namespace OpenBve.Graphics
 			GL.Disable(EnableCap.DepthTest);
 			overlays.Render(RealTimeElapsed);
 			OptionLighting = true;
+		}
+
+		public override void SetCursor(MouseCursor newCursor)
+		{
+			Program.currentGameWindow.Cursor = newCursor;
+		}
+
+		public override void SetWindowState(WindowState windowState)
+		{
+			Program.currentGameWindow.WindowState = windowState;
+			if (windowState == WindowState.Fullscreen)
+			{
+				// move origin appropriately
+				Program.currentGameWindow.X = 0;
+				Program.currentGameWindow.Y = 0;
+			}
+		}
+
+		public override void SetWindowSize(int width, int height)
+		{
+			Program.currentGameWindow.Width = width;
+			Program.currentGameWindow.Height = height;
+			Screen.Width = width; 
+			Screen.Height = height;
 		}
 
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)

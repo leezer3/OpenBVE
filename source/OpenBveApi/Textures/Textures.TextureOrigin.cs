@@ -1,4 +1,5 @@
-﻿#pragma warning disable 0659, 0661
+﻿// ReSharper disable MergeCastWithTypeCheck
+#pragma warning disable 0659, 0661
 
 namespace OpenBveApi.Textures
 {
@@ -16,7 +17,7 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether the two origins are equal.</returns>
 		public static bool operator ==(TextureOrigin a, TextureOrigin b)
 		{
-			if ((object)a == null && (object)b == null)
+			if (a is null && b is null)
 			{
 				return true; //Two nulls are always equal
 			}
@@ -46,7 +47,7 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether the two origins are unequal.</returns>
 		public static bool operator !=(TextureOrigin a, TextureOrigin b)
 		{
-			if ((object)a == null && (object)b == null)
+			if (a is null && b is null)
 			{
 				return false; //Two nulls are always equal
 			}
@@ -75,7 +76,7 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether this instance is equal to the specified object.</returns>
 		public override bool Equals(object obj)
 		{
-			if (obj == null)
+			if (obj is null)
 			{
 				return false; //Two nulls are always equal
 			}

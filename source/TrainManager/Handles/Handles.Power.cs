@@ -1,6 +1,9 @@
-﻿using System.Globalization;
+using System;
+using System.Globalization;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using RouteManager2.MessageManager;
 using TrainManager.Trains;
 
 namespace TrainManager.Handles
@@ -10,10 +13,11 @@ namespace TrainManager.Handles
 	{
 		public PowerHandle(int max, int driverMax, double[] delayUp, double[] delayDown, TrainBase Train) : base(Train)
 		{
-			this.MaximumNotch = max;
-			this.MaximumDriverNotch = driverMax;
-			this.DelayUp = delayUp;
-			this.DelayDown = delayDown;
+			MaximumNotch = max;
+			MaximumDriverNotch = driverMax;
+			DelayUp = delayUp;
+			DelayDown = delayDown;
+			DelayedChanges = new HandleChange[] { };
 		}
 
 		public override void Update()
@@ -69,6 +73,7 @@ namespace TrainManager.Handles
 
 		public override void ApplyState(int newState, bool relativeChange, bool isOverMaxDriverNotch = false)
 		{
+			int previousDriver = Driver;
 			if (baseTrain.Handles.Brake.SpringType > SpringType.Single)
 			{
 				baseTrain.Handles.Brake.SpringTimer = TrainManagerBase.currentHost.InGameTime + SpringTime;
@@ -136,13 +141,29 @@ namespace TrainManager.Handles
 				p = 0;
 			}
 			Driver = p;
-			TrainManagerBase.currentHost.AddBlackBoxEntry();
+			
 			// plugin
 			if (baseTrain.Plugin != null)
 			{
 				baseTrain.Plugin.UpdatePower();
 				baseTrain.Plugin.UpdateBrake();
 			}
+
+			if (previousDriver == Driver)
+			{
+				return;
+			}
+
+			TrainManagerBase.currentHost.AddBlackBoxEntry();
+
+			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
+			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+			
+		}
+
+		public override void ApplySafetyState(int newState)
+		{
+			safetyState = newState;
 		}
 
 		public override string GetNotchDescription(out MessageColor color)

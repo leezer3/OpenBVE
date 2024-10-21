@@ -22,6 +22,13 @@ namespace OpenBveApi.Objects
 		public bool PlayOnShow = true;
 		/// <summary>Whether the sound should be played on hiding a new state</summary>
 		public bool PlayOnHide = true;
+		/*
+		 * Note: The position vector will always be zero
+		 *       We cannot however use this to store our sound position, as it's
+		 *       required to position the *object* by the renderer (even though this is already transformed)
+		 */
+		/// <summary>The relative position of the sound</summary>
+		public Vector3 SoundPosition;
 
 		private int lastState;
 
@@ -73,7 +80,7 @@ namespace OpenBveApi.Objects
 
 								if (isToBePlayed)
 								{
-									Source = currentHost.PlaySound(Buffers[0], currentPitch, currentVolume, Position, null, false);
+									Source = currentHost.PlaySound(Buffers[0], currentPitch, currentVolume, Position + SoundPosition, null, false);
 								}
 							}
 						}
@@ -83,7 +90,7 @@ namespace OpenBveApi.Objects
 
 							if (bufferIndex >= 0 && bufferIndex < Buffers.Length && Buffers[bufferIndex] != null)
 							{
-								Source = currentHost.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position, null, false);
+								Source = currentHost.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position + SoundPosition, null, false);
 							}
 						}
 					}

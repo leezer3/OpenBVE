@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenTK.Graphics;
@@ -46,11 +47,9 @@ namespace RouteViewer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
-            
-
-            //Interpolation mode
-            switch (InterpolationMode.SelectedIndex)
+			//Interpolation mode
+			InterpolationMode prevInterpolationMode = Interface.CurrentOptions.Interpolation;
+			switch (InterpolationMode.SelectedIndex)
             {
                 case 0:
                     Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.NearestNeighbor;
@@ -71,8 +70,15 @@ namespace RouteViewer
                     Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering;
                     break;
             }
-            //Ansiotropic filtering level
-            Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnsiotropicLevel.Value;
+
+            if (previousInterpolationMode != Interface.CurrentOptions.Interpolation)
+            {
+	            // We have changed interpolation level, so the texture cache needs totally clearing (as opposed to changed files)
+	            Program.Renderer.TextureManager.UnloadAllTextures(false);
+            }
+
+			//Ansiotropic filtering level
+			Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnsiotropicLevel.Value;
             //Antialiasing level
             Interface.CurrentOptions.AntiAliasingLevel = (int)AntialiasingLevel.Value;
             if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialasingLevel)
@@ -108,11 +114,34 @@ namespace RouteViewer
 			Interface.CurrentOptions.LoadingLogo = checkBoxLogo.Checked;
 			Interface.CurrentOptions.LoadingBackground = checkBoxBackgrounds.Checked;
 			Interface.CurrentOptions.LoadingProgressBar = checkBoxProgressBar.Checked;
-			Interface.CurrentOptions.CurrentXParser = (XParsers) comboBoxNewXParser.SelectedIndex;
-			Interface.CurrentOptions.CurrentObjParser = (ObjParsers) comboBoxNewObjParser.SelectedIndex;
+			XParsers xParser = (XParsers)comboBoxNewXParser.SelectedIndex;
+			ObjParsers objParser = (ObjParsers)comboBoxNewObjParser.SelectedIndex;
+
+			if (Interface.CurrentOptions.CurrentXParser != xParser || Interface.CurrentOptions.CurrentObjParser != objParser)
+			{
+				Interface.CurrentOptions.CurrentXParser = xParser;
+				Interface.CurrentOptions.CurrentObjParser = objParser;
+				Program.CurrentHost.StaticObjectCache.Clear(); // as a different parser may interpret differently
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Object != null)
+					{
+						Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+						Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+					}
+				}
+			}
 			Interface.CurrentOptions.ViewingDistance = (int)numericUpDownViewingDistance.Value;
 			Interface.CurrentOptions.QuadTreeLeafSize = Math.Max(50, (int)Math.Ceiling(Interface.CurrentOptions.ViewingDistance / 10.0d) * 10); // quad tree size set to 10% of viewing distance to the nearest 10
-			Options.SaveOptions();
+			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg"));
+			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+			{
+				if (Program.CurrentHost.Plugins[i].Object != null)
+				{
+					Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+					Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+				}
+			}
 			//Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
 			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || GraphicsModeChanged || Interface.CurrentOptions.ViewingDistance != previousViewingDistance)
 			{

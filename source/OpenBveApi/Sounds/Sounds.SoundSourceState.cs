@@ -10,6 +10,12 @@
 		/// <summary>The sound will stop playing. The OpenAL sound name is still valid.</summary>
 		StopPending,
 		/// <summary>The sound has stopped and will be removed from the list of sound sources. The OpenAL source name is not valid any longer.</summary>
-		Stopped
+		Stopped,
+		/// <summary>The sound is not yet in audible range, but is paused</summary>
+		PausePending,
+		/// <summary>The sound is paused</summary>
+		Paused,
+		/// <summary>The sound is pending resuming</summary>
+		ResumePending
 	}
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+#pragma warning disable IDE0064
 using System.Runtime.InteropServices;
+// ReSharper disable MergeCastWithTypeCheck
 
 namespace OpenBveApi.Math {
 	/// <summary>Represents a two-dimensional vector.</summary>
@@ -31,6 +33,13 @@ namespace OpenBveApi.Math {
 		{
 			this.X = v.X;
 			this.Y = v.Y;
+		}
+
+		/// <summary>Converts a Vector2 to a Vector2f</summary>
+		///	<remarks>This discards the double precision</remarks>
+		public static implicit operator Vector2f(Vector2 v)
+		{
+			return new Vector2f(v.X, v.Y);
 		}
 
 		/// <summary>Parses a Vector2 from a list of strings</summary>
@@ -279,13 +288,33 @@ namespace OpenBveApi.Math {
 			double y = sineOfAngle * this.X + cosineOfAngle * this.Y;
 			this = new Vector2(x, y);
 		}
-		
+
+		/// <summary>Rotates the vector by the specified angle.</summary>
+		/// <param name="angle">The angle.</param>
+		public void Rotate(double angle)
+		{
+			if (angle == 0)
+			{
+				return;
+			}
+			double cosineOfAngle = System.Math.Cos(angle);
+			double sineOfAngle = System.Math.Sin(angle);
+			Rotate(cosineOfAngle, sineOfAngle);
+		}
+
 		/// <summary>Checks whether the vector is a null vector.</summary>
 		/// <returns>A boolean indicating whether the vector is a null vector.</returns>
 		public bool IsNullVector() {
 			return this.X == 0.0 & this.Y == 0.0;
 		}
-		
+
+		/// <summary>Tests to see whether the vector is finite (no components are double or infinity.</summary>
+		/// <returns>A boolean indicating whether the vector is finite</returns>
+		public static bool IsFinite(Vector2 Vector)
+		{
+			return !double.IsNaN(Vector.X) && !double.IsInfinity(Vector.X) && !double.IsNaN(Vector.Y) && !double.IsInfinity(Vector.Y);
+		}
+
 		/// <summary>Checks whether the vector is considered a null vector.</summary>
 		/// <param name="tolerance">The highest absolute value that each component of the vector may have before the vector is not considered a null vector.</param>
 		/// <returns>A boolean indicating whether the vector is considered a null vector.</returns>

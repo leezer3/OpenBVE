@@ -40,6 +40,9 @@ namespace RouteManager2.Stations
 		/// <remarks>Used by some BVE2 / BVE4 routes in conjunction with forced redsignal</remarks>
 		public bool Dummy;
 
+		/// <summary>The key for this station</summary>
+		public readonly string Key;
+		
 		/// <summary>Gets the index of the stop corresponding to the train's number of cars</summary>
 		/// <param name="Cars">The number of cars the train has</param>
 		public int GetStopIndex(int Cars)
@@ -94,6 +97,11 @@ namespace RouteManager2.Stations
 				return StopMode == StationStopMode.AllStop | StopMode == StationStopMode.PlayerStop | StopMode == StationStopMode.PlayerRequestStop | StopMode == StationStopMode.AllRequestStop;
 			}
 			return StopMode == StationStopMode.AllStop | StopMode == StationStopMode.PlayerPass | StopMode == StationStopMode.AllRequestStop;
+		}
+
+		public RouteStation(string key = "")
+		{
+			Key = key;
 		}
 	}
 }

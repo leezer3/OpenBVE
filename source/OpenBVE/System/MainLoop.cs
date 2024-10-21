@@ -163,14 +163,19 @@ namespace OpenBve
 			}
 			if (e.Button == MouseButton.Left)
 			{
-				// if currently in a menu, forward the click to the menu system
-				if (Program.Renderer.CurrentInterface >= InterfaceType.Menu)
+				switch (Program.Renderer.CurrentInterface)
 				{
-					Game.Menu.ProcessMouseDown(e.X, e.Y);
-				}
-				else if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
-				{
-					Program.Renderer.Touch.TouchCheck(new Vector2(e.X, e.Y));
+					case InterfaceType.Normal:
+						Program.Renderer.Touch.TouchCheck(new Vector2(e.X, e.Y));
+						break;
+					case InterfaceType.Menu:
+					case InterfaceType.GLMainMenu:
+						// if currently in a menu, forward the click to the menu system
+						Game.Menu.ProcessMouseDown(e.X, e.Y);
+						break;
+					case InterfaceType.SwitchChangeMap:
+						Game.switchChangeDialog.ProcessMouseDown(e.X, e.Y);
+						break;
 				}
 			}
 		}
@@ -192,16 +197,22 @@ namespace OpenBve
 			}
 		}
 
-		/// <summary>Called when a mouse button is released</summary>
+		/// <summary>Called when the mouse is moved</summary>
 		/// <param name="sender">The sender</param>
-		/// <param name="e">The button arguments</param>
+		/// <param name="e">The move arguments</param>
 		internal static void mouseMoveEvent(object sender, MouseMoveEventArgs e)
 		{
 			timeSinceLastMouseEvent = 0;
-			// if currently in a menu, forward the click to the menu system
-			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu)
+			// Forward movement appropriately
+			switch (Program.Renderer.CurrentInterface)
 			{
-				Game.Menu.ProcessMouseMove(e.X, e.Y);
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.ProcessMouseMove(e.X, e.Y);
+					break;
+				case InterfaceType.SwitchChangeMap:
+					Game.switchChangeDialog.ProcessMouseMove(e.X, e.Y);
+					break;
 			}
 		}
 
@@ -364,8 +375,11 @@ namespace OpenBve
 				{
 					case JoystickComponent.Axis:
 						// Assume that a joystick axis fulfills the criteria for the handle to be 'held' in place
-						TrainManager.PlayerTrain.Handles.Power.ResetSpring();
-						TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+						if (TrainManager.PlayerTrain != null)
+						{
+							TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+							TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+						}
 						var axisState = Program.Joysticks.GetAxis(currentDevice, Interface.CurrentControls[i].Element);
 						if (axisState.ToString(CultureInfo.InvariantCulture) != Interface.CurrentControls[i].LastState)
 						{
@@ -452,8 +466,11 @@ namespace OpenBve
 						if (buttonState.ToString() != Interface.CurrentControls[i].LastState)
 						{
 							// Attempt to reset handle spring
-							TrainManager.PlayerTrain.Handles.Power.ResetSpring();
-							TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+							if (TrainManager.PlayerTrain != null)
+							{
+								TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+								TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+							}
 							if (buttonState == ButtonState.Pressed)
 							{
 								Interface.CurrentControls[i].AnalogState = 1.0;
@@ -477,8 +494,11 @@ namespace OpenBve
 						if (hatState.ToString() != Interface.CurrentControls[i].LastState)
 						{
 							// Attempt to reset handle spring
-							TrainManager.PlayerTrain.Handles.Power.ResetSpring();
-							TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+							if (TrainManager.PlayerTrain != null)
+							{
+								TrainManager.PlayerTrain.Handles.Power.ResetSpring();
+								TrainManager.PlayerTrain.Handles.Brake.ResetSpring();
+							}
 							if ((int)hatState == Interface.CurrentControls[i].Direction)
 							{
 								Interface.CurrentControls[i].AnalogState = 1.0;
@@ -573,6 +593,17 @@ namespace OpenBve
 						message += "GL_STACK_UNDERFLOW";
 						break;
 					case ErrorCode.OutOfMemory:
+						if (IntPtr.Size == 4)
+						{
+							/*
+							 * Exceeded the 32-bit memory limit (~1.2gb due to CLR overhead)
+							 * Can't try anything fancy with strings etc. here as things
+							 * are most likely falling down. This also means the error logger etc.
+							 * are unlikely to work (or be useful)
+							 */
+							message = @"Total memory usage exceeded the 32-bit memory limit. \r\nPlease use the 64-bit version of OpenBVE to run this content.";
+							Environment.Exit(0);
+						}
 						message += "GL_OUT_OF_MEMORY";
 						break;
 					case ErrorCode.TableTooLargeExt:

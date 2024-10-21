@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace OpenBveApi
@@ -6,7 +7,7 @@ namespace OpenBveApi
 	/// <summary>This class implements a high-precision, multi-platform timer</summary>
 	public static class CPreciseTimer
 	{
-		private static readonly bool UseEnvTicks;
+		private static readonly bool UseStopWatch;
 
 		//UNSAFE ZONE//
 		[DllImport("kernel32.dll", CallingConvention = CallingConvention.StdCall), System.Security.SuppressUnmanagedCodeSecurity]
@@ -17,6 +18,8 @@ namespace OpenBveApi
 
 		static readonly long _ticksPerSecond = 0;  //initialize variables
 		static long _previousElapsedTime = 0;
+
+		private static readonly Stopwatch stopWatch;
 
 		static CPreciseTimer()
 		{
@@ -29,10 +32,10 @@ namespace OpenBveApi
 			}
 			catch
 			{
-				//We're running on Linux/ OSX, so we must use the environment ticks
-				//This actually has much better precision than under Windows too
-				UseEnvTicks = true;
-				_ticksPerSecond = TimeSpan.TicksPerSecond;
+				//We're running on Linux/ OSX, so we must use the stopwatch
+				UseStopWatch = true;
+				stopWatch = new Stopwatch();
+				stopWatch.Start();
 				GetElapsedTime();
 			}
 		}
@@ -45,19 +48,19 @@ namespace OpenBveApi
 		/// <summary>Gets the elapsed time in seconds since the last call to GetElapsedTime</summary>
 		public static double GetElapsedTime()
 		{
-			if (UseEnvTicks)
+			if (UseStopWatch)
 			{
 				OldTicks = Ticks;
-				Ticks = Environment.TickCount;
+				Ticks = stopWatch.ElapsedMilliseconds;
 
-				while (MinWait > Ticks - OldTicks)
+				if (MinWait > Ticks - OldTicks)
 				{
-					System.Threading.Thread.Sleep(0);
-					Ticks = Environment.TickCount;
+					System.Threading.Thread.Sleep(5);
+					Ticks = stopWatch.ElapsedMilliseconds;
 				}
 
-				DeltaTime = (Ticks - OldTicks)/ 1000.0;
-				return DeltaTime;
+				DeltaTime = Ticks - OldTicks;
+				return DeltaTime / 1000.0;
 			}
 			long time = 0;
 			QueryPerformanceCounter(ref time); //gets the number of ticks elapsed, pulled from the cloop

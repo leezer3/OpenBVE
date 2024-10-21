@@ -9,11 +9,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using LibRender2.Menu;
+using LibRender2.Screens;
 using LibRender2.Trains;
 using ObjectViewer.Graphics;
 using ObjectViewer.Trains;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -61,9 +64,9 @@ namespace ObjectViewer {
 		internal static CurrentRoute CurrentRoute;
 
 		internal static TrainManager TrainManager;
-
+		
 		// main
-	    [STAThread]
+		[STAThread]
 	    internal static void Main(string[] args)
 	    {
 		    CurrentHost = new Host();
@@ -74,7 +77,6 @@ namespace ObjectViewer {
 	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 	        Options.LoadOptions();
 	        Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
-	        Renderer.CameraTrackFollower = new TrackFollower(CurrentHost);
 	        
 	        
 	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
@@ -83,8 +85,7 @@ namespace ObjectViewer {
 		        Renderer.Screen.Width = 960;
 		        Renderer.Screen.Height = 600;
 	        }
-	        string error;
-	        if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, TrainManager, Renderer))
+	        if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
 	        {
 		        MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		        return;
@@ -150,9 +151,12 @@ namespace ObjectViewer {
 		        Backend = PlatformBackend.PreferX11
 	        };
 	        Toolkit.Init(options);
-	        // initialize camera
-
-	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
+	        // --- load language ---
+	        string folder = Program.FileSystem.GetDataFolder("Languages");
+	        Translations.LoadLanguageFiles(folder);
+			GameMenu.Instance = new GameMenu();
+			// initialize camera
+			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
 	        currentGameWindow = new ObjectViewer(Renderer.Screen.Width, Renderer.Screen.Height, currentGraphicsMode, "Object Viewer", GameWindowFlags.Default)
 	        {
 		        Visible = true,
@@ -162,7 +166,7 @@ namespace ObjectViewer {
 	        };
 	        currentGameWindow.Run();
 			// quit
-			Renderer.TextureManager.UnloadAllTextures();
+			Renderer.TextureManager.UnloadAllTextures(false);
 
 			formTrain.WaitTaskFinish();
 	    }
@@ -171,33 +175,67 @@ namespace ObjectViewer {
 	    
 
 		internal static void MouseWheelEvent(object sender, MouseWheelEventArgs e)
-		{	
-			if(e.Delta != 0)
+		{
+			switch (Program.Renderer.CurrentInterface)
 			{
-				double dx = -0.025 * e.Delta;
-				Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteDirection;
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.ProcessMouseScroll(e.Delta);
+					break;
+				default:
+					if (e.Delta != 0)
+					{
+						double dx = -0.025 * e.Delta;
+						Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteDirection;
+					}
+					break;
 			}
 		}
 
-	    internal static void MouseEvent(object sender, MouseButtonEventArgs e)
+		internal static void MouseMoveEvent(object sender, MouseMoveEventArgs e)
+		{
+			switch (Program.Renderer.CurrentInterface)
+			{
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.ProcessMouseMove(e.X, e.Y);
+					break;
+			}
+		}
+
+		internal static void MouseEvent(object sender, MouseButtonEventArgs e)
 	    {
-            MouseCameraPosition = Renderer.Camera.AbsolutePosition;
-            MouseCameraDirection = Renderer.Camera.AbsoluteDirection;
-            MouseCameraUp = Renderer.Camera.AbsoluteUp;
-            MouseCameraSide = Renderer.Camera.AbsoluteSide;
-	        if (e.Button == OpenTK.Input.MouseButton.Left)
-	        {
-	            MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
-	        }
-	        if (e.Button == OpenTK.Input.MouseButton.Right)
-	        {
-	            MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 2 : 0;
-	        }
-	        if (e.Button == OpenTK.Input.MouseButton.Middle)
-	        {
-                MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
-	        }
-            previousMouseState = Mouse.GetState();
+		    switch (Program.Renderer.CurrentInterface)
+		    {
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					if (e.IsPressed)
+					{
+						// viewer hooks up and down to same event
+						Game.Menu.ProcessMouseDown(e.X, e.Y);
+					}
+					break;
+				default:
+					MouseCameraPosition = Renderer.Camera.AbsolutePosition;
+					MouseCameraDirection = Renderer.Camera.AbsoluteDirection;
+					MouseCameraUp = Renderer.Camera.AbsoluteUp;
+					MouseCameraSide = Renderer.Camera.AbsoluteSide;
+					if (e.Button == OpenTK.Input.MouseButton.Left)
+					{
+						MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
+					}
+					if (e.Button == OpenTK.Input.MouseButton.Right)
+					{
+						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 2 : 0;
+					}
+					if (e.Button == OpenTK.Input.MouseButton.Middle)
+					{
+						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
+					}
+					previousMouseState = Mouse.GetState();
+					break;
+		    }
+            
 	    }
 
 		internal static void DragFile(object sender, FileDropEventArgs e)
@@ -218,7 +256,7 @@ namespace ObjectViewer {
 
 	    internal static void MouseMovement()
 	    {
-	        if (MouseButton == 0) return;
+	        if (MouseButton == 0 || Program.Renderer.CurrentInterface != InterfaceType.Normal) return;
 	        currentMouseState = Mouse.GetState();
 	        if (currentMouseState != previousMouseState)
 	        {
@@ -316,8 +354,7 @@ namespace ObjectViewer {
 				    }
 				    else
 				    {
-					    UnifiedObject o;
-					    if (CurrentHost.LoadObject(Files[i], Encoding.UTF8, out o))
+					    if (CurrentHost.LoadObject(Files[i], Encoding.UTF8, out UnifiedObject o))
 					    {
 						    o.CreateObject(Vector3.Zero, 0.0, 0.0, 0.0);
 					    }
@@ -347,9 +384,9 @@ namespace ObjectViewer {
 	    // process events
 	    internal static void KeyDown(object sender, KeyboardKeyEventArgs e)
 	    {
+
 	        switch (e.Key)
 	        {
-
 	            case Key.LShift:
 	            case Key.RShift:
 	                ShiftPressed = true;
@@ -360,6 +397,10 @@ namespace ObjectViewer {
 	                break;
 	            case Key.F7:
 					{
+						if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+						{
+							return;
+						}
 						OpenFileDialog Dialog = new OpenFileDialog
 					    {
 				            CheckFileExists = true,
@@ -417,12 +458,19 @@ namespace ObjectViewer {
 					} 
 					break;
 	            case Key.F9:
-	                if (Interface.LogMessages.Count != 0)
+		            if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+		            {
+						Program.Renderer.CurrentInterface = InterfaceType.Menu;
+						Game.Menu.PushMenu(MenuType.ErrorList);
+						return;
+		            }
+					if (Interface.LogMessages.Count != 0)
 	                {
 	                    formMessages.ShowMessages();
                         Application.DoEvents();
 	                }
 	                break;
+				case Key.BackSpace:
 	            case Key.Delete:
 		            LightingRelative = -1.0;
 	                Game.Reset();
@@ -437,31 +485,47 @@ namespace ObjectViewer {
 	                RotateX = 1;
 	                break;
 	            case Key.Up:
-	                RotateY = -1;
+		            if (Renderer.CurrentInterface == InterfaceType.Normal)
+		            {
+			            RotateY = -1;
+					}
+		            else
+		            {
+			            Game.Menu.ProcessCommand(Translations.Command.MenuUp, 0);
+		            }
 	                break;
 	            case Key.Down:
-	                RotateY = 1;
+		            if (Renderer.CurrentInterface == InterfaceType.Normal)
+		            {
+			            RotateY = 1;
+					}
+		            else
+		            {
+						Game.Menu.ProcessCommand(Translations.Command.MenuDown, 0);
+					}
 	                break;
-	            case Key.A:
+	            case var value when value == (Key)Interface.CurrentOptions.CameraMoveLeft:
 	            case Key.Keypad4:
 	                MoveX = -1;
 	                break;
-	            case Key.D:
-	            case Key.Keypad6:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveRight:
+				case Key.Keypad6:
 	                MoveX = 1;
 	                break;
-	            case Key.Keypad8:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveUp:
+				case Key.Keypad8:
 	                MoveY = 1;
 	                break;
-	            case Key.Keypad2:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveDown:
+				case Key.Keypad2:
 	                MoveY = -1;
 	                break;
-	            case Key.W:
-	            case Key.Keypad9:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveForward:
+				case Key.Keypad9:
 	                MoveZ = 1;
 	                break;
-	            case Key.S:
-	            case Key.Keypad3:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveBackward:
+				case Key.Keypad3:
 	                MoveZ = -1;
 	                break;
 	            case Key.Keypad5:
@@ -484,11 +548,19 @@ namespace ObjectViewer {
 	                Renderer.OptionInterface = !Renderer.OptionInterface;
 	                break;
                 case Key.F8:
-                    formOptions.ShowOptions();
+	                if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+	                {
+		                return;
+	                }
+					formOptions.ShowOptions();
                     Application.DoEvents();
                     break;
                 case Key.F10:
-                    formTrain.ShowTrainSettings();
+	                if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+	                {
+		                return;
+	                }
+					formTrain.ShowTrainSettings();
                     break;
 	            case Key.G:
 	            case Key.C:
@@ -497,8 +569,9 @@ namespace ObjectViewer {
 	            case Key.B:
 	                if (ShiftPressed)
 	                {
-		                using (ColorDialog dialog = new ColorDialog {FullOpen = true})
+		                using (ColorDialog dialog = new ColorDialog())
 		                {
+			                dialog.FullOpen = true;
 			                if (dialog.ShowDialog() == DialogResult.OK)
 			                {
 				                Renderer.BackgroundColor = -1;
@@ -522,6 +595,27 @@ namespace ObjectViewer {
 				case Key.F11:
 					Renderer.RenderStatsOverlay = !Renderer.RenderStatsOverlay;
 					break;
+				case Key.Enter:
+					if (Renderer.CurrentInterface != InterfaceType.Normal)
+					{
+						Game.Menu.ProcessCommand(Translations.Command.MenuEnter, 0);
+					}
+					break;
+				case Key.Escape:
+					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+					{
+						if (Renderer.CurrentInterface != InterfaceType.Normal)
+						{
+							Game.Menu.ProcessCommand(Translations.Command.MenuBack, 0);
+						}
+						else
+						{
+							Program.Renderer.CurrentInterface = InterfaceType.Menu;
+							Game.Menu.PushMenu(MenuType.GameStart);
+						}
+					}
+					
+					break;
 	        }
 	    }
 
@@ -541,19 +635,18 @@ namespace ObjectViewer {
 	            case Key.Down:
 	                RotateY = 0;
 	                break;
-	            case Key.A:
-	            case Key.D:
-	            case Key.Keypad4:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveLeft || value == (Key)Interface.CurrentOptions.CameraMoveRight:
+				case Key.Keypad4:
 	            case Key.Keypad6:
 	                MoveX = 0;
 	                break;
-	            case Key.Keypad8:
+	            case var value when value == (Key)Interface.CurrentOptions.CameraMoveUp || value == (Key)Interface.CurrentOptions.CameraMoveDown:
+				case Key.Keypad8:
 	            case Key.Keypad2:
 	                MoveY = 0;
 	                break;
-	            case Key.W:
-	            case Key.S:
-	            case Key.Keypad9:
+				case var value when value == (Key)Interface.CurrentOptions.CameraMoveForward || value == (Key)Interface.CurrentOptions.CameraMoveBackward:
+				case Key.Keypad9:
 	            case Key.Keypad3:
 	                MoveZ = 0;
 	                break;

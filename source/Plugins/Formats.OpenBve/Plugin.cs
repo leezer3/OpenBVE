@@ -106,13 +106,10 @@ namespace Formats.OpenBve
 	/// <summary>Root block for a .CFG type file</summary>
     public class ConfigFile <T, TT> : Block<T, TT> where T : struct, Enum where TT : struct, Enum
 	{
-		private readonly string[] myLines;
-
 		private readonly List<Block<T, TT>> subBlocks;
 
 		public ConfigFile(string[] Lines, HostInterface Host, string expectedHeader = null) : base(-1, default, Host)
 		{
-			myLines = Lines;
 			subBlocks = new List<Block<T, TT>>();
 			List<string> blockLines = new List<string>();
 			bool addToBlock = false;
@@ -124,7 +121,9 @@ namespace Formats.OpenBve
 
 			//string 
 
-			for (int i = 0; i < myLines.Length; i++)
+			int startingLine = 0;
+
+			for (int i = 0; i < Lines.Length; i++)
 			{
 				if (headerOK == false)
 				{
@@ -143,17 +142,17 @@ namespace Formats.OpenBve
 						headerOK = true;
 					}
 				}
-				if (myLines[i].StartsWith("[") && myLines[i].EndsWith("]"))
+				if (Lines[i].StartsWith("[") && Lines[i].EndsWith("]"))
 				{
+					startingLine = i;
 					if (!headerOK)
 					{
 						currentHost.AddMessage(MessageType.Error, false, "The expected header " + expectedHeader + " was not found.");
 						headerOK = true;
 					}
 					// n.b. remove spaces to allow parsing to an enum
-					string sct = myLines[i].Trim().Trim('[', ']').Replace(" ", "");
+					string sct = Lines[i].Trim().Trim('[', ']').Replace(" ", "");
 
-					T currentSection;
 					if (char.IsDigit(sct[sct.Length - 1]))
 					{
 						int c = sct.Length - 1;
@@ -171,7 +170,7 @@ namespace Formats.OpenBve
 						sct = sct.Substring(0, c);
 
 					}
-					if (!Enum.TryParse(sct, true, out currentSection))
+					if (!Enum.TryParse(sct, true, out T currentSection))
 					{
 						addToBlock = false;
 						currentHost.AddMessage(MessageType.Error, false, "Unknown Section " + sct + " encountered at Line " + i);
@@ -183,7 +182,7 @@ namespace Formats.OpenBve
 
 					if (blockLines.Count > 0)
 					{
-						subBlocks.Add(new ConfigSection<T, TT>(previousIdx, previousSection, blockLines.ToArray(), currentHost));
+						subBlocks.Add(new ConfigSection<T, TT>(previousIdx, startingLine, previousSection, blockLines.ToArray(), currentHost));
 						blockLines.Clear();
 					}
 					previousSection = currentSection;
@@ -193,14 +192,14 @@ namespace Formats.OpenBve
 				{
 					if (addToBlock)
 					{
-						blockLines.Add(myLines[i]);
+						blockLines.Add(Lines[i]);
 					}
 				}
 			}
 			// final block
 			if (blockLines.Count > 0)
 			{
-				subBlocks.Add(new ConfigSection<T, TT>(idx, previousSection, blockLines.ToArray(), currentHost));
+				subBlocks.Add(new ConfigSection<T, TT>(idx, startingLine, previousSection, blockLines.ToArray(), currentHost));
 			}
 		}
 
@@ -216,9 +215,9 @@ namespace Formats.OpenBve
 
 	public class ConfigSection <T, TT> : Block<T, TT> where T : struct, Enum where TT : struct, Enum
 	{
-		private readonly Dictionary<TT, string> keyValuePairs;
+		private readonly Dictionary<TT, KeyValuePair<int, string>> keyValuePairs;
 
-		private readonly Dictionary<int, string> indexedValues;
+		private readonly Dictionary<int, KeyValuePair<int, string>> indexedValues;
 		public override Block<T, TT> ReadNextBlock()
 		{
 			currentHost.AddMessage(MessageType.Error, false, "A section in a CFG file cannot contain sub-blocks.");
@@ -227,10 +226,10 @@ namespace Formats.OpenBve
 
 		public override int RemainingDataValues => keyValuePairs.Count + indexedValues.Count;
 		
-		internal ConfigSection(int myIndex, T myKey, string[] myLines, HostInterface Host) : base(myIndex, myKey, Host)
+		internal ConfigSection(int myIndex, int startingLine, T myKey, string[] myLines, HostInterface Host) : base(myIndex, myKey, Host)
 		{
-			keyValuePairs = new Dictionary<TT, string>();
-			indexedValues = new Dictionary<int, string>();
+			keyValuePairs = new Dictionary<TT, KeyValuePair<int, string>>();
+			indexedValues = new Dictionary<int, KeyValuePair<int, string>>();
 			for (int i = 0; i < myLines.Length; i++)
 			{
 				int j = myLines[i].IndexOf("=", StringComparison.Ordinal);
@@ -244,28 +243,28 @@ namespace Formats.OpenBve
 						{
 							if (indexedValues.ContainsKey(idx))
 							{
-								currentHost.AddMessage(MessageType.Warning, false, "Duplicate index " + idx + " encountered in Section " + myKey + " at Line " + i);
-								indexedValues[idx] = b;
+								currentHost.AddMessage(MessageType.Warning, false, "Duplicate index " + idx + " encountered in Section " + myKey + " at Line " + i + startingLine);
+								indexedValues[idx] = new KeyValuePair<int, string>(i + startingLine, b);
 							}
 							else
 							{
-								indexedValues.Add(idx, b);
+								indexedValues.Add(idx, new KeyValuePair<int, string>(i + startingLine, b));
 							}
 							
 						}
 						else
 						{
-							currentHost.AddMessage(MessageType.Error, false, "Invalid index " + idx + " encountered in Section " + myKey + " at Line " + i);	
+							currentHost.AddMessage(MessageType.Error, false, "Invalid index " + idx + " encountered in Section " + myKey + " at Line " + i + startingLine);	
 						}
 						
 					}
 					else if (Enum.TryParse(a, true, out TT key))
 					{
-						keyValuePairs.Add(key, b);
+						keyValuePairs.Add(key, new KeyValuePair<int, string>(i + startingLine, b));
 					}
 					else
 					{
-						currentHost.AddMessage(MessageType.Error, false, "Unknown Key " + key + " encountered in Section " + myKey + " at Line " + i);
+						currentHost.AddMessage(MessageType.Error, false, "Unknown Key " + key + " encountered in Section " + myKey + " at Line " + i + startingLine);
 					}
 				}
 			}
@@ -276,19 +275,19 @@ namespace Formats.OpenBve
 			value = Vector2.Null;
 			if (keyValuePairs.TryGetValue(key, out var rawValue))
 			{
-				string[] splitStrings = rawValue.Split(separator);
+				string[] splitStrings = rawValue.Value.Split(separator);
 				if (splitStrings.Length > 2)
 				{
-					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key);
+					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key + " at Line " + rawValue.Key);
 				}
 				
 				if (!NumberFormats.TryParseDoubleVb6(splitStrings[0], out value.X))
 				{
-					currentHost.AddMessage(MessageType.Warning, false, "X was invalid in " + key + " in Section " + Key);
+					currentHost.AddMessage(MessageType.Warning, false, "X was invalid in " + key + " in Section " + Key + " at Line " + rawValue.Key);
 				}
 				if (!NumberFormats.TryParseDoubleVb6(splitStrings[1], out value.Y))
 				{
-					currentHost.AddMessage(MessageType.Warning, false, "Y was invalid in " + key + " in Section " + Key);
+					currentHost.AddMessage(MessageType.Warning, false, "Y was invalid in " + key + " in Section " + Key + " at Line " + rawValue.Key);
 				}
 				return true;
 			}
@@ -300,23 +299,23 @@ namespace Formats.OpenBve
 			value = Vector3.Zero;
 			if (keyValuePairs.TryGetValue(key, out var rawValue))
 			{
-				string[] splitStrings = rawValue.Split(separator);
+				string[] splitStrings = rawValue.Value.Split(separator);
 				if (splitStrings.Length > 3)
 				{
-					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key);
+					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key + " at Line " + rawValue.Key);
 				}
 				
 				if (!NumberFormats.TryParseDoubleVb6(splitStrings[0], out value.X))
 				{
-					currentHost.AddMessage(MessageType.Warning, false, "X was invalid in " + key + " in Section " + Key);
+					currentHost.AddMessage(MessageType.Warning, false, "X was invalid in " + key + " in Section " + Key + " at Line " + rawValue.Key);
 				}
 				if (!NumberFormats.TryParseDoubleVb6(splitStrings[1], out value.Y))
 				{
-					currentHost.AddMessage(MessageType.Warning, false, "Y was invalid in " + key + " in Section " + Key);
+					currentHost.AddMessage(MessageType.Warning, false, "Y was invalid in " + key + " in Section " + Key + " at Line " + rawValue.Key);
 				}
 				if (!NumberFormats.TryParseDoubleVb6(splitStrings[2], out value.Z))
 				{
-					currentHost.AddMessage(MessageType.Warning, false, "Z was invalid in " + key + " in Section " + Key);
+					currentHost.AddMessage(MessageType.Warning, false, "Z was invalid in " + key + " in Section " + Key + " at Line " + rawValue.Key);
 				}
 				return true;
 			}
@@ -328,7 +327,7 @@ namespace Formats.OpenBve
 			if (indexedValues.Count > 0)
 			{
 				index = indexedValues.ElementAt(0).Key;
-				value = indexedValues.ElementAt(0).Value;
+				value = indexedValues.ElementAt(0).Value.Value;
 				indexedValues.Remove(index);
 				return true;
 			}
@@ -341,10 +340,10 @@ namespace Formats.OpenBve
 		{
 			if (keyValuePairs.TryGetValue(key, out var value))
 			{
-				values = value.Split(separator);
+				values = value.Value.Split(separator);
 				return true;
 			}
-			currentHost.AddMessage(MessageType.Warning, false, "Key " + key + " was not found in Section " + Key);
+			currentHost.AddMessage(MessageType.Warning, false, "Key " + key + " was not found in Section " + Key + " at Line " + value.Key);
 			values = new string[0];
 			return false;
 		}
@@ -357,12 +356,12 @@ namespace Formats.OpenBve
 				try
 				{
 					bool isInfix = key.ToString().IndexOf("RPN", StringComparison.Ordinal) != -1;
-					function = new FunctionScript(currentHost, script, isInfix);
+					function = new FunctionScript(currentHost, script.Value, isInfix);
 					return true;
 				}
 				catch
 				{
-					currentHost.AddMessage(MessageType.Warning, false, "Function Script " + script + " was invalid in Key "+ Key + " in Section " + Key);
+					currentHost.AddMessage(MessageType.Warning, false, "Function Script " + script + " was invalid in Key "+ Key + " in Section " + Key + " at Line " + script.Key);
 					function = null;
 					return false;
 				}
@@ -372,13 +371,14 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-		public override bool GetValue(TT key, out string value)
+		public override bool GetValue(TT key, out string stringValue)
 		{
-			if (keyValuePairs.TryGetValue(key, out value))
+			if (keyValuePairs.TryGetValue(key, out var value))
 			{
+				stringValue = value.Value;
 				return true;
 			}
-			value = string.Empty;
+			stringValue = string.Empty;
 			return false;
 		}
 
@@ -386,11 +386,11 @@ namespace Formats.OpenBve
 		{
 			if (keyValuePairs.TryGetValue(key, out var s))
 			{
-				if (double.TryParse(s, out value))
+				if (double.TryParse(s.Value, out value))
 				{
 					return true;
 				}
-				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid double in Key "+ Key + " in Section " + Key);
+				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid double in Key "+ Key + " in Section " + Key + " at Line " + s.Key);
 				return false;
 
 			}
@@ -402,8 +402,8 @@ namespace Formats.OpenBve
 		{
 			if (keyValuePairs.TryGetValue(key, out var s))
 			{
-				s = s.ToLowerInvariant().Trim();
-				if (s == "1" || s == "true")
+				var ss = s.Value.ToLowerInvariant().Trim();
+				if (ss == "1" || ss == "true")
 				{
 					value = true;
 					return true;

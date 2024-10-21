@@ -50,10 +50,17 @@ namespace TrainManager.BrakeSystems
 				else
 				{
 					mainReservoir.CurrentPressure += Rate * TimeElapsed;
-					if (!LoopStarted && TrainManagerBase.currentHost.InGameTime > TimeStarted + 5.0)
+					if (!LoopStarted)
 					{
-						LoopStarted = true;
-						LoopSound.Play(baseCar, true);
+						if ((StartSound.Buffer == null && TrainManagerBase.currentHost.InGameTime > TimeStarted + 5.0) || (StartSound.Buffer != null && !StartSound.IsPlaying))
+						{
+							/*
+							 * If no start sound, assume a run-up time of 5s for the compressor
+							 * before the sound loop starts
+							 */
+							LoopStarted = true;
+							LoopSound.Play(baseCar, true);
+						}
 					}
 				}
 			}

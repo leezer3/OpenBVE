@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using OpenBveApi;
 using OpenBveApi.Math;
 using Path = OpenBveApi.Path;
 
@@ -66,11 +67,10 @@ namespace CarXmlConvertor
                             int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
                             if (j >= 0)
                             {
-	                            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-	                            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-                                int k;
-                                if (!int.TryParse(a, NumberStyles.Integer,
-                                    CultureInfo.InvariantCulture, out k))
+	                            string a = Lines[i].Substring(0, j).TrimEnd();
+	                            string b = Lines[i].Substring(j + 1).TrimStart();
+	                            if (!int.TryParse(a, NumberStyles.Integer,
+		                                CultureInfo.InvariantCulture, out int k))
                                 {
                                     continue;
                                 }
@@ -82,7 +82,7 @@ namespace CarXmlConvertor
                                 {
                                     newLines.Add("<Sound>");
                                     newLines.Add("<Index>" + k + "</Index>");
-                                    newLines.Add("<FileName>" + b + "</FileName>");
+                                    newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                     newLines.Add("<Position>0,0,0</Position>");
                                     newLines.Add("<Radius>10.0</Radius>");
                                     newLines.Add("</Sound>");
@@ -101,11 +101,10 @@ namespace CarXmlConvertor
 			                int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 			                if (j >= 0)
 			                {
-				                string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-				                string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-				                int k;
+				                string a = Lines[i].Substring(0, j).TrimEnd();
+				                string b = Lines[i].Substring(j + 1).TrimStart();
 				                if (!int.TryParse(a, NumberStyles.Integer,
-					                CultureInfo.InvariantCulture, out k))
+					                    CultureInfo.InvariantCulture, out int k))
 				                {
 					                continue;
 				                }
@@ -117,7 +116,7 @@ namespace CarXmlConvertor
 				                {
 					                newLines.Add("<Sound>");
 					                newLines.Add("<Index>" + k + "</Index>");
-					                newLines.Add("<FileName>" + b + "</FileName>");
+					                newLines.Add("<FileName>" + b.Escape() + "</FileName>");
 					                newLines.Add("<Position>0,0,0</Position>");
 					                newLines.Add("<Radius>10.0</Radius>");
 					                newLines.Add("</Sound>");
@@ -136,11 +135,10 @@ namespace CarXmlConvertor
                             int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
                             if (j >= 0)
                             {
-	                            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-	                            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-                                int k;
-                                if (!int.TryParse(a, NumberStyles.Integer,
-                                    CultureInfo.InvariantCulture, out k))
+	                            string a = Lines[i].Substring(0, j).TrimEnd();
+	                            string b = Lines[i].Substring(j + 1).TrimStart();
+	                            if (!int.TryParse(a, NumberStyles.Integer,
+		                                CultureInfo.InvariantCulture, out int k))
                                 {
                                     continue;
                                 }
@@ -152,7 +150,7 @@ namespace CarXmlConvertor
                                 {
                                     newLines.Add("<Sound>");
                                     newLines.Add("<Index>" + k + "</Index>");
-                                    newLines.Add("<FileName>" + b + "</FileName>");
+                                    newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                     newLines.Add("<Position>0,0,0</Position>");
                                     newLines.Add("<Radius>10.0</Radius>");
                                     newLines.Add("</Sound>");
@@ -171,11 +169,10 @@ namespace CarXmlConvertor
                             int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
                             if (j >= 0)
                             {
-	                            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-	                            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-                                int k;
-                                if (!int.TryParse(a, NumberStyles.Integer,
-                                    CultureInfo.InvariantCulture, out k))
+	                            string a = Lines[i].Substring(0, j).TrimEnd();
+	                            string b = Lines[i].Substring(j + 1).TrimStart();
+	                            if (!int.TryParse(a, NumberStyles.Integer,
+		                                CultureInfo.InvariantCulture, out int k))
                                 {
                                     continue;
                                 }
@@ -187,7 +184,7 @@ namespace CarXmlConvertor
                                 {
                                     newLines.Add("<Sound>");
                                     newLines.Add("<Index>" + k + "</Index>");
-                                    newLines.Add("<FileName>" + b + "</FileName>");
+                                    newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                     newLines.Add("<Position>0,0,0</Position>");
                                     newLines.Add("<Radius>10.0</Radius>");
                                     newLines.Add("</Sound>");
@@ -215,35 +212,35 @@ namespace CarXmlConvertor
                                 {
                                     case "bc release high":
                                         newLines.Add("<ReleaseHigh>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>0,0,0</Position>");
                                         newLines.Add("<Radius>5.0</Radius>");
                                         newLines.Add("</ReleaseHigh>");
                                         break;
                                     case "bc release":
                                         newLines.Add("<Release>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>0,0,0</Position>");
                                         newLines.Add("<Radius>5.0</Radius>");
                                         newLines.Add("</Release>");
                                         break;
                                     case "bc release full":
                                         newLines.Add("<ReleaseFull>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>0,0,0</Position>");
                                         newLines.Add("<Radius>5.0</Radius>");
                                         newLines.Add("</ReleaseFull>");
                                         break;
                                     case "emergency":
                                         newLines.Add("<Emergency>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>0,0,0</Position>");
                                         newLines.Add("<Radius>5.0</Radius>");
                                         newLines.Add("</Emergency>");
                                         break;
                                     case "bp decomp":
                                         newLines.Add("<Application>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>0,0,0</Position>");
                                         newLines.Add("<Radius>5.0</Radius>");
                                         newLines.Add("</Application>");
@@ -272,21 +269,21 @@ namespace CarXmlConvertor
                                 {
                                     case "attack":
                                         newLines.Add("<Start>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>0,0,0</Position>");
                                         newLines.Add("<Radius>10.0</Radius>");
                                         newLines.Add("</Start>");
                                         break;
                                     case "loop":
                                         newLines.Add("<Loop>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>0,0,0</Position>");
                                         newLines.Add("<Radius>10.0</Radius>");
                                         newLines.Add("</Loop>");
                                         break;
                                     case "release":
                                         newLines.Add("<End>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>0,0,0</Position>");
                                         newLines.Add("<Radius>10.0</Radius>");
                                         newLines.Add("</End>");
@@ -317,14 +314,14 @@ namespace CarXmlConvertor
                                 {
                                     case "left":
                                         newLines.Add("<Left>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>0,0,0</Position>");
                                         newLines.Add("<Radius>5.0</Radius>");
                                         newLines.Add("</Left>");
                                         break;
                                     case "right":
                                         newLines.Add("<Right>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>0,0,0</Position>");
                                         newLines.Add("<Radius>5.0</Radius>");
                                         newLines.Add("</Right>");
@@ -359,7 +356,7 @@ namespace CarXmlConvertor
                                     //PRIMARY HORN (Enter)
                                     case "primarystart":
                                         primary.Add("<Start>");
-                                        primary.Add("<FileName>" + b + "</FileName>");
+                                        primary.Add("<FileName>" + b.Escape() + "</FileName>");
                                         primary.Add("<Position>" + front + "</Position>");
                                         primary.Add("<Radius>30.0</Radius>");
                                         primary.Add("</Start>");
@@ -367,7 +364,7 @@ namespace CarXmlConvertor
                                     case "primaryend":
                                     case "primaryrelease":
                                         primary.Add("<End>");
-                                        primary.Add("<FileName>" + b + "</FileName>");
+                                        primary.Add("<FileName>" + b.Escape() + "</FileName>");
                                         primary.Add("<Position>" + front + "</Position>");
                                         primary.Add("<Radius>30.0</Radius>");
                                         primary.Add("</End>");
@@ -375,7 +372,7 @@ namespace CarXmlConvertor
                                     case "primaryloop":
                                     case "primary":
                                         primary.Add("<Loop>");
-                                        primary.Add("<FileName>" + b + "</FileName>");
+                                        primary.Add("<FileName>" + b.Escape() + "</FileName>");
                                         primary.Add("<Position>" + front + "</Position>");
                                         primary.Add("<Radius>30.0</Radius>");
                                         primary.Add("</Loop>");
@@ -383,7 +380,7 @@ namespace CarXmlConvertor
                                     //SECONDARY HORN (Numpad Enter)
                                     case "secondarystart":
                                         secondary.Add("<Start>");
-                                        secondary.Add("<FileName>" + b + "</FileName>");
+                                        secondary.Add("<FileName>" + b.Escape() + "</FileName>");
                                         secondary.Add("<Position>" + front + "</Position>");
                                         secondary.Add("<Radius>30.0</Radius>");
                                         secondary.Add("</Start>");
@@ -391,7 +388,7 @@ namespace CarXmlConvertor
                                     case "secondaryend":
                                     case "secondaryrelease":
                                         secondary.Add("<End>");
-                                        secondary.Add("<FileName>" + b + "</FileName>");
+                                        secondary.Add("<FileName>" + b.Escape() + "</FileName>");
                                         secondary.Add("<Position>" + front + "</Position>");
                                         secondary.Add("<Radius>30.0</Radius>");
                                         secondary.Add("</End>");
@@ -399,7 +396,7 @@ namespace CarXmlConvertor
                                     case "secondaryloop":
                                     case "secondary":
                                         secondary.Add("<Loop>");
-                                        secondary.Add("<FileName>" + b + "</FileName>");
+                                        secondary.Add("<FileName>" + b.Escape() + "</FileName>");
                                         secondary.Add("<Position>" + front + "</Position>");
                                         secondary.Add("<Radius>30.0</Radius>");
                                         secondary.Add("</Loop>");
@@ -407,7 +404,7 @@ namespace CarXmlConvertor
                                     //MUSIC HORN
                                     case "musicstart":
                                         music.Add("<Start>");
-                                        music.Add("<FileName>" + b + "</FileName>");
+                                        music.Add("<FileName>" + b.Escape() + "</FileName>");
                                         music.Add("<Position>" + front + "</Position>");
                                         music.Add("<Radius>30.0</Radius>");
                                         music.Add("</Start>");
@@ -415,7 +412,7 @@ namespace CarXmlConvertor
                                     case "musicend":
                                     case "musicrelease":
                                         music.Add("<End>");
-                                        music.Add("<FileName>" + b + "</FileName>");
+                                        music.Add("<FileName>" + b.Escape() + "</FileName>");
                                         music.Add("<Position>" + front + "</Position>");
                                         music.Add("<Radius>30.0</Radius>");
                                         music.Add("</End>");
@@ -423,7 +420,7 @@ namespace CarXmlConvertor
                                     case "musicloop":
                                     case "music":
                                         music.Add("<Loop>");
-                                        music.Add("<FileName>" + b + "</FileName>");
+                                        music.Add("<FileName>" + b.Escape() + "</FileName>");
                                         music.Add("<Position>" + front + "</Position>");
                                         music.Add("<Radius>30.0</Radius>");
                                         music.Add("</Loop>");
@@ -473,28 +470,28 @@ namespace CarXmlConvertor
                                     {
                                         case "open left":
                                             newLines.Add("<OpenLeft>");
-                                            newLines.Add("<FileName>" + b + "</FileName>");
+                                            newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                             newLines.Add("<Position>-1.3,0,0</Position>");
                                             newLines.Add("<Radius>5.0</Radius>");
                                             newLines.Add("</OpenLeft>");
                                             break;
                                         case "open right":
                                             newLines.Add("<OpenRight>");
-                                            newLines.Add("<FileName>" + b + "</FileName>");
+                                            newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                             newLines.Add("<Position>1.3,0,0</Position>");
                                             newLines.Add("<Radius>5.0</Radius>");
                                             newLines.Add("</OpenRight>");
                                             break;
                                         case "close left":
                                             newLines.Add("<CloseLeft>");
-                                            newLines.Add("<FileName>" + b + "</FileName>");
+                                            newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                             newLines.Add("<Position>-1.3,0,0</Position>");
                                             newLines.Add("<Radius>5.0</Radius>");
                                             newLines.Add("</CloseLeft>");
                                             break;
                                         case "close right":
                                             newLines.Add("<CloseRight>");
-                                            newLines.Add("<FileName>" + b + "</FileName>");
+                                            newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                             newLines.Add("<Position>1.3,0,0</Position>");
                                             newLines.Add("<Radius>5.0</Radius>");
                                             newLines.Add("</CloseRight>");
@@ -523,7 +520,7 @@ namespace CarXmlConvertor
                                 {
                                     case "correct":
                                         newLines.Add("<Buzzer>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Buzzer>");
@@ -550,14 +547,14 @@ namespace CarXmlConvertor
                                 {
                                     case "on":
                                         newLines.Add("<On>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</On>");
                                         break;
                                     case "off":
                                         newLines.Add("<Off>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Off>");
@@ -586,42 +583,42 @@ namespace CarXmlConvertor
                                 {
                                     case "apply":
                                         newLines.Add("<Apply>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Apply>");
                                         break;
                                     case "applyfast":
 	                                    newLines.Add("<ApplyFast>");
-	                                    newLines.Add("<FileName>" + b + "</FileName>");
+	                                    newLines.Add("<FileName>" + b.Escape() + "</FileName>");
 	                                    newLines.Add("<Position>" + panel + "</Position>");
 	                                    newLines.Add("<Radius>2.0</Radius>");
 	                                    newLines.Add("</ApplyFast>");
 	                                    break;
                                     case "release":
                                         newLines.Add("<Release>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Release>");
                                         break;
                                     case "releasefast":
 	                                    newLines.Add("<ReleaseFast>");
-	                                    newLines.Add("<FileName>" + b + "</FileName>");
+	                                    newLines.Add("<FileName>" + b.Escape() + "</FileName>");
 	                                    newLines.Add("<Position>" + panel + "</Position>");
 	                                    newLines.Add("<Radius>2.0</Radius>");
 	                                    newLines.Add("</ReleaseFast>");
 	                                    break;
                                     case "min":
                                         newLines.Add("<Minimum>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Minimum>");
                                         break;
                                     case "max":
                                         newLines.Add("<Maximum>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Maximum>");
@@ -652,42 +649,42 @@ namespace CarXmlConvertor
                                     {
                                         case "up":
                                             newLines.Add("<Increase>");
-                                            newLines.Add("<FileName>" + b + "</FileName>");
+                                            newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                             newLines.Add("<Position>" + panel + "</Position>");
                                             newLines.Add("<Radius>2.0</Radius>");
                                             newLines.Add("</Increase>");
                                             break;
                                         case "upfast":
 	                                        newLines.Add("<IncreaseFast>");
-	                                        newLines.Add("<FileName>" + b + "</FileName>");
+	                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
 	                                        newLines.Add("<Position>" + panel + "</Position>");
 	                                        newLines.Add("<Radius>2.0</Radius>");
 	                                        newLines.Add("</IncreaseFast>");
 	                                        break;
                                         case "down":
                                             newLines.Add("<Decrease>");
-                                            newLines.Add("<FileName>" + b + "</FileName>");
+                                            newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                             newLines.Add("<Position>" + panel + "</Position>");
                                             newLines.Add("<Radius>2.0</Radius>");
                                             newLines.Add("</Decrease>");
                                             break;
                                         case "downfast":
 	                                        newLines.Add("<DecreaseFast>");
-	                                        newLines.Add("<FileName>" + b + "</FileName>");
+	                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
 	                                        newLines.Add("<Position>" + panel + "</Position>");
 	                                        newLines.Add("<Radius>2.0</Radius>");
 	                                        newLines.Add("</DecreaseFast>");
 	                                        break;
                                         case "min":
                                             newLines.Add("<Minimum>");
-                                            newLines.Add("<FileName>" + b + "</FileName>");
+                                            newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                             newLines.Add("<Position>" + panel + "</Position>");
                                             newLines.Add("<Radius>2.0</Radius>");
                                             newLines.Add("</Minimum>");
                                             break;
                                         case "max":
                                             newLines.Add("<Maximum>");
-                                            newLines.Add("<FileName>" + b + "</FileName>");
+                                            newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                             newLines.Add("<Position>" + panel + "</Position>");
                                             newLines.Add("<Radius>2.0</Radius>");
                                             newLines.Add("</Maximum>");
@@ -718,14 +715,14 @@ namespace CarXmlConvertor
                                 {
                                     case "on":
                                         newLines.Add("<On>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</On>");
                                         break;
                                     case "off":
                                         newLines.Add("<Off>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Off>");
@@ -756,14 +753,14 @@ namespace CarXmlConvertor
                                     {
                                         case "on":
                                             newLines.Add("<On>");
-                                            newLines.Add("<FileName>" + b + "</FileName>");
+                                            newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                             newLines.Add("<Position>" + panel + "</Position>");
                                             newLines.Add("<Radius>5.0</Radius>");
                                             newLines.Add("</On>");
                                             break;
                                         case "off":
                                             newLines.Add("<Off>");
-                                            newLines.Add("<FileName>" + b + "</FileName>");
+                                            newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                             newLines.Add("<Position>" + panel + "</Position>");
                                             newLines.Add("<Radius>5.0</Radius>");
                                             newLines.Add("</Off>");
@@ -784,11 +781,10 @@ namespace CarXmlConvertor
 		                    int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 		                    if (j >= 0)
 		                    {
-			                    string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-			                    string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
-			                    int k;
+			                    string a = Lines[i].Substring(0, j).TrimEnd();
+			                    string b = Lines[i].Substring(j + 1).TrimStart();
 			                    if (!int.TryParse(a, NumberStyles.Integer,
-				                        CultureInfo.InvariantCulture, out k))
+				                        CultureInfo.InvariantCulture, out int k))
 			                    {
 				                    continue;
 			                    }
@@ -800,7 +796,7 @@ namespace CarXmlConvertor
 			                    {
 				                    newLines.Add("<Sound>");
 				                    newLines.Add("<Index>" + k + "</Index>");
-				                    newLines.Add("<FileName>" + b + "</FileName>");
+				                    newLines.Add("<FileName>" + b.Escape() + "</FileName>");
 				                    newLines.Add("<Position>0,0,0</Position>");
 				                    newLines.Add("<Radius>10.0</Radius>");
 				                    newLines.Add("</Sound>");
@@ -827,14 +823,14 @@ namespace CarXmlConvertor
                                 {
                                     case "noise":
                                         newLines.Add("<Loop>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>0,0,0</Position>");
                                         newLines.Add("<Radius>10.0</Radius>");
                                         newLines.Add("</Loop>");
                                         break;
                                     case "shoe":
                                         newLines.Add("<Rub>");
-                                        newLines.Add("<FileName>" + b + "</FileName>");
+                                        newLines.Add("<FileName>" + b.Escape() + "</FileName>");
                                         newLines.Add("<Position>0,0,0</Position>");
                                         newLines.Add("<Radius>10.0</Radius>");
                                         newLines.Add("</Rub>");
@@ -861,28 +857,28 @@ namespace CarXmlConvertor
 								{
 									case "raindrop":
 										newLines.Add("<RainDrop>");
-										newLines.Add("<FileName>" + b + "</FileName>");
+										newLines.Add("<FileName>" + b.Escape() + "</FileName>");
 										newLines.Add("<Position>" + panel + "</Position>");
 										newLines.Add("<Radius>2.0</Radius>");
 										newLines.Add("</RainDrop>");
 										break;
 									case "wetwipe":
 										newLines.Add("<WetWipe>");
-										newLines.Add("<FileName>" + b + "</FileName>");
+										newLines.Add("<FileName>" + b.Escape() + "</FileName>");
 										newLines.Add("<Position>" + panel + "</Position>");
 										newLines.Add("<Radius>2.0</Radius>");
 										newLines.Add("</WetWipe>");
 										break;
 									case "drywipe":
 										newLines.Add("<DryWipe>");
-										newLines.Add("<FileName>" + b + "</FileName>");
+										newLines.Add("<FileName>" + b.Escape() + "</FileName>");
 										newLines.Add("<Position>" + panel + "</Position>");
 										newLines.Add("<Radius>2.0</Radius>");
 										newLines.Add("</DryWipe>");
 										break;
 									case "switch":
 										newLines.Add("<Switch>");
-										newLines.Add("<FileName>" + b + "</FileName>");
+										newLines.Add("<FileName>" + b.Escape() + "</FileName>");
 										newLines.Add("<Position>" + panel + "</Position>");
 										newLines.Add("<Radius>2.0</Radius>");
 										newLines.Add("</Switch>");
