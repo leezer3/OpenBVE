@@ -116,11 +116,16 @@ namespace Formats.OpenBve
 
 	    public virtual bool GetColor24(TT key, out Color24 value)
 	    {
-			value = Color24.Blue;
+			value = Color24.White;
 			return false;
 	    }
 
-	    public virtual bool GetStringArray(TT key, char separator, out string[] values)
+	    public virtual bool TryGetColor24(TT key, ref Color24 value)
+	    {
+		    return false;
+	    }
+
+		public virtual bool GetStringArray(TT key, char separator, out string[] values)
 	    {
 		    values = new string[0];
 		    return false;
@@ -162,18 +167,17 @@ namespace Formats.OpenBve
 
 			for (int i = 0; i < Lines.Length; i++)
 			{
+				int j = Lines[i].IndexOf(';');
+				if (j >= 0)
+				{
+					Lines[i] = Lines[i].Substring(0, j).Trim();
+				}
+				else
+				{
+					Lines[i] = Lines[i].Trim();
+				}
 				if (headerOK == false)
 				{
-					int j = Lines[i].IndexOf(';');
-					if (j >= 0)
-					{
-						Lines[i] = Lines[i].Substring(0, j).Trim();
-					}
-					else
-					{
-						Lines[i] = Lines[i].Trim();
-					}
-
 					if (!string.IsNullOrEmpty(Lines[i]) && string.Compare(Lines[i], expectedHeader, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						headerOK = true;
@@ -601,7 +605,22 @@ namespace Formats.OpenBve
 				currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + key + " in " + Key + " at line " + color.Key);
 			}
 
-			value = Color24.Blue;
+			value = Color24.White;
+			return false;
+		}
+
+		public override bool TryGetColor24(TT key, ref Color24 value)
+		{
+			if (keyValuePairs.TryGetValue(key, out var color))
+			{
+				if (Color24.TryParseHexColor(color.Value, out Color24 newValue))
+				{
+					value = newValue;
+					return true;
+				}
+				currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + key + " in " + Key + " at line " + color.Key);
+			}
+
 			return false;
 		}
 	}

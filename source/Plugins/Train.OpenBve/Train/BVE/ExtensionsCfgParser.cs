@@ -89,20 +89,9 @@ namespace Train.OpenBve
 							}
 
 							CarsDefined[block.Index] = true;
-							if (block.GetValue(ExtensionCfgKey.Object, out string carObject))
+							if (block.GetPath(ExtensionCfgKey.Object, TrainPath, out string carObject))
 							{
-								if (!Path.ContainsInvalidChars(carObject))
-								{
-									string File = Path.CombineFile(TrainPath, carObject);
-									if (System.IO.File.Exists(File))
-									{
-										Plugin.currentHost.LoadObject(File, Encoding, out CarObjects[block.Index]);
-									}
-									else
-									{
-										Plugin.currentHost.AddMessage(MessageType.Error, true, "The object " + File + " for Car " + block.Index + " does not exist in file " + FileName);
-									}
-								}
+								Plugin.currentHost.LoadObject(carObject, Encoding, out CarObjects[block.Index]);
 							}
 
 							if (block.GetValue(ExtensionCfgKey.Length, out double carLength))
@@ -140,20 +129,9 @@ namespace Train.OpenBve
 									Train.Cars[block.Index].Coupler.MaximumDistanceBetweenCars = distances.Y;
 								}
 							}
-							if (block.GetValue(ExtensionCfgKey.Object, out string couplerObject))
+							if (block.GetPath(ExtensionCfgKey.Object, TrainPath, out string couplerObject))
 							{
-								if (!Path.ContainsInvalidChars(couplerObject))
-								{
-									string File = Path.CombineFile(TrainPath, couplerObject);
-									if (System.IO.File.Exists(File))
-									{
-										Plugin.currentHost.LoadObject(File, Encoding, out CouplerObjects[block.Index]);
-									}
-									else
-									{
-										Plugin.currentHost.AddMessage(MessageType.Error, true, "The object " + File + " for Coupler " + block.Index + " does not exist in file " + FileName);
-									}
-								}
+								Plugin.currentHost.LoadObject(couplerObject, Encoding, out CouplerObjects[block.Index]);
 							}
 							break;
 						case ExtensionCfgSection.Bogie:
@@ -179,20 +157,9 @@ namespace Train.OpenBve
 							int CarIndex = block.Index / 2;
 							bool DefinedAxles = false;
 
-							if (block.GetValue(ExtensionCfgKey.Object, out string bogieObject))
+							if (block.GetPath(ExtensionCfgKey.Object, TrainPath, out string bogieObject))
 							{
-								if (!Path.ContainsInvalidChars(bogieObject))
-								{
-									string File = Path.CombineFile(TrainPath, bogieObject);
-									if (System.IO.File.Exists(File))
-									{
-										Plugin.currentHost.LoadObject(File, Encoding, out BogieObjects[block.Index]);
-									}
-									else
-									{
-										Plugin.currentHost.AddMessage(MessageType.Error, true, "The object " + File + " for Bogie " + block.Index + " does not exist in file " + FileName);
-									}
-								}
+								Plugin.currentHost.LoadObject(bogieObject, Encoding, out BogieObjects[block.Index]);
 							}
 							block.GetValue(ExtensionCfgKey.Reversed, out BogieObjectsReversed[block.Index]);
 							if (block.GetVector2(ExtensionCfgKey.Axles, ',', out Vector2 bogieAxles))

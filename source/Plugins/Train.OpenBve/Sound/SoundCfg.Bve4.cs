@@ -168,8 +168,8 @@ namespace Train.OpenBve
 							train.Cars[c].CarBrake.Release = new CarSound(Plugin.currentHost, bpDecomp, SoundCfgParser.smallRadius, center);
 							
 						}
-						train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Plugin.currentHost, trainFolder, emergency, SoundCfgParser.mediumRadius, center);
-						train.Handles.EmergencyBrake.ReleaseSound = new CarSound(Plugin.currentHost, trainFolder, emergencyRelease, SoundCfgParser.mediumRadius, center);
+						train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Plugin.currentHost, emergency, SoundCfgParser.mediumRadius, center);
+						train.Handles.EmergencyBrake.ReleaseSound = new CarSound(Plugin.currentHost, emergencyRelease, SoundCfgParser.mediumRadius, center);
 						break;
 					case SoundCfgSection.Compressor:
 						block.GetPath(SoundCfgKey.Attack, trainFolder, out string attack);
