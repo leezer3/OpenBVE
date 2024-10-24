@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.IO;
 using OpenBveApi.Hosts;
 
 namespace LibRender2.Text
@@ -54,6 +56,10 @@ namespace LibRender2.Text
 		/// <returns>The next larger font</returns>
 		public OpenGlFont NextLargestFont(OpenGlFont currentFont)
 		{
+			if (currentFont == null)
+			{
+				throw new InvalidDataException("No font was specified.");
+			}
 			switch ((int)currentFont.FontSize)
 			{
 				case 9:
