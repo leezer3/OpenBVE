@@ -8,10 +8,11 @@ namespace OpenBveApi
 		/// <summary>Returns whether the dat file is potentially a Mechanik DAT file</summary>
 	    public static bool IsInvalidDatName(string fileName)
 	    {
-		    /*
+		    string fn = Path.GetFileName(fileName).ToLowerInvariant();
+			/*
 		     * Blacklist a bunch of invalid .dat files so they don't show up in the route browser
 		     */
-		    switch (fileName.ToLowerInvariant())
+			switch (fn)
 		    {
 			    case "train.dat":       //BVE Train data
 			    case "tekstury.dat":    //Mechanik texture list
@@ -43,7 +44,17 @@ namespace OpenBveApi
 		     * > Common readme names
 		     * > Files over 20kb (a BVE5 scenario should be ~1kb, but let's be safe)
 		     */
-		    FileInfo f = new FileInfo(fileName);
+		    FileInfo f;
+		    try
+		    {
+			    f = new FileInfo(fileName);
+			}
+		    catch
+		    {
+				// couldn't access the file, so unable to load either way
+			    return false;
+		    }
+		    
 		    if (f.Length > 20000)
 		    {
 			    return true;

@@ -306,7 +306,7 @@ namespace OpenBve
 							}
 							if (fileName.ToLowerInvariant().EndsWith(".csv") || fileName.ToLowerInvariant().EndsWith(".rw") || fileName.EndsWith(".txt") || fileName.EndsWith(".dat"))
 							{
-								if(Path.IsInvalidDatName(fileName) || Path.IsInvalidTxtName(fileName))
+								if(Path.IsInvalidDatName(potentialFiles[j]) || Path.IsInvalidTxtName(potentialFiles[j]))
 								{
 									// block most junk files from trying to be shown as a route
 									continue;

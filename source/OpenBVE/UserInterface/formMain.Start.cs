@@ -272,7 +272,7 @@ namespace OpenBve
 									break;
 								case ".dat":
 									fileName = System.IO.Path.GetFileName(Files[i]);
-									if (fileName == null || Path.IsInvalidDatName(fileName))
+									if (fileName == null || Path.IsInvalidDatName(Files[i]))
 									{
 										continue;
 									}
