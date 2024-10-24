@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Panel\Enums\Panel2Key.cs" />
+    <Compile Include="Panel\Enums\Panel2Sections.cs" />
     <Compile Include="Panel\Enums\PanelKey.cs" />
     <Compile Include="Panel\Enums\PanelSections.cs" />
     <Compile Include="Panel\Panel2CfgParser.cs" />

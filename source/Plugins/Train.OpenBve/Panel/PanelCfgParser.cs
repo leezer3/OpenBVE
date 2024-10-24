@@ -85,11 +85,11 @@ namespace Train.OpenBve
 				{
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 					{
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
-						switch (Section.ToLowerInvariant())
+						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out PanelSections Section);
+						switch (Section)
 						{
 							// panel
-							case "panel":
+							case PanelSections.Panel:
 								i++;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
 								{
@@ -125,7 +125,7 @@ namespace Train.OpenBve
 								i--;
 								break;
 							// view
-							case "view":
+							case PanelSections.View:
 								i++;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
 								{
@@ -203,14 +203,10 @@ namespace Train.OpenBve
 				{
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 					{
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
-						switch (Section.ToLowerInvariant())
+						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out PanelSections Section);
+						switch (Section)
 						{
-							// pressuregauge
-							case "pressuregauge":
-							case "pressuremeter":
-							case "pressureindicator":
-							case "圧力計":
+							case PanelSections.PressureGauge:
 							{
 								int Type = 0;
 								Color32[] NeedleColor = new Color32[] {Color32.Black, Color32.Black};
@@ -225,13 +221,12 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd();
+										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 										string Value = Lines[i].Substring(j + 1).TrimStart();
 										string[] Arguments = GetArguments(Value);
-										switch (Key.ToLowerInvariant())
+										switch (Key)
 										{
-											case "type":
-											case "形態":
+											case PanelKey.Type:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out Type))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Type is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -244,13 +239,9 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "lowerneedle":
-											case "lowerhand":
-											case "下針":
-											case "upperneedle":
-											case "upperhand":
-											case "上針":
-												int k = Key.ToLowerInvariant() == "lowerneedle" | Key.ToLowerInvariant() == "lowerhand" | Key == "下針" ? 0 : 1;
+											case PanelKey.LowerNeedle:
+											case PanelKey.UpperNeedle:
+												int k = Key == PanelKey.LowerNeedle ? 0 : 1;
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0)
 												{
 													switch (Arguments[0].ToLowerInvariant())
@@ -330,8 +321,7 @@ namespace Train.OpenBve
 
 												NeedleColor[k] = new Color32((byte) r, (byte) g, (byte) b, 255);
 												break;
-											case "center":
-											case "中心":
+											case PanelKey.Center:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CenterX))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -344,8 +334,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "radius":
-											case "半径":
+											case PanelKey.Radius:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Radius))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -353,8 +342,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "background":
-											case "背景":
+											case PanelKey.Background:
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 												if (Path.ContainsInvalidChars(Value))
 												{
@@ -371,8 +359,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "cover":
-											case "ふた":
+											case PanelKey.Cover:
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 												if (Path.ContainsInvalidChars(Value))
 												{
@@ -389,8 +376,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "unit":
-											case "単位":
+											case PanelKey.Unit:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0)
 												{
 													string a = Arguments[0].ToLowerInvariant();
@@ -414,8 +400,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "maximum":
-											case "最大":
+											case PanelKey.Maximum:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Maximum))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "PressureValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -423,8 +408,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "minimum":
-											case "最小":
+											case PanelKey.Minimum:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Minimum))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "PressureValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -432,8 +416,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "angle":
-											case "角度":
+											case PanelKey.Angle:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Angle))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -587,10 +570,7 @@ namespace Train.OpenBve
 								}
 							}
 								break;
-							// speedometer
-							case "speedometer":
-							case "speedindicator":
-							case "速度計":
+							case PanelSections.Speedometer:
 							{
 								int Type = 0;
 								Color32 Needle = Color32.White;
@@ -604,13 +584,12 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd();
+										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 										string Value = Lines[i].Substring(j + 1).TrimStart();
 										string[] Arguments = GetArguments(Value);
-										switch (Key.ToLowerInvariant())
+										switch (Key)
 										{
-											case "type":
-											case "形態":
+											case PanelKey.Type:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out Type))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -623,8 +602,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "background":
-											case "背景":
+											case PanelKey.Background:
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 												if (Path.ContainsInvalidChars(Value))
 												{
@@ -641,9 +619,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "needle":
-											case "hand":
-											case "針":
+											case PanelKey.Needle:
 											{
 												int r = 0, g = 0, b = 0;
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[0], out r))
@@ -683,8 +659,7 @@ namespace Train.OpenBve
 												NeedleOverridden = true;
 											}
 												break;
-											case "cover":
-											case "ふた":
+											case PanelKey.Cover:
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 												Cover = Path.CombineFile(TrainPath, Value);
 												if (!System.IO.File.Exists(Cover))
@@ -694,7 +669,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "atc":
+											case PanelKey.ATC:
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 												Atc = Path.CombineFile(TrainPath, Value);
 												if (!System.IO.File.Exists(Atc))
@@ -704,8 +679,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "atcradius":
-											case "atc半径":
+											case PanelKey.ATCRadius:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out AtcRadius))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -713,8 +687,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "center":
-											case "中心":
+											case PanelKey.Center:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CenterX))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -727,8 +700,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "radius":
-											case "半径":
+											case PanelKey.Radius:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Radius))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -736,8 +708,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "angle":
-											case "角度":
+											case PanelKey.Angle:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Angle))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -749,8 +720,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "maximum":
-											case "最大":
+											case PanelKey.Maximum:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Maximum))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "SpeedValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -929,9 +899,7 @@ namespace Train.OpenBve
 								}
 							}
 								break;
-							// digitalindicator
-							case "digitalindicator":
-							case "デジタル速度計":
+							case PanelSections.DigitalIndicator:
 							{
 								string Number = null;
 								double CornerX = 0.0, CornerY = 0.0;
@@ -943,13 +911,12 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd();
+										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 										string Value = Lines[i].Substring(j + 1).TrimStart();
 										string[] Arguments = GetArguments(Value);
-										switch (Key.ToLowerInvariant())
+										switch (Key)
 										{
-											case "number":
-											case "数字":
+											case PanelKey.Number
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 												if (Path.ContainsInvalidChars(Value))
 												{
@@ -966,8 +933,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "corner":
-											case "左上":
+											case PanelKey.Corner:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CornerX))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -980,8 +946,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "size":
-											case "サイズ":
+											case PanelKey.Size:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out Width))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Width is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -994,7 +959,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "unit":
+											case PanelKey.Unit:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0)
 												{
 													string a = Arguments[0].ToLowerInvariant();
@@ -1143,9 +1108,7 @@ namespace Train.OpenBve
 								}
 							}
 								break;
-							// pilotlamp
-							case "pilotlamp":
-							case "知らせ灯":
+							case PanelSections.PilotLamp:
 							{
 								double CornerX = 0.0, CornerY = 0.0;
 								string TurnOn = null, TurnOff = null;
@@ -1155,13 +1118,12 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd();
+										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 										string Value = Lines[i].Substring(j + 1).TrimStart();
 										string[] Arguments = GetArguments(Value);
-										switch (Key.ToLowerInvariant())
+										switch (Key)
 										{
-											case "turnon":
-											case "点灯":
+											case PanelKey.TurnOn:
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 												if (Path.ContainsInvalidChars(Value))
 												{
@@ -1178,8 +1140,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "turnoff":
-											case "消灯":
+											case PanelKey.TurnOff:
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 												if (Path.ContainsInvalidChars(Value))
 												{
@@ -1196,8 +1157,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "corner":
-											case "左上":
+											case PanelKey.Corner:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CornerX))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -1227,9 +1187,7 @@ namespace Train.OpenBve
 								}
 							}
 								break;
-							// watch
-							case "watch":
-							case "時計":
+							case PanelSections.Watch:
 							{
 								Color32 Needle = Color32.Black;
 								double CenterX = 0.0, CenterY = 0.0, Radius = 16.0;
@@ -1240,13 +1198,12 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd();
+										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 										string Value = Lines[i].Substring(j + 1).TrimStart();
 										string[] Arguments = GetArguments(Value);
-										switch (Key.ToLowerInvariant())
+										switch (Key)
 										{
-											case "background":
-											case "背景":
+											case PanelKey.Background:
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 												if (Path.ContainsInvalidChars(Value))
 												{
@@ -1263,9 +1220,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "needle":
-											case "hand":
-											case "針":
+											case PanelKey.Needle:
 											{
 												int r = 0, g = 0, b = 0;
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[0], out r))
@@ -1304,8 +1259,7 @@ namespace Train.OpenBve
 												Needle = new Color32((byte) r, (byte) g, (byte) b, 255);
 											}
 												break;
-											case "center":
-											case "中心":
+											case PanelKey.Center:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CenterX))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -1318,8 +1272,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "radius":
-											case "半径":
+											case PanelKey.Radius:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Radius))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -1376,9 +1329,7 @@ namespace Train.OpenBve
 								}
 							}
 								break;
-							// brakeindicator
-							case "brakeindicator":
-							case "ハンドルの段表示":
+							case PanelSections.BrakeIndicator:
 							{
 								double CornerX = 0.0, CornerY = 0.0;
 								string Image = null;
@@ -1389,13 +1340,12 @@ namespace Train.OpenBve
 									int j = Lines[i].IndexOf('=');
 									if (j >= 0)
 									{
-										string Key = Lines[i].Substring(0, j).TrimEnd();
+										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
 										string Value = Lines[i].Substring(j + 1).TrimStart();
 										string[] Arguments = GetArguments(Value);
-										switch (Key.ToLowerInvariant())
+										switch (Key)
 										{
-											case "image":
-											case "画像":
+											case PanelKey.Image:
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 												if (Path.ContainsInvalidChars(Value))
 												{
@@ -1412,8 +1362,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "corner":
-											case "左上":
+											case PanelKey.Corner:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CornerX))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -1426,8 +1375,7 @@ namespace Train.OpenBve
 												}
 
 												break;
-											case "width":
-											case "幅":
+											case PanelKey.Width:
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out Width))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "Width is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
