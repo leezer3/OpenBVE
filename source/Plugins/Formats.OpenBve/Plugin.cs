@@ -50,8 +50,14 @@ namespace Formats.OpenBve
 	    public readonly int Index;
 		
 	    internal readonly HostInterface currentHost;
-		
-	    public virtual bool GetValue(TT key, out bool value)
+
+	    public virtual bool GetValue(TT key, out string value)
+	    {
+		    value = string.Empty;
+		    return false;
+	    }
+
+        public virtual bool GetValue(TT key, out bool value)
 	    {
 		    value = false;
 		    return false;
@@ -125,7 +131,7 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
-		public virtual bool GetStringArray(TT key, char separator, out string[] values)
+		public virtual bool TryGetStringArray(TT key, char separator, ref string[] values)
 	    {
 		    values = new string[0];
 		    return false;
@@ -437,7 +443,7 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-		public override bool GetStringArray(TT key, char separator, out string[] values)
+		public override bool TryGetStringArray(TT key, char separator, ref string[] values)
 		{
 			if (keyValuePairs.TryGetValue(key, out var value))
 			{
@@ -445,7 +451,6 @@ namespace Formats.OpenBve
 				return true;
 			}
 			currentHost.AddMessage(MessageType.Warning, false, "Key " + key + " was not found in Section " + Key + " at Line " + value.Key);
-			values = new string[0];
 			return false;
 		}
 
@@ -515,7 +520,18 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-		public override bool GetValue(TT key, out double value)
+		public override bool GetValue(TT key, out string stringValue)
+		{
+			if (keyValuePairs.TryGetValue(key, out var value))
+			{
+                stringValue = value.Value;
+				return true;
+			}
+			stringValue = string.Empty;
+			return false;
+		}
+
+        public override bool GetValue(TT key, out double value)
 		{
 			if (keyValuePairs.TryGetValue(key, out var s))
 			{

@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using Formats.OpenBve;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
-using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -139,22 +137,21 @@ namespace Train.OpenBve
 			{
 				Block = cfg.ReadNextBlock();
 				string Subject = "true";
+				Block.TryGetValue(PanelKey.Subject, ref Subject);
 				string Function = string.Empty, DaytimeImage;
+				Block.TryGetValue(PanelKey.Function, ref Function);
 				Color24 Color = Color24.White;
 				Color24 TransparentColor = Color24.Blue;
+				Block.TryGetColor24(PanelKey.TransparentColor, ref TransparentColor);
+				Block.GetValue(PanelKey.Layer, out int Layer);
 				double Radius = 0;
 				switch (Block.Key)
 				{
 					case PanelSections.PilotLamp:
 						if (Block.GetPath(PanelKey.DaytimeImage, TrainPath, out DaytimeImage))
 						{
-							Block.TryGetValue(PanelKey.Subject, ref Subject);
-							Block.TryGetValue(PanelKey.Function, ref Function);
 							Block.GetVector2(PanelKey.Location, ',', out Vector2 Location);
 							Block.GetPath(PanelKey.NighttimeImage, TrainPath, out string NighttimeImage);
-							Block.GetValue(PanelKey.Layer, out int Layer);
-							Block.TryGetColor24(PanelKey.TransparentColor, ref TransparentColor);
-
 							Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 							Texture tnight = null;
 							if (!string.IsNullOrEmpty(NighttimeImage))
@@ -198,8 +195,6 @@ namespace Train.OpenBve
 							Block.GetValue(PanelKey.Backstop, out bool Backstop);
 							Block.GetValue(PanelKey.Smoothed, out bool Smoothed);
 							Block.GetPath(PanelKey.NighttimeImage, TrainPath, out string NighttimeImage);
-							Block.TryGetColor24(PanelKey.TransparentColor, ref TransparentColor);
-							Block.GetValue(PanelKey.Layer, out int Layer);
 							
 							Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 							Texture tnight = null;
@@ -276,8 +271,6 @@ namespace Train.OpenBve
 							Block.GetValue(PanelKey.Width, out int Width);
 							Block.TryGetVector2(PanelKey.Direction, ',', ref Direction);
 							Block.GetPath(PanelKey.NighttimeImage, TrainPath, out string NighttimeImage);
-							Block.TryGetColor24(PanelKey.TransparentColor, ref TransparentColor);
-							Block.GetValue(PanelKey.Layer, out int Layer);
 
 							Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 							Texture tnight = null;
@@ -321,8 +314,6 @@ namespace Train.OpenBve
 							Block.GetVector2(PanelKey.Location, ',', out Vector2 Location);
 							Block.GetValue(PanelKey.Interval, out int Interval);
 							Block.GetPath(PanelKey.NighttimeImage, TrainPath, out string NighttimeImage);
-							Block.TryGetColor24(PanelKey.TransparentColor, ref TransparentColor);
-							Block.GetValue(PanelKey.Layer, out int Layer);
 
 							Plugin.currentHost.QueryTextureDimensions(DaytimeImage, out var wday, out var hday);
 							if (wday > 0 & hday > 0)
@@ -468,8 +459,6 @@ namespace Train.OpenBve
 							Block.TryGetValue(PanelKey.Maximum, ref Maximum);
 							Block.TryGetColor24(PanelKey.Color, ref Color);
 							Block.GetValue(PanelKey.Step, out double Step);
-							Block.GetPath(PanelKey.NighttimeImage, TrainPath, out string NighttimeImage);
-							Block.GetValue(PanelKey.Layer, out int Layer);
 
 							if (Plugin.CurrentOptions.EnableBveTsHacks && trainName == "BOEING-737")
 							{
@@ -582,7 +571,7 @@ namespace Train.OpenBve
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "Width and Height are required to be positive in " + Block.Key + " in " + FileName);
 								break;
 							}
-							Block.GetValue(PanelKey.Layer, out int Layer);
+
 							if (Block.GetColor24(PanelKey.TransparentColor, out _))
 							{
 								// The original code read this, but never used it
@@ -603,285 +592,143 @@ namespace Train.OpenBve
 							Plugin.currentHost.AddObjectForCustomTimeTable(Car.CarSections[0].Groups[GroupIndex].Elements[j]);
 						}
 						break;
-				}
-			}
-			
-			
+					case PanelSections.Windscreen:
+						Vector2 topLeft = new Vector2(PanelLeft, PanelTop);
+						Vector2 bottomRight = new Vector2(PanelRight, PanelBottom);
+						int numberOfDrops = 16, dropSize = 16;
+						double wipeSpeed = 1.0, holdTime = 1.0, dropLife = 10.0;
+						WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
+						string[] daytimeDropFiles, nighttimeDropFiles, daytimeFlakeFiles, nighttimeFlakeFiles;
+						try
+						{
+							daytimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day"), "drop*.png");
+							daytimeFlakeFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day"), "flake*.png");
+							nighttimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night"), "drop*.png");
+							nighttimeFlakeFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night"), "flake*.png");
+						}
+						catch
+						{
+							break;
+						}
 
-			// parse lines for rest
-			double invfac = Lines.Length == 0 ? 0.4 : 0.4 / Lines.Length;
-			for (int i = 0; i < Lines.Length; i++) {
-				Plugin.CurrentProgress = Plugin.LastProgress + invfac * i;
-				if ((i & 7) == 0) {
-					System.Threading.Thread.Sleep(1);
-					if (Plugin.Cancel) return;
-				}
-				if (Lines[i].Length > 0) {
-					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
-					{
-						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out PanelSections Section);
-						switch (Section) {
-								case PanelSections.Windscreen:
-								{
-									i++;
-									Vector2 topLeft = new Vector2(PanelLeft, PanelTop);
-									Vector2 bottomRight = new Vector2(PanelRight, PanelBottom);
-									int numberOfDrops = 16, Layer = 0, dropSize = 16;
-									WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
-									List<string> daytimeDropFiles, nighttimeDropFiles, daytimeFlakeFiles, nighttimeFlakeFiles;
-									Color24 TransparentColor = Color24.Blue;
-									double wipeSpeed = 1.0, holdTime = 1.0, dropLife = 10.0;
-									try
-									{
-										daytimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day"), "drop*.png").ToList();
-										daytimeFlakeFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day"), "flake*.png").ToList();
-										nighttimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night"), "drop*.png").ToList();
-										nighttimeFlakeFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night"), "flake*.png").ToList();
-									}
-									catch
-									{
-										break;
-									}
+						Block.TryGetVector2(PanelKey.TopLeft, ',', ref topLeft);
+						Block.TryGetVector2(PanelKey.BottomRight, ',', ref bottomRight);
+						Block.TryGetValue(PanelKey.NumberOfDrops, ref numberOfDrops);
+						Block.TryGetValue(PanelKey.DropSize, ref dropSize);
+						Block.TryGetValue(PanelKey.DropLife, ref dropLife);
+						Block.TryGetStringArray(PanelKey.DaytimeDrops, ',', ref daytimeDropFiles);
+						Block.TryGetStringArray(PanelKey.NighttimeDrops, ',', ref nighttimeDropFiles);
+						Block.TryGetStringArray(PanelKey.DaytimeFlakes, ',', ref daytimeFlakeFiles);
+						Block.TryGetStringArray(PanelKey.NighttimeFlakes, ',', ref nighttimeFlakeFiles);
+						Block.TryGetValue(PanelKey.WipeSpeed, ref wipeSpeed);
+						Block.TryGetValue(PanelKey.WiperHoldTime, ref holdTime);
+						if (Block.GetValue(PanelKey.RestPosition, out string restPos))
+						{
+							switch (restPos.ToLowerInvariant())
+							{
+								case "0":
+								case "left":
+									restPosition = WiperPosition.Left;
+									break;
+								case "1":
+								case "right":
+									restPosition = WiperPosition.Right;
+									break;
+								default:
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + FileName);
+									break;
+							}
+						}
+						if (Block.GetValue(PanelKey.HoldPosition, out string holdPos))
+						{
+							switch (holdPos.ToLowerInvariant())
+							{
+								case "0":
+								case "left":
+									restPosition = WiperPosition.Left;
+									break;
+								case "1":
+								case "right":
+									restPosition = WiperPosition.Right;
+									break;
+								default:
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + FileName);
+									break;
+							}
+						}
 
-									while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
-									{
-										int j = Lines[i].IndexOf('=');
-										if (j >= 0)
-										{
-											int k;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
-											string Value = Lines[i].Substring(j + 1).TrimStart();
-											switch (Key)
-											{
-												case PanelKey.TopLeft:
-													k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out topLeft.X))
-														{
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out topLeft.Y))
-														{
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													}
-													else
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-
-													break;
-												case PanelKey.BottomRight:
-													k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out bottomRight.X))
-														{
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out bottomRight.Y))
-														{
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													}
-													else
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-
-													break;
-												case PanelKey.NumberOfDrops:
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out numberOfDrops))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "NumberOfDrops is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-
-													break;
-												case PanelKey.DropSize:
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out dropSize))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "DropSize is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-
-													break;
-												case PanelKey.DaytimeDrops:
-													daytimeDropFiles = Value.IndexOf(',') != -1 ? Value.Trim().Split(',').ToList() : new List<string> {Value};
-													break;
-												case PanelKey.NighttimeDrops:
-													nighttimeDropFiles = Value.IndexOf(',') != -1 ? Value.Trim().Split(',').ToList() : new List<string> {Value};
-													break;
-												case PanelKey.DaytimeFlakes:
-													daytimeDropFiles = Value.IndexOf(',') != -1 ? Value.Trim().Split(',').ToList() : new List<string> {Value};
-													break;
-												case PanelKey.NighttimeFlakes:
-													nighttimeDropFiles = Value.IndexOf(',') != -1 ? Value.Trim().Split(',').ToList() : new List<string> {Value};
-													break;
-												case PanelKey.TransparentColor:
-													if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-
-													break;
-												case PanelKey.Layer:
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "NumberOfDrops is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-													break;
-												case PanelKey.WipeSpeed:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out wipeSpeed))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "WipeSpeed is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-													break;
-												case PanelKey.WiperHoldTime:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out holdTime))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "WipeSpeed is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-													break;
-												case PanelKey.RestPosition:
-												case PanelKey.WiperRestPosition:
-													switch (Value.ToLowerInvariant())
-													{
-														case "0":
-														case "left":
-															restPosition = WiperPosition.Left;
-															break;
-														case "1":
-														case "right":
-															restPosition = WiperPosition.Right;
-															break;
-														default:
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															break;
-													}
-													break;
-												case PanelKey.HoldPosition:
-												case PanelKey.WiperHoldPosition:
-													switch (Value.ToLowerInvariant())
-													{
-														case "0":
-														case "left":
-															holdPosition = WiperPosition.Left;
-															break;
-														case "1":
-														case "right":
-															holdPosition = WiperPosition.Right;
-															break;
-														default:
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperHoldPosition is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															break;
-													}
-													break;
-												case PanelKey.DropLife:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out dropLife))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "DropLife is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-													break;
-											}
-										}
-
-										i++;
-									}
-
-									i--;
-									/*
+						/*
 									 * Ensure we have the same number of drops for day + night
 									 * NOTE: If a drop is missing, we may get slightly odd effects, but can't be helped
 									 * Raindrops ought to be blurry, and they're small enough anyway...
 									 */
-									int MD = Math.Max(daytimeDropFiles.Count, nighttimeDropFiles.Count);
-									MD = Math.Max(daytimeFlakeFiles.Count, MD);
-									MD = Math.Max(nighttimeFlakeFiles.Count, MD);
-									if (daytimeDropFiles.Count < MD)
-									{
-										while (daytimeDropFiles.Count < MD)
-										{
-											daytimeDropFiles.Add(string.Empty);
-										}
-									}
-
-									if (daytimeFlakeFiles.Count < MD)
-									{
-										while (daytimeFlakeFiles.Count < MD)
-										{
-											daytimeFlakeFiles.Add(string.Empty);
-										}
-									}
-
-									if (nighttimeDropFiles.Count < MD)
-									{
-										while (nighttimeDropFiles.Count < MD)
-										{
-											nighttimeDropFiles.Add(string.Empty);
-										}
-									}
-
-									
-									if (nighttimeFlakeFiles.Count < MD)
-									{
-										while (nighttimeFlakeFiles.Count < MD)
-										{
-											nighttimeFlakeFiles.Add(string.Empty);
-										}
-									}
-
-									List<Texture> daytimeDrops = LoadDrops(TrainPath, daytimeDropFiles, TransparentColor, "drop");
-									List<Texture> daytimeFlakes = LoadDrops(TrainPath, daytimeFlakeFiles, TransparentColor, "flake");
-									List<Texture> nighttimeDrops = LoadDrops(TrainPath, nighttimeDropFiles, TransparentColor, "drop");
-									List<Texture> nighttimeFlakes = LoadDrops(TrainPath, nighttimeFlakeFiles, TransparentColor, "flake");
-
-									double dropInterval = (bottomRight.X - topLeft.X) / numberOfDrops;
-									double currentDropX = topLeft.X;
-									Car.Windscreen = new Windscreen(numberOfDrops, dropLife, Car);
-									Car.Windscreen.Wipers = new WindscreenWiper(Car.Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
-									// Create drops
-									for (int drop = 0; drop < numberOfDrops; drop++)
-									{
-										int DropTexture = Plugin.RandomNumberGenerator.Next(daytimeDrops.Count);
-										double currentDropY = Plugin.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
-										//Create both a drop and a snowflake at the same position, the windscreen code will determine which is shown
-										int panelDropIndex = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
-										int panelFlakeIndex = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeFlakes[DropTexture], nighttimeFlakes[DropTexture], Color32.White);
-										string f = drop + " raindrop";
-										string f2 = drop + " snowflake";
-										try
-										{
-											Car.CarSections[0].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
-											Car.CarSections[0].Groups[GroupIndex].Elements[panelFlakeIndex].StateFunction = new FunctionScript(Plugin.currentHost, f2 + " 1 == --", false);
-										}
-										catch
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-										}
-
-										currentDropX += dropInterval;
-									}
-								}
-								break;
+						int MD = Math.Max(daytimeDropFiles.Length, nighttimeDropFiles.Length);
+						MD = Math.Max(daytimeFlakeFiles.Length, MD);
+						MD = Math.Max(nighttimeFlakeFiles.Length, MD);
+						if (daytimeDropFiles.Length < MD)
+						{
+							Array.Resize(ref daytimeDropFiles, MD);
 						}
-					}
+
+						if (daytimeFlakeFiles.Length < MD)
+						{
+							Array.Resize(ref daytimeFlakeFiles, MD);
+						}
+
+						if (nighttimeDropFiles.Length < MD)
+						{
+							Array.Resize(ref nighttimeDropFiles, MD);
+						}
+
+
+						if (nighttimeFlakeFiles.Length < MD)
+						{
+							Array.Resize(ref nighttimeFlakeFiles, MD);
+						}
+
+						List<Texture> daytimeDrops = LoadDrops(TrainPath, daytimeDropFiles, TransparentColor, "drop");
+						List<Texture> daytimeFlakes = LoadDrops(TrainPath, daytimeFlakeFiles, TransparentColor, "flake");
+						List<Texture> nighttimeDrops = LoadDrops(TrainPath, nighttimeDropFiles, TransparentColor, "drop");
+						List<Texture> nighttimeFlakes = LoadDrops(TrainPath, nighttimeFlakeFiles, TransparentColor, "flake");
+
+						double dropInterval = (bottomRight.X - topLeft.X) / numberOfDrops;
+						double currentDropX = topLeft.X;
+						Car.Windscreen = new Windscreen(numberOfDrops, dropLife, Car);
+						Car.Windscreen.Wipers = new WindscreenWiper(Car.Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
+						// Create drops
+						for (int drop = 0; drop < numberOfDrops; drop++)
+						{
+							int DropTexture = Plugin.RandomNumberGenerator.Next(daytimeDrops.Count);
+							double currentDropY = Plugin.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
+							//Create both a drop and a snowflake at the same position, the windscreen code will determine which is shown
+							int panelDropIndex = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
+							int panelFlakeIndex = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeFlakes[DropTexture], nighttimeFlakes[DropTexture], Color32.White);
+							string f = drop + " raindrop";
+							string f2 = drop + " snowflake";
+							try
+							{
+								Car.CarSections[0].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
+								Car.CarSections[0].Groups[GroupIndex].Elements[panelFlakeIndex].StateFunction = new FunctionScript(Plugin.currentHost, f2 + " 1 == --", false);
+							}
+							catch
+							{
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+							}
+
+							currentDropX += dropInterval;
+						}
+						break;
 				}
 			}
 		}
 
-		private List<Texture> LoadDrops(string TrainPath, List<string> dropFiles, Color24 TransparentColor, string compatabilityString)
+		private List<Texture> LoadDrops(string TrainPath, string[] dropFiles, Color24 TransparentColor, string compatabilityString)
 		{
 			List<Texture> drops = new List<Texture>();
-			for (int l = 0; l < dropFiles.Count; l++)
+			for (int l = 0; l < dropFiles.Length; l++)
 			{
 				string currentDropFile = !System.IO.Path.IsPathRooted(dropFiles[l]) ? Path.CombineFile(TrainPath, dropFiles[l]) : dropFiles[l];
-				if (!File.Exists(currentDropFile))
+				if (string.IsNullOrEmpty(currentDropFile) || !File.Exists(currentDropFile))
 				{
 					currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\" + compatabilityString + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
 					TransparentColor = Color24.Blue;
