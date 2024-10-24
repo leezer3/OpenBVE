@@ -424,7 +424,7 @@ namespace ObjectViewer {
 			throw new NotImplementedException();
 		}
 
-		public override AbstractTrain[] Trains
+		public override IEnumerable<AbstractTrain> Trains
 		{
 			get
 			{

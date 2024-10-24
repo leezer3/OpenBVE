@@ -17,7 +17,7 @@ namespace ObjectViewer {
 		
 		internal static void Reset()
 		{
-			Program.TrainManager.Trains = new TrainBase[] { };
+			Program.TrainManager.Trains = new List<TrainBase>();
 			TrainManager.PlayerTrain = null;
 			Interface.LogMessages.Clear();
 			Program.CurrentHost.ClearErrors();

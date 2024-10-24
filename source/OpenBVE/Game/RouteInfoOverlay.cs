@@ -66,9 +66,8 @@ namespace OpenBve
 			{
 			case state.map:
 				Program.Renderer.Rectangle.Draw(mapImage, origin, mapSize);
-				// get current train position
-				int n = Program.TrainManager.Trains.Length;
-				for (int i = 0; i < n; i++)
+					// get current train position
+				for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
 				{
 					int trainX = (int)Program.TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.X;
 					int trainZ = (int)Program.TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.Z;
