@@ -916,7 +916,7 @@ namespace Train.OpenBve
 										string[] Arguments = GetArguments(Value);
 										switch (Key)
 										{
-											case PanelKey.Number
+											case PanelKey.Number:
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 												if (Path.ContainsInvalidChars(Value))
 												{
