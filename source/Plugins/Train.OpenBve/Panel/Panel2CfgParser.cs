@@ -64,14 +64,14 @@ namespace Train.OpenBve
 				}
 			}
 
-			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(Lines, Plugin.currentHost);
+			ConfigFile<Panel2Sections, Panel2Key, Panel2Subject> cfg = new ConfigFile<Panel2Sections, Panel2Key, Panel2Subject>(Lines, Plugin.currentHost);
 
-			if (cfg.ReadBlock(PanelSections.This, out var Block))
+			if (cfg.ReadBlock(Panel2Sections.This, out var Block))
 			{
 				// NOTE: Only able to create a panel with a daytime image available!
-				if (Block.GetPath(PanelKey.DaytimeImage, TrainPath, out PanelDaytimeImage))
+				if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out PanelDaytimeImage))
 				{
-					Block.GetValue(PanelKey.Resolution, out PanelResolution);
+					Block.GetValue(Panel2Key.Resolution, out PanelResolution);
 					if (PanelResolution < 100)
 					{
 						//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
@@ -79,13 +79,13 @@ namespace Train.OpenBve
 						Plugin.currentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given in " + FileName);
 					}
 
-					Block.GetValue(PanelKey.Left, out PanelLeft);
-					Block.GetValue(PanelKey.Right, out PanelRight);
-					Block.GetValue(PanelKey.Top, out PanelTop);
-					Block.GetValue(PanelKey.Bottom, out PanelBottom);
-					Block.TryGetColor24(PanelKey.TransparentColor, ref PanelTransparentColor);
-					Block.GetVector2(PanelKey.Center, ',', out PanelCenter);
-					Block.GetVector2(PanelKey.Origin, ',', out PanelOrigin);
+					Block.GetValue(Panel2Key.Left, out PanelLeft);
+					Block.GetValue(Panel2Key.Right, out PanelRight);
+					Block.GetValue(Panel2Key.Top, out PanelTop);
+					Block.GetValue(Panel2Key.Bottom, out PanelBottom);
+					Block.TryGetColor24(Panel2Key.TransparentColor, ref PanelTransparentColor);
+					Block.GetVector2(Panel2Key.Center, ',', out PanelCenter);
+					Block.GetVector2(Panel2Key.Origin, ',', out PanelOrigin);
 					ApplyGlobalHacks();
 					double WorldWidth, WorldHeight;
 					if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
@@ -106,7 +106,7 @@ namespace Train.OpenBve
 					Car.CameraRestriction.TopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
 					Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
 					Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
-					Block.GetPath(PanelKey.NighttimeImage, TrainPath, out PanelNighttimeImage);
+					Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out PanelNighttimeImage);
 					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true, 20000);
 					Plugin.currentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out var tnight, true, 20000);
 					CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight);
@@ -137,21 +137,21 @@ namespace Train.OpenBve
 			{
 				Block = cfg.ReadNextBlock();
 				string Subject = "true";
-				Block.TryGetValue(PanelKey.Subject, ref Subject);
+				Block.TryGetValue(Panel2Key.Subject, ref Subject);
 				string Function = string.Empty, DaytimeImage;
-				Block.TryGetValue(PanelKey.Function, ref Function);
+				Block.TryGetValue(Panel2Key.Function, ref Function);
 				Color24 Color = Color24.White;
 				Color24 TransparentColor = Color24.Blue;
-				Block.TryGetColor24(PanelKey.TransparentColor, ref TransparentColor);
-				Block.GetValue(PanelKey.Layer, out int Layer);
+				Block.TryGetColor24(Panel2Key.TransparentColor, ref TransparentColor);
+				Block.GetValue(Panel2Key.Layer, out int Layer);
 				double Radius = 0;
 				switch (Block.Key)
 				{
-					case PanelSections.PilotLamp:
-						if (Block.GetPath(PanelKey.DaytimeImage, TrainPath, out DaytimeImage))
+					case Panel2Sections.PilotLamp:
+						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
 						{
-							Block.GetVector2(PanelKey.Location, ',', out Vector2 Location);
-							Block.GetPath(PanelKey.NighttimeImage, TrainPath, out string NighttimeImage);
+							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
+							Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage);
 							Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 							Texture tnight = null;
 							if (!string.IsNullOrEmpty(NighttimeImage))
@@ -172,29 +172,29 @@ namespace Train.OpenBve
 							}
 						}
 						break;
-					case PanelSections.Needle:
-						if (Block.GetPath(PanelKey.DaytimeImage, TrainPath, out DaytimeImage))
+					case Panel2Sections.Needle:
+						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
 						{
 							double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
 							double Minimum = 0.0, Maximum = 1000.0;
 							double NaturalFrequency = -1.0, DampingRatio = -1.0;
 							Vector2 Origin = new Vector2(-1, -1);
 							
-							Block.TryGetValue(PanelKey.Subject, ref Subject);
-							Block.TryGetValue(PanelKey.Function, ref Function);
-							Block.GetVector2(PanelKey.Location, ',', out Vector2 Location);
-							bool OriginDefined = Block.TryGetVector2(PanelKey.Origin, ',', ref Origin);
-							Block.GetValue(PanelKey.Radius, out Radius);
-							Block.TryGetValue(PanelKey.InitialAngle, ref InitialAngle);
-							Block.TryGetValue(PanelKey.LastAngle, ref LastAngle);
-							Block.TryGetValue(PanelKey.Minimum, ref Minimum);
-							Block.TryGetValue(PanelKey.Maximum, ref Maximum);
-							Block.TryGetValue(PanelKey.NaturalFreq, ref NaturalFrequency);
-							Block.TryGetValue(PanelKey.DampingRatio, ref DampingRatio);
-							Block.TryGetColor24(PanelKey.Color, ref Color);
-							Block.GetValue(PanelKey.Backstop, out bool Backstop);
-							Block.GetValue(PanelKey.Smoothed, out bool Smoothed);
-							Block.GetPath(PanelKey.NighttimeImage, TrainPath, out string NighttimeImage);
+							Block.TryGetValue(Panel2Key.Subject, ref Subject);
+							Block.TryGetValue(Panel2Key.Function, ref Function);
+							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
+							bool OriginDefined = Block.TryGetVector2(Panel2Key.Origin, ',', ref Origin);
+							Block.GetValue(Panel2Key.Radius, out Radius);
+							Block.TryGetValue(Panel2Key.InitialAngle, ref InitialAngle);
+							Block.TryGetValue(Panel2Key.LastAngle, ref LastAngle);
+							Block.TryGetValue(Panel2Key.Minimum, ref Minimum);
+							Block.TryGetValue(Panel2Key.Maximum, ref Maximum);
+							Block.TryGetValue(Panel2Key.NaturalFreq, ref NaturalFrequency);
+							Block.TryGetValue(Panel2Key.DampingRatio, ref DampingRatio);
+							Block.TryGetColor24(Panel2Key.Color, ref Color);
+							Block.GetValue(Panel2Key.Backstop, out bool Backstop);
+							Block.GetValue(Panel2Key.Smoothed, out bool Smoothed);
+							Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage);
 							
 							Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 							Texture tnight = null;
@@ -257,20 +257,20 @@ namespace Train.OpenBve
 							}
 						}
 						break;
-					case PanelSections.LinearGauge:
-						if (Block.GetPath(PanelKey.DaytimeImage, TrainPath, out DaytimeImage))
+					case Panel2Sections.LinearGauge:
+						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
 						{
 							Vector2 Direction = new Vector2(1, 0);
 							double Minimum = 0, Maximum = 0;
 
-							Block.TryGetValue(PanelKey.Subject, ref Subject);
-							Block.TryGetValue(PanelKey.Function, ref Function);
-							Block.GetVector2(PanelKey.Location, ',', out Vector2 Location);
-							Block.TryGetValue(PanelKey.Minimum, ref Minimum);
-							Block.TryGetValue(PanelKey.Maximum, ref Maximum);
-							Block.GetValue(PanelKey.Width, out int Width);
-							Block.TryGetVector2(PanelKey.Direction, ',', ref Direction);
-							Block.GetPath(PanelKey.NighttimeImage, TrainPath, out string NighttimeImage);
+							Block.TryGetValue(Panel2Key.Subject, ref Subject);
+							Block.TryGetValue(Panel2Key.Function, ref Function);
+							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
+							Block.TryGetValue(Panel2Key.Minimum, ref Minimum);
+							Block.TryGetValue(Panel2Key.Maximum, ref Maximum);
+							Block.GetValue(Panel2Key.Width, out int Width);
+							Block.TryGetVector2(Panel2Key.Direction, ',', ref Direction);
+							Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage);
 
 							Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 							Texture tnight = null;
@@ -306,14 +306,14 @@ namespace Train.OpenBve
 							}
 						}
 						break;
-					case PanelSections.DigitalNumber:
-						if (Block.GetPath(PanelKey.DaytimeImage, TrainPath, out DaytimeImage))
+					case Panel2Sections.DigitalNumber:
+						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
 						{
-							Block.TryGetValue(PanelKey.Subject, ref Subject);
-							Block.TryGetValue(PanelKey.Function, ref Function);
-							Block.GetVector2(PanelKey.Location, ',', out Vector2 Location);
-							Block.GetValue(PanelKey.Interval, out int Interval);
-							Block.GetPath(PanelKey.NighttimeImage, TrainPath, out string NighttimeImage);
+							Block.TryGetValue(Panel2Key.Subject, ref Subject);
+							Block.TryGetValue(Panel2Key.Function, ref Function);
+							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
+							Block.GetValue(Panel2Key.Interval, out int Interval);
+							Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage);
 
 							Plugin.currentHost.QueryTextureDimensions(DaytimeImage, out var wday, out var hday);
 							if (wday > 0 & hday > 0)
@@ -445,20 +445,20 @@ namespace Train.OpenBve
 							}
 						}
 						break;
-					case PanelSections.DigitalGauge:
-						if (Block.GetPath(PanelKey.DaytimeImage, TrainPath, out DaytimeImage) && Block.GetValue(PanelKey.Radius, out Radius) && Radius != 0)
+					case Panel2Sections.DigitalGauge:
+						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage) && Block.GetValue(Panel2Key.Radius, out Radius) && Radius != 0)
 						{
 							double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
 							double Minimum = 0.0, Maximum = 1000.0;
-							Block.TryGetValue(PanelKey.Subject, ref Subject);
-							Block.TryGetValue(PanelKey.Function, ref Function);
-							Block.GetVector2(PanelKey.Location, ',', out Vector2 Location);
-							Block.TryGetValue(PanelKey.InitialAngle, ref InitialAngle);
-							Block.TryGetValue(PanelKey.LastAngle, ref LastAngle);
-							Block.TryGetValue(PanelKey.Minimum, ref Minimum);
-							Block.TryGetValue(PanelKey.Maximum, ref Maximum);
-							Block.TryGetColor24(PanelKey.Color, ref Color);
-							Block.GetValue(PanelKey.Step, out double Step);
+							Block.TryGetValue(Panel2Key.Subject, ref Subject);
+							Block.TryGetValue(Panel2Key.Function, ref Function);
+							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
+							Block.TryGetValue(Panel2Key.InitialAngle, ref InitialAngle);
+							Block.TryGetValue(Panel2Key.LastAngle, ref LastAngle);
+							Block.TryGetValue(Panel2Key.Minimum, ref Minimum);
+							Block.TryGetValue(Panel2Key.Maximum, ref Maximum);
+							Block.TryGetColor24(Panel2Key.Color, ref Color);
+							Block.GetValue(Panel2Key.Step, out double Step);
 
 							if (Plugin.CurrentOptions.EnableBveTsHacks && trainName == "BOEING-737")
 							{
@@ -560,19 +560,19 @@ namespace Train.OpenBve
 							}
 						}
 						break;
-					case PanelSections.Timetable:
-						if (Block.GetPath(PanelKey.DaytimeImage, TrainPath, out DaytimeImage))
+					case Panel2Sections.Timetable:
+						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
 						{
-							Block.GetVector2(PanelKey.Location, ',', out Vector2 Location);
-							Block.GetValue(PanelKey.Width, out double Width);
-							Block.GetValue(PanelKey.Height, out double Height);
+							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
+							Block.GetValue(Panel2Key.Width, out double Width);
+							Block.GetValue(Panel2Key.Height, out double Height);
 							if (Width <= 0 || Height <= 0)
 							{
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "Width and Height are required to be positive in " + Block.Key + " in " + FileName);
 								break;
 							}
 
-							if (Block.GetColor24(PanelKey.TransparentColor, out _))
+							if (Block.GetColor24(Panel2Key.TransparentColor, out _))
 							{
 								// The original code read this, but never used it
 								// Deliberately deprecate.
@@ -592,7 +592,7 @@ namespace Train.OpenBve
 							Plugin.currentHost.AddObjectForCustomTimeTable(Car.CarSections[0].Groups[GroupIndex].Elements[j]);
 						}
 						break;
-					case PanelSections.Windscreen:
+					case Panel2Sections.Windscreen:
 						Vector2 topLeft = new Vector2(PanelLeft, PanelTop);
 						Vector2 bottomRight = new Vector2(PanelRight, PanelBottom);
 						int numberOfDrops = 16, dropSize = 16;
@@ -611,18 +611,18 @@ namespace Train.OpenBve
 							break;
 						}
 
-						Block.TryGetVector2(PanelKey.TopLeft, ',', ref topLeft);
-						Block.TryGetVector2(PanelKey.BottomRight, ',', ref bottomRight);
-						Block.TryGetValue(PanelKey.NumberOfDrops, ref numberOfDrops);
-						Block.TryGetValue(PanelKey.DropSize, ref dropSize);
-						Block.TryGetValue(PanelKey.DropLife, ref dropLife);
-						Block.TryGetStringArray(PanelKey.DaytimeDrops, ',', ref daytimeDropFiles);
-						Block.TryGetStringArray(PanelKey.NighttimeDrops, ',', ref nighttimeDropFiles);
-						Block.TryGetStringArray(PanelKey.DaytimeFlakes, ',', ref daytimeFlakeFiles);
-						Block.TryGetStringArray(PanelKey.NighttimeFlakes, ',', ref nighttimeFlakeFiles);
-						Block.TryGetValue(PanelKey.WipeSpeed, ref wipeSpeed);
-						Block.TryGetValue(PanelKey.WiperHoldTime, ref holdTime);
-						if (Block.GetValue(PanelKey.RestPosition, out string restPos))
+						Block.TryGetVector2(Panel2Key.TopLeft, ',', ref topLeft);
+						Block.TryGetVector2(Panel2Key.BottomRight, ',', ref bottomRight);
+						Block.TryGetValue(Panel2Key.NumberOfDrops, ref numberOfDrops);
+						Block.TryGetValue(Panel2Key.DropSize, ref dropSize);
+						Block.TryGetValue(Panel2Key.DropLife, ref dropLife);
+						Block.TryGetStringArray(Panel2Key.DaytimeDrops, ',', ref daytimeDropFiles);
+						Block.TryGetStringArray(Panel2Key.NighttimeDrops, ',', ref nighttimeDropFiles);
+						Block.TryGetStringArray(Panel2Key.DaytimeFlakes, ',', ref daytimeFlakeFiles);
+						Block.TryGetStringArray(Panel2Key.NighttimeFlakes, ',', ref nighttimeFlakeFiles);
+						Block.TryGetValue(Panel2Key.WipeSpeed, ref wipeSpeed);
+						Block.TryGetValue(Panel2Key.WiperHoldTime, ref holdTime);
+						if (Block.GetValue(Panel2Key.RestPosition, out string restPos))
 						{
 							switch (restPos.ToLowerInvariant())
 							{
@@ -639,7 +639,7 @@ namespace Train.OpenBve
 									break;
 							}
 						}
-						if (Block.GetValue(PanelKey.HoldPosition, out string holdPos))
+						if (Block.GetValue(Panel2Key.HoldPosition, out string holdPos))
 						{
 							switch (holdPos.ToLowerInvariant())
 							{
