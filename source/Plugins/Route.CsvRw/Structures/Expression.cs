@@ -199,6 +199,12 @@ namespace CsvRwRouteParser
 						}
 						else if (Text[i] == ')')
 						{
+							if (i == Text.Length - 1)
+							{
+								found = true;
+								firstClosingBracket = i;
+								break;
+							}
 							switch (argumentIndex)
 							{
 								case 0:
@@ -207,9 +213,12 @@ namespace CsvRwRouteParser
 										Text = Text.Remove(i, 1).Insert(i, "]");
 										continue;
 									}
-									if ((Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase)) && i != Text.Length  ||
-									    Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1 && Text.IndexOf('<') != -1 && i > 18 && i != Text.Length -1)
+									if (Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase) || Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
 									{
+										if (Text.IndexOf('<') != -1)
+										{
+											continue;
+										}
 										/*
 										 * HACK: In filenames, temp replace with an invalid but known character
 										 *
