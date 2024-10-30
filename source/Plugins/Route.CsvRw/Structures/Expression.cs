@@ -213,7 +213,7 @@ namespace CsvRwRouteParser
 										Text = Text.Remove(i, 1).Insert(i, "]");
 										continue;
 									}
-									if (Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase) || Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
+									if (Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase) || (Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1 && i > 18))
 									{
 										if (Text.IndexOf('<') != -1)
 										{
