@@ -1,7 +1,9 @@
 using System;
+using Formats.OpenBve;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -78,116 +80,52 @@ namespace Train.OpenBve
 			double PanelYaw = 0.0;
 			double PanelPitch = UpDownAngleConstant;
 			string PanelBackground = Path.CombineFile(TrainPath, "panel.bmp");
-			// parse lines for panel and view
-			for (int i = 0; i < Lines.Length; i++)
+
+			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(Lines, Plugin.currentHost);
+
+			cfg.ReadBlock(PanelSections.Panel, out var Block);
+			if (!Block.GetPath(PanelKey.Background, TrainPath, out PanelBackground))
 			{
-				if (Lines[i].Length > 0)
+				return;
+			}
+			Plugin.currentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out var panelTexture, true);
+			SemiHeight = PanelSize.Y - panelTexture.Height;
+			CreateElement(Car, 0, SemiHeight, panelTexture.Width, panelTexture.Height, WorldZ + EyeDistance, panelTexture, Color32.White);
+
+			while (cfg.RemainingSubBlocks > 0)
+			{
+				Block = cfg.ReadNextBlock();
+				switch (Block.Key)
 				{
-					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
-					{
-						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out PanelSections Section);
-						switch (Section)
+					case PanelSections.View:
+						if (Block.GetValue(PanelKey.Yaw, out double yaw))
 						{
-							// panel
-							case PanelSections.Panel:
-								i++;
-								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
-								{
-									int j = Lines[i].IndexOf('=');
-									if (j >= 0)
-									{
-										string Key = Lines[i].Substring(0, j).TrimEnd();
-										string Value = Lines[i].Substring(j + 1).TrimStart();
-										switch (Key.ToLowerInvariant())
-										{
-											case "background":
-												if (Path.ContainsInvalidChars(Value))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
-												else
-												{
-													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													PanelBackground = Path.CombineFile(TrainPath, Value);
-													if (!System.IO.File.Exists(PanelBackground))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + PanelBackground + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-												}
-
-												break;
-										}
-									}
-
-									i++;
-								}
-
-								i--;
-								break;
-							// view
-							case PanelSections.View:
-								i++;
-								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
-								{
-									int j = Lines[i].IndexOf('=');
-									if (j >= 0)
-									{
-										string Key = Lines[i].Substring(0, j).TrimEnd();
-										string Value = Lines[i].Substring(j + 1).TrimStart();
-										switch (Key.ToLowerInvariant())
-										{
-											case "yaw":
-											{
-												double yaw = 0.0;
-												if (Value.Length > 0 && !NumberFormats.TryParseDoubleVb6(Value, out yaw))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													yaw = 0.0;
-												}
-
-												PanelYaw = Math.Atan(yaw);
-											}
-												break;
-											case "pitch":
-											{
-												double pitch = 0.0;
-												if (Value.Length > 0 && !NumberFormats.TryParseDoubleVb6(Value, out pitch))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													pitch = 0.0;
-												}
-
-												PanelPitch = Math.Atan(pitch) + UpDownAngleConstant;
-											}
-												break;
-										}
-									}
-
-									i++;
-								}
-
-								i--;
-								break;
+							Car.DriverYaw = Math.Atan(yaw);
 						}
-					}
+
+						if (Block.GetValue(PanelKey.Pitch, out double pitch))
+						{
+							Car.DriverPitch = Math.Atan(pitch) + UpDownAngleConstant;
+						}
+						break;
+					case PanelSections.PressureGauge:
+						Block.GetValue(PanelKey.Type, out int Type);
+						int[] NeedleType = { 0, 0 };
+						if (Type != 0 & Type != 1)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "Type must be either 0 or 1 in " + Block.Key + " in " + FileName);
+							Type = 0;
+						}
+
+						if (Block.GetEnumValue(PanelKey.LowerHand, out PanelSubject subject))
+						{
+
+						}
+						break;
+					
 				}
 			}
 
-			Car.DriverYaw = PanelYaw;
-			Car.DriverPitch = PanelPitch;
-			// panel
-			{
-				if (!System.IO.File.Exists(PanelBackground))
-				{
-					Plugin.currentHost.AddMessage(MessageType.Error, true, "The panel image could not be found in " + FileName);
-				}
-				else
-				{
-					Plugin.currentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out var t, true);
-					SemiHeight = PanelSize.Y - t.Height;
-					CreateElement(Car, 0, SemiHeight, t.Width, t.Height, WorldZ + EyeDistance, t, Color32.White);
-				}
-			}
 			// parse lines for rest
 			double invfac = Lines.Length == 0 ? 0.4 : 0.4 / Lines.Length;
 			for (int i = 0; i < Lines.Length; i++)

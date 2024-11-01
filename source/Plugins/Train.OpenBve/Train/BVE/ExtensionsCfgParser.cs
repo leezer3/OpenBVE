@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Text;
+using Formats.OpenBve;
 using OpenBveApi;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using TrainManager.Trains;
 
@@ -16,6 +18,8 @@ namespace Train.OpenBve
 			Plugin = plugin;
 		}
 
+		internal static bool unicodeCheck;
+
 		// parse extensions config
 		internal void ParseExtensionsConfig(string TrainPath, Encoding Encoding, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, out bool[] VisibleFromInterior, TrainBase Train)
 		{
@@ -24,399 +28,172 @@ namespace Train.OpenBve
 			bool[] BogieObjectsReversed = new bool[Train.Cars.Length * 2];
 			bool[] CarsDefined = new bool[Train.Cars.Length];
 			bool[] BogiesDefined = new bool[Train.Cars.Length * 2];
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string FileName = Path.CombineFile(TrainPath, "extensions.cfg");
 			if (System.IO.File.Exists(FileName)) {
 				Encoding = TextEncoding.GetSystemEncodingFromFile(FileName, Encoding);
 
 				string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
-				for (int i = 0; i < Lines.Length; i++) {
-					int j = Lines[i].IndexOf(';');
-					if (j >= 0) {
-						Lines[i] = Lines[i].Substring(0, j).Trim();
-					} else {
-						Lines[i] = Lines[i].Trim();
+				if (Lines.Length == 1)
+				{
+					if (unicodeCheck)
+					{
+						return;
 					}
+
+					unicodeCheck = true;
+					/*
+					 * If only one line, there's a good possibility that our file is NOT Unicode at all
+					 * and that the misdetection has turned it into garbage
+					 *
+					 * Try again with ASCII instead
+					 */
+					ParseExtensionsConfig(TrainPath, Encoding.GetEncoding(1252), ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior, Train);
+					return;
 				}
-				for (int i = 0; i < Lines.Length; i++) {
-					if (Lines[i].Length != 0) {
-						switch (Lines[i].ToLowerInvariant()) {
-							case "[exterior]":
-								// exterior
-								i++;
-								while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-									if (Lines[i].Length != 0) {
-										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-										if (j >= 0)
-										{
-											string a = Lines[i].Substring(0, j).TrimEnd();
-											string b = Lines[i].Substring(j + 1).TrimStart();
-											if (int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out var n)) {
-												if (n >= 0 & n < Train.Cars.Length) {
-													if (Path.ContainsInvalidChars(b)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} else {
-														string File = Path.CombineFile(TrainPath, b);
-														if (System.IO.File.Exists(File)) {
-															Plugin.currentHost.LoadObject(File, Encoding, out CarObjects[n]);
-														} else {
-															Plugin.currentHost.AddMessage(MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-														}
-													}
-												} else {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "The car index " + a + " does not reference an existing car at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-												}
-											} else {
-												Plugin.currentHost.AddMessage(MessageType.Error, false, "The car index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-											}
-										} else {
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										}
-									}
-									i++;
-								}
-								i--;
+				ConfigFile<ExtensionCfgSection, ExtensionCfgKey> cfg = new ConfigFile<ExtensionCfgSection, ExtensionCfgKey>(Lines, Plugin.currentHost);
+				while (cfg.RemainingSubBlocks > 0)
+				{
+					Block<ExtensionCfgSection, ExtensionCfgKey> block = cfg.ReadNextBlock();
+					switch (block.Key)
+					{
+						case ExtensionCfgSection.Exterior:
+							while (block.RemainingDataValues > 0 && block.GetIndexedPath(TrainPath, out var carIndex, out var fileName))
+							{
+								Plugin.currentHost.LoadObject(fileName, Encoding, out CarObjects[carIndex]);
+							}
+							break;
+						case ExtensionCfgSection.Car:
+							if (block.Index == -1)
+							{
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid or missing CarIndex in file " + FileName);
 								break;
-							default:
-								if (Lines[i].StartsWith("[car", StringComparison.OrdinalIgnoreCase) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-									// car
-									string t = Lines[i].Substring(4, Lines[i].Length - 5);
-									if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out var n)) {
-										if (n >= 0 & n < Train.Cars.Length)
-										{
-											if (CarsDefined[n])
-											{
-												Plugin.currentHost.AddMessage(MessageType.Error, false, "Car " + n.ToString(Culture) + " has already been declared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-											}
-											CarsDefined[n] = true;
-											bool DefinedLength = false;
-											bool DefinedAxles = false;
-											i++;
-											while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-												if (Lines[i].Length != 0) {
-													int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-													if (j >= 0)
-													{
-														string a = Lines[i].Substring(0, j).TrimEnd();
-														string b = Lines[i].Substring(j + 1).TrimStart();
-														switch (a.ToLowerInvariant()) {
-															case "object":
-																if (string.IsNullOrEmpty(b))
-																{
-																	Plugin.currentHost.AddMessage(MessageType.Error, true, "An empty car object was supplied at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	break;
-																}
-																if (Path.ContainsInvalidChars(b)) {
-																	Plugin.currentHost.AddMessage(MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																} else {
-																	string File = Path.CombineFile(TrainPath, b);
-																	if (System.IO.File.Exists(File)) {
-																		Plugin.currentHost.LoadObject(File, Encoding, out CarObjects[n]);
-																	} else {
-																		Plugin.currentHost.AddMessage(MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	}
-																}
-																break;
-															case "length":
-																{
-																	if (double.TryParse(b, System.Globalization.NumberStyles.Float, Culture, out var m)) {
-																		if (m > 0.0) {
-																			Train.Cars[n].Length = m;
-																			Train.Cars[n].BeaconReceiverPosition = 0.5 * m;
-																			DefinedLength = true;
-																		} else {
-																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is expected to be a positive floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		}
-																	} else {
-																		Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is expected to be a positive floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	}
-																}
-																break;
-															case "axles":
-																{
-																	int k = b.IndexOf(',');
-																	if (k >= 0)
-																	{
-																		string c = b.Substring(0, k).TrimEnd();
-																		string d = b.Substring(k + 1).TrimStart();
-																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out var rear)) {
-																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		} else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out var front)) {
-																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Front is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		} else if (rear >= front) {
-																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		} else {
-																			Train.Cars[n].RearAxle.Position = rear;
-																			Train.Cars[n].FrontAxle.Position = front;
-																			DefinedAxles = true;
-																		}
-																	} else {
-																		Plugin.currentHost.AddMessage(MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	}
-																}
-																break;
-															case "reversed":
-																CarObjectsReversed[n] = b.Equals("true", StringComparison.OrdinalIgnoreCase);
-																break;
-															case "loadingsway":
-																Train.Cars[n].EnableLoadingSway = b.Equals("true", StringComparison.OrdinalIgnoreCase);
-																break;
-															case "visiblefrominterior":
-																VisibleFromInterior[n] = b.Equals("true", StringComparison.OrdinalIgnoreCase);
-																break;
-															default:
-																Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																break;
-														}
-													} else {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													}
-												}
-												i++;
-											}
-											i--;
-											if (DefinedLength & !DefinedAxles) {
-												double AxleDistance = 0.4 * Train.Cars[n].Length;
-												Train.Cars[n].RearAxle.Position = -AxleDistance;
-												Train.Cars[n].FrontAxle.Position = AxleDistance;
-											}
-										} else {
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "The car index " + t + " does not reference an existing car at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										}
-									} else {
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "The car index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									}
-								} else if (Lines[i].StartsWith("[coupler", StringComparison.OrdinalIgnoreCase) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-									// coupler
-									string t = Lines[i].Substring(8, Lines[i].Length - 9);
-									if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out var n)) {
-										if (n >= 0 & n < Train.Cars.Length -1) {
-											i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-												if (Lines[i].Length != 0) {
-													int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-													if (j >= 0)
-													{
-														string a = Lines[i].Substring(0, j).TrimEnd();
-														string b = Lines[i].Substring(j + 1).TrimStart();
-														switch (a.ToLowerInvariant()) {
-															case "distances":
-																{
-																	int k = b.IndexOf(',');
-																	if (k >= 0)
-																	{
-																		string c = b.Substring(0, k).TrimEnd();
-																		string d = b.Substring(k + 1).TrimStart();
-																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out var min)) {
-																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Minimum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		} else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out var max)) {
-																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Maximum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		} else if (min > max) {
-																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Minimum is expected to be less than Maximum in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		} else {
-																			Train.Cars[n].Coupler.MinimumDistanceBetweenCars = min;
-																			Train.Cars[n].Coupler.MaximumDistanceBetweenCars = max;
-																		}
-																	} else {
-																		Plugin.currentHost.AddMessage(MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	}
-																} break;
-															case "object":
-																if (string.IsNullOrEmpty(b))
-																{
-																	Plugin.currentHost.AddMessage(MessageType.Error, true, "An empty coupler object was supplied at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	break;
-																}
-																if (Path.ContainsInvalidChars(b)) {
-																	Plugin.currentHost.AddMessage(MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																} else {
-																	string File = Path.CombineFile(TrainPath, b);
-																	if (System.IO.File.Exists(File)) {
-																		Plugin.currentHost.LoadObject(File, Encoding, out CouplerObjects[n]);
-																	} else {
-																		Plugin.currentHost.AddMessage(MessageType.Error, true, "The coupler object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	}
-																}
-																break;
-															default:
-																Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																break;
-														}
-													} else {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													}
-												} i++;
-											} i--;
-										} else {
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "The coupler index " + t + " does not reference an existing coupler at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										}
-									} else {
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "The coupler index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									}
-								}
-								else if (Lines[i].StartsWith("[bogie", StringComparison.OrdinalIgnoreCase) & Lines[i].EndsWith("]", StringComparison.Ordinal))
+							}
+
+							if (block.Index > Train.Cars.Length)
+							{
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "CarIndex " + block.Index + " does not reference an existing car in in file " + FileName);
+								break;
+							}
+
+							if (CarsDefined[block.Index])
+							{
+								Plugin.currentHost.AddMessage(MessageType.Warning, false, "CarIndex " + block.Index + " has already been declared in in file " + FileName);
+							}
+
+							CarsDefined[block.Index] = true;
+							if (block.GetPath(ExtensionCfgKey.Object, TrainPath, out string carObject))
+							{
+								Plugin.currentHost.LoadObject(carObject, Encoding, out CarObjects[block.Index]);
+							}
+
+							if (block.GetValue(ExtensionCfgKey.Length, out double carLength))
+							{
+								Train.Cars[block.Index].Length = carLength;
+							}
+							block.GetValue(ExtensionCfgKey.Reversed, out CarObjectsReversed[block.Index]);
+							block.GetValue(ExtensionCfgKey.VisibleFromInterior, out VisibleFromInterior[block.Index]);
+							block.GetValue(ExtensionCfgKey.LoadingSway, out Train.Cars[block.Index].EnableLoadingSway);
+							if (block.GetVector2(ExtensionCfgKey.Axles, ',', out Vector2 carAxles))
+							{
+								if (carAxles.X >= carAxles.Y)
 								{
-									// car
-									string t = Lines[i].Substring(6, Lines[i].Length - 7);
-									if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out var n))
-									{
-										if (n > BogiesDefined.Length -1)
-										{
-											continue;
-										}
-										if (BogiesDefined[n])
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Bogie " + n.ToString(Culture) + " has already been declared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										}
-										BogiesDefined[n] = true;
-										//Assuming that there are two bogies per car
-										bool IsOdd = (n % 2 != 0);
-										int CarIndex = n / 2;
-										if (n >= 0 & n < Train.Cars.Length * 2)
-										{
-											bool DefinedAxles = false;
-											i++;
-											while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal))
-											{
-												if (Lines[i].Length != 0)
-												{
-													int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-													if (j >= 0)
-													{
-														string a = Lines[i].Substring(0, j).TrimEnd();
-														string b = Lines[i].Substring(j + 1).TrimStart();
-														switch (a.ToLowerInvariant())
-														{
-															case "object":
-																if (Path.ContainsInvalidChars(b))
-																{
-																	Plugin.currentHost.AddMessage(MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																}
-																else
-																{
-																	if (string.IsNullOrEmpty(b))
-																	{
-																		Plugin.currentHost.AddMessage(MessageType.Error, true, "An empty bogie object was supplied at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		break;
-																	}
-																	string File = Path.CombineFile(TrainPath, b);
-																	if (System.IO.File.Exists(File))
-																	{
-																		Plugin.currentHost.LoadObject(File, Encoding, out BogieObjects[n]);
-																	}
-																	else
-																	{
-																		Plugin.currentHost.AddMessage(MessageType.Error, true, "The bogie object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	}
-																}
-																break;
-															case "length":
-																{
-																	Plugin.currentHost.AddMessage(MessageType.Error, false, "A defined length is not supported for bogies at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																}
-																break;
-															case "axles":
-																{
-																	int k = b.IndexOf(',');
-																	if (k >= 0)
-																	{
-																		string c = b.Substring(0, k).TrimEnd();
-																		string d = b.Substring(k + 1).TrimStart();
-																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out var rear))
-																		{
-																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		}
-																		else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out var front))
-																		{
-																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Front is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		}
-																		else if (rear >= front)
-																		{
-																			Plugin.currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		}
-																		else
-																		{
-																			if (IsOdd)
-																			{
-																				Train.Cars[CarIndex].FrontBogie.RearAxle.Position = rear;
-																				Train.Cars[CarIndex].FrontBogie.FrontAxle.Position = front;
-																			}
-																			else
-																			{
-																				Train.Cars[CarIndex].RearBogie.RearAxle.Position = rear;
-																				Train.Cars[CarIndex].RearBogie.FrontAxle.Position = front;
-																			}
-																			DefinedAxles = true;
-																		}
-																	}
-																	else
-																	{
-																		Plugin.currentHost.AddMessage(MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	}
-																}
-																break;
-															case "reversed":
-																BogieObjectsReversed[n] = b.Equals("true", StringComparison.OrdinalIgnoreCase);
-																break;
-															default:
-																Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																break;
-														}
-													}
-													else
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													}
-												}
-												i++;
-											}
-											i--;
-											if (!DefinedAxles)
-											{
-												if (IsOdd)
-												{
-													double AxleDistance = 0.4 * Train.Cars[CarIndex].FrontBogie.Length;
-													Train.Cars[CarIndex].FrontBogie.RearAxle.Position = -AxleDistance;
-													Train.Cars[CarIndex].FrontBogie.FrontAxle.Position = AxleDistance;
-												}
-												else
-												{
-													double AxleDistance = 0.4 * Train.Cars[CarIndex].RearBogie.Length;
-													Train.Cars[CarIndex].RearBogie.RearAxle.Position = -AxleDistance;
-													Train.Cars[CarIndex].RearBogie.FrontAxle.Position = AxleDistance;
-												}
-											}
-										}
-										else
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "The car index " + t + " does not reference an existing car at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										}
-									}
-									else
-									{
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "The car index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									}
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front for Car " + block.Index + " in file " + FileName);
 								}
 								else
 								{
-									// default
-									if (Lines.Length == 1 && Encoding.Equals(Encoding.Unicode))
-									{
-										/*
-										 * If only one line, there's a good possibility that our file is NOT Unicode at all
-										 * and that the misdetection has turned it into garbage
-										 *
-										 * Try again with ASCII instead
-										 */
-										ParseExtensionsConfig(TrainPath, Encoding.GetEncoding(1252), ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior, Train);
-										return;
-									}
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									Train.Cars[block.Index].RearAxle.Position = carAxles.X;	
+									Train.Cars[block.Index].FrontAxle.Position = carAxles.Y;
 								}
+								
+							}
+							break;
+						case ExtensionCfgSection.Coupler:
+							if (block.GetVector2(ExtensionCfgKey.Distances, ',', out Vector2 distances))
+							{
+								if (distances.X > distances.Y)
+								{
+									// NOTE: Current error is misleading...
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Minimum is expected to be less than Maximum in for Coupler " + block.Index + " in file " + FileName);
+								}
+								else
+								{
+									Train.Cars[block.Index].Coupler.MinimumDistanceBetweenCars = distances.X;
+									Train.Cars[block.Index].Coupler.MaximumDistanceBetweenCars = distances.Y;
+								}
+							}
+							if (block.GetPath(ExtensionCfgKey.Object, TrainPath, out string couplerObject))
+							{
+								Plugin.currentHost.LoadObject(couplerObject, Encoding, out CouplerObjects[block.Index]);
+							}
+							break;
+						case ExtensionCfgSection.Bogie:
+							if (block.Index == -1)
+							{
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid or missing BogieIndex in file " + FileName);
 								break;
-						}
+							}
+
+							if (block.Index > Train.Cars.Length * 2)
+							{
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "BogieIndex " + block.Index + " does not reference an existing bogie in in file " + FileName);
+								break;
+							}
+
+							if (BogiesDefined[block.Index])
+							{
+								Plugin.currentHost.AddMessage(MessageType.Warning, false, "BogieIndex " + block.Index + " has already been declared in in file " + FileName);
+							}
+							BogiesDefined[block.Index] = true;
+							//Assuming that there are two bogies per car
+							bool IsOdd = (block.Index % 2 != 0);
+							int CarIndex = block.Index / 2;
+							bool DefinedAxles = false;
+
+							if (block.GetPath(ExtensionCfgKey.Object, TrainPath, out string bogieObject))
+							{
+								Plugin.currentHost.LoadObject(bogieObject, Encoding, out BogieObjects[block.Index]);
+							}
+							block.GetValue(ExtensionCfgKey.Reversed, out BogieObjectsReversed[block.Index]);
+							if (block.GetVector2(ExtensionCfgKey.Axles, ',', out Vector2 bogieAxles))
+							{
+								if (bogieAxles.X >= bogieAxles.Y)
+								{
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front for Bogie " + block.Index + " in file " + FileName);
+								}
+								else
+								{
+									if (IsOdd)
+									{
+										Train.Cars[CarIndex].FrontBogie.RearAxle.Position = bogieAxles.X;
+										Train.Cars[CarIndex].FrontBogie.FrontAxle.Position = bogieAxles.Y;
+									}
+									else
+									{
+										Train.Cars[CarIndex].RearBogie.RearAxle.Position = bogieAxles.X;
+										Train.Cars[CarIndex].RearBogie.FrontAxle.Position = bogieAxles.Y;
+									}
+									DefinedAxles = true;
+								}
+							}
+							if (!DefinedAxles)
+							{
+								if (IsOdd)
+								{
+									double AxleDistance = 0.4 * Train.Cars[CarIndex].FrontBogie.Length;
+									Train.Cars[CarIndex].FrontBogie.RearAxle.Position = -AxleDistance;
+									Train.Cars[CarIndex].FrontBogie.FrontAxle.Position = AxleDistance;
+								}
+								else
+								{
+									double AxleDistance = 0.4 * Train.Cars[CarIndex].RearBogie.Length;
+									Train.Cars[CarIndex].RearBogie.RearAxle.Position = -AxleDistance;
+									Train.Cars[CarIndex].RearBogie.FrontAxle.Position = AxleDistance;
+								}
+							}
+							break;
 					}
 				}
-
+				
 				// check for car objects and reverse if necessary
 				int carObjects = 0;
 				for (int i = 0; i < Train.Cars.Length; i++) {

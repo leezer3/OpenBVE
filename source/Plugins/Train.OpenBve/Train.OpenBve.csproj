@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -42,10 +42,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Panel\Enums\NeedleType.cs" />
     <Compile Include="Panel\Enums\Panel2Key.cs" />
+    <Compile Include="Panel\Enums\Panel2Subject.cs" />
     <Compile Include="Panel\Enums\Panel2Sections.cs" />
     <Compile Include="Panel\Enums\PanelKey.cs" />
+    <Compile Include="Panel\Enums\Panel2Sections.cs" />
     <Compile Include="Panel\Enums\PanelSections.cs" />
+    <Compile Include="Panel\Enums\PanelSubject.cs" />
     <Compile Include="Panel\Panel2CfgParser.cs" />
     <Compile Include="Panel\Panel2CfgParser.Hacks.cs" />
     <Compile Include="Panel\PanelAnimatedXmlParser.cs" />
@@ -53,13 +57,16 @@
     <Compile Include="Panel\PanelXmlParser.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sound\Enums\SoundCfgKey.cs" />
     <Compile Include="Sound\SoundCfg.Ats.cs" />
     <Compile Include="Sound\SoundCfg.Base.cs" />
     <Compile Include="Sound\SoundCfg.Bve2.cs" />
     <Compile Include="Sound\SoundCfg.Bve4.cs" />
-    <Compile Include="Sound\SoundCfg.Sections.cs" />
+    <Compile Include="Sound\Enums\SoundCfgSection.cs" />
     <Compile Include="Sound\SoundCfg.Xml.cs" />
     <Compile Include="Train\BVE5\MotorSoundTable.cs" />
+    <Compile Include="Train\BVE\Enums\ExtensionCfgKey.cs" />
+    <Compile Include="Train\BVE\Enums\ExtensionCfgSection.cs" />
     <Compile Include="Train\BVE\ExtensionsCfgParser.cs" />
     <Compile Include="Train\BVE\TrainDatParser.cs" />
     <Compile Include="Train\BVE\TrainDatparser.Formats.cs" />
@@ -86,10 +93,15 @@
       <Project>{d0fca2c5-ff75-42d8-ae80-310280a61fb1}</Project>
       <Name>TrainManager</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Formats.OpenBve\Formats.OpenBve.csproj">
+      <Project>{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}</Project>
+      <Name>Formats.OpenBve</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>

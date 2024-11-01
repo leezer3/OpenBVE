@@ -13,6 +13,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
+using OpenBveApi.Trains;
 using TrainManager.Car;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
@@ -585,7 +586,7 @@ namespace Train.OpenBve
 									Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
 								}
 								int j = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, tday.Width, tday.Height, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White);
-								string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
+								string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 								try
 								{
 									if (!string.IsNullOrEmpty(Function))
@@ -841,7 +842,7 @@ namespace Train.OpenBve
 										f = Smoothed ? "time 60 mod" : "time floor";
 										break;
 									default:
-										f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
+										f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 										break;
 								}
 								InitialAngle = InitialAngle.ToRadians();
@@ -1025,7 +1026,7 @@ namespace Train.OpenBve
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Section + " in " + FileName);
 									break;
 								}
-								string tf = Plugin.Panel2CfgParser.GetInfixFunction(Train, Subject, Minimum, Maximum, Width, tday.Width, Section + " in " + FileName);
+								string tf = GetInfixFunction(Train, Subject, Minimum, Maximum, Width, tday.Width, Section + " in " + FileName);
 								CarSection.Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
 								try
 								{
@@ -1215,7 +1216,7 @@ namespace Train.OpenBve
 										int l = Plugin.Panel2CfgParser.CreateElement(ref CarSection.Groups[GroupIndex], LocationX, LocationY, wday, Interval, new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
 										if (k == 0) j = l;
 									}
-									string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
+									string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 									try
 									{
 										if (!string.IsNullOrEmpty(Function))
@@ -1405,7 +1406,7 @@ namespace Train.OpenBve
 									new Vector3(x3, y3, z3),
 									new Vector3(cx, cy, cz)
 								};
-								string f = Plugin.Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
+								string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 								double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 								double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 								if (Step == 1.0)
@@ -1858,6 +1859,218 @@ namespace Train.OpenBve
 				}
 			}
 		}
+
+		internal string GetInfixFunction(AbstractTrain Train, string Subject, double Minimum, double Maximum, int Width, int TextureWidth, string ErrorLocation)
+		{
+			double mp = 0.0;
+			if (Minimum < 0)
+			{
+				mp = Math.Abs(Minimum);
+			}
+			double ftc = 1.0;
+			if (Width != 0)
+			{
+				//If the width of the needle is not set, it will loop round to the starting position
+				ftc -= (double)Width / TextureWidth;
+			}
+			double range = ftc / ((Maximum + mp) - (Minimum + mp));
+
+			string subjectText = GetStackLanguageFromSubject(Train, Subject, ErrorLocation);
+
+			if (!string.IsNullOrEmpty(subjectText))
+			{
+				return $"{subjectText} {Maximum} < {subjectText} {Minimum} > {subjectText} {Minimum + mp} - {range} * 0 ? {ftc} ?";
+			}
+
+			return string.Empty;
+		}
+
+		/// <summary>Converts a Panel2.cfg subject to an animation function stack</summary>
+		/// <param name="Train">The train</param>
+		/// <param name="Subject">The subject to convert</param>
+		/// <param name="ErrorLocation">The location in the Panel2.cfg file</param>
+		/// <returns>The parsed animation function stack</returns>
+		internal string GetStackLanguageFromSubject(AbstractTrain Train, string Subject, string ErrorLocation)
+		{
+			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+			string Suffix = "";
+			{
+				// detect d# suffix
+				int i;
+				for (i = Subject.Length - 1; i >= 0; i--)
+				{
+					int a = char.ConvertToUtf32(Subject, i);
+					if (a < 48 | a > 57) break;
+				}
+				if (i >= 0 & i < Subject.Length - 1)
+				{
+					if (Subject[i] == 'd' | Subject[i] == 'D')
+					{
+						if (int.TryParse(Subject.Substring(i + 1), System.Globalization.NumberStyles.Integer, Culture, out var n))
+						{
+							if (n == 0)
+							{
+								Suffix = " floor 10 mod";
+							}
+							else
+							{
+								string t0 = Math.Pow(10.0, n).ToString(Culture);
+								string t1 = Math.Pow(10.0, -n).ToString(Culture);
+								Suffix = " ~ " + t0 + " >= <> " + t1 + " * floor 10 mod 10 ?";
+							}
+							Subject = Subject.Substring(0, i);
+						}
+					}
+				}
+			}
+			// transform subject
+			string Code;
+			switch (Subject.ToLowerInvariant())
+			{
+				case "acc":
+					Code = "acceleration";
+					break;
+				case "motor":
+					Code = "accelerationmotor";
+					break;
+				case "true":
+					Code = "1";
+					break;
+				case "kmph":
+					Code = "speedometer abs 3.6 *";
+					break;
+				case "mph":
+					Code = "speedometer abs 2.2369362920544 *";
+					break;
+				case "ms":
+					Code = "speedometer abs";
+					break;
+				case "locobrakecylinder":
+					Code = Train.DriverCar + " brakecylinderindex 0.001 *";
+					break;
+				case "bc":
+					Code = "brakecylinder 0.001 *";
+					break;
+				case "mr":
+					Code = "mainreservoir 0.001 *";
+					break;
+				case "sap":
+					Code = "straightairpipe 0.001 *";
+					break;
+				case "locobrakepipe":
+					Code = Train.DriverCar + " brakepipeindex 0.001 *";
+					break;
+				case "bp":
+					Code = "brakepipe 0.001 *";
+					break;
+				case "er":
+					Code = "equalizingreservoir 0.001 *";
+					break;
+				case "door":
+					Code = "1 doors -";
+					break;
+				case "csc":
+					Code = "constSpeed";
+					break;
+				case "power":
+					Code = "brakeNotchLinear 0 powerNotch ?";
+					break;
+				case "locobrake":
+					Code = "locoBrakeNotch";
+					break;
+				case "brake":
+					Code = "brakeNotchLinear";
+					break;
+				case "rev":
+					Code = "reverserNotch ++";
+					break;
+				case "hour":
+					Code = "0.000277777777777778 time * 24 mod floor";
+					break;
+				case "min":
+					Code = "0.0166666666666667 time * 60 mod floor";
+					break;
+				case "sec":
+					Code = "time 60 mod floor";
+					break;
+				case "atc":
+					Code = "271 pluginstate";
+					break;
+				case "klaxon":
+				case "horn":
+				case "primaryklaxon":
+				case "primaryhorn":
+				case "secondaryklaxon":
+				case "secondaryhorn":
+				case "doorbuttonl":
+				case "doorbuttonr":
+				case "wiperposition":
+				case "routelimit":
+				case "wheelslip":
+				case "sanders":
+				case "sandlevel":
+					Code = Subject.ToLowerInvariant();
+					break;
+				default:
+					{
+						Code = "0";
+						bool unsupported = true;
+						if (Subject.StartsWith("ats", StringComparison.OrdinalIgnoreCase))
+						{
+							string a = Subject.Substring(3);
+							if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var n))
+							{
+								if (n >= 0 & n <= 255)
+								{
+									Code = n.ToString(Culture) + " pluginstate";
+									unsupported = false;
+								}
+							}
+						}
+						else if (Subject.StartsWith("doorl", StringComparison.OrdinalIgnoreCase))
+						{
+							string a = Subject.Substring(5);
+							if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var n))
+							{
+								if (n >= 0 & n < Train.NumberOfCars)
+								{
+									Code = n.ToString(Culture) + " leftdoorsindex ceiling";
+									unsupported = false;
+								}
+								else
+								{
+									Code = "2";
+									unsupported = false;
+								}
+							}
+						}
+						else if (Subject.StartsWith("doorr", StringComparison.OrdinalIgnoreCase))
+						{
+							string a = Subject.Substring(5);
+							if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var n))
+							{
+								if (n >= 0 & n < Train.NumberOfCars)
+								{
+									Code = n.ToString(Culture) + " rightdoorsindex ceiling";
+									unsupported = false;
+								}
+								else
+								{
+									Code = "2";
+									unsupported = false;
+								}
+							}
+						}
+						if (unsupported)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid subject " + Subject + " encountered in " + ErrorLocation);
+						}
+					}
+					break;
+			}
+			return Code + Suffix;
+		}
+
 
 		internal void CreateTouchElement(ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int[] SoundIndices, CommandEntry[] CommandEntries, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
 		{
