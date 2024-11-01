@@ -3,6 +3,7 @@ using Formats.OpenBve;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -96,7 +97,7 @@ namespace Train.OpenBve
 				Block = cfg.ReadNextBlock();
 				int Type;
 				double Minimum = 0, Maximum = 1000, Angle = 45;
-				string Background, Cover, Unit;
+				string Background, Cover, Unit, File;
 				Vector2 Center;
 				int Radius;
 				switch (Block.Key)
@@ -173,15 +174,15 @@ namespace Train.OpenBve
 						// background
 						if (Background != null)
 						{
-							Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var t, true);
-							CreateElement(Car, Center.X - 0.5 * t.Width, Center.Y + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
+							Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var pressureBackgroundTexture, true);
+							CreateElement(Car, Center.X - 0.5 * pressureBackgroundTexture.Width, Center.Y + SemiHeight - 0.5 * pressureBackgroundTexture.Height, WorldZ + EyeDistance - 3.0 * StackDistance, pressureBackgroundTexture);
 						}
 
 						// cover
 						if (Cover != null)
 						{
-							Plugin.currentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var t, true);
-							CreateElement(Car, Center.X - 0.5 * t.Width, Center.Y + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 6.0 * StackDistance, t);
+							Plugin.currentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var pressureCoverTexture, true);
+							CreateElement(Car, Center.X - 0.5 * pressureCoverTexture.Width, Center.Y + SemiHeight - 0.5 * pressureCoverTexture.Height, WorldZ + EyeDistance - 6.0 * StackDistance, pressureCoverTexture);
 						}
 
 						if (Type == 0)
@@ -192,9 +193,9 @@ namespace Train.OpenBve
 								if (NeedleType[k] != 0)
 								{
 									string Folder = Plugin.FileSystem.GetDataFolder("Compatibility");
-									string File = Path.CombineFile(Folder, k == 0 ? "needle_pressuregauge_lower.png" : "needle_pressuregauge_upper.png");
-									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var t, true);
-									int j = CreateElement(Car, Center.X - Radius * t.AspectRatio, Center.Y + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - (4 + k) * StackDistance, t, NeedleColor[k]);
+									File = Path.CombineFile(Folder, k == 0 ? "needle_pressuregauge_lower.png" : "needle_pressuregauge_upper.png");
+									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var pressureNeedleTexture, true);
+									int j = CreateElement(Car, Center.X - Radius * pressureNeedleTexture.AspectRatio, Center.Y + SemiHeight - Radius, 2.0 * Radius * pressureNeedleTexture.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - (4 + k) * StackDistance, pressureNeedleTexture, NeedleColor[k]);
 									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 									Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -338,15 +339,15 @@ namespace Train.OpenBve
 						if (!string.IsNullOrEmpty(Background))
 						{
 							// background/led
-							Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var t, true);
-							CreateElement(Car, Center.X - 0.5 * t.Width, Center.Y + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
+							Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var speedometerBackgroundTexture, true);
+							CreateElement(Car, Center.X - 0.5 * speedometerBackgroundTexture.Width, Center.Y + SemiHeight - 0.5 * speedometerBackgroundTexture.Height, WorldZ + EyeDistance - 3.0 * StackDistance, speedometerBackgroundTexture);
 						}
 
 						if (!string.IsNullOrEmpty(Cover))
 						{
 							// cover
-							Plugin.currentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var t, true);
-							CreateElement(Car, Center.X - 0.5 * t.Width, Center.Y + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 6.0 * StackDistance, t);
+							Plugin.currentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var speedometerNeedleTexture, true);
+							CreateElement(Car, Center.X - 0.5 * speedometerNeedleTexture.Width, Center.Y + SemiHeight - 0.5 * speedometerNeedleTexture.Height, WorldZ + EyeDistance - 6.0 * StackDistance, speedometerNeedleTexture);
 						}
 
 						if (!string.IsNullOrEmpty(ATCPath))
@@ -413,14 +414,14 @@ namespace Train.OpenBve
 
 									double x = Center.X - 0.5 * atcHeight + Math.Sin(a) * ATCRadius;
 									double y = Center.Y - 0.5 * atcHeight - Math.Cos(a) * ATCRadius + SemiHeight;
-									Plugin.currentHost.RegisterTexture(ATCPath, new TextureParameters(new TextureClipRegion(j * atcHeight, 0, atcHeight, atcHeight), Color24.Blue), out var t, true);
+									Plugin.currentHost.RegisterTexture(ATCPath, new TextureParameters(new TextureClipRegion(j * atcHeight, 0, atcHeight, atcHeight), Color24.Blue), out var ATCTexture, true);
 									if (j == 0)
 									{
-										k = CreateElement(Car, x, y, atcHeight, atcHeight, WorldZ + EyeDistance - 4.0 * StackDistance, t, Color32.White);
+										k = CreateElement(Car, x, y, atcHeight, atcHeight, WorldZ + EyeDistance - 4.0 * StackDistance, ATCTexture, Color32.White);
 									}
 									else
 									{
-										CreateElement(Car, x, y, atcHeight, atcHeight, WorldZ + EyeDistance - 4.0 * StackDistance, t, Color32.White, true);
+										CreateElement(Car, x, y, atcHeight, atcHeight, WorldZ + EyeDistance - 4.0 * StackDistance, ATCTexture, Color32.White, true);
 									}
 								}
 
@@ -432,9 +433,9 @@ namespace Train.OpenBve
 						{
 							// needle
 							string Folder = Plugin.FileSystem.GetDataFolder("Compatibility");
-							string File = Path.CombineFile(Folder, "needle_speedometer.png");
-							Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var t, true);
-							int j = CreateElement(Car, Center.X - Radius * t.AspectRatio, Center.Y + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, t, needleColor);
+							File = Path.CombineFile(Folder, "needle_speedometer.png");
+							Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var speedometerNeedleTexture, true);
+							int j = CreateElement(Car, Center.X - Radius * speedometerNeedleTexture.AspectRatio, Center.Y + SemiHeight - Radius, 2.0 * Radius * speedometerNeedleTexture.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, speedometerNeedleTexture, needleColor);
 							Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 							Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 							Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -575,10 +576,10 @@ namespace Train.OpenBve
 							}
 
 							int n = digitalNumberHeight / (int)Size.Y;
-							Texture[] t = new Texture[n];
+							Texture[] digitalNumberTextures = new Texture[n];
 							for (int j = 0; j < n; j++)
 							{
-								Plugin.currentHost.RegisterTexture(digitalNumber, new TextureParameters(new TextureClipRegion(digitalNumberWidth - (int)Size.X, j * (int)Size.Y, (int)Size.X, (int)Size.Y), Color24.Blue), out t[j]);
+								Plugin.currentHost.RegisterTexture(digitalNumber, new TextureParameters(new TextureClipRegion(digitalNumberWidth - (int)Size.X, j * (int)Size.Y, (int)Size.X, (int)Size.Y), Color24.Blue), out digitalNumberTextures[j]);
 							}
 
 							{
@@ -588,11 +589,11 @@ namespace Train.OpenBve
 								{
 									if (j == 0)
 									{
-										k = CreateElement(Car, Corner.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White);
+										k = CreateElement(Car, Corner.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White);
 									}
 									else
 									{
-										CreateElement(Car, Corner.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
+										CreateElement(Car, Corner.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
 									}
 								}
 
@@ -605,11 +606,11 @@ namespace Train.OpenBve
 								{
 									if (j == 0)
 									{
-										k = CreateElement(Car, Corner.X + Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White);
+										k = CreateElement(Car, Corner.X + Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White);
 									}
 									else
 									{
-										CreateElement(Car, Corner.X + Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
+										CreateElement(Car, Corner.X + Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
 									}
 								}
 
@@ -622,11 +623,11 @@ namespace Train.OpenBve
 								{
 									if (j == 0)
 									{
-										k = CreateElement(Car, Corner.X + 2.0 * Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White);
+										k = CreateElement(Car, Corner.X + 2.0 * Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White);
 									}
 									else
 									{
-										CreateElement(Car, Corner.X + 2.0 * Size.Y, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, t[j], Color32.White, true);
+										CreateElement(Car, Corner.X + 2.0 * Size.Y, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
 									}
 								}
 
@@ -653,316 +654,112 @@ namespace Train.OpenBve
 						Car.CarSections[0].Groups[0].Elements[elementIndex].StateFunction = new FunctionScript(Plugin.currentHost, "doors 0 !=", false);
 						break;
 					case PanelSections.Watch:
+						Color24 handColor = Color24.Black;
+						double handRadius = 16;
+						Block.GetPath(PanelKey.Background, TrainPath, out Background);
+						if (Block.GetColor24(PanelKey.Needle, out color))
+						{
+							handColor = color;
+						}
+
+						Block.GetVector2(PanelKey.Center, ',', out Center);
+						Block.TryGetValue(PanelKey.Radius, ref handRadius);
+
+						if (!string.IsNullOrEmpty(Background))
+						{
+							Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var watchBackgroundTexture, true);
+							CreateElement(Car, Center.X - 0.5 * watchBackgroundTexture.Width, Center.Y + SemiHeight - 0.5 * watchBackgroundTexture.Height, WorldZ + EyeDistance - 3.0 * StackDistance, watchBackgroundTexture);
+						}
+
+						string compatabilityFolder = Plugin.FileSystem.GetDataFolder("Compatibility");
+						// hour
+						File = Path.CombineFile(compatabilityFolder, "needle_hour.png");
+						Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var hourTexture, true);
+						int handElement = CreateElement(Car, Center.X - handRadius * hourTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * hourTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 4.0 * StackDistance, hourTexture, handColor);
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection = Vector3.Backward;
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection = Vector3.Right;
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection, Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection);
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateZFunction = new FunctionScript(Plugin.currentHost, "time 0.000277777777777778 * floor 0.523598775598298 *", false);
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDamping = new Damping(20.0, 0.4);
+						// minute
+						File = Path.CombineFile(compatabilityFolder, "needle_minute.png");
+						Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var minuteTexture, true);
+						handElement = CreateElement(Car, Center.X - handRadius * minuteTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * minuteTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 5.0 * StackDistance, minuteTexture, handColor);
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection = Vector3.Backward;
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection = Vector3.Right;
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection, Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection);
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateZFunction = new FunctionScript(Plugin.currentHost, "time 0.0166666666666667 * floor 0.10471975511966 *", false);
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDamping = new Damping(20.0, 0.4);
+						// second
+						File = Path.CombineFile(compatabilityFolder, "needle_second.png");
+						Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var secondTexture, true);
+						handElement = CreateElement(Car, Center.X - handRadius * secondTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * secondTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 6.0 * StackDistance, secondTexture, handColor);
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection = Vector3.Backward;
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection = Vector3.Right;
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection, Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection);
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateZFunction = new FunctionScript(Plugin.currentHost, "time floor 0.10471975511966 *", false);
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDamping = new Damping(20.0, 0.4);
+						break;
+					case PanelSections.BrakeIndicator:
+						if (!Block.GetPath(PanelKey.Image, TrainPath, out string brakeIndicatorPath) || string.IsNullOrEmpty(brakeIndicatorPath))
+						{
+							break;
+						}
+
+						Block.GetVector2(PanelKey.Corner, ',', out Corner);
+						Block.GetValue(PanelKey.Width, out int indicatorWidth);
+						if (indicatorWidth <= 0)
+						{
+							indicatorWidth = 1;
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "Width is expected to be positive in " + Block.Key + " in " + FileName);
+						}
+
+						Plugin.currentHost.QueryTextureDimensions(brakeIndicatorPath, out var w, out var h);
+						if (w > 0 & h > 0)
+						{
+							int n = w / indicatorWidth;
+							int k = -1;
+							for (int j = 0; j < n; j++)
+							{
+								TextureClipRegion clip = new TextureClipRegion(j * indicatorWidth, 0, indicatorWidth, h);
+								Plugin.currentHost.RegisterTexture(brakeIndicatorPath, new TextureParameters(clip, Color24.Blue), out var brakeIndicatorTexture);
+								if (j == 0)
+								{
+									k = CreateElement(Car, Corner.X, Corner.Y + SemiHeight, indicatorWidth, h, WorldZ + EyeDistance - StackDistance, brakeIndicatorTexture, Color32.White);
+								}
+								else
+								{
+									CreateElement(Car, Corner.X, Corner.Y + SemiHeight,  indicatorWidth, h, WorldZ + EyeDistance - StackDistance, brakeIndicatorTexture, Color32.White, true);
+								}
+							}
+
+							if (Car.baseTrain.Handles.Brake is AirBrakeHandle)
+							{
+								int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
+								int em = maxpow + 3;
+								Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > " + maxpow.ToString(Culture) + " BrakeNotch + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
+							}
+							else
+							{
+								if (Car.baseTrain.Handles.HasHoldBrake)
+								{
+									int em = Car.baseTrain.Handles.Power.MaximumNotch + 2 + Car.baseTrain.Handles.Brake.MaximumNotch;
+									int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
+									int maxpowp1 = maxpow + 1;
+									Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " holdBrake " + maxpowp1.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpowp1.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ? ?", false);
+								}
+								else
+								{
+									int em = Car.baseTrain.Handles.Power.MaximumNotch + 1 + Car.baseTrain.Handles.Brake.MaximumNotch;
+									int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
+									Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpow.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
+								}
+							}
+						}
 						break;
 					
 				}
 			}
-
-			// parse lines for rest
-			double invfac = Lines.Length == 0 ? 0.4 : 0.4 / Lines.Length;
-			for (int i = 0; i < Lines.Length; i++)
-			{
-				Plugin.CurrentProgress = Plugin.LastProgress + invfac * i;
-				if ((i & 7) == 0)
-				{
-					System.Threading.Thread.Sleep(1);
-					if (Plugin.Cancel) return;
-				}
-
-				if (Lines[i].Length != 0)
-				{
-					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
-					{
-						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out PanelSections Section);
-						switch (Section)
-						{
-							case PanelSections.Watch:
-							{
-								Color32 Needle = Color32.Black;
-								double CenterX = 0.0, CenterY = 0.0, Radius = 16.0;
-								string Background = null;
-								i++;
-								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
-								{
-									int j = Lines[i].IndexOf('=');
-									if (j >= 0)
-									{
-										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
-										string Value = Lines[i].Substring(j + 1).TrimStart();
-										string[] Arguments = GetArguments(Value);
-										switch (Key)
-										{
-											case PanelKey.Background:
-												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-												if (Path.ContainsInvalidChars(Value))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
-												else
-												{
-													Background = Path.CombineFile(TrainPath, Value);
-													if (!System.IO.File.Exists(Background))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName" + Background + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														Background = null;
-													}
-												}
-
-												break;
-											case PanelKey.Needle:
-											{
-												int r = 0, g = 0, b = 0;
-												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[0], out r))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
-
-												if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[1], out g))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
-
-												if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[2], out b))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
-												
-												Needle = new Color32((byte) r, (byte) g, (byte) b, 255);
-											}
-												break;
-											case PanelKey.Center:
-												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CenterX))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													CenterX = 0.0;
-												}
-												else if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out CenterY))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													CenterY = 0.0;
-												}
-
-												break;
-											case PanelKey.Radius:
-												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Radius))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													Radius = 16.0;
-												}
-
-												break;
-										}
-									}
-
-									i++;
-								}
-
-								i--;
-								if (Background != null)
-								{
-									Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var t, true);
-									CreateElement(Car, CenterX - 0.5 * t.Width, CenterY + SemiHeight - 0.5 * t.Height, WorldZ + EyeDistance - 3.0 * StackDistance, t);
-								}
-
-								string Folder = Plugin.FileSystem.GetDataFolder("Compatibility");
-								{
-									// hour
-									string File = Path.CombineFile(Folder, "needle_hour.png");
-									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var t, true);
-									int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 4.0 * StackDistance, t, Needle);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
-									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
-									Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, "time 0.000277777777777778 * floor 0.523598775598298 *", false);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);
-								}
-								{
-									// minute
-									string File = Path.CombineFile(Folder, "needle_minute.png");
-									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var t, true);
-									int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, t, Needle);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
-									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
-									Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, "time 0.0166666666666667 * floor 0.10471975511966 *", false);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);
-								}
-								{
-									// second
-									string File = Path.CombineFile(Folder, "needle_second.png");
-									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var t, true);
-									int j = CreateElement(Car, CenterX - Radius * t.AspectRatio, CenterY + SemiHeight - Radius, 2.0 * Radius * t.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 6.0 * StackDistance, t, Needle);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
-									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
-									Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, "time floor 0.10471975511966 *", false);
-									Car.CarSections[0].Groups[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);
-								}
-							}
-								break;
-							case PanelSections.BrakeIndicator:
-							{
-								double CornerX = 0.0, CornerY = 0.0;
-								string Image = null;
-								int Width = 0;
-								i++;
-								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
-								{
-									int j = Lines[i].IndexOf('=');
-									if (j >= 0)
-									{
-										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out PanelKey Key);
-										string Value = Lines[i].Substring(j + 1).TrimStart();
-										string[] Arguments = GetArguments(Value);
-										switch (Key)
-										{
-											case PanelKey.Image:
-												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-												if (Path.ContainsInvalidChars(Value))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
-												else
-												{
-													Image = Path.CombineFile(TrainPath, Value);
-													if (!System.IO.File.Exists(Image))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + Image + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														Image = null;
-													}
-												}
-
-												break;
-											case PanelKey.Corner:
-												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CornerX))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													CornerX = 0.0;
-												}
-												else if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out CornerY))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													CornerY = 0.0;
-												}
-
-												break;
-											case PanelKey.Width:
-												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out Width))
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Width is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													Width = 1;
-												}
-												else if (Width <= 0)
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Width is expected to be positive in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													Width = 1;
-												}
-
-												break;
-										}
-									}
-
-									i++;
-								}
-
-								i--;
-								if (Image == null)
-								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Image is required to be specified in " + Section + " in " + FileName);
-								}
-
-								if (Width <= 0)
-								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Width is required to be specified in " + Section + " in " + FileName);
-								}
-
-								if (Image != null & Width > 0)
-								{
-									Plugin.currentHost.QueryTextureDimensions(Image, out var w, out var h);
-									if (w > 0 & h > 0)
-									{
-										int n = w / Width;
-										int k = -1;
-										for (int j = 0; j < n; j++)
-										{
-											TextureClipRegion clip = new TextureClipRegion(j * Width, 0, Width, h);
-											Plugin.currentHost.RegisterTexture(Image, new TextureParameters(clip, Color24.Blue), out var t);
-											if (j == 0)
-											{
-												k = CreateElement(Car, CornerX, CornerY + SemiHeight, Width, h, WorldZ + EyeDistance - StackDistance, t, Color32.White);
-											}
-											else
-											{
-												CreateElement(Car, CornerX, CornerY + SemiHeight, Width, h, WorldZ + EyeDistance - StackDistance, t, Color32.White, true);
-											}
-										}
-
-										if (Car.baseTrain.Handles.Brake is AirBrakeHandle)
-										{
-											int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
-											int em = maxpow + 3;
-											Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > " + maxpow.ToString(Culture) + " BrakeNotch + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
-										}
-										else
-										{
-											if (Car.baseTrain.Handles.HasHoldBrake)
-											{
-												int em = Car.baseTrain.Handles.Power.MaximumNotch + 2 + Car.baseTrain.Handles.Brake.MaximumNotch;
-												int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
-												int maxpowp1 = maxpow + 1;
-												Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " holdBrake " + maxpowp1.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpowp1.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ? ?", false);
-											}
-											else
-											{
-												int em = Car.baseTrain.Handles.Power.MaximumNotch + 1 + Car.baseTrain.Handles.Brake.MaximumNotch;
-												int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
-												Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpow.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
-											}
-										}
-									}
-								}
-							}
-								break;
-						}
-					}
-				}
-			}
-		}
-
-		// get arguments
-		private static string[] GetArguments(string Expression)
-		{
-			string[] Arguments = new string[16];
-			int UsedArguments = 0;
-			int Start = 0;
-			for (int i = 0; i < Expression.Length; i++)
-			{
-				if (Expression[i] == ',' | Expression[i] == ':')
-				{
-					if (UsedArguments >= Arguments.Length) Array.Resize(ref Arguments, Arguments.Length << 1);
-					Arguments[UsedArguments] = Expression.Substring(Start, i - Start).TrimStart();
-					UsedArguments++;
-					Start = i + 1;
-				}
-				else if (Expression[i] == ';')
-				{
-					if (UsedArguments >= Arguments.Length) Array.Resize(ref Arguments, Arguments.Length << 1);
-					Arguments[UsedArguments] = Expression.Substring(Start, i - Start).TrimStart();
-					UsedArguments++;
-					Start = Expression.Length;
-					break;
-				}
-			}
-
-			if (Start < Expression.Length)
-			{
-				if (UsedArguments >= Arguments.Length) Array.Resize(ref Arguments, Arguments.Length << 1);
-				Arguments[UsedArguments] = Expression.Substring(Start).Trim();
-				UsedArguments++;
-			}
-
-			Array.Resize(ref Arguments, UsedArguments);
-			return Arguments;
 		}
 
 		private int CreateElement(CarBase Car, double Left, double Top, double WorldZ, Texture Texture, bool AddStateToLastElement = false)
