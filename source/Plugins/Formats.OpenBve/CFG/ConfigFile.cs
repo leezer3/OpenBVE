@@ -355,7 +355,13 @@ namespace Formats.OpenBve
 			{
 				if (!Path.ContainsInvalidChars(value.Value))
 				{
+					
 					string relativePath = value.Value;
+					finalPath = Path.CombineFile(absolutePath, relativePath);
+					if (File.Exists(finalPath))
+					{
+						return true;
+					}
 					if (!System.IO.Path.HasExtension(relativePath))
 					{
 						// HACK: BVE allows bmp without extension
@@ -552,7 +558,6 @@ namespace Formats.OpenBve
 
 		public override bool GetEnumValue<T3>(T2 key, out T3 enumValue, out int index, out string Suffix)
 		{
-
 			index = -1;
 			Suffix = string.Empty;
 			if (keyValuePairs.TryGetValue(key, out var value))
@@ -613,6 +618,35 @@ namespace Formats.OpenBve
 				currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Key + " at line " + value.Key);
 			}
 
+			enumValue = default;
+			return false;
+		}
+
+		public override bool GetEnumValue<T3>(T2 key, out T3 enumValue, out Color32 Color)
+		{
+			Color = Color32.Black;
+			if (keyValuePairs.TryGetValue(key, out var value))
+			{
+				int colonIndex = value.Value.IndexOf(':');
+				string colorValue = value.Value.Substring(colonIndex);
+				string s = value.Value.Substring(0, colonIndex);
+				
+				if (Enum.TryParse(s, true, out enumValue))
+				{
+					if (Color32.TryParseColor(colorValue.Split(','), out var newColor))
+					{
+						Color = newColor;
+					}
+					else
+					{
+						currentHost.AddMessage(MessageType.Error, false, "Color is invalid in " + key + " in " + Key + " at line " + value.Key);
+					}
+					return true;
+				}
+
+				currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Key + " at line " + value.Key);
+			}
+			
 			enumValue = default;
 			return false;
 		}

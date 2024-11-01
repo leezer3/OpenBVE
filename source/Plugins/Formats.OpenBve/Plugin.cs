@@ -170,6 +170,14 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
+		/// <summary>Reads the specified Enum value from the block</summary>
+		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue, out Color32 Color) where T3 : struct, Enum
+		{
+			enumValue = default;
+			Color = Color32.Black;
+			return false;
+		}
+
 		protected Block(int myIndex, T1 myKey, HostInterface host)
 		{
 			Index = myIndex;
