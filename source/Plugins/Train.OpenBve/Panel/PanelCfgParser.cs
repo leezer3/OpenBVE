@@ -3,7 +3,6 @@ using Formats.OpenBve;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
-using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -77,16 +76,14 @@ namespace Train.OpenBve
 			WorldTop = Car.Driver.Y + 0.5 * WorldSize.Y;
 			double WorldZ = Car.Driver.Z;
 			const double UpDownAngleConstant = -0.191986217719376;
-			double PanelYaw = 0.0;
-			double PanelPitch = UpDownAngleConstant;
 			string PanelBackground = Path.CombineFile(TrainPath, "panel.bmp");
 
 			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(Lines, Plugin.currentHost);
 
 			cfg.ReadBlock(PanelSections.Panel, out var Block);
-			if (!Block.GetPath(PanelKey.Background, TrainPath, out PanelBackground))
+			if (Block.GetPath(PanelKey.Background, TrainPath, out var panelBackground))
 			{
-				return;
+				PanelBackground = panelBackground;
 			}
 			Plugin.currentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out var panelTexture, true);
 			SemiHeight = PanelSize.Y - panelTexture.Height;
@@ -819,12 +816,8 @@ namespace Train.OpenBve
 			{
 				int n = Car.CarSections[0].Groups[0].Elements.Length;
 				Array.Resize(ref Car.CarSections[0].Groups[0].Elements, n + 1);
-				Car.CarSections[0].Groups[0].Elements[n] = new AnimatedObject(Plugin.currentHost);
-				Car.CarSections[0].Groups[0].Elements[n].States = new[] {new ObjectState()};
+				Car.CarSections[0].Groups[0].Elements[n] = new AnimatedObject(Plugin.currentHost, Object);
 				Car.CarSections[0].Groups[0].Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
-				Car.CarSections[0].Groups[0].Elements[n].States[0].Prototype = Object;
-				Car.CarSections[0].Groups[0].Elements[n].CurrentState = 0;
-				Car.CarSections[0].Groups[0].Elements[n].internalObject = new ObjectState(Object);
 				Plugin.currentHost.CreateDynamicObject(ref Car.CarSections[0].Groups[0].Elements[n].internalObject);
 				return n;
 			}

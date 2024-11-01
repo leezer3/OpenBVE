@@ -942,12 +942,8 @@ namespace Train.OpenBve
 			} else {
 				int n = Group.Elements.Length;
 				Array.Resize(ref Group.Elements, n + 1);
-				Group.Elements[n] = new AnimatedObject(Plugin.currentHost);
-				Group.Elements[n].States = new[] { new ObjectState() };
+				Group.Elements[n] = new AnimatedObject(Plugin.currentHost, Object);
 				Group.Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
-				Group.Elements[n].States[0].Prototype = Object;
-				Group.Elements[n].CurrentState = 0;
-				Group.Elements[n].internalObject = new ObjectState { Prototype = Object };
 				Plugin.currentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
 				return n;
 			}
