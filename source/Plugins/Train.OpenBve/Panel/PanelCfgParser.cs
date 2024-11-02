@@ -142,7 +142,7 @@ namespace Train.OpenBve
 						Block.GetPath(PanelKey.Cover, TrainPath, out Cover);
 						if (Block.GetValue(PanelKey.Unit, out Unit))
 						{
-							switch (Unit)
+							switch (Unit.ToLowerInvariant())
 							{
 								case "kpa":
 								case "0":
@@ -507,7 +507,7 @@ namespace Train.OpenBve
 						int Units = 0;
 						if (Block.GetValue(PanelKey.Unit, out Unit))
 						{
-							switch (Unit)
+							switch (Unit.ToLowerInvariant())
 							{
 								case "km/h":
 									Units = 0;
