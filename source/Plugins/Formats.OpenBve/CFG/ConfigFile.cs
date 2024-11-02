@@ -25,7 +25,6 @@
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
-using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using System;
@@ -518,7 +517,12 @@ namespace Formats.OpenBve
 				{
 					return true;
 				}
-				currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + key + " in " + Key + " at line " + color.Key);
+
+				if (Color24.TryParseColor(color.Value, ',', out value))
+				{
+					return true;
+				}
+				currentHost.AddMessage(MessageType.Error, false, "Color is invalid in " + key + " in " + Key + " at line " + color.Key);
 			}
 
 			value = Color24.White;
@@ -534,7 +538,12 @@ namespace Formats.OpenBve
 					value = newValue;
 					return true;
 				}
-				currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + key + " in " + Key + " at line " + color.Key);
+
+				if (Color24.TryParseColor(color.Value, ',', out value))
+				{
+					return true;
+				}
+				currentHost.AddMessage(MessageType.Error, false, "Color is invalid in " + key + " in " + Key + " at line " + color.Key);
 			}
 
 			return false;
@@ -575,7 +584,7 @@ namespace Formats.OpenBve
 				{
 					if (s[i] == 'd')
 					{
-						if (int.TryParse(s.Substring(i + 1), System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture, out var n))
+						if (int.TryParse(s.Substring(i + 1), NumberStyles.Integer, CultureInfo.InvariantCulture, out var n))
 						{
 							if (n == 0)
 							{

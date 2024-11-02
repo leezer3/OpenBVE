@@ -76,12 +76,13 @@ namespace Train.OpenBve
 			WorldTop = Car.Driver.Y + 0.5 * WorldSize.Y;
 			double WorldZ = Car.Driver.Z;
 			const double UpDownAngleConstant = -0.191986217719376;
+			// default background
 			string PanelBackground = Path.CombineFile(TrainPath, "panel.bmp");
 
 			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(Lines, Plugin.currentHost);
 
 			cfg.ReadBlock(PanelSections.Panel, out var Block);
-			if (Block.GetPath(PanelKey.Background, TrainPath, out var panelBackground))
+			if (Block != null && Block.GetPath(PanelKey.Background, TrainPath, out var panelBackground))
 			{
 				PanelBackground = panelBackground;
 			}
@@ -138,7 +139,7 @@ namespace Train.OpenBve
 						Block.GetVector2(PanelKey.Center, ',', out Center);
 						Block.GetValue(PanelKey.Radius, out Radius);
 						Block.GetPath(PanelKey.Background, TrainPath, out Background);
-						Block.GetPath(PanelKey.Background, TrainPath, out Cover);
+						Block.GetPath(PanelKey.Cover, TrainPath, out Cover);
 						if (Block.GetValue(PanelKey.Unit, out Unit))
 						{
 							switch (Unit)
@@ -312,7 +313,7 @@ namespace Train.OpenBve
 						}
 
 						Block.GetPath(PanelKey.Background, TrainPath, out Background);
-						Block.GetPath(PanelKey.Background, TrainPath, out Cover);
+						Block.GetPath(PanelKey.Cover, TrainPath, out Cover);
 						if (Block.GetColor24(PanelKey.Needle, out Color24 color))
 						{
 							needleColor = color;
@@ -333,6 +334,8 @@ namespace Train.OpenBve
 						Block.GetValue(PanelKey.Radius, out Radius);
 						Block.GetValue(PanelKey.Angle, out Angle);
 
+						Angle = Angle.ToRadians();
+
 						if (!string.IsNullOrEmpty(Background))
 						{
 							// background/led
@@ -343,8 +346,8 @@ namespace Train.OpenBve
 						if (!string.IsNullOrEmpty(Cover))
 						{
 							// cover
-							Plugin.currentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var speedometerNeedleTexture, true);
-							CreateElement(Car, Center.X - 0.5 * speedometerNeedleTexture.Width, Center.Y + SemiHeight - 0.5 * speedometerNeedleTexture.Height, WorldZ + EyeDistance - 6.0 * StackDistance, speedometerNeedleTexture);
+							Plugin.currentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var speedometerCoverTexture, true);
+							CreateElement(Car, Center.X - 0.5 * speedometerCoverTexture.Width, Center.Y + SemiHeight - 0.5 * speedometerCoverTexture.Height, WorldZ + EyeDistance - 6.0 * StackDistance, speedometerCoverTexture);
 						}
 
 						if (!string.IsNullOrEmpty(ATCPath))
@@ -579,57 +582,51 @@ namespace Train.OpenBve
 								Plugin.currentHost.RegisterTexture(digitalNumber, new TextureParameters(new TextureClipRegion(digitalNumberWidth - (int)Size.X, j * (int)Size.Y, (int)Size.X, (int)Size.Y), Color24.Blue), out digitalNumberTextures[j]);
 							}
 
+							// hundreds
+							int k = -1;
+							for (int j = 0; j < n; j++)
 							{
-								// hundreds
-								int k = -1;
-								for (int j = 0; j < n; j++)
+								if (j == 0)
 								{
-									if (j == 0)
-									{
-										k = CreateElement(Car, Corner.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White);
-									}
-									else
-									{
-										CreateElement(Car, Corner.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
-									}
+									k = CreateElement(Car, Corner.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White);
 								}
-
-								Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 100 >= <> 100 quotient 10 mod 10 ?", false);
+								else
+								{
+									CreateElement(Car, Corner.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
+								}
 							}
+							Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 100 >= <> 100 quotient 10 mod 10 ?", false);
+
+							// tens
+							k = -1;
+							for (int j = 0; j < n; j++)
 							{
-								// tens
-								int k = -1;
-								for (int j = 0; j < n; j++)
+								if (j == 0)
 								{
-									if (j == 0)
-									{
-										k = CreateElement(Car, Corner.X + Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White);
-									}
-									else
-									{
-										CreateElement(Car, Corner.X + Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
-									}
+									k = CreateElement(Car, Corner.X + Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White);
 								}
-
-								Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 10 >= <> 10 quotient 10 mod 10 ?", false);
+								else
+								{
+									CreateElement(Car, Corner.X + Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
+								}
 							}
+							Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 10 >= <> 10 quotient 10 mod 10 ?", false);
+
+							// ones
+							k = -1;
+							for (int j = 0; j < n; j++)
 							{
-								// ones
-								int k = -1;
-								for (int j = 0; j < n; j++)
+								if (j == 0)
 								{
-									if (j == 0)
-									{
-										k = CreateElement(Car, Corner.X + 2.0 * Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White);
-									}
-									else
-									{
-										CreateElement(Car, Corner.X + 2.0 * Size.Y, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
-									}
+									k = CreateElement(Car, Corner.X + 2.0 * Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White);
 								}
-
-								Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * floor 10 mod", false);
+								else
+								{
+									CreateElement(Car, Corner.X + 2.0 * Size.Y, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
+								}
 							}
+
+							Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * floor 10 mod", false);
 						}
 						break;
 					case PanelSections.PilotLamp:
