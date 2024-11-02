@@ -637,7 +637,7 @@ namespace Formats.OpenBve
 			if (keyValuePairs.TryGetValue(key, out var value))
 			{
 				int colonIndex = value.Value.IndexOf(':');
-				string colorValue = value.Value.Substring(colonIndex);
+				string colorValue = value.Value.Substring(colonIndex + 1);
 				string s = value.Value.Substring(0, colonIndex);
 				
 				if (Enum.TryParse(s, true, out enumValue))
