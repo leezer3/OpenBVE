@@ -253,24 +253,24 @@ namespace Train.OpenBve
 
 								int[][] faces =
 								{
-											new[] {0, 1, 2},
-											new[] {0, 3, 4},
-											new[] {0, 5, 6},
-											new[] {0, 7, 8},
-											new[] {0, 9, 10}
-										};
+									new[] {0, 1, 2},
+									new[] {0, 3, 4},
+									new[] {0, 5, 6},
+									new[] {0, 7, 8},
+									new[] {0, 9, 10}
+								};
 								Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, NeedleColor[1]);
 								Car.CarSections[0].Groups[0].Elements[j].LEDClockwiseWinding = true;
 								Car.CarSections[0].Groups[0].Elements[j].LEDInitialAngle = Angle - 2.0 * Math.PI;
 								Car.CarSections[0].Groups[0].Elements[j].LEDLastAngle = 2.0 * Math.PI - Angle;
 								Car.CarSections[0].Groups[0].Elements[j].LEDVectors = new[]
 								{
-											new Vector3(x0, y0, z0),
-											new Vector3(x1, y1, z1),
-											new Vector3(x2, y2, z2),
-											new Vector3(x3, y3, z3),
-											new Vector3(cx, cy, cz)
-										};
+									new Vector3(x0, y0, z0),
+									new Vector3(x1, y1, z1),
+									new Vector3(x2, y2, z2),
+									new Vector3(x3, y3, z3),
+									new Vector3(cx, cy, cz)
+								};
 								double c0 = (Angle * (Maximum - Minimum) - 2.0 * Minimum * Math.PI) / (Maximum - Minimum);
 								double c1 = 2.0 * (Math.PI - Angle) / (Maximum - Minimum);
 								string Variable;
@@ -472,24 +472,24 @@ namespace Train.OpenBve
 
 							int[][] faces =
 							{
-										new[] {0, 1, 2},
-										new[] {0, 3, 4},
-										new[] {0, 5, 6},
-										new[] {0, 7, 8},
-										new[] {0, 9, 10}
-									};
+								new[] {0, 1, 2},
+								new[] {0, 3, 4},
+								new[] {0, 5, 6},
+								new[] {0, 7, 8},
+								new[] {0, 9, 10}
+							};
 							Car.CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, needleColor);
 							Car.CarSections[0].Groups[0].Elements[j].LEDClockwiseWinding = true;
 							Car.CarSections[0].Groups[0].Elements[j].LEDInitialAngle = Angle - 2.0 * Math.PI;
 							Car.CarSections[0].Groups[0].Elements[j].LEDLastAngle = 2.0 * Math.PI - Angle;
 							Car.CarSections[0].Groups[0].Elements[j].LEDVectors = new[]
 							{
-										new Vector3(x0, y0, z0),
-										new Vector3(x1, y1, z1),
-										new Vector3(x2, y2, z2),
-										new Vector3(x3, y3, z3),
-										new Vector3(cx, cy, cz)
-									};
+								new Vector3(x0, y0, z0),
+								new Vector3(x1, y1, z1),
+								new Vector3(x2, y2, z2),
+								new Vector3(x3, y3, z3),
+								new Vector3(cx, cy, cz)
+							};
 							double c0 = Angle;
 							double c1 = 2.0 * (Math.PI - Angle) / Maximum;
 							Car.CarSections[0].Groups[0].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);

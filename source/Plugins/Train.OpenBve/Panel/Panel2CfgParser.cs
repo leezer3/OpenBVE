@@ -174,7 +174,7 @@ namespace Train.OpenBve
 					case Panel2Sections.Needle:
 						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
 						{
-							double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
+							double InitialAngle = -120, LastAngle = 120;
 							double Minimum = 0.0, Maximum = 1000.0;
 							double NaturalFrequency = -1.0, DampingRatio = -1.0;
 							Vector2 Origin = new Vector2(-1, -1);
@@ -183,7 +183,9 @@ namespace Train.OpenBve
 							bool OriginDefined = Block.TryGetVector2(Panel2Key.Origin, ',', ref Origin);
 							Block.GetValue(Panel2Key.Radius, out Radius);
 							Block.TryGetValue(Panel2Key.InitialAngle, ref InitialAngle);
+							InitialAngle = InitialAngle.ToRadians();
 							Block.TryGetValue(Panel2Key.LastAngle, ref LastAngle);
+							LastAngle = LastAngle.ToRadians();
 							Block.TryGetValue(Panel2Key.Minimum, ref Minimum);
 							Block.TryGetValue(Panel2Key.Maximum, ref Maximum);
 							Block.TryGetValue(Panel2Key.NaturalFreq, ref NaturalFrequency);
@@ -230,8 +232,6 @@ namespace Train.OpenBve
 									break;
 							}
 
-							InitialAngle = InitialAngle.ToRadians();
-							LastAngle = LastAngle.ToRadians();
 							double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 							double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 							f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
@@ -443,12 +443,14 @@ namespace Train.OpenBve
 					case Panel2Sections.DigitalGauge:
 						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage) && Block.GetValue(Panel2Key.Radius, out Radius) && Radius != 0)
 						{
-							double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
+							double InitialAngle = -120, LastAngle = 120;
 							double Minimum = 0.0, Maximum = 1000.0;
 							Block.TryGetValue(Panel2Key.Function, ref Function);
 							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
 							Block.TryGetValue(Panel2Key.InitialAngle, ref InitialAngle);
+							InitialAngle = InitialAngle.ToRadians();
 							Block.TryGetValue(Panel2Key.LastAngle, ref LastAngle);
+							LastAngle = LastAngle.ToRadians();
 							Block.TryGetValue(Panel2Key.Minimum, ref Minimum);
 							Block.TryGetValue(Panel2Key.Maximum, ref Maximum);
 							Block.TryGetColor24(Panel2Key.Color, ref Color);
@@ -505,24 +507,26 @@ namespace Train.OpenBve
 							{
 								vertices[v] = new Vertex();
 							}
-							int[][] faces = {
-											new[] { 0, 1, 2 },
-											new[] { 0, 3, 4 },
-											new[] { 0, 5, 6 },
-											new[] { 0, 7, 8 },
-											new[] { 0, 9, 10 }
-										};
+							int[][] faces = 
+							{
+								new[] { 0, 1, 2 },
+								new[] { 0, 3, 4 },
+								new[] { 0, 5, 6 },
+								new[] { 0, 7, 8 },
+								new[] { 0, 9, 10 }
+							};
 							Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, Color);
 							Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDClockwiseWinding = InitialAngle <= LastAngle;
 							Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDInitialAngle = InitialAngle;
 							Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDLastAngle = LastAngle;
-							Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDVectors = new[] {
-											new Vector3(x0, y0, z0),
-											new Vector3(x1, y1, z1),
-											new Vector3(x2, y2, z2),
-											new Vector3(x3, y3, z3),
-											new Vector3(cx, cy, cz)
-										};
+							Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDVectors = new[]
+							{
+								new Vector3(x0, y0, z0),
+								new Vector3(x1, y1, z1),
+								new Vector3(x2, y2, z2),
+								new Vector3(x3, y3, z3),
+								new Vector3(cx, cy, cz)
+							};
 							string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, subjectIndex, subjectSuffix);
 							double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 							double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
@@ -652,10 +656,10 @@ namespace Train.OpenBve
 						}
 
 						/*
-									 * Ensure we have the same number of drops for day + night
-									 * NOTE: If a drop is missing, we may get slightly odd effects, but can't be helped
-									 * Raindrops ought to be blurry, and they're small enough anyway...
-									 */
+						 * Ensure we have the same number of drops for day + night
+						 * NOTE: If a drop is missing, we may get slightly odd effects, but can't be helped
+						 * Raindrops ought to be blurry, and they're small enough anyway...
+						 */
 						int MD = Math.Max(daytimeDropFiles.Length, nighttimeDropFiles.Length);
 						MD = Math.Max(daytimeFlakeFiles.Length, MD);
 						MD = Math.Max(nighttimeFlakeFiles.Length, MD);
