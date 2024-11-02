@@ -94,7 +94,7 @@ namespace Train.OpenBve
 			{
 				Block = cfg.ReadNextBlock();
 				int Type;
-				double Minimum = 0, Maximum = 1000, Angle = 45;
+				double Minimum = 0, Maximum = 1000, Angle;
 				string Background, Cover, Unit, File;
 				Vector2 Center;
 				int Radius;
@@ -112,6 +112,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case PanelSections.PressureGauge:
+						Angle = 45;
 						Block.GetValue(PanelKey.Type, out Type);
 						int[] NeedleType = { 0, 0 };
 						Color32[] NeedleColor = { Color32.Black, Color32.Black };
@@ -303,6 +304,7 @@ namespace Train.OpenBve
 					case PanelSections.Speedometer:
 						Color32 needleColor = Color32.White;
 						bool needleColorOverridden = false;
+						Angle = 60;
 						
 						Block.GetValue(PanelKey.Type, out Type);
 
@@ -332,7 +334,7 @@ namespace Train.OpenBve
 							Maximum = 33.3333333333333; // 120km/h
 						}
 						Block.GetValue(PanelKey.Radius, out Radius);
-						Block.GetValue(PanelKey.Angle, out Angle);
+						Block.TryGetValue(PanelKey.Angle, ref Angle);
 
 						Angle = Angle.ToRadians();
 
