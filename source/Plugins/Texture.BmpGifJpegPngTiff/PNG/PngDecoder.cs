@@ -168,7 +168,7 @@ namespace Plugin.PNG
 										return false;
 								}
 
-								ScanlineLength = Math.Max(1, (Width * BytesPerPixel) / ScanlineLength); // scanline must be a minumum of 1 byte in length
+								ScanlineLength = Math.Max(1, (int)Math.Ceiling((Width * BytesPerPixel) / (double)ScanlineLength)); // scanline must be a minumum of 1 byte in length. Always round up
 
 								pixelBuffer = ColorType != ColorType.Palleted && ColorType != ColorType.GrayscaleAlpha ? new byte[Width * Height * BytesPerPixel] : new byte[Width * Height * 4];
 								break;
@@ -248,6 +248,9 @@ namespace Plugin.PNG
 											byte leftByte, upByte, upLeftByte;
 											switch (scanlineFilterAlgorithm)
 											{
+												case ScanlineFilterAlgorithm.None:
+													// ignore
+													break;
 												case ScanlineFilterAlgorithm.Sub:
 													leftByte = x >= BytesPerPixel ? scanline[x - BytesPerPixel] : (byte)0;
 													scanline[x] = (byte)((scanline[x] + leftByte) % 256);
@@ -267,6 +270,9 @@ namespace Plugin.PNG
 													upLeftByte = x >= BytesPerPixel ? previousScanline[x - BytesPerPixel] : (byte)0;
 													scanline[x] = (byte)((scanline[x] + PaethPredictor(leftByte, upByte, upLeftByte)) % 256);
 													break;
+												default:
+													// decoder has messed up somewhere, so don't return junk data
+													return false;
 											}
 										}
 
