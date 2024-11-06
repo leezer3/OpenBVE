@@ -289,36 +289,18 @@ namespace Train.OpenBve
 												if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[1], out r))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													r = 0;
 												}
-												else if (r < 0 | r > 255)
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "RedValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													r = r < 0 ? 0 : 255;
-												}
-
+												
 												if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[2], out g))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Key + " in " + Section + Key + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													g = 0;
 												}
-												else if (g < 0 | g > 255)
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "GreenValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													g = g < 0 ? 0 : 255;
-												}
-
+												
 												if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[3], out b))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Key + " in " + Section + Key + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													b = 0;
 												}
-												else if (b < 0 | b > 255)
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													b = b < 0 ? 0 : 255;
-												}
-
+												
 												NeedleColor[k] = new Color32((byte) r, (byte) g, (byte) b, 255);
 												break;
 											case PanelKey.Center:
@@ -627,32 +609,17 @@ namespace Train.OpenBve
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													r = 255;
 												}
-												else if (r < 0 | r > 255)
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "RedValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													r = r < 0 ? 0 : 255;
-												}
-
+												
 												if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[1], out g))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													g = 255;
-												}
-												else if (g < 0 | g > 255)
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "GreenValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													g = g < 0 ? 0 : 255;
 												}
 
 												if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[2], out b))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													b = 255;
-												}
-												else if (b < 0 | b > 255)
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													b = b < 0 ? 0 : 255;
 												}
 
 												Needle = new Color32((byte) r, (byte) g, (byte) b, 255);
@@ -1226,36 +1193,18 @@ namespace Train.OpenBve
 												if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[0], out r))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "RedValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													r = 0;
-												}
-												else if (r < 0 | r > 255)
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "RedValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													r = r < 0 ? 0 : 255;
 												}
 
 												if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[1], out g))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "GreenValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													g = 0;
-												}
-												else if (g < 0 | g > 255)
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "GreenValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													g = g < 0 ? 0 : 255;
 												}
 
 												if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseByteVb6(Arguments[2], out b))
 												{
 													Plugin.currentHost.AddMessage(MessageType.Error, false, "BlueValue is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													b = 0;
 												}
-												else if (b < 0 | b > 255)
-												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													b = b < 0 ? 0 : 255;
-												}
-
+												
 												Needle = new Color32((byte) r, (byte) g, (byte) b, 255);
 											}
 												break;
