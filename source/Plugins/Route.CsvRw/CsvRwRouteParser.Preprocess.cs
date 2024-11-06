@@ -248,7 +248,8 @@ namespace CsvRwRouteParser
 								case "$if":
 									if (j != 0) {
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $If directive must not appear within another statement" + Epilog);
-									} else {
+									} else
+									{
 										if (double.TryParse(s, NumberStyles.Float, Culture, out double num)) {
 											openIfs++;
 											Expressions[i].Text = string.Empty;
@@ -286,9 +287,8 @@ namespace CsvRwRouteParser
 											}
 											continueWithNextExpression = true;
 											break;
-										} else {
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $If condition does not evaluate to a number" + Epilog);
 										}
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $If condition does not evaluate to a number" + Epilog);
 									}
 									continueWithNextExpression = true;
 									break;
@@ -583,10 +583,12 @@ namespace CsvRwRouteParser
 												} else {
 													continueWithNextExpression = true;
 													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is out of range in " + t + Epilog);
+													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + "" + Expressions[i].Text.Substring(h + 1);
 												}
 											} else {
 												continueWithNextExpression = true;
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
+												Expressions[i].Text = Expressions[i].Text.Substring(0, j) + "" + Expressions[i].Text.Substring(h + 1);
 											}
 										}
 										
