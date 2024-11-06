@@ -24,6 +24,8 @@ namespace LibRender2.Overlays
 		{
 			int py = Top;
 
+			Width = (int)System.Math.Ceiling(OpenTK.DisplayDevice.Default.ScaleFactor.X * Width);
+
 			foreach (string[] key in Keys)
 			{
 				int px = Left;
