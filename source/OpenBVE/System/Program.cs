@@ -28,8 +28,11 @@ namespace OpenBve {
 		/// <remarks>Used for checking if we are running as SUDO</remarks>
 		[DllImport("libc")]
 		private static extern uint geteuid();
+
+		[System.Runtime.InteropServices.DllImport("user32.dll")]
+		private static extern bool SetProcessDPIAware();
 #pragma warning restore IDE1006
-		
+
 		/// <summary>Stores the current CPU architecture</summary>
 		internal static ImageFileMachine CurrentCPUArchitecture;
 
@@ -275,6 +278,12 @@ namespace OpenBve {
 				result.Start = true;
 				//Apply translations
 				Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
+			}
+
+			if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+			{
+				// Tell Windows that the main game is managing it's own DPI
+				SetProcessDPIAware();
 			}
 
 			if (result.ExperimentalGLMenu)
