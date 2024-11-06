@@ -55,7 +55,8 @@ namespace LibRender2.Menu
 					{
 						for (int i = 0; i < castEntries.Length; i++)
 						{
-							if (castEntries[i].Width == BaseMenu.Renderer.Screen.Width && castEntries[i].Height == BaseMenu.Renderer.Screen.Height)
+							// n.b. sometimes we seem to end up with a window size 1px different to that requested
+							if (System.Math.Abs(castEntries[i].Width - BaseMenu.Renderer.Screen.Width) < 5 && System.Math.Abs(castEntries[i].Height - BaseMenu.Renderer.Screen.Height) < 5)
 							{
 								CurrentlySelectedOption = i;
 								return;
