@@ -1,4 +1,4 @@
-﻿#pragma warning disable 0659, 0661
+#pragma warning disable 0659, 0661
 using OpenBveApi.Colors;
 // ReSharper disable MergeCastWithTypeCheck
 
@@ -28,6 +28,21 @@ namespace OpenBveApi.Textures
 			Height = height;
 			TextureBytes = bytes;
 			FrameInterval = frameInterval;
+			NumberOfFrames = bytes.Length;
+		}
+
+		/// <summary>Creates a byte array origin</summary>
+		/// <param name="width">The width of the underlying texture</param>
+		/// <param name="height">The height of the underlying texture</param>
+		/// <param name="bytes">The bytes</param>
+		public ByteArrayOrigin(int width, int height, byte[] bytes)
+		{
+			Width = width;
+			Height = height;
+			TextureBytes = new[]
+			{
+				bytes
+			};
 			NumberOfFrames = bytes.Length;
 		}
 
