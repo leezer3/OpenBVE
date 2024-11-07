@@ -1,5 +1,6 @@
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <RoutePatches>
+  <!-- NYCT-L -->
 	<Patch>
 		<Hash>B97E93C1A21B43CCDA2C504F254E6F8FF099FD51E502E2EE875E6B05FBDE5326</Hash>
 		<FileName>NYCT-L.csv</FileName>
@@ -70,5 +71,11 @@
 		<FileName>Penn Station to West Side Yard Night.csv</FileName>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 	</Patch>
+	<Patch>
+		<Hash>DF136CBEB37095503932D068941A9AC54D4F5F4CF96033EAB7533C2CE67EFE6C</Hash>
+		<FileName>SF&amp;C South.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	
   </RoutePatches>
 </openBVE>
