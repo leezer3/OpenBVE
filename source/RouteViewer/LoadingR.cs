@@ -54,15 +54,16 @@ namespace RouteViewer {
 		internal static bool JobAvailable;
 
 		// load
-		internal static void Load(string RouteFile, Encoding RouteEncoding, Bitmap bitmap = null)
+		internal static void Load(string RouteFile, Encoding RouteEncoding, byte[] textureBytes)
 		{
 			Program.currentGameWindow.TargetRenderFrequency = 0;
 			// reset
 			Game.Reset();
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString(), Interface.CurrentOptions.LoadingLogo, Interface.CurrentOptions.LoadingProgressBar);
-			if (bitmap != null)
+			if (textureBytes != null)
 			{
-				Program.Renderer.Loading.SetLoadingBkg(Program.Renderer.TextureManager.RegisterTexture(bitmap, new TextureParameters(null, null)));
+				Texture t = new Texture(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, PixelFormat.RGBAlpha, textureBytes, null);
+				Program.Renderer.Loading.SetLoadingBkg(t);
 			}
 			// members
 			Cancel = false;
