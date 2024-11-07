@@ -606,7 +606,7 @@ namespace RouteViewer
 					
 
 					keys = new[] { new[] { "F" }, new[] { "N" }, new[] { "E" }, new[] { "M" }, new[] { "I" } };
-					Keys.Render(Screen.Width - 20, 4, 16, Fonts.SmallFont, keys);
+					Keys.Render(Screen.Width - (int)(20 * scaleFactor), 4, 16, Fonts.SmallFont, keys);
 					OpenGlString.Draw(Fonts.SmallFont, "WireFrame:", new Vector2(Screen.Width - (32 * scaleFactor), 4), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, "Normals:", new Vector2(Screen.Width - (32 * scaleFactor), 24), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, "Events:", new Vector2(Screen.Width - (32 * scaleFactor), 44), TextAlignment.TopRight, Color128.White, true);
@@ -617,13 +617,13 @@ namespace RouteViewer
 					{
 						OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Vector2(Screen.Width - (32 * scaleFactor), 124), TextAlignment.TopRight, Color128.White, true);
 						keys = new[] { new[] { "R" } };
-						Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
+						Keys.Render(Screen.Width - (int)(20 * scaleFactor), 124, 16, Fonts.SmallFont, keys);
 						if (Program.CurrentHost.Platform != HostPlatform.AppleOSX || IntPtr.Size == 4)
 						{
 							// only works on WinForms supporting systems
 							OpenGlString.Draw(Fonts.SmallFont, $"Draw Rail Paths:", new Vector2(Screen.Width - (32 * scaleFactor), 144), TextAlignment.TopRight, Color128.White, true);
 							keys = new[] { new[] { "P" } };
-							Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
+							Keys.Render(Screen.Width - (int)(20 * scaleFactor), 144, 16, Fonts.SmallFont, keys);
 						}
 					}
 					else
@@ -633,25 +633,25 @@ namespace RouteViewer
 							// only works on WinForms supporting systems
 							OpenGlString.Draw(Fonts.SmallFont, $"Rail Paths:", new Vector2(Screen.Width - (32 * scaleFactor), 124), TextAlignment.TopRight, Color128.White, true);
 							keys = new[] { new[] { "P" } };
-							Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
+							Keys.Render(Screen.Width - (int)(20 * scaleFactor), 124, 16, Fonts.SmallFont, keys);
 						}
 					}
 					
 
 					keys = new[] { new[] { "F10" } };
-					Keys.Render(Screen.Width - 32, 104, 30, Fonts.SmallFont, keys);
+					Keys.Render(Screen.Width - (int)(32 * scaleFactor), 104, 30, Fonts.SmallFont, keys);
 					
 					keys = new[] { new[] { null, "W", null }, new[] { "A", "S", "D" } };
 					Keys.Render(4, Screen.Height - 40, 16, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { null, "↑", null }, new[] { "←", "↓", "→" } };
-					Keys.Render((int)(0.5 * Screen.Width - 48), Screen.Height - 40, 16, Fonts.SmallFont, keys);
+					Keys.Render((int)(0.5 * Screen.Width - (48 * scaleFactor)), Screen.Height - 40, 16, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { "P↑" }, new[] { "P↓" } };
 					Keys.Render((int)(0.5 * Screen.Width + 32), Screen.Height - 40, 24, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { null, "/", "*" }, new[] { "7", "8", "9" }, new[] { "4", "5", "6" }, new[] { "1", "2", "3" }, new[] { null, "0", "." } };
-					Keys.Render(Screen.Width - 60, Screen.Height - 100, 16, Fonts.SmallFont, keys);
+					Keys.Render(Screen.Width - (int)(60 * scaleFactor), Screen.Height - 100, 16, Fonts.SmallFont, keys);
 
 					if (Program.JumpToPositionEnabled)
 					{
