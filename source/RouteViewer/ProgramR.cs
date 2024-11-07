@@ -233,6 +233,8 @@ namespace RouteViewer
 				}
 				Renderer.trackColors[key].Render();
 			}
+
+			Renderer.CurrentInterface = InterfaceType.Normal;
 			return result;
 		}
 
