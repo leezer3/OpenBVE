@@ -272,7 +272,7 @@ namespace OpenBve
 									break;
 								case ".dat":
 									fileName = System.IO.Path.GetFileName(Files[i]);
-									if (fileName == null || isInvalidDatName(fileName))
+									if (fileName == null || Path.IsInvalidDatName(Files[i]))
 									{
 										continue;
 									}
@@ -292,7 +292,7 @@ namespace OpenBve
 									}
 									break;
 								case ".txt":
-									if (isInvalidTxtName(Files[i]))
+									if (Path.IsInvalidTxtName(Files[i]))
 									{
 										continue;
 									}
@@ -329,78 +329,7 @@ namespace OpenBve
 				listView.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 			}
 		}
-
-		private bool isInvalidDatName(string fileName)
-		{
-			/*
-			 * Blacklist a bunch of invalid .dat files so they don't show up in the route browser
-			 */
-			switch (fileName.ToLowerInvariant())
-			{
-				case "train.dat":		//BVE Train data
-				case "tekstury.dat":	//Mechanik texture list
-				case "dzweiki.dat":		//Mechanik sound list
-				case "moduly.dat":		//Mechnik route generator dat list
-				case "dzw_osob.dat":	//Mechanik route generator sound list
-				case "dzw_posp.dat":	//Mechanik route generator sound list
-				case "log.dat":			//Mechanik route generator logfile
-				case "s80_text.dat":	//S80 Mechanik routefile sounds
-				case "s80_snd.dat":		//S80 Mechanik routefile textures
-				case "gensc.dat":		//Mechanik route generator (?)
-				case "scenerio.dat":    //Mechanik route generator (?)
-				case "ntuser.dat":		//Windows user file
-					return true;
-				default:
-					return false;
-			}
-		}
-
-		private bool isInvalidTxtName(string fileName)
-		{
-			/*
-			 * Unfortunately, BVE5 uses plain txt files for routes
-			 *
-			 * Blacklist the following (likely to require expansion):
-			 * > Common route components
-			 * > Legacy train.txt
-			 * > Common readme names
-			 * > Files over 20kb (a BVE5 scenario should be ~1kb, but let's be safe)
-			 */
-			FileInfo f = new FileInfo(fileName);
-			if (f.Length > 20000)
-			{
-				return true;
-			}
-
-			string fn = Path.GetFileName(fileName).ToLowerInvariant();
-			if (string.IsNullOrEmpty(fn))
-			{
-				return true;
-			}
-
-			switch (fn)
-			{
-				case "train":
-				case "stations":
-				case "structures":
-				case "sounds":
-				case "sounds3d":
-				case "signals":
-				case "map":
-					return false;
-			}
-
-			if (fn.IndexOf("readme", StringComparison.InvariantCultureIgnoreCase) != -1)
-			{
-				return true;
-			}
-			if (fn.IndexOf("liesmich", StringComparison.InvariantCultureIgnoreCase) != -1)
-			{
-				return true;
-			}
-			return false;
-		}
-
+		
 		// route files
 		private void listviewRouteFiles_SelectedIndexChanged(object sender, EventArgs e)
 		{

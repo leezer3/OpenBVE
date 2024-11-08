@@ -21,11 +21,32 @@
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 	</Patch>
 	<!-- Leszno-Krotoszyn -->
-		<Patch>
+	<Patch>
 		<Hash>1C600BA5074BF9C8B3E1BD045E544C123C919EAA82E676E04EBFBDAE971B0A03</Hash>
 		<FileName>Leszno-Krotoszyn.csv</FileName>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 	</Patch>
+	<Patch>
+		<Hash>BE4A2C2C9F311E67DC1CC2BB370F758CA576849E728187C93097B91E4BA8FA65</Hash>
+		<FileName>Leszno-Krotoszyn.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<!-- Metro Warszawskie -->
+	<Patch>
+		<Hash>3BFEA1F51E360DFDC5B1F4CAB7D05BD01097BB4C319D0C770BDD5AEA60FAC1D0</Hash>
+		<FileName>Metro Warszawskie_81-717.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<CylinderHack>true</CylinderHack>
+	</Patch>
+	<Patch>
+		<Hash>3AB5C577345A971F652881270601229CD5E6C53F346168A37B83BD51B686F59BA</Hash>
+		<FileName>Metro Warszawskie_ALSTOM.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<CylinderHack>true</CylinderHack>
+	</Patch>	
   </RoutePatches>
 </openBVE>

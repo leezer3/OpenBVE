@@ -163,7 +163,7 @@ namespace CsvRwRouteParser
 											Text = Text.Remove(i, 1).Insert(i, "[");
 											break;
 										}
-										if (Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase) ||
+										if (Text.StartsWith(".marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith(".announce", StringComparison.InvariantCultureIgnoreCase) ||
 										    Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
 										{
 											/*
@@ -171,7 +171,10 @@ namespace CsvRwRouteParser
 											 *
 											 * Opening parenthesis are fortunately simpler than closing, see notes below.
 											 */
-											Text = Text.Remove(i, 1).Insert(i, "<");
+											if (Text.Substring(i - 5, 5).ToLowerInvariant() != ".load")
+											{
+												Text = Text.Remove(i, 1).Insert(i, "<");
+											}
 											break;
 										}
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
@@ -199,6 +202,12 @@ namespace CsvRwRouteParser
 						}
 						else if (Text[i] == ')')
 						{
+							if (i == Text.Length - 1)
+							{
+								found = true;
+								firstClosingBracket = i;
+								break;
+							}
 							switch (argumentIndex)
 							{
 								case 0:
@@ -207,9 +216,21 @@ namespace CsvRwRouteParser
 										Text = Text.Remove(i, 1).Insert(i, "]");
 										continue;
 									}
-									if ((Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase)) && i != Text.Length  ||
-									    Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1 && Text.IndexOf('<') != -1 && i > 18 && i != Text.Length -1)
+									if (Text.StartsWith(".marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith(".announce", StringComparison.InvariantCultureIgnoreCase) || Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
 									{
+										if (Text.Substring(i + 1, 5).ToLowerInvariant() == ".load")
+										{
+											found = true;
+											firstClosingBracket = i;
+											goto breakout;
+										}
+
+										if (Text.IndexOf('<') == -1)
+										{
+											i++;
+											continue;
+										}
+										
 										/*
 										 * HACK: In filenames, temp replace with an invalid but known character
 										 *
@@ -235,9 +256,10 @@ namespace CsvRwRouteParser
 							firstClosingBracket = i;
 							break;
 						}
-
 						i++;
 					}
+
+					breakout:
 
 					if (!found)
 					{
@@ -417,7 +439,7 @@ namespace CsvRwRouteParser
 					{
 						Command = Text.Substring(0, i).TrimEnd();
 						ArgumentSequence = Text.Substring(i + 1, Text.Length - i - 2).Trim();
-						if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith("announce", StringComparison.InvariantCultureIgnoreCase) || Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
+						if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith(".marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith(".announce", StringComparison.InvariantCultureIgnoreCase) || Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
 						{
 							// put back any temp removed brackets
 							ArgumentSequence = ArgumentSequence.Replace('<', '(');

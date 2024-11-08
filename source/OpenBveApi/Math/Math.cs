@@ -103,12 +103,13 @@ namespace OpenBveApi.Math {
 			{
 				if (double.TryParse(Expression.Substring(0, n), NumberStyles.Float, Culture, out double a))
 				{
+					Value = (int)System.Math.Round(a);
 					if (a >= 0 & a <= 255)
 					{
-						Value = (int)System.Math.Round(a);
 						return true;
 					}
-					else break;
+					Value = Value < 0 ? 0 : 255;
+					return false;
 				}
 			}
 			Value = 0;

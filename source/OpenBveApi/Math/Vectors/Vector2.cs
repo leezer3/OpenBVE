@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+
 #pragma warning disable IDE0064
 using System.Runtime.InteropServices;
 // ReSharper disable MergeCastWithTypeCheck
@@ -439,7 +441,8 @@ namespace OpenBveApi.Math {
 		/// <summary>Returns the representation of the vector in string format</summary>
 		public override string ToString()
 		{
-			string toString = this.X + " , " + this.Y;
+			CultureInfo c = CultureInfo.InvariantCulture;
+			string toString = this.X.ToString(c) + " , " + this.Y.ToString(c);
 			return toString;
 		}
 		

@@ -27,6 +27,7 @@ using LibRender2.Overlays;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
+using Buffer = System.Buffer;
 using ButtonState = OpenTK.Input.ButtonState;
 using LibRender2.Menu;
 using LibRender2.Screens;
@@ -68,7 +69,10 @@ namespace RouteViewer
 
 		internal static formRailPaths pathForm;
 
-			// main
+		[System.Runtime.InteropServices.DllImport("user32.dll")]
+		private static extern bool SetProcessDPIAware();
+
+		// main
 		[STAThread]
 		internal static void Main(string[] args)
 		{
@@ -151,6 +155,11 @@ namespace RouteViewer
 				}
 
 			}
+			if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+			{
+				// Tell Windows that the main game is managing it's own DPI
+				SetProcessDPIAware();
+			}
 
 			var options = new ToolkitOptions();
 			options.Backend = PlatformBackend.PreferX11;
@@ -180,7 +189,7 @@ namespace RouteViewer
 		}
 		
 		// load route
-		internal static bool LoadRoute(Bitmap bitmap = null) {
+		internal static bool LoadRoute(byte[] textureBytes = null) {
 			if (string.IsNullOrEmpty(CurrentRouteFile))
 			{
 				return false;
@@ -190,7 +199,7 @@ namespace RouteViewer
 			try
 			{
 				Encoding encoding = TextEncoding.GetSystemEncodingFromFile(CurrentRouteFile);
-				Loading.Load(CurrentRouteFile, encoding, bitmap);
+				Loading.Load(CurrentRouteFile, encoding, textureBytes);
 				result = true;
 			} catch (Exception ex) {
 				MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
@@ -233,6 +242,8 @@ namespace RouteViewer
 				}
 				Renderer.trackColors[key].Render();
 			}
+
+			Renderer.CurrentInterface = InterfaceType.Normal;
 			return result;
 		}
 
@@ -417,25 +428,33 @@ namespace RouteViewer
 					{
 						return;
 					}
+					byte[] textureBytes = {};
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
-						
-						Bitmap bitmap = null;
 						CurrentlyLoading = true;
 						Renderer.OptionInterface = false;
 						if (!Interface.CurrentOptions.LoadingBackground)
 						{
 							Renderer.RenderScene(0.0);
 							currentGameWindow.SwapBuffers();
-							bitmap = new Bitmap(Renderer.Screen.Width, Renderer.Screen.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-							BitmapData bData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
-							GL.ReadPixels(0, 0, Renderer.Screen.Width, Renderer.Screen.Height, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bData.Scan0);
-							bitmap.UnlockBits(bData);
-							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+							textureBytes = new byte[Renderer.Screen.Width * Renderer.Screen.Height * 4];
+							GL.ReadPixels(0, 0, Renderer.Screen.Width, Renderer.Screen.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, textureBytes);
+							// GL.ReadPixels is reversed for what it wants as a texture, so we've got to flip it
+							byte[] tmp = new byte[Renderer.Screen.Width * 4]; // temp row
+							int currentLine = 0;
+							while (currentLine < Renderer.Screen.Height / 2)
+							{
+								int start = currentLine * Renderer.Screen.Width * 4;
+								int flipStart = (Renderer.Screen.Height - currentLine - 1) * Renderer.Screen.Width * 4;
+								Buffer.BlockCopy(textureBytes, start, tmp, 0, Renderer.Screen.Width * 4);
+								Buffer.BlockCopy(textureBytes, flipStart, textureBytes, start, Renderer.Screen.Width * 4);
+								Buffer.BlockCopy(tmp, 0, textureBytes, flipStart, Renderer.Screen.Width * 4);
+								currentLine++;
+							}
 						}
 						Renderer.Reset();
 						CameraAlignment a = Renderer.Camera.Alignment;
-						if (LoadRoute(bitmap))
+						if (LoadRoute(textureBytes))
 						{
 							Renderer.Camera.Alignment = a;
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
@@ -452,10 +471,6 @@ namespace RouteViewer
 						}
 						CurrentlyLoading = false;
 						Renderer.OptionInterface = true;
-						if (bitmap != null)
-						{
-							bitmap.Dispose();
-						}
 						GCSettings.LargeObjectHeapCompactionMode =  GCLargeObjectHeapCompactionMode.CompactOnce; 
 						GC.Collect();
 						
@@ -612,10 +627,24 @@ namespace RouteViewer
 					Renderer.Camera.AlignmentDirection.Yaw = CameraProperties.ExteriorTopAngularSpeed * speedModified;
 					break;
 				case Key.Up:
-					Renderer.Camera.AlignmentDirection.Pitch = CameraProperties.ExteriorTopAngularSpeed * speedModified;
+					if (Renderer.CurrentInterface != InterfaceType.Normal)
+					{
+						Game.Menu.ProcessCommand(Translations.Command.MenuUp, 0);
+					}
+					else
+					{
+						Renderer.Camera.AlignmentDirection.Pitch = CameraProperties.ExteriorTopAngularSpeed * speedModified;
+					}
 					break;
 				case Key.Down:
-					Renderer.Camera.AlignmentDirection.Pitch = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
+					if (Renderer.CurrentInterface != InterfaceType.Normal)
+					{
+						Game.Menu.ProcessCommand(Translations.Command.MenuDown, 0);
+					}
+					else
+					{
+						Renderer.Camera.AlignmentDirection.Pitch = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
+					}
 					break;
 				case Key.KeypadDivide:
 					Renderer.Camera.AlignmentDirection.Roll = -CameraProperties.ExteriorTopAngularSpeed * speedModified;
@@ -713,6 +742,11 @@ namespace RouteViewer
 					}
 					break;
 				case Key.Enter:
+					if (Renderer.CurrentInterface != InterfaceType.Normal)
+					{
+						Game.Menu.ProcessCommand(Translations.Command.MenuEnter, 0);
+						return;
+					}
 					if (JumpToPositionEnabled)
 					{
 						if (JumpToPositionValue.Length != 0)
@@ -761,6 +795,7 @@ namespace RouteViewer
 					{
 						if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 						{
+							Program.currentGameWindow.TargetRenderFrequency = 0;
 							Program.Renderer.CurrentInterface = InterfaceType.Menu;
 							Game.Menu.PushMenu(MenuType.GameStart);
 						}

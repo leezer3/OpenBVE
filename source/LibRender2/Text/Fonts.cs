@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
+using System.IO;
 using OpenBveApi.Hosts;
+using OpenTK;
 
 namespace LibRender2.Text
 {
@@ -54,6 +56,10 @@ namespace LibRender2.Text
 		/// <returns>The next larger font</returns>
 		public OpenGlFont NextLargestFont(OpenGlFont currentFont)
 		{
+			if (currentFont == null)
+			{
+				throw new InvalidDataException("No font was specified.");
+			}
 			switch ((int)currentFont.FontSize)
 			{
 				case 9:
@@ -86,12 +92,15 @@ namespace LibRender2.Text
 				}
 				
 			}
-			VerySmallFont = new OpenGlFont(uiFont, 9.0f);
-			SmallFont = new OpenGlFont(uiFont, 12.0f);
-			NormalFont = new OpenGlFont(uiFont, 16.0f);
-			LargeFont = new OpenGlFont(uiFont, 21.0f);
-			VeryLargeFont = new OpenGlFont(uiFont, 27.0f);
-			EvenLargerFont = new OpenGlFont(uiFont, 34.0f);
+
+			float scaleFactor = DisplayDevice.Default.ScaleFactor.X;
+			
+			VerySmallFont = new OpenGlFont(uiFont, 9.0f * scaleFactor);
+			SmallFont = new OpenGlFont(uiFont, 12.0f * scaleFactor);
+			NormalFont = new OpenGlFont(uiFont, 16.0f * scaleFactor);
+			LargeFont = new OpenGlFont(uiFont, 21.0f * scaleFactor);
+			VeryLargeFont = new OpenGlFont(uiFont, 27.0f * scaleFactor);
+			EvenLargerFont = new OpenGlFont(uiFont, 34.0f * scaleFactor);
 		}
 	}
 }

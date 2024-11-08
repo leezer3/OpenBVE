@@ -41,39 +41,47 @@ namespace Route.Bve5
 		/// <param name="FileName">The filename to check</param>
 		internal static bool IsBve5(string FileName)
 		{
-			using (StreamReader reader = new StreamReader(FileName))
+			try
 			{
-				var firstLine = reader.ReadLine() ?? "";
-				string b = String.Empty;
-				if (!firstLine.ToLowerInvariant().StartsWith("bvets scenario"))
+				using (StreamReader reader = new StreamReader(FileName))
 				{
-					return false;
-				}
-				for (int i = 15; i < firstLine.Length; i++)
-				{
-					if (Char.IsDigit(firstLine[i]) || firstLine[i] == '.')
+					var firstLine = reader.ReadLine() ?? "";
+					string b = String.Empty;
+					if (!firstLine.ToLowerInvariant().StartsWith("bvets scenario"))
 					{
-						b = b + firstLine[i];
+						return false;
+					}
+					for (int i = 15; i < firstLine.Length; i++)
+					{
+						if (Char.IsDigit(firstLine[i]) || firstLine[i] == '.')
+						{
+							b = b + firstLine[i];
+						}
+						else
+						{
+							break;
+						}
+					}
+					if (b.Length > 0)
+					{
+						NumberFormats.TryParseDoubleVb6(b, out double version);
+						if (version > 2.0)
+						{
+							throw new Exception(version + " is not a supported BVE5 scenario version");
+						}
 					}
 					else
 					{
-						break;
+						return false;
 					}
 				}
-				if (b.Length > 0)
-				{
-					NumberFormats.TryParseDoubleVb6(b, out double version);
-					if (version > 2.0)
-					{
-						throw new Exception(version + " is not a supported BVE5 scenario version");
-					}
-				}
-				else
-				{
-					return false;
-				}
+				return true;
 			}
-			return true;
+			catch
+			{
+				return false;
+			}
+			
 		}
 
 		internal static void ParseScenario(string FileName, bool PreviewOnly)

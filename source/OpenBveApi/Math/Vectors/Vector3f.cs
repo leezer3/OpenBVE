@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 // ReSharper disable MergeCastWithTypeCheck
 
 namespace OpenBveApi.Math {
@@ -597,7 +598,8 @@ namespace OpenBveApi.Math {
 		/// <summary>Returns the representation of the vector in string format</summary>
 		public override string ToString()
 		{
-			string toString = this.X + " , " + this.Y + " , " + this.Z;
+			CultureInfo c = CultureInfo.InvariantCulture;
+			string toString = this.X.ToString(c) + " , " + this.Y.ToString(c) + " , " + this.Z.ToString(c);
 			return toString;
 		}
 	}

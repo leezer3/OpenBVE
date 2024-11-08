@@ -2441,6 +2441,11 @@ namespace OpenBve {
             // 
             this.updownSoundNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.updownSoundNumber.Location = new System.Drawing.Point(140, 16);
+            this.updownSoundNumber.Maximum = new decimal(new int[] {
+            128,
+            0,
+            0,
+            0});
             this.updownSoundNumber.Minimum = new decimal(new int[] {
             8,
             0,

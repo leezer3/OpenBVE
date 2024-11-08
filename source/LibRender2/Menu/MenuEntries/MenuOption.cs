@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2024, Maurizo M. Gavioli, The OpenBVE Project
 //
@@ -55,7 +55,8 @@ namespace LibRender2.Menu
 					{
 						for (int i = 0; i < castEntries.Length; i++)
 						{
-							if (castEntries[i].Width == BaseMenu.Renderer.Screen.Width && castEntries[i].Height == BaseMenu.Renderer.Screen.Height)
+							// n.b. sometimes we seem to end up with a window size 1px different to that requested
+							if (System.Math.Abs(castEntries[i].Width - BaseMenu.Renderer.Screen.Width) < 5 && System.Math.Abs(castEntries[i].Height - BaseMenu.Renderer.Screen.Height) < 5)
 							{
 								CurrentlySelectedOption = i;
 								return;
@@ -120,7 +121,29 @@ namespace LibRender2.Menu
 					}
 					return;
 				case OptionType.UIScaleFactor:
-					CurrentlySelectedOption = BaseMenu.CurrentOptions.UserInterfaceScaleFactor;
+					CurrentlySelectedOption = BaseMenu.CurrentOptions.UserInterfaceScaleFactor - 1;
+					return;
+				case OptionType.NumberOfSounds:
+					switch (BaseMenu.CurrentOptions.SoundNumber)
+					{
+						case 16:
+							CurrentlySelectedOption = 0;
+							break;
+						case 32:
+							CurrentlySelectedOption = 1;
+							break;
+						case 64:
+							CurrentlySelectedOption = 2;
+							break;
+						case 128:
+							CurrentlySelectedOption = 3;
+							break;
+						default:
+							// n.b. This resets the sound number if edited manually in the file
+							BaseMenu.CurrentOptions.SoundNumber = 16;
+							CurrentlySelectedOption = 0;
+							break;
+					}
 					return;
 			}
 			CurrentlySelectedOption = 0;
@@ -232,6 +255,9 @@ namespace LibRender2.Menu
 					string currentOption = (string)CurrentOption;
 					currentOption = currentOption.Trim('x');
 					BaseMenu.CurrentOptions.UserInterfaceScaleFactor = int.Parse(currentOption, NumberStyles.Integer);
+					break;
+				case OptionType.NumberOfSounds:
+					BaseMenu.CurrentOptions.SoundNumber = int.Parse((string)CurrentOption, NumberStyles.Integer);
 					break;
 
 			}

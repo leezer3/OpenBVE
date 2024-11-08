@@ -108,13 +108,17 @@ namespace TrainManager.SafetySystems
 				foreach (RouteStation selectedStation in TrainManagerBase.CurrentRoute.Stations)
 				{
 					double stopPosition = -1;
+					double forwardTolerance = -1;
+					double backwardTolerance = -1;
 					int stopIdx = TrainManagerBase.CurrentRoute.Stations[s].GetStopIndex(Train.NumberOfCars);
 					if (selectedStation.Stops.Length != 0)
 					{
 						stopPosition = selectedStation.Stops[stopIdx].TrackPosition;
+						forwardTolerance = selectedStation.Stops[stopIdx].ForwardTolerance;
+						backwardTolerance = selectedStation.Stops[stopIdx].BackwardTolerance;
 					}
 
-					Station i = new Station(selectedStation, stopPosition);
+					Station i = new Station(selectedStation, stopPosition, forwardTolerance, backwardTolerance);
 					currentRouteStations.Add(i);
 					s++;
 				}

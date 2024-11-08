@@ -24,13 +24,13 @@ namespace CsvRwRouteParser
 							int ix = 0;
 							if (Arguments[k].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[k], out ix))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GroundStructureIndex " + (k + 1).ToString(Culture) + " is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The index of " + (k + 1).ToString(Culture) + " is invalid in Cycle." + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								ix = 0;
 							}
 
 							if (ix < 0 | !Data.Structure.Ground.ContainsKey(ix))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GroundStructureIndex " + (k + 1).ToString(Culture) + " is out of range in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GroundStructure with an index of " + ix + " is out of range in Cycle." + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								ix = 0;
 							}
 
@@ -54,13 +54,13 @@ namespace CsvRwRouteParser
 							int ix = 0;
 							if (Arguments[k].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[k], out ix))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex " + (k + 1).ToString(Culture) + " is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The index of " + (k + 1).ToString(Culture) + " is invalid in Cycle." + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								ix = 0;
 							}
 
 							if (ix < 0 | !Data.Structure.RailObjects.ContainsKey(ix))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex " + (k + 1).ToString(Culture) + " is out of range in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructure with an index of " + ix + " is out of range in Cycle." + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								ix = 0;
 							}
 

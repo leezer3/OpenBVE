@@ -64,7 +64,10 @@ namespace ObjectViewer {
 		internal static CurrentRoute CurrentRoute;
 
 		internal static TrainManager TrainManager;
-		
+
+		[System.Runtime.InteropServices.DllImport("user32.dll")]
+		private static extern bool SetProcessDPIAware();
+
 		// main
 		[STAThread]
 	    internal static void Main(string[] args)
@@ -150,7 +153,13 @@ namespace ObjectViewer {
 	        {
 		        Backend = PlatformBackend.PreferX11
 	        };
-	        Toolkit.Init(options);
+
+	        if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+	        {
+		        // Tell Windows that the main game is managing it's own DPI
+		        SetProcessDPIAware();
+	        }
+			Toolkit.Init(options);
 	        // --- load language ---
 	        string folder = Program.FileSystem.GetDataFolder("Languages");
 	        Translations.LoadLanguageFiles(folder);

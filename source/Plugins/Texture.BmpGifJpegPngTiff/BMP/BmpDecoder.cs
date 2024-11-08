@@ -724,7 +724,9 @@ namespace Plugin.BMP
 										{
 											if (rowPixel > Width - 1)
 											{
+												sourceIdx++;
 												StartNextRow();
+												break;
 											}
 
 											int startByte = rowPixel * 4;
@@ -746,14 +748,18 @@ namespace Plugin.BMP
 											rowPixel++;
 										}
 										sourceIdx++;
+										// Padding
+										sourceIdx = sourceIdx % 2 == 0 ? sourceIdx : sourceIdx + 2 - sourceIdx % 2;
 										break;
 									case CompressionFormat.BI_RLE24:
 										for (int i = 0; i < numPix; i++)
 										{
 											if (rowPixel > Width - 1)
 											{
+												sourceIdx++;
 												StartNextRow();
-											}
+                                                break;
+                                            }
 
 											int startByte = rowPixel * 4;
 											rowBytes[startByte] = buffer[sourceIdx + 2];

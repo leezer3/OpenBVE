@@ -85,13 +85,15 @@ namespace OpenBveApi.Textures {
 			{
 				throw new ArgumentException("The data bytes are not of the expected length.");
 			}
-
-			MySize.X = width;
-			MySize.Y = height;
-			MyPixelFormat = pixelFormat;
-			MyBytes = new byte[1][];
-			MyBytes[0] = bytes;
-			MyPalette = palette;
+			this.Origin = new ByteArrayOrigin(width, height, bytes);
+			this.MyOpenGlTextures = new OpenGlTexture[1][];
+			this.MyOpenGlTextures[0] = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.MySize.X = width;
+			this.MySize.Y = height;
+			this.MyPixelFormat = pixelFormat;
+			this.MyBytes = new byte[1][];
+			this.MyBytes[0] = bytes;
+			this.MyPalette = palette;
 		}
 
 		/// <summary>Creates a new instance of this class.</summary>

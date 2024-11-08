@@ -100,11 +100,6 @@ namespace OpenBve
 		/// <summary>Should be called when the screen resolution changes to re-position all items on the menu appropriately</summary>
 		private void OnResize()
 		{
-			if (Interface.CurrentOptions.UserInterfaceFolder == "Large")
-			{
-				// If using the large HUD option, increase the text size in the menu too
-				MenuFont = Program.Renderer.Fonts.NextLargestFont(MenuFont);
-			}
 			// choose the text font size according to screen height
 			// the boundaries follow approximately the progression
 			// of font sizes defined in Graphics/Fonts.cs
@@ -113,6 +108,12 @@ namespace OpenBve
 			else if (Program.Renderer.Screen.Height <= 890) MenuFont = Program.Renderer.Fonts.LargeFont;
 			else if (Program.Renderer.Screen.Height <= 1150) MenuFont = Program.Renderer.Fonts.VeryLargeFont;
 			else MenuFont = Program.Renderer.Fonts.EvenLargerFont;
+
+			if (Interface.CurrentOptions.UserInterfaceFolder == "Large")
+			{
+				// If using the large HUD option, increase the text size in the menu too
+				MenuFont = Program.Renderer.Fonts.NextLargestFont(MenuFont);
+			}
 
 			lineHeight = (int)(MenuFont.FontSize * LineSpacing);
 			int quarterWidth = (int)(Program.Renderer.Screen.Width / 4.0);

@@ -1375,7 +1375,16 @@ namespace Train.OpenBve
 				Train.Cars[i].Length = CarLength;
 				Train.Cars[i].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * Train.Cars[i].Specs.CenterOfGravityHeight / Train.Cars[i].Width);
 			}
-			Train.Cars[Train.Cars.Length - 1].BeaconReceiver.TriggerType = EventTriggerType.TrainRear;
+
+			if (Cars == 1)
+			{
+				Train.Cars[Train.Cars.Length - 1].BeaconReceiver.TriggerType = EventTriggerType.SingleCarTrain;
+			}
+			else
+			{
+				Train.Cars[Train.Cars.Length - 1].BeaconReceiver.TriggerType = EventTriggerType.TrainRear;
+			}
+			
 
 			Plugin.MotorSoundTables = Tables;
 			Plugin.AccelerationCurves = AccelerationCurves;

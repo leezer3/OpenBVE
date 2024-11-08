@@ -301,17 +301,8 @@ namespace Route.Bve5
 		/// <summary>Gets the transformation for an object on a secondary rail</summary>
 		private static void GetSecondaryRailTransformation(Vector3 StartingPosition, Vector2 StartingDirection, IList<Block> Blocks, int StartingBlock, string RailKey, AbstractStructure Structure, out Vector3 pos, out Transformation t)
 		{
-			pos = StartingPosition;
-			Vector3 pos2 = new Vector3(StartingPosition); // starting point of block
-			t = new Transformation();
-			if (Structure.Type == ObjectTransformType.Horizontal)
-			{
-				GetTransformation(StartingPosition, Blocks[StartingBlock], Blocks[StartingBlock], RailKey, Blocks[StartingBlock].Pitch, Structure.TrackPosition, Structure.Type, Structure.Span, StartingDirection, out pos, out t);
-				return;
-			}
-			int currentBlock = StartingBlock;
 			int nextBlock = StartingBlock < Blocks.Count - 1 ? StartingBlock + 1 : StartingBlock;
-			GetTransformation(pos2, Blocks[StartingBlock], Blocks[nextBlock], RailKey, Blocks[currentBlock].Pitch, Structure.TrackPosition, Structure.Type, Structure.Span, StartingDirection, out pos, out t);
+			GetTransformation(StartingPosition, Blocks[StartingBlock], Blocks[nextBlock], RailKey, Blocks[StartingBlock].Pitch, Structure.TrackPosition, Structure.Type, Structure.Span, StartingDirection, out pos, out t);
 		}
 
 		/// <summary>Gets the transformation between two blocks</summary>

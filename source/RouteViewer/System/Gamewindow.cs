@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Threading;
 using OpenBveApi;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics;
@@ -26,6 +27,13 @@ namespace RouteViewer
             {
 				// Ignored- Just an icon
             }
+
+            if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+            {
+	            // attempted workaround for massive CPU usage when idle
+	            TargetRenderFrequency = 5.0;
+			}
+			
         }
 
         //Default Properties
@@ -109,6 +117,7 @@ namespace RouteViewer
 
 	    protected override void OnClosing(CancelEventArgs e)
 	    {
+			Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg"));
 			// Minor hack:
 			// If we are currently loading, catch the first close event, and terminate the loader threads
 			// before actually closing the game-window.
