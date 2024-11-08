@@ -6,6 +6,7 @@ using LibRender2.Overlays;
 using TrainManager.BrakeSystems;
 using TrainManager.Handles;
 using TrainManager.Car.Systems;
+using OpenBveApi.Routes;
 
 namespace RouteViewer {
 	internal static class FunctionScripts {
@@ -1178,6 +1179,297 @@ namespace RouteViewer {
 						break;
 					case Instructions.WiperPosition:
 						Function.Stack[s] = 1.0;
+						s++; break;
+					case Instructions.OverheadVolts:
+						if (Train != null)
+						{
+							Function.Stack[s - 1] = Train.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].Voltage : 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.OverheadVoltsTarget:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].Voltage : 0.0;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.ThirdRailVolts:
+						if (Train != null)
+						{
+							Function.Stack[s - 1] = Train.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].Voltage : 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.ThirdRailVoltsTarget:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].Voltage : 0.0;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.FourthRailVolts:
+						if (Train != null)
+						{
+							Function.Stack[s - 1] = Train.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.AvailablePowerSupplies[PowerSupplyTypes.FourthRail].Voltage : 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.FourthRailVoltsTarget:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.FourthRail].Voltage : 0.0;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.OverheadHeight:
+						if (Train != null)
+						{
+							Function.Stack[s - 1] = Train.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].ContactHeight : 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
+					case Instructions.OverheadHeightTarget:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].ContactHeight : 0.0;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.ThirdRailHeight:
+						if (Train != null)
+						{
+							Function.Stack[s - 1] = Train.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].ContactHeight : 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.ThirdRailHeightTarget:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].ContactHeight : 0.0;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.FourthRailHeight:
+						if (Train != null)
+						{
+							Function.Stack[s - 1] = Train.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.AvailablePowerSupplies[PowerSupplyTypes.FourthRail].ContactHeight : 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.FourthRailHeightTarget:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.FourthRail].ContactHeight : 0.0;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.OverheadAC:
+						if (Train != null)
+						{
+							Function.Stack[s - 1] = Train.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].VoltageType == PowerSupplyVoltageTypes.AC ? 1 : 0 : 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.ThirdRailAC:
+						if (Train != null)
+						{
+							Function.Stack[s - 1] = Train.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].VoltageType == PowerSupplyVoltageTypes.AC ? 1 : 0 : 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.FourthRailAC:
+						if (Train != null)
+						{
+							Function.Stack[s - 1] = Train.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.AvailablePowerSupplies[PowerSupplyTypes.FourthRail].VoltageType == PowerSupplyVoltageTypes.AC ? 1 : 0 : 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.OverheadAmps:
+						if (Train != null)
+						{
+							Function.Stack[s - 1] = Train.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].Amperage : 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.OverheadAmpsTarget:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].Amperage : 0.0;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.ThirdRailAmps:
+						if (Train != null)
+						{
+							Function.Stack[s - 1] = Train.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].Amperage : 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.ThirdRailAmpsTarget:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].Amperage : 0.0;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						s++; break;
+					case Instructions.FourthRailAmps:
+						if (Train != null)
+						{
+							Function.Stack[s - 1] = Train.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.AvailablePowerSupplies[PowerSupplyTypes.FourthRail].Amperage : 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
+					case Instructions.FourthRailAmpsTarget:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.FourthRail].Amperage : 0.0;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
 						s++; break;
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
