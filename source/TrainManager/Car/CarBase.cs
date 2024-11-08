@@ -15,6 +15,7 @@ using OpenBveApi.World;
 using TrainManager.Brake;
 using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
+using TrainManager.Car.Systems.OpenBveApi.Trains;
 using TrainManager.Cargo;
 using TrainManager.Handles;
 using TrainManager.Power;
@@ -82,15 +83,12 @@ namespace TrainManager.Car
 		public CameraRestriction CameraRestriction;
 		/// <summary>Stores the camera interior camera alignment for this car</summary>
 		public CameraAlignment InteriorCamera;
-		/// <summary>The location of the pantograph on the car</summary>
-		public double PantographPosition;
-		/// <summary>Provides current collection etc.</summary>
-		public TrackFollower Pantograph;
 		/// <summary>Whether loading sway is enabled for this car</summary>
 		public bool EnableLoadingSway = true;
 		/// <summary>Whether this car has an interior view</summary>
 		public bool HasInteriorView = false;
-		public override Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies => Pantograph != null ? Pantograph.AvailablePowerSupplies : new Dictionary<PowerSupplyTypes, PowerSupply>();
+		/// <summary>The pantograph</summary>
+		public Pantograph Pantograph;
 
 		/// <summary>Contains the generic sounds attached to the car</summary>
 		public CarSounds Sounds;
@@ -135,10 +133,6 @@ namespace TrainManager.Car
 			Suspension = new Suspension(this);
 			Flange = new Flange(this);
 			Run = new RunSounds(this);
-			Pantograph = new TrackFollower(TrainManagerBase.currentHost, train, this)
-			{
-				TriggerType = EventTriggerType.None
-			};
 		}
 
 		public CarBase(TrainBase train, int index)
@@ -179,7 +173,7 @@ namespace TrainManager.Car
 				FrontBogie.RearAxle.Follower.UpdateRelative(Delta, true, true);
 				if (Pantograph != null)
 				{
-					Pantograph.UpdateRelative(Delta, true, true);
+					Pantograph.Update(Delta, false);
 				}
 				if (baseTrain.State != TrainState.Disposed)
 				{

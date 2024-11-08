@@ -101,13 +101,13 @@ namespace TrainManager.Trains
 				Dictionary<PowerSupplyTypes, PowerSupply> supplies = new Dictionary<PowerSupplyTypes, PowerSupply>();
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					if (Cars[i].AvailablePowerSupplies.Count == 0) continue;
-					for (int j = 0; j < Cars[i].AvailablePowerSupplies.Count; j++)
+					if (Cars[i].Pantograph.AvailablePowerSupplies.Count == 0) continue;
+					for (int j = 0; j < Cars[i].Pantograph.AvailablePowerSupplies.Count; j++)
 					{
-						PowerSupplyTypes type = Cars[i].AvailablePowerSupplies.ElementAt(j).Key;
+						PowerSupplyTypes type = Cars[i].Pantograph.AvailablePowerSupplies.ElementAt(j).Key;
 						if (!supplies.ContainsKey(type))
 						{
-							supplies.Add(type, Cars[i].AvailablePowerSupplies.ElementAt(j).Value);
+							supplies.Add(type, Cars[i].Pantograph.AvailablePowerSupplies.ElementAt(j).Value);
 						}
 					}
 				}
@@ -224,7 +224,7 @@ namespace TrainManager.Trains
 				}
 				if (Cars[i].Pantograph != null)
 				{
-					Cars[i].Pantograph.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].PantographPosition;
+					Cars[i].Pantograph.Update(TrackPosition, true);
 				}
 			}
 		}

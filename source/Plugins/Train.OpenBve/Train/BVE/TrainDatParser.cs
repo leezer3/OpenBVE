@@ -11,6 +11,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
+using TrainManager.Car.Systems.OpenBveApi.Trains;
 using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Power;
@@ -1266,7 +1267,7 @@ namespace Train.OpenBve
 				Train.Cars[i].CarBrake.straightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
 				Train.Cars[i].CarBrake.JerkUp = JerkBrakeUp;
 				Train.Cars[i].CarBrake.JerkDown = JerkBrakeDown;
-				Train.Cars[i].PantographPosition = pantographLocation;
+				Train.Cars[i].Pantograph = new Pantograph(Plugin.currentHost, pantographLocation);
 			}
 			if (Train.Handles.HasHoldBrake & Train.Handles.Brake.MaximumNotch > 1) {
 				Train.Handles.Brake.MaximumNotch--;

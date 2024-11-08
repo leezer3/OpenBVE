@@ -63,9 +63,6 @@ namespace OpenBveApi.Trains
 			set => throw new NotSupportedException("Cannot set the index of a single car");
 		}
 
-		/// <summary>Returns the available power supplies to this car</summary>
-		public virtual Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies => new Dictionary<PowerSupplyTypes, PowerSupply>();
-
 		/// <summary>Call this method to reverse (flip) the car</summary>
 		public virtual void Reverse(bool flipInterior = false)
 		{

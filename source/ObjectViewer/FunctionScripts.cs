@@ -1239,9 +1239,9 @@ namespace ObjectViewer {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length)
+							if (j >= 0 & j < Train.Cars.Length && Train.Cars[j].Pantograph != null)
 							{
-								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].Voltage : 0.0;
+								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].Voltage : 0.0;
 							}
 							else
 							{
@@ -1268,9 +1268,9 @@ namespace ObjectViewer {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length)
+							if (j >= 0 & j < Train.Cars.Length && Train.Cars[j].Pantograph != null)
 							{
-								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].Voltage : 0.0;
+								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].Voltage : 0.0;
 							}
 							else
 							{
@@ -1297,9 +1297,9 @@ namespace ObjectViewer {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length)
+							if (j >= 0 & j < Train.Cars.Length && Train.Cars[j].Pantograph != null)
 							{
-								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.FourthRail].Voltage : 0.0;
+								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.FourthRail].Voltage : 0.0;
 							}
 							else
 							{
@@ -1326,9 +1326,9 @@ namespace ObjectViewer {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length)
+							if (j >= 0 & j < Train.Cars.Length && Train.Cars[j].Pantograph != null)
 							{
-								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].ContactHeight : 0.0;
+								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].ContactHeight : 0.0;
 							}
 							else
 							{
@@ -1355,9 +1355,9 @@ namespace ObjectViewer {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length)
+							if (j >= 0 & j < Train.Cars.Length && Train.Cars[j].Pantograph != null)
 							{
-								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].ContactHeight : 0.0;
+								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].ContactHeight : 0.0;
 							}
 							else
 							{
@@ -1384,9 +1384,9 @@ namespace ObjectViewer {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length)
+							if (j >= 0 & j < Train.Cars.Length && Train.Cars[j].Pantograph != null)
 							{
-								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.FourthRail].ContactHeight : 0.0;
+								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.FourthRail].ContactHeight : 0.0;
 							}
 							else
 							{
@@ -1443,9 +1443,9 @@ namespace ObjectViewer {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length)
+							if (j >= 0 & j < Train.Cars.Length && Train.Cars[j].Pantograph != null)
 							{
-								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].Amperage : 0.0;
+								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.OverheadLine) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.OverheadLine].Amperage : 0.0;
 							}
 							else
 							{
@@ -1472,9 +1472,9 @@ namespace ObjectViewer {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length)
+							if (j >= 0 & j < Train.Cars.Length && Train.Cars[j].Pantograph != null)
 							{
-								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].Amperage : 0.0;
+								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.ThirdRail) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.ThirdRail].Amperage : 0.0;
 							}
 							else
 							{
@@ -1501,9 +1501,9 @@ namespace ObjectViewer {
 						{
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length)
+							if (j >= 0 & j < Train.Cars.Length && Train.Cars[j].Pantograph != null)
 							{
-								Function.Stack[s - 1] = Train.Cars[j].AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.Cars[j].AvailablePowerSupplies[PowerSupplyTypes.FourthRail].Amperage : 0.0;
+								Function.Stack[s - 1] = Train.Cars[j].Pantograph.AvailablePowerSupplies.ContainsKey(PowerSupplyTypes.FourthRail) ? Train.Cars[j].Pantograph.AvailablePowerSupplies[PowerSupplyTypes.FourthRail].Amperage : 0.0;
 							}
 							else
 							{
