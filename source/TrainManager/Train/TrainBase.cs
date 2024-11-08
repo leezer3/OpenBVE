@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using LibRender2.Trains;
@@ -90,6 +91,27 @@ namespace TrainManager.Trains
 				}
 
 				return myLength;
+			}
+		}
+
+		public override Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies
+		{
+			get
+			{
+				Dictionary<PowerSupplyTypes, PowerSupply> supplies = new Dictionary<PowerSupplyTypes, PowerSupply>();
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					if (Cars[i].AvailablePowerSupplies.Count == 0) continue;
+					for (int j = 0; j < Cars[i].AvailablePowerSupplies.Count; j++)
+					{
+						PowerSupplyTypes type = Cars[i].AvailablePowerSupplies.ElementAt(j).Key;
+						if (!supplies.ContainsKey(type))
+						{
+							supplies.Add(type, Cars[i].AvailablePowerSupplies.ElementAt(j).Value);
+						}
+					}
+				}
+				return supplies;
 			}
 		}
 
