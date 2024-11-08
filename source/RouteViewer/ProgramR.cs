@@ -69,7 +69,10 @@ namespace RouteViewer
 
 		internal static formRailPaths pathForm;
 
-			// main
+		[System.Runtime.InteropServices.DllImport("user32.dll")]
+		private static extern bool SetProcessDPIAware();
+
+		// main
 		[STAThread]
 		internal static void Main(string[] args)
 		{
@@ -151,6 +154,11 @@ namespace RouteViewer
 					}
 				}
 
+			}
+			if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+			{
+				// Tell Windows that the main game is managing it's own DPI
+				SetProcessDPIAware();
 			}
 
 			var options = new ToolkitOptions();

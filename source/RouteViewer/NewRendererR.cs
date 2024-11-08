@@ -17,6 +17,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.Events;
 using RouteManager2.Tracks;
@@ -564,20 +565,22 @@ namespace RouteViewer
 					totalObjects += ObjectManager.AnimatedWorldObjectsUsed;
 				}
 
+				double scaleFactor = DisplayDevice.Default.ScaleFactor.X;
+
 				if (totalObjects == 0)
 				{
 					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 					{
 						keys = new[] { new[] { "esc" } };
 						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
-						OpenGlString.Draw(Fonts.SmallFont, "Display the menu", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the menu", new Vector2(32 * scaleFactor, 4), TextAlignment.TopLeft, Color128.White, true);
 					}
 					else
 					{
 						keys = new[] { new[] { "F7" }, new[] { "F8" } };
 						Keys.Render(4, 4, 20, Fonts.SmallFont, keys);
-						OpenGlString.Draw(Fonts.SmallFont, "Open route", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White);
-						OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White);
+						OpenGlString.Draw(Fonts.SmallFont, "Open route", new Vector2(32 * scaleFactor, 4), TextAlignment.TopLeft, Color128.White);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32 * scaleFactor, 24), TextAlignment.TopLeft, Color128.White);
 						OpenGlString.Draw(Fonts.SmallFont, $"v{Application.ProductVersion}", new Vector2(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, Color128.White);
 					}
 					
@@ -589,38 +592,38 @@ namespace RouteViewer
 					{
 						keys = new[] { new[] { "F5" }, new[] { "esc" } };
 						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
-						OpenGlString.Draw(Fonts.SmallFont, "Reload route", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, "Display the menu", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, "Reload route", new Vector2(32 * scaleFactor, 4), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the menu", new Vector2(32 * scaleFactor, 24), TextAlignment.TopLeft, Color128.White, true);
 					}
 					else
 					{
 						keys = new[] { new[] { "F5" }, new[] { "F7" }, new[] { "F8" } };
 						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
-						OpenGlString.Draw(Fonts.SmallFont, "Reload route", new Vector2(32, 4), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, "Open route", new Vector2(32, 24), TextAlignment.TopLeft, Color128.White, true);
-						OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32, 44), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, "Reload route", new Vector2(32 * scaleFactor, 4), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, "Open route", new Vector2(32 * scaleFactor, 24), TextAlignment.TopLeft, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Vector2(32 * scaleFactor, 44), TextAlignment.TopLeft, Color128.White, true);
 					}
 					
 
 					keys = new[] { new[] { "F" }, new[] { "N" }, new[] { "E" }, new[] { "M" }, new[] { "I" } };
-					Keys.Render(Screen.Width - 20, 4, 16, Fonts.SmallFont, keys);
-					OpenGlString.Draw(Fonts.SmallFont, "WireFrame:", new Vector2(Screen.Width - 32, 4), TextAlignment.TopRight, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, "Normals:", new Vector2(Screen.Width - 32, 24), TextAlignment.TopRight, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, "Events:", new Vector2(Screen.Width - 32, 44), TextAlignment.TopRight, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, "Mute:", new Vector2(Screen.Width - 32, 64), TextAlignment.TopRight, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Vector2(Screen.Width - 32, 84), TextAlignment.TopRight, Color128.White, true);
+					Keys.Render(Screen.Width - (int)(20 * scaleFactor), 4, 16, Fonts.SmallFont, keys);
+					OpenGlString.Draw(Fonts.SmallFont, "WireFrame:", new Vector2(Screen.Width - (32 * scaleFactor), 4), TextAlignment.TopRight, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, "Normals:", new Vector2(Screen.Width - (32 * scaleFactor), 24), TextAlignment.TopRight, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, "Events:", new Vector2(Screen.Width - (32 * scaleFactor), 44), TextAlignment.TopRight, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, "Mute:", new Vector2(Screen.Width - (32 * scaleFactor), 64), TextAlignment.TopRight, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Vector2(Screen.Width - (32 * scaleFactor), 84), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Vector2(Screen.Width - 32, 104), TextAlignment.TopRight, Color128.White, true);
 					if (!ForceLegacyOpenGL)
 					{
-						OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Vector2(Screen.Width - (32 * scaleFactor), 124), TextAlignment.TopRight, Color128.White, true);
 						keys = new[] { new[] { "R" } };
-						Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
+						Keys.Render(Screen.Width - (int)(20 * scaleFactor), 124, 16, Fonts.SmallFont, keys);
 						if (Program.CurrentHost.Platform != HostPlatform.AppleOSX || IntPtr.Size == 4)
 						{
 							// only works on WinForms supporting systems
-							OpenGlString.Draw(Fonts.SmallFont, $"Draw Rail Paths:", new Vector2(Screen.Width - 32, 144), TextAlignment.TopRight, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Draw Rail Paths:", new Vector2(Screen.Width - (32 * scaleFactor), 144), TextAlignment.TopRight, Color128.White, true);
 							keys = new[] { new[] { "P" } };
-							Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
+							Keys.Render(Screen.Width - (int)(20 * scaleFactor), 144, 16, Fonts.SmallFont, keys);
 						}
 					}
 					else
@@ -628,27 +631,27 @@ namespace RouteViewer
 						if (Program.CurrentHost.Platform != HostPlatform.AppleOSX || IntPtr.Size == 4)
 						{
 							// only works on WinForms supporting systems
-							OpenGlString.Draw(Fonts.SmallFont, $"Rail Paths:", new Vector2(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Rail Paths:", new Vector2(Screen.Width - (32 * scaleFactor), 124), TextAlignment.TopRight, Color128.White, true);
 							keys = new[] { new[] { "P" } };
-							Keys.Render(Screen.Width - 20, 124, 16, Fonts.SmallFont, keys);
+							Keys.Render(Screen.Width - (int)(20 * scaleFactor), 124, 16, Fonts.SmallFont, keys);
 						}
 					}
 					
 
 					keys = new[] { new[] { "F10" } };
-					Keys.Render(Screen.Width - 32, 104, 30, Fonts.SmallFont, keys);
+					Keys.Render(Screen.Width - (int)(32 * scaleFactor), 104, 30, Fonts.SmallFont, keys);
 					
 					keys = new[] { new[] { null, "W", null }, new[] { "A", "S", "D" } };
 					Keys.Render(4, Screen.Height - 40, 16, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { null, "↑", null }, new[] { "←", "↓", "→" } };
-					Keys.Render((int)(0.5 * Screen.Width - 48), Screen.Height - 40, 16, Fonts.SmallFont, keys);
+					Keys.Render((int)(0.5 * Screen.Width - (48 * scaleFactor)), Screen.Height - 40, 16, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { "P↑" }, new[] { "P↓" } };
 					Keys.Render((int)(0.5 * Screen.Width + 32), Screen.Height - 40, 24, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { null, "/", "*" }, new[] { "7", "8", "9" }, new[] { "4", "5", "6" }, new[] { "1", "2", "3" }, new[] { null, "0", "." } };
-					Keys.Render(Screen.Width - 60, Screen.Height - 100, 16, Fonts.SmallFont, keys);
+					Keys.Render(Screen.Width - (int)(60 * scaleFactor), Screen.Height - 100, 16, Fonts.SmallFont, keys);
 
 					if (Program.JumpToPositionEnabled)
 					{
@@ -747,12 +750,12 @@ namespace RouteViewer
 
 						if (Interface.LogMessages[0].Type != MessageType.Information)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Vector2(32, 72), TextAlignment.TopLeft, Color128.Red, true);
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Vector2(32 * scaleFactor, 72), TextAlignment.TopLeft, Color128.Red, true);
 						}
 						else
 						{
 							//If all of our messages are information, then print the message text in grey
-							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Vector2(32, 72), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 message recently generated.", new Vector2(32 * scaleFactor, 72), TextAlignment.TopLeft, Color128.White, true);
 						}
 					}
 					else if (Interface.LogMessages.Count > 1)
@@ -762,11 +765,11 @@ namespace RouteViewer
 
 						if (error)
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count} error messages recently generated.", new Vector2(32, 72), TextAlignment.TopLeft, Color128.Red, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count} error messages recently generated.", new Vector2(32 * scaleFactor, 72), TextAlignment.TopLeft, Color128.Red, true);
 						}
 						else
 						{
-							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count} messages recently generated.", new Vector2(32, 72), TextAlignment.TopLeft, Color128.White, true);
+							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.LogMessages.Count} messages recently generated.", new Vector2(32 * scaleFactor, 72), TextAlignment.TopLeft, Color128.White, true);
 						}
 					}
 
