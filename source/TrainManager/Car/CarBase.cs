@@ -83,9 +83,9 @@ namespace TrainManager.Car
 		/// <summary>Stores the camera interior camera alignment for this car</summary>
 		public CameraAlignment InteriorCamera;
 		/// <summary>The location of the pantograph on the car</summary>
-		internal double PantographPosition;
+		public double PantographPosition;
 		/// <summary>Provides current collection etc.</summary>
-		internal TrackFollower Pantograph;
+		public TrackFollower Pantograph;
 		/// <summary>Whether loading sway is enabled for this car</summary>
 		public bool EnableLoadingSway = true;
 		/// <summary>Whether this car has an interior view</summary>
@@ -135,6 +135,10 @@ namespace TrainManager.Car
 			Suspension = new Suspension(this);
 			Flange = new Flange(this);
 			Run = new RunSounds(this);
+			Pantograph = new TrackFollower(TrainManagerBase.currentHost, train, this)
+			{
+				TriggerType = EventTriggerType.None
+			};
 		}
 
 		public CarBase(TrainBase train, int index)
