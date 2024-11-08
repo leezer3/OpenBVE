@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 
 namespace OpenBveApi.Trains
 {
@@ -60,6 +62,9 @@ namespace OpenBveApi.Trains
 			get => 0;
 			set => throw new NotSupportedException("Cannot set the index of a single car");
 		}
+
+		/// <summary>Returns the available power supplies to this car</summary>
+		public virtual Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies => new Dictionary<PowerSupplyTypes, PowerSupply>();
 
 		/// <summary>Call this method to reverse (flip) the car</summary>
 		public virtual void Reverse(bool flipInterior = false)
