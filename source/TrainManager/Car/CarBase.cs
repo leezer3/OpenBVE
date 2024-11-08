@@ -173,6 +173,10 @@ namespace TrainManager.Car
 				FrontAxle.Follower.UpdateRelative(Delta, true, true);
 				FrontBogie.FrontAxle.Follower.UpdateRelative(Delta, true, true);
 				FrontBogie.RearAxle.Follower.UpdateRelative(Delta, true, true);
+				if (Pantograph != null)
+				{
+					Pantograph.UpdateRelative(Delta, true, true);
+				}
 				if (baseTrain.State != TrainState.Disposed)
 				{
 					RearAxle.Follower.UpdateRelative(Delta, true, true);

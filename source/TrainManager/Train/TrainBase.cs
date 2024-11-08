@@ -222,6 +222,10 @@ namespace TrainManager.Trains
 				{
 					TrackPosition -= 0.5 * (Cars[i].Coupler.MinimumDistanceBetweenCars + Cars[i].Coupler.MaximumDistanceBetweenCars);
 				}
+				if (Cars[i].Pantograph != null)
+				{
+					Cars[i].Pantograph.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].PantographPosition;
+				}
 			}
 		}
 
