@@ -1267,7 +1267,7 @@ namespace Train.OpenBve
 				Train.Cars[i].CarBrake.straightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
 				Train.Cars[i].CarBrake.JerkUp = JerkBrakeUp;
 				Train.Cars[i].CarBrake.JerkDown = JerkBrakeDown;
-				Train.Cars[i].Pantograph = new Pantograph(Plugin.currentHost, pantographLocation);
+				Train.Cars[i].Pantograph = new Pantograph(Plugin.currentHost, pantographLocation, true);
 			}
 			if (Train.Handles.HasHoldBrake & Train.Handles.Brake.MaximumNotch > 1) {
 				Train.Handles.Brake.MaximumNotch--;

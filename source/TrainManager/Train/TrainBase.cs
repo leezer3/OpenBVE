@@ -101,7 +101,7 @@ namespace TrainManager.Trains
 				Dictionary<PowerSupplyTypes, PowerSupply> supplies = new Dictionary<PowerSupplyTypes, PowerSupply>();
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					if (Cars[i].Pantograph.AvailablePowerSupplies.Count == 0) continue;
+					if (Cars[i].Pantograph.AvailablePowerSupplies.Count == 0 || !Cars[i].Pantograph.CollectsPower) continue;
 					for (int j = 0; j < Cars[i].Pantograph.AvailablePowerSupplies.Count; j++)
 					{
 						PowerSupplyTypes type = Cars[i].Pantograph.AvailablePowerSupplies.ElementAt(j).Key;
