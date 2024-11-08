@@ -170,7 +170,7 @@ namespace Train.OpenBve
 			string[] Lines = ReadFile(FileName, Encoding);
 
 			// Check version
-			const int currentVersion = 18230;
+			const int currentVersion = 19000;
 			TrainDatFormats currentFormat = ParseFormat(Lines, out int myVersion);
 			string versionString = Lines.FirstOrDefault(x => x.Length > 0) ?? Lines[0];
 			switch (currentFormat)
@@ -235,6 +235,8 @@ namespace Train.OpenBve
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
 			double electricBrakeDelayUp = 0, electricBrakeDelayDown = 0;
 			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1, locoBrakeType = 0, driverPowerNotches = 0, driverBrakeNotches = 0;
+			int numberOfPantographs = 1;
+			double pantographLocation = -1;
 			BVEMotorSoundTable[] Tables = new BVEMotorSoundTable[4];
 			for (int i = 0; i < 4; i++) {
 				Tables[i].Entries = new BVEMotorSoundTableEntry[16];
@@ -843,6 +845,20 @@ namespace Train.OpenBve
 										} else {
 											CarUnexposedFrontalArea = a;
 										} break;
+									case 11:
+										if (a <= 0.0)
+										{
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "NumberOfPantographs is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
+										else
+										{
+											numberOfPantographs = (int)a;
+										}
+										break;
+									case 12:
+										//Do no validation here, as we don't necessarily yet know the length of a car
+										pantographLocation = a;
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -1136,6 +1152,20 @@ namespace Train.OpenBve
 					MaximumAcceleration = AccelerationCurves[i].MaximumAcceleration;
 				}
 			}
+
+			if (pantographLocation < 0 || pantographLocation > CarLength)
+			{
+				//Pantograph location is relative from the front of the car
+				//Somone will probably want to add one outside the physical model, so just warn...
+				Plugin.currentHost.AddMessage(MessageType.Warning, false, "A PantographLocation of " + pantographLocation.ToString(Culture) + " places it outside the bounds of the car in file " + FileName);
+			}
+
+			if (numberOfPantographs > Cars)
+			{
+				Plugin.currentHost.AddMessage(MessageType.Error, false, "A total of " + numberOfPantographs.ToString(Culture) + " were defined, when the train has " + Cars.ToString(Culture) + " cars in file " + FileName);
+				numberOfPantographs = Cars;
+			}
+
 			// assign motor cars
 			if (MotorCars == 1) {
 				if (FrontCarIsMotorCar | TrailerCars == 0) {
@@ -1183,6 +1213,85 @@ namespace Train.OpenBve
 						if (i >= Cars) break;
 						Train.Cars[i].Specs.IsMotorCar = true;
 					}
+				}
+			}
+			// assign pantograph cars
+			if (numberOfPantographs == Cars)
+			{
+				//One pantograph per car
+				for (int i = 0; i < Train.Cars.Length; i++)
+				{
+					Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+				}
+			}
+			else if (numberOfPantographs == MotorCars)
+			{
+				//Assign pantograph to all motor cars
+				for (int i = 0; i < Train.Cars.Length; i++)
+				{
+					if (Train.Cars[i].Specs.IsMotorCar)
+					{
+						Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+					}
+				}
+			}
+			else if (numberOfPantographs == 1)
+			{
+				// With single pantograph, assign to the first motor car
+				for (int i = 0; i < Train.Cars.Length; i++)
+				{
+					if (Train.Cars[i].Specs.IsMotorCar)
+					{
+						Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+						break;
+					}
+				}
+			}
+			else if (numberOfPantographs == 2)
+			{
+				if (MotorCars >= 2)
+				{
+					// Assign pantographs to the first and last motor cars
+					for (int i = 0; i < Train.Cars.Length; i++)
+					{
+						if (Train.Cars[i].Specs.IsMotorCar)
+						{
+							Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+							break;
+						}
+					}
+					for (int i = Train.Cars.Length - 1; i > 0; i--)
+					{
+						if (Train.Cars[i].Specs.IsMotorCar)
+						{
+							Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+							break;
+						}
+					}
+				}
+				else
+				{
+					//Assign evenly
+					int i = (int)Math.Ceiling(0.25 * (double)(Cars - 1));
+					int j = (int)Math.Floor(0.75 * (double)(Cars - 1));
+					Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+					Train.Cars[j].Pantograph = new TrackFollower(Program.CurrentHost, Train);
+				}
+			}
+			else
+			{
+				//Assign using motor cars algo
+				double t = 1.0 + numberOfPantographs;
+				double r = 0.0;
+				double x = 1.0;
+				while (true)
+				{
+					double y = x + t - r;
+					x = Math.Ceiling(y);
+					r = x - y;
+					int i = (int)x;
+					if (i >= Cars) break;
+					Train.Cars[i].Pantograph = new TrackFollower(Program.CurrentHost, Train);
 				}
 			}
 			double MotorDeceleration = Math.Sqrt(MaximumAcceleration * BrakeDeceleration);

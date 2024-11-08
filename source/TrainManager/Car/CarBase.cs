@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
 using LibRender2.Camera;
@@ -81,10 +82,16 @@ namespace TrainManager.Car
 		public CameraRestriction CameraRestriction;
 		/// <summary>Stores the camera interior camera alignment for this car</summary>
 		public CameraAlignment InteriorCamera;
+		/// <summary>The location of the pantograph on the car</summary>
+		internal double PantographPosition;
+		/// <summary>Provides current collection etc.</summary>
+		internal TrackFollower Pantograph;
 		/// <summary>Whether loading sway is enabled for this car</summary>
 		public bool EnableLoadingSway = true;
 		/// <summary>Whether this car has an interior view</summary>
 		public bool HasInteriorView = false;
+		public override Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies => Pantograph != null ? Pantograph.AvailablePowerSupplies : new Dictionary<PowerSupplyTypes, PowerSupply>();
+
 		/// <summary>Contains the generic sounds attached to the car</summary>
 		public CarSounds Sounds;
 		/// <summary>The cargo carried by the car</summary>

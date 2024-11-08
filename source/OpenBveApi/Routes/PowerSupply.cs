@@ -4,13 +4,13 @@
 	public class PowerSupply
 	{
 		/// <summary>The voltage type supplied</summary>
-		internal readonly PowerSupplyVoltageTypes VoltageType;
+		public readonly PowerSupplyVoltageTypes VoltageType;
 		/// <summary>The voltage supplied</summary>
-		internal readonly double Voltage;
+		public readonly double Voltage;
 		/// <summary>The maximum amperage supplied</summary>
-		internal readonly double Amperage;
+		public readonly double Amperage;
 		/// <summary>The contact height</summary>
-		internal readonly double ContactHeight;
+		public readonly double ContactHeight;
 
 		/// <summary>Creates a new power supply</summary>
 		public PowerSupply(PowerSupplyVoltageTypes voltageType, double voltage, double amperage, double contactHeight)
