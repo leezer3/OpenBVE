@@ -13,6 +13,7 @@ using OpenBveApi.Objects;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
+using TrainManager.Car.Systems.OpenBveApi.Trains;
 using TrainManager.Cargo;
 using TrainManager.Handles;
 using TrainManager.Power;
@@ -717,6 +718,38 @@ namespace Train.OpenBve
 								Train.Cars[Car].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Car].Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
 							}
 						}
+						break;
+					case "pantograph":
+						bool collectsPower = true;
+						double location = 0;
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "fitted":
+										int cp;
+										NumberFormats.TryParseIntVb6(c.InnerText, out cp);
+										if (cp == 1 || c.InnerText.ToLowerInvariant() == "true")
+										{
+											collectsPower = true;
+										}
+										else
+										{
+											collectsPower = false;
+										}
+										break;
+									case "location":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out location))
+										{
+											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid pantograph location defined for Car " + Car + " in XML file " + fileName);
+										}
+										break;
+								}
+							}
+						}
+						Train.Cars[Car].Pantograph = new Pantograph(Plugin.currentHost, location, collectsPower);
 						break;
 				}
 			}
