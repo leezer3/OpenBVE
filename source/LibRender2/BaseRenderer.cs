@@ -30,10 +30,12 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
+using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using Path = OpenBveApi.Path;
 using PixelFormat = OpenBveApi.Textures.PixelFormat;
+using Vector2 = OpenBveApi.Math.Vector2;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace LibRender2
@@ -84,6 +86,23 @@ namespace LibRender2
 				currentInterface = value;
 			}
 		}
+
+		/// <summary>Gets the scale factor for the current display</summary>
+		public static Vector2 ScaleFactor
+		{
+			get
+			{
+				if (_scaleFactor.X > 0)
+				{
+					return _scaleFactor;
+				}
+				// guard against the fact that some systems return a scale factor of zero
+				_scaleFactor = new Vector2(Math.Max(DisplayDevice.Default.ScaleFactor.X, 1), Math.Max(DisplayDevice.Default.ScaleFactor.Y, 1));
+				return _scaleFactor;
+			}
+		}
+
+		private static Vector2 _scaleFactor = new Vector2(-1, -1);
 
 		/// <summary>Holds a reference to the previous interface type of the game</summary>
 		public InterfaceType PreviousInterface => previousInterface;

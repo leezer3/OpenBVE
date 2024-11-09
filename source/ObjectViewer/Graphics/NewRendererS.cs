@@ -263,7 +263,7 @@ namespace ObjectViewer.Graphics
 			CurrentViewMatrix = Matrix4D.Identity;
 
 			CultureInfo culture = CultureInfo.InvariantCulture;
-			double scaleFactor = DisplayDevice.Default.ScaleFactor.X;
+			double scaleFactor = BaseRenderer.ScaleFactor.X;
 
 			if (OptionInterface)
 			{

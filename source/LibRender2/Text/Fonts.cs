@@ -93,7 +93,7 @@ namespace LibRender2.Text
 				
 			}
 
-			float scaleFactor = DisplayDevice.Default.ScaleFactor.X;
+			float scaleFactor = (float)BaseRenderer.ScaleFactor.X;
 			
 			VerySmallFont = new OpenGlFont(uiFont, 9.0f * scaleFactor);
 			SmallFont = new OpenGlFont(uiFont, 12.0f * scaleFactor);
