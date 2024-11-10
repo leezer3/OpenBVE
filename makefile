@@ -209,6 +209,6 @@ ifeq (, $(PROGRAM_VERSION))
 	@mv installers/debian.deb OpenBVE-$$(date '+%F').deb
 else
 	@echo This is a $(COLOR_YELLOW)Tagged Release build$(COLOR_END)
-	@echo Final filename: $(COLOR_RED)OpenBVE-$(PROGRAM_VERSION).deb(COLOR_END)
+	@echo Final filename: $(COLOR_RED)OpenBVE-$(PROGRAM_VERSION).deb$(COLOR_END)
 	@mv "$(ROOT_DIR)/installers/debian.deb" OpenBVE-$(PROGRAM_VERSION).deb
 endif

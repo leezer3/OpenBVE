@@ -261,6 +261,7 @@ namespace Route.Bve5
 
 						if (StartRadius == EndRadius && StartCant == EndCant)
 						{
+							i++;
 							continue;
 						}
 
@@ -445,6 +446,7 @@ namespace Route.Bve5
 
 						if (StartPitch == EndPitch)
 						{
+							i++;
 							continue;
 						}
 
@@ -847,6 +849,7 @@ namespace Route.Bve5
 
 						if (StartCant == EndCant)
 						{
+							i++;
 							continue;
 						}
 
