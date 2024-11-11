@@ -78,6 +78,7 @@ namespace OpenBveApi
 		ObjObject,
 		GDIPlus,
 		// Folders
+		ObjectSearch,
 		RouteSearch,
 		Route,
 		Train,
@@ -86,7 +87,13 @@ namespace OpenBveApi
 		// Touch
 		Cursor,
 		Panel2Extended,
-		Panel2ExtendedMinSize
-
+		Panel2ExtendedMinSize,
+		// Keys
+		Left,
+		Right,
+		Up,
+		Down,
+		Forward,
+		Backward
     }
 }
