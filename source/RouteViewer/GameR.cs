@@ -76,12 +76,12 @@ namespace RouteViewer {
 
 		// ================================
 
-		internal static bool ApplyPointOfInterest(int Value, bool Relative) {
+		internal static bool ApplyPointOfInterest(int newValue, bool newValueIsRelative) {
 			double t = 0.0;
 			int j = -1;
-			if (Relative) {
+			if (newValueIsRelative) {
 				// relative
-				if (Value < 0) {
+				if (newValue < 0) {
 					// previous poi
 					t = double.NegativeInfinity;
 					for (int i = 0; i < Program.CurrentRoute.PointsOfInterest.Length; i++) {
@@ -92,7 +92,7 @@ namespace RouteViewer {
 							}
 						}
 					}
-				} else if (Value > 0) {
+				} else if (newValue > 0) {
 					// next poi
 					t = double.PositiveInfinity;
 					for (int i = 0; i < Program.CurrentRoute.PointsOfInterest.Length; i++) {
@@ -106,7 +106,7 @@ namespace RouteViewer {
 				}
 			} else {
 				// absolute
-				j = Value >= 0 & Value < Program.CurrentRoute.PointsOfInterest.Length ? Value : -1;
+				j = newValue >= 0 & newValue < Program.CurrentRoute.PointsOfInterest.Length ? newValue : -1;
 			}
 			// process poi
 			if (j >= 0) {

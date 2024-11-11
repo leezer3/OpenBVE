@@ -89,8 +89,8 @@ namespace RouteViewer
 
         protected override void OnLoad(EventArgs e)
         {
-            KeyDown += Program.keyDownEvent;
-            KeyUp += Program.keyUpEvent;
+            KeyDown += Program.KeyDownEvent;
+            KeyUp += Program.KeyUpEvent;
 			MouseDown += Program.MouseEvent;
 			MouseUp += Program.MouseEvent;
 	        FileDrop += Program.FileDrop;
@@ -106,9 +106,9 @@ namespace RouteViewer
             Program.Renderer.Lighting.Initialize();
 			Program.Sounds.Initialize(SoundRange.Low);
 			Program.Renderer.UpdateViewport();
-            if (Program.processCommandLineArgs)
+            if (Program.ProcessCommandLineArgs)
             {
-                Program.processCommandLineArgs = false;
+                Program.ProcessCommandLineArgs = false;
                 Program.UpdateCaption();
 				Program.LoadRoute();
                 Program.UpdateCaption();
@@ -145,8 +145,8 @@ namespace RouteViewer
 			while (!Loading.Complete && !Loading.Cancel)
 			{
 				CPreciseTimer.GetElapsedTime();
-				Program.currentGameWindow.ProcessEvents();
-				if (Program.currentGameWindow.IsExiting)
+				Program.CurrentGameWindow.ProcessEvents();
+				if (Program.CurrentGameWindow.IsExiting)
 					Loading.Cancel = true;
 				double routeProgress = 1.0;
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
@@ -157,7 +157,7 @@ namespace RouteViewer
 					}
 				}
 				Program.Renderer.Loading.DrawLoadingScreen(Program.Renderer.Fonts.SmallFont, routeProgress);
-				Program.currentGameWindow.SwapBuffers();
+				Program.CurrentGameWindow.SwapBuffers();
 
 				if (Loading.JobAvailable)
 				{
