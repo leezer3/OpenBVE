@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="CFG\ConfigFile.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Plugin.cs" />
+    <Compile Include="Block.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
