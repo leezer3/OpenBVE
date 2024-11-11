@@ -111,8 +111,8 @@ namespace OpenBve
 			}
 			Screen.Initialize();
 			currentResult = result;
-			Program.currentGameWindow.Closing += OpenTKQuit;
-			Program.currentGameWindow.Run();
+			Program.Renderer.GameWindow.Closing += OpenTKQuit;
+			Program.Renderer.GameWindow.Run();
 		}
 
 		// --------------------------------
@@ -241,11 +241,11 @@ namespace OpenBve
 
 			if (Interface.CurrentOptions.CursorHideDelay > 0 && timeSinceLastMouseEvent > Interface.CurrentOptions.CursorHideDelay)
 			{
-				Program.currentGameWindow.CursorVisible = false;
+				Program.Renderer.GameWindow.CursorVisible = false;
 			}
 			else
 			{
-				Program.currentGameWindow.CursorVisible = true;
+				Program.Renderer.GameWindow.CursorVisible = true;
 			}
 
 			if (MainLoop.MouseGrabEnabled)

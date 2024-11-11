@@ -48,8 +48,6 @@ namespace OpenBve {
 		/// <summary>The random number generator used by this program.</summary>
 		internal static readonly Random RandomNumberGenerator = new Random();
 
-		public static GameWindow currentGameWindow;
-
 		internal static JoystickManager Joysticks;
 
 		internal static NewRenderer Renderer;
@@ -398,7 +396,6 @@ namespace OpenBve {
 			Program.CurrentHost.UnloadPlugins(out _);
 			Sounds.DeInitialize();
 			Renderer.DeInitialize();
-			currentGameWindow?.Dispose();
 		}
 
 	}

@@ -145,8 +145,8 @@ namespace RouteViewer
 			while (!Loading.Complete && !Loading.Cancel)
 			{
 				CPreciseTimer.GetElapsedTime();
-				Program.currentGameWindow.ProcessEvents();
-				if (Program.currentGameWindow.IsExiting)
+				Program.Renderer.GameWindow.ProcessEvents();
+				if (Program.Renderer.GameWindow.IsExiting)
 					Loading.Cancel = true;
 				double routeProgress = 1.0;
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
@@ -157,7 +157,7 @@ namespace RouteViewer
 					}
 				}
 				Program.Renderer.Loading.DrawLoadingScreen(Program.Renderer.Fonts.SmallFont, routeProgress);
-				Program.currentGameWindow.SwapBuffers();
+				Program.Renderer.GameWindow.SwapBuffers();
 
 				if (Loading.JobAvailable)
 				{

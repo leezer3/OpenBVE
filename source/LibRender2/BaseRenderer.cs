@@ -273,7 +273,10 @@ namespace LibRender2
 		public Texture MasconTeture;
 		/// <summary>A raildriver icon</summary>
 		public Texture RailDriverTexture;
-
+		/// <summary>The game window</summary>
+		public GameWindow GameWindow;
+		/// <summary>The graphics mode in use</summary>
+		public GraphicsMode GraphicsMode;
 		public bool LoadLogo()
 		{
 			return currentHost.LoadTexture(ref _programLogo, OpenGlTextureWrapMode.ClampClamp);
@@ -432,6 +435,7 @@ namespace LibRender2
 		/// <summary>Deinitializes the renderer</summary>
 		public void DeInitialize()
 		{
+			this.GameWindow?.Dispose();
 			// terminate spinning thread
 			visibilityThread = false;
 		}
@@ -1710,24 +1714,33 @@ namespace LibRender2
 
 		/// <summary>Sets the current MouseCursor</summary>
 		/// <param name="newCursor">The new cursor</param>
-		public virtual void SetCursor(OpenTK.MouseCursor newCursor)
+		public void SetCursor(OpenTK.MouseCursor newCursor)
 		{
-
+			GameWindow.Cursor = newCursor;
 		}
 
 		/// <summary>Sets the window state</summary>
 		/// <param name="windowState">The new window state</param>
-		public virtual void SetWindowState(OpenTK.WindowState windowState)
+		public void SetWindowState(OpenTK.WindowState windowState)
 		{
-
+			GameWindow.WindowState = windowState;
+			if (windowState == WindowState.Fullscreen)
+			{
+				// move origin appropriately
+				GameWindow.X = 0;
+				GameWindow.Y = 0;
+			}
 		}
 
 		/// <summary>Sets the size of the window</summary>
 		/// <param name="width">The new width</param>
 		/// <param name="height">The new height</param>
-		public virtual void SetWindowSize(int width, int height)
+		public void SetWindowSize(int width, int height)
 		{
-
+			GameWindow.Width = width;
+			GameWindow.Height = height;
+			Screen.Width = width;
+			Screen.Height = height;
 		}
 	}
 }

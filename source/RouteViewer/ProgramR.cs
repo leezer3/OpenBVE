@@ -50,9 +50,6 @@ namespace RouteViewer
 		private static bool ControlPressed = false;
 		private static bool AltPressed = false;
 
-		internal static GameWindow currentGameWindow;
-		internal static GraphicsMode currentGraphicsMode;
-
 		// mouse
 		private static int MouseButton;
 
@@ -169,7 +166,7 @@ namespace RouteViewer
 			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
-			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
+			Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 			if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
 			{
 				//Duff values saved, so reset to something sensible else we crash
@@ -177,13 +174,13 @@ namespace RouteViewer
 				Renderer.Screen.Height = 768;
 			}
 			Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
-			currentGameWindow = new RouteViewer(Renderer.Screen.Width, Renderer.Screen.Height, currentGraphicsMode, "Route Viewer", GameWindowFlags.Default);
-			currentGameWindow.Visible = true;
-			currentGameWindow.TargetUpdateFrequency = 0;
-			currentGameWindow.TargetRenderFrequency = 0;
-			currentGameWindow.Title = "Route Viewer";
+			Renderer.GameWindow = new RouteViewer(Renderer.Screen.Width, Renderer.Screen.Height, Renderer.GraphicsMode, "Route Viewer", GameWindowFlags.Default);
+			Renderer.GameWindow.Visible = true;
+			Renderer.GameWindow.TargetUpdateFrequency = 0;
+			Renderer.GameWindow.TargetRenderFrequency = 0;
+			Renderer.GameWindow.Title = "Route Viewer";
 			processCommandLineArgs = true;
-			currentGameWindow.Run();
+			Renderer.GameWindow.Run();
 			//Unload
 			Sounds.DeInitialize();
 		}
@@ -288,7 +285,7 @@ namespace RouteViewer
 			{
 				Program.CurrentlyLoading = true;
 				Renderer.RenderScene(0.0);
-				Program.currentGameWindow.SwapBuffers();
+				Program.Renderer.GameWindow.SwapBuffers();
 				CameraAlignment a = Renderer.Camera.Alignment;
 				if (Program.LoadRoute())
 				{
@@ -436,7 +433,7 @@ namespace RouteViewer
 						if (!Interface.CurrentOptions.LoadingBackground)
 						{
 							Renderer.RenderScene(0.0);
-							currentGameWindow.SwapBuffers();
+							Renderer.GameWindow.SwapBuffers();
 							textureBytes = new byte[Renderer.Screen.Width * Renderer.Screen.Height * 4];
 							GL.ReadPixels(0, 0, Renderer.Screen.Width, Renderer.Screen.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, textureBytes);
 							// GL.ReadPixels is reversed for what it wants as a texture, so we've got to flip it
@@ -795,7 +792,7 @@ namespace RouteViewer
 					{
 						if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 						{
-							Program.currentGameWindow.TargetRenderFrequency = 0;
+							Program.Renderer.GameWindow.TargetRenderFrequency = 0;
 							Program.Renderer.CurrentInterface = InterfaceType.Menu;
 							Game.Menu.PushMenu(MenuType.GameStart);
 						}
@@ -893,10 +890,10 @@ namespace RouteViewer
 		internal static void UpdateCaption() {
 			if (CurrentRouteFile != null)
 			{
-				currentGameWindow.Title = Program.CurrentlyLoading ? @"Loading: " + System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName : System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName;
+				Renderer.GameWindow.Title = Program.CurrentlyLoading ? @"Loading: " + System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName : System.IO.Path.GetFileName(CurrentRouteFile) + " - " + Application.ProductName;
 			} else
 			{
-				currentGameWindow.Title = Application.ProductName;
+				Renderer.GameWindow.Title = Application.ProductName;
 			}
 		}
 	}
