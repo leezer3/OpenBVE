@@ -548,15 +548,16 @@ namespace OpenBve
 			{
 				// load options
 				string[] Lines = System.IO.File.ReadAllLines(File, new UTF8Encoding());
-				string Section = "";
+				OptionsSection currentSection = OptionsSection.Unknown;
 				for (int i = 0; i < Lines.Length; i++)
 				{
 					Lines[i] = Lines[i].Trim(new char[] { });
 					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
 					{
+						
 						if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 						{
-							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { }).ToLowerInvariant();
+							Enum.TryParse(Lines[i].TrimStart('[').TrimEnd(']').Replace(" ", string.Empty), true, out currentSection);
 						}
 						else
 						{
@@ -572,16 +573,17 @@ namespace OpenBve
 								Key = "";
 								Value = Lines[i];
 							}
-							switch (Section)
+							
+							switch (currentSection)
 							{
-								case "language":
+								case OptionsSection.Language:
 									switch (Key)
 									{
 										case "code":
 											Interface.CurrentOptions.LanguageCode = Value.Length != 0 ? Value : "en-US";
 											break;
 									} break;
-								case "interface":
+								case OptionsSection.Interface:
 									switch (Key)
 									{
 										case "folder":
@@ -635,7 +637,7 @@ namespace OpenBve
 											}
 											break;
 									} break;
-								case "display":
+								case OptionsSection.Display:
 									switch (Key)
 									{
 										case "prefernativebackend":
@@ -714,7 +716,7 @@ namespace OpenBve
 											Interface.CurrentOptions.UserInterfaceScaleFactor = s;
 											break;
 									} break;
-								case "quality":
+								case OptionsSection.Quality:
 									switch (Key)
 									{
 										case "interpolation":
@@ -800,7 +802,7 @@ namespace OpenBve
 											Interface.CurrentOptions.FPSLimit = limit;
 											break;
 									} break;
-								case "objectoptimization":
+								case OptionsSection.ObjectOptimization:
 									switch (Key)
 									{
 										case "basicthreshold":
@@ -818,7 +820,7 @@ namespace OpenBve
 												Interface.CurrentOptions.ObjectOptimizationVertexCulling = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											} break;
 									} break;
-								case "simulation":
+								case OptionsSection.Simulation:
 									switch (Key)
 									{
 										case "toppling":
@@ -859,7 +861,7 @@ namespace OpenBve
 											Interface.CurrentOptions.EnableBve5ScriptedTrain = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 									} break;
-								case "controls":
+								case OptionsSection.Controls:
 									switch (Key)
 									{
 										case "usejoysticks":
@@ -895,7 +897,7 @@ namespace OpenBve
 											}
 											break;
 									} break;
-								case "sound":
+								case OptionsSection.Sound:
 									switch (Key)
 									{
 										case "model":
@@ -920,7 +922,7 @@ namespace OpenBve
 												Interface.CurrentOptions.SoundNumber = a < 16 ? 16 : a;
 											} break;
 									} break;
-								case "verbosity":
+								case OptionsSection.Verbosity:
 									switch (Key)
 									{
 										case "showwarningmessages":
@@ -933,7 +935,7 @@ namespace OpenBve
 											Interface.CurrentOptions.GenerateDebugLogging = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 									} break;
-								case "folders":
+								case OptionsSection.Folders:
 									switch (Key)
 									{
 										case "route":
@@ -943,7 +945,7 @@ namespace OpenBve
 											Interface.CurrentOptions.TrainFolder = Value;
 											break;
 									} break;
-								case "packages":
+								case OptionsSection.Packages:
 									switch (Key)
 									{
 										case "compression":
@@ -961,19 +963,19 @@ namespace OpenBve
 											}
 											break;
 									} break;
-								case "recentlyusedroutes":
+								case OptionsSection.RecentlyUsedRoutes:
 									{
 										int n = Interface.CurrentOptions.RecentlyUsedRoutes.Length;
 										Array.Resize(ref Interface.CurrentOptions.RecentlyUsedRoutes, n + 1);
 										Interface.CurrentOptions.RecentlyUsedRoutes[n] = Value;
 									} break;
-								case "recentlyusedtrains":
+								case OptionsSection.RecentlyUsedTrains:
 									{
 										int n = Interface.CurrentOptions.RecentlyUsedTrains.Length;
 										Array.Resize(ref Interface.CurrentOptions.RecentlyUsedTrains, n + 1);
 										Interface.CurrentOptions.RecentlyUsedTrains[n] = Value;
 									} break;
-								case "routeencodings":
+								case OptionsSection.RouteEncodings:
 									{
 										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out int a))
 										{
@@ -996,7 +998,7 @@ namespace OpenBve
 										Interface.CurrentOptions.RouteEncodings[n].Codepage = a;
 										Interface.CurrentOptions.RouteEncodings[n].Value = Value;
 									} break;
-								case "trainencodings":
+								case OptionsSection.TrainEncodings:
 									{
 										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out int a))
 										{
@@ -1019,13 +1021,13 @@ namespace OpenBve
 										Interface.CurrentOptions.TrainEncodings[n].Codepage = a;
 										Interface.CurrentOptions.TrainEncodings[n].Value = Value;
 									} break;
-								case "enableinputdeviceplugins":
+								case OptionsSection.EnableInputDevicePlugins:
 									{
 										int n = Interface.CurrentOptions.EnableInputDevicePlugins.Length;
 										Array.Resize(ref Interface.CurrentOptions.EnableInputDevicePlugins, n + 1);
 										Interface.CurrentOptions.EnableInputDevicePlugins[n] = Value;
 									} break;
-								case "parsers":
+								case OptionsSection.Parsers:
 									switch (Key)
 									{
 										case "xobject":
@@ -1057,7 +1059,7 @@ namespace OpenBve
 											break;
 									}
 									break;
-								case "touch":
+								case OptionsSection.Touch:
 									switch (Key)
 									{
 										case "cursor":

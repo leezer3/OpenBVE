@@ -107,7 +107,7 @@ namespace RouteViewer
 			{
 				// load options
 				string[] Lines = File.ReadAllLines(configFile, new System.Text.UTF8Encoding());
-				string Section = "";
+				OptionsSection currentSection = OptionsSection.Unknown;
 				for (int i = 0; i < Lines.Length; i++)
 				{
 					Lines[i] = Lines[i].Trim(new char[] { });
@@ -116,7 +116,7 @@ namespace RouteViewer
 						if (Lines[i].StartsWith("[", StringComparison.Ordinal) &
 							Lines[i].EndsWith("]", StringComparison.Ordinal))
 						{
-							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { }).ToLowerInvariant();
+							Enum.TryParse(Lines[i].TrimStart('[').TrimEnd(']').Replace(" ", string.Empty), true, out currentSection);
 						}
 						else
 						{
@@ -132,9 +132,9 @@ namespace RouteViewer
 								Key = "";
 								Value = Lines[i];
 							}
-							switch (Section)
+							switch (currentSection)
 							{
-								case "display":
+								case OptionsSection.Display:
 									switch (Key)
 									{
 										case "vsync":
@@ -184,7 +184,7 @@ namespace RouteViewer
 											break;
 									}
 									break;
-								case "quality":
+								case OptionsSection.Quality:
 									switch (Key)
 									{
 										case "interpolation":
@@ -232,7 +232,7 @@ namespace RouteViewer
 											break;
 									}
 									break;
-								case "loading":
+								case OptionsSection.Loading:
 									switch (Key)
 									{
 										case "showlogo":
@@ -247,7 +247,7 @@ namespace RouteViewer
 
 									}
 									break;
-								case "parsers":
+								case OptionsSection.Parsers:
 									switch (Key)
 									{
 										case "xobject":
@@ -276,7 +276,7 @@ namespace RouteViewer
 											}
 									}
 									break;
-								case "folders":
+								case OptionsSection.Folders:
 									switch (Key)
 									{
 										case "routesearch":

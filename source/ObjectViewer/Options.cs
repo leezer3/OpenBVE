@@ -160,7 +160,7 @@ namespace ObjectViewer
 			{
 				// load options
 				string[] Lines = File.ReadAllLines(configFile, new System.Text.UTF8Encoding());
-				string Section = "";
+				OptionsSection currentSection = OptionsSection.Unknown;
 				for (int i = 0; i < Lines.Length; i++)
 				{
 					Lines[i] = Lines[i].Trim(new char[] { });
@@ -169,7 +169,7 @@ namespace ObjectViewer
 						if (Lines[i].StartsWith("[", StringComparison.Ordinal) &
 							Lines[i].EndsWith("]", StringComparison.Ordinal))
 						{
-							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { }).ToLowerInvariant();
+							Enum.TryParse(Lines[i].TrimStart('[').TrimEnd(']').Replace(" ", string.Empty), true, out currentSection);
 						}
 						else
 						{
@@ -185,9 +185,9 @@ namespace ObjectViewer
 								Key = "";
 								Value = Lines[i];
 							}
-							switch (Section)
+							switch (currentSection)
 							{
-								case "display":
+								case OptionsSection.Display:
 									switch (Key)
 									{
 										case "windowwidth":
@@ -213,7 +213,7 @@ namespace ObjectViewer
 											break;
 									}
 									break;
-								case "quality":
+								case OptionsSection.Quality:
 									switch (Key)
 									{
 										case "interpolation":
@@ -261,7 +261,7 @@ namespace ObjectViewer
 											break;
 									}
 									break;
-								case "parsers":
+								case OptionsSection.Parsers:
 									switch (Key)
 									{
 										case "xobject":
@@ -285,7 +285,7 @@ namespace ObjectViewer
 											break;
 									}
 									break;
-								case "objectoptimization":
+								case OptionsSection.ObjectOptimization:
 									switch (Key)
 									{
 										case "mode":
@@ -298,7 +298,7 @@ namespace ObjectViewer
 											break;
 									}
 									break;
-								case "folders":
+								case OptionsSection.Folders:
 									switch (Key)
 									{
 										case "objectsearch":
@@ -309,7 +309,7 @@ namespace ObjectViewer
 											break;
 									}
 									break;
-								case "keys":
+								case OptionsSection.Keys:
 									switch (Key)
 									{
 										case "left":
