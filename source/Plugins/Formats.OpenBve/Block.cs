@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
@@ -101,6 +102,14 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
+	    /// <summary>Uncondtionally reads the next indexed encoding from the block</summary>
+	    public virtual bool GetIndexedEncoding(out TextEncoding.Encoding e, out string path)
+	    {
+		    e = TextEncoding.Encoding.Unknown;
+		    path = string.Empty;
+			return false;
+	    }
+
 		/// <summary>Reads the specified string from the block, preserving the prior value if not present</summary>
 		public virtual bool TryGetValue(T2 key, ref string value)
 	    {
@@ -177,6 +186,13 @@ namespace Formats.OpenBve
 			Color = Color32.Black;
 			return false;
 		}
+
+		public virtual bool GetNextRawValue(out string s)
+		{
+			s = string.Empty;
+			return false;
+		}
+
 
 		protected Block(int myIndex, T1 myKey, HostInterface host)
 		{

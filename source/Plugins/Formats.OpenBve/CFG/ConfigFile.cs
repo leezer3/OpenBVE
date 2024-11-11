@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using OpenBveApi;
 using Path = OpenBveApi.Path;
 
 namespace Formats.OpenBve
@@ -168,6 +169,8 @@ namespace Formats.OpenBve
 		private readonly Dictionary<T2, KeyValuePair<int, string>> keyValuePairs;
 
 		private readonly Dictionary<int, KeyValuePair<int, string>> indexedValues;
+
+		private readonly Queue<string> rawValues;
 		public override Block<T1, T2> ReadNextBlock()
 		{
 			currentHost.AddMessage(MessageType.Error, false, "A section in a CFG file cannot contain sub-blocks.");
@@ -181,12 +184,13 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-		public override int RemainingDataValues => keyValuePairs.Count + indexedValues.Count;
+		public override int RemainingDataValues => keyValuePairs.Count + indexedValues.Count + rawValues.Count;
 
 		internal ConfigSection(int myIndex, int startingLine, T1 myKey, string[] myLines, HostInterface Host) : base(myIndex, myKey, Host)
 		{
 			keyValuePairs = new Dictionary<T2, KeyValuePair<int, string>>();
 			indexedValues = new Dictionary<int, KeyValuePair<int, string>>();
+			rawValues = new Queue<string>();
 			for (int i = 0; i < myLines.Length; i++)
 			{
 				int j = myLines[i].IndexOf("=", StringComparison.Ordinal);
@@ -222,6 +226,13 @@ namespace Formats.OpenBve
 					else
 					{
 						currentHost.AddMessage(MessageType.Error, false, "Unknown Key " + a + " encountered in Section " + myKey + " at Line " + i + startingLine);
+					}
+				}
+				else
+				{
+					if (!string.IsNullOrEmpty(myLines[i]))
+					{
+						rawValues.Enqueue(myLines[i]);
 					}
 				}
 			}
@@ -657,6 +668,39 @@ namespace Formats.OpenBve
 			}
 			
 			enumValue = default;
+			return false;
+		}
+
+		public override bool GetIndexedEncoding(out TextEncoding.Encoding e, out string path)
+		{
+			if (indexedValues.Count > 0)
+			{
+				int encodingIdx = indexedValues.ElementAt(0).Key;
+				KeyValuePair<int, string> value = indexedValues.ElementAt(0).Value;
+				indexedValues.Remove(encodingIdx);
+				
+				if (File.Exists(value.Value))
+				{
+					path = value.Value;
+					e = (TextEncoding.Encoding)encodingIdx;
+					return true;
+				}
+			}
+
+			e = TextEncoding.Encoding.Unknown;
+			path = string.Empty;
+			return false;
+		}
+
+		public override bool GetNextRawValue(out string s)
+		{
+			if (rawValues.Count > 0)
+			{
+				s = rawValues.Dequeue();
+				return true;
+			}
+
+			s = string.Empty;
 			return false;
 		}
 	}

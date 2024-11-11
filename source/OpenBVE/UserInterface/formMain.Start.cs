@@ -520,14 +520,14 @@ namespace OpenBve
 					{
 						if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile)
 						{
-							Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
+							Interface.CurrentOptions.RouteEncodings[j].Codepage = (TextEncoding.Encoding)EncodingCodepages[i];
 							break;
 						}
 					}
 					if (j == Interface.CurrentOptions.RouteEncodings.Length)
 					{
 						Array.Resize(ref Interface.CurrentOptions.RouteEncodings, j + 1);
-						Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
+						Interface.CurrentOptions.RouteEncodings[j].Codepage = (TextEncoding.Encoding)EncodingCodepages[i];
 						Interface.CurrentOptions.RouteEncodings[j].Value = Result.RouteFile;
 					}
 				}
@@ -1056,12 +1056,12 @@ namespace OpenBve
 						// add to cache
 						int j; for (j = 0; j < Interface.CurrentOptions.TrainEncodings.Length; j++) {
 							if (Interface.CurrentOptions.TrainEncodings[j].Value == Result.TrainFolder) {
-								Interface.CurrentOptions.TrainEncodings[j].Codepage = EncodingCodepages[i];
+								Interface.CurrentOptions.TrainEncodings[j].Codepage = (TextEncoding.Encoding)EncodingCodepages[i];
 								break;
 							}
 						} if (j == Interface.CurrentOptions.TrainEncodings.Length) {
 							Array.Resize(ref Interface.CurrentOptions.TrainEncodings, j + 1);
-							Interface.CurrentOptions.TrainEncodings[j].Codepage = EncodingCodepages[i];
+							Interface.CurrentOptions.TrainEncodings[j].Codepage = (TextEncoding.Encoding)EncodingCodepages[i];
 							Interface.CurrentOptions.TrainEncodings[j].Value = Result.TrainFolder;
 						}
 					}
@@ -1385,7 +1385,7 @@ namespace OpenBve
 						int j;
 						for (j = 1; j < EncodingCodepages.Length; j++)
 						{
-							if (EncodingCodepages[j] == Interface.CurrentOptions.RouteEncodings[i].Codepage)
+							if ((TextEncoding.Encoding)EncodingCodepages[j] == Interface.CurrentOptions.RouteEncodings[i].Codepage)
 							{
 								comboboxRouteEncoding.SelectedIndex = j;
 								Result.RouteEncoding = Encoding.GetEncoding(EncodingCodepages[j]);
@@ -1458,7 +1458,7 @@ namespace OpenBve
 									int j;
 									for (j = 1; j < EncodingCodepages.Length; j++)
 									{
-										if (EncodingCodepages[j] == Interface.CurrentOptions.TrainEncodings[k].Codepage)
+										if ((TextEncoding.Encoding)EncodingCodepages[j] == Interface.CurrentOptions.TrainEncodings[k].Codepage)
 										{
 											comboboxTrainEncoding.SelectedIndex = j;
 											Result.TrainEncoding = Encoding.GetEncoding(EncodingCodepages[j]);

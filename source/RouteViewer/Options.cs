@@ -123,8 +123,9 @@ namespace RouteViewer
 						case OptionsSection.Quality:
 							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);
 							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref Interface.CurrentOptions.AnisotropicFilteringLevel);
-							block.TryGetValue(OptionsKey.AntialisingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
+							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
 							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
+							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance);
 							break;
 						case OptionsSection.Loading:
 							block.GetValue(OptionsKey.ShowLogo, out Interface.CurrentOptions.LoadingLogo);

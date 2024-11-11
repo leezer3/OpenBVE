@@ -35,7 +35,8 @@ namespace OpenBveApi
 		// Quality
 		Interpolation,
 		AnisotropicFilteringLevel,
-		AntialisingLevel,
+		AnisotropicFilteringMaximum,
+		AntiAliasingLevel,
 		TransparencyMode,
 		OldTransparencyMode,
 		MotionBlur,

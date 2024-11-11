@@ -239,7 +239,7 @@ namespace OpenBve {
 									result.TrainEncoding = System.Text.Encoding.UTF8;
 									for (int j = 0; j < Interface.CurrentOptions.TrainEncodings.Length; j++) {
 										if (string.Compare(Interface.CurrentOptions.TrainEncodings[j].Value, result.TrainFolder, StringComparison.InvariantCultureIgnoreCase) == 0) {
-											result.TrainEncoding = System.Text.Encoding.GetEncoding(Interface.CurrentOptions.TrainEncodings[j].Codepage);
+											result.TrainEncoding = System.Text.Encoding.GetEncoding((int)Interface.CurrentOptions.TrainEncodings[j].Codepage);
 											break;
 										}
 									}
