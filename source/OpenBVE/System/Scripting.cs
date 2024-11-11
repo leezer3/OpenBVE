@@ -33,7 +33,7 @@ namespace OpenBve
                         int a = Program.CurrentRoute.Sections[nextSectionIndex].CurrentAspect;
                         if (a >= 0 & a < Program.CurrentRoute.Sections[nextSectionIndex].Aspects.Length)
                         {
-                            return Program.CurrentRoute.Sections[nextSectionIndex].Aspects[a].Number;
+                            return Program.CurrentRoute.Sections[nextSectionIndex].Aspects[a].AspectNumber;
                         }
                         return 0;
                     }
@@ -43,7 +43,7 @@ namespace OpenBve
                     int a = Program.CurrentRoute.Sections[SectionIndex].CurrentAspect;
                     if (a >= 0 & a < Program.CurrentRoute.Sections[SectionIndex].Aspects.Length)
                     {
-                        return Program.CurrentRoute.Sections[SectionIndex].Aspects[a].Number;
+                        return Program.CurrentRoute.Sections[SectionIndex].Aspects[a].AspectNumber;
                     }
                 }
                 return 0;

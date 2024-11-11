@@ -41,14 +41,14 @@ namespace RouteViewer
 			}
 		}
 
-		public override void AddMessage(MessageType type, bool FileNotFound, string text)
+		public override void AddMessage(MessageType type, bool fileNotFound, string text)
 		{
-			Interface.AddMessage(type, FileNotFound, text);
+			Interface.AddMessage(type, fileNotFound, text);
 		}
 
-		public override void AddMessage(object Message)
+		public override void AddMessage(object message)
 		{
-			MessageManager.AddMessage((AbstractMessage)Message);
+			MessageManager.AddMessage((AbstractMessage)message);
 		}
 
 		// --- texture ---
@@ -186,9 +186,9 @@ namespace RouteViewer
 			return false;
 		}
 
-		public override bool LoadTexture(ref Texture Texture, OpenGlTextureWrapMode wrapMode)
+		public override bool LoadTexture(ref Texture texture, OpenGlTextureWrapMode wrapMode)
 		{
-			return Program.Renderer.TextureManager.LoadTexture(ref Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
+			return Program.Renderer.TextureManager.LoadTexture(ref texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 		}
 		
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false, int timeout = 1000) {
@@ -319,16 +319,16 @@ namespace RouteViewer
 			return true;
 		}
 
-		public override bool LoadStaticObject(string path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
+		public override bool LoadStaticObject(string path, System.Text.Encoding encoding, bool preserveVertices, out StaticObject @object)
 		{
-			if (base.LoadStaticObject(path, Encoding, PreserveVertices, out Object))
+			if (base.LoadStaticObject(path, encoding, preserveVertices, out @object))
 			{
 				return true;
 			}
 
 			if (File.Exists(path) || Directory.Exists(path))
 			{
-				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
+				encoding = TextEncoding.GetSystemEncodingFromFile(path, encoding);
 
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
@@ -340,17 +340,17 @@ namespace RouteViewer
 							{
 								try
 								{
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out var unifiedObject))
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, encoding, out var unifiedObject))
 									{
 										if (unifiedObject is StaticObject staticObject)
 										{
-											staticObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
-											Object = staticObject;
-											StaticObjectCache.Add(ValueTuple.Create(path, PreserveVertices, File.GetLastWriteTime(path)), Object);
+											staticObject.OptimizeObject(preserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
+											@object = staticObject;
+											StaticObjectCache.Add(ValueTuple.Create(path, preserveVertices, File.GetLastWriteTime(path)), @object);
 											return true;
 										}
 
-										Object = null;
+										@object = null;
 										// may be trying to load in different places, so leave
 										Interface.AddMessage(MessageType.Error, false, "Attempted to load " + path + " which is an animated object where only static objects are allowed.");
 									}
@@ -384,20 +384,20 @@ namespace RouteViewer
 			{
 				ReportProblem(ProblemType.PathNotFound, path);
 			}
-			Object = null;
+			@object = null;
 			return false;
 		}
 
-		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
+		public override bool LoadObject(string path, System.Text.Encoding encoding, out UnifiedObject @object)
 		{
-			if (base.LoadObject(path, Encoding, out Object))
+			if (base.LoadObject(path, encoding, out @object))
 			{
 				return true;
 			}
 
 			if (File.Exists(path) || Directory.Exists(path))
 			{
-				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
+				encoding = TextEncoding.GetSystemEncodingFromFile(path, encoding);
 
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
@@ -409,22 +409,22 @@ namespace RouteViewer
 							{
 								try
 								{
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out UnifiedObject obj))
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, encoding, out UnifiedObject obj))
 									{
 										if (obj == null)
 										{
 											continue;
 										}
 										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
-										Object = obj;
+										@object = obj;
 
-										if (Object is StaticObject staticObject)
+										if (@object is StaticObject staticObject)
 										{
 											StaticObjectCache.Add(ValueTuple.Create(path, false, File.GetLastWriteTime(path)), staticObject);
 											return true;
 										}
 
-										if (Object is AnimatedObjectCollection aoc)
+										if (@object is AnimatedObjectCollection aoc)
 										{
 											AnimatedObjectCollectionCache.Add(path, aoc);
 										}
@@ -473,23 +473,23 @@ namespace RouteViewer
 			{
 				ReportProblem(ProblemType.PathNotFound, path);
 			}
-			Object = null;
+			@object = null;
 			return false;
 		}
 
-		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
+		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, AbstractTrain train, int carIndex, Vector3 position, double trackPosition, int sectionIndex, bool isPartOfTrain, double timeElapsed, int currentState)
 		{
-			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, carIndex, position, trackPosition, sectionIndex, isPartOfTrain, timeElapsed, currentState);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
+		public override int CreateStaticObject(StaticObject prototype, Vector3 position, Transformation worldTransformation, Transformation localTransformation, double accurateObjectDisposalZOffset, double startingDistance, double endingDistance, double trackPosition, double brightness)
 		{
-			return Program.Renderer.CreateStaticObject(Prototype, Position, WorldTransformation, LocalTransformation, Program.CurrentRoute.AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, Program.CurrentRoute.BlockLength, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(prototype, position, worldTransformation, localTransformation, Program.CurrentRoute.AccurateObjectDisposal, accurateObjectDisposalZOffset, startingDistance, endingDistance, Program.CurrentRoute.BlockLength, trackPosition, brightness);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
+		public override int CreateStaticObject(StaticObject prototype, Vector3 position, Transformation localTransformation, Matrix4D rotate, Matrix4D translate, double accurateObjectDisposalZOffset, double startingDistance, double endingDistance, double trackPosition, double brightness)
 		{
-			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, Program.CurrentRoute.AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, Program.CurrentRoute.BlockLength, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(position, prototype, localTransformation, rotate, translate, Program.CurrentRoute.AccurateObjectDisposal, accurateObjectDisposalZOffset, startingDistance, endingDistance, Program.CurrentRoute.BlockLength, trackPosition, brightness);
 		}
 
 		public override void CreateDynamicObject(ref ObjectState internalObject)
@@ -547,11 +547,11 @@ namespace RouteViewer
 		// ReSharper disable once CoVariantArrayConversion
 		public override AbstractTrain[] Trains => Program.TrainManager.Trains;
 
-		public override AbstractTrain ClosestTrain(AbstractTrain Train)
+		public override AbstractTrain ClosestTrain(AbstractTrain train)
 		{
 			AbstractTrain closestTrain = null;
 			double bestLocation = double.MaxValue;
-			if(Train is TrainBase baseTrain)
+			if(train is TrainBase baseTrain)
 			{
 				for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
 				{
@@ -570,7 +570,7 @@ namespace RouteViewer
 			return closestTrain;
 		}
 
-		public override AbstractTrain ClosestTrain(double TrackPosition)
+		public override AbstractTrain ClosestTrain(double trackPosition)
 		{
 			AbstractTrain closestTrain = null;
 			double trainDistance = double.MaxValue;
@@ -579,13 +579,13 @@ namespace RouteViewer
 				if (Program.TrainManager.Trains[j].State == TrainState.Available)
 				{
 					double distance;
-					if (Program.TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
+					if (Program.TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < trackPosition)
 					{
-						distance = TrackPosition - Program.TrainManager.Trains[j].Cars[0].TrackPosition;
+						distance = trackPosition - Program.TrainManager.Trains[j].Cars[0].TrackPosition;
 					}
-					else if (Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > TrackPosition)
+					else if (Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > trackPosition)
 					{
-						distance = Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - TrackPosition;
+						distance = Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - trackPosition;
 					}
 					else
 					{

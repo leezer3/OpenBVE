@@ -6,13 +6,11 @@ using System.IO;
 using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Hosts;
-using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
-using RouteManager2.Tracks;
 
 namespace RouteManager2
 {

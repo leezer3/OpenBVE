@@ -142,10 +142,10 @@ namespace RouteManager2
 		}
 
 		/// <summary>Updates the specified signal section</summary>
-		/// <param name="SectionIndex"></param>
-		public void UpdateSection(int SectionIndex)
+		/// <param name="sectionIndex"></param>
+		public void UpdateSection(int sectionIndex)
 		{
-			UpdateSection(Sections[SectionIndex], out Section nextSectionToUpdate);
+			UpdateSection(Sections[sectionIndex], out Section nextSectionToUpdate);
 			while (nextSectionToUpdate != null)
 			{
 				UpdateSection(nextSectionToUpdate, out nextSectionToUpdate);
@@ -153,31 +153,31 @@ namespace RouteManager2
 		}
 
 		/// <summary>Updates the specified signal section</summary>
-		/// <param name="Section"></param>
-		/// <param name="PreviousSection"></param>
-		public void UpdateSection(Section Section, out Section PreviousSection)
+		/// <param name="section"></param>
+		/// <param name="previousSection"></param>
+		public void UpdateSection(Section section, out Section previousSection)
 		{
-			if (Section == null)
+			if (section == null)
 			{
-				PreviousSection = null;
+				previousSection = null;
 				return;
 			}
 
-			double timeElapsed = SecondsSinceMidnight - Section.LastUpdate;
-			Section.LastUpdate = SecondsSinceMidnight;
+			double timeElapsed = SecondsSinceMidnight - section.LastUpdate;
+			section.LastUpdate = SecondsSinceMidnight;
 
 			// preparations
 			int zeroAspect = 0;
 			bool setToRed = false;
 
-			if (Section.Type == SectionType.ValueBased)
+			if (section.Type == SectionType.ValueBased)
 			{
 				// value-based
 				zeroAspect = 0;
 
-				for (int i = 1; i < Section.Aspects.Length; i++)
+				for (int i = 1; i < section.Aspects.Length; i++)
 				{
-					if (Section.Aspects[i].Number < Section.Aspects[zeroAspect].Number)
+					if (section.Aspects[i].Number < section.Aspects[zeroAspect].Number)
 					{
 						zeroAspect = i;
 					}
@@ -185,12 +185,12 @@ namespace RouteManager2
 			}
 			
 			// hold station departure signal at red
-			int d = Section.StationIndex;
+			int d = section.StationIndex;
 
 			if (d >= 0)
 			{
 				// look for train in previous blocks
-				Section l = Section.PreviousSection;
+				Section l = section.PreviousSection;
 				AbstractTrain train = null;
 
 				while (true)
@@ -232,7 +232,7 @@ namespace RouteManager2
 				// set to red where applicable
 				if (train != null)
 				{
-					if (!Section.TrainReachedStopPoint)
+					if (!section.TrainReachedStopPoint)
 					{
 						if (train.Station == d)
 						{
@@ -245,12 +245,12 @@ namespace RouteManager2
 
 								if (p0 >= p1)
 								{
-									Section.TrainReachedStopPoint = true;
+									section.TrainReachedStopPoint = true;
 								}
 							}
 							else
 							{
-								Section.TrainReachedStopPoint = true;
+								section.TrainReachedStopPoint = true;
 							}
 						}
 					}
@@ -270,20 +270,20 @@ namespace RouteManager2
 					{
 						if (train.LastStation == d - 1 || train.Station == d)
 						{
-							if (Section.RedTimer == -1)
+							if (section.RedTimer == -1)
 							{
-								Section.RedTimer = 30;
+								section.RedTimer = 30;
 							}
 							else
 							{
-								Section.RedTimer -= timeElapsed;
+								section.RedTimer -= timeElapsed;
 							}
 
-							setToRed = !(Section.RedTimer <= 0);
+							setToRed = !(section.RedTimer <= 0);
 						}
 						else
 						{
-							Section.RedTimer = -1;
+							section.RedTimer = -1;
 						}
 					}
 
@@ -295,7 +295,7 @@ namespace RouteManager2
 					{
 						setToRed = true;
 					}
-					else if (!Section.TrainReachedStopPoint)
+					else if (!section.TrainReachedStopPoint)
 					{
 						setToRed = true;
 					}
@@ -307,7 +307,7 @@ namespace RouteManager2
 			}
 
 			// train in block
-			if (!Section.IsFree())
+			if (!section.IsFree())
 			{
 				setToRed = true;
 			}
@@ -317,38 +317,38 @@ namespace RouteManager2
 
 			if (setToRed)
 			{
-				Section.FreeSections = 0;
+				section.FreeSections = 0;
 				newAspect = zeroAspect;
 			}
 			else
 			{
-				Section n = Section.NextSection;
+				Section n = section.NextSection;
 
 				if (n != null)
 				{
 					if (n.FreeSections == -1)
 					{
-						Section.FreeSections = -1;
+						section.FreeSections = -1;
 					}
 					else
 					{
-						Section.FreeSections = n.FreeSections + 1;
+						section.FreeSections = n.FreeSections + 1;
 					}
 				}
 				else
 				{
-					Section.FreeSections = -1;
+					section.FreeSections = -1;
 				}
 			}
 
 			// change aspect
 			if (newAspect == -1)
 			{
-				if (Section.Type == SectionType.ValueBased)
+				if (section.Type == SectionType.ValueBased)
 				{
 					// value-based
-					Section n = Section.NextSection;
-					int a = Section.Aspects.Last().Number;
+					Section n = section.NextSection;
+					int a = section.Aspects.Last().Number;
 
 					if (n != null && n.CurrentAspect >= 0)
 					{
@@ -356,9 +356,9 @@ namespace RouteManager2
 						a = n.Aspects[n.CurrentAspect].Number;
 					}
 
-					for (int i = Section.Aspects.Length - 1; i >= 0; i--)
+					for (int i = section.Aspects.Length - 1; i >= 0; i--)
 					{
-						if (Section.Aspects[i].Number > a)
+						if (section.Aspects[i].Number > a)
 						{
 							newAspect = i;
 						}
@@ -366,28 +366,28 @@ namespace RouteManager2
 
 					if (newAspect == -1)
 					{
-						newAspect = Section.Aspects.Length - 1;
+						newAspect = section.Aspects.Length - 1;
 					}
 				}
 				else
 				{
 					// index-based
-					if (Section.FreeSections >= 0 & Section.FreeSections < Section.Aspects.Length)
+					if (section.FreeSections >= 0 & section.FreeSections < section.Aspects.Length)
 					{
-						newAspect = Section.FreeSections;
+						newAspect = section.FreeSections;
 					}
 					else
 					{
-						newAspect = Section.Aspects.Length - 1;
+						newAspect = section.Aspects.Length - 1;
 					}
 				}
 			}
 
 			// apply new aspect
-			Section.CurrentAspect = newAspect;
+			section.CurrentAspect = newAspect;
 
 			// update previous section
-			PreviousSection = Section.PreviousSection;
+			previousSection = section.PreviousSection;
 		}
 
 		/// <summary>Gets the next section from the specified track position</summary>
@@ -427,14 +427,14 @@ namespace RouteManager2
 		}
 
 		/// <summary>Updates the currently displayed background</summary>
-		/// <param name="TimeElapsed">The time elapsed since the previous call to this function</param>
-		/// <param name="GamePaused">Whether the game is currently paused</param>
-		public void UpdateBackground(double TimeElapsed, bool GamePaused)
+		/// <param name="timeElapsed">The time elapsed since the previous call to this function</param>
+		/// <param name="gamePaused">Whether the game is currently paused</param>
+		public void UpdateBackground(double timeElapsed, bool gamePaused)
 		{
-			if (GamePaused)
+			if (gamePaused)
 			{
 				//Don't update the transition whilst paused
-				TimeElapsed = 0.0;
+				timeElapsed = 0.0;
 			}
 
 			const float scale = 0.5f;
@@ -463,7 +463,7 @@ namespace RouteManager2
 			}
 
 			//Update the currently displayed background
-			CurrentBackground.UpdateBackground(SecondsSinceMidnight, TimeElapsed, false);
+			CurrentBackground.UpdateBackground(SecondsSinceMidnight, timeElapsed, false);
 
 			if (TargetBackground == null || TargetBackground == CurrentBackground)
 			{
@@ -475,10 +475,10 @@ namespace RouteManager2
 			//Update the target background
 			if (TargetBackground is StaticBackground)
 			{
-				TargetBackground.Countdown += TimeElapsed;
+				TargetBackground.Countdown += timeElapsed;
 			}
 
-			TargetBackground.UpdateBackground(SecondsSinceMidnight, TimeElapsed, true);
+			TargetBackground.UpdateBackground(SecondsSinceMidnight, timeElapsed, true);
 
 			switch (TargetBackground.Mode)
 			{

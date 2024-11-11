@@ -58,7 +58,7 @@ namespace RouteManager2.Events
 
 							if (a >= 0)
 							{
-								if (currentRoute.Sections[s].Aspects[a].Number == 0)
+								if (currentRoute.Sections[s].Aspects[a].AspectNumber == 0)
 								{
 									break;
 								}

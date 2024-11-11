@@ -29,9 +29,9 @@ namespace RouteManager2.MessageManager.MessageTypes
 		/// <summary>The size</summary>
 		public Vector2 Size = Vector2.Null;
 
-		public TextureMessage(HostInterface Host)
+		public TextureMessage(HostInterface host)
 		{
-			currentHost = Host;
+			currentHost = host;
 			Timeout = 10000;
 			TriggerOnce = true;
 			Direction = MessageDirection.Forwards;
