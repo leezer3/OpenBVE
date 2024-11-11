@@ -103,13 +103,13 @@ namespace OpenBve
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(currentFile))
 				{
 					// ReSharper disable once RedundantCast
-					object Route = (object)Program.CurrentRoute; // must cast to allow us to use the ref keyword correctly.
-					string RailwayFolder = Loading.GetRailwayFolder(currentFile);
-					string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
-					string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
-					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(currentFile, RouteEncoding, null, ObjectFolder, SoundFolder, true, ref Route))
+					object route = (object)Program.CurrentRoute; // must cast to allow us to use the ref keyword correctly.
+					string railwayFolder = Loading.GetRailwayFolder(currentFile);
+					string objectFolder = Path.CombineDirectory(railwayFolder, "Object");
+					string soundFolder = Path.CombineDirectory(railwayFolder, "Sound");
+					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(currentFile, RouteEncoding, null, objectFolder, soundFolder, true, ref route))
 					{
-						Program.CurrentRoute = (CurrentRoute) Route;
+						Program.CurrentRoute = (CurrentRoute) route;
 					}
 					else
 					{
@@ -193,8 +193,8 @@ namespace OpenBve
 				routePictureBox.Texture = routeImageTexture;
 
 				// description
-				string Description = Program.CurrentRoute.Comment.ConvertNewlinesToCrLf();
-				routeDescriptionBox.Text = Description.Length != 0 ? Description : System.IO.Path.GetFileNameWithoutExtension(currentFile);
+				string routeDescription = Program.CurrentRoute.Comment.ConvertNewlinesToCrLf();
+				routeDescriptionBox.Text = routeDescription.Length != 0 ? routeDescription : System.IO.Path.GetFileNameWithoutExtension(currentFile);
 			}
 			catch (Exception ex)
 			{

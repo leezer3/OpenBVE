@@ -174,7 +174,7 @@ namespace OpenBve
 						Game.Menu.ProcessMouseDown(e.X, e.Y);
 						break;
 					case InterfaceType.SwitchChangeMap:
-						Game.switchChangeDialog.ProcessMouseDown(e.X, e.Y);
+						Game.SwitchChangeDialog.ProcessMouseDown(e.X, e.Y);
 						break;
 				}
 			}
@@ -211,7 +211,7 @@ namespace OpenBve
 					Game.Menu.ProcessMouseMove(e.X, e.Y);
 					break;
 				case InterfaceType.SwitchChangeMap:
-					Game.switchChangeDialog.ProcessMouseMove(e.X, e.Y);
+					Game.SwitchChangeDialog.ProcessMouseMove(e.X, e.Y);
 					break;
 			}
 		}

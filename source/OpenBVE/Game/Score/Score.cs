@@ -15,7 +15,7 @@ namespace OpenBve
 		internal static Score CurrentScore = new Score();
 
 		/// <summary>The score class</summary>
-		internal class Score
+		internal partial class Score
 		{
 			/// <summary>The current total score</summary>
 			internal int CurrentValue;
@@ -36,8 +36,8 @@ namespace OpenBve
 			internal double PassengerTimer;
 
 			/// <summary>This method should be called once a frame to update the player's score</summary>
-			/// <param name="TimeElapsed">The time elapsed since this function was last called</param>
-			internal void Update(double TimeElapsed)
+			/// <param name="timeElapsed">The time elapsed since this function was last called</param>
+			internal void Update(double timeElapsed)
 			{
 				if (TrainManager.PlayerTrain == null)
 				{
@@ -90,11 +90,11 @@ namespace OpenBve
 					}
 					if (bad)
 					{
-						OpenedDoorsCounter += (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) + 0.25) * TimeElapsed;
+						OpenedDoorsCounter += (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) + 0.25) * timeElapsed;
 					}
 					else if (OpenedDoorsCounter != 0.0)
 					{
-						int x = (int)Math.Ceiling(ScoreFactorOpenedDoors * OpenedDoorsCounter);
+						int x = (int)Math.Ceiling(FactorOpenedDoors * OpenedDoorsCounter);
 						CurrentValue += x;
 						if (x != 0)
 						{
@@ -110,11 +110,11 @@ namespace OpenBve
 				double a = Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) - 0.277777777777778;
 				if (a > n)
 				{
-					OverspeedCounter += (a - n) * TimeElapsed;
+					OverspeedCounter += (a - n) * timeElapsed;
 				}
 				else if (OverspeedCounter != 0.0)
 				{
-					int x = (int)Math.Ceiling(ScoreFactorOverspeed * OverspeedCounter);
+					int x = (int)Math.Ceiling(FactorOverspeed * OverspeedCounter);
 					CurrentValue += x;
 					if (x != 0)
 					{
@@ -135,11 +135,11 @@ namespace OpenBve
 					}
 					if (q)
 					{
-						TopplingCounter += TimeElapsed;
+						TopplingCounter += timeElapsed;
 					}
 					else if (TopplingCounter != 0.0)
 					{
-						int x = (int)Math.Ceiling(ScoreFactorToppling * TopplingCounter);
+						int x = (int)Math.Ceiling(FactorToppling * TopplingCounter);
 						CurrentValue += x;
 						if (x != 0)
 						{
@@ -162,7 +162,7 @@ namespace OpenBve
 					}
 					if (q)
 					{
-						int x = ScoreValueDerailment;
+						int x = ValueDerailment;
 						if (CurrentValue > 0) x -= CurrentValue;
 						CurrentValue += x;
 						if (x != 0)
@@ -178,7 +178,7 @@ namespace OpenBve
 					{
 						if (!RedSignal)
 						{
-							int x = ScoreValueRedSignal;
+							int x = ValueRedSignal;
 							CurrentValue += x;
 							AddScore(x, ScoreTextToken.PassedRedSignal, 5.0);
 							RedSignal = true;
@@ -199,7 +199,7 @@ namespace OpenBve
 							if (j == 0 || Program.CurrentRoute.Stations[j - 1].Type != StationType.ChangeEnds && Program.CurrentRoute.Stations[j - 1].Type != StationType.Jump)
 							{
 								// arrival
-								int xa = ScoreValueStationArrival;
+								int xa = ValueStationArrival;
 								CurrentValue += xa;
 								AddScore(xa, ScoreTextToken.ArrivedAtStation, 10.0);
 								// early/late
@@ -209,13 +209,13 @@ namespace OpenBve
 									double d = Program.CurrentRoute.SecondsSinceMidnight - Program.CurrentRoute.Stations[j].ArrivalTime;
 									if (d >= -5.0 & d <= 0.0)
 									{
-										xb = ScoreValueStationPerfectTime;
+										xb = ValueStationPerfectTime;
 										CurrentValue += xb;
 										AddScore(xb, ScoreTextToken.PerfectTimeBonus, 10.0);
 									}
 									else if (d > 0.0)
 									{
-										xb = (int)Math.Ceiling(ScoreFactorStationLate * (d - 1.0));
+										xb = (int)Math.Ceiling(FactorStationLate * (d - 1.0));
 										CurrentValue += xb;
 										if (xb != 0)
 										{
@@ -250,7 +250,7 @@ namespace OpenBve
 									}
 									if (r < 0.01)
 									{
-										xc = ScoreValueStationPerfectStop;
+										xc = ValueStationPerfectStop;
 										CurrentValue += xc;
 										AddScore(xc, ScoreTextToken.PerfectStopBonus, 10.0);
 									}
@@ -258,7 +258,7 @@ namespace OpenBve
 									{
 										if (r > 1.0) r = 1.0;
 										r = (r - 0.01) * 1.01010101010101;
-										xc = (int)Math.Ceiling(ScoreFactorStationStop * r);
+										xc = (int)Math.Ceiling(FactorStationStop * r);
 										CurrentValue += xc;
 										if (xc != 0)
 										{
@@ -319,7 +319,7 @@ namespace OpenBve
 							double r = TrainManager.PlayerTrain.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight;
 							if (r > 0.0)
 							{
-								int x = (int)Math.Ceiling(ScoreFactorStationDeparture * r);
+								int x = (int)Math.Ceiling(FactorStationDeparture * r);
 								CurrentValue += x;
 								if (x != 0)
 								{
@@ -347,14 +347,14 @@ namespace OpenBve
 				}
 				if (fallenOver & PassengerTimer == 0.0)
 				{
-					int x = ScoreValuePassengerDiscomfort;
+					int x = ValuePassengerDiscomfort;
 					CurrentValue += x;
 					AddScore(x, ScoreTextToken.PassengerDiscomfort, 5.0);
 					PassengerTimer = 5.0;
 				}
 				else
 				{
-					PassengerTimer -= TimeElapsed;
+					PassengerTimer -= timeElapsed;
 					if (PassengerTimer <= 0.0)
 					{
 						PassengerTimer = fallenOver ? 5.0 : 0.0;
@@ -363,26 +363,26 @@ namespace OpenBve
 			}
 
 			/// <summary>Is called by the update function to add a new score event to the log</summary>
-			/// <param name="Value">The value of the score event</param>
-			/// <param name="TextToken">The token type which caused the score event</param>
-			/// <param name="Duration">The duration of the score event (e.g. overspeed)</param>
-			/// <param name="Count">Whether this should be counted as a unique event (NOTE: Scheduled stops are the only case which are not)</param>
-			private void AddScore(int Value, ScoreTextToken TextToken, double Duration, bool Count = true)
+			/// <param name="scoreValue">The value of the score event</param>
+			/// <param name="textToken">The token type which caused the score event</param>
+			/// <param name="scoreDuration">The duration of the score event (e.g. overspeed)</param>
+			/// <param name="countedEvent">Whether this should be counted as a unique event (NOTE: Scheduled stops are the only case which are not)</param>
+			private void AddScore(int scoreValue, ScoreTextToken textToken, double scoreDuration, bool countedEvent = true)
 			{
 				if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 				{
 					int n = ScoreMessages.Length;
 					Array.Resize(ref ScoreMessages, n + 1);
-					ScoreMessages[n].Value = Value;
-					ScoreMessages[n].Text = Interface.GetScoreText(TextToken) + ": " + Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
-					ScoreMessages[n].Timeout = Program.CurrentRoute.SecondsSinceMidnight + Duration;
+					ScoreMessages[n].Value = scoreValue;
+					ScoreMessages[n].Text = Interface.GetScoreText(textToken) + ": " + scoreValue.ToString(System.Globalization.CultureInfo.InvariantCulture);
+					ScoreMessages[n].Timeout = Program.CurrentRoute.SecondsSinceMidnight + scoreDuration;
 					ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
 					ScoreMessages[n].RendererAlpha = 0.0;
-					if (Value < 0.0)
+					if (scoreValue < 0.0)
 					{
 						ScoreMessages[n].Color = MessageColor.Red;
 					}
-					else if (Value > 0.0)
+					else if (scoreValue > 0.0)
 					{
 						ScoreMessages[n].Color = MessageColor.Green;
 					}
@@ -391,14 +391,14 @@ namespace OpenBve
 						ScoreMessages[n].Color = MessageColor.White;
 					}
 				}
-				if (Value != 0 & Count)
+				if (scoreValue != 0 & countedEvent)
 				{
 					if (ScoreLogCount == ScoreLogs.Length)
 					{
 						Array.Resize(ref ScoreLogs, ScoreLogs.Length << 1);
 					}
-					ScoreLogs[ScoreLogCount].Value = Value;
-					ScoreLogs[ScoreLogCount].TextToken = TextToken;
+					ScoreLogs[ScoreLogCount].Value = scoreValue;
+					ScoreLogs[ScoreLogCount].TextToken = textToken;
 					ScoreLogs[ScoreLogCount].Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;
 					ScoreLogs[ScoreLogCount].Time = Program.CurrentRoute.SecondsSinceMidnight;
 					ScoreLogCount++;
@@ -406,17 +406,17 @@ namespace OpenBve
 			}
 
 			/// <summary>Is called by the update function to add a new score event to the log</summary>
-			/// <param name="Text">The log text for this score event</param>
-			/// <param name="Duration">The duration of the score event (e.g. overspeed)</param>
-			private void AddScore(string Text, double Duration)
+			/// <param name="scoreText">The log text for this score event</param>
+			/// <param name="scoreDuration">The duration of the score event (e.g. overspeed)</param>
+			private void AddScore(string scoreText, double scoreDuration)
 			{
 				if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 				{
 					int n = ScoreMessages.Length;
 					Array.Resize(ref ScoreMessages, n + 1);
 					ScoreMessages[n].Value = 0;
-					ScoreMessages[n].Text = Text.Length != 0 ? Text : "══════════";
-					ScoreMessages[n].Timeout = Program.CurrentRoute.SecondsSinceMidnight + Duration;
+					ScoreMessages[n].Text = scoreText.Length != 0 ? scoreText : "══════════";
+					ScoreMessages[n].Timeout = Program.CurrentRoute.SecondsSinceMidnight + scoreDuration;
 					ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
 					ScoreMessages[n].RendererAlpha = 0.0;
 					ScoreMessages[n].Color = MessageColor.White;

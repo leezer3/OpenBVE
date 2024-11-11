@@ -502,7 +502,7 @@ namespace OpenBve
 					case MenuType.Control:
 						//Refresh the joystick list
 						Program.Joysticks.RefreshJoysticks();
-						Selection = SelectionNone;
+						Selection = selectionNone;
 						Items = new MenuEntry[4];
 						// get code name and description
 						Control loadedControl = Interface.CurrentControls[data];

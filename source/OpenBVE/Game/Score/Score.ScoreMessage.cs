@@ -6,7 +6,7 @@ namespace OpenBve
 	internal static partial class Game
 	{
 		/// <summary>Holds all current score messages to be rendered</summary>
-		internal static ScoreMessage[] ScoreMessages = new ScoreMessage[] { };
+		internal static ScoreMessage[] ScoreMessages = { };
 		/// <summary>Holds the current on-screen size in px of the area occupied by score messages</summary>
 		internal static Vector2 ScoreMessagesRendererSize = new Vector2(16.0, 16.0);
 

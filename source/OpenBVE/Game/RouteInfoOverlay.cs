@@ -14,13 +14,12 @@ namespace OpenBve
 	/// <summary>Displays an in-game overlay with information about the route, including a map and gradient profile</summary>
 	public class RouteInfoOverlay
 	{
-		private enum state
+		private enum OverlayState
 		{
-			none = 0,
-			map,
-			gradient,
-			numOf
-		};
+			None = 0,
+			Map,
+			Gradient,
+		}
 
 		/// <summary>The width of the gradient position bar in pixels</summary>
 		private const int gradientPosWidth= 2;
@@ -35,7 +34,7 @@ namespace OpenBve
 		/// <summary>The color used to render the dot for the player train</summary>
 		private static readonly Color128 playerTrainDotColour = Color128.Green;
 
-		private state currentState	= state.none;
+		private OverlayState currentOverlayState	= OverlayState.None;
 		private Texture gradientImage;
 		private Vector2	gradientSize;
 		private Texture mapImage;
@@ -49,22 +48,22 @@ namespace OpenBve
 			if (command != Translations.Command.RouteInformation)	// only accept RouteInformation command
 				return false;
 			// cycle through available state
-			setState( (state)((int)(currentState + 1) % (int)state.numOf) );
+			SetState((OverlayState)((int)(currentOverlayState + 1) % 3));
 			return true;
 		}
 
 		/// <summary>Displays the current state into the simulation window.</summary>
 		public void Show()
 		{
-			if (currentState == state.none)
+			if (currentOverlayState == OverlayState.None)
 				return;
-			Vector2 Pos = Vector2.Null;
+			Vector2 currentPosition = Vector2.Null;
 			Vector2	origin = Vector2.Null;
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 			// draw the relevant image
-			switch (currentState)
+			switch (currentOverlayState)
 			{
-			case state.map:
+			case OverlayState.Map:
 				Program.Renderer.Rectangle.Draw(mapImage, origin, mapSize);
 				// get current train position
 				int n = Program.TrainManager.Trains.Length;
@@ -73,44 +72,44 @@ namespace OpenBve
 					int trainX = (int)Program.TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.X;
 					int trainZ = (int)Program.TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.Z;
 					// convert to route map coordinates
-					Pos.X = mapSize.X * (trainX - Program.CurrentRoute.Information.RouteMinX) /
+					currentPosition.X = mapSize.X * (trainX - Program.CurrentRoute.Information.RouteMinX) /
 							(Program.CurrentRoute.Information.RouteMaxX - Program.CurrentRoute.Information.RouteMinX) - trainDotRadius;
-					Pos.Y = mapSize.Y - mapSize.Y * (trainZ - Program.CurrentRoute.Information.RouteMinZ) /
+					currentPosition.Y = mapSize.Y - mapSize.Y * (trainZ - Program.CurrentRoute.Information.RouteMinZ) /
 							(Program.CurrentRoute.Information.RouteMaxZ - Program.CurrentRoute.Information.RouteMinZ) - trainDotRadius;
 						// draw a dot at current train position
-						Program.Renderer.Rectangle.Draw(null, Pos,
+						Program.Renderer.Rectangle.Draw(null, currentPosition,
 							new Vector2(trainDotDiameter, trainDotDiameter),
 							Program.TrainManager.Trains[i].IsPlayerTrain ? playerTrainDotColour : trainDotColour);
 				}
 				break;
-			case state.gradient:
+			case OverlayState.Gradient:
 				Program.Renderer.Rectangle.Draw(gradientImage, origin, gradientSize);
 				// get current train position in track
 				int trackPos	= (int)(TrainManager.PlayerTrain.FrontCarTrackPosition);
 				// convert to gradient profile offset
-				Pos.X = gradientSize.Y * (trackPos - Program.CurrentRoute.Information.GradientMinTrack) /
+				currentPosition.X = gradientSize.Y * (trackPos - Program.CurrentRoute.Information.GradientMinTrack) /
 						(Program.CurrentRoute.Information.GradientMaxTrack - Program.CurrentRoute.Information.GradientMinTrack);
 				// draw a vertical bar at the current train position
-				Program.Renderer.Rectangle.Draw(null, new Vector2(Pos.X, gradientSize.Y / 2),
+				Program.Renderer.Rectangle.Draw(null, new Vector2(currentPosition.X, gradientSize.Y / 2),
 					new Vector2(gradientPosWidth, gradientSize.Y / 2), gradientPosBar);
 				break;
 			}
 		}
 
 		/// <summary>Sets the state, intializing any required resource.</summary>
-		/// <param name="newState">The new state to set to.</param>
-		private void setState(state newState)
+		/// <param name="newOverlayState">The new state to set to.</param>
+		private void SetState(OverlayState newOverlayState)
 		{
-			switch (newState)
+			switch (newOverlayState)
 			{
-			case state.map:
+			case OverlayState.Map:
 				if (mapImage == null)
 				{
 					mapImage	= new Texture(Program.CurrentRoute.Information.RouteMap);
 					mapSize		= new Vector2(Program.CurrentRoute.Information.RouteMap.Width, Program.CurrentRoute.Information.RouteMap.Height);
 				}
 				break;
-			case state.gradient:
+			case OverlayState.Gradient:
 				if (gradientImage == null)
 				{
 					gradientImage	= new Texture(Program.CurrentRoute.Information.GradientProfile);
@@ -118,7 +117,7 @@ namespace OpenBve
 				}
 				break;
 			}
-			currentState	= newState;
+			currentOverlayState	= newOverlayState;
 		}
 	}
 }

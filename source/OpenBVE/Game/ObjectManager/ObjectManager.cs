@@ -15,9 +15,9 @@ namespace OpenBve
 		internal static int AnimatedWorldObjectsUsed = 0;
 
 		/// <summary>Is called once a frame to update all animated objects</summary>
-		/// <param name="TimeElapsed">The total frame time elapsed</param>
-		/// <param name="ForceUpdate">Whether this is a forced update (e.g. camera change etc)</param>
-		internal static void UpdateAnimatedWorldObjects(double TimeElapsed, bool ForceUpdate)
+		/// <param name="timeElapsed">The total frame time elapsed</param>
+		/// <param name="forceUpdate">Whether this is a forced update (e.g. camera change etc)</param>
+		internal static void UpdateAnimatedWorldObjects(double timeElapsed, bool forceUpdate)
 		{
 			for (int i = 0; i < AnimatedWorldObjectsUsed; i++)
 			{
@@ -25,31 +25,31 @@ namespace OpenBve
 				Vector3 cameraPos = Program.Renderer.Camera.Alignment.Position;
 				cameraPos.Z += Program.Renderer.CameraTrackFollower.TrackPosition;
 				bool visible = AnimatedWorldObjects[i].IsVisible(cameraPos, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, Program.Renderer.Camera.ExtraViewingDistance);
-				if (visible | ForceUpdate)
+				if (visible | forceUpdate)
 				{
 					//Find the closest train
 					train = Program.CurrentHost.ClosestTrain(AnimatedWorldObjects[i].RelativeTrackPosition);
 				}
 
-				if (ForceUpdate)
+				if (forceUpdate)
 				{
 					if (Interface.CurrentOptions.DelayedAnimatedUpdates == false || AnimatedWorldObjects[i].TrackPosition - Math.Abs(Program.Renderer.CameraTrackFollower.TrackPosition) <= 5000 || AnimatedWorldObjects[i].Object.TrackFollowerFunction != null)
 					{
-						AnimatedWorldObjects[i].Update(train, TimeElapsed, true, visible);
+						AnimatedWorldObjects[i].Update(train, timeElapsed, true, visible);
 					}
 				}
 				else
 				{
-					AnimatedWorldObjects[i].Update(train, TimeElapsed, false, visible);
+					AnimatedWorldObjects[i].Update(train, timeElapsed, false, visible);
 				}
 			}
 		}
 
 		/// <summary>Updates any TFOs within the world after a jump</summary>
-		/// <param name="Train">The train which has jumped</param>
-		public static void ProcessJump(AbstractTrain Train)
+		/// <param name="train">The train which has jumped</param>
+		public static void ProcessJump(AbstractTrain train)
 		{
-			if (Train.IsPlayerTrain)
+			if (train.IsPlayerTrain)
 			{
 				for (int i = 0; i < AnimatedWorldObjects.Length; i++)
 				{

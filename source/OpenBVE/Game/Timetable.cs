@@ -57,16 +57,16 @@ namespace OpenBve {
 				Stations = new List<Station>();
 				Tracks = new Track[16];
 				int n = 0;
-				double Limit = -1.0, LastLimit = 6.94444444444444;
-				int LastArrivalHours = -1, LastDepartureHours = -1;
-				double LastTime = -1.0;
+				double limit = -1.0, lastLimit = 6.94444444444444;
+				int lastArrivalHours = -1, lastDepartureHours = -1;
+				double lastTime = -1.0;
 				for (int i = 0; i < Program.CurrentRoute.Tracks[0].Elements.Length; i++)
 				{
 					for (int j = 0; j < Program.CurrentRoute.Tracks[0].Elements[i].Events.Count; j++)
 					{
 						if (Program.CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent sse && Program.CurrentRoute.Stations[sse.StationIndex].Name != string.Empty && !Program.CurrentRoute.Stations[sse.StationIndex].Dummy)
 						{
-							if (Limit == -1.0) Limit = LastLimit;
+							if (limit == -1.0) limit = lastLimit;
 							// update station
 							Station currentStation;
 
@@ -84,10 +84,10 @@ namespace OpenBve {
 								int minutes = (int) Math.Floor(x / 60.0);
 								x -= 60.0 * minutes;
 								int seconds = (int) Math.Floor(x);
-								currentStation.Arrival.Hour = hours != LastArrivalHours ? hours.ToString("00", Culture) : "";
+								currentStation.Arrival.Hour = hours != lastArrivalHours ? hours.ToString("00", Culture) : "";
 								currentStation.Arrival.Minute = minutes.ToString("00", Culture);
 								currentStation.Arrival.Second = seconds.ToString("00", Culture);
-								LastArrivalHours = hours;
+								lastArrivalHours = hours;
 							}
 							else
 							{
@@ -105,10 +105,10 @@ namespace OpenBve {
 								int minutes = (int) Math.Floor(x / 60.0);
 								x -= 60.0 * minutes;
 								int seconds = (int) Math.Floor(x);
-								currentStation.Departure.Hour = hours != LastDepartureHours ? hours.ToString("00", Culture) : "";
+								currentStation.Departure.Hour = hours != lastDepartureHours ? hours.ToString("00", Culture) : "";
 								currentStation.Departure.Minute = minutes.ToString("00", Culture);
 								currentStation.Departure.Second = seconds.ToString("00", Culture);
-								LastDepartureHours = hours;
+								lastDepartureHours = hours;
 							}
 							else
 							{
@@ -127,10 +127,10 @@ namespace OpenBve {
 								}
 
 								// speed
-								x = Math.Round(3.6 * Limit);
+								x = Math.Round(3.6 * limit);
 								Tracks[m].Speed = x.ToString(Culture);
 								// time
-								if (LastTime >= 0.0)
+								if (lastTime >= 0.0)
 								{
 									if (Program.CurrentRoute.Stations[sse.StationIndex].ArrivalTime >= 0.0)
 									{
@@ -144,7 +144,7 @@ namespace OpenBve {
 
 									if (x >= 0.0)
 									{
-										x -= LastTime;
+										x -= lastTime;
 										int hours = (int) Math.Floor(x / 3600.0);
 										x -= 3600.0 * hours;
 										int minutes = (int) Math.Floor(x / 60.0);
@@ -172,19 +172,19 @@ namespace OpenBve {
 							// update last data
 							if (Program.CurrentRoute.Stations[sse.StationIndex].DepartureTime >= 0.0)
 							{
-								LastTime = Program.CurrentRoute.Stations[sse.StationIndex].DepartureTime;
+								lastTime = Program.CurrentRoute.Stations[sse.StationIndex].DepartureTime;
 							}
 							else if (Program.CurrentRoute.Stations[sse.StationIndex].ArrivalTime >= 0.0)
 							{
-								LastTime = Program.CurrentRoute.Stations[sse.StationIndex].ArrivalTime;
+								lastTime = Program.CurrentRoute.Stations[sse.StationIndex].ArrivalTime;
 							}
 							else
 							{
-								LastTime = -1.0;
+								lastTime = -1.0;
 							}
 
-							LastLimit = Limit;
-							Limit = -1.0;
+							lastLimit = limit;
+							limit = -1.0;
 							n++;
 							Stations.Add(currentStation);
 						}
@@ -193,7 +193,7 @@ namespace OpenBve {
 						{
 							if (Program.CurrentRoute.Tracks[0].Elements[i].Events[j] is LimitChangeEvent lce)
 							{
-								if (lce.NextSpeedLimit != double.PositiveInfinity & lce.NextSpeedLimit > Limit) Limit = lce.NextSpeedLimit;
+								if (lce.NextSpeedLimit != double.PositiveInfinity & lce.NextSpeedLimit > limit) limit = lce.NextSpeedLimit;
 							}
 						}
 					}
@@ -509,9 +509,9 @@ namespace OpenBve {
 		{
 			try
 			{
-				Table Table = new Table();
-				Table.CollectData();
-				Table.RenderData(ref DefaultTimetableTexture);
+				Table table = new Table();
+				table.CollectData();
+				table.RenderData(ref DefaultTimetableTexture);
 			}
 			catch
 			{
@@ -521,24 +521,24 @@ namespace OpenBve {
 
 
 		// update custom timetable
-		internal static void UpdateCustomTimetable(Texture daytime, Texture nighttime) {
+		internal static void UpdateCustomTimetable(Texture daytimeTexture, Texture nighttimeTexture) {
 			for (int i = 0; i < CustomObjectsUsed; i++) {
 				for (int j = 0; j < CustomObjects[i].States.Length; j++) {
 					for (int k = 0; k < CustomObjects[i].States[j].Prototype.Mesh.Materials.Length; k++) {
-						if (daytime != null) {
-							CustomObjects[i].States[j].Prototype.Mesh.Materials[k].DaytimeTexture = daytime;
+						if (daytimeTexture != null) {
+							CustomObjects[i].States[j].Prototype.Mesh.Materials[k].DaytimeTexture = daytimeTexture;
 						}
-						if (nighttime != null) {
-							CustomObjects[i].States[j].Prototype.Mesh.Materials[k].NighttimeTexture = nighttime;
+						if (nighttimeTexture != null) {
+							CustomObjects[i].States[j].Prototype.Mesh.Materials[k].NighttimeTexture = nighttimeTexture;
 						}
 					}
 				}
 			}
-			if (daytime != null) {
-				CurrentCustomTimetableDaytimeTexture = daytime;
+			if (daytimeTexture != null) {
+				CurrentCustomTimetableDaytimeTexture = daytimeTexture;
 			}
-			if (nighttime != null) {
-				CurrentCustomTimetableNighttimeTexture = nighttime;
+			if (nighttimeTexture != null) {
+				CurrentCustomTimetableNighttimeTexture = nighttimeTexture;
 			}
 			if (CurrentCustomTimetableDaytimeTexture != null | CurrentCustomTimetableNighttimeTexture != null) {
 				CustomTimetableAvailable = true;

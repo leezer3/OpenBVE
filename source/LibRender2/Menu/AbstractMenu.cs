@@ -160,15 +160,15 @@ namespace LibRender2.Menu
 		}
 
 		/// <summary>Processes a scroll wheel event</summary>
-		/// <param name="Scroll">The delta</param>
-		public virtual void ProcessMouseScroll(int Scroll)
+		/// <param name="scrollDelta">The delta</param>
+		public virtual void ProcessMouseScroll(int scrollDelta)
 		{
 			if (Menus.Length == 0)
 			{
 				return;
 			}
 			// Load the current menu
-			Menus[CurrMenu].ProcessScroll(Scroll, visibleItems);
+			Menus[CurrMenu].ProcessScroll(scrollDelta, visibleItems);
 		}
 
 		/// <summary>Processes a mouse move event</summary>

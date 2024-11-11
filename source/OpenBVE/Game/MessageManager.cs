@@ -17,28 +17,28 @@ namespace OpenBve
 		internal static readonly List<AbstractMessage> ImageMessages = new List<AbstractMessage>();
 		
 		/// <summary>Adds a message to the in-game interface render queue</summary>
-		/// <param name="Text">The text of the message</param>
-		/// <param name="Depencency"></param>
-		/// <param name="Mode"></param>
-		/// <param name="Color">The color of the message text</param>
-		/// <param name="Timeout">The time this message will display for</param>
+		/// <param name="text">The text of the message</param>
+		/// <param name="depencency"></param>
+		/// <param name="mode"></param>
+		/// <param name="color">The color of the message text</param>
+		/// <param name="timeout">The time this message will display for</param>
 		/// <param name="key">The textual key identifiying this message</param>
-		internal static void AddMessage(string Text, MessageDependency Depencency, GameMode Mode, MessageColor Color, double Timeout, string key)
+		internal static void AddMessage(string text, MessageDependency depencency, GameMode mode, MessageColor color, double timeout, string key)
 		{
 			if (TrainManagerBase.PlayerTrain == null)
 			{
-				Program.FileSystem.AppendToLogFile(Text);
+				Program.FileSystem.AppendToLogFile(text);
 				return;
 			}
-			if (Interface.CurrentOptions.GameMode <= Mode)
+			if (Interface.CurrentOptions.GameMode <= mode)
 			{
 				GameMessage message = new GameMessage
 				{
-					InternalText = Text,
+					InternalText = text,
 					MessageToDisplay = String.Empty,
-					Depencency = Depencency,
-					Color = Color,
-					Timeout = Timeout,
+					Depencency = depencency,
+					Color = color,
+					Timeout = timeout,
 					Key = key
 				};
 				AddMessage(message);

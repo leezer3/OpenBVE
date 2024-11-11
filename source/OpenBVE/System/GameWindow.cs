@@ -362,7 +362,7 @@ namespace OpenBve
 			if (Program.Renderer.CurrentInterface == InterfaceType.SwitchChangeMap)
 			{
 				// call the show method again to trigger resize
-				Game.switchChangeDialog.Show();
+				Game.SwitchChangeDialog.Show();
 			}
 		}
 
@@ -759,13 +759,13 @@ namespace OpenBve
 				{
 					if (i == 0 || Program.CurrentRoute.Stations[i - 1].Type != StationType.ChangeEnds && Program.CurrentRoute.Stations[i - 1].Type != StationType.Jump)
 					{
-						Game.CurrentScore.Maximum += Game.ScoreValueStationArrival;
+						Game.CurrentScore.Maximum += Game.Score.ValueStationArrival;
 					}
 				}
 			}
 			if (Game.CurrentScore.Maximum <= 0)
 			{
-				Game.CurrentScore.Maximum = Game.ScoreValueStationArrival;
+				Game.CurrentScore.Maximum = Game.Score.ValueStationArrival;
 			}
 			// signals
 			if (Program.CurrentRoute.Sections.Length > 0)
