@@ -175,7 +175,7 @@ namespace ObjectViewer
 						case OptionsSection.Quality:
 							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);
 							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref Interface.CurrentOptions.AnisotropicFilteringLevel);
-							block.TryGetValue(OptionsKey.AntialisingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
+							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
 							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
 							break;
 						case OptionsSection.Parsers:
