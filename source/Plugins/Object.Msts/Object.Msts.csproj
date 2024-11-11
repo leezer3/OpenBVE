@@ -72,6 +72,7 @@
     <ProjectReference Include="..\Formats.Msts\Formats.Msts.csproj">
       <Project>{e81b7bd8-a326-47d3-b7ee-e9c7d4d119fa}</Project>
       <Name>Formats.Msts</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
