@@ -28,17 +28,17 @@ namespace TrainManager.Power
 		}
 
 		/// <summary> Updates the breaker</summary>
-		/// <param name="BreakerActive">Whether the breaker is currently active</param>
-		public void Update(bool BreakerActive)
+		/// <param name="breakerActive">Whether the breaker is currently active</param>
+		public void Update(bool breakerActive)
 		{
-			if (BreakerActive & !Resumed)
+			if (breakerActive & !Resumed)
 			{
 				// resume
 				Resume.Play(Car, false);
 				ResumeOrInterrupt.Play(Car, false);
 				Resumed = true;
 			}
-			else if (!BreakerActive & Resumed)
+			else if (!breakerActive & Resumed)
 			{
 				// interrupt
 				ResumeOrInterrupt.Play(Car, false);

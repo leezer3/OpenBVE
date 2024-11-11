@@ -57,11 +57,11 @@ namespace Train.OpenBve
 				train.Cars[i].CarBrake.Air = new CarSound(Plugin.currentHost, train.TrainFolder, "Air.wav", SoundCfgParser.smallRadius, center);
 				train.Cars[i].CarBrake.AirHigh = new CarSound(Plugin.currentHost, train.TrainFolder, "AirHigh.wav", SoundCfgParser.smallRadius, center);
 				train.Cars[i].CarBrake.AirZero = new CarSound(Plugin.currentHost, train.TrainFolder, "AirZero.wav", SoundCfgParser.smallRadius, center);
-				if (train.Cars[i].CarBrake.brakeType == BrakeType.Main)
+				if (train.Cars[i].CarBrake.BrakeType == BrakeType.Main)
 				{
-					train.Cars[i].CarBrake.airCompressor.EndSound = new CarSound(Plugin.currentHost, train.TrainFolder, "CpEnd.wav", SoundCfgParser.mediumRadius, center);
-					train.Cars[i].CarBrake.airCompressor.LoopSound = new CarSound(Plugin.currentHost, train.TrainFolder, "CpLoop.wav", SoundCfgParser.mediumRadius, center);
-					train.Cars[i].CarBrake.airCompressor.StartSound = new CarSound(Plugin.currentHost, train.TrainFolder, "CpStart.wav", SoundCfgParser.mediumRadius, center);
+					train.Cars[i].CarBrake.AirCompressor.EndSound = new CarSound(Plugin.currentHost, train.TrainFolder, "CpEnd.wav", SoundCfgParser.mediumRadius, center);
+					train.Cars[i].CarBrake.AirCompressor.LoopSound = new CarSound(Plugin.currentHost, train.TrainFolder, "CpLoop.wav", SoundCfgParser.mediumRadius, center);
+					train.Cars[i].CarBrake.AirCompressor.StartSound = new CarSound(Plugin.currentHost, train.TrainFolder, "CpStart.wav", SoundCfgParser.mediumRadius, center);
 				}
 				train.Cars[i].Doors[0].CloseSound = new CarSound(Plugin.currentHost, train.TrainFolder, "DoorClsL.wav", SoundCfgParser.smallRadius, left);
 				train.Cars[i].Doors[1].CloseSound = new CarSound(Plugin.currentHost, train.TrainFolder, "DoorClsR.wav", SoundCfgParser.smallRadius, right);

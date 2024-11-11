@@ -36,7 +36,7 @@ namespace TrainManager.BrakeSystems
 			baseCar = car;
 		}
 
-		public void Update(double TimeElapsed)
+		public void Update(double timeElapsed)
 		{
 			if (Enabled)
 			{
@@ -49,10 +49,10 @@ namespace TrainManager.BrakeSystems
 				}
 				else
 				{
-					mainReservoir.CurrentPressure += Rate * TimeElapsed;
+					mainReservoir.CurrentPressure += Rate * timeElapsed;
 					if (!LoopStarted)
 					{
-						if ((StartSound.Buffer == null && TrainManagerBase.currentHost.InGameTime > TimeStarted + 5.0) || (StartSound.Buffer != null && !StartSound.IsPlaying))
+						if ((StartSound.Buffer == null && TrainManagerBase.CurrentHost.InGameTime > TimeStarted + 5.0) || (StartSound.Buffer != null && !StartSound.IsPlaying))
 						{
 							/*
 							 * If no start sound, assume a run-up time of 5s for the compressor
@@ -69,7 +69,7 @@ namespace TrainManager.BrakeSystems
 				if (mainReservoir.CurrentPressure < mainReservoir.MinimumPressure)
 				{
 					Enabled = true;
-					TimeStarted = TrainManagerBase.currentHost.InGameTime;
+					TimeStarted = TrainManagerBase.CurrentHost.InGameTime;
 					StartSound.Play(baseCar, false);
 				}
 			}

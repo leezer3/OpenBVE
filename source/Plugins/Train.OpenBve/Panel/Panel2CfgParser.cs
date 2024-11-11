@@ -324,7 +324,7 @@ namespace Train.OpenBve
 										int w = tday.Width;
 										int h = tday.Height;
 										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
-										string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
+										string f = GetStackLanguageFromSubject(Car.BaseTrain, Subject, Section + " in " + FileName);
 										try
 										{
 											if (!string.IsNullOrEmpty(Function))
@@ -532,7 +532,7 @@ namespace Train.OpenBve
 												f = Smoothed ? "time 60 mod" : "time floor";
 												break;
 											default:
-												f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
+												f = GetStackLanguageFromSubject(Car.BaseTrain, Subject, Section + " in " + FileName);
 												break;
 										}
 
@@ -692,7 +692,7 @@ namespace Train.OpenBve
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Section + " in " + FileName);
 											break;
 										}
-										string tf = GetInfixFunction(Car.baseTrain, Subject, Minimum, Maximum, Width, tday.Width, Section + " in " + FileName);
+										string tf = GetInfixFunction(Car.BaseTrain, Subject, Minimum, Maximum, Width, tday.Width, Section + " in " + FileName);
 										if (!string.IsNullOrEmpty(tf) || !string.IsNullOrEmpty(Function))
 										{
 											Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
@@ -813,14 +813,14 @@ namespace Train.OpenBve
 												switch (Subject)
 												{
 													case "power":
-														if (Car.baseTrain.Handles.Power.MaximumNotch > numFrames)
+														if (Car.BaseTrain.Handles.Power.MaximumNotch > numFrames)
 														{
-															numFrames = Car.baseTrain.Handles.Power.MaximumNotch;
+															numFrames = Car.BaseTrain.Handles.Power.MaximumNotch;
 														}
 														break;
 													case "brake":
-														int b = Car.baseTrain.Handles.Brake.MaximumNotch + 2;
-														if (Car.baseTrain.Handles.HasHoldBrake)
+														int b = Car.BaseTrain.Handles.Brake.MaximumNotch + 2;
+														if (Car.BaseTrain.Handles.HasHoldBrake)
 														{
 															b++;
 														}
@@ -878,7 +878,7 @@ namespace Train.OpenBve
 												int l = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, wday, Interval, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday[k], tnight[k], Color32.White, k != 0);
 												if (k == 0) j = l;
 											}
-											string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
+											string f = GetStackLanguageFromSubject(Car.BaseTrain, Subject, Section + " in " + FileName);
 											try
 											{
 												if (!string.IsNullOrEmpty(Function))
@@ -1070,7 +1070,7 @@ namespace Train.OpenBve
 											new Vector3(x3, y3, z3),
 											new Vector3(cx, cy, cz)
 										};
-										string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
+										string f = GetStackLanguageFromSubject(Car.BaseTrain, Subject, Section + " in " + FileName);
 										double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 										double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 										if (Step == 1.0) {

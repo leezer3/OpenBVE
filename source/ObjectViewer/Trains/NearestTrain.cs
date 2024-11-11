@@ -74,11 +74,11 @@ namespace ObjectViewer.Trains
 
 				train.Cars[i].Specs.IsMotorCar = true;
 				//At the minute, Object Viewer uses dummy brake systems
-				train.Cars[i].CarBrake.mainReservoir = new MainReservoir(Status.MainReservoirPressure * 1000.0);
-				train.Cars[i].CarBrake.equalizingReservoir = new EqualizingReservoir(Status.EqualizingReservoirPressure * 1000.0);
-				train.Cars[i].CarBrake.brakePipe = new BrakePipe(Status.BrakePipePressure * 1000.0);
-				train.Cars[i].CarBrake.brakeCylinder = new BrakeCylinder(Status.BrakeCylinderPressure * 1000.0);
-				train.Cars[i].CarBrake.straightAirPipe = new StraightAirPipe(Status.StraightAirPipePressure * 1000.0);
+				train.Cars[i].CarBrake.MainReservoir = new MainReservoir(Status.MainReservoirPressure * 1000.0);
+				train.Cars[i].CarBrake.EqualizingReservoir = new EqualizingReservoir(Status.EqualizingReservoirPressure * 1000.0);
+				train.Cars[i].CarBrake.BrakePipe = new BrakePipe(Status.BrakePipePressure * 1000.0);
+				train.Cars[i].CarBrake.BrakeCylinder = new BrakeCylinder(Status.BrakeCylinderPressure * 1000.0);
+				train.Cars[i].CarBrake.StraightAirPipe = new StraightAirPipe(Status.StraightAirPipePressure * 1000.0);
 
 				train.Cars[i].Coupler = new Coupler(0.9 * 0.3, 1.1 * 0.3, train.Cars[i], i < train.Cars.Length - 1 ? train.Cars[i + 1] : null, train);
 

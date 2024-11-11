@@ -150,10 +150,10 @@ namespace TrainManager.SafetySystems
 
 			if (properties.FailureReason != null)
 			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + PluginTitle + " failed to load for the following reason: " + properties.FailureReason);
+				TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, false, "The train plugin " + PluginTitle + " failed to load for the following reason: " + properties.FailureReason);
 				return false;
 			}
-			TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + PluginTitle + " failed to load for an unspecified reason.");
+			TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, false, "The train plugin " + PluginTitle + " failed to load for an unspecified reason.");
 			return false;
 		}
 
@@ -413,22 +413,22 @@ namespace TrainManager.SafetySystems
 		}
 
 		/// <summary>May be called from a .Net plugin, in order to add a message to the in-game display</summary>
-		/// <param name="Message">The message to display</param>
-		/// <param name="Color">The color in which to display the message</param>
-		/// <param name="Time">The time in seconds for which to display the message</param>
-		internal void AddInterfaceMessage(string Message, MessageColor Color, double Time)
+		/// <param name="message">The message to display</param>
+		/// <param name="color">The color in which to display the message</param>
+		/// <param name="time">The time in seconds for which to display the message</param>
+		internal void AddInterfaceMessage(string message, MessageColor color, double time)
 		{
-			TrainManagerBase.currentHost.AddMessage(Message, MessageDependency.Plugin, GameMode.Expert, Color, TrainManagerBase.currentHost.InGameTime + Time, null);
+			TrainManagerBase.CurrentHost.AddMessage(message, MessageDependency.Plugin, GameMode.Expert, color, TrainManagerBase.CurrentHost.InGameTime + time, null);
 		}
 
 		/// <summary>May be called from a .Net plugin, in order to add a score to the post-game log</summary>
-		/// <param name="Score">The score to add</param>
-		/// <param name="Message">The message to display in the post-game log</param>
-		/// <param name="Color">The color of the in-game message</param>
-		/// <param name="Timeout">The time in seconds for which to display the in-game message</param>
-		internal void AddScore(int Score, string Message, MessageColor Color, double Timeout)
+		/// <param name="score">The score to add</param>
+		/// <param name="message">The message to display in the post-game log</param>
+		/// <param name="color">The color of the in-game message</param>
+		/// <param name="timeout">The time in seconds for which to display the in-game message</param>
+		internal void AddScore(int score, string message, MessageColor color, double timeout)
 		{
-			TrainManagerBase.currentHost.AddScore(Score, Message, Color, Timeout);
+			TrainManagerBase.CurrentHost.AddScore(score, message, color, timeout);
 		}
 
 		/// <summary>May be called from a .Net plugin to open the train doors</summary>
@@ -472,11 +472,11 @@ namespace TrainManager.SafetySystems
 		/// <param name="volume">The volume of the sound- A volume of 1.0 represents nominal volume</param>
 		/// <param name="pitch">The pitch of the sound- A pitch of 1.0 represents nominal pitch</param>
 		/// <param name="looped">Whether the sound is looped</param>
-		/// <param name="CarIndex">The index of the car which is to emit the sound</param>
+		/// <param name="carIndex">The index of the car which is to emit the sound</param>
 		/// <returns>The sound handle, or null if not successful</returns>
-		internal SoundHandleEx PlayCarSound(int index, double volume, double pitch, bool looped, int CarIndex)
+		internal SoundHandleEx PlayCarSound(int index, double volume, double pitch, bool looped, int carIndex)
 		{
-			if (CarIndex < 0 || CarIndex >= Train.Cars.Length)
+			if (carIndex < 0 || carIndex >= Train.Cars.Length)
 			{
 				// Not a valid car
 				return null;
@@ -496,21 +496,21 @@ namespace TrainManager.SafetySystems
 			 * If a separate soundset has been loaded via XML for the car, this may produce different sounds, but is unavoidable
 			 */
 
-			if (!Train.Cars[CarIndex].Sounds.Plugin.ContainsKey(index))
+			if (!Train.Cars[carIndex].Sounds.Plugin.ContainsKey(index))
 			{
 				if (Train.Cars[Train.DriverCar].Sounds.Plugin.ContainsKey(index))
 				{
-					Train.Cars[CarIndex].Sounds.Plugin.Add(index, Train.Cars[Train.DriverCar].Sounds.Plugin[index].Clone());
+					Train.Cars[carIndex].Sounds.Plugin.Add(index, Train.Cars[Train.DriverCar].Sounds.Plugin[index].Clone());
 				}
 			}
 
-			Train.Cars[CarIndex].Sounds.Plugin[index].Play(pitch, volume, Train.Cars[CarIndex], looped);
+			Train.Cars[carIndex].Sounds.Plugin[index].Play(pitch, volume, Train.Cars[carIndex], looped);
 			if (SoundHandlesCount == SoundHandles.Length)
 			{
 				Array.Resize(ref SoundHandles, SoundHandles.Length << 1);
 			}
 
-			SoundHandles[SoundHandlesCount] = new SoundHandleEx(volume, pitch, Train.Cars[CarIndex].Sounds.Plugin[index].Source);
+			SoundHandles[SoundHandlesCount] = new SoundHandleEx(volume, pitch, Train.Cars[carIndex].Sounds.Plugin[index].Source);
 			SoundHandlesCount++;
 			return SoundHandles[SoundHandlesCount - 1];
 		}
@@ -520,14 +520,14 @@ namespace TrainManager.SafetySystems
 		/// <param name="volume">The volume of the sound- A volume of 1.0 represents nominal volume</param>
 		/// <param name="pitch">The pitch of the sound- A pitch of 1.0 represents nominal pitch</param>
 		/// <param name="looped">Whether the sound is looped</param>
-		/// <param name="CarIndicies">The index of the cars which are to emit the sound</param>
+		/// <param name="carIndicies">The index of the cars which are to emit the sound</param>
 		/// <returns>The sound handle, or null if not successful</returns>
-		internal SoundHandleEx[] PlayMultiCarSound(int index, double volume, double pitch, bool looped, int[] CarIndicies)
+		internal SoundHandleEx[] PlayMultiCarSound(int index, double volume, double pitch, bool looped, int[] carIndicies)
 		{
-			SoundHandleEx[] soundHandles = new SoundHandleEx[CarIndicies.Length];
-			for (int i = 0; i < CarIndicies.Length; i++)
+			SoundHandleEx[] soundHandles = new SoundHandleEx[carIndicies.Length];
+			for (int i = 0; i < carIndicies.Length; i++)
 			{
-				soundHandles[i] = PlayCarSound(index, volume, pitch, looped, CarIndicies[i]);
+				soundHandles[i] = PlayCarSound(index, volume, pitch, looped, carIndicies[i]);
 			}
 			return soundHandles;
 		}

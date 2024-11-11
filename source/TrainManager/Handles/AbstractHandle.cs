@@ -12,10 +12,10 @@ namespace TrainManager.Handles
 		public int Driver;
 
 		/// <summary>The notch set by the safety sytem</summary>
-		public int Safety => safetyState;
+		public int Safety => SafetyState;
 
 		/// <summary>Backing property for the safety state</summary>
-		protected int safetyState;
+		protected int SafetyState;
 
 		/// <summary>The actual notch, as used by the physics system etc.</summary>
 		public int Actual;
@@ -66,7 +66,7 @@ namespace TrainManager.Handles
 
 		internal double SpringTimer;
 
-		internal readonly TrainBase baseTrain;
+		internal readonly TrainBase BaseTrain;
 
 		public abstract void Update();
 
@@ -86,13 +86,13 @@ namespace TrainManager.Handles
 		{
 			if (SpringType > SpringType.AnyHandle)
 			{
-				SpringTime = TrainManagerBase.currentHost.InGameTime;
+				SpringTime = TrainManagerBase.CurrentHost.InGameTime;
 			}
 		}
 
-		protected AbstractHandle(TrainBase Train)
+		protected AbstractHandle(TrainBase train)
 		{
-			baseTrain = Train;
+			BaseTrain = train;
 			Increase = new CarSound();
 			IncreaseFast = new CarSound();
 			Decrease = new CarSound();
@@ -131,36 +131,36 @@ namespace TrainManager.Handles
 		}
 
 		/// <summary>Adds a delayed handle state change</summary>
-		/// <param name="Value">The value to add or subtract</param>
-		/// <param name="Delay">The delay in seconds</param>
-		internal void AddChange(int Value, double Delay)
+		/// <param name="value">The value to add or subtract</param>
+		/// <param name="delay">The delay in seconds</param>
+		internal void AddChange(int value, double delay)
 		{
 			int n = DelayedChanges.Length;
 			Array.Resize(ref DelayedChanges, n + 1);
-			DelayedChanges[n].Value = Value;
-			DelayedChanges[n].Time = TrainManagerBase.currentHost.InGameTime + Delay;
+			DelayedChanges[n].Value = value;
+			DelayedChanges[n].Time = TrainManagerBase.CurrentHost.InGameTime + delay;
 		}
 
 		/// <summary>Removes a specified number of delayed changes</summary>
-		/// <param name="Count">The number of changes to remove</param>
-		internal void RemoveChanges(int Count)
+		/// <param name="count">The number of changes to remove</param>
+		internal void RemoveChanges(int count)
 		{
 			int n = DelayedChanges.Length;
-			for (int i = 0; i < n - Count; i++)
+			for (int i = 0; i < n - count; i++)
 			{
-				DelayedChanges[i] = DelayedChanges[i + Count];
+				DelayedChanges[i] = DelayedChanges[i + count];
 			}
 
-			Array.Resize(ref DelayedChanges, n - Count);
+			Array.Resize(ref DelayedChanges, n - count);
 		}
 
 
 		/// <summary>Gets the delay value for this handle</summary>
-		/// <param name="ShouldIncrease">Whether this is an increase or a decrease</param>
+		/// <param name="shouldIncrease">Whether this is an increase or a decrease</param>
 		/// <returns>The delay value to apply</returns>
-		internal double GetDelay(bool ShouldIncrease)
+		internal double GetDelay(bool shouldIncrease)
 		{
-			if (ShouldIncrease)
+			if (shouldIncrease)
 			{
 				if (DelayUp == null || DelayUp.Length == 0)
 				{

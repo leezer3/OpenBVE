@@ -34,20 +34,20 @@ namespace TrainManager.SafetySystems
 		internal MTRAutoAI(Plugin plugin)
 		{
 			Plugin = plugin;
-			currentStep = 0;
+			CurrentStep = 0;
 		}
 
 		internal override void Perform(AIData data)
 		{
 			
-			switch (currentStep)
+			switch (CurrentStep)
 			{
 				case 0:
 					// start in N + EB
 					data.Handles.Reverser = 0;
 					data.Handles.BrakeNotch = Plugin.Train.Handles.Brake.MaximumNotch + 1;
 					data.Response = AIResponse.Medium;
-					currentStep++;
+					CurrentStep++;
 					break;
 				case 1:
 					// enable system
@@ -55,14 +55,14 @@ namespace TrainManager.SafetySystems
 					data.Handles.BrakeNotch = Plugin.Train.Handles.Brake.MaximumNotch + 1;
 					Plugin.KeyDown(VirtualKeys.J);
 					data.Response = AIResponse.Short;
-					currentStep++;
+					CurrentStep++;
 					break;
 				case 2:
 					data.Handles.Reverser = 0;
 					data.Handles.BrakeNotch = Plugin.Train.Handles.Brake.MaximumNotch + 1;
 					Plugin.KeyUp(VirtualKeys.J);
 					data.Response = AIResponse.Short;
-					currentStep++;
+					CurrentStep++;
 					break;
 				case 3:
 					// set train to drive mode
@@ -70,7 +70,7 @@ namespace TrainManager.SafetySystems
 					data.Handles.PowerNotch = 0;
 					data.Handles.BrakeNotch = 0;
 					data.Response = AIResponse.Medium;
-					currentStep++;
+					CurrentStep++;
 					break;
 				case 4:
 					data.Handles.PowerNotch = 0;
@@ -79,7 +79,7 @@ namespace TrainManager.SafetySystems
 					{
 						Plugin.KeyDown(VirtualKeys.A1);
 						Plugin.KeyDown(VirtualKeys.A2);
-						currentStep++;
+						CurrentStep++;
 					}
 					break;
 				case 5:
@@ -89,7 +89,7 @@ namespace TrainManager.SafetySystems
 					{
 						Plugin.KeyUp(VirtualKeys.A1);
 						Plugin.KeyUp(VirtualKeys.A2);
-						currentStep--;
+						CurrentStep--;
 					}
 					break;
 			}
@@ -103,7 +103,7 @@ namespace TrainManager.SafetySystems
 
 		public override void EndJump()
 		{
-			currentStep = 0;
+			CurrentStep = 0;
 		}
 
 		public override void SetBeacon(BeaconData beacon)

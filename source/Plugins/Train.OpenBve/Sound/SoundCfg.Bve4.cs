@@ -330,18 +330,18 @@ namespace Train.OpenBve
 								string b = Lines[i].Substring(j + 1).TrimStart();
 								for (int c = 0; c < train.Cars.Length; c++)
 								{
-									if (train.Cars[c].CarBrake.brakeType == BrakeType.Main)
+									if (train.Cars[c].CarBrake.BrakeType == BrakeType.Main)
 									{
 										switch (a.ToLowerInvariant())
 										{
 											case "attack":
-												train.Cars[c].CarBrake.airCompressor.StartSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
+												train.Cars[c].CarBrake.AirCompressor.StartSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
 												break;
 											case "loop":
-												train.Cars[c].CarBrake.airCompressor.LoopSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
+												train.Cars[c].CarBrake.AirCompressor.LoopSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
 												break;
 											case "release":
-												train.Cars[c].CarBrake.airCompressor.EndSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
+												train.Cars[c].CarBrake.AirCompressor.EndSound = new CarSound(Plugin.currentHost, trainFolder, FileName, i, b, SoundCfgParser.mediumRadius, center);
 												break;
 											default:
 												Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);

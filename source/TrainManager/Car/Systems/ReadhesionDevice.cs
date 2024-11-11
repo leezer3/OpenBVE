@@ -67,14 +67,14 @@ namespace TrainManager.Car
 			}
 		}
 
-		public override void Update(double TimeElapsed)
+		public override void Update(double timeElapsed)
 		{
-			if (TrainManagerBase.currentHost.InGameTime < NextUpdateTime || Car.Specs.MaxMotorAcceleration == -1)
+			if (TrainManagerBase.CurrentHost.InGameTime < NextUpdateTime || Car.Specs.MaxMotorAcceleration == -1)
 			{
 				return;
 			}
 
-			NextUpdateTime = TrainManagerBase.currentHost.InGameTime + this.UpdateInterval;
+			NextUpdateTime = TrainManagerBase.CurrentHost.InGameTime + this.UpdateInterval;
 			if (Car.FrontAxle.CurrentWheelSlip | Car.RearAxle.CurrentWheelSlip)
 			{
 				MaximumAccelerationOutput = Car.Specs.MaxMotorAcceleration * this.ApplicationFactor;

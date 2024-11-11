@@ -42,43 +42,43 @@ namespace TrainManager.SafetySystems
 		internal UKDtAI(Plugin plugin)
 		{
 			Plugin = plugin;
-			currentStep = 0;
-			nextPluginAction = 0;
+			CurrentStep = 0;
+			NextPluginAction = 0;
 			vigilanceTimer = 0;
 		}
 
 		internal override void Perform(AIData data)
 		{
-			if (Plugin.Train.CurrentSpeed != 0 && currentStep == 0)
+			if (Plugin.Train.CurrentSpeed != 0 && CurrentStep == 0)
 			{
 				// ai asked to take over at speed, skip startup sequence
-				currentStep = 100;
+				CurrentStep = 100;
 			}
 
-			switch (currentStep)
+			switch (CurrentStep)
 			{
 				case 0:
 					// start of startup sequence- start by bringing up TPWS / AWS
 					data.Handles.Reverser = 1;
 					data.Response = AIResponse.Long;
-					currentStep++;
+					CurrentStep++;
 					return;
 				case 1:
 					data.Handles.Reverser = 0;
 					data.Response = AIResponse.Long;
-					currentStep++;
+					CurrentStep++;
 					return;
 				case 2:
 					if (Plugin.Sound[2] == 0 || Plugin.Sound[2] == -1000)
 					{
 						data.Response = AIResponse.Medium;
-						currentStep++;
+						CurrentStep++;
 					}
 					return;
 				case 3:
 					Plugin.KeyDown(VirtualKeys.A1);
 					data.Response = AIResponse.Medium;
-					currentStep++;
+					CurrentStep++;
 					return;
 				case 4:
 					Plugin.KeyUp(VirtualKeys.A1);
@@ -87,33 +87,33 @@ namespace TrainManager.SafetySystems
 					if (Plugin.Panel[5] == 2)
 					{
 						// engine stopped, continue with startup
-						currentStep++;
+						CurrentStep++;
 					}
 					else
 					{
 						// startup test complete
-						currentStep = 100;
+						CurrentStep = 100;
 					}
 					return;
 				case 5:
 					Plugin.KeyDown(VirtualKeys.D);
 					data.Response = AIResponse.Long;
-					currentStep++;
+					CurrentStep++;
 					return;
 				case 6:
-					currentStep++;
+					CurrentStep++;
 					return;
 				case 7:
 					Plugin.KeyUp(VirtualKeys.D);
 					data.Response = AIResponse.Medium;
-					currentStep = 100;
+					CurrentStep = 100;
 					return;
 			}
 
 			if (Plugin.Panel[5] == 3)
 			{
 				// engine either stalled on start, or has been stopped by user
-				currentStep = 5;
+				CurrentStep = 5;
 			}
 
 			if (Plugin.Panel[51] == 1)
@@ -155,16 +155,16 @@ namespace TrainManager.SafetySystems
 			if (Plugin.Sound[2] == 0)
 			{
 				//AWS horn active, so wait a sec before triggering cancel
-				switch (currentStep)
+				switch (CurrentStep)
 				{
 					case 100:
 						data.Response = AIResponse.Medium;
-						currentStep++;
+						CurrentStep++;
 						return;
 					case 101:
 						Plugin.KeyDown(VirtualKeys.A1);
 						data.Response = AIResponse.Medium;
-						currentStep++;
+						CurrentStep++;
 						return;
 				}
 			}
@@ -191,26 +191,26 @@ namespace TrainManager.SafetySystems
 					return;
 				}
 				//Reset alarm
-				switch (currentStep)
+				switch (CurrentStep)
 				{
 					case 100:
 						data.Response = AIResponse.Medium;
-						currentStep++;
+						CurrentStep++;
 						return;
 					case 101:
 						Plugin.KeyDown(VirtualKeys.A2);
 						data.Response = AIResponse.Medium;
-						currentStep+= 2;
+						CurrentStep+= 2;
 						return;
 				}
 			}
 			
-			if (currentStep == 102 || currentStep == 103)
+			if (CurrentStep == 102 || CurrentStep == 103)
 			{
 				//Raise the cancel key
-				Plugin.KeyUp(currentStep == 102 ? VirtualKeys.A1 : VirtualKeys.A2);
+				Plugin.KeyUp(CurrentStep == 102 ? VirtualKeys.A1 : VirtualKeys.A2);
 				data.Response = AIResponse.Medium;
-				currentStep = 100;
+				CurrentStep = 100;
 				return;
 			}
 
@@ -218,7 +218,7 @@ namespace TrainManager.SafetySystems
 			 * Assume that with a brightness value below 180 we want night headlights
 			 * Further assume that the driver only sets these at the initial station once
 			 */
-			if (!lightsSet)
+			if (!LightsSet)
 			{
 				float currentBrightness = Plugin.Train.Cars[Plugin.Train.DriverCar].Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, 0.0);
 				switch (Plugin.Panel[20])
@@ -239,7 +239,7 @@ namespace TrainManager.SafetySystems
 						}
 						else
 						{
-							lightsSet = true;
+							LightsSet = true;
 						}
 						return;
 					case 2:
@@ -258,7 +258,7 @@ namespace TrainManager.SafetySystems
 						}
 						else
 						{
-							lightsSet = true;
+							LightsSet = true;
 						}
 						return;
 				}
@@ -286,7 +286,7 @@ namespace TrainManager.SafetySystems
 			}
 			//UKDT fitted trains generally use the tail lights toggle for something else dummy (ETS etc.) which isn't directly relevant to the AI or the external appearance, so do nothing here
 
-			if (TrainManagerBase.currentHost.InGameTime > nextPluginAction)
+			if (TrainManagerBase.CurrentHost.InGameTime > NextPluginAction)
 			{
 				//If nothing else has happened recently, blip power / brake (some trains don't like using the vigilance reset key to keep going)
 				if (data.Handles.BrakeNotch == 0)
@@ -313,7 +313,7 @@ namespace TrainManager.SafetySystems
 					}
 				}
 				data.Response = AIResponse.Short;
-				nextPluginAction = TrainManagerBase.currentHost.InGameTime + 20.0;
+				NextPluginAction = TrainManagerBase.CurrentHost.InGameTime + 20.0;
 				return;
 			}
 
@@ -332,7 +332,7 @@ namespace TrainManager.SafetySystems
 			switch (Plugin.Panel[198])
 			{
 				case 0:
-					if (currentRainIntensity > 30 || shouldWipe)
+					if (CurrentRainIntensity > 30 || shouldWipe)
 					{
 						Plugin.KeyDown(VirtualKeys.B1);
 						Plugin.KeyUp(VirtualKeys.B1);
@@ -340,7 +340,7 @@ namespace TrainManager.SafetySystems
 					}
 					return;
 				case 1:
-					if (currentRainIntensity > 45)
+					if (CurrentRainIntensity > 45)
 					{
 						Plugin.KeyDown(VirtualKeys.B1);
 						Plugin.KeyUp(VirtualKeys.B1);
@@ -354,7 +354,7 @@ namespace TrainManager.SafetySystems
 					}
 					return;
 				case 2:
-					if (currentRainIntensity < 60)
+					if (CurrentRainIntensity < 60)
 					{
 						Plugin.KeyDown(VirtualKeys.B2);
 						Plugin.KeyUp(VirtualKeys.B2);
@@ -403,7 +403,7 @@ namespace TrainManager.SafetySystems
 		public override void BeginJump(InitializationModes mode)
 		{
 			overCurrentTrip = false;
-			currentStep = mode == InitializationModes.OffEmergency ? 0 : 100;
+			CurrentStep = mode == InitializationModes.OffEmergency ? 0 : 100;
 		}
 
 		public override void EndJump()
@@ -415,7 +415,7 @@ namespace TrainManager.SafetySystems
 		{
 			if (beacon.Type == 21)
 			{
-				currentRainIntensity = beacon.Optional;
+				CurrentRainIntensity = beacon.Optional;
 			}
 		}
 	}

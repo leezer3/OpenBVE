@@ -58,11 +58,11 @@ namespace ObjectViewer.Trains
 
 				if (!NearestTrain.IsExtensionsCfg)
 				{
-					car.CarBrake.mainReservoir.CurrentPressure = MainReservoirPressure * 1000.0;
-					car.CarBrake.equalizingReservoir.CurrentPressure = EqualizingReservoirPressure * 1000.0;
-					car.CarBrake.brakePipe.CurrentPressure = BrakePipePressure * 1000.0;
-					car.CarBrake.brakeCylinder.CurrentPressure = BrakeCylinderPressure * 1000.0;
-					car.CarBrake.straightAirPipe.CurrentPressure = StraightAirPipePressure * 1000.0;
+					car.CarBrake.MainReservoir.CurrentPressure = MainReservoirPressure * 1000.0;
+					car.CarBrake.EqualizingReservoir.CurrentPressure = EqualizingReservoirPressure * 1000.0;
+					car.CarBrake.BrakePipe.CurrentPressure = BrakePipePressure * 1000.0;
+					car.CarBrake.BrakeCylinder.CurrentPressure = BrakeCylinderPressure * 1000.0;
+					car.CarBrake.StraightAirPipe.CurrentPressure = StraightAirPipePressure * 1000.0;
 				}
 
 				car.Doors[0].State = LeftDoorState;

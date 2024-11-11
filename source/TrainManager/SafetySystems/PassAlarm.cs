@@ -16,10 +16,10 @@ namespace TrainManager.SafetySystems
 
 		/// <summary>Creates a new PassAlarm</summary>
 		/// <param name="type">The type of PassAlarm</param>
-		/// <param name="Car">A reference to the base car</param>
-		public PassAlarm(PassAlarmType type, AbstractCar Car)
+		/// <param name="car">A reference to the base car</param>
+		public PassAlarm(PassAlarmType type, AbstractCar car)
 		{
-			this.baseCar = Car;
+			this.baseCar = car;
 			this.Type = type;
 			this.Sound = new CarSound();
 			this.Lit = false;
@@ -29,7 +29,7 @@ namespace TrainManager.SafetySystems
 		public void Trigger()
 		{
 			Lit = true;
-			if (TrainManagerBase.currentHost.SoundIsPlaying(Sound.Source))
+			if (TrainManagerBase.CurrentHost.SoundIsPlaying(Sound.Source))
 			{
 				return;
 			}

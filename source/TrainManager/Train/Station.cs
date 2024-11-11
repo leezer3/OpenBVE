@@ -20,7 +20,7 @@ namespace TrainManager.Trains
 		{
 			if (direction < 0)
 			{
-				if (Handles.Reverser.Actual == ReverserPosition.Forwards && Handles.Power.Driver != 0 && TrainManagerBase.currentHost.SimulationState != SimulationState.MinimalisticSimulation && stationIndex == Station)
+				if (Handles.Reverser.Actual == ReverserPosition.Forwards && Handles.Power.Driver != 0 && TrainManagerBase.CurrentHost.SimulationState != SimulationState.MinimalisticSimulation && stationIndex == Station)
 				{
 					//Our reverser and power are in F, but we are rolling backwards
 					//Leave the station index alone, and we won't trigger again when we actually move forwards
@@ -69,13 +69,13 @@ namespace TrainManager.Trains
 						{
 							string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","station_passed"});
 							s = s.Replace("[name]", TrainManagerBase.CurrentRoute.Stations[stationIndex].Name);
-							TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Orange, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+							TrainManagerBase.CurrentHost.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Orange, TrainManagerBase.CurrentHost.InGameTime + 10.0, null);
 						}
 						else if (TrainManagerBase.CurrentRoute.Stations[stationIndex].PlayerStops() & StationState == TrainStopState.Boarding)
 						{
 							string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message","station_passed_boarding"});
 							s = s.Replace("[name]", TrainManagerBase.CurrentRoute.Stations[stationIndex].Name);
-							TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+							TrainManagerBase.CurrentHost.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, TrainManagerBase.CurrentHost.InGameTime + 10.0, null);
 						}
 					}
 
@@ -91,8 +91,8 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Is called once a frame to update the station state for the train</summary>
-		/// <param name="TimeElapsed">The frame time elapsed</param>
-		private void UpdateStation(double TimeElapsed)
+		/// <param name="timeElapsed">The frame time elapsed</param>
+		private void UpdateStation(double timeElapsed)
 		{
 			if (Station >= 0)
 			{
@@ -182,7 +182,7 @@ namespace TrainManager.Trains
 								if (buffer != null)
 								{
 									OpenBveApi.Math.Vector3 pos = TrainManagerBase.CurrentRoute.Stations[i].SoundOrigin;
-									TrainManagerBase.currentHost.PlaySound(buffer, 1.0, 1.0, pos, null, false);
+									TrainManagerBase.CurrentHost.PlaySound(buffer, 1.0, 1.0, pos, null, false);
 								}
 
 								StationArrivalTime = TrainManagerBase.CurrentRoute.SecondsSinceMidnight;
@@ -218,9 +218,9 @@ namespace TrainManager.Trains
 										s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","station_arrival"});
 									}
 
-									System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+									System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
 									TimeSpan a = TimeSpan.FromSeconds(Math.Abs(early));
-									string b = a.Hours.ToString("00", Culture) + ":" + a.Minutes.ToString("00", Culture) + ":" + a.Seconds.ToString("00", Culture);
+									string b = a.Hours.ToString("00", culture) + ":" + a.Minutes.ToString("00", culture) + ":" + a.Seconds.ToString("00", culture);
 									if (StationDistanceToStopPoint < -0.1)
 									{
 										s += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","delimiter"}) + Translations.GetInterfaceString(HostApplication.OpenBve, CurrentDirection == TrackDirection.Forwards ? new[] {"message","station_overrun"} : new[] {"message","station_underrun"});
@@ -231,7 +231,7 @@ namespace TrainManager.Trains
 									}
 
 									double d = Math.Abs(StationDistanceToStopPoint);
-									string c = d.ToString("0.0", Culture);
+									string c = d.ToString("0.0", culture);
 									if (TrainManagerBase.CurrentRoute.Stations[i].Type == StationType.Terminal)
 									{
 										s += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","delimiter"}) + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","station_terminal"});
@@ -240,14 +240,14 @@ namespace TrainManager.Trains
 									s = s.Replace("[name]", TrainManagerBase.CurrentRoute.Stations[i].Name);
 									s = s.Replace("[time]", b);
 									s = s.Replace("[difference]", c);
-									TrainManagerBase.currentHost.AddMessage(s, MessageDependency.StationArrival, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+									TrainManagerBase.CurrentHost.AddMessage(s, MessageDependency.StationArrival, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 									if (TrainManagerBase.CurrentRoute.Stations[i].Type == StationType.Normal)
 									{
 										s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","station_deadline"});
-										TrainManagerBase.currentHost.AddMessage(s, MessageDependency.StationDeparture, GameMode.Normal, MessageColor.White, double.PositiveInfinity, null);
+										TrainManagerBase.CurrentHost.AddMessage(s, MessageDependency.StationDeparture, GameMode.Normal, MessageColor.White, double.PositiveInfinity, null);
 									}
 
-									TrainManagerBase.currentHost.UpdateCustomTimetable(TrainManagerBase.CurrentRoute.Stations[i].TimetableDaytimeTexture, TrainManagerBase.CurrentRoute.Stations[i].TimetableNighttimeTexture);
+									TrainManagerBase.CurrentHost.UpdateCustomTimetable(TrainManagerBase.CurrentRoute.Stations[i].TimetableDaytimeTexture, TrainManagerBase.CurrentRoute.Stations[i].TimetableNighttimeTexture);
 								}
 
 								// schedule door locks (passengers stuck between the doors)
@@ -388,9 +388,9 @@ namespace TrainManager.Trains
 						{
 							if (TrainManagerBase.CurrentRoute.SecondsSinceMidnight >= StationDepartureTime - buffer.Duration)
 							{
-								if (TrainManagerBase.currentHost.SimulationState == SimulationState.Running)
+								if (TrainManagerBase.CurrentHost.SimulationState == SimulationState.Running)
 								{
-									TrainManagerBase.currentHost.PlaySound(buffer, 1.0, 1.0, TrainManagerBase.CurrentRoute.Stations[i].SoundOrigin, null, false);
+									TrainManagerBase.CurrentHost.PlaySound(buffer, 1.0, 1.0, TrainManagerBase.CurrentRoute.Stations[i].SoundOrigin, null, false);
 									StationDepartureSoundPlayed = true;
 								}
 							}
@@ -452,7 +452,7 @@ namespace TrainManager.Trains
 							for (int j = 0; j < Cars.Length; j++)
 							{
 								if (!Cars[j].EnableLoadingSway) continue;
-								double r = 2.0 * TrainManagerBase.CurrentRoute.Stations[i].PassengerRatio * TimeElapsed;
+								double r = 2.0 * TrainManagerBase.CurrentRoute.Stations[i].PassengerRatio * timeElapsed;
 								if (r >= TrainManagerBase.RandomNumberGenerator.NextDouble())
 								{
 									int d =
@@ -481,11 +481,11 @@ namespace TrainManager.Trains
 											break; // Only trigger messages for the player train
 										if (!TrainManagerBase.CurrentRoute.Stations[i].OpenLeftDoors & !TrainManagerBase.CurrentRoute.Stations[i].OpenRightDoors | Specs.DoorCloseMode != DoorMode.Manual)
 										{
-											TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","station_depart"}), MessageDependency.None, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+											TrainManagerBase.CurrentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","station_depart"}), MessageDependency.None, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 										}
 										else
 										{
-											TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","station_depart_closedoors"}), MessageDependency.None, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+											TrainManagerBase.CurrentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","station_depart_closedoors"}), MessageDependency.None, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 										}
 
 										break;
@@ -505,7 +505,7 @@ namespace TrainManager.Trains
 							StationState = TrainStopState.Completed;
 							if (IsPlayerTrain & TrainManagerBase.CurrentRoute.Stations[i].Type == StationType.Normal)
 							{
-								TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","station_depart"}), MessageDependency.None, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+								TrainManagerBase.CurrentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","station_depart"}), MessageDependency.None, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 							}
 						}
 					}

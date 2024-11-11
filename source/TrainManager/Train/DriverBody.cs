@@ -30,7 +30,7 @@ namespace TrainManager.Trains
 			RollDamping = new Damping(6.0, 0.3);
 		}
 
-		public void Update(double TimeElapsed)
+		public void Update(double timeElapsed)
 		{
 			if (TrainManagerBase.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 			{
@@ -41,7 +41,7 @@ namespace TrainManager.Trains
 					const double accelerationFast = 2.0;
 					if (Slow.Y < targetY)
 					{
-						Slow.Y += accelerationSlow * TimeElapsed;
+						Slow.Y += accelerationSlow * timeElapsed;
 						if (Slow.Y > targetY)
 						{
 							Slow.Y = targetY;
@@ -49,7 +49,7 @@ namespace TrainManager.Trains
 					}
 					else if (Slow.Y > targetY)
 					{
-						Slow.Y -= accelerationSlow * TimeElapsed;
+						Slow.Y -= accelerationSlow * timeElapsed;
 						if (Slow.Y < targetY)
 						{
 							Slow.Y = targetY;
@@ -58,7 +58,7 @@ namespace TrainManager.Trains
 
 					if (Fast.Y < targetY)
 					{
-						Fast.Y += accelerationFast * TimeElapsed;
+						Fast.Y += accelerationFast * timeElapsed;
 						if (Fast.Y > targetY)
 						{
 							Fast.Y = targetY;
@@ -66,7 +66,7 @@ namespace TrainManager.Trains
 					}
 					else if (Fast.Y > targetY)
 					{
-						Fast.Y -= accelerationFast * TimeElapsed;
+						Fast.Y -= accelerationFast * timeElapsed;
 						if (Fast.Y < targetY)
 						{
 							Fast.Y = targetY;
@@ -80,7 +80,7 @@ namespace TrainManager.Trains
 					{
 						Pitch = 0.1;
 					}
-					PitchDamping.Update(TimeElapsed, ref Pitch, true);
+					PitchDamping.Update(timeElapsed, ref Pitch, true);
 				}
 				{
 					// roll
@@ -127,7 +127,7 @@ namespace TrainManager.Trains
 					const double accelerationFast = 10.0;
 					if (Slow.X < targetX)
 					{
-						Slow.X += accelerationSlow * TimeElapsed;
+						Slow.X += accelerationSlow * timeElapsed;
 						if (Slow.X > targetX)
 						{
 							Slow.X = targetX;
@@ -135,7 +135,7 @@ namespace TrainManager.Trains
 					}
 					else if (Slow.X > targetX)
 					{
-						Slow.X -= accelerationSlow * TimeElapsed;
+						Slow.X -= accelerationSlow * timeElapsed;
 						if (Slow.X < targetX)
 						{
 							Slow.X = targetX;
@@ -144,7 +144,7 @@ namespace TrainManager.Trains
 
 					if (Fast.X < targetX)
 					{
-						Fast.X += accelerationFast * TimeElapsed;
+						Fast.X += accelerationFast * timeElapsed;
 						if (Fast.X > targetX)
 						{
 							Fast.X = targetX;
@@ -152,7 +152,7 @@ namespace TrainManager.Trains
 					}
 					else if (Fast.X > targetX)
 					{
-						Fast.X -= accelerationFast * TimeElapsed;
+						Fast.X -= accelerationFast * timeElapsed;
 						if (Fast.X < targetX)
 						{
 							Fast.X = targetX;
@@ -162,7 +162,7 @@ namespace TrainManager.Trains
 					double diffX = Slow.X - Fast.X;
 					diffX = Math.Sign(diffX) * diffX * diffX;
 					Roll = 0.5 * Math.Atan(0.3 * diffX);
-					RollDamping.Update(TimeElapsed, ref Roll, true);
+					RollDamping.Update(timeElapsed, ref Roll, true);
 				}
 			}
 		}

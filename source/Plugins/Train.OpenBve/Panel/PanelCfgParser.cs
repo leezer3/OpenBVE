@@ -1375,25 +1375,25 @@ namespace Train.OpenBve
 											}
 										}
 
-										if (Car.baseTrain.Handles.Brake is AirBrakeHandle)
+										if (Car.BaseTrain.Handles.Brake is AirBrakeHandle)
 										{
-											int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
+											int maxpow = Car.BaseTrain.Handles.Power.MaximumNotch;
 											int em = maxpow + 3;
 											Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > " + maxpow.ToString(Culture) + " BrakeNotch + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
 										}
 										else
 										{
-											if (Car.baseTrain.Handles.HasHoldBrake)
+											if (Car.BaseTrain.Handles.HasHoldBrake)
 											{
-												int em = Car.baseTrain.Handles.Power.MaximumNotch + 2 + Car.baseTrain.Handles.Brake.MaximumNotch;
-												int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
+												int em = Car.BaseTrain.Handles.Power.MaximumNotch + 2 + Car.BaseTrain.Handles.Brake.MaximumNotch;
+												int maxpow = Car.BaseTrain.Handles.Power.MaximumNotch;
 												int maxpowp1 = maxpow + 1;
 												Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " holdBrake " + maxpowp1.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpowp1.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ? ?", false);
 											}
 											else
 											{
-												int em = Car.baseTrain.Handles.Power.MaximumNotch + 1 + Car.baseTrain.Handles.Brake.MaximumNotch;
-												int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
+												int em = Car.BaseTrain.Handles.Power.MaximumNotch + 1 + Car.BaseTrain.Handles.Brake.MaximumNotch;
+												int maxpow = Car.BaseTrain.Handles.Power.MaximumNotch;
 												Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpow.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
 											}
 										}

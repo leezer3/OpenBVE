@@ -15,7 +15,7 @@ namespace TrainManager.Car
 		{
 			get
 			{
-				if (legacyRainEvents)
+				if (LegacyRainEvents)
 				{
 					return rainIntensity;
 				}
@@ -26,7 +26,7 @@ namespace TrainManager.Car
 		/// <summary>Backing property storing the current legacy rain intensity</summary>
 		private int rainIntensity;
 		/// <summary>Whether legacy rain events are in use</summary>
-		public bool legacyRainEvents;
+		public bool LegacyRainEvents;
 		/// <summary>The raindrop array</summary>
 		public Raindrop[] RainDrops;
 		/// <summary>The sound played when a raindrop hits the windscreen</summary>
@@ -39,13 +39,13 @@ namespace TrainManager.Car
 		internal readonly double DropLife;
 		private double dropTimer;
 		/// <summary>The number of drops currently visible on the windscreen</summary>
-		public int currentDrops;
+		public int CurrentDrops;
 
 		public Windscreen(int numberOfDrops, double dropLife, CarBase car)
 		{
 			RainDrops = new Raindrop[numberOfDrops];
 			DropLife = dropLife;
-			currentDrops = 0;
+			CurrentDrops = 0;
 			Car = car;
 		}
 
@@ -53,7 +53,7 @@ namespace TrainManager.Car
 		public void SetRainIntensity(int intensity)
 		{
 			//Must assume that the .rain command and legacy rain are not mixed in a routefile
-			legacyRainEvents = true;
+			LegacyRainEvents = true;
 			if (intensity < 0)
 			{
 				intensity = 0;
@@ -66,8 +66,8 @@ namespace TrainManager.Car
 		}
 
 		/// <summary>Updates the windscreen</summary>
-		/// <param name="TimeElapsed">The time elapsed since the previous call to this method</param>
-		public void Update(double TimeElapsed)
+		/// <param name="timeElapsed">The time elapsed since the previous call to this method</param>
+		public void Update(double timeElapsed)
 		{
 			if (RainDrops == null || RainDrops.Length == 0)
 			{
@@ -77,7 +77,7 @@ namespace TrainManager.Car
 			if (CurrentlyRaining)
 			{
 				int nextDrop = PickDrop();
-				dropTimer += TimeElapsed * 1000;
+				dropTimer += timeElapsed * 1000;
 				var dev = (int)(0.4 * 2000 / Intensity);
 				int dropInterval =  2000 / Intensity + TrainManagerBase.RandomNumberGenerator.Next(dev, dev * 2);
 				if (dropTimer > dropInterval)
@@ -86,10 +86,10 @@ namespace TrainManager.Car
 					{
 						if (!RainDrops[nextDrop].Visible)
 						{
-							currentDrops++;
+							CurrentDrops++;
 						}
 						RainDrops[nextDrop].Visible = true;
-						if (!legacyRainEvents)
+						if (!LegacyRainEvents)
 						{
 							int snowProbability = TrainManagerBase.RandomNumberGenerator.Next(100);
 							if ((snowProbability < Car.FrontAxle.Follower.SnowIntensity) || Car.FrontAxle.Follower.RainIntensity == 0)
@@ -108,16 +108,16 @@ namespace TrainManager.Car
 
 			for (int i = 0; i < RainDrops.Length; i++)
 			{
-				RainDrops[i].RemainingLife -= TimeElapsed;
+				RainDrops[i].RemainingLife -= timeElapsed;
 				if (RainDrops[i].RemainingLife <= 0 && RainDrops[i].Visible)
 				{
 					RainDrops[i].Visible = false;
 					RainDrops[i].IsSnowFlake = false;
-					currentDrops--;
+					CurrentDrops--;
 					RainDrops[i].RemainingLife = 0.5 * TrainManagerBase.RandomNumberGenerator.NextDouble() * DropLife;
 				}
 			}
-			Wipers.Update(TimeElapsed);
+			Wipers.Update(timeElapsed);
 		}
 
 		private int PickDrop()

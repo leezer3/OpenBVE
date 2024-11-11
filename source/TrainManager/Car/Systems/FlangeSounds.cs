@@ -21,7 +21,7 @@ namespace TrainManager.Car.Systems
 			Sounds = new Dictionary<int, CarSound>();
 		}
 
-		public void Update(double TimeElapsed)
+		public void Update(double timeElapsed)
 		{
 			if (Sounds.Count == 0)
 			{
@@ -55,12 +55,12 @@ namespace TrainManager.Car.Systems
 			if (basegain > 0.75) basegain = 0.75;
 			if (pitch > Pitch)
 			{
-				Pitch += TimeElapsed;
+				Pitch += timeElapsed;
 				if (Pitch > pitch) Pitch = pitch;
 			}
 			else
 			{
-				Pitch -= TimeElapsed;
+				Pitch -= timeElapsed;
 				if (Pitch < pitch) Pitch = pitch;
 			}
 
@@ -75,12 +75,12 @@ namespace TrainManager.Car.Systems
 
 				if (key == baseCar.FrontAxle.FlangeIndex | key == baseCar.RearAxle.FlangeIndex)
 				{
-					Sounds[key].TargetVolume += TimeElapsed;
+					Sounds[key].TargetVolume += timeElapsed;
 					if (Sounds[key].TargetVolume > 1.0) Sounds[key].TargetVolume = 1.0;
 				}
 				else
 				{
-					Sounds[key].TargetVolume -= TimeElapsed;
+					Sounds[key].TargetVolume -= timeElapsed;
 					if (Sounds[key].TargetVolume < 0.0) Sounds[key].TargetVolume = 0.0;
 				}
 

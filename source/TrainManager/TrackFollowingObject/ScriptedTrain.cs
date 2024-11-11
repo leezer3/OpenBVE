@@ -34,20 +34,20 @@ namespace TrainManager.Trains
 				Cars[i].RearBogie.ChangeSection(-1);
 				Cars[i].Coupler.ChangeSection(-1);
 			}
-			TrainManagerBase.currentHost.StopAllSounds(this);
+			TrainManagerBase.CurrentHost.StopAllSounds(this);
 		}
 
 		/// <summary>Call this method to update the train</summary>
-		/// <param name="TimeElapsed">The elapsed time this frame</param>
-		public override void Update(double TimeElapsed)
+		/// <param name="timeElapsed">The elapsed time this frame</param>
+		public override void Update(double timeElapsed)
 		{
 			if (State == TrainState.Pending)
 			{
 				// pending train
-				if (TrainManagerBase.currentHost.InGameTime >= AppearanceTime)
+				if (TrainManagerBase.CurrentHost.InGameTime >= AppearanceTime)
 				{
-					double PlayerTrainTrackPosition = TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition + 0.5 * TrainManagerBase.PlayerTrain.Cars[0].Length - TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Position;
-					if (PlayerTrainTrackPosition < AppearanceStartPosition || (PlayerTrainTrackPosition > AppearanceEndPosition && AppearanceEndPosition > AppearanceStartPosition))
+					double playerTrainTrackPosition = TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition + 0.5 * TrainManagerBase.PlayerTrain.Cars[0].Length - TrainManagerBase.PlayerTrain.Cars[0].FrontAxle.Position;
+					if (playerTrainTrackPosition < AppearanceStartPosition || (playerTrainTrackPosition > AppearanceEndPosition && AppearanceEndPosition > AppearanceStartPosition))
 					{
 						return;
 					}
@@ -74,7 +74,7 @@ namespace TrainManager.Trains
 			else if (State == TrainState.Available)
 			{
 				// available train
-				UpdatePhysicsAndControls(TimeElapsed);
+				UpdatePhysicsAndControls(timeElapsed);
 				for (int i = 0; i < Cars.Length; i++)
 				{
 					byte dnb;
@@ -116,21 +116,21 @@ namespace TrainManager.Trains
 						}
 					}
 
-					AI?.Trigger(TimeElapsed);
+					AI?.Trigger(timeElapsed);
 				}
 			}
 			else if (State == TrainState.Bogus)
 			{
 				// bogus train
-				AI?.Trigger(TimeElapsed);
+				AI?.Trigger(timeElapsed);
 			}
 		}
 
 		/// <summary>Updates the physics and controls for this train</summary>
-		/// <param name="TimeElapsed">The time elapsed</param>
-		private void UpdatePhysicsAndControls(double TimeElapsed)
+		/// <param name="timeElapsed">The time elapsed</param>
+		private void UpdatePhysicsAndControls(double timeElapsed)
 		{
-			if (TimeElapsed == 0.0 || TimeElapsed > 1000)
+			if (timeElapsed == 0.0 || timeElapsed > 1000)
 			{
 				//HACK: The physics engine really does not like update times above 1000ms
 				//This works around a bug experienced when jumping to a station on a steep hill
@@ -139,18 +139,18 @@ namespace TrainManager.Trains
 			}
 
 			// update station and doors
-			UpdateDoors(TimeElapsed);
+			UpdateDoors(timeElapsed);
 
 			// Update Run and Motor sounds
-			foreach (var Car in Cars)
+			foreach (var car in Cars)
 			{
-				Car.Run.Update(TimeElapsed);
-				Car.Sounds.Motor?.Update(TimeElapsed);
+				car.Run.Update(timeElapsed);
+				car.Sounds.Motor?.Update(timeElapsed);
 				
 			}
 
 			// infrequent updates
-			InternalTimerTimeElapsed += TimeElapsed;
+			InternalTimerTimeElapsed += timeElapsed;
 			if (InternalTimerTimeElapsed > 10.0)
 			{
 				InternalTimerTimeElapsed -= 10.0;
@@ -162,7 +162,7 @@ namespace TrainManager.Trains
 		{
 			Dispose();
 			State = TrainState.Pending;
-			TrainManagerBase.currentHost.ProcessJump(this, stationIndex, 0);
+			TrainManagerBase.CurrentHost.ProcessJump(this, stationIndex, 0);
 		}
 	}
 }

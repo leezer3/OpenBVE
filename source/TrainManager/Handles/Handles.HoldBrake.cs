@@ -17,9 +17,9 @@ namespace TrainManager.Handles
 			baseTrain = train;
 		}
 
-		public void ApplyState(bool Value)
+		public void ApplyState(bool value)
 		{
-			Driver = Value;
+			Driver = value;
 			if (baseTrain.Plugin == null) return;
 			baseTrain.Plugin.UpdatePower();
 			baseTrain.Plugin.UpdateBrake();

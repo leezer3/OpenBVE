@@ -287,10 +287,10 @@ namespace TrainManager.SafetySystems {
 			}
 		}
 
-		public void ReportError(string Error, bool Critical = false)
+		public void ReportError(string error, bool critical = false)
 		{
-			lastError = Error;
-			if (Critical)
+			lastError = error;
+			if (critical)
 			{
 				externalCrashed = true;
 			}

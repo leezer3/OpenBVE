@@ -15,9 +15,9 @@
 		public virtual double Mass => 0.0;
 
 		/// <summary>Called once a frame to update the cargo</summary>
-		/// <param name="Acceleration">The current acceleration of the train</param>
-		/// <param name="TimeElapsed">The elapsed time</param>
-		public virtual void Update(double Acceleration, double TimeElapsed)
+		/// <param name="newAcceleration">The current acceleration of the train</param>
+		/// <param name="timeElapsed">The elapsed time</param>
+		public virtual void Update(double newAcceleration, double timeElapsed)
 		{
 
 		}

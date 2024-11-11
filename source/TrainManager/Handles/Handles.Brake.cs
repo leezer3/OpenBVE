@@ -11,7 +11,7 @@ namespace TrainManager.Handles
 	/// <summary>A brake handle</summary>
 	public class BrakeHandle : NotchedHandle
 	{
-		public BrakeHandle(int max, int driverMax, EmergencyHandle eb, double[] delayUp, double[] delayDown, TrainBase Train) : base(Train)
+		public BrakeHandle(int max, int driverMax, EmergencyHandle eb, double[] delayUp, double[] delayDown, TrainBase train) : base(train)
 		{
 			MaximumNotch = max;
 			MaximumDriverNotch = driverMax;
@@ -52,7 +52,7 @@ namespace TrainManager.Handles
 			}
 			if (DelayedChanges.Length >= 1)
 			{
-				if (DelayedChanges[0].Time <= TrainManagerBase.currentHost.InGameTime)
+				if (DelayedChanges[0].Time <= TrainManagerBase.CurrentHost.InGameTime)
 				{
 					Actual = DelayedChanges[0].Value;
 					RemoveChanges(1);
@@ -62,22 +62,22 @@ namespace TrainManager.Handles
 			// Spring increase
 			if (SpringType != SpringType.Unsprung && SpringTime > 0)
 			{
-				if (TrainManagerBase.currentHost.InGameTime > SpringTimer)
+				if (TrainManagerBase.CurrentHost.InGameTime > SpringTimer)
 				{
 					ApplyState(1, true);
 				}
 			}
 		}
 
-		public override void ApplyState(int BrakeValue, bool BrakeRelative, bool IsOverMaxDriverNotch = false)
+		public override void ApplyState(int brakeValue, bool brakeRelative, bool isOverMaxDriverNotch = false)
 		{
 			int previousDriver = Driver;
-			if (baseTrain.Handles.Power.SpringType > SpringType.Single)
+			if (BaseTrain.Handles.Power.SpringType > SpringType.Single)
 			{
-				baseTrain.Handles.Power.SpringTimer = TrainManagerBase.currentHost.InGameTime + SpringTime;
+				BaseTrain.Handles.Power.SpringTimer = TrainManagerBase.CurrentHost.InGameTime + SpringTime;
 			}
-			SpringTimer = TrainManagerBase.currentHost.InGameTime + SpringTime;
-			int b = BrakeRelative ? BrakeValue + Driver : BrakeValue;
+			SpringTimer = TrainManagerBase.CurrentHost.InGameTime + SpringTime;
+			int b = brakeRelative ? brakeValue + Driver : brakeValue;
 			if (b < 0)
 			{
 				b = 0;
@@ -86,7 +86,7 @@ namespace TrainManager.Handles
 			{
 				b = MaximumNotch;
 			}
-			if (!IsOverMaxDriverNotch && b > MaximumDriverNotch)
+			if (!isOverMaxDriverNotch && b > MaximumDriverNotch)
 			{
 				b = MaximumDriverNotch;
 			}
@@ -95,24 +95,24 @@ namespace TrainManager.Handles
 			if (b < Driver)
 			{
 				// brake release
-				baseTrain.Cars[baseTrain.DriverCar].CarBrake.Release.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+				BaseTrain.Cars[BaseTrain.DriverCar].CarBrake.Release.Play(BaseTrain.Cars[BaseTrain.DriverCar], false);
 					
 				if (b > 0)
 				{
 					// brake release (not min)
 					if (Driver - b > 2 | ContinuousMovement && DecreaseFast.Buffer != null)
 					{
-						DecreaseFast.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+						DecreaseFast.Play(BaseTrain.Cars[BaseTrain.DriverCar], false);
 					}
 					else
 					{
-						Decrease.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+						Decrease.Play(BaseTrain.Cars[BaseTrain.DriverCar], false);
 					}
 				}
 				else
 				{
 					// brake min
-					Min.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+					Min.Play(BaseTrain.Cars[BaseTrain.DriverCar], false);
 				}
 			}
 			else if (b > Driver)
@@ -120,51 +120,51 @@ namespace TrainManager.Handles
 				// brake
 				if (b - Driver > 2 | ContinuousMovement && IncreaseFast.Buffer != null)
 				{
-					IncreaseFast.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+					IncreaseFast.Play(BaseTrain.Cars[BaseTrain.DriverCar], false);
 				}
 				else
 				{
-					Increase.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+					Increase.Play(BaseTrain.Cars[BaseTrain.DriverCar], false);
 				}
 			}
 
 			Driver = b;
 			
 			// plugin
-			if (baseTrain.Plugin != null)
+			if (BaseTrain.Plugin != null)
 			{
-				baseTrain.Plugin.UpdatePower();
-				baseTrain.Plugin.UpdateBrake();
+				BaseTrain.Plugin.UpdatePower();
+				BaseTrain.Plugin.UpdateBrake();
 			}
 
 			if (previousDriver == Driver)
 			{
 				return;
 			}
-			TrainManagerBase.currentHost.AddBlackBoxEntry();
+			TrainManagerBase.CurrentHost.AddBlackBoxEntry();
 			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
-			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+			TrainManagerBase.CurrentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentHost.InGameTime + 10.0, null);
 		}
 
 		public override void ApplySafetyState(int newState)
 		{
-			safetyState = newState;
+			SafetyState = newState;
 		}
 
 		public override string GetNotchDescription(out MessageColor color)
 		{
 			color = MessageColor.Gray;
-			int offset = baseTrain.Handles.HasHoldBrake ? 2 : 1;
+			int offset = BaseTrain.Handles.HasHoldBrake ? 2 : 1;
 
 			if (NotchDescriptions == null || offset + Driver >= NotchDescriptions.Length)
 			{
-				if (baseTrain.Handles.EmergencyBrake.Driver)
+				if (BaseTrain.Handles.EmergencyBrake.Driver)
 				{
 					color = MessageColor.Red;
 					return Translations.QuickReferences.HandleEmergency;
 				}
 
-				if (baseTrain.Handles.HasHoldBrake && baseTrain.Handles.HoldBrake.Driver)
+				if (BaseTrain.Handles.HasHoldBrake && BaseTrain.Handles.HoldBrake.Driver)
 				{
 					color = MessageColor.Green;
 					return Translations.QuickReferences.HandleHoldBrake;
@@ -180,13 +180,13 @@ namespace TrainManager.Handles
 			}
 			else
 			{
-				if (baseTrain.Handles.EmergencyBrake.Driver)
+				if (BaseTrain.Handles.EmergencyBrake.Driver)
 				{
 					color = MessageColor.Red;
 					return NotchDescriptions[0];
 				}
 
-				if (baseTrain.Handles.HasHoldBrake && baseTrain.Handles.HoldBrake.Driver) {
+				if (BaseTrain.Handles.HasHoldBrake && BaseTrain.Handles.HoldBrake.Driver) {
 					color = MessageColor.Green;
 					return NotchDescriptions[1];
 				}

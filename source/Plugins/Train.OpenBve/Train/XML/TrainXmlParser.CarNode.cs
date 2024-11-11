@@ -85,7 +85,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case "brake":
-						Train.Cars[Car].CarBrake.brakeType = BrakeType.Auxiliary;
+						Train.Cars[Car].CarBrake.BrakeType = BrakeType.Auxiliary;
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
 							ParseBrakeNode(c, fileName, Car, ref Train);

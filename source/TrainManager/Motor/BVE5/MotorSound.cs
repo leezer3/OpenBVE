@@ -22,7 +22,7 @@ namespace TrainManager.Motor
 			SoundSources = new SoundSource[0];
 		}
 
-		public override void Update(double TimeElapsed)
+		public override void Update(double timeElapsed)
 		{
 			if (!Car.Specs.IsMotorCar)
 			{
@@ -53,7 +53,7 @@ namespace TrainManager.Motor
 				{
 					if (i >= entry.Sounds.Length || i < SoundSources.Length && (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0))
 					{
-						TrainManagerBase.currentHost.StopSound(SoundSources[i]);
+						TrainManagerBase.CurrentHost.StopSound(SoundSources[i]);
 					}
 					else
 					{
@@ -69,7 +69,7 @@ namespace TrainManager.Motor
 
 							if (pitch <= 0 || gain <= 0)
 							{
-								TrainManagerBase.currentHost.StopSound(SoundSources[i]);
+								TrainManagerBase.CurrentHost.StopSound(SoundSources[i]);
 								continue;
 							}
 							/*
@@ -93,7 +93,7 @@ namespace TrainManager.Motor
 							}
 							else
 							{
-								SoundSources[i] = TrainManagerBase.currentHost.PlaySound(SoundBuffers[i], pitch, gain, Position, Car, true) as SoundSource;	
+								SoundSources[i] = TrainManagerBase.CurrentHost.PlaySound(SoundBuffers[i], pitch, gain, Position, Car, true) as SoundSource;	
 							}
 						}
 					}
@@ -121,7 +121,7 @@ namespace TrainManager.Motor
 				{
 					if (i >= entry.Sounds.Length || i < SoundSources.Length && (entry.Sounds[i].Pitch == 0 || entry.Sounds[i].Gain == 0))
 					{
-						TrainManagerBase.currentHost.StopSound(SoundSources[i]);
+						TrainManagerBase.CurrentHost.StopSound(SoundSources[i]);
 					}
 					else
 					{
@@ -137,7 +137,7 @@ namespace TrainManager.Motor
 
 							if (pitch <= 0 || gain <= 0)
 							{
-								TrainManagerBase.currentHost.StopSound(SoundSources[i]);
+								TrainManagerBase.CurrentHost.StopSound(SoundSources[i]);
 								continue;
 							}
 							/*
@@ -160,7 +160,7 @@ namespace TrainManager.Motor
 							}
 							else
 							{
-								SoundSources[i] = TrainManagerBase.currentHost.PlaySound(SoundBuffers[i], pitch, gain, Position, Car, true) as SoundSource;
+								SoundSources[i] = TrainManagerBase.CurrentHost.PlaySound(SoundBuffers[i], pitch, gain, Position, Car, true) as SoundSource;
 							}
 						}
 					}

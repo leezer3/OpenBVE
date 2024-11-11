@@ -22,7 +22,7 @@ namespace TrainManager.Car.Systems
 			SpringPlayedAngle = 0;
 		}
 
-		public void Update(double TimeElapsed)
+		public void Update(double timeElapsed)
 		{
 			double a = baseCar.Specs.RollDueToShakingAngle;
 			double diff = a - SpringPlayedAngle;
@@ -60,7 +60,7 @@ namespace TrainManager.Car.Systems
 				SpringPlayedAngle = a;
 				springTimer = 0;
 			}
-			springTimer += TimeElapsed;
+			springTimer += timeElapsed;
 		}
 	}
 }
