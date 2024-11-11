@@ -17,8 +17,8 @@ namespace ObjectViewer
 	public sealed partial class GameMenu: AbstractMenu
 	{
 
-		internal Picturebox filePictureBox;
-		internal Textbox fileTextBox;
+		private Picturebox filePictureBox;
+		private Textbox fileTextBox;
 		private double lastTimeElapsed;
 		private static string SearchDirectory;
 		private static string currentFile;
@@ -220,7 +220,7 @@ namespace ObjectViewer
 
 		public override bool ProcessMouseMove(int x, int y)
 		{
-			Program.currentGameWindow.CursorVisible = true;
+			Program.CurrentGameWindow.CursorVisible = true;
 			if (CurrMenu < 0)
 			{
 				return false;
@@ -266,10 +266,10 @@ namespace ObjectViewer
 			return false;
 		}
 
-		public override void Draw(double RealTimeElapsed)
+		public override void Draw(double realTimeElapsed)
 		{
-			double TimeElapsed = RealTimeElapsed - lastTimeElapsed;
-			lastTimeElapsed = RealTimeElapsed;
+			double timeElapsed = realTimeElapsed - lastTimeElapsed;
+			lastTimeElapsed = realTimeElapsed;
 			int i;
 
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
@@ -358,14 +358,14 @@ namespace ObjectViewer
 					}
 
 					// draw the text
-					Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
+					Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(timeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourHighlight, false);
 				}
 				else if (menu.Items[i] is MenuCaption)
-					Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
+					Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(timeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourCaption, false);
 				else
-					Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
+					Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(timeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourNormal, false);
 				if (menu.Items[i] is MenuOption opt)
 				{

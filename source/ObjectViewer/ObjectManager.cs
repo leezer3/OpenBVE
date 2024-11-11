@@ -8,17 +8,17 @@ namespace ObjectViewer
         internal static WorldObject[] AnimatedWorldObjects = new WorldObject[4];
         internal static int AnimatedWorldObjectsUsed = 0;
 
-        internal static void UpdateAnimatedWorldObjects(double TimeElapsed, bool ForceUpdate)
+        internal static void UpdateAnimatedWorldObjects(double timeElapsed, bool forceUpdate)
         {
             for (int i = 0; i < AnimatedWorldObjectsUsed; i++)
 			{
 				AbstractTrain train = null;
 				bool visible = AnimatedWorldObjects[i].IsVisible(Program.Renderer.Camera.Alignment.Position, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, Program.Renderer.Camera.ExtraViewingDistance);
-				if (visible | ForceUpdate)
+				if (visible | forceUpdate)
 				{
 					train = Program.CurrentHost.ClosestTrain(AnimatedWorldObjects[i].RelativeTrackPosition);
 				}
-				AnimatedWorldObjects[i].Update(train, TimeElapsed, ForceUpdate, visible);
+				AnimatedWorldObjects[i].Update(train, timeElapsed, forceUpdate, visible);
 			}
         }
     }

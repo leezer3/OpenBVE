@@ -19,7 +19,6 @@ using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
-using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using OpenTK;
 using OpenTK.Graphics;
@@ -54,10 +53,10 @@ namespace ObjectViewer {
         private static bool ShiftPressed = false;
 
 
-        internal static GameWindow currentGameWindow;
-        internal static GraphicsMode currentGraphicsMode;
+        internal static GameWindow CurrentGameWindow;
+        internal static GraphicsMode CurrentGraphicsMode;
 
-		internal static OpenBveApi.Hosts.HostInterface CurrentHost;
+		internal static HostInterface CurrentHost;
 
 		internal static NewRenderer Renderer;
 
@@ -165,15 +164,15 @@ namespace ObjectViewer {
 	        Translations.LoadLanguageFiles(folder);
 			GameMenu.Instance = new GameMenu();
 			// initialize camera
-			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
-	        currentGameWindow = new ObjectViewer(Renderer.Screen.Width, Renderer.Screen.Height, currentGraphicsMode, "Object Viewer", GameWindowFlags.Default)
+			CurrentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
+	        CurrentGameWindow = new ObjectViewer(Renderer.Screen.Width, Renderer.Screen.Height, CurrentGraphicsMode, "Object Viewer", GameWindowFlags.Default)
 	        {
 		        Visible = true,
 		        TargetUpdateFrequency = 0,
 		        TargetRenderFrequency = 0,
 		        Title = "Object Viewer"
 	        };
-	        currentGameWindow.Run();
+	        CurrentGameWindow.Run();
 			// quit
 			Renderer.TextureManager.UnloadAllTextures(false);
 
@@ -241,7 +240,7 @@ namespace ObjectViewer {
 					{
 						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
 					}
-					previousMouseState = Mouse.GetState();
+					PreviousMouseState = Mouse.GetState();
 					break;
 		    }
             
@@ -260,14 +259,14 @@ namespace ObjectViewer {
 			Renderer.ApplyBackgroundColor();
 		}
 
-		internal static MouseState currentMouseState;
-	    internal static MouseState previousMouseState;
+		internal static MouseState CurrentMouseState;
+	    internal static MouseState PreviousMouseState;
 
 	    internal static void MouseMovement()
 	    {
 	        if (MouseButton == 0 || Program.Renderer.CurrentInterface != InterfaceType.Normal) return;
-	        currentMouseState = Mouse.GetState();
-	        if (currentMouseState != previousMouseState)
+	        CurrentMouseState = Mouse.GetState();
+	        if (CurrentMouseState != PreviousMouseState)
 	        {
 	            if (MouseButton == 1)
 	            {
@@ -275,13 +274,13 @@ namespace ObjectViewer {
 		            Renderer.Camera.AbsoluteUp = MouseCameraUp;
 		            Renderer.Camera.AbsoluteSide = MouseCameraSide;
                     {
-                        double dx = 0.0025 * (previousMouseState.X - currentMouseState.X);
+                        double dx = 0.0025 * (PreviousMouseState.X - CurrentMouseState.X);
                         Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, dx);
                         Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, dx);
                         Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, dx);
                     }
                     {
-                        double dy = 0.0025 * (previousMouseState.Y - currentMouseState.Y);
+                        double dy = 0.0025 * (PreviousMouseState.Y - CurrentMouseState.Y);
                         Renderer.Camera.AbsoluteDirection.Rotate(Renderer.Camera.AbsoluteSide, dy);
                         Renderer.Camera.AbsoluteUp.Rotate(Renderer.Camera.AbsoluteSide, dy);
                     }
@@ -289,17 +288,17 @@ namespace ObjectViewer {
 	            else if(MouseButton == 2)
 	            {
 		            Renderer.Camera.AbsolutePosition = MouseCameraPosition;
-                    double dx = -0.025 * (currentMouseState.X - previousMouseState.X);
+                    double dx = -0.025 * (CurrentMouseState.X - PreviousMouseState.X);
                     Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteSide;
-                    double dy = 0.025 * (currentMouseState.Y - previousMouseState.Y);
+                    double dy = 0.025 * (CurrentMouseState.Y - PreviousMouseState.Y);
                     Renderer.Camera.AbsolutePosition += dy * Renderer.Camera.AbsoluteUp;
 	            }
 	            else
 	            {
 		            Renderer.Camera.AbsolutePosition = MouseCameraPosition;
-                    double dx = -0.025 * (currentMouseState.X - previousMouseState.X);
+                    double dx = -0.025 * (CurrentMouseState.X - PreviousMouseState.X);
                     Renderer.Camera.AbsolutePosition += dx * Renderer.Camera.AbsoluteSide;
-                    double dz = -0.025 * (currentMouseState.Y - previousMouseState.Y);
+                    double dz = -0.025 * (CurrentMouseState.Y - PreviousMouseState.Y);
                     Renderer.Camera.AbsolutePosition += dz * Renderer.Camera.AbsoluteDirection;
 	            }
 	        }

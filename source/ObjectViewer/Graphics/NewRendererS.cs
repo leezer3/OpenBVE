@@ -429,28 +429,28 @@ namespace ObjectViewer.Graphics
 
 		public override void SetWindowState(WindowState windowState)
 		{
-			Program.currentGameWindow.WindowState = windowState;
+			Program.CurrentGameWindow.WindowState = windowState;
 			if (windowState == WindowState.Fullscreen)
 			{
 				// move origin appropriately
-				Program.currentGameWindow.X = 0;
-				Program.currentGameWindow.Y = 0;
+				Program.CurrentGameWindow.X = 0;
+				Program.CurrentGameWindow.Y = 0;
 			}
 		}
 
 		public override void SetWindowSize(int width, int height)
 		{
-			Program.currentGameWindow.Width = width;
-			Program.currentGameWindow.Height = height;
+			Program.CurrentGameWindow.Width = width;
+			Program.CurrentGameWindow.Height = height;
 			Screen.Width = width;
 			Screen.Height = height;
 		}
 
-		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
+		public NewRenderer(HostInterface currentHost, BaseOptions currentOptions, FileSystem fileSystem) : base(currentHost, currentOptions, fileSystem)
 		{
-			Screen.Width = CurrentOptions.WindowWidth;
-			Screen.Height = CurrentOptions.WindowHeight;
-			CameraTrackFollower = new TrackFollower(CurrentHost);
+			Screen.Width = currentOptions.WindowWidth;
+			Screen.Height = currentOptions.WindowHeight;
+			CameraTrackFollower = new TrackFollower(currentHost);
 		}
 	}
 }

@@ -36,8 +36,8 @@ namespace ObjectViewer {
 
 		internal static readonly List<LogMessage> LogMessages = new List<LogMessage>();
 
-		internal static void AddMessage(MessageType Type, bool FileNotFound, string Text) {
-			LogMessages.Add(new LogMessage(Type, FileNotFound, Text));
+		internal static void AddMessage(MessageType messageType, bool fileNotFound, string messageText) {
+			LogMessages.Add(new LogMessage(messageType, fileNotFound, messageText));
 		}
 		
 		/// <summary>The current options in use</summary>

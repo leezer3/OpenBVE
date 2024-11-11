@@ -84,7 +84,7 @@ namespace ObjectViewer
 			Interface.CurrentOptions.AntiAliasingLevel = (int) AntialiasingLevel.Value;
 			if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialasingLevel)
 			{
-				Program.currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
+				Program.CurrentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 			}
 
 			//Transparency quality
@@ -104,13 +104,13 @@ namespace ObjectViewer
 				if (width.Value >= 300)
 				{
 					Program.Renderer.Screen.Width = (int) width.Value;
-					Program.currentGameWindow.Width = (int) width.Value;
+					Program.CurrentGameWindow.Width = (int) width.Value;
 				}
 
 				if (height.Value >= 300)
 				{
 					Program.Renderer.Screen.Height = (int) height.Value;
-					Program.currentGameWindow.Height = (int) height.Value;
+					Program.CurrentGameWindow.Height = (int) height.Value;
 				}
 
 				Program.Renderer.UpdateViewport();
