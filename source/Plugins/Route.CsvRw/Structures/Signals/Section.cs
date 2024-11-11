@@ -53,7 +53,7 @@ namespace CsvRwRouteParser
 			SectionAspect[] newAspects = new SectionAspect[Aspects.Length];
 			for (int l = 0; l < Aspects.Length; l++)
 			{
-				newAspects[l].AspectNumber = Aspects[l];
+				newAspects[l].Number = Aspects[l];
 				if (Aspects[l] >= 0 & Aspects[l] < SignalSpeeds.Length)
 				{
 					newAspects[l].Speed = SignalSpeeds[Aspects[l]];

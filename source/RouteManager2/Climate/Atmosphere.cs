@@ -54,11 +54,11 @@ namespace RouteManager2.Climate
 		public void CalculateSeaLevelConstants()
 		{
 			SeaLevelAirTemperature = InitialAirTemperature - TemperatureLapseRate * InitialElevation;
-			double Exponent = AccelerationDueToGravity * MolarMass / (UniversalGasConstant * TemperatureLapseRate);
-			double Base = 1.0 + TemperatureLapseRate * InitialElevation / SeaLevelAirTemperature;
-			if (Base >= 0.0)
+			double exponent = AccelerationDueToGravity * MolarMass / (UniversalGasConstant * TemperatureLapseRate);
+			double baseRate = 1.0 + TemperatureLapseRate * InitialElevation / SeaLevelAirTemperature;
+			if (baseRate >= 0.0)
 			{
-				SeaLevelAirPressure = InitialAirPressure * Math.Pow(Base, Exponent);
+				SeaLevelAirPressure = InitialAirPressure * Math.Pow(baseRate, exponent);
 				if (SeaLevelAirPressure < 0.001)
 				{
 					SeaLevelAirPressure = 0.001;
@@ -71,21 +71,21 @@ namespace RouteManager2.Climate
 		}
 
 		/// <summary>Calculates the air temperature for a given elevation</summary>
-		/// <param name="Elevation">The elevation for which to calculate the air temperature</param>
+		/// <param name="elevation">The elevation for which to calculate the air temperature</param>
 		/// <returns>A temperature in degrees kelvin</returns>
-		public double GetAirTemperature(double Elevation)
+		public double GetAirTemperature(double elevation)
 		{
-			double x = SeaLevelAirTemperature + TemperatureLapseRate * Elevation;
+			double x = SeaLevelAirTemperature + TemperatureLapseRate * elevation;
 			return x >= 1.0 ? x : 1.0;
 		}
 
 		/// <summary>Calculates the air density for a given pressure and temperature</summary>
-		/// <param name="AirPressure">The air pressure in Pa</param>
-		/// <param name="AirTemperature">The air temperature in degrees kelvin</param>
+		/// <param name="airPressure">The air pressure in Pa</param>
+		/// <param name="airTemperature">The air temperature in degrees kelvin</param>
 		/// <returns>The air density in kg/m³</returns>
-		public double GetAirDensity(double AirPressure, double AirTemperature)
+		public double GetAirDensity(double airPressure, double airTemperature)
 		{
-			double x = AirPressure * MolarMass / (UniversalGasConstant * AirTemperature);
+			double x = airPressure * MolarMass / (UniversalGasConstant * airTemperature);
 			return x >= 0.001 ? x : 0.001;
 		}
 		
@@ -93,45 +93,45 @@ namespace RouteManager2.Climate
 		/// <returns>The air density in kg/m³</returns>
 		public double GetAirDensity(double elevation)
 		{
-			double AirTemperature = GetAirTemperature(elevation);
-			double AirPressure = GetAirPressure(elevation, AirTemperature);
-			double x = AirPressure * MolarMass / (UniversalGasConstant * AirTemperature);
+			double airTemperature = GetAirTemperature(elevation);
+			double airPressure = GetAirPressure(elevation, airTemperature);
+			double x = airPressure * MolarMass / (UniversalGasConstant * airTemperature);
 			return x >= 0.001 ? x : 0.001;
 		}
 
 		/// <summary>Calculates the air pressure for a given elevation and temperature</summary>
-		/// <param name="Elevation">The elevation in m</param>
-		/// <param name="AirTemperature">The air temperature in degrees kelvin</param>
+		/// <param name="elevation">The elevation in m</param>
+		/// <param name="airTemperature">The air temperature in degrees kelvin</param>
 		/// <returns>The air pressure in Pa</returns>
-		public double GetAirPressure(double Elevation, double AirTemperature)
+		public double GetAirPressure(double elevation, double airTemperature)
 		{
-			double Exponent = -AccelerationDueToGravity * MolarMass / (UniversalGasConstant * TemperatureLapseRate);
-			double Base = 1.0 + TemperatureLapseRate * Elevation / SeaLevelAirTemperature;
-			if (!(Base >= 0.0))
+			double exponent = -AccelerationDueToGravity * MolarMass / (UniversalGasConstant * TemperatureLapseRate);
+			double baseRate = 1.0 + TemperatureLapseRate * elevation / SeaLevelAirTemperature;
+			if (!(baseRate >= 0.0))
 			{
 				return 0.001;
 			}
 
-			double x = SeaLevelAirPressure * Math.Pow(Base, Exponent);
+			double x = SeaLevelAirPressure * Math.Pow(baseRate, exponent);
 			return x >= 0.001 ? x : 0.001;
 		}
 
 		/// <summary>Calculates the speed of sound for a given air pressure and temperature</summary>
-		/// <param name="AirPressure">The air pressure in Pa</param>
-		/// <param name="AirTemperature">The air temperature in degrees kelvin</param>
+		/// <param name="airPressure">The air pressure in Pa</param>
+		/// <param name="airTemperature">The air temperature in degrees kelvin</param>
 		/// <returns>The speed of sound in m/s</returns>
-		public double GetSpeedOfSound(double AirPressure, double AirTemperature)
+		public double GetSpeedOfSound(double airPressure, double airTemperature)
 		{
-			double AirDensity = GetAirDensity(AirPressure, AirTemperature);
-			return Math.Sqrt(CoefficientOfStiffness / AirDensity);
+			double airDensity = GetAirDensity(airPressure, airTemperature);
+			return Math.Sqrt(CoefficientOfStiffness / airDensity);
 		}
 
 		/// <summary>Calculates the speed of sound for a given air density</summary>
-		/// <param name="AirDensity">The air density</param>
+		/// <param name="airDensity">The air density</param>
 		/// <returns>The speed of sound in m/s</returns>
-		public double GetSpeedOfSound(double AirDensity)
+		public double GetSpeedOfSound(double airDensity)
 		{
-			return Math.Sqrt(CoefficientOfStiffness / AirDensity);
+			return Math.Sqrt(CoefficientOfStiffness / airDensity);
 		}
 	}
 }

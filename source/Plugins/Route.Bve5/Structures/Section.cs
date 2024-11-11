@@ -64,7 +64,7 @@ namespace Route.Bve5
 
 			for (int l = 0; l < Aspects.Length; l++)
 			{
-				Plugin.CurrentRoute.Sections[m].Aspects[l].AspectNumber = Aspects[l];
+				Plugin.CurrentRoute.Sections[m].Aspects[l].Number = Aspects[l];
 				if (Aspects[l] >= 0 & Aspects[l] < Data.SignalSpeeds.Length)
 				{
 					Plugin.CurrentRoute.Sections[m].Aspects[l].Speed = Data.SignalSpeeds[Aspects[l]];
