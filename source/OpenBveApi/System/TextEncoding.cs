@@ -6,13 +6,13 @@ namespace OpenBveApi
 	/// <summary>Contains helper functions for working with TextEncodings</summary>
 	public static class TextEncoding
 	{
-		/// <summary>Represents a text encoding</summary>
+		/// <summary>Represents a file and the associated encoding</summary>
 		public struct EncodingValue
 		{
 			/// <summary>The system codepage for this text encoding</summary>
-			public int Codepage;
+			public Encoding Codepage;
 
-			/// <summary>The textual name for this text encoding</summary>
+			/// <summary>The filename</summary>
 			public string Value;
 		}
 

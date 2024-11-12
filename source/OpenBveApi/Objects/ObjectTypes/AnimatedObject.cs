@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Graphics;
@@ -116,6 +115,16 @@ namespace OpenBveApi.Objects
 			currentHost = host;
 			States = new ObjectState[] { };
 			FileName = fileName;
+		}
+
+		/// <summary>Creates a new animated object</summary>
+		public AnimatedObject(HostInterface host, StaticObject staticObject)
+		{
+			currentHost = host;
+			States = new [] { new ObjectState() };
+			States[0].Prototype = staticObject;
+			internalObject = new ObjectState(staticObject);
+			CurrentState = 0;
 		}
 
 		/// <summary>Clones this object</summary>

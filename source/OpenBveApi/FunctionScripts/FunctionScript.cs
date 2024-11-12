@@ -749,6 +749,7 @@ namespace OpenBveApi.FunctionScripting
 							InstructionSet[n] = Instructions.SafetyPluginAvailable;
 							n++; s++; if (s >= m) m = s; break;
 						case "pluginstate":
+						case "ats":
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.SafetyPluginState;

@@ -16,8 +16,6 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using RouteManager2;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
 using System.Runtime;
