@@ -22,9 +22,9 @@ namespace TrainManager.Trains
 				return false;
 			}
 
-			string Text = System.IO.File.ReadAllText(config, encoding);
-			Text = Text.Replace("\r", "").Replace("\n", "");
-			if (Text.Length > 260)
+			string text = System.IO.File.ReadAllText(config, encoding);
+			text = text.Replace("\r", "").Replace("\n", "");
+			if (text.Length > 260)
 			{
 				/*
 				 * String length is over max Windows path length, so
@@ -43,7 +43,7 @@ namespace TrainManager.Trains
 					fileLines[i] = fileLines[i].Trim();
 					if (fileLines[i].Length != 0)
 					{
-						Text = fileLines[i];
+						text = fileLines[i];
 						break;
 					}
 				}
@@ -52,34 +52,34 @@ namespace TrainManager.Trains
 			string file;
 			try
 			{
-				file = OpenBveApi.Path.CombineFile(trainFolder, Text);
+				file = OpenBveApi.Path.CombineFile(trainFolder, text);
 			}
 			catch
 			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, true, "The train plugin path was malformed in " + config);
+				TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, true, "The train plugin path was malformed in " + config);
 				return false;
 			}
 
 			string title = System.IO.Path.GetFileName(file);
 			if (!System.IO.File.Exists(file))
 			{
-				if (Text.EndsWith(".dll") && encoding.Equals(System.Text.Encoding.Unicode))
+				if (text.EndsWith(".dll") && encoding.Equals(System.Text.Encoding.Unicode))
 				{
 					// Our filename ends with .dll so probably is not mangled Unicode
-					TrainManagerBase.currentHost.AddMessage(MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
+					TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
 					return false;
 				}
 
 				// Try again with ASCII encoding
-				Text = System.IO.File.ReadAllText(config, System.Text.Encoding.GetEncoding(1252));
-				Text = Text.Replace("\r", "").Replace("\n", "");
+				text = System.IO.File.ReadAllText(config, System.Text.Encoding.GetEncoding(1252));
+				text = text.Replace("\r", "").Replace("\n", "");
 				try
 				{
-					file = OpenBveApi.Path.CombineFile(trainFolder, Text);
+					file = OpenBveApi.Path.CombineFile(trainFolder, text);
 				}
 				catch
 				{
-					TrainManagerBase.currentHost.AddMessage(MessageType.Error, true, "The train plugin path was malformed in " + config);
+					TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, true, "The train plugin path was malformed in " + config);
 					return false;
 				}
 
@@ -87,13 +87,13 @@ namespace TrainManager.Trains
 				if (!System.IO.File.Exists(file))
 				{
 					// Nope, still not found
-					TrainManagerBase.currentHost.AddMessage(MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
+					TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
 					return false;
 				}
 
 			}
 
-			TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Loading train plugin: " + file);
+			TrainManagerBase.CurrentHost.AddMessage(MessageType.Information, false, "Loading train plugin: " + file);
 			bool success = LoadPlugin(file, trainFolder);
 			if (success == false)
 			{
@@ -101,7 +101,7 @@ namespace TrainManager.Trains
 			}
 			else
 			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Train plugin loaded successfully.");
+				TrainManagerBase.CurrentHost.AddMessage(MessageType.Information, false, "Train plugin loaded successfully.");
 			}
 
 			return success;
@@ -154,7 +154,7 @@ namespace TrainManager.Trains
 			string pluginTitle = System.IO.Path.GetFileName(pluginFile);
 			if (!System.IO.File.Exists(pluginFile))
 			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, true, "The train plugin " + pluginTitle + " could not be found.");
+				TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, true, "The train plugin " + pluginTitle + " could not be found.");
 				return false;
 			}
 
@@ -187,7 +187,7 @@ namespace TrainManager.Trains
 					AssemblyName myAssembly = AssemblyName.GetAssemblyName(pluginFile);
 					if (IntPtr.Size != 4 && myAssembly.ProcessorArchitecture == ProcessorArchitecture.X86)
 					{
-						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " can only be used with the 32-bit version of " + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"program","title"}));
+						TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " can only be used with the 32-bit version of " + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"program","title"}));
 						return false;
 					}
 				}
@@ -199,7 +199,7 @@ namespace TrainManager.Trains
 			}
 			catch (Exception ex)
 			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " could not be loaded due to the following exception: " + ex.Message);
+				TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " could not be loaded due to the following exception: " + ex.Message);
 				return false;
 			}
 
@@ -214,7 +214,7 @@ namespace TrainManager.Trains
 				{
 					foreach (Exception e in ex.LoaderExceptions)
 					{
-						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " raised an exception on loading: " + e.Message);
+						TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " raised an exception on loading: " + e.Message);
 					}
 
 					return false;
@@ -257,7 +257,7 @@ namespace TrainManager.Trains
 					}
 				}
 
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with" + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"program","title"}));
+				TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with" + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"program","title"}));
 				return false;
 			}
 
@@ -269,22 +269,22 @@ namespace TrainManager.Trains
 			{
 				if (!Win32Plugin.CheckHeader(pluginFile))
 				{
-					TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " is of an unsupported binary format and therefore cannot be used with "  + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"program","title"}));
+					TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " is of an unsupported binary format and therefore cannot be used with "  + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"program","title"}));
 					return false;
 				}
 			}
 			catch (Exception ex)
 			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " could not be read due to the following reason: " + ex.Message);
+				TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " could not be read due to the following reason: " + ex.Message);
 				return false;
 			}
 
-			switch (TrainManagerBase.currentHost.Platform)
+			switch (TrainManagerBase.CurrentHost.Platform)
 			{
 				case HostPlatform.WINE:
 					if (IntPtr.Size != 4)
 					{
-						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "WINE does not support the WCF plugin proxy- Please use the 32-bit version of OpenBVE to load this train plugin.");
+						TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, false, "WINE does not support the WCF plugin proxy- Please use the 32-bit version of OpenBVE to load this train plugin.");
 						return false;
 					}
 					break;
@@ -299,18 +299,18 @@ namespace TrainManager.Trains
 						}
 
 						Plugin = null;
-						TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " failed to load.");
+						TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " failed to load.");
 						return false;
 					}
 					break;
 				default:
-					TrainManagerBase.currentHost.AddMessage(MessageType.Warning, false, "Legacy Win32 train plugins " + pluginTitle + " can only be used on Microsoft Windows or compatible.");
+					TrainManagerBase.CurrentHost.AddMessage(MessageType.Warning, false, "Legacy Win32 train plugins " + pluginTitle + " can only be used on Microsoft Windows or compatible.");
 					return false;
 			}
 
-			if (TrainManagerBase.currentHost.Platform == HostPlatform.MicrosoftWindows && !System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\AtsPluginProxy.dll"))
+			if (TrainManagerBase.CurrentHost.Platform == HostPlatform.MicrosoftWindows && !System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\AtsPluginProxy.dll"))
 			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Warning, false, "AtsPluginProxy.dll is missing or corrupt- Please reinstall.");
+				TrainManagerBase.CurrentHost.AddMessage(MessageType.Warning, false, "AtsPluginProxy.dll is missing or corrupt- Please reinstall.");
 				return false;
 			}
 
@@ -321,7 +321,7 @@ namespace TrainManager.Trains
 			}
 
 			Plugin = null;
-			TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with" + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"program","title"}));
+			TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with" + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"program","title"}));
 			return false;
 		}
 

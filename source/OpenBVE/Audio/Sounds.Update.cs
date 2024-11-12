@@ -211,7 +211,7 @@ namespace OpenBve
 				toBePlayed[i].Gain += clampFactor * toBePlayed[i].Distance * toBePlayed[i].Distance;
 			}
 			double desiredLogClampFactor;
-			int index = Math.Min(systemMaxSounds, Interface.CurrentOptions.SoundNumber);
+			int index = Math.Min(SystemMaxSounds, Interface.CurrentOptions.SoundNumber);
 			if (toBePlayed.Count <= index) {
 				desiredLogClampFactor = MinLogClampFactor;
 			} else {

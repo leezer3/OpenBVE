@@ -177,11 +177,11 @@ namespace Train.OpenBve
 						block.GetPath(SoundCfgKey.Release, trainFolder, out string release);
 						for (int c = 0; c < train.Cars.Length; c++)
 						{
-							if (train.Cars[c].CarBrake.brakeType == BrakeType.Main)
+							if (train.Cars[c].CarBrake.BrakeType == BrakeType.Main)
 							{
-								train.Cars[c].CarBrake.airCompressor.StartSound = new CarSound(Plugin.currentHost, attack, SoundCfgParser.mediumRadius, center);
-								train.Cars[c].CarBrake.airCompressor.LoopSound = new CarSound(Plugin.currentHost, loop, SoundCfgParser.mediumRadius, center);
-								train.Cars[c].CarBrake.airCompressor.EndSound = new CarSound(Plugin.currentHost, release, SoundCfgParser.mediumRadius, center);
+								train.Cars[c].CarBrake.AirCompressor.StartSound = new CarSound(Plugin.currentHost, attack, SoundCfgParser.mediumRadius, center);
+								train.Cars[c].CarBrake.AirCompressor.LoopSound = new CarSound(Plugin.currentHost, loop, SoundCfgParser.mediumRadius, center);
+								train.Cars[c].CarBrake.AirCompressor.EndSound = new CarSound(Plugin.currentHost, release, SoundCfgParser.mediumRadius, center);
 							}
 						}
 						break;

@@ -21,8 +21,8 @@ namespace TrainManager.Car.Systems
 		}
 
 		/// <summary>Updates all run sounds</summary>
-		/// <param name="TimeElapsed">The elapsed time</param>
-		public void Update(double TimeElapsed)
+		/// <param name="timeElapsed">The elapsed time</param>
+		public void Update(double timeElapsed)
 		{
 			if (Sounds.Count == 0)
 			{
@@ -42,7 +42,7 @@ namespace TrainManager.Car.Systems
 			{
 				if (baseCar.Index != 0)
 				{
-					NextReasynchronizationPosition = baseCar.baseTrain.Cars[0].FrontAxle.Follower.TrackPosition;
+					NextReasynchronizationPosition = baseCar.BaseTrain.Cars[0].FrontAxle.Follower.TrackPosition;
 				}
 			}
 			else if (NextReasynchronizationPosition == double.MaxValue & baseCar.FrontAxle.RunIndex >= 0)
@@ -59,7 +59,7 @@ namespace TrainManager.Car.Systems
 							if (runSound.Buffer.Duration > 0.0)
 							{
 								double offset = distance > maxDistance ? 25.0 : 300.0;
-								NextReasynchronizationPosition = runSound.Buffer.Duration * Math.Ceiling((baseCar.baseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / runSound.Buffer.Duration);
+								NextReasynchronizationPosition = runSound.Buffer.Duration * Math.Ceiling((baseCar.BaseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / runSound.Buffer.Duration);
 							}
 						}
 					}
@@ -81,12 +81,12 @@ namespace TrainManager.Car.Systems
 				int key = Sounds.ElementAt(j).Key;
 				if (key == baseCar.FrontAxle.RunIndex | key == baseCar.RearAxle.RunIndex)
 				{
-					Sounds[key].TargetVolume += 3.0 * TimeElapsed;
+					Sounds[key].TargetVolume += 3.0 * timeElapsed;
 					if (Sounds[key].TargetVolume > 1.0) Sounds[key].TargetVolume = 1.0;
 				}
 				else
 				{
-					Sounds[key].TargetVolume -= 3.0 * TimeElapsed;
+					Sounds[key].TargetVolume -= 3.0 * timeElapsed;
 					if (Sounds[key].TargetVolume < 0.0) Sounds[key].TargetVolume = 0.0;
 				}
 
@@ -119,9 +119,9 @@ namespace TrainManager.Car.Systems
 
 		/// <summary>Updates the sounds for a specific run index</summary>
 		/// <remarks>Used by TE2 only</remarks>
-		/// <param name="TimeElapsed">The elapsed time</param>
-		/// <param name="RunIndex">The run index to update</param>
-		public void Update(double TimeElapsed, int RunIndex)
+		/// <param name="timeElapsed">The elapsed time</param>
+		/// <param name="runIndex">The run index to update</param>
+		public void Update(double timeElapsed, int runIndex)
 		{
 			if (Sounds.Count == 0)
 			{
@@ -136,9 +136,9 @@ namespace TrainManager.Car.Systems
 			for (int i = 0; i < Sounds.Count; i++)
 			{
 				int key = Sounds.ElementAt(i).Key;
-				if (key == RunIndex)
+				if (key == runIndex)
 				{
-					Sounds[key].TargetVolume += 3.0 * TimeElapsed;
+					Sounds[key].TargetVolume += 3.0 * timeElapsed;
 
 					if (Sounds[key].TargetVolume > 1.0)
 					{
@@ -147,7 +147,7 @@ namespace TrainManager.Car.Systems
 				}
 				else
 				{
-					Sounds[key].TargetVolume -= 3.0 * TimeElapsed;
+					Sounds[key].TargetVolume -= 3.0 * timeElapsed;
 
 					if (Sounds[key].TargetVolume < 0.0)
 					{
@@ -181,7 +181,7 @@ namespace TrainManager.Car.Systems
 			for (int j = 0; j < Sounds.Count; j++)
 			{
 				int key =  Sounds.ElementAt(j).Key;
-				TrainManagerBase.currentHost.StopSound(Sounds[key].Source);
+				TrainManagerBase.CurrentHost.StopSound(Sounds[key].Source);
 			}
 		}
 

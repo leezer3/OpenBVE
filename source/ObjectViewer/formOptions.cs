@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using ObjectViewer.Graphics;
 using OpenBveApi;
@@ -106,6 +106,7 @@ namespace ObjectViewer
 					Program.Renderer.SetWindowSize((int)width.Value, (int)height.Value);
 					Program.Renderer.UpdateViewport();
 				}
+				Program.Renderer.UpdateViewport();
 			}
 
 			XParsers xParser = (XParsers)comboBoxNewXParser.SelectedIndex;

@@ -54,7 +54,7 @@ namespace RouteViewer {
 		internal static bool JobAvailable;
 
 		// load
-		internal static void Load(string RouteFile, Encoding RouteEncoding, byte[] textureBytes)
+		internal static void Load(string routeFile, Encoding routeEncoding, byte[] textureBytes)
 		{
 			Program.Renderer.GameWindow.TargetRenderFrequency = 0;
 			// reset
@@ -68,8 +68,8 @@ namespace RouteViewer {
 			// members
 			Cancel = false;
 			Complete = false;
-			CurrentRouteFile = RouteFile;
-			CurrentRouteEncoding = RouteEncoding;
+			CurrentRouteFile = routeFile;
+			CurrentRouteEncoding = routeEncoding;
 			// thread
 			Loading.LoadAsynchronously(CurrentRouteFile, CurrentRouteEncoding);
 			RouteViewer.LoadingScreenLoop();
@@ -77,10 +77,10 @@ namespace RouteViewer {
 
 		/// <summary>Gets the absolute Railway folder for a given route file</summary>
 		/// <returns>The absolute on-disk path of the railway folder</returns>
-		internal static string GetRailwayFolder(string RouteFile) {
+		internal static string GetRailwayFolder(string routeFile) {
 			try
 			{
-				string Folder = Path.GetDirectoryName(RouteFile);
+				string Folder = Path.GetDirectoryName(routeFile);
 
 				while (true)
 				{
@@ -109,7 +109,7 @@ namespace RouteViewer {
 			//If the Route, Object and Sound folders exist, but are not in a railway folder.....
 			try
 			{
-				string Folder = Path.GetDirectoryName(RouteFile);
+				string Folder = Path.GetDirectoryName(routeFile);
 				if (Folder == null)
 				{
 					// Unlikely to work, but attempt to make the best of it
@@ -164,13 +164,13 @@ namespace RouteViewer {
 			}
 		}
 
-		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding)
+		internal static void LoadAsynchronously(string routeFile, Encoding routeEncoding)
 		{
 			// members
 			Cancel = false;
 			Complete = false;
-			CurrentRouteFile = RouteFile;
-			CurrentRouteEncoding = RouteEncoding;
+			CurrentRouteFile = routeFile;
+			CurrentRouteEncoding = routeEncoding;
 
 			//Set the route and train folders in the info class
 			// ReSharper disable once UnusedVariable
@@ -181,9 +181,9 @@ namespace RouteViewer {
 		}
 
 		private static void LoadEverythingThreaded() {
-			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
-			string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
-			string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
+			string railwayFolder = GetRailwayFolder(CurrentRouteFile);
+			string objectFolder = Path.CombineDirectory(railwayFolder, "Object");
+			string soundFolder = Path.CombineDirectory(railwayFolder, "Sound");
 			Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
 			// load route
 			bool loaded = false;
@@ -191,10 +191,10 @@ namespace RouteViewer {
 			{
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
 				{
-					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
-					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, null, ObjectFolder, SoundFolder, false, ref Route))
+					object currentRoute = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
+					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, null, objectFolder, soundFolder, false, ref currentRoute))
 					{
-						Program.CurrentRoute = (CurrentRoute) Route;
+						Program.CurrentRoute = (CurrentRoute) currentRoute;
 						Program.CurrentRoute.UpdateLighting();
 						loaded = true;
 						break;
@@ -224,10 +224,10 @@ namespace RouteViewer {
 			Program.CurrentRoute.UpdateAllSections();
 			// starting track position
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			double FirstStationPosition = 0.0;
+			double firstStationPosition = 0.0;
 			for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++) {
 				if (Program.CurrentRoute.Stations[i].Stops.Length != 0) {
-					FirstStationPosition = Program.CurrentRoute.Stations[i].Stops[Program.CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
+					firstStationPosition = Program.CurrentRoute.Stations[i].Stops[Program.CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
 					if (Program.CurrentRoute.Stations[i].ArrivalTime < 0.0) {
 						if (Program.CurrentRoute.Stations[i].DepartureTime < 0.0) {
 							Game.SecondsSinceMidnight = 0.0;
@@ -242,8 +242,8 @@ namespace RouteViewer {
 			}
 			// initialize camera
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
-			Program.Renderer.CameraTrackFollower.UpdateAbsolute(FirstStationPosition, true, false);
-			Program.Renderer.Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(firstStationPosition, true, false);
+			Program.Renderer.Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, firstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
 			Complete = true;
 		}

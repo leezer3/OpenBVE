@@ -35,19 +35,19 @@ namespace TrainManager.Handles
 			baseTrain = train;
 		}
 
-		public void ApplyState(ReverserPosition Value)
+		public void ApplyState(ReverserPosition value)
 		{
-			ApplyState((int)Value, false);
+			ApplyState((int)value, false);
 		}
 
-		public void ApplyState(int Value, bool Relative)
+		public void ApplyState(int value, bool relative)
 		{
 			if (baseTrain.Handles.HandleType == HandleType.InterlockedReverserHandle && baseTrain.Handles.Power.Driver != 0)
 			{
 				return;
 			}
 			int a = (int)Driver;
-			int r = Relative ? a + Value : Value;
+			int r = relative ? a + value : value;
 			if (r < -1) r = -1;
 			if (r > 1) r = 1;
 			if (baseTrain.CurrentDirection == TrackDirection.Reverse)
@@ -61,7 +61,7 @@ namespace TrainManager.Handles
 				{
 					baseTrain.Plugin.UpdateReverser();
 				}
-				TrainManagerBase.currentHost.AddBlackBoxEntry();
+				TrainManagerBase.CurrentHost.AddBlackBoxEntry();
 				// sound
 				if (a == 0 & r != 0)
 				{
@@ -76,7 +76,7 @@ namespace TrainManager.Handles
 			if (a == (int)Driver) return;
 
 			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
-			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+			TrainManagerBase.CurrentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentHost.InGameTime + 10.0, null);
 		}
 
 		/// <summary>Gets the description string for this notch</summary>

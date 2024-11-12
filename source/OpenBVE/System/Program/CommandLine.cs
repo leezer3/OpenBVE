@@ -7,65 +7,65 @@ namespace OpenBve
 	class CommandLine
 	{
 		/// <summary>Parses any command-line arguments passed to the main program</summary>
-		/// <param name="Arguments">A string array of arguments</param>
-		internal static LaunchParameters ParseArguments(string[] Arguments)
+		/// <param name="arguments">A string array of arguments</param>
+		internal static LaunchParameters ParseArguments(string[] arguments)
 		{
-			LaunchParameters Result = new LaunchParameters();
-			if (Arguments.Length == 0)
+			LaunchParameters result = new LaunchParameters();
+			if (arguments.Length == 0)
 			{
-				return Result;
+				return result;
 			}
-			for (int i = 0; i < Arguments.Length; i++)
+			for (int i = 0; i < arguments.Length; i++)
 			{
-				int equals = Arguments[i].IndexOf('=');
+				int equals = arguments[i].IndexOf('=');
 				if (equals >= 0)
 				{
-					string key = Arguments[i].Substring(0, equals).Trim(new char[] { }).ToLowerInvariant();
-					string value = Arguments[i].Substring(equals + 1).Trim(new char[] { });
+					string key = arguments[i].Substring(0, equals).Trim(new char[] { }).ToLowerInvariant();
+					string value = arguments[i].Substring(equals + 1).Trim(new char[] { });
 					switch (key)
 					{
 						case "/route":
-							Result.RouteFile = value;
-							Result.RouteEncoding = TextEncoding.GetSystemEncodingFromFile(Result.RouteFile);
+							result.RouteFile = value;
+							result.RouteEncoding = TextEncoding.GetSystemEncodingFromFile(result.RouteFile);
 							break;
 						case "/train":
-							Result.TrainFolder = value;
-							Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(Result.TrainFolder, "train.txt");
+							result.TrainFolder = value;
+							result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(result.TrainFolder, "train.txt");
 							break;
 						case "/station":
-							Result.InitialStation = value;
+							result.InitialStation = value;
 							break;
 						case "/time":
-							Interface.TryParseTime(value, out Result.StartTime);
+							Interface.TryParseTime(value, out result.StartTime);
 							break;
 						case "/ai":
 							if (value.ToLowerInvariant() == "true" || value.ToLowerInvariant() == "1")
 							{
-								Result.AIDriver = true;
+								result.AIDriver = true;
 							}
 							break;
 						case "/fullscreen":
 							if (value.ToLowerInvariant() == "true" || value.ToLowerInvariant() == "1")
 							{
-								Result.FullScreen = true;
+								result.FullScreen = true;
 							}
 							break;
 						case "/width":
-							NumberFormats.TryParseIntVb6(value, out Result.Width);
+							NumberFormats.TryParseIntVb6(value, out result.Width);
 							break;
 						case "/height":
-							NumberFormats.TryParseIntVb6(value, out Result.Height);
+							NumberFormats.TryParseIntVb6(value, out result.Height);
 							break;
 						case "/glmenu":
 							if (value.ToLowerInvariant() == "true" || value.ToLowerInvariant() == "1")
 							{
-								Result.ExperimentalGLMenu = true;
+								result.ExperimentalGLMenu = true;
 							}
 							break;
 					}
 				}
 			}
-			return Result;
+			return result;
 		}
 	}
 }

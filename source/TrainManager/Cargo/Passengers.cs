@@ -35,27 +35,27 @@ namespace TrainManager.Cargo
 		}
 
 		/// <summary>Called once a frame to update the status of the passengers</summary>
-		/// <param name="Acceleration">The current average acceleration of the train</param>
-		/// <param name="TimeElapsed">The frame time elapsed</param>
-		public override void Update(double Acceleration, double TimeElapsed)
+		/// <param name="newAcceleration">The current average acceleration of the train</param>
+		/// <param name="timeElapsed">The frame time elapsed</param>
+		public override void Update(double newAcceleration, double timeElapsed)
 		{
-			double accelerationDifference = Acceleration - CurrentAcceleration;
+			double accelerationDifference = newAcceleration - CurrentAcceleration;
 			double jerk = 0.25 + 0.10 * Math.Abs(accelerationDifference);
-			double accelerationQuanta = jerk * TimeElapsed;
+			double accelerationQuanta = jerk * timeElapsed;
 			if (Math.Abs(accelerationDifference) < accelerationQuanta)
 			{
-				CurrentAcceleration = Acceleration;
+				CurrentAcceleration = newAcceleration;
 				accelerationDifference = 0.0;
 			}
 			else
 			{
 				CurrentAcceleration += Math.Sign(accelerationDifference) * accelerationQuanta;
-				accelerationDifference = Acceleration - CurrentAcceleration;
+				accelerationDifference = newAcceleration - CurrentAcceleration;
 			}
 
-			CurrentSpeedDifference += accelerationDifference * TimeElapsed;
+			CurrentSpeedDifference += accelerationDifference * timeElapsed;
 			double acceleration = 0.10 + 0.35 * Math.Abs(CurrentSpeedDifference);
-			double speedQuanta = acceleration * TimeElapsed;
+			double speedQuanta = acceleration * timeElapsed;
 			if (Math.Abs(CurrentSpeedDifference) < speedQuanta)
 			{
 				CurrentSpeedDifference = 0.0;

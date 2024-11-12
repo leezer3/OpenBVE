@@ -214,7 +214,7 @@ namespace Train.OpenBve
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "An empty list of compressor sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (car.CarBrake.brakeType != BrakeType.Main)
+									if (car.CarBrake.BrakeType != BrakeType.Main)
 									{
 										break;
 									}
@@ -225,17 +225,17 @@ namespace Train.OpenBve
 											case "attack":
 											case "start":
 												//Compressor starting sound
-												ParseNode(cc, out car.CarBrake.airCompressor.StartSound, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.CarBrake.AirCompressor.StartSound, center, SoundCfgParser.mediumRadius);
 												break;
 											case "loop":
 												//Compressor loop sound
-												ParseNode(cc, out car.CarBrake.airCompressor.LoopSound, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.CarBrake.AirCompressor.LoopSound, center, SoundCfgParser.mediumRadius);
 												break;
 											case "release":
 											case "stop":
 											case "end":
 												//Compressor end sound
-												ParseNode(cc, out car.CarBrake.airCompressor.EndSound, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.CarBrake.AirCompressor.EndSound, center, SoundCfgParser.mediumRadius);
 												break;
 											default:
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");

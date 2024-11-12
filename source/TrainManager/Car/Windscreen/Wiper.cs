@@ -44,11 +44,11 @@ namespace TrainManager.Car
 		}
 
 		/// <summary>Changes the wiper speed</summary>
-		public void ChangeSpeed(Translations.Command Command)
+		public void ChangeSpeed(Translations.Command command)
 		{
 			SwitchSound.Play(Windscreen.Car, false);
 			
-			switch (Command)
+			switch (command)
 			{
 				case Translations.Command.WiperSpeedUp:
 					if (CurrentSpeed < WiperSpeed.Fast)
@@ -67,10 +67,10 @@ namespace TrainManager.Car
 		}
 
 		/// <summary>Updates the windscreen wipers</summary>
-		/// <param name="TimeElapsed">The time elapsed since the last call to this method</param>
-		internal void Update(double TimeElapsed)
+		/// <param name="timeElapsed">The time elapsed since the last call to this method</param>
+		internal void Update(double timeElapsed)
 		{
-			wiperTimer += TimeElapsed;
+			wiperTimer += timeElapsed;
 			if (CurrentSpeed == WiperSpeed.Off)
 			{
 				if (RestPosition == WiperPosition.Left && CurrentPosition == 100)
@@ -113,7 +113,7 @@ namespace TrainManager.Car
 					{
 						if (HoldPosition == WiperPosition.Right && CurrentSpeed != WiperSpeed.Fast)
 						{
-							holdTimer += TimeElapsed;
+							holdTimer += timeElapsed;
 							if (holdTimer > HoldTime)
 							{
 								holdTimer = 0;
@@ -131,7 +131,7 @@ namespace TrainManager.Car
 						{
 							if (HoldPosition == WiperPosition.Right)
 							{
-								holdTimer += TimeElapsed;
+								holdTimer += timeElapsed;
 								if (holdTimer > HoldTime)
 								{
 									holdTimer = 0;
@@ -150,7 +150,7 @@ namespace TrainManager.Car
 					{
 						if (HoldPosition == WiperPosition.Left && CurrentSpeed != WiperSpeed.Fast)
 						{
-							holdTimer += TimeElapsed;
+							holdTimer += timeElapsed;
 							if (holdTimer > HoldTime)
 							{
 								holdTimer = 0;
@@ -168,7 +168,7 @@ namespace TrainManager.Car
 						{
 							if (HoldPosition == WiperPosition.Left)
 							{
-								holdTimer += TimeElapsed;
+								holdTimer += timeElapsed;
 								if (holdTimer > HoldTime)
 								{
 									holdTimer = 0;
@@ -186,7 +186,7 @@ namespace TrainManager.Car
 				case 1:
 					if (currentDirection == WiperPosition.Right)
 					{
-						if(Windscreen.currentDrops / (double)Windscreen.RainDrops.Length > 0.8)
+						if(Windscreen.CurrentDrops / (double)Windscreen.RainDrops.Length > 0.8)
 						{
 							if (soundTriggered == false)
 							{
@@ -207,7 +207,7 @@ namespace TrainManager.Car
 				case 99:
 					if (currentDirection == WiperPosition.Left)
 					{
-						if(Windscreen.currentDrops / (double)Windscreen.RainDrops.Length > 0.8)
+						if(Windscreen.CurrentDrops / (double)Windscreen.RainDrops.Length > 0.8)
 						{
 							if (soundTriggered == false)
 							{
@@ -232,7 +232,7 @@ namespace TrainManager.Car
 				Windscreen.RainDrops[dropToRemove].Visible = false;
 				Windscreen.RainDrops[dropToRemove].IsSnowFlake = false;
 				Windscreen.RainDrops[dropToRemove].RemainingLife = 0.5 * TrainManagerBase.RandomNumberGenerator.NextDouble() * Windscreen.DropLife;
-				Windscreen.currentDrops--;
+				Windscreen.CurrentDrops--;
 			}
 		}
 	}

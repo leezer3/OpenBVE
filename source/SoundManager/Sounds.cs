@@ -66,7 +66,7 @@ namespace SoundManager
 		/// <summary>Whether sound events are currently suppressed</summary>
 		public static bool SuppressSoundEvents = false;
 
-		protected internal int systemMaxSounds = int.MaxValue;
+		protected internal int SystemMaxSounds = int.MaxValue;
 		// --- linear distance clamp model ---
 
 		/// <summary>The factor by which the inner radius is multiplied to give the outer radius.</summary>
@@ -145,7 +145,7 @@ namespace SoundManager
 				 * Further note that the current version of OpenAL Soft (1.20.0 at the time of writing) does not like OpenTK
 				 * The version in use is 1.17.0 found here: https://openal-soft.org/openal-binaries/
 				 */
-				systemMaxSounds = 16;
+				SystemMaxSounds = 16;
 			}
 			try
 			{
@@ -293,18 +293,18 @@ namespace SoundManager
 		}
 
 		/// <summary>Attempts to load a new sound buffer</summary>
-		/// <param name="FileName">The on-disk path to the sound</param>
+		/// <param name="fileName">The on-disk path to the sound</param>
 		/// <param name="radius">The radius of the sound</param>
 		/// <returns>The new sound buffer OR null if the call does not succeed</returns>
-		public SoundBuffer TryToLoad(string FileName, double radius)
+		public SoundBuffer TryToLoad(string fileName, double radius)
 		{
-			if (FileName != null)
+			if (fileName != null)
 			{
-				if (File.Exists(FileName))
+				if (File.Exists(fileName))
 				{
 					try
 					{
-						return RegisterBuffer(FileName, radius);
+						return RegisterBuffer(fileName, radius);
 					}
 					catch
 					{
@@ -522,13 +522,13 @@ namespace SoundManager
 		// --- tests ---
 
 		/// <summary>Checks whether the specified sound is playing or supposed to be playing.</summary>
-		/// <param name="Source">The sound source, or a null reference.</param>
+		/// <param name="source">The sound source, or a null reference.</param>
 		/// <returns>Whether the sound is playing or supposed to be playing.</returns>
-		public bool IsPlaying(object Source)
+		public bool IsPlaying(object source)
 		{
-			if (Source is SoundSource source)
+			if (source is SoundSource soundSource)
 			{
-				if (source.State == SoundSourceState.PlayPending | source.State == SoundSourceState.Playing)
+				if (soundSource.State == SoundSourceState.PlayPending | soundSource.State == SoundSourceState.Playing)
 				{
 					return true;
 				}

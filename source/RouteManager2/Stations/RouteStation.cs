@@ -44,14 +44,14 @@ namespace RouteManager2.Stations
 		public readonly string Key;
 		
 		/// <summary>Gets the index of the stop corresponding to the train's number of cars</summary>
-		/// <param name="Cars">The number of cars the train has</param>
-		public int GetStopIndex(int Cars)
+		/// <param name="numberOfCars">The number of cars the train has</param>
+		public int GetStopIndex(int numberOfCars)
 		{
 			int j = -1;
 			int allCars = -1;
 			for (int i = Stops.Length - 1; i >= 0; i--)
 			{
-				if (Cars == Stops[i].Cars)
+				if (numberOfCars == Stops[i].Cars)
 				{
 					 // If we have found the specified number of cars, stop searching
 					 return i;
@@ -60,7 +60,7 @@ namespace RouteManager2.Stations
 				{
 					allCars = j;
 				}
-				if (Stops[i].Cars != 0 && Cars < Stops[i].Cars)
+				if (Stops[i].Cars != 0 && numberOfCars < Stops[i].Cars)
 				{
 					/*
 					 * The stop has greater than the specified number of cars (hence all cars will be platformed)
@@ -90,9 +90,9 @@ namespace RouteManager2.Stations
 		}
 
 		/// <summary>Indicates whether the specified train stops at this station.</summary>
-		public bool StopsHere(AbstractTrain Train)
+		public bool StopsHere(AbstractTrain train)
 		{
-			if (Train.IsPlayerTrain)
+			if (train.IsPlayerTrain)
 			{
 				return StopMode == StationStopMode.AllStop | StopMode == StationStopMode.PlayerStop | StopMode == StationStopMode.PlayerRequestStop | StopMode == StationStopMode.AllRequestStop;
 			}

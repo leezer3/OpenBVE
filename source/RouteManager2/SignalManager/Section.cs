@@ -62,32 +62,32 @@ namespace RouteManager2.SignalManager
 		}
 
 		/// <summary>Called when a train enters the section</summary>
-		/// <param name="Train">The train</param>
-		public void Enter(AbstractTrain Train)
+		/// <param name="train">The train</param>
+		public void Enter(AbstractTrain train)
 		{
 			int n = Trains.Length;
 
 			for (int i = 0; i < n; i++)
 			{
-				if (Trains[i] == Train)
+				if (Trains[i] == train)
 				{
 					return;
 				}
 			}
 
 			Array.Resize(ref Trains, n + 1);
-			Trains[n] = Train;
+			Trains[n] = train;
 		}
 
 		/// <summary>Called when a train leaves the section</summary>
-		/// <param name="Train">The train</param>
-		public void Leave(AbstractTrain Train)
+		/// <param name="train">The train</param>
+		public void Leave(AbstractTrain train)
 		{
 			int n = Trains.Length;
 
 			for (int i = 0; i < n; i++)
 			{
-				if (Trains[i] == Train)
+				if (Trains[i] == train)
 				{
 					for (int j = i; j < n - 1; j++)
 					{
@@ -101,11 +101,11 @@ namespace RouteManager2.SignalManager
 		}
 
 		/// <summary>Checks whether a train is currently within the section</summary>
-		/// <param name="Train">The train</param>
+		/// <param name="train">The train</param>
 		/// <returns>True if the train is within the section, false otherwise</returns>
-		public bool Exists(AbstractTrain Train)
+		public bool Exists(AbstractTrain train)
 		{
-			return Trains.Any(t => t == Train);
+			return Trains.Any(t => t == train);
 		}
 
 		/// <summary>Checks whether the section is free, disregarding the specified train.</summary>
@@ -124,9 +124,9 @@ namespace RouteManager2.SignalManager
 		}
 
 		/// <summary>Gets the first train within the section</summary>
-		/// <param name="AllowBogusTrain">Whether bogus trains are to be allowed</param>
+		/// <param name="allowBogusTrain">Whether bogus trains are to be allowed</param>
 		/// <returns>The first train within the section, or null if no trains are found</returns>
-		public AbstractTrain GetFirstTrain(bool AllowBogusTrain)
+		public AbstractTrain GetFirstTrain(bool allowBogusTrain)
 		{
 			for (int i = 0; i < Trains.Length; i++)
 			{
@@ -135,7 +135,7 @@ namespace RouteManager2.SignalManager
 					return Trains[i];
 				}
 
-				if (AllowBogusTrain & Trains[i].State == TrainState.Bogus)
+				if (allowBogusTrain & Trains[i].State == TrainState.Bogus)
 				{
 					return Trains[i];
 				}

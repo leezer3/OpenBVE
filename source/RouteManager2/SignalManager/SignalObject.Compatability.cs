@@ -20,14 +20,14 @@ namespace RouteManager2.SignalManager
 		/// <summary>The aspect numbers associated with each state</summary>
 		public readonly int[] AspectNumbers;
 		/// <summary>The object states</summary>
-		public readonly StaticObject[] Objects;
+		public readonly StaticObject[] AspectObjects;
 
 		private readonly HostInterface currentHost;
-		public CompatibilitySignalObject(int[] aspectNumbers, StaticObject[] Objects, HostInterface Host)
+		public CompatibilitySignalObject(int[] aspectNumbers, StaticObject[] aspectObjects, HostInterface currentHost)
 		{
 			this.AspectNumbers = aspectNumbers;
-			this.Objects = Objects;
-			this.currentHost = Host;
+			this.AspectObjects = aspectObjects;
+			this.currentHost = currentHost;
 		}
 
 		public override void Create(Vector3 wpos, Transformation railTransformation, Transformation localTransformation, int sectionIndex, double startingDistance, double endingDistance, double trackPosition, double brightness)
@@ -44,15 +44,15 @@ namespace RouteManager2.SignalManager
 				aoc.Objects[0].States = new ObjectState[AspectNumbers.Length];
 				for (int l = 0; l < AspectNumbers.Length; l++)
 				{
-					aoc.Objects[0].States[l] = new ObjectState((StaticObject)Objects[l].Clone());
+					aoc.Objects[0].States[l] = new ObjectState((StaticObject)AspectObjects[l].Clone());
 				}
-				CultureInfo Culture = CultureInfo.InvariantCulture;
+				CultureInfo culture = CultureInfo.InvariantCulture;
 				string expr = "";
 				for (int l = 0; l < AspectNumbers.Length - 1; l++)
 				{
-					expr += "section " + AspectNumbers[l].ToString(Culture) + " <= " + l.ToString(Culture) + " ";
+					expr += "section " + AspectNumbers[l].ToString(culture) + " <= " + l.ToString(culture) + " ";
 				}
-				expr += (AspectNumbers.Length - 1).ToString(Culture);
+				expr += (AspectNumbers.Length - 1).ToString(culture);
 				for (int l = 0; l < AspectNumbers.Length - 1; l++)
 				{
 					expr += " ?";
@@ -86,11 +86,11 @@ namespace RouteManager2.SignalManager
 				{
 					currentHost.AddMessage(MessageType.Information, false, "INFO: Using the " + node.InnerText + " compatibility signal set.");
 				}
-				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/CompatibilitySignals/Signal");
-				if (DocumentNodes != null)
+				XmlNodeList documentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/CompatibilitySignals/Signal");
+				if (documentNodes != null)
 				{
 					int index = 0;
-					foreach (XmlNode nn in DocumentNodes)
+					foreach (XmlNode nn in documentNodes)
 					{
 						List<StaticObject> objectList = new List<StaticObject>();
 						List<int> aspectList = new List<int>();
@@ -158,10 +158,10 @@ namespace RouteManager2.SignalManager
 					currentHost.AddMessage(MessageType.Error, true, "An unexpected error was encountered whilst processing the compatability signal file " + fileName);
 				}
 
-				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/CompatibilitySignals/SpeedLimits");
-				if (DocumentNodes != null)
+				documentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/CompatibilitySignals/SpeedLimits");
+				if (documentNodes != null)
 				{
-					foreach (XmlNode nn in DocumentNodes)
+					foreach (XmlNode nn in documentNodes)
 					{
 						try
 						{

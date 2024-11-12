@@ -23,7 +23,7 @@ namespace TrainManager.Handles
 		{
 			if (DelayedValue != AirBrakeHandleState.Invalid)
 			{
-				if (DelayedTime <= TrainManagerBase.currentHost.InGameTime)
+				if (DelayedTime <= TrainManagerBase.CurrentHost.InGameTime)
 				{
 					Actual = (int)DelayedValue;
 					DelayedValue = AirBrakeHandleState.Invalid;
@@ -34,12 +34,12 @@ namespace TrainManager.Handles
 				if (Safety == (int)AirBrakeHandleState.Release & Actual != (int)AirBrakeHandleState.Release)
 				{
 					DelayedValue = AirBrakeHandleState.Release;
-					DelayedTime = TrainManagerBase.currentHost.InGameTime;
+					DelayedTime = TrainManagerBase.CurrentHost.InGameTime;
 				}
 				else if (Safety == (int)AirBrakeHandleState.Service & Actual != (int)AirBrakeHandleState.Service)
 				{
 					DelayedValue = AirBrakeHandleState.Service;
-					DelayedTime = TrainManagerBase.currentHost.InGameTime;
+					DelayedTime = TrainManagerBase.CurrentHost.InGameTime;
 				}
 				else if (Safety == (int)AirBrakeHandleState.Lap)
 				{
@@ -55,7 +55,7 @@ namespace TrainManager.Handles
 				// sound when moved to service
 				if (newState == AirBrakeHandleState.Service)
 				{
-					baseTrain.Cars[baseTrain.DriverCar].CarBrake.Release.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+					BaseTrain.Cars[BaseTrain.DriverCar].CarBrake.Release.Play(BaseTrain.Cars[BaseTrain.DriverCar], false);
 				}
 
 				// sound
@@ -67,17 +67,17 @@ namespace TrainManager.Handles
 						// brake release (not min)
 						if (Driver - (int)newState > 2 | ContinuousMovement && DecreaseFast.Buffer != null)
 						{
-							DecreaseFast.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+							DecreaseFast.Play(BaseTrain.Cars[BaseTrain.DriverCar], false);
 						}
 						else
 						{
-							Decrease.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+							Decrease.Play(BaseTrain.Cars[BaseTrain.DriverCar], false);
 						}
 					}
 					else
 					{
 						// brake min
-						Min.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+						Min.Play(BaseTrain.Cars[BaseTrain.DriverCar], false);
 					}
 				}
 				else if ((int)newState > Driver)
@@ -85,31 +85,31 @@ namespace TrainManager.Handles
 					// brake
 					if ((int)newState - Driver > 2 | ContinuousMovement && IncreaseFast.Buffer != null)
 					{
-						IncreaseFast.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+						IncreaseFast.Play(BaseTrain.Cars[BaseTrain.DriverCar], false);
 					}
 					else
 					{
-						Increase.Play(baseTrain.Cars[baseTrain.DriverCar], false);
+						Increase.Play(BaseTrain.Cars[BaseTrain.DriverCar], false);
 					}
 				}
 
 				Driver = (int)newState;
-				TrainManagerBase.currentHost.AddBlackBoxEntry();
+				TrainManagerBase.CurrentHost.AddBlackBoxEntry();
 				// plugin
-				if (baseTrain.Plugin != null)
+				if (BaseTrain.Plugin != null)
 				{
-					baseTrain.Plugin.UpdatePower();
-					baseTrain.Plugin.UpdateBrake();
+					BaseTrain.Plugin.UpdatePower();
+					BaseTrain.Plugin.UpdateBrake();
 				}
 
 				if (!TrainManagerBase.CurrentOptions.Accessibility) return;
-				TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+				TrainManagerBase.CurrentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentHost.InGameTime + 10.0, null);
 			}
 		}
 
 		public override void ApplySafetyState(int newState)
 		{
-			safetyState = newState;
+			SafetyState = newState;
 		}
 
 		public override string GetNotchDescription(out MessageColor color)
@@ -117,7 +117,7 @@ namespace TrainManager.Handles
 			color = MessageColor.Gray;
 			if (NotchDescriptions == null || Driver >= NotchDescriptions.Length)
 			{
-				if (baseTrain.Handles.EmergencyBrake.Driver)
+				if (BaseTrain.Handles.EmergencyBrake.Driver)
 				{
 					color = MessageColor.Red;
 					return Translations.QuickReferences.HandleEmergency;
@@ -138,7 +138,7 @@ namespace TrainManager.Handles
 			}
 			else
 			{
-				if (baseTrain.Handles.EmergencyBrake.Driver)
+				if (BaseTrain.Handles.EmergencyBrake.Driver)
 				{
 					color = MessageColor.Red;
 					return NotchDescriptions[0];

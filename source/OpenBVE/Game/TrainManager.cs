@@ -18,21 +18,21 @@ namespace OpenBve
 		}
 		
 		/// <summary>This method should be called once a frame to update the position, speed and state of all trains within the simulation</summary>
-		/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
-		internal void UpdateTrains(double TimeElapsed)
+		/// <param name="timeElapsed">The time elapsed since the last call to this function</param>
+		internal void UpdateTrains(double timeElapsed)
 		{
 			if (Interface.CurrentOptions.GameMode == GameMode.Developer)
 			{
 				return;
 			}
 			for (int i = 0; i < Trains.Length; i++) {
-				Trains[i].Update(TimeElapsed);
+				Trains[i].Update(timeElapsed);
 			}
 
 			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
-			foreach (ScriptedTrain Train in TFOs) //Must not use var, as otherwise the wrong inferred type
+			foreach (ScriptedTrain scriptedTrain in TFOs) //Must not use var, as otherwise the wrong inferred type
 			{
-				Train.Update(TimeElapsed);
+				scriptedTrain.Update(timeElapsed);
 			}
 
 			// detect collision
@@ -86,9 +86,9 @@ namespace OpenBve
 												double vi = v * fi;
 												double vj = v * fj;
 												if (vi > Trains[i].CriticalCollisionSpeedDifference)
-													Trains[i].Derail(k, TimeElapsed);
+													Trains[i].Derail(k, timeElapsed);
 												if (vj > Trains[j].CriticalCollisionSpeedDifference)
-													Trains[j].Derail(i, TimeElapsed);
+													Trains[j].Derail(i, timeElapsed);
 											}
 
 											// adjust cars for train i
@@ -112,9 +112,9 @@ namespace OpenBve
 														double vi = v * fi;
 														double vj = v * fj;
 														if (vi > Trains[i].CriticalCollisionSpeedDifference)
-															Trains[i].Derail(h + 1, TimeElapsed);
+															Trains[i].Derail(h + 1, timeElapsed);
 														if (vj > Trains[j].CriticalCollisionSpeedDifference)
-															Trains[i].Derail(h, TimeElapsed);
+															Trains[i].Derail(h, timeElapsed);
 													}
 
 													Trains[i].Cars[h].CurrentSpeed =
@@ -143,9 +143,9 @@ namespace OpenBve
 														double vi = v * fi;
 														double vj = v * fj;
 														if (vi > Trains[j].CriticalCollisionSpeedDifference)
-															Trains[j].Derail(h - 1, TimeElapsed);
+															Trains[j].Derail(h - 1, timeElapsed);
 														if (vj > Trains[j].CriticalCollisionSpeedDifference)
-															Trains[j].Derail(h, TimeElapsed);
+															Trains[j].Derail(h, timeElapsed);
 													}
 
 													Trains[j].Cars[h].CurrentSpeed =
@@ -185,9 +185,9 @@ namespace OpenBve
 												double vi = v * fi;
 												double vj = v * fj;
 												if (vi > Trains[i].CriticalCollisionSpeedDifference)
-													Trains[i].Derail(0, TimeElapsed);
+													Trains[i].Derail(0, timeElapsed);
 												if (vj > Trains[j].CriticalCollisionSpeedDifference)
-													Trains[j].Derail(k, TimeElapsed);
+													Trains[j].Derail(k, timeElapsed);
 											}
 
 											// adjust cars for train i
@@ -211,9 +211,9 @@ namespace OpenBve
 														double vi = v * fi;
 														double vj = v * fj;
 														if (vi > Trains[i].CriticalCollisionSpeedDifference)
-															Trains[i].Derail(h - 1, TimeElapsed);
+															Trains[i].Derail(h - 1, timeElapsed);
 														if (vj > Trains[i].CriticalCollisionSpeedDifference)
-															Trains[i].Derail(h, TimeElapsed);
+															Trains[i].Derail(h, timeElapsed);
 													}
 
 													Trains[i].Cars[h].CurrentSpeed =
@@ -242,9 +242,9 @@ namespace OpenBve
 														double vi = v * fi;
 														double vj = v * fj;
 														if (vi > Trains[i].CriticalCollisionSpeedDifference)
-															Trains[j].Derail(h + 1, TimeElapsed);
+															Trains[j].Derail(h + 1, timeElapsed);
 														if (vj > Trains[j].CriticalCollisionSpeedDifference)
-															Trains[j].Derail(h, TimeElapsed);
+															Trains[j].Derail(h, timeElapsed);
 													}
 
 													Trains[j].Cars[h].CurrentSpeed =
@@ -289,7 +289,7 @@ namespace OpenBve
 								if (Interface.CurrentOptions.Derailments &&
 								    Math.Abs(Trains[i].Cars[0].CurrentSpeed) > Trains[i].CriticalCollisionSpeedDifference)
 								{
-									Trains[i].Derail(0, TimeElapsed);
+									Trains[i].Derail(0, timeElapsed);
 								}
 
 								Trains[i].Cars[0].CurrentSpeed = 0.0;
@@ -308,7 +308,7 @@ namespace OpenBve
 										    Math.Abs(Trains[i].Cars[h].CurrentSpeed) >
 										    Trains[i].CriticalCollisionSpeedDifference)
 										{
-											Trains[i].Derail(h, TimeElapsed);
+											Trains[i].Derail(h, timeElapsed);
 										}
 
 										Trains[i].Cars[h].CurrentSpeed = 0.0;
@@ -328,7 +328,7 @@ namespace OpenBve
 								if (Interface.CurrentOptions.Derailments &&
 								    Math.Abs(Trains[i].Cars[c].CurrentSpeed) > Trains[i].CriticalCollisionSpeedDifference)
 								{
-									Trains[i].Derail(c, TimeElapsed);
+									Trains[i].Derail(c, timeElapsed);
 								}
 
 								Trains[i].Cars[c].CurrentSpeed = 0.0;
@@ -347,7 +347,7 @@ namespace OpenBve
 										    Math.Abs(Trains[i].Cars[h].CurrentSpeed) >
 										    Trains[i].CriticalCollisionSpeedDifference)
 										{
-											Trains[i].Derail(h, TimeElapsed);
+											Trains[i].Derail(h, timeElapsed);
 										}
 
 										Trains[i].Cars[h].CurrentSpeed = 0.0;
@@ -373,12 +373,12 @@ namespace OpenBve
 						Trains[i].Cars[j].RearAxle.Follower.UpdateWorldCoordinates(true);
 						Trains[i].Cars[j].RearBogie.FrontAxle.Follower.UpdateWorldCoordinates(true);
 						Trains[i].Cars[j].RearBogie.RearAxle.Follower.UpdateWorldCoordinates(true);
-						if (TimeElapsed == 0.0 | TimeElapsed > 0.5)
+						if (timeElapsed == 0.0 | timeElapsed > 0.5)
 						{
 							//Don't update the toppling etc. with excessive or no time
 							continue;
 						}
-						Trains[i].Cars[j].UpdateTopplingCantAndSpring(TimeElapsed);
+						Trains[i].Cars[j].UpdateTopplingCantAndSpring(timeElapsed);
 						Trains[i].Cars[j].FrontBogie.UpdateTopplingCantAndSpring();
 						Trains[i].Cars[j].RearBogie.UpdateTopplingCantAndSpring();
 					}
@@ -398,12 +398,12 @@ namespace OpenBve
 						Car.RearAxle.Follower.UpdateWorldCoordinates(true);
 						Car.RearBogie.FrontAxle.Follower.UpdateWorldCoordinates(true);
 						Car.RearBogie.RearAxle.Follower.UpdateWorldCoordinates(true);
-						if (TimeElapsed == 0.0 | TimeElapsed > 0.5)
+						if (timeElapsed == 0.0 | timeElapsed > 0.5)
 						{
 							//Don't update the toppling etc. with excessive or no time
 							continue;
 						}
-						Car.UpdateTopplingCantAndSpring(TimeElapsed);
+						Car.UpdateTopplingCantAndSpring(timeElapsed);
 						Car.FrontBogie.UpdateTopplingCantAndSpring();
 						Car.RearBogie.UpdateTopplingCantAndSpring();
 					}

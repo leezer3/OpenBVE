@@ -9,13 +9,13 @@ namespace TrainManager.SafetySystems
 		/// <summary>The plugin</summary>
 		internal Plugin Plugin;
 		/// <summary>Control variable used to determine next AI step</summary>
-		internal int currentStep;
+		internal int CurrentStep;
 		/// <summary>Timer variable controlling the next plugin action</summary>
-		internal double nextPluginAction;
+		internal double NextPluginAction;
 		/// <summary>Stores the current rain intensity</summary>
-		internal int currentRainIntensity;
+		internal int CurrentRainIntensity;
 		/// <summary>Whether the plugin has set the lights</summary>
-		internal bool lightsSet;
+		internal bool LightsSet;
 		/// <summary>Called once a frame to perform any AI specific tasks</summary>
 		/// <param name="data">The AI Data</param>
 		internal abstract void Perform(AIData data);

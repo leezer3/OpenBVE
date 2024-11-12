@@ -7,18 +7,18 @@ namespace TrainManager.Trains
 	public partial class TrainBase
 	{
 		/// <inheritdoc/>
-		public override void OpenDoors(bool Left, bool Right)
+		public override void OpenDoors(bool left, bool right)
 		{
 			bool sl = false, sr = false;
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				if (Left & !Cars[i].Doors[0].AnticipatedOpen & (SafetySystems.DoorInterlockState == DoorInterlockStates.Left | SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+				if (left & !Cars[i].Doors[0].AnticipatedOpen & (SafetySystems.DoorInterlockState == DoorInterlockStates.Left | SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 				{
 					Cars[i].Doors[0].AnticipatedOpen = true;
 					sl = true;
 				}
 
-				if (Right & !Cars[i].Doors[1].AnticipatedOpen & (SafetySystems.DoorInterlockState == DoorInterlockStates.Right | SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+				if (right & !Cars[i].Doors[1].AnticipatedOpen & (SafetySystems.DoorInterlockState == DoorInterlockStates.Right | SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 				{
 					Cars[i].Doors[1].AnticipatedOpen = true;
 					sr = true;
@@ -57,18 +57,18 @@ namespace TrainManager.Trains
 		}
 
 		/// <inheritdoc/>
-		public override void CloseDoors(bool Left, bool Right)
+		public override void CloseDoors(bool left, bool right)
 		{
 			bool sl = false, sr = false;
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				if (Left & Cars[i].Doors[0].AnticipatedOpen & (SafetySystems.DoorInterlockState == DoorInterlockStates.Left | SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+				if (left & Cars[i].Doors[0].AnticipatedOpen & (SafetySystems.DoorInterlockState == DoorInterlockStates.Left | SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 				{
 					Cars[i].Doors[0].AnticipatedOpen = false;
 					sl = true;
 				}
 
-				if (Right & Cars[i].Doors[1].AnticipatedOpen & (SafetySystems.DoorInterlockState == DoorInterlockStates.Right | SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
+				if (right & Cars[i].Doors[1].AnticipatedOpen & (SafetySystems.DoorInterlockState == DoorInterlockStates.Right | SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 				{
 					Cars[i].Doors[1].AnticipatedOpen = false;
 					sr = true;
@@ -93,17 +93,17 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Returns the combination of door states encountered in a </summary>
-		/// <param name="Left">Whether to include left doors.</param>
-		/// <param name="Right">Whether to include right doors.</param>
+		/// <param name="left">Whether to include left doors.</param>
+		/// <param name="right">Whether to include right doors.</param>
 		/// <returns>A bit mask combining encountered door states.</returns>
-		public TrainDoorState GetDoorsState(bool Left, bool Right)
+		public TrainDoorState GetDoorsState(bool left, bool right)
 		{
 			bool opened = false, closed = false, mixed = false;
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				for (int j = 0; j < Cars[i].Doors.Length; j++)
 				{
-					if (Left & Cars[i].Doors[j].Direction == -1 | Right & Cars[i].Doors[j].Direction == 1)
+					if (left & Cars[i].Doors[j].Direction == -1 | right & Cars[i].Doors[j].Direction == 1)
 					{
 						if (Cars[i].Doors[j].State == 0.0)
 						{
@@ -121,27 +121,27 @@ namespace TrainManager.Trains
 				}
 			}
 
-			TrainDoorState Result = TrainDoorState.None;
-			if (opened) Result |= TrainDoorState.Opened;
-			if (closed) Result |= TrainDoorState.Closed;
-			if (mixed) Result |= TrainDoorState.Mixed;
-			if (opened & !closed & !mixed) Result |= TrainDoorState.AllOpened;
-			if (!opened & closed & !mixed) Result |= TrainDoorState.AllClosed;
-			if (!opened & !closed & mixed) Result |= TrainDoorState.AllMixed;
-			return Result;
+			TrainDoorState result = TrainDoorState.None;
+			if (opened) result |= TrainDoorState.Opened;
+			if (closed) result |= TrainDoorState.Closed;
+			if (mixed) result |= TrainDoorState.Mixed;
+			if (opened & !closed & !mixed) result |= TrainDoorState.AllOpened;
+			if (!opened & closed & !mixed) result |= TrainDoorState.AllClosed;
+			if (!opened & !closed & mixed) result |= TrainDoorState.AllMixed;
+			return result;
 		}
 
 		/// <summary>Called once a frame for each train when arriving at a station, in order to update the automatic doors</summary>
-		/// <param name="NextStation">The train's next station</param>
-		/// <param name="BackwardsTolerance">The backwards tolerance for this stop point</param>
-		/// <param name="ForwardsTolerance">The forwards tolerance for this stop point</param>
-		public void AttemptToOpenDoors(Station NextStation, double BackwardsTolerance, double ForwardsTolerance)
+		/// <param name="nextStation">The train's next station</param>
+		/// <param name="backwardsTolerance">The backwards tolerance for this stop point</param>
+		/// <param name="forwardsTolerance">The forwards tolerance for this stop point</param>
+		public void AttemptToOpenDoors(Station nextStation, double backwardsTolerance, double forwardsTolerance)
 		{
-			if ((GetDoorsState(NextStation.OpenLeftDoors, NextStation.OpenRightDoors) & TrainDoorState.AllOpened) == 0)
+			if ((GetDoorsState(nextStation.OpenLeftDoors, nextStation.OpenRightDoors) & TrainDoorState.AllOpened) == 0)
 			{
-				if (StationDistanceToStopPoint < BackwardsTolerance & -StationDistanceToStopPoint < ForwardsTolerance)
+				if (StationDistanceToStopPoint < backwardsTolerance & -StationDistanceToStopPoint < forwardsTolerance)
 				{
-					OpenDoors(NextStation.OpenLeftDoors, NextStation.OpenRightDoors);
+					OpenDoors(nextStation.OpenLeftDoors, nextStation.OpenRightDoors);
 				}
 
 			}
@@ -150,7 +150,7 @@ namespace TrainManager.Trains
 		/// <summary>Called once a frame for each train whilst stopped at a station with the doors open, in order to update the automatic doors</summary>
 		public void AttemptToCloseDoors()
 		{
-			if (TrainManagerBase.currentHost.InGameTime >= StationDepartureTime - 1.0 / Cars[DriverCar].Specs.DoorCloseFrequency)
+			if (TrainManagerBase.CurrentHost.InGameTime >= StationDepartureTime - 1.0 / Cars[DriverCar].Specs.DoorCloseFrequency)
 			{
 				if ((GetDoorsState(true, true) & TrainDoorState.AllClosed) == 0)
 				{
@@ -161,8 +161,8 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Is called once a frame, to update the door states of the train</summary>
-		/// <param name="TimeElapsed">The frame time elapsed</param>
-		public void UpdateDoors(double TimeElapsed)
+		/// <param name="timeElapsed">The frame time elapsed</param>
+		public void UpdateDoors(double timeElapsed)
 		{
 			DoorStates oldState = DoorStates.None;
 			DoorStates newState = DoorStates.None;
@@ -193,7 +193,7 @@ namespace TrainManager.Trains
 						if (shouldBeOpen)
 						{
 							// open
-							Cars[i].Doors[j].State += os * TimeElapsed;
+							Cars[i].Doors[j].State += os * timeElapsed;
 							if (Cars[i].Doors[j].State > 1.0)
 							{
 								Cars[i].Doors[j].State = 1.0;
@@ -206,7 +206,7 @@ namespace TrainManager.Trains
 							{
 								if (Cars[i].Doors[j].State > Cars[i].Doors[j].DoorLockState)
 								{
-									Cars[i].Doors[j].State -= cs * TimeElapsed;
+									Cars[i].Doors[j].State -= cs * timeElapsed;
 								}
 
 								if (Cars[i].Doors[j].State < Cars[i].Doors[j].DoorLockState)
@@ -214,7 +214,7 @@ namespace TrainManager.Trains
 									Cars[i].Doors[j].State = Cars[i].Doors[j].DoorLockState;
 								}
 
-								Cars[i].Doors[j].DoorLockDuration -= TimeElapsed;
+								Cars[i].Doors[j].DoorLockDuration -= timeElapsed;
 								if (Cars[i].Doors[j].DoorLockDuration < 0.0)
 								{
 									Cars[i].Doors[j].DoorLockDuration = 0.0;
@@ -222,7 +222,7 @@ namespace TrainManager.Trains
 							}
 							else
 							{
-								Cars[i].Doors[j].State -= cs * TimeElapsed;
+								Cars[i].Doors[j].State -= cs * timeElapsed;
 							}
 
 							if (Cars[i].Doors[j].AnticipatedReopen && Cars[i].Doors[j].State < Cars[i].Doors[j].InterferingObjectRate)

@@ -17,28 +17,28 @@ namespace OpenBve
 		internal static Control[] CurrentControls = { };
 
 		/// <summary>Saves a control configuration to disk</summary>
-		/// <param name="FileOrNull">An absolute file path if we are exporting the controls, or a null reference to save to the default configuration location</param>
+		/// <param name="fileOrNull">An absolute file path if we are exporting the controls, or a null reference to save to the default configuration location</param>
 		/// <param name="controlsToSave">The list of controls to save</param>
-		internal static void SaveControls(string FileOrNull, Control[] controlsToSave) {
-			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
-			Builder.AppendLine("; Current control configuration");
-			Builder.AppendLine("; =============================");
-			Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
-			Builder.AppendLine("; This file is INCOMPATIBLE with versions older than 1.4.4.");
-			Builder.AppendLine();
+		internal static void SaveControls(string fileOrNull, Control[] controlsToSave) {
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			builder.AppendLine("; Current control configuration");
+			builder.AppendLine("; =============================");
+			builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
+			builder.AppendLine("; This file is INCOMPATIBLE with versions older than 1.4.4.");
+			builder.AppendLine();
 			for (int i = 0; i < controlsToSave.Length; i++) {
 				if (controlsToSave[i].Command == Translations.Command.None)
 				{
 					// don't save a control with no command set, just stores up problems for later
 					continue;
 				}
-				Translations.CommandInfo Info = Translations.CommandInfos.TryGetInfo(controlsToSave[i].Command);
-				Builder.Append(Info.Name + ", " + controlsToSave[i]);
+				Translations.CommandInfo info = Translations.CommandInfos.TryGetInfo(controlsToSave[i].Command);
+				builder.Append(info.Name + ", " + controlsToSave[i]);
 				
-				Builder.Append("\n");
+				builder.Append("\n");
 			}
-			string File = FileOrNull ?? OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
-			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
+			string file = fileOrNull ?? OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
+			File.WriteAllText(file, builder.ToString(), new System.Text.UTF8Encoding(true));
 		}
 
 		private static bool ControlsReset = false;
@@ -58,35 +58,35 @@ namespace OpenBve
 		}
 
 		/// <summary>Loads the current controls from the controls.cfg file</summary>
-		/// <param name="FileOrNull">An absolute path reference to a saved controls.cfg file, or a null reference to check the default locations</param>
-		/// <param name="Controls">The current controls array</param>
-		internal static void LoadControls(string FileOrNull, out Control[] Controls)
+		/// <param name="fileOrNull">An absolute path reference to a saved controls.cfg file, or a null reference to check the default locations</param>
+		/// <param name="controls">The current controls array</param>
+		internal static void LoadControls(string fileOrNull, out Control[] controls)
 		{
-			string File;
-			string[] Lines = {};
+			string file;
+			string[] lines = {};
 			try
 			{
 				//Don't crash horribly if the embedded default controls file is missing (makefile.....)
-				Lines = GetLines(Assembly.GetExecutingAssembly().GetManifestResourceStream("OpenBve.Default.controls"));
+				lines = GetLines(Assembly.GetExecutingAssembly().GetManifestResourceStream("OpenBve.Default.controls"));
 			}
 			catch
 			{
 				//ignored
 			}
 			
-			if (FileOrNull == null)
+			if (fileOrNull == null)
 			{
-				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
-				if (!System.IO.File.Exists(File))
+				file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
+				if (!File.Exists(file))
 				{
-					File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "controls.cfg");
+					file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "controls.cfg");
 				}
 
-				if (!System.IO.File.Exists(File))
+				if (!File.Exists(file))
 				{
 					//Load the default key assignments if the user settings don't exist
-					File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls");
-					if (!System.IO.File.Exists(File))
+					file = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls");
+					if (!File.Exists(file))
 					{
 						MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_missing"}),
 							Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
@@ -95,57 +95,57 @@ namespace OpenBve
 			}
 			else
 			{
-				File = FileOrNull;
+				file = fileOrNull;
 			}
 
-			Controls = new Control[256];
-			int Length = 0;
-			CultureInfo Culture = CultureInfo.InvariantCulture;
-			if (System.IO.File.Exists(File))
+			controls = new Control[256];
+			int length = 0;
+			CultureInfo culture = CultureInfo.InvariantCulture;
+			if (File.Exists(file))
 			{
-				Lines = System.IO.File.ReadAllLines(File, new System.Text.UTF8Encoding());
+				lines = File.ReadAllLines(file, new System.Text.UTF8Encoding());
 			}
 
-			for (int i = 0; i < Lines.Length; i++)
+			for (int i = 0; i < lines.Length; i++)
 			{
-				Lines[i] = Lines[i].Trim();
-				if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
+				lines[i] = lines[i].Trim();
+				if (lines[i].Length != 0 && !lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
 				{
-					string[] Terms = Lines[i].Split(',');
-					for (int j = 0; j < Terms.Length; j++)
+					string[] terms = lines[i].Split(',');
+					for (int j = 0; j < terms.Length; j++)
 					{
-						Terms[j] = Terms[j].Trim();
+						terms[j] = terms[j].Trim();
 					}
 
-					if (Terms.Length >= 2)
+					if (terms.Length >= 2)
 					{
-						if (Length >= Controls.Length)
+						if (length >= controls.Length)
 						{
-							Array.Resize(ref Controls, Controls.Length << 1);
+							Array.Resize(ref controls, controls.Length << 1);
 						}
 
 						// note: to get rid of the underscore in the saved commmand file would require a format change, and this isn't a performance sensitive area hence don't bother....
-						if (!Enum.TryParse(Terms[0].Replace("_", string.Empty), true, out Translations.Command parsedCommand))
+						if (!Enum.TryParse(terms[0].Replace("_", string.Empty), true, out Translations.Command parsedCommand))
 						{
-							Controls[Length].Command = Translations.Command.None;
-							Controls[Length].InheritedType = Translations.CommandType.Digital;
-							Controls[Length].Method = ControlMethod.Invalid;
-							Controls[Length].Device = Guid.Empty;
-							Controls[Length].Component = JoystickComponent.Invalid;
-							Controls[Length].Element = -1;
-							Controls[Length].Direction = 0;
-							Controls[Length].Modifier = KeyboardModifier.None;
-							Controls[Length].Option = 0;
+							controls[length].Command = Translations.Command.None;
+							controls[length].InheritedType = Translations.CommandType.Digital;
+							controls[length].Method = ControlMethod.Invalid;
+							controls[length].Device = Guid.Empty;
+							controls[length].Component = JoystickComponent.Invalid;
+							controls[length].Element = -1;
+							controls[length].Direction = 0;
+							controls[length].Modifier = KeyboardModifier.None;
+							controls[length].Option = 0;
 						}
 						else
 						{
-							Controls[Length].Command = parsedCommand;
-							Controls[Length].InheritedType = Translations.CommandInfos[parsedCommand].Type;
-							Enum.TryParse(Terms[1], true, out ControlMethod Method);
-							bool Valid = false;
-							if (Method == ControlMethod.Keyboard & Terms.Length >= 4)
+							controls[length].Command = parsedCommand;
+							controls[length].InheritedType = Translations.CommandInfos[parsedCommand].Type;
+							Enum.TryParse(terms[1], true, out ControlMethod method);
+							bool valid = false;
+							if (method == ControlMethod.Keyboard & terms.Length >= 4)
 							{
-								if (int.TryParse(Terms[2], out _))
+								if (int.TryParse(terms[2], out _))
 								{
 									//We've discovered a SDL keybinding is present, so reset the loading process with the default keyconfig & show an appropriate error message
 									if (ControlsReset == false)
@@ -154,20 +154,20 @@ namespace OpenBve
 											MessageBoxButtons.OK, MessageBoxIcon.Hand);
 									}
 
-									var DefaultControls = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls");
-									if (System.IO.File.Exists(DefaultControls))
+									var defaultControls = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls");
+									if (File.Exists(defaultControls))
 									{
 										if (ControlsReset == false)
 										{
 											ControlsReset = true;
-											LoadControls(DefaultControls, out CurrentControls);
+											LoadControls(defaultControls, out CurrentControls);
 										}
 										else
 										{
 											MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_default_oldversion"}),
 												Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 											i = 0;
-											Lines = GetLines(Assembly.GetExecutingAssembly().GetManifestResourceStream("OpenBve.Default.controls"));
+											lines = GetLines(Assembly.GetExecutingAssembly().GetManifestResourceStream("OpenBve.Default.controls"));
 											continue;
 										}
 
@@ -176,196 +176,196 @@ namespace OpenBve
 									{
 										MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_default_missing"}),
 											Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-										Controls = new Control[0];
+										controls = new Control[0];
 									}
 
 									return;
 								}
 
-								if (Enum.TryParse(Terms[2], true, out Key CurrentKey))
+								if (Enum.TryParse(terms[2], true, out Key currentKey))
 								{
-									if (int.TryParse(Terms[3], NumberStyles.Integer, Culture, out int Modifiers))
+									if (int.TryParse(terms[3], NumberStyles.Integer, culture, out int modifiers))
 									{
-										Controls[Length].Method = Method;
-										Controls[Length].Device = Guid.Empty;
-										Controls[Length].Component = JoystickComponent.Invalid;
-										Controls[Length].Key = (OpenBveApi.Input.Key)CurrentKey;
-										Controls[Length].Direction = 0;
-										Controls[Length].Modifier = (KeyboardModifier) Modifiers;
-										if (Terms.Length >= 5 && int.TryParse(Terms[4], NumberStyles.Integer, Culture, out int Option))
+										controls[length].Method = method;
+										controls[length].Device = Guid.Empty;
+										controls[length].Component = JoystickComponent.Invalid;
+										controls[length].Key = (OpenBveApi.Input.Key)currentKey;
+										controls[length].Direction = 0;
+										controls[length].Modifier = (KeyboardModifier) modifiers;
+										if (terms.Length >= 5 && int.TryParse(terms[4], NumberStyles.Integer, culture, out int option))
 										{
-											Controls[Length].Option = Option;
+											controls[length].Option = option;
 										}
 
-										Valid = true;
+										valid = true;
 									}
 								}
 							}
-							else if (Method == ControlMethod.Joystick & Terms.Length >= 4)
+							else if (method == ControlMethod.Joystick & terms.Length >= 4)
 							{
-								Guid Device = Guid.Empty;
-								if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out int oldDevice))
+								Guid device = Guid.Empty;
+								if (int.TryParse(terms[2], NumberStyles.Integer, culture, out int oldDevice))
 								{
-									Device = Joystick.GetGuid(oldDevice);
+									device = Joystick.GetGuid(oldDevice);
 								}
 
-								Enum.TryParse(Terms[3], true, out JoystickComponent Component);
+								Enum.TryParse(terms[3], true, out JoystickComponent component);
 								
-								if (Device != Guid.Empty || Guid.TryParse(Terms[2], out Device))
+								if (device != Guid.Empty || Guid.TryParse(terms[2], out device))
 								{
 									
-									if (Component == JoystickComponent.Axis & Terms.Length >= 6)
+									if (component == JoystickComponent.Axis & terms.Length >= 6)
 									{
-										if (int.TryParse(Terms[4], out int CurrentAxis))
+										if (int.TryParse(terms[4], out int currentAxis))
 										{
-											if (int.TryParse(Terms[5], NumberStyles.Integer, Culture, out int Direction))
+											if (int.TryParse(terms[5], NumberStyles.Integer, culture, out int direction))
 											{
 
-												Controls[Length].Method = Method;
-												Controls[Length].Device = Device;
-												Controls[Length].Component = JoystickComponent.Axis;
-												Controls[Length].Element = CurrentAxis;
-												Controls[Length].Direction = Direction;
-												Controls[Length].Modifier = KeyboardModifier.None;
-												if (Terms.Length >= 7 && int.TryParse(Terms[6], NumberStyles.Integer, Culture, out int Option))
+												controls[length].Method = method;
+												controls[length].Device = device;
+												controls[length].Component = JoystickComponent.Axis;
+												controls[length].Element = currentAxis;
+												controls[length].Direction = direction;
+												controls[length].Modifier = KeyboardModifier.None;
+												if (terms.Length >= 7 && int.TryParse(terms[6], NumberStyles.Integer, culture, out int option))
 												{
-													Controls[Length].Option = Option;
+													controls[length].Option = option;
 												}
 
-												Valid = true;
+												valid = true;
 											}
 										}
 									}
-									else if (Component == JoystickComponent.Hat & Terms.Length >= 6)
+									else if (component == JoystickComponent.Hat & terms.Length >= 6)
 									{
-										if (int.TryParse(Terms[4], out int CurrentHat))
+										if (int.TryParse(terms[4], out int currentHat))
 										{
-											if (int.TryParse(Terms[5], out int HatDirection))
+											if (int.TryParse(terms[5], out int hatDirection))
 											{
-												Controls[Length].Method = Method;
-												Controls[Length].Device = Device;
-												Controls[Length].Component = JoystickComponent.Hat;
-												Controls[Length].Element = CurrentHat;
-												Controls[Length].Direction = HatDirection;
-												Controls[Length].Modifier = KeyboardModifier.None;
-												if (Terms.Length >= 7 && int.TryParse(Terms[6], NumberStyles.Integer, Culture, out int Option))
+												controls[length].Method = method;
+												controls[length].Device = device;
+												controls[length].Component = JoystickComponent.Hat;
+												controls[length].Element = currentHat;
+												controls[length].Direction = hatDirection;
+												controls[length].Modifier = KeyboardModifier.None;
+												if (terms.Length >= 7 && int.TryParse(terms[6], NumberStyles.Integer, culture, out int option))
 												{
-													Controls[Length].Option = Option;
+													controls[length].Option = option;
 												}
 
-												Valid = true;
+												valid = true;
 											}
 
 										}
 									}
-									else if (Component == JoystickComponent.Button & Terms.Length >= 5)
+									else if (component == JoystickComponent.Button & terms.Length >= 5)
 									{
-										if (int.TryParse(Terms[4], out int CurrentButton))
+										if (int.TryParse(terms[4], out int currentButton))
 										{
-											Controls[Length].Method = Method;
-											Controls[Length].Device = Device;
-											Controls[Length].Component = JoystickComponent.Button;
-											Controls[Length].Element = CurrentButton;
-											Controls[Length].Direction = 0;
-											Controls[Length].Modifier = KeyboardModifier.None;
-											if (Terms.Length >= 6 && int.TryParse(Terms[5], NumberStyles.Integer, Culture, out int Option))
+											controls[length].Method = method;
+											controls[length].Device = device;
+											controls[length].Component = JoystickComponent.Button;
+											controls[length].Element = currentButton;
+											controls[length].Direction = 0;
+											controls[length].Modifier = KeyboardModifier.None;
+											if (terms.Length >= 6 && int.TryParse(terms[5], NumberStyles.Integer, culture, out int option))
 											{
-												Controls[Length].Option = Option;
+												controls[length].Option = option;
 											}
 
-											Valid = true;
+											valid = true;
 										}
 									}
 
 								}
 							}
-							else if (Method == ControlMethod.RailDriver & Terms.Length >= 4)
+							else if (method == ControlMethod.RailDriver & terms.Length >= 4)
 							{
-								Guid Device = Guid.Empty;
-								if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out int oldDevice))
+								Guid device = Guid.Empty;
+								if (int.TryParse(terms[2], NumberStyles.Integer, culture, out int oldDevice))
 								{
-									Device = Joystick.GetGuid(oldDevice);
+									device = Joystick.GetGuid(oldDevice);
 								}
 								
-								if (Device != Guid.Empty || Guid.TryParse(Terms[2], out Device))
+								if (device != Guid.Empty || Guid.TryParse(terms[2], out device))
 								{
-									Enum.TryParse(Terms[3], true, out JoystickComponent Component);
-									if (Component == JoystickComponent.Axis & Terms.Length >= 6)
+									Enum.TryParse(terms[3], true, out JoystickComponent component);
+									if (component == JoystickComponent.Axis & terms.Length >= 6)
 									{
-										if (int.TryParse(Terms[4], out int CurrentAxis))
+										if (int.TryParse(terms[4], out int currentAxis))
 										{
-											if (int.TryParse(Terms[5], NumberStyles.Integer, Culture, out int Direction))
+											if (int.TryParse(terms[5], NumberStyles.Integer, culture, out int direction))
 											{
 
-												Controls[Length].Method = Method;
-												Controls[Length].Device = Device;
-												Controls[Length].Component = JoystickComponent.Axis;
-												Controls[Length].Element = CurrentAxis;
-												Controls[Length].Direction = Direction;
-												Controls[Length].Modifier = KeyboardModifier.None;
-												if (Terms.Length >= 7 && int.TryParse(Terms[6], NumberStyles.Integer, Culture, out int Option))
+												controls[length].Method = method;
+												controls[length].Device = device;
+												controls[length].Component = JoystickComponent.Axis;
+												controls[length].Element = currentAxis;
+												controls[length].Direction = direction;
+												controls[length].Modifier = KeyboardModifier.None;
+												if (terms.Length >= 7 && int.TryParse(terms[6], NumberStyles.Integer, culture, out int option))
 												{
-													Controls[Length].Option = Option;
+													controls[length].Option = option;
 												}
 
-												Valid = true;
+												valid = true;
 											}
 										}
 									}
-									else if (Component == JoystickComponent.Button & Terms.Length >= 5)
+									else if (component == JoystickComponent.Button & terms.Length >= 5)
 									{
-										if (int.TryParse(Terms[4], out int CurrentButton))
+										if (int.TryParse(terms[4], out int currentButton))
 										{
-											Controls[Length].Method = ControlMethod.RailDriver;
-											Controls[Length].Device = Device;
-											Controls[Length].Component = JoystickComponent.Button;
-											Controls[Length].Element = CurrentButton;
-											Controls[Length].Direction = 0;
-											Controls[Length].Modifier = KeyboardModifier.None;
-											if (Terms.Length >= 6 && int.TryParse(Terms[5], NumberStyles.Integer, Culture, out int Option))
+											controls[length].Method = ControlMethod.RailDriver;
+											controls[length].Device = device;
+											controls[length].Component = JoystickComponent.Button;
+											controls[length].Element = currentButton;
+											controls[length].Direction = 0;
+											controls[length].Modifier = KeyboardModifier.None;
+											if (terms.Length >= 6 && int.TryParse(terms[5], NumberStyles.Integer, culture, out int option))
 											{
-												Controls[Length].Option = Option;
+												controls[length].Option = option;
 											}
 
-											Valid = true;
+											valid = true;
 										}
 									}
 
 								}
 							}
 
-							if (!Valid)
+							if (!valid)
 							{
-								Controls[Length].Method = ControlMethod.Invalid;
-								Controls[Length].Device = Guid.Empty;
-								Controls[Length].Component = JoystickComponent.Invalid;
-								Controls[Length].Element = -1;
-								Controls[Length].Direction = 0;
-								Controls[Length].Modifier = KeyboardModifier.None;
-								Controls[Length].Option = 0;
+								controls[length].Method = ControlMethod.Invalid;
+								controls[length].Device = Guid.Empty;
+								controls[length].Component = JoystickComponent.Invalid;
+								controls[length].Element = -1;
+								controls[length].Direction = 0;
+								controls[length].Modifier = KeyboardModifier.None;
+								controls[length].Option = 0;
 							}
 						}
 
-						Length++;
+						length++;
 					}
 				}
 			}
-			Array.Resize(ref Controls, Length);
+			Array.Resize(ref controls, length);
 		}
 
 
 		/// <summary>Adds an array of controls to an existing control array</summary>
-		/// <param name="Base">The base control array</param>
-		/// <param name="Add">The new controls to add</param>
-		internal static void AddControls(ref Control[] Base, Control[] Add) {
-			for (int i = 0; i < Add.Length; i++) {
+		/// <param name="baseControls">The base control array</param>
+		/// <param name="additionalControls">The new controls to add</param>
+		internal static void AddControls(ref Control[] baseControls, Control[] additionalControls) {
+			for (int i = 0; i < additionalControls.Length; i++) {
 				int j;
-				for (j = 0; j < Base.Length; j++) {
-					if (Add[i].Command == Base[j].Command) break;
+				for (j = 0; j < baseControls.Length; j++) {
+					if (additionalControls[i].Command == baseControls[j].Command) break;
 				}
-				if (j == Base.Length) {
-					Array.Resize(ref Base, Base.Length + 1);
-					Base[Base.Length - 1] = Add[i];
+				if (j == baseControls.Length) {
+					Array.Resize(ref baseControls, baseControls.Length + 1);
+					baseControls[baseControls.Length - 1] = additionalControls[i];
 				}
 			}
 		}

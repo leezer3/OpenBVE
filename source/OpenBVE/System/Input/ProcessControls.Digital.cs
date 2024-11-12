@@ -24,18 +24,18 @@ namespace OpenBve
 {
 	internal static partial class MainLoop
 	{
-		private static void ProcessDigitalControl(double TimeElapsed, ref Control Control)
+		private static void ProcessDigitalControl(double timeElapsed, ref Control control)
 		{
 			bool lookahead = false;
 			bool returnToCab = false;
 			// digital control
-			if (Control.DigitalState == DigitalControlState.Pressed)
+			if (control.DigitalState == DigitalControlState.Pressed)
 			{
 				// pressed
-				Control.DigitalState =
+				control.DigitalState =
 					DigitalControlState.PressedAcknowledged;
-				TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DSD?.ControlDown(Control.Command);
-				switch (Control.Command)
+				TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DSD?.ControlDown(control.Command);
+				switch (control.Command)
 				{
 					case Translations.Command.MiscQuit:
 						// quit
@@ -100,7 +100,7 @@ namespace OpenBve
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 						Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-						World.UpdateAbsoluteCamera(TimeElapsed);
+						World.UpdateAbsoluteCamera(timeElapsed);
 						Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 						{
@@ -175,7 +175,7 @@ namespace OpenBve
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 						Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-						World.UpdateAbsoluteCamera(TimeElapsed);
+						World.UpdateAbsoluteCamera(timeElapsed);
 						Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 						{
@@ -217,7 +217,7 @@ namespace OpenBve
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 						Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-						World.UpdateAbsoluteCamera(TimeElapsed);
+						World.UpdateAbsoluteCamera(timeElapsed);
 						Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						break;
 					case Translations.Command.CameraTrack:
@@ -225,7 +225,7 @@ namespace OpenBve
 						// camera: track / fly-by
 					{
 						SaveCameraSettings();
-						if (Control.Command == Translations.Command.CameraTrack)
+						if (control.Command == Translations.Command.CameraTrack)
 						{
 							Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
 							MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","track"}),
@@ -264,7 +264,7 @@ namespace OpenBve
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 						Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-						World.UpdateAbsoluteCamera(TimeElapsed);
+						World.UpdateAbsoluteCamera(timeElapsed);
 						Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					}
 						break;
@@ -307,7 +307,7 @@ namespace OpenBve
 							Program.Renderer.Camera.Alignment.TrackPosition = Program.Renderer.CameraTrackFollower.TrackPosition;
 							Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
 							Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-							World.UpdateAbsoluteCamera(TimeElapsed);
+							World.UpdateAbsoluteCamera(timeElapsed);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 
@@ -352,7 +352,7 @@ namespace OpenBve
 								Program.Renderer.CameraTrackFollower.TrackPosition;
 							Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
 							Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-							World.UpdateAbsoluteCamera(TimeElapsed);
+							World.UpdateAbsoluteCamera(timeElapsed);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 
@@ -404,7 +404,7 @@ namespace OpenBve
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 						Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-						World.UpdateAbsoluteCamera(TimeElapsed);
+						World.UpdateAbsoluteCamera(timeElapsed);
 						Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
 						     Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) &
@@ -750,7 +750,7 @@ namespace OpenBve
 						}
 
 						TrainManager.PlayerTrain.Handles.Brake.ApplyState(0, TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle);
-						TrainManager.PlayerTrain.Handles.Power.ApplyState(Control.Option, false);
+						TrainManager.PlayerTrain.Handles.Power.ApplyState(control.Option, false);
 						break;
 					case Translations.Command.BrakeAnyNotch:
 						if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle)
@@ -761,11 +761,11 @@ namespace OpenBve
 							}
 
 							TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(false);
-							if (Control.Option <= (int)AirBrakeHandleState.Release)
+							if (control.Option <= (int)AirBrakeHandleState.Release)
 							{
 								TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
 							}
-							else if (Control.Option == (int)AirBrakeHandleState.Lap)
+							else if (control.Option == (int)AirBrakeHandleState.Lap)
 							{
 								TrainManager.PlayerTrain.Handles.Brake.ApplyState(AirBrakeHandleState.Lap);
 							}
@@ -782,13 +782,13 @@ namespace OpenBve
 							}
 
 							TrainManager.PlayerTrain.Handles.HoldBrake.ApplyState(false);
-							TrainManager.PlayerTrain.Handles.Brake.ApplyState(Control.Option, false);
+							TrainManager.PlayerTrain.Handles.Brake.ApplyState(control.Option, false);
 							TrainManager.PlayerTrain.Handles.Power.ApplyState(0, TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle);
 						}
 
 						break;
 					case Translations.Command.ReverserAnyPosition:
-						TrainManager.PlayerTrain.Handles.Reverser.ApplyState((ReverserPosition)Control.Option);
+						TrainManager.PlayerTrain.Handles.Reverser.ApplyState((ReverserPosition)control.Option);
 						break;
 					case Translations.Command.HoldBrake:
 						if (TrainManager.PlayerTrain.Handles.HasHoldBrake && (TrainManager.PlayerTrain.Handles.Brake.Driver == 0 || TrainManager.PlayerTrain.Handles.Brake.Driver == 1) && !TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
@@ -820,9 +820,9 @@ namespace OpenBve
 					case Translations.Command.HornMusic:
 						// horn
 					{
-						int j = Control.Command == Translations.Command.HornPrimary
+						int j = control.Command == Translations.Command.HornPrimary
 							? 0
-							: Control.Command == Translations.Command.HornSecondary
+							: control.Command == Translations.Command.HornSecondary
 								? 1
 								: 2;
 						int d = TrainManager.PlayerTrain.DriverCar;
@@ -942,7 +942,7 @@ namespace OpenBve
 						if (TrainManager.PlayerTrain.Plugin != null)
 						{
 							TrainManager.PlayerTrain.Plugin.KeyDown(
-								Translations.SecurityToVirtualKey(Control.Command));
+								Translations.SecurityToVirtualKey(control.Command));
 						}
 
 						break;
@@ -950,7 +950,7 @@ namespace OpenBve
 						if (TrainManager.PlayerTrain.Plugin != null)
 						{
 							TrainManager.PlayerTrain.Plugin.KeyDown(
-								Translations.SecurityToVirtualKey(Control.Command));
+								Translations.SecurityToVirtualKey(control.Command));
 						}
 
 						TrainManager.PlayerTrain.SafetySystems.Headlights.ChangeState();
@@ -959,7 +959,7 @@ namespace OpenBve
 						if (TrainManager.PlayerTrain.Plugin != null)
 						{
 							TrainManager.PlayerTrain.Plugin.KeyDown(
-								Translations.SecurityToVirtualKey(Control.Command));
+								Translations.SecurityToVirtualKey(control.Command));
 						}
 
 						break;
@@ -967,21 +967,21 @@ namespace OpenBve
 					case Translations.Command.WiperSpeedDown:
 						if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen != null)
 						{
-							TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen.Wipers.ChangeSpeed(Control.Command);
+							TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen.Wipers.ChangeSpeed(control.Command);
 						}
 
 						if (TrainManager.PlayerTrain.Plugin != null)
 						{
 							//Also inform the plugin that these keys have been pressed
 							TrainManager.PlayerTrain.Plugin.KeyDown(
-								Translations.SecurityToVirtualKey(Control.Command));
+								Translations.SecurityToVirtualKey(control.Command));
 						}
 						break;
 					case Translations.Command.Sanders:
 						if (TrainManager.PlayerTrain.Plugin != null)
 						{
 							TrainManager.PlayerTrain.Plugin.KeyDown(
-								Translations.SecurityToVirtualKey(Control.Command));
+								Translations.SecurityToVirtualKey(control.Command));
 						}
 
 						for (int c = 0; c < TrainManager.PlayerTrain.Cars.Length; c++)
@@ -1330,16 +1330,16 @@ namespace OpenBve
 					case Translations.Command.MiscFullscreen:
 						// toggle fullscreen
 						Screen.ToggleFullscreen();
-						Control.AnalogState = 0.0;
-						Control.DigitalState = DigitalControlState.Released;
+						control.AnalogState = 0.0;
+						control.DigitalState = DigitalControlState.Released;
 						break;
 					case Translations.Command.MiscMute:
 						// mute
 						Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
-						Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
+						Program.Sounds.Update(timeElapsed, Interface.CurrentOptions.SoundModel);
 						break;
 					case Translations.Command.RouteInformation:
-						Game.routeInfoOverlay.ProcessCommand(Translations.Command.RouteInformation);
+						Game.RouteInfoOverlay.ProcessCommand(Translations.Command.RouteInformation);
 						break;
 					case Translations.Command.AccessibilityCurrentSpeed:
 						string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","train_currentspeed"}).Replace("[speed]", $"{TrainManagerBase.PlayerTrain.CurrentSpeed * 3.6:0.0}") + "km/h";
@@ -1373,22 +1373,22 @@ namespace OpenBve
 						{
 							case InterfaceType.Normal:
 								Program.Renderer.CurrentInterface = InterfaceType.SwitchChangeMap;
-								Game.switchChangeDialog.Show();
+								Game.SwitchChangeDialog.Show();
 								break;
 							case InterfaceType.SwitchChangeMap:
-								Game.switchChangeDialog.Close(null, null);
+								Game.SwitchChangeDialog.Close(null, null);
 								break;
 						}
 						break;
 				}
 			}
-			else if (Control.DigitalState == DigitalControlState.Released)
+			else if (control.DigitalState == DigitalControlState.Released)
 			{
 				// released
-				Control.DigitalState =
+				control.DigitalState =
 					DigitalControlState.ReleasedAcknowledged;
-				TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DSD?.ControlUp(Control.Command);
-				switch (Control.Command)
+				TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DSD?.ControlUp(control.Command);
+				switch (control.Command)
 				{
 					case Translations.Command.SingleBrake:
 					case Translations.Command.BrakeIncrease:
@@ -1450,7 +1450,7 @@ namespace OpenBve
 						if (TrainManager.PlayerTrain.Plugin != null)
 						{
 							TrainManager.PlayerTrain.Plugin.KeyUp(
-								Translations.SecurityToVirtualKey(Control.Command));
+								Translations.SecurityToVirtualKey(control.Command));
 						}
 
 						break;
@@ -1459,9 +1459,9 @@ namespace OpenBve
 					case Translations.Command.HornSecondary:
 					case Translations.Command.HornMusic:
 						// horn
-						int j = Control.Command == Translations.Command.HornPrimary
+						int j = control.Command == Translations.Command.HornPrimary
 							? 0
-							: Control.Command == Translations.Command.HornSecondary
+							: control.Command == Translations.Command.HornSecondary
 								? 1
 								: 2;
 						int d = TrainManager.PlayerTrain.DriverCar;

@@ -103,6 +103,7 @@ namespace RouteViewer
 					Program.Renderer.SetWindowSize((int)width.Value, (int)height.Value);
 					Program.Renderer.UpdateViewport();
 				}
+				Program.Renderer.UpdateViewport();
 			}
 			Interface.CurrentOptions.LoadingLogo = checkBoxLogo.Checked;
 			Interface.CurrentOptions.LoadingBackground = checkBoxBackgrounds.Checked;

@@ -33,9 +33,9 @@ namespace OpenBve
 		/// <summary>The current simulation time-factor</summary>
 		internal static int TimeFactor = 1;
 		
-		internal static double timeSinceLastMouseEvent;
+		private static double timeSinceLastMouseEvent;
 
-		internal static LaunchParameters currentResult;
+		internal static LaunchParameters CurrentResult;
 
 		private static double kioskModeTimer;
 
@@ -110,36 +110,18 @@ namespace OpenBve
 				Program.FileSystem.AppendToLogFile("Initialising game window of size " + Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight);
 			}
 			Screen.Initialize();
-			currentResult = result;
+			CurrentResult = result;
 			Program.Renderer.GameWindow.Closing += OpenTKQuit;
 			Program.Renderer.GameWindow.Run();
 		}
-
-		// --------------------------------
-
-		// repeats
-
-
-		//		private static void ThreadProc()
-		//		{
-		//			RouteInformationForm = new formRouteInformation();
-		//			Application.Run(RouteInformationForm);
-		//		}
-
+		
 		private static void OpenTKQuit(object sender, CancelEventArgs e)
 		{
 			Quit = QuitMode.QuitProgram;
 		}
 
-		/********************
-			PROCESS EVENTS
-		********************/
-		//
-		// MOUSE EVENTS
-		//
-
 		/// <summary>The current mouse state</summary>
-		internal static MouseState currentMouseState, previousMouseState;
+		private static MouseState currentMouseState, previousMouseState;
 
 		internal static bool MouseGrabEnabled = false;
 		internal static bool MouseGrabIgnoreOnce = false;
@@ -148,7 +130,7 @@ namespace OpenBve
 		/// <summary>Called when a mouse button is pressed</summary>
 		/// <param name="sender">The sender</param>
 		/// <param name="e">The button arguments</param>
-		internal static void mouseDownEvent(object sender, MouseButtonEventArgs e)
+		internal static void MouseDownEvent(object sender, MouseButtonEventArgs e)
 		{
 			if (Program.Renderer.CurrentInterface == InterfaceType.LoadScreen)
 			{
@@ -174,13 +156,13 @@ namespace OpenBve
 						Game.Menu.ProcessMouseDown(e.X, e.Y);
 						break;
 					case InterfaceType.SwitchChangeMap:
-						Game.switchChangeDialog.ProcessMouseDown(e.X, e.Y);
+						Game.SwitchChangeDialog.ProcessMouseDown(e.X, e.Y);
 						break;
 				}
 			}
 		}
 
-		internal static void mouseUpEvent(object sender, MouseButtonEventArgs e)
+		internal static void MouseUpEvent(object sender, MouseButtonEventArgs e)
 		{
 			if (Program.Renderer.CurrentInterface == InterfaceType.LoadScreen)
 			{
@@ -200,7 +182,7 @@ namespace OpenBve
 		/// <summary>Called when the mouse is moved</summary>
 		/// <param name="sender">The sender</param>
 		/// <param name="e">The move arguments</param>
-		internal static void mouseMoveEvent(object sender, MouseMoveEventArgs e)
+		internal static void MouseMoveEvent(object sender, MouseMoveEventArgs e)
 		{
 			timeSinceLastMouseEvent = 0;
 			// Forward movement appropriately
@@ -211,7 +193,7 @@ namespace OpenBve
 					Game.Menu.ProcessMouseMove(e.X, e.Y);
 					break;
 				case InterfaceType.SwitchChangeMap:
-					Game.switchChangeDialog.ProcessMouseMove(e.X, e.Y);
+					Game.SwitchChangeDialog.ProcessMouseMove(e.X, e.Y);
 					break;
 			}
 		}
@@ -219,7 +201,7 @@ namespace OpenBve
 		/// <summary>Called when the state of the mouse wheel changes</summary>
 		/// <param name="sender">The sender</param>
 		/// <param name="e">The button arguments</param>
-		internal static void mouseWheelEvent(object sender, MouseWheelEventArgs e)
+		internal static void MouseWheelEvent(object sender, MouseWheelEventArgs e)
 		{
 			timeSinceLastMouseEvent = 0;
 			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu)
@@ -228,11 +210,11 @@ namespace OpenBve
 			}
 		}
 
-		internal static void UpdateMouse(double TimeElapsed)
+		internal static void UpdateMouse(double timeElapsed)
 		{
 			if (Program.Renderer.CurrentInterface < InterfaceType.Menu)
 			{
-				timeSinceLastMouseEvent += TimeElapsed;
+				timeSinceLastMouseEvent += timeElapsed;
 			}
 			else
 			{
@@ -567,15 +549,15 @@ namespace OpenBve
 #if DEBUG
 
 		/// <summary>Checks whether an OpenGL error has occured this frame</summary>
-		/// <param name="Location">The location of the caller (The main loop or the loading screen loop)</param>
-		internal static void CheckForOpenGlError(string Location) {
+		/// <param name="errorLocation">The location of the caller (The main loop or the loading screen loop)</param>
+		internal static void CheckForOpenGlError(string errorLocation) {
 			if (Program.Renderer.ReShadeInUse)
 			{
 				return;
 			}
 			var error = GL.GetError();
 			if (error != ErrorCode.NoError) {
-				string message = Location + ": ";
+				string message = errorLocation + ": ";
 				switch (error) {
 					case ErrorCode.InvalidEnum:
 						message += "GL_INVALID_ENUM";

@@ -5,17 +5,16 @@
 	{
 		/// <summary>The aspect number</summary>
 		public int Number;
-		
 		/// <summary>The speed limit associated with this aspect number</summary>
 		public double Speed;
 
 		/// <summary>Creates a new signalling aspect</summary>
-		/// <param name="Number">The aspect number</param>
-		/// <param name="Speed">The speed limit</param>
-		public SectionAspect(int Number, double Speed)
+		/// <param name="aspectNumber">The aspect number</param>
+		/// <param name="speedLimit">The speed limit</param>
+		public SectionAspect(int aspectNumber, double speedLimit)
 		{
-			this.Number = Number;
-			this.Speed = Speed;
+			this.Number = aspectNumber;
+			this.Speed = speedLimit;
 		}
 	}
 }

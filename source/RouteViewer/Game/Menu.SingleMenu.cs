@@ -5,10 +5,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Textures;
 using System;
 using System.IO;
-using OpenBveApi.Math;
 using Path = OpenBveApi.Path;
-using RouteViewer;
-using OpenBveApi.Packages;
 using System.ComponentModel;
 
 namespace RouteViewer
@@ -18,9 +15,9 @@ namespace RouteViewer
 		/// <summary>Provides implementation for a single menu of the menu stack.</summary>
 		/// <remarks>The class is private to Menu, but all its fields are public to allow 'quick-and-dirty'
 		/// access from Menu itself.</remarks>
-		private class SingleMenu : MenuBase
+		private sealed class SingleMenu : MenuBase
 		{
-			public SingleMenu(AbstractMenu menu, MenuType menuType, int data = 0, double MaxWidth = 0) : base(menuType)
+			public SingleMenu(AbstractMenu menu, MenuType menuType, int data = 0, double maxWidth = 0) : base(menuType)
 			{
 				//Vector2 size;
 				Align = TextAlignment.TopMiddle;
@@ -162,7 +159,7 @@ namespace RouteViewer
 						break;
 				}
 
-				ComputeExtent(menuType, Game.Menu.MenuFont, MaxWidth);
+				ComputeExtent(menuType, Game.Menu.MenuFont, maxWidth);
 				Height = Items.Length * Game.Menu.lineHeight;
 				TopItem = 0;
 

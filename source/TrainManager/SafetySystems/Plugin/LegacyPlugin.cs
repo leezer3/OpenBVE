@@ -16,7 +16,7 @@ namespace TrainManager.SafetySystems
 		// --- win32 proxy calls ---
 
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "LoadDLL", ExactSpelling = true, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-		private static extern int Win32LoadDLL([MarshalAs(UnmanagedType.LPWStr)] string UnicodeFileName, [MarshalAs(UnmanagedType.LPStr)] string AnsiFileName);
+		private static extern int Win32LoadDLL([MarshalAs(UnmanagedType.LPWStr)] string unicodeFileName, [MarshalAs(UnmanagedType.LPStr)] string ansiFileName);
 
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "UnloadDLL", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
 		private static extern int Win32UnloadDLL();
@@ -207,7 +207,7 @@ namespace TrainManager.SafetySystems
 
 				int errorCode = Marshal.GetLastWin32Error();
 				string errorMessage = new Win32Exception(errorCode).Message;
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, true,$"Error loading Win32 plugin: {errorMessage} (0x{errorCode:x})");
+				TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, true,$"Error loading Win32 plugin: {errorMessage} (0x{errorCode:x})");
 				return false;
 			}
 
@@ -234,7 +234,7 @@ namespace TrainManager.SafetySystems
 
 			if (version == 0 && System.IO.Path.GetFileName(PluginFile).ToLowerInvariant() != "ats2.dll" || version != 131072)
 			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Error, false, "The train plugin " + PluginTitle + " is of an unsupported version.");
+				TrainManagerBase.CurrentHost.AddMessage(MessageType.Error, false, "The train plugin " + PluginTitle + " is of an unsupported version.");
 				try
 				{
 					Win32Dispose();

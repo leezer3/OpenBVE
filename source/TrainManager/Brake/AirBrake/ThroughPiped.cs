@@ -8,13 +8,13 @@ namespace TrainManager.BrakeSystems
 	{
 		public ThroughPiped(CarBase car) : base(car)
 		{
-			decelerationCurves = new AccelerationCurve[] { };
-			brakeType = BrakeType.None;
+			DecelerationCurves = new AccelerationCurve[] { };
+			BrakeType = BrakeType.None;
 		}
 
-		public override void Update(double TimeElapsed, double currentSpeed, AbstractHandle brakeHandle, out double Deceleration)
+		public override void Update(double timeElapsed, double currentSpeed, AbstractHandle brakeHandle, out double deceleration)
 		{
-			Deceleration = 0.0;
+			deceleration = 0.0;
 		}
 	}
 }

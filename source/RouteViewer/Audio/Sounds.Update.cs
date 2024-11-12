@@ -37,8 +37,8 @@ namespace RouteViewer
 			}
 			AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
 			AL.Listener(ALListener3f.Velocity, (float)listenerVelocity.X, (float)listenerVelocity.Y, (float)listenerVelocity.Z);
-		    var Orientation = new[]{(float) listenerOrientation.Z.X, (float) listenerOrientation.Z.Y, (float) listenerOrientation.Z.Z,-(float) listenerOrientation.Y.X, -(float) listenerOrientation.Y.Y, -(float) listenerOrientation.Y.Z};
-			AL.Listener(ALListenerfv.Orientation, ref Orientation);
+		    var orientation = new[]{(float) listenerOrientation.Z.X, (float) listenerOrientation.Z.Y, (float) listenerOrientation.Z.Z,-(float) listenerOrientation.Y.X, -(float) listenerOrientation.Y.Y, -(float) listenerOrientation.Y.Z};
+			AL.Listener(ALListenerfv.Orientation, ref orientation);
 			/*
 			 * Set up the atmospheric attributes.
 			 * */
@@ -142,8 +142,8 @@ namespace RouteViewer
 							switch (Sources[i].Type)
 							{
 								case SoundType.TrainCar:
-									var Car = (AbstractCar)Sources[i].Parent;
-									Car.CreateWorldCoordinates(Sources[i].Position, out position, out _);
+									var parentCar = (AbstractCar)Sources[i].Parent;
+									parentCar.CreateWorldCoordinates(Sources[i].Position, out position, out _);
 									break;
 								default:
 									position = Sources[i].Position;
@@ -285,10 +285,9 @@ namespace RouteViewer
 					switch (source.Type)
 					{
 						case SoundType.TrainCar:
-							Vector3 direction;
-							var Car = (AbstractCar)Sources[i].Parent;
-							Car.CreateWorldCoordinates(source.Position, out position, out direction);
-							velocity = Car.CurrentSpeed * direction;
+							var parentCar = (AbstractCar)Sources[i].Parent;
+							parentCar.CreateWorldCoordinates(source.Position, out position, out Vector3 direction);
+							velocity = parentCar.CurrentSpeed * direction;
 							break;
 						default:
 							position = source.Position;

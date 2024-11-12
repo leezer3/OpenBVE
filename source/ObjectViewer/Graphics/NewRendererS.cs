@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -427,11 +427,11 @@ namespace ObjectViewer.Graphics
 			PopMatrix(MatrixMode.Modelview);
 		}
 
-		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
+		public NewRenderer(HostInterface currentHost, BaseOptions currentOptions, FileSystem fileSystem) : base(currentHost, currentOptions, fileSystem)
 		{
-			Screen.Width = CurrentOptions.WindowWidth;
-			Screen.Height = CurrentOptions.WindowHeight;
-			CameraTrackFollower = new TrackFollower(CurrentHost);
+			Screen.Width = currentOptions.WindowWidth;
+			Screen.Height = currentOptions.WindowHeight;
+			CameraTrackFollower = new TrackFollower(currentHost);
 		}
 	}
 }

@@ -45,9 +45,9 @@ namespace TrainManager.Motor
 		private BVE5AISoundControl lastState;
 		private double timer;
 
-		public override void Update(double TimeElapsed)
+		public override void Update(double timeElapsed)
 		{
-			timer += TimeElapsed;
+			timer += timeElapsed;
 			if (SoundEntries.Length == 0 || timer < 1)
 			{
 				// no need to update
@@ -83,7 +83,7 @@ namespace TrainManager.Motor
 			{
 				if (SoundEntries[i].Controller == currentState)
 				{
-					SoundEntries[i].Source = TrainManagerBase.currentHost.PlaySound(SoundEntries[i].Sound, 1.0, 1.0, Vector3.Zero, Car, true) as SoundSource;
+					SoundEntries[i].Source = TrainManagerBase.CurrentHost.PlaySound(SoundEntries[i].Sound, 1.0, 1.0, Vector3.Zero, Car, true) as SoundSource;
 				}
 				else
 				{

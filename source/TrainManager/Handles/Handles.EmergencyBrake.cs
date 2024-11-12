@@ -40,8 +40,8 @@ namespace TrainManager.Handles
 		{
 			if (Safety & !Actual)
 			{
-				if (TrainManagerBase.currentHost.InGameTime < ApplicationTime) ApplicationTime = TrainManagerBase.currentHost.InGameTime;
-				if (ApplicationTime <= TrainManagerBase.currentHost.InGameTime)
+				if (TrainManagerBase.CurrentHost.InGameTime < ApplicationTime) ApplicationTime = TrainManagerBase.CurrentHost.InGameTime;
+				if (ApplicationTime <= TrainManagerBase.CurrentHost.InGameTime)
 				{
 					Actual = true;
 					ApplicationTime = double.MaxValue;
@@ -102,7 +102,7 @@ namespace TrainManager.Handles
 			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
 			if (Driver)
 			{
-				TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleEmergency, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);	
+				TrainManagerBase.CurrentHost.AddMessage(Translations.QuickReferences.HandleEmergency, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentHost.InGameTime + 10.0, null);	
 			}
 		}
 

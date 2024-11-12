@@ -41,19 +41,19 @@ namespace TrainManager.Car
 		/// <summary>Whether the bogie is the rear bogie</summary>
 		private readonly bool Rear;
 		
-		public Bogie(CarBase car, bool IsRear)
+		public Bogie(CarBase car, bool isRear)
 		{
 			baseCar = car;
-			Rear = IsRear;
+			Rear = isRear;
 			CarSections = new CarSection[] { };
 			CurrentCarSection = -1;
-			FrontAxle = new Axle(TrainManagerBase.currentHost, car.baseTrain, car);
+			FrontAxle = new Axle(TrainManagerBase.CurrentHost, car.BaseTrain, car);
 			FrontAxle.Follower.TriggerType = EventTriggerType.FrontBogieAxle;
-			RearAxle = new Axle(TrainManagerBase.currentHost, car.baseTrain, car);
+			RearAxle = new Axle(TrainManagerBase.CurrentHost, car.BaseTrain, car);
 			RearAxle.Follower.TriggerType = EventTriggerType.RearBogieAxle;
 		}
 
-		public void UpdateObjects(double TimeElapsed, bool ForceUpdate)
+		public void UpdateObjects(double timeElapsed, bool forceUpdate)
 		{
 			//Same hack: Check if any car sections are defined for the offending bogie
 			if (CarSections.Length == 0)
@@ -94,7 +94,7 @@ namespace TrainManager.Car
 			{
 				for (int i = 0; i < CarSections[cs].Groups[0].Elements.Length; i++)
 				{
-					UpdateSectionElement(cs, i, p, d, s, CurrentlyVisible, TimeElapsed, ForceUpdate);
+					UpdateSectionElement(cs, i, p, d, s, CurrentlyVisible, timeElapsed, forceUpdate);
 
 					// brightness change
 					if (CarSections[cs].Groups[0].Elements[i].internalObject != null)
@@ -128,10 +128,10 @@ namespace TrainManager.Car
 		{
 			int j = CarSections.Length;
 			Array.Resize(ref CarSections, j + 1);
-			CarSections[j] = new CarSection(TrainManagerBase.currentHost, ObjectType.Dynamic, visibleFromInterior, currentObject);
+			CarSections[j] = new CarSection(TrainManagerBase.CurrentHost, ObjectType.Dynamic, visibleFromInterior, currentObject);
 		}
 
-		public void ChangeSection(int SectionIndex)
+		public void ChangeSection(int sectionIndex)
 		{
 			if (CarSections.Length == 0)
 			{
@@ -144,61 +144,61 @@ namespace TrainManager.Car
 			{
 				for (int j = 0; j < CarSections[i].Groups[0].Elements.Length; j++)
 				{
-					TrainManagerBase.currentHost.HideObject(CarSections[i].Groups[0].Elements[j].internalObject);
+					TrainManagerBase.CurrentHost.HideObject(CarSections[i].Groups[0].Elements[j].internalObject);
 				}
 			}
 
-			if (SectionIndex >= 0)
+			if (sectionIndex >= 0)
 			{
-				CarSections[SectionIndex].Initialize(CurrentlyVisible);
-				for (int j = 0; j < CarSections[SectionIndex].Groups[0].Elements.Length; j++)
+				CarSections[sectionIndex].Initialize(CurrentlyVisible);
+				for (int j = 0; j < CarSections[sectionIndex].Groups[0].Elements.Length; j++)
 				{
-					TrainManagerBase.currentHost.ShowObject(CarSections[SectionIndex].Groups[0].Elements[j].internalObject, ObjectType.Dynamic);
+					TrainManagerBase.CurrentHost.ShowObject(CarSections[sectionIndex].Groups[0].Elements[j].internalObject, ObjectType.Dynamic);
 				}
 			}
 
-			CurrentCarSection = SectionIndex;
+			CurrentCarSection = sectionIndex;
 			UpdateObjects(0.0, true);
 		}
 
-		private void UpdateSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
+		private void UpdateSectionElement(int sectionIndex, int elementIndex, Vector3 position, Vector3 direction, Vector3 side, bool show, double timeElapsed, bool forceUpdate)
 		{
 			//TODO: Check whether the UP and SIDE vectors should actually be recalculated, as this just uses that of the root car
 			{
-				Vector3 p = Position;
+				Vector3 p = position;
 				double timeDelta;
 				bool updatefunctions;
 
-				if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate != 0.0)
+				if (CarSections[sectionIndex].Groups[0].Elements[elementIndex].RefreshRate != 0.0)
 				{
-					if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate >= CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate)
+					if (CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate >= CarSections[sectionIndex].Groups[0].Elements[elementIndex].RefreshRate)
 					{
 						timeDelta =
-							CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
-						CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate =
-							TimeElapsed;
+							CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate;
+						CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate =
+							timeElapsed;
 						updatefunctions = true;
 					}
 					else
 					{
-						timeDelta = TimeElapsed;
-						CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate += TimeElapsed;
+						timeDelta = timeElapsed;
+						CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate += timeElapsed;
 						updatefunctions = false;
 					}
 				}
 				else
 				{
-					timeDelta = CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
-					CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate = TimeElapsed;
+					timeDelta = CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate;
+					CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate = timeElapsed;
 					updatefunctions = true;
 				}
 
-				if (ForceUpdate)
+				if (forceUpdate)
 				{
 					updatefunctions = true;
 				}
 
-				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(baseCar.baseTrain, baseCar.Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
+				CarSections[sectionIndex].Groups[0].Elements[elementIndex].Update(baseCar.BaseTrain, baseCar.Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, direction, Up, side, updatefunctions, show, timeDelta, true);
 			}
 		}
 
@@ -227,8 +227,8 @@ namespace TrainManager.Car
 				{
 					double a = baseCar.Specs.RollDueToTopplingAngle +
 					           baseCar.Specs.RollDueToCantAngle;
-					double x = Math.Sign(a) * 0.5 * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
-					double y = Math.Abs(0.5 * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
+					double x = Math.Sign(a) * 0.5 * TrainManagerBase.CurrentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
+					double y = Math.Abs(0.5 * TrainManagerBase.CurrentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
 					Vector3 c = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
 					FrontAxle.Follower.WorldPosition += c;
 					RearAxle.Follower.WorldPosition += c;

@@ -6,10 +6,10 @@ namespace TrainManager.Power
 	public abstract class AccelerationCurve
 	{
 		/// <summary>Gets the acceleration output for this curve</summary>
-		/// <param name="Speed">The current speed</param>
-		/// <param name="Loading">A double between 0 (Unloaded) and 1.0 (Loaded) representing the load factor</param>
+		/// <param name="speed">The current speed</param>
+		/// <param name="loading">A double between 0 (Unloaded) and 1.0 (Loaded) representing the load factor</param>
 		/// <returns>The acceleration output</returns>
-		public abstract double GetAccelerationOutput(double Speed, double Loading);
+		public abstract double GetAccelerationOutput(double speed, double loading);
 
 		/// <summary>Gets the maximum possible acceleration output for this curve</summary>
 		// ReSharper disable once UnusedMemberInSuper.Global
@@ -29,25 +29,25 @@ namespace TrainManager.Power
 		public double StageTwoExponent;
 		private readonly double Multiplier;
 
-		public override double GetAccelerationOutput(double Speed, double Loading)
+		public override double GetAccelerationOutput(double speed, double loading)
 		{
-			if (Speed <= 0.0)
+			if (speed <= 0.0)
 			{
 				return Multiplier * this.StageZeroAcceleration;
 			}
 
-			if (Speed < this.StageOneSpeed)
+			if (speed < this.StageOneSpeed)
 			{
-				double t = Speed / this.StageOneSpeed;
+				double t = speed / this.StageOneSpeed;
 				return Multiplier * (this.StageZeroAcceleration * (1.0 - t) + this.StageOneAcceleration * t);
 			}
 
-			if (Speed < this.StageTwoSpeed)
+			if (speed < this.StageTwoSpeed)
 			{
-				return Multiplier * this.StageOneSpeed * this.StageOneAcceleration / Speed;
+				return Multiplier * this.StageOneSpeed * this.StageOneAcceleration / speed;
 			}
 
-			return Multiplier * this.StageOneSpeed * this.StageOneAcceleration * Math.Pow(this.StageTwoSpeed, this.StageTwoExponent - 1.0) * Math.Pow(Speed, -this.StageTwoExponent);
+			return Multiplier * this.StageOneSpeed * this.StageOneAcceleration * Math.Pow(this.StageTwoSpeed, this.StageTwoExponent - 1.0) * Math.Pow(speed, -this.StageTwoExponent);
 		}
 
 		public override double MaximumAcceleration => Math.Max(StageZeroAcceleration, StageOneAcceleration);
@@ -77,16 +77,16 @@ namespace TrainManager.Power
 	{
 		private readonly double MaxDecelerationOutput;
 
-		public override double GetAccelerationOutput(double Speed, double Loading)
+		public override double GetAccelerationOutput(double speed, double loading)
 		{
 			return this.MaxDecelerationOutput;
 		}
 
 		public override double MaximumAcceleration => MaxDecelerationOutput;
 
-		public BveDecelerationCurve(double Deceleration)
+		public BveDecelerationCurve(double deceleration)
 		{
-			this.MaxDecelerationOutput = Deceleration;
+			this.MaxDecelerationOutput = deceleration;
 		}
 	}
 }

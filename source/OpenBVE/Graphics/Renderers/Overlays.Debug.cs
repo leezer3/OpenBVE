@@ -146,7 +146,7 @@ namespace OpenBve.Graphics.Renderers
 				mass += TrainManager.PlayerTrain.Cars[i].CurrentMass;
 			}
 
-			string rainIntensity = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen != null && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen.legacyRainEvents ? "Legacy beacon based." : TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower.RainIntensity + "%";
+			string rainIntensity = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen != null && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen.LegacyRainEvents ? "Legacy beacon based." : TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower.RainIntensity + "%";
 			double elevation = Program.Renderer.Camera.AbsolutePosition.Y + Program.CurrentRoute.Atmosphere.InitialElevation;
 			double airTemperature = Program.CurrentRoute.Atmosphere.GetAirTemperature(elevation);
 			double airPressure = Program.CurrentRoute.Atmosphere.GetAirPressure(elevation, airTemperature);
@@ -318,8 +318,8 @@ namespace OpenBve.Graphics.Renderers
 						heading[0] = true;
 					}
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);
-					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.brakePipe.CurrentPressure;
-					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakePipe.NormalPressure;
+					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.BrakePipe.CurrentPressure;
+					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.BrakePipe.NormalPressure;
 					renderer.Rectangle.Draw(null, new Vector2((float)x, (float)y), new Vector2(r * w, h), Color128.Yellow);
 				}
 				x += w + 8.0;
@@ -332,8 +332,8 @@ namespace OpenBve.Graphics.Renderers
 						heading[1] = true;
 					}
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);
-					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.auxiliaryReservoir.CurrentPressure;
-					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.auxiliaryReservoir.MaximumPressure;
+					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.AuxiliaryReservoir.CurrentPressure;
+					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.AuxiliaryReservoir.MaximumPressure;
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), Color128.Grey);
 				}
 				x += w + 8.0;
@@ -346,13 +346,13 @@ namespace OpenBve.Graphics.Renderers
 					}
 
 					renderer.Rectangle.Draw(null, new Vector2((float) x, (float) y), new Vector2(w, h), Color128.Black);
-					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.CurrentPressure;
-					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
+					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.BrakeCylinder.CurrentPressure;
+					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.BrakeCylinder.EmergencyMaximumPressure;
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), new Color128(0.75f, 0.5f, 0.25f, 1.0f));
 				}
 				x += w + 8.0;
 				// main reservoir
-				if (TrainManager.PlayerTrain.Cars[i].CarBrake.brakeType == BrakeType.Main)
+				if (TrainManager.PlayerTrain.Cars[i].CarBrake.BrakeType == BrakeType.Main)
 				{
 					if (!heading[3])
 					{
@@ -360,13 +360,13 @@ namespace OpenBve.Graphics.Renderers
 						heading[3] = true;
 					}
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);
-					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.mainReservoir.CurrentPressure;
-					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.mainReservoir.MaximumPressure;
+					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.MainReservoir.CurrentPressure;
+					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.MainReservoir.MaximumPressure;
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), Color128.Red);
 				}
 				x += w + 8.0;
 				// equalizing reservoir
-				if (TrainManager.PlayerTrain.Cars[i].CarBrake.brakeType == BrakeType.Main)
+				if (TrainManager.PlayerTrain.Cars[i].CarBrake.BrakeType == BrakeType.Main)
 				{
 					if (!heading[4])
 					{
@@ -374,13 +374,13 @@ namespace OpenBve.Graphics.Renderers
 						heading[4] = true;
 					}
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);
-					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.equalizingReservoir.CurrentPressure;
-					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.equalizingReservoir.NormalPressure;
+					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.EqualizingReservoir.CurrentPressure;
+					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.EqualizingReservoir.NormalPressure;
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), new Color128(0.0f, 0.75f, 0.0f, 1.0f));
 				}
 				x += w + 8.0;
 				// straight air pipe
-				if (TrainManager.PlayerTrain.Cars[i].CarBrake is ElectromagneticStraightAirBrake & TrainManager.PlayerTrain.Cars[i].CarBrake.brakeType == BrakeType.Main)
+				if (TrainManager.PlayerTrain.Cars[i].CarBrake is ElectromagneticStraightAirBrake & TrainManager.PlayerTrain.Cars[i].CarBrake.BrakeType == BrakeType.Main)
 				{
 					if (!heading[5])
 					{
@@ -388,8 +388,8 @@ namespace OpenBve.Graphics.Renderers
 						heading[5] = true;
 					}
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2((float)w, (float)h), Color128.Black);
-					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.straightAirPipe.CurrentPressure;
-					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
+					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.StraightAirPipe.CurrentPressure;
+					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.BrakeCylinder.EmergencyMaximumPressure;
 					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), Color128.DeepSkyBlue);
 				}
 				y += h + 8.0;

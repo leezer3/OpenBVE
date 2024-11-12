@@ -33,8 +33,8 @@ namespace TrainManager.SafetySystems
 		internal HeiAtsAI(Plugin plugin)
 		{
 			Plugin = plugin;
-			currentStep = 2;
-			nextPluginAction = 0;
+			CurrentStep = 2;
+			NextPluginAction = 0;
 		}
 		/// <summary>Used to store the current state of the wipers</summary>
 		private int wiperState;
@@ -42,67 +42,67 @@ namespace TrainManager.SafetySystems
 		{
 			if (Plugin.Panel[17] == 0)
 			{
-				currentStep = 0;
+				CurrentStep = 0;
 			}
 
-			switch (currentStep)
+			switch (CurrentStep)
 			{
 				case 0:
 					Plugin.KeyDown(VirtualKeys.H);
 					data.Response = AIResponse.Short;
-					currentStep++;
+					CurrentStep++;
 					break;
 				case 1:
 					Plugin.KeyUp(VirtualKeys.H);
 					data.Response = AIResponse.Long;
-					currentStep++;
+					CurrentStep++;
 					break;
 				case 2:
 					Plugin.KeyDown(VirtualKeys.S);
 					data.Response = AIResponse.Short;
-					currentStep++;
+					CurrentStep++;
 					break;
 				case 3:
 					Plugin.KeyUp(VirtualKeys.S);
 					data.Response = AIResponse.Long;
-					currentStep++;
+					CurrentStep++;
 					break;
 				case 4:
 					if (Plugin.Train.Cars[Plugin.Train.DriverCar].Sounds.Plugin[0].IsPlaying && Plugin.Train.CurrentSpeed == 0)
 					{
 						data.Response = AIResponse.Long;
-						currentStep++;
+						CurrentStep++;
 					}
 					break;
 				case 5:
 					data.Response = AIResponse.Long;
-					currentStep++;
+					CurrentStep++;
 					break;
 				case 6:
 					Plugin.KeyDown(VirtualKeys.S);
 					data.Response = AIResponse.Short;
-					currentStep++;
+					CurrentStep++;
 					break;
 				case 7:
 					Plugin.KeyUp(VirtualKeys.S);
 					data.Response = AIResponse.Short;
-					currentStep = 4;
+					CurrentStep = 4;
 					break;
 				case 100:
 				case 101:
 					//Decent pause before resetting the safety system
 					data.Response = AIResponse.Long;
-					currentStep++;
+					CurrentStep++;
 					break;
 				case 102:
 					Plugin.KeyDown(VirtualKeys.S);
 					data.Response = AIResponse.Short;
-					currentStep++;
+					CurrentStep++;
 					break;
 				case 103:
 					Plugin.KeyUp(VirtualKeys.S);
 					data.Response = AIResponse.Short;
-					currentStep = 4;
+					CurrentStep = 4;
 					break;
 			}
 			
@@ -110,7 +110,7 @@ namespace TrainManager.SafetySystems
 			switch (wiperState)
 			{
 				case 0:
-					if (currentRainIntensity > 30)
+					if (CurrentRainIntensity > 30)
 					{
 						Plugin.KeyDown(VirtualKeys.D);
 						Plugin.KeyUp(VirtualKeys.D);
@@ -119,14 +119,14 @@ namespace TrainManager.SafetySystems
 					}
 					return;
 				case 1:
-					if (currentRainIntensity > 60)
+					if (CurrentRainIntensity > 60)
 					{
 						Plugin.KeyDown(VirtualKeys.D);
 						Plugin.KeyUp(VirtualKeys.D);
 						data.Response = AIResponse.Short;
 						wiperState++;
 					}
-					else if(currentRainIntensity < 30)
+					else if(CurrentRainIntensity < 30)
 					{
 						Plugin.KeyDown(VirtualKeys.E);
 						Plugin.KeyUp(VirtualKeys.E);
@@ -135,7 +135,7 @@ namespace TrainManager.SafetySystems
 					}
 					return;
 				case 2:
-					if (currentRainIntensity < 60)
+					if (CurrentRainIntensity < 60)
 					{
 						Plugin.KeyDown(VirtualKeys.E);
 						Plugin.KeyUp(VirtualKeys.E);
@@ -148,7 +148,7 @@ namespace TrainManager.SafetySystems
 
 		public override void BeginJump(InitializationModes mode)
 		{
-			currentStep = 100;
+			CurrentStep = 100;
 		}
 
 		public override void EndJump()
@@ -159,7 +159,7 @@ namespace TrainManager.SafetySystems
 		{
 			if (beacon.Type == 21)
 			{
-				currentRainIntensity = beacon.Optional;
+				CurrentRainIntensity = beacon.Optional;
 			}
 		}
 	}

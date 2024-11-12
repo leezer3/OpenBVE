@@ -87,10 +87,10 @@ namespace OpenBve
 			/// <summary>Whether a screen reader is available</summary>
 			/// <remarks>Not saved, detected on game init</remarks>
 			internal bool ScreenReaderAvailable;
-			
+			/// <summary>The mode the timetable is displayed in</summary>
 			internal TimeTableMode TimeTableStyle;
-
-			internal CompressionType packageCompressionType;
+			/// <summary>The type of compression used when creating packages</summary>
+			internal CompressionType PackageCompressionType;
 			/*
 			 * Only relevant in developer mode, not saved
 			 */
@@ -158,7 +158,7 @@ namespace OpenBve
 				TimeAccelerationFactor = 5;
 				AllowAxisEB = true;
 				TimeTableStyle = TimeTableMode.Default;
-				packageCompressionType = CompressionType.Zip;
+				PackageCompressionType = CompressionType.Zip;
 				RailDriverMPH = true;
 				EnableBveTsHacks = true;
 				OldTransparencyMode = true;
@@ -452,7 +452,7 @@ namespace OpenBve
 				Builder.AppendLine();
 				Builder.AppendLine("[packages]");
 				Builder.Append("compression = ");
-				switch (packageCompressionType)
+				switch (PackageCompressionType)
 				{
 					case CompressionType.Zip:
 						Builder.AppendLine("zip");
@@ -534,13 +534,13 @@ namespace OpenBve
 		internal static void LoadOptions()
 		{
 			CurrentOptions = new Options();
-			string OptionsDir = Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
-			if (!Directory.Exists(OptionsDir))
+			string optionsDir = Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
+			if (!Directory.Exists(optionsDir))
 			{
-				Directory.CreateDirectory(OptionsDir);
+				Directory.CreateDirectory(optionsDir);
 			}
 			
-			string configFile = Path.CombineFile(OptionsDir, "options.cfg");
+			string configFile = Path.CombineFile(optionsDir, "options.cfg");
 			if (!File.Exists(configFile))
 			{
 				//Attempt to load and upgrade a prior configuration file
@@ -659,7 +659,7 @@ namespace OpenBve
 							block.GetValue(OptionsKey.Train, out CurrentOptions.TrainFolder);
 							break;
 						case OptionsSection.Packages:
-							block.GetEnumValue(OptionsKey.Compression, out CurrentOptions.packageCompressionType);
+							block.GetEnumValue(OptionsKey.Compression, out CurrentOptions.PackageCompressionType);
 							break;
 						case OptionsSection.RecentlyUsedRoutes:
 							Array.Resize(ref CurrentOptions.RecentlyUsedRoutes, block.RemainingDataValues);

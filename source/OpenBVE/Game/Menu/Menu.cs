@@ -34,12 +34,11 @@ namespace OpenBve
 	/// <summary>Implements the in-game menu system; manages addition and removal of individual menus.</summary>
 	public sealed partial class GameMenu : AbstractMenu
 	{
-		private static readonly Picturebox LogoPictureBox = new Picturebox(Program.Renderer);
-		internal static List<FoundSwitch> nextSwitches = new List<FoundSwitch>();
-		internal static List<FoundSwitch> previousSwitches = new List<FoundSwitch>();
-		internal static bool switchesFound = false;
+		private static readonly Picturebox logoPictureBox = new Picturebox(Program.Renderer);
+		private static readonly List<FoundSwitch> nextSwitches = new List<FoundSwitch>();
+		private static readonly List<FoundSwitch> previousSwitches = new List<FoundSwitch>();
 		
-		private const int SelectionNone = -1;
+		private const int selectionNone = -1;
 
 		private double lastTimeElapsed;
 		private static readonly string currentDatabaseFile = Path.CombineFile(Program.FileSystem.PackageDatabaseFolder, "packages.xml");
@@ -90,7 +89,7 @@ namespace OpenBve
 			menuControls.Add(switchMainPictureBox);
 			menuControls.Add(switchSettingPictureBox);
 			menuControls.Add(switchMapPictureBox);
-			menuControls.Add(LogoPictureBox);
+			menuControls.Add(logoPictureBox);
 			menuControls.Add(controlTextBox);
 			menuControls.Add(routeDescriptionBox);
 			menuControls.Add(nextImageButton);
@@ -143,9 +142,9 @@ namespace OpenBve
 			switchSettingPictureBox.BackgroundColor = Color128.Transparent;
 			switchMapPictureBox.Location = new Vector2(imageLoc / 2.0, 0);
 			switchMapPictureBox.Size = new Vector2(quarterWidth * 2.0, Program.Renderer.Screen.Height);
-			LogoPictureBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0);
-			LogoPictureBox.Size = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Width / 2.0);
-			LogoPictureBox.Texture = Program.Renderer.ProgramLogo;
+			logoPictureBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0);
+			logoPictureBox.Size = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Width / 2.0);
+			logoPictureBox.Texture = Program.Renderer.ProgramLogo;
 			controlPictureBox.Location = new Vector2(Program.Renderer.Screen.Width / 2.0, Program.Renderer.Screen.Height / 8.0);
 			controlPictureBox.Size = new Vector2(quarterWidth, quarterWidth);
 			controlPictureBox.BackgroundColor = Color128.Transparent;
@@ -183,12 +182,12 @@ namespace OpenBve
 			
 			if (Menus.Length <= CurrMenu)
 				Array.Resize(ref Menus, CurrMenu + 1);
-			int MaxWidth = 0;
+			int maxWidth = 0;
 			if ((int)type >= 100)
 			{
-				MaxWidth = Program.Renderer.Screen.Width / 2;
+				maxWidth = Program.Renderer.Screen.Width / 2;
 			}
-			Menus[CurrMenu] = new SingleMenu(this, type, data, MaxWidth);
+			Menus[CurrMenu] = new SingleMenu(this, type, data, maxWidth);
 			if (replace)
 			{
 				Menus[CurrMenu].Selection = 1;
@@ -239,8 +238,8 @@ namespace OpenBve
 		}
 
 		/// <summary>Processes a scroll wheel event</summary>
-		/// <param name="Scroll">The delta</param>
-		public override void ProcessMouseScroll(int Scroll)
+		/// <param name="scrollDelta">The delta</param>
+		public override void ProcessMouseScroll(int scrollDelta)
 		{
 			if (Menus.Length == 0)
 			{
@@ -252,7 +251,7 @@ namespace OpenBve
 			{
 				if (routeDescriptionBox.CurrentlySelected)
 				{
-					if (Math.Abs(Scroll) == Scroll)
+					if (Math.Abs(scrollDelta) == scrollDelta)
 					{
 						routeDescriptionBox.VerticalScroll(-1);
 					}
@@ -263,7 +262,7 @@ namespace OpenBve
 					return;
 				}
 			}
-			base.ProcessMouseScroll(Scroll);
+			base.ProcessMouseScroll(scrollDelta);
 		}
 
 		public override void DragFile(object sender, OpenTK.Input.FileDropEventArgs e)
@@ -357,7 +356,7 @@ namespace OpenBve
 				return;
 			}
 			
-			if (menu.Selection == SelectionNone)    // if menu has no selection, do nothing
+			if (menu.Selection == selectionNone)    // if menu has no selection, do nothing
 				return;
 			if (menu.Selection == int.MaxValue)
 			{
@@ -683,8 +682,8 @@ namespace OpenBve
 										break;
 									case MenuType.ControlReset:
 										Interface.CurrentControls = null;
-										var File = Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls");
-										Interface.LoadControls(File, out Interface.CurrentControls);
+										var controlsFile = Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls");
+										Interface.LoadControls(controlsFile, out Interface.CurrentControls);
 										Instance.PopMenu();
 										break;
 								}
@@ -722,7 +721,6 @@ namespace OpenBve
 								}
 
 								menu.Items[2].Text = "Current Setting: " + Program.CurrentRoute.Switches[switchToToggle].CurrentlySetTrack;
-								switchesFound = false; // as switch has been toggled, need to recalculate switches along route
 								Instance.PushMenu(Instance.Menus[CurrMenu].Type, 0, true);
 								break;
 							case MenuTag.PreviousSwitch:
@@ -786,16 +784,16 @@ namespace OpenBve
 
 		private ControlMethod lastControlMethod;
 
-		public override void Draw(double RealTimeElapsed)
+		public override void Draw(double realTimeElapsed)
 		{
-			pluginKeepAliveTimer += RealTimeElapsed;
+			pluginKeepAliveTimer += realTimeElapsed;
 			if (pluginKeepAliveTimer > 100000 && TrainManagerBase.PlayerTrain != null && TrainManagerBase.PlayerTrain.Plugin != null)
 			{
 				TrainManagerBase.PlayerTrain.Plugin.KeepAlive();
 				pluginKeepAliveTimer = 0;
 			}
-			double TimeElapsed = RealTimeElapsed - lastTimeElapsed;
-			lastTimeElapsed = RealTimeElapsed;
+			double timeElapsed = realTimeElapsed - lastTimeElapsed;
+			lastTimeElapsed = realTimeElapsed;
 			int i;
 
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
@@ -884,14 +882,14 @@ namespace OpenBve
 					}
 					
 					// draw the text
-					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
+					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(timeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourHighlight, false);
 				}
 				else if (menu.Items[i] is MenuCaption)
-					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
+					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(timeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourCaption, false);
 				else
-					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(TimeElapsed), new Vector2(itemX, itemY),
+					Program.Renderer.OpenGlString.Draw(MenuFont, menu.Items[i].DisplayText(timeElapsed), new Vector2(itemX, itemY),
 						menu.Align, ColourNormal, false);
 				if (menu.Items[i] is MenuOption opt)
 				{
@@ -920,7 +918,7 @@ namespace OpenBve
 			{
 				case MenuType.GameStart:
 				case MenuType.Packages:
-					LogoPictureBox.Draw();
+					logoPictureBox.Draw();
 					string currentVersion =  @"v" + System.Windows.Forms.Application.ProductVersion + Program.VersionSuffix;
 					if (IntPtr.Size != 4)
 					{
@@ -979,7 +977,7 @@ namespace OpenBve
 					}
 					else
 					{
-						LogoPictureBox.Draw();
+						logoPictureBox.Draw();
 					}
 					break;
 				case MenuType.UninstallRoute:

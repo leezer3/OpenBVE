@@ -19,33 +19,33 @@ namespace TrainManager.Car
 		}
 
 		/// <summary>Called once a frame to update the constant speed device</summary>
-		/// <param name="Acceleration">The current acceleration output of the train</param>
-		/// <param name="Enabled">Whether the constant speed device is enabled (As this refers to the whole train)</param>
-		/// <param name="ReverserPosition">The current position of the reverser handle</param>
-		public void Update(ref double Acceleration, bool Enabled, ReverserPosition ReverserPosition)
+		/// <param name="acceleration">The current acceleration output of the train</param>
+		/// <param name="enabled">Whether the constant speed device is enabled (As this refers to the whole train)</param>
+		/// <param name="reverserPosition">The current position of the reverser handle</param>
+		public void Update(ref double acceleration, bool enabled, ReverserPosition reverserPosition)
 		{
-			if (!Enabled)
+			if (!enabled)
 			{
-				this.CurrentAccelerationOutput = Acceleration;
+				this.CurrentAccelerationOutput = acceleration;
 				return;
 			}
-			if (TrainManagerBase.currentHost.InGameTime >= this.NextUpdateTime)
+			if (TrainManagerBase.CurrentHost.InGameTime >= this.NextUpdateTime)
 			{
-				this.NextUpdateTime = TrainManagerBase.currentHost.InGameTime + UpdateInterval;
-				this.CurrentAccelerationOutput -= 0.8 * this.Car.Specs.Acceleration * (double)ReverserPosition;
+				this.NextUpdateTime = TrainManagerBase.CurrentHost.InGameTime + UpdateInterval;
+				this.CurrentAccelerationOutput -= 0.8 * this.Car.Specs.Acceleration * (double)reverserPosition;
 				if (this.CurrentAccelerationOutput < 0.0)
 				{
 					this.CurrentAccelerationOutput = 0.0;
 				}
 			}
-			if (Acceleration > CurrentAccelerationOutput)
+			if (acceleration > CurrentAccelerationOutput)
 			{
-				Acceleration = CurrentAccelerationOutput;
+				acceleration = CurrentAccelerationOutput;
 			}
 
-			if (Acceleration < 0.0)
+			if (acceleration < 0.0)
 			{
-				Acceleration = 0.0;
+				acceleration = 0.0;
 			}
 		}
 	}

@@ -243,11 +243,11 @@ namespace OpenBve
 						Train.Handles.Power.ApplyState(-1, true);
 						if (Train.Handles.Brake is AirBrakeHandle)
 						{
-							if (Train.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight > 10 || Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure < 0.3 * Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.ServiceMaximumPressure)
+							if (Train.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight > 10 || Train.Cars[Train.DriverCar].CarBrake.BrakeCylinder.CurrentPressure < 0.3 * Train.Cars[Train.DriverCar].CarBrake.BrakeCylinder.ServiceMaximumPressure)
 							{
 								Train.Handles.Brake.ApplyState(AirBrakeHandleState.Service);
 							}
-							else if (Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure > 0.9 * Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.EmergencyMaximumPressure)
+							else if (Train.Cars[Train.DriverCar].CarBrake.BrakeCylinder.CurrentPressure > 0.9 * Train.Cars[Train.DriverCar].CarBrake.BrakeCylinder.EmergencyMaximumPressure)
 							{
 								Train.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
 							}
@@ -417,9 +417,9 @@ namespace OpenBve
 					{
 						if (Train.Cars[i].Specs.IsMotorCar)
 						{
-							if (Train.Cars[Train.DriverCar].CarBrake.motorDeceleration != 0 && Train.Cars[Train.DriverCar].CarBrake.motorDeceleration < BrakeDeceleration)
+							if (Train.Cars[Train.DriverCar].CarBrake.MotorDeceleration != 0 && Train.Cars[Train.DriverCar].CarBrake.MotorDeceleration < BrakeDeceleration)
 							{
-								BrakeDeceleration = Train.Cars[Train.DriverCar].CarBrake.motorDeceleration;
+								BrakeDeceleration = Train.Cars[Train.DriverCar].CarBrake.MotorDeceleration;
 							}
 							break;
 						}
@@ -681,14 +681,14 @@ namespace OpenBve
 				{
 					if (wiperTimer < 0)
 					{
-						if (Train.Cars[Train.DriverCar].Windscreen.currentDrops < Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length / 4)
+						if (Train.Cars[Train.DriverCar].Windscreen.CurrentDrops < Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length / 4)
 						{
 							if(Train.Cars[Train.DriverCar].Windscreen.Wipers.CurrentSpeed != WiperSpeed.Off)
 							{
 								Train.Cars[Train.DriverCar].Windscreen.Wipers.ChangeSpeed(Translations.Command.WiperSpeedDown);
 							}
 						}
-						else if (Train.Cars[Train.DriverCar].Windscreen.currentDrops > Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length / 4 && Train.Cars[Train.DriverCar].Windscreen.currentDrops < Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length / 2)
+						else if (Train.Cars[Train.DriverCar].Windscreen.CurrentDrops > Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length / 4 && Train.Cars[Train.DriverCar].Windscreen.CurrentDrops < Train.Cars[Train.DriverCar].Windscreen.RainDrops.Length / 2)
 						{
 							switch (Train.Cars[Train.DriverCar].Windscreen.Wipers.CurrentSpeed)
 							{

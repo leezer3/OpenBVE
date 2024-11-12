@@ -6,9 +6,11 @@ namespace RouteManager2.Climate
 	public struct Fog
 	{
 		/// <summary>The offset at which the fog starts</summary>
+		/// <remarks>Distance from camera</remarks>
 		public float Start;
-		
+
 		/// <summary>The offset at which the fog ends</summary>
+		/// /// <remarks>Distance from camera</remarks>
 		public float End;
 		
 		/// <summary>The color of the fog</summary>
@@ -24,14 +26,14 @@ namespace RouteManager2.Climate
 		public bool IsLinear;
 
 		/// <summary>Creates a new region of fog</summary>
-		public Fog(float Start, float End, Color24 Color, double TrackPosition, bool IsLinear = true, float Density = 0.0f)
+		public Fog(float startDistance, float endDistance, Color24 fogColor, double trackPosition, bool isLinear = true, float density = 0.0f)
 		{
-			this.Start = Start;
-			this.End = End;
-			this.Color = Color;
-			this.TrackPosition = TrackPosition;
-			this.Density = Density;
-			this.IsLinear = IsLinear;
+			Start = startDistance;
+			End = endDistance;
+			Color = fogColor;
+			TrackPosition = trackPosition;
+			Density = density;
+			IsLinear = isLinear;
 		}
 	}
 }

@@ -129,11 +129,11 @@ namespace TrainManager.SafetySystems
 
 			//End of additions
 			double speed = this.Train.Cars[this.Train.DriverCar].Specs.PerceivedSpeed;
-			double bcPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure;
-			double mrPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.mainReservoir.CurrentPressure;
-			double erPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.equalizingReservoir.CurrentPressure;
-			double bpPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.brakePipe.CurrentPressure;
-			double sapPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.straightAirPipe.CurrentPressure;
+			double bcPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.BrakeCylinder.CurrentPressure;
+			double mrPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.MainReservoir.CurrentPressure;
+			double erPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.EqualizingReservoir.CurrentPressure;
+			double bpPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.BrakePipe.CurrentPressure;
+			double sapPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.StraightAirPipe.CurrentPressure;
 			bool wheelSlip = false;
 			for (int i = 0; i < this.Train.Cars.Length; i++)
 			{
@@ -157,7 +157,7 @@ namespace TrainManager.SafetySystems
 			PrecedingVehicleState precedingVehicle;
 			try
 			{
-				AbstractTrain closestTrain = TrainManagerBase.currentHost.ClosestTrain(this.Train);
+				AbstractTrain closestTrain = TrainManagerBase.CurrentHost.ClosestTrain(this.Train);
 				precedingVehicle = closestTrain != null ? new PrecedingVehicleState(closestTrain.RearCarTrackPosition, closestTrain.RearCarTrackPosition - location, new Speed(closestTrain.CurrentSpeed)) : new PrecedingVehicleState(Double.MaxValue, Double.MaxValue - location, new Speed(0.0));
 			}
 			catch
@@ -172,12 +172,12 @@ namespace TrainManager.SafetySystems
 			/*
 			 * Update the plugin.
 			 * */
-			double totalTime = TrainManagerBase.currentHost.InGameTime;
-			double elapsedTime = TrainManagerBase.currentHost.InGameTime - LastTime;
+			double totalTime = TrainManagerBase.CurrentHost.InGameTime;
+			double elapsedTime = TrainManagerBase.CurrentHost.InGameTime - LastTime;
 
 			ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.SafetySystems.DoorInterlockState, this.Train.SafetySystems.Headlights.CurrentState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, TrainManagerBase.Renderer.Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
 			ElapseData inputDevicePluginData = data;
-			LastTime = TrainManagerBase.currentHost.InGameTime;
+			LastTime = TrainManagerBase.CurrentHost.InGameTime;
 			Elapse(ref data);
 			this.PluginMessage = data.DebugMessage;
 			this.Train.SafetySystems.DoorInterlockState = data.DoorInterlockState;

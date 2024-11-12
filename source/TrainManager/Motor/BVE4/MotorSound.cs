@@ -50,7 +50,7 @@ namespace TrainManager.Motor
 			}
 		}
 
-		public override void Update(double TimeElapsed)
+		public override void Update(double timeElapsed)
 		{
 			if (!Car.Specs.IsMotorCar)
 			{
@@ -68,7 +68,7 @@ namespace TrainManager.Motor
 				{
 					if (j < Tables.Length)
 					{
-						TrainManagerBase.currentHost.StopSound(Tables[j].Source);
+						TrainManagerBase.CurrentHost.StopSound(Tables[j].Source);
 						Tables[j].Source = null;
 						Tables[j].Buffer = null;
 					}
@@ -77,7 +77,7 @@ namespace TrainManager.Motor
 				{
 					if (k < Tables.Length)
 					{
-						TrainManagerBase.currentHost.StopSound(Tables[k].Source);
+						TrainManagerBase.CurrentHost.StopSound(Tables[k].Source);
 						Tables[k].Source = null;
 						Tables[k].Buffer = null;
 					}
@@ -94,7 +94,7 @@ namespace TrainManager.Motor
 							idx2 = Tables[j].Entries.Length - 1;
 						}
 
-						if (TrainManagerBase.currentHost.Application != HostApplication.OpenBve && ((!PlayFirstTrack && h == 0) || (!PlaySecondTrack && h == 1)))
+						if (TrainManagerBase.CurrentHost.Application != HostApplication.OpenBve && ((!PlayFirstTrack && h == 0) || (!PlaySecondTrack && h == 1)))
 						{
 							// Used in TrainEditor2 to play a single track whilst editing
 							idx2 = -1;
@@ -121,10 +121,10 @@ namespace TrainManager.Motor
 							{
 								// brake
 								double max = -Car.Specs.MotorAcceleration;
-								if (Car.baseTrain != null)
+								if (Car.BaseTrain != null)
 								{
 									// train / brake system not simulated in TrainEditor2
-									max = Car.CarBrake.DecelerationAtServiceMaximumPressure(Car.baseTrain.Handles.Brake.Actual, Car.CurrentSpeed);
+									max = Car.CarBrake.DecelerationAtServiceMaximumPressure(Car.BaseTrain.Handles.Brake.Actual, Car.CurrentSpeed);
 								}
 								if (max != 0.0)
 								{
@@ -136,10 +136,10 @@ namespace TrainManager.Motor
 
 							if (obuf != nbuf)
 							{
-								TrainManagerBase.currentHost.StopSound(Tables[j].Source);
+								TrainManagerBase.CurrentHost.StopSound(Tables[j].Source);
 								if (nbuf != null)
 								{
-									Tables[j].Source = (SoundSource) TrainManagerBase.currentHost.PlaySound(nbuf, pitch, gain, Position, Car, true);
+									Tables[j].Source = (SoundSource) TrainManagerBase.CurrentHost.PlaySound(nbuf, pitch, gain, Position, Car, true);
 									Tables[j].Buffer = nbuf;
 								}
 								else
@@ -158,14 +158,14 @@ namespace TrainManager.Motor
 							}
 							else
 							{
-								TrainManagerBase.currentHost.StopSound(Tables[j].Source);
+								TrainManagerBase.CurrentHost.StopSound(Tables[j].Source);
 								Tables[j].Source = null;
 								Tables[j].Buffer = null;
 							}
 						}
 						else
 						{
-							TrainManagerBase.currentHost.StopSound(Tables[j].Source);
+							TrainManagerBase.CurrentHost.StopSound(Tables[j].Source);
 							Tables[j].Source = null;
 							Tables[j].Buffer = null;
 						}

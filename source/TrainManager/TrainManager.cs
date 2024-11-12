@@ -13,7 +13,7 @@ namespace TrainManager
 	/// <summary>The base train manager class</summary>
 	public abstract class TrainManagerBase
 	{
-		internal static HostInterface currentHost;
+		internal static HostInterface CurrentHost;
 		internal static BaseRenderer Renderer;
 		public static CurrentRoute CurrentRoute;
 		internal static FileSystem FileSystem;
@@ -32,11 +32,11 @@ namespace TrainManager
 		/// <summary>Stores the plugin error message string, or a null reference if no error encountered</summary>
 		public static string PluginError;
 
-		protected TrainManagerBase(HostInterface host, BaseRenderer renderer, BaseOptions Options, FileSystem fileSystem)
+		protected TrainManagerBase(HostInterface host, BaseRenderer renderer, BaseOptions options, FileSystem fileSystem)
 		{
-			currentHost = host;
+			CurrentHost = host;
 			Renderer = renderer;
-			CurrentOptions = Options;
+			CurrentOptions = options;
 			FileSystem = fileSystem;
 		}
 
@@ -67,19 +67,19 @@ namespace TrainManager
 		}
 
 		/// <summary>Updates the objects for all trains within the simulation world</summary>
-		/// <param name="TimeElapsed">The time elapsed</param>
-		/// <param name="ForceUpdate">Whether this is a forced update</param>
-		public void UpdateTrainObjects(double TimeElapsed, bool ForceUpdate)
+		/// <param name="timeElapsed">The time elapsed</param>
+		/// <param name="forceUpdate">Whether this is a forced update</param>
+		public void UpdateTrainObjects(double timeElapsed, bool forceUpdate)
 		{
 			for (int i = 0; i < Trains.Length; i++)
 			{
-				Trains[i].UpdateObjects(TimeElapsed, ForceUpdate);
+				Trains[i].UpdateObjects(timeElapsed, forceUpdate);
 			}
 
 			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
-			foreach (ScriptedTrain Train in TFOs) //Must not use var, as otherwise the wrong inferred type
+			foreach (ScriptedTrain train in TFOs) //Must not use var, as otherwise the wrong inferred type
 			{
-				Train.UpdateObjects(TimeElapsed, ForceUpdate);
+				train.UpdateObjects(timeElapsed, forceUpdate);
 			}
 		}
 		
@@ -87,9 +87,9 @@ namespace TrainManager
 		public void JumpTFO()
 		{
 			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
-			foreach (ScriptedTrain Train in TFOs) //Must not use var, as otherwise the wrong inferred type
+			foreach (ScriptedTrain train in TFOs) //Must not use var, as otherwise the wrong inferred type
 			{
-				Train.Jump(-1, 0);
+				train.Jump(-1, 0);
 			}
 		}
 	}

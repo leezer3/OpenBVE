@@ -60,7 +60,7 @@ namespace RouteViewer
 					Program.Renderer.trackColors[(int)dataGridViewPaths.Rows[i].Cells[keyColumn].Value].Display = (bool)dataGridViewPaths.Rows[i].Cells[4].Value;
 				}
 			}
-			Program.pathForm = null;
+			Program.PathForm = null;
 			this.Close();
 		}
 

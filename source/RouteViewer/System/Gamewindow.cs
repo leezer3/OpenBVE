@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Threading;
@@ -62,19 +62,19 @@ namespace RouteViewer
                 return;
             }
             ProcessEvents();
-            double TimeElapsed = CPreciseTimer.GetElapsedTime();
+            double timeElapsed = CPreciseTimer.GetElapsedTime();
 
             if (Program.CurrentRouteFile != null)
             {
 	            DateTime d = DateTime.Now;
 	            Game.SecondsSinceMidnight = 3600 * d.Hour + 60 * d.Minute + d.Second + 0.001 * d.Millisecond;
-	            ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
-	            World.UpdateAbsoluteCamera(TimeElapsed);
+	            ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
+	            World.UpdateAbsoluteCamera(timeElapsed);
 	            Program.Renderer.UpdateVisibility(true);
-	            Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
+	            Program.Sounds.Update(timeElapsed, SoundModels.Linear);
             }
             Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
-            Program.Renderer.RenderScene(TimeElapsed);
+            Program.Renderer.RenderScene(timeElapsed);
             MessageManager.UpdateMessages();
             SwapBuffers();
             
@@ -89,8 +89,8 @@ namespace RouteViewer
 
         protected override void OnLoad(EventArgs e)
         {
-            KeyDown += Program.keyDownEvent;
-            KeyUp += Program.keyUpEvent;
+            KeyDown += Program.KeyDownEvent;
+            KeyUp += Program.KeyUpEvent;
 			MouseDown += Program.MouseEvent;
 			MouseUp += Program.MouseEvent;
 	        FileDrop += Program.FileDrop;
@@ -106,9 +106,9 @@ namespace RouteViewer
             Program.Renderer.Lighting.Initialize();
 			Program.Sounds.Initialize(SoundRange.Low);
 			Program.Renderer.UpdateViewport();
-            if (Program.processCommandLineArgs)
+            if (Program.ProcessCommandLineArgs)
             {
-                Program.processCommandLineArgs = false;
+                Program.ProcessCommandLineArgs = false;
                 Program.UpdateCaption();
 				Program.LoadRoute();
                 Program.UpdateCaption();

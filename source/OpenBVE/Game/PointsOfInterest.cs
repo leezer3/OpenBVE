@@ -8,20 +8,20 @@ namespace OpenBve
 	internal static partial class Game
 	{
 		/// <summary>Moves the camera to a point of interest</summary>
-		/// <param name="Value">The value of the jump to perform:
+		/// <param name="newValue">The value of the jump to perform:
 		/// -1= Previous POI
 		///  0= Return to currently selected POI (From cab etc.)
 		///  1= Next POI</param>
-		/// <param name="Relative">Whether the relative camera position should be retained</param>
+		/// <param name="newValueIsRelative">Whether the relative camera position should be retained</param>
 		/// <returns>False if the previous / next POI would be outside those defined, true otherwise</returns>
-		internal static bool ApplyPointOfInterest(int Value, bool Relative)
+		internal static bool ApplyPointOfInterest(int newValue, bool newValueIsRelative)
 		{
 			double t = 0.0;
 			int j = -1;
-			if (Relative)
+			if (newValueIsRelative)
 			{
 				// relative
-				if (Value < 0)
+				if (newValue < 0)
 				{
 					// previous poi
 					t = double.NegativeInfinity;
@@ -37,7 +37,7 @@ namespace OpenBve
 						}
 					}
 				}
-				else if (Value > 0)
+				else if (newValue > 0)
 				{
 					// next poi
 					t = double.PositiveInfinity;
@@ -57,7 +57,7 @@ namespace OpenBve
 			else
 			{
 				// absolute
-				j = Value >= 0 & Value < Program.CurrentRoute.PointsOfInterest.Length ? Value : -1;
+				j = newValue >= 0 & newValue < Program.CurrentRoute.PointsOfInterest.Length ? newValue : -1;
 			}
 			// process poi
 			if (j < 0) return false;

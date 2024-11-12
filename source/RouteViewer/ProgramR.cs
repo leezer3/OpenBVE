@@ -41,7 +41,7 @@ namespace RouteViewer
 		internal static bool JumpToPositionEnabled = false;
 		internal static string JumpToPositionValue = "";
 		internal static double MinimumJumpToPositionValue =  0;
-		internal static bool processCommandLineArgs;
+		internal static bool ProcessCommandLineArgs;
 
 		// keys
 		private static bool ShiftPressed = false;
@@ -62,7 +62,7 @@ namespace RouteViewer
 
 		internal static TrainManager TrainManager;
 
-		internal static formRailPaths pathForm;
+		internal static formRailPaths PathForm;
 
 		[System.Runtime.InteropServices.DllImport("user32.dll")]
 		private static extern bool SetProcessDPIAware();
@@ -109,7 +109,7 @@ namespace RouteViewer
 									if (string.IsNullOrEmpty(CurrentRouteFile))
 									{
 										CurrentRouteFile = args[i];
-										processCommandLineArgs = true;
+										ProcessCommandLineArgs = true;
 									}
 								}
 							}
@@ -138,10 +138,10 @@ namespace RouteViewer
 
 			if (objectsToLoad.Length != 0)
 			{
-				string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
-				if (System.IO.File.Exists(File))
+				string objectViewerExecutable = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
+				if (System.IO.File.Exists(objectViewerExecutable))
 				{
-					System.Diagnostics.Process.Start(File, objectsToLoad);
+					System.Diagnostics.Process.Start(objectViewerExecutable, objectsToLoad);
 					if (string.IsNullOrEmpty(CurrentRouteFile))
 					{
 						//We only supplied objects, so launch Object Viewer instead
@@ -177,7 +177,7 @@ namespace RouteViewer
 			Renderer.GameWindow.TargetUpdateFrequency = 0;
 			Renderer.GameWindow.TargetRenderFrequency = 0;
 			Renderer.GameWindow.Title = "Route Viewer";
-			processCommandLineArgs = true;
+			ProcessCommandLineArgs = true;
 			Renderer.GameWindow.Run();
 			//Unload
 			Sounds.DeInitialize();
@@ -243,12 +243,12 @@ namespace RouteViewer
 		}
 
 		// jump to station
-		private static void JumpToStation(int Direction) {
+		private static void JumpToStation(int directionOfTravel) {
 			if (Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse)
 			{
-				Direction = -Direction;
+				directionOfTravel = -directionOfTravel;
 			}
-			if (Direction < 0) {
+			if (directionOfTravel < 0) {
 				for (int i = CurrentRoute.Stations.Length - 1; i >= 0; i--) {
 					if (CurrentRoute.Stations[i].Stops.Length != 0) {
 						double p = CurrentRoute.Stations[i].Stops[CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
@@ -260,7 +260,7 @@ namespace RouteViewer
 						}
 					}
 				}
-			} else if (Direction > 0) {
+			} else if (directionOfTravel > 0) {
 				for (int i = 0; i < CurrentRoute.Stations.Length; i++) {
 					if (CurrentRoute.Stations[i].Stops.Length != 0) {
 						double p = CurrentRoute.Stations[i].Stops[CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
@@ -346,7 +346,7 @@ namespace RouteViewer
 					{
 						MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
 					}
-					previousMouseState = Mouse.GetState();
+					PreviousMouseState = Mouse.GetState();
 					if (MouseButton == 0)
 					{
 						Renderer.Camera.AlignmentDirection.Yaw = 0.0;
@@ -359,15 +359,15 @@ namespace RouteViewer
 			
 		}
 
-		internal static MouseState currentMouseState;
-		internal static MouseState previousMouseState;
+		internal static MouseState CurrentMouseState;
+		internal static MouseState PreviousMouseState;
 
 		internal static void MouseMovement()
 		{
 			if (MouseButton == 0 || Program.Renderer.CurrentInterface != InterfaceType.Normal) return;
 
-			currentMouseState = Mouse.GetState();
-			if (currentMouseState != previousMouseState)
+			CurrentMouseState = Mouse.GetState();
+			if (CurrentMouseState != PreviousMouseState)
 			{
 				Renderer.Camera.AlignmentDirection.Yaw = 0.0;
 				Renderer.Camera.AlignmentDirection.Pitch = 0.0;
@@ -375,13 +375,13 @@ namespace RouteViewer
 				Renderer.Camera.AlignmentDirection.Position.Y = 0.0;
 				if (MouseButton == 1)
 				{
-					Renderer.Camera.AlignmentDirection.Yaw = 0.025 * (previousMouseState.X - currentMouseState.X);
-					Renderer.Camera.AlignmentDirection.Pitch = 0.025 * (previousMouseState.Y - currentMouseState.Y);
+					Renderer.Camera.AlignmentDirection.Yaw = 0.025 * (PreviousMouseState.X - CurrentMouseState.X);
+					Renderer.Camera.AlignmentDirection.Pitch = 0.025 * (PreviousMouseState.Y - CurrentMouseState.Y);
 				}
 				else if (MouseButton == 2)
 				{
-					Renderer.Camera.AlignmentDirection.Position.X = 0.1 * (previousMouseState.X - currentMouseState.X);
-					Renderer.Camera.AlignmentDirection.Position.Y = 0.1 * (previousMouseState.Y - currentMouseState.Y);
+					Renderer.Camera.AlignmentDirection.Position.X = 0.1 * (PreviousMouseState.X - CurrentMouseState.X);
+					Renderer.Camera.AlignmentDirection.Position.Y = 0.1 * (PreviousMouseState.Y - CurrentMouseState.Y);
 				}
 				
 			}
@@ -401,7 +401,7 @@ namespace RouteViewer
 			UpdateCaption();
 		}
 
-		internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
+		internal static void KeyDownEvent(object sender, KeyboardKeyEventArgs e)
 		{
 			double speedModified = (ShiftPressed ? 2.0 : 1.0) * (ControlPressed ? 4.0 : 1.0) * (AltPressed ? 8.0 : 1.0);
 			switch (e.Key)
@@ -481,14 +481,14 @@ namespace RouteViewer
 					{
 						break;
 					}
-					OpenFileDialog Dialog = new OpenFileDialog();
-					Dialog.CheckFileExists = true;
-					Dialog.Filter = @"All Supported Routes|*.csv;*.rw;*.dat;*.txt|CSV/RW files|*.csv;*.rw|Mechanik Routes|*.dat|BVE5 Routes|*.txt|All files|*";
-					if (Dialog.ShowDialog() == DialogResult.OK)
+					OpenFileDialog dialog = new OpenFileDialog();
+					dialog.CheckFileExists = true;
+					dialog.Filter = @"All Supported Routes|*.csv;*.rw;*.dat;*.txt|CSV/RW files|*.csv;*.rw|Mechanik Routes|*.dat|BVE5 Routes|*.txt|All files|*";
+					if (dialog.ShowDialog() == DialogResult.OK)
 					{
 						Application.DoEvents();
 						CurrentlyLoading = true;
-						CurrentRouteFile = Dialog.FileName;
+						CurrentRouteFile = dialog.FileName;
 						UpdateCaption();
 						bool canLoad = false;
 						for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
@@ -522,10 +522,10 @@ namespace RouteViewer
 							if (isObject)
 							{
 								// oops, that's actually an object- Let's show Object Viewer
-								string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
-								if (System.IO.File.Exists(File))
+								string objectViewerExecutable = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
+								if (System.IO.File.Exists(objectViewerExecutable))
 								{
-									System.Diagnostics.Process.Start(File, CurrentRouteFile);
+									System.Diagnostics.Process.Start(objectViewerExecutable, CurrentRouteFile);
 								}
 							}
 							else
@@ -551,7 +551,7 @@ namespace RouteViewer
 							Application.DoEvents();
 						}
 					}
-					Dialog.Dispose();
+					dialog.Dispose();
 					break;
 				case Key.F8:
 					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
@@ -807,22 +807,22 @@ namespace RouteViewer
 					}
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
-						if (pathForm == null || pathForm.IsDisposed)
+						if (PathForm == null || PathForm.IsDisposed)
 						{
-							pathForm = new formRailPaths();
+							PathForm = new formRailPaths();
 						}
 						// Must be shown as a dialog box on Linux for paint events to work....
 						if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 						{
-							if (!pathForm.Visible)
+							if (!PathForm.Visible)
 							{
-								pathForm.Show();
+								PathForm.Show();
 							}
 							
 						}
 						else
 						{
-							pathForm.ShowDialog();
+							PathForm.ShowDialog();
 							Application.DoEvents();
 						}
 
@@ -833,7 +833,7 @@ namespace RouteViewer
 			}
 		}
 
-		internal static void keyUpEvent(object sender, KeyboardKeyEventArgs e)
+		internal static void KeyUpEvent(object sender, KeyboardKeyEventArgs e)
 		{
 			switch (e.Key)
 			{

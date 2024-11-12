@@ -25,8 +25,8 @@ namespace OpenBve
 		internal static bool MinimalisticSimulation = false;
 		
 		/// <summary>Call this function to reset the game</summary>
-		/// <param name="ResetLogs">Whether the logs should be reset</param>
-		internal static void Reset(bool ResetLogs) {
+		/// <param name="resetLogs">Whether the logs should be reset</param>
+		internal static void Reset(bool resetLogs) {
 			// track manager
 			for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
 			{
@@ -59,7 +59,7 @@ namespace OpenBve
 			Program.CurrentRoute.PreviousFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
 			Program.CurrentRoute.CurrentFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 0.5);
 			Program.CurrentRoute.NextFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 1.0);
-			if (ResetLogs) {
+			if (resetLogs) {
 				LogRouteName = "";
 				LogTrainName = "";
 				LogDateTime = DateTime.Now;

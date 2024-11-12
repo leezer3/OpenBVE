@@ -55,7 +55,8 @@ namespace Train.OpenBve
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string FileName = Path.CombineFile(TrainPath, PanelFile);
 			string[] Lines = File.ReadAllLines(FileName, Encoding);
-			for (int i = 0; i < Lines.Length; i++) {
+			for (int i = 0; i < Lines.Length; i++)
+			{
 				Lines[i] = Lines[i].Trim();
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0)
@@ -160,7 +161,7 @@ namespace Train.OpenBve
 							int w = tday.Width;
 							int h = tday.Height;
 							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, w, h, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
-							string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, subjectIndex, subjectSuffix);
+							string f = GetStackLanguageFromSubject(Car.BaseTrain, Subject, subjectIndex, subjectSuffix);
 							try
 							{
 								Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = !string.IsNullOrEmpty(Function) ? new FunctionScript(Plugin.currentHost, Function, true) : new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
@@ -194,7 +195,7 @@ namespace Train.OpenBve
 							Block.GetValue(Panel2Key.Backstop, out bool Backstop);
 							Block.GetValue(Panel2Key.Smoothed, out bool Smoothed);
 							Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage);
-							
+
 							Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 							Texture tnight = null;
 							if (!string.IsNullOrEmpty(NighttimeImage))
@@ -228,7 +229,7 @@ namespace Train.OpenBve
 									f = Smoothed ? "time 60 mod" : "time floor";
 									break;
 								default:
-									f = GetStackLanguageFromSubject(Car.baseTrain, Subject, subjectIndex, subjectSuffix);
+									f = GetStackLanguageFromSubject(Car.BaseTrain, Subject, subjectIndex, subjectSuffix);
 									break;
 							}
 
@@ -280,7 +281,7 @@ namespace Train.OpenBve
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Block.Key + " in " + FileName);
 								break;
 							}
-							string tf = GetInfixFunction(Car.baseTrain, Subject, subjectIndex, subjectSuffix, Minimum, Maximum, Width, tday.Width);
+							string tf = GetInfixFunction(Car.BaseTrain, Subject, subjectIndex, subjectSuffix, Minimum, Maximum, Width, tday.Width, Block.Key + " in " + FileName);
 							if (!string.IsNullOrEmpty(tf) || !string.IsNullOrEmpty(Function))
 							{
 								Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
@@ -325,14 +326,14 @@ namespace Train.OpenBve
 									switch (Subject)
 									{
 										case Panel2Subject.Power:
-											if (Car.baseTrain.Handles.Power.MaximumNotch > numFrames)
+											if (Car.BaseTrain.Handles.Power.MaximumNotch > numFrames)
 											{
-												numFrames = Car.baseTrain.Handles.Power.MaximumNotch;
+												numFrames = Car.BaseTrain.Handles.Power.MaximumNotch;
 											}
 											break;
 										case Panel2Subject.Brake:
-											int b = Car.baseTrain.Handles.Brake.MaximumNotch + 2;
-											if (Car.baseTrain.Handles.HasHoldBrake)
+											int b = Car.BaseTrain.Handles.Brake.MaximumNotch + 2;
+											if (Car.BaseTrain.Handles.HasHoldBrake)
 											{
 												b++;
 											}
@@ -397,7 +398,7 @@ namespace Train.OpenBve
 									int l = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, wday, Interval, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday[k], tnight[k], Color32.White, k != 0);
 									if (k == 0) j = l;
 								}
-								string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, subjectIndex, subjectSuffix);
+								string f = GetStackLanguageFromSubject(Car.BaseTrain, Subject, subjectIndex, subjectSuffix);
 								try
 								{
 									if (!string.IsNullOrEmpty(Function))
@@ -507,7 +508,7 @@ namespace Train.OpenBve
 							{
 								vertices[v] = new Vertex();
 							}
-							int[][] faces = 
+							int[][] faces =
 							{
 								new[] { 0, 1, 2 },
 								new[] { 0, 3, 4 },
@@ -527,7 +528,7 @@ namespace Train.OpenBve
 								new Vector3(x3, y3, z3),
 								new Vector3(cx, cy, cz)
 							};
-							string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, subjectIndex, subjectSuffix);
+							string f = GetStackLanguageFromSubject(Car.BaseTrain, Subject, subjectIndex, subjectSuffix);
 							double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 							double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 							if (Step == 1.0)
@@ -737,7 +738,7 @@ namespace Train.OpenBve
 			return drops;
 		}
 
-		internal string GetInfixFunction(AbstractTrain Train, Panel2Subject Subject, int SubjectIndex, string SubjectSuffix, double Minimum, double Maximum, int Width, int TextureWidth)
+		internal string GetInfixFunction(AbstractTrain Train, Panel2Subject Subject, int SubjectIndex, string SubjectSuffix, double Minimum, double Maximum, int Width, int TextureWidth, string ErrorLocation)
 		{
 			double mp = 0.0;
 			if (Minimum < 0)
@@ -767,11 +768,14 @@ namespace Train.OpenBve
 		/// <param name="Subject">The subject to convert</param>
 		/// <param name="SubjectIndex">The index of the ATS etc. function if applicable</param>
 		/// <returns>The parsed animation function stack</returns>
-		internal string GetStackLanguageFromSubject(AbstractTrain Train, Panel2Subject Subject, int SubjectIndex, string Suffix) 
+		internal string GetStackLanguageFromSubject(AbstractTrain Train, Panel2Subject Subject, int SubjectIndex, string Suffix)
 		{
+			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+
 			// transform subject
 			string Code;
-			switch (Subject) {
+			switch (Subject)
+			{
 				case Panel2Subject.Acc:
 					Code = "acceleration";
 					break;
@@ -874,10 +878,13 @@ namespace Train.OpenBve
 				Plugin.currentHost.AddMessage(MessageType.Error, false, "Attempted to create an invalid size element");
 			}
 			double WorldWidth, WorldHeight;
-			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {
+			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
+			{
 				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
 				WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
-			} else {
+			}
+			else
+			{
 				WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
 				WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
 			}
@@ -931,7 +938,8 @@ namespace Train.OpenBve
 			o.Y = ym + Driver.Y;
 			o.Z = EyeDistance - Distance + Driver.Z;
 			// add object
-			if (AddStateToLastElement) {
+			if (AddStateToLastElement)
+			{
 				int n = Group.Elements.Length - 1;
 				int j = Group.Elements[n].States.Length;
 				Array.Resize(ref Group.Elements[n].States, j + 1);
@@ -941,7 +949,9 @@ namespace Train.OpenBve
 					Prototype = Object
 				};
 				return n;
-			} else {
+			}
+			else
+			{
 				int n = Group.Elements.Length;
 				Array.Resize(ref Group.Elements, n + 1);
 				Group.Elements[n] = new AnimatedObject(Plugin.currentHost, Object);

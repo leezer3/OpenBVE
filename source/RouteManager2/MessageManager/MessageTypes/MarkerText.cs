@@ -23,14 +23,14 @@ namespace RouteManager2.MessageManager.MessageTypes
 
 		/// <summary>Creates a marker text</summary>
 		/// <param name="text">The text to be displayed</param>
-		/// <param name="Color">The color of the text</param>
-		public MarkerText(string text, MessageColor Color)
+		/// <param name="color">The color of the text</param>
+		public MarkerText(string text, MessageColor color)
 		{
 			MessageToDisplay = text;
 			Timeout = double.PositiveInfinity;
 			TriggerOnce = false;
 			Direction = MessageDirection.Both;
-			this.Color = Color;
+			Color = color;
 			RendererAlpha = 1.0;
 		}
 

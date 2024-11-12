@@ -17,7 +17,6 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.Events;
 using RouteManager2.Tracks;
@@ -56,21 +55,21 @@ namespace RouteViewer
 		{
 			base.Initialize();
 
-			string Folder = Path.CombineDirectory(Program.FileSystem.GetDataFolder(), "RouteViewer");
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "background.png"), out BackgroundChangeTexture);
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "brightness.png"), out BrightnessChangeTexture);
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "transponder.png"), out TransponderTexture);
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "section.png"), out SectionTexture);
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "limit.png"), out LimitTexture);
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "station_start.png"), out StationStartTexture);
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "station_end.png"), out StationEndTexture);
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "stop.png"), out StopTexture);
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "buffer.png"), out BufferTexture);
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "sound.png"), out SoundTexture);
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "switchsound.png"), out PointSoundTexture);
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "runsound.png"), out RunSoundTexture);
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "lighting.png"), out LightingEventTexture);
-			TextureManager.RegisterTexture(Path.CombineFile(Folder, "weather.png"), out WeatherEventTexture);
+			string dataFolder = Path.CombineDirectory(Program.FileSystem.GetDataFolder(), "RouteViewer");
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "background.png"), out BackgroundChangeTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "brightness.png"), out BrightnessChangeTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "transponder.png"), out TransponderTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "section.png"), out SectionTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "limit.png"), out LimitTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "station_start.png"), out StationStartTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "station_end.png"), out StationEndTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "stop.png"), out StopTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "buffer.png"), out BufferTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "sound.png"), out SoundTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "switchsound.png"), out PointSoundTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "runsound.png"), out RunSoundTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "lighting.png"), out LightingEventTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(dataFolder, "weather.png"), out WeatherEventTexture);
 		}
 
 		// render scene
@@ -799,35 +798,35 @@ namespace RouteViewer
 			PopMatrix(MatrixMode.Modelview);
 		}
 
-		private static string GetTime(double Time)
+		private static string GetTime(double currentTime)
 		{
-			int h = (int)Math.Floor(Time / 3600.0);
-			Time -= h * 3600.0;
-			int m = (int)Math.Floor(Time / 60.0);
-			Time -= m * 60.0;
-			int s = (int)Math.Floor(Time);
+			int h = (int)Math.Floor(currentTime / 3600.0);
+			currentTime -= h * 3600.0;
+			int m = (int)Math.Floor(currentTime / 60.0);
+			currentTime -= m * 60.0;
+			int s = (int)Math.Floor(currentTime);
 			return $"{h:00}:{m:00}:{s:00}";
 		}
 
 		// get length string 
-		private static string GetLengthString(double Value)
+		private static string GetLengthString(double lengthValue)
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			if (Program.CurrentRoute.UnitOfLength.Length == 1 && Program.CurrentRoute.UnitOfLength[0] == 1.0)
 			{
-				return Value.ToString("0.00", culture);
+				return lengthValue.ToString("0.00", culture);
 			}
 
 			double[] values = new double[Program.CurrentRoute.UnitOfLength.Length];
 
 			for (int i = 0; i < Program.CurrentRoute.UnitOfLength.Length - 1; i++)
 			{
-				values[i] = Math.Floor(Value / Program.CurrentRoute.UnitOfLength[i]);
-				Value -= values[i] * Program.CurrentRoute.UnitOfLength[i];
+				values[i] = Math.Floor(lengthValue / Program.CurrentRoute.UnitOfLength[i]);
+				lengthValue -= values[i] * Program.CurrentRoute.UnitOfLength[i];
 			}
 
-			values[Program.CurrentRoute.UnitOfLength.Length - 1] = Value / Program.CurrentRoute.UnitOfLength[Program.CurrentRoute.UnitOfLength.Length - 1];
+			values[Program.CurrentRoute.UnitOfLength.Length - 1] = lengthValue / Program.CurrentRoute.UnitOfLength[Program.CurrentRoute.UnitOfLength.Length - 1];
 			string s = string.Empty;
 
 			for (int i = 0; i < values.Length - 1; i++)
@@ -839,7 +838,7 @@ namespace RouteViewer
 			return s;
 		}
 
-		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
+		public NewRenderer(HostInterface currentHost, BaseOptions currentOptions, FileSystem fileSystem) : base(currentHost, currentOptions, fileSystem)
 		{
 			Screen.Width = Interface.CurrentOptions.WindowWidth;
 			Screen.Height = Interface.CurrentOptions.WindowHeight;

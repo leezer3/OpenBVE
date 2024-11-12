@@ -935,7 +935,7 @@ namespace OpenBve
 			ProblemEncountered = false;
 			workerThread.DoWork += delegate
 			{
-				Manipulation.CreatePackage(currentPackage, Interface.CurrentOptions.packageCompressionType, currentPackage.FileName, ImageFile, filesToPackage);
+				Manipulation.CreatePackage(currentPackage, Interface.CurrentOptions.PackageCompressionType, currentPackage.FileName, ImageFile, filesToPackage);
 			};
 
 			workerThread.RunWorkerCompleted += delegate {

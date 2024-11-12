@@ -12,10 +12,10 @@ namespace RouteManager2.MessageManager.MessageTypes
 		/// <summary>The texture to be displayed</summary>
 		private readonly Texture texture;
 
-		public MarkerImage(HostInterface Host, Texture Texture)
+		public MarkerImage(HostInterface host, Texture texture)
 		{
-			currentHost = Host;
-			texture = Texture;
+			currentHost = host;
+			this.texture = texture;
 		}
 
 		public override void AddMessage(double currentTime)

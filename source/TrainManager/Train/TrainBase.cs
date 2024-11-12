@@ -58,7 +58,7 @@ namespace TrainManager.Trains
 		/// <inheritdoc/>
 		public override bool IsPlayerTrain => this == TrainManagerBase.PlayerTrain;
 		/// <summary>The lock to be held whilst operations potentially affecting the makeup of the train are performed</summary>
-		internal object updateLock = new object();
+		internal object UpdateLock = new object();
 
 		/// <inheritdoc/>
 		public override int NumberOfCars => this.Cars.Length;
@@ -134,23 +134,23 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Updates the objects for all cars in this train</summary>
-		/// <param name="TimeElapsed">The time elapsed</param>
-		/// <param name="ForceUpdate">Whether this is a forced update</param>
-		public void UpdateObjects(double TimeElapsed, bool ForceUpdate)
+		/// <param name="timeElapsed">The time elapsed</param>
+		/// <param name="forceUpdate">Whether this is a forced update</param>
+		public void UpdateObjects(double timeElapsed, bool forceUpdate)
 		{
-			if (TrainManagerBase.currentHost.SimulationState == SimulationState.Running)
+			if (TrainManagerBase.CurrentHost.SimulationState == SimulationState.Running)
 			{
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Cars[i].UpdateObjects(TimeElapsed, ForceUpdate, true);
-					Cars[i].FrontBogie.UpdateObjects(TimeElapsed, ForceUpdate);
-					Cars[i].RearBogie.UpdateObjects(TimeElapsed, ForceUpdate);
+					Cars[i].UpdateObjects(timeElapsed, forceUpdate, true);
+					Cars[i].FrontBogie.UpdateObjects(timeElapsed, forceUpdate);
+					Cars[i].RearBogie.UpdateObjects(timeElapsed, forceUpdate);
 					if (i == DriverCar && Cars[i].Windscreen != null)
 					{
-						Cars[i].Windscreen.Update(TimeElapsed);
+						Cars[i].Windscreen.Update(timeElapsed);
 					}
 
-					Cars[i].Coupler.UpdateObjects(TimeElapsed, ForceUpdate);
+					Cars[i].Coupler.UpdateObjects(timeElapsed, forceUpdate);
 				}
 			}
 		}
@@ -178,27 +178,27 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Places the cars</summary>
-		/// <param name="TrackPosition">The track position of the front car</param>
-		public void PlaceCars(double TrackPosition)
+		/// <param name="trackPosition">The track position of the front car</param>
+		public void PlaceCars(double trackPosition)
 		{
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				//Front axle track position
-				Cars[i].FrontAxle.Follower.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].FrontAxle.Position;
+				Cars[i].FrontAxle.Follower.TrackPosition = trackPosition - 0.5 * Cars[i].Length + Cars[i].FrontAxle.Position;
 				//Bogie for front axle
 				Cars[i].FrontBogie.FrontAxle.Follower.TrackPosition = Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * Cars[i].FrontBogie.Length + Cars[i].FrontBogie.FrontAxle.Position;
 				Cars[i].FrontBogie.RearAxle.Follower.TrackPosition = Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * Cars[i].FrontBogie.Length + Cars[i].FrontBogie.RearAxle.Position;
 				//Rear axle track position
-				Cars[i].RearAxle.Follower.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].RearAxle.Position;
+				Cars[i].RearAxle.Follower.TrackPosition = trackPosition - 0.5 * Cars[i].Length + Cars[i].RearAxle.Position;
 				//Bogie for rear axle
 				Cars[i].RearBogie.FrontAxle.Follower.TrackPosition = Cars[i].RearAxle.Follower.TrackPosition - 0.5 * Cars[i].RearBogie.Length + Cars[i].RearBogie.FrontAxle.Position;
 				Cars[i].RearBogie.RearAxle.Follower.TrackPosition = Cars[i].RearAxle.Follower.TrackPosition - 0.5 * Cars[i].RearBogie.Length + Cars[i].RearBogie.RearAxle.Position;
 				//Beacon reciever (AWS, ATC etc.)
-				Cars[i].BeaconReceiver.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].BeaconReceiverPosition;
-				TrackPosition -= Cars[i].Length;
+				Cars[i].BeaconReceiver.TrackPosition = trackPosition - 0.5 * Cars[i].Length + Cars[i].BeaconReceiverPosition;
+				trackPosition -= Cars[i].Length;
 				if (i < Cars.Length - 1)
 				{
-					TrackPosition -= 0.5 * (Cars[i].Coupler.MinimumDistanceBetweenCars + Cars[i].Coupler.MaximumDistanceBetweenCars);
+					trackPosition -= 0.5 * (Cars[i].Coupler.MinimumDistanceBetweenCars + Cars[i].Coupler.MaximumDistanceBetweenCars);
 				}
 			}
 		}
@@ -215,7 +215,7 @@ namespace TrainManager.Trains
 				Cars[i].Coupler.ChangeSection(-1);
 			}
 
-			TrainManagerBase.currentHost.StopAllSounds(this);
+			TrainManagerBase.CurrentHost.StopAllSounds(this);
 
 			for (int i = 0; i < TrainManagerBase.CurrentRoute.Sections.Length; i++)
 			{
@@ -235,14 +235,14 @@ namespace TrainManager.Trains
 		}
 
 		/// <inheritdoc/>
-		public override void Update(double TimeElapsed)
+		public override void Update(double timeElapsed)
 		{
-			lock (updateLock)
+			lock (UpdateLock)
 			{
 				if (State == TrainState.Pending)
 				{
 					// pending train
-					bool forceIntroduction = !IsPlayerTrain && TrainManagerBase.currentHost.SimulationState != SimulationState.MinimalisticSimulation;
+					bool forceIntroduction = !IsPlayerTrain && TrainManagerBase.CurrentHost.SimulationState != SimulationState.MinimalisticSimulation;
 					double time = 0.0;
 					if (!forceIntroduction)
 					{
@@ -280,7 +280,7 @@ namespace TrainManager.Trains
 							}
 						}
 
-						if (this == TrainManagerBase.PlayerTrain && TrainManagerBase.currentHost.SimulationState != SimulationState.Loading)
+						if (this == TrainManagerBase.PlayerTrain && TrainManagerBase.CurrentHost.SimulationState != SimulationState.Loading)
 						{
 							/* Loading has finished, but we still have an AI train in the current section
 							 * This may be caused by an iffy RunInterval value, or simply by having no sections							 *
@@ -338,7 +338,7 @@ namespace TrainManager.Trains
 				else if (State == TrainState.Available)
 				{
 					// available train
-					UpdatePhysicsAndControls(TimeElapsed);
+					UpdatePhysicsAndControls(timeElapsed);
 					SafetySystems.OverspeedDevice?.Update();
 
 					if (TrainManagerBase.CurrentOptions.Accessibility)
@@ -352,7 +352,7 @@ namespace TrainManager.Trains
 							if (!nextSection.AccessibilityAnnounced && tPos < 500)
 							{
 								string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "route_nextsection" }).Replace("[distance]", $"{tPos:0.0}") + "m";
-								TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+								TrainManagerBase.CurrentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentHost.InGameTime + 10.0, null);
 								nextSection.AccessibilityAnnounced = true;
 							}
 						}
@@ -366,7 +366,7 @@ namespace TrainManager.Trains
 							if (!nextStation.AccessibilityAnnounced && tPos < 500)
 							{
 								string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "route_nextstation" }).Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[name]", nextStation.Name);
-								TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+								TrainManagerBase.CurrentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentHost.InGameTime + 10.0, null);
 								nextStation.AccessibilityAnnounced = true;
 							}
 						}
@@ -376,20 +376,20 @@ namespace TrainManager.Trains
 					{
 						if (CurrentSectionLimit == 0.0)
 						{
-							TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_stop" }), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
+							TrainManagerBase.CurrentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_stop" }), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
 						}
 						else if (CurrentSpeed > CurrentSectionLimit)
 						{
-							TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_overspeed" }), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
+							TrainManagerBase.CurrentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_overspeed" }), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 						}
 					}
 
-					AI?.Trigger(TimeElapsed);
+					AI?.Trigger(timeElapsed);
 				}
 				else if (State == TrainState.Bogus)
 				{
 					// bogus train
-					AI?.Trigger(TimeElapsed);
+					AI?.Trigger(timeElapsed);
 				}
 
 				//Trigger point sounds if appropriate
@@ -435,10 +435,10 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Updates the physics and controls for this train</summary>
-		/// <param name="TimeElapsed">The time elapsed</param>
-		private void UpdatePhysicsAndControls(double TimeElapsed)
+		/// <param name="timeElapsed">The time elapsed</param>
+		private void UpdatePhysicsAndControls(double timeElapsed)
 		{
-			if (TimeElapsed == 0.0 || TimeElapsed > 1000)
+			if (timeElapsed == 0.0 || timeElapsed > 1000)
 			{
 				//HACK: The physics engine really does not like update times above 1000ms
 				//This works around a bug experienced when jumping to a station on a steep hill
@@ -450,18 +450,18 @@ namespace TrainManager.Trains
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				// move cars
-				Cars[i].Move(Cars[i].CurrentSpeed * TimeElapsed);
+				Cars[i].Move(Cars[i].CurrentSpeed * timeElapsed);
 				if (State == TrainState.Disposed)
 				{
 					return;
 				}
 				// update cargo and related score
-				Cars[i].Cargo.Update(Specs.CurrentAverageAcceleration, TimeElapsed);
+				Cars[i].Cargo.Update(Specs.CurrentAverageAcceleration, timeElapsed);
 			}
 
 			// update station and doors
-			UpdateStation(TimeElapsed);
-			UpdateDoors(TimeElapsed);
+			UpdateStation(timeElapsed);
+			UpdateDoors(timeElapsed);
 			// delayed handles
 			if (Plugin == null)
 			{
@@ -475,21 +475,21 @@ namespace TrainManager.Trains
 			Handles.Brake.Update();
 			Handles.EmergencyBrake.Update();
 			Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
-			Cars[DriverCar].DSD?.Update(TimeElapsed);
+			Cars[DriverCar].DSD?.Update(timeElapsed);
 			// update speeds
-			UpdateSpeeds(TimeElapsed);
+			UpdateSpeeds(timeElapsed);
 			// Update Run and Motor sounds
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				Cars[i].Run.Update(TimeElapsed);
+				Cars[i].Run.Update(timeElapsed);
 				if (Cars[i].Sounds.Motor != null)
 				{
-					Cars[i].Sounds.Motor.Update(TimeElapsed);
+					Cars[i].Sounds.Motor.Update(timeElapsed);
 				}
 			}
 
 			// safety system
-			if (TrainManagerBase.currentHost.SimulationState != SimulationState.MinimalisticSimulation | !IsPlayerTrain)
+			if (TrainManagerBase.CurrentHost.SimulationState != SimulationState.MinimalisticSimulation | !IsPlayerTrain)
 			{
 				UpdateSafetySystem();
 			}
@@ -519,13 +519,13 @@ namespace TrainManager.Trains
 						double a = (3.6 * CurrentSectionLimit) * TrainManagerBase.CurrentOptions.SpeedConversionFactor;
 						s = s.Replace("[speed]", a.ToString("0", CultureInfo.InvariantCulture));
 						s = s.Replace("[unit]", TrainManagerBase.CurrentOptions.UnitOfSpeed);
-						TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, TrainManagerBase.currentHost.InGameTime + 5.0, null);
+						TrainManagerBase.CurrentHost.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, TrainManagerBase.CurrentHost.InGameTime + 5.0, null);
 					}
 				}
 			}
 
 			// infrequent updates
-			InternalTimerTimeElapsed += TimeElapsed;
+			InternalTimerTimeElapsed += timeElapsed;
 			if (InternalTimerTimeElapsed > 10.0)
 			{
 				InternalTimerTimeElapsed -= 10.0;
@@ -533,9 +533,9 @@ namespace TrainManager.Trains
 			}
 		}
 
-		private void UpdateSpeeds(double TimeElapsed)
+		private void UpdateSpeeds(double timeElapsed)
 		{
-			if (TrainManagerBase.currentHost.SimulationState == SimulationState.MinimalisticSimulation & IsPlayerTrain)
+			if (TrainManagerBase.CurrentHost.SimulationState == SimulationState.MinimalisticSimulation & IsPlayerTrain)
 			{
 				// hold the position of the player's train during startup
 				for (int i = 0; i < Cars.Length; i++)
@@ -548,30 +548,30 @@ namespace TrainManager.Trains
 			}
 
 			// update brake system
-			UpdateBrakeSystem(TimeElapsed, out var DecelerationDueToBrake, out var DecelerationDueToMotor);
+			UpdateBrakeSystem(timeElapsed, out var decelerationDueToBrake, out var decelerationDueToMotor);
 			// calculate new car speeds
-			double[] NewSpeeds = new double[Cars.Length];
+			double[] newSpeeds = new double[Cars.Length];
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				Cars[i].UpdateSpeed(TimeElapsed, DecelerationDueToMotor[i], DecelerationDueToBrake[i], out NewSpeeds[i]);
+				Cars[i].UpdateSpeed(timeElapsed, decelerationDueToMotor[i], decelerationDueToBrake[i], out newSpeeds[i]);
 			}
 
 			// calculate center of mass position
-			double[] CenterOfCarPositions = new double[Cars.Length];
-			double CenterOfMassPosition = 0.0;
-			double TrainMass = 0.0;
+			double[] centerOfCarPositions = new double[Cars.Length];
+			double centerOfMassPosition = 0.0;
+			double trainMass = 0.0;
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				double pr = Cars[i].RearAxle.Follower.TrackPosition - Cars[i].RearAxle.Position;
 				double pf = Cars[i].FrontAxle.Follower.TrackPosition - Cars[i].FrontAxle.Position;
-				CenterOfCarPositions[i] = 0.5 * (pr + pf);
-				CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].CurrentMass;
-				TrainMass += Cars[i].CurrentMass;
+				centerOfCarPositions[i] = 0.5 * (pr + pf);
+				centerOfMassPosition += centerOfCarPositions[i] * Cars[i].CurrentMass;
+				trainMass += Cars[i].CurrentMass;
 			}
 
-			if (TrainMass != 0.0)
+			if (trainMass != 0.0)
 			{
-				CenterOfMassPosition /= TrainMass;
+				centerOfMassPosition /= trainMass;
 			}
 
 			{
@@ -580,38 +580,38 @@ namespace TrainManager.Trains
 				int p = -1; // primary car index
 				int s = -1; // secondary car index
 				{
-					double PrimaryDistance = double.MaxValue;
+					double primaryDistance = double.MaxValue;
 					for (int i = 0; i < Cars.Length; i++)
 					{
-						double d = Math.Abs(CenterOfCarPositions[i] - CenterOfMassPosition);
-						if (d < PrimaryDistance)
+						double d = Math.Abs(centerOfCarPositions[i] - centerOfMassPosition);
+						if (d < primaryDistance)
 						{
-							PrimaryDistance = d;
+							primaryDistance = d;
 							p = i;
 						}
 					}
 
-					double SecondDistance = Double.MaxValue;
+					double secondDistance = Double.MaxValue;
 					for (int i = p - 1; i <= p + 1; i++)
 					{
 						if (i >= 0 & i < Cars.Length & i != p)
 						{
-							double d = Math.Abs(CenterOfCarPositions[i] - CenterOfMassPosition);
-							if (d < SecondDistance)
+							double d = Math.Abs(centerOfCarPositions[i] - centerOfMassPosition);
+							if (d < secondDistance)
 							{
-								SecondDistance = d;
+								secondDistance = d;
 								s = i;
 							}
 						}
 					}
 
-					if (s >= 0 && PrimaryDistance <= 0.25 * (PrimaryDistance + SecondDistance))
+					if (s >= 0 && primaryDistance <= 0.25 * (primaryDistance + secondDistance))
 					{
 						s = -1;
 					}
 				}
 				// coupler
-				bool[] CouplerCollision = new bool[Cars.Length - 1];
+				bool[] couplerCollision = new bool[Cars.Length - 1];
 				int cf, cr;
 				if (s >= 0)
 				{
@@ -625,7 +625,7 @@ namespace TrainManager.Trains
 
 					double min = Cars[p].Coupler.MinimumDistanceBetweenCars;
 					double max = Cars[p].Coupler.MaximumDistanceBetweenCars;
-					double d = CenterOfCarPositions[p] - CenterOfCarPositions[s] - 0.5 * (Cars[p].Length + Cars[s].Length);
+					double d = centerOfCarPositions[p] - centerOfCarPositions[s] - 0.5 * (Cars[p].Length + Cars[s].Length);
 					if (d < min)
 					{
 						double t = (min - d) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
@@ -633,9 +633,9 @@ namespace TrainManager.Trains
 						double ts = t * Cars[p].CurrentMass;
 						Cars[p].UpdateTrackFollowers(tp, false, false);
 						Cars[s].UpdateTrackFollowers(-ts, false, false);
-						CenterOfCarPositions[p] += tp;
-						CenterOfCarPositions[s] -= ts;
-						CouplerCollision[p] = true;
+						centerOfCarPositions[p] += tp;
+						centerOfCarPositions[s] -= ts;
+						couplerCollision[p] = true;
 					}
 					else if (d > max & !Cars[p].Derailed & !Cars[s].Derailed)
 					{
@@ -645,9 +645,9 @@ namespace TrainManager.Trains
 
 						Cars[p].UpdateTrackFollowers(-tp, false, false);
 						Cars[s].UpdateTrackFollowers(ts, false, false);
-						CenterOfCarPositions[p] -= tp;
-						CenterOfCarPositions[s] += ts;
-						CouplerCollision[p] = true;
+						centerOfCarPositions[p] -= tp;
+						centerOfCarPositions[s] += ts;
+						couplerCollision[p] = true;
 					}
 
 					cf = p;
@@ -665,20 +665,20 @@ namespace TrainManager.Trains
 				{
 					double min = Cars[i].Coupler.MinimumDistanceBetweenCars;
 					double max = Cars[i].Coupler.MaximumDistanceBetweenCars;
-					double d = CenterOfCarPositions[i] - CenterOfCarPositions[i + 1] - 0.5 * (Cars[i].Length + Cars[i + 1].Length);
+					double d = centerOfCarPositions[i] - centerOfCarPositions[i + 1] - 0.5 * (Cars[i].Length + Cars[i + 1].Length);
 					if (d < min)
 					{
 						double t = min - d + 0.0001;
 						Cars[i].UpdateTrackFollowers(t, false, false);
-						CenterOfCarPositions[i] += t;
-						CouplerCollision[i] = true;
+						centerOfCarPositions[i] += t;
+						couplerCollision[i] = true;
 					}
 					else if (d > max & !Cars[i].Derailed & !Cars[i + 1].Derailed)
 					{
 						double t = d - max + 0.0001;
 						Cars[i].UpdateTrackFollowers(-t, false, false);
-						CenterOfCarPositions[i] -= t;
-						CouplerCollision[i] = true;
+						centerOfCarPositions[i] -= t;
+						couplerCollision[i] = true;
 					}
 				}
 
@@ -687,33 +687,33 @@ namespace TrainManager.Trains
 				{
 					double min = Cars[i - 1].Coupler.MinimumDistanceBetweenCars;
 					double max = Cars[i - 1].Coupler.MaximumDistanceBetweenCars;
-					double d = CenterOfCarPositions[i - 1] - CenterOfCarPositions[i] - 0.5 * (Cars[i].Length + Cars[i - 1].Length);
+					double d = centerOfCarPositions[i - 1] - centerOfCarPositions[i] - 0.5 * (Cars[i].Length + Cars[i - 1].Length);
 					if (d < min)
 					{
 						double t = min - d + 0.0001;
 						Cars[i].UpdateTrackFollowers(-t, false, false);
-						CenterOfCarPositions[i] -= t;
-						CouplerCollision[i - 1] = true;
+						centerOfCarPositions[i] -= t;
+						couplerCollision[i - 1] = true;
 					}
 					else if (d > max & !Cars[i].Derailed & !Cars[i - 1].Derailed)
 					{
 						double t = d - max + 0.0001;
 						Cars[i].UpdateTrackFollowers(t, false, false);
 
-						CenterOfCarPositions[i] += t;
-						CouplerCollision[i - 1] = true;
+						centerOfCarPositions[i] += t;
+						couplerCollision[i - 1] = true;
 					}
 				}
 
 				// update speeds
 				for (int i = 0; i < Cars.Length - 1; i++)
 				{
-					if (CouplerCollision[i])
+					if (couplerCollision[i])
 					{
 						int j;
 						for (j = i + 1; j < Cars.Length - 1; j++)
 						{
-							if (!CouplerCollision[j])
+							if (!couplerCollision[j])
 							{
 								break;
 							}
@@ -723,7 +723,7 @@ namespace TrainManager.Trains
 						double m = 0.0;
 						for (int k = i; k <= j; k++)
 						{
-							v += NewSpeeds[k] * Cars[k].CurrentMass;
+							v += newSpeeds[k] * Cars[k].CurrentMass;
 							m += Cars[k].CurrentMass;
 						}
 
@@ -734,12 +734,12 @@ namespace TrainManager.Trains
 
 						for (int k = i; k <= j; k++)
 						{
-							if (TrainManagerBase.CurrentOptions.Derailments && Math.Abs(v - NewSpeeds[k]) > 0.5 * CriticalCollisionSpeedDifference)
+							if (TrainManagerBase.CurrentOptions.Derailments && Math.Abs(v - newSpeeds[k]) > 0.5 * CriticalCollisionSpeedDifference)
 							{
-								Derail(k, TimeElapsed);
+								Derail(k, timeElapsed);
 							}
 
-							NewSpeeds[k] = v;
+							newSpeeds[k] = v;
 						}
 
 						i = j - 1;
@@ -749,12 +749,12 @@ namespace TrainManager.Trains
 			// update average data
 			CurrentSpeed = 0.0;
 			Specs.CurrentAverageAcceleration = 0.0;
-			double invtime = TimeElapsed != 0.0 ? 1.0 / TimeElapsed : 1.0;
+			double invtime = timeElapsed != 0.0 ? 1.0 / timeElapsed : 1.0;
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				Cars[i].Specs.Acceleration = (NewSpeeds[i] - Cars[i].CurrentSpeed) * invtime;
-				Cars[i].CurrentSpeed = NewSpeeds[i];
-				CurrentSpeed += NewSpeeds[i];
+				Cars[i].Specs.Acceleration = (newSpeeds[i] - Cars[i].CurrentSpeed) * invtime;
+				Cars[i].CurrentSpeed = newSpeeds[i];
+				CurrentSpeed += newSpeeds[i];
 				Specs.CurrentAverageAcceleration += Cars[i].Specs.Acceleration;
 			}
 
@@ -796,41 +796,41 @@ namespace TrainManager.Trains
 
 		
 		/// <summary>Call this method to derail a car</summary>
-		/// <param name="CarIndex">The car index to derail</param>
-		/// <param name="ElapsedTime">The elapsed time for this frame (Used for logging)</param>
-		public override void Derail(int CarIndex, double ElapsedTime)
+		/// <param name="carIndex">The car index to derail</param>
+		/// <param name="elapsedTime">The elapsed time for this frame (Used for logging)</param>
+		public override void Derail(int carIndex, double elapsedTime)
 		{
-			this.Cars[CarIndex].Derailed = true;
+			this.Cars[carIndex].Derailed = true;
 			this.Derailed = true;
-			if (Cars[CarIndex].Sounds.Loop != null)
+			if (Cars[carIndex].Sounds.Loop != null)
 			{
-				TrainManagerBase.currentHost.StopSound(Cars[CarIndex].Sounds.Loop.Source);
+				TrainManagerBase.CurrentHost.StopSound(Cars[carIndex].Sounds.Loop.Source);
 			}
-			Cars[CarIndex].Run.Stop();
+			Cars[carIndex].Run.Stop();
 
 			if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
 			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + CarIndex + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+				TrainManagerBase.CurrentHost.AddMessage(MessageType.Information, false, "Car " + carIndex + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + elapsedTime);
 			}
 		}
 
 		/// <inheritdoc/>
-		public override void Derail(AbstractCar Car, double ElapsedTime)
+		public override void Derail(AbstractCar car, double elapsedTime)
 		{
-			if (this.Cars.Contains(Car))
+			if (this.Cars.Contains(car))
 			{
-				var c = Car as CarBase;
+				var c = car as CarBase;
 				// ReSharper disable once PossibleNullReferenceException
 				if (c.Sounds.Loop != null)
 				{
-					TrainManagerBase.currentHost.StopSound(c.Sounds.Loop.Source);
+					TrainManagerBase.CurrentHost.StopSound(c.Sounds.Loop.Source);
 				}
 				c.Run.Stop();
 				c.Derailed = true;
 				this.Derailed = true;
 				if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
 				{
-					TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + c.Index + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					TrainManagerBase.CurrentHost.AddMessage(MessageType.Information, false, "Car " + c.Index + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + elapsedTime);
 				}
 			}
 		}
@@ -838,7 +838,7 @@ namespace TrainManager.Trains
 		/// <inheritdoc/>
 		public override void Reverse(bool flipInterior = false, bool flipDriver = false)
 		{
-			lock (updateLock)
+			lock (UpdateLock)
 			{
 				double trackPosition = Cars[0].TrackPosition;
 				Cars = Cars.Reverse().ToArray();
@@ -894,13 +894,13 @@ namespace TrainManager.Trains
 		/// <inheritdoc/>
 		public override void SectionChange()
 		{
-			if (CurrentSectionLimit == 0.0 && TrainManagerBase.currentHost.SimulationState != SimulationState.MinimalisticSimulation)
+			if (CurrentSectionLimit == 0.0 && TrainManagerBase.CurrentHost.SimulationState != SimulationState.MinimalisticSimulation)
 			{
-				TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"message","signal_stop"}), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
+				TrainManagerBase.CurrentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"message","signal_stop"}), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
 			}
 			else if (CurrentSpeed > CurrentSectionLimit)
 			{
-				TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"message","signal_overspeed"}), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
+				TrainManagerBase.CurrentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"message","signal_overspeed"}), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 			}
 		}
 
@@ -1034,14 +1034,14 @@ namespace TrainManager.Trains
 				{
 					for (int i = newTrackElement; i < currentTrackElement; i++)
 					{
-						for (int j = 0; j < TrainManagerBase.currentHost.Tracks[0].Elements[i].Events.Count; j++)
+						for (int j = 0; j < TrainManagerBase.CurrentHost.Tracks[0].Elements[i].Events.Count; j++)
 						{
-							TrainManagerBase.currentHost.Tracks[0].Elements[i].Events[j].Reset();
+							TrainManagerBase.CurrentHost.Tracks[0].Elements[i].Events[j].Reset();
 						}
 
 					}
 				}
-				TrainManagerBase.currentHost.ProcessJump(this, stationIndex, 0);
+				TrainManagerBase.CurrentHost.ProcessJump(this, stationIndex, 0);
 			}
 		}
 
@@ -1060,7 +1060,7 @@ namespace TrainManager.Trains
 				if (CameraCar < Cars.Length - 1)
 				{
 					CameraCar++;
-					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"notification","exterior"}) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+					TrainManagerBase.CurrentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"notification","exterior"}) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
 						MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 				}
 			}
@@ -1069,7 +1069,7 @@ namespace TrainManager.Trains
 				if (CameraCar > 0)
 				{
 					CameraCar--;
-					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"notification","exterior"}) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+					TrainManagerBase.CurrentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"notification","exterior"}) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 				}
 			}
 

@@ -19,8 +19,8 @@ namespace OpenBve
 	internal static partial class MainLoop
 	{
 		/// <summary>The ProcessControls function should be called once a frame, and updates the simulation accordingly</summary>
-		/// <param name="TimeElapsed">The time elapsed in ms since the last call to this function</param>
-		internal static void ProcessControls(double TimeElapsed)
+		/// <param name="timeElapsed">The time elapsed in ms since the last call to this function</param>
+		internal static void ProcessControls(double timeElapsed)
 		{
 			for (int i = 0; i < Program.Joysticks.AttachedJoysticks.Count; i++)
 			{
@@ -52,7 +52,7 @@ namespace OpenBve
 			}
 			if (Interface.CurrentOptions.KioskMode)
 			{
-				kioskModeTimer += TimeElapsed;
+				kioskModeTimer += timeElapsed;
 				if (kioskModeTimer > Interface.CurrentOptions.KioskModeTimer && TrainManager.PlayerTrain.AI == null)
 				{
 					/*
@@ -122,7 +122,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-					World.UpdateAbsoluteCamera(TimeElapsed);
+					World.UpdateAbsoluteCamera(timeElapsed);
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 					{
@@ -185,11 +185,11 @@ namespace OpenBve
 										break;
 									case Translations.Command.MiscMute:
 										Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
-										Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
+										Program.Sounds.Update(timeElapsed, Interface.CurrentOptions.SoundModel);
 										break;
 									case Translations.Command.SwitchMenu:
 										Program.Renderer.CurrentInterface = InterfaceType.SwitchChangeMap;
-										Game.switchChangeDialog.Show();
+										Game.SwitchChangeDialog.Show();
 										break;
 								}
 							}
@@ -210,7 +210,7 @@ namespace OpenBve
 						{
 							Interface.CurrentControls[i].DigitalState =
 									DigitalControlState.PressedAcknowledged;
-							Game.Menu.ProcessCommand(Interface.CurrentControls[i].Command, TimeElapsed);
+							Game.Menu.ProcessCommand(Interface.CurrentControls[i].Command, timeElapsed);
 						}
 					}
 					break;
@@ -223,11 +223,11 @@ namespace OpenBve
 						if (Interface.CurrentControls[i].InheritedType == Translations.CommandType.AnalogHalf |
 							Interface.CurrentControls[i].InheritedType == Translations.CommandType.AnalogFull)
 						{
-							ProcessAnalogControl(TimeElapsed, ref Interface.CurrentControls[i]);
+							ProcessAnalogControl(timeElapsed, ref Interface.CurrentControls[i]);
 						}
 						else if (Interface.CurrentControls[i].InheritedType == Translations.CommandType.Digital)
 						{
-							ProcessDigitalControl(TimeElapsed, ref Interface.CurrentControls[i]);
+							ProcessDigitalControl(timeElapsed, ref Interface.CurrentControls[i]);
 						}
 					}
 					break;

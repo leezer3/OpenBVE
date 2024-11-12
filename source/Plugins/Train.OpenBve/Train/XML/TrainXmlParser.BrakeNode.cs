@@ -24,7 +24,7 @@ namespace Train.OpenBve
 				switch (c.Name.ToLowerInvariant())
 				{
 					case "compressor":
-						Train.Cars[Car].CarBrake.brakeType = BrakeType.Main; //We have a compressor so must be a main brake type
+						Train.Cars[Car].CarBrake.BrakeType = BrakeType.Main; //We have a compressor so must be a main brake type
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
 							foreach (XmlNode cc in c.ChildNodes)
@@ -244,20 +244,20 @@ namespace Train.OpenBve
 				}
 			}
 			
-			Train.Cars[Car].CarBrake.mainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
-			Train.Cars[Car].CarBrake.airCompressor = new Compressor(compressorRate, Train.Cars[Car].CarBrake.mainReservoir, Train.Cars[Car]);
-			Train.Cars[Car].CarBrake.equalizingReservoir = new EqualizingReservoir(equalizingReservoirServiceRate, equalizingReservoirEmergencyRate, equalizingReservoirChargeRate);
-			Train.Cars[Car].CarBrake.equalizingReservoir.NormalPressure = 1.005 * brakePipeNormalPressure;
+			Train.Cars[Car].CarBrake.MainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
+			Train.Cars[Car].CarBrake.AirCompressor = new Compressor(compressorRate, Train.Cars[Car].CarBrake.MainReservoir, Train.Cars[Car]);
+			Train.Cars[Car].CarBrake.EqualizingReservoir = new EqualizingReservoir(equalizingReservoirServiceRate, equalizingReservoirEmergencyRate, equalizingReservoirChargeRate);
+			Train.Cars[Car].CarBrake.EqualizingReservoir.NormalPressure = 1.005 * brakePipeNormalPressure;
 				
-			Train.Cars[Car].CarBrake.brakePipe = new BrakePipe(brakePipeNormalPressure, brakePipeChargeRate, brakePipeServiceRate, brakePipeEmergencyRate, Train.Cars[0].CarBrake is ElectricCommandBrake);
+			Train.Cars[Car].CarBrake.BrakePipe = new BrakePipe(brakePipeNormalPressure, brakePipeChargeRate, brakePipeServiceRate, brakePipeEmergencyRate, Train.Cars[0].CarBrake is ElectricCommandBrake);
 			{
 				double r = 200000.0 / brakeCylinderEmergencyMaximumPressure - 1.0;
 				if (r < 0.1) r = 0.1;
 				if (r > 1.0) r = 1.0;
-				Train.Cars[Car].CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakePipeNormalPressure, auxiliaryReservoirChargeRate, 0.5, r);
+				Train.Cars[Car].CarBrake.AuxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakePipeNormalPressure, auxiliaryReservoirChargeRate, 0.5, r);
 			}
-			Train.Cars[Car].CarBrake.brakeCylinder = new BrakeCylinder(brakeCylinderServiceMaximumPressure, brakeCylinderEmergencyMaximumPressure, Train.Handles.Brake is AirBrakeHandle ? brakeCylinderEmergencyRate : 0.3 * brakeCylinderEmergencyRate, brakeCylinderEmergencyRate, brakeCylinderReleaseRate);
-			Train.Cars[Car].CarBrake.straightAirPipe = new StraightAirPipe(straightAirPipeServiceRate, straightAirPipeEmergencyRate, straightAirPipeReleaseRate);
+			Train.Cars[Car].CarBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderServiceMaximumPressure, brakeCylinderEmergencyMaximumPressure, Train.Handles.Brake is AirBrakeHandle ? brakeCylinderEmergencyRate : 0.3 * brakeCylinderEmergencyRate, brakeCylinderEmergencyRate, brakeCylinderReleaseRate);
+			Train.Cars[Car].CarBrake.StraightAirPipe = new StraightAirPipe(straightAirPipeServiceRate, straightAirPipeEmergencyRate, straightAirPipeReleaseRate);
 		}
 	}
 }
