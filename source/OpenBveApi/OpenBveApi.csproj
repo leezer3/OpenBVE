@@ -242,6 +242,7 @@
     <Compile Include="Train\TrainStartMode.cs" />
     <Compile Include="Train\TrainState.cs" />
     <Compile Include="Train\TrainStopState.cs" />
+    <Compile Include="Train\TrainType.cs" />
     <Compile Include="Train\TravelDirection.cs" />
     <Compile Include="World\Orientation3.cs" />
     <Compile Include="Packages\Packages.cs" />

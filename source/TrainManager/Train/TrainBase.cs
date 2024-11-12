@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using LibRender2;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -96,9 +97,10 @@ namespace TrainManager.Trains
 		/// <summary>The direction of travel on the current track</summary>
 		public TrackDirection CurrentDirection => TrainManagerBase.CurrentRoute.Tracks[Cars[DriverCar].FrontAxle.Follower.TrackIndex].Direction;
 
-		public TrainBase(TrainState state)
+		public TrainBase(TrainState state, TrainType type)
 		{
 			State = state;
+			Type = type;
 			Destination = TrainManagerBase.CurrentOptions.InitialDestination;
 			Station = -1;
 			RouteLimits = new[] { double.PositiveInfinity };
@@ -206,7 +208,7 @@ namespace TrainManager.Trains
 		/// <summary>Disposes of the train</summary>
 		public override void Dispose()
 		{
-			State = TrainState.Disposed;
+			State = TrainState.DisposePending;
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].ChangeCarSection(CarSectionType.NotVisible);
@@ -451,7 +453,7 @@ namespace TrainManager.Trains
 			{
 				// move cars
 				Cars[i].Move(Cars[i].CurrentSpeed * TimeElapsed);
-				if (State == TrainState.Disposed)
+				if (State >= TrainState.DisposePending)
 				{
 					return;
 				}
@@ -1073,6 +1075,83 @@ namespace TrainManager.Trains
 				}
 			}
 
+		}
+
+		public override void Couple(AbstractTrain Train, bool Front)
+		{
+			TrainBase trainBase = Train as TrainBase;
+			if (trainBase == null)
+			{
+				throw new Exception("Attempted to couple to something that isn't a train");
+			}
+
+			int oldCars = Cars.Length;
+			/*
+			 * NOTE: Need to set the speeds to zero for *both* trains on coupling
+			 *       The 'old' train will be disposed of immediately, but if not
+			 *       set to zero, we can get glitched acceleration and the train enters orbit....
+			 */
+
+			if (Front)
+			{
+				CarBase[] newCars = new CarBase[Cars.Length + trainBase.Cars.Length];
+				Array.Copy(Cars, 0, newCars, trainBase.Cars.Length, Cars.Length);
+				Array.Copy(trainBase.Cars, 0, newCars, 0, trainBase.Cars.Length);
+				Cars = newCars;
+				// camera / driver car is now down the train
+				DriverCar += trainBase.Cars.Length;
+				CameraCar += trainBase.Cars.Length;
+			}
+			else
+			{
+				Array.Resize(ref Cars, Cars.Length + trainBase.Cars.Length);
+				// add new cars to end
+				for (int i = 0; i < trainBase.Cars.Length; i++)
+				{
+					Cars[i + oldCars] = trainBase.Cars[i];
+					Cars[i + oldCars].Index = i + oldCars;
+					trainBase.Cars[i].CurrentSpeed = 0;
+				}
+			}
+
+			// set properties
+			for (int i = 0; i < Cars.Length; i++)
+			{
+				Cars[i].baseTrain = this;
+				Cars[i].CurrentSpeed = 0;
+				if ((int)TrainManagerBase.Renderer.Camera.CurrentMode > 1)
+				{
+					Cars[i].ChangeCarSection(CarSectionType.Exterior);
+				}
+				Cars[i].FrontAxle.Follower.Train = this;
+				Cars[i].RearAxle.Follower.Train = this;
+				Cars[i].FrontBogie.FrontAxle.Follower.Train = this;
+				Cars[i].FrontBogie.RearAxle.Follower.Train = this;
+				Cars[i].RearBogie.FrontAxle.Follower.Train = this;
+				Cars[i].RearBogie.RearAxle.Follower.Train = this;
+				if (i < Cars.Length - 1)
+				{
+					Cars[i].Coupler.connectedCar = Cars[i + 1];
+				}
+			}
+
+			Cars[0].BeaconReceiver.Train = this;
+
+			/*
+			 * Reset properties for 'old' train to empty cars
+			 * 
+			 * Due to multi-threading, we can't guarantee
+			 * that something isn't trying to access the cars
+			 * array until the *next* complete frame.
+			 */
+			for (int i = 0; i < trainBase.Cars.Length; i++)
+			{
+				trainBase.Cars[i] = new CarBase(trainBase, i);
+			}
+
+
+			string message = Translations.GetInterfaceString(HostApplication.OpenBve, Front ? new[] { "notification", "couple_front" } : new[] { "notification", "couple_rear" }).Replace("[number]", trainBase.Cars.Length.ToString());
+			TrainManagerBase.currentHost.AddMessage(message, MessageDependency.None, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 		}
 	}
 }

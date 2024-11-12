@@ -34,7 +34,7 @@ namespace OpenBve
 				Program.CurrentRoute.Tracks[key] = new Track();
 			}
 			// train manager
-			Program.TrainManager.Trains = new TrainBase[] { };
+			Program.TrainManager.Trains = new List<TrainBase>();
 			// game
 			Interface.LogMessages.Clear();
 			Program.CurrentHost.ClearErrors();

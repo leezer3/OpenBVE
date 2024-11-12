@@ -6,6 +6,14 @@ namespace TrainManager.BrakeSystems
 {
 	public class AutomaticAirBrake : CarBrake
 	{
+		public AutomaticAirBrake(EletropneumaticBrakeType type, CarBase car) : base(car)
+		{
+			electropneumaticBrakeType = type;
+			brakeControlSpeed = 0;
+			motorDeceleration = 0;
+			decelerationCurves = new AccelerationCurve[] { };
+		}
+
 		public AutomaticAirBrake(EletropneumaticBrakeType type, CarBase car, double BrakeControlSpeed, double MotorDeceleration, AccelerationCurve[] DecelerationCurves) : base(car)
 		{
 			electropneumaticBrakeType = type;

@@ -1594,6 +1594,12 @@
 					<trans-unit id="fixed_uncouple">
 						<source>This coupler is fixed, and cannot uncouple.</source>
 					</trans-unit>
+					<trans-unit id="couple_front">
+						<source>Coupled [number] of cars to the front of the train.</source>
+					</trans-unit>
+					<trans-unit id="couple_rear">
+						<source>Coupled [number] of cars to the rear of the train.</source>
+					</trans-unit>
 				</group>
 				<group id="score">
 					<trans-unit id="overspeed">

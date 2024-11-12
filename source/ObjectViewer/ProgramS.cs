@@ -320,7 +320,7 @@ namespace ObjectViewer {
 						    if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
 						    {
 							    Control[] dummyControls = new Control[0];
-								TrainManager.Trains = new[] { new TrainBase(TrainState.Available) };
+								TrainManager.Trains = new List<TrainBase> { new TrainBase(TrainState.Available, TrainType.LocalPlayerTrain) };
 								AbstractTrain playerTrain = TrainManager.Trains[0];
 								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrainFolder, ref playerTrain, ref dummyControls);
 								TrainManager.PlayerTrain = TrainManager.Trains[0];
