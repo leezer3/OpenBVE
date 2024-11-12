@@ -403,7 +403,7 @@ namespace OpenBve
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
 			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 			Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
-			if (string.IsNullOrEmpty(MainLoop.currentResult.RouteFile))
+			if (string.IsNullOrEmpty(MainLoop.CurrentResult.RouteFile))
 			{
 				Game.Menu.PushMenu(MenuType.GameStart);
 				Loading.Complete = true;
@@ -412,17 +412,17 @@ namespace OpenBve
 			}
 			else
 			{
-				Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
+				Loading.LoadAsynchronously(MainLoop.CurrentResult.RouteFile, MainLoop.CurrentResult.RouteEncoding, MainLoop.CurrentResult.TrainFolder, MainLoop.CurrentResult.TrainEncoding);
 				LoadingScreenLoop();
 			}
 			//Add event handler hooks for keyboard and mouse buttons
 			//Do this after the renderer has init and the loop has started to prevent timing issues
-			KeyDown	+= MainLoop.keyDownEvent;
-			KeyUp	+= MainLoop.keyUpEvent;
-			MouseDown	+= MainLoop.mouseDownEvent;
-			MouseUp += MainLoop.mouseUpEvent;
-			MouseMove	+= MainLoop.mouseMoveEvent;
-			MouseWheel  += MainLoop.mouseWheelEvent;
+			KeyDown	+= MainLoop.KeyDownEvent;
+			KeyUp	+= MainLoop.KeyUpEvent;
+			MouseDown	+= MainLoop.MouseDownEvent;
+			MouseUp += MainLoop.MouseUpEvent;
+			MouseMove	+= MainLoop.MouseMoveEvent;
+			MouseWheel  += MainLoop.MouseWheelEvent;
 			FileDrop += GameMenu.Instance.DragFile;
 
 			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
@@ -575,8 +575,8 @@ namespace OpenBve
 				}
 			}
 			Program.Renderer.Lighting.Initialize();
-			Game.LogRouteName = Path.GetFileName(MainLoop.currentResult.RouteFile);
-			Game.LogTrainName = Path.GetFileName(MainLoop.currentResult.TrainFolder);
+			Game.LogRouteName = Path.GetFileName(MainLoop.CurrentResult.RouteFile);
+			Game.LogTrainName = Path.GetFileName(MainLoop.CurrentResult.TrainFolder);
 			Game.LogDateTime = DateTime.Now;
 
 			if (Interface.CurrentOptions.LoadInAdvance)

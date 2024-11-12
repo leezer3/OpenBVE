@@ -87,10 +87,10 @@ namespace OpenBve
 			/// <summary>Whether a screen reader is available</summary>
 			/// <remarks>Not saved, detected on game init</remarks>
 			internal bool ScreenReaderAvailable;
-			
+			/// <summary>The mode the timetable is displayed in</summary>
 			internal TimeTableMode TimeTableStyle;
-
-			internal CompressionType packageCompressionType;
+			/// <summary>The type of compression used when creating packages</summary>
+			internal CompressionType PackageCompressionType;
 			/*
 			 * Only relevant in developer mode, not saved
 			 */
@@ -158,7 +158,7 @@ namespace OpenBve
 				TimeAccelerationFactor = 5;
 				AllowAxisEB = true;
 				TimeTableStyle = TimeTableMode.Default;
-				packageCompressionType = CompressionType.Zip;
+				PackageCompressionType = CompressionType.Zip;
 				RailDriverMPH = true;
 				EnableBveTsHacks = true;
 				OldTransparencyMode = true;
@@ -452,7 +452,7 @@ namespace OpenBve
 				Builder.AppendLine();
 				Builder.AppendLine("[packages]");
 				Builder.Append("compression = ");
-				switch (packageCompressionType)
+				switch (PackageCompressionType)
 				{
 					case CompressionType.Zip:
 						Builder.AppendLine("zip");
@@ -659,7 +659,7 @@ namespace OpenBve
 							block.GetValue(OptionsKey.Train, out CurrentOptions.TrainFolder);
 							break;
 						case OptionsSection.Packages:
-							block.GetEnumValue(OptionsKey.Compression, out CurrentOptions.packageCompressionType);
+							block.GetEnumValue(OptionsKey.Compression, out CurrentOptions.PackageCompressionType);
 							break;
 						case OptionsSection.RecentlyUsedRoutes:
 							Array.Resize(ref CurrentOptions.RecentlyUsedRoutes, block.RemainingDataValues);

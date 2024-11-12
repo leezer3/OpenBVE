@@ -60,7 +60,7 @@ namespace OpenBve.Graphics.Renderers
 
 			if (renderer.AvailableNewRenderer && state.Prototype.Mesh.VAO == null)
 			{
-				VAOExtensions.CreateVAO(ref state.Prototype.Mesh, state.Prototype.Dynamic, renderer.pickingShader.VertexLayout, renderer);
+				VAOExtensions.CreateVAO(ref state.Prototype.Mesh, state.Prototype.Dynamic, renderer.PickingShader.VertexLayout, renderer);
 			}
 		}
 
@@ -116,21 +116,21 @@ namespace OpenBve.Graphics.Renderers
 				fbo.Bind();
 				GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-				renderer.pickingShader.Activate();
-				renderer.pickingShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
+				renderer.PickingShader.Activate();
+				renderer.PickingShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 
 				for (int i = 0; i < touchableObject.Count; i++)
 				{
-					renderer.pickingShader.SetObjectIndex(i + 1);
+					renderer.PickingShader.SetObjectIndex(i + 1);
 
 					foreach (MeshFace face in touchableObject[i].Prototype.Mesh.Faces)
 					{
-						renderer.RenderFace(renderer.pickingShader, touchableObject[i], face);
+						renderer.RenderFace(renderer.PickingShader, touchableObject[i], face);
 					}
 				}
 
 				//Must deactivate and unbind here
-				renderer.pickingShader.Deactivate();
+				renderer.PickingShader.Deactivate();
 				fbo.UnBind();
 			}
 

@@ -29,7 +29,7 @@ namespace OpenBve {
 		[DllImport("libc")]
 		private static extern uint geteuid();
 
-		[System.Runtime.InteropServices.DllImport("user32.dll")]
+		[DllImport("user32.dll")]
 		private static extern bool SetProcessDPIAware();
 #pragma warning restore IDE1006
 

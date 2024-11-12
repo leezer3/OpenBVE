@@ -18,9 +18,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.World;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using MouseCursor = OpenTK.MouseCursor;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve.Graphics
@@ -51,7 +49,7 @@ namespace OpenBve.Graphics
 		internal bool OptionBrakeSystems = false;
 		internal bool DebugTouchMode = false;
 
-		internal Shader pickingShader;
+		internal Shader PickingShader;
 		private Events events;
 		private Overlays overlays;
 		internal Touch Touch;
@@ -63,13 +61,13 @@ namespace OpenBve.Graphics
 			{
 				try
 				{
-					if (pickingShader == null)
+					if (PickingShader == null)
 					{
-						pickingShader = new Shader(this, "default", "picking", true);
+						PickingShader = new Shader(this, "default", "picking", true);
 					}
 
-					pickingShader.Activate();
-					pickingShader.Deactivate();
+					PickingShader.Activate();
+					PickingShader.Deactivate();
 				}
 				catch
 				{
@@ -89,22 +87,22 @@ namespace OpenBve.Graphics
 			Program.FileSystem.AppendToLogFile("Renderer initialised successfully.");
 		}
 		
-		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		internal int CreateStaticObject(UnifiedObject prototype, Vector3 position, Transformation worldTransformation, Transformation localTransformation, ObjectDisposalMode accurateObjectDisposal, double accurateObjectDisposalZOffset, double startingDistance, double endingDistance, double blockLength, double trackPosition, double brightness)
 		{
-			StaticObject obj = Prototype as StaticObject;
+			StaticObject obj = prototype as StaticObject;
 			if (obj == null)
 			{
 				Interface.AddMessage(MessageType.Error, false, "Attempted to use an animated object where only static objects are allowed.");
 				return -1;
 			}
-			return base.CreateStaticObject(obj, Position, WorldTransformation, LocalTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return base.CreateStaticObject(obj, position, worldTransformation, localTransformation, accurateObjectDisposal, accurateObjectDisposalZOffset, startingDistance, endingDistance, blockLength, trackPosition, brightness);
 		}
 
-		public override void UpdateViewport(int Width, int Height)
+		public override void UpdateViewport(int width, int height)
 		{
 			_programLogo = null;
-			Screen.Width = Width;
-			Screen.Height = Height;
+			Screen.Width = width;
+			Screen.Height = height;
 			GL.Viewport(0, 0, Screen.Width, Screen.Height);
 
 			Screen.AspectRatio = Screen.Width / (double)Screen.Height;
@@ -125,7 +123,7 @@ namespace OpenBve.Graphics
 		}
 		
 		// render scene
-		internal void RenderScene(double TimeElapsed, double RealTimeElapsed)
+		internal void RenderScene(double timeElapsed, double realTimeElapsed)
 		{
 			ReleaseResources();
 			// initialize
@@ -200,7 +198,7 @@ namespace OpenBve.Graphics
 
 			// render background
 			GL.Disable(EnableCap.DepthTest);
-			Program.CurrentRoute.UpdateBackground(TimeElapsed, Program.Renderer.CurrentInterface != InterfaceType.Normal);
+			Program.CurrentRoute.UpdateBackground(timeElapsed, Program.Renderer.CurrentInterface != InterfaceType.Normal);
 
 			events.Render(Camera.AbsolutePosition);
 
@@ -482,11 +480,11 @@ namespace OpenBve.Graphics
 			UnsetAlphaFunc();
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			GL.Disable(EnableCap.DepthTest);
-			overlays.Render(RealTimeElapsed);
+			overlays.Render(realTimeElapsed);
 			OptionLighting = true;
 		}
 
-		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
+		public NewRenderer(HostInterface currentHost, BaseOptions currentOptions, FileSystem fileSystem) : base(currentHost, currentOptions, fileSystem)
 		{
 		}
 	}

@@ -11,12 +11,12 @@ namespace OpenBve
 {
 	internal static partial class MainLoop
 	{
-		private static void ProcessAnalogControl(double TimeElapsed, ref Control Control)
+		private static void ProcessAnalogControl(double timeElapsed, ref Control control)
 		{
 			// analog control
-			if (Control.AnalogState != 0.0)
+			if (control.AnalogState != 0.0)
 			{
-				switch (Control.Command)
+				switch (control.Command)
 				{
 					case Translations.Command.PowerHalfAxis:
 					case Translations.Command.PowerFullAxis:
@@ -29,8 +29,8 @@ namespace OpenBve
 						// power half/full-axis
 						if (TrainManager.PlayerTrain.Handles.HandleType != HandleType.SingleHandle)
 						{
-							double a = Control.AnalogState;
-							if (Control.Command == Translations.Command.PowerFullAxis)
+							double a = control.AnalogState;
+							if (control.Command == Translations.Command.PowerFullAxis)
 							{
 								a = 0.5 * (a + 1.0);
 							}
@@ -54,8 +54,8 @@ namespace OpenBve
 						{
 							if (TrainManager.PlayerTrain.Handles.Brake is AirBrakeHandle)
 							{
-								double a = Control.AnalogState;
-								if (Control.Command ==
+								double a = control.AnalogState;
+								if (control.Command ==
 								    Translations.Command.BrakeFullAxis)
 								{
 									a = 0.5 * (a + 1.0);
@@ -92,8 +92,8 @@ namespace OpenBve
 							{
 								if (TrainManager.PlayerTrain.Handles.HasHoldBrake)
 								{
-									double a = Control.AnalogState;
-									if (Control.Command ==
+									double a = control.AnalogState;
+									if (control.Command ==
 									    Translations.Command.BrakeFullAxis)
 									{
 										a = 0.5 * (a + 1.0);
@@ -117,8 +117,8 @@ namespace OpenBve
 								}
 								else
 								{
-									double a = Control.AnalogState;
-									if (Control.Command ==
+									double a = control.AnalogState;
+									if (control.Command ==
 									    Translations.Command.BrakeFullAxis)
 									{
 										a = 0.5 * (a + 1.0);
@@ -155,8 +155,8 @@ namespace OpenBve
 						{
 							if (TrainManager.PlayerTrain.Handles.HasHoldBrake)
 							{
-								int p = (int)Math.Round(Control.AnalogState * TrainManager.PlayerTrain.Handles.Power.MaximumNotch);
-								int b = (int)Math.Round(-Control.AnalogState * (TrainManager.PlayerTrain.Handles.Brake.MaximumNotch + 2.0));
+								int p = (int)Math.Round(control.AnalogState * TrainManager.PlayerTrain.Handles.Power.MaximumNotch);
+								int b = (int)Math.Round(-control.AnalogState * (TrainManager.PlayerTrain.Handles.Brake.MaximumNotch + 2.0));
 								if (p < 0) p = 0;
 								if (b < 0) b = 0;
 								bool q = b == 1;
@@ -179,8 +179,8 @@ namespace OpenBve
 							}
 							else
 							{
-								int p = (int)Math.Round(Control.AnalogState * TrainManager.PlayerTrain.Handles.Power.MaximumNotch);
-								int b = (int)Math.Round(-Control.AnalogState * (TrainManager.PlayerTrain.Handles.Brake.MaximumNotch + 1.0));
+								int p = (int)Math.Round(control.AnalogState * TrainManager.PlayerTrain.Handles.Power.MaximumNotch);
+								int b = (int)Math.Round(-control.AnalogState * (TrainManager.PlayerTrain.Handles.Brake.MaximumNotch + 1.0));
 								if (p < 0) p = 0;
 								if (b < 0) b = 0;
 								if (b <= TrainManager.PlayerTrain.Handles.Brake.MaximumNotch)
@@ -208,7 +208,7 @@ namespace OpenBve
 						}
 
 						// reverser full axis
-						TrainManager.PlayerTrain.Handles.Reverser.ApplyState((ReverserPosition)(int)Math.Round(Control.AnalogState));
+						TrainManager.PlayerTrain.Handles.Reverser.ApplyState((ReverserPosition)(int)Math.Round(control.AnalogState));
 						break;
 					case Translations.Command.CameraMoveForward:
 						// camera move forward
@@ -220,7 +220,7 @@ namespace OpenBve
 							           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
 								? CameraProperties.InteriorTopSpeed
 								: CameraProperties.ExteriorTopSpeed;
-							Program.Renderer.Camera.AlignmentDirection.Position.Z = s * Control.AnalogState;
+							Program.Renderer.Camera.AlignmentDirection.Position.Z = s * control.AnalogState;
 						}
 						else
 						{
@@ -230,7 +230,7 @@ namespace OpenBve
 								break;
 							}
 
-							Program.Renderer.Camera.AlignmentDirection.TrackPosition = CameraProperties.ExteriorTopSpeed * Control.AnalogState;
+							Program.Renderer.Camera.AlignmentDirection.TrackPosition = CameraProperties.ExteriorTopSpeed * control.AnalogState;
 						}
 
 						break;
@@ -244,12 +244,12 @@ namespace OpenBve
 							           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
 								? CameraProperties.InteriorTopSpeed
 								: CameraProperties.ExteriorTopSpeed;
-							Program.Renderer.Camera.AlignmentDirection.Position.Z = -s * Control.AnalogState;
+							Program.Renderer.Camera.AlignmentDirection.Position.Z = -s * control.AnalogState;
 						}
 						else
 						{
 							Program.Renderer.Camera.AlignmentDirection.TrackPosition =
-								-CameraProperties.ExteriorTopSpeed * Control.AnalogState;
+								-CameraProperties.ExteriorTopSpeed * control.AnalogState;
 						}
 
 						break;
@@ -260,7 +260,7 @@ namespace OpenBve
 						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
 							? CameraProperties.InteriorTopSpeed
 							: CameraProperties.ExteriorTopSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Position.X = -s * Control.AnalogState;
+						Program.Renderer.Camera.AlignmentDirection.Position.X = -s * control.AnalogState;
 					}
 						break;
 					case Translations.Command.CameraMoveRight:
@@ -270,7 +270,7 @@ namespace OpenBve
 						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
 							? CameraProperties.InteriorTopSpeed
 							: CameraProperties.ExteriorTopSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Position.X = s * Control.AnalogState;
+						Program.Renderer.Camera.AlignmentDirection.Position.X = s * control.AnalogState;
 					}
 						break;
 					case Translations.Command.CameraMoveUp:
@@ -280,7 +280,7 @@ namespace OpenBve
 						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
 							? CameraProperties.InteriorTopSpeed
 							: CameraProperties.ExteriorTopSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Position.Y = s * Control.AnalogState;
+						Program.Renderer.Camera.AlignmentDirection.Position.Y = s * control.AnalogState;
 					}
 						break;
 					case Translations.Command.CameraMoveDown:
@@ -290,7 +290,7 @@ namespace OpenBve
 						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
 							? CameraProperties.InteriorTopSpeed
 							: CameraProperties.ExteriorTopSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Position.Y = -s * Control.AnalogState;
+						Program.Renderer.Camera.AlignmentDirection.Position.Y = -s * control.AnalogState;
 					}
 						break;
 					case Translations.Command.CameraRotateLeft:
@@ -300,7 +300,7 @@ namespace OpenBve
 						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
 							? CameraProperties.InteriorTopAngularSpeed
 							: CameraProperties.ExteriorTopAngularSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Yaw = -s * Control.AnalogState;
+						Program.Renderer.Camera.AlignmentDirection.Yaw = -s * control.AnalogState;
 					}
 						break;
 					case Translations.Command.CameraRotateRight:
@@ -310,7 +310,7 @@ namespace OpenBve
 						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
 							? CameraProperties.InteriorTopAngularSpeed
 							: CameraProperties.ExteriorTopAngularSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Yaw = s * Control.AnalogState;
+						Program.Renderer.Camera.AlignmentDirection.Yaw = s * control.AnalogState;
 					}
 						break;
 					case Translations.Command.CameraRotateUp:
@@ -320,7 +320,7 @@ namespace OpenBve
 						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
 							? CameraProperties.InteriorTopAngularSpeed
 							: CameraProperties.ExteriorTopAngularSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Pitch = s * Control.AnalogState;
+						Program.Renderer.Camera.AlignmentDirection.Pitch = s * control.AnalogState;
 					}
 						break;
 					case Translations.Command.CameraRotateDown:
@@ -330,7 +330,7 @@ namespace OpenBve
 						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
 							? CameraProperties.InteriorTopAngularSpeed
 							: CameraProperties.ExteriorTopAngularSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Pitch = -s * Control.AnalogState;
+						Program.Renderer.Camera.AlignmentDirection.Pitch = -s * control.AnalogState;
 					}
 						break;
 					case Translations.Command.CameraRotateCCW:
@@ -343,7 +343,7 @@ namespace OpenBve
 							           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
 								? CameraProperties.InteriorTopAngularSpeed
 								: CameraProperties.ExteriorTopAngularSpeed;
-							Program.Renderer.Camera.AlignmentDirection.Roll = -s * Control.AnalogState;
+							Program.Renderer.Camera.AlignmentDirection.Roll = -s * control.AnalogState;
 						}
 
 						break;
@@ -357,40 +357,40 @@ namespace OpenBve
 							           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
 								? CameraProperties.InteriorTopAngularSpeed
 								: CameraProperties.ExteriorTopAngularSpeed;
-							Program.Renderer.Camera.AlignmentDirection.Roll = s * Control.AnalogState;
+							Program.Renderer.Camera.AlignmentDirection.Roll = s * control.AnalogState;
 						}
 
 						break;
 					case Translations.Command.CameraZoomIn:
 						// camera zoom in
-						if (TimeElapsed > 0.0)
+						if (timeElapsed > 0.0)
 						{
-							Program.Renderer.Camera.AlignmentDirection.Zoom = -CameraProperties.ZoomTopSpeed * Control.AnalogState;
+							Program.Renderer.Camera.AlignmentDirection.Zoom = -CameraProperties.ZoomTopSpeed * control.AnalogState;
 						}
 
 						break;
 					case Translations.Command.CameraZoomOut:
 						// camera zoom out
-						if (TimeElapsed > 0.0)
+						if (timeElapsed > 0.0)
 						{
-							Program.Renderer.Camera.AlignmentDirection.Zoom = CameraProperties.ZoomTopSpeed * Control.AnalogState;
+							Program.Renderer.Camera.AlignmentDirection.Zoom = CameraProperties.ZoomTopSpeed * control.AnalogState;
 						}
 
 						break;
 					case Translations.Command.TimetableUp:
 						// timetable up
-						if (TimeElapsed > 0.0)
+						if (timeElapsed > 0.0)
 						{
 							const double scrollSpeed = 250.0;
 							if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Default)
 							{
-								Timetable.DefaultTimetablePosition += scrollSpeed * Control.AnalogState * TimeElapsed;
+								Timetable.DefaultTimetablePosition += scrollSpeed * control.AnalogState * timeElapsed;
 								if (Timetable.DefaultTimetablePosition > 0.0)
 									Timetable.DefaultTimetablePosition = 0.0;
 							}
 							else if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Custom)
 							{
-								Timetable.CustomTimetablePosition += scrollSpeed * Control.AnalogState * TimeElapsed;
+								Timetable.CustomTimetablePosition += scrollSpeed * control.AnalogState * timeElapsed;
 								if (Timetable.CustomTimetablePosition > 0.0)
 									Timetable.CustomTimetablePosition = 0.0;
 							}
@@ -399,12 +399,12 @@ namespace OpenBve
 						break;
 					case Translations.Command.TimetableDown:
 						// timetable down
-						if (TimeElapsed > 0.0)
+						if (timeElapsed > 0.0)
 						{
 							const double scrollSpeed = 250.0;
 							if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Default)
 							{
-								Timetable.DefaultTimetablePosition -= scrollSpeed * Control.AnalogState * TimeElapsed;
+								Timetable.DefaultTimetablePosition -= scrollSpeed * control.AnalogState * timeElapsed;
 								double max;
 								if (Timetable.DefaultTimetableTexture != null)
 								{
@@ -423,7 +423,7 @@ namespace OpenBve
 							}
 							else if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Custom)
 							{
-								Timetable.CustomTimetablePosition -= scrollSpeed * Control.AnalogState * TimeElapsed;
+								Timetable.CustomTimetablePosition -= scrollSpeed * control.AnalogState * timeElapsed;
 								Texture texture = Timetable.CurrentCustomTimetableDaytimeTexture ?? Timetable.CurrentCustomTimetableNighttimeTexture;
 								double max;
 								if (texture != null)

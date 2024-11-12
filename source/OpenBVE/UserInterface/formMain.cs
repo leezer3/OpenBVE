@@ -486,7 +486,7 @@ namespace OpenBve {
 			updownSoundNumber.Value = Interface.CurrentOptions.SoundNumber;
 			checkboxWarningMessages.Checked = Interface.CurrentOptions.ShowWarningMessages;
 			checkboxErrorMessages.Checked = Interface.CurrentOptions.ShowErrorMessages;
-			comboBoxCompressionFormat.SelectedIndex = (int)Interface.CurrentOptions.packageCompressionType;
+			comboBoxCompressionFormat.SelectedIndex = (int)Interface.CurrentOptions.PackageCompressionType;
 			comboBoxRailDriverUnits.SelectedIndex = Interface.CurrentOptions.RailDriverMPH ? 0 : 1;
 			checkBoxEnableKiosk.Checked = Interface.CurrentOptions.KioskMode;
 			numericUpDownKioskTimeout.Value = (decimal)Interface.CurrentOptions.KioskModeTimer;
@@ -1992,13 +1992,13 @@ namespace OpenBve {
 			switch (comboBoxCompressionFormat.SelectedIndex)
 			{
 				case 0:
-					Interface.CurrentOptions.packageCompressionType = CompressionType.Zip;
+					Interface.CurrentOptions.PackageCompressionType = CompressionType.Zip;
 					break;
 				case 1:
-					Interface.CurrentOptions.packageCompressionType = CompressionType.TarGZ;
+					Interface.CurrentOptions.PackageCompressionType = CompressionType.TarGZ;
 					break;
 				case 2:
-					Interface.CurrentOptions.packageCompressionType = CompressionType.BZ2;
+					Interface.CurrentOptions.PackageCompressionType = CompressionType.BZ2;
 					break;
 			}
 		}
