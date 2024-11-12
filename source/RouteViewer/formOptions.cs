@@ -8,9 +8,9 @@ using OpenTK.Graphics;
 
 namespace RouteViewer
 {
-    public partial class formOptions : Form
+    public partial class FormOptions : Form
     {
-        public formOptions()
+        public FormOptions()
         {
             InitializeComponent();
             InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
@@ -29,9 +29,9 @@ namespace RouteViewer
 
         internal static DialogResult ShowOptions()
         {
-            formOptions Dialog = new formOptions();
-            DialogResult Result = Dialog.ShowDialog();
-            return Result;
+            FormOptions optionsDialog = new FormOptions();
+            DialogResult dialogResult = optionsDialog.ShowDialog();
+            return dialogResult;
         }
 
         private void formOptions_Shown(object sender, EventArgs e)
@@ -41,14 +41,13 @@ namespace RouteViewer
 
 	    readonly int previousAntialasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
 	    readonly int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
-	    readonly InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
 	    readonly int previousViewingDistance = Interface.CurrentOptions.ViewingDistance;
 	    private bool GraphicsModeChanged = false;
 
         private void button1_Click(object sender, EventArgs e)
         {
 			//Interpolation mode
-			InterpolationMode prevInterpolationMode = Interface.CurrentOptions.Interpolation;
+			InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
 			switch (InterpolationMode.SelectedIndex)
             {
                 case 0:

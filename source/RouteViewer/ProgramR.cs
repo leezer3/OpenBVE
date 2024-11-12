@@ -564,7 +564,7 @@ namespace RouteViewer
 						//Don't allow the user to update the settings during loading, bad idea..
 						break;
 					}
-					if (formOptions.ShowOptions() == DialogResult.OK)
+					if (FormOptions.ShowOptions() == DialogResult.OK)
 					{
 						UpdateGraphicsSettings();
 					}

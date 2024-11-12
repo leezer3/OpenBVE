@@ -560,33 +560,35 @@ namespace Train.OpenBve
 						}
 						break;
 					case Panel2Sections.Timetable:
-						Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
-						Block.GetValue(Panel2Key.Width, out double Width);
-						Block.GetValue(Panel2Key.Height, out double Height);
-						if (Width <= 0 || Height <= 0)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "Width and Height are required to be positive in " + Block.Key + " in " + FileName);
-							break;
-						}
+							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
+							Block.GetValue(Panel2Key.Width, out double Width);
+							Block.GetValue(Panel2Key.Height, out double Height);
+							if (Width <= 0 || Height <= 0)
+							{
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Width and Height are required to be positive in " + Block.Key + " in " + FileName);
+								break;
+							}
 
-						if (Block.GetColor24(Panel2Key.TransparentColor, out _))
-						{
-							// The original code read this, but never used it
-							// Deliberately deprecate.
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "TransparentColor is not supported in " + Block.Key + " in " + FileName);
-						}
+							if (Block.GetColor24(Panel2Key.TransparentColor, out _))
+							{
+								// The original code read this, but never used it
+								// Deliberately deprecate.
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "TransparentColor is not supported in " + Block.Key + " in " + FileName);
+							}
 
-						int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, Width, Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color32.White);
-						try
-						{
-							Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, "panel2timetable", false);
-						}
-						catch
-						{
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
-						}
+							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, Width, Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color32.White);
+							try
+							{
+								Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, "panel2timetable", false);
+							}
+							catch
+							{
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+							}
 
-						Plugin.currentHost.AddObjectForCustomTimeTable(Car.CarSections[0].Groups[GroupIndex].Elements[j]);
+							Plugin.currentHost.AddObjectForCustomTimeTable(Car.CarSections[0].Groups[GroupIndex].Elements[j]);
+						}
 						break;
 					case Panel2Sections.Windscreen:
 						Vector2 topLeft = new Vector2(PanelLeft, PanelTop);
@@ -768,6 +770,8 @@ namespace Train.OpenBve
 		/// <returns>The parsed animation function stack</returns>
 		internal string GetStackLanguageFromSubject(AbstractTrain Train, Panel2Subject Subject, int SubjectIndex, string Suffix)
 		{
+			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+
 			// transform subject
 			string Code;
 			switch (Subject)
