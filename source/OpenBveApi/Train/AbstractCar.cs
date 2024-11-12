@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 
 namespace OpenBveApi.Trains
 {

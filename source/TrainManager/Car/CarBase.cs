@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
 using LibRender2.Camera;
@@ -14,6 +15,7 @@ using OpenBveApi.World;
 using TrainManager.Brake;
 using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
+using TrainManager.Car.Systems.OpenBveApi.Trains;
 using TrainManager.Cargo;
 using TrainManager.Handles;
 using TrainManager.Power;
@@ -85,6 +87,9 @@ namespace TrainManager.Car
 		public bool EnableLoadingSway = true;
 		/// <summary>Whether this car has an interior view</summary>
 		public bool HasInteriorView = false;
+		/// <summary>The pantograph</summary>
+		public Pantograph Pantograph;
+
 		/// <summary>Contains the generic sounds attached to the car</summary>
 		public CarSounds Sounds;
 		/// <summary>The cargo carried by the car</summary>
@@ -166,6 +171,10 @@ namespace TrainManager.Car
 				FrontAxle.Follower.UpdateRelative(Delta, true, true);
 				FrontBogie.FrontAxle.Follower.UpdateRelative(Delta, true, true);
 				FrontBogie.RearAxle.Follower.UpdateRelative(Delta, true, true);
+				if (Pantograph != null)
+				{
+					Pantograph.Update(Delta, false);
+				}
 				if (baseTrain.State != TrainState.Disposed)
 				{
 					RearAxle.Follower.UpdateRelative(Delta, true, true);

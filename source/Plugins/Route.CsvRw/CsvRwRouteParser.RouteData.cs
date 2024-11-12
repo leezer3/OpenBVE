@@ -125,6 +125,7 @@ namespace CsvRwRouteParser
 								RailEnded = false,
 								RailEnd = new Vector2(Blocks[i - 1].Rails[key].RailStart),
 								IsDriveable = Blocks[i - 1].Rails[key].IsDriveable,
+								PowerSupplies = new Dictionary<PowerSupplyTypes, PowerSupply>(Blocks[i -1].Rails[key].PowerSupplies)
 							};
 							Blocks[i].Rails.Add(key, rail);
 						}

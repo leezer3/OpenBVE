@@ -424,6 +424,15 @@ namespace CsvRwRouteParser
 						}
 					}
 				}
+				// power supplies
+				if (!PreviewOnly)
+				{
+					for (int jj = 0; jj < Data.Blocks[i].Rails.Count; jj++)
+					{
+						int j = Data.Blocks[i].Rails.ElementAt(jj).Key;
+						CurrentRoute.Tracks[j].Elements[n].PowerSupplies = Data.Blocks[i].Rails[j].PowerSupplies;
+					}
+				}
 				// station
 				if (Data.Blocks[i].Station >= 0)
 				{

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using LibRender2.Trains;
 using OpenBveApi;
@@ -10,6 +11,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
+using TrainManager.Car.Systems.OpenBveApi.Trains;
 using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Power;
@@ -170,7 +172,7 @@ namespace Train.OpenBve
 			string[] Lines = ReadFile(FileName, Encoding);
 
 			// Check version
-			const int currentVersion = 18230;
+			const int currentVersion = 19000;
 			TrainDatFormats currentFormat = ParseFormat(Lines, out int myVersion);
 			string versionString = Lines.FirstOrDefault(x => x.Length > 0) ?? Lines[0];
 			switch (currentFormat)
@@ -235,6 +237,7 @@ namespace Train.OpenBve
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
 			double electricBrakeDelayUp = 0, electricBrakeDelayDown = 0;
 			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1, locoBrakeType = 0, driverPowerNotches = 0, driverBrakeNotches = 0;
+			double pantographLocation = double.MaxValue;
 			BVEMotorSoundTable[] Tables = new BVEMotorSoundTable[4];
 			for (int i = 0; i < 4; i++) {
 				Tables[i].Entries = new BVEMotorSoundTableEntry[16];
@@ -843,6 +846,10 @@ namespace Train.OpenBve
 										} else {
 											CarUnexposedFrontalArea = a;
 										} break;
+									case 11:
+										//Do no validation here, as we don't necessarily yet know the length of a car
+										pantographLocation = a;
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -1136,6 +1143,18 @@ namespace Train.OpenBve
 					MaximumAcceleration = AccelerationCurves[i].MaximumAcceleration;
 				}
 			}
+
+			if (pantographLocation == double.MaxValue)
+			{
+				pantographLocation = 0.5 * CarLength;
+			}
+			else if (pantographLocation < 0 || pantographLocation > CarLength)
+			{
+				//Pantograph location is relative from the front of the car
+				//Somone will probably want to add one outside the physical model, so just warn...
+				Plugin.currentHost.AddMessage(MessageType.Warning, false, "A PantographLocation of " + pantographLocation.ToString(Culture) + " places it outside the bounds of the car in file " + FileName);
+			}
+
 			// assign motor cars
 			if (MotorCars == 1) {
 				if (FrontCarIsMotorCar | TrailerCars == 0) {
@@ -1185,6 +1204,7 @@ namespace Train.OpenBve
 					}
 				}
 			}
+
 			double MotorDeceleration = Math.Sqrt(MaximumAcceleration * BrakeDeceleration);
 			// apply brake-specific attributes for all cars
 			for (int i = 0; i < Cars; i++) {
@@ -1247,6 +1267,7 @@ namespace Train.OpenBve
 				Train.Cars[i].CarBrake.straightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
 				Train.Cars[i].CarBrake.JerkUp = JerkBrakeUp;
 				Train.Cars[i].CarBrake.JerkDown = JerkBrakeDown;
+				Train.Cars[i].Pantograph = new Pantograph(Plugin.currentHost, pantographLocation, true);
 			}
 			if (Train.Handles.HasHoldBrake & Train.Handles.Brake.MaximumNotch > 1) {
 				Train.Handles.Brake.MaximumNotch--;
