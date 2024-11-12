@@ -441,7 +441,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case Panel2Sections.DigitalGauge:
-						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage) && Block.GetValue(Panel2Key.Radius, out Radius) && Radius != 0)
+						if (Block.GetValue(Panel2Key.Radius, out Radius) && Radius != 0)
 						{
 							double InitialAngle = -120, LastAngle = 120;
 							double Minimum = 0.0, Maximum = 1000.0;
@@ -559,7 +559,6 @@ namespace Train.OpenBve
 						}
 						break;
 					case Panel2Sections.Timetable:
-						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
 						{
 							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
 							Block.GetValue(Panel2Key.Width, out double Width);
