@@ -490,14 +490,14 @@ namespace OpenBve
 				Builder.AppendLine("[routeEncodings]");
 				for (int i = 0; i < RouteEncodings.Length; i++)
 				{
-					Builder.AppendLine(RouteEncodings[i].Codepage.ToString(Culture) + " = " + RouteEncodings[i].Value);
+					Builder.AppendLine(RouteEncodings[i].Codepage + " = " + RouteEncodings[i].Value);
 				}
 
 				Builder.AppendLine();
 				Builder.AppendLine("[trainEncodings]");
 				for (int i = 0; i < TrainEncodings.Length; i++)
 				{
-					Builder.AppendLine(TrainEncodings[i].Codepage.ToString(Culture) + " = " + TrainEncodings[i].Value);
+					Builder.AppendLine(TrainEncodings[i].Codepage + " = " + TrainEncodings[i].Value);
 				}
 
 				Builder.AppendLine();
@@ -540,7 +540,6 @@ namespace OpenBve
 				Directory.CreateDirectory(OptionsDir);
 			}
 			
-			CultureInfo Culture = CultureInfo.InvariantCulture;
 			string configFile = Path.CombineFile(OptionsDir, "options.cfg");
 			if (!File.Exists(configFile))
 			{

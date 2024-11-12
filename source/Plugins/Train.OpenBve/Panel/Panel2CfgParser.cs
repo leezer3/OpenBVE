@@ -280,7 +280,7 @@ namespace Train.OpenBve
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Block.Key + " in " + FileName);
 								break;
 							}
-							string tf = GetInfixFunction(Car.baseTrain, Subject, subjectIndex, subjectSuffix, Minimum, Maximum, Width, tday.Width, Block.Key + " in " + FileName);
+							string tf = GetInfixFunction(Car.baseTrain, Subject, subjectIndex, subjectSuffix, Minimum, Maximum, Width, tday.Width);
 							if (!string.IsNullOrEmpty(tf) || !string.IsNullOrEmpty(Function))
 							{
 								Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
@@ -737,7 +737,7 @@ namespace Train.OpenBve
 			return drops;
 		}
 
-		internal string GetInfixFunction(AbstractTrain Train, Panel2Subject Subject, int SubjectIndex, string SubjectSuffix, double Minimum, double Maximum, int Width, int TextureWidth, string ErrorLocation)
+		internal string GetInfixFunction(AbstractTrain Train, Panel2Subject Subject, int SubjectIndex, string SubjectSuffix, double Minimum, double Maximum, int Width, int TextureWidth)
 		{
 			double mp = 0.0;
 			if (Minimum < 0)
@@ -767,9 +767,8 @@ namespace Train.OpenBve
 		/// <param name="Subject">The subject to convert</param>
 		/// <param name="SubjectIndex">The index of the ATS etc. function if applicable</param>
 		/// <returns>The parsed animation function stack</returns>
-		internal string GetStackLanguageFromSubject(AbstractTrain Train, Panel2Subject Subject, int SubjectIndex, string Suffix) {
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			
+		internal string GetStackLanguageFromSubject(AbstractTrain Train, Panel2Subject Subject, int SubjectIndex, string Suffix) 
+		{
 			// transform subject
 			string Code;
 			switch (Subject) {
