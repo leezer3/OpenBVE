@@ -399,16 +399,14 @@ namespace OpenBve {
 
 			int totalAdditionalTrains = Program.CurrentRoute.PrecedingTrainTimeDeltas.Length + Program.CurrentRoute.BogusPreTrainInstructions.Length;
 
-			for (int i = 0; i < totalAdditionalTrains; i++)
+			for (int i = 0; i < Program.CurrentRoute.PrecedingTrainTimeDeltas.Length; i++)
 			{
-				if (i == Program.TrainManager.Trains.Count & Program.CurrentRoute.BogusPreTrainInstructions.Length != 0)
-				{
-					Program.TrainManager.Trains[i] = new TrainBase(TrainState.Bogus, TrainType.PreTrain);
-				}
-				else
-				{
-					Program.TrainManager.Trains[i] = new TrainBase(TrainState.Pending, TrainType.PreTrain);
-				}
+				Program.TrainManager.Trains.Add(new TrainBase(TrainState.Pending, TrainType.PreTrain));
+			}
+
+			for (int i = 0; i < Program.CurrentRoute.BogusPreTrainInstructions.Length; i++)
+			{
+				Program.TrainManager.Trains.Add(new TrainBase(TrainState.Bogus, TrainType.PreTrain));
 			}
 			
 			// load trains

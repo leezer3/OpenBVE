@@ -398,7 +398,7 @@ namespace OpenBve
 				}
 			}
 
-			for (int i = Trains.Count; i > 0; i--)
+			for (int i = Trains.Count - 1; i > 0; i--)
 			{
 				switch (Trains[i].State)
 				{
