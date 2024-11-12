@@ -83,7 +83,7 @@ namespace RouteViewer
             Interface.CurrentOptions.AntiAliasingLevel = (int)AntialiasingLevel.Value;
             if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialasingLevel)
             {
-                Program.CurrentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
+                Program.Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 	            GraphicsModeChanged = true;
             }
             //Transparency quality
@@ -99,15 +99,10 @@ namespace RouteViewer
 			//Set width and height
 			if (Program.Renderer.Screen.Width != width.Value || Program.Renderer.Screen.Height != height.Value)
 			{
-				if (width.Value >= 300)
+				if (width.Value > 300 && height.Value > 300)
 				{
-					Program.Renderer.Screen.Width = (int) width.Value;
-					Program.CurrentGameWindow.Width = (int)width.Value;
-				}
-				if (height.Value >= 300)
-				{
-					Program.Renderer.Screen.Height = (int) height.Value;
-					Program.CurrentGameWindow.Height = (int)height.Value;
+					Program.Renderer.SetWindowSize((int)width.Value, (int)height.Value);
+					Program.Renderer.UpdateViewport();
 				}
 				Program.Renderer.UpdateViewport();
 			}

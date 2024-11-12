@@ -10,6 +10,7 @@ using SharpCompress.Archives;
 using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace OpenBveApi.Packages
 {
@@ -188,11 +189,13 @@ namespace OpenBveApi.Packages
 	public enum CompressionType
 	{
 		/// <summary>LZMA Zip compression</summary>
-		Zip,
+		Zip = 1,
 		/// <summary>G compression</summary>
-		TarGZ,
+		TarGZ = 2,
+		GZip = 2,
 		/// <summary>BZip2 compression</summary>
-		BZ2
+		BZ2 = 3,
+		BZip = 3
 	}
 
 	/// <summary>The current operation being performed</summary>

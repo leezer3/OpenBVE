@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -425,25 +425,6 @@ namespace ObjectViewer.Graphics
 			// finalize
 			PopMatrix(MatrixMode.Projection);
 			PopMatrix(MatrixMode.Modelview);
-		}
-
-		public override void SetWindowState(WindowState windowState)
-		{
-			Program.CurrentGameWindow.WindowState = windowState;
-			if (windowState == WindowState.Fullscreen)
-			{
-				// move origin appropriately
-				Program.CurrentGameWindow.X = 0;
-				Program.CurrentGameWindow.Y = 0;
-			}
-		}
-
-		public override void SetWindowSize(int width, int height)
-		{
-			Program.CurrentGameWindow.Width = width;
-			Program.CurrentGameWindow.Height = height;
-			Screen.Width = width;
-			Screen.Height = height;
 		}
 
 		public NewRenderer(HostInterface currentHost, BaseOptions currentOptions, FileSystem fileSystem) : base(currentHost, currentOptions, fileSystem)

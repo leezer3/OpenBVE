@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using LibRender2.Menu;
 using LibRender2.Primitives;
@@ -220,7 +220,7 @@ namespace ObjectViewer
 
 		public override bool ProcessMouseMove(int x, int y)
 		{
-			Program.CurrentGameWindow.CursorVisible = true;
+			Program.Renderer.GameWindow.CursorVisible = true;
 			if (CurrMenu < 0)
 			{
 				return false;

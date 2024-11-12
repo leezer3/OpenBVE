@@ -113,7 +113,7 @@ namespace OpenBve
 					Thread.Sleep(10);
 				}
 				Program.Renderer.RenderScene(TimeElapsed, RealTimeElapsed);
-				Program.currentGameWindow.SwapBuffers();
+				SwapBuffers();
 				if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
 				{
 					Close();
@@ -184,7 +184,7 @@ namespace OpenBve
 			Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 			if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
 			{
-				Program.currentGameWindow.Exit();
+				Exit();
 				if (Program.CurrentHost.MonoRuntime && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
 				{
 					Environment.Exit(0);
@@ -197,7 +197,7 @@ namespace OpenBve
 			}
 			Program.Renderer.RenderScene(TimeElapsed, RealTimeElapsed);
 			Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
-			Program.currentGameWindow.SwapBuffers();
+			Program.Renderer.GameWindow.SwapBuffers();
 			Game.UpdateBlackBox();
 			// pause/menu
 			
@@ -1122,7 +1122,7 @@ namespace OpenBve
 
 				Program.Renderer.Loading.SetLoadingBkg(Program.CurrentRoute.Information.LoadingScreenBackground);
 				Program.Renderer.Loading.DrawLoadingScreen(Program.Renderer.Fonts.SmallFont, routeProgress, finalTrainProgress);
-				Program.currentGameWindow.SwapBuffers();
+				SwapBuffers();
 				
 				if (Loading.JobAvailable)
 				{

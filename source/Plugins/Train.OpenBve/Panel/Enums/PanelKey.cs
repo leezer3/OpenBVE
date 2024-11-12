@@ -1,4 +1,4 @@
-﻿// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMember.Global
 namespace Train.OpenBve
 {
 	/// <summary>Keys found in the Panel.cfg file</summary>

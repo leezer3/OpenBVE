@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -243,7 +243,7 @@ namespace RouteViewer
 
 		public override bool ProcessMouseMove(int x, int y)
 		{
-			Program.CurrentGameWindow.CursorVisible = true;
+			Program.Renderer.GameWindow.CursorVisible = true;
 			if (CurrMenu < 0)
 			{
 				return false;

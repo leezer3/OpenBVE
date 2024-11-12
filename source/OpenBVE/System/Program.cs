@@ -48,8 +48,6 @@ namespace OpenBve {
 		/// <summary>The random number generator used by this program.</summary>
 		internal static readonly Random RandomNumberGenerator = new Random();
 
-		public static GameWindow currentGameWindow;
-
 		internal static JoystickManager Joysticks;
 
 		internal static NewRenderer Renderer;
@@ -239,7 +237,7 @@ namespace OpenBve {
 									result.TrainEncoding = System.Text.Encoding.UTF8;
 									for (int j = 0; j < Interface.CurrentOptions.TrainEncodings.Length; j++) {
 										if (string.Compare(Interface.CurrentOptions.TrainEncodings[j].Value, result.TrainFolder, StringComparison.InvariantCultureIgnoreCase) == 0) {
-											result.TrainEncoding = System.Text.Encoding.GetEncoding(Interface.CurrentOptions.TrainEncodings[j].Codepage);
+											result.TrainEncoding = System.Text.Encoding.GetEncoding((int)Interface.CurrentOptions.TrainEncodings[j].Codepage);
 											break;
 										}
 									}
@@ -398,7 +396,6 @@ namespace OpenBve {
 			Program.CurrentHost.UnloadPlugins(out _);
 			Sounds.DeInitialize();
 			Renderer.DeInitialize();
-			currentGameWindow?.Dispose();
 		}
 
 	}

@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
@@ -178,6 +178,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win32PluginProxy", "source\Plugins\Win32PluginProxy\Win32PluginProxy.csproj", "{B9014791-7170-4DCD-B3F1-2B7518A85C83}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Route.Bve5", "source\Plugins\Route.Bve5\Route.Bve5.csproj", "{C4BE7A1F-9CCD-4E78-8341-741ABDA8E026}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Formats.OpenBve", "source\Plugins\Formats.OpenBve\Formats.OpenBve.csproj", "{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -645,6 +647,18 @@ Global
 		{C4BE7A1F-9CCD-4E78-8341-741ABDA8E026}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C4BE7A1F-9CCD-4E78-8341-741ABDA8E026}.Release|x86.ActiveCfg = Release|Any CPU
 		{C4BE7A1F-9CCD-4E78-8341-741ABDA8E026}.Release|x86.Build.0 = Release|Any CPU
+		{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}.Debug|x86.Build.0 = Debug|Any CPU
+		{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}.Release|x86.ActiveCfg = Release|Any CPU
+		{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -681,6 +695,7 @@ Global
 		{D3710390-CD0E-4E14-8E4F-80302D797D5E} = {F49789F2-97F3-45B3-BC85-F4E09C0D120D}
 		{B9014791-7170-4DCD-B3F1-2B7518A85C83} = {F49789F2-97F3-45B3-BC85-F4E09C0D120D}
 		{C4BE7A1F-9CCD-4E78-8341-741ABDA8E026} = {D75531B7-000E-432E-A168-51846256A9D1}
+		{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC} = {16553295-E70F-4596-AA78-848EEA576C4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50B52A67-69B1-4B19-A59C-FF058FD9EBDF}

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using Formats.OpenBve;
 using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
@@ -105,190 +106,44 @@ namespace RouteViewer
 
 			if (File.Exists(configFile))
 			{
-				// load options
-				string[] Lines = File.ReadAllLines(configFile, new System.Text.UTF8Encoding());
-				string Section = "";
-				for (int i = 0; i < Lines.Length; i++)
-				{
-					Lines[i] = Lines[i].Trim(new char[] { });
-					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
-					{
-						if (Lines[i].StartsWith("[", StringComparison.Ordinal) &
-							Lines[i].EndsWith("]", StringComparison.Ordinal))
-						{
-							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { }).ToLowerInvariant();
-						}
-						else
-						{
-							int j = Lines[i].IndexOf("=", StringComparison.OrdinalIgnoreCase);
-							string Key, Value;
-							if (j >= 0)
-							{
-								Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-								Value = Lines[i].Substring(j + 1).TrimStart();
-							}
-							else
-							{
-								Key = "";
-								Value = Lines[i];
-							}
-							switch (Section)
-							{
-								case "display":
-									switch (Key)
-									{
-										case "vsync":
-											Interface.CurrentOptions.VerticalSynchronization = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "windowwidth":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300)
-												{
-													a = 960;
-												}
-												Interface.CurrentOptions.WindowWidth = a;
-											}
-											break;
-										case "windowheight":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300)
-												{
-													a = 600;
-												}
-												Interface.CurrentOptions.WindowHeight = a;
-											}
-											break;
-										case "isusenewrenderer":
-											Interface.CurrentOptions.IsUseNewRenderer = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "viewingdistance":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300)
-												{
-													a = 600;
-												}
-												Interface.CurrentOptions.ViewingDistance = a;
-											}
-											break;
-										case "quadleafsize":
-											{
-												if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
-												{
-													if (a >= 50 && a <= 500)
-													{
-														Interface.CurrentOptions.QuadTreeLeafSize = a;
-													}
-												}
-												Interface.CurrentOptions.QuadTreeLeafSize = a;
-											}
-											break;
-									}
-									break;
-								case "quality":
-									switch (Key)
-									{
-										case "interpolation":
-											switch (Value.ToLowerInvariant())
-											{
-												case "nearestneighbor": Interface.CurrentOptions.Interpolation = InterpolationMode.NearestNeighbor; break;
-												case "bilinear": Interface.CurrentOptions.Interpolation = InterpolationMode.Bilinear; break;
-												case "nearestneighbormipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.NearestNeighborMipmapped; break;
-												case "bilinearmipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
-												case "trilinearmipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.TrilinearMipmapped; break;
-												case "anisotropicfiltering": Interface.CurrentOptions.Interpolation = InterpolationMode.AnisotropicFiltering; break;
-												default: Interface.CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
-											}
-											break;
-										case "anisotropicfilteringlevel":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												Interface.CurrentOptions.AnisotropicFilteringLevel = a;
-											}
-											break;
-										case "antialiasinglevel":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												Interface.CurrentOptions.AntiAliasingLevel = a;
-											}
-											break;
-										case "transparencymode":
-											switch (Value.ToLowerInvariant())
-											{
-												case "sharp": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Performance; break;
-												case "smooth": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
-												default:
-													{
-														if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
-														{
-															Interface.CurrentOptions.TransparencyMode = (TransparencyMode)a;
-														}
-														else
-														{
-															Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality;
-														}
-														break;
-													}
-											}
-											break;
-									}
-									break;
-								case "loading":
-									switch (Key)
-									{
-										case "showlogo":
-											Interface.CurrentOptions.LoadingLogo = Value.Trim().ToLowerInvariant() == "true";
-											break;
-										case "showprogressbar":
-											Interface.CurrentOptions.LoadingProgressBar = Value.Trim().ToLowerInvariant() == "true";
-											break;
-										case "showbackground":
-											Interface.CurrentOptions.LoadingBackground = Value.Trim().ToLowerInvariant() == "true";
-											break;
+				ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new System.Text.UTF8Encoding()), Program.CurrentHost);
 
-									}
-									break;
-								case "parsers":
-									switch (Key)
-									{
-										case "xobject":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int p) || p < 0 || p > 3)
-												{
-													Interface.CurrentOptions.CurrentXParser = XParsers.Original;
-												}
-												else
-												{
-													Interface.CurrentOptions.CurrentXParser = (XParsers)p;
-												}
-												break;
-											}
-										case "objobject":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int p) || p < 0 || p > 2)
-												{
-													Interface.CurrentOptions.CurrentObjParser = ObjParsers.Original;
-												}
-												else
-												{
-													Interface.CurrentOptions.CurrentObjParser = (ObjParsers)p;
-												}
-												break;
-											}
-									}
-									break;
-								case "folders":
-									switch (Key)
-									{
-										case "routesearch":
-											if (Directory.Exists(Value))
-											{
-												Interface.CurrentOptions.RouteSearchDirectory = Value;
-											}
-											break;
-									}
-									break;
+				while (cfg.RemainingSubBlocks > 0)
+				{
+					Block<OptionsSection, OptionsKey> block = cfg.ReadNextBlock();
+					switch (block.Key)
+					{
+						case OptionsSection.Display:
+							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth);
+							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight);
+							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
+							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance);
+							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize);
+							break;
+						case OptionsSection.Quality:
+							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);
+							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref Interface.CurrentOptions.AnisotropicFilteringLevel);
+							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
+							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
+							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance);
+							break;
+						case OptionsSection.Loading:
+							block.GetValue(OptionsKey.ShowLogo, out Interface.CurrentOptions.LoadingLogo);
+							block.GetValue(OptionsKey.ShowProgressBar, out Interface.CurrentOptions.LoadingProgressBar);
+							block.GetValue(OptionsKey.ShowBackground, out Interface.CurrentOptions.LoadingBackground);
+							break;
+						case OptionsSection.Parsers:
+							block.GetEnumValue(OptionsKey.XObject, out Interface.CurrentOptions.CurrentXParser);
+							block.GetEnumValue(OptionsKey.ObjObject, out Interface.CurrentOptions.CurrentObjParser);
+							block.GetValue(OptionsKey.GDIPlus, out Interface.CurrentOptions.UseGDIDecoders);
+							break;
+						case OptionsSection.Folders:
+							block.GetValue(OptionsKey.RouteSearch, out string folder);
+							if (Directory.Exists(folder))
+							{
+								Interface.CurrentOptions.RouteSearchDirectory = folder;
 							}
-						}
+							break;
 					}
 				}
 			}

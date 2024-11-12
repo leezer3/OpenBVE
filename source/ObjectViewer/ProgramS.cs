@@ -52,11 +52,7 @@ namespace ObjectViewer {
         internal static double LightingRelative = 1.0;
         private static bool ShiftPressed = false;
 
-
-        internal static GameWindow CurrentGameWindow;
-        internal static GraphicsMode CurrentGraphicsMode;
-
-		internal static HostInterface CurrentHost;
+		internal static OpenBveApi.Hosts.HostInterface CurrentHost;
 
 		internal static NewRenderer Renderer;
 
@@ -164,15 +160,15 @@ namespace ObjectViewer {
 	        Translations.LoadLanguageFiles(folder);
 			GameMenu.Instance = new GameMenu();
 			// initialize camera
-			CurrentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
-	        CurrentGameWindow = new ObjectViewer(Renderer.Screen.Width, Renderer.Screen.Height, CurrentGraphicsMode, "Object Viewer", GameWindowFlags.Default)
+			Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
+	        Renderer.GameWindow = new ObjectViewer(Renderer.Screen.Width, Renderer.Screen.Height, Renderer.GraphicsMode, "Object Viewer", GameWindowFlags.Default)
 	        {
 		        Visible = true,
 		        TargetUpdateFrequency = 0,
 		        TargetRenderFrequency = 0,
 		        Title = "Object Viewer"
 	        };
-	        CurrentGameWindow.Run();
+	        Renderer.GameWindow.Run();
 			// quit
 			Renderer.TextureManager.UnloadAllTextures(false);
 

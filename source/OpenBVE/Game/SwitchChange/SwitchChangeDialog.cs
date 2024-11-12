@@ -76,7 +76,7 @@ namespace OpenBve
 		{
 			trackFollower = Program.Renderer.Camera.CurrentMode <= CameraViewMode.Exterior ? TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower : Program.Renderer.CameraTrackFollower;
 			drawRadius = 500;
-			Program.currentGameWindow.CursorVisible = true;
+			Program.Renderer.GameWindow.CursorVisible = true;
 			Program.Renderer.SetCursor(MouseCursor.Default); // as we may have hidden the cursor through inactivity or be over a touch control when triggering
 			Program.Renderer.CurrentOutputMode = OutputMode.None;
 			MapPicturebox.Size = new Vector2(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height); // as size may have changed between fullscreen etc.
@@ -124,7 +124,7 @@ namespace OpenBve
 			if (CloseButton.CurrentlySelected)
 			{
 				// don't bother to look for a switch if we've selected the button
-				Program.currentGameWindow.Cursor = MouseCursor.Default;
+				Program.Renderer.SetCursor(MouseCursor.Default);
 				return;
 			}
 			
@@ -144,7 +144,7 @@ namespace OpenBve
 			if (selectedSwitch == Guid.Empty || Program.CurrentRoute.Switches[selectedSwitch].FixedRoute)
 			{
 				// Not found an appropriate switch, so set back to default
-				Program.currentGameWindow.Cursor = MouseCursor.Default;
+				Program.Renderer.GameWindow.Cursor = MouseCursor.Default;
 			}
 			ZoomInButton.MouseMove(x, y);
 			ZoomOutButton.MouseMove(x, y);
@@ -155,7 +155,7 @@ namespace OpenBve
 		/// <param name="y">The screen-relative y coordinate of the down event</param>
 		internal void ProcessMouseDown(int x, int y)
 		{
-			Program.currentGameWindow.CursorVisible = true;
+			Program.Renderer.GameWindow.CursorVisible = true;
 			ProcessMouseMove(x, y);
 			if (selectedSwitch != Guid.Empty)
 			{

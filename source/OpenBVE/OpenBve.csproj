@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -385,6 +385,11 @@
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Formats.OpenBve\Formats.OpenBve.csproj">
+      <Project>{7ed7b285-fae6-4b34-acc5-87399f27c8bc}</Project>
+      <Name>Formats.OpenBve</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\RouteManager2\RouteManager2.csproj">
       <Project>{4ef680d7-df17-4978-9872-133edc169b4b}</Project>
