@@ -377,7 +377,17 @@ namespace Formats.OpenBve
 						// HACK: BVE allows bmp without extension
 						relativePath += ".bmp";
 					}
-					finalPath = Path.CombineFile(absolutePath, relativePath);
+
+					try
+					{
+						finalPath = Path.CombineFile(absolutePath, relativePath);
+					}
+					catch
+					{
+						finalPath = string.Empty;
+						return false;
+					}
+					
 					if (File.Exists(finalPath))
 					{
 						return true;
@@ -406,7 +416,16 @@ namespace Formats.OpenBve
 				KeyValuePair<int, string> value = indexedValues.ElementAt(0).Value;
 				indexedValues.Remove(index);
 
-				finalPath = Path.CombineFile(absolutePath, value.Value);
+				try
+				{
+					finalPath = Path.CombineFile(absolutePath, value.Value);
+				}
+				catch
+				{
+					finalPath = string.Empty;
+					return false;
+				}
+				
 				if (File.Exists(finalPath))
 				{
 					return true;
