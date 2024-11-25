@@ -155,7 +155,7 @@ namespace TrainManager.Car
 			Flange = new Flange(this);
 			Run = new RunSounds(this);
 			Sounds = new CarSounds();
-			Coupler = new Coupler(0, 0, this, null, train);
+			Coupler = new Coupler(0, 0, this, null);
 		}
 
 		/// <summary>Moves the car</summary>
