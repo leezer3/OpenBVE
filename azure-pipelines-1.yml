@@ -39,7 +39,7 @@ jobs:
 - job: AppleMakeBuild
   displayName: 'Build on Apple OS-X (makefile)'
   pool:
-    vmImage: 'macos-12'
+    vmImage: 'macos-13'
 
   variables:
     solution: 'OpenBVE.sln'
