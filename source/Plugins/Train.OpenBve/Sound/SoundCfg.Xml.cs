@@ -590,6 +590,15 @@ namespace Train.OpenBve
 											case "uncouple":
 												ParseNode(cc, out car.Coupler.UncoupleSound, rear, SoundCfgParser.smallRadius);
 												break;
+											case "couple":
+												ParseNode(cc, out car.Coupler.CoupleSound, rear, SoundCfgParser.smallRadius);
+												break;
+											case "couplecab":
+												ParseNode(cc, out car.Sounds.CoupleCab, rear, SoundCfgParser.smallRadius);
+												break;
+											case "uncouplecab":
+												ParseNode(cc, out car.Sounds.UncoupleCab, rear, SoundCfgParser.smallRadius);
+												break;
 											default:
 												Plugin.currentHost.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
 												break;

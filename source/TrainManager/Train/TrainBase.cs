@@ -1141,6 +1141,8 @@ namespace TrainManager.Trains
 				}
 			}
 
+			Cars[oldCars].Coupler.CoupleSound.Play(1.0, 1.0, Cars[oldCars], false);
+
 			Cars[0].BeaconReceiver.Train = this;
 
 			/*
@@ -1155,6 +1157,7 @@ namespace TrainManager.Trains
 				trainBase.Cars[i] = new CarBase(trainBase, i);
 			}
 
+			Cars[DriverCar].Sounds.CoupleCab?.Play(1.0, 1.0, Cars[DriverCar], false);
 
 			string message = Translations.GetInterfaceString(HostApplication.OpenBve, Front ? new[] { "notification", "couple_front" } : new[] { "notification", "couple_rear" }).Replace("[number]", trainBase.Cars.Length.ToString());
 			TrainManagerBase.currentHost.AddMessage(message, MessageDependency.None, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);

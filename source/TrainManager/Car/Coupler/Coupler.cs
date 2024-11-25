@@ -12,21 +12,18 @@ namespace TrainManager.Car
 	{
 		/// <summary>The car sections to display</summary>
 		internal CarSection[] CarSections;
-
 		/// <summary>The currently displayed car section</summary>
 		internal int CurrentCarSection;
-
 		/// <summary>The base car which the coupling is attached to</summary>
 		/// <remarks>This is the FRONT car when travelling in the notional forwards direction</remarks>
 		internal CarBase BaseCar;
-
 		/// <summary>The connected car</summary>
 		/// <remarks>This is the REAR car when travelling in the notional forwards direction</remarks>
 		public CarBase ConnectedCar;
-
 		/// <summary>The sound played when this coupler is uncoupled</summary>
 		public CarSound UncoupleSound;
-
+		/// <summary>The sound played when this coupler is uncoupled</summary>
+		public CarSound CoupleSound;
 		/// <summary>The brake behaviour when this consist is uncoupled</summary>
 		public UncouplingBehaviour UncouplingBehaviour;
 
@@ -42,6 +39,7 @@ namespace TrainManager.Car
 			CarSections = new CarSection[] { };
 			ChangeSection(-1);
 			UncoupleSound = new CarSound();
+			CoupleSound = new CarSound();
 			canUncouple = true;
 			UncouplingBehaviour = UncouplingBehaviour.EmergencyUncoupledConsist;
 		}
@@ -52,7 +50,7 @@ namespace TrainManager.Car
 			set => canUncouple = value;
 		}
 
-		public void UpdateObjects(double TimeElapsed, bool ForceUpdate)
+		public void UpdateObjects(double timeElapsed, bool forceUpdate)
 		{
 			// calculate positions and directions for section element update
 			Vector3 d = new Vector3(BaseCar.RearAxle.Follower.WorldPosition - ConnectedCar.FrontAxle.Follower.WorldPosition);
@@ -78,7 +76,7 @@ namespace TrainManager.Car
 			Vector3 cd = new Vector3(p - TrainManagerBase.Renderer.Camera.AbsolutePosition);
 			double dist = cd.NormSquared();
 			double bid = TrainManagerBase.Renderer.Camera.ViewingDistance + BaseCar.Length;
-			bool CurrentlyVisible = dist < bid * bid;
+			bool currentlyVisible = dist < bid * bid;
 			// Updates the brightness value
 			byte dnb = (byte)BaseCar.Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, 1.0);
 			
@@ -90,7 +88,7 @@ namespace TrainManager.Car
 				{
 					for (int i = 0; i < CarSections[cs].Groups[0].Elements.Length; i++)
 					{
-						UpdateSectionElement(cs, i, p, d, u, s, CurrentlyVisible, TimeElapsed, ForceUpdate);
+						UpdateSectionElement(cs, i, p, d, u, s, currentlyVisible, timeElapsed, forceUpdate);
 
 						// brightness change
 						if (CarSections[cs].Groups[0].Elements[i].internalObject != null)
@@ -102,7 +100,7 @@ namespace TrainManager.Car
 			}
 		}
 
-		public void ChangeSection(int SectionIndex)
+		public void ChangeSection(int sectionIndex)
 		{
 			if (CarSections.Length == 0)
 			{
@@ -119,56 +117,56 @@ namespace TrainManager.Car
 				}
 			}
 
-			if (SectionIndex >= 0)
+			if (sectionIndex >= 0)
 			{
-				CarSections[SectionIndex].Initialize(BaseCar.CurrentlyVisible);
-				for (int j = 0; j < CarSections[SectionIndex].Groups[0].Elements.Length; j++)
+				CarSections[sectionIndex].Initialize(BaseCar.CurrentlyVisible);
+				for (int j = 0; j < CarSections[sectionIndex].Groups[0].Elements.Length; j++)
 				{
-					TrainManagerBase.currentHost.ShowObject(CarSections[SectionIndex].Groups[0].Elements[j].internalObject, ObjectType.Dynamic);
+					TrainManagerBase.currentHost.ShowObject(CarSections[sectionIndex].Groups[0].Elements[j].internalObject, ObjectType.Dynamic);
 				}
 			}
 
-			CurrentCarSection = SectionIndex;
+			CurrentCarSection = sectionIndex;
 			UpdateObjects(0.0, true);
 		}
 
-		private void UpdateSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
+		private void UpdateSectionElement(int sectionIndex, int elementIndex, Vector3 position, Vector3 direction, Vector3 up, Vector3 side, bool show, double timeElapsed, bool forceUpdate)
 		{
 			{
-				Vector3 p = Position;
+				Vector3 p = position;
 				double timeDelta;
 				bool updatefunctions;
 
-				if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate != 0.0)
+				if (CarSections[sectionIndex].Groups[0].Elements[elementIndex].RefreshRate != 0.0)
 				{
-					if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate >= CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate)
+					if (CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate >= CarSections[sectionIndex].Groups[0].Elements[elementIndex].RefreshRate)
 					{
 						timeDelta =
-							CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
-						CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate =
-							TimeElapsed;
+							CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate;
+						CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate =
+							timeElapsed;
 						updatefunctions = true;
 					}
 					else
 					{
-						timeDelta = TimeElapsed;
-						CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate += TimeElapsed;
+						timeDelta = timeElapsed;
+						CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate += timeElapsed;
 						updatefunctions = false;
 					}
 				}
 				else
 				{
-					timeDelta = CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
-					CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate = TimeElapsed;
+					timeDelta = CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate;
+					CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate = timeElapsed;
 					updatefunctions = true;
 				}
 
-				if (ForceUpdate)
+				if (forceUpdate)
 				{
 					updatefunctions = true;
 				}
 
-				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(BaseCar.baseTrain, BaseCar.Index, (BaseCar.RearAxle.Follower.TrackPosition + ConnectedCar.FrontAxle.Follower.TrackPosition) * 0.5, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
+				CarSections[sectionIndex].Groups[0].Elements[elementIndex].Update(BaseCar.baseTrain, BaseCar.Index, (BaseCar.RearAxle.Follower.TrackPosition + ConnectedCar.FrontAxle.Follower.TrackPosition) * 0.5, p, direction, up, side, updatefunctions, show, timeDelta, true);
 			}
 		}
 

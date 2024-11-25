@@ -516,8 +516,9 @@ namespace TrainManager.Car
 						newTrain.Handles.Brake.ApplyState(0, false);
 						newTrain.Handles.EmergencyBrake.Release();
 						break;
-
 				}
+
+				baseTrain.Cars[baseTrain.DriverCar].Sounds.UncoupleCab?.Play(1.0, 1.0, baseTrain.Cars[baseTrain.DriverCar], false);
 			}
 		}
 
