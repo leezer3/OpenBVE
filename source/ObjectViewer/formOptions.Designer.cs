@@ -30,7 +30,6 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageOptions = new System.Windows.Forms.TabPage();
-            this.tabPageKeys = new System.Windows.Forms.TabPage();
             this.comboBoxOptimizeObjects = new System.Windows.Forms.ComboBox();
             this.labelOptimizeObjects = new System.Windows.Forms.Label();
             this.comboBoxNewObjParser = new System.Windows.Forms.ComboBox();
@@ -52,27 +51,28 @@
             this.labelInterpolationMode = new System.Windows.Forms.Label();
             this.labelInterpolationSettings = new System.Windows.Forms.Label();
             this.InterpolationMode = new System.Windows.Forms.ComboBox();
-            this.CloseButton = new System.Windows.Forms.Button();
-            this.labelLeft = new System.Windows.Forms.Label();
-            this.comboBoxLeft = new System.Windows.Forms.ComboBox();
-            this.comboBoxRight = new System.Windows.Forms.ComboBox();
-            this.labelRight = new System.Windows.Forms.Label();
-            this.comboBoxUp = new System.Windows.Forms.ComboBox();
-            this.labelUp = new System.Windows.Forms.Label();
-            this.comboBoxDown = new System.Windows.Forms.ComboBox();
-            this.labelDown = new System.Windows.Forms.Label();
-            this.comboBoxForwards = new System.Windows.Forms.ComboBox();
-            this.labelForwards = new System.Windows.Forms.Label();
+            this.tabPageKeys = new System.Windows.Forms.TabPage();
+            this.labelControls = new System.Windows.Forms.Label();
             this.comboBoxBackwards = new System.Windows.Forms.ComboBox();
             this.labelBackwards = new System.Windows.Forms.Label();
-            this.labelControls = new System.Windows.Forms.Label();
+            this.comboBoxForwards = new System.Windows.Forms.ComboBox();
+            this.labelForwards = new System.Windows.Forms.Label();
+            this.comboBoxDown = new System.Windows.Forms.ComboBox();
+            this.labelDown = new System.Windows.Forms.Label();
+            this.comboBoxUp = new System.Windows.Forms.ComboBox();
+            this.labelUp = new System.Windows.Forms.Label();
+            this.comboBoxRight = new System.Windows.Forms.ComboBox();
+            this.labelRight = new System.Windows.Forms.Label();
+            this.comboBoxLeft = new System.Windows.Forms.ComboBox();
+            this.labelLeft = new System.Windows.Forms.Label();
+            this.CloseButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPageOptions.SuspendLayout();
-            this.tabPageKeys.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AntialiasingLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.AnsiotropicLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.height)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.width)).BeginInit();
+            this.tabPageKeys.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -115,29 +115,6 @@
             this.tabPageOptions.TabIndex = 0;
             this.tabPageOptions.Text = "Options";
             this.tabPageOptions.UseVisualStyleBackColor = true;
-            // 
-            // tabPageKeys
-            // 
-            this.tabPageKeys.Controls.Add(this.labelControls);
-            this.tabPageKeys.Controls.Add(this.comboBoxBackwards);
-            this.tabPageKeys.Controls.Add(this.labelBackwards);
-            this.tabPageKeys.Controls.Add(this.comboBoxForwards);
-            this.tabPageKeys.Controls.Add(this.labelForwards);
-            this.tabPageKeys.Controls.Add(this.comboBoxDown);
-            this.tabPageKeys.Controls.Add(this.labelDown);
-            this.tabPageKeys.Controls.Add(this.comboBoxUp);
-            this.tabPageKeys.Controls.Add(this.labelUp);
-            this.tabPageKeys.Controls.Add(this.comboBoxRight);
-            this.tabPageKeys.Controls.Add(this.labelRight);
-            this.tabPageKeys.Controls.Add(this.comboBoxLeft);
-            this.tabPageKeys.Controls.Add(this.labelLeft);
-            this.tabPageKeys.Location = new System.Drawing.Point(4, 22);
-            this.tabPageKeys.Name = "tabPageKeys";
-            this.tabPageKeys.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageKeys.Size = new System.Drawing.Size(304, 348);
-            this.tabPageKeys.TabIndex = 1;
-            this.tabPageKeys.Text = "Keys";
-            this.tabPageKeys.UseVisualStyleBackColor = true;
             // 
             // comboBoxOptimizeObjects
             // 
@@ -380,100 +357,38 @@
             this.InterpolationMode.Size = new System.Drawing.Size(121, 21);
             this.InterpolationMode.TabIndex = 26;
             // 
-            // CloseButton
+            // tabPageKeys
             // 
-            this.CloseButton.Location = new System.Drawing.Point(234, 388);
-            this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(75, 23);
-            this.CloseButton.TabIndex = 32;
-            this.CloseButton.Text = "OK";
-            this.CloseButton.UseVisualStyleBackColor = true;
-            this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
+            this.tabPageKeys.Controls.Add(this.labelControls);
+            this.tabPageKeys.Controls.Add(this.comboBoxBackwards);
+            this.tabPageKeys.Controls.Add(this.labelBackwards);
+            this.tabPageKeys.Controls.Add(this.comboBoxForwards);
+            this.tabPageKeys.Controls.Add(this.labelForwards);
+            this.tabPageKeys.Controls.Add(this.comboBoxDown);
+            this.tabPageKeys.Controls.Add(this.labelDown);
+            this.tabPageKeys.Controls.Add(this.comboBoxUp);
+            this.tabPageKeys.Controls.Add(this.labelUp);
+            this.tabPageKeys.Controls.Add(this.comboBoxRight);
+            this.tabPageKeys.Controls.Add(this.labelRight);
+            this.tabPageKeys.Controls.Add(this.comboBoxLeft);
+            this.tabPageKeys.Controls.Add(this.labelLeft);
+            this.tabPageKeys.Location = new System.Drawing.Point(4, 22);
+            this.tabPageKeys.Name = "tabPageKeys";
+            this.tabPageKeys.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageKeys.Size = new System.Drawing.Size(304, 348);
+            this.tabPageKeys.TabIndex = 1;
+            this.tabPageKeys.Text = "Keys";
+            this.tabPageKeys.UseVisualStyleBackColor = true;
             // 
-            // labelLeft
+            // labelControls
             // 
-            this.labelLeft.AutoSize = true;
-            this.labelLeft.Location = new System.Drawing.Point(138, 41);
-            this.labelLeft.Name = "labelLeft";
-            this.labelLeft.Size = new System.Drawing.Size(25, 13);
-            this.labelLeft.TabIndex = 0;
-            this.labelLeft.Text = "Left";
-            // 
-            // comboBoxLeft
-            // 
-            this.comboBoxLeft.FormattingEnabled = true;
-            this.comboBoxLeft.Location = new System.Drawing.Point(6, 33);
-            this.comboBoxLeft.Name = "comboBoxLeft";
-            this.comboBoxLeft.Size = new System.Drawing.Size(126, 21);
-            this.comboBoxLeft.TabIndex = 1;
-            // 
-            // comboBoxRight
-            // 
-            this.comboBoxRight.FormattingEnabled = true;
-            this.comboBoxRight.Location = new System.Drawing.Point(6, 60);
-            this.comboBoxRight.Name = "comboBoxRight";
-            this.comboBoxRight.Size = new System.Drawing.Size(126, 21);
-            this.comboBoxRight.TabIndex = 3;
-            // 
-            // labelRight
-            // 
-            this.labelRight.AutoSize = true;
-            this.labelRight.Location = new System.Drawing.Point(138, 68);
-            this.labelRight.Name = "labelRight";
-            this.labelRight.Size = new System.Drawing.Size(32, 13);
-            this.labelRight.TabIndex = 2;
-            this.labelRight.Text = "Right";
-            // 
-            // comboBoxUp
-            // 
-            this.comboBoxUp.FormattingEnabled = true;
-            this.comboBoxUp.Location = new System.Drawing.Point(6, 87);
-            this.comboBoxUp.Name = "comboBoxUp";
-            this.comboBoxUp.Size = new System.Drawing.Size(126, 21);
-            this.comboBoxUp.TabIndex = 5;
-            // 
-            // labelUp
-            // 
-            this.labelUp.AutoSize = true;
-            this.labelUp.Location = new System.Drawing.Point(138, 95);
-            this.labelUp.Name = "labelUp";
-            this.labelUp.Size = new System.Drawing.Size(21, 13);
-            this.labelUp.TabIndex = 4;
-            this.labelUp.Text = "Up";
-            // 
-            // comboBoxDown
-            // 
-            this.comboBoxDown.FormattingEnabled = true;
-            this.comboBoxDown.Location = new System.Drawing.Point(6, 114);
-            this.comboBoxDown.Name = "comboBoxDown";
-            this.comboBoxDown.Size = new System.Drawing.Size(126, 21);
-            this.comboBoxDown.TabIndex = 7;
-            // 
-            // labelDown
-            // 
-            this.labelDown.AutoSize = true;
-            this.labelDown.Location = new System.Drawing.Point(138, 122);
-            this.labelDown.Name = "labelDown";
-            this.labelDown.Size = new System.Drawing.Size(35, 13);
-            this.labelDown.TabIndex = 6;
-            this.labelDown.Text = "Down";
-            // 
-            // comboBoxForwards
-            // 
-            this.comboBoxForwards.FormattingEnabled = true;
-            this.comboBoxForwards.Location = new System.Drawing.Point(6, 141);
-            this.comboBoxForwards.Name = "comboBoxForwards";
-            this.comboBoxForwards.Size = new System.Drawing.Size(126, 21);
-            this.comboBoxForwards.TabIndex = 9;
-            // 
-            // labelForwards
-            // 
-            this.labelForwards.AutoSize = true;
-            this.labelForwards.Location = new System.Drawing.Point(138, 149);
-            this.labelForwards.Name = "labelForwards";
-            this.labelForwards.Size = new System.Drawing.Size(50, 13);
-            this.labelForwards.TabIndex = 8;
-            this.labelForwards.Text = "Forwards";
+            this.labelControls.AutoSize = true;
+            this.labelControls.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelControls.Location = new System.Drawing.Point(8, 7);
+            this.labelControls.Name = "labelControls";
+            this.labelControls.Size = new System.Drawing.Size(99, 13);
+            this.labelControls.TabIndex = 12;
+            this.labelControls.Text = "Camera Controls";
             // 
             // comboBoxBackwards
             // 
@@ -492,15 +407,100 @@
             this.labelBackwards.TabIndex = 10;
             this.labelBackwards.Text = "Backwards";
             // 
-            // labelControls
+            // comboBoxForwards
             // 
-            this.labelControls.AutoSize = true;
-            this.labelControls.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelControls.Location = new System.Drawing.Point(8, 7);
-            this.labelControls.Name = "labelControls";
-            this.labelControls.Size = new System.Drawing.Size(99, 13);
-            this.labelControls.TabIndex = 12;
-            this.labelControls.Text = "Camera Controls";
+            this.comboBoxForwards.FormattingEnabled = true;
+            this.comboBoxForwards.Location = new System.Drawing.Point(6, 141);
+            this.comboBoxForwards.Name = "comboBoxForwards";
+            this.comboBoxForwards.Size = new System.Drawing.Size(126, 21);
+            this.comboBoxForwards.TabIndex = 9;
+            // 
+            // labelForwards
+            // 
+            this.labelForwards.AutoSize = true;
+            this.labelForwards.Location = new System.Drawing.Point(138, 149);
+            this.labelForwards.Name = "labelForwards";
+            this.labelForwards.Size = new System.Drawing.Size(50, 13);
+            this.labelForwards.TabIndex = 8;
+            this.labelForwards.Text = "Forwards";
+            // 
+            // comboBoxDown
+            // 
+            this.comboBoxDown.FormattingEnabled = true;
+            this.comboBoxDown.Location = new System.Drawing.Point(6, 114);
+            this.comboBoxDown.Name = "comboBoxDown";
+            this.comboBoxDown.Size = new System.Drawing.Size(126, 21);
+            this.comboBoxDown.TabIndex = 7;
+            // 
+            // labelDown
+            // 
+            this.labelDown.AutoSize = true;
+            this.labelDown.Location = new System.Drawing.Point(138, 122);
+            this.labelDown.Name = "labelDown";
+            this.labelDown.Size = new System.Drawing.Size(35, 13);
+            this.labelDown.TabIndex = 6;
+            this.labelDown.Text = "Down";
+            // 
+            // comboBoxUp
+            // 
+            this.comboBoxUp.FormattingEnabled = true;
+            this.comboBoxUp.Location = new System.Drawing.Point(6, 87);
+            this.comboBoxUp.Name = "comboBoxUp";
+            this.comboBoxUp.Size = new System.Drawing.Size(126, 21);
+            this.comboBoxUp.TabIndex = 5;
+            // 
+            // labelUp
+            // 
+            this.labelUp.AutoSize = true;
+            this.labelUp.Location = new System.Drawing.Point(138, 95);
+            this.labelUp.Name = "labelUp";
+            this.labelUp.Size = new System.Drawing.Size(21, 13);
+            this.labelUp.TabIndex = 4;
+            this.labelUp.Text = "Up";
+            // 
+            // comboBoxRight
+            // 
+            this.comboBoxRight.FormattingEnabled = true;
+            this.comboBoxRight.Location = new System.Drawing.Point(6, 60);
+            this.comboBoxRight.Name = "comboBoxRight";
+            this.comboBoxRight.Size = new System.Drawing.Size(126, 21);
+            this.comboBoxRight.TabIndex = 3;
+            // 
+            // labelRight
+            // 
+            this.labelRight.AutoSize = true;
+            this.labelRight.Location = new System.Drawing.Point(138, 68);
+            this.labelRight.Name = "labelRight";
+            this.labelRight.Size = new System.Drawing.Size(32, 13);
+            this.labelRight.TabIndex = 2;
+            this.labelRight.Text = "Right";
+            // 
+            // comboBoxLeft
+            // 
+            this.comboBoxLeft.FormattingEnabled = true;
+            this.comboBoxLeft.Location = new System.Drawing.Point(6, 33);
+            this.comboBoxLeft.Name = "comboBoxLeft";
+            this.comboBoxLeft.Size = new System.Drawing.Size(126, 21);
+            this.comboBoxLeft.TabIndex = 1;
+            // 
+            // labelLeft
+            // 
+            this.labelLeft.AutoSize = true;
+            this.labelLeft.Location = new System.Drawing.Point(138, 41);
+            this.labelLeft.Name = "labelLeft";
+            this.labelLeft.Size = new System.Drawing.Size(25, 13);
+            this.labelLeft.TabIndex = 0;
+            this.labelLeft.Text = "Left";
+            // 
+            // CloseButton
+            // 
+            this.CloseButton.Location = new System.Drawing.Point(234, 388);
+            this.CloseButton.Name = "CloseButton";
+            this.CloseButton.Size = new System.Drawing.Size(75, 23);
+            this.CloseButton.TabIndex = 32;
+            this.CloseButton.Text = "OK";
+            this.CloseButton.UseVisualStyleBackColor = true;
+            this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
             // 
             // formOptions
             // 
@@ -516,12 +516,12 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPageOptions.ResumeLayout(false);
             this.tabPageOptions.PerformLayout();
-            this.tabPageKeys.ResumeLayout(false);
-            this.tabPageKeys.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AntialiasingLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.AnsiotropicLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.height)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.width)).EndInit();
+            this.tabPageKeys.ResumeLayout(false);
+            this.tabPageKeys.PerformLayout();
             this.ResumeLayout(false);
 
         }

@@ -88,7 +88,6 @@ namespace RouteViewer
 			{
 				Directory.CreateDirectory(optionsFolder);
 			}
-			CultureInfo Culture = CultureInfo.InvariantCulture;
 			string configFile = Path.CombineFile(optionsFolder, "options_rv.cfg");
 			if (!File.Exists(configFile))
 			{
