@@ -199,7 +199,7 @@ namespace Route.Bve5
 					Train.Cars[i].Doors[1] = new Door(1, 10000, 10000);
 					Train.Cars[i].Width = 2.6;
 					Train.Cars[i].Height = 3.2;
-					Train.Cars[i].Coupler = new Coupler(0.05, 0.1, Train.Cars[i], i < Train.Cars.Length - 1 ? Train.Cars[i + 1] : null, Train);
+					Train.Cars[i].Coupler = new Coupler(0.05, 0.1, Train.Cars[i], i < Train.Cars.Length - 1 ? Train.Cars[i + 1] : null);
 					if (i + 1 < Train.Cars.Length)
 					{
 						Train.Cars[i].Length = OtherTrain.CarObjects[i].Distance - OtherTrain.CarObjects[i + 1].Distance;

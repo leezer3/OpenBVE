@@ -21,7 +21,7 @@
 		TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
 		TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
 		PlayerTrainDistance, TrainDistance, TrainDistanceToCar, PlayerTrackDistance, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, CurveRadiusOfCar, FrontAxleCurveRadius, FrontAxleCurveRadiusOfCar, RearAxleCurveRadius, RearAxleCurveRadiusOfCar, CurveCant, CurveCantOfCar, Pitch, PitchOfCar, Odometer, OdometerOfCar, BrightnessOfCar,
-		Doors, DoorsIndex,
+		Doors, DoorsIndex, FrontCoupler, FrontCouplerIndex, RearCoupler, RearCouplerIndex,
 		LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
 		LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
 		LeftDoorButton, RightDoorButton, PilotLamp, Headlights,

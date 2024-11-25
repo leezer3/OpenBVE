@@ -18,11 +18,11 @@ namespace TrainManager.Car
 
 		/// <summary>The base car which the coupling is attached to</summary>
 		/// <remarks>This is the FRONT car when travelling in the notional forwards direction</remarks>
-		internal CarBase baseCar;
+		internal CarBase BaseCar;
 
 		/// <summary>The connected car</summary>
 		/// <remarks>This is the REAR car when travelling in the notional forwards direction</remarks>
-		internal CarBase connectedCar;
+		public CarBase ConnectedCar;
 
 		/// <summary>The sound played when this coupler is uncoupled</summary>
 		public CarSound UncoupleSound;
@@ -32,17 +32,14 @@ namespace TrainManager.Car
 
 		private bool canUncouple;
 
-		internal AbstractTrain baseTrain;
-
-		public Coupler(double minimumDistance, double maximumDistance, CarBase frontCar, CarBase rearCar, AbstractTrain train)
+		public Coupler(double minimumDistance, double maximumDistance, CarBase frontCar, CarBase rearCar)
 		{
 			MinimumDistanceBetweenCars = minimumDistance;
 			MaximumDistanceBetweenCars = maximumDistance;
-			baseCar = frontCar;
-			connectedCar = rearCar ?? frontCar;
+			BaseCar = frontCar;
+			ConnectedCar = rearCar ?? frontCar;
 
 			CarSections = new CarSection[] { };
-			baseTrain = train;
 			ChangeSection(-1);
 			UncoupleSound = new CarSound();
 			canUncouple = true;
@@ -51,21 +48,21 @@ namespace TrainManager.Car
 
 		public override bool CanUncouple
 		{
-			get => connectedCar != baseCar && canUncouple;
+			get => ConnectedCar != BaseCar && canUncouple;
 			set => canUncouple = value;
 		}
 
 		public void UpdateObjects(double TimeElapsed, bool ForceUpdate)
 		{
 			// calculate positions and directions for section element update
-			Vector3 d = new Vector3(baseCar.RearAxle.Follower.WorldPosition - connectedCar.FrontAxle.Follower.WorldPosition);
+			Vector3 d = new Vector3(BaseCar.RearAxle.Follower.WorldPosition - ConnectedCar.FrontAxle.Follower.WorldPosition);
 			Vector3 u, s;
 			double t = d.NormSquared();
 			if (t != 0.0)
 			{
 				t = 1.0 / Math.Sqrt(t);
 				d *= t;
-				u = new Vector3((baseCar.Up + connectedCar.Up) * 0.5);
+				u = new Vector3((BaseCar.Up + ConnectedCar.Up) * 0.5);
 				s.X = d.Z * u.Y - d.Y * u.Z;
 				s.Y = d.X * u.Z - d.Z * u.X;
 				s.Z = d.Y * u.X - d.X * u.Y;
@@ -76,14 +73,14 @@ namespace TrainManager.Car
 				s = Vector3.Right;
 			}
 
-			Vector3 p = new Vector3(0.5 * (baseCar.RearAxle.Follower.WorldPosition + connectedCar.FrontAxle.Follower.WorldPosition));
+			Vector3 p = new Vector3(0.5 * (BaseCar.RearAxle.Follower.WorldPosition + ConnectedCar.FrontAxle.Follower.WorldPosition));
 			// determine visibility
 			Vector3 cd = new Vector3(p - TrainManagerBase.Renderer.Camera.AbsolutePosition);
 			double dist = cd.NormSquared();
-			double bid = TrainManagerBase.Renderer.Camera.ViewingDistance + baseCar.Length;
+			double bid = TrainManagerBase.Renderer.Camera.ViewingDistance + BaseCar.Length;
 			bool CurrentlyVisible = dist < bid * bid;
 			// Updates the brightness value
-			byte dnb = (byte)baseCar.Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, 1.0);
+			byte dnb = (byte)BaseCar.Brightness.CurrentBrightness(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, 1.0);
 			
 			// update current section
 			int cs = CurrentCarSection;
@@ -124,7 +121,7 @@ namespace TrainManager.Car
 
 			if (SectionIndex >= 0)
 			{
-				CarSections[SectionIndex].Initialize(baseCar.CurrentlyVisible);
+				CarSections[SectionIndex].Initialize(BaseCar.CurrentlyVisible);
 				for (int j = 0; j < CarSections[SectionIndex].Groups[0].Elements.Length; j++)
 				{
 					TrainManagerBase.currentHost.ShowObject(CarSections[SectionIndex].Groups[0].Elements[j].internalObject, ObjectType.Dynamic);
@@ -171,7 +168,7 @@ namespace TrainManager.Car
 					updatefunctions = true;
 				}
 
-				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(baseTrain, baseCar.Index, (baseCar.RearAxle.Follower.TrackPosition + connectedCar.FrontAxle.Follower.TrackPosition) * 0.5, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
+				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(BaseCar.baseTrain, BaseCar.Index, (BaseCar.RearAxle.Follower.TrackPosition + ConnectedCar.FrontAxle.Follower.TrackPosition) * 0.5, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
 			}
 		}
 

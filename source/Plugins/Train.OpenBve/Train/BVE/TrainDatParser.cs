@@ -1340,11 +1340,11 @@ namespace Train.OpenBve
 			for (int i = 0; i < Cars; i++) {
 				if (Train.Cars.Length > 1)
 				{
-					Train.Cars[i].Coupler = new Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i], i < Cars - 1 ? Train.Cars[i + 1] : null, Train);
+					Train.Cars[i].Coupler = new Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i], i < Cars - 1 ? Train.Cars[i + 1] : null);
 				}
 				else
 				{
-					Train.Cars[i].Coupler = new Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i], null, Train);
+					Train.Cars[i].Coupler = new Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i], null);
 				}
 				if (i == DriverCar)
 				{

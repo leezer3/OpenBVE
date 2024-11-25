@@ -1596,7 +1596,82 @@ namespace OpenBve {
 							}
 						} 
 						s++; break;
-						// default
+					case Instructions.FrontCoupler:
+						if (Train != null)
+						{
+							if (CarIndex > 0 && CarIndex < Train.Cars.Length)
+							{
+								// not the first car in a train, hence must be coupled
+								Function.Stack[s] = 1;
+							}
+							else
+							{
+								Function.Stack[s] = 0;
+							}
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.FrontCouplerIndex:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								// not the first car in a train, hence must be coupled
+								Function.Stack[s - 1] = 1.0;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
+					case Instructions.RearCoupler:
+						if (Train != null)
+						{
+							if (CarIndex == 0)
+							{
+								Function.Stack[s] = 0.0;
+							}
+							else
+							{
+								// if connected car is not null, then state is coupled
+								Function.Stack[s] = Train.Cars[CarIndex].Coupler.ConnectedCar != null ? 1.0 : 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.RearCouplerIndex:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].Coupler.ConnectedCar != null ? 1.0 : 0.0;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
+					// default
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");
 				}

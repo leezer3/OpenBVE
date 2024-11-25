@@ -861,7 +861,7 @@ namespace TrainManager.Trains
 						maxDistance = Cars[i + 1].Coupler.MaximumDistanceBetweenCars;
 					}
 
-					Cars[i].Coupler = new Coupler(minDistance, maxDistance, Cars[i], i < Cars.Length - 1 ? Cars[i + 1] : null, this);
+					Cars[i].Coupler = new Coupler(minDistance, maxDistance, Cars[i], i < Cars.Length - 1 ? Cars[i + 1] : null);
 				}
 
 				PlaceCars(trackPosition);
@@ -1137,7 +1137,7 @@ namespace TrainManager.Trains
 				Cars[i].RearBogie.RearAxle.Follower.Train = this;
 				if (i < Cars.Length - 1)
 				{
-					Cars[i].Coupler.connectedCar = Cars[i + 1];
+					Cars[i].Coupler.ConnectedCar = Cars[i + 1];
 				}
 			}
 

@@ -425,7 +425,7 @@ namespace TrainManager.Car
 						}
 
 						Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalFollowingCars);
-						baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.connectedCar = baseTrain.Cars[baseTrain.Cars.Length - 1];
+						baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.ConnectedCar = baseTrain.Cars[baseTrain.Cars.Length - 1];
 					}
 					else
 					{
