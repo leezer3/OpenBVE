@@ -367,7 +367,15 @@ namespace Formats.OpenBve
 				{
 					
 					string relativePath = value.Value;
-					finalPath = Path.CombineFile(absolutePath, relativePath);
+					try
+					{
+						finalPath = Path.CombineFile(absolutePath, relativePath);
+					}
+					catch
+					{
+						finalPath = string.Empty;
+					}
+
 					if (File.Exists(finalPath))
 					{
 						return true;
