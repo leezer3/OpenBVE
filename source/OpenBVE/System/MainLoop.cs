@@ -52,7 +52,8 @@ namespace OpenBve
 			}
 			Program.FileSystem.AppendToLogFile(@"--------------------", false);
 
-
+			Program.FileSystem.AppendToLogFile("Detected Platform: " + Program.CurrentHost.Platform);
+			Program.FileSystem.AppendToLogFile("Backend: " + (Interface.CurrentOptions.PreferNativeBackend ? "Native" : "SDL2"));
 			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
 				Tolk.Load();
