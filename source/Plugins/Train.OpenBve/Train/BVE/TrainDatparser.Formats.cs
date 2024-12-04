@@ -1,4 +1,5 @@
-﻿namespace Train.OpenBve
+﻿// ReSharper disable InconsistentNaming
+namespace Train.OpenBve
 {
 	/// <summary>The different train.dat format types</summary>
 	internal enum TrainDatFormats

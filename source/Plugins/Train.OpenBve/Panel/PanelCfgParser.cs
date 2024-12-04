@@ -79,14 +79,14 @@ namespace Train.OpenBve
 			// default background
 			string PanelBackground = Path.CombineFile(TrainPath, "panel.bmp");
 
-			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(Lines, Plugin.currentHost);
+			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(Lines, Plugin.CurrentHost);
 
 			cfg.ReadBlock(PanelSections.Panel, out var Block);
 			if (Block != null && Block.GetPath(PanelKey.Background, TrainPath, out var panelBackground))
 			{
 				PanelBackground = panelBackground;
 			}
-			Plugin.currentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out var panelTexture, true);
+			Plugin.CurrentHost.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out var panelTexture, true);
 			SemiHeight = PanelSize.Y - panelTexture.Height;
 			CreateElement(Car, 0, SemiHeight, panelTexture.Width, panelTexture.Height, WorldZ + EyeDistance, panelTexture, Color32.White);
 
@@ -121,7 +121,7 @@ namespace Train.OpenBve
 
 						if (Type != 0 & Type != 1)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "Type must be either 0 or 1 in " + Block.Key + " in " + FileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type must be either 0 or 1 in " + Block.Key + " in " + FileName);
 							Type = 0;
 						}
 
@@ -157,7 +157,7 @@ namespace Train.OpenBve
 									UnitFactor = 98066.5;
 									break;
 								default:
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Units are invalid in " + Block.Key + " in " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Units are invalid in " + Block.Key + " in " + FileName);
 									break;
 							}
 						}
@@ -173,14 +173,14 @@ namespace Train.OpenBve
 						// background
 						if (Background != null)
 						{
-							Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var pressureBackgroundTexture, true);
+							Plugin.CurrentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var pressureBackgroundTexture, true);
 							CreateElement(Car, Center.X - 0.5 * pressureBackgroundTexture.Width, Center.Y + SemiHeight - 0.5 * pressureBackgroundTexture.Height, WorldZ + EyeDistance - 3.0 * StackDistance, pressureBackgroundTexture);
 						}
 
 						// cover
 						if (Cover != null)
 						{
-							Plugin.currentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var pressureCoverTexture, true);
+							Plugin.CurrentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var pressureCoverTexture, true);
 							CreateElement(Car, Center.X - 0.5 * pressureCoverTexture.Width, Center.Y + SemiHeight - 0.5 * pressureCoverTexture.Height, WorldZ + EyeDistance - 6.0 * StackDistance, pressureCoverTexture);
 						}
 
@@ -193,7 +193,7 @@ namespace Train.OpenBve
 								{
 									string Folder = Plugin.FileSystem.GetDataFolder("Compatibility");
 									File = Path.CombineFile(Folder, k == 0 ? "needle_pressuregauge_lower.png" : "needle_pressuregauge_upper.png");
-									Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var pressureNeedleTexture, true);
+									Plugin.CurrentHost.RegisterTexture(File, new TextureParameters(null, null), out var pressureNeedleTexture, true);
 									int j = CreateElement(Car, Center.X - Radius * pressureNeedleTexture.AspectRatio, Center.Y + SemiHeight - Radius, 2.0 * Radius * pressureNeedleTexture.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - (4 + k) * StackDistance, pressureNeedleTexture, NeedleColor[k]);
 									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
@@ -220,7 +220,7 @@ namespace Train.OpenBve
 											break;
 									}
 
-									Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, Variable + " " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
+									Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.CurrentHost, Variable + " " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
 								}
 							}
 						}
@@ -297,7 +297,7 @@ namespace Train.OpenBve
 										break;
 								}
 
-								Car.CarSections[0].Groups[0].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, Variable + " " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
+								Car.CarSections[0].Groups[0].Elements[j].LEDFunction = new FunctionScript(Plugin.CurrentHost, Variable + " " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
 							}
 						}
 						break;
@@ -310,7 +310,7 @@ namespace Train.OpenBve
 
 						if (Type != 0 & Type != 1)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "Type must be either 0 or 1 in " + Block.Key + " in " + FileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type must be either 0 or 1 in " + Block.Key + " in " + FileName);
 							Type = 0;
 						}
 
@@ -341,21 +341,21 @@ namespace Train.OpenBve
 						if (!string.IsNullOrEmpty(Background))
 						{
 							// background/led
-							Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var speedometerBackgroundTexture, true);
+							Plugin.CurrentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var speedometerBackgroundTexture, true);
 							CreateElement(Car, Center.X - 0.5 * speedometerBackgroundTexture.Width, Center.Y + SemiHeight - 0.5 * speedometerBackgroundTexture.Height, WorldZ + EyeDistance - 3.0 * StackDistance, speedometerBackgroundTexture);
 						}
 
 						if (!string.IsNullOrEmpty(Cover))
 						{
 							// cover
-							Plugin.currentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var speedometerCoverTexture, true);
+							Plugin.CurrentHost.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out var speedometerCoverTexture, true);
 							CreateElement(Car, Center.X - 0.5 * speedometerCoverTexture.Width, Center.Y + SemiHeight - 0.5 * speedometerCoverTexture.Height, WorldZ + EyeDistance - 6.0 * StackDistance, speedometerCoverTexture);
 						}
 
 						if (!string.IsNullOrEmpty(ATCPath))
 						{
 							// atc
-							Plugin.currentHost.QueryTextureDimensions(ATCPath, out var atcWidth, out var atcHeight);
+							Plugin.CurrentHost.QueryTextureDimensions(ATCPath, out var atcWidth, out var atcHeight);
 							if (atcWidth > 0 & atcHeight > 0)
 							{
 								int n = atcWidth / atcHeight;
@@ -416,7 +416,7 @@ namespace Train.OpenBve
 
 									double x = Center.X - 0.5 * atcHeight + Math.Sin(a) * ATCRadius;
 									double y = Center.Y - 0.5 * atcHeight - Math.Cos(a) * ATCRadius + SemiHeight;
-									Plugin.currentHost.RegisterTexture(ATCPath, new TextureParameters(new TextureClipRegion(j * atcHeight, 0, atcHeight, atcHeight), Color24.Blue), out var ATCTexture, true);
+									Plugin.CurrentHost.RegisterTexture(ATCPath, new TextureParameters(new TextureClipRegion(j * atcHeight, 0, atcHeight, atcHeight), Color24.Blue), out var ATCTexture, true);
 									if (j == 0)
 									{
 										k = CreateElement(Car, x, y, atcHeight, atcHeight, WorldZ + EyeDistance - 4.0 * StackDistance, ATCTexture, Color32.White);
@@ -427,7 +427,7 @@ namespace Train.OpenBve
 									}
 								}
 
-								Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "271 pluginstate", false);
+								Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.CurrentHost, "271 pluginstate", false);
 							}
 						}
 
@@ -436,14 +436,14 @@ namespace Train.OpenBve
 							// needle
 							string Folder = Plugin.FileSystem.GetDataFolder("Compatibility");
 							File = Path.CombineFile(Folder, "needle_speedometer.png");
-							Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var speedometerNeedleTexture, true);
+							Plugin.CurrentHost.RegisterTexture(File, new TextureParameters(null, null), out var speedometerNeedleTexture, true);
 							int j = CreateElement(Car, Center.X - Radius * speedometerNeedleTexture.AspectRatio, Center.Y + SemiHeight - Radius, 2.0 * Radius * speedometerNeedleTexture.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, speedometerNeedleTexture, needleColor);
 							Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 							Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
 							Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
 							double c0 = Angle + Math.PI;
 							double c1 = 2.0 * (Math.PI - Angle) / Maximum;
-							Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
+							Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.CurrentHost, "speedometer abs " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
 						}
 						else if (Type == 1)
 						{
@@ -494,7 +494,7 @@ namespace Train.OpenBve
 							};
 							double c0 = Angle;
 							double c1 = 2.0 * (Math.PI - Angle) / Maximum;
-							Car.CarSections[0].Groups[0].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
+							Car.CarSections[0].Groups[0].Elements[j].LEDFunction = new FunctionScript(Plugin.CurrentHost, "speedometer abs " + c1.ToString(Culture) + " " + c0.ToString(Culture) + " fma", false);
 						}
 						break;
 					case PanelSections.DigitalIndicator:
@@ -523,7 +523,7 @@ namespace Train.OpenBve
 								default:
 									if (!NumberFormats.TryParseIntVb6(Unit, out Units))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "Units are invalid in " + Block.Key + " in " + FileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Units are invalid in " + Block.Key + " in " + FileName);
 										Units = 0;
 									}
 									break;
@@ -532,7 +532,7 @@ namespace Train.OpenBve
 
 						if (Units < 0 | Units > 2)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "Value must be between 0 and 2 in " + Block.Key + " in " + FileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value must be between 0 and 2 in " + Block.Key + " in " + FileName);
 							Units = 0;
 						}
 
@@ -551,37 +551,37 @@ namespace Train.OpenBve
 
 						if (Size.X <= 0)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "Width is required to be specified in " + Block.Key + " in " + FileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Width is required to be specified in " + Block.Key + " in " + FileName);
 							break;
 						}
 
 						if (Size.Y <= 0)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "Height is required to be specified in " + Block.Key + " in " + FileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Height is required to be specified in " + Block.Key + " in " + FileName);
 							break;
 						}
 
-						Plugin.currentHost.QueryTextureDimensions(digitalNumber, out var digitalNumberWidth, out var digitalNumberHeight);
+						Plugin.CurrentHost.QueryTextureDimensions(digitalNumber, out var digitalNumberWidth, out var digitalNumberHeight);
 						if (digitalNumberWidth > 0 & digitalNumberHeight > 0)
 						{
 							//Generate an error message rather than crashing if the clip region is invalid
 							if (Size.X > digitalNumberWidth)
 							{
 								Size.X = digitalNumberWidth;
-								Plugin.currentHost.AddMessage(MessageType.Warning, false, "Clip region width was greater than the texture width " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Clip region width was greater than the texture width " + Block.Key + " in " + FileName);
 							}
 
 							if (Size.Y > digitalNumberHeight)
 							{
 								Size.X = digitalNumberHeight;
-								Plugin.currentHost.AddMessage(MessageType.Warning, false, "Clip region height was greater than the texture height " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Clip region height was greater than the texture height " + Block.Key + " in " + FileName);
 							}
 
 							int n = digitalNumberHeight / (int)Size.Y;
 							Texture[] digitalNumberTextures = new Texture[n];
 							for (int j = 0; j < n; j++)
 							{
-								Plugin.currentHost.RegisterTexture(digitalNumber, new TextureParameters(new TextureClipRegion(digitalNumberWidth - (int)Size.X, j * (int)Size.Y, (int)Size.X, (int)Size.Y), Color24.Blue), out digitalNumberTextures[j]);
+								Plugin.CurrentHost.RegisterTexture(digitalNumber, new TextureParameters(new TextureClipRegion(digitalNumberWidth - (int)Size.X, j * (int)Size.Y, (int)Size.X, (int)Size.Y), Color24.Blue), out digitalNumberTextures[j]);
 							}
 
 							// hundreds
@@ -597,7 +597,7 @@ namespace Train.OpenBve
 									CreateElement(Car, Corner.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
 								}
 							}
-							Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 100 >= <> 100 quotient 10 mod 10 ?", false);
+							Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.CurrentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 100 >= <> 100 quotient 10 mod 10 ?", false);
 
 							// tens
 							k = -1;
@@ -612,7 +612,7 @@ namespace Train.OpenBve
 									CreateElement(Car, Corner.X + Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
 								}
 							}
-							Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 10 >= <> 10 quotient 10 mod 10 ?", false);
+							Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.CurrentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * ~ 10 >= <> 10 quotient 10 mod 10 ?", false);
 
 							// ones
 							k = -1;
@@ -628,7 +628,7 @@ namespace Train.OpenBve
 								}
 							}
 
-							Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * floor 10 mod", false);
+							Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.CurrentHost, "speedometer abs " + UnitFactor.ToString(Culture) + " * floor 10 mod", false);
 						}
 						break;
 					case PanelSections.PilotLamp:
@@ -643,11 +643,11 @@ namespace Train.OpenBve
 
 						Block.GetVector2(PanelKey.Corner, ',', out Corner);
 
-						Plugin.currentHost.RegisterTexture(turnOnPath, new TextureParameters(null, Color24.Blue), out var t0, true);
-						Plugin.currentHost.RegisterTexture(turnOffPath, new TextureParameters(null, Color24.Blue), out var t1, true);
+						Plugin.CurrentHost.RegisterTexture(turnOnPath, new TextureParameters(null, Color24.Blue), out var t0, true);
+						Plugin.CurrentHost.RegisterTexture(turnOffPath, new TextureParameters(null, Color24.Blue), out var t1, true);
 						int elementIndex = CreateElement(Car, Corner.X, Corner.Y + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t0);
 						CreateElement(Car, Corner.X, Corner.Y + SemiHeight, WorldZ + EyeDistance - 2.0 * StackDistance, t1, true);
-						Car.CarSections[0].Groups[0].Elements[elementIndex].StateFunction = new FunctionScript(Plugin.currentHost, "doors 0 !=", false);
+						Car.CarSections[0].Groups[0].Elements[elementIndex].StateFunction = new FunctionScript(Plugin.CurrentHost, "doors 0 !=", false);
 						break;
 					case PanelSections.Watch:
 						Color24 handColor = Color24.Black;
@@ -663,37 +663,37 @@ namespace Train.OpenBve
 
 						if (!string.IsNullOrEmpty(Background))
 						{
-							Plugin.currentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var watchBackgroundTexture, true);
+							Plugin.CurrentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var watchBackgroundTexture, true);
 							CreateElement(Car, Center.X - 0.5 * watchBackgroundTexture.Width, Center.Y + SemiHeight - 0.5 * watchBackgroundTexture.Height, WorldZ + EyeDistance - 3.0 * StackDistance, watchBackgroundTexture);
 						}
 
 						string compatabilityFolder = Plugin.FileSystem.GetDataFolder("Compatibility");
 						// hour
 						File = Path.CombineFile(compatabilityFolder, "needle_hour.png");
-						Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var hourTexture, true);
+						Plugin.CurrentHost.RegisterTexture(File, new TextureParameters(null, null), out var hourTexture, true);
 						int handElement = CreateElement(Car, Center.X - handRadius * hourTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * hourTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 4.0 * StackDistance, hourTexture, handColor);
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection = Vector3.Backward;
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection = Vector3.Right;
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection, Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection);
-						Car.CarSections[0].Groups[0].Elements[handElement].RotateZFunction = new FunctionScript(Plugin.currentHost, "time 0.000277777777777778 * floor 0.523598775598298 *", false);
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateZFunction = new FunctionScript(Plugin.CurrentHost, "time 0.000277777777777778 * floor 0.523598775598298 *", false);
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDamping = new Damping(20.0, 0.4);
 						// minute
 						File = Path.CombineFile(compatabilityFolder, "needle_minute.png");
-						Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var minuteTexture, true);
+						Plugin.CurrentHost.RegisterTexture(File, new TextureParameters(null, null), out var minuteTexture, true);
 						handElement = CreateElement(Car, Center.X - handRadius * minuteTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * minuteTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 5.0 * StackDistance, minuteTexture, handColor);
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection = Vector3.Backward;
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection = Vector3.Right;
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection, Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection);
-						Car.CarSections[0].Groups[0].Elements[handElement].RotateZFunction = new FunctionScript(Plugin.currentHost, "time 0.0166666666666667 * floor 0.10471975511966 *", false);
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateZFunction = new FunctionScript(Plugin.CurrentHost, "time 0.0166666666666667 * floor 0.10471975511966 *", false);
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDamping = new Damping(20.0, 0.4);
 						// second
 						File = Path.CombineFile(compatabilityFolder, "needle_second.png");
-						Plugin.currentHost.RegisterTexture(File, new TextureParameters(null, null), out var secondTexture, true);
+						Plugin.CurrentHost.RegisterTexture(File, new TextureParameters(null, null), out var secondTexture, true);
 						handElement = CreateElement(Car, Center.X - handRadius * secondTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * secondTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 6.0 * StackDistance, secondTexture, handColor);
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection = Vector3.Backward;
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection = Vector3.Right;
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection, Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection);
-						Car.CarSections[0].Groups[0].Elements[handElement].RotateZFunction = new FunctionScript(Plugin.currentHost, "time floor 0.10471975511966 *", false);
+						Car.CarSections[0].Groups[0].Elements[handElement].RotateZFunction = new FunctionScript(Plugin.CurrentHost, "time floor 0.10471975511966 *", false);
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDamping = new Damping(20.0, 0.4);
 						break;
 					case PanelSections.BrakeIndicator:
@@ -707,10 +707,10 @@ namespace Train.OpenBve
 						if (indicatorWidth <= 0)
 						{
 							indicatorWidth = 1;
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "Width is expected to be positive in " + Block.Key + " in " + FileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Width is expected to be positive in " + Block.Key + " in " + FileName);
 						}
 
-						Plugin.currentHost.QueryTextureDimensions(brakeIndicatorPath, out var w, out var h);
+						Plugin.CurrentHost.QueryTextureDimensions(brakeIndicatorPath, out var w, out var h);
 						if (w > 0 & h > 0)
 						{
 							int n = w / indicatorWidth;
@@ -718,7 +718,7 @@ namespace Train.OpenBve
 							for (int j = 0; j < n; j++)
 							{
 								TextureClipRegion clip = new TextureClipRegion(j * indicatorWidth, 0, indicatorWidth, h);
-								Plugin.currentHost.RegisterTexture(brakeIndicatorPath, new TextureParameters(clip, Color24.Blue), out var brakeIndicatorTexture);
+								Plugin.CurrentHost.RegisterTexture(brakeIndicatorPath, new TextureParameters(clip, Color24.Blue), out var brakeIndicatorTexture);
 								if (j == 0)
 								{
 									k = CreateElement(Car, Corner.X, Corner.Y + SemiHeight, indicatorWidth, h, WorldZ + EyeDistance - StackDistance, brakeIndicatorTexture, Color32.White);
@@ -733,7 +733,7 @@ namespace Train.OpenBve
 							{
 								int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
 								int em = maxpow + 3;
-								Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > " + maxpow.ToString(Culture) + " BrakeNotch + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
+								Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.CurrentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > " + maxpow.ToString(Culture) + " BrakeNotch + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
 							}
 							else
 							{
@@ -742,13 +742,13 @@ namespace Train.OpenBve
 									int em = Car.baseTrain.Handles.Power.MaximumNotch + 2 + Car.baseTrain.Handles.Brake.MaximumNotch;
 									int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
 									int maxpowp1 = maxpow + 1;
-									Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " holdBrake " + maxpowp1.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpowp1.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ? ?", false);
+									Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.CurrentHost, "emergencyBrake " + em.ToString(Culture) + " holdBrake " + maxpowp1.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpowp1.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ? ?", false);
 								}
 								else
 								{
 									int em = Car.baseTrain.Handles.Power.MaximumNotch + 1 + Car.baseTrain.Handles.Brake.MaximumNotch;
 									int maxpow = Car.baseTrain.Handles.Power.MaximumNotch;
-									Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.currentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpow.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
+									Car.CarSections[0].Groups[0].Elements[k].StateFunction = new FunctionScript(Plugin.CurrentHost, "emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpow.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ?", false);
 								}
 							}
 						}
@@ -767,7 +767,7 @@ namespace Train.OpenBve
 		private int CreateElement(CarBase Car, double Left, double Top, double Width, double Height, double WorldZ, Texture Texture, Color32 Color, bool AddStateToLastElement = false)
 		{
 			// create object
-			StaticObject Object = new StaticObject(Plugin.currentHost);
+			StaticObject Object = new StaticObject(Plugin.CurrentHost);
 			Vector3[] v = new Vector3[4];
 			double sx = 0.5 * WorldSize.X * Width / PanelSize.X;
 			double sy = 0.5 * WorldSize.Y * Height / PanelSize.Y;
@@ -815,9 +815,9 @@ namespace Train.OpenBve
 			{
 				int n = Car.CarSections[0].Groups[0].Elements.Length;
 				Array.Resize(ref Car.CarSections[0].Groups[0].Elements, n + 1);
-				Car.CarSections[0].Groups[0].Elements[n] = new AnimatedObject(Plugin.currentHost, Object);
+				Car.CarSections[0].Groups[0].Elements[n] = new AnimatedObject(Plugin.CurrentHost, Object);
 				Car.CarSections[0].Groups[0].Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
-				Plugin.currentHost.CreateDynamicObject(ref Car.CarSections[0].Groups[0].Elements[n].internalObject);
+				Plugin.CurrentHost.CreateDynamicObject(ref Car.CarSections[0].Groups[0].Elements[n].internalObject);
 				return n;
 			}
 		}

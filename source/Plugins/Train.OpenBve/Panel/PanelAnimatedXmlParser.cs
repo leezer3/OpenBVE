@@ -101,7 +101,7 @@ namespace Train.OpenBve
 									case "number":
 										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out n))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
 								}
@@ -137,19 +137,19 @@ namespace Train.OpenBve
 									case "position":
 										if (!Vector3.TryParse(KeyNode.Value, ',', out Position))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Position is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Position is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case "size":
 										if (!Vector3.TryParse(KeyNode.Value, ',', out Size))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Size is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Size is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case "jumpscreen":
 										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out JumpScreen))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case "soundindex":
@@ -157,7 +157,7 @@ namespace Train.OpenBve
 										{
 											if (!NumberFormats.TryParseIntVb6(Value, out var SoundIndex))
 											{
-												Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												break;
 											}
 											SoundIndices.Add(SoundIndex);
@@ -181,7 +181,7 @@ namespace Train.OpenBve
 											}
 											else
 											{
-												Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 											}
 										}
 										break;
@@ -193,13 +193,13 @@ namespace Train.OpenBve
 
 										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out CommandEntry.Option))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case "soundentries":
 										if (!KeyNode.HasElements)
 										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, $"An empty list of touch sound indices was defined at line {((IXmlLineInfo)KeyNode).LineNumber} in XML file {FileName}");
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"An empty list of touch sound indices was defined at line {((IXmlLineInfo)KeyNode).LineNumber} in XML file {FileName}");
 											break;
 										}
 
@@ -208,7 +208,7 @@ namespace Train.OpenBve
 									case "commandentries":
 										if (!KeyNode.HasElements)
 										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, $"An empty list of touch commands was defined at line {((IXmlLineInfo)KeyNode).LineNumber} in XML file {FileName}");
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"An empty list of touch commands was defined at line {((IXmlLineInfo)KeyNode).LineNumber} in XML file {FileName}");
 											break;
 										}
 
@@ -246,19 +246,19 @@ namespace Train.OpenBve
 											if (System.IO.File.Exists(File))
 											{
 												System.Text.Encoding e = TextEncoding.GetSystemEncodingFromFile(File);
-												Plugin.currentHost.LoadObject(File, e, out var currentObject);
+												Plugin.CurrentHost.LoadObject(File, e, out var currentObject);
 												var a = (AnimatedObjectCollection)currentObject;
 												if (a != null)
 												{
 													for (int i = 0; i < a.Objects.Length; i++)
 													{
-														Plugin.currentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
+														Plugin.CurrentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
 													}
 													CarSection.Groups[GroupIndex].Elements = a.Objects;
 												}
 												else
 												{
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												}
 											}
 										}
@@ -277,7 +277,7 @@ namespace Train.OpenBve
 			{
 				if (childNode.Name.LocalName.ToLowerInvariant() != "entry")
 				{
-					Plugin.currentHost.AddMessage(MessageType.Error, false, $"Invalid entry node {childNode.Name.LocalName} in XML node {parent.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber}");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"Invalid entry node {childNode.Name.LocalName} in XML node {parent.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber}");
 				}
 				else
 				{
@@ -298,7 +298,7 @@ namespace Train.OpenBve
 								{
 									if (!NumberFormats.TryParseIntVb6(value, out var index))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 										break;
 									}
 
@@ -317,7 +317,7 @@ namespace Train.OpenBve
 			{
 				if (childNode.Name.LocalName.ToLowerInvariant() != "entry")
 				{
-					Plugin.currentHost.AddMessage(MessageType.Error, false, $"Invalid entry node {childNode.Name.LocalName} in XML node {parent.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber}");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"Invalid entry node {childNode.Name.LocalName} in XML node {parent.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber}");
 				}
 				else
 				{
@@ -346,7 +346,7 @@ namespace Train.OpenBve
 								}
 								else
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 								break;
 							case "option":
@@ -354,7 +354,7 @@ namespace Train.OpenBve
 								{
 									if (!NumberFormats.TryParseIntVb6(value, out var option))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 										break;
 									}
 									entry.Option = option;
@@ -378,7 +378,7 @@ namespace Train.OpenBve
             Vertex t5 = new Vertex(Size.X, -Size.Y, Size.Z);
             Vertex t6 = new Vertex(-Size.X, -Size.Y, Size.Z);
             Vertex t7 = new Vertex(-Size.X, Size.Y, Size.Z);
-			StaticObject Object = new StaticObject(Plugin.currentHost);
+			StaticObject Object = new StaticObject(Plugin.CurrentHost);
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3, t4, t5, t6, t7 };
             Object.Mesh.Faces = new[] { new MeshFace(new[] { 0, 1, 2, 3 }), new MeshFace(new[] { 0, 4, 5, 1 }), new MeshFace(new[] { 0, 3, 7, 4 }), new MeshFace(new[] { 6, 5, 4, 7 }), new MeshFace(new[] { 6, 7, 3, 2 }), new MeshFace(new[] { 6, 2, 1, 5 }) };
 			Object.Mesh.Materials = new MeshMaterial[1];
@@ -396,7 +396,7 @@ namespace Train.OpenBve
 			Array.Resize(ref Group.TouchElements, n + 1);
 			Group.TouchElements[n] = new TouchElement
 			{
-				Element = new AnimatedObject(Plugin.currentHost),
+				Element = new AnimatedObject(Plugin.CurrentHost),
 				JumpScreenIndex = ScreenIndex,
 				SoundIndices = SoundIndices,
 				ControlIndices = new int[CommandEntries.Length]
@@ -406,7 +406,7 @@ namespace Train.OpenBve
 			Group.TouchElements[n].Element.States[0].Prototype = Object;
 			Group.TouchElements[n].Element.CurrentState = 0;
 			Group.TouchElements[n].Element.internalObject = new ObjectState(Object);
-			Plugin.currentHost.CreateDynamicObject(ref Group.TouchElements[n].Element.internalObject);
+			Plugin.CurrentHost.CreateDynamicObject(ref Group.TouchElements[n].Element.internalObject);
 			int m = Plugin.CurrentControls.Length;
 			Array.Resize(ref Plugin.CurrentControls, m + CommandEntries.Length);
 			for (int i = 0; i < CommandEntries.Length; i++)

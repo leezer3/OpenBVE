@@ -62,7 +62,7 @@ namespace Train.OpenBve
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			Dictionary<int, string> MotorFiles = new Dictionary<int, string>();
 
-			ConfigFile<SoundCfgSection, SoundCfgKey> cfg = new ConfigFile<SoundCfgSection, SoundCfgKey>(Lines, Plugin.currentHost, "Version 1.0");
+			ConfigFile<SoundCfgSection, SoundCfgKey> cfg = new ConfigFile<SoundCfgSection, SoundCfgKey>(Lines, Plugin.CurrentHost, "Version 1.0");
 			while (cfg.RemainingSubBlocks > 0)
 			{
 				Block<SoundCfgSection, SoundCfgKey> block = cfg.ReadNextBlock();
@@ -80,11 +80,11 @@ namespace Train.OpenBve
 
 								if (train.Cars[c].Run.Sounds.ContainsKey(runIndex))
 								{
-									train.Cars[c].Run.Sounds[runIndex] = new CarSound(Plugin.currentHost, fileName, SoundCfgParser.mediumRadius, center);
+									train.Cars[c].Run.Sounds[runIndex] = new CarSound(Plugin.CurrentHost, fileName, SoundCfgParser.mediumRadius, center);
 								}
 								else
 								{
-									train.Cars[c].Run.Sounds.Add(runIndex, new CarSound(Plugin.currentHost, fileName, SoundCfgParser.mediumRadius, center));
+									train.Cars[c].Run.Sounds.Add(runIndex, new CarSound(Plugin.CurrentHost, fileName, SoundCfgParser.mediumRadius, center));
 								}
 							}
 						}
@@ -101,11 +101,11 @@ namespace Train.OpenBve
 
 								if (train.Cars[c].Flange.Sounds.ContainsKey(flangeIndex))
 								{
-									train.Cars[c].Flange.Sounds[flangeIndex] = new CarSound(Plugin.currentHost, fileName, SoundCfgParser.mediumRadius, center);
+									train.Cars[c].Flange.Sounds[flangeIndex] = new CarSound(Plugin.CurrentHost, fileName, SoundCfgParser.mediumRadius, center);
 								}
 								else
 								{
-									train.Cars[c].Flange.Sounds.Add(flangeIndex, new CarSound(Plugin.currentHost, fileName, SoundCfgParser.mediumRadius, center));
+									train.Cars[c].Flange.Sounds.Add(flangeIndex, new CarSound(Plugin.CurrentHost, fileName, SoundCfgParser.mediumRadius, center));
 								}
 							}
 						}
@@ -125,7 +125,7 @@ namespace Train.OpenBve
 
 							if (!System.IO.File.Exists(MotorFiles[motorIndex]))
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, true, "File " + MotorFiles[motorIndex] + " does not exist in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "File " + MotorFiles[motorIndex] + " does not exist in file " + FileName);
 								MotorFiles[motorIndex] = string.Empty;
 							}
 						}
@@ -148,8 +148,8 @@ namespace Train.OpenBve
 								}
 								Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[c].FrontAxle.Position);
 								Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[c].RearAxle.Position);
-								train.Cars[c].FrontAxle.PointSounds[switchIndex] = new CarSound(Plugin.currentHost, fileName, SoundCfgParser.smallRadius, frontaxle);
-								train.Cars[c].RearAxle.PointSounds[switchIndex] = new CarSound(Plugin.currentHost, fileName, SoundCfgParser.smallRadius, rearaxle);
+								train.Cars[c].FrontAxle.PointSounds[switchIndex] = new CarSound(Plugin.CurrentHost, fileName, SoundCfgParser.smallRadius, frontaxle);
+								train.Cars[c].RearAxle.PointSounds[switchIndex] = new CarSound(Plugin.CurrentHost, fileName, SoundCfgParser.smallRadius, rearaxle);
 							}
 						}
 						break;
@@ -162,14 +162,14 @@ namespace Train.OpenBve
 						block.GetPath(SoundCfgKey.BpDecomp, trainFolder, out string bpDecomp);
 						for (int c = 0; c < train.Cars.Length; c++)
 						{
-							train.Cars[c].CarBrake.AirHigh = new CarSound(Plugin.currentHost, bcReleaseHigh, SoundCfgParser.smallRadius, center);
-							train.Cars[c].CarBrake.Air = new CarSound(Plugin.currentHost, bcRelease, SoundCfgParser.smallRadius, center);
-							train.Cars[c].CarBrake.AirZero = new CarSound(Plugin.currentHost, bcReleaseFull, SoundCfgParser.smallRadius, center);
-							train.Cars[c].CarBrake.Release = new CarSound(Plugin.currentHost, bpDecomp, SoundCfgParser.smallRadius, center);
+							train.Cars[c].CarBrake.AirHigh = new CarSound(Plugin.CurrentHost, bcReleaseHigh, SoundCfgParser.smallRadius, center);
+							train.Cars[c].CarBrake.Air = new CarSound(Plugin.CurrentHost, bcRelease, SoundCfgParser.smallRadius, center);
+							train.Cars[c].CarBrake.AirZero = new CarSound(Plugin.CurrentHost, bcReleaseFull, SoundCfgParser.smallRadius, center);
+							train.Cars[c].CarBrake.Release = new CarSound(Plugin.CurrentHost, bpDecomp, SoundCfgParser.smallRadius, center);
 							
 						}
-						train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Plugin.currentHost, emergency, SoundCfgParser.mediumRadius, center);
-						train.Handles.EmergencyBrake.ReleaseSound = new CarSound(Plugin.currentHost, emergencyRelease, SoundCfgParser.mediumRadius, center);
+						train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Plugin.CurrentHost, emergency, SoundCfgParser.mediumRadius, center);
+						train.Handles.EmergencyBrake.ReleaseSound = new CarSound(Plugin.CurrentHost, emergencyRelease, SoundCfgParser.mediumRadius, center);
 						break;
 					case SoundCfgSection.Compressor:
 						block.GetPath(SoundCfgKey.Attack, trainFolder, out string attack);
@@ -179,9 +179,9 @@ namespace Train.OpenBve
 						{
 							if (train.Cars[c].CarBrake.brakeType == BrakeType.Main)
 							{
-								train.Cars[c].CarBrake.airCompressor.StartSound = new CarSound(Plugin.currentHost, attack, SoundCfgParser.mediumRadius, center);
-								train.Cars[c].CarBrake.airCompressor.LoopSound = new CarSound(Plugin.currentHost, loop, SoundCfgParser.mediumRadius, center);
-								train.Cars[c].CarBrake.airCompressor.EndSound = new CarSound(Plugin.currentHost, release, SoundCfgParser.mediumRadius, center);
+								train.Cars[c].CarBrake.airCompressor.StartSound = new CarSound(Plugin.CurrentHost, attack, SoundCfgParser.mediumRadius, center);
+								train.Cars[c].CarBrake.airCompressor.LoopSound = new CarSound(Plugin.CurrentHost, loop, SoundCfgParser.mediumRadius, center);
+								train.Cars[c].CarBrake.airCompressor.EndSound = new CarSound(Plugin.CurrentHost, release, SoundCfgParser.mediumRadius, center);
 							}
 						}
 						break;
@@ -190,45 +190,45 @@ namespace Train.OpenBve
 						block.GetPath(SoundCfgKey.Right, trainFolder, out string springR);
 						for (int c = 0; c < train.Cars.Length; c++)
 						{
-							train.Cars[c].Suspension.SpringL = new CarSound(Plugin.currentHost, springL, SoundCfgParser.smallRadius, left);
-							train.Cars[c].Suspension.SpringR = new CarSound(Plugin.currentHost, springR, SoundCfgParser.smallRadius, left);
+							train.Cars[c].Suspension.SpringL = new CarSound(Plugin.CurrentHost, springL, SoundCfgParser.smallRadius, left);
+							train.Cars[c].Suspension.SpringR = new CarSound(Plugin.CurrentHost, springR, SoundCfgParser.smallRadius, left);
 						}
 						break;
 					case SoundCfgSection.Horn:
 						if (block.GetPath(SoundCfgKey.Primary, trainFolder, out string primaryLoop) || block.GetPath(SoundCfgKey.PrimaryLoop, trainFolder, out primaryLoop))
 						{
-							Plugin.currentHost.RegisterSound(primaryLoop, SoundCfgParser.largeRadius, out var sound);
+							Plugin.CurrentHost.RegisterSound(primaryLoop, SoundCfgParser.largeRadius, out var sound);
 							train.Cars[train.DriverCar].Horns[0].LoopSound = sound as SoundBuffer;
 							train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
 							train.Cars[train.DriverCar].Horns[0].Loop = false;
 							if (block.GetPath(SoundCfgKey.PrimaryStart, trainFolder, out string primaryStart))
 							{
-								Plugin.currentHost.RegisterSound(primaryStart, SoundCfgParser.largeRadius, out var startSound);
+								Plugin.CurrentHost.RegisterSound(primaryStart, SoundCfgParser.largeRadius, out var startSound);
 								train.Cars[train.DriverCar].Horns[0].StartSound = startSound as SoundBuffer;
 								train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
 							}
 							if (block.GetPath(SoundCfgKey.PrimaryStart, trainFolder, out string primaryEnd))
 							{
-								Plugin.currentHost.RegisterSound(primaryEnd, SoundCfgParser.largeRadius, out var endSound);
+								Plugin.CurrentHost.RegisterSound(primaryEnd, SoundCfgParser.largeRadius, out var endSound);
 								train.Cars[train.DriverCar].Horns[0].StartSound = endSound as SoundBuffer;
 								train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
 							}
 						}
 						if (block.GetPath(SoundCfgKey.Secondary, trainFolder, out string secondaryLoop) || block.GetPath(SoundCfgKey.SecondaryLoop, trainFolder, out secondaryLoop))
 						{
-							Plugin.currentHost.RegisterSound(secondaryLoop, SoundCfgParser.largeRadius, out var sound);
+							Plugin.CurrentHost.RegisterSound(secondaryLoop, SoundCfgParser.largeRadius, out var sound);
 							train.Cars[train.DriverCar].Horns[1].LoopSound = sound as SoundBuffer;
 							train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
 							train.Cars[train.DriverCar].Horns[1].Loop = false;
 							if (block.GetPath(SoundCfgKey.SecondaryStart, trainFolder, out string secondaryStart))
 							{
-								Plugin.currentHost.RegisterSound(secondaryStart, SoundCfgParser.largeRadius, out var startSound);
+								Plugin.CurrentHost.RegisterSound(secondaryStart, SoundCfgParser.largeRadius, out var startSound);
 								train.Cars[train.DriverCar].Horns[1].StartSound = startSound as SoundBuffer;
 								train.Cars[train.DriverCar].Horns[1].StartEndSounds = true;
 							}
 							if (block.GetPath(SoundCfgKey.SecondaryEnd, trainFolder, out string secondaryEnd))
 							{
-								Plugin.currentHost.RegisterSound(secondaryEnd, SoundCfgParser.largeRadius, out var endSound);
+								Plugin.CurrentHost.RegisterSound(secondaryEnd, SoundCfgParser.largeRadius, out var endSound);
 								train.Cars[train.DriverCar].Horns[1].EndSound = endSound as SoundBuffer;
 								train.Cars[train.DriverCar].Horns[1].StartEndSounds = true;
 							}
@@ -236,19 +236,19 @@ namespace Train.OpenBve
 						}
 						if (block.GetPath(SoundCfgKey.Music, trainFolder, out string musicLoop) || block.GetPath(SoundCfgKey.MusicLoop, trainFolder, out musicLoop))
 						{
-							Plugin.currentHost.RegisterSound(musicLoop, SoundCfgParser.mediumRadius, out var sound);
+							Plugin.CurrentHost.RegisterSound(musicLoop, SoundCfgParser.mediumRadius, out var sound);
 							train.Cars[train.DriverCar].Horns[0].LoopSound = sound as SoundBuffer;
 							train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
 							train.Cars[train.DriverCar].Horns[0].Loop = false;
 							if (block.GetPath(SoundCfgKey.MusicStart, trainFolder, out string musicStart))
 							{
-								Plugin.currentHost.RegisterSound(musicStart, SoundCfgParser.mediumRadius, out var startSound);
+								Plugin.CurrentHost.RegisterSound(musicStart, SoundCfgParser.mediumRadius, out var startSound);
 								train.Cars[train.DriverCar].Horns[0].StartSound = startSound as SoundBuffer;
 								train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
 							}
 							if (block.GetPath(SoundCfgKey.MusicEnd, trainFolder, out string musicEnd))
 							{
-								Plugin.currentHost.RegisterSound(musicEnd, SoundCfgParser.mediumRadius, out var endSound);
+								Plugin.CurrentHost.RegisterSound(musicEnd, SoundCfgParser.mediumRadius, out var endSound);
 								train.Cars[train.DriverCar].Horns[0].EndSound = endSound as SoundBuffer;
 								train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
 							}
@@ -262,10 +262,10 @@ namespace Train.OpenBve
 						block.GetPath(SoundCfgKey.CloseRight, trainFolder, out string closeRight);
 						for (int c = 0; c < train.Cars.Length; c++)
 						{
-							train.Cars[c].Doors[0].OpenSound = new CarSound(Plugin.currentHost, openLeft, SoundCfgParser.smallRadius, left);
-							train.Cars[c].Doors[0].CloseSound = new CarSound(Plugin.currentHost, closeLeft, SoundCfgParser.smallRadius, left);
-							train.Cars[c].Doors[1].OpenSound = new CarSound(Plugin.currentHost, openRight, SoundCfgParser.smallRadius, right);
-							train.Cars[c].Doors[1].CloseSound = new CarSound(Plugin.currentHost, closeRight, SoundCfgParser.smallRadius, right);
+							train.Cars[c].Doors[0].OpenSound = new CarSound(Plugin.CurrentHost, openLeft, SoundCfgParser.smallRadius, left);
+							train.Cars[c].Doors[0].CloseSound = new CarSound(Plugin.CurrentHost, closeLeft, SoundCfgParser.smallRadius, left);
+							train.Cars[c].Doors[1].OpenSound = new CarSound(Plugin.CurrentHost, openRight, SoundCfgParser.smallRadius, right);
+							train.Cars[c].Doors[1].CloseSound = new CarSound(Plugin.CurrentHost, closeRight, SoundCfgParser.smallRadius, right);
 						}
 						break;
 					case SoundCfgSection.ATS:
@@ -273,23 +273,23 @@ namespace Train.OpenBve
 						{
 							if (!train.Cars[train.DriverCar].Sounds.Plugin.ContainsKey(atsIndex))
 							{
-								train.Cars[train.DriverCar].Sounds.Plugin.Add(atsIndex, new CarSound(Plugin.currentHost, fileName, SoundCfgParser.tinyRadius, panel));
+								train.Cars[train.DriverCar].Sounds.Plugin.Add(atsIndex, new CarSound(Plugin.CurrentHost, fileName, SoundCfgParser.tinyRadius, panel));
 							}
 							else
 							{
-								train.Cars[train.DriverCar].Sounds.Plugin[atsIndex] = new CarSound(Plugin.currentHost, fileName, SoundCfgParser.tinyRadius, panel);
+								train.Cars[train.DriverCar].Sounds.Plugin[atsIndex] = new CarSound(Plugin.CurrentHost, fileName, SoundCfgParser.tinyRadius, panel);
 							}
 						}
 						break;
 					case SoundCfgSection.Buzzer:
 						block.GetPath(SoundCfgKey.Correct, trainFolder, out string buzzerCorrect);
-						train.SafetySystems.StationAdjust.AdjustAlarm = new CarSound(Plugin.currentHost, buzzerCorrect, SoundCfgParser.tinyRadius, panel);
+						train.SafetySystems.StationAdjust.AdjustAlarm = new CarSound(Plugin.CurrentHost, buzzerCorrect, SoundCfgParser.tinyRadius, panel);
 						break;
 					case SoundCfgSection.PilotLamp:
 						block.GetPath(SoundCfgKey.On, trainFolder, out string lampOn);
 						block.GetPath(SoundCfgKey.Off, trainFolder, out string lampOff);
-						train.SafetySystems.PilotLamp.OnSound = new CarSound(Plugin.currentHost, lampOn, SoundCfgParser.tinyRadius, panel);
-						train.SafetySystems.PilotLamp.OffSound = new CarSound(Plugin.currentHost, lampOff, SoundCfgParser.tinyRadius, panel);
+						train.SafetySystems.PilotLamp.OnSound = new CarSound(Plugin.CurrentHost, lampOn, SoundCfgParser.tinyRadius, panel);
+						train.SafetySystems.PilotLamp.OffSound = new CarSound(Plugin.CurrentHost, lampOff, SoundCfgParser.tinyRadius, panel);
 						break;
 					case SoundCfgSection.BrakeHandle:
 						block.GetPath(SoundCfgKey.Apply, trainFolder, out string apply);
@@ -298,12 +298,12 @@ namespace Train.OpenBve
 						block.GetPath(SoundCfgKey.ReleaseFast, trainFolder, out string brakeReleaseFast);
 						block.GetPath(SoundCfgKey.Min, trainFolder, out string brakeMin);
 						block.GetPath(SoundCfgKey.Max, trainFolder, out string brakeMax);
-						train.Handles.Brake.Increase = new CarSound(Plugin.currentHost, apply, SoundCfgParser.tinyRadius, panel);
-						train.Handles.Brake.IncreaseFast = new CarSound(Plugin.currentHost, applyFast, SoundCfgParser.tinyRadius, panel);
-						train.Handles.Brake.Decrease = new CarSound(Plugin.currentHost, brakeRelease, SoundCfgParser.tinyRadius, panel);
-						train.Handles.Brake.DecreaseFast = new CarSound(Plugin.currentHost, brakeReleaseFast, SoundCfgParser.tinyRadius, panel);
-						train.Handles.Brake.Min = new CarSound(Plugin.currentHost, brakeMin, SoundCfgParser.tinyRadius, panel);
-						train.Handles.Brake.Max = new CarSound(Plugin.currentHost, brakeMax, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Brake.Increase = new CarSound(Plugin.CurrentHost, apply, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Brake.IncreaseFast = new CarSound(Plugin.CurrentHost, applyFast, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Brake.Decrease = new CarSound(Plugin.CurrentHost, brakeRelease, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Brake.DecreaseFast = new CarSound(Plugin.CurrentHost, brakeReleaseFast, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Brake.Min = new CarSound(Plugin.CurrentHost, brakeMin, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Brake.Max = new CarSound(Plugin.CurrentHost, brakeMax, SoundCfgParser.tinyRadius, panel);
 						break;
 					case SoundCfgSection.MasterController:
 						block.GetPath(SoundCfgKey.Up, trainFolder, out string up);
@@ -312,37 +312,37 @@ namespace Train.OpenBve
 						block.GetPath(SoundCfgKey.DownFast, trainFolder, out string downFast);
 						block.GetPath(SoundCfgKey.Min, trainFolder, out string powerMin);
 						block.GetPath(SoundCfgKey.Max, trainFolder, out string powerMax);
-						train.Handles.Power.Increase = new CarSound(Plugin.currentHost, up, SoundCfgParser.tinyRadius, panel);
-						train.Handles.Power.IncreaseFast = new CarSound(Plugin.currentHost, upFast, SoundCfgParser.tinyRadius, panel);
-						train.Handles.Power.Decrease = new CarSound(Plugin.currentHost, down, SoundCfgParser.tinyRadius, panel);
-						train.Handles.Power.DecreaseFast = new CarSound(Plugin.currentHost, downFast, SoundCfgParser.tinyRadius, panel);
-						train.Handles.Power.Min = new CarSound(Plugin.currentHost, powerMin, SoundCfgParser.tinyRadius, panel);
-						train.Handles.Power.Max = new CarSound(Plugin.currentHost, powerMax, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Power.Increase = new CarSound(Plugin.CurrentHost, up, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Power.IncreaseFast = new CarSound(Plugin.CurrentHost, upFast, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Power.Decrease = new CarSound(Plugin.CurrentHost, down, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Power.DecreaseFast = new CarSound(Plugin.CurrentHost, downFast, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Power.Min = new CarSound(Plugin.CurrentHost, powerMin, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Power.Max = new CarSound(Plugin.CurrentHost, powerMax, SoundCfgParser.tinyRadius, panel);
 						break;
 					case SoundCfgSection.Reverser:
 						block.GetPath(SoundCfgKey.On, trainFolder, out string reverserOn);
 						block.GetPath(SoundCfgKey.Off, trainFolder, out string reverserOff);
-						train.Handles.Reverser.EngageSound = new CarSound(Plugin.currentHost, reverserOn, SoundCfgParser.tinyRadius, panel);
-						train.Handles.Reverser.ReleaseSound = new CarSound(Plugin.currentHost, reverserOff, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Reverser.EngageSound = new CarSound(Plugin.CurrentHost, reverserOn, SoundCfgParser.tinyRadius, panel);
+						train.Handles.Reverser.ReleaseSound = new CarSound(Plugin.CurrentHost, reverserOff, SoundCfgParser.tinyRadius, panel);
 						break;
 					case SoundCfgSection.Breaker:
 						block.GetPath(SoundCfgKey.On, trainFolder, out string breakerOn);
 						block.GetPath(SoundCfgKey.Off, trainFolder, out string breakerOff);
-						train.Cars[train.DriverCar].Breaker.Resume = new CarSound(Plugin.currentHost, breakerOn, SoundCfgParser.smallRadius, panel);
-						train.Cars[train.DriverCar].Breaker.ResumeOrInterrupt = new CarSound(Plugin.currentHost, breakerOff, SoundCfgParser.smallRadius, panel);
+						train.Cars[train.DriverCar].Breaker.Resume = new CarSound(Plugin.CurrentHost, breakerOn, SoundCfgParser.smallRadius, panel);
+						train.Cars[train.DriverCar].Breaker.ResumeOrInterrupt = new CarSound(Plugin.CurrentHost, breakerOff, SoundCfgParser.smallRadius, panel);
 						break;
 					case SoundCfgSection.Others:
 						block.GetPath(SoundCfgKey.Noise, trainFolder, out string noise);
 						block.GetPath(SoundCfgKey.Shoe, trainFolder, out string rub);
 						block.GetPath(SoundCfgKey.Halt, trainFolder, out string halt);
-						train.SafetySystems.PassAlarm.Sound = new CarSound(Plugin.currentHost, halt, SoundCfgParser.tinyRadius, panel);
+						train.SafetySystems.PassAlarm.Sound = new CarSound(Plugin.CurrentHost, halt, SoundCfgParser.tinyRadius, panel);
 						for (int c = 0; c < train.Cars.Length; c++)
 						{
 							if (train.Cars[c].Specs.IsMotorCar | c == train.DriverCar)
 							{
-								train.Cars[c].Sounds.Loop = new CarSound(Plugin.currentHost, noise, SoundCfgParser.mediumRadius, center);
+								train.Cars[c].Sounds.Loop = new CarSound(Plugin.CurrentHost, noise, SoundCfgParser.mediumRadius, center);
 							}
-							train.Cars[c].CarBrake.Rub = new CarSound(Plugin.currentHost, rub, SoundCfgParser.mediumRadius, center);
+							train.Cars[c].CarBrake.Rub = new CarSound(Plugin.CurrentHost, rub, SoundCfgParser.mediumRadius, center);
 						}
 						break;
 					case SoundCfgSection.Windscreen:
@@ -350,10 +350,10 @@ namespace Train.OpenBve
 						block.GetPath(SoundCfgKey.WetWipe, trainFolder, out string wetWipe);
 						block.GetPath(SoundCfgKey.DryWipe, trainFolder, out string dryWipe);
 						block.GetPath(SoundCfgKey.Switch, trainFolder, out string wiperSwitch);
-						train.Cars[train.DriverCar].Windscreen.DropSound = new CarSound(Plugin.currentHost, rainDrop, SoundCfgParser.tinyRadius, panel);
-						train.Cars[train.DriverCar].Windscreen.Wipers.WetWipeSound = new CarSound(Plugin.currentHost, wetWipe, SoundCfgParser.tinyRadius, panel);
-						train.Cars[train.DriverCar].Windscreen.Wipers.DryWipeSound = new CarSound(Plugin.currentHost, dryWipe, SoundCfgParser.tinyRadius, panel);
-						train.Cars[train.DriverCar].Windscreen.Wipers.SwitchSound = new CarSound(Plugin.currentHost, wiperSwitch, SoundCfgParser.tinyRadius, panel);
+						train.Cars[train.DriverCar].Windscreen.DropSound = new CarSound(Plugin.CurrentHost, rainDrop, SoundCfgParser.tinyRadius, panel);
+						train.Cars[train.DriverCar].Windscreen.Wipers.WetWipeSound = new CarSound(Plugin.CurrentHost, wetWipe, SoundCfgParser.tinyRadius, panel);
+						train.Cars[train.DriverCar].Windscreen.Wipers.DryWipeSound = new CarSound(Plugin.CurrentHost, dryWipe, SoundCfgParser.tinyRadius, panel);
+						train.Cars[train.DriverCar].Windscreen.Wipers.SwitchSound = new CarSound(Plugin.CurrentHost, wiperSwitch, SoundCfgParser.tinyRadius, panel);
 						break;
 				}
 			}
@@ -376,7 +376,7 @@ namespace Train.OpenBve
 								int index = motorSound.Tables[i].Entries[j].SoundIndex;
 								if (MotorFiles.ContainsKey(index) && !string.IsNullOrEmpty(MotorFiles[index]))
 								{
-									Plugin.currentHost.RegisterSound(MotorFiles[index], SoundCfgParser.mediumRadius, out var mS);
+									Plugin.CurrentHost.RegisterSound(MotorFiles[index], SoundCfgParser.mediumRadius, out var mS);
 									motorSound.Tables[i].Entries[j].Buffer = mS as SoundBuffer;
 								}
 							}
@@ -386,7 +386,7 @@ namespace Train.OpenBve
 					}
 					else
 					{
-						Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected motor sound model found in car " + c);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unexpected motor sound model found in car " + c);
 					}
 				}
 			}

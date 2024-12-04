@@ -50,7 +50,7 @@ namespace Train.OpenBve
 					ParseExtensionsConfig(TrainPath, Encoding.GetEncoding(1252), ref CarObjects, ref BogieObjects, ref CouplerObjects, out VisibleFromInterior, Train);
 					return;
 				}
-				ConfigFile<ExtensionCfgSection, ExtensionCfgKey> cfg = new ConfigFile<ExtensionCfgSection, ExtensionCfgKey>(Lines, Plugin.currentHost);
+				ConfigFile<ExtensionCfgSection, ExtensionCfgKey> cfg = new ConfigFile<ExtensionCfgSection, ExtensionCfgKey>(Lines, Plugin.CurrentHost);
 				while (cfg.RemainingSubBlocks > 0)
 				{
 					Block<ExtensionCfgSection, ExtensionCfgKey> block = cfg.ReadNextBlock();
@@ -59,31 +59,31 @@ namespace Train.OpenBve
 						case ExtensionCfgSection.Exterior:
 							while (block.RemainingDataValues > 0 && block.GetIndexedPath(TrainPath, out var carIndex, out var fileName))
 							{
-								Plugin.currentHost.LoadObject(fileName, Encoding, out CarObjects[carIndex]);
+								Plugin.CurrentHost.LoadObject(fileName, Encoding, out CarObjects[carIndex]);
 							}
 							break;
 						case ExtensionCfgSection.Car:
 							if (block.Index == -1)
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid or missing CarIndex in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid or missing CarIndex in file " + FileName);
 								break;
 							}
 
 							if (block.Index >= Train.Cars.Length)
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "CarIndex " + block.Index + " does not reference an existing car in in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CarIndex " + block.Index + " does not reference an existing car in in file " + FileName);
 								break;
 							}
 
 							if (CarsDefined[block.Index])
 							{
-								Plugin.currentHost.AddMessage(MessageType.Warning, false, "CarIndex " + block.Index + " has already been declared in in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "CarIndex " + block.Index + " has already been declared in in file " + FileName);
 							}
 
 							CarsDefined[block.Index] = true;
 							if (block.GetPath(ExtensionCfgKey.Object, TrainPath, out string carObject))
 							{
-								Plugin.currentHost.LoadObject(carObject, Encoding, out CarObjects[block.Index]);
+								Plugin.CurrentHost.LoadObject(carObject, Encoding, out CarObjects[block.Index]);
 							}
 
 							if (block.GetValue(ExtensionCfgKey.Length, out double carLength))
@@ -97,7 +97,7 @@ namespace Train.OpenBve
 							{
 								if (carAxles.X >= carAxles.Y)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front for Car " + block.Index + " in file " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front for Car " + block.Index + " in file " + FileName);
 								}
 								else
 								{
@@ -113,7 +113,7 @@ namespace Train.OpenBve
 								if (distances.X > distances.Y)
 								{
 									// NOTE: Current error is misleading...
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Minimum is expected to be less than Maximum in for Coupler " + block.Index + " in file " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Minimum is expected to be less than Maximum in for Coupler " + block.Index + " in file " + FileName);
 								}
 								else
 								{
@@ -123,25 +123,25 @@ namespace Train.OpenBve
 							}
 							if (block.GetPath(ExtensionCfgKey.Object, TrainPath, out string couplerObject))
 							{
-								Plugin.currentHost.LoadObject(couplerObject, Encoding, out CouplerObjects[block.Index]);
+								Plugin.CurrentHost.LoadObject(couplerObject, Encoding, out CouplerObjects[block.Index]);
 							}
 							break;
 						case ExtensionCfgSection.Bogie:
 							if (block.Index == -1)
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid or missing BogieIndex in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid or missing BogieIndex in file " + FileName);
 								break;
 							}
 
 							if (block.Index > Train.Cars.Length * 2)
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "BogieIndex " + block.Index + " does not reference an existing bogie in in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BogieIndex " + block.Index + " does not reference an existing bogie in in file " + FileName);
 								break;
 							}
 
 							if (BogiesDefined[block.Index])
 							{
-								Plugin.currentHost.AddMessage(MessageType.Warning, false, "BogieIndex " + block.Index + " has already been declared in in file " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "BogieIndex " + block.Index + " has already been declared in in file " + FileName);
 							}
 							BogiesDefined[block.Index] = true;
 							//Assuming that there are two bogies per car
@@ -151,14 +151,14 @@ namespace Train.OpenBve
 
 							if (block.GetPath(ExtensionCfgKey.Object, TrainPath, out string bogieObject))
 							{
-								Plugin.currentHost.LoadObject(bogieObject, Encoding, out BogieObjects[block.Index]);
+								Plugin.CurrentHost.LoadObject(bogieObject, Encoding, out BogieObjects[block.Index]);
 							}
 							block.GetValue(ExtensionCfgKey.Reversed, out BogieObjectsReversed[block.Index]);
 							if (block.GetVector2(ExtensionCfgKey.Axles, ',', out Vector2 bogieAxles))
 							{
 								if (bogieAxles.X >= bogieAxles.Y)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front for Bogie " + block.Index + " in file " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front for Bogie " + block.Index + " in file " + FileName);
 								}
 								else
 								{
@@ -268,12 +268,12 @@ namespace Train.OpenBve
 				}
 				
 				if (carObjects > 0 & carObjects < Train.Cars.Length) {
-					Plugin.currentHost.AddMessage(MessageType.Warning, false, "An incomplete set of exterior objects was provided in file " + FileName);
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "An incomplete set of exterior objects was provided in file " + FileName);
 				}
 				
 				if (bogieObjects > 0 & bogieObjects < Train.Cars.Length * 2)
 				{
-					Plugin.currentHost.AddMessage(MessageType.Warning, false, "An incomplete set of bogie objects was provided in file " + FileName);
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "An incomplete set of bogie objects was provided in file " + FileName);
 				}
 			}
 		}

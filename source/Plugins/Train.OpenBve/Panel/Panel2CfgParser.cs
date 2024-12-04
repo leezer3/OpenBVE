@@ -64,7 +64,7 @@ namespace Train.OpenBve
 				}
 			}
 
-			ConfigFile<Panel2Sections, Panel2Key> cfg = new ConfigFile<Panel2Sections, Panel2Key>(Lines, Plugin.currentHost);
+			ConfigFile<Panel2Sections, Panel2Key> cfg = new ConfigFile<Panel2Sections, Panel2Key>(Lines, Plugin.CurrentHost);
 
 			if (cfg.ReadBlock(Panel2Sections.This, out var Block))
 			{
@@ -76,7 +76,7 @@ namespace Train.OpenBve
 					{
 						//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
 						//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
-						Plugin.currentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given in " + FileName);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given in " + FileName);
 					}
 
 					Block.GetValue(Panel2Key.Left, out PanelLeft);
@@ -107,8 +107,8 @@ namespace Train.OpenBve
 					Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
 					Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
 					Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out PanelNighttimeImage);
-					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true, 20000);
-					Plugin.currentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out var tnight, true, 20000);
+					Plugin.CurrentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true, 20000);
+					Plugin.CurrentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out var tnight, true, 20000);
 					CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight);
 				}
 				else
@@ -120,7 +120,7 @@ namespace Train.OpenBve
 			else
 			{
 				// no main panel image, so invalid
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "Panel2.cfg file " + FileName + " does not contain a [This] section.");
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Panel2.cfg file " + FileName + " does not contain a [This] section.");
 				return;
 			}
 
@@ -151,11 +151,11 @@ namespace Train.OpenBve
 						{
 							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
 							Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage);
-							Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
+							Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 							Texture tnight = null;
 							if (!string.IsNullOrEmpty(NighttimeImage))
 							{
-								Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
+								Plugin.CurrentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
 							}
 							int w = tday.Width;
 							int h = tday.Height;
@@ -163,11 +163,11 @@ namespace Train.OpenBve
 							string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, subjectIndex, subjectSuffix);
 							try
 							{
-								Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = !string.IsNullOrEmpty(Function) ? new FunctionScript(Plugin.currentHost, Function, true) : new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
+								Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = !string.IsNullOrEmpty(Function) ? new FunctionScript(Plugin.CurrentHost, Function, true) : new FunctionScript(Plugin.CurrentHost, f + " 1 == --", false);
 							}
 							catch
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
 							}
 						}
 						break;
@@ -195,11 +195,11 @@ namespace Train.OpenBve
 							Block.GetValue(Panel2Key.Smoothed, out bool Smoothed);
 							Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage);
 							
-							Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
+							Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 							Texture tnight = null;
 							if (!string.IsNullOrEmpty(NighttimeImage))
 							{
-								Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
+								Plugin.CurrentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
 							}
 							if (!OriginDefined)
 							{
@@ -241,11 +241,11 @@ namespace Train.OpenBve
 							}
 							try
 							{
-								Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = !string.IsNullOrEmpty(Function) ? new FunctionScript(Plugin.currentHost, Function, true) : new FunctionScript(Plugin.currentHost, f, false);
+								Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = !string.IsNullOrEmpty(Function) ? new FunctionScript(Plugin.CurrentHost, Function, true) : new FunctionScript(Plugin.CurrentHost, f, false);
 							}
 							catch
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
 							}
 							if (Backstop)
 							{
@@ -268,16 +268,16 @@ namespace Train.OpenBve
 							Block.TryGetVector2(Panel2Key.Direction, ',', ref Direction);
 							Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage);
 
-							Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
+							Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 							Texture tnight = null;
 							if (!string.IsNullOrEmpty(NighttimeImage))
 							{
-								Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
+								Plugin.CurrentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
 							}
 							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, tday.Width, tday.Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
 							if (Maximum < Minimum)
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Block.Key + " in " + FileName);
 								break;
 							}
 							string tf = GetInfixFunction(Car.baseTrain, Subject, subjectIndex, subjectSuffix, Minimum, Maximum, Width, tday.Width);
@@ -288,16 +288,16 @@ namespace Train.OpenBve
 								{
 									if (!string.IsNullOrEmpty(Function))
 									{
-										Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, Function, true);
+										Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.CurrentHost, Function, true);
 									}
 									else
 									{
-										Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, tf, false);
+										Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.CurrentHost, tf, false);
 									}
 								}
 								catch
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
 								}
 							}
 						}
@@ -310,7 +310,7 @@ namespace Train.OpenBve
 							Block.GetValue(Panel2Key.Interval, out int Interval);
 							Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage);
 
-							Plugin.currentHost.QueryTextureDimensions(DaytimeImage, out var wday, out var hday);
+							Plugin.CurrentHost.QueryTextureDimensions(DaytimeImage, out var wday, out var hday);
 							if (wday > 0 & hday > 0)
 							{
 								int numFrames = hday / Interval;
@@ -349,7 +349,7 @@ namespace Train.OpenBve
 								{
 									if ((k + 1) * Interval <= hday)
 									{
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), TransparentColor), out tday[k]);
+										Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), TransparentColor), out tday[k]);
 									}
 									else if (k * Interval >= hday)
 									{
@@ -358,18 +358,18 @@ namespace Train.OpenBve
 									}
 									else
 									{
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), TransparentColor), out tday[k]);
+										Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), TransparentColor), out tday[k]);
 									}
 								}
 								if (!string.IsNullOrEmpty(NighttimeImage))
 								{
-									Plugin.currentHost.QueryTextureDimensions(NighttimeImage, out var wnight, out var hnight);
+									Plugin.CurrentHost.QueryTextureDimensions(NighttimeImage, out var wnight, out var hnight);
 									tnight = new Texture[numFrames];
 									for (int k = 0; k < numFrames; k++)
 									{
 										if ((k + 1) * Interval <= hnight)
 										{
-											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), TransparentColor), out tnight[k]);
+											Plugin.CurrentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), TransparentColor), out tnight[k]);
 										}
 										else if (k * Interval > hnight)
 										{
@@ -377,7 +377,7 @@ namespace Train.OpenBve
 										}
 										else
 										{
-											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), TransparentColor), out tnight[k]);
+											Plugin.CurrentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), TransparentColor), out tnight[k]);
 										}
 									}
 
@@ -402,16 +402,16 @@ namespace Train.OpenBve
 								{
 									if (!string.IsNullOrEmpty(Function))
 									{
-										Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, Function, true);
+										Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.CurrentHost, Function, true);
 									}
 									else
 									{
-										Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+										Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.CurrentHost, f, false);
 									}
 								}
 								catch
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
 								}
 
 								if (Plugin.CurrentOptions.Panel2ExtendedMode)
@@ -472,16 +472,16 @@ namespace Train.OpenBve
 
 							if (Radius == 0.0)
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Radius is required to be non-zero in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Radius is required to be non-zero in " + Block.Key + " in " + FileName);
 							}
 							if (Minimum == Maximum)
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Minimum and Maximum must not be equal in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Minimum and Maximum must not be equal in " + Block.Key + " in " + FileName);
 								Radius = 0.0;
 							}
 							if (Math.Abs(InitialAngle - LastAngle) > 6.28318531)
 							{
-								Plugin.currentHost.AddMessage(MessageType.Warning, false, "The absolute difference between InitialAngle and LastAngle exceeds 360 degrees in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The absolute difference between InitialAngle and LastAngle exceeds 360 degrees in " + Block.Key + " in " + FileName);
 							}
 							// create element
 							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X - Radius, Location.Y - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color);
@@ -545,16 +545,16 @@ namespace Train.OpenBve
 							{
 								if (!string.IsNullOrEmpty(Function))
 								{
-									Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, Function, true);
+									Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.CurrentHost, Function, true);
 								}
 								else
 								{
-									Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, f, false);
+									Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.CurrentHost, f, false);
 								}
 							}
 							catch
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
 							}
 						}
 						break;
@@ -565,7 +565,7 @@ namespace Train.OpenBve
 							Block.GetValue(Panel2Key.Height, out double Height);
 							if (Width <= 0 || Height <= 0)
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Width and Height are required to be positive in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Width and Height are required to be positive in " + Block.Key + " in " + FileName);
 								break;
 							}
 
@@ -573,20 +573,20 @@ namespace Train.OpenBve
 							{
 								// The original code read this, but never used it
 								// Deliberately deprecate.
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "TransparentColor is not supported in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TransparentColor is not supported in " + Block.Key + " in " + FileName);
 							}
 
 							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, Width, Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color32.White);
 							try
 							{
-								Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, "panel2timetable", false);
+								Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.CurrentHost, "panel2timetable", false);
 							}
 							catch
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
 							}
 
-							Plugin.currentHost.AddObjectForCustomTimeTable(Car.CarSections[0].Groups[GroupIndex].Elements[j]);
+							Plugin.CurrentHost.AddObjectForCustomTimeTable(Car.CarSections[0].Groups[GroupIndex].Elements[j]);
 						}
 						break;
 					case Panel2Sections.Windscreen:
@@ -632,7 +632,7 @@ namespace Train.OpenBve
 									restPosition = WiperPosition.Right;
 									break;
 								default:
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + FileName);
 									break;
 							}
 						}
@@ -649,7 +649,7 @@ namespace Train.OpenBve
 									restPosition = WiperPosition.Right;
 									break;
 								default:
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + FileName);
 									break;
 							}
 						}
@@ -704,12 +704,12 @@ namespace Train.OpenBve
 							string f2 = drop + " snowflake";
 							try
 							{
-								Car.CarSections[0].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
-								Car.CarSections[0].Groups[GroupIndex].Elements[panelFlakeIndex].StateFunction = new FunctionScript(Plugin.currentHost, f2 + " 1 == --", false);
+								Car.CarSections[0].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Plugin.CurrentHost, f + " 1 == --", false);
+								Car.CarSections[0].Groups[GroupIndex].Elements[panelFlakeIndex].StateFunction = new FunctionScript(Plugin.CurrentHost, f2 + " 1 == --", false);
 							}
 							catch
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
 							}
 
 							currentDropX += dropInterval;
@@ -730,7 +730,7 @@ namespace Train.OpenBve
 					currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\" + compatabilityString + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
 					TransparentColor = Color24.Blue;
 				}
-				Plugin.currentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true, 20000);
+				Plugin.CurrentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true, 20000);
 				drops.Add(drop);
 			}
 
@@ -871,7 +871,7 @@ namespace Train.OpenBve
 		{
 			if (Width == 0 || Height == 0)
 			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "Attempted to create an invalid size element");
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Attempted to create an invalid size element");
 			}
 			double WorldWidth, WorldHeight;
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {
@@ -905,7 +905,7 @@ namespace Train.OpenBve
 			Vertex t1 = new Vertex(v[1], new Vector2(0.0f, 0.0f));
 			Vertex t2 = new Vertex(v[2], new Vector2(1.0f, 0.0f));
 			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
-			StaticObject Object = new StaticObject(Plugin.currentHost);
+			StaticObject Object = new StaticObject(Plugin.CurrentHost);
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
 			Object.Mesh.Faces = new[] { new MeshFace(new[] { 0, 1, 2, 0, 2, 3 }, FaceFlags.Triangles) }; //Must create as a single face like this to avoid Z-sort issues with overlapping bits
 			Object.Mesh.Materials = new MeshMaterial[1];
@@ -944,9 +944,9 @@ namespace Train.OpenBve
 			} else {
 				int n = Group.Elements.Length;
 				Array.Resize(ref Group.Elements, n + 1);
-				Group.Elements[n] = new AnimatedObject(Plugin.currentHost, Object);
+				Group.Elements[n] = new AnimatedObject(Plugin.CurrentHost, Object);
 				Group.Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
-				Plugin.currentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
+				Plugin.CurrentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
 				return n;
 			}
 		}

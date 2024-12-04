@@ -78,12 +78,12 @@ namespace Train.OpenBve
 						{
 							if (Sounds.ContainsKey(n))
 							{
-								Plugin.currentHost.RegisterSound(Files[i], Radius, out var snd);
+								Plugin.CurrentHost.RegisterSound(Files[i], Radius, out var snd);
 								Sounds[n] = new CarSound(snd, Position);
 							}
 							else
 							{
-								Plugin.currentHost.RegisterSound(Files[i], Radius, out var snd);
+								Plugin.CurrentHost.RegisterSound(Files[i], Radius, out var snd);
 								Sounds.Add(n, new CarSound(snd, Position));
 							}
 						}

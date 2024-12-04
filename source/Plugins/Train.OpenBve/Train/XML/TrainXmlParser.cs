@@ -51,7 +51,7 @@ namespace Train.OpenBve
 							case "DriverCar":
 								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out var driverCar) || driverCar < 0)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "DriverCar is invalid in XML file " + fileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DriverCar is invalid in XML file " + fileName);
 									break;
 								}
 								Train.DriverCar = driverCar;
@@ -63,7 +63,7 @@ namespace Train.OpenBve
 				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/*[self::Car or self::Coupler]");
 				if (DocumentNodes == null || DocumentNodes.Count == 0)
 				{
-					Plugin.currentHost.AddMessage(MessageType.Error, false, "No car nodes defined in XML file " + fileName);
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "No car nodes defined in XML file " + fileName);
 					//If we have no appropriate nodes specified, return false and fallback to loading the legacy Sound.cfg file
 					throw new Exception("Empty train.xml file");
 				}
@@ -74,7 +74,7 @@ namespace Train.OpenBve
 				{
 					if (carIndex > Train.Cars.Length - 1)
 					{
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
 						break;
 					}
 					if (DocumentNodes[i].ChildNodes.OfType<XmlElement>().Any())
@@ -87,7 +87,7 @@ namespace Train.OpenBve
 						{
 							if (carIndex - 1 > Train.Cars.Length - 2)
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected extra coupler encountered in XML file " + fileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unexpected extra coupler encountered in XML file " + fileName);
 								continue;
 							}
 							foreach (XmlNode c in DocumentNodes[i].ChildNodes)
@@ -97,25 +97,25 @@ namespace Train.OpenBve
 									case "minimum":
 										if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[carIndex - 1].Coupler.MinimumDistanceBetweenCars))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "MinimumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MinimumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
 										}
 										break;
 									case "maximum":
 										if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[carIndex - 1].Coupler.MaximumDistanceBetweenCars))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "MaximumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MaximumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
 										}
 										break;
 									case "object":
 										if (string.IsNullOrEmpty(c.InnerText))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid object path for Coupler " + (carIndex - 1) + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid object path for Coupler " + (carIndex - 1) + " in XML file " + fileName);
 											break;
 										}
 										string f = Path.CombineFile(currentPath, c.InnerText);
 										if (File.Exists(f))
 										{
-											Plugin.currentHost.LoadObject(f, Encoding.Default, out CouplerObjects[carIndex - 1]);
+											Plugin.CurrentHost.LoadObject(f, Encoding.Default, out CouplerObjects[carIndex - 1]);
 										}
 										break;
 									case "canuncouple":
@@ -129,7 +129,7 @@ namespace Train.OpenBve
 									case "uncouplingbehaviour":
 										if (!Enum.TryParse(c.InnerText, true, out Train.Cars[carIndex -1].Coupler.UncouplingBehaviour))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid uncoupling behaviour " + c.InnerText + " in " + c.Name + " node.");
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid uncoupling behaviour " + c.InnerText + " in " + c.Name + " node.");
 										}
 										break;
 								}
@@ -153,15 +153,15 @@ namespace Train.OpenBve
 						}
 						catch(Exception ex)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "Failed to load the child Car XML file specified in " + DocumentNodes[i].InnerText);
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "The error encountered was " + ex);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Failed to load the child Car XML file specified in " + DocumentNodes[i].InnerText);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The error encountered was " + ex);
 						}
 					}
 					if (i == DocumentNodes.Count && carIndex < Train.Cars.Length)
 					{
 						//If this is the case, the number of motor cars is the primary thing which may get confused....
 						//Not a lot to be done about this until a full replacement is built for the train.dat file & we can dump it entirely
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "WARNING: The number of cars specified in the train.xml file does not match that in the train.dat- Some properties may be invalid.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "WARNING: The number of cars specified in the train.xml file does not match that in the train.dat- Some properties may be invalid.");
 					}
 					if (DocumentNodes[i].Name == "Car")
 					{
@@ -171,7 +171,7 @@ namespace Train.OpenBve
 
 				if (Train.DriverCar >= Train.Cars.Length)
 				{
-					Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid driver car defined in XML file " + fileName);
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid driver car defined in XML file " + fileName);
 					Train.DriverCar = Train.Cars.Length - 1;
 				}
 
@@ -270,7 +270,7 @@ namespace Train.OpenBve
 								int numStates;
 								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out numStates))
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, false, "NumStates is invalid for HeadlightStates in XML file " + fileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "NumStates is invalid for HeadlightStates in XML file " + fileName);
 									break;
 								}
 
