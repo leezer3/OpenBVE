@@ -69,7 +69,7 @@ namespace Train.OpenBve
 								break;
 							}
 
-							if (block.Index > Train.Cars.Length)
+							if (block.Index >= Train.Cars.Length)
 							{
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "CarIndex " + block.Index + " does not reference an existing car in in file " + FileName);
 								break;
