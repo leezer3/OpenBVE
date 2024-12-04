@@ -766,6 +766,7 @@ namespace Train.OpenBve
 		/// <param name="Train">The train</param>
 		/// <param name="Subject">The subject to convert</param>
 		/// <param name="SubjectIndex">The index of the ATS etc. function if applicable</param>
+		/// <param name="Suffix">Optional suffix</param>
 		/// <returns>The parsed animation function stack</returns>
 		internal string GetStackLanguageFromSubject(AbstractTrain Train, Panel2Subject Subject, int SubjectIndex, string Suffix) 
 		{

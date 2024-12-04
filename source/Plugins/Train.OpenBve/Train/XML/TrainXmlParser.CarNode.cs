@@ -268,8 +268,7 @@ namespace Train.OpenBve
 										}
 										break;
 									case "reversed":
-										int nn;
-										NumberFormats.TryParseIntVb6(cc.InnerText, out nn);
+										NumberFormats.TryParseIntVb6(cc.InnerText, out int nn);
 										if (cc.InnerText.ToLowerInvariant() == "true" || nn == 1)
 										{
 											BogieObjectsReversed[Car * 2] = true;

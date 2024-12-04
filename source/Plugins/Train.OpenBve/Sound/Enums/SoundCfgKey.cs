@@ -1,4 +1,5 @@
-﻿namespace Train.OpenBve
+﻿// ReSharper disable UnusedMember.Global
+namespace Train.OpenBve
 {
 	/// <summary>The keys in a sound.cfg file</summary>
 	internal enum SoundCfgKey

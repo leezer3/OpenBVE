@@ -119,8 +119,7 @@ namespace Train.OpenBve
 										}
 										break;
 									case "canuncouple":
-										int nn;
-										NumberFormats.TryParseIntVb6(c.InnerText, out nn);
+										NumberFormats.TryParseIntVb6(c.InnerText, out int nn);
 										if (c.InnerText.ToLowerInvariant() == "false" || nn == 0)
 										{
 											Train.Cars[carIndex - 1].Coupler.CanUncouple = false;
@@ -267,8 +266,7 @@ namespace Train.OpenBve
 								}
 								break;
 							case "HeadlightStates":
-								int numStates;
-								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out numStates))
+								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out int numStates))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "NumStates is invalid for HeadlightStates in XML file " + fileName);
 									break;

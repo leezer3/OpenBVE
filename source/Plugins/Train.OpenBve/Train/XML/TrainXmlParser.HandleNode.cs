@@ -30,9 +30,8 @@ namespace Train.OpenBve
 								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unable to define a number of notches for an AirBrake handle for Car " + Car + " in XML file " + fileName);
 								break;
 							}
-
-							int numberOfNotches;
-							if (!NumberFormats.TryParseIntVb6(cc.InnerText, out numberOfNotches) | numberOfNotches < 0)
+							
+							if (!NumberFormats.TryParseIntVb6(cc.InnerText, out int numberOfNotches) | numberOfNotches < 0)
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid number of handle notches defined for Car " + Car + " in XML file " + fileName);
 							}
@@ -72,8 +71,7 @@ namespace Train.OpenBve
 								break;
 							}
 
-							int maxSpring;
-							if (!NumberFormats.TryParseIntVb6(cc.InnerText, out maxSpring) | maxSpring > Handle.MaximumNotch)
+							if (!NumberFormats.TryParseIntVb6(cc.InnerText, out int maxSpring) | maxSpring > Handle.MaximumNotch)
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid maximum handle spring value defined for Car " + Car + " in XML file " + fileName);
 							}

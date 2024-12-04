@@ -413,8 +413,7 @@ namespace Train.OpenBve
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An empty list of point front axle sounds was defined in in XML file " + fileName);
 										break;
 									}
-									CarSound[] pointSounds;
-									ParseArrayNode(c, out pointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+									ParseArrayNode(c, out CarSound[] pointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
 									// ReSharper disable once CoVariantArrayConversion
 									car.FrontAxle.PointSounds = pointSounds;
 									// ReSharper disable once CoVariantArrayConversion
@@ -426,9 +425,7 @@ namespace Train.OpenBve
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An empty list of point front axle sounds was defined in in XML file " + fileName);
 										break;
 									}
-
-									CarSound[] frontAxlePointSounds;
-									ParseArrayNode(c, out frontAxlePointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+									ParseArrayNode(c, out CarSound[] frontAxlePointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
 									// ReSharper disable once CoVariantArrayConversion
 									car.FrontAxle.PointSounds = frontAxlePointSounds;
 									break;
@@ -438,8 +435,7 @@ namespace Train.OpenBve
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
 										break;
 									}
-									CarSound[] rearAxlePointSounds;
-									ParseArrayNode(c, out rearAxlePointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+									ParseArrayNode(c, out CarSound[] rearAxlePointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
 									// ReSharper disable once CoVariantArrayConversion
 									car.RearAxle.PointSounds = rearAxlePointSounds;
 									break;
@@ -973,14 +969,7 @@ namespace Train.OpenBve
 					if (idx >= 0)
 					{
 						ParseNode(c, out var sound, Position, Radius);
-						if (Sounds.ContainsKey(idx))
-						{
-							Sounds[idx] = sound;
-						}
-						else
-						{
-							Sounds.Add(idx, sound);
-						}
+						Sounds[idx] = sound;
 					}
 					else
 					{

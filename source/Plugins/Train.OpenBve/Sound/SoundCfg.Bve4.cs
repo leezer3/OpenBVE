@@ -114,14 +114,7 @@ namespace Train.OpenBve
 					case SoundCfgSection.Motor:
 						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var motorIndex, out var fileName))
 						{
-							if (!MotorFiles.ContainsKey(motorIndex))
-							{
-								MotorFiles.Add(motorIndex, fileName);
-							}
-							else
-							{
-								MotorFiles[motorIndex] = fileName;
-							}
+							MotorFiles[motorIndex] = fileName;
 
 							if (!System.IO.File.Exists(MotorFiles[motorIndex]))
 							{

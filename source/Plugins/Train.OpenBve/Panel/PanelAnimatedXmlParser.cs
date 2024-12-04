@@ -215,10 +215,10 @@ namespace Train.OpenBve
 										ParseTouchCommandEntryNode(FileName, KeyNode, CommandEntries);
 										break;
 									case "cursor":
-										string File = Path.CombineFile(TrainPath, Value);
-										if (System.IO.File.Exists(File))
+										string cursorFile = Path.CombineFile(TrainPath, Value);
+										if (File.Exists(cursorFile))
 										{
-											cursorTexture = (Bitmap)Bitmap.FromFile(File);
+											cursorTexture = (Bitmap)Image.FromFile(cursorFile);
 										}
 										break;
 								}
@@ -242,11 +242,11 @@ namespace Train.OpenBve
 								{
 									case "filename":
 										{
-											string File = Path.CombineFile(TrainPath, Value);
-											if (System.IO.File.Exists(File))
+											string includeFile = Path.CombineFile(TrainPath, Value);
+											if (File.Exists(includeFile))
 											{
-												System.Text.Encoding e = TextEncoding.GetSystemEncodingFromFile(File);
-												Plugin.CurrentHost.LoadObject(File, e, out var currentObject);
+												System.Text.Encoding e = TextEncoding.GetSystemEncodingFromFile(includeFile);
+												Plugin.CurrentHost.LoadObject(includeFile, e, out var currentObject);
 												var a = (AnimatedObjectCollection)currentObject;
 												if (a != null)
 												{

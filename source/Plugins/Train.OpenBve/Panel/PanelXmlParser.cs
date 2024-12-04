@@ -473,7 +473,7 @@ namespace Train.OpenBve
 										string File = Path.CombineFile(Train.TrainFolder, Value);
 										if (System.IO.File.Exists(File))
 										{
-											cursorTexture = (Bitmap)Bitmap.FromFile(File);
+											cursorTexture = (Bitmap)Image.FromFile(File);
 										}
 										break;
 								}
