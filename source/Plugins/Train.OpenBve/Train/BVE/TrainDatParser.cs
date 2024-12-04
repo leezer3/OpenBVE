@@ -113,6 +113,22 @@ namespace Train.OpenBve
 					case "openbve":
 						version = 0;
 						return TrainDatFormats.openBVE;
+					case "#acceleration":
+					case "#deceleration":
+					case "#delay":
+					case "#move":
+					case "#brake":
+					case "#pressure":
+					case "#handle":
+					case "#cab":
+					case "#car":
+					case "#device":
+					case "motor_p1":
+					case "motor_p2":
+					case "brake_p1":
+					case "brake_p2":
+						version = 0;
+						return TrainDatFormats.MissingHeader;
 					default:
 						if (t.ToLowerInvariant().StartsWith("openbve"))
 						{
@@ -156,7 +172,12 @@ namespace Train.OpenBve
 			}
 
 			TrainDatFormats format = ParseFormat(lines, out _);
-
+			if (format == TrainDatFormats.MissingHeader)
+			{
+				// Some NYCTA stuff seems to be missing the version header from their train.dat files
+				// absolute mess....
+				Plugin.currentHost.AddMessage(MessageType.Warning, false, "The train.dat file " + fileName + " has a missing version header.");
+			}
 			return format != TrainDatFormats.Unsupported;
 		}
 

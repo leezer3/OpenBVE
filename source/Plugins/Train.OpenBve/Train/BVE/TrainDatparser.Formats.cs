@@ -18,6 +18,8 @@
 		/// <summary>The train.dat was written for openBVE</summary>
 		openBVE = 5,
 		/// <summary>The train.dat was created by an unknown BVE version</summary>
-		UnknownBVE = 100
+		UnknownBVE = 100,
+		/// <summary>The train.dat file is missing the required header</summary>
+		MissingHeader
 	}
 }
