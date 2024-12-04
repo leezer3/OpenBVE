@@ -1672,6 +1672,13 @@ namespace OpenBve {
 						}
 						break;
 					// default
+					case Instructions.WheelRadius:
+						Function.Stack[s] = 1.0;
+						s++; break;
+					case Instructions.WheelRadiusOfCar:
+						Function.Stack[s - 1] = 1.0;
+						break;
+					// default
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");
 				}

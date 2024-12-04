@@ -714,6 +714,30 @@ namespace OpenBveApi.Math {
 			Z = z;
 		}
 
+		/// <summary>Transforms the Vector based upon the given transform matrix</summary>
+		/// <param name="transformMatrix">The matrix by which to transform the Vector</param>
+		/// <param name="ignoreW">Whether the W component of the matrix should be ignored</param>
+		public void Transform2(Matrix4D transformMatrix, bool ignoreW = true)
+		{
+			double x = (X * transformMatrix.Column0.X) + (Y * transformMatrix.Column0.Y) + (Z * transformMatrix.Column0.Z);
+			double y = (X * transformMatrix.Column1.X) + (Y * transformMatrix.Column1.Y) + (Z * transformMatrix.Column1.Z);
+			double z = (X * transformMatrix.Column2.X) + (Y * transformMatrix.Column2.Y) + (Z * transformMatrix.Column2.Z);
+			if (!ignoreW)
+			{
+				/*
+				 * Multiplying a Vector3 by a Matrix4 is actually mathematically undefined behaviour
+				 * Some implementations appear to expect a constant W value to be added to the vector,
+				 * whereas others ignore it
+				 */
+				x += (1 * transformMatrix.Row3.X);
+				y += (1 * transformMatrix.Row3.Y);
+				z += (1 * transformMatrix.Row3.Z);
+			}
+			X = x;
+			Y = y;
+			Z = z;
+		}
+
 		/// <summary>Transforms a vector by a quaternion rotation.</summary>
 		/// <param name="vec">The vector to transform.</param>
 		/// <param name="quat">The quaternion to rotate the vector by.</param>
@@ -754,6 +778,19 @@ namespace OpenBveApi.Math {
 			}
 			double dot = Dot(firstVector, secondVector);
 			return new Vector3(secondVector.X * dot / squareMagnitude, secondVector.Y * dot / squareMagnitude, secondVector.Z * dot / squareMagnitude);
+		}
+
+		/// <summary>Returns a new Vector that is the linear blend of the 2 given Vectors</summary>
+		/// <param name="a">First input vector</param>
+		/// <param name="b">Second input vector</param>
+		/// <param name="blend">The blend factor. a when blend=0, b when blend=1.</param>
+		/// <returns>a when blend=0, b when blend=1, and a linear combination otherwise</returns>
+		public static Vector3 Lerp(Vector3 a, Vector3 b, float blend)
+		{
+			a.X = blend * (b.X - a.X) + a.X;
+			a.Y = blend * (b.Y - a.Y) + a.Y;
+			a.Z = blend * (b.Z - a.Z) + a.Z;
+			return a;
 		}
 
 		/// <summary>Determines whether this is a zero (0,0,0) vector</summary>

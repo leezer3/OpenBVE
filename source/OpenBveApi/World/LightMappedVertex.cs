@@ -275,23 +275,25 @@ namespace OpenBveApi.Objects
 		public Color128 Color;
 
 		/// <summary>Creates a new vertex</summary>
-		/// <param name="X">The x-coordinate</param>
-		/// <param name="Y">The y-coordinate</param>
-		/// <param name="Z">The z-coordinate</param>
+		/// <param name="x">The x-coordinate</param>
+		/// <param name="y">The y-coordinate</param>
+		/// <param name="z">The z-coordinate</param>
 		/// <param name="c">The color for the vertex</param>
-		public ColoredVertex(double X, double Y, double Z, Color128 c) {
-			this.Coordinates = new Vector3(X, Y, Z);
+		public ColoredVertex(double x, double y, double z, Color128 c)
+		{
+			this.Coordinates = new Vector3(x, y, z);
 			this.TextureCoordinates = new Vector2(0.0f, 0.0f);
 			this.Color = c;
 		}
 
 		/// <summary>Creates a new vertex</summary>
-		/// <param name="Coordinates">A Vector3 containing the coordinates</param>
-		/// <param name="TextureCoordinates">A Vector2 containing the texture coordinates</param>
+		/// <param name="coordinates">A Vector3 containing the coordinates</param>
+		/// <param name="textureCoordinates">A Vector2 containing the texture coordinates</param>
 		/// <param name="color">The color for the vertex</param>
-		public ColoredVertex(Vector3 Coordinates, Vector2 TextureCoordinates, Color128 color) {
-			this.Coordinates = Coordinates;
-			this.TextureCoordinates = TextureCoordinates;
+		public ColoredVertex(Vector3 coordinates, Vector2 textureCoordinates, Color128 color)
+		{
+			this.Coordinates = coordinates;
+			this.TextureCoordinates = textureCoordinates;
 			this.Color = color;
 		}
 
@@ -316,7 +318,8 @@ namespace OpenBveApi.Objects
 		/// <summary>Tests if this vertex is equal to the supplied object</summary>
 		/// <param name="obj">The supplied object</param>
 		/// <returns>Trye if they are equal, false otherwise</returns>
-		public override bool Equals(object obj) {
+		public override bool Equals(object obj)
+		{
 			if (obj == null)
 			{
 				return false;
@@ -330,9 +333,7 @@ namespace OpenBveApi.Objects
 			return true;
 		}
 
-		/// <summary>
-		/// Returns the hashcode for this instance.
-		/// </summary>
+		/// <summary>Returns the hashcode for this instance.</summary>
 		/// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
 		public override int GetHashCode()
 		{
@@ -348,6 +349,92 @@ namespace OpenBveApi.Objects
 				hashCode = (hashCode * 397) ^ Color.G.GetHashCode();
 				hashCode = (hashCode * 397) ^ Color.B.GetHashCode();
 				hashCode = (hashCode * 397) ^ Color.A.GetHashCode();
+				return hashCode;
+			}
+		}
+	}
+
+	/// <summary>Represents a vertex animated via a chain of matricies</summary>
+	public class AnimatedVertex : VertexTemplate
+	{
+		/// <summary>The matrix chain within the object to transform this vertex by</summary>
+		public int[] MatrixChain;
+
+		/// <summary>Creates a new vertex</summary>
+		/// <param name="x">The x-coordinate</param>
+		/// <param name="y">The y-coordinate</param>
+		/// <param name="z">The z-coordinate</param>
+		/// <param name="matrixChain">An array of integers containing the matrix chain</param>
+		public AnimatedVertex(double x, double y, double z, int[] matrixChain)
+		{
+			this.Coordinates = new Vector3(x, y, z);
+			this.TextureCoordinates = new Vector2(0.0f, 0.0f);
+			this.MatrixChain = matrixChain;
+		}
+
+		/// <summary>Creates a new vertex</summary>
+		/// <param name="coordinates">A Vector3 containing the coordinates</param>
+		/// <param name="textureCoordinates">A Vector2 containing the texture coordinates</param>
+		/// <param name="matrixChain">An array of integers containing the matrix chain</param>
+		public AnimatedVertex(Vector3 coordinates, Vector2 textureCoordinates, int[] matrixChain)
+		{
+			this.Coordinates = coordinates;
+			this.TextureCoordinates = textureCoordinates;
+			this.MatrixChain = matrixChain;
+		}
+
+		/// <summary>Creates a colored vertex from a base vertex and a matrix chain</summary>
+		/// <param name="v">The base vertex</param>
+		/// <param name="matrixChain">The matrix chain</param>
+		public AnimatedVertex(Vertex v, int[] matrixChain)
+		{
+			this.Coordinates = v.Coordinates;
+			this.TextureCoordinates = v.TextureCoordinates;
+			this.MatrixChain = matrixChain;
+		}
+
+		/// <summary>Clones an animated vertex</summary>
+		public AnimatedVertex(AnimatedVertex v)
+		{
+			this.Coordinates = v.Coordinates;
+			this.TextureCoordinates = v.TextureCoordinates;
+			this.MatrixChain = v.MatrixChain;
+		}
+
+		/// <summary>Tests if this vertex is equal to the supplied object</summary>
+		/// <param name="obj">The supplied object</param>
+		/// <returns>Trye if they are equal, false otherwise</returns>
+		public override bool Equals(object obj)
+		{
+			if (obj == null)
+			{
+				return false;
+			}
+
+			AnimatedVertex v = obj as AnimatedVertex;
+			if (v == null) return false;
+			if (v.Coordinates.X != Coordinates.X | v.Coordinates.Y != Coordinates.Y | v.Coordinates.Z != Coordinates.Z) return false;
+			if (v.TextureCoordinates.X != TextureCoordinates.X | v.TextureCoordinates.Y != TextureCoordinates.Y) return false;
+			if (v.MatrixChain != MatrixChain) return false;
+			return true;
+		}
+
+		/// <summary>Returns the hashcode for this instance.</summary>
+		/// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				// ReSharper disable NonReadonlyMemberInGetHashCode
+				var hashCode = Coordinates.X.GetHashCode();
+				hashCode = (hashCode * 397) ^ Coordinates.Y.GetHashCode();
+				hashCode = (hashCode * 397) ^ Coordinates.Z.GetHashCode();
+				hashCode = (hashCode * 397) ^ TextureCoordinates.X.GetHashCode();
+				hashCode = (hashCode * 397) ^ TextureCoordinates.Y.GetHashCode();
+				hashCode = (hashCode * 397) ^ MatrixChain.GetHashCode();
+				hashCode = (hashCode * 397) ^ MatrixChain.GetHashCode();
+				hashCode = (hashCode * 397) ^ MatrixChain.GetHashCode();
+				hashCode = (hashCode * 397) ^ MatrixChain.GetHashCode();
 				return hashCode;
 			}
 		}

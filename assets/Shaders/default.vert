@@ -1,4 +1,4 @@
-#version 150 core
+#version 430 core
 precision highp int;
 precision highp float;
 
@@ -20,10 +20,11 @@ struct MaterialColor
 	float shininess;
 };
 
-in vec3 iPosition;
-in vec3 iNormal;
-in vec2 iUv;
-in vec4 iColor;
+layout(location = 0) in vec3 iPosition;
+layout(location = 1) in vec3 iNormal;
+layout(location = 2) in vec2 iUv;
+layout(location = 3) in vec4 iColor;
+layout(location = 4) in int iMatrixChain;
 
 uniform mat4 uCurrentProjectionMatrix;
 uniform mat4 uCurrentModelViewMatrix;
@@ -33,6 +34,10 @@ uniform bool uIsLight;
 uniform Light uLight;
 uniform MaterialColor uMaterial;
 uniform int uMaterialFlags;
+
+layout(binding = 12, std430) buffer AnimationMatricies {
+    mat4 modelMatricies[];
+};
 
 out vec4 oViewPos;
 out vec2 oUv;
@@ -55,12 +60,60 @@ vec4 getLightResult()
 	return clamp(finalColor, 0.0, 1.0);
 }
 
+vec3 transformVector(vec3 initialVector, int matrixIndex)
+{
+	float X = (initialVector.x * modelMatricies[matrixIndex][0].x) + (initialVector.y * modelMatricies[matrixIndex][1].x) + (initialVector.z * modelMatricies[matrixIndex][2].x);
+	float Y = (initialVector.x * modelMatricies[matrixIndex][0].y) + (initialVector.y * modelMatricies[matrixIndex][1].y) + (initialVector.z * modelMatricies[matrixIndex][2].y);
+	float Z = (initialVector.x * modelMatricies[matrixIndex][0].z) + (initialVector.y * modelMatricies[matrixIndex][1].z) + (initialVector.z * modelMatricies[matrixIndex][2].z);
+	// ignoreW per DirectX
+
+	X += 1 * modelMatricies[matrixIndex][3].x;
+	Y += 1 * modelMatricies[matrixIndex][3].y;
+	Z += 1 * modelMatricies[matrixIndex][3].z;
+	return vec3(X, Y, Z);
+}
+
 void main()
 {
-	oViewPos = uCurrentModelViewMatrix * vec4(vec3(iPosition.x, iPosition.y, -iPosition.z), 1.0);
+	vec3 pos = vec3(iPosition);
+	oColor = iColor;
+
+	if(iMatrixChain != 0)
+	{	
+		// unpack packed matrix indicies
+		int m0 = (iMatrixChain & (0xff << 24)) >> 24;
+		int m1 = (iMatrixChain >> 16) & 0xff;
+		int m2 = (iMatrixChain & 0xff00) >> 8;
+		int m3 = (iMatrixChain & 0xff);
+        
+		if(m0 >=0 && m0 < 255)
+		{	
+			pos = transformVector(pos, m0);
+		}
+		
+		if(m1 >=0 && m1 < 255)
+		{
+			pos = transformVector(pos, m1);
+		}
+		
+		if(m2 >=0 && m2 < 255)
+		{
+			pos = transformVector(pos, m2);
+		}
+
+		if(m3 >=0 && m3 < 255)
+		{
+			pos = transformVector(pos, m3);
+		}		
+	}
+	
+	pos.z = -pos.z;
+	vec4 transformedPosition = vec4(pos, 1.0);
+
+	oViewPos = uCurrentModelViewMatrix * transformedPosition;
 	gl_Position = uCurrentProjectionMatrix * oViewPos;
 
 	oUv = (uCurrentTextureMatrix * vec4(iUv, 1.0, 1.0)).xy;
-	oColor = iColor;
+	
 	oLightResult = uIsLight && (uMaterialFlags & 4) == 0 ? getLightResult() : uMaterial.ambient;
 }

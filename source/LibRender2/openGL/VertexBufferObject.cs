@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -75,6 +76,11 @@ namespace LibRender2
 			{
 				GL.EnableVertexAttribArray(VertexLayout.Color);
 			}
+
+			if (VertexLayout.MatrixChain >= 0)
+			{
+				GL.EnableVertexAttribArray(VertexLayout.MatrixChain);
+			}
 		}
 
 		/// <summary>
@@ -104,6 +110,13 @@ namespace LibRender2
 			if (VertexLayout.Color >= 0)
 			{
 				GL.VertexAttribPointer(VertexLayout.Color, 4, VertexAttribPointerType.Float, false, vertexSize, offset);
+				offset += Vector4.SizeInBytes;
+			}
+
+			if (VertexLayout.MatrixChain >= 0)
+			{
+				// NOTE: Must use VertexAttribIPointer here, as VertexAttribPointer actually converts to float and normalizes.....
+				GL.VertexAttribIPointer(VertexLayout.MatrixChain, 1, VertexAttribIntegerType.Int, 48 + sizeof(int), (IntPtr)offset);
 			}
 		}
 
@@ -130,6 +143,11 @@ namespace LibRender2
 			if (VertexLayout.Color >= 0)
 			{
 				GL.DisableVertexAttribArray(VertexLayout.Color);
+			}
+
+			if (VertexLayout.MatrixChain >= 0)
+			{
+				GL.DisableVertexAttribArray(VertexLayout.MatrixChain);
 			}
 		}
 
