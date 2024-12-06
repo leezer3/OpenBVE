@@ -1,6 +1,6 @@
 //Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020, Christopher Lees, The OpenBVE Project
+//Copyright (c) 2024, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -24,7 +24,6 @@
 
 using OpenBve.Formats.MsTs;
 using OpenBveApi.Colors;
-using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -34,7 +33,6 @@ using SharpCompress.Compressors.Deflate;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 // Stop ReSharper complaining about unused stuff:
@@ -91,16 +89,6 @@ namespace Plugin
 			internal int numVerticies;
 		}
 
-		struct Matrix
-		{
-			internal Matrix(string Name, Matrix4D Matrix)
-			{
-				name = Name;
-				matrix = Matrix;
-			}
-			internal string name;
-			internal Matrix4D matrix;
-		}
 
 		struct Animation
 		{
@@ -163,6 +151,8 @@ namespace Plugin
 				vtx_states = new List<VertexStates>();
 				LODs = new List<LOD>();
 				Animations = new List<Animation>();
+				AnimatedMatricies = new Dictionary<int, int>();
+				Matricies = new List<KeyframeMatrix>();
 			}
 
 			// Global variables used by all LODs
@@ -185,6 +175,11 @@ namespace Plugin
 			internal readonly List<VertexStates> vtx_states;
 
 			internal readonly List<Animation> Animations;
+			/// <summary>Dictionary of animated matricies mapped to the final model</summary>
+			/// <remarks>Most matricies aren't animated, so don't send excessive numbers to the shader each frame</remarks>
+			internal readonly Dictionary<int, int> AnimatedMatricies;
+			/// <summary>The matricies within the shape</summary>
+			internal List<KeyframeMatrix> Matricies;
 
 			// The list of LODs actually containing the objects
 
@@ -224,7 +219,7 @@ namespace Plugin
 				this.hierarchy = new List<int>();
 			}
 
-			internal void TransformVerticies(KeyframeMatrix[] matrices, ref List<SubObject> subObjects)
+			internal void TransformVerticies(MsTsShape shape)
 			{
 				transformedVertices = new List<Vertex>(verticies);
 				
@@ -239,7 +234,7 @@ namespace Plugin
 							List<int> matrixChain = new List<int>();
 							bool staticTransform = true;
 							int hi = vertexSets[j].hierarchyIndex;
-							if (hi != -1 && hi < matrices.Length)
+							if (hi != -1 && hi < shape.Matricies.Count)
 							{
 								matrixChain.Add(hi);
 								while (hi != -1)
@@ -255,7 +250,7 @@ namespace Plugin
 										continue;
 									}
 									matrixChain.Insert(0, hi);
-									if (IsAnimated(matrices[hi].Name) && staticTransform)
+									if (IsAnimated(shape.Matricies[hi].Name) && staticTransform)
 									{
 										staticTransform = false;
 									}
@@ -272,18 +267,44 @@ namespace Plugin
 							{
 								for (int k = 0; k < matrixChain.Count; k++)
 								{
-									transformedVertices[i].Coordinates.Transform(matrices[matrixChain[k]].Matrix, false);
+									transformedVertices[i].Coordinates.Transform(shape.Matricies[matrixChain[k]].Matrix, false);
 								}
 							}
 							else
 							{
+								/*
+								 * Check if our matricies are in the shape, and copy them there if not
+								 *
+								 * Note:
+								 * ----
+								 * This is trading off a slightly slower load time for not copying large numbers of matricies to the shader each time,
+								 * so better FPS whilst running the thing
+								 */
+								for (int k = 0; k < matrixChain.Count; k++)
+								{
+									if (shape.AnimatedMatricies.ContainsKey(matrixChain[k]))
+									{
+										// replace with the actual index in the shape matrix array
+										matrixChain[k] = shape.AnimatedMatricies[matrixChain[k]];
+									}
+									else
+									{
+										// copy matrix to shape and add to our dict
+										int matrixIndex = newResult.Matricies.Length;
+										Array.Resize(ref newResult.Matricies, matrixIndex + 1);
+										newResult.Matricies[matrixIndex] = shape.Matricies[matrixChain[k]];
+										shape.AnimatedMatricies.Add(matrixChain[k], matrixIndex);
+										matrixChain[k] = matrixIndex;
+									}
+								}
+
 								// Note: transforming verticies must be done in reverse if the model is in motion
 								matrixChain.Reverse();
 								// used to pack 4 x matrix indicies into a int
 								int[] transformChain = { 255, 255, 255, 255};
-								
 								matrixChain.CopyTo(transformChain);
 								transformedVertices[i].matrixChain = transformChain;
+
 							}
 
 							break;
@@ -905,8 +926,7 @@ namespace Plugin
 					currentMatrix.Row1 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
 					currentMatrix.Row2 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
 					currentMatrix.Row3 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
-					Array.Resize(ref newResult.Matricies, newResult.Matricies.Length + 1);
-					newResult.Matricies[newResult.Matricies.Length - 1] = new KeyframeMatrix(newResult, block.Label, currentMatrix);
+					shape.Matricies.Add(new KeyframeMatrix(newResult, block.Label, currentMatrix));
 					break;
 				case KujuTokenID.normals:
 					int normalCount = block.ReadUInt16();
@@ -1164,7 +1184,7 @@ namespace Plugin
 					}
 
 					//We now need to transform our verticies
-					currentLOD.subObjects[currentLOD.subObjects.Count - 1].TransformVerticies(newResult.Matricies, ref currentLOD.subObjects);
+					currentLOD.subObjects[currentLOD.subObjects.Count - 1].TransformVerticies(shape);
 					break;
 				case KujuTokenID.vertex_uvs:
 					int[] vertex_uvs = new int[block.ReadInt32()];
@@ -1210,11 +1230,11 @@ namespace Plugin
 					break;
 				case KujuTokenID.anim_node:
 					Matrix4D matrix = Matrix4D.Identity;
-					for (int i = 0; i < newResult.Matricies.Length; i++)
+					for (int i = 0; i < shape.Matricies.Count; i++)
 					{
-						if (newResult.Matricies[i].Name == block.Label)
+						if (shape.Matricies[i].Name == block.Label)
 						{
-							matrix = newResult.Matricies[i].Matrix;
+							matrix = shape.Matricies[i].Matrix;
 							break;
 						}
 					}

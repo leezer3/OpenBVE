@@ -1,3 +1,27 @@
+//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2024, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +44,7 @@ namespace OpenBveApi.Objects
 		public Dictionary<string, KeyframeAnimation> Animations;
 		/// <summary>The objects within this object</summary>
 		public ObjectState[] Objects;
-		/// <summary>The keyframe matricies</summary>
+		/// <summary>The keyframe matricies to be sent to the shader</summary>
 		public KeyframeMatrix[] Matricies;
 
 		/// <summary>Creates an empty KeyFrameAnimatedObject</summary>
@@ -115,7 +139,7 @@ namespace OpenBveApi.Objects
 			for (int i = 0; i < Animations.Count; i++)
 			{
 				string key = Animations.ElementAt(i).Key;
-				Animations[key].Update(train, carIndex, position, trackPosition, -1, train != null, timeElapsed, -1); // current state not applicable, no hand-crafted functions
+				Animations[key].Update(train, carIndex, position, trackPosition, -1, train != null, timeElapsed); // current state not applicable, no hand-crafted functions
 			}
 			Matrix4D[] matriciesToShader = new Matrix4D[Matricies.Length];
 			for (int i = 0; i < matriciesToShader.Length; i++)
@@ -130,34 +154,4 @@ namespace OpenBveApi.Objects
 			}
 		}
 	}
-
-	public class KeyframeMatrix
-	{
-		private readonly KeyframeAnimatedObject containerObject;
-
-		public KeyframeMatrix(KeyframeAnimatedObject container, string name, Matrix4D matrix)
-		{
-			containerObject = container;
-			Name = name;
-			_matrix = matrix;
-		}
-
-		public readonly string Name;
-
-		private readonly Matrix4D _matrix;
-
-		public Matrix4D Matrix
-		{
-			get
-			{
-				if (containerObject.Animations != null && containerObject.Animations.ContainsKey(Name))
-				{
-					return containerObject.Animations[Name].Matrix;
-
-				}
-				return _matrix;
-			}
-		}
-	}
-
 }

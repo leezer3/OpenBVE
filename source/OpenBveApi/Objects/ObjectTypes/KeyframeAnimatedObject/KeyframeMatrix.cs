@@ -22,28 +22,39 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Objects
 {
-	/// <summary>An abstract animation</summary>
-    public abstract class AbstractAnimation
-    {
-		/// <summary>The name of the animation</summary>
-	    public readonly string Name;
+	/// <summary>A keyframe matrix used in a KeyframeAnimatedObject</summary>
+	public class KeyframeMatrix
+	{
+		private readonly KeyframeAnimatedObject containerObject;
 
-		/// <summary>Creates an abstract animation</summary>
-		protected AbstractAnimation(string name)
-        {
+		/// <summary>Creates a new keyframe matrix</summary>
+		public KeyframeMatrix(KeyframeAnimatedObject container, string name, Matrix4D matrix)
+		{
+			containerObject = container;
 			Name = name;
-        }
+			_matrix = matrix;
+		}
 
-		/// <summary>Updates the animation</summary>
-        public virtual void Update(double animationKey, double timeElapsed, ref Matrix4D matrix)
-        {
+		/// <summary>The matrix name</summary>
+		public readonly string Name;
+		/// <summary>The base matrix before transformations</summary>
+		private readonly Matrix4D _matrix;
+		/// <summary>Gets the final transformed matrix</summary>
+		public Matrix4D Matrix
+		{
+			get
+			{
+				if (containerObject.Animations != null && containerObject.Animations.ContainsKey(Name))
+				{
+					return containerObject.Animations[Name].Matrix;
 
-        }
-
+				}
+				return _matrix;
+			}
+		}
 	}
 }
