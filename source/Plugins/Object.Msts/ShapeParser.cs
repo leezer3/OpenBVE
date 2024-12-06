@@ -35,13 +35,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+
 // Stop ReSharper complaining about unused stuff:
 // We need to load this sequentially anyway, and
 // hopefully this will be used in a later build
+// Also disable naming warnings, as we'll use the Kuju textual representations
 
 // ReSharper disable NotAccessedField.Local
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable
+// ReSharper disable InconsistentNaming
 #pragma warning disable 0219
 namespace Plugin
 {
@@ -109,7 +112,6 @@ namespace Plugin
 			internal Vector3 Normal;
 			internal Vector2 TextureCoordinates;
 			internal int[] matrixChain;
-			internal bool alreadyTransformed;
 
 			public Vertex(Vector3 c, Vector3 n)
 			{
@@ -179,7 +181,7 @@ namespace Plugin
 			/// <remarks>Most matricies aren't animated, so don't send excessive numbers to the shader each frame</remarks>
 			internal readonly Dictionary<int, int> AnimatedMatricies;
 			/// <summary>The matricies within the shape</summary>
-			internal List<KeyframeMatrix> Matricies;
+			internal readonly List<KeyframeMatrix> Matricies;
 
 			// The list of LODs actually containing the objects
 
@@ -190,7 +192,6 @@ namespace Plugin
 
 			internal int currentPrimitiveState = -1;
 			internal int totalObjects = 0;
-			internal int currentFrame = 0;
 		}
 
 		private class LOD
@@ -237,7 +238,7 @@ namespace Plugin
 							if (hi != -1 && hi < shape.Matricies.Count)
 							{
 								matrixChain.Add(hi);
-								while (hi != -1)
+								while (true)
 								{
 									hi = currentLOD.hierarchy[hi];
 									if (hi == -1)
@@ -421,11 +422,6 @@ namespace Plugin
 		internal static UnifiedObject ReadObject(string fileName)
 		{
 			MsTsShape shape = new MsTsShape();
-			AnimatedObjectCollection Result = new AnimatedObjectCollection(Plugin.currentHost)
-			{
-				Objects = new AnimatedObject[4]
-			};
-
 			newResult = new KeyframeAnimatedObject(Plugin.currentHost);
 
 			currentFolder = Path.GetDirectoryName(fileName);
@@ -515,7 +511,6 @@ namespace Plugin
 					ParseBlock(block, ref shape);
 				}
 			}
-			Array.Resize(ref Result.Objects, shape.totalObjects);
 			Array.Resize(ref newResult.Objects, shape.totalObjects);
 			int idx = 0;
 			double[] previousLODs = new double[shape.totalObjects];
