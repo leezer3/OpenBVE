@@ -44,19 +44,7 @@ namespace RouteViewer
 				Builder.AppendLine("quadleafsize = " + QuadTreeLeafSize);
 				Builder.AppendLine();
 				Builder.AppendLine("[quality]");
-				{
-					string t; switch (Interpolation)
-					{
-						case InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
-						case InterpolationMode.Bilinear: t = "bilinear"; break;
-						case InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
-						case InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
-						case InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
-						case InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
-						default: t = "bilinearMipmapped"; break;
-					}
-					Builder.AppendLine("interpolation = " + t);
-				}
+				Builder.AppendLine("interpolation = " + Interpolation);
 				Builder.AppendLine("anisotropicfilteringlevel = " + AnisotropicFilteringLevel.ToString(Culture));
 				Builder.AppendLine("antialiasinglevel = " + AntiAliasingLevel.ToString(Culture));
 				Builder.AppendLine("transparencyMode = " + ((int)TransparencyMode).ToString(Culture));

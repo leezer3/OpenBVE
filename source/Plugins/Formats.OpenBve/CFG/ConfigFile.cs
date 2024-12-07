@@ -591,7 +591,7 @@ namespace Formats.OpenBve
 		{
 			if (keyValuePairs.TryGetValue(key, out var value))
 			{
-				if (Enum.TryParse(value.Value, out enumValue))
+				if (Enum.TryParse(value.Value, true, out enumValue))
 				{
 					return true;
 				}
