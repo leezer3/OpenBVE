@@ -185,7 +185,7 @@ namespace OpenBveApi.Math {
 				{
 					for (int i = 0; i < parameters.Length; i++)
 					{
-						if (TryParseDoubleVb6(parameters[i].Trim(new char[] { }), out a))
+						if (TryParseDoubleVb6(parameters[i].Trim(), out a))
 						{
 							int j = i + UnitFactors.Length - parameters.Length;
 							Value += a * UnitFactors[j];
