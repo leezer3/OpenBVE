@@ -189,13 +189,13 @@ namespace OpenBveApi.Packages
 	public enum CompressionType
 	{
 		/// <summary>LZMA Zip compression</summary>
-		Zip = 1,
-		/// <summary>G compression</summary>
-		TarGZ = 2,
-		GZip = 2,
+		Zip = 0,
+		/// <summary>G comp0ession</summary>
+		TarGZ = 1,
+		GZip = 1,
 		/// <summary>BZip2 compression</summary>
-		BZ2 = 3,
-		BZip = 3
+		BZ2 = 2,
+		BZip = 2
 	}
 
 	/// <summary>The current operation being performed</summary>
