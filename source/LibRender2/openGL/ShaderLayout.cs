@@ -24,10 +24,20 @@
 		/// The handle of "iColor" within the shader
 		/// </summary>
 		public short Color = -1;
+
+		/// <summary>
+		/// The handle of "iMatrixChain" within the shader
+		/// </summary>
+		public short MatrixChain = -1;
 	}
 
 	public class UniformLayout
 	{
+		/// <summary>
+		/// The handle of "uCurrentProjectionMatrix" within the shader
+		/// </summary>
+		public short CurrentAnimationMatricies = -1;
+
 		/// <summary>
 		/// The handle of "uCurrentProjectionMatrix" within the shader
 		/// </summary>

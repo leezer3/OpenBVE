@@ -723,6 +723,10 @@ namespace TrainManager.Car
 			CameraRestriction.AbsoluteTopRight += Driver;
 			CameraRestriction.AbsoluteTopRight.Rotate(new Transformation(d, Up, s));
 			CameraRestriction.AbsoluteTopRight.Translate(p);
+			if (cs >= 0 && CarSections[cs].Groups[0].Keyframes != null)
+			{
+				CarSections[cs].Groups[0].Keyframes.Update(baseTrain, Index, TrackPosition, p, d, Up, s, true, true, TimeElapsed, true);
+			}
 		}
 
 		/// <summary>Updates the given car section element</summary>
