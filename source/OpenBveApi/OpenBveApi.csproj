@@ -147,6 +147,7 @@
     <Compile Include="Objects\ObjectTypes\Animations\SlerpRot.cs" />
     <Compile Include="Objects\ObjectTypes\Animations\TcbKey.cs" />
     <Compile Include="Objects\ObjectTypes\Animations\WheelRotation.cs" />
+    <Compile Include="Objects\ObjectTypes\Animations\Wheels.cs" />
     <Compile Include="Objects\ObjectTypes\KeyframeAnimatedObject\KeyframeAnimatedObject.cs" />
     <Compile Include="Objects\ObjectTypes\KeyframeAnimatedObject\KeyframeAnimation.cs" />
     <Compile Include="Objects\ObjectTypes\KeyframeAnimatedObject\KeyframeMatrix.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="Train\TrainStopState.cs" />
     <Compile Include="Train\TrainType.cs" />
     <Compile Include="Train\TravelDirection.cs" />
+    <Compile Include="Train\Wheels.cs" />
     <Compile Include="World\Orientation3.cs" />
     <Compile Include="Packages\Packages.cs" />
     <Compile Include="Packages\Packages.Database.cs" />
