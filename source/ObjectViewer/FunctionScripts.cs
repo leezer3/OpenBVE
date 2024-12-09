@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LibRender2.Overlays;
 using ObjectViewer.Trains;
 using TrainManager.BrakeSystems;
@@ -1297,6 +1297,9 @@ namespace ObjectViewer {
 						{
 							Function.Stack[s - 1] = 0.0;
 						}
+						break;
+					case Instructions.WheelRadiusOfCar:
+						Function.Stack[s - 1] = 1.0;
 						break;
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");

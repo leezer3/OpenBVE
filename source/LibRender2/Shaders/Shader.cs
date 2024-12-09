@@ -1,4 +1,5 @@
 using System;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -87,6 +88,7 @@ namespace LibRender2.Shaders
 
 			VertexLayout = GetVertexLayout();
 			UniformLayout = GetUniformLayout();
+			int n = 0;
 		}
 
 		/// <summary>Loads the shader source and compiles the shader</summary>
@@ -151,14 +153,18 @@ namespace LibRender2.Shaders
 				Position = (short)GL.GetAttribLocation(handle, "iPosition"),
 				Normal = (short)GL.GetAttribLocation(handle, "iNormal"),
 				UV = (short)GL.GetAttribLocation(handle, "iUv"),
-				Color = (short)GL.GetAttribLocation(handle, "iColor")
+				Color = (short)GL.GetAttribLocation(handle, "iColor"),
+				MatrixChain = (short)GL.GetAttribLocation(handle, "iMatrixChain"),
 			};
+
+
 		}
 
 		public UniformLayout GetUniformLayout()
 		{
 			return new UniformLayout
 			{
+				CurrentAnimationMatricies = (short)GL.GetUniformLocation(handle, "uAnimationMatricies"),
 				CurrentProjectionMatrix = (short)GL.GetUniformLocation(handle, "uCurrentProjectionMatrix"),
 				CurrentModelViewMatrix = (short)GL.GetUniformLocation(handle, "uCurrentModelViewMatrix"),
 				CurrentTextureMatrix = (short)GL.GetUniformLocation(handle, "uCurrentTextureMatrix"),
@@ -238,6 +244,39 @@ namespace LibRender2.Shaders
 			renderer.lastObjectState = null; // clear the cached object state, as otherwise it might be stale
 			Matrix4 matrix = ConvertToMatrix4(ProjectionMatrix);
 			GL.ProgramUniformMatrix4(handle, UniformLayout.CurrentProjectionMatrix, false, ref matrix);
+		}
+
+		/// <summary>
+		/// Set the animation matricies
+		/// </summary>
+		public void SetCurrentAnimationMatricies(ObjectState objectState)
+		{
+			renderer.lastObjectState = null; // clear the cached object state, as otherwise it might be stale
+			Matrix4[] matriciesToShader = new Matrix4[objectState.Matricies.Length];
+			
+			for (int i = 0; i < objectState.Matricies.Length; i++)
+			{
+				matriciesToShader[i] = ConvertToMatrix4(objectState.Matricies[i]);
+			}
+
+			if (objectState.MatrixBufferIndex == 0)
+			{
+				GL.CreateBuffers(1, out objectState.MatrixBufferIndex);
+				unsafe
+				{
+					GL.NamedBufferStorage(objectState.MatrixBufferIndex, sizeof(Matrix4) * matriciesToShader.Length, matriciesToShader, BufferStorageFlags.DynamicStorageBit);
+				}
+			}
+			else
+			{
+				// need to use BufferSubData in order to update the data in the buffer once it has been initially set
+				unsafe
+				{
+					GL.BindBuffer(BufferTarget.ShaderStorageBuffer, objectState.MatrixBufferIndex);
+					GL.BufferSubData(BufferTarget.ShaderStorageBuffer, IntPtr.Zero, sizeof(Matrix4) * matriciesToShader.Length, matriciesToShader);
+				}
+			}
+			
 		}
 
 		/// <summary>
