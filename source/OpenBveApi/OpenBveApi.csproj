@@ -146,7 +146,6 @@
     <Compile Include="Objects\ObjectTypes\Animations\LinearPos.cs" />
     <Compile Include="Objects\ObjectTypes\Animations\SlerpRot.cs" />
     <Compile Include="Objects\ObjectTypes\Animations\TcbKey.cs" />
-    <Compile Include="Objects\ObjectTypes\Animations\WheelRotation.cs" />
     <Compile Include="Objects\ObjectTypes\Animations\Wheels.cs" />
     <Compile Include="Objects\ObjectTypes\KeyframeAnimatedObject\KeyframeAnimatedObject.cs" />
     <Compile Include="Objects\ObjectTypes\KeyframeAnimatedObject\KeyframeAnimation.cs" />

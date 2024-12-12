@@ -31,6 +31,10 @@ namespace OpenBveApi.Objects
 	/// <summary>An animation using keyframes</summary>
     public class KeyframeAnimation
     {
+		/// <summary>The parent object</summary>
+	    internal readonly KeyframeAnimatedObject ParentObject;
+		/// <summary>The parent animation</summary>
+	    internal readonly string ParentAnimation;
 		/// <summary>The animation name</summary>
 	    public readonly string Name;
 		/// <summary>The base matrix before transforms are performed</summary>
@@ -81,8 +85,10 @@ namespace OpenBveApi.Objects
 	    /// <param name="frameCount">The total number of frames in the animation</param>
 	    /// <param name="frameRate">The framerate of the animation</param>
 	    /// <param name="matrix">The base matrix to be transformed</param>
-	    public KeyframeAnimation(string name, int frameCount, double frameRate, Matrix4D matrix)
+	    public KeyframeAnimation(KeyframeAnimatedObject parentObject, string parentAnimation, string name, int frameCount, double frameRate, Matrix4D matrix)
 	    {
+			ParentObject = parentObject;
+			ParentAnimation = parentAnimation;
 			Name = name;
 		    baseMatrix = matrix;
 			FrameCount = frameCount;
@@ -92,9 +98,18 @@ namespace OpenBveApi.Objects
 	    /// <summary>Updates the animation</summary>
 		public void Update(AbstractTrain train, int carIndex, Vector3 position, double trackPosition, int sectionIndex, bool isPartOfTrain, double timeElapsed)
 		{
-			// calculate the current keyframe for the animation
-			AnimationKey += timeElapsed * FrameRate;
-			AnimationKey %= FrameCount;
+			if (!string.IsNullOrEmpty(ParentAnimation))
+			{
+				// we have a parent- calculate our key from the parent key
+				AnimationKey = (ParentObject.Animations[ParentAnimation].AnimationKey / ParentObject.Animations[ParentAnimation].FrameCount) * FrameCount;
+			}
+			else
+			{
+				// calculate the current keyframe for the animation
+				AnimationKey += timeElapsed * FrameRate;
+				AnimationKey %= FrameCount;
+			}
+			
 			// we start off with the base matrix (clone!)
 			Matrix = new Matrix4D(baseMatrix);
 			for (int i = 0; i < AnimationControllers.Length; i++)

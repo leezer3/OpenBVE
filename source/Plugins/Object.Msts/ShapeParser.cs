@@ -1233,7 +1233,8 @@ namespace Plugin
 							break;
 						}
 					}
-					KeyframeAnimation currentNode = new KeyframeAnimation(block.Label, shape.Animations[shape.Animations.Count - 1].FrameCount, shape.Animations[shape.Animations.Count - 1].FrameRate, matrix);
+
+					KeyframeAnimation currentNode = new KeyframeAnimation(newResult, string.Empty, block.Label, shape.Animations[shape.Animations.Count - 1].FrameCount, shape.Animations[shape.Animations.Count - 1].FrameRate, matrix);
 					newBlock = block.ReadSubBlock(KujuTokenID.controllers);
 					ParseBlock(newBlock, ref shape, ref currentNode);
 					if (currentNode.AnimationControllers.Length != 0)
