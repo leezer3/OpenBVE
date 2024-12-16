@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using Formats.OpenBve;
 using OpenBveApi;
@@ -84,6 +85,13 @@ namespace Train.OpenBve
 							if (block.GetPath(ExtensionCfgKey.Object, TrainPath, out string carObject))
 							{
 								Plugin.CurrentHost.LoadObject(carObject, Encoding, out CarObjects[block.Index]);
+								if (CarObjects[block.Index] is KeyframeAnimatedObject keyframeObject)
+								{
+									for (int i = 0; i < keyframeObject.Animations.Count; i++)
+									{
+										keyframeObject.Animations.ElementAt(i).Value.SetCar(Train.Cars[block.Index]);
+									}
+								}
 							}
 
 							if (block.GetValue(ExtensionCfgKey.Length, out double carLength))

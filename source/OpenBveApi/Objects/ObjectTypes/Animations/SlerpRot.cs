@@ -31,7 +31,7 @@ namespace OpenBveApi.Objects
 	/// <summary>A an animation rotating the base matrix</summary>
     public class SlerpRot : AbstractAnimation
     {
-	    private readonly QuaternionFrame[] animationFrames;
+	    internal readonly QuaternionFrame[] animationFrames;
 		
 		/// <summary>Creates a new slerp_rot animation</summary>
 	    public SlerpRot(string name, QuaternionFrame[] frames) : base(name)

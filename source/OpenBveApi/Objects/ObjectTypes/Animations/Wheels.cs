@@ -47,6 +47,10 @@ namespace OpenBveApi.Objects
 	    /// <summary>Updates the animation</summary>
 	    public override void Update(double animationKey, double timeElapsed, ref Matrix4D matrix)
 	    {
+		    if (_car.Wheels == null)
+		    {
+			    return;
+		    }
 		    double wheelRadius;
 		    switch (Name)
 		    {

@@ -155,6 +155,7 @@ namespace Plugin
 				Animations = new List<Animation>();
 				AnimatedMatricies = new Dictionary<int, int>();
 				Matricies = new List<KeyframeMatrix>();
+				MatrixParents = new Dictionary<string, string>();
 			}
 
 			// Global variables used by all LODs
@@ -182,6 +183,8 @@ namespace Plugin
 			internal readonly Dictionary<int, int> AnimatedMatricies;
 			/// <summary>The matricies within the shape</summary>
 			internal readonly List<KeyframeMatrix> Matricies;
+
+			internal readonly Dictionary<string, string> MatrixParents;
 
 			// The list of LODs actually containing the objects
 
@@ -273,6 +276,14 @@ namespace Plugin
 							}
 							else
 							{
+								// find and store matrix parents for use by the animation function
+								for (int k = 0; k < matrixChain.Count - 1; k++)
+								{
+									if (!shape.MatrixParents.ContainsKey(shape.Matricies[matrixChain[k + 1]].Name))
+									{
+										shape.MatrixParents[shape.Matricies[matrixChain[k + 1]].Name] = shape.Matricies[matrixChain[k]].Name;
+									}
+								}
 								/*
 								 * Check if our matricies are in the shape, and copy them there if not
 								 *
@@ -301,13 +312,12 @@ namespace Plugin
 
 								// Note: transforming verticies must be done in reverse if the model is in motion
 								matrixChain.Reverse();
+								
 								// used to pack 4 x matrix indicies into a int
 								int[] transformChain = { 255, 255, 255, 255};
 								matrixChain.CopyTo(transformChain);
 								transformedVertices[i].matrixChain = transformChain;
-
 							}
-
 							break;
 						}
 					}
@@ -547,8 +557,6 @@ namespace Plugin
 			}
 
 			Matrix4D matrix = Matrix4D.Identity;
-			
-
 			return newResult;
 		}
 
@@ -1234,7 +1242,19 @@ namespace Plugin
 						}
 					}
 
-					KeyframeAnimation currentNode = new KeyframeAnimation(newResult, string.Empty, block.Label, shape.Animations[shape.Animations.Count - 1].FrameCount, shape.Animations[shape.Animations.Count - 1].FrameRate, matrix);
+					string parentAnimation = string.Empty;
+					if (shape.MatrixParents.ContainsKey(block.Label))
+					{
+						parentAnimation = shape.MatrixParents[block.Label];
+					}
+					else
+					{
+						if (block.Label != "MAIN")
+						{
+							parentAnimation = "MAIN";
+						}
+					}
+					KeyframeAnimation currentNode = new KeyframeAnimation(newResult, parentAnimation, block.Label, shape.Animations[shape.Animations.Count - 1].FrameCount, shape.Animations[shape.Animations.Count - 1].FrameRate, matrix);
 					newBlock = block.ReadSubBlock(KujuTokenID.controllers);
 					ParseBlock(newBlock, ref shape, ref currentNode);
 					if (currentNode.AnimationControllers.Length != 0)

@@ -22,7 +22,6 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
@@ -80,12 +79,14 @@ namespace OpenBveApi.Objects
 		/// <summary>The current animation key</summary>
 	    internal double AnimationKey;
 
-	    /// <summary>Creates a new keyframe animation</summary>
-	    /// <param name="name">The animation name</param>
-	    /// <param name="frameCount">The total number of frames in the animation</param>
-	    /// <param name="frameRate">The framerate of the animation</param>
-	    /// <param name="matrix">The base matrix to be transformed</param>
-	    public KeyframeAnimation(KeyframeAnimatedObject parentObject, string parentAnimation, string name, int frameCount, double frameRate, Matrix4D matrix)
+		/// <summary>Creates a new keyframe animation</summary>
+		/// <param name="parentObject">The parent object</param>
+		/// <param name="parentAnimation">The parent animation</param>
+		/// <param name="name">The animation name</param>
+		/// <param name="frameCount">The total number of frames in the animation</param>
+		/// <param name="frameRate">The framerate of the animation</param>
+		/// <param name="matrix">The base matrix to be transformed</param>
+		public KeyframeAnimation(KeyframeAnimatedObject parentObject, string parentAnimation, string name, int frameCount, double frameRate, Matrix4D matrix)
 	    {
 			ParentObject = parentObject;
 			ParentAnimation = parentAnimation;
@@ -98,7 +99,7 @@ namespace OpenBveApi.Objects
 	    /// <summary>Updates the animation</summary>
 		public void Update(AbstractTrain train, int carIndex, Vector3 position, double trackPosition, int sectionIndex, bool isPartOfTrain, double timeElapsed)
 		{
-			if (!string.IsNullOrEmpty(ParentAnimation))
+			if (!string.IsNullOrEmpty(ParentAnimation) && ParentObject.Animations.ContainsKey(ParentAnimation))
 			{
 				// we have a parent- calculate our key from the parent key
 				AnimationKey = (ParentObject.Animations[ParentAnimation].AnimationKey / ParentObject.Animations[ParentAnimation].FrameCount) * FrameCount;
@@ -122,6 +123,24 @@ namespace OpenBveApi.Objects
 				
 			}
 		}
+
+		/// <summary>Sets the car</summary>
+		/// <param name="car">The reference car</param>
+	    public void SetCar(AbstractCar car)
+	    {
+			// Rather nasty hack: The object loading interface does not have the car set, and introducing it isn't a good idea, so have an appropriate method instead
+		    if (!Name.StartsWith("WHEELS"))
+		    {
+			    return;
+		    }
+		    for (int i = 0; i < AnimationControllers.Length; i++)
+		    {
+			    if (AnimationControllers[i] is SlerpRot slerpRot)
+			    {
+				    AnimationControllers[i] = new WheelsAnimation(slerpRot.Name, slerpRot.animationFrames, car);
+			    }
+		    }
+	    }
 
 	}
 }
