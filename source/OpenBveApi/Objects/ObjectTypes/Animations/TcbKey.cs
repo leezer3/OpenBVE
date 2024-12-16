@@ -32,7 +32,7 @@ namespace OpenBveApi.Objects
     {
 	    private readonly QuaternionFrame[] animationFrames;
 
-	    /// <summary>Creates a new slerp_rot animation</summary>
+	    /// <summary>Creates a new tcb_key animation</summary>
 	    public TcbKey(string name, QuaternionFrame[] frames) : base(name)
 	    {
 		    animationFrames = frames;

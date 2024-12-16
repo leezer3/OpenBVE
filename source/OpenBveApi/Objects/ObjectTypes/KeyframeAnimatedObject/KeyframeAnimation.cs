@@ -39,6 +39,8 @@ namespace OpenBveApi.Objects
 		/// <summary>The base matrix before transforms are performed</summary>
 	    private readonly Matrix4D baseMatrix;
 
+	    private AbstractCar baseCar;
+
 		/*
 	     * FRAMERATE
 		 * ---------
@@ -79,6 +81,8 @@ namespace OpenBveApi.Objects
 		/// <summary>The current animation key</summary>
 	    internal double AnimationKey;
 
+	    private double lastDistance;
+
 		/// <summary>Creates a new keyframe animation</summary>
 		/// <param name="parentObject">The parent object</param>
 		/// <param name="parentAnimation">The parent animation</param>
@@ -107,8 +111,31 @@ namespace OpenBveApi.Objects
 			else
 			{
 				// calculate the current keyframe for the animation
-				AnimationKey += timeElapsed * FrameRate;
-				AnimationKey %= FrameCount;
+				if (baseCar != null)
+				{
+					double wheelRadius;
+					if (baseCar.Wheels.ContainsKey(Name))
+					{
+						wheelRadius = baseCar.Wheels[Name].Radius;
+					}
+					else
+					{
+						// unknown animation key- for the minute, we'll stick to the MSTS keys
+						return;
+					}
+
+					double distanceTravelled = baseCar.FrontAxle.Follower.TrackPosition - lastDistance;
+					double wheelCircumference = 2 * System.Math.PI * wheelRadius;
+					lastDistance = baseCar.FrontAxle.Follower.TrackPosition;
+					AnimationKey += (distanceTravelled / wheelCircumference) * FrameCount;
+					AnimationKey %= FrameCount;
+				}
+				else
+				{
+					AnimationKey += timeElapsed * FrameRate;
+					AnimationKey %= FrameCount;
+				}
+				
 			}
 			
 			// we start off with the base matrix (clone!)
@@ -133,13 +160,8 @@ namespace OpenBveApi.Objects
 		    {
 			    return;
 		    }
-		    for (int i = 0; i < AnimationControllers.Length; i++)
-		    {
-			    if (AnimationControllers[i] is SlerpRot slerpRot)
-			    {
-				    AnimationControllers[i] = new WheelsAnimation(slerpRot.Name, slerpRot.animationFrames, car);
-			    }
-		    }
+
+		    baseCar = car;
 	    }
 
 	}

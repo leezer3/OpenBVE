@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Trains
@@ -44,7 +45,7 @@ namespace OpenBveApi.Trains
 		public Brightness Brightness;
 
 		/// <summary>The wheels sets on the car</summary>
-		public Wheels[] Wheels;
+		public Dictionary<string, Wheels> Wheels;
 
 		/// <summary>Creates the in-world co-ordinates for a sound attached to this car</summary>
 		public virtual void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
