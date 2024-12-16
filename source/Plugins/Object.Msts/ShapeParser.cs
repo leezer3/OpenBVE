@@ -241,20 +241,25 @@ namespace Plugin
 							if (hi != -1 && hi < shape.Matricies.Count)
 							{
 								matrixChain.Add(hi);
+								if (IsAnimated(shape.Matricies[hi].Name))
+								{
+									staticTransform = false;
+								}
 								while (true)
 								{
 									hi = currentLOD.hierarchy[hi];
+									
 									if (hi == -1)
 									{
 										break;
 									}
-
+									
 									if (hi == matrixChain[0])
 									{
 										continue;
 									}
 									matrixChain.Insert(0, hi);
-									if (IsAnimated(shape.Matricies[hi].Name) && staticTransform)
+									if (IsAnimated(shape.Matricies[hi].Name))
 									{
 										staticTransform = false;
 									}
@@ -421,7 +426,7 @@ namespace Plugin
 
 		private static bool IsAnimated(string matrixName)
 		{
-			if (matrixName.StartsWith("WHEELS") || matrixName.StartsWith("ROD") || matrixName.StartsWith("BOGIE"))
+			if (matrixName.StartsWith("WHEELS") || matrixName.StartsWith("ROD") || matrixName.StartsWith("BOGIE") || matrixName.StartsWith("PISTON"))
 			{
 				return true;
 			}
@@ -1251,7 +1256,17 @@ namespace Plugin
 					{
 						if (block.Label != "MAIN")
 						{
-							parentAnimation = "MAIN";
+							if (block.Label.StartsWith("ROD") || block.Label.StartsWith("PISTON"))
+							{
+								// Undocumented 'feature': rod and piston, if not linked to a parent in the shape
+								// file seem to link to WHEELS1 to determine animation key
+								parentAnimation = "WHEELS1";
+							}
+							else
+							{
+								parentAnimation = "MAIN";
+							}
+							
 						}
 					}
 					KeyframeAnimation currentNode = new KeyframeAnimation(newResult, parentAnimation, block.Label, shape.Animations[shape.Animations.Count - 1].FrameCount, shape.Animations[shape.Animations.Count - 1].FrameRate, matrix);
