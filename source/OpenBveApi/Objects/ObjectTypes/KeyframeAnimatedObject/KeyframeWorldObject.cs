@@ -41,7 +41,10 @@ namespace OpenBveApi.Objects
 				}
 				if (!Visible)
 				{
-					//currentHost.ShowObject(Object.internalObject, ObjectType.Dynamic);
+					for (int i = 0; i < Object.Objects.Length; i++)
+					{
+						currentHost.ShowObject(Object.Objects[i], ObjectType.Dynamic);
+					}
 					Visible = true;
 				}
 			}
@@ -50,7 +53,10 @@ namespace OpenBveApi.Objects
 				Object.SecondsSinceLastUpdate += TimeElapsed;
 				if (Visible)
 				{
-					//currentHost.HideObject(Object.internalObject);
+					for (int i = 0; i < Object.Objects.Length; i++)
+					{
+						currentHost.HideObject(Object.Objects[i]);
+					}
 					Visible = false;
 				}
 			}
