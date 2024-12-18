@@ -102,6 +102,11 @@ namespace TrainManager.Car
 						CarSections[cs].Groups[0].Elements[i].internalObject.DaytimeNighttimeBlend = dnb;
 					}
 				}
+
+				if (CarSections[cs].Groups[0].Keyframes != null)
+				{
+					CarSections[cs].Groups[0].Keyframes.Update(baseCar.baseTrain, baseCar.Index, baseCar.TrackPosition, p, d, Up, s, true, true, TimeElapsed, true);
+				}
 			}
 		}
 

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using OpenBveApi.Math;
+using System;
 using System.Globalization;
+using System.Runtime.InteropServices;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MergeCastWithTypeCheck
 
@@ -351,6 +353,9 @@ namespace OpenBveApi.Colors {
 				return hashCode;
 			}
 		}
+
+		/// <summary>Defines the size of the Vector2 struct in bytes.</summary>
+		public static readonly int SizeInBytes = Marshal.SizeOf((object)new Color32());
 
 		// --- read-only fields ---
 		/// <summary>Represents a black color.</summary>
