@@ -339,6 +339,11 @@ namespace Train.OpenBve
 						}
 						break;
 					case SoundCfgSection.Windscreen:
+						if (train.Cars[train.DriverCar].Windscreen == null)
+						{
+							// e.g. non-player train
+							break;
+						}
 						block.GetPath(SoundCfgKey.RainDrop, trainFolder, out string rainDrop);
 						block.GetPath(SoundCfgKey.WetWipe, trainFolder, out string wetWipe);
 						block.GetPath(SoundCfgKey.DryWipe, trainFolder, out string dryWipe);
