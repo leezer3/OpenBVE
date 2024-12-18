@@ -269,6 +269,10 @@ namespace OpenBveApi.Textures {
 			if (ReferenceEquals(a, b)) return false;
 			if (a is null) return true;
 			if (b is null) return true;
+			if (a.MyBytes == null)
+			{
+				return b.MyBytes != null;
+			}
 			if (a.MultipleFrames != b.MultipleFrames) return true;
 			if (a.Origin != b.Origin) return true;
 			if (a.MySize.X != b.MySize.X) return true;
@@ -288,9 +292,12 @@ namespace OpenBveApi.Textures {
 		public override bool Equals(object obj)
 		{
 			if (ReferenceEquals(this, obj)) return true;
-			if (ReferenceEquals(this, null)) return false;
-			if (ReferenceEquals(obj, null)) return false;
+			if (obj is null) return false;
 			if (!(obj is Texture x)) return false;
+			if (MyBytes == null)
+			{
+				return x.MyBytes == null;
+			}
 			if (MultipleFrames != x.MultipleFrames) return false;
 			if (Origin != x.Origin) return false;
 			if (MySize.X != x.MySize.X) return false;
