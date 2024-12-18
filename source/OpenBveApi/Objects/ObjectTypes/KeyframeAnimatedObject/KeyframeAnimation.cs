@@ -39,8 +39,6 @@ namespace OpenBveApi.Objects
 		/// <summary>The base matrix before transforms are performed</summary>
 	    private readonly Matrix4D baseMatrix;
 
-	    private AbstractCar baseCar;
-
 		/*
 	     * FRAMERATE
 		 * ---------
@@ -111,8 +109,11 @@ namespace OpenBveApi.Objects
 			else
 			{
 				// calculate the current keyframe for the animation
-				if (baseCar != null)
+				if (isPartOfTrain)
 				{
+					// HACK: use the train as a dynamic to allow us to pull out the car reference
+					dynamic dynamicTrain = train;
+					AbstractCar baseCar = dynamicTrain.Cars[carIndex];
 					double wheelRadius;
 					if (baseCar.Wheels.ContainsKey(Name))
 					{
@@ -150,19 +151,5 @@ namespace OpenBveApi.Objects
 				
 			}
 		}
-
-		/// <summary>Sets the car</summary>
-		/// <param name="car">The reference car</param>
-	    public void SetCar(AbstractCar car)
-	    {
-			// Rather nasty hack: The object loading interface does not have the car set, and introducing it isn't a good idea, so have an appropriate method instead
-		    if (!Name.StartsWith("WHEELS"))
-		    {
-			    return;
-		    }
-
-		    baseCar = car;
-	    }
-
 	}
 }
