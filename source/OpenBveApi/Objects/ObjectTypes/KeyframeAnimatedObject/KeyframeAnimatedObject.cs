@@ -150,6 +150,7 @@ namespace OpenBveApi.Objects
 			{
 				Objects[i].Matricies = matriciesToShader;
 				Objects[i].Translation = Matrix4D.CreateTranslation(position.X, position.Y, -position.Z);
+				Objects[i].Rotate = (Matrix4D)new Transformation(direction, up, side);
 				currentHost.ShowObject(Objects[i], ObjectType.Dynamic);
 			}
 		}
