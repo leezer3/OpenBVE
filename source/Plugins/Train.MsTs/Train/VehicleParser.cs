@@ -253,7 +253,7 @@ namespace Train.MsTs
 							 * FIXME: Need to implement vac braked / air piped and vice-versa, but for the minute, we'll assume that if one or the other is present
 							 * then the vehicle has no brakes
 							 */
-							car.CarBrake = new ThroughPiped();
+							car.CarBrake = new ThroughPiped(car);
 						}
 						else
 						{
@@ -261,20 +261,20 @@ namespace Train.MsTs
 							{
 								// Combined air brakes and control signals
 								// Assume equivilant to ElectromagneticStraightAirBrake
-								car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
+								car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, car);
 							}
 							else if (brakeSystemTypes.Contains(BrakeSystemType.ECP))
 							{
 								// Complex computer control
 								// Assume equivialant to ElectricCommandBrake at the minute
-								car.CarBrake = new ElectricCommandBrake(EletropneumaticBrakeType.DelayFillingControl, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
+								car.CarBrake = new ElectricCommandBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
 							}
 							else if (brakeSystemTypes.Contains(BrakeSystemType.Air_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Air_twin_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_twin_pipe))
 							{
 								// The car contains no control gear, but is air / vac braked
 								// Assume equivilant to AutomaticAirBrake
 								// NOTE: This must be last in the else-if chain to enure that a vehicle with EP / ECP and these declared is setup correctly
-								car.CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.DelayFillingControl, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
+								car.CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
 							}
 
 							car.CarBrake.mainReservoir = new MainReservoir(690000.0, 780000.0, 0.01, 0.075 / train.Cars.Length);
@@ -330,7 +330,7 @@ namespace Train.MsTs
 						 * FIXME: Need to implement vac braked / air piped and vice-versa, but for the minute, we'll assume that if one or the other is present
 						 * then the vehicle has no brakes
 						 */
-						car.CarBrake = new ThroughPiped();
+						car.CarBrake = new ThroughPiped(car);
 					}
 					else
 					{
@@ -338,20 +338,20 @@ namespace Train.MsTs
 						{
 							// Combined air brakes and control signals
 							// Assume equivilant to ElectromagneticStraightAirBrake
-							car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
+							car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
 						}
 						else if (brakeSystemTypes.Contains(BrakeSystemType.ECP))
 						{
 							// Complex computer control
 							// Assume equivialant to ElectricCommandBrake at the minute
-							car.CarBrake = new ElectricCommandBrake(EletropneumaticBrakeType.DelayFillingControl, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
+							car.CarBrake = new ElectricCommandBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
 						}
 						else if (brakeSystemTypes.Contains(BrakeSystemType.Air_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Air_twin_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_twin_pipe))
 						{
 							// The car contains no control gear, but is air / vac braked
 							// Assume equivilant to AutomaticAirBrake
 							// NOTE: This must be last in the else-if chain to enure that a vehicle with EP / ECP and these declared is setup correctly
-							car.CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.DelayFillingControl, train.Handles.EmergencyBrake, train.Handles.Reverser, true, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
+							car.CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
 						}
 
 						car.CarBrake.mainReservoir = new MainReservoir(690000.0, 780000.0, 0.01, 0.075 / train.Cars.Length);
