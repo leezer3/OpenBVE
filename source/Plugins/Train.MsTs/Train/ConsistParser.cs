@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using LibRender2.Trains;
@@ -143,7 +144,7 @@ namespace Train.MsTs
 			//TODO: Pull out MSTS properties
 			for (int i = 0; i < train.Cars.Length; i++)
 			{
-				train.Cars[i].Coupler = new Coupler(0.9 * 0.3, 1.1 * 0.3, train.Cars[i / 2], train.Cars.Length > 1 ? train.Cars[i / 2 + 1] : null, train);
+				train.Cars[i].Coupler = new Coupler(0.9 * 0.3, 1.1 * 0.3, train.Cars[i / 2], train.Cars.Length > 1 ? train.Cars[i / 2 + 1] : null);
 				train.Cars[i].CurrentCarSection = -1;
 				train.Cars[i].ChangeCarSection(CarSectionType.NotVisible);
 				train.Cars[i].FrontBogie.ChangeSection(-1);
@@ -236,7 +237,7 @@ namespace Train.MsTs
 						reverseCurentCar = false;
 					}
 					currentCar.Breaker = new Breaker(currentCar);
-					currentCar.Sounds.Plugin = new CarSound[] { };
+					currentCar.Sounds.Plugin = new Dictionary<int, CarSound>();
 					currentCar.Sounds.Motor = new MSTSMotorSound(currentCar);
 					Train.Cars[currentCarIndex] = currentCar;
 					/*
@@ -246,8 +247,6 @@ namespace Train.MsTs
 					Train.Cars[currentCarIndex].RearAxle.Follower.TriggerType = currentCarIndex == Train.Cars.Length - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 					Train.Cars[currentCarIndex].BeaconReceiver.TriggerType = currentCarIndex == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;
 					Train.Cars[currentCarIndex].BeaconReceiverPosition = 0.5 * Train.Cars[currentCarIndex].Length;
-					Train.Cars[currentCarIndex].FrontAxle.Follower.Car = Train.Cars[currentCarIndex];
-					Train.Cars[currentCarIndex].RearAxle.Follower.Car = Train.Cars[currentCarIndex];
 					Train.Cars[currentCarIndex].FrontAxle.Position = 0.4 * Train.Cars[currentCarIndex].Length;
 					Train.Cars[currentCarIndex].RearAxle.Position = -0.4 * Train.Cars[currentCarIndex].Length;
 					break;
@@ -264,7 +263,6 @@ namespace Train.MsTs
 					 * FIXME: All this needs to be pulled from the eng properties, or fixed so it doesn't matter
 					 */
 					currentCar = new CarBase(Train, currentCarIndex, 0.35, 0.0025, 1.1);
-					currentCar.Specs = new CarPhysics();
 					currentCar.HoldBrake = new CarHoldBrake(currentCar);
 					//FIXME END
 

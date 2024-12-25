@@ -60,7 +60,7 @@ namespace Train.MsTs
 		public override string GetDescription(string trainPath, Encoding userSelectedEncoding = null)
 		{
 			PreviewOnly = true;
-			AbstractTrain train = new TrainBase(TrainState.Pending);
+			AbstractTrain train = new TrainBase(TrainState.Pending, TrainType.LocalPlayerTrain);
 			ConsistParser.ReadConsist(trainPath, ref train);
 			TrainBase trainBase = train as TrainBase;
 			if(trainBase != null && trainBase.Cars.Length != 0)
@@ -70,10 +70,9 @@ namespace Train.MsTs
 			return string.Empty;
 		}
 
-		public override Image GetImage(string trainPath)
+		public override string GetImage(string trainPath)
 		{
-			PreviewOnly = true;
-			return new Bitmap(1, 1);
+			return string.Empty;
 		}
 	}
 }
