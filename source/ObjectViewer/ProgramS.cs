@@ -311,13 +311,13 @@ namespace ObjectViewer {
 		    {
 			    try
 			    {
-				    if(Files[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase))
+				    if(Files[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
 				    {
-					    if (currentTrain.EndsWith("extensions.cfg", StringComparison.InvariantCultureIgnoreCase))
+					    string currentTrain = Files[i];
+						if (currentTrain.EndsWith("extensions.cfg", StringComparison.InvariantCultureIgnoreCase))
 					    {
 						    currentTrain = System.IO.Path.GetDirectoryName(currentTrain);
 					    }
-					    string currentTrain = Files[i];
 					    bool canLoad = false;
 					    for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					    {
@@ -422,11 +422,11 @@ namespace ObjectViewer {
 							string[] f = Dialog.FileNames;
 							for (int i = 0; i < f.Length; i++)
 				            {
-								string currentTrainFolder = string.Empty;
-								if(f[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase))
+								string currentTrain = string.Empty;
+								if(f[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
 								{
 									// only check to see if it's a train if this is a specified filetype, else we'll start loading the full train from an object in it's folder
-									currentTrainFolder = Path.GetDirectoryName(f[i]);
+									currentTrain = f[i].EndsWith(".con", StringComparison.InvariantCultureIgnoreCase) ? f[i] : Path.GetDirectoryName(f[i]);
 								}
 								for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					            {
@@ -444,7 +444,7 @@ namespace ObjectViewer {
 						            {
 							            Files.Add(f[i]);
 						            }
-						            if (!string.IsNullOrEmpty(currentTrainFolder) && Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
+						            if (!string.IsNullOrEmpty(currentTrain) && Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrain))
 						            {
 							            Files.Add(f[i]);
 						            }
