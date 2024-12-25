@@ -115,7 +115,7 @@ namespace OpenBveApi.Objects
 					dynamic dynamicTrain = train;
 					AbstractCar baseCar = dynamicTrain.Cars[carIndex];
 					double wheelRadius;
-					if (baseCar.Wheels.ContainsKey(Name))
+					if (baseCar.Wheels != null && baseCar.Wheels.ContainsKey(Name))
 					{
 						wheelRadius = baseCar.Wheels[Name].Radius;
 					}
