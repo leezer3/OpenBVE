@@ -44,6 +44,14 @@ namespace LibRender2.Trains
 					currentHost.CreateDynamicObject(ref Groups[0].Elements[h].internalObject);
 				}
 			}
+			else if (Object is KeyframeAnimatedObject k)
+			{
+				Groups[0].Keyframes = k;
+				for (int h = 0; h < Groups[0].Keyframes.Objects.Length; h++)
+				{
+					currentHost.CreateDynamicObject(ref Groups[0].Keyframes.Objects[h]);
+				}
+			}
 			Type = ObjectType;
 		}
 
@@ -65,6 +73,14 @@ namespace LibRender2.Trains
 				for (int i = 0; i < Groups[0].Elements.Length; i++)
 				{
 					currentHost.ShowObject(Groups[0].Elements[i].internalObject, Type);
+				}
+
+				if (Groups[0].Keyframes != null)
+				{
+					for (int i = 0; i < Groups[0].Keyframes.Objects.Length; i++)
+					{
+						currentHost.ShowObject(Groups[0].Keyframes.Objects[i], Type);
+					}
 				}
 			}
 

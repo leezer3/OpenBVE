@@ -12,6 +12,8 @@ namespace LibRender2.Trains
 		/// <summary>The touch elements if applicable</summary>
 		public TouchElement[] TouchElements;
 
+		public KeyframeAnimatedObject Keyframes;
+
 		public ElementsGroup()
 		{
 			Elements = new AnimatedObject[] {};

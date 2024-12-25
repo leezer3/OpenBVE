@@ -23,6 +23,8 @@ namespace CsvRwRouteParser
 		internal double Accuracy;
 		/// <summary>The adhesion multiplier applying to the rail</summary>
 		internal double AdhesionMultiplier;
+		/// <summary>The starting track position</summary>
+		internal double StartingTrackPosition;
 
 		/// <summary>Gets the mid point of the rail</summary>
 		internal Vector2 MidPoint => new Vector2(RailEnd - RailStart);

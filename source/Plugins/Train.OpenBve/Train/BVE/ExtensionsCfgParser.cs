@@ -1,10 +1,13 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Formats.OpenBve;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 using TrainManager.Trains;
 
 namespace Train.OpenBve

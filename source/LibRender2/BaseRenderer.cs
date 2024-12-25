@@ -688,10 +688,18 @@ namespace LibRender2
 				for (int i = 0; i < StaticObjectStates.Count; i++)
 				{
 					VAOExtensions.CreateVAO(ref StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+					if (StaticObjectStates[i].Matricies != null)
+					{
+						GL.CreateBuffers(1, out StaticObjectStates[i].MatrixBufferIndex);
+					}
 				}
 				for (int i = 0; i < DynamicObjectStates.Count; i++)
 				{
 					VAOExtensions.CreateVAO(ref DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+					if (DynamicObjectStates[i].Matricies != null)
+					{
+						GL.CreateBuffers(1, out DynamicObjectStates[i].MatrixBufferIndex);
+					}
 				}
 			}
 			ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
@@ -1247,6 +1255,13 @@ namespace LibRender2
 				}
 			}
 
+			// model matricies
+			if (State.Matricies != null && State != lastObjectState)
+			{
+				Shader.SetCurrentAnimationMatricies(State);
+				GL.BindBufferBase(BufferTarget.ShaderStorageBuffer, 12, State.MatrixBufferIndex);
+			}
+
 			// matrix
 			if (sendToShader)
 			{
@@ -1259,7 +1274,7 @@ namespace LibRender2
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 			}
-
+			
 			// lighting
 			Shader.SetMaterialFlags(material.Flags);
 			if (OptionLighting)
