@@ -7,6 +7,7 @@ using LibRender2.Trains;
 using OpenBve.Formats.MsTs;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 using OpenBveApi.World;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
@@ -24,6 +25,8 @@ namespace Train.MsTs
 		private readonly Dictionary<string, string> wagonCache;
 		private readonly Dictionary<string, string> engineCache;
 		private string[] wagonFiles;
+		private int wheelRadiusNum;
+		private double wheelRadius;
 
 		internal WagonParser(Plugin Plugin)
 		{
@@ -34,8 +37,10 @@ namespace Train.MsTs
 
 		internal void Parse(string trainSetDirectory, string wagonName, bool isEngine, ref CarBase Car, ref TrainBase train)
 		{
+			wheelRadiusNum = 0;
 			wagonFiles = Directory.GetFiles(trainSetDirectory, isEngine ? "*.eng" : "*.wag", SearchOption.AllDirectories);
 			Car.Specs.IsMotorCar = false;
+			Car.Wheels = new Dictionary<string, Wheels>();
 			/*
 			 * MSTS maintains an internal database, as opposed to using full paths
 			 * Unfortunately, this means we've got to do an approximation of the same thing!
@@ -456,7 +461,7 @@ namespace Train.MsTs
 						car.CarSections = move;
 					}
 					car.CarSections[0] = new CarSection(Plugin.currentHost, ObjectType.Overlay, true);
-					CabviewFileParser.ParseCabViewFile(cabViewFile, Encoding.ASCII, ref car);
+					CabviewFileParser.ParseCabViewFile(cabViewFile, ref car);
 					car.HasInteriorView = true;
 					break;
 				case KujuTokenID.Description:
@@ -490,6 +495,27 @@ namespace Train.MsTs
 					// FIXME: Default BVE values
 					car.Specs.JerkPowerUp = 10.0;
 					car.Specs.JerkPowerDown = 10.0;
+					break;
+				case KujuTokenID.WheelRadius:
+					wheelRadius = block.ReadSingle(UnitOfLength.Meter);
+					break;
+				case KujuTokenID.NumWheels:
+					int numWheels = block.ReadInt32() / 2; // total wheels, so divide by 2 to get axles
+					for (int i = 1; i < numWheels + 1; i++)
+					{
+						switch (wheelRadiusNum)
+						{
+							case 0:
+								// first wheel radius in the file seems to be the main drivers
+								car.Wheels.Add("WHEELS" + i, new Wheels(2, "WHEELS" + i, wheelRadius));
+								break;
+							default:
+								// second appears to be the first bogie
+								car.Wheels.Add("WHEELS" + wheelRadiusNum + i, new Wheels(2, "WHEELS2" + wheelRadiusNum + i, wheelRadius));
+								break;
+						}
+					}
+					wheelRadiusNum++;
 					break;
 			}
 			return true;
