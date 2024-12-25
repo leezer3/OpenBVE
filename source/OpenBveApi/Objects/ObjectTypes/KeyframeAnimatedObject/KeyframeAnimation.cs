@@ -45,18 +45,17 @@ namespace OpenBveApi.Objects
 		 *
 		 * FrameRate indicates the number of frames per second (of real-time) the animation advances.
 		 * 
-		 * WHEELS
-		 * ------
+		 * WHEELS AND OTHER LINKED ANIMATIONS
+		 * ----------------------------------
 		 *
 		 * An animation with the name prefixed with WHEELS reads the corresponding wheel radius from the ENG file and uses a pretty standard odometer to rotate
-		 * It has 9 frames for a total of 1 revolution.
+		 * It has N + 1 frames for a total of 1 revolution.
 		 *
 		 * We need to ignore (!) the time advance, and instead use the total wheel revolution.
 		 * The ROD prefixed animations will likewise require linking to the WHEEL position.
-		 * Essentially, read back through the hierarchy tree for the wheel pos. (Will require a new animation subtype)
+		 * Essentially, read back through the hierarchy tree for the wheel pos, and then update the animation from there.
 		 *
-		 * For the minute however, let's just try and animate everything at the FPS value.
-		 * This will give us constantly rotating rods, wheels etc and proves the point (!)
+		 * Binary ON / OFF animations should use the framerate to calculate the total transition time between the two states.
 		 *
 	     * MSTS bug / feature
 	     * ------------------
@@ -104,6 +103,7 @@ namespace OpenBveApi.Objects
 			if (!string.IsNullOrEmpty(ParentAnimation) && ParentObject.Animations.ContainsKey(ParentAnimation))
 			{
 				// we have a parent- calculate our key from the parent key
+				// n.b. ROD animations must have a parent of WHEEL
 				AnimationKey = (ParentObject.Animations[ParentAnimation].AnimationKey / ParentObject.Animations[ParentAnimation].FrameCount) * FrameCount;
 			}
 			else
