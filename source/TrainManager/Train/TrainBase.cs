@@ -796,6 +796,10 @@ namespace TrainManager.Trains
 				Plugin.LastSection = CurrentSectionIndex;
 				Plugin.UpdatePlugin();
 			}
+			else
+			{
+				Handles.Reverser.Actual = Handles.Reverser.Driver;
+			}
 		}
 
 		

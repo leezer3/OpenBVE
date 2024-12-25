@@ -1173,7 +1173,7 @@ namespace TrainManager.Car
 					    !baseTrain.Handles.EmergencyBrake.Actual)
 					{
 						// target acceleration
-						if (baseTrain.Handles.Power.Actual - 1 < Specs.AccelerationCurves.Length)
+						if (Specs.AccelerationCurves != null && baseTrain.Handles.Power.Actual - 1 < Specs.AccelerationCurves.Length)
 						{
 							// Load factor is a constant 1.0 for anything prior to BVE5
 							// This will need to be changed when the relevant branch is merged in
@@ -1224,7 +1224,7 @@ namespace TrainManager.Car
 
 						Specs.MaxMotorAcceleration = a;
 						// Update constant speed device
-						this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
+						this.ConstSpeed?.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
 
 						// finalize
 						if (wheelspin != 0.0) a = 0.0;
@@ -1279,7 +1279,7 @@ namespace TrainManager.Car
 				}
 			}
 
-			ReAdhesionDevice.Update(TimeElapsed);
+			ReAdhesionDevice?.Update(TimeElapsed);
 			// brake
 			bool wheellock = wheelspin == 0.0 & Derailed;
 			if (!Derailed & wheelspin == 0.0)
