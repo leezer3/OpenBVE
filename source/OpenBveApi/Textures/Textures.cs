@@ -269,15 +269,15 @@ namespace OpenBveApi.Textures {
 			if (ReferenceEquals(a, b)) return false;
 			if (a is null) return true;
 			if (b is null) return true;
-			if (a.MyBytes == null)
-			{
-				return b.MyBytes != null;
-			}
 			if (a.MultipleFrames != b.MultipleFrames) return true;
 			if (a.Origin != b.Origin) return true;
 			if (a.MySize.X != b.MySize.X) return true;
 			if (a.MySize.Y != b.MySize.Y) return true;
 			if (a.MyPixelFormat != b.MyPixelFormat) return true;
+			if (a.MyBytes == null)
+			{
+				return b.MyBytes != null;
+			}
 			if (a.MyBytes.Length != b.MyBytes.Length) return true;
 			for (int i = 0; i < a.MyBytes.Length; i++)
 			{
@@ -294,15 +294,15 @@ namespace OpenBveApi.Textures {
 			if (ReferenceEquals(this, obj)) return true;
 			if (obj is null) return false;
 			if (!(obj is Texture x)) return false;
-			if (MyBytes == null)
-			{
-				return x.MyBytes == null;
-			}
 			if (MultipleFrames != x.MultipleFrames) return false;
 			if (Origin != x.Origin) return false;
 			if (MySize.X != x.MySize.X) return false;
 			if (MySize.Y != x.MySize.Y) return false;
 			if (MyPixelFormat != x.MyPixelFormat) return false;
+			if (MyBytes == null)
+			{
+				return x.MyBytes == null;
+			}
 			if (MyBytes.Length != x.MyBytes.Length) return false;
 			for (int i = 0; i < MyBytes.Length; i++)
 			{
