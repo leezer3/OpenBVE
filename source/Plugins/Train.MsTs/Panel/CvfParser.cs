@@ -21,17 +21,17 @@ namespace Train.MsTs
 	class CabviewFileParser
 	{
 		// constants
-		private const double StackDistance = 0.000001;
+		private const double stackDistance = 0.000001;
 
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
-		private const double EyeDistance = 1.0;
+		private const double eyeDistance = 1.0;
 
 		private static string currentFolder;
 
-		private static List<Component> cabComponents = new List<Component>();
+		private static readonly List<Component> cabComponents = new List<Component>();
 
 		// parse panel config
-		internal static bool ParseCabViewFile(string fileName, Encoding Encoding, ref CarBase Car)
+		internal static bool ParseCabViewFile(string fileName, ref CarBase Car)
 		{
 			currentFolder = Path.GetDirectoryName(fileName);
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read);
@@ -128,12 +128,12 @@ namespace Train.MsTs
 			double WorldWidth, WorldHeight;
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
 			{
-				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
+				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * eyeDistance;
 				WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
 			}
 			else
 			{
-				WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
+				WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * eyeDistance / Plugin.Renderer.Screen.AspectRatio;
 				WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
 			}
 
@@ -141,8 +141,8 @@ namespace Train.MsTs
 			double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
 			double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
 			double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-			Car.CameraRestriction.BottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
-			Car.CameraRestriction.TopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
+			Car.CameraRestriction.BottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, eyeDistance);
+			Car.CameraRestriction.TopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, eyeDistance);
 			Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
 			Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
 
@@ -360,7 +360,7 @@ namespace Train.MsTs
 							Size.X *= rW;
 							Size.Y *= rH;
 							PivotPoint *= rH;
-							j = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X, Size.Y, new Vector2((0.5 * Size.X) / (tday.Width * rW), PivotPoint / (tday.Height * rH)), Layer * StackDistance, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
+							j = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X, Size.Y, new Vector2((0.5 * Size.X) / (tday.Width * rW), PivotPoint / (tday.Height * rH)), Layer * stackDistance, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
 							Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
 							Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
 							Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
@@ -405,7 +405,7 @@ namespace Train.MsTs
 								j = -1;
 								for (int k = 0; k < textures.Length; k++)
 								{
-									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * StackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
 									if (k == 0) j = l;
 								}
 
@@ -443,7 +443,7 @@ namespace Train.MsTs
 								j = -1;
 								for (int k = 0; k < textures.Length; k++)
 								{
-									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * StackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
 									if (k == 0) j = l;
 								}
 
@@ -797,12 +797,12 @@ namespace Train.MsTs
 			double WorldWidth, WorldHeight;
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
 			{
-				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
+				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * eyeDistance;
 				WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
 			}
 			else
 			{
-				WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
+				WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * eyeDistance / Plugin.Renderer.Screen.AspectRatio;
 				WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
 			}
 
@@ -857,7 +857,7 @@ namespace Train.MsTs
 			Vector3 o;
 			o.X = xm + Driver.X;
 			o.Y = ym + Driver.Y;
-			o.Z = EyeDistance - Distance + Driver.Z;
+			o.Z = eyeDistance - Distance + Driver.Z;
 			// add object
 			if (AddStateToLastElement)
 			{
