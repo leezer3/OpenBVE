@@ -120,7 +120,7 @@ namespace OpenBve.Formats.MsTs
 		/// <summary>Reads any sub-block from the enclosing block</summary>
 		/// <returns>The new block</returns>
 		/// <remarks>The type of the new block will always match that of the base block</remarks>
-		public abstract Block ReadSubBlock();
+		public abstract Block ReadSubBlock(bool allowEmptyBlock = false);
 	}
 
 	/// <inheritdoc cref="Block" />
@@ -186,7 +186,7 @@ namespace OpenBve.Formats.MsTs
 			return new BinaryBlock(newBytes, currentToken);
 		}
 
-		public override Block ReadSubBlock()
+		public override Block ReadSubBlock(bool allowEmptyBlock = false)
 		{
 			KujuTokenID currentToken = (KujuTokenID) myReader.ReadUInt16();
 			myReader.ReadUInt16();
@@ -536,7 +536,7 @@ namespace OpenBve.Formats.MsTs
 			throw new InvalidDataException("Unexpected end of block in " + Token);
 		}
 
-		public override Block ReadSubBlock()
+		public override Block ReadSubBlock(bool allowEmptyBlock = false)
 		{
 			startPosition = currentPosition;
 			string s = String.Empty;
@@ -555,7 +555,10 @@ namespace OpenBve.Formats.MsTs
 
 			if (string.IsNullOrWhiteSpace(s))
 			{
-				throw new InvalidDataException("Empty sub-block");
+				if (!allowEmptyBlock)
+				{
+					throw new InvalidDataException("Empty sub-block");
+				}
 			}
 
 			KujuTokenID currentToken;
