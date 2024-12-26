@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -67,7 +67,8 @@ namespace Train.MsTs
 			}
 			else if (!headerString.StartsWith("SIMISA@@"))
 			{
-				throw new Exception("Unrecognized cabview file header " + headerString + " in " + fileName);
+				Plugin.currentHost.AddMessage(MessageType.Error, false, "Unrecognized cabview file header " + headerString + " in " + fileName);
+				return false;
 			}
 
 			string subHeader;
@@ -103,7 +104,8 @@ namespace Train.MsTs
 			}
 			else if (subHeader[7] != 'b')
 			{
-				throw new Exception("Unrecognized subHeader \"" + subHeader + "\" in " + fileName);
+				Plugin.currentHost.AddMessage(MessageType.Error, false, "Unrecognized subHeader " + subHeader + " in " + fileName);
+				return false;
 			}
 			else
 			{
