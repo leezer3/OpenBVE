@@ -149,8 +149,7 @@ namespace Train.MsTs
 			if (File.Exists(CabViews[0].fileName))
 			{
 				Car.Driver = CabViews[0].position;
-				Texture tday;
-				Plugin.currentHost.RegisterTexture(CabViews[0].fileName, new TextureParameters(null, null), out tday, true);
+				Plugin.currentHost.RegisterTexture(CabViews[0].fileName, new TextureParameters(null, null), out Texture tday, true);
 				PanelBitmapWidth = tday.Width;
 				PanelBitmapHeight = tday.Height;
 				CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, PanelBitmapWidth, PanelBitmapHeight, new Vector2(0.5, 0.5), 0.0, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
@@ -161,10 +160,10 @@ namespace Train.MsTs
 				return false;
 			}
 
-			int Layer = 1;
+			int currentLayer = 1;
 			for (int i = 0; i < cabComponents.Count; i++)
 			{
-				cabComponents[i].Create(ref Car, Layer, fileName);
+				cabComponents[i].Create(ref Car, currentLayer, fileName);
 
 			}
 
