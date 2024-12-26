@@ -152,7 +152,7 @@ namespace Train.MsTs
 				Plugin.currentHost.RegisterTexture(CabViews[0].fileName, new TextureParameters(null, null), out Texture tday, true);
 				PanelBitmapWidth = tday.Width;
 				PanelBitmapHeight = tday.Height;
-				CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, PanelBitmapWidth, PanelBitmapHeight, new Vector2(0.5, 0.5), 0.0, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
+				CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, 1024, 768, new Vector2(0.5, 0.5), 0.0, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
 			}
 			else
 			{
@@ -593,6 +593,10 @@ namespace Train.MsTs
 							case "train_brake lever":
 								_panelSubject = PanelSubject.TrainBrakeHandle;
 								Units = "brake";
+								break;
+							case "whistle two_state":
+								_panelSubject = PanelSubject.Horn;
+								Units = "klaxon";
 								break;
 						}
 
