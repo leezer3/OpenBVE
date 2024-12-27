@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -20,7 +19,7 @@ namespace TrainManager.Handles
 			DelayedChanges = new HandleChange[] { };
 		}
 
-		public PowerHandle(int max, TrainBase Train) : base(Train)
+		public PowerHandle(int max, TrainBase train) : base(train)
 		{
 			MaximumNotch = max;
 			MaximumDriverNotch = max;
