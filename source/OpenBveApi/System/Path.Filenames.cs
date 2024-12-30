@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
+using OpenBveApi.Hosts;
 
 namespace OpenBveApi
 {
@@ -86,6 +87,39 @@ namespace OpenBveApi
 		    {
 			    return true;
 		    }
+		    return false;
+	    }
+
+		/// <summary>Returns whether the directory name is valid for browsing</summary>
+	    public static bool IsInvalidDirectoryName(HostPlatform platform, string directoryName)
+	    {
+		    string dn = directoryName.ToLowerInvariant();
+		    switch (platform)
+		    {
+				case HostPlatform.GNULinux:
+					switch (dn)
+					{
+						case "lib.usr-is-merged":
+						case "sbin-usr-is-merged":
+						case "bin-usr-is-merged":
+						case "lost+found":
+							return true;
+					}
+					break;
+				case HostPlatform.MicrosoftWindows:
+					switch (dn)
+					{
+						case "$getcurrent":
+						case "$recycle.bin":
+						case "config.msi":
+						case "system32":
+						case "syswow64":
+							return true;
+					}
+
+					break;
+		    }
+
 		    return false;
 	    }
 	}

@@ -282,8 +282,15 @@ namespace OpenBve
 							DirectoryInfo directoryInfo = new DirectoryInfo(directoryList[j]);
 							if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows && directoryInfo.Name[0] == '.')
 							{
+								// hidden folders on non-Windows
 								continue;
 							}
+
+							if (Path.IsInvalidDirectoryName(Program.CurrentHost.Platform, directoryInfo.Name))
+							{
+								continue;
+							}
+
 							Items[totalEntries] = new MenuCommand(menu, directoryInfo.Name, MenuTag.Directory, 0);
 							if (drives)
 							{
