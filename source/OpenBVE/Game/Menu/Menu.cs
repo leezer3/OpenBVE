@@ -763,6 +763,26 @@ namespace OpenBve
 									Process.Start(runCmd);
 								}
 								break;
+							case MenuTag.ViewLog:
+								try
+								{
+									var file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");
+
+									if (File.Exists(file))
+									{
+										Process.Start(file);
+									}
+									else
+									{
+										PushMenu(MenuType.Error);
+									}
+								}
+								catch
+								{
+									PushMenu(MenuType.Error);
+									// Actually failed to load, but same difference
+								}
+								break;
 						}
 					}
 					else if (menu.Items[menu.Selection] is MenuOption opt)

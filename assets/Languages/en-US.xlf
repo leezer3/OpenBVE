@@ -324,6 +324,12 @@
 					<trans-unit id="start_start">
 						<source>Start</source>
 					</trans-unit>
+					<trans-unit id="view_log">
+						<source>View the previous log</source>
+					</trans-unit>
+					<trans-unit id="log_error">
+						<source>Unable to display the previous log.</source>
+					</trans-unit>
 				</group>
 				<group id="review">
 					<trans-unit id="title">

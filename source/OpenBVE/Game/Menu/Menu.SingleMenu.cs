@@ -497,12 +497,13 @@ namespace OpenBve
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.Tools:         // ask for quit confirmation
-						Items = new MenuEntry[5];
+						Items = new MenuEntry[6];
 						Items[0] = new MenuCaption(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "tools" }));
 						Items[1] = new MenuCommand(menu, "Object Viewer", MenuTag.ObjectViewer, 0);
 						Items[2] = new MenuCommand(menu, "Route Viewer", MenuTag.RouteViewer, 0);
 						Items[3] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "packages", "title" }), MenuTag.Packages, 0);
-						Items[4] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu","back" }), MenuTag.MenuBack, 0);
+						Items[4] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "view_log" }), MenuTag.ViewLog, 0);
+						Items[5] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "back" }), MenuTag.MenuBack, 0);
 						Selection = 1;
 						Align = TextAlignment.TopLeft;
 						break;
@@ -555,6 +556,12 @@ namespace OpenBve
 							//Default train not found or not valid
 							Instance.PushMenu(MenuType.TrainList);
 						}
+						break;
+					case MenuType.Error:
+						Items = new MenuEntry[2];
+						Items[0] = new MenuCaption(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "log_error" }));
+						Items[1] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "back" }), MenuTag.MenuBack, 0);
+						Selection = 1;
 						break;
 				}
 				
