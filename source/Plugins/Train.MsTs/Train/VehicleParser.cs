@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using LibRender2.Trains;
 using OpenBve.Formats.MsTs;
+using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
@@ -518,6 +519,13 @@ namespace Train.MsTs
 						}
 					}
 					wheelRadiusNum++;
+					break;
+				case KujuTokenID.Sound:
+					string soundFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Path.GetDirectoryName(fileName), "SOUND"), block.ReadString());
+					if (File.Exists(soundFile))
+					{
+						SoundModelSystemParser.ParseSoundFile(soundFile, ref car);
+					}
 					break;
 			}
 			return true;
