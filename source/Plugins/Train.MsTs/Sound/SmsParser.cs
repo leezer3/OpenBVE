@@ -4,6 +4,7 @@ using System.IO;
 using System;
 using System.Text;
 using OpenBveApi.Interface;
+using OpenBveApi.Sounds;
 using SharpCompress.Compressors;
 using TrainManager.Car;
 
@@ -64,7 +65,7 @@ namespace Train.MsTs
 				fb.Read(buffer, 0, 16);
 				subHeader = Encoding.ASCII.GetString(buffer, 0, 8);
 			}
-
+			SoundSet soundSet = new SoundSet();
 			if (subHeader[7] == 't')
 			{
 				using (BinaryReader reader = new BinaryReader(fb))
@@ -81,7 +82,7 @@ namespace Train.MsTs
 					}
 
 					TextualBlock block = new TextualBlock(s, KujuTokenID.Tr_SMS);
-					ParseBlock(block);
+					ParseBlock(block, ref soundSet);
 				}
 
 			}
@@ -104,34 +105,107 @@ namespace Train.MsTs
 					uint remainingBytes = reader.ReadUInt32();
 					byte[] newBytes = reader.ReadBytes((int)remainingBytes);
 					BinaryBlock block = new BinaryBlock(newBytes, KujuTokenID.Tr_SMS);
-					ParseBlock(block);
+					ParseBlock(block, ref soundSet);
 				}
 			}
 
 			return false;
 		}
 
-		private static void ParseBlock(Block block)
+
+		internal struct SoundSet
+		{
+			internal bool Activation;
+			internal double ActivationDistance;
+			internal double DeactivationDistance;
+			internal bool CamCam;
+			internal bool PassengerCam;
+			internal bool ExternalCam;
+		}
+
+
+		private static void ParseBlock(Block block, ref SoundSet currentSoundSet)
 		{
 			Block newBlock;
 			switch (block.Token)
 			{
-				case KujuTokenID.ScalabiltyGroup:
-					/*
-					 * The root container for sound groupings.
-					 * First, parse the activation triggers
-					 */
-					newBlock = block.ReadSubBlock(KujuTokenID.Activation);
-					ParseBlock(newBlock);
-					break;
-				case KujuTokenID.Activation:
+				case KujuTokenID.Tr_SMS:
+					// file root
 					while (block.Position() < block.Length())
 					{
 						newBlock = block.ReadSubBlock();
-						ParseBlock(newBlock);
+						ParseBlock(newBlock, ref currentSoundSet);
 					}
 					break;
-
+				case KujuTokenID.ScalabiltyGroup:
+					// root container for sound groups
+					block.ReadSingle(); // number of groups
+					while (block.Position() < block.Length())
+					{
+						try
+						{
+							newBlock = block.ReadSubBlock(true);
+							ParseBlock(newBlock, ref currentSoundSet);
+						}
+						catch (Exception e)
+						{
+							Console.WriteLine(e);
+							throw;
+						}
+						
+						int b = 0;
+					}
+					break;
+				case KujuTokenID.Activation:
+					// control the conditions under which the sounds in the group are activated
+					currentSoundSet.Activation = true;
+					while (block.Position() < block.Length())
+					{
+						newBlock = block.ReadSubBlock(true);
+						ParseBlock(newBlock, ref currentSoundSet);
+					}
+					break;
+				case KujuTokenID.Deactivation:
+					// control the conditions under which the sounds in the group are deactivated
+					currentSoundSet.Activation = false;
+					while (block.Position() < block.Length())
+					{
+						newBlock = block.ReadSubBlock(true);
+						ParseBlock(newBlock, ref currentSoundSet);
+					}
+					break;
+				case KujuTokenID.Distance:
+					// absolute distance, presumably to camera
+					if (currentSoundSet.Activation)
+					{
+						currentSoundSet.ActivationDistance = block.ReadSingle();
+					}
+					else
+					{
+						currentSoundSet.DeactivationDistance = block.ReadSingle();
+					}
+					break;
+				case KujuTokenID.ExternalCam:
+				case KujuTokenID.CabCam:
+				case KujuTokenID.PassengerCam:
+					currentSoundSet.ExternalCam = currentSoundSet.Activation;
+					break;
+				case KujuTokenID.Streams:
+					// each stream represents a unique sound
+					int numStreams = block.ReadInt32();
+					for (int i = 0; i < numStreams; i++)
+					{
+						newBlock = block.ReadSubBlock(new[] { KujuTokenID.Stream, KujuTokenID.Skip });
+						if (block.Token == KujuTokenID.Skip)
+						{
+							i--;
+						}
+						else
+						{
+							ParseBlock(newBlock, ref currentSoundSet);
+						}
+					}
+					break;
 			}
 		}
 	}
