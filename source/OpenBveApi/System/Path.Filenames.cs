@@ -36,6 +36,10 @@ namespace OpenBveApi
 		/// <summary>Returns whether the TXT file is potentially a BVE5 route</summary>
 		public static bool IsInvalidTxtName(string fileName)
 	    {
+		    if (!fileName.EndsWith(".txt", StringComparison.InvariantCultureIgnoreCase))
+		    {
+			    return false;
+		    }
 		    /*
 		     * Unfortunately, BVE5 uses plain txt files for routes
 		     *
