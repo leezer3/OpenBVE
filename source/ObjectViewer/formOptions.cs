@@ -34,7 +34,7 @@ namespace ObjectViewer
 			comboBoxForwards.DataSource = Enum.GetValues(typeof(Key));
 			comboBoxForwards.SelectedItem = Interface.CurrentOptions.CameraMoveForward;
 			comboBoxBackwards.DataSource = Enum.GetValues(typeof(Key));
-			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveForward;
+			comboBoxBackwards.SelectedItem = Interface.CurrentOptions.CameraMoveBackward;
 		}
 
 		internal static DialogResult ShowOptions()
