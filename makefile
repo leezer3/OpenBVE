@@ -161,9 +161,9 @@ $(MAC_BUILD_RESULT): all-release
 	@echo $(COLOR_RED)Copying build data into $(COLOR_CYAN)OpenBVE.app$(COLOR_END)
 	@cp -r $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/
 
-# Because Azure is iffy on MacOS13, try creating DMG as root....
+# Because Azure is iffy on MacOS13, let's try a custom script
 	@echo $(COLOR_RED)Creating $(COLOR_CYAN)$(MAC_BUILD_RESULT)$(COLOR_END)
-	@/usr/bin/sudo /usr/bin/hdiutil create $(MAC_BUILD_RESULT) -volname "OpenBVE" -fs HFS+ -srcfolder "mac/OpenBVE.app"
+	@./DMGScript.sh
 	@echo Renaming final output file
 ifeq (, $(PROGRAM_VERSION))
 	@echo This is a $(COLOR_BLUE)Daily build$(COLOR_END)
