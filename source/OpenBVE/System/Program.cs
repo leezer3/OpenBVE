@@ -284,7 +284,6 @@ namespace OpenBve {
 				SetProcessDPIAware();
 			}
 
-            result.ExperimentalGLMenu = true;
 			if (result.ExperimentalGLMenu)
 			{
 				result.Start = true;

@@ -1,5 +1,4 @@
 using System;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -34,18 +33,18 @@ namespace LibRender2.Shaders
 		/// Constructor
 		/// </summary>
 		/// <param name="Renderer">A reference to the base renderer</param>
-		/// <param name="VertexShaderName">file path and name to vertex shader source</param>
-		/// <param name="FragmentShaderName">file path and name to fragment shader source</param>
-		/// <param name="IsFromStream"></param>
-		public Shader(BaseRenderer Renderer, string VertexShaderName, string FragmentShaderName, bool IsFromStream = false)
+		/// <param name="vertexShaderName">file path and name to vertex shader source</param>
+		/// <param name="fragmentShaderName">file path and name to fragment shader source</param>
+		/// <param name="isFromStream"></param>
+		public Shader(BaseRenderer Renderer, string vertexShaderName, string fragmentShaderName, bool isFromStream = false)
 		{
 			renderer = Renderer;
 			handle = GL.CreateProgram();
 
-			if (IsFromStream)
+			if (isFromStream)
 			{
 				Assembly thisAssembly = Assembly.GetExecutingAssembly();
-				using (Stream stream = thisAssembly.GetManifestResourceStream($"LibRender2.{VertexShaderName}.vert"))
+				using (Stream stream = thisAssembly.GetManifestResourceStream($"LibRender2.{vertexShaderName}.vert"))
 				{
 					if (stream != null)
 					{
@@ -55,7 +54,7 @@ namespace LibRender2.Shaders
 						}
 					}
 				}
-				using (Stream stream = thisAssembly.GetManifestResourceStream($"LibRender2.{FragmentShaderName}.frag"))
+				using (Stream stream = thisAssembly.GetManifestResourceStream($"LibRender2.{fragmentShaderName}.frag"))
 				{
 					if (stream != null)
 					{
@@ -68,8 +67,8 @@ namespace LibRender2.Shaders
 			}
 			else
 			{
-				LoadShader(File.ReadAllText(VertexShaderName, Encoding.UTF8), ShaderType.VertexShader);
-				LoadShader(File.ReadAllText(FragmentShaderName, Encoding.UTF8), ShaderType.FragmentShader);
+				LoadShader(File.ReadAllText(vertexShaderName, Encoding.UTF8), ShaderType.VertexShader);
+				LoadShader(File.ReadAllText(fragmentShaderName, Encoding.UTF8), ShaderType.FragmentShader);
 			}
 
 			GL.AttachShader(handle, vertexShader);
@@ -88,7 +87,6 @@ namespace LibRender2.Shaders
 
 			VertexLayout = GetVertexLayout();
 			UniformLayout = GetUniformLayout();
-			int n = 0;
 		}
 
 		/// <summary>Loads the shader source and compiles the shader</summary>
