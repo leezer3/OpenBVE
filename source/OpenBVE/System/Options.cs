@@ -316,7 +316,7 @@ namespace OpenBve
 				Builder.AppendLine("derailments = " + (Derailments ? "true" : "false"));
 				Builder.AppendLine("loadingsway = " + (LoadingSway ? "true" : "false"));
 				Builder.AppendLine("blackbox = " + (BlackBox ? "true" : "false"));
-				Builder.Append("mode = ");
+				Builder.AppendLine("mode = ");
 				switch (GameMode)
 				{
 					case GameMode.Arcade:
@@ -351,12 +351,12 @@ namespace OpenBve
 				Builder.AppendLine("raildrivermph = " + (RailDriverMPH ? "true" : "false"));
 				Builder.AppendLine();
 				Builder.AppendLine("[sound]");
-				Builder.Append("model = " + SoundModel);
-				Builder.Append("range = " + SoundRange);
+				Builder.AppendLine("model = " + SoundModel);
+				Builder.AppendLine("range = " + SoundRange);
 				Builder.AppendLine("number = " + SoundNumber.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[packages]");
-				Builder.Append("compression = " + packageCompressionType);
+				Builder.AppendLine("compression = " + packageCompressionType);
 				Builder.AppendLine();
 				Builder.AppendLine("[folders]");
 				Builder.AppendLine("route = " + RouteFolder);
