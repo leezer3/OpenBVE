@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using Formats.OpenBve;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Input;
 using OpenBveApi.Interface;
@@ -30,7 +31,132 @@ namespace Plugin
 			int SoundCount = 0;
 			// load file
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
-			
+
+			ConfigFile<AnimatedSection, AnimatedKey> cfg = new ConfigFile<AnimatedSection, AnimatedKey>(Lines, Plugin.currentHost);
+
+			while (cfg.RemainingSubBlocks > 0)
+			{
+				Block<AnimatedSection, AnimatedKey> block = cfg.ReadNextBlock();
+				switch (block.Key)
+				{
+					case AnimatedSection.Include:
+						Vector3 position = Vector3.Zero;
+						UnifiedObject[] obj = new UnifiedObject[4];
+						block.GetVector3(AnimatedKey.Position, ',', out position);
+						string Folder = Path.GetDirectoryName(FileName);
+						int objectCount = 0;
+						while (block.RemainingDataValues > 0 && block.GetNextRawValue(out string objectFile))
+						{
+							objectFile = Path.CombineFile(Folder, objectFile);
+							if (File.Exists(objectFile))
+							{
+								if (obj.Length == objectCount)
+								{
+									Array.Resize(ref obj, obj.Length << 1);
+								}
+								currentHost.LoadObject(objectFile, Encoding, out obj[objectCount]);
+								objectCount++;
+							}
+							else
+							{
+								currentHost.AddMessage(MessageType.Error, true, "File " + objectFile + " not found in the Section " + block.Key + " in file " + FileName);
+							}
+						}
+						for (int j = 0; j < objectCount; j++)
+						{
+							if (obj[j] != null)
+							{
+								if (obj[j] is StaticObject s)
+								{
+									s.Dynamic = true;
+									if (ObjectCount >= Result.Objects.Length)
+									{
+										Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
+									}
+									AnimatedObject a = new AnimatedObject(currentHost, FileName);
+									ObjectState aos = new ObjectState
+									{
+										Prototype = s,
+										Translation = Matrix4D.CreateTranslation(position.X, position.Y, -position.Z)
+									};
+									a.States = new[] { aos };
+									Result.Objects[ObjectCount] = a;
+									ObjectCount++;
+								}
+								else if (obj[j] is AnimatedObjectCollection)
+								{
+									AnimatedObjectCollection a = (AnimatedObjectCollection)obj[j].Clone();
+									for (int k = 0; k < a.Objects.Length; k++)
+									{
+										if (ObjectCount >= Result.Objects.Length)
+										{
+											Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
+										}
+										for (int h = 0; h < a.Objects[k].States.Length; h++)
+										{
+											a.Objects[k].States[h].Translation *= Matrix4D.CreateTranslation(position.X, position.Y, -position.Z);
+										}
+										Result.Objects[ObjectCount] = a.Objects[k];
+										ObjectCount++;
+									}
+									for (int kk = 0; kk < a.Sounds.Length; kk++)
+									{
+										if (SoundCount >= Result.Sounds.Length)
+										{
+											Array.Resize(ref Result.Sounds, Result.Sounds.Length << 1);
+										}
+										Result.Sounds[SoundCount] = a.Sounds[kk];
+										SoundCount++;
+									}
+								}
+							}
+						}
+						break;
+					case AnimatedSection.Object:
+						if (Result.Objects.Length == ObjectCount)
+						{
+							Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
+						}
+						Result.Objects[ObjectCount] = new AnimatedObject(currentHost, FileName)
+						{
+							CurrentState = -1,
+							TranslateXDirection = Vector3.Right,
+							TranslateYDirection = Vector3.Down,
+							TranslateZDirection = Vector3.Forward,
+							RotateXDirection = Vector3.Right,
+							RotateYDirection = Vector3.Down,
+							RotateZDirection = Vector3.Forward,
+							TextureShiftXDirection = Vector2.Right,
+							TextureShiftYDirection = Vector2.Down,
+							RefreshRate = 0.0,
+						};
+						
+						string[] objectStates = { };
+						if (block.TryGetStringArray(AnimatedKey.States, ',', ref objectStates) && objectStates.Length >= 1)
+						{
+							block.GetVector3(AnimatedKey.Position, ',', out Vector3 Position);
+						}
+						else
+						{
+							currentHost.AddMessage(MessageType.Error, false, "A minimum of one state is expected in " + block.Key + " in file " + FileName);
+							return null;
+						}
+						double RotateX = 0;
+						bool StaticXRotation = false;
+						double RotateY = 0;
+						bool StaticYRotation = false;
+						double RotateZ = 0;
+						bool StaticZRotation = false;
+						bool timetableUsed = false;
+						string[] StateFiles = null;
+						string StateFunctionRpn = null;
+						bool StateFunctionIsPostfix = false;
+						int StateFunctionLine = -1;
+						Vector3 Scale = Vector3.One;
+						break;
+				}
+			}
+
 			for (int i = 0; i < Lines.Length; i++)
 			{
 				int sc = Lines[i].IndexOf(';');
@@ -42,117 +168,6 @@ namespace Plugin
 					Enum.TryParse(sct, true, out AnimatedSection Section);
 					switch (Section)
 					{
-						case AnimatedSection.Include:
-							{
-								i++;
-								Vector3 position = Vector3.Zero;
-								UnifiedObject[] obj = new UnifiedObject[4];
-								int objCount = 0;
-								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
-								{
-									if (Lines[i].Length != 0)
-									{
-										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-										if (j > 0)
-										{
-											string a = Lines[i].Substring(0, j).TrimEnd();
-											string b = Lines[i].Substring(j + 1).TrimStart();
-											if (!Enum.TryParse(a, true, out AnimatedKey key))
-											{
-												currentHost.AddMessage(MessageType.Error, false, "Unknown key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-												i++;
-												continue;
-											}
-											switch (key)
-											{
-												case AnimatedKey.Position:
-													position = ParseVector3(b, key, i, Section, FileName);
-													break;
-												default:
-													currentHost.AddMessage(MessageType.Error, false, "The attribute " + key + " is not supported in a " + Section + " section at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-													break;
-											}
-										}
-										else
-										{
-											string Folder = Path.GetDirectoryName(FileName);
-											if (Path.ContainsInvalidChars(Lines[i]))
-											{
-												currentHost.AddMessage(MessageType.Error, false, Lines[i] + " contains illegal characters at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-											}
-											else
-											{
-												string file = Path.CombineFile(Folder, Lines[i]);
-												if (System.IO.File.Exists(file))
-												{
-													if (obj.Length == objCount)
-													{
-														Array.Resize(ref obj, obj.Length << 1);
-													}
-													currentHost.LoadObject(file, Encoding, out obj[objCount]);
-													objCount++;
-												}
-												else
-												{
-													currentHost.AddMessage(MessageType.Error, true, "File " + file + " not found at line " + (i + 1).ToString(Culture) + " in the Section " + Section + " in file " + FileName);
-												}
-											}
-										}
-									}
-									i++;
-								}
-								i--;
-								for (int j = 0; j < objCount; j++)
-								{
-									if (obj[j] != null)
-									{
-										if (obj[j] is StaticObject s)
-										{
-											s.Dynamic = true;
-											if (ObjectCount >= Result.Objects.Length)
-											{
-												Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
-											}
-											AnimatedObject a = new AnimatedObject(currentHost, FileName);
-											ObjectState aos = new ObjectState
-											{
-												Prototype = s,
-												Translation = Matrix4D.CreateTranslation(position.X, position.Y, -position.Z)
-											};
-											a.States = new[] { aos };
-											Result.Objects[ObjectCount] = a;
-											ObjectCount++;
-										}
-										else if (obj[j] is AnimatedObjectCollection)
-										{
-											AnimatedObjectCollection a = (AnimatedObjectCollection)obj[j].Clone();
-											for (int k = 0; k < a.Objects.Length; k++)
-											{
-												if (ObjectCount >= Result.Objects.Length)
-												{
-													Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
-												}
-												for (int h = 0; h < a.Objects[k].States.Length; h++)
-												{
-													a.Objects[k].States[h].Translation *= Matrix4D.CreateTranslation(position.X, position.Y, -position.Z);
-												}
-												Result.Objects[ObjectCount] = a.Objects[k];
-												ObjectCount++;
-											}
-											for (int kk = 0; kk < a.Sounds.Length; kk++)
-											{
-												if (SoundCount >= Result.Sounds.Length)
-												{
-													Array.Resize(ref Result.Sounds, Result.Sounds.Length << 1);
-												}
-												Result.Sounds[SoundCount] = a.Sounds[kk];
-												SoundCount++;
-											}
-										}
-									}
-								}
-							}
-							break;
 						case AnimatedSection.Object:
 							{
 								i++;
