@@ -316,23 +316,7 @@ namespace OpenBve
 				Builder.AppendLine("derailments = " + (Derailments ? "true" : "false"));
 				Builder.AppendLine("loadingsway = " + (LoadingSway ? "true" : "false"));
 				Builder.AppendLine("blackbox = " + (BlackBox ? "true" : "false"));
-				Builder.AppendLine("mode = ");
-				switch (GameMode)
-				{
-					case GameMode.Arcade:
-						Builder.AppendLine("arcade");
-						break;
-					case GameMode.Normal:
-						Builder.AppendLine("normal");
-						break;
-					case GameMode.Expert:
-						Builder.AppendLine("expert");
-						break;
-					default:
-						Builder.AppendLine("normal");
-						break;
-				}
-
+				Builder.AppendLine("mode = " + GameMode);
 				Builder.AppendLine("acceleratedtimefactor = " + TimeAccelerationFactor);
 				Builder.AppendLine("enablebvetshacks = " + (EnableBveTsHacks ? "true" : "false"));
 				Builder.AppendLine("enablebve5scriptedtrain = " + (EnableBve5ScriptedTrain ? "true" : "false"));
