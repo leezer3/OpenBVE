@@ -113,6 +113,11 @@ namespace RouteViewer
 				Program.LoadRoute();
                 Program.UpdateCaption();
             }
+
+            if (Width == DisplayDevice.Default.Width && Height == DisplayDevice.Default.Height)
+            {
+	            WindowState = WindowState.Maximized;
+            }
         }
 
 	    protected override void OnClosing(CancelEventArgs e)

@@ -298,7 +298,11 @@ namespace ObjectViewer
 			Program.Renderer.UpdateVisibility(true);
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 			Program.RefreshObjects();
-        }
+			if (Width == DisplayDevice.Default.Width && Height == DisplayDevice.Default.Height)
+			{
+				WindowState = WindowState.Maximized;
+			}
+		}
 
         protected override void OnClosing(CancelEventArgs e)
         {

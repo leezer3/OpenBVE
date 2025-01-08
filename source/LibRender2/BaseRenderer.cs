@@ -1756,6 +1756,11 @@ namespace LibRender2
 			GameWindow.Height = height;
 			Screen.Width = width;
 			Screen.Height = height;
+
+			if (width == DisplayDevice.Default.Width && height == DisplayDevice.Default.Height)
+			{
+				SetWindowState(WindowState.Maximized);
+			}
 		}
 	}
 }
