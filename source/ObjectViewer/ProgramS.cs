@@ -75,7 +75,22 @@ namespace ObjectViewer {
 	        
 	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 	        Options.LoadOptions();
-	        Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
+			// n.b. Init the toolkit before the renderer
+	        var options = new ToolkitOptions
+	        {
+		        Backend = PlatformBackend.PreferX11,
+	        };
+
+	        if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+	        {
+		        // We're managing our own DPI
+		        options.EnableHighResolution = false;
+		        SetProcessDPIAware();
+	        }
+
+	        Toolkit.Init(options);
+
+			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 	        
 	        
 	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
@@ -145,17 +160,7 @@ namespace ObjectViewer {
 				}
 	        }
 
-	        var options = new ToolkitOptions
-	        {
-		        Backend = PlatformBackend.PreferX11
-	        };
-
-	        if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
-	        {
-		        // Tell Windows that the main game is managing it's own DPI
-		        SetProcessDPIAware();
-	        }
-			Toolkit.Init(options);
+	        
 	        // --- load language ---
 	        string folder = Program.FileSystem.GetDataFolder("Languages");
 	        Translations.LoadLanguageFiles(folder);

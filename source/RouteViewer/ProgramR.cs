@@ -77,6 +77,21 @@ namespace RouteViewer
 			FileSystem.CreateFileSystem();
 			Sounds = new Sounds(CurrentHost);
 			Options.LoadOptions();
+			// n.b. Init the toolkit before the renderer
+			var options = new ToolkitOptions
+			{
+				Backend = PlatformBackend.PreferX11,
+			};
+
+			if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+			{
+				// We're managing our own DPI
+				options.EnableHighResolution = false;
+				SetProcessDPIAware();
+			}
+
+			Toolkit.Init(options);
+
 			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 			CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 			TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
@@ -156,9 +171,6 @@ namespace RouteViewer
 				SetProcessDPIAware();
 			}
 
-			var options = new ToolkitOptions();
-			options.Backend = PlatformBackend.PreferX11;
-			Toolkit.Init(options);
 			string folder = Program.FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
 			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
