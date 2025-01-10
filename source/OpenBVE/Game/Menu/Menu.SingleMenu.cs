@@ -308,7 +308,7 @@ namespace OpenBve
 								continue;
 							}
 
-							if (Path.IsInvalidDirectoryName(Program.CurrentHost.Platform, directoryInfo.Name))
+							if (Path.IsInvalidDirectoryName(Program.CurrentHost.Platform, SearchDirectory, directoryInfo.Name))
 							{
 								continue;
 							}
