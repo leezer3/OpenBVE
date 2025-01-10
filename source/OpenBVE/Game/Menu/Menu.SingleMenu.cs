@@ -250,33 +250,55 @@ namespace OpenBve
 						potentialFiles = new string[] { };
 						directoryList = new string[] { };
 						drives = false;
-						if (SearchDirectory != string.Empty)
+						switch (SearchDirectory)
 						{
-							try
-							{
-								potentialFiles = Directory.GetFiles(SearchDirectory);
-								directoryList = Directory.GetDirectories(SearchDirectory);
-							}
-							catch
-							{
-								// Ignored
-							}
-						}
-						else
-						{
-							DriveInfo[] systemDrives = DriveInfo.GetDrives();
-							directoryList = new string[systemDrives.Length];
-							for (int k = 0; k < systemDrives.Length; k++)
-							{
-								directoryList[k] = systemDrives[k].Name;
-							}
-							drives = true;
+							case "":
+								// show drive list
+								DriveInfo[] systemDrives = DriveInfo.GetDrives();
+								directoryList = new string[systemDrives.Length];
+								for (int k = 0; k < systemDrives.Length; k++)
+								{
+									directoryList[k] = systemDrives[k].Name;
+								}
+								drives = true;
+								Items = new MenuEntry[directoryList.Length + 1];
+								Items[0] = new MenuCaption(menu, SearchDirectory);
+								totalEntries = 1;
+								break;
+							case "/":
+								// root of Linux etc.
+								// Mono seems to show block devices and stuff, but goes wonky if we select them
+								try
+								{
+									potentialFiles = Directory.GetFiles(SearchDirectory);
+									directoryList = Directory.GetDirectories(SearchDirectory);
+								}
+								catch
+								{
+									// Ignored
+								}
+								Items = new MenuEntry[potentialFiles.Length + directoryList.Length + 1];
+								Items[0] = new MenuCaption(menu, SearchDirectory);
+								totalEntries = 1;
+								break;
+							default:
+								// actual directory
+								try
+								{
+									potentialFiles = Directory.GetFiles(SearchDirectory);
+									directoryList = Directory.GetDirectories(SearchDirectory);
+								}
+								catch
+								{
+									// Ignored
+								}
+								Items = new MenuEntry[potentialFiles.Length + directoryList.Length + 2];
+								Items[0] = new MenuCaption(menu, SearchDirectory);
+								Items[1] = new MenuCommand(menu, "...", MenuTag.ParentDirectory, 0);
+								totalEntries = 2;
+								break;
 						}
 						
-						Items = new MenuEntry[potentialFiles.Length + directoryList.Length + 2];
-						Items[0] = new MenuCaption(menu, SearchDirectory);
-						Items[1] = new MenuCommand(menu, "...", MenuTag.ParentDirectory, 0);
-						totalEntries = 2;
 						for (int j = 0; j < directoryList.Length; j++)
 						{
 							DirectoryInfo directoryInfo = new DirectoryInfo(directoryList[j]);
