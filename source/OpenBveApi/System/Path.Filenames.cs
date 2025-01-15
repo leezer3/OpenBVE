@@ -126,7 +126,7 @@ namespace OpenBveApi
 							return true;
 					}
 
-					if (Directory.GetParent(searchDirectory) == null)
+					if (!string.IsNullOrEmpty(searchDirectory) && Directory.GetParent(searchDirectory) == null)
 					{
 						// root of the drive- storing things in reserved system folders is *not* a good idea
 						switch (dn)
