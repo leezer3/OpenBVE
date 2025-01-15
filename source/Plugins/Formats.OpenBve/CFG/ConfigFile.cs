@@ -34,6 +34,7 @@ using System.IO;
 using System.Linq;
 using OpenBveApi;
 using Path = OpenBveApi.Path;
+using OpenBveApi.Objects;
 
 namespace Formats.OpenBve
 {
@@ -325,6 +326,33 @@ namespace Formats.OpenBve
 			return false;
 		}
 
+		public override bool TryGetVector3(T2 key, char separator, ref Vector3 value)
+		{
+			if (keyValuePairs.TryGetValue(key, out var rawValue))
+			{
+				string[] splitStrings = rawValue.Value.Split(separator);
+				if (splitStrings.Length > 3)
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key + " at Line " + rawValue.Key);
+				}
+
+				if (!NumberFormats.TryParseDoubleVb6(splitStrings[0], out value.X))
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "X was invalid in " + key + " in Section " + Key + " at Line " + rawValue.Key);
+				}
+				if (!NumberFormats.TryParseDoubleVb6(splitStrings[1], out value.Y))
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "Y was invalid in " + key + " in Section " + Key + " at Line " + rawValue.Key);
+				}
+				if (!NumberFormats.TryParseDoubleVb6(splitStrings[2], out value.Z))
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "Z was invalid in " + key + " in Section " + Key + " at Line " + rawValue.Key);
+				}
+				return true;
+			}
+			return false;
+		}
+
 		public override bool TryGetStringArray(T2 key, char separator, ref string[] values)
 		{
 			if (keyValuePairs.TryGetValue(key, out var value))
@@ -336,14 +364,50 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-		public override bool GetFunctionScript(T2 key, out FunctionScript function)
+		public override bool GetPathArray(T2 key, char separator, string absolutePath, ref string[] values)
+		{
+			if (keyValuePairs.TryGetValue(key, out var value))
+			{
+				string[] splitValues = value.Value.Split(separator);
+				if (splitValues.Length > 0)
+				{
+					values = new string[splitValues.Length];
+					for (int i = 0; i < splitValues.Length; i++)
+					{
+						try
+						{
+							values[i] = Path.CombineFile(absolutePath, splitValues[i].Trim());
+						}
+						catch
+						{
+							if (!string.IsNullOrEmpty(splitValues[i]))
+							{
+								// allow empty states etc.
+								currentHost.AddMessage(MessageType.Warning, false, "The path for state " + i + " was invalid in " + key + " in Section " + Key + " at Line " + value.Key);
+							}
+						}
+					}
+					return true;
+				}
+				else
+				{
+					currentHost.AddMessage(MessageType.Warning, false, "An empty path list was provided for " + key + " in Section " + Key + " at Line " + value.Key);
+					return false;
+				}
+				
+			}
+			currentHost.AddMessage(MessageType.Warning, false, "Key " + key + " was not found in Section " + Key + " at Line " + value.Key);
+			return false;
+		}
+
+		public override bool GetFunctionScript(T2 key, out AnimationScript function)
 		{
 
 			if (keyValuePairs.TryGetValue(key, out var script))
 			{
 				try
 				{
-					bool isInfix = key.ToString().IndexOf("RPN", StringComparison.Ordinal) != -1;
+					bool isInfix = key.ToString().IndexOf("RPN", StringComparison.Ordinal) == -1;
 					function = new FunctionScript(currentHost, script.Value, isInfix);
 					return true;
 				}
@@ -355,6 +419,53 @@ namespace Formats.OpenBve
 				}
 			}
 			currentHost.AddMessage(MessageType.Warning, false, "Key " + key + " was not found in Section " + Key);
+			function = null;
+			return false;
+		}
+
+		public override bool GetFunctionScript(T2[] keys, string absolutePath, out AnimationScript function)
+		{
+
+			foreach (T2 key in keys)
+			{
+				if (keyValuePairs.TryGetValue(key, out var script))
+				{
+					if (key.ToString().IndexOf("script", StringComparison.InvariantCultureIgnoreCase) != -1)
+					{
+						try
+						{
+							string scriptFile = Path.CombineFile(absolutePath, script.Value.Trim());
+							if (File.Exists(scriptFile))
+							{
+								function = new CSAnimationScript(currentHost, scriptFile);
+								return true;
+							}
+							currentHost.AddMessage(MessageType.Warning, false, "Function Script " + script + " was not found in Key " + key + " in Section " + Key + " at Line " + script.Key);
+							function = null;
+							return false;
+						}
+						catch
+						{
+							currentHost.AddMessage(MessageType.Warning, false, "An error occured whilst attempting to load Function Script " + script + " in Key " + key + " in Section " + Key + " at Line " + script.Key);
+						}
+					}
+					else
+					{
+						try
+						{
+							bool isInfix = key.ToString().IndexOf("RPN", StringComparison.Ordinal) == -1;
+							function = new FunctionScript(currentHost, script.Value, isInfix);
+							return true;
+						}
+						catch
+						{
+							currentHost.AddMessage(MessageType.Warning, false, "Function Script " + script + " was invalid in Key " + key + " in Section " + Key + " at Line " + script.Key);
+							function = null;
+							return false;
+						}
+					}
+				}
+			}
 			function = null;
 			return false;
 		}
@@ -728,6 +839,81 @@ namespace Formats.OpenBve
 			}
 
 			s = string.Empty;
+			return false;
+		}
+
+		public override bool GetNextPath(string absolutePath, out string finalPath)
+		{
+			if (rawValues.Count > 0)
+			{
+				string fileName = rawValues.Dequeue();
+				if (!Path.ContainsInvalidChars(fileName))
+				{
+					try
+					{
+						finalPath = Path.CombineFile(absolutePath, fileName);
+					}
+					catch
+					{
+						finalPath = string.Empty;
+					}
+
+					if (File.Exists(finalPath))
+					{
+						return true;
+					}
+					
+					currentHost.AddMessage(MessageType.Warning, false, "File " + fileName + " was not found in Section " + Key);
+					finalPath = string.Empty;
+					return false;
+				}
+
+				currentHost.AddMessage(MessageType.Warning, false, "Path contains invalid characters for " + fileName + " in Section " + Key);
+				finalPath = string.Empty;
+				return false;
+			}
+
+			finalPath = string.Empty;
+			return false;
+		}
+
+		public override bool GetDamping(T2 key, char separator, out Damping damping)
+		{
+			damping = null;
+			if (keyValuePairs.TryGetValue(key, out var value))
+			{
+				string[] s = value.Value.Split(separator);
+				if (s.Length == 2)
+				{
+					if (!double.TryParse(s[0], NumberStyles.Float, CultureInfo.InvariantCulture, out double nf))
+					{
+						currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is invalid in " + key + " at line " + value.Key + " in the Section " + Key);
+						return false;
+					}
+					if (!double.TryParse(s[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double dr))
+					{
+						currentHost.AddMessage(MessageType.Error, false, "DampingRatio is invalid in " + key + " at line " + value.Key + " in the Section " + Key);
+						return false;
+					}
+					if (nf <= 0.0)
+					{
+						currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is expected to be positive in " + key + " at line " + value.Key + " in the Section " + Key);
+						return false;
+					}
+					if (dr <= 0.0)
+					{
+						currentHost.AddMessage(MessageType.Error, false, "DampingRatio is expected to be positive in " + key + " at line " + value.Key + " in the Section " + Key);
+						return false;
+					}
+
+					damping = new Damping(nf, dr);
+
+				}
+				else
+				{
+					currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + key + " at line " + value.Key + " in the Section " + Key);
+				}
+			}
 			return false;
 		}
 	}

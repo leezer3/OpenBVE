@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
@@ -28,6 +28,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace Formats.OpenBve
 {
@@ -136,8 +137,14 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
-	    /// <summary>Unconditionally reads the specified Color24 from the block</summary>
-	    public virtual bool GetColor24(T2 key, out Color24 value)
+	    /// <summary>Reads the specified Vector3 from the block, preserving the prior value if not present</summary>
+	    public virtual bool TryGetVector3(T2 key, char separator, ref Vector3 value)
+	    {
+		    return false;
+	    }
+
+		/// <summary>Unconditionally reads the specified Color24 from the block</summary>
+		public virtual bool GetColor24(T2 key, out Color24 value)
 	    {
 			value = Color24.White;
 			return false;
@@ -156,15 +163,29 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
-	    /// <summary>Reads the specified FunctionScript from the block, preserving the prior value if not present</summary>
-	    public virtual bool GetFunctionScript(T2 key, out FunctionScript function)
+	    /// <summary>Reads the specified path array from the block</summary>
+	    public virtual bool GetPathArray(T2 key, char separator, string absolutePath, ref string[] values)
+	    {
+		    values = new string[0];
+		    return false;
+	    }
+
+		/// <summary>Reads the specified FunctionScript from the block, preserving the prior value if not present</summary>
+		public virtual bool GetFunctionScript(T2 key, out AnimationScript function)
 	    {
 		    function = null;
 		    return false;
 	    }
 
-	    /// <summary>Reads the specified Enum value from the block</summary>
-	    public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue) where T3 : struct, Enum
+	    /// <summary>Reads the specified FunctionScript from the block, preserving the prior value if not present</summary>
+	    public virtual bool GetFunctionScript(T2[] keys, string absolutePath, out AnimationScript function)
+	    {
+		    function = null;
+		    return false;
+	    }
+
+		/// <summary>Reads the specified Enum value from the block</summary>
+		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue) where T3 : struct, Enum
 	    {
 		    enumValue = default;
 		    return false;
@@ -193,6 +214,17 @@ namespace Formats.OpenBve
 			return false;
 		}
 
+		public virtual bool GetNextPath(string absolutePath, out string finalPath)
+		{
+			finalPath = string.Empty;
+			return false;
+		}
+
+		public virtual bool GetDamping(T2 key, char separator, out Damping damping)
+		{
+			damping = null;
+			return false;
+		}
 
 		protected Block(int myIndex, T1 myKey, HostInterface host)
 		{

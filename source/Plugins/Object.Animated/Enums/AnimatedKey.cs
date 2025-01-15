@@ -45,6 +45,7 @@
 		TextureShiftYFunctionRPN,
 		TextureShiftYScript,
 		TrackFollowerFunction,
+		TrackFollowerScript,
 		Axles,
 		TextureOverride,
 		RefreshRate,
@@ -60,6 +61,7 @@
 		ScaleYFunction,
 		ScaleYScript,
 		ScaleZFunction,
-		ScaleZScript
+		ScaleZScript,
+		StateScript
 	}
 }
