@@ -37,18 +37,16 @@ namespace OpenBve {
 		internal static ImageFileMachine CurrentCPUArchitecture;
 
 		/// <summary>The host API used by this program.</summary>
-		internal static Host CurrentHost = null;
+		internal static Host CurrentHost;
 
 		/// <summary>Information about the file system organization.</summary>
-		internal static FileSystem FileSystem = null;
+		internal static FileSystem FileSystem;
 		
 		/// <summary>If the program is to be restarted, this contains the command-line arguments that should be passed to the process, or a null reference otherwise.</summary>
-		internal static string RestartArguments = null;
+		internal static string RestartArguments;
 
 		/// <summary>The random number generator used by this program.</summary>
 		internal static readonly Random RandomNumberGenerator = new Random();
-
-		public static GameWindow currentGameWindow;
 
 		internal static JoystickManager Joysticks;
 
@@ -239,7 +237,7 @@ namespace OpenBve {
 									result.TrainEncoding = System.Text.Encoding.UTF8;
 									for (int j = 0; j < Interface.CurrentOptions.TrainEncodings.Length; j++) {
 										if (string.Compare(Interface.CurrentOptions.TrainEncodings[j].Value, result.TrainFolder, StringComparison.InvariantCultureIgnoreCase) == 0) {
-											result.TrainEncoding = System.Text.Encoding.GetEncoding(Interface.CurrentOptions.TrainEncodings[j].Codepage);
+											result.TrainEncoding = System.Text.Encoding.GetEncoding((int)Interface.CurrentOptions.TrainEncodings[j].Codepage);
 											break;
 										}
 									}
@@ -297,18 +295,15 @@ namespace OpenBve {
 			// --- start the actual program ---
 			if (result.Start) {
 				if (Initialize()) {
-					#if !DEBUG
 					try {
-						#endif
 						MainLoop.StartLoopEx(result);
-						#if !DEBUG
 					} catch (Exception ex) {
 						bool found = false;
-						for (int i = 0; i < TrainManager.Trains.Length; i++) {
+						for (int i = 0; i < TrainManager.Trains.Count; i++) {
 							if (TrainManager.Trains[i] != null && TrainManager.Trains[i].Plugin != null) {
 								if (TrainManager.Trains[i].Plugin.LastException != null) {
 									CrashHandler.LoadingCrash(ex.Message, true);
-									MessageBox.Show("The train plugin " + TrainManager.Trains[i].Plugin.PluginTitle + " caused a runtime exception: " + TrainManager.Trains[i].Plugin.LastException.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+									MessageBox.Show(@"The train plugin " + TrainManager.Trains[i].Plugin.PluginTitle + @" caused a runtime exception: " + TrainManager.Trains[i].Plugin.LastException.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 									found = true;
 									RestartArguments = "";
 									break;
@@ -317,16 +312,16 @@ namespace OpenBve {
 						}
 						if (!found)
 						{
-							if (ex is System.DllNotFoundException)
+							if (ex is DllNotFoundException)
 							{
 								Interface.AddMessage(MessageType.Critical, false, "The required system library " + ex.Message + " was not found on the system.");
 								switch (ex.Message)
 								{
 									case "libopenal.so.1":
-										MessageBox.Show("openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+										MessageBox.Show(@"openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 										break;
 									default:
-										MessageBox.Show("The required system library " + ex.Message + " was not found on this system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+										MessageBox.Show(@"The required system library " + ex.Message + @" was not found on this system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 										break;
 								}
 							}
@@ -338,7 +333,6 @@ namespace OpenBve {
 							RestartArguments = "";
 						}
 					}
-#endif
 				}
 				Deinitialize();
 			}
@@ -398,7 +392,6 @@ namespace OpenBve {
 			Program.CurrentHost.UnloadPlugins(out _);
 			Sounds.DeInitialize();
 			Renderer.DeInitialize();
-			currentGameWindow?.Dispose();
 		}
 
 	}

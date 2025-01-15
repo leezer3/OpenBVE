@@ -10,6 +10,7 @@ using SharpCompress.Archives;
 using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace OpenBveApi.Packages
 {
@@ -188,11 +189,13 @@ namespace OpenBveApi.Packages
 	public enum CompressionType
 	{
 		/// <summary>LZMA Zip compression</summary>
-		Zip,
-		/// <summary>G compression</summary>
-		TarGZ,
+		Zip = 0,
+		/// <summary>G comp0ession</summary>
+		TarGZ = 1,
+		GZip = 1,
 		/// <summary>BZip2 compression</summary>
-		BZ2
+		BZ2 = 2,
+		BZip = 2
 	}
 
 	/// <summary>The current operation being performed</summary>
@@ -356,7 +359,7 @@ namespace OpenBveApi.Packages
 						//Create temp directory and XML file
 						var tempXML = System.IO.Path.GetTempPath() + System.IO.Path.GetRandomFileName() + "package.xml";
 						string tempPath = Path.GetDirectoryName(tempXML);
-						if (tempPath is null)
+                        if (tempPath is null)
 						{
 							throw new Exception("Unable to create the temporary directory for package compression.");
 						}

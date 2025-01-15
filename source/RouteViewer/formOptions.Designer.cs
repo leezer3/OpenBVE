@@ -1,6 +1,6 @@
 namespace RouteViewer
 {
-    partial class formOptions
+    partial class FormOptions
     {
         /// <summary>
         /// Required designer variable.
@@ -423,7 +423,7 @@ namespace RouteViewer
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.InterpolationLabel);
 			this.Controls.Add(this.InterpolationMode);
-			this.Name = "formOptions";
+			this.Name = "FormOptions";
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
 			this.Text = "Options";

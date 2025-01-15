@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
+using Formats.OpenBve;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -63,159 +63,65 @@ namespace Train.OpenBve
 					Lines[i] = Lines[i].Substring(0, j).TrimEnd();
 				}
 			}
-			// initialize
-			
-			// parse lines for panel
-			for (int i = 0; i < Lines.Length; i++) {
-				if (Lines[i].Length > 0) {
-					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out Panel2Sections Section);
-						switch (Section) {
-								// panel
-							case Panel2Sections.This:
-								i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-									int j = Lines[i].IndexOf('='); if (j >= 0)
-									{
-										Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Panel2Key Key);
-										string Value = Lines[i].Substring(j + 1).TrimStart();
-										switch (Key) {
-											case Panel2Key.Resolution:
-												double pr = 0.0;
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out pr)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
-												if (pr > 100)
-												{
-													PanelResolution = pr;
-												}
-												else
-												{
-													//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
-													//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
-												break;
-											case Panel2Key.Left:
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelLeft)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line" + (i + 1).ToString(Culture) + " in " + FileName);
-												} break;
-											case Panel2Key.Right:
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelRight)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												}
-												break;
-											case Panel2Key.Top:
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelTop)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} break;
-											case Panel2Key.Bottom:
-												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelBottom)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} break;
-											case Panel2Key.DaytimeImage:
-												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-												if (Path.ContainsInvalidChars(Value)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} else {
-													PanelDaytimeImage = Path.CombineFile(TrainPath, Value);
-													if (!File.Exists(PanelDaytimeImage)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + PanelDaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														PanelDaytimeImage = null;
-													}
-												}
-												break;
-											case Panel2Key.NighttimeImage:
-												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-												if (Path.ContainsInvalidChars(Value)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} else {
-													PanelNighttimeImage = Path.CombineFile(TrainPath, Value);
-													if (!File.Exists(PanelNighttimeImage)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + PanelNighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														PanelNighttimeImage = null;
-													}
-												}
-												break;
-											case Panel2Key.TransparentColor:
-												if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out PanelTransparentColor)) {
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} break;
-											case Panel2Key.Center:
-												{
-													int k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelCenter.X)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelCenter.Y)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													} else {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												}
-											case Panel2Key.Origin:
-												{
-													int k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelOrigin.X)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelOrigin.Y)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													} else {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												}
-										}
-									} i++;
-								} i--; break;
-						}
+
+			ConfigFile<Panel2Sections, Panel2Key> cfg = new ConfigFile<Panel2Sections, Panel2Key>(Lines, Plugin.CurrentHost);
+
+			if (cfg.ReadBlock(Panel2Sections.This, out var Block))
+			{
+				// NOTE: Only able to create a panel with a daytime image available!
+				if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out PanelDaytimeImage))
+				{
+					Block.GetValue(Panel2Key.Resolution, out PanelResolution);
+					if (PanelResolution < 100)
+					{
+						//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
+						//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given in " + FileName);
 					}
-				}
-			}
-			ApplyGlobalHacks();
-			{ // camera restriction
-				double WorldWidth, WorldHeight;
-				if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {
-					WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
-					WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
-				} else {
-					WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
-					WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
-				}
-				double x0 = (PanelLeft - PanelCenter.X) / PanelResolution;
-				double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
-				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-				Car.CameraRestriction.BottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
-				Car.CameraRestriction.TopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
-				Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
-				Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
-			}
-			// create panel
-			if (PanelDaytimeImage != null) {
-				if (!File.Exists(PanelDaytimeImage)) {
-					Plugin.currentHost.AddMessage(MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
-				} else {
-					Plugin.currentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true, 20000);
-					Texture tnight = null;
-					if (PanelNighttimeImage != null) {
-						if (!File.Exists(PanelNighttimeImage)) {
-							Plugin.currentHost.AddMessage(MessageType.Error, true, "The nighttime panel bitmap could not be found in " + FileName);
-						} else {
-							Plugin.currentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out tnight);
-						}
+
+					Block.GetValue(Panel2Key.Left, out PanelLeft);
+					Block.GetValue(Panel2Key.Right, out PanelRight);
+					Block.GetValue(Panel2Key.Top, out PanelTop);
+					Block.GetValue(Panel2Key.Bottom, out PanelBottom);
+					Block.TryGetColor24(Panel2Key.TransparentColor, ref PanelTransparentColor);
+					Block.GetVector2(Panel2Key.Center, ',', out PanelCenter);
+					Block.GetVector2(Panel2Key.Origin, ',', out PanelOrigin);
+					ApplyGlobalHacks();
+					double WorldWidth, WorldHeight;
+					if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
+					{
+						WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
+						WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
 					}
+					else
+					{
+						WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Plugin.Renderer.Screen.AspectRatio;
+						WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
+					}
+					double x0 = (PanelLeft - PanelCenter.X) / PanelResolution;
+					double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
+					double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
+					double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
+					Car.CameraRestriction.BottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
+					Car.CameraRestriction.TopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
+					Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
+					Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
+					Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out PanelNighttimeImage);
+					Plugin.CurrentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true, 20000);
+					Plugin.CurrentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out var tnight, true, 20000);
 					CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight);
 				}
+				else
+				{
+					// error already added in the block
+					return;
+				}
+			}
+			else
+			{
+				// no main panel image, so invalid
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Panel2.cfg file " + FileName + " does not contain a [This] section.");
+				return;
 			}
 
 			int GroupIndex = 0;
@@ -227,1224 +133,611 @@ namespace Train.OpenBve
 				Car.CarSections[0].Groups[GroupIndex] = new ElementsGroup();
 			}
 
-			// parse lines for rest
-			double invfac = Lines.Length == 0 ? 0.4 : 0.4 / Lines.Length;
-			for (int i = 0; i < Lines.Length; i++) {
-				Plugin.CurrentProgress = Plugin.LastProgress + invfac * i;
-				if ((i & 7) == 0) {
-					System.Threading.Thread.Sleep(1);
-					if (Plugin.Cancel) return;
-				}
-				if (Lines[i].Length > 0) {
-					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
-					{
-						Enum.TryParse(Lines[i].Substring(1, Lines[i].Length - 2).Trim(), true, out Panel2Sections Section);
-						switch (Section) {
-							case Panel2Sections.PilotLamp:
+			while (cfg.RemainingSubBlocks > 0)
+			{
+				Block = cfg.ReadNextBlock();
+				Block.GetEnumValue(Panel2Key.Subject, out Panel2Subject Subject, out int subjectIndex, out string subjectSuffix);
+				string Function = string.Empty, DaytimeImage;
+				Block.TryGetValue(Panel2Key.Function, ref Function);
+				Color24 Color = Color24.White;
+				Color24 TransparentColor = Color24.Blue;
+				Block.TryGetColor24(Panel2Key.TransparentColor, ref TransparentColor);
+				Block.GetValue(Panel2Key.Layer, out int Layer);
+				double Radius = 0;
+				switch (Block.Key)
+				{
+					case Panel2Sections.PilotLamp:
+						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
+						{
+							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
+							Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage);
+							Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
+							Texture tnight = null;
+							if (!string.IsNullOrEmpty(NighttimeImage))
+							{
+								Plugin.CurrentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
+							}
+							int w = tday.Width;
+							int h = tday.Height;
+							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, w, h, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
+							string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, subjectIndex, subjectSuffix);
+							try
+							{
+								Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = !string.IsNullOrEmpty(Function) ? new FunctionScript(Plugin.CurrentHost, Function, true) : new FunctionScript(Plugin.CurrentHost, f + " 1 == --", false);
+							}
+							catch
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+							}
+						}
+						break;
+					case Panel2Sections.Needle:
+						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
+						{
+							double InitialAngle = -120, LastAngle = 120;
+							double Minimum = 0.0, Maximum = 1000.0;
+							double NaturalFrequency = -1.0, DampingRatio = -1.0;
+							Vector2 Origin = new Vector2(-1, -1);
+							Block.TryGetValue(Panel2Key.Function, ref Function);
+							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
+							bool OriginDefined = Block.TryGetVector2(Panel2Key.Origin, ',', ref Origin);
+							Block.GetValue(Panel2Key.Radius, out Radius);
+							Block.TryGetValue(Panel2Key.InitialAngle, ref InitialAngle);
+							InitialAngle = InitialAngle.ToRadians();
+							Block.TryGetValue(Panel2Key.LastAngle, ref LastAngle);
+							LastAngle = LastAngle.ToRadians();
+							Block.TryGetValue(Panel2Key.Minimum, ref Minimum);
+							Block.TryGetValue(Panel2Key.Maximum, ref Maximum);
+							Block.TryGetValue(Panel2Key.NaturalFreq, ref NaturalFrequency);
+							Block.TryGetValue(Panel2Key.DampingRatio, ref DampingRatio);
+							Block.TryGetColor24(Panel2Key.Color, ref Color);
+							Block.GetValue(Panel2Key.Backstop, out bool Backstop);
+							Block.GetValue(Panel2Key.Smoothed, out bool Smoothed);
+							Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage);
+							
+							Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
+							Texture tnight = null;
+							if (!string.IsNullOrEmpty(NighttimeImage))
+							{
+								Plugin.CurrentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
+							}
+							if (!OriginDefined)
+							{
+								Origin.X = 0.5 * tday.Width;
+								Origin.Y = 0.5 * tday.Height;
+							}
+							double ox = Origin.X / tday.Width;
+							double oy = Origin.Y / tday.Height;
+							double n = Radius == 0.0 | Origin.Y == 0.0 ? 1.0 : Radius / Origin.Y;
+							double nx = n * tday.Width;
+							double ny = n * tday.Height;
+							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X - ox * nx, Location.Y - oy * ny, nx, ny, new Vector2(ox, oy), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color);
+							Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection = Vector3.Backward;
+							Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection = Vector3.Right;
+							Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection, Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection);
+							string f;
+							switch (Subject)
+							{
+								case Panel2Subject.Hour:
+									f = Smoothed ? "0.000277777777777778 time * 24 mod" : "0.000277777777777778 time * floor";
+									break;
+								case Panel2Subject.Min:
+									f = Smoothed ? "0.0166666666666667 time * 60 mod" : "0.0166666666666667 time * floor";
+									break;
+								case Panel2Subject.Sec:
+									f = Smoothed ? "time 60 mod" : "time floor";
+									break;
+								default:
+									f = GetStackLanguageFromSubject(Car.baseTrain, Subject, subjectIndex, subjectSuffix);
+									break;
+							}
+
+							double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
+							double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
+							f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
+							if (NaturalFrequency >= 0.0 & DampingRatio >= 0.0)
+							{
+								Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
+							}
+							try
+							{
+								Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = !string.IsNullOrEmpty(Function) ? new FunctionScript(Plugin.CurrentHost, Function, true) : new FunctionScript(Plugin.CurrentHost, f, false);
+							}
+							catch
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+							}
+							if (Backstop)
+							{
+								Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle;
+								Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle;
+							}
+						}
+						break;
+					case Panel2Sections.LinearGauge:
+						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
+						{
+							Vector2 Direction = new Vector2(1, 0);
+							double Minimum = 0, Maximum = 0;
+
+							Block.TryGetValue(Panel2Key.Function, ref Function);
+							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
+							Block.TryGetValue(Panel2Key.Minimum, ref Minimum);
+							Block.TryGetValue(Panel2Key.Maximum, ref Maximum);
+							Block.GetValue(Panel2Key.Width, out int Width);
+							Block.TryGetVector2(Panel2Key.Direction, ',', ref Direction);
+							Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage);
+
+							Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
+							Texture tnight = null;
+							if (!string.IsNullOrEmpty(NighttimeImage))
+							{
+								Plugin.CurrentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
+							}
+							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, tday.Width, tday.Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
+							if (Maximum < Minimum)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Block.Key + " in " + FileName);
+								break;
+							}
+							string tf = GetInfixFunction(Car.baseTrain, Subject, subjectIndex, subjectSuffix, Minimum, Maximum, Width, tday.Width);
+							if (!string.IsNullOrEmpty(tf) || !string.IsNullOrEmpty(Function))
+							{
+								Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
+								try
 								{
-									string Subject = "true";
-									string Function = string.Empty;
-									double LocationX = 0.0, LocationY = 0.0;
-									string DaytimeImage = null, NighttimeImage = null;
-									Color24 TransparentColor = Color24.Blue;
-									int Layer = 0;
-									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-										int j = Lines[i].IndexOf('=');
-										if (j >= 0)
-										{
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Panel2Key Key);
-											string Value = Lines[i].Substring(j + 1).TrimStart();
-											switch (Key) {
-												case Panel2Key.Subject:
-													Subject = Value;
-													break;
-												case Panel2Key.Function: 
-													Function = Value;
-													break;
-												case Panel2Key.Location:
-													int k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													} else {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.DaytimeImage:
-													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Path.ContainsInvalidChars(Value)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														DaytimeImage = Path.CombineFile(TrainPath, Value);
-														if (!File.Exists(DaytimeImage)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															DaytimeImage = null;
-														}
-													}
-													break;
-												case Panel2Key.NighttimeImage:
-													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Path.ContainsInvalidChars(Value)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														NighttimeImage = Path.CombineFile(TrainPath, Value);
-														if (!File.Exists(NighttimeImage)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															NighttimeImage = null;
-														}
-													}
-													break;
-												case Panel2Key.TransparentColor:
-													if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Layer:
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-											}
-										} i++;
-									} i--;
-									if (DaytimeImage == null) {
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "DaytimeImage is required to be specified in " + Section + " in " + FileName);
-									}
-									// create element
-									if (DaytimeImage != null) {
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
-										Texture tnight = null;
-										if (NighttimeImage != null) {
-											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
-										}
-										int w = tday.Width;
-										int h = tday.Height;
-										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
-										string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
-										try
-										{
-											if (!string.IsNullOrEmpty(Function))
-											{
-												Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, Function, true);
-											}
-											else
-											{
-												Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
-											}
-											
-										}
-										catch
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-										}
-									}
-								} break;
-							case Panel2Sections.Needle:
-								{
-									string Subject = "true";
-									string Function = string.Empty;
-									double LocationX = 0.0, LocationY = 0.0;
-									string DaytimeImage = null, NighttimeImage = null;
-									Color32 Color = Color32.White;
-									Color24 TransparentColor = Color24.Blue;
-									double OriginX = -1.0, OriginY = -1.0;
-									bool OriginDefined = false;
-									double Layer = 0.0, Radius = 0.0;
-									double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
-									double Minimum = 0.0, Maximum = 1000.0;
-									double NaturalFrequency = -1.0, DampingRatio = -1.0;
-									bool Backstop = false, Smoothed = false;
-									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-										int j = Lines[i].IndexOf('=');
-										if (j >= 0)
-										{
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Panel2Key Key);
-											string Value = Lines[i].Substring(j + 1).TrimStart();
-											switch (Key) {
-												case Panel2Key.Subject:
-													Subject = Value;
-													break;
-												case Panel2Key.Function:
-													Function = Value;
-													break;
-												case Panel2Key.Location:
-													{
-														int k = Value.IndexOf(',');
-														if (k >= 0)
-														{
-															string a = Value.Substring(0, k).TrimEnd();
-															string b = Value.Substring(k + 1).TrimStart();
-															if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
-																Plugin.currentHost.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															}
-															if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY)) {
-																Plugin.currentHost.AddMessage(MessageType.Error, false, "CenterY is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															}
-														} else {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													} break;
-												case Panel2Key.Radius:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Radius)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (Radius == 0.0) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInPixels is expected to be non-zero in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														Radius = 16.0;
-													} break;
-												case Panel2Key.DaytimeImage:
-													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Path.ContainsInvalidChars(Value)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														DaytimeImage = Path.CombineFile(TrainPath, Value);
-														if (!File.Exists(DaytimeImage)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															DaytimeImage = null;
-														}
-													}
-													break;
-												case Panel2Key.NighttimeImage:
-													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Path.ContainsInvalidChars(Value)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														NighttimeImage = Path.CombineFile(TrainPath, Value);
-														if (!File.Exists(NighttimeImage)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															NighttimeImage = null;
-														}
-													}
-													break;
-												case Panel2Key.Color:
-													if (Value.Length != 0 && !Color32.TryParseHexColor(Value, out Color)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.TransparentColor:
-													if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Origin:
-													{
-														int k = Value.IndexOf(',');
-														if (k >= 0)
-														{
-															string a = Value.Substring(0, k).TrimEnd();
-															string b = Value.Substring(k + 1).TrimStart();
-															if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out OriginX)) {
-																Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															}
-															if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out OriginY)) {
-																Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-																OriginX = -OriginX;
-															}
-															OriginDefined = true;
-														} else {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													} break;
-												case Panel2Key.InitialAngle:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out InitialAngle)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.LastAngle:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out LastAngle)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Minimum:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Minimum)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Maximum:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Maximum)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.NaturalFreq:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out NaturalFrequency)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (NaturalFrequency < 0.0) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														NaturalFrequency = -NaturalFrequency;
-													} break;
-												case Panel2Key.DampingRatio:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out DampingRatio)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (DampingRatio < 0.0) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														DampingRatio = -DampingRatio;
-													} break;
-												case Panel2Key.Layer:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Layer)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Backstop:
-													if (Value.Length != 0 && Value.ToLowerInvariant() == "true" || Value == "1")
-													{
-														Backstop = true;
-													}
-													break;
-												case Panel2Key.Smoothed:
-													if (Value.Length != 0 && Value.ToLowerInvariant() == "true" || Value == "1")
-													{
-														Smoothed = true;
-													}
-													break;
-											}
-										} i++;
-									} i--;
-									if (DaytimeImage == null) {
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "DaytimeImage is required to be specified in " + Section + " in " + FileName);
-									}
-									// create element
-									if (DaytimeImage != null)
+									if (!string.IsNullOrEmpty(Function))
 									{
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
-										Texture tnight = null;
-										if (NighttimeImage != null)
-										{
-											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
-										}
-										if (!OriginDefined) {
-											OriginX = 0.5 * tday.Width;
-											OriginY = 0.5 * tday.Height;
-										}
-										double ox = OriginX / tday.Width;
-										double oy = OriginY / tday.Height;
-										double n = Radius == 0.0 | OriginY == 0.0 ? 1.0 : Radius / OriginY;
-										double nx = n * tday.Width;
-										double ny = n * tday.Height;
-										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color);
-										Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection = Vector3.Backward;
-										Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection = Vector3.Right;
-										Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection, Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection);
-										string f;
-										switch (Subject.ToLowerInvariant()) {
-											case "hour":
-												f = Smoothed ? "0.000277777777777778 time * 24 mod" : "0.000277777777777778 time * floor";
-												break;
-											case "min":
-												f = Smoothed ? "0.0166666666666667 time * 60 mod" : "0.0166666666666667 time * floor";
-												break;
-											case "sec":
-												f = Smoothed ? "time 60 mod" : "time floor";
-												break;
-											default:
-												f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
-												break;
-										}
-
-										InitialAngle = InitialAngle.ToRadians();
-										LastAngle = LastAngle.ToRadians();
-										double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
-										double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
-										f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
-										if (NaturalFrequency >= 0.0 & DampingRatio >= 0.0) {
-											Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
-										}
-										try
-										{
-											if (!string.IsNullOrEmpty(Function))
-											{
-												Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, Function, true);
-											}
-											else
-											{
-												Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
-											}
-										}
-										catch
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-										}
-										if (Backstop)
-										{
-											Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle;
-											Car.CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle;
-										}
+										Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.CurrentHost, Function, true);
 									}
-								} break;
-							case Panel2Sections.LinearGauge:
+									else
 									{
-									string Subject = "true";
-									string Function = string.Empty;
-									int Width = 0;
-									Vector2 Direction = new Vector2(1,0);
-									double LocationX = 0.0, LocationY = 0.0;
-									string DaytimeImage = null, NighttimeImage = null;
-									double Minimum = 0.0, Maximum = 0.0;
-									Color24 TransparentColor = Color24.Blue;
-									int Layer = 0;
-									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-										int j = Lines[i].IndexOf('=');
-										if (j >= 0)
-										{
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Panel2Key Key);
-											string Value = Lines[i].Substring(j + 1).TrimStart();
-											switch (Key) {
-												case Panel2Key.Subject:
-													Subject = Value;
-													break;
-												case Panel2Key.Function:
-													Function = Value;
-													break;
-												case Panel2Key.Location:
-													int k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													} else {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Minimum:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Minimum))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Maximum:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Maximum))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Width:
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Width))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-													break;
-												case Panel2Key.Direction:
-													{
-														string[] s = Value.Split( ',');
-														if (s.Length == 2)
-														{
-															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out Direction.X))
-															{
-																Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in LinearGauge Direction at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-															if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out Direction.Y))
-															{
-																Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in  LinearGauge Direction at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-														}
-														else
-														{
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in LinearGauge Direction at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-														}
-													}
-													break;
-												case Panel2Key.DaytimeImage:
-													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Path.ContainsInvalidChars(Value)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														DaytimeImage = Path.CombineFile(TrainPath, Value);
-														if (!File.Exists(DaytimeImage)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															DaytimeImage = null;
-														}
-													}
-													break;
-												case Panel2Key.NighttimeImage:
-													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Path.ContainsInvalidChars(Value)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														NighttimeImage = Path.CombineFile(TrainPath, Value);
-														if (!File.Exists(NighttimeImage)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															NighttimeImage = null;
-														}
-													}
-													break;
-												case Panel2Key.TransparentColor:
-													if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Layer:
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-											}
-										} i++;
-									} i--;
-									if (DaytimeImage == null) {
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "DaytimeImage is required to be specified in " + Section + " in " + FileName);
-									}
-									// create element
-									if (DaytimeImage != null) {
-										Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
-										Texture tnight = null;
-										if (NighttimeImage != null) {
-											Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
-										}
-										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, tday.Width, tday.Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
-										if (Maximum < Minimum)
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Section + " in " + FileName);
-											break;
-										}
-										string tf = GetInfixFunction(Car.baseTrain, Subject, Minimum, Maximum, Width, tday.Width, Section + " in " + FileName);
-										if (!string.IsNullOrEmpty(tf) || !string.IsNullOrEmpty(Function))
-										{
-											Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
-											try
-											{
-												if (!string.IsNullOrEmpty(Function))
-												{
-													Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, Function, true);
-												}
-												else
-												{
-													Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.currentHost, tf, false);
-												}
-											}
-											catch
-											{
-												Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-											}
-										}
-									}
-									} break;
-							case Panel2Sections.DigitalNumber:
-								{
-									string Subject = "true";
-									string Function = string.Empty;
-									double LocationX = 0.0, LocationY = 0.0;
-									string DaytimeImage = null, NighttimeImage = null;
-									Color24 TransparentColor = Color24.Blue;
-									double Layer = 0.0; int Interval = 0;
-									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-										int j = Lines[i].IndexOf('=');
-										if (j >= 0)
-										{
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Panel2Key Key);
-											string Value = Lines[i].Substring(j + 1).TrimStart();
-											switch (Key) {
-												case Panel2Key.Subject:
-													Subject = Value;
-													break;
-												case Panel2Key.Function:
-													Function = Value;
-													break;
-												case Panel2Key.Location:
-													int k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													} else {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.DaytimeImage:
-													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Path.ContainsInvalidChars(Value)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														DaytimeImage = Path.CombineFile(TrainPath, Value);
-														if (!File.Exists(DaytimeImage)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															DaytimeImage = null;
-														}
-													}
-													break;
-												case Panel2Key.NighttimeImage:
-													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Path.ContainsInvalidChars(Value)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														NighttimeImage = Path.CombineFile(TrainPath, Value);
-														if (!File.Exists(NighttimeImage)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															NighttimeImage = null;
-														}
-													}
-													break;
-												case Panel2Key.TransparentColor:
-													if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Interval:
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Interval)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Height is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (Interval <= 0) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Height is expected to be non-negative in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Layer:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Layer)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-											}
-										} i++;
-									} i--;
-									if (DaytimeImage == null) {
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "DaytimeImage is required to be specified in " + Section + " in " + FileName);
-									}
-									if (Interval <= 0) {
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "Interval is required to be specified in " + Section + " in " + FileName);
-									}
-									// create element
-									if (DaytimeImage != null & Interval > 0) {
-										Plugin.currentHost.QueryTextureDimensions(DaytimeImage, out var wday, out var hday);
-										if (wday > 0 & hday > 0) {
-											int numFrames = hday / Interval;
-											if (Plugin.CurrentOptions.EnableBveTsHacks)
-											{
-												/*
-												 * With hacks enabled, the final frame does not necessarily need to be
-												 * completely within the confines of the texture
-												 * e.g. LT_C69_77
-												 * https://github.com/leezer3/OpenBVE/issues/247
-												 */
-												switch (Subject)
-												{
-													case "power":
-														if (Car.baseTrain.Handles.Power.MaximumNotch > numFrames)
-														{
-															numFrames = Car.baseTrain.Handles.Power.MaximumNotch;
-														}
-														break;
-													case "brake":
-														int b = Car.baseTrain.Handles.Brake.MaximumNotch + 2;
-														if (Car.baseTrain.Handles.HasHoldBrake)
-														{
-															b++;
-														}
-														if (b > numFrames )
-														{
-															numFrames = b;
-														}
-														break;
-												}
-											}
-											Texture[] tday = new Texture[numFrames];
-											Texture[] tnight;
-											for (int k = 0; k < numFrames; k++)
-											{
-												if ((k + 1) * Interval <= hday)
-												{
-													Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), TransparentColor), out tday[k]);
-												}
-												else if (k * Interval >= hday)
-												{
-													numFrames = k;
-													Array.Resize(ref tday, k);
-												}
-												else
-												{
-													Plugin.currentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), TransparentColor), out tday[k]);
-												}
-											}
-											if (NighttimeImage != null) {
-												Plugin.currentHost.QueryTextureDimensions(NighttimeImage, out var wnight, out var hnight);
-												tnight = new Texture[numFrames];
-												for (int k = 0; k < numFrames; k++) {
-													if ((k + 1) * Interval <= hnight)
-													{
-														Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), TransparentColor), out tnight[k]);
-													}
-													else if (k * Interval > hnight)
-													{
-														tnight[k] = null;
-													}
-													else
-													{
-														Plugin.currentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), TransparentColor), out tnight[k]);
-													}
-												}
-												
-											} else {
-												tnight = new Texture[numFrames];
-												for (int k = 0; k < numFrames; k++) {
-													tnight[k] = null;
-												}
-											}
-											int j = -1;
-											for (int k = 0; k < tday.Length; k++) {
-												int l = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, wday, Interval, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday[k], tnight[k], Color32.White, k != 0);
-												if (k == 0) j = l;
-											}
-											string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
-											try
-											{
-												if (!string.IsNullOrEmpty(Function))
-												{
-													Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, Function, true);
-												}
-												else
-												{
-													Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
-												}
-											}
-											catch
-											{
-												Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-											}
-
-											if (Plugin.CurrentOptions.Panel2ExtendedMode)
-											{
-												if (wday >= Plugin.CurrentOptions.Panel2ExtendedMinSize && Interval >= Plugin.CurrentOptions.Panel2ExtendedMinSize)
-												{
-													if (Subject == "power")
-													{
-														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.PowerDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
-														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.PowerIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
-													}
-
-													if (Subject == "brake")
-													{
-														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.BrakeIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
-														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.BrakeDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
-													}
-
-													if (Subject == "reverser")
-													{
-														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.ReverserForward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
-														Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.ReverserBackward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
-													}
-												}
-											}
-										}
-									}
-								} break;
-							case Panel2Sections.DigitalGauge:
-								{
-									string Subject = "true";
-									string Function = string.Empty;
-									double LocationX = 0.0, LocationY = 0.0;
-									Color32 Color = Color32.Black;
-									double Radius = 0.0;
-									int Layer = 0;
-									double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
-									double Minimum = 0.0, Maximum = 1000.0;
-									double Step = 0.0;
-									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-										int j = Lines[i].IndexOf('=');
-										if (j >= 0)
-										{
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Panel2Key Key);
-											string Value = Lines[i].Substring(j + 1).TrimStart();
-											switch (Key) {
-												case Panel2Key.Subject:
-													Subject = Value;
-													break;
-												case Panel2Key.Function:
-													Function = Value;
-													break;
-												case Panel2Key.Location:
-													int k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "CenterY is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													} else {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Radius:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Radius)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (Radius == 0.0) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInPixels is expected to be non-zero in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														Radius = 16.0;
-													} break;
-												case Panel2Key.Color:
-													if (Value.Length != 0 && !Color32.TryParseHexColor(Value, out Color)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.InitialAngle:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out InitialAngle)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														InitialAngle = InitialAngle.ToRadians();
-													} break;
-												case Panel2Key.LastAngle:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out LastAngle)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else {
-														LastAngle = LastAngle.ToRadians();
-													} break;
-												case Panel2Key.Minimum:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Minimum)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Maximum:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Maximum)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Step:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Step)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Layer:
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-											}
-										} i++;
-									} i--;
-
-									if (Plugin.CurrentOptions.EnableBveTsHacks && trainName == "BOEING-737")
-									{
-										/*
-										 * BVE4 stacks objects within layers in order
-										 * If two overlapping objects are declared in the same
-										 * layer in openBVE, this causes Z-fighting
-										 *
-										 */
-										if (Subject == "sap" || Subject == "bp")
-										{
-											Layer = 4;
-										}
-									}
-
-									if (Radius == 0.0) {
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "Radius is required to be non-zero in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-									}
-									if (Minimum == Maximum) {
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "Minimum and Maximum must not be equal in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-										Radius = 0.0;
-									}
-									if (Math.Abs(InitialAngle - LastAngle) > 6.28318531) {
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "The absolute difference between InitialAngle and LastAngle exceeds 360 degrees in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-									}
-									if (Radius != 0.0) {
-										// create element
-										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color);
-										InitialAngle += Math.PI;
-										LastAngle += Math.PI;
-										double x0 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
-										double y0 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
-										double z0 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
-										double x1 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.X;
-										double y1 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Y;
-										double z1 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Z;
-										double x2 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.X;
-										double y2 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Y;
-										double z2 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Z;
-										double x3 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.X;
-										double y3 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Y;
-										double z3 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Z;
-										double cx = 0.25 * (x0 + x1 + x2 + x3);
-										double cy = 0.25 * (y0 + y1 + y2 + y3);
-										double cz = 0.25 * (z0 + z1 + z2 + z3);
-										VertexTemplate[] vertices = new VertexTemplate[11];
-										for (int v = 0; v < 11; v++)
-										{
-											vertices[v] = new Vertex();
-										}
-										int[][] faces = {
-											new[] { 0, 1, 2 },
-											new[] { 0, 3, 4 },
-											new[] { 0, 5, 6 },
-											new[] { 0, 7, 8 },
-											new[] { 0, 9, 10 }
-										};
-										Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, Color);
-										Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDClockwiseWinding = InitialAngle <= LastAngle;
-										Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDInitialAngle = InitialAngle;
-										Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDLastAngle = LastAngle;
-										Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDVectors = new[] {
-											new Vector3(x0, y0, z0),
-											new Vector3(x1, y1, z1),
-											new Vector3(x2, y2, z2),
-											new Vector3(x3, y3, z3),
-											new Vector3(cx, cy, cz)
-										};
-										string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, Section + " in " + FileName);
-										double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
-										double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
-										if (Step == 1.0) {
-											f += " floor";
-										} else if (Step != 0.0) {
-											string s = (1.0 / Step).ToString(Culture);
-											string t = Step.ToString(Culture);
-											f += " " + s + " * floor " + t + " *";
-										}
-										f += " " + a1.ToString(Culture) + " " + a0.ToString(Culture) + " fma";
-										try
-										{
-											if (!string.IsNullOrEmpty(Function))
-											{
-												Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, Function, true);
-											}
-											else
-											{
-												Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.currentHost, f, false);
-											}
-										}
-										catch
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-										}
-									} else {
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "Radius is required to be specified in " + Section + " in " + FileName);
-									}
-								} break;
-							case Panel2Sections.Timetable:
-								{
-									double LocationX = 0.0, LocationY = 0.0;
-									double Width = 0.0, Height = 0.0;
-									double Layer = 0.0;
-									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-										int j = Lines[i].IndexOf('=');
-										if (j >= 0)
-										{
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Panel2Key Key);
-											string Value = Lines[i].Substring(j + 1).TrimStart();
-											switch (Key) {
-												case Panel2Key.Location:
-													int k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out LocationY)) {
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													} else {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Width:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Width)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (Width <= 0.0) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInPixels is required to be positive in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Height:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Height)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} else if (Height <= 0.0) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "ValueInPixels is required to be positive in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.Layer:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Layer)) {
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													} break;
-												case Panel2Key.TransparentColor:
-													// The original code read this, but never used it
-													// Deliberately deprecate.
-													Plugin.currentHost.AddMessage(MessageType.Error, false, "TransparentColor is not supported for " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													break;
-											}
-										} i++;
-									} i--;
-									// create element
-									if (Width <= 0.0) {
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "Width is required to be specified in " + Section + " in " + FileName);
-									}
-									if (Height <= 0.0) {
-										Plugin.currentHost.AddMessage(MessageType.Error, false, "Height is required to be specified in " + Section + " in " + FileName);
-									}
-									if (Width > 0.0 & Height > 0.0) {
-										int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color32.White);
-										try
-										{
-											Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, "panel2timetable", false);
-										}
-										catch
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-										}
-										
-										Plugin.currentHost.AddObjectForCustomTimeTable(Car.CarSections[0].Groups[GroupIndex].Elements[j]);
-									}
-								} break;
-								case Panel2Sections.Windscreen:
-								{
-									i++;
-									Vector2 topLeft = new Vector2(PanelLeft, PanelTop);
-									Vector2 bottomRight = new Vector2(PanelRight, PanelBottom);
-									int numberOfDrops = 16, Layer = 0, dropSize = 16;
-									WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
-									List<string> daytimeDropFiles, nighttimeDropFiles, daytimeFlakeFiles, nighttimeFlakeFiles;
-									Color24 TransparentColor = Color24.Blue;
-									double wipeSpeed = 1.0, holdTime = 1.0, dropLife = 10.0;
-									try
-									{
-										daytimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day"), "drop*.png").ToList();
-										daytimeFlakeFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day"), "flake*.png").ToList();
-										nighttimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night"), "drop*.png").ToList();
-										nighttimeFlakeFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night"), "flake*.png").ToList();
-									}
-									catch
-									{
-										break;
-									}
-
-									while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
-									{
-										int j = Lines[i].IndexOf('=');
-										if (j >= 0)
-										{
-											int k;
-											Enum.TryParse(Lines[i].Substring(0, j).TrimEnd(), true, out Panel2Key Key);
-											string Value = Lines[i].Substring(j + 1).TrimStart();
-											switch (Key)
-											{
-												case Panel2Key.TopLeft:
-													k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out topLeft.X))
-														{
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out topLeft.Y))
-														{
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													}
-													else
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-
-													break;
-												case Panel2Key.BottomRight:
-													k = Value.IndexOf(',');
-													if (k >= 0)
-													{
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out bottomRight.X))
-														{
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out bottomRight.Y))
-														{
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-														}
-													}
-													else
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-
-													break;
-												case Panel2Key.NumberOfDrops:
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out numberOfDrops))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "NumberOfDrops is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-
-													break;
-												case Panel2Key.DropSize:
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out dropSize))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "DropSize is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-
-													break;
-												case Panel2Key.DaytimeDrops:
-													daytimeDropFiles = Value.IndexOf(',') != -1 ? Value.Trim().Split(',').ToList() : new List<string> {Value};
-													break;
-												case Panel2Key.NighttimeDrops:
-													nighttimeDropFiles = Value.IndexOf(',') != -1 ? Value.Trim().Split(',').ToList() : new List<string> {Value};
-													break;
-												case Panel2Key.DaytimeFlakes:
-													daytimeDropFiles = Value.IndexOf(',') != -1 ? Value.Trim().Split(',').ToList() : new List<string> {Value};
-													break;
-												case Panel2Key.NighttimeFlakes:
-													nighttimeDropFiles = Value.IndexOf(',') != -1 ? Value.Trim().Split(',').ToList() : new List<string> {Value};
-													break;
-												case Panel2Key.TransparentColor:
-													if (Value.Length != 0 && !Color24.TryParseHexColor(Value, out TransparentColor))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-
-													break;
-												case Panel2Key.Layer:
-													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "NumberOfDrops is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-													break;
-												case Panel2Key.WipeSpeed:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out wipeSpeed))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "WipeSpeed is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-													break;
-												case Panel2Key.WiperHoldTime:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out holdTime))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "WipeSpeed is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-													break;
-												case Panel2Key.RestPosition:
-												case Panel2Key.WiperRestPosition:
-													switch (Value.ToLowerInvariant())
-													{
-														case "0":
-														case "left":
-															restPosition = WiperPosition.Left;
-															break;
-														case "1":
-														case "right":
-															restPosition = WiperPosition.Right;
-															break;
-														default:
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															break;
-													}
-													break;
-												case Panel2Key.HoldPosition:
-												case Panel2Key.WiperHoldPosition:
-													switch (Value.ToLowerInvariant())
-													{
-														case "0":
-														case "left":
-															holdPosition = WiperPosition.Left;
-															break;
-														case "1":
-														case "right":
-															holdPosition = WiperPosition.Right;
-															break;
-														default:
-															Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperHoldPosition is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															break;
-													}
-													break;
-												case Panel2Key.DropLife:
-													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out dropLife))
-													{
-														Plugin.currentHost.AddMessage(MessageType.Error, false, "DropLife is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-													}
-													break;
-											}
-										}
-
-										i++;
-									}
-
-									i--;
-									/*
-									 * Ensure we have the same number of drops for day + night
-									 * NOTE: If a drop is missing, we may get slightly odd effects, but can't be helped
-									 * Raindrops ought to be blurry, and they're small enough anyway...
-									 */
-									int MD = Math.Max(daytimeDropFiles.Count, nighttimeDropFiles.Count);
-									MD = Math.Max(daytimeFlakeFiles.Count, MD);
-									MD = Math.Max(nighttimeFlakeFiles.Count, MD);
-									if (daytimeDropFiles.Count < MD)
-									{
-										while (daytimeDropFiles.Count < MD)
-										{
-											daytimeDropFiles.Add(string.Empty);
-										}
-									}
-
-									if (daytimeFlakeFiles.Count < MD)
-									{
-										while (daytimeFlakeFiles.Count < MD)
-										{
-											daytimeFlakeFiles.Add(string.Empty);
-										}
-									}
-
-									if (nighttimeDropFiles.Count < MD)
-									{
-										while (nighttimeDropFiles.Count < MD)
-										{
-											nighttimeDropFiles.Add(string.Empty);
-										}
-									}
-
-									
-									if (nighttimeFlakeFiles.Count < MD)
-									{
-										while (nighttimeFlakeFiles.Count < MD)
-										{
-											nighttimeFlakeFiles.Add(string.Empty);
-										}
-									}
-
-									List<Texture> daytimeDrops = LoadDrops(TrainPath, daytimeDropFiles, TransparentColor, "drop");
-									List<Texture> daytimeFlakes = LoadDrops(TrainPath, daytimeFlakeFiles, TransparentColor, "flake");
-									List<Texture> nighttimeDrops = LoadDrops(TrainPath, nighttimeDropFiles, TransparentColor, "drop");
-									List<Texture> nighttimeFlakes = LoadDrops(TrainPath, nighttimeFlakeFiles, TransparentColor, "flake");
-
-									double dropInterval = (bottomRight.X - topLeft.X) / numberOfDrops;
-									double currentDropX = topLeft.X;
-									Car.Windscreen = new Windscreen(numberOfDrops, dropLife, Car);
-									Car.Windscreen.Wipers = new WindscreenWiper(Car.Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
-									// Create drops
-									for (int drop = 0; drop < numberOfDrops; drop++)
-									{
-										int DropTexture = Plugin.RandomNumberGenerator.Next(daytimeDrops.Count);
-										double currentDropY = Plugin.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
-										//Create both a drop and a snowflake at the same position, the windscreen code will determine which is shown
-										int panelDropIndex = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
-										int panelFlakeIndex = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeFlakes[DropTexture], nighttimeFlakes[DropTexture], Color32.White);
-										string f = drop + " raindrop";
-										string f2 = drop + " snowflake";
-										try
-										{
-											Car.CarSections[0].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Plugin.currentHost, f + " 1 == --", false);
-											Car.CarSections[0].Groups[GroupIndex].Elements[panelFlakeIndex].StateFunction = new FunctionScript(Plugin.currentHost, f2 + " 1 == --", false);
-										}
-										catch
-										{
-											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-										}
-
-										currentDropX += dropInterval;
+										Car.CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Plugin.CurrentHost, tf, false);
 									}
 								}
-								break;
+								catch
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								}
+							}
 						}
-					}
+						break;
+					case Panel2Sections.DigitalNumber:
+						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
+						{
+							Block.TryGetValue(Panel2Key.Function, ref Function);
+							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
+							Block.GetValue(Panel2Key.Interval, out int Interval);
+							Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage);
+
+							Plugin.CurrentHost.QueryTextureDimensions(DaytimeImage, out var wday, out var hday);
+							if (wday > 0 & hday > 0)
+							{
+								int numFrames = hday / Interval;
+								if (Plugin.CurrentOptions.EnableBveTsHacks)
+								{
+									/*
+									 * With hacks enabled, the final frame does not necessarily need to be
+									 * completely within the confines of the texture
+									 * e.g. LT_C69_77
+									 * https://github.com/leezer3/OpenBVE/issues/247
+									 */
+									switch (Subject)
+									{
+										case Panel2Subject.Power:
+											if (Car.baseTrain.Handles.Power.MaximumNotch > numFrames)
+											{
+												numFrames = Car.baseTrain.Handles.Power.MaximumNotch;
+											}
+											break;
+										case Panel2Subject.Brake:
+											int b = Car.baseTrain.Handles.Brake.MaximumNotch + 2;
+											if (Car.baseTrain.Handles.HasHoldBrake)
+											{
+												b++;
+											}
+											if (b > numFrames)
+											{
+												numFrames = b;
+											}
+											break;
+									}
+								}
+								Texture[] tday = new Texture[numFrames];
+								Texture[] tnight;
+								for (int k = 0; k < numFrames; k++)
+								{
+									if ((k + 1) * Interval <= hday)
+									{
+										Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), TransparentColor), out tday[k]);
+									}
+									else if (k * Interval >= hday)
+									{
+										numFrames = k;
+										Array.Resize(ref tday, k);
+									}
+									else
+									{
+										Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), TransparentColor), out tday[k]);
+									}
+								}
+								if (!string.IsNullOrEmpty(NighttimeImage))
+								{
+									Plugin.CurrentHost.QueryTextureDimensions(NighttimeImage, out var wnight, out var hnight);
+									tnight = new Texture[numFrames];
+									for (int k = 0; k < numFrames; k++)
+									{
+										if ((k + 1) * Interval <= hnight)
+										{
+											Plugin.CurrentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), TransparentColor), out tnight[k]);
+										}
+										else if (k * Interval > hnight)
+										{
+											tnight[k] = null;
+										}
+										else
+										{
+											Plugin.CurrentHost.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), TransparentColor), out tnight[k]);
+										}
+									}
+
+								}
+								else
+								{
+									tnight = new Texture[numFrames];
+									for (int k = 0; k < numFrames; k++)
+									{
+										tnight[k] = null;
+									}
+								}
+
+								int j = -1;
+								for (int k = 0; k < tday.Length; k++)
+								{
+									int l = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, wday, Interval, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday[k], tnight[k], Color32.White, k != 0);
+									if (k == 0) j = l;
+								}
+								string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, subjectIndex, subjectSuffix);
+								try
+								{
+									if (!string.IsNullOrEmpty(Function))
+									{
+										Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.CurrentHost, Function, true);
+									}
+									else
+									{
+										Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.CurrentHost, f, false);
+									}
+								}
+								catch
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								}
+
+								if (Plugin.CurrentOptions.Panel2ExtendedMode)
+								{
+									if (wday >= Plugin.CurrentOptions.Panel2ExtendedMinSize && Interval >= Plugin.CurrentOptions.Panel2ExtendedMinSize)
+									{
+										if (Subject == Panel2Subject.Power)
+										{
+											Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(Location.X, Location.Y), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.PowerDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+											Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(Location.X, Location.Y + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.PowerIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+										}
+
+										if (Subject == Panel2Subject.Brake)
+										{
+											Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(Location.X, Location.Y), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.BrakeIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+											Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(Location.X, Location.Y + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.BrakeDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+										}
+
+										if (Subject == Panel2Subject.Reverser)
+										{
+											Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(Location.X, Location.Y), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.ReverserForward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+											Plugin.PanelXmlParser.CreateTouchElement(Car.CarSections[0].Groups[GroupIndex], new Vector2(Location.X, Location.Y + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new CommandEntry { Command = Translations.Command.ReverserBackward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Car.Driver);
+										}
+									}
+								}
+							}
+						}
+						break;
+					case Panel2Sections.DigitalGauge:
+						if (Block.GetValue(Panel2Key.Radius, out Radius) && Radius != 0)
+						{
+							double InitialAngle = -120, LastAngle = 120;
+							double Minimum = 0.0, Maximum = 1000.0;
+							Block.TryGetValue(Panel2Key.Function, ref Function);
+							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
+							Block.TryGetValue(Panel2Key.InitialAngle, ref InitialAngle);
+							InitialAngle = InitialAngle.ToRadians();
+							Block.TryGetValue(Panel2Key.LastAngle, ref LastAngle);
+							LastAngle = LastAngle.ToRadians();
+							Block.TryGetValue(Panel2Key.Minimum, ref Minimum);
+							Block.TryGetValue(Panel2Key.Maximum, ref Maximum);
+							Block.TryGetColor24(Panel2Key.Color, ref Color);
+							Block.GetValue(Panel2Key.Step, out double Step);
+
+							if (Plugin.CurrentOptions.EnableBveTsHacks && trainName == "BOEING-737")
+							{
+								/*
+								 * BVE4 stacks objects within layers in order
+								 * If two overlapping objects are declared in the same
+								 * layer in openBVE, this causes Z-fighting
+								 *
+								 */
+								if (Subject == Panel2Subject.SAP || Subject == Panel2Subject.BP)
+								{
+									Layer = 4;
+								}
+							}
+
+							if (Radius == 0.0)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Radius is required to be non-zero in " + Block.Key + " in " + FileName);
+							}
+							if (Minimum == Maximum)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Minimum and Maximum must not be equal in " + Block.Key + " in " + FileName);
+								Radius = 0.0;
+							}
+							if (Math.Abs(InitialAngle - LastAngle) > 6.28318531)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The absolute difference between InitialAngle and LastAngle exceeds 360 degrees in " + Block.Key + " in " + FileName);
+							}
+							// create element
+							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X - Radius, Location.Y - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color);
+							InitialAngle += Math.PI;
+							LastAngle += Math.PI;
+							double x0 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
+							double y0 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
+							double z0 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
+							double x1 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.X;
+							double y1 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Y;
+							double z1 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Z;
+							double x2 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.X;
+							double y2 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Y;
+							double z2 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Z;
+							double x3 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.X;
+							double y3 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Y;
+							double z3 = Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Z;
+							double cx = 0.25 * (x0 + x1 + x2 + x3);
+							double cy = 0.25 * (y0 + y1 + y2 + y3);
+							double cz = 0.25 * (z0 + z1 + z2 + z3);
+							VertexTemplate[] vertices = new VertexTemplate[11];
+							for (int v = 0; v < 11; v++)
+							{
+								vertices[v] = new Vertex();
+							}
+							int[][] faces = 
+							{
+								new[] { 0, 1, 2 },
+								new[] { 0, 3, 4 },
+								new[] { 0, 5, 6 },
+								new[] { 0, 7, 8 },
+								new[] { 0, 9, 10 }
+							};
+							Car.CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, Color);
+							Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDClockwiseWinding = InitialAngle <= LastAngle;
+							Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDInitialAngle = InitialAngle;
+							Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDLastAngle = LastAngle;
+							Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDVectors = new[]
+							{
+								new Vector3(x0, y0, z0),
+								new Vector3(x1, y1, z1),
+								new Vector3(x2, y2, z2),
+								new Vector3(x3, y3, z3),
+								new Vector3(cx, cy, cz)
+							};
+							string f = GetStackLanguageFromSubject(Car.baseTrain, Subject, subjectIndex, subjectSuffix);
+							double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
+							double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
+							if (Step == 1.0)
+							{
+								f += " floor";
+							}
+							else if (Step != 0.0)
+							{
+								string s = (1.0 / Step).ToString(Culture);
+								string t = Step.ToString(Culture);
+								f += " " + s + " * floor " + t + " *";
+							}
+							f += " " + a1.ToString(Culture) + " " + a0.ToString(Culture) + " fma";
+							try
+							{
+								if (!string.IsNullOrEmpty(Function))
+								{
+									Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.CurrentHost, Function, true);
+								}
+								else
+								{
+									Car.CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Plugin.CurrentHost, f, false);
+								}
+							}
+							catch
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+							}
+						}
+						break;
+					case Panel2Sections.Timetable:
+						{
+							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
+							Block.GetValue(Panel2Key.Width, out double Width);
+							Block.GetValue(Panel2Key.Height, out double Height);
+							if (Width <= 0 || Height <= 0)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Width and Height are required to be positive in " + Block.Key + " in " + FileName);
+								break;
+							}
+
+							if (Block.GetColor24(Panel2Key.TransparentColor, out _))
+							{
+								// The original code read this, but never used it
+								// Deliberately deprecate.
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TransparentColor is not supported in " + Block.Key + " in " + FileName);
+							}
+
+							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, Width, Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color32.White);
+							try
+							{
+								Car.CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Plugin.CurrentHost, "panel2timetable", false);
+							}
+							catch
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+							}
+
+							Plugin.CurrentHost.AddObjectForCustomTimeTable(Car.CarSections[0].Groups[GroupIndex].Elements[j]);
+						}
+						break;
+					case Panel2Sections.Windscreen:
+						Vector2 topLeft = new Vector2(PanelLeft, PanelTop);
+						Vector2 bottomRight = new Vector2(PanelRight, PanelBottom);
+						int numberOfDrops = 16, dropSize = 16;
+						double wipeSpeed = 1.0, holdTime = 1.0, dropLife = 10.0;
+						WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
+						string[] daytimeDropFiles, nighttimeDropFiles, daytimeFlakeFiles, nighttimeFlakeFiles;
+						try
+						{
+							daytimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day"), "drop*.png");
+							daytimeFlakeFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Day"), "flake*.png");
+							nighttimeDropFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night"), "drop*.png");
+							nighttimeFlakeFiles = Directory.GetFiles(Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility\\Windscreen\\Night"), "flake*.png");
+						}
+						catch
+						{
+							break;
+						}
+
+						Block.TryGetVector2(Panel2Key.TopLeft, ',', ref topLeft);
+						Block.TryGetVector2(Panel2Key.BottomRight, ',', ref bottomRight);
+						Block.TryGetValue(Panel2Key.NumberOfDrops, ref numberOfDrops);
+						Block.TryGetValue(Panel2Key.DropSize, ref dropSize);
+						Block.TryGetValue(Panel2Key.DropLife, ref dropLife);
+						Block.TryGetStringArray(Panel2Key.DaytimeDrops, ',', ref daytimeDropFiles);
+						Block.TryGetStringArray(Panel2Key.NighttimeDrops, ',', ref nighttimeDropFiles);
+						Block.TryGetStringArray(Panel2Key.DaytimeFlakes, ',', ref daytimeFlakeFiles);
+						Block.TryGetStringArray(Panel2Key.NighttimeFlakes, ',', ref nighttimeFlakeFiles);
+						Block.TryGetValue(Panel2Key.WipeSpeed, ref wipeSpeed);
+						Block.TryGetValue(Panel2Key.WiperHoldTime, ref holdTime);
+						if (Block.GetValue(Panel2Key.RestPosition, out string restPos))
+						{
+							switch (restPos.ToLowerInvariant())
+							{
+								case "0":
+								case "left":
+									restPosition = WiperPosition.Left;
+									break;
+								case "1":
+								case "right":
+									restPosition = WiperPosition.Right;
+									break;
+								default:
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + FileName);
+									break;
+							}
+						}
+						if (Block.GetValue(Panel2Key.HoldPosition, out string holdPos))
+						{
+							switch (holdPos.ToLowerInvariant())
+							{
+								case "0":
+								case "left":
+									restPosition = WiperPosition.Left;
+									break;
+								case "1":
+								case "right":
+									restPosition = WiperPosition.Right;
+									break;
+								default:
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + FileName);
+									break;
+							}
+						}
+
+						/*
+						 * Ensure we have the same number of drops for day + night
+						 * NOTE: If a drop is missing, we may get slightly odd effects, but can't be helped
+						 * Raindrops ought to be blurry, and they're small enough anyway...
+						 */
+						int MD = Math.Max(daytimeDropFiles.Length, nighttimeDropFiles.Length);
+						MD = Math.Max(daytimeFlakeFiles.Length, MD);
+						MD = Math.Max(nighttimeFlakeFiles.Length, MD);
+						if (daytimeDropFiles.Length < MD)
+						{
+							Array.Resize(ref daytimeDropFiles, MD);
+						}
+
+						if (daytimeFlakeFiles.Length < MD)
+						{
+							Array.Resize(ref daytimeFlakeFiles, MD);
+						}
+
+						if (nighttimeDropFiles.Length < MD)
+						{
+							Array.Resize(ref nighttimeDropFiles, MD);
+						}
+
+
+						if (nighttimeFlakeFiles.Length < MD)
+						{
+							Array.Resize(ref nighttimeFlakeFiles, MD);
+						}
+
+						List<Texture> daytimeDrops = LoadDrops(TrainPath, daytimeDropFiles, TransparentColor, "drop");
+						List<Texture> daytimeFlakes = LoadDrops(TrainPath, daytimeFlakeFiles, TransparentColor, "flake");
+						List<Texture> nighttimeDrops = LoadDrops(TrainPath, nighttimeDropFiles, TransparentColor, "drop");
+						List<Texture> nighttimeFlakes = LoadDrops(TrainPath, nighttimeFlakeFiles, TransparentColor, "flake");
+
+						double dropInterval = (bottomRight.X - topLeft.X) / numberOfDrops;
+						double currentDropX = topLeft.X;
+						Car.Windscreen = new Windscreen(numberOfDrops, dropLife, Car);
+						Car.Windscreen.Wipers = new WindscreenWiper(Car.Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
+						// Create drops
+						for (int drop = 0; drop < numberOfDrops; drop++)
+						{
+							int DropTexture = Plugin.RandomNumberGenerator.Next(daytimeDrops.Count);
+							double currentDropY = Plugin.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
+							//Create both a drop and a snowflake at the same position, the windscreen code will determine which is shown
+							int panelDropIndex = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
+							int panelFlakeIndex = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, daytimeFlakes[DropTexture], nighttimeFlakes[DropTexture], Color32.White);
+							string f = drop + " raindrop";
+							string f2 = drop + " snowflake";
+							try
+							{
+								Car.CarSections[0].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Plugin.CurrentHost, f + " 1 == --", false);
+								Car.CarSections[0].Groups[GroupIndex].Elements[panelFlakeIndex].StateFunction = new FunctionScript(Plugin.CurrentHost, f2 + " 1 == --", false);
+							}
+							catch
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+							}
+
+							currentDropX += dropInterval;
+						}
+						break;
 				}
 			}
 		}
 
-		private List<Texture> LoadDrops(string TrainPath, List<string> dropFiles, Color24 TransparentColor, string compatabilityString)
+		private List<Texture> LoadDrops(string TrainPath, string[] dropFiles, Color24 TransparentColor, string compatabilityString)
 		{
 			List<Texture> drops = new List<Texture>();
-			for (int l = 0; l < dropFiles.Count; l++)
+			for (int l = 0; l < dropFiles.Length; l++)
 			{
 				string currentDropFile = !System.IO.Path.IsPathRooted(dropFiles[l]) ? Path.CombineFile(TrainPath, dropFiles[l]) : dropFiles[l];
-				if (!File.Exists(currentDropFile))
+				if (string.IsNullOrEmpty(currentDropFile) || !File.Exists(currentDropFile))
 				{
 					currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\" + compatabilityString + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
 					TransparentColor = Color24.Blue;
 				}
-				Plugin.currentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true, 20000);
+				Plugin.CurrentHost.RegisterTexture(currentDropFile, new TextureParameters(null, TransparentColor), out var drop, true, 20000);
 				drops.Add(drop);
 			}
 
 			return drops;
 		}
 
-		internal string GetInfixFunction(AbstractTrain Train, string Subject, double Minimum, double Maximum, int Width, int TextureWidth, string ErrorLocation)
+		internal string GetInfixFunction(AbstractTrain Train, Panel2Subject Subject, int SubjectIndex, string SubjectSuffix, double Minimum, double Maximum, int Width, int TextureWidth)
 		{
 			double mp = 0.0;
 			if (Minimum < 0)
@@ -1459,7 +752,7 @@ namespace Train.OpenBve
 			}
 			double range = ftc / ((Maximum + mp) - (Minimum + mp));
 
-			string subjectText = GetStackLanguageFromSubject(Train, Subject, ErrorLocation);
+			string subjectText = GetStackLanguageFromSubject(Train, Subject, SubjectIndex, SubjectSuffix);
 
 			if (!string.IsNullOrEmpty(subjectText))
 			{
@@ -1472,159 +765,100 @@ namespace Train.OpenBve
 		/// <summary>Converts a Panel2.cfg subject to an animation function stack</summary>
 		/// <param name="Train">The train</param>
 		/// <param name="Subject">The subject to convert</param>
-		/// <param name="ErrorLocation">The location in the Panel2.cfg file</param>
+		/// <param name="SubjectIndex">The index of the ATS etc. function if applicable</param>
+		/// <param name="Suffix">Optional suffix</param>
 		/// <returns>The parsed animation function stack</returns>
-		internal string GetStackLanguageFromSubject(AbstractTrain Train, string Subject, string ErrorLocation) {
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			string Suffix = "";
-			{
-				// detect d# suffix
-				int i;
-				for (i = Subject.Length - 1; i >= 0; i--) {
-					int a = char.ConvertToUtf32(Subject, i);
-					if (a < 48 | a > 57) break;
-				}
-				if (i >= 0 & i < Subject.Length - 1) {
-					if (Subject[i] == 'd' | Subject[i] == 'D') {
-						if (int.TryParse(Subject.Substring(i + 1), System.Globalization.NumberStyles.Integer, Culture, out var n)) {
-							if (n == 0) {
-								Suffix = " floor 10 mod";
-							} else {
-								string t0 = Math.Pow(10.0, n).ToString(Culture);
-								string t1 = Math.Pow(10.0, -n).ToString(Culture);
-								Suffix = " ~ " + t0 + " >= <> " + t1 + " * floor 10 mod 10 ?";
-							}
-							Subject = Subject.Substring(0, i);
-						}
-					}
-				}
-			}
+		internal string GetStackLanguageFromSubject(AbstractTrain Train, Panel2Subject Subject, int SubjectIndex, string Suffix) 
+		{
 			// transform subject
 			string Code;
-			switch (Subject.ToLowerInvariant()) {
-				case "acc":
+			switch (Subject) {
+				case Panel2Subject.Acc:
 					Code = "acceleration";
 					break;
-				case "motor":
+				case Panel2Subject.Motor:
 					Code = "accelerationmotor";
 					break;
-				case "true":
+				case Panel2Subject.True:
 					Code = "1";
 					break;
-				case "kmph":
+				case Panel2Subject.kmph:
 					Code = "speedometer abs 3.6 *";
 					break;
-				case "mph":
+				case Panel2Subject.mph:
 					Code = "speedometer abs 2.2369362920544 *";
 					break;
-				case "ms":
+				case Panel2Subject.ms:
 					Code = "speedometer abs";
 					break;
-				case "locobrakecylinder":
+				case Panel2Subject.LocoBrakeCylinder:
 					Code = Train.DriverCar + " brakecylinderindex 0.001 *";
 					break;
-				case "bc":
+				case Panel2Subject.BC:
 					Code = "brakecylinder 0.001 *";
 					break;
-				case "mr":
+				case Panel2Subject.MR:
 					Code = "mainreservoir 0.001 *";
 					break;
-				case "sap":
+				case Panel2Subject.SAP:
 					Code = "straightairpipe 0.001 *";
 					break;
-				case "locobrakepipe":
+				case Panel2Subject.LocoBrakePipe:
 					Code = Train.DriverCar + " brakepipeindex 0.001 *";
 					break;
-				case "bp":
+				case Panel2Subject.BP:
 					Code = "brakepipe 0.001 *";
 					break;
-				case "er":
+				case Panel2Subject.ER:
 					Code = "equalizingreservoir 0.001 *";
 					break;
-				case "door":
+				case Panel2Subject.Door:
 					Code = "1 doors -";
 					break;
-				case "csc":
+				case Panel2Subject.CsC:
 					Code = "constSpeed";
 					break;
-				case "power":
+				case Panel2Subject.Power:
 					Code = "brakeNotchLinear 0 powerNotch ?";
 					break;
-				case "locobrake":
+				case Panel2Subject.LocoBrake:
 					Code = "locoBrakeNotch";
 					break;
-				case "brake":
+				case Panel2Subject.Brake:
 					Code = "brakeNotchLinear";
 					break;
-				case "rev":
+				case Panel2Subject.Rev:
 					Code = "reverserNotch ++";
 					break;
-				case "hour":
+				case Panel2Subject.Hour:
 					Code = "0.000277777777777778 time * 24 mod floor";
 					break;
-				case "min":
+				case Panel2Subject.Min:
 					Code = "0.0166666666666667 time * 60 mod floor";
 					break;
-				case "sec":
+				case Panel2Subject.Sec:
 					Code = "time 60 mod floor";
 					break;
-				case "atc":
+				case Panel2Subject.ATC:
 					Code = "271 pluginstate";
 					break;
-				case "klaxon":
-				case "horn":
-				case "primaryklaxon":
-				case "primaryhorn":
-				case "secondaryklaxon":
-				case "secondaryhorn":
-				case "doorbuttonl":
-				case "doorbuttonr":
-				case "wiperposition":
-				case "routelimit":
-				case "wheelslip":
-				case "sanders": 
-				case "sandlevel":
-					Code = Subject.ToLowerInvariant();
+				case Panel2Subject.Klaxon:
+				case Panel2Subject.Horn:
+				case Panel2Subject.PrimaryKlaxon:
+				case Panel2Subject.PrimaryHorn:
+				case Panel2Subject.SecondaryKlaxon:
+				case Panel2Subject.SecondaryHorn:
+				case Panel2Subject.DoorButtonL:
+				case Panel2Subject.DoorButtonR:
+				case Panel2Subject.WiperPosition:
+				case Panel2Subject.Wheelslip:
+				case Panel2Subject.Sanders:
+				case Panel2Subject.SandLevel:
+					Code = Subject.ToString().ToLowerInvariant();
 					break;
 				default:
-					{
-						Code = "0";
-						bool unsupported = true;
-						if (Subject.StartsWith("ats", StringComparison.OrdinalIgnoreCase)) {
-							string a = Subject.Substring(3);
-							if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var n)) {
-								if (n >= 0 & n <= 255) {
-									Code = n.ToString(Culture) + " pluginstate";
-									unsupported = false;
-								}
-							}
-						} else if (Subject.StartsWith("doorl", StringComparison.OrdinalIgnoreCase)) {
-							string a = Subject.Substring(5);
-							if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var n)) {
-								if (n >= 0 & n < Train.NumberOfCars) {
-									Code = n.ToString(Culture) + " leftdoorsindex ceiling";
-									unsupported = false;
-								} else {
-									Code = "2";
-									unsupported = false;
-								}
-							}
-						} else if (Subject.StartsWith("doorr", StringComparison.OrdinalIgnoreCase)) {
-							string a = Subject.Substring(5);
-							if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var n)) {
-								if (n >= 0 & n < Train.NumberOfCars) {
-									Code = n.ToString(Culture) + " rightdoorsindex ceiling";
-									unsupported = false;
-								} else {
-									Code = "2";
-									unsupported = false;
-								}
-							}
-						}
-						if (unsupported) {
-							Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid subject " + Subject + " encountered in " + ErrorLocation);
-						}
-					} break;
+					Code = SubjectIndex + " " + Subject.ToString().ToLowerInvariant();
+					break;
 			}
 			return Code + Suffix;
 		}
@@ -1638,7 +872,7 @@ namespace Train.OpenBve
 		{
 			if (Width == 0 || Height == 0)
 			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "Attempted to create an invalid size element");
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Attempted to create an invalid size element");
 			}
 			double WorldWidth, WorldHeight;
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height) {
@@ -1672,7 +906,7 @@ namespace Train.OpenBve
 			Vertex t1 = new Vertex(v[1], new Vector2(0.0f, 0.0f));
 			Vertex t2 = new Vertex(v[2], new Vector2(1.0f, 0.0f));
 			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
-			StaticObject Object = new StaticObject(Plugin.currentHost);
+			StaticObject Object = new StaticObject(Plugin.CurrentHost);
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
 			Object.Mesh.Faces = new[] { new MeshFace(new[] { 0, 1, 2, 0, 2, 3 }, FaceFlags.Triangles) }; //Must create as a single face like this to avoid Z-sort issues with overlapping bits
 			Object.Mesh.Materials = new MeshMaterial[1];
@@ -1711,13 +945,9 @@ namespace Train.OpenBve
 			} else {
 				int n = Group.Elements.Length;
 				Array.Resize(ref Group.Elements, n + 1);
-				Group.Elements[n] = new AnimatedObject(Plugin.currentHost);
-				Group.Elements[n].States = new[] { new ObjectState() };
+				Group.Elements[n] = new AnimatedObject(Plugin.CurrentHost, Object);
 				Group.Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
-				Group.Elements[n].States[0].Prototype = Object;
-				Group.Elements[n].CurrentState = 0;
-				Group.Elements[n].internalObject = new ObjectState { Prototype = Object };
-				Plugin.currentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
+				Plugin.CurrentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
 				return n;
 			}
 		}

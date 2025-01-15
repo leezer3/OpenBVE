@@ -27,7 +27,7 @@ namespace Train.OpenBve
 									case "stagezeroacceleration":
 										if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageZeroAcceleration))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage zero acceleration was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Stage zero acceleration was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
 										}
 
 										curve.StageZeroAcceleration *= 0.277777777777778;
@@ -35,7 +35,7 @@ namespace Train.OpenBve
 									case "stageoneacceleration":
 										if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageOneAcceleration))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage one acceleration was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Stage one acceleration was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
 										}
 
 										curve.StageOneAcceleration *= 0.277777777777778;
@@ -43,7 +43,7 @@ namespace Train.OpenBve
 									case "stageonespeed":
 										if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageOneSpeed))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage one speed was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Stage one speed was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
 										}
 
 										curve.StageOneSpeed *= 0.277777777777778;
@@ -51,7 +51,7 @@ namespace Train.OpenBve
 									case "stagetwospeed":
 										if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageTwoSpeed))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage two speed was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Stage two speed was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
 										}
 
 										curve.StageTwoSpeed *= 0.277777777777778;
@@ -59,7 +59,7 @@ namespace Train.OpenBve
 									case "stagetwoexponent":
 										if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageTwoExponent))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Stage two exponent was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Stage two exponent was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
 										}
 
 										break;
@@ -71,7 +71,7 @@ namespace Train.OpenBve
 				}
 				return accelerationCurves.ToArray();
 			}
-			Plugin.currentHost.AddMessage(MessageType.Warning, false, "An empty list of acceleration curves was provided in XML file " + fileName);
+			Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "An empty list of acceleration curves was provided in XML file " + fileName);
 			return new AccelerationCurve[] { };
 		}
 	}

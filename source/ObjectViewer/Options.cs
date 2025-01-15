@@ -3,11 +3,11 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using Formats.OpenBve;
 using ObjectViewer.Graphics;
 using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Input;
-using OpenBveApi.Objects;
 using Path = OpenBveApi.Path;
 
 namespace ObjectViewer
@@ -81,19 +81,7 @@ namespace ObjectViewer
 				Builder.AppendLine("isUseNewRenderer = " + (IsUseNewRenderer ? "true" : "false"));
 				Builder.AppendLine();
 				Builder.AppendLine("[quality]");
-				{
-					string t; switch (Interpolation)
-					{
-						case InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
-						case InterpolationMode.Bilinear: t = "bilinear"; break;
-						case InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
-						case InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
-						case InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
-						case InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
-						default: t = "bilinearMipmapped"; break;
-					}
-					Builder.AppendLine("interpolation = " + t);
-				}
+				Builder.AppendLine("interpolation = " + Interpolation);
 				Builder.AppendLine("anisotropicfilteringlevel = " + AnisotropicFilteringLevel.ToString(Culture));
 				Builder.AppendLine("antialiasinglevel = " + AntiAliasingLevel.ToString(Culture));
 				Builder.AppendLine("transparencyMode = " + ((int)TransparencyMode).ToString(Culture));
@@ -158,200 +146,49 @@ namespace ObjectViewer
 
 			if (File.Exists(configFile))
 			{
-				// load options
-				string[] Lines = File.ReadAllLines(configFile, new System.Text.UTF8Encoding());
-				string Section = "";
-				for (int i = 0; i < Lines.Length; i++)
+				ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new System.Text.UTF8Encoding()), Program.CurrentHost);
+
+				while (cfg.RemainingSubBlocks > 0)
 				{
-					Lines[i] = Lines[i].Trim(new char[] { });
-					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
+					Block<OptionsSection, OptionsKey> block = cfg.ReadNextBlock();
+					switch (block.Key)
 					{
-						if (Lines[i].StartsWith("[", StringComparison.Ordinal) &
-							Lines[i].EndsWith("]", StringComparison.Ordinal))
-						{
-							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { }).ToLowerInvariant();
-						}
-						else
-						{
-							int j = Lines[i].IndexOf("=", StringComparison.OrdinalIgnoreCase);
-							string Key, Value;
-							if (j >= 0)
+						case OptionsSection.Display:
+							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth);
+							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight);
+							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
+							break;
+						case OptionsSection.Quality:
+							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);
+							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref Interface.CurrentOptions.AnisotropicFilteringLevel);
+							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
+							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
+							break;
+						case OptionsSection.Parsers:
+							block.GetEnumValue(OptionsKey.XObject, out Interface.CurrentOptions.CurrentXParser);
+							block.GetEnumValue(OptionsKey.ObjObject, out Interface.CurrentOptions.CurrentObjParser);
+							block.GetValue(OptionsKey.GDIPlus, out Interface.CurrentOptions.UseGDIDecoders);
+							break;
+						case OptionsSection.ObjectOptimization:
+							block.GetEnumValue(OptionsKey.Mode, out ObjectOptimizationMode mode);
+							Interface.CurrentOptions.ObjectOptimizationMode = mode; // can't set an accessor value directly
+							break;
+						case OptionsSection.Folders:
+							block.GetValue(OptionsKey.ObjectSearch, out string folder);
+							if (Directory.Exists(folder))
 							{
-								Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-								Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								Interface.CurrentOptions.ObjectSearchDirectory = folder;
 							}
-							else
-							{
-								Key = "";
-								Value = Lines[i];
-							}
-							switch (Section)
-							{
-								case "display":
-									switch (Key)
-									{
-										case "windowwidth":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300)
-												{
-													a = 960;
-												}
-												Interface.CurrentOptions.WindowWidth = a;
-											}
-											break;
-										case "windowheight":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a) || a < 300)
-												{
-													a = 600;
-												}
-												Interface.CurrentOptions.WindowHeight = a;
-											}
-											break;
-										case "isusenewrenderer":
-											Interface.CurrentOptions.IsUseNewRenderer = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-									}
-									break;
-								case "quality":
-									switch (Key)
-									{
-										case "interpolation":
-											switch (Value.ToLowerInvariant())
-											{
-												case "nearestneighbor": Interface.CurrentOptions.Interpolation = InterpolationMode.NearestNeighbor; break;
-												case "bilinear": Interface.CurrentOptions.Interpolation = InterpolationMode.Bilinear; break;
-												case "nearestneighbormipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.NearestNeighborMipmapped; break;
-												case "bilinearmipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
-												case "trilinearmipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.TrilinearMipmapped; break;
-												case "anisotropicfiltering": Interface.CurrentOptions.Interpolation = InterpolationMode.AnisotropicFiltering; break;
-												default: Interface.CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
-											}
-											break;
-										case "anisotropicfilteringlevel":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												Interface.CurrentOptions.AnisotropicFilteringLevel = a;
-											}
-											break;
-										case "antialiasinglevel":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												Interface.CurrentOptions.AntiAliasingLevel = a;
-											}
-											break;
-										case "transparencymode":
-											switch (Value.ToLowerInvariant())
-											{
-												case "sharp": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Performance; break;
-												case "smooth": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
-												default:
-													{
-														if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
-														{
-															Interface.CurrentOptions.TransparencyMode = (TransparencyMode)a;
-														}
-														else
-														{
-															Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality;
-														}
-														break;
-													}
-											}
-											break;
-									}
-									break;
-								case "parsers":
-									switch (Key)
-									{
-										case "xobject":
-											{
-												if (!Enum.TryParse(Value, out Interface.CurrentOptions.CurrentXParser))
-												{
-													Interface.CurrentOptions.CurrentXParser = XParsers.Original;
-												}
-												break;
-											}
-										case "objobject":
-											{
-												if (!Enum.TryParse(Value, out Interface.CurrentOptions.CurrentObjParser))
-												{
-													Interface.CurrentOptions.CurrentObjParser = ObjParsers.Original;
-												}
-												break;
-											}
-										case "gdiplus":
-											Interface.CurrentOptions.UseGDIDecoders = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-									}
-									break;
-								case "objectoptimization":
-									switch (Key)
-									{
-										case "mode":
-											{
-												if (Enum.TryParse(Value, out ObjectOptimizationMode mode))
-												{
-													Interface.CurrentOptions.ObjectOptimizationMode = mode;
-												}
-											}
-											break;
-									}
-									break;
-								case "folders":
-									switch (Key)
-									{
-										case "objectsearch":
-											if (Directory.Exists(Value))
-											{
-												Interface.CurrentOptions.ObjectSearchDirectory = Value;
-											}
-											break;
-									}
-									break;
-								case "keys":
-									switch (Key)
-									{
-										case "left":
-											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveLeft))
-											{
-												Interface.CurrentOptions.CameraMoveLeft = OpenBveApi.Input.Key.A;
-											}
-											break;
-										case "right":
-											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveRight))
-											{
-												Interface.CurrentOptions.CameraMoveRight = OpenBveApi.Input.Key.D;
-											}
-											break;
-										case "up":
-											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveUp))
-											{
-												Interface.CurrentOptions.CameraMoveUp = OpenBveApi.Input.Key.W;
-											}
-											break;
-										case "down":
-											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveDown))
-											{
-												Interface.CurrentOptions.CameraMoveDown = OpenBveApi.Input.Key.S;
-											}
-											break;
-										case "forward":
-											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveForward))
-											{
-												Interface.CurrentOptions.CameraMoveForward = OpenBveApi.Input.Key.Q;
-											}
-											break;
-										case "backward":
-											if (!Enum.TryParse(Value, out Interface.CurrentOptions.CameraMoveBackward))
-											{
-												Interface.CurrentOptions.CameraMoveBackward = OpenBveApi.Input.Key.E;
-											}
-											break;
-									}
-									break;
-							}
-						}
+							break;
+						case OptionsSection.Keys:
+							block.GetEnumValue(OptionsKey.Left, out Interface.CurrentOptions.CameraMoveLeft);
+							block.GetEnumValue(OptionsKey.Right, out Interface.CurrentOptions.CameraMoveRight);
+							block.GetEnumValue(OptionsKey.Up, out Interface.CurrentOptions.CameraMoveUp);
+							block.GetEnumValue(OptionsKey.Down, out Interface.CurrentOptions.CameraMoveDown);
+							block.GetEnumValue(OptionsKey.Forward, out Interface.CurrentOptions.CameraMoveForward);
+							block.GetEnumValue(OptionsKey.Backward, out Interface.CurrentOptions.CameraMoveBackward);
+							break;
+
 					}
 				}
 			}

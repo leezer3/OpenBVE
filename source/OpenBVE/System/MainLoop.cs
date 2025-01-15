@@ -52,7 +52,10 @@ namespace OpenBve
 			}
 			Program.FileSystem.AppendToLogFile(@"--------------------", false);
 
-
+			Program.FileSystem.AppendToLogFile("Detected Platform: " + Program.CurrentHost.Platform);
+			Program.FileSystem.AppendToLogFile("Backend: " + (Interface.CurrentOptions.PreferNativeBackend ? "Native" : "SDL2"));
+			Program.FileSystem.AppendToLogFile("User Interface Size: " + Interface.CurrentOptions.UserInterfaceFolder);
+			Program.FileSystem.AppendToLogFile("User Interface Scale Factor: " + Interface.CurrentOptions.UserInterfaceScaleFactor);
 			if (Program.CurrentHost.Platform == HostPlatform.MicrosoftWindows)
 			{
 				Tolk.Load();
@@ -111,8 +114,8 @@ namespace OpenBve
 			}
 			Screen.Initialize();
 			currentResult = result;
-			Program.currentGameWindow.Closing += OpenTKQuit;
-			Program.currentGameWindow.Run();
+			Program.Renderer.GameWindow.Closing += OpenTKQuit;
+			Program.Renderer.GameWindow.Run();
 		}
 
 		// --------------------------------
@@ -241,11 +244,11 @@ namespace OpenBve
 
 			if (Interface.CurrentOptions.CursorHideDelay > 0 && timeSinceLastMouseEvent > Interface.CurrentOptions.CursorHideDelay)
 			{
-				Program.currentGameWindow.CursorVisible = false;
+				Program.Renderer.GameWindow.CursorVisible = false;
 			}
 			else
 			{
-				Program.currentGameWindow.CursorVisible = true;
+				Program.Renderer.GameWindow.CursorVisible = true;
 			}
 
 			if (MainLoop.MouseGrabEnabled)

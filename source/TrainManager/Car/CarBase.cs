@@ -155,23 +155,24 @@ namespace TrainManager.Car
 			Flange = new Flange(this);
 			Run = new RunSounds(this);
 			Sounds = new CarSounds();
+			Coupler = new Coupler(0, 0, this, null);
 		}
 
 		/// <summary>Moves the car</summary>
 		/// <param name="Delta">The delta to move</param>
 		public void Move(double Delta)
 		{
-			if (baseTrain.State != TrainState.Disposed)
+			if (baseTrain.State < TrainState.DisposePending)
 			{
 				FrontAxle.Follower.UpdateRelative(Delta, true, true);
 				FrontBogie.FrontAxle.Follower.UpdateRelative(Delta, true, true);
 				FrontBogie.RearAxle.Follower.UpdateRelative(Delta, true, true);
-				if (baseTrain.State != TrainState.Disposed)
+				if (baseTrain.State < TrainState.DisposePending)
 				{
 					RearAxle.Follower.UpdateRelative(Delta, true, true);
 					RearBogie.FrontAxle.Follower.UpdateRelative(Delta, true, true);
 					RearBogie.RearAxle.Follower.UpdateRelative(Delta, true, true);
-					if (baseTrain.State != TrainState.Disposed)
+					if (baseTrain.State < TrainState.DisposePending)
 					{
 						BeaconReceiver.UpdateRelative(Delta, true, false);
 					}
@@ -374,14 +375,12 @@ namespace TrainManager.Car
 			lock (baseTrain.updateLock)
 			{
 				if (!Front && !Rear)
-				{
 					return;
-				}
 
 				// Create new train
-				TrainBase newTrain = new TrainBase(TrainState.Available);
+				TrainBase newTrain = new TrainBase(TrainState.Available, TrainType.StaticCars);
 				UncouplingBehaviour uncouplingBehaviour = UncouplingBehaviour.Emergency;
-				newTrain.Handles.Power = new PowerHandle(0, 0, new double[0], new double[0], newTrain);
+				newTrain.Handles.Power = new PowerHandle(0, newTrain);
 				newTrain.Handles.Brake = new BrakeHandle(0, 0, newTrain.Handles.EmergencyBrake, new double[0], new double[0], newTrain);
 				newTrain.Handles.HoldBrake = new HoldBrakeHandle(newTrain);
 				if (Front)
@@ -426,7 +425,7 @@ namespace TrainManager.Car
 						}
 
 						Array.Resize(ref baseTrain.Cars, baseTrain.Cars.Length - totalFollowingCars);
-						baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.connectedCar = baseTrain.Cars[baseTrain.Cars.Length - 1];
+						baseTrain.Cars[baseTrain.Cars.Length - 1].Coupler.ConnectedCar = baseTrain.Cars[baseTrain.Cars.Length - 1];
 					}
 					else
 					{
@@ -517,8 +516,9 @@ namespace TrainManager.Car
 						newTrain.Handles.Brake.ApplyState(0, false);
 						newTrain.Handles.EmergencyBrake.Release();
 						break;
-
 				}
+
+				baseTrain.Cars[baseTrain.DriverCar].Sounds.UncoupleCab?.Play(1.0, 1.0, baseTrain.Cars[baseTrain.DriverCar], false);
 			}
 		}
 
@@ -723,6 +723,10 @@ namespace TrainManager.Car
 			CameraRestriction.AbsoluteTopRight += Driver;
 			CameraRestriction.AbsoluteTopRight.Rotate(new Transformation(d, Up, s));
 			CameraRestriction.AbsoluteTopRight.Translate(p);
+			if (cs >= 0 && CarSections[cs].Groups[0].Keyframes != null)
+			{
+				CarSections[cs].Groups[0].Keyframes.Update(baseTrain, Index, TrackPosition, p, d, Up, s, true, true, TimeElapsed, true);
+			}
 		}
 
 		/// <summary>Updates the given car section element</summary>

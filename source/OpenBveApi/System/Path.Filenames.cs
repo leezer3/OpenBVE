@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
+using OpenBveApi.Hosts;
 
 namespace OpenBveApi
 {
@@ -35,6 +36,10 @@ namespace OpenBveApi
 		/// <summary>Returns whether the TXT file is potentially a BVE5 route</summary>
 		public static bool IsInvalidTxtName(string fileName)
 	    {
+		    if (!fileName.EndsWith(".txt", StringComparison.InvariantCultureIgnoreCase))
+		    {
+			    return false;
+		    }
 		    /*
 		     * Unfortunately, BVE5 uses plain txt files for routes
 		     *
@@ -86,6 +91,56 @@ namespace OpenBveApi
 		    {
 			    return true;
 		    }
+		    return false;
+	    }
+
+		/// <summary>Returns whether the directory name is valid for browsing</summary>
+	    public static bool IsInvalidDirectoryName(HostPlatform platform, string searchDirectory, string directoryName)
+	    {
+		    string dn = directoryName.ToLowerInvariant();
+		    switch (platform)
+		    {
+				case HostPlatform.GNULinux:
+					switch (dn)
+					{
+						case "lib.usr-is-merged":
+						case "sbin.usr-is-merged":
+						case "bin.usr-is-merged":
+						case "lost+found":
+							return true;
+					}
+					break;
+				case HostPlatform.MicrosoftWindows:
+					switch (dn)
+					{
+						case "$getcurrent":
+						case "$recycle.bin":
+						case "$dmstemp$":
+						case "config.msi":
+						case "system32":
+						case "syswow64":
+						case "system volume information":
+						case "msdownld.tmp":
+						case "msocache":
+						case "onedrivetemp":
+							return true;
+					}
+
+					if (!string.IsNullOrEmpty(searchDirectory) && Directory.GetParent(searchDirectory) == null)
+					{
+						// root of the drive- storing things in reserved system folders is *not* a good idea
+						switch (dn)
+						{
+							case "windows":
+							case "boot":
+							case "recovery":
+							case "programdata":
+								return true;
+						}
+					}
+					break;
+		    }
+
 		    return false;
 	    }
 	}

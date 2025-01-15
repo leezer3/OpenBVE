@@ -280,7 +280,7 @@ namespace OpenBve
 
 		public override bool ProcessMouseMove(int x, int y)
 		{
-			Program.currentGameWindow.CursorVisible = true;
+			Program.Renderer.GameWindow.CursorVisible = true;
 			if (CurrMenu < 0)
 			{
 				return false;
@@ -378,7 +378,7 @@ namespace OpenBve
 						//Launch the game!
 						Loading.Complete = false;
 						Loading.LoadAsynchronously(currentFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
-						OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
+						OpenBVEGame g = Program.Renderer.GameWindow as OpenBVEGame;
 						// ReSharper disable once PossibleNullReferenceException
 						g.LoadingScreenLoop();
 						Program.Renderer.CurrentInterface = InterfaceType.Normal;
@@ -677,7 +677,7 @@ namespace OpenBve
 										//Launch the game!
 										Loading.Complete = false;
 										Loading.LoadAsynchronously(currentFile, Encoding.UTF8, Interface.CurrentOptions.TrainFolder, Encoding.UTF8);
-										OpenBVEGame g = Program.currentGameWindow as OpenBVEGame;
+										OpenBVEGame g = Program.Renderer.GameWindow as OpenBVEGame;
 										// ReSharper disable once PossibleNullReferenceException
 										g.LoadingScreenLoop();
 										break;
@@ -761,6 +761,26 @@ namespace OpenBve
 								else
 								{
 									Process.Start(runCmd);
+								}
+								break;
+							case MenuTag.ViewLog:
+								try
+								{
+									var file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");
+
+									if (File.Exists(file))
+									{
+										Process.Start(file);
+									}
+									else
+									{
+										PushMenu(MenuType.Error);
+									}
+								}
+								catch
+								{
+									PushMenu(MenuType.Error);
+									// Actually failed to load, but same difference
 								}
 								break;
 						}

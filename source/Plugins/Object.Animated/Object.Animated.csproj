@@ -51,6 +51,11 @@
       <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
       <Name>OpenBveApi</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Formats.OpenBve\Formats.OpenBve.csproj">
+      <Project>{7ED7B285-FAE6-4B34-ACC5-87399F27C8BC}</Project>
+      <Name>Formats.OpenBve</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

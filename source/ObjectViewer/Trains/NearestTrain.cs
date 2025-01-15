@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using OpenBveApi.Trains;
 using TrainManager;
 using TrainManager.BrakeSystems;
@@ -44,7 +45,7 @@ namespace ObjectViewer.Trains
 		/// <returns>A dummy train</returns>
 		private static TrainBase CreateDummyTrain()
 		{
-			TrainBase train = new TrainBase(TrainState.Available);
+			TrainBase train = new TrainBase(TrainState.Available, TrainType.LocalPlayerTrain);
 			train.Handles.Power = new PowerHandle(Specs.PowerNotches, Specs.PowerNotches, new double[] { }, new double[] { }, train);
 			if (Specs.IsAirBrake)
 			{
@@ -65,11 +66,11 @@ namespace ObjectViewer.Trains
 
 				if (Specs.IsAirBrake)
 				{
-					train.Cars[i].CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.None, train.Cars[i], 0.0, 0.0, new AccelerationCurve[] { });
+					train.Cars[i].CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.None, train.Cars[i]);
 				}
 				else
 				{
-					train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, train.Cars[i], 0.0, 0.0, 0.0, 0.0, new AccelerationCurve[] { });
+					train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, train.Cars[i]);
 				}
 
 				train.Cars[i].Specs.IsMotorCar = true;
@@ -80,7 +81,7 @@ namespace ObjectViewer.Trains
 				train.Cars[i].CarBrake.brakeCylinder = new BrakeCylinder(Status.BrakeCylinderPressure * 1000.0);
 				train.Cars[i].CarBrake.straightAirPipe = new StraightAirPipe(Status.StraightAirPipePressure * 1000.0);
 
-				train.Cars[i].Coupler = new Coupler(0.9 * 0.3, 1.1 * 0.3, train.Cars[i], i < train.Cars.Length - 1 ? train.Cars[i + 1] : null, train);
+				train.Cars[i].Coupler = new Coupler(0.9 * 0.3, 1.1 * 0.3, train.Cars[i], i < train.Cars.Length - 1 ? train.Cars[i + 1] : null);
 
 				train.Cars[i].Doors[0] = new Door(-1, 1000.0, 0.0);
 				train.Cars[i].Doors[1] = new Door(1, 1000.0, 0.0);
@@ -107,7 +108,7 @@ namespace ObjectViewer.Trains
 		{
 			lock (LockObj)
 			{
-				IsExtensionsCfg = Program.TrainManager.Trains.Length != 0;
+				IsExtensionsCfg = Program.TrainManager.Trains.Count != 0;
 
 				if (IsExtensionsCfg)
 				{
@@ -175,8 +176,8 @@ namespace ObjectViewer.Trains
 					else
 					{
 						train = CreateDummyTrain();
-						Array.Resize(ref Program.TrainManager.Trains, 1);
-						Program.TrainManager.Trains[0] = train;
+						Program.TrainManager.Trains.Clear();
+						Program.TrainManager.Trains.Add(train);
 						TrainManagerBase.PlayerTrain = train;
 					}
 					Status.Apply(train);
@@ -190,7 +191,7 @@ namespace ObjectViewer.Trains
 					}
 					else
 					{
-						Program.TrainManager.Trains = new TrainBase[0];
+						Program.TrainManager.Trains = new List<TrainBase>();
 						TrainManagerBase.PlayerTrain = null;
 					}
 

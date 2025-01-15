@@ -51,7 +51,7 @@ jobs:
 - job: AppleMakeBuild
   displayName: 'Build on Apple OS-X (makefile)'
   pool:
-    vmImage: 'macos-12'
+    vmImage: 'macos-13'
 
   variables:
     solution: 'OpenBVE.sln'
@@ -59,6 +59,9 @@ jobs:
     buildConfiguration: 'Release'
 
   steps:
+  - script: |
+          echo killing...; sudo pkill -9 XProtect >/dev/null || true;
+          echo waiting...; while pgrep XProtect; do sleep 3; done;
   - task: NuGetToolInstaller@1
   - script: make publish 
   - task: CopyFilesOverSSH@0

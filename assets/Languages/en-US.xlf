@@ -324,6 +324,12 @@
 					<trans-unit id="start_start">
 						<source>Start</source>
 					</trans-unit>
+					<trans-unit id="view_log">
+						<source>View the previous log</source>
+					</trans-unit>
+					<trans-unit id="log_error">
+						<source>Unable to display the previous log.</source>
+					</trans-unit>
 				</group>
 				<group id="review">
 					<trans-unit id="title">
@@ -1593,6 +1599,12 @@
 					</trans-unit>
 					<trans-unit id="fixed_uncouple">
 						<source>This coupler is fixed, and cannot uncouple.</source>
+					</trans-unit>
+					<trans-unit id="couple_front">
+						<source>Coupled [number] of cars to the front of the train.</source>
+					</trans-unit>
+					<trans-unit id="couple_rear">
+						<source>Coupled [number] of cars to the rear of the train.</source>
 					</trans-unit>
 				</group>
 				<group id="score">

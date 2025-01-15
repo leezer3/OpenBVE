@@ -19,5 +19,9 @@ namespace TrainManager.Car
 		public CarSound[] RequestStop;
 		/// <summary>The sounds played when a touch sensitive panel control is pressed</summary>
 		public CarSound[] Touch;
+		/// <summary>The car sound played in the driver's cab when coupling occurs</summary>
+		public CarSound CoupleCab;
+		/// <summary>The car sound played in the driver's cab when uncoupling occurs</summary>
+		public CarSound UncoupleCab;
 	}
 }

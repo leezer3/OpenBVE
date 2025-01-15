@@ -50,11 +50,11 @@ namespace OpenBveApi.FunctionScripting
 			
 
 			//Allows us to pin the result, but keep the underlying figure
-			if (this.Minimum != Double.NaN & this.LastResult < Minimum)
+			if (!double.IsNaN(this.Minimum) & this.LastResult < Minimum)
 			{
 				return Minimum;
 			}
-			if (this.Maximum != Double.NaN & this.LastResult > Maximum)
+			if (!double.IsNaN(this.Maximum) & this.LastResult > Maximum)
 			{
 				return Maximum;
 			}
@@ -309,12 +309,19 @@ namespace OpenBveApi.FunctionScripting
 							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (Arguments[i - 2].ToLowerInvariant() == "cars")
 							{
-								NumberFormats.TryParseIntVb6(Arguments[i - 1], out int nCars);
-								if (System.Math.Abs(nCars) != nCars)
+								if (NumberFormats.TryParseIntVb6(Arguments[i - 1], out int nCars))
 								{
-									//It makes absolutely no sense to test whether there are less than 0 cars in a train, so let's at least throw a broken script error
-									throw new InvalidOperationException("Cannot test against less than zero cars in function script " + Expression);
+									if (System.Math.Abs(nCars) != nCars)
+									{
+										//It makes absolutely no sense to test whether there are less than 0 cars in a train, so let's at least throw a broken script error
+										throw new InvalidOperationException("Cannot test against less than zero cars in function script " + Expression);
+									}
 								}
+								else
+								{
+									throw new InvalidOperationException("Unexpected argument " + Arguments[i -1] + " in function script " + Expression);
+								}
+								
 							}
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.CompareLess;
@@ -749,6 +756,7 @@ namespace OpenBveApi.FunctionScripting
 							InstructionSet[n] = Instructions.SafetyPluginAvailable;
 							n++; s++; if (s >= m) m = s; break;
 						case "pluginstate":
+						case "ats":
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.SafetyPluginState;
@@ -875,6 +883,15 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.AmbientTemperature;
 							n++; s++; if (s >= m) m = s; break;
+						case "frontcoupler":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.FrontCoupler;
+							n++; s++; if (s >= m) m = s; break;
+						case "frontcouplerindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.FrontCouplerIndex;
+							n++; break;
 						// default
 						default:
 							throw new System.IO.InvalidDataException("Unknown command " + Arguments[i] + " encountered in function script " + Expression);

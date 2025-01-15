@@ -53,10 +53,6 @@ namespace ObjectViewer {
         internal static double LightingRelative = 1.0;
         private static bool ShiftPressed = false;
 
-
-        internal static GameWindow currentGameWindow;
-        internal static GraphicsMode currentGraphicsMode;
-
 		internal static OpenBveApi.Hosts.HostInterface CurrentHost;
 
 		internal static NewRenderer Renderer;
@@ -79,7 +75,22 @@ namespace ObjectViewer {
 	        
 	        CurrentRoute = new CurrentRoute(CurrentHost, Renderer);
 	        Options.LoadOptions();
-	        Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
+			// n.b. Init the toolkit before the renderer
+	        var options = new ToolkitOptions
+	        {
+		        Backend = PlatformBackend.PreferX11,
+	        };
+
+	        if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
+	        {
+		        // We're managing our own DPI
+		        options.EnableHighResolution = false;
+		        SetProcessDPIAware();
+	        }
+
+	        Toolkit.Init(options);
+
+			Renderer = new NewRenderer(CurrentHost, Interface.CurrentOptions, FileSystem);
 	        
 	        
 	        TrainManager = new TrainManager(CurrentHost, Renderer, Interface.CurrentOptions, FileSystem);
@@ -149,31 +160,21 @@ namespace ObjectViewer {
 				}
 	        }
 
-	        var options = new ToolkitOptions
-	        {
-		        Backend = PlatformBackend.PreferX11
-	        };
-
-	        if (CurrentHost.Platform == HostPlatform.MicrosoftWindows)
-	        {
-		        // Tell Windows that the main game is managing it's own DPI
-		        SetProcessDPIAware();
-	        }
-			Toolkit.Init(options);
+	        
 	        // --- load language ---
 	        string folder = Program.FileSystem.GetDataFolder("Languages");
 	        Translations.LoadLanguageFiles(folder);
 			GameMenu.Instance = new GameMenu();
 			// initialize camera
-			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
-	        currentGameWindow = new ObjectViewer(Renderer.Screen.Width, Renderer.Screen.Height, currentGraphicsMode, "Object Viewer", GameWindowFlags.Default)
+			Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
+	        Renderer.GameWindow = new ObjectViewer(Renderer.Screen.Width, Renderer.Screen.Height, Renderer.GraphicsMode, "Object Viewer", GameWindowFlags.Default)
 	        {
 		        Visible = true,
 		        TargetUpdateFrequency = 0,
 		        TargetRenderFrequency = 0,
 		        Title = "Object Viewer"
 	        };
-	        currentGameWindow.Run();
+	        Renderer.GameWindow.Run();
 			// quit
 			Renderer.TextureManager.UnloadAllTextures(false);
 
@@ -324,7 +325,7 @@ namespace ObjectViewer {
 						    if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
 						    {
 							    Control[] dummyControls = new Control[0];
-								TrainManager.Trains = new[] { new TrainBase(TrainState.Available) };
+								TrainManager.Trains = new List<TrainBase> { new TrainBase(TrainState.Available, TrainType.LocalPlayerTrain) };
 								AbstractTrain playerTrain = TrainManager.Trains[0];
 								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrainFolder, ref playerTrain, ref dummyControls);
 								TrainManager.PlayerTrain = TrainManager.Trains[0];

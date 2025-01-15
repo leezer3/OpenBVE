@@ -128,10 +128,11 @@ namespace OpenBveApi.FunctionScripting {
 					SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState });
 					break;
 			}
-			if (this.Minimum != Double.NaN & this.LastResult < Minimum) {
+			if (!double.IsNaN(this.Minimum) & this.LastResult < Minimum) {
 				return Minimum;
 			}
-			if (this.Maximum != Double.NaN & this.LastResult > Maximum) {
+            if (!double.IsNaN(this.Maximum) & this.LastResult > Maximum)
+            {
 				return Maximum;
 			}
 			return LastResult;

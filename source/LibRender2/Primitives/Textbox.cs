@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LibRender2.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -40,6 +41,7 @@ namespace LibRender2.Primitives
 
 		private List<string> WrappedLines(int width)
 		{
+			width = 200;
 			// string literal as well as escaped character as we may have loaded from language file
 			string[] firstSplit = Text.Split(new[] {"\r\n", "\n", @"\r\n"}, StringSplitOptions.None);
 			List<string> wrappedLines = new List<string>();
@@ -52,25 +54,27 @@ namespace LibRender2.Primitives
 					currentLine += currentChar;
 					if (myFont.MeasureString(currentLine).X > width)
 					{
-						// Exceeded length, back up to last space
-						int moveback = 0;
-						int lastChar = i - 1;
-						while (currentChar != ' ')
+						if (currentLine.Any(char.IsWhiteSpace))
 						{
-							moveback++;
-							i--;
-							if (i == 0)
+							// Exceeded length, back up to last space
+							int moveback = 1;
+							while (!char.IsWhiteSpace(currentLine[currentLine.Length - moveback]))
 							{
-								//No spaces found, so just drop back one char
-								i = lastChar;
-								moveback = 1;
-								break;
+								moveback++;
+								i--;
 							}
-							currentChar = firstSplit[j][i];
+							string lineToAdd = currentLine.Substring(0, currentLine.Length - moveback);
+							wrappedLines.Add(lineToAdd.TrimStart());
+							currentLine = string.Empty;
 						}
-						string lineToAdd = currentLine.Substring(0, currentLine.Length - moveback);
-						wrappedLines.Add(lineToAdd.TrimStart());
-						currentLine = string.Empty;
+						else
+						{
+							i--;
+							string lineToAdd = currentLine.Substring(0, currentLine.Length - 1);
+							wrappedLines.Add(lineToAdd.TrimStart());
+							currentLine = string.Empty;
+						}
+						
 					}
 				}
 				wrappedLines.Add(currentLine.TrimStart());

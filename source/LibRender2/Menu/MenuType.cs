@@ -72,6 +72,8 @@ namespace LibRender2.Menu
 		/// <summary>Displays a list of object files</summary>
 		ObjectList,
 		/// <summary>Displays the current list of errors</summary>
-		ErrorList
+		ErrorList,
+		/// <summary>Shows an error</summary>
+		Error
 	}
 }

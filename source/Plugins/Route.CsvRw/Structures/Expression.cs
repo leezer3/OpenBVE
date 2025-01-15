@@ -76,6 +76,11 @@ namespace CsvRwRouteParser
 					//Same hack as above, found in Minobu route for BVE2
 					Text = "Texture.Background" + Text.Substring(19, Text.Length - 19);
 				}
+				else if (Text.StartsWith("Structure. ", StringComparison.InvariantCultureIgnoreCase))
+				{
+					//Another variant, this time from JR 内房Line
+					Text = "Structure." + Text.Substring(11, Text.Length - 11);
+				}
 				else if (Text.EndsWith(")height(0)", StringComparison.InvariantCultureIgnoreCase))
 				{
 					//Heavy Coal original RW- Fix starting station

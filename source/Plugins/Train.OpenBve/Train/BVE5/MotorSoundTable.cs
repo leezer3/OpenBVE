@@ -31,7 +31,7 @@ namespace Train.OpenBve
 			}
 			else
 			{
-				Plugin.currentHost.AddMessage("Missing BVE5 MotorSound table file.");
+				Plugin.CurrentHost.AddMessage("Missing BVE5 MotorSound table file.");
 			}
 
 			if (File.Exists(brakeSoundPitch) && File.Exists(brakeSoundGain))
@@ -41,7 +41,7 @@ namespace Train.OpenBve
 			}
 			else
 			{
-				Plugin.currentHost.AddMessage("Missing BVE5 BrakeSound table file.");
+				Plugin.CurrentHost.AddMessage("Missing BVE5 BrakeSound table file.");
 			}
 			
 			
@@ -77,7 +77,7 @@ namespace Train.OpenBve
 					string[] splitString = Lines[i].TrimEnd(',', ' ').Split(',');
 					if (!double.TryParse(splitString[0], out double speed))
 					{
-						Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid speed encountered at Line " + i + " in BveTs Motor Noise table " + pitchFile);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid speed encountered at Line " + i + " in BveTs Motor Noise table " + pitchFile);
 						continue;
 					}
 
@@ -99,7 +99,7 @@ namespace Train.OpenBve
 							pitchValues[j - 1] = 1;
 							if (!string.IsNullOrEmpty(splitString[j]))
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid pitch encountered at Line " + i + " Index " + (j - 1) + " in BveTs Motor Noise table " + pitchFile);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid pitch encountered at Line " + i + " Index " + (j - 1) + " in BveTs Motor Noise table " + pitchFile);
 							}
 						}
 					}
@@ -158,7 +158,7 @@ namespace Train.OpenBve
 					string[] splitString = Lines[i].TrimEnd(',', ' ').Split(',');
 					if (!double.TryParse(splitString[0], out double speed))
 					{
-						Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid speed encountered at Line " + i + " in BveTs Motor Noise table " + volumeFile);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid speed encountered at Line " + i + " in BveTs Motor Noise table " + volumeFile);
 						continue;
 					}
 
@@ -181,7 +181,7 @@ namespace Train.OpenBve
 							gainValues[j - 1] = 1;
 							if(!string.IsNullOrEmpty(splitString[j]))
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid gain encountered at Line " + i + " Index " + (j - 1) + " in BveTs Motor Noise table " + volumeFile);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid gain encountered at Line " + i + " Index " + (j - 1) + " in BveTs Motor Noise table " + volumeFile);
 							}
 						}
 					}

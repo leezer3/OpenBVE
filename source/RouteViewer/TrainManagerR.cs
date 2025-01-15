@@ -24,9 +24,9 @@ namespace RouteViewer {
 
 		// train
 		internal class Train : TrainBase {
-			internal Train() : base(TrainState.Pending)
+			internal Train() : base(TrainState.Pending, TrainType.LocalPlayerTrain)
 			{
-				Handles.Power = new PowerHandle(8, 8, new double[] {}, new double[] {}, this);
+				Handles.Power = new PowerHandle(8, this);
 				Handles.Brake = new BrakeHandle(8, 8, null, new double[] {}, new double[] {}, this);
 				Handles.HoldBrake = new HoldBrakeHandle(this);
 			}

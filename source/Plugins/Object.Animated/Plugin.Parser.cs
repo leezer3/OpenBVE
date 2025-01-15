@@ -30,21 +30,12 @@ namespace Plugin
 			int SoundCount = 0;
 			// load file
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
-			bool rpnUsed = false;
+			
 			for (int i = 0; i < Lines.Length; i++)
 			{
-				int j = Lines[i].IndexOf(';');
+				int sc = Lines[i].IndexOf(';');
 				//Trim out comments
-				Lines[i] = j >= 0 ? Lines[i].Substring(0, j).Trim(new char[] { }) : Lines[i].Trim(new char[] { });
-				//Test whether RPN functions have been used
-				rpnUsed = Lines[i].IndexOf("functionrpn", StringComparison.OrdinalIgnoreCase) >= 0;
-			}
-			if (rpnUsed)
-			{
-				currentHost.AddMessage(MessageType.Error, false, "An animated object file contains RPN functions. These were never meant to be used directly, only for debugging. They won't be supported indefinately. Please get rid of them in file " + FileName);
-			}
-			for (int i = 0; i < Lines.Length; i++)
-			{
+				Lines[i] = sc >= 0 ? Lines[i].Substring(0, sc).Trim(new char[] { }) : Lines[i].Trim(new char[] { });
 				if (Lines[i].Length != 0)
 				{
 					string sct = Lines[i].Trim().Trim('[', ']');

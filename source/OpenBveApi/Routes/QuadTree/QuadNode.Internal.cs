@@ -46,10 +46,7 @@ namespace OpenBveApi.Routes
 				}
 			}
 
-			if (Parent != null)
-			{
-				Parent.UpdateBoundingRectangle();
-			}
+			Parent?.UpdateBoundingRectangle();
 		}
 
 		public override void FinalizeBoundingRectangles()

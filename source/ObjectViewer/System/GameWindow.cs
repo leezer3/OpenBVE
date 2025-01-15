@@ -51,7 +51,7 @@ namespace ObjectViewer
 
 			ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
 
-			if (Program.TrainManager.Trains.Length != 0)
+			if (Program.TrainManager.Trains.Count != 0)
 			{
 				Program.TrainManager.Trains[0].UpdateObjects(timeElapsed, false);
 			}
@@ -298,7 +298,11 @@ namespace ObjectViewer
 			Program.Renderer.UpdateVisibility(true);
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 			Program.RefreshObjects();
-        }
+			if (Width == DisplayDevice.Default.Width && Height == DisplayDevice.Default.Height)
+			{
+				WindowState = WindowState.Maximized;
+			}
+		}
 
         protected override void OnClosing(CancelEventArgs e)
         {

@@ -8,9 +8,9 @@ using OpenTK.Graphics;
 
 namespace RouteViewer
 {
-    public partial class formOptions : Form
+    public partial class FormOptions : Form
     {
-        public formOptions()
+        public FormOptions()
         {
             InitializeComponent();
             InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
@@ -29,9 +29,9 @@ namespace RouteViewer
 
         internal static DialogResult ShowOptions()
         {
-            formOptions Dialog = new formOptions();
-            DialogResult Result = Dialog.ShowDialog();
-            return Result;
+            FormOptions optionsDialog = new FormOptions();
+            DialogResult dialogResult = optionsDialog.ShowDialog();
+            return dialogResult;
         }
 
         private void formOptions_Shown(object sender, EventArgs e)
@@ -41,14 +41,13 @@ namespace RouteViewer
 
 	    readonly int previousAntialasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
 	    readonly int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
-	    readonly InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
 	    readonly int previousViewingDistance = Interface.CurrentOptions.ViewingDistance;
 	    private bool GraphicsModeChanged = false;
 
         private void button1_Click(object sender, EventArgs e)
         {
 			//Interpolation mode
-			InterpolationMode prevInterpolationMode = Interface.CurrentOptions.Interpolation;
+			InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
 			switch (InterpolationMode.SelectedIndex)
             {
                 case 0:
@@ -83,7 +82,7 @@ namespace RouteViewer
             Interface.CurrentOptions.AntiAliasingLevel = (int)AntialiasingLevel.Value;
             if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialasingLevel)
             {
-                Program.currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
+                Program.Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 	            GraphicsModeChanged = true;
             }
             //Transparency quality
@@ -99,17 +98,11 @@ namespace RouteViewer
 			//Set width and height
 			if (Program.Renderer.Screen.Width != width.Value || Program.Renderer.Screen.Height != height.Value)
 			{
-				if (width.Value >= 300)
+				if (width.Value > 300 && height.Value > 300)
 				{
-					Program.Renderer.Screen.Width = (int) width.Value;
-					Program.currentGameWindow.Width = (int)width.Value;
+					Program.Renderer.SetWindowSize((int)width.Value, (int)height.Value);
+					Program.Renderer.UpdateViewport();
 				}
-				if (height.Value >= 300)
-				{
-					Program.Renderer.Screen.Height = (int) height.Value;
-					Program.currentGameWindow.Height = (int)height.Value;
-				}
-				Program.Renderer.UpdateViewport();
 			}
 			Interface.CurrentOptions.LoadingLogo = checkBoxLogo.Checked;
 			Interface.CurrentOptions.LoadingBackground = checkBoxBackgrounds.Checked;

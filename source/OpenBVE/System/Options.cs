@@ -1,15 +1,18 @@
 using System;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using Formats.OpenBve;
 using LibRender2.MotionBlurs;
 using LibRender2.Overlays;
 using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
-using OpenBveApi.Packages;
 using SoundManager;
+using CompressionType = OpenBveApi.Packages.CompressionType;
+using Path = OpenBveApi.Path;
 
 namespace OpenBve
 {
@@ -106,82 +109,82 @@ namespace OpenBve
 			/// <summary>Creates a new instance of the options class with default values set</summary>
 			internal Options()
 			{
-				this.LanguageCode = "en-US";
-				this.FullscreenMode = false;
-				this.VerticalSynchronization = true;
-				this.WindowWidth = 960;
-				this.WindowHeight = 600;
-				this.FullscreenWidth = 1024;
-				this.FullscreenHeight = 768;
-				this.FullscreenBits = 32;
-				this.UserInterfaceFolder = "Default";
-				this.Interpolation = InterpolationMode.BilinearMipmapped;
-				this.TransparencyMode = TransparencyMode.Quality;
-				this.AnisotropicFilteringLevel = 0;
-				this.AnisotropicFilteringMaximum = 0;
-				this.AntiAliasingLevel = 0;
-				this.ViewingDistance = 600;
-				this.QuadTreeLeafSize = 60;
-				this.MotionBlur = MotionBlurMode.None;
-				this.Toppling = true;
-				this.Collisions = true;
-				this.Derailments = true;
-				this.LoadingSway = false;
-				this.GameMode = GameMode.Normal;
-				this.BlackBox = false;
-				this.UseJoysticks = true;
-				this.JoystickAxisThreshold = 0.0;
-				this.KeyRepeatDelay = 0.5;
-				this.KeyRepeatInterval = 0.1;
+				LanguageCode = "en-US";
+				FullscreenMode = false;
+				VerticalSynchronization = true;
+				WindowWidth = 960;
+				WindowHeight = 600;
+				FullscreenWidth = 1024;
+				FullscreenHeight = 768;
+				FullscreenBits = 32;
+				UserInterfaceFolder = "Default";
+				Interpolation = InterpolationMode.BilinearMipmapped;
+				TransparencyMode = TransparencyMode.Quality;
+				AnisotropicFilteringLevel = 0;
+				AnisotropicFilteringMaximum = 0;
+				AntiAliasingLevel = 0;
+				ViewingDistance = 600;
+				QuadTreeLeafSize = 60;
+				MotionBlur = MotionBlurMode.None;
+				Toppling = true;
+				Collisions = true;
+				Derailments = true;
+				LoadingSway = false;
+				GameMode = GameMode.Normal;
+				BlackBox = false;
+				UseJoysticks = true;
+				JoystickAxisThreshold = 0.0;
+				KeyRepeatDelay = 0.5;
+				KeyRepeatInterval = 0.1;
 				SoundModel = SoundModels.Inverse;
 				SoundRange = SoundRange.Low;
-				this.SoundNumber = 16;
-				this.ShowWarningMessages = true;
-				this.ShowErrorMessages = true;
-				this.ObjectOptimizationBasicThreshold = 10000;
-				this.ObjectOptimizationFullThreshold = 1000;
-				this.ObjectOptimizationVertexCulling = false;
-				this.RouteFolder = "";
-				this.TrainFolder = "";
-				this.RecentlyUsedRoutes = new string[] { };
-				this.RecentlyUsedTrains = new string[] { };
-				this.RecentlyUsedLimit = 10;
-				this.RouteEncodings = new TextEncoding.EncodingValue[] { };
-				this.TrainEncodings = new TextEncoding.EncodingValue[] { };
-				this.MainMenuWidth = 0;
-				this.MainMenuHeight = 0;
-				this.LoadInAdvance = false;
-				this.UnloadUnusedTextures = false;
-				this.TimeAccelerationFactor = 5;
-				this.AllowAxisEB = true;
-				this.TimeTableStyle = TimeTableMode.Default;
-				this.packageCompressionType = CompressionType.Zip;
-				this.RailDriverMPH = true;
-				this.EnableBveTsHacks = true;
-				this.OldTransparencyMode = true;
-				this.KioskMode = false;
-				this.KioskModeTimer = 300;
-				this.EnableInputDevicePlugins = new string[] { };
-				this.CursorFileName = "nk.png";
-				this.Panel2ExtendedMode = false;
-				this.Panel2ExtendedMinSize = 128;
-				this.CurrentXParser = XParsers.NewXParser; //Set to new X parser by default
-				this.CurrentObjParser = ObjParsers.Original; //Set to original Obj parser by default
-				this.CursorHideDelay = 10;
-				this.Accessibility = false;
-				this.ScreenReaderAvailable = false;
-				this.ForceForwardsCompatibleContext = false;
-				this.IsUseNewRenderer = true;
-				this.DailyBuildUpdates = false;
-				this.UseGDIDecoders = false;
-				this.EnableBve5ScriptedTrain = true;
-				this.UserInterfaceScaleFactor = 1;
+				SoundNumber = 16;
+				ShowWarningMessages = true;
+				ShowErrorMessages = true;
+				ObjectOptimizationBasicThreshold = 10000;
+				ObjectOptimizationFullThreshold = 1000;
+				ObjectOptimizationVertexCulling = false;
+				RouteFolder = "";
+				TrainFolder = "";
+				RecentlyUsedRoutes = new string[] { };
+				RecentlyUsedTrains = new string[] { };
+				RecentlyUsedLimit = 10;
+				RouteEncodings = new TextEncoding.EncodingValue[] { };
+				TrainEncodings = new TextEncoding.EncodingValue[] { };
+				MainMenuWidth = 0;
+				MainMenuHeight = 0;
+				LoadInAdvance = false;
+				UnloadUnusedTextures = false;
+				TimeAccelerationFactor = 5;
+				AllowAxisEB = true;
+				TimeTableStyle = TimeTableMode.Default;
+				packageCompressionType = CompressionType.Zip;
+				RailDriverMPH = true;
+				EnableBveTsHacks = true;
+				OldTransparencyMode = true;
+				KioskMode = false;
+				KioskModeTimer = 300;
+				EnableInputDevicePlugins = new string[] { };
+				CursorFileName = "nk.png";
+				Panel2ExtendedMode = false;
+				Panel2ExtendedMinSize = 128;
+				CurrentXParser = XParsers.NewXParser; //Set to new X parser by default
+				CurrentObjParser = ObjParsers.Original; //Set to original Obj parser by default
+				CursorHideDelay = 10;
+				Accessibility = false;
+				ScreenReaderAvailable = false;
+				ForceForwardsCompatibleContext = false;
+				IsUseNewRenderer = true;
+				DailyBuildUpdates = false;
+				UseGDIDecoders = false;
+				EnableBve5ScriptedTrain = true;
+				UserInterfaceScaleFactor = 1;
 				CultureInfo currentCultureInfo = CultureInfo.CurrentCulture;
 				switch (Program.CurrentHost.Platform)
 				{
 					case HostPlatform.AppleOSX:
 						// This gets us a much better Unicode glyph set on Apple
-						this.Font = "Arial Unicode MS";
+						Font = "Arial Unicode MS";
 						break;
 					case HostPlatform.FreeBSD:
 					case HostPlatform.GNULinux:
@@ -196,25 +199,25 @@ namespace OpenBve
 							case "ro-RO":
 							case "hu-HU":
 								// Plain Noto Sans has better Cyrillic glyphs
-								this.Font = "Noto Sans";
+								Font = "Noto Sans";
 								break;
 							case "jp-JP":
 							case "zh-TW":
 							case "zh-CN":
 							case "zh-HK":
 								// For JP / CN, use the Japanese version of Noto Sans
-								this.Font = "Noto Sans CJK JP";
+								Font = "Noto Sans CJK JP";
 								break;
 							case "ko-KR":
 								// Korean version of Noto Sans
-								this.Font = "Noto Sans CJK KR";
+								Font = "Noto Sans CJK KR";
 								break;
 							default:
 								// By default, use the Japanese version of Noto Sans- whilst this lacks some glyphs, it's the best overall
-								this.Font = "Noto Sans CJK JP";
+								Font = "Noto Sans CJK JP";
 								break;
 						}
-						this.FPSLimit = 200;
+						FPSLimit = 200;
 						break;
 					case HostPlatform.WINE:
 						// WINE reports slightly different font names to native
@@ -225,28 +228,28 @@ namespace OpenBve
 							case "ro-RO":
 							case "hu-HU":
 								// Plain Noto Sans has better Cyrillic glyphs
-								this.Font = "Noto Sans Regular";
+								Font = "Noto Sans Regular";
 								break;
 							case "jp-JP":
 							case "zh-TW":
 							case "zh-CN":
 							case "zh-HK":
 								// For JP / CN, use the Japanese version of Noto Sans
-								this.Font = "Noto Sans CJK JP Regular";
+								Font = "Noto Sans CJK JP Regular";
 								break;
 							case "ko-KR":
 								// Korean version of Noto Sans
-								this.Font = "Noto Sans CJK KR Regular";
+								Font = "Noto Sans CJK KR Regular";
 								break;
 							default:
 								// By default, use the Japanese version of Noto Sans- whilst this lacks some glyphs, it's the best overall
-								this.Font = "Noto Sans CJK JP Regular";
+								Font = "Noto Sans CJK JP Regular";
 								break;
 						}
 						break;
 					default:
 						// This is what's set by default for WinForms
-						this.Font = "Microsoft Sans Serif";
+						Font = "Microsoft Sans Serif";
 						break;
 				}
 			}
@@ -266,29 +269,7 @@ namespace OpenBve
 				Builder.AppendLine();
 				Builder.AppendLine("[interface]");
 				Builder.AppendLine("folder = " + UserInterfaceFolder);
-				{
-					string t;
-					switch (TimeTableStyle)
-					{
-						case TimeTableMode.None:
-							t = "none";
-							break;
-						case TimeTableMode.Default:
-							t = "default";
-							break;
-						case TimeTableMode.AutoGenerated:
-							t = "autogenerated";
-							break;
-						case TimeTableMode.PreferCustom:
-							t = "prefercustom";
-							break;
-						default:
-							t = "default";
-							break;
-					}
-
-					Builder.AppendLine("timetablemode = " + t);
-				}
+				Builder.AppendLine("timetablemode = " + TimeTableStyle);
 				Builder.AppendLine("kioskMode = " + (KioskMode ? "true" : "false"));
 				Builder.AppendLine("kioskModeTimer = " + KioskModeTimer);
 				Builder.AppendLine("accessibility = " + (Accessibility ? "true" : "false"));
@@ -313,35 +294,7 @@ namespace OpenBve
 				Builder.AppendLine("uiscalefactor = " + UserInterfaceScaleFactor);
 				Builder.AppendLine();
 				Builder.AppendLine("[quality]");
-				{
-					string t;
-					switch (Interpolation)
-					{
-						case InterpolationMode.NearestNeighbor:
-							t = "nearestNeighbor";
-							break;
-						case InterpolationMode.Bilinear:
-							t = "bilinear";
-							break;
-						case InterpolationMode.NearestNeighborMipmapped:
-							t = "nearestNeighborMipmapped";
-							break;
-						case InterpolationMode.BilinearMipmapped:
-							t = "bilinearMipmapped";
-							break;
-						case InterpolationMode.TrilinearMipmapped:
-							t = "trilinearMipmapped";
-							break;
-						case InterpolationMode.AnisotropicFiltering:
-							t = "anisotropicFiltering";
-							break;
-						default:
-							t = "bilinearMipmapped";
-							break;
-					}
-
-					Builder.AppendLine("interpolation = " + t);
-				}
+				Builder.AppendLine("interpolation = " + Interpolation);
 				Builder.AppendLine("anisotropicFilteringLevel = " + AnisotropicFilteringLevel.ToString(Culture));
 				Builder.AppendLine("anisotropicFilteringMaximum = " + AnisotropicFilteringMaximum.ToString(Culture));
 				Builder.AppendLine("antiAliasingLevel = " + AntiAliasingLevel.ToString(Culture));
@@ -349,26 +302,7 @@ namespace OpenBve
 				Builder.AppendLine("oldtransparencymode = " + (OldTransparencyMode ? "true" : "false"));
 				Builder.AppendLine("viewingDistance = " + ViewingDistance.ToString(Culture));
 				Builder.AppendLine("quadLeafSize = " + QuadTreeLeafSize.ToString(Culture));
-				{
-					string t;
-					switch (MotionBlur)
-					{
-						case MotionBlurMode.Low:
-							t = "low";
-							break;
-						case MotionBlurMode.Medium:
-							t = "medium";
-							break;
-						case MotionBlurMode.High:
-							t = "high";
-							break;
-						default:
-							t = "none";
-							break;
-					}
-
-					Builder.AppendLine("motionBlur = " + t);
-				}
+				Builder.AppendLine("motionBlur = " + MotionBlur);
 				Builder.AppendLine("fpslimit = " + FPSLimit.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[objectOptimization]");
@@ -382,23 +316,7 @@ namespace OpenBve
 				Builder.AppendLine("derailments = " + (Derailments ? "true" : "false"));
 				Builder.AppendLine("loadingsway = " + (LoadingSway ? "true" : "false"));
 				Builder.AppendLine("blackbox = " + (BlackBox ? "true" : "false"));
-				Builder.Append("mode = ");
-				switch (GameMode)
-				{
-					case GameMode.Arcade:
-						Builder.AppendLine("arcade");
-						break;
-					case GameMode.Normal:
-						Builder.AppendLine("normal");
-						break;
-					case GameMode.Expert:
-						Builder.AppendLine("expert");
-						break;
-					default:
-						Builder.AppendLine("normal");
-						break;
-				}
-
+				Builder.AppendLine("mode = " + GameMode);
 				Builder.AppendLine("acceleratedtimefactor = " + TimeAccelerationFactor);
 				Builder.AppendLine("enablebvetshacks = " + (EnableBveTsHacks ? "true" : "false"));
 				Builder.AppendLine("enablebve5scriptedtrain = " + (EnableBve5ScriptedTrain ? "true" : "false"));
@@ -417,54 +335,12 @@ namespace OpenBve
 				Builder.AppendLine("raildrivermph = " + (RailDriverMPH ? "true" : "false"));
 				Builder.AppendLine();
 				Builder.AppendLine("[sound]");
-				Builder.Append("model = ");
-				switch (SoundModel)
-				{
-					case SoundModels.Linear:
-						Builder.AppendLine("linear");
-						break;
-					default:
-						Builder.AppendLine("inverse");
-						break;
-				}
-
-				Builder.Append("range = ");
-				switch (SoundRange)
-				{
-					case SoundRange.Low:
-						Builder.AppendLine("low");
-						break;
-					case SoundRange.Medium:
-						Builder.AppendLine("medium");
-						break;
-					case SoundRange.High:
-						Builder.AppendLine("high");
-						break;
-					default:
-						Builder.AppendLine("low");
-						break;
-				}
-
+				Builder.AppendLine("model = " + SoundModel);
+				Builder.AppendLine("range = " + SoundRange);
 				Builder.AppendLine("number = " + SoundNumber.ToString(Culture));
 				Builder.AppendLine();
 				Builder.AppendLine("[packages]");
-				Builder.Append("compression = ");
-				switch (packageCompressionType)
-				{
-					case CompressionType.Zip:
-						Builder.AppendLine("zip");
-						break;
-					case CompressionType.TarGZ:
-						Builder.AppendLine("gzip");
-						break;
-					case CompressionType.BZ2:
-						Builder.AppendLine("bzip");
-						break;
-					default:
-						Builder.AppendLine("zip");
-						break;
-				}
-
+				Builder.AppendLine("compression = " + packageCompressionType);
 				Builder.AppendLine();
 				Builder.AppendLine("[folders]");
 				Builder.AppendLine("route = " + RouteFolder);
@@ -487,14 +363,14 @@ namespace OpenBve
 				Builder.AppendLine("[routeEncodings]");
 				for (int i = 0; i < RouteEncodings.Length; i++)
 				{
-					Builder.AppendLine(RouteEncodings[i].Codepage.ToString(Culture) + " = " + RouteEncodings[i].Value);
+					Builder.AppendLine(RouteEncodings[i].Codepage + " = " + RouteEncodings[i].Value);
 				}
 
 				Builder.AppendLine();
 				Builder.AppendLine("[trainEncodings]");
 				for (int i = 0; i < TrainEncodings.Length; i++)
 				{
-					Builder.AppendLine(TrainEncodings[i].Codepage.ToString(Culture) + " = " + TrainEncodings[i].Value);
+					Builder.AppendLine(TrainEncodings[i].Codepage + " = " + TrainEncodings[i].Value);
 				}
 
 				Builder.AppendLine();
@@ -516,7 +392,7 @@ namespace OpenBve
 				Builder.AppendLine("panel2extendedminsize = " + Panel2ExtendedMinSize.ToString(Culture));
 				try
 				{
-					System.IO.File.WriteAllText(fileName, Builder.ToString(), new UTF8Encoding(true));
+					File.WriteAllText(fileName, Builder.ToString(), new UTF8Encoding(true));
 				}
 				catch
 				{
@@ -532,580 +408,192 @@ namespace OpenBve
 		{
 			CurrentOptions = new Options();
 			string OptionsDir = Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
-			if (!System.IO.Directory.Exists(OptionsDir))
+			if (!Directory.Exists(OptionsDir))
 			{
-				System.IO.Directory.CreateDirectory(OptionsDir);
+				Directory.CreateDirectory(OptionsDir);
 			}
 			
-			CultureInfo Culture = CultureInfo.InvariantCulture;
-			string File = Path.CombineFile(OptionsDir, "options.cfg");
-			if (!System.IO.File.Exists(File))
+			string configFile = Path.CombineFile(OptionsDir, "options.cfg");
+			if (!File.Exists(configFile))
 			{
 				//Attempt to load and upgrade a prior configuration file
-				File = Path.CombineFile(Program.FileSystem.SettingsFolder, "options.cfg");
+				configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "options.cfg");
 			}
-			if (System.IO.File.Exists(File))
+
+			if (File.Exists(configFile))
 			{
-				// load options
-				string[] Lines = System.IO.File.ReadAllLines(File, new UTF8Encoding());
-				string Section = "";
-				for (int i = 0; i < Lines.Length; i++)
+				ConfigFile<OptionsSection, OptionsKey> cfg = new ConfigFile<OptionsSection, OptionsKey>(File.ReadAllLines(configFile, new UTF8Encoding()), Program.CurrentHost);
+
+				while (cfg.RemainingSubBlocks > 0)
 				{
-					Lines[i] = Lines[i].Trim(new char[] { });
-					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
+					Block<OptionsSection, OptionsKey> block = cfg.ReadNextBlock();
+					switch (block.Key)
 					{
-						if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
-						{
-							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { }).ToLowerInvariant();
-						}
-						else
-						{
-							int j = Lines[i].IndexOf("=", StringComparison.OrdinalIgnoreCase);
-							string Key, Value;
-							if (j >= 0)
+						case OptionsSection.Language:
+							block.TryGetValue(OptionsKey.Code, ref CurrentOptions.LanguageCode);
+							break;
+						case OptionsSection.Interface:
+							block.TryGetValue(OptionsKey.Folder, ref CurrentOptions.UserInterfaceFolder);
+							block.GetEnumValue(OptionsKey.TimetableMode, out CurrentOptions.TimeTableStyle);
+							block.GetValue(OptionsKey.KioskMode, out Interface.CurrentOptions.KioskMode);
+							block.TryGetValue(OptionsKey.KioskModeTimer, ref CurrentOptions.KioskModeTimer);
+							if (CurrentOptions.KioskModeTimer > 1000 || CurrentOptions.KioskModeTimer == 0)
 							{
-								Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-								Value = Lines[i].Substring(j + 1).TrimStart();
+								CurrentOptions.KioskModeTimer = 300;
 							}
-							else
+
+							block.GetValue(OptionsKey.Accessibility, out Interface.CurrentOptions.Accessibility);
+							block.TryGetValue(OptionsKey.Font, ref CurrentOptions.Font);
+							block.GetValue(OptionsKey.DailyBuildUpdates, out Interface.CurrentOptions.DailyBuildUpdates);
+							break;
+						case OptionsSection.Display:
+							block.GetValue(OptionsKey.PreferNativeBackend, out CurrentOptions.PreferNativeBackend);
+							block.GetValue(OptionsKey.Mode, out string m);
+							CurrentOptions.FullscreenMode = string.Compare(m, "fullscreen", StringComparison.OrdinalIgnoreCase) == 0;
+							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth);
+							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight);
+							block.TryGetValue(OptionsKey.FullScreenWidth, ref Interface.CurrentOptions.FullscreenWidth);
+							block.TryGetValue(OptionsKey.FullScreenHeight, ref CurrentOptions.FullscreenHeight);
+							block.TryGetValue(OptionsKey.FullScreenBits, ref CurrentOptions.FullscreenBits);
+							block.TryGetValue(OptionsKey.MainMenuWidth, ref CurrentOptions.MainMenuWidth);
+							block.TryGetValue(OptionsKey.MainMenuHeight, ref CurrentOptions.MainMenuHeight);
+							block.GetValue(OptionsKey.LoadInAdvance, out Interface.CurrentOptions.LoadInAdvance);
+							block.GetValue(OptionsKey.UnloadTextures, out CurrentOptions.UnloadUnusedTextures);
+							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
+							block.GetValue(OptionsKey.ForwardsCompatibleContext, out CurrentOptions.ForceForwardsCompatibleContext);
+							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance);
+							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize);
+							block.TryGetValue(OptionsKey.UIScaleFactor, ref CurrentOptions.UserInterfaceScaleFactor);
+							break;
+						case OptionsSection.Quality:
+							block.GetEnumValue(OptionsKey.Interpolation, out Interface.CurrentOptions.Interpolation);
+							block.TryGetValue(OptionsKey.AnisotropicFilteringMaximum, ref CurrentOptions.AnisotropicFilteringMaximum);
+							block.TryGetValue(OptionsKey.AnisotropicFilteringLevel, ref Interface.CurrentOptions.AnisotropicFilteringLevel);
+							block.TryGetValue(OptionsKey.AntiAliasingLevel, ref Interface.CurrentOptions.AntiAliasingLevel);
+							block.GetEnumValue(OptionsKey.TransparencyMode, out Interface.CurrentOptions.TransparencyMode);
+							block.GetValue(OptionsKey.OldTransparencyMode, out CurrentOptions.OldTransparencyMode);
+							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance);
+							block.TryGetValue(OptionsKey.QuadLeafSize, ref CurrentOptions.QuadTreeLeafSize);
+							block.GetEnumValue(OptionsKey.MotionBlur, out CurrentOptions.MotionBlur);
+							block.GetValue(OptionsKey.FPSLimit, out CurrentOptions.FPSLimit);
+							if (CurrentOptions.FPSLimit < 0)
 							{
-								Key = "";
-								Value = Lines[i];
+								CurrentOptions.FPSLimit = 0; // n.b. 0 is unlimited
 							}
-							switch (Section)
+
+							break;
+						case OptionsSection.ObjectOptimization:
+							block.GetValue(OptionsKey.BasicThreshold, out CurrentOptions.ObjectOptimizationBasicThreshold);
+							block.GetValue(OptionsKey.FullThreshold, out CurrentOptions.ObjectOptimizationFullThreshold);
+							block.GetValue(OptionsKey.VertexCulling, out CurrentOptions.ObjectOptimizationVertexCulling);
+							break;
+						case OptionsSection.Simulation:
+							block.GetValue(OptionsKey.Toppling, out CurrentOptions.Toppling);
+							block.GetValue(OptionsKey.Collisions, out CurrentOptions.Collisions);
+							block.GetValue(OptionsKey.Derailments, out CurrentOptions.Derailments);
+							block.GetValue(OptionsKey.LoadingSway, out CurrentOptions.LoadingSway);
+							block.GetValue(OptionsKey.BlackBox, out CurrentOptions.BlackBox);
+							block.GetEnumValue(OptionsKey.Mode, out CurrentOptions.GameMode);
+							block.GetValue(OptionsKey.AcceleratedTimeFactor, out CurrentOptions.TimeAccelerationFactor);
+							if (CurrentOptions.TimeAccelerationFactor <= 0)
 							{
-								case "language":
-									switch (Key)
-									{
-										case "code":
-											Interface.CurrentOptions.LanguageCode = Value.Length != 0 ? Value : "en-US";
-											break;
-									} break;
-								case "interface":
-									switch (Key)
-									{
-										case "folder":
-											Interface.CurrentOptions.UserInterfaceFolder = Value.Length != 0 ? Value : "Default";
-											break;
-										case "timetablemode":
-											switch (Value.ToLowerInvariant())
-											{
-												case "none":
-													Interface.CurrentOptions.TimeTableStyle = TimeTableMode.None;
-													break;
-												case "default":
-													Interface.CurrentOptions.TimeTableStyle = TimeTableMode.Default;
-													break;
-												case "autogenerated":
-													Interface.CurrentOptions.TimeTableStyle = TimeTableMode.AutoGenerated;
-													break;
-												case "prefercustom":
-													Interface.CurrentOptions.TimeTableStyle = TimeTableMode.PreferCustom;
-													break;
-											}
-											break;
-										case "kioskmode":
-											Interface.CurrentOptions.KioskMode = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
-											break;
-										case "kioskmodetimer":
-											if (!double.TryParse(Value, NumberStyles.Number, Culture, out double d))
-											{
-												d = 300;
-											}
-											if (d > 1000 || d < 0)
-											{
-												d = 300;
-											}
-											Interface.CurrentOptions.KioskModeTimer = d;
-											break;
-										case "accessibility":
-											Interface.CurrentOptions.Accessibility = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
-											break;
-										case "font":
-											Interface.CurrentOptions.Font = Value;
-											break;
-										case "dailybuildupdates":
-											if (Value == "true" || Value == "1")
-											{
-												Interface.CurrentOptions.DailyBuildUpdates = true;
-											}
-											else
-											{
-												Interface.CurrentOptions.DailyBuildUpdates = false;
-											}
-											break;
-									} break;
-								case "display":
-									switch (Key)
-									{
-										case "prefernativebackend":
-											Interface.CurrentOptions.PreferNativeBackend = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
-											break;
-										case "mode":
-											Interface.CurrentOptions.FullscreenMode = string.Compare(Value, "fullscreen", StringComparison.OrdinalIgnoreCase) == 0;
-											break;
-										case "vsync":
-											Interface.CurrentOptions.VerticalSynchronization = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "windowwidth":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
-												{
-													a = 960;
-												}
-												Interface.CurrentOptions.WindowWidth = a;
-											} break;
-										case "windowheight":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
-												{
-													a = 600;
-												}
-												Interface.CurrentOptions.WindowHeight = a;
-											} break;
-										case "fullscreenwidth":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
-												{
-													a = 1024;
-												}
-												Interface.CurrentOptions.FullscreenWidth = a;
-											} break;
-										case "fullscreenheight":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
-												{
-													a = 768;
-												}
-												Interface.CurrentOptions.FullscreenHeight = a;
-											} break;
-										case "fullscreenbits":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
-												{
-													a = 32;
-												}
-												Interface.CurrentOptions.FullscreenBits = a;
-											} break;
-										case "mainmenuwidth":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												Interface.CurrentOptions.MainMenuWidth = a;
-											} break;
-										case "mainmenuheight":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												Interface.CurrentOptions.MainMenuHeight = a;
-											} break;
-										case "loadinadvance":
-											Interface.CurrentOptions.LoadInAdvance = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "unloadtextures":
-											Interface.CurrentOptions.UnloadUnusedTextures = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "isusenewrenderer":
-											Interface.CurrentOptions.IsUseNewRenderer = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "forwardscompatiblecontext":
-											Interface.CurrentOptions.ForceForwardsCompatibleContext = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "uiscalefactor":
-											int.TryParse(Value, NumberStyles.Integer, Culture, out int s);
-											Interface.CurrentOptions.UserInterfaceScaleFactor = s;
-											break;
-									} break;
-								case "quality":
-									switch (Key)
-									{
-										case "interpolation":
-											switch (Value.ToLowerInvariant())
-											{
-												case "nearestneighbor": Interface.CurrentOptions.Interpolation = InterpolationMode.NearestNeighbor; break;
-												case "bilinear": Interface.CurrentOptions.Interpolation = InterpolationMode.Bilinear; break;
-												case "nearestneighbormipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.NearestNeighborMipmapped; break;
-												case "bilinearmipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
-												case "trilinearmipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.TrilinearMipmapped; break;
-												case "anisotropicfiltering": Interface.CurrentOptions.Interpolation = InterpolationMode.AnisotropicFiltering; break;
-												default: Interface.CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
-											} break;
-										case "anisotropicfilteringlevel":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												Interface.CurrentOptions.AnisotropicFilteringLevel = a;
-											} break;
-										case "anisotropicfilteringmaximum":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												Interface.CurrentOptions.AnisotropicFilteringMaximum = a;
-											} break;
-										case "antialiasinglevel":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												Interface.CurrentOptions.AntiAliasingLevel = a;
-											} break;
-										case "transparencymode":
-											switch (Value.ToLowerInvariant())
-											{
-												case "sharp": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Performance; break;
-												case "smooth": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
-												default:
-													{
-														if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
-														{
-															Interface.CurrentOptions.TransparencyMode = (TransparencyMode)a;
-														}
-														else
-														{
-															Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality;
-														}
-														break;
-													}
-											} break;
-										case "oldtransparencymode":
-											Interface.CurrentOptions.OldTransparencyMode = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "viewingdistance":
-											{
-												if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
-												{
-													if (a >= 100 && a <= 10000)
-													{
-														Interface.CurrentOptions.ViewingDistance = a;
-													}
-												}
-											} break;
-										case "quadleafsize":
-											{
-												if (int.TryParse(Value, NumberStyles.Integer, Culture, out int a))
-												{
-													if (a >= 50 && a <= 500)
-													{
-														Interface.CurrentOptions.QuadTreeLeafSize = a;
-													}
-												}
-											} break;
-										case "motionblur":
-											switch (Value.ToLowerInvariant())
-											{
-												case "low": Interface.CurrentOptions.MotionBlur = MotionBlurMode.Low; break;
-												case "medium": Interface.CurrentOptions.MotionBlur = MotionBlurMode.Medium; break;
-												case "high": Interface.CurrentOptions.MotionBlur = MotionBlurMode.High; break;
-												default: Interface.CurrentOptions.MotionBlur = MotionBlurMode.None; break;
-											} break;
-										case "fpslimit":
-											if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int limit) || limit < 0)
-											{
-												limit = 0;
-											}
-											Interface.CurrentOptions.FPSLimit = limit;
-											break;
-									} break;
-								case "objectoptimization":
-									switch (Key)
-									{
-										case "basicthreshold":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												Interface.CurrentOptions.ObjectOptimizationBasicThreshold = a;
-											} break;
-										case "fullthreshold":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												Interface.CurrentOptions.ObjectOptimizationFullThreshold = a;
-											} break;
-										case "vertexCulling":
-											{
-												Interface.CurrentOptions.ObjectOptimizationVertexCulling = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											} break;
-									} break;
-								case "simulation":
-									switch (Key)
-									{
-										case "toppling":
-											Interface.CurrentOptions.Toppling = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "collisions":
-											Interface.CurrentOptions.Collisions = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "derailments":
-											Interface.CurrentOptions.Derailments = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "loadingsway":
-											Interface.CurrentOptions.LoadingSway = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "blackbox":
-											Interface.CurrentOptions.BlackBox = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "mode":
-											switch (Value.ToLowerInvariant())
-											{
-												case "arcade": Interface.CurrentOptions.GameMode = GameMode.Arcade; break;
-												case "normal": Interface.CurrentOptions.GameMode = GameMode.Normal; break;
-												case "expert": Interface.CurrentOptions.GameMode = GameMode.Expert; break;
-												default: Interface.CurrentOptions.GameMode = GameMode.Normal; break;
-											} break;
-										case "acceleratedtimefactor":
-											int.TryParse(Value, NumberStyles.Integer, Culture, out int tf);
-											if (tf <= 0)
-											{
-												tf = 5;
-											}
-											Interface.CurrentOptions.TimeAccelerationFactor = tf;
-											break;
-										case "enablebvetshacks":
-											Interface.CurrentOptions.EnableBveTsHacks = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "enablebve5scriptedtrain":
-											Interface.CurrentOptions.EnableBve5ScriptedTrain = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-									} break;
-								case "controls":
-									switch (Key)
-									{
-										case "usejoysticks":
-											Interface.CurrentOptions.UseJoysticks = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "joystickaxiseb":
-											Interface.CurrentOptions.AllowAxisEB = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "joystickaxisthreshold":
-											{
-												double.TryParse(Value, NumberStyles.Float, Culture, out double a);
-												Interface.CurrentOptions.JoystickAxisThreshold = a;
-											} break;
-										case "keyrepeatdelay":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												if (a <= 0) a = 500;
-												Interface.CurrentOptions.KeyRepeatDelay = 0.001 * a;
-											} break;
-										case "keyrepeatinterval":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												if (a <= 0) a = 100;
-												Interface.CurrentOptions.KeyRepeatInterval = 0.001 * a;
-											} break;
-										case "raildrivermph":
-											Interface.CurrentOptions.RailDriverMPH = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "cursorhidedelay":
-											{
-												double.TryParse(Value, NumberStyles.Float, Culture, out double a);
-												Interface.CurrentOptions.CursorHideDelay = a;
-											}
-											break;
-									} break;
-								case "sound":
-									switch (Key)
-									{
-										case "model":
-											switch (Value.ToLowerInvariant())
-											{
-												case "linear": CurrentOptions.SoundModel = SoundModels.Linear; break;
-												default: CurrentOptions.SoundModel = SoundModels.Inverse; break;
-											}
-											break;
-										case "range":
-											switch (Value.ToLowerInvariant())
-											{
-												case "low": CurrentOptions.SoundRange = SoundRange.Low; break;
-												case "medium": CurrentOptions.SoundRange = SoundRange.Medium; break;
-												case "high": CurrentOptions.SoundRange = SoundRange.High; break;
-												default: CurrentOptions.SoundRange = SoundRange.Low; break;
-											}
-											break;
-										case "number":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												Interface.CurrentOptions.SoundNumber = a < 16 ? 16 : a;
-											} break;
-									} break;
-								case "verbosity":
-									switch (Key)
-									{
-										case "showwarningmessages":
-											Interface.CurrentOptions.ShowWarningMessages = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "showerrormessages":
-											Interface.CurrentOptions.ShowErrorMessages = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "debuglog":
-											Interface.CurrentOptions.GenerateDebugLogging = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-									} break;
-								case "folders":
-									switch (Key)
-									{
-										case "route":
-											Interface.CurrentOptions.RouteFolder = Value;
-											break;
-										case "train":
-											Interface.CurrentOptions.TrainFolder = Value;
-											break;
-									} break;
-								case "packages":
-									switch (Key)
-									{
-										case "compression":
-											switch (Value.ToLowerInvariant())
-											{
-												case "zip":
-													Interface.CurrentOptions.packageCompressionType = CompressionType.Zip;
-													break;
-												case "bzip":
-													Interface.CurrentOptions.packageCompressionType = CompressionType.BZ2;
-													break;
-												case "gzip":
-													Interface.CurrentOptions.packageCompressionType = CompressionType.TarGZ;
-													break;
-											}
-											break;
-									} break;
-								case "recentlyusedroutes":
-									{
-										int n = Interface.CurrentOptions.RecentlyUsedRoutes.Length;
-										Array.Resize(ref Interface.CurrentOptions.RecentlyUsedRoutes, n + 1);
-										Interface.CurrentOptions.RecentlyUsedRoutes[n] = Value;
-									} break;
-								case "recentlyusedtrains":
-									{
-										int n = Interface.CurrentOptions.RecentlyUsedTrains.Length;
-										Array.Resize(ref Interface.CurrentOptions.RecentlyUsedTrains, n + 1);
-										Interface.CurrentOptions.RecentlyUsedTrains[n] = Value;
-									} break;
-								case "routeencodings":
-									{
-										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out int a))
-										{
-											a = Encoding.UTF8.CodePage;
-										}
-										try
-										{
-#pragma warning disable CS0219
-//Used to check that the parsed integer is a valid codepage
-											// ReSharper disable once UnusedVariable
-											Encoding e = Encoding.GetEncoding(a);
-#pragma warning restore CS0219
-										}
-										catch
-										{
-											a = Encoding.UTF8.CodePage;
-										}
-										int n = Interface.CurrentOptions.RouteEncodings.Length;
-										Array.Resize(ref Interface.CurrentOptions.RouteEncodings, n + 1);
-										Interface.CurrentOptions.RouteEncodings[n].Codepage = a;
-										Interface.CurrentOptions.RouteEncodings[n].Value = Value;
-									} break;
-								case "trainencodings":
-									{
-										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out int a))
-										{
-											a = Encoding.UTF8.CodePage;
-										}
-										try
-										{
-#pragma warning disable CS0219
-//Used to check that the parsed integer is a valid codepage
-											// ReSharper disable once UnusedVariable
-											Encoding e = Encoding.GetEncoding(a);
-#pragma warning restore CS0219
-										}
-										catch
-										{
-											a = Encoding.UTF8.CodePage;
-										}
-										int n = Interface.CurrentOptions.TrainEncodings.Length;
-										Array.Resize(ref Interface.CurrentOptions.TrainEncodings, n + 1);
-										Interface.CurrentOptions.TrainEncodings[n].Codepage = a;
-										Interface.CurrentOptions.TrainEncodings[n].Value = Value;
-									} break;
-								case "enableinputdeviceplugins":
-									{
-										int n = Interface.CurrentOptions.EnableInputDevicePlugins.Length;
-										Array.Resize(ref Interface.CurrentOptions.EnableInputDevicePlugins, n + 1);
-										Interface.CurrentOptions.EnableInputDevicePlugins[n] = Value;
-									} break;
-								case "parsers":
-									switch (Key)
-									{
-										case "xobject":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int p) || p < 0 || p > 3)
-												{
-													Interface.CurrentOptions.CurrentXParser = XParsers.Original;
-												}
-												else
-												{
-													Interface.CurrentOptions.CurrentXParser = (XParsers)p;
-												}
-												break;
-											}
-										case "objobject":
-											{
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out int p) || p < 0 || p > 2)
-												{
-													Interface.CurrentOptions.CurrentObjParser = ObjParsers.Original;
-												}
-												else
-												{
-													Interface.CurrentOptions.CurrentObjParser = (ObjParsers)p;
-												}
-												break;
-											}
-										case "gdiplus":
-											Interface.CurrentOptions.UseGDIDecoders = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-									}
-									break;
-								case "touch":
-									switch (Key)
-									{
-										case "cursor":
-											Interface.CurrentOptions.CursorFileName = Value;
-											break;
-										case "panel2extended":
-											Interface.CurrentOptions.Panel2ExtendedMode = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "panel2extendedminsize":
-											{
-												int.TryParse(Value, NumberStyles.Integer, Culture, out int a);
-												Interface.CurrentOptions.Panel2ExtendedMinSize = a;
-											} break;
-									}
-									break;
+								CurrentOptions.TimeAccelerationFactor = 5;
 							}
-						}
-					}
-				}
-			}
-			else
-			{
-				// file not found
-				string Code = CultureInfo.CurrentUICulture.Name;
-				if (string.IsNullOrEmpty(Code)) Code = "en-US";
-				File = Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".xlf");
-				if (System.IO.File.Exists(File))
-				{
-					CurrentOptions.LanguageCode = Code;
-				}
-				else
-				{
-					try
-					{
-						int i = Code.IndexOf("-", StringComparison.Ordinal);
-						if (i > 0)
-						{
-							Code = Code.Substring(0, i);
-							File = Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".xlf");
-							if (System.IO.File.Exists(File))
+
+							block.GetValue(OptionsKey.EnableBVETSHacks, out CurrentOptions.EnableBveTsHacks);
+							block.GetValue(OptionsKey.EnableBVE5ScriptedTrain, out CurrentOptions.EnableBve5ScriptedTrain);
+							break;
+						case OptionsSection.Controls:
+							block.GetValue(OptionsKey.UseJoysticks, out CurrentOptions.UseJoysticks);
+							block.GetValue(OptionsKey.JoystickAxisEB, out CurrentOptions.AllowAxisEB);
+							block.GetValue(OptionsKey.JoystickAxisThreshold, out CurrentOptions.JoystickAxisThreshold);
+							block.GetValue(OptionsKey.KeyRepeatDelay, out int delay);
+							if (delay <= 500) delay = 500;
+							CurrentOptions.KeyRepeatDelay = delay * 0.001;
+							block.GetValue(OptionsKey.KeyRepeatDelay, out int interval);
+							if (interval <= 500) interval = 500;
+							CurrentOptions.KeyRepeatInterval = interval * 0.001;
+							block.GetValue(OptionsKey.RailDriverMPH, out CurrentOptions.RailDriverMPH);
+							block.GetValue(OptionsKey.CursorHideDelay, out CurrentOptions.CursorHideDelay);
+							break;
+						case OptionsSection.Sound:
+							block.GetEnumValue(OptionsKey.Model, out CurrentOptions.SoundModel);
+							block.GetEnumValue(OptionsKey.Range, out CurrentOptions.SoundRange);
+							block.GetValue(OptionsKey.Number, out CurrentOptions.SoundNumber);
+							if (CurrentOptions.SoundNumber < 16) CurrentOptions.SoundNumber = 16;
+							break;
+						case OptionsSection.Verbosity:
+							block.GetValue(OptionsKey.ShowWarningMessages, out CurrentOptions.ShowWarningMessages);
+							block.GetValue(OptionsKey.ShowErrorMessages, out CurrentOptions.ShowErrorMessages);
+							block.GetValue(OptionsKey.DebugLog, out CurrentOptions.GenerateDebugLogging);
+							break;
+						case OptionsSection.Folders:
+							block.GetValue(OptionsKey.Route, out CurrentOptions.RouteFolder);
+							block.GetValue(OptionsKey.Train, out CurrentOptions.TrainFolder);
+							break;
+						case OptionsSection.Packages:
+							block.GetEnumValue(OptionsKey.Compression, out CurrentOptions.packageCompressionType);
+							break;
+						case OptionsSection.RecentlyUsedRoutes:
+							Array.Resize(ref CurrentOptions.RecentlyUsedRoutes, block.RemainingDataValues);
+							int num = 0;
+							while (block.RemainingDataValues > 0)
 							{
-								CurrentOptions.LanguageCode = Code;
+								block.GetNextRawValue(out CurrentOptions.RecentlyUsedRoutes[num]);
+								num++;
 							}
-						}
-					}
-					catch
-					{
-						CurrentOptions.LanguageCode = "en-US";
+
+							break;
+						case OptionsSection.RecentlyUsedTrains:
+							Array.Resize(ref CurrentOptions.RecentlyUsedTrains, block.RemainingDataValues);
+							num = 0;
+							while (num < CurrentOptions.RecentlyUsedTrains.Length)
+							{
+								block.GetNextRawValue(out CurrentOptions.RecentlyUsedTrains[num]);
+								num++;
+							}
+
+							break;
+						case OptionsSection.RouteEncodings:
+							Array.Resize(ref CurrentOptions.RouteEncodings, block.RemainingDataValues);
+							num = 0;
+							while (num < CurrentOptions.RouteEncodings.Length)
+							{
+								block.GetIndexedEncoding(out CurrentOptions.RouteEncodings[num].Codepage, out CurrentOptions.RouteEncodings[num].Value);
+								num++;
+							}
+
+							break;
+						case OptionsSection.TrainEncodings:
+							Array.Resize(ref CurrentOptions.TrainEncodings, block.RemainingDataValues);
+							num = 0;
+							while (num < CurrentOptions.TrainEncodings.Length)
+							{
+								block.GetIndexedEncoding(out CurrentOptions.TrainEncodings[num].Codepage, out CurrentOptions.TrainEncodings[num].Value);
+								num++;
+							}
+
+							break;
+						case OptionsSection.EnableInputDevicePlugins:
+							Array.Resize(ref CurrentOptions.EnableInputDevicePlugins, block.RemainingDataValues);
+							num = 0;
+							while (num < CurrentOptions.EnableInputDevicePlugins.Length)
+							{
+								block.GetNextRawValue(out CurrentOptions.EnableInputDevicePlugins[num]);
+								num++;
+							}
+
+							break;
+						case OptionsSection.Parsers:
+							block.GetEnumValue(OptionsKey.XObject, out Interface.CurrentOptions.CurrentXParser);
+							block.GetEnumValue(OptionsKey.ObjObject, out Interface.CurrentOptions.CurrentObjParser);
+							block.GetValue(OptionsKey.GDIPlus, out Interface.CurrentOptions.UseGDIDecoders);
+							break;
+						case OptionsSection.Touch:
+							block.TryGetValue(OptionsKey.Cursor, ref CurrentOptions.CursorFileName);
+							block.GetValue(OptionsKey.Panel2Extended, out CurrentOptions.Panel2ExtendedMode);
+							block.GetValue(OptionsKey.Panel2ExtendedMinSize, out CurrentOptions.Panel2ExtendedMinSize);
+							break;
 					}
 				}
 			}

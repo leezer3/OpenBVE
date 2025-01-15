@@ -987,7 +987,7 @@ namespace OpenBve
 				}
 
 				// trains ahead
-				for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
+				for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
 				{
 					if (Program.TrainManager.Trains[i] != Train && Program.TrainManager.Trains[i].State == TrainState.Available)
 					{
@@ -1306,7 +1306,7 @@ namespace OpenBve
 				}
 
 				// trains ahead
-				for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
+				for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
 				{
 					if (Program.TrainManager.Trains[i] != Train && Program.TrainManager.Trains[i].State == TrainState.Available)
 					{

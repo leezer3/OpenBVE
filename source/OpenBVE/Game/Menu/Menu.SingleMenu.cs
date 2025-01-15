@@ -250,40 +250,69 @@ namespace OpenBve
 						potentialFiles = new string[] { };
 						directoryList = new string[] { };
 						drives = false;
-						if (SearchDirectory != string.Empty)
+						switch (SearchDirectory)
 						{
-							try
-							{
-								potentialFiles = Directory.GetFiles(SearchDirectory);
-								directoryList = Directory.GetDirectories(SearchDirectory);
-							}
-							catch
-							{
-								// Ignored
-							}
-						}
-						else
-						{
-							DriveInfo[] systemDrives = DriveInfo.GetDrives();
-							directoryList = new string[systemDrives.Length];
-							for (int k = 0; k < systemDrives.Length; k++)
-							{
-								directoryList[k] = systemDrives[k].Name;
-							}
-							drives = true;
+							case "":
+								// show drive list
+								DriveInfo[] systemDrives = DriveInfo.GetDrives();
+								directoryList = new string[systemDrives.Length];
+								for (int k = 0; k < systemDrives.Length; k++)
+								{
+									directoryList[k] = systemDrives[k].Name;
+								}
+								drives = true;
+								Items = new MenuEntry[directoryList.Length + 1];
+								Items[0] = new MenuCaption(menu, SearchDirectory);
+								totalEntries = 1;
+								break;
+							case "/":
+								// root of Linux etc.
+								// Mono seems to show block devices and stuff, but goes wonky if we select them
+								try
+								{
+									potentialFiles = Directory.GetFiles(SearchDirectory);
+									directoryList = Directory.GetDirectories(SearchDirectory);
+								}
+								catch
+								{
+									// Ignored
+								}
+								Items = new MenuEntry[potentialFiles.Length + directoryList.Length + 1];
+								Items[0] = new MenuCaption(menu, SearchDirectory);
+								totalEntries = 1;
+								break;
+							default:
+								// actual directory
+								try
+								{
+									potentialFiles = Directory.GetFiles(SearchDirectory);
+									directoryList = Directory.GetDirectories(SearchDirectory);
+								}
+								catch
+								{
+									// Ignored
+								}
+								Items = new MenuEntry[potentialFiles.Length + directoryList.Length + 2];
+								Items[0] = new MenuCaption(menu, SearchDirectory);
+								Items[1] = new MenuCommand(menu, "...", MenuTag.ParentDirectory, 0);
+								totalEntries = 2;
+								break;
 						}
 						
-						Items = new MenuEntry[potentialFiles.Length + directoryList.Length + 2];
-						Items[0] = new MenuCaption(menu, SearchDirectory);
-						Items[1] = new MenuCommand(menu, "...", MenuTag.ParentDirectory, 0);
-						totalEntries = 2;
 						for (int j = 0; j < directoryList.Length; j++)
 						{
 							DirectoryInfo directoryInfo = new DirectoryInfo(directoryList[j]);
 							if (Program.CurrentHost.Platform != HostPlatform.MicrosoftWindows && directoryInfo.Name[0] == '.')
 							{
+								// hidden folders on non-Windows
 								continue;
 							}
+
+							if (Path.IsInvalidDirectoryName(Program.CurrentHost.Platform, SearchDirectory, directoryInfo.Name))
+							{
+								continue;
+							}
+
 							Items[totalEntries] = new MenuCommand(menu, directoryInfo.Name, MenuTag.Directory, 0);
 							if (drives)
 							{
@@ -490,12 +519,13 @@ namespace OpenBve
 						Align = TextAlignment.TopLeft;
 						break;
 					case MenuType.Tools:         // ask for quit confirmation
-						Items = new MenuEntry[5];
+						Items = new MenuEntry[6];
 						Items[0] = new MenuCaption(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "tools" }));
 						Items[1] = new MenuCommand(menu, "Object Viewer", MenuTag.ObjectViewer, 0);
 						Items[2] = new MenuCommand(menu, "Route Viewer", MenuTag.RouteViewer, 0);
 						Items[3] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "packages", "title" }), MenuTag.Packages, 0);
-						Items[4] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu","back" }), MenuTag.MenuBack, 0);
+						Items[4] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "view_log" }), MenuTag.ViewLog, 0);
+						Items[5] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "back" }), MenuTag.MenuBack, 0);
 						Selection = 1;
 						Align = TextAlignment.TopLeft;
 						break;
@@ -548,6 +578,12 @@ namespace OpenBve
 							//Default train not found or not valid
 							Instance.PushMenu(MenuType.TrainList);
 						}
+						break;
+					case MenuType.Error:
+						Items = new MenuEntry[2];
+						Items[0] = new MenuCaption(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "log_error" }));
+						Items[1] = new MenuCommand(menu, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "menu", "back" }), MenuTag.MenuBack, 0);
+						Selection = 1;
 						break;
 				}
 				

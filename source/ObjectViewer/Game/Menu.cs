@@ -220,7 +220,7 @@ namespace ObjectViewer
 
 		public override bool ProcessMouseMove(int x, int y)
 		{
-			Program.currentGameWindow.CursorVisible = true;
+			Program.Renderer.GameWindow.CursorVisible = true;
 			if (CurrMenu < 0)
 			{
 				return false;

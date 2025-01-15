@@ -48,37 +48,37 @@ namespace Train.OpenBve
 								case "backwards":
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.BottomLeft.Z))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid backwards camera restriction defined for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid backwards camera restriction defined for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 								case "forwards":
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.TopRight.Z))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid forwards camera restriction defined for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid forwards camera restriction defined for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 								case "left":
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.BottomLeft.X))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid left camera restriction defined for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid left camera restriction defined for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 								case "right":
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.TopRight.X))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid right camera restriction defined for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid right camera restriction defined for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 								case "down":
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.BottomLeft.Y))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid down camera restriction defined for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid down camera restriction defined for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 								case "up":
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.TopRight.Y))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid up camera restriction defined for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid up camera restriction defined for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 							}
@@ -106,15 +106,15 @@ namespace Train.OpenBve
 							}
 							catch(Exception ex)
 							{
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "Failed to load the child Brake XML file specified in " +c.InnerText);
-								Plugin.currentHost.AddMessage(MessageType.Error, false, "The error encountered was " + ex);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Failed to load the child Brake XML file specified in " +c.InnerText);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The error encountered was " + ex);
 							}
 						}
 						break;
 					case "length":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double l) | l <= 0.0)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid length defined for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid length defined for Car " + Car + " in XML file " + fileName);
 							break;
 						}
 						Train.Cars[Car].Length = l;
@@ -122,7 +122,7 @@ namespace Train.OpenBve
 					case "width":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double w) | w <= 0.0)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid width defined for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid width defined for Car " + Car + " in XML file " + fileName);
 							break;
 						}
 						Train.Cars[Car].Width = w;
@@ -130,7 +130,7 @@ namespace Train.OpenBve
 					case "height":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double h) | h <= 0.0)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid height defined for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid height defined for Car " + Car + " in XML file " + fileName);
 							break;
 						}
 						Train.Cars[Car].Height = h;
@@ -162,7 +162,7 @@ namespace Train.OpenBve
 					case "mass":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double m) | m <= 0.0)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid mass defined for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid mass defined for Car " + Car + " in XML file " + fileName);
 							break;
 						}
 						Train.Cars[Car].EmptyMass = m;
@@ -171,7 +171,7 @@ namespace Train.OpenBve
 					case "centerofgravityheight":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double cg) | cg <= 0.0)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid CenterOfGravityHeight defined for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid CenterOfGravityHeight defined for Car " + Car + " in XML file " + fileName);
 							break;
 						}
 						Train.Cars[Car].Specs.CenterOfGravityHeight = cg;
@@ -179,7 +179,7 @@ namespace Train.OpenBve
 					case "exposedfrontalarea":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double ef) | ef <= 0.0)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid ExposedFrontalArea defined for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid ExposedFrontalArea defined for Car " + Car + " in XML file " + fileName);
 							break;
 						}
 						Train.Cars[Car].Specs.ExposedFrontalArea = ef;
@@ -188,7 +188,7 @@ namespace Train.OpenBve
 					case "unexposedfrontalarea":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double uf) | uf <= 0.0)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid UnexposedFrontalArea defined for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid UnexposedFrontalArea defined for Car " + Car + " in XML file " + fileName);
 							break;
 						}
 						Train.Cars[Car].Specs.UnexposedFrontalArea = uf;
@@ -197,25 +197,25 @@ namespace Train.OpenBve
 					case "frontaxle":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[Car].FrontAxle.Position))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid front axle position defined for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid front axle position defined for Car " + Car + " in XML file " + fileName);
 						}
 						break;
 					case "rearaxle":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[Car].RearAxle.Position))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid rear axle position defined for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid rear axle position defined for Car " + Car + " in XML file " + fileName);
 						}
 						break;
 					case "object":
 						if (string.IsNullOrEmpty(c.InnerText))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid object path for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid object path for Car " + Car + " in XML file " + fileName);
 							break;
 						}
 						string f = Path.CombineFile(currentPath, c.InnerText);
 						if (System.IO.File.Exists(f))
 						{
-							Plugin.currentHost.LoadObject(f, Encoding.Default, out CarObjects[Car]);
+							Plugin.CurrentHost.LoadObject(f, Encoding.Default, out CarObjects[Car]);
 						}
 						break;
 					case "reversed":
@@ -246,30 +246,29 @@ namespace Train.OpenBve
 									case "frontaxle":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].FrontBogie.FrontAxle.Position))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid front bogie, front axle position defined for Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid front bogie, front axle position defined for Car " + Car + " in XML file " + fileName);
 										}
 										break;
 									case "rearaxle":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].FrontBogie.RearAxle.Position))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid front bogie, rear axle position defined for Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid front bogie, rear axle position defined for Car " + Car + " in XML file " + fileName);
 										}
 										break;
 									case "object":
 										if (string.IsNullOrEmpty(cc.InnerText))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid front bogie object path for Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid front bogie object path for Car " + Car + " in XML file " + fileName);
 											break;
 										}
 										string fb = Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
-											Plugin.currentHost.LoadObject(fb, Encoding.Default, out BogieObjects[Car * 2]);
+											Plugin.CurrentHost.LoadObject(fb, Encoding.Default, out BogieObjects[Car * 2]);
 										}
 										break;
 									case "reversed":
-										int nn;
-										NumberFormats.TryParseIntVb6(cc.InnerText, out nn);
+										NumberFormats.TryParseIntVb6(cc.InnerText, out int nn);
 										if (cc.InnerText.ToLowerInvariant() == "true" || nn == 1)
 										{
 											BogieObjectsReversed[Car * 2] = true;
@@ -289,25 +288,25 @@ namespace Train.OpenBve
 									case "frontaxle":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].RearBogie.FrontAxle.Position))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid rear bogie, front axle position defined for Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid rear bogie, front axle position defined for Car " + Car + " in XML file " + fileName);
 										}
 										break;
 									case "rearaxle":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].RearBogie.RearAxle.Position))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid rear bogie, rear axle position defined for Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid rear bogie, rear axle position defined for Car " + Car + " in XML file " + fileName);
 										}
 										break;
 									case "object":
 										if (string.IsNullOrEmpty(cc.InnerText))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid rear bogie object path for Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid rear bogie object path for Car " + Car + " in XML file " + fileName);
 											break;
 										}
 										string fb = Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
-											Plugin.currentHost.LoadObject(fb, Encoding.Default, out BogieObjects[Car * 2 + 1]);
+											Plugin.CurrentHost.LoadObject(fb, Encoding.Default, out BogieObjects[Car * 2 + 1]);
 										}
 										break;
 									case "reversed":
@@ -325,22 +324,22 @@ namespace Train.OpenBve
 						string[] splitText = c.InnerText.Split(',');
 						if (splitText.Length != 3)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Driver position must have three arguments for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Driver position must have three arguments for Car " + Car + " in XML file " + fileName);
 							break;
 						}
 						Train.Cars[Car].Driver = new Vector3();
 						double driverZ;
 						if (!NumberFormats.TryParseDoubleVb6(splitText[0], out Train.Cars[Car].Driver.X))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Driver position X was invalid for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Driver position X was invalid for Car " + Car + " in XML file " + fileName);
 						}
 						if (!NumberFormats.TryParseDoubleVb6(splitText[1], out Train.Cars[Car].Driver.Y))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Driver position Y was invalid for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Driver position Y was invalid for Car " + Car + " in XML file " + fileName);
 						}
 						if (!NumberFormats.TryParseDoubleVb6(splitText[2], out driverZ))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Driver position X was invalid for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Driver position X was invalid for Car " + Car + " in XML file " + fileName);
 						}
 						Train.Cars[Car].Driver.Z = 0.5 * Train.Cars[Car].Length + driverZ;
 						break;
@@ -351,12 +350,12 @@ namespace Train.OpenBve
 						}
 						Train.Cars[Car].HasInteriorView = true;
 						Train.Cars[Car].CarSections = new CarSection[1];
-						Train.Cars[Car].CarSections[0] = new CarSection(Plugin.currentHost, ObjectType.Overlay, true);
+						Train.Cars[Car].CarSections[0] = new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true);
 
 						string cv = Path.CombineFile(currentPath, c.InnerText);
 						if (!System.IO.File.Exists(cv))
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Interior view file was invalid for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Interior view file was invalid for Car " + Car + " in XML file " + fileName);
 							break;
 						}
 						interiorFile = cv;
@@ -399,37 +398,37 @@ namespace Train.OpenBve
 								case "type":
 									if (!Enum.TryParse(cc.InnerText, true, out type))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Sanders type was invalid for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sanders type was invalid for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 								case "rate":
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out rate))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Sanders application rate was invalid for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sanders application rate was invalid for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 								case "sandlevel":
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out level))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Sand level was invalid for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sand level was invalid for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 								case "numberofshots":
 									if (!NumberFormats.TryParseIntVb6(cc.InnerText, out shots))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Sand level was invalid for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sand level was invalid for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 								case "applicationtime":
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out applicationTime))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Sanders application time was invalid for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sanders application time was invalid for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 								case "activationtime":
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out activationTime))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Sanders activation time was invalid for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sanders activation time was invalid for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 							}
@@ -459,19 +458,19 @@ namespace Train.OpenBve
 								case "interventiontime":
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out activationTime))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice activation time was invalid for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice activation time was invalid for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 								case "type":
 									if (!Enum.TryParse(cc.InnerText, true, out driverSupervisionType))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice type was invalid for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice type was invalid for Car " + Car + " in XML file " + fileName);
 									} 
 									break; 
 								case "requiredstoptime":
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out requiredStopTime))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice required stop time was invalid for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice required stop time was invalid for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 								case "loopingalarm":
@@ -483,13 +482,13 @@ namespace Train.OpenBve
 								case "mode":
 									if (!Enum.TryParse(cc.InnerText, true, out driverSupervisionMode))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice mode was invalid for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice mode was invalid for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 								case "triggermode":
 									if (!Enum.TryParse(cc.InnerText, true, out triggerMode))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice trigger mode was invalid for Car " + Car + " in XML file " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice trigger mode was invalid for Car " + Car + " in XML file " + fileName);
 									}
 									break;
 							}
@@ -577,7 +576,7 @@ namespace Train.OpenBve
 									case "openspeed":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out double os))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
 										}
 										else
 										{
@@ -587,7 +586,7 @@ namespace Train.OpenBve
 									case "closespeed":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out double cs))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
 										}
 										else
 										{
@@ -597,13 +596,13 @@ namespace Train.OpenBve
 									case "width":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out doorWidth))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door width defined for Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid door width defined for Car " + Car + " in XML file " + fileName);
 										}
 										break;
 									case "tolerance":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out doorWidth))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid door closing tolerance defined for Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid door closing tolerance defined for Car " + Car + " in XML file " + fileName);
 										}
 										break;
 								}
@@ -647,28 +646,28 @@ namespace Train.OpenBve
 									case "numberofdrops":
 										if (!NumberFormats.TryParseIntVb6(cc.InnerText, out numDrops))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid number of drops defined for Windscreen in Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid number of drops defined for Windscreen in Car " + Car + " in XML file " + fileName);
 										}
 
 										break;
 									case "wipespeed":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out wipeSpeed))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid wipe speed defined for Windscreen in Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid wipe speed defined for Windscreen in Car " + Car + " in XML file " + fileName);
 										}
 
 										break;
 									case "holdtime":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out holdTime))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid wiper hold time defined for Windscreen in Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid wiper hold time defined for Windscreen in Car " + Car + " in XML file " + fileName);
 										}
 
 										break;
 									case "droplife":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out dropLife))
 										{
-											Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid drop life defined for Windscreen in Car " + Car + " in XML file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid drop life defined for Windscreen in Car " + Car + " in XML file " + fileName);
 										}
 
 										break;
@@ -685,7 +684,7 @@ namespace Train.OpenBve
 												restPosition = WiperPosition.Right;
 												break;
 											default:
-												Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid for Windscreen in Car " + Car + " in XML file " + fileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid for Windscreen in Car " + Car + " in XML file " + fileName);
 												break;
 										}
 
@@ -703,7 +702,7 @@ namespace Train.OpenBve
 												holdPosition = WiperPosition.Right;
 												break;
 											default:
-												Plugin.currentHost.AddMessage(MessageType.Error, false, "WiperHoldPosition is invalid for Windscreen in Car " + Car + " in XML file " + fileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperHoldPosition is invalid for Windscreen in Car " + Car + " in XML file " + fileName);
 												break;
 										}
 
@@ -769,7 +768,7 @@ namespace Train.OpenBve
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))
 				{
-					Plugin.currentHost.LoadObject(interiorFile, Encoding.UTF8, out var currentObject);
+					Plugin.CurrentHost.LoadObject(interiorFile, Encoding.UTF8, out var currentObject);
 					var a = (AnimatedObjectCollection)currentObject;
 					if (a != null)
 					{
@@ -777,7 +776,7 @@ namespace Train.OpenBve
 						{
 							for (int i = 0; i < a.Objects.Length; i++)
 							{
-								Plugin.currentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
+								Plugin.CurrentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
 							}
 							Train.Cars[Car].CarSections[0].Groups[0].Elements = a.Objects;
 							if (Train.Cars[Car].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
@@ -794,7 +793,7 @@ namespace Train.OpenBve
 				}
 				else
 				{
-					Plugin.currentHost.AddMessage(MessageType.Warning, false, "Interior view file is not supported for Car " + Car + " in XML file " + fileName);
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Interior view file is not supported for Car " + Car + " in XML file " + fileName);
 				}
 			}
 

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using OpenBveApi.Math;
+using System;
 using System.Globalization;
+using System.Runtime.InteropServices;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MergeCastWithTypeCheck
 
@@ -139,6 +141,63 @@ namespace OpenBveApi.Colors {
 				return false;
 			}
 			return false;
+		}
+
+		/// <summary>Parses a Color24 stored in a string</summary>
+		/// <param name="stringToParse">The string to parse</param>
+		/// <param name="separator">The separator character</param>
+		/// <param name="Color">The out Color32</param>
+		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <remarks>This will always return a Color32.
+		/// If any part fails parsing, it will be set to 255</remarks>
+		public static bool TryParseColor(string stringToParse, char separator, out Color24 Color)
+		{
+			Color = White;
+			bool success = true;
+			string[] splitString = stringToParse.Split(separator);
+			int i;
+			for (i = 0; i < splitString.Length; i++)
+			{
+				switch (i)
+				{
+					case 0:
+						if (!double.TryParse(splitString[i], out double r) || r < 0 || r > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.R = (byte)r;
+						}
+						break;
+					case 1:
+						if (!double.TryParse(splitString[i], out double g) || g < 0 || g > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.G = (byte)g;
+						}
+						break;
+					case 2:
+						if (!double.TryParse(splitString[i], out double b) || b < 0 || b > 255)
+						{
+							success = false;
+						}
+						else
+						{
+							Color.B = (byte)b;
+						}
+						break;
+				}
+			}
+
+			if (i != 3)
+			{
+				success = false;
+			}
+			return success;
 		}
 
 		/// <summary>Parses a Hexadecimal string into a Color24</summary>
@@ -294,6 +353,9 @@ namespace OpenBveApi.Colors {
 				return hashCode;
 			}
 		}
+
+		/// <summary>Defines the size of the Vector2 struct in bytes.</summary>
+		public static readonly int SizeInBytes = Marshal.SizeOf((object)new Color32());
 
 		// --- read-only fields ---
 		/// <summary>Represents a black color.</summary>

@@ -16,6 +16,7 @@ using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using OpenTK.Graphics.OpenGL;
 using RouteManager2.MessageManager;
 using SoundManager;
 using TrainManager.Trains;
@@ -640,16 +641,16 @@ namespace OpenBve {
 		}
 
 		// ReSharper disable once CoVariantArrayConversion
-		public override AbstractTrain[] Trains => Program.TrainManager.Trains;
+		public override IEnumerable<AbstractTrain> Trains => Program.TrainManager.Trains;
 			
 			
 
 		public override void AddTrain(AbstractTrain ReferenceTrain, AbstractTrain NewTrain, bool Preccedes)
 		{
-			Array.Resize(ref Program.TrainManager.Trains, Program.TrainManager.Trains.Length + 1);
+			
 			int trainIndex = -1;
 			// find index of train within trainmanager array
-			for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
+			for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
 			{
 				if (Program.TrainManager.Trains[i] == ReferenceTrain)
 				{
@@ -665,16 +666,11 @@ namespace OpenBve {
 
 			if (trainIndex == -1)
 			{
-				Program.TrainManager.Trains[Program.TrainManager.Trains.Length - 1] = (TrainBase)NewTrain;
+				Program.TrainManager.Trains.Add((TrainBase)NewTrain);
 			}
 			else
 			{
-				for (int i = Program.TrainManager.Trains.Length - 2; i > trainIndex; i--)
-				{
-					Program.TrainManager.Trains[i + 1] = Program.TrainManager.Trains[i];
-				}
-
-				Program.TrainManager.Trains[trainIndex + 1] = (TrainBase)NewTrain;
+				Program.TrainManager.Trains.Insert(trainIndex, (TrainBase)NewTrain);
 			}
 
 		}
@@ -696,7 +692,7 @@ namespace OpenBve {
 
 			if(Train is TrainBase baseTrain)
 			{
-				for (int i = 0; i < Program.TrainManager.Trains.Length; i++)
+				for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
 				{
 					if (Program.TrainManager.Trains[i] != baseTrain & Program.TrainManager.Trains[i].State == TrainState.Available & baseTrain.Cars.Length > 0)
 					{
@@ -718,7 +714,7 @@ namespace OpenBve {
 		{
 			AbstractTrain closestTrain = null;
 			double trainDistance = double.MaxValue;
-			for (int j = 0; j < Program.TrainManager.Trains.Length; j++)
+			for (int j = 0; j < Program.TrainManager.Trains.Count; j++)
 			{
 				if (Program.TrainManager.Trains[j].State == TrainState.Available)
 				{

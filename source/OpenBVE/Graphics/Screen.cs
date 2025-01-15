@@ -23,7 +23,7 @@ namespace OpenBve
             Program.Renderer.Screen.Height = Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenHeight : Interface.CurrentOptions.WindowHeight;
             Program.Renderer.Screen.Fullscreen = Interface.CurrentOptions.FullscreenMode;
 			//Set a new graphics mode, using 8 bits for R,G,B,A & a 8 bit stencil buffer (Currently unused)
-			GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
+			Program.Renderer.GraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 			if (Interface.CurrentOptions.FullscreenMode)
 			{
 				IList<DisplayResolution> resolutions = DisplayDevice.Default.AvailableResolutions;
@@ -44,7 +44,7 @@ namespace OpenBve
 								 * OS-X is a fickle beast
 								 * In order to get a functioning GL3 context, we appear to need to be running as 64-bit & explicitly specify the forwards compatible flag
 								 */
-								Program.currentGameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, currentGraphicsMode,
+								Program.Renderer.GameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, Program.Renderer.GraphicsMode,
 									GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
 								{
 									Visible = true,
@@ -53,7 +53,7 @@ namespace OpenBve
 							}
 							else
 							{
-								Program.currentGameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, currentGraphicsMode,
+								Program.Renderer.GameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, Program.Renderer.GraphicsMode,
 									GameWindowFlags.Default)
 								{
 									Visible = true,
@@ -95,16 +95,16 @@ namespace OpenBve
 						 * OS-X is a fickle beast
 						 * In order to get a functioning GL3 context, we appear to need to be running as 64-bit & explicitly specify the forwards compatible flag
 						 */
-						Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
-							Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
+						Program.Renderer.GameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
+							Interface.CurrentOptions.WindowHeight, Program.Renderer.GraphicsMode, GameWindowFlags.Default, GraphicsContextFlags.ForwardCompatible)
 						{
 							Visible = true
 						};
 					}
 					else
 					{
-						Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
-							Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default)
+						Program.Renderer.GameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
+							Interface.CurrentOptions.WindowHeight, Program.Renderer.GraphicsMode, GameWindowFlags.Default)
 						{
 							Visible = true
 						};
@@ -123,7 +123,7 @@ namespace OpenBve
 					return;
 				}
 			}
-			if (Program.currentGameWindow == null)
+			if (Program.Renderer.GameWindow == null)
 			{
 				//We should never really get an unspecified error here, but it's good manners to handle all cases
 				MessageBox.Show("An unspecified error occured whilst attempting to launch the graphics subsystem.",
@@ -135,7 +135,7 @@ namespace OpenBve
 			// BUG: Currently disabled- https://github.com/leezer3/OpenBVE/issues/957
 			//Program.currentGameWindow.TargetUpdateFrequency = Interface.CurrentOptions.FPSLimit;
 			//Program.currentGameWindow.TargetRenderFrequency = Interface.CurrentOptions.FPSLimit;
-			Program.currentGameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
+			Program.Renderer.GameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
 			
 		}
 		
@@ -189,16 +189,16 @@ namespace OpenBve
 			            resolutions[i].BitsPerPixel == Interface.CurrentOptions.FullscreenBits)
 			        {
 			            DisplayDevice.Default.ChangeResolution(resolutions[i]);
-			            Program.currentGameWindow.Width = resolutions[i].Width;
-			            Program.currentGameWindow.Height = resolutions[i].Height;
+			            Program.Renderer.GameWindow.Width = resolutions[i].Width;
+			            Program.Renderer.GameWindow.Height = resolutions[i].Height;
 			            Program.Renderer.Screen.Width = Interface.CurrentOptions.FullscreenWidth;
 			            Program.Renderer.Screen.Height = Interface.CurrentOptions.FullscreenHeight;
-                        Program.currentGameWindow.WindowState = WindowState.Fullscreen;
+                        Program.Renderer.GameWindow.WindowState = WindowState.Fullscreen;
 				        break;
 			        }
 			    }
 			    System.Threading.Thread.Sleep(20);
-			    if (Program.currentGameWindow.WindowState != WindowState.Fullscreen)
+			    if (Program.Renderer.GameWindow.WindowState != WindowState.Fullscreen)
 			    {
                     MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","fullscreen_switch1"}) + Environment.NewLine +
                         Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","fullscreen_switch2"}), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
@@ -209,8 +209,8 @@ namespace OpenBve
 			{
                 DisplayDevice.Default.RestoreResolution();
 				Program.Renderer.SetWindowState(WindowState.Normal);
-				Program.currentGameWindow.Width = Interface.CurrentOptions.WindowWidth;
-                Program.currentGameWindow.Height = Interface.CurrentOptions.WindowHeight;
+				Program.Renderer.GameWindow.Width = Interface.CurrentOptions.WindowWidth;
+                Program.Renderer.GameWindow.Height = Interface.CurrentOptions.WindowHeight;
 
                 Program.Renderer.Screen.Width = Interface.CurrentOptions.WindowWidth;
                 Program.Renderer.Screen.Height = Interface.CurrentOptions.WindowHeight;

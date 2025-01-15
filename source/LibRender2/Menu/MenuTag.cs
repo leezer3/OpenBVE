@@ -102,6 +102,8 @@ namespace LibRender2.Menu
 		ObjectViewer,
 		/// <summary>Launches Route Viewer</summary>
 		RouteViewer,
+		/// <summary>Views the previous log file</summary>
+		ViewLog,
 
 		// OBJECT VIEWER
 		/// <summary>Displays a list of objects</summary>
