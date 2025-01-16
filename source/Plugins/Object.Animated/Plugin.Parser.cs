@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.IO;
 using Formats.OpenBve;
 using OpenBveApi.FunctionScripting;
@@ -131,7 +130,6 @@ namespace Plugin
 							RefreshRate = 0.0,
 						};
 						string[] stateFiles = { };
-						double refreshRate = 0;
 						if (Block.GetPathArray(AnimatedKey.States, ',', Folder, ref stateFiles))
 						{
 							Block.GetVector3(AnimatedKey.Position, ',', out Position);
@@ -181,7 +179,7 @@ namespace Plugin
 								}
 							}
 
-							if (Block.GetValue(AnimatedKey.RefreshRate, out refreshRate))
+							if (Block.GetValue(AnimatedKey.RefreshRate, out double refreshRate))
 							{
 								if (refreshRate < 0)
 								{
