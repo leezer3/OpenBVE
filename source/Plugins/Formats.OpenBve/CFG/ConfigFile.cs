@@ -28,6 +28,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -43,7 +44,7 @@ namespace Formats.OpenBve
 	{
 		private readonly List<Block<T1, T2>> subBlocks;
 
-		public ConfigFile(string[] Lines, HostInterface Host, string expectedHeader = null) : base(-1, default, Host)
+		public ConfigFile(string[] lines, HostInterface currentHost, string expectedHeader = null) : base(-1, default, currentHost)
 		{
 			subBlocks = new List<Block<T1, T2>>();
 			List<string> blockLines = new List<string>();
@@ -52,31 +53,32 @@ namespace Formats.OpenBve
 			int previousIdx = -1;
 			T1 previousSection = default(T1);
 
+			// ReSharper disable once InconsistentNaming
 			bool headerOK = string.IsNullOrEmpty(expectedHeader);
 
 			//string 
 
 			int startingLine = 0;
 
-			for (int i = 0; i < Lines.Length; i++)
+			for (int i = 0; i < lines.Length; i++)
 			{
-				int j = Lines[i].IndexOf(';');
+				int j = lines[i].IndexOf(';');
 				if (j >= 0)
 				{
-					Lines[i] = Lines[i].Substring(0, j).Trim();
+					lines[i] = lines[i].Substring(0, j).Trim();
 				}
 				else
 				{
-					Lines[i] = Lines[i].Trim();
+					lines[i] = lines[i].Trim();
 				}
 				if (headerOK == false)
 				{
-					if (!string.IsNullOrEmpty(Lines[i]) && string.Compare(Lines[i], expectedHeader, StringComparison.OrdinalIgnoreCase) == 0)
+					if (!string.IsNullOrEmpty(lines[i]) && string.Compare(lines[i], expectedHeader, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						headerOK = true;
 					}
 				}
-				if (Lines[i].StartsWith("[") && Lines[i].EndsWith("]"))
+				if (lines[i].StartsWith("[") && lines[i].EndsWith("]"))
 				{
 					startingLine = i;
 					if (!headerOK)
@@ -85,7 +87,7 @@ namespace Formats.OpenBve
 						headerOK = true;
 					}
 					// n.b. remove spaces to allow parsing to an enum
-					string sct = Lines[i].Trim().Trim('[', ']').Replace(" ", "");
+					string sct = lines[i].Trim().Trim('[', ']').Replace(" ", "");
 
 					if (char.IsDigit(sct[sct.Length - 1]))
 					{
@@ -128,7 +130,7 @@ namespace Formats.OpenBve
 				{
 					if (addToBlock)
 					{
-						blockLines.Add(Lines[i]);
+						blockLines.Add(lines[i]);
 					}
 				}
 			}
@@ -167,9 +169,9 @@ namespace Formats.OpenBve
 
 	public class ConfigSection<T1, T2> : Block<T1, T2> where T1 : struct, Enum where T2 : struct, Enum
 	{
-		private readonly Dictionary<T2, KeyValuePair<int, string>> keyValuePairs;
+		private readonly ConcurrentDictionary<T2, KeyValuePair<int, string>> keyValuePairs;
 
-		private readonly Dictionary<int, KeyValuePair<int, string>> indexedValues;
+		private readonly ConcurrentDictionary<int, KeyValuePair<int, string>> indexedValues;
 
 		private readonly Queue<string> rawValues;
 		public override Block<T1, T2> ReadNextBlock()
@@ -187,10 +189,10 @@ namespace Formats.OpenBve
 
 		public override int RemainingDataValues => keyValuePairs.Count + indexedValues.Count + rawValues.Count;
 
-		internal ConfigSection(int myIndex, int startingLine, T1 myKey, string[] myLines, HostInterface Host) : base(myIndex, myKey, Host)
+		internal ConfigSection(int myIndex, int startingLine, T1 myKey, string[] myLines, HostInterface currentHost) : base(myIndex, myKey, currentHost)
 		{
-			keyValuePairs = new Dictionary<T2, KeyValuePair<int, string>>();
-			indexedValues = new Dictionary<int, KeyValuePair<int, string>>();
+			keyValuePairs = new ConcurrentDictionary<T2, KeyValuePair<int, string>>();
+			indexedValues = new ConcurrentDictionary<int, KeyValuePair<int, string>>();
 			rawValues = new Queue<string>();
 			for (int i = 0; i < myLines.Length; i++)
 			{
@@ -210,7 +212,7 @@ namespace Formats.OpenBve
 							}
 							else
 							{
-								indexedValues.Add(idx, new KeyValuePair<int, string>(i + startingLine, b));
+								indexedValues.TryAdd(idx, new KeyValuePair<int, string>(i + startingLine, b));
 							}
 
 						}
@@ -222,7 +224,7 @@ namespace Formats.OpenBve
 					}
 					else if (Enum.TryParse(a.Replace(" ", ""), true, out T2 key))
 					{
-						keyValuePairs.Add(key, new KeyValuePair<int, string>(i + startingLine, b));
+						keyValuePairs.TryAdd(key, new KeyValuePair<int, string>(i + startingLine, b));
 					}
 					else
 					{
@@ -242,7 +244,7 @@ namespace Formats.OpenBve
 		public override bool GetVector2(T2 key, char separator, out Vector2 value)
 		{
 			value = Vector2.Null;
-			if (keyValuePairs.TryGetValue(key, out var rawValue))
+			if (keyValuePairs.TryRemove(key, out var rawValue))
 			{
 				string[] splitStrings = rawValue.Value.Split(separator);
 				if (splitStrings.Length > 2)
@@ -265,7 +267,7 @@ namespace Formats.OpenBve
 
 		public override bool TryGetVector2(T2 key, char separator, ref Vector2 value)
 		{
-			if (keyValuePairs.TryGetValue(key, out var rawValue))
+			if (keyValuePairs.TryRemove(key, out var rawValue))
 			{
 				string[] splitStrings = rawValue.Value.Split(separator);
 				if (splitStrings.Length > 2)
@@ -301,7 +303,7 @@ namespace Formats.OpenBve
 		public override bool GetVector3(T2 key, char separator, out Vector3 value)
 		{
 			value = Vector3.Zero;
-			if (keyValuePairs.TryGetValue(key, out var rawValue))
+			if (keyValuePairs.TryRemove(key, out var rawValue))
 			{
 				string[] splitStrings = rawValue.Value.Split(separator);
 				if (splitStrings.Length > 3)
@@ -328,7 +330,7 @@ namespace Formats.OpenBve
 
 		public override bool TryGetVector3(T2 key, char separator, ref Vector3 value)
 		{
-			if (keyValuePairs.TryGetValue(key, out var rawValue))
+			if (keyValuePairs.TryRemove(key, out var rawValue))
 			{
 				string[] splitStrings = rawValue.Value.Split(separator);
 				if (splitStrings.Length > 3)
@@ -355,7 +357,7 @@ namespace Formats.OpenBve
 
 		public override bool TryGetStringArray(T2 key, char separator, ref string[] values)
 		{
-			if (keyValuePairs.TryGetValue(key, out var value))
+			if (keyValuePairs.TryRemove(key, out var value))
 			{
 				values = value.Value.Split(separator);
 				return true;
@@ -366,7 +368,7 @@ namespace Formats.OpenBve
 
 		public override bool GetPathArray(T2 key, char separator, string absolutePath, ref string[] values)
 		{
-			if (keyValuePairs.TryGetValue(key, out var value))
+			if (keyValuePairs.TryRemove(key, out var value))
 			{
 				string[] splitValues = value.Value.Split(separator);
 				if (splitValues.Length > 0)
@@ -402,8 +404,7 @@ namespace Formats.OpenBve
 
 		public override bool GetFunctionScript(T2 key, out AnimationScript function)
 		{
-
-			if (keyValuePairs.TryGetValue(key, out var script))
+			if (keyValuePairs.TryRemove(key, out var script))
 			{
 				try
 				{
@@ -428,7 +429,7 @@ namespace Formats.OpenBve
 
 			foreach (T2 key in keys)
 			{
-				if (keyValuePairs.TryGetValue(key, out var script))
+				if (keyValuePairs.TryRemove(key, out var script))
 				{
 					if (key.ToString().IndexOf("script", StringComparison.InvariantCultureIgnoreCase) != -1)
 					{
@@ -472,7 +473,7 @@ namespace Formats.OpenBve
 
 		public override bool GetPath(T2 key, string absolutePath, out string finalPath)
 		{
-			if (keyValuePairs.TryGetValue(key, out var value))
+			if (keyValuePairs.TryRemove(key, out var value))
 			{
 				if (!Path.ContainsInvalidChars(value.Value))
 				{
@@ -532,8 +533,7 @@ namespace Formats.OpenBve
 			if (indexedValues.Count > 0)
 			{
 				index = indexedValues.ElementAt(0).Key;
-				KeyValuePair<int, string> value = indexedValues.ElementAt(0).Value;
-				indexedValues.Remove(index);
+				indexedValues.TryRemove(index, out var value);
 
 				try
 				{
@@ -560,7 +560,7 @@ namespace Formats.OpenBve
 
 		public override bool TryGetValue(T2 key, ref string stringValue)
 		{
-			if (keyValuePairs.TryGetValue(key, out var value))
+			if (keyValuePairs.TryRemove(key, out var value))
 			{
 				stringValue = value.Value;
 				return true;
@@ -570,7 +570,7 @@ namespace Formats.OpenBve
 
 		public override bool GetValue(T2 key, out string stringValue)
 		{
-			if (keyValuePairs.TryGetValue(key, out var value))
+			if (keyValuePairs.TryRemove(key, out var value))
 			{
 				stringValue = value.Value;
 				return true;
@@ -581,7 +581,7 @@ namespace Formats.OpenBve
 
 		public override bool GetValue(T2 key, out double value)
 		{
-			if (keyValuePairs.TryGetValue(key, out var s))
+			if (keyValuePairs.TryRemove(key, out var s))
 			{
 				if (double.TryParse(s.Value, out value))
 				{
@@ -597,7 +597,7 @@ namespace Formats.OpenBve
 
 		public override bool TryGetValue(T2 key, ref double value)
 		{
-			if (keyValuePairs.TryGetValue(key, out var s))
+			if (keyValuePairs.TryRemove(key, out var s))
 			{
 				if (double.TryParse(s.Value, out double newValue))
 				{
@@ -613,7 +613,7 @@ namespace Formats.OpenBve
 
 		public override bool GetValue(T2 key, out int value)
 		{
-			if (keyValuePairs.TryGetValue(key, out var s))
+			if (keyValuePairs.TryRemove(key, out var s))
 			{
 				if (int.TryParse(s.Value, out value))
 				{
@@ -629,7 +629,7 @@ namespace Formats.OpenBve
 
 		public override bool TryGetValue(T2 key, ref int value)
 		{
-			if (keyValuePairs.TryGetValue(key, out var s))
+			if (keyValuePairs.TryRemove(key, out var s))
 			{
 				if (int.TryParse(s.Value, out int newValue))
 				{
@@ -645,7 +645,7 @@ namespace Formats.OpenBve
 
 		public override bool GetValue(T2 key, out bool value)
 		{
-			if (keyValuePairs.TryGetValue(key, out var s))
+			if (keyValuePairs.TryRemove(key, out var s))
 			{
 				var ss = s.Value.ToLowerInvariant().Trim();
 				if (ss == "1" || ss == "true")
@@ -660,7 +660,7 @@ namespace Formats.OpenBve
 
 		public override bool GetColor24(T2 key, out Color24 value)
 		{
-			if (keyValuePairs.TryGetValue(key, out var color))
+			if (keyValuePairs.TryRemove(key, out var color))
 			{
 				if (Color24.TryParseHexColor(color.Value, out value))
 				{
@@ -680,7 +680,7 @@ namespace Formats.OpenBve
 
 		public override bool TryGetColor24(T2 key, ref Color24 value)
 		{
-			if (keyValuePairs.TryGetValue(key, out var color))
+			if (keyValuePairs.TryRemove(key, out var color))
 			{
 				if (Color24.TryParseHexColor(color.Value, out Color24 newValue))
 				{
@@ -700,7 +700,7 @@ namespace Formats.OpenBve
 
 		public override bool GetEnumValue<T3>(T2 key, out T3 enumValue)
 		{
-			if (keyValuePairs.TryGetValue(key, out var value))
+			if (keyValuePairs.TryRemove(key, out var value))
 			{
 				if (Enum.TryParse(value.Value, true, out enumValue))
 				{
@@ -718,7 +718,7 @@ namespace Formats.OpenBve
 		{
 			index = -1;
 			Suffix = string.Empty;
-			if (keyValuePairs.TryGetValue(key, out var value))
+			if (keyValuePairs.TryRemove(key, out var value))
 			{
 				string s = value.Value.ToLowerInvariant();
 
@@ -783,7 +783,7 @@ namespace Formats.OpenBve
 		public override bool GetEnumValue<T3>(T2 key, out T3 enumValue, out Color32 Color)
 		{
 			Color = Color32.Black;
-			if (keyValuePairs.TryGetValue(key, out var value))
+			if (keyValuePairs.TryRemove(key, out var value))
 			{
 				int colonIndex = value.Value.IndexOf(':');
 				string colorValue = value.Value.Substring(colonIndex + 1);
@@ -814,9 +814,7 @@ namespace Formats.OpenBve
 			if (indexedValues.Count > 0)
 			{
 				int encodingIdx = indexedValues.ElementAt(0).Key;
-				KeyValuePair<int, string> value = indexedValues.ElementAt(0).Value;
-				indexedValues.Remove(encodingIdx);
-				
+				indexedValues.TryRemove(encodingIdx, out var value);
 				if (File.Exists(value.Value))
 				{
 					path = value.Value;
@@ -880,7 +878,7 @@ namespace Formats.OpenBve
 		public override bool GetDamping(T2 key, char separator, out Damping damping)
 		{
 			damping = null;
-			if (keyValuePairs.TryGetValue(key, out var value))
+			if (keyValuePairs.TryRemove(key, out var value))
 			{
 				string[] s = value.Value.Split(separator);
 				if (s.Length == 2)

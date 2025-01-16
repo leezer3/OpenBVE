@@ -226,11 +226,11 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-		protected Block(int myIndex, T1 myKey, HostInterface host)
+		protected Block(int myIndex, T1 myKey, HostInterface currentHost)
 		{
 			Index = myIndex;
 		    Key = myKey;
-		    currentHost = host;
+		    this.currentHost = currentHost;
 	    }
     }
 }
