@@ -435,10 +435,10 @@ namespace Formats.OpenBve
 					{
 						try
 						{
-							string scriptFile = Path.CombineFile(absolutePath, script.Value.Trim());
+							string scriptFile = Path.CombineFile(absolutePath, script.Value.Split('?').First());
 							if (File.Exists(scriptFile))
 							{
-								function = new CSAnimationScript(currentHost, scriptFile);
+								function = new CSAnimationScript(currentHost, Path.CombineDirectory(absolutePath, script.Value, true));
 								return true;
 							}
 							currentHost.AddMessage(MessageType.Warning, false, "Function Script " + script + " was not found in Key " + key + " in Section " + Key + " at line " + script.Key);
