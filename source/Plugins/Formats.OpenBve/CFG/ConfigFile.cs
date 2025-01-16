@@ -173,7 +173,7 @@ namespace Formats.OpenBve
 
 		private readonly ConcurrentDictionary<int, KeyValuePair<int, string>> indexedValues;
 
-		private readonly Queue<string> rawValues;
+		private readonly Queue<KeyValuePair<int, string>> rawValues;
 		public override Block<T1, T2> ReadNextBlock()
 		{
 			currentHost.AddMessage(MessageType.Error, false, "A section in a CFG file cannot contain sub-blocks.");
@@ -193,7 +193,7 @@ namespace Formats.OpenBve
 		{
 			keyValuePairs = new ConcurrentDictionary<T2, KeyValuePair<int, string>>();
 			indexedValues = new ConcurrentDictionary<int, KeyValuePair<int, string>>();
-			rawValues = new Queue<string>();
+			rawValues = new Queue<KeyValuePair<int, string>>();
 			for (int i = 0; i < myLines.Length; i++)
 			{
 				int j = myLines[i].IndexOf("=", StringComparison.Ordinal);
@@ -235,7 +235,7 @@ namespace Formats.OpenBve
 				{
 					if (!string.IsNullOrEmpty(myLines[i]))
 					{
-						rawValues.Enqueue(myLines[i]);
+						rawValues.Enqueue(new KeyValuePair<int, string>(i, myLines[i]));
 					}
 				}
 			}
@@ -832,7 +832,7 @@ namespace Formats.OpenBve
 		{
 			if (rawValues.Count > 0)
 			{
-				s = rawValues.Dequeue();
+				s = rawValues.Dequeue().Value;
 				return true;
 			}
 
@@ -844,12 +844,12 @@ namespace Formats.OpenBve
 		{
 			if (rawValues.Count > 0)
 			{
-				string fileName = rawValues.Dequeue();
-				if (!Path.ContainsInvalidChars(fileName))
+				var fileName = rawValues.Dequeue();
+				if (!Path.ContainsInvalidChars(fileName.Value))
 				{
 					try
 					{
-						finalPath = Path.CombineFile(absolutePath, fileName);
+						finalPath = Path.CombineFile(absolutePath, fileName.Value);
 					}
 					catch
 					{
@@ -861,12 +861,12 @@ namespace Formats.OpenBve
 						return true;
 					}
 					
-					currentHost.AddMessage(MessageType.Warning, false, "File " + fileName + " was not found in Section " + Key);
+					currentHost.AddMessage(MessageType.Warning, false, "File " + fileName + " was not found at Line " + fileName.Key + " in Section " + Key);
 					finalPath = string.Empty;
 					return false;
 				}
 
-				currentHost.AddMessage(MessageType.Warning, false, "Path contains invalid characters for " + fileName + " in Section " + Key);
+				currentHost.AddMessage(MessageType.Warning, false, "Path contains invalid characters for " + fileName + " at line " + fileName.Key + " in Section " + Key);
 				finalPath = string.Empty;
 				return false;
 			}

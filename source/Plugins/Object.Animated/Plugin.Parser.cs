@@ -20,7 +20,6 @@ namespace Plugin
 		/// <returns>The collection of animated objects.</returns>
 		private static AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding)
 		{
-			CultureInfo Culture = CultureInfo.InvariantCulture;
 			AnimatedObjectCollection Result = new AnimatedObjectCollection(currentHost)
 			{
 				Objects = new AnimatedObject[4],
