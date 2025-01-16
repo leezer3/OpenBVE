@@ -50,6 +50,16 @@
     <Prefer32Bit>false</Prefer32Bit>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'GLMenu'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin_debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <FileAlignment>4096</FileAlignment>
+    <DebugType>Full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>6</LangVersion>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Reference Include="System" />
