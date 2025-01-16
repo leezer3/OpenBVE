@@ -185,6 +185,10 @@ namespace Plugin
 								{
 									currentHost.AddMessage(MessageType.Error, false, "RefreshRate is expected to be non-negative in Section " + Block.Key + " in File " + FileName);
 								}
+								else
+								{
+									Result.Objects[ObjectCount].RefreshRate = refreshRate;
+								}
 							}
 
 							Result.Objects[ObjectCount].States = new ObjectState[stateFiles.Length];
