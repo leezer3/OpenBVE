@@ -11,7 +11,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 
-namespace Plugin
+namespace Object.CsvB3d
 {
 	public partial class Plugin
 	{
