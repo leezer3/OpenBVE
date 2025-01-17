@@ -710,22 +710,24 @@ namespace OpenBve {
 			return closestTrain;
 		}
 
-		public override AbstractTrain ClosestTrain(double TrackPosition)
+		public override AbstractTrain ClosestTrain(double trackPosition)
 		{
+			// NOTE: It appears to be possible to produce zero-length trains via poorly written XML
+			//		 Add appropriate guards against this here
 			AbstractTrain closestTrain = null;
 			double trainDistance = double.MaxValue;
 			for (int j = 0; j < Program.TrainManager.Trains.Count; j++)
 			{
-				if (Program.TrainManager.Trains[j].State == TrainState.Available)
+				if (Program.TrainManager.Trains[j].State == TrainState.Available && Program.TrainManager.Trains[j].Cars.Length > 0)
 				{
 					double distance;
-					if (Program.TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
+					if (Program.TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < trackPosition)
 					{
-						distance = TrackPosition - Program.TrainManager.Trains[j].Cars[0].TrackPosition;
+						distance = trackPosition - Program.TrainManager.Trains[j].Cars[0].TrackPosition;
 					}
-					else if (Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > TrackPosition)
+					else if (Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > trackPosition)
 					{
-						distance = Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - TrackPosition;
+						distance = Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - trackPosition;
 					}
 					else
 					{
@@ -742,16 +744,16 @@ namespace OpenBve {
 			for (int j = 0; j < Program.TrainManager.TFOs.Length; j++)
 			{
 				ScriptedTrain scriptedTrain = Program.TrainManager.TFOs[j] as ScriptedTrain;
-				if (scriptedTrain.State == TrainState.Available)
+				if (scriptedTrain.State == TrainState.Available && scriptedTrain.Cars.Length > 0)
 				{
 					double distance;
-					if (scriptedTrain.Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
+					if (scriptedTrain.Cars[0].FrontAxle.Follower.TrackPosition < trackPosition)
 					{
-						distance = TrackPosition - scriptedTrain.Cars[0].TrackPosition;
+						distance = trackPosition - scriptedTrain.Cars[0].TrackPosition;
 					}
-					else if (scriptedTrain.Cars[scriptedTrain.Cars.Length - 1].RearAxle.Follower.TrackPosition > TrackPosition)
+					else if (scriptedTrain.Cars[scriptedTrain.Cars.Length - 1].RearAxle.Follower.TrackPosition > trackPosition)
 					{
-						distance = scriptedTrain.Cars[scriptedTrain.Cars.Length - 1].RearAxle.Follower.TrackPosition - TrackPosition;
+						distance = scriptedTrain.Cars[scriptedTrain.Cars.Length - 1].RearAxle.Follower.TrackPosition - trackPosition;
 					}
 					else
 					{
