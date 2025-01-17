@@ -190,6 +190,11 @@ namespace Train.OpenBve
 							Block.TryGetValue(Panel2Key.Maximum, ref Maximum);
 							Block.TryGetValue(Panel2Key.NaturalFreq, ref NaturalFrequency);
 							Block.TryGetValue(Panel2Key.DampingRatio, ref DampingRatio);
+							if (DampingRatio < 0)
+							{
+								DampingRatio = -DampingRatio;
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DampingRatio is expected to be non-negative in [Needle] in " + PanelFile);
+							}
 							Block.TryGetColor24(Panel2Key.Color, ref Color);
 							Block.GetValue(Panel2Key.Backstop, out bool Backstop);
 							Block.GetValue(Panel2Key.Smoothed, out bool Smoothed);
