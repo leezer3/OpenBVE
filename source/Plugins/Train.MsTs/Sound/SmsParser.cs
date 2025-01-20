@@ -2,6 +2,7 @@
 using SharpCompress.Compressors.Deflate;
 using System.IO;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Sounds;
@@ -14,8 +15,11 @@ namespace Train.MsTs
 	{
 		private static string currentFolder;
 
+		private static string currentFile;
+
 		internal static bool ParseSoundFile(string fileName, ref CarBase Car)
 		{
+			currentFile = fileName;
 			currentFolder = Path.GetDirectoryName(fileName);
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read);
 
@@ -121,8 +125,10 @@ namespace Train.MsTs
 			internal bool CamCam;
 			internal bool PassengerCam;
 			internal bool ExternalCam;
+			internal double Priority;
+			
 		}
-
+		
 
 		private static void ParseBlock(Block block, ref SoundSet currentSoundSet)
 		{
@@ -168,7 +174,7 @@ namespace Train.MsTs
 				case KujuTokenID.Deactivation:
 					// control the conditions under which the sounds in the group are deactivated
 					currentSoundSet.Activation = false;
-					while (block.Position() < block.Length())
+					while (block.Position() < block.Length() - 1)
 					{
 						newBlock = block.ReadSubBlock(true);
 						ParseBlock(newBlock, ref currentSoundSet);
@@ -205,6 +211,130 @@ namespace Train.MsTs
 							ParseBlock(newBlock, ref currentSoundSet);
 						}
 					}
+					break;
+				case KujuTokenID.Stream:
+					while (block.Position() < block.Length() - 1)
+					{
+						newBlock = block.ReadSubBlock(new[] { KujuTokenID.Priority, KujuTokenID.Triggers, KujuTokenID.VolumeCurve, KujuTokenID.Granularity });
+						ParseBlock(newBlock, ref currentSoundSet);
+					}
+					break;
+				case KujuTokenID.Priority:
+					currentSoundSet.Priority = block.ReadSingle();
+					break;
+				case KujuTokenID.Triggers:
+					int numTriggers = block.ReadInt32();
+					for (int i = 0; i < numTriggers; i++)
+					{
+						// two triggers per sound set  (start + stop)
+						newBlock = block.ReadSubBlock(new [] {KujuTokenID.Variable_Trigger, KujuTokenID.Initial_Trigger});
+						ParseBlock(newBlock, ref currentSoundSet);
+					}
+					break;
+				case KujuTokenID.Initial_Trigger:
+					// when initially appears, hence nothing other than StartLoop should be valid
+					newBlock = block.ReadSubBlock(KujuTokenID.StartLoop);
+					ParseBlock(newBlock, ref currentSoundSet);
+					break;
+				case KujuTokenID.StartLoop:
+					numStreams = block.ReadInt32();
+					for (int i = 0; i < numStreams; i++)
+					{
+						newBlock = block.ReadSubBlock(KujuTokenID.File);
+						ParseBlock(newBlock, ref currentSoundSet);
+						newBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
+						ParseBlock(newBlock, ref currentSoundSet);
+					}
+					break;
+				case KujuTokenID.File:
+					string soundFile = block.ReadString();
+					int checkDigit = block.ReadInt32();
+					if (checkDigit != -1)
+					{
+						// Unknown purpose at the minute- set to -1 everywhere
+						throw new Exception();
+					}
+					break;
+				case KujuTokenID.SelectionMethod:
+					KujuTokenID token = block.ReadEnumValue(default(KujuTokenID));
+					switch (token)
+					{
+						case KujuTokenID.SequentialSelection:
+							break;
+						case KujuTokenID.RandomSelection:
+							break;
+					}
+					break;
+				case KujuTokenID.Discrete_Trigger:
+					block.ReadInt32();
+					// 15 - reverserf
+					// 16 - reverserb
+					// 17 - brake+
+					// 18 - brake-
+					// 32 - damper
+					// 33 - blowers
+					// 34 - open cylinder cocks
+					// 36 - open firebox
+					// 44 - heat (shovel sound??)
+					token = block.ReadEnumValue(default(KujuTokenID));
+					if (token != KujuTokenID.PlayOneShot)
+					{
+						throw new Exception("Unexpected enum value " + token + " encounted in SMS file " + currentFile);
+					}
+					numStreams = block.ReadInt32();
+					for (int i = 0; i < numStreams; i++)
+					{
+						newBlock = block.ReadSubBlock(KujuTokenID.File);
+						ParseBlock(newBlock, ref currentSoundSet);
+						newBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
+						ParseBlock(newBlock, ref currentSoundSet);
+					}
+					break;
+				case KujuTokenID.Variable_Trigger:
+					token = block.ReadEnumValue(default(KujuTokenID));
+					switch (token)
+					{
+						case KujuTokenID.StartLoop:
+							break;
+						case KujuTokenID.Speed_Inc_Past:
+							double speedValue = block.ReadSingle();
+							break;
+						case KujuTokenID.Speed_Dec_Past:
+							speedValue = block.ReadSingle();
+							break;
+						default:
+							throw new Exception("Unexpected enum value " + token + " encounted in SMS file " + currentFile);
+
+					}
+					break;
+				case KujuTokenID.VolumeCurve:
+					token = block.ReadEnumValue(default(KujuTokenID));
+					switch (token)
+					{
+						case KujuTokenID.SpeedControlled:
+							newBlock = block.ReadSubBlock(KujuTokenID.CurvePoints);
+							ParseBlock(newBlock, ref currentSoundSet);
+							break;
+						case KujuTokenID.DistanceControlled:
+							break;
+						case KujuTokenID.Variable1Controlled:
+						case KujuTokenID.Variable2Controlled:
+						case KujuTokenID.Variable3Controlled:
+							break;
+						default:
+							throw new Exception("Unexpected enum value " + token + " encounted in SMS file " + currentFile);
+					}
+					break;
+				case KujuTokenID.CurvePoints:
+					int numPoints = block.ReadInt32();
+					for (int i = 0; i < numPoints; i++)
+					{
+						double refenceValue = block.ReadSingle();
+						double volumeValue = block.ReadSingle();
+					}
+					break;
+				case KujuTokenID.Granularity:
+					// presuming this is the step in km/h
 					break;
 			}
 		}
