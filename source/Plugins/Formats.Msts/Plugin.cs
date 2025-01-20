@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Text;
 using OpenBveApi.World;
@@ -74,10 +75,15 @@ namespace OpenBve.Formats.MsTs
 		/// <summary>Reads a string array from the block</summary>
 		public abstract string[] ReadStringArray();
 
-		/// <summary>Reads an array of enum values from the block</summary>
+        /// <summary>Reads an array of enum values from the block</summary>
+        /// <typeparam name="TEnumType">The desired enum</typeparam>
+        /// <returns>An enum array</returns>
+        public abstract TEnumType[] ReadEnumArray<TEnumType>(TEnumType desiredEnumType)  where TEnumType : struct;
+
+		/// <summary>Reads an enum value from the block</summary>
 		/// <typeparam name="TEnumType">The desired enum</typeparam>
 		/// <returns>An enum array</returns>
-		public abstract TEnumType[] ReadEnumArray<TEnumType>(TEnumType desiredEnumType)  where TEnumType : struct;
+		public abstract TEnumType ReadEnumValue<TEnumType>(TEnumType desiredEnumType) where TEnumType : struct;
 
 		/// <summary>Returns the length of the block</summary>
 		public abstract long Length();
@@ -259,6 +265,11 @@ namespace OpenBve.Formats.MsTs
 			throw new NotImplementedException();
 		}
 
+		public override TEnumType ReadEnumValue<TEnumType>(TEnumType desiredEnumType)
+		{
+			throw new NotImplementedException();
+		}
+
 		public override long Length()
 		{
 			return myStream.Length;
@@ -314,6 +325,12 @@ namespace OpenBve.Formats.MsTs
 					myText = myText.Insert(i + 1, " ");
 					i++;
 				}
+
+				if (i < myText.Length - 1 && char.IsWhiteSpace(myText[i]) && char.IsWhiteSpace(myText[i + 1]))
+				{
+					// remove runs of multiple whitespace
+					myText = myText.Remove(i, 1);
+				}
 			}
 			currentPosition = 0;
 		}
@@ -336,6 +353,11 @@ namespace OpenBve.Formats.MsTs
 				{
 					myText = myText.Insert(i + 1, " ");
 					i++;
+				}
+				if (i < myText.Length - 1 && char.IsWhiteSpace(myText[i]) && char.IsWhiteSpace(myText[i + 1]))
+				{
+					// remove runs of multiple whitespace
+					myText = myText.Remove(i, 1);
 				}
 			}
 			Token = token;
@@ -559,6 +581,10 @@ namespace OpenBve.Formats.MsTs
 				{
 					throw new InvalidDataException("Empty sub-block");
 				}
+
+				TextualBlock t = new TextualBlock("");
+				t.Token = KujuTokenID.Skip;
+				return t;
 			}
 
 			KujuTokenID currentToken;
@@ -702,6 +728,11 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			string s = getNextValue();
+			if (s[s.Length -1] == ',')
+			{
+                // SMS files contain comma separated numbers in a textual CurvePoints block
+				s = s.Substring(0, s.Length - 1);
+			}
 			float val;
 			if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
 			{
@@ -809,6 +840,16 @@ namespace OpenBve.Formats.MsTs
 				}
 			}
 			return returnArray;
+		}
+
+		public override TEnumType ReadEnumValue<TEnumType>(TEnumType desiredEnumType)
+		{
+			string s = ReadString();
+			if (!Enum.TryParse(s, true, out TEnumType e))
+			{
+				throw new InvalidDataException("Expected " + s + " to be a value member of the specified enum.");
+			}
+			return e;
 		}
 
 		public override long Length()
