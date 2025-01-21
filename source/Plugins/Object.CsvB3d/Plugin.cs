@@ -6,7 +6,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
-namespace Plugin
+namespace Object.CsvB3d
 {
     public partial class Plugin : ObjectInterface
     {

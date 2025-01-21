@@ -1470,7 +1470,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.RainDrop:
 						// n.b. windscreen may be null if we've changed driver car, or this is used in non XML train
-						if (Train == null || !Train.IsPlayerTrain && Train.Cars[Train.DriverCar].Windscreen != null) {
+						if (Train == null || Train.Cars[Train.DriverCar].Windscreen == null) {
 							Function.Stack[s - 1] = 0.0;
 						} else {
 							int n = (int)Math.Round(Function.Stack[s - 1]);
