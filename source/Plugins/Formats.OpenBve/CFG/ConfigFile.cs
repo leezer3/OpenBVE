@@ -583,7 +583,7 @@ namespace Formats.OpenBve
 		{
 			if (keyValuePairs.TryRemove(key, out var s))
 			{
-				if (double.TryParse(s.Value, out value))
+				if (NumberFormats.TryParseDoubleVb6(s.Value, out value))
 				{
 					return true;
 				}
@@ -599,7 +599,7 @@ namespace Formats.OpenBve
 		{
 			if (keyValuePairs.TryRemove(key, out var s))
 			{
-				if (double.TryParse(s.Value, out double newValue))
+				if (NumberFormats.TryParseDoubleVb6(s.Value, out double newValue))
 				{
 					value = newValue;
 					return true;
