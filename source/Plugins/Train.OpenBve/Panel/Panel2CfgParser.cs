@@ -819,6 +819,18 @@ namespace Train.OpenBve
 				case Panel2Subject.Door:
 					Code = "1 doors -";
 					break;
+				case Panel2Subject.DoorL:
+				case Panel2Subject.DoorR:
+					if (SubjectIndex < Train.NumberOfCars)
+					{
+						Code = SubjectIndex + (Subject == Panel2Subject.DoorL ? " leftdoorsindex ceiling" : " rightdoorsindex ceiling");
+					}
+					else
+					{
+						Plugin.CurrentHost.AddMessage("CarIndex was invalid for " + Subject);
+						return "2";
+					}
+					break;
 				case Panel2Subject.CsC:
 					Code = "constSpeed";
 					break;

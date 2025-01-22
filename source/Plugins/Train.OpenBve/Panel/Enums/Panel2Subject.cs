@@ -20,6 +20,8 @@ namespace Train.OpenBve
 		BP,
 		ER,
 		Door,
+		DoorL,
+		DoorR,
 		CsC,
 		Power,
 		Brake,

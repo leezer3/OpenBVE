@@ -756,12 +756,12 @@ namespace Formats.OpenBve
 					num = s.Substring(3);
 					s = s.Substring(0, 3);
 				}
-				else if (s.StartsWith("doorsl"))
+				else if (s.StartsWith("doorl"))
 				{
 					num = s.Substring(5);
 					s = s.Substring(0, 5);
 				}
-				else if (s.StartsWith("doorsr"))
+				else if (s.StartsWith("doorr"))
 				{
 					num = s.Substring(5);
 					s = s.Substring(0, 5);
