@@ -189,8 +189,7 @@ namespace Train.OpenBve
 							Block.TryGetValue(Panel2Key.Minimum, ref Minimum);
 							Block.TryGetValue(Panel2Key.Maximum, ref Maximum);
 							Block.TryGetValue(Panel2Key.NaturalFreq, ref NaturalFrequency);
-							Block.TryGetValue(Panel2Key.DampingRatio, ref DampingRatio);
-							if (DampingRatio < 0)
+							if(Block.TryGetValue(Panel2Key.DampingRatio, ref DampingRatio) && DampingRatio < 0)
 							{
 								DampingRatio = -DampingRatio;
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DampingRatio is expected to be non-negative in [Needle] in " + PanelFile);
