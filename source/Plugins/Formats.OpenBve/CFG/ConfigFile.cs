@@ -120,7 +120,7 @@ namespace Formats.OpenBve
 
 					if (blockLines.Count > 0)
 					{
-						subBlocks.Add(new ConfigSection<T1, T2>(previousIdx, startingLine, previousSection, blockLines.ToArray(), currentHost));
+						subBlocks.Add(new ConfigSection<T1, T2>(previousIdx, startingLine + 1, previousSection, blockLines.ToArray(), currentHost));
 						blockLines.Clear();
 					}
 					previousSection = currentSection;
@@ -137,7 +137,7 @@ namespace Formats.OpenBve
 			// final block
 			if (blockLines.Count > 0)
 			{
-				subBlocks.Add(new ConfigSection<T1, T2>(idx, startingLine, previousSection, blockLines.ToArray(), currentHost));
+				subBlocks.Add(new ConfigSection<T1, T2>(idx, startingLine + 1, previousSection, blockLines.ToArray(), currentHost));
 			}
 		}
 
