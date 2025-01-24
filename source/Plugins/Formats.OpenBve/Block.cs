@@ -117,7 +117,13 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
-        /// <summary>Unconditionally reads the specified Vector2 from the block</summary>
+		/// <summary>Reads the specified bool from the block, preserving the prior value if not present</summary>
+		public virtual bool TryGetValue(T2 key, ref bool boolValue)
+		{
+			return false;
+		}
+
+		/// <summary>Unconditionally reads the specified Vector2 from the block</summary>
 		public virtual bool GetVector2(T2 key, char separator, out Vector2 value)
 	    {
 			value = Vector2.Null;

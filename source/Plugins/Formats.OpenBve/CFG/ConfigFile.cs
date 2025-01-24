@@ -568,6 +568,20 @@ namespace Formats.OpenBve
 			return false;
 		}
 
+		public override bool TryGetValue(T2 key, ref bool boolValue)
+		{
+			if (keyValuePairs.TryRemove(key, out var s))
+			{
+				var ss = s.Value.ToLowerInvariant().Trim();
+				if (ss == "1" || ss == "true")
+				{
+					boolValue = true;
+					return true;
+				}
+			}
+			return false;
+		}
+
 		public override bool GetValue(T2 key, out string stringValue)
 		{
 			if (keyValuePairs.TryRemove(key, out var value))
