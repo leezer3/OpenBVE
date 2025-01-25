@@ -10,6 +10,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
+using RouteManager2;
 using RouteManager2.MessageManager;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
@@ -1161,6 +1162,31 @@ namespace TrainManager.Trains
 
 			string message = Translations.GetInterfaceString(HostApplication.OpenBve, Front ? new[] { "notification", "couple_front" } : new[] { "notification", "couple_rear" }).Replace("[number]", trainBase.Cars.Length.ToString());
 			TrainManagerBase.currentHost.AddMessage(message, MessageDependency.None, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+		}
+
+		public void ContactSignaller()
+		{
+			Section sct = TrainManagerBase.CurrentRoute.Sections[CurrentSectionIndex].NextSection;
+			if (sct.Type != SectionType.PermissiveValueBased && sct.Type != SectionType.PermissiveIndexBased)
+			{
+				// not a valid section to access
+				string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_access_invalid" });
+			}
+			else
+			{
+				if (sct.IsFree())
+				{
+					// section is free of trains, so can be permissively accessed
+					string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_access_granted" });
+					sct.SignallerPermission = true;
+				}
+				else
+				{
+					// not free, access denied
+					string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_access_denied" });
+					sct.SignallerPermission = false;
+				}
+			}
 		}
 	}
 }

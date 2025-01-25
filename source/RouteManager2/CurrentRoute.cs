@@ -170,7 +170,7 @@ namespace RouteManager2
 			int zeroAspect = 0;
 			bool setToRed = false;
 
-			if (Section.Type == SectionType.ValueBased)
+			if (Section.Type == SectionType.ValueBased || Section.Type == SectionType.PermissiveValueBased)
 			{
 				// value-based
 				zeroAspect = 0;
@@ -312,6 +312,19 @@ namespace RouteManager2
 				setToRed = true;
 			}
 
+			if ((Section.Type == SectionType.PermissiveValueBased || Section.Type == SectionType.PermissiveIndexBased) && Section.SignallerPermission == false)
+			{
+				// with a permissive section, check to see if the *previous* section holds the player train
+				// ignore for AI trains (we'll assume they can contact the signaller silently)
+				for (int i = 0; i < Section.PreviousSection.Trains.Length; i++)
+				{
+					if (Section.PreviousSection.Trains[i].Type == TrainType.LocalPlayerTrain || Section.PreviousSection.Trains[i].Type == TrainType.RemotePlayerTrain)
+					{
+						setToRed = true;
+					}
+				}
+			}
+
 			// free sections
 			int newAspect = -1;
 
@@ -344,7 +357,7 @@ namespace RouteManager2
 			// change aspect
 			if (newAspect == -1)
 			{
-				if (Section.Type == SectionType.ValueBased)
+				if (Section.Type == SectionType.ValueBased || Section.Type == SectionType.PermissiveValueBased)
 				{
 					// value-based
 					Section n = Section.NextSection;

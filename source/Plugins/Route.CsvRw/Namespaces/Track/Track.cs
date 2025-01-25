@@ -461,6 +461,7 @@ namespace CsvRwRouteParser
 					break;
 				case TrackCommand.Section:
 				case TrackCommand.SectionS:
+				case TrackCommand.SectionP:
 				{
 					if (!PreviewOnly)
 					{
@@ -531,7 +532,16 @@ namespace CsvRwRouteParser
 								}
 							}
 
-							Data.Blocks[BlockIndex].Sections[n] = new Section(Data.TrackPosition, aspects, departureStationIndex, valueBased ? SectionType.ValueBased : SectionType.IndexBased);
+							SectionType type;
+							if (valueBased)
+							{
+								type = Command == TrackCommand.SectionP ? SectionType.PermissiveValueBased : SectionType.ValueBased;
+							}
+							else
+							{
+								type = Command == TrackCommand.SectionP ? SectionType.PermissiveIndexBased : SectionType.IndexBased;
+							}
+							Data.Blocks[BlockIndex].Sections[n] = new Section(Data.TrackPosition, aspects, departureStationIndex, type);
 
 
 							CurrentSection++;
