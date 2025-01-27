@@ -1140,6 +1140,7 @@ namespace TrainManager.Trains
 				{
 					Cars[i].Coupler.ConnectedCar = Cars[i + 1];
 				}
+				Cars[i].Index = i;
 			}
 
 			Cars[oldCars].Coupler.CoupleSound.Play(1.0, 1.0, Cars[oldCars], false);
