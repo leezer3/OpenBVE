@@ -1237,17 +1237,12 @@ namespace LibRender2
 			MeshMaterial material = State.Prototype.Mesh.Materials[Face.Material];
 			VertexArrayObject VAO = (VertexArrayObject)State.Prototype.Mesh.VAO;
 
-			if (VAO == null)
-			{
-				// do this here to guarantee that we've got a GL context
-				VAOExtensions.CreateVAO(ref State.Prototype.Mesh, State.Prototype.Dynamic, DefaultShader.VertexLayout, this);
-			}
-			else if (lastVAO != VAO.handle)
+			if (lastVAO != VAO.handle)
 			{
 				VAO.Bind();
 				lastVAO = VAO.handle;
 			}
-			
+
 			if (!OptionBackFaceCulling || (Face.Flags & FaceFlags.Face2Mask) != 0)
 			{
 				GL.Disable(EnableCap.CullFace);
