@@ -17,7 +17,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector2 = OpenBveApi.Math.Vector2;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -164,16 +163,16 @@ namespace ObjectViewer.Graphics
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
 			ResetOpenGlState();
-			List<FaceState> opaqueFaces, alphaFaces;
+			List<Guid> opaqueFaces, alphaFaces;
 			lock (VisibleObjects.LockObject)
 			{
-				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
+				opaqueFaces = new List<Guid>(VisibleObjects.OpaqueFaces);
 				alphaFaces = VisibleObjects.GetSortedPolygons();
 			}
 
-			foreach (FaceState face in opaqueFaces)
+			foreach (Guid face in opaqueFaces)
 			{
-				face.Draw();
+				VisibleObjects.Faces[face].Draw();
 			}
 
 			// alpha face
@@ -185,9 +184,9 @@ namespace ObjectViewer.Graphics
 				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				GL.DepthMask(false);
 
-				foreach (FaceState face in alphaFaces)
+				foreach (Guid face in alphaFaces)
 				{
-					face.Draw();
+					VisibleObjects.Faces[face].Draw();
 				}
 			}
 			else
@@ -196,8 +195,9 @@ namespace ObjectViewer.Graphics
 				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				GL.DepthMask(true);
 
-				foreach (FaceState face in alphaFaces)
+				foreach (Guid faceGuid in alphaFaces)
 				{
+					FaceState face = VisibleObjects.Faces[faceGuid];
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
@@ -212,8 +212,9 @@ namespace ObjectViewer.Graphics
 				GL.DepthMask(false);
 				bool additive = false;
 
-				foreach (FaceState face in alphaFaces)
+				foreach (Guid faceGuid in alphaFaces)
 				{
+					FaceState face = VisibleObjects.Faces[faceGuid];
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
 					{
 						if (!additive)
@@ -251,6 +252,14 @@ namespace ObjectViewer.Graphics
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			RenderOverlays(timeElapsed);
 			OptionLighting = true;
+			lock (VisibleObjects.LockObject)
+			{
+				for (int i = 0; i < VisibleObjects.FacesQueuedForRemoval.Count; i++)
+				{
+					VisibleObjects.Faces.Remove(VisibleObjects.FacesQueuedForRemoval[i]);
+				}
+				VisibleObjects.FacesQueuedForRemoval.Clear();
+			}
 		}
 
 		private void RenderOverlays(double timeElapsed)

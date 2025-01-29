@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Objects;
+﻿using System;
+using OpenBveApi.Objects;
 
 namespace LibRender2.Objects
 {
@@ -12,11 +13,14 @@ namespace LibRender2.Objects
 		/// <summary>Holds the reference to the base renderer</summary>
 		public readonly BaseRenderer Renderer;
 
+		public Guid Guid;
+
 		public FaceState(ObjectState _object, MeshFace face, BaseRenderer renderer)
 		{
 			Object = _object;
 			Face = face;
 			Renderer = renderer;
+			Guid = Guid.NewGuid();
 			if (Object.Prototype.Mesh.VAO == null && !Renderer.ForceLegacyOpenGL)
 			{
 				VAOExtensions.CreateVAO(ref Object.Prototype.Mesh, Object.Prototype.Dynamic, Renderer.DefaultShader.VertexLayout, Renderer);

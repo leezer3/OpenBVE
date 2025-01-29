@@ -19,15 +19,14 @@ namespace LibRender2.Objects
 		public readonly QuadTree quadTree;
 
 		private readonly List<ObjectState> myObjects;
-		private readonly List<FaceState> myOpaqueFaces;
-		private readonly List<FaceState> myAlphaFaces;
-		private readonly List<FaceState> myOverlayOpaqueFaces;
-		private List<FaceState> myOverlayAlphaFaces;
 		public readonly ReadOnlyCollection<ObjectState> Objects;
-		public readonly ReadOnlyCollection<FaceState> OpaqueFaces;  // StaticOpaque and DynamicOpaque
-		public readonly ReadOnlyCollection<FaceState> OverlayOpaqueFaces;
-		public readonly ReadOnlyCollection<FaceState> AlphaFaces;  // DynamicAlpha
-		public ReadOnlyCollection<FaceState> OverlayAlphaFaces;
+		public Dictionary<Guid, FaceState> Faces;
+
+		public List<Guid> AlphaFaces;
+		public List<Guid> OpaqueFaces;
+		public List<Guid> OverlayOpaqueFaces;
+		public List<Guid> OverlayAlphaFaces;
+		public List<Guid> FacesQueuedForRemoval;
 
 		public readonly object LockObject = new object();
 
@@ -35,16 +34,14 @@ namespace LibRender2.Objects
 		{
 			renderer = Renderer;
 			myObjects = new List<ObjectState>();
-			myOpaqueFaces = new List<FaceState>();
-			myAlphaFaces = new List<FaceState>();
-			myOverlayOpaqueFaces = new List<FaceState>();
-			myOverlayAlphaFaces = new List<FaceState>();
-
+			Faces = new Dictionary<Guid, FaceState>();
+			AlphaFaces = new List<Guid>();
+			OpaqueFaces = new List<Guid>();
+			OverlayAlphaFaces = new List<Guid>();
+			OverlayOpaqueFaces = new List<Guid>();
+			FacesQueuedForRemoval = new List<Guid>();
 			Objects = myObjects.AsReadOnly();
-			OpaqueFaces = myOpaqueFaces.AsReadOnly();
-			AlphaFaces = myAlphaFaces.AsReadOnly();
-			OverlayOpaqueFaces = myOverlayOpaqueFaces.AsReadOnly();
-			OverlayAlphaFaces = myOverlayAlphaFaces.AsReadOnly();
+
 			quadTree = new QuadTree(renderer.currentOptions.ViewingDistance);
 		}
 
@@ -66,10 +63,10 @@ namespace LibRender2.Objects
 				if (myObjects.Contains(state))
 				{
 					myObjects.Remove(state);
-					myOpaqueFaces.RemoveAll(x => x.Object == state);
-					myAlphaFaces.RemoveAll(x => x.Object == state);
-					myOverlayOpaqueFaces.RemoveAll(x => x.Object == state);
-					myOverlayAlphaFaces.RemoveAll(x => x.Object == state);
+					OpaqueFaces.RemoveAll(x => Faces[x].Object == state);
+					AlphaFaces.RemoveAll(x => Faces[x].Object == state);
+					OverlayOpaqueFaces.RemoveAll(x => Faces[x].Object == state);
+					OverlayAlphaFaces.RemoveAll(x => Faces[x].Object == state);
 				}	
 			}
 			
@@ -80,10 +77,10 @@ namespace LibRender2.Objects
 			lock (LockObject)
 			{
 				myObjects.Clear();
-				myOpaqueFaces.Clear();
-				myAlphaFaces.Clear();
-				myOverlayOpaqueFaces.Clear();
-				myOverlayAlphaFaces.Clear();
+				OpaqueFaces.Clear();
+				AlphaFaces.Clear();
+				OverlayAlphaFaces.Clear();
+				OverlayOpaqueFaces.Clear();
 			}
 		}
 
@@ -217,21 +214,23 @@ namespace LibRender2.Objects
 					}
 				}
 				
-				List<FaceState> list;
+				List<Guid> list;
 
 				switch (Type)
 				{
 					case ObjectType.Static:
 					case ObjectType.Dynamic:
-						list = alpha ? myAlphaFaces : myOpaqueFaces;
+						list = alpha ? AlphaFaces : OpaqueFaces;
 						break;
 					case ObjectType.Overlay:
-						list = alpha ? myOverlayAlphaFaces : myOverlayOpaqueFaces;
+						list = alpha ? OverlayAlphaFaces : OverlayOpaqueFaces;
 						break;
 					default:
 						throw new ArgumentOutOfRangeException(nameof(Type), Type, null);
 				}
 
+				FaceState faceState = new FaceState(State, face, renderer);
+				Faces.Add(faceState.Guid, faceState);
 				lock (LockObject)
 				{
 					if (!alpha)
@@ -245,22 +244,22 @@ namespace LibRender2.Objects
 						 */
 						if (list.Count == 0)
 						{
-							list.Add(new FaceState(State, face, renderer));
+							list.Add(faceState.Guid);
 						}
 						else
 						{
 							for (int i = 0; i < list.Count; i++)
 							{
 
-								if (list[i].Object.Prototype == State.Prototype)
+								if (Faces[list[i]].Object.Prototype == State.Prototype)
 								{
-									list.Insert(i, new FaceState(State, face, renderer));
+									list.Insert(i, faceState.Guid);
 									break;
 								}
 
 								if (i == list.Count - 1)
 								{
-									list.Add(new FaceState(State, face, renderer));
+									list.Add(faceState.Guid);
 									break;
 								}
 							}
@@ -271,7 +270,7 @@ namespace LibRender2.Objects
 						/*
 						 * Alpha faces should be inserted at the end of the list- We're going to sort it anyway so it makes no odds
 						 */
-						list.Add(new FaceState(State, face, renderer));
+						list.Add(faceState.Guid);
 					}
 				}
 			}
@@ -282,37 +281,35 @@ namespace LibRender2.Objects
 			RemoveObject(State);
 		}
 
-		public List<FaceState> GetSortedPolygons(bool overlay = false)
+		public List<Guid> GetSortedPolygons(bool overlay = false)
 		{
 			if (overlay)
 			{
-				myOverlayAlphaFaces = GetSortedPolygons(myOverlayAlphaFaces.AsReadOnly());
-				OverlayAlphaFaces = myOverlayAlphaFaces.AsReadOnly();
-				return OverlayAlphaFaces.ToList();
+				return GetSortedPolygons(OverlayAlphaFaces);
 			}
 			return GetSortedPolygons(AlphaFaces);
 		}
 
-		private List<FaceState> GetSortedPolygons(ReadOnlyCollection<FaceState> faces)
+		private List<Guid> GetSortedPolygons(List<Guid> faces)
 		{
 			// calculate distance
 			double[] distances = new double[faces.Count];
 
 			Parallel.For(0, faces.Count, i =>
 			{
-				if (faces[i].Face.Vertices.Length >= 3)
+				if (Faces.ContainsKey(faces[i]) && Faces[faces[i]].Face.Vertices.Length >= 3)
 				{
-					Vector4 v0 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[0].Index].Coordinates, 1.0);
-					Vector4 v1 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[1].Index].Coordinates, 1.0);
-					Vector4 v2 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[2].Index].Coordinates, 1.0);
+					Vector4 v0 = new Vector4(Faces[faces[i]].Object.Prototype.Mesh.Vertices[Faces[faces[i]].Face.Vertices[0].Index].Coordinates, 1.0);
+					Vector4 v1 = new Vector4(Faces[faces[i]].Object.Prototype.Mesh.Vertices[Faces[faces[i]].Face.Vertices[1].Index].Coordinates, 1.0);
+					Vector4 v2 = new Vector4(Faces[faces[i]].Object.Prototype.Mesh.Vertices[Faces[faces[i]].Face.Vertices[2].Index].Coordinates, 1.0);
 					Vector4 w1 = v1 - v0;
 					Vector4 w2 = v2 - v0;
 					v0.Z *= -1.0;
 					w1.Z *= -1.0;
 					w2.Z *= -1.0;
-					v0 = Vector4.Transform(v0, faces[i].Object.ModelMatrix);
-					w1 = Vector4.Transform(w1, faces[i].Object.ModelMatrix);
-					w2 = Vector4.Transform(w2, faces[i].Object.ModelMatrix);
+					v0 = Vector4.Transform(v0, Faces[faces[i]].Object.ModelMatrix);
+					w1 = Vector4.Transform(w1, Faces[faces[i]].Object.ModelMatrix);
+					w2 = Vector4.Transform(w2, Faces[faces[i]].Object.ModelMatrix);
 					v0.Z *= -1.0;
 					w1.Z *= -1.0;
 					w2.Z *= -1.0;

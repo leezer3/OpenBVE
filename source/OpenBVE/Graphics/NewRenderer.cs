@@ -251,18 +251,19 @@ namespace OpenBve.Graphics
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
 			ResetOpenGlState();
-			List<FaceState> opaqueFaces, alphaFaces, overlayOpaqueFaces, overlayAlphaFaces;
+
+			List<Guid> opaqueFaces, alphaFaces, overlayOpaqueFaces, overlayAlphaFaces;
 			lock (VisibleObjects.LockObject)
 			{
-				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
+				opaqueFaces = new List<Guid>(VisibleObjects.OpaqueFaces);
 				alphaFaces = VisibleObjects.GetSortedPolygons();
-				overlayOpaqueFaces = VisibleObjects.OverlayOpaqueFaces.ToList();
-				overlayAlphaFaces = VisibleObjects.GetSortedPolygons(true);
+				overlayOpaqueFaces = new List<Guid>(VisibleObjects.OverlayOpaqueFaces);
+				overlayAlphaFaces = new List<Guid>(VisibleObjects.OverlayAlphaFaces);
 			}
-			
-			foreach (FaceState face in opaqueFaces)
+
+			foreach (Guid face in opaqueFaces)
 			{
-				face.Draw();
+				VisibleObjects.Faces[face].Draw();
 			}
 
 			// alpha face
@@ -274,9 +275,9 @@ namespace OpenBve.Graphics
 				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				GL.DepthMask(false);
 
-				foreach (FaceState face in alphaFaces)
+				foreach (Guid face in alphaFaces)
 				{
-					face.Draw();
+					VisibleObjects.Faces[face].Draw();
 				}
 			}
 			else
@@ -285,8 +286,9 @@ namespace OpenBve.Graphics
 				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				GL.DepthMask(true);
 
-				foreach (FaceState face in alphaFaces)
+				foreach (Guid faceGuid in alphaFaces)
 				{
+					FaceState face = VisibleObjects.Faces[faceGuid];
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
@@ -301,8 +303,9 @@ namespace OpenBve.Graphics
 				GL.DepthMask(false);
 				bool additive = false;
 
-				foreach (FaceState face in alphaFaces)
+				foreach (Guid faceGuid in alphaFaces)
 				{
+					FaceState face = VisibleObjects.Faces[faceGuid];
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
 					{
 						if (!additive)
@@ -382,9 +385,9 @@ namespace OpenBve.Graphics
 				
 
 				// overlay opaque face
-				foreach (FaceState face in overlayOpaqueFaces)
+				foreach (Guid face in overlayOpaqueFaces)
 				{
-					face.Draw();
+					VisibleObjects.Faces[face].Draw();
 				}
 
 				// overlay alpha face
@@ -395,9 +398,9 @@ namespace OpenBve.Graphics
 					SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 					GL.DepthMask(false);
 
-					foreach (FaceState face in overlayAlphaFaces)
+					foreach (Guid face in overlayAlphaFaces)
 					{
-						face.Draw();
+						VisibleObjects.Faces[face].Draw();
 					}
 				}
 				else
@@ -406,8 +409,9 @@ namespace OpenBve.Graphics
 					SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 					GL.DepthMask(true);
 
-					foreach (FaceState face in overlayAlphaFaces)
+					foreach (Guid faceGuid in overlayAlphaFaces)
 					{
+						FaceState face = VisibleObjects.Faces[faceGuid];
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
 						{
 							if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
@@ -422,8 +426,9 @@ namespace OpenBve.Graphics
 					GL.DepthMask(false);
 					bool additive = false;
 
-					foreach (FaceState face in overlayAlphaFaces)
+					foreach (Guid faceGuid in overlayAlphaFaces)
 					{
+						FaceState face = VisibleObjects.Faces[faceGuid];
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
 						{
 							if (!additive)
@@ -468,9 +473,9 @@ namespace OpenBve.Graphics
 				UnsetAlphaFunc();
 				GL.Disable(EnableCap.DepthTest);
 				GL.DepthMask(false);
-				foreach (FaceState face in overlayAlphaFaces)
+				foreach (Guid face in overlayAlphaFaces)
 				{
-					face.Draw();
+					VisibleObjects.Faces[face].Draw();
 				}
 			}
 			// render touch
@@ -484,6 +489,14 @@ namespace OpenBve.Graphics
 			GL.Disable(EnableCap.DepthTest);
 			overlays.Render(RealTimeElapsed);
 			OptionLighting = true;
+			lock (VisibleObjects.LockObject)
+			{
+				for (int i = 0; i < VisibleObjects.FacesQueuedForRemoval.Count; i++)
+				{
+					VisibleObjects.Faces.Remove(VisibleObjects.FacesQueuedForRemoval[i]);
+				}
+				VisibleObjects.FacesQueuedForRemoval.Clear();
+			}
 		}
 
 		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)

@@ -205,16 +205,17 @@ namespace RouteViewer
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
 			ResetOpenGlState();
-			List<FaceState> opaqueFaces, alphaFaces;
+
+			List<Guid> opaqueFaces, alphaFaces;
 			lock (VisibleObjects.LockObject)
 			{
-				opaqueFaces = VisibleObjects.OpaqueFaces.ToList();
+				opaqueFaces = new List<Guid>(VisibleObjects.OpaqueFaces);
 				alphaFaces = VisibleObjects.GetSortedPolygons();
 			}
-			
-			foreach (FaceState face in opaqueFaces)
+
+			foreach (Guid face in opaqueFaces)
 			{
-				face.Draw();
+				VisibleObjects.Faces[face].Draw();
 			}
 
 			// alpha face
@@ -226,9 +227,9 @@ namespace RouteViewer
 				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				GL.DepthMask(false);
 
-				foreach (FaceState face in alphaFaces)
+				foreach (Guid face in alphaFaces)
 				{
-					face.Draw();
+					VisibleObjects.Faces[face].Draw();
 				}
 			}
 			else
@@ -237,8 +238,9 @@ namespace RouteViewer
 				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				GL.DepthMask(true);
 
-				foreach (FaceState face in alphaFaces)
+				foreach (Guid faceGuid in alphaFaces)
 				{
+					FaceState face = VisibleObjects.Faces[faceGuid];
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Normal && face.Object.Prototype.Mesh.Materials[face.Face.Material].GlowAttenuationData == 0)
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
@@ -253,8 +255,9 @@ namespace RouteViewer
 				GL.DepthMask(false);
 				bool additive = false;
 
-				foreach (FaceState face in alphaFaces)
+				foreach (Guid faceGuid in alphaFaces)
 				{
+					FaceState face = VisibleObjects.Faces[faceGuid];
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
 					{
 						if (!additive)
