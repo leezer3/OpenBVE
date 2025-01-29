@@ -61,7 +61,7 @@ namespace LibRender2
 		{
 			if (vbo != null)
 			{
-				UnBind();
+				Release();
 				vbo.Dispose();
 				Bind();
 			}
@@ -79,7 +79,7 @@ namespace LibRender2
 		{
 			if (ibo != null)
 			{
-				UnBind();
+				Release();
 				ibo.Dispose();
 				Bind();
 			}
@@ -119,9 +119,9 @@ namespace LibRender2
 		}
 
 		/// <summary>
-		/// Unbinds the VAO deactivating the VAO from use
+		/// Releases the VAO
 		/// </summary>
-		public void UnBind()
+		public void Release()
 		{
 			GL.BindVertexArray(0);
 			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
@@ -200,7 +200,7 @@ namespace LibRender2
 				}
 
 				VertexArrayObject VAO = (VertexArrayObject)mesh.VAO;
-				VAO?.UnBind();
+				VAO?.Release();
 				VAO?.Dispose();
 
 				VAO = new VertexArrayObject();
@@ -217,10 +217,10 @@ namespace LibRender2
 				}
 
 				VAO.SetAttributes(vertexLayout);
-				VAO.UnBind();
+				VAO.Release();
 				mesh.VAO = VAO;
 				VertexArrayObject NormalsVAO = (VertexArrayObject)mesh.NormalsVAO;
-				NormalsVAO?.UnBind();
+				NormalsVAO?.Release();
 				NormalsVAO?.Dispose();
 
 				NormalsVAO = new VertexArrayObject();
@@ -237,7 +237,7 @@ namespace LibRender2
 				}
 
 				NormalsVAO.SetAttributes(vertexLayout);
-				NormalsVAO.UnBind();
+				NormalsVAO.Release();
 				mesh.NormalsVAO = NormalsVAO;
 			}
 			catch (Exception e)
@@ -358,7 +358,7 @@ namespace LibRender2
 				}
 
 				VertexArrayObject VAO = (VertexArrayObject)background.VAO;
-				VAO?.UnBind();
+				VAO?.Release();
 				VAO?.Dispose();
 
 				VAO = new VertexArrayObject();
@@ -366,7 +366,7 @@ namespace LibRender2
 				VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), BufferUsageHint.StaticDraw));
 				VAO.SetIBO(new IndexBufferObjectUS(indexData.ToArray(), BufferUsageHint.StaticDraw));
 				VAO.SetAttributes(vertexLayout);
-				VAO.UnBind();
+				VAO.Release();
 				background.VAO = VAO;
 			}
 			catch (Exception e)

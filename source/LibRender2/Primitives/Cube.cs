@@ -217,7 +217,7 @@ namespace LibRender2.Primitives
 					defaultVAO.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
 					defaultVAO.SetIBO(new IndexBufferObjectUS(Enumerable.Range(0, vertexData.Length).Select(x => (ushort)x).ToArray(), BufferUsageHint.StaticDraw));
 					defaultVAO.SetAttributes(renderer.DefaultShader.VertexLayout);
-					defaultVAO.UnBind();
+					defaultVAO.Release();
 				}
 				catch
 				{
