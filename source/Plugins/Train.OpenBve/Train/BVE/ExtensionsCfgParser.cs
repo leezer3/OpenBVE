@@ -89,9 +89,12 @@ namespace Train.OpenBve
 								Plugin.CurrentHost.LoadObject(carObject, Encoding, out CarObjects[block.Index]);
 							}
 
+							bool definedLength = false;
 							if (block.GetValue(ExtensionCfgKey.Length, out double carLength))
 							{
 								Train.Cars[block.Index].Length = carLength;
+								Train.Cars[block.Index].BeaconReceiverPosition = 0.5 * carLength;
+								definedLength = true;
 							}
 							block.GetValue(ExtensionCfgKey.Reversed, out CarObjectsReversed[block.Index]);
 							block.GetValue(ExtensionCfgKey.VisibleFromInterior, out VisibleFromInterior[block.Index]);
@@ -107,7 +110,15 @@ namespace Train.OpenBve
 									Train.Cars[block.Index].RearAxle.Position = carAxles.X;	
 									Train.Cars[block.Index].FrontAxle.Position = carAxles.Y;
 								}
-								
+							}
+							else
+							{
+								if (definedLength == false)
+								{
+									double axleDistance = 0.4 * Train.Cars[block.Index].Length;
+									Train.Cars[block.Index].RearAxle.Position = -axleDistance;
+									Train.Cars[block.Index].FrontAxle.Position = axleDistance;
+								}
 							}
 							break;
 						case ExtensionCfgSection.Coupler:
@@ -150,7 +161,6 @@ namespace Train.OpenBve
 							//Assuming that there are two bogies per car
 							bool IsOdd = (block.Index % 2 != 0);
 							int CarIndex = block.Index / 2;
-							bool DefinedAxles = false;
 
 							if (block.GetPath(ExtensionCfgKey.Object, TrainPath, out string bogieObject))
 							{
@@ -175,22 +185,21 @@ namespace Train.OpenBve
 										Train.Cars[CarIndex].RearBogie.RearAxle.Position = bogieAxles.X;
 										Train.Cars[CarIndex].RearBogie.FrontAxle.Position = bogieAxles.Y;
 									}
-									DefinedAxles = true;
 								}
 							}
-							if (!DefinedAxles)
+							else
 							{
 								if (IsOdd)
 								{
-									double AxleDistance = 0.4 * Train.Cars[CarIndex].FrontBogie.Length;
-									Train.Cars[CarIndex].FrontBogie.RearAxle.Position = -AxleDistance;
-									Train.Cars[CarIndex].FrontBogie.FrontAxle.Position = AxleDistance;
+									double axleDistance = 0.4 * Train.Cars[CarIndex].FrontBogie.Length;
+									Train.Cars[CarIndex].FrontBogie.RearAxle.Position = -axleDistance;
+									Train.Cars[CarIndex].FrontBogie.FrontAxle.Position = axleDistance;
 								}
 								else
 								{
-									double AxleDistance = 0.4 * Train.Cars[CarIndex].RearBogie.Length;
-									Train.Cars[CarIndex].RearBogie.RearAxle.Position = -AxleDistance;
-									Train.Cars[CarIndex].RearBogie.FrontAxle.Position = AxleDistance;
+									double axleDistance = 0.4 * Train.Cars[CarIndex].RearBogie.Length;
+									Train.Cars[CarIndex].RearBogie.RearAxle.Position = -axleDistance;
+									Train.Cars[CarIndex].RearBogie.FrontAxle.Position = axleDistance;
 								}
 							}
 							break;
