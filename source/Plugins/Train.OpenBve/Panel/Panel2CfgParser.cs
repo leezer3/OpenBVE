@@ -250,6 +250,7 @@ namespace Train.OpenBve
 							catch
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								break;
 							}
 							if (Backstop)
 							{
@@ -870,6 +871,7 @@ namespace Train.OpenBve
 				case Panel2Subject.Wheelslip:
 				case Panel2Subject.Sanders:
 				case Panel2Subject.SandLevel:
+				case Panel2Subject.RouteLimit:
 					Code = Subject.ToString().ToLowerInvariant();
 					break;
 				default:
