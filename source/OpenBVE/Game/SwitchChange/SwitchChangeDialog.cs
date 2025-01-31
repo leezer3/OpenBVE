@@ -86,7 +86,9 @@ namespace OpenBve
 			TextureManager.UnloadTexture(ref MapPicturebox.Texture);
 			Program.CurrentHost.RegisterTexture(Illustrations.CreateRouteMap(Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, true, out AvailableSwitches, trackFollower, drawRadius), new TextureParameters(null, null), out MapPicturebox.Texture);
 			TitleLabel.Location = new Vector2(Program.Renderer.Screen.Width * 0.5 - TitleLabel.Size.X * 0.5, 5);
-			
+			CloseButton.IsVisible = true;
+			ZoomInButton.IsVisible = true;
+			ZoomOutButton.IsVisible = true;
 		}
 
 		internal void Draw()
