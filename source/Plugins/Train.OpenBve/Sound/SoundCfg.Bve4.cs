@@ -200,7 +200,7 @@ namespace Train.OpenBve
 								train.Cars[train.DriverCar].Horns[0].StartSound = startSound as SoundBuffer;
 								train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
 							}
-							if (block.GetPath(SoundCfgKey.PrimaryStart, trainFolder, out string primaryEnd))
+							if (block.GetPath(SoundCfgKey.PrimaryEnd, trainFolder, out string primaryEnd))
 							{
 								Plugin.CurrentHost.RegisterSound(primaryEnd, SoundCfgParser.largeRadius, out var endSound);
 								train.Cars[train.DriverCar].Horns[0].StartSound = endSound as SoundBuffer;
