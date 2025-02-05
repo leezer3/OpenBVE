@@ -1466,6 +1466,15 @@
 					<trans-unit id="delimiter">
 						<source>\x20</source>
 					</trans-unit>
+					<trans-unit id="signal_access_invalid">
+						<source>The next section is not a permissive section.</source>
+					</trans-unit>
+					<trans-unit id="signal_access_denied">
+						<source>The next section is a permissive section, but access is not currently possible. Please wait and retry.</source>
+					</trans-unit>
+					<trans-unit id="signal_access_granted">
+						<source>Access to the next section has been granted.</source>
+					</trans-unit>
 					<trans-unit id="signal_proceed">
 						<source>You may proceed at [speed] [unit] with extreme caution.</source>
 					</trans-unit>

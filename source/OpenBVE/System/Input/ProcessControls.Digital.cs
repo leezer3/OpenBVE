@@ -1380,6 +1380,9 @@ namespace OpenBve
 								break;
 						}
 						break;
+					case Translations.Command.AccessPermissiveSection:
+						TrainManager.PlayerTrain.ContactSignaller();
+						break;
 				}
 			}
 			else if (Control.DigitalState == DigitalControlState.Released)

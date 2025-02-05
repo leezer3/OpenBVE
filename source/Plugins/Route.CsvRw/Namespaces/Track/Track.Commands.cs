@@ -29,6 +29,9 @@
 		Section,
 		/// <summary>Adds a signalling section</summary>
 		SectionS,
+		/// <summary>Adds a permissive signalling section</summary>
+		/// <remarks>Must be value based</remarks>
+		SectionP,
 		/// <summary>Adds a signal object</summary>
 		SigF,
 		/// <summary>Adds a signal object</summary>

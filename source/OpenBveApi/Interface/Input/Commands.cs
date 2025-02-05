@@ -315,7 +315,10 @@ namespace OpenBveApi.Interface {
 			/// <summary>Uncouples the rear coupling of a car</summary>
 			UncoupleRear,
 			/// <summary>Controls the DSD</summary>
-			DriverSupervisionDevice
+			DriverSupervisionDevice,
+			// Added in 1.11.2.0
+			/// <summary>Press to request permission from the signaller to access a permissive section</summary>
+			AccessPermissiveSection
 		}
 
 		/// <summary>Defines the possible command types</summary>

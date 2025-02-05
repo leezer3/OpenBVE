@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 
@@ -45,6 +46,8 @@ namespace RouteManager2.SignalManager
 		internal double LastUpdate;
 
 		internal double RedTimer;
+
+		public bool SignallerPermission;
 
 		/// <summary>Whether this section has been announced with accessibility in use</summary>
 		public bool AccessibilityAnnounced;

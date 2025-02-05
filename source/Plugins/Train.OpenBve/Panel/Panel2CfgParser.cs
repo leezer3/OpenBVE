@@ -189,8 +189,7 @@ namespace Train.OpenBve
 							Block.TryGetValue(Panel2Key.Minimum, ref Minimum);
 							Block.TryGetValue(Panel2Key.Maximum, ref Maximum);
 							Block.TryGetValue(Panel2Key.NaturalFreq, ref NaturalFrequency);
-							Block.TryGetValue(Panel2Key.DampingRatio, ref DampingRatio);
-							if (DampingRatio < 0)
+							if(Block.TryGetValue(Panel2Key.DampingRatio, ref DampingRatio) && DampingRatio < 0)
 							{
 								DampingRatio = -DampingRatio;
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DampingRatio is expected to be non-negative in [Needle] in " + PanelFile);
@@ -251,6 +250,7 @@ namespace Train.OpenBve
 							catch
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								break;
 							}
 							if (Backstop)
 							{
@@ -820,6 +820,18 @@ namespace Train.OpenBve
 				case Panel2Subject.Door:
 					Code = "1 doors -";
 					break;
+				case Panel2Subject.DoorL:
+				case Panel2Subject.DoorR:
+					if (SubjectIndex < Train.NumberOfCars)
+					{
+						Code = SubjectIndex + (Subject == Panel2Subject.DoorL ? " leftdoorsindex ceiling" : " rightdoorsindex ceiling");
+					}
+					else
+					{
+						Plugin.CurrentHost.AddMessage("CarIndex was invalid for " + Subject);
+						return "2";
+					}
+					break;
 				case Panel2Subject.CsC:
 					Code = "constSpeed";
 					break;
@@ -859,6 +871,7 @@ namespace Train.OpenBve
 				case Panel2Subject.Wheelslip:
 				case Panel2Subject.Sanders:
 				case Panel2Subject.SandLevel:
+				case Panel2Subject.RouteLimit:
 					Code = Subject.ToString().ToLowerInvariant();
 					break;
 				default:

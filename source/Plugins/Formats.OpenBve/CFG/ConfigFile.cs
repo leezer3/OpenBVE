@@ -120,7 +120,7 @@ namespace Formats.OpenBve
 
 					if (blockLines.Count > 0)
 					{
-						subBlocks.Add(new ConfigSection<T1, T2>(previousIdx, startingLine, previousSection, blockLines.ToArray(), currentHost));
+						subBlocks.Add(new ConfigSection<T1, T2>(previousIdx, startingLine + 1, previousSection, blockLines.ToArray(), currentHost));
 						blockLines.Clear();
 					}
 					previousSection = currentSection;
@@ -137,7 +137,7 @@ namespace Formats.OpenBve
 			// final block
 			if (blockLines.Count > 0)
 			{
-				subBlocks.Add(new ConfigSection<T1, T2>(idx, startingLine, previousSection, blockLines.ToArray(), currentHost));
+				subBlocks.Add(new ConfigSection<T1, T2>(idx, startingLine + 1, previousSection, blockLines.ToArray(), currentHost));
 			}
 		}
 
@@ -568,6 +568,20 @@ namespace Formats.OpenBve
 			return false;
 		}
 
+		public override bool TryGetValue(T2 key, ref bool boolValue)
+		{
+			if (keyValuePairs.TryRemove(key, out var s))
+			{
+				var ss = s.Value.ToLowerInvariant().Trim();
+				if (ss == "1" || ss == "true")
+				{
+					boolValue = true;
+					return true;
+				}
+			}
+			return false;
+		}
+
 		public override bool GetValue(T2 key, out string stringValue)
 		{
 			if (keyValuePairs.TryRemove(key, out var value))
@@ -756,12 +770,12 @@ namespace Formats.OpenBve
 					num = s.Substring(3);
 					s = s.Substring(0, 3);
 				}
-				else if (s.StartsWith("doorsl"))
+				else if (s.StartsWith("doorl"))
 				{
 					num = s.Substring(5);
 					s = s.Substring(0, 5);
 				}
-				else if (s.StartsWith("doorsr"))
+				else if (s.StartsWith("doorr"))
 				{
 					num = s.Substring(5);
 					s = s.Substring(0, 5);

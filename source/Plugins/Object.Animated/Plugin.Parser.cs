@@ -317,8 +317,9 @@ namespace Plugin
 							Block.TryGetValue(AnimatedKey.Pitch, ref pitch);
 							Block.TryGetValue(AnimatedKey.Volume, ref volume);
 							Block.TryGetValue(AnimatedKey.Radius, ref radius);
-							Block.GetValue(AnimatedKey.PlayOnShow, out bool playOnShow);
-							Block.GetValue(AnimatedKey.PlayOnHide, out bool playOnHide);
+							bool playOnShow = true, playOnHide = true;
+							Block.TryGetValue(AnimatedKey.PlayOnShow, ref playOnShow);
+							Block.TryGetValue(AnimatedKey.PlayOnHide, ref playOnHide);
 
 							if (ObjectCount > 0)
 							{
