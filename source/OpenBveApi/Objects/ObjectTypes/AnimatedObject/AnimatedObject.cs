@@ -219,17 +219,9 @@ namespace OpenBveApi.Objects
 			{
 				internalObject.Prototype = States[t].Prototype;
 			}
-			else
-			{
-				/*
-				 * Must internally reset the object, not create a new one.
-				 * This allows the reference to keep pointing to the same place
-				 */
-				internalObject.Prototype = new StaticObject(currentHost);
-			}
-
+			
 			CurrentState = StateIndex;
-			if (Show)
+			if (Show && StateIndex != -1)
 			{
 				currentHost.ShowObject(internalObject, Type);
 			}
