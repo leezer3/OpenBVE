@@ -784,7 +784,7 @@ namespace TrainManager.Car
 			CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].Update(baseTrain, Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, false, CarSections[SectionIndex].Type == ObjectType.Overlay ? TrainManagerBase.Renderer.Camera : null);
 			if (!TrainManagerBase.Renderer.ForceLegacyOpenGL && CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].UpdateVAO)
 			{
-				VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].internalObject.Prototype.Mesh, true, TrainManagerBase.Renderer.DefaultShader.VertexLayout, TrainManagerBase.Renderer);
+				VAOExtensions.CreateVAO(CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].internalObject.Prototype.Mesh, true, TrainManagerBase.Renderer.DefaultShader.VertexLayout, TrainManagerBase.Renderer);
 			}
 		}
 
@@ -832,7 +832,7 @@ namespace TrainManager.Car
 			CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.Update(baseTrain, Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, true, CarSections[SectionIndex].Type == ObjectType.Overlay ? TrainManagerBase.Renderer.Camera : null);
 			if (!TrainManagerBase.Renderer.ForceLegacyOpenGL && CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.UpdateVAO)
 			{
-				VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.internalObject.Prototype.Mesh, true, TrainManagerBase.Renderer.DefaultShader.VertexLayout, TrainManagerBase.Renderer);
+				VAOExtensions.CreateVAO(CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.internalObject.Prototype.Mesh, true, TrainManagerBase.Renderer.DefaultShader.VertexLayout, TrainManagerBase.Renderer);
 			}
 		}
 

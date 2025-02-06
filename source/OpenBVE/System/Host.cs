@@ -214,7 +214,7 @@ namespace OpenBve {
 					handle = data;
 					if (loadTexture)
 					{
-						OpenBVEGame.RunInRenderThread(() =>
+						Program.Renderer.RunInRenderThread(() =>
 						{
 							LoadTexture(ref data, OpenGlTextureWrapMode.ClampClamp);
 						}, timeout);

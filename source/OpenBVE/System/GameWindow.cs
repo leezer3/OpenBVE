@@ -99,6 +99,21 @@ namespace OpenBve
 				//If the load is not complete, then we shouldn't be running the mainloop
 				return;
 			}
+
+			if (Program.Renderer.RenderThreadJobWaiting)
+			{
+				while (!Program.Renderer.RenderThreadJobs.IsEmpty)
+				{
+					Program.Renderer.RenderThreadJobs.TryDequeue(out ThreadStart currentJob);
+					currentJob();
+					lock (currentJob)
+					{
+						Monitor.Pulse(currentJob);
+					}
+				}
+			}
+			
+			Program.Renderer.RenderThreadJobWaiting = false;
 			double TimeElapsed = RenderTimeElapsed;
 			double RealTimeElapsed = RenderRealTimeElapsed;
 			
@@ -395,7 +410,6 @@ namespace OpenBve
 			}
 			Program.FileSystem.AppendToLogFile("Game window initialised successfully.");
 			//Initialise the loader thread queues
-			jobs = new ConcurrentQueue<ThreadStart>();
 			Program.Renderer.Initialize();
 			Program.Renderer.DetermineMaxAFLevel();
 			Interface.CurrentOptions.Save(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg"));
@@ -1078,7 +1092,12 @@ namespace OpenBve
 					}
 				}
 			}
+
+			simulationSetup = true;
 		}
+
+		private Thread setupThread;
+		private bool simulationSetup = false;
 
 		public void LoadingScreenLoop()
 		{
@@ -1087,7 +1106,7 @@ namespace OpenBve
 			Program.Renderer.PushMatrix(MatrixMode.Modelview);
 			Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
 
-			while (!Loading.Complete && !Loading.Cancel)
+			while (!Loading.Complete && !Loading.Cancel && !simulationSetup)
 			{
 				CPreciseTimer.GetElapsedTime();
 				this.ProcessEvents();
@@ -1124,11 +1143,11 @@ namespace OpenBve
 				Program.Renderer.Loading.DrawLoadingScreen(Program.Renderer.Fonts.SmallFont, routeProgress, finalTrainProgress);
 				SwapBuffers();
 				
-				if (Loading.JobAvailable)
+				if (Program.Renderer.RenderThreadJobWaiting)
 				{
-					while (!jobs.IsEmpty)
+					while (!Program.Renderer.RenderThreadJobs.IsEmpty)
 					{
-						jobs.TryDequeue(out ThreadStart currentJob);
+						Program.Renderer.RenderThreadJobs.TryDequeue(out ThreadStart currentJob);
 						currentJob();
 						lock (currentJob)
 						{
@@ -1136,7 +1155,7 @@ namespace OpenBve
 						}
 						
 					}
-					Loading.JobAvailable = false;
+					Program.Renderer.RenderThreadJobWaiting = false;
 				}
 				double time = CPreciseTimer.GetElapsedTime();
 				double wait = 1000.0 / 60.0 - time * 1000 - 50;
@@ -1153,22 +1172,6 @@ namespace OpenBve
 			}
 		}
 
-		private static ConcurrentQueue<ThreadStart> jobs;
 		
-		/// <summary>This method is used during loading to run commands requiring an OpenGL context in the main render loop</summary>
-		/// <param name="job">The OpenGL command</param>
-		/// <param name="timeout">The timeout</param>
-		internal static void RunInRenderThread(ThreadStart job, int timeout)
-		{
-			jobs.Enqueue(job);
-			//Don't set the job to available until after it's been loaded into the queue
-			Loading.JobAvailable = true;
-			//Failsafe: If our job has taken more than the timeout, stop waiting for it
-			//A missing texture is probably better than an infinite loadscreen
-			lock (job)
-			{
-				Monitor.Wait(job, timeout);
-			}
-		}
 	}
 }

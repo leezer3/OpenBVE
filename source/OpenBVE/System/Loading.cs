@@ -51,8 +51,6 @@ namespace OpenBve {
 		internal static bool Complete;
 		/// <summary>True when the simulation has been completely setup</summary>
 		internal static bool SimulationSetup;
-		/// <summary>Whether there is currently a job waiting to complete in the main game loop</summary>
-		internal static bool JobAvailable = false;
 		private static Thread Loader;
 		/// <summary>The current route file</summary>
 		private static string CurrentRouteFile;
@@ -306,7 +304,7 @@ namespace OpenBve {
 				Program.RestartArguments = " ";
 				Cancel = true;                
 			}
-			if (JobAvailable)
+			if (Program.Renderer.RenderThreadJobWaiting)
 			{
 				Thread.Sleep(10);
 			}
