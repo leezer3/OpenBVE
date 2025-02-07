@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Formats.OpenBve;
-using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using SoundManager;
@@ -12,6 +10,7 @@ using TrainManager.Trains;
 
 namespace Train.OpenBve
 {
+	// ReSharper disable once InconsistentNaming
 	internal class BVE4SoundParser
 	{
 		internal readonly Plugin Plugin;
@@ -53,16 +52,10 @@ namespace Train.OpenBve
 			// Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
 			Vector3 panel = new Vector3(train.Cars[train.DriverCar].Driver.X, train.Cars[train.DriverCar].Driver.Y, train.Cars[train.DriverCar].Driver.Z + 1.0);
 
-			
-			
-
-			Encoding Encoding = TextEncoding.GetSystemEncodingFromFile(FileName);
-
 			// parse configuration file
-			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
-			Dictionary<int, string> MotorFiles = new Dictionary<int, string>();
+			Dictionary<int, string> motorFiles = new Dictionary<int, string>();
 
-			ConfigFile<SoundCfgSection, SoundCfgKey> cfg = new ConfigFile<SoundCfgSection, SoundCfgKey>(Lines, Plugin.CurrentHost, "Version 1.0");
+			ConfigFile<SoundCfgSection, SoundCfgKey> cfg = new ConfigFile<SoundCfgSection, SoundCfgKey>(FileName, Plugin.CurrentHost, "Version 1.0");
 			while (cfg.RemainingSubBlocks > 0)
 			{
 				Block<SoundCfgSection, SoundCfgKey> block = cfg.ReadNextBlock();
@@ -114,12 +107,12 @@ namespace Train.OpenBve
 					case SoundCfgSection.Motor:
 						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var motorIndex, out var fileName))
 						{
-							MotorFiles[motorIndex] = fileName;
+							motorFiles[motorIndex] = fileName;
 
-							if (!System.IO.File.Exists(MotorFiles[motorIndex]))
+							if (!System.IO.File.Exists(motorFiles[motorIndex]))
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "File " + MotorFiles[motorIndex] + " does not exist in file " + FileName);
-								MotorFiles[motorIndex] = string.Empty;
+								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "File " + motorFiles[motorIndex] + " does not exist in file " + FileName);
+								motorFiles[motorIndex] = string.Empty;
 							}
 						}
 						break;
@@ -372,9 +365,9 @@ namespace Train.OpenBve
 							for (int j = 0; j < motorSound.Tables[i].Entries.Length; j++)
 							{
 								int index = motorSound.Tables[i].Entries[j].SoundIndex;
-								if (MotorFiles.ContainsKey(index) && !string.IsNullOrEmpty(MotorFiles[index]))
+								if (motorFiles.ContainsKey(index) && !string.IsNullOrEmpty(motorFiles[index]))
 								{
-									Plugin.CurrentHost.RegisterSound(MotorFiles[index], SoundCfgParser.mediumRadius, out var mS);
+									Plugin.CurrentHost.RegisterSound(motorFiles[index], SoundCfgParser.mediumRadius, out var mS);
 									motorSound.Tables[i].Entries[j].Buffer = mS as SoundBuffer;
 								}
 							}

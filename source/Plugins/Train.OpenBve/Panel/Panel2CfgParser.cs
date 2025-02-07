@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Formats.OpenBve;
 using LibRender2.Trains;
-using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
@@ -48,23 +46,11 @@ namespace Train.OpenBve
 		/// <param name="Car">The car to add the panel to</param>
 		internal void ParsePanel2Config(string PanelFile, string TrainPath, CarBase Car)
 		{
-			Encoding Encoding = TextEncoding.GetSystemEncodingFromFile(PanelFile);
 			//Train name, used for hacks detection
 			trainName = new DirectoryInfo(TrainPath).Name.ToUpperInvariant();
-			// read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string FileName = Path.CombineFile(TrainPath, PanelFile);
-			string[] Lines = File.ReadAllLines(FileName, Encoding);
-			for (int i = 0; i < Lines.Length; i++) {
-				Lines[i] = Lines[i].Trim();
-				int j = Lines[i].IndexOf(';');
-				if (j >= 0)
-				{
-					Lines[i] = Lines[i].Substring(0, j).TrimEnd();
-				}
-			}
-
-			ConfigFile<Panel2Sections, Panel2Key> cfg = new ConfigFile<Panel2Sections, Panel2Key>(Lines, Plugin.CurrentHost);
+			ConfigFile<Panel2Sections, Panel2Key> cfg = new ConfigFile<Panel2Sections, Panel2Key>(FileName, Plugin.CurrentHost);
 
 			if (cfg.ReadBlock(Panel2Sections.This, out var Block))
 			{

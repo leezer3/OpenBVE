@@ -47,16 +47,6 @@ namespace Train.OpenBve
 			// read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string FileName = Path.CombineFile(TrainPath, "panel.cfg");
-			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
-			for (int i = 0; i < Lines.Length; i++)
-			{
-				Lines[i] = Lines[i].Trim();
-				int j = Lines[i].IndexOf(';');
-				if (j >= 0)
-				{
-					Lines[i] = Lines[i].Substring(0, j).TrimEnd();
-				}
-			}
 			// initialize
 			
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
@@ -79,7 +69,7 @@ namespace Train.OpenBve
 			// default background
 			string PanelBackground = Path.CombineFile(TrainPath, "panel.bmp");
 
-			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(Lines, Plugin.CurrentHost);
+			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(FileName, Plugin.CurrentHost);
 
 			cfg.ReadBlock(PanelSections.Panel, out var Block);
 			if (Block != null && Block.GetPath(PanelKey.Background, TrainPath, out var panelBackground))
