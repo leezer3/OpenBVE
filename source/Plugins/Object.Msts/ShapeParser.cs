@@ -526,39 +526,27 @@ namespace Plugin
 					ParseBlock(block, ref shape);
 				}
 			}
-			Array.Resize(ref newResult.Objects, shape.totalObjects);
-			int idx = 0;
-			double[] previousLODs = new double[shape.totalObjects];
+			
+			
+
+			int LOD = 0;
+			double viewingDistance = double.MaxValue;
 			for (int i = 0; i < shape.LODs.Count; i++)
 			{
-				for (int j = 0; j < shape.LODs[i].subObjects.Count; j++)
+				if (shape.LODs[i].viewingDistance < viewingDistance)
 				{
-					ObjectState aos = new ObjectState();
-					if (i == 0)
-					{
-						shape.LODs[i].subObjects[j].Apply(out aos.Prototype, true);
-						previousLODs[idx] = shape.LODs[i].viewingDistance;
-						int k = idx;
-						while (k > 0)
-						{
-							if (previousLODs[k] < shape.LODs[i].viewingDistance)
-							{
-								break;
-							}
-
-							k--;
-
-						}
-						/*
-						 * END TO REMOVE
-						 */
-
-
-						newResult.Objects[idx] = aos;
-						idx++;
-					}
-					
+					LOD = i;
+					viewingDistance = shape.LODs[i].viewingDistance;
 				}
+			}
+
+			Array.Resize(ref newResult.Objects, shape.LODs[LOD].subObjects.Count);
+
+			for (int j = 0; j < shape.LODs[LOD].subObjects.Count; j++)
+			{
+				ObjectState aos = new ObjectState();
+				shape.LODs[LOD].subObjects[j].Apply(out aos.Prototype, true);
+				newResult.Objects[j] = aos;
 			}
 
 			Matrix4D matrix = Matrix4D.Identity;

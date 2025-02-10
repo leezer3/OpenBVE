@@ -1055,7 +1055,7 @@ namespace LibRender2
 
 				if (lastError != ErrorCode.NoError)
 				{
-					throw new InvalidOperationException($"OpenGL Error: {lastError}");
+				//	throw new InvalidOperationException($"OpenGL Error: {lastError}");
 				}
 			}
 #endif

@@ -61,6 +61,7 @@ namespace OpenBveApi.Objects
 		/// <inheritdoc />
 		public override void CreateObject(Vector3 position, Transformation worldTransformation, Transformation localTransformation, int sectionIndex, double startingDistance, double endingDistance, double trackPosition, double brightness, bool duplicateMaterials = false)
 		{
+			Transformation FinalTransformation = new Transformation(localTransformation, worldTransformation);
 			Matrix4D[] matriciesToShader = new Matrix4D[Matricies.Length];
 			for (int i = 0; i < matriciesToShader.Length; i++)
 			{
@@ -68,6 +69,11 @@ namespace OpenBveApi.Objects
 			}
 			for (int i = 0; i < Objects.Length; i++)
 			{
+				if (Objects[i] == null)
+				{
+					continue;
+				}
+				Objects[i].WorldPosition = position;
 				Objects[i].Rotate = Matrix4D.NoTransformation;
 				Objects[i].Translation = Matrix4D.NoTransformation;
 				currentHost.ShowObject(Objects[i], ObjectType.Dynamic);
@@ -76,7 +82,12 @@ namespace OpenBveApi.Objects
 			int a = currentHost.AnimatedWorldObjectsUsed;
 			KeyframeWorldObject currentObject = new KeyframeWorldObject(currentHost)
 			{
-				Object = this
+				Object = this,
+				Position = position,
+				Direction = FinalTransformation.Z,
+				Up = FinalTransformation.Y,
+				Side = FinalTransformation.X,
+				TrackPosition = trackPosition
 			};
 			currentHost.AnimatedWorldObjects[a] = currentObject;
 			currentHost.AnimatedWorldObjectsUsed++;
@@ -148,6 +159,10 @@ namespace OpenBveApi.Objects
 			}
 			for (int i = 0; i < Objects.Length; i++)
 			{
+				if (Objects[i] == null)
+				{
+					continue;
+				}
 				Objects[i].Matricies = matriciesToShader;
 				Objects[i].Translation = Matrix4D.CreateTranslation(position.X, position.Y, -position.Z);
 				Objects[i].Rotate = (Matrix4D)new Transformation(direction, up, side);
