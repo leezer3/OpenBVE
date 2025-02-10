@@ -54,8 +54,10 @@ namespace Train.OpenBve
 
 			if (cfg.ReadBlock(Panel2Sections.This, out var Block))
 			{
-				// NOTE: Only able to create a panel with a daytime image available!
-				if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out PanelDaytimeImage))
+				// NOTE: We should only be able to create a panel with main image available, however some trains seem to use a PilotLamp as the main panel image, with no texture defined in the [This] section
+				// e.g. trta9000_6r
+				// Many panel properties are calculated with the size of this element, so only accept this with hacks on
+				if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out PanelDaytimeImage) || Plugin.CurrentOptions.EnableBveTsHacks)
 				{
 					Block.GetValue(Panel2Key.Resolution, out PanelResolution);
 					if (PanelResolution < 100)
@@ -99,7 +101,7 @@ namespace Train.OpenBve
 				}
 				else
 				{
-					// error already added in the block
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A [This] section was present, but the main panel image was missing or invalid in " + FileName);
 					return;
 				}
 			}
@@ -867,9 +869,12 @@ namespace Train.OpenBve
 			return Code + Suffix;
 		}
 
-		internal int CreateElement(ref ElementsGroup Group, double Left, double Top, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, bool AddStateToLastElement = false)
+		internal void CreateElement(ref ElementsGroup Group, double Left, double Top, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, bool AddStateToLastElement = false)
 		{
-			return CreateElement(ref Group, Left, Top, DaytimeTexture.Width, DaytimeTexture.Height, RelativeRotationCenter, Distance, PanelResolution, PanelBottom, PanelCenter, Driver, DaytimeTexture, NighttimeTexture, Color32.White, AddStateToLastElement);
+			if (DaytimeTexture != null)
+			{
+				CreateElement(ref Group, Left, Top, DaytimeTexture.Width, DaytimeTexture.Height, RelativeRotationCenter, Distance, PanelResolution, PanelBottom, PanelCenter, Driver, DaytimeTexture, NighttimeTexture, Color32.White, AddStateToLastElement);
+			}
 		}
 
 		internal int CreateElement(ref ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
