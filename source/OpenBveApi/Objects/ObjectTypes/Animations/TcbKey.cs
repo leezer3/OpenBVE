@@ -47,5 +47,11 @@ namespace OpenBveApi.Objects
 		    matrix = Matrix4D.CreateFromQuaternion(q);
 		    matrix.Row3.Xyz = location;
 	    }
+
+	    /// <inheritdoc />
+	    public override AbstractAnimation Clone()
+	    {
+		    return new TcbKey(Name, animationFrames);
+	    }
 	}
 }

@@ -49,5 +49,11 @@ namespace OpenBveApi.Objects
 			matrix *= newMatrix;
 			matrix.Row3.Xyz = location;
 		}
+
+	    /// <inheritdoc />
+	    public override AbstractAnimation Clone()
+	    {
+		    return new SlerpRot(Name, animationFrames);
+	    }
 	}
 }

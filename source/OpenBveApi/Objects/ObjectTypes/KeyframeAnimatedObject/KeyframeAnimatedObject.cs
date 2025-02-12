@@ -61,7 +61,7 @@ namespace OpenBveApi.Objects
 		/// <inheritdoc />
 		public override void CreateObject(Vector3 position, Transformation worldTransformation, Transformation localTransformation, int sectionIndex, double startingDistance, double endingDistance, double trackPosition, double brightness, bool duplicateMaterials = false)
 		{
-			Transformation FinalTransformation = new Transformation(localTransformation, worldTransformation);
+			Transformation finalTransformation = new Transformation(localTransformation, worldTransformation);
 			Matrix4D[] matriciesToShader = new Matrix4D[Matricies.Length];
 			for (int i = 0; i < matriciesToShader.Length; i++)
 			{
@@ -82,11 +82,11 @@ namespace OpenBveApi.Objects
 			int a = currentHost.AnimatedWorldObjectsUsed;
 			KeyframeWorldObject currentObject = new KeyframeWorldObject(currentHost)
 			{
-				Object = this,
+				Object = (KeyframeAnimatedObject)Clone(),
 				Position = position,
-				Direction = FinalTransformation.Z,
-				Up = FinalTransformation.Y,
-				Side = FinalTransformation.X,
+				Direction = finalTransformation.Z,
+				Up = finalTransformation.Y,
+				Side = finalTransformation.X,
 				TrackPosition = trackPosition
 			};
 			currentHost.AnimatedWorldObjects[a] = currentObject;
@@ -103,7 +103,25 @@ namespace OpenBveApi.Objects
 		/// <inheritdoc />
 		public override UnifiedObject Clone()
 		{
-			throw new NotImplementedException();
+			KeyframeAnimatedObject clonedObject = new KeyframeAnimatedObject(currentHost);
+			clonedObject.Objects = new ObjectState[Objects.Length];
+			for (int i = 0; i < Objects.Length; i++)
+			{
+				clonedObject.Objects[i] = (ObjectState)Objects[i].Clone();
+			}
+
+			clonedObject.Matricies = new KeyframeMatrix[Matricies.Length];
+			for (int i = 0; i < Matricies.Length; i++)
+			{
+				clonedObject.Matricies[i] = new KeyframeMatrix(clonedObject, Matricies[i].Name, Matricies[i].Matrix);
+			}
+
+			for (int i = 0; i < Animations.Count; i++)
+			{
+				clonedObject.Animations.Add(Animations.ElementAt(i).Key, Animations.ElementAt(i).Value.Clone(clonedObject));
+			}
+			return clonedObject;
+			
 		}
 
 		/// <inheritdoc />

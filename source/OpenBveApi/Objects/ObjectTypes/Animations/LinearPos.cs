@@ -46,5 +46,11 @@ namespace OpenBveApi.Objects
 			Vector3 v = Vector3.Lerp(animationFrames[currentFrame].Vector, animationFrames[interpolateFrame].Vector, (float)frac);
 		    matrix.Row3.Xyz = v;
 	    }
-	}
+
+	    /// <inheritdoc />
+	    public override AbstractAnimation Clone()
+	    {
+		    return new LinearKey(Name, animationFrames);
+	    }
+    }
 }

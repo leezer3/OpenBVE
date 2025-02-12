@@ -151,5 +151,20 @@ namespace OpenBveApi.Objects
 				
 			}
 		}
+
+	    /// <summary>Clones the animation</summary>
+	    /// <param name="parentObject">The parent object</param>
+	    /// <returns>The cloned animation</returns>
+	    public KeyframeAnimation Clone(KeyframeAnimatedObject parentObject)
+	    {
+		    KeyframeAnimation kf = new KeyframeAnimation(parentObject, ParentAnimation, Name, FrameCount, FrameRate, Matrix);
+		    kf.AnimationControllers = new AbstractAnimation[AnimationControllers.Length];
+		    for (int i = 0; i < AnimationControllers.Length; i++)
+		    {
+			    kf.AnimationControllers[i] = AnimationControllers[i].Clone();
+		    }
+
+		    return kf;
+	    }
 	}
 }
