@@ -277,8 +277,9 @@ namespace OpenBve
 						}
 
 						//Otherwise, check if we can move down to the previous POI
-						if (Game.ApplyPointOfInterest(-1, true))
+						if (Program.CurrentRoute.ApplyPointOfInterest(TrackDirection.Reverse))
 						{
+							World.UpdateAbsoluteCamera();
 							if (Program.Renderer.Camera.CurrentMode < CameraViewMode.Exterior)
 							{
 								SaveCameraSettings();
@@ -321,8 +322,9 @@ namespace OpenBve
 						}
 
 						//Otherwise, check if we can move up to the next POI
-						if (Game.ApplyPointOfInterest(1, true))
+						if (Program.CurrentRoute.ApplyPointOfInterest(TrackDirection.Forwards))
 						{
+							World.UpdateAbsoluteCamera();
 							if (Program.Renderer.Camera.CurrentMode < CameraViewMode.Exterior)
 							{
 								SaveCameraSettings();

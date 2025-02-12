@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.Climate;
+using RouteManager2.MessageManager;
 using RouteManager2.SignalManager;
 using RouteManager2.SignalManager.PreTrain;
 using RouteManager2.Stations;
@@ -522,6 +524,61 @@ namespace RouteManager2
 			renderer.Lighting.OptionDiffuseColor = Atmosphere.DiffuseLightColor;
 			renderer.Lighting.OptionLightPosition = Atmosphere.LightPosition;
 			renderer.Lighting.ShouldInitialize = true;
+		}
+
+		/// <summary>Moves the camera to a point of interest</summary>
+		/// <param name="direction">The direction of the jump to perform</param>
+		/// <returns>False if the previous / next POI would be outside those defined, true otherwise</returns>
+		public bool ApplyPointOfInterest(TrackDirection direction)
+		{
+			double t = 0.0;
+			int j = -1;
+			if (direction == TrackDirection.Reverse)
+			{
+				t = double.NegativeInfinity;
+				for (int i = 0; i < PointsOfInterest.Length; i++)
+				{
+					if (PointsOfInterest[i].TrackPosition < renderer.CameraTrackFollower.TrackPosition)
+					{
+						if (PointsOfInterest[i].TrackPosition > t)
+						{
+							t = PointsOfInterest[i].TrackPosition;
+							j = i;
+						}
+					}
+				}
+			}
+			else if (direction == TrackDirection.Forwards)
+			{
+				t = double.PositiveInfinity;
+				for (int i = 0; i < PointsOfInterest.Length; i++)
+				{
+					if (PointsOfInterest[i].TrackPosition > renderer.CameraTrackFollower.TrackPosition)
+					{
+						if (PointsOfInterest[i].TrackPosition < t)
+						{
+							t = PointsOfInterest[i].TrackPosition;
+							j = i;
+						}
+					}
+				}
+			}
+
+			if (j < 0) return false;
+			renderer.CameraTrackFollower.UpdateAbsolute(t, true, false);
+			renderer.Camera.Alignment.Position = PointsOfInterest[j].TrackOffset;
+			renderer.Camera.Alignment.Yaw = PointsOfInterest[j].TrackYaw;
+			renderer.Camera.Alignment.Pitch = PointsOfInterest[j].TrackPitch;
+			renderer.Camera.Alignment.Roll = PointsOfInterest[j].TrackRoll;
+			renderer.Camera.Alignment.TrackPosition = t;
+
+			if (PointsOfInterest[j].Text != null)
+			{
+				double n = 3.0 + 0.5 * Math.Sqrt(PointsOfInterest[j].Text.Length);
+				currentHost.AddMessage(PointsOfInterest[j].Text, MessageDependency.PointOfInterest, GameMode.Expert, MessageColor.White, SecondsSinceMidnight + n, null);
+			}
+
+			return true;
 		}
 
 		/// <summary>The index of the first station</summary>
