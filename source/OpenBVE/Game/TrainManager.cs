@@ -276,9 +276,9 @@ namespace OpenBve
 													{
 														f = 2.0 / (Trains[j].Cars[h + 1].CurrentMass + Trains[j].Cars[h].CurrentMass);
 														fi = Trains[j].Cars[h + 1].CurrentMass * f;
-														fi = Trains[j].Cars[h].CurrentMass * f;
+														fj = Trains[j].Cars[h].CurrentMass * f;
 														vi = v * fi;
-														vi = v * fj;
+														vj = v * fj;
 														if (vi > Trains[i].CriticalCollisionSpeedDifference)
 															Trains[j].Derail(h + 1, TimeElapsed);
 														if (vj > Trains[j].CriticalCollisionSpeedDifference)
