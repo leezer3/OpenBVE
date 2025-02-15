@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using Formats.OpenBve;
 using ObjectViewer.Graphics;
 using OpenBveApi;
-using OpenBveApi.Graphics;
 using OpenBveApi.Input;
 using Path = OpenBveApi.Path;
 

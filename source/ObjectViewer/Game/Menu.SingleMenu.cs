@@ -5,7 +5,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Textures;
 using System;
 using System.IO;
-using OpenBveApi.Math;
 using Path = OpenBveApi.Path;
 
 namespace ObjectViewer

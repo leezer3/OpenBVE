@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.IO;
 using OpenBveApi.Hosts;
-using OpenTK;
 
 namespace LibRender2.Text
 {

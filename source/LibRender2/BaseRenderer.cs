@@ -1740,7 +1740,7 @@ namespace LibRender2
 
 		/// <summary>Sets the window state</summary>
 		/// <param name="windowState">The new window state</param>
-		public void SetWindowState(OpenTK.WindowState windowState)
+		public void SetWindowState(WindowState windowState)
 		{
 			GameWindow.WindowState = windowState;
 			if (windowState == WindowState.Fullscreen)

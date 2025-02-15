@@ -131,7 +131,7 @@ namespace Train.OpenBve
 				Color24 TransparentColor = Color24.Blue;
 				Block.TryGetColor24(Panel2Key.TransparentColor, ref TransparentColor);
 				Block.GetValue(Panel2Key.Layer, out int Layer);
-				double Radius = 0;
+				double Radius;
 				switch (Block.Key)
 				{
 					case Panel2Sections.PilotLamp:

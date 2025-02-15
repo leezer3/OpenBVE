@@ -1,5 +1,4 @@
 ﻿using OpenBveApi.Objects;
-using System.Threading;
 
 namespace LibRender2.Objects
 {
