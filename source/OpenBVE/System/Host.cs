@@ -16,7 +16,6 @@ using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
-using OpenTK.Graphics.OpenGL;
 using RouteManager2.MessageManager;
 using SoundManager;
 using TrainManager.Trains;
@@ -743,8 +742,7 @@ namespace OpenBve {
 
 			for (int j = 0; j < Program.TrainManager.TFOs.Length; j++)
 			{
-				ScriptedTrain scriptedTrain = Program.TrainManager.TFOs[j] as ScriptedTrain;
-				if (scriptedTrain.State == TrainState.Available && scriptedTrain.Cars.Length > 0)
+				if (Program.TrainManager.TFOs[j] is ScriptedTrain scriptedTrain && scriptedTrain.State == TrainState.Available && scriptedTrain.Cars.Length > 0)
 				{
 					double distance;
 					if (scriptedTrain.Cars[0].FrontAxle.Follower.TrackPosition < trackPosition)

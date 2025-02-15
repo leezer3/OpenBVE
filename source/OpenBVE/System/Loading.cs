@@ -394,9 +394,7 @@ namespace OpenBve {
 				new TrainBase(TrainState.Pending, TrainType.LocalPlayerTrain)
 			};
 			TrainManagerBase.PlayerTrain = Program.TrainManager.Trains[0];
-
-			int totalAdditionalTrains = Program.CurrentRoute.PrecedingTrainTimeDeltas.Length + Program.CurrentRoute.BogusPreTrainInstructions.Length;
-
+			
 			for (int i = 0; i < Program.CurrentRoute.PrecedingTrainTimeDeltas.Length; i++)
 			{
 				Program.TrainManager.Trains.Add(new TrainBase(TrainState.Pending, TrainType.PreTrain));

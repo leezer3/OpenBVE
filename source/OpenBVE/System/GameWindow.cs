@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -1096,7 +1095,6 @@ namespace OpenBve
 			simulationSetup = true;
 		}
 
-		private Thread setupThread;
 		private bool simulationSetup = false;
 
 		public void LoadingScreenLoop()
