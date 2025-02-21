@@ -1572,9 +1572,9 @@ namespace TrainEditor {
 
 			groupboxMotorPreview.Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"motor","preview"});
 			labelMotorInfo.Text =
-				"X: 0.00 km/h\n\n" +
-				Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"motor","y_pitch"}) + ": 100.00 (100%)\n" +
-				Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"motor","y_volume"}) + ": 128.00 (100%)";
+				@"X: 0.00 km/h\n\n" +
+				Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"motor","y_pitch"}) + @": 100.00 (100%)\n" +
+				Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"motor","y_volume"}) + @": 128.00 (100%)";
 			labelMotorMinX.Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"motor","min_x"});
 			labelMotorMaxX.Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"motor","max_x"});
 			buttonMotorLeft.Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"motor","left"});

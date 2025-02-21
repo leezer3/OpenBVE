@@ -405,7 +405,6 @@ namespace AssimpNET.Obj
 			}
 
 			Face face = new Face(type);
-			bool hasNormal = false;
 
 			int vSize = Model.Vertices.Count;
 			int vtSize = Model.TextureCoord.Count;
@@ -536,10 +535,6 @@ namespace AssimpNET.Obj
 			Model.CurrentMesh.Faces.Add(face);
 			Model.CurrentMesh.NumIndices += (uint)face.Vertices.Count;
 			Model.CurrentMesh.UVCoordinates[0] += (uint)face.TexturCoords.Count;
-			if (!Model.CurrentMesh.HasNormals && hasNormal)
-			{
-				Model.CurrentMesh.HasNormals = true;
-			}
 			// Skip the rest of the line
 			DataIt = SkipLine(DataIt, DataEnd, ref Line);
 		}

@@ -150,7 +150,8 @@ namespace OpenBveAts {
 		
 		// --- compatibility limit ---
 		/// <summary>Represents a speed limit at a specific track position.</summary>
-		private struct CompatibilityLimit {
+		private struct CompatibilityLimit : IEquatable<CompatibilityLimit>
+		{
 			// --- members ---
 			/// <summary>The speed limit.</summary>
 			internal readonly double Limit;
@@ -163,6 +164,25 @@ namespace OpenBveAts {
 			internal CompatibilityLimit(double limit, double location) {
 				this.Limit = limit;
 				this.Location = location;
+			}
+
+			public bool Equals(CompatibilityLimit other)
+			{
+				return Limit.Equals(other.Limit) && Location.Equals(other.Location);
+			}
+
+			public override bool Equals(object obj)
+			{
+				if (ReferenceEquals(null, obj)) return false;
+				return obj is CompatibilityLimit && Equals((CompatibilityLimit)obj);
+			}
+
+			public override int GetHashCode()
+			{
+				unchecked
+				{
+					return (Limit.GetHashCode() * 397) ^ Location.GetHashCode();
+				}
 			}
 		}
 		

@@ -9,7 +9,7 @@ namespace OpenBveApi.Objects
 	{
 		/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
 		public int SectionIndex;
-
+		/// <summary>The animated object</summary>
 		public new KeyframeAnimatedObject Object;
 
 		/// <summary>Creates a new Animated World Object</summary>

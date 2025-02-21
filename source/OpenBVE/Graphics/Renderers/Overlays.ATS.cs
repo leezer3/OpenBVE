@@ -10,8 +10,7 @@ namespace OpenBve.Graphics.Renderers
 	{
 		/// <summary>Renders the ATS lamp overlay</summary>
 		/// <param name="Element">The HUD element these are to be rendererd onto</param>
-		/// <param name="TimeElapsed">The time elapsed</param>
-		private void RenderATSLamps(HUD.Element Element, double TimeElapsed)
+		private void RenderATSLamps(HUD.Element Element)
 		{
 			if (TrainManager.PlayerTrain == null)
 			{

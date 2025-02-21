@@ -1,5 +1,4 @@
-﻿using System;
-using OpenBveApi.Routes;
+﻿using OpenBveApi.Routes;
 using RouteManager2.Events;
 using RouteManager2.MessageManager;
 

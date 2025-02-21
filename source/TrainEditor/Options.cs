@@ -116,17 +116,16 @@ namespace TrainEditor
 		{
 			try
 			{
-				CultureInfo Culture = CultureInfo.InvariantCulture;
-				System.Text.StringBuilder Builder = new System.Text.StringBuilder();
-				Builder.AppendLine("; Options");
-				Builder.AppendLine("; =======");
-				Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
-				Builder.AppendLine("; Train Editor specific options file");
-				Builder.AppendLine();
-				Builder.AppendLine("[language]");
-				Builder.AppendLine("code = " + CurrentOptions.LanguageCode);
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+				builder.AppendLine("; Options");
+				builder.AppendLine("; =======");
+				builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
+				builder.AppendLine("; Train Editor specific options file");
+				builder.AppendLine();
+				builder.AppendLine("[language]");
+				builder.AppendLine("code = " + CurrentOptions.LanguageCode);
 				string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_te.cfg");
-				System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
+				System.IO.File.WriteAllText(configFile, builder.ToString(), new System.Text.UTF8Encoding(true));
 			}
 			catch
 			{

@@ -394,14 +394,12 @@ namespace Plugin.PNG
 												switch (BitDepth)
 												{
 													case 8:
-														int pixelIndex = 0;
 														for (int px = 0; px < scanline.Length; px++)
 														{
 															pixelBuffer[pixelsOffset++] = scanline[px];
 															pixelBuffer[pixelsOffset++] = scanline[px];
 															pixelBuffer[pixelsOffset++] = scanline[px];
 															pixelBuffer[pixelsOffset++] = scanline[px + 1];
-															pixelIndex++;
 															px++;
 														}
 														break;

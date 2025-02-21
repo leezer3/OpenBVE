@@ -228,8 +228,6 @@ namespace AssimpNET.Obj
 		public uint[] UVCoordinates = Enumerable.Repeat(0u, (int)AI_MAX_NUMBER_OF_TEXTURECOORDS).ToArray();
 		/// Material index.
 		public uint MaterialIndex = NoMaterial;
-		/// True, if normals are stored.
-		public bool HasNormals = false;
 		/// True, if vertex colors are stored.
 #pragma warning disable 169
 		bool HasVertexColors;
