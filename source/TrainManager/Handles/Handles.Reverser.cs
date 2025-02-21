@@ -57,10 +57,7 @@ namespace TrainManager.Handles
 			if (a != r)
 			{
 				Driver = (ReverserPosition)r;
-				if (baseTrain.Plugin != null)
-				{
-					baseTrain.Plugin.UpdateReverser();
-				}
+				baseTrain.Plugin?.UpdateReverser();
 				TrainManagerBase.currentHost.AddBlackBoxEntry();
 				// sound
 				if (a == 0 & r != 0)

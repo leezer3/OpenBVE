@@ -19,10 +19,10 @@ namespace TrainManager.SafetySystems
 		/// <param name="Car">A reference to the base car</param>
 		public PassAlarm(PassAlarmType type, AbstractCar Car)
 		{
-			this.baseCar = Car;
-			this.Type = type;
-			this.Sound = new CarSound();
-			this.Lit = false;
+			baseCar = Car;
+			Type = type;
+			Sound = new CarSound();
+			Lit = false;
 		}
 
 		/// <summary>Triggers the pass alarm</summary>
@@ -47,10 +47,7 @@ namespace TrainManager.SafetySystems
 		public void Halt()
 		{
 			Lit = false;
-			if (Sound != null)
-			{
-				Sound.Stop();
-			}
+			Sound?.Stop();
 		}
 	}
 	/// <summary>Defines the differing types of station pass alarm a train may be fitted with</summary>

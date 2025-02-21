@@ -491,10 +491,7 @@ namespace TrainManager.Trains
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].Run.Update(TimeElapsed);
-				if (Cars[i].Sounds.Motor != null)
-				{
-					Cars[i].Sounds.Motor.Update(TimeElapsed);
-				}
+				Cars[i].Sounds.Motor?.Update(TimeElapsed);
 			}
 
 			// safety system
@@ -627,9 +624,7 @@ namespace TrainManager.Trains
 					// use two cars as center of mass
 					if (p > s)
 					{
-						int t = p;
-						p = s;
-						s = t;
+						(s, p) = (p, s);
 					}
 
 					double min = Cars[p].Coupler.MinimumDistanceBetweenCars;

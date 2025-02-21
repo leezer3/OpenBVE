@@ -228,11 +228,7 @@ namespace TrainManager.Trains
 				Cars[CarIndex].CarBrake.Update(TimeElapsed, Cars[DriverCar].CurrentSpeed, Handles.Brake, out DecelerationDueToBrake);
 			}
 
-			if (Cars[CarIndex].CarBrake.airSound != null)
-			{
-				Cars[CarIndex].CarBrake.airSound.Play(Cars[CarIndex], false);
-
-			}
+			Cars[CarIndex].CarBrake.airSound?.Play(Cars[CarIndex], false);
 
 			// deceleration provided by motor
 			if (!(Cars[CarIndex].CarBrake is AutomaticAirBrake) && Math.Abs(Cars[CarIndex].CurrentSpeed) >= Cars[CarIndex].CarBrake.brakeControlSpeed & Handles.Reverser.Actual != 0 & !Handles.EmergencyBrake.Actual)

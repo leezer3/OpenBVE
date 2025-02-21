@@ -363,10 +363,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			if (RawApi != null)
-			{
-				RawApi.TouchEvent(groupIndex, commandIndex);
-			}
+			RawApi?.TouchEvent(groupIndex, commandIndex);
 			
 #if !DEBUG
 			} catch (Exception ex) {
@@ -381,10 +378,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			if (RawApi != null)
-			{
-				RawApi.RawKeyDown(key);
-			}
+			RawApi?.RawKeyDown(key);
 			
 #if !DEBUG
 			} catch (Exception ex) {
@@ -399,10 +393,7 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			if (RawApi != null)
-			{
-				RawApi.RawKeyUp(key);
-			}
+			RawApi?.RawKeyUp(key);
 			
 #if !DEBUG
 			} catch (Exception ex) {

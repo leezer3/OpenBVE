@@ -308,11 +308,9 @@ namespace TrainManager.Car
 					}
 				}	
 			}
-			
 
-			Bogie b = RearBogie;
-			RearBogie = FrontBogie;
-			FrontBogie = b;
+
+			(FrontBogie, RearBogie) = (RearBogie, FrontBogie);
 			FrontBogie.Reverse();
 			RearBogie.Reverse();
 			FrontBogie.FrontAxle.Follower.UpdateAbsolute(FrontAxle.Position + FrontBogie.FrontAxle.Position, true, false);
