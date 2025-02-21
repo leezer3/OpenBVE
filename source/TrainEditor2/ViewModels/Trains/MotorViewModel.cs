@@ -512,10 +512,8 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
 
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
 
 					return message;
 				})
@@ -530,10 +528,8 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
 
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
 
 					return message;
 				})
@@ -548,10 +544,8 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
 
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
 
 					return message;
 				})
@@ -768,9 +762,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReactiveCommand()
 				.WithSubscribe(() =>
 				{
-					string tmp = StartSpeed.Value;
-					StartSpeed.Value = EndSpeed.Value;
-					EndSpeed.Value = tmp;
+					(EndSpeed.Value, StartSpeed.Value) = (StartSpeed.Value, EndSpeed.Value);
 				})
 				.AddTo(disposable);
 
@@ -829,14 +821,9 @@ namespace TrainEditor2.ViewModels.Trains
 			MinVelocity
 				.SetValidateNotifyError(x =>
 				{
-					double min;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.NonNegative, out min, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out double min, out string message))
 					{
-						double max;
-
-						if (Utilities.TryParse(MaxVelocity.Value, NumberRange.NonNegative, out max) && min >= max)
+						if (Utilities.TryParse(MaxVelocity.Value, NumberRange.NonNegative, out double max) && min >= max)
 						{
 							message = Utilities.GetInterfaceString("message", "mustbe_less_than");
 						}
@@ -856,14 +843,9 @@ namespace TrainEditor2.ViewModels.Trains
 			MaxVelocity
 				.SetValidateNotifyError(x =>
 				{
-					double max;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.NonNegative, out max, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out double max, out string message))
 					{
-						double min;
-
-						if (Utilities.TryParse(MinVelocity.Value, NumberRange.NonNegative, out min) && max <= min)
+						if (Utilities.TryParse(MinVelocity.Value, NumberRange.NonNegative, out double min) && max <= min)
 						{
 							message = Utilities.GetInterfaceString("message", "mustbe_less_than");
 						}
@@ -883,14 +865,10 @@ namespace TrainEditor2.ViewModels.Trains
 			MinPitch
 				.SetValidateNotifyError(x =>
 				{
-					double min;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.NonNegative, out min, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out double min, out string message))
 					{
-						double max;
 
-						if (Utilities.TryParse(MaxPitch.Value, NumberRange.NonNegative, out max) && min >= max)
+						if (Utilities.TryParse(MaxPitch.Value, NumberRange.NonNegative, out double max) && min >= max)
 						{
 							message = Utilities.GetInterfaceString("message", "mustbe_less_than");
 						}
@@ -910,14 +888,9 @@ namespace TrainEditor2.ViewModels.Trains
 			MaxPitch
 				.SetValidateNotifyError(x =>
 				{
-					double max;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.NonNegative, out max, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out double max, out string message))
 					{
-						double min;
-
-						if (Utilities.TryParse(MinPitch.Value, NumberRange.NonNegative, out min) && max <= min)
+						if (Utilities.TryParse(MinPitch.Value, NumberRange.NonNegative, out double min) && max <= min)
 						{
 							message = Utilities.GetInterfaceString("message", "mustbe_less_than");
 						}
@@ -937,14 +910,9 @@ namespace TrainEditor2.ViewModels.Trains
 			MinVolume
 				.SetValidateNotifyError(x =>
 				{
-					double min;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.NonNegative, out min, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out double min, out string message))
 					{
-						double max;
-
-						if (Utilities.TryParse(MaxVolume.Value, NumberRange.NonNegative, out max) && min >= max)
+						if (Utilities.TryParse(MaxVolume.Value, NumberRange.NonNegative, out double max) && min >= max)
 						{
 							message = Utilities.GetInterfaceString("message", "mustbe_less_than");
 						}
@@ -964,14 +932,9 @@ namespace TrainEditor2.ViewModels.Trains
 			MaxVolume
 				.SetValidateNotifyError(x =>
 				{
-					double max;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.NonNegative, out max, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out double max, out string message))
 					{
-						double min;
-
-						if (Utilities.TryParse(MinVolume.Value, NumberRange.NonNegative, out min) && max <= min)
+						if (Utilities.TryParse(MinVolume.Value, NumberRange.NonNegative, out double min) && max <= min)
 						{
 							message = Utilities.GetInterfaceString("message", "mustbe_less_than");
 						}

@@ -51,10 +51,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
 
 					return message;
 				})
@@ -69,10 +66,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
 
 					return message;
 				})
@@ -87,10 +81,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
 
 					return message;
 				})
@@ -105,10 +96,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
 
 					return message;
 				})
@@ -123,10 +111,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
 
 					return message;
 				})
@@ -141,10 +126,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
 
 					return message;
 				})

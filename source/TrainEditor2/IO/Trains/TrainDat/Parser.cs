@@ -153,9 +153,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 											if (acceleration.Entries[n].V2 < acceleration.Entries[n].V1)
 											{
-												double x = acceleration.Entries[n].V1;
-												acceleration.Entries[n].V1 = acceleration.Entries[n].V2;
-												acceleration.Entries[n].V2 = x;
+												(acceleration.Entries[n].V2, acceleration.Entries[n].V1) = (acceleration.Entries[n].V1, acceleration.Entries[n].V2);
 											}
 
 											break;

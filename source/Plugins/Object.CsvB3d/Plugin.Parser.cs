@@ -466,9 +466,7 @@ namespace Object.CsvB3d
 										if (Builder.isCylinder && enabledHacks.BveTsHacks && enabledHacks.CylinderHack)
 										{
 											int l = f.Vertices.Length;
-											MeshFaceVertex v = f.Vertices[l - 1];
-											f.Vertices[l - 1] = f.Vertices[l - 2];
-											f.Vertices[l - 2] = v;
+											(f.Vertices[l - 2], f.Vertices[l - 1]) = (f.Vertices[l - 1], f.Vertices[l - 2]);
 										}
 										if (isFace2) {
 											f.Flags = FaceFlags.Face2Mask;
