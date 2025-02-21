@@ -25,9 +25,11 @@
 using System;
 using System.IO;
 using Ionic.Zlib;
+// ReSharper disable UnusedVariable
 
 namespace Plugin
 {
+	// ReSharper disable once InconsistentNaming
 	public static class MSZip
     {
 		/// <summary>Decompresses a byte array compressed with MSZip compression</summary>
@@ -55,12 +57,13 @@ namespace Plugin
             MemoryStream outputStream = new MemoryStream();
 			int currentBlock = 0;
 			byte[] previousBlockBytes = new byte[(int) MSZIP_BLOCK];
-			byte[] blockBytes;
 			while (p + 3 < end)
 			{
 
 				// Read compressed block size after decompression
+#pragma warning disable CS0219
 				ushort uncompressedBlockSize = BitConverter.ToUInt16(Data, p);
+#pragma warning restore CS0219
 				p += 2;
 
 				// Read compressed block size
@@ -85,24 +88,18 @@ namespace Plugin
 				inputStream.Position = p + 2;
 
 				// Decompress the compressed block
-				blockBytes = new byte[compressedBlockSize];
-				inputStream.Read(blockBytes, 0, compressedBlockSize);
-				byte[] decompressedBytes;
-
-				if (currentBlock == 0)
-				{
-					decompressedBytes = ZlibDecompressWithDictionary(blockBytes, null);
-					//Works OK
-				}
-				else
-				{
-
-					decompressedBytes = ZlibDecompressWithDictionary(blockBytes, previousBlockBytes);
-				}
+				byte[] blockBytes = new byte[compressedBlockSize];
+				int numBytesRead = inputStream.Read(blockBytes, 0, compressedBlockSize);
 				
+				if (numBytesRead != compressedBlockSize)
+				{
+					throw new Exception("Insufficient number of bytes read from the compressed stream.");
+				}
+
+				byte[] decompressedBytes = ZlibDecompressWithDictionary(blockBytes, currentBlock == 0 ? null : previousBlockBytes);
+
 				outputStream.Write(decompressedBytes, 0, decompressedBytes.Length);
 				previousBlockBytes = decompressedBytes;
-				
 				
 				// Preparing to move to the next data block
 				p += compressedBlockSize;
