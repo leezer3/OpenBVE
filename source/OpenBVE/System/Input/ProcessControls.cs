@@ -122,13 +122,13 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-					World.UpdateAbsoluteCamera(TimeElapsed);
+					Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, TimeElapsed);
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 					{
 						if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
 						{
-							World.InitializeCameraRestriction();
+							Program.Renderer.Camera.InitializeCameraRestriction(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 					}
 

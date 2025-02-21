@@ -1731,6 +1731,65 @@ namespace LibRender2
 			GL.PopMatrix();
 		}
 
+		public virtual void UpdateAbsoluteCamera(double backgroundImageDistance, double timeElapsed = 0)
+		{
+			// zoom
+			double zm = Camera.Alignment.Zoom;
+			Camera.AdjustAlignment(ref Camera.Alignment.Zoom, Camera.AlignmentDirection.Zoom, ref Camera.AlignmentSpeed.Zoom, timeElapsed, true);
+			if (zm != Camera.Alignment.Zoom)
+			{
+				Camera.ApplyZoom();
+			}
+			// current alignment
+			Camera.AdjustAlignment(ref Camera.Alignment.Position.X, Camera.AlignmentDirection.Position.X, ref Camera.AlignmentSpeed.Position.X, timeElapsed);
+			Camera.AdjustAlignment(ref Camera.Alignment.Position.Y, Camera.AlignmentDirection.Position.Y, ref Camera.AlignmentSpeed.Position.Y, timeElapsed);
+			bool q = Camera.AlignmentSpeed.Yaw != 0.0 | Camera.AlignmentSpeed.Pitch != 0.0 | Camera.AlignmentSpeed.Roll != 0.0;
+			Camera.AdjustAlignment(ref Camera.Alignment.Yaw, Camera.AlignmentDirection.Yaw, ref Camera.AlignmentSpeed.Yaw, timeElapsed);
+			Camera.AdjustAlignment(ref Camera.Alignment.Pitch, Camera.AlignmentDirection.Pitch, ref Camera.AlignmentSpeed.Pitch, timeElapsed);
+			Camera.AdjustAlignment(ref Camera.Alignment.Roll, Camera.AlignmentDirection.Roll, ref Camera.AlignmentSpeed.Roll, timeElapsed);
+			double tr = Camera.Alignment.TrackPosition;
+			Camera.AdjustAlignment(ref Camera.Alignment.TrackPosition, Camera.AlignmentDirection.TrackPosition, ref Camera.AlignmentSpeed.TrackPosition, timeElapsed);
+			if (tr != Camera.Alignment.TrackPosition)
+			{
+				CameraTrackFollower.UpdateAbsolute(Camera.Alignment.TrackPosition, true, false);
+				q = true;
+			}
+			if (q)
+			{
+				UpdateViewingDistances(backgroundImageDistance);
+			}
+			Vector3 dF = new Vector3(CameraTrackFollower.WorldDirection);
+			Vector3 uF = new Vector3(CameraTrackFollower.WorldUp);
+			Vector3 sF = new Vector3(CameraTrackFollower.WorldSide);
+			Vector3 pF = new Vector3(Camera.Alignment.Position);
+			Vector3 dx2 = new Vector3(dF);
+			Vector3 ux2 = new Vector3(uF);
+			double cx = CameraTrackFollower.WorldPosition.X + sF.X * pF.X + ux2.X * pF.Y + dx2.X * pF.Z;
+			double cy = CameraTrackFollower.WorldPosition.Y + sF.Y * pF.X + ux2.Y * pF.Y + dx2.Y * pF.Z;
+			double cz = CameraTrackFollower.WorldPosition.Z + sF.Z * pF.X + ux2.Z * pF.Y + dx2.Z * pF.Z;
+			if (Camera.Alignment.Yaw != 0.0)
+			{
+				dF.Rotate(uF, Camera.Alignment.Yaw);
+				sF.Rotate(uF, Camera.Alignment.Yaw);
+			}
+			double p = Camera.Alignment.Pitch;
+			if (p != 0.0)
+			{
+				dF.Rotate(sF, -p);
+				uF.Rotate(sF, -p);
+			}
+			if (Camera.Alignment.Roll != 0.0)
+			{
+				uF.Rotate(dF, -Camera.Alignment.Roll);
+				sF.Rotate(dF, -Camera.Alignment.Roll);
+			}
+
+			Camera.AbsolutePosition = new Vector3(cx, cy, cz);
+			Camera.AbsoluteDirection = dF;
+			Camera.AbsoluteUp = uF;
+			Camera.AbsoluteSide = sF;
+		}
+
 		/// <summary>Sets the current MouseCursor</summary>
 		/// <param name="newCursor">The new cursor</param>
 		public void SetCursor(OpenTK.MouseCursor newCursor)

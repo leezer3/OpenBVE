@@ -9,7 +9,7 @@ using OpenBveApi.Runtime;
 
 namespace LibRender2.Cameras
 {
-	public class CameraProperties
+	public partial class CameraProperties
 	{
 		private readonly BaseRenderer Renderer;
 		/// <summary>The current viewing distance in the forward direction.</summary>
@@ -112,6 +112,60 @@ namespace LibRender2.Cameras
 			alignmentDirection = new CameraAlignment();
 			Alignment = new CameraAlignment();
 			AlignmentSpeed = new CameraAlignment();
+		}
+
+		/// <summary>Initializes the camera restrictions</summary>
+		/// <param name="driverCarCameraRestriction">The camera restriction for the driver car</param>
+		/// <param name="backgroundDistance">The background image distance</param>
+		public void InitializeCameraRestriction(CameraRestriction driverCarCameraRestriction, double backgroundDistance)
+		{
+			if (CurrentMode < CameraViewMode.Exterior || CurrentRestriction != CameraRestrictionMode.On)
+			{
+				return;
+			}
+			Renderer.UpdateAbsoluteCamera(backgroundDistance);
+			if (PerformRestrictionTest(driverCarCameraRestriction))
+			{
+				return;
+			}
+			Alignment = new CameraAlignment();
+			VerticalViewingAngle = OriginalVerticalViewingAngle;
+			Renderer.UpdateViewport(ViewportChangeMode.NoChange);
+			Renderer.UpdateAbsoluteCamera(0);
+			Renderer.UpdateViewingDistances(backgroundDistance);
+			if (PerformRestrictionTest(driverCarCameraRestriction))
+			{
+				Renderer.UpdateAbsoluteCamera(backgroundDistance);
+				return;
+			}
+			Alignment.Position.Z = 0.8;
+			Renderer.UpdateAbsoluteCamera(0);
+			PerformProgressiveAdjustmentForCameraRestriction(ref Alignment.Position.Z, 0.0, true, driverCarCameraRestriction);
+			if (PerformRestrictionTest(driverCarCameraRestriction))
+			{
+				Renderer.UpdateAbsoluteCamera(backgroundDistance);
+				return;
+			}
+			Alignment.Position.X = 0.5 * (driverCarCameraRestriction.BottomLeft.X + driverCarCameraRestriction.TopRight.X);
+			Alignment.Position.Y = 0.5 * (driverCarCameraRestriction.BottomLeft.Y + driverCarCameraRestriction.TopRight.Y);
+			Alignment.Position.Z = 0.0;
+			Renderer.UpdateAbsoluteCamera(backgroundDistance);
+			if (PerformRestrictionTest(driverCarCameraRestriction))
+			{
+				PerformProgressiveAdjustmentForCameraRestriction(ref Alignment.Position.X, 0.0, true, driverCarCameraRestriction);
+				PerformProgressiveAdjustmentForCameraRestriction(ref Alignment.Position.Y, 0.0, true, driverCarCameraRestriction);
+			}
+			else
+			{
+				Alignment.Position.Z = 0.8;
+				Renderer.UpdateAbsoluteCamera(backgroundDistance);
+				PerformProgressiveAdjustmentForCameraRestriction(ref Alignment.Position.Z, 0.0, true, driverCarCameraRestriction);
+				if (!PerformRestrictionTest(driverCarCameraRestriction))
+				{
+					Alignment = new CameraAlignment();
+				}
+			}
+			Renderer.UpdateAbsoluteCamera(backgroundDistance);
 		}
 
 		/// <summary>Tests whether the camera may move further in the current direction</summary>

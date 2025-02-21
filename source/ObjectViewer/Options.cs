@@ -127,7 +127,6 @@ namespace ObjectViewer
 			{
 				Directory.CreateDirectory(optionsFolder);
 			}
-			CultureInfo Culture = CultureInfo.InvariantCulture;
 			string configFile = Path.CombineFile(optionsFolder, "options_ov.cfg");
 			if (!File.Exists(configFile))
 			{

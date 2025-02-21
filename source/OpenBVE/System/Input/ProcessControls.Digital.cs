@@ -100,13 +100,13 @@ namespace OpenBve
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 						Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-						World.UpdateAbsoluteCamera(TimeElapsed);
+						Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, TimeElapsed);
 						Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 						{
 							if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
 							{
-								World.InitializeCameraRestriction();
+								Program.Renderer.Camera.InitializeCameraRestriction(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							}
 						}
 
@@ -175,13 +175,13 @@ namespace OpenBve
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 						Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-						World.UpdateAbsoluteCamera(TimeElapsed);
+						Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, TimeElapsed);
 						Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 						{
 							if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
 							{
-								World.InitializeCameraRestriction();
+								Program.Renderer.Camera.InitializeCameraRestriction(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							}
 						}
 
@@ -217,7 +217,7 @@ namespace OpenBve
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 						Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-						World.UpdateAbsoluteCamera(TimeElapsed);
+						Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, TimeElapsed);
 						Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						break;
 					case Translations.Command.CameraTrack:
@@ -264,7 +264,7 @@ namespace OpenBve
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 						Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-						World.UpdateAbsoluteCamera(TimeElapsed);
+						Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, TimeElapsed);
 						Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					}
 						break;
@@ -279,7 +279,7 @@ namespace OpenBve
 						//Otherwise, check if we can move down to the previous POI
 						if (Program.CurrentRoute.ApplyPointOfInterest(TrackDirection.Reverse))
 						{
-							World.UpdateAbsoluteCamera();
+							Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							if (Program.Renderer.Camera.CurrentMode < CameraViewMode.Exterior)
 							{
 								SaveCameraSettings();
@@ -308,7 +308,7 @@ namespace OpenBve
 							Program.Renderer.Camera.Alignment.TrackPosition = Program.Renderer.CameraTrackFollower.TrackPosition;
 							Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
 							Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-							World.UpdateAbsoluteCamera(TimeElapsed);
+							Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, TimeElapsed);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 
@@ -324,7 +324,7 @@ namespace OpenBve
 						//Otherwise, check if we can move up to the next POI
 						if (Program.CurrentRoute.ApplyPointOfInterest(TrackDirection.Forwards))
 						{
-							World.UpdateAbsoluteCamera();
+							Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							if (Program.Renderer.Camera.CurrentMode < CameraViewMode.Exterior)
 							{
 								SaveCameraSettings();
@@ -354,7 +354,7 @@ namespace OpenBve
 								Program.Renderer.CameraTrackFollower.TrackPosition;
 							Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
 							Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-							World.UpdateAbsoluteCamera(TimeElapsed);
+							Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, TimeElapsed);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 
@@ -406,7 +406,7 @@ namespace OpenBve
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 						Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-						World.UpdateAbsoluteCamera(TimeElapsed);
+						Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, TimeElapsed);
 						Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
 						     Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) &
@@ -414,7 +414,7 @@ namespace OpenBve
 						{
 							if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
 							{
-								World.InitializeCameraRestriction();
+								Program.Renderer.Camera.InitializeCameraRestriction(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							}
 						}
 
@@ -441,7 +441,7 @@ namespace OpenBve
 								break;
 							default:
 								Program.Renderer.Camera.CurrentRestriction = Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off ? TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode : CameraRestrictionMode.Off;
-								World.InitializeCameraRestriction();
+								Program.Renderer.Camera.InitializeCameraRestriction(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 								if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
 								{
 									MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","camerarestriction_off"}),

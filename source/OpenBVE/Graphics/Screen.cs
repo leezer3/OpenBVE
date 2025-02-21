@@ -147,7 +147,7 @@ namespace OpenBve
             if (Loading.Complete)
             {
 	            Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-                World.InitializeCameraRestriction();
+                Program.Renderer.Camera.InitializeCameraRestriction(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
                 if (Program.Renderer.OptionBackFaceCulling)
                 {
                     GL.Enable(EnableCap.CullFace);
@@ -224,7 +224,7 @@ namespace OpenBve
 			}
 			Timetable.UpdateCustomTimetable(null, null);
 			
-			World.InitializeCameraRestriction();
+			Program.Renderer.Camera.InitializeCameraRestriction(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 			if (Program.Renderer.OptionBackFaceCulling)
 			{
 			    GL.Enable(EnableCap.CullFace);

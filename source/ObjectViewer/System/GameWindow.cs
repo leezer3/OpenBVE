@@ -81,14 +81,14 @@ namespace ObjectViewer
                 }
                 else
                 {
-                    RotateXSpeed -= (double)Math.Sign(RotateXSpeed) * d;
+                    RotateXSpeed -= Math.Sign(RotateXSpeed) * d;
                 }
             }
             else
             {
                 double d = (1.0 + 1.0 - 1.0 / (1.0 + RotateXSpeed * RotateXSpeed)) * timeElapsed;
                 double m = 1.0;
-                RotateXSpeed += (double)Program.RotateX * d;
+                RotateXSpeed += Program.RotateX * d;
                 if (RotateXSpeed < -m)
                 {
                     RotateXSpeed = -m;
@@ -114,14 +114,14 @@ namespace ObjectViewer
                 }
                 else
                 {
-                    RotateYSpeed -= (double)Math.Sign(RotateYSpeed) * d;
+                    RotateYSpeed -= Math.Sign(RotateYSpeed) * d;
                 }
             }
             else
             {
                 double d = (1.0 + 1.0 - 1.0 / (1.0 + RotateYSpeed * RotateYSpeed)) * timeElapsed;
                 double m = 1.0;
-                RotateYSpeed += (double)Program.RotateY * d;
+                RotateYSpeed += Program.RotateY * d;
                 if (RotateYSpeed < -m)
                 {
                     RotateYSpeed = -m;
@@ -146,14 +146,14 @@ namespace ObjectViewer
                 }
                 else
                 {
-                    MoveXSpeed -= (double)Math.Sign(MoveXSpeed) * d;
+                    MoveXSpeed -= Math.Sign(MoveXSpeed) * d;
                 }
             }
             else
             {
                 double d = (5.0 + 10.0 - 10.0 / (1.0 + MoveXSpeed * MoveXSpeed)) * timeElapsed;
                 double m = 25.0;
-                MoveXSpeed += (double)Program.MoveX * d;
+                MoveXSpeed += Program.MoveX * d;
                 if (MoveXSpeed < -m)
                 {
                     MoveXSpeed = -m;
@@ -177,14 +177,14 @@ namespace ObjectViewer
                 }
                 else
                 {
-                    MoveYSpeed -= (double)Math.Sign(MoveYSpeed) * d;
+                    MoveYSpeed -= Math.Sign(MoveYSpeed) * d;
                 }
             }
             else
             {
                 double d = (5.0 + 10.0 - 10.0 / (1.0 + MoveYSpeed * MoveYSpeed)) * timeElapsed;
                 double m = 25.0;
-                MoveYSpeed += (double)Program.MoveY * d;
+                MoveYSpeed += Program.MoveY * d;
                 if (MoveYSpeed < -m)
                 {
                     MoveYSpeed = -m;
@@ -208,14 +208,14 @@ namespace ObjectViewer
                 }
                 else
                 {
-                    MoveZSpeed -= (double)Math.Sign(MoveZSpeed) * d;
+                    MoveZSpeed -= Math.Sign(MoveZSpeed) * d;
                 }
             }
             else
             {
                 double d = (5.0 + 10.0 - 10.0 / (1.0 + MoveZSpeed * MoveZSpeed)) * timeElapsed;
                 double m = 25.0;
-                MoveZSpeed += (double)Program.MoveZ * d;
+                MoveZSpeed += Program.MoveZ * d;
                 if (MoveZSpeed < -m)
                 {
                     MoveZSpeed = -m;
@@ -232,7 +232,7 @@ namespace ObjectViewer
             // lighting
             if (Program.LightingRelative == -1)
             {
-                Program.LightingRelative = (double)Program.LightingTarget;
+                Program.LightingRelative = Program.LightingTarget;
                 updatelight = true;
             }
             if (Program.LightingTarget == 0)

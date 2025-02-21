@@ -473,7 +473,7 @@ namespace RouteViewer
 						{
 							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							Renderer.UpdateViewport();
-							World.UpdateAbsoluteCamera(0.0);
+							Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 						CurrentlyLoading = false;
@@ -516,7 +516,7 @@ namespace RouteViewer
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							Renderer.UpdateViewport();
-							World.UpdateAbsoluteCamera(0.0);
+							Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 						else
@@ -547,7 +547,7 @@ namespace RouteViewer
 							
 							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							Renderer.UpdateViewport();
-							World.UpdateAbsoluteCamera(0.0);
+							Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							CurrentRouteFile = null;
 							Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
@@ -680,7 +680,7 @@ namespace RouteViewer
 				case Key.Keypad5:
 					Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 					Renderer.UpdateViewport();
-					World.UpdateAbsoluteCamera(0.0);
+					Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 				case Key.F:
@@ -785,7 +785,7 @@ namespace RouteViewer
 									Program.Renderer.CameraTrackFollower.UpdateAbsolute(value, true, false);
 									Renderer.Camera.Alignment.TrackPosition = value;
 									Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
-									World.UpdateAbsoluteCamera(0.0);
+									Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 									Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 								}
 							}

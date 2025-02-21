@@ -17,7 +17,9 @@ using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
+using OpenTK.Graphics.ES20;
 using RouteManager2;
+using PixelFormat = OpenBveApi.Textures.PixelFormat;
 
 namespace RouteViewer {
 	internal static class Loading {
@@ -244,7 +246,7 @@ namespace RouteViewer {
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(FirstStationPosition, true, false);
 			Program.Renderer.Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
-			World.UpdateAbsoluteCamera(0.0);
+			Program.Renderer.UpdateAbsoluteCamera(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 			Complete = true;
 		}
 

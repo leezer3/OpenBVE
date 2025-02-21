@@ -155,7 +155,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="TrainManagerR.cs" />
-    <Compile Include="WorldR.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibRender2\LibRender2.csproj">
