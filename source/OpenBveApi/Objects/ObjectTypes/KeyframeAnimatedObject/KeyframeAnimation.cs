@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2024, Christopher Lees, The OpenBVE Project
 //
@@ -115,9 +115,23 @@ namespace OpenBveApi.Objects
 					dynamic dynamicTrain = train;
 					AbstractCar baseCar = dynamicTrain.Cars[carIndex];
 					double wheelRadius;
-					if (baseCar.Wheels != null && baseCar.Wheels.ContainsKey(Name))
+					if (baseCar.Wheels != null)
 					{
-						wheelRadius = baseCar.Wheels[Name].Radius;
+						if (baseCar.Wheels.ContainsKey(Name))
+						{
+							wheelRadius = baseCar.Wheels[Name].Radius;
+						}
+						else
+						{
+							// if controllers are not defined for WHEELSN-N, it appears that those for the base WHEELSN are used
+							// otherwise, controlled by the position of WHEELS1
+							string baseName = Name.StartsWith("WHEELS") ? Name.Substring(0, 7) : "WHEELS1";
+							if (!baseCar.Wheels.ContainsKey(baseName))
+							{
+								return;
+							}
+							wheelRadius = baseCar.Wheels[baseName].Radius;
+						}
 					}
 					else
 					{
