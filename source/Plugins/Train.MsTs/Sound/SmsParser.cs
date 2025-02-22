@@ -229,6 +229,11 @@ namespace Train.MsTs
 						// two triggers per sound set  (start + stop)
 						newBlock = block.ReadSubBlock(new [] {KujuTokenID.Variable_Trigger, KujuTokenID.Initial_Trigger, KujuTokenID.Discrete_Trigger});
 						ParseBlock(newBlock, ref currentSoundSet);
+						if (block.Length() - block.Position() <= 3)
+						{
+							// WARN: incorrect number of triggers supplied
+							break;
+						}
 					}
 					break;
 				case KujuTokenID.Initial_Trigger:
