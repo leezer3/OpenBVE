@@ -213,9 +213,9 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Stream:
-					while (block.Position() < block.Length() - 1)
+					while (block.Position() < block.Length() - 3)
 					{
-						newBlock = block.ReadSubBlock(new[] { KujuTokenID.Priority, KujuTokenID.Triggers, KujuTokenID.VolumeCurve, KujuTokenID.Granularity });
+						newBlock = block.ReadSubBlock(new[] { KujuTokenID.Priority, KujuTokenID.Triggers, KujuTokenID.Volume, KujuTokenID.VolumeCurve, KujuTokenID.Granularity });
 						ParseBlock(newBlock, ref currentSoundSet);
 					}
 					break;
@@ -227,7 +227,7 @@ namespace Train.MsTs
 					for (int i = 0; i < numTriggers; i++)
 					{
 						// two triggers per sound set  (start + stop)
-						newBlock = block.ReadSubBlock(new [] {KujuTokenID.Variable_Trigger, KujuTokenID.Initial_Trigger});
+						newBlock = block.ReadSubBlock(new [] {KujuTokenID.Variable_Trigger, KujuTokenID.Initial_Trigger, KujuTokenID.Discrete_Trigger});
 						ParseBlock(newBlock, ref currentSoundSet);
 					}
 					break;
@@ -267,28 +267,37 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Discrete_Trigger:
 					block.ReadInt32();
+					// Triggers decoded from default MS Scotsman model
+					//--------------------------------------------------
+					//
+					// 04 - sanders apply
+					// 05 - sanders release
+					// 08 - whistle key press
+					// 09 - whistle key release
+					// 14 - air brake apply
 					// 15 - reverserf
 					// 16 - reverserb
 					// 17 - brake+
 					// 18 - brake-
+					// 27 - injector on
+					// 28 - injector off
+					// 30 - injector on
+					// 31 - injector off
 					// 32 - damper
 					// 33 - blowers
 					// 34 - open cylinder cocks
 					// 36 - open firebox
+					// 38 - water scoop down
+					// 39 - water scoop up
 					// 44 - heat (shovel sound??)
-					token = block.ReadEnumValue(default(KujuTokenID));
-					if (token != KujuTokenID.PlayOneShot)
-					{
-						throw new Exception("Unexpected enum value " + token + " encounted in SMS file " + currentFile);
-					}
-					numStreams = block.ReadInt32();
-					for (int i = 0; i < numStreams; i++)
-					{
-						newBlock = block.ReadSubBlock(KujuTokenID.File);
-						ParseBlock(newBlock, ref currentSoundSet);
-						newBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
-						ParseBlock(newBlock, ref currentSoundSet);
-					}
+					// 58 - coupling
+					// 59 - coupling (speed dependant?)
+					// 60 - coupling
+					// 61 - uncoupling
+					// 62 - uncoupling (speed dependant?)
+					// 63 - uncoupling
+					newBlock = block.ReadSubBlock(new[] { KujuTokenID.PlayOneShot, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump });
+					ParseBlock(newBlock, ref currentSoundSet);
 					break;
 				case KujuTokenID.Variable_Trigger:
 					token = block.ReadEnumValue(default(KujuTokenID));
@@ -304,8 +313,23 @@ namespace Train.MsTs
 							break;
 						default:
 							throw new Exception("Unexpected enum value " + token + " encounted in SMS file " + currentFile);
-
 					}
+					break;
+				case KujuTokenID.StartLoopRelease:
+					numStreams = block.ReadInt16();
+					for (int i = 0; i < numStreams; i++)
+					{
+						newBlock = block.ReadSubBlock(KujuTokenID.File);
+						ParseBlock(newBlock, ref currentSoundSet);
+					}
+					newBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
+					ParseBlock(newBlock, ref currentSoundSet);
+					break;
+				case KujuTokenID.ReleaseLoopRelease:
+					// empty block expected
+					break;
+				case KujuTokenID.Volume:
+					double volume = block.ReadSingle();
 					break;
 				case KujuTokenID.VolumeCurve:
 					token = block.ReadEnumValue(default(KujuTokenID));
