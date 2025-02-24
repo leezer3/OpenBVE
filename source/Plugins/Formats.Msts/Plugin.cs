@@ -74,10 +74,15 @@ namespace OpenBve.Formats.MsTs
 		/// <summary>Reads a string array from the block</summary>
 		public abstract string[] ReadStringArray();
 
-		/// <summary>Reads an array of enum values from the block</summary>
+        /// <summary>Reads an array of enum values from the block</summary>
+        /// <typeparam name="TEnumType">The desired enum</typeparam>
+        /// <returns>An enum array</returns>
+        public abstract TEnumType[] ReadEnumArray<TEnumType>(TEnumType desiredEnumType)  where TEnumType : struct;
+
+		/// <summary>Reads an enum value from the block</summary>
 		/// <typeparam name="TEnumType">The desired enum</typeparam>
 		/// <returns>An enum array</returns>
-		public abstract TEnumType[] ReadEnumArray<TEnumType>(TEnumType desiredEnumType)  where TEnumType : struct;
+		public abstract TEnumType ReadEnumValue<TEnumType>(TEnumType desiredEnumType) where TEnumType : struct;
 
 		/// <summary>Returns the length of the block</summary>
 		public abstract long Length();
@@ -259,6 +264,11 @@ namespace OpenBve.Formats.MsTs
 			throw new NotImplementedException();
 		}
 
+		public override TEnumType ReadEnumValue<TEnumType>(TEnumType desiredEnumType)
+		{
+			throw new NotImplementedException();
+		}
+
 		public override long Length()
 		{
 			return myStream.Length;
@@ -295,49 +305,91 @@ namespace OpenBve.Formats.MsTs
 		private readonly LengthConverter lengthConverter = new LengthConverter();
 		private readonly WeightConverter weightConverter = new WeightConverter();
 
-		private TextualBlock(string text)
+		private TextualBlock(string text, bool textIsClean)
 		{
-			myText = text;
-			//Replace special characters and escaped brackets to stop the parser barfing
-			myText = myText.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
-			myText = myText.Replace(@"\(", "[").Replace(@"\)", "]");
-			// FIXME: Current parser needs whitespace around brackets, else it throws a wobbly
-			for (int i = 0; i < myText.Length; i++)
+			if (!textIsClean)
 			{
-				if (i > 0 && myText[i] == ')' && !char.IsWhiteSpace(myText[i - 1]))
+				char[] fixedText = new char[text.Length];
+				int newTextLength = 0;
+
+				text = text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
+				text = text.Replace(@"\(", "[").Replace(@"\)", "]");
+				for (int i = 0; i < text.Length; i++)
 				{
-					myText = myText.Insert(i, " ");
-					i++;
+					if (i > 0 && (text[i] == '(' || text[i] == ')'))
+					{
+						if (!char.IsWhiteSpace(fixedText[newTextLength - 1]))
+						{
+							fixedText[newTextLength++] = ' ';
+						}
+						fixedText[newTextLength++] = text[i];
+					}
+					else
+					{
+						if (!char.IsWhiteSpace(text[i]) || !char.IsWhiteSpace(fixedText[newTextLength]))
+						{
+							fixedText[newTextLength++] = text[i];
+						}
+					}
+
+					if (newTextLength == fixedText.Length - 1 && i != text.Length - 1)
+					{
+						Array.Resize(ref fixedText, fixedText.Length << 2);
+					}
 				}
-				if (i > 0 && myText[i] == '(' && !char.IsWhiteSpace(myText[i + 1]))
-				{
-					myText = myText.Insert(i + 1, " ");
-					i++;
-				}
+				myText = new string(fixedText, 0, newTextLength);
+			}
+			else
+			{
+				myText = text;
 			}
 			currentPosition = 0;
 		}
 
-		public TextualBlock(string text, KujuTokenID token)
+		public TextualBlock(string text, KujuTokenID token, bool textIsClean = false)
 		{
-			myText = text;
-			//Replace special characters and escaped brackets to stop the parser barfing
-			myText = myText.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
-			myText = myText.Replace(@"\(", "[").Replace(@"\)", "]");
-			// FIXME: Current parser needs whitespace around brackets, else it throws a wobbly
-			for (int i = 0; i < myText.Length; i++)
+			if (text.Length == 0)
 			{
-				if (i > 0 && myText[i] == ')' && !char.IsWhiteSpace(myText[i - 1]))
-				{
-					myText = myText.Insert(i, " ");
-					i++;
-				}
-				if (i > 0 && myText[i] == '(' && !char.IsWhiteSpace(myText[i + 1]))
-				{
-					myText = myText.Insert(i + 1, " ");
-					i++;
-				}
+				return;
 			}
+
+			if (!textIsClean)
+			{
+				char[] fixedText = new char[text.Length];
+				int newTextLength = 0;
+
+				text = text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
+				text = text.Replace(@"\(", "[").Replace(@"\)", "]");
+				for (int i = 0; i < text.Length; i++)
+				{
+					if (i > 0 && (text[i] == '(' || text[i] == ')'))
+					{
+						if (!char.IsWhiteSpace(fixedText[newTextLength - 1]))
+						{
+							fixedText[newTextLength++] = ' ';
+						}
+						fixedText[newTextLength++] = text[i];
+					}
+					else
+					{
+						if (!char.IsWhiteSpace(text[i]) || !char.IsWhiteSpace(fixedText[newTextLength]))
+						{
+							fixedText[newTextLength++] = text[i];
+						}
+					}
+
+					if (newTextLength == fixedText.Length - 1 && i != text.Length - 1)
+					{
+						Array.Resize(ref fixedText, fixedText.Length << 2);
+					}
+				}
+				myText = new string(fixedText, 0, newTextLength);
+			}
+			else
+			{
+				myText = text;
+			}
+
 			Token = token;
 			currentPosition = 0;
 			Label = string.Empty;
@@ -376,7 +428,7 @@ namespace OpenBve.Formats.MsTs
 
 		public static Dictionary<KujuTokenID, Block> ReadBlocks(string text, KujuTokenID[] validTokens)
 		{
-			Block b = new TextualBlock(text);
+			Block b = new TextualBlock(text, false);
 			Dictionary<KujuTokenID, Block> readBlocks = new Dictionary<KujuTokenID, Block>();
 			while (b.Position() < b.Length() - 1)
 			{
@@ -395,7 +447,7 @@ namespace OpenBve.Formats.MsTs
 
 		public static Dictionary<KujuTokenID, Block> ReadBlocks(string text)
 		{
-			Block b = new TextualBlock(text);
+			Block b = new TextualBlock(text, false);
 			Dictionary<KujuTokenID, Block> readBlocks = new Dictionary<KujuTokenID, Block>();
 			while (b.Position() < b.Length() - 1)
 			{
@@ -461,7 +513,7 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), newToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), newToken, true);
 					}
 
 					level--;
@@ -507,7 +559,11 @@ namespace OpenBve.Formats.MsTs
 
 			if (!validTokens.Contains(currentToken))
 			{
-				throw new InvalidDataException("Expected one of the following tokens: " + validTokens + " , got " + currentToken);
+				if (currentToken != KujuTokenID.Comment)
+				{
+					// comment is always valid and will be discarded by the block reader
+					throw new InvalidDataException("Expected one of the following tokens: " + validTokens + " , got " + currentToken);
+				}
 			}
 
 			int level = 0;
@@ -523,7 +579,7 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true);
 					}
 
 					level--;
@@ -539,7 +595,7 @@ namespace OpenBve.Formats.MsTs
 		public override Block ReadSubBlock(bool allowEmptyBlock = false)
 		{
 			startPosition = currentPosition;
-			string s = String.Empty;
+			string s = string.Empty;
 			while (currentPosition < myText.Length)
 			{
 				if (myText[currentPosition] == '(')
@@ -559,6 +615,10 @@ namespace OpenBve.Formats.MsTs
 				{
 					throw new InvalidDataException("Empty sub-block");
 				}
+
+				TextualBlock t = new TextualBlock("", true);
+				t.Token = KujuTokenID.Skip;
+				return t;
 			}
 
 			KujuTokenID currentToken;
@@ -588,7 +648,7 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true);
 					}
 
 					level--;
@@ -702,6 +762,11 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			string s = getNextValue();
+			if (s[s.Length -1] == ',')
+			{
+                // SMS files contain comma separated numbers in a textual CurvePoints block
+				s = s.Substring(0, s.Length - 1);
+			}
 			float val;
 			if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
 			{
@@ -809,6 +874,16 @@ namespace OpenBve.Formats.MsTs
 				}
 			}
 			return returnArray;
+		}
+
+		public override TEnumType ReadEnumValue<TEnumType>(TEnumType desiredEnumType)
+		{
+			string s = ReadString();
+			if (!Enum.TryParse(s, true, out TEnumType e))
+			{
+				throw new InvalidDataException("Expected " + s + " to be a value member of the specified enum.");
+			}
+			return e;
 		}
 
 		public override long Length()

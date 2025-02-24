@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
@@ -1358,6 +1358,8 @@ namespace OpenBve.Formats.MsTs
 		ORTSPantographToggle4,
 		//needed for our block parser, so let's deliberately use values ORTS will not touch
 		Comment = uint.MinValue + 1,
+		// skip is found in SMS files, identical purpose to comment
+		Skip = Comment,
 		Train = uint.MinValue, 
     }
 }
