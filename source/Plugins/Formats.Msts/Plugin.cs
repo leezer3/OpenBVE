@@ -311,27 +311,34 @@ namespace OpenBve.Formats.MsTs
 			{
 				char[] fixedText = new char[text.Length];
 				int newTextLength = 0;
-
 				text = text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
 				text = text.Replace(@"\(", "[").Replace(@"\)", "]");
+				bool lastWhiteSpace = false;
 				for (int i = 0; i < text.Length; i++)
 				{
-					if (i > 0 && (text[i] == '(' || text[i] == ')'))
+					if (text[i] == '(' || text[i] == ')')
 					{
-						if (!char.IsWhiteSpace(fixedText[newTextLength - 1]))
+						if (!lastWhiteSpace)
 						{
 							fixedText[newTextLength++] = ' ';
 						}
 						fixedText[newTextLength++] = text[i];
+						fixedText[newTextLength++] = ' ';
+						lastWhiteSpace = true;
+					}
+					else if (char.IsWhiteSpace(text[i]))
+					{
+						if (!lastWhiteSpace)
+						{
+							fixedText[newTextLength++] = ' ';
+							lastWhiteSpace = true;
+						}
 					}
 					else
 					{
-						if (!char.IsWhiteSpace(text[i]) || !char.IsWhiteSpace(fixedText[newTextLength]))
-						{
-							fixedText[newTextLength++] = text[i];
-						}
+						fixedText[newTextLength++] = text[i];
+						lastWhiteSpace = false;
 					}
-
 					if (newTextLength == fixedText.Length - 1 && i != text.Length - 1)
 					{
 						Array.Resize(ref fixedText, fixedText.Length << 2);
@@ -357,27 +364,34 @@ namespace OpenBve.Formats.MsTs
 			{
 				char[] fixedText = new char[text.Length];
 				int newTextLength = 0;
-
 				text = text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
 				text = text.Replace(@"\(", "[").Replace(@"\)", "]");
+				bool lastWhiteSpace = false;
 				for (int i = 0; i < text.Length; i++)
 				{
-					if (i > 0 && (text[i] == '(' || text[i] == ')'))
+					if (text[i] == '(' || text[i] == ')')
 					{
-						if (!char.IsWhiteSpace(fixedText[newTextLength - 1]))
+						if (!lastWhiteSpace)
 						{
 							fixedText[newTextLength++] = ' ';
 						}
 						fixedText[newTextLength++] = text[i];
+						fixedText[newTextLength++] = ' ';
+						lastWhiteSpace = true;
+					}
+					else if (char.IsWhiteSpace(text[i]))
+					{
+						if (!lastWhiteSpace)
+						{
+							fixedText[newTextLength++] = ' ';
+							lastWhiteSpace = true;
+						}
 					}
 					else
 					{
-						if (!char.IsWhiteSpace(text[i]) || !char.IsWhiteSpace(fixedText[newTextLength]))
-						{
-							fixedText[newTextLength++] = text[i];
-						}
+						fixedText[newTextLength++] = text[i];
+						lastWhiteSpace = false;
 					}
-
 					if (newTextLength == fixedText.Length - 1 && i != text.Length - 1)
 					{
 						Array.Resize(ref fixedText, fixedText.Length << 2);
