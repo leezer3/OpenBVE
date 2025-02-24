@@ -210,6 +210,11 @@ namespace Train.MsTs
 						{
 							ParseBlock(newBlock, ref currentSoundSet);
 						}
+						if (block.Length() - block.Position() <= 3)
+						{
+							// WARN: incorrect number of streams supplied
+							break;
+						}
 					}
 					break;
 				case KujuTokenID.Stream:
@@ -227,7 +232,7 @@ namespace Train.MsTs
 					for (int i = 0; i < numTriggers; i++)
 					{
 						// two triggers per sound set  (start + stop)
-						newBlock = block.ReadSubBlock(new [] {KujuTokenID.Variable_Trigger, KujuTokenID.Initial_Trigger, KujuTokenID.Discrete_Trigger});
+						newBlock = block.ReadSubBlock(new [] {KujuTokenID.Variable_Trigger, KujuTokenID.Initial_Trigger, KujuTokenID.Discrete_Trigger, KujuTokenID.Random_Trigger, KujuTokenID.Dist_Travelled_Trigger});
 						ParseBlock(newBlock, ref currentSoundSet);
 						if (block.Length() - block.Position() <= 3)
 						{
@@ -238,7 +243,7 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Initial_Trigger:
 					// when initially appears, hence nothing other than StartLoop should be valid
-					newBlock = block.ReadSubBlock(KujuTokenID.StartLoop);
+					newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.DisableTrigger });
 					ParseBlock(newBlock, ref currentSoundSet);
 					break;
 				case KujuTokenID.StartLoop:
@@ -315,6 +320,20 @@ namespace Train.MsTs
 							break;
 						case KujuTokenID.Speed_Dec_Past:
 							speedValue = block.ReadSingle();
+							break;
+						case KujuTokenID.SpeedControlled:
+							break;
+						case KujuTokenID.Variable1_Inc_Past:
+						case KujuTokenID.Variable1_Dec_Past:
+						case KujuTokenID.Variable1Controlled:
+							break;
+						case KujuTokenID.Variable2_Inc_Past:
+						case KujuTokenID.Variable2_Dec_Past:
+						case KujuTokenID.Variable2Controlled:
+							break;
+						case KujuTokenID.Variable3_Inc_Past:
+						case KujuTokenID.Variable3_Dec_Past:
+						case KujuTokenID.Variable3Controlled:
 							break;
 						default:
 							throw new Exception("Unexpected enum value " + token + " encounted in SMS file " + currentFile);
