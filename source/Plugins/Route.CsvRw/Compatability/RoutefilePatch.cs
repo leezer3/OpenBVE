@@ -82,10 +82,7 @@ namespace CsvRwRouteParser
 					for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
 					{
 						CompatabilityHacks hacks = new CompatabilityHacks { ReduceTransparencyColorDepth = true };
-						if (Plugin.CurrentHost.Plugins[i].Texture != null)
-						{
-							Plugin.CurrentHost.Plugins[i].Texture.SetCompatabilityHacks(hacks);
-						}
+						Plugin.CurrentHost.Plugins[i].Texture?.SetCompatabilityHacks(hacks);
 					}
 				}
 

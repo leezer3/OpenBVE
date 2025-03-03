@@ -89,8 +89,7 @@ namespace OpenBve.Graphics
 		
 		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
-			StaticObject obj = Prototype as StaticObject;
-			if (obj == null)
+			if (!(Prototype is StaticObject obj))
 			{
 				Interface.AddMessage(MessageType.Error, false, "Attempted to use an animated object where only static objects are allowed.");
 				return -1;

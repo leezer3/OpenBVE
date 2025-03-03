@@ -238,10 +238,7 @@ namespace OpenBve.Graphics.Renderers
 								if (PlayerTrain.StationState != TrainStopState.Pending || beepSpeed == 0)
 								{
 									// We're stopped or beep is not required
-									if (HUD.stationAdjustBeepSource != null)
-									{
-										HUD.stationAdjustBeepSource.Stop();
-									}
+									HUD.stationAdjustBeepSource?.Stop();
 								}
 								else
 								{
