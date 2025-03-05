@@ -8,13 +8,17 @@
 		Dial = 1,
 		/// <summary>Lever based control</summary>
 		Lever = 2,
+		/// <summary>Dial based gauge</summary>
+		Gauge = 3,
 		/// <summary>Two-state based control</summary>
-		TwoState = 3,
+		TwoState = 4,
 		/// <summary>Tri-state based control</summary>
-		TriState = 4,
+		TriState = 5,
 		/// <summary>A display capable of displaying N states</summary>
-		MultiStateDisplay = 5,
+		MultiStateDisplay = 6,
 		/// <summary>In cab signalling / safety system (e.g. AWS)</summary>
-		CabSignalDisplay = 6
+		CabSignalDisplay = 7,
+		/// <summary>Steam locomotive firebox animation</summary>
+		Firebox = 8
 	}
 }
