@@ -413,8 +413,7 @@ namespace Train.MsTs
 						
 						if (Plugin.currentHost.Plugins[i].Object != null && Plugin.currentHost.Plugins[i].Object.CanLoadObject(objectFile))
 						{
-							UnifiedObject carObject;
-							Plugin.currentHost.Plugins[i].Object.LoadObject(objectFile, Encoding.Default, out carObject);
+							Plugin.currentHost.Plugins[i].Object.LoadObject(objectFile, Encoding.Default, out UnifiedObject carObject);
 							car.LoadCarSections(carObject, false);
 							break;
 						}
@@ -503,7 +502,11 @@ namespace Train.MsTs
 						car.Description = string.Join("", strings);
 					}
 					break;
+				case KujuTokenID.MaxPower:
+					// maximum continous power at the rails provided to the wheels
+					break;
 				case KujuTokenID.MaxForce:
+					// maximum force applied when starting
 					if (!isEngine)
 					{
 						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Engine force is not expected to be present in a wagon block.");
@@ -512,11 +515,17 @@ namespace Train.MsTs
 					maxForce = block.ReadSingle(UnitOfForce.Newton);
 					car.Specs.AccelerationCurves = new AccelerationCurve[]
 					{
-						new MSTSAccelerationCurve(train, maxForce)
+						new MSTSAccelerationCurve(car, maxForce)
 					};
 					// FIXME: Default BVE values
 					car.Specs.JerkPowerUp = 10.0;
 					car.Specs.JerkPowerDown = 10.0;
+					break;
+				case KujuTokenID.MaxContinuousForce:
+					// Maximum continuous force
+					break;
+				case KujuTokenID.RunUpTimeToMaxForce:
+					// 
 					break;
 				case KujuTokenID.WheelRadius:
 					wheelRadius = block.ReadSingle(UnitOfLength.Meter);
