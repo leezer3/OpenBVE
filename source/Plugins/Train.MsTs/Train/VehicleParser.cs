@@ -421,11 +421,25 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Size:
-					int b = 0;
 					// Physical size of the car
 					car.Width = block.ReadSingle(UnitOfLength.Meter);
+					if (car.Width == 0)
+					{
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle width is invalid.");
+						car.Width = 2;
+					}
 					car.Height = block.ReadSingle(UnitOfLength.Meter);
+					if (car.Height == 0)
+					{
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle width is invalid.");
+						car.Height = 2;
+					}
 					car.Length = block.ReadSingle(UnitOfLength.Meter);
+					if (car.Length == 0)
+					{
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle width is invalid.");
+						car.Length = 25;
+					}
 					break;
 				case KujuTokenID.Mass:
 					// Sets the empty mass of the car
