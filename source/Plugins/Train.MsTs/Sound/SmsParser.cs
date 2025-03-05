@@ -323,6 +323,10 @@ namespace Train.MsTs
 							break;
 						case KujuTokenID.SpeedControlled:
 							break;
+						case KujuTokenID.DistanceControlled:
+						case KujuTokenID.Distance_Inc_Past:
+						case KujuTokenID.Distance_Dec_Past:
+							break;
 						case KujuTokenID.Variable1_Inc_Past:
 						case KujuTokenID.Variable1_Dec_Past:
 						case KujuTokenID.Variable1Controlled:
