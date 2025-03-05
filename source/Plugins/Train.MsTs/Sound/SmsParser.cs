@@ -2,12 +2,11 @@
 using SharpCompress.Compressors.Deflate;
 using System.IO;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using OpenBveApi.Interface;
-using OpenBveApi.Sounds;
 using SharpCompress.Compressors;
 using TrainManager.Car;
+using SoundManager;
 
 namespace Train.MsTs
 {
@@ -16,7 +15,7 @@ namespace Train.MsTs
 		private static string currentFolder;
 
 		private static string currentFile;
-
+		
 		internal static bool ParseSoundFile(string fileName, ref CarBase Car)
 		{
 			currentFile = fileName;
@@ -86,7 +85,7 @@ namespace Train.MsTs
 					}
 
 					TextualBlock block = new TextualBlock(s, KujuTokenID.Tr_SMS);
-					ParseBlock(block, ref soundSet);
+					ParseBlock(block, ref soundSet, ref Car);
 				}
 
 			}
@@ -109,7 +108,7 @@ namespace Train.MsTs
 					uint remainingBytes = reader.ReadUInt32();
 					byte[] newBytes = reader.ReadBytes((int)remainingBytes);
 					BinaryBlock block = new BinaryBlock(newBytes, KujuTokenID.Tr_SMS);
-					ParseBlock(block, ref soundSet);
+					ParseBlock(block, ref soundSet, ref Car);
 				}
 			}
 
@@ -129,8 +128,10 @@ namespace Train.MsTs
 			
 		}
 		
+		private static SoundTrigger currentTrigger;
+		private static KujuTokenID currentSoundType;
 
-		private static void ParseBlock(Block block, ref SoundSet currentSoundSet)
+		private static void ParseBlock(Block block, ref SoundSet currentSoundSet, ref CarBase car)
 		{
 			Block newBlock;
 			switch (block.Token)
@@ -140,7 +141,7 @@ namespace Train.MsTs
 					while (block.Position() < block.Length())
 					{
 						newBlock = block.ReadSubBlock();
-						ParseBlock(newBlock, ref currentSoundSet);
+						ParseBlock(newBlock, ref currentSoundSet, ref car);
 					}
 					break;
 				case KujuTokenID.ScalabiltyGroup:
@@ -151,15 +152,13 @@ namespace Train.MsTs
 						try
 						{
 							newBlock = block.ReadSubBlock(true);
-							ParseBlock(newBlock, ref currentSoundSet);
+							ParseBlock(newBlock, ref currentSoundSet, ref car);
 						}
 						catch (Exception e)
 						{
 							Console.WriteLine(e);
 							throw;
 						}
-						
-						int b = 0;
 					}
 					break;
 				case KujuTokenID.Activation:
@@ -168,7 +167,7 @@ namespace Train.MsTs
 					while (block.Position() < block.Length())
 					{
 						newBlock = block.ReadSubBlock(true);
-						ParseBlock(newBlock, ref currentSoundSet);
+						ParseBlock(newBlock, ref currentSoundSet, ref car);
 					}
 					break;
 				case KujuTokenID.Deactivation:
@@ -177,7 +176,7 @@ namespace Train.MsTs
 					while (block.Position() < block.Length() - 1)
 					{
 						newBlock = block.ReadSubBlock(true);
-						ParseBlock(newBlock, ref currentSoundSet);
+						ParseBlock(newBlock, ref currentSoundSet, ref car);
 					}
 					break;
 				case KujuTokenID.Distance:
@@ -208,7 +207,7 @@ namespace Train.MsTs
 						}
 						else
 						{
-							ParseBlock(newBlock, ref currentSoundSet);
+							ParseBlock(newBlock, ref currentSoundSet, ref car);
 						}
 						if (block.Length() - block.Position() <= 3)
 						{
@@ -221,7 +220,7 @@ namespace Train.MsTs
 					while (block.Position() < block.Length() - 3)
 					{
 						newBlock = block.ReadSubBlock(new[] { KujuTokenID.Priority, KujuTokenID.Triggers, KujuTokenID.Volume, KujuTokenID.VolumeCurve, KujuTokenID.FrequencyCurve, KujuTokenID.Granularity });
-						ParseBlock(newBlock, ref currentSoundSet);
+						ParseBlock(newBlock, ref currentSoundSet, ref car);
 					}
 					break;
 				case KujuTokenID.Priority:
@@ -233,7 +232,7 @@ namespace Train.MsTs
 					{
 						// two triggers per sound set  (start + stop)
 						newBlock = block.ReadSubBlock(new [] {KujuTokenID.Variable_Trigger, KujuTokenID.Initial_Trigger, KujuTokenID.Discrete_Trigger, KujuTokenID.Random_Trigger, KujuTokenID.Dist_Travelled_Trigger});
-						ParseBlock(newBlock, ref currentSoundSet);
+						ParseBlock(newBlock, ref currentSoundSet, ref car);
 						if (block.Length() - block.Position() <= 3)
 						{
 							// WARN: incorrect number of triggers supplied
@@ -244,26 +243,77 @@ namespace Train.MsTs
 				case KujuTokenID.Initial_Trigger:
 					// when initially appears, hence nothing other than StartLoop should be valid
 					newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.DisableTrigger });
-					ParseBlock(newBlock, ref currentSoundSet);
+					ParseBlock(newBlock, ref currentSoundSet, ref car);
 					break;
 				case KujuTokenID.StartLoop:
 					numStreams = block.ReadInt32();
 					for (int i = 0; i < numStreams; i++)
 					{
 						newBlock = block.ReadSubBlock(KujuTokenID.File);
-						ParseBlock(newBlock, ref currentSoundSet);
+						ParseBlock(newBlock, ref currentSoundSet, ref car);
 						newBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
-						ParseBlock(newBlock, ref currentSoundSet);
+						ParseBlock(newBlock, ref currentSoundSet, ref car);
 					}
 					break;
 				case KujuTokenID.File:
-					string soundFile = block.ReadString();
+					if (block.ReadPath(currentFolder, out string soundFile))
+					{
+						// n.b. MSTS does not distinguish between increase / decrease sounds for handles etc.
+						switch (currentTrigger)
+						{
+							case SoundTrigger.ReverserChange:
+								if (currentSoundType == KujuTokenID.PlayOneShot)
+								{
+									car.baseTrain.Handles.Reverser.EngageSound = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Reverser.ReleaseSound = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+								}
+								break;
+							case SoundTrigger.ThrottleChange:
+								if (currentSoundType == KujuTokenID.PlayOneShot)
+								{
+									car.baseTrain.Handles.Power.Decrease = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Power.DecreaseFast = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Power.Increase = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Power.IncreaseFast = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Power.Min = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Power.Max = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+								}
+								break;
+							case SoundTrigger.TrainBrakeChange:
+								if (currentSoundType == KujuTokenID.PlayOneShot)
+								{
+									car.baseTrain.Handles.Brake.Decrease = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Brake.DecreaseFast = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Brake.Increase = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Brake.IncreaseFast = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Brake.Min = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Brake.Max = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+								}
+								break;
+							case SoundTrigger.EngineBrakeChange:
+								if (currentSoundType == KujuTokenID.PlayOneShot && car.baseTrain.Handles.LocoBrake != null)
+								{
+									car.baseTrain.Handles.LocoBrake.Decrease = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.LocoBrake.DecreaseFast = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.LocoBrake.Increase = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.LocoBrake.IncreaseFast = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.LocoBrake.Min = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.LocoBrake.Max = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+								}
+								break;
+						}
+					}
+					else
+					{
+						Plugin.currentHost.AddMessage(MessageType.Error, true, "MSTS Sound File " + soundFile + " was not found in SMS " + currentFile);
+					}
 					int checkDigit = block.ReadInt32();
 					if (checkDigit != -1)
 					{
 						// Unknown purpose at the minute- set to -1 everywhere
 						throw new Exception();
 					}
+					
 					break;
 				case KujuTokenID.SelectionMethod:
 					KujuTokenID token = block.ReadEnumValue(default(KujuTokenID));
@@ -276,40 +326,13 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Discrete_Trigger:
-					block.ReadInt32();
-					// Triggers decoded from default MS Scotsman model
-					//--------------------------------------------------
-					//
-					// 04 - sanders apply
-					// 05 - sanders release
-					// 08 - whistle key press
-					// 09 - whistle key release
-					// 14 - air brake apply
-					// 15 - reverserf
-					// 16 - reverserb
-					// 17 - brake+
-					// 18 - brake-
-					// 27 - injector on
-					// 28 - injector off
-					// 30 - injector on
-					// 31 - injector off
-					// 32 - damper
-					// 33 - blowers
-					// 34 - open cylinder cocks
-					// 36 - open firebox
-					// 38 - water scoop down
-					// 39 - water scoop up
-					// 44 - heat (shovel sound??)
-					// 58 - coupling
-					// 59 - coupling (speed dependant?)
-					// 60 - coupling
-					// 61 - uncoupling
-					// 62 - uncoupling (speed dependant?)
-					// 63 - uncoupling
+					currentSoundType = block.Token;
+					currentTrigger = (SoundTrigger)block.ReadInt32(); // stored as integer
 					newBlock = block.ReadSubBlock(new[] { KujuTokenID.PlayOneShot, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump });
-					ParseBlock(newBlock, ref currentSoundSet);
+					ParseBlock(newBlock, ref currentSoundSet, ref car);
 					break;
 				case KujuTokenID.Variable_Trigger:
+					currentSoundType = block.Token;
 					token = block.ReadEnumValue(default(KujuTokenID));
 					switch (token)
 					{
@@ -343,15 +366,24 @@ namespace Train.MsTs
 							throw new Exception("Unexpected enum value " + token + " encounted in SMS file " + currentFile);
 					}
 					break;
+				case KujuTokenID.PlayOneShot:
+					currentSoundType = block.Token;
+					int numSounds = block.ReadInt16();
+					for (int i = 0; i < numSounds; i++)
+					{
+						newBlock = block.ReadSubBlock(KujuTokenID.File);
+						ParseBlock(newBlock, ref currentSoundSet, ref car);
+					}
+					break;
 				case KujuTokenID.StartLoopRelease:
 					numStreams = block.ReadInt16();
 					for (int i = 0; i < numStreams; i++)
 					{
 						newBlock = block.ReadSubBlock(KujuTokenID.File);
-						ParseBlock(newBlock, ref currentSoundSet);
+						ParseBlock(newBlock, ref currentSoundSet, ref car);
 					}
 					newBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
-					ParseBlock(newBlock, ref currentSoundSet);
+					ParseBlock(newBlock, ref currentSoundSet, ref car);
 					break;
 				case KujuTokenID.ReleaseLoopRelease:
 					// empty block expected
@@ -365,7 +397,7 @@ namespace Train.MsTs
 					{
 						case KujuTokenID.SpeedControlled:
 							newBlock = block.ReadSubBlock(KujuTokenID.CurvePoints);
-							ParseBlock(newBlock, ref currentSoundSet);
+							ParseBlock(newBlock, ref currentSoundSet, ref car);
 							break;
 						case KujuTokenID.DistanceControlled:
 							break;
