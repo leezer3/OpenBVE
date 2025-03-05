@@ -796,6 +796,10 @@ namespace TrainManager.Trains
 				Plugin.LastSection = CurrentSectionIndex;
 				Plugin.UpdatePlugin();
 			}
+			else
+			{
+				Handles.Reverser.Actual = Handles.Reverser.Driver;
+			}
 		}
 
 		
@@ -918,7 +922,11 @@ namespace TrainManager.Trains
 					TrainManagerBase.CurrentRoute.Sections[i].AccessibilityAnnounced = false;
 				}
 			}
-			SafetySystems.PassAlarm.Halt();
+
+			if (SafetySystems.PassAlarm != null)
+			{
+				SafetySystems.PassAlarm.Halt();
+			}
 			int currentTrackElement = Cars[0].FrontAxle.Follower.LastTrackElement;
 			StationState = TrainStopState.Jumping;
 			int stopIndex = TrainManagerBase.CurrentRoute.Stations[stationIndex].GetStopIndex(NumberOfCars);
@@ -1020,7 +1028,7 @@ namespace TrainManager.Trains
 				{
 					Cars[i].Doors[0].AnticipatedOpen = TrainManagerBase.CurrentRoute.Stations[stationIndex].OpenLeftDoors;
 					Cars[i].Doors[1].AnticipatedOpen = TrainManagerBase.CurrentRoute.Stations[stationIndex].OpenRightDoors;
-					Cars[i].ReAdhesionDevice.Jump();
+					Cars[i].ReAdhesionDevice?.Jump();
 				}
 				if (IsPlayerTrain)
 				{
