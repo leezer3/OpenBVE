@@ -794,15 +794,19 @@ namespace OpenBve.Formats.MsTs
 		{
 			string s = ReadString();
 			int c = s.Length - 1;
-			while (c > 0)
+			if (c > 1)
 			{
-				if (char.IsDigit(s[c]))
+				while (c > 0)
 				{
-					c++;
-					break;
+					if (char.IsDigit(s[c]))
+					{
+						c++;
+						break;
+					}
+					c--;
 				}
-				c--;
 			}
+			
 
 			string Unit = s.Substring(c).ToLowerInvariant();
 			s = s.Substring(0, c);
