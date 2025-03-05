@@ -1,17 +1,20 @@
-﻿using TrainManager.Trains;
+﻿using TrainManager.Car;
+using TrainManager.Trains;
 
 namespace TrainManager.Power
 {
 	/// <summary>Represents a MSTS acceleration curve</summary>
 	public class MSTSAccelerationCurve : AccelerationCurve
 	{
-		private readonly TrainBase Train;
+		/// <summary>Holds a reference to the car</summary>
+		/// <remarks>Can't store the train reference directly as we may couple to another</remarks>
+		private readonly CarBase baseCar;
 		/// <summary>The maximum force supplied by the engine</summary>
 		private readonly double MaxForce;
 
-		public MSTSAccelerationCurve(TrainBase train, double maxForce)
+		public MSTSAccelerationCurve(CarBase car, double maxForce)
 		{
-			Train = train;
+			baseCar = car;
 			MaxForce = maxForce;
 		}
 
@@ -30,22 +33,24 @@ namespace TrainManager.Power
 			 * REFACTOR: Store the train reference in BVE acceleration curves???
 			 */
 			double totalMass = 0;
-			for (int i = 0; i < Train.Cars.Length; i++)
+
+			TrainBase baseTrain = baseCar.baseTrain;
+			for (int i = 0; i < baseTrain.Cars.Length; i++)
 			{
-				totalMass += Train.Cars[i].CurrentMass;
+				totalMass += baseTrain.Cars[i].CurrentMass;
 			}
 
-			if (Train.Handles.EmergencyBrake.Actual)
+			if (baseTrain.Handles.EmergencyBrake.Actual)
 			{
 				return totalMass / MaxForce / 3.6;
 			}
 
-			if (Train.Handles.Brake.Actual > 0)
+			if (baseTrain.Handles.Brake.Actual > 0)
 			{
-				return ((Train.Handles.Brake.Actual / (double)Train.Handles.Brake.MaximumNotch) *  (totalMass / MaxForce)) / 3.6;
+				return ((baseTrain.Handles.Brake.Actual / (double)baseTrain.Handles.Brake.MaximumNotch) *  (totalMass / MaxForce)) / 3.6;
 			}
 
-			return ((Train.Handles.Power.Actual / (double)Train.Handles.Power.MaximumNotch) *  (totalMass / MaxForce)) / 3.6;
+			return ((baseTrain.Handles.Power.Actual / (double)baseTrain.Handles.Power.MaximumNotch) *  (totalMass / MaxForce)) / 3.6;
 
 		}
 
@@ -54,9 +59,10 @@ namespace TrainManager.Power
 			get
 			{
 				double totalMass = 0;
-				for (int i = 0; i < Train.Cars.Length; i++)
+				TrainBase baseTrain = baseCar.baseTrain;
+				for (int i = 0; i < baseTrain.Cars.Length; i++)
 				{
-					totalMass += Train.Cars[i].CurrentMass;
+					totalMass += baseTrain.Cars[i].CurrentMass;
 				}
 
 				return totalMass / MaxForce;
