@@ -1173,17 +1173,26 @@ namespace TrainManager.Car
 					    !baseTrain.Handles.EmergencyBrake.Actual)
 					{
 						// target acceleration
-						if (Specs.AccelerationCurves != null && baseTrain.Handles.Power.Actual - 1 < Specs.AccelerationCurves.Length)
+						if (Specs.AccelerationCurves != null && Specs.AccelerationCurves[0] is MSTSAccelerationCurve curve)
 						{
-							// Load factor is a constant 1.0 for anything prior to BVE5
-							// This will need to be changed when the relevant branch is merged in
-							a = Specs.AccelerationCurves[baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)baseTrain.Handles.Reverser.Actual * CurrentSpeed);
+							// single acceleration curve
+							a = curve.GetAccelerationOutput((double)baseTrain.Handles.Reverser.Actual * CurrentSpeed);
 						}
 						else
 						{
-							a = 0.0;
+							// acceleration curve per power notch
+							if (Specs.AccelerationCurves != null && baseTrain.Handles.Power.Actual - 1 < Specs.AccelerationCurves.Length)
+							{
+								// Load factor is a constant 1.0 for anything prior to BVE5
+								// This will need to be changed when the relevant branch is merged in
+								a = Specs.AccelerationCurves[baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)baseTrain.Handles.Reverser.Actual * CurrentSpeed);
+							}
+							else
+							{
+								a = 0.0;
+							}
 						}
-
+						
 						// readhesion device
 						if (ReAdhesionDevice is BveReAdhesionDevice device)
 						{
