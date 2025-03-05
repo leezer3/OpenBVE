@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Text;
+﻿using System.Text;
 using LibRender2;
 using OpenBveApi;
 using OpenBveApi.FileSystem;

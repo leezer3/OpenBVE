@@ -220,7 +220,7 @@ namespace Train.MsTs
 				case KujuTokenID.Stream:
 					while (block.Position() < block.Length() - 3)
 					{
-						newBlock = block.ReadSubBlock(new[] { KujuTokenID.Priority, KujuTokenID.Triggers, KujuTokenID.Volume, KujuTokenID.VolumeCurve, KujuTokenID.Granularity });
+						newBlock = block.ReadSubBlock(new[] { KujuTokenID.Priority, KujuTokenID.Triggers, KujuTokenID.Volume, KujuTokenID.VolumeCurve, KujuTokenID.FrequencyCurve, KujuTokenID.Granularity });
 						ParseBlock(newBlock, ref currentSoundSet);
 					}
 					break;
