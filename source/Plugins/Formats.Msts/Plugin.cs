@@ -304,6 +304,7 @@ namespace OpenBve.Formats.MsTs
 
 		private readonly LengthConverter lengthConverter = new LengthConverter();
 		private readonly WeightConverter weightConverter = new WeightConverter();
+		private readonly ForceConverter forceConverter = new ForceConverter();
 
 		private TextualBlock(string text, bool textIsClean)
 		{
@@ -834,6 +835,15 @@ namespace OpenBve.Formats.MsTs
 				}
 
 				parsedNumber = (float)weightConverter.Convert(parsedNumber, WeightConverter.KnownUnits[Unit], (UnitOfWeight)(object)desiredUnit);
+			}
+			else if (desiredUnit is UnitOfForce)
+			{
+				if (!ForceConverter.KnownUnits.ContainsKey(Unit))
+				{
+					throw new InvalidDataException("Unknown or unexpected weight unit " + Unit + " encountered in block " + Token);
+				}
+
+				parsedNumber = (float)forceConverter.Convert(parsedNumber, ForceConverter.KnownUnits[Unit], (UnitOfForce)(object)desiredUnit);
 			}
 			return parsedNumber;
 		}
