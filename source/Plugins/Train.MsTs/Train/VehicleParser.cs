@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using LibRender2.Trains;
+using OpenBve.Formats.Msts;
 using OpenBve.Formats.MsTs;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
@@ -378,16 +379,19 @@ namespace Train.MsTs
 					car.CarBrake.JerkDown = 10;
 					break;
 				case KujuTokenID.Type:
-					string wagonType = block.ReadString().ToLowerInvariant();
 					if (isEngine)
 					{
 						//Will load engine type
 					}
 					else
 					{
-						if (wagonType != "wagon" && wagonType != "carriage" && wagonType != "engine" && wagonType != "freight")
+						try
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vechicle Parser: Expected a Carriage or Wagon, however " + wagonType + " was found.");
+							WagonType type = block.ReadEnumValue(default(WagonType));
+						}
+						catch
+						{
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vechicle Parser: Invalid vehicle type specified.");
 						}
 					}
 					break;
@@ -417,6 +421,7 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Size:
+					int b = 0;
 					// Physical size of the car
 					car.Width = block.ReadSingle(UnitOfLength.Meter);
 					car.Height = block.ReadSingle(UnitOfLength.Meter);
