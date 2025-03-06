@@ -1,4 +1,6 @@
-﻿using TrainManager.Car;
+﻿// ReSharper disable InconsistentNaming
+
+using TrainManager.Car;
 using TrainManager.Trains;
 
 namespace TrainManager.Power
@@ -70,6 +72,7 @@ namespace TrainManager.Power
 		}
 
 	}
+	
 	public class MSTSDecelerationCurve : AccelerationCurve
 	{
 		private readonly TrainBase Train;
@@ -101,12 +104,7 @@ namespace TrainManager.Power
 				totalMass += Train.Cars[i].CurrentMass;
 			}
 
-			if (Train.Handles.EmergencyBrake.Actual)
-			{
-				return totalMass / MaxForce / 3.6;
-			}
-
-			return ((Train.Handles.Brake.Actual / (double)Train.Handles.Brake.MaximumNotch) *  (totalMass / MaxForce)) / 3.6;
+			return totalMass / MaxForce / 3.6; ;
 		}
 
 		public override double MaximumAcceleration
