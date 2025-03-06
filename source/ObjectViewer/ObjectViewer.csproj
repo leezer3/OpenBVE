@@ -1,54 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
     <NoWarn>$(NoWarn),IDE1006</NoWarn>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <Configurations>Debug;GLMenu;Release</Configurations>
   </PropertyGroup>
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F1E0F444-D09A-487E-8AFA-B8223E0D8671}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ObjectViewer</RootNamespace>
-    <AssemblyName>ObjectViewer</AssemblyName>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject></StartupObject>
     <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\bin_debug\</OutputPath>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>7.0</LangVersion>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>None</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>..\..\bin_release\</OutputPath>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DebugSymbols>false</DebugSymbols>
     <LangVersion>7.0</LangVersion>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <RegisterForComInterop>False</RegisterForComInterop>
@@ -66,114 +40,31 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'GLMenu|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\bin_debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <FileAlignment>4096</FileAlignment>
     <NoWarn>,IDE1006</NoWarn>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.0</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=3.3.2.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OpenTK-OpenBVE.1.0.4\lib\net20\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows.Forms" />
+    <ProjectReference Include="..\LibRender2\LibRender2.csproj" />
+    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj" />
+    <ProjectReference Include="..\Plugins\Formats.OpenBve\Formats.OpenBve.csproj" />
+    <ProjectReference Include="..\RouteManager2\RouteManager2.csproj" />
+    <ProjectReference Include="..\TrainManager\TrainManager.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="formOptions.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="formOptions.Designer.cs">
-      <DependentUpon>formOptions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="formTrain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="formTrain.Designer.cs">
-      <DependentUpon>formTrain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FunctionScripts.cs" />
-    <Compile Include="Game\Menu.cs" />
-    <Compile Include="Game\Menu.SingleMenu.cs" />
-    <Compile Include="Graphics\NewRendererS.cs" />
-    <Compile Include="Graphics\ObjectOptimizationMode.cs" />
-    <Compile Include="Hosts.cs" />
-    <Compile Include="Options.cs" />
-    <Compile Include="System\GameWindow.cs" />
-    <Compile Include="ObjectManager.cs" />
-    <Compile Include="formMessages.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="formMessages.designer.cs">
-      <DependentUpon>formMessages.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InterfaceS.cs" />
-    <Compile Include="ProgramS.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TrainManagerS.cs" />
-    <Compile Include="Trains\NearestTrain.cs" />
-    <Compile Include="Trains\NearestTrainSpecs.cs" />
-    <Compile Include="Trains\NearestTrainStatus.cs" />
-    <Compile Include="Trains\PluginState.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="formMessages.resx">
-      <DependentUpon>formMessages.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="formOptions.resx">
-      <DependentUpon>formOptions.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="formTrain.resx">
-      <DependentUpon>formTrain.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LibRender2\LibRender2.csproj">
-      <Project>{68215476-302c-49f2-9f7e-aae20a2b6b12}</Project>
-      <Name>LibRender2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
-      <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
-      <Name>OpenBveApi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\Formats.OpenBve\Formats.OpenBve.csproj">
-      <Project>{7ed7b285-fae6-4b34-acc5-87399f27c8bc}</Project>
-      <Name>Formats.OpenBve</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\RouteManager2\RouteManager2.csproj">
-      <Project>{4ef680d7-df17-4978-9872-133edc169b4b}</Project>
-      <Name>RouteManager2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TrainManager\TrainManager.csproj">
-      <Project>{d0fca2c5-ff75-42d8-ae80-310280a61fb1}</Project>
-      <Name>TrainManager</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="OpenTK.dll.config">
+    <None Update="OpenTK.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <PackageReference Include="OpenTK-OpenBVE" Version="1.0.4" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
   <Target Name="AfterBuild">
-    <!-- Copy in dependancies -->
-    <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
     <ItemGroup>
       <AssetFiles Include="$(SolutionDir)assets\**\*.*" />
     </ItemGroup>
-    <Copy SkipUnchangedFiles="true" SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(TargetDir)Data\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles-&gt;'$(TargetDir)Data\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 </Project>

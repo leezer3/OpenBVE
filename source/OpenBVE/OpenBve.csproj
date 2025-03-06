@@ -1,31 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
     <NoWarn>$(NoWarn),IDE1006</NoWarn>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <Configurations>Debug;GLMenu;Release</Configurations>
   </PropertyGroup>
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{34743421-2EB8-4F68-9600-AEAE79AECFA5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenBve</RootNamespace>
-    <AssemblyName>OpenBve</AssemblyName>
     <NoStdLib>False</NoStdLib>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <RunSourceAnalysis>False</RunSourceAnalysis>
     <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -43,34 +33,16 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>Full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\bin_debug\</OutputPath>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>7.3</LangVersion>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>..\..\bin_release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <DefineConstants></DefineConstants>
     <DebugSymbols>true</DebugSymbols>
     <DocumentationFile>..\..\bin_release\OpenBve.XML</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>7.3</LangVersion>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
@@ -80,7 +52,6 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <PropertyGroup>
@@ -90,25 +61,14 @@
         .dll.config
     </AllowedReferenceRelatedFileExtensions>
   </PropertyGroup>
-  <PropertyGroup>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'GLMenu|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\bin_debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <FileAlignment>4096</FileAlignment>
     <NoWarn>,IDE1006</NoWarn>
-    <DebugType>Full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=3.3.2.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OpenTK-OpenBVE.1.0.4\lib\net20\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="PIEHid32Net">
       <HintPath>..\..\dependencies\PIEHid32Net.dll</HintPath>
     </Reference>
@@ -116,246 +76,59 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\dependencies\PIEHid64Net.dll</HintPath>
     </Reference>
-    <Reference Include="SharpCompress, Version=0.32.2.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpCompress.0.32.2\lib\net461\SharpCompress.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Text.Encoding.CodePages, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Text.Encoding.CodePages.6.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="TolkDotNet">
       <HintPath>..\..\dependencies\TolkDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\AI\AI.cs" />
-    <Compile Include="Game\AI\AI.PreTrain.cs">
+    <Compile Update="Game\AI\AI.PreTrain.cs">
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game\AI\AI.SimpleHuman.cs">
+    <Compile Update="Game\AI\AI.SimpleHuman.cs">
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game\Menu\Menu.Controls.cs" />
-    <Compile Include="Game\Menu\Menu.Route.cs" />
-    <Compile Include="Game\Menu\Menu.SingleMenu.cs" />
-    <Compile Include="Game\MessageManager.cs" />
-    <Compile Include="Game\MessageManager.TextualMessages.cs">
+    <Compile Update="Game\MessageManager.TextualMessages.cs">
       <DependentUpon>MessageManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game\ObjectManager\ObjectManager.cs" />
-    <Compile Include="Game\RouteInfoOverlay.cs" />
-    <Compile Include="Game\Information.cs" />
-    <Compile Include="Game\Menu\Menu.cs" />
-    <Compile Include="Game\Score\Score.cs" />
-    <Compile Include="Game\Score\Score.Log.cs" />
-    <Compile Include="Game\Score\Score.ScoreMessage.cs" />
-    <Compile Include="Game\Score\Score.Tokens.cs" />
-    <Compile Include="Game\Score\Score.Values.cs" />
-    <Compile Include="Game\SwitchChange\SwitchChangeDialog.cs" />
-    <Compile Include="Graphics\HUD\HUD.cs" />
-    <Compile Include="Graphics\HUD\HUD.Element.cs">
+    <Compile Update="Graphics\HUD\HUD.Element.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\HUD\HUD.Image.cs">
+    <Compile Update="Graphics\HUD\HUD.Image.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\HUD\HUD.Subject.cs" />
-    <Compile Include="Graphics\HUD\HUD.Transitions.cs">
+    <Compile Update="Graphics\HUD\HUD.Transitions.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\NewRenderer.cs" />
-    <Compile Include="Graphics\Renderers\Events.cs" />
-    <Compile Include="Graphics\Renderers\Overlays.Lamp.cs" />
-    <Compile Include="Graphics\Renderers\Overlays.cs" />
-    <Compile Include="Graphics\Renderers\Overlays.ATS.cs">
+    <Compile Update="Graphics\Renderers\Overlays.ATS.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderers\Overlays.Debug.cs">
+    <Compile Update="Graphics\Renderers\Overlays.Debug.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderers\Overlays.Functions.cs">
+    <Compile Update="Graphics\Renderers\Overlays.Functions.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderers\Overlays.GameMessages.cs">
+    <Compile Update="Graphics\Renderers\Overlays.GameMessages.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderers\Overlays.HUD.cs">
+    <Compile Update="Graphics\Renderers\Overlays.HUD.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderers\Overlays.ScoreMessages.cs">
+    <Compile Update="Graphics\Renderers\Overlays.ScoreMessages.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderers\Touch.cs" />
-    <Compile Include="Graphics\Textures.cs" />
-    <Compile Include="Parsers\Script\TrackFollowingObjectParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyInfo.tt</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="System\Cursor.cs" />
-    <Compile Include="System\Functions\Bve5Shared.cs" />
-    <Compile Include="System\Functions\CrashHandler.cs" />
-    <Compile Include="System\Functions\FolderBrowserDialog.cs" />
-    <Compile Include="System\Input\JoystickManager\AbstractJoystick.cs" />
-    <Compile Include="System\Input\JoystickManager\AbstractJoystickManager.cs" />
-    <Compile Include="System\Input\Controls.cs" />
-    <Compile Include="System\Input\InputDevicePlugin.cs" />
-    <Compile Include="System\Input\JoystickManager\ConfigurationLink.cs" />
-    <Compile Include="System\Input\JoystickManager\JoystickManager32.cs" />
-    <Compile Include="System\Input\JoystickManager\JoystickManager64.cs" />
-    <Compile Include="System\Input\JoystickManager\RailDriver\AbstractRailDriver.cs" />
-    <Compile Include="System\Input\JoystickManager\StandardJoystick.cs" />
-    <Compile Include="System\Input\ProcessControls.Analog.cs" />
-    <Compile Include="System\Input\ProcessControls.Digital.cs" />
-    <Compile Include="System\Logging\BlackBox.cs" />
-    <Compile Include="System\Logging\Score.cs" />
-    <Compile Include="System\Options.cs" />
-    <Compile Include="System\Program\CommandLine.cs" />
-    <Compile Include="UserInterface\formViewLog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\formViewLog.Designer.cs">
-      <DependentUpon>formViewLog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserInterface\formImageExport.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\formImageExport.Designer.cs">
-      <DependentUpon>formImageExport.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserInterface\formRaildriverCalibration.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\formRaildriverCalibration.Designer.cs">
-      <DependentUpon>formRaildriverCalibration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserInterface\formBugReport.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\formBugReport.Designer.cs">
-      <DependentUpon>formBugReport.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserInterface\formAbout.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\formAbout.Designer.cs">
-      <DependentUpon>formAbout.cs</DependentUpon>
-    </Compile>
-    <Compile Include="System\Functions\Extensions.cs" />
-    <Compile Include="System\Input\ControlRepeats.cs" />
-    <Compile Include="System\Input\Keyboard.cs" />
-    <Compile Include="System\Input\ProcessControls.cs" />
-    <Compile Include="System\Scripting.cs" />
-    <Compile Include="UserInterface\LaunchParameters.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserInterface\formAbout.resx">
-      <DependentUpon>formAbout.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserInterface\formImageExport.resx">
-      <DependentUpon>formImageExport.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserInterface\formRaildriverCalibration.resx">
-      <DependentUpon>formRaildriverCalibration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserInterface\formViewLog.resx">
-      <DependentUpon>formViewLog.cs</DependentUpon>
-    </EmbeddedResource>
-    <None Include="app.config" />
-    <Compile Include="Audio\Sounds.cs" />
-    <Compile Include="Audio\Sounds.Update.cs">
+    <Compile Update="Audio\Sounds.Update.cs">
       <DependentUpon>Sounds.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Screen.cs" />
-    <Compile Include="UserInterface\formImage.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\formImage.Designer.cs">
-      <DependentUpon>formImage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserInterface\formMain.Controls.cs">
-      <DependentUpon>formMain.cs</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\formMain.Packages.cs">
-      <DependentUpon>formMain.cs</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\formMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\formMain.Designer.cs">
-      <DependentUpon>formMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserInterface\formMain.Options.cs">
-      <DependentUpon>formMain.cs</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\formMain.Review.cs">
-      <DependentUpon>formMain.cs</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\formMain.Start.cs">
-      <DependentUpon>formMain.cs</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Game\ObjectManager\AnimatedObjects\FunctionScripts.cs" />
-    <Compile Include="Game\Game.cs" />
-    <Compile Include="System\Interface.cs" />
-    <Compile Include="System\Loading.cs" />
-    <Compile Include="System\MainLoop.cs" />
-    <Compile Include="System\GameWindow.cs" />
-    <Compile Include="Game\Timetable.cs" />
-    <Compile Include="Game\TrainManager.cs" />
-    <Compile Include="Game\World.cs" />
-    <Compile Include="System\Host.cs" />
-    <Compile Include="System\Input\JoystickManager\RailDriver\RailDriver32.cs" />
-    <Compile Include="System\Input\JoystickManager\RailDriver\RailDriver64.cs" />
-    <Compile Include="System\Program.cs" />
-    <EmbeddedResource Include="UserInterface\formBugReport.resx">
-      <DependentUpon>formBugReport.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserInterface\formImage.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>formImage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserInterface\formMain.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>formMain.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="..\..\assets\Controls\Default.controls" />
-    <None Include="OpenTK.dll.config">
+    <None Update="OpenTK.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\assets\Cursors\nk.png" />
@@ -389,31 +162,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibRender2\LibRender2.csproj">
-      <Project>{68215476-302c-49f2-9f7e-aae20a2b6b12}</Project>
-      <Name>LibRender2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
-      <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
-      <Name>OpenBveApi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\Formats.OpenBve\Formats.OpenBve.csproj">
-      <Project>{7ed7b285-fae6-4b34-acc5-87399f27c8bc}</Project>
-      <Name>Formats.OpenBve</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\RouteManager2\RouteManager2.csproj">
-      <Project>{4ef680d7-df17-4978-9872-133edc169b4b}</Project>
-      <Name>RouteManager2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SoundManager\SoundManager.csproj">
-      <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>
-      <Name>SoundManager</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TrainManager\TrainManager.csproj">
-      <Project>{d0fca2c5-ff75-42d8-ae80-310280a61fb1}</Project>
-      <Name>TrainManager</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\LibRender2\LibRender2.csproj" />
+    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj" />
+    <ProjectReference Include="..\Plugins\Formats.OpenBve\Formats.OpenBve.csproj" />
+    <ProjectReference Include="..\RouteManager2\RouteManager2.csproj" />
+    <ProjectReference Include="..\SoundManager\SoundManager.csproj" />
+    <ProjectReference Include="..\TrainManager\TrainManager.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -421,19 +175,19 @@
   <ItemGroup>
     <Content Include="Properties\AssemblyInfo.tt" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- AUTOMATICALLY TRANSLATE TEXT TEMPLATES -->
-  <!-- Optionally make the import portable across VS versions -->
-  <PropertyGroup>
-    <!-- Get the Visual Studio version – defaults to 10: -->
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <!-- Keep the next element all on one line: -->
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-  </PropertyGroup>
-  <!-- This is the important line: -->
-  <Import Condition=" '$(OS)' != 'Unix' and Exists('$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets')" Project="$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets" />
-  <!-- Details about translation -->
+  <ItemGroup>
+    <PackageReference Include="OpenTK-OpenBVE" Version="1.0.4" />
+    <PackageReference Include="SharpCompress" Version="0.32.2" />
+    <PackageReference Include="System.Buffers" Version="4.5.1" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Properties\Settings.Designer.cs" />
+  </ItemGroup>
   <PropertyGroup>
     <TransformOnBuild>true</TransformOnBuild>
   </PropertyGroup>
@@ -444,21 +198,16 @@
     <TransformOutOfDateOnly>true</TransformOutOfDateOnly>
   </PropertyGroup>
   <PropertyGroup>
-    <!-- Generate AssemblyInfo.cs -->
-    <!-- NOTE: Microsoft.TextTemplating.targets cannot process files that contain LF. -->
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">"$(ProjectDir)..\DevTools\TextTransform\TextTransform.exe" "$(ProjectDir)Properties\AssemblyInfo.tt"</PreBuildEvent>
     <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">mono $(ProjectDir)../DevTools/TextTransform/TextTransform.exe $(ProjectDir)Properties/AssemblyInfo.tt</PreBuildEvent>
   </PropertyGroup>
   <Target Name="AfterBuild">
-    <!-- Set LBA flag -->
     <Exec Condition="'$(OS)' != 'Unix'" Command="&quot;$(TargetDir)DevTools\LBAHeader.exe&quot; &quot;$(TargetDir)OpenBve.exe&quot;" />
     <Exec Condition="'$(OS)' == 'Unix'" Command="mono $(TargetDir)DevTools/LBAHeader.exe $(TargetDir)OpenBve.exe" />
-    <!-- Copy in dependancies -->
-    <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
     <ItemGroup>
       <AssetFiles Include="$(SolutionDir)assets\**\*.*" />
     </ItemGroup>
-    <Copy SkipUnchangedFiles="true" SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(TargetDir)Data\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles-&gt;'$(TargetDir)Data\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <Target Name="AfterClean">
     <Delete Files="Properties\AssemblyInfo.cs" />
