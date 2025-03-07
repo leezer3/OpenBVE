@@ -42,6 +42,7 @@ namespace Train.MsTs
 			train.Handles.LocoBrakeType = LocoBrakeType.Independant;
 			train.Handles.HasLocoBrake = false;
 			train.Handles.HoldBrake = new HoldBrakeHandle(train);
+			train.Specs.AveragesPressureDistribution = true;
 			currentFolder = Path.GetDirectoryName(fileName);
 			DirectoryInfo d = Directory.GetParent(currentFolder);
 			if(!d.Name.Equals("TRAINS", StringComparison.InvariantCultureIgnoreCase))
