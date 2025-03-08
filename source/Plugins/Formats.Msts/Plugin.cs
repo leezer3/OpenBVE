@@ -37,6 +37,9 @@ namespace OpenBve.Formats.MsTs
 	/// <summary>An abstract block of data, read from a MSTS file</summary>
 	public abstract class Block
 	{
+		/// <summary>The parent block</summary>
+		public Block ParentBlock;
+
 		/// <summary>The token that identifies the contents of this block</summary>
 		public KujuTokenID Token;
 
@@ -134,7 +137,7 @@ namespace OpenBve.Formats.MsTs
 		private readonly BinaryReader myReader;
 		private readonly MemoryStream myStream;
 
-		public BinaryBlock(byte[] bytes, KujuTokenID token)
+		public BinaryBlock(byte[] bytes, KujuTokenID token, Block parentBlock = null)
 		{
 			Token = token;
 			myStream = new MemoryStream(bytes);
@@ -157,6 +160,8 @@ namespace OpenBve.Formats.MsTs
 			{
 				Label = string.Empty;
 			}
+
+			ParentBlock = parentBlock;
 		}
 
 		public override Block ReadSubBlock(KujuTokenID newToken)
@@ -174,7 +179,7 @@ namespace OpenBve.Formats.MsTs
 			myReader.ReadUInt16();
 			uint remainingBytes = myReader.ReadUInt32();
 			byte[] newBytes = myReader.ReadBytes((int) remainingBytes);
-			return new BinaryBlock(newBytes, newToken);
+			return new BinaryBlock(newBytes, newToken, this);
 		}
 
 		public override Block ReadSubBlock(KujuTokenID[] validTokens)
@@ -188,7 +193,7 @@ namespace OpenBve.Formats.MsTs
 			myReader.ReadUInt16();
 			uint remainingBytes = myReader.ReadUInt32();
 			byte[] newBytes = myReader.ReadBytes((int) remainingBytes);
-			return new BinaryBlock(newBytes, currentToken);
+			return new BinaryBlock(newBytes, currentToken, this);
 		}
 
 		public override Block ReadSubBlock(bool allowEmptyBlock = false)
@@ -197,7 +202,7 @@ namespace OpenBve.Formats.MsTs
 			myReader.ReadUInt16();
 			uint remainingBytes = myReader.ReadUInt32();
 			byte[] newBytes = myReader.ReadBytes((int) remainingBytes);
-			return new BinaryBlock(newBytes, currentToken);
+			return new BinaryBlock(newBytes, currentToken, this);
 		}
 
 		public override ushort ReadUInt16()
@@ -354,7 +359,7 @@ namespace OpenBve.Formats.MsTs
 			currentPosition = 0;
 		}
 
-		public TextualBlock(string text, KujuTokenID token, bool textIsClean = false)
+		public TextualBlock(string text, KujuTokenID token, bool textIsClean = false, Block parentBlock = null)
 		{
 			if (text.Length == 0)
 			{
@@ -439,6 +444,7 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			currentPosition++;
+			ParentBlock = parentBlock;
 		}
 
 		public static Dictionary<KujuTokenID, Block> ReadBlocks(string text, KujuTokenID[] validTokens)
@@ -528,7 +534,7 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), newToken, true);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), newToken, true, this);
 					}
 
 					level--;
@@ -594,7 +600,7 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true, this);
 					}
 
 					level--;
@@ -663,7 +669,7 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true, this);
 					}
 
 					level--;
