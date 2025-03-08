@@ -15,6 +15,7 @@ using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
+using TrainManager.Handles;
 using TrainManager.Power;
 using TrainManager.Trains;
 
@@ -554,6 +555,53 @@ namespace Train.MsTs
 					{
 						SoundModelSystemParser.ParseSoundFile(soundFile, ref car);
 					}
+					break;
+				case KujuTokenID.EngineControllers:
+					if (!isEngine)
+					{
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Engine controllers are not expected to be present in a wagon block.");
+						break;
+					}
+
+					while (block.Position() < block.Length() - 2)
+					{
+						// large number of potential controls when including diesel + steam, so allow *any* block here
+						newBlock = block.ReadSubBlock();
+						ParseBlock(newBlock, fileName, ref wagonName, true, ref car, ref train);
+					}
+					break;
+				case KujuTokenID.Throttle:
+				case KujuTokenID.Brake_Train:
+					// NOTE: Throttle is valid for DIESEL + ELECTRIC only
+					block.ReadSingle(); // minimum
+					block.ReadSingle(); // maxiumum
+					block.ReadSingle(); // power step per notch
+					block.ReadSingle(); // default value (at start of simulation presumably)
+					newBlock = block.ReadSubBlock(KujuTokenID.NumNotches);
+					ParseBlock(newBlock, fileName, ref wagonName, true, ref car, ref train);
+					break;
+				case KujuTokenID.NumNotches:
+					// n.b. totalNotches value includes zero in MSTS
+					int totalNotches = block.ReadInt16();
+					for (int i = 0; i < totalNotches; i++)
+					{
+						newBlock = block.ReadSubBlock(KujuTokenID.Notch);
+						ParseBlock(newBlock, fileName, ref wagonName, true, ref car, ref train);
+					}
+					switch (block.ParentBlock.Token)
+					{
+						case KujuTokenID.Throttle:
+							train.Handles.Power = new PowerHandle(totalNotches - 1, train);
+							break;
+						case KujuTokenID.Brake_Train:
+							train.Handles.Brake = new BrakeHandle(totalNotches - 1, totalNotches - 1, train.Handles.EmergencyBrake, new double[] { }, new double[] { }, train);
+							break;
+					}
+					break;
+				case KujuTokenID.Notch:
+					double powerValue = block.ReadSingle();
+					double graduationValue = block.ReadSingle();
+					string notchToken = block.ReadString();
 					break;
 			}
 			return true;

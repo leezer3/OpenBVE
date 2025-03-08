@@ -378,9 +378,19 @@ namespace Train.MsTs
 							Car.CarSections[0].Groups[0].Elements[j].RotateZFunction.Maximum = LastAngle;
 							break;
 						case CabComponentType.Lever:
+							/*
+							 * TODO:
+							 * Need to revisit the actual position versus frame with MSTS content.
+							 *
+							 * Take the example of the stock Class 50
+							 * This has a notched brake handle, with 5 physical notches
+							 *
+							 * The cabview has 12 frames for these 5 notches, which appear to be mapped using NumPositions
+							 * Oddly, all frames appear to be distinct. Need to check OR + MSTS handling
+							 * Suspect there's a notch delay or something that should use these.
+							 */
 							Position.X *= rW;
 							Position.Y *= rH;
-
 							Plugin.currentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
 							if (wday > 0 & hday > 0)
 							{
