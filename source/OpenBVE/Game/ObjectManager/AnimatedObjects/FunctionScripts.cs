@@ -1501,6 +1501,16 @@ namespace OpenBve {
 							Function.Stack[s] = Train.Cars[Train.DriverCar].Windscreen.Wipers.CurrentPosition;
 						}
 						s++; break;
+					case Instructions.WiperState:
+						if (Train == null || !Train.IsPlayerTrain)
+						{
+							Function.Stack[s] = 0.0; //Not part of player train, so irrelevant
+						}
+						else
+						{
+							Function.Stack[s] = (int)Train.Cars[Train.DriverCar].Windscreen.Wipers.CurrentSpeed;
+						}
+						s++; break;
 					case Instructions.BrightnessOfCar:
 						if (Train == null) {
 							Function.Stack[s - 1] = 0.0;

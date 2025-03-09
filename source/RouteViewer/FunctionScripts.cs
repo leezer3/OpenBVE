@@ -1179,6 +1179,9 @@ namespace RouteViewer {
 					case Instructions.WiperPosition:
 						Function.Stack[s] = 1.0;
 						s++; break;
+					case Instructions.WiperState:
+						Function.Stack[s] = 0.0; //Not part of player train, so irrelevant
+						s++; break;
 					case Instructions.FrontCoupler:
 						if (Train != null)
 						{
