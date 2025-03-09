@@ -11,6 +11,7 @@
 		EngineBrakeHandle = 6,
 		TrainBrakeHandle = 7,
 		Horn = 8,
-		AWS = 9
+		AWS = 9,
+		WiperState = 10,
 	}
 }

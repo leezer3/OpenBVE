@@ -610,6 +610,10 @@ namespace Train.MsTs
 								_panelSubject = PanelSubject.Horn;
 								Units = "klaxon";
 								break;
+							case "wipers two_state":
+								_panelSubject = PanelSubject.WiperState;
+								Units = "wiperstate";
+								break;
 						}
 
 						break;
@@ -736,6 +740,9 @@ namespace Train.MsTs
 					break;
 				case "klaxon":
 					Code = "klaxon";
+					break;
+				case "wiperstate":
+					Code = "wiperstate";
 					break;
 				default:
 				{

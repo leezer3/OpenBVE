@@ -162,6 +162,9 @@ namespace Train.MsTs
 					train.DriverCar = i;
 				}
 			}
+
+			train.Cars[train.DriverCar].Windscreen = new Windscreen(256, 10.0, train.Cars[train.DriverCar]);
+			train.Cars[train.DriverCar].Windscreen.Wipers = new WindscreenWiper(train.Cars[Train.DriverCar].Windscreen, WiperPosition.Left, WiperPosition.Left, 1.0, 0.0, true); // hack: zero hold time so they act as fast with two states
 			train.PlaceCars(0.0);
 		}
 
