@@ -40,7 +40,7 @@ namespace Train.MsTs
 
 		internal void Parse(string trainSetDirectory, string wagonName, bool isEngine, ref CarBase Car, ref TrainBase train)
 		{
-			wheelRadiusNum = 0;
+			wheelRadiusNum = 1;
 			wagonFiles = Directory.GetFiles(trainSetDirectory, isEngine ? "*.eng" : "*.wag", SearchOption.AllDirectories);
 			Car.Specs.IsMotorCar = false;
 			Car.Wheels = new Dictionary<string, Wheels>();
@@ -532,19 +532,28 @@ namespace Train.MsTs
 					wheelRadius = block.ReadSingle(UnitOfLength.Meter);
 					break;
 				case KujuTokenID.NumWheels:
-					int numWheels = block.ReadInt32() / 2; // total wheels, so divide by 2 to get axles
-					for (int i = 1; i < numWheels + 1; i++)
+					int numWheels = block.ReadInt32();
+					if (numWheels < 2)
 					{
-						switch (wheelRadiusNum)
+						// NumWheels *should* be divisible by two (to get axles), but some content uses a single wheel, e.g. stock Class 50
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Invalid number of wheels.");
+						numWheels = 1;
+					}
+					else
+					{
+						numWheels /= 2;
+					}
+
+					if (numWheels == 1)
+					{
+						car.Wheels.Add("WHEELS" + wheelRadiusNum, new Wheels(2, "WHEELS" + wheelRadiusNum, wheelRadius));
+					}
+					else
+					{
+						car.Wheels.Add("WHEELS" + wheelRadiusNum, new Wheels(2, "WHEELS" + wheelRadiusNum, wheelRadius));
+						for (int i = 1; i < numWheels + 1; i++)
 						{
-							case 0:
-								// first wheel radius in the file seems to be the main drivers
-								car.Wheels.Add("WHEELS" + i, new Wheels(2, "WHEELS" + i, wheelRadius));
-								break;
-							default:
-								// second appears to be the first bogie
-								car.Wheels.Add("WHEELS" + wheelRadiusNum + i, new Wheels(2, "WHEELS2" + wheelRadiusNum + i, wheelRadius));
-								break;
+							car.Wheels.Add("WHEELS" + wheelRadiusNum + i, new Wheels(2, "WHEELS1" + wheelRadiusNum + i, wheelRadius));
 						}
 					}
 					wheelRadiusNum++;
