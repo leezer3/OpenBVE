@@ -125,10 +125,10 @@ namespace OpenBveApi.Objects
 						{
 							// if controllers are not defined for WHEELSN-N, it appears that those for the base WHEELSN are used
 							// otherwise, controlled by the position of WHEELS1
-							string baseName = Name.StartsWith("WHEELS") ? Name.Substring(0, 7) : "WHEELS1";
+							string baseName = Name.Substring(0, 7);
 							if (!baseCar.Wheels.ContainsKey(baseName))
 							{
-								return;
+								baseName = "WHEELS1";
 							}
 							wheelRadius = baseCar.Wheels[baseName].Radius;
 						}
