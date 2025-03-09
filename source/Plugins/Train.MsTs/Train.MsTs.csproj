@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D7561922-31A6-46DE-801F-C3C519B4B9C3}</ProjectGuid>
+    <ProjectGuid>{A6E3D875-DDFA-446A-AAF5-BFAFF3C9EF45}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Object.Msts</RootNamespace>
-    <AssemblyName>Object.Msts</AssemblyName>
+    <RootNamespace>Train.MsTs</RootNamespace>
+    <AssemblyName>Train.MsTs</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,8 +21,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,17 +29,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'GLMenu|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\bin_debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpCompress, Version=0.32.2.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
@@ -69,26 +55,45 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Panel\CvfParser.cs" />
+    <Compile Include="Panel\Enums\CabComponentType.cs" />
+    <Compile Include="Panel\Enums\PanelSubject.cs" />
+    <Compile Include="Sound\SmsParser.cs" />
+    <Compile Include="Sound\TriggerTypes.cs" />
+    <Compile Include="Train\ConsistParser.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShapeParser.cs" />
-    <Compile Include="WheelRotation.cs" />
+    <Compile Include="Train\Enums\BrakeEquipmentType.cs" />
+    <Compile Include="Train\Enums\BrakeSystemType.cs" />
+    <Compile Include="Train\VehicleParser.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\LibRender2\LibRender2.csproj">
+      <Project>{68215476-302C-49F2-9F7E-AAE20A2B6B12}</Project>
+      <Name>LibRender2</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\OpenBveApi\OpenBveApi.csproj">
-      <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
+      <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SoundManager\SoundManager.csproj">
+      <Project>{90ABFA0C-ABCA-444E-ADEF-9A299AED6524}</Project>
+      <Name>SoundManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TrainManager\TrainManager.csproj">
+      <Project>{D0FCA2C5-FF75-42D8-AE80-310280A61FB1}</Project>
+      <Name>TrainManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\Formats.Msts\Formats.Msts.csproj">
       <Project>{e81b7bd8-a326-47d3-b7ee-e9c7d4d119fa}</Project>
       <Name>Formats.Msts</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>
