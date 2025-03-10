@@ -13,5 +13,6 @@
 		Horn = 8,
 		AWS = 9,
 		WiperState = 10,
+		Headlight = 11,
 	}
 }
