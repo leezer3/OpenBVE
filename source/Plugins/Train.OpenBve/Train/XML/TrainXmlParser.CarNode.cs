@@ -148,7 +148,7 @@ namespace Train.OpenBve
 							Train.Cars[Car].Specs.AccelerationCurves = new AccelerationCurve[Plugin.AccelerationCurves.Length];
 							for (int i = 0; i < Plugin.AccelerationCurves.Length; i++)
 							{
-								Train.Cars[Car].Specs.AccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone();
+								Train.Cars[Car].Specs.AccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone(1.0);
 							}
 
 							Train.Cars[Car].Specs.AccelerationCurveMaximum = Plugin.MaximumAcceleration;
