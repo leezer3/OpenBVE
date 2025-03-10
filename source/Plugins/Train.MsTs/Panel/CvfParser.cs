@@ -614,6 +614,12 @@ namespace Train.MsTs
 								_panelSubject = PanelSubject.WiperState;
 								Units = "wiperstate";
 								break;
+							case "front_hlight tri_state":
+								// CHECK ACTUAL BEHAVIOUR- Last 2 frames from default Class 50 are identical.
+								// Probably correct, with intention being OFF / FRONT / REAR
+								_panelSubject = PanelSubject.Headlight;
+								Units = "headlights";
+								break;
 						}
 
 						break;
@@ -739,10 +745,9 @@ namespace Train.MsTs
 					Code = "271 pluginstate";
 					break;
 				case "klaxon":
-					Code = "klaxon";
-					break;
 				case "wiperstate":
-					Code = "wiperstate";
+				case "headlights":
+					Code = Subject.ToLowerInvariant();
 					break;
 				default:
 				{
