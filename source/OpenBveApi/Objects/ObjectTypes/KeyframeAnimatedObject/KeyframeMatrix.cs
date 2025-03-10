@@ -48,12 +48,35 @@ namespace OpenBveApi.Objects
 		{
 			get
 			{
+				Matrix4D matrix;
 				if (containerObject.Animations != null && containerObject.Animations.ContainsKey(Name))
 				{
-					return containerObject.Animations[Name].Matrix;
-
+					matrix = containerObject.Animations[Name].Matrix;
 				}
-				return _matrix;
+				else
+				{
+					matrix = _matrix;
+				}
+				
+				if (containerObject.Pivots.ContainsKey(Name))
+				{
+					// This somewhat misuses a single track follower, but it works OK
+					// Y rotation is not handled (other than by the main model matrix moving)
+					Vector3 v1 = containerObject.rearAxlePosition - containerObject.frontAxlePosition;
+					containerObject.trackFollower.UpdateAbsolute(containerObject.currentTrackPosition + containerObject.Pivots[Name].FrontPoint, true, false);
+					Vector3 w1 = containerObject.trackFollower.WorldPosition;
+					containerObject.trackFollower.UpdateAbsolute(containerObject.currentTrackPosition + containerObject.Pivots[Name].RearPoint, true, false);
+					Vector3 w2 = containerObject.trackFollower.WorldPosition;
+					Vector3 v2 = w2 - w1;
+					double a = Vector2.Dot(new Vector2(v1.X, v1.Z), new Vector2(v2.X, v2.Z));
+					double b = Vector2.Determinant(new Vector2(v1.X, v1.Z), new Vector2(v2.X, v2.Z));
+					double angle = System.Math.Atan2(a, b);
+					angle += 1.5708;
+					Matrix4D.CreateFromAxisAngle(Vector3.Down, angle, out Matrix4D m);
+					m *= matrix;
+					return m;
+				}
+				return matrix;
 			}
 		}
 	}

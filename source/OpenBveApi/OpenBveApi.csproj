@@ -161,6 +161,7 @@
     <Compile Include="Objects\ObjectTypes\KeyframeAnimatedObject\KeyframeAnimation.cs" />
     <Compile Include="Objects\ObjectTypes\KeyframeAnimatedObject\KeyframeMatrix.cs" />
     <Compile Include="Objects\ObjectTypes\KeyframeAnimatedObject\KeyframeWorldObject.cs" />
+    <Compile Include="Objects\ObjectTypes\KeyframeAnimatedObject\PivotPoint.cs" />
     <Compile Include="Objects\ObjectTypes\StaticObject.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObject\TrackFollowingObject.cs" />
     <Compile Include="Objects\ObjectTypes\UnifiedObject.cs" />

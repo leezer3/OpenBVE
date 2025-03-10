@@ -568,7 +568,39 @@ namespace Plugin
 					}
 				}
 			}
-			
+			// extract pivots
+			for (int i = 0; i < shape.Matricies.Count; i++)
+			{
+				if (shape.Matricies[i].Name.StartsWith("BOGIE"))
+				{
+					int bogieIndex = int.Parse(shape.Matricies[i].Name.Substring(5));
+					double minWheel = 0, maxWheel = 0;
+					for (int j = 0; j < shape.Matricies.Count; j++)
+					{
+						if (shape.Matricies[j].Name.Length == 8 && shape.Matricies[j].Name.StartsWith("WHEELS" + bogieIndex))
+						{
+							double z = shape.Matricies[j].Matrix.ExtractTranslation().Z;
+							minWheel = Math.Min(shape.Matricies[j].Matrix.ExtractTranslation().Z, minWheel);
+							maxWheel = Math.Max(shape.Matricies[j].Matrix.ExtractTranslation().Z, maxWheel);
+						}
+					}
+
+					if (minWheel == 0 && maxWheel == 0)
+					{
+						// as wheel translation may not be specified
+						newResult.Pivots.Add(shape.Matricies[i].Name, new PivotPoint(shape.Matricies[i].Name, shape.Matricies[i].Matrix.ExtractTranslation().Z, -2, 2));
+					}
+					else
+					{
+						newResult.Pivots.Add(shape.Matricies[i].Name, new PivotPoint(shape.Matricies[i].Name, shape.Matricies[i].Matrix.ExtractTranslation().Z, minWheel, maxWheel));
+					}
+						
+					
+				}
+			}
+
+
+
 
 			Matrix4D matrix = Matrix4D.Identity;
 			return newResult;

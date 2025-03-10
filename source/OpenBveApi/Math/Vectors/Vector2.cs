@@ -350,7 +350,16 @@ namespace OpenBveApi.Math {
 		public static double Dot(Vector2 a, Vector2 b) {
 			return a.X * b.X + a.Y * b.Y;
 		}
-		
+
+		/// <summary>Gives the determinant product of two vectors.</summary>
+		/// <param name="a">The first vector.</param>
+		/// <param name="b">The second vector.</param>
+		/// <returns>The determinant product of the two vectors.</returns>
+		public static double Determinant(Vector2 a, Vector2 b)
+		{
+			return a.X * b.Y - a.Y * b.X;
+		}
+
 		/// <summary>Normalizes a vector.</summary>
 		/// <param name="vector">The vector.</param>
 		/// <returns>The normalized vector.</returns>

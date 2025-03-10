@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 
@@ -46,6 +47,14 @@ namespace OpenBveApi.Objects
 		public ObjectState[] Objects;
 		/// <summary>The keyframe matricies to be sent to the shader</summary>
 		public KeyframeMatrix[] Matricies;
+		/// <summary>The pivots</summary>
+		public Dictionary<string, PivotPoint> Pivots = new Dictionary<string, PivotPoint>();
+
+		internal readonly TrackFollower trackFollower;
+		internal Vector3 frontAxlePosition;
+		internal Vector3 rearAxlePosition;
+		internal Matrix4D baseObjectRotationMatrix;
+		internal double currentTrackPosition;
 
 		/// <summary>Creates an empty KeyFrameAnimatedObject</summary>
 		/// <param name="currentHost">The host application interface</param>
@@ -56,6 +65,7 @@ namespace OpenBveApi.Objects
 			SecondsSinceLastUpdate = 0;
 			Matricies = new KeyframeMatrix[0];
 			Animations = new Dictionary<string, KeyframeAnimation>();
+			trackFollower = new TrackFollower(currentHost);
 		}
 
 		/// <inheritdoc />
@@ -67,6 +77,7 @@ namespace OpenBveApi.Objects
 			{
 				matriciesToShader[i] = Matricies[i].Matrix;
 			}
+
 			for (int i = 0; i < Objects.Length; i++)
 			{
 				if (Objects[i] == null)
@@ -120,6 +131,11 @@ namespace OpenBveApi.Objects
 			{
 				clonedObject.Animations.Add(Animations.ElementAt(i).Key, Animations.ElementAt(i).Value.Clone(clonedObject));
 			}
+
+			for (int i = 0; i < Pivots.Count; i++)
+			{
+				clonedObject.Pivots.Add(Pivots.ElementAt(i).Key, Pivots.ElementAt(i).Value);
+			}
 			return clonedObject;
 			
 		}
@@ -164,6 +180,15 @@ namespace OpenBveApi.Objects
 		/// <param name="camera"></param>
 		public void Update(AbstractTrain train, int carIndex, double trackPosition, Vector3 position, Vector3 direction, Vector3 up, Vector3 side, bool updateFunctions, bool show, double timeElapsed, bool enableDamping, bool isTouch = false, dynamic camera = null)
 		{
+			if (train != null)
+			{
+				dynamic dynamicTrain = train; // HACK: get the track follower onto the right track index!
+				trackFollower.TrackIndex = dynamicTrain.Cars[carIndex].FrontAxle.Follower.TrackIndex;
+				frontAxlePosition = dynamicTrain.Cars[carIndex].FrontAxle.Follower.WorldPosition;
+				rearAxlePosition = dynamicTrain.Cars[carIndex].RearAxle.Follower.WorldPosition;
+				currentTrackPosition = trackPosition;
+			}
+			
 			// Update animations
 			for (int i = 0; i < Animations.Count; i++)
 			{
