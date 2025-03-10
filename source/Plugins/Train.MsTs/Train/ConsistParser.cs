@@ -43,6 +43,7 @@ namespace Train.MsTs
 			train.Handles.HasLocoBrake = false;
 			train.Handles.HoldBrake = new HoldBrakeHandle(train);
 			train.Specs.AveragesPressureDistribution = true;
+			train.SafetySystems.Headlights = new LightSource(train, 2);
 			currentFolder = Path.GetDirectoryName(fileName);
 			DirectoryInfo d = Directory.GetParent(currentFolder);
 			if(!d.Name.Equals("TRAINS", StringComparison.InvariantCultureIgnoreCase))
