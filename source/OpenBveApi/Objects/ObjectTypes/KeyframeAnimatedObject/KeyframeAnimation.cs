@@ -112,7 +112,8 @@ namespace OpenBveApi.Objects
 				if (baseCar != null)
 				{
 					// HACK: use the train as a dynamic to allow us to pull out the car reference
-					if (baseCar.Wheels != null && baseCar.Wheels.ContainsKey(Name))
+					double wheelRadius;
+					if (baseCar.Wheels != null)
 					{
 						double wheelRadius;
 						if (baseCar.Wheels.ContainsKey(Name))
