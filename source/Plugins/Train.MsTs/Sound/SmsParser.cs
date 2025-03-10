@@ -74,16 +74,7 @@ namespace Train.MsTs
 				using (BinaryReader reader = new BinaryReader(fb))
 				{
 					byte[] newBytes = reader.ReadBytes((int)(fb.Length - fb.Position));
-					string s;
-					if (unicode)
-					{
-						s = Encoding.Unicode.GetString(newBytes);
-					}
-					else
-					{
-						s = Encoding.ASCII.GetString(newBytes);
-					}
-
+					string s = unicode ? Encoding.Unicode.GetString(newBytes) : Encoding.ASCII.GetString(newBytes);
 					TextualBlock block = new TextualBlock(s, KujuTokenID.Tr_SMS);
 					ParseBlock(block, ref soundSet, ref Car);
 				}
@@ -245,7 +236,15 @@ namespace Train.MsTs
 					newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.DisableTrigger });
 					ParseBlock(newBlock, ref currentSoundSet, ref car);
 					break;
+				case KujuTokenID.StartLoopRelease:
 				case KujuTokenID.StartLoop:
+					/* StartLoopRelease - Loop stops when key is released
+					 * StartLoop - Loop continues when key is released
+					 * ---------------------------------------------------
+					 * NOTE: Handle these on a per-sound trigger, as where possible
+					 * map to existing subsystems
+					 */
+					currentSoundType = block.Token;
 					numStreams = block.ReadInt32();
 					for (int i = 0; i < numStreams; i++)
 					{
@@ -254,6 +253,10 @@ namespace Train.MsTs
 						newBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
 						ParseBlock(newBlock, ref currentSoundSet, ref car);
 					}
+					break;
+				case KujuTokenID.ReleaseLoopRelease:
+					// empty block expected
+					// appear to be paired with StartLoopRelease
 					break;
 				case KujuTokenID.File:
 					if (block.ReadPath(currentFolder, out string soundFile))
@@ -301,6 +304,27 @@ namespace Train.MsTs
 									car.baseTrain.Handles.LocoBrake.Max = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
+							case SoundTrigger.LightSwitchToggle:
+								if (currentSoundType == KujuTokenID.PlayOneShot && car.baseTrain.SafetySystems.Headlights != null)
+								{
+									Plugin.currentHost.RegisterSound(soundFile, 2.0, out var soundHandle);
+									car.baseTrain.SafetySystems.Headlights.SwitchSoundBuffer = soundHandle as SoundBuffer;
+								}
+								break;
+							case SoundTrigger.HornOn:
+								if (currentSoundType == KujuTokenID.StartLoopRelease && car.Horns[0] != null)
+								{
+									Plugin.currentHost.RegisterSound(soundFile, 2.0, out var soundHandle);
+									car.Horns[0].LoopSound = soundHandle as SoundBuffer;
+								}
+								break;
+							case SoundTrigger.BellOn:
+								if (currentSoundType == KujuTokenID.StartLoopRelease && car.Horns[2] != null)
+								{
+									Plugin.currentHost.RegisterSound(soundFile, 2.0, out var soundHandle);
+									car.Horns[0].LoopSound = soundHandle as SoundBuffer;
+								}
+								break;
 						}
 					}
 					else
@@ -326,13 +350,11 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Discrete_Trigger:
-					currentSoundType = block.Token;
 					currentTrigger = (SoundTrigger)block.ReadInt32(); // stored as integer
 					newBlock = block.ReadSubBlock(new[] { KujuTokenID.PlayOneShot, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump });
 					ParseBlock(newBlock, ref currentSoundSet, ref car);
 					break;
 				case KujuTokenID.Variable_Trigger:
-					currentSoundType = block.Token;
 					token = block.ReadEnumValue(default(KujuTokenID));
 					switch (token)
 					{
@@ -374,19 +396,6 @@ namespace Train.MsTs
 						newBlock = block.ReadSubBlock(KujuTokenID.File);
 						ParseBlock(newBlock, ref currentSoundSet, ref car);
 					}
-					break;
-				case KujuTokenID.StartLoopRelease:
-					numStreams = block.ReadInt16();
-					for (int i = 0; i < numStreams; i++)
-					{
-						newBlock = block.ReadSubBlock(KujuTokenID.File);
-						ParseBlock(newBlock, ref currentSoundSet, ref car);
-					}
-					newBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
-					ParseBlock(newBlock, ref currentSoundSet, ref car);
-					break;
-				case KujuTokenID.ReleaseLoopRelease:
-					// empty block expected
 					break;
 				case KujuTokenID.Volume:
 					double volume = block.ReadSingle();
