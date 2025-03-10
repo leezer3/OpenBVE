@@ -1,18 +1,34 @@
-﻿namespace Train.MsTs
+﻿// ReSharper disable InconsistentNaming
+namespace Train.MsTs
 {
 	internal enum PanelSubject
 	{
-		Speedometer = 0,
-		BrakePipe = 1,
-		BrakeCylinder = 2,
-		Ammeter = 3,
-		Direction = 4,
-		PowerHandle = 5,
-		EngineBrakeHandle = 6,
-		TrainBrakeHandle = 7,
-		Horn = 8,
-		AWS = 9,
-		WiperState = 10,
-		Headlight = 11,
+		Alerter_Display,
+		Ammeter,
+		Aspect_Display,
+		AWS,
+		Bell,
+		Brake_Cyl,
+		Brake_Pipe,
+		CP_Handle,
+		CPH_Display,
+		Direction,
+		Direction_Display,
+		Engine_Brake,
+		Eq_Res,
+		Front_Hlight,
+		Horn,
+		Load_Meter,
+		Main_Res,
+		Overspeed,
+		Penalty_App,
+		Reset,
+		Sanders,
+		Sanding,
+		Speedometer,
+		Throttle,
+		Train_Brake,
+		Whistle,
+		Wipers,
 	}
 }
