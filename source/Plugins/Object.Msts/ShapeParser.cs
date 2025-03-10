@@ -33,6 +33,7 @@ using SharpCompress.Compressors.Deflate;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 
@@ -48,7 +49,7 @@ using System.Text;
 #pragma warning disable 0219
 namespace Plugin
 {
-	class MsTsShapeParser
+	partial class MsTsShapeParser
 	{
 		struct Texture
 		{
@@ -548,6 +549,26 @@ namespace Plugin
 				shape.LODs[LOD].subObjects[j].Apply(out aos.Prototype, true);
 				newResult.Objects[j] = aos;
 			}
+
+			if (newResult.Animations.Count == 0)
+			{
+				// some objects have default wheels matricies defined but no animations e.g. default UK MK1 coaches
+				// add them now, as MSTS animates these (yuck)
+				for (int i = 0; i < shape.Matricies.Count; i++)
+				{
+
+					if (shape.Matricies[i].Name.StartsWith("WHEELS"))
+					{
+						KeyframeAnimation newAnimation = new KeyframeAnimation(newResult, string.Empty, shape.Matricies[i].Name, 8, 60, shape.Matricies[i].Matrix);
+						newAnimation.AnimationControllers = new[]
+						{
+							new TcbKey(shape.Matricies[i].Name, defaultWheelRotationFrames)
+						};
+						newResult.Animations.Add(shape.Matricies[i].Name, newAnimation);
+					}
+				}
+			}
+			
 
 			Matrix4D matrix = Matrix4D.Identity;
 			return newResult;
@@ -1263,6 +1284,20 @@ namespace Plugin
 					if (currentNode.AnimationControllers.Length != 0)
 					{
 						newResult.Animations.Add(block.Label, currentNode);
+					}
+					else
+					{
+						if (currentNode.Name.StartsWith("WHEELS"))
+						{
+							// some objects, e.g. the default Class 50 provide a wheel animation with no controllers
+							// add a default 8 frame animation
+							currentNode.AnimationControllers = new AbstractAnimation[]
+							{
+								new TcbKey(currentNode.Name, defaultWheelRotationFrames)
+							};
+
+							newResult.Animations.Add(block.Label, currentNode);
+						}
 					}
 					break;
 				case KujuTokenID.controllers:
