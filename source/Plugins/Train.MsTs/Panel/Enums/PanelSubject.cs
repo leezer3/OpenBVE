@@ -1,4 +1,5 @@
 ﻿// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Global
 namespace Train.MsTs
 {
 	internal enum PanelSubject
@@ -21,6 +22,7 @@ namespace Train.MsTs
 		Load_Meter,
 		Main_Res,
 		Overspeed,
+		Pantograph,
 		Penalty_App,
 		Reset,
 		Sanders,
@@ -28,6 +30,7 @@ namespace Train.MsTs
 		Speedometer,
 		Throttle,
 		Train_Brake,
+		Wheelslip,
 		Whistle,
 		Wipers,
 	}
