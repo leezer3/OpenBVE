@@ -21,6 +21,7 @@ namespace Train.MsTs
 		Load_Meter,
 		Main_Res,
 		Overspeed,
+		Pantograph,
 		Penalty_App,
 		Reset,
 		Sanders,
@@ -28,6 +29,7 @@ namespace Train.MsTs
 		Speedometer,
 		Throttle,
 		Train_Brake,
+		Wheelslip,
 		Whistle,
 		Wipers,
 	}
