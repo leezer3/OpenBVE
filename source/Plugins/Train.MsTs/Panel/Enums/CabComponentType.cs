@@ -19,6 +19,10 @@
 		/// <summary>In cab signalling / safety system (e.g. AWS)</summary>
 		CabSignalDisplay = 7,
 		/// <summary>Steam locomotive firebox animation</summary>
-		Firebox = 8
+		Firebox = 8,
+		/// <summary>A digital display</summary>
+		Digital = 9,
+		/// <summary>A digital clock</summary>
+		DigitalClock = 10
 	}
 }
