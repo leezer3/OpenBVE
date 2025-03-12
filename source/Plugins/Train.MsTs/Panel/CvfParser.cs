@@ -563,6 +563,7 @@ namespace Train.MsTs
 				case PanelSubject.Brake_Cyl:
 					switch (subjectUnits)
 					{
+						case Units.Inches_Of_Mercury:
 						case Units.PSI:
 							Code = "brakecylinder 0.001 *";
 							break;
@@ -571,6 +572,7 @@ namespace Train.MsTs
 				case PanelSubject.Brake_Pipe:
 					switch (subjectUnits)
 					{
+						case Units.Inches_Of_Mercury:
 						case Units.PSI:
 							Code = "brakepipe 0.001 *";
 							break;
