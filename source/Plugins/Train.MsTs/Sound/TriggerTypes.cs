@@ -1,6 +1,7 @@
-﻿namespace Train.MsTs
+﻿// ReSharper disable UnusedMember.Global
+namespace Train.MsTs
 {
-    enum SoundTrigger
+    internal enum SoundTrigger
 	{
 		DynamicBrakeIncrease = 2,
 		DynamicBrakeOff = 3,

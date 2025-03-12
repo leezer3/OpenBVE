@@ -1,32 +1,34 @@
-﻿namespace Train.MsTs
+﻿// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Global
+namespace Train.MsTs
 {
 	enum BrakeEquipmentType
 	{
 		/// <summary>Handbrake is fitted</summary>
-		handbrake,
+		Handbrake,
 		/// <summary>Manual brake fitted.</summary>
-		manual_brake,
+		Manual_Brake,
 		/// <summary>3 position retaining valve is fitted.</summary>
-		retainer_3_position,
+		Retainer_3_Position,
 		/// <summary>4 position retaining valve is fitted</summary>
 		/// <remarks>This is meant for freight wagons only</remarks>
-		retainer_4_position,
+		Retainer_4_Position,
 		/// <summary>Vacuum brake is fitted.</summary>
-		vacuum_brake,
+		Vacuum_Brake,
 		/// <summary>Standard triple valve is fitted.</summary>
-		triple_valve,
+		Triple_Valve,
 		/// <summary>Triple valve that permits partial releasing of the brakes.</summary>
-		graduated_release_triple_valve,
+		Graduated_Release_Triple_Valve,
 		/// <summary>Electrically controlled brake system is fitted. Release and application of the brakes are independently controlled.</summary>
-		ep_brake,
+		EP_Brake,
 		/// <summary>Same functionality as ep_brake</summary>
-		ecp_brake,
+		ECP_Brake,
 		/// <summary>Air tank used for normal service brake applications. This is required for all brake systems.</summary>
-		auxilary_reservoir,
+		Auxilary_Reservoir,
 		/// <summary>Air tank used for emergency applications.</summary>
 		/// <remarks>This is optional.</remarks>
-		emergency_brake_reservoir,
+		Emergency_Brake_Reservoir,
 		/// <summary>Electronic or computer controller on the vehicle that can be set to independently control any parameter of the braking system.</summary>
-		distributor
+		Distributor
 	}
 }
