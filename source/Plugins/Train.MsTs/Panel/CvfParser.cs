@@ -88,15 +88,7 @@ namespace Train.MsTs
 				using (BinaryReader reader = new BinaryReader(fb))
 				{
 					byte[] newBytes = reader.ReadBytes((int) (fb.Length - fb.Position));
-					string s;
-					if (unicode)
-					{
-						s = Encoding.Unicode.GetString(newBytes);
-					}
-					else
-					{
-						s = Encoding.ASCII.GetString(newBytes);
-					}
+					string s = unicode ? Encoding.Unicode.GetString(newBytes) : Encoding.ASCII.GetString(newBytes);
 					TextualBlock block = new TextualBlock(s, KujuTokenID.Tr_CabViewFile);
 					ParseBlock(block);
 				}
@@ -152,8 +144,6 @@ namespace Train.MsTs
 			{
 				Car.Driver = CabViews[0].position;
 				Plugin.currentHost.RegisterTexture(CabViews[0].fileName, new TextureParameters(null, null), out Texture tday, true);
-				PanelBitmapWidth = tday.Width;
-				PanelBitmapHeight = tday.Height;
 				CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, 1024, 768, new Vector2(0.5, 0.5), 0.0, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
 			}
 			else
@@ -290,9 +280,6 @@ namespace Train.MsTs
 		static double PanelTop = 0.0, PanelBottom = 768.0;
 		static Vector2 PanelCenter = new Vector2(0, 240);
 		private static Vector2 PanelOrigin = new Vector2(0, 240);
-		static double PanelBitmapWidth = 640.0, PanelBitmapHeight = 480.0;
-
-
 
 		private class Component
 		{
@@ -314,7 +301,6 @@ namespace Train.MsTs
 
 			internal void Parse()
 			{
-				Block newBlock;
 				if (!Enum.TryParse(myBlock.Token.ToString(), true, out Type))
 				{
 					Plugin.currentHost.AddMessage(MessageType.Error, false, "Unrecognised CabViewComponent type.");
@@ -326,7 +312,7 @@ namespace Train.MsTs
 					//Components in CVF files are considerably less structured, so read *any* valid block
 					try
 					{
-						newBlock = myBlock.ReadSubBlock();
+						Block newBlock = myBlock.ReadSubBlock();
 						ReadSubBlock(newBlock);
 					}
 					catch
@@ -353,8 +339,7 @@ namespace Train.MsTs
 					switch (Type)
 					{
 						case CabComponentType.Dial:
-							Texture tday;
-							Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(null, null), out tday, true);
+							Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(null, null), out Texture tday, true);
 							//Get final position from the 640px panel (Yuck...)
 							Position.X *= rW;
 							Position.Y *= rH;
@@ -670,12 +655,6 @@ namespace Train.MsTs
 			if (DaytimeTexture != null)
 			{
 				Object.Mesh.Materials[0].Flags |= MaterialFlags.TransparentColor;
-
-				if (NighttimeTexture != null)
-				{
-					// In BVE4 and versions of OpenBVE prior to v1.7.1.0, elements with NighttimeImage defined are rendered with lighting disabled.
-					Object.Mesh.Materials[0].Flags |= MaterialFlags.DisableLighting;
-				}
 			}
 
 			Object.Mesh.Materials[0].Color = Color;

@@ -149,15 +149,7 @@ namespace Train.MsTs
 				using (BinaryReader reader = new BinaryReader(fb))
 				{
 					byte[] newBytes = reader.ReadBytes((int)(fb.Length - fb.Position));
-					string s;
-					if (unicode)
-					{
-						s = Encoding.Unicode.GetString(newBytes);
-					}
-					else
-					{
-						s = Encoding.ASCII.GetString(newBytes);
-					}
+					string s = unicode ? Encoding.Unicode.GetString(newBytes) : Encoding.ASCII.GetString(newBytes);
 
 					/*
 					 * Engine files contain two blocks, not in an enclosing block
@@ -481,7 +473,7 @@ namespace Train.MsTs
 						}
 						car.CarSections = move;
 					}
-					car.CarSections[0] = new CarSection(Plugin.currentHost, ObjectType.Overlay, true);
+					car.CarSections[0] = new CarSection(Plugin.currentHost, ObjectType.Overlay, true, car);
 					car.CameraRestrictionMode = CameraRestrictionMode.On;
 					Plugin.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 					CabviewFileParser.ParseCabViewFile(cabViewFile, ref car);

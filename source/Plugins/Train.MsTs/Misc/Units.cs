@@ -1,4 +1,6 @@
-﻿namespace Train.MsTs
+﻿// ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
+namespace Train.MsTs
 {
     internal enum Units
     {
@@ -7,6 +9,7 @@
 		Inches_Of_Mercury,
 		Kilometers_Per_Hour,
 		Miles_Per_Hour,
-		PSI
+		PSI,
+		Kilo_Lbs
     }
 }
