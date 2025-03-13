@@ -108,7 +108,10 @@ namespace Plugin
 						for (int i = 0; i < nVerts; i++)
 						{
 							f.Vertices[i].Index = i;
-							f.Vertices[i].Normal = allNormals[(int)face.Normals[i]];
+							if (face.Normals.Count > i)
+							{
+								f.Vertices[i].Normal = allNormals[(int)face.Normals[i]];
+							}
 						}
 						f.Material = 1;
 						builder.Faces.Add(f);
