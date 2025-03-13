@@ -1285,6 +1285,9 @@ namespace OpenBve {
 			{
 				Program.CurrentHost.UnloadPlugins(out _);
 			}
+
+			routeWatcher.EnableRaisingEvents = false;
+			trainWatcher.EnableRaisingEvents = false;
 			if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && Program.CurrentHost.Platform != HostPlatform.FreeBSD)
 			{
 				// A FileSystemWatcher may crash when disposed as the game is closing (without launching a route) on these platforms
