@@ -23,29 +23,31 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenBveApi.Math;
+using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
 {
 	/// <summary>A keyframe matrix used in a KeyframeAnimatedObject</summary>
 	public class KeyframeMatrix
 	{
+		/// <summary>Holds a reference to the container object</summary>
 		private readonly KeyframeAnimatedObject containerObject;
-
-		private readonly double ZTranslation;
+		/// <summary>The Z-translation of this matrix within the container object</summary>
+		private readonly double zTranslation;
 
 		/// <summary>Creates a new keyframe matrix</summary>
 		public KeyframeMatrix(KeyframeAnimatedObject container, string name, Matrix4D matrix)
 		{
 			containerObject = container;
 			Name = name;
-			ZTranslation = matrix.ExtractTranslation().Z;
+			zTranslation = matrix.ExtractTranslation().Z;
 			_matrix = matrix;
 		}
 
 		/// <summary>The matrix name</summary>
 		public readonly string Name;
 		/// <summary>The base matrix before transformations</summary>
-		private readonly Matrix4D _matrix;
+		internal readonly Matrix4D _matrix;
 		/// <summary>Gets the final transformed matrix</summary>
 		public Matrix4D Matrix
 		{
@@ -60,21 +62,21 @@ namespace OpenBveApi.Objects
 				{
 					matrix = _matrix;
 				}
-				
-				if (containerObject.Pivots.ContainsKey(Name))
+
+				if (containerObject.Pivots.ContainsKey(Name) && containerObject.BaseCar != null)
 				{
 					// This somewhat misuses a single track follower, but it works OK
 					// Y rotation is not handled (other than by the main model matrix moving)
 					Vector3 v1 = containerObject.rearAxlePosition - containerObject.frontAxlePosition;
-					containerObject.trackFollower.UpdateAbsolute(containerObject.currentTrackPosition + ZTranslation + containerObject.Pivots[Name].FrontPoint, true, false);
+					containerObject.trackFollower.UpdateAbsolute(containerObject.currentTrackPosition + zTranslation + containerObject.Pivots[Name].FrontPoint, true, false);
 					Vector3 w1 = containerObject.trackFollower.WorldPosition;
-					containerObject.trackFollower.UpdateAbsolute(containerObject.currentTrackPosition + ZTranslation + containerObject.Pivots[Name].RearPoint, true, false);
+					containerObject.trackFollower.UpdateAbsolute(containerObject.currentTrackPosition + zTranslation + containerObject.Pivots[Name].RearPoint, true, false);
 					Vector3 w2 = containerObject.trackFollower.WorldPosition;
 					Vector3 v2 = w2 - w1;
 					double a = Vector2.Dot(new Vector2(v1.X, v1.Z), new Vector2(v2.X, v2.Z));
 					double b = Vector2.Determinant(new Vector2(v1.X, v1.Z), new Vector2(v2.X, v2.Z));
 					double angle = System.Math.Atan2(a, b);
-					angle += 1.5708;
+					angle += 1.5708; // 90 degrees
 					Matrix4D.CreateFromAxisAngle(Vector3.Down, angle, out Matrix4D m);
 					m *= matrix;
 					return m;

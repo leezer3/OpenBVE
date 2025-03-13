@@ -49,11 +49,15 @@ namespace OpenBveApi.Objects
 		public KeyframeMatrix[] Matricies;
 		/// <summary>The pivots</summary>
 		public Dictionary<string, PivotPoint> Pivots = new Dictionary<string, PivotPoint>();
-
+		/// <summary>Holds a reference to the car if appropriate</summary>
+		public AbstractCar BaseCar;
+		/// <summary>Track follower used to update bogie positions</summary>
 		internal readonly TrackFollower trackFollower;
+		/// <summary>The front axle world-position of the car</summary>
 		internal Vector3 frontAxlePosition;
+		/// <summary>The rear axle world-position of the car</summary>
 		internal Vector3 rearAxlePosition;
-		internal Matrix4D baseObjectRotationMatrix;
+		/// <summary>The current absolute track position of the car</summary>
 		internal double currentTrackPosition;
 
 		/// <summary>Creates an empty KeyFrameAnimatedObject</summary>
@@ -124,7 +128,7 @@ namespace OpenBveApi.Objects
 			clonedObject.Matricies = new KeyframeMatrix[Matricies.Length];
 			for (int i = 0; i < Matricies.Length; i++)
 			{
-				clonedObject.Matricies[i] = new KeyframeMatrix(clonedObject, Matricies[i].Name, Matricies[i].Matrix);
+				clonedObject.Matricies[i] = new KeyframeMatrix(clonedObject, Matricies[i].Name, Matricies[i]._matrix);
 			}
 
 			for (int i = 0; i < Animations.Count; i++)
@@ -165,27 +169,24 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary> Updates the position and state of the animated object</summary>
-		/// <param name="train">The train, or a null reference otherwise</param>
-		/// <param name="carIndex">If this object forms part of a train, the car index it refers to</param>
 		/// <param name="trackPosition"></param>
 		/// <param name="position"></param>
 		/// <param name="direction"></param>
 		/// <param name="up"></param>
 		/// <param name="side"></param>
-		/// <param name="updateFunctions">Whether the functions associated with this object should be re-evaluated</param>
 		/// <param name="show"></param>
 		/// <param name="timeElapsed">The time elapsed since this object was last updated</param>
 		/// <param name="enableDamping">Whether damping is to be applied for this call</param>
 		/// <param name="isTouch">Whether Animated Object belonging to TouchElement class.</param>
 		/// <param name="camera"></param>
-		public void Update(AbstractTrain train, int carIndex, double trackPosition, Vector3 position, Vector3 direction, Vector3 up, Vector3 side, bool updateFunctions, bool show, double timeElapsed, bool enableDamping, bool isTouch = false, dynamic camera = null)
+		public void Update(double trackPosition, Vector3 position, Vector3 direction, Vector3 up, Vector3 side, bool show, double timeElapsed, bool enableDamping, bool isTouch = false, dynamic camera = null)
 		{
-			if (train != null)
+			if (BaseCar != null)
 			{
-				dynamic dynamicTrain = train; // HACK: get the track follower onto the right track index!
-				trackFollower.TrackIndex = dynamicTrain.Cars[carIndex].FrontAxle.Follower.TrackIndex;
-				frontAxlePosition = dynamicTrain.Cars[carIndex].FrontAxle.Follower.WorldPosition;
-				rearAxlePosition = dynamicTrain.Cars[carIndex].RearAxle.Follower.WorldPosition;
+				dynamic dynamicCar = BaseCar; // HACK: get the track follower onto the right track index!
+				trackFollower.TrackIndex = dynamicCar.FrontAxle.Follower.TrackIndex;
+				frontAxlePosition = dynamicCar.FrontAxle.Follower.WorldPosition;
+				rearAxlePosition = dynamicCar.RearAxle.Follower.WorldPosition;
 				currentTrackPosition = trackPosition;
 			}
 			
@@ -193,7 +194,7 @@ namespace OpenBveApi.Objects
 			for (int i = 0; i < Animations.Count; i++)
 			{
 				string key = Animations.ElementAt(i).Key;
-				Animations[key].Update(train, carIndex, position, trackPosition, -1, train != null, timeElapsed); // current state not applicable, no hand-crafted functions
+				Animations[key].Update(BaseCar, position, trackPosition, -1, BaseCar != null, timeElapsed); // current state not applicable, no hand-crafted functions
 			}
 			Matrix4D[] matriciesToShader = new Matrix4D[Matricies.Length];
 			for (int i = 0; i < matriciesToShader.Length; i++)

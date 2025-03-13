@@ -563,7 +563,7 @@ namespace TrainManager.Car
 		{
 			int j = CarSections.Length;
 			Array.Resize(ref CarSections, j + 1);
-			CarSections[j] = new CarSection(TrainManagerBase.currentHost, ObjectType.Dynamic, visibleFromInterior, currentObject);
+			CarSections[j] = new CarSection(TrainManagerBase.currentHost, ObjectType.Dynamic, visibleFromInterior, this, currentObject);
 		}
 
 		/// <summary>Changes the currently visible car section</summary>
@@ -723,7 +723,7 @@ namespace TrainManager.Car
 			CameraRestriction.AbsoluteTopRight.Translate(p);
 			if (cs >= 0 && CarSections[cs].Groups[0].Keyframes != null)
 			{
-				CarSections[cs].Groups[0].Keyframes.Update(baseTrain, Index, TrackPosition, p, d, Up, s, true, true, TimeElapsed, true);
+				CarSections[cs].Groups[0].Keyframes.Update(TrackPosition, p, d, Up, s, true, TimeElapsed, true);
 			}
 		}
 

@@ -98,7 +98,7 @@ namespace OpenBveApi.Objects
 	    }
 
 	    /// <summary>Updates the animation</summary>
-		public void Update(AbstractTrain train, int carIndex, Vector3 position, double trackPosition, int sectionIndex, bool isPartOfTrain, double timeElapsed)
+		public void Update(AbstractCar baseCar, Vector3 position, double trackPosition, int sectionIndex, bool isPartOfTrain, double timeElapsed)
 		{
 			if (!string.IsNullOrEmpty(ParentAnimation) && ParentObject.Animations.ContainsKey(ParentAnimation))
 			{
@@ -112,8 +112,6 @@ namespace OpenBveApi.Objects
 				if (isPartOfTrain)
 				{
 					// HACK: use the train as a dynamic to allow us to pull out the car reference
-					dynamic dynamicTrain = train;
-					AbstractCar baseCar = dynamicTrain.Cars[carIndex];
 					double wheelRadius;
 					if (baseCar.Wheels != null && baseCar.Wheels.ContainsKey(Name))
 					{

@@ -174,7 +174,7 @@ namespace TrainManager.Car
 		{
 			int j = CarSections.Length;
 			Array.Resize(ref CarSections, j + 1);
-			CarSections[j] = new CarSection(TrainManagerBase.currentHost, ObjectType.Dynamic, visibleFromInterior, currentObject);
+			CarSections[j] = new CarSection(TrainManagerBase.currentHost, ObjectType.Dynamic, visibleFromInterior, BaseCar, currentObject);
 		}
 	}
 }
