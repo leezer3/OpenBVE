@@ -779,10 +779,7 @@ namespace CsvRwRouteParser
 
 							if (Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[railKey]))
 							{
-								if (Data.Structure.RailObjects[Data.Blocks[i].RailType[railKey]] != null)
-								{
-									Data.Structure.RailObjects[Data.Blocks[i].RailType[railKey]].CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
-								}
+								Data.Structure.RailObjects[Data.Blocks[i].RailType[railKey]]?.CreateObject(pos, RailTransformation, StartingDistance, EndingDistance, StartingDistance);
 							}
 
 							// points of interest

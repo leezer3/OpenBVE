@@ -77,7 +77,7 @@ namespace OpenBve
 				//We have supplied a station name or index to the loader
 				Program.CurrentRoute.InitialStationName = result.InitialStation;
 			}
-			if (result.StartTime != default(double))
+			if (result.StartTime != default)
 			{
 				Program.CurrentRoute.InitialStationTime = result.StartTime;
 			}

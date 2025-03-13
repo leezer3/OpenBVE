@@ -37,6 +37,9 @@ namespace OpenBve.Formats.MsTs
 	/// <summary>An abstract block of data, read from a MSTS file</summary>
 	public abstract class Block
 	{
+		/// <summary>The parent block</summary>
+		public Block ParentBlock;
+
 		/// <summary>The token that identifies the contents of this block</summary>
 		public KujuTokenID Token;
 
@@ -74,10 +77,15 @@ namespace OpenBve.Formats.MsTs
 		/// <summary>Reads a string array from the block</summary>
 		public abstract string[] ReadStringArray();
 
-		/// <summary>Reads an array of enum values from the block</summary>
+        /// <summary>Reads an array of enum values from the block</summary>
+        /// <typeparam name="TEnumType">The desired enum</typeparam>
+        /// <returns>An enum array</returns>
+        public abstract TEnumType[] ReadEnumArray<TEnumType>(TEnumType desiredEnumType)  where TEnumType : struct;
+
+		/// <summary>Reads an enum value from the block</summary>
 		/// <typeparam name="TEnumType">The desired enum</typeparam>
 		/// <returns>An enum array</returns>
-		public abstract TEnumType[] ReadEnumArray<TEnumType>(TEnumType desiredEnumType)  where TEnumType : struct;
+		public abstract TEnumType ReadEnumValue<TEnumType>(TEnumType desiredEnumType) where TEnumType : struct;
 
 		/// <summary>Returns the length of the block</summary>
 		public abstract long Length();
@@ -129,7 +137,7 @@ namespace OpenBve.Formats.MsTs
 		private readonly BinaryReader myReader;
 		private readonly MemoryStream myStream;
 
-		public BinaryBlock(byte[] bytes, KujuTokenID token)
+		public BinaryBlock(byte[] bytes, KujuTokenID token, Block parentBlock = null)
 		{
 			Token = token;
 			myStream = new MemoryStream(bytes);
@@ -152,6 +160,8 @@ namespace OpenBve.Formats.MsTs
 			{
 				Label = string.Empty;
 			}
+
+			ParentBlock = parentBlock;
 		}
 
 		public override Block ReadSubBlock(KujuTokenID newToken)
@@ -169,7 +179,7 @@ namespace OpenBve.Formats.MsTs
 			myReader.ReadUInt16();
 			uint remainingBytes = myReader.ReadUInt32();
 			byte[] newBytes = myReader.ReadBytes((int) remainingBytes);
-			return new BinaryBlock(newBytes, newToken);
+			return new BinaryBlock(newBytes, newToken, this);
 		}
 
 		public override Block ReadSubBlock(KujuTokenID[] validTokens)
@@ -183,7 +193,7 @@ namespace OpenBve.Formats.MsTs
 			myReader.ReadUInt16();
 			uint remainingBytes = myReader.ReadUInt32();
 			byte[] newBytes = myReader.ReadBytes((int) remainingBytes);
-			return new BinaryBlock(newBytes, currentToken);
+			return new BinaryBlock(newBytes, currentToken, this);
 		}
 
 		public override Block ReadSubBlock(bool allowEmptyBlock = false)
@@ -192,7 +202,7 @@ namespace OpenBve.Formats.MsTs
 			myReader.ReadUInt16();
 			uint remainingBytes = myReader.ReadUInt32();
 			byte[] newBytes = myReader.ReadBytes((int) remainingBytes);
-			return new BinaryBlock(newBytes, currentToken);
+			return new BinaryBlock(newBytes, currentToken, this);
 		}
 
 		public override ushort ReadUInt16()
@@ -259,6 +269,11 @@ namespace OpenBve.Formats.MsTs
 			throw new NotImplementedException();
 		}
 
+		public override TEnumType ReadEnumValue<TEnumType>(TEnumType desiredEnumType)
+		{
+			throw new NotImplementedException();
+		}
+
 		public override long Length()
 		{
 			return myStream.Length;
@@ -294,50 +309,107 @@ namespace OpenBve.Formats.MsTs
 
 		private readonly LengthConverter lengthConverter = new LengthConverter();
 		private readonly WeightConverter weightConverter = new WeightConverter();
+		private readonly ForceConverter forceConverter = new ForceConverter();
 
-		private TextualBlock(string text)
+		private TextualBlock(string text, bool textIsClean)
 		{
-			myText = text;
-			//Replace special characters and escaped brackets to stop the parser barfing
-			myText = myText.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
-			myText = myText.Replace(@"\(", "[").Replace(@"\)", "]");
-			// FIXME: Current parser needs whitespace around brackets, else it throws a wobbly
-			for (int i = 0; i < myText.Length; i++)
+			if (!textIsClean)
 			{
-				if (i > 0 && myText[i] == ')' && !char.IsWhiteSpace(myText[i - 1]))
+				char[] fixedText = new char[text.Length];
+				int newTextLength = 0;
+				text = text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
+				text = text.Replace(@"\(", "[").Replace(@"\)", "]");
+				bool lastWhiteSpace = false;
+				for (int i = 0; i < text.Length; i++)
 				{
-					myText = myText.Insert(i, " ");
-					i++;
+					if (text[i] == '(' || text[i] == ')')
+					{
+						if (!lastWhiteSpace)
+						{
+							fixedText[newTextLength++] = ' ';
+						}
+						fixedText[newTextLength++] = text[i];
+						fixedText[newTextLength++] = ' ';
+						lastWhiteSpace = true;
+					}
+					else if (char.IsWhiteSpace(text[i]))
+					{
+						if (!lastWhiteSpace)
+						{
+							fixedText[newTextLength++] = ' ';
+							lastWhiteSpace = true;
+						}
+					}
+					else
+					{
+						fixedText[newTextLength++] = text[i];
+						lastWhiteSpace = false;
+					}
+					if (newTextLength == fixedText.Length - 1 && i != text.Length - 1)
+					{
+						Array.Resize(ref fixedText, fixedText.Length << 2);
+					}
 				}
-				if (i > 0 && myText[i] == '(' && !char.IsWhiteSpace(myText[i + 1]))
-				{
-					myText = myText.Insert(i + 1, " ");
-					i++;
-				}
+				myText = new string(fixedText, 0, newTextLength);
+			}
+			else
+			{
+				myText = text;
 			}
 			currentPosition = 0;
 		}
 
-		public TextualBlock(string text, KujuTokenID token)
+		public TextualBlock(string text, KujuTokenID token, bool textIsClean = false, Block parentBlock = null)
 		{
-			myText = text;
-			//Replace special characters and escaped brackets to stop the parser barfing
-			myText = myText.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
-			myText = myText.Replace(@"\(", "[").Replace(@"\)", "]");
-			// FIXME: Current parser needs whitespace around brackets, else it throws a wobbly
-			for (int i = 0; i < myText.Length; i++)
+			if (text.Length == 0)
 			{
-				if (i > 0 && myText[i] == ')' && !char.IsWhiteSpace(myText[i - 1]))
-				{
-					myText = myText.Insert(i, " ");
-					i++;
-				}
-				if (i > 0 && myText[i] == '(' && !char.IsWhiteSpace(myText[i + 1]))
-				{
-					myText = myText.Insert(i + 1, " ");
-					i++;
-				}
+				return;
 			}
+
+			if (!textIsClean)
+			{
+				char[] fixedText = new char[text.Length];
+				int newTextLength = 0;
+				text = text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
+				text = text.Replace(@"\(", "[").Replace(@"\)", "]");
+				bool lastWhiteSpace = false;
+				for (int i = 0; i < text.Length; i++)
+				{
+					if (text[i] == '(' || text[i] == ')')
+					{
+						if (!lastWhiteSpace)
+						{
+							fixedText[newTextLength++] = ' ';
+						}
+						fixedText[newTextLength++] = text[i];
+						fixedText[newTextLength++] = ' ';
+						lastWhiteSpace = true;
+					}
+					else if (char.IsWhiteSpace(text[i]))
+					{
+						if (!lastWhiteSpace)
+						{
+							fixedText[newTextLength++] = ' ';
+							lastWhiteSpace = true;
+						}
+					}
+					else
+					{
+						fixedText[newTextLength++] = text[i];
+						lastWhiteSpace = false;
+					}
+					if (newTextLength == fixedText.Length - 1 && i != text.Length - 1)
+					{
+						Array.Resize(ref fixedText, fixedText.Length << 2);
+					}
+				}
+				myText = new string(fixedText, 0, newTextLength);
+			}
+			else
+			{
+				myText = text;
+			}
+
 			Token = token;
 			currentPosition = 0;
 			Label = string.Empty;
@@ -372,11 +444,12 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			currentPosition++;
+			ParentBlock = parentBlock;
 		}
 
 		public static Dictionary<KujuTokenID, Block> ReadBlocks(string text, KujuTokenID[] validTokens)
 		{
-			Block b = new TextualBlock(text);
+			Block b = new TextualBlock(text, false);
 			Dictionary<KujuTokenID, Block> readBlocks = new Dictionary<KujuTokenID, Block>();
 			while (b.Position() < b.Length() - 1)
 			{
@@ -395,7 +468,7 @@ namespace OpenBve.Formats.MsTs
 
 		public static Dictionary<KujuTokenID, Block> ReadBlocks(string text)
 		{
-			Block b = new TextualBlock(text);
+			Block b = new TextualBlock(text, false);
 			Dictionary<KujuTokenID, Block> readBlocks = new Dictionary<KujuTokenID, Block>();
 			while (b.Position() < b.Length() - 1)
 			{
@@ -461,7 +534,7 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), newToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), newToken, true, this);
 					}
 
 					level--;
@@ -507,7 +580,11 @@ namespace OpenBve.Formats.MsTs
 
 			if (!validTokens.Contains(currentToken))
 			{
-				throw new InvalidDataException("Expected one of the following tokens: " + validTokens + " , got " + currentToken);
+				if (currentToken != KujuTokenID.Comment)
+				{
+					// comment is always valid and will be discarded by the block reader
+					throw new InvalidDataException("Expected one of the following tokens: " + validTokens + " , got " + currentToken);
+				}
 			}
 
 			int level = 0;
@@ -523,7 +600,7 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true, this);
 					}
 
 					level--;
@@ -539,7 +616,7 @@ namespace OpenBve.Formats.MsTs
 		public override Block ReadSubBlock(bool allowEmptyBlock = false)
 		{
 			startPosition = currentPosition;
-			string s = String.Empty;
+			string s = string.Empty;
 			while (currentPosition < myText.Length)
 			{
 				if (myText[currentPosition] == '(')
@@ -559,6 +636,10 @@ namespace OpenBve.Formats.MsTs
 				{
 					throw new InvalidDataException("Empty sub-block");
 				}
+
+				TextualBlock t = new TextualBlock("", true);
+				t.Token = KujuTokenID.Skip;
+				return t;
 			}
 
 			KujuTokenID currentToken;
@@ -588,7 +669,7 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true, this);
 					}
 
 					level--;
@@ -702,6 +783,11 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			string s = getNextValue();
+			if (s[s.Length -1] == ',')
+			{
+                // SMS files contain comma separated numbers in a textual CurvePoints block
+				s = s.Substring(0, s.Length - 1);
+			}
 			float val;
 			if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
 			{
@@ -715,15 +801,19 @@ namespace OpenBve.Formats.MsTs
 		{
 			string s = ReadString();
 			int c = s.Length - 1;
-			while (c > 0)
+			if (c > 1)
 			{
-				if (char.IsDigit(s[c]))
+				while (c > 0)
 				{
-					c++;
-					break;
+					if (char.IsDigit(s[c]))
+					{
+						c++;
+						break;
+					}
+					c--;
 				}
-				c--;
 			}
+			
 
 			string Unit = s.Substring(c).ToLowerInvariant();
 			s = s.Substring(0, c);
@@ -751,6 +841,15 @@ namespace OpenBve.Formats.MsTs
 				}
 
 				parsedNumber = (float)weightConverter.Convert(parsedNumber, WeightConverter.KnownUnits[Unit], (UnitOfWeight)(object)desiredUnit);
+			}
+			else if (desiredUnit is UnitOfForce)
+			{
+				if (!ForceConverter.KnownUnits.ContainsKey(Unit))
+				{
+					throw new InvalidDataException("Unknown or unexpected weight unit " + Unit + " encountered in block " + Token);
+				}
+
+				parsedNumber = (float)forceConverter.Convert(parsedNumber, ForceConverter.KnownUnits[Unit], (UnitOfForce)(object)desiredUnit);
 			}
 			return parsedNumber;
 		}
@@ -809,6 +908,16 @@ namespace OpenBve.Formats.MsTs
 				}
 			}
 			return returnArray;
+		}
+
+		public override TEnumType ReadEnumValue<TEnumType>(TEnumType desiredEnumType)
+		{
+			string s = ReadString();
+			if (!Enum.TryParse(s, true, out TEnumType e))
+			{
+				throw new InvalidDataException("Expected " + s + " to be a value member of the specified enum.");
+			}
+			return e;
 		}
 
 		public override long Length()

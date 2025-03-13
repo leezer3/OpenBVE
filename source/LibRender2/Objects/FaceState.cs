@@ -19,7 +19,7 @@ namespace LibRender2.Objects
 			Renderer = renderer;
 			if (Object.Prototype.Mesh.VAO == null && !Renderer.ForceLegacyOpenGL)
 			{
-				VAOExtensions.CreateVAO(ref Object.Prototype.Mesh, Object.Prototype.Dynamic, Renderer.DefaultShader.VertexLayout, Renderer);
+				VAOExtensions.CreateVAO(Object.Prototype.Mesh, Object.Prototype.Dynamic, Renderer.DefaultShader.VertexLayout, Renderer);
 			}
 		}
 

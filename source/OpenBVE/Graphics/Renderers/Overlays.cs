@@ -66,7 +66,7 @@ namespace OpenBve.Graphics.Renderers
 								RenderScoreMessages(element, TimeElapsed);
 								break;
 							case HUDSubject.ATS:
-								RenderATSLamps(element, TimeElapsed);
+								RenderATSLamps(element);
 								break;
 							default:
 								RenderHUDElement(element, TimeElapsed);

@@ -163,7 +163,6 @@
       <DependentUpon>MessageManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\ObjectManager\ObjectManager.cs" />
-    <Compile Include="Game\PointsOfInterest.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
     <Compile Include="Game\Information.cs" />
     <Compile Include="Game\Menu\Menu.cs" />

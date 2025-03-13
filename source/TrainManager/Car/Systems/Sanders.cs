@@ -47,18 +47,12 @@ namespace TrainManager.Car.Systems
 			{
 				if ((ActivationSound != null && !ActivationSound.IsPlaying) || ActivationSound == null)
 				{
-					if (LoopSound != null)
-					{
-						LoopSound.Play(Car, true);
-					}
+					LoopSound?.Play(Car, true);
 				}
 			}
 			else
 			{
-				if (LoopSound != null)
-				{
-					LoopSound.Stop();
-				}
+				LoopSound?.Stop();
 			}
 
 			if (SandLevel <= 0)
@@ -69,11 +63,7 @@ namespace TrainManager.Car.Systems
 					Active = false;
 					if (!emptied)
 					{
-						if (EmptySound != null)
-						{
-							EmptySound.Play(Car, false);
-						}
-
+						EmptySound?.Play(Car, false);
 						emptied = true;
 					}
 				}
@@ -146,10 +136,7 @@ namespace TrainManager.Car.Systems
 					return;
 				}
 
-				if (DeActivationSound != null)
-				{
-					DeActivationSound.Play(Car, false);
-				}
+				DeActivationSound?.Play(Car, false);
 			} else if(!Active && willBeActive) {
 				if (Type == SandersType.NumberOfShots)
 				{
@@ -161,10 +148,7 @@ namespace TrainManager.Car.Systems
 					timer = ApplicationTime;
 				}
 
-				if (ActivationSound != null)
-				{
-					ActivationSound.Play(Car, false);
-				}
+				ActivationSound?.Play(Car, false);
 			}
 
 			Active = willBeActive;

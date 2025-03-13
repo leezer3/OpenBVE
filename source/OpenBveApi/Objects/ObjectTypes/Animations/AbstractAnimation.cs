@@ -45,5 +45,8 @@ namespace OpenBveApi.Objects
 
         }
 
-	}
+		/// <summary>Clones the animation</summary>
+        public abstract AbstractAnimation Clone();
+
+    }
 }

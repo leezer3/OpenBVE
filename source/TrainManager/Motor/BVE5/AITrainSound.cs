@@ -87,10 +87,7 @@ namespace TrainManager.Motor
 				}
 				else
 				{
-					if (SoundEntries[i].Source != null)
-					{
-						SoundEntries[i].Source.Stop();
-					}
+					SoundEntries[i].Source?.Stop();
 				}
 			}
 

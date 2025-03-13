@@ -475,18 +475,11 @@ namespace SanYingInput
 
 				if (_notchPosition > 0)
 				{
-					notchPositionString = string.Format("P{0}", _notchPosition);
+					notchPositionString = $"P{_notchPosition}";
 				}
 				else if (_notchPosition < 0)
 				{
-					if (_notchPosition > -9)
-					{
-						notchPositionString = string.Format("B{0}", _notchPosition);
-					}
-					else
-					{
-						notchPositionString = "EB";
-					}
+					notchPositionString = _notchPosition > -9 ? $"B{_notchPosition}" : "EB";
 				}
 				else
 				{

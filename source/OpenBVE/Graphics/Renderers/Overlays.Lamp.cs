@@ -23,7 +23,7 @@ namespace OpenBve.Graphics.Renderers
             Atc, AtcPower, AtcUse, AtcEmergency,
             Eb, ConstSpeed
         }
-        private struct Lamp
+        private readonly struct Lamp
         {
             internal readonly LampType Type;
             internal readonly string Text;
@@ -35,52 +35,52 @@ namespace OpenBve.Graphics.Renderers
                 switch (Type)
                 {
                     case LampType.None:
-                        this.Text = null;
+                        Text = null;
                         break;
                     case LampType.Ats:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","ats"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","ats"});
                         break;
                     case LampType.AtsOperation:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atsoperation"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atsoperation"});
                         break;
                     case LampType.AtsPPower:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atsppower"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atsppower"});
                         break;
                     case LampType.AtsPPattern:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atsppattern"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atsppattern"});
                         break;
                     case LampType.AtsPBrakeOverride:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atspbrakeoverride"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atspbrakeoverride"});
                         break;
                     case LampType.AtsPBrakeOperation:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atspbrakeoperation"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atspbrakeoperation"});
                         break;
                     case LampType.AtsP:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atsp"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atsp"});
                         break;
                     case LampType.AtsPFailure:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atspfailure"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atspfailure"});
                         break;
                     case LampType.Atc:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atc"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atc"});
                         break;
                     case LampType.AtcPower:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atcpower"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atcpower"});
                         break;
                     case LampType.AtcUse:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atcuse"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atcuse"});
                         break;
                     case LampType.AtcEmergency:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atcemergency"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","atcemergency"});
                         break;
                     case LampType.Eb:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","eb"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","eb"});
                         break;
                     case LampType.ConstSpeed:
-                        this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","constspeed"});
+                        Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"lamps","constspeed"});
                         break;
                     default:
-                        this.Text = "TEXT";
+                        Text = "TEXT";
                         break;
                 }
                 OpenGlFont font = Program.Renderer.Fonts.NormalFont;
@@ -92,9 +92,9 @@ namespace OpenBve.Graphics.Renderers
                         break;
                     }
                 }
-                Vector2 size = font.MeasureString(this.Text);
-                this.Width = size.X;
-                this.Height = size.Y;
+                Vector2 size = font.MeasureString(Text);
+				Width = size.X;
+                Height = size.Y;
             }
         }
 

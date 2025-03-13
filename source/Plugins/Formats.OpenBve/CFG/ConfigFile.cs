@@ -44,6 +44,10 @@ namespace Formats.OpenBve
 	{
 		private readonly List<Block<T1, T2>> subBlocks;
 
+		public ConfigFile(string fileName, HostInterface currentHost, string expectedHeader = null) : this(File.ReadAllLines(fileName, TextEncoding.GetSystemEncodingFromFile(fileName)), currentHost, expectedHeader)
+		{
+		}
+
 		public ConfigFile(string[] lines, HostInterface currentHost, string expectedHeader = null) : base(-1, default, currentHost)
 		{
 			subBlocks = new List<Block<T1, T2>>();

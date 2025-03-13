@@ -766,7 +766,7 @@ namespace OpenBve
 							case MenuTag.ViewLog:
 								try
 								{
-									var file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");
+									var file = Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");
 
 									if (File.Exists(file))
 									{

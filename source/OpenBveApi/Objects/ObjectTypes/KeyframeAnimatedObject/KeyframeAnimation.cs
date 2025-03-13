@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2024, Christopher Lees, The OpenBVE Project
 //
@@ -98,7 +98,7 @@ namespace OpenBveApi.Objects
 	    }
 
 	    /// <summary>Updates the animation</summary>
-		public void Update(AbstractTrain train, int carIndex, Vector3 position, double trackPosition, int sectionIndex, bool isPartOfTrain, double timeElapsed)
+		public void Update(AbstractCar baseCar, Vector3 position, double trackPosition, int sectionIndex, bool isPartOfTrain, double timeElapsed)
 		{
 			if (!string.IsNullOrEmpty(ParentAnimation) && ParentObject.Animations.ContainsKey(ParentAnimation))
 			{
@@ -112,12 +112,24 @@ namespace OpenBveApi.Objects
 				if (isPartOfTrain)
 				{
 					// HACK: use the train as a dynamic to allow us to pull out the car reference
-					dynamic dynamicTrain = train;
-					AbstractCar baseCar = dynamicTrain.Cars[carIndex];
 					double wheelRadius;
 					if (baseCar.Wheels != null && baseCar.Wheels.ContainsKey(Name))
 					{
-						wheelRadius = baseCar.Wheels[Name].Radius;
+						if (baseCar.Wheels.ContainsKey(Name))
+						{
+							wheelRadius = baseCar.Wheels[Name].Radius;
+						}
+						else
+						{
+							// if controllers are not defined for WHEELSN-N, it appears that those for the base WHEELSN are used
+							// otherwise, controlled by the position of WHEELS1
+							string baseName = Name.Substring(0, 7);
+							if (!baseCar.Wheels.ContainsKey(baseName))
+							{
+								baseName = "WHEELS1";
+							}
+							wheelRadius = baseCar.Wheels[baseName].Radius;
+						}
 					}
 					else
 					{
@@ -151,5 +163,20 @@ namespace OpenBveApi.Objects
 				
 			}
 		}
+
+	    /// <summary>Clones the animation</summary>
+	    /// <param name="parentObject">The parent object</param>
+	    /// <returns>The cloned animation</returns>
+	    public KeyframeAnimation Clone(KeyframeAnimatedObject parentObject)
+	    {
+		    KeyframeAnimation kf = new KeyframeAnimation(parentObject, ParentAnimation, Name, FrameCount, FrameRate, Matrix);
+		    kf.AnimationControllers = new AbstractAnimation[AnimationControllers.Length];
+		    for (int i = 0; i < AnimationControllers.Length; i++)
+		    {
+			    kf.AnimationControllers[i] = AnimationControllers[i].Clone();
+		    }
+
+		    return kf;
+	    }
 	}
 }

@@ -59,8 +59,8 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Creates a new material from the specified texture file with default properties</summary>
-		/// <param name="Texture"></param>
-		public Material(string Texture) {
+		/// <param name="textureFile"></param>
+		public Material(string textureFile) {
 			this.Color = Color32.White;
 			this.EmissiveColor = Color24.Black;
 			this.TransparentColor = Color24.Black;
@@ -74,24 +74,24 @@ namespace OpenBveApi.Objects
 			this.TextPadding = new Vector2(0, 0);
 			this.Font = "Arial";
 			this.WrapMode = null;
-			this.DaytimeTexture = Texture;
+			this.DaytimeTexture = textureFile;
 		}
 
 		/// <summary>Clones an existing material</summary>
-		public Material(Material Prototype) {
-			this.Color = Prototype.Color;
-			this.EmissiveColor = Prototype.EmissiveColor;
-			this.TransparentColor = Prototype.TransparentColor;
-			this.Flags = Prototype.Flags;
-			this.DaytimeTexture = Prototype.DaytimeTexture;
-			this.NighttimeTexture = Prototype.NighttimeTexture;
-			this.BlendMode = Prototype.BlendMode;
-			this.GlowAttenuationData = Prototype.GlowAttenuationData;
-			this.TextColor = Prototype.TextColor;
-			this.BackgroundColor = Prototype.BackgroundColor;
-			this.TextPadding = Prototype.TextPadding;
-			this.Font = Prototype.Font;
-			this.WrapMode = Prototype.WrapMode;
+		public Material(Material prototypeMaterial) {
+			this.Color = prototypeMaterial.Color;
+			this.EmissiveColor = prototypeMaterial.EmissiveColor;
+			this.TransparentColor = prototypeMaterial.TransparentColor;
+			this.Flags = prototypeMaterial.Flags;
+			this.DaytimeTexture = prototypeMaterial.DaytimeTexture;
+			this.NighttimeTexture = prototypeMaterial.NighttimeTexture;
+			this.BlendMode = prototypeMaterial.BlendMode;
+			this.GlowAttenuationData = prototypeMaterial.GlowAttenuationData;
+			this.TextColor = prototypeMaterial.TextColor;
+			this.BackgroundColor = prototypeMaterial.BackgroundColor;
+			this.TextPadding = prototypeMaterial.TextPadding;
+			this.Font = prototypeMaterial.Font;
+			this.WrapMode = prototypeMaterial.WrapMode;
 		}
 	}
 }

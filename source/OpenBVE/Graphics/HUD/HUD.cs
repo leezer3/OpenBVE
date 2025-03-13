@@ -2,7 +2,6 @@
 using System.Globalization;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
-using OpenTK;
 using SoundManager;
 using Vector2 = OpenBveApi.Math.Vector2;
 

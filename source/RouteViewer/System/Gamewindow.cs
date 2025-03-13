@@ -61,7 +61,20 @@ namespace RouteViewer
             {
                 return;
             }
-            ProcessEvents();
+            if (Program.Renderer.RenderThreadJobWaiting)
+            {
+	            while (!Program.Renderer.RenderThreadJobs.IsEmpty)
+	            {
+		            Program.Renderer.RenderThreadJobs.TryDequeue(out ThreadStart currentJob);
+		            currentJob();
+		            lock (currentJob)
+		            {
+			            Monitor.Pulse(currentJob);
+		            }
+	            }
+	            Program.Renderer.RenderThreadJobWaiting = false;
+            }
+			ProcessEvents();
             double TimeElapsed = CPreciseTimer.GetElapsedTime();
 
             if (Program.CurrentRouteFile != null)
@@ -164,18 +177,19 @@ namespace RouteViewer
 				Program.Renderer.Loading.DrawLoadingScreen(Program.Renderer.Fonts.SmallFont, routeProgress);
 				Program.Renderer.GameWindow.SwapBuffers();
 
-				if (Loading.JobAvailable)
+				if (Program.Renderer.RenderThreadJobWaiting)
 				{
-					while (jobs.Count > 0)
+					while (!Program.Renderer.RenderThreadJobs.IsEmpty)
 					{
-						jobs.TryDequeue(out ThreadStart currentJob);
+						Program.Renderer.RenderThreadJobs.TryDequeue(out ThreadStart currentJob);
 						currentJob();
 						lock (currentJob)
 						{
 							Monitor.Pulse(currentJob);
 						}
+
 					}
-					Loading.JobAvailable = false;
+					Program.Renderer.RenderThreadJobWaiting = false;
 				}
 				double time = CPreciseTimer.GetElapsedTime();
 				double wait = 1000.0 / 60.0 - time * 1000 - 50;
@@ -193,27 +207,6 @@ namespace RouteViewer
 				Game.Reset();
 				currentlyLoading = false;
 				Program.CurrentRouteFile = null;
-			}
-		}
-
-#pragma warning disable 0649
-		private static ConcurrentQueue<ThreadStart> jobs;
-#pragma warning restore 0649
-
-		/// <summary>This method is used during loading to run commands requiring an OpenGL context in the main render loop</summary>
-		/// <param name="job">The OpenGL command</param>
-		/// <param name="timeout">The timeout</param>
-		internal static void RunInRenderThread(ThreadStart job, int timeout)
-		{
-			object locker = new object();
-			jobs.Enqueue(job);
-			//Don't set the job to available until after it's been loaded into the queue
-			Loading.JobAvailable = true;
-			//Failsafe: If our job has taken more than the timeout, stop waiting for it
-			//A missing texture is probably better than an infinite loadscreen
-			lock (job)
-			{
-				Monitor.Wait(job, timeout);
 			}
 		}
 	}

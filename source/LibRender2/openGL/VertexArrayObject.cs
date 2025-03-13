@@ -167,7 +167,23 @@ namespace LibRender2
 		/// <param name="isDynamic">Whether the mesh is dynamic (e.g. part of an animated object / train)</param>
 		/// <param name="vertexLayout">The vertex layout to use</param>
 		/// <param name="renderer">A reference to the base renderer</param>
-		public static void CreateVAO(ref Mesh mesh, bool isDynamic, VertexLayout vertexLayout, BaseRenderer renderer)
+		public static void CreateVAO(Mesh mesh, bool isDynamic, VertexLayout vertexLayout, BaseRenderer renderer)
+		{
+			if (!renderer.GameWindow.Context.IsCurrent)
+			{
+				renderer.RunInRenderThread(() =>
+				{
+					createVAO(mesh, isDynamic, vertexLayout, renderer);
+				}, 2000);
+			}
+			else
+			{
+				createVAO(mesh, isDynamic, vertexLayout, renderer);
+			}
+		}
+
+		
+		private static void createVAO(Mesh mesh, bool isDynamic, VertexLayout vertexLayout, BaseRenderer renderer)
 		{
 			try
 			{

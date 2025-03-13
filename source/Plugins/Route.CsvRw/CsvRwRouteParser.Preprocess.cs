@@ -678,9 +678,7 @@ namespace CsvRwRouteParser
 					n++;
 					while (j > 0) {
 						if (p[j].TrackPosition < p[j - 1].TrackPosition) {
-							PositionedExpression t = p[j];
-							p[j] = p[j - 1];
-							p[j - 1] = t;
+							(p[j - 1], p[j]) = (p[j], p[j - 1]);
 							j--;
 						} else {
 							break;

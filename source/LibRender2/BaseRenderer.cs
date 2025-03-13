@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -75,6 +76,8 @@ namespace LibRender2
 
 		/// <summary>The track follower for the main camera</summary>
 		public TrackFollower CameraTrackFollower;
+
+		public bool RenderThreadJobWaiting;
 
 		/// <summary>Holds a reference to the current interface type of the game (Used by the renderer)</summary>
 		public InterfaceType CurrentInterface
@@ -315,6 +318,7 @@ namespace LibRender2
 			Fonts = new Fonts(currentHost, currentOptions.Font);
 			VisibilityThread = new Thread(vt);
 			VisibilityThread.Start();
+			RenderThreadJobs = new ConcurrentQueue<ThreadStart>();
 		}
 
 		~BaseRenderer()
@@ -687,7 +691,7 @@ namespace LibRender2
 			{
 				for (int i = 0; i < StaticObjectStates.Count; i++)
 				{
-					VAOExtensions.CreateVAO(ref StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+					VAOExtensions.CreateVAO(StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
 					if (StaticObjectStates[i].Matricies != null)
 					{
 						GL.CreateBuffers(1, out StaticObjectStates[i].MatrixBufferIndex);
@@ -695,7 +699,7 @@ namespace LibRender2
 				}
 				for (int i = 0; i < DynamicObjectStates.Count; i++)
 				{
-					VAOExtensions.CreateVAO(ref DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+					VAOExtensions.CreateVAO(DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
 					if (DynamicObjectStates[i].Matricies != null)
 					{
 						GL.CreateBuffers(1, out DynamicObjectStates[i].MatrixBufferIndex);
@@ -1051,7 +1055,7 @@ namespace LibRender2
 
 				if (lastError != ErrorCode.NoError)
 				{
-					throw new InvalidOperationException($"OpenGL Error: {lastError}");
+				//	throw new InvalidOperationException($"OpenGL Error: {lastError}");
 				}
 			}
 #endif
@@ -1736,7 +1740,7 @@ namespace LibRender2
 
 		/// <summary>Sets the window state</summary>
 		/// <param name="windowState">The new window state</param>
-		public void SetWindowState(OpenTK.WindowState windowState)
+		public void SetWindowState(WindowState windowState)
 		{
 			GameWindow.WindowState = windowState;
 			if (windowState == WindowState.Fullscreen)
@@ -1760,6 +1764,24 @@ namespace LibRender2
 			if (width == DisplayDevice.Default.Width && height == DisplayDevice.Default.Height)
 			{
 				SetWindowState(WindowState.Maximized);
+			}
+		}
+
+		public ConcurrentQueue<ThreadStart> RenderThreadJobs;
+
+		/// <summary>This method is used during loading to run commands requiring an OpenGL context in the main render loop</summary>
+		/// <param name="job">The OpenGL command</param>
+		/// <param name="timeout">The timeout</param>
+		public void RunInRenderThread(ThreadStart job, int timeout)
+		{
+			RenderThreadJobs.Enqueue(job);
+			//Don't set the job to available until after it's been loaded into the queue
+			RenderThreadJobWaiting = true;
+			//Failsafe: If our job has taken more than the timeout, stop waiting for it
+			//A missing texture is probably better than an infinite loadscreen
+			lock (job)
+			{
+				Monitor.Wait(job, timeout);
 			}
 		}
 	}

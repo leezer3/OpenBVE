@@ -251,17 +251,11 @@ namespace TrainManager.Trains
 				}
 			}
 
-			if (SafetySystems.PilotLamp != null)
-			{
-				SafetySystems.PilotLamp.Update(newState);
-			}
+			SafetySystems.PilotLamp?.Update(newState);
 
 			if (oldState != newState)
 			{
-				if (Plugin != null)
-				{
-					Plugin.DoorChange(oldState, newState);
-				}
+				Plugin?.DoorChange(oldState, newState);
 				if (IsPlayerTrain)
 				{
 					for (int j = 0; j < InputDevicePlugin.AvailablePluginInfos.Count; j++)

@@ -32,8 +32,7 @@ namespace OpenBve.UserInterface
 		{
 			if (Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
 			{
-				var j = Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] as AbstractRailDriver;
-				if (j == null)
+				if (!(Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] is AbstractRailDriver j))
 				{
 					return;
 				}
@@ -82,8 +81,7 @@ namespace OpenBve.UserInterface
 			{
 				return;
 			}
-			var j = Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] as AbstractRailDriver;
-			if (j == null)
+			if (!(Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] is AbstractRailDriver j))
 			{
 				return;
 			}
@@ -296,10 +294,7 @@ namespace OpenBve.UserInterface
 		{
 			if (disposing)
 			{
-				if(components != null)
-				{
-					components.Dispose();
-				}
+				components?.Dispose();
 				main?.Dispose();
 				Modified?.Dispose();
 

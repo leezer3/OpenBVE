@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using ObjectViewer.Trains;
 using OpenBveApi;
 using OpenTK;
@@ -37,6 +38,19 @@ namespace ObjectViewer
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+	        if (Program.Renderer.RenderThreadJobWaiting)
+	        {
+		        while (!Program.Renderer.RenderThreadJobs.IsEmpty)
+		        {
+			        Program.Renderer.RenderThreadJobs.TryDequeue(out ThreadStart currentJob);
+			        currentJob();
+			        lock (currentJob)
+			        {
+				        Monitor.Pulse(currentJob);
+			        }
+		        }
+		        Program.Renderer.RenderThreadJobWaiting = false;
+	        }
 			double timeElapsed = RenderRealTimeElapsed;
 
 			// Use the OpenTK frame rate as this is much more accurate

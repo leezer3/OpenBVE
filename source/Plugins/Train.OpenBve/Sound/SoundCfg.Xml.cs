@@ -11,7 +11,6 @@ using TrainManager.Car;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.Power;
-using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -607,8 +606,7 @@ namespace Train.OpenBve
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An empty list of driver supervision device sounds was defined in in XML file " + fileName);
 										break;
 									}
-									DriverSupervisionDevice driverSupervisionDevice = car.DSD as DriverSupervisionDevice;
-									if (driverSupervisionDevice == null)
+									if (car.DSD == null)
 									{
 										break;
 									}
@@ -618,10 +616,10 @@ namespace Train.OpenBve
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "alarm":
-												ParseNode(cc, out driverSupervisionDevice.TriggerSound, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.DSD.TriggerSound, center, SoundCfgParser.smallRadius);
 												break;
 											case "reset":
-												ParseNode(cc, out driverSupervisionDevice.ResetSound, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.DSD.ResetSound, center, SoundCfgParser.smallRadius);
 												break;
 										}
 									}

@@ -9,7 +9,7 @@ namespace OpenBveApi.Objects
 	{
 		/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
 		public int SectionIndex;
-
+		/// <summary>The animated object</summary>
 		public new KeyframeAnimatedObject Object;
 
 		/// <summary>Creates a new Animated World Object</summary>
@@ -33,7 +33,7 @@ namespace OpenBveApi.Objects
 				{
 					double timeDelta = Object.SecondsSinceLastUpdate + TimeElapsed;
 					Object.SecondsSinceLastUpdate = 0.0;
-					Object.Update(NearestTrain, NearestTrain?.DriverCar ?? 0, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
+					Object.Update(TrackPosition, Position, Direction, Up, Side, true, timeDelta, true);
 				}
 				else
 				{

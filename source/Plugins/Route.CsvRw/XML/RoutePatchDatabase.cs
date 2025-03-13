@@ -128,8 +128,7 @@ namespace CsvRwRouteParser
 						break;
 					case "Expression":
 						t = childNode.Attributes["Number"].InnerText;
-						int expressionNumber;
-						if (NumberFormats.TryParseIntVb6(t, out expressionNumber))
+						if (NumberFormats.TryParseIntVb6(t, out int expressionNumber))
 						{
 							currentPatch.ExpressionFixes.Add(expressionNumber, childNode.InnerText);
 						}

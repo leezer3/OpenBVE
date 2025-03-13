@@ -43,10 +43,7 @@ namespace CsvRwRouteParser {
 			{
 				for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
 				{
-					if (Plugin.CurrentHost.Plugins[i].Object != null)
-					{
-						Plugin.CurrentHost.Plugins[i].Object.SetObjectParser(SoundPath); //HACK: Pass out the sound folder path to those plugins which consume it
-					}
+					Plugin.CurrentHost.Plugins[i].Object?.SetObjectParser(SoundPath); //HACK: Pass out the sound folder path to those plugins which consume it
 				}
 			}
 			freeObjCount = 0;

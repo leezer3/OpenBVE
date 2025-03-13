@@ -51,10 +51,7 @@ namespace CsvRwRouteParser
 			double dz = LastPlacement - StartingDistance;
 			WorldPosition += Position.X * RailTransformation.X + Position.Y * RailTransformation.Y + dz * RailTransformation.Z;
 			FreeObjects.TryGetValue(Types[LastType], out UnifiedObject obj);
-			if (obj != null)
-			{
-				obj.CreateObject(WorldPosition, RailTransformation, new Transformation(), StartingDistance, EndingDistance, LastPlacement);
-			}
+			obj?.CreateObject(WorldPosition, RailTransformation, new Transformation(), StartingDistance, EndingDistance, LastPlacement);
 
 			if (Types.Length > 1)
 			{

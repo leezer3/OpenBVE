@@ -33,6 +33,7 @@ using SharpCompress.Compressors.Deflate;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 
@@ -48,7 +49,7 @@ using System.Text;
 #pragma warning disable 0219
 namespace Plugin
 {
-	class MsTsShapeParser
+	partial class MsTsShapeParser
 	{
 		struct Texture
 		{
@@ -526,40 +527,80 @@ namespace Plugin
 					ParseBlock(block, ref shape);
 				}
 			}
-			Array.Resize(ref newResult.Objects, shape.totalObjects);
-			int idx = 0;
-			double[] previousLODs = new double[shape.totalObjects];
+			
+			
+
+			int LOD = 0;
+			double viewingDistance = double.MaxValue;
 			for (int i = 0; i < shape.LODs.Count; i++)
 			{
-				for (int j = 0; j < shape.LODs[i].subObjects.Count; j++)
+				if (shape.LODs[i].viewingDistance < viewingDistance)
 				{
-					ObjectState aos = new ObjectState();
-					if (i == 0)
+					LOD = i;
+					viewingDistance = shape.LODs[i].viewingDistance;
+				}
+			}
+
+			Array.Resize(ref newResult.Objects, shape.LODs[LOD].subObjects.Count);
+
+			for (int j = 0; j < shape.LODs[LOD].subObjects.Count; j++)
+			{
+				ObjectState aos = new ObjectState();
+				shape.LODs[LOD].subObjects[j].Apply(out aos.Prototype, true);
+				newResult.Objects[j] = aos;
+			}
+
+			if (newResult.Animations.Count == 0)
+			{
+				// some objects have default wheels matricies defined but no animations e.g. default UK MK1 coaches
+				// add them now, as MSTS animates these (yuck)
+				for (int i = 0; i < shape.Matricies.Count; i++)
+				{
+
+					if (shape.Matricies[i].Name.StartsWith("WHEELS"))
 					{
-						shape.LODs[i].subObjects[j].Apply(out aos.Prototype, true);
-						previousLODs[idx] = shape.LODs[i].viewingDistance;
-						int k = idx;
-						while (k > 0)
+						KeyframeAnimation newAnimation = new KeyframeAnimation(newResult, string.Empty, shape.Matricies[i].Name, 8, 60, shape.Matricies[i].Matrix);
+						newAnimation.AnimationControllers = new[]
 						{
-							if (previousLODs[k] < shape.LODs[i].viewingDistance)
-							{
-								break;
-							}
-
-							k--;
-
-						}
-						/*
-						 * END TO REMOVE
-						 */
-
-
-						newResult.Objects[idx] = aos;
-						idx++;
+							new TcbKey(shape.Matricies[i].Name, defaultWheelRotationFrames)
+						};
+						newResult.Animations.Add(shape.Matricies[i].Name, newAnimation);
 					}
+				}
+			}
+			// extract pivots
+			for (int i = 0; i < shape.Matricies.Count; i++)
+			{
+				if (shape.Matricies[i].Name.StartsWith("BOGIE"))
+				{
+					int bogieIndex = int.Parse(shape.Matricies[i].Name.Substring(5));
+					double minWheel = 0, maxWheel = 0;
+					for (int j = 0; j < shape.Matricies.Count; j++)
+					{
+						if (shape.Matricies[j].Name.Length == 8 && shape.Matricies[j].Name.StartsWith("WHEELS" + bogieIndex))
+						{
+							double z = shape.Matricies[j].Matrix.ExtractTranslation().Z;
+							minWheel = Math.Min(shape.Matricies[j].Matrix.ExtractTranslation().Z, minWheel);
+							maxWheel = Math.Max(shape.Matricies[j].Matrix.ExtractTranslation().Z, maxWheel);
+						}
+					}
+
+					if (minWheel == 0 && maxWheel == 0)
+					{
+						// as wheel translation may not be specified
+						newResult.Pivots.Add(shape.Matricies[i].Name, new PivotPoint(shape.Matricies[i].Name, shape.Matricies[i].Matrix.ExtractTranslation().Z, -2, 2));
+					}
+					else
+					{
+						newResult.Pivots.Add(shape.Matricies[i].Name, new PivotPoint(shape.Matricies[i].Name, shape.Matricies[i].Matrix.ExtractTranslation().Z, minWheel, maxWheel));
+					}
+						
 					
 				}
 			}
+
+
+
 
 			Matrix4D matrix = Matrix4D.Identity;
 			return newResult;
@@ -1275,6 +1316,20 @@ namespace Plugin
 					if (currentNode.AnimationControllers.Length != 0)
 					{
 						newResult.Animations.Add(block.Label, currentNode);
+					}
+					else
+					{
+						if (currentNode.Name.StartsWith("WHEELS"))
+						{
+							// some objects, e.g. the default Class 50 provide a wheel animation with no controllers
+							// add a default 8 frame animation
+							currentNode.AnimationControllers = new AbstractAnimation[]
+							{
+								new TcbKey(currentNode.Name, defaultWheelRotationFrames)
+							};
+
+							newResult.Animations.Add(block.Label, currentNode);
+						}
 					}
 					break;
 				case KujuTokenID.controllers:

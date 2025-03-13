@@ -1,3 +1,4 @@
+using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -106,7 +107,6 @@ namespace Train.OpenBve
 					if (train.Cars[i].Sounds.Motor == null)
 					{
 						BVEMotorSound motorSound = new BVEMotorSound(train.Cars[i], 18.0, Plugin.MotorSoundTables);
-						System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 						motorSound.Position = center;
 						for (int j = 0; j < motorSound.Tables.Length; j++)
 						{
@@ -115,7 +115,7 @@ namespace Train.OpenBve
 								int idx = motorSound.Tables[j].Entries[k].SoundIndex;
 								if (idx >= 0)
 								{
-									CarSound snd = new CarSound(Plugin.CurrentHost, train.TrainFolder, "Motor" + idx.ToString(Culture) + ".wav", SoundCfgParser.mediumRadius, center);
+									CarSound snd = new CarSound(Plugin.CurrentHost, train.TrainFolder, "Motor" + idx.ToString(CultureInfo.InvariantCulture) + ".wav", SoundCfgParser.mediumRadius, center);
 									motorSound.Tables[j].Entries[k].Buffer = snd.Buffer;
 								}
 							}

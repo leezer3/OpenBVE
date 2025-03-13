@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 
 namespace LibRender2.Trains
 {
@@ -17,7 +18,7 @@ namespace LibRender2.Trains
 		/// <summary>Whether this is to be shown in overlay mode (e.g. panel)</summary>
 		public readonly ObjectType Type;
 
-		public CarSection(HostInterface Host, ObjectType ObjectType, bool visibleFromInterior, UnifiedObject Object = null)
+		public CarSection(HostInterface Host, ObjectType ObjectType, bool visibleFromInterior, AbstractCar baseCar = null, UnifiedObject Object = null)
 		{
 			currentHost = Host;
 			Groups = new ElementsGroup[1];
@@ -46,6 +47,7 @@ namespace LibRender2.Trains
 			}
 			else if (Object is KeyframeAnimatedObject k)
 			{
+				k.BaseCar = baseCar;
 				Groups[0].Keyframes = k;
 				for (int h = 0; h < Groups[0].Keyframes.Objects.Length; h++)
 				{

@@ -5,7 +5,6 @@ using TrainManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
-using TrainManager.Power;
 using TrainManager.Trains;
 
 namespace ObjectViewer.Trains

@@ -666,10 +666,10 @@ namespace RouteViewer
 					Renderer.Camera.AlignmentDirection.Zoom = -CameraProperties.ZoomTopSpeed * speedModified;
 					break;
 				case Key.Keypad1:
-					Game.ApplyPointOfInterest(-1, true);
+					Program.CurrentRoute.ApplyPointOfInterest(TrackDirection.Reverse);
 					break;
 				case Key.Keypad7:
-					Game.ApplyPointOfInterest(1, true);
+					Program.CurrentRoute.ApplyPointOfInterest(TrackDirection.Forwards);
 					break;
 				case Key.PageUp:
 					JumpToStation(1);

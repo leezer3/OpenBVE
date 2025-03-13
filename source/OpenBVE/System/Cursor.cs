@@ -33,8 +33,7 @@ namespace OpenBve
 			{
 				return;
 			}
-			MouseCursor c = comboboxCursor.Items[i] as MouseCursor;
-			if (c == null)
+			if (!(comboboxCursor.Items[i] is MouseCursor c))
 			{
 				return;
 			}

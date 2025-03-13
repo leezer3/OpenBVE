@@ -16,29 +16,29 @@ namespace Train.OpenBve
 		}
 
 		/// <summary>Parses the sound configuration file for a train</summary>
-		/// <param name="Train">The train to which to apply the new sound configuration</param>
-		internal void ParseSoundConfig(TrainBase Train)
+		/// <param name="train">The train to which to apply the new sound configuration</param>
+		internal void ParseSoundConfig(TrainBase train)
 		{
-			LoadDefaultATSSounds(Train);
-			string FileName = OpenBveApi.Path.CombineFile(Train.TrainFolder, "sound.xml");
-			if (System.IO.File.Exists(FileName))
+			LoadDefaultATSSounds(train);
+			string fileName = OpenBveApi.Path.CombineFile(train.TrainFolder, "sound.xml");
+			if (System.IO.File.Exists(fileName))
 			{
-				if (Plugin.SoundXmlParser.ParseTrain(FileName, Train))
+				if (Plugin.SoundXmlParser.ParseTrain(fileName, train))
 				{
-					Plugin.FileSystem.AppendToLogFile("Loading sound.xml file: " + FileName);
+					Plugin.FileSystem.AppendToLogFile("Loading sound.xml file: " + fileName);
 					return;
 				}
 			}
-			FileName = OpenBveApi.Path.CombineFile(Train.TrainFolder, "sound.cfg");
-			if (System.IO.File.Exists(FileName))
+			fileName = OpenBveApi.Path.CombineFile(train.TrainFolder, "sound.cfg");
+			if (System.IO.File.Exists(fileName))
 			{
-				Plugin.FileSystem.AppendToLogFile("Loading sound.cfg file: " + FileName);
-				Plugin.BVE4SoundParser.Parse(FileName, Train.TrainFolder, Train);
+				Plugin.FileSystem.AppendToLogFile("Loading sound.cfg file: " + fileName);
+				Plugin.BVE4SoundParser.Parse(fileName, train.TrainFolder, train);
 			}
 			else
 			{
 				Plugin.FileSystem.AppendToLogFile("Loading default BVE2 sounds.");
-				Plugin.BVE2SoundParser.Parse(Train);
+				Plugin.BVE2SoundParser.Parse(train);
 			}
 		}
 
@@ -49,48 +49,48 @@ namespace Train.OpenBve
 		internal const double tinyRadius = 2.0;
 
 		/// <summary>Attempts to load an array of sound files into a car-sound dictionary</summary>
-		/// <param name="Folder">The folder the sound files are located in</param>
-		/// <param name="FileStart">The first sound file</param>
-		/// <param name="FileEnd">The last sound file</param>
-		/// <param name="Position">The position the sound is to be emitted from within the car</param>
-		/// <param name="Radius">The sound radius</param>
+		/// <param name="folder">The folder the sound files are located in</param>
+		/// <param name="fileStart">The first sound file</param>
+		/// <param name="fileEnd">The last sound file</param>
+		/// <param name="position">The position the sound is to be emitted from within the car</param>
+		/// <param name="radius">The sound radius</param>
 		/// <returns>The new car sound dictionary</returns>
-		internal static Dictionary<int, CarSound> TryLoadSoundDictionary(string Folder, string FileStart, string FileEnd, Vector3 Position, double Radius)
+		internal static Dictionary<int, CarSound> TryLoadSoundDictionary(string folder, string fileStart, string fileEnd, Vector3 position, double radius)
 		{
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			Dictionary<int, CarSound> Sounds = new Dictionary<int, CarSound>();
-			if (!System.IO.Directory.Exists(Folder))
+			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
+			Dictionary<int, CarSound> sounds = new Dictionary<int, CarSound>();
+			if (!System.IO.Directory.Exists(folder))
 			{
 				//Detect whether the given folder exists before attempting to load from it
-				return Sounds;
+				return sounds;
 			}
-			string[] Files = System.IO.Directory.GetFiles(Folder);
-			for (int i = 0; i < Files.Length; i++)
+			string[] files = System.IO.Directory.GetFiles(folder);
+			for (int i = 0; i < files.Length; i++)
 			{
-				string a = System.IO.Path.GetFileName(Files[i]);
-				if (a == null) return Sounds;
-				if (a.Length > FileStart.Length + FileEnd.Length)
+				string a = System.IO.Path.GetFileName(files[i]);
+				if (a == null) return sounds;
+				if (a.Length > fileStart.Length + fileEnd.Length)
 				{
-					if (a.StartsWith(FileStart, StringComparison.OrdinalIgnoreCase) & a.EndsWith(FileEnd, StringComparison.OrdinalIgnoreCase))
+					if (a.StartsWith(fileStart, StringComparison.OrdinalIgnoreCase) & a.EndsWith(fileEnd, StringComparison.OrdinalIgnoreCase))
 					{
-						string b = a.Substring(FileStart.Length, a.Length - FileEnd.Length - FileStart.Length);
-						if (int.TryParse(b, System.Globalization.NumberStyles.Integer, Culture, out var n))
+						string b = a.Substring(fileStart.Length, a.Length - fileEnd.Length - fileStart.Length);
+						if (int.TryParse(b, System.Globalization.NumberStyles.Integer, culture, out var n))
 						{
-							if (Sounds.ContainsKey(n))
+							if (sounds.ContainsKey(n))
 							{
-								Plugin.CurrentHost.RegisterSound(Files[i], Radius, out var snd);
-								Sounds[n] = new CarSound(snd, Position);
+								Plugin.CurrentHost.RegisterSound(files[i], radius, out var snd);
+								sounds[n] = new CarSound(snd, position);
 							}
 							else
 							{
-								Plugin.CurrentHost.RegisterSound(Files[i], Radius, out var snd);
-								Sounds.Add(n, new CarSound(snd, Position));
+								Plugin.CurrentHost.RegisterSound(files[i], radius, out var snd);
+								sounds.Add(n, new CarSound(snd, position));
 							}
 						}
 					}
 				}
 			}
-			return Sounds;
+			return sounds;
 		}
 	}
 }

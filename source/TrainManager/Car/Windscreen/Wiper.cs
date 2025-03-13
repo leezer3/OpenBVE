@@ -31,8 +31,9 @@ namespace TrainManager.Car
 		private double wiperTimer;
 		private double holdTimer;
 		private bool soundTriggered;
+		private WiperSpeed maxSpeed;
 
-		public WindscreenWiper(Windscreen windscreen, WiperPosition restPosition, WiperPosition holdPosition, double wipeSpeed, double holdTime)
+		public WindscreenWiper(Windscreen windscreen, WiperPosition restPosition, WiperPosition holdPosition, double wipeSpeed, double holdTime, bool singleSpeed = false)
 		{
 			RestPosition = restPosition;
 			HoldPosition = holdPosition;
@@ -41,6 +42,7 @@ namespace TrainManager.Car
 			Windscreen = windscreen;
 			CurrentPosition = restPosition == WiperPosition.Left ? 100 : 0;
 			CurrentSpeed = WiperSpeed.Off;
+			maxSpeed = singleSpeed ? WiperSpeed.Intermittant : WiperSpeed.Fast;
 		}
 
 		/// <summary>Changes the wiper speed</summary>
@@ -51,7 +53,7 @@ namespace TrainManager.Car
 			switch (Command)
 			{
 				case Translations.Command.WiperSpeedUp:
-					if (CurrentSpeed < WiperSpeed.Fast)
+					if (CurrentSpeed < maxSpeed)
 					{
 						CurrentSpeed++;
 					}

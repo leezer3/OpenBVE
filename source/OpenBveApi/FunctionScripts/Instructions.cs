@@ -33,7 +33,7 @@
 		TimetableVisible, Panel2Timetable, DistanceNextStation, DistanceLastStation, StopsNextStation, DistanceStation, StopsStation, NextStation, NextStationStop, TerminalStation,
 		RouteLimit,
 		SectionAspectNumber, CurrentObjectState,
-		RainDrop, SnowFlake, WiperPosition,
+		RainDrop, SnowFlake, WiperPosition, WiperState,
 		WheelRadius, WheelRadiusOfCar,
 		WheelSlip, WheelSlipCar,
 		Sanders, SandLevel, SandShots, DSD,
