@@ -31,11 +31,14 @@ namespace OpenBveApi.Objects
 	{
 		private readonly KeyframeAnimatedObject containerObject;
 
+		private readonly double ZTranslation;
+
 		/// <summary>Creates a new keyframe matrix</summary>
 		public KeyframeMatrix(KeyframeAnimatedObject container, string name, Matrix4D matrix)
 		{
 			containerObject = container;
 			Name = name;
+			ZTranslation = matrix.ExtractTranslation().Z;
 			_matrix = matrix;
 		}
 
@@ -63,9 +66,9 @@ namespace OpenBveApi.Objects
 					// This somewhat misuses a single track follower, but it works OK
 					// Y rotation is not handled (other than by the main model matrix moving)
 					Vector3 v1 = containerObject.rearAxlePosition - containerObject.frontAxlePosition;
-					containerObject.trackFollower.UpdateAbsolute(containerObject.currentTrackPosition + containerObject.Pivots[Name].FrontPoint, true, false);
+					containerObject.trackFollower.UpdateAbsolute(containerObject.currentTrackPosition + ZTranslation + containerObject.Pivots[Name].FrontPoint, true, false);
 					Vector3 w1 = containerObject.trackFollower.WorldPosition;
-					containerObject.trackFollower.UpdateAbsolute(containerObject.currentTrackPosition + containerObject.Pivots[Name].RearPoint, true, false);
+					containerObject.trackFollower.UpdateAbsolute(containerObject.currentTrackPosition + ZTranslation + containerObject.Pivots[Name].RearPoint, true, false);
 					Vector3 w2 = containerObject.trackFollower.WorldPosition;
 					Vector3 v2 = w2 - w1;
 					double a = Vector2.Dot(new Vector2(v1.X, v1.Z), new Vector2(v2.X, v2.Z));
