@@ -481,7 +481,7 @@ namespace Train.MsTs
 						}
 						car.CarSections = move;
 					}
-					car.CarSections[0] = new CarSection(Plugin.currentHost, ObjectType.Overlay, true);
+					car.CarSections[0] = new CarSection(Plugin.currentHost, ObjectType.Overlay, true, car);
 					car.CameraRestrictionMode = CameraRestrictionMode.On;
 					Plugin.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 					CabviewFileParser.ParseCabViewFile(cabViewFile, ref car);
