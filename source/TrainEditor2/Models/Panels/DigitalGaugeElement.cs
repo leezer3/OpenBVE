@@ -1,4 +1,8 @@
-﻿using OpenBveApi.Colors;
+﻿using System.Text;
+using System.Windows;
+using System.Xml.Linq;
+using OpenBveApi.Colors;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Panels
 {
@@ -124,8 +128,39 @@ namespace TrainEditor2.Models.Panels
 		public override object Clone()
 		{
 			DigitalGaugeElement element = (DigitalGaugeElement)base.Clone();
-			element.Subject = (Subject)Subject.Clone();
+			Subject = (Subject)Subject.Clone();
 			return element;
+		}
+
+		public override void WriteCfg(string fileName, StringBuilder builder)
+		{
+			builder.AppendLine("[DigitalGauge]");
+			WriteKey(builder, "Subject", Subject.ToString());
+			WriteKey(builder, "Location", LocationX, LocationY);
+			WriteKey(builder, "Radius", Radius);
+			WriteKey(builder, "Color", Color.ToString());
+			WriteKey(builder, "InitialAngle", InitialAngle.ToDegrees());
+			WriteKey(builder, "LastAngle", LastAngle.ToDegrees());
+			WriteKey(builder, "Minimum", Minimum);
+			WriteKey(builder, "Maximum", Maximum);
+			WriteKey(builder, "Step", Step);
+			WriteKey(builder, "Layer", Layer);
+		}
+
+		public override void WriteXML(string fileName, XElement parent)
+		{
+			parent.Add(new XElement("DigitalGauge",
+			new XElement("Location", $"{LocationX}, {LocationY}"),
+			new XElement("Layer", Layer),
+				new XElement("Subject", Subject),
+				new XElement("Radius", Radius),
+				new XElement("Color", Color),
+				new XElement("InitialAngle", InitialAngle.ToDegrees()),
+				new XElement("LastAngle", LastAngle.ToDegrees()),
+				new XElement("Minimum", Minimum),
+				new XElement("Maximum", Maximum),
+				new XElement("Step", Step)
+			));
 		}
 	}
 }

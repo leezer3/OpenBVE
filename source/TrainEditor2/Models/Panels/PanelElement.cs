@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Xml.Linq;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Panels
@@ -55,6 +59,36 @@ namespace TrainEditor2.Models.Panels
 		public virtual object Clone()
 		{
 			return MemberwiseClone();
+		}
+
+		/// <summary>Writes the element to a Panel2.cfg file</summary>
+		/// <param name="fileName">The output filename</param>
+		/// <param name="builder">The stringbuilder</param>
+		public abstract void WriteCfg(string fileName, StringBuilder builder);
+
+		/// <summary>Writes the element to a Panel.xml file</summary>
+		/// <param name="fileName">The output filename</param>
+		/// <param name="parent">The parent element</param>
+		public abstract void WriteXML(string fileName, XElement parent);
+
+		internal static void WriteKey(StringBuilder builder, string key, params string[] values)
+		{
+			if (values.All(string.IsNullOrEmpty))
+			{
+				return;
+			}
+
+			builder.AppendLine($"{key} = {string.Join(", ", values)}");
+		}
+
+		internal static void WriteKey(StringBuilder builder, string key, params int[] values)
+		{
+			WriteKey(builder, key, values.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToArray());
+		}
+
+		internal static void WriteKey(StringBuilder builder, string key, params double[] values)
+		{
+			WriteKey(builder, key, values.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToArray());
 		}
 	}
 }

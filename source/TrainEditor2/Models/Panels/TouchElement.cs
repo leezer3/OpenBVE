@@ -3,6 +3,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Xml.Linq;
 using OpenBveApi.Interface;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
@@ -10,7 +13,7 @@ using TrainEditor2.Models.Others;
 
 namespace TrainEditor2.Models.Panels
 {
-	internal class TouchElement : BindableBase, ICloneable
+	internal class TouchElement : PanelElement
 	{
 		internal class SoundEntry : BindableBase, ICloneable
 		{
@@ -82,12 +85,9 @@ namespace TrainEditor2.Models.Panels
 
 		private readonly CultureInfo culture;
 
-		private double locationX;
-		private double locationY;
 		private double sizeX;
 		private double sizeY;
 		private int jumpScreen;
-		private int layer;
 
 		private TreeViewItemModel treeItem;
 		private TreeViewItemModel selectedTreeItem;
@@ -99,30 +99,6 @@ namespace TrainEditor2.Models.Panels
 
 		internal ObservableCollection<ListViewColumnHeaderModel> ListColumns;
 		internal ObservableCollection<ListViewItemModel> ListItems;
-
-		internal double LocationX
-		{
-			get
-			{
-				return locationX;
-			}
-			set
-			{
-				SetProperty(ref locationX, value);
-			}
-		}
-
-		internal double LocationY
-		{
-			get
-			{
-				return locationY;
-			}
-			set
-			{
-				SetProperty(ref locationY, value);
-			}
-		}
 
 		internal double SizeX
 		{
@@ -157,18 +133,6 @@ namespace TrainEditor2.Models.Panels
 			set
 			{
 				SetProperty(ref jumpScreen, value);
-			}
-		}
-
-		internal int Layer
-		{
-			get
-			{
-				return layer;
-			}
-			set
-			{
-				SetProperty(ref layer, value);
 			}
 		}
 
@@ -228,7 +192,7 @@ namespace TrainEditor2.Models.Panels
 			SelectedTreeItem = TreeItem;
 		}
 
-		public object Clone()
+		public override object Clone()
 		{
 			TouchElement touch = (TouchElement)MemberwiseClone();
 			touch.SoundEntries = new ObservableCollection<SoundEntry>(SoundEntries.Select(x => (SoundEntry)x.Clone()));
@@ -377,6 +341,48 @@ namespace TrainEditor2.Models.Panels
 			ListItems.Remove(SelectedListItem);
 
 			SelectedListItem = null;
+		}
+
+		public override void WriteCfg(string fileName, StringBuilder builder)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void WriteXML(string fileName, XElement parent)
+		{
+			XElement touchNode = new XElement("Touch",
+				new XElement("Location", $"{LocationX}, {LocationY}"),
+				new XElement("Layer", Layer),
+				new XElement("Size", $"{SizeX}, {SizeY}"),
+				new XElement("JumpScreen", JumpScreen)
+			);
+
+			if (SoundEntries.Any())
+			{
+				touchNode.Add(new XElement("SoundEntries", SoundEntries.Select(WriteTouchElementSoundEntryNode)));
+			}
+
+			if (CommandEntries.Any())
+			{
+				touchNode.Add(new XElement("CommandEntries", CommandEntries.Select(WriteTouchElementCommandEntryNode)));
+			}
+
+			parent.Add(touchNode);
+		}
+
+		private XElement WriteTouchElementSoundEntryNode(SoundEntry entry)
+		{
+			return new XElement("Entry",
+				new XElement("Index", entry.Index)
+			);
+		}
+
+		private XElement WriteTouchElementCommandEntryNode(CommandEntry entry)
+		{
+			return new XElement("Entry",
+				new XElement("Name", entry.Info.Name),
+				new XElement("Option", entry.Option)
+			);
 		}
 	}
 }

@@ -1,4 +1,7 @@
-﻿using OpenBveApi.Colors;
+﻿using System.Text;
+using System.Xml.Linq;
+using OpenBveApi.Colors;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Panels
 {
@@ -293,8 +296,101 @@ namespace TrainEditor2.Models.Panels
 		public override object Clone()
 		{
 			NeedleElement element = (NeedleElement)base.Clone();
-			element.Subject = (Subject)Subject.Clone();
+			Subject = (Subject)Subject.Clone();
 			return element;
+		}
+
+		public override void WriteCfg(string fileName, StringBuilder builder)
+		{
+			builder.AppendLine("[Needle]");
+			WriteKey(builder, "Subject", Subject.ToString());
+			WriteKey(builder, "Location", LocationX, LocationY);
+
+			if (DefinedRadius)
+			{
+				WriteKey(builder, "Radius", Radius);
+			}
+
+			WriteKey(builder, "DaytimeImage", Utilities.MakeRelativePath(fileName, DaytimeImage));
+			WriteKey(builder, "NighttimeImage", Utilities.MakeRelativePath(fileName, NighttimeImage));
+			WriteKey(builder, "Color", Color.ToString());
+			WriteKey(builder, "TransparentColor", TransparentColor.ToString());
+
+			if (DefinedOrigin)
+			{
+				WriteKey(builder, "Origin", OriginX, OriginY);
+			}
+
+			WriteKey(builder, "InitialAngle", InitialAngle.ToDegrees());
+			WriteKey(builder, "LastAngle", LastAngle.ToDegrees());
+			WriteKey(builder, "Minimum", Minimum);
+			WriteKey(builder, "Maximum", Maximum);
+
+			if (DefinedNaturalFreq)
+			{
+				WriteKey(builder, "NaturalFreq", NaturalFreq);
+			}
+
+			if (DefinedDampingRatio)
+			{
+				WriteKey(builder, "DampingRatio", DampingRatio);
+			}
+
+			WriteKey(builder, "Backstop", Backstop.ToString());
+			WriteKey(builder, "Smoothed", Smoothed.ToString());
+			WriteKey(builder, "Layer", Layer);
+		}
+
+		public override void WriteXML(string fileName, XElement parent)
+		{
+			XElement needleNode = new XElement("Needle",
+				new XElement("Location", $"{LocationX}, {LocationY}"),
+				new XElement("Layer", Layer),
+				new XElement("Subject", Subject)
+			);
+
+			if (!string.IsNullOrEmpty(DaytimeImage))
+			{
+				needleNode.Add(new XElement("DaytimeImage", Utilities.MakeRelativePath(fileName, DaytimeImage)));
+			}
+
+			if (!string.IsNullOrEmpty(NighttimeImage))
+			{
+				needleNode.Add(new XElement("NighttimeImage", Utilities.MakeRelativePath(fileName, NighttimeImage)));
+			}
+
+			needleNode.Add(
+				new XElement("TransparentColor", TransparentColor),
+				new XElement("Color", Color),
+				new XElement("InitialAngle", InitialAngle.ToDegrees()),
+				new XElement("LastAngle", LastAngle.ToDegrees()),
+				new XElement("Minimum", Minimum),
+				new XElement("Maximum", Maximum),
+				new XElement("Backstop", Backstop),
+				new XElement("Smoothed", Smoothed)
+			);
+
+			if (DefinedRadius)
+			{
+				needleNode.Add(new XElement("Radius", Radius));
+			}
+
+			if (DefinedOrigin)
+			{
+				needleNode.Add(new XElement("Origin", $"{OriginX}, {OriginY}"));
+			}
+
+			if (DefinedNaturalFreq)
+			{
+				needleNode.Add(new XElement("NaturalFreq", NaturalFreq));
+			}
+
+			if (DefinedDampingRatio)
+			{
+				needleNode.Add(new XElement("DampingRatio", DampingRatio));
+			}
+
+			parent.Add(needleNode);
 		}
 	}
 }

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using System.Text;
+using System.Xml.Linq;
 using OpenBveApi.Colors;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Panels
 {
-	internal class This : BindableBase, ICloneable
+	internal class This : PanelElement
 	{
 		private double resolution;
 		private double left;
@@ -179,9 +180,48 @@ namespace TrainEditor2.Models.Panels
 			OriginY = 512.0;
 		}
 
-		public object Clone()
+		public override void WriteCfg(string fileName, StringBuilder builder)
 		{
-			return MemberwiseClone();
+			builder.AppendLine("[This]");
+			WriteKey(builder, "Resolution", Resolution);
+			WriteKey(builder, "Left", Left);
+			WriteKey(builder, "Right", Right);
+			WriteKey(builder, "Top", Top);
+			WriteKey(builder, "Bottom", Bottom);
+			WriteKey(builder, "DaytimeImage", Utilities.MakeRelativePath(fileName, DaytimeImage));
+			WriteKey(builder, "NighttimeImage", Utilities.MakeRelativePath(fileName, NighttimeImage));
+			WriteKey(builder, "TransparentColor", TransparentColor.ToString());
+			WriteKey(builder, "Center", CenterX, CenterY);
+			WriteKey(builder, "Origin", OriginX, CenterY);
+		}
+
+		public override void WriteXML(string fileName, XElement parent)
+		{
+			XElement thisNode = new XElement("This",
+				new XElement("Resolution", Resolution),
+				new XElement("Left", Left),
+				new XElement("Right", Right),
+				new XElement("Top", Top),
+				new XElement("Bottom", Bottom)
+			);
+
+			if (!string.IsNullOrEmpty(DaytimeImage))
+			{
+				thisNode.Add(new XElement("DaytimeImage", Utilities.MakeRelativePath(fileName, DaytimeImage)));
+			}
+
+			if (!string.IsNullOrEmpty(NighttimeImage))
+			{
+				thisNode.Add(new XElement("NighttimeImage", Utilities.MakeRelativePath(fileName, NighttimeImage)));
+			}
+
+			thisNode.Add(
+				new XElement("TransparentColor", TransparentColor),
+				new XElement("Center", $"{CenterX}, {CenterY}"),
+				new XElement("Origin", $"{OriginX}, {OriginY}")
+			);
+
+			parent.Add(thisNode);
 		}
 	}
 }
