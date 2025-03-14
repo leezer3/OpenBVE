@@ -69,9 +69,12 @@ namespace Train.OpenBve
 				}
 
 				int carIndex = 0;
+
+				double perCarProgress = 0.25 / DocumentNodes.Count;
 				//Use the index here for easy access to the car count
 				for (int i = 0; i < DocumentNodes.Count; i++)
 				{
+					Plugin.CurrentProgress = Plugin.LastProgress + perCarProgress * i;
 					if (carIndex > Train.Cars.Length - 1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
