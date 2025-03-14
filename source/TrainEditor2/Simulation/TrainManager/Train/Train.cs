@@ -1,5 +1,4 @@
-﻿using System;
-using OpenBveApi.Trains;
+﻿using OpenBveApi.Trains;
 
 namespace TrainEditor2.Simulation.TrainManager
 {

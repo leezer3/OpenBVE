@@ -1,4 +1,3 @@
-using OpenBveApi.Interface;
 using System.Globalization;
 using System.Linq;
 
@@ -208,13 +207,6 @@ namespace OpenBveApi.Math {
 		public static double ToRadians(this double degrees)
 		{
 			return degrees * 0.0174532925199433;
-		}
-
-		/// <summary>Gets the modulous of two numbers</summary>
-		/// <returns>The modulous</returns>
-		public static double Mod(double a, double b)
-		{
-			return a - b * System.Math.Floor(a / b);
 		}
 
 		private static string TrimInside(string Expression)

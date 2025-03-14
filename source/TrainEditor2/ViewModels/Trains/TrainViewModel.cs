@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reactive.Disposables;
+﻿using System.Linq;
 using System.Reactive.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;

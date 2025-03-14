@@ -23,8 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // ReSharper disable UnusedMember.Global
-
-using System;
+// ReSharper disable InconsistentNaming
 
 namespace OpenBve.Formats.MsTs
 {

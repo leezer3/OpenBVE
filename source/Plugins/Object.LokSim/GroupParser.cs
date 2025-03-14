@@ -27,7 +27,6 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
-using System.Text;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -258,7 +257,7 @@ namespace Plugin
 							}
 							else
 							{
-								throw new Exception("Format " + System.IO.Path.GetExtension(CurrentObjects[i].Name) + " is not currently supported by the Loksim3D object parser");
+								throw new Exception("Format " + Path.GetExtension(CurrentObjects[i].Name) + " is not currently supported by the Loksim3D object parser");
 							}
 						}
 						catch (Exception ex) {

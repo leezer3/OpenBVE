@@ -23,7 +23,6 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenBveApi.Math;
-using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
 {

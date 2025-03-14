@@ -8,7 +8,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using OpenBveApi.Hosts;
-using OpenBveApi.Textures;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace Texture.Tga
