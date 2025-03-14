@@ -19,8 +19,8 @@ using Path = OpenBveApi.Path;
 namespace OpenBve {
 	internal static class Loading
 	{
-		/// <summary>The current train loading index</summary>
-		internal static int CurrentTrain;
+		/// <summary>The number of trains that have been loaded so far</summary>
+		internal static int LoadedTrain;
 		/// <summary>Set this member to true to cancel loading</summary>
 		internal static bool Cancel
 		{
@@ -404,7 +404,8 @@ namespace OpenBve {
 			{
 				Program.TrainManager.Trains.Add(new TrainBase(TrainState.Bogus, TrainType.PreTrain));
 			}
-			
+
+			LoadedTrain = 0;
 			// load trains
 			for (int k = 0; k < Program.TrainManager.Trains.Count; k++) {
 
@@ -415,6 +416,7 @@ namespace OpenBve {
 					{
 						
 						Program.CurrentHost.Plugins[i].Train.LoadTrain(CurrentTrainEncoding, CurrentTrainFolder, ref currentTrain, ref Interface.CurrentControls);
+						LoadedTrain++;
 						break;
 					}
 				}
@@ -445,9 +447,6 @@ namespace OpenBve {
 				Program.CurrentRoute.UpdateAllSections();
 			}
 			// load plugin
-
-
-			CurrentTrain = 0;
 			for (int i = 0; i < Program.TrainManager.Trains.Count; i++) {
 				if ( Program.TrainManager.Trains[i].State != TrainState.Bogus) {
 					if ( Program.TrainManager.Trains[i].IsPlayerTrain) {
@@ -468,8 +467,6 @@ namespace OpenBve {
 						}
 					}
 				}
-				CurrentTrain++;
-
 			}
 		}
 

@@ -257,7 +257,6 @@ namespace Train.OpenBve
 		    // add panel section
 		    if (currentTrain.IsPlayerTrain) {	
 			    ParsePanelConfig(currentTrain, encoding);
-			    LastProgress = 0.6;
 			    Thread.Sleep(1);
 			    if (Cancel)
 			    {
@@ -266,6 +265,10 @@ namespace Train.OpenBve
 			    }
 			    FileSystem.AppendToLogFile("Train panel loaded sucessfully.");
 		    }
+
+		    CurrentProgress = 0.5;
+		    LastProgress = 0.5;
+		    
 			// add exterior section
 			if (currentTrain.State != TrainState.Bogus)
 			{
@@ -304,6 +307,10 @@ namespace Train.OpenBve
 					IsLoading = false;
 					return false;
 				}
+				
+				CurrentProgress = 0.75;
+				LastProgress = 0.75;
+				
 				//Stores the current array index of the bogie object to add
 				//Required as there are two bogies per car, and we're using a simple linear array....
 				int currentBogieObject = 0;
@@ -398,6 +405,7 @@ namespace Train.OpenBve
 					currentTrain.Cars[0].Sounds.Motor = new BVEMotorSound(currentTrain.Cars[0], 18.0, MotorSoundTables);
 				}
 			}
+			CurrentProgress = 1;
 			// place cars
 			currentTrain.PlaceCars(0.0);
 			currentControls = CurrentControls;
