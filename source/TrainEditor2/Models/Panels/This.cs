@@ -183,16 +183,16 @@ namespace TrainEditor2.Models.Panels
 		public override void WriteCfg(string fileName, StringBuilder builder)
 		{
 			builder.AppendLine("[This]");
-			WriteKey(builder, "Resolution", Resolution);
-			WriteKey(builder, "Left", Left);
-			WriteKey(builder, "Right", Right);
-			WriteKey(builder, "Top", Top);
-			WriteKey(builder, "Bottom", Bottom);
-			WriteKey(builder, "DaytimeImage", Utilities.MakeRelativePath(fileName, DaytimeImage));
-			WriteKey(builder, "NighttimeImage", Utilities.MakeRelativePath(fileName, NighttimeImage));
-			WriteKey(builder, "TransparentColor", TransparentColor.ToString());
-			WriteKey(builder, "Center", CenterX, CenterY);
-			WriteKey(builder, "Origin", OriginX, CenterY);
+			Utilities.WriteKey(builder, "Resolution", Resolution);
+			Utilities.WriteKey(builder, "Left", Left);
+			Utilities.WriteKey(builder, "Right", Right);
+			Utilities.WriteKey(builder, "Top", Top);
+			Utilities.WriteKey(builder, "Bottom", Bottom);
+			Utilities.WriteKey(builder, "DaytimeImage", Utilities.MakeRelativePath(fileName, DaytimeImage));
+			Utilities.WriteKey(builder, "NighttimeImage", Utilities.MakeRelativePath(fileName, NighttimeImage));
+			Utilities.WriteKey(builder, "TransparentColor", TransparentColor.ToString());
+			Utilities.WriteKey(builder, "Center", CenterX, CenterY);
+			Utilities.WriteKey(builder, "Origin", OriginX, CenterY);
 		}
 
 		public override void WriteXML(string fileName, XElement parent)

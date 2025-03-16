@@ -135,16 +135,16 @@ namespace TrainEditor2.Models.Panels
 		public override void WriteCfg(string fileName, StringBuilder builder)
 		{
 			builder.AppendLine("[DigitalGauge]");
-			WriteKey(builder, "Subject", Subject.ToString());
-			WriteKey(builder, "Location", LocationX, LocationY);
-			WriteKey(builder, "Radius", Radius);
-			WriteKey(builder, "Color", Color.ToString());
-			WriteKey(builder, "InitialAngle", InitialAngle.ToDegrees());
-			WriteKey(builder, "LastAngle", LastAngle.ToDegrees());
-			WriteKey(builder, "Minimum", Minimum);
-			WriteKey(builder, "Maximum", Maximum);
-			WriteKey(builder, "Step", Step);
-			WriteKey(builder, "Layer", Layer);
+			Utilities.WriteKey(builder, "Subject", Subject.ToString());
+			Utilities.WriteKey(builder, "Location", LocationX, LocationY);
+			Utilities.WriteKey(builder, "Radius", Radius);
+			Utilities.WriteKey(builder, "Color", Color.ToString());
+			Utilities.WriteKey(builder, "InitialAngle", InitialAngle.ToDegrees());
+			Utilities.WriteKey(builder, "LastAngle", LastAngle.ToDegrees());
+			Utilities.WriteKey(builder, "Minimum", Minimum);
+			Utilities.WriteKey(builder, "Maximum", Maximum);
+			Utilities.WriteKey(builder, "Step", Step);
+			Utilities.WriteKey(builder, "Layer", Layer);
 		}
 
 		public override void WriteXML(string fileName, XElement parent)

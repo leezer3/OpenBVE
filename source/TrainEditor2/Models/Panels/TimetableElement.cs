@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using System.Windows;
 using System.Xml.Linq;
 using OpenBveApi.Colors;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Panels
 {
@@ -57,11 +57,11 @@ namespace TrainEditor2.Models.Panels
 		public override void WriteCfg(string fileName, StringBuilder builder)
 		{
 			builder.AppendLine("[Timetable]");
-			WriteKey(builder, "Location", LocationX, LocationY);
-			WriteKey(builder, "Width", Width);
-			WriteKey(builder, "Height", Height);
-			WriteKey(builder, "TransparentColor", TransparentColor.ToString());
-			WriteKey(builder, "Layer", Layer);
+			Utilities.WriteKey(builder, "Location", LocationX, LocationY);
+			Utilities.WriteKey(builder, "Width", Width);
+			Utilities.WriteKey(builder, "Height", Height);
+			Utilities.WriteKey(builder, "TransparentColor", TransparentColor.ToString());
+			Utilities.WriteKey(builder, "Layer", Layer);
 		}
 
 		public override void WriteXML(string fileName, XElement parent)

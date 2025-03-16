@@ -303,42 +303,42 @@ namespace TrainEditor2.Models.Panels
 		public override void WriteCfg(string fileName, StringBuilder builder)
 		{
 			builder.AppendLine("[Needle]");
-			WriteKey(builder, "Subject", Subject.ToString());
-			WriteKey(builder, "Location", LocationX, LocationY);
+			Utilities.WriteKey(builder, "Subject", Subject.ToString());
+			Utilities.WriteKey(builder, "Location", LocationX, LocationY);
 
 			if (DefinedRadius)
 			{
-				WriteKey(builder, "Radius", Radius);
+				Utilities.WriteKey(builder, "Radius", Radius);
 			}
 
-			WriteKey(builder, "DaytimeImage", Utilities.MakeRelativePath(fileName, DaytimeImage));
-			WriteKey(builder, "NighttimeImage", Utilities.MakeRelativePath(fileName, NighttimeImage));
-			WriteKey(builder, "Color", Color.ToString());
-			WriteKey(builder, "TransparentColor", TransparentColor.ToString());
+			Utilities.WriteKey(builder, "DaytimeImage", Utilities.MakeRelativePath(fileName, DaytimeImage));
+			Utilities.WriteKey(builder, "NighttimeImage", Utilities.MakeRelativePath(fileName, NighttimeImage));
+			Utilities.WriteKey(builder, "Color", Color.ToString());
+			Utilities.WriteKey(builder, "TransparentColor", TransparentColor.ToString());
 
 			if (DefinedOrigin)
 			{
-				WriteKey(builder, "Origin", OriginX, OriginY);
+				Utilities.WriteKey(builder, "Origin", OriginX, OriginY);
 			}
 
-			WriteKey(builder, "InitialAngle", InitialAngle.ToDegrees());
-			WriteKey(builder, "LastAngle", LastAngle.ToDegrees());
-			WriteKey(builder, "Minimum", Minimum);
-			WriteKey(builder, "Maximum", Maximum);
+			Utilities.WriteKey(builder, "InitialAngle", InitialAngle.ToDegrees());
+			Utilities.WriteKey(builder, "LastAngle", LastAngle.ToDegrees());
+			Utilities.WriteKey(builder, "Minimum", Minimum);
+			Utilities.WriteKey(builder, "Maximum", Maximum);
 
 			if (DefinedNaturalFreq)
 			{
-				WriteKey(builder, "NaturalFreq", NaturalFreq);
+				Utilities.WriteKey(builder, "NaturalFreq", NaturalFreq);
 			}
 
 			if (DefinedDampingRatio)
 			{
-				WriteKey(builder, "DampingRatio", DampingRatio);
+				Utilities.WriteKey(builder, "DampingRatio", DampingRatio);
 			}
 
-			WriteKey(builder, "Backstop", Backstop.ToString());
-			WriteKey(builder, "Smoothed", Smoothed.ToString());
-			WriteKey(builder, "Layer", Layer);
+			Utilities.WriteKey(builder, "Backstop", Backstop.ToString());
+			Utilities.WriteKey(builder, "Smoothed", Smoothed.ToString());
+			Utilities.WriteKey(builder, "Layer", Layer);
 		}
 
 		public override void WriteXML(string fileName, XElement parent)

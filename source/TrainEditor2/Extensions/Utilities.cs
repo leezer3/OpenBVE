@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -278,6 +279,26 @@ namespace TrainEditor2.Extensions
 			string relativePath = basePathUri.MakeRelativeUri(targetPathUri).ToString();
 
 			return Uri.UnescapeDataString(relativePath).Replace("%25", "%");
+		}
+
+		public static void WriteKey(StringBuilder builder, string key, params string[] values)
+		{
+			if (values.All(string.IsNullOrEmpty))
+			{
+				return;
+			}
+
+			builder.AppendLine($"{key} = {string.Join(", ", values)}");
+		}
+
+		public static void WriteKey(StringBuilder builder, string key, params int[] values)
+		{
+			WriteKey(builder, key, values.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToArray());
+		}
+
+		public static void WriteKey(StringBuilder builder, string key, params double[] values)
+		{
+			WriteKey(builder, key, values.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToArray());
 		}
 	}
 }

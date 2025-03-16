@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 using Prism.Mvvm;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -79,6 +83,19 @@ namespace TrainEditor2.Models.Trains
 			public object Clone()
 			{
 				return MemberwiseClone();
+			}
+
+			internal void WriteExtensionsCfg(string fileName, StringBuilder builder, int bogieIndex)
+			{
+				builder.AppendLine($"[Bogie{bogieIndex.ToString(CultureInfo.InvariantCulture)}]");
+				Utilities.WriteKey(builder, "Object", Utilities.MakeRelativePath(fileName, Object));
+
+				if (DefinedAxles)
+				{
+					Utilities.WriteKey(builder, "Axles", RearAxle, FrontAxle);
+				}
+
+				Utilities.WriteKey(builder, "Reversed", Reversed.ToString());
 			}
 		}
 
@@ -378,6 +395,23 @@ namespace TrainEditor2.Models.Trains
 			car.Brake = (Brake)Brake.Clone();
 			car.Pressure = (Pressure)Pressure.Clone();
 			return car;
+		}
+
+		public void WriteExtensionsCfg(string fileName, StringBuilder builder, int carIndex)
+		{
+			builder.AppendLine($"[Car{carIndex.ToString(CultureInfo.InvariantCulture)}]");
+			Utilities.WriteKey(builder, "Object", Utilities.MakeRelativePath(fileName, Object));
+			Utilities.WriteKey(builder, "Length", Length);
+
+			if (DefinedAxles)
+			{
+				Utilities.WriteKey(builder, "Axles", RearAxle, FrontAxle);
+			}
+
+			Utilities.WriteKey(builder, "Reversed", Reversed.ToString());
+			Utilities.WriteKey(builder, "LoadingSway", LoadingSway.ToString());
+			FrontBogie.WriteExtensionsCfg(fileName, builder, carIndex * 2);
+			RearBogie.WriteExtensionsCfg(fileName, builder, carIndex * 2 + 1);
 		}
 	}
 

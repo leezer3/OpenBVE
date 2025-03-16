@@ -92,13 +92,13 @@ namespace TrainEditor2.Models.Panels
 		public override void WriteCfg(string fileName, StringBuilder builder)
 		{
 			builder.AppendLine("[DigitalNumber]");
-			WriteKey(builder, "Subject", Subject.ToString());
-			WriteKey(builder, "Location", LocationX, LocationY);
-			WriteKey(builder, "DaytimeImage", Utilities.MakeRelativePath(fileName, DaytimeImage));
-			WriteKey(builder, "NighttimeImage", Utilities.MakeRelativePath(fileName, NighttimeImage));
-			WriteKey(builder, "TransparentColor", TransparentColor.ToString());
-			WriteKey(builder, "Interval", Interval);
-			WriteKey(builder, "Layer", Layer);
+			Utilities.WriteKey(builder, "Subject", Subject.ToString());
+			Utilities.WriteKey(builder, "Location", LocationX, LocationY);
+			Utilities.WriteKey(builder, "DaytimeImage", Utilities.MakeRelativePath(fileName, DaytimeImage));
+			Utilities.WriteKey(builder, "NighttimeImage", Utilities.MakeRelativePath(fileName, NighttimeImage));
+			Utilities.WriteKey(builder, "TransparentColor", TransparentColor.ToString());
+			Utilities.WriteKey(builder, "Interval", Interval);
+			Utilities.WriteKey(builder, "Layer", Layer);
 		}
 
 		public override void WriteXML(string fileName, XElement parent)

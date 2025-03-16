@@ -70,25 +70,5 @@ namespace TrainEditor2.Models.Panels
 		/// <param name="fileName">The output filename</param>
 		/// <param name="parent">The parent element</param>
 		public abstract void WriteXML(string fileName, XElement parent);
-
-		internal static void WriteKey(StringBuilder builder, string key, params string[] values)
-		{
-			if (values.All(string.IsNullOrEmpty))
-			{
-				return;
-			}
-
-			builder.AppendLine($"{key} = {string.Join(", ", values)}");
-		}
-
-		internal static void WriteKey(StringBuilder builder, string key, params int[] values)
-		{
-			WriteKey(builder, key, values.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToArray());
-		}
-
-		internal static void WriteKey(StringBuilder builder, string key, params double[] values)
-		{
-			WriteKey(builder, key, values.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToArray());
-		}
 	}
 }
