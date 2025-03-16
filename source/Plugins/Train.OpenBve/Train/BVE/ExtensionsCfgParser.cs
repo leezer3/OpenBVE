@@ -51,8 +51,12 @@ namespace Train.OpenBve
 					return;
 				}
 				ConfigFile<ExtensionCfgSection, ExtensionCfgKey> cfg = new ConfigFile<ExtensionCfgSection, ExtensionCfgKey>(Lines, Plugin.CurrentHost);
+
+				double perBlockProgress = cfg.RemainingSubBlocks == 0 ? 0.25 : 0.25 / cfg.RemainingSubBlocks;
+				int readBlocks = 0;
 				while (cfg.RemainingSubBlocks > 0)
 				{
+					Plugin.CurrentProgress = Plugin.LastProgress + perBlockProgress * readBlocks;
 					Block<ExtensionCfgSection, ExtensionCfgKey> block = cfg.ReadNextBlock();
 					switch (block.Key)
 					{
@@ -201,6 +205,8 @@ namespace Train.OpenBve
 							}
 							break;
 					}
+
+					readBlocks++;
 				}
 				
 				// check for car objects and reverse if necessary

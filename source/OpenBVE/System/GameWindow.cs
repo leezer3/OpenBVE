@@ -1130,7 +1130,7 @@ namespace OpenBve
 				if (Program.TrainManager.Trains.Count != 0)
 				{
 					//Trains are not loaded until after the route
-					finalTrainProgress = (Loading.CurrentTrain * trainProgressWeight) + trainProgressWeight * trainProgress;
+					finalTrainProgress = (Loading.LoadedTrain * trainProgressWeight) + trainProgressWeight * trainProgress;
 				}
 				else
 				{

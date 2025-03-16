@@ -268,6 +268,8 @@ namespace Train.OpenBve
 						}
 						break;
 				}
+
+				currentSectionElement++;
 			}
 		}
 
