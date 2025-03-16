@@ -1,4 +1,5 @@
-﻿namespace OpenBveApi.Runtime
+﻿// ReSharper disable UnusedMember.Global
+namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents a virtual key.</summary>
 	public enum VirtualKeys

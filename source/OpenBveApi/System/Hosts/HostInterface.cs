@@ -116,6 +116,7 @@ namespace OpenBveApi.Hosts {
 		private static extern void uname(out UName uname_struct);
 
 		[DllImport("ntdll.dll", EntryPoint = "wine_get_version", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+		// ReSharper disable once UnusedMember.Local - release only
 		private static extern string GetWineVersion();
 
 		/// <summary>The base host interface constructor</summary>
