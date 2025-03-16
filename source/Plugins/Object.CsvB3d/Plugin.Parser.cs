@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Object.CsvB3d;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;

@@ -140,7 +140,7 @@ namespace Plugin
 							
 							if (material.Texture != null)
 							{
-								builder.Materials[m].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, material.Texture);
+								builder.Materials[m].DaytimeTexture = Path.CombineFile(currentFolder, material.Texture);
 								if (!System.IO.File.Exists(builder.Materials[m].DaytimeTexture))
 								{
 									Plugin.currentHost.AddMessage(MessageType.Error, true, "Texure " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);

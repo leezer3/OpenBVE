@@ -49,7 +49,7 @@ namespace Plugin
 			try
 			{
 #endif
-			byte[] buffer = System.IO.File.ReadAllBytes(FileName);
+			byte[] buffer = File.ReadAllBytes(FileName);
 				if (buffer.Length < 16 || buffer[0] != 120 | buffer[1] != 111 | buffer[2] != 102 | buffer[3] != 32)
 				{
 					// Object is actually a single line text file containing relative path to the 'real' X
@@ -249,7 +249,7 @@ namespace Plugin
 						builder.Materials[m].DaytimeTexture = null;
 					}
 
-					if (builder.Materials[m].DaytimeTexture != null && !System.IO.File.Exists(builder.Materials[m].DaytimeTexture))
+					if (builder.Materials[m].DaytimeTexture != null && !File.Exists(builder.Materials[m].DaytimeTexture))
 					{
 						Plugin.currentHost.AddMessage(MessageType.Error, true, "Texture " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);
 						builder.Materials[m].DaytimeTexture = null;
