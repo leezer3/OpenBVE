@@ -119,6 +119,7 @@
     <Compile Include="IO\Trains\ExtensionsCfg\Writer.cs" />
     <Compile Include="IO\Trains\TrainDat\Parser.cs" />
     <Compile Include="IO\Trains\TrainDat\Writer.cs" />
+    <Compile Include="IO\Trains\XML\Writer.cs" />
     <Compile Include="Models\App.cs" />
     <Compile Include="Models\Dialogs\BaseDialog.cs" />
     <Compile Include="Models\Dialogs\MessageBox.cs" />

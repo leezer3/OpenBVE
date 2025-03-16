@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Globalization;
-using System.Reflection;
 using System.Text;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
-using TrainManager.Car;
 
 namespace TrainEditor2.Models.Trains
 {

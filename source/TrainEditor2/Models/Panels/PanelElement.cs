@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using Prism.Mvvm;
