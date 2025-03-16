@@ -424,7 +424,7 @@ namespace TrainEditor2.Models.Trains
 			RearBogie.WriteExtensionsCfg(fileName, builder, carIndex * 2 + 1);
 		}
 
-		public abstract void WriteXML(string fileName, XElement trainNode, int i);
+		public abstract void WriteXML(string fileName, XElement trainNode, Train train, int i);
 	}
 
 	internal class MotorCar : Car
@@ -496,7 +496,7 @@ namespace TrainEditor2.Models.Trains
 			return car;
 		}
 
-		public override void WriteXML(string fileName, XElement trainNode, int i)
+		public override void WriteXML(string fileName, XElement trainNode, Train train, int i)
 		{
 			XElement carElement = new XElement("Car",
 				new XElement("Mass", Mass),
@@ -516,6 +516,10 @@ namespace TrainEditor2.Models.Trains
 			FrontBogie.WriteXML(fileName, carElement, true);
 			RearBogie.WriteXML(fileName, carElement, false);
 			Acceleration.WriteXML(fileName, carElement);
+			if (i == train.Cab.DriverCar)
+			{
+				train.Cab.WriteXML(fileName, carElement);
+			}
 			trainNode.Add(carElement);
 		}
 	}
@@ -524,8 +528,6 @@ namespace TrainEditor2.Models.Trains
 	{
 		internal TrailerCar()
 		{
-			XElement carNode = new XElement("Car");
-
 		}
 
 		internal TrailerCar(MotorCar car)
@@ -552,7 +554,7 @@ namespace TrainEditor2.Models.Trains
 			LoadingSway = car.LoadingSway;
 		}
 
-		public override void WriteXML(string fileName, XElement trainNode, int i)
+		public override void WriteXML(string fileName, XElement trainNode, Train train, int i)
 		{
 			XElement carElement = new XElement("Car",
 				new XElement("Mass", Mass),
@@ -571,6 +573,10 @@ namespace TrainEditor2.Models.Trains
 			Brake.WriteXML(fileName, carElement, false);
 			FrontBogie.WriteXML(fileName, carElement, true);
 			RearBogie.WriteXML(fileName, carElement, false);
+			if (i == train.Cab.DriverCar)
+			{
+				train.Cab.WriteXML(fileName, carElement);
+			}
 			trainNode.Add(carElement);
 		}
 	}

@@ -19,6 +19,9 @@ namespace TrainEditor2.IO.Trains.XML
 			{
 				train.Cars[i].WriteXML(fileName, trainNode, i);
 			}
+
+			trainNode.Add(new XElement("DriverCar", train.Cab.DriverCar));
+
 			openBVE.Add(trainNode);
 			xml.Add(openBVE);
 			xml.Save(fileName);
