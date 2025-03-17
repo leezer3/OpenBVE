@@ -16,6 +16,7 @@ using SharpCompress.Compressors.Deflate;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
 
@@ -42,6 +43,7 @@ namespace Train.MsTs
 		{
 			wheelRadiusNum = 1;
 			wagonFiles = Directory.GetFiles(trainSetDirectory, isEngine ? "*.eng" : "*.wag", SearchOption.AllDirectories);
+			currentEngineType = EngineType.NoEngine;
 			/*
 			 * MSTS maintains an internal database, as opposed to using full paths
 			 * Unfortunately, this means we've got to do an approximation of the same thing!
@@ -89,6 +91,18 @@ namespace Train.MsTs
 						break;
 					}
 				}	
+			}
+			// as properties may not be in order, set this stuff last
+			if (isEngine)
+			{
+				switch (currentEngineType)
+				{
+					case EngineType.Diesel:
+						Car.Engine = new DieselEngine(Car, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
+						Car.Engine.FuelTank = new FuelTank(dieselCapacity, 0, dieselCapacity);
+						Car.Engine.IsRunning = true;
+						break;
+				}
 			}
 		}
 
@@ -204,6 +218,13 @@ namespace Train.MsTs
 		private double maxForce = 0;
 		private double maxBrakeForce = 0;
 		private BrakeSystemType[] brakeSystemTypes;
+		private EngineType currentEngineType;
+		private double dieselIdleRPM;
+		private double dieselMaxRPM;
+		private double dieselRPMChangeRate;
+		private double dieselIdleUse;
+		private double dieselMaxUse;
+		private double dieselCapacity;
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
@@ -245,7 +266,7 @@ namespace Train.MsTs
 							break;
 						}
 						// Add brakes last, as we need the acceleration values
-						if (brakeSystemTypes.Contains(BrakeSystemType.Vacuum_piped) || brakeSystemTypes.Contains(BrakeSystemType.Air_piped))
+						if (brakeSystemTypes.Contains(BrakeSystemType.Vacuum_Piped) || brakeSystemTypes.Contains(BrakeSystemType.Air_Piped))
 						{
 							/*
 							 * FIXME: Need to implement vac braked / air piped and vice-versa, but for the minute, we'll assume that if one or the other is present
@@ -322,7 +343,7 @@ namespace Train.MsTs
 						break;
 					}
 					// Add brakes last, as we need the acceleration values
-					if (brakeSystemTypes.Contains(BrakeSystemType.Vacuum_piped) || brakeSystemTypes.Contains(BrakeSystemType.Air_piped))
+					if (brakeSystemTypes.Contains(BrakeSystemType.Vacuum_Piped) || brakeSystemTypes.Contains(BrakeSystemType.Air_Piped))
 					{
 						/*
 						 * FIXME: Need to implement vac braked / air piped and vice-versa, but for the minute, we'll assume that if one or the other is present
@@ -372,7 +393,7 @@ namespace Train.MsTs
 				case KujuTokenID.Type:
 					if (isEngine)
 					{
-						//Will load engine type
+						currentEngineType = block.ReadEnumValue(default(EngineType));
 					}
 					else
 					{
@@ -604,6 +625,26 @@ namespace Train.MsTs
 					double powerValue = block.ReadSingle();
 					double graduationValue = block.ReadSingle();
 					string notchToken = block.ReadString();
+					break;
+				case KujuTokenID.DieselEngineIdleRPM:
+					dieselIdleRPM = block.ReadSingle();
+					break;
+				case KujuTokenID.DieselEngineMaxRPM:
+					dieselMaxRPM = block.ReadSingle();
+					break;
+				case KujuTokenID.DieselEngineMaxRPMChangeRate:
+					dieselRPMChangeRate = block.ReadSingle();
+					break;
+				case KujuTokenID.DieselUsedPerHourAtIdle:
+					dieselIdleUse = block.ReadSingle(UnitOfVolume.Litres);
+					dieselIdleUse /= 3600;
+					break;
+				case KujuTokenID.DieselUsedPerHourAtMaxPower:
+					dieselMaxUse = block.ReadSingle(UnitOfVolume.Litres);
+					dieselMaxUse /= 3600;
+					break;
+				case KujuTokenID.MaxDieselLevel:
+					dieselCapacity = block.ReadSingle(UnitOfVolume.Litres);
 					break;
 			}
 			return true;
