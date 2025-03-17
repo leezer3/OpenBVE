@@ -605,7 +605,7 @@ namespace Formats.OpenBve
 				{
 					return true;
 				}
-				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid double in Key " + Key + " in Section " + Key + " at line " + s.Key);
+				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid double in Key " + key + " in Section " + Key + " at line " + s.Key);
 				return false;
 
 			}
@@ -622,7 +622,7 @@ namespace Formats.OpenBve
 					value = newValue;
 					return true;
 				}
-				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid double in Key " + Key + " in Section " + Key + " at line " + s.Key);
+				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid double in Key " + key + " in Section " + Key + " at line " + s.Key);
 				return false;
 
 			}
@@ -633,13 +633,17 @@ namespace Formats.OpenBve
 		{
 			if (keyValuePairs.TryRemove(key, out var s))
 			{
-				if (int.TryParse(s.Value, out value))
+				if (NumberFormats.TryParseIntVb6(s.Value, out value))
 				{
+					if (!int.TryParse(s.Value, out _))
+					{
+						currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is a double, not an integer and precision will be lost in Key " + key + " in Section " + Key + " at line " + s.Key);
+					}
 					return true;
 				}
-				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid integer in Key " + Key + " in Section " + Key + " at line " + s.Key);
+				
+				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid integer in Key " + key + " in Section " + Key + " at line " + s.Key);
 				return false;
-
 			}
 			value = 0;
 			return false;
@@ -649,12 +653,16 @@ namespace Formats.OpenBve
 		{
 			if (keyValuePairs.TryRemove(key, out var s))
 			{
-				if (int.TryParse(s.Value, out int newValue))
+				if (NumberFormats.TryParseIntVb6(s.Value, out int newValue))
 				{
+					if (!int.TryParse(s.Value, out _))
+					{
+						currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is a double, not an integer and precision will be lost in Key " + key + " in Section " + Key + " at line " + s.Key);
+					}
 					value = newValue;
 					return true;
 				}
-				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid integer in Key " + Key + " in Section " + Key + " at line " + s.Key);
+				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid integer in Key " + key + " in Section " + Key + " at line " + s.Key);
 				return false;
 
 			}
