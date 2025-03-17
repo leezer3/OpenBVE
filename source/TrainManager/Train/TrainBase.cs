@@ -555,24 +555,26 @@ namespace TrainManager.Trains
 
 			// update brake system
 			UpdateBrakeSystem(TimeElapsed, out var DecelerationDueToBrake, out var DecelerationDueToMotor);
-			// calculate new car speeds
+			
 			double[] NewSpeeds = new double[Cars.Length];
-			for (int i = 0; i < Cars.Length; i++)
-			{
-				Cars[i].UpdateSpeed(TimeElapsed, DecelerationDueToMotor[i], DecelerationDueToBrake[i], out NewSpeeds[i]);
-			}
-
-			// calculate center of mass position
 			double[] CenterOfCarPositions = new double[Cars.Length];
 			double CenterOfMassPosition = 0.0;
 			double TrainMass = 0.0;
 			for (int i = 0; i < Cars.Length; i++)
 			{
+				// calculate new car speeds
+				Cars[i].UpdateSpeed(TimeElapsed, DecelerationDueToMotor[i], DecelerationDueToBrake[i], out NewSpeeds[i]);
+				// calculate center of mass position
 				double pr = Cars[i].RearAxle.Follower.TrackPosition - Cars[i].RearAxle.Position;
 				double pf = Cars[i].FrontAxle.Follower.TrackPosition - Cars[i].FrontAxle.Position;
 				CenterOfCarPositions[i] = 0.5 * (pr + pf);
 				CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].CurrentMass;
 				TrainMass += Cars[i].CurrentMass;
+				// update engine
+				if (Cars[i].Specs.IsMotorCar && Cars[i].Engine != null)
+				{
+					Cars[i].Engine.Update(TimeElapsed);
+				}
 			}
 
 			if (TrainMass != 0.0)

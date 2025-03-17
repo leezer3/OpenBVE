@@ -38,7 +38,8 @@
 		WheelSlip, WheelSlipCar,
 		Sanders, SandLevel, SandShots, DSD,
 		AmbientTemperature,
-		BillboardX, BillboardY
+		BillboardX, BillboardY,
+		EngineRunning, EngineRunningCar, EngineRPM, EngineRPMCar, FuelLevel, FuelLevelCar,
 #pragma warning restore CS1591
 			
 		}
