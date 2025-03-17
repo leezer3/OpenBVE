@@ -61,8 +61,7 @@ namespace Train.MsTs
 			PreviewOnly = true;
 			AbstractTrain train = new TrainBase(TrainState.Pending, TrainType.LocalPlayerTrain);
 			ConsistParser.ReadConsist(trainPath, ref train);
-			TrainBase trainBase = train as TrainBase;
-			if(trainBase != null && trainBase.Cars.Length != 0)
+			if(train is TrainBase trainBase && trainBase.Cars.Length != 0)
 			{
 				return trainBase.Cars[train.DriverCar].Description;
 			}

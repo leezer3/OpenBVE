@@ -149,15 +149,7 @@ namespace Train.MsTs
 				using (BinaryReader reader = new BinaryReader(fb))
 				{
 					byte[] newBytes = reader.ReadBytes((int)(fb.Length - fb.Position));
-					string s;
-					if (unicode)
-					{
-						s = Encoding.Unicode.GetString(newBytes);
-					}
-					else
-					{
-						s = Encoding.ASCII.GetString(newBytes);
-					}
+					string s = unicode ? Encoding.Unicode.GetString(newBytes) : Encoding.ASCII.GetString(newBytes);
 
 					/*
 					 * Engine files contain two blocks, not in an enclosing block
