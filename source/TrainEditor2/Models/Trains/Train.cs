@@ -169,16 +169,7 @@ namespace TrainEditor2.Models.Trains
 			for (int x = 0; x < car.Acceleration.ImageWidth; x++)
 			{
 				double velocity = car.Acceleration.XtoVelocity(x);
-				double acceleration;
-
-				if (car.Acceleration.Resistance)
-				{
-					acceleration = Math.Max(car.Acceleration.GetAcceleration(entry, velocity) - GetDeceleration(car, velocity), 0.0);
-				}
-				else
-				{
-					acceleration = car.Acceleration.GetAcceleration(entry, velocity);
-				}
+				double acceleration = car.Acceleration.Resistance ? Math.Max(car.Acceleration.GetAcceleration(entry, velocity) - GetDeceleration(car, velocity), 0.0) : car.Acceleration.GetAcceleration(entry, velocity);
 
 				int y = (int)Math.Round(car.Acceleration.AccelerationToY(acceleration));
 

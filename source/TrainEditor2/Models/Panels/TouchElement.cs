@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Windows;
 using System.Xml.Linq;
 using OpenBveApi.Interface;
 using Prism.Mvvm;

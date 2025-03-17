@@ -10,8 +10,6 @@ using TrainEditor2.Audio;
 using TrainEditor2.Graphics;
 using TrainEditor2.Systems;
 using TrainEditor2.Views;
-using TrainManager;
-using TrainManager = TrainEditor2.Simulation.TrainManager.TrainManager;
 
 namespace TrainEditor2
 {

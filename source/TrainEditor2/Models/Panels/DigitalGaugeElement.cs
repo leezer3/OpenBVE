@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Windows;
 using System.Xml.Linq;
 using OpenBveApi.Colors;
 using TrainEditor2.Extensions;

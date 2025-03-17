@@ -830,7 +830,7 @@ namespace TrainEditor2.Models
 			}
 
 			StringBuilder builder = new StringBuilder();
-			builder.AppendLine($"TrainEditor2 Log: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}");
+			builder.AppendLine($"TrainEditor2 Log: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
 
 			foreach (string message in Interface.LogMessages.Select(x => $"{x.Type.ToString()}: {x.Text}"))
 			{

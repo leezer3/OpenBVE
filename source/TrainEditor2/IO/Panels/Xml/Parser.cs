@@ -332,38 +332,31 @@ namespace TrainEditor2.IO.Panels.Xml
 						}
 						break;
 					case "pilotlamp":
-						PilotLampElement pilotLamp;
-						ParsePilotLampElementNode(fileName, keyNode, out pilotLamp);
+						ParsePilotLampElementNode(fileName, keyNode, out PilotLampElement pilotLamp);
 						screen.PanelElements.Add(pilotLamp);
 						break;
 					case "needle":
-						NeedleElement needle;
-						ParseNeedleElementNode(fileName, keyNode, out needle);
+						ParseNeedleElementNode(fileName, keyNode, out NeedleElement needle);
 						screen.PanelElements.Add(needle);
 						break;
 					case "digitalnumber":
-						DigitalNumberElement digitalNumber;
-						ParseDigitalNumberElementNode(fileName, keyNode, out digitalNumber);
+						ParseDigitalNumberElementNode(fileName, keyNode, out DigitalNumberElement digitalNumber);
 						screen.PanelElements.Add(digitalNumber);
 						break;
 					case "digitalgauge":
-						DigitalGaugeElement digitalGauge;
-						ParseDigitalGaugeElementNode(fileName, keyNode, out digitalGauge);
+						ParseDigitalGaugeElementNode(fileName, keyNode, out DigitalGaugeElement digitalGauge);
 						screen.PanelElements.Add(digitalGauge);
 						break;
 					case "lineargauge":
-						LinearGaugeElement linearGauge;
-						ParseLinearGaugeElementNode(fileName, keyNode, out linearGauge);
+						ParseLinearGaugeElementNode(fileName, keyNode, out LinearGaugeElement linearGauge);
 						screen.PanelElements.Add(linearGauge);
 						break;
 					case "timetable":
-						TimetableElement timetable;
-						ParseTimetableElementNode(fileName, keyNode, out timetable);
+						ParseTimetableElementNode(fileName, keyNode, out TimetableElement timetable);
 						screen.PanelElements.Add(timetable);
 						break;
 					case "touch":
-						TouchElement touch;
-						ParseTouchElementNode(fileName, keyNode, screen, out touch);
+						ParseTouchElementNode(fileName, keyNode, screen, out TouchElement touch);
 						screen.TouchElements.Add(touch);
 						break;
 				}

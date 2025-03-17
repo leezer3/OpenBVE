@@ -304,9 +304,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 						element.DefinedPosition = true;
 						break;
 					case "radius":
-						double radius;
-
-						if (!NumberFormats.TryParseDoubleVb6(childNode.Value, out radius))
+						if (!NumberFormats.TryParseDoubleVb6(childNode.Value, out double radius))
 						{
 							Interface.AddMessage(MessageType.Error, false, $"The sound radius {childNode.Value} in XML node {parentNode.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber} is invalid.");
 						}

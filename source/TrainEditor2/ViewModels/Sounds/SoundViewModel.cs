@@ -6,7 +6,6 @@ using System.Reactive.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Models.Sounds;
-using TrainEditor2.Simulation.TrainManager;
 using TrainEditor2.ViewModels.Others;
 
 namespace TrainEditor2.ViewModels.Sounds

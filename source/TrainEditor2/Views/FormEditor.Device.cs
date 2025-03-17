@@ -4,7 +4,6 @@ using System.Reactive.Linq;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
-using TrainEditor2.Models.Trains;
 using TrainEditor2.ViewModels.Trains;
 using TrainManager.Car;
 using TrainManager.SafetySystems;
