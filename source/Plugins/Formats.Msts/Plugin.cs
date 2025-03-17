@@ -310,6 +310,7 @@ namespace OpenBve.Formats.MsTs
 		private readonly LengthConverter lengthConverter = new LengthConverter();
 		private readonly WeightConverter weightConverter = new WeightConverter();
 		private readonly ForceConverter forceConverter = new ForceConverter();
+		private readonly VolumeConverter volumeConverter = new VolumeConverter();
 
 		private TextualBlock(string text, bool textIsClean)
 		{
@@ -846,10 +847,19 @@ namespace OpenBve.Formats.MsTs
 			{
 				if (!ForceConverter.KnownUnits.ContainsKey(Unit))
 				{
-					throw new InvalidDataException("Unknown or unexpected weight unit " + Unit + " encountered in block " + Token);
+					throw new InvalidDataException("Unknown or unexpected force unit " + Unit + " encountered in block " + Token);
 				}
 
 				parsedNumber = (float)forceConverter.Convert(parsedNumber, ForceConverter.KnownUnits[Unit], (UnitOfForce)(object)desiredUnit);
+			}
+			else if (desiredUnit is UnitOfVolume)
+			{
+				if (!VolumeConverter.KnownUnits.ContainsKey(Unit))
+				{
+					throw new InvalidDataException("Unknown or unexpected volume unit " + Unit + " encountered in block " + Token);
+				}
+
+				parsedNumber = (float)volumeConverter.Convert(parsedNumber, VolumeConverter.KnownUnits[Unit], (UnitOfVolume)(object)desiredUnit);
 			}
 			return parsedNumber;
 		}
