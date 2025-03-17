@@ -637,12 +637,12 @@ namespace Formats.OpenBve
 				{
 					if (!int.TryParse(s.Value, out _))
 					{
-						currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is a double, not an integer and precision will be lost in Key " + key + " in Section " + Key + " at line " + s.Key);
+						currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is a double, not an integer and precision will be lost in Key " + key + " in Section " + Key + " at line " + s.Key);
 					}
 					return true;
 				}
 				
-				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid integer in Key " + key + " in Section " + Key + " at line " + s.Key);
+				currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is not a valid integer in Key " + key + " in Section " + Key + " at line " + s.Key);
 				return false;
 			}
 			value = 0;
@@ -657,12 +657,12 @@ namespace Formats.OpenBve
 				{
 					if (!int.TryParse(s.Value, out _))
 					{
-						currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is a double, not an integer and precision will be lost in Key " + key + " in Section " + Key + " at line " + s.Key);
+						currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is a double, not an integer and precision will be lost in Key " + key + " in Section " + Key + " at line " + s.Key);
 					}
 					value = newValue;
 					return true;
 				}
-				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid integer in Key " + key + " in Section " + Key + " at line " + s.Key);
+				currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is not a valid integer in Key " + key + " in Section " + Key + " at line " + s.Key);
 				return false;
 
 			}
