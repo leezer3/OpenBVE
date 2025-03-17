@@ -170,9 +170,8 @@ namespace TrainEditor2.Models.Panels
 					if (value[i] == 'd' | value[i] == 'D')
 					{
 						result.Suffix = SubjectSuffix.D;
-						int n;
 
-						if (int.TryParse(value.Substring(i + 1), NumberStyles.Integer, culture, out n))
+						if (int.TryParse(value.Substring(i + 1), NumberStyles.Integer, culture, out int n))
 						{
 							result.SuffixOption = n;
 							value = value.Substring(0, i);
@@ -182,8 +181,7 @@ namespace TrainEditor2.Models.Panels
 			}
 
 			// transform subject
-			SubjectBase _base;
-			bool ret = Enum.TryParse(value, true, out _base);
+			bool ret = Enum.TryParse(value, true, out SubjectBase _base);
 			result.Base = _base;
 
 			if (!ret)
@@ -193,9 +191,8 @@ namespace TrainEditor2.Models.Panels
 				if (value.StartsWith("ats", StringComparison.OrdinalIgnoreCase))
 				{
 					string a = value.Substring(3);
-					int n;
 
-					if (int.TryParse(a, NumberStyles.Integer, culture, out n))
+					if (int.TryParse(a, NumberStyles.Integer, culture, out int n))
 					{
 						result.Base = SubjectBase.Ats;
 						result.BaseOption = n;
@@ -205,9 +202,8 @@ namespace TrainEditor2.Models.Panels
 				else if (value.StartsWith("doorl", StringComparison.OrdinalIgnoreCase))
 				{
 					string a = value.Substring(5);
-					int n;
 
-					if (int.TryParse(a, NumberStyles.Integer, culture, out n))
+					if (int.TryParse(a, NumberStyles.Integer, culture, out int n))
 					{
 						result.Base = SubjectBase.DoorL;
 						result.BaseOption = n;
@@ -217,9 +213,8 @@ namespace TrainEditor2.Models.Panels
 				else if (value.StartsWith("doorr", StringComparison.OrdinalIgnoreCase))
 				{
 					string a = value.Substring(5);
-					int n;
 
-					if (int.TryParse(a, NumberStyles.Integer, culture, out n))
+					if (int.TryParse(a, NumberStyles.Integer, culture, out int n))
 					{
 						result.Base = SubjectBase.DoorR;
 						result.BaseOption = n;

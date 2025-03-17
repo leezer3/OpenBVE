@@ -57,8 +57,7 @@ namespace TrainEditor2
 			SoundApi = new SoundApi(CurrentHost);
 			SoundApi.Initialize(SoundRange.Medium);
 
-			string error;
-			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, null, Renderer))
+			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, null, Renderer))
 			{
 				SoundApi.DeInitialize();
 				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);

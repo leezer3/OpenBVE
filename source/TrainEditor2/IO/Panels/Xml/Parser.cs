@@ -46,38 +46,31 @@ namespace TrainEditor2.IO.Panels.Xml
 						ParseThisNode(fileName, sectionNode, panel.This);
 						break;
 					case "screen":
-						Screen screen;
-						ParseScreenNode(fileName, sectionNode, out screen);
+						ParseScreenNode(fileName, sectionNode, out Screen screen);
 						panel.Screens.Add(screen);
 						break;
 					case "pilotlamp":
-						PilotLampElement pilotLamp;
-						ParsePilotLampElementNode(fileName, sectionNode, out pilotLamp);
+						ParsePilotLampElementNode(fileName, sectionNode, out PilotLampElement pilotLamp);
 						panel.PanelElements.Add(pilotLamp);
 						break;
 					case "needle":
-						NeedleElement needle;
-						ParseNeedleElementNode(fileName, sectionNode, out needle);
+						ParseNeedleElementNode(fileName, sectionNode, out NeedleElement needle);
 						panel.PanelElements.Add(needle);
 						break;
 					case "digitalnumber":
-						DigitalNumberElement digitalNumber;
-						ParseDigitalNumberElementNode(fileName, sectionNode, out digitalNumber);
+						ParseDigitalNumberElementNode(fileName, sectionNode, out DigitalNumberElement digitalNumber);
 						panel.PanelElements.Add(digitalNumber);
 						break;
 					case "digitalgauge":
-						DigitalGaugeElement digitalGauge;
-						ParseDigitalGaugeElementNode(fileName, sectionNode, out digitalGauge);
+						ParseDigitalGaugeElementNode(fileName, sectionNode, out DigitalGaugeElement digitalGauge);
 						panel.PanelElements.Add(digitalGauge);
 						break;
 					case "lineargauge":
-						LinearGaugeElement linearGauge;
-						ParseLinearGaugeElementNode(fileName, sectionNode, out linearGauge);
+						ParseLinearGaugeElementNode(fileName, sectionNode, out LinearGaugeElement linearGauge);
 						panel.PanelElements.Add(linearGauge);
 						break;
 					case "timetable":
-						TimetableElement timetable;
-						ParseTimetableElementNode(fileName, sectionNode, out timetable);
+						ParseTimetableElementNode(fileName, sectionNode, out TimetableElement timetable);
 						panel.PanelElements.Add(timetable);
 						break;
 				}
@@ -122,9 +115,7 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "left":
 						if (value.Any())
 						{
-							double left;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out left))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double left))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line{lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -135,9 +126,7 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "right":
 						if (value.Any())
 						{
-							double right;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out right))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double right))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -148,9 +137,7 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "top":
 						if (value.Any())
 						{
-							double top;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out top))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double top))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -161,9 +148,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "bottom":
 						if (value.Any())
 						{
-							double bottom;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out bottom))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double bottom))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -216,9 +202,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "transparentcolor":
 						if (value.Any())
 						{
-							Color24 transparentColor;
 
-							if (!Color24.TryParseHexColor(value, out transparentColor))
+							if (!Color24.TryParseHexColor(value, out Color24 transparentColor))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"HexColor is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -237,9 +222,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 								if (a.Any())
 								{
-									double x;
 
-									if (!NumberFormats.TryParseDoubleVb6(a, out x))
+									if (!NumberFormats.TryParseDoubleVb6(a, out double x))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"X is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
@@ -249,9 +233,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 								if (b.Any())
 								{
-									double y;
 
-									if (!NumberFormats.TryParseDoubleVb6(b, out y))
+									if (!NumberFormats.TryParseDoubleVb6(b, out double y))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"Y is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
@@ -278,9 +261,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 								if (a.Any())
 								{
-									double x;
 
-									if (!NumberFormats.TryParseDoubleVb6(a, out x))
+									if (!NumberFormats.TryParseDoubleVb6(a, out double x))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"X is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
@@ -290,9 +272,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 								if (b.Any())
 								{
-									double y;
 
-									if (!NumberFormats.TryParseDoubleVb6(b, out y))
+									if (!NumberFormats.TryParseDoubleVb6(b, out double y))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"Y is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
@@ -329,9 +310,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "number":
 						if (value.Any())
 						{
-							int number;
 
-							if (!NumberFormats.TryParseIntVb6(value, out number))
+							if (!NumberFormats.TryParseIntVb6(value, out int number))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -342,9 +322,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "layer":
 						if (value.Any())
 						{
-							int layer;
 
-							if (!NumberFormats.TryParseIntVb6(value, out layer))
+							if (!NumberFormats.TryParseIntVb6(value, out int layer))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -420,9 +399,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (a.Any())
 							{
-								double x;
 
-								if (!NumberFormats.TryParseDoubleVb6(a, out x))
+								if (!NumberFormats.TryParseDoubleVb6(a, out double x))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Left is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
@@ -432,9 +410,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (b.Any())
 							{
-								double y;
 
-								if (!NumberFormats.TryParseDoubleVb6(b, out y))
+								if (!NumberFormats.TryParseDoubleVb6(b, out double y))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Top is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
@@ -490,9 +467,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "transparentcolor":
 						if (value.Any())
 						{
-							Color24 transparentColor;
 
-							if (!Color24.TryParseHexColor(value, out transparentColor))
+							if (!Color24.TryParseHexColor(value, out Color24 transparentColor))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"HexColor is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -503,9 +479,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "layer":
 						if (value.Any())
 						{
-							int layer;
 
-							if (!NumberFormats.TryParseIntVb6(value, out layer))
+							if (!NumberFormats.TryParseIntVb6(value, out int layer))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -547,9 +522,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 								if (a.Any())
 								{
-									double x;
 
-									if (!NumberFormats.TryParseDoubleVb6(a, out x))
+									if (!NumberFormats.TryParseDoubleVb6(a, out double x))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"CenterX is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
@@ -559,9 +533,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 								if (b.Any())
 								{
-									double y;
 
-									if (!NumberFormats.TryParseDoubleVb6(b, out y))
+									if (!NumberFormats.TryParseDoubleVb6(b, out double y))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"CenterY is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
@@ -578,9 +551,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "radius":
 						if (value.Any())
 						{
-							double radius;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out radius))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double radius))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"ValueInPixels is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -639,9 +611,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "color":
 						if (value.Any())
 						{
-							Color24 color;
 
-							if (!Color24.TryParseHexColor(value, out color))
+							if (!Color24.TryParseHexColor(value, out Color24 color))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"HexColor is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -652,9 +623,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "transparentcolor":
 						if (value.Any())
 						{
-							Color24 transparentColor;
 
-							if (!Color24.TryParseHexColor(value, out transparentColor))
+							if (!Color24.TryParseHexColor(value, out Color24 transparentColor))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"HexColor is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -673,9 +643,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 								if (a.Any())
 								{
-									double x;
 
-									if (!NumberFormats.TryParseDoubleVb6(a, out x))
+									if (!NumberFormats.TryParseDoubleVb6(a, out double x))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"X is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
@@ -685,9 +654,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 								if (b.Any())
 								{
-									double y;
 
-									if (!NumberFormats.TryParseDoubleVb6(b, out y))
+									if (!NumberFormats.TryParseDoubleVb6(b, out double y))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"Y is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 										needle.OriginX = -needle.OriginX;
@@ -707,9 +675,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "initialangle":
 						if (value.Any())
 						{
-							double initialAngle;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out initialAngle))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double initialAngle))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"ValueInDegrees is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -720,9 +687,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "lastangle":
 						if (value.Any())
 						{
-							double lastAngle;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out lastAngle))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double lastAngle))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"ValueInDegrees is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -733,9 +699,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "minimum":
 						if (value.Any())
 						{
-							double minimum;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out minimum))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double minimum))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -746,9 +711,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "maximum":
 						if (value.Any())
 						{
-							double maximum;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out maximum))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double maximum))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -759,9 +723,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "naturalfreq":
 						if (value.Any())
 						{
-							double naturalFreq;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out naturalFreq))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double naturalFreq))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -780,9 +743,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "dampingratio":
 						if (value.Any())
 						{
-							double dampingRatio;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out dampingRatio))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double dampingRatio))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -801,9 +763,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "layer":
 						if (value.Any())
 						{
-							int layer;
 
-							if (!NumberFormats.TryParseIntVb6(value, out layer))
+							if (!NumberFormats.TryParseIntVb6(value, out int layer))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -856,9 +817,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (a.Any())
 							{
-								double x;
 
-								if (!NumberFormats.TryParseDoubleVb6(a, out x))
+								if (!NumberFormats.TryParseDoubleVb6(a, out double x))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Left is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
@@ -868,9 +828,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (b.Any())
 							{
-								double y;
 
-								if (!NumberFormats.TryParseDoubleVb6(b, out y))
+								if (!NumberFormats.TryParseDoubleVb6(b, out double y))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Top is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
@@ -926,9 +885,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "transparentcolor":
 						if (value.Any())
 						{
-							Color24 transparentColor;
 
-							if (!Color24.TryParseHexColor(value, out transparentColor))
+							if (!Color24.TryParseHexColor(value, out Color24 transparentColor))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"HexColor is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -939,9 +897,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "interval":
 						if (value.Any())
 						{
-							int interval;
 
-							if (!NumberFormats.TryParseIntVb6(value, out interval))
+							if (!NumberFormats.TryParseIntVb6(value, out int interval))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Height is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -957,9 +914,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "layer":
 						if (value.Any())
 						{
-							int layer;
 
-							if (!NumberFormats.TryParseIntVb6(value, out layer))
+							if (!NumberFormats.TryParseIntVb6(value, out int layer))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -999,9 +955,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (a.Any())
 							{
-								double x;
 
-								if (!NumberFormats.TryParseDoubleVb6(a, out x))
+								if (!NumberFormats.TryParseDoubleVb6(a, out double x))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"CenterX is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
@@ -1011,9 +966,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (b.Any())
 							{
-								double y;
 
-								if (!NumberFormats.TryParseDoubleVb6(b, out y))
+								if (!NumberFormats.TryParseDoubleVb6(b, out double y))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"CenterY is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
@@ -1029,9 +983,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "radius":
 						if (value.Any())
 						{
-							double radius;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out radius))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double radius))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"ValueInPixels is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1048,9 +1001,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "color":
 						if (value.Any())
 						{
-							Color24 color;
 
-							if (!Color24.TryParseHexColor(value, out color))
+							if (!Color24.TryParseHexColor(value, out Color24 color))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"HexColor is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1061,9 +1013,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "initialangle":
 						if (value.Any())
 						{
-							double initialAngle;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out initialAngle))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double initialAngle))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"ValueInDegrees is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1074,9 +1025,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "lastangle":
 						if (value.Any())
 						{
-							double lastAngle;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out lastAngle))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double lastAngle))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"ValueInDegrees is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1087,9 +1037,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "minimum":
 						if (value.Any())
 						{
-							double minimum;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out minimum))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double minimum))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1100,9 +1049,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "maximum":
 						if (value.Any())
 						{
-							double maximum;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out maximum))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double maximum))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1113,9 +1061,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "step":
 						if (value.Any())
 						{
-							double step;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out step))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double step))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1126,9 +1073,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "layer":
 						if (value.Any())
 						{
-							int layer;
 
-							if (!NumberFormats.TryParseIntVb6(value, out layer))
+							if (!NumberFormats.TryParseIntVb6(value, out int layer))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1169,9 +1115,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (a.Any())
 							{
-								double x;
 
-								if (!NumberFormats.TryParseDoubleVb6(a, out x))
+								if (!NumberFormats.TryParseDoubleVb6(a, out double x))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Left is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
@@ -1181,9 +1126,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (b.Any())
 							{
-								double y;
 
-								if (!NumberFormats.TryParseDoubleVb6(b, out y))
+								if (!NumberFormats.TryParseDoubleVb6(b, out double y))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Top is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
@@ -1199,9 +1143,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "minimum":
 						if (value.Any())
 						{
-							double minimum;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out minimum))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double minimum))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1212,9 +1155,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "maximum":
 						if (value.Any())
 						{
-							double maximum;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out maximum))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double maximum))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1225,9 +1167,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "width":
 						if (value.Any())
 						{
-							int width;
 
-							if (!NumberFormats.TryParseIntVb6(value, out width))
+							if (!NumberFormats.TryParseIntVb6(value, out int width))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1241,9 +1182,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (s.Length == 2)
 							{
-								int x, y;
 
-								if (!NumberFormats.TryParseIntVb6(s[0], out x))
+								if (!NumberFormats.TryParseIntVb6(s[0], out int x))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"X is invalid in LinearGauge Direction at line {lineNumber.ToString(culture)} in file {fileName}");
 								}
@@ -1256,7 +1196,7 @@ namespace TrainEditor2.IO.Panels.Xml
 									linearGauge.DirectionX = 0;
 								}
 
-								if (!NumberFormats.TryParseIntVb6(s[1], out y))
+								if (!NumberFormats.TryParseIntVb6(s[1], out int y))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Y is invalid in  LinearGauge Direction at line {lineNumber.ToString(culture)} in file {fileName}");
 								}
@@ -1318,9 +1258,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "transparentcolor":
 						if (value.Any())
 						{
-							Color24 transparentColor;
 
-							if (!Color24.TryParseHexColor(value, out transparentColor))
+							if (!Color24.TryParseHexColor(value, out Color24 transparentColor))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"HexColor is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1331,9 +1270,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "layer":
 						if (value.Any())
 						{
-							int layer;
 
-							if (!NumberFormats.TryParseIntVb6(value, out layer))
+							if (!NumberFormats.TryParseIntVb6(value, out int layer))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1370,9 +1308,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (a.Any())
 							{
-								double x;
 
-								if (!NumberFormats.TryParseDoubleVb6(a, out x))
+								if (!NumberFormats.TryParseDoubleVb6(a, out double x))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"X is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
@@ -1382,9 +1319,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (b.Any())
 							{
-								double y;
 
-								if (!NumberFormats.TryParseDoubleVb6(b, out y))
+								if (!NumberFormats.TryParseDoubleVb6(b, out double y))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Y is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
@@ -1400,9 +1336,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "width":
 						if (value.Any())
 						{
-							double width;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out width))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double width))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"ValueInPixels is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1418,9 +1353,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "height":
 						if (value.Any())
 						{
-							double height;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out height))
+							if (!NumberFormats.TryParseDoubleVb6(value, out double height))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"ValueInPixels is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1436,9 +1370,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "transparentcolor":
 						if (value.Any())
 						{
-							Color24 transparentColor;
 
-							if (!Color24.TryParseHexColor(value, out transparentColor))
+							if (!Color24.TryParseHexColor(value, out Color24 transparentColor))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"HexColor is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1449,9 +1382,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "layer":
 						if (value.Any())
 						{
-							int layer;
 
-							if (!NumberFormats.TryParseIntVb6(value, out layer))
+							if (!NumberFormats.TryParseIntVb6(value, out int layer))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1490,9 +1422,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 								if (a.Any())
 								{
-									double x;
 
-									if (!NumberFormats.TryParseDoubleVb6(a, out x))
+									if (!NumberFormats.TryParseDoubleVb6(a, out double x))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"Left is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
@@ -1502,9 +1433,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 								if (b.Any())
 								{
-									double y;
 
-									if (!NumberFormats.TryParseDoubleVb6(b, out y))
+									if (!NumberFormats.TryParseDoubleVb6(b, out double y))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"Top is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
@@ -1529,9 +1459,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 								if (a.Any())
 								{
-									double x;
 
-									if (!NumberFormats.TryParseDoubleVb6(a, out x))
+									if (!NumberFormats.TryParseDoubleVb6(a, out double x))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"Left is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
@@ -1541,9 +1470,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 								if (b.Any())
 								{
-									double y;
 
-									if (!NumberFormats.TryParseDoubleVb6(b, out y))
+									if (!NumberFormats.TryParseDoubleVb6(b, out double y))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"Top is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
@@ -1560,9 +1488,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "jumpscreen":
 						if (value.Any())
 						{
-							int jumpScreen;
 
-							if (!NumberFormats.TryParseIntVb6(value, out jumpScreen))
+							if (!NumberFormats.TryParseIntVb6(value, out int jumpScreen))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1573,9 +1500,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "soundindex":
 						if (value.Any())
 						{
-							int soundIndex;
 
-							if (!NumberFormats.TryParseIntVb6(value, out soundIndex))
+							if (!NumberFormats.TryParseIntVb6(value, out int soundIndex))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1625,9 +1551,8 @@ namespace TrainEditor2.IO.Panels.Xml
 
 						if (value.Any())
 						{
-							int commandOption;
 
-							if (!NumberFormats.TryParseIntVb6(value, out commandOption))
+							if (!NumberFormats.TryParseIntVb6(value, out int commandOption))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1658,9 +1583,8 @@ namespace TrainEditor2.IO.Panels.Xml
 					case "layer":
 						if (value.Any())
 						{
-							int layer;
 
-							if (!NumberFormats.TryParseIntVb6(value, out layer))
+							if (!NumberFormats.TryParseIntVb6(value, out int layer))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1698,9 +1622,8 @@ namespace TrainEditor2.IO.Panels.Xml
 							case "index":
 								if (value.Any())
 								{
-									int index;
 
-									if (!NumberFormats.TryParseIntVb6(value, out index))
+									if (!NumberFormats.TryParseIntVb6(value, out int index))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
@@ -1769,9 +1692,8 @@ namespace TrainEditor2.IO.Panels.Xml
 							case "option":
 								if (value.Any())
 								{
-									int option;
 
-									if (!NumberFormats.TryParseIntVb6(value, out option))
+									if (!NumberFormats.TryParseIntVb6(value, out int option))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}

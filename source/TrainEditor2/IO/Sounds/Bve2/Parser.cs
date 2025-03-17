@@ -79,9 +79,8 @@ namespace TrainEditor2.IO.Sounds.Bve2
 					if (a.StartsWith(fileStart, StringComparison.OrdinalIgnoreCase) & a.EndsWith(fileEnd, StringComparison.OrdinalIgnoreCase))
 					{
 						string b = a.Substring(fileStart.Length, a.Length - fileEnd.Length - fileStart.Length);
-						int n;
 
-						if (int.TryParse(b, NumberStyles.Integer, CultureInfo.InvariantCulture, out n))
+						if (int.TryParse(b, NumberStyles.Integer, CultureInfo.InvariantCulture, out int n))
 						{
 							if (n >= 0)
 							{

@@ -50,9 +50,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 									{
 										string a = lines[i].Substring(0, j).TrimEnd();
 										string b = lines[i].Substring(j + 1).TrimStart();
-										int n;
-
-										if (int.TryParse(a, NumberStyles.Integer, culture, out n))
+										if (int.TryParse(a, NumberStyles.Integer, culture, out int n))
 										{
 											if (n >= 0)
 											{
@@ -112,9 +110,8 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 							{
 								// car
 								string t = lines[i].Substring(4, lines[i].Length - 5);
-								int n;
 
-								if (int.TryParse(t, NumberStyles.Integer, culture, out n))
+								if (int.TryParse(t, NumberStyles.Integer, culture, out int n))
 								{
 									if (n >= 0)
 									{
@@ -166,9 +163,8 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 															break;
 														case "length":
 															{
-																double m;
 
-																if (double.TryParse(b, NumberStyles.Float, culture, out m))
+																if (double.TryParse(b, NumberStyles.Float, culture, out double m))
 																{
 																	if (m > 0.0)
 																	{
@@ -192,13 +188,12 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 															{
 																string c = b.Substring(0, k).TrimEnd();
 																string d = b.Substring(k + 1).TrimStart();
-																double rear, front;
 
-																if (!double.TryParse(c, NumberStyles.Float, culture, out rear))
+																if (!double.TryParse(c, NumberStyles.Float, culture, out double rear))
 																{
 																	Interface.AddMessage(MessageType.Error, false, $"Rear is expected to be a floating-point number in {a} at line {(i + 1).ToString(culture)} in file {fileName}");
 																}
-																else if (!double.TryParse(d, NumberStyles.Float, culture, out front))
+																else if (!double.TryParse(d, NumberStyles.Float, culture, out double front))
 																{
 																	Interface.AddMessage(MessageType.Error, false, $"Front is expected to be a floating-point number in {a} at line {(i + 1).ToString(culture)} in file {fileName}");
 																}
@@ -250,9 +245,8 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 							{
 								// coupler
 								string t = lines[i].Substring(8, lines[i].Length - 9);
-								int n;
 
-								if (int.TryParse(t, NumberStyles.Integer, culture, out n))
+								if (int.TryParse(t, NumberStyles.Integer, culture, out int n))
 								{
 									if (n >= 0)
 									{
@@ -289,13 +283,12 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 																{
 																	string c = b.Substring(0, k).TrimEnd();
 																	string d = b.Substring(k + 1).TrimStart();
-																	double min, max;
 
-																	if (!double.TryParse(c, NumberStyles.Float, culture, out min))
+																	if (!double.TryParse(c, NumberStyles.Float, culture, out double min))
 																	{
 																		Interface.AddMessage(MessageType.Error, false, $"Minimum is expected to be a floating-point number in {a} at line {(i + 1).ToString(culture)} in file {fileName}");
 																	}
-																	else if (!double.TryParse(d, NumberStyles.Float, culture, out max))
+																	else if (!double.TryParse(d, NumberStyles.Float, culture, out double max))
 																	{
 																		Interface.AddMessage(MessageType.Error, false, $"Maximum is expected to be a floating-point number in {a} at line {(i + 1).ToString(culture)} in file {fileName}");
 																	}
@@ -366,9 +359,8 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 							{
 								// bogie
 								string t = lines[i].Substring(6, lines[i].Length - 7);
-								int n;
 
-								if (int.TryParse(t, NumberStyles.Integer, culture, out n))
+								if (int.TryParse(t, NumberStyles.Integer, culture, out int n))
 								{
 									//Assuming that there are two bogies per car
 									bool IsOdd = (n % 2 != 0);
@@ -436,13 +428,12 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 															{
 																string c = b.Substring(0, k).TrimEnd();
 																string d = b.Substring(k + 1).TrimStart();
-																double rear, front;
 
-																if (!double.TryParse(c, NumberStyles.Float, culture, out rear))
+																if (!double.TryParse(c, NumberStyles.Float, culture, out double rear))
 																{
 																	Interface.AddMessage(MessageType.Error, false, $"Rear is expected to be a floating-point number in {a} at line {(i + 1).ToString(culture)} in file {fileName}");
 																}
-																else if (!double.TryParse(d, NumberStyles.Float, culture, out front))
+																else if (!double.TryParse(d, NumberStyles.Float, culture, out double front))
 																{
 																	Interface.AddMessage(MessageType.Error, false, $"Front is expected to be a floating-point number in {a} at line {(i + 1).ToString(culture)} in file {fileName}");
 																}

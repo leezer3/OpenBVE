@@ -73,9 +73,8 @@ namespace TrainEditor2.IO.Sounds.Bve4
 							{
 								string a = lines[i].Substring(0, j).TrimEnd();
 								string b = lines[i].Substring(j + 1).TrimStart();
-								int k;
 
-								if (!int.TryParse(a, NumberStyles.Integer, culture, out k))
+								if (!int.TryParse(a, NumberStyles.Integer, culture, out int k))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(culture)} in file {fileName}");
 								}
@@ -112,9 +111,8 @@ namespace TrainEditor2.IO.Sounds.Bve4
 							{
 								string a = lines[i].Substring(0, j).TrimEnd();
 								string b = lines[i].Substring(j + 1).TrimStart();
-								int k;
 
-								if (!int.TryParse(a, NumberStyles.Integer, culture, out k))
+								if (!int.TryParse(a, NumberStyles.Integer, culture, out int k))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(culture)} in file {fileName}");
 								}
@@ -151,9 +149,8 @@ namespace TrainEditor2.IO.Sounds.Bve4
 							{
 								string a = lines[i].Substring(0, j).TrimEnd();
 								string b = lines[i].Substring(j + 1).TrimStart();
-								int k;
 
-								if (!int.TryParse(a, NumberStyles.Integer, culture, out k))
+								if (!int.TryParse(a, NumberStyles.Integer, culture, out int k))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(culture)} in file {fileName}");
 								}
@@ -190,9 +187,8 @@ namespace TrainEditor2.IO.Sounds.Bve4
 							{
 								string a = lines[i].Substring(0, j).TrimEnd();
 								string b = lines[i].Substring(j + 1).TrimStart();
-								int k;
 
-								if (!int.TryParse(a, NumberStyles.Integer, culture, out k))
+								if (!int.TryParse(a, NumberStyles.Integer, culture, out int k))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(culture)} in file {fileName}");
 								}
@@ -438,9 +434,8 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									int k;
 
-									if (!int.TryParse(a, NumberStyles.Integer, culture, out k))
+									if (!int.TryParse(a, NumberStyles.Integer, culture, out int k))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(culture)} in file {fileName}");
 									}
@@ -769,9 +764,8 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									int k;
 
-									if (!int.TryParse(a, NumberStyles.Integer, culture, out k))
+									if (!int.TryParse(a, NumberStyles.Integer, culture, out int k))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(culture)} in file {fileName}");
 									}
