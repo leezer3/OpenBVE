@@ -1,4 +1,6 @@
-﻿namespace Train.MsTs
+﻿// ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
+namespace Train.MsTs
 {
     internal enum Units
     {
