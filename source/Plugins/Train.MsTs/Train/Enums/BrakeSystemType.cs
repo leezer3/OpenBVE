@@ -18,9 +18,9 @@
 		EP,
 		/// <summary>The vehicle has no brakes</summary>
 		/// <remarks>Air pipe pressure will be passed through this vehicle</remarks>
-		Air_piped,
+		Air_Piped,
 		/// <summary>The vehicle has no brakes</summary>
 		/// <remarks>Vacuum pipe pressure will be passed through this vehicle</remarks>
-		Vacuum_piped
+		Vacuum_Piped
 	}
 }
