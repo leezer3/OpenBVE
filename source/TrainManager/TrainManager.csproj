@@ -123,6 +123,7 @@
     <Compile Include="Motor\DieselEngine\DieselEngine.cs" />
     <Compile Include="Motor\DieselEngine\TractionMotor.cs" />
     <Compile Include="Motor\Fuel\FuelTank.cs" />
+    <Compile Include="Motor\MSTS\MotorSound.cs" />
     <Compile Include="Power\AccelerationCurve.cs" />
     <Compile Include="Power\Breaker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
