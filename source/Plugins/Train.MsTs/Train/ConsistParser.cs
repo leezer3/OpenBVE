@@ -10,7 +10,6 @@ using OpenBveApi.Trains;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
 using SoundManager;
-using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Motor;
@@ -106,15 +105,7 @@ namespace Train.MsTs
 				using (BinaryReader reader = new BinaryReader(fb))
 				{
 					byte[] newBytes = reader.ReadBytes((int)(fb.Length - fb.Position));
-					string s;
-					if (unicode)
-					{
-						s = Encoding.Unicode.GetString(newBytes);
-					}
-					else
-					{
-						s = Encoding.ASCII.GetString(newBytes);
-					}
+					string s = unicode ? Encoding.Unicode.GetString(newBytes) : Encoding.ASCII.GetString(newBytes);
 					TextualBlock block = new TextualBlock(s, KujuTokenID.Train);
 					ParseBlock(block, ref train);
 				}
