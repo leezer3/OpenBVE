@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using OpenBveApi.World;
 
-/// <summary>Available units of length</summary>
+/// <summary>Available units of volume</summary>
 public enum UnitOfVolume
 {
 	/// <summary>Litres</summary>
@@ -10,7 +10,7 @@ public enum UnitOfVolume
 	Gallons,
 }
 
-/// <summary>Implements the length convertor</summary>
+/// <summary>Implements the volume convertor</summary>
 public class VolumeConverter : UnitConverter<UnitOfVolume, double>
 {
 	static VolumeConverter()

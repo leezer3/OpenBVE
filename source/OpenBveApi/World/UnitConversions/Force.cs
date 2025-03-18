@@ -13,7 +13,7 @@ namespace OpenBveApi.World
 		PoundsOfForce
 	}
 
-	/// <summary>Implements the length convertor</summary>
+	/// <summary>Implements the force convertor</summary>
 	public class ForceConverter : UnitConverter<UnitOfForce, double>
 	{
 		static ForceConverter()
