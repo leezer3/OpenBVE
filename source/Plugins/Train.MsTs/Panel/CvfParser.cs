@@ -351,9 +351,8 @@ namespace Train.MsTs
 							Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
 							Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
 							f = GetStackLanguageFromSubject(Car.baseTrain, panelSubject, Units);
-							InitialAngle -= 360;
-							InitialAngle *= 0.0174532925199433; //degrees to radians
-							LastAngle *= 0.0174532925199433;
+							InitialAngle = InitialAngle.ToRadians();
+							LastAngle = LastAngle.ToRadians();
 							double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 							double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 							f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
@@ -467,14 +466,6 @@ namespace Train.MsTs
 						LastAngle = block.ReadSingle();
 						break;
 					case KujuTokenID.ScaleRange:
-						if (panelSubject == PanelSubject.Ammeter)
-						{
-							//As we're currently using the BVE ammeter hack, ignore the values
-							Minimum = 0;
-							Maximum = 1;
-							block.Skip((int) block.Length());
-						}
-
 						Minimum = block.ReadSingle();
 						Maximum = block.ReadSingle();
 						break;
@@ -543,7 +534,7 @@ namespace Train.MsTs
 			switch (subject)
 			{
 				case PanelSubject.Ammeter:
-					Code = "acceleration";
+					Code = "amps";
 					break;
 				case PanelSubject.Brake_Cyl:
 					switch (subjectUnits)
