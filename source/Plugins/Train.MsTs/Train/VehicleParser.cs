@@ -92,6 +92,8 @@ namespace Train.MsTs
 					}
 				}	
 			}
+
+			Car.Specs.AccelerationCurveMaximum = maxForce / Car.CurrentMass;
 			// as properties may not be in order, set this stuff last
 			if (isEngine)
 			{
@@ -101,6 +103,11 @@ namespace Train.MsTs
 						Car.Engine = new DieselEngine(Car, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
 						Car.Engine.FuelTank = new FuelTank(dieselCapacity, 0, dieselCapacity);
 						Car.Engine.IsRunning = true;
+
+						if (maxEngineAmps > 0)
+						{
+							Car.Engine.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Car.Engine, maxEngineAmps));
+						}
 						break;
 				}
 			}
@@ -225,6 +232,7 @@ namespace Train.MsTs
 		private double dieselIdleUse;
 		private double dieselMaxUse;
 		private double dieselCapacity;
+		private double maxEngineAmps;
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
@@ -645,6 +653,9 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.MaxDieselLevel:
 					dieselCapacity = block.ReadSingle(UnitOfVolume.Litres);
+					break;
+				case KujuTokenID.MaxCurrent:
+					maxEngineAmps = block.ReadSingle(UnitOfCurrent.Amps);
 					break;
 			}
 			return true;
