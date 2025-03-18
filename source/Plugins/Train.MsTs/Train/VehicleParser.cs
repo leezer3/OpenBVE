@@ -107,7 +107,11 @@ namespace Train.MsTs
 						Car.Engine.FuelTank = new FuelTank(dieselCapacity, 0, dieselCapacity);
 						Car.Engine.IsRunning = true;
 
-						if (maxEngineAmps > 0)
+						if (maxBrakeAmps > 0 && maxEngineAmps > 0)
+						{
+							Car.Engine.Components.Add(EngineComponent.RegenerativeTractionMotor, new RegenerativeTractionMotor(Car.Engine, maxEngineAmps, maxBrakeAmps));
+						}
+						else if (maxEngineAmps > 0)
 						{
 							Car.Engine.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Car.Engine, maxEngineAmps));
 						}
@@ -236,6 +240,7 @@ namespace Train.MsTs
 		private double dieselMaxUse;
 		private double dieselCapacity;
 		private double maxEngineAmps;
+		private double maxBrakeAmps;
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
@@ -659,6 +664,9 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.MaxCurrent:
 					maxEngineAmps = block.ReadSingle(UnitOfCurrent.Amps);
+					break;
+				case KujuTokenID.DynamicBrakesResistorCurrentLimit:
+					maxBrakeAmps = block.ReadSingle(UnitOfCurrent.Amps);
 					break;
 			}
 			return true;
