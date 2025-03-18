@@ -120,6 +120,7 @@
     <Compile Include="Motor\ComponentTypes.cs" />
     <Compile Include="Motor\ComponentTypes.cs" />
     <Compile Include="Motor\DieselEngine\DieselEngine.cs" />
+    <Compile Include="Motor\DieselEngine\RegenerativeTractionMotor.cs" />
     <Compile Include="Motor\DieselEngine\TractionMotor.cs" />
     <Compile Include="Motor\Fuel\FuelTank.cs" />
     <Compile Include="Motor\MSTS\MotorSound.cs" />
