@@ -29,11 +29,16 @@ namespace OpenBveApi.World
 			RegisterConversion(UnitOfLength.Feet, v => v * 3.281, v => v / 3.281);
 			KnownUnits = new Dictionary<string, UnitOfLength>
 			{
+				// standard units
 				{"mm", UnitOfLength.Millimeter}, {"millimeter", UnitOfLength.Millimeter}, {"millimeters", UnitOfLength.Millimeter},
 				{"cm", UnitOfLength.Centimeter}, {"centimeter", UnitOfLength.Centimeter}, {"centimeters", UnitOfLength.Centimeter},
 				{"m", UnitOfLength.Meter}, {"meter", UnitOfLength.Meter}, {"meters", UnitOfLength.Meter},
 				{"in", UnitOfLength.Inches}, {"ins", UnitOfLength.Inches}, {"inch", UnitOfLength.Inches}, {"inches", UnitOfLength.Inches},
-				{"ft", UnitOfLength.Feet}, {"foot", UnitOfLength.Feet}, {"feet", UnitOfLength.Feet}
+				{"ft", UnitOfLength.Feet}, {"foot", UnitOfLength.Feet}, {"feet", UnitOfLength.Feet},
+				// special-cases
+
+				// typo in dash9.eng
+				{"in2", UnitOfLength.Inches} 
 			};
 		}
 
