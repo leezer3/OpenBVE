@@ -27,5 +27,6 @@ namespace TrainManager.Motor
     public enum EngineComponent
     {
 		TractionMotor,
+		RegenerativeTractionMotor
     }
 }
