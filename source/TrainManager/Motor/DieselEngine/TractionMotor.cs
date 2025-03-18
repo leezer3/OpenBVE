@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -22,34 +22,41 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System.Collections.Generic;
-using TrainManager.Car;
+using TrainManager.Handles;
 
 namespace TrainManager.Motor
 {
-	/// <summary>An abstract engine</summary>
-    public abstract class AbstractEngine
+    public class TractionMotor : AbstractComponent
     {
-		/// <summary>Holds a reference to the base car</summary>
-	    internal readonly CarBase BaseCar;
-		/// <summary>The fuel supply</summary>
-	    public FuelTank FuelTank;
-	    /// <summary>Whether the engine is running</summary>
-	    public bool IsRunning;
-		/// <summary>The components of the engine</summary>
-	    public Dictionary<EngineComponent, AbstractComponent> Components;
+		/// <summary>The current in Amps delivered by the traction motor</summary>
+	    public double CurrentAmps;
+		/// <summary>The maximum amps able to be delivered by the traction motor</summary>
+	    private readonly double maxAmps;
 
-		/// <summary>Creates a new AbstractEngine</summary>
-		protected AbstractEngine(CarBase car)
-	    {
-		    BaseCar = car;
-			Components = new Dictionary<EngineComponent, AbstractComponent>();
-	    }
+		public TractionMotor(AbstractEngine engine, double max) : base(engine)
+		{
+			maxAmps = max;
+		}
 
-
-
-		/// <summary>Called once a frame to update the engine</summary>
-		/// <param name="timeElapsed"></param>
-	    public abstract void Update(double timeElapsed);
+		public override void Update(double timeElapsed)
+		{
+			if (baseEngine is DieselEngine dieselEngine)
+			{
+				// n.b. assume that the engine makes no current at idle
+				if (baseEngine.BaseCar.baseTrain.Handles.Reverser.Actual != ReverserPosition.Neutral)
+				{
+					// find the max possible amps at the current engine RPM
+					CurrentAmps = maxAmps / (dieselEngine.MaxRPM - dieselEngine.IdleRPM) * (dieselEngine.CurrentRPM - dieselEngine.IdleRPM);
+				}
+				else
+				{
+					CurrentAmps = 0;
+				}
+			}
+			else
+			{
+				CurrentAmps = maxAmps / baseEngine.BaseCar.baseTrain.Handles.Power.MaximumDriverNotch * baseEngine.BaseCar.baseTrain.Handles.Power.Actual;
+			}
+		}
     }
 }

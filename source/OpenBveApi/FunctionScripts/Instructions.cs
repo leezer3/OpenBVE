@@ -39,7 +39,7 @@
 		Sanders, SandLevel, SandShots, DSD,
 		AmbientTemperature,
 		BillboardX, BillboardY,
-		EngineRunning, EngineRunningCar, EngineRPM, EngineRPMCar, FuelLevel, FuelLevelCar,
+		EngineRunning, EngineRunningCar, EngineRPM, EngineRPMCar, FuelLevel, FuelLevelCar, Amps, AmpsCar
 #pragma warning restore CS1591
 			
 		}

@@ -106,6 +106,7 @@
     <Compile Include="Handles\Handles.Reverser.cs" />
     <Compile Include="Handles\Handles.Reverser.Positions.cs" />
     <Compile Include="Handles\Handles.SpringTypes.cs" />
+    <Compile Include="Motor\AbstractComponent.cs" />
     <Compile Include="Motor\AbstractEngine.cs" />
     <Compile Include="Motor\AbstractMotorSound.cs" />
     <Compile Include="Motor\BVE4\MotorSound.cs" />
@@ -116,7 +117,9 @@
     <Compile Include="Motor\BVE5\MotorSound.cs" />
     <Compile Include="Motor\BVE5\MotorSoundTableEntry.cs" />
     <Compile Include="Motor\BVE5\SoundState.cs" />
+    <Compile Include="Motor\ComponentTypes.cs" />
     <Compile Include="Motor\DieselEngine\DieselEngine.cs" />
+    <Compile Include="Motor\DieselEngine\TractionMotor.cs" />
     <Compile Include="Motor\Fuel\FuelTank.cs" />
     <Compile Include="Power\AccelerationCurve.cs" />
     <Compile Include="Power\Breaker.cs" />

@@ -1849,6 +1849,68 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.Amps:
+					{
+						if (Train != null)
+						{
+							int totalMotors = 0;
+							double ampsTotal = 0;
+							for (int k = 0; k < Train.Cars.Length; k++)
+							{
+								if (Train.Cars[k].Specs.IsMotorCar && Train.Cars[k].Engine is DieselEngine dieselEngine)
+								{
+									if (dieselEngine.Components[EngineComponent.TractionMotor] is TractionMotor t)
+									{
+										totalMotors++;
+										ampsTotal += t.CurrentAmps;
+									}
+								}
+							}
+
+							if (totalMotors == 0)
+							{
+								Function.Stack[s] = 0;
+							}
+							else
+							{
+								Function.Stack[s] = ampsTotal / totalMotors;
+							}
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+					} s++; break;
+					case Instructions.AmpsCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								if (Train.Cars[j].Specs.IsMotorCar && Train.Cars[j].Engine is DieselEngine dieselEngine)
+								{
+									if (dieselEngine.Components[EngineComponent.TractionMotor] is TractionMotor t)
+									{
+										
+										Function.Stack[s - 1] = t.CurrentAmps;
+									}
+								}
+								else
+								{
+									Function.Stack[s - 1] = 0.0;
+								}
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
 					// default
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");
