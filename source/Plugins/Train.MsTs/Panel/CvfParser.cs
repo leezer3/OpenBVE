@@ -298,6 +298,7 @@ namespace Train.MsTs
 			private int HorizontalFrames;
 			private int VerticalFrames;
 			private bool MouseControl;
+			private bool DirIncrease;
 
 			internal void Parse()
 			{
@@ -357,9 +358,6 @@ namespace Train.MsTs
 							double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 							f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
 							Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
-							//MSTS cab dials are backstopped as standard
-							Car.CarSections[0].Groups[0].Elements[j].RotateZFunction.Minimum = InitialAngle;
-							Car.CarSections[0].Groups[0].Elements[j].RotateZFunction.Maximum = LastAngle;
 							break;
 						case CabComponentType.Lever:
 							/*
@@ -477,7 +475,7 @@ namespace Train.MsTs
 						break;
 					case KujuTokenID.DirIncrease:
 						//Do we start at 0 or max?
-						block.Skip((int) block.Length());
+						DirIncrease = block.ReadInt16() == 1;
 						break;
 					case KujuTokenID.Orientation:
 						//Flip?
@@ -539,18 +537,24 @@ namespace Train.MsTs
 				case PanelSubject.Brake_Cyl:
 					switch (subjectUnits)
 					{
-						case Units.Inches_Of_Mercury:
 						case Units.PSI:
-							Code = "brakecylinder 0.001 *";
+							Code = "brakecylinder 0.000145038 *";
 							break;
 					}
 					break;
 				case PanelSubject.Brake_Pipe:
 					switch (subjectUnits)
 					{
-						case Units.Inches_Of_Mercury:
 						case Units.PSI:
-							Code = "brakepipe 0.001 *";
+							Code = "brakecylinder 0.000145038 *";
+							break;
+					}
+					break;
+				case PanelSubject.Main_Res:
+					switch (subjectUnits)
+					{
+						case Units.PSI:
+							Code = "mainreservoir 0.000145038 *";
 							break;
 					}
 					break;
