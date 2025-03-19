@@ -8,10 +8,10 @@ using OpenBveApi.Interface;
 namespace OpenBve.UserInterface
 {
 	/// <inheritdoc />
-	public partial class formRaildriverCalibration : Form
+	public partial class FormRaildriverCalibration : Form
 	{
 		/// <inheritdoc />
-		public formRaildriverCalibration()
+		public FormRaildriverCalibration()
 		{
 			InitializeComponent();
 			main = (Bitmap)ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\raildriver.png"));

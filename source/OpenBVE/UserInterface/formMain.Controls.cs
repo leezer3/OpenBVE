@@ -849,7 +849,7 @@ namespace OpenBve {
 									}
 									break;
 								case ConfigurationLink.RailDriver:
-									using (formRaildriverCalibration f = new formRaildriverCalibration())
+									using (FormRaildriverCalibration f = new FormRaildriverCalibration())
 									{
 										f.ShowDialog();
 									}

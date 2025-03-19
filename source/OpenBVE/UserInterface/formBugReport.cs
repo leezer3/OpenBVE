@@ -55,7 +55,7 @@ namespace OpenBve
 					else
 					{
 						
-						formViewLog log = new formViewLog(File.ReadAllText(file));
+						FormViewLog log = new FormViewLog(File.ReadAllText(file));
 						log.ShowDialog();
 					}
 				} else {
@@ -81,7 +81,7 @@ namespace OpenBve
 				}
 				else
 				{
-					formViewLog log = new formViewLog(File.ReadAllText(file.FullName));
+					FormViewLog log = new FormViewLog(File.ReadAllText(file.FullName));
 					log.ShowDialog();
 				}
 			}

@@ -478,7 +478,7 @@ namespace OpenBve
 		{
 			if (pictureboxRouteImage.Image != null)
 			{
-				formImage.ShowImageDialog(pictureboxRouteImage.Image);
+				FormImage.ShowImageDialog(pictureboxRouteImage.Image);
 			}
 		}
 
@@ -1033,7 +1033,7 @@ namespace OpenBve
 		// train image
 		private void pictureboxTrainImage_Click(object sender, EventArgs e) {
 			if (pictureboxTrainImage.Image != null) {
-				formImage.ShowImageDialog(pictureboxTrainImage.Image);
+				FormImage.ShowImageDialog(pictureboxTrainImage.Image);
 			}
 		}
 

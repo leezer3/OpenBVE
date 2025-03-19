@@ -7,11 +7,11 @@ using RouteManager2;
 
 namespace OpenBve
 {
-	internal partial class formImageExport : Form
+	internal partial class FormImageExport : Form
 	{
 		private readonly bool IsMap;
 		private readonly string routeFileName;
-		internal formImageExport(bool isMap, string fileName)
+		internal FormImageExport(bool isMap, string fileName)
 		{
 			InitializeComponent();
 			IsMap = isMap;

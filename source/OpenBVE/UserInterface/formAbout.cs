@@ -7,9 +7,9 @@ using OpenBveApi.Interface;
 
 namespace OpenBve
 {
-	internal partial class formAbout : Form
+	internal partial class FormAbout : Form
 	{
-		public formAbout()
+		public FormAbout()
 		{
 			InitializeComponent();
 			ApplyLanguage();

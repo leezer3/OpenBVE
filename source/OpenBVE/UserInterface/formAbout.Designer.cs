@@ -1,6 +1,6 @@
-﻿namespace OpenBve
+namespace OpenBve
 {
-    partial class formAbout
+    partial class FormAbout
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formAbout));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAbout));
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.labelProductName = new System.Windows.Forms.Label();
             this.textBoxMain = new System.Windows.Forms.TextBox();
@@ -148,7 +148,7 @@
             this.Controls.Add(this.textBoxMain);
             this.Controls.Add(this.labelProductName);
             this.Controls.Add(this.pictureBoxLogo);
-            this.Name = "formAbout";
+            this.Name = "FormAbout";
             this.Text = "About";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.ResumeLayout(false);
