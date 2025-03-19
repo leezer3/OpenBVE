@@ -692,14 +692,18 @@ namespace Plugin
 					ParseBlock(newBlock, ref shape);
 					newBlock = block.ReadSubBlock(KujuTokenID.lod_controls);
 					ParseBlock(newBlock, ref shape);
-					try
+
+					if (block.Length() - block.Position() > 0)
 					{
-						newBlock = block.ReadSubBlock(KujuTokenID.animations);
-						ParseBlock(newBlock, ref shape);
-					}
-					catch (EndOfStreamException)
-					{
-						// Animation controllers are optional
+						try
+						{
+							newBlock = block.ReadSubBlock(KujuTokenID.animations);
+							ParseBlock(newBlock, ref shape);
+						}
+						catch (EndOfStreamException)
+						{
+							// Animation controllers are optional
+						}
 					}
 					break;
 				case KujuTokenID.shape_header:
