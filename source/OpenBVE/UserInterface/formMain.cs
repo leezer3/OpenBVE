@@ -1724,11 +1724,11 @@ namespace OpenBve {
 		// =========
 
 		/// <summary>Attempts to load an image into memory using the OpenBVE path resolution API</summary>
-		private Image LoadImage(string ImageFolder, string fileName)
+		private Image LoadImage(string imageFolder, string fileName)
 		{
 			try
 			{
-				fileName = Path.CombineFile(ImageFolder, fileName);
+				fileName = Path.CombineFile(imageFolder, fileName);
 				if (File.Exists(fileName))
 				{
 					try

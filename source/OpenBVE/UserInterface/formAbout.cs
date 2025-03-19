@@ -16,10 +16,10 @@ namespace OpenBve
 			labelProductName.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}) + @" v" + Application.ProductVersion + Program.VersionSuffix;
 			try
 			{
-				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "logo.png");
-				if (System.IO.File.Exists(File))
+				string logoFile = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "logo.png");
+				if (System.IO.File.Exists(logoFile))
 				{
-					pictureBoxLogo.Image = ImageExtensions.FromFile(File);
+					pictureBoxLogo.Image = ImageExtensions.FromFile(logoFile);
 				}
 			}
 			catch
@@ -29,8 +29,8 @@ namespace OpenBve
 
 			try
 			{
-				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
-				this.Icon = new Icon(File);
+				string iconFile = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
+				Icon = new Icon(iconFile);
 			}
 			catch
 			{

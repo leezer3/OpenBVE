@@ -430,8 +430,8 @@ namespace OpenBve
 			}
 			//Add event handler hooks for keyboard and mouse buttons
 			//Do this after the renderer has init and the loop has started to prevent timing issues
-			KeyDown	+= MainLoop.keyDownEvent;
-			KeyUp	+= MainLoop.keyUpEvent;
+			KeyDown	+= MainLoop.KeyDownEvent;
+			KeyUp	+= MainLoop.KeyUpEvent;
 			MouseDown	+= MainLoop.mouseDownEvent;
 			MouseUp += MainLoop.mouseUpEvent;
 			MouseMove	+= MainLoop.mouseMoveEvent;

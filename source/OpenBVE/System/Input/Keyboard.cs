@@ -9,7 +9,7 @@ namespace OpenBve
 	internal static partial class MainLoop
 	{
 		/// <summary>Called when a KeyDown event is generated</summary>
-		internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
+		internal static void KeyDownEvent(object sender, KeyboardKeyEventArgs e)
 		{
 			if (Interface.CurrentOptions.KioskMode && Program.Renderer.CurrentInterface != InterfaceType.GLMainMenu)
 			{
@@ -85,7 +85,7 @@ namespace OpenBve
 		}
 
 		/// <summary>Called when a KeyUp event is generated</summary>
-		internal static void keyUpEvent(object sender, KeyboardKeyEventArgs e)
+		internal static void KeyUpEvent(object sender, KeyboardKeyEventArgs e)
 		{
 			if (Interface.CurrentOptions.KioskMode && Program.Renderer.CurrentInterface != InterfaceType.GLMainMenu)
 			{

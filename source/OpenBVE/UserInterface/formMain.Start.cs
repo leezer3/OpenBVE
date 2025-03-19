@@ -141,14 +141,14 @@ namespace OpenBve
 		}
 
 		/// <summary>Populates the route display list from the selected folder</summary>
-		/// <param name="Folder">The folder containing route files</param>
+		/// <param name="routeFolder">The folder containing route files</param>
 		/// <param name="listView">The list view to populate</param>
 		/// <param name="packages">Whether this is a packaged content folder</param>
-		private void populateRouteList(string Folder, ListView listView, bool packages)
+		private void populateRouteList(string routeFolder, ListView listView, bool packages)
 		{
 			try
 			{
-				if (Folder.Length == 0)
+				if (routeFolder.Length == 0)
 				{
 					// drives
 					listView.Items.Clear();
@@ -168,16 +168,16 @@ namespace OpenBve
 						//Unable to get list of drives
 					}
 				}
-				else if (Directory.Exists(Folder))
+				else if (Directory.Exists(routeFolder))
 				{
 					listView.Items.Clear();
 					
-					if (!packages || Folder != Program.FileSystem.RouteInstallationDirectory)
+					if (!packages || routeFolder != Program.FileSystem.RouteInstallationDirectory)
 					{
 						// Show parent if applicable
 						try
 						{
-							DirectoryInfo Info = Directory.GetParent(Folder);
+							DirectoryInfo Info = Directory.GetParent(routeFolder);
 							if (Info != null)
 							{
 								ListViewItem Item = listView.Items.Add("..");
@@ -202,7 +202,7 @@ namespace OpenBve
 					// folders
 					try
 					{
-						string[] Folders = Directory.GetDirectories(Folder);
+						string[] Folders = Directory.GetDirectories(routeFolder);
 						Array.Sort(Folders);
 						for (int i = 0; i < Folders.Length; i++)
 						{
@@ -226,7 +226,7 @@ namespace OpenBve
 					// files
 					try
 					{
-						string[] Files = Directory.GetFiles(Folder);
+						string[] Files = Directory.GetFiles(routeFolder);
 						Array.Sort(Files);
 						for (int i = 0; i < Files.Length; i++)
 						{

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
@@ -11,7 +12,6 @@ namespace OpenBve
     /// <summary>Provides functions for handling crashes, and producing an appropriate error log</summary>
     class CrashHandler
     {
-        static readonly System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
         static readonly string CrashLog = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder,"OpenBVE Crash- " + DateTime.Now.ToString("yyyy.M.dd[HH.mm]") + ".log");
         /// <summary>Catches all unhandled exceptions within the current appdomain</summary>
         internal static void CurrentDomain_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
@@ -147,7 +147,7 @@ namespace OpenBve
                 //Track position and viewing distance
                 try
                 {
-	                outputFile.WriteLine("Current track position is: " + Program.Renderer.CameraTrackFollower.TrackPosition.ToString("0.00", Culture) + " m");
+	                outputFile.WriteLine("Current track position is: " + Program.Renderer.CameraTrackFollower.TrackPosition.ToString("0.00", CultureInfo.InvariantCulture) + " m");
 	                outputFile.WriteLine("Current viewing distance is: " + Interface.CurrentOptions.ViewingDistance);
                 }
                 catch

@@ -14,12 +14,12 @@ namespace OpenBve
 	/// <summary>Displays an in-game overlay with information about the route, including a map and gradient profile</summary>
 	public class RouteInfoOverlay
 	{
-		private enum state
+		private enum OverlayState
 		{
-			none = 0,
-			map,
-			gradient,
-			numOf
+			None = 0,
+			Map,
+			Gradient,
+			NumOf
 		};
 
 		/// <summary>The width of the gradient position bar in pixels</summary>
@@ -35,7 +35,7 @@ namespace OpenBve
 		/// <summary>The color used to render the dot for the player train</summary>
 		private static readonly Color128 playerTrainDotColour = Color128.Green;
 
-		private state currentState	= state.none;
+		private OverlayState currentState	= OverlayState.None;
 		private Texture gradientImage;
 		private Vector2	gradientSize;
 		private Texture mapImage;
@@ -49,14 +49,14 @@ namespace OpenBve
 			if (command != Translations.Command.RouteInformation)	// only accept RouteInformation command
 				return false;
 			// cycle through available state
-			setState( (state)((int)(currentState + 1) % (int)state.numOf) );
+			SetState( (OverlayState)((int)(currentState + 1) % (int)OverlayState.NumOf) );
 			return true;
 		}
 
 		/// <summary>Displays the current state into the simulation window.</summary>
 		public void Show()
 		{
-			if (currentState == state.none)
+			if (currentState == OverlayState.None)
 				return;
 			Vector2 Pos = Vector2.Null;
 			Vector2	origin = Vector2.Null;
@@ -64,7 +64,7 @@ namespace OpenBve
 			// draw the relevant image
 			switch (currentState)
 			{
-			case state.map:
+			case OverlayState.Map:
 				Program.Renderer.Rectangle.Draw(mapImage, origin, mapSize);
 					// get current train position
 				for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
@@ -82,7 +82,7 @@ namespace OpenBve
 							Program.TrainManager.Trains[i].IsPlayerTrain ? playerTrainDotColour : trainDotColour);
 				}
 				break;
-			case state.gradient:
+			case OverlayState.Gradient:
 				Program.Renderer.Rectangle.Draw(gradientImage, origin, gradientSize);
 				// get current train position in track
 				int trackPos	= (int)(TrainManager.PlayerTrain.FrontCarTrackPosition);
@@ -98,18 +98,18 @@ namespace OpenBve
 
 		/// <summary>Sets the state, intializing any required resource.</summary>
 		/// <param name="newState">The new state to set to.</param>
-		private void setState(state newState)
+		private void SetState(OverlayState newState)
 		{
 			switch (newState)
 			{
-			case state.map:
+			case OverlayState.Map:
 				if (mapImage == null)
 				{
 					mapImage	= new Texture(Program.CurrentRoute.Information.RouteMap);
 					mapSize		= new Vector2(Program.CurrentRoute.Information.RouteMap.Width, Program.CurrentRoute.Information.RouteMap.Height);
 				}
 				break;
-			case state.gradient:
+			case OverlayState.Gradient:
 				if (gradientImage == null)
 				{
 					gradientImage	= new Texture(Program.CurrentRoute.Information.GradientProfile);
