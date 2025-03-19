@@ -63,10 +63,8 @@ namespace OpenBve.Formats.MsTs
 		public abstract float ReadSingle();
 
 		/// <summary>Reads a single-bit precision floating point number from the block, and converts it to the desired units</summary>
-		/// <param name="desiredUnit"></param>
-		/// <returns></returns>
-		public abstract float ReadSingle<TUnitType>(TUnitType desiredUnit);
-
+		public abstract float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnit = null) where TUnitType : struct;
+		
 		/// <summary>Skips <para>length</para> through the block</summary>
 		/// <param name="length">The length to skip</param>
 		public abstract void Skip(int length);
@@ -230,7 +228,7 @@ namespace OpenBve.Formats.MsTs
 			return myReader.ReadSingle();
 		}
 
-		public override float ReadSingle<TUnitType>(TUnitType desiredUnit)
+		public override float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnitType)
 		{
 			throw new NotImplementedException();
 		}
@@ -312,6 +310,7 @@ namespace OpenBve.Formats.MsTs
 		private readonly ForceConverter forceConverter = new ForceConverter();
 		private readonly VolumeConverter volumeConverter = new VolumeConverter();
 		private readonly CurrentConverter currentConverter = new CurrentConverter();
+		private readonly PressureConverter pressureConverter = new PressureConverter();
 
 		private TextualBlock(string text, bool textIsClean)
 		{
@@ -799,25 +798,26 @@ namespace OpenBve.Formats.MsTs
 			throw new InvalidDataException("Unable to parse " + s + " to a valid single in block " + Token);
 		}
 
-		public override float ReadSingle<TUnitType>(TUnitType desiredUnit)
+		public override float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnits)
 		{
 			string s = ReadString();
-			int c = s.Length - 1;
-			if (c > 1)
+			int c;
+			for (c = 0; c < s.Length; c++)
 			{
-				while (c > 0)
+				if (!char.IsNumber(s[c]) && s[c] != '.')
 				{
-					if (char.IsDigit(s[c]))
-					{
-						c++;
-						break;
-					}
-					c--;
+					break;
 				}
 			}
-			
 
-			string Unit = s.Substring(c).ToLowerInvariant();
+
+			string Unit = s.Substring(c).ToLowerInvariant().Replace("//", string.Empty);
+
+			if (string.IsNullOrEmpty(Unit))
+			{
+				// assume that if no units are specified, our number is already in the desired unit e.g. Dash9.eng
+				Unit = (defaultUnits != null ? defaultUnits.ToString(): desiredUnit.ToString()).ToLowerInvariant();
+			}
 			s = s.Substring(0, c);
 			float parsedNumber;
 			
@@ -871,9 +871,19 @@ namespace OpenBve.Formats.MsTs
 
 				parsedNumber = (float)currentConverter.Convert(parsedNumber, CurrentConverter.KnownUnits[Unit], (UnitOfCurrent)(object)desiredUnit);
 			}
+			else if (desiredUnit is UnitOfPressure)
+			{
+				if (!PressureConverter.KnownUnits.ContainsKey(Unit))
+				{
+					throw new InvalidDataException("Unknown or unexpected pressure unit " + Unit + " encountered in block " + Token);
+				}
+
+				parsedNumber = (float)pressureConverter.Convert(parsedNumber, PressureConverter.KnownUnits[Unit], (UnitOfPressure)(object)desiredUnit);
+
+			}
 			return parsedNumber;
 		}
-
+		
 		public override void Skip(int length)
 		{
 			//Unused at the minute
