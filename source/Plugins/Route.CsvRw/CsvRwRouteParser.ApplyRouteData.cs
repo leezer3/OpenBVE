@@ -485,7 +485,7 @@ namespace CsvRwRouteParser
 				// marker
 				if (!PreviewOnly)
 				{
-					for (int j = 0; j < Data.Markers.Length; j++)
+					for (int j = 0; j < Data.Markers.Count; j++)
 					{
 						Data.Markers[j].CreateEvent(StartingDistance, EndingDistance, ref CurrentRoute.Tracks[0].Elements[n]);
 					}
@@ -493,7 +493,7 @@ namespace CsvRwRouteParser
 				// request stops
 				if (!PreviewOnly)
 				{
-					for (int j = 0; j < Data.RequestStops.Length; j++)
+					for (int j = 0; j < Data.RequestStops.Count; j++)
 					{
 						Data.RequestStops[j].CreateEvent(StartingDistance, EndingDistance, ref CurrentRoute.Tracks[0].Elements[n]);
 						

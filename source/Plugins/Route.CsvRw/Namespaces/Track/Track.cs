@@ -1814,9 +1814,7 @@ namespace CsvRwRouteParser
 					CurrentRoute.Stations[CurrentStation] = StationXMLParser.ReadStationXML(CurrentRoute, fn, PreviewOnly, Data.TimetableDaytime, Data.TimetableNighttime, CurrentStation, ref Data.Blocks[BlockIndex].StationPassAlarm, ref sr);
 					if (CurrentRoute.Stations[CurrentStation].Type == StationType.RequestStop)
 					{
-						int l = Data.RequestStops.Length;
-						Array.Resize(ref Data.RequestStops, l + 1);
-						Data.RequestStops[l] = sr;
+						Data.RequestStops.Add(sr);
 					}
 
 					Data.Blocks[BlockIndex].Station = CurrentStation;
@@ -2313,14 +2311,10 @@ namespace CsvRwRouteParser
 							{
 								if (System.IO.File.Exists(f) && f.ToLowerInvariant().EndsWith(".xml"))
 								{
-									Marker m = null;
-									if (MarkerScriptParser.ReadMarkerXML(f, Data.TrackPosition, ref m))
+									if (MarkerScriptParser.ReadMarkerXML(f, Data.TrackPosition, out Marker m))
 									{
-										int nn = Data.Markers.Length;
-										Array.Resize(ref Data.Markers, nn + 1);
-										Data.Markers[nn] = m;
+										Data.Markers.Add(m);
 									}
-
 									break;
 								}
 
@@ -2346,8 +2340,6 @@ namespace CsvRwRouteParser
 								if (start < 0.0) start = 0.0;
 								if (end < 0.0) end = 0.0;
 								if (end <= start) end = start + 0.01;
-								int n = Data.Markers.Length;
-								Array.Resize(ref Data.Markers, n + 1);
 								AbstractMessage message;
 								if (Command == TrackCommand.TextMarker)
 								{
@@ -2411,7 +2403,7 @@ namespace CsvRwRouteParser
 									message = new MarkerImage(Plugin.CurrentHost, t);
 								}
 
-								Data.Markers[n] = new Marker(start, end, message);
+								Data.Markers.Add(new Marker(start, end, message));
 							}
 						}
 					}

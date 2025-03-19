@@ -13,8 +13,9 @@ namespace CsvRwRouteParser
 {
 	class MarkerScriptParser
 	{
-		public static bool ReadMarkerXML(string fileName, double StartingPosition, ref Marker Marker)
+		public static bool ReadMarkerXML(string fileName, double StartingPosition, out Marker Marker)
 		{
+			Marker = null;
 			double EndingPosition = Double.PositiveInfinity;
 			AbstractMessage Message = null;
 			//The current XML file to load
