@@ -241,6 +241,10 @@ namespace Train.MsTs
 		private double dieselCapacity;
 		private double maxEngineAmps;
 		private double maxBrakeAmps;
+		private double mainReservoirMinimumPressure;
+		private double mainReservoirMaximumPressure;
+		private double brakeCylinderMaximumPressure;
+
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
@@ -309,7 +313,7 @@ namespace Train.MsTs
 								// The car contains no control gear, but is air / vac braked
 								// Assume equivilant to AutomaticAirBrake
 								// NOTE: This must be last in the else-if chain to enure that a vehicle with EP / ECP and these declared is setup correctly
-								car.CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
+								car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, car);
 							}
 
 							car.CarBrake.mainReservoir = new MainReservoir(690000.0, 780000.0, 0.01, 0.075 / train.Cars.Length);
@@ -389,20 +393,20 @@ namespace Train.MsTs
 							car.CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
 						}
 
-						car.CarBrake.mainReservoir = new MainReservoir(690000.0, 780000.0, 0.01, 0.075 / train.Cars.Length);
+						car.CarBrake.mainReservoir = new MainReservoir(mainReservoirMinimumPressure, mainReservoirMaximumPressure, 0.01, 0.075 / train.Cars.Length);
 						car.CarBrake.airCompressor = new Compressor(5000.0, car.CarBrake.mainReservoir, car);
 						car.CarBrake.equalizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
-						car.CarBrake.equalizingReservoir.NormalPressure = 1.005 * 490000.0;
+						car.CarBrake.equalizingReservoir.NormalPressure = 1.005 * brakeCylinderMaximumPressure;
 						double r = 200000.0 / 440000.0 - 1.0;
 						if (r < 0.1) r = 0.1;
 						if (r > 1.0) r = 1.0;
-						car.CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * 490000.0, 200000.0, 0.5, r);
-						car.CarBrake.brakeCylinder = new BrakeCylinder(440000.0, 440000.0, 0.3 * 300000.0, 300000.0, 200000.0);
+						car.CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakeCylinderMaximumPressure, 200000.0, 0.5, r);
+						car.CarBrake.brakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure, 0.3 * 300000.0, 300000.0, 200000.0);
 						car.CarBrake.straightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
 
 					}
 
-					car.CarBrake.brakePipe = new BrakePipe(490000.0, 10000000.0, 1500000.0, 5000000.0, true);
+					car.CarBrake.brakePipe = new BrakePipe(brakeCylinderMaximumPressure, 10000000.0, 1500000.0, 5000000.0, true);
 					car.CarBrake.JerkUp = 10;
 					car.CarBrake.JerkDown = 10;
 					break;
@@ -667,6 +671,15 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.DynamicBrakesResistorCurrentLimit:
 					maxBrakeAmps = block.ReadSingle(UnitOfCurrent.Amps);
+					break;
+				case KujuTokenID.AirBrakesMainMinResAirPressure:
+					mainReservoirMinimumPressure = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					break;
+				case KujuTokenID.AirBrakesMainMaxAirPressure:
+					mainReservoirMaximumPressure = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					break;
+				case KujuTokenID.BrakeCylinderPressureForMaxBrakeBrakeForce:
+					brakeCylinderMaximumPressure = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
 					break;
 			}
 			return true;
