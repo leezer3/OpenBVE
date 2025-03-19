@@ -267,7 +267,7 @@ namespace OpenBve.Graphics.Renderers
 			// debug
 			renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), Color128.SemiTransparentGrey);
 			string[] Lines;
-			if (TrainManager.PlayerTrain.Plugin.Panel.Length > 0)
+			if (TrainManager.PlayerTrain.Plugin?.Panel.Length > 0)
 			{
 				Lines = new string[TrainManager.PlayerTrain.Plugin.Panel.Length + 2];
 				Lines[0] = "=ATS Plugin Variables";
