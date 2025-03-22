@@ -1,7 +1,6 @@
-﻿// ReSharper disable UnusedMember.Global
-namespace Train.OpenBve
+﻿namespace Formats.OpenBve
 {
-	internal enum Panel2Sections
+	public enum Panel2Sections
 	{
 		Unknown = 0,
 		This,

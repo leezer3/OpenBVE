@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Formats.OpenBve;
+using Formats.OpenBve.Panel.Panel2;
 using LibRender2.Trains;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;

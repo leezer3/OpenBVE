@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Formats.OpenBve;
 using LibRender2;
 using LibRender2.Trains;
 using OpenBveApi.Colors;
