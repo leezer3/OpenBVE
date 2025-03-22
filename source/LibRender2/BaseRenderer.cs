@@ -1055,7 +1055,7 @@ namespace LibRender2
 
 				if (lastError != ErrorCode.NoError)
 				{
-				//	throw new InvalidOperationException($"OpenGL Error: {lastError}");
+					throw new InvalidOperationException($"OpenGL Error: {lastError}");
 				}
 			}
 #endif
@@ -1260,9 +1260,9 @@ namespace LibRender2
 			}
 
 			// model matricies
-			if (State.Matricies != null && State != lastObjectState)
+			if (State.Matricies != null && State.Matricies.Length > 0 && State != lastObjectState)
 			{
-				Shader.SetCurrentAnimationMatricies(State);
+				// n.b. if buffer has no data in it (matricies are of zero length), attempting to bind generates an InvalidValue
 				GL.BindBufferBase(BufferTarget.ShaderStorageBuffer, 12, State.MatrixBufferIndex);
 			}
 
