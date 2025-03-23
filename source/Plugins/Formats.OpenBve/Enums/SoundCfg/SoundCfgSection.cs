@@ -1,6 +1,6 @@
-﻿namespace Train.OpenBve
+﻿namespace Formats.OpenBve
 {
-	internal enum SoundCfgSection
+	public enum SoundCfgSection
 	{
 		/// <summary>Unknown section</summary>
 		Unknown = 0,

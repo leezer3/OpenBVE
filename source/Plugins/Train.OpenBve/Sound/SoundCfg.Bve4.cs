@@ -331,6 +331,30 @@ namespace Train.OpenBve
 							train.Cars[c].CarBrake.Rub = new CarSound(Plugin.CurrentHost, rub, SoundCfgParser.mediumRadius, center);
 						}
 						break;
+					case SoundCfgSection.RequestStop:
+						block.GetPath(SoundCfgKey.Stop, trainFolder, out string requestStop);
+						block.GetPath(SoundCfgKey.Pass, trainFolder, out string requestPass);
+						block.GetPath(SoundCfgKey.Ignored, trainFolder, out string requestIgnored);
+						for (int c = 0; c < train.Cars.Length; c++)
+						{
+							train.Cars[c].Sounds.RequestStop[0] = new CarSound(Plugin.CurrentHost, requestStop, SoundCfgParser.mediumRadius, panel);
+							train.Cars[c].Sounds.RequestStop[1] = new CarSound(Plugin.CurrentHost, requestPass, SoundCfgParser.mediumRadius, panel);
+							train.Cars[c].Sounds.RequestStop[2] = new CarSound(Plugin.CurrentHost, requestIgnored, SoundCfgParser.mediumRadius, panel);
+						}
+						break;
+					case SoundCfgSection.Touch:
+						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var touchIndex, out var fileName))
+						{
+							if (!train.Cars[train.DriverCar].Sounds.Touch.ContainsKey(touchIndex))
+							{
+								train.Cars[train.DriverCar].Sounds.Touch.Add(touchIndex, new CarSound(Plugin.CurrentHost, fileName, SoundCfgParser.tinyRadius, panel));
+							}
+							else
+							{
+								train.Cars[train.DriverCar].Sounds.Touch[touchIndex] = new CarSound(Plugin.CurrentHost, fileName, SoundCfgParser.tinyRadius, panel);
+							}
+						}
+						break;
 					case SoundCfgSection.Windscreen:
 						if (train.Cars[train.DriverCar].Windscreen == null)
 						{

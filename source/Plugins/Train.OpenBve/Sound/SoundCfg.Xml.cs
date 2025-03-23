@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Formats.OpenBve;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -534,7 +535,7 @@ namespace Train.OpenBve
 									{
 										break;
 									}
-									ParseArrayNode(c, out car.Sounds.Touch, center, SoundCfgParser.mediumRadius);
+									ParseDictionaryNode(c, out car.Sounds.Touch, center, SoundCfgParser.mediumRadius);
 									break;
 								case SoundCfgSection.Sanders:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())

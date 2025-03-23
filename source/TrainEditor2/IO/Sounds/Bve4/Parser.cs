@@ -1,796 +1,207 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.IO;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
-using OpenBveApi;
-using OpenBveApi.Interface;
-using TrainEditor2.Extensions;
+using Formats.OpenBve;
 using TrainEditor2.Models.Sounds;
-using TrainEditor2.Systems;
 using Path = OpenBveApi.Path;
 
 namespace TrainEditor2.IO.Sounds.Bve4
 {
 	internal static partial class SoundCfgBve4
 	{
-		internal static void Parse(string fileName, out Sound sound)
+		internal static void Parse(string FileName, out Sound sound)
 		{
 			sound = new Sound();
+			string trainFolder = Path.GetDirectoryName(FileName);
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
-			List<string> lines = File.ReadAllLines(fileName, TextEncoding.GetSystemEncodingFromFile(fileName)).ToList();
-			string basePath = Path.GetDirectoryName(fileName);
-
-			for (int i = lines.Count - 1; i >= 0; i--)
+			ConfigFile<SoundCfgSection, SoundCfgKey> cfg = new ConfigFile<SoundCfgSection, SoundCfgKey>(FileName, Program.CurrentHost, "Version 1.0");
+			while (cfg.RemainingSubBlocks > 0)
 			{
-				/*
-				 * Strip comments and remove empty resulting lines etc.
-				 *
-				 * This fixes an error with some NYCTA content, which has
-				 * a copyright notice instead of the file header specified....
-				 */
-				int j = lines[i].IndexOf(';');
-
-				if (j >= 0)
+				Block<SoundCfgSection, SoundCfgKey> block = cfg.ReadNextBlock();
+				switch (block.Key)
 				{
-					lines[i] = lines[i].Substring(0, j).Trim();
-				}
-				else
-				{
-					lines[i] = lines[i].Trim();
-				}
-
-				if (string.IsNullOrEmpty(lines[i]))
-				{
-					lines.RemoveAt(i);
-				}
-			}
-
-			if (!lines.Any())
-			{
-				Interface.AddMessage(MessageType.Error, false, $"Empty sound.cfg encountered in {fileName}.");
-			}
-
-			if (string.Compare(lines[0], "version 1.0", StringComparison.OrdinalIgnoreCase) != 0)
-			{
-				Interface.AddMessage(MessageType.Error, false, $"Invalid file format encountered in {fileName}. The first line is expected to be \"Version 1.0\".");
-			}
-
-			for (int i = 0; i < lines.Count; i++)
-			{
-				switch (lines[i].ToLowerInvariant())
-				{
-					case "[run]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
+					case SoundCfgSection.Run:
+						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var runIndex, out var fileName))
 						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (!int.TryParse(a, NumberStyles.Integer, culture, out int k))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									if (k >= 0)
-									{
-										sound.SoundElements.Add(new RunElement { Key = k, FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Error, false, $"Index must be greater or equal to zero at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
+							sound.SoundElements.Add(new RunElement { Key = runIndex, FilePath = Path.CombineFile(trainFolder, fileName) });
 						}
-
-						i--;
 						break;
-					case "[flange]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
+					case SoundCfgSection.Flange:
+						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var runIndex, out var fileName))
 						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (!int.TryParse(a, NumberStyles.Integer, culture, out int k))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									if (k >= 0)
-									{
-										sound.SoundElements.Add(new FlangeElement { Key = k, FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Error, false, $"Index must be greater or equal to zero at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
+							sound.SoundElements.Add(new FlangeElement { Key = runIndex, FilePath = Path.CombineFile(trainFolder, fileName) });
 						}
-
-						i--;
 						break;
-					case "[motor]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
+					case SoundCfgSection.Motor:
+						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var runIndex, out var fileName))
 						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (!int.TryParse(a, NumberStyles.Integer, culture, out int k))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									if (k >= 0)
-									{
-										sound.SoundElements.Add(new MotorElement { Key = k, FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Error, false, $"Index is invalid at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
+							sound.SoundElements.Add(new MotorElement { Key = runIndex, FilePath = Path.CombineFile(trainFolder, fileName) });
 						}
-
-						i--;
 						break;
-					case "[switch]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
+					case SoundCfgSection.Switch:
+						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var runIndex, out var fileName))
 						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (!int.TryParse(a, NumberStyles.Integer, culture, out int k))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									if (k >= 0)
-									{
-										sound.SoundElements.Add(new FrontSwitchElement { Key = k, FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Error, false, $"Index is invalid at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
+							sound.SoundElements.Add(new FrontSwitchElement { Key = runIndex, FilePath = Path.CombineFile(trainFolder, fileName) });
+							sound.SoundElements.Add(new RearSwitchElement { Key = runIndex, FilePath = Path.CombineFile(trainFolder, fileName) });
 						}
-
-						i--;
 						break;
-					case "[brake]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									BrakeKey[] keys = Enum.GetValues(typeof(BrakeKey)).OfType<BrakeKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-
-									if (keys.Any())
-									{
-										sound.SoundElements.Add(new BrakeElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
-						}
-
-						i--;
+					case SoundCfgSection.Brake:
+						block.GetPath(SoundCfgKey.BcReleaseHigh, trainFolder, out string bcReleaseHigh);
+						sound.SoundElements.Add(new BrakeElement { Key = BrakeKey.BcReleaseHigh, FilePath = bcReleaseHigh });
+						block.GetPath(SoundCfgKey.BcRelease, trainFolder, out string bcRelease);
+						sound.SoundElements.Add(new BrakeElement { Key = BrakeKey.BcRelease, FilePath = bcRelease });
+						block.GetPath(SoundCfgKey.BcReleaseFull, trainFolder, out string bcReleaseFull);
+						sound.SoundElements.Add(new BrakeElement { Key = BrakeKey.BcReleaseFull, FilePath = bcReleaseFull });
+						block.GetPath(SoundCfgKey.Emergency, trainFolder, out string emergency);
+						sound.SoundElements.Add(new BrakeElement { Key = BrakeKey.Emergency, FilePath = emergency });
+						block.GetPath(SoundCfgKey.EmergencyRelease, trainFolder, out string emergencyRelease);
+						sound.SoundElements.Add(new BrakeElement { Key = BrakeKey.EmergencyRelease, FilePath = emergencyRelease });
+						block.GetPath(SoundCfgKey.BpDecomp, trainFolder, out string bpDecomp);
+						sound.SoundElements.Add(new BrakeElement { Key = BrakeKey.BpDecomp, FilePath = bpDecomp });
 						break;
-					case "[compressor]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									CompressorKey[] keys = Enum.GetValues(typeof(CompressorKey)).OfType<CompressorKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-
-									if (keys.Any())
-									{
-										sound.SoundElements.Add(new CompressorElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
-						}
-
-						i--;
+					case SoundCfgSection.Compressor:
+						block.GetPath(SoundCfgKey.Attack, trainFolder, out string attack);
+						sound.SoundElements.Add(new CompressorElement { Key = CompressorKey.Attack, FilePath = attack });
+						block.GetPath(SoundCfgKey.Loop, trainFolder, out string loop);
+						sound.SoundElements.Add(new CompressorElement { Key = CompressorKey.Loop, FilePath = loop });
+						block.GetPath(SoundCfgKey.Release, trainFolder, out string release);
+						sound.SoundElements.Add(new CompressorElement { Key = CompressorKey.Release, FilePath = release });
 						break;
-					case "[suspension]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									SuspensionKey[] keys = Enum.GetValues(typeof(SuspensionKey)).OfType<SuspensionKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-
-									if (keys.Any())
-									{
-										sound.SoundElements.Add(new SuspensionElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
-						}
-
-						i--;
+					case SoundCfgSection.Suspension:
+						block.GetPath(SoundCfgKey.Left, trainFolder, out string springL);
+						sound.SoundElements.Add(new SuspensionElement { Key = SuspensionKey.Left, FilePath = springL });
+						block.GetPath(SoundCfgKey.Right, trainFolder, out string springR);
+						sound.SoundElements.Add(new SuspensionElement { Key = SuspensionKey.Right, FilePath = springR });
 						break;
-					case "[horn]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
+					case SoundCfgSection.Horn:
+						if (block.GetPath(SoundCfgKey.Primary, trainFolder, out string primaryLoop) || block.GetPath(SoundCfgKey.PrimaryLoop, trainFolder, out primaryLoop))
 						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
+							sound.SoundElements.Add(new PrimaryHornElement { Key = HornKey.Start, FilePath = primaryLoop });
+							if (block.GetPath(SoundCfgKey.PrimaryStart, trainFolder, out string primaryStart))
 							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									HornKey[] primaryKeys = Enum.GetValues(typeof(HornKey)).OfType<HornKey>().Where(x => x.GetStringValues().Any(y => $"Primary{y}".Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-									HornKey[] secondaryKeys = Enum.GetValues(typeof(HornKey)).OfType<HornKey>().Where(x => x.GetStringValues().Any(y => $"Secondary{y}".Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-									HornKey[] musicKeys = Enum.GetValues(typeof(HornKey)).OfType<HornKey>().Where(x => x.GetStringValues().Any(y => $"Music{y}".Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-
-									if (primaryKeys.Any())
-									{
-										sound.SoundElements.Add(new PrimaryHornElement { Key = primaryKeys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else if (secondaryKeys.Any())
-									{
-										sound.SoundElements.Add(new SecondaryHornElement { Key = secondaryKeys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else if (musicKeys.Any())
-									{
-										sound.SoundElements.Add(new MusicHornElement { Key = musicKeys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else if ("Primary".Equals(a, StringComparison.InvariantCultureIgnoreCase))
-									{
-										sound.SoundElements.Add(new PrimaryHornElement { Key = HornKey.Loop, FilePath = Path.CombineFile(basePath, b) });
-									}
-									else if ("Secondary".Equals(a, StringComparison.InvariantCultureIgnoreCase))
-									{
-										sound.SoundElements.Add(new SecondaryHornElement { Key = HornKey.Loop, FilePath = Path.CombineFile(basePath, b) });
-									}
-									else if ("Music".Equals(a, StringComparison.InvariantCultureIgnoreCase))
-									{
-										sound.SoundElements.Add(new MusicHornElement { Key = HornKey.Loop, FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
+								// FIXME: Start / end sounds not supported by TE2
+							}
+							if (block.GetPath(SoundCfgKey.PrimaryEnd, trainFolder, out string primaryEnd))
+							{
+								// FIXME: Start / end sounds not supported by TE2
+							}
+						}
+						if (block.GetPath(SoundCfgKey.Secondary, trainFolder, out string secondaryLoop) || block.GetPath(SoundCfgKey.SecondaryLoop, trainFolder, out secondaryLoop))
+						{
+							sound.SoundElements.Add(new SecondaryHornElement { Key = HornKey.Start, FilePath = secondaryLoop });
+							if (block.GetPath(SoundCfgKey.SecondaryStart, trainFolder, out string secondaryStart))
+							{
+								// FIXME: Start / end sounds not supported by TE2
+							}
+							if (block.GetPath(SoundCfgKey.SecondaryEnd, trainFolder, out string secondaryEnd))
+							{
+								// FIXME: Start / end sounds not supported by TE2
 							}
 
-							i++;
 						}
+						if (block.GetPath(SoundCfgKey.Music, trainFolder, out string musicLoop) || block.GetPath(SoundCfgKey.MusicLoop, trainFolder, out musicLoop))
+						{
+							sound.SoundElements.Add(new MusicHornElement { Key = HornKey.Start, FilePath = musicLoop });
+							if (block.GetPath(SoundCfgKey.MusicStart, trainFolder, out string musicStart))
+							{
+								// FIXME: Start / end sounds not supported by TE2
+							}
+							if (block.GetPath(SoundCfgKey.MusicEnd, trainFolder, out string musicEnd))
+							{
+								// FIXME: Start / end sounds not supported by TE2
+							}
 
-						i--;
+						}
 						break;
-					case "[door]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									DoorKey[] keys = Enum.GetValues(typeof(DoorKey)).OfType<DoorKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-
-									if (keys.Any())
-									{
-										sound.SoundElements.Add(new DoorElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
-						}
-
-						i--;
+					case SoundCfgSection.Door:
+						block.GetPath(SoundCfgKey.OpenLeft, trainFolder, out string openLeft);
+						sound.SoundElements.Add(new DoorElement { Key = DoorKey.OpenLeft, FilePath = openLeft });
+						block.GetPath(SoundCfgKey.CloseLeft, trainFolder, out string closeLeft);
+						sound.SoundElements.Add(new DoorElement { Key = DoorKey.CloseLeft, FilePath = closeLeft });
+						block.GetPath(SoundCfgKey.OpenRight, trainFolder, out string openRight);
+						sound.SoundElements.Add(new DoorElement { Key = DoorKey.OpenRight, FilePath = openRight });
+						block.GetPath(SoundCfgKey.CloseRight, trainFolder, out string closeRight);
+						sound.SoundElements.Add(new DoorElement { Key = DoorKey.CloseRight, FilePath = closeRight });
 						break;
-					case "[ats]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
+					case SoundCfgSection.ATS:
+						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var atsIndex, out var fileName))
 						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-
-									if (!int.TryParse(a, NumberStyles.Integer, culture, out int k))
-									{
-										Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-									else
-									{
-										if (k >= 0)
-										{
-											sound.SoundElements.Add(new AtsElement { Key = k, FilePath = Path.CombineFile(basePath, b) });
-										}
-										else
-										{
-											Interface.AddMessage(MessageType.Warning, false, "Index must be greater or equal to zero at line " + (i + 1).ToString(culture) + " in file " + fileName);
-										}
-									}
-								}
-							}
-
-							i++;
+							sound.SoundElements.Add(new AtsElement { Key = atsIndex, FilePath = fileName });
 						}
-
-						i--;
 						break;
-					case "[buzzer]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									BuzzerKey[] keys = Enum.GetValues(typeof(BuzzerKey)).OfType<BuzzerKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-
-									if (keys.Any())
-									{
-										sound.SoundElements.Add(new BuzzerElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
-						}
-
-						i--;
+					case SoundCfgSection.Buzzer:
+						block.GetPath(SoundCfgKey.Correct, trainFolder, out string buzzerCorrect);
+						sound.SoundElements.Add(new BuzzerElement { Key = BuzzerKey.Correct, FilePath = buzzerCorrect });
 						break;
-					case "[pilot lamp]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									PilotLampKey[] keys = Enum.GetValues(typeof(PilotLampKey)).OfType<PilotLampKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-
-									if (keys.Any())
-									{
-										sound.SoundElements.Add(new PilotLampElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
-						}
-
-						i--;
+					case SoundCfgSection.PilotLamp:
+						block.GetPath(SoundCfgKey.On, trainFolder, out string lampOn);
+						sound.SoundElements.Add(new PilotLampElement { Key = PilotLampKey.On, FilePath = lampOn });
+						block.GetPath(SoundCfgKey.Off, trainFolder, out string lampOff);
+						sound.SoundElements.Add(new PilotLampElement { Key = PilotLampKey.Off, FilePath = lampOff });
 						break;
-					case "[brake handle]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									BrakeHandleKey[] keys = Enum.GetValues(typeof(BrakeHandleKey)).OfType<BrakeHandleKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-
-									if (keys.Any())
-									{
-										sound.SoundElements.Add(new BrakeHandleElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
-						}
-
-						i--;
+					case SoundCfgSection.BrakeHandle:
+						block.GetPath(SoundCfgKey.Apply, trainFolder, out string apply);
+						sound.SoundElements.Add(new BrakeHandleElement { Key = BrakeHandleKey.Apply, FilePath = apply });
+						block.GetPath(SoundCfgKey.ApplyFast, trainFolder, out string applyFast);
+						sound.SoundElements.Add(new BrakeHandleElement { Key = BrakeHandleKey.ApplyFast, FilePath = applyFast });
+						block.GetPath(SoundCfgKey.Release, trainFolder, out string brakeRelease);
+						sound.SoundElements.Add(new BrakeHandleElement { Key = BrakeHandleKey.Release, FilePath = brakeRelease });
+						block.GetPath(SoundCfgKey.ReleaseFast, trainFolder, out string brakeReleaseFast);
+						sound.SoundElements.Add(new BrakeHandleElement { Key = BrakeHandleKey.ReleaseFast, FilePath = brakeReleaseFast });
+						block.GetPath(SoundCfgKey.Min, trainFolder, out string brakeMin);
+						sound.SoundElements.Add(new BrakeHandleElement { Key = BrakeHandleKey.Min, FilePath = brakeMin });
+						block.GetPath(SoundCfgKey.Max, trainFolder, out string brakeMax);
+						sound.SoundElements.Add(new BrakeHandleElement { Key = BrakeHandleKey.Max, FilePath = brakeMax });
 						break;
-					case "[master controller]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									MasterControllerKey[] keys = Enum.GetValues(typeof(MasterControllerKey)).OfType<MasterControllerKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-
-									if (keys.Any())
-									{
-										sound.SoundElements.Add(new MasterControllerElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
-						}
-
-						i--;
+					case SoundCfgSection.MasterController:
+						block.GetPath(SoundCfgKey.Up, trainFolder, out string up);
+						sound.SoundElements.Add(new MasterControllerElement { Key = MasterControllerKey.Up, FilePath = up });
+						block.GetPath(SoundCfgKey.UpFast, trainFolder, out string upFast);
+						sound.SoundElements.Add(new MasterControllerElement { Key = MasterControllerKey.UpFast, FilePath = upFast });
+						block.GetPath(SoundCfgKey.Down, trainFolder, out string down);
+						sound.SoundElements.Add(new MasterControllerElement { Key = MasterControllerKey.Down, FilePath = down });
+						block.GetPath(SoundCfgKey.DownFast, trainFolder, out string downFast);
+						sound.SoundElements.Add(new MasterControllerElement { Key = MasterControllerKey.DownFast, FilePath = downFast });
+						block.GetPath(SoundCfgKey.Min, trainFolder, out string powerMin);
+						sound.SoundElements.Add(new MasterControllerElement { Key = MasterControllerKey.Min, FilePath = powerMin });
+						block.GetPath(SoundCfgKey.Max, trainFolder, out string powerMax);
+						sound.SoundElements.Add(new MasterControllerElement { Key = MasterControllerKey.Max, FilePath = powerMax });
 						break;
-					case "[reverser]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									ReverserKey[] keys = Enum.GetValues(typeof(ReverserKey)).OfType<ReverserKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-
-									if (keys.Any())
-									{
-										sound.SoundElements.Add(new ReverserElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
-						}
-
-						i--;
+					case SoundCfgSection.Reverser:
+						block.GetPath(SoundCfgKey.On, trainFolder, out string reverserOn);
+						sound.SoundElements.Add(new ReverserElement { Key = ReverserKey.On, FilePath = reverserOn });
+						block.GetPath(SoundCfgKey.Off, trainFolder, out string reverserOff);
+						sound.SoundElements.Add(new ReverserElement { Key = ReverserKey.Off, FilePath = reverserOff });
 						break;
-					case "[breaker]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									BreakerKey[] keys = Enum.GetValues(typeof(BreakerKey)).OfType<BreakerKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-
-									if (keys.Any())
-									{
-										sound.SoundElements.Add(new BreakerElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
-						}
-
-						i--;
+					case SoundCfgSection.Breaker:
+						block.GetPath(SoundCfgKey.On, trainFolder, out string breakerOn);
+						sound.SoundElements.Add(new BreakerElement { Key = BreakerKey.On, FilePath = breakerOn });
+						block.GetPath(SoundCfgKey.Off, trainFolder, out string breakerOff);
+						sound.SoundElements.Add(new BreakerElement { Key = BreakerKey.Off, FilePath = breakerOff });
 						break;
-					case "[others]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									OthersKey[] keys = Enum.GetValues(typeof(OthersKey)).OfType<OthersKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-
-									if (keys.Any())
-									{
-										sound.SoundElements.Add(new OthersElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
-						}
-
-						i--;
+					case SoundCfgSection.Others:
+						block.GetPath(SoundCfgKey.Noise, trainFolder, out string noise);
+						sound.SoundElements.Add(new OthersElement { Key = OthersKey.Noise, FilePath = noise });
+						block.GetPath(SoundCfgKey.Shoe, trainFolder, out string rub);
+						sound.SoundElements.Add(new OthersElement { Key = OthersKey.Shoe, FilePath = rub });
+						block.GetPath(SoundCfgKey.Halt, trainFolder, out string halt);
+						sound.SoundElements.Add(new OthersElement { Key = OthersKey.Halt, FilePath = halt });
 						break;
-					case "[requeststop]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
-						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-									RequestStopKey[] keys = Enum.GetValues(typeof(RequestStopKey)).OfType<RequestStopKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-
-									if (keys.Any())
-									{
-										sound.SoundElements.Add(new RequestStopElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else
-									{
-										Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-								}
-							}
-
-							i++;
-						}
-
-						i--;
+					case SoundCfgSection.RequestStop:
+						block.GetPath(SoundCfgKey.Stop, trainFolder, out string requestStop);
+						sound.SoundElements.Add(new RequestStopElement { Key = RequestStopKey.Stop, FilePath = requestStop });
+						block.GetPath(SoundCfgKey.Pass, trainFolder, out string requestPass);
+						sound.SoundElements.Add(new RequestStopElement { Key = RequestStopKey.Pass, FilePath = requestPass });
+						block.GetPath(SoundCfgKey.Ignored, trainFolder, out string requestIgnored);
+						sound.SoundElements.Add(new RequestStopElement { Key = RequestStopKey.Ignored, FilePath = requestIgnored });
 						break;
-					case "[touch]":
-						i++;
-
-						while (i < lines.Count && !lines[i].StartsWith("[", StringComparison.Ordinal))
+					case SoundCfgSection.Touch:
+						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var touchIndex, out var fileName))
 						{
-							int j = lines[i].IndexOf("=", StringComparison.Ordinal);
-
-							if (j >= 0)
-							{
-								string a = lines[i].Substring(0, j).TrimEnd();
-								string b = lines[i].Substring(j + 1).TrimStart();
-
-								if (b.Length == 0 || Path.ContainsInvalidChars(b))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(culture)} in file {fileName}");
-								}
-								else
-								{
-
-									if (!int.TryParse(a, NumberStyles.Integer, culture, out int k))
-									{
-										Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(culture)} in file {fileName}");
-									}
-									else
-									{
-										if (k >= 0)
-										{
-											sound.SoundElements.Add(new TouchElement { Key = k, FilePath = Path.CombineFile(basePath, b) });
-										}
-										else
-										{
-											Interface.AddMessage(MessageType.Warning, false, "Index must be greater or equal to zero at line " + (i + 1).ToString(culture) + " in file " + fileName);
-										}
-									}
-								}
-							}
-
-							i++;
+							sound.SoundElements.Add(new TouchElement { Key = touchIndex, FilePath = fileName });
 						}
-
-						i--;
 						break;
 				}
 			}
-
 			sound.SoundElements = new ObservableCollection<SoundElement>(sound.SoundElements.GroupBy(x => new { Type = x.GetType(), x.Key }).Select(x => x.First()));
 		}
 	}

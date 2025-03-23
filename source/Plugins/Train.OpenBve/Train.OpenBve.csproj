@@ -64,12 +64,10 @@
     <Compile Include="Panel\PanelXmlParser.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sound\Enums\SoundCfgKey.cs" />
     <Compile Include="Sound\SoundCfg.Ats.cs" />
     <Compile Include="Sound\SoundCfg.Base.cs" />
     <Compile Include="Sound\SoundCfg.Bve2.cs" />
     <Compile Include="Sound\SoundCfg.Bve4.cs" />
-    <Compile Include="Sound\Enums\SoundCfgSection.cs" />
     <Compile Include="Sound\SoundCfg.Xml.cs" />
     <Compile Include="Train\BVE5\MotorSoundTable.cs" />
     <Compile Include="Train\BVE\ExtensionsCfgParser.cs" />

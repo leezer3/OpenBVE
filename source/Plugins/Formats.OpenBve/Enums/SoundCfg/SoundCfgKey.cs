@@ -1,8 +1,7 @@
-﻿// ReSharper disable UnusedMember.Global
-namespace Train.OpenBve
+﻿namespace Formats.OpenBve
 {
 	/// <summary>The keys in a sound.cfg file</summary>
-	internal enum SoundCfgKey
+	public enum SoundCfgKey
 	{
 		Unknown = 0,
 		// brake
@@ -68,6 +67,10 @@ namespace Train.OpenBve
 		RainDrop,
 		WetWipe,
 		DryWipe,
-		Switch
+		Switch,
+		// request stop
+		Stop,
+		Pass,
+		Ignored
 	}
 }

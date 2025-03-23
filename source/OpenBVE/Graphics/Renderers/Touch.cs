@@ -438,9 +438,12 @@ namespace OpenBve.Graphics.Renderers
 					// Force a show / hide of the car sections to ensure that the touch stack is correctly updated
 					Car.ChangeCarSection(CarSectionType.Interior, false, true);
 
-					foreach (var index in TouchElement.SoundIndices.Where(x => x >= 0 && Car.Sounds.Touch != null &&  x < Car.Sounds.Touch.Length))
+					foreach (var index in TouchElement.SoundIndices)
 					{
-						Car.Sounds.Touch[index].Play(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar], false);
+						if (Car.Sounds.Touch.ContainsKey(index))
+						{
+							Car.Sounds.Touch[index].Play(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar], false);
+						}		
 					}
 				}
 
