@@ -72,8 +72,6 @@
     <Compile Include="Sound\Enums\SoundCfgSection.cs" />
     <Compile Include="Sound\SoundCfg.Xml.cs" />
     <Compile Include="Train\BVE5\MotorSoundTable.cs" />
-    <Compile Include="Train\BVE\Enums\ExtensionCfgKey.cs" />
-    <Compile Include="Train\BVE\Enums\ExtensionCfgSection.cs" />
     <Compile Include="Train\BVE\ExtensionsCfgParser.cs" />
     <Compile Include="Train\BVE\TrainDatParser.cs" />
     <Compile Include="Train\BVE\TrainDatparser.Formats.cs" />
