@@ -91,7 +91,7 @@ namespace Train.OpenBve
 							}
 
 							bool definedLength = false;
-							if (block.GetValue(ExtensionCfgKey.Length, out double carLength))
+							if (block.GetValue(ExtensionCfgKey.Length, out double carLength) && carLength > 0)
 							{
 								Train.Cars[block.Index].Length = carLength;
 								Train.Cars[block.Index].BeaconReceiverPosition = 0.5 * carLength;
