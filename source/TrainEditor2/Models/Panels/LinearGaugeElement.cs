@@ -152,7 +152,7 @@ namespace TrainEditor2.Models.Panels
 			Utilities.WriteKey(builder, "Location", LocationX, LocationY);
 			Utilities.WriteKey(builder, "Minimum", Minimum);
 			Utilities.WriteKey(builder, "Maximum", Maximum);
-			Utilities.WriteKey(builder, "Location", LocationX, LocationY);
+			Utilities.WriteKey(builder, "Direction", DirectionX, DirectionY);
 			Utilities.WriteKey(builder, "DaytimeImage", Utilities.MakeRelativePath(fileName, DaytimeImage));
 			Utilities.WriteKey(builder, "NighttimeImage", Utilities.MakeRelativePath(fileName, NighttimeImage));
 			Utilities.WriteKey(builder, "Width", Width);
