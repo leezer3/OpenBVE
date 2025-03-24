@@ -40,11 +40,8 @@ namespace Plugin
 		internal static StaticObject ReadObject(string fileName)
 		{
 			currentFolder = Path.GetDirectoryName(fileName);
-
-#if !DEBUG
 			try
 			{
-#endif
 				ObjFileParser parser = new ObjFileParser(System.IO.File.ReadAllLines(fileName), null, System.IO.Path.GetFileNameWithoutExtension(fileName), fileName);
 				Model model = parser.GetModel();
 
@@ -157,14 +154,12 @@ namespace Plugin
 				}
 				obj.Mesh.CreateNormals();
 				return obj;
-#if !DEBUG
 			}
 			catch (Exception e)
 			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, e.Message + " in " + FileName);
+				Plugin.currentHost.AddMessage(MessageType.Error, false, e.Message + " in " + fileName);
 				return null;
 			}
-#endif
 		}
 	}
 }
