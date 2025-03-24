@@ -11,15 +11,17 @@ namespace CsvRwRouteParser
 		internal readonly int PrimaryRail;
 		internal readonly int SecondaryRail;
 		internal readonly int Type;
+		internal readonly string FileName;
 		
-		internal Crack(int primaryRail, int secondaryRail, int type)
+		internal Crack(int primaryRail, int secondaryRail, int type, string fileName)
 		{
 			PrimaryRail = primaryRail;
 			SecondaryRail = secondaryRail;
 			Type = type;
+			FileName = fileName;
 		}
 
-		internal void Create(int CurrentRail, Transformation RailTransformation, Vector3 pos, Block CurrentBlock, Block NextBlock, StructureData Structure, double StartingDistance, double EndingDistance, string FileName)
+		internal void Create(int CurrentRail, Transformation RailTransformation, Vector3 pos, Block CurrentBlock, Block NextBlock, StructureData Structure, double StartingDistance, double EndingDistance)
 		{
 			if (PrimaryRail != CurrentRail)
 			{

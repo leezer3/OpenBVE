@@ -629,21 +629,21 @@ namespace CsvRwRouteParser
 			}
 		}
 
-		private void PreprocessSortByTrackPosition(double[] UnitFactors, ref Expression[] Expressions) {
+		private void PreprocessSortByTrackPosition(double[] unitFactors, ref Expression[] Expressions) {
 			PositionedExpression[] p = new PositionedExpression[Expressions.Length];
 			int n = 0;
 			double a = -1.0;
-			bool NumberCheck = !IsRW;
+			bool numberCheck = !IsRW;
 			for (int i = 0; i < Expressions.Length; i++) {
 				if (IsRW) {
 					// only check for track positions in the railway section for RW routes
 					if (Expressions[i].Text.StartsWith("[", StringComparison.Ordinal) && Expressions[i].Text.EndsWith("]", StringComparison.Ordinal))
 					{
 						string s = Expressions[i].Text.Substring(1, Expressions[i].Text.Length - 2).Trim();
-						NumberCheck = string.Compare(s, "Railway", StringComparison.OrdinalIgnoreCase) == 0;
+						numberCheck = string.Compare(s, "Railway", StringComparison.OrdinalIgnoreCase) == 0;
 					}
 				}
-				if (NumberCheck && NumberFormats.TryParseDouble(Expressions[i].Text, UnitFactors, out double x)) {
+				if (numberCheck && NumberFormats.TryParseDouble(Expressions[i].Text, unitFactors, out double x)) {
 					x += Expressions[i].TrackPositionOffset;
 					if (x >= 0.0) {
 						if (Plugin.CurrentOptions.EnableBveTsHacks)
@@ -692,7 +692,7 @@ namespace CsvRwRouteParser
 			for (int i = 0; i < n; i++) {
 				if (p[i].TrackPosition != a) {
 					a = p[i].TrackPosition;
-					e[m] = new Expression(string.Empty, (a / UnitFactors[UnitFactors.Length - 1]).ToString(Culture), -1, -1, -1);
+					e[m] = new Expression(string.Empty, (a / unitFactors[unitFactors.Length - 1]).ToString(Culture), -1, -1, -1);
 					m++;
 				}
 				e[m] = p[i].Expression;

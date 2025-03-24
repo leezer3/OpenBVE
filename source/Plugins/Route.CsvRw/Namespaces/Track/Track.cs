@@ -1920,7 +1920,7 @@ namespace CsvRwRouteParser
 
 							int n = Data.Blocks[BlockIndex].Forms.Length;
 							Array.Resize(ref Data.Blocks[BlockIndex].Forms, n + 1);
-							Data.Blocks[BlockIndex].Forms[n] = new Form(idx1, idx2, pf, roof, Data.Structure);
+							Data.Blocks[BlockIndex].Forms[n] = new Form(idx1, idx2, pf, roof, Data.Structure, Expression.File);
 						}
 					}
 				}
@@ -2509,7 +2509,7 @@ namespace CsvRwRouteParser
 
 								int n = Data.Blocks[BlockIndex].Cracks.Length;
 								Array.Resize(ref Data.Blocks[BlockIndex].Cracks, n + 1);
-								Data.Blocks[BlockIndex].Cracks[n] = new Crack(idx1, idx2, sttype);
+								Data.Blocks[BlockIndex].Cracks[n] = new Crack(idx1, idx2, sttype, Expression.File);
 							}
 						}
 					}

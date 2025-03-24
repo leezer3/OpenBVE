@@ -847,20 +847,20 @@ namespace CsvRwRouteParser
 								// primary rail
 								if (Data.Blocks[i].Forms[k].PrimaryRail == railKey)
 								{
-									Data.Blocks[i].Forms[k].CreatePrimaryRail(Data.Blocks[i], Data.Blocks[i + 1], pos, RailTransformation, StartingDistance, EndingDistance, FileName);
+									Data.Blocks[i].Forms[k].CreatePrimaryRail(Data.Blocks[i], Data.Blocks[i + 1], pos, RailTransformation, StartingDistance, EndingDistance);
 								}
 
 								// secondary rail
 								if (Data.Blocks[i].Forms[k].SecondaryRail == railKey)
 								{
-									Data.Blocks[i].Forms[k].CreateSecondaryRail(Data.Blocks[i], pos, RailTransformation, StartingDistance, EndingDistance, FileName);
+									Data.Blocks[i].Forms[k].CreateSecondaryRail(Data.Blocks[i], pos, RailTransformation, StartingDistance, EndingDistance);
 								}
 							}
 
 							// cracks
 							for (int k = 0; k < Data.Blocks[i].Cracks.Length; k++)
 							{
-								Data.Blocks[i].Cracks[k].Create(railKey, RailTransformation, pos, Data.Blocks[i], Data.Blocks[i + 1], Data.Structure, StartingDistance, EndingDistance, FileName);
+								Data.Blocks[i].Cracks[k].Create(railKey, RailTransformation, pos, Data.Blocks[i], Data.Blocks[i + 1], Data.Structure, StartingDistance, EndingDistance);
 							}
 
 							// free objects
