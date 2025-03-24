@@ -50,17 +50,22 @@ namespace Plugin
 {
 	partial class MsTsShapeParser
 	{
-		struct Texture
+		class Texture
 		{
-			internal string fileName;
+			internal readonly string fileName;
 			internal int filterMode;
 			internal int mipmapLODBias;
 			internal Color32 borderColor;
+
+			internal Texture(string file)
+			{
+				fileName = file;
+			}
 		}
 
-		struct PrimitiveState
+		class PrimitiveState
 		{
-			internal string Name;
+			internal readonly string Name;
 			internal UInt32 Flags;
 			internal int Shader;
 			internal int[] Textures;
@@ -73,23 +78,40 @@ namespace Plugin
 			internal int alphaTestMode;
 			internal int lightCfgIdx;
 			internal int zBufferMode;
+
+			internal PrimitiveState(string name)
+			{
+				Name = name;
+			}
 		}
 
-		struct VertexStates
+		class VertexStates
 		{
 			internal uint flags; //Describes specular and some other stuff, unlikely to be supported
-			internal int hierarchyID; //The hierarchy ID of the top-level transform matrix, remember that they chain
+			/// <summary>The hierarchy ID of the top-level transform matrix</summary>
+			/// <remarks>Remmeber that matricies transform down a chain</remarks>
+			internal readonly int hierarchyID;
 			internal int lightingMatrixID;
 			internal int lightingConfigIdx;
 			internal uint lightingFlags;
 			internal int matrix2ID; //Optional
+
+			internal VertexStates(int hierarchy)
+			{
+				hierarchyID = hierarchy;
+			}
 		}
 
-		struct VertexSet
+		class VertexSet
 		{
-			internal int hierarchyIndex;
+			internal readonly int hierarchyIndex;
 			internal int startVertex;
 			internal int numVerticies;
+
+			internal VertexSet(int hierarchy)
+			{
+				hierarchyIndex = hierarchy;
+			}
 		}
 
 
@@ -372,8 +394,7 @@ namespace Plugin
 
 					for (int i = 0; i < faces.Count; i++)
 					{
-						Object.Mesh.Faces[i] = new MeshFace(faces[i].Vertices);
-						Object.Mesh.Faces[i].Material = (ushort)faces[i].Material;
+						Object.Mesh.Faces[i] = new MeshFace(faces[i].Vertices, (ushort)faces[i].Material);
 						for (int k = 0; k < faces[i].Vertices.Length; k++)
 						{
 							Object.Mesh.Faces[i].Vertices[k].Normal = verticies[faces[i].Vertices[k]].Normal;
@@ -395,8 +416,7 @@ namespace Plugin
 						Object.Mesh.Materials[mm + i].BlendMode = MeshMaterialBlendMode.Normal;
 						if (materials[i].DaytimeTexture != null)
 						{
-							OpenBveApi.Textures.Texture tday;
-							Plugin.currentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out tday);
+							Plugin.currentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out OpenBveApi.Textures.Texture tday);
 							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 						}
 						else
@@ -719,7 +739,7 @@ namespace Plugin
 
 				case KujuTokenID.vtx_state:
 					flags = block.ReadUInt32();
-					int matrix1 = block.ReadInt32();
+					VertexStates vs = new VertexStates(block.ReadInt32());
 					int lightMaterialIdx = block.ReadInt32();
 					int lightStateCfgIdx = block.ReadInt32();
 					uint lightFlags = block.ReadUInt32();
@@ -729,9 +749,7 @@ namespace Plugin
 						matrix2 = block.ReadInt32();
 					}
 
-					VertexStates vs = new VertexStates();
 					vs.flags = flags;
-					vs.hierarchyID = matrix1;
 					vs.lightingMatrixID = lightMaterialIdx;
 					vs.lightingConfigIdx = lightStateCfgIdx;
 					vs.lightingFlags = lightFlags;
@@ -764,8 +782,7 @@ namespace Plugin
 					int alphaTestMode = block.ReadInt32();
 					int lightCfgIdx = block.ReadInt32();
 					int zBufferMode = block.ReadInt32();
-					PrimitiveState p = new PrimitiveState();
-					p.Name = block.Label;
+					PrimitiveState p = new PrimitiveState(block.Label);
 					p.Flags = flags;
 					p.Shader = shader;
 					p.Textures = texIdxs;
@@ -806,7 +823,7 @@ namespace Plugin
 
 					break;
 				case KujuTokenID.texture:
-					int imageIDX = block.ReadInt32();
+					Texture t = new Texture(shape.images[block.ReadInt32()]);
 					int filterMode = (int)block.ReadUInt32();
 					float mipmapLODBias = block.ReadSingle();
 					uint borderColor = 0xff000000U;
@@ -821,8 +838,6 @@ namespace Plugin
 					g = (borderColor / 256) % 256;
 					b = (borderColor / 256 / 256) % 256;
 					a = (borderColor / 256 / 256 / 256) % 256;
-					Texture t = new Texture();
-					t.fileName = shape.images[imageIDX];
 					t.filterMode = filterMode;
 					t.mipmapLODBias = (int)mipmapLODBias;
 					t.borderColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
@@ -973,11 +988,13 @@ namespace Plugin
 					}
 					break;
 				case KujuTokenID.matrix:
-					Matrix4D currentMatrix = new Matrix4D();
-					currentMatrix.Row0 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
-					currentMatrix.Row1 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
-					currentMatrix.Row2 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
-					currentMatrix.Row3 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
+					Matrix4D currentMatrix = new Matrix4D
+					{
+						Row0 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0),
+						Row1 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0),
+						Row2 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0),
+						Row3 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0)
+					};
 					shape.Matricies.Add(new KeyframeMatrix(newResult, block.Label, currentMatrix));
 					break;
 				case KujuTokenID.normals:
@@ -1213,11 +1230,9 @@ namespace Plugin
 					break;
 				case KujuTokenID.vertex_set:
 					int vertexStateIndex = block.ReadInt32(); //Index to the vtx_states member
-					int hierarchy = shape.vtx_states[vertexStateIndex].hierarchyID; //Now pull the hierachy ID out
+					VertexSet vts = new VertexSet(shape.vtx_states[vertexStateIndex].hierarchyID); //Now pull the hierachy ID out
 					int setStartVertexIndex = block.ReadInt32(); //First vertex
 					int setVertexCount = block.ReadInt32(); //Total number of vert
-					VertexSet vts = new VertexSet();
-					vts.hierarchyIndex = hierarchy;
 					vts.startVertex = setStartVertexIndex;
 					vts.numVerticies = setVertexCount;
 					currentLOD.subObjects[currentLOD.subObjects.Count - 1].vertexSets.Add(vts);
