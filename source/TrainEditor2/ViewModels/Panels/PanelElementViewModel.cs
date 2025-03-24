@@ -29,7 +29,7 @@ namespace TrainEditor2.ViewModels.Panels
 
 			LocationX = element
 				.ToReactivePropertyAsSynchronized(
-					x => x.LocationX,
+					x => x.Location.X,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
@@ -44,7 +44,7 @@ namespace TrainEditor2.ViewModels.Panels
 
 			LocationY = element
 				.ToReactivePropertyAsSynchronized(
-					x => x.LocationY,
+					x => x.Location.Y,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true

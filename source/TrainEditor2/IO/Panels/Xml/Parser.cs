@@ -219,7 +219,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							{
 								string a = value.Substring(0, k).TrimEnd();
 								string b = value.Substring(k + 1).TrimStart();
-
+								Vector2 center = This.Center;
 								if (a.Any())
 								{
 
@@ -228,7 +228,7 @@ namespace TrainEditor2.IO.Panels.Xml
 										Interface.AddMessage(MessageType.Error, false, $"X is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
 
-									This.CenterX = x;
+									center.X = x;
 								}
 
 								if (b.Any())
@@ -239,8 +239,10 @@ namespace TrainEditor2.IO.Panels.Xml
 										Interface.AddMessage(MessageType.Error, false, $"Y is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
 
-									This.CenterY = y;
+									center.Y = y;
 								}
+
+								This.Center = center;
 							}
 							else
 							{
@@ -259,6 +261,7 @@ namespace TrainEditor2.IO.Panels.Xml
 								string a = value.Substring(0, k).TrimEnd();
 								string b = value.Substring(k + 1).TrimStart();
 
+								Vector2 origin = This.Origin;
 								if (a.Any())
 								{
 
@@ -267,7 +270,7 @@ namespace TrainEditor2.IO.Panels.Xml
 										Interface.AddMessage(MessageType.Error, false, $"X is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
 
-									This.OriginX = x;
+									origin.X = x;
 								}
 
 								if (b.Any())
@@ -278,8 +281,10 @@ namespace TrainEditor2.IO.Panels.Xml
 										Interface.AddMessage(MessageType.Error, false, $"Y is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
 
-									This.OriginY = y;
+									origin.Y = y;
 								}
+
+								This.Origin = origin;
 							}
 							else
 							{
@@ -390,6 +395,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							string a = value.Substring(0, k).TrimEnd();
 							string b = value.Substring(k + 1).TrimStart();
 
+							Vector2 location = pilotLamp.Location;
 							if (a.Any())
 							{
 
@@ -398,7 +404,7 @@ namespace TrainEditor2.IO.Panels.Xml
 									Interface.AddMessage(MessageType.Error, false, $"Left is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 
-								pilotLamp.LocationX = x;
+								location.X = x;
 							}
 
 							if (b.Any())
@@ -409,8 +415,10 @@ namespace TrainEditor2.IO.Panels.Xml
 									Interface.AddMessage(MessageType.Error, false, $"Top is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 
-								pilotLamp.LocationY = y;
+								location.Y = y;
 							}
+
+							pilotLamp.Location = location;
 						}
 						else
 						{
@@ -513,6 +521,7 @@ namespace TrainEditor2.IO.Panels.Xml
 								string a = value.Substring(0, k).TrimEnd();
 								string b = value.Substring(k + 1).TrimStart();
 
+								Vector2 location = needle.Location;
 								if (a.Any())
 								{
 
@@ -521,7 +530,7 @@ namespace TrainEditor2.IO.Panels.Xml
 										Interface.AddMessage(MessageType.Error, false, $"CenterX is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
 
-									needle.LocationX = x;
+									location.X = x;
 								}
 
 								if (b.Any())
@@ -532,8 +541,10 @@ namespace TrainEditor2.IO.Panels.Xml
 										Interface.AddMessage(MessageType.Error, false, $"CenterY is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
 
-									needle.LocationY = y;
+									location.Y = y;
 								}
+
+								needle.Location = location;
 							}
 							else
 							{
@@ -634,6 +645,7 @@ namespace TrainEditor2.IO.Panels.Xml
 								string a = value.Substring(0, k).TrimEnd();
 								string b = value.Substring(k + 1).TrimStart();
 
+								Vector2 origin = needle.Origin;
 								if (a.Any())
 								{
 
@@ -642,7 +654,7 @@ namespace TrainEditor2.IO.Panels.Xml
 										Interface.AddMessage(MessageType.Error, false, $"X is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
 
-									needle.OriginX = x;
+									origin.X = x;
 								}
 
 								if (b.Any())
@@ -651,12 +663,13 @@ namespace TrainEditor2.IO.Panels.Xml
 									if (!NumberFormats.TryParseDoubleVb6(b, out double y))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"Y is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-										needle.OriginX = -needle.OriginX;
+										origin.X = -origin.X;
 									}
 
-									needle.OriginY = y;
+									origin.Y = y;
 								}
 
+								needle.Origin = origin;
 								needle.DefinedOrigin = true;
 							}
 							else
@@ -808,6 +821,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							string a = value.Substring(0, k).TrimEnd();
 							string b = value.Substring(k + 1).TrimStart();
 
+							Vector2 location = digitalNumber.Location;
 							if (a.Any())
 							{
 
@@ -816,7 +830,7 @@ namespace TrainEditor2.IO.Panels.Xml
 									Interface.AddMessage(MessageType.Error, false, $"Left is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 
-								digitalNumber.LocationX = x;
+								location.X = x;
 							}
 
 							if (b.Any())
@@ -827,8 +841,10 @@ namespace TrainEditor2.IO.Panels.Xml
 									Interface.AddMessage(MessageType.Error, false, $"Top is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 
-								digitalNumber.LocationY = y;
+								location.Y = y;
 							}
+
+							digitalNumber.Location = location;
 						}
 						else
 						{
@@ -946,6 +962,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							string a = value.Substring(0, k).TrimEnd();
 							string b = value.Substring(k + 1).TrimStart();
 
+							Vector2 location = digitalGauge.Location;
 							if (a.Any())
 							{
 
@@ -954,7 +971,7 @@ namespace TrainEditor2.IO.Panels.Xml
 									Interface.AddMessage(MessageType.Error, false, $"CenterX is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 
-								digitalGauge.LocationX = x;
+								location.X = x;
 							}
 
 							if (b.Any())
@@ -965,8 +982,10 @@ namespace TrainEditor2.IO.Panels.Xml
 									Interface.AddMessage(MessageType.Error, false, $"CenterY is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 
-								digitalGauge.LocationY = y;
+								location.Y = y;
 							}
+
+							digitalGauge.Location = location;
 						}
 						else
 						{
@@ -1106,6 +1125,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							string a = value.Substring(0, k).TrimEnd();
 							string b = value.Substring(k + 1).TrimStart();
 
+							Vector2 location = linearGauge.Location;
 							if (a.Any())
 							{
 
@@ -1114,7 +1134,7 @@ namespace TrainEditor2.IO.Panels.Xml
 									Interface.AddMessage(MessageType.Error, false, $"Left is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 
-								linearGauge.LocationX = x;
+								location.X = x;
 							}
 
 							if (b.Any())
@@ -1125,8 +1145,10 @@ namespace TrainEditor2.IO.Panels.Xml
 									Interface.AddMessage(MessageType.Error, false, $"Top is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 
-								linearGauge.LocationY = y;
+								location.Y = y;
 							}
+
+							linearGauge.Location = location;
 						}
 						else
 						{
@@ -1176,17 +1198,18 @@ namespace TrainEditor2.IO.Panels.Xml
 							if (s.Length == 2)
 							{
 
+								Vector2 direction = linearGauge.Direction;
 								if (!NumberFormats.TryParseIntVb6(s[0], out int x))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"X is invalid in LinearGauge Direction at line {lineNumber.ToString(culture)} in file {fileName}");
 								}
 
-								linearGauge.DirectionX = x;
+								direction.X = x;
 
-								if (linearGauge.DirectionX < -1 || linearGauge.DirectionX > 1)
+								if (linearGauge.Direction.X < -1 || linearGauge.Direction.X > 1)
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Value is expected to be -1, 0 or 1  in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-									linearGauge.DirectionX = 0;
+									direction.X = 0;
 								}
 
 								if (!NumberFormats.TryParseIntVb6(s[1], out int y))
@@ -1194,13 +1217,15 @@ namespace TrainEditor2.IO.Panels.Xml
 									Interface.AddMessage(MessageType.Error, false, $"Y is invalid in  LinearGauge Direction at line {lineNumber.ToString(culture)} in file {fileName}");
 								}
 
-								linearGauge.DirectionY = y;
+								direction.Y = y;
 
-								if (linearGauge.DirectionY < -1 || linearGauge.DirectionY > 1)
+								if (linearGauge.Direction.Y < -1 || linearGauge.Direction.Y > 1)
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Value is expected to be -1, 0 or 1  in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-									linearGauge.DirectionY = 0;
+									direction.Y = 0;
 								}
+
+								linearGauge.Direction = direction;
 							}
 							else
 							{
@@ -1299,6 +1324,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							string a = value.Substring(0, k).TrimEnd();
 							string b = value.Substring(k + 1).TrimStart();
 
+							Vector2 location = timetable.Location;
 							if (a.Any())
 							{
 
@@ -1307,7 +1333,7 @@ namespace TrainEditor2.IO.Panels.Xml
 									Interface.AddMessage(MessageType.Error, false, $"X is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 
-								timetable.LocationX = x;
+								location.X = x;
 							}
 
 							if (b.Any())
@@ -1318,8 +1344,10 @@ namespace TrainEditor2.IO.Panels.Xml
 									Interface.AddMessage(MessageType.Error, false, $"Y is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 
-								timetable.LocationY = y;
+								location.Y = y;
 							}
+							
+							timetable.Location = location;
 						}
 						else
 						{
@@ -1413,6 +1441,7 @@ namespace TrainEditor2.IO.Panels.Xml
 								string a = value.Substring(0, k).TrimEnd();
 								string b = value.Substring(k + 1).TrimStart();
 
+								Vector2 location = touch.Location;
 								if (a.Any())
 								{
 
@@ -1421,7 +1450,7 @@ namespace TrainEditor2.IO.Panels.Xml
 										Interface.AddMessage(MessageType.Error, false, $"Left is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
 
-									touch.LocationX = x;
+									location.X = x;
 								}
 
 								if (b.Any())
@@ -1432,8 +1461,10 @@ namespace TrainEditor2.IO.Panels.Xml
 										Interface.AddMessage(MessageType.Error, false, $"Top is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
 
-									touch.LocationY = y;
+									location.Y = y;
 								}
+
+								touch.Location = location;
 							}
 							else
 							{
@@ -1450,6 +1481,7 @@ namespace TrainEditor2.IO.Panels.Xml
 								string a = value.Substring(0, k).TrimEnd();
 								string b = value.Substring(k + 1).TrimStart();
 
+								Vector2 size = touch.Size;
 								if (a.Any())
 								{
 
@@ -1458,7 +1490,7 @@ namespace TrainEditor2.IO.Panels.Xml
 										Interface.AddMessage(MessageType.Error, false, $"Left is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
 
-									touch.SizeX = x;
+									size.X = x;
 								}
 
 								if (b.Any())
@@ -1469,8 +1501,10 @@ namespace TrainEditor2.IO.Panels.Xml
 										Interface.AddMessage(MessageType.Error, false, $"Top is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									}
 
-									touch.SizeY = y;
+									size.Y = y;
 								}
+
+								touch.Size = size;
 							}
 							else
 							{

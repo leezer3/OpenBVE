@@ -168,7 +168,7 @@ namespace TrainEditor2.ViewModels.Panels
 
 			LocationX = touch
 				.ToReactivePropertyAsSynchronized(
-					x => x.LocationX,
+					x => x.Location.X,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
@@ -183,7 +183,7 @@ namespace TrainEditor2.ViewModels.Panels
 
 			LocationY = touch
 				.ToReactivePropertyAsSynchronized(
-					x => x.LocationY,
+					x => x.Location.Y,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
@@ -198,7 +198,7 @@ namespace TrainEditor2.ViewModels.Panels
 
 			SizeX = touch
 				.ToReactivePropertyAsSynchronized(
-					x => x.SizeX,
+					x => x.Size.X,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
@@ -213,7 +213,7 @@ namespace TrainEditor2.ViewModels.Panels
 
 			SizeY = touch
 				.ToReactivePropertyAsSynchronized(
-					x => x.SizeY,
+					x => x.Size.Y,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true

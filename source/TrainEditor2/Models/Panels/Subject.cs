@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Formats.OpenBve;
 using OpenBveApi.Interface;
 using Prism.Mvvm;
 using TrainEditor2.Systems;
@@ -143,6 +144,11 @@ namespace TrainEditor2.Models.Panels
 		public object Clone()
 		{
 			return MemberwiseClone();
+		}
+
+		internal static Subject StringToSubject(string value, Panel2Sections errorLocation)
+		{
+			return StringToSubject(value, errorLocation.ToString());
 		}
 
 		internal static Subject StringToSubject(string value, string errorLocation)

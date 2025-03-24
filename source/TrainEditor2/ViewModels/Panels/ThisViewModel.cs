@@ -173,7 +173,7 @@ namespace TrainEditor2.ViewModels.Panels
 
 			CenterX = _this
 				.ToReactivePropertyAsSynchronized(
-					x => x.CenterX,
+					x => x.Center.X,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
@@ -188,7 +188,7 @@ namespace TrainEditor2.ViewModels.Panels
 
 			CenterY = _this
 				.ToReactivePropertyAsSynchronized(
-					x => x.CenterY,
+					x => x.Center.Y,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
@@ -203,7 +203,7 @@ namespace TrainEditor2.ViewModels.Panels
 
 			OriginX = _this
 				.ToReactivePropertyAsSynchronized(
-					x => x.OriginX,
+					x => x.Origin.X,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
@@ -218,7 +218,7 @@ namespace TrainEditor2.ViewModels.Panels
 
 			OriginY = _this
 				.ToReactivePropertyAsSynchronized(
-					x => x.OriginY,
+					x => x.Origin.Y,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true

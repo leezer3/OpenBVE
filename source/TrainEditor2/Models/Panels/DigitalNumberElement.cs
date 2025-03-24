@@ -93,7 +93,7 @@ namespace TrainEditor2.Models.Panels
 		{
 			builder.AppendLine("[DigitalNumber]");
 			Utilities.WriteKey(builder, "Subject", Subject.ToString());
-			Utilities.WriteKey(builder, "Location", LocationX, LocationY);
+			Utilities.WriteKey(builder, "Location", Location.X, Location.Y);
 			Utilities.WriteKey(builder, "DaytimeImage", Utilities.MakeRelativePath(fileName, DaytimeImage));
 			Utilities.WriteKey(builder, "NighttimeImage", Utilities.MakeRelativePath(fileName, NighttimeImage));
 			Utilities.WriteKey(builder, "TransparentColor", TransparentColor.ToString());
@@ -104,7 +104,7 @@ namespace TrainEditor2.Models.Panels
 		public override void WriteXML(string fileName, XElement parent)
 		{
 			XElement digitalNumberNode = new XElement("DigitalNumber",
-				new XElement("Location", $"{LocationX}, {LocationY}"),
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
 				new XElement("Layer", Layer),
 				new XElement("Subject", Subject)
 			);

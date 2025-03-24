@@ -1,6 +1,7 @@
-﻿using System.Text;
+using System.Text;
 using System.Xml.Linq;
 using OpenBveApi.Colors;
+using OpenBveApi.Math;
 using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Panels
@@ -13,8 +14,7 @@ namespace TrainEditor2.Models.Panels
 		private Color24 transparentColor;
 		private double minimum;
 		private double maximum;
-		private int directionX;
-		private int directionY;
+		private Vector2 direction;
 		private int width;
 
 		internal Subject Subject
@@ -89,27 +89,15 @@ namespace TrainEditor2.Models.Panels
 			}
 		}
 
-		internal int DirectionX
+		internal Vector2 Direction
 		{
 			get
 			{
-				return directionX;
+				return direction;
 			}
 			set
 			{
-				SetProperty(ref directionX, value);
-			}
-		}
-
-		internal int DirectionY
-		{
-			get
-			{
-				return directionY;
-			}
-			set
-			{
-				SetProperty(ref directionY, value);
+				SetProperty(ref direction, value);
 			}
 		}
 
@@ -133,8 +121,7 @@ namespace TrainEditor2.Models.Panels
 			TransparentColor = Color24.Blue;
 			Minimum = 0.0;
 			Maximum = 0.0;
-			DirectionX = 0;
-			DirectionY = 0;
+			Direction = Vector2.Null;
 			Width = 0;
 		}
 
@@ -149,10 +136,10 @@ namespace TrainEditor2.Models.Panels
 		{
 			builder.AppendLine("[LinearGauge]");
 			Utilities.WriteKey(builder, "Subject", Subject.ToString());
-			Utilities.WriteKey(builder, "Location", LocationX, LocationY);
+			Utilities.WriteKey(builder, "Location", Location.X, Location.Y);
 			Utilities.WriteKey(builder, "Minimum", Minimum);
 			Utilities.WriteKey(builder, "Maximum", Maximum);
-			Utilities.WriteKey(builder, "Direction", DirectionX, DirectionY);
+			Utilities.WriteKey(builder, "Direction", Direction.X, Direction.Y);
 			Utilities.WriteKey(builder, "DaytimeImage", Utilities.MakeRelativePath(fileName, DaytimeImage));
 			Utilities.WriteKey(builder, "NighttimeImage", Utilities.MakeRelativePath(fileName, NighttimeImage));
 			Utilities.WriteKey(builder, "Width", Width);
@@ -162,7 +149,7 @@ namespace TrainEditor2.Models.Panels
 		public override void WriteXML(string fileName, XElement parent)
 		{
 			XElement linearGaugeNode = new XElement("LinearGauge",
-				new XElement("Location", $"{LocationX}, {LocationY}"),
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
 				new XElement("Layer", Layer),
 				new XElement("Subject", Subject)
 			);
@@ -181,7 +168,7 @@ namespace TrainEditor2.Models.Panels
 				new XElement("TransparentColor", TransparentColor),
 				new XElement("Minimum", Minimum),
 				new XElement("Maximum", Maximum),
-				new XElement("Direction", $"{DirectionX}, {DirectionY}"),
+				new XElement("Direction", $"{Direction.X}, {Direction.Y}"),
 				new XElement("Width", Width)
 			);
 

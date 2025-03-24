@@ -135,7 +135,7 @@ namespace TrainEditor2.Models.Panels
 		{
 			builder.AppendLine("[DigitalGauge]");
 			Utilities.WriteKey(builder, "Subject", Subject.ToString());
-			Utilities.WriteKey(builder, "Location", LocationX, LocationY);
+			Utilities.WriteKey(builder, "Location", Location.X, Location.Y);
 			Utilities.WriteKey(builder, "Radius", Radius);
 			Utilities.WriteKey(builder, "Color", Color.ToString());
 			Utilities.WriteKey(builder, "InitialAngle", InitialAngle.ToDegrees());
@@ -149,7 +149,7 @@ namespace TrainEditor2.Models.Panels
 		public override void WriteXML(string fileName, XElement parent)
 		{
 			parent.Add(new XElement("DigitalGauge",
-			new XElement("Location", $"{LocationX}, {LocationY}"),
+			new XElement("Location", $"{Location.X}, {Location.Y}"),
 			new XElement("Layer", Layer),
 				new XElement("Subject", Subject),
 				new XElement("Radius", Radius),

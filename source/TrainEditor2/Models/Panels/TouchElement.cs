@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Others;
@@ -84,8 +85,7 @@ namespace TrainEditor2.Models.Panels
 
 		private readonly CultureInfo culture;
 
-		private double sizeX;
-		private double sizeY;
+		private Vector2 size;
 		private int jumpScreen;
 
 		private TreeViewItemModel treeItem;
@@ -99,27 +99,15 @@ namespace TrainEditor2.Models.Panels
 		internal ObservableCollection<ListViewColumnHeaderModel> ListColumns;
 		internal ObservableCollection<ListViewItemModel> ListItems;
 
-		internal double SizeX
+		internal Vector2 Size
 		{
 			get
 			{
-				return sizeX;
+				return size;
 			}
 			set
 			{
-				SetProperty(ref sizeX, value);
-			}
-		}
-
-		internal double SizeY
-		{
-			get
-			{
-				return sizeY;
-			}
-			set
-			{
-				SetProperty(ref sizeY, value);
+				SetProperty(ref size, value);
 			}
 		}
 
@@ -175,10 +163,8 @@ namespace TrainEditor2.Models.Panels
 		{
 			culture = CultureInfo.InvariantCulture;
 
-			LocationX = 0.0;
-			LocationY = 0.0;
-			SizeX = 0.0;
-			SizeY = 0.0;
+			Location = Vector2.Null;
+			Size = Vector2.Null;
 			JumpScreen = screen.Number;
 			SoundEntries = new ObservableCollection<SoundEntry>();
 			CommandEntries = new ObservableCollection<CommandEntry>();
@@ -350,9 +336,9 @@ namespace TrainEditor2.Models.Panels
 		public override void WriteXML(string fileName, XElement parent)
 		{
 			XElement touchNode = new XElement("Touch",
-				new XElement("Location", $"{LocationX}, {LocationY}"),
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
 				new XElement("Layer", Layer),
-				new XElement("Size", $"{SizeX}, {SizeY}"),
+				new XElement("Size", $"{Size.X}, {Size.Y}"),
 				new XElement("JumpScreen", JumpScreen)
 			);
 

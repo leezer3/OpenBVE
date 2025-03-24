@@ -1,37 +1,25 @@
 ﻿using System;
 using System.Text;
 using System.Xml.Linq;
+using OpenBveApi.Math;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Panels
 {
 	internal abstract class PanelElement : BindableBase, ICloneable
 	{
-		protected double locationX;
-		protected double locationY;
+		protected Vector2 location;
 		protected int layer;
 
-		internal double LocationX
+		internal Vector2 Location
 		{
 			get
 			{
-				return locationX;
+				return location;
 			}
 			set
 			{
-				SetProperty(ref locationX, value);
-			}
-		}
-
-		internal double LocationY
-		{
-			get
-			{
-				return locationY;
-			}
-			set
-			{
-				SetProperty(ref locationY, value);
+				SetProperty(ref location, value);
 			}
 		}
 
@@ -49,8 +37,7 @@ namespace TrainEditor2.Models.Panels
 
 		internal PanelElement()
 		{
-			LocationX = 0.0;
-			LocationY = 0.0;
+			Location = Vector2.Null;
 			Layer = 0;
 		}
 

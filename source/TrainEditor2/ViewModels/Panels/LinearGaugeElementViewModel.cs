@@ -120,11 +120,11 @@ namespace TrainEditor2.ViewModels.Panels
 				.AddTo(disposable);
 
 			DirectionX = linearGauge
-				.ToReactivePropertyAsSynchronized(x => x.DirectionX)
+				.ToReactivePropertyAsSynchronized(x => (int)x.Direction.X)
 				.AddTo(disposable);
 
 			DirectionY = linearGauge
-				.ToReactivePropertyAsSynchronized(x => x.DirectionY)
+				.ToReactivePropertyAsSynchronized(x => (int)x.Direction.Y)
 				.AddTo(disposable);
 
 			Width = linearGauge

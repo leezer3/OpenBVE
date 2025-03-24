@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Xml.Linq;
 using OpenBveApi.Colors;
+using OpenBveApi.Math;
 using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Panels
@@ -15,8 +16,7 @@ namespace TrainEditor2.Models.Panels
 		private double radius;
 		private Color24 color;
 		private bool definedOrigin;
-		private double originX;
-		private double originY;
+		private Vector2 origin;
 		private double initialAngle;
 		private double lastAngle;
 		private double minimum;
@@ -124,27 +124,15 @@ namespace TrainEditor2.Models.Panels
 			}
 		}
 
-		internal double OriginX
+		internal Vector2 Origin
 		{
 			get
 			{
-				return originX;
+				return origin;
 			}
 			set
 			{
-				SetProperty(ref originX, value);
-			}
-		}
-
-		internal double OriginY
-		{
-			get
-			{
-				return originY;
-			}
-			set
-			{
-				SetProperty(ref originY, value);
+				SetProperty(ref origin, value);
 			}
 		}
 
@@ -279,8 +267,7 @@ namespace TrainEditor2.Models.Panels
 			Radius = 0.0;
 			Color = Color24.White;
 			DefinedOrigin = false;
-			OriginX = 0.0;
-			OriginY = 0.0;
+			Origin = Vector2.Null;
 			InitialAngle = -2.0943951023932;
 			LastAngle = 2.0943951023932;
 			Minimum = 0.0;
@@ -304,7 +291,7 @@ namespace TrainEditor2.Models.Panels
 		{
 			builder.AppendLine("[Needle]");
 			Utilities.WriteKey(builder, "Subject", Subject.ToString());
-			Utilities.WriteKey(builder, "Location", LocationX, LocationY);
+			Utilities.WriteKey(builder, "Location", Location.X, Location.Y);
 
 			if (DefinedRadius)
 			{
@@ -318,7 +305,7 @@ namespace TrainEditor2.Models.Panels
 
 			if (DefinedOrigin)
 			{
-				Utilities.WriteKey(builder, "Origin", OriginX, OriginY);
+				Utilities.WriteKey(builder, "Origin", Origin.X, Origin.Y);
 			}
 
 			Utilities.WriteKey(builder, "InitialAngle", InitialAngle.ToDegrees());
@@ -344,7 +331,7 @@ namespace TrainEditor2.Models.Panels
 		public override void WriteXML(string fileName, XElement parent)
 		{
 			XElement needleNode = new XElement("Needle",
-				new XElement("Location", $"{LocationX}, {LocationY}"),
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
 				new XElement("Layer", Layer),
 				new XElement("Subject", Subject)
 			);
@@ -377,7 +364,7 @@ namespace TrainEditor2.Models.Panels
 
 			if (DefinedOrigin)
 			{
-				needleNode.Add(new XElement("Origin", $"{OriginX}, {OriginY}"));
+				needleNode.Add(new XElement("Origin", $"{Origin.X}, {Origin.Y}"));
 			}
 
 			if (DefinedNaturalFreq)
