@@ -57,6 +57,17 @@
 		Command,
 		CommandEntries,
 		CommandOption,
-		Cursor
+		Option,
+		Cursor,
+		Index,
+		Name,
+		// XML Screen
+		PilotLamp,
+		Needle,
+		DigitalNumber,
+		DigitalGauge,
+		LinearGauge,
+		Timetable,
+		Touch
 	}
 }

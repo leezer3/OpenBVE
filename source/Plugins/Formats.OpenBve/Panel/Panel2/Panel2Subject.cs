@@ -1,5 +1,5 @@
 ﻿// ReSharper disable InconsistentNaming
-namespace Formats.OpenBve.Panel.Panel2
+namespace Formats.OpenBve
 {
 	public enum Panel2Subject
 	{

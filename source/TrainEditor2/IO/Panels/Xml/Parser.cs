@@ -6,6 +6,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Formats.OpenBve;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -40,36 +41,37 @@ namespace TrainEditor2.IO.Panels.Xml
 		{
 			foreach (XElement sectionNode in parent.Elements())
 			{
-				switch (sectionNode.Name.LocalName.ToLowerInvariant())
+				Enum.TryParse(sectionNode.Name.LocalName, true, out Panel2Sections section);
+				switch (section)
 				{
-					case "This":
+					case Panel2Sections.This:
 						ParseThisNode(fileName, sectionNode, panel.This);
 						break;
-					case "screen":
+					case Panel2Sections.Screen:
 						ParseScreenNode(fileName, sectionNode, out Screen screen);
 						panel.Screens.Add(screen);
 						break;
-					case "pilotlamp":
+					case Panel2Sections.PilotLamp:
 						ParsePilotLampElementNode(fileName, sectionNode, out PilotLampElement pilotLamp);
 						panel.PanelElements.Add(pilotLamp);
 						break;
-					case "needle":
+					case Panel2Sections.Needle:
 						ParseNeedleElementNode(fileName, sectionNode, out NeedleElement needle);
 						panel.PanelElements.Add(needle);
 						break;
-					case "digitalnumber":
+					case Panel2Sections.DigitalNumber:
 						ParseDigitalNumberElementNode(fileName, sectionNode, out DigitalNumberElement digitalNumber);
 						panel.PanelElements.Add(digitalNumber);
 						break;
-					case "digitalgauge":
+					case Panel2Sections.DigitalGauge:
 						ParseDigitalGaugeElementNode(fileName, sectionNode, out DigitalGaugeElement digitalGauge);
 						panel.PanelElements.Add(digitalGauge);
 						break;
-					case "lineargauge":
+					case Panel2Sections.LinearGauge:
 						ParseLinearGaugeElementNode(fileName, sectionNode, out LinearGaugeElement linearGauge);
 						panel.PanelElements.Add(linearGauge);
 						break;
-					case "timetable":
+					case Panel2Sections.Timetable:
 						ParseTimetableElementNode(fileName, sectionNode, out TimetableElement timetable);
 						panel.PanelElements.Add(timetable);
 						break;
@@ -86,13 +88,13 @@ namespace TrainEditor2.IO.Panels.Xml
 
 			foreach (XElement keyNode in parent.Elements())
 			{
-				string key = keyNode.Name.LocalName;
 				string value = keyNode.Value;
 				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+				Enum.TryParse(keyNode.Name.LocalName, true, out Panel2Key key);
 
-				switch (keyNode.Name.LocalName.ToLowerInvariant())
+				switch (key)
 				{
-					case "resolution":
+					case Panel2Key.Resolution:
 						double pr = 0.0;
 
 						if (value.Any() && !NumberFormats.TryParseDoubleVb6(value, out pr))
@@ -112,7 +114,7 @@ namespace TrainEditor2.IO.Panels.Xml
 						}
 
 						break;
-					case "left":
+					case Panel2Key.Left:
 						if (value.Any())
 						{
 							if (!NumberFormats.TryParseDoubleVb6(value, out double left))
@@ -123,7 +125,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							This.Left = left;
 						}
 						break;
-					case "right":
+					case Panel2Key.Right:
 						if (value.Any())
 						{
 							if (!NumberFormats.TryParseDoubleVb6(value, out double right))
@@ -134,7 +136,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							This.Right = right;
 						}
 						break;
-					case "top":
+					case Panel2Key.Top:
 						if (value.Any())
 						{
 							if (!NumberFormats.TryParseDoubleVb6(value, out double top))
@@ -145,7 +147,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							This.Top = top;
 						}
 						break;
-					case "bottom":
+					case Panel2Key.Bottom:
 						if (value.Any())
 						{
 
@@ -157,7 +159,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							This.Bottom = bottom;
 						}
 						break;
-					case "daytimeimage":
+					case Panel2Key.DaytimeImage:
 						if (!System.IO.Path.HasExtension(value))
 						{
 							value += ".bmp";
@@ -178,7 +180,7 @@ namespace TrainEditor2.IO.Panels.Xml
 						}
 
 						break;
-					case "nighttimeimage":
+					case Panel2Key.NighttimeImage:
 						if (!System.IO.Path.HasExtension(value))
 						{
 							value += ".bmp";
@@ -199,7 +201,7 @@ namespace TrainEditor2.IO.Panels.Xml
 						}
 
 						break;
-					case "transparentcolor":
+					case Panel2Key.TransparentColor:
 						if (value.Any())
 						{
 
@@ -211,7 +213,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							This.TransparentColor = transparentColor;
 						}
 						break;
-					case "center":
+					case Panel2Key.Center:
 						{
 							int k = value.IndexOf(',');
 
@@ -252,7 +254,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							break;
 						}
 
-					case "origin":
+					case Panel2Key.Origin:
 						{
 							int k = value.IndexOf(',');
 
@@ -306,13 +308,13 @@ namespace TrainEditor2.IO.Panels.Xml
 
 			foreach (XElement keyNode in parent.Elements())
 			{
-				string key = keyNode.Name.LocalName;
 				string value = keyNode.Value;
 				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+				Enum.TryParse(keyNode.Name.LocalName, true, out Panel2Key key);
 
-				switch (keyNode.Name.LocalName.ToLowerInvariant())
+				switch (key)
 				{
-					case "number":
+					case Panel2Key.Number:
 						if (value.Any())
 						{
 
@@ -324,7 +326,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							screen.Number = number;
 						}
 						break;
-					case "layer":
+					case Panel2Key.Layer:
 						if (value.Any())
 						{
 
@@ -336,31 +338,31 @@ namespace TrainEditor2.IO.Panels.Xml
 							screen.Layer = layer;
 						}
 						break;
-					case "pilotlamp":
+					case Panel2Key.PilotLamp:
 						ParsePilotLampElementNode(fileName, keyNode, out PilotLampElement pilotLamp);
 						screen.PanelElements.Add(pilotLamp);
 						break;
-					case "needle":
+					case Panel2Key.Needle:
 						ParseNeedleElementNode(fileName, keyNode, out NeedleElement needle);
 						screen.PanelElements.Add(needle);
 						break;
-					case "digitalnumber":
+					case Panel2Key.DigitalNumber:
 						ParseDigitalNumberElementNode(fileName, keyNode, out DigitalNumberElement digitalNumber);
 						screen.PanelElements.Add(digitalNumber);
 						break;
-					case "digitalgauge":
+					case Panel2Key.DigitalGauge:
 						ParseDigitalGaugeElementNode(fileName, keyNode, out DigitalGaugeElement digitalGauge);
 						screen.PanelElements.Add(digitalGauge);
 						break;
-					case "lineargauge":
+					case Panel2Key.LinearGauge:
 						ParseLinearGaugeElementNode(fileName, keyNode, out LinearGaugeElement linearGauge);
 						screen.PanelElements.Add(linearGauge);
 						break;
-					case "timetable":
+					case Panel2Key.Timetable:
 						ParseTimetableElementNode(fileName, keyNode, out TimetableElement timetable);
 						screen.PanelElements.Add(timetable);
 						break;
-					case "touch":
+					case Panel2Key.Touch:
 						ParseTouchElementNode(fileName, keyNode, screen, out TouchElement touch);
 						screen.TouchElements.Add(touch);
 						break;
@@ -378,16 +380,15 @@ namespace TrainEditor2.IO.Panels.Xml
 
 			foreach (XElement keyNode in parent.Elements())
 			{
-				string key = keyNode.Name.LocalName;
 				string value = keyNode.Value;
 				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (keyNode.Name.LocalName.ToLowerInvariant())
+				Enum.TryParse(keyNode.Name.LocalName, true, out Panel2Key key);
+				switch (key)
 				{
-					case "subject":
+					case Panel2Key.Subject:
 						pilotLamp.Subject = Subject.StringToSubject(value, $"{section} in {fileName}");
 						break;
-					case "location":
+					case Panel2Key.Location:
 						int k = value.IndexOf(',');
 
 						if (k >= 0)
@@ -425,7 +426,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							Interface.AddMessage(MessageType.Error, false, $"Two arguments are expected in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 						}
 						break;
-					case "daytimeimage":
+					case Panel2Key.DaytimeImage:
 						if (!System.IO.Path.HasExtension(value))
 						{
 							value += ".bmp";
@@ -445,7 +446,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "nighttimeimage":
+					case Panel2Key.NighttimeImage:
 						if (!System.IO.Path.HasExtension(value))
 						{
 							value += ".bmp";
@@ -465,7 +466,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "transparentcolor":
+					case Panel2Key.TransparentColor:
 						if (value.Any())
 						{
 
@@ -477,7 +478,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							pilotLamp.TransparentColor = transparentColor;
 						}
 						break;
-					case "layer":
+					case Panel2Key.Layer:
 						if (value.Any())
 						{
 
@@ -503,16 +504,16 @@ namespace TrainEditor2.IO.Panels.Xml
 
 			foreach (XElement keyNode in parent.Elements())
 			{
-				string key = keyNode.Name.LocalName;
 				string value = keyNode.Value;
 				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+				Enum.TryParse(keyNode.Name.LocalName, true, out Panel2Key key);
 
-				switch (keyNode.Name.LocalName.ToLowerInvariant())
+				switch (key)
 				{
-					case "subject":
+					case Panel2Key.Subject:
 						needle.Subject = Subject.StringToSubject(value, $"{section} at line {lineNumber.ToString(culture)} in {fileName}");
 						break;
-					case "location":
+					case Panel2Key.Location:
 						{
 							int k = value.IndexOf(',');
 
@@ -552,7 +553,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "radius":
+					case Panel2Key.Radius:
 						if (value.Any())
 						{
 
@@ -572,7 +573,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							needle.DefinedRadius = true;
 						}
 						break;
-					case "daytimeimage":
+					case Panel2Key.DaytimeImage:
 						if (!System.IO.Path.HasExtension(value))
 						{
 							value += ".bmp";
@@ -592,7 +593,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "nighttimeimage":
+					case Panel2Key.NighttimeImage:
 						if (!System.IO.Path.HasExtension(value))
 						{
 							value += ".bmp";
@@ -612,7 +613,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "color":
+					case Panel2Key.Color:
 						if (value.Any())
 						{
 
@@ -624,7 +625,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							needle.Color = color;
 						}
 						break;
-					case "transparentcolor":
+					case Panel2Key.TransparentColor:
 						if (value.Any())
 						{
 
@@ -636,7 +637,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							needle.TransparentColor = transparentColor;
 						}
 						break;
-					case "origin":
+					case Panel2Key.Origin:
 						{
 							int k = value.IndexOf(',');
 
@@ -678,7 +679,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "initialangle":
+					case Panel2Key.InitialAngle:
 						if (value.Any())
 						{
 
@@ -690,7 +691,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							needle.InitialAngle = initialAngle.ToRadians();
 						}
 						break;
-					case "lastangle":
+					case Panel2Key.LastAngle:
 						if (value.Any())
 						{
 
@@ -702,7 +703,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							needle.LastAngle = lastAngle.ToRadians();
 						}
 						break;
-					case "minimum":
+					case Panel2Key.Minimum:
 						if (value.Any())
 						{
 
@@ -714,7 +715,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							needle.Minimum = minimum;
 						}
 						break;
-					case "maximum":
+					case Panel2Key.Maximum:
 						if (value.Any())
 						{
 
@@ -726,7 +727,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							needle.Maximum = maximum;
 						}
 						break;
-					case "naturalfreq":
+					case Panel2Key.NaturalFreq:
 						if (value.Any())
 						{
 
@@ -746,7 +747,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							needle.DefinedNaturalFreq = true;
 						}
 						break;
-					case "dampingratio":
+					case Panel2Key.DampingRatio:
 						if (value.Any())
 						{
 
@@ -766,7 +767,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							needle.DefinedDampingRatio = true;
 						}
 						break;
-					case "layer":
+					case Panel2Key.Layer:
 						if (value.Any())
 						{
 
@@ -778,13 +779,13 @@ namespace TrainEditor2.IO.Panels.Xml
 							needle.Layer = layer;
 						}
 						break;
-					case "backstop":
+					case Panel2Key.Backstop:
 						if (value.Any() && value.ToLowerInvariant() == "true" || value == "1")
 						{
 							needle.Backstop = true;
 						}
 						break;
-					case "smoothed":
+					case Panel2Key.Smoothed:
 						if (value.Any() && value.ToLowerInvariant() == "true" || value == "1")
 						{
 							needle.Smoothed = true;
@@ -804,16 +805,16 @@ namespace TrainEditor2.IO.Panels.Xml
 
 			foreach (XElement keyNode in parent.Elements())
 			{
-				string key = keyNode.Name.LocalName;
 				string value = keyNode.Value;
 				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+				Enum.TryParse(keyNode.Name.LocalName, true, out Panel2Key key);
 
-				switch (keyNode.Name.LocalName.ToLowerInvariant())
+				switch (key)
 				{
-					case "subject":
+					case Panel2Key.Subject:
 						digitalNumber.Subject = Subject.StringToSubject(value, $"{section} at line {lineNumber.ToString(culture)} in {fileName}");
 						break;
-					case "location":
+					case Panel2Key.Location:
 						int k = value.IndexOf(',');
 
 						if (k >= 0)
@@ -851,7 +852,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							Interface.AddMessage(MessageType.Error, false, $"Two arguments are expected in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 						}
 						break;
-					case "daytimeimage":
+					case Panel2Key.DaytimeImage:
 						if (!System.IO.Path.HasExtension(value))
 						{
 							value += ".bmp";
@@ -871,7 +872,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "nighttimeimage":
+					case Panel2Key.NighttimeImage:
 						if (!System.IO.Path.HasExtension(value))
 						{
 							value += ".bmp";
@@ -891,7 +892,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "transparentcolor":
+					case Panel2Key.TransparentColor:
 						if (value.Any())
 						{
 
@@ -903,7 +904,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							digitalNumber.TransparentColor = transparentColor;
 						}
 						break;
-					case "interval":
+					case Panel2Key.Interval:
 						if (value.Any())
 						{
 
@@ -920,7 +921,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "layer":
+					case Panel2Key.Layer:
 						if (value.Any())
 						{
 
@@ -945,16 +946,16 @@ namespace TrainEditor2.IO.Panels.Xml
 
 			foreach (XElement keyNode in parent.Elements())
 			{
-				string key = keyNode.Name.LocalName;
 				string value = keyNode.Value;
 				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+				Enum.TryParse(keyNode.Name.LocalName, true, out Panel2Key key);
 
-				switch (keyNode.Name.LocalName.ToLowerInvariant())
+				switch (key)
 				{
-					case "subject":
+					case Panel2Key.Subject:
 						digitalGauge.Subject = Subject.StringToSubject(value, $"{section} at line {lineNumber.ToString(culture)} in {fileName}");
 						break;
-					case "location":
+					case Panel2Key.Location:
 						int k = value.IndexOf(',');
 
 						if (k >= 0)
@@ -992,7 +993,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							Interface.AddMessage(MessageType.Error, false, $"Two arguments are expected in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 						}
 						break;
-					case "radius":
+					case Panel2Key.Radius:
 						if (value.Any())
 						{
 
@@ -1010,7 +1011,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "color":
+					case Panel2Key.Color:
 						if (value.Any())
 						{
 
@@ -1022,7 +1023,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							digitalGauge.Color = color;
 						}
 						break;
-					case "initialangle":
+					case Panel2Key.InitialAngle:
 						if (value.Any())
 						{
 
@@ -1034,7 +1035,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							digitalGauge.InitialAngle = initialAngle.ToRadians();
 						}
 						break;
-					case "lastangle":
+					case Panel2Key.LastAngle:
 						if (value.Any())
 						{
 
@@ -1046,7 +1047,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							digitalGauge.LastAngle = lastAngle.ToRadians();
 						}
 						break;
-					case "minimum":
+					case Panel2Key.Minimum:
 						if (value.Any())
 						{
 
@@ -1058,7 +1059,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							digitalGauge.Minimum = minimum;
 						}
 						break;
-					case "maximum":
+					case Panel2Key.Maximum:
 						if (value.Any())
 						{
 
@@ -1070,7 +1071,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							digitalGauge.Maximum = maximum;
 						}
 						break;
-					case "step":
+					case Panel2Key.Step:
 						if (value.Any())
 						{
 
@@ -1082,7 +1083,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							digitalGauge.Step = step;
 						}
 						break;
-					case "layer":
+					case Panel2Key.Layer:
 						if (value.Any())
 						{
 
@@ -1108,16 +1109,16 @@ namespace TrainEditor2.IO.Panels.Xml
 
 			foreach (XElement keyNode in parent.Elements())
 			{
-				string key = keyNode.Name.LocalName;
 				string value = keyNode.Value;
 				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+				Enum.TryParse(keyNode.Name.LocalName, true, out Panel2Key key);
 
-				switch (keyNode.Name.LocalName.ToLowerInvariant())
+				switch (key)
 				{
-					case "subject":
+					case Panel2Key.Subject:
 						linearGauge.Subject = Subject.StringToSubject(value, $"{section} at line {lineNumber.ToString(culture)} in {fileName}");
 						break;
-					case "location":
+					case Panel2Key.Location:
 						int k = value.IndexOf(',');
 
 						if (k >= 0)
@@ -1155,7 +1156,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							Interface.AddMessage(MessageType.Error, false, $"Two arguments are expected in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 						}
 						break;
-					case "minimum":
+					case Panel2Key.Minimum:
 						if (value.Any())
 						{
 
@@ -1167,7 +1168,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							linearGauge.Minimum = minimum;
 						}
 						break;
-					case "maximum":
+					case Panel2Key.Maximum:
 						if (value.Any())
 						{
 
@@ -1179,7 +1180,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							linearGauge.Maximum = maximum;
 						}
 						break;
-					case "width":
+					case Panel2Key.Width:
 						if (value.Any())
 						{
 
@@ -1191,7 +1192,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							linearGauge.Width = width;
 						}
 						break;
-					case "direction":
+					case Panel2Key.Direction:
 						{
 							string[] s = value.Split(',');
 
@@ -1233,7 +1234,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "daytimeimage":
+					case Panel2Key.DaytimeImage:
 						if (!System.IO.Path.HasExtension(value))
 						{
 							value += ".bmp";
@@ -1253,7 +1254,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "nighttimeimage":
+					case Panel2Key.NighttimeImage:
 						if (!System.IO.Path.HasExtension(value))
 						{
 							value += ".bmp";
@@ -1273,7 +1274,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "transparentcolor":
+					case Panel2Key.TransparentColor:
 						if (value.Any())
 						{
 
@@ -1285,7 +1286,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							linearGauge.TransparentColor = transparentColor;
 						}
 						break;
-					case "layer":
+					case Panel2Key.Layer:
 						if (value.Any())
 						{
 
@@ -1310,13 +1311,13 @@ namespace TrainEditor2.IO.Panels.Xml
 
 			foreach (XElement keyNode in parent.Elements())
 			{
-				string key = keyNode.Name.LocalName;
 				string value = keyNode.Value;
 				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+				Enum.TryParse(keyNode.Name.LocalName, true, out Panel2Key key);
 
-				switch (keyNode.Name.LocalName.ToLowerInvariant())
+				switch (key)
 				{
-					case "location":
+					case Panel2Key.Location:
 						int k = value.IndexOf(',');
 
 						if (k >= 0)
@@ -1354,7 +1355,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							Interface.AddMessage(MessageType.Error, false, $"Two arguments are expected in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 						}
 						break;
-					case "width":
+					case Panel2Key.Width:
 						if (value.Any())
 						{
 
@@ -1371,7 +1372,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "height":
+					case Panel2Key.Height:
 						if (value.Any())
 						{
 
@@ -1388,7 +1389,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "transparentcolor":
+					case Panel2Key.TransparentColor:
 						if (value.Any())
 						{
 
@@ -1400,7 +1401,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							timetable.TransparentColor = transparentColor;
 						}
 						break;
-					case "layer":
+					case Panel2Key.Layer:
 						if (value.Any())
 						{
 
@@ -1426,13 +1427,13 @@ namespace TrainEditor2.IO.Panels.Xml
 
 			foreach (XElement keyNode in parent.Elements())
 			{
-				string key = keyNode.Name.LocalName;
 				string value = keyNode.Value;
 				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+				Enum.TryParse(keyNode.Name.LocalName, true, out Panel2Key key);
 
-				switch (keyNode.Name.LocalName.ToLowerInvariant())
+				switch (key)
 				{
-					case "location":
+					case Panel2Key.Location:
 						{
 							int k = value.IndexOf(',');
 
@@ -1472,7 +1473,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "size":
+					case Panel2Key.Size:
 						{
 							int k = value.IndexOf(',');
 
@@ -1512,7 +1513,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "jumpscreen":
+					case Panel2Key.JumpScreen:
 						if (value.Any())
 						{
 
@@ -1524,7 +1525,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							touch.JumpScreen = jumpScreen;
 						}
 						break;
-					case "soundindex":
+					case Panel2Key.SoundIndex:
 						if (value.Any())
 						{
 
@@ -1536,7 +1537,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							touch.SoundEntries.Add(new TouchElement.SoundEntry { Index = soundIndex });
 						}
 						break;
-					case "command":
+					case Panel2Key.Command:
 						{
 							if (!touch.CommandEntries.Contains(commandEntry))
 							{
@@ -1570,7 +1571,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "commandoption":
+					case Panel2Key.CommandOption:
 						if (!touch.CommandEntries.Contains(commandEntry))
 						{
 							touch.CommandEntries.Add(commandEntry);
@@ -1589,7 +1590,7 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 						}
 						break;
-					case "soundentries":
+					case Panel2Key.SoundEntries:
 						if (!keyNode.HasElements)
 						{
 							Interface.AddMessage(MessageType.Error, false, $"An empty list of touch sound indices was defined at line {((IXmlLineInfo)keyNode).LineNumber} in XML file {fileName}");
@@ -1598,7 +1599,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 						ParseTouchElementSoundEntryNode(fileName, keyNode, touch.SoundEntries);
 						break;
-					case "commandentries":
+					case Panel2Key.CommandEntries:
 						if (!keyNode.HasElements)
 						{
 							Interface.AddMessage(MessageType.Error, false, $"An empty list of touch commands was defined at line {((IXmlLineInfo)keyNode).LineNumber} in XML file {fileName}");
@@ -1607,7 +1608,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 						ParseTouchElementCommandEntryNode(fileName, keyNode, touch.CommandEntries);
 						break;
-					case "layer":
+					case Panel2Key.Layer:
 						if (value.Any())
 						{
 
@@ -1640,13 +1641,13 @@ namespace TrainEditor2.IO.Panels.Xml
 
 					foreach (XElement keyNode in childNode.Elements())
 					{
-						string key = keyNode.Name.LocalName;
 						string value = keyNode.Value;
 						int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+						Enum.TryParse(keyNode.Name.LocalName, true, out Panel2Key key);
 
-						switch (keyNode.Name.LocalName.ToLowerInvariant())
+						switch (key)
 						{
-							case "index":
+							case Panel2Key.Index:
 								if (value.Any())
 								{
 
@@ -1683,13 +1684,13 @@ namespace TrainEditor2.IO.Panels.Xml
 
 					foreach (XElement keyNode in childNode.Elements())
 					{
-						string key = keyNode.Name.LocalName;
 						string value = keyNode.Value;
 						int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+						Enum.TryParse(keyNode.Name.LocalName, true, out Panel2Key key);
 
-						switch (keyNode.Name.LocalName.ToLowerInvariant())
+						switch (key)
 						{
-							case "name":
+							case Panel2Key.Name:
 								if (string.Compare(value, "N/A", StringComparison.InvariantCultureIgnoreCase) == 0)
 								{
 									break;
@@ -1716,7 +1717,7 @@ namespace TrainEditor2.IO.Panels.Xml
 									entry.Info = info;
 								}
 								break;
-							case "option":
+							case Panel2Key.Option:
 								if (value.Any())
 								{
 
