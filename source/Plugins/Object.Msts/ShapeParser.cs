@@ -590,9 +590,22 @@ namespace Plugin
 			// extract pivots
 			for (int i = 0; i < shape.Matricies.Count; i++)
 			{
-				if (shape.Matricies[i].Name.StartsWith("BOGIE"))
+				string matrixName = shape.Matricies[i].Name;
+				if (matrixName.StartsWith("BOGIE"))
 				{
-					int bogieIndex = int.Parse(shape.Matricies[i].Name.Substring(5));
+					// yuck: we seem to ignore anything after an underscore when looking at matrix names to animate
+					// G84_ETR_521_1
+					if (shape.Matricies[i].Name.IndexOf('_') != -1)
+					{
+						matrixName = matrixName.Substring(0, shape.Matricies[i].Name.IndexOf('_'));
+					}
+
+					int bogieIndex = 0;
+					if (int.TryParse(matrixName.Substring(5), out int temp))
+					{
+						bogieIndex = temp;
+					}
+
 					double minWheel = 0, maxWheel = 0;
 					for (int j = 0; j < shape.Matricies.Count; j++)
 					{
