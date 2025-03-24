@@ -13,6 +13,8 @@
 		Windscreen,
 		// XML Stuff
 		Screen,
-		Touch
+		Touch,
+		Group,
+		Include
 	}
 }

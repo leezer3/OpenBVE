@@ -1,4 +1,4 @@
-﻿namespace Formats.OpenBve
+namespace Formats.OpenBve
 {
 	public enum Panel2Key
 	{
@@ -61,6 +61,8 @@
 		Cursor,
 		Index,
 		Name,
+		Position,
+		FileName,
 		// XML Screen
 		PilotLamp,
 		Needle,
@@ -68,6 +70,6 @@
 		DigitalGauge,
 		LinearGauge,
 		Timetable,
-		Touch
+		Touch,
 	}
 }
