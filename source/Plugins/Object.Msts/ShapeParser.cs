@@ -33,6 +33,7 @@ using SharpCompress.Compressors.Deflate;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security;
 using System.Text;
 
 
@@ -392,21 +393,51 @@ namespace Plugin
 
 					}
 
+					int usedFaces = 0;
+					int numSquashed = 0;
 					for (int i = 0; i < faces.Count; i++)
 					{
-						Object.Mesh.Faces[i] = new MeshFace(faces[i].Vertices, (ushort)faces[i].Material);
-						for (int k = 0; k < faces[i].Vertices.Length; k++)
+						bool canSquashFace = false;
+						if (i > 0)
 						{
-							Object.Mesh.Faces[i].Vertices[k].Normal = verticies[faces[i].Vertices[k]].Normal;
+							if (verticies[faces[i].Vertices[0]].matrixChain == verticies[faces[i - 1].Vertices[0]].matrixChain && faces[i].Material == faces[i -1].Material)
+							{
+								// check the matrix chain of the first vertex of each face, and te 
+								canSquashFace = true;
+							}
 						}
 
-						for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
+						if (canSquashFace)
 						{
-							Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
-						}
+							int squashID = mf + usedFaces - 1;
+							int oldLength = Object.Mesh.Faces[squashID].Vertices.Length;
+							Object.Mesh.Faces[squashID].AppendVerticies(faces[i].Vertices);
+							for (int k = 0; k < faces[i].Vertices.Length; k++)
+							{
+								Object.Mesh.Faces[squashID].Vertices[k + oldLength].Normal = verticies[faces[i].Vertices[k]].Normal;
+								Object.Mesh.Faces[squashID].Vertices[k + oldLength].Index += (ushort)mv;
+							}
 
-						Object.Mesh.Faces[mf + i].Material += (ushort)mm;
+							numSquashed++;
+						}
+						else
+						{
+							Object.Mesh.Faces[mf + usedFaces] = new MeshFace(faces[i].Vertices, (ushort)faces[i].Material, FaceFlags.Triangles);
+							for (int k = 0; k < faces[i].Vertices.Length; k++)
+							{
+								Object.Mesh.Faces[mf + usedFaces].Vertices[k].Normal = verticies[faces[i].Vertices[k]].Normal;
+								Object.Mesh.Faces[mf + usedFaces].Vertices[k].Index += (ushort)mv;
+							}
+							
+							Object.Mesh.Faces[mf + usedFaces].Material += (ushort)mm;
+							usedFaces++;
+						}
+						
 					}
+
+					
+
+					Array.Resize(ref Object.Mesh.Faces, mf + usedFaces);
 
 					for (int i = 0; i < materials.Count; i++)
 					{

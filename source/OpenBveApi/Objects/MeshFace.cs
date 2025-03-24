@@ -80,6 +80,16 @@ namespace OpenBveApi.Objects
 			NormalsIboStartIndex = 0;
 		}
 
+		public void AppendVerticies(int[] Vertices)
+		{
+			int oldLength = this.Vertices.Length;
+			Array.Resize(ref this.Vertices, oldLength + Vertices.Length);
+			for (int i = 0; i < Vertices.Length; i++)
+			{
+				this.Vertices[oldLength + i] = new MeshFaceVertex(Vertices[i]);
+			}
+		}
+
 		/// <summary>Flips the MeshFace</summary>
 		public void Flip()
 		{
