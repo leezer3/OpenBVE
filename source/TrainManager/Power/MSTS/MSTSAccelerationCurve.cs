@@ -32,7 +32,6 @@ namespace TrainManager.Power
 			 *
 			 * We don't in this case need to take the speed or loading values into account, but
 			 * retain them as legacy
-			 * REFACTOR: Store the train reference in BVE acceleration curves???
 			 */
 			double totalMass = 0;
 
@@ -49,10 +48,10 @@ namespace TrainManager.Power
 
 			if (baseTrain.Handles.Brake.Actual > 0)
 			{
-				return ((baseTrain.Handles.Brake.Actual / (double)baseTrain.Handles.Brake.MaximumNotch) *  (totalMass / MaxForce)) / 3.6;
+				return ((baseTrain.Handles.Brake.Actual / (double)baseTrain.Handles.Brake.MaximumNotch) *  (totalMass / MaxForce));
 			}
 
-			return ((baseTrain.Handles.Power.Actual / (double)baseTrain.Handles.Power.MaximumNotch) *  (totalMass / MaxForce)) / 3.6;
+			return ((baseTrain.Handles.Power.Actual / (double)baseTrain.Handles.Power.MaximumNotch) *  (totalMass / MaxForce));
 
 		}
 
