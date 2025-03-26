@@ -241,6 +241,8 @@ namespace Train.MsTs
 		private double mainReservoirMinimumPressure;
 		private double mainReservoirMaximumPressure;
 		private double brakeCylinderMaximumPressure;
+		private double emergencyRate;
+		private double releaseRate;
 
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
@@ -677,6 +679,12 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.BrakeCylinderPressureForMaxBrakeBrakeForce:
 					brakeCylinderMaximumPressure = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					break;
+				case KujuTokenID.TrainBrakesControllerEmergencyApplicationRate:
+					emergencyRate = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					break;
+				case KujuTokenID.TrainBrakesControllerMaxReleaseRate:
+					releaseRate = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
 					break;
 			}
 			return true;
