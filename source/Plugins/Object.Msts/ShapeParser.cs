@@ -179,6 +179,7 @@ namespace Plugin
 				AnimatedMatricies = new Dictionary<int, int>();
 				Matricies = new List<KeyframeMatrix>();
 				MatrixParents = new Dictionary<string, string>();
+				ShaderNames = new List<ShaderNames>();
 			}
 
 			// Global variables used by all LODs
@@ -208,6 +209,8 @@ namespace Plugin
 			internal readonly List<KeyframeMatrix> Matricies;
 
 			internal readonly Dictionary<string, string> MatrixParents;
+
+			internal List<ShaderNames> ShaderNames;
 
 			// The list of LODs actually containing the objects
 
@@ -441,7 +444,7 @@ namespace Plugin
 
 					for (int i = 0; i < materials.Count; i++)
 					{
-						Object.Mesh.Materials[mm + i].Flags = 0;
+						Object.Mesh.Materials[mm + i].Flags = materials[i].Flags;
 						Object.Mesh.Materials[mm + i].Color = materials[i].Color;
 						Object.Mesh.Materials[mm + i].TransparentColor = Color24.Black;
 						Object.Mesh.Materials[mm + i].BlendMode = MeshMaterialBlendMode.Normal;
@@ -780,7 +783,18 @@ namespace Plugin
 					//Unsupported stuff, so just read to the end at the minute
 					block.Skip((int)block.Length());
 					break;
-
+				case KujuTokenID.shader_names:
+					int numShaders = block.ReadInt32();
+					while (numShaders > 0)
+					{
+						newBlock = block.ReadSubBlock(KujuTokenID.named_shader);
+						ParseBlock(newBlock, ref shape);
+						numShaders--;
+					}
+					break;
+				case KujuTokenID.named_shader:
+					shape.ShaderNames.Add(block.ReadEnumValue(default(ShaderNames)));
+					break;
 				case KujuTokenID.vtx_state:
 					flags = block.ReadUInt32();
 					VertexStates vs = new VertexStates(block.ReadInt32());
@@ -1139,7 +1153,32 @@ namespace Plugin
 								{
 									Plugin.currentHost.AddMessage(MessageType.Warning, true, "Texture file path " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was invalid.");
 								}
-								currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials.Add(new Material(txF));
+
+								Material mat = new Material(txF);
+								switch (shape.ShaderNames[shape.prim_states[shape.currentPrimitiveState].Shader])
+								{
+									case ShaderNames.Tex:
+										mat.Flags |= MaterialFlags.DisableTextureAlpha;
+										mat.Flags |= MaterialFlags.DisableLighting;
+										break;
+									case ShaderNames.TexDiff:
+										mat.Flags |= MaterialFlags.DisableTextureAlpha;
+										break;
+									case ShaderNames.BlendATex:
+										mat.Flags |= MaterialFlags.DisableLighting;
+										break;
+									case ShaderNames.BlendATexDiff:
+										// Default material
+										break;
+									case ShaderNames.AddATex:
+										mat.Flags |= MaterialFlags.Emissive;
+										mat.Flags |= MaterialFlags.DisableLighting;
+										break;
+									case ShaderNames.AddATexDiff:
+										mat.Flags |= MaterialFlags.Emissive;
+										break;
+								}
+								currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials.Add(mat);
 								break;
 							case KujuTokenID.indexed_trilist:
 								ParseBlock(newBlock, ref shape);

@@ -269,7 +269,9 @@ namespace OpenBve.Formats.MsTs
 
 		public override TEnumType ReadEnumValue<TEnumType>(TEnumType desiredEnumType)
 		{
-			throw new NotImplementedException();
+			string enumValue = ReadString();
+			Enum.TryParse(enumValue, out TEnumType e);
+			return e;
 		}
 
 		public override long Length()
