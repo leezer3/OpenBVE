@@ -313,7 +313,7 @@ namespace Train.MsTs
 								// The car contains no control gear, but is air / vac braked
 								// Assume equivilant to AutomaticAirBrake
 								// NOTE: This must be last in the else-if chain to enure that a vehicle with EP / ECP and these declared is setup correctly
-								car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, car);
+								car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0,0,0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
 							}
 
 							car.CarBrake.mainReservoir = new MainReservoir(690000.0, 780000.0, 0.01, 0.075 / train.Cars.Length);
