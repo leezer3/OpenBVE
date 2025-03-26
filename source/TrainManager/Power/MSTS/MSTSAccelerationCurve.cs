@@ -1,6 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
 
 using TrainManager.Car;
+using TrainManager.Motor;
 using TrainManager.Trains;
 
 namespace TrainManager.Power
@@ -51,8 +52,12 @@ namespace TrainManager.Power
 				return ((baseTrain.Handles.Brake.Actual / (double)baseTrain.Handles.Brake.MaximumNotch) *  (totalMass / MaxForce));
 			}
 
-			return ((baseTrain.Handles.Power.Actual / (double)baseTrain.Handles.Power.MaximumNotch) *  (totalMass / MaxForce));
+			if (baseCar.Engine is DieselEngine dieselEngine)
+			{
+				return dieselEngine.CurrentPower * (totalMass / MaxForce);
+			}
 
+			return ((baseTrain.Handles.Power.Actual / (double)baseTrain.Handles.Power.MaximumNotch) * (totalMass / MaxForce));
 		}
 
 		public override double MaximumAcceleration
