@@ -33,7 +33,6 @@ using SharpCompress.Compressors.Deflate;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security;
 using System.Text;
 
 
@@ -210,7 +209,7 @@ namespace Plugin
 
 			internal readonly Dictionary<string, string> MatrixParents;
 
-			internal List<ShaderNames> ShaderNames;
+			internal readonly List<ShaderNames> ShaderNames;
 
 			// The list of LODs actually containing the objects
 
@@ -357,7 +356,7 @@ namespace Plugin
 
 			internal void Apply(out StaticObject Object, bool useTransformedVertics)
 			{
-				Object = new StaticObject(Plugin.currentHost)
+				Object = new StaticObject(Plugin.CurrentHost)
 				{
 					Mesh =
 					{
@@ -397,7 +396,6 @@ namespace Plugin
 					}
 
 					int usedFaces = 0;
-					int numSquashed = 0;
 					for (int i = 0; i < faces.Count; i++)
 					{
 						bool canSquashFace = false;
@@ -420,8 +418,6 @@ namespace Plugin
 								Object.Mesh.Faces[squashID].Vertices[k + oldLength].Normal = verticies[faces[i].Vertices[k]].Normal;
 								Object.Mesh.Faces[squashID].Vertices[k + oldLength].Index += (ushort)mv;
 							}
-
-							numSquashed++;
 						}
 						else
 						{
@@ -450,7 +446,7 @@ namespace Plugin
 						Object.Mesh.Materials[mm + i].BlendMode = MeshMaterialBlendMode.Normal;
 						if (materials[i].DaytimeTexture != null)
 						{
-							Plugin.currentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out OpenBveApi.Textures.Texture tday);
+							Plugin.CurrentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out OpenBveApi.Textures.Texture tday);
 							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 						}
 						else
@@ -491,7 +487,7 @@ namespace Plugin
 		internal static UnifiedObject ReadObject(string fileName)
 		{
 			MsTsShape shape = new MsTsShape();
-			newResult = new KeyframeAnimatedObject(Plugin.currentHost);
+			newResult = new KeyframeAnimatedObject(Plugin.CurrentHost);
 
 			currentFolder = Path.GetDirectoryName(fileName);
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -1145,13 +1141,13 @@ namespace Plugin
 									txF = OpenBveApi.Path.CombineFile(currentFolder, shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName);
 									if (!File.Exists(txF))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, true, "Texture file " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was not found.");
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, true, "Texture file " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was not found.");
 										txF = null;
 									}
 								}
 								catch
 								{
-									Plugin.currentHost.AddMessage(MessageType.Warning, true, "Texture file path " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was invalid.");
+									Plugin.CurrentHost.AddMessage(MessageType.Warning, true, "Texture file path " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was invalid.");
 								}
 
 								Material mat = new Material(txF);

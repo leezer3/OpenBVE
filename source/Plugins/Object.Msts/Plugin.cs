@@ -36,16 +36,13 @@ namespace Plugin
 {
 	public class Plugin : ObjectInterface
 	{
-		internal static HostInterface currentHost;
-
-		internal static string LoksimPackageFolder;
+		internal static HostInterface CurrentHost;
 
 		public override string[] SupportedAnimatedObjectExtensions => new[] { ".s" };
 
 		public override void Load(HostInterface host, FileSystem fileSystem)
 		{
-			currentHost = host;
-			LoksimPackageFolder = fileSystem.LoksimPackageInstallationDirectory;
+			CurrentHost = host;
 		}
 
 
