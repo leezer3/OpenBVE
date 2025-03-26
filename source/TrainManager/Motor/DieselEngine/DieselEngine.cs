@@ -52,6 +52,7 @@ namespace TrainManager.Motor
 			private set => currentRPM = value;
 		}
 
+
 		private double currentRPM;
 		private double targetRPM;
 		private readonly double perNotchRPM;
