@@ -45,11 +45,15 @@ namespace TrainManager.Motor
 		    BaseCar = car;
 			Components = new Dictionary<EngineComponent, AbstractComponent>();
 	    }
-
-
-
+		
 		/// <summary>Called once a frame to update the engine</summary>
 		/// <param name="timeElapsed"></param>
 	    public abstract void Update(double timeElapsed);
+
+		/// <summary>Gets the current power level</summary>
+	    public abstract double CurrentPower
+	    {
+		    get;
+	    }
     }
 }
