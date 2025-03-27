@@ -285,7 +285,16 @@ namespace TrainManager.BrakeSystems
 			}
 
 			double pressureratio = brakeCylinder.CurrentPressure / brakeCylinder.ServiceMaximumPressure;
-			deceleration = pressureratio * DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed);
+			if (pressureratio == 0)
+			{
+				// we shouldn't really have zero pressure in the BC, but if we do multiplying by zero gives NaN
+				// this fudges everything else up
+				deceleration = 0;
+			}
+			else
+			{
+				deceleration = pressureratio * DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed);
+			}
 		}
 
 		
