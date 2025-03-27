@@ -371,9 +371,9 @@ namespace LibRender2.Shaders
 			GL.ProgramUniform3(handle, UniformLayout.MaterialEmission, MaterialEmission.R / 255.0f, MaterialEmission.G / 255.0f, MaterialEmission.B / 255.0f);
 		}
 
-		public void SetMaterialShininess(float MaterialShininess)
+		public void SetMaterialShininess(float materialShininess)
 		{
-			GL.ProgramUniform1(handle, UniformLayout.MaterialShininess, MaterialShininess);
+			GL.ProgramUniform1(handle, UniformLayout.MaterialShininess, materialShininess);
 		}
 
 		public void SetMaterialFlags(MaterialFlags Flags)
@@ -409,31 +409,31 @@ namespace LibRender2.Shaders
 			}
 		}
 
-		public void SetTexture(int TextureUnit)
+		public void SetTexture(int textureUnit)
 		{
-			GL.ProgramUniform1(handle, UniformLayout.Texture, TextureUnit);
+			GL.ProgramUniform1(handle, UniformLayout.Texture, textureUnit);
 		}
 
 		private float lastBrightness;
 
-		public void SetBrightness(float Brightness)
+		public void SetBrightness(float brightness)
 		{
-			if(Brightness == lastBrightness)
+			if(brightness == lastBrightness)
 			{
 				return;
 			}
-			lastBrightness = Brightness;
-			GL.ProgramUniform1(handle, UniformLayout.Brightness, Brightness);
+			lastBrightness = brightness;
+			GL.ProgramUniform1(handle, UniformLayout.Brightness, brightness);
 		}
 
-		public void SetOpacity(float Opacity)
+		public void SetOpacity(float opacity)
 		{
-			GL.ProgramUniform1(handle, UniformLayout.Opacity, Opacity);
+			GL.ProgramUniform1(handle, UniformLayout.Opacity, opacity);
 		}
 
-		public void SetObjectIndex(int ObjectIndex)
+		public void SetObjectIndex(int objectIndex)
 		{
-			GL.ProgramUniform1(handle, UniformLayout.ObjectIndex, ObjectIndex);
+			GL.ProgramUniform1(handle, UniformLayout.ObjectIndex, objectIndex);
 		}
 
 		public void SetPoint(Vector2 point)

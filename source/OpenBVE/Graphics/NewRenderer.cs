@@ -194,7 +194,7 @@ namespace OpenBve.Graphics
 			{
 				Program.CurrentRoute.CurrentFog = Program.CurrentRoute.PreviousFog;
 			}
-
+			
 			// render background
 			GL.Disable(EnableCap.DepthTest);
 			Program.CurrentRoute.UpdateBackground(TimeElapsed, Program.Renderer.CurrentInterface != InterfaceType.Normal);
@@ -256,7 +256,7 @@ namespace OpenBve.Graphics
 				overlayOpaqueFaces = VisibleObjects.OverlayOpaqueFaces.ToList();
 				overlayAlphaFaces = VisibleObjects.GetSortedPolygons(true);
 			}
-			
+
 			foreach (FaceState face in opaqueFaces)
 			{
 				face.Draw();
@@ -340,6 +340,7 @@ namespace OpenBve.Graphics
 			// overlay layer
 			OptionFog = false;
 			UpdateViewport(ViewportChangeMode.ChangeToCab);
+			
 			if (AvailableNewRenderer)
 			{
 				/*

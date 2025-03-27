@@ -71,8 +71,6 @@ namespace CsvRwRouteParser {
 				Data.Blocks[0].RailWall = new Dictionary<int, WallDike>();
 				Data.Blocks[0].RailDike = new Dictionary<int, WallDike>();
 				Data.Blocks[0].RailPole = new Pole[] {};
-				Data.Markers = new Marker[] {};
-				Data.RequestStops = new StopRequest[] { };
 				string PoleFolder = Path.CombineDirectory(CompatibilityFolder, "Poles");
 				Data.Structure.Poles = new PoleDictionary
 				{
@@ -114,8 +112,6 @@ namespace CsvRwRouteParser {
 				Data.TimetableNighttime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				Data.Structure.WeatherObjects = new ObjectDictionary();
 				Data.Structure.LightDefinitions = new Dictionary<int, LightDefinition[]>();
-				// signals
-				Data.Signals = new SignalDictionary();
 				if (Plugin.CurrentOptions.CurrentCompatibilitySignalSet == null) //not selected via main form
 				{
 					Plugin.CurrentOptions.CurrentCompatibilitySignalSet = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Signals\\Japanese.xml");
@@ -169,7 +165,6 @@ namespace CsvRwRouteParser {
 			int BlockIndex = 0;
 			CurrentRoute.Tracks[0].Direction = TrackDirection.Forwards;
 			CurrentRoute.Stations = new RouteStation[] { };
-			Data.RequestStops = new StopRequest[] { };
 			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / Expressions.Length;
 			// process non-track namespaces
 			//Check for any special-cased fixes we might need

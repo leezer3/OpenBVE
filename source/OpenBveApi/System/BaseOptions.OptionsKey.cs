@@ -1,4 +1,6 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+﻿// ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace OpenBveApi
 {
 	/// <summary>The keys found in an options file</summary>

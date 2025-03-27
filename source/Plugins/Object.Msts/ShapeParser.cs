@@ -33,7 +33,6 @@ using SharpCompress.Compressors.Deflate;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 
@@ -51,17 +50,22 @@ namespace Plugin
 {
 	partial class MsTsShapeParser
 	{
-		struct Texture
+		class Texture
 		{
-			internal string fileName;
+			internal readonly string fileName;
 			internal int filterMode;
 			internal int mipmapLODBias;
 			internal Color32 borderColor;
+
+			internal Texture(string file)
+			{
+				fileName = file;
+			}
 		}
 
-		struct PrimitiveState
+		class PrimitiveState
 		{
-			internal string Name;
+			internal readonly string Name;
 			internal UInt32 Flags;
 			internal int Shader;
 			internal int[] Textures;
@@ -74,23 +78,40 @@ namespace Plugin
 			internal int alphaTestMode;
 			internal int lightCfgIdx;
 			internal int zBufferMode;
+
+			internal PrimitiveState(string name)
+			{
+				Name = name;
+			}
 		}
 
-		struct VertexStates
+		class VertexStates
 		{
 			internal uint flags; //Describes specular and some other stuff, unlikely to be supported
-			internal int hierarchyID; //The hierarchy ID of the top-level transform matrix, remember that they chain
+			/// <summary>The hierarchy ID of the top-level transform matrix</summary>
+			/// <remarks>Remmeber that matricies transform down a chain</remarks>
+			internal readonly int hierarchyID;
 			internal int lightingMatrixID;
 			internal int lightingConfigIdx;
 			internal uint lightingFlags;
 			internal int matrix2ID; //Optional
+
+			internal VertexStates(int hierarchy)
+			{
+				hierarchyID = hierarchy;
+			}
 		}
 
-		struct VertexSet
+		class VertexSet
 		{
-			internal int hierarchyIndex;
+			internal readonly int hierarchyIndex;
 			internal int startVertex;
 			internal int numVerticies;
+
+			internal VertexSet(int hierarchy)
+			{
+				hierarchyIndex = hierarchy;
+			}
 		}
 
 
@@ -157,6 +178,7 @@ namespace Plugin
 				AnimatedMatricies = new Dictionary<int, int>();
 				Matricies = new List<KeyframeMatrix>();
 				MatrixParents = new Dictionary<string, string>();
+				ShaderNames = new List<ShaderNames>();
 			}
 
 			// Global variables used by all LODs
@@ -186,6 +208,8 @@ namespace Plugin
 			internal readonly List<KeyframeMatrix> Matricies;
 
 			internal readonly Dictionary<string, string> MatrixParents;
+
+			internal readonly List<ShaderNames> ShaderNames;
 
 			// The list of LODs actually containing the objects
 
@@ -332,7 +356,7 @@ namespace Plugin
 
 			internal void Apply(out StaticObject Object, bool useTransformedVertics)
 			{
-				Object = new StaticObject(Plugin.currentHost)
+				Object = new StaticObject(Plugin.CurrentHost)
 				{
 					Mesh =
 					{
@@ -371,33 +395,58 @@ namespace Plugin
 
 					}
 
+					int usedFaces = 0;
 					for (int i = 0; i < faces.Count; i++)
 					{
-						Object.Mesh.Faces[i] = new MeshFace(faces[i].Vertices);
-						Object.Mesh.Faces[i].Material = (ushort)faces[i].Material;
-						for (int k = 0; k < faces[i].Vertices.Length; k++)
+						bool canSquashFace = false;
+						if (i > 0)
 						{
-							Object.Mesh.Faces[i].Vertices[k].Normal = verticies[faces[i].Vertices[k]].Normal;
+							if (verticies[faces[i].Vertices[0]].matrixChain == verticies[faces[i - 1].Vertices[0]].matrixChain && faces[i].Material == faces[i -1].Material)
+							{
+								// check the matrix chain of the first vertex of each face, and te 
+								canSquashFace = true;
+							}
 						}
 
-						for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
+						if (canSquashFace)
 						{
-							Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
+							int squashID = mf + usedFaces - 1;
+							int oldLength = Object.Mesh.Faces[squashID].Vertices.Length;
+							Object.Mesh.Faces[squashID].AppendVerticies(faces[i].Vertices);
+							for (int k = 0; k < faces[i].Vertices.Length; k++)
+							{
+								Object.Mesh.Faces[squashID].Vertices[k + oldLength].Normal = verticies[faces[i].Vertices[k]].Normal;
+								Object.Mesh.Faces[squashID].Vertices[k + oldLength].Index += (ushort)mv;
+							}
 						}
-
-						Object.Mesh.Faces[mf + i].Material += (ushort)mm;
+						else
+						{
+							Object.Mesh.Faces[mf + usedFaces] = new MeshFace(faces[i].Vertices, (ushort)faces[i].Material, FaceFlags.Triangles);
+							for (int k = 0; k < faces[i].Vertices.Length; k++)
+							{
+								Object.Mesh.Faces[mf + usedFaces].Vertices[k].Normal = verticies[faces[i].Vertices[k]].Normal;
+								Object.Mesh.Faces[mf + usedFaces].Vertices[k].Index += (ushort)mv;
+							}
+							
+							Object.Mesh.Faces[mf + usedFaces].Material += (ushort)mm;
+							usedFaces++;
+						}
+						
 					}
+
+					
+
+					Array.Resize(ref Object.Mesh.Faces, mf + usedFaces);
 
 					for (int i = 0; i < materials.Count; i++)
 					{
-						Object.Mesh.Materials[mm + i].Flags = 0;
+						Object.Mesh.Materials[mm + i].Flags = materials[i].Flags;
 						Object.Mesh.Materials[mm + i].Color = materials[i].Color;
 						Object.Mesh.Materials[mm + i].TransparentColor = Color24.Black;
 						Object.Mesh.Materials[mm + i].BlendMode = MeshMaterialBlendMode.Normal;
 						if (materials[i].DaytimeTexture != null)
 						{
-							OpenBveApi.Textures.Texture tday;
-							Plugin.currentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out tday);
+							Plugin.CurrentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out OpenBveApi.Textures.Texture tday);
 							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 						}
 						else
@@ -438,7 +487,7 @@ namespace Plugin
 		internal static UnifiedObject ReadObject(string fileName)
 		{
 			MsTsShape shape = new MsTsShape();
-			newResult = new KeyframeAnimatedObject(Plugin.currentHost);
+			newResult = new KeyframeAnimatedObject(Plugin.CurrentHost);
 
 			currentFolder = Path.GetDirectoryName(fileName);
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -571,9 +620,22 @@ namespace Plugin
 			// extract pivots
 			for (int i = 0; i < shape.Matricies.Count; i++)
 			{
-				if (shape.Matricies[i].Name.StartsWith("BOGIE"))
+				string matrixName = shape.Matricies[i].Name;
+				if (matrixName.StartsWith("BOGIE"))
 				{
-					int bogieIndex = int.Parse(shape.Matricies[i].Name.Substring(5));
+					// yuck: we seem to ignore anything after an underscore when looking at matrix names to animate
+					// G84_ETR_521_1
+					if (shape.Matricies[i].Name.IndexOf('_') != -1)
+					{
+						matrixName = matrixName.Substring(0, shape.Matricies[i].Name.IndexOf('_'));
+					}
+
+					int bogieIndex = 0;
+					if (int.TryParse(matrixName.Substring(5), out int temp))
+					{
+						bogieIndex = temp;
+					}
+
 					double minWheel = 0, maxWheel = 0;
 					for (int j = 0; j < shape.Matricies.Count; j++)
 					{
@@ -693,14 +755,18 @@ namespace Plugin
 					ParseBlock(newBlock, ref shape);
 					newBlock = block.ReadSubBlock(KujuTokenID.lod_controls);
 					ParseBlock(newBlock, ref shape);
-					try
+
+					if (block.Length() - block.Position() > 0)
 					{
-						newBlock = block.ReadSubBlock(KujuTokenID.animations);
-						ParseBlock(newBlock, ref shape);
-					}
-					catch (EndOfStreamException)
-					{
-						// Animation controllers are optional
+						try
+						{
+							newBlock = block.ReadSubBlock(KujuTokenID.animations);
+							ParseBlock(newBlock, ref shape);
+						}
+						catch (EndOfStreamException)
+						{
+							// Animation controllers are optional
+						}
 					}
 					break;
 				case KujuTokenID.shape_header:
@@ -713,10 +779,21 @@ namespace Plugin
 					//Unsupported stuff, so just read to the end at the minute
 					block.Skip((int)block.Length());
 					break;
-
+				case KujuTokenID.shader_names:
+					int numShaders = block.ReadInt32();
+					while (numShaders > 0)
+					{
+						newBlock = block.ReadSubBlock(KujuTokenID.named_shader);
+						ParseBlock(newBlock, ref shape);
+						numShaders--;
+					}
+					break;
+				case KujuTokenID.named_shader:
+					shape.ShaderNames.Add(block.ReadEnumValue(default(ShaderNames)));
+					break;
 				case KujuTokenID.vtx_state:
 					flags = block.ReadUInt32();
-					int matrix1 = block.ReadInt32();
+					VertexStates vs = new VertexStates(block.ReadInt32());
 					int lightMaterialIdx = block.ReadInt32();
 					int lightStateCfgIdx = block.ReadInt32();
 					uint lightFlags = block.ReadUInt32();
@@ -726,9 +803,7 @@ namespace Plugin
 						matrix2 = block.ReadInt32();
 					}
 
-					VertexStates vs = new VertexStates();
 					vs.flags = flags;
-					vs.hierarchyID = matrix1;
 					vs.lightingMatrixID = lightMaterialIdx;
 					vs.lightingConfigIdx = lightStateCfgIdx;
 					vs.lightingFlags = lightFlags;
@@ -761,8 +836,7 @@ namespace Plugin
 					int alphaTestMode = block.ReadInt32();
 					int lightCfgIdx = block.ReadInt32();
 					int zBufferMode = block.ReadInt32();
-					PrimitiveState p = new PrimitiveState();
-					p.Name = block.Label;
+					PrimitiveState p = new PrimitiveState(block.Label);
 					p.Flags = flags;
 					p.Shader = shader;
 					p.Textures = texIdxs;
@@ -803,7 +877,7 @@ namespace Plugin
 
 					break;
 				case KujuTokenID.texture:
-					int imageIDX = block.ReadInt32();
+					Texture t = new Texture(shape.images[block.ReadInt32()]);
 					int filterMode = (int)block.ReadUInt32();
 					float mipmapLODBias = block.ReadSingle();
 					uint borderColor = 0xff000000U;
@@ -818,8 +892,6 @@ namespace Plugin
 					g = (borderColor / 256) % 256;
 					b = (borderColor / 256 / 256) % 256;
 					a = (borderColor / 256 / 256 / 256) % 256;
-					Texture t = new Texture();
-					t.fileName = shape.images[imageIDX];
 					t.filterMode = filterMode;
 					t.mipmapLODBias = (int)mipmapLODBias;
 					t.borderColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
@@ -970,11 +1042,13 @@ namespace Plugin
 					}
 					break;
 				case KujuTokenID.matrix:
-					Matrix4D currentMatrix = new Matrix4D();
-					currentMatrix.Row0 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
-					currentMatrix.Row1 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
-					currentMatrix.Row2 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
-					currentMatrix.Row3 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0);
+					Matrix4D currentMatrix = new Matrix4D
+					{
+						Row0 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0),
+						Row1 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0),
+						Row2 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0),
+						Row3 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0)
+					};
 					shape.Matricies.Add(new KeyframeMatrix(newResult, block.Label, currentMatrix));
 					break;
 				case KujuTokenID.normals:
@@ -1067,15 +1141,40 @@ namespace Plugin
 									txF = OpenBveApi.Path.CombineFile(currentFolder, shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName);
 									if (!File.Exists(txF))
 									{
-										Plugin.currentHost.AddMessage(MessageType.Warning, true, "Texture file " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was not found.");
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, true, "Texture file " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was not found.");
 										txF = null;
 									}
 								}
 								catch
 								{
-									Plugin.currentHost.AddMessage(MessageType.Warning, true, "Texture file path " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was invalid.");
+									Plugin.CurrentHost.AddMessage(MessageType.Warning, true, "Texture file path " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was invalid.");
 								}
-								currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials.Add(new Material(txF));
+
+								Material mat = new Material(txF);
+								switch (shape.ShaderNames[shape.prim_states[shape.currentPrimitiveState].Shader])
+								{
+									case ShaderNames.Tex:
+										mat.Flags |= MaterialFlags.DisableTextureAlpha;
+										mat.Flags |= MaterialFlags.DisableLighting;
+										break;
+									case ShaderNames.TexDiff:
+										mat.Flags |= MaterialFlags.DisableTextureAlpha;
+										break;
+									case ShaderNames.BlendATex:
+										mat.Flags |= MaterialFlags.DisableLighting;
+										break;
+									case ShaderNames.BlendATexDiff:
+										// Default material
+										break;
+									case ShaderNames.AddATex:
+										mat.Flags |= MaterialFlags.Emissive;
+										mat.Flags |= MaterialFlags.DisableLighting;
+										break;
+									case ShaderNames.AddATexDiff:
+										mat.Flags |= MaterialFlags.Emissive;
+										break;
+								}
+								currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials.Add(mat);
 								break;
 							case KujuTokenID.indexed_trilist:
 								ParseBlock(newBlock, ref shape);
@@ -1210,11 +1309,9 @@ namespace Plugin
 					break;
 				case KujuTokenID.vertex_set:
 					int vertexStateIndex = block.ReadInt32(); //Index to the vtx_states member
-					int hierarchy = shape.vtx_states[vertexStateIndex].hierarchyID; //Now pull the hierachy ID out
+					VertexSet vts = new VertexSet(shape.vtx_states[vertexStateIndex].hierarchyID); //Now pull the hierachy ID out
 					int setStartVertexIndex = block.ReadInt32(); //First vertex
 					int setVertexCount = block.ReadInt32(); //Total number of vert
-					VertexSet vts = new VertexSet();
-					vts.hierarchyIndex = hierarchy;
 					vts.startVertex = setStartVertexIndex;
 					vts.numVerticies = setVertexCount;
 					currentLOD.subObjects[currentLOD.subObjects.Count - 1].vertexSets.Add(vts);

@@ -6,6 +6,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using SoundManager;
 using TrainManager.Handles;
+using TrainManager.Motor;
 
 namespace OpenBve.Graphics.Renderers
 {
@@ -155,6 +156,18 @@ namespace OpenBve.Graphics.Renderers
 				remainder = (int)Program.CurrentRoute.SecondsSinceMidnight % 3600,
 				minutes = remainder / 60,
 				seconds = remainder % 60;
+
+			bool hasRPM = false;
+			string RPM = "Engine RPM: ";
+			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+			{
+				if (TrainManager.PlayerTrain.Cars[i].Engine is DieselEngine dieselEngine)
+				{
+					RPM += "Car " + i + " " + (int)dieselEngine.CurrentRPM + "rpm ";
+					hasRPM = true;
+				}
+			}
+
 			string[] Lines = {
 				"=system",
 				"fps: " + Program.Renderer.FrameRate.ToString("0.0", Culture) + (MainLoop.LimitFramerate ? " (low cpu)" : ""),
@@ -174,6 +187,7 @@ namespace OpenBve.Graphics.Renderers
 				"speed of sound: " + (Program.CurrentRoute.Atmosphere.GetSpeedOfSound(airDensity) * 3.6).ToString("0.00", Culture) + " km/h",
 				"passenger ratio: " + TrainManager.PlayerTrain.CargoRatio.ToString("0.00"),
 				"total mass: " + mass.ToString("0.00", Culture) + " kg",
+				"" + (hasRPM ? RPM : string.Empty),
 				"",
 				"=route",
 				"track limit: " + (TrainManager.PlayerTrain.CurrentRouteLimit == double.PositiveInfinity ? "unlimited" : ((TrainManager.PlayerTrain.CurrentRouteLimit * 3.6).ToString("0.0", Culture) + " km/h")),
@@ -253,7 +267,7 @@ namespace OpenBve.Graphics.Renderers
 			// debug
 			renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), Color128.SemiTransparentGrey);
 			string[] Lines;
-			if (TrainManager.PlayerTrain.Plugin.Panel.Length > 0)
+			if (TrainManager.PlayerTrain.Plugin?.Panel.Length > 0)
 			{
 				Lines = new string[TrainManager.PlayerTrain.Plugin.Panel.Length + 2];
 				Lines[0] = "=ATS Plugin Variables";

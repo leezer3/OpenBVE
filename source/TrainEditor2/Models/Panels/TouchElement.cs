@@ -3,14 +3,17 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Xml.Linq;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Others;
 
 namespace TrainEditor2.Models.Panels
 {
-	internal class TouchElement : BindableBase, ICloneable
+	internal class TouchElement : PanelElement
 	{
 		internal class SoundEntry : BindableBase, ICloneable
 		{
@@ -82,12 +85,8 @@ namespace TrainEditor2.Models.Panels
 
 		private readonly CultureInfo culture;
 
-		private double locationX;
-		private double locationY;
-		private double sizeX;
-		private double sizeY;
+		private Vector2 size;
 		private int jumpScreen;
-		private int layer;
 
 		private TreeViewItemModel treeItem;
 		private TreeViewItemModel selectedTreeItem;
@@ -100,51 +99,15 @@ namespace TrainEditor2.Models.Panels
 		internal ObservableCollection<ListViewColumnHeaderModel> ListColumns;
 		internal ObservableCollection<ListViewItemModel> ListItems;
 
-		internal double LocationX
+		internal Vector2 Size
 		{
 			get
 			{
-				return locationX;
+				return size;
 			}
 			set
 			{
-				SetProperty(ref locationX, value);
-			}
-		}
-
-		internal double LocationY
-		{
-			get
-			{
-				return locationY;
-			}
-			set
-			{
-				SetProperty(ref locationY, value);
-			}
-		}
-
-		internal double SizeX
-		{
-			get
-			{
-				return sizeX;
-			}
-			set
-			{
-				SetProperty(ref sizeX, value);
-			}
-		}
-
-		internal double SizeY
-		{
-			get
-			{
-				return sizeY;
-			}
-			set
-			{
-				SetProperty(ref sizeY, value);
+				SetProperty(ref size, value);
 			}
 		}
 
@@ -157,18 +120,6 @@ namespace TrainEditor2.Models.Panels
 			set
 			{
 				SetProperty(ref jumpScreen, value);
-			}
-		}
-
-		internal int Layer
-		{
-			get
-			{
-				return layer;
-			}
-			set
-			{
-				SetProperty(ref layer, value);
 			}
 		}
 
@@ -212,10 +163,8 @@ namespace TrainEditor2.Models.Panels
 		{
 			culture = CultureInfo.InvariantCulture;
 
-			LocationX = 0.0;
-			LocationY = 0.0;
-			SizeX = 0.0;
-			SizeY = 0.0;
+			Location = Vector2.Null;
+			Size = Vector2.Null;
 			JumpScreen = screen.Number;
 			SoundEntries = new ObservableCollection<SoundEntry>();
 			CommandEntries = new ObservableCollection<CommandEntry>();
@@ -228,7 +177,7 @@ namespace TrainEditor2.Models.Panels
 			SelectedTreeItem = TreeItem;
 		}
 
-		public object Clone()
+		public override object Clone()
 		{
 			TouchElement touch = (TouchElement)MemberwiseClone();
 			touch.SoundEntries = new ObservableCollection<SoundEntry>(SoundEntries.Select(x => (SoundEntry)x.Clone()));
@@ -377,6 +326,48 @@ namespace TrainEditor2.Models.Panels
 			ListItems.Remove(SelectedListItem);
 
 			SelectedListItem = null;
+		}
+
+		public override void WriteCfg(string fileName, StringBuilder builder)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void WriteXML(string fileName, XElement parent)
+		{
+			XElement touchNode = new XElement("Touch",
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
+				new XElement("Layer", Layer),
+				new XElement("Size", $"{Size.X}, {Size.Y}"),
+				new XElement("JumpScreen", JumpScreen)
+			);
+
+			if (SoundEntries.Any())
+			{
+				touchNode.Add(new XElement("SoundEntries", SoundEntries.Select(WriteTouchElementSoundEntryNode)));
+			}
+
+			if (CommandEntries.Any())
+			{
+				touchNode.Add(new XElement("CommandEntries", CommandEntries.Select(WriteTouchElementCommandEntryNode)));
+			}
+
+			parent.Add(touchNode);
+		}
+
+		private XElement WriteTouchElementSoundEntryNode(SoundEntry entry)
+		{
+			return new XElement("Entry",
+				new XElement("Index", entry.Index)
+			);
+		}
+
+		private XElement WriteTouchElementCommandEntryNode(CommandEntry entry)
+		{
+			return new XElement("Entry",
+				new XElement("Name", entry.Info.Name),
+				new XElement("Option", entry.Option)
+			);
 		}
 	}
 }

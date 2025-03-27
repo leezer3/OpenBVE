@@ -2,7 +2,7 @@
 using OpenBveApi.Interface;
 
 namespace OpenBve {
-    partial class formImage {
+    partial class FormImage {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -36,7 +36,7 @@ namespace OpenBve {
             this.ClientSize = new System.Drawing.Size(960, 600);
             this.DoubleBuffered = true;
             this.MinimizeBox = false;
-            this.Name = "formImage";
+            this.Name = "FormImage";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;

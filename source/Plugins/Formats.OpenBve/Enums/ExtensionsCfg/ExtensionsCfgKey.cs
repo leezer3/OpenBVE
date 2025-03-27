@@ -1,6 +1,6 @@
-﻿namespace Train.OpenBve
+﻿namespace Formats.OpenBve
 {
-	internal enum ExtensionCfgKey
+	public enum ExtensionCfgKey
 	{
 		Unknown = 0,
 		Object,

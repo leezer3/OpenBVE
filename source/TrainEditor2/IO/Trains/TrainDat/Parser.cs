@@ -133,9 +133,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 								string s = u.Substring(0, j).Trim();
 								u = u.Substring(j + 1);
-								double a;
 
-								if (double.TryParse(s, NumberStyles.Float, culture, out a))
+								if (double.TryParse(s, NumberStyles.Float, culture, out double a))
 								{
 									switch (m)
 									{
@@ -199,9 +198,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 						while (i < lines.Length && !lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 						{
-							double a;
 
-							if (double.TryParse(lines[i], NumberStyles.Float, culture, out a))
+							if (double.TryParse(lines[i], NumberStyles.Float, culture, out double a))
 							{
 								switch (n)
 								{
@@ -260,9 +258,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 						while (i < lines.Length && !lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 						{
-							double a;
 
-							if (double.TryParse(lines[i], NumberStyles.Float, culture, out a))
+							if (double.TryParse(lines[i], NumberStyles.Float, culture, out double a))
 							{
 								switch (n)
 								{
@@ -360,7 +357,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										}
 										else
 										{
-											delayLocoBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();	
+											delayLocoBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
 										}
 										break;
 								}
@@ -438,9 +435,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 						while (i < lines.Length && !lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 						{
-							double a;
 
-							if (double.TryParse(lines[i], NumberStyles.Float, culture, out a))
+							if (double.TryParse(lines[i], NumberStyles.Float, culture, out double a))
 							{
 								switch (n)
 								{
@@ -500,9 +496,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 						while (i < lines.Length && !lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 						{
-							double a;
 
-							if (double.TryParse(lines[i], NumberStyles.Float, culture, out a))
+							if (double.TryParse(lines[i], NumberStyles.Float, culture, out double a))
 							{
 								int b = (int)Math.Round(a);
 
@@ -550,9 +545,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 						while (i < lines.Length && !lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 						{
-							double a;
 
-							if (double.TryParse(lines[i], NumberStyles.Float, culture, out a))
+							if (double.TryParse(lines[i], NumberStyles.Float, culture, out double a))
 							{
 								switch (n)
 								{
@@ -605,9 +599,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 						while (i < lines.Length && !lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 						{
-							double a;
 
-							if (double.TryParse(lines[i], NumberStyles.Float, culture, out a))
+							if (double.TryParse(lines[i], NumberStyles.Float, culture, out double a))
 							{
 								int b = (int)Math.Round(a);
 
@@ -691,9 +684,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 						while (i < lines.Length && !lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 						{
-							double a;
 
-							if (double.TryParse(lines[i], NumberStyles.Float, culture, out a))
+							if (double.TryParse(lines[i], NumberStyles.Float, culture, out double a))
 							{
 								switch (n)
 								{
@@ -723,9 +715,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 						while (i < lines.Length && !lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 						{
-							double a;
 
-							if (double.TryParse(lines[i], NumberStyles.Float, culture, out a))
+							if (double.TryParse(lines[i], NumberStyles.Float, culture, out double a))
 							{
 								int b = (int)Math.Round(a);
 
@@ -814,9 +805,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 						while (i < lines.Length && !lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 						{
-							double a;
 
-							if (double.TryParse(lines[i], NumberStyles.Float, culture, out a))
+							if (double.TryParse(lines[i], NumberStyles.Float, culture, out double a))
 							{
 								int b = (int)Math.Round(a);
 
@@ -929,9 +919,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 									string s = u.Substring(0, j).Trim();
 									u = u.Substring(j + 1);
-									double a;
 
-									if (double.TryParse(s, NumberStyles.Float, culture, out a))
+									if (double.TryParse(s, NumberStyles.Float, culture, out double a))
 									{
 										int b = (int)Math.Round(a);
 

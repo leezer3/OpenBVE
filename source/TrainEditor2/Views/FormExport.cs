@@ -44,6 +44,14 @@ namespace TrainEditor2.Views
 					x => x == App.TrainFileType.OldFormat
 				)
 				.AddTo(disposable);
+			app.CurrentTrainFileType
+				.BindTo(
+					groupBoxTrainXML,
+					x => x.Enabled,
+					BindingMode.OneWay,
+					x => x == App.TrainFileType.TrainXML
+				)
+				.AddTo(disposable);
 
 			app.TrainDatExportLocation
 				.BindTo(
@@ -233,6 +241,26 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxSoundXmlFileName)
 				.AddTo(disposable);
 
+			app.TrainXmlExportLocation
+				.BindTo(
+					textBoxTrainXmlFilename,
+					x => x.Text,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => textBoxTrainXmlFilename.TextChanged += h,
+							h => textBoxTrainXmlFilename.TextChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(disposable);
+
+			app.TrainXmlExportLocation
+				.BindToErrorProvider(errorProvider, textBoxTrainXmlFilename)
+				.AddTo(disposable);
+
 			app.ExportFiles.BindToButton(buttonOK).AddTo(disposable);
 
 			groupBoxOldFormat.Text = Utilities.GetInterfaceString("import_export", "train", "old_format");
@@ -326,6 +354,11 @@ namespace TrainEditor2.Views
 		private void ButtonOK_Click(object sender, EventArgs e)
 		{
 			Close();
+		}
+
+		private void buttonTrainXmlFilenameOpen_Click(object sender, EventArgs e)
+		{
+			SetFileName(@"train.xml files|train.xml|All files|*", textBoxTrainXmlFilename);
 		}
 	}
 }

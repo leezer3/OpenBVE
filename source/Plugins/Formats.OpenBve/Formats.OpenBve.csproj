@@ -54,8 +54,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CFG\ConfigFile.cs" />
+    <Compile Include="Enums\ExtensionsCfg\ExtensionsCfgKey.cs" />
+    <Compile Include="Enums\ExtensionsCfg\ExtensionsCfgSection.cs" />
+    <Compile Include="Enums\SoundCfg\SoundCfgKey.cs" />
+    <Compile Include="Enums\SoundCfg\SoundCfgSection.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Block.cs" />
+    <Compile Include="Panel\Panel2\Panel2Key.cs" />
+    <Compile Include="Panel\Panel2\Panel2Sections.cs" />
+    <Compile Include="Panel\Panel2\Panel2Subject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

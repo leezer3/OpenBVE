@@ -356,7 +356,7 @@ namespace TrainEditor2.Models.Panels
 			if (pilotLamp != null)
 			{
 				item.Texts[0] = pilotLamp.Subject.ToString();
-				item.Texts[1] = $"{pilotLamp.LocationX.ToString(culture)}, {pilotLamp.LocationY.ToString(culture)}";
+				item.Texts[1] = $"{pilotLamp.Location.X.ToString(culture)}, {pilotLamp.Location.Y.ToString(culture)}";
 				item.Texts[2] = pilotLamp.DaytimeImage;
 				item.Texts[3] = pilotLamp.NighttimeImage;
 				item.Texts[4] = pilotLamp.TransparentColor.ToString();
@@ -366,13 +366,13 @@ namespace TrainEditor2.Models.Panels
 			if (needle != null)
 			{
 				item.Texts[0] = needle.Subject.ToString();
-				item.Texts[1] = $"{needle.LocationX.ToString(culture)}, {needle.LocationY.ToString(culture)}";
+				item.Texts[1] = $"{needle.Location.X.ToString(culture)}, {needle.Location.Y.ToString(culture)}";
 				item.Texts[2] = needle.DefinedRadius ? needle.Radius.ToString(culture) : string.Empty;
 				item.Texts[3] = needle.DaytimeImage;
 				item.Texts[4] = needle.NighttimeImage;
 				item.Texts[5] = needle.Color.ToString();
 				item.Texts[6] = needle.TransparentColor.ToString();
-				item.Texts[7] = needle.DefinedOrigin ? $"{needle.OriginX.ToString(culture)}, {needle.OriginY.ToString(culture)}" : string.Empty;
+				item.Texts[7] = needle.DefinedOrigin ? $"{needle.Origin.X.ToString(culture)}, {needle.Origin.Y.ToString(culture)}" : string.Empty;
 				item.Texts[8] = needle.InitialAngle.ToDegrees().ToString(culture);
 				item.Texts[9] = needle.LastAngle.ToDegrees().ToString(culture);
 				item.Texts[10] = needle.Minimum.ToString(culture);
@@ -387,7 +387,7 @@ namespace TrainEditor2.Models.Panels
 			if (digitalNumber != null)
 			{
 				item.Texts[0] = digitalNumber.Subject.ToString();
-				item.Texts[1] = $"{digitalNumber.LocationX.ToString(culture)}, {digitalNumber.LocationY.ToString(culture)}";
+				item.Texts[1] = $"{digitalNumber.Location.X.ToString(culture)}, {digitalNumber.Location.Y.ToString(culture)}";
 				item.Texts[2] = digitalNumber.DaytimeImage;
 				item.Texts[3] = digitalNumber.NighttimeImage;
 				item.Texts[4] = digitalNumber.TransparentColor.ToString();
@@ -398,7 +398,7 @@ namespace TrainEditor2.Models.Panels
 			if (digitalGauge != null)
 			{
 				item.Texts[0] = digitalGauge.Subject.ToString();
-				item.Texts[1] = $"{digitalGauge.LocationX.ToString(culture)}, {digitalGauge.LocationY.ToString(culture)}";
+				item.Texts[1] = $"{digitalGauge.Location.X.ToString(culture)}, {digitalGauge.Location.Y.ToString(culture)}";
 				item.Texts[2] = digitalGauge.Radius.ToString(culture);
 				item.Texts[3] = digitalGauge.Color.ToString();
 				item.Texts[4] = digitalGauge.InitialAngle.ToDegrees().ToString(culture);
@@ -412,20 +412,20 @@ namespace TrainEditor2.Models.Panels
 			if (linearGauge != null)
 			{
 				item.Texts[0] = linearGauge.Subject.ToString();
-				item.Texts[1] = $"{linearGauge.LocationX.ToString(culture)}, {linearGauge.LocationY.ToString(culture)}";
+				item.Texts[1] = $"{linearGauge.Location.X.ToString(culture)}, {linearGauge.Location.Y.ToString(culture)}";
 				item.Texts[2] = linearGauge.DaytimeImage;
 				item.Texts[3] = linearGauge.NighttimeImage;
 				item.Texts[4] = linearGauge.TransparentColor.ToString();
 				item.Texts[5] = linearGauge.Minimum.ToString(culture);
 				item.Texts[6] = linearGauge.Maximum.ToString(culture);
-				item.Texts[7] = $"{linearGauge.DirectionX.ToString(culture)}, {linearGauge.DirectionY.ToString(culture)}";
+				item.Texts[7] = $"{linearGauge.Direction.X.ToString(culture)}, {linearGauge.Direction.Y.ToString(culture)}";
 				item.Texts[8] = linearGauge.Width.ToString(culture);
 				item.Texts[9] = linearGauge.Layer.ToString(culture);
 			}
 
 			if (timetable != null)
 			{
-				item.Texts[0] = $"{timetable.LocationX.ToString(culture)}, {timetable.LocationY.ToString(culture)}";
+				item.Texts[0] = $"{timetable.Location.X.ToString(culture)}, {timetable.Location.Y.ToString(culture)}";
 				item.Texts[1] = timetable.Width.ToString(culture);
 				item.Texts[2] = timetable.Height.ToString(culture);
 				item.Texts[3] = timetable.TransparentColor.ToString();
@@ -434,8 +434,8 @@ namespace TrainEditor2.Models.Panels
 
 			if (touch != null)
 			{
-				item.Texts[0] = $"{touch.LocationX.ToString(culture)}, {touch.LocationY.ToString(culture)}";
-				item.Texts[1] = $"{touch.SizeX.ToString(culture)}, {touch.SizeY.ToString(culture)}";
+				item.Texts[0] = $"{touch.Location.X.ToString(culture)}, {touch.Location.Y.ToString(culture)}";
+				item.Texts[1] = $"{touch.Size.X.ToString(culture)}, {touch.Size.Y.ToString(culture)}";
 				item.Texts[2] = touch.JumpScreen.ToString(culture);
 				item.Texts[3] = touch.Layer.ToString(culture);
 			}

@@ -16,6 +16,8 @@ namespace OpenBveApi.Objects
 		DisableLighting = 4,
 		/// <summary>The daytime and night-time textures are to be cross-faded</summary>
 		/// <remarks>Disabled by default</remarks>
-		CrossFadeTexture = 8
+		CrossFadeTexture = 8,
+		/// <summary>Alpha is disabled when rendering</summary>
+		DisableTextureAlpha = 16
 	}
 }

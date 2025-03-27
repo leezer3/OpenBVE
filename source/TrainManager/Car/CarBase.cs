@@ -16,6 +16,7 @@ using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
 using TrainManager.Cargo;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.SafetySystems;
 using TrainManager.Trains;
@@ -95,6 +96,8 @@ namespace TrainManager.Car
 		public Flange Flange;
 		/// <summary>The run sounds</summary>
 		public RunSounds Run;
+		/// <summary>The engine</summary>
+		public AbstractEngine Engine;
 
 		private int trainCarIndex;
 

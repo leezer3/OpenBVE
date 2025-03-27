@@ -298,9 +298,12 @@
     <Compile Include="World\Transformations.cs" />
     <Compile Include="Math\Vectors\Vector2.cs" />
     <Compile Include="Math\Vectors\Vector3.cs" />
+    <Compile Include="World\UnitConversions\Current.cs" />
     <Compile Include="World\UnitConversions\Force.cs" />
     <Compile Include="World\UnitConversions\Length.cs" />
+    <Compile Include="World\UnitConversions\Pressure.cs" />
     <Compile Include="World\UnitConversions\UnitConvertor.cs" />
+    <Compile Include="World\UnitConversions\Volume.cs" />
     <Compile Include="World\UnitConversions\Weight.cs" />
     <Compile Include="World\LightMappedVertex.cs" />
   </ItemGroup>

@@ -614,7 +614,7 @@ namespace Train.OpenBve
 								}
 								else
 								{
-									CreateElement(Car, Corner.X + 2.0 * Size.Y, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
+									CreateElement(Car, Corner.X + 2.0 * Size.X, Corner.Y + SemiHeight, Size.X, Size.Y, WorldZ + EyeDistance - 7.0 * StackDistance, digitalNumberTextures[j], Color32.White, true);
 								}
 							}
 

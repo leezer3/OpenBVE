@@ -125,6 +125,11 @@ namespace TrainEditor2.ViewModels
 			get;
 		}
 
+		internal ReactiveProperty<string> TrainXmlExportLocation
+		{
+			get;
+		}
+
 		internal ReadOnlyReactivePropertySlim<TrainViewModel> Train
 		{
 			get;
@@ -414,6 +419,14 @@ namespace TrainEditor2.ViewModels
 				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
 				.AddTo(disposable);
 
+			TrainXmlExportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.TrainXmlExportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
+				.AddTo(disposable);
+
 			Train = app
 				.ObserveProperty(x => x.Train)
 				.Do(_ => Train?.Value.Dispose())
@@ -549,6 +562,7 @@ namespace TrainEditor2.ViewModels
 				{
 					TrainDatExportLocation.ObserveHasErrors,
 					ExtensionsCfgExportLocation.ObserveHasErrors,
+					TrainXmlExportLocation.ObserveHasErrors,
 					Panel2CfgExportLocation.ObserveHasErrors,
 					PanelXmlExportLocation.ObserveHasErrors,
 					SoundCfgExportLocation.ObserveHasErrors,

@@ -1,8 +1,7 @@
-﻿// ReSharper disable UnusedMember.Global
-// ReSharper disable InconsistentNaming
-namespace Train.OpenBve
+﻿// ReSharper disable InconsistentNaming
+namespace Formats.OpenBve
 {
-	internal enum Panel2Subject
+	public enum Panel2Subject
 	{
 		True = 0,
 		Acc,

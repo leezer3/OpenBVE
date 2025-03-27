@@ -15,7 +15,7 @@ namespace OpenBveApi.World
 		ImperialTons
 	}
 
-	/// <summary>Implements the length convertor</summary>
+	/// <summary>Implements the weight convertor</summary>
 	public class WeightConverter : UnitConverter<UnitOfWeight, double>
 	{
 		static WeightConverter()

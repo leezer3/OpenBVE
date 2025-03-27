@@ -843,7 +843,7 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Reverses the object</summary>
-		public void Reverse(bool Interior = false)
+		public void Reverse(bool interior = false)
 		{
 			foreach (ObjectState state in States)
 			{
@@ -866,7 +866,7 @@ namespace OpenBveApi.Objects
 			TranslateZDirection.Z *= -1.0;
 			// If our object is an interior, we need to reverse the rotation of objects
 			// This does not apply to exterior / general objects, as we're using a translation matrix
-			if (Interior)
+			if (interior)
 			{
 				RotateXDirection.X *= -1.0;
 				RotateXDirection.Z *= -1.0;

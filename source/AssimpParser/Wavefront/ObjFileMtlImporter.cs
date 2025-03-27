@@ -83,7 +83,6 @@ using System.Diagnostics;
 using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Colors;
-using OpenBveApi.Interface;
 
 namespace AssimpNET.Obj
 {

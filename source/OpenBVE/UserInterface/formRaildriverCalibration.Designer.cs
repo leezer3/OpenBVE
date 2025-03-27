@@ -1,6 +1,6 @@
 ﻿namespace OpenBve.UserInterface
 {
-	partial class formRaildriverCalibration
+	partial class FormRaildriverCalibration
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -68,7 +68,7 @@
 			this.Controls.Add(this.buttonCalibrationNext);
 			this.Controls.Add(this.labelCalibrationText);
 			this.Controls.Add(this.pictureBox1);
-			this.Name = "formRaildriverCalibration";
+			this.Name = "FormRaildriverCalibration";
 			this.Text = "Raildriver Calibration";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.formRaildriverCalibration_FormClosing);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

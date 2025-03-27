@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Globalization;
+using System.Text;
+using System.Xml.Linq;
 using Prism.Mvvm;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -79,6 +83,29 @@ namespace TrainEditor2.Models.Trains
 			public object Clone()
 			{
 				return MemberwiseClone();
+			}
+
+			internal void WriteExtensionsCfg(string fileName, StringBuilder builder, int bogieIndex)
+			{
+				builder.AppendLine($"[Bogie{bogieIndex.ToString(CultureInfo.InvariantCulture)}]");
+				Utilities.WriteKey(builder, "Object", Utilities.MakeRelativePath(fileName, Object));
+
+				if (DefinedAxles)
+				{
+					Utilities.WriteKey(builder, "Axles", RearAxle, FrontAxle);
+				}
+
+				Utilities.WriteKey(builder, "Reversed", Reversed.ToString());
+			}
+
+			internal void WriteXML(string fileName, XElement carNode, bool isFront)
+			{
+				XElement bogieElement = new XElement(isFront ? "FrontBogie" : "RearBogie",
+					new XElement("FrontAxle", FrontAxle),
+					new XElement("RearAxle", RearAxle),
+					new XElement("Reversed", Reversed),
+					new XElement("Object", Utilities.MakeRelativePath(fileName, Object)));
+				carNode.Add(bogieElement);
 			}
 		}
 
@@ -379,6 +406,25 @@ namespace TrainEditor2.Models.Trains
 			car.Pressure = (Pressure)Pressure.Clone();
 			return car;
 		}
+
+		public void WriteExtensionsCfg(string fileName, StringBuilder builder, int carIndex)
+		{
+			builder.AppendLine($"[Car{carIndex.ToString(CultureInfo.InvariantCulture)}]");
+			Utilities.WriteKey(builder, "Object", Utilities.MakeRelativePath(fileName, Object));
+			Utilities.WriteKey(builder, "Length", Length);
+
+			if (DefinedAxles)
+			{
+				Utilities.WriteKey(builder, "Axles", RearAxle, FrontAxle);
+			}
+
+			Utilities.WriteKey(builder, "Reversed", Reversed.ToString());
+			Utilities.WriteKey(builder, "LoadingSway", LoadingSway.ToString());
+			FrontBogie.WriteExtensionsCfg(fileName, builder, carIndex * 2);
+			RearBogie.WriteExtensionsCfg(fileName, builder, carIndex * 2 + 1);
+		}
+
+		public abstract void WriteXML(string fileName, XElement trainNode, Train train, int i);
 	}
 
 	internal class MotorCar : Car
@@ -449,6 +495,33 @@ namespace TrainEditor2.Models.Trains
 			car.Motor = (Motor)Motor.Clone();
 			return car;
 		}
+
+		public override void WriteXML(string fileName, XElement trainNode, Train train, int i)
+		{
+			XElement carElement = new XElement("Car",
+				new XElement("Mass", Mass),
+				new XElement("Length", Length),
+				new XElement("Width", Width),
+				new XElement("Height", Height),
+				new XElement("CenterOfGravityHeight", CenterOfGravityHeight),
+				new XElement("FrontAxle", FrontAxle),
+				new XElement("RearAxle", RearAxle),
+				new XElement("ExposedFrontalArea", ExposedFrontalArea),
+				new XElement("UnexposedFrontalArea", UnexposedFrontalArea),
+				new XElement("Reversed", Reversed),
+				new XElement("Object", Utilities.MakeRelativePath(fileName, Object)),
+				new XElement("LoadingSway", LoadingSway)
+			);
+			Brake.WriteXML(fileName, carElement, true);
+			FrontBogie.WriteXML(fileName, carElement, true);
+			RearBogie.WriteXML(fileName, carElement, false);
+			Acceleration.WriteXML(fileName, carElement);
+			if (i == train.Cab.DriverCar)
+			{
+				train.Cab.WriteXML(fileName, carElement);
+			}
+			trainNode.Add(carElement);
+		}
 	}
 
 	internal class TrailerCar : Car
@@ -479,6 +552,32 @@ namespace TrainEditor2.Models.Trains
 			Reversed = car.Reversed;
 			Object = car.Object;
 			LoadingSway = car.LoadingSway;
+		}
+
+		public override void WriteXML(string fileName, XElement trainNode, Train train, int i)
+		{
+			XElement carElement = new XElement("Car",
+				new XElement("Mass", Mass),
+				new XElement("Length", Length),
+				new XElement("Width", Width),
+				new XElement("Height", Height),
+				new XElement("CenterOfGravityHeight", CenterOfGravityHeight),
+				new XElement("FrontAxle", FrontAxle),
+				new XElement("RearAxle", RearAxle),
+				new XElement("ExposedFrontalArea", ExposedFrontalArea),
+				new XElement("UnexposedFrontalArea", UnexposedFrontalArea),
+				new XElement("Reversed", Reversed),
+				new XElement("Object", Utilities.MakeRelativePath(fileName, Object)),
+				new XElement("LoadingSway", LoadingSway)
+			);
+			Brake.WriteXML(fileName, carElement, false);
+			FrontBogie.WriteXML(fileName, carElement, true);
+			RearBogie.WriteXML(fileName, carElement, false);
+			if (i == train.Cab.DriverCar)
+			{
+				train.Cab.WriteXML(fileName, carElement);
+			}
+			trainNode.Add(carElement);
 		}
 	}
 }

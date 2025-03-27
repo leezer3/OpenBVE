@@ -53,7 +53,7 @@ namespace RouteViewer
 						string[] potentialFiles = { };
 						string[] directoryList = { };
 						bool drives = false;
-						int totalEntries = 2;
+						int totalEntries;
 						switch (SearchDirectory)
 						{
 							case "":

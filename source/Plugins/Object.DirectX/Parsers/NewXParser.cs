@@ -88,7 +88,7 @@ namespace Plugin
 						}
 					}
 					//Convert runs of whitespace to single
-					var list = Lines[i].Split(new char[] { }).Where(s => !string.IsNullOrWhiteSpace(s));
+					var list = Lines[i].Split().Where(s => !string.IsNullOrWhiteSpace(s));
 					Lines[i] = string.Join(" ", list);
 				}
 				StringBuilder Builder = new StringBuilder();
@@ -439,14 +439,7 @@ namespace Plugin
 						// Key based material definitions
 						if (!string.IsNullOrEmpty(block.Label))
 						{
-							if (rootMaterials.ContainsKey(block.Label))
-							{
-								rootMaterials[block.Label] = newMaterial;
-							}
-							else
-							{
-								rootMaterials.Add(block.Label, newMaterial);
-							}
+							rootMaterials[block.Label] = newMaterial;
 						}
 					}
 					else

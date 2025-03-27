@@ -36,18 +36,13 @@ namespace Plugin
 	class AssimpObjParser
 	{
 		private static string currentFolder;
-		private static string currentFile;
 
-		internal static StaticObject ReadObject(string FileName)
+		internal static StaticObject ReadObject(string fileName)
 		{
-			currentFolder = Path.GetDirectoryName(FileName);
-			currentFile = FileName;
-
-#if !DEBUG
+			currentFolder = Path.GetDirectoryName(fileName);
 			try
 			{
-#endif
-				ObjFileParser parser = new ObjFileParser(System.IO.File.ReadAllLines(currentFile), null, System.IO.Path.GetFileNameWithoutExtension(currentFile), currentFile);
+				ObjFileParser parser = new ObjFileParser(System.IO.File.ReadAllLines(fileName), null, System.IO.Path.GetFileNameWithoutExtension(fileName), fileName);
 				Model model = parser.GetModel();
 
 				StaticObject obj = new StaticObject(Plugin.currentHost);
@@ -108,7 +103,10 @@ namespace Plugin
 						for (int i = 0; i < nVerts; i++)
 						{
 							f.Vertices[i].Index = i;
-							f.Vertices[i].Normal = allNormals[(int)face.Normals[i]];
+							if (face.Normals.Count > i)
+							{
+								f.Vertices[i].Normal = allNormals[(int)face.Normals[i]];
+							}
 						}
 						f.Material = 1;
 						builder.Faces.Add(f);
@@ -137,10 +135,10 @@ namespace Plugin
 							
 							if (material.Texture != null)
 							{
-								builder.Materials[m].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, material.Texture);
+								builder.Materials[m].DaytimeTexture = Path.CombineFile(currentFolder, material.Texture);
 								if (!System.IO.File.Exists(builder.Materials[m].DaytimeTexture))
 								{
-									Plugin.currentHost.AddMessage(MessageType.Error, true, "Texure " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);
+									Plugin.currentHost.AddMessage(MessageType.Error, true, "Texure " + builder.Materials[m].DaytimeTexture + " was not found in file " + fileName);
 									builder.Materials[m].DaytimeTexture = null;
 								}
 							}
@@ -156,14 +154,12 @@ namespace Plugin
 				}
 				obj.Mesh.CreateNormals();
 				return obj;
-#if !DEBUG
 			}
 			catch (Exception e)
 			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, e.Message + " in " + FileName);
+				Plugin.currentHost.AddMessage(MessageType.Error, false, e.Message + " in " + fileName);
 				return null;
 			}
-#endif
 		}
 	}
 }

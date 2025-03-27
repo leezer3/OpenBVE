@@ -168,17 +168,14 @@ namespace TrainEditor2.ViewModels.Panels
 
 			LocationX = touch
 				.ToReactivePropertyAsSynchronized(
-					x => x.LocationX,
+					x => x.Location.X,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -186,17 +183,14 @@ namespace TrainEditor2.ViewModels.Panels
 
 			LocationY = touch
 				.ToReactivePropertyAsSynchronized(
-					x => x.LocationY,
+					x => x.Location.Y,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -204,17 +198,14 @@ namespace TrainEditor2.ViewModels.Panels
 
 			SizeX = touch
 				.ToReactivePropertyAsSynchronized(
-					x => x.SizeX,
+					x => x.Size.X,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
 
 					return message;
 				})
@@ -222,17 +213,14 @@ namespace TrainEditor2.ViewModels.Panels
 
 			SizeY = touch
 				.ToReactivePropertyAsSynchronized(
-					x => x.SizeY,
+					x => x.Size.Y,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
 
 					return message;
 				})

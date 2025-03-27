@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Xml.Linq;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Others;
@@ -410,6 +411,24 @@ namespace TrainEditor2.Models.Trains
 		{
 			NowVelocity = 0.01 * Math.Round(100.0 * XtoVelocity(position.X));
 			NowAcceleration = 0.01 * Math.Round(100.0 * YtoAcceleration(position.Y));
+		}
+
+		internal void WriteXML(string fileName, XElement carNode)
+		{
+			XElement accelerationElement = new XElement("AccelerationCurves");
+			for (int i = 0; i < Entries.Count; i++)
+			{
+				XElement curveElement = new XElement("openBVE",
+					new XElement("StageZeroAcceleration", Entries[i].A0),
+					new XElement("StageOneAcceleration", Entries[i].A1),
+					new XElement("StageOneSpeed", Entries[i].V1),
+					new XElement("StageTwoSpeed", Entries[i].V2),
+					new XElement("StageTwoExponent", Entries[i].E));
+				accelerationElement.Add(curveElement);
+			}
+			carNode.Add(accelerationElement);
+
+
 		}
 	}
 }

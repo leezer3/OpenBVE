@@ -1,4 +1,5 @@
-﻿namespace Object.Wavefront
+﻿// ReSharper disable InconsistentNaming
+namespace Object.Wavefront
 {
 	internal enum WavefrontObjCommands
 	{

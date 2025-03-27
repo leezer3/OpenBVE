@@ -20,15 +20,15 @@ namespace CsvRwRouteParser
 			internal bool SignedCant;
 			internal bool FogTransitionMode;
 			internal readonly StructureData Structure;
-			internal SignalDictionary Signals;
+			internal readonly SignalDictionary Signals;
 			internal CompatibilitySignalObject[] CompatibilitySignals;
 			internal Texture[] TimetableDaytime;
 			internal Texture[] TimetableNighttime;
 			internal BackgroundDictionary Backgrounds;
 			internal double[] SignalSpeeds;
-			internal List<Block> Blocks;
-			internal Marker[] Markers;
-			internal StopRequest[] RequestStops;
+			internal readonly List<Block> Blocks;
+			internal readonly List<Marker> Markers;
+			internal readonly List<StopRequest> RequestStops;
 			internal int FirstUsedBlock;
 			internal bool IgnorePitchRoll;
 			internal bool LineEndingFix;
@@ -36,7 +36,7 @@ namespace CsvRwRouteParser
 			internal bool TurnUsed = false;
 			internal bool SwitchUsed = false;
 
-			internal List<string> ScriptedTrainFiles;
+			internal readonly List<string> ScriptedTrainFiles;
 			/*
 			 * HMMSIM
 			 */
@@ -47,8 +47,12 @@ namespace CsvRwRouteParser
 				BlockInterval = 25.0;
 				FirstUsedBlock = -1;
 				Blocks = new List<Block>();
-				Structure = new StructureData();
+				Markers = new List<Marker>();
+				RequestStops = new List<StopRequest>();
 				ScriptedTrainFiles = new List<string>();
+				Signals = new SignalDictionary();
+				Structure = new StructureData();
+				
 				Blocks.Add(new Block(previewOnly));
 				Blocks[0].Rails.Add(0, new Rail(2.0, 1.0) { RailStarted = true });
 				Blocks[0].RailType = new[] { 0 };

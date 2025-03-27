@@ -18,6 +18,9 @@ namespace TrainEditor2.Models.Sounds
 		[StringValue("Emergency")]
 		Emergency,
 
+		[StringValue("EmergencyRelease")]
+		EmergencyRelease,
+
 		[StringValue("BP Decomp", "Application")]
 		BpDecomp
 	}

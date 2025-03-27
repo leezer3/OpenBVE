@@ -21,13 +21,14 @@ SOFTWARE.
 */
 
 #pragma warning disable 660, 661
+using System;
 using System.Runtime.InteropServices;
 
 namespace OpenBveApi.Math
 {
 	/// <summary>Represents a Quaternion</summary>
 	[StructLayout(LayoutKind.Sequential)]
-	public struct Quaternion
+	public struct Quaternion : IEquatable<Quaternion>
 	{
 		/// <summary>The X, Y and Z components</summary>
 		public Vector3 Xyz;
@@ -445,6 +446,29 @@ namespace OpenBveApi.Math
 				return result;
 			}
 			return Identity;
+		}
+
+		/// <summary>Tests whether this Quaternion is equal to another</summary>
+		/// <param name="other">The other quaternion</param>
+		public bool Equals(Quaternion other)
+		{
+			return Xyz.Equals(other.Xyz) && W.Equals(other.W);
+		}
+
+		/// <summary>Tests whether this Quaternion is equal to the specified object</summary>
+		/// <param name="obj">The object</param>
+		public override bool Equals(object obj)
+		{
+			return obj is Quaternion other && Equals(other);
+		}
+
+		/// <summary>Gets the hash-code for this quaternion</summary>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (Xyz.GetHashCode() * 397) ^ W.GetHashCode();
+			}
 		}
 	}
 }

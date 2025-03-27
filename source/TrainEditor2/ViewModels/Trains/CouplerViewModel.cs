@@ -60,14 +60,9 @@ namespace TrainEditor2.ViewModels.Trains
 
 			Min.SetValidateNotifyError(x =>
 				{
-					double min;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.Any, out min, out message))
+					if (Utilities.TryParse(x, NumberRange.Any, out double min, out string message))
 					{
-						double max;
-
-						if (Utilities.TryParse(Max.Value, NumberRange.Any, out max) && min > max)
+						if (Utilities.TryParse(Max.Value, NumberRange.Any, out double max) && min > max)
 						{
 							message = Utilities.GetInterfaceString("message", "mustbe_greater_than");
 						}
@@ -86,14 +81,9 @@ namespace TrainEditor2.ViewModels.Trains
 
 			Max.SetValidateNotifyError(x =>
 				{
-					double max;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.Any, out max, out message))
+					if (Utilities.TryParse(x, NumberRange.Any, out double max, out string message))
 					{
-						double min;
-
-						if (Utilities.TryParse(Min.Value, NumberRange.Any, out min) && max < min)
+						if (Utilities.TryParse(Min.Value, NumberRange.Any, out double min) && max < min)
 						{
 							message = Utilities.GetInterfaceString("message", "mustbe_greater_than");
 						}

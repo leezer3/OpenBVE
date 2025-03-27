@@ -63,7 +63,7 @@ namespace Plugin
 		    return false;
 	    }
 
-	    public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject unifiedObject)
+	    public override bool LoadObject(string path, System.Text.Encoding encoding, out UnifiedObject unifiedObject)
 	    {
 
 		    if (currentObjParser == ObjParsers.Assimp)
@@ -80,7 +80,7 @@ namespace Plugin
 		    }
 		    try
 		    {   
-			    unifiedObject = WavefrontObjParser.ReadObject(path, Encoding);
+			    unifiedObject = WavefrontObjParser.ReadObject(path, encoding);
 			    return true;
 		    }
 		    catch

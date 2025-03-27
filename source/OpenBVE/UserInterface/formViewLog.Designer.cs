@@ -1,7 +1,7 @@
 ﻿
 namespace OpenBve.UserInterface
 {
-	partial class formViewLog
+	partial class FormViewLog
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -65,7 +65,7 @@ namespace OpenBve.UserInterface
 			this.ClientSize = new System.Drawing.Size(784, 561);
 			this.Controls.Add(this.buttonClose);
 			this.Controls.Add(this.textBoxLog);
-			this.Name = "formViewLog";
+			this.Name = "FormViewLog";
 			this.Text = "View Log";
 			this.ResumeLayout(false);
 			this.PerformLayout();

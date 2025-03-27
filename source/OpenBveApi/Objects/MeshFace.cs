@@ -30,8 +30,9 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Creates a new MeshFace using the specified vertex indicies and the default material</summary>
 		/// <param name="Vertices">The vertex indicies</param>
+		/// <param name="material">The material</param>
 		/// <param name="Type">The type of OpenGL face drawing to use</param>
-		public MeshFace(int[] Vertices, FaceFlags Type = FaceFlags.NotSet)
+		public MeshFace(int[] Vertices, ushort material, FaceFlags Type = FaceFlags.NotSet)
 		{
 			this.Vertices = new MeshFaceVertex[Vertices.Length];
 			for (int i = 0; i < Vertices.Length; i++)
@@ -39,7 +40,7 @@ namespace OpenBveApi.Objects
 				this.Vertices[i] = new MeshFaceVertex(Vertices[i]);
 			}
 
-			Material = 0;
+			Material = material;
 			Flags = 0;
 			IboStartIndex = 0;
 			NormalsIboStartIndex = 0;
@@ -47,6 +48,13 @@ namespace OpenBveApi.Objects
 			{
 				Flags |= Type;
 			}
+		}
+
+		/// <summary>Creates a new MeshFace using the specified vertex indicies and the default material</summary>
+		/// <param name="Vertices">The vertex indicies</param>
+		/// <param name="Type">The type of OpenGL face drawing to use</param>
+		public MeshFace(int[] Vertices, FaceFlags Type = FaceFlags.NotSet) : this(Vertices, 0, Type)
+		{
 		}
 
 		/// <summary>Creates a new MeshFace using the specified vertex indices and material</summary>
@@ -70,6 +78,16 @@ namespace OpenBveApi.Objects
 			Flags = 0;
 			IboStartIndex = 0;
 			NormalsIboStartIndex = 0;
+		}
+
+		public void AppendVerticies(int[] Vertices)
+		{
+			int oldLength = this.Vertices.Length;
+			Array.Resize(ref this.Vertices, oldLength + Vertices.Length);
+			for (int i = 0; i < Vertices.Length; i++)
+			{
+				this.Vertices[oldLength + i] = new MeshFaceVertex(Vertices[i]);
+			}
 		}
 
 		/// <summary>Flips the MeshFace</summary>

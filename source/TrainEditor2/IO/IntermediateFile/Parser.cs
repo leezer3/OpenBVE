@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Panels;
 using TrainEditor2.Models.Sounds;
@@ -304,10 +305,8 @@ namespace TrainEditor2.IO.IntermediateFile
 				DaytimeImage = (string)parent.Element("DaytimeImage"),
 				NighttimeImage = (string)parent.Element("NighttimeImage"),
 				TransparentColor = Color24.ParseHexColor((string)parent.Element("TransparentColor")),
-				CenterX = center[0],
-				CenterY = center[1],
-				OriginX = origin[0],
-				OriginY = origin[1]
+				Center = new Vector2(center[0], center[1]),
+				Origin = new Vector2(origin[0], origin[1])
 			};
 		}
 
@@ -360,8 +359,7 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			element = new Models.Panels.PilotLampElement
 			{
-				LocationX = location[0],
-				LocationY = location[1],
+				Location = new Vector2(location[0], location[1]),
 				Layer = (int)parent.Element("Layer"),
 				Subject = ParseSubjectNode(parent.Element("Subject")),
 				DaytimeImage = (string)parent.Element("DaytimeImage"),
@@ -377,8 +375,7 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			element = new NeedleElement
 			{
-				LocationX = location[0],
-				LocationY = location[1],
+				Location = new Vector2(location[0], location[1]),
 				Layer = (int)parent.Element("Layer"),
 				Subject = ParseSubjectNode(parent.Element("Subject")),
 				DaytimeImage = (string)parent.Element("DaytimeImage"),
@@ -388,8 +385,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				Radius = (double)parent.Element("Radius"),
 				Color = Color24.ParseHexColor((string)parent.Element("Color")),
 				DefinedOrigin = (bool)parent.Element("DefinedOrigin"),
-				OriginX = origin[0],
-				OriginY = origin[1],
+				Origin = new Vector2(origin[0], origin[1]),
 				InitialAngle = (double)parent.Element("InitialAngle"),
 				LastAngle = (double)parent.Element("LastAngle"),
 				Minimum = (double)parent.Element("Minimum"),
@@ -409,8 +405,7 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			element = new DigitalNumberElement
 			{
-				LocationX = location[0],
-				LocationY = location[1],
+				Location = new Vector2(location[0], location[1]),
 				Layer = (int)parent.Element("Layer"),
 				Subject = ParseSubjectNode(parent.Element("Subject")),
 				DaytimeImage = (string)parent.Element("DaytimeImage"),
@@ -426,8 +421,7 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			element = new DigitalGaugeElement
 			{
-				LocationX = location[0],
-				LocationY = location[1],
+				Location = new Vector2(location[0], location[1]),
 				Layer = (int)parent.Element("Layer"),
 				Subject = ParseSubjectNode(parent.Element("Subject")),
 				Radius = (double)parent.Element("Radius"),
@@ -447,8 +441,7 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			element = new LinearGaugeElement
 			{
-				LocationX = location[0],
-				LocationY = location[1],
+				Location = new Vector2(location[0], location[1]),
 				Layer = (int)parent.Element("Layer"),
 				Subject = ParseSubjectNode(parent.Element("Subject")),
 				DaytimeImage = (string)parent.Element("DaytimeImage"),
@@ -456,8 +449,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				TransparentColor = Color24.ParseHexColor((string)parent.Element("TransparentColor")),
 				Minimum = (double)parent.Element("Minimum"),
 				Maximum = (double)parent.Element("Maximum"),
-				DirectionX = direction[0],
-				DirectionY = direction[1],
+				Direction = new Vector2(direction[0], direction[1]),
 				Width = (int)parent.Element("Width")
 			};
 		}
@@ -468,8 +460,7 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			element = new TimetableElement
 			{
-				LocationX = location[0],
-				LocationY = location[1],
+				Location = new Vector2(location[0], location[1]),
 				Layer = (int)parent.Element("Layer"),
 				Width = (double)parent.Element("Width"),
 				Height = (double)parent.Element("Height"),
@@ -495,10 +486,8 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			Models.Panels.TouchElement element = new Models.Panels.TouchElement(screen)
 			{
-				LocationX = location[0],
-				LocationY = location[1],
-				SizeX = size[0],
-				SizeY = size[1],
+				Location = new Vector2(location[0], location[1]),
+				Size = new Vector2(size[0], size[1]),
 				JumpScreen = (int)parent.Element("JumpScreen")
 			};
 

@@ -40,12 +40,6 @@ namespace OpenBveApi.Routes
 				newObject.Mesh.Vertices[v] = new Vertex(0, newObject.Mesh.Vertices[vertexIndicies[0]].Coordinates.Y + 100, 0);
 				int f = newObject.Mesh.Faces.Length;
 				Array.Resize(ref newObject.Mesh.Faces, f + 1);
-				MeshFaceVertex[] face = new MeshFaceVertex[vertexIndicies.Count];
-				for (int i = 0; i < vertexIndicies.Count; i++)
-				{
-					face[i] = new MeshFaceVertex(vertexIndicies[i]);
-				}
-
 				newObject.Mesh.Faces[f] = new MeshFace(vertexIndicies.ToArray(), FaceFlags.Face2Mask);
 				this.Object = newObject;
 			}

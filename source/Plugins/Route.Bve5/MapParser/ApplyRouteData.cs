@@ -37,7 +37,6 @@ using RouteManager2;
 using RouteManager2.Climate;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
-using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace Route.Bve5
 {

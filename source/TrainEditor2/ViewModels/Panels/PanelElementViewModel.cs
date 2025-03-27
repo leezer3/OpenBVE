@@ -29,17 +29,14 @@ namespace TrainEditor2.ViewModels.Panels
 
 			LocationX = element
 				.ToReactivePropertyAsSynchronized(
-					x => x.LocationX,
+					x => x.Location.X,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -47,17 +44,14 @@ namespace TrainEditor2.ViewModels.Panels
 
 			LocationY = element
 				.ToReactivePropertyAsSynchronized(
-					x => x.LocationY,
+					x => x.Location.Y,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})

@@ -359,10 +359,7 @@ namespace LibRender2
 						 * but it crashes on use, but remains active
 						 * Deactivate it, otherwise we get a grey screen
 						 */
-						if (DefaultShader != null)
-						{
-							DefaultShader.Deactivate();
-						}
+						DefaultShader?.Deactivate();
 					}
 					catch 
 					{ 
@@ -1046,7 +1043,7 @@ namespace LibRender2
 			CurrentProjectionMatrix = Matrix4D.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, 0.2, currentOptions.ViewingDistance);
 		}
 
-		public void ResetShader(Shader Shader)
+		public void ResetShader(Shader shader)
 		{
 #if DEBUG
 			if (!ReShadeInUse)
@@ -1055,33 +1052,33 @@ namespace LibRender2
 
 				if (lastError != ErrorCode.NoError)
 				{
-				//	throw new InvalidOperationException($"OpenGL Error: {lastError}");
+					throw new InvalidOperationException($"OpenGL Error: {lastError}");
 				}
 			}
 #endif
 
-			Shader.SetCurrentProjectionMatrix(Matrix4D.Identity);
-			Shader.SetCurrentModelViewMatrix(Matrix4D.Identity);
-			Shader.SetCurrentTextureMatrix(Matrix4D.Identity);
-			Shader.SetIsLight(false);
-			Shader.SetLightPosition(Vector3.Zero);
-			Shader.SetLightAmbient(Color24.White);
-			Shader.SetLightDiffuse(Color24.White);
-			Shader.SetLightSpecular(Color24.White);
-			Shader.SetLightModel(Lighting.LightModel);
-			Shader.SetMaterialAmbient(Color24.White);
-			Shader.SetMaterialDiffuse(Color24.White);
-			Shader.SetMaterialSpecular(Color24.White);
-			Shader.SetMaterialEmission(Color24.White);
+			shader.SetCurrentProjectionMatrix(Matrix4D.Identity);
+			shader.SetCurrentModelViewMatrix(Matrix4D.Identity);
+			shader.SetCurrentTextureMatrix(Matrix4D.Identity);
+			shader.SetIsLight(false);
+			shader.SetLightPosition(Vector3.Zero);
+			shader.SetLightAmbient(Color24.White);
+			shader.SetLightDiffuse(Color24.White);
+			shader.SetLightSpecular(Color24.White);
+			shader.SetLightModel(Lighting.LightModel);
+			shader.SetMaterialAmbient(Color24.White);
+			shader.SetMaterialDiffuse(Color24.White);
+			shader.SetMaterialSpecular(Color24.White);
+			shader.SetMaterialEmission(Color24.White);
 			lastColor = Color32.White;
-			Shader.SetMaterialShininess(1.0f);
-			Shader.SetIsFog(false);
-			Shader.DisableTexturing();
-			Shader.SetTexture(0);
-			Shader.SetBrightness(1.0f);
-			Shader.SetOpacity(1.0f);
-			Shader.SetObjectIndex(0);
-			Shader.SetAlphaTest(false);
+			shader.SetMaterialShininess(1.0f);
+			shader.SetIsFog(false);
+			shader.DisableTexturing();
+			shader.SetTexture(0);
+			shader.SetBrightness(1.0f);
+			shader.SetOpacity(1.0f);
+			shader.SetObjectIndex(0);
+			shader.SetAlphaTest(false);
 		}
 
 		public void SetBlendFunc()
@@ -1089,13 +1086,13 @@ namespace LibRender2
 			SetBlendFunc(blendSrcFactor, blendDestFactor);
 		}
 
-		public void SetBlendFunc(BlendingFactor SrcFactor, BlendingFactor DestFactor)
+		public void SetBlendFunc(BlendingFactor srcFactor, BlendingFactor destFactor)
 		{
 			blendEnabled = true;
-			blendSrcFactor = SrcFactor;
-			blendDestFactor = DestFactor;
+			blendSrcFactor = srcFactor;
+			blendDestFactor = destFactor;
 			GL.Enable(EnableCap.Blend);
-			GL.BlendFunc(SrcFactor, DestFactor);
+			GL.BlendFunc(srcFactor, destFactor);
 		}
 
 		public void UnsetBlendFunc()
@@ -1124,22 +1121,22 @@ namespace LibRender2
 		}
 
 		/// <summary>Specifies the OpenGL alpha function to perform</summary>
-		/// <param name="Comparison">The comparison to use</param>
-		/// <param name="Value">The value to compare</param>
-		public void SetAlphaFunc(AlphaFunction Comparison, float Value)
+		/// <param name="comparison">The comparison to use</param>
+		/// <param name="value">The value to compare</param>
+		public void SetAlphaFunc(AlphaFunction comparison, float value)
 		{
 			alphaTestEnabled = true;
-			alphaFuncComparison = Comparison;
-			alphaFuncValue = Value;
+			alphaFuncComparison = comparison;
+			alphaFuncValue = value;
 			if (AvailableNewRenderer)
 			{
 				CurrentShader.SetAlphaTest(true);
-				CurrentShader.SetAlphaFunction(Comparison, Value);
+				CurrentShader.SetAlphaFunction(comparison, value);
 			}
 			else
 			{
 				GL.Enable(EnableCap.AlphaTest);
-				GL.AlphaFunc(Comparison, Value);	
+				GL.AlphaFunc(comparison, value);	
 			}
 			
 		}
@@ -1197,49 +1194,49 @@ namespace LibRender2
 		private bool sendToShader;
 
 		/// <summary>Draws a face using the current shader</summary>
-		/// <param name="State">The FaceState to draw</param>
-		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
-		public void RenderFace(FaceState State, bool IsDebugTouchMode = false)
+		/// <param name="state">The FaceState to draw</param>
+		/// <param name="isDebugTouchMode">Whether debug touch mode</param>
+		public void RenderFace(FaceState state, bool isDebugTouchMode = false)
 		{
-			RenderFace(CurrentShader, State.Object, State.Face, IsDebugTouchMode);
+			RenderFace(CurrentShader, state.Object, state.Face, isDebugTouchMode);
 		}
 
 		/// <summary>Draws a face using the specified shader and matricies</summary>
-		/// <param name="Shader">The shader to use</param>
-		/// <param name="State">The ObjectState to draw</param>
-		/// <param name="Face">The Face within the ObjectState</param>
-		/// <param name="ModelMatrix">The model matrix to use</param>
-		/// <param name="ModelViewMatrix">The modelview matrix to use</param>
-		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D ModelMatrix, Matrix4D ModelViewMatrix)
+		/// <param name="shader">The shader to use</param>
+		/// <param name="state">The ObjectState to draw</param>
+		/// <param name="face">The Face within the ObjectState</param>
+		/// <param name="modelMatrix">The model matrix to use</param>
+		/// <param name="modelViewMatrix">The modelview matrix to use</param>
+		public void RenderFace(Shader shader, ObjectState state, MeshFace face, Matrix4D modelMatrix, Matrix4D modelViewMatrix)
 		{
-			lastModelMatrix = ModelMatrix;
-			lastModelViewMatrix = ModelViewMatrix;
+			lastModelMatrix = modelMatrix;
+			lastModelViewMatrix = modelViewMatrix;
 			sendToShader = true;
-			RenderFace(Shader, State, Face, false, true);
+			RenderFace(shader, state, face, false, true);
 		}
 
 		/// <summary>Draws a face using the specified shader</summary>
-		/// <param name="Shader">The shader to use</param>
-		/// <param name="State">The ObjectState to draw</param>
-		/// <param name="Face">The Face within the ObjectState</param>
-		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
+		/// <param name="shader">The shader to use</param>
+		/// <param name="state">The ObjectState to draw</param>
+		/// <param name="face">The Face within the ObjectState</param>
+		/// <param name="debugTouchMode">Whether debug touch mode</param>
 		/// <param name="screenSpace">Used when a forced matrix, for items which are in screen space not camera space</param>
-		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false, bool screenSpace = false)
+		public void RenderFace(Shader shader, ObjectState state, MeshFace face, bool debugTouchMode = false, bool screenSpace = false)
 		{
-			if ((State != lastObjectState || State.Prototype.Dynamic) && !screenSpace)
+			if ((state != lastObjectState || state.Prototype.Dynamic) && !screenSpace)
 			{
-				lastModelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
+				lastModelMatrix = state.ModelMatrix * Camera.TranslationMatrix;
 				lastModelViewMatrix = lastModelMatrix * CurrentViewMatrix;
 				sendToShader = true;
 			}
 
-			if (State.Prototype.Mesh.Vertices.Length < 1)
+			if (state.Prototype.Mesh.Vertices.Length < 1)
 			{
 				return;
 			}
 
-			MeshMaterial material = State.Prototype.Mesh.Materials[Face.Material];
-			VertexArrayObject VAO = (VertexArrayObject)State.Prototype.Mesh.VAO;
+			MeshMaterial material = state.Prototype.Mesh.Materials[face.Material];
+			VertexArrayObject VAO = (VertexArrayObject)state.Prototype.Mesh.VAO;
 
 			if (lastVAO != VAO.handle)
 			{
@@ -1247,83 +1244,84 @@ namespace LibRender2
 				lastVAO = VAO.handle;
 			}
 
-			if (!OptionBackFaceCulling || (Face.Flags & FaceFlags.Face2Mask) != 0)
+			if (!OptionBackFaceCulling || (face.Flags & FaceFlags.Face2Mask) != 0)
 			{
 				GL.Disable(EnableCap.CullFace);
 			}
 			else if (OptionBackFaceCulling)
 			{
-				if ((Face.Flags & FaceFlags.Face2Mask) == 0)
+				if ((face.Flags & FaceFlags.Face2Mask) == 0)
 				{
 					GL.Enable(EnableCap.CullFace);
 				}
 			}
 
 			// model matricies
-			if (State.Matricies != null && State != lastObjectState)
+			if (state.Matricies != null && state.Matricies.Length > 0 && state != lastObjectState)
 			{
-				Shader.SetCurrentAnimationMatricies(State);
-				GL.BindBufferBase(BufferTarget.ShaderStorageBuffer, 12, State.MatrixBufferIndex);
+				// n.b. if buffer has no data in it (matricies are of zero length), attempting to bind generates an InvalidValue
+				shader.SetCurrentAnimationMatricies(state);
+				GL.BindBufferBase(BufferTarget.ShaderStorageBuffer, 12, state.MatrixBufferIndex);
 			}
 
 			// matrix
 			if (sendToShader)
 			{
-				Shader.SetCurrentModelViewMatrix(lastModelViewMatrix);
-				Shader.SetCurrentTextureMatrix(State.TextureTranslation);
+				shader.SetCurrentModelViewMatrix(lastModelViewMatrix);
+				shader.SetCurrentTextureMatrix(state.TextureTranslation);
 				sendToShader = false;
 			}
 			
-			if (OptionWireFrame || IsDebugTouchMode)
+			if (OptionWireFrame || debugTouchMode)
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 			}
 			
 			// lighting
-			Shader.SetMaterialFlags(material.Flags);
+			shader.SetMaterialFlags(material.Flags);
 			if (OptionLighting)
 			{
 				if (material.Color != lastColor)
 				{
-					Shader.SetMaterialAmbient(material.Color);
-					Shader.SetMaterialDiffuse(material.Color);
-					Shader.SetMaterialSpecular(material.Color);
+					shader.SetMaterialAmbient(material.Color);
+					shader.SetMaterialDiffuse(material.Color);
+					shader.SetMaterialSpecular(material.Color);
 					//TODO: Ambient and specular colors are not set by any current parsers
 				}
 				if ((material.Flags & MaterialFlags.Emissive) != 0)
 				{
-					Shader.SetMaterialEmission(material.EmissiveColor);
+					shader.SetMaterialEmission(material.EmissiveColor);
 				}
 
-				Shader.SetMaterialShininess(1.0f);
+				shader.SetMaterialShininess(1.0f);
 			}
 			else
 			{
 				if (material.Color != lastColor)
 				{
-					Shader.SetMaterialAmbient(material.Color);
+					shader.SetMaterialAmbient(material.Color);
 				}
 			}
 
 			lastColor = material.Color;
-			PrimitiveType DrawMode;
+			PrimitiveType drawMode;
 
-			switch (Face.Flags & FaceFlags.FaceTypeMask)
+			switch (face.Flags & FaceFlags.FaceTypeMask)
 			{
 				case FaceFlags.Triangles:
-					DrawMode = PrimitiveType.Triangles;
+					drawMode = PrimitiveType.Triangles;
 					break;
 				case FaceFlags.TriangleStrip:
-					DrawMode = PrimitiveType.TriangleStrip;
+					drawMode = PrimitiveType.TriangleStrip;
 					break;
 				case FaceFlags.Quads:
-					DrawMode = PrimitiveType.Quads;
+					drawMode = PrimitiveType.Quads;
 					break;
 				case FaceFlags.QuadStrip:
-					DrawMode = PrimitiveType.QuadStrip;
+					drawMode = PrimitiveType.QuadStrip;
 					break;
 				default:
-					DrawMode = PrimitiveType.Polygon;
+					drawMode = PrimitiveType.Polygon;
 					break;
 			}
 
@@ -1331,14 +1329,14 @@ namespace LibRender2
 			float distanceFactor;
 			if (material.GlowAttenuationData != 0)
 			{
-				distanceFactor = (float)Glow.GetDistanceFactor(lastModelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData);
+				distanceFactor = (float)Glow.GetDistanceFactor(lastModelMatrix, state.Prototype.Mesh.Vertices, ref face, material.GlowAttenuationData);
 			}
 			else
 			{
 				distanceFactor = 1.0f;
 			}
 
-			float blendFactor = inv255 * State.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
+			float blendFactor = inv255 * state.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
 			if (blendFactor > 1.0)
 			{
 				blendFactor = 1.0f;
@@ -1359,7 +1357,7 @@ namespace LibRender2
 				}
 				else
 				{
-					Shader.DisableTexturing();
+					shader.DisableTexturing();
 				}
 				// Calculate the brightness of the poly to render
 				float factor;
@@ -1369,7 +1367,7 @@ namespace LibRender2
 					factor = 1.0f;
 					GL.Enable(EnableCap.Blend);
 					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
-					Shader.SetIsFog(false);
+					shader.SetIsFog(false);
 				}
 				else if (material.NighttimeTexture == null || material.NighttimeTexture == material.DaytimeTexture)
 				{
@@ -1381,7 +1379,7 @@ namespace LibRender2
 					//Valid nighttime texture- Blend the two textures by DNB at max brightness
 					factor = 1.0f;
 				}
-				Shader.SetBrightness(factor);
+				shader.SetBrightness(factor);
 
 				float alphaFactor = distanceFactor;
 				if (material.NighttimeTexture != null && (material.Flags & MaterialFlags.CrossFadeTexture) != 0)
@@ -1389,10 +1387,10 @@ namespace LibRender2
 					alphaFactor *= 1.0f - blendFactor;
 				}
 
-				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
+				shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
 				// render polygon
-				VAO.Draw(DrawMode, Face.IboStartIndex, Face.Vertices.Length);
+				VAO.Draw(drawMode, face.IboStartIndex, face.Vertices.Length);
 			}
 
 			// nighttime polygon
@@ -1409,16 +1407,16 @@ namespace LibRender2
 				GL.Enable(EnableCap.Blend);
 
 				// alpha test
-				Shader.SetAlphaTest(true);
-				Shader.SetAlphaFunction(AlphaFunction.Greater, 0.0f);
+				shader.SetAlphaTest(true);
+				shader.SetAlphaFunction(AlphaFunction.Greater, 0.0f);
 				
 				// blend mode
 				float alphaFactor = distanceFactor * blendFactor;
 
-				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
+				shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
 				// render polygon
-				VAO.Draw(DrawMode, Face.IboStartIndex, Face.Vertices.Length);
+				VAO.Draw(drawMode, face.IboStartIndex, face.Vertices.Length);
 				RestoreBlendFunc();
 				RestoreAlphaFunc();
 			}
@@ -1427,57 +1425,57 @@ namespace LibRender2
 			// normals
 			if (OptionNormals)
 			{
-				Shader.DisableTexturing();
-				Shader.SetBrightness(1.0f);
-				Shader.SetOpacity(1.0f);
-				VertexArrayObject NormalsVAO = (VertexArrayObject)State.Prototype.Mesh.NormalsVAO;
-				NormalsVAO.Bind();
-				lastVAO = NormalsVAO.handle;
-				NormalsVAO.Draw(PrimitiveType.Lines, Face.NormalsIboStartIndex, Face.Vertices.Length * 2);
+				shader.DisableTexturing();
+				shader.SetBrightness(1.0f);
+				shader.SetOpacity(1.0f);
+				VertexArrayObject normalsVao = (VertexArrayObject)state.Prototype.Mesh.NormalsVAO;
+				normalsVao.Bind();
+				lastVAO = normalsVao.handle;
+				normalsVao.Draw(PrimitiveType.Lines, face.NormalsIboStartIndex, face.Vertices.Length * 2);
 			}
 
 			// finalize
 			if (material.BlendMode == MeshMaterialBlendMode.Additive)
 			{
 				RestoreBlendFunc();
-				Shader.SetIsFog(OptionFog);
+				shader.SetIsFog(OptionFog);
 			}
-			if (OptionWireFrame || IsDebugTouchMode)
+			if (OptionWireFrame || debugTouchMode)
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 			}
-			lastObjectState = State;
+			lastObjectState = state;
 		}
 
-		public void RenderFaceImmediateMode(FaceState State, bool IsDebugTouchMode = false)
+		public void RenderFaceImmediateMode(FaceState state, bool debugTouchMode = false)
 		{
-			RenderFaceImmediateMode(State.Object, State.Face, IsDebugTouchMode);
+			RenderFaceImmediateMode(state.Object, state.Face, debugTouchMode);
 		}
 
-		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
+		public void RenderFaceImmediateMode(ObjectState state, MeshFace face, bool debugTouchMode = false)
 		{
-			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
+			Matrix4D modelMatrix = state.ModelMatrix * Camera.TranslationMatrix;
 			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
-			RenderFaceImmediateMode(State, Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
+			RenderFaceImmediateMode(state, face, modelMatrix, modelViewMatrix, debugTouchMode);
 		}
 
-		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
+		public void RenderFaceImmediateMode(ObjectState state, MeshFace face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool debugTouchMode = false)
 		{
-			if (State.Prototype.Mesh.Vertices.Length < 1)
+			if (state.Prototype.Mesh.Vertices.Length < 1)
 			{
 				return;
 			}
 
-			VertexTemplate[] vertices = State.Prototype.Mesh.Vertices;
-			MeshMaterial material = State.Prototype.Mesh.Materials[Face.Material];
+			VertexTemplate[] vertices = state.Prototype.Mesh.Vertices;
+			MeshMaterial material = state.Prototype.Mesh.Materials[face.Material];
 
-			if (!OptionBackFaceCulling || (Face.Flags & FaceFlags.Face2Mask) != 0)
+			if (!OptionBackFaceCulling || (face.Flags & FaceFlags.Face2Mask) != 0)
 			{
 				GL.Disable(EnableCap.CullFace);
 			}
 			else if (OptionBackFaceCulling)
 			{
-				if ((Face.Flags & FaceFlags.Face2Mask) == 0)
+				if ((face.Flags & FaceFlags.Face2Mask) == 0)
 				{
 					GL.Enable(EnableCap.CullFace);
 				}
@@ -1506,14 +1504,14 @@ namespace LibRender2
 
 				GL.MatrixMode(MatrixMode.Texture);
 				GL.PushMatrix();
-				fixed (double* matrixPointer = &State.TextureTranslation.Row0.X)
+				fixed (double* matrixPointer = &state.TextureTranslation.Row0.X)
 				{
 					GL.LoadMatrix(matrixPointer);
 				}
 
 			}
 
-			if (OptionWireFrame || IsDebugTouchMode)
+			if (OptionWireFrame || debugTouchMode)
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 			}
@@ -1535,24 +1533,24 @@ namespace LibRender2
 				GL.Enable(EnableCap.Fog);
 			}
 
-			PrimitiveType DrawMode;
+			PrimitiveType drawMode;
 
-			switch (Face.Flags & FaceFlags.FaceTypeMask)
+			switch (face.Flags & FaceFlags.FaceTypeMask)
 			{
 				case FaceFlags.Triangles:
-					DrawMode = PrimitiveType.Triangles;
+					drawMode = PrimitiveType.Triangles;
 					break;
 				case FaceFlags.TriangleStrip:
-					DrawMode = PrimitiveType.TriangleStrip;
+					drawMode = PrimitiveType.TriangleStrip;
 					break;
 				case FaceFlags.Quads:
-					DrawMode = PrimitiveType.Quads;
+					drawMode = PrimitiveType.Quads;
 					break;
 				case FaceFlags.QuadStrip:
-					DrawMode = PrimitiveType.QuadStrip;
+					drawMode = PrimitiveType.QuadStrip;
 					break;
 				default:
-					DrawMode = PrimitiveType.Polygon;
+					drawMode = PrimitiveType.Polygon;
 					break;
 			}
 
@@ -1560,14 +1558,14 @@ namespace LibRender2
 			float distanceFactor;
 			if (material.GlowAttenuationData != 0)
 			{
-				distanceFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref Face, material.GlowAttenuationData);
+				distanceFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref face, material.GlowAttenuationData);
 			}
 			else
 			{
 				distanceFactor = 1.0f;
 			}
 
-			float blendFactor = inv255 * State.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
+			float blendFactor = inv255 * state.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
 			if (blendFactor > 1.0)
 			{
 				blendFactor = 1.0f;
@@ -1619,7 +1617,7 @@ namespace LibRender2
 					alphaFactor *= 1.0f - blendFactor;
 				}
 
-				GL.Begin(DrawMode);
+				GL.Begin(drawMode);
 
 				if (OptionWireFrame)
 				{
@@ -1630,17 +1628,17 @@ namespace LibRender2
 					GL.Color4(inv255 * material.Color.R * factor, inv255 * material.Color.G * factor, inv255 * material.Color.B * factor, inv255 * material.Color.A * alphaFactor);
 				}
 
-				for (int i = 0; i < Face.Vertices.Length; i++)
+				for (int i = 0; i < face.Vertices.Length; i++)
 				{
-					GL.Normal3(Face.Vertices[i].Normal.X, Face.Vertices[i].Normal.Y, -Face.Vertices[i].Normal.Z);
-					GL.TexCoord2(vertices[Face.Vertices[i].Index].TextureCoordinates.X, vertices[Face.Vertices[i].Index].TextureCoordinates.Y);
+					GL.Normal3(face.Vertices[i].Normal.X, face.Vertices[i].Normal.Y, -face.Vertices[i].Normal.Z);
+					GL.TexCoord2(vertices[face.Vertices[i].Index].TextureCoordinates.X, vertices[face.Vertices[i].Index].TextureCoordinates.Y);
 
-					if (vertices[Face.Vertices[i].Index] is ColoredVertex v)
+					if (vertices[face.Vertices[i].Index] is ColoredVertex v)
 					{
 						GL.Color4(v.Color.R, v.Color.G, v.Color.B, v.Color.A);
 					}
 
-					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X, vertices[Face.Vertices[i].Index].Coordinates.Y, -vertices[Face.Vertices[i].Index].Coordinates.Z);
+					GL.Vertex3(vertices[face.Vertices[i].Index].Coordinates.X, vertices[face.Vertices[i].Index].Coordinates.Y, -vertices[face.Vertices[i].Index].Coordinates.Z);
 				}
 
 				GL.End();
@@ -1666,7 +1664,7 @@ namespace LibRender2
 				// blend mode
 				float alphaFactor = distanceFactor * blendFactor;
 
-				GL.Begin(DrawMode);
+				GL.Begin(drawMode);
 
 				if (OptionWireFrame)
 				{
@@ -1677,18 +1675,17 @@ namespace LibRender2
 					GL.Color4(inv255 * material.Color.R, inv255 * material.Color.G, inv255 * material.Color.B, inv255 * material.Color.A * alphaFactor);
 				}
 
-				for (int i = 0; i < Face.Vertices.Length; i++)
+				for (int i = 0; i < face.Vertices.Length; i++)
 				{
-					GL.Normal3(Face.Vertices[i].Normal.X, Face.Vertices[i].Normal.Y, -Face.Vertices[i].Normal.Z);
-					GL.TexCoord2(vertices[Face.Vertices[i].Index].TextureCoordinates.X, vertices[Face.Vertices[i].Index].TextureCoordinates.Y);
+					GL.Normal3(face.Vertices[i].Normal.X, face.Vertices[i].Normal.Y, -face.Vertices[i].Normal.Z);
+					GL.TexCoord2(vertices[face.Vertices[i].Index].TextureCoordinates.X, vertices[face.Vertices[i].Index].TextureCoordinates.Y);
 
-					if (vertices[Face.Vertices[i].Index] is ColoredVertex)
+					if (vertices[face.Vertices[i].Index] is ColoredVertex v)
 					{
-						ColoredVertex v = (ColoredVertex)vertices[Face.Vertices[i].Index];
 						GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 					}
 
-					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X, vertices[Face.Vertices[i].Index].Coordinates.Y, -vertices[Face.Vertices[i].Index].Coordinates.Z);
+					GL.Vertex3(vertices[face.Vertices[i].Index].Coordinates.X, vertices[face.Vertices[i].Index].Coordinates.Y, -vertices[face.Vertices[i].Index].Coordinates.Z);
 				}
 
 				GL.End();
@@ -1701,18 +1698,18 @@ namespace LibRender2
 			// normals
 			if (OptionNormals)
 			{
-				for (int i = 0; i < Face.Vertices.Length; i++)
+				for (int i = 0; i < face.Vertices.Length; i++)
 				{
 					GL.Begin(PrimitiveType.Lines);
 					GL.Color4(new Color4(material.Color.R, material.Color.G, material.Color.B, 255));
-					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X, vertices[Face.Vertices[i].Index].Coordinates.Y, -vertices[Face.Vertices[i].Index].Coordinates.Z);
-					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X + Face.Vertices[i].Normal.X, vertices[Face.Vertices[i].Index].Coordinates.Y + +Face.Vertices[i].Normal.Y, -(vertices[Face.Vertices[i].Index].Coordinates.Z + Face.Vertices[i].Normal.Z));
+					GL.Vertex3(vertices[face.Vertices[i].Index].Coordinates.X, vertices[face.Vertices[i].Index].Coordinates.Y, -vertices[face.Vertices[i].Index].Coordinates.Z);
+					GL.Vertex3(vertices[face.Vertices[i].Index].Coordinates.X + face.Vertices[i].Normal.X, vertices[face.Vertices[i].Index].Coordinates.Y + +face.Vertices[i].Normal.Y, -(vertices[face.Vertices[i].Index].Coordinates.Z + face.Vertices[i].Normal.Z));
 					GL.End();
 				}
 			}
 
 			// finalize
-			if (OptionWireFrame || IsDebugTouchMode)
+			if (OptionWireFrame || debugTouchMode)
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 			}

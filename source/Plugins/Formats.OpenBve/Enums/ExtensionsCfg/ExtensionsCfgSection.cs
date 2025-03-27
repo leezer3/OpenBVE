@@ -1,6 +1,6 @@
-﻿namespace Train.OpenBve
+﻿namespace Formats.OpenBve
 {
-	internal enum ExtensionCfgSection
+	public enum ExtensionCfgSection
 	{
 		Unknown = 0,
 		Exterior,

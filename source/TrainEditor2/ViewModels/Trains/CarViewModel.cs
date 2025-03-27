@@ -79,14 +79,9 @@ namespace TrainEditor2.ViewModels.Trains
 
 				FrontAxle.SetValidateNotifyError(x =>
 					{
-						double front;
-						string message;
-
-						if (Utilities.TryParse(x, NumberRange.Any, out front, out message))
+						if (Utilities.TryParse(x, NumberRange.Any, out double front, out string message))
 						{
-							double rear;
-
-							if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, NumberRange.Any, out rear) && front <= rear)
+							if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, NumberRange.Any, out double rear) && front <= rear)
 							{
 								message = Utilities.GetInterfaceString("car_settings", "general", "axles", "mustbe_less");
 							}
@@ -105,14 +100,9 @@ namespace TrainEditor2.ViewModels.Trains
 
 				RearAxle.SetValidateNotifyError(x =>
 					{
-						double rear;
-						string message;
-
-						if (Utilities.TryParse(x, NumberRange.Any, out rear, out message))
+						if (Utilities.TryParse(x, NumberRange.Any, out double rear, out string message))
 						{
-							double front;
-
-							if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, NumberRange.Any, out front) && rear >= front)
+							if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, NumberRange.Any, out double front) && rear >= front)
 							{
 								message = Utilities.GetInterfaceString("car_settings", "general", "axles", "mustbe_less");
 							}
@@ -251,10 +241,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
 
 					return message;
 				})
@@ -269,10 +256,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
 
 					return message;
 				})
@@ -287,10 +271,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
 
 					return message;
 				})
@@ -305,10 +286,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
 
 					return message;
 				})
@@ -323,10 +301,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -377,10 +352,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
 
 					return message;
 				})
@@ -395,10 +367,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
 
 					return message;
 				})
@@ -459,14 +428,9 @@ namespace TrainEditor2.ViewModels.Trains
 
 			FrontAxle.SetValidateNotifyError(x =>
 				{
-					double front;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.Any, out front, out message))
+					if (Utilities.TryParse(x, NumberRange.Any, out double front, out string message))
 					{
-						double rear;
-
-						if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, NumberRange.Any, out rear) && front <= rear)
+						if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, NumberRange.Any, out double rear) && front <= rear)
 						{
 							message =  Utilities.GetInterfaceString("car_settings", "general", "axles", "mustbe_less");
 						}
@@ -485,14 +449,9 @@ namespace TrainEditor2.ViewModels.Trains
 
 			RearAxle.SetValidateNotifyError(x =>
 				{
-					double rear;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.Any, out rear, out message))
+					if (Utilities.TryParse(x, NumberRange.Any, out double rear, out string message))
 					{
-						double front;
-
-						if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, NumberRange.Any, out front) && rear >= front)
+						if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, NumberRange.Any, out double front) && rear >= front)
 						{
 							message =  Utilities.GetInterfaceString("car_settings", "general", "axles", "mustbe_less");
 						}

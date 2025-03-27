@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using OpenBveApi.Routes;
 using RouteManager2.Events;
 
@@ -7,13 +6,13 @@ namespace CsvRwRouteParser
 {
 	internal class LightingChange
 	{
-		internal LightDefinition previousLightDefinition;
+		private readonly LightDefinition previousLightDefinition;
 
-		internal LightDefinition currentLightDefinition;
+		private readonly LightDefinition currentLightDefinition;
 
-		internal int currentDynamicLightSet;
+		private readonly int currentDynamicLightSet;
 
-		internal int previousDynamicLightSet;
+		private readonly int previousDynamicLightSet;
 
 		internal LightingChange(LightDefinition PreviousLightDefinition, LightDefinition CurrentLightDefinition)
 		{

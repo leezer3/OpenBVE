@@ -16,8 +16,8 @@ namespace OpenBve {
 		// language
 		private void comboboxLanguages_SelectedIndexChanged(object sender, EventArgs e) {
 			if (this.Tag != null) return;
-			string Folder = Program.FileSystem.GetDataFolder("Flags");
-			if (Translations.SelectedLanguage(Folder, ref Interface.CurrentOptions.LanguageCode, comboboxLanguages, out string newImage))
+			string flagFolder = Program.FileSystem.GetDataFolder("Flags");
+			if (Translations.SelectedLanguage(flagFolder, ref Interface.CurrentOptions.LanguageCode, comboboxLanguages, out string newImage))
 			{
 				pictureboxLanguage.Image = ImageExtensions.FromFile(newImage);
 				ApplyLanguage();

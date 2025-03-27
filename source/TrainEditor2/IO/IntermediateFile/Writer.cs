@@ -315,8 +315,8 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("DaytimeImage", This.DaytimeImage),
 				new XElement("NighttimeImage", This.NighttimeImage),
 				new XElement("TransparentColor", This.TransparentColor),
-				new XElement("Center", $"{This.CenterX}, {This.CenterY}"),
-				new XElement("Origin", $"{This.OriginX}, {This.OriginY}")
+				new XElement("Center", $"{This.Center.X}, {This.Center.Y}"),
+				new XElement("Origin", $"{This.Origin.X}, {This.Origin.Y}")
 				));
 		}
 
@@ -381,7 +381,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static void WritePilotLampElementNode(XElement parent, Models.Panels.PilotLampElement element)
 		{
 			parent.Add(new XElement("PilotLamp",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
+				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
 				new XElement("Layer", element.Layer),
 				WriteSubjectNode(element.Subject),
 				new XElement("DaytimeImage", element.DaytimeImage),
@@ -393,7 +393,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static void WriteNeedleElementNode(XElement parent, NeedleElement element)
 		{
 			parent.Add(new XElement("Needle",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
+				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
 				new XElement("Layer", element.Layer),
 				WriteSubjectNode(element.Subject),
 				new XElement("DaytimeImage", element.DaytimeImage),
@@ -403,7 +403,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("Radius", element.Radius),
 				new XElement("Color", element.Color),
 				new XElement("DefinedOrigin", element.DefinedOrigin),
-				new XElement("Origin", $"{element.OriginX}, {element.OriginY}"),
+				new XElement("Origin", $"{element.Origin.X}, {element.Origin.Y}"),
 				new XElement("InitialAngle", element.InitialAngle),
 				new XElement("LastAngle", element.LastAngle),
 				new XElement("Minimum", element.Minimum),
@@ -420,7 +420,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static void WriteDigitalNumberElementNode(XElement parent, DigitalNumberElement element)
 		{
 			parent.Add(new XElement("DigitalNumber",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
+				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
 				new XElement("Layer", element.Layer),
 				WriteSubjectNode(element.Subject),
 				new XElement("DaytimeImage", element.DaytimeImage),
@@ -433,7 +433,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static void WriteDigitalGaugeElementNode(XElement parent, DigitalGaugeElement element)
 		{
 			parent.Add(new XElement("DigitalGauge",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
+				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
 				new XElement("Layer", element.Layer),
 				WriteSubjectNode(element.Subject),
 				new XElement("Radius", element.Radius),
@@ -449,7 +449,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static void WriteLinearGaugeElementNode(XElement parent, LinearGaugeElement element)
 		{
 			parent.Add(new XElement("LinearGauge",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
+				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
 				new XElement("Layer", element.Layer),
 				WriteSubjectNode(element.Subject),
 				new XElement("DaytimeImage", element.DaytimeImage),
@@ -457,7 +457,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("TransparentColor", element.TransparentColor),
 				new XElement("Minimum", element.Minimum),
 				new XElement("Maximum", element.Maximum),
-				new XElement("Direction", $"{element.DirectionX}, {element.DirectionY}"),
+				new XElement("Direction", $"{element.Direction.X}, {element.Direction.Y}"),
 				new XElement("Width", element.Width)
 				));
 		}
@@ -465,7 +465,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static void WriteTimetableElementNode(XElement parent, TimetableElement element)
 		{
 			parent.Add(new XElement("Timetable",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
+				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
 				new XElement("Layer", element.Layer),
 				new XElement("Width", element.Width),
 				new XElement("Height", element.Height),
@@ -486,8 +486,8 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static void WriteTouchElementNode(XElement parent, Models.Panels.TouchElement element)
 		{
 			parent.Add(new XElement("Touch",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
-				new XElement("Size", $"{element.SizeX}, {element.SizeY}"),
+				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
+				new XElement("Size", $"{element.Size.X}, {element.Size.Y}"),
 				new XElement("JumpScreen", element.JumpScreen),
 				new XElement("SoundEntries", element.SoundEntries.Select(WriteTouchElementSoundEntryNode)),
 				new XElement("CommandEntries", element.CommandEntries.Select(WriteTouchElementCommandEntryNode)),

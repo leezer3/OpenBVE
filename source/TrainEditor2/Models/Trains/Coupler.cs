@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Globalization;
+using System.Text;
 using Prism.Mvvm;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -55,6 +58,13 @@ namespace TrainEditor2.Models.Trains
 		public object Clone()
 		{
 			return MemberwiseClone();
+		}
+
+		internal void WriteExtensionsCfg(string fileName, StringBuilder builder, int couplerIndex)
+		{
+			builder.AppendLine($"[Coupler{couplerIndex.ToString(CultureInfo.InvariantCulture)}]");
+			Utilities.WriteKey(builder, "Distances", Min, Max);
+			Utilities.WriteKey(builder, "Object", Utilities.MakeRelativePath(fileName, Object));
 		}
 	}
 }

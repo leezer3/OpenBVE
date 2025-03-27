@@ -51,9 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Panel\Enums\Panel2Key.cs" />
-    <Compile Include="Panel\Enums\Panel2Subject.cs" />
-    <Compile Include="Panel\Enums\Panel2Sections.cs" />
     <Compile Include="Panel\Enums\PanelKey.cs" />
     <Compile Include="Panel\Enums\PanelSections.cs" />
     <Compile Include="Panel\Enums\PanelSubject.cs" />
@@ -64,16 +61,12 @@
     <Compile Include="Panel\PanelXmlParser.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sound\Enums\SoundCfgKey.cs" />
     <Compile Include="Sound\SoundCfg.Ats.cs" />
     <Compile Include="Sound\SoundCfg.Base.cs" />
     <Compile Include="Sound\SoundCfg.Bve2.cs" />
     <Compile Include="Sound\SoundCfg.Bve4.cs" />
-    <Compile Include="Sound\Enums\SoundCfgSection.cs" />
     <Compile Include="Sound\SoundCfg.Xml.cs" />
     <Compile Include="Train\BVE5\MotorSoundTable.cs" />
-    <Compile Include="Train\BVE\Enums\ExtensionCfgKey.cs" />
-    <Compile Include="Train\BVE\Enums\ExtensionCfgSection.cs" />
     <Compile Include="Train\BVE\ExtensionsCfgParser.cs" />
     <Compile Include="Train\BVE\TrainDatParser.cs" />
     <Compile Include="Train\BVE\TrainDatparser.Formats.cs" />

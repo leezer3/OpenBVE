@@ -7,7 +7,7 @@ namespace OpenBve.Input
 	/// <summary>A 32-bit RailDriver</summary>
 	internal class RailDriver32 : AbstractRailDriver, PIEDataHandler, PIEErrorHandler
 	{
-		internal readonly PIEDevice myDevice;
+		private readonly PIEDevice myDevice;
 
 		internal RailDriver32(PIEDevice device)
 		{

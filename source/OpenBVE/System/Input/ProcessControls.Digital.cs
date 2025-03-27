@@ -799,7 +799,6 @@ namespace OpenBve
 
 						break;
 					case Translations.Command.ReverserForward:
-						// reverser forward
 						if (TrainManager.PlayerTrain.Handles.Reverser.Driver < ReverserPosition.Forwards)
 						{
 							TrainManager.PlayerTrain.Handles.Reverser.ApplyState(1, true);
@@ -817,25 +816,18 @@ namespace OpenBve
 					case Translations.Command.HornPrimary:
 					case Translations.Command.HornSecondary:
 					case Translations.Command.HornMusic:
-						// horn
-					{
-						int j = Control.Command == Translations.Command.HornPrimary
-							? 0
-							: Control.Command == Translations.Command.HornSecondary
-								? 1
-								: 2;
-						int d = TrainManager.PlayerTrain.DriverCar;
-						if (TrainManager.PlayerTrain.Cars[d].Horns.Length > j)
 						{
-							TrainManager.PlayerTrain.Cars[d].Horns[j].Play();
-							TrainManager.PlayerTrain.Plugin?.HornBlow(
-								j == 0 ? HornTypes.Primary : 
-								j == 1 ? HornTypes.Secondary : HornTypes.Music);
+							int j = Control.Command == Translations.Command.HornPrimary
+								? 0 : Control.Command == Translations.Command.HornSecondary ? 1 : 2;
+							int d = TrainManager.PlayerTrain.DriverCar;
+							if (TrainManager.PlayerTrain.Cars[d].Horns.Length > j)
+							{
+								TrainManager.PlayerTrain.Cars[d].Horns[j].Play();
+								TrainManager.PlayerTrain.Plugin?.HornBlow(j == 0 ? HornTypes.Primary : j == 1 ? HornTypes.Secondary : HornTypes.Music);
 							}
-					}
+						}
 						break;
 					case Translations.Command.DoorsLeft:
-						// doors: left
 						if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[0].ButtonPressed)
 						{
 							return;
@@ -863,7 +855,6 @@ namespace OpenBve
 						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[0].ButtonPressed = true;
 						break;
 					case Translations.Command.DoorsRight:
-						// doors: right
 						if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[1].ButtonPressed)
 						{
 							return;

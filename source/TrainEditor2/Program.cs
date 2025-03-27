@@ -10,8 +10,6 @@ using TrainEditor2.Audio;
 using TrainEditor2.Graphics;
 using TrainEditor2.Systems;
 using TrainEditor2.Views;
-using TrainManager;
-using TrainManager = TrainEditor2.Simulation.TrainManager.TrainManager;
 
 namespace TrainEditor2
 {
@@ -57,8 +55,7 @@ namespace TrainEditor2
 			SoundApi = new SoundApi(CurrentHost);
 			SoundApi.Initialize(SoundRange.Medium);
 
-			string error;
-			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out error, null, Renderer))
+			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, null, Renderer))
 			{
 				SoundApi.DeInitialize();
 				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);

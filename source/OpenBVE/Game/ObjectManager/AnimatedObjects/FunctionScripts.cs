@@ -6,6 +6,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using TrainManager.Car.Systems;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Trains;
 
 namespace OpenBve {
@@ -1687,6 +1688,228 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.WheelRadiusOfCar:
 						Function.Stack[s - 1] = 1.0;
+						break;
+					case Instructions.EngineRunning:
+					{
+						if (Train != null)
+						{
+							bool isRunning = false;
+							for (int k = 0; k < Train.Cars.Length; k++)
+							{
+								if (Train.Cars[k].Specs.IsMotorCar && Train.Cars[k].Engine != null)
+								{
+									isRunning = Train.Cars[k].Engine.IsRunning;
+								}
+
+								if (isRunning)
+								{
+									break;
+								}
+							}
+							Function.Stack[s] = isRunning ? 1 : 0;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+					} s++; break;
+					case Instructions.EngineRunningCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								if (Train.Cars[j].Specs.IsMotorCar && Train.Cars[j].Engine != null && Train.Cars[j].Engine.IsRunning)
+								{
+									Function.Stack[s - 1] = 1.0;
+								}
+								else
+								{
+									Function.Stack[s - 1] = 0.0;
+								}
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
+					case Instructions.EngineRPM:
+					{
+						if (Train != null)
+						{
+							int numEngines = 0;
+							double rpmTotal = 0;
+							for (int k = 0; k < Train.Cars.Length; k++)
+							{
+								if (Train.Cars[k].Specs.IsMotorCar && Train.Cars[k].Engine is DieselEngine dieselEngine)
+								{
+									numEngines++;
+									rpmTotal += dieselEngine.CurrentRPM;
+								}
+							}
+
+							if (numEngines == 0)
+							{
+								Function.Stack[s] = 0;
+							}
+							else
+							{
+								Function.Stack[s] = rpmTotal / numEngines;
+							}
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+					} s++; break;
+					case Instructions.EngineRPMCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								if (Train.Cars[j].Specs.IsMotorCar && Train.Cars[j].Engine is DieselEngine dieselEngine)
+								{
+									Function.Stack[s - 1] = dieselEngine.CurrentRPM;
+								}
+								else
+								{
+									Function.Stack[s - 1] = 0.0;
+								}
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
+					case Instructions.FuelLevel:
+					{
+						if (Train != null)
+						{
+							int totalTanks = 0;
+							double fuelTotal = 0;
+							for (int k = 0; k < Train.Cars.Length; k++)
+							{
+								if (Train.Cars[k].Specs.IsMotorCar && Train.Cars[k].Engine is DieselEngine dieselEngine)
+								{
+									totalTanks++;
+									fuelTotal += dieselEngine.FuelTank.CurrentLevel;
+								}
+							}
+
+							if (totalTanks == 0)
+							{
+								Function.Stack[s] = 0;
+							}
+							else
+							{
+								Function.Stack[s] = fuelTotal / totalTanks;
+							}
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+					} s++; break;
+					case Instructions.FuelLevelCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								if (Train.Cars[j].Specs.IsMotorCar && Train.Cars[j].Engine is DieselEngine dieselEngine)
+								{
+									Function.Stack[s - 1] = dieselEngine.FuelTank.CurrentLevel;
+								}
+								else
+								{
+									Function.Stack[s - 1] = 0.0;
+								}
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
+					case Instructions.Amps:
+					{
+						if (Train != null)
+						{
+							int totalMotors = 0;
+							double ampsTotal = 0;
+							for (int k = 0; k < Train.Cars.Length; k++)
+							{
+								if (Train.Cars[k].Specs.IsMotorCar && Train.Cars[k].Engine is DieselEngine dieselEngine)
+								{
+									if (dieselEngine.Components[EngineComponent.TractionMotor] is TractionMotor t)
+									{
+										totalMotors++;
+										ampsTotal += t.CurrentAmps;
+									}
+								}
+							}
+
+							if (totalMotors == 0)
+							{
+								Function.Stack[s] = 0;
+							}
+							else
+							{
+								Function.Stack[s] = ampsTotal / totalMotors;
+							}
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+					} s++; break;
+					case Instructions.AmpsCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								if (Train.Cars[j].Specs.IsMotorCar && Train.Cars[j].Engine is DieselEngine dieselEngine)
+								{
+									if (dieselEngine.Components[EngineComponent.TractionMotor] is TractionMotor t)
+									{
+										
+										Function.Stack[s - 1] = t.CurrentAmps;
+									}
+								}
+								else
+								{
+									Function.Stack[s - 1] = 0.0;
+								}
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
 						break;
 					// default
 					default:

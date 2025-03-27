@@ -164,23 +164,8 @@ namespace OpenBve {
 			ZukiImage = LoadImage(MenuFolder, "zuki.png");
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
-			string flagsFolder = Program.FileSystem.GetDataFolder("Flags");
 			pictureboxRouteImage.ErrorImage = LoadImage(Program.FileSystem.GetDataFolder("Menu"),"error_route.png");
 			pictureboxTrainImage.ErrorImage = LoadImage(Program.FileSystem.GetDataFolder("Menu"), "error_train.png");
-			/* 
-			 * TODO: Integrate into packages
-			 */
-	#pragma warning disable 0219
-			string[] flags = { };
-			try
-			{
-				flags = Directory.GetFiles(flagsFolder);
-			}
-			catch
-			{
-				//ignored- not currently used either, hangover from the initial managed content system
-			}
-	#pragma warning restore 0219
 			// route selection
 			listviewRouteFiles.SmallImageList = new ImageList { TransparentColor = Color.White };
 			listViewRoutePackages.SmallImageList = new ImageList { TransparentColor = Color.White };
@@ -1285,6 +1270,9 @@ namespace OpenBve {
 			{
 				Program.CurrentHost.UnloadPlugins(out _);
 			}
+
+			routeWatcher.EnableRaisingEvents = false;
+			trainWatcher.EnableRaisingEvents = false;
 			if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && Program.CurrentHost.Platform != HostPlatform.FreeBSD)
 			{
 				// A FileSystemWatcher may crash when disposed as the game is closing (without launching a route) on these platforms
@@ -1577,10 +1565,9 @@ namespace OpenBve {
 		/// <summary>Launches a web-browser linked to the project homepage</summary>
 		private void linkHomepage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			const string Url = "http://github.com/leezer3/OpenBVE/";
 			try
 			{
-				Process.Start(Url);
+				Process.Start("http://openbve-project.net");
 			}
 			catch (Exception ex)
 			{
@@ -1737,16 +1724,16 @@ namespace OpenBve {
 		// =========
 
 		/// <summary>Attempts to load an image into memory using the OpenBVE path resolution API</summary>
-		private Image LoadImage(string Folder, string Title)
+		private Image LoadImage(string imageFolder, string fileName)
 		{
 			try
 			{
-				string File = Path.CombineFile(Folder, Title);
-				if (System.IO.File.Exists(File))
+				fileName = Path.CombineFile(imageFolder, fileName);
+				if (File.Exists(fileName))
 				{
 					try
 					{
-						return ImageExtensions.FromFile(File);
+						return ImageExtensions.FromFile(fileName);
 					}
 					catch
 					{
@@ -1762,39 +1749,39 @@ namespace OpenBve {
 		}
 	
 		/// <summary>Attempts to load an image into a picture box using the OpenBVE path resolution API</summary>
-		private void TryLoadImage(PictureBox Box, string File)
+		private void TryLoadImage(PictureBox pictureBox, string imageFile)
 		{
 			try
 			{
-				if (!System.IO.File.Exists(File))
+				if (!File.Exists(imageFile))
 				{
-					string Folder = Program.FileSystem.GetDataFolder("Menu");
-					File = Path.CombineFile(Folder, File);
+					string menuFolder = Program.FileSystem.GetDataFolder("Menu");
+					imageFile = Path.CombineFile(menuFolder, imageFile);
 				}
-				if (System.IO.File.Exists(File))
+				if (File.Exists(imageFile))
 				{
-					FileInfo f = new FileInfo(File);
+					FileInfo f = new FileInfo(imageFile);
 					if (f.Length == 0)
 					{
-						Box.Image = Box.ErrorImage;
+						pictureBox.Image = pictureBox.ErrorImage;
 						return;
 					}
 					try
 					{
-						Box.Image = ImageExtensions.FromFile(File);
+						pictureBox.Image = ImageExtensions.FromFile(imageFile);
 						return;
 					}
 					catch
 					{
-						Box.Image = Box.ErrorImage;
+						pictureBox.Image = pictureBox.ErrorImage;
 						return;
 					}
 				}
-				Box.Image = Box.ErrorImage;
+				pictureBox.Image = pictureBox.ErrorImage;
 			}
 			catch
 			{
-				Box.Image = Box.ErrorImage;
+				pictureBox.Image = pictureBox.ErrorImage;
 			}
 		}
 
@@ -1828,8 +1815,8 @@ namespace OpenBve {
 
 		private void checkForUpdate()
 		{
-			string xmlURL = Interface.CurrentOptions.DailyBuildUpdates ? "https://vps.bvecornwall.co.uk/OpenBVE/Builds/version.xml" : "http://openbve-project.net/version.xml";
-			HttpWebRequest hwRequest = (HttpWebRequest)WebRequest.Create(xmlURL);
+			string xmlUrl = Interface.CurrentOptions.DailyBuildUpdates ? "https://vps.bvecornwall.co.uk/OpenBVE/Builds/version.xml" : "http://openbve-project.net/version.xml";
+			HttpWebRequest hwRequest = (HttpWebRequest)WebRequest.Create(xmlUrl);
 			hwRequest.Timeout = 5000;
 			HttpWebResponse hwResponse = null;
 			XmlTextReader reader = null;
@@ -1923,7 +1910,7 @@ namespace OpenBve {
 
 		private void aboutLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			using (formAbout f = new formAbout()) {
+			using (FormAbout f = new FormAbout()) {
 				f.ShowDialog();
 			}
 		}
@@ -2024,7 +2011,7 @@ namespace OpenBve {
 
 		private void buttonRailDriverCalibration_Click(object sender, EventArgs e)
 		{
-			using (formRaildriverCalibration f = new formRaildriverCalibration())
+			using (FormRaildriverCalibration f = new FormRaildriverCalibration())
 			{
 				f.ShowDialog();
 			}
@@ -2064,7 +2051,7 @@ namespace OpenBve {
 		private void toolStripExport_Click(object sender, EventArgs e)
 		{
 			Control sourceControl = ((ContextMenuStrip)((ToolStripItem)sender).Owner).SourceControl;
-			formImageExport exporter = sourceControl == pictureboxRouteMap ? new formImageExport(true, Result.RouteFile) : new formImageExport(false, Result.RouteFile);
+			FormImageExport exporter = sourceControl == pictureboxRouteMap ? new FormImageExport(true, Result.RouteFile) : new FormImageExport(false, Result.RouteFile);
 			
 			exporter.ShowDialog();
 		}

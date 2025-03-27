@@ -334,18 +334,7 @@ namespace TrainEditor2.Views
 					BindingMode.OneWay,
 					_ =>
 					{
-						TabPage tabPage;
-
-						if (tabControlEditor.SelectedTab.Enabled)
-						{
-							tabPage = tabControlEditor.SelectedTab;
-						}
-						else
-						{
-							tabPage = tabControlEditor.TabPages.OfType<TabPage>().FirstOrDefault(x => x.Enabled);
-						}
-
-						return tabPage;
+						return tabControlEditor.SelectedTab.Enabled ? tabControlEditor.SelectedTab : tabControlEditor.TabPages.OfType<TabPage>().FirstOrDefault(x => x.Enabled);
 					}
 				)
 				.AddTo(disposable);

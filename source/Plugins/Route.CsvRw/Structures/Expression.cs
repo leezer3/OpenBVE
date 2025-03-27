@@ -221,9 +221,9 @@ namespace CsvRwRouteParser
 										Text = Text.Remove(i, 1).Insert(i, "]");
 										continue;
 									}
-									if (Text.StartsWith(".marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith(".announce", StringComparison.InvariantCultureIgnoreCase) || Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
+									if (Text.StartsWith(".timetable", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith(".marker", StringComparison.InvariantCultureIgnoreCase) || Text.StartsWith(".announce", StringComparison.InvariantCultureIgnoreCase) || Text.IndexOf(".Load", StringComparison.InvariantCultureIgnoreCase) != -1)
 									{
-										if (Text.Substring(i + 1, 5).ToLowerInvariant() == ".load")
+										if (Text.Substring(i + 1, 5).ToLowerInvariant() == ".load" || Text.Substring(i + 1, 9).ToLowerInvariant() == ".day.load" || Text.Substring(i + 1, 11).ToLowerInvariant() == ".night.load")
 										{
 											found = true;
 											firstClosingBracket = i;

@@ -83,10 +83,7 @@ namespace TrainEditor2.ViewModels.Panels
 				)
 				.SetValidateNotifyError(x =>
 				{
-					Color24 result;
-					string message;
-
-					Utilities.TryParse(x, out result, out message);
+					Utilities.TryParse(x, out Color24 result, out string message);
 
 					return message;
 				})
@@ -101,10 +98,7 @@ namespace TrainEditor2.ViewModels.Panels
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -119,21 +113,18 @@ namespace TrainEditor2.ViewModels.Panels
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
 				.AddTo(disposable);
 
 			DirectionX = linearGauge
-				.ToReactivePropertyAsSynchronized(x => x.DirectionX)
+				.ToReactivePropertyAsSynchronized(x => (int)x.Direction.X)
 				.AddTo(disposable);
 
 			DirectionY = linearGauge
-				.ToReactivePropertyAsSynchronized(x => x.DirectionY)
+				.ToReactivePropertyAsSynchronized(x => (int)x.Direction.Y)
 				.AddTo(disposable);
 
 			Width = linearGauge

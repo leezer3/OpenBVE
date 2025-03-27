@@ -18,6 +18,7 @@ using TrainEditor2.IO.Sounds.Bve4;
 using TrainEditor2.IO.Sounds.Xml;
 using TrainEditor2.IO.Trains.ExtensionsCfg;
 using TrainEditor2.IO.Trains.TrainDat;
+using TrainEditor2.IO.Trains.XML;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
 using TrainEditor2.Models.Panels;
@@ -31,7 +32,8 @@ namespace TrainEditor2.Models
 	{
 		internal enum TrainFileType
 		{
-			OldFormat
+			OldFormat,
+			TrainXML
 		}
 
 		internal enum PanelFileType
@@ -77,6 +79,7 @@ namespace TrainEditor2.Models
 		private string soundCfgExportLocation;
 		private string soundXmlImportLocation;
 		private string soundXmlExportLocation;
+		private string trainXmlExportLocation;
 
 		private TreeViewItemModel item;
 		private TreeViewItemModel selectedItem;
@@ -366,6 +369,18 @@ namespace TrainEditor2.Models
 			set
 			{
 				SetProperty(ref soundXmlExportLocation, value);
+			}
+		}
+
+		internal string TrainXmlExportLocation
+		{
+			get
+			{
+				return trainXmlExportLocation;
+			}
+			set
+			{
+				SetProperty(ref trainXmlExportLocation, value);
 			}
 		}
 
@@ -732,6 +747,12 @@ namespace TrainEditor2.Models
 							ExtensionsCfg.Write(ExtensionsCfgExportLocation, Train);
 						}
 						break;
+					case TrainFileType.TrainXML:
+						if (!string.IsNullOrEmpty(TrainXmlExportLocation))
+						{
+							TrainXML.Write(TrainXmlExportLocation, Train);
+						}
+						break;
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
@@ -809,7 +830,7 @@ namespace TrainEditor2.Models
 			}
 
 			StringBuilder builder = new StringBuilder();
-			builder.AppendLine($"TrainEditor2 Log: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}");
+			builder.AppendLine($"TrainEditor2 Log: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
 
 			foreach (string message in Interface.LogMessages.Select(x => $"{x.Type.ToString()}: {x.Text}"))
 			{

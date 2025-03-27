@@ -1,7 +1,6 @@
-// ReSharper disable UnusedMember.Global
-namespace Train.OpenBve
+namespace Formats.OpenBve
 {
-	internal enum Panel2Key
+	public enum Panel2Key
 	{
 		Unknown = 0,
 		Resolution,
@@ -58,6 +57,19 @@ namespace Train.OpenBve
 		Command,
 		CommandEntries,
 		CommandOption,
-		Cursor
+		Option,
+		Cursor,
+		Index,
+		Name,
+		Position,
+		FileName,
+		// XML Screen
+		PilotLamp,
+		Needle,
+		DigitalNumber,
+		DigitalGauge,
+		LinearGauge,
+		Timetable,
+		Touch,
 	}
 }

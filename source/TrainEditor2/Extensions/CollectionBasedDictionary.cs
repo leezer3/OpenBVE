@@ -53,9 +53,8 @@ namespace TrainEditor2.Extensions
 			set
 			{
 				KeyValuePair<TKey, TValue> newValue = new KeyValuePair<TKey, TValue>(key, value);
-				KeyValuePair<TKey, TValue> oldValue;
 
-				if (Dictionary.TryGetValue(key, out oldValue))
+				if (Dictionary.TryGetValue(key, out KeyValuePair<TKey, TValue> oldValue))
 				{
 					SetItem(Items.IndexOf(oldValue), newValue);
 				}
@@ -78,8 +77,7 @@ namespace TrainEditor2.Extensions
 
 		public bool TryGetValue(TKey key, out TValue value)
 		{
-			KeyValuePair<TKey, TValue> pair;
-			bool result = Dictionary.TryGetValue(key, out pair);
+			bool result = Dictionary.TryGetValue(key, out KeyValuePair<TKey, TValue> pair);
 			value = pair.Value;
 			return result;
 		}

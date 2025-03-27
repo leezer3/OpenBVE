@@ -47,7 +47,7 @@ namespace OpenBveApi.Routes
 		/// <summary>The station index at the current location</summary>
 		public int StationIndex;
 
-		private readonly Hosts.HostInterface currentHost;
+		private readonly HostInterface currentHost;
 
 
 
@@ -69,9 +69,9 @@ namespace OpenBveApi.Routes
 		}
 
 		/// <summary>Creates a new TrackFollower</summary>
-		public TrackFollower(Hosts.HostInterface Host, AbstractTrain train = null, AbstractCar car = null)
+		public TrackFollower(HostInterface host, AbstractTrain train = null, AbstractCar car = null)
 		{
-			currentHost = Host;
+			currentHost = host;
 			Train = train;
 			Car = car;
 			LastTrackElement = 0;
@@ -97,31 +97,31 @@ namespace OpenBveApi.Routes
 		public double RailGauge => currentHost.Tracks[TrackIndex].RailGauge;
 
 		/// <summary>Updates the World Coordinates</summary>
-		/// <param name="AddTrackInaccuracy"></param>
-		public void UpdateWorldCoordinates(bool AddTrackInaccuracy)
+		/// <param name="addTrackInaccuracy"></param>
+		public void UpdateWorldCoordinates(bool addTrackInaccuracy)
 		{
-			UpdateAbsolute(this.TrackPosition, true, AddTrackInaccuracy);
+			UpdateAbsolute(this.TrackPosition, true, addTrackInaccuracy);
 		}
 
 		/// <summary>Call this method to update a single track follower on a relative basis</summary>
-		/// <param name="RelativeTrackPosition">The new absolute track position of the follower</param>
-		/// <param name="UpdateWorldCoordinates">Whether to update the world co-ordinates</param>
-		/// <param name="AddTrackInaccuracy">Whether to add track innacuracy</param>
-		public void UpdateRelative(double RelativeTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccuracy)
+		/// <param name="relativeTrackPosition">The new absolute track position of the follower</param>
+		/// <param name="updateWorldCoordinates">Whether to update the world co-ordinates</param>
+		/// <param name="addTrackInaccuracy">Whether to add track innacuracy</param>
+		public void UpdateRelative(double relativeTrackPosition, bool updateWorldCoordinates, bool addTrackInaccuracy)
 		{
-			if (RelativeTrackPosition == 0)
+			if (relativeTrackPosition == 0)
 			{
 				// not moved!
 				return;
 			}
-			UpdateAbsolute(TrackPosition + RelativeTrackPosition, UpdateWorldCoordinates, AddTrackInaccuracy);
+			UpdateAbsolute(TrackPosition + relativeTrackPosition, updateWorldCoordinates, addTrackInaccuracy);
 		}
 
 		/// <summary>Call this method to update a single track follower on an absolute basis</summary>
-		/// <param name="NewTrackPosition">The new absolute track position of the follower</param>
-		/// <param name="UpdateWorldCoordinates">Whether to update the world co-ordinates</param>
-		/// <param name="AddTrackInaccuracy">Whether to add track inaccuracy</param>
-		public void UpdateAbsolute(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccuracy)
+		/// <param name="newTrackPosition">The new absolute track position of the follower</param>
+		/// <param name="updateWorldCoordinates">Whether to update the world co-ordinates</param>
+		/// <param name="addTrackInaccuracy">Whether to add track inaccuracy</param>
+		public void UpdateAbsolute(double newTrackPosition, bool updateWorldCoordinates, bool addTrackInaccuracy)
 		{
 			if (!currentHost.Tracks.ContainsKey(TrackIndex) || currentHost.Tracks[TrackIndex].Elements.Length == 0) return;
 			int i = System.Math.Min(currentHost.Tracks[TrackIndex].Elements.Length - 1, LastTrackElement);
@@ -144,7 +144,7 @@ namespace OpenBveApi.Routes
 					}
 				}
 
-				if (NewTrackPosition >= currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition)
+				if (newTrackPosition >= currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition)
 				{
 					break;
 				}
@@ -175,7 +175,7 @@ namespace OpenBveApi.Routes
 						}
 					}
 
-					if (NewTrackPosition < currentHost.Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition) break;
+					if (newTrackPosition < currentHost.Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition) break;
 					double ta = TrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition;
 					double tb = currentHost.Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition + 0.01;
 					CheckEvents(i, 1, ta, tb);
@@ -188,10 +188,10 @@ namespace OpenBveApi.Routes
 			}
 
 			double da = TrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition;
-			double db = NewTrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition;
+			double db = newTrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition;
 
 			// track
-			if (UpdateWorldCoordinates)
+			if (updateWorldCoordinates)
 			{
 				if (db != 0.0)
 				{
@@ -323,7 +323,7 @@ namespace OpenBveApi.Routes
 			//Mutliply this by 1000 to get the original value
 			Pitch = currentHost.Tracks[TrackIndex].Elements[i].Pitch * 1000;
 			// inaccuracy
-			if (AddTrackInaccuracy)
+			if (addTrackInaccuracy)
 			{
 				double x, y, c;
 				if (i < currentHost.Tracks[TrackIndex].Elements.Length - 1)
@@ -338,15 +338,15 @@ namespace OpenBveApi.Routes
 						t = 1.0;
 					}
 
-					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out double x1, out double y1, out double c1);
-					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i + 1].CsvRwAccuracyLevel, out double x2, out double y2, out double c2);
+					currentHost.Tracks[TrackIndex].GetInaccuracies(newTrackPosition, currentHost.Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out double x1, out double y1, out double c1);
+					currentHost.Tracks[TrackIndex].GetInaccuracies(newTrackPosition, currentHost.Tracks[TrackIndex].Elements[i + 1].CsvRwAccuracyLevel, out double x2, out double y2, out double c2);
 					x = (1.0 - t) * x1 + t * x2;
 					y = (1.0 - t) * y1 + t * y2;
 					c = (1.0 - t) * c1 + t * c2;
 				}
 				else
 				{
-					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x, out y, out c);
+					currentHost.Tracks[TrackIndex].GetInaccuracies(newTrackPosition, currentHost.Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x, out y, out c);
 				}
 
 				WorldPosition += x * WorldSide + y * WorldUp;
@@ -361,54 +361,54 @@ namespace OpenBveApi.Routes
 			// events
 			CheckEvents(i, System.Math.Sign(db - da), da, db);
 			//Update the odometer
-			if (TrackPosition != NewTrackPosition)
+			if (TrackPosition != newTrackPosition)
 			{
 				//HACK: Reset the odometer if we've moved more than 10m this frame
-				if (System.Math.Abs(NewTrackPosition - TrackPosition) > 10)
+				if (System.Math.Abs(newTrackPosition - TrackPosition) > 10)
 				{
 					Odometer = 0;
 				}
 				else
 				{
-					Odometer += NewTrackPosition - TrackPosition;
+					Odometer += newTrackPosition - TrackPosition;
 				}
 			}
 
 			// finish
-			TrackPosition = NewTrackPosition;
+			TrackPosition = newTrackPosition;
 			LastTrackElement = i;
 		}
 
-		private void CheckEvents(int ElementIndex, int Direction, double OldDelta, double NewDelta)
+		private void CheckEvents(int elementIndex, int direction, double oldDelta, double newDelta)
 		{
-			if (TriggerType == EventTriggerType.None || currentHost.Tracks[TrackIndex].Elements[ElementIndex].Events == null || currentHost.Tracks[TrackIndex].Elements[ElementIndex].Events.Count == 0)
+			if (TriggerType == EventTriggerType.None || currentHost.Tracks[TrackIndex].Elements[elementIndex].Events == null || currentHost.Tracks[TrackIndex].Elements[elementIndex].Events.Count == 0)
 			{
 				return;
 			}
 
 			int Index = TrackIndex;
-			if (Direction < 0)
+			if (direction < 0)
 			{
-				for (int j = currentHost.Tracks[Index].Elements[ElementIndex].Events.Count - 1; j >= 0; j--)
+				for (int j = currentHost.Tracks[Index].Elements[elementIndex].Events.Count - 1; j >= 0; j--)
 				{
-					GeneralEvent e = currentHost.Tracks[Index].Elements[ElementIndex].Events[j];
-					if (currentHost.Tracks[Index].Elements[ElementIndex].Events.Count == 0)
+					GeneralEvent e = currentHost.Tracks[Index].Elements[elementIndex].Events[j];
+					if (currentHost.Tracks[Index].Elements[elementIndex].Events.Count == 0)
 					{
 						return;
 					}
 
-					if (OldDelta > e.TrackPositionDelta & NewDelta <= e.TrackPositionDelta)
+					if (oldDelta > e.TrackPositionDelta & newDelta <= e.TrackPositionDelta)
 					{
 						e.TryTrigger(-1, this);
 					}
 				}
 			}
-			else if (Direction > 0)
+			else if (direction > 0)
 			{
-				for (int j = 0; j < currentHost.Tracks[Index].Elements[ElementIndex].Events.Count; j++)
+				for (int j = 0; j < currentHost.Tracks[Index].Elements[elementIndex].Events.Count; j++)
 				{
-					GeneralEvent e = currentHost.Tracks[Index].Elements[ElementIndex].Events[j];
-					if (OldDelta < e.TrackPositionDelta & NewDelta >= e.TrackPositionDelta)
+					GeneralEvent e = currentHost.Tracks[Index].Elements[elementIndex].Events[j];
+					if (oldDelta < e.TrackPositionDelta & newDelta >= e.TrackPositionDelta)
 					{
 						e.TryTrigger(1, this);
 					}
@@ -418,7 +418,7 @@ namespace OpenBveApi.Routes
 			if (Index != TrackIndex)
 			{
 				//We have swapped tracks, so need to check the events on the new track also
-				CheckEvents(ElementIndex, Direction, OldDelta, NewDelta);
+				CheckEvents(elementIndex, direction, oldDelta, newDelta);
 			}
 		}
 

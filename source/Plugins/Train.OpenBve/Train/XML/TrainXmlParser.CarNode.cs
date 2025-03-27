@@ -15,6 +15,7 @@ using TrainManager.Car;
 using TrainManager.Car.Systems;
 using TrainManager.Cargo;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.SafetySystems;
 using TrainManager.Trains;
@@ -715,6 +716,73 @@ namespace Train.OpenBve
 								Train.Cars[Car].Windscreen = new Windscreen(numDrops, dropLife, Train.Cars[Car]);
 								Train.Cars[Car].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Car].Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
 							}
+						}
+						break;
+					case "dieselengine":
+						foreach (XmlNode cc in c.ChildNodes)
+						{
+							double idleRPM = 0, minRPM = 0, maxRPM = 0, rpmChangeUpRate = 0, rpmChangeDownRate = 0, idleFuelUse = 0, maxPowerFuelUse = 0, fuelCapacity = 0;
+							switch (cc.Name.ToLowerInvariant())
+							{
+								case "idlerpm":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out idleRPM))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid idle RPM defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "minrpm":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out minRPM))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid minimum RPM defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "maxrpm":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxRPM))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid maximum RPM defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "rpmchangerate":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out rpmChangeUpRate))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid RPM change rate defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+									}
+									rpmChangeDownRate = rpmChangeUpRate;
+									break;
+								case "rpmchangeuprate":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out rpmChangeUpRate))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid RPM change Up rate defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "rpmchangedownrate":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out rpmChangeDownRate))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid RPM change Down rate defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "idlefueluse":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out idleFuelUse))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid idle fuel use rate defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "maxpowerfueluse":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxPowerFuelUse))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid max power fuel use rate defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "fuelcapacity":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out fuelCapacity))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+									}
+									break;
+							}
+
+							Train.Cars[Car].Engine = new DieselEngine(Train.Cars[Car], idleRPM, minRPM, maxRPM, rpmChangeUpRate, rpmChangeDownRate, idleFuelUse, maxPowerFuelUse);
+							Train.Cars[Car].Engine.FuelTank = new FuelTank(fuelCapacity, 0, fuelCapacity);
 						}
 						break;
 				}

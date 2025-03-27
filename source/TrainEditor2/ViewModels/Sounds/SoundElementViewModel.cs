@@ -75,10 +75,7 @@ namespace TrainEditor2.ViewModels.Sounds
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -93,10 +90,7 @@ namespace TrainEditor2.ViewModels.Sounds
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -111,10 +105,7 @@ namespace TrainEditor2.ViewModels.Sounds
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -133,10 +124,7 @@ namespace TrainEditor2.ViewModels.Sounds
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})

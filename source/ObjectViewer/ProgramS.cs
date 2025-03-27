@@ -19,7 +19,6 @@ using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
-using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using OpenTK;
 using OpenTK.Graphics;
@@ -53,7 +52,7 @@ namespace ObjectViewer {
         internal static double LightingRelative = 1.0;
         private static bool ShiftPressed = false;
 
-		internal static OpenBveApi.Hosts.HostInterface CurrentHost;
+		internal static HostInterface CurrentHost;
 
 		internal static NewRenderer Renderer;
 

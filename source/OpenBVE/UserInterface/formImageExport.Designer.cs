@@ -1,7 +1,7 @@
 ﻿
 namespace OpenBve
 {
-	partial class formImageExport
+	partial class FormImageExport
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -175,7 +175,7 @@ namespace OpenBve
 			this.Controls.Add(this.labelInstructions);
 			this.Controls.Add(this.buttonCancel);
 			this.Controls.Add(this.buttonExport);
-			this.Name = "formImageExport";
+			this.Name = "FormImageExport";
 			this.Text = "Export Image";
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();

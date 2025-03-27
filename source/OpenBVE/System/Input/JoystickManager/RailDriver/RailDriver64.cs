@@ -6,7 +6,7 @@ namespace OpenBve.Input
 	/// <summary>A 64-bit RailDriver</summary>
 	internal class RailDriver64 : AbstractRailDriver, PIEDataHandler, PIEErrorHandler
 	{
-		internal readonly PIEDevice myDevice;
+		private readonly PIEDevice myDevice;
 
 		internal RailDriver64(PIEDevice device)
 		{

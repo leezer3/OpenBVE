@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Linq;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
@@ -65,6 +66,12 @@ namespace TrainEditor2.Models.Trains
 		{
 			PositionX = PositionY = PositionZ = 0.0;
 			DriverCar = 0;
+		}
+
+		public void WriteXML(string fileName, XElement carNode)
+		{
+			carNode.Add(new XElement("DriverPosition", PositionX + "," + PositionY + "," + PositionZ));
+			carNode.Add(new XElement("InteriorView", "panel.xml"));
 		}
 
 		public object Clone()

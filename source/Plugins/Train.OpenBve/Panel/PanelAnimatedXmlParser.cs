@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Formats.OpenBve;
 using LibRender2;
 using LibRender2.Trains;
 using OpenBveApi;
@@ -81,27 +82,27 @@ namespace Train.OpenBve
 					if (Plugin.Cancel) return;
 				}
 
-				string Section = SectionElement.Name.LocalName;
 
-				switch (SectionElement.Name.LocalName.ToLowerInvariant())
+				Enum.TryParse(SectionElement.Name.LocalName, true, out Panel2Sections Section);
+				switch (Section)
 				{
-					case "group":
+					case Panel2Sections.Group:
 						if (GroupIndex == 0)
 						{
 							int n = 0;
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								string Key = KeyNode.Name.LocalName;
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
+								Enum.TryParse(KeyNode.Name.LocalName, true, out Panel2Key key);
 
-								switch (Key.ToLowerInvariant())
+								switch (key)
 								{
-									case "number":
+									case Panel2Key.Number:
 										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out n))
 										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
 								}
@@ -116,7 +117,7 @@ namespace Train.OpenBve
 							ParsePanelAnimatedNode(SectionElement, FileName, TrainPath, CarSection, n + 1);
 						}
 						break;
-					case "touch":
+					case Panel2Sections.Touch:
 						if (GroupIndex > 0)
 						{
 							Vector3 Position = Vector3.Zero;
@@ -128,42 +129,42 @@ namespace Train.OpenBve
 							Bitmap cursorTexture = null;
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								string Key = KeyNode.Name.LocalName;
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
+								Enum.TryParse(KeyNode.Name.LocalName, true, out Panel2Key key);
 
-								switch (Key.ToLowerInvariant())
+								switch (key)
 								{
-									case "position":
+									case Panel2Key.Position:
 										if (!Vector3.TryParse(KeyNode.Value, ',', out Position))
 										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Position is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Position is invalid in " + key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
-									case "size":
+									case Panel2Key.Size:
 										if (!Vector3.TryParse(KeyNode.Value, ',', out Size))
 										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Size is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Size is invalid in " + key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
-									case "jumpscreen":
+									case Panel2Key.JumpScreen:
 										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out JumpScreen))
 										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
-									case "soundindex":
+									case Panel2Key.SoundIndex:
 										if (Value.Length != 0)
 										{
 											if (!NumberFormats.TryParseIntVb6(Value, out var SoundIndex))
 											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												break;
 											}
 											SoundIndices.Add(SoundIndex);
 										}
 										break;
-									case "command":
+									case Panel2Key.Command:
 										{
 											if (!CommandEntries.Contains(CommandEntry))
 											{
@@ -181,11 +182,11 @@ namespace Train.OpenBve
 											}
 											else
 											{
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 											}
 										}
 										break;
-									case "commandoption":
+									case Panel2Key.CommandOption:
 										if (!CommandEntries.Contains(CommandEntry))
 										{
 											CommandEntries.Add(CommandEntry);
@@ -193,10 +194,10 @@ namespace Train.OpenBve
 
 										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out CommandEntry.Option))
 										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
-									case "soundentries":
+									case Panel2Key.SoundEntries:
 										if (!KeyNode.HasElements)
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"An empty list of touch sound indices was defined at line {((IXmlLineInfo)KeyNode).LineNumber} in XML file {FileName}");
@@ -205,7 +206,7 @@ namespace Train.OpenBve
 
 										ParseTouchSoundEntryNode(FileName, KeyNode, SoundIndices);
 										break;
-									case "commandentries":
+									case Panel2Key.CommandEntries:
 										if (!KeyNode.HasElements)
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"An empty list of touch commands was defined at line {((IXmlLineInfo)KeyNode).LineNumber} in XML file {FileName}");
@@ -214,7 +215,7 @@ namespace Train.OpenBve
 
 										ParseTouchCommandEntryNode(FileName, KeyNode, CommandEntries);
 										break;
-									case "cursor":
+									case Panel2Key.Cursor:
 										string cursorFile = Path.CombineFile(TrainPath, Value);
 										if (File.Exists(cursorFile))
 										{
@@ -230,17 +231,17 @@ namespace Train.OpenBve
 							}
 						}
 						break;
-					case "include":
+					case Panel2Sections.Include:
 						{
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
-								string Key = KeyNode.Name.LocalName;
 								string Value = KeyNode.Value;
 								int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
+								Enum.TryParse(KeyNode.Name.LocalName, true, out Panel2Key key);
 
-								switch (Key.ToLowerInvariant())
+								switch (key)
 								{
-									case "filename":
+									case Panel2Key.FileName:
 										{
 											string includeFile = Path.CombineFile(TrainPath, Value);
 											if (File.Exists(includeFile))
@@ -258,7 +259,7 @@ namespace Train.OpenBve
 												}
 												else
 												{
-													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 												}
 											}
 										}
@@ -268,6 +269,8 @@ namespace Train.OpenBve
 						}
 						break;
 				}
+
+				currentSectionElement++;
 			}
 		}
 
@@ -287,13 +290,13 @@ namespace Train.OpenBve
 
 					foreach (XElement keyNode in childNode.Elements())
 					{
-						string key = keyNode.Name.LocalName;
 						string value = keyNode.Value;
 						int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+						Enum.TryParse(keyNode.Name.LocalName, true, out Panel2Key key);
 
-						switch (keyNode.Name.LocalName.ToLowerInvariant())
+						switch (key)
 						{
-							case "index":
+							case Panel2Key.Index:
 								if (value.Any())
 								{
 									if (!NumberFormats.TryParseIntVb6(value, out var index))
@@ -328,13 +331,13 @@ namespace Train.OpenBve
 
 					foreach (XElement keyNode in childNode.Elements())
 					{
-						string key = keyNode.Name.LocalName;
 						string value = keyNode.Value;
 						int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+						Enum.TryParse(keyNode.Name.LocalName, true, out Panel2Key key);
 
-						switch (keyNode.Name.LocalName.ToLowerInvariant())
+						switch (key)
 						{
-							case "name":
+							case Panel2Key.Name:
 								if (string.Compare(value, "N/A", StringComparison.InvariantCultureIgnoreCase) == 0)
 								{
 									break;
@@ -349,7 +352,7 @@ namespace Train.OpenBve
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 								break;
-							case "option":
+							case Panel2Key.Option:
 								if (value.Any())
 								{
 									if (!NumberFormats.TryParseIntVb6(value, out var option))

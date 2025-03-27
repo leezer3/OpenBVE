@@ -9,9 +9,9 @@ namespace OpenBve
 	internal static partial class Interface
 	{
 		/// <summary>Gets the formatted text for an in-game score event</summary>
-		/// <param name="TextToken">The in-game score event</param>
-		internal static string GetScoreText(Game.ScoreTextToken TextToken) {
-			switch (TextToken) {
+		/// <param name="textToken">The in-game score event</param>
+		internal static string GetScoreText(Game.ScoreTextToken textToken) {
+			switch (textToken) {
 					case Game.ScoreTextToken.Overspeed: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","overspeed"});
 					case Game.ScoreTextToken.PassedRedSignal: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","redsignal"});
 					case Game.ScoreTextToken.Toppling: return Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","toppling"});

@@ -52,10 +52,7 @@ namespace TrainEditor2.ViewModels.Trains
 					)
 					.SetValidateNotifyError(x =>
 					{
-						double result;
-						string message;
-
-						Utilities.TryParse(x, NumberRange.Positive, out result, out message);
+						Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
 
 						return message;
 					})
@@ -70,10 +67,7 @@ namespace TrainEditor2.ViewModels.Trains
 					)
 					.SetValidateNotifyError(x =>
 					{
-						double result;
-						string message;
-
-						Utilities.TryParse(x, NumberRange.Positive, out result, out message);
+						Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
 
 						return message;
 					})
@@ -88,10 +82,7 @@ namespace TrainEditor2.ViewModels.Trains
 					)
 					.SetValidateNotifyError(x =>
 					{
-						double result;
-						string message;
-
-						Utilities.TryParse(x, NumberRange.Positive, out result, out message);
+						Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
 
 						return message;
 					})
@@ -106,10 +97,7 @@ namespace TrainEditor2.ViewModels.Trains
 					)
 					.SetValidateNotifyError(x =>
 					{
-						double result;
-						string message;
-
-						Utilities.TryParse(x, NumberRange.Positive, out result, out message);
+						Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
 
 						return message;
 					})
@@ -124,10 +112,7 @@ namespace TrainEditor2.ViewModels.Trains
 					)
 					.SetValidateNotifyError(x =>
 					{
-						double result;
-						string message;
-
-						Utilities.TryParse(x, NumberRange.Positive, out result, out message);
+						Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
 
 						return message;
 					})
@@ -377,14 +362,9 @@ namespace TrainEditor2.ViewModels.Trains
 			MinVelocity
 				.SetValidateNotifyError(x =>
 				{
-					double min;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.NonNegative, out min, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out double min, out string message))
 					{
-						double max;
-
-						if (Utilities.TryParse(MaxVelocity.Value, NumberRange.NonNegative, out max) && min >= max)
+						if (Utilities.TryParse(MaxVelocity.Value, NumberRange.NonNegative, out double max) && min >= max)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}
@@ -404,14 +384,9 @@ namespace TrainEditor2.ViewModels.Trains
 			MaxVelocity
 				.SetValidateNotifyError(x =>
 				{
-					double max;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.NonNegative, out max, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out double max, out string message))
 					{
-						double min;
-
-						if (Utilities.TryParse(MinVelocity.Value, NumberRange.NonNegative, out min) && max <= min)
+						if (Utilities.TryParse(MinVelocity.Value, NumberRange.NonNegative, out double min) && max <= min)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}
@@ -431,14 +406,9 @@ namespace TrainEditor2.ViewModels.Trains
 			MinAcceleration
 				.SetValidateNotifyError(x =>
 				{
-					double min;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.NonNegative, out min, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out double min, out string message))
 					{
-						double max;
-
-						if (Utilities.TryParse(MaxAcceleration.Value, NumberRange.NonNegative, out max) && min >= max)
+						if (Utilities.TryParse(MaxAcceleration.Value, NumberRange.NonNegative, out double max) && min >= max)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}
@@ -458,14 +428,9 @@ namespace TrainEditor2.ViewModels.Trains
 			MaxAcceleration
 				.SetValidateNotifyError(x =>
 				{
-					double max;
-					string message;
-
-					if (Utilities.TryParse(x, NumberRange.NonNegative, out max, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out double max, out string message))
 					{
-						double min;
-
-						if (Utilities.TryParse(MinAcceleration.Value, NumberRange.NonNegative, out min) && max <= min)
+						if (Utilities.TryParse(MinAcceleration.Value, NumberRange.NonNegative, out double min) && max <= min)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}

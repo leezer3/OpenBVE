@@ -6,7 +6,7 @@ namespace OpenBve.Input
 {
 	class JoystickManager32 : JoystickManager
 	{
-		internal PIEDevice[] devices;
+		private readonly PIEDevice[] devices;
 
 		internal JoystickManager32()
 		{

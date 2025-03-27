@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using OpenBveApi.World;
-using SharpCompress.Common;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MergeCastWithTypeCheck
 
@@ -124,24 +123,24 @@ namespace OpenBveApi.Math {
 		}
 
 		/// <summary>Interpolates between two Vector3 values using a simple Cosine algorithm</summary>
-		/// <param name="Vector1">The first vector</param>
-		/// <param name="Vector2">The second vector</param>
+		/// <param name="vector1">The first vector</param>
+		/// <param name="vector2">The second vector</param>
 		/// <param name="mu">The position on the curve of the new vector</param>
 		/// <returns>The interpolated vector</returns>
-		public static Vector3 CosineInterpolate(Vector3 Vector1, Vector3 Vector2, double mu)
+		public static Vector3 CosineInterpolate(Vector3 vector1, Vector3 vector2, double mu)
 		{
 			double mu2 = (1 - System.Math.Cos(mu * System.Math.PI)) / 2;
-			return new Vector3((Vector1.X * (1 - mu2) + Vector2.X * mu2), (Vector1.Y * (1 - mu2) + Vector2.Y * mu2), (Vector1.Z * (1 - mu2) + Vector2.Z * mu2));
+			return new Vector3((vector1.X * (1 - mu2) + vector2.X * mu2), (vector1.Y * (1 - mu2) + vector2.Y * mu2), (vector1.Z * (1 - mu2) + vector2.Z * mu2));
 		}
 
 		/// <summary>Linearly interpolates between two vectors</summary>
-		/// <param name="Vector1">The first vector</param>
-		/// <param name="Vector2">The second vector</param>
+		/// <param name="vector1">The first vector</param>
+		/// <param name="vector2">The second vector</param>
 		/// <param name="mu">The position on the interpolation curve of the new vector</param>
 		/// <returns>The interpolated vector</returns>
-		public static Vector3 LinearInterpolate(Vector3 Vector1, Vector3 Vector2, double mu)
+		public static Vector3 LinearInterpolate(Vector3 vector1, Vector3 vector2, double mu)
 		{
-			return new Vector3(Vector1.X + ((Vector2.X - Vector1.X) * mu), Vector1.Y + ((Vector2.Y - Vector1.Y) * mu), Vector1.Z + ((Vector2.Z - Vector1.Z) * mu));
+			return new Vector3(vector1.X + ((vector2.X - vector1.X) * mu), vector1.Y + ((vector2.Y - vector1.Y) * mu), vector1.Z + ((vector2.Z - vector1.Z) * mu));
 		}
 		
 		/// <summary>Converts a Vector3 to a Vector3f</summary>
@@ -662,9 +661,9 @@ namespace OpenBveApi.Math {
 
 		/// <summary>Tests to see whether the vector is finite (no components are double or infinity.</summary>
 		/// <returns>A boolean indicating whether the vector is finite</returns>
-		public static bool IsFinite(Vector3 Vector)
+		public static bool IsFinite(Vector3 vector)
         {
-            return !double.IsNaN(Vector.X) && !double.IsInfinity(Vector.X) && !double.IsNaN(Vector.Y) && !double.IsInfinity(Vector.Y) && !double.IsNaN(Vector.Z) && !double.IsInfinity(Vector.Z);
+            return !double.IsNaN(vector.X) && !double.IsInfinity(vector.X) && !double.IsNaN(vector.Y) && !double.IsInfinity(vector.Y) && !double.IsNaN(vector.Z) && !double.IsInfinity(vector.Z);
         }
 
         /// <summary>Gets the euclidean norm of the specified vector.</summary>
@@ -682,12 +681,12 @@ namespace OpenBveApi.Math {
 		}
 
 		/// <summary>Returns a normalized vector based on a 2D vector in the XZ plane and an additional Y-coordinate.</summary>
-		/// <param name="Vector">The vector in the XZ-plane. The X and Y components in Vector represent the X- and Z-coordinates, respectively.</param>
+		/// <param name="vector">The vector in the XZ-plane. The X and Y components in Vector represent the X- and Z-coordinates, respectively.</param>
 		/// <param name="Y">The Y-coordinate.</param>
-		public static Vector3 GetVector3(Vector2 Vector, double Y)
+		public static Vector3 GetVector3(Vector2 vector, double Y)
 		{
-			double t = 1.0 / System.Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Y * Y);
-			return new Vector3(t * Vector.X, t * Y, t * Vector.Y);
+			double t = 1.0 / System.Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y + Y * Y);
+			return new Vector3(t * vector.X, t * Y, t * vector.Y);
 		}
 
 		/// <summary>Transforms the Vector based upon the given transform matrix</summary>

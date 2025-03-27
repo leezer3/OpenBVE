@@ -17,7 +17,6 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.Events;
 using RouteManager2.Tracks;

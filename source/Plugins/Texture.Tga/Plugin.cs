@@ -41,7 +41,7 @@ namespace Texture.Tga
 		/// <returns>Whether the plugin can load the specified texture.</returns>
 		public override bool CanLoadTexture(string path)
 		{
-			if (path != null && File.Exists(path) && System.IO.Path.GetExtension(path).ToLower() == ".tga")
+			if (path != null && File.Exists(path) && Path.GetExtension(path).ToLower() == ".tga")
 			{
 				return true;
 			}

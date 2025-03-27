@@ -38,15 +38,15 @@ namespace Plugin
 		
 
 		/// <summary>Loads a Wavefront object from a file.</summary>
-		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
-		/// <param name="Encoding">The encoding the file is saved in.</param>
+		/// <param name="fileName">The text file to load the object from. Must be an absolute file name.</param>
+		/// <param name="encoding">The encoding the file is saved in.</param>
 		/// <returns>The object loaded.</returns>
-		internal static StaticObject ReadObject(string FileName, System.Text.Encoding Encoding)
+		internal static StaticObject ReadObject(string fileName, System.Text.Encoding encoding)
 		{
-			ModelExporter Exporter = ModelExporter.Unknown;
-			StaticObject Object = new StaticObject(Plugin.currentHost);
+			ModelExporter modelExporter = ModelExporter.Unknown;
+			StaticObject parsedObject = new StaticObject(Plugin.currentHost);
 
-			MeshBuilder Builder = new MeshBuilder(Plugin.currentHost);
+			MeshBuilder meshBuilder = new MeshBuilder(Plugin.currentHost);
 
 			/*
 			 * Temporary arrays
@@ -54,43 +54,43 @@ namespace Plugin
 			 List<Vector3> tempVertices = new List<Vector3>();
 			List<Vector3> tempNormals = new List<Vector3>();
 			List<Vector2> tempCoords = new List<Vector2>();
-			Dictionary<string, Material> TempMaterials = new Dictionary<string, Material>();
+			Dictionary<string, Material> tempMaterials = new Dictionary<string, Material>();
 			//Stores the current material
 			string currentMaterial = string.Empty;
 
 			//Read the contents of the file
-			string[] Lines = File.ReadAllLines(FileName, Encoding);
+			string[] lines = File.ReadAllLines(fileName, encoding);
 
 			double currentScale = 1.0;
 			//Preprocess
-			for (int i = 0; i < Lines.Length; i++)
+			for (int i = 0; i < lines.Length; i++)
 			{
 				// Strip hash comments
-				int c = Lines[i].IndexOf("#", StringComparison.Ordinal);
+				int c = lines[i].IndexOf("#", StringComparison.Ordinal);
 				if (c >= 0)
 				{
-					int hash = Lines[i].IndexOf('#');
-					int eq = Lines[i].IndexOf('=');
-					if(Lines[i].IndexOf("SketchUp", StringComparison.InvariantCultureIgnoreCase) != -1)
+					int hash = lines[i].IndexOf('#');
+					int eq = lines[i].IndexOf('=');
+					if(lines[i].IndexOf("SketchUp", StringComparison.InvariantCultureIgnoreCase) != -1)
 					{
-						Exporter = ModelExporter.SketchUp;
+						modelExporter = ModelExporter.SketchUp;
 					}
 
-					if (Lines[i].IndexOf("BlockBench", StringComparison.InvariantCultureIgnoreCase) != -1)
+					if (lines[i].IndexOf("BlockBench", StringComparison.InvariantCultureIgnoreCase) != -1)
 					{
-						Exporter = ModelExporter.BlockBench;
+						modelExporter = ModelExporter.BlockBench;
 					}
 
-					if (Lines[i].IndexOf("Blender", StringComparison.InvariantCultureIgnoreCase) != -1)
+					if (lines[i].IndexOf("Blender", StringComparison.InvariantCultureIgnoreCase) != -1)
 					{
-						Exporter = ModelExporter.Blender;
+						modelExporter = ModelExporter.Blender;
 					}
 					if(hash != -1 && eq != -1)
 					{
-						string afterHash = Lines[i].Substring(hash + 1).Trim();
+						string afterHash = lines[i].Substring(hash + 1).Trim();
 						if (afterHash.StartsWith("File units", StringComparison.InvariantCultureIgnoreCase))
 						{
-							string units = Lines[i].Substring(eq + 1).Trim().ToLowerInvariant();
+							string units = lines[i].Substring(eq + 1).Trim().ToLowerInvariant();
 							switch (units)
 							{
 								/*
@@ -112,40 +112,40 @@ namespace Plugin
 							}
 						}
 					}
-					Lines[i] = Lines[i].Substring(0, c);
+					lines[i] = lines[i].Substring(0, c);
 				}
 				// collect arguments
-				List<string> Arguments = new List<string>(Lines[i].Split(new[] { ' ', '\t' }, StringSplitOptions.None));
-				for (int j = Arguments.Count -1; j >= 0; j--)
+				List<string> arguments = new List<string>(lines[i].Split(new[] { ' ', '\t' }, StringSplitOptions.None));
+				for (int j = arguments.Count -1; j >= 0; j--)
 				{
-					Arguments[j] = Arguments[j].Trim(new char[] { });
-					if (Arguments[j] == string.Empty)
+					arguments[j] = arguments[j].Trim(new char[] { });
+					if (arguments[j] == string.Empty)
 					{
-						Arguments.RemoveAt(j);
+						arguments.RemoveAt(j);
 					}
 				}
-				if (Arguments.Count == 0)
+				if (arguments.Count == 0)
 				{
 					continue;
 				}
 
 				WavefrontObjCommands cmd;
-				Enum.TryParse(Arguments[0], true, out cmd);
+				Enum.TryParse(arguments[0], true, out cmd);
 
 
 				switch (cmd)
 				{
 					case WavefrontObjCommands.V:
 						Vector3 vertex = new Vector3();
-						if (!double.TryParse(Arguments[1], out vertex.X))
+						if (!double.TryParse(arguments[1], out vertex.X))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Vertex at Line " + i);
 						}
-						if (!double.TryParse(Arguments[2], out vertex.Y))
+						if (!double.TryParse(arguments[2], out vertex.Y))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Y co-ordinate in Vertex at Line " + i);
 						}
-						if (!double.TryParse(Arguments[3], out vertex.Z))
+						if (!double.TryParse(arguments[3], out vertex.Z))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Z co-ordinate in Vertex at Line " + i);
 						}
@@ -154,11 +154,11 @@ namespace Plugin
 						break;
 					case WavefrontObjCommands.VT:
 						Vector2 coords = new Vector2();
-						if (!double.TryParse(Arguments[1], out coords.X))
+						if (!double.TryParse(arguments[1], out coords.X))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Texture Co-ordinates at Line " + i);
 						}
-						if (!double.TryParse(Arguments[2], out coords.Y))
+						if (!double.TryParse(arguments[2], out coords.Y))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Texture Co-Ordinates at Line " + i);
 						}
@@ -166,15 +166,15 @@ namespace Plugin
 						break;
 					case WavefrontObjCommands.VN:
 						Vector3 normal = new Vector3();
-						if (!double.TryParse(Arguments[1], out normal.X))
+						if (!double.TryParse(arguments[1], out normal.X))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Vertex Normal at Line " + i);
 						}
-						if (!double.TryParse(Arguments[2], out normal.Y))
+						if (!double.TryParse(arguments[2], out normal.Y))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Y co-ordinate in Vertex Normal at Line " + i);
 						}
-						if (!double.TryParse(Arguments[3], out normal.Z))
+						if (!double.TryParse(arguments[3], out normal.Z))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Z co-ordinate in Vertex Normal at Line " + i);
 						}
@@ -186,10 +186,10 @@ namespace Plugin
 						//Create the temp list to hook out the vertices 
 						List<VertexTemplate> vertices = new List<VertexTemplate>();
 						List<Vector3> normals = new List<Vector3>();
-						for (int f = 1; f < Arguments.Count; f++)
+						for (int f = 1; f < arguments.Count; f++)
 						{
 							Vertex newVertex = new Vertex();
-							string[] faceArguments = Arguments[f].Split(new[] {'/'} , StringSplitOptions.None);
+							string[] faceArguments = arguments[f].Split(new[] {'/'} , StringSplitOptions.None);
 							int idx;
 							if (!int.TryParse(faceArguments[0], out idx))
 							{
@@ -214,7 +214,7 @@ namespace Plugin
 								continue;
 							}
 							newVertex.Coordinates = tempVertices[currentVertex - 1];
-							if (Exporter >= ModelExporter.UnknownLeftHanded)
+							if (modelExporter >= ModelExporter.UnknownLeftHanded)
 							{
 								newVertex.Coordinates.X *= -1.0;
 							}
@@ -254,7 +254,7 @@ namespace Plugin
 										newVertex.TextureCoordinates = tempCoords[currentCoord - 1];
 									}
 
-									switch (Exporter)
+									switch (modelExporter)
 									{
 										case ModelExporter.SketchUp:
 											newVertex.TextureCoordinates.X *= -1.0;
@@ -307,19 +307,19 @@ namespace Plugin
 							}
 							vertices.Add(newVertex);
 						}
-						MeshFaceVertex[] Vertices = new MeshFaceVertex[vertices.Count];
+						MeshFaceVertex[] meshVerticies = new MeshFaceVertex[vertices.Count];
 						for (int k = 0; k < vertices.Count; k++)
 						{
-							Builder.Vertices.Add(vertices[k]);
-							Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
-							Vertices[k].Normal = normals[k];
+							meshBuilder.Vertices.Add(vertices[k]);
+							meshVerticies[k].Index = (ushort)(meshBuilder.Vertices.Count -1);
+							meshVerticies[k].Normal = normals[k];
 						}
 						int materialIndex = -1;
 						if (currentMaterial != string.Empty)
 						{
-							for (int m = 0; m < Builder.Materials.Length; m++)
+							for (int m = 0; m < meshBuilder.Materials.Length; m++)
 							{
-								if (Builder.Materials[m] == TempMaterials[currentMaterial])
+								if (meshBuilder.Materials[m] == tempMaterials[currentMaterial])
 								{
 									materialIndex = m;
 									break;
@@ -329,28 +329,28 @@ namespace Plugin
 
 						if (materialIndex == -1)
 						{
-							materialIndex = Builder.Materials.Length;
-							Array.Resize(ref Builder.Materials, Builder.Materials.Length + 1);
-							if (TempMaterials.ContainsKey(currentMaterial))
+							materialIndex = meshBuilder.Materials.Length;
+							Array.Resize(ref meshBuilder.Materials, meshBuilder.Materials.Length + 1);
+							if (tempMaterials.ContainsKey(currentMaterial))
 							{
-								Builder.Materials[materialIndex] = TempMaterials[currentMaterial];
+								meshBuilder.Materials[materialIndex] = tempMaterials[currentMaterial];
 							}
 							else
 							{
-								Builder.Materials[materialIndex] = new Material();
+								meshBuilder.Materials[materialIndex] = new Material();
 							}
 							
 						}
-						if (Exporter >= ModelExporter.UnknownLeftHanded)
+						if (modelExporter >= ModelExporter.UnknownLeftHanded)
 						{
-							Array.Reverse(Vertices, 0, Vertices.Length);
+							Array.Reverse(meshVerticies, 0, meshVerticies.Length);
 						}
-						Builder.Faces.Add(currentMaterial == string.Empty ? new MeshFace(Vertices, 0) : new MeshFace(Vertices, (ushort)materialIndex));
+						meshBuilder.Faces.Add(currentMaterial == string.Empty ? new MeshFace(meshVerticies, 0) : new MeshFace(meshVerticies, (ushort)materialIndex));
 						break;
 					case WavefrontObjCommands.O:
 					case WavefrontObjCommands.G:
-						Builder.Apply(ref Object);
-						Builder = new MeshBuilder(Plugin.currentHost);
+						meshBuilder.Apply(ref parsedObject);
+						meshBuilder = new MeshBuilder(Plugin.currentHost);
 						break;
 					case WavefrontObjCommands.S:
 						/* 
@@ -367,72 +367,72 @@ namespace Plugin
 						 break;
 					case WavefrontObjCommands.MtlLib:
 						//Loads the library of materials used by this file
-						string MaterialsPath = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[1]);
-						if (File.Exists(MaterialsPath))
+						string materialsPath = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), arguments[1]);
+						if (File.Exists(materialsPath))
 						{
-							LoadMaterials(MaterialsPath, ref TempMaterials);
+							LoadMaterials(materialsPath, ref tempMaterials);
 						}
 						break;
 					case WavefrontObjCommands.UseMtl:
-						currentMaterial = Arguments[1].ToLowerInvariant();
-						if (!TempMaterials.ContainsKey(currentMaterial))
+						currentMaterial = arguments[1].ToLowerInvariant();
+						if (!tempMaterials.ContainsKey(currentMaterial))
 						{
 							currentMaterial = string.Empty;
-							Plugin.currentHost.AddMessage(MessageType.Error, true, "Material " + Arguments[1] + " was not found.");
+							Plugin.currentHost.AddMessage(MessageType.Error, true, "Material " + arguments[1] + " was not found.");
 						}
 						break;
 					default:
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unrecognised command " + Arguments[0]);
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unrecognised command " + arguments[0]);
 						break;
 				}
 			}
-			Builder.Apply(ref Object);
-			Object.Mesh.CreateNormals();
-			return Object;
+			meshBuilder.Apply(ref parsedObject);
+			parsedObject.Mesh.CreateNormals();
+			return parsedObject;
 		}
 
-		private static void LoadMaterials(string FileName, ref Dictionary<string, Material> Materials)
+		private static void LoadMaterials(string fileName, ref Dictionary<string, Material> materials)
 		{
-			string[] Lines = File.ReadAllLines(FileName);
+			string[] lines = File.ReadAllLines(fileName);
 			string currentKey = string.Empty;
 			//Preprocess
-			for (int i = 0; i < Lines.Length; i++)
+			for (int i = 0; i < lines.Length; i++)
 			{
 				// Strip hash comments
-				int c = Lines[i].IndexOf("#", StringComparison.Ordinal);
+				int c = lines[i].IndexOf("#", StringComparison.Ordinal);
 				if (c >= 0)
 				{
-					Lines[i] = Lines[i].Substring(0, c);
+					lines[i] = lines[i].Substring(0, c);
 				}
 				// collect arguments
-				List<string> Arguments = new List<string>(Lines[i].Split(new[] { ' ', '\t' }, StringSplitOptions.None));
-				for (int j = Arguments.Count - 1; j >= 0; j--)
+				List<string> arguments = new List<string>(lines[i].Split(new[] { ' ', '\t' }, StringSplitOptions.None));
+				for (int j = arguments.Count - 1; j >= 0; j--)
 				{
-					Arguments[j] = Arguments[j].Trim(new char[] { });
-					if (Arguments[j] == string.Empty)
+					arguments[j] = arguments[j].Trim(new char[] { });
+					if (arguments[j] == string.Empty)
 					{
-						Arguments.RemoveAt(j);
+						arguments.RemoveAt(j);
 					}
 				}
-				if (Arguments.Count == 0)
+				if (arguments.Count == 0)
 				{
 					continue;
 				}
 
 				WavefrontMtlCommands cmd;
-				Enum.TryParse(Arguments[0], true, out cmd);
+				Enum.TryParse(arguments[0], true, out cmd);
 
 				switch (cmd)
 				{
 					case WavefrontMtlCommands.NewMtl:
-						currentKey = Arguments[1].ToLowerInvariant(); //store as KVP, but case insensitive
-						if (Materials.ContainsKey(currentKey))
+						currentKey = arguments[1].ToLowerInvariant(); //store as KVP, but case insensitive
+						if (materials.ContainsKey(currentKey))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Material " + currentKey + " has been defined twice.");
 						}
 						else
 						{
-							Materials.Add(currentKey, new Material());
+							materials.Add(currentKey, new Material());
 						}
 						break;
 					case WavefrontMtlCommands.Ka:
@@ -440,22 +440,22 @@ namespace Plugin
 						break;
 					case WavefrontMtlCommands.Kd:
 						double r = 1, g = 1, b = 1;
-						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out r))
+						if (arguments.Count >= 2 && !double.TryParse(arguments[1], out r))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color R in Material Definition for " + currentKey);
 						}
-						if (Arguments.Count >= 3 && !double.TryParse(Arguments[2], out g))
+						if (arguments.Count >= 3 && !double.TryParse(arguments[2], out g))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color G in Material Definition for " + currentKey);
 						}
-						if (Arguments.Count >= 4 && !double.TryParse(Arguments[3], out b))
+						if (arguments.Count >= 4 && !double.TryParse(arguments[3], out b))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color B in Material Definition for " + currentKey);
 						}
 						r = 255 * r;
 						g = 255 * g;
 						b = 255 * b;
-						Materials[currentKey].Color = new Color32((byte)r, (byte)g, (byte)b);
+						materials[currentKey].Color = new Color32((byte)r, (byte)g, (byte)b);
 						break;
 					case WavefrontMtlCommands.Ks:
 					case WavefrontMtlCommands.Ke:
@@ -463,28 +463,28 @@ namespace Plugin
 						break;
 					case WavefrontMtlCommands.D:
 						double a = 1;
-						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out a))
+						if (arguments.Count >= 2 && !double.TryParse(arguments[1], out a))
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + currentKey);
 						}
-						Materials[currentKey].Color.A = (byte)(a * 255);
+						materials[currentKey].Color.A = (byte)(a * 255);
 						break;
 					case WavefrontMtlCommands.Map_Kd:
 					case WavefrontMtlCommands.Map_Ka:
-						if(Path.IsPathRooted(Arguments[Arguments.Count - 1]))
+						if(Path.IsPathRooted(arguments[arguments.Count - 1]))
 						{
 							// Rooted path should not be used- Try looking beside the object instead
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Encountered rooted path for " + currentKey);
-							Arguments[Arguments.Count - 1] = Path.GetFileName(Arguments[Arguments.Count - 1]);
+							arguments[arguments.Count - 1] = Path.GetFileName(arguments[arguments.Count - 1]);
 						}
-						string tday = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[Arguments.Count - 1]);
+						string tday = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), arguments[arguments.Count - 1]);
 						if (File.Exists(tday))
 						{
-							Materials[currentKey].DaytimeTexture = tday;
+							materials[currentKey].DaytimeTexture = tday;
 						}
 						else
 						{
-							Plugin.currentHost.AddMessage(MessageType.Error, true, "Material texture file " + Arguments[Arguments.Count -1] + " was not found.");
+							Plugin.currentHost.AddMessage(MessageType.Error, true, "Material texture file " + arguments[arguments.Count -1] + " was not found.");
 						}
 						break;
 					

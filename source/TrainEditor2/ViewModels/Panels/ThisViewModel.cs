@@ -82,10 +82,7 @@ namespace TrainEditor2.ViewModels.Panels
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -100,10 +97,7 @@ namespace TrainEditor2.ViewModels.Panels
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -118,10 +112,7 @@ namespace TrainEditor2.ViewModels.Panels
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -136,10 +127,7 @@ namespace TrainEditor2.ViewModels.Panels
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -154,10 +142,7 @@ namespace TrainEditor2.ViewModels.Panels
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -180,10 +165,7 @@ namespace TrainEditor2.ViewModels.Panels
 				)
 				.SetValidateNotifyError(x =>
 				{
-					Color24 result;
-					string message;
-
-					Utilities.TryParse(x, out result, out message);
+					Utilities.TryParse(x, out Color24 result, out string message);
 
 					return message;
 				})
@@ -191,17 +173,14 @@ namespace TrainEditor2.ViewModels.Panels
 
 			CenterX = _this
 				.ToReactivePropertyAsSynchronized(
-					x => x.CenterX,
+					x => x.Center.X,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -209,17 +188,14 @@ namespace TrainEditor2.ViewModels.Panels
 
 			CenterY = _this
 				.ToReactivePropertyAsSynchronized(
-					x => x.CenterY,
+					x => x.Center.Y,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -227,17 +203,14 @@ namespace TrainEditor2.ViewModels.Panels
 
 			OriginX = _this
 				.ToReactivePropertyAsSynchronized(
-					x => x.OriginX,
+					x => x.Origin.X,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
@@ -245,17 +218,14 @@ namespace TrainEditor2.ViewModels.Panels
 
 			OriginY = _this
 				.ToReactivePropertyAsSynchronized(
-					x => x.OriginY,
+					x => x.Origin.Y,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
 				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out double result, out string message);
 
 					return message;
 				})
