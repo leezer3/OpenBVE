@@ -51,6 +51,7 @@ namespace TrainManager.Motor
 			private set => currentRPM = value;
 		}
 
+
 		private double currentRPM;
 		private double targetRPM;
 		private readonly double perNotchRPM;
@@ -115,5 +116,7 @@ namespace TrainManager.Motor
 				Components.ElementAt(i).Value.Update(timeElapsed);
 			}
 		}
+
+		public override double CurrentPower => (currentRPM - MinRPM) / (MaxRPM - MinRPM);
     }
 }

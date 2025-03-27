@@ -1864,6 +1864,11 @@ namespace OpenBve {
 										totalMotors++;
 										ampsTotal += t.CurrentAmps;
 									}
+									else if (dieselEngine.Components[EngineComponent.RegenerativeTractionMotor] is RegenerativeTractionMotor rt)
+									{
+										totalMotors++;
+										ampsTotal += rt.CurrentAmps;
+									}
 								}
 							}
 
@@ -1894,6 +1899,10 @@ namespace OpenBve {
 									{
 										
 										Function.Stack[s - 1] = t.CurrentAmps;
+									}
+									else if (dieselEngine.Components[EngineComponent.RegenerativeTractionMotor] is RegenerativeTractionMotor rt)
+									{
+										Function.Stack[s - 1] = rt.CurrentAmps;
 									}
 								}
 								else

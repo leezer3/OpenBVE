@@ -113,7 +113,7 @@ namespace OpenBveApi.Objects
 				{
 					// HACK: use the train as a dynamic to allow us to pull out the car reference
 					double wheelRadius;
-					if (baseCar.Wheels != null && baseCar.Wheels.ContainsKey(Name))
+					if (baseCar.Wheels != null)
 					{
 						if (baseCar.Wheels.ContainsKey(Name))
 						{
@@ -123,17 +123,26 @@ namespace OpenBveApi.Objects
 						{
 							// if controllers are not defined for WHEELSN-N, it appears that those for the base WHEELSN are used
 							// otherwise, controlled by the position of WHEELS1
-							string baseName = Name.Substring(0, 7);
-							if (!baseCar.Wheels.ContainsKey(baseName))
+							if (Name.StartsWith("WHEELS"))
 							{
-								baseName = "WHEELS1";
+								string baseName = Name.Substring(0, 7);
+								if (!baseCar.Wheels.ContainsKey(baseName))
+								{
+									baseName = "WHEELS1";
+								}
+								wheelRadius = baseCar.Wheels[baseName].Radius;
 							}
-							wheelRadius = baseCar.Wheels[baseName].Radius;
+							else
+							{
+								AnimationKey = 0;
+								return;
+							}
 						}
 					}
 					else
 					{
 						// unknown animation key- for the minute, we'll stick to the MSTS keys
+						AnimationKey = 0;
 						return;
 					}
 

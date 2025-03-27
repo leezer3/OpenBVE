@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+//Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,38 +22,14 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System.Collections.Generic;
-using TrainManager.Car;
-
-namespace TrainManager.Motor
+namespace OpenBve.Formats.Msts
 {
-	/// <summary>An abstract engine</summary>
-    public abstract class AbstractEngine
+	/// <summary>The types of wagon</summary>
+    public enum WagonType
     {
-		/// <summary>Holds a reference to the base car</summary>
-	    internal readonly CarBase BaseCar;
-		/// <summary>The fuel supply</summary>
-	    public FuelTank FuelTank;
-	    /// <summary>Whether the engine is running</summary>
-	    public bool IsRunning;
-		/// <summary>The components of the engine</summary>
-	    public Dictionary<EngineComponent, AbstractComponent> Components;
-
-		/// <summary>Creates a new AbstractEngine</summary>
-		protected AbstractEngine(CarBase car)
-	    {
-		    BaseCar = car;
-			Components = new Dictionary<EngineComponent, AbstractComponent>();
-	    }
-		
-		/// <summary>Called once a frame to update the engine</summary>
-		/// <param name="timeElapsed"></param>
-	    public abstract void Update(double timeElapsed);
-
-		/// <summary>Gets the current power level</summary>
-	    public abstract double CurrentPower
-	    {
-		    get;
-	    }
+		Engine,
+		Tender,
+		Carriage,
+		Freight
     }
 }

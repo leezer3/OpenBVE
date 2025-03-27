@@ -72,6 +72,12 @@ namespace OpenBve.Formats.MsTs
 		/// <summary>Reads a string from the block</summary>
 		public abstract string ReadString();
 
+		/// <summary>Reads a path from the block</summary>
+		/// <param name="absolute">The platform specific absolute path</param>
+		/// <param name="finalPath">The final path</param>
+		/// <returns>True if the path is found, false otherwise</returns>
+		public abstract bool ReadPath(string absolute, out string finalPath);
+
 		/// <summary>Reads a string array from the block</summary>
 		public abstract string[] ReadStringArray();
 
@@ -255,6 +261,27 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			return (string.Empty); //Not sure this is valid, but let's be on the safe side
+		}
+
+		public override bool ReadPath(string absolute, out string finalPath)
+		{
+			string relative = ReadString().Replace("\"", "");
+			try
+			{
+				finalPath = OpenBveApi.Path.CombineFile(absolute, relative);
+			}
+			catch
+			{
+				finalPath = relative;
+				return false;
+			}
+			if (File.Exists(finalPath))
+			{
+				return true;
+			}
+
+			finalPath = relative;
+			return false;
 		}
 
 		public override string[] ReadStringArray()
@@ -900,6 +927,28 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			return getNextValue();
+		}
+
+		public override bool ReadPath(string absolute, out string finalPath)
+		{
+			string relative = ReadString().Replace("\"", "");
+			try
+			{
+				finalPath = OpenBveApi.Path.CombineFile(absolute, relative);
+			}
+			catch
+			{
+				finalPath = relative;
+				return false;
+			}
+			
+			if (File.Exists(finalPath))
+			{
+				return true;
+			}
+
+			finalPath = relative;
+			return false;
 		}
 
 		public override string[] ReadStringArray()
