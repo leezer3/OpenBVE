@@ -418,7 +418,7 @@ namespace ObjectViewer {
 					    {
 				            CheckFileExists = true,
 				            Multiselect = true,
-				            Filter = @"All supported object files|*.csv;*.b3d;*.x;*.animated;extensions.cfg;*.l3dobj;*.l3dgrp;*.obj;*.s;train.xml|openBVE Objects|*.csv;*.b3d;*.x;*.animated;extensions.cfg;train.xml|LokSim 3D Objects|*.l3dobj;*.l3dgrp|Wavefront Objects|*.obj|Microsoft Train Simulator Objects|*.s|All files|*"
+				            Filter = @"All supported object files|*.csv;*.b3d;*.x;*.animated;extensions.cfg;*.l3dobj;*.l3dgrp;*.obj;*.s;train.xml;*.con|openBVE Objects|*.csv;*.b3d;*.x;*.animated;extensions.cfg;train.xml|LokSim 3D Objects|*.l3dobj;*.l3dgrp|Wavefront Objects|*.obj|Microsoft Train Simulator Files|*.s;*.con|All files|*"
 			            };
 						if (Dialog.ShowDialog() == DialogResult.OK)
 						{
