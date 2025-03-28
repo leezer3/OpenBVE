@@ -1169,6 +1169,7 @@ namespace TrainManager.Trains
 			{
 				// not a valid section to access
 				string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_access_invalid" });
+				TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Expert, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 			}
 			else
 			{
@@ -1176,12 +1177,14 @@ namespace TrainManager.Trains
 				{
 					// section is free of trains, so can be permissively accessed
 					string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_access_granted" });
+					TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Expert, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 					sct.SignallerPermission = true;
 				}
 				else
 				{
 					// not free, access denied
 					string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_access_denied" });
+					TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Expert, MessageColor.Red, TrainManagerBase.currentHost.InGameTime + 10.0, null);
 					sct.SignallerPermission = false;
 				}
 			}
