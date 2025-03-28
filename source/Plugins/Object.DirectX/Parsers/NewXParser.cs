@@ -133,7 +133,7 @@ namespace Plugin
 		
 		private static StaticObject LoadTextualX(string Text)
 		{
-			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
+			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
 			StaticObject obj = new StaticObject(Plugin.currentHost);
 			MeshBuilder builder = new MeshBuilder(Plugin.currentHost);
 			Material material = new Material();

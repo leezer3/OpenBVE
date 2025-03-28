@@ -153,7 +153,7 @@ namespace OpenBve.Formats.DirectX
 				{
 					// reference based material name in textual X
 					string l = myText.Substring(p, currentPosition - 1);
-					Label = l.Trim(new char[] { });
+					Label = l.Trim();
 					return;
 				}
 				if (currentPosition == text.Length - 1)
@@ -162,7 +162,7 @@ namespace OpenBve.Formats.DirectX
 					return;
 				}
 				string s = myText.Substring(p, currentPosition - 1);
-				Label = s.Trim(new char[] { });
+				Label = s.Trim();
 			}
 			else
 			{
@@ -174,7 +174,7 @@ namespace OpenBve.Formats.DirectX
 				int ws = s.IndexOf(' ');
 				if (ws != -1)
 				{
-					Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
+					Label = s.Substring(ws, s.Length - ws).Trim();
 					s = s.Substring(0, ws);
 				}
 
@@ -210,7 +210,7 @@ namespace OpenBve.Formats.DirectX
 				if (myText[currentPosition] == '{')
 				{
 					int l = currentPosition - startPosition;
-					s = myText.Substring(startPosition, l).Trim(new char[] { });
+					s = myText.Substring(startPosition, l).Trim();
 					currentPosition++;
 					break;
 				}
@@ -266,7 +266,7 @@ namespace OpenBve.Formats.DirectX
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(), currentToken);
 					}
 
 					level--;
@@ -295,7 +295,7 @@ namespace OpenBve.Formats.DirectX
 				if (myText[currentPosition] == '{')
 				{
 					int l = currentPosition - startPosition;
-					s = myText.Substring(startPosition, l).Trim(new char[] { });
+					s = myText.Substring(startPosition, l).Trim();
 					currentPosition++;
 					break;
 				}
@@ -312,7 +312,7 @@ namespace OpenBve.Formats.DirectX
 			if (ws != -1)
 			{
 				//The block has the optional label
-				Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
+				Label = s.Substring(ws, s.Length - ws).Trim();
 				s = s.Substring(0, ws);
 			}
 
@@ -347,7 +347,7 @@ namespace OpenBve.Formats.DirectX
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(), currentToken);
 					}
 
 					level--;
@@ -376,7 +376,7 @@ namespace OpenBve.Formats.DirectX
 				if (myText[currentPosition] == '{')
 				{
 					int l = currentPosition - startPosition;
-					s = myText.Substring(startPosition, l).Trim(new char[] { });
+					s = myText.Substring(startPosition, l).Trim();
 					currentPosition++;
 					break;
 				}
@@ -398,8 +398,8 @@ namespace OpenBve.Formats.DirectX
 			if (ws != -1)
 			{
 				//The block has the optional label
-				Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
-				s = s.Substring(0, ws).Trim(new char[] { });
+				Label = s.Substring(ws, s.Length - ws).Trim();
+				s = s.Substring(0, ws).Trim();
 			}
 
 			if (!Enum.TryParse(s, true, out currentToken))
@@ -420,7 +420,7 @@ namespace OpenBve.Formats.DirectX
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(), currentToken);
 					}
 
 					level--;
@@ -543,7 +543,7 @@ namespace OpenBve.Formats.DirectX
 				currentPosition++;
 				if (l > 0)
 				{
-					return myText.Substring(startPosition, l).Trim(new char[] { });
+					return myText.Substring(startPosition, l).Trim();
 				}
 			}
 			else if (myText[currentPosition] == '<')
@@ -560,7 +560,7 @@ namespace OpenBve.Formats.DirectX
 				currentPosition++;
 				if (l > 0)
 				{
-					return myText.Substring(startPosition, l).Trim(new char[] { });
+					return myText.Substring(startPosition, l).Trim();
 				}
 			}
 			else
@@ -573,7 +573,7 @@ namespace OpenBve.Formats.DirectX
 				int l = currentPosition - startPosition;
 				if (l > 0)
 				{
-					return myText.Substring(startPosition, l).Trim(new char[] { });
+					return myText.Substring(startPosition, l).Trim();
 				}
 			}
 

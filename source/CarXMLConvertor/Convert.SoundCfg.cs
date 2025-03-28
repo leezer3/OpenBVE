@@ -637,8 +637,8 @@ namespace CarXmlConvertor
                             int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
                             if (j >= 0)
                             {
-	                            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-	                            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+	                            string a = Lines[i].Substring(0, j).TrimEnd();
+	                            string b = Lines[i].Substring(j + 1).TrimStart();
                                 if (b.Length == 0 || Path.ContainsInvalidChars(b))
                                 {
                                     continue;
@@ -741,8 +741,8 @@ namespace CarXmlConvertor
                             int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
                             if (j >= 0)
                             {
-	                            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-	                            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+	                            string a = Lines[i].Substring(0, j).TrimEnd();
+	                            string b = Lines[i].Substring(j + 1).TrimStart();
                                 if (b.Length == 0 || Path.ContainsInvalidChars(b))
                                 {
                                     continue;
@@ -847,8 +847,8 @@ namespace CarXmlConvertor
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									continue;

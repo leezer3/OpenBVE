@@ -69,13 +69,13 @@ namespace TrainEditor2.Systems
 
 				for (int i = 0; i < Lines.Length; i++)
 				{
-					Lines[i] = Lines[i].Trim(new char[] { });
+					Lines[i] = Lines[i].Trim();
 
 					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
 					{
 						if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 						{
-							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { }).ToLowerInvariant();
+							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim().ToLowerInvariant();
 						}
 						else
 						{

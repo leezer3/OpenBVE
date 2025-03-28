@@ -113,7 +113,7 @@ namespace Plugin
 						s = Encoding.ASCII.GetString(newBytes);
 					}
 
-					s = s.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] { });
+					s = s.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
 					if (s.StartsWith("shape", StringComparison.InvariantCultureIgnoreCase))
 					{
 						return true;

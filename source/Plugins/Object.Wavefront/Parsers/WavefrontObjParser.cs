@@ -408,7 +408,7 @@ namespace Plugin
 				List<string> arguments = new List<string>(lines[i].Split(new[] { ' ', '\t' }, StringSplitOptions.None));
 				for (int j = arguments.Count - 1; j >= 0; j--)
 				{
-					arguments[j] = arguments[j].Trim(new char[] { });
+					arguments[j] = arguments[j].Trim();
 					if (arguments[j] == string.Empty)
 					{
 						arguments.RemoveAt(j);

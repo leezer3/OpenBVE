@@ -435,8 +435,7 @@ namespace OpenBve.Formats.MsTs
 				s = s.Substring(0, ws);
 			}
 
-			KujuTokenID currentToken;
-			if (!Enum.TryParse(s, true, out currentToken))
+			if (!Enum.TryParse(s, true, out KujuTokenID currentToken))
 			{
 				throw new InvalidDataException("Invalid token " + s);
 			}
@@ -567,7 +566,6 @@ namespace OpenBve.Formats.MsTs
 				currentPosition++;
 			}
 
-			KujuTokenID currentToken;
 			int ws = s.IndexOf(' ');
 			if (ws != -1)
 			{
@@ -576,7 +574,7 @@ namespace OpenBve.Formats.MsTs
 				s = s.Substring(0, ws);
 			}
 
-			if (!Enum.TryParse(s, true, out currentToken))
+			if (!Enum.TryParse(s, true, out KujuTokenID currentToken))
 			{
 				throw new InvalidDataException("Unrecognised token " + s);
 			}
@@ -701,8 +699,7 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			string s = getNextValue();
-			int val;
-			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out val))
+			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out int val))
 			{
 				return (ushort) val;
 			}
@@ -723,8 +720,7 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			string s = getNextValue();
-			uint val;
-			if (uint.TryParse(s, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
+			if (uint.TryParse(s, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint val))
 			{
 				return val;
 			}
@@ -746,8 +742,7 @@ namespace OpenBve.Formats.MsTs
 
 
 			string s = getNextValue();
-			int val;
-			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out val))
+			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out int val))
 			{
 				return val;
 			}
@@ -768,8 +763,7 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			string s = getNextValue();
-			int val;
-			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out val))
+			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out int val))
 			{
 				return (ushort) val;
 			}
@@ -791,8 +785,7 @@ namespace OpenBve.Formats.MsTs
                 // SMS files contain comma separated numbers in a textual CurvePoints block
 				s = s.Substring(0, s.Length - 1);
 			}
-			float val;
-			if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
+			if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out float val))
 			{
 				return val;
 			}
@@ -821,9 +814,8 @@ namespace OpenBve.Formats.MsTs
 				Unit = (defaultUnits != null ? defaultUnits.ToString(): desiredUnit.ToString()).ToLowerInvariant();
 			}
 			s = s.Substring(0, c);
-			float parsedNumber;
 			
-			if (!float.TryParse(s, out parsedNumber))
+			if (!float.TryParse(s, out float parsedNumber))
 			{
 				throw new InvalidDataException("Unable to parse " + s + " to a valid single in block " + Token);
 			}
