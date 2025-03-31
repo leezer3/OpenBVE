@@ -132,7 +132,7 @@ namespace Train.MsTs
 		internal bool ReadWagonData(string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-
+			vigilanceDevices = new List<VigilanceDevice>();
 			byte[] buffer = new byte[34];
 			fb.Read(buffer, 0, 2);
 
@@ -258,6 +258,7 @@ namespace Train.MsTs
 		private double releaseRate;
 		private double maxVelocity;
 		private bool hasAntiSlipDevice;
+		private List<VigilanceDevice> vigilanceDevices;
 
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
@@ -706,6 +707,19 @@ namespace Train.MsTs
 				case KujuTokenID.AntiSlip:
 					// if any value in this block, car has wheelslip detection control
 					hasAntiSlipDevice = true;
+					break;
+				case KujuTokenID.AWSMonitor:
+				case KujuTokenID.EmergencyStopMonitor:
+				case KujuTokenID.OverspeedMonitor:
+				case KujuTokenID.VigilanceMonitor:
+					// MSTS safety systems
+					VigilanceDevice device = VigilanceDevice.CreateVigilanceDevice(block.Token);
+					while (block.Position() < block.Length() - 2)
+					{
+						newBlock = block.ReadSubBlock();
+						device.ParseBlock(newBlock);
+					}
+					vigilanceDevices.Add(device);
 					break;
 			}
 			return true;
