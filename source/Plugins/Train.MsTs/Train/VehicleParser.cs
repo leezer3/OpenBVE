@@ -286,7 +286,7 @@ namespace Train.MsTs
 							}
 							return false;
 						}
-						while (block.Length() - block.Position() > 1)
+						while (block.Length() - block.Position() > 2)
 						{
 							try
 							{
@@ -362,7 +362,7 @@ namespace Train.MsTs
 						}
 						return false;
 					}
-					while (block.Length() - block.Position() > 1)
+					while (block.Length() - block.Position() > 2)
 					{
 						try
 						{
