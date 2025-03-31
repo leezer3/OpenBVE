@@ -97,6 +97,14 @@ namespace Train.MsTs
 			// as properties may not be in order, set this stuff last
 			if (isEngine)
 			{
+				Car.Specs.AccelerationCurves = new AccelerationCurve[]
+				{
+					new MSTSAccelerationCurve(Car, maxForce, maxVelocity)
+				};
+				// FIXME: Default BVE values
+				Car.Specs.JerkPowerUp = 10.0;
+				Car.Specs.JerkPowerDown = 10.0;
+				Car.ReAdhesionDevice = new BveReAdhesionDevice(Car, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
 				switch (currentEngineType)
 				{
 					case EngineType.Diesel:
@@ -243,6 +251,8 @@ namespace Train.MsTs
 		private double brakeCylinderMaximumPressure;
 		private double emergencyRate;
 		private double releaseRate;
+		private double maxVelocity;
+		private bool hasAntiSlipDevice;
 
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
@@ -544,13 +554,9 @@ namespace Train.MsTs
 						break;
 					}
 					maxForce = block.ReadSingle(UnitOfForce.Newton);
-					car.Specs.AccelerationCurves = new AccelerationCurve[]
-					{
-						new MSTSAccelerationCurve(car, maxForce)
-					};
-					// FIXME: Default BVE values
-					car.Specs.JerkPowerUp = 10.0;
-					car.Specs.JerkPowerDown = 10.0;
+					break;
+				case KujuTokenID.MaxVelocity:
+					maxVelocity = block.ReadSingle(UnitOfVelocity.MetersPerSecond);
 					break;
 				case KujuTokenID.MaxBrakeForce:
 					maxBrakeForce = block.ReadSingle(UnitOfForce.Newton);
@@ -685,6 +691,10 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.TrainBrakesControllerMaxReleaseRate:
 					releaseRate = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					break;
+				case KujuTokenID.AntiSlip:
+					// if any value in this block, car has wheelslip detection control
+					hasAntiSlipDevice = true;
 					break;
 			}
 			return true;
