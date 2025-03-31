@@ -510,8 +510,6 @@ namespace Train.MsTs
 						break;
 					case KujuTokenID.Type:
 						panelSubject = block.ReadEnumValue(default(PanelSubject));
-						
-
 						break;
 				}
 			}
