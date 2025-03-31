@@ -5,11 +5,11 @@ namespace OpenBveApi.World
 	/// <summary>Available units of velocity</summary>
 	public enum UnitOfVelocity
 	{
-		/// <summary>Newtons</summary>
+		/// <summary>Meters per second</summary>
 		MetersPerSecond,
-		/// <summary>KiloNewtons</summary>
+		/// <summary>Miles per hour</summary>
 		MilesPerHour,
-		/// <summary>Pounds of force</summary>
+		/// <summary>Kilometers per hour</summary>
 		KilometersPerHour
 	}
 
@@ -24,7 +24,6 @@ namespace OpenBveApi.World
 			KnownUnits = new Dictionary<string, UnitOfVelocity>
 			{
 				{"m/s", UnitOfVelocity.MetersPerSecond}, {"mph", UnitOfVelocity.MilesPerHour}, {"kmh", UnitOfVelocity.KilometersPerHour}, {"km/h", UnitOfVelocity.KilometersPerHour}
-
 			};
 		}
 
