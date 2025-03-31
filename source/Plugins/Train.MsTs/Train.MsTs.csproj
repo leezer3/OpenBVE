@@ -68,6 +68,12 @@
     <Compile Include="Train\Enums\BrakeSystemType.cs" />
     <Compile Include="Train\Enums\EngineTypes.cs" />
     <Compile Include="Train\VehicleParser.cs" />
+    <Compile Include="Vigilance\AWSMonitor.cs" />
+    <Compile Include="Vigilance\EmergencyStopMonitor.cs" />
+    <Compile Include="Vigilance\AbstractVigilanceDevice.cs" />
+    <Compile Include="Vigilance\OverspeedMonitor.cs" />
+    <Compile Include="Vigilance\ResetCondition.cs" />
+    <Compile Include="Vigilance\VigilanceMonitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\LibRender2\LibRender2.csproj">
