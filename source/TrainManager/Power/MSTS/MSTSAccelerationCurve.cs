@@ -16,7 +16,8 @@ namespace TrainManager.Power
 		private readonly double MaxForce;
 		/// <summary>The maximum velocity attainable</summary>
 		private readonly double MaxVelocity;
-
+		/// <summary>The maximum continuous force supplied by the engine</summary>
+		/// <remarks>Used by electric model</remarks>
 		private readonly double MaxContinuousForce;
 
 		public MSTSAccelerationCurve(CarBase car, double maxForce, double maxContinuousForce, double maxVelocity)
