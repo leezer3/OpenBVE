@@ -826,6 +826,12 @@ namespace OpenBve.Formats.MsTs
 		public override float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnits)
 		{
 			string s = ReadString();
+			int hash = s.IndexOf('#');
+			if (hash != -1)
+			{
+				// In unit deliminated strings, hash acts as a comment separator (despite being valid as a string member elsewhere)
+				s = s.Substring(0, hash).Trim();
+			}
 			int c;
 			for (c = 0; c < s.Length; c++)
 			{
