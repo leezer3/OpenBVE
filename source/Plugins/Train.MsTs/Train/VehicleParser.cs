@@ -107,6 +107,7 @@ namespace Train.MsTs
 				// FIXME: Default BVE values
 				Car.Specs.JerkPowerUp = 10.0;
 				Car.Specs.JerkPowerDown = 10.0;
+				Car.ReAdhesionDevice = new BveReAdhesionDevice(Car, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
 				switch (currentEngineType)
 				{
 					case EngineType.Diesel:
@@ -254,6 +255,7 @@ namespace Train.MsTs
 		private double emergencyRate;
 		private double releaseRate;
 		private double maxVelocity;
+		private bool hasAntiSlipDevice;
 
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
@@ -692,6 +694,10 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.TrainBrakesControllerMaxReleaseRate:
 					releaseRate = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					break;
+				case KujuTokenID.AntiSlip:
+					// if any value in this block, car has wheelslip detection control
+					hasAntiSlipDevice = true;
 					break;
 			}
 			return true;
