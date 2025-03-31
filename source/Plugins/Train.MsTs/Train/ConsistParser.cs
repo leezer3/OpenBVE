@@ -172,9 +172,16 @@ namespace Train.MsTs
 					newBlock = block.ReadSubBlock();
 					ParseBlock(newBlock, ref Train);
 					break;
+				case KujuTokenID.Default:
+					// presumably used internally by MSTS, not useful
+					block.Skip((int)block.Length());
+					break;
+				case KujuTokenID.Name:
+					string consistName = block.ReadString(); // displayed name for consist in-game
+					break;
 				case KujuTokenID.TrainCfg:
 					string trainName = block.ReadString(); // we're unlikely to want this, as this is just the MSTS internal dictionary key
-					while (block.Length() - block.Position() > 1)
+					while (block.Length() - block.Position() > 2)
 					{
 						try
 						{
@@ -208,7 +215,7 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Engine:
 				case KujuTokenID.Wagon:
-					newBlock = block.ReadSubBlock(new[] {KujuTokenID.EngineData, KujuTokenID.WagonData, KujuTokenID.UiD});
+					newBlock = block.ReadSubBlock(new[] {KujuTokenID.EngineData, KujuTokenID.WagonData, KujuTokenID.UiD, KujuTokenID.Flip});
 					Block secondBlock = block.ReadSubBlock(new[] {KujuTokenID.EngineData, KujuTokenID.WagonData, KujuTokenID.UiD});
 					//Must have 2x blocks, car UiD and car name. Order doesn't matter however, so we've gotta DIY as we need the car number
 					if (newBlock.Token == KujuTokenID.UiD)
