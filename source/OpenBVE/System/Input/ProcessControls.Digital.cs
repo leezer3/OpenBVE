@@ -18,6 +18,8 @@ using RouteManager2.Stations;
 using TrainManager;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
+using TrainManager.Handles;
+using TrainManager.Motor;
 
 namespace OpenBve
 {
@@ -538,6 +540,63 @@ namespace OpenBve
 						break;
 					case Translations.Command.PlayMicSounds:
 						Program.Sounds.IsPlayingMicSounds = !Program.Sounds.IsPlayingMicSounds;
+						break;
+//We only want to mark these as obsolete for new users of the API
+#pragma warning disable 618
+					case Translations.Command.SecurityS:
+					case Translations.Command.SecurityA1:
+					case Translations.Command.SecurityA2:
+					case Translations.Command.SecurityB1:
+					case Translations.Command.SecurityB2:
+					case Translations.Command.SecurityC1:
+					case Translations.Command.SecurityC2:
+					case Translations.Command.SecurityD:
+					case Translations.Command.SecurityE:
+					case Translations.Command.SecurityF:
+					case Translations.Command.SecurityG:
+					case Translations.Command.SecurityH:
+					case Translations.Command.SecurityI:
+					case Translations.Command.SecurityJ:
+					case Translations.Command.SecurityK:
+					case Translations.Command.SecurityL:
+					case Translations.Command.SecurityM:
+					case Translations.Command.SecurityN:
+					case Translations.Command.SecurityO:
+					case Translations.Command.SecurityP:
+#pragma warning restore 618
+					case Translations.Command.FillFuel:
+					case Translations.Command.LiveSteamInjector:
+					case Translations.Command.ExhaustSteamInjector:
+					case Translations.Command.IncreaseCutoff:
+					case Translations.Command.DecreaseCutoff:
+					case Translations.Command.Blowers:
+					case Translations.Command.EngineStart:
+					case Translations.Command.EngineStop:
+					case Translations.Command.GearUp:
+					case Translations.Command.GearDown:
+						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
+						break;
+					case Translations.Command.RaisePantograph:
+						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+						{
+							if (TrainManager.PlayerTrain.Cars[i].Engine is ElectricEngine)
+							{
+								Pantograph pantograph = TrainManager.PlayerTrain.Cars[i].Engine.Components[EngineComponent.Pantograph] as Pantograph;
+								pantograph.Raise();
+							}
+						}
+						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
+						break;
+					case Translations.Command.LowerPantograph:
+						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+						{
+							if (TrainManager.PlayerTrain.Cars[i].Engine is ElectricEngine)
+							{
+								Pantograph pantograph = TrainManager.PlayerTrain.Cars[i].Engine.Components[EngineComponent.Pantograph] as Pantograph;
+								pantograph.Lower();
+							}
+						}
+						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
 						break;
 					case Translations.Command.Headlights:
 						TrainManager.PlayerTrain.SafetySystems.Headlights.ChangeState();

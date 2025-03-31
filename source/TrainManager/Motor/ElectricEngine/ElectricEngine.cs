@@ -22,12 +22,33 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using TrainManager.Car;
+
+
 namespace TrainManager.Motor
 {
-    public enum EngineComponent
-    {
-		TractionMotor,
-		RegenerativeTractionMotor,
-		Pantograph
-    }
+	public class ElectricEngine : AbstractEngine
+	{
+		public ElectricEngine(CarBase car) : base(car)
+		{
+		}
+
+		public override void Update(double timeElapsed)
+		{
+		}
+
+		public override double CurrentPower
+		{
+			get
+			{
+				Pantograph pantograph = Components[EngineComponent.Pantograph] as Pantograph;
+				if (pantograph?.State != PantographState.Raised)
+				{
+					return 0;
+				}
+
+				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
+			}
+		}
+	}
 }
