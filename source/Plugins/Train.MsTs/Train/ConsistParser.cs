@@ -215,20 +215,13 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Engine:
 				case KujuTokenID.Wagon:
-					newBlock = block.ReadSubBlock(new[] {KujuTokenID.EngineData, KujuTokenID.WagonData, KujuTokenID.UiD, KujuTokenID.Flip});
-					Block secondBlock = block.ReadSubBlock(new[] {KujuTokenID.EngineData, KujuTokenID.WagonData, KujuTokenID.UiD});
-					//Must have 2x blocks, car UiD and car name. Order doesn't matter however, so we've gotta DIY as we need the car number
-					if (newBlock.Token == KujuTokenID.UiD)
+					Array.Resize(ref Train.Cars, Train.Cars.Length + 1);
+					currentCarIndex++;
+					while (block.Length() - block.Position() > 2)
 					{
-						ParseBlock(newBlock, ref Train);
-						ParseBlock(secondBlock, ref Train);
-					}
-					else
-					{
-						ParseBlock(secondBlock, ref Train);
+						newBlock = block.ReadSubBlock(new[] { KujuTokenID.EngineData, KujuTokenID.WagonData, KujuTokenID.UiD, KujuTokenID.Flip, KujuTokenID.EngineVariables });
 						ParseBlock(newBlock, ref Train);
 					}
-
 					currentCar.Doors = new[]
 					{
 						new Door(-1, 1000.0, 0),
@@ -257,8 +250,6 @@ namespace Train.MsTs
 				case KujuTokenID.UiD:
 					// Unique ID of engine / wagon within consist
 					// For the minute, let's just create a new car and advance our car number
-					Array.Resize(ref Train.Cars, Train.Cars.Length + 1);
-					currentCarIndex++;
 					break;
 				case KujuTokenID.WagonData:
 				case KujuTokenID.EngineData:
@@ -312,6 +303,9 @@ namespace Train.MsTs
 				case KujuTokenID.Flip:
 					// Allows a car to be reversed within a consist
 					reverseCurentCar = true;
+					break;
+				case KujuTokenID.EngineVariables:
+					// Sets properties of the train when loaded, ignore for the minute
 					break;
 			}
 
