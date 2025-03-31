@@ -14,8 +14,10 @@ namespace TrainManager.Power
 		private readonly CarBase baseCar;
 		/// <summary>The maximum force supplied by the engine</summary>
 		private readonly double MaxForce;
+		/// <summary>The maximum velocity attainable</summary>
+		private readonly double MaxVelocity;
 
-		public MSTSAccelerationCurve(CarBase car, double maxForce)
+		public MSTSAccelerationCurve(CarBase car, double maxForce, double maxVelocity)
 		{
 			baseCar = car;
 			MaxForce = maxForce;
@@ -23,6 +25,11 @@ namespace TrainManager.Power
 
 		public override double GetAccelerationOutput(double Speed)
 		{
+			if (baseCar.Specs.PerceivedSpeed > MaxVelocity)
+			{
+				return 0;
+			}
+
 			/*
 			 * According to Newton's second law, Acceleration = Force / Mass
 			 * For the minute at least, we'll assume that the Force value specified in an
