@@ -110,6 +110,10 @@ namespace OpenBveApi.Objects
 				{
 					Result.Mesh.Vertices[j] = new LightMappedVertex(lv);
 				}
+				else if (Mesh.Vertices[j] is AnimatedVertex av)
+				{
+					Result.Mesh.Vertices[j] = new AnimatedVertex(av);
+				}
 				else
 				{
 					Result.Mesh.Vertices[j] = new Vertex((Vertex) Mesh.Vertices[j]);

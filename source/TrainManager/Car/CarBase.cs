@@ -292,7 +292,13 @@ namespace TrainManager.Car
 							foreach (AnimatedObject animatedObject in CarSections[i].Groups[0].Elements)
 							{
 								animatedObject.Reverse();
-							}	
+							}
+
+							if (CarSections[i].Groups[0].Keyframes != null)
+							{
+								CarSections[i].Groups[0].Keyframes.Reverse();
+							}
+							
 						}
 						
 					}
@@ -308,6 +314,11 @@ namespace TrainManager.Car
 					foreach (AnimatedObject animatedObject in CarSections[idxToReverse].Groups[0].Elements)
 					{
 						animatedObject.Reverse();
+					}
+
+					if (CarSections[idxToReverse].Groups[0].Keyframes != null)
+					{
+						CarSections[idxToReverse].Groups[0].Keyframes.Reverse();
 					}
 				}	
 			}
