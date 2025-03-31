@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using OpenBveApi.Colors;
+using OpenBveApi.Math;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -173,9 +174,9 @@ namespace TrainEditor2.ViewModels.Panels
 
 			CenterX = _this
 				.ToReactivePropertyAsSynchronized(
-					x => x.Center.X,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Center,
+					x => x.X.ToString(culture),
+					x => new Vector2(double.Parse(x, NumberStyles.Float, culture), _this.Center.Y),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -188,9 +189,9 @@ namespace TrainEditor2.ViewModels.Panels
 
 			CenterY = _this
 				.ToReactivePropertyAsSynchronized(
-					x => x.Center.Y,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Center,
+					x => x.Y.ToString(culture),
+					x => new Vector2(_this.Center.X, double.Parse(x, NumberStyles.Float, culture)),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -203,9 +204,9 @@ namespace TrainEditor2.ViewModels.Panels
 
 			OriginX = _this
 				.ToReactivePropertyAsSynchronized(
-					x => x.Origin.X,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Origin,
+					x => x.X.ToString(culture),
+					x => new Vector2(double.Parse(x, NumberStyles.Float, culture), _this.Origin.Y),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -218,9 +219,9 @@ namespace TrainEditor2.ViewModels.Panels
 
 			OriginY = _this
 				.ToReactivePropertyAsSynchronized(
-					x => x.Origin.Y,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Origin,
+					x => x.Y.ToString(culture),
+					x => new Vector2(_this.Origin.X, double.Parse(x, NumberStyles.Float, culture)),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>

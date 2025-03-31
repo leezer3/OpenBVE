@@ -185,9 +185,9 @@ namespace TrainEditor2.ViewModels.Panels
 
 			OriginX = needle
 				.ToReactivePropertyAsSynchronized(
-					x => x.Origin.X,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Origin,
+					x => x.X.ToString(culture),
+					x => new Vector2(double.Parse(x, NumberStyles.Float, culture), needle.Origin.Y),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -200,9 +200,9 @@ namespace TrainEditor2.ViewModels.Panels
 
 			OriginY = needle
 				.ToReactivePropertyAsSynchronized(
-					x => x.Origin.Y,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Origin,
+					x => x.Y.ToString(culture),
+					x => new Vector2(needle.Origin.X, double.Parse(x, NumberStyles.Float, culture)),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>

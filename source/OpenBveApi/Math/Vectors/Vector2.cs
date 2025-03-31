@@ -74,7 +74,13 @@ namespace OpenBveApi.Math {
 			}
 			return success;
 		}
-		
+
+
+		public static Vector2 Parse(string v)
+		{
+			TryParse(v.Split(','), out Vector2 vv);
+			return vv;
+		}
 		
 		// --- arithmetic operators ---
 		
