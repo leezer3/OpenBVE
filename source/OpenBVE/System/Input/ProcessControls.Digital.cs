@@ -19,6 +19,7 @@ using TrainManager;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
 using TrainManager.Handles;
+using TrainManager.Motor;
 
 namespace OpenBve
 {
@@ -916,8 +917,28 @@ namespace OpenBve
 					case Translations.Command.EngineStop:
 					case Translations.Command.GearUp:
 					case Translations.Command.GearDown:
+						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
+						break;
 					case Translations.Command.RaisePantograph:
+						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+						{
+							if (TrainManager.PlayerTrain.Cars[i].Engine is ElectricEngine)
+							{
+								Pantograph pantograph = TrainManager.PlayerTrain.Cars[i].Engine.Components[EngineComponent.Pantograph] as Pantograph;
+								pantograph.Raise();
+							}
+						}
+						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
+						break;
 					case Translations.Command.LowerPantograph:
+						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+						{
+							if (TrainManager.PlayerTrain.Cars[i].Engine is ElectricEngine)
+							{
+								Pantograph pantograph = TrainManager.PlayerTrain.Cars[i].Engine.Components[EngineComponent.Pantograph] as Pantograph;
+								pantograph.Lower();
+							}
+						}
 						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
 						break;
 					case Translations.Command.Headlights:
