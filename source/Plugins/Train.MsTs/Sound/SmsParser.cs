@@ -129,7 +129,7 @@ namespace Train.MsTs
 			{
 				case KujuTokenID.Tr_SMS:
 					// file root
-					while (block.Position() < block.Length())
+					while (block.Position() < block.Length() - 3)
 					{
 						newBlock = block.ReadSubBlock();
 						ParseBlock(newBlock, ref currentSoundSet, ref car);
@@ -155,7 +155,7 @@ namespace Train.MsTs
 				case KujuTokenID.Activation:
 					// control the conditions under which the sounds in the group are activated
 					currentSoundSet.Activation = true;
-					while (block.Position() < block.Length())
+					while (block.Position() < block.Length() - 3)
 					{
 						newBlock = block.ReadSubBlock(true);
 						ParseBlock(newBlock, ref currentSoundSet, ref car);
@@ -164,7 +164,7 @@ namespace Train.MsTs
 				case KujuTokenID.Deactivation:
 					// control the conditions under which the sounds in the group are deactivated
 					currentSoundSet.Activation = false;
-					while (block.Position() < block.Length() - 1)
+					while (block.Position() < block.Length() - 3)
 					{
 						newBlock = block.ReadSubBlock(true);
 						ParseBlock(newBlock, ref currentSoundSet, ref car);
@@ -351,7 +351,7 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Discrete_Trigger:
 					currentTrigger = (SoundTrigger)block.ReadInt32(); // stored as integer
-					newBlock = block.ReadSubBlock(new[] { KujuTokenID.PlayOneShot, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump });
+					newBlock = block.ReadSubBlock(new[] { KujuTokenID.PlayOneShot, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump, KujuTokenID.SetStreamVolume });
 					ParseBlock(newBlock, ref currentSoundSet, ref car);
 					break;
 				case KujuTokenID.Variable_Trigger:

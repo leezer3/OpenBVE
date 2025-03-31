@@ -31,6 +31,8 @@ namespace Train.MsTs
 		/// <summary>Electronic or computer controller on the vehicle that can be set to independently control any parameter of the braking system.</summary>
 		Distributor,
 		/// <summary>One pipe controls and supplies the air brakes.</summary>
-		Air_Single_Pipe
+		Air_Single_Pipe,
+		/// <summary>One pipe for control air, one pipe for supply air</summary>
+		Air_Twin_Pipe
 	}
 }
