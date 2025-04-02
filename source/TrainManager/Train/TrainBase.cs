@@ -479,9 +479,9 @@ namespace TrainManager.Trains
 				Handles.EmergencyBrake.Safety = Handles.EmergencyBrake.Driver;
 			}
 
-			Handles.Power.Update();
-			Handles.Brake.Update();
-			Handles.Brake.Update();
+			Handles.Power.Update(TimeElapsed);
+			Handles.Brake.Update(TimeElapsed);
+			Handles.Brake.Update(TimeElapsed);
 			Handles.EmergencyBrake.Update();
 			Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
 			Cars[DriverCar].DSD?.Update(TimeElapsed);
