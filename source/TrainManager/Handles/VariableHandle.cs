@@ -4,6 +4,7 @@ using TrainManager.Trains;
 
 namespace TrainManager.Handles
 {
+	/// <summary>A handle with variable properties per notch</summary>
 	public class VariableHandle : AbstractHandle
 	{
 		public VariableHandle(TrainBase train, Tuple<double, string>[] notches = null) : base(train)
@@ -98,6 +99,7 @@ namespace TrainManager.Handles
 			return _notches[Actual].Item2;
 		}
 
+		/// <summary>Gets the current power modifier for this handle</summary>
 		public double GetPowerModifier
 		{
 			get
