@@ -1,6 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
 
 using TrainManager.Car;
+using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Trains;
 
@@ -134,7 +135,12 @@ namespace TrainManager.Power
 				totalMass += Train.Cars[i].CurrentMass;
 			}
 
-			return totalMass / MaxForce / 3.6;
+			double maxBrakeForce = totalMass / MaxForce / 3.6;
+			if (Train.Handles.Brake is VariableHandle variableHandle)
+			{
+				maxBrakeForce *= variableHandle.GetPowerModifier;
+			}
+			return maxBrakeForce;
 		}
 
 		public override double MaximumAcceleration
