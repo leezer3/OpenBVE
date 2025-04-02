@@ -68,7 +68,7 @@ namespace TrainManager.Handles
 
 		internal readonly TrainBase baseTrain;
 
-		public abstract void Update();
+		public abstract void Update(double timeElapsed);
 
 		public virtual void ApplyState(int newState, bool relativeChange, bool isOverMaxDriverNotch = false)
 		{
