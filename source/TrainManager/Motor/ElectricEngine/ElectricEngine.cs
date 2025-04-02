@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using TrainManager.Car;
+using TrainManager.Handles;
 
 
 namespace TrainManager.Motor
@@ -47,6 +48,10 @@ namespace TrainManager.Motor
 					return 0;
 				}
 
+				if (BaseCar.baseTrain.Handles.Power is VariableHandle variableHandle)
+				{
+					return variableHandle.GetPowerModifier;
+				}
 				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 			}
 		}
