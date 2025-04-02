@@ -633,15 +633,15 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Throttle:
+					if (currentEngineType == EngineType.Steam)
+					{
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: A throttle is not valid for a Steam Locomotive.");
+						break;
+					}
 					train.Handles.Power = ParseHandle(block, train);
 					break;
 				case KujuTokenID.Brake_Train:
 					train.Handles.Brake = ParseHandle(block, train);
-					break;
-				case KujuTokenID.Notch:
-					double powerValue = block.ReadSingle();
-					double graduationValue = block.ReadSingle();
-					string notchToken = block.ReadString();
 					break;
 				case KujuTokenID.DieselEngineIdleRPM:
 					dieselIdleRPM = block.ReadSingle();
