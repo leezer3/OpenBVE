@@ -8,7 +8,7 @@ namespace TrainManager.Handles
 		/// <summary>The Reverser</summary>
 		public ReverserHandle Reverser;
 		/// <summary>The Power</summary>
-		public PowerHandle Power;
+		public AbstractHandle Power;
 		/// <summary>The Brake</summary>
 		public AbstractHandle Brake;
 		/// <summary>The Loco brake handle</summary>
