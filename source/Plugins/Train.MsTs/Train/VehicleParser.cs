@@ -15,14 +15,13 @@ using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
-using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
 
 namespace Train.MsTs
 {
-	internal class WagonParser
+	internal partial class WagonParser
 	{
 		private readonly Plugin plugin;
 
@@ -631,37 +630,15 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Throttle:
+					if (currentEngineType == EngineType.Steam)
+					{
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: A throttle is not valid for a Steam Locomotive.");
+						break;
+					}
+					train.Handles.Power = ParseHandle(block, train);
+					break;
 				case KujuTokenID.Brake_Train:
-					// NOTE: Throttle is valid for DIESEL + ELECTRIC only
-					block.ReadSingle(); // minimum
-					block.ReadSingle(); // maxiumum
-					block.ReadSingle(); // power step per notch
-					block.ReadSingle(); // default value (at start of simulation presumably)
-					newBlock = block.ReadSubBlock(KujuTokenID.NumNotches);
-					ParseBlock(newBlock, fileName, ref wagonName, true, ref car, ref train);
-					break;
-				case KujuTokenID.NumNotches:
-					// n.b. totalNotches value includes zero in MSTS
-					int totalNotches = block.ReadInt16();
-					for (int i = 0; i < totalNotches; i++)
-					{
-						newBlock = block.ReadSubBlock(KujuTokenID.Notch);
-						ParseBlock(newBlock, fileName, ref wagonName, true, ref car, ref train);
-					}
-					switch (block.ParentBlock.Token)
-					{
-						case KujuTokenID.Throttle:
-							train.Handles.Power = new PowerHandle(totalNotches - 1, train);
-							break;
-						case KujuTokenID.Brake_Train:
-							train.Handles.Brake = new BrakeHandle(totalNotches - 1, totalNotches - 1, train.Handles.EmergencyBrake, new double[] { }, new double[] { }, train);
-							break;
-					}
-					break;
-				case KujuTokenID.Notch:
-					double powerValue = block.ReadSingle();
-					double graduationValue = block.ReadSingle();
-					string notchToken = block.ReadString();
+					train.Handles.Brake = ParseHandle(block, train);
 					break;
 				case KujuTokenID.DieselEngineIdleRPM:
 					dieselIdleRPM = block.ReadSingle();
