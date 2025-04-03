@@ -1171,18 +1171,18 @@ namespace TrainManager.Car
 			if (DecelerationDueToMotor == 0.0)
 			{
 				double a;
-				if (DecelerationDueToMotor == 0.0 || !Specs.IsMotorCar)
+				if (DecelerationDueToMotor == 0.0 || !Engine.ProvidesPower)
 				{
 					if (baseTrain.Handles.Reverser.Actual != 0 & baseTrain.Handles.Power.Actual > 0 &
 					    !baseTrain.Handles.HoldBrake.Actual &
 					    !baseTrain.Handles.EmergencyBrake.Actual)
 					{
 						// target acceleration
-						if (baseTrain.Handles.Power.Actual - 1 < Specs.AccelerationCurves.Length)
+						if (baseTrain.Handles.Power.Actual - 1 < Engine.AccelerationCurves.Length)
 						{
 							// Load factor is a constant 1.0 for anything prior to BVE5
 							// This will need to be changed when the relevant branch is merged in
-							a = Specs.AccelerationCurves[baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)baseTrain.Handles.Reverser.Actual * CurrentSpeed, 1.0);
+							a = Engine.AccelerationCurves[baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)baseTrain.Handles.Reverser.Actual * CurrentSpeed, 1.0);
 						}
 						else
 						{
@@ -1227,7 +1227,7 @@ namespace TrainManager.Car
 							wheelspin += (double)baseTrain.Handles.Reverser.Actual * a * CurrentMass;
 						}
 
-						Specs.MaxMotorAcceleration = a;
+						Engine.MaximumCurrentAcceleration = a;
 						// Update constant speed device
 						this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
 
@@ -1244,7 +1244,7 @@ namespace TrainManager.Car
 				else
 				{
 					// HACK: Use special value here to inform the BVE readhesion device it shouldn't update this frame
-					Specs.MaxMotorAcceleration = -1;
+					Engine.MaximumCurrentAcceleration = -1;
 					a = 0.0;
 					FrontAxle.CurrentWheelSlip = false;
 					RearAxle.CurrentWheelSlip = false;
@@ -1253,34 +1253,34 @@ namespace TrainManager.Car
 
 				if (!Derailed)
 				{
-					if (Specs.MotorAcceleration < a)
+					if (Engine.CurrentAcceleration < a)
 					{
-						if (Specs.MotorAcceleration < 0.0)
+						if (Engine.CurrentAcceleration < 0.0)
 						{
-							Specs.MotorAcceleration += CarBrake.JerkDown * TimeElapsed;
+							Engine.CurrentAcceleration += CarBrake.JerkDown * TimeElapsed;
 						}
 						else
 						{
-							Specs.MotorAcceleration += Specs.JerkPowerUp * TimeElapsed;
+							Engine.CurrentAcceleration += Specs.JerkPowerUp * TimeElapsed;
 						}
 
-						if (Specs.MotorAcceleration > a)
+						if (Engine.CurrentAcceleration > a)
 						{
-							Specs.MotorAcceleration = a;
+							Engine.CurrentAcceleration = a;
 						}
 					}
 					else
 					{
-						Specs.MotorAcceleration -= Specs.JerkPowerDown * TimeElapsed;
-						if (Specs.MotorAcceleration < a)
+						Engine.CurrentAcceleration -= Specs.JerkPowerDown * TimeElapsed;
+						if (Engine.CurrentAcceleration < a)
 						{
-							Specs.MotorAcceleration = a;
+							Engine.CurrentAcceleration = a;
 						}
 					}
 				}
 				else
 				{
-					Specs.MotorAcceleration = 0.0;
+					Engine.CurrentAcceleration = 0.0;
 				}
 			}
 
@@ -1291,31 +1291,31 @@ namespace TrainManager.Car
 			{
 				double a;
 				// motor
-				if (Specs.IsMotorCar & DecelerationDueToMotor != 0.0)
+				if (Engine.ProvidesPower & DecelerationDueToMotor != 0.0)
 				{
 					a = -DecelerationDueToMotor;
-					if (Specs.MotorAcceleration > a)
+					if (Engine.CurrentAcceleration > a)
 					{
-						if (Specs.MotorAcceleration > 0.0)
+						if (Engine.CurrentAcceleration > 0.0)
 						{
-							Specs.MotorAcceleration -= Specs.JerkPowerDown * TimeElapsed;
+							Engine.CurrentAcceleration -= Specs.JerkPowerDown * TimeElapsed;
 						}
 						else
 						{
-							Specs.MotorAcceleration -= CarBrake.JerkUp * TimeElapsed;
+							Engine.CurrentAcceleration -= CarBrake.JerkUp * TimeElapsed;
 						}
 
-						if (Specs.MotorAcceleration < a)
+						if (Engine.CurrentAcceleration < a)
 						{
-							Specs.MotorAcceleration = a;
+							Engine.CurrentAcceleration = a;
 						}
 					}
 					else
 					{
-						Specs.MotorAcceleration += CarBrake.JerkDown * TimeElapsed;
-						if (Specs.MotorAcceleration > a)
+						Engine.CurrentAcceleration += CarBrake.JerkDown * TimeElapsed;
+						if (Engine.CurrentAcceleration > a)
 						{
-							Specs.MotorAcceleration = a;
+							Engine.CurrentAcceleration = a;
 						}
 					}
 				}
@@ -1360,14 +1360,14 @@ namespace TrainManager.Car
 			if (baseTrain.Handles.Reverser.Actual != 0)
 			{
 				double factor = EmptyMass / CurrentMass;
-				if (Specs.MotorAcceleration > 0.0)
+				if (Engine.CurrentAcceleration > 0.0)
 				{
 					PowerRollingCouplerAcceleration +=
-						(double) baseTrain.Handles.Reverser.Actual * Specs.MotorAcceleration * factor;
+						(double) baseTrain.Handles.Reverser.Actual * Engine.CurrentAcceleration * factor;
 				}
 				else
 				{
-					double a = -Specs.MotorAcceleration;
+					double a = -Engine.CurrentAcceleration;
 					if (a >= wheelSlipAccelerationMotorFront)
 					{
 						FrontAxle.CurrentWheelSlip = true;
@@ -1389,7 +1389,7 @@ namespace TrainManager.Car
 			}
 			else
 			{
-				Specs.MotorAcceleration = 0.0;
+				Engine.CurrentAcceleration = 0.0;
 			}
 
 			// perceived speed
