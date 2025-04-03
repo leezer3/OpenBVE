@@ -8,6 +8,7 @@ using OpenBve.Formats.Msts;
 using OpenBve.Formats.MsTs;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using OpenBveApi.Motor;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using OpenBveApi.World;

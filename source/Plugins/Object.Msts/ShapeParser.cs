@@ -468,7 +468,7 @@ namespace Plugin
 
 		private static bool IsAnimated(string matrixName)
 		{
-			if (matrixName.StartsWith("WHEELS") || matrixName.StartsWith("ROD") || matrixName.StartsWith("BOGIE") || matrixName.StartsWith("PISTON"))
+			if (matrixName.StartsWith("WHEELS") || matrixName.StartsWith("ROD") || matrixName.StartsWith("BOGIE") || matrixName.StartsWith("PISTON") || matrixName.StartsWith("PANTOGRAPH"))
 			{
 				return true;
 			}
@@ -1450,7 +1450,7 @@ namespace Plugin
 					// Frame index
 					int frameIndex = block.ReadInt32();
 					// n.b. we need to negate the Z and W components to get to GL format as opposed to DX
-					Quaternion q = new Quaternion(block.ReadSingle(), block.ReadSingle(), -block.ReadSingle(), -block.ReadSingle());
+					Quaternion q = new Quaternion(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), -block.ReadSingle());
 					quaternionFrames[currentFrame] = new QuaternionFrame(frameIndex, q);
 					/* 4 more floats:
 					 * TENSION
