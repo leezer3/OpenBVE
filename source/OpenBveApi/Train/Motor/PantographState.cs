@@ -22,39 +22,16 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using OpenBveApi.Motor;
-using TrainManager.Car;
-using TrainManager.Handles;
-
-
-namespace TrainManager.Motor
+namespace OpenBveApi.Motor
 {
-	public class ElectricEngine : AbstractEngine
+	/// <summary>The possible states of a pantograph</summary>
+	public enum PantographState
 	{
-		public ElectricEngine(CarBase car) : base(car)
-		{
-		}
-
-		public override void Update(double timeElapsed)
-		{
-		}
-
-		public override double CurrentPower
-		{
-			get
-			{
-				Pantograph pantograph = Components[EngineComponent.Pantograph] as Pantograph;
-				if (pantograph?.State != PantographState.Raised)
-				{
-					return 0;
-				}
-
-				if (BaseCar.baseTrain.Handles.Power is VariableHandle variableHandle)
-				{
-					return variableHandle.GetPowerModifier;
-				}
-				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
-			}
-		}
+		/// <summary>The pantograph is raised</summary>
+		Raised,
+		/// <summary>The pantograph is lowered</summary>
+		Lowered,
+		/// <summary>The pantograph is raised, but no wire is present</summary>
+		Dewired
 	}
 }
