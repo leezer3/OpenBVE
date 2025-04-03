@@ -8,6 +8,7 @@ using OpenBve.Formats.Msts;
 using OpenBve.Formats.MsTs;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using OpenBveApi.Motor;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
@@ -28,7 +29,6 @@ namespace Train.MsTs
 		private readonly Dictionary<string, string> wagonCache;
 		private readonly Dictionary<string, string> engineCache;
 		private string[] wagonFiles;
-		private int wheelRadiusNum;
 		private double wheelRadius;
 
 		internal WagonParser(Plugin Plugin)
@@ -40,7 +40,7 @@ namespace Train.MsTs
 
 		internal void Parse(string trainSetDirectory, string wagonName, bool isEngine, ref CarBase Car, ref TrainBase train)
 		{
-			wheelRadiusNum = 1;
+			exteriorLoaded = false;
 			wagonFiles = Directory.GetFiles(trainSetDirectory, isEngine ? "*.eng" : "*.wag", SearchOption.AllDirectories);
 			currentEngineType = EngineType.NoEngine;
 			/*
@@ -594,19 +594,14 @@ namespace Train.MsTs
 						numWheels /= 2;
 					}
 
-					if (numWheels == 1)
+					if (block.ParentBlock.Token == KujuTokenID.Engine)
 					{
-						car.Wheels.Add("WHEELS" + wheelRadiusNum, new Wheels(2, "WHEELS" + wheelRadiusNum, wheelRadius));
+						car.DrivingWheels.Add(new Wheels(numWheels == 1 ? 2 : numWheels, wheelRadius));
 					}
 					else
 					{
-						car.Wheels.Add("WHEELS" + wheelRadiusNum, new Wheels(2, "WHEELS" + wheelRadiusNum, wheelRadius));
-						for (int i = 1; i < numWheels + 1; i++)
-						{
-							car.Wheels.Add("WHEELS" + wheelRadiusNum + i, new Wheels(2, "WHEELS1" + wheelRadiusNum + i, wheelRadius));
-						}
+						car.TrailingWheels.Add(new Wheels(numWheels == 1 ? 2 : numWheels, wheelRadius));
 					}
-					wheelRadiusNum++;
 					break;
 				case KujuTokenID.Sound:
 					string soundFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Path.GetDirectoryName(fileName), "SOUND"), block.ReadString());
