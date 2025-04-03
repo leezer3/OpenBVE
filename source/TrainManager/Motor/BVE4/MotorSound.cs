@@ -59,7 +59,7 @@ namespace TrainManager.Motor
 			double speed = Math.Abs(Car.Specs.PerceivedSpeed);
 			int idx = (int) Math.Round(speed * SpeedConversionFactor);
 			int odir = CurrentAccelerationDirection;
-			int ndir = Math.Sign(Car.Specs.MotorAcceleration);
+			int ndir = Math.Sign(Car.Engine.CurrentAcceleration);
 			for (int h = 0; h < 2; h++)
 			{
 				int j = h == 0 ? BVEMotorSound.MotorP1 : BVEMotorSound.MotorP2;
@@ -111,7 +111,7 @@ namespace TrainManager.Motor
 								// power
 								if (Car.Engine.MaximumAcceleration != 0.0)
 								{
-									double cur = Car.Specs.MotorAcceleration;
+									double cur = Car.Engine.CurrentAcceleration;
 									if (cur < 0.0) cur = 0.0;
 									gain *= Math.Pow(cur / Car.Engine.MaximumAcceleration, 0.25);
 								}
@@ -119,7 +119,7 @@ namespace TrainManager.Motor
 							else if (ndir == -1)
 							{
 								// brake
-								double max = -Car.Specs.MotorAcceleration;
+								double max = -Car.Engine.CurrentAcceleration;
 								if (Car.baseTrain != null)
 								{
 									// train / brake system not simulated in TrainEditor2
@@ -127,7 +127,7 @@ namespace TrainManager.Motor
 								}
 								if (max != 0.0)
 								{
-									double cur = -Car.Specs.MotorAcceleration;
+									double cur = -Car.Engine.CurrentAcceleration;
 									if (cur < 0.0) cur = 0.0;
 									gain *= Math.Pow(cur / max, 0.25);
 								}

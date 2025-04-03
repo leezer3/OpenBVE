@@ -546,7 +546,7 @@ namespace TrainManager.Trains
 				for (int i = 0; i < Cars.Length; i++)
 				{
 					Cars[i].CurrentSpeed = 0.0;
-					Cars[i].Specs.MotorAcceleration = 0.0;
+					Cars[i].Engine.CurrentAcceleration = 0.0;
 				}
 
 				return;
