@@ -6,6 +6,7 @@ namespace Train.MsTs
     {
 		Unknown = 0,
 		Amps,
+		Gallons,
 		Inches_Of_Mercury,
 		Kilometers_Per_Hour,
 		Miles_Per_Hour,

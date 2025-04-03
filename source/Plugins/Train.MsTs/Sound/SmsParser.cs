@@ -250,9 +250,9 @@ namespace Train.MsTs
 					{
 						newBlock = block.ReadSubBlock(KujuTokenID.File);
 						ParseBlock(newBlock, ref currentSoundSet, ref car);
-						newBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
-						ParseBlock(newBlock, ref currentSoundSet, ref car);
 					}
+					newBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
+					ParseBlock(newBlock, ref currentSoundSet, ref car);
 					break;
 				case KujuTokenID.ReleaseLoopRelease:
 					// empty block expected
