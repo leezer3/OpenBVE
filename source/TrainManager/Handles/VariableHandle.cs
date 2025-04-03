@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Math;
 using TrainManager.Trains;
 
 namespace TrainManager.Handles
@@ -14,6 +15,14 @@ namespace TrainManager.Handles
 				MaximumDriverNotch = notches.Length - 1;
 				MaximumNotch = notches.Length - 1;
 				_notches = notches;
+				for (int i = 0; i < _notches.Length; i++)
+				{
+					Vector2 s = TrainManagerBase.Renderer.Fonts.NormalFont.MeasureString(_notches[i].Item2);
+					if (s.X > MaxWidth)
+					{
+						MaxWidth = s.X;
+					}
+				}
 			}
 			else
 			{
