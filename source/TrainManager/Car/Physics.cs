@@ -9,9 +9,6 @@
 		/// <summary>The current total acceleration output supplied by the car from all sources</summary>
 		/// <remarks>Is positive for power and negative for brake, regardless of the train's direction</remarks>
 		public double Acceleration;
-		/// <summary>The maximum possible motor acceleration</summary>
-		/// <remarks>This ignores wheelspin etc.</remarks>
-		public double MaxMotorAcceleration;
 		/// <summary>The jerk applied when the acceleration from the motor increases</summary>
 		public double JerkPowerUp;
 		/// <summary>The jerk applied when the acceleration from the motor decreases</summary>

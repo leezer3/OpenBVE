@@ -6,7 +6,7 @@ namespace TrainManager.Motor
 	{
 		public BVETrailerCar(CarBase car) : base(car, null, false)
 		{
-			MaximumAcceleration = 0;
+			MaximumPossibleAcceleration = 0;
 		}
 
 		public override void Update(double timeElapsed)

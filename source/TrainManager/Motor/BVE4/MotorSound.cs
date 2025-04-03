@@ -109,11 +109,11 @@ namespace TrainManager.Motor
 							if (ndir == 1)
 							{
 								// power
-								if (Car.Engine.MaximumAcceleration != 0.0)
+								if (Car.Engine.MaximumPossibleAcceleration != 0.0)
 								{
 									double cur = Car.Engine.CurrentAcceleration;
 									if (cur < 0.0) cur = 0.0;
-									gain *= Math.Pow(cur / Car.Engine.MaximumAcceleration, 0.25);
+									gain *= Math.Pow(cur / Car.Engine.MaximumPossibleAcceleration, 0.25);
 								}
 							}
 							else if (ndir == -1)

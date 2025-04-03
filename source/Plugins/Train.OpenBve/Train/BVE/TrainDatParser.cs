@@ -1428,7 +1428,7 @@ namespace Train.OpenBve
 					{
 						Train.Cars[i].Engine.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
 					}
-					Train.Cars[i].Engine.MaximumAcceleration = MaximumAcceleration;
+					Train.Cars[i].Engine.MaximumPossibleAcceleration = MaximumAcceleration;
 				} else {
 					// trailer car
 					Train.Cars[i].EmptyMass = TrailerCarMass;

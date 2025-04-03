@@ -152,7 +152,7 @@ namespace Train.OpenBve
 							}
 
 							Train.Cars[Car].Engine = new BVEMotorCar(Train.Cars[Car], finalAccelerationCurves);
-							Train.Cars[Car].Engine.MaximumAcceleration = Plugin.MaximumAcceleration;
+							Train.Cars[Car].Engine.MaximumPossibleAcceleration = Plugin.MaximumAcceleration;
 						}
 						else
 						{

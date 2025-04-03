@@ -1227,7 +1227,7 @@ namespace TrainManager.Car
 							wheelspin += (double)baseTrain.Handles.Reverser.Actual * a * CurrentMass;
 						}
 
-						Specs.MaxMotorAcceleration = a;
+						Engine.MaximumCurrentAcceleration = a;
 						// Update constant speed device
 						this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
 
@@ -1244,7 +1244,7 @@ namespace TrainManager.Car
 				else
 				{
 					// HACK: Use special value here to inform the BVE readhesion device it shouldn't update this frame
-					Specs.MaxMotorAcceleration = -1;
+					Engine.MaximumCurrentAcceleration = -1;
 					a = 0.0;
 					FrontAxle.CurrentWheelSlip = false;
 					RearAxle.CurrentWheelSlip = false;

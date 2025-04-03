@@ -77,11 +77,11 @@ namespace TrainManager.Motor
 							 * Now multiply that by the actual acceleration as opposed to the max acceleration to find the absolute
 							 * gain
 							 */
-							if (Car.Engine.MaximumAcceleration != 0.0)
+							if (Car.Engine.MaximumPossibleAcceleration != 0.0)
 							{
 								double cur = Car.Engine.CurrentAcceleration;
 								if (cur < 0.0) cur = 0.0;
-								gain *= Math.Pow(cur / Car.Engine.MaximumAcceleration, 0.25);
+								gain *= Math.Pow(cur / Car.Engine.MaximumPossibleAcceleration, 0.25);
 							}
 
 							if (SoundSources[i] != null && SoundSources[i].State != SoundSourceState.Stopped)
@@ -144,11 +144,11 @@ namespace TrainManager.Motor
 							 * Now multiply that by the actual acceleration as opposed to the max acceleration to find the absolute
 							 * gain
 							 */
-							if (Car.Engine.MaximumAcceleration != 0.0)
+							if (Car.Engine.MaximumPossibleAcceleration != 0.0)
 							{
 								double cur = Car.Engine.CurrentAcceleration;
 								if (cur < 0.0) cur = 0.0;
-								gain *= Math.Pow(cur / Car.Engine.MaximumAcceleration, 0.25);
+								gain *= Math.Pow(cur / Car.Engine.MaximumPossibleAcceleration, 0.25);
 							}
 
 							if (SoundSources[i] != null && SoundSources[i].State != SoundSourceState.Stopped)
