@@ -538,6 +538,9 @@ namespace Train.MsTs
 						case Units.PSI:
 							Code = "brakecylinder 0.000145038 *";
 							break;
+						case Units.Inches_Of_Mercury:
+							Code = "0";
+							break;
 					}
 					break;
 				case PanelSubject.Brake_Pipe:
@@ -546,6 +549,9 @@ namespace Train.MsTs
 						case Units.PSI:
 							Code = "brakecylinder 0.000145038 *";
 							break;
+						case Units.Inches_Of_Mercury:
+							Code = "0";
+							break;
 					}
 					break;
 				case PanelSubject.Main_Res:
@@ -553,6 +559,9 @@ namespace Train.MsTs
 					{
 						case Units.PSI:
 							Code = "mainreservoir 0.000145038 *";
+							break;
+						case Units.Inches_Of_Mercury:
+							Code = "0";
 							break;
 					}
 					break;
