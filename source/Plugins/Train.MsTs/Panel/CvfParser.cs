@@ -462,6 +462,11 @@ namespace Train.MsTs
 					case KujuTokenID.ScalePos:
 						InitialAngle = block.ReadSingle();
 						LastAngle = block.ReadSingle();
+						// correct angle position if appropriate
+						if (InitialAngle > LastAngle)
+						{
+							InitialAngle = -(365 - InitialAngle);
+						}
 						break;
 					case KujuTokenID.ScaleRange:
 						Minimum = block.ReadSingle();

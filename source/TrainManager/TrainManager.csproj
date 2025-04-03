@@ -127,7 +127,6 @@
     <Compile Include="Motor\BVE5\MotorSound.cs" />
     <Compile Include="Motor\BVE5\MotorSoundTableEntry.cs" />
     <Compile Include="Motor\BVE5\SoundState.cs" />
-    <Compile Include="Motor\ComponentTypes.cs" />
     <Compile Include="Motor\DieselEngine\DieselEngine.cs" />
     <Compile Include="Motor\DieselEngine\GearboxOperation.cs" />
     <Compile Include="Motor\DieselEngine\RegenerativeTractionMotor.cs" />
