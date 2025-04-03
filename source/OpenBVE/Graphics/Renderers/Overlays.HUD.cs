@@ -7,6 +7,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using SoundManager;
+using TrainManager;
 using TrainManager.Car;
 using TrainManager.Handles;
 using static TrainManager.TrainManagerBase;
@@ -630,13 +631,24 @@ namespace OpenBve.Graphics.Renderers
 
 				}
 
-				// background
-				if (Element.CenterMiddle.BackgroundTexture != null)
+
+				Texture backgroundTexture = Element.CenterMiddle.BackgroundTexture;
+				Texture overlayTexture = Element.CenterMiddle.OverlayTexture;
+				if (w > 100 && Element.CenterMiddle.WideBackgroundTexture != null && Element.CenterMiddle.WideOverlayTexture != null)
 				{
-					if (Program.CurrentHost.LoadTexture(ref Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
+					// use non-slanted texture if we're greater than 100px wide, as this otherwise looks dreadful
+					backgroundTexture = Element.CenterMiddle.WideBackgroundTexture;
+					overlayTexture = Element.CenterMiddle.WideOverlayTexture;
+					w -= 48 * Interface.CurrentOptions.UserInterfaceScaleFactor;
+				}
+
+				// background
+				if (backgroundTexture != null)
+				{
+					if (Program.CurrentHost.LoadTexture(ref backgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						Color128 c = Element.BackgroundColor.CreateBackColor(sc, alpha);
-						renderer.Rectangle.Draw(Element.CenterMiddle.BackgroundTexture, new Vector2(x, y), new Vector2(w, h), c);
+						renderer.Rectangle.Draw(backgroundTexture, new Vector2(x, y), new Vector2(w, h), c);
 					}
 				}
 				{ // text
@@ -648,13 +660,14 @@ namespace OpenBve.Graphics.Renderers
 					Color128 c = Element.TextColor.CreateTextColor(sc, alpha);
 					Program.Renderer.OpenGlString.Draw(Element.Font, t, new Vector2(p, q), TextAlignment.TopLeft, c, Element.TextShadow);
 				}
+
 				// overlay
-				if (Element.CenterMiddle.OverlayTexture != null)
+				if (overlayTexture != null)
 				{
-					if (Program.CurrentHost.LoadTexture(ref Element.CenterMiddle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(ref overlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						Color128 c = Element.OverlayColor.CreateBackColor(sc, alpha);
-						renderer.Rectangle.Draw(Element.CenterMiddle.BackgroundTexture, new Vector2(x, y), new Vector2(w, h), c);
+						renderer.Rectangle.Draw(overlayTexture, new Vector2(x, y), new Vector2(w, h), c);
 					}
 				}
 			}

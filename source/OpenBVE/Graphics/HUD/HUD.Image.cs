@@ -8,6 +8,8 @@ namespace OpenBve
 		{
 			internal Texture BackgroundTexture;
 			internal Texture OverlayTexture;
+			internal Texture WideBackgroundTexture;
+			internal Texture WideOverlayTexture;
 		}
 	}
 }
