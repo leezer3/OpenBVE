@@ -32,7 +32,8 @@ namespace Train.OpenBve
 			{
 				readhesionDevice = device.DeviceType;
 			}
-			bool CopyAccelerationCurves = true;
+
+			bool copyAccelerationCurves = true;
 			bool exposedFrontalAreaSet = false;
 			bool unexposedFrontalAreaSet = false;
 			foreach (XmlNode c in Node.ChildNodes)
@@ -139,25 +140,23 @@ namespace Train.OpenBve
 					case "motorcar":
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
 						{
-							Train.Cars[Car].Specs.IsMotorCar = true;
-							if (!CopyAccelerationCurves)
+							if (!copyAccelerationCurves)
 							{
 								//We've already set the acceleration curves elsewhere in the XML, so don't copy the default ones
 								break;
 							}
-							Train.Cars[Car].Specs.AccelerationCurves = new AccelerationCurve[Plugin.AccelerationCurves.Length];
+							AccelerationCurve[] finalAccelerationCurves = new AccelerationCurve[Plugin.AccelerationCurves.Length];
 							for (int i = 0; i < Plugin.AccelerationCurves.Length; i++)
 							{
-								Train.Cars[Car].Specs.AccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone();
+								finalAccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone();
 							}
 
-							Train.Cars[Car].Specs.AccelerationCurveMaximum = Plugin.MaximumAcceleration;
+							Train.Cars[Car].Engine = new BVEMotorCar(Train.Cars[Car], finalAccelerationCurves);
+							Train.Cars[Car].Engine.MaximumAcceleration = Plugin.MaximumAcceleration;
 						}
 						else
 						{
-							Train.Cars[Car].Specs.AccelerationCurves = new AccelerationCurve[] { };
-							Train.Cars[Car].Specs.AccelerationCurveMaximum = 0;
-							Train.Cars[Car].Specs.IsMotorCar = false;
+							Train.Cars[Car].Engine = new BVETrailerCar(Train.Cars[Car]);
 						}
 						break;
 					case "mass":
@@ -530,7 +529,7 @@ namespace Train.OpenBve
 													break;
 											}
 										}
-										Train.Cars[Car].Sounds.Motor = Bve5MotorSoundTableParser.Parse(Train.Cars[Car], powerFreq, powerVol, brakeFreq, brakeVol);
+										Train.Cars[Car].Engine.MotorSounds = Bve5MotorSoundTableParser.Parse(Train.Cars[Car], powerFreq, powerVol, brakeFreq, brakeVol);
 										break;
 								}
 							}
@@ -542,8 +541,14 @@ namespace Train.OpenBve
 						 * It has moved to being a child-node of the power node
 						 * Retain this for the minute in case someone has actually used the thing (although the format is an ongoing WIP)....
 						 */
-						CopyAccelerationCurves = false;
-						Train.Cars[Car].Specs.AccelerationCurves = ParseAccelerationNode(c, fileName);
+						copyAccelerationCurves = false;
+						AccelerationCurve[] curves = ParseAccelerationNode(c, fileName);
+						if (Train.Cars[Car].Engine is BVEMotorCar || Train.Cars[Car].Engine is BVETrailerCar)
+						{
+							AbstractMotorSound motor = Train.Cars[Car].Engine.MotorSounds;
+							Train.Cars[Car].Engine = new BVEMotorCar(Train.Cars[Car], curves);
+							Train.Cars[Car].Engine.MotorSounds = motor;
+						}
 						break;
 					case "power":
 						if (c.ChildNodes.OfType<XmlElement>().Any())
@@ -557,8 +562,14 @@ namespace Train.OpenBve
 										ParseHandleNode(cc, ref p, Car, Train, fileName);
 										break;
 									case "accelerationcurves":
-										CopyAccelerationCurves = false;
-										Train.Cars[Car].Specs.AccelerationCurves = ParseAccelerationNode(cc, fileName);
+										copyAccelerationCurves = false;
+										curves = ParseAccelerationNode(c, fileName);
+										if (Train.Cars[Car].Engine is BVEMotorCar || Train.Cars[Car].Engine is BVETrailerCar)
+										{
+											AbstractMotorSound motor = Train.Cars[Car].Engine.MotorSounds;
+											Train.Cars[Car].Engine = new BVEMotorCar(Train.Cars[Car], curves);
+											Train.Cars[Car].Engine.MotorSounds = motor;
+										}
 										break;
 								}
 							}
@@ -781,7 +792,7 @@ namespace Train.OpenBve
 									break;
 							}
 
-							Train.Cars[Car].Engine = new DieselEngine(Train.Cars[Car], idleRPM, minRPM, maxRPM, rpmChangeUpRate, rpmChangeDownRate, idleFuelUse, maxPowerFuelUse);
+							Train.Cars[Car].Engine = new DieselEngine(Train.Cars[Car], Plugin.AccelerationCurves, idleRPM, minRPM, maxRPM, rpmChangeUpRate, rpmChangeDownRate, idleFuelUse, maxPowerFuelUse);
 							Train.Cars[Car].Engine.FuelTank = new FuelTank(fuelCapacity, 0, fuelCapacity);
 						}
 						break;

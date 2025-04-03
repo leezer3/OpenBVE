@@ -29,7 +29,7 @@ namespace TrainManager.Car
 			this.DeviceType = type;
 			this.MaximumAccelerationOutput = Double.PositiveInfinity;
 			this.ApplicationFactor = 0.0;
-			if (Car.Specs.IsMotorCar)
+			if (Car.Engine.ProvidesPower)
 			{
 				switch (type)
 				{

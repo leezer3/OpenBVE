@@ -224,7 +224,7 @@ namespace Route.Bve5
 
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
-					Train.Cars[i].Specs.IsMotorCar = true;
+					Train.Cars[i].Engine = new BVEMotorCar(Train.Cars[i], null);
 					BVE5AITrainSounds carSounds = new BVE5AITrainSounds(Train.Cars[i], new BVE5AISoundEntry[OtherTrain.CarSounds.Count]);
 					for (int j = 0; j < carSounds.SoundEntries.Length; j++)
 					{
@@ -232,7 +232,7 @@ namespace Route.Bve5
 						carSounds.SoundEntries[j] = new BVE5AISoundEntry(soundHandle as SoundBuffer, OtherTrain.CarSounds[j].Function);
 					}
 
-					Train.Cars[i].Sounds.Motor = carSounds;
+					Train.Cars[i].Engine.MotorSounds = carSounds;
 				}
 
 				List<TravelData> Data = new List<TravelData>();

@@ -371,7 +371,7 @@ namespace RouteViewer {
 						if (Train != null) {
 							Function.Stack[s] = 0.0;
 							for (int j = 0; j < Train.Cars.Length; j++) {
-								if (Train.Cars[j].Specs.IsMotorCar) {
+								if (Train.Cars[j].Engine.ProvidesPower) {
 									// hack: MotorAcceleration does not distinguish between forward/backward
 									if (Train.Cars[j].Specs.MotorAcceleration < 0.0) {
 										Function.Stack[s] = Train.Cars[j].Specs.MotorAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);

@@ -1171,18 +1171,18 @@ namespace TrainManager.Car
 			if (DecelerationDueToMotor == 0.0)
 			{
 				double a;
-				if (DecelerationDueToMotor == 0.0 || !Specs.IsMotorCar)
+				if (DecelerationDueToMotor == 0.0 || !Engine.ProvidesPower)
 				{
 					if (baseTrain.Handles.Reverser.Actual != 0 & baseTrain.Handles.Power.Actual > 0 &
 					    !baseTrain.Handles.HoldBrake.Actual &
 					    !baseTrain.Handles.EmergencyBrake.Actual)
 					{
 						// target acceleration
-						if (baseTrain.Handles.Power.Actual - 1 < Specs.AccelerationCurves.Length)
+						if (baseTrain.Handles.Power.Actual - 1 < Engine.AccelerationCurves.Length)
 						{
 							// Load factor is a constant 1.0 for anything prior to BVE5
 							// This will need to be changed when the relevant branch is merged in
-							a = Specs.AccelerationCurves[baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)baseTrain.Handles.Reverser.Actual * CurrentSpeed, 1.0);
+							a = Engine.AccelerationCurves[baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)baseTrain.Handles.Reverser.Actual * CurrentSpeed, 1.0);
 						}
 						else
 						{
@@ -1291,7 +1291,7 @@ namespace TrainManager.Car
 			{
 				double a;
 				// motor
-				if (Specs.IsMotorCar & DecelerationDueToMotor != 0.0)
+				if (Engine.ProvidesPower & DecelerationDueToMotor != 0.0)
 				{
 					a = -DecelerationDueToMotor;
 					if (Specs.MotorAcceleration > a)

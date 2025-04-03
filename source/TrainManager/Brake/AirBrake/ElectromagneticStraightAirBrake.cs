@@ -148,7 +148,7 @@ namespace TrainManager.BrakeSystems
 				targetPressure *= brakeCylinder.ServiceMaximumPressure;
 			}
 
-			if (Car.Specs.IsMotorCar & !Car.baseTrain.Handles.EmergencyBrake.Actual & Car.baseTrain.Handles.Reverser.Actual != 0)
+			if (Car.Engine.ProvidesPower & !Car.baseTrain.Handles.EmergencyBrake.Actual & Car.baseTrain.Handles.Reverser.Actual != 0)
 			{
 				//If we meet the conditions for brake control system to activate
 				if (Math.Abs(currentSpeed) > brakeControlSpeed)

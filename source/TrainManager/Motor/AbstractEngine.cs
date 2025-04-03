@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using TrainManager.Car;
+using TrainManager.Power;
 
 namespace TrainManager.Motor
 {
@@ -38,12 +39,22 @@ namespace TrainManager.Motor
 	    public bool IsRunning;
 		/// <summary>The components of the engine</summary>
 	    public Dictionary<EngineComponent, AbstractComponent> Components;
+		/// <summary>Whether the engine provides power (acceleration) to the train</summary>
+	    public readonly bool ProvidesPower;
+		/// <summary>The acceleration curves</summary>
+	    public AccelerationCurve[] AccelerationCurves;
+	    /// <summary>The motor sounds</summary>
+	    public AbstractMotorSound MotorSounds;
+		/// <summary>The maximum possible acceleration provided</summary>
+	    public double MaximumAcceleration;
 
 		/// <summary>Creates a new AbstractEngine</summary>
-		protected AbstractEngine(CarBase car)
+		protected AbstractEngine(CarBase car, AccelerationCurve[] accelerationCurves, bool providesPower)
 	    {
 		    BaseCar = car;
+			AccelerationCurves = accelerationCurves;
 			Components = new Dictionary<EngineComponent, AbstractComponent>();
+			ProvidesPower = providesPower;
 	    }
 
 
