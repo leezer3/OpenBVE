@@ -2,6 +2,7 @@ using System;
 using LibRender2.Overlays;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
+using OpenBveApi.Motor;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using TrainManager.BrakeSystems;
