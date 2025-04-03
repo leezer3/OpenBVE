@@ -22,39 +22,16 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System.Collections.Generic;
-using OpenBveApi.Motor;
-using TrainManager.Car;
-
-namespace TrainManager.Motor
+namespace OpenBveApi.Motor
 {
-	/// <summary>An abstract engine</summary>
-    public abstract class AbstractEngine
-    {
-		/// <summary>Holds a reference to the base car</summary>
-	    internal readonly CarBase BaseCar;
-		/// <summary>The fuel supply</summary>
-	    public FuelTank FuelTank;
-	    /// <summary>Whether the engine is running</summary>
-	    public bool IsRunning;
-		/// <summary>The components of the engine</summary>
-	    public Dictionary<EngineComponent, AbstractComponent> Components;
-
-		/// <summary>Creates a new AbstractEngine</summary>
-		protected AbstractEngine(CarBase car)
-	    {
-		    BaseCar = car;
-			Components = new Dictionary<EngineComponent, AbstractComponent>();
-	    }
-		
-		/// <summary>Called once a frame to update the engine</summary>
-		/// <param name="timeElapsed"></param>
-	    public abstract void Update(double timeElapsed);
-
-		/// <summary>Gets the current power level</summary>
-	    public abstract double CurrentPower
-	    {
-		    get;
-	    }
-    }
+	/// <summary>The possible states of a pantograph</summary>
+	public enum PantographState
+	{
+		/// <summary>The pantograph is raised</summary>
+		Raised,
+		/// <summary>The pantograph is lowered</summary>
+		Lowered,
+		/// <summary>The pantograph is raised, but no wire is present</summary>
+		Dewired
+	}
 }
