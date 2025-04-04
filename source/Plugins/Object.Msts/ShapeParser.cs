@@ -476,7 +476,7 @@ namespace Plugin
 
 		private static bool IsAnimated(string matrixName)
 		{
-			if (matrixName.StartsWith("WHEELS") || matrixName.StartsWith("ROD") || matrixName.StartsWith("BOGIE") || matrixName.StartsWith("PISTON"))
+			if (matrixName.StartsWith("WHEELS") || matrixName.StartsWith("ROD") || matrixName.StartsWith("BOGIE") || matrixName.StartsWith("PISTON") || matrixName.StartsWith("PANTOGRAPH"))
 			{
 				return true;
 			}
@@ -1465,8 +1465,8 @@ namespace Plugin
 				case KujuTokenID.tcb_key:
 					// Frame index
 					int frameIndex = block.ReadInt32();
-					// n.b. we need to negate the Z and W components to get to GL format as opposed to DX
-					Quaternion q = new Quaternion(block.ReadSingle(), block.ReadSingle(), -block.ReadSingle(), -block.ReadSingle());
+					// n.b. we need to negate the W components to get to GL format as opposed to DX
+					Quaternion q = new Quaternion(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), -block.ReadSingle());
 					quaternionFrames[currentFrame] = new QuaternionFrame(frameIndex, q);
 					/* 4 more floats:
 					 * TENSION
@@ -1478,7 +1478,7 @@ namespace Plugin
 				case KujuTokenID.slerp_rot:
 					// Frame index
 					frameIndex = block.ReadInt32();
-					q = new Quaternion(block.ReadSingle(), block.ReadSingle(), -block.ReadSingle(), -block.ReadSingle());
+					q = new Quaternion(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), -block.ReadSingle());
 					quaternionFrames[currentFrame] = new QuaternionFrame(frameIndex, q);
 					break;
 				case KujuTokenID.linear_pos:

@@ -72,6 +72,12 @@ namespace OpenBve.Formats.MsTs
 		/// <summary>Reads a string from the block</summary>
 		public abstract string ReadString();
 
+		/// <summary>Reads a path from the block</summary>
+		/// <param name="absolute">The platform specific absolute path</param>
+		/// <param name="finalPath">The final path</param>
+		/// <returns>True if the path is found, false otherwise</returns>
+		public abstract bool ReadPath(string absolute, out string finalPath);
+
 		/// <summary>Reads a string array from the block</summary>
 		public abstract string[] ReadStringArray();
 
@@ -257,6 +263,27 @@ namespace OpenBve.Formats.MsTs
 			return (string.Empty); //Not sure this is valid, but let's be on the safe side
 		}
 
+		public override bool ReadPath(string absolute, out string finalPath)
+		{
+			string relative = ReadString().Replace("\"", "");
+			try
+			{
+				finalPath = OpenBveApi.Path.CombineFile(absolute, relative);
+			}
+			catch
+			{
+				finalPath = relative;
+				return false;
+			}
+			if (File.Exists(finalPath))
+			{
+				return true;
+			}
+
+			finalPath = relative;
+			return false;
+		}
+
 		public override string[] ReadStringArray()
 		{
 			throw new NotImplementedException();
@@ -313,6 +340,7 @@ namespace OpenBve.Formats.MsTs
 		private readonly VolumeConverter volumeConverter = new VolumeConverter();
 		private readonly CurrentConverter currentConverter = new CurrentConverter();
 		private readonly PressureConverter pressureConverter = new PressureConverter();
+		private readonly VelocityConverter velocityConvertor = new VelocityConverter();
 
 		private TextualBlock(string text, bool textIsClean)
 		{
@@ -796,6 +824,12 @@ namespace OpenBve.Formats.MsTs
 		public override float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnits)
 		{
 			string s = ReadString();
+			int hash = s.IndexOf('#');
+			if (hash != -1)
+			{
+				// In unit deliminated strings, hash acts as a comment separator (despite being valid as a string member elsewhere)
+				s = s.Substring(0, hash).Trim();
+			}
 			int c;
 			for (c = 0; c < s.Length; c++)
 			{
@@ -875,6 +909,15 @@ namespace OpenBve.Formats.MsTs
 				parsedNumber = (float)pressureConverter.Convert(parsedNumber, PressureConverter.KnownUnits[Unit], (UnitOfPressure)(object)desiredUnit);
 
 			}
+			else if (desiredUnit is UnitOfVelocity)
+			{
+				if (!VelocityConverter.KnownUnits.ContainsKey(Unit))
+				{
+					throw new InvalidDataException("Unknown or unexpected velocity unit " + Unit + " encountered in block " + Token);
+				}
+
+				parsedNumber = (float)velocityConvertor.Convert(parsedNumber, VelocityConverter.KnownUnits[Unit], (UnitOfVelocity)(object)desiredUnit);
+			}
 			return parsedNumber;
 		}
 		
@@ -892,6 +935,28 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			return getNextValue();
+		}
+
+		public override bool ReadPath(string absolute, out string finalPath)
+		{
+			string relative = ReadString().Replace("\"", "");
+			try
+			{
+				finalPath = OpenBveApi.Path.CombineFile(absolute, relative);
+			}
+			catch
+			{
+				finalPath = relative;
+				return false;
+			}
+			
+			if (File.Exists(finalPath))
+			{
+				return true;
+			}
+
+			finalPath = relative;
+			return false;
 		}
 
 		public override string[] ReadStringArray()
