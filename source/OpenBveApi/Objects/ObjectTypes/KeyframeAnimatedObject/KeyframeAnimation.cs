@@ -112,7 +112,7 @@ namespace OpenBveApi.Objects
 				// calculate the current keyframe for the animation
 				if (isPartOfTrain)
 				{
-					if (Name.StartsWith("WHEELS"))
+					if (Name.StartsWith("WHEELS") || Name.StartsWith("ROD") || Name.StartsWith("PISTON"))
 					{
 						// HACK: use the train as a dynamic to allow us to pull out the car reference
 						double wheelRadius;
@@ -126,12 +126,17 @@ namespace OpenBveApi.Objects
 							{
 								// if controllers are not defined for WHEELSN-N, it appears that those for the base WHEELSN are used
 								// otherwise, controlled by the position of WHEELS1
-								string baseName = Name.Substring(0, 7);
-								if (!baseCar.Wheels.ContainsKey(baseName))
+								// RODN and PISTONN animations link to WHEELS1
+								string baseName = "WHEELS1";
+								if (Name.StartsWith("WHEELS"))
 								{
-									baseName = "WHEELS1";
+									string wheelName = Name.Substring(0, 7);
+									if (baseCar.Wheels.ContainsKey(wheelName))
+									{
+										baseName = wheelName;
+									}
 								}
-
+								
 								wheelRadius = baseCar.Wheels[baseName].Radius;
 							}
 						}
