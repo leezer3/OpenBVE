@@ -102,31 +102,28 @@ namespace Train.OpenBve
 				train.Cars[i].Suspension.SpringL = new CarSound(Plugin.CurrentHost, train.TrainFolder, "SpringL.wav", SoundCfgParser.smallRadius, left);
 				train.Cars[i].Suspension.SpringR = new CarSound(Plugin.CurrentHost, train.TrainFolder, "SpringR.wav", SoundCfgParser.smallRadius, right);
 				// motor sound
-				if (train.Cars[i].Specs.IsMotorCar)
+				if (train.Cars[i].Engine.MotorSounds == null)
 				{
-					if (train.Cars[i].Sounds.Motor == null)
+					BVEMotorSound motorSound = new BVEMotorSound(train.Cars[i], 18.0, Plugin.MotorSoundTables);
+					motorSound.Position = center;
+					for (int j = 0; j < motorSound.Tables.Length; j++)
 					{
-						BVEMotorSound motorSound = new BVEMotorSound(train.Cars[i], 18.0, Plugin.MotorSoundTables);
-						motorSound.Position = center;
-						for (int j = 0; j < motorSound.Tables.Length; j++)
+						for (int k = 0; k < motorSound.Tables[j].Entries.Length; k++)
 						{
-							for (int k = 0; k < motorSound.Tables[j].Entries.Length; k++)
+							int idx = motorSound.Tables[j].Entries[k].SoundIndex;
+							if (idx >= 0)
 							{
-								int idx = motorSound.Tables[j].Entries[k].SoundIndex;
-								if (idx >= 0)
-								{
-									CarSound snd = new CarSound(Plugin.CurrentHost, train.TrainFolder, "Motor" + idx.ToString(CultureInfo.InvariantCulture) + ".wav", SoundCfgParser.mediumRadius, center);
-									motorSound.Tables[j].Entries[k].Buffer = snd.Buffer;
-								}
+								CarSound snd = new CarSound(Plugin.CurrentHost, train.TrainFolder, "Motor" + idx.ToString(CultureInfo.InvariantCulture) + ".wav", SoundCfgParser.mediumRadius, center);
+								motorSound.Tables[j].Entries[k].Buffer = snd.Buffer;
 							}
 						}
+					}
 
-						train.Cars[i].Sounds.Motor = motorSound;
-					}
-					else
-					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unexpected motor sound model found in car " + i);
-					}
+					train.Cars[i].Engine.MotorSounds = motorSound;
+				}
+				else
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unexpected motor sound model found in car " + i);
 				}
 			}
 		}

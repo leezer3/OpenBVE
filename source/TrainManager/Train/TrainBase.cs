@@ -336,7 +336,7 @@ namespace TrainManager.Trains
 								Cars[j].RearBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
 								Cars[j].Coupler.ChangeSection(!IsPlayerTrain ? 0 : -1);
 
-								if (Cars[j].Specs.IsMotorCar && Cars[j].Sounds.Loop != null)
+								if (Cars[j].Engine.ProvidesPower && Cars[j].Sounds.Loop != null)
 								{
 									Cars[j].Sounds.Loop.Play(Cars[j], true);
 								}
@@ -491,7 +491,6 @@ namespace TrainManager.Trains
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].Run.Update(TimeElapsed);
-				Cars[i].Sounds.Motor?.Update(TimeElapsed);
 			}
 
 			// safety system
@@ -547,7 +546,7 @@ namespace TrainManager.Trains
 				for (int i = 0; i < Cars.Length; i++)
 				{
 					Cars[i].CurrentSpeed = 0.0;
-					Cars[i].Specs.MotorAcceleration = 0.0;
+					Cars[i].Engine.CurrentAcceleration = 0.0;
 				}
 
 				return;
@@ -571,7 +570,7 @@ namespace TrainManager.Trains
 				CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].CurrentMass;
 				TrainMass += Cars[i].CurrentMass;
 				// update engine
-				if (Cars[i].Specs.IsMotorCar && Cars[i].Engine != null)
+				if (Cars[i].Engine.ProvidesPower && Cars[i].Engine != null)
 				{
 					Cars[i].Engine.Update(TimeElapsed);
 				}

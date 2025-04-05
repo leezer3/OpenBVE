@@ -7,8 +7,6 @@ namespace TrainManager.Car
 	/// <summary>The set of sounds attached to a car</summary>
 	public class CarSounds
 	{
-		/// <summary>The motor sounds</summary>
-		public AbstractMotorSound Motor;
 		/// <summary>The loop sound</summary>
 		public CarSound Loop;
 		
