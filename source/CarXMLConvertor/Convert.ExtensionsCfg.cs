@@ -79,11 +79,11 @@ namespace CarXmlConvertor
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0)
 				{
-					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] { });
+					Lines[i] = Lines[i].Substring(0, j).Trim();
 				}
 				else
 				{
-					Lines[i] = Lines[i].Trim(new char[] { });
+					Lines[i] = Lines[i].Trim();
 				}
 			}
 			for (int i = 0; i < Lines.Length; i++)
@@ -272,8 +272,8 @@ namespace CarXmlConvertor
 												int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 												if (j >= 0)
 												{
-													string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-													string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+													string a = Lines[i].Substring(0, j).TrimEnd();
+													string b = Lines[i].Substring(j + 1).TrimStart();
 													switch (a.ToLowerInvariant())
 													{
 														case "object":

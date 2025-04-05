@@ -124,15 +124,16 @@ namespace SanYingInput
 		{
 			InitializeComponent();
 
-			List<string> axisArray = new List<string>();
-
-			axisArray.Add("OFF");
-			axisArray.Add("X");
-			axisArray.Add("Y");
-			axisArray.Add("Z");
-			axisArray.Add("Rx");
-			axisArray.Add("Ry");
-			axisArray.Add("Rz");
+			List<string> axisArray = new List<string>()
+			{
+				"OFF",
+				"X",
+				"Y",
+				"Z",
+				"Rx",
+				"Ry",
+				"Rz",
+			};
 
 			m_saveData = new ConfigFormSaveData();
 

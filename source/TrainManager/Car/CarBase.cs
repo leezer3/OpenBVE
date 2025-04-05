@@ -294,11 +294,7 @@ namespace TrainManager.Car
 								animatedObject.Reverse();
 							}
 
-							if (CarSections[i].Groups[0].Keyframes != null)
-							{
-								CarSections[i].Groups[0].Keyframes.Reverse();
-							}
-							
+							CarSections[i].Groups[0].Keyframes?.Reverse();
 						}
 						
 					}

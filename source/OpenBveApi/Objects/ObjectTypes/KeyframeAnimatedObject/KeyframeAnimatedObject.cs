@@ -214,6 +214,7 @@ namespace OpenBveApi.Objects
 			}
 		}
 
+		/// <summary>Reverses the object</summary>
 		public void Reverse()
 		{
 			foreach (ObjectState state in Objects)

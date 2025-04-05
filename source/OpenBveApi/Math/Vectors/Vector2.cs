@@ -75,7 +75,8 @@ namespace OpenBveApi.Math {
 			return success;
 		}
 
-
+		/// <summary>Unconditionally parses a vector stored in string format</summary>
+		/// <param name="v">The string</param>
 		public static Vector2 Parse(string v)
 		{
 			TryParse(v.Split(','), out Vector2 vv);

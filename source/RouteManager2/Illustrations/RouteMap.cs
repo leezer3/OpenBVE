@@ -485,8 +485,7 @@ namespace RouteManager2
 			// in any 'real world' unit (like m).
 
 			// HORIZONTAL RANGE: find first and last used element based on stations
-			int totalElements, firstUsedElement, lastUsedElement;
-			TotalRouteRange(out totalElements, out firstUsedElement, out lastUsedElement);
+			TotalRouteRange(out int totalElements, out int firstUsedElement, out int lastUsedElement);
 			// VERTICAL RANGE
 			double y0 = double.PositiveInfinity, y1 = double.NegativeInfinity;
 			for (int i = firstUsedElement; i <= lastUsedElement; i++)
