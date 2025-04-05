@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
-using System.Runtime.InteropServices;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
@@ -168,22 +166,6 @@ namespace LibRender2.Textures
 		/// <returns>The handle to the texture.</returns>
 		/// <remarks>Be sure not to dispose of the bitmap after calling this function.</remarks>
 		public Texture RegisterTexture(Bitmap bitmap)
-		{
-			/*
-			 * Register the texture and return the newly created handle.
-			 * */
-			int idx = GetNextFreeTexture();
-			RegisteredTextures[idx] = new Texture(bitmap);
-			RegisteredTexturesCount++;
-			return RegisteredTextures[idx];
-		}
-
-		/// <summary>Registers a texture and returns a handle to the texture.</summary>
-		/// <param name="bitmap">The bitmap that contains the texture.</param>
-		/// <param name="alpha">A second bitmap containing the alpha channel for this texture</param>
-		/// <returns>The handle to the texture.</returns>
-		/// <remarks>Be sure not to dispose of the bitmap after calling this function.</remarks>
-		public Texture RegisterTexture(Bitmap bitmap, Bitmap alpha)
 		{
 			/*
 			 * Register the texture and return the newly created handle.
@@ -453,145 +435,6 @@ namespace LibRender2.Textures
 			handle.Ignore = true;
 			return false;
 		}
-
-		// --- save texture ---
-
-		/// <summary>Saves a texture to a file.</summary>
-		/// <param name="file">The file.</param>
-		/// <param name="texture">The texture.</param>
-		/// <remarks>The texture is always saved in PNG format.</remarks>
-		public void SaveTexture(string file, Texture texture)
-		{
-			Bitmap bitmap = new Bitmap(texture.Width, texture.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-			BitmapData data = bitmap.LockBits(new Rectangle(0, 0, texture.Width, texture.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
-			byte[] bytes = new byte[texture.Bytes.Length];
-
-			for (int i = 0; i < bytes.Length; i += 4)
-			{
-				bytes[i] = texture.Bytes[i + 2];
-				bytes[i + 1] = texture.Bytes[i + 1];
-				bytes[i + 2] = texture.Bytes[i];
-				bytes[i + 3] = texture.Bytes[i + 3];
-			}
-
-			Marshal.Copy(bytes, 0, data.Scan0, texture.Bytes.Length);
-			bitmap.UnlockBits(data);
-			bitmap.Save(file, ImageFormat.Png);
-			bitmap.Dispose();
-		}
-
-
-		// --- upsize texture ---
-
-		/// <summary>Resizes the specified texture to a power of two size and returns the result.</summary>
-		/// <param name="texture">The texture.</param>
-		/// <returns>The upsized texture, or the original if already a power of two size.</returns>
-		/// <exception cref="System.NotSupportedException">The bits per pixel in the texture is not supported.</exception>
-		public Texture ResizeToPowerOfTwo(Texture texture)
-		{
-			int width = RoundUpToPowerOfTwo(texture.Width);
-			int height = RoundUpToPowerOfTwo(texture.Height);
-
-			//HACK: Some routes use non-power of two textures which upscale to stupid numbers
-			//At least round down if we're over 1024 px....
-			if (width != texture.Width && width > 1024)
-			{
-				width /= 2;
-			}
-
-			if (height != texture.Height && height > 1024)
-			{
-				height /= 2;
-			}
-
-			return Resize(texture, width, height);
-		}
-
-		/// <summary>Resizes the specified texture to the specified width and height and returns the result.</summary>
-		/// <param name="texture">The texture.</param>
-		/// <param name="width">The new width.</param>
-		/// <param name="height">The new height.</param>
-		/// <returns>The resize texture, or the original if already of the specified size.</returns>
-		/// <exception cref="System.NotSupportedException">The bits per pixel in the source texture is not supported.</exception>
-		/// <exception cref="System.OverflowException">The resized texture would exceed the maximum possible size.</exception>
-		public static Texture Resize(Texture texture, int width, int height)
-		{
-			if (width == texture.Width && height == texture.Height)
-			{
-				return texture;
-			}
-
-			if (texture.PixelFormat != PixelFormat.RGBAlpha)
-			{
-				throw new NotSupportedException("The number of bits per pixel is not supported.");
-			}
-
-			TextureTransparencyType type = texture.GetTransparencyType();
-
-			/*
-			 * Convert the texture into a bitmap.
-			 * */
-			Bitmap bitmap = new Bitmap(texture.Width, texture.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-			BitmapData data = bitmap.LockBits(new Rectangle(0, 0, texture.Width, texture.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
-			Marshal.Copy(texture.Bytes, 0, data.Scan0, texture.Bytes.Length);
-			bitmap.UnlockBits(data);
-
-			/*
-			 * Scale the bitmap.
-			 * */
-			Bitmap scaledBitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-			Graphics graphics = Graphics.FromImage(scaledBitmap);
-			graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
-			graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-			graphics.DrawImage(bitmap, new Rectangle(0, 0, width, height), new Rectangle(0, 0, texture.Width, texture.Height), GraphicsUnit.Pixel);
-			graphics.Dispose();
-			bitmap.Dispose();
-
-			/*
-			 * Convert the bitmap into a texture.
-			 * */
-			data = scaledBitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, scaledBitmap.PixelFormat);
-			int newSize;
-
-			try
-			{
-				newSize = checked(4 * width * height);
-			}
-			catch (OverflowException)
-			{
-				throw new OverflowException("The resized texture would exceed the maximum possible size.");
-			}
-
-			byte[] bytes = new byte[newSize];
-			Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
-			scaledBitmap.UnlockBits(data);
-			scaledBitmap.Dispose();
-
-			/*
-			 * Ensure opaque and partially transparent
-			 * textures have valid alpha components.
-			 * */
-			if (type == TextureTransparencyType.Opaque)
-			{
-				for (int i = 3; i < bytes.Length; i += 4)
-				{
-					bytes[i] = 255;
-				}
-			}
-			else if (type == TextureTransparencyType.Partial)
-			{
-				for (int i = 3; i < bytes.Length; i += 4)
-				{
-					bytes[i] = bytes[i] < 128 ? (byte)0 : (byte)255;
-				}
-			}
-
-			Texture result = new Texture(width, height, PixelFormat.RGBAlpha, bytes, texture.Palette);
-			return result;
-		}
-
-
-		// --- unload texture ---
 
 		/// <summary>Unloads the specified texture from OpenGL if loaded.</summary>
 		/// <param name="handle">The handle to the registered texture.</param>
