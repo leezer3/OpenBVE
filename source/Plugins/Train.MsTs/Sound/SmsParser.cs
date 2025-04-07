@@ -233,7 +233,7 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Initial_Trigger:
 					// when initially appears, hence nothing other than StartLoop should be valid
-					newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.DisableTrigger });
+					newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.DisableTrigger });
 					ParseBlock(newBlock, ref currentSoundSet, ref car);
 					break;
 				case KujuTokenID.StartLoopRelease:
