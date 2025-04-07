@@ -1355,10 +1355,19 @@ namespace OpenBve.Formats.MsTs
 		ORTSSoundFileName, // ORTS specific for individual level crossing sounds
 		ORTSPantographToggle3,
 		ORTSPantographToggle4,
+		
+		
 		//needed for our block parser, so let's deliberately use values ORTS will not touch
 		Comment = uint.MinValue + 1,
 		// skip is found in SMS files, identical purpose to comment
 		Skip = Comment,
-		Train = uint.MinValue, 
-    }
+		Train = uint.MinValue,
+
+		/*
+		 * Incorrect spellings
+		 *
+		 */
+		AirBrakeHasLowPressureTest = AirBrakesHasLowPressureTest, // MT Class 86
+		TrainBrakesControllerMaxPressureDropInNormalAppication = TrainBrakesControllerMaxPressureDropInNormalApplication // MT Class 86
+	}
 }
