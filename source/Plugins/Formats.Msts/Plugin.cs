@@ -123,6 +123,12 @@ namespace OpenBve.Formats.MsTs
 		/// <remarks>The type of the new block will always match that of the base block</remarks>
 		public abstract Block ReadSubBlock(KujuTokenID newToken);
 
+		/// <summary>Reads the next sub-block from the enclosing block, skipping unexpected values</summary>
+		/// <param name="newToken">The expected token for the new block</param>
+		/// <returns>The new block</returns>
+		/// <remarks>The type of the new block will always match that of the base block</remarks>
+		public abstract Block GetSubBlock(KujuTokenID newToken);
+
 		/// <summary>Reads a sub-block from the enclosing block</summary>
 		/// <param name="validTokens">An array containing all possible valid tokens for the new block</param>
 		/// <returns>The new block</returns>
@@ -184,6 +190,11 @@ namespace OpenBve.Formats.MsTs
 			uint remainingBytes = myReader.ReadUInt32();
 			byte[] newBytes = myReader.ReadBytes((int) remainingBytes);
 			return new BinaryBlock(newBytes, newToken, this);
+		}
+
+		public override Block GetSubBlock(KujuTokenID newToken)
+		{
+			throw new NotImplementedException();
 		}
 
 		public override Block ReadSubBlock(KujuTokenID[] validTokens)
@@ -518,7 +529,7 @@ namespace OpenBve.Formats.MsTs
 		public override Block ReadSubBlock(KujuTokenID newToken)
 		{
 			startPosition = currentPosition;
-			string s = String.Empty;
+			string s = string.Empty;
 			while (currentPosition < myText.Length)
 			{
 				if (myText[currentPosition] == '(')
@@ -575,6 +586,18 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			throw new InvalidDataException("Unexpected end of block in " + Token);
+		}
+
+		public override Block GetSubBlock(KujuTokenID newToken)
+		{
+			int position = currentPosition;
+			while (double.TryParse(getNextValue(), out _))
+			{
+				position = currentPosition;
+			}
+
+			currentPosition = position;
+			return ReadSubBlock(newToken);
 		}
 
 		public override Block ReadSubBlock(KujuTokenID[] validTokens)
@@ -816,6 +839,16 @@ namespace OpenBve.Formats.MsTs
 			if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out float val))
 			{
 				return val;
+			}
+
+			// try ignoring numbers after the second decimal point if applicable
+			if (s.Split(',').Length > 2)
+			{
+				s = s.Substring(0, s.IndexOf(',', 0, 2));
+				if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
+				{
+					return val;
+				}
 			}
 
 			throw new InvalidDataException("Unable to parse " + s + " to a valid single in block " + Token);
