@@ -24,7 +24,8 @@ namespace Train.MsTs
 		/// <summary>Same functionality as ep_brake</summary>
 		ECP_Brake,
 		/// <summary>Air tank used for normal service brake applications. This is required for all brake systems.</summary>
-		Auxilary_Reservoir,
+		Auxiliary_Reservoir = 9,
+		Auxilary_Reservoir = 9,
 		/// <summary>Air tank used for emergency applications.</summary>
 		/// <remarks>This is optional.</remarks>
 		Emergency_Brake_Reservoir,
