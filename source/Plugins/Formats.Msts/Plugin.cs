@@ -515,7 +515,7 @@ namespace OpenBve.Formats.MsTs
 			{
 				try
 				{
-					Block sb = b.ReadSubBlock();
+					Block sb = b.ReadSubBlock(true);
 					readBlocks.Add(sb.Token, sb);
 				}
 				catch
@@ -681,8 +681,9 @@ namespace OpenBve.Formats.MsTs
 				currentPosition++;
 			}
 
-			if (string.IsNullOrWhiteSpace(s))
+			if (string.IsNullOrWhiteSpace(s) || s == ")")
 			{
+				// empty string or 'extra' closing brackets
 				if (!allowEmptyBlock)
 				{
 					throw new InvalidDataException("Empty sub-block");
