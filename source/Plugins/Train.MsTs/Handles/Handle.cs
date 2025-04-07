@@ -23,8 +23,8 @@ namespace Train.MsTs
 			HandleMaximum = (int)(block.ReadSingle() * 100);
 			HandleStep = (int)(block.ReadSingle() * 100);
 			HandleStartingPosition = (int)(block.ReadSingle() * 100);
-			
-			Block notchDescriptions = block.ReadSubBlock(KujuTokenID.NumNotches);
+			// some handles seem to have extra numbers here, I believe ignored by the MSTS parser
+			Block notchDescriptions = block.GetSubBlock(KujuTokenID.NumNotches);
 			ParseNotchDescriptionBlock(notchDescriptions);
 			return new VariableHandle(train, NotchDescriptions);
 		}

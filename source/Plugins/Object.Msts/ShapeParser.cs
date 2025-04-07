@@ -747,7 +747,7 @@ namespace Plugin
 					newBlock = block.ReadSubBlock(KujuTokenID.lod_controls);
 					ParseBlock(newBlock, ref shape);
 
-					if (block.Length() - block.Position() > 0)
+					if ((block is BinaryBlock && block.Length() - block.Position() > 0) || (block is TextualBlock && block.Length() - block.Position() > 3))
 					{
 						try
 						{
@@ -804,7 +804,7 @@ namespace Plugin
 					int lightStateCfgIdx = block.ReadInt32();
 					uint lightFlags = block.ReadUInt32();
 					int matrix2 = -1;
-					if ((block is BinaryBlock && block.Length() - block.Position() > 1) || (!(block is BinaryBlock) && block.Length() - block.Position() > 2))
+					if ((block is BinaryBlock && block.Length() - block.Position() > 1) || (block is TextualBlock && block.Length() - block.Position() > 2))
 					{
 						matrix2 = block.ReadInt32();
 					}
