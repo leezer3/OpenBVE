@@ -465,6 +465,7 @@ namespace Plugin
 		private static string currentFolder;
 
 		private static KeyframeAnimatedObject newResult;
+		internal static string wagonFileDirectory;
 
 		private static bool IsAnimated(string matrixName)
 		{
@@ -1123,6 +1124,13 @@ namespace Plugin
 								try
 								{
 									txF = OpenBveApi.Path.CombineFile(currentFolder, shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName);
+									if (!File.Exists(txF) && !string.IsNullOrEmpty(wagonFileDirectory))
+									{
+										// yuck: MSTS texture paths resolve relative to the WAG / ENG file if part of a train, even if the S file is not in the same directory
+										//		Only try this if we can't find the texture file by a simple relative combine
+										txF = OpenBveApi.Path.CombineFile(wagonFileDirectory, shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName);
+									}
+
 									if (!File.Exists(txF))
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Warning, true, "Texture file " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was not found.");
