@@ -30,6 +30,7 @@ namespace Train.MsTs
 		private readonly Dictionary<string, string> engineCache;
 		private string[] wagonFiles;
 		private double wheelRadius;
+		private bool exteriorLoaded = false;
 
 		internal WagonParser(Plugin Plugin)
 		{
@@ -459,11 +460,20 @@ namespace Train.MsTs
 						
 						if (Plugin.currentHost.Plugins[i].Object != null && Plugin.currentHost.Plugins[i].Object.CanLoadObject(objectFile))
 						{
-							Plugin.currentHost.Plugins[i].Object.LoadObject(objectFile, Encoding.Default, out UnifiedObject carObject);
-							car.LoadCarSections(carObject, false);
+							Plugin.currentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject carObject);
+							if (exteriorLoaded)
+							{
+								car.CarSections[car.CarSections.Length -1].AppendObject(Plugin.currentHost, car, carObject);
+							}
+							else
+							{
+								car.LoadCarSections(carObject, false);
+							}
 							break;
 						}
 					}
+
+					exteriorLoaded = true;
 					break;
 				case KujuTokenID.Size:
 					// Physical size of the car
@@ -692,6 +702,32 @@ namespace Train.MsTs
 						device.ParseBlock(newBlock);
 					}
 					vigilanceDevices.Add(device);
+					break;
+				case KujuTokenID.FreightAnim:
+					objectFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), block.ReadString());
+					if (!File.Exists(objectFile))
+					{
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle object file " + objectFile + " was not found");
+						break;
+					}
+
+					for (int i = 0; i < Plugin.currentHost.Plugins.Length; i++)
+					{
+
+						if (Plugin.currentHost.Plugins[i].Object != null && Plugin.currentHost.Plugins[i].Object.CanLoadObject(objectFile))
+						{
+							Plugin.currentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject freightObject);
+							if (exteriorLoaded)
+							{
+								car.CarSections[car.CarSections.Length - 1].AppendObject(Plugin.currentHost, car, freightObject);
+							}
+							else
+							{
+								car.LoadCarSections(freightObject, false);	
+							}
+							break;
+						}
+					}
 					break;
 			}
 			return true;
