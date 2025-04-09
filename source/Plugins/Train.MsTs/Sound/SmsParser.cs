@@ -329,7 +329,10 @@ namespace Train.MsTs
 					}
 					else
 					{
-						Plugin.currentHost.AddMessage(MessageType.Error, true, "MSTS Sound File " + soundFile + " was not found in SMS " + currentFile);
+						if (currentTrigger != SoundTrigger.Skip)
+						{
+							Plugin.currentHost.AddMessage(MessageType.Error, true, "MSTS Sound File " + soundFile + " was not found in SMS " + currentFile);
+						}
 					}
 					int checkDigit = block.ReadInt32();
 					if (checkDigit != -1)
