@@ -460,7 +460,7 @@ namespace Train.MsTs
 						
 						if (Plugin.currentHost.Plugins[i].Object != null && Plugin.currentHost.Plugins[i].Object.CanLoadObject(objectFile))
 						{
-							Plugin.currentHost.Plugins[i].Object.LoadObject(objectFile, Encoding.Default, out UnifiedObject carObject);
+							Plugin.currentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject carObject);
 							if (exteriorLoaded)
 							{
 								car.CarSections[car.CarSections.Length -1].AppendObject(Plugin.currentHost, car, carObject);
@@ -716,7 +716,7 @@ namespace Train.MsTs
 
 						if (Plugin.currentHost.Plugins[i].Object != null && Plugin.currentHost.Plugins[i].Object.CanLoadObject(objectFile))
 						{
-							Plugin.currentHost.Plugins[i].Object.LoadObject(objectFile, Encoding.Default, out UnifiedObject freightObject);
+							Plugin.currentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject freightObject);
 							if (exteriorLoaded)
 							{
 								car.CarSections[car.CarSections.Length - 1].AppendObject(Plugin.currentHost, car, freightObject);
