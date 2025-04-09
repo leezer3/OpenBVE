@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+//Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,10 +22,14 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-namespace TrainManager.Motor
+namespace OpenBve.Formats.Msts
 {
-    public enum EngineComponent
+	/// <summary>The types of wagon</summary>
+    public enum WagonType
     {
-		TractionMotor,
+		Engine,
+		Tender,
+		Carriage,
+		Freight
     }
 }

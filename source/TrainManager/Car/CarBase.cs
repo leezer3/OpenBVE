@@ -731,9 +731,13 @@ namespace TrainManager.Car
 			CameraRestriction.AbsoluteTopRight += Driver;
 			CameraRestriction.AbsoluteTopRight.Rotate(new Transformation(d, Up, s));
 			CameraRestriction.AbsoluteTopRight.Translate(p);
-			if (cs >= 0 && CarSections[cs].Groups[0].Keyframes != null)
+			if (cs >= 0)
 			{
-				CarSections[cs].Groups[0].Keyframes.Update(TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+				CarSections[cs].Groups[0].Keyframes?.Update(TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+				if (CarSections[cs].CurrentAdditionalGroup + 1 < CarSections[cs].Groups.Length)
+				{
+					CarSections[cs].Groups[CarSections[cs].CurrentAdditionalGroup + 1].Keyframes?.Update(TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+				}
 			}
 		}
 
@@ -847,7 +851,16 @@ namespace TrainManager.Car
 		public void UpdateTopplingCantAndSpring(double TimeElapsed)
 		{
 			// get direction, up and side vectors
-			Vector3 d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+			Vector3 d;
+			if (FrontAxle.Follower.WorldPosition == RearAxle.Follower.WorldPosition)
+			{
+				d = FrontAxle.Follower.WorldPosition;
+			}
+			else
+			{
+				d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+			}
+				
 			Vector3 s;
 			{
 				double t = 1.0 / d.Norm();
@@ -1174,17 +1187,26 @@ namespace TrainManager.Car
 					    !baseTrain.Handles.EmergencyBrake.Actual)
 					{
 						// target acceleration
-						if (baseTrain.Handles.Power.Actual - 1 < Specs.AccelerationCurves.Length)
+						if (Specs.AccelerationCurves != null && Specs.AccelerationCurves.Length > 0 && Specs.AccelerationCurves[0] is MSTSAccelerationCurve curve)
 						{
-							// Load factor is a constant 1.0 for anything prior to BVE5
-							// This will need to be changed when the relevant branch is merged in
-							a = Specs.AccelerationCurves[baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)baseTrain.Handles.Reverser.Actual * CurrentSpeed, 1.0);
+							// single acceleration curve
+							a = curve.GetAccelerationOutput((double)baseTrain.Handles.Reverser.Actual * CurrentSpeed);
 						}
 						else
 						{
-							a = 0.0;
+							// acceleration curve per power notch
+							if (Specs.AccelerationCurves != null && baseTrain.Handles.Power.Actual - 1 < Specs.AccelerationCurves.Length)
+							{
+								// Load factor is a constant 1.0 for anything prior to BVE5
+								// This will need to be changed when the relevant branch is merged in
+								a = Specs.AccelerationCurves[baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)baseTrain.Handles.Reverser.Actual * CurrentSpeed);
+							}
+							else
+							{
+								a = 0.0;
+							}
 						}
-
+						
 						// readhesion device
 						if (ReAdhesionDevice is BveReAdhesionDevice device)
 						{
@@ -1225,7 +1247,7 @@ namespace TrainManager.Car
 
 						Specs.MaxMotorAcceleration = a;
 						// Update constant speed device
-						this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
+						this.ConstSpeed?.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
 
 						// finalize
 						if (wheelspin != 0.0) a = 0.0;
@@ -1280,7 +1302,7 @@ namespace TrainManager.Car
 				}
 			}
 
-			ReAdhesionDevice.Update(TimeElapsed);
+			ReAdhesionDevice?.Update(TimeElapsed);
 			// brake
 			bool wheellock = wheelspin == 0.0 & Derailed;
 			if (!Derailed & wheelspin == 0.0)
