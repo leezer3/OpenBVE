@@ -294,11 +294,7 @@ namespace TrainManager.Car
 								animatedObject.Reverse();
 							}
 
-							if (CarSections[i].Groups[0].Keyframes != null)
-							{
-								CarSections[i].Groups[0].Keyframes.Reverse();
-							}
-							
+							CarSections[i].Groups[0].Keyframes?.Reverse();
 						}
 						
 					}
@@ -735,9 +731,13 @@ namespace TrainManager.Car
 			CameraRestriction.AbsoluteTopRight += Driver;
 			CameraRestriction.AbsoluteTopRight.Rotate(new Transformation(d, Up, s));
 			CameraRestriction.AbsoluteTopRight.Translate(p);
-			if (cs >= 0 && CarSections[cs].Groups[0].Keyframes != null)
+			if (cs >= 0)
 			{
-				CarSections[cs].Groups[0].Keyframes.Update(TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+				CarSections[cs].Groups[0].Keyframes?.Update(TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+				if (CarSections[cs].CurrentAdditionalGroup + 1 < CarSections[cs].Groups.Length)
+				{
+					CarSections[cs].Groups[CarSections[cs].CurrentAdditionalGroup + 1].Keyframes?.Update(TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+				}
 			}
 		}
 
