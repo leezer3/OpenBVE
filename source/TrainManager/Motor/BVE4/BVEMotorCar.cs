@@ -12,7 +12,7 @@ namespace TrainManager.Motor
 
 		public override void Update(double timeElapsed)
 		{
-			MotorSounds.Update(timeElapsed);
+			MotorSounds?.Update(timeElapsed);
 		}
 
 		public override double CurrentPower => CurrentAcceleration / MaximumPossibleAcceleration;
