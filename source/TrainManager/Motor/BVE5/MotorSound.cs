@@ -24,12 +24,12 @@ namespace TrainManager.Motor
 
 		public override void Update(double TimeElapsed)
 		{
-			if (!Car.Engine.ProvidesPower)
+			if (!Car.TractionModel.ProvidesPower)
 			{
 				return;
 			}
 			double speed = Math.Abs(Car.Specs.PerceivedSpeed) * 3.6; // km/h
-			int ndir = Math.Sign(Car.Engine.CurrentAcceleration);
+			int ndir = Math.Sign(Car.TractionModel.CurrentAcceleration);
 
 			if (ndir == 1)
 			{
@@ -77,11 +77,11 @@ namespace TrainManager.Motor
 							 * Now multiply that by the actual acceleration as opposed to the max acceleration to find the absolute
 							 * gain
 							 */
-							if (Car.Engine.MaximumPossibleAcceleration != 0.0)
+							if (Car.TractionModel.MaximumPossibleAcceleration != 0.0)
 							{
-								double cur = Car.Engine.CurrentAcceleration;
+								double cur = Car.TractionModel.CurrentAcceleration;
 								if (cur < 0.0) cur = 0.0;
-								gain *= Math.Pow(cur / Car.Engine.MaximumPossibleAcceleration, 0.25);
+								gain *= Math.Pow(cur / Car.TractionModel.MaximumPossibleAcceleration, 0.25);
 							}
 
 							if (SoundSources[i] != null && SoundSources[i].State != SoundSourceState.Stopped)
@@ -144,11 +144,11 @@ namespace TrainManager.Motor
 							 * Now multiply that by the actual acceleration as opposed to the max acceleration to find the absolute
 							 * gain
 							 */
-							if (Car.Engine.MaximumPossibleAcceleration != 0.0)
+							if (Car.TractionModel.MaximumPossibleAcceleration != 0.0)
 							{
-								double cur = Car.Engine.CurrentAcceleration;
+								double cur = Car.TractionModel.CurrentAcceleration;
 								if (cur < 0.0) cur = 0.0;
-								gain *= Math.Pow(cur / Car.Engine.MaximumPossibleAcceleration, 0.25);
+								gain *= Math.Pow(cur / Car.TractionModel.MaximumPossibleAcceleration, 0.25);
 							}
 
 							if (SoundSources[i] != null && SoundSources[i].State != SoundSourceState.Stopped)

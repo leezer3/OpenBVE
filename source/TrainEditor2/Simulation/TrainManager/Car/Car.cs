@@ -52,8 +52,8 @@ namespace TrainEditor2.Simulation.TrainManager
 				}
 				
 				// motor sound
-				Engine.MotorSounds.Position = center;
-				if (Engine.MotorSounds is BVEMotorSound motorSound)
+				TractionModel.MotorSounds.Position = center;
+				if (TractionModel.MotorSounds is BVEMotorSound motorSound)
 				{
 					for (int i = 0; i < motorSound.Tables.Length; i++)
 					{

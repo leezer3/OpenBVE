@@ -151,12 +151,12 @@ namespace Train.OpenBve
 								finalAccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone();
 							}
 
-							Train.Cars[Car].Engine = new BVEMotorCar(Train.Cars[Car], finalAccelerationCurves);
-							Train.Cars[Car].Engine.MaximumPossibleAcceleration = Plugin.MaximumAcceleration;
+							Train.Cars[Car].TractionModel = new BVEMotorCar(Train.Cars[Car], finalAccelerationCurves);
+							Train.Cars[Car].TractionModel.MaximumPossibleAcceleration = Plugin.MaximumAcceleration;
 						}
 						else
 						{
-							Train.Cars[Car].Engine = new BVETrailerCar(Train.Cars[Car]);
+							Train.Cars[Car].TractionModel = new BVETrailerCar(Train.Cars[Car]);
 						}
 						break;
 					case "mass":
@@ -529,7 +529,7 @@ namespace Train.OpenBve
 													break;
 											}
 										}
-										Train.Cars[Car].Engine.MotorSounds = Bve5MotorSoundTableParser.Parse(Train.Cars[Car], powerFreq, powerVol, brakeFreq, brakeVol);
+										Train.Cars[Car].TractionModel.MotorSounds = Bve5MotorSoundTableParser.Parse(Train.Cars[Car], powerFreq, powerVol, brakeFreq, brakeVol);
 										break;
 								}
 							}
@@ -543,11 +543,11 @@ namespace Train.OpenBve
 						 */
 						copyAccelerationCurves = false;
 						AccelerationCurve[] curves = ParseAccelerationNode(c, fileName);
-						if (Train.Cars[Car].Engine is BVEMotorCar || Train.Cars[Car].Engine is BVETrailerCar)
+						if (Train.Cars[Car].TractionModel is BVEMotorCar || Train.Cars[Car].TractionModel is BVETrailerCar)
 						{
-							AbstractMotorSound motor = Train.Cars[Car].Engine.MotorSounds;
-							Train.Cars[Car].Engine = new BVEMotorCar(Train.Cars[Car], curves);
-							Train.Cars[Car].Engine.MotorSounds = motor;
+							AbstractMotorSound motor = Train.Cars[Car].TractionModel.MotorSounds;
+							Train.Cars[Car].TractionModel = new BVEMotorCar(Train.Cars[Car], curves);
+							Train.Cars[Car].TractionModel.MotorSounds = motor;
 						}
 						break;
 					case "power":
@@ -564,11 +564,11 @@ namespace Train.OpenBve
 									case "accelerationcurves":
 										copyAccelerationCurves = false;
 										curves = ParseAccelerationNode(c, fileName);
-										if (Train.Cars[Car].Engine is BVEMotorCar || Train.Cars[Car].Engine is BVETrailerCar)
+										if (Train.Cars[Car].TractionModel is BVEMotorCar || Train.Cars[Car].TractionModel is BVETrailerCar)
 										{
-											AbstractMotorSound motor = Train.Cars[Car].Engine.MotorSounds;
-											Train.Cars[Car].Engine = new BVEMotorCar(Train.Cars[Car], curves);
-											Train.Cars[Car].Engine.MotorSounds = motor;
+											AbstractMotorSound motor = Train.Cars[Car].TractionModel.MotorSounds;
+											Train.Cars[Car].TractionModel = new BVEMotorCar(Train.Cars[Car], curves);
+											Train.Cars[Car].TractionModel.MotorSounds = motor;
 										}
 										break;
 								}
@@ -792,8 +792,8 @@ namespace Train.OpenBve
 									break;
 							}
 
-							Train.Cars[Car].Engine = new DieselEngine(Train.Cars[Car], Plugin.AccelerationCurves, idleRPM, minRPM, maxRPM, rpmChangeUpRate, rpmChangeDownRate, idleFuelUse, maxPowerFuelUse);
-							Train.Cars[Car].Engine.FuelTank = new FuelTank(fuelCapacity, 0, fuelCapacity);
+							Train.Cars[Car].TractionModel = new DieselEngine(Train.Cars[Car], Plugin.AccelerationCurves, idleRPM, minRPM, maxRPM, rpmChangeUpRate, rpmChangeDownRate, idleFuelUse, maxPowerFuelUse);
+							Train.Cars[Car].TractionModel.FuelTank = new FuelTank(fuelCapacity, 0, fuelCapacity);
 						}
 						break;
 				}

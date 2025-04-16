@@ -102,7 +102,7 @@ namespace Train.OpenBve
 				train.Cars[i].Suspension.SpringL = new CarSound(Plugin.CurrentHost, train.TrainFolder, "SpringL.wav", SoundCfgParser.smallRadius, left);
 				train.Cars[i].Suspension.SpringR = new CarSound(Plugin.CurrentHost, train.TrainFolder, "SpringR.wav", SoundCfgParser.smallRadius, right);
 				// motor sound
-				if (train.Cars[i].Engine.MotorSounds == null)
+				if (train.Cars[i].TractionModel.MotorSounds == null)
 				{
 					BVEMotorSound motorSound = new BVEMotorSound(train.Cars[i], 18.0, Plugin.MotorSoundTables);
 					motorSound.Position = center;
@@ -119,7 +119,7 @@ namespace Train.OpenBve
 						}
 					}
 
-					train.Cars[i].Engine.MotorSounds = motorSound;
+					train.Cars[i].TractionModel.MotorSounds = motorSound;
 				}
 				else
 				{

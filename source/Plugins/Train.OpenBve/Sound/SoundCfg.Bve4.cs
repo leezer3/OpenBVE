@@ -324,7 +324,7 @@ namespace Train.OpenBve
 						train.SafetySystems.PassAlarm.Sound = new CarSound(Plugin.CurrentHost, halt, SoundCfgParser.tinyRadius, panel);
 						for (int c = 0; c < train.Cars.Length; c++)
 						{
-							if (train.Cars[c].Engine.ProvidesPower | c == train.DriverCar)
+							if (train.Cars[c].TractionModel.ProvidesPower | c == train.DriverCar)
 							{
 								train.Cars[c].Sounds.Loop = new CarSound(Plugin.CurrentHost, noise, SoundCfgParser.mediumRadius, center);
 							}
@@ -376,7 +376,7 @@ namespace Train.OpenBve
 			// Assign motor sounds to appropriate cars
 			for (int c = 0; c < train.Cars.Length; c++)
 			{
-				if (train.Cars[c].Engine.MotorSounds == null)
+				if (train.Cars[c].TractionModel.MotorSounds == null)
 				{
 					BVEMotorSound motorSound = new BVEMotorSound(train.Cars[c], 18.0, Plugin.MotorSoundTables);
 					motorSound.Position = center;
@@ -395,7 +395,7 @@ namespace Train.OpenBve
 						}
 					}
 
-					train.Cars[c].Engine.MotorSounds = motorSound;
+					train.Cars[c].TractionModel.MotorSounds = motorSound;
 				}
 				else
 				{

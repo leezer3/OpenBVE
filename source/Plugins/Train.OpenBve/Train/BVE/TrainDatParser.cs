@@ -1247,7 +1247,7 @@ namespace Train.OpenBve
 					}
 				}
 
-				if (Train.Cars[i].Engine.ProvidesPower || Train.IsPlayerTrain && i == Train.DriverCar || trainBrakeType == BrakeSystemType.ElectricCommandBrake)
+				if (Train.Cars[i].TractionModel.ProvidesPower || Train.IsPlayerTrain && i == Train.DriverCar || trainBrakeType == BrakeSystemType.ElectricCommandBrake)
 				{
 					Train.Cars[i].CarBrake.brakeType = BrakeType.Main;
 				}
@@ -1419,16 +1419,16 @@ namespace Train.OpenBve
 				Train.Cars[i].ConstSpeed = new CarConstSpeed(Train.Cars[i]);
 				Train.Cars[i].HoldBrake = new CarHoldBrake(Train.Cars[i]);
 				Train.Cars[i].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
-				if (Train.Cars[i].Engine.ProvidesPower) {
+				if (Train.Cars[i].TractionModel.ProvidesPower) {
 					// motor car
 					Train.Cars[i].EmptyMass = MotorCarMass;
 					Train.Cars[i].CargoMass = 0;
-					Array.Resize(ref Train.Cars[i].Engine.AccelerationCurves, AccelerationCurves.Length);
+					Array.Resize(ref Train.Cars[i].TractionModel.AccelerationCurves, AccelerationCurves.Length);
 					for (int j = 0; j < AccelerationCurves.Length; j++)
 					{
-						Train.Cars[i].Engine.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
+						Train.Cars[i].TractionModel.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
 					}
-					Train.Cars[i].Engine.MaximumPossibleAcceleration = MaximumAcceleration;
+					Train.Cars[i].TractionModel.MaximumPossibleAcceleration = MaximumAcceleration;
 				} else {
 					// trailer car
 					Train.Cars[i].EmptyMass = TrailerCarMass;
