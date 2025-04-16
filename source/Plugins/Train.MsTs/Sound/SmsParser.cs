@@ -4,6 +4,7 @@ using System.IO;
 using System;
 using System.Text;
 using OpenBveApi.Interface;
+using OpenBveApi.Runtime;
 using OpenBveApi.World;
 using SharpCompress.Compressors;
 using TrainManager.Car;
@@ -118,9 +119,6 @@ namespace Train.MsTs
 			internal bool Activation;
 			internal double ActivationDistance;
 			internal double DeactivationDistance;
-			internal bool CamCam;
-			internal bool PassengerCam;
-			internal bool ExternalCam;
 			internal double Priority;
 
 			internal SoundTrigger currentTrigger;
@@ -192,9 +190,33 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.ExternalCam:
+					if (currentSoundSet.Activation)
+					{
+						currentSoundStream.ActivationCameraModes |= CameraViewMode.Exterior;
+						currentSoundStream.ActivationCameraModes |= CameraViewMode.Track;
+						currentSoundStream.ActivationCameraModes |= CameraViewMode.FlyBy;
+						currentSoundStream.ActivationCameraModes |= CameraViewMode.FlyByZooming;
+					}
+					else
+					{
+						currentSoundStream.DeactivationCameraModes |= CameraViewMode.Exterior;
+						currentSoundStream.DeactivationCameraModes |= CameraViewMode.Track;
+						currentSoundStream.DeactivationCameraModes |= CameraViewMode.FlyBy;
+						currentSoundStream.DeactivationCameraModes |= CameraViewMode.FlyByZooming;
+					}
+					break;
 				case KujuTokenID.CabCam:
+					if (currentSoundSet.Activation)
+					{
+						currentSoundStream.ActivationCameraModes |= CameraViewMode.Interior;
+					}
+					else
+					{
+						currentSoundStream.DeactivationCameraModes |= CameraViewMode.Interior;
+					}
+					break;
 				case KujuTokenID.PassengerCam:
-					currentSoundSet.ExternalCam = currentSoundSet.Activation;
+					// FIXME: Passenger cam not currently distinguished from interior cam
 					break;
 				case KujuTokenID.Streams:
 					// each stream represents a unique sound
@@ -282,7 +304,7 @@ namespace Train.MsTs
 						{
 							case SoundTrigger.VariableControlled:
 								// hack
-								Plugin.currentHost.RegisterSound(soundFile, 5.0, out var soundHandle);
+								Plugin.currentHost.RegisterSound(soundFile, currentSoundSet.ActivationDistance, out var soundHandle);
 								switch (currentSoundSet.variableTriggerType)
 								{
 									case KujuTokenID.Speed_Inc_Past:
