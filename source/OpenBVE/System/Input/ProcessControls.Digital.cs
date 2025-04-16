@@ -580,9 +580,9 @@ namespace OpenBve
 					case Translations.Command.RaisePantograph:
 						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
 						{
-							if (TrainManager.PlayerTrain.Cars[i].Engine is ElectricEngine)
+							if (TrainManager.PlayerTrain.Cars[i].TractionModel is ElectricEngine)
 							{
-								Pantograph pantograph = TrainManager.PlayerTrain.Cars[i].Engine.Components[EngineComponent.Pantograph] as Pantograph;
+								Pantograph pantograph = TrainManager.PlayerTrain.Cars[i].TractionModel.Components[EngineComponent.Pantograph] as Pantograph;
 								pantograph.Raise();
 							}
 						}
@@ -591,9 +591,9 @@ namespace OpenBve
 					case Translations.Command.LowerPantograph:
 						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
 						{
-							if (TrainManager.PlayerTrain.Cars[i].Engine is ElectricEngine)
+							if (TrainManager.PlayerTrain.Cars[i].TractionModel is ElectricEngine)
 							{
-								Pantograph pantograph = TrainManager.PlayerTrain.Cars[i].Engine.Components[EngineComponent.Pantograph] as Pantograph;
+								Pantograph pantograph = TrainManager.PlayerTrain.Cars[i].TractionModel.Components[EngineComponent.Pantograph] as Pantograph;
 								pantograph.Lower();
 							}
 						}
