@@ -45,7 +45,6 @@ namespace Train.MsTs
 			exteriorLoaded = false;
 			wheelRadiusNum = 1;
 			wagonFiles = Directory.GetFiles(trainSetDirectory, isEngine ? "*.eng" : "*.wag", SearchOption.AllDirectories);
-			Car.Specs.IsMotorCar = false;
 			Car.Wheels = new Dictionary<string, Wheels>();
 			currentEngineType = EngineType.NoEngine;
 			/*
@@ -62,7 +61,6 @@ namespace Train.MsTs
 			 */
 			if (isEngine)
 			{
-				Car.Specs.IsMotorCar = true;
 				if (engineCache.ContainsKey(wagonName))
 				{
 					ReadWagonData(engineCache[wagonName], ref wagonName, true, ref Car, ref train);
@@ -77,6 +75,10 @@ namespace Train.MsTs
 						}
 					}
 				}
+			}
+			else
+			{
+				Car.TractionModel = new BVETrailerCar(Car);
 			}
 			/*
 			 * We've now found the engine properties-
@@ -95,42 +97,38 @@ namespace Train.MsTs
 					{
 						break;
 					}
-				}	
+				}
 			}
 
-			Car.Specs.AccelerationCurveMaximum = maxForce / Car.CurrentMass;
 			// as properties may not be in order, set this stuff last
 			if (isEngine)
 			{
-				Car.Specs.AccelerationCurves = new AccelerationCurve[]
-				{
-					new MSTSAccelerationCurve(Car, maxForce, maxContinuousForce, maxVelocity)
-				};
 				// FIXME: Default BVE values
 				Car.Specs.JerkPowerUp = 10.0;
 				Car.Specs.JerkPowerDown = 10.0;
-				Car.ReAdhesionDevice = new BveReAdhesionDevice(Car, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
+				
 				switch (currentEngineType)
 				{
 					case EngineType.Diesel:
-						Car.Engine = new DieselEngine(Car, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
-						Car.Engine.FuelTank = new FuelTank(dieselCapacity, 0, dieselCapacity);
-						Car.Engine.IsRunning = true;
+						Car.TractionModel = new DieselEngine(Car, new AccelerationCurve[] { new MSTSAccelerationCurve(Car, maxForce, maxContinuousForce, maxVelocity) }, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
+						Car.TractionModel.FuelTank = new FuelTank(dieselCapacity, 0, dieselCapacity);
+						Car.TractionModel.IsRunning = true;
 
 						if (maxBrakeAmps > 0 && maxEngineAmps > 0)
 						{
-							Car.Engine.Components.Add(EngineComponent.RegenerativeTractionMotor, new RegenerativeTractionMotor(Car.Engine, maxEngineAmps, maxBrakeAmps));
+							Car.TractionModel.Components.Add(EngineComponent.RegenerativeTractionMotor, new RegenerativeTractionMotor(Car.TractionModel, maxEngineAmps, maxBrakeAmps));
 						}
 						else if (maxEngineAmps > 0)
 						{
-							Car.Engine.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Car.Engine, maxEngineAmps));
+							Car.TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Car.TractionModel, maxEngineAmps));
 						}
 						break;
 					case EngineType.Electric:
-						Car.Engine = new ElectricEngine(Car);
-						Car.Engine.Components.Add(EngineComponent.Pantograph, new Pantograph(Car.Engine));
+						Car.TractionModel = new ElectricEngine(Car, new AccelerationCurve[] { new MSTSAccelerationCurve(Car, maxForce, maxContinuousForce, maxVelocity) });
+						Car.TractionModel.Components.Add(EngineComponent.Pantograph, new Pantograph(Car.TractionModel));
 						break;
 				}
+				Car.ReAdhesionDevice = new BveReAdhesionDevice(Car, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
 			}
 		}
 
