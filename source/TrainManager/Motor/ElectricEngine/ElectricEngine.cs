@@ -29,7 +29,7 @@ using TrainManager.Handles;
 
 namespace TrainManager.Motor
 {
-	public class ElectricEngine : AbstractEngine
+	public class ElectricEngine : TractionModel
 	{
 		public ElectricEngine(CarBase car) : base(car)
 		{

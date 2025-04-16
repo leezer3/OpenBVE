@@ -369,7 +369,7 @@ namespace Train.OpenBve
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An empty list of motor sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (!car.Specs.IsMotorCar)
+									if (!car.TractionModel.ProvidesPower)
 									{
 										break;
 									}
@@ -379,7 +379,7 @@ namespace Train.OpenBve
 										TrainXmlParser.MotorSoundXMLParsed = new bool[Train.Cars.Length];
 									}
 									TrainXmlParser.MotorSoundXMLParsed[car.Index] = true;
-									ParseMotorSoundTableNode(c, car, ref car.Sounds.Motor, center, SoundCfgParser.mediumRadius);
+									ParseMotorSoundTableNode(c, car, ref car.TractionModel.MotorSounds, center, SoundCfgParser.mediumRadius);
 									break;
 								case SoundCfgSection.PilotLamp:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())

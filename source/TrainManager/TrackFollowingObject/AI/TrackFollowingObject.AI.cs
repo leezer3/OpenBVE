@@ -115,7 +115,7 @@ namespace TrainManager.Trains
 				Car.CurrentSpeed = Train.CurrentSpeed;
 				Car.Specs.PerceivedSpeed = Train.CurrentSpeed;
 				Car.Specs.Acceleration = Train.Specs.CurrentAverageAcceleration;
-				Car.Specs.MotorAcceleration = Train.Specs.CurrentAverageAcceleration;
+				Car.TractionModel.CurrentAcceleration = Train.Specs.CurrentAverageAcceleration;
 			}
 
 			CurrentPosition = NewPosition;

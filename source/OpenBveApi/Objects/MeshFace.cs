@@ -80,6 +80,9 @@ namespace OpenBveApi.Objects
 			NormalsIboStartIndex = 0;
 		}
 
+		/// <summary>Appends an array of verticies to the MeshFace</summary>
+		/// <param name="Vertices">The verticies to append</param>
+		/// <remarks>This does not check the MeshFace for duplicates</remarks>
 		public void AppendVerticies(int[] Vertices)
 		{
 			int oldLength = this.Vertices.Length;

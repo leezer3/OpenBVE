@@ -373,12 +373,12 @@ namespace OpenBve {
 						if (Train != null) {
 							Function.Stack[s] = 0.0;
 							for (int j = 0; j < Train.Cars.Length; j++) {
-								if (Train.Cars[j].Specs.IsMotorCar) {
+								if (Train.Cars[j].TractionModel.ProvidesPower) {
 									// hack: MotorAcceleration does not distinguish between forward/backward
-									if (Train.Cars[j].Specs.MotorAcceleration < 0.0) {
-										Function.Stack[s] = Train.Cars[j].Specs.MotorAcceleration * Math.Sign(Train.Cars[j].CurrentSpeed);
-									} else if (Train.Cars[j].Specs.MotorAcceleration > 0.0) {
-										Function.Stack[s] = Train.Cars[j].Specs.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
+									if (Train.Cars[j].TractionModel.CurrentAcceleration < 0.0) {
+										Function.Stack[s] = Train.Cars[j].TractionModel.CurrentAcceleration * Math.Sign(Train.Cars[j].CurrentSpeed);
+									} else if (Train.Cars[j].TractionModel.CurrentAcceleration > 0.0) {
+										Function.Stack[s] = Train.Cars[j].TractionModel.CurrentAcceleration * (double)Train.Handles.Reverser.Actual;
 									} else {
 										Function.Stack[s] = 0.0;
 									}
@@ -395,10 +395,10 @@ namespace OpenBve {
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
 								// hack: MotorAcceleration does not distinguish between forward/backward
-								if (Train.Cars[j].Specs.MotorAcceleration < 0.0) {
-									Function.Stack[s - 1] = Train.Cars[j].Specs.MotorAcceleration * Math.Sign(Train.Cars[j].CurrentSpeed);
-								} else if (Train.Cars[j].Specs.MotorAcceleration > 0.0) {
-									Function.Stack[s - 1] = Train.Cars[j].Specs.MotorAcceleration * (double)Train.Handles.Reverser.Actual;
+								if (Train.Cars[j].TractionModel.CurrentAcceleration < 0.0) {
+									Function.Stack[s - 1] = Train.Cars[j].TractionModel.CurrentAcceleration * Math.Sign(Train.Cars[j].CurrentSpeed);
+								} else if (Train.Cars[j].TractionModel.CurrentAcceleration > 0.0) {
+									Function.Stack[s - 1] = Train.Cars[j].TractionModel.CurrentAcceleration * (double)Train.Handles.Reverser.Actual;
 								} else {
 									Function.Stack[s - 1] = 0.0;
 								}
@@ -1697,9 +1697,9 @@ namespace OpenBve {
 							bool isRunning = false;
 							for (int k = 0; k < Train.Cars.Length; k++)
 							{
-								if (Train.Cars[k].Specs.IsMotorCar && Train.Cars[k].Engine != null)
+								if (Train.Cars[k].TractionModel != null)
 								{
-									isRunning = Train.Cars[k].Engine.IsRunning;
+									isRunning = Train.Cars[k].TractionModel.IsRunning;
 								}
 
 								if (isRunning)
@@ -1721,7 +1721,7 @@ namespace OpenBve {
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length)
 							{
-								if (Train.Cars[j].Specs.IsMotorCar && Train.Cars[j].Engine != null && Train.Cars[j].Engine.IsRunning)
+								if (Train.Cars[j].TractionModel != null && Train.Cars[j].TractionModel.IsRunning)
 								{
 									Function.Stack[s - 1] = 1.0;
 								}
@@ -1748,7 +1748,7 @@ namespace OpenBve {
 							double rpmTotal = 0;
 							for (int k = 0; k < Train.Cars.Length; k++)
 							{
-								if (Train.Cars[k].Specs.IsMotorCar && Train.Cars[k].Engine is DieselEngine dieselEngine)
+								if (Train.Cars[k].TractionModel is DieselEngine dieselEngine)
 								{
 									numEngines++;
 									rpmTotal += dieselEngine.CurrentRPM;
@@ -1776,7 +1776,7 @@ namespace OpenBve {
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length)
 							{
-								if (Train.Cars[j].Specs.IsMotorCar && Train.Cars[j].Engine is DieselEngine dieselEngine)
+								if (Train.Cars[j].TractionModel is DieselEngine dieselEngine)
 								{
 									Function.Stack[s - 1] = dieselEngine.CurrentRPM;
 								}
@@ -1803,7 +1803,7 @@ namespace OpenBve {
 							double fuelTotal = 0;
 							for (int k = 0; k < Train.Cars.Length; k++)
 							{
-								if (Train.Cars[k].Specs.IsMotorCar && Train.Cars[k].Engine is DieselEngine dieselEngine)
+								if (Train.Cars[k].TractionModel is DieselEngine dieselEngine)
 								{
 									totalTanks++;
 									fuelTotal += dieselEngine.FuelTank.CurrentLevel;
@@ -1831,7 +1831,7 @@ namespace OpenBve {
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length)
 							{
-								if (Train.Cars[j].Specs.IsMotorCar && Train.Cars[j].Engine is DieselEngine dieselEngine)
+								if (Train.Cars[j].TractionModel is DieselEngine dieselEngine)
 								{
 									Function.Stack[s - 1] = dieselEngine.FuelTank.CurrentLevel;
 								}
@@ -1858,7 +1858,7 @@ namespace OpenBve {
 							double ampsTotal = 0;
 							for (int k = 0; k < Train.Cars.Length; k++)
 							{
-								if (Train.Cars[k].Specs.IsMotorCar && Train.Cars[k].Engine is DieselEngine dieselEngine)
+								if (Train.Cars[k].TractionModel is DieselEngine dieselEngine)
 								{
 									if (dieselEngine.Components[EngineComponent.TractionMotor] is TractionMotor t)
 									{
@@ -1894,7 +1894,7 @@ namespace OpenBve {
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length)
 							{
-								if (Train.Cars[j].Specs.IsMotorCar && Train.Cars[j].Engine is DieselEngine dieselEngine)
+								if (Train.Cars[j].TractionModel is DieselEngine dieselEngine)
 								{
 									if (dieselEngine.Components[EngineComponent.TractionMotor] is TractionMotor t)
 									{
