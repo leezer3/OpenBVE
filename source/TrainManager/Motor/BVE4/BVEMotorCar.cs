@@ -3,7 +3,7 @@ using TrainManager.Power;
 
 namespace TrainManager.Motor
 {
-	public class BVEMotorCar : AbstractEngine
+	public class BVEMotorCar : TractionModel
 	{
 		public BVEMotorCar(CarBase car, AccelerationCurve[] accelerationCurves) : base(car, accelerationCurves, true)
 		{

@@ -29,7 +29,7 @@ using TrainManager.Power;
 namespace TrainManager.Motor
 {
 	/// <summary>An abstract engine</summary>
-    public abstract class AbstractEngine
+    public abstract class TractionModel
     {
 		/// <summary>Holds a reference to the base car</summary>
 	    internal readonly CarBase BaseCar;
@@ -56,7 +56,7 @@ namespace TrainManager.Motor
 
 
 		/// <summary>Creates a new AbstractEngine</summary>
-		protected AbstractEngine(CarBase car, AccelerationCurve[] accelerationCurves, bool providesPower)
+		protected TractionModel(CarBase car, AccelerationCurve[] accelerationCurves, bool providesPower)
 	    {
 		    BaseCar = car;
 			AccelerationCurves = accelerationCurves;

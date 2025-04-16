@@ -2,7 +2,7 @@
 
 namespace TrainManager.Motor
 {
-	public class BVETrailerCar : AbstractEngine
+	public class BVETrailerCar : TractionModel
 	{
 		public BVETrailerCar(CarBase car) : base(car, null, false)
 		{

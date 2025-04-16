@@ -27,9 +27,9 @@ namespace TrainManager.Motor
     public abstract class AbstractComponent
     {
 		/// <summary>Holds a reference to the base engine</summary>
-	    internal AbstractEngine baseEngine;
+	    internal TractionModel baseEngine;
 
-	    protected AbstractComponent(AbstractEngine engine)
+	    protected AbstractComponent(TractionModel engine)
 	    {
 			baseEngine = engine;
 	    }

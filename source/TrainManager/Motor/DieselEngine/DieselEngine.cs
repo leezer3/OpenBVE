@@ -29,7 +29,7 @@ using TrainManager.Power;
 
 namespace TrainManager.Motor
 {
-    public class DieselEngine : AbstractEngine
+    public class DieselEngine : TractionModel
     {
 		/// <summary>The RPM at maximum power</summary>
 	    public readonly double MaxRPM;
