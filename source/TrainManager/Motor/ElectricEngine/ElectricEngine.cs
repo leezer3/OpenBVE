@@ -25,13 +25,14 @@
 using OpenBveApi.Motor;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Power;
 
 
 namespace TrainManager.Motor
 {
 	public class ElectricEngine : AbstractEngine
 	{
-		public ElectricEngine(CarBase car) : base(car)
+		public ElectricEngine(CarBase car, AccelerationCurve[] accelerationCurves) : base(car, accelerationCurves, true)
 		{
 		}
 
@@ -56,5 +57,7 @@ namespace TrainManager.Motor
 				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 			}
 		}
+
+		public override double TargetAcceleration => AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed);
 	}
 }
