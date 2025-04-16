@@ -3,8 +3,9 @@ using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using OpenBveApi.Sounds;
+using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
+using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace SoundManager
 {
@@ -20,6 +21,8 @@ namespace SoundManager
 		/// <summary>The target volume of the sound</summary>
 		/// <remarks>Used when crossfading between multiple sounds of the same type</remarks>
 		public double TargetVolume;
+
+		public CameraViewMode ViewModes;
 
 		public CarSound(HostInterface currentHost, string trainFolder, string soundFile, double radius, Vector3 position) : this(currentHost, trainFolder, string.Empty, -1, soundFile, radius, position)
 		{
