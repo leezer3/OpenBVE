@@ -714,6 +714,10 @@ namespace Train.MsTs
 					vigilanceDevices.Add(device);
 					break;
 				case KujuTokenID.FreightAnim:
+					if (Plugin.PreviewOnly)
+					{
+						break;
+					}
 					objectFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), block.ReadString());
 					if (!File.Exists(objectFile))
 					{
