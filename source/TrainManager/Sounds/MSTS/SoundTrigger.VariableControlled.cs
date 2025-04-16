@@ -9,9 +9,7 @@ namespace TrainManager.MsTsSounds
 		private readonly double speedValue;
 
 		private readonly bool soundLoops;
-
-		private bool triggered;
-
+		
 		public Variable2IncPast(CarBase car, SoundBuffer buffer, double speedValue, bool soundLoops) : base(car, buffer)
 		{
 			this.speedValue = speedValue;
@@ -24,7 +22,7 @@ namespace TrainManager.MsTsSounds
 			{
 				if (Buffer != null)
 				{
-					if (triggered == false)
+					if (Triggered == false)
 					{
 						this.Source = TrainManagerBase.currentHost.PlaySound(Buffer, pitchValue, volumeValue, Vector3.Zero, Car, soundLoops) as SoundSource;
 					}
@@ -34,12 +32,11 @@ namespace TrainManager.MsTsSounds
 						this.Source.Volume = volumeValue;
 					}
 				}
-				triggered = true;
+				Triggered = true;
 			}
 			else
 			{
-				triggered = false;
-				Source?.Stop();
+				Stop();
 			}
 		}
 	}
@@ -49,8 +46,6 @@ namespace TrainManager.MsTsSounds
 		private readonly double speedValue;
 
 		private readonly bool soundLoops;
-
-		private bool triggered;
 
 		public Variable2DecPast(CarBase car, SoundBuffer buffer, double speedValue, bool soundLoops) : base(car, buffer)
 		{
@@ -64,7 +59,7 @@ namespace TrainManager.MsTsSounds
 			{
 				if (Buffer != null)
 				{
-					if (triggered == false)
+					if (Triggered == false)
 					{
 						this.Source = TrainManagerBase.currentHost.PlaySound(Buffer, pitchValue, volumeValue, Vector3.Zero, Car, soundLoops) as SoundSource;
 					}
@@ -74,12 +69,11 @@ namespace TrainManager.MsTsSounds
 						this.Source.Volume = volumeValue;
 					}
 				}
-				triggered = true;
+				Triggered = true;
 			}
 			else
 			{
-				triggered = false;
-				Source?.Stop();
+				Stop();
 			}
 		}
 	}
