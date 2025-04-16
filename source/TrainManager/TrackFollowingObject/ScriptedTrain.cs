@@ -64,7 +64,7 @@ namespace TrainManager.Trains
 						Cars[i].RearBogie.ChangeSection(0);
 						Cars[i].Coupler.ChangeSection(0);
 
-						if (Cars[i].Specs.IsMotorCar && Cars[i].Sounds.Loop != null)
+						if (Cars[i].TractionModel.ProvidesPower && Cars[i].Sounds.Loop != null)
 						{
 							Cars[i].Sounds.Loop.Play(Cars[i], true);
 						}
@@ -145,7 +145,7 @@ namespace TrainManager.Trains
 			foreach (var Car in Cars)
 			{
 				Car.Run.Update(TimeElapsed);
-				Car.Sounds.Motor?.Update(TimeElapsed);
+				Car.TractionModel.MotorSounds?.Update(TimeElapsed);
 				
 			}
 

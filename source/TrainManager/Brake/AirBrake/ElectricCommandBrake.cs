@@ -47,7 +47,7 @@ namespace TrainManager.BrakeSystems
 			if (!Car.baseTrain.Handles.EmergencyBrake.Actual & Car.baseTrain.Handles.Reverser.Actual != 0)
 			{
 				// brake control system
-				if (Car.Specs.IsMotorCar & Math.Abs(currentSpeed) > brakeControlSpeed)
+				if (Car.TractionModel.ProvidesPower & Math.Abs(currentSpeed) > brakeControlSpeed)
 				{
 					switch (electropneumaticBrakeType)
 					{

@@ -378,14 +378,14 @@ namespace Train.OpenBve
 				for (int i = 0; i < currentTrain.Cars.Length; i++)
 				{
 					currentTrain.Cars[i].DetermineDoorClosingSpeed();
-					if (currentTrain.Cars[i].Specs.IsMotorCar)
+					if (currentTrain.Cars[i].TractionModel.ProvidesPower)
 					{
 						numMotorCars++;
-						if (currentTrain.Cars[i].Sounds.Motor == null && TrainXmlParser.MotorSoundXMLParsed != null)
+						if (currentTrain.Cars[i].TractionModel.MotorSounds == null && TrainXmlParser.MotorSoundXMLParsed != null)
 						{
 							if(!TrainXmlParser.MotorSoundXMLParsed[i])
 							{
-								currentTrain.Cars[i].Sounds.Motor = new BVEMotorSound(currentTrain.Cars[i], 18.0, MotorSoundTables);
+								currentTrain.Cars[i].TractionModel.MotorSounds = new BVEMotorSound(currentTrain.Cars[i], 18.0, MotorSoundTables);
 							}
 						}
 						
@@ -401,8 +401,8 @@ namespace Train.OpenBve
 					 * Speed / physics are likely to be off, but let's at least do something
 					 */
 					CurrentHost.AddMessage(MessageType.Error, false, "Player train appears to have no motor cars, assigning Car 0 as a motor car.");
-					currentTrain.Cars[0].Specs.IsMotorCar = true;
-					currentTrain.Cars[0].Sounds.Motor = new BVEMotorSound(currentTrain.Cars[0], 18.0, MotorSoundTables);
+					currentTrain.Cars[0].TractionModel = new BVEMotorCar(currentTrain.Cars[0], null);
+					currentTrain.Cars[0].TractionModel.MotorSounds = new BVEMotorSound(currentTrain.Cars[0], 18.0, MotorSoundTables);
 				}
 			}
 			CurrentProgress = 1;

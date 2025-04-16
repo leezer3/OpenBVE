@@ -33,7 +33,7 @@ namespace TrainManager.Motor
 		/// <summary>The maximum amps able to be delivered by the traction motor</summary>
 	    private readonly double maxAmps;
 
-		public TractionMotor(AbstractEngine engine, double max) : base(engine)
+		public TractionMotor(TractionModel engine, double max) : base(engine)
 		{
 			maxAmps = max;
 		}

@@ -25,10 +25,11 @@
 using System;
 using System.Linq;
 using TrainManager.Car;
+using TrainManager.Power;
 
 namespace TrainManager.Motor
 {
-    public class DieselEngine : AbstractEngine
+    public class DieselEngine : TractionModel
     {
 		/// <summary>The RPM at maximum power</summary>
 	    public readonly double MaxRPM;
@@ -56,7 +57,7 @@ namespace TrainManager.Motor
 		private readonly double perNotchRPM;
 
 
-		public DieselEngine(CarBase car, double idleRPM, double minRPM, double maxRPM, double rpmChangeUpRate, double rpmChangeDownRate, double idleFuelUse = 0, double maxFuelUse = 0) : base (car)
+		public DieselEngine(CarBase car, AccelerationCurve[] accelerationCurves, double idleRPM, double minRPM, double maxRPM, double rpmChangeUpRate, double rpmChangeDownRate, double idleFuelUse = 0, double maxFuelUse = 0) : base (car, accelerationCurves, true)
 		{
 			MinRPM = minRPM;
 			MaxRPM = maxRPM;
@@ -85,6 +86,7 @@ namespace TrainManager.Motor
 			{
 				targetRPM = 0;
 			}
+			MotorSounds.Update(timeElapsed);
 
 			if (targetRPM > currentRPM)
 			{
