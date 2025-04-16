@@ -11,6 +11,8 @@ namespace TrainManager.MsTsSounds
 
 		internal readonly CarBase Car;
 
+		internal bool Triggered;
+
 		internal SoundTrigger(CarBase car, SoundBuffer buffer)
 		{
 			Buffer = buffer;
@@ -20,6 +22,12 @@ namespace TrainManager.MsTsSounds
 		public virtual void Update(double timeElapsed, double pitchValue, double volumeValue)
 		{
 
+		}
+
+		internal void Stop()
+		{
+			Source?.Stop();
+			Triggered = false;
 		}
 	}
 }
