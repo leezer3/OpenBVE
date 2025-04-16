@@ -1284,7 +1284,7 @@ namespace OpenBve
 						Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 						break;
 					case Translations.Command.RouteInformation:
-						Game.routeInfoOverlay.ProcessCommand(Translations.Command.RouteInformation);
+						Game.RouteInfoOverlay.ProcessCommand(Translations.Command.RouteInformation);
 						break;
 					case Translations.Command.AccessibilityCurrentSpeed:
 						string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","train_currentspeed"}).Replace("[speed]", $"{TrainManagerBase.PlayerTrain.CurrentSpeed * 3.6:0.0}") + "km/h";
@@ -1316,10 +1316,10 @@ namespace OpenBve
 						{
 							case InterfaceType.Normal:
 								Program.Renderer.CurrentInterface = InterfaceType.SwitchChangeMap;
-								Game.switchChangeDialog.Show();
+								Game.SwitchChangeDialog.Show();
 								break;
 							case InterfaceType.SwitchChangeMap:
-								Game.switchChangeDialog.Close(null, null);
+								Game.SwitchChangeDialog.Close(null, null);
 								break;
 						}
 						break;
