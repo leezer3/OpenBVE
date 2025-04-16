@@ -127,6 +127,10 @@ namespace Train.MsTs
 						Car.TractionModel = new ElectricEngine(Car, new AccelerationCurve[] { new MSTSAccelerationCurve(Car, maxForce, maxContinuousForce, maxVelocity) });
 						Car.TractionModel.Components.Add(EngineComponent.Pantograph, new Pantograph(Car.TractionModel));
 						break;
+					case EngineType.Steam:
+						// NOT YET IMPLEMENTED
+						Car.TractionModel = new BVEMotorCar(Car, new AccelerationCurve[] { new MSTSAccelerationCurve(Car, maxForce, maxContinuousForce, maxVelocity) });
+						break;
 				}
 				Car.ReAdhesionDevice = new BveReAdhesionDevice(Car, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
 			}
