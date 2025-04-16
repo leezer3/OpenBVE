@@ -40,7 +40,7 @@ namespace TrainManager.MsTsSounds
 					case KujuTokenID.Variable2Controlled:
 						for (int i = frequencyPoints.Length - 1; i >= 0; i--)
 						{
-							if (car.Engine.CurrentPower >= frequencyPoints[i].Item1)
+							if (car.TractionModel.CurrentPower >= frequencyPoints[i].Item1)
 							{
 								return frequencyPoints[i].Item2;
 							}

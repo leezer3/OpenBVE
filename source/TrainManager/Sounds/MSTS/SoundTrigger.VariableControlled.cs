@@ -20,7 +20,7 @@ namespace TrainManager.MsTsSounds
 
 		public override void Update(double timeElapsed, double pitchValue, double volumeValue)
 		{
-			if (Car.Engine.CurrentPower >= speedValue)
+			if (Car.TractionModel.CurrentPower >= speedValue)
 			{
 				if (Buffer != null)
 				{
@@ -60,7 +60,7 @@ namespace TrainManager.MsTsSounds
 
 		public override void Update(double timeElapsed, double pitchValue, double volumeValue)
 		{
-			if (Car.Engine.CurrentPower <= speedValue)
+			if (Car.TractionModel.CurrentPower <= speedValue)
 			{
 				if (Buffer != null)
 				{
