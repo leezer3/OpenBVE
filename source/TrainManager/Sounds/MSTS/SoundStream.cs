@@ -58,7 +58,7 @@ namespace TrainManager.MsTsSounds
 				}
 				else
 				{
-					Triggers[i].Source?.Stop();
+					Triggers[i].Stop();
 				}
 				
 			}
