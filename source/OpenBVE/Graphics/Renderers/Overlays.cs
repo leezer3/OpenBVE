@@ -52,7 +52,7 @@ namespace OpenBve.Graphics.Renderers
 				case OutputMode.Default:
 
 					//Route info overlay (if selected)
-					Game.routeInfoOverlay.Show();
+					Game.RouteInfoOverlay.Show();
 
 					//HUD
 					foreach (HUD.Element element in HUD.CurrentHudElements)
@@ -169,7 +169,7 @@ namespace OpenBve.Graphics.Renderers
 					PauseAnnounced = false;
 					break;
 				case InterfaceType.SwitchChangeMap:
-					Game.switchChangeDialog.Draw();
+					Game.SwitchChangeDialog.Draw();
 					break;
 				default:
 					PauseAnnounced = false;
