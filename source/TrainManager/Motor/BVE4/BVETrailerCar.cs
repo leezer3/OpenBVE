@@ -13,7 +13,5 @@ namespace TrainManager.Motor
 		{
 			// Nothing to do
 		}
-
-		public override double CurrentPower => 0;
 	}
 }
