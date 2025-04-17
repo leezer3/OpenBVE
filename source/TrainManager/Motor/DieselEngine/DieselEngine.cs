@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -86,7 +86,7 @@ namespace TrainManager.Motor
 			{
 				targetRPM = 0;
 			}
-			MotorSounds.Update(timeElapsed);
+			MotorSounds?.Update(timeElapsed);
 
 			if (targetRPM > currentRPM)
 			{
@@ -117,5 +117,9 @@ namespace TrainManager.Motor
 				Components.ElementAt(i).Value.Update(timeElapsed);
 			}
 		}
-    }
+
+		public override double CurrentPower => (currentRPM - MinRPM) / (MaxRPM - MinRPM);
+
+		public override double TargetAcceleration => AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed);
+	}
 }
