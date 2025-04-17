@@ -341,6 +341,11 @@ namespace Train.MsTs
 					{
 						case CabComponentType.Dial:
 							Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(null, null), out Texture tday, true);
+							// correct angle position if appropriate
+							if (!DirIncrease && InitialAngle > LastAngle)
+							{
+								InitialAngle = -(365 - InitialAngle);
+							}
 							//Get final position from the 640px panel (Yuck...)
 							Position.X *= rW;
 							Position.Y *= rH;
@@ -349,7 +354,7 @@ namespace Train.MsTs
 							PivotPoint *= rH;
 							j = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X, Size.Y, new Vector2((0.5 * Size.X) / (tday.Width * rW), PivotPoint / (tday.Height * rH)), Layer * stackDistance, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
 							Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
-							Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
+							Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = DirIncrease ? new Vector3(1.0, 0.0, 0.0) : new Vector3(-1.0, 0.0, 0.0);
 							Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
 							f = GetStackLanguageFromSubject(Car.baseTrain, panelSubject, Units);
 							InitialAngle = InitialAngle.ToRadians();
@@ -462,11 +467,6 @@ namespace Train.MsTs
 					case KujuTokenID.ScalePos:
 						InitialAngle = block.ReadSingle();
 						LastAngle = block.ReadSingle();
-						// correct angle position if appropriate
-						if (InitialAngle > LastAngle)
-						{
-							InitialAngle = -(365 - InitialAngle);
-						}
 						break;
 					case KujuTokenID.ScaleRange:
 						Minimum = block.ReadSingle();
@@ -479,7 +479,7 @@ namespace Train.MsTs
 						block.Skip((int) block.Length());
 						break;
 					case KujuTokenID.DirIncrease:
-						//Do we start at 0 or max?
+						// rotates Clockwise (0) or AntiClockwise (1)
 						DirIncrease = block.ReadInt16() == 1;
 						break;
 					case KujuTokenID.Orientation:
@@ -552,7 +552,7 @@ namespace Train.MsTs
 					switch (subjectUnits)
 					{
 						case Units.PSI:
-							Code = "brakecylinder 0.000145038 *";
+							Code = "brakepipe 0.000145038 *";
 							break;
 						case Units.Inches_Of_Mercury:
 							Code = "0";
