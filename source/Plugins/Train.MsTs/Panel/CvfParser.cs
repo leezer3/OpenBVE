@@ -414,6 +414,7 @@ namespace Train.MsTs
 							break;
 						case CabComponentType.TriState:
 						case CabComponentType.TwoState:
+						case CabComponentType.MultiStateDisplay:
 							Position.X *= rW;
 							Position.Y *= rH;
 							Plugin.currentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
@@ -444,11 +445,9 @@ namespace Train.MsTs
 									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
 									if (k == 0) j = l;
 								}
-
 								f = GetStackLanguageFromSubject(Car.baseTrain, panelSubject, Units);
 								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
 							}
-
 							break;
 					}
 				}
@@ -474,9 +473,9 @@ namespace Train.MsTs
 						break;
 					case KujuTokenID.States:
 						//Contains sub-blocks with Style and SwitchVal types
-						//Doesn't appear to have any frame data
-						//Examining image appears to show 1-frame V strip
-						block.Skip((int) block.Length());
+						TotalFrames = block.ReadInt16();
+						HorizontalFrames = block.ReadInt16();
+						VerticalFrames = block.ReadInt16();
 						break;
 					case KujuTokenID.DirIncrease:
 						// rotates Clockwise (0) or AntiClockwise (1)
@@ -601,6 +600,10 @@ namespace Train.MsTs
 					break;
 				case PanelSubject.Wipers:
 					Code = "wiperstate";
+					break;
+				case PanelSubject.Panto_Display:
+				case PanelSubject.Pantograph:
+					Code = "pantographstate";
 					break;
 				default:
 					Code = "0";
