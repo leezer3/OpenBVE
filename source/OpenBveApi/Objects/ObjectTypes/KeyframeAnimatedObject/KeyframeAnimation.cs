@@ -156,7 +156,7 @@ namespace OpenBveApi.Objects
 					else if (Name == "PANTOGRAPHBOTTOM1" || Name == "PANTOGRAPHTOP1")
 					{
 						dynamic d = baseCar;
-						dynamic pantograph = d.Engine.Components[EngineComponent.Pantograph];
+						dynamic pantograph = d.TractionModel.Components[EngineComponent.Pantograph];
 						if (pantograph == null)
 						{
 							AnimationKey = 0;
