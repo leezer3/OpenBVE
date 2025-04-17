@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System.Collections.Generic;
+using OpenBveApi.Motor;
 using TrainManager.Car;
 using TrainManager.Power;
 
@@ -55,7 +56,7 @@ namespace TrainManager.Motor
 		public double CurrentAcceleration;
 
 
-		/// <summary>Creates a new AbstractEngine</summary>
+		/// <summary>Creates a new TractionModel</summary>
 		protected TractionModel(CarBase car, AccelerationCurve[] accelerationCurves, bool providesPower)
 	    {
 		    BaseCar = car;
@@ -64,10 +65,22 @@ namespace TrainManager.Motor
 			ProvidesPower = providesPower;
 	    }
 
-
-
+	    protected TractionModel(CarBase car)
+	    {
+		    BaseCar = car;
+			AccelerationCurves = new AccelerationCurve[0];
+			Components = new Dictionary<EngineComponent, AbstractComponent>();
+		}
+		
 		/// <summary>Called once a frame to update the engine</summary>
 		/// <param name="timeElapsed"></param>
 	    public abstract void Update(double timeElapsed);
+
+	    /// <summary>Gets the current power level</summary>
+	    public virtual double CurrentPower => 0;
+
+	    /// <summary>The target acceleration</summary>
+	    /// <remarks>Figure achievable before wheelslip etc. is applied</remarks>
+	    public virtual double TargetAcceleration => 0;
     }
 }

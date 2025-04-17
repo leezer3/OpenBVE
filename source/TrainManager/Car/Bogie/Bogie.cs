@@ -104,6 +104,10 @@ namespace TrainManager.Car
 				}
 
 				CarSections[cs].Groups[0].Keyframes?.Update(baseCar.TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+				if (CarSections[cs].CurrentAdditionalGroup + 1 < CarSections[cs].Groups.Length)
+				{
+					CarSections[cs].Groups[CarSections[cs].CurrentAdditionalGroup + 1].Keyframes?.Update(baseCar.TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+				}
 			}
 		}
 
@@ -211,7 +215,15 @@ namespace TrainManager.Car
 				//FRONT BOGIE
 
 				// get direction, up and side vectors
-				Vector3 d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+				Vector3 d;
+				if (FrontAxle.Follower.WorldPosition == RearAxle.Follower.WorldPosition)
+				{
+					d = FrontAxle.Follower.WorldPosition;
+				}
+				else
+				{
+					d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+				}
 				Vector3 s;
 				{
 					double t = 1.0 / d.Norm();

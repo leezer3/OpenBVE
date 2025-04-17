@@ -1056,7 +1056,8 @@ namespace Train.OpenBve
 			Train.Handles.Power = new PowerHandle(powerNotches, driverPowerNotches, powerDelayUp, powerDelayDown, Train);
 			if (powerReduceSteps != -1)
 			{
-				Train.Handles.Power.ReduceSteps = powerReduceSteps;
+				PowerHandle powerHandle = Train.Handles.Power as PowerHandle;
+				powerHandle.ReduceSteps = powerReduceSteps;
 			}
 
 			if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
@@ -1284,7 +1285,7 @@ namespace Train.OpenBve
 			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
 			Train.SafetySystems.OverspeedDevice = new OverspeedDevice(Train);
 			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
-			Train.SafetySystems.Headlights = new LightSource(1);
+			Train.SafetySystems.Headlights = new LightSource(Train, 1);
 			switch (Plugin.CurrentOptions.TrainStart)
 			{
 				// starting mode

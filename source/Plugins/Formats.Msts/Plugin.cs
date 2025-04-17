@@ -72,6 +72,12 @@ namespace OpenBve.Formats.MsTs
 		/// <summary>Reads a string from the block</summary>
 		public abstract string ReadString();
 
+		/// <summary>Reads a path from the block</summary>
+		/// <param name="absolute">The platform specific absolute path</param>
+		/// <param name="finalPath">The final path</param>
+		/// <returns>True if the path is found, false otherwise</returns>
+		public abstract bool ReadPath(string absolute, out string finalPath);
+
 		/// <summary>Reads a string array from the block</summary>
 		public abstract string[] ReadStringArray();
 
@@ -116,6 +122,12 @@ namespace OpenBve.Formats.MsTs
 		/// <returns>The new block</returns>
 		/// <remarks>The type of the new block will always match that of the base block</remarks>
 		public abstract Block ReadSubBlock(KujuTokenID newToken);
+
+		/// <summary>Reads the next sub-block from the enclosing block, skipping unexpected values</summary>
+		/// <param name="newToken">The expected token for the new block</param>
+		/// <returns>The new block</returns>
+		/// <remarks>The type of the new block will always match that of the base block</remarks>
+		public abstract Block GetSubBlock(KujuTokenID newToken);
 
 		/// <summary>Reads a sub-block from the enclosing block</summary>
 		/// <param name="validTokens">An array containing all possible valid tokens for the new block</param>
@@ -178,6 +190,11 @@ namespace OpenBve.Formats.MsTs
 			uint remainingBytes = myReader.ReadUInt32();
 			byte[] newBytes = myReader.ReadBytes((int) remainingBytes);
 			return new BinaryBlock(newBytes, newToken, this);
+		}
+
+		public override Block GetSubBlock(KujuTokenID newToken)
+		{
+			throw new NotImplementedException();
 		}
 
 		public override Block ReadSubBlock(KujuTokenID[] validTokens)
@@ -257,6 +274,27 @@ namespace OpenBve.Formats.MsTs
 			return (string.Empty); //Not sure this is valid, but let's be on the safe side
 		}
 
+		public override bool ReadPath(string absolute, out string finalPath)
+		{
+			string relative = ReadString().Replace("\"", "");
+			try
+			{
+				finalPath = OpenBveApi.Path.CombineFile(absolute, relative);
+			}
+			catch
+			{
+				finalPath = relative;
+				return false;
+			}
+			if (File.Exists(finalPath))
+			{
+				return true;
+			}
+
+			finalPath = relative;
+			return false;
+		}
+
 		public override string[] ReadStringArray()
 		{
 			throw new NotImplementedException();
@@ -313,6 +351,7 @@ namespace OpenBve.Formats.MsTs
 		private readonly VolumeConverter volumeConverter = new VolumeConverter();
 		private readonly CurrentConverter currentConverter = new CurrentConverter();
 		private readonly PressureConverter pressureConverter = new PressureConverter();
+		private readonly VelocityConverter velocityConvertor = new VelocityConverter();
 
 		private TextualBlock(string text, bool textIsClean)
 		{
@@ -476,7 +515,7 @@ namespace OpenBve.Formats.MsTs
 			{
 				try
 				{
-					Block sb = b.ReadSubBlock();
+					Block sb = b.ReadSubBlock(true);
 					readBlocks.Add(sb.Token, sb);
 				}
 				catch
@@ -490,7 +529,7 @@ namespace OpenBve.Formats.MsTs
 		public override Block ReadSubBlock(KujuTokenID newToken)
 		{
 			startPosition = currentPosition;
-			string s = String.Empty;
+			string s = string.Empty;
 			while (currentPosition < myText.Length)
 			{
 				if (myText[currentPosition] == '(')
@@ -547,6 +586,18 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			throw new InvalidDataException("Unexpected end of block in " + Token);
+		}
+
+		public override Block GetSubBlock(KujuTokenID newToken)
+		{
+			int position = currentPosition;
+			while (double.TryParse(getNextValue(), out _))
+			{
+				position = currentPosition;
+			}
+
+			currentPosition = position;
+			return ReadSubBlock(newToken);
 		}
 
 		public override Block ReadSubBlock(KujuTokenID[] validTokens)
@@ -631,8 +682,9 @@ namespace OpenBve.Formats.MsTs
 				currentPosition++;
 			}
 
-			if (string.IsNullOrWhiteSpace(s))
+			if (string.IsNullOrWhiteSpace(s) || s == ")")
 			{
+				// empty string or 'extra' closing brackets
 				if (!allowEmptyBlock)
 				{
 					throw new InvalidDataException("Empty sub-block");
@@ -643,7 +695,6 @@ namespace OpenBve.Formats.MsTs
 				return t;
 			}
 
-			KujuTokenID currentToken;
 			int ws = s.IndexOf(' ');
 			if (ws != -1)
 			{
@@ -652,7 +703,7 @@ namespace OpenBve.Formats.MsTs
 				s = s.Substring(0, ws);
 			}
 
-			if (!Enum.TryParse(s, true, out currentToken))
+			if (!Enum.TryParse(s, true, out KujuTokenID currentToken))
 			{
 				throw new InvalidDataException("Unrecognised token " + s);
 			}
@@ -790,12 +841,28 @@ namespace OpenBve.Formats.MsTs
 				return val;
 			}
 
+			// try ignoring numbers after the second decimal point if applicable
+			if (s.Split(',').Length > 2)
+			{
+				s = s.Substring(0, s.IndexOf(',', 0, 2));
+				if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
+				{
+					return val;
+				}
+			}
+
 			throw new InvalidDataException("Unable to parse " + s + " to a valid single in block " + Token);
 		}
 
 		public override float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnits)
 		{
 			string s = ReadString();
+			int hash = s.IndexOf('#');
+			if (hash != -1)
+			{
+				// In unit deliminated strings, hash acts as a comment separator (despite being valid as a string member elsewhere)
+				s = s.Substring(0, hash).Trim();
+			}
 			int c;
 			for (c = 0; c < s.Length; c++)
 			{
@@ -875,6 +942,15 @@ namespace OpenBve.Formats.MsTs
 				parsedNumber = (float)pressureConverter.Convert(parsedNumber, PressureConverter.KnownUnits[Unit], (UnitOfPressure)(object)desiredUnit);
 
 			}
+			else if (desiredUnit is UnitOfVelocity)
+			{
+				if (!VelocityConverter.KnownUnits.ContainsKey(Unit))
+				{
+					throw new InvalidDataException("Unknown or unexpected velocity unit " + Unit + " encountered in block " + Token);
+				}
+
+				parsedNumber = (float)velocityConvertor.Convert(parsedNumber, VelocityConverter.KnownUnits[Unit], (UnitOfVelocity)(object)desiredUnit);
+			}
 			return parsedNumber;
 		}
 		
@@ -892,6 +968,28 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			return getNextValue();
+		}
+
+		public override bool ReadPath(string absolute, out string finalPath)
+		{
+			string relative = ReadString().Replace("\"", "");
+			try
+			{
+				finalPath = OpenBveApi.Path.CombineFile(absolute, relative);
+			}
+			catch
+			{
+				finalPath = relative;
+				return false;
+			}
+			
+			if (File.Exists(finalPath))
+			{
+				return true;
+			}
+
+			finalPath = relative;
+			return false;
 		}
 
 		public override string[] ReadStringArray()

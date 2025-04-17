@@ -473,10 +473,11 @@ namespace Plugin
 		private static string currentFolder;
 
 		private static KeyframeAnimatedObject newResult;
+		internal static string wagonFileDirectory;
 
 		private static bool IsAnimated(string matrixName)
 		{
-			if (matrixName.StartsWith("WHEELS") || matrixName.StartsWith("ROD") || matrixName.StartsWith("BOGIE") || matrixName.StartsWith("PISTON"))
+			if (matrixName.StartsWith("WHEELS") || matrixName.StartsWith("ROD") || matrixName.StartsWith("BOGIE") || matrixName.StartsWith("PISTON") || matrixName.StartsWith("PANTOGRAPH"))
 			{
 				return true;
 			}
@@ -756,7 +757,7 @@ namespace Plugin
 					newBlock = block.ReadSubBlock(KujuTokenID.lod_controls);
 					ParseBlock(newBlock, ref shape);
 
-					if (block.Length() - block.Position() > 0)
+					if ((block is BinaryBlock && block.Length() - block.Position() > 0) || (block is TextualBlock && block.Length() - block.Position() > 3))
 					{
 						try
 						{
@@ -798,7 +799,7 @@ namespace Plugin
 					int lightStateCfgIdx = block.ReadInt32();
 					uint lightFlags = block.ReadUInt32();
 					int matrix2 = -1;
-					if ((block is BinaryBlock && block.Length() - block.Position() > 1) || (!(block is BinaryBlock) && block.Length() - block.Position() > 2))
+					if ((block is BinaryBlock && block.Length() - block.Position() > 1) || (block is TextualBlock && block.Length() - block.Position() > 2))
 					{
 						matrix2 = block.ReadInt32();
 					}
@@ -1139,6 +1140,13 @@ namespace Plugin
 								try
 								{
 									txF = OpenBveApi.Path.CombineFile(currentFolder, shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName);
+									if (!File.Exists(txF) && !string.IsNullOrEmpty(wagonFileDirectory))
+									{
+										// yuck: MSTS texture paths resolve relative to the WAG / ENG file if part of a train, even if the S file is not in the same directory
+										//		Only try this if we can't find the texture file by a simple relative combine
+										txF = OpenBveApi.Path.CombineFile(wagonFileDirectory, shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName);
+									}
+
 									if (!File.Exists(txF))
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Warning, true, "Texture file " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was not found.");
@@ -1465,8 +1473,8 @@ namespace Plugin
 				case KujuTokenID.tcb_key:
 					// Frame index
 					int frameIndex = block.ReadInt32();
-					// n.b. we need to negate the Z and W components to get to GL format as opposed to DX
-					Quaternion q = new Quaternion(block.ReadSingle(), block.ReadSingle(), -block.ReadSingle(), -block.ReadSingle());
+					// n.b. we need to negate the W components to get to GL format as opposed to DX
+					Quaternion q = new Quaternion(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), -block.ReadSingle());
 					quaternionFrames[currentFrame] = new QuaternionFrame(frameIndex, q);
 					/* 4 more floats:
 					 * TENSION
@@ -1478,7 +1486,7 @@ namespace Plugin
 				case KujuTokenID.slerp_rot:
 					// Frame index
 					frameIndex = block.ReadInt32();
-					q = new Quaternion(block.ReadSingle(), block.ReadSingle(), -block.ReadSingle(), -block.ReadSingle());
+					q = new Quaternion(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), -block.ReadSingle());
 					quaternionFrames[currentFrame] = new QuaternionFrame(frameIndex, q);
 					break;
 				case KujuTokenID.linear_pos:
