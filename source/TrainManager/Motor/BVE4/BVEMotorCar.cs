@@ -28,13 +28,13 @@ namespace TrainManager.Motor
 				// NOTE: LoadFactor is constant 1.0 for BVE2 / BVE4
 				if (BaseCar.baseTrain.Handles.Power.Actual - 1 < AccelerationCurves.Length)
 				{
-					return AccelerationCurves[BaseCar.baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)BaseCar.baseTrain.Handles.Reverser.Actual * BaseCar.CurrentSpeed);
+					return AccelerationCurves[BaseCar.baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)BaseCar.baseTrain.Handles.Reverser.Actual * BaseCar.CurrentSpeed,1.0);
 				}
 
 				// acceleration curve per power notch
 				if (BaseCar.baseTrain.Handles.Power.Actual - 1 < AccelerationCurves.Length)
 				{
-					return AccelerationCurves[BaseCar.baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)BaseCar.baseTrain.Handles.Reverser.Actual * BaseCar.CurrentSpeed);
+					return AccelerationCurves[BaseCar.baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)BaseCar.baseTrain.Handles.Reverser.Actual * BaseCar.CurrentSpeed,1.0);
 				}
 
 				return 0.0;

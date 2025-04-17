@@ -1247,6 +1247,14 @@ namespace Train.OpenBve
 					}
 				}
 
+				if (motorCars[i])
+				{
+					Train.Cars[i].TractionModel = new BVEMotorCar(Train.Cars[i], AccelerationCurves);
+				}
+				else
+				{
+					Train.Cars[i].TractionModel = new BVETrailerCar(Train.Cars[i]);
+				}
 				if (Train.Cars[i].TractionModel.ProvidesPower || Train.IsPlayerTrain && i == Train.DriverCar || trainBrakeType == BrakeSystemType.ElectricCommandBrake)
 				{
 					Train.Cars[i].CarBrake.brakeType = BrakeType.Main;
