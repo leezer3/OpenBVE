@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Math;
+using OpenBveApi.Math;
 
 namespace LibRender2.Smoke
 {
@@ -6,21 +6,18 @@ namespace LibRender2.Smoke
 	{
 		internal Vector3 Position;
 
-		internal Vector2 Size;
+		internal Vector3 Size;
 
 		internal double RemainingLifeSpan;
 
 		internal readonly double LifeSpan;
-
-		internal readonly int Texture;
-
-		internal Particle(Vector3 offset, Vector2 size, double life, int texture)
+		
+		internal Particle(Vector3 offset, Vector3 size, double life)
 		{
 			Position = offset;
 			Size = size;
 			LifeSpan = life;
 			RemainingLifeSpan = life;
-			Texture = texture;
 		}
 	}
 }

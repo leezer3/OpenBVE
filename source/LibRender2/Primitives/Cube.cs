@@ -301,6 +301,42 @@ namespace LibRender2.Primitives
 			GL.Disable(EnableCap.Texture2D);
 		}
 
+		/// <summary>Draws a 3D cube</summary>
+		/// <param name="Position">The position in world-space</param>
+		/// <param name="Direction">The direction vector</param>
+		/// <param name="Up">The up vector</param>
+		/// <param name="Side">The side vector</param>
+		/// <param name="Size">A 3D vector describing the size of the cube</param>
+		/// <param name="Camera">The camera position</param>
+		/// <param name="TextureIndex">The texture to apply</param>
+		internal void DrawRetained(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera, Texture TextureIndex, float Opacity)
+		{
+			VertexArrayObject VAO = defaultVAO;
+			// TODO: REMOVE ME AGAIN - THIS IS TEMPORARY
+			renderer.DefaultShader.Activate();
+			renderer.ResetShader(renderer.DefaultShader);
+			//renderer.DefaultShader.SetOpacity(Opacity);
+			// matrix
+			renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
+			renderer.DefaultShader.SetCurrentModelViewMatrix(Matrix4D.Scale(Size) * (Matrix4D)new Transformation(Direction, Up, Side) * Matrix4D.CreateTranslation(Position.X - Camera.X, Position.Y - Camera.Y, -Position.Z + Camera.Z) * renderer.CurrentViewMatrix);
+
+			// texture
+			if (TextureIndex != null && renderer.currentHost.LoadTexture(ref TextureIndex, OpenGlTextureWrapMode.ClampClamp))
+			{
+				GL.Enable(EnableCap.Texture2D);
+				GL.BindTexture(TextureTarget.Texture2D, TextureIndex.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
+			}
+			else
+			{
+				GL.Disable(EnableCap.Texture2D);
+			}
+
+			// render polygon
+			VAO.Bind();
+			VAO.Draw(PrimitiveType.Quads);
+			GL.Disable(EnableCap.Texture2D);
+		}
+
 		/// <summary>Draws a 3D cube in immediate mode</summary>
 		/// <param name="Position">The position in world-space</param>
 		/// <param name="Direction">The direction vector</param>

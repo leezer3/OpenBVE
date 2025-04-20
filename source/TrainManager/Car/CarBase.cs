@@ -101,7 +101,7 @@ namespace TrainManager.Car
 		/// <summary>The traction model</summary>
 		public TractionModel TractionModel;
 
-		public List<ParticleSource> ParticleSources;
+		public ParticleSource ParticleSource;
 
 		private int trainCarIndex;
 
