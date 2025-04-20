@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+using System;
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -300,7 +301,7 @@ namespace LibRender2.Primitives
 			VAO.Draw(PrimitiveType.Quads);
 			GL.Disable(EnableCap.Texture2D);
 		}
-
+		
 		/// <summary>Draws a 3D cube in immediate mode</summary>
 		/// <param name="Position">The position in world-space</param>
 		/// <param name="Direction">The direction vector</param>

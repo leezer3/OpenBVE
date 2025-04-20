@@ -65,13 +65,13 @@ namespace TrainManager.Power
 				return ((baseTrain.Handles.Brake.Actual / (double)baseTrain.Handles.Brake.MaximumNotch) *  (totalMass / MaxForce));
 			}
 
-			if (baseCar.Engine is DieselEngine dieselEngine)
+			if (baseCar.TractionModel is DieselEngine dieselEngine)
 			{
 				// diesel engine uses simulated power level of MaxForce
 				return dieselEngine.CurrentPower * (totalMass / MaxForce);
 			}
 
-			if (baseCar.Engine is ElectricEngine electricEngine)
+			if (baseCar.TractionModel is ElectricEngine electricEngine)
 			{
 				if (baseCar.Specs.PerceivedSpeed < 3.61111 || baseCar.Specs.PerceivedSpeed > 7.22222)
 				{

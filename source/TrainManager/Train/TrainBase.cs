@@ -469,9 +469,9 @@ namespace TrainManager.Trains
 				Handles.EmergencyBrake.Safety = Handles.EmergencyBrake.Driver;
 			}
 
-			Handles.Power.Update(TimeElapsed);
-			Handles.Brake.Update(TimeElapsed);
-			Handles.Brake.Update(TimeElapsed);
+			Handles.Power.Update(timeElapsed);
+			Handles.Brake.Update(timeElapsed);
+			Handles.Brake.Update(timeElapsed);
 			Handles.EmergencyBrake.Update();
 			Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
 			Cars[DriverCar].DSD?.Update(timeElapsed);
@@ -480,11 +480,10 @@ namespace TrainManager.Trains
 			// Update Run and Motor sounds
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				Cars[i].Run.Update(TimeElapsed);
-				Cars[i].Sounds.Motor?.Update(TimeElapsed);
+				Cars[i].Run.Update(timeElapsed);
 				for (int j = 0; j < Cars[i].Sounds.ControlledSounds.Count; j++)
 				{
-					Cars[i].Sounds.ControlledSounds[j].Update(TimeElapsed);
+					Cars[i].Sounds.ControlledSounds[j].Update(timeElapsed);
 				}
 			}
 
@@ -564,7 +563,7 @@ namespace TrainManager.Trains
 				CenterOfCarPositions[i] = 0.5 * (pr + pf);
 				CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].CurrentMass;
 				TrainMass += Cars[i].CurrentMass;
-				// update engine
+				// update engine etc.
 				if (Cars[i].TractionModel.ProvidesPower && Cars[i].TractionModel != null)
 				{
 					Cars[i].TractionModel.Update(timeElapsed);
