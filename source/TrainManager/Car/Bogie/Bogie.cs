@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using LibRender2.Trains;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;

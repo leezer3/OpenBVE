@@ -55,6 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Effects\Exhaust.cs" />
     <Compile Include="Handles\Handle.cs" />
     <Compile Include="Misc\Units.cs" />
     <Compile Include="Panel\CvfParser.cs" />

@@ -35,7 +35,7 @@ namespace TrainManager.Motor
 		/// <summary>The maximum regenerative amps able to be delivered by the traction motor</summary>
 		private readonly double maxRegenAmps;
 
-		public RegenerativeTractionMotor(AbstractEngine engine, double max, double maxRegen) : base(engine)
+		public RegenerativeTractionMotor(TractionModel engine, double max, double maxRegen) : base(engine)
 		{
 			maxAmps = max;
 			maxRegenAmps = maxRegen;
