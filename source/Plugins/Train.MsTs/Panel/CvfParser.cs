@@ -456,7 +456,7 @@ namespace Train.MsTs
 							}
 							break;
 						case CabComponentType.Digital:
-							if (panelSubject != PanelSubject.Speedometer)
+							if (panelSubject != PanelSubject.Speedometer && panelSubject != PanelSubject.Speedlim_Display)
 							{
 								break;
 							}
@@ -714,6 +714,17 @@ namespace Train.MsTs
 				case PanelSubject.Panto_Display:
 				case PanelSubject.Pantograph:
 					Code = "pantographstate";
+					break;
+				case PanelSubject.Speedlim_Display:
+					switch (subjectUnits)
+					{
+						case Units.Miles_Per_Hour:
+							Code = "routelimit 2.2369362920544 *";
+							break;
+						case Units.Kilometers_Per_Hour:
+							Code = "routelimit 3.6 *";
+							break;
+					}
 					break;
 				default:
 					Code = "0";
