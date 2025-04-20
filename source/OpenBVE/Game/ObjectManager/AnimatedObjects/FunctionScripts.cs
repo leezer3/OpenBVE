@@ -1443,7 +1443,14 @@ namespace OpenBve {
 						}
 						else
 						{
-							Function.Stack[s] = Train.CurrentRouteLimit;
+							if (Train.CurrentRouteLimit == double.PositiveInfinity)
+							{
+								Function.Stack[s] = -1;
+							}
+							else
+							{
+								Function.Stack[s] = Train.CurrentRouteLimit;
+							}
 						}
 						s++; break;
 						// sections
