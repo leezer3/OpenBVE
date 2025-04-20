@@ -2,6 +2,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using System;
+using OpenBveApi.World;
 
 namespace LibRender2.Trains
 {
