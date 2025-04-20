@@ -1453,7 +1453,24 @@ namespace OpenBve {
 							}
 						}
 						s++; break;
-						// sections
+					case Instructions.SectionLimit:
+						if (Train == null)
+						{
+							Function.Stack[s] = 0.0; //Not part of a train, so irrelevant
+						}
+						else
+						{
+							if (Train.CurrentSectionLimit == double.PositiveInfinity)
+							{
+								Function.Stack[s] = -1;
+							}
+							else
+							{
+								Function.Stack[s] = Train.CurrentSectionLimit;
+							}
+						}
+						s++; break;
+					// sections
 					case Instructions.SectionAspectNumber:
 						if (IsPartOfTrain) {
 							int nextSectionIndex = Train.CurrentSectionIndex + 1;
