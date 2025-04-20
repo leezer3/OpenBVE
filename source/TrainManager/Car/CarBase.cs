@@ -1170,7 +1170,7 @@ namespace TrainManager.Car
 					{
 						// target acceleration
 						a = TractionModel.TargetAcceleration;
-						
+
 						// readhesion device
 						if (ReAdhesionDevice is BveReAdhesionDevice device)
 						{

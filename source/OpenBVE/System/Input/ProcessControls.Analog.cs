@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LibRender2.Cameras;
 using LibRender2.Overlays;
 using OpenBveApi.Graphics;
