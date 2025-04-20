@@ -19,6 +19,8 @@ namespace Train.MsTs
 
 		internal static BaseRenderer Renderer;
 
+		internal static FileSystem FileSystem;
+
 		internal static bool PreviewOnly;
 		public Plugin()
 		{
@@ -29,6 +31,7 @@ namespace Train.MsTs
 		public override void Load(HostInterface host, FileSystem fileSystem, BaseOptions Options, object rendererReference)
 		{
 			currentHost = host;
+			FileSystem = fileSystem;
 			Renderer = (BaseRenderer) rendererReference;
 		}
 

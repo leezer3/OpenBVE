@@ -299,6 +299,13 @@ namespace Train.MsTs
 			private int VerticalFrames;
 			private bool MouseControl;
 			private bool DirIncrease;
+			private int LeadingZeros;
+			private FrameMapping[] FrameMappings = new FrameMapping[0];
+
+			private Tuple<double, Color24>[] PositiveColors;
+			private bool HasPositiveColor = false;
+			private Tuple<double, Color24>[] NegativeColors;
+			private bool HasNegativeColor = false;
 
 			internal void Parse()
 			{
@@ -326,10 +333,20 @@ namespace Train.MsTs
 
 			internal void Create(ref CarBase Car, int Layer)
 			{
-				if (File.Exists(TexturePath))
+				if (File.Exists(TexturePath) || Type == CabComponentType.Digital)
 				{
-					//Create and register texture
+					if (FrameMappings.Length == 0 && TotalFrames > 1)
+					{
+						// e.g. Acela power handle has 25 frames for total power value of 100% but no mappings specified
+						FrameMappings = new FrameMapping[TotalFrames];
+						// frame 0 is always mapping value 0
+						for (int i = 1; i < TotalFrames; i++)
+						{
+							FrameMappings[i].MappingValue = (double)i / TotalFrames;
+							FrameMappings[i].FrameKey = i;
+						}
 
+					}
 					//Create element
 					double rW = 1024.0 / 640.0;
 					double rH = 768.0 / 480.0;
@@ -408,7 +425,17 @@ namespace Train.MsTs
 								}
 
 								f = GetStackLanguageFromSubject(Car.baseTrain, panelSubject, Units);
-								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+								switch (panelSubject)
+								{
+									case PanelSubject.Throttle:
+									case PanelSubject.Train_Brake:
+										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
+										break;
+									default:
+										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+										break;
+								}
+								
 							}
 
 							break;
@@ -445,9 +472,79 @@ namespace Train.MsTs
 									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
 									if (k == 0) j = l;
 								}
+
 								f = GetStackLanguageFromSubject(Car.baseTrain, panelSubject, Units);
-								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+								switch (panelSubject)
+								{
+									case PanelSubject.Direction:
+									case PanelSubject.Direction_Display:
+										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
+										break;
+									default:
+										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+										break;
+								}
+								
+								
 							}
+							break;
+						case CabComponentType.Digital:
+							if (panelSubject != PanelSubject.Speedometer && panelSubject != PanelSubject.Speedlim_Display)
+							{
+								break;
+							}
+							Position.X *= rW;
+							Position.Y *= rH;
+							
+							Color24 textColor = PositiveColors[0].Item2;
+
+							Texture[] frameTextures = new Texture[11];
+							TexturePath = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility"), "numbers.png"); // arial 9.5pt
+							Plugin.currentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
+							
+							for (int i = 0; i < 10; i++)
+							{
+								Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(0, i * 24, 16, 24), null), out frameTextures[i], true);
+							}
+							Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(0, 0, 16, 24), null), out frameTextures[10], true); // repeated zero [check vice MSTS]
+
+							int numMaxDigits = (int)Math.Floor(Math.Log10(Maximum) + 1);
+							int numMinDigits = (int)Math.Floor(Math.Log10(Minimum) + 1);
+
+							int totalDigits = Math.Max(numMinDigits, numMaxDigits) + LeadingZeros;
+							j = -1;
+							double digitWidth = Size.X / totalDigits;
+							for (int currentDigit = 0; currentDigit < totalDigits; currentDigit++)
+							{
+								for (int k = 0; k < frameTextures.Length; k++)
+								{
+									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X + Size.X - (digitWidth * (currentDigit + 1)), Position.Y, digitWidth * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, frameTextures[k], null, textColor, k != 0);
+									if (k == 0) j = l;
+								}
+
+								// build color arrays and mappings
+								Car.CarSections[0].Groups[0].Elements[j].Colors = new Color24[NegativeColors.Length + PositiveColors.Length];
+								FrameMappings = new FrameMapping[PositiveColors.Length + NegativeColors.Length];
+								for (int i = 0; i < NegativeColors.Length; i++)
+								{
+									FrameMappings[i].MappingValue = NegativeColors[i].Item1;
+									FrameMappings[i].FrameKey = i;
+									Car.CarSections[0].Groups[0].Elements[j].Colors[i] = NegativeColors[i].Item2;
+								}
+
+								for (int i = 0; i < PositiveColors.Length; i++)
+								{
+									FrameMappings[i + NegativeColors.Length].MappingValue = PositiveColors[i].Item1;
+									FrameMappings[i + NegativeColors.Length].FrameKey = i + NegativeColors.Length;
+									Car.CarSections[0].Groups[0].Elements[j].Colors[i + NegativeColors.Length] = PositiveColors[i].Item2;
+								}
+
+								// create color and digit functions
+								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, Units, currentDigit);
+								Car.CarSections[0].Groups[0].Elements[j].ColorFunction = new CvfAnimation(panelSubject, Units, FrameMappings);
+							}
+
+							
 							break;
 					}
 				}
@@ -487,9 +584,23 @@ namespace Train.MsTs
 						break;
 					case KujuTokenID.NumValues:
 					case KujuTokenID.NumPositions:
-						//notch ==> frame data
-						//We can skip for basic cabs
-						block.Skip((int) block.Length());
+						int numValues = block.ReadInt16();
+						if (FrameMappings.Length < numValues)
+						{
+							Array.Resize(ref FrameMappings, numValues);
+						}
+
+						for (int i = 0; i < numValues; i++)
+						{
+							if (block.Token == KujuTokenID.NumValues)
+							{
+								FrameMappings[i].MappingValue = block.ReadSingle();
+							}
+							else
+							{
+								FrameMappings[i].FrameKey = block.ReadInt16();
+							}
+						}
 						break;
 					case KujuTokenID.NumFrames:
 						TotalFrames = block.ReadInt16();
@@ -515,6 +626,76 @@ namespace Train.MsTs
 					case KujuTokenID.Type:
 						panelSubject = block.ReadEnumValue(default(PanelSubject));
 						break;
+					case KujuTokenID.LeadingZeros:
+						LeadingZeros = block.ReadInt16();
+						break;
+					case KujuTokenID.PositiveColour:
+						int numColors = block.ReadInt16();
+						if (numColors == 0)
+						{
+							PositiveColors = new[]
+							{
+								new Tuple<double, Color24>(0, Color24.White)
+
+							};
+							if (block.Length() - block.Position() > 3)
+							{
+								var subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
+								PositiveColors[0] = new Tuple<double, Color24>(0, new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16()));
+								HasPositiveColor = true;
+							}
+						}
+						else
+						{
+							HasPositiveColor = true;
+							PositiveColors = new Tuple<double, Color24>[numColors];
+							double value = 0;
+							for (int i = 0; i < numColors; i++)
+							{
+								var subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
+								Color24 color = new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16());
+								PositiveColors[i] = new Tuple<double, Color24>(value, color);
+								if (i < numColors - 1)
+								{
+									subBlock = block.ReadSubBlock(KujuTokenID.SwitchVal);
+									value = subBlock.ReadSingle();
+								}
+							}
+						}
+						break;
+					case KujuTokenID.NegativeColour:
+						numColors = block.ReadInt16();
+						if (numColors == 0)
+						{
+							NegativeColors = new[]
+							{
+								new Tuple<double, Color24>(double.NegativeInfinity, Color24.White)
+
+							};
+							if (block.Length() - block.Position() > 3)
+							{
+								var subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
+								NegativeColors[0] = new Tuple<double, Color24>(double.NegativeInfinity, new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16()));
+								HasNegativeColor = true;
+							}
+						}
+						else
+						{
+							NegativeColors = new Tuple<double, Color24>[numColors];
+							double value = double.NegativeInfinity;
+							for (int i = 0; i < numColors; i++)
+							{
+								var subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
+								Color24 color = new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16());
+								NegativeColors[i] = new Tuple<double, Color24>(value, color);
+								if (i < numColors - 1)
+								{
+									subBlock = block.ReadSubBlock(KujuTokenID.SwitchVal);
+									value = subBlock.ReadSingle();
+								}
+							}
+						}
+						break;
 				}
 			}
 
@@ -527,7 +708,7 @@ namespace Train.MsTs
 		}
 		
 		// get stack language from subject
-		private static string GetStackLanguageFromSubject(TrainBase Train, PanelSubject subject, Units subjectUnits)
+		private static string GetStackLanguageFromSubject(TrainBase Train, PanelSubject subject, Units subjectUnits, string suffix = "")
 		{
 			// transform subject
 			string Code = string.Empty;
@@ -605,11 +786,22 @@ namespace Train.MsTs
 				case PanelSubject.Pantograph:
 					Code = "pantographstate";
 					break;
+				case PanelSubject.Speedlim_Display:
+					switch (subjectUnits)
+					{
+						case Units.Miles_Per_Hour:
+							Code = "routelimit sectionlimit max 1 Minus == 1 Minus routelimit sectionlimit max 2.2369362920544 * ?";
+							break;
+						case Units.Kilometers_Per_Hour:
+							Code = "routelimit sectionlimit max 1 Minus == 1 Minus routelimit sectionlimit max 3.6 * ?";
+							break;
+					}
+					break;
 				default:
 					Code = "0";
 					break;
 			}
-			return Code;
+			return Code + suffix;
 		}
 
 		internal static int CreateElement(ref ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
