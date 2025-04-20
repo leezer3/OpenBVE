@@ -299,6 +299,12 @@ namespace Train.MsTs
 			private int VerticalFrames;
 			private bool MouseControl;
 			private bool DirIncrease;
+			private int LeadingZeros;
+
+			private Tuple<double, Color24>[] PositiveColors;
+			private bool HasPositiveColor = false;
+			private Tuple<double, Color24>[] NegativeColors;
+			private bool HasNegativeColor = false;
 
 			internal void Parse()
 			{
@@ -326,7 +332,7 @@ namespace Train.MsTs
 
 			internal void Create(ref CarBase Car, int Layer)
 			{
-				if (File.Exists(TexturePath))
+				if (File.Exists(TexturePath) || Type == CabComponentType.Digital)
 				{
 					//Create and register texture
 
@@ -449,6 +455,59 @@ namespace Train.MsTs
 								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
 							}
 							break;
+						case CabComponentType.Digital:
+							if (panelSubject != PanelSubject.Speedometer && panelSubject != PanelSubject.Speedlim_Display)
+							{
+								break;
+							}
+							Position.X *= rW;
+							Position.Y *= rH;
+							
+							Color24 textColor = PositiveColors[0].Item2;
+
+							Texture[] frameTextures = new Texture[11];
+							TexturePath = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility"), "numbers.png"); // arial 9.5pt
+							Plugin.currentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
+							
+							for (int i = 0; i < 10; i++)
+							{
+								Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(0, i * 24, 16, 24), null), out frameTextures[i], true);
+							}
+							Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(0, 0, 16, 24), null), out frameTextures[10], true); // repeated zero [check vice MSTS]
+
+							int numMaxDigits = (int)Math.Floor(Math.Log10(Maximum) + 1);
+							int numMinDigits = (int)Math.Floor(Math.Log10(Minimum) + 1);
+
+							int totalDigits = Math.Max(numMinDigits, numMaxDigits) + LeadingZeros;
+							j = -1;
+							double digitWidth = Size.X / totalDigits;
+							for (int currentDigit = 0; currentDigit < totalDigits; currentDigit++)
+							{
+								for (int k = 0; k < frameTextures.Length; k++)
+								{
+									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X + Size.X - (digitWidth * (currentDigit + 1)), Position.Y, digitWidth * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, frameTextures[k], null, textColor, k != 0);
+									if (k == 0) j = l;
+								}
+
+								string Suffix;
+								if (currentDigit == 0)
+								{
+									Suffix = " floor 10 mod";
+								}
+								else
+								{
+									string t0 = Math.Pow(10.0, currentDigit).ToString(CultureInfo.InvariantCulture);
+									string t1 = Math.Pow(10.0, -currentDigit).ToString(CultureInfo.InvariantCulture);
+									Suffix = " ~ " + t0 + " >= <> " + t1 + " * floor 10 mod 10 ?";
+								}
+
+								f = GetStackLanguageFromSubject(Car.baseTrain, panelSubject, Units, Suffix);
+								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+
+							}
+
+							
+							break;
 					}
 				}
 			}
@@ -515,6 +574,67 @@ namespace Train.MsTs
 					case KujuTokenID.Type:
 						panelSubject = block.ReadEnumValue(default(PanelSubject));
 						break;
+					case KujuTokenID.LeadingZeros:
+						LeadingZeros = block.ReadInt16();
+						break;
+					case KujuTokenID.PositiveColour:
+						int numColors = block.ReadInt16();
+						if (numColors == 0)
+						{
+							PositiveColors = new Tuple<double, Color24>[1]
+							{
+								new Tuple<double, Color24>(0, Color24.White)
+
+							};
+							if (block.Position() - block.Length() > 3)
+							{
+								PositiveColors[0] = new Tuple<double, Color24>(0, new Color24((byte)block.ReadInt16(), (byte)block.ReadInt16(), (byte)block.ReadInt16()));
+								HasPositiveColor = true;
+							}
+						}
+						else
+						{
+							HasPositiveColor = true;
+							PositiveColors = new Tuple<double, Color24>[numColors];
+							PositiveColors[0] = new Tuple<double, Color24>(0, new Color24((byte)block.ReadInt16(), (byte)block.ReadInt16(), (byte)block.ReadInt16()));
+							for (int i = 0; i < numColors - 1; i++)
+							{
+								var subBlock = block.ReadSubBlock(KujuTokenID.SwitchVal);
+								double value = subBlock.ReadSingle();
+								subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
+								PositiveColors[i + 1] = new Tuple<double, Color24>(value, new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16()));
+							}
+						}
+						break;
+					case KujuTokenID.NegativeColour:
+						numColors = block.ReadInt16();
+						if (numColors == 0)
+						{
+							NegativeColors = new Tuple<double, Color24>[1]
+							{
+								new Tuple<double, Color24>(0, Color24.White)
+
+							};
+							if (block.Length() - block.Position() > 3)
+							{
+								NegativeColors[0] = new Tuple<double, Color24>(0, new Color24((byte)block.ReadInt16(), (byte)block.ReadInt16(), (byte)block.ReadInt16()));
+								HasNegativeColor = true;
+							}
+						}
+						else
+						{
+							NegativeColors = new Tuple<double, Color24>[numColors];
+							NegativeColors[0] = new Tuple<double, Color24>(0, new Color24((byte)block.ReadInt16(), (byte)block.ReadInt16(), (byte)block.ReadInt16()));
+							for (int i = 0; i < numColors - 1; i++)
+							{
+								var subBlock = block.ReadSubBlock(KujuTokenID.SwitchVal);
+								double value = subBlock.ReadSingle();
+								subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
+								NegativeColors[i + 1] = new Tuple<double, Color24>(value, new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16()));
+								HasNegativeColor = true;
+							}
+						}
+						break;
 				}
 			}
 
@@ -527,7 +647,7 @@ namespace Train.MsTs
 		}
 		
 		// get stack language from subject
-		private static string GetStackLanguageFromSubject(TrainBase Train, PanelSubject subject, Units subjectUnits)
+		private static string GetStackLanguageFromSubject(TrainBase Train, PanelSubject subject, Units subjectUnits, string suffix = "")
 		{
 			// transform subject
 			string Code = string.Empty;
@@ -605,11 +725,22 @@ namespace Train.MsTs
 				case PanelSubject.Pantograph:
 					Code = "pantographstate";
 					break;
+				case PanelSubject.Speedlim_Display:
+					switch (subjectUnits)
+					{
+						case Units.Miles_Per_Hour:
+							Code = "routelimit 2.2369362920544 *";
+							break;
+						case Units.Kilometers_Per_Hour:
+							Code = "routelimit 3.6 *";
+							break;
+					}
+					break;
 				default:
 					Code = "0";
 					break;
 			}
-			return Code;
+			return Code + suffix;
 		}
 
 		internal static int CreateElement(ref ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
