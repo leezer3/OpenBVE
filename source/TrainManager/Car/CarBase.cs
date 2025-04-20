@@ -599,6 +599,14 @@ namespace TrainManager.Car
 						TrainManagerBase.currentHost.HideObject(currentCarSection.Groups[j].Elements[k].internalObject);
 					}
 				}
+
+				if (CarSections[i].Groups[0].Keyframes != null)
+				{
+					for (int j = 0; j < CarSections[i].Groups[0].Keyframes.Objects.Length; j++)
+					{
+						TrainManagerBase.currentHost.HideObject(CarSections[i].Groups[0].Keyframes.Objects[j]);
+					}
+				}
 			}
 			
 

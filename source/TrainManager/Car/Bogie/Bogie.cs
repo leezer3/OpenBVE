@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LibRender2.Trains;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -147,6 +147,13 @@ namespace TrainManager.Car
 				for (int j = 0; j < CarSections[i].Groups[0].Elements.Length; j++)
 				{
 					TrainManagerBase.currentHost.HideObject(CarSections[i].Groups[0].Elements[j].internalObject);
+				}
+				if (CarSections[i].Groups[0].Keyframes != null)
+				{
+					for (int j = 0; j < CarSections[i].Groups[0].Keyframes.Objects.Length; j++)
+					{
+						TrainManagerBase.currentHost.HideObject(CarSections[i].Groups[0].Keyframes.Objects[j]);
+					}
 				}
 			}
 
