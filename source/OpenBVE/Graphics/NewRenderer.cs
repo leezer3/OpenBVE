@@ -201,6 +201,17 @@ namespace OpenBve.Graphics
 
 			events.Render(Camera.AbsolutePosition);
 
+			GL.Enable(EnableCap.CullFace);
+			GL.Enable(EnableCap.DepthTest);
+			GL.DepthMask(true);
+			OptionLighting = false;
+			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+			{
+				TrainManager.PlayerTrain.Cars[i].ParticleSource?.Update(TimeElapsed);
+			}
+
+			OptionLighting = true;
+
 			// fog
 			float aa = Program.CurrentRoute.CurrentFog.Start;
 			float bb = Program.CurrentRoute.CurrentFog.End;

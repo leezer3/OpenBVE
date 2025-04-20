@@ -107,6 +107,8 @@
     <Compile Include="Screen\Resolution.cs" />
     <Compile Include="Screen\Screen.cs" />
     <Compile Include="Shaders\Shader.cs" />
+    <Compile Include="Smoke\Particle.cs" />
+    <Compile Include="Smoke\ParticleSource.cs" />
     <Compile Include="Textures\TextureManager.cs" />
     <Compile Include="Text\Fonts.BlockedFonts.cs" />
     <Compile Include="Text\Fonts.cs" />

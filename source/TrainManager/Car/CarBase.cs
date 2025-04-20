@@ -3,6 +3,7 @@ using System.Linq;
 using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
+using LibRender2.Smoke;
 using LibRender2.Trains;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
@@ -98,6 +99,8 @@ namespace TrainManager.Car
 		public RunSounds Run;
 		/// <summary>The traction model</summary>
 		public TractionModel TractionModel;
+
+		public ParticleSource ParticleSource;
 
 		private int trainCarIndex;
 
@@ -568,7 +571,7 @@ namespace TrainManager.Car
 		
 		/// <summary>Loads Car Sections (Exterior objects etc.) for this car</summary>
 		/// <param name="currentObject">The object to add to the car sections array</param>
-		/// <param name="visibleFromInterior">Wether this is visible from the interior of other cars</param>
+		/// <param name="visibleFromInterior">Whether this is visible from the interior of other cars</param>
 		public void LoadCarSections(UnifiedObject currentObject, bool visibleFromInterior)
 		{
 			int j = CarSections.Length;
