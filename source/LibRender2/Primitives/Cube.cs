@@ -315,7 +315,7 @@ namespace LibRender2.Primitives
 			// TODO: REMOVE ME AGAIN - THIS IS TEMPORARY
 			renderer.DefaultShader.Activate();
 			renderer.ResetShader(renderer.DefaultShader);
-			//renderer.DefaultShader.SetOpacity(Opacity);
+			renderer.DefaultShader.SetOpacity(Opacity);
 			// matrix
 			renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 			renderer.DefaultShader.SetCurrentModelViewMatrix(Matrix4D.Scale(Size) * (Matrix4D)new Transformation(Direction, Up, Side) * Matrix4D.CreateTranslation(Position.X - Camera.X, Position.Y - Camera.Y, -Position.Z + Camera.Z) * renderer.CurrentViewMatrix);

@@ -205,10 +205,6 @@ namespace OpenBve.Graphics
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
 			OptionLighting = false;
-			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
-			{
-				TrainManager.PlayerTrain.Cars[i].ParticleSource?.Update(TimeElapsed);
-			}
 
 			OptionLighting = true;
 
@@ -352,17 +348,10 @@ namespace OpenBve.Graphics
 			// particle sources
 			SetBlendFunc();
 			SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-			if(CurrentInterface != InterfaceType.GLMainMenu)
+			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
 			{
-				for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
-				{
-					for (int j = 0; j < TrainManager.PlayerTrain.Cars[i].ParticleSources.Count; j++)
-					{
-						TrainManager.PlayerTrain.Cars[i].ParticleSources[j].Update(TimeElapsed);
-					}
-				}
+				TrainManager.PlayerTrain.Cars[i].ParticleSource?.Update(TimeElapsed);
 			}
-			
 
 
 			// overlay (cab / interior) layer
