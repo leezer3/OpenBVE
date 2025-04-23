@@ -9,5 +9,11 @@ namespace Train.MsTs
 		internal Vector3 Direction;
 
 		internal double Size;
+
+		internal double SmokeMaxMagnitude;
+
+		internal double SmokeInitialRate;
+
+		internal double SmokeMaxRate;
 	}
 }
