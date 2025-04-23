@@ -139,7 +139,7 @@ namespace Train.MsTs
 				if (Exhaust.Size > 0)
 				{
 					Exhaust.Offset.Z -= 0.5 * Car.Length;
-					Car.ParticleSource = new ParticleSource(Plugin.Renderer, Car, Exhaust.Offset, Exhaust.Size, Exhaust.Direction);
+					Car.ParticleSource = new ParticleSource(Plugin.Renderer, Car, Exhaust.Offset, Exhaust.Size, Exhaust.SmokeMaxMagnitude, Exhaust.Direction);
 				}
 			}
 		}
@@ -771,6 +771,15 @@ namespace Train.MsTs
 					Exhaust.Offset = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
 					Exhaust.Direction = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
 					Exhaust.Size = block.ReadSingle();
+					break;
+				case KujuTokenID.DieselSmokeEffectMaxMagnitude:
+					Exhaust.SmokeMaxMagnitude = block.ReadSingle();
+					break;
+				case KujuTokenID.DieselSmokeEffectInitialSmokeRate:
+					Exhaust.SmokeInitialRate = block.ReadSingle();
+					break;
+				case KujuTokenID.DieselSmokeEffectMaxSmokeRate:
+					Exhaust.SmokeMaxRate = block.ReadSingle();
 					break;
 			}
 			return true;

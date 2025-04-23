@@ -22,6 +22,8 @@ namespace LibRender2.Smoke
 		
 		internal readonly double MaximumSize;
 
+		internal readonly double MaximumGrownSize;
+
 		internal readonly BaseRenderer Renderer;
 
 		internal Texture ParticleTexture;
@@ -39,11 +41,12 @@ namespace LibRender2.Smoke
 		
 
 
-		public ParticleSource(BaseRenderer renderer, AbstractCar car, Vector3 offset, double maximumSize, Vector3 movementSpeed)
+		public ParticleSource(BaseRenderer renderer, AbstractCar car, Vector3 offset, double maximumSize, double maximumGrownSize, Vector3 movementSpeed)
 		{
 			Renderer = renderer;
 			Random = new Random();
 			MaximumSize = maximumSize;
+			MaximumGrownSize = maximumGrownSize;
 			Particles = new List<Particle>();
 			MovementSpeed = movementSpeed;
 			Offset = offset;
@@ -52,6 +55,7 @@ namespace LibRender2.Smoke
 
 		public void Update(double timeElapsed)
 		{
+			dynamic dynamicCar = Car as dynamic;
 			Transformation directionalTransform = new Transformation(Car.FrontAxle.Follower.WorldDirection, Car.FrontAxle.Follower.WorldUp, Car.FrontAxle.Follower.WorldSide); // to correct for rotation of car
 			for (int i = Particles.Count - 1; i > 0; i--)
 			{
@@ -62,7 +66,6 @@ namespace LibRender2.Smoke
 				}
 				else
 				{
-					
 					// Apply base motion (stationary)
 					Vector3 transformedSpeed = new Vector3(MovementSpeed);
 					transformedSpeed.Rotate(directionalTransform);
@@ -80,20 +83,67 @@ namespace LibRender2.Smoke
 					}
 					movementDirection.Rotate(directionalTransform);
 					Vector3 vehicleMovement = (Car.CurrentSpeed / MaxSpeed) * movementDirection * timeElapsed;
+
+					if (dynamicCar.TractionModel.CurrentPower > 0)
+					{
+						if (Particles[i].Size.X < MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
+						{
+							if (Random.NextDouble() < 0.3)
+							{
+								Particles[i].Size.X -= Random.NextDouble() * timeElapsed;
+							}
+							else
+							{
+								Particles[i].Size.X += Random.NextDouble() * timeElapsed;
+							}
+
+							Particles[i].Size.X = Math.Max(0, Math.Min(Particles[i].Size.X, MaximumGrownSize));
+						}
+
+						if (Particles[i].Size.Y < MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
+						{
+							if (Random.NextDouble() < 0.3)
+							{
+								Particles[i].Size.Y -= Random.NextDouble() * timeElapsed;
+							}
+							else
+							{
+								Particles[i].Size.Y += Random.NextDouble() * timeElapsed;
+							}
+
+							Particles[i].Size.Y = Math.Max(0, Math.Min(Particles[i].Size.Y, MaximumGrownSize));
+						}
+
+						if (Particles[i].Size.Z < MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
+						{
+							if (Random.NextDouble() < 0.3)
+							{
+								Particles[i].Size.Y -= Random.NextDouble() * timeElapsed;
+							}
+							else
+							{
+								Particles[i].Size.Y += Random.NextDouble() * timeElapsed;
+							}
+
+							Particles[i].Size.Z = Math.Max(0, Math.Min(Particles[i].Size.Z, MaximumGrownSize));
+						}
+					}
 					Particles[i].Position += vehicleMovement;
 				}
-
-
 			}
 
 			if (Particles.Count < MaximumParticles)
 			{
-				if (Random.NextDouble() >= 0.5)
+				if (dynamicCar.TractionModel.IsRunning)
 				{
-					Vector3 startingPosition = new Vector3(Offset);
-					startingPosition.Rotate(directionalTransform);
-					Particles.Add(new Particle(startingPosition, new Vector3(Random.NextDouble() * MaximumSize, Random.NextDouble() * MaximumSize, Random.NextDouble() * MaximumSize), Random.NextDouble() * MaximumLifeSpan));
+					if (Random.NextDouble() >= 0.5)
+					{
+						Vector3 startingPosition = new Vector3(Offset);
+						startingPosition.Rotate(directionalTransform);
+						Particles.Add(new Particle(startingPosition, new Vector3(Random.NextDouble() * MaximumSize, Random.NextDouble() * MaximumSize, Random.NextDouble() * MaximumSize), Random.NextDouble() * MaximumLifeSpan));
+					}
 				}
+				
 			}
 
 			previousUpdatePosition = Car.FrontAxle.Follower.TrackPosition;
