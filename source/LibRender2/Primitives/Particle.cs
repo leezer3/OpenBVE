@@ -45,42 +45,48 @@ namespace LibRender2.Primitives
 				try
 				{
 					particlesVAO = new VertexArrayObject[12];
-					for (int i = 0; i < 11; i++)
+					for (int i = 0; i < 3; i++)
 					{
-						// TODO: sort out texture co-ordinates for 4 rows of 4 and replace image
-						LibRenderVertex[] vertexData =
+						for (int j = 0; j < 4; j++)
 						{
-							new LibRenderVertex
+							LibRenderVertex[] vertexData =
 							{
-								Position = new Vector3f(-1.0f, 1.0f, 0.0f),
-								UV = Vector2f.Null,
-								Color = Color128.White
-							},
-							new LibRenderVertex
-							{
-								Position = new Vector3f(1.0f, 1.0f, 0.0f),
-								UV = Vector2f.Right,
-								Color = Color128.White
-							},
-							new LibRenderVertex
-							{
-								Position = new Vector3f(1.0f, -1.0f, 0.0f),
-								UV = Vector2f.One,
-								Color = Color128.White
-							},
-							new LibRenderVertex
-							{
-								Position = new Vector3f(-1.0f, -1.0f, 0.0f),
-								UV = Vector2f.Down,
-								Color = Color128.White
-							},
-						};
-						particlesVAO[i] = new VertexArrayObject();
-						particlesVAO[i].Bind();
-						particlesVAO[i].SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
-						particlesVAO[i].SetIBO(new IndexBufferObjectUS(Enumerable.Range(0, vertexData.Length).Select(x => (ushort)x).ToArray(), BufferUsageHint.StaticDraw));
-						particlesVAO[i].SetAttributes(renderer.DefaultShader.VertexLayout);
-						particlesVAO[i].UnBind();
+								new LibRenderVertex
+								{
+									Position = new Vector3f(-1.0f, 1.0f, 0.0f),
+									UV = new Vector2f(i * 0.25, j * 0.25),
+									Color = Color128.White
+								},
+								new LibRenderVertex
+								{
+									Position = new Vector3f(1.0f, 1.0f, 0.0f),
+									UV = new Vector2f(0.25 + i * 0.25, j * 0.25),
+									Color = Color128.White
+								},
+								new LibRenderVertex
+								{
+									Position = new Vector3f(1.0f, -1.0f, 0.0f),
+									UV = new Vector2f(0.25 + i * 0.25, 0.25 + j * 0.25),
+									Color = Color128.White
+								},
+								new LibRenderVertex
+								{
+									Position = new Vector3f(-1.0f, -1.0f, 0.0f),
+									UV = new Vector2f(i * 0.25, 0.25 + j * 0.25),
+									Color = Color128.White
+								}
+							};
+
+							particlesVAO[i * 4 + j] = new VertexArrayObject();
+							particlesVAO[i * 4 + j].Bind();
+							particlesVAO[i * 4 + j].SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
+							particlesVAO[i * 4 + j].SetIBO(new IndexBufferObjectUS(Enumerable.Range(0, vertexData.Length).Select(x => (ushort)x).ToArray(), BufferUsageHint.StaticDraw));
+							particlesVAO[i * 4 + j].SetAttributes(renderer.DefaultShader.VertexLayout);
+							particlesVAO[i * 4 + j].UnBind();
+						}
+						
+						
+						
 					}
 					
 				}
