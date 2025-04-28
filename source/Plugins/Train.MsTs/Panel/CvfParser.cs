@@ -581,6 +581,11 @@ namespace Train.MsTs
 						int numColors = block.ReadInt16();
 						if (numColors == 0)
 						{
+							PositiveColors = new Tuple<double, Color24>[1]
+							{
+								new Tuple<double, Color24>(0, Color24.White)
+
+							};
 							if (block.Position() - block.Length() > 3)
 							{
 								PositiveColors[0] = new Tuple<double, Color24>(0, new Color24((byte)block.ReadInt16(), (byte)block.ReadInt16(), (byte)block.ReadInt16()));
@@ -605,6 +610,11 @@ namespace Train.MsTs
 						numColors = block.ReadInt16();
 						if (numColors == 0)
 						{
+							NegativeColors = new Tuple<double, Color24>[1]
+							{
+								new Tuple<double, Color24>(0, Color24.White)
+
+							};
 							if (block.Length() - block.Position() > 3)
 							{
 								NegativeColors[0] = new Tuple<double, Color24>(0, new Color24((byte)block.ReadInt16(), (byte)block.ReadInt16(), (byte)block.ReadInt16()));
