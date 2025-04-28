@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -1145,9 +1145,16 @@ namespace CsvRwRouteParser
 						cource = 0;
 					}
 
+					if (limit < 0.0)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed must be positive in Track.Limit at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						break;
+					}
+
 					int n = Data.Blocks[BlockIndex].Limits.Length;
 					Array.Resize(ref Data.Blocks[BlockIndex].Limits, n + 1);
-					Data.Blocks[BlockIndex].Limits[n] = new Limit(Data.TrackPosition, limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit, direction, cource, 0);
+					
+					Data.Blocks[BlockIndex].Limits[n] = new Limit(Data.TrackPosition, limit == 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit, direction, cource, 0);
 				}
 					break;
 				case TrackCommand.Stop:

@@ -63,17 +63,17 @@ namespace OpenBve {
 		
 		// load
 		/// <summary>Initializes loading the route and train asynchronously. Set the Loading.Cancel member to cancel loading. Check the Loading.Complete member to see when loading has finished.</summary>
-		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding, string TrainFolder, Encoding TrainEncoding) {
+		internal static void LoadAsynchronously(string routeFile, Encoding routeEncoding, string trainFolder, Encoding trainEncoding) {
 			// members
 			Cancel = false;
 			Complete = false;
-			CurrentRouteFile = RouteFile;
-			CurrentRouteEncoding = RouteEncoding;
-			CurrentTrainFolder = TrainFolder;
-			CurrentTrainEncoding = TrainEncoding;
+			CurrentRouteFile = routeFile;
+			CurrentRouteEncoding = routeEncoding;
+			CurrentTrainFolder = trainFolder;
+			CurrentTrainEncoding = trainEncoding;
 			//Set the route and train folders in the info class
-			Program.CurrentRoute.Information.RouteFile = RouteFile;
-			Program.CurrentRoute.Information.TrainFolder = TrainFolder;
+			Program.CurrentRoute.Information.RouteFile = routeFile;
+			Program.CurrentRoute.Information.TrainFolder = trainFolder;
 			Program.CurrentRoute.Information.FilesNotFound = null;
 			Program.CurrentRoute.Information.ErrorsAndWarnings = null;
 			Loader = new Thread(LoadThreaded) {IsBackground = true};
@@ -82,14 +82,14 @@ namespace OpenBve {
 
 		/// <summary>Gets the absolute Railway folder for a given route file</summary>
 		/// <returns>The absolute on-disk path of the railway folder</returns>
-		internal static string GetRailwayFolder(string RouteFile) {
+		internal static string GetRailwayFolder(string routeFile) {
 			try
 			{
-				string Folder = Path.GetDirectoryName(RouteFile);
+				string currentFolder = Path.GetDirectoryName(routeFile);
 
 				while (true)
 				{
-					string Subfolder = Path.CombineDirectory(Folder, "Railway");
+					string Subfolder = Path.CombineDirectory(currentFolder, "Railway");
 					if (Directory.Exists(Subfolder))
 					{
 						if (Directory.EnumerateDirectories(Subfolder).Any() || Directory.EnumerateFiles(Subfolder).Any())
@@ -103,10 +103,10 @@ namespace OpenBve {
 						Program.FileSystem.AppendToLogFile(Subfolder + " : Railway folder candidate rejected- Directory empty.");
 					}
 
-					if (Folder == null) continue;
-					DirectoryInfo Info = Directory.GetParent(Folder);
-					if (Info == null) break;
-					Folder = Info.FullName;
+					if (currentFolder == null) continue;
+					DirectoryInfo directoryInfo = Directory.GetParent(currentFolder);
+					if (directoryInfo == null) break;
+					currentFolder = directoryInfo.FullName;
 				}
 			}
 			catch
@@ -117,8 +117,8 @@ namespace OpenBve {
 			// If the Route, Object and Sound folders exist, but are not in a railway folder.....
 			try
 			{
-				string Folder = Path.GetDirectoryName(RouteFile);
-				if (Folder == null)
+				string currentFolder = Path.GetDirectoryName(routeFile);
+				if (currentFolder == null)
 				{
 					// Unlikely to work, but attempt to make the best of it
 					Program.FileSystem.AppendToLogFile("The route file appears to be stored on a root path- Returning the " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}) + " startup path.");
@@ -127,33 +127,33 @@ namespace OpenBve {
 				string candidate = null;
 				while (true)
 				{
-					string RouteFolder = Path.CombineDirectory(Folder, "Route");
-					string ObjectFolder = Path.CombineDirectory(Folder, "Object");
-					string SoundFolder = Path.CombineDirectory(Folder, "Sound");
-					if (Directory.Exists(RouteFolder) && Directory.Exists(ObjectFolder) && Directory.Exists(SoundFolder))
+					string routeFolder = Path.CombineDirectory(currentFolder, "Route");
+					string objectFolder = Path.CombineDirectory(currentFolder, "Object");
+					string soundFolder = Path.CombineDirectory(currentFolder, "Sound");
+					if (Directory.Exists(routeFolder) && Directory.Exists(objectFolder) && Directory.Exists(soundFolder))
 					{
-						Program.FileSystem.AppendToLogFile(Folder + " : Railway folder found.");
-						return Folder;
+						Program.FileSystem.AppendToLogFile(currentFolder + " : Railway folder found.");
+						return currentFolder;
 					}
 
-					if (Directory.Exists(RouteFolder) && Directory.Exists(ObjectFolder))
+					if (Directory.Exists(routeFolder) && Directory.Exists(objectFolder))
 					{
-						candidate = Folder;
+						candidate = currentFolder;
 					}
 
-					DirectoryInfo Info = Directory.GetParent(Folder);
-					if (Info == null)
+					DirectoryInfo directoryInfo = Directory.GetParent(currentFolder);
+					if (directoryInfo == null)
 					{
 						if (candidate != null)
 						{
-							Program.FileSystem.AppendToLogFile(Folder + " : The best candidate for the Railway folder has been selected- Sound folder not detected.");
+							Program.FileSystem.AppendToLogFile(currentFolder + " : The best candidate for the Railway folder has been selected- Sound folder not detected.");
 							return candidate;
 						}
 
 						break;
 					}
 
-					Folder = Info.FullName;
+					currentFolder = directoryInfo.FullName;
 				}
 			}
 			catch
@@ -166,27 +166,27 @@ namespace OpenBve {
 
 		/// <summary>Gets the default train folder for a given route file</summary>
 		/// <returns>The absolute on-disk path of the train folder</returns>
-		internal static string GetDefaultTrainFolder(string RouteFile)
+		internal static string GetDefaultTrainFolder(string routeFile)
 		{
-			if (string.IsNullOrEmpty(RouteFile) || string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
+			if (string.IsNullOrEmpty(routeFile) || string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
 				return string.Empty;
 			}
 			
-			string Folder;
+			string currentFolder;
 			try {
-				Folder = Path.GetDirectoryName(RouteFile);
+				currentFolder = Path.GetDirectoryName(routeFile);
 				if (Interface.CurrentOptions.TrainName[0] == '$') {
-					Folder = Path.CombineDirectory(Folder, Interface.CurrentOptions.TrainName);
-					if (Directory.Exists(Folder)) {
-						string File = Path.CombineFile(Folder, "train.dat");
+					currentFolder = Path.CombineDirectory(currentFolder, Interface.CurrentOptions.TrainName);
+					if (Directory.Exists(currentFolder)) {
+						string File = Path.CombineFile(currentFolder, "train.dat");
 						if (System.IO.File.Exists(File)) {
 							
-							return Folder;
+							return currentFolder;
 						}
 					}
 				}
 			} catch {
-				Folder = null;
+				currentFolder = null;
 			}
 			bool recursionTest = false;
 			string lastFolder = null;
@@ -194,13 +194,13 @@ namespace OpenBve {
 			{
 				while (true)
 				{
-					string TrainFolder = Path.CombineDirectory(Folder, "Train");
-					var OldFolder = Folder;
-					if (Directory.Exists(TrainFolder))
+					string trainFolder = Path.CombineDirectory(currentFolder, "Train");
+					var oldFolder = currentFolder;
+					if (Directory.Exists(trainFolder))
 					{
 						try
 						{
-							Folder = Path.CombineDirectory(TrainFolder, Interface.CurrentOptions.TrainName);
+							currentFolder = Path.CombineDirectory(trainFolder, Interface.CurrentOptions.TrainName);
 						}
 						catch (Exception ex)
 						{
@@ -209,36 +209,36 @@ namespace OpenBve {
 								break; // Invalid character in path causes infinite recursion
 							}
 
-							Folder = null;
+							currentFolder = null;
 						}
 
-						if (Folder != null)
+						if (currentFolder != null)
 						{
 							char c = System.IO.Path.DirectorySeparatorChar;
-							if (Directory.Exists(Folder))
+							if (Directory.Exists(currentFolder))
 							{
 
-								string File = Path.CombineFile(Folder, "train.dat");
+								string File = Path.CombineFile(currentFolder, "train.dat");
 								if (System.IO.File.Exists(File))
 								{
 									// train found
-									return Folder;
+									return currentFolder;
 								}
 
-								if (lastFolder == Folder || recursionTest)
+								if (lastFolder == currentFolder || recursionTest)
 								{
 									break;
 								}
 
-								lastFolder = Folder;
+								lastFolder = currentFolder;
 							}
-							else if (Folder.ToLowerInvariant().Contains(c + "railway" + c))
+							else if (currentFolder.ToLowerInvariant().Contains(c + "railway" + c))
 							{
 								//If we have a misplaced Train folder in either our Railway\Route
 								//or Railway folders, this can cause the train search to fail
 								//Detect the presence of a railway folder and carry on traversing upwards if this is the case
 								recursionTest = true;
-								Folder = OldFolder;
+								currentFolder = oldFolder;
 							}
 							else
 							{
@@ -247,11 +247,11 @@ namespace OpenBve {
 						}
 					}
 
-					if (Folder == null) continue;
-					DirectoryInfo Info = Directory.GetParent(Folder);
-					if (Info != null)
+					if (currentFolder == null) continue;
+					DirectoryInfo directoryInfo = Directory.GetParent(currentFolder);
+					if (directoryInfo != null)
 					{
-						Folder = Info.FullName;
+						currentFolder = directoryInfo.FullName;
 					}
 					else
 					{
@@ -312,9 +312,9 @@ namespace OpenBve {
 		}
 		private static void LoadEverythingThreaded() {
 			
-			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
-			string ObjectFolder = Path.CombineDirectory(RailwayFolder, "Object");
-			string SoundFolder = Path.CombineDirectory(RailwayFolder, "Sound");
+			string railwayFolder = GetRailwayFolder(CurrentRouteFile);
+			string objectFolder = Path.CombineDirectory(railwayFolder, "Object");
+			string soundFolder = Path.CombineDirectory(railwayFolder, "Sound");
 			Game.Reset(true);
 			Game.MinimalisticSimulation = true;
 			// screen
@@ -330,10 +330,10 @@ namespace OpenBve {
 			{
 				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
 				{
-					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
-					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false, ref Route))
+					object currentRoute = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
+					if (Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, CurrentTrainFolder, objectFolder, soundFolder, false, ref currentRoute))
 					{
-						Program.CurrentRoute = (CurrentRoute) Route;
+						Program.CurrentRoute = (CurrentRoute) currentRoute;
 						Program.CurrentRoute.UpdateLighting();
 						
 						loaded = true;

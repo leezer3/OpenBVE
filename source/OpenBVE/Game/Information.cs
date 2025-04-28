@@ -7,8 +7,8 @@
         /// <summary>The in-game menu system</summary>
 		internal static readonly GameMenu Menu = GameMenu.Instance;
 		/// <summary>The in-game overlay with route info drawings</summary>
-		internal static readonly RouteInfoOverlay routeInfoOverlay = new RouteInfoOverlay();
+		internal static readonly RouteInfoOverlay RouteInfoOverlay = new RouteInfoOverlay();
 
-		internal static readonly SwitchChangeDialog switchChangeDialog = new SwitchChangeDialog();
+		internal static readonly SwitchChangeDialog SwitchChangeDialog = new SwitchChangeDialog();
     }
 }

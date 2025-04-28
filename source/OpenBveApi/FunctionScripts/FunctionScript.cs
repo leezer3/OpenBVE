@@ -815,7 +815,11 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.SectionAspectNumber;
 							n++; s++; if (s >= m) m = s; break;
-							// state
+						case "sectionlimit":
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.SectionLimit;
+							n++; s++; if (s >= m) m = s; break;
+						// state
 						case "currentstate":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.CurrentObjectState;

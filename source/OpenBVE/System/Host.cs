@@ -644,14 +644,14 @@ namespace OpenBve {
 			
 			
 
-		public override void AddTrain(AbstractTrain ReferenceTrain, AbstractTrain NewTrain, bool Preccedes)
+		public override void AddTrain(AbstractTrain referenceTrain, AbstractTrain newTrain, bool Preccedes)
 		{
 			
 			int trainIndex = -1;
 			// find index of train within trainmanager array
 			for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
 			{
-				if (Program.TrainManager.Trains[i] == ReferenceTrain)
+				if (Program.TrainManager.Trains[i] == referenceTrain)
 				{
 					trainIndex = i;
 					break;
@@ -665,16 +665,16 @@ namespace OpenBve {
 
 			if (trainIndex == -1)
 			{
-				Program.TrainManager.Trains.Add((TrainBase)NewTrain);
+				Program.TrainManager.Trains.Add((TrainBase)newTrain);
 			}
 			else
 			{
-				Program.TrainManager.Trains.Insert(trainIndex, (TrainBase)NewTrain);
+				Program.TrainManager.Trains.Insert(trainIndex, (TrainBase)newTrain);
 			}
 
 		}
 
-		public override AbstractTrain ClosestTrain(AbstractTrain Train)
+		public override AbstractTrain ClosestTrain(AbstractTrain referenceTrain)
 		{
 			AbstractTrain closestTrain = null;
 			double bestLocation = double.MaxValue;
@@ -689,7 +689,7 @@ namespace OpenBve {
 			 * Sort of thing that will probably want a spinning thread to deal with it possibly
 			 */
 
-			if(Train is TrainBase baseTrain)
+			if(referenceTrain is TrainBase baseTrain)
 			{
 				for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
 				{

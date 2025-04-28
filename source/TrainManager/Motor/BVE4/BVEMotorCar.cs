@@ -1,4 +1,4 @@
-﻿using TrainManager.Car;
+using TrainManager.Car;
 using TrainManager.Power;
 
 namespace TrainManager.Motor

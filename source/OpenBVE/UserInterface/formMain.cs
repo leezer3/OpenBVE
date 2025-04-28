@@ -196,31 +196,31 @@ namespace OpenBve {
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
 			{
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedRoutes[i])) continue;
-				string RouteFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
-				string RoutePath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
-				if (string.IsNullOrEmpty(RouteFileName) || string.IsNullOrEmpty(RoutePath)) continue;
-				ListViewItem Item = listviewRouteRecently.Items.Add(RouteFileName);
+				string routeFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
+				string routePath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
+				if (string.IsNullOrEmpty(routeFileName) || string.IsNullOrEmpty(routePath)) continue;
+				ListViewItem listItem = listviewRouteRecently.Items.Add(routeFileName);
 				string extension = System.IO.Path.GetExtension(Interface.CurrentOptions.RecentlyUsedRoutes[i]).ToLowerInvariant();
 				switch (extension)
 				{
 					case ".dat":
-						Item.ImageKey = @"mechanik";
+						listItem.ImageKey = @"mechanik";
 						break;
 					case ".rw":
-						Item.ImageKey = @"rwroute";
+						listItem.ImageKey = @"rwroute";
 						break;
 					case ".csv":
-						Item.ImageKey = @"csvroute";
+						listItem.ImageKey = @"csvroute";
 						break;
 					case ".txt":
-						Item.ImageKey = @"bve5";
+						listItem.ImageKey = @"bve5";
 						break;
 				}
 
-				Item.Tag = Interface.CurrentOptions.RecentlyUsedRoutes[i];
-				if (textboxRouteFolder.Items.Count == 0 || !textboxRouteFolder.Items.Contains(RoutePath))
+				listItem.Tag = Interface.CurrentOptions.RecentlyUsedRoutes[i];
+				if (textboxRouteFolder.Items.Count == 0 || !textboxRouteFolder.Items.Contains(routePath))
 				{
-					textboxRouteFolder.Items.Add(RoutePath);
+					textboxRouteFolder.Items.Add(routePath);
 				}
 
 			}
@@ -1247,8 +1247,8 @@ namespace OpenBve {
 					if (Info.Status != InputDevicePlugin.PluginInfo.PluginStatus.Enable) {
 						continue;
 					}
-					string PluginPath = Path.CombineFile(Program.FileSystem.GetDataFolder("InputDevicePlugins"), Info.FileName);
-					if (File.Exists(PluginPath))
+					string pluginPath = Path.CombineFile(Program.FileSystem.GetDataFolder("InputDevicePlugins"), Info.FileName);
+					if (File.Exists(pluginPath))
 					{
 						a[n] = Info.FileName;
 						n++;

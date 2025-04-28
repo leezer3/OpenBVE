@@ -18,7 +18,7 @@
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-29</source>
-					<target>2023-12-27</target>
+					<target state="translated">2025-04-16</target>
 				</trans-unit>
 			</group>
 			<group id="openbve">
@@ -88,12 +88,12 @@
 						<target>Guardar Relatório do Erro</target>
 					</trans-unit>
 					<trans-unit id="saved">
-						<source>The report has been saved as &quot;[filename]&quot; on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
-						<target>O relatório foi guardado como &quot;[filename]&quot; na sua Área de Trabalho. \r\n\r\nAgora pode submeter um relatório de erro na área de discussão, ou colocando uma questão no GitHub com este ficheiro ZIP anexado.</target>
+						<source>The report has been saved as "[filename]" on your desktop. \r\n\r\nYou may now submit a bug report to the discussion board, or open an issue on GitHub with this zip file attached.</source>
+						<target>O relatório foi guardado como "[filename]" na sua Área de Trabalho. \r\n\r\nAgora pode submeter um relatório de erro na área de discussão, ou colocando uma questão no GitHub com este ficheiro ZIP anexado.</target>
 					</trans-unit>
 					<trans-unit id="save_failed">
-						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the &quot;View...&quot; button, then submit these logs to the discussion board or open an issue on GitHub.</source>
-						<target>Impossível criar o relatório de erro! \r\n\r\nPode aceder ao Registo e Registo de Avaria directamente clicando no botão &quot;Ver...&quot; , submetendo depois estes registos à área de discussão ou colocando uma questão no GitHub.</target>
+						<source>Cannot create bug report! \r\n\r\nYou may access the Log and Crash Log directly by clicking the "View..." button, then submit these logs to the discussion board or open an issue on GitHub.</source>
+						<target>Impossível criar o relatório de erro! \r\n\r\nPode aceder ao Registo e Registo de Avaria directamente clicando no botão "Ver..." , submetendo depois estes registos à área de discussão ou colocando uma questão no GitHub.</target>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -295,9 +295,11 @@
 					</trans-unit>
 					<trans-unit id="route_please_select">
 						<source>Please first select a route file to begin.</source>
+						<target state="translated">Para começar seleccione uma linha, por favor.</target>
 					</trans-unit>
 					<trans-unit id="route_switch_turn">
 						<source>The .Turn command and the .Switch command may not be used in the same route.</source>
+						<target state="translated">O comando .Turn e o comando .Switch não podem ser usados em simultâneo na mesma linha.</target>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -427,12 +429,15 @@
 					</trans-unit>
 					<trans-unit id="train_choose">
 						<source>Choose Train...</source>
+						<target state="translated">Escolha o comboio...</target>
 					</trans-unit>
 					<trans-unit id="train_default">
 						<source>Route default</source>
+						<target state="translated">Linha pré-definida</target>
 					</trans-unit>
 					<trans-unit id="train_notfound_download">
 						<source>The default train is not currently installed:\r\n\r\n [train]\r\n\r\n It may be downloaded at:\r\n\r\n</source>
+						<target state="translated">O comboio pré-definido não está instalado:\r\n\r\n [train]\r\n\r\n Pode ser baixado em:\r\n\r\n</target>
 					</trans-unit>
 				</group>
 				<group id="review">
@@ -743,8 +748,8 @@
 						<target>Remover</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_skip_if_none">
-						<source>If your package does not rely on other dependencies, you may continue by clicking the &quot;Create&quot; button.</source>
-						<target>Se o seu pacote não assenta noutras dependências pode prosseguir clicando no botão &quot;Criar&quot;.</target>
+						<source>If your package does not rely on other dependencies, you may continue by clicking the "Create" button.</source>
+						<target>Se o seu pacote não assenta noutras dependências pode prosseguir clicando no botão "Criar".</target>
 					</trans-unit>
 					<trans-unit id="creation_dependancies_nextstep">
 						<source>Package details and dependancies may be assigned in the following steps.</source>
@@ -1008,12 +1013,15 @@
 					</trans-unit>
 					<trans-unit id="database_newer_expected">
 						<source>The package database version appears to be a newer version than supported by this copy of OpenBVE.</source>
+						<target state="translated">A versão do pacote da base de dados parece ser mais recente que a suportada por esta cópia do OpenBVE.</target>
 					</trans-unit>
 					<trans-unit id="database_invalid_xml">
 						<source>The package database XML was invalid, and has been re-created.</source>
+						<target state="translated">O pacote da base de dados XML é inválido, e foi recreado.</target>
 					</trans-unit>
 					<trans-unit id="error_busy_thread">
 						<source>The package worker thread is currently busy. Please wait a moment and try again.</source>
+						<target state="translated">A tarefa executável do pacote está ocupada. Aguarde um momento e tente mais tarde por favor.</target>
 					</trans-unit>
 				</group>
 				<group id="controls">
@@ -1146,8 +1154,8 @@
 						<target>Carregue em qualquer tecla ou desloque o eixo na direcção desejada...</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab_fullaxis">
-						<source>Move an axis into the direction of &quot;increase&quot; or &quot;power&quot;...</source>
-						<target>Desloque um eixo qualquer na direcção de &quot;aumentar&quot; ou &quot;força&quot;...</target>
+						<source>Move an axis into the direction of "increase" or "power"...</source>
+						<target>Desloque um eixo qualquer na direcção de "aumentar" ou "força"...</target>
 					</trans-unit>
 					<trans-unit id="attached">
 						<source>Attached joysticks</source>
@@ -1265,71 +1273,71 @@
 					</trans-unit>
 					<trans-unit id="notdetected">
 						<source>No RailDriver controllers detected.</source>
-						<target>Não foram encontrados controladores do &quot;RailDriver&quot;.</target>
+						<target>Não foram encontrados controladores do "RailDriver".</target>
 					</trans-unit>
 					<trans-unit id="config_error">
 						<source>Error loading RailDriver calibration file.</source>
 						<target>Erro ao carregar o ficheiro de calibragem do RailDriver.</target>
 					</trans-unit>
 					<trans-unit id="calibration_start">
-						<source>Please press &apos;Next&apos; to start calibration.</source>
-						<target>Carregue em &apos;Seguinte&apos; para iniciar a calibragem.</target>
+						<source>Please press 'Next' to start calibration.</source>
+						<target>Carregue em 'Seguinte' para iniciar a calibragem.</target>
 					</trans-unit>
 					<trans-unit id="calibration_a">
-						<source>Move the reverser lever to the full reverse position and press &apos;Next&apos;.</source>
-						<target>Mova o inversor para marcha-atrás e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move the reverser lever to the full reverse position and press 'Next'.</source>
+						<target>Mova o inversor para marcha-atrás e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_b">
-						<source>Move the reverser lever to the full forward position and press &apos;Next&apos;.</source>
-						<target>Mova o inversor para marcha-à-frente e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move the reverser lever to the full forward position and press 'Next'.</source>
+						<target>Mova o inversor para marcha-à-frente e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_c">
-						<source>Move the combined brake / throttle lever to the full power position and press &apos;Next&apos;.</source>
-						<target>Mova o combinador para a potência máxima e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
+						<target>Mova o combinador para a potência máxima e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_d">
-						<source>Move the combined brake / throttle lever to the full brake position and press &apos;Next&apos;.</source>
-						<target>Mova o combinador para a travagem máxima e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
+						<target>Mova o combinador para a travagem máxima e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_e">
-						<source>Move the dynamic brake lever to the release position and press &apos;Next&apos;.</source>
-						<target>Mova o travão dinâmico para neutro e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move the dynamic brake lever to the release position and press 'Next'.</source>
+						<target>Mova o travão dinâmico para neutro e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_f">
-						<source>Move the dynamic brake lever to the emergency position and press &apos;Next&apos;.</source>
-						<target>Mova o travão dinâmico para emergência e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
+						<target>Mova o travão dinâmico para emergência e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_g">
-						<source>Move the independant brake lever to the release position and press &apos;Next&apos;.</source>
-						<target>Mova o travão independente para neutro e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move the independant brake lever to the release position and press 'Next'.</source>
+						<target>Mova o travão independente para neutro e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_h">
-						<source>Move the independant brake lever to the full position and press &apos;Next&apos;.</source>
-						<target>Mova o travão independente para a máxima travagem e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move the independant brake lever to the full position and press 'Next'.</source>
+						<target>Mova o travão independente para a máxima travagem e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_i">
-						<source>Move the bail-off lever to the release position and press &apos;Next&apos;.</source>
-						<target>Mova a manete do travão do comboio para neutro e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move the bail-off lever to the release position and press 'Next'.</source>
+						<target>Mova a manete do travão do comboio para neutro e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_j">
-						<source>Move and hold the bail-off lever into the full position and press &apos;Next&apos;.</source>
-						<target>Mova a manete do travão do comboio para máximo e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move and hold the bail-off lever into the full position and press 'Next'.</source>
+						<target>Mova a manete do travão do comboio para máximo e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_k">
-						<source>Move the wiper switch to OFF and press &apos;Next&apos;.</source>
-						<target>Desligue o limpa-pára-brisas e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move the wiper switch to OFF and press 'Next'.</source>
+						<target>Desligue o limpa-pára-brisas e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_l">
-						<source>Move the wiper switch to FULL and press &apos;Next&apos;.</source>
-						<target>Ligue o limpa-pára-brisas e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move the wiper switch to FULL and press 'Next'.</source>
+						<target>Ligue o limpa-pára-brisas e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_m">
-						<source>Move the lights switch to OFF and press &apos;Next&apos;.</source>
-						<target>Desligue os faróis e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move the lights switch to OFF and press 'Next'.</source>
+						<target>Desligue os faróis e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_n">
-						<source>Move the lights switch to FULL and press &apos;Next&apos;.</source>
-						<target>Ligue os faróis e carregue em &apos;Seguinte&apos;.</target>
+						<source>Move the lights switch to FULL and press 'Next'.</source>
+						<target>Ligue os faróis e carregue em 'Seguinte'.</target>
 					</trans-unit>
 					<trans-unit id="calibration_o">
 						<source>Calibration complete.</source>
@@ -1763,6 +1771,7 @@
 					</trans-unit>
 					<trans-unit id="resolution">
 						<source>Resolution:</source>
+						<target state="translated">Resolução:</target>
 					</trans-unit>
 				</group>
 				<group id="dialog">
@@ -1875,12 +1884,12 @@
 						<target>Ficheiros não encontrados:</target>
 					</trans-unit>
 					<trans-unit id="almost_help_filesnotfound">
-						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting &quot;Ignore&quot; from below.</source>
-						<target>Foram encontrados alguns problemas ao carregar a linha e o comboio.\r\n\r\nComo alguns ficheiros não foram encontrados, a linha e/ou comboio podem não aparecer correctamente. Tente obter novamente a linha e/ou o comboio para garantir que dispõe do pacote completo.\r\n\r\nA seguinte lista de problemas pode fornecer informações adicionais. Pode, ainda assim, iniciar a simulação seleccionando &quot;Ignorar&quot; no botão abaixo.</target>
+						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting "Ignore" from below.</source>
+						<target>Foram encontrados alguns problemas ao carregar a linha e o comboio.\r\n\r\nComo alguns ficheiros não foram encontrados, a linha e/ou comboio podem não aparecer correctamente. Tente obter novamente a linha e/ou o comboio para garantir que dispõe do pacote completo.\r\n\r\nA seguinte lista de problemas pode fornecer informações adicionais. Pode, ainda assim, iniciar a simulação seleccionando "Ignorar" no botão abaixo.</target>
 					</trans-unit>
 					<trans-unit id="almost_help_general">
-						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select &quot;Ignore&quot; at this point to start the game.</source>
-						<target>Foram encontrados alguns problemas ao carregar a linha e o comboio. Caso seja o autor da linha ou do comboio, talvez valha a pena dar uma olhadela à seguinte lista de problemas.\r\n\r\nComo utilizador pode seleccionar &quot;Ignorar&quot; para poder iniciar a simulação.</target>
+						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select "Ignore" at this point to start the game.</source>
+						<target>Foram encontrados alguns problemas ao carregar a linha e o comboio. Caso seja o autor da linha ou do comboio, talvez valha a pena dar uma olhadela à seguinte lista de problemas.\r\n\r\nComo utilizador pode seleccionar "Ignorar" para poder iniciar a simulação.</target>
 					</trans-unit>
 					<trans-unit id="almost_show">
 						<source>Show issues</source>
@@ -2012,18 +2021,23 @@
 					</trans-unit>
 					<trans-unit id="route_newlimit">
 						<source>New speed limit: [limit] [unit].</source>
+						<target state="translated">Novo limite de velocidade: [limit] [unit].</target>
 					</trans-unit>
 					<trans-unit id="route_nextsection">
 						<source>Next signal in [distance]</source>
+						<target state="translated">Próximo sinal a [distance]</target>
 					</trans-unit>
 					<trans-unit id="route_nextsection_aspect">
 						<source>Next signal in [distance], with aspect [aspect]</source>
+						<target state="translated">Próximo sinal a [distance], com aspecto [aspect]</target>
 					</trans-unit>
 					<trans-unit id="route_nextstation">
 						<source>Next station is [name] in [distance]</source>
+						<target state="translated">A próxima estação é [name] a [distance]</target>
 					</trans-unit>
 					<trans-unit id="train_currentspeed">
-						<source>The train&apos;s current speed is [speed]</source>
+						<source>The train's current speed is [speed]</source>
+						<target state="translated">A velocidade actual do comboio é [speed]</target>
 					</trans-unit>
 				</group>
 				<group id="notification">
@@ -2093,18 +2107,23 @@
 					</trans-unit>
 					<trans-unit id="switchexterior_uncouple">
 						<source>Please switch to exterior view to uncouple.</source>
+						<target state="translated">Por favor mude para a vista exterior para desengatar.</target>
 					</trans-unit>
 					<trans-unit id="unable_uncouple">
 						<source>Unable to uncouple this car.</source>
+						<target state="translated">Não é possível desengatar este vagão.</target>
 					</trans-unit>
 					<trans-unit id="exterior_uncouplerear">
 						<source>Uncoupling the rear of car number</source>
+						<target state="translated">Desengatando a traseira do vagão Nº</target>
 					</trans-unit>
 					<trans-unit id="exterior_uncouplefront">
 						<source>Uncoupling the front of car number</source>
+						<target state="translated">Desengatando a frente do vagão Nº</target>
 					</trans-unit>
 					<trans-unit id="fixed_uncouple">
 						<source>This coupler is fixed, and cannot uncouple.</source>
+						<target state="translated">Este engate é fixo e não pode ser desengatado.</target>
 					</trans-unit>
 				</group>
 				<group id="score">
@@ -2290,19 +2309,23 @@
 					</trans-unit>
 					<trans-unit id="title">
 						<source>In-Game Menu</source>
+						<target state="translated">Menu do Jogo</target>
 					</trans-unit>
 					<trans-unit id="pause_title">
 						<source>PAUSE</source>
+						<target state="translated">PAUSA</target>
 					</trans-unit>
 					<trans-unit id="train_default">
 						<source>Do you wish to use the default train?</source>
-						<target>Pré-definido</target>
+						<target state="translated">Pretende utilizar o comboio pré-definido?</target>
 					</trans-unit>
 					<trans-unit id="train_default_no">
 						<source>No</source>
+						<target state="translated">Não</target>
 					</trans-unit>
 					<trans-unit id="train_default_yes">
 						<source>Yes</source>
+						<target state="translated">Sim</target>
 					</trans-unit>
 				</group>
 				<group id="lamps">
@@ -2643,15 +2666,15 @@
 						<target>Função P do sistema de segurança</target>
 					</trans-unit>
 					<trans-unit id="camera_interior">
-						<source>Switches to the train&apos;s interior view</source>
+						<source>Switches to the train's interior view</source>
 						<target>Muda para a vista interior do comboio</target>
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
-						<source>Switches to the train&apos;s interior view. However, the panel is not displayed.</source>
+						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
 						<target>Muda para a vista interior do comboio. No entanto, o painel não é mostrado.</target>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
-						<source>Switches to the train&apos;s exterior view</source>
+						<source>Switches to the train's exterior view</source>
 						<target>Muda para a vista exterior do comboio</target>
 					</trans-unit>
 					<trans-unit id="camera_track">
@@ -2824,11 +2847,11 @@
 					</trans-unit>
 					<trans-unit id="debug_wireframe">
 						<source>Activates or deactivates wireframe mode</source>
-						<target>Activa ou desactiva o modo &quot;vêr grelha&quot;</target>
+						<target>Activa ou desactiva o modo "vêr grelha"</target>
 					</trans-unit>
 					<trans-unit id="debug_normals">
 						<source>Shows or hides vertex normals</source>
-						<target>Mostra ou esconde a posição dos &quot;vértices&quot;</target>
+						<target>Mostra ou esconde a posição dos "vértices"</target>
 					</trans-unit>
 					<trans-unit id="debug_brake_systems">
 						<source>Shows or hides brake system debug output</source>
@@ -2916,27 +2939,35 @@
 					</trans-unit>
 					<trans-unit id="debug_renderer_mode">
 						<source>Toggles the renderer</source>
+						<target state="translated">Alterna o renderizador</target>
 					</trans-unit>
 					<trans-unit id="raildriver_speed_units">
 						<source>Toggles the RailDriver speed display units.</source>
+						<target state="translated">Alterna as unidades de velocidade do RailDriver.</target>
 					</trans-unit>
 					<trans-unit id="accessibility_current_speed">
 						<source>Accessibility: Audibly announces the current speed.</source>
+						<target state="translated">Acessibilidade: Anúncio áudio da velocidade actual.</target>
 					</trans-unit>
 					<trans-unit id="accessibility_next_signal">
 						<source>Accessibility: Audibly announces the next signal distance and aspect.</source>
+						<target state="translated">Acessibilidade: Anúncio áudio da distância e aspecto do próximo sinal.</target>
 					</trans-unit>
 					<trans-unit id="accessibility_next_station">
 						<source>Accessibility: Audibly announces the the next station name and distance.</source>
+						<target state="translated">Acessibilidade: Anúncio áudio do nome e distância da próxima estação.</target>
 					</trans-unit>
 					<trans-unit id="uncouple_front">
 						<source>Uncouples the front coupler for the selected car.</source>
+						<target state="translated">Desengata o engate frontal do vagão seleccionado.</target>
 					</trans-unit>
 					<trans-unit id="uncouple_rear">
 						<source>Uncouples the rear coupler for the selected car.</source>
+						<target state="translated">Desengata o engate traseiro do vagão seleccionado.</target>
 					</trans-unit>
 					<trans-unit id="switch_menu">
 						<source>Shows the change switch menu</source>
+						<target state="translated">Mostra o menu da mudança de agulhas</target>
 					</trans-unit>
 				</group>
 				<group id="keys">
@@ -3480,149 +3511,197 @@
 				<group id="switchmenu">
 					<trans-unit id="title">
 						<source>Select a Switch To Change: </source>
+						<target state="translated">Seleccione uma agulha para mudar </target>
 					</trans-unit>
 					<trans-unit id="selected">
 						<source>Selected Switch: </source>
+						<target state="translated">Agulha seleccionada: </target>
 					</trans-unit>
 					<trans-unit id="current">
 						<source>Current Setting: </source>
+						<target state="translated">Posição actual: </target>
 					</trans-unit>
 					<trans-unit id="distance">
 						<source>Distance from Player: </source>
+						<target state="translated">Distância do jogador: </target>
 					</trans-unit>
 					<trans-unit id="zoom_in">
 						<source>Zoom In</source>
+						<target state="translated">Aproxima</target>
 					</trans-unit>
 					<trans-unit id="zoom_out">
 						<source>Zoom Out</source>
+						<target state="translated">Afasta</target>
 					</trans-unit>
 				</group>
 				<group id="denshadego">
 					<trans-unit id="config_title">
 						<source>Densha de GO! controller configuration</source>
+						<target state="translated">Densha de GO! Configuração do controlador</target>
 					</trans-unit>
 					<trans-unit id="input_section">
 						<source>Device input</source>
+						<target state="translated">Entrada de dispositivo</target>
 					</trans-unit>
 					<trans-unit id="label_brake">
 						<source>Brake: [notch]</source>
+						<target state="translated">Travão [notch]</target>
 					</trans-unit>
 					<trans-unit id="label_power">
 						<source>Power: [notch]</source>
+						<target state="translated">Acelerador [notch]</target>
 					</trans-unit>
 					<trans-unit id="label_reverser">
 						<source>Reverser: [notch]</source>
+						<target state="translated">Inversor [notch]</target>
 					</trans-unit>
 					<trans-unit id="calibration_button">
 						<source>Start calibration</source>
+						<target state="translated">Inicia a calibragem</target>
 					</trans-unit>
 					<trans-unit id="device">
 						<source>Device:</source>
+						<target state="translated">Dispositivo:</target>
 					</trans-unit>
 					<trans-unit id="button_section">
 						<source>Button mapping</source>
+						<target state="translated">Mapeamento dos botões</target>
 					</trans-unit>
 					<trans-unit id="command_none">
 						<source>None</source>
+						<target state="translated">Nenhum</target>
 					</trans-unit>
 					<trans-unit id="handle_section">
 						<source>Handle mapping</source>
+						<target state="translated">Mapeamento do manípulo</target>
 					</trans-unit>
 					<trans-unit id="option_convert">
 						<source>Convert notches</source>
+						<target state="translated">Converte pontos</target>
 					</trans-unit>
 					<trans-unit id="option_keep_minmax">
 						<source>Keep minimum and maximum</source>
+						<target state="translated">Mantém mínimo e máximo</target>
 					</trans-unit>
 					<trans-unit id="option_holdbrake">
 						<source>Map hold brake to B1</source>
+						<target state="translated">Mapa mantém o travão em B1</target>
 					</trans-unit>
 					<trans-unit id="save_button">
 						<source>Save</source>
+						<target state="translated">Guardar</target>
 					</trans-unit>
 					<trans-unit id="cancel_button">
 						<source>Cancel</source>
+						<target state="translated">Cancelar</target>
 					</trans-unit>
 					<trans-unit id="calibrate_button">
 						<source>Hold the [button] button in the controller and press OK.</source>
+						<target state="translated">Carregue no [button] botão do controlador e pressione OK.</target>
 					</trans-unit>
 					<trans-unit id="calibrate_brake">
 						<source>Move the brake handle to [notch] and press OK.</source>
+						<target state="translated">Mova o manípulo do travão para [notch] e pressione OK.</target>
 					</trans-unit>
 					<trans-unit id="calibrate_power">
 						<source>Move the power handle to [notch] and press OK.</source>
+						<target state="translated">Mova o manípulo do acelerador para [notch] e pressione OK.</target>
 					</trans-unit>
 					<trans-unit id="label_up">
 						<source>UP</source>
+						<target state="translated">ACIMA</target>
 					</trans-unit>
 					<trans-unit id="label_down">
 						<source>DOWN</source>
+						<target state="translated">ABAIXO</target>
 					</trans-unit>
 					<trans-unit id="label_left">
 						<source>LEFT</source>
+						<target state="translated">ESQUERDA</target>
 					</trans-unit>
 					<trans-unit id="label_right">
 						<source>RIGHT</source>
+						<target state="translated">DIREITA</target>
 					</trans-unit>
 					<trans-unit id="label_pedal">
 						<source>PEDAL</source>
+						<target state="translated">PEDAL</target>
 					</trans-unit>
 					<trans-unit id="label_ldoor">
 						<source>L DOOR</source>
+						<target state="translated">PORTA ESQUERDA</target>
 					</trans-unit>
 					<trans-unit id="label_rdoor">
 						<source>R DOOR</source>
+						<target state="translated">PORTA DIREITA</target>
 					</trans-unit>
 					<trans-unit id="label_a2">
 						<source>A2</source>
+						<target state="translated">A2</target>
 					</trans-unit>
 					<trans-unit id="label_ats">
 						<source>ATS</source>
+						<target state="translated">ATS</target>
 					</trans-unit>
 					<trans-unit id="linkLabel_driver">
 						<source>My controller is not detected or does not work properly</source>
+						<target state="translated">O meu controlador não foi detectado ou não funciona correctamente</target>
 					</trans-unit>
 					<trans-unit id="help_title">
 						<source>Help</source>
+						<target state="translated">Ajuda</target>
 					</trans-unit>
 					<trans-unit id="help_controller1_label">
 						<source>My controller is not working correctly</source>
+						<target state="translated">O meu controlador não funciona correctamente</target>
 					</trans-unit>
 					<trans-unit id="help_controller2_label">
 						<source>My PS2 controller is not detected</source>
+						<target state="translated">O meu controlador PS2 não foi detectado</target>
 					</trans-unit>
 					<trans-unit id="help_windows_label">
 						<source>Windows</source>
+						<target state="translated">Windows</target>
 					</trans-unit>
 					<trans-unit id="help_linux_label">
 						<source>Linux</source>
+						<target state="translated">Linux</target>
 					</trans-unit>
 					<trans-unit id="help_controller1_textbox">
 						<source>If your non-USB controller is not providing correct input:\r\n\r\n1. Ensure the USB adapter is working. Ideally, the adapter should map the direction buttons from a standard controller to separate buttons to avoid compatibility issues.\r\n2. Calibrate the controller from the configuration window, if necessary.</source>
+						<target state="translated">Se o seu controlador não USB não proporcionar uma entrada correcta:\r\n\r\n1. Assegure-se de que o adaptador USB esteja funcional. Idealmente, o adaptador deveria mapear os botões de direcção a partir dum controlador padrão para botões separados para evitar incompatibilidades.\r\n2. Calibre o controlador a partir da janela de configuração, se necessário.</target>
 					</trans-unit>
 					<trans-unit id="help_controller2_textbox">
 						<source>If your PS2 controller does not appear in the list, follow these steps:</source>
+						<target state="translated">Se o seu controlador PS2 não aparecer nesta lista siga os passos seguintes:</target>
 					</trans-unit>
 					<trans-unit id="help_windows_textbox">
-						<source>1. Extract the Windows drivers.\r\n2. Download and run Zadig.\r\n3. Load the appropriate CFG file for your device (&quot;Device &gt; Load Preset Device&quot;).\r\n4. Press &quot;Install Driver&quot; and wait for installation to complete.</source>
+						<source>1. Extract the Windows drivers.\r\n2. Download and run Zadig.\r\n3. Load the appropriate CFG file for your device ("Device &gt; Load Preset Device").\r\n4. Press "Install Driver" and wait for installation to complete.</source>
+						<target state="translated">1. Extraia os controladores Windows.\r11n2. Baixe e execute o Zadig.\r\n3. Carregue o ficheiro CFG apropriado para o seu dispositivo ("Device &gt; Load Preset Device").\r\n4. Pressione "Install Driver" e aguarde que a instalação complete.</target>
 					</trans-unit>
 					<trans-unit id="help_libusb_symlink">
-						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.\r\nPlease follow the following instructions:\r\n\r\n1. Check that the &quot;libusb-1.0&quot; package is installed.\r\n2. Find the location of &quot;libusb-1.0.so.0&quot; - On recent Ubuntu and Debian versions, this is likely to be &quot;/lib/x86_64-linux-gnu/&quot;\r\n3. Open the directory in the terminal.\r\n4. Check this location to see if &quot;libusb-1.0.so&quot; exists.\r\n5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: &quot;sudo ln -s libusb-1.0.so.0 libusb-1.0.so&quot;</source>
+						<source>LibUsb appears to be either missing, or has not been correctly symlinked for runtime loading.\r\nPlease follow the following instructions:\r\n\r\n1. Check that the "libusb-1.0" package is installed.\r\n2. Find the location of "libusb-1.0.so.0" - On recent Ubuntu and Debian versions, this is likely to be "/lib/x86_64-linux-gnu/"\r\n3. Open the directory in the terminal.\r\n4. Check this location to see if "libusb-1.0.so" exists.\r\n5. If the file does not exist, we must create the appropriate symlink by executing the following command from this terminal: "sudo ln -s libusb-1.0.so.0 libusb-1.0.so"</source>
+						<target state="translated">LibUsb parece faltar ou não foi correctamente ligado para o carregamento do runtime.\r\nPor favor siga as seguintes instruções:\r\n\r\n1. Verifique se o pacote "libusb-1.0" está instalado.\r\n2. Procure a localização do "libusb-1.0.so.0" - Nas versões recentes de Ubuntu e Debian, esta deverá ser "/lib/x86_64-linux-gnu/"\r\n3. Abra o directório no terminal.\r\n4. Verifique esta localização para ver se existe o "libusb-1.0.so" exists.\r\n5. Se o ficheiro não existir, devemos criar a apropriada ligação executando o seguinte comando a partir deste terminal: "sudo ln -s libusb-1.0.so.0 libusb-1.0.so"</target>
 					</trans-unit>
 					<trans-unit id="help_linux_textbox">
-						<source>1. Extract the Linux udev file.\r\n2. Copy the file to &quot;/etc/udev/rules.d/&quot; (root permissions required).\r\n3. Reboot or reload udev rules manually.</source>
+						<source>1. Extract the Linux udev file.\r\n2. Copy the file to "/etc/udev/rules.d/" (root permissions required).\r\n3. Reboot or reload udev rules manually.</source>
+						<target state="translated">1. Extrair o ficheiro Linux udev.\r\n2. Copiar o ficheiro para "/etc/udev/rules.d/" (necessárias permissões de raíz).\r\n3. Reinicie ou recarregue as regras udev manualmente.</target>
 					</trans-unit>
 					<trans-unit id="help_zadig_button">
 						<source>Get Zadig</source>
+						<target state="translated">Obter o Zadig</target>
 					</trans-unit>
 					<trans-unit id="help_windows_button">
 						<source>Extract files (Windows)</source>
+						<target state="translated">Extrair ficheiros (Windows)</target>
 					</trans-unit>
 					<trans-unit id="help_linux_button">
 						<source>Extract files (Linux)</source>
+						<target state="translated">Extrair ficheiros (Linux)</target>
 					</trans-unit>
 					<trans-unit id="help_ok_button">
 						<source>OK</source>
+						<target state="translated">OK</target>
 					</trans-unit>
 				</group>
 			</group>
@@ -3878,9 +3957,11 @@
 					</trans-unit>
 					<trans-unit id="separated_interlocked">
 						<source>Separated (Interlocked)</source>
+						<target state="translated">Separado (Interligado)</target>
 					</trans-unit>
 					<trans-unit id="separated_interlocked_reverser">
 						<source>Separated (Reverser Interlocked)</source>
+						<target state="translated">Separado (Inversor interligado)</target>
 					</trans-unit>
 				</group>
 				<group id="cab">
@@ -3948,7 +4029,7 @@
 					</trans-unit>
 					<trans-unit id="number_of_trailer_cars_error_message">
 						<source>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</source>
-						<target>Nº de reboques deve ser pelo menos 1, se não está definido &quot;Carruagem da frente é Motora&quot;.</target>
+						<target>Nº de reboques deve ser pelo menos 1, se não está definido "Carruagem da frente é Motora".</target>
 					</trans-unit>
 				</group>
 				<group id="device">
@@ -4360,9 +4441,11 @@
 							</trans-unit>
 							<trans-unit id="separated_interlocked">
 								<source>Separated (Interlocked)</source>
+								<target state="translated">Separado (interligado)</target>
 							</trans-unit>
 							<trans-unit id="separated_interlocked_reverser">
 								<source>Separated (Reverser Interlocked)</source>
+								<target state="translated">Separado (Inversor interligado)</target>
 							</trans-unit>
 						</group>
 						<group id="eb_handle_behaviour">
@@ -4435,12 +4518,15 @@
 						</trans-unit>
 						<trans-unit id="brake_notches_error_message">
 							<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+							<target state="translated">O Número de Pontos de Travagem deve ser pelo menos 1 se o Manter o Travão está activo.</target>
 						</trans-unit>
 						<trans-unit id="driver_power_notches_error_message">
 							<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+							<target state="translated">Os Pontos de Aceleração do Maquinista devem ser menores ou iguais aos Pontos de Aceleração.</target>
 						</trans-unit>
 						<trans-unit id="driver_brake_notches_error_message">
 							<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
+							<target state="translated">Os Pontos de Travagem do Maquinista devem ser menores ou iguais ao número de Pontos de Travagem.</target>
 						</trans-unit>
 					</group>
 					<group id="cab">
@@ -4615,6 +4701,7 @@
 							</trans-unit>
 							<trans-unit id="mustbe_less">
 								<source>RearAxle must be less than FrontAxle.</source>
+								<target state="translated">O eixo traseiro deve ser menor que o eixo dianteiro.</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
@@ -4824,12 +4911,15 @@
 						<group id="edit_entry">
 							<trans-unit id="name">
 								<source>Edit entry</source>
+								<target state="translated">Editar entrada</target>
 							</trans-unit>
 							<trans-unit id="up">
 								<source>Up</source>
+								<target state="translated">Acima</target>
 							</trans-unit>
 							<trans-unit id="down">
 								<source>Down</source>
+								<target state="translated">Abaixo</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
@@ -4858,6 +4948,7 @@
 						</trans-unit>
 						<trans-unit id="electric_brake">
 							<source>ElectricBrake</source>
+							<target state="translated">Travão eléctrico</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="name">
@@ -5140,7 +5231,7 @@
 							</trans-unit>
 							<trans-unit id="acceleration">
 								<source>Acceleration</source>
-								<target>Aceleração:</target>
+								<target state="translated">Aceleração</target>
 							</trans-unit>
 							<trans-unit id="swap">
 								<source>Swap</source>
@@ -5777,66 +5868,83 @@
 						</trans-unit>
 						<trans-unit id="sound_command">
 							<source>Sound and command</source>
+							<target state="translated">Som e comando</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
+							<target state="translated">Camada</target>
 						</trans-unit>
 					</group>
 					<group id="subject">
 						<trans-unit id="name">
 							<source>Subject</source>
+							<target state="translated">Assunto</target>
 						</trans-unit>
 						<trans-unit id="base">
 							<source>Base</source>
+							<target state="translated">Base</target>
 						</trans-unit>
 						<trans-unit id="baseoption">
 							<source>Base option</source>
+							<target state="translated">Opção de base</target>
 						</trans-unit>
 						<trans-unit id="suffix">
 							<source>Suffix</source>
+							<target state="translated">Sufixo</target>
 						</trans-unit>
 						<trans-unit id="suffixoption">
 							<source>Suffix option</source>
+							<target state="translated">Opção de sufixo</target>
 						</trans-unit>
 					</group>
 					<group id="sound_command">
 						<group id="tree">
 							<trans-unit id="touch_element">
 								<source>Touch element</source>
+								<target state="translated">Elemento de toque</target>
 							</trans-unit>
 							<trans-unit id="sounds">
 								<source>Sounds</source>
+								<target state="translated">Sons</target>
 							</trans-unit>
 							<trans-unit id="commands">
 								<source>Commands</source>
+								<target state="translated">Comandos</target>
 							</trans-unit>
 						</group>
 						<group id="edit_entry">
 							<group id="sound">
 								<trans-unit id="index">
 									<source>Index</source>
+									<target state="translated">Índice</target>
 								</trans-unit>
 							</group>
 							<group id="command">
 								<trans-unit id="name">
 									<source>Key</source>
+									<target state="translated">Chave</target>
 								</trans-unit>
 								<trans-unit id="option">
 									<source>Option</source>
+									<target state="translated">Opção</target>
 								</trans-unit>
 							</group>
 							<trans-unit id="name">
 								<source>Edit entry</source>
+								<target state="translated">Editar a entrada</target>
 							</trans-unit>
 							<trans-unit id="sound">
 								<source>Sound</source>
+								<target state="translated">Som</target>
 							</trans-unit>
 							<trans-unit id="command">
 								<source>Command</source>
+								<target state="translated">Comando</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="name">
 							<source>Sound and command</source>
+							<target state="translated">Som e comando</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="name">
@@ -5993,83 +6101,105 @@
 					</trans-unit>
 					<trans-unit id="invalid_color">
 						<source>Invalid HEX color</source>
-						<target>cor inválida</target>
+						<target state="translated">Cor inválida</target>
 					</trans-unit>
 					<trans-unit id="number_exist">
 						<source>The specified number is already set.</source>
+						<target state="translated">O número especificado já se encontra atribuído.</target>
 					</trans-unit>
 					<trans-unit id="mustbe_greater_than">
 						<source>Max must be greater than or equal to Min.</source>
+						<target state="translated">Max deve ser maior ou igual a Min.</target>
 					</trans-unit>
 					<trans-unit id="mustbe_less_than">
 						<source>Min must be less than the Max.</source>
+						<target state="translated">Min deve ser menor do que Max.</target>
 					</trans-unit>
 				</group>
 				<group id="items">
 					<trans-unit id="filename">
 						<source>Filename</source>
+						<target state="translated">Nome do ficheiro</target>
 					</trans-unit>
 					<trans-unit id="folder">
 						<source>Folder</source>
+						<target state="translated">Pasta</target>
 					</trans-unit>
 					<trans-unit id="type">
 						<source>Type</source>
+						<target state="translated">Tipo</target>
 					</trans-unit>
 					<trans-unit id="button_ok">
 						<source>OK</source>
+						<target state="translated">OK</target>
 					</trans-unit>
 				</group>
 				<group id="import_export">
 					<group id="train">
 						<trans-unit id="name">
 							<source>Train setting file</source>
+							<target state="translated">Ficheiro de ajuste do comboio</target>
 						</trans-unit>
 						<trans-unit id="old_format">
 							<source>Old format</source>
+							<target state="translated">Formato antigo</target>
 						</trans-unit>
 						<trans-unit id="traindat">
 							<source>Train.dat</source>
+							<target state="translated">Train.dat</target>
 						</trans-unit>
 						<trans-unit id="extensionscfg">
 							<source>Extensions.cfg</source>
+							<target state="translated">Extensions.cfg</target>
 						</trans-unit>
 					</group>
 					<group id="panel">
 						<trans-unit id="name">
 							<source>Panel Setting File</source>
+							<target state="translated">Ficheiro de ajuste do Painel</target>
 						</trans-unit>
 						<trans-unit id="panel2cfg">
 							<source>Panel2.cfg</source>
+							<target state="translated">Panel2.cfg</target>
 						</trans-unit>
 						<trans-unit id="panelxml">
 							<source>Panel.xml</source>
+							<target state="translated">Panel.xml</target>
 						</trans-unit>
 					</group>
 					<group id="sound">
 						<trans-unit id="name">
 							<source>Sound setting file</source>
+							<target state="translated">Ficheiro de ajuste do som</target>
 						</trans-unit>
 						<trans-unit id="no_setting_file">
 							<source>No setting file</source>
+							<target state="translated">Sem ficheiro de ajuste</target>
 						</trans-unit>
 						<trans-unit id="soundcfg">
 							<source>Sound.cfg</source>
+							<target state="translated">Sound.cfg</target>
 						</trans-unit>
 						<trans-unit id="soundxml">
 							<source>Sound.xml</source>
+							<target state="translated">Sound.xml</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="import_name">
 						<source>Import</source>
+						<target state="translated">Importar</target>
 					</trans-unit>
 					<trans-unit id="export_name">
 						<source>Export</source>
+						<target state="translated">Exportar</target>
 					</trans-unit>
 					<trans-unit id="folder">
 						<source>Folder</source>
+						<target state="translated">Pasta</target>
 					</trans-unit>
 					<trans-unit id="type">
 						<source>Type</source>
+						<target state="translated">Tipo</target>
 					</trans-unit>
 				</group>
 			</group>

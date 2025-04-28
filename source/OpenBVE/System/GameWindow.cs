@@ -376,7 +376,7 @@ namespace OpenBve
 			if (Program.Renderer.CurrentInterface == InterfaceType.SwitchChangeMap)
 			{
 				// call the show method again to trigger resize
-				Game.switchChangeDialog.Show();
+				Game.SwitchChangeDialog.Show();
 			}
 		}
 
