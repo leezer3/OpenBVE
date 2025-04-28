@@ -1,4 +1,28 @@
-﻿using System;
+﻿//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2025, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+using System;
 using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Math;
@@ -55,7 +79,7 @@ namespace LibRender2.Smoke
 
 		public void Update(double timeElapsed)
 		{
-			dynamic dynamicCar = Car as dynamic;
+			dynamic dynamicCar = Car;
 			Transformation directionalTransform = new Transformation(Car.FrontAxle.Follower.WorldDirection, Car.FrontAxle.Follower.WorldUp, Car.FrontAxle.Follower.WorldSide); // to correct for rotation of car
 			for (int i = Particles.Count - 1; i > 0; i--)
 			{
@@ -113,20 +137,6 @@ namespace LibRender2.Smoke
 
 							Particles[i].Size.Y = Math.Max(0, Math.Min(Particles[i].Size.Y, MaximumGrownSize));
 						}
-
-						if (Particles[i].Size.Z < MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
-						{
-							if (Random.NextDouble() < 0.3)
-							{
-								Particles[i].Size.Y -= Random.NextDouble() * timeElapsed;
-							}
-							else
-							{
-								Particles[i].Size.Y += Random.NextDouble() * timeElapsed;
-							}
-
-							Particles[i].Size.Z = Math.Max(0, Math.Min(Particles[i].Size.Z, MaximumGrownSize));
-						}
 					}
 					Particles[i].Position += vehicleMovement;
 				}
@@ -140,10 +150,9 @@ namespace LibRender2.Smoke
 					{
 						Vector3 startingPosition = new Vector3(Offset);
 						startingPosition.Rotate(directionalTransform);
-						Particles.Add(new Particle(startingPosition, new Vector3(Random.NextDouble() * MaximumSize, Random.NextDouble() * MaximumSize, Random.NextDouble() * MaximumSize), Random.NextDouble() * MaximumLifeSpan));
+						Particles.Add(new Particle(startingPosition, new Vector2(Random.NextDouble() * MaximumSize, Random.NextDouble() * MaximumSize), Random.NextDouble() * MaximumLifeSpan, Random.Next(0, 11)));
 					}
 				}
-				
 			}
 
 			previousUpdatePosition = Car.FrontAxle.Follower.TrackPosition;
@@ -155,9 +164,8 @@ namespace LibRender2.Smoke
 
 			if (ParticleTexture == null)
 			{
-				// TODO: Random smoke texture, choose from 3 or so
-				string Folder = Path.CombineDirectory(Renderer.fileSystem.GetDataFolder(), "Compatibility");
-				Renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "smoke.png"), out ParticleTexture);
+				string compatibilityFolder = Path.CombineDirectory(Renderer.fileSystem.GetDataFolder(), "Compatibility");
+				Renderer.TextureManager.RegisterTexture(Path.CombineFile(compatibilityFolder, "smoke.png"), out ParticleTexture);
 			}
 			// EMITTER POSITION for debugging
 			// Vector3 emitterPosition = new Vector3(Offset);
@@ -166,8 +174,7 @@ namespace LibRender2.Smoke
 
 			for (int i = 0; i < Particles.Count; i++)
 			{
-				// TODO: Add better particle shape shader- cross probably
-				Renderer.Cube.DrawRetained(Car.FrontAxle.Follower.WorldPosition + Particles[i].Position, Car.FrontAxle.Follower.WorldDirection, Car.FrontAxle.Follower.WorldUp, Car.FrontAxle.Follower.WorldSide, Particles[i].Size, Renderer.Camera.AbsolutePosition, ParticleTexture, (float)(Particles[i].RemainingLifeSpan / Particles[i].LifeSpan));
+				Renderer.Particle.Draw(Particles[i].Texture, Car.FrontAxle.Follower.WorldPosition + Particles[i].Position, Car.FrontAxle.Follower.WorldDirection, Car.FrontAxle.Follower.WorldUp, Car.FrontAxle.Follower.WorldSide, Particles[i].Size, ParticleTexture, (float)(Particles[i].RemainingLifeSpan / Particles[i].LifeSpan));
 			}
 		}
 	}
