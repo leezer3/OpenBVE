@@ -153,7 +153,11 @@ namespace Train.MsTs
 					hasCabview = true;
 					train.DriverCar = i;
 				}
+
+				train.Cars[train.Cars.Length - 1].RearAxle.Follower.TriggerType = i == train.Cars.Length - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 			}
+
+			train.Cars[train.Cars.Length - 1].RearAxle.Follower.TriggerType = EventTriggerType.RearCarRearAxle;
 
 			train.Cars[train.DriverCar].Windscreen = new Windscreen(256, 10.0, train.Cars[train.DriverCar]);
 			train.Cars[train.DriverCar].Windscreen.Wipers = new WindscreenWiper(train.Cars[Train.DriverCar].Windscreen, WiperPosition.Left, WiperPosition.Left, 1.0, 0.0, true); // hack: zero hold time so they act as fast with two states
@@ -239,7 +243,6 @@ namespace Train.MsTs
 					 * FIXME: Needs removing or sorting when the car is created
 					 */
 					Train.Cars[currentCarIndex].FrontAxle.Follower.TriggerType = currentCarIndex == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
-					Train.Cars[currentCarIndex].RearAxle.Follower.TriggerType = currentCarIndex == Train.Cars.Length - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 					Train.Cars[currentCarIndex].BeaconReceiver.TriggerType = currentCarIndex == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;
 					Train.Cars[currentCarIndex].BeaconReceiverPosition = 0.5 * Train.Cars[currentCarIndex].Length;
 					Train.Cars[currentCarIndex].FrontAxle.Position = 0.4 * Train.Cars[currentCarIndex].Length;
