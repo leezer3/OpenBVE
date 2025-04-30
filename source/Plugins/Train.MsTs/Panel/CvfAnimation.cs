@@ -1,23 +1,44 @@
+﻿using System;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
 namespace Train.MsTs
 {
+	/// <summary>Animation class handling CVF elements with keyframe mappings</summary>
 	internal class CvfAnimation : AnimationScript
 	{
 		internal readonly PanelSubject Subject;
 
 		internal readonly FrameMapping[] FrameMapping;
 
+		internal readonly int Digit;
+
+		internal readonly double UnitConversionFactor;
+
 		private int lastResult;
 
 		internal CvfAnimation(PanelSubject subject, FrameMapping[] frameMapping)
 		{
-			this.Subject = subject;
+			Subject = subject;
 			FrameMapping = frameMapping;
 			Minimum = 0;
 			Maximum = FrameMapping.Length;
+		}
+
+		internal CvfAnimation(PanelSubject subject, Units unit, int digit)
+		{
+			Subject= subject;
+			switch (unit)
+			{
+				case Units.Miles_Per_Hour:
+					UnitConversionFactor = 2.2369362920544;
+					break;
+				case Units.Kilometers_Per_Hour:
+					UnitConversionFactor = 3.6;
+					break;
+			}
+			Digit = digit;
 		}
 		
 		public double ExecuteScript(AbstractTrain Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
@@ -47,6 +68,22 @@ namespace Train.MsTs
 					break;
 				case PanelSubject.Direction:
 					lastResult = (int)dynamicTrain.Handles.Reverser.Actual + 1;
+					break;
+				case PanelSubject.Speedlim_Display:
+					double speedLim = Math.Min(Train.CurrentRouteLimit, Train.CurrentSectionLimit);
+
+					if (speedLim == double.PositiveInfinity)
+					{
+						lastResult = -1; // cheat to hide
+					}
+					else
+					{
+						lastResult = (int)(speedLim *  UnitConversionFactor / (int)Math.Pow(10, Digit) % 10);
+					}
+					break;
+				case PanelSubject.Speedometer:
+					double currentSpeed = Math.Abs(Train.CurrentSpeed);
+					lastResult = (int)(currentSpeed * UnitConversionFactor / (int)Math.Pow(10, Digit) % 10);
 					break;
 			}
 
