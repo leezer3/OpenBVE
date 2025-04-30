@@ -300,6 +300,7 @@ namespace Train.MsTs
 			private bool MouseControl;
 			private bool DirIncrease;
 			private int LeadingZeros;
+			private FrameMapping[] FrameMappings = new FrameMapping[0];
 
 			private Tuple<double, Color24>[] PositiveColors;
 			private bool HasPositiveColor = false;
@@ -334,8 +335,18 @@ namespace Train.MsTs
 			{
 				if (File.Exists(TexturePath) || Type == CabComponentType.Digital)
 				{
-					//Create and register texture
+					if (FrameMappings.Length == 0 && TotalFrames > 1)
+					{
+						// e.g. Acela power handle has 25 frames for total power value of 100% but no mappings specified
+						FrameMappings = new FrameMapping[TotalFrames];
+						// frame 0 is always mapping value 0
+						for (int i = 1; i < TotalFrames; i++)
+						{
+							FrameMappings[i].MappingValue = (double)i / TotalFrames;
+							FrameMappings[i].FrameKey = i;
+						}
 
+					}
 					//Create element
 					double rW = 1024.0 / 640.0;
 					double rH = 768.0 / 480.0;
@@ -414,7 +425,17 @@ namespace Train.MsTs
 								}
 
 								f = GetStackLanguageFromSubject(Car.baseTrain, panelSubject, Units);
-								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+								switch (panelSubject)
+								{
+									case PanelSubject.Throttle:
+									case PanelSubject.Train_Brake:
+										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
+										break;
+									default:
+										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+										break;
+								}
+								
 							}
 
 							break;
@@ -546,9 +567,23 @@ namespace Train.MsTs
 						break;
 					case KujuTokenID.NumValues:
 					case KujuTokenID.NumPositions:
-						//notch ==> frame data
-						//We can skip for basic cabs
-						block.Skip((int) block.Length());
+						int numValues = block.ReadInt16();
+						if (FrameMappings.Length < numValues)
+						{
+							Array.Resize(ref FrameMappings, numValues);
+						}
+
+						for (int i = 0; i < numValues; i++)
+						{
+							if (block.Token == KujuTokenID.NumValues)
+							{
+								FrameMappings[i].MappingValue = block.ReadSingle();
+							}
+							else
+							{
+								FrameMappings[i].FrameKey = block.ReadInt16();
+							}
+						}
 						break;
 					case KujuTokenID.NumFrames:
 						TotalFrames = block.ReadInt16();
