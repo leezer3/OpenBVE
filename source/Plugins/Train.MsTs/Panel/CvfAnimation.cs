@@ -1,4 +1,4 @@
-﻿using OpenBveApi.FunctionScripting;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
@@ -44,6 +44,9 @@ namespace Train.MsTs
 							break;
 						}
 					}
+					break;
+				case PanelSubject.Direction:
+					lastResult = (int)dynamicTrain.Handles.Reverser.Actual + 1;
 					break;
 			}
 
