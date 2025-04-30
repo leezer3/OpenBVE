@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="SharpCompress, Version=0.32.2.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\SharpCompress.0.32.2\lib\net461\SharpCompress.dll</HintPath>
     </Reference>
@@ -58,9 +59,11 @@
     <Compile Include="Effects\Exhaust.cs" />
     <Compile Include="Handles\Handle.cs" />
     <Compile Include="Misc\Units.cs" />
+    <Compile Include="Panel\CvfAnimation.cs" />
     <Compile Include="Panel\CvfParser.cs" />
     <Compile Include="Panel\Enums\CabComponentType.cs" />
     <Compile Include="Panel\Enums\PanelSubject.cs" />
+    <Compile Include="Panel\FrameMapping.cs" />
     <Compile Include="Sound\SmsParser.cs" />
     <Compile Include="Sound\TriggerTypes.cs" />
     <Compile Include="Train\ConsistParser.cs" />
