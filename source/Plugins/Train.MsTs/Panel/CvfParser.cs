@@ -522,21 +522,7 @@ namespace Train.MsTs
 									if (k == 0) j = l;
 								}
 
-								string Suffix;
-								if (currentDigit == 0)
-								{
-									Suffix = " floor 10 mod";
-								}
-								else
-								{
-									string t0 = Math.Pow(10.0, currentDigit).ToString(CultureInfo.InvariantCulture);
-									string t1 = Math.Pow(10.0, -currentDigit).ToString(CultureInfo.InvariantCulture);
-									Suffix = " ~ " + t0 + " >= <> " + t1 + " * floor 10 mod 10 ?";
-								}
-
-								f = GetStackLanguageFromSubject(Car.baseTrain, panelSubject, Units, Suffix);
-								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
-
+								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, Units, currentDigit);
 							}
 
 							
