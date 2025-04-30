@@ -24,6 +24,7 @@ namespace Train.MsTs
 			FrameMapping = frameMapping;
 			Minimum = 0;
 			Maximum = FrameMapping.Length;
+			Digit = -1;
 		}
 
 		internal CvfAnimation(PanelSubject subject, Units unit, int digit)
@@ -40,7 +41,24 @@ namespace Train.MsTs
 			}
 			Digit = digit;
 		}
-		
+
+		internal CvfAnimation(PanelSubject subject, Units unit, FrameMapping[] frameMapping)
+		{
+			Subject = subject;
+			switch (unit)
+			{
+				case Units.Miles_Per_Hour:
+					UnitConversionFactor = 2.2369362920544;
+					break;
+				case Units.Kilometers_Per_Hour:
+					UnitConversionFactor = 3.6;
+					break;
+			}
+
+			Digit = -1;
+			FrameMapping = frameMapping;
+		}
+
 		public double ExecuteScript(AbstractTrain Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
 		{
 			dynamic dynamicTrain = Train;
@@ -70,20 +88,51 @@ namespace Train.MsTs
 					lastResult = (int)dynamicTrain.Handles.Reverser.Actual + 1;
 					break;
 				case PanelSubject.Speedlim_Display:
-					double speedLim = Math.Min(Train.CurrentRouteLimit, Train.CurrentSectionLimit);
-
-					if (speedLim == double.PositiveInfinity)
+					double speedLim = Math.Min(Train.CurrentRouteLimit, Train.CurrentSectionLimit) * UnitConversionFactor;
+					if (Digit == -1)
 					{
-						lastResult = -1; // cheat to hide
+						// color
+						for (int i = 0; i < FrameMapping.Length; i++)
+						{
+							if (FrameMapping[i].MappingValue <= speedLim)
+							{
+								lastResult = FrameMapping[i].FrameKey;
+								break;
+							}
+						}
 					}
 					else
 					{
-						lastResult = (int)(speedLim *  UnitConversionFactor / (int)Math.Pow(10, Digit) % 10);
+						// digit
+						if (speedLim == double.PositiveInfinity)
+						{
+							lastResult = -1; // cheat to hide
+						}
+						else
+						{
+							lastResult = (int)(speedLim / (int)Math.Pow(10, Digit) % 10);
+						}
 					}
 					break;
 				case PanelSubject.Speedometer:
-					double currentSpeed = Math.Abs(Train.CurrentSpeed);
-					lastResult = (int)(currentSpeed * UnitConversionFactor / (int)Math.Pow(10, Digit) % 10);
+					double currentSpeed = Math.Abs(Train.CurrentSpeed) * UnitConversionFactor;
+					if (Digit == -1)
+					{
+						// color
+						for (int i = FrameMapping.Length - 1; i > 0; i--)
+						{
+							if (FrameMapping[i].MappingValue <= currentSpeed)
+							{
+								lastResult = FrameMapping[i].FrameKey;
+								break;
+							}
+						}
+					}
+					else
+					{
+						// digit
+						lastResult = (int)(currentSpeed / (int)Math.Pow(10, Digit) % 10);
+					}
 					break;
 			}
 
