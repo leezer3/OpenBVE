@@ -2,6 +2,7 @@
 // ReSharper disable InconsistentNaming
 namespace Train.MsTs
 {
+	/// <summary>Units encountered in a MSTS CVF</summary>
     internal enum Units
     {
 		Unknown = 0,

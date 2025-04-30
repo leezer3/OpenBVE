@@ -472,8 +472,20 @@ namespace Train.MsTs
 									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
 									if (k == 0) j = l;
 								}
+
 								f = GetStackLanguageFromSubject(Car.baseTrain, panelSubject, Units);
-								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+								switch (panelSubject)
+								{
+									case PanelSubject.Direction:
+									case PanelSubject.Direction_Display:
+										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
+										break;
+									default:
+										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+										break;
+								}
+								
+								
 							}
 							break;
 						case CabComponentType.Digital:
@@ -764,10 +776,10 @@ namespace Train.MsTs
 					switch (subjectUnits)
 					{
 						case Units.Miles_Per_Hour:
-							Code = "routelimit 2.2369362920544 *";
+							Code = "routelimit sectionlimit max 1 Minus == 1 Minus routelimit sectionlimit max 2.2369362920544 * ?";
 							break;
 						case Units.Kilometers_Per_Hour:
-							Code = "routelimit 3.6 *";
+							Code = "routelimit sectionlimit max 1 Minus == 1 Minus routelimit sectionlimit max 3.6 * ?";
 							break;
 					}
 					break;
