@@ -88,7 +88,7 @@ namespace TrainManager.Handles
 			}
 			
 
-			Actual = Math.Min(Actual, MaximumNotch);
+			Actual = Math.Max(0, Math.Min(Actual, MaximumNotch));
 			Driver = Actual;
 		}
 
