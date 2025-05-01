@@ -345,6 +345,7 @@ namespace OpenBve.Graphics
 				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
 
+			ResetOpenGlState();
 			// particle sources
 			SetBlendFunc();
 			SetAlphaFunc(AlphaFunction.Greater, 0.0f);
