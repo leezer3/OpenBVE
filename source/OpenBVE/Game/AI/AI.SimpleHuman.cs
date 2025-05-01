@@ -240,7 +240,11 @@ namespace OpenBve
 					else
 					{
 						CurrentInterval = 1.0;
-						Train.Handles.Power.ApplyState(-1, true);
+						if (Train.Handles.Power.Actual > 1)
+						{
+							Train.Handles.Power.ApplyState(-1, true);
+						}
+						
 						if (Train.Handles.Brake is AirBrakeHandle)
 						{
 							if (Train.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight > 10 || Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure < 0.3 * Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.ServiceMaximumPressure)
