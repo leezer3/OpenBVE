@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, The OpenBVE Project
 //
@@ -126,8 +126,6 @@ namespace LibRender2.Primitives
 			modelViewMatrix.Row2.Xyz = new Vector3(0, 0, 1);
 			Matrix4D scale = Matrix4D.Scale(size.X, size.Y, size.X);
 			modelViewMatrix = scale * modelViewMatrix;
-
-			renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 			renderer.DefaultShader.SetCurrentModelViewMatrix(modelViewMatrix);
 			renderer.DefaultShader.SetOpacity(opacity);
 			renderer.DefaultShader.SetIsLight(false);

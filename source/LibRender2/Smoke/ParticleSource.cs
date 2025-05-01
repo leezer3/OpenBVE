@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -172,6 +173,13 @@ namespace LibRender2.Smoke
 			// emitterPosition.Rotate(directionalTransform);
 			// Renderer.Cube.DrawRetained(trackFollower.WorldPosition + emitterPosition, trackFollower.WorldDirection, trackFollower.WorldUp, trackFollower.WorldSide, new Vector3(MaximumSize,MaximumSize,MaximumSize), Renderer.Camera.AbsolutePosition, null, 1.0f);
 
+			// set shader properties
+			Renderer.DefaultShader.SetCurrentProjectionMatrix(Renderer.CurrentProjectionMatrix);
+			Renderer.DefaultShader.SetMaterialAmbient(Color32.White);
+			Renderer.DefaultShader.SetMaterialDiffuse(Color32.White);
+			Renderer.DefaultShader.SetMaterialSpecular(Color32.White);
+			Renderer.DefaultShader.SetBrightness(1.0f);
+			Renderer.DefaultShader.SetAlphaTest(true);
 			for (int i = 0; i < Particles.Count; i++)
 			{
 				Renderer.Particle.Draw(Particles[i].Texture, Car.FrontAxle.Follower.WorldPosition + Particles[i].Position, Car.FrontAxle.Follower.WorldDirection, Car.FrontAxle.Follower.WorldUp, Car.FrontAxle.Follower.WorldSide, Particles[i].Size, ParticleTexture, (float)(Particles[i].RemainingLifeSpan / Particles[i].LifeSpan));
