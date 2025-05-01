@@ -153,7 +153,7 @@ namespace TrainManager.Power
 					totalMass += Train.Cars[i].CurrentMass;
 				}
 
-				return totalMass / MaxForce;
+				return totalMass / MaxForce / 3.6;
 			}
 		}
 	}
