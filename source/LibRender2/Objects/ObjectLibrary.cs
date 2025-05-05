@@ -50,7 +50,7 @@ namespace LibRender2.Objects
 
 		private bool AddObject(ObjectState state)
 		{
-			if (!myObjects.Contains(state))
+			if (state.Prototype != null &&!myObjects.Contains(state))
 			{
 				myObjects.Add(state);
 				return true;
