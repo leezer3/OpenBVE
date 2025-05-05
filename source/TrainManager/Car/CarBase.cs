@@ -1174,7 +1174,7 @@ namespace TrainManager.Car
 					    !baseTrain.Handles.EmergencyBrake.Actual)
 					{
 						// target acceleration
-						a = TractionModel.CurrentAcceleration;
+						a = TractionModel.TargetAcceleration;
 
 						// readhesion device
 						if (ReAdhesionDevice is BveReAdhesionDevice device)
