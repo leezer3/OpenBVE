@@ -2,7 +2,7 @@
 
 namespace Train.MsTs
 {
-	/// <summary>Describes the exhaust animation for a MSTS model</summary>
+	/// <summary>Describes the properties of an exhaust animation for a MSTS model</summary>
 	internal struct Exhaust
 	{
 		/// <summary>The offset from the center of the model</summary>
