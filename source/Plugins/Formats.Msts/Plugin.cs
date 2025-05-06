@@ -652,7 +652,15 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true, this);
+						if (currentToken == KujuTokenID.Comment && !validTokens.Contains(KujuTokenID.Comment))
+						{
+							// found comment block which we don't want to read- retry
+							return ReadSubBlock(validTokens);
+						}
+						else
+						{
+							return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true, this);
+						}
 					}
 
 					level--;
