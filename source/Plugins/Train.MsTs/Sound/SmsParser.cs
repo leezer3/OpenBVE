@@ -1,4 +1,4 @@
-﻿using OpenBve.Formats.MsTs;
+using OpenBve.Formats.MsTs;
 using SharpCompress.Compressors.Deflate;
 using System.IO;
 using System;
@@ -9,6 +9,7 @@ using OpenBveApi.World;
 using SharpCompress.Compressors;
 using TrainManager.Car;
 using SoundManager;
+using TrainManager.Motor;
 using TrainManager.MsTsSounds;
 
 namespace Train.MsTs
@@ -507,7 +508,16 @@ namespace Train.MsTs
 					curvePoints = new Tuple<double, double>[numPoints];
 					for (int i = 0; i < numPoints; i++)
 					{
-						curvePoints[i] = new Tuple<double, double>(block.ReadSingle(), block.ReadSingle());
+						// Normalise Variable2 values to be consistant across traction models
+						// MSTS yuck...
+						if (car.TractionModel is ElectricEngine)
+						{
+							curvePoints[i] = new Tuple<double, double>(block.ReadSingle() / 100, block.ReadSingle());
+						}
+						else
+						{
+							curvePoints[i] = new Tuple<double, double>(block.ReadSingle(), block.ReadSingle());
+						}
 					}
 					break;
 				case KujuTokenID.Granularity:
