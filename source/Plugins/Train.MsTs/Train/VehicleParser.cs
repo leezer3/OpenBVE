@@ -54,8 +54,7 @@ namespace Train.MsTs
 
 		private readonly Dictionary<string, string> wagonCache;
 		private readonly Dictionary<string, string> engineCache;
-		private string soundFile;
-		private bool hasSounds;
+		private List<string> soundFiles;
 		private string[] wagonFiles;
 		private double wheelRadius;
 		private bool exteriorLoaded = false;
@@ -65,6 +64,7 @@ namespace Train.MsTs
 			plugin = Plugin;
 			wagonCache = new Dictionary<string, string>();
 			engineCache = new Dictionary<string, string>();
+			soundFiles = new List<string>();
 		}
 
 		internal void Parse(string trainSetDirectory, string wagonName, bool isEngine, ref CarBase Car, ref TrainBase train)
@@ -166,10 +166,13 @@ namespace Train.MsTs
 				}
 			}
 
-			if (hasSounds)
+			if (soundFiles.Count > 0)
 			{
-				SoundModelSystemParser.ParseSoundFile(soundFile, ref Car);
-				hasSounds = false;
+				for (int i = 0; i < soundFiles.Count; i++)
+				{
+					SoundModelSystemParser.ParseSoundFile(soundFiles[i], ref Car);
+				}
+				soundFiles.Clear();
 			}
 		}
 
@@ -659,13 +662,13 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Sound:
 					// parse the sounds *after* we've loaded the traction model though
-					soundFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Path.GetDirectoryName(fileName), "SOUND"), block.ReadString());
+					string soundFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Path.GetDirectoryName(fileName), "SOUND"), block.ReadString());
 					if (!File.Exists(soundFile))
 					{
 						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: SMS file " + soundFile + " was not found.");
 						break;
 					}
-					hasSounds = true;
+					soundFiles.Add(soundFile);
 					break;
 				case KujuTokenID.EngineControllers:
 					if (!isEngine)

@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBve.Formats.MsTs;
 using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.Car;
@@ -38,7 +39,13 @@ namespace TrainManager.MsTsSounds
 		private readonly double variableValue;
 
 		private readonly bool soundLoops;
-		
+
+		public Variable2IncPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double variableValue, bool soundLoops) : base(car, buffers, selectionMethod)
+		{
+			this.variableValue = variableValue;
+			this.soundLoops = soundLoops;
+		}
+
 		public Variable2IncPast(CarBase car, SoundBuffer buffer, double variableValue, bool soundLoops) : base(car, buffer)
 		{
 			this.variableValue = variableValue;
@@ -81,6 +88,11 @@ namespace TrainManager.MsTsSounds
 
 		private readonly bool soundLoops;
 
+		public Variable2DecPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double variableValue, bool soundLoops) : base(car, buffers, selectionMethod)
+		{
+			this.variableValue = variableValue;
+			this.soundLoops = soundLoops;
+		}
 		public Variable2DecPast(CarBase car, SoundBuffer buffer, double variableValue, bool soundLoops) : base(car, buffer)
 		{
 			this.variableValue = variableValue;
