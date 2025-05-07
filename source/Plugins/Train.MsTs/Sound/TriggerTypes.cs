@@ -55,6 +55,10 @@ namespace Train.MsTs
 		Pantograph1Toggle = 47,
 		VigilanceAlarmReset = 48,
 		// 49 - 53 not listed
+
+		// TODO: CHECK 53 / 54:
+		// acelaeng.sms has 53 commented as Brake Normal Apply and 54 as BrakeEmergencyApply
+
 		TrainBrakePressureDecrease = 54,
 		//55 not listed
 		VigilanceAlarmOn = 56,

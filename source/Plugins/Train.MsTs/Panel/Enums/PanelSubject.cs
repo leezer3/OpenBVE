@@ -27,6 +27,7 @@ namespace Train.MsTs
 		Firehole,
 		Friction_Braking,
 		Front_Hlight,
+		Gears,
 		Horn,
 		Load_Meter,
 		Main_Res,

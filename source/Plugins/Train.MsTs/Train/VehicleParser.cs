@@ -1,6 +1,6 @@
 //Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020, Christopher Lees, The OpenBVE Project
+//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,6 @@ using LibRender2.Smoke;
 using LibRender2.Trains;
 using OpenBve.Formats.Msts;
 using OpenBve.Formats.MsTs;
-using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Motor;
@@ -54,7 +53,7 @@ namespace Train.MsTs
 
 		private readonly Dictionary<string, string> wagonCache;
 		private readonly Dictionary<string, string> engineCache;
-		private List<string> soundFiles;
+		private readonly List<string> soundFiles;
 		private string[] wagonFiles;
 		private double wheelRadius;
 		private bool exteriorLoaded = false;
@@ -158,6 +157,8 @@ namespace Train.MsTs
 						break;
 				}
 				Car.ReAdhesionDevice = new BveReAdhesionDevice(Car, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
+				Car.Windscreen = new Windscreen(0, 0, Car);
+				Car.Windscreen.Wipers = new WindscreenWiper(Car.Windscreen, WiperPosition.Left, WiperPosition.Left, 1.0, 1.0);
 
 				if (Exhaust.Size > 0)
 				{
@@ -485,7 +486,7 @@ namespace Train.MsTs
 						}
 						catch
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vechicle Parser: Invalid vehicle type specified.");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vechicle Parser: Invalid vehicle type specified.");
 						}
 					}
 					break;
@@ -498,23 +499,25 @@ namespace Train.MsTs
 					string objectFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), block.ReadString());
 					if (!File.Exists(objectFile))
 					{
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle object file " + objectFile + " was not found");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle object file " + objectFile + " was not found");
 						return true;
 					}
 
-					for (int i = 0; i < Plugin.currentHost.Plugins.Length; i++)
+					for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
 					{
 						
-						if (Plugin.currentHost.Plugins[i].Object != null && Plugin.currentHost.Plugins[i].Object.CanLoadObject(objectFile))
+						if (Plugin.CurrentHost.Plugins[i].Object != null && Plugin.CurrentHost.Plugins[i].Object.CanLoadObject(objectFile))
 						{
-							Plugin.currentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject carObject);
+							Plugin.CurrentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject carObject);
 							if (exteriorLoaded)
 							{
-								car.CarSections[car.CarSections.Length -1].AppendObject(Plugin.currentHost, car, carObject);
+								CarSection exteriorCarSection = car.CarSections[CarSectionType.Exterior];
+								exteriorCarSection.AppendObject(Plugin.CurrentHost, car, carObject);
+								car.CarSections[CarSectionType.Exterior] = exteriorCarSection;
 							}
 							else
 							{
-								car.LoadCarSections(carObject, false);
+								car.CarSections.Add(CarSectionType.Exterior, new CarSection(Plugin.CurrentHost, ObjectType.Dynamic, false, car, carObject));
 							}
 							break;
 						}
@@ -527,19 +530,19 @@ namespace Train.MsTs
 					car.Width = block.ReadSingle(UnitOfLength.Meter);
 					if (car.Width == 0)
 					{
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle width is invalid.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle width is invalid.");
 						car.Width = 2;
 					}
 					car.Height = block.ReadSingle(UnitOfLength.Meter);
 					if (car.Height == 0)
 					{
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle height is invalid.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle height is invalid.");
 						car.Height = 2;
 					}
 					car.Length = block.ReadSingle(UnitOfLength.Meter);
 					if (car.Length == 0)
 					{
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle length is invalid.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle length is invalid.");
 						car.Length = 25;
 					}
 					break;
@@ -564,27 +567,10 @@ namespace Train.MsTs
 					string cabViewFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Path.GetDirectoryName(fileName), "CABVIEW"), block.ReadString());
 					if (!File.Exists(cabViewFile))
 					{
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Cab view file " + cabViewFile + " was not found");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Cab view file " + cabViewFile + " was not found");
 						return true;
 					}
-
-					if (car.CarSections.Length == 0)
-					{
-						car.CarSections = new CarSection[1];
-					}
-					else if (car.CarSections.Length > 0)
-					{
-						// Cab View must always be at CarSection zero, but the order is not guaranteed within an eng / wag
-						CarSection[] move = new CarSection[car.CarSections.Length + 1];
-						for (int i = 0; i < car.CarSections.Length; i++)
-						{
-							move[i + 1] = car.CarSections[i];
-						}
-						car.CarSections = move;
-					}
-					car.CarSections[0] = new CarSection(Plugin.currentHost, ObjectType.Overlay, true, car);
-					car.CameraRestrictionMode = CameraRestrictionMode.On;
-					Plugin.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
+					
 					CabviewFileParser.ParseCabViewFile(cabViewFile, ref car);
 					car.HasInteriorView = true;
 					break;
@@ -612,7 +598,7 @@ namespace Train.MsTs
 					// maximum force applied when starting
 					if (!isEngine)
 					{
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Engine force is not expected to be present in a wagon block.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Engine force is not expected to be present in a wagon block.");
 						break;
 					}
 					maxForce = block.ReadSingle(UnitOfForce.Newton);
@@ -627,7 +613,7 @@ namespace Train.MsTs
 					// Maximum continuous force
 					if (!isEngine)
 					{
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Engine force is not expected to be present in a wagon block.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Engine force is not expected to be present in a wagon block.");
 						break;
 					}
 					maxContinuousForce = block.ReadSingle(UnitOfForce.Newton);
@@ -643,7 +629,7 @@ namespace Train.MsTs
 					if (numWheels < 2)
 					{
 						// NumWheels *should* be divisible by two (to get axles), but some content uses a single wheel, e.g. stock Class 50
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Invalid number of wheels.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Invalid number of wheels.");
 						numWheels = 1;
 					}
 					else
@@ -665,7 +651,7 @@ namespace Train.MsTs
 					string soundFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Path.GetDirectoryName(fileName), "SOUND"), block.ReadString());
 					if (!File.Exists(soundFile))
 					{
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: SMS file " + soundFile + " was not found.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: SMS file " + soundFile + " was not found.");
 						break;
 					}
 					soundFiles.Add(soundFile);
@@ -673,7 +659,7 @@ namespace Train.MsTs
 				case KujuTokenID.EngineControllers:
 					if (!isEngine)
 					{
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Engine controllers are not expected to be present in a wagon block.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Engine controllers are not expected to be present in a wagon block.");
 						break;
 					}
 
@@ -687,7 +673,7 @@ namespace Train.MsTs
 				case KujuTokenID.Throttle:
 					if (currentEngineType == EngineType.Steam)
 					{
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: A throttle is not valid for a Steam Locomotive.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: A throttle is not valid for a Steam Locomotive.");
 						break;
 					}
 					train.Handles.Power = ParseHandle(block, train);
@@ -761,23 +747,25 @@ namespace Train.MsTs
 					objectFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), block.ReadString());
 					if (!File.Exists(objectFile))
 					{
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle object file " + objectFile + " was not found");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle object file " + objectFile + " was not found");
 						break;
 					}
 
-					for (int i = 0; i < Plugin.currentHost.Plugins.Length; i++)
+					for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
 					{
 
-						if (Plugin.currentHost.Plugins[i].Object != null && Plugin.currentHost.Plugins[i].Object.CanLoadObject(objectFile))
+						if (Plugin.CurrentHost.Plugins[i].Object != null && Plugin.CurrentHost.Plugins[i].Object.CanLoadObject(objectFile))
 						{
-							Plugin.currentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject freightObject);
+							Plugin.CurrentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject freightObject);
 							if (exteriorLoaded)
 							{
-								car.CarSections[car.CarSections.Length - 1].AppendObject(Plugin.currentHost, car, freightObject);
+								CarSection exteriorCarSection = car.CarSections[CarSectionType.Exterior];
+								exteriorCarSection.AppendObject(Plugin.CurrentHost, car, freightObject);
+								car.CarSections[CarSectionType.Exterior] = exteriorCarSection;
 							}
 							else
 							{
-								car.LoadCarSections(freightObject, false);	
+								car.CarSections.Add(CarSectionType.Exterior, new CarSection(Plugin.CurrentHost, ObjectType.Dynamic, false, car, freightObject));
 							}
 							break;
 						}
