@@ -28,6 +28,8 @@ using System.IO;
 using System;
 using System.Text;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
+using OpenBveApi.Motor;
 using OpenBveApi.Runtime;
 using OpenBveApi.World;
 using SharpCompress.Compressors;
@@ -318,6 +320,7 @@ namespace Train.MsTs
 					if (block.ReadPath(currentFolder, out string soundFile))
 					{
 						// n.b. MSTS does not distinguish between increase / decrease sounds for handles etc.
+						// sound radii are also fudged based upon BVE values; most MSTS content just seems to use massive radii
 						switch (currentSoundSet.currentTrigger)
 						{
 							case SoundTrigger.VariableControlled:
@@ -399,6 +402,27 @@ namespace Train.MsTs
 								{
 									Plugin.currentHost.RegisterSound(soundFile, 2.0, out soundHandle);
 									car.Horns[0].LoopSound = soundHandle as SoundBuffer;
+								}
+								break;
+							case SoundTrigger.Pantograph1Up:
+								Pantograph pantograph = car.TractionModel.Components[EngineComponent.Pantograph] as Pantograph;
+								if (pantograph != null)
+								{
+									pantograph.RaiseSound = new CarSound(Plugin.currentHost, soundFile, 100, Vector3.Zero);
+								}
+								break;
+							case SoundTrigger.Pantograph1Down:
+								pantograph = car.TractionModel.Components[EngineComponent.Pantograph] as Pantograph;
+								if (pantograph != null)
+								{
+									pantograph.LowerSound = new CarSound(Plugin.currentHost, soundFile, 100, Vector3.Zero);
+								}
+								break;
+							case SoundTrigger.Pantograph1Toggle:
+								pantograph = car.TractionModel.Components[EngineComponent.Pantograph] as Pantograph;
+								if (pantograph != null)
+								{
+									pantograph.SwitchToggle = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
 						}
