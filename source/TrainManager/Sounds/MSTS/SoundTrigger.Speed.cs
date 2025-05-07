@@ -36,9 +36,7 @@ namespace TrainManager.MsTsSounds
 		private readonly double speedValue;
 
 		private readonly bool soundLoops;
-
-		private double previousSpeed;
-
+		
 		public SpeedIncPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double speedValue, bool soundLoops) : base(car, buffers, selectionMethod)
 		{
 			this.speedValue = speedValue;
@@ -54,7 +52,7 @@ namespace TrainManager.MsTsSounds
 		public override void Update(double timeElapsed, double pitchValue, double volumeValue)
 		{
 			double speed = Math.Abs(Car.CurrentSpeed);
-			if (speed >= speedValue && speed > previousSpeed)
+			if (speed >= speedValue)
 			{
 				if (Buffer != null)
 				{
@@ -64,13 +62,16 @@ namespace TrainManager.MsTsSounds
 					}
 				}
 				Triggered = true;
+				Timer = 0;
 			}
 			else
 			{
-				Stop();
+				Timer += timeElapsed;
+				if (Timer > 1.0)
+				{
+					Stop();
+				}
 			}
-
-			previousSpeed = speed;
 		}
 	}
 
@@ -80,9 +81,7 @@ namespace TrainManager.MsTsSounds
 		private readonly double speedValue;
 
 		private readonly bool soundLoops;
-
-		private double previousSpeed;
-
+		
 		public SpeedDecPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double speedValue, bool soundLoops) : base(car, buffers, selectionMethod)
 		{
 			this.speedValue = speedValue;
@@ -98,7 +97,7 @@ namespace TrainManager.MsTsSounds
 		public override void Update(double timeElapsed, double pitchValue, double volumeValue)
 		{
 			double speed = Math.Abs(Car.CurrentSpeed);
-			if (speed <= speedValue && speed < previousSpeed)
+			if (speed <= speedValue)
 			{
 				if (Buffer != null)
 				{
@@ -108,13 +107,16 @@ namespace TrainManager.MsTsSounds
 					}
 				}
 				Triggered = true;
+				Timer = 0;
 			}
 			else
 			{
-				Stop();
+				Timer += timeElapsed;
+				if (Timer > 1.0)
+				{
+					Stop();
+				}
 			}
-
-			previousSpeed = speed;
 		}
 	}
 }
