@@ -69,6 +69,7 @@ namespace TrainManager.Car
 		/// <param name="TimeElapsed">The time elapsed since the previous call to this method</param>
 		public void Update(double TimeElapsed)
 		{
+			Wipers.Update(TimeElapsed);
 			if (RainDrops == null || RainDrops.Length == 0)
 			{
 				return;
@@ -117,7 +118,6 @@ namespace TrainManager.Car
 					RainDrops[i].RemainingLife = 0.5 * TrainManagerBase.RandomNumberGenerator.NextDouble() * DropLife;
 				}
 			}
-			Wipers.Update(TimeElapsed);
 		}
 
 		private int PickDrop()

@@ -425,6 +425,10 @@ namespace Train.MsTs
 									pantograph.SwitchToggle = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
+							case SoundTrigger.WiperOn:
+							case SoundTrigger.WiperOff:
+								car.Windscreen.Wipers.SwitchSound = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+								break;
 						}
 					}
 					else
