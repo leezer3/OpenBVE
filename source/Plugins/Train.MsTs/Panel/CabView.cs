@@ -22,54 +22,28 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using SoundManager;
+using OpenBveApi.Math;
 
-namespace TrainManager.Motor
+namespace Train.MsTs
 {
-	public class Pantograph : AbstractComponent
+	/// <summary>A cab view within a CVF file</summary>
+	internal struct CabView
 	{
-		/// <summary>Whether the pantograph is currently raised</summary>
-		public PantographState State;
-		/// <summary>The sound played when the pantograph is lowered</summary>
-		public CarSound LowerSound;
-		/// <summary>The sound played when the pantograph is raised</summary>
-		public CarSound RaiseSound;
-		/// <summary>The sound played when the switch is toggled</summary>
-		public CarSound SwitchToggle;
+		/// <summary>The base texture</summary>
+		internal string FileName;
+		/// <summary>The top left position within the texture</summary>
+		internal Vector2 TopLeft;
+		/// <summary>The clipped size within the texture</summary>
+		internal Vector2 PanelSize;
+		/// <summary>The position of the driver's eye within the containing car</summary>
+		internal Vector3 Position;
+		/// <summary>The rotated direction of the cab view</summary>
+		internal Vector3 Direction;
 
-		public Pantograph(TractionModel engine) : base(engine)
+		internal void SetCabView(string currentFolder, string cabViewFile)
 		{
+			cabViewFile = cabViewFile.Replace(@"\\", @"\");
+			FileName = OpenBveApi.Path.CombineFile(currentFolder, cabViewFile);
 		}
-
-		public void Raise()
-		{
-			if (State == PantographState.Lowered)
-			{
-				State = PantographState.Raised;
-				RaiseSound?.Play(1.0, 1.0, baseEngine.BaseCar, false);
-				SwitchToggle?.Play(1.0,1.0, baseEngine.BaseCar, false);
-			}
-		}
-
-		public void Lower()
-		{
-			if (State != PantographState.Lowered)
-			{
-				State = PantographState.Lowered;
-				LowerSound?.Play(1.0,1.0, baseEngine.BaseCar, false);
-				SwitchToggle?.Play(1.0, 1.0, baseEngine.BaseCar, false);
-			}
-		}
-	}
-
-	/// <summary>The possible states of a pantograph</summary>
-	public enum PantographState
-	{
-		/// <summary>The pantograph is lowered</summary>
-		Lowered = 0,
-		/// <summary>The pantograph is raised</summary>
-		Raised = 1,
-		/// <summary>The pantograph is raised, but no wire is present</summary>
-		Dewired = 2
 	}
 }

@@ -600,11 +600,11 @@ namespace TrainManager.Car
 					}
 				}
 
-				if (CarSections[i].Groups[0].Keyframes != null)
+				if (currentCarSection.Groups[0].Keyframes != null)
 				{
-					for (int j = 0; j < CarSections[i].Groups[0].Keyframes.Objects.Length; j++)
+					for (int j = 0; j < currentCarSection.Groups[0].Keyframes.Objects.Length; j++)
 					{
-						TrainManagerBase.currentHost.HideObject(CarSections[i].Groups[0].Keyframes.Objects[j]);
+						TrainManagerBase.currentHost.HideObject(currentCarSection.Groups[0].Keyframes.Objects[j]);
 					}
 				}
 			}
@@ -633,6 +633,22 @@ namespace TrainManager.Car
 					else
 					{
 						CurrentCarSection = CarSectionType.NotVisible;
+					}
+					break;
+				case CarSectionType.HeadOutLeft:
+					if (CarSections.TryGetValue(CarSectionType.HeadOutLeft, out CarSection headOutLeftCarSection))
+					{
+						CurrentCarSection = CarSectionType.HeadOutLeft;
+						headOutLeftCarSection.Initialize(false);
+						headOutLeftCarSection.Show();
+					}
+					break;
+				case CarSectionType.HeadOutRight:
+					if (CarSections.TryGetValue(CarSectionType.HeadOutRight, out CarSection headOutRightCarSection))
+					{
+						CurrentCarSection = CarSectionType.HeadOutRight;
+						headOutRightCarSection.Initialize(false);
+						headOutRightCarSection.Show();
 					}
 					break;
 			}

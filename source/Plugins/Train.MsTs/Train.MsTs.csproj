@@ -56,9 +56,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Panel\CabComponent.cs" />
     <Compile Include="Effects\Exhaust.cs" />
     <Compile Include="Handles\Handle.cs" />
     <Compile Include="Misc\Units.cs" />
+    <Compile Include="Panel\CabView.cs" />
     <Compile Include="Panel\CvfAnimation.cs" />
     <Compile Include="Panel\CvfParser.cs" />
     <Compile Include="Panel\Enums\CabComponentType.cs" />

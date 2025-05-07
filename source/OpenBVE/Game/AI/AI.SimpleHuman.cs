@@ -1,4 +1,5 @@
 using System;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Motor;
 using OpenBveApi.Routes;
@@ -204,10 +205,14 @@ namespace OpenBve
 				// do the ai
 				Train.Specs.CurrentConstSpeed = false;
 				Train.Handles.HoldBrake.ApplyState(false);
-				if (Train.Cars[Train.DriverCar].TractionModel.Components[EngineComponent.Pantograph] is Pantograph pantograph && pantograph.State == PantographState.Lowered)
+				foreach (CarBase car in Train.Cars)
 				{
-					pantograph.Raise();
+					if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph) && pantograph.State == PantographState.Lowered)
+					{
+						pantograph.Raise();
+					}
 				}
+				
 				int stopIndex = Train.Station >= 0 ? Program.CurrentRoute.Stations[Train.Station].GetStopIndex(Train.NumberOfCars) : -1;
 				if (Train.CurrentSectionLimit == 0.0)
 				{
