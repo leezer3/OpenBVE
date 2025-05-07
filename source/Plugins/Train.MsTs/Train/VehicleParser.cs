@@ -158,6 +158,8 @@ namespace Train.MsTs
 						break;
 				}
 				Car.ReAdhesionDevice = new BveReAdhesionDevice(Car, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
+				Car.Windscreen = new Windscreen(0, 0, Car);
+				Car.Windscreen.Wipers = new WindscreenWiper(Car.Windscreen, WiperPosition.Left, WiperPosition.Left, 1.0, 1.0);
 
 				if (Exhaust.Size > 0)
 				{
