@@ -502,6 +502,7 @@ namespace Train.MsTs
 								{
 									case PanelSubject.Direction:
 									case PanelSubject.Direction_Display:
+									case PanelSubject.Overspeed:
 										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
 										break;
 									default:
@@ -567,8 +568,46 @@ namespace Train.MsTs
 								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, Units, currentDigit);
 								Car.CarSections[0].Groups[0].Elements[j].ColorFunction = new CvfAnimation(panelSubject, Units, FrameMappings);
 							}
+							break;
+						case CabComponentType.CabSignalDisplay:
+							TotalFrames = 8;
+							HorizontalFrames = 4;
+							VerticalFrames = 2;
+							Position.X *= rW;
+							Position.Y *= rH;
+							Plugin.currentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
+							if (wday > 0 & hday > 0)
+							{
+								Texture[] textures = new Texture[8];
+								// 4 h-frames, 2 v-frames
+								int row = 0;
+								int column = 0;
+								int frameWidth = wday / HorizontalFrames;
+								int frameHeight = hday / VerticalFrames;
+								for (int k = 0; k < TotalFrames; k++)
+								{
+									Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out textures[k]);
+									if (column < HorizontalFrames - 1)
+									{
+										column++;
+									}
+									else
+									{
+										column = 0;
+										row++;
+									}
+								}
 
-							
+								j = -1;
+								for (int k = 0; k < textures.Length; k++)
+								{
+									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+									if (k == 0) j = l;
+								}
+
+								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject);
+
+							}
 							break;
 					}
 				}
@@ -820,6 +859,9 @@ namespace Train.MsTs
 							Code = "routelimit sectionlimit max 1 Minus == 1 Minus routelimit sectionlimit max 3.6 * ?";
 							break;
 					}
+					break;
+				case PanelSubject.Emergency_Brake:
+					Code = "emergencybrake";
 					break;
 				default:
 					Code = "0";
