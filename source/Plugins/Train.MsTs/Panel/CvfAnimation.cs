@@ -42,6 +42,23 @@ namespace Train.MsTs
 
 		private int lastResult;
 
+		internal CvfAnimation(PanelSubject subject)
+		{
+			Subject = subject;
+			switch (subject)
+			{
+				case PanelSubject.Aspect_Display:
+					Minimum = 0;
+					Maximum = 7;
+					break;
+				default:
+					Minimum = 0;
+					Maximum = double.MaxValue;
+					break;
+			}
+			Digit = -1;
+		}
+
 		internal CvfAnimation(PanelSubject subject, FrameMapping[] frameMapping)
 		{
 			Subject = subject;
@@ -157,6 +174,13 @@ namespace Train.MsTs
 						// digit
 						lastResult = (int)(currentSpeed / (int)Math.Pow(10, Digit) % 10);
 					}
+					break;
+				case PanelSubject.Aspect_Display:
+					lastResult = Train.CurrentSignalAspect;
+					break;
+				case PanelSubject.Overspeed:
+					double currentLimit = Math.Min(Train.CurrentRouteLimit, Train.CurrentSectionLimit);
+					lastResult = Math.Abs(Train.CurrentSpeed) > currentLimit ? 1 : 0;
 					break;
 			}
 
