@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using LibRender2;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -10,7 +9,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
-using RouteManager2;
 using RouteManager2.MessageManager;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
@@ -98,6 +96,20 @@ namespace TrainManager.Trains
 				}
 
 				return myLength;
+			}
+		}
+
+		public override int CurrentSignalAspect
+		{
+			get
+			{
+				int nextSectionIndex = CurrentSectionIndex + 1;
+				int a = 0;
+				if (nextSectionIndex >= 0 & nextSectionIndex < TrainManagerBase.CurrentRoute.Sections.Length)
+				{
+					a = TrainManagerBase.CurrentRoute.Sections[nextSectionIndex].CurrentAspect;
+				}
+				return a;
 			}
 		}
 
