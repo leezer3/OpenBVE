@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using SoundManager;
 using TrainManager.Motor;
+using TrainManager.MsTsSounds;
 
 namespace TrainManager.Car
 {
@@ -9,8 +10,8 @@ namespace TrainManager.Car
 	{
 		/// <summary>The loop sound</summary>
 		public CarSound Loop;
-		
-		
+
+		public List<SoundStream> ControlledSounds = new List<SoundStream>();
 		/// <summary>The sounds triggered by the train's plugin</summary>
 		public Dictionary<int, CarSound> Plugin = new Dictionary<int, CarSound>();
 		/// <summary>The sounds triggered by a request stop</summary>
