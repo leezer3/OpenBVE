@@ -142,7 +142,7 @@ namespace LibRender2.Text
 		{
 			if (value == 0)
 			{
-				throw new ArgumentException();
+				throw new ArgumentException("Unable to round a value of zero.", nameof(value));
 			}
 
 			value -= 1;

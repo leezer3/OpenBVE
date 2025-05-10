@@ -162,17 +162,24 @@ namespace OpenBve
 											}
 											break;
 										case "centermiddle":
-											if (Arguments.Length == 2)
+											if (Arguments.Length >= 1 && Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
 											{
-												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
-												{
-													Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[0]), out CurrentHudElements[Length - 1].CenterMiddle.BackgroundTexture);
-												}
+												Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[0]), out CurrentHudElements[Length - 1].CenterMiddle.BackgroundTexture);
+											}
 
-												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase))
-												{
-													Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].CenterMiddle.OverlayTexture);
-												}
+											if (Arguments.Length >= 2 && Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase))
+											{
+												Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].CenterMiddle.OverlayTexture);
+											}
+
+											if (Arguments.Length >= 3 && Arguments[2].Length != 0 & !Arguments[2].Equals("null", StringComparison.OrdinalIgnoreCase))
+											{
+												Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[2]), out CurrentHudElements[Length - 1].CenterMiddle.WideBackgroundTexture);
+											}
+
+											if (Arguments.Length >= 4 && Arguments[3].Length != 0 & !Arguments[3].Equals("null", StringComparison.OrdinalIgnoreCase))
+											{
+												Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[3]), out CurrentHudElements[Length - 1].CenterMiddle.WideOverlayTexture);
 											}
 											break;
 										case "centerright":

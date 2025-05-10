@@ -56,11 +56,11 @@ namespace OpenBve
 				}
 				this.SpeedLimit = Limit;
 				MotorCar = train.DriverCar;
-				if (!train.Cars[train.DriverCar].Specs.IsMotorCar)
+				if (!train.Cars[train.DriverCar].TractionModel.ProvidesPower)
 				{
 					for (int i = 0; i < train.Cars.Length; i++)
 					{
-						if (train.Cars[i].Specs.IsMotorCar)
+						if (train.Cars[i].TractionModel.ProvidesPower)
 						{
 							MotorCar = i;
 							break;
@@ -95,7 +95,7 @@ namespace OpenBve
 			private double decelerationCruise;   /* power below this deceleration, cruise above */
 			private double decelerationStart;    /* brake above this deceleration, cruise below */
 			private double decelerationStep;     /* the deceleration step per brake notch */
-			private double BrakeDeceleration;
+			private double brakeDeceleration;
 			private bool reduceDecelerationCruiseAndStart;
 
 			/// <summary>Performs all default actions</summary>
@@ -412,35 +412,35 @@ namespace OpenBve
 						}
 					}
 					dec = 0.0;
-					BrakeDeceleration = Train.Cars[Train.DriverCar].CarBrake.DecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual, Train.Cars[Train.DriverCar].CurrentSpeed);
+					brakeDeceleration = Train.Cars[Train.DriverCar].CarBrake.DecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual, Train.Cars[Train.DriverCar].CurrentSpeed);
 					for (int i = 0; i < Train.Cars.Length; i++)
 					{
-						if (Train.Cars[i].Specs.IsMotorCar)
+						if (Train.Cars[i].TractionModel.ProvidesPower)
 						{
-							if (Train.Cars[Train.DriverCar].CarBrake.motorDeceleration != 0 && Train.Cars[Train.DriverCar].CarBrake.motorDeceleration < BrakeDeceleration)
+							if (Train.Cars[Train.DriverCar].CarBrake.motorDeceleration != 0 && Train.Cars[Train.DriverCar].CarBrake.motorDeceleration < brakeDeceleration)
 							{
-								BrakeDeceleration = Train.Cars[Train.DriverCar].CarBrake.motorDeceleration;
+								brakeDeceleration = Train.Cars[Train.DriverCar].CarBrake.motorDeceleration;
 							}
 							break;
 						}
 					}
 					if (Train.Handles.Brake is AirBrakeHandle | Train.Handles.Brake.MaximumNotch <= 0)
 					{
-						decelerationCruise = 0.3 * BrakeDeceleration;
-						decelerationStart = 0.5 * BrakeDeceleration;
-						decelerationStep = 0.1 * BrakeDeceleration;
+						decelerationCruise = 0.3 * brakeDeceleration;
+						decelerationStart = 0.5 * brakeDeceleration;
+						decelerationStep = 0.1 * brakeDeceleration;
 					}
 					else if (Train.Handles.Brake.MaximumNotch <= 2)
 					{
-						decelerationCruise = 0.2 * BrakeDeceleration;
-						decelerationStart = 0.4 * BrakeDeceleration;
-						decelerationStep = 0.5 * BrakeDeceleration;
+						decelerationCruise = 0.2 * brakeDeceleration;
+						decelerationStart = 0.4 * brakeDeceleration;
+						decelerationStep = 0.5 * brakeDeceleration;
 					}
 					else
 					{
-						decelerationCruise = 0.2 * BrakeDeceleration;
-						decelerationStart = 0.5 * BrakeDeceleration;
-						decelerationStep = BrakeDeceleration / Train.Handles.Brake.MaximumNotch;
+						decelerationCruise = 0.2 * brakeDeceleration;
+						decelerationStart = 0.5 * brakeDeceleration;
+						decelerationStep = brakeDeceleration / Train.Handles.Brake.MaximumNotch;
 					}
 					if (this.CurrentSpeedFactor >= 1.0)
 					{
@@ -489,7 +489,7 @@ namespace OpenBve
 								}
 								else
 								{
-									dec = BrakeDeceleration;
+									dec = brakeDeceleration;
 								}
 							}
 						}
@@ -807,7 +807,7 @@ namespace OpenBve
 												}
 												else
 												{
-													edec = BrakeDeceleration;
+													edec = brakeDeceleration;
 												}
 
 												if (dist < 100.0)
@@ -936,7 +936,7 @@ namespace OpenBve
 									}
 									else
 									{
-										edec = BrakeDeceleration;
+										edec = brakeDeceleration;
 									}
 
 									if (edec > dec) dec = edec;
@@ -1126,7 +1126,7 @@ namespace OpenBve
 												}
 												else
 												{
-													edec = BrakeDeceleration;
+													edec = brakeDeceleration;
 												}
 
 												if (dist < 100.0)
@@ -1255,7 +1255,7 @@ namespace OpenBve
 									}
 									else
 									{
-										edec = BrakeDeceleration;
+										edec = brakeDeceleration;
 									}
 
 									if (edec > dec) dec = edec;

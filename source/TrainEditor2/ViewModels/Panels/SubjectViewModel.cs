@@ -1,4 +1,5 @@
-﻿using Reactive.Bindings;
+﻿using Formats.OpenBve;
+using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Models.Panels;
 
@@ -6,7 +7,7 @@ namespace TrainEditor2.ViewModels.Panels
 {
 	internal class SubjectViewModel : BaseViewModel
 	{
-		internal ReactiveProperty<SubjectBase> Base
+		internal ReactiveProperty<Panel2Subject> Base
 		{
 			get;
 		}

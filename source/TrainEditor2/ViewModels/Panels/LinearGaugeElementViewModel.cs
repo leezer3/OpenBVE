@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Reactive.Linq;
 using OpenBveApi.Colors;
+using OpenBveApi.Math;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -120,11 +121,17 @@ namespace TrainEditor2.ViewModels.Panels
 				.AddTo(disposable);
 
 			DirectionX = linearGauge
-				.ToReactivePropertyAsSynchronized(x => (int)x.Direction.X)
+				.ToReactivePropertyAsSynchronized(
+					x => x.Direction,
+					x => (int)x.X,
+					x => new Vector2(x, linearGauge.Direction.Y))
 				.AddTo(disposable);
 
 			DirectionY = linearGauge
-				.ToReactivePropertyAsSynchronized(x => (int)x.Direction.Y)
+				.ToReactivePropertyAsSynchronized(
+					x => x.Direction,
+					x => (int)x.Y,
+					x => new Vector2(linearGauge.Direction.X, x))
 				.AddTo(disposable);
 
 			Width = linearGauge

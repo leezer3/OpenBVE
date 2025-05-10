@@ -109,6 +109,8 @@
     <Compile Include="Motor\AbstractComponent.cs" />
     <Compile Include="Motor\AbstractEngine.cs" />
     <Compile Include="Motor\AbstractMotorSound.cs" />
+    <Compile Include="Motor\BVE4\BVEMotorCar.cs" />
+    <Compile Include="Motor\BVE4\BVETrailerCar.cs" />
     <Compile Include="Motor\BVE4\MotorSound.cs" />
     <Compile Include="Motor\BVE4\MotorSoundTable.cs" />
     <Compile Include="Motor\BVE4\MotorSoundTable.Entry.cs" />

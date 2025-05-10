@@ -383,7 +383,7 @@ namespace OpenBveApi.Objects
 			this.MatrixChain = matrixChain;
 		}
 
-		/// <summary>Creates a colored vertex from a base vertex and a matrix chain</summary>
+		/// <summary>Creates an animated vertex from a base vertex and a matrix chain</summary>
 		/// <param name="v">The base vertex</param>
 		/// <param name="matrixChain">The matrix chain</param>
 		public AnimatedVertex(Vertex v, int[] matrixChain)

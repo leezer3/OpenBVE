@@ -31,7 +31,7 @@ namespace TrainManager.Car
 		private double wiperTimer;
 		private double holdTimer;
 		private bool soundTriggered;
-		private WiperSpeed maxSpeed;
+		private readonly WiperSpeed maxSpeed;
 
 		public WindscreenWiper(Windscreen windscreen, WiperPosition restPosition, WiperPosition holdPosition, double wipeSpeed, double holdTime, bool singleSpeed = false)
 		{

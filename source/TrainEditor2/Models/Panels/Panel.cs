@@ -339,21 +339,13 @@ namespace TrainEditor2.Models.Panels
 
 		internal void UpdateListItem(ListViewItemModel item)
 		{
-			PilotLampElement pilotLamp = item.Tag as PilotLampElement;
-			NeedleElement needle = item.Tag as NeedleElement;
-			DigitalNumberElement digitalNumber = item.Tag as DigitalNumberElement;
-			DigitalGaugeElement digitalGauge = item.Tag as DigitalGaugeElement;
-			LinearGaugeElement linearGauge = item.Tag as LinearGaugeElement;
-			TimetableElement timetable = item.Tag as TimetableElement;
-			TouchElement touch = item.Tag as TouchElement;
-
 			if (item.Tag is Screen screen)
 			{
 				item.Texts[0] = screen.Number.ToString(culture);
 				item.Texts[1] = screen.Layer.ToString(culture);
 			}
 
-			if (pilotLamp != null)
+			if (item.Tag is PilotLampElement pilotLamp)
 			{
 				item.Texts[0] = pilotLamp.Subject.ToString();
 				item.Texts[1] = $"{pilotLamp.Location.X.ToString(culture)}, {pilotLamp.Location.Y.ToString(culture)}";
@@ -363,7 +355,7 @@ namespace TrainEditor2.Models.Panels
 				item.Texts[5] = pilotLamp.Layer.ToString(culture);
 			}
 
-			if (needle != null)
+			if (item.Tag is NeedleElement needle)
 			{
 				item.Texts[0] = needle.Subject.ToString();
 				item.Texts[1] = $"{needle.Location.X.ToString(culture)}, {needle.Location.Y.ToString(culture)}";
@@ -384,7 +376,7 @@ namespace TrainEditor2.Models.Panels
 				item.Texts[16] = needle.Layer.ToString(culture);
 			}
 
-			if (digitalNumber != null)
+			if (item.Tag is DigitalNumberElement digitalNumber)
 			{
 				item.Texts[0] = digitalNumber.Subject.ToString();
 				item.Texts[1] = $"{digitalNumber.Location.X.ToString(culture)}, {digitalNumber.Location.Y.ToString(culture)}";
@@ -395,7 +387,7 @@ namespace TrainEditor2.Models.Panels
 				item.Texts[6] = digitalNumber.Layer.ToString(culture);
 			}
 
-			if (digitalGauge != null)
+			if (item.Tag is DigitalGaugeElement digitalGauge)
 			{
 				item.Texts[0] = digitalGauge.Subject.ToString();
 				item.Texts[1] = $"{digitalGauge.Location.X.ToString(culture)}, {digitalGauge.Location.Y.ToString(culture)}";
@@ -409,7 +401,7 @@ namespace TrainEditor2.Models.Panels
 				item.Texts[9] = digitalGauge.Layer.ToString(culture);
 			}
 
-			if (linearGauge != null)
+			if (item.Tag is LinearGaugeElement linearGauge)
 			{
 				item.Texts[0] = linearGauge.Subject.ToString();
 				item.Texts[1] = $"{linearGauge.Location.X.ToString(culture)}, {linearGauge.Location.Y.ToString(culture)}";
@@ -423,7 +415,7 @@ namespace TrainEditor2.Models.Panels
 				item.Texts[9] = linearGauge.Layer.ToString(culture);
 			}
 
-			if (timetable != null)
+			if (item.Tag is TimetableElement timetable)
 			{
 				item.Texts[0] = $"{timetable.Location.X.ToString(culture)}, {timetable.Location.Y.ToString(culture)}";
 				item.Texts[1] = timetable.Width.ToString(culture);
@@ -432,7 +424,7 @@ namespace TrainEditor2.Models.Panels
 				item.Texts[4] = timetable.Layer.ToString(culture);
 			}
 
-			if (touch != null)
+			if (item.Tag is TouchElement touch)
 			{
 				item.Texts[0] = $"{touch.Location.X.ToString(culture)}, {touch.Location.Y.ToString(culture)}";
 				item.Texts[1] = $"{touch.Size.X.ToString(culture)}, {touch.Size.Y.ToString(culture)}";

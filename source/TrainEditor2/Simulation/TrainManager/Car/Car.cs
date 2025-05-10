@@ -19,7 +19,6 @@ namespace TrainEditor2.Simulation.TrainManager
 			public Car() : base(null, 0)
 			{
 				Sounds = new CarSounds();
-				Specs.IsMotorCar = true;
 			}
 
 			public Car(TrainBase train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient) : base(train, index, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient)
@@ -53,8 +52,8 @@ namespace TrainEditor2.Simulation.TrainManager
 				}
 				
 				// motor sound
-				Sounds.Motor.Position = center;
-				if (Sounds.Motor is BVEMotorSound motorSound)
+				TractionModel.MotorSounds.Position = center;
+				if (TractionModel.MotorSounds is BVEMotorSound motorSound)
 				{
 					for (int i = 0; i < motorSound.Tables.Length; i++)
 					{

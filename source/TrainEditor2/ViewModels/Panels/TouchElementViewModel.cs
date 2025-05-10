@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -168,9 +169,9 @@ namespace TrainEditor2.ViewModels.Panels
 
 			LocationX = touch
 				.ToReactivePropertyAsSynchronized(
-					x => x.Location.X,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Location,
+					x => x.X.ToString(culture),
+					x => new Vector2(double.Parse(x, NumberStyles.Float, culture), touch.Location.Y),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -183,9 +184,9 @@ namespace TrainEditor2.ViewModels.Panels
 
 			LocationY = touch
 				.ToReactivePropertyAsSynchronized(
-					x => x.Location.Y,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Location,
+					x => x.Y.ToString(culture),
+					x => new Vector2(touch.Location.X, double.Parse(x, NumberStyles.Float, culture)),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>

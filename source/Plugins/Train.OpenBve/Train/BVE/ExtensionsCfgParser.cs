@@ -229,6 +229,10 @@ namespace Train.OpenBve
 								AnimatedObjectCollection obj = (AnimatedObjectCollection)CarObjects[i].Clone();
 								obj.Reverse();
 								CarObjects[i] = obj;
+							} else if (CarObjects[i] is KeyframeAnimatedObject) {
+								KeyframeAnimatedObject obj = (KeyframeAnimatedObject)CarObjects[i].Clone();
+								obj.Reverse();
+								CarObjects[i] = obj;
 							} else {
 								throw new NotImplementedException();
 							}
@@ -262,20 +266,19 @@ namespace Train.OpenBve
 									Train.Cars[CarIndex].RearBogie.RearAxle.Position = -temp;
 								}
 							}
-							if (BogieObjects[i] is StaticObject)
-							{
+							if (BogieObjects[i] is StaticObject) {
 								StaticObject obj = (StaticObject)BogieObjects[i].Clone();
 								obj.ApplyScale(-1.0, 1.0, -1.0);
 								BogieObjects[i] = obj;
-							}
-							else if (BogieObjects[i] is AnimatedObjectCollection)
-							{
+							} else if (BogieObjects[i] is AnimatedObjectCollection) {
 								AnimatedObjectCollection obj = (AnimatedObjectCollection)BogieObjects[i].Clone();
 								obj.Reverse();
 								BogieObjects[i] = obj;
-							}
-							else
-							{
+							} else if (BogieObjects[i] is KeyframeAnimatedObject) {
+								KeyframeAnimatedObject obj = (KeyframeAnimatedObject)BogieObjects[i].Clone();
+								obj.Reverse();
+								BogieObjects[i] = obj;
+							} else {
 								throw new NotImplementedException();
 							}
 						}

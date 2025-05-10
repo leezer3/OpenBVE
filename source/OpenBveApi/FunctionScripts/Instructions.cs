@@ -31,7 +31,7 @@
 		BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,
 		SafetyPluginAvailable, SafetyPluginState, PassAlarm, StationAdjustAlarm,
 		TimetableVisible, Panel2Timetable, DistanceNextStation, DistanceLastStation, StopsNextStation, DistanceStation, StopsStation, NextStation, NextStationStop, TerminalStation,
-		RouteLimit,
+		RouteLimit, SectionLimit,
 		SectionAspectNumber, CurrentObjectState,
 		RainDrop, SnowFlake, WiperPosition, WiperState,
 		WheelRadius, WheelRadiusOfCar,

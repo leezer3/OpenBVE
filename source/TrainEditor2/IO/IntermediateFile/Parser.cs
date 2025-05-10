@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Formats.OpenBve;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -472,7 +473,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Subject
 			{
-				Base = (SubjectBase)Enum.Parse(typeof(SubjectBase), (string)parent.Element("Base")),
+				Base = (Panel2Subject)Enum.Parse(typeof(Panel2Subject), (string)parent.Element("Base")),
 				BaseOption = (int)parent.Element("BaseOption"),
 				Suffix = (SubjectSuffix)Enum.Parse(typeof(SubjectSuffix), (string)parent.Element("Suffix")),
 				SuffixOption = (int)parent.Element("SuffixOption")

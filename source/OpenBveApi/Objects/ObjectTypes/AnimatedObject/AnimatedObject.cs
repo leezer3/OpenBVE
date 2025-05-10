@@ -215,7 +215,7 @@ namespace OpenBveApi.Objects
 		{
 			currentHost.HideObject(internalObject);
 			int t = StateIndex;
-			if (t >= 0 && States[t].Prototype != null)
+			if (t >= 0)
 			{
 				internalObject.Prototype = States[t].Prototype;
 			}

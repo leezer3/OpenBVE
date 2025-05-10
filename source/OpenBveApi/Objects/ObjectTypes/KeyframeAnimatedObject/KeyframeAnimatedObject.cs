@@ -213,5 +213,23 @@ namespace OpenBveApi.Objects
 				currentHost.ShowObject(Objects[i], ObjectType.Dynamic);
 			}
 		}
+
+		/// <summary>Reverses the object</summary>
+		public void Reverse()
+		{
+			foreach (ObjectState state in Objects)
+			{
+				if (state.Prototype == null)
+				{
+					continue;
+				}
+				state.Prototype = (StaticObject)state.Prototype.Clone();
+				state.Prototype.ApplyScale(-1.0, 1.0, -1.0);
+				Matrix4D t = state.Translation;
+				t.Row3.X *= -1.0f;
+				t.Row3.Z *= -1.0f;
+				state.Translation = t;
+			}
+		}
 	}
 }

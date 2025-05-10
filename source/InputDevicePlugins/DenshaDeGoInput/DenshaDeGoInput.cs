@@ -584,8 +584,7 @@ namespace DenshaDeGoInput
 									{
 										case "guid":
 											{
-												Guid a;
-												if (Guid.TryParse(Value, out a))
+												if (Guid.TryParse(Value, out Guid a))
 												{
 													InputTranslator.ActiveControllerGuid = a;
 												}
@@ -740,8 +739,7 @@ namespace DenshaDeGoInput
 											break;
 										case "hat_index":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.HatIndex = a;
 												}
@@ -752,8 +750,7 @@ namespace DenshaDeGoInput
 											break;
 										case "axis_index":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.AxisIndex = a;
 												}
@@ -761,8 +758,7 @@ namespace DenshaDeGoInput
 											break;
 										case "select":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.ButtonIndex.Select = a;
 												}
@@ -770,8 +766,7 @@ namespace DenshaDeGoInput
 											break;
 										case "start":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.ButtonIndex.Start = a;
 												}
@@ -779,8 +774,7 @@ namespace DenshaDeGoInput
 											break;
 										case "a":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.ButtonIndex.A = a;
 												}
@@ -788,8 +782,7 @@ namespace DenshaDeGoInput
 											break;
 										case "b":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.ButtonIndex.B = a;
 												}
@@ -797,8 +790,7 @@ namespace DenshaDeGoInput
 											break;
 										case "c":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.ButtonIndex.C = a;
 												}
@@ -806,8 +798,7 @@ namespace DenshaDeGoInput
 											break;
 										case "power1":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.ButtonIndex.Power1 = a;
 												}
@@ -815,8 +806,7 @@ namespace DenshaDeGoInput
 											break;
 										case "power2":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.ButtonIndex.Power2 = a;
 												}
@@ -824,8 +814,7 @@ namespace DenshaDeGoInput
 											break;
 										case "power3":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.ButtonIndex.Power3 = a;
 												}
@@ -833,8 +822,7 @@ namespace DenshaDeGoInput
 											break;
 										case "brake1":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.ButtonIndex.Brake1 = a;
 												}
@@ -842,8 +830,7 @@ namespace DenshaDeGoInput
 											break;
 										case "brake2":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.ButtonIndex.Brake2 = a;
 												}
@@ -851,8 +838,7 @@ namespace DenshaDeGoInput
 											break;
 										case "brake3":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.ButtonIndex.Brake3 = a;
 												}
@@ -860,8 +846,7 @@ namespace DenshaDeGoInput
 											break;
 										case "brake4":
 											{
-												int a;
-												if (int.TryParse(Value, out a))
+												if (int.TryParse(Value, out int a))
 												{
 													ClassicController.ButtonIndex.Brake4 = a;
 												}
