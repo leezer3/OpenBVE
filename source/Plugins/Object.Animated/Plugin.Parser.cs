@@ -281,14 +281,7 @@ namespace Plugin
 							Block.TryGetValue(AnimatedKey.Radius, ref radius);
 							Block.GetFunctionScript(new[] { AnimatedKey.Pitch, AnimatedKey.PitchFunction }, Folder, out AnimationScript pitchFunction);
 							Block.GetFunctionScript(new[] { AnimatedKey.Volume, AnimatedKey.VolumeFunction }, Folder, out AnimationScript volumeFunction);
-							Block.GetFunctionScript(new[] { AnimatedKey.TranslateXFunction, AnimatedKey.TranslateXFunctionRPN, AnimatedKey.TranslateXScript }, Folder, out Result.Objects[ObjectCount].TranslateXFunction);
-							Block.GetFunctionScript(new[] { AnimatedKey.TranslateYFunction, AnimatedKey.TranslateYFunctionRPN, AnimatedKey.TranslateYScript }, Folder, out Result.Objects[ObjectCount].TranslateYFunction);
-							Block.GetFunctionScript(new[] { AnimatedKey.TranslateZFunction, AnimatedKey.TranslateZFunctionRPN, AnimatedKey.TranslateZScript }, Folder, out Result.Objects[ObjectCount].TranslateZFunction);
-							Block.TryGetVector3(AnimatedKey.TranslateXDirection, ',', ref Result.Objects[ObjectCount].TranslateXDirection);
-							Block.TryGetVector3(AnimatedKey.TranslateYDirection, ',', ref Result.Objects[ObjectCount].TranslateYDirection);
-							Block.TryGetVector3(AnimatedKey.TranslateZDirection, ',', ref Result.Objects[ObjectCount].TranslateZDirection);
 							Block.GetFunctionScript(new[] { AnimatedKey.TranslateZFunction, AnimatedKey.TranslateZFunctionRPN, AnimatedKey.TranslateZScript }, Folder, out AnimationScript trackFollowerFunction);
-
 							currentHost.RegisterSound(soundPath, radius, out SoundHandle currentSound);
 							WorldSound snd = new WorldSound(currentHost, currentSound)
 							{
