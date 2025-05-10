@@ -551,6 +551,7 @@ namespace LibRender2
 				}
 			}
 			TextureManager.UnloadAllTextures(true);
+			VisibleObjects.Clear();
 		}
 
 		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
