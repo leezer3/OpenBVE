@@ -563,7 +563,7 @@ namespace Train.OpenBve
 										break;
 									case "accelerationcurves":
 										copyAccelerationCurves = false;
-										curves = ParseAccelerationNode(c, fileName);
+										curves = ParseAccelerationNode(cc, fileName);
 										if (Train.Cars[Car].TractionModel is BVEMotorCar || Train.Cars[Car].TractionModel is BVETrailerCar)
 										{
 											AbstractMotorSound motor = Train.Cars[Car].TractionModel.MotorSounds;

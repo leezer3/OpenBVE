@@ -280,7 +280,9 @@ namespace Plugin
 							Block.GetVector3(AnimatedKey.Position, ',', out Position);
 							Block.TryGetValue(AnimatedKey.Radius, ref radius);
 							Block.GetFunctionScript(new[] { AnimatedKey.Pitch, AnimatedKey.PitchFunction }, Folder, out AnimationScript pitchFunction);
-							Block.GetFunctionScript(new[] { AnimatedKey.Volume, AnimatedKey.VolumeFunction }, Folder, out AnimationScript volumeFunction);
+							Block.TryGetValue(AnimatedKey.Pitch, ref pitch);
+							Block.GetFunctionScript(new[] { AnimatedKey.VolumeFunction }, Folder, out AnimationScript volumeFunction);
+							Block.TryGetValue(AnimatedKey.Volume, ref volume);
 							Block.GetFunctionScript(new[] { AnimatedKey.TranslateZFunction, AnimatedKey.TranslateZFunctionRPN, AnimatedKey.TranslateZScript }, Folder, out AnimationScript trackFollowerFunction);
 							currentHost.RegisterSound(soundPath, radius, out SoundHandle currentSound);
 							WorldSound snd = new WorldSound(currentHost, currentSound)
