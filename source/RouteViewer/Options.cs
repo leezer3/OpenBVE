@@ -22,6 +22,7 @@ namespace RouteViewer
 		internal Options()
 		{
 			ViewingDistance = 600;
+			SoundNumber = 16;
 		}
 
 		public override void Save(string fileName)
