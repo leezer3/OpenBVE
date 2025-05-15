@@ -408,15 +408,8 @@ namespace RouteViewer
 						{
 							s = 0.15;
 							dy = 0.4;
-							if (transponderEvent.Type == 21)
-							{
-								// beacon type 21 is reserved for legacy weather events
-								t = WeatherEventTexture;
-							}
-							else
-							{
-								t = TransponderTexture;
-							}
+							// beacon type 21 is reserved for legacy weather events
+							t = transponderEvent.Type == 21 ? WeatherEventTexture : TransponderTexture;
 
 						}
 						else if (e is SoundEvent soundEvent)
@@ -838,7 +831,7 @@ namespace RouteViewer
 			return s;
 		}
 
-		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
+		public NewRenderer(HostInterface currentHost, BaseOptions currentOptions, FileSystem fileSystem) : base(currentHost, currentOptions, fileSystem)
 		{
 			Screen.Width = Interface.CurrentOptions.WindowWidth;
 			Screen.Height = Interface.CurrentOptions.WindowHeight;
