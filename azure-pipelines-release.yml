@@ -79,7 +79,7 @@ jobs:
 - job: LinuxMakeBuild
   displayName: 'Build on Linux (makefile)'
   pool:
-    vmImage: 'ubuntu-20.04'
+    vmImage: 'ubuntu-22.04'
 
   variables:
     solution: 'OpenBVE.sln'
@@ -104,7 +104,7 @@ jobs:
 - job: LinuxDebBuild
   displayName: 'Build on Linux (makefile, debian package)'
   pool:
-    vmImage: 'ubuntu-20.04'
+    vmImage: 'ubuntu-22.04'
 
   variables:
     solution: 'OpenBVE.sln'

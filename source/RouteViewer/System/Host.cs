@@ -9,10 +9,12 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using RouteManager2.MessageManager;
+using SoundManager;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -505,6 +507,26 @@ namespace RouteViewer
 		public override void HideObject(ObjectState objectToHide)
 		{
 			Program.Renderer.VisibleObjects.HideObject(objectToHide);
+		}
+
+		public override bool SoundIsPlaying(object SoundSource)
+		{
+			return Program.Sounds.IsPlaying(SoundSource);
+		}
+
+		public override object PlaySound(SoundHandle buffer, double pitch, double volume, Vector3 position, object parent, bool looped)
+		{
+			return Program.Sounds.PlaySound(buffer, pitch, volume, position, parent, looped);
+		}
+
+		public override void StopSound(object SoundSource)
+		{
+			Program.Sounds.StopSound(SoundSource as SoundSource);
+		}
+
+		public override void StopAllSounds(object parent)
+		{
+			Program.Sounds.StopAllSounds(parent);
 		}
 
 		public override int AnimatedWorldObjectsUsed

@@ -37,7 +37,7 @@ namespace OpenBve.Graphics.Renderers
 			MessagesRendererSize.X += 16.0 * TimeElapsed * (totalwidth -MessagesRendererSize.X);
 			totalwidth = (float)MessagesRendererSize.X;
 			//Calculate final viewing plane size to pass to openGL
-			CalculateViewingPlaneSize(Element, out double lw, out double rw, out double lcrh);
+			Element.CalculateViewingPlaneSize(out double lw, out double rw, out double lcrh);
 
 			// start
 			double w = totalwidth + lw + rw;

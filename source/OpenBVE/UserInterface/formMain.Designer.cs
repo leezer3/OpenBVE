@@ -1610,7 +1610,7 @@ namespace OpenBve {
             this.comboBoxFont.Name = "comboBoxFont";
             this.comboBoxFont.Size = new System.Drawing.Size(264, 21);
             this.comboBoxFont.TabIndex = 14;
-            this.comboBoxFont.SelectedIndexChanged += new System.EventHandler(this.comboBoxFont_SelectedIndexChanged);
+            this.comboBoxFont.SelectionChangeCommitted += new System.EventHandler(this.comboBoxFont_SelectedIndexChanged);
             // 
             // labelFontName
             // 

@@ -21,7 +21,7 @@ namespace OpenBve.Graphics.Renderers
 			{
 				CurrentLampCollection = new LampCollection(TrainManager.PlayerTrain);
 			}
-			CalculateViewingPlaneSize(Element, out double lw, out double rw, out double lcrh);
+			Element.CalculateViewingPlaneSize(out double lw, out double rw, out double lcrh);
 			// start
 
 			// ReSharper disable once PossibleNullReferenceException

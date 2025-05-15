@@ -193,9 +193,6 @@
     <Compile Include="Graphics\Renderers\Overlays.Debug.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderers\Overlays.Functions.cs">
-      <DependentUpon>Overlays.cs</DependentUpon>
-    </Compile>
     <Compile Include="Graphics\Renderers\Overlays.GameMessages.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>

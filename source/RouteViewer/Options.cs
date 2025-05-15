@@ -5,8 +5,6 @@ using System.Reflection;
 using System.Windows.Forms;
 using Formats.OpenBve;
 using OpenBveApi;
-using OpenBveApi.Graphics;
-using OpenBveApi.Objects;
 using Path = OpenBveApi.Path;
 
 namespace RouteViewer
@@ -22,6 +20,7 @@ namespace RouteViewer
 		internal Options()
 		{
 			ViewingDistance = 600;
+			SoundNumber = 16;
 		}
 
 		public override void Save(string fileName)
