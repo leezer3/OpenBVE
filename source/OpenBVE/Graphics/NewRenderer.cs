@@ -201,6 +201,13 @@ namespace OpenBve.Graphics
 
 			events.Render(Camera.AbsolutePosition);
 
+			GL.Enable(EnableCap.CullFace);
+			GL.Enable(EnableCap.DepthTest);
+			GL.DepthMask(true);
+			OptionLighting = false;
+
+			OptionLighting = true;
+
 			// fog
 			float aa = Program.CurrentRoute.CurrentFog.Start;
 			float bb = Program.CurrentRoute.CurrentFog.End;
@@ -337,7 +344,18 @@ namespace OpenBve.Graphics
 				}
 				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
-			// overlay layer
+
+			ResetOpenGlState();
+			// particle sources
+			SetBlendFunc();
+			SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+			{
+				TrainManager.PlayerTrain.Cars[i].ParticleSource?.Update(TimeElapsed);
+			}
+
+
+			// overlay (cab / interior) layer
 			OptionFog = false;
 			UpdateViewport(ViewportChangeMode.ChangeToCab);
 			

@@ -47,6 +47,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="OpenTK, Version=3.3.2.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\OpenTK-OpenBVE.1.0.4\lib\net20\OpenTK.dll</HintPath>
     </Reference>
@@ -97,6 +98,7 @@
     <Compile Include="Primitives\Cube.cs" />
     <Compile Include="Primitives\GLControl.cs" />
     <Compile Include="Primitives\Label.cs" />
+    <Compile Include="Primitives\Particle.cs" />
     <Compile Include="Primitives\Picturebox.cs" />
     <Compile Include="Primitives\Rectangle.cs" />
     <Compile Include="openGL\Vertex.cs" />
@@ -107,6 +109,8 @@
     <Compile Include="Screen\Resolution.cs" />
     <Compile Include="Screen\Screen.cs" />
     <Compile Include="Shaders\Shader.cs" />
+    <Compile Include="Smoke\Particle.cs" />
+    <Compile Include="Smoke\ParticleSource.cs" />
     <Compile Include="Textures\TextureManager.cs" />
     <Compile Include="Text\Fonts.BlockedFonts.cs" />
     <Compile Include="Text\Fonts.cs" />

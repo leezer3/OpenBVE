@@ -61,6 +61,9 @@ namespace OpenBveApi.Trains
 		/// <summary>Gets the length of the train</summary>
 		public virtual double Length => 0;
 
+		/// <summary>Gets the current signal aspect applicable to the train</summary>
+		public virtual int CurrentSignalAspect => 0;
+
 		/// <summary>Updates the train</summary>
 		/// <param name="TimeElapsed">The time elapsed since the last call to update</param>
 		public virtual void Update(double TimeElapsed)
