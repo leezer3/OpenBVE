@@ -149,7 +149,15 @@ namespace RouteViewer
 				e.Cancel = true;
 				Loading.Cancel = true;
 			}
-	    }
+			if (Program.CurrentHost.MonoRuntime)
+			{
+				// Mono often fails to close the main window properly
+				// give it a brief pause (to the visibility thread terminate cleanly)
+				// then issue forceful closeure
+				Thread.Sleep(100);
+				Environment.Exit(0);
+			}
+		}
 
 		public static void LoadingScreenLoop()
 		{

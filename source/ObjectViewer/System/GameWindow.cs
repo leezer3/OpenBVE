@@ -322,6 +322,10 @@ namespace ObjectViewer
         {
 	        Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
 			Program.Renderer.visibilityThread = false;
+			if (Program.CurrentHost.MonoRuntime)
+			{
+				Environment.Exit(0);
+			}
         }
 
         protected override void OnUnload(EventArgs e)
