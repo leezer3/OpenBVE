@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBve.Formats.MsTs;
 using SoundManager;
 using TrainManager.Car;
 
@@ -29,7 +30,33 @@ namespace TrainManager.MsTsSounds
 {
 	public abstract class SoundTrigger
 	{
-		internal readonly SoundBuffer Buffer;
+		internal readonly SoundBuffer[] Buffers;
+
+		private readonly KujuTokenID bufferSelectionMethod;
+
+
+		private int bufferIndex;
+
+		internal SoundBuffer Buffer
+		{
+			get
+			{
+				switch (bufferSelectionMethod)
+				{
+					case KujuTokenID.SequentialSelection:
+						bufferIndex++;
+						if (bufferIndex > Buffers.Length - 1)
+						{
+							bufferIndex = 0;
+						}
+						break;
+					case KujuTokenID.RandomSelection:
+						bufferIndex = TrainManagerBase.RandomNumberGenerator.Next(0, Buffers.Length - 1);
+						break;
+				}
+				return Buffers[bufferIndex];
+			}
+		}
 
 		internal SoundSource Source;
 
@@ -39,8 +66,15 @@ namespace TrainManager.MsTsSounds
 
 		internal SoundTrigger(CarBase car, SoundBuffer buffer)
 		{
-			Buffer = buffer;
 			Car = car;
+			Buffers = new[] { buffer };
+		}
+
+		internal SoundTrigger(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod)
+		{
+			Car = car;
+			Buffers = buffers;
+			bufferSelectionMethod = selectionMethod;
 		}
 
 		public virtual void Update(double timeElapsed, double pitchValue, double volumeValue)
