@@ -439,7 +439,9 @@ namespace RouteViewer
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
 						CurrentlyLoading = true;
+						Renderer.PauseVisibilityUpdates = true;
 						Renderer.OptionInterface = false;
+						UpdateCaption();
 						if (!Interface.CurrentOptions.LoadingBackground)
 						{
 							Renderer.RenderScene(0.0);
@@ -461,16 +463,18 @@ namespace RouteViewer
 						}
 						Renderer.Reset();
 						CameraAlignment a = Renderer.Camera.Alignment;
+						
 						if (LoadRoute(textureBytes))
 						{
+							Renderer.PauseVisibilityUpdates = false;
 							Renderer.Camera.Alignment = a;
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 							Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
-							//Renderer.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
 						else
 						{
+							Renderer.PauseVisibilityUpdates = false;
 							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);
@@ -480,6 +484,7 @@ namespace RouteViewer
 						Renderer.OptionInterface = true;
 						GCSettings.LargeObjectHeapCompactionMode =  GCLargeObjectHeapCompactionMode.CompactOnce; 
 						GC.Collect();
+						UpdateCaption();
 						
 					}
 					break;

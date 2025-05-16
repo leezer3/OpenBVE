@@ -727,6 +727,8 @@ namespace LibRender2
 		}
 
 		private VisibilityUpdate updateVisibility;
+
+		public bool PauseVisibilityUpdates;
 		
 		public bool visibilityThread = true;
 
@@ -736,6 +738,10 @@ namespace LibRender2
 		{
 			while (visibilityThread)
 			{
+				if (PauseVisibilityUpdates)
+				{
+					continue;
+				}
 				if (updateVisibility != VisibilityUpdate.None && CameraTrackFollower != null)
 				{
 					UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);
