@@ -123,6 +123,7 @@ namespace LibRender2
 		public TextureManager TextureManager;
 		public Cube Cube;
 		public Rectangle Rectangle;
+		public Particle Particle;
 		public Loading Loading;
 		public Keys Keys;
 		public MotionBlur MotionBlur;
@@ -383,6 +384,7 @@ namespace LibRender2
 			TextureManager = new TextureManager(currentHost, this);
 			Cube = new Cube(this);
 			Rectangle = new Rectangle(this);
+			Particle = new Particle(this);
 			Loading = new Loading(this);
 			Keys = new Keys(this);
 			MotionBlur = new MotionBlur(this);
@@ -688,18 +690,18 @@ namespace LibRender2
 				for (int i = 0; i < StaticObjectStates.Count; i++)
 				{
 					VAOExtensions.CreateVAO(StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
-					if (StaticObjectStates[i].Matricies != null)
-					{
-						GL.CreateBuffers(1, out StaticObjectStates[i].MatrixBufferIndex);
-					}
+					/*
+					 * n.b.
+					 * Only create the actual matrix buffer at first frame render time
+					 * I can't find why at the minute, but Object Viewer otherwise doesn't show them, and attempting
+					 * to retrieve previously set matricies from the shader shows all zeros
+					 *
+					 * Probably a timing issue, but it works doing it that way :/
+					 */
 				}
 				for (int i = 0; i < DynamicObjectStates.Count; i++)
 				{
 					VAOExtensions.CreateVAO(DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
-					if (DynamicObjectStates[i].Matricies != null)
-					{
-						GL.CreateBuffers(1, out DynamicObjectStates[i].MatrixBufferIndex);
-					}
 				}
 			}
 			ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();
