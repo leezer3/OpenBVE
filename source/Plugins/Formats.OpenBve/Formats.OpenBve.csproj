@@ -56,6 +56,7 @@
     <Compile Include="CFG\ConfigFile.cs" />
     <Compile Include="Enums\ExtensionsCfg\ExtensionsCfgKey.cs" />
     <Compile Include="Enums\ExtensionsCfg\ExtensionsCfgSection.cs" />
+    <Compile Include="Enums\HUD\HUDKey.cs" />
     <Compile Include="Enums\SoundCfg\SoundCfgKey.cs" />
     <Compile Include="Enums\SoundCfg\SoundCfgSection.cs" />
     <Compile Include="Extensions.cs" />

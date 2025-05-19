@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Formats.OpenBve;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using SoundManager;
@@ -70,9 +71,10 @@ namespace OpenBve
 									{
 										Arguments[j] = Arguments[j].Trim(new char[] { });
 									}
-									switch (Command.ToLowerInvariant())
+									Enum.TryParse(Command, true, out HUDKey key);
+									switch (key)
 									{
-										case "subject":
+										case HUDKey.Subject:
 											if (Arguments.Length == 1)
 											{
 												if (!Enum.TryParse(Arguments[0], true, out CurrentHudElements[Length - 1].Subject))
@@ -81,13 +83,13 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "position":
+										case HUDKey.Position:
 											if (!Vector2.TryParse(Arguments, out CurrentHudElements[Length - 1].Position))
 											{
 												Interface.AddMessage(MessageType.Error, false, "Invalid Position for HUD element " + (Length - 1) + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
-										case "alignment":
+										case HUDKey.Alignment:
 											if (Arguments.Length == 2)
 											{
 												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int x))
@@ -105,7 +107,7 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "topleft":
+										case HUDKey.TopLeft:
 											if (Arguments.Length == 2)
 											{
 												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
@@ -119,7 +121,7 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "topmiddle":
+										case HUDKey.TopMiddle:
 											if (Arguments.Length == 2)
 											{
 												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
@@ -133,7 +135,7 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "topright":
+										case HUDKey.TopRight:
 											if (Arguments.Length == 2)
 											{
 												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
@@ -147,7 +149,7 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "centerleft":
+										case HUDKey.CenterLeft:
 											if (Arguments.Length == 2)
 											{
 												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
@@ -161,7 +163,7 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "centermiddle":
+										case HUDKey.CenterMiddle:
 											if (Arguments.Length >= 1 && Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
 											{
 												Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[0]), out CurrentHudElements[Length - 1].CenterMiddle.BackgroundTexture);
@@ -182,7 +184,7 @@ namespace OpenBve
 												Program.Renderer.TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[3]), out CurrentHudElements[Length - 1].CenterMiddle.WideOverlayTexture);
 											}
 											break;
-										case "centerright":
+										case HUDKey.CenterRight:
 											if (Arguments.Length == 2)
 											{
 												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
@@ -196,7 +198,7 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "bottomleft":
+										case HUDKey.BottomLeft:
 											if (Arguments.Length == 2)
 											{
 												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
@@ -210,7 +212,7 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "bottommiddle":
+										case HUDKey.BottomMiddle:
 											if (Arguments.Length == 2)
 											{
 												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
@@ -224,7 +226,7 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "bottomright":
+										case HUDKey.BottomRight:
 											if (Arguments.Length == 2)
 											{
 												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
@@ -238,31 +240,31 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "backcolor":
+										case HUDKey.BackColor:
 											if (!Color32.TryParseColor(Arguments, out CurrentHudElements[Length - 1].BackgroundColor))
 											{
 												Interface.AddMessage(MessageType.Error, false, "Invalid BackColor for HUD element " + (Length - 1) + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
-										case "overlaycolor":
+										case HUDKey.OverlayColor:
 											if (!Color32.TryParseColor(Arguments, out CurrentHudElements[Length - 1].OverlayColor))
 											{
 												Interface.AddMessage(MessageType.Error, false, "Invalid OverlayColor for HUD element " + (Length - 1) + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
-										case "textcolor":
+										case HUDKey.TextColor:
 											if (!Color32.TryParseColor(Arguments, out CurrentHudElements[Length - 1].TextColor))
 											{
 												Interface.AddMessage(MessageType.Error, false, "Invalid TextColor for HUD element " + (Length - 1) + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
-										case "textposition":
+										case HUDKey.TextPosition:
 											if (!Vector2.TryParse(Arguments, out CurrentHudElements[Length - 1].TextPosition))
 											{
 												Interface.AddMessage(MessageType.Error, false, "Invalid TextPosition for HUD element " + (Length - 1) + " at Line " + (i + 1).ToString(Culture) + " in " + File);
 											}
 											break;
-										case "textalignment":
+										case HUDKey.TextAlignment:
 											if (Arguments.Length == 2)
 											{
 												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int x))
@@ -280,7 +282,7 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "textsize":
+										case HUDKey.TextSize:
 											if (Arguments.Length == 1)
 											{
 												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int s))
@@ -317,7 +319,7 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "textshadow":
+										case HUDKey.TextShadow:
 											if (Arguments.Length == 1)
 											{
 												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int s))
@@ -330,13 +332,13 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "text":
+										case HUDKey.Text:
 											if (Arguments.Length == 1)
 											{
 												CurrentHudElements[Length - 1].Text = Arguments[0];
 											}
 											break;
-										case "value":
+										case HUDKey.Value:
 											if (Arguments.Length == 1)
 											{
 												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int n))
@@ -365,7 +367,7 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "transition":
+										case HUDKey.Transition:
 											if (Arguments.Length == 1)
 											{
 												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out int n))
@@ -378,7 +380,7 @@ namespace OpenBve
 												}
 											}
 											break;
-										case "transitionvector":
+										case HUDKey.TransitionVector:
 											if (Arguments.Length == 2)
 											{
 												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out float x))
