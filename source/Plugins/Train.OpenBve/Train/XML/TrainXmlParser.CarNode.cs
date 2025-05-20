@@ -796,6 +796,64 @@ namespace Train.OpenBve
 							Train.Cars[Car].TractionModel.FuelTank = new FuelTank(fuelCapacity, 0, fuelCapacity);
 						}
 						break;
+					case "particlesource":
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							Vector3 emitterLocation = Vector3.Zero;
+							Vector3 initialMotion = Vector3.Down;
+							double maximumSize = 0.2;
+							double maximumGrownSize = 1.0;
+							foreach (XmlNode cc in c.ChildNodes)
+							{
+								switch (cc.Name.ToLowerInvariant())
+								{
+									case "location":
+										splitText = cc.InnerText.Split(',');
+										if (!NumberFormats.TryParseDoubleVb6(splitText[0], out emitterLocation.X))
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location X was invalid for Car " + Car + " in XML file " + fileName);
+										}
+										if (!NumberFormats.TryParseDoubleVb6(splitText[1], out emitterLocation.Y))
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location Y was invalid for Car " + Car + " in XML file " + fileName);
+										}
+										if (!NumberFormats.TryParseDoubleVb6(splitText[2], out emitterLocation.Z))
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location Z was invalid for Car " + Car + " in XML file " + fileName);
+										}
+										break;
+									case "maximumsize":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maximumSize))
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid initial maximum size defined for particle emitter in Car " + Car + " in XML file " + fileName);
+										}
+										break;
+									case "maximumgrownsize":
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maximumGrownSize))
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid maximum grown size defined for particle emitter in Car " + Car + " in XML file " + fileName);
+										}
+										break;
+									case "initialdirection":
+										splitText = cc.InnerText.Split(',');
+										if (!NumberFormats.TryParseDoubleVb6(splitText[0], out emitterLocation.X))
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location X was invalid for Car " + Car + " in XML file " + fileName);
+										}
+										if (!NumberFormats.TryParseDoubleVb6(splitText[1], out emitterLocation.Y))
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location Y was invalid for Car " + Car + " in XML file " + fileName);
+										}
+										if (!NumberFormats.TryParseDoubleVb6(splitText[2], out emitterLocation.Z))
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location Z was invalid for Car " + Car + " in XML file " + fileName);
+										}
+										break;
+								}
+							}
+							Train.Cars[Car].ParticleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, Train.Cars[Car], emitterLocation, maximumSize, maximumGrownSize, initialMotion);
+						}
+						break;
 				}
 			}
 			/*
