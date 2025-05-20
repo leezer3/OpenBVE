@@ -123,6 +123,7 @@ namespace LibRender2
 		public TextureManager TextureManager;
 		public Cube Cube;
 		public Rectangle Rectangle;
+		public Particle Particle;
 		public Loading Loading;
 		public Keys Keys;
 		public MotionBlur MotionBlur;

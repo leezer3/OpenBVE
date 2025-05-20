@@ -3,6 +3,7 @@ using System.Linq;
 using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
+using LibRender2.Smoke;
 using LibRender2.Trains;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
@@ -98,6 +99,8 @@ namespace TrainManager.Car
 		public RunSounds Run;
 		/// <summary>The traction model</summary>
 		public TractionModel TractionModel;
+
+		public ParticleSource ParticleSource;
 
 		private int trainCarIndex;
 
