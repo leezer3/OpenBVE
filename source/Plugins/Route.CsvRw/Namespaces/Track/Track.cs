@@ -2773,7 +2773,7 @@ namespace CsvRwRouteParser
 								else
 								{
 									double speed = 0.0;
-									if (Arguments.Length >= 2 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out speed))
+									if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out speed))
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 										speed = 0.0;
