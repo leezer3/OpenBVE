@@ -153,7 +153,12 @@ namespace RouteViewer
 
 			if (OptionEvents)
 			{
-				RenderEvents();
+				for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
+				{
+					int railIndex = Program.CurrentRoute.Tracks.ElementAt(i).Key;
+					RenderEvents(railIndex);
+				}
+				
 			}
 
 			// fog
@@ -336,9 +341,9 @@ namespace RouteViewer
 			OptionLighting = true;
 		}
 
-		private void RenderEvents()
+		private void RenderEvents(int railIndex)
 		{
-			if (Program.CurrentRoute.Tracks[0].Elements == null)
+			if (Program.CurrentRoute.Tracks[railIndex].Elements == null)
 			{
 				return;
 			}
@@ -353,14 +358,14 @@ namespace RouteViewer
 			bool[] sta = new bool[Program.CurrentRoute.Stations.Length];
 
 			// events
-			for (int i = 0; i < Program.CurrentRoute.Tracks[0].Elements.Length; i++)
+			for (int i = 0; i < Program.CurrentRoute.Tracks[railIndex].Elements.Length; i++)
 			{
-				double p = Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
+				double p = Program.CurrentRoute.Tracks[railIndex].Elements[i].StartingTrackPosition;
 				double d = p - CameraTrackFollower.TrackPosition;
 
 				if (d >= da & d <= db)
 				{
-					foreach (GeneralEvent e in Program.CurrentRoute.Tracks[0].Elements[i].Events)
+					foreach (GeneralEvent e in Program.CurrentRoute.Tracks[railIndex].Elements[i].Events)
 					{
 						double dy, dx = 0.0, dz = 0.0;
 						double s;
@@ -452,7 +457,8 @@ namespace RouteViewer
 							TrackFollower f = new TrackFollower(Program.CurrentHost)
 							{
 								TriggerType = EventTriggerType.None,
-								TrackPosition = p
+								TrackPosition = p,
+								TrackIndex = railIndex
 							};
 							f.UpdateAbsolute(p + e.TrackPositionDelta, true, false);
 							f.WorldPosition.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
