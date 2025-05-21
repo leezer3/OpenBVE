@@ -22,8 +22,10 @@ namespace CsvRwRouteParser
 		internal readonly double ForwardTolerance;
 		/// <summary>The backwards tolerance for triggering the sound</summary>
 		internal readonly double BackwardTolerance;
+		/// <summary>The index of the rail on which the sound event is played</summary>
+		internal readonly int RailIndex;
 
-		internal Sound(double trackPosition, string fileName, double speed, Vector2 position = new Vector2(), double forwardTolerance = 0, double backwardTolerance = 0, bool allCars = false) : base(trackPosition)
+		internal Sound(double trackPosition, string fileName, double speed, Vector2 position = new Vector2(), double forwardTolerance = 0, double backwardTolerance = 0, bool allCars = false, int railIndex = 0) : base(trackPosition)
 		{
 			//TODO:
 			//This is always set to a constant 15.0 on loading a sound, and never touched again

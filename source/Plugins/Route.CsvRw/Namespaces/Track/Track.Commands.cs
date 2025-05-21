@@ -143,6 +143,10 @@
 		RailAccuracy,
 		/// <summary>Sets the adhesion value for a rail</summary>
 		RailAdhesion,
+		/// <summary>Adds an announcement played in the cab on a non-zero rail</summary>
+		RailAnnounce,
+		/// <summary>Adds an announcement played in all cars on a non-zero rail</summary>
+		RailAnnounceAll,
 		/// <summary>Changes the player path</summary>
 		PlayerPath,
 
