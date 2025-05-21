@@ -657,7 +657,7 @@ namespace MechanikRouteParser
 				string f = Path.CombineFile(RouteFolder, "obloczki.bmp");
 				if (File.Exists(f))
 				{
-					Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out bt);
+					Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out bt);
 				}
 				else
 				{
@@ -665,7 +665,7 @@ namespace MechanikRouteParser
 					if (File.Exists(f))
 					{
 
-						Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out bt);
+						Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out bt);
 					}
 				}
 

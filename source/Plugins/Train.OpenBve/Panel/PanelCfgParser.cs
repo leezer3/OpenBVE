@@ -183,7 +183,7 @@ namespace Train.OpenBve
 								{
 									string Folder = Plugin.FileSystem.GetDataFolder("Compatibility");
 									File = Path.CombineFile(Folder, k == 0 ? "needle_pressuregauge_lower.png" : "needle_pressuregauge_upper.png");
-									Plugin.CurrentHost.RegisterTexture(File, new TextureParameters(null, null), out var pressureNeedleTexture, true);
+									Plugin.CurrentHost.RegisterTexture(File, TextureParameters.NoChange, out var pressureNeedleTexture, true);
 									int j = CreateElement(Car, Center.X - Radius * pressureNeedleTexture.AspectRatio, Center.Y + SemiHeight - Radius, 2.0 * Radius * pressureNeedleTexture.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - (4 + k) * StackDistance, pressureNeedleTexture, NeedleColor[k]);
 									Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 									Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
@@ -426,7 +426,7 @@ namespace Train.OpenBve
 							// needle
 							string Folder = Plugin.FileSystem.GetDataFolder("Compatibility");
 							File = Path.CombineFile(Folder, "needle_speedometer.png");
-							Plugin.CurrentHost.RegisterTexture(File, new TextureParameters(null, null), out var speedometerNeedleTexture, true);
+							Plugin.CurrentHost.RegisterTexture(File, TextureParameters.NoChange, out var speedometerNeedleTexture, true);
 							int j = CreateElement(Car, Center.X - Radius * speedometerNeedleTexture.AspectRatio, Center.Y + SemiHeight - Radius, 2.0 * Radius * speedometerNeedleTexture.AspectRatio, 2.0 * Radius, WorldZ + EyeDistance - 5.0 * StackDistance, speedometerNeedleTexture, needleColor);
 							Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
 							Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
@@ -660,7 +660,7 @@ namespace Train.OpenBve
 						string compatabilityFolder = Plugin.FileSystem.GetDataFolder("Compatibility");
 						// hour
 						File = Path.CombineFile(compatabilityFolder, "needle_hour.png");
-						Plugin.CurrentHost.RegisterTexture(File, new TextureParameters(null, null), out var hourTexture, true);
+						Plugin.CurrentHost.RegisterTexture(File, TextureParameters.NoChange, out var hourTexture, true);
 						int handElement = CreateElement(Car, Center.X - handRadius * hourTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * hourTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 4.0 * StackDistance, hourTexture, handColor);
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection = Vector3.Backward;
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection = Vector3.Right;
@@ -669,7 +669,7 @@ namespace Train.OpenBve
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDamping = new Damping(20.0, 0.4);
 						// minute
 						File = Path.CombineFile(compatabilityFolder, "needle_minute.png");
-						Plugin.CurrentHost.RegisterTexture(File, new TextureParameters(null, null), out var minuteTexture, true);
+						Plugin.CurrentHost.RegisterTexture(File, TextureParameters.NoChange, out var minuteTexture, true);
 						handElement = CreateElement(Car, Center.X - handRadius * minuteTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * minuteTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 5.0 * StackDistance, minuteTexture, handColor);
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection = Vector3.Backward;
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection = Vector3.Right;
@@ -678,7 +678,7 @@ namespace Train.OpenBve
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDamping = new Damping(20.0, 0.4);
 						// second
 						File = Path.CombineFile(compatabilityFolder, "needle_second.png");
-						Plugin.CurrentHost.RegisterTexture(File, new TextureParameters(null, null), out var secondTexture, true);
+						Plugin.CurrentHost.RegisterTexture(File, TextureParameters.NoChange, out var secondTexture, true);
 						handElement = CreateElement(Car, Center.X - handRadius * secondTexture.AspectRatio, Center.Y + SemiHeight - handRadius, 2.0 * handRadius * secondTexture.AspectRatio, 2.0 * handRadius, WorldZ + EyeDistance - 6.0 * StackDistance, secondTexture, handColor);
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateZDirection = Vector3.Backward;
 						Car.CarSections[0].Groups[0].Elements[handElement].RotateXDirection = Vector3.Right;

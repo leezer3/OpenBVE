@@ -908,7 +908,7 @@ namespace CsvRwRouteParser
 									{
 										if (Data.Backgrounds[commandIndices[0]] is StaticBackground b)
 										{
-											Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out b.Texture);
+											Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out b.Texture);
 										}
 									}
 								}

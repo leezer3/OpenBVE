@@ -446,7 +446,7 @@ namespace Plugin
 						Object.Mesh.Materials[mm + i].BlendMode = MeshMaterialBlendMode.Normal;
 						if (materials[i].DaytimeTexture != null)
 						{
-							Plugin.CurrentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out OpenBveApi.Textures.Texture tday);
+							Plugin.CurrentHost.RegisterTexture(materials[i].DaytimeTexture, TextureParameters.NoChange, out OpenBveApi.Textures.Texture tday);
 							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 						}
 						else

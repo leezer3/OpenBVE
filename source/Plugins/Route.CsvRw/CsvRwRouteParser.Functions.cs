@@ -133,7 +133,7 @@ namespace CsvRwRouteParser
 												{
 													texture.InvertLightness();
 												}
-												Plugin.CurrentHost.RegisterTexture(texture, new TextureParameters(null, null), out Textures[j]);
+												Plugin.CurrentHost.RegisterTexture(texture, TextureParameters.NoChange, out Textures[j]);
 											}
 										}
 										else

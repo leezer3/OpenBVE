@@ -860,7 +860,7 @@ namespace Train.OpenBve
 										string st = Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(st))
 										{
-											Plugin.CurrentHost.RegisterTexture(st, new TextureParameters(null, null), out particleTexture);
+											Plugin.CurrentHost.RegisterTexture(st, TextureParameters.NoChange, out particleTexture);
 										}
 										break;
 								}

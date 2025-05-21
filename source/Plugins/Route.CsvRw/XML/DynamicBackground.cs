@@ -111,7 +111,7 @@ namespace CsvRwRouteParser
 										}
 										else
 										{
-											Plugin.CurrentHost.RegisterTexture(file, new TextureParameters(null, null), out t);
+											Plugin.CurrentHost.RegisterTexture(file, TextureParameters.NoChange, out t);
 										}
 										break;
 									case "time":

@@ -208,7 +208,7 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							Texture t = new Texture(f, new TextureParameters(null, null), Plugin.CurrentHost);
+							Texture t = new Texture(f, TextureParameters.NoChange, Plugin.CurrentHost);
 							CurrentRoute.Information.LoadingScreenBackground = t;
 						}
 					}
