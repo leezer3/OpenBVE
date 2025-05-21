@@ -10,6 +10,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
@@ -803,6 +804,7 @@ namespace Train.OpenBve
 							Vector3 initialMotion = Vector3.Down;
 							double maximumSize = 0.2;
 							double maximumGrownSize = 1.0;
+							Texture particleTexture = null;
 							foreach (XmlNode cc in c.ChildNodes)
 							{
 								switch (cc.Name.ToLowerInvariant())
@@ -849,9 +851,22 @@ namespace Train.OpenBve
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location Z was invalid for Car " + Car + " in XML file " + fileName);
 										}
 										break;
+									case "texture":
+										if (string.IsNullOrEmpty(cc.InnerText))
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid particle emitter texture for Car " + Car + " in XML file " + fileName);
+											break;
+										}
+										string st = Path.CombineFile(currentPath, cc.InnerText);
+										if (System.IO.File.Exists(st))
+										{
+											Plugin.CurrentHost.RegisterTexture(st, new TextureParameters(null, null), out particleTexture);
+										}
+										break;
 								}
 							}
 							Train.Cars[Car].ParticleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, Train.Cars[Car], emitterLocation, maximumSize, maximumGrownSize, initialMotion);
+							Train.Cars[Car].ParticleSource.ParticleTexture = particleTexture;
 						}
 						break;
 				}

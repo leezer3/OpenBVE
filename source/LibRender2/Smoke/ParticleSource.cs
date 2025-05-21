@@ -51,7 +51,9 @@ namespace LibRender2.Smoke
 
 		internal readonly BaseRenderer Renderer;
 
-		internal Texture ParticleTexture;
+		/// <summary>The texture used for drawing particles</summary>
+		/// <remarks>Must be a 4x4 texture atlas</remarks>
+		public Texture ParticleTexture;
 
 		internal Vector3 MovementSpeed;
 
