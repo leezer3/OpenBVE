@@ -339,9 +339,8 @@ namespace RouteManager2
 				{
 					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Count; j++)
 					{
-						if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
+						if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent e)
 						{
-							StationStartEvent e = (StationStartEvent)CurrentRoute.Tracks[0].Elements[i].Events[j];
 							if (CurrentRoute.Stations[e.StationIndex].Name != string.Empty)
 							{
 								double x = CurrentRoute.Tracks[0].Elements[i].WorldPosition.X;
@@ -557,9 +556,8 @@ namespace RouteManager2
 				{
 					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Count; j++)
 					{
-						if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
+						if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent e)
 						{
-							StationStartEvent e = (StationStartEvent)CurrentRoute.Tracks[0].Elements[i].Events[j];
 							if (CurrentRoute.Stations[e.StationIndex].Name != string.Empty)
 							{
 								bool stop = CurrentRoute.Stations[e.StationIndex].PlayerStops();

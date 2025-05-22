@@ -906,7 +906,7 @@ namespace CsvRwRouteParser
 							{
 								for (int k = 0; k < Data.Blocks[i].Transponders.Length; k++)
 								{
-									double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Transponders[k].TrackPosition);
+									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].Transponders[k].TrackPosition);
 									Data.Blocks[i].Transponders[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.Structure.Beacon);
 								}
 
@@ -927,7 +927,7 @@ namespace CsvRwRouteParser
 								// signals
 								for (int k = 0; k < Data.Blocks[i].Signals.Length; k++)
 								{
-									Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.27 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Signals[k].TrackPosition));
+									Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.27 + 0.75 * Data.GetBrightness(Data.Blocks[i].Signals[k].TrackPosition));
 								}
 
 								// sections
@@ -953,7 +953,7 @@ namespace CsvRwRouteParser
 							{
 								if (railKey == Data.Blocks[i].Limits[k].RailIndex)
 								{
-									double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Limits[k].TrackPosition);
+									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].Limits[k].TrackPosition);
 									Data.Blocks[i].Limits[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.UnitOfSpeed);
 								}
 							}
@@ -963,7 +963,7 @@ namespace CsvRwRouteParser
 							{
 								for (int k = 0; k < Data.Blocks[i].StopPositions.Length; k++)
 								{
-									double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].StopPositions[k].TrackPosition);
+									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].StopPositions[k].TrackPosition);
 									Data.Blocks[i].StopPositions[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b);
 								}
 							}

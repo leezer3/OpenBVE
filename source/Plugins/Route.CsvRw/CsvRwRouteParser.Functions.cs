@@ -17,61 +17,6 @@ namespace CsvRwRouteParser
 	 */
 	internal partial class Parser
 	{
-		/// <summary>Sets the brightness value for the specified track position</summary>
-		/// <param name="Data">The route data (Accessed via 'ref') which we wish to query the brightness value from</param>
-		/// <param name="TrackPosition">The track position to get the brightness value for</param>
-		/// <returns>The brightness value</returns>
-		private double GetBrightness(ref RouteData Data, double TrackPosition)
-		{
-			double tMin = double.PositiveInfinity;
-			double tMax = double.NegativeInfinity;
-			double bMin = 1.0, bMax = 1.0;
-			for (int i = 0; i < Data.Blocks.Count; i++)
-			{
-				for (int j = 0; j < Data.Blocks[i].BrightnessChanges.Length; j++)
-				{
-					if (Data.Blocks[i].BrightnessChanges[j].TrackPosition <= TrackPosition)
-					{
-						tMin = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
-						bMin = Data.Blocks[i].BrightnessChanges[j].Value;
-					}
-				}
-			}
-			for (int i = Data.Blocks.Count - 1; i >= 0; i--)
-			{
-				for (int j = Data.Blocks[i].BrightnessChanges.Length - 1; j >= 0; j--)
-				{
-					if (Data.Blocks[i].BrightnessChanges[j].TrackPosition >= TrackPosition)
-					{
-						tMax = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
-						bMax = Data.Blocks[i].BrightnessChanges[j].Value;
-					}
-				}
-			}
-			if (tMin == double.PositiveInfinity && tMax == double.NegativeInfinity)
-			{
-				return 1.0;
-			}
-
-			if (tMin == double.PositiveInfinity)
-			{
-				return (bMax - 1.0) * TrackPosition / tMax + 1.0;
-			}
-
-			if (tMax == double.NegativeInfinity)
-			{
-				return bMin;
-			}
-
-			if (tMin == tMax)
-			{
-				return 0.5 * (bMin + bMax);
-			}
-
-			double n = (TrackPosition - tMin) / (tMax - tMin);
-			return (1.0 - n) * bMin + n * bMax;
-		}
-
 		/// <summary>Loads all BVE4 signal or glow textures (Non animated file)</summary>
 		/// <param name="BaseFile">The base file.</param>
 		/// <param name="IsGlowTexture">Whether to load glow textures. If false, black is the transparent color. If true, the texture is edited according to the CSV route documentation.</param>

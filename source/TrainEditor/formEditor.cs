@@ -769,7 +769,7 @@ namespace TrainEditor {
 		private float MotorHoverYPitch = 0.0f;
 		private float MotorHoverYVolume = 0.0f;
 		private class PictureBoxUpdateQueue {
-			private PictureBox[] Boxes = new PictureBox[4];
+			private readonly PictureBox[] Boxes = new PictureBox[4];
 			internal void Add(PictureBox Box) {
 				int i;
 				for (i = 0; i < 4; i++) {
@@ -791,7 +791,7 @@ namespace TrainEditor {
 				return this.Boxes[0];
 			}
 		}
-		private TrainEditor.formEditor.PictureBoxUpdateQueue MotorUpdateQueue = new PictureBoxUpdateQueue();
+		private readonly PictureBoxUpdateQueue MotorUpdateQueue = new PictureBoxUpdateQueue();
 		
 		// motor p1
 		private void PictureboxMotorP1Paint(object sender, PaintEventArgs e) {
@@ -1215,7 +1215,7 @@ namespace TrainEditor {
 			e.Graphics.DrawRectangle(new Pen(SystemColors.ButtonShadow), new Rectangle(0, 0, width - 1, height - 1));
 			// queue
 			PictureBox b = MotorUpdateQueue.Next();
-			if (b != null) b.Invalidate();
+			b?.Invalidate();
 		}
 		
 		// mouse
