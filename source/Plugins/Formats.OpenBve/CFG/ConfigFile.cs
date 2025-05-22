@@ -270,11 +270,6 @@ namespace Formats.OpenBve
 			if (keyValuePairs.TryRemove(key, out var rawValue))
 			{
 				string[] splitStrings = rawValue.Value.ConsistantSplit(separator, 2);
-				if (splitStrings.Length > 2)
-				{
-					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key + " at line " + rawValue.Key);
-				}
-
 				bool error = false;
 
 				if (!NumberFormats.TryParseDoubleVb6(splitStrings[0], out double X))
@@ -306,11 +301,7 @@ namespace Formats.OpenBve
 			if (keyValuePairs.TryRemove(key, out var rawValue))
 			{
 				string[] splitStrings = rawValue.Value.ConsistantSplit(separator, 3);
-				if (splitStrings.Length > 3)
-				{
-					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key + " at line " + rawValue.Key);
-				}
-
+				
 				if (!NumberFormats.TryParseDoubleVb6(splitStrings[0], out value.X))
 				{
 					currentHost.AddMessage(MessageType.Warning, false, "X was invalid in " + key + " in Section " + Key + " at line " + rawValue.Key);
@@ -333,11 +324,7 @@ namespace Formats.OpenBve
 			if (keyValuePairs.TryRemove(key, out var rawValue))
 			{
 				string[] splitStrings = rawValue.Value.ConsistantSplit(separator, 3);
-				if (splitStrings.Length > 3)
-				{
-					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key + " at line " + rawValue.Key);
-				}
-
+				
 				if (!NumberFormats.TryParseDoubleVb6(splitStrings[0], out value.X))
 				{
 					currentHost.AddMessage(MessageType.Warning, false, "X was invalid in " + key + " in Section " + Key + " at line " + rawValue.Key);
