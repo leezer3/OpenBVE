@@ -469,6 +469,16 @@ namespace RouteViewer
 						}
 					}
 				}
+
+				if (d > db)
+				{
+					break;
+				}
+			}
+
+			if (railIndex != 0)
+			{
+				return;
 			}
 
 			// stops
