@@ -245,10 +245,7 @@ namespace OpenBve.Graphics.Renderers
 								{
 									if (Element.TransitionState == 0.0)
 									{
-										if (HUD.stationAdjustBeepSource != null)
-										{
-											HUD.stationAdjustBeepSource.Stop();
-										}
+										HUD.stationAdjustBeepSource?.Stop();
 									}
 									else
 									{

@@ -250,11 +250,7 @@ namespace Formats.OpenBve
 			value = Vector2.Null;
 			if (keyValuePairs.TryRemove(key, out var rawValue))
 			{
-				string[] splitStrings = rawValue.Value.Split(separator);
-				if (splitStrings.Length > 2)
-				{
-					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key + " at line " + rawValue.Key);
-				}
+				string[] splitStrings = rawValue.Value.ConsistantSplit(separator, 2);
 
 				if (!NumberFormats.TryParseDoubleVb6(splitStrings[0], out value.X))
 				{
@@ -273,7 +269,7 @@ namespace Formats.OpenBve
 		{
 			if (keyValuePairs.TryRemove(key, out var rawValue))
 			{
-				string[] splitStrings = rawValue.Value.Split(separator);
+				string[] splitStrings = rawValue.Value.ConsistantSplit(separator, 2);
 				if (splitStrings.Length > 2)
 				{
 					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key + " at line " + rawValue.Key);
@@ -309,7 +305,7 @@ namespace Formats.OpenBve
 			value = Vector3.Zero;
 			if (keyValuePairs.TryRemove(key, out var rawValue))
 			{
-				string[] splitStrings = rawValue.Value.Split(separator);
+				string[] splitStrings = rawValue.Value.ConsistantSplit(separator, 3);
 				if (splitStrings.Length > 3)
 				{
 					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key + " at line " + rawValue.Key);
@@ -336,7 +332,7 @@ namespace Formats.OpenBve
 		{
 			if (keyValuePairs.TryRemove(key, out var rawValue))
 			{
-				string[] splitStrings = rawValue.Value.Split(separator);
+				string[] splitStrings = rawValue.Value.ConsistantSplit(separator, 3);
 				if (splitStrings.Length > 3)
 				{
 					currentHost.AddMessage(MessageType.Warning, false, "Unexpected extra " + (splitStrings.Length - 2) + " paramaters " + key + " encountered in " + key + " in Section " + Key + " at line " + rawValue.Key);
@@ -386,7 +382,7 @@ namespace Formats.OpenBve
 						}
 						catch
 						{
-							if (!string.IsNullOrEmpty(splitValues[i]))
+							if (!string.IsNullOrEmpty(splitValues[i]) && !splitValues[i].Equals("null", StringComparison.InvariantCultureIgnoreCase))
 							{
 								// allow empty states etc.
 								currentHost.AddMessage(MessageType.Warning, false, "The path for state " + i + " was invalid in " + key + " in Section " + Key + " at line " + value.Key);
@@ -406,6 +402,24 @@ namespace Formats.OpenBve
 			return false;
 		}
 
+		public override bool GetDoubleArray(T2 key, char separator, ref double[] values)
+		{
+			if (keyValuePairs.TryRemove(key, out var value))
+			{
+				string[] strings = value.Value.Split(separator);
+				values = new double[strings.Length];
+				for (int i = 0; i < strings.Length; i++)
+				{
+					if (!NumberFormats.TryParseDoubleVb6(strings[i], out values[i]))
+					{
+						currentHost.AddMessage(MessageType.Warning, false, "Value " + i + " in array " + key + " was not a valid double in Section " + Key + " at line " + value.Key);
+					}
+				}
+				return true;
+			}
+			currentHost.AddMessage(MessageType.Warning, false, "Key " + key + " was not found in Section " + Key + " at line " + value.Key);
+			return false;
+		}
 		public override bool GetFunctionScript(T2 key, out AnimationScript function)
 		{
 			if (keyValuePairs.TryRemove(key, out var script))
@@ -724,6 +738,26 @@ namespace Formats.OpenBve
 			return false;
 		}
 
+		public override bool TryGetColor32(T2 key, ref Color32 value)
+		{
+			if (keyValuePairs.TryRemove(key, out var color))
+			{
+				if (Color32.TryParseHexColor(color.Value, out Color32 newValue))
+				{
+					value = newValue;
+					return true;
+				}
+
+				if (Color32.TryParseColor(color.Value, ',', out value))
+				{
+					return true;
+				}
+				currentHost.AddMessage(MessageType.Error, false, "Color is invalid in " + key + " in " + Key + " at line " + color.Key);
+			}
+
+			return false;
+		}
+
 		public override bool GetEnumValue<T3>(T2 key, out T3 enumValue)
 		{
 			if (keyValuePairs.TryRemove(key, out var value))
@@ -732,7 +766,7 @@ namespace Formats.OpenBve
 				{
 					return true;
 				}
-
+				
 				currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + key + " in " + Key + " at line " + value.Key);
 			}
 

@@ -29,8 +29,8 @@ namespace OpenBve
 			internal OpenGlFont Font;
 			internal bool TextShadow;
 			internal string Text;
-			internal float Value1;
-			internal float Value2;
+			internal double Value1;
+			internal double Value2;
 			internal Transition Transition;
 			internal Vector2 TransitionVector;
 			internal double TransitionState;

@@ -162,7 +162,13 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
-	    /// <summary>Reads the specified string array from the block, preserving the prior value if not present</summary>
+		/// <summary>Reads the specified Color24 from the block, preserving the prior value if not present</summary>
+		public virtual bool TryGetColor32(T2 key, ref Color32 value)
+		{
+			return false;
+		}
+
+		/// <summary>Reads the specified string array from the block, preserving the prior value if not present</summary>
 		public virtual bool TryGetStringArray(T2 key, char separator, ref string[] values)
 	    {
 		    values = new string[0];
@@ -175,6 +181,13 @@ namespace Formats.OpenBve
 		    values = new string[0];
 		    return false;
 	    }
+
+		/// <summary>Reads the specified double array from the block</summary>
+		public virtual bool GetDoubleArray(T2 key, char separator, ref double[] values)
+		{
+			values = new double[0];
+			return false;
+		}
 
 		/// <summary>Reads the specified FunctionScript from the block, preserving the prior value if not present</summary>
 		public virtual bool GetFunctionScript(T2 key, out AnimationScript function)
