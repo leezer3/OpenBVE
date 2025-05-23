@@ -57,47 +57,47 @@ namespace OpenBve
 					CurrentHudElements[Length - 1].Alignment.X = Math.Sign(CurrentHudElements[Length - 1].Alignment.X);
 					CurrentHudElements[Length - 1].Alignment.Y = Math.Sign(CurrentHudElements[Length - 1].Alignment.Y);
 				}
-				if (block.GetPathArray(HUDKey.TopLeft, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.TopLeft, ',', Folder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].TopLeft.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].TopLeft.OverlayTexture);
 				}
-				if (block.GetPathArray(HUDKey.TopMiddle, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.TopMiddle, ',', Folder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].TopMiddle.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].TopMiddle.OverlayTexture);
 				}
-				if (block.GetPathArray(HUDKey.TopRight, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.TopRight, ',', Folder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].TopRight.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].TopRight.OverlayTexture);
 				}
-				if (block.GetPathArray(HUDKey.CenterLeft, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.CenterLeft, ',', Folder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].CenterLeft.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].CenterLeft.OverlayTexture);
 				}
-				if (block.GetPathArray(HUDKey.CenterMiddle, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.CenterMiddle, ',', Folder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].CenterMiddle.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].CenterMiddle.OverlayTexture);
 				}
-				if (block.GetPathArray(HUDKey.CenterRight, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.CenterRight, ',', Folder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].CenterRight.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].CenterRight.OverlayTexture);
 				}
-				if (block.GetPathArray(HUDKey.BottomLeft, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.BottomLeft, ',', Folder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].BottomLeft.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].BottomLeft.OverlayTexture);
 				}
-				if (block.GetPathArray(HUDKey.BottomMiddle, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.BottomMiddle, ',', Folder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].BottomMiddle.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].BottomMiddle.OverlayTexture);
 				}
-				if (block.GetPathArray(HUDKey.BottomRight, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.BottomRight, ',', Folder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].BottomRight.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].BottomRight.OverlayTexture);
@@ -145,7 +145,7 @@ namespace OpenBve
 				}
 				block.TryGetValue(HUDKey.Text, ref CurrentHudElements[Length - 1].Text);
 				double[] values = null;
-				if (block.GetDoubleArray(HUDKey.Value, ',', ref values))
+				if (block.TryGetDoubleArray(HUDKey.Value, ',', ref values))
 				{
 					if (values.Length >= 1)
 					{

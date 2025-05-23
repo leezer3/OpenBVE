@@ -175,15 +175,22 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
-	    /// <summary>Reads the specified path array from the block</summary>
-	    public virtual bool GetPathArray(T2 key, char separator, string absolutePath, ref string[] values)
+		/// <summary>Reads the specified path array from the block</summary>
+		public virtual bool TryGetPathArray(T2 key, char separator, string absolutePath, ref string[] values)
+		{
+			values = new string[0];
+			return false;
+		}
+
+		/// <summary>Reads the specified path array from the block</summary>
+		public virtual bool GetPathArray(T2 key, char separator, string absolutePath, ref string[] values)
 	    {
 		    values = new string[0];
 		    return false;
 	    }
 
 		/// <summary>Reads the specified double array from the block</summary>
-		public virtual bool GetDoubleArray(T2 key, char separator, ref double[] values)
+		public virtual bool TryGetDoubleArray(T2 key, char separator, ref double[] values)
 		{
 			values = new double[0];
 			return false;

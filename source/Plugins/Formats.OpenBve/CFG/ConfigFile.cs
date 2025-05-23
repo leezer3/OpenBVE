@@ -355,6 +355,16 @@ namespace Formats.OpenBve
 
 		public override bool GetPathArray(T2 key, char separator, string absolutePath, ref string[] values)
 		{
+			if (!TryGetPathArray(key, separator, absolutePath, ref values))
+			{
+				currentHost.AddMessage(MessageType.Warning, false, "Key " + key + " was not found in Section " + Key);
+				return false;
+			}
+			return true;
+		}
+
+		public override bool TryGetPathArray(T2 key, char separator, string absolutePath, ref string[] values)
+		{
 			if (keyValuePairs.TryRemove(key, out var value))
 			{
 				string[] splitValues = value.Value.Split(separator);
@@ -383,13 +393,11 @@ namespace Formats.OpenBve
 					currentHost.AddMessage(MessageType.Warning, false, "An empty path list was provided for " + key + " in Section " + Key + " at line " + value.Key);
 					return false;
 				}
-				
 			}
-			currentHost.AddMessage(MessageType.Warning, false, "Key " + key + " was not found in Section " + Key + " at line " + value.Key);
 			return false;
 		}
 
-		public override bool GetDoubleArray(T2 key, char separator, ref double[] values)
+		public override bool TryGetDoubleArray(T2 key, char separator, ref double[] values)
 		{
 			if (keyValuePairs.TryRemove(key, out var value))
 			{
@@ -404,7 +412,6 @@ namespace Formats.OpenBve
 				}
 				return true;
 			}
-			currentHost.AddMessage(MessageType.Warning, false, "Key " + key + " was not found in Section " + Key + " at line " + value.Key);
 			return false;
 		}
 		public override bool GetFunctionScript(T2 key, out AnimationScript function)
