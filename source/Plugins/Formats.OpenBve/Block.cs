@@ -218,19 +218,19 @@ namespace Formats.OpenBve
 	    }
 
 		/// <summary>Reads the specified Enum value from the block</summary>
-		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue, out int index, out string Suffix) where T3 : struct, Enum
+		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue, out int index, out string suffix) where T3 : struct, Enum
 		{
 		    enumValue = default;
 		    index = 0;
-		    Suffix = string.Empty;
+		    suffix = string.Empty;
 		    return false;
 	    }
 
 		/// <summary>Reads the specified Enum value from the block</summary>
-		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue, out Color32 Color) where T3 : struct, Enum
+		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue, out Color32 color) where T3 : struct, Enum
 		{
 			enumValue = default;
-			Color = Color32.Black;
+			color = Color32.Black;
 			return false;
 		}
 

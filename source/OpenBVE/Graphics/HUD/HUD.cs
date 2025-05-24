@@ -1,12 +1,7 @@
 ﻿using Formats.OpenBve;
-using Microsoft.Win32;
-using OpenBveApi.Colors;
 using OpenBveApi.Interface;
-using OpenTK.Audio.OpenAL;
 using SoundManager;
 using System;
-using System.Globalization;
-using Vector2 = OpenBveApi.Math.Vector2;
 
 namespace OpenBve
 {
@@ -16,19 +11,18 @@ namespace OpenBve
 		internal static Element[] CurrentHudElements = { };
 
 		/// <summary>Sound source used by the accessibility station adjust tone</summary>
-		internal static SoundSource stationAdjustBeepSource;
+		internal static SoundSource StationAdjustBeepSource;
 		/// <summary>Station adjust beep sound used by accessibility</summary>
-		internal static SoundBuffer stationAdjustBeep;
+		internal static SoundBuffer StationAdjustBeep;
 
 		/// <summary>Loads the current HUD</summary>
 		internal static void LoadHUD()
 		{
-			CultureInfo Culture = CultureInfo.InvariantCulture;
-			string Folder = Program.FileSystem.GetDataFolder("In-game", Interface.CurrentOptions.UserInterfaceFolder);
-			string File = OpenBveApi.Path.CombineFile(Folder, "interface.cfg");
-			ConfigFile<HUDSection, HUDKey> cfg = new ConfigFile<HUDSection, HUDKey>(File, Program.CurrentHost);
+			string uiFolder = Program.FileSystem.GetDataFolder("In-game", Interface.CurrentOptions.UserInterfaceFolder);
+			string cfgFile = OpenBveApi.Path.CombineFile(uiFolder, "interface.cfg");
+			ConfigFile<HUDSection, HUDKey> cfg = new ConfigFile<HUDSection, HUDKey>(cfgFile, Program.CurrentHost);
 			Program.CurrentHost.RegisterSound(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("In-game"), "beep.wav"), 50, out var beep);
-			stationAdjustBeep = beep as SoundBuffer;
+			StationAdjustBeep = beep as SoundBuffer;
 			CurrentHudElements = new Element[16];
 			int Length = 0;
 			string[] texturePath = null;
@@ -37,7 +31,7 @@ namespace OpenBve
 				Block<HUDSection, HUDKey> block = cfg.ReadNextBlock();
 				if (block.Key != HUDSection.Element)
 				{
-					Interface.AddMessage(MessageType.Error, false, "Unknown section encountered in HUD configuration in " + File);
+					Interface.AddMessage(MessageType.Error, false, "Unknown section encountered in HUD configuration in " + cfgFile);
 					continue;
 				}
 				Length++;
@@ -57,47 +51,47 @@ namespace OpenBve
 					CurrentHudElements[Length - 1].Alignment.X = Math.Sign(CurrentHudElements[Length - 1].Alignment.X);
 					CurrentHudElements[Length - 1].Alignment.Y = Math.Sign(CurrentHudElements[Length - 1].Alignment.Y);
 				}
-				if (block.TryGetPathArray(HUDKey.TopLeft, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.TopLeft, ',', uiFolder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].TopLeft.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].TopLeft.OverlayTexture);
 				}
-				if (block.TryGetPathArray(HUDKey.TopMiddle, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.TopMiddle, ',', uiFolder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].TopMiddle.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].TopMiddle.OverlayTexture);
 				}
-				if (block.TryGetPathArray(HUDKey.TopRight, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.TopRight, ',', uiFolder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].TopRight.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].TopRight.OverlayTexture);
 				}
-				if (block.TryGetPathArray(HUDKey.CenterLeft, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.CenterLeft, ',', uiFolder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].CenterLeft.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].CenterLeft.OverlayTexture);
 				}
-				if (block.TryGetPathArray(HUDKey.CenterMiddle, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.CenterMiddle, ',', uiFolder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].CenterMiddle.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].CenterMiddle.OverlayTexture);
 				}
-				if (block.TryGetPathArray(HUDKey.CenterRight, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.CenterRight, ',', uiFolder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].CenterRight.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].CenterRight.OverlayTexture);
 				}
-				if (block.TryGetPathArray(HUDKey.BottomLeft, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.BottomLeft, ',', uiFolder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].BottomLeft.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].BottomLeft.OverlayTexture);
 				}
-				if (block.TryGetPathArray(HUDKey.BottomMiddle, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.BottomMiddle, ',', uiFolder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].BottomMiddle.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].BottomMiddle.OverlayTexture);
 				}
-				if (block.TryGetPathArray(HUDKey.BottomRight, ',', Folder, ref texturePath))
+				if (block.TryGetPathArray(HUDKey.BottomRight, ',', uiFolder, ref texturePath))
 				{
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[0], out CurrentHudElements[Length - 1].BottomRight.BackgroundTexture);
 					Program.Renderer.TextureManager.RegisterTexture(texturePath[1], out CurrentHudElements[Length - 1].BottomRight.OverlayTexture);

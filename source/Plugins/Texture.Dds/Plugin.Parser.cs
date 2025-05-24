@@ -268,15 +268,13 @@ namespace Texture.Dds
 
         private unsafe void DxtcReadColors(byte* data, ref Color32[] op)
         {
-            byte r0, g0, b0, r1, g1, b1;
+            byte b0 = (byte)(data[0] & 0x1F);
+            byte g0 = (byte)(((data[0] & 0xE0) >> 5) | ((data[1] & 0x7) << 3));
+            byte r0 = (byte)((data[1] & 0xF8) >> 3);
 
-            b0 = (byte)(data[0] & 0x1F);
-            g0 = (byte)(((data[0] & 0xE0) >> 5) | ((data[1] & 0x7) << 3));
-            r0 = (byte)((data[1] & 0xF8) >> 3);
-
-            b1 = (byte)(data[2] & 0x1F);
-            g1 = (byte)(((data[2] & 0xE0) >> 5) | ((data[3] & 0x7) << 3));
-            r1 = (byte)((data[3] & 0xF8) >> 3);
+            byte b1 = (byte)(data[2] & 0x1F);
+            byte g1 = (byte)(((data[2] & 0xE0) >> 5) | ((data[3] & 0x7) << 3));
+            byte r1 = (byte)((data[3] & 0xF8) >> 3);
 
             op[0].R = (byte)(r0 << 3 | r0 >> 2);
             op[0].G = (byte)(g0 << 2 | g0 >> 3);
@@ -289,11 +287,9 @@ namespace Texture.Dds
 
         private void DxtcReadColor(ushort data, ref Color32 op)
         {
-            byte r, g, b;
-
-            b = (byte)(data & 0x1f);
-            g = (byte)((data & 0x7E0) >> 5);
-            r = (byte)((data & 0xF800) >> 11);
+            byte b = (byte)(data & 0x1f);
+            byte g = (byte)((data & 0x7E0) >> 5);
+            byte r = (byte)((data & 0xF800) >> 11);
 
             op.R = (byte)(r << 3 | r >> 2);
             op.G = (byte)(g << 2 | g >> 3);
@@ -313,7 +309,7 @@ namespace Texture.Dds
 
         private void GetBitsFromMask(uint mask, out uint shiftLeft, out uint shiftRight)
         {
-            uint temp, i;
+            uint i;
 
             if (mask == 0)
             {
@@ -321,7 +317,7 @@ namespace Texture.Dds
                 return;
             }
 
-            temp = mask;
+            uint temp = mask;
             for (i = 0; i < 32; i++, temp >>= 1)
             {
                 if ((temp & 1) != 0)
@@ -949,7 +945,6 @@ namespace Texture.Dds
                                             // only put pixels out < width
                                             if (((x + i) < header.width))
                                             {
-                                                int t;
                                                 byte tx, ty;
 
                                                 t1 = currentOffset + (x + i) * 3;
@@ -957,7 +952,7 @@ namespace Texture.Dds
                                                 rawData[t1 + 0] = tx = xColours[bitmask2 & 0x07];
 
                                                 //calculate b (z) component ((r/255)^2 + (g/255)^2 + (b/255)^2 = 1
-                                                t = 127 * 128 - (tx - 127) * (tx - 128) - (ty - 127) * (ty - 128);
+                                                int t = 127 * 128 - (tx - 127) * (tx - 128) - (ty - 127) * (ty - 128);
                                                 if (t > 0)
                                                     rawData[t1 + 2] = (byte)(Math.Sqrt(t) + 128);
                                                 else
@@ -1310,7 +1305,7 @@ namespace Texture.Dds
                 return rawData;
             }
 
-            uint readI = 0, tempBpp;
+            uint readI = 0;
             uint redL, redR;
             uint greenL, greenR;
             uint blueL, blueR;
@@ -1320,7 +1315,7 @@ namespace Texture.Dds
             GetBitsFromMask(header.pixelFormat.gbitmask, out greenL, out greenR);
             GetBitsFromMask(header.pixelFormat.bbitmask, out blueL, out blueR);
             GetBitsFromMask(header.pixelFormat.alphabitmask, out alphaL, out alphaR);
-            tempBpp = (uint)(header.pixelFormat.rgbbitcount / 8);
+            uint tempBpp = (uint)(header.pixelFormat.rgbbitcount / 8);
 
             fixed (byte* bytePtr = data)
             {
@@ -1400,21 +1395,16 @@ namespace Texture.Dds
             uint greenL, greenR;
             uint blueL, blueR;
             uint alphaL, alphaR;
-            uint redPad, greenPad, bluePad, alphaPad;
-
+            
             GetBitsFromMask(header.pixelFormat.rbitmask, out redL, out redR);
             GetBitsFromMask(header.pixelFormat.gbitmask, out greenL, out greenR);
             GetBitsFromMask(header.pixelFormat.bbitmask, out blueL, out blueR);
             GetBitsFromMask(header.pixelFormat.alphabitmask, out alphaL, out alphaR);
-            redPad = 16 - CountBitsFromMask(header.pixelFormat.rbitmask);
-            greenPad = 16 - CountBitsFromMask(header.pixelFormat.gbitmask);
-            bluePad = 16 - CountBitsFromMask(header.pixelFormat.bbitmask);
-            alphaPad = 16 - CountBitsFromMask(header.pixelFormat.alphabitmask);
-
-            redL += redPad;
-            greenL += greenPad;
-            blueL += bluePad;
-            alphaL += alphaPad;
+            // padding
+            redL += 16 - CountBitsFromMask(header.pixelFormat.rbitmask);
+            greenL += 16 - CountBitsFromMask(header.pixelFormat.gbitmask);
+            blueL += 16 - CountBitsFromMask(header.pixelFormat.bbitmask);
+            alphaL += 16 - CountBitsFromMask(header.pixelFormat.alphabitmask);
 
             uint tempBpp = (uint)(header.pixelFormat.rgbbitcount / 8);
             fixed (byte* bytePtr = data)

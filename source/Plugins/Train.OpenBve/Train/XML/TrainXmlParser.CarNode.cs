@@ -329,7 +329,6 @@ namespace Train.OpenBve
 							break;
 						}
 						Train.Cars[Car].Driver = new Vector3();
-						double driverZ;
 						if (!NumberFormats.TryParseDoubleVb6(splitText[0], out Train.Cars[Car].Driver.X))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Driver position X was invalid for Car " + Car + " in XML file " + fileName);
@@ -338,7 +337,7 @@ namespace Train.OpenBve
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Driver position Y was invalid for Car " + Car + " in XML file " + fileName);
 						}
-						if (!NumberFormats.TryParseDoubleVb6(splitText[2], out driverZ))
+						if (!NumberFormats.TryParseDoubleVb6(splitText[2], out double driverZ))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Driver position X was invalid for Car " + Car + " in XML file " + fileName);
 						}

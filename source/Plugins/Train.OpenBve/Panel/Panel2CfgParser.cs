@@ -41,15 +41,15 @@ namespace Train.OpenBve
 		private string trainName;
 
 		/// <summary>Parses a BVE2 / openBVE panel.cfg file</summary>
-		/// <param name="PanelFile">The relative path of the panel configuration file from the train</param>
+		/// <param name="panelFile">The relative path of the panel configuration file from the train</param>
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Car">The car to add the panel to</param>
-		internal void ParsePanel2Config(string PanelFile, string TrainPath, CarBase Car)
+		internal void ParsePanel2Config(string panelFile, string TrainPath, CarBase Car)
 		{
 			//Train name, used for hacks detection
 			trainName = new DirectoryInfo(TrainPath).Name.ToUpperInvariant();
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			string FileName = Path.CombineFile(TrainPath, PanelFile);
+			string FileName = Path.CombineFile(TrainPath, panelFile);
 			ConfigFile<Panel2Sections, Panel2Key> cfg = new ConfigFile<Panel2Sections, Panel2Key>(FileName, Plugin.CurrentHost);
 
 			if (cfg.ReadBlock(Panel2Sections.This, out var Block))
@@ -179,12 +179,12 @@ namespace Train.OpenBve
 							if (Block.TryGetValue(Panel2Key.NaturalFreq, ref NaturalFrequency) && NaturalFrequency < 0)
 							{
 								NaturalFrequency = -NaturalFrequency;
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is expected to be non-negative in [Needle] in " + PanelFile);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is expected to be non-negative in [Needle] in " + panelFile);
 							}
 							if(Block.TryGetValue(Panel2Key.DampingRatio, ref DampingRatio) && DampingRatio < 0)
 							{
 								DampingRatio = -DampingRatio;
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DampingRatio is expected to be non-negative in [Needle] in " + PanelFile);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DampingRatio is expected to be non-negative in [Needle] in " + panelFile);
 							}
 							Block.TryGetColor24(Panel2Key.Color, ref Color);
 							Block.GetValue(Panel2Key.Backstop, out bool Backstop);

@@ -768,10 +768,10 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-		public override bool GetEnumValue<T3>(T2 key, out T3 enumValue, out int index, out string Suffix)
+		public override bool GetEnumValue<T3>(T2 key, out T3 enumValue, out int index, out string suffix)
 		{
 			index = -1;
-			Suffix = string.Empty;
+			suffix = string.Empty;
 			if (keyValuePairs.TryRemove(key, out var value))
 			{
 				string s = value.Value.ToLowerInvariant();
@@ -791,13 +791,13 @@ namespace Formats.OpenBve
 						{
 							if (n == 0)
 							{
-								Suffix = " floor 10 mod";
+								suffix = " floor 10 mod";
 							}
 							else
 							{
 								string t0 = Math.Pow(10.0, n).ToString(CultureInfo.InvariantCulture);
 								string t1 = Math.Pow(10.0, -n).ToString(CultureInfo.InvariantCulture);
-								Suffix = " ~ " + t0 + " >= <> " + t1 + " * floor 10 mod 10 ?";
+								suffix = " ~ " + t0 + " >= <> " + t1 + " * floor 10 mod 10 ?";
 							}
 							s = s.Substring(0, i);
 						}
@@ -834,9 +834,9 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-		public override bool GetEnumValue<T3>(T2 key, out T3 enumValue, out Color32 Color)
+		public override bool GetEnumValue<T3>(T2 key, out T3 enumValue, out Color32 color)
 		{
-			Color = Color32.Black;
+			color = Color32.Black;
 			if (keyValuePairs.TryRemove(key, out var value))
 			{
 				int colonIndex = value.Value.IndexOf(':');
@@ -847,7 +847,7 @@ namespace Formats.OpenBve
 				{
 					if (Color32.TryParseColor(colorValue.Split(','), out var newColor))
 					{
-						Color = newColor;
+						color = newColor;
 					}
 					else
 					{

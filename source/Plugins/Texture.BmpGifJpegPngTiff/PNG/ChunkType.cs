@@ -1,4 +1,6 @@
-﻿namespace Plugin.PNG
+﻿// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Global
+namespace Plugin.PNG
 {
 	/// <summary>The known types of chunk</summary>
 	internal enum ChunkType
