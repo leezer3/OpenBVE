@@ -55,5 +55,19 @@ namespace TrainEditor2.Models.Panels
 		/// <param name="fileName">The output filename</param>
 		/// <param name="parent">The parent element</param>
 		public abstract void WriteXML(string fileName, XElement parent);
+
+		/// <summary>Writes the element to a TE2 intermediate file</summary>
+		/// <param name="parent"></param>
+		public abstract void WriteIntermediate(XElement parent);
+
+		internal static XElement WriteSubjectNode(Subject subject)
+		{
+			return new XElement("Subject",
+				new XElement("Base", subject.Base),
+				new XElement("BaseOption", subject.BaseOption),
+				new XElement("Suffix", subject.Suffix),
+				new XElement("SuffixOption", subject.SuffixOption)
+				);
+		}
 	}
 }

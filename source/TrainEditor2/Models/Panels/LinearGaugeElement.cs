@@ -1,7 +1,8 @@
-using System.Text;
-using System.Xml.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using System.Text;
+using System.Windows;
+using System.Xml.Linq;
 using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Panels
@@ -173,6 +174,22 @@ namespace TrainEditor2.Models.Panels
 			);
 
 			parent.Add(linearGaugeNode);
+		}
+
+		public override void WriteIntermediate(XElement parent)
+		{
+			parent.Add(new XElement("LinearGauge",
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
+				new XElement("Layer", Layer),
+				WriteSubjectNode(Subject),
+				new XElement("DaytimeImage", DaytimeImage),
+				new XElement("NighttimeImage", NighttimeImage),
+				new XElement("TransparentColor", TransparentColor),
+				new XElement("Minimum", Minimum),
+				new XElement("Maximum", Maximum),
+				new XElement("Direction", $"{Direction.X}, {Direction.Y}"),
+				new XElement("Width", Width)
+				));
 		}
 	}
 }

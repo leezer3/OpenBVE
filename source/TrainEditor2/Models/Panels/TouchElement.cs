@@ -1,13 +1,14 @@
-﻿using System;
+﻿using OpenBveApi.Interface;
+using OpenBveApi.Math;
+using Prism.Mvvm;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Xml.Linq;
-using OpenBveApi.Interface;
-using OpenBveApi.Math;
-using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Others;
 
@@ -366,8 +367,21 @@ namespace TrainEditor2.Models.Panels
 		{
 			return new XElement("Entry",
 				new XElement("Name", entry.Info.Name),
+				new XElement("Info", entry.Info.Command),
 				new XElement("Option", entry.Option)
 			);
+		}
+
+		public override void WriteIntermediate(XElement parent)
+		{
+			parent.Add(new XElement("Touch",
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
+				new XElement("Size", $"{Size.X}, {Size.Y}"),
+				new XElement("JumpScreen", JumpScreen),
+				new XElement("SoundEntries", SoundEntries.Select(WriteTouchElementSoundEntryNode)),
+				new XElement("CommandEntries", CommandEntries.Select(WriteTouchElementCommandEntryNode)),
+				new XElement("Layer", Layer)
+				));
 		}
 	}
 }

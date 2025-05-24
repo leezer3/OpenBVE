@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using System;
 using System.Globalization;
 using System.Text;
-using Prism.Mvvm;
+using System.Xml.Linq;
 using TrainEditor2.Extensions;
+using TrainManager.Car;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -65,6 +67,15 @@ namespace TrainEditor2.Models.Trains
 			builder.AppendLine($"[Coupler{couplerIndex.ToString(CultureInfo.InvariantCulture)}]");
 			Utilities.WriteKey(builder, "Distances", Min, Max);
 			Utilities.WriteKey(builder, "Object", Utilities.MakeRelativePath(fileName, Object));
+		}
+
+		internal void WriteIntermediate(XElement parent)
+		{
+			parent.Add(new XElement("Coupler",
+				new XElement("Min", Min),
+				new XElement("Max", Max),
+				new XElement("Object", Object)
+				));
 		}
 	}
 }

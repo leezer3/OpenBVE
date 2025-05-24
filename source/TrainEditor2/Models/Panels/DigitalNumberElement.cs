@@ -1,6 +1,7 @@
-﻿using System.Text;
+﻿using OpenBveApi.Colors;
+using System.Text;
+using System.Windows;
 using System.Xml.Linq;
-using OpenBveApi.Colors;
 using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Panels
@@ -125,6 +126,19 @@ namespace TrainEditor2.Models.Panels
 			);
 
 			parent.Add(digitalNumberNode);
+		}
+
+		public override void WriteIntermediate(XElement parent)
+		{
+			parent.Add(new XElement("DigitalNumber",
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
+				new XElement("Layer", Layer),
+				WriteSubjectNode(Subject),
+				new XElement("DaytimeImage", DaytimeImage),
+				new XElement("NighttimeImage", NighttimeImage),
+				new XElement("TransparentColor", TransparentColor),
+				new XElement("Interval", Interval)
+				));
 		}
 	}
 }

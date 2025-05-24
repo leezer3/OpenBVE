@@ -196,5 +196,21 @@ namespace TrainEditor2.Models.Panels
 
 			parent.Add(thisNode);
 		}
+
+		public override void WriteIntermediate(XElement parent)
+		{
+			parent.Add(new XElement("This",
+				new XElement("Resolution", Resolution),
+				new XElement("Left", Left),
+				new XElement("Right", Right),
+				new XElement("Top", Top),
+				new XElement("Bottom", Bottom),
+				new XElement("DaytimeImage", DaytimeImage),
+				new XElement("NighttimeImage", NighttimeImage),
+				new XElement("TransparentColor", TransparentColor),
+				new XElement("Center", $"{Center.X}, {Center.Y}"),
+				new XElement("Origin", $"{Origin.X}, {Origin.Y}")
+				));
+		}
 	}
 }

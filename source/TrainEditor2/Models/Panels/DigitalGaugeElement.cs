@@ -1,6 +1,7 @@
-﻿using System.Text;
+﻿using OpenBveApi.Colors;
+using System.Text;
+using System.Windows;
 using System.Xml.Linq;
-using OpenBveApi.Colors;
 using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Panels
@@ -160,6 +161,22 @@ namespace TrainEditor2.Models.Panels
 				new XElement("Maximum", Maximum),
 				new XElement("Step", Step)
 			));
+		}
+
+		public override void WriteIntermediate(XElement parent)
+		{
+			parent.Add(new XElement("DigitalGauge",
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
+				new XElement("Layer", Layer),
+				WriteSubjectNode(Subject),
+				new XElement("Radius", Radius),
+				new XElement("Color", Color),
+				new XElement("InitialAngle", InitialAngle),
+				new XElement("LastAngle", LastAngle),
+				new XElement("Minimum", Minimum),
+				new XElement("Maximum", Maximum),
+				new XElement("Step", Step)
+				));
 		}
 	}
 }

@@ -1,6 +1,7 @@
-﻿using System.Text;
+﻿using OpenBveApi.Colors;
+using System.Text;
+using System.Windows;
 using System.Xml.Linq;
-using OpenBveApi.Colors;
 using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Panels
@@ -73,6 +74,17 @@ namespace TrainEditor2.Models.Panels
 				new XElement("Height", Height),
 				new XElement("TransparentColor", TransparentColor)
 			));
+		}
+
+		public override void WriteIntermediate(XElement parent)
+		{
+			parent.Add(new XElement("Timetable",
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
+				new XElement("Layer", Layer),
+				new XElement("Width", Width),
+				new XElement("Height", Height),
+				new XElement("TransparentColor", TransparentColor)
+				));
 		}
 	}
 }

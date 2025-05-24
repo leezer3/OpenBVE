@@ -379,5 +379,32 @@ namespace TrainEditor2.Models.Panels
 
 			parent.Add(needleNode);
 		}
+
+		public override void WriteIntermediate(XElement parent)
+		{
+			parent.Add(new XElement("Needle",
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
+				new XElement("Layer", Layer),
+				WriteSubjectNode(Subject),
+				new XElement("DaytimeImage", DaytimeImage),
+				new XElement("NighttimeImage", NighttimeImage),
+				new XElement("TransparentColor", TransparentColor),
+				new XElement("DefinedRadius", DefinedRadius),
+				new XElement("Radius", Radius),
+				new XElement("Color", Color),
+				new XElement("DefinedOrigin", DefinedOrigin),
+				new XElement("Origin", $"{Origin.X}, {Origin.Y}"),
+				new XElement("InitialAngle", InitialAngle),
+				new XElement("LastAngle", LastAngle),
+				new XElement("Minimum", Minimum),
+				new XElement("Maximum", Maximum),
+				new XElement("DefinedNaturalFreq", DefinedNaturalFreq),
+				new XElement("NaturalFreq", NaturalFreq),
+				new XElement("DefinedDampingRatio", DefinedDampingRatio),
+				new XElement("DampingRatio", DampingRatio),
+				new XElement("Backstop", Backstop),
+				new XElement("Smoothed", Smoothed)
+				));
+		}
 	}
 }
