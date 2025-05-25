@@ -27,11 +27,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Object.DirectX;
 using OpenBve.Formats.DirectX;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace Plugin
 {
@@ -161,6 +163,7 @@ namespace Plugin
 		private static Matrix4D rootMatrix;
 		private static int currentLevel = 0;
 		private static int transformStart = 0;
+		private static VertexElement[] vertexElements;
 
 		private static readonly Dictionary<string, Material> rootMaterials = new Dictionary<string, Material>();
 
@@ -276,7 +279,7 @@ namespace Plugin
 						builder.Apply(ref obj, false, false);
 						builder = new MeshBuilder(Plugin.currentHost);
 					}
-					int nVerts = block.ReadUInt();
+					int nVerts = block.ReadInt();
 					if (nVerts == 0)
 					{
 						//Some null objects contain an empty mesh
@@ -286,7 +289,7 @@ namespace Plugin
 					{
 						builder.Vertices.Add(new Vertex(new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle())));
 					}
-					int nFaces = block.ReadUInt();
+					int nFaces = block.ReadInt();
 					if (nFaces == 0)
 					{
 						try
@@ -317,7 +320,7 @@ namespace Plugin
 					}
 					for (int i = 0; i < nFaces; i++)
 					{
-						int fVerts = block.ReadUInt();
+						int fVerts = block.ReadInt();
 						if (fVerts == 0)
 						{
 							// Assuming here that a face must contain vertices
@@ -327,7 +330,7 @@ namespace Plugin
 						MeshFace f = new MeshFace(fVerts);
 						for (int j = 0; j < fVerts; j++)
 						{
-							f.Vertices[j].Index = block.ReadUInt();
+							f.Vertices[j].Index = block.ReadInt();
 						}
 						builder.Faces.Add(f);
 					}
@@ -341,12 +344,12 @@ namespace Plugin
 					currentLevel--;
 					break;
 				case TemplateID.MeshMaterialList:
-					int nMaterials = block.ReadUInt();
-					int nFaceIndices = block.ReadUInt();
+					int nMaterials = block.ReadInt();
+					int nFaceIndices = block.ReadInt();
 					if (nFaceIndices == 1 && builder.Faces.Count > 1)
 					{
 						//Single material for all faces
-						int globalMaterial = block.ReadUInt();
+						int globalMaterial = block.ReadInt();
 						for (int i = 0; i < builder.Faces.Count; i++)
 						{
 							MeshFace f = builder.Faces[i];
@@ -358,7 +361,7 @@ namespace Plugin
 					{
 						for (int i = 0; i < nFaceIndices; i++)
 						{
-							int fMaterial = block.ReadUInt();
+							int fMaterial = block.ReadInt();
 							MeshFace f = builder.Faces[i];
 							f.Material = (ushort) (fMaterial + 1);
 							builder.Faces[i] = f;
@@ -482,35 +485,35 @@ namespace Plugin
 					}
 					break;
 				case TemplateID.MeshTextureCoords:
-					int nCoords = block.ReadUInt();
+					int nCoords = block.ReadInt();
 					for (int i = 0; i < nCoords; i++)
 					{
 						builder.Vertices[i].TextureCoordinates = new Vector2(block.ReadSingle(), block.ReadSingle());
 					}
 					break;
 				case TemplateID.MeshNormals:
-					int nNormals = block.ReadUInt();
+					int nNormals = block.ReadInt();
 					Vector3[] normals = new Vector3[nNormals];
 					for (int i = 0; i < nNormals; i++)
 					{
 						normals[i] = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
 						normals[i].Normalize();
 					}
-					int nFaceNormals = block.ReadUInt();
+					int nFaceNormals = block.ReadInt();
 					if (nFaceNormals != builder.Faces.Count)
 					{
 						throw new Exception("nFaceNormals must match the number of faces in the mesh");
 					}
 					for (int i = 0; i < nFaceNormals; i++)
 					{
-						int nVertexNormals = block.ReadUInt();
+						int nVertexNormals = block.ReadInt();
 						if (nVertexNormals != builder.Faces[i].Vertices.Length)
 						{
 							throw new Exception("nVertexNormals must match the number of verticies in the face");
 						}
 						for (int j = 0; j < nVertexNormals; j++)
 						{
-							int normalIdx = block.ReadUInt();
+							int normalIdx = block.ReadInt();
 							if (normalIdx < normals.Length)
 							{
 								// Check normal index is valid
@@ -520,10 +523,10 @@ namespace Plugin
 					}
 					break;
 				case TemplateID.MeshVertexColors:
-					int nVertexColors = block.ReadUInt();
+					int nVertexColors = block.ReadInt();
 					for (int i = 0; i < nVertexColors; i++)
 					{
-						int idx = block.ReadUInt();
+						int idx = block.ReadInt();
 						if (idx >= builder.Vertices.Count)
 						{
 							Plugin.currentHost.AddMessage(MessageType.Warning, false, "MeshVertexColors index " + idx +  " should be less than nVertices in Mesh " + block.Label);
@@ -544,7 +547,7 @@ namespace Plugin
 					}
 					break;
 				case TemplateID.MeshFaceWraps:
-					int nMeshFaceWraps = block.ReadUInt();
+					int nMeshFaceWraps = block.ReadInt();
 					if (nMeshFaceWraps != builder.Faces.Count)
 					{
 						throw new Exception("nMeshFaceWraps must match the number of faces in the mesh");
@@ -567,6 +570,69 @@ namespace Plugin
 					{
 						builder.Materials[ml] = rootMaterials[block.Label];
 					}
+					break;
+				case TemplateID.DeclData:
+					int numTemplates = (int)block.ReadDword();
+					vertexElements = new VertexElement[numTemplates];
+					for (int i = 0; i < numTemplates; i++)
+					{
+						vertexElements[i] = new VertexElement(block.ReadDword(), block.ReadDword(), block.ReadDword(), block.ReadDword());
+					}
+
+					int currentElement = 0;
+					int currentVertex = 0;
+					unsafe
+					{
+						// unsafe to convert dwords back to floats (used in this context as no precision problem)
+						int numRemainingDwords = (int)block.ReadDword();
+						while (numRemainingDwords > 0)
+						{
+							switch (vertexElements[currentElement].Usage)
+							{
+								default:
+									throw new NotImplementedException(vertexElements[currentElement].Usage + " is not implemented by this decoder.");
+								case D3DDeclUsage.D3DDECLUSAGE_NORMAL:
+									uint x = block.ReadDword();
+									uint y = block.ReadDword();
+									uint z = block.ReadDword();
+									Vector3 normal = new Vector3(*(float*)&x, *(float*)&y, *(float*)&z);
+
+									for (int i = 0; i < builder.Faces.Count; i++)
+									{
+										for (int j = 0; j < builder.Faces[i].Vertices.Length; j++)
+										{
+											if (builder.Faces[i].Vertices[j].Index == currentVertex)
+											{
+												builder.Faces[i].Vertices[j].Normal = normal;
+											}
+										}
+									}
+									numRemainingDwords -= 3;
+									break;
+								case D3DDeclUsage.D3DDECLUSAGE_TEXCOORD:
+									x = block.ReadDword();
+									y = block.ReadDword();
+									Vector2 texCoords = new Vector2(*(float*)&x, *(float*)&y);
+									if (vertexElements[currentElement].UsageIndex == 0)
+									{
+										// as additional D3DDECLUSAGE_TEXCOORD may also be used to store other user shader data per MSDN
+										builder.Vertices[currentVertex].TextureCoordinates = texCoords;
+									}
+									numRemainingDwords -= 2;
+									break;
+							}
+							
+							currentElement++;
+							if (currentElement > vertexElements.Length - 1)
+							{
+								// move to next vertex
+								currentElement = 0;
+								currentVertex++;
+							}
+
+						}
+					}
+
 					break;
 			}
 		}
