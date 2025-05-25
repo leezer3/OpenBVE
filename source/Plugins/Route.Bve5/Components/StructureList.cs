@@ -61,10 +61,10 @@ namespace Route.Bve5
 
 			System.Text.Encoding Encoding = Text.DetermineBVE5FileEncoding(structureList);
 			string[] Lines = File.ReadAllLines(structureList, Encoding).Select(Line => Line.Trim('"').Trim()).ToArray();
-			if (structureList.IndexOf("Tn_E235", StringComparison.InvariantCultureIgnoreCase) != -1)
+			if (structureList.IndexOf("Tn_E235", StringComparison.InvariantCultureIgnoreCase) != -1 || structureList.IndexOf("TSLSeoul4", StringComparison.InvariantCultureIgnoreCase) != -1)
 			{
-				// This route uses some 5m track segments with over 1000 faces, which kill FPS, so set the optimisation threshold a little higher here
-				Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 5000;
+				// Some routes with badly optimized objects- Use a much lower threshold to avoid killing the renderer
+				Plugin.CurrentOptions.ObjectOptimizationBasicThreshold = 2000;
 			}
 			for (int i = 1; i < Lines.Length; i++)
 			{

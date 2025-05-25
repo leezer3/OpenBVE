@@ -86,8 +86,6 @@ namespace Route.Bve5
 
 		internal static void ParseScenario(string FileName, bool PreviewOnly)
 		{
-			Plugin.CurrentOptions.CurrentXParser = XParsers.Assimp;
-
 			Encoding Encoding = Text.DetermineBVE5FileEncoding(FileName);
 
 			ScenarioGrammarParser Parser = new ScenarioGrammarParser();
