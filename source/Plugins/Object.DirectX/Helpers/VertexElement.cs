@@ -1,4 +1,6 @@
-﻿namespace Object.DirectX
+﻿// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Global
+namespace Object.DirectX
 {
 	internal class VertexElement
 	{

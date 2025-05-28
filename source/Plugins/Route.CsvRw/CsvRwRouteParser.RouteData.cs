@@ -178,7 +178,6 @@ namespace CsvRwRouteParser
 			}
 
 			/// <summary>Sets the brightness value for the specified track position</summary>
-			/// <param name="Data">The route data (Accessed via 'ref') which we wish to query the brightness value from</param>
 			/// <param name="TrackPosition">The track position to get the brightness value for</param>
 			/// <returns>The brightness value</returns>
 			internal double GetBrightness(double TrackPosition)

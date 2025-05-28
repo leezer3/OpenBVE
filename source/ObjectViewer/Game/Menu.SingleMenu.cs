@@ -16,7 +16,7 @@ namespace ObjectViewer
 		/// access from Menu itself.</remarks>
 		private class SingleMenu : MenuBase
 		{
-			public SingleMenu(AbstractMenu menu, MenuType menuType, int data = 0, double MaxWidth = 0) : base(menuType)
+			public SingleMenu(AbstractMenu menu, MenuType menuType, int data = 0, double maxWidth = 0) : base(menuType)
 			{
 				//Vector2 size;
 				Align = TextAlignment.TopMiddle;
@@ -186,7 +186,7 @@ namespace ObjectViewer
 						break;
 				}
 
-				ComputeExtent(menuType, Game.Menu.MenuFont, MaxWidth);
+				ComputeExtent(menuType, Game.Menu.MenuFont, maxWidth);
 				Height = Items.Length * Game.Menu.lineHeight;
 				TopItem = 0;
 

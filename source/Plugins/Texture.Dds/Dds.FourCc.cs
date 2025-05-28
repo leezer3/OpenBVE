@@ -9,6 +9,7 @@
  * Also some minor enum conversion & cleanup
  */
 
+// ReSharper disable InconsistentNaming
 namespace Texture.Dds
 {
 	/// <summary>The known DDS FourCC values</summary>

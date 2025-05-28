@@ -197,6 +197,7 @@ namespace DenshaDeGoInput
 		/// <param name="guid">The GUID of the controller</param>
 		/// <param name="read">An array containing the previous read buffer</param>
 		/// <param name="write">The bytes to be sent to the controller</param>
+		/// <param name="setup">The LibUsb setup packet</param>
 		/// <returns>The bytes read from the controller.</returns>
 		internal static byte[] SyncController(Guid guid, byte[] read, byte[] write, UsbSetupPacket setup)
 		{

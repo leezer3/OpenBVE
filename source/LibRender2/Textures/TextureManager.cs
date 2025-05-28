@@ -487,7 +487,7 @@ namespace LibRender2.Textures
 				}
 			}
 			handle.Ignore = false;
-			if (handle.Origin != null && textureCache.ContainsKey(handle.Origin))
+			if (handle.Origin != null)
 			{
 				textureCache.Remove(handle.Origin);
 			}
