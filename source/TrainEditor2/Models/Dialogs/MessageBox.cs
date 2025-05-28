@@ -8,38 +8,20 @@
 
 		internal DialogIcon Icon
 		{
-			get
-			{
-				return icon;
-			}
-			set
-			{
-				SetProperty(ref icon, value);
-			}
+			get => icon;
+			set => SetProperty(ref icon, value);
 		}
 
 		internal DialogButton Button
 		{
-			get
-			{
-				return button;
-			}
-			set
-			{
-				SetProperty(ref button, value);
-			}
+			get => button;
+			set => SetProperty(ref button, value);
 		}
 
 		internal string Text
 		{
-			get
-			{
-				return text;
-			}
-			set
-			{
-				SetProperty(ref text, value);
-			}
+			get => text;
+			set => SetProperty(ref text, value);
 		}
 	}
 }

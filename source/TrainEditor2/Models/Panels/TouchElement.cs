@@ -22,14 +22,8 @@ namespace TrainEditor2.Models.Panels
 
 			internal int Index
 			{
-				get
-				{
-					return index;
-				}
-				set
-				{
-					SetProperty(ref index, value);
-				}
+				get => index;
+				set => SetProperty(ref index, value);
 			}
 
 			internal SoundEntry()
@@ -50,26 +44,14 @@ namespace TrainEditor2.Models.Panels
 
 			internal Translations.CommandInfo Info
 			{
-				get
-				{
-					return info;
-				}
-				set
-				{
-					SetProperty(ref info, value);
-				}
+				get => info;
+				set => SetProperty(ref info, value);
 			}
 
 			internal int Option
 			{
-				get
-				{
-					return option;
-				}
-				set
-				{
-					SetProperty(ref option, value);
-				}
+				get => option;
+				set => SetProperty(ref option, value);
 			}
 
 			internal CommandEntry()
@@ -102,62 +84,32 @@ namespace TrainEditor2.Models.Panels
 
 		internal Vector2 Size
 		{
-			get
-			{
-				return size;
-			}
-			set
-			{
-				SetProperty(ref size, value);
-			}
+			get => size;
+			set => SetProperty(ref size, value);
 		}
 
 		internal int JumpScreen
 		{
-			get
-			{
-				return jumpScreen;
-			}
-			set
-			{
-				SetProperty(ref jumpScreen, value);
-			}
+			get => jumpScreen;
+			set => SetProperty(ref jumpScreen, value);
 		}
 
 		internal TreeViewItemModel TreeItem
 		{
-			get
-			{
-				return treeItem;
-			}
-			set
-			{
-				SetProperty(ref treeItem, value);
-			}
+			get => treeItem;
+			set => SetProperty(ref treeItem, value);
 		}
 
 		internal TreeViewItemModel SelectedTreeItem
 		{
-			get
-			{
-				return selectedTreeItem;
-			}
-			set
-			{
-				SetProperty(ref selectedTreeItem, value);
-			}
+			get => selectedTreeItem;
+			set => SetProperty(ref selectedTreeItem, value);
 		}
 
 		internal ListViewItemModel SelectedListItem
 		{
-			get
-			{
-				return selectedListItem;
-			}
-			set
-			{
-				SetProperty(ref selectedListItem, value);
-			}
+			get => selectedListItem;
+			set => SetProperty(ref selectedListItem, value);
 		}
 
 		internal TouchElement(Screen screen)

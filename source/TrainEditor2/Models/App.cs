@@ -86,326 +86,164 @@ namespace TrainEditor2.Models
 
 		internal string SaveLocation
 		{
-			get
-			{
-				return saveLocation;
-			}
-			set
-			{
-				SetProperty(ref saveLocation, value);
-			}
+			get => saveLocation;
+			set => SetProperty(ref saveLocation, value);
 		}
 
 		internal string CurrentLanguageCode
 		{
-			get
-			{
-				return currentLanguageCode;
-			}
-			set
-			{
-				SetProperty(ref currentLanguageCode, value);
-			}
+			get => currentLanguageCode;
+			set => SetProperty(ref currentLanguageCode, value);
 		}
 
 		internal Train Train
 		{
-			get
-			{
-				return train;
-			}
-			set
-			{
-				SetProperty(ref train, value);
-			}
+			get => train;
+			set => SetProperty(ref train, value);
 		}
 
 		internal Panel Panel
 		{
-			get
-			{
-				return panel;
-			}
-			set
-			{
-				SetProperty(ref panel, value);
-			}
+			get => panel;
+			set => SetProperty(ref panel, value);
 		}
 
 		internal Sound Sound
 		{
-			get
-			{
-				return sound;
-			}
-			set
-			{
-				SetProperty(ref sound, value);
-			}
+			get => sound;
+			set => SetProperty(ref sound, value);
 		}
 
 		internal MessageBox MessageBox
 		{
-			get
-			{
-				return messageBox;
-			}
-			set
-			{
-				SetProperty(ref messageBox, value);
-			}
+			get => messageBox;
+			set => SetProperty(ref messageBox, value);
 		}
 
 		internal OpenFileDialog OpenFileDialog
 		{
-			get
-			{
-				return openFileDialog;
-			}
-			set
-			{
-				SetProperty(ref openFileDialog, value);
-			}
+			get => openFileDialog;
+			set => SetProperty(ref openFileDialog, value);
 		}
 
 		internal SaveFileDialog SaveFileDialog
 		{
-			get
-			{
-				return saveFileDialog;
-			}
-			set
-			{
-				SetProperty(ref saveFileDialog, value);
-			}
+			get => saveFileDialog;
+			set => SetProperty(ref saveFileDialog, value);
 		}
 
 		internal TrainFileType CurrentTrainFileType
 		{
-			get
-			{
-				return currentTrainFileType;
-			}
-			set
-			{
-				SetProperty(ref currentTrainFileType, value);
-			}
+			get => currentTrainFileType;
+			set => SetProperty(ref currentTrainFileType, value);
 		}
 
 		internal PanelFileType CurrentPanelFileType
 		{
-			get
-			{
-				return currentPanelFileType;
-			}
-			set
-			{
-				SetProperty(ref currentPanelFileType, value);
-			}
+			get => currentPanelFileType;
+			set => SetProperty(ref currentPanelFileType, value);
 		}
 
 		internal SoundFileType CurrentSoundFileType
 		{
-			get
-			{
-				return currentSoundFileType;
-			}
-			set
-			{
-				SetProperty(ref currentSoundFileType, value);
-			}
+			get => currentSoundFileType;
+			set => SetProperty(ref currentSoundFileType, value);
 		}
 
 		internal string TrainDatImportLocation
 		{
-			get
-			{
-				return trainDatImportLocation;
-			}
-			set
-			{
-				SetProperty(ref trainDatImportLocation, value);
-			}
+			get => trainDatImportLocation;
+			set => SetProperty(ref trainDatImportLocation, value);
 		}
 
 		internal string TrainDatExportLocation
 		{
-			get
-			{
-				return trainDatExportLocation;
-			}
-			set
-			{
-				SetProperty(ref trainDatExportLocation, value);
-			}
+			get => trainDatExportLocation;
+			set => SetProperty(ref trainDatExportLocation, value);
 		}
 
 		internal string ExtensionsCfgImportLocation
 		{
-			get
-			{
-				return extensionsCfgImportLocation;
-			}
-			set
-			{
-				SetProperty(ref extensionsCfgImportLocation, value);
-			}
+			get => extensionsCfgImportLocation;
+			set => SetProperty(ref extensionsCfgImportLocation, value);
 		}
 
 		internal string ExtensionsCfgExportLocation
 		{
-			get
-			{
-				return extensionsCfgExportLocation;
-			}
-			set
-			{
-				SetProperty(ref extensionsCfgExportLocation, value);
-			}
+			get => extensionsCfgExportLocation;
+			set => SetProperty(ref extensionsCfgExportLocation, value);
 		}
 
 		internal string Panel2CfgImportLocation
 		{
-			get
-			{
-				return panel2CfgImportLocation;
-			}
-			set
-			{
-				SetProperty(ref panel2CfgImportLocation, value);
-			}
+			get => panel2CfgImportLocation;
+			set => SetProperty(ref panel2CfgImportLocation, value);
 		}
 
 		internal string Panel2CfgExportLocation
 		{
-			get
-			{
-				return panel2CfgExportLocation;
-			}
-			set
-			{
-				SetProperty(ref panel2CfgExportLocation, value);
-			}
+			get => panel2CfgExportLocation;
+			set => SetProperty(ref panel2CfgExportLocation, value);
 		}
 
 		internal string PanelXmlImportLocation
 		{
-			get
-			{
-				return panelXmlImportLocation;
-			}
-			set
-			{
-				SetProperty(ref panelXmlImportLocation, value);
-			}
+			get => panelXmlImportLocation;
+			set => SetProperty(ref panelXmlImportLocation, value);
 		}
 
 		internal string PanelXmlExportLocation
 		{
-			get
-			{
-				return panelXmlExportLocation;
-			}
-			set
-			{
-				SetProperty(ref panelXmlExportLocation, value);
-			}
+			get => panelXmlExportLocation;
+			set => SetProperty(ref panelXmlExportLocation, value);
 		}
 
 		internal string TrainFolderImportLocation
 		{
-			get
-			{
-				return trainFolderImportLocation;
-			}
-			set
-			{
-				SetProperty(ref trainFolderImportLocation, value);
-			}
+			get => trainFolderImportLocation;
+			set => SetProperty(ref trainFolderImportLocation, value);
 		}
 
 		internal string SoundCfgImportLocation
 		{
-			get
-			{
-				return soundCfgImportLocation;
-			}
-			set
-			{
-				SetProperty(ref soundCfgImportLocation, value);
-			}
+			get => soundCfgImportLocation;
+			set => SetProperty(ref soundCfgImportLocation, value);
 		}
 
 		internal string SoundCfgExportLocation
 		{
-			get
-			{
-				return soundCfgExportLocation;
-			}
-			set
-			{
-				SetProperty(ref soundCfgExportLocation, value);
-			}
+			get => soundCfgExportLocation;
+			set => SetProperty(ref soundCfgExportLocation, value);
 		}
 
 		internal string SoundXmlImportLocation
 		{
-			get
-			{
-				return soundXmlImportLocation;
-			}
-			set
-			{
-				SetProperty(ref soundXmlImportLocation, value);
-			}
+			get => soundXmlImportLocation;
+			set => SetProperty(ref soundXmlImportLocation, value);
 		}
 
 		internal string SoundXmlExportLocation
 		{
-			get
-			{
-				return soundXmlExportLocation;
-			}
-			set
-			{
-				SetProperty(ref soundXmlExportLocation, value);
-			}
+			get => soundXmlExportLocation;
+			set => SetProperty(ref soundXmlExportLocation, value);
 		}
 
 		internal string TrainXmlExportLocation
 		{
-			get
-			{
-				return trainXmlExportLocation;
-			}
-			set
-			{
-				SetProperty(ref trainXmlExportLocation, value);
-			}
+			get => trainXmlExportLocation;
+			set => SetProperty(ref trainXmlExportLocation, value);
 		}
 
 		internal TreeViewItemModel Item
 		{
-			get
-			{
-				return item;
-			}
-			set
-			{
-				SetProperty(ref item, value);
-			}
+			get => item;
+			set => SetProperty(ref item, value);
 		}
 
 		internal TreeViewItemModel SelectedItem
 		{
-			get
-			{
-				return selectedItem;
-			}
-			set
-			{
-				SetProperty(ref selectedItem, value);
-			}
+			get => selectedItem;
+			set => SetProperty(ref selectedItem, value);
 		}
 
 		internal ObservableCollection<ListViewItemModel> VisibleLogMessages;

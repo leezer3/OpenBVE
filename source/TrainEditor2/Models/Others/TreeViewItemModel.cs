@@ -15,26 +15,14 @@ namespace TrainEditor2.Models.Others
 
 		internal string Title
 		{
-			get
-			{
-				return title;
-			}
-			set
-			{
-				SetProperty(ref title, value);
-			}
+			get => title;
+			set => SetProperty(ref title, value);
 		}
 
 		internal object Tag
 		{
-			get
-			{
-				return tag;
-			}
-			set
-			{
-				SetProperty(ref tag, value);
-			}
+			get => tag;
+			set => SetProperty(ref tag, value);
 		}
 
 		internal ObservableCollection<TreeViewItemModel> Children;

@@ -27,10 +27,7 @@ namespace TrainEditor2.Models.Dialogs
 
 		internal bool IsOpen
 		{
-			get
-			{
-				return isOpen;
-			}
+			get => isOpen;
 			set
 			{
 				if (value)
@@ -44,26 +41,14 @@ namespace TrainEditor2.Models.Dialogs
 
 		internal bool? DialogResult
 		{
-			get
-			{
-				return dialogResult;
-			}
-			set
-			{
-				SetProperty(ref dialogResult, value);
-			}
+			get => dialogResult;
+			set => SetProperty(ref dialogResult, value);
 		}
 
 		internal string Title
 		{
-			get
-			{
-				return title;
-			}
-			set
-			{
-				SetProperty(ref title, value);
-			}
+			get => title;
+			set => SetProperty(ref title, value);
 		}
 	}
 }

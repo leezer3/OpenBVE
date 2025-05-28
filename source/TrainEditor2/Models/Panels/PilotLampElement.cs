@@ -15,50 +15,26 @@ namespace TrainEditor2.Models.Panels
 
 		internal Subject Subject
 		{
-			get
-			{
-				return subject;
-			}
-			set
-			{
-				SetProperty(ref subject, value);
-			}
+			get => subject;
+			set => SetProperty(ref subject, value);
 		}
 
 		internal string DaytimeImage
 		{
-			get
-			{
-				return daytimeImage;
-			}
-			set
-			{
-				SetProperty(ref daytimeImage, value);
-			}
+			get => daytimeImage;
+			set => SetProperty(ref daytimeImage, value);
 		}
 
 		internal string NighttimeImage
 		{
-			get
-			{
-				return nighttimeImage;
-			}
-			set
-			{
-				SetProperty(ref nighttimeImage, value);
-			}
+			get => nighttimeImage;
+			set => SetProperty(ref nighttimeImage, value);
 		}
 
 		internal Color24 TransparentColor
 		{
-			get
-			{
-				return transparentColor;
-			}
-			set
-			{
-				SetProperty(ref transparentColor, value);
-			}
+			get => transparentColor;
+			set => SetProperty(ref transparentColor, value);
 		}
 
 		internal PilotLampElement()

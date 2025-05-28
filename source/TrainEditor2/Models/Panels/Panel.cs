@@ -23,50 +23,26 @@ namespace TrainEditor2.Models.Panels
 
 		internal This This
 		{
-			get
-			{
-				return _this;
-			}
-			set
-			{
-				SetProperty(ref _this, value);
-			}
+			get => _this;
+			set => SetProperty(ref _this, value);
 		}
 
 		internal TreeViewItemModel TreeItem
 		{
-			get
-			{
-				return treeItem;
-			}
-			set
-			{
-				SetProperty(ref treeItem, value);
-			}
+			get => treeItem;
+			set => SetProperty(ref treeItem, value);
 		}
 
 		internal TreeViewItemModel SelectedTreeItem
 		{
-			get
-			{
-				return selectedTreeItem;
-			}
-			set
-			{
-				SetProperty(ref selectedTreeItem, value);
-			}
+			get => selectedTreeItem;
+			set => SetProperty(ref selectedTreeItem, value);
 		}
 
 		internal ListViewItemModel SelectedListItem
 		{
-			get
-			{
-				return selectedListItem;
-			}
-			set
-			{
-				SetProperty(ref selectedListItem, value);
-			}
+			get => selectedListItem;
+			set => SetProperty(ref selectedListItem, value);
 		}
 
 		internal ObservableCollection<Screen> Screens;

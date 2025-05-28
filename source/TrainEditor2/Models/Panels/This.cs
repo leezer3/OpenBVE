@@ -21,122 +21,62 @@ namespace TrainEditor2.Models.Panels
 
 		internal double Resolution
 		{
-			get
-			{
-				return resolution;
-			}
-			set
-			{
-				SetProperty(ref resolution, value);
-			}
+			get => resolution;
+			set => SetProperty(ref resolution, value);
 		}
 
 		internal double Left
 		{
-			get
-			{
-				return left;
-			}
-			set
-			{
-				SetProperty(ref left, value);
-			}
+			get => left;
+			set => SetProperty(ref left, value);
 		}
 
 		internal double Right
 		{
-			get
-			{
-				return right;
-			}
-			set
-			{
-				SetProperty(ref right, value);
-			}
+			get => right;
+			set => SetProperty(ref right, value);
 		}
 
 		internal double Top
 		{
-			get
-			{
-				return top;
-			}
-			set
-			{
-				SetProperty(ref top, value);
-			}
+			get => top;
+			set => SetProperty(ref top, value);
 		}
 
 		internal double Bottom
 		{
-			get
-			{
-				return bottom;
-			}
-			set
-			{
-				SetProperty(ref bottom, value);
-			}
+			get => bottom;
+			set => SetProperty(ref bottom, value);
 		}
 
 		internal string DaytimeImage
 		{
-			get
-			{
-				return daytimeImage;
-			}
-			set
-			{
-				SetProperty(ref daytimeImage, value);
-			}
+			get => daytimeImage;
+			set => SetProperty(ref daytimeImage, value);
 		}
 
 		internal string NighttimeImage
 		{
-			get
-			{
-				return nighttimeImage;
-			}
-			set
-			{
-				SetProperty(ref nighttimeImage, value);
-			}
+			get => nighttimeImage;
+			set => SetProperty(ref nighttimeImage, value);
 		}
 
 		internal Color24 TransparentColor
 		{
-			get
-			{
-				return transparentColor;
-			}
-			set
-			{
-				SetProperty(ref transparentColor, value);
-			}
+			get => transparentColor;
+			set => SetProperty(ref transparentColor, value);
 		}
 
 		internal Vector2 Center
 		{
-			get
-			{
-				return center;
-			}
-			set
-			{
-				SetProperty(ref center, value);
-			}
+			get => center;
+			set => SetProperty(ref center, value);
 		}
 
 		internal Vector2 Origin
 		{
-			get
-			{
-				return origin;
-			}
-			set
-			{
-				SetProperty(ref origin, value);
-			}
+			get => origin;
+			set => SetProperty(ref origin, value);
 		}
 
 		internal This()

@@ -14,38 +14,20 @@ namespace TrainEditor2.Models.Panels
 
 		internal double Width
 		{
-			get
-			{
-				return width;
-			}
-			set
-			{
-				SetProperty(ref width, value);
-			}
+			get => width;
+			set => SetProperty(ref width, value);
 		}
 
 		internal double Height
 		{
-			get
-			{
-				return height;
-			}
-			set
-			{
-				SetProperty(ref height, value);
-			}
+			get => height;
+			set => SetProperty(ref height, value);
 		}
 
 		internal Color24 TransparentColor
 		{
-			get
-			{
-				return transparentColor;
-			}
-			set
-			{
-				SetProperty(ref transparentColor, value);
-			}
+			get => transparentColor;
+			set => SetProperty(ref transparentColor, value);
 		}
 
 		internal TimetableElement()

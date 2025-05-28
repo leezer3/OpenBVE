@@ -11,14 +11,8 @@ namespace TrainEditor2.Models.Panels
 
 		internal int Number
 		{
-			get
-			{
-				return number;
-			}
-			set
-			{
-				SetProperty(ref number, value);
-			}
+			get => number;
+			set => SetProperty(ref number, value);
 		}
 
 		internal ObservableCollection<PanelElement> PanelElements;

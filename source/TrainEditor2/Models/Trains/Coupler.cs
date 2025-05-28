@@ -16,38 +16,20 @@ namespace TrainEditor2.Models.Trains
 
 		internal double Min
 		{
-			get
-			{
-				return min;
-			}
-			set
-			{
-				SetProperty(ref min, value);
-			}
+			get => min;
+			set => SetProperty(ref min, value);
 		}
 
 		internal double Max
 		{
-			get
-			{
-				return max;
-			}
-			set
-			{
-				SetProperty(ref max, value);
-			}
+			get => max;
+			set => SetProperty(ref max, value);
 		}
 
 		internal string Object
 		{
-			get
-			{
-				return exteriorObject;
-			}
-			set
-			{
-				SetProperty(ref exteriorObject, value);
-			}
+			get => exteriorObject;
+			set => SetProperty(ref exteriorObject, value);
 		}
 
 		internal Coupler()

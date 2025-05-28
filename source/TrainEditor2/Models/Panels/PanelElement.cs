@@ -13,26 +13,14 @@ namespace TrainEditor2.Models.Panels
 
 		internal Vector2 Location
 		{
-			get
-			{
-				return location;
-			}
-			set
-			{
-				SetProperty(ref location, value);
-			}
+			get => location;
+			set => SetProperty(ref location, value);
 		}
 
 		internal int Layer
 		{
-			get
-			{
-				return layer;
-			}
-			set
-			{
-				SetProperty(ref layer, value);
-			}
+			get => layer;
+			set => SetProperty(ref layer, value);
 		}
 
 		internal PanelElement()

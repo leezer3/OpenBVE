@@ -16,50 +16,26 @@ namespace TrainEditor2.Models.Trains
 
 		internal double PositionX
 		{
-			get
-			{
-				return positionX;
-			}
-			set
-			{
-				SetProperty(ref positionX, value);
-			}
+			get => positionX;
+			set => SetProperty(ref positionX, value);
 		}
 
 		internal double PositionY
 		{
-			get
-			{
-				return positionY;
-			}
-			set
-			{
-				SetProperty(ref positionY, value);
-			}
+			get => positionY;
+			set => SetProperty(ref positionY, value);
 		}
 
 		internal double PositionZ
 		{
-			get
-			{
-				return positionZ;
-			}
-			set
-			{
-				SetProperty(ref positionZ, value);
-			}
+			get => positionZ;
+			set => SetProperty(ref positionZ, value);
 		}
 
 		internal int DriverCar
 		{
-			get
-			{
-				return driverCar;
-			}
-			set
-			{
-				SetProperty(ref driverCar, value);
-			}
+			get => driverCar;
+			set => SetProperty(ref driverCar, value);
 		}
 
 		internal Cab()

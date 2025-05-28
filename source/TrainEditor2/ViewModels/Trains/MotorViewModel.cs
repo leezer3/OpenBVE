@@ -563,16 +563,15 @@ namespace TrainEditor2.ViewModels.Trains
 			DirectX = new ReactiveProperty<string>(0.0.ToString(culture))
 				.SetValidateNotifyError(x =>
 				{
-					double result;
 					string message;
 
 					switch (CurrentToolMode.Value)
 					{
 						case Motor.ToolMode.Move:
-							Utilities.TryParse(x, NumberRange.Any, out result, out message);
+							Utilities.TryParse(x, NumberRange.Any, out _, out message);
 							break;
 						case Motor.ToolMode.Dot:
-							Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+							Utilities.TryParse(x, NumberRange.NonNegative, out _, out message);
 							break;
 						default:
 							message = null;

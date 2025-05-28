@@ -19,98 +19,50 @@ namespace TrainEditor2.Models.Panels
 
 		internal Subject Subject
 		{
-			get
-			{
-				return subject;
-			}
-			set
-			{
-				SetProperty(ref subject, value);
-			}
+			get => subject;
+			set => SetProperty(ref subject, value);
 		}
 
 		internal double Radius
 		{
-			get
-			{
-				return radius;
-			}
-			set
-			{
-				SetProperty(ref radius, value);
-			}
+			get => radius;
+			set => SetProperty(ref radius, value);
 		}
 
 		internal Color24 Color
 		{
-			get
-			{
-				return color;
-			}
-			set
-			{
-				SetProperty(ref color, value);
-			}
+			get => color;
+			set => SetProperty(ref color, value);
 		}
 
 		internal double InitialAngle
 		{
-			get
-			{
-				return initialAngle;
-			}
-			set
-			{
-				SetProperty(ref initialAngle, value);
-			}
+			get => initialAngle;
+			set => SetProperty(ref initialAngle, value);
 		}
 
 		internal double LastAngle
 		{
-			get
-			{
-				return lastAngle;
-			}
-			set
-			{
-				SetProperty(ref lastAngle, value);
-			}
+			get => lastAngle;
+			set => SetProperty(ref lastAngle, value);
 		}
 
 		internal double Minimum
 		{
-			get
-			{
-				return minimum;
-			}
-			set
-			{
-				SetProperty(ref minimum, value);
-			}
+			get => minimum;
+			set => SetProperty(ref minimum, value);
 		}
 
 		internal double Maximum
 		{
-			get
-			{
-				return maximum;
-			}
-			set
-			{
-				SetProperty(ref maximum, value);
-			}
+			get => maximum;
+			set => SetProperty(ref maximum, value);
 		}
 
 		internal double Step
 		{
-			get
-			{
-				return step;
-			}
-			set
-			{
-				SetProperty(ref step, value);
-			}
+			get => step;
+			set => SetProperty(ref step, value);
 		}
 
 		internal DigitalGaugeElement()

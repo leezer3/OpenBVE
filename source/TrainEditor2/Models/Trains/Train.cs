@@ -21,38 +21,20 @@ namespace TrainEditor2.Models.Trains
 
 		internal Handle Handle
 		{
-			get
-			{
-				return handle;
-			}
-			set
-			{
-				SetProperty(ref handle, value);
-			}
+			get => handle;
+			set => SetProperty(ref handle, value);
 		}
 
 		internal Cab Cab
 		{
-			get
-			{
-				return cab;
-			}
-			set
-			{
-				SetProperty(ref cab, value);
-			}
+			get => cab;
+			set => SetProperty(ref cab, value);
 		}
 
 		internal Device Device
 		{
-			get
-			{
-				return device;
-			}
-			set
-			{
-				SetProperty(ref device, value);
-			}
+			get => device;
+			set => SetProperty(ref device, value);
 		}
 
 		internal ObservableCollection<Car> Cars;

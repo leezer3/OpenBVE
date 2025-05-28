@@ -20,98 +20,50 @@ namespace TrainEditor2.Models.Panels
 
 		internal Subject Subject
 		{
-			get
-			{
-				return subject;
-			}
-			set
-			{
-				SetProperty(ref subject, value);
-			}
+			get => subject;
+			set => SetProperty(ref subject, value);
 		}
 
 		internal string DaytimeImage
 		{
-			get
-			{
-				return daytimeImage;
-			}
-			set
-			{
-				SetProperty(ref daytimeImage, value);
-			}
+			get => daytimeImage;
+			set => SetProperty(ref daytimeImage, value);
 		}
 
 		internal string NighttimeImage
 		{
-			get
-			{
-				return nighttimeImage;
-			}
-			set
-			{
-				SetProperty(ref nighttimeImage, value);
-			}
+			get => nighttimeImage;
+			set => SetProperty(ref nighttimeImage, value);
 		}
 
 		internal Color24 TransparentColor
 		{
-			get
-			{
-				return transparentColor;
-			}
-			set
-			{
-				SetProperty(ref transparentColor, value);
-			}
+			get => transparentColor;
+			set => SetProperty(ref transparentColor, value);
 		}
 
 		internal double Minimum
 		{
-			get
-			{
-				return minimum;
-			}
-			set
-			{
-				SetProperty(ref minimum, value);
-			}
+			get => minimum;
+			set => SetProperty(ref minimum, value);
 		}
 
 		internal double Maximum
 		{
-			get
-			{
-				return maximum;
-			}
-			set
-			{
-				SetProperty(ref maximum, value);
-			}
+			get => maximum;
+			set => SetProperty(ref maximum, value);
 		}
 
 		internal Vector2 Direction
 		{
-			get
-			{
-				return direction;
-			}
-			set
-			{
-				SetProperty(ref direction, value);
-			}
+			get => direction;
+			set => SetProperty(ref direction, value);
 		}
 
 		internal int Width
 		{
-			get
-			{
-				return width;
-			}
-			set
-			{
-				SetProperty(ref width, value);
-			}
+			get => width;
+			set => SetProperty(ref width, value);
 		}
 
 		internal LinearGaugeElement()
