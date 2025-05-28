@@ -259,7 +259,6 @@ namespace OpenBveApi.Routes
 			{
 				for (int j = 0; j < Objects[i].Prototype.Mesh.Faces.Length; j++)
 				{
-					int material = Objects[i].Prototype.Mesh.Faces[j].Material;
 					Texture texture = Objects[i].Prototype.Mesh.Materials[i].DaytimeTexture;
 					if (texture != null)
 					{
