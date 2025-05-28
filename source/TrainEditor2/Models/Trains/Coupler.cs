@@ -69,6 +69,17 @@ namespace TrainEditor2.Models.Trains
 			Utilities.WriteKey(builder, "Object", Utilities.MakeRelativePath(fileName, Object));
 		}
 
+		internal void WriteXML(XElement parent)
+		{
+			parent.Add(new XElement("Coupler",
+				new XElement("Min", Min),
+				new XElement("Max", Max),
+				new XElement("Object", Object),
+				new XElement("CanUncoupler", "false"),
+				new XElement("UncouplngBehaviour", "Emergency")
+			));
+		}
+
 		internal void WriteIntermediate(XElement parent)
 		{
 			parent.Add(new XElement("Coupler",

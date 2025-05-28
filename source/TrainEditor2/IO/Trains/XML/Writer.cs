@@ -18,6 +18,10 @@ namespace TrainEditor2.IO.Trains.XML
 			for (int i = 0; i < train.Cars.Count; i++)
 			{
 				train.Cars[i].WriteXML(fileName, trainNode, train, i);
+				if (i > 0)
+				{
+					train.Couplers[i - 1].WriteXML(trainNode);
+				}
 			}
 
 			trainNode.Add(new XElement("DriverCar", train.Cab.DriverCar));
