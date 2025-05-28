@@ -81,10 +81,7 @@ namespace SanYingInput
 
 		public ConfigFormSaveData Configuration
 		{
-			get
-			{
-				return m_saveData;
-			}
+			get => m_saveData;
 		}
 
 		public void loadConfigurationFile(string path)

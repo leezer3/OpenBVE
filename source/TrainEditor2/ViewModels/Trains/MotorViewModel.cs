@@ -513,8 +513,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.SetValidateNotifyError(x =>
 				{
 
-					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
-
+					Utilities.TryValidate(x, NumberRange.NonNegative, out string message);
 					return message;
 				})
 				.AddTo(disposable);
@@ -529,8 +528,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.SetValidateNotifyError(x =>
 				{
 
-					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
-
+					Utilities.TryValidate(x, NumberRange.NonNegative, out string message);
 					return message;
 				})
 				.AddTo(disposable);
@@ -545,8 +543,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.SetValidateNotifyError(x =>
 				{
 
-					Utilities.TryParse(x, NumberRange.NonNegative, out double result, out string message);
-
+					Utilities.TryValidate(x, NumberRange.NonNegative, out string message);
 					return message;
 				})
 				.AddTo(disposable);
@@ -568,10 +565,10 @@ namespace TrainEditor2.ViewModels.Trains
 					switch (CurrentToolMode.Value)
 					{
 						case Motor.ToolMode.Move:
-							Utilities.TryParse(x, NumberRange.Any, out _, out message);
+							Utilities.TryValidate(x, NumberRange.Any, out message);
 							break;
 						case Motor.ToolMode.Dot:
-							Utilities.TryParse(x, NumberRange.NonNegative, out _, out message);
+							Utilities.TryValidate(x, NumberRange.NonNegative, out message);
 							break;
 						default:
 							message = null;
@@ -585,16 +582,15 @@ namespace TrainEditor2.ViewModels.Trains
 			DirectY = new ReactiveProperty<string>(0.0.ToString(culture))
 				.SetValidateNotifyError(x =>
 				{
-					double result;
 					string message;
 
 					switch (CurrentToolMode.Value)
 					{
 						case Motor.ToolMode.Move:
-							Utilities.TryParse(x, NumberRange.Any, out result, out message);
+							Utilities.TryValidate(x, NumberRange.Any, out message);
 							break;
 						case Motor.ToolMode.Dot:
-							Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+							Utilities.TryValidate(x, NumberRange.NonNegative, out message);
 							break;
 						default:
 							message = null;

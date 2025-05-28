@@ -3,8 +3,8 @@ using TrainEditor2.Models.Trains;
 
 namespace TrainEditor2.IO.Trains.XML
 {
-    internal static partial class TrainXML
-    {
+  internal static partial class TrainXML
+  {
 		internal static void Write(string fileName, Train train)
 		{
 			XDocument xml = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));

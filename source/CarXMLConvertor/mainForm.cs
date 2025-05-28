@@ -17,15 +17,8 @@ namespace CarXmlConvertor
 
 	    public string updateLogBoxText
 	    {
-		    get
-		    {
-			    return this.textBoxOutput.Text;
-		    }
-		    set
-		    {
-			    this.textBoxOutput.Text = value;
-		    }
-
+		    get => this.textBoxOutput.Text;
+		    set => this.textBoxOutput.Text = value;
 	    }
 
 	    private bool animatedPanel;

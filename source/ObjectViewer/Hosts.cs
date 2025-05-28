@@ -375,10 +375,7 @@ namespace ObjectViewer {
 
 		public override int AnimatedWorldObjectsUsed
 		{
-			get
-			{
-				return ObjectManager.AnimatedWorldObjectsUsed;
-			}
+			get => ObjectManager.AnimatedWorldObjectsUsed;
 			set
 			{
 				int a = ObjectManager.AnimatedWorldObjectsUsed;
@@ -397,26 +394,14 @@ namespace ObjectViewer {
 
 		public override WorldObject[] AnimatedWorldObjects
 		{
-			get
-			{
-				return ObjectManager.AnimatedWorldObjects;
-			}
-			set
-			{
-				ObjectManager.AnimatedWorldObjects = value;
-			}
+			get => ObjectManager.AnimatedWorldObjects;
+			set => ObjectManager.AnimatedWorldObjects = value;
 		}
 
 		public override Dictionary<int, Track> Tracks
 		{
-			get
-			{
-				return Program.CurrentRoute.Tracks;
-			}
-			set
-			{
-				Program.CurrentRoute.Tracks = value;
-			}
+			get => Program.CurrentRoute.Tracks;
+			set => Program.CurrentRoute.Tracks = value;
 		}
 
 		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
@@ -426,11 +411,8 @@ namespace ObjectViewer {
 
 		public override IEnumerable<AbstractTrain> Trains
 		{
-			get
-			{
-				// ReSharper disable once CoVariantArrayConversion
-				return Program.TrainManager.Trains;
-			}
+			// ReSharper disable once CoVariantArrayConversion
+			get => Program.TrainManager.Trains;
 		}
 
 		public override AbstractTrain ClosestTrain(AbstractTrain Train)
