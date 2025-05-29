@@ -112,6 +112,9 @@ namespace RouteManager2
 		/// <param name="Width">The width of the bitmap to create.</param>
 		/// <param name="Height">The height of the bitmap to create.</param>
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
+		/// <param name="switchPositions">The list of switch positions on the map</param>
+		/// <param name="follower">The trackfollower used for drawing</param>
+		/// <param name="drawRadius">The draw radius</param>
 		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, out Dictionary<Guid, Vector2> switchPositions, TrackFollower follower = null, int drawRadius = 500)
 		{
 			switchPositions = null;

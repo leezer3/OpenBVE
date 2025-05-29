@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
@@ -104,16 +103,16 @@ namespace TrainManager.Car
 
 		private int trainCarIndex;
 
-		public CarBase(TrainBase train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient)
+		public CarBase(TrainBase train, int index, double coefficientOfFriction, double coefficientOfRollingResistance, double aerodynamicDragCoefficient)
 		{
 			Specs = new CarPhysics();
 			Brightness = new Brightness(this);
 			baseTrain = train;
 			trainCarIndex = index;
 			CarSections = new CarSection[] { };
-			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
+			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this, coefficientOfFriction, coefficientOfRollingResistance, aerodynamicDragCoefficient);
 			FrontAxle.Follower.TriggerType = index == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
-			RearAxle = new Axle(TrainManagerBase.currentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
+			RearAxle = new Axle(TrainManagerBase.currentHost, train, this, coefficientOfFriction, coefficientOfRollingResistance, aerodynamicDragCoefficient);
 			RearAxle.Follower.TriggerType = index == baseTrain.Cars.Length - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
 			FrontBogie = new Bogie(this, false);
@@ -902,19 +901,11 @@ namespace TrainManager.Car
 					}
 				}
 
-				double SpringAcceleration;
-				if (!Derailed)
-				{
-					SpringAcceleration = 15.0 * Math.Abs(a1 - a0);
-				}
-				else
-				{
-					SpringAcceleration = 1.5 * Math.Abs(a1 - a0);
-				}
+				double springAcceleration = Derailed ? 15.0 : 1.5 * Math.Abs(a1 - a0);
+				double springDeceleration = 0.25 * springAcceleration;
 
-				double SpringDeceleration = 0.25 * SpringAcceleration;
-				Specs.RollDueToShakingAngularSpeed += Math.Sign(a1 - a0) * SpringAcceleration * TimeElapsed;
-				double x = Math.Sign(Specs.RollDueToShakingAngularSpeed) * SpringDeceleration * TimeElapsed;
+				Specs.RollDueToShakingAngularSpeed += Math.Sign(a1 - a0) * springAcceleration * TimeElapsed;
+				double x = Math.Sign(Specs.RollDueToShakingAngularSpeed) * springDeceleration * TimeElapsed;
 				if (Math.Abs(x) < Math.Abs(Specs.RollDueToShakingAngularSpeed))
 				{
 					Specs.RollDueToShakingAngularSpeed -= x;
@@ -1012,7 +1003,6 @@ namespace TrainManager.Car
 			// toppling roll
 			if (TrainManagerBase.Toppling | Derailed)
 			{
-				double a = Specs.RollDueToTopplingAngle;
 				double ab = Specs.RollDueToTopplingAngle + Specs.RollDueToCantAngle;
 				double h = Specs.CenterOfGravityHeight;
 				double sr = Math.Abs(CurrentSpeed);
@@ -1055,20 +1045,18 @@ namespace TrainManager.Car
 					if (td < 0.1) td = 0.1;
 				}
 
-				if (a > ta)
+				if (Specs.RollDueToTopplingAngle > ta)
 				{
-					double da = a - ta;
+					double da = Specs.RollDueToTopplingAngle - ta;
 					if (td > da) td = da;
-					a -= td * TimeElapsed;
+					Specs.RollDueToTopplingAngle -= td * TimeElapsed;
 				}
-				else if (a < ta)
+				else if (Specs.RollDueToTopplingAngle < ta)
 				{
-					double da = ta - a;
+					double da = ta - Specs.RollDueToTopplingAngle;
 					if (td > da) td = da;
-					a += td * TimeElapsed;
+					Specs.RollDueToTopplingAngle += td * TimeElapsed;
 				}
-
-				Specs.RollDueToTopplingAngle = a;
 			}
 			else
 			{
@@ -1085,10 +1073,8 @@ namespace TrainManager.Car
 				RearAxle.Follower.WorldPosition += cc;
 			}
 			// apply rolling
-			{
-				s.Rotate(d, -Specs.RollDueToTopplingAngle - Specs.RollDueToCantAngle);
-				Up.Rotate(d, -Specs.RollDueToTopplingAngle - Specs.RollDueToCantAngle);
-			}
+			s.Rotate(d, -Specs.RollDueToTopplingAngle - Specs.RollDueToCantAngle);
+			Up.Rotate(d, -Specs.RollDueToTopplingAngle - Specs.RollDueToCantAngle);
 			// apply pitching
 			if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Type == ObjectType.Overlay)
 			{
@@ -1141,8 +1127,7 @@ namespace TrainManager.Car
 			{
 				double a = FrontAxle.Follower.WorldDirection.Y;
 				double b = RearAxle.Follower.WorldDirection.Y;
-				PowerRollingCouplerAcceleration =
-					-0.5 * (a + b) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity;
+				PowerRollingCouplerAcceleration = -0.5 * (a + b) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 			}
 			// friction
 			double FrictionBrakeAcceleration;

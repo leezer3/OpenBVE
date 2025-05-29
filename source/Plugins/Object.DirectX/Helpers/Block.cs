@@ -181,8 +181,7 @@ namespace OpenBve.Formats.DirectX
 					s = s.Substring(0, ws);
 				}
 
-				TemplateID currentToken;
-				if (!Enum.TryParse(s, true, out currentToken))
+				if (!Enum.TryParse(s, true, out TemplateID currentToken))
 				{
 					throw new Exception("Invalid token " + s);
 				}
@@ -230,7 +229,6 @@ namespace OpenBve.Formats.DirectX
 				throw new Exception();
 			}
 
-			TemplateID currentToken;
 			int ws = s.IndexOf(' ');
 			if (ws != -1)
 			{
@@ -239,7 +237,7 @@ namespace OpenBve.Formats.DirectX
 				s = s.Substring(0, ws);
 			}
 
-			if (!Enum.TryParse(s, true, out currentToken))
+			if (!Enum.TryParse(s, true, out TemplateID currentToken))
 			{
 				if (newToken == TemplateID.TextureKey)
 				{
@@ -310,7 +308,6 @@ namespace OpenBve.Formats.DirectX
 				currentPosition++;
 			}
 
-			TemplateID currentToken;
 			int ws = s.IndexOf(' ');
 			if (ws != -1)
 			{
@@ -319,7 +316,7 @@ namespace OpenBve.Formats.DirectX
 				s = s.Substring(0, ws);
 			}
 
-			if (!Enum.TryParse(s, true, out currentToken))
+			if (!Enum.TryParse(s, true, out TemplateID currentToken))
 			{
 				if (validTokens.Contains(TemplateID.TextureKey))
 				{
@@ -396,7 +393,6 @@ namespace OpenBve.Formats.DirectX
 				throw new Exception();
 			}
 
-			TemplateID currentToken;
 			int ws = s.IndexOf(' ');
 			if (ws != -1)
 			{
@@ -405,7 +401,7 @@ namespace OpenBve.Formats.DirectX
 				s = s.Substring(0, ws).Trim();
 			}
 
-			if (!Enum.TryParse(s, true, out currentToken))
+			if (!Enum.TryParse(s, true, out TemplateID currentToken))
 			{
 				throw new Exception("Unrecognised token " + s);
 			}
@@ -450,8 +446,7 @@ namespace OpenBve.Formats.DirectX
 					currentPosition++;
 				}
 			}
-			int val;
-			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out val))
+			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out int val))
 			{
 				return val;
 			}
@@ -499,8 +494,7 @@ namespace OpenBve.Formats.DirectX
 			startPosition = currentPosition;
 			string s = getNextValue();
 			currentPosition++;
-			float val;
-			if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
+			if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out float val))
 			{
 				return val;
 			}
@@ -653,8 +647,7 @@ namespace OpenBve.Formats.DirectX
 						break;
 					default:
 						cachedStrings.Add(currentToken);
-						TemplateID newBlockToken;
-						if (Enum.TryParse(currentToken, true, out newBlockToken) && newBlockToken != TemplateID.Header)
+						if (Enum.TryParse(currentToken, true, out TemplateID newBlockToken) && newBlockToken != TemplateID.Header)
 						{
 							myStream.Position = startPosition;
 							return;
@@ -804,9 +797,8 @@ namespace OpenBve.Formats.DirectX
 		public override Block ReadSubBlock()
 		{
 			string blockName = getNextToken();
-			TemplateID newToken;
-			
-			if (!Enum.TryParse(blockName, true, out newToken))
+
+			if (!Enum.TryParse(blockName, true, out TemplateID newToken))
 			{
 				throw new Exception("Unable to parse " + blockName + " into a valid token.");
 			}

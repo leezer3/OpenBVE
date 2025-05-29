@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using LibRender2;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -10,7 +9,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
-using RouteManager2;
 using RouteManager2.MessageManager;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
@@ -138,23 +136,23 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Updates the objects for all cars in this train</summary>
-		/// <param name="TimeElapsed">The time elapsed</param>
-		/// <param name="ForceUpdate">Whether this is a forced update</param>
-		public void UpdateObjects(double TimeElapsed, bool ForceUpdate)
+		/// <param name="timeElapsed">The time elapsed</param>
+		/// <param name="forceUpdate">Whether this is a forced update</param>
+		public void UpdateObjects(double timeElapsed, bool forceUpdate)
 		{
 			if (TrainManagerBase.currentHost.SimulationState == SimulationState.Running)
 			{
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Cars[i].UpdateObjects(TimeElapsed, ForceUpdate, true);
-					Cars[i].FrontBogie.UpdateObjects(TimeElapsed, ForceUpdate);
-					Cars[i].RearBogie.UpdateObjects(TimeElapsed, ForceUpdate);
+					Cars[i].UpdateObjects(timeElapsed, forceUpdate, true);
+					Cars[i].FrontBogie.UpdateObjects(timeElapsed, forceUpdate);
+					Cars[i].RearBogie.UpdateObjects(timeElapsed, forceUpdate);
 					if (i == DriverCar && Cars[i].Windscreen != null)
 					{
-						Cars[i].Windscreen.Update(TimeElapsed);
+						Cars[i].Windscreen.Update(timeElapsed);
 					}
 
-					Cars[i].Coupler.UpdateObjects(TimeElapsed, ForceUpdate);
+					Cars[i].Coupler.UpdateObjects(timeElapsed, forceUpdate);
 				}
 			}
 		}
@@ -182,27 +180,27 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Places the cars</summary>
-		/// <param name="TrackPosition">The track position of the front car</param>
-		public void PlaceCars(double TrackPosition)
+		/// <param name="trackPosition">The track position of the front car</param>
+		public void PlaceCars(double trackPosition)
 		{
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				//Front axle track position
-				Cars[i].FrontAxle.Follower.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].FrontAxle.Position;
+				Cars[i].FrontAxle.Follower.TrackPosition = trackPosition - 0.5 * Cars[i].Length + Cars[i].FrontAxle.Position;
 				//Bogie for front axle
 				Cars[i].FrontBogie.FrontAxle.Follower.TrackPosition = Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * Cars[i].FrontBogie.Length + Cars[i].FrontBogie.FrontAxle.Position;
 				Cars[i].FrontBogie.RearAxle.Follower.TrackPosition = Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * Cars[i].FrontBogie.Length + Cars[i].FrontBogie.RearAxle.Position;
 				//Rear axle track position
-				Cars[i].RearAxle.Follower.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].RearAxle.Position;
+				Cars[i].RearAxle.Follower.TrackPosition = trackPosition - 0.5 * Cars[i].Length + Cars[i].RearAxle.Position;
 				//Bogie for rear axle
 				Cars[i].RearBogie.FrontAxle.Follower.TrackPosition = Cars[i].RearAxle.Follower.TrackPosition - 0.5 * Cars[i].RearBogie.Length + Cars[i].RearBogie.FrontAxle.Position;
 				Cars[i].RearBogie.RearAxle.Follower.TrackPosition = Cars[i].RearAxle.Follower.TrackPosition - 0.5 * Cars[i].RearBogie.Length + Cars[i].RearBogie.RearAxle.Position;
 				//Beacon reciever (AWS, ATC etc.)
-				Cars[i].BeaconReceiver.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].BeaconReceiverPosition;
-				TrackPosition -= Cars[i].Length;
+				Cars[i].BeaconReceiver.TrackPosition = trackPosition - 0.5 * Cars[i].Length + Cars[i].BeaconReceiverPosition;
+				trackPosition -= Cars[i].Length;
 				if (i < Cars.Length - 1)
 				{
-					TrackPosition -= 0.5 * (Cars[i].Coupler.MinimumDistanceBetweenCars + Cars[i].Coupler.MaximumDistanceBetweenCars);
+					trackPosition -= 0.5 * (Cars[i].Coupler.MinimumDistanceBetweenCars + Cars[i].Coupler.MaximumDistanceBetweenCars);
 				}
 			}
 		}
@@ -239,7 +237,7 @@ namespace TrainManager.Trains
 		}
 
 		/// <inheritdoc/>
-		public override void Update(double TimeElapsed)
+		public override void Update(double timeElapsed)
 		{
 			lock (updateLock)
 			{
@@ -342,7 +340,7 @@ namespace TrainManager.Trains
 				else if (State == TrainState.Available)
 				{
 					// available train
-					UpdatePhysicsAndControls(TimeElapsed);
+					UpdatePhysicsAndControls(timeElapsed);
 					SafetySystems.OverspeedDevice?.Update();
 
 					if (TrainManagerBase.CurrentOptions.Accessibility)
@@ -388,12 +386,12 @@ namespace TrainManager.Trains
 						}
 					}
 
-					AI?.Trigger(TimeElapsed);
+					AI?.Trigger(timeElapsed);
 				}
 				else if (State == TrainState.Bogus)
 				{
 					// bogus train
-					AI?.Trigger(TimeElapsed);
+					AI?.Trigger(timeElapsed);
 				}
 
 				//Trigger point sounds if appropriate
@@ -439,10 +437,10 @@ namespace TrainManager.Trains
 		}
 
 		/// <summary>Updates the physics and controls for this train</summary>
-		/// <param name="TimeElapsed">The time elapsed</param>
-		private void UpdatePhysicsAndControls(double TimeElapsed)
+		/// <param name="timeElapsed">The time elapsed</param>
+		private void UpdatePhysicsAndControls(double timeElapsed)
 		{
-			if (TimeElapsed == 0.0 || TimeElapsed > 1000)
+			if (timeElapsed == 0.0 || timeElapsed > 1000)
 			{
 				//HACK: The physics engine really does not like update times above 1000ms
 				//This works around a bug experienced when jumping to a station on a steep hill
@@ -454,18 +452,18 @@ namespace TrainManager.Trains
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				// move cars
-				Cars[i].Move(Cars[i].CurrentSpeed * TimeElapsed);
+				Cars[i].Move(Cars[i].CurrentSpeed * timeElapsed);
 				if (State >= TrainState.DisposePending)
 				{
 					return;
 				}
 				// update cargo and related score
-				Cars[i].Cargo.Update(Specs.CurrentAverageAcceleration, TimeElapsed);
+				Cars[i].Cargo.Update(Specs.CurrentAverageAcceleration, timeElapsed);
 			}
 
 			// update station and doors
-			UpdateStation(TimeElapsed);
-			UpdateDoors(TimeElapsed);
+			UpdateStation(timeElapsed);
+			UpdateDoors(timeElapsed);
 			// delayed handles
 			if (Plugin == null)
 			{
@@ -479,13 +477,13 @@ namespace TrainManager.Trains
 			Handles.Brake.Update();
 			Handles.EmergencyBrake.Update();
 			Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
-			Cars[DriverCar].DSD?.Update(TimeElapsed);
+			Cars[DriverCar].DSD?.Update(timeElapsed);
 			// update speeds
-			UpdateSpeeds(TimeElapsed);
+			UpdateSpeeds(timeElapsed);
 			// Update Run and Motor sounds
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				Cars[i].Run.Update(TimeElapsed);
+				Cars[i].Run.Update(timeElapsed);
 			}
 
 			// safety system
@@ -525,7 +523,7 @@ namespace TrainManager.Trains
 			}
 
 			// infrequent updates
-			InternalTimerTimeElapsed += TimeElapsed;
+			InternalTimerTimeElapsed += timeElapsed;
 			if (InternalTimerTimeElapsed > 10.0)
 			{
 				InternalTimerTimeElapsed -= 10.0;
@@ -533,7 +531,7 @@ namespace TrainManager.Trains
 			}
 		}
 
-		private void UpdateSpeeds(double TimeElapsed)
+		private void UpdateSpeeds(double timeElapsed)
 		{
 			if (TrainManagerBase.currentHost.SimulationState == SimulationState.MinimalisticSimulation & IsPlayerTrain)
 			{
@@ -548,7 +546,7 @@ namespace TrainManager.Trains
 			}
 
 			// update brake system
-			UpdateBrakeSystem(TimeElapsed, out var DecelerationDueToBrake, out var DecelerationDueToMotor);
+			UpdateBrakeSystem(timeElapsed, out var DecelerationDueToBrake, out var DecelerationDueToMotor);
 			
 			double[] NewSpeeds = new double[Cars.Length];
 			double[] CenterOfCarPositions = new double[Cars.Length];
@@ -557,7 +555,7 @@ namespace TrainManager.Trains
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				// calculate new car speeds
-				Cars[i].UpdateSpeed(TimeElapsed, DecelerationDueToMotor[i], DecelerationDueToBrake[i], out NewSpeeds[i]);
+				Cars[i].UpdateSpeed(timeElapsed, DecelerationDueToMotor[i], DecelerationDueToBrake[i], out NewSpeeds[i]);
 				// calculate center of mass position
 				double pr = Cars[i].RearAxle.Follower.TrackPosition - Cars[i].RearAxle.Position;
 				double pf = Cars[i].FrontAxle.Follower.TrackPosition - Cars[i].FrontAxle.Position;
@@ -567,7 +565,7 @@ namespace TrainManager.Trains
 				// update engine
 				if (Cars[i].TractionModel.ProvidesPower && Cars[i].TractionModel != null)
 				{
-					Cars[i].TractionModel.Update(TimeElapsed);
+					Cars[i].TractionModel.Update(timeElapsed);
 				}
 			}
 
@@ -736,7 +734,7 @@ namespace TrainManager.Trains
 						{
 							if (TrainManagerBase.CurrentOptions.Derailments && Math.Abs(v - NewSpeeds[k]) > 0.5 * CriticalCollisionSpeedDifference)
 							{
-								Derail(k, TimeElapsed);
+								Derail(k, timeElapsed);
 							}
 
 							NewSpeeds[k] = v;
@@ -749,7 +747,7 @@ namespace TrainManager.Trains
 			// update average data
 			CurrentSpeed = 0.0;
 			Specs.CurrentAverageAcceleration = 0.0;
-			double invtime = TimeElapsed != 0.0 ? 1.0 / TimeElapsed : 1.0;
+			double invtime = timeElapsed != 0.0 ? 1.0 / timeElapsed : 1.0;
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].Specs.Acceleration = (NewSpeeds[i] - Cars[i].CurrentSpeed) * invtime;
@@ -796,30 +794,30 @@ namespace TrainManager.Trains
 
 		
 		/// <summary>Call this method to derail a car</summary>
-		/// <param name="CarIndex">The car index to derail</param>
-		/// <param name="ElapsedTime">The elapsed time for this frame (Used for logging)</param>
-		public override void Derail(int CarIndex, double ElapsedTime)
+		/// <param name="carIndex">The car index to derail</param>
+		/// <param name="elapsedTime">The elapsed time for this frame (Used for logging)</param>
+		public override void Derail(int carIndex, double elapsedTime)
 		{
-			this.Cars[CarIndex].Derailed = true;
+			this.Cars[carIndex].Derailed = true;
 			this.Derailed = true;
-			if (Cars[CarIndex].Sounds.Loop != null)
+			if (Cars[carIndex].Sounds.Loop != null)
 			{
-				TrainManagerBase.currentHost.StopSound(Cars[CarIndex].Sounds.Loop.Source);
+				TrainManagerBase.currentHost.StopSound(Cars[carIndex].Sounds.Loop.Source);
 			}
-			Cars[CarIndex].Run.Stop();
+			Cars[carIndex].Run.Stop();
 
 			if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
 			{
-				TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + CarIndex + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+				TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + carIndex + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + elapsedTime);
 			}
 		}
 
 		/// <inheritdoc/>
-		public override void Derail(AbstractCar Car, double ElapsedTime)
+		public override void Derail(AbstractCar car, double elapsedTime)
 		{
-			if (this.Cars.Contains(Car))
+			if (this.Cars.Contains(car))
 			{
-				var c = Car as CarBase;
+				var c = car as CarBase;
 				// ReSharper disable once PossibleNullReferenceException
 				if (c.Sounds.Loop != null)
 				{
@@ -830,7 +828,7 @@ namespace TrainManager.Trains
 				this.Derailed = true;
 				if (TrainManagerBase.CurrentOptions.GenerateDebugLogging)
 				{
-					TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + c.Index + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					TrainManagerBase.currentHost.AddMessage(MessageType.Information, false, "Car " + c.Index + " derailed. Current simulation time: " + TrainManagerBase.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + elapsedTime);
 				}
 			}
 		}
@@ -1075,9 +1073,9 @@ namespace TrainManager.Trains
 
 		}
 
-		public override void Couple(AbstractTrain Train, bool Front)
+		public override void Couple(AbstractTrain train, bool front)
 		{
-			TrainBase trainBase = Train as TrainBase;
+			TrainBase trainBase = train as TrainBase;
 			if (trainBase == null)
 			{
 				throw new Exception("Attempted to couple to something that isn't a train");
@@ -1090,7 +1088,7 @@ namespace TrainManager.Trains
 			 *       set to zero, we can get glitched acceleration and the train enters orbit....
 			 */
 
-			if (Front)
+			if (front)
 			{
 				CarBase[] newCars = new CarBase[Cars.Length + trainBase.Cars.Length];
 				Array.Copy(Cars, 0, newCars, trainBase.Cars.Length, Cars.Length);
@@ -1152,7 +1150,7 @@ namespace TrainManager.Trains
 
 			Cars[DriverCar].Sounds.CoupleCab?.Play(1.0, 1.0, Cars[DriverCar], false);
 
-			string message = Translations.GetInterfaceString(HostApplication.OpenBve, Front ? new[] { "notification", "couple_front" } : new[] { "notification", "couple_rear" }).Replace("[number]", trainBase.Cars.Length.ToString());
+			string message = Translations.GetInterfaceString(HostApplication.OpenBve, front ? new[] { "notification", "couple_front" } : new[] { "notification", "couple_rear" }).Replace("[number]", trainBase.Cars.Length.ToString());
 			TrainManagerBase.currentHost.AddMessage(message, MessageDependency.None, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 		}
 

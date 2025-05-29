@@ -1,6 +1,5 @@
 ﻿using OpenBveApi.Colors;
 using System.Text;
-using System.Windows;
 using System.Xml.Linq;
 using TrainEditor2.Extensions;
 

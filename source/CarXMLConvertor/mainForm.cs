@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 using Path = OpenBveApi.Path;
@@ -27,7 +26,7 @@ namespace CarXmlConvertor
         private void process_Click(object sender, EventArgs e)
         {
 			terminateEarly = false;
-	        if (string.IsNullOrEmpty(ConvertTrainDat.FileName) && !string.IsNullOrEmpty(textBox1.Text) && System.IO.Directory.Exists(textBox1.Text))
+	        if (string.IsNullOrEmpty(ConvertTrainDat.FileName) && !string.IsNullOrEmpty(textBox1.Text) && Directory.Exists(textBox1.Text))
 	        {
 		        ConvertTrainDat.FileName = Path.CombineFile(textBox1.Text, "train.dat");
 		        ConvertSoundCfg.FileName = Path.CombineFile(textBox1.Text, "sound.cfg");
