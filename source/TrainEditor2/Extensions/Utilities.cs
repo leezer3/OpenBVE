@@ -58,7 +58,7 @@ namespace TrainEditor2.Extensions
 			return !error;
 		}
 
-		internal static bool TryParse(string text, NumberRange range, out string message)
+		internal static bool TryValidate(string text, NumberRange range, out string message)
 		{
 			return TryParse(text, range, out _, out message);
 		}

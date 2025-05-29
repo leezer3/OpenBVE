@@ -58,10 +58,8 @@ namespace TrainManager.Trains
 		/// <summary>Internal timer used for updates</summary>
 		private double InternalTimerTimeElapsed;
 		/// <inheritdoc/>
-		public override bool IsPlayerTrain
-		{
-			get => return ReferenceEquals(this, TrainManagerBase.PlayerTrain);
-		}
+		public override bool IsPlayerTrain => ReferenceEquals(this, TrainManagerBase.PlayerTrain);
+
 		/// <summary>The lock to be held whilst operations potentially affecting the makeup of the train are performed</summary>
 		internal object updateLock = new object();
 
