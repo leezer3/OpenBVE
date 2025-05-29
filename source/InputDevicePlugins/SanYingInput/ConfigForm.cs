@@ -79,12 +79,9 @@ namespace SanYingInput
 		private int _notchPosition = 0;
 		private int _reverserPosition = 0;
 
-		public ConfigFormSaveData Configuration
-		{
-			get => m_saveData;
-		}
+		public ConfigFormSaveData Configuration => m_saveData;
 
-		public void loadConfigurationFile(string path)
+		public void LoadConfigurationFile(string path)
 		{
 			m_configFilePath = path;
 
@@ -101,7 +98,7 @@ namespace SanYingInput
 			}
 		}
 
-		public void saveConfigurationFile(string path)
+		public void SaveConfigurationFile(string path)
 		{
 			if (!Directory.Exists(path))
 			{
@@ -181,7 +178,7 @@ namespace SanYingInput
 			}
 		}
 
-		private void restoreConfiguration(ConfigFormSaveData saveData)
+		private void RestoreConfiguration(ConfigFormSaveData saveData)
 		{
 			txtSwS.Text = toSwitchString(saveData.switchS);
 			txtSwA1.Text = toSwitchString(saveData.switchA1);
@@ -208,7 +205,7 @@ namespace SanYingInput
 			txtSwConstSpeed.Text = toSwitchString(saveData.switchConstSpeed);
 		}
 
-		private ConfigFormSaveData saveConfiguration()
+		private ConfigFormSaveData SaveConfiguration()
 		{
 			ConfigFormSaveData saveData = new ConfigFormSaveData();
 
@@ -244,7 +241,7 @@ namespace SanYingInput
 			return saveData;
 		}
 
-		public void enumerateDevices()
+		public void EnumerateDevices()
 		{
 			JoystickApi.EnumerateJoystick();
 			int joyNum = JoystickManager.AttachedJoysticks.Length;
@@ -299,8 +296,8 @@ namespace SanYingInput
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
-			m_saveData = saveConfiguration();
-			saveConfigurationFile(m_configFilePath);
+			m_saveData = SaveConfiguration();
+			SaveConfigurationFile(m_configFilePath);
 			this.Close();
 		}
 
@@ -430,7 +427,7 @@ namespace SanYingInput
 			if (JoystickApi.CurrentDevice != -1)
 			{
 				var buttonsState = JoystickApi.GetButtonsState();
-				var axises = JoystickApi.GetAxises();
+				var axises = JoystickApi.GetAxisStates();
 
 				int lastNotchPosition = _notchPosition;
 				if (InputTranslator.TranslateNotchPosition(buttonsState, out _notchPosition))
@@ -440,9 +437,7 @@ namespace SanYingInput
 				InputTranslator.TranslateReverserPosition(axises, out _reverserPosition);
 
 				{
-					uint notchButtonsState;
-
-					InputTranslator.MakeBitFromNotchButtons(buttonsState, out notchButtonsState);
+					InputTranslator.MakeBitFromNotchButtons(buttonsState, out uint notchButtonsState);
 
 					txtInfoBt7.Text = ((notchButtonsState & (uint)InputTranslator.BT7_10_Pressed.BT7) != 0) ? "1" : "0";
 					txtInfoBt8.Text = ((notchButtonsState & (uint)InputTranslator.BT7_10_Pressed.BT8) != 0) ? "1" : "0";
@@ -504,7 +499,7 @@ namespace SanYingInput
 			}
 			else
 			{
-				enumerateDevices();
+				EnumerateDevices();
 			}
 		}
 
@@ -517,8 +512,8 @@ namespace SanYingInput
 		{
 			timer1.Enabled = true;
 
-			enumerateDevices();
-			restoreConfiguration(m_saveData);
+			EnumerateDevices();
+			RestoreConfiguration(m_saveData);
 		}
 
 		private void cmbJoySelect_SelectedIndexChanged(object sender, EventArgs e)

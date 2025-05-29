@@ -50,11 +50,14 @@ namespace SanYingInput
 		private ConfigForm m_configForm;
 		private bool m_pauseTick;
 		private bool m_first;
-
-		private int _reverserPos = 0;
-		private int _lastReverserPos = -128;
-		private int _handlePos = 0;
-		private int _lastHandlePos = -128;
+		/// <summary>The current reverser position</summary>
+		private int currentReverserPosition = 0;
+		/// <summary>The reverser position at the previous update</summary>
+		private int previousReversorPosition = -128;
+		/// <summary>The current handle positions</summary>
+		private int currentHandlePosition = 0;
+		/// <summary>The handle positions at the previous update</summary>
+		private int previousHandlePosition = -128;
 
 		/// <summary>
 		/// A function call when the plugin is loading
@@ -68,13 +71,13 @@ namespace SanYingInput
 
 			m_configForm = new ConfigForm();
 			string settingsPath = fileSystem.SettingsFolder + System.IO.Path.DirectorySeparatorChar + "1.5.0";
-			m_configForm.loadConfigurationFile(settingsPath);
+			m_configForm.LoadConfigurationFile(settingsPath);
 			m_configForm.Hide();
 
-			_reverserPos = 0;
-			_lastReverserPos = -128;
-			_handlePos = 0;
-			_lastHandlePos = -128;
+			currentReverserPosition = 0;
+			previousReversorPosition = -128;
+			currentHandlePosition = 0;
+			previousHandlePosition = -128;
 
 			Controls = new InputControl[39];
 			Controls[0].Command = Translations.Command.BrakeEmergency;
@@ -145,10 +148,10 @@ namespace SanYingInput
 		/// <param name="brakeNotch">Maximum brake notch number</param>
 		public void SetMaxNotch(int powerNotch, int brakeNotch)
 		{
-			_reverserPos = 0;
-			_lastReverserPos = -128;
-			_handlePos = 0;
-			_lastHandlePos = -128;
+			currentReverserPosition = 0;
+			previousReversorPosition = -128;
+			currentHandlePosition = 0;
+			previousHandlePosition = -128;
 		}
 
 		/// <summary>
@@ -171,15 +174,15 @@ namespace SanYingInput
 
 			if (m_first)
 			{
-				m_configForm.enumerateDevices();
+				m_configForm.EnumerateDevices();
 				m_first = false;
 			}
 
 			JoystickApi.Update();
 
-			setReverserPos();
-			setHandlePos();
-			setSwitchState();
+			SetReverserPosition();
+			SetHandlePosition();
+			SetSwitchState();
 		}
 
 		protected virtual void OnKeyDown(InputEventArgs e)
@@ -192,7 +195,7 @@ namespace SanYingInput
 			KeyUp?.Invoke(this, e);
 		}
 
-		private void setSwitchState()
+		private void SetSwitchState()
 		{
 			if (JoystickApi.CurrentDevice == -1)
 			{
@@ -200,20 +203,21 @@ namespace SanYingInput
 			}
 
 			var currentButtonState = JoystickApi.GetButtonsState();
-			int buttonNum = 6;
+			const int buttonNum = 6;
 
 			if (currentButtonState.Count < buttonNum || JoystickApi.lastButtonState.Count < buttonNum)
 			{
+				// not SanYing compatible
 				return;
 			}
 
-			for (int i = 0; i < buttonNum; ++i)
+			for (int i = 0; i < buttonNum; i++)
 			{
 				if (currentButtonState[i] != JoystickApi.lastButtonState[i])
 				{
 					if (currentButtonState[i] == OpenTK.Input.ButtonState.Pressed)
 					{
-						int keyIdx = getKeyIdx(i);
+						int keyIdx = GetKeyIdx(i);
 						if (keyIdx != -1)
 						{
 							OnKeyDown(new InputEventArgs(Controls[keyIdx]));
@@ -221,7 +225,7 @@ namespace SanYingInput
 					}
 					else if (currentButtonState[i] == OpenTK.Input.ButtonState.Released)
 					{
-						int keyIdx = getKeyIdx(i);
+						int keyIdx = GetKeyIdx(i);
 						if (keyIdx != -1)
 						{
 							OnKeyUp(new InputEventArgs(Controls[keyIdx]));
@@ -231,7 +235,7 @@ namespace SanYingInput
 			}
 		}
 
-		private int getKeyIdx(int i)
+		private int GetKeyIdx(int i)
 		{
 			int keyIdx = -1;
 			ConfigForm.ConfigFormSaveData config = m_configForm.Configuration;
@@ -332,10 +336,10 @@ namespace SanYingInput
 			return keyIdx;
 		}
 
-		private void setHandlePos()
+		private void SetHandlePosition()
 		{
 			var buttonsState = JoystickApi.GetButtonsState();
-			if (InputTranslator.TranslateNotchPosition(buttonsState, out _handlePos))
+			if (InputTranslator.TranslateNotchPosition(buttonsState, out currentHandlePosition))
 			{
 				return;
 			}
@@ -347,13 +351,13 @@ namespace SanYingInput
 			//
 			// P5 may be output when the notch is between P1 and P2.
 			// This is an unintended output and should be excluded.
-			if (_handlePos == 5)
+			if (currentHandlePosition == 5)
 			{
-				if (_lastHandlePos == 1)
+				if (previousHandlePosition == 1)
 				{
 					isNotchIntermediateEstimated = true;
 				}
-				else if (_lastHandlePos == 2)
+				else if (previousHandlePosition == 2)
 				{
 					isNotchIntermediateEstimated = true;
 				}
@@ -366,38 +370,38 @@ namespace SanYingInput
 					OnKeyUp(new InputEventArgs(Controls[i]));
 				}
 
-				if (_handlePos != _lastHandlePos)
+				if (currentHandlePosition != previousHandlePosition)
 				{
-					if (_handlePos <= 0)
+					if (currentHandlePosition <= 0)
 					{
-						OnKeyDown(new InputEventArgs(Controls[_handlePos + 9]));
+						OnKeyDown(new InputEventArgs(Controls[currentHandlePosition + 9]));
 					}
-					if (_handlePos >= 0)
+					if (currentHandlePosition >= 0)
 					{
-						OnKeyDown(new InputEventArgs(Controls[_handlePos + 10]));
+						OnKeyDown(new InputEventArgs(Controls[currentHandlePosition + 10]));
 					}
 				}
 			}
 
-			_lastHandlePos = _handlePos;
+			previousHandlePosition = currentHandlePosition;
 		}
 
-		private void setReverserPos()
+		private void SetReverserPosition()
 		{
-			var axises = JoystickApi.GetAxises();
-			InputTranslator.TranslateReverserPosition(axises, out _reverserPos);
+			var axises = JoystickApi.GetAxisStates();
+			InputTranslator.TranslateReverserPosition(axises, out currentReverserPosition);
 
 			for (int i = 16; i < 19; i++)
 			{
 				OnKeyUp(new InputEventArgs(Controls[i]));
 			}
 
-			if (_reverserPos != _lastReverserPos)
+			if (currentReverserPosition != previousReversorPosition)
 			{
-				OnKeyDown(new InputEventArgs(Controls[17 - _reverserPos]));
+				OnKeyDown(new InputEventArgs(Controls[17 - currentReverserPosition]));
 			}
 
-			_lastReverserPos = _reverserPos;
+			previousReversorPosition = currentReverserPosition;
 		}
 	}
 }
