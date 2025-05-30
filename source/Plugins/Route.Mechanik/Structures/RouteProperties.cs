@@ -5,17 +5,22 @@ namespace MechanikRouteParser
 {
 	internal partial class Parser
 	{
-		internal static Dictionary<string, RouteProperties> knownRoutes;
-		internal static List<string> knownModules;
+		/// <summary>Holds the list of known complete Mechanik routes</summary>
+		internal static Dictionary<string, RouteProperties> KnownRoutes;
+		/// <summary>Holds the list of known Mechanik modules</summary>
+		/// <remarks>Any number of modules could be combined using the Mechnik route generator
+		/// to generate a 'complete' routefile. They are not useful by themselves, but
+		/// structurally resemble a complete route, and should be ignored.</remarks>
+		internal static List<string> KnownModules;
 
 		internal static void GetProperties(string hash)
 		{
-			if (knownRoutes == null || !knownRoutes.ContainsKey(hash))
+			if (KnownRoutes == null || !KnownRoutes.ContainsKey(hash))
 			{
 				return;
 			}
 
-			RouteProperties routeProperties = knownRoutes[hash];
+			RouteProperties routeProperties = KnownRoutes[hash];
 			for (int i = 0; i < Plugin.CurrentRoute.Stations.Length; i++)
 			{
 				if (routeProperties.StationNames.Length == Plugin.CurrentRoute.Stations.Length)

@@ -103,15 +103,7 @@ namespace Plugin
 				using (BinaryReader reader = new BinaryReader(fb))
 				{
 					byte[] newBytes = reader.ReadBytes((int)(fb.Length - fb.Position));
-					string s;
-					if (unicode)
-					{
-						s = Encoding.Unicode.GetString(newBytes);
-					}
-					else
-					{
-						s = Encoding.ASCII.GetString(newBytes);
-					}
+					string s = unicode ? Encoding.Unicode.GetString(newBytes) : Encoding.ASCII.GetString(newBytes);
 
 					s = s.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
 					if (s.StartsWith("shape", StringComparison.InvariantCultureIgnoreCase))

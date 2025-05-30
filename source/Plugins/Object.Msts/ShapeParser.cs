@@ -150,15 +150,7 @@ namespace Plugin
 			internal Face(int[] vertices, int material)
 			{
 				Vertices = vertices;
-				if (material == -1)
-				{
-					Material = 0;
-				}
-				else
-				{
-					Material = material;
-				}
-
+				Material = material == -1 ? 0 : material;
 			}
 		}
 
@@ -542,15 +534,7 @@ namespace Plugin
 				using (BinaryReader reader = new BinaryReader(fb))
 				{
 					byte[] newBytes = reader.ReadBytes((int)(fb.Length - fb.Position));
-					string s;
-					if (unicode)
-					{
-						s = Encoding.Unicode.GetString(newBytes);
-					}
-					else
-					{
-						s = Encoding.ASCII.GetString(newBytes);
-					}
+					string s = unicode ? Encoding.Unicode.GetString(newBytes) : Encoding.ASCII.GetString(newBytes);
 					TextualBlock block = new TextualBlock(s, KujuTokenID.shape);
 					ParseBlock(block, ref shape);
 				}

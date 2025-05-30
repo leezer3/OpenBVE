@@ -33,18 +33,17 @@ using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.Textures;
 
 namespace Plugin
 {
 	class NewXParser
 	{
-		internal static StaticObject ReadObject(string FileName, Encoding Encoding)
+		internal static StaticObject ReadObject(string fileName, Encoding encoding)
 		{
 			rootMatrix = Matrix4D.NoTransformation;
-			currentFolder = Path.GetDirectoryName(FileName);
-			currentFile = FileName;
-			byte[] Data = File.ReadAllBytes(FileName);
+			currentFolder = Path.GetDirectoryName(fileName);
+			currentFile = fileName;
+			byte[] Data = File.ReadAllBytes(fileName);
 			
 			if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32)
 			{
@@ -53,7 +52,7 @@ namespace Plugin
 				string relativePath = Encoding.ASCII.GetString(Data);
 				if (!OpenBveApi.Path.ContainsInvalidChars(relativePath))
 				{
-					return ReadObject(OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), relativePath), Encoding);
+					return ReadObject(OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), relativePath), encoding);
 				}
 			}
 
@@ -76,7 +75,7 @@ namespace Plugin
 			if (Data[8] == 116 & Data[9] == 120 & Data[10] == 116 & Data[11] == 32)
 			{
 				// textual flavor
-				string[] Lines = File.ReadAllLines(FileName, Encoding);
+				string[] Lines = File.ReadAllLines(fileName, encoding);
 				// strip away comments
 				bool Quote = false;
 				for (int i = 0; i < Lines.Length; i++) {
@@ -116,7 +115,7 @@ namespace Plugin
 			{
 				// compressed textual flavor
 				newData = MSZip.Decompress(Data);
-				string Text = Encoding.GetString(newData);
+				string Text = encoding.GetString(newData);
 				return LoadTextualX(Text);
 			}
 
@@ -129,7 +128,7 @@ namespace Plugin
 			}
 
 			// unsupported flavor
-			Plugin.currentHost.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + FileName);
+			Plugin.currentHost.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + fileName);
 			return null;
 		}
 		

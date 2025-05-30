@@ -47,7 +47,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// GUID of the active controller
 		/// </summary>
-		private static Guid activeControllerGuid = new Guid();
+		private static Guid activeControllerGuid = Guid.Empty;
 
 		/// <summary>
 		/// The thread which spins to poll for LibUsb input

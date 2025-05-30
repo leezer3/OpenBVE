@@ -1,4 +1,5 @@
-﻿namespace Formats.OpenBve
+﻿// ReSharper disable UnusedMember.Global
+namespace Formats.OpenBve
 {
 	public enum SoundCfgSection
 	{

@@ -76,7 +76,7 @@ namespace CarXmlConvertor
 	        }
 	        
 			
-	        if (!System.IO.File.Exists(ConvertSoundCfg.FileName))
+	        if (!File.Exists(ConvertSoundCfg.FileName))
 	        {
 		        updateLogBoxText += "INFO: No sound.cfg file detected." + Environment.NewLine;
 				//TODO: Is it worth spinning up a default XML for the BVE2 sound-set??
@@ -87,7 +87,7 @@ namespace CarXmlConvertor
 				}
 		        
 			}
-	        if (System.IO.File.Exists(Path.CombineFile(Path.GetDirectoryName(ConvertSoundCfg.FileName), "sound.xml")))
+	        if (File.Exists(Path.CombineFile(Path.GetDirectoryName(ConvertSoundCfg.FileName), "sound.xml")))
 	        {
 		        updateLogBoxText += "INFO: An existing sound.xml file was detected." + Environment.NewLine;
 				if (MessageBox.Show("The selected folder already contains a sound.xml file. \r\n Do you wish to continue?", "CarXML Convertor", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
@@ -147,7 +147,7 @@ namespace CarXmlConvertor
 		        
 		        updateLogBoxText += "Overwriting...." + Environment.NewLine;
 			}
-			if (this.radioButtonSingleFile.Checked == true)
+			if (radioButtonSingleFile.Checked)
 	        {
 		        updateLogBoxText += "INFO: Using a single train.xml file." + Environment.NewLine;
 				ConvertExtensionsCfg.SingleFile = true;
@@ -182,12 +182,9 @@ namespace CarXmlConvertor
 			ConvertExtensionsCfg.FileName = Path.CombineFile(path, "extensions.cfg");
 		}
 
-		private void textBox1_DragEnter(object sender, DragEventArgs e) {
-			if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
-				e.Effect = DragDropEffects.Copy;
-			} else {
-				e.Effect = DragDropEffects.None;
-			}
+		private void textBox1_DragEnter(object sender, DragEventArgs e)
+		{
+			e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
 		}
 
 		private void textBox1_DragDrop(object sender, DragEventArgs e) {
