@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
@@ -99,7 +100,7 @@ namespace TrainManager.Car
 		/// <summary>The traction model</summary>
 		public TractionModel TractionModel;
 
-		public ParticleSource ParticleSource;
+		public List<ParticleSource> ParticleSources;
 
 		private int trainCarIndex;
 
@@ -133,6 +134,7 @@ namespace TrainManager.Car
 			Suspension = new Suspension(this);
 			Flange = new Flange(this);
 			Run = new RunSounds(this);
+			ParticleSources = new List<ParticleSource>();
 		}
 
 		public CarBase(TrainBase train, int index)

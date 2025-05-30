@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using LibRender2.Trains;
+using LibRender2.Smoke;
 using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
@@ -864,8 +865,9 @@ namespace Train.OpenBve
 										break;
 								}
 							}
-							Train.Cars[Car].ParticleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, Train.Cars[Car], emitterLocation, maximumSize, maximumGrownSize, initialMotion);
-							Train.Cars[Car].ParticleSource.ParticleTexture = particleTexture;
+							ParticleSource particleSource = new ParticleSource(Plugin.Renderer, Train.Cars[Car], emitterLocation, maximumSize, maximumGrownSize, initialMotion);
+							particleSource.ParticleTexture = particleTexture;
+							Train.Cars[Car].ParticleSources.Add(particleSource);
 						}
 						break;
 				}
