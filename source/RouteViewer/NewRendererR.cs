@@ -547,20 +547,7 @@ namespace RouteViewer
 			// marker
 			if (OptionInterface)
 			{
-				int y = 150;
-
-
-				for(int i = 0; i < Marker.MarkerTextures.Length; i++)
-				{
-					if (Program.CurrentHost.LoadTexture(ref Marker.MarkerTextures[i].Texture, OpenGlTextureWrapMode.ClampClamp))
-					{
-						double w = Marker.MarkerTextures[i].Size.X == 0 ? Marker.MarkerTextures[i].Texture.Width : Marker.MarkerTextures[i].Size.X;
-						double h = Marker.MarkerTextures[i].Size.Y == 0 ? Marker.MarkerTextures[i].Texture.Height : Marker.MarkerTextures[i].Size.Y;
-						GL.Color4(1.0, 1.0, 1.0, 1.0);
-						Rectangle.Draw(Marker.MarkerTextures[i].Texture, new Vector2(Screen.Width - w - 8, y), new Vector2(w, h));
-						y += (int)h + 8;
-					}
-				}
+				Marker.Draw(150);
 			}
 
 			if (!Program.CurrentlyLoading)

@@ -312,7 +312,7 @@ namespace LibRender2
 			}
 			Camera = new CameraProperties(this);
 			Lighting = new Lighting(this);
-			Marker = new Marker();
+			Marker = new Marker(this);
 
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();

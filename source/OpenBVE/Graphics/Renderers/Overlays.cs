@@ -77,17 +77,7 @@ namespace OpenBve.Graphics.Renderers
 					//Marker textures
 					if (Interface.CurrentOptions.GameMode != GameMode.Expert)
 					{
-						double y = 8.0;
-						for (int i = 0; i < renderer.Marker.MarkerTextures.Length; i++)
-						{
-							if (Program.CurrentHost.LoadTexture(ref renderer.Marker.MarkerTextures[i].Texture, OpenGlTextureWrapMode.ClampClamp))
-							{
-								double w = renderer.Marker.MarkerTextures[i].Size.X == 0 ? renderer.Marker.MarkerTextures[i].Texture.Width : renderer.Marker.MarkerTextures[i].Size.X;
-								double h = renderer.Marker.MarkerTextures[i].Size.Y == 0 ? renderer.Marker.MarkerTextures[i].Texture.Height : renderer.Marker.MarkerTextures[i].Size.Y;
-								renderer.Rectangle.Draw(renderer.Marker.MarkerTextures[i].Texture, new Vector2(renderer.Screen.Width - w - 8.0,y), new Vector2(w, h), Color128.White);
-								y += h + 8.0;
-							}
-						}
+						Program.Renderer.Marker.Draw(8);
 					}
 
 					//Timetable overlay
