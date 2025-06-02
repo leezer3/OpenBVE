@@ -439,47 +439,49 @@ namespace RouteViewer
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
 						CurrentlyLoading = true;
-						Renderer.PauseVisibilityUpdates = true;
-						Renderer.OptionInterface = false;
-						UpdateCaption();
-						if (!Interface.CurrentOptions.LoadingBackground)
+						lock (Renderer.VisibilityUpdateLock)
 						{
-							Renderer.RenderScene(0.0);
-							Renderer.GameWindow.SwapBuffers();
-							textureBytes = new byte[Renderer.Screen.Width * Renderer.Screen.Height * 4];
-							GL.ReadPixels(0, 0, Renderer.Screen.Width, Renderer.Screen.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, textureBytes);
-							// GL.ReadPixels is reversed for what it wants as a texture, so we've got to flip it
-							byte[] tmp = new byte[Renderer.Screen.Width * 4]; // temp row
-							int currentLine = 0;
-							while (currentLine < Renderer.Screen.Height / 2)
+							Renderer.OptionInterface = false;
+							UpdateCaption();
+							if (!Interface.CurrentOptions.LoadingBackground)
 							{
-								int start = currentLine * Renderer.Screen.Width * 4;
-								int flipStart = (Renderer.Screen.Height - currentLine - 1) * Renderer.Screen.Width * 4;
-								Buffer.BlockCopy(textureBytes, start, tmp, 0, Renderer.Screen.Width * 4);
-								Buffer.BlockCopy(textureBytes, flipStart, textureBytes, start, Renderer.Screen.Width * 4);
-								Buffer.BlockCopy(tmp, 0, textureBytes, flipStart, Renderer.Screen.Width * 4);
-								currentLine++;
+								Renderer.RenderScene(0.0);
+								Renderer.GameWindow.SwapBuffers();
+								textureBytes = new byte[Renderer.Screen.Width * Renderer.Screen.Height * 4];
+								GL.ReadPixels(0, 0, Renderer.Screen.Width, Renderer.Screen.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, textureBytes);
+								// GL.ReadPixels is reversed for what it wants as a texture, so we've got to flip it
+								byte[] tmp = new byte[Renderer.Screen.Width * 4]; // temp row
+								int currentLine = 0;
+								while (currentLine < Renderer.Screen.Height / 2)
+								{
+									int start = currentLine * Renderer.Screen.Width * 4;
+									int flipStart = (Renderer.Screen.Height - currentLine - 1) * Renderer.Screen.Width * 4;
+									Buffer.BlockCopy(textureBytes, start, tmp, 0, Renderer.Screen.Width * 4);
+									Buffer.BlockCopy(textureBytes, flipStart, textureBytes, start, Renderer.Screen.Width * 4);
+									Buffer.BlockCopy(tmp, 0, textureBytes, flipStart, Renderer.Screen.Width * 4);
+									currentLine++;
+								}
+							}
+
+							Renderer.Reset();
+							CameraAlignment a = Renderer.Camera.Alignment;
+
+							if (LoadRoute(textureBytes))
+							{
+								Renderer.Camera.Alignment = a;
+								Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
+								Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
+								ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+							}
+							else
+							{
+								Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
+								Renderer.UpdateViewport();
+								World.UpdateAbsoluteCamera(0.0);
+								Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							}
 						}
-						Renderer.Reset();
-						CameraAlignment a = Renderer.Camera.Alignment;
-						
-						if (LoadRoute(textureBytes))
-						{
-							Renderer.PauseVisibilityUpdates = false;
-							Renderer.Camera.Alignment = a;
-							Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
-							Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
-							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
-						}
-						else
-						{
-							Renderer.PauseVisibilityUpdates = false;
-							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
-							Renderer.UpdateViewport();
-							World.UpdateAbsoluteCamera(0.0);
-							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
-						}
+
 						CurrentlyLoading = false;
 						Renderer.OptionInterface = true;
 						GCSettings.LargeObjectHeapCompactionMode =  GCLargeObjectHeapCompactionMode.CompactOnce; 
@@ -516,40 +518,44 @@ namespace RouteViewer
 								break;
 							}
 						}
-						if (canLoad && LoadRoute())
-						{
-							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
-							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
-							Renderer.UpdateViewport();
-							World.UpdateAbsoluteCamera(0.0);
-							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
-						}
-						else
-						{
-							bool isObject = false;
-							for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
-							{
-								if (Program.CurrentHost.Plugins[i].Object != null && Program.CurrentHost.Plugins[i].Object.CanLoadObject(CurrentRouteFile))
-								{
-									isObject = true;
-									break;
-								}
-							}
 
-							if (isObject)
+						lock (Renderer.VisibilityUpdateLock)
+						{
+							if (canLoad && LoadRoute())
 							{
-								// oops, that's actually an object- Let's show Object Viewer
-								string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
-								if (System.IO.File.Exists(File))
-								{
-									System.Diagnostics.Process.Start(File, CurrentRouteFile);
-								}
+								ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+								Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
+								Renderer.UpdateViewport();
+								World.UpdateAbsoluteCamera(0.0);
+								Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							}
 							else
 							{
-								MessageBox.Show("No plugins found capable of loading routefile: " +Environment.NewLine + CurrentRouteFile);
+								bool isObject = false;
+								for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+								{
+									if (Program.CurrentHost.Plugins[i].Object != null && Program.CurrentHost.Plugins[i].Object.CanLoadObject(CurrentRouteFile))
+									{
+										isObject = true;
+										break;
+									}
+								}
+
+								if (isObject)
+								{
+									// oops, that's actually an object- Let's show Object Viewer
+									string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
+									if (System.IO.File.Exists(File))
+									{
+										System.Diagnostics.Process.Start(File, CurrentRouteFile);
+									}
+								}
+								else
+								{
+									MessageBox.Show("No plugins found capable of loading routefile: " + Environment.NewLine + CurrentRouteFile);
+								}
 							}
-							
+
 							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);

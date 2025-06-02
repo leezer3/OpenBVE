@@ -142,7 +142,7 @@ namespace RouteViewer
 			{
 				return;
 			}
-			Program.Renderer.visibilityThread = false;
+			Program.Renderer.VisibilityThreadShouldRun = false;
 			if (!Loading.Complete && Program.CurrentRouteFile != null)
 			{
 				e.Cancel = true;

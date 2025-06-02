@@ -317,7 +317,7 @@ namespace LibRender2
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
 			Fonts = new Fonts(currentHost, currentOptions.Font);
-			VisibilityThread = new Thread(vt);
+			VisibilityThread = new Thread(RunVisibiliityThread);
 			VisibilityThread.Start();
 			RenderThreadJobs = new ConcurrentQueue<ThreadStart>();
 		}
@@ -440,7 +440,7 @@ namespace LibRender2
 		{
 			this.GameWindow?.Dispose();
 			// terminate spinning thread
-			visibilityThread = false;
+			VisibilityThreadShouldRun = false;
 		}
 
 		/// <summary>Should be called when the OpenGL version is switched mid-game</summary>
@@ -729,29 +729,28 @@ namespace LibRender2
 		}
 
 		private VisibilityUpdate updateVisibility;
-
-		public bool PauseVisibilityUpdates;
+		/// <summary>The lock to be held whilst visibility updates or loading operations are in progress</summary>
+		public object VisibilityUpdateLock = new object();
 		
-		public bool visibilityThread = true;
+		public bool VisibilityThreadShouldRun = true;
 
 		public Thread VisibilityThread;
 
-		private void vt()
+		private void RunVisibiliityThread()
 		{
-			while (visibilityThread)
+			while (VisibilityThreadShouldRun)
 			{
-				if (PauseVisibilityUpdates)
+				lock (VisibilityUpdateLock)
 				{
-					continue;
-				}
-				if (updateVisibility != VisibilityUpdate.None && CameraTrackFollower != null)
-				{
-					UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);
-					updateVisibility = VisibilityUpdate.None;
-				}
-				else
-				{
-					Thread.Sleep(100);
+					if (updateVisibility != VisibilityUpdate.None && CameraTrackFollower != null)
+					{
+						UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);
+						updateVisibility = VisibilityUpdate.None;
+					}
+					else
+					{
+						Thread.Sleep(100);
+					}
 				}
 			}
 		}
@@ -761,7 +760,7 @@ namespace LibRender2
 			updateVisibility = force ? VisibilityUpdate.Force : VisibilityUpdate.None;
 		}
 
-		private void UpdateVisibility(double TrackPosition)
+		private void UpdateVisibility(double trackPosition)
 		{
 			if (currentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
 			{
@@ -771,7 +770,7 @@ namespace LibRender2
 			{
 				if (updateVisibility == VisibilityUpdate.Normal)
 				{
-					UpdateLegacyVisibility(TrackPosition);
+					UpdateLegacyVisibility(trackPosition);
 				}
 				else
 				{
@@ -781,8 +780,8 @@ namespace LibRender2
 					 *
 					 * Horrible kludge...
 					 */
-					UpdateLegacyVisibility(TrackPosition + 0.01);
-					UpdateLegacyVisibility(TrackPosition - 0.01);
+					UpdateLegacyVisibility(trackPosition + 0.01);
+					UpdateLegacyVisibility(trackPosition - 0.01);
 				}
 				
 			}

@@ -321,7 +321,7 @@ namespace ObjectViewer
         protected override void OnClosing(CancelEventArgs e)
         {
 	        Interface.CurrentOptions.Save(Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg"));
-			Program.Renderer.visibilityThread = false;
+			Program.Renderer.VisibilityThreadShouldRun = false;
 			if (Program.CurrentHost.MonoRuntime)
 			{
 				Environment.Exit(0);
