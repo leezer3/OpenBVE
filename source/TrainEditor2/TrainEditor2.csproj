@@ -154,6 +154,7 @@
     <Compile Include="Models\Trains\Motor.Functions.cs" />
     <Compile Include="Models\Trains\Motor.Simulation.cs" />
     <Compile Include="Models\Trains\Move.cs" />
+    <Compile Include="Models\Trains\ParticleSource.cs" />
     <Compile Include="Models\Trains\Performance.cs" />
     <Compile Include="Models\Trains\Pressure.cs" />
     <Compile Include="Models\Trains\Train.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="ViewModels\Trains\HandleViewModel.cs" />
     <Compile Include="ViewModels\Trains\MotorViewModel.cs" />
     <Compile Include="ViewModels\Trains\MoveViewModel.cs" />
+    <Compile Include="ViewModels\Trains\ParticleSourceViewModel.cs" />
     <Compile Include="ViewModels\Trains\PerformanceViewModel.cs" />
     <Compile Include="ViewModels\Trains\PressureViewModel.cs" />
     <Compile Include="ViewModels\Trains\TrainViewModel.cs" />

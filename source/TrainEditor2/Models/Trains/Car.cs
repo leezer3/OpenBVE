@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Xml.Linq;
@@ -98,6 +99,8 @@ namespace TrainEditor2.Models.Trains
 		private bool reversed;
 		private string _object;
 		private bool loadingSway;
+
+		internal List<ParticleSource> particleSources = new List<ParticleSource>();
 
 		internal double Mass
 		{
@@ -241,6 +244,7 @@ namespace TrainEditor2.Models.Trains
 			Reversed = false;
 			Object = string.Empty;
 			LoadingSway = false;
+			particleSources.Add(new ParticleSource());
 		}
 
 		public virtual object Clone()
