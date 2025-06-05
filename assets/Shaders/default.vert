@@ -80,7 +80,7 @@ vec4 getLightResult()
 	vec4 specular = vec4(uLight.specular, 1.0) * pf;
 
 	vec4 sceneColor = (uMaterialFlags & 1) != 0 ? vec4(uMaterial.emission, 1.0) + uMaterial.ambient * uLight.lightModel : uLight.lightModel;
-	vec4 finalColor = sceneColor + ambient * uMaterial.ambient + diffuse * uMaterial.specular + specular * uMaterial.specular;
+	vec4 finalColor = sceneColor + ambient * uMaterial.ambient + diffuse * uMaterial.diffuse + specular * uMaterial.specular;
 	return clamp(finalColor, 0.0, 1.0);
 }
 
