@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using OpenTK;
 
 namespace TrainEditor2.Views
 {
@@ -335,6 +336,7 @@ namespace TrainEditor2.Views
             this.tabPageMotor = new System.Windows.Forms.TabPage();
             this.panelMotorSound = new System.Windows.Forms.Panel();
             this.toolStripContainerDrawArea = new System.Windows.Forms.ToolStripContainer();
+            this.glControlMotor = new GLControl();
             this.toolStripToolBar = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonUndo = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRedo = new System.Windows.Forms.ToolStripButton();
@@ -3610,27 +3612,46 @@ namespace TrainEditor2.Views
             this.panelMotorSound.Name = "panelMotorSound";
             this.panelMotorSound.Size = new System.Drawing.Size(786, 661);
             this.panelMotorSound.TabIndex = 5;
-            // 
-            // toolStripContainerDrawArea
-            // 
-            // 
-            // toolStripContainerDrawArea.ContentPanel
-            // 
-            this.toolStripContainerDrawArea.ContentPanel.Size = new System.Drawing.Size(568, 588);
-            this.toolStripContainerDrawArea.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStripContainerDrawArea.Location = new System.Drawing.Point(0, 24);
-            this.toolStripContainerDrawArea.Name = "toolStripContainerDrawArea";
-            this.toolStripContainerDrawArea.Size = new System.Drawing.Size(568, 613);
-            this.toolStripContainerDrawArea.TabIndex = 4;
-            this.toolStripContainerDrawArea.Text = "toolStripContainer1";
-            // 
-            // toolStripContainerDrawArea.TopToolStripPanel
-            // 
-            this.toolStripContainerDrawArea.TopToolStripPanel.Controls.Add(this.toolStripToolBar);
-            // 
-            // toolStripToolBar
-            // 
-            this.toolStripToolBar.Dock = System.Windows.Forms.DockStyle.None;
+			// 
+			// toolStripContainerDrawArea
+			// 
+			// 
+			// toolStripContainerDrawArea.ContentPanel
+			// 
+			this.toolStripContainerDrawArea.ContentPanel.Controls.Add(this.glControlMotor);
+			this.toolStripContainerDrawArea.ContentPanel.Size = new System.Drawing.Size(568, 593);
+			this.toolStripContainerDrawArea.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.toolStripContainerDrawArea.Location = new System.Drawing.Point(0, 24);
+			this.toolStripContainerDrawArea.Name = "toolStripContainerDrawArea";
+			this.toolStripContainerDrawArea.Size = new System.Drawing.Size(568, 618);
+			this.toolStripContainerDrawArea.TabIndex = 4;
+			this.toolStripContainerDrawArea.Text = "toolStripContainer1";
+			// 
+			// toolStripContainerDrawArea.TopToolStripPanel
+			// 
+			this.toolStripContainerDrawArea.TopToolStripPanel.Controls.Add(this.toolStripToolBar);
+			// 
+			// glControlMotor
+			// 
+			this.glControlMotor.BackColor = System.Drawing.Color.Black;
+			this.glControlMotor.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.glControlMotor.Location = new System.Drawing.Point(0, 0);
+			this.glControlMotor.Name = "glControlMotor";
+			this.glControlMotor.Size = new System.Drawing.Size(568, 593);
+			this.glControlMotor.TabIndex = 0;
+			this.glControlMotor.VSync = false;
+			this.glControlMotor.Load += new System.EventHandler(this.GlControlMotor_Load);
+			this.glControlMotor.Paint += new System.Windows.Forms.PaintEventHandler(this.GlControlMotor_Paint);
+			this.glControlMotor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlControlMotor_KeyDown);
+			this.glControlMotor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseDown);
+			this.glControlMotor.MouseEnter += new System.EventHandler(this.GlControlMotor_MouseEnter);
+			this.glControlMotor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseMove);
+			this.glControlMotor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseUp);
+			this.glControlMotor.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.GlControlMotor_PreviewKeyDown);
+			// 
+			// toolStripToolBar
+			// 
+			this.toolStripToolBar.Dock = System.Windows.Forms.DockStyle.None;
             this.toolStripToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonUndo,
             this.toolStripButtonRedo,
