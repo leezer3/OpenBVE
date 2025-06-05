@@ -1,6 +1,9 @@
-﻿using System;
+﻿using LibRender2.Smoke;
 using OpenBveApi.Math;
 using Prism.Mvvm;
+using System;
+using System.Windows.Media.Media3D;
+using System.Xml.Linq;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -72,7 +75,17 @@ namespace TrainEditor2.Models.Trains
 		}
 
 
-
+		public void WriteXML(string fileName, XElement carNode)
+		{
+			XElement particleElement = new XElement("ParticleSource",
+				new XElement("Location", location),
+				new XElement("MaximumSize", initialSize),
+				new XElement("MaximumGrownSize", maximumSize),
+				new XElement("InitialDirection", initialDirection),
+				new XElement("Texture", textureFile)
+			);
+			carNode.Add(particleElement);
+		}
 		public object Clone()
 		{
 			return MemberwiseClone();

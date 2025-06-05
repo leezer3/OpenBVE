@@ -104,14 +104,15 @@ namespace TrainEditor2.ViewModels.Trains
 				.Select(x => Cars.FirstOrDefault(y => y.Model == x.Tag))
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
-			/*
+
 			SelectedParticleSource = app
 				.ObserveProperty(x => x.SelectedItem)
 				.Where(x => x != null)
-				.Select(x => Cars.FirstOrDefault(y => y.Model == x.Parent.Tag).ParticleSource)
+				.Select(x => Cars.FirstOrDefault(y => y.Model == x.Parent.Tag).ParticleSources.FirstOrDefault(y => y.Model == x.Tag))
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
-			*/
+
+
 			SelectedCoupler = app
 				.ObserveProperty(x => x.SelectedItem)
 				.Where(x => x != null)

@@ -53,8 +53,18 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ParticleSourceViewModel(ParticleSource particleSource)
+		internal ParticleSource Model
 		{
+			get;
+		}
+
+		internal CarViewModel ParentCar;
+
+		internal ParticleSourceViewModel(ParticleSource particleSource, CarViewModel parentCar)
+		{
+
+			Model = particleSource;
+
 			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			LocationX = particleSource
@@ -102,27 +112,27 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.AddTo(disposable);
 
-			LocationX = particleSource
+			InitialDirectionX = particleSource
 				.ToReactivePropertyAsSynchronized(
-					x => x.LocationX,
+					x => x.InitialDirectionX,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.AddTo(disposable);
 
-			LocationY = particleSource
+			InitialDirectionY = particleSource
 				.ToReactivePropertyAsSynchronized(
-					x => x.LocationY,
+					x => x.InitialDirectionY,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.AddTo(disposable);
 
-			LocationZ = particleSource
+			InitialDirectionZ = particleSource
 				.ToReactivePropertyAsSynchronized(
-					x => x.LocationZ,
+					x => x.InitialDirectionZ,
 					x => x.ToString(culture),
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
@@ -132,6 +142,7 @@ namespace TrainEditor2.ViewModels.Trains
 			TextureFile = particleSource
 				.ToReactivePropertyAsSynchronized(x => x.TextureFile)
 				.AddTo(disposable);
+			ParentCar = parentCar;
 		}
 	}
 }

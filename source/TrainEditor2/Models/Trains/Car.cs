@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using Reactive.Bindings.Helpers;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
 using System.Xml.Linq;
@@ -100,7 +103,7 @@ namespace TrainEditor2.Models.Trains
 		private string _object;
 		private bool loadingSway;
 
-		internal List<ParticleSource> particleSources = new List<ParticleSource>();
+		internal ObservableCollection<ParticleSource> particleSources = new ObservableCollection<ParticleSource>();
 
 		internal double Mass
 		{
@@ -360,6 +363,11 @@ namespace TrainEditor2.Models.Trains
 			if (i == train.Cab.DriverCar)
 			{
 				train.Cab.WriteXML(fileName, carElement);
+			}
+
+			for (int p = 0; p < particleSources.Count; p++)
+			{
+				particleSources[p].WriteXML(fileName, carElement);
 			}
 			trainNode.Add(carElement);
 		}

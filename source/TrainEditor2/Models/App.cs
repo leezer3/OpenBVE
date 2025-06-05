@@ -272,8 +272,8 @@ namespace TrainEditor2.Models
 			
 			for (int i = 0; i < item.Children[1].Children.Count; i++)
 			{
-				item.Children[1].Children[i].Children.Add(new TreeViewItemModel(Item) { Title = "Particle Sources" });
-				item.Children[1].Children[i].Children[0].Children = new ObservableCollection<TreeViewItemModel>(Train.Cars[i].particleSources.Select((x, j) => new TreeViewItemModel(Item.Children[1]) { Title = j.ToString(culture), Tag = x }));
+				item.Children[1].Children[i].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = "Particle Sources" });
+				item.Children[1].Children[i].Children[0].Children = new ObservableCollection<TreeViewItemModel>(Train.Cars[i].particleSources.Select((x, j) => new TreeViewItemModel(Item.Children[1].Children[0]) { Title = j.ToString(culture), Tag = x }));
 			}
 			item.Children[2].Children = new ObservableCollection<TreeViewItemModel>(Train.Couplers.Select((x, i) => new TreeViewItemModel(Item.Children[2]) { Title = i.ToString(culture), Tag = x }));
 			OnPropertyChanged(new PropertyChangedEventArgs(nameof(Item)));
