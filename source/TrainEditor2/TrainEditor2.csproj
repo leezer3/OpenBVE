@@ -274,6 +274,9 @@
     <Compile Include="Views\FormEditor.Panel.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\FormEditor.ParticleSource.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\FormEditor.Performance.cs">
       <SubType>Form</SubType>
     </Compile>

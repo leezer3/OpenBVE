@@ -719,6 +719,8 @@ namespace TrainEditor2.Models
 			Train.ApplyLocoBrakeNotchesToCar();
 
 			Item.Children[1].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
+			item.Children[1].Children[Train.Cars.Count - 1].Children.Add(new TreeViewItemModel(Item) { Title = "Particle Sources" });
+			item.Children[1].Children[Train.Cars.Count - 1].Children[0].Children = new ObservableCollection<TreeViewItemModel>(Train.Cars[Train.Cars.Count - 1].particleSources.Select((x, j) => new TreeViewItemModel(Item.Children[1]) { Title = j.ToString(culture), Tag = x }));
 			Item.Children[2].Children.Add(new TreeViewItemModel(Item.Children[2]) { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
 			SelectedItem = Item.Children[1].Children.Last();
 		}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reactive.Linq;
 using Reactive.Bindings;
@@ -222,6 +223,11 @@ namespace TrainEditor2.ViewModels.Trains
 		}
 
 		internal ReactiveProperty<bool> LoadingSway
+		{
+			get;
+		}
+
+		internal ReadOnlyReactivePropertySlim<ParticleSourceViewModel> ParticleSource
 		{
 			get;
 		}
