@@ -16,21 +16,20 @@ namespace TrainEditor2.Models.Trains
 	{
 		internal class Vertex : BindableBase, ICloneable
 		{
-			private double x;
-			private double y;
+			private OpenBveApi.Math.Vector2 position;
 			private bool selected;
 			private bool isOrigin;
 
 			internal double X
 			{
-				get => x;
-				set => SetProperty(ref x, value);
+				get => position.X;
+				set => SetProperty(ref position.X, value);
 			}
 
 			internal double Y
 			{
-				get => y;
-				set => SetProperty(ref y, value);
+				get => position.Y;
+				set => SetProperty(ref position.Y, value);
 			}
 
 			internal bool Selected
