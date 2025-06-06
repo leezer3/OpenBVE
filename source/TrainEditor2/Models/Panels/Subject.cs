@@ -2,7 +2,7 @@
 using System.Globalization;
 using Formats.OpenBve;
 using OpenBveApi.Interface;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 using TrainEditor2.Systems;
 
 namespace TrainEditor2.Models.Panels

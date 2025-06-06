@@ -2,7 +2,7 @@
 using System.Text;
 using System.Xml.Linq;
 using OpenBveApi.Math;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Panels
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 using TrainManager.BrakeSystems;
 
 namespace TrainEditor2.Models.Trains

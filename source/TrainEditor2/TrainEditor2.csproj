@@ -59,9 +59,6 @@
       <HintPath>..\..\packages\OpenTK.GLControl-OpenBVE.1.0.1\lib\net20\OpenTK.GLControl.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
-    <Reference Include="Prism, Version=7.2.0.1422, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Prism.Core.7.2.0.1422\lib\net45\Prism.dll</HintPath>
-    </Reference>
     <Reference Include="ReactiveProperty, Version=9.7.0.0, Culture=neutral, PublicKeyToken=910d1732782c71cb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ReactiveProperty.9.7.0\lib\net472\ReactiveProperty.dll</HintPath>
     </Reference>
@@ -98,6 +95,7 @@
   <ItemGroup>
     <Compile Include="Audio\SoundApi.cs" />
     <Compile Include="Audio\SoundApi.Update.cs" />
+    <Compile Include="Extensions\BindableBase.cs" />
     <Compile Include="Extensions\Binders.cs" />
     <Compile Include="Extensions\CollectionBasedDictionary.cs" />
     <Compile Include="Extensions\ObservableDictionary.cs" />

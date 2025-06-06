@@ -1,6 +1,5 @@
 ﻿using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using Prism.Mvvm;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;

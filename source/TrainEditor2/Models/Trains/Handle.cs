@@ -1,5 +1,5 @@
 ﻿using System;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 using TrainManager.Handles;
 
 namespace TrainEditor2.Models.Trains

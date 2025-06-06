@@ -1,4 +1,4 @@
-﻿using Prism.Mvvm;
+﻿using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Dialogs
 {

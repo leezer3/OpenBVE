@@ -8,7 +8,6 @@ using System.Media;
 using System.Text;
 using System.Xml;
 using OpenBveApi.Interface;
-using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.IO.IntermediateFile;
 using TrainEditor2.IO.Panels.Bve4;

@@ -5,7 +5,6 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
-using Prism.Mvvm;
 using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Trains
