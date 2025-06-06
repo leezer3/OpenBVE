@@ -7,6 +7,7 @@ namespace TrainEditor2.Models.Others
 	{
 		private string title;
 		private object tag;
+		private object secondaryTag;
 
 		internal TreeViewItemModel Parent
 		{
@@ -24,6 +25,14 @@ namespace TrainEditor2.Models.Others
 			get => tag;
 			set => SetProperty(ref tag, value);
 		}
+
+		internal object SecondaryTag
+		{
+			get => secondaryTag;
+			set => SetProperty(ref secondaryTag, value);
+		}
+
+
 
 		internal ObservableCollection<TreeViewItemModel> Children;
 

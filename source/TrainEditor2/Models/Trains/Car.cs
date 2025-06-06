@@ -1,7 +1,4 @@
-﻿using Prism.Mvvm;
-using Reactive.Bindings.Helpers;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
@@ -247,7 +244,6 @@ namespace TrainEditor2.Models.Trains
 			Reversed = false;
 			Object = string.Empty;
 			LoadingSway = false;
-			particleSources.Add(new ParticleSource());
 		}
 
 		public virtual object Clone()

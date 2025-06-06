@@ -1,9 +1,7 @@
-﻿using LibRender2.Smoke;
-using OpenBveApi.Math;
-using Prism.Mvvm;
+﻿using OpenBveApi.Math;
 using System;
-using System.Windows.Media.Media3D;
 using System.Xml.Linq;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Trains
 {
