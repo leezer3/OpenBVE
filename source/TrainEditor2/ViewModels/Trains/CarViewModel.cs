@@ -1,8 +1,8 @@
-﻿using System;
-using System.Globalization;
-using System.Reactive.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
+using System.Globalization;
+using System.Reactive.Linq;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
 
@@ -222,6 +222,11 @@ namespace TrainEditor2.ViewModels.Trains
 		}
 
 		internal ReactiveProperty<bool> LoadingSway
+		{
+			get;
+		}
+
+		internal ReadOnlyReactiveCollection<ParticleSourceViewModel> ParticleSources
 		{
 			get;
 		}
@@ -453,6 +458,14 @@ namespace TrainEditor2.ViewModels.Trains
 					return message;
 				})
 				.Subscribe(_ => FrontAxle.ForceValidate())
+				.AddTo(disposable);
+
+			ParticleSources = car.particleSources
+				.ToReadOnlyReactiveCollection(x =>
+				{
+					ParticleSourceViewModel viewModel = new ParticleSourceViewModel(x, this);
+					return viewModel;
+				})
 				.AddTo(disposable);
 
 			RearAxle.ObserveHasErrors

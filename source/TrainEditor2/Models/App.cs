@@ -7,6 +7,7 @@ using System.Linq;
 using System.Media;
 using System.Text;
 using System.Xml;
+using LibRender2.Trains;
 using OpenBveApi.Interface;
 using TrainEditor2.Extensions;
 using TrainEditor2.IO.IntermediateFile;
@@ -24,6 +25,7 @@ using TrainEditor2.Models.Panels;
 using TrainEditor2.Models.Sounds;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
+using TrainEditor2.Views;
 
 namespace TrainEditor2.Models
 {
@@ -269,6 +271,12 @@ namespace TrainEditor2.Models
 			item.Children.Add(new TreeViewItemModel(Item) { Title = Utilities.GetInterfaceString("tree_cars", "cars") });
 			item.Children.Add(new TreeViewItemModel(Item) { Title = Utilities.GetInterfaceString("tree_cars", "couplers") });
 			item.Children[1].Children = new ObservableCollection<TreeViewItemModel>(Train.Cars.Select((x, i) => new TreeViewItemModel(Item.Children[1]) { Title = i.ToString(culture), Tag = x }));
+			
+			for (int i = 0; i < item.Children[1].Children.Count; i++)
+			{
+				item.Children[1].Children[i].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = "Particle Sources", Tag = Train.Cars.Last() });
+				item.Children[1].Children[i].Children[0].Children = new ObservableCollection<TreeViewItemModel>(Train.Cars[i].particleSources.Select((x, j) => new TreeViewItemModel(Item.Children[1].Children[0]) { Title = j.ToString(culture), Tag = x }));
+			}
 			item.Children[2].Children = new ObservableCollection<TreeViewItemModel>(Train.Couplers.Select((x, i) => new TreeViewItemModel(Item.Children[2]) { Title = i.ToString(culture), Tag = x }));
 			OnPropertyChanged(new PropertyChangedEventArgs(nameof(Item)));
 		}
@@ -713,6 +721,8 @@ namespace TrainEditor2.Models
 			Train.ApplyLocoBrakeNotchesToCar();
 
 			Item.Children[1].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
+			item.Children[1].Children[Train.Cars.Count - 1].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = "Particle Sources", Tag = Train.Cars.Last()});
+			item.Children[1].Children[Train.Cars.Count - 1].Children[0].Children = new ObservableCollection<TreeViewItemModel>();
 			Item.Children[2].Children.Add(new TreeViewItemModel(Item.Children[2]) { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
 			SelectedItem = Item.Children[1].Children.Last();
 		}
@@ -739,6 +749,47 @@ namespace TrainEditor2.Models
 			Item.Children[1].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
 			Item.Children[2].Children.Add(new TreeViewItemModel(Item.Children[2]) { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
 			SelectedItem = Item.Children[1].Children.Last();
+		}
+
+		internal void AddParticleSource()
+		{
+			Car car;
+			// FIXME:
+			// for some reason (reactive property somewhere...) the selected item isn't propagating to the last in the tree, but the one before
+			// this gets us to the item we want to modify
+			// doesn't help that the selection methods are a bit bodgy
+			if (SelectedItem.Tag is ParticleSource)
+			{
+				car = (Car)SelectedItem.SecondaryTag;
+				SelectedItem = SelectedItem.Parent;
+			}
+			else if(SelectedItem.Tag is Car c)
+			{
+				car = c;
+			}
+			else
+			{
+				return;
+			}
+						
+			
+			int carIndex = Train.Cars.IndexOf(car);
+			Train.Cars[carIndex].particleSources.Add(new ParticleSource());
+			SelectedItem.Children.Add(new TreeViewItemModel(SelectedItem) { Title = (Train.Cars[carIndex].particleSources.Count - 1).ToString(culture), Tag = Train.Cars[carIndex].particleSources.Last(), SecondaryTag = Train.Cars[carIndex]});
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(Item)));
+		}
+
+		internal void RemoveParticleSource()
+		{
+			if (SelectedItem.Tag is ParticleSource p)
+			{
+				Car c = (Car)SelectedItem.SecondaryTag;
+				int carIndex = Train.Cars.IndexOf(c);
+				int index = c.particleSources.IndexOf(p);
+				c.particleSources.RemoveAt(index);
+				Item.Children[1].Children[carIndex].Children[0].Children.RemoveAt(index);
+				RenameTreeViewItem(Item.Children[1].Children[carIndex].Children[0].Children);
+			}
 		}
 
 		internal void UpCoupler()

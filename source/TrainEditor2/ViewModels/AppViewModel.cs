@@ -236,6 +236,16 @@ namespace TrainEditor2.ViewModels
 			get;
 		}
 
+		internal ReactiveCommand AddParticleSource
+		{
+			get;
+		}
+
+		internal ReactiveCommand RemoveParticleSource
+		{
+			get;
+		}
+
 		internal ReactiveCommand CopyCar
 		{
 			get;
@@ -601,6 +611,19 @@ namespace TrainEditor2.ViewModels
 				.Select(x => Item.Value.Children[1].Children.Contains(x) && Item.Value.Children[1].Children.Where(y => y != x).Any(y => y.Tag.Value is MotorCar))
 				.ToReactiveCommand()
 				.WithSubscribe(app.RemoveCar)
+				.AddTo(disposable);
+
+			AddParticleSource = SelectedItem
+				.Select(x => x == Item.Value.Children[1].Children[1] || SelectedItem.Value.Children.Contains(x))
+				.ToReactiveCommand()
+				.WithSubscribe(app.AddParticleSource)
+				.AddTo(disposable);
+
+			
+			RemoveParticleSource = SelectedItem
+				.Select(x => SelectedItem.Value.Children.Contains(x) && SelectedItem.Value.Children.Where(y => y != x).Any(y => y.Tag.Value is ParticleSource))
+				.ToReactiveCommand()
+				.WithSubscribe(app.RemoveParticleSource)
 				.AddTo(disposable);
 
 			CopyCar = SelectedItem
