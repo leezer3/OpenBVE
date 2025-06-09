@@ -72,6 +72,14 @@ namespace TrainEditor2.Models.Trains
 			set => SetProperty(ref textureFile, value);
 		}
 
+		internal ParticleSource()
+		{
+			InitialSize = 0.1;
+			MaximiumSize = 1.0;
+			InitialDirectionX = 0;
+			InitialDirectionY = 1;
+			InitialDirectionZ = 0;
+		}
 
 		public void WriteXML(string fileName, XElement carNode)
 		{
