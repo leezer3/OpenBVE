@@ -422,6 +422,11 @@ namespace TrainEditor2.Models.Trains
 			{
 				train.Cab.WriteXML(fileName, carElement);
 			}
+
+			for (int p = 0; p < particleSources.Count; p++)
+			{
+				particleSources[p].WriteXML(fileName, carElement);
+			}
 			trainNode.Add(carElement);
 		}
 	}

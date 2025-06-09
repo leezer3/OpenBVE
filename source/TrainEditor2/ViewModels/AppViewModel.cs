@@ -613,13 +613,14 @@ namespace TrainEditor2.ViewModels
 				.AddTo(disposable);
 
 			AddParticleSource = SelectedItem
-				.Select(x => x == Item.Value.Children[1].Children[1] || Item.Value.Children[1].Children[1].Children.Contains(x))
+				.Select(x => x == Item.Value.Children[1].Children[1] || SelectedItem.Value.Children.Contains(x))
 				.ToReactiveCommand()
 				.WithSubscribe(app.AddParticleSource)
 				.AddTo(disposable);
 
+			
 			RemoveParticleSource = SelectedItem
-				.Select(x => Item.Value.Children[1].Children[1].Children.Contains(x) && Item.Value.Children[1].Children[1].Children.Where(y => y != x).Any(y => y.Tag.Value is ParticleSource))
+				.Select(x => SelectedItem.Value.Children.Contains(x) && SelectedItem.Value.Children.Where(y => y != x).Any(y => y.Tag.Value is ParticleSource))
 				.ToReactiveCommand()
 				.WithSubscribe(app.RemoveParticleSource)
 				.AddTo(disposable);

@@ -278,7 +278,7 @@ namespace TrainEditor2.Views
 					tabPageParticleSource,
 					x => x.Enabled,
 					BindingMode.OneWay,
-					x => app.Item.Value.Children[1].Children[0].Children[0].Children.Contains(x)
+					x => app.SelectedItem?.Value?.Model?.Tag is ParticleSource
 				)
 				.AddTo(disposable);
 
