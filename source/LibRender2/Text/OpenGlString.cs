@@ -1,3 +1,5 @@
+using System.IO;
+using FontStashSharp;
 using LibRender2.Shaders;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -18,15 +20,27 @@ namespace LibRender2.Text
 			this.renderer = renderer;
 			try
 			{
-				this.Shader = new Shader(renderer, "text", "rectangle", true);
+				this.Shader = new Shader(renderer, "text", "text", true);
 			}
 			catch
 			{
 				renderer.ForceLegacyOpenGL = true;
 			}
-			
+
+			var settings = new FontSystemSettings
+			{
+				FontResolutionFactor = 2,
+				KernelWidth = 2,
+				KernelHeight = 2
+			};
+			FontSystem = new FontSystem(settings);
+			// TODO : Use font in settings
+			FontSystem.AddFont(File.ReadAllBytes(@"DroidSans.ttf"));
 		}
 
+		private FontSystem FontSystem;
+
+		
 		/// <summary>Renders a string to the screen.</summary>
 		/// <param name="font">The font to use.</param>
 		/// <param name="text">The string to render.</param>
@@ -40,6 +54,13 @@ namespace LibRender2.Text
 			{
 				return;
 			}
+
+			var fontStashFont = FontSystem.GetFont(font.FontSize);
+			var size = fontStashFont.MeasureString(text);
+			renderer.FontStashRenderer.Begin();
+			fontStashFont.DrawText(renderer.FontStashRenderer, text, new System.Numerics.Vector2((float)location.X,(float)location.Y), FSColor.White);
+			renderer.FontStashRenderer.End();
+			return;
 			renderer.LastBoundTexture = null;
 			/*
 			 * Prepare the top-left coordinates for rendering, incorporating the

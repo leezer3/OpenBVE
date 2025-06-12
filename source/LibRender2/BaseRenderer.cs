@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Threading;
+using FontStashSharp.Interfaces;
 using LibRender2.Backgrounds;
 using LibRender2.Cameras;
 using LibRender2.Fogs;
@@ -286,6 +287,8 @@ namespace LibRender2
 		public GameWindow GameWindow;
 		/// <summary>The graphics mode in use</summary>
 		public GraphicsMode GraphicsMode;
+
+		internal FontStashRenderer FontStashRenderer;
 		public bool LoadLogo()
 		{
 			return currentHost.LoadTexture(ref _programLogo, OpenGlTextureWrapMode.ClampClamp);
@@ -352,6 +355,7 @@ namespace LibRender2
 					lastColor = Color32.White;
 					DefaultShader.Deactivate();
 					dummyVao = new VertexArrayObject();
+					FontStashRenderer = new FontStashRenderer(this);
 				}
 				catch
 				{
