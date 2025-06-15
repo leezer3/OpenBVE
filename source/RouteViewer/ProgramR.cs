@@ -554,12 +554,13 @@ namespace RouteViewer
 								{
 									MessageBox.Show("No plugins found capable of loading routefile: " + Environment.NewLine + CurrentRouteFile);
 								}
+
+								CurrentRoute = null;
 							}
 
 							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 							Renderer.UpdateViewport();
 							World.UpdateAbsoluteCamera(0.0);
-							CurrentRouteFile = null;
 							Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
 						CurrentlyLoading = false;
