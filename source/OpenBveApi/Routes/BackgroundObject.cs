@@ -1,4 +1,6 @@
-﻿using System;
+using OpenBveApi.Math;
+using OpenBveApi.Objects;
+using System;
 using System.Collections.Generic;
 using OpenBveApi.Objects;
 
@@ -47,7 +49,37 @@ namespace OpenBveApi.Routes
 			{
 				this.Object = Object;
 			}
+
+			// sort object faces to ensure correct draw order
+			double[] distances = new double[Object.Mesh.Faces.Length];
+			for (int i = 0; i < Object.Mesh.Faces.Length; i++)
+			{
+				if (Object.Mesh.Faces[i].Vertices.Length >= 3)
+				{
+					Vector4 v0 = new Vector4(Object.Mesh.Vertices[Object.Mesh.Faces[i].Vertices[0].Index].Coordinates, 1.0);
+					Vector4 v1 = new Vector4(Object.Mesh.Vertices[Object.Mesh.Faces[i].Vertices[1].Index].Coordinates, 1.0);
+					Vector4 v2 = new Vector4(Object.Mesh.Vertices[Object.Mesh.Faces[i].Vertices[2].Index].Coordinates, 1.0);
+					Vector4 w1 = v1 - v0;
+					Vector4 w2 = v2 - v0;
+					v0.Z *= -1.0;
+					w1.Z *= -1.0;
+					w2.Z *= -1.0;
+					v0.Z *= -1.0;
+					w1.Z *= -1.0;
+					w2.Z *= -1.0;
+					Vector3 d = Vector3.Cross(w1.Xyz, w2.Xyz);
+					double t = d.Norm();
+					if (t != 0.0)
+					{
+						d /= t;
+						t = Vector3.Dot(d, v0.Xyz);
+						distances[i] = -t * t;
+					}
+
+				}
+			}
 			
+			Array.Sort(distances, Object.Mesh.Faces);
 
 			//As we are using an object based background, calculate the minimum clip distance
 			for (int i = 0; i < Object.Mesh.Vertices.Length; i++)
