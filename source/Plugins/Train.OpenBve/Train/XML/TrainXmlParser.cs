@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using Formats.OpenBve;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -46,9 +47,10 @@ namespace Train.OpenBve
 					// Optional stuff, needs to be loaded before the car list
 					for (int i = 0; i < DocumentNodes.Count; i++)
 					{
-						switch (DocumentNodes[i].Name)
+						Enum.TryParse(DocumentNodes[i].Name, true, out TrainXMLKey key);
+						switch (key)
 						{
-							case "DriverCar":
+							case TrainXMLKey.DriverCar:
 								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out var driverCar) || driverCar < 0)
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "DriverCar is invalid in XML file " + fileName);
@@ -95,21 +97,22 @@ namespace Train.OpenBve
 							}
 							foreach (XmlNode c in DocumentNodes[i].ChildNodes)
 							{
-								switch (c.Name.ToLowerInvariant())
+								Enum.TryParse(c.Name, true, out TrainXMLKey key);
+								switch (key)
 								{
-									case "minimum":
+									case TrainXMLKey.Minimum:
 										if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[carIndex - 1].Coupler.MinimumDistanceBetweenCars))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MinimumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
 										}
 										break;
-									case "maximum":
+									case TrainXMLKey.Maximum:
 										if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[carIndex - 1].Coupler.MaximumDistanceBetweenCars))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MaximumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
 										}
 										break;
-									case "object":
+									case TrainXMLKey.Object:
 										if (string.IsNullOrEmpty(c.InnerText))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid object path for Coupler " + (carIndex - 1) + " in XML file " + fileName);
@@ -121,14 +124,14 @@ namespace Train.OpenBve
 											Plugin.CurrentHost.LoadObject(f, Encoding.Default, out CouplerObjects[carIndex - 1]);
 										}
 										break;
-									case "canuncouple":
+									case TrainXMLKey.CanUncouple:
 										NumberFormats.TryParseIntVb6(c.InnerText, out int nn);
 										if (c.InnerText.ToLowerInvariant() == "false" || nn == 0)
 										{
 											Train.Cars[carIndex - 1].Coupler.CanUncouple = false;
 										}
 										break;
-									case "uncouplingbehaviour":
+									case TrainXMLKey.UncouplingBehaviour:
 										if (!Enum.TryParse(c.InnerText, true, out Train.Cars[carIndex -1].Coupler.UncouplingBehaviour))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid uncoupling behaviour " + c.InnerText + " in " + c.Name + " node.");
@@ -192,9 +195,10 @@ namespace Train.OpenBve
 						{
 							foreach (XmlNode c in DocumentNodes[i].ChildNodes)
 							{
-								switch (c.Name.ToLowerInvariant())
+								Enum.TryParse(c.Name, true, out TrainXMLKey key);
+								switch (key)
 								{
-									case "power":
+									case TrainXMLKey.Power:
 										Train.Handles.Power.NotchDescriptions = c.InnerText.Split(separatorChars);
 										for (int j = 0; j < Train.Handles.Power.NotchDescriptions.Length; j++)
 										{
@@ -205,7 +209,7 @@ namespace Train.OpenBve
 											}
 										}
 										break;
-									case "brake":
+									case TrainXMLKey.Brake:
 										Train.Handles.Brake.NotchDescriptions = c.InnerText.Split(separatorChars);
 										for (int j = 0; j < Train.Handles.Brake.NotchDescriptions.Length; j++)
 										{
@@ -216,7 +220,7 @@ namespace Train.OpenBve
 											}
 										}
 										break;
-									case "locobrake":
+									case TrainXMLKey.LocoBrake:
 										if (Train.Handles.LocoBrake == null)
 										{
 											continue;
@@ -231,7 +235,7 @@ namespace Train.OpenBve
 											}
 										}
 										break;
-									case "reverser":
+									case TrainXMLKey.Reverser:
 										Train.Handles.Reverser.NotchDescriptions = c.InnerText.Split(separatorChars);
 										for (int j = 0; j < Train.Handles.Reverser.NotchDescriptions.Length; j++)
 										{
@@ -254,9 +258,10 @@ namespace Train.OpenBve
 					// More optional, but needs to be loaded after the car list
 					for (int i = 0; i < DocumentNodes.Count; i++)
 					{
-						switch (DocumentNodes[i].Name)
+						Enum.TryParse(DocumentNodes[i].Name, true, out TrainXMLKey key);
+						switch (key)
 						{
-							case "Plugin":
+							case TrainXMLKey.Plugin:
 								currentPath = Path.GetDirectoryName(fileName); // reset to base path
 								string pluginFile = DocumentNodes[i].InnerText;
 								pluginFile = Path.CombineFile(currentPath, pluginFile);
@@ -268,7 +273,7 @@ namespace Train.OpenBve
 									}
 								}
 								break;
-							case "HeadlightStates":
+							case TrainXMLKey.HeadlightStates:
 								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out int numStates))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "NumStates is invalid for HeadlightStates in XML file " + fileName);
