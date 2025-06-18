@@ -17,11 +17,11 @@ namespace TrainEditor2.IO.Trains.XML
 			XElement trainNode = new XElement("Train");
 			for (int i = 0; i < train.Cars.Count; i++)
 			{
-				train.Cars[i].WriteXML(fileName, trainNode, train, i);
 				if (i > 0)
 				{
 					train.Couplers[i - 1].WriteXML(trainNode);
 				}
+				train.Cars[i].WriteXML(fileName, trainNode, train, i);
 			}
 
 			trainNode.Add(new XElement("DriverCar", train.Cab.DriverCar));
