@@ -1,5 +1,4 @@
 ﻿using System;
-using Prism.Mvvm;
 using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Sounds
@@ -185,98 +184,50 @@ namespace TrainEditor2.Models.Sounds
 
 		internal object Key
 		{
-			get
-			{
-				return key;
-			}
-			set
-			{
-				SetProperty(ref key, value);
-			}
+			get => key;
+			set => SetProperty(ref key, value);
 		}
 
 		internal string FilePath
 		{
-			get
-			{
-				return filePath;
-			}
-			set
-			{
-				SetProperty(ref filePath, value);
-			}
+			get => filePath;
+			set => SetProperty(ref filePath, value);
 		}
 
 		internal bool DefinedPosition
 		{
-			get
-			{
-				return definedPosition;
-			}
-			set
-			{
-				SetProperty(ref definedPosition, value);
-			}
+			get => definedPosition;
+			set => SetProperty(ref definedPosition, value);
 		}
 
 		internal double PositionX
 		{
-			get
-			{
-				return positionX;
-			}
-			set
-			{
-				SetProperty(ref positionX, value);
-			}
+			get => positionX;
+			set => SetProperty(ref positionX, value);
 		}
 
 		internal double PositionY
 		{
-			get
-			{
-				return positionY;
-			}
-			set
-			{
-				SetProperty(ref positionY, value);
-			}
+			get => positionY;
+			set => SetProperty(ref positionY, value);
 		}
 
 		internal double PositionZ
 		{
-			get
-			{
-				return positionZ;
-			}
-			set
-			{
-				SetProperty(ref positionZ, value);
-			}
+			get => positionZ;
+			set => SetProperty(ref positionZ, value);
 		}
 
 		internal bool DefinedRadius
 		{
-			get
-			{
-				return definedRadius;
-			}
-			set
-			{
-				SetProperty(ref definedRadius, value);
-			}
+			get => definedRadius;
+			set => SetProperty(ref definedRadius, value);
 		}
 
 		internal double Radius
 		{
-			get
-			{
-				return radius;
-			}
-			set
-			{
-				SetProperty(ref radius, value);
-			}
+			get => radius;
+			set => SetProperty(ref radius, value);
 		}
 
 		public object Clone()
@@ -289,14 +240,8 @@ namespace TrainEditor2.Models.Sounds
 	{
 		internal new T Key
 		{
-			get
-			{
-				return (T)key;
-			}
-			set
-			{
-				SetProperty(ref key, value);
-			}
+			get => (T)key;
+			set => SetProperty(ref key, value);
 		}
 
 		internal SoundElement()

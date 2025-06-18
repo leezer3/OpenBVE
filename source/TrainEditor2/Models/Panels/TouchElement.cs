@@ -1,13 +1,13 @@
-﻿using System;
+﻿using OpenBveApi.Interface;
+using OpenBveApi.Math;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Xml.Linq;
-using OpenBveApi.Interface;
-using OpenBveApi.Math;
-using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Others;
 
@@ -21,14 +21,8 @@ namespace TrainEditor2.Models.Panels
 
 			internal int Index
 			{
-				get
-				{
-					return index;
-				}
-				set
-				{
-					SetProperty(ref index, value);
-				}
+				get => index;
+				set => SetProperty(ref index, value);
 			}
 
 			internal SoundEntry()
@@ -49,26 +43,14 @@ namespace TrainEditor2.Models.Panels
 
 			internal Translations.CommandInfo Info
 			{
-				get
-				{
-					return info;
-				}
-				set
-				{
-					SetProperty(ref info, value);
-				}
+				get => info;
+				set => SetProperty(ref info, value);
 			}
 
 			internal int Option
 			{
-				get
-				{
-					return option;
-				}
-				set
-				{
-					SetProperty(ref option, value);
-				}
+				get => option;
+				set => SetProperty(ref option, value);
 			}
 
 			internal CommandEntry()
@@ -101,62 +83,32 @@ namespace TrainEditor2.Models.Panels
 
 		internal Vector2 Size
 		{
-			get
-			{
-				return size;
-			}
-			set
-			{
-				SetProperty(ref size, value);
-			}
+			get => size;
+			set => SetProperty(ref size, value);
 		}
 
 		internal int JumpScreen
 		{
-			get
-			{
-				return jumpScreen;
-			}
-			set
-			{
-				SetProperty(ref jumpScreen, value);
-			}
+			get => jumpScreen;
+			set => SetProperty(ref jumpScreen, value);
 		}
 
 		internal TreeViewItemModel TreeItem
 		{
-			get
-			{
-				return treeItem;
-			}
-			set
-			{
-				SetProperty(ref treeItem, value);
-			}
+			get => treeItem;
+			set => SetProperty(ref treeItem, value);
 		}
 
 		internal TreeViewItemModel SelectedTreeItem
 		{
-			get
-			{
-				return selectedTreeItem;
-			}
-			set
-			{
-				SetProperty(ref selectedTreeItem, value);
-			}
+			get => selectedTreeItem;
+			set => SetProperty(ref selectedTreeItem, value);
 		}
 
 		internal ListViewItemModel SelectedListItem
 		{
-			get
-			{
-				return selectedListItem;
-			}
-			set
-			{
-				SetProperty(ref selectedListItem, value);
-			}
+			get => selectedListItem;
+			set => SetProperty(ref selectedListItem, value);
 		}
 
 		internal TouchElement(Screen screen)
@@ -366,8 +318,21 @@ namespace TrainEditor2.Models.Panels
 		{
 			return new XElement("Entry",
 				new XElement("Name", entry.Info.Name),
+				new XElement("Info", entry.Info.Command),
 				new XElement("Option", entry.Option)
 			);
+		}
+
+		public override void WriteIntermediate(XElement parent)
+		{
+			parent.Add(new XElement("Touch",
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
+				new XElement("Size", $"{Size.X}, {Size.Y}"),
+				new XElement("JumpScreen", JumpScreen),
+				new XElement("SoundEntries", SoundEntries.Select(WriteTouchElementSoundEntryNode)),
+				new XElement("CommandEntries", CommandEntries.Select(WriteTouchElementCommandEntryNode)),
+				new XElement("Layer", Layer)
+				));
 		}
 	}
 }

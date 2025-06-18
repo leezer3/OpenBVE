@@ -51,24 +51,32 @@ namespace RouteManager2.Events
 					{
 						trackFollower.Train.Switch = Index;
 					}
+
+					SetTrackIndex(trackFollower, direction);
 					break;
 				case EventTriggerType.TrainRear:
 					if ((int)currentRoute.Switches[Index].Direction == -1)
 					{
 						trackFollower.Train.Switch = Index;
 					}
+					SetTrackIndex(trackFollower, direction);
 					break;
 				case EventTriggerType.Camera:
 					// Camera should always follow the track and will just go through switches set against us
-					if (direction == (int)currentRoute.Switches[Index].Direction)
-					{
-						trackFollower.TrackIndex = currentRoute.Switches[Index].CurrentlySetTrack;
-					}
-					else
-					{
-						trackFollower.TrackIndex = currentRoute.Switches[Index].ToeRail;
-					}
+					SetTrackIndex(trackFollower, direction);
 					break;
+			}
+		}
+
+		private void SetTrackIndex(TrackFollower trackFollower, int direction)
+		{
+			if (direction == (int)currentRoute.Switches[Index].Direction)
+			{
+				trackFollower.TrackIndex = currentRoute.Switches[Index].CurrentlySetTrack;
+			}
+			else
+			{
+				trackFollower.TrackIndex = currentRoute.Switches[Index].ToeRail;
 			}
 		}
 	}

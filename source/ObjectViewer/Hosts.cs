@@ -348,14 +348,14 @@ namespace ObjectViewer {
 			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainBase)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
+		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition)
 		{
-			return Program.Renderer.CreateStaticObject(Prototype, Position, WorldTransformation, LocalTransformation, ObjectDisposalMode.Accurate, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, 25.0, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Prototype, Position, WorldTransformation, LocalTransformation, ObjectDisposalMode.Accurate, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, 25.0, TrackPosition);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
+		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition)
 		{
-			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, ObjectDisposalMode.Accurate, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, 25.0, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, ObjectDisposalMode.Accurate, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, 25.0, TrackPosition);
 		}
 
 		public override void CreateDynamicObject(ref ObjectState internalObject)
@@ -375,10 +375,7 @@ namespace ObjectViewer {
 
 		public override int AnimatedWorldObjectsUsed
 		{
-			get
-			{
-				return ObjectManager.AnimatedWorldObjectsUsed;
-			}
+			get => ObjectManager.AnimatedWorldObjectsUsed;
 			set
 			{
 				int a = ObjectManager.AnimatedWorldObjectsUsed;
@@ -397,26 +394,14 @@ namespace ObjectViewer {
 
 		public override WorldObject[] AnimatedWorldObjects
 		{
-			get
-			{
-				return ObjectManager.AnimatedWorldObjects;
-			}
-			set
-			{
-				ObjectManager.AnimatedWorldObjects = value;
-			}
+			get => ObjectManager.AnimatedWorldObjects;
+			set => ObjectManager.AnimatedWorldObjects = value;
 		}
 
 		public override Dictionary<int, Track> Tracks
 		{
-			get
-			{
-				return Program.CurrentRoute.Tracks;
-			}
-			set
-			{
-				Program.CurrentRoute.Tracks = value;
-			}
+			get => Program.CurrentRoute.Tracks;
+			set => Program.CurrentRoute.Tracks = value;
 		}
 
 		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
@@ -426,11 +411,8 @@ namespace ObjectViewer {
 
 		public override IEnumerable<AbstractTrain> Trains
 		{
-			get
-			{
-				// ReSharper disable once CoVariantArrayConversion
-				return Program.TrainManager.Trains;
-			}
+			// ReSharper disable once CoVariantArrayConversion
+			get => Program.TrainManager.Trains;
 		}
 
 		public override AbstractTrain ClosestTrain(AbstractTrain Train)

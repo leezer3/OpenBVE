@@ -1,4 +1,5 @@
 ﻿// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Global
 namespace Formats.OpenBve
 {
 	public enum Panel2Subject

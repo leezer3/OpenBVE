@@ -71,11 +71,11 @@ namespace OpenBveApi.Objects
 							mat *= transformationMatrix;
 							double zOffset = Objects[i].States[0].Translation.ExtractTranslation().Z * -1.0; //To calculate the Z-offset within the object, we want the untransformed co-ordinates, not the world co-ordinates
 
-							currentHost.CreateStaticObject(Objects[i].States[0].Prototype, Position, LocalTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), zOffset, StartingDistance, EndingDistance, TrackPosition, Brightness);
+							currentHost.CreateStaticObject(Objects[i].States[0].Prototype, Position, LocalTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), zOffset, StartingDistance, EndingDistance, TrackPosition);
 						}
 						else
 						{
-							Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition, Brightness);
+							Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
 						}
 					}
 				}
@@ -86,7 +86,7 @@ namespace OpenBveApi.Objects
 				{
 					if (Objects[i].States.Length != 0)
 					{
-						Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition, Brightness);
+						Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
 					}
 				}
 			}

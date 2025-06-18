@@ -19,7 +19,7 @@ namespace OpenBveApi.Interface
 		/// <param name="control">Control's information</param>
 		public InputEventArgs(InputControl control)
 		{
-				this.Control = control;
+			this.Control = control;
 		}
 
 		/// <summary>

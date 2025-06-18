@@ -2743,6 +2743,57 @@ namespace CsvRwRouteParser
 					}
 				}
 					break;
+				case TrackCommand.RailAnnounce:
+				case TrackCommand.RailAnnounceAll:
+				{
+					if (!PreviewOnly)
+					{
+						if (Arguments.Length < 2)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have between 2 and 3 arguments at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+						}
+						else
+						{
+							if (!NumberFormats.TryParseIntVb6(Arguments[0], out int railIndex))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid rail index for " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								break;
+							}
+							if (Path.ContainsInvalidChars(Arguments[1]))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FileName " + Arguments[1] + " contains illegal characters in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+							else
+							{
+								string f = Arguments[1];
+								if (!LocateSound(ref f, SoundPath))
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								}
+								else
+								{
+									double speed = 0.0;
+									if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out speed))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										speed = 0.0;
+									}
+									int n = Data.Blocks[BlockIndex].SoundEvents.Length;
+									Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
+									if (Command == TrackCommand.AnnounceAll)
+									{
+										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed, new Vector2(), 0, 0, true, railIndex);
+									}
+									else
+									{
+										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed, new Vector2(), 0, 0, true, railIndex);
+									}
+								}
+							}
+						}
+					}
+				}
+					break;
 				case TrackCommand.Doppler:
 				case TrackCommand.DopplerAll:
 				{

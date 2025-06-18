@@ -31,7 +31,7 @@ namespace OpenBve.Graphics.Renderers
 			}
 			Game.ScoreMessagesRendererSize.X += 16.0 * TimeElapsed * (totalwidth - Game.ScoreMessagesRendererSize.X);
 			totalwidth = (float)Game.ScoreMessagesRendererSize.X;
-			CalculateViewingPlaneSize(Element, out double lw, out double rw, out double lcrh);
+			Element.CalculateViewingPlaneSize(out double lw, out double rw, out double lcrh);
 			// start
 			double w = Element.Alignment.X == 0 ? lw + rw + 128 : totalwidth + lw + rw;
 			double h = Element.Value2 * n;

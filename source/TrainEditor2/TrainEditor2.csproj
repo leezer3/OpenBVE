@@ -59,9 +59,6 @@
       <HintPath>..\..\packages\OpenTK.GLControl-OpenBVE.1.0.1\lib\net20\OpenTK.GLControl.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
-    <Reference Include="Prism, Version=7.2.0.1422, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Prism.Core.7.2.0.1422\lib\net45\Prism.dll</HintPath>
-    </Reference>
     <Reference Include="ReactiveProperty, Version=9.7.0.0, Culture=neutral, PublicKeyToken=910d1732782c71cb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ReactiveProperty.9.7.0\lib\net472\ReactiveProperty.dll</HintPath>
     </Reference>
@@ -98,6 +95,7 @@
   <ItemGroup>
     <Compile Include="Audio\SoundApi.cs" />
     <Compile Include="Audio\SoundApi.Update.cs" />
+    <Compile Include="Extensions\BindableBase.cs" />
     <Compile Include="Extensions\Binders.cs" />
     <Compile Include="Extensions\CollectionBasedDictionary.cs" />
     <Compile Include="Extensions\ObservableDictionary.cs" />
@@ -156,6 +154,7 @@
     <Compile Include="Models\Trains\Motor.Functions.cs" />
     <Compile Include="Models\Trains\Motor.Simulation.cs" />
     <Compile Include="Models\Trains\Move.cs" />
+    <Compile Include="Models\Trains\ParticleSource.cs" />
     <Compile Include="Models\Trains\Performance.cs" />
     <Compile Include="Models\Trains\Pressure.cs" />
     <Compile Include="Models\Trains\Train.cs" />
@@ -200,6 +199,7 @@
     <Compile Include="ViewModels\Trains\HandleViewModel.cs" />
     <Compile Include="ViewModels\Trains\MotorViewModel.cs" />
     <Compile Include="ViewModels\Trains\MoveViewModel.cs" />
+    <Compile Include="ViewModels\Trains\ParticleSourceViewModel.cs" />
     <Compile Include="ViewModels\Trains\PerformanceViewModel.cs" />
     <Compile Include="ViewModels\Trains\PressureViewModel.cs" />
     <Compile Include="ViewModels\Trains\TrainViewModel.cs" />
@@ -272,6 +272,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.Panel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.ParticleSource.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.Performance.cs">

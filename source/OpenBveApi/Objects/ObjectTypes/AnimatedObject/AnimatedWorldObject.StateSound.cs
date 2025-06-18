@@ -161,7 +161,6 @@ namespace OpenBveApi.Objects
 				}
 			}
 
-			currentObject.Object.internalObject.Brightness = Brightness;
 
 			double r = 0.0;
 			for (int i = 0; i < currentObject.Object.States.Length; i++)

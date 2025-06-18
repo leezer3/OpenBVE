@@ -227,5 +227,18 @@ namespace OpenBveApi
 			}
 			return String;
 		}
+
+		/// <summary>Performs a string split to an array with a consistant length</summary>
+		/// <param name="text">The string to split</param>
+		/// <param name="separator">The separator character</param>
+		/// <param name="desiredLength">The desired length</param>
+		/// <returns>The split string</returns>
+		public static string[] ConsistantSplit(this string text, char separator, int desiredLength)
+		{
+			string[] result = new string[desiredLength];
+			string[] splitString = text.Split(separator);
+			Array.Copy(splitString, result, System.Math.Min(desiredLength, splitString.Length));
+			return result;
+		}
 	}
 }

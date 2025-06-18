@@ -153,7 +153,12 @@ namespace RouteViewer
 
 			if (OptionEvents)
 			{
-				RenderEvents();
+				for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
+				{
+					int railIndex = Program.CurrentRoute.Tracks.ElementAt(i).Key;
+					RenderEvents(railIndex);
+				}
+				
 			}
 
 			// fog
@@ -336,9 +341,9 @@ namespace RouteViewer
 			OptionLighting = true;
 		}
 
-		private void RenderEvents()
+		private void RenderEvents(int railIndex)
 		{
-			if (Program.CurrentRoute.Tracks[0].Elements == null)
+			if (Program.CurrentRoute.Tracks[railIndex].Elements == null)
 			{
 				return;
 			}
@@ -353,14 +358,14 @@ namespace RouteViewer
 			bool[] sta = new bool[Program.CurrentRoute.Stations.Length];
 
 			// events
-			for (int i = 0; i < Program.CurrentRoute.Tracks[0].Elements.Length; i++)
+			for (int i = 0; i < Program.CurrentRoute.Tracks[railIndex].Elements.Length; i++)
 			{
-				double p = Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
+				double p = Program.CurrentRoute.Tracks[railIndex].Elements[i].StartingTrackPosition;
 				double d = p - CameraTrackFollower.TrackPosition;
 
 				if (d >= da & d <= db)
 				{
-					foreach (GeneralEvent e in Program.CurrentRoute.Tracks[0].Elements[i].Events)
+					foreach (GeneralEvent e in Program.CurrentRoute.Tracks[railIndex].Elements[i].Events)
 					{
 						double dy, dx = 0.0, dz = 0.0;
 						double s;
@@ -408,15 +413,8 @@ namespace RouteViewer
 						{
 							s = 0.15;
 							dy = 0.4;
-							if (transponderEvent.Type == 21)
-							{
-								// beacon type 21 is reserved for legacy weather events
-								t = WeatherEventTexture;
-							}
-							else
-							{
-								t = TransponderTexture;
-							}
+							// beacon type 21 is reserved for legacy weather events
+							t = transponderEvent.Type == 21 ? WeatherEventTexture : TransponderTexture;
 
 						}
 						else if (e is SoundEvent soundEvent)
@@ -459,7 +457,8 @@ namespace RouteViewer
 							TrackFollower f = new TrackFollower(Program.CurrentHost)
 							{
 								TriggerType = EventTriggerType.None,
-								TrackPosition = p
+								TrackPosition = p,
+								TrackIndex = railIndex
 							};
 							f.UpdateAbsolute(p + e.TrackPositionDelta, true, false);
 							f.WorldPosition.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
@@ -470,6 +469,16 @@ namespace RouteViewer
 						}
 					}
 				}
+
+				if (d > db)
+				{
+					break;
+				}
+			}
+
+			if (railIndex != 0)
+			{
+				return;
 			}
 
 			// stops
@@ -538,20 +547,7 @@ namespace RouteViewer
 			// marker
 			if (OptionInterface)
 			{
-				int y = 150;
-
-
-				for(int i = 0; i < Marker.MarkerTextures.Length; i++)
-				{
-					if (Program.CurrentHost.LoadTexture(ref Marker.MarkerTextures[i].Texture, OpenGlTextureWrapMode.ClampClamp))
-					{
-						double w = Marker.MarkerTextures[i].Size.X == 0 ? Marker.MarkerTextures[i].Texture.Width : Marker.MarkerTextures[i].Size.X;
-						double h = Marker.MarkerTextures[i].Size.Y == 0 ? Marker.MarkerTextures[i].Texture.Height : Marker.MarkerTextures[i].Size.Y;
-						GL.Color4(1.0, 1.0, 1.0, 1.0);
-						Rectangle.Draw(Marker.MarkerTextures[i].Texture, new Vector2(Screen.Width - w - 8, y), new Vector2(w, h));
-						y += (int)h + 8;
-					}
-				}
+				Marker.Draw(150);
 			}
 
 			if (!Program.CurrentlyLoading)
@@ -838,7 +834,7 @@ namespace RouteViewer
 			return s;
 		}
 
-		public NewRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem) : base(CurrentHost, CurrentOptions, FileSystem)
+		public NewRenderer(HostInterface currentHost, BaseOptions currentOptions, FileSystem fileSystem) : base(currentHost, currentOptions, fileSystem)
 		{
 			Screen.Width = Interface.CurrentOptions.WindowWidth;
 			Screen.Height = Interface.CurrentOptions.WindowHeight;

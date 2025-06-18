@@ -2,7 +2,7 @@
 using System.Globalization;
 using Formats.OpenBve;
 using OpenBveApi.Interface;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 using TrainEditor2.Systems;
 
 namespace TrainEditor2.Models.Panels
@@ -22,50 +22,26 @@ namespace TrainEditor2.Models.Panels
 
 		internal Panel2Subject Base
 		{
-			get
-			{
-				return _base;
-			}
-			set
-			{
-				SetProperty(ref _base, value);
-			}
+			get => _base;
+			set => SetProperty(ref _base, value);
 		}
 
 		internal int BaseOption
 		{
-			get
-			{
-				return baseOption;
-			}
-			set
-			{
-				SetProperty(ref baseOption, value);
-			}
+			get => baseOption;
+			set => SetProperty(ref baseOption, value);
 		}
 
 		internal SubjectSuffix Suffix
 		{
-			get
-			{
-				return suffix;
-			}
-			set
-			{
-				SetProperty(ref suffix, value);
-			}
+			get => suffix;
+			set => SetProperty(ref suffix, value);
 		}
 
 		internal int SuffixOption
 		{
-			get
-			{
-				return suffixOption;
-			}
-			set
-			{
-				SetProperty(ref suffixOption, value);
-			}
+			get => suffixOption;
+			set => SetProperty(ref suffixOption, value);
 		}
 
 		internal Subject()

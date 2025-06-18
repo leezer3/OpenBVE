@@ -1,4 +1,4 @@
-﻿using Prism.Mvvm;
+﻿using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Others
 {
@@ -8,14 +8,8 @@ namespace TrainEditor2.Models.Others
 
 		internal string Text
 		{
-			get
-			{
-				return text;
-			}
-			set
-			{
-				SetProperty(ref text, value);
-			}
+			get => text;
+			set => SetProperty(ref text, value);
 		}
 	}
 }

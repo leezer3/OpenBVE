@@ -3,8 +3,8 @@ using TrainEditor2.Models.Trains;
 
 namespace TrainEditor2.IO.Trains.XML
 {
-    internal static partial class TrainXML
-    {
+  internal static partial class TrainXML
+  {
 		internal static void Write(string fileName, Train train)
 		{
 			XDocument xml = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
@@ -17,6 +17,10 @@ namespace TrainEditor2.IO.Trains.XML
 			XElement trainNode = new XElement("Train");
 			for (int i = 0; i < train.Cars.Count; i++)
 			{
+				if (i > 0)
+				{
+					train.Couplers[i - 1].WriteXML(trainNode);
+				}
 				train.Cars[i].WriteXML(fileName, trainNode, train, i);
 			}
 

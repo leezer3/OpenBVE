@@ -1,4 +1,5 @@
-﻿namespace Plugin.BMP
+﻿// ReSharper disable InconsistentNaming
+namespace Plugin.BMP
 {
 	/// <summary>Compression format for the bitmap format</summary>
 	enum CompressionFormat

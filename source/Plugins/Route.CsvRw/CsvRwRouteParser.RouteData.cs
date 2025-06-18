@@ -176,6 +176,60 @@ namespace CsvRwRouteParser
 					}
 				}
 			}
+
+			/// <summary>Sets the brightness value for the specified track position</summary>
+			/// <param name="TrackPosition">The track position to get the brightness value for</param>
+			/// <returns>The brightness value</returns>
+			internal double GetBrightness(double TrackPosition)
+			{
+				double tMin = double.PositiveInfinity;
+				double tMax = double.NegativeInfinity;
+				double bMin = 1.0, bMax = 1.0;
+				for (int i = 0; i < Blocks.Count; i++)
+				{
+					for (int j = 0; j < Blocks[i].BrightnessChanges.Length; j++)
+					{
+						if (Blocks[i].BrightnessChanges[j].TrackPosition <= TrackPosition)
+						{
+							tMin = Blocks[i].BrightnessChanges[j].TrackPosition;
+							bMin = Blocks[i].BrightnessChanges[j].Value;
+						}
+					}
+				}
+				for (int i = Blocks.Count - 1; i >= 0; i--)
+				{
+					for (int j = Blocks[i].BrightnessChanges.Length - 1; j >= 0; j--)
+					{
+						if (Blocks[i].BrightnessChanges[j].TrackPosition >= TrackPosition)
+						{
+							tMax = Blocks[i].BrightnessChanges[j].TrackPosition;
+							bMax = Blocks[i].BrightnessChanges[j].Value;
+						}
+					}
+				}
+				if (tMin == double.PositiveInfinity && tMax == double.NegativeInfinity)
+				{
+					return 1.0;
+				}
+
+				if (tMin == double.PositiveInfinity)
+				{
+					return (bMax - 1.0) * TrackPosition / tMax + 1.0;
+				}
+
+				if (tMax == double.NegativeInfinity)
+				{
+					return bMin;
+				}
+
+				if (tMin == tMax)
+				{
+					return 0.5 * (bMin + bMax);
+				}
+
+				double n = (TrackPosition - tMin) / (tMax - tMin);
+				return (1.0 - n) * bMin + n * bMax;
+			}
 		}
 		
 	}

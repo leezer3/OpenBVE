@@ -657,7 +657,7 @@ namespace MechanikRouteParser
 				string f = Path.CombineFile(RouteFolder, "obloczki.bmp");
 				if (File.Exists(f))
 				{
-					Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out bt);
+					Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out bt);
 				}
 				else
 				{
@@ -665,7 +665,7 @@ namespace MechanikRouteParser
 					if (File.Exists(f))
 					{
 
-						Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out bt);
+						Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out bt);
 					}
 				}
 
@@ -798,7 +798,7 @@ namespace MechanikRouteParser
 							nextHeldAtRed = true;
 						}
 						
-						signal.Object().CreateObject(worldPosition + eyePosition, t, Transformation.NullTransformation, s + 1, StartingDistance, 1.0);
+						signal.Object().CreateObject(worldPosition + eyePosition, t, Transformation.NullTransformation, s + 1, StartingDistance);
 					}
 
 					if (currentRouteData.Blocks[i].HornBlow)

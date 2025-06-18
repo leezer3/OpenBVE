@@ -504,7 +504,6 @@ namespace OpenBve.Formats.MsTs
 				currentPosition++;
 			}
 
-			KujuTokenID currentToken;
 			int ws = s.IndexOf(' ');
 			if (ws != -1)
 			{
@@ -513,7 +512,7 @@ namespace OpenBve.Formats.MsTs
 				s = s.Substring(0, ws);
 			}
 
-			if (!Enum.TryParse(s, true, out currentToken))
+			if (!Enum.TryParse(s, true, out KujuTokenID currentToken))
 			{
 				throw new InvalidDataException("Unrecognised token " + s);
 			}
@@ -643,7 +642,6 @@ namespace OpenBve.Formats.MsTs
 				return t;
 			}
 
-			KujuTokenID currentToken;
 			int ws = s.IndexOf(' ');
 			if (ws != -1)
 			{
@@ -652,7 +650,7 @@ namespace OpenBve.Formats.MsTs
 				s = s.Substring(0, ws);
 			}
 
-			if (!Enum.TryParse(s, true, out currentToken))
+			if (!Enum.TryParse(s, true, out KujuTokenID currentToken))
 			{
 				throw new InvalidDataException("Unrecognised token " + s);
 			}

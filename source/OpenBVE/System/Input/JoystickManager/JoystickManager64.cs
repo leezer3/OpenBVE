@@ -28,14 +28,14 @@ namespace OpenBve.Input
 					var state = OpenTK.Input.Joystick.GetState(i);
 					Guid foundGuid = OpenTK.Input.Joystick.GetGuid(i);
 					var description = OpenTK.Input.Joystick.GetCapabilities(i);
-					if (description.ToString() == "{Axes: 0; Buttons: 0; Hats: 0; IsConnected: True}")
+					if (description.ButtonCount == 0 && description.HatCount == 0 && description.AxisCount == 0 && description.IsConnected)
 					{
 						// Broken joystick drivers- pointless attempting to go any further
 						break;
 					}
 					// A joystick with 56 buttons and zero axis is likely the RailDriver, which is bugged in openTK
 					// OpenTK also returns an empty GUID if we call GetState on an invalid joystick
-					if (description.ToString() == "{Axes: 0; Buttons: 56; Hats: 0; IsConnected: True}" || foundGuid == Guid.Empty) continue;
+					if (description.AxisCount == 0 && description.ButtonCount == 56 && description.IsConnected || foundGuid == Guid.Empty) continue;
 					if (Program.CurrentHost.MonoRuntime)
 					{
 						if (description.AxisCount == 0 && description.ButtonCount == 0 && description.HatCount == 0)

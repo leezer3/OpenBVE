@@ -124,7 +124,7 @@ namespace Plugin
 				{
 					for (int i = 0; i < obj.Mesh.Vertices.Length; i++)
 					{
-						obj.Mesh.Vertices[i].Coordinates.Transform(rootMatrix);
+						obj.Mesh.Vertices[i].Coordinates.Transform(rootMatrix, false);
 					}
 				}
 				return obj;

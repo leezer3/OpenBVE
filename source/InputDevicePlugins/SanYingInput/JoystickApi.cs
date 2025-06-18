@@ -83,7 +83,7 @@ namespace SanYingInput
 			if (CurrentDevice < 0 || CurrentDevice >= JoystickManager.AttachedJoysticks.Length)
 			{
 				CurrentDevice = -1;
-				return new Guid();
+				return Guid.Empty;
 			}
 
 			return JoystickManager.AttachedJoysticks[CurrentDevice].Guid;
@@ -114,21 +114,21 @@ namespace SanYingInput
 		/// Function to acquire state of axial of chosen joy-stick
 		/// </summary>
 		/// <returns>State of axial of chosen joy-stick</returns>
-		internal static List<double> GetAxises()
+		internal static List<double> GetAxisStates()
 		{
-			List<double> axises = new List<double>();
+			List<double> axisStates = new List<double>();
 
 			if (CurrentDevice < 0 || CurrentDevice >= JoystickManager.AttachedJoysticks.Length)
 			{
 				CurrentDevice = -1;
-				return axises;
+				return axisStates;
 			}
 
-			for (int i = 0; i < JoystickManager.AttachedJoysticks[CurrentDevice].ButtonCount(); i++)
+			for (int i = 0; i < JoystickManager.AttachedJoysticks[CurrentDevice].AxisCount(); i++)
 			{
-				axises.Add(JoystickManager.GetAxis(CurrentDevice, i));
+				axisStates.Add(JoystickManager.GetAxis(CurrentDevice, i));
 			}
-			return axises;
+			return axisStates;
 		}
 	}
 }

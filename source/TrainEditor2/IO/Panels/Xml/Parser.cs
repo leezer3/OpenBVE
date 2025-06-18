@@ -1209,20 +1209,20 @@ namespace TrainEditor2.IO.Panels.Xml
 
 								if (linearGauge.Direction.X < -1 || linearGauge.Direction.X > 1)
 								{
-									Interface.AddMessage(MessageType.Error, false, $"Value is expected to be -1, 0 or 1  in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									Interface.AddMessage(MessageType.Error, false, $"Value is expected to be -1, 0 or 1 in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									direction.X = 0;
 								}
 
 								if (!NumberFormats.TryParseIntVb6(s[1], out int y))
 								{
-									Interface.AddMessage(MessageType.Error, false, $"Y is invalid in  LinearGauge Direction at line {lineNumber.ToString(culture)} in file {fileName}");
+									Interface.AddMessage(MessageType.Error, false, $"Y is invalid in LinearGauge Direction at line {lineNumber.ToString(culture)} in file {fileName}");
 								}
 
 								direction.Y = y;
 
 								if (linearGauge.Direction.Y < -1 || linearGauge.Direction.Y > 1)
 								{
-									Interface.AddMessage(MessageType.Error, false, $"Value is expected to be -1, 0 or 1  in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									Interface.AddMessage(MessageType.Error, false, $"Value is expected to be -1, 0 or 1 in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 									direction.Y = 0;
 								}
 

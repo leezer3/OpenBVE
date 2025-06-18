@@ -8,38 +8,20 @@
 
 		internal string Filter
 		{
-			get
-			{
-				return filter;
-			}
-			set
-			{
-				SetProperty(ref filter, value);
-			}
+			get => filter;
+			set => SetProperty(ref filter, value);
 		}
 
 		internal bool CheckFileExists
 		{
-			get
-			{
-				return checkFileExists;
-			}
-			set
-			{
-				SetProperty(ref checkFileExists, value);
-			}
+			get => checkFileExists;
+			set => SetProperty(ref checkFileExists, value);
 		}
 
 		internal string FileName
 		{
-			get
-			{
-				return fileName;
-			}
-			set
-			{
-				SetProperty(ref fileName, value);
-			}
+			get => fileName;
+			set => SetProperty(ref fileName, value);
 		}
 	}
 }

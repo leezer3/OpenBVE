@@ -120,7 +120,7 @@ namespace CsvRwRouteParser
 						 */
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "No backgrounds were defined- Using default background.");
 						string f = OpenBveApi.Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
-						Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out var t);
+						Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out var t);
 						CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false, Plugin.CurrentOptions.ViewingDistance);
 					}
 					else if (Data.Backgrounds.Count > 0 && !Data.Backgrounds.ContainsKey(0) && Data.Blocks[0].Background == 0)
@@ -507,19 +507,20 @@ namespace CsvRwRouteParser
 						if ((int)Data.Blocks[i].SoundEvents[j].Type > 1 && (int)Data.Blocks[i].SoundEvents[j].Type < 6 )
 						{
 							double d = Data.Blocks[i].SoundEvents[j].TrackPosition - StartingDistance;
+							int railIndex = Data.Blocks[i].SoundEvents[j].RailIndex;
 							switch (Data.Blocks[i].SoundEvents[j].Type)
 							{
 								case SoundType.TrainStatic:
-									CurrentRoute.Tracks[0].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, false, Vector3.Zero));
+									CurrentRoute.Tracks[railIndex].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, false, Vector3.Zero));
 									break;
 								case SoundType.TrainAllCarStatic:
-									CurrentRoute.Tracks[0].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, true, false, Vector3.Zero));
+									CurrentRoute.Tracks[railIndex].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, true, false, Vector3.Zero));
 									break;
 								case SoundType.TrainDynamic:
-									CurrentRoute.Tracks[0].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed));
+									CurrentRoute.Tracks[railIndex].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed));
 									break;
 								case SoundType.TrainAllCarDynamic:
-									CurrentRoute.Tracks[0].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, true, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed));
+									CurrentRoute.Tracks[railIndex].Elements[n].Events.Add(new SoundEvent(Plugin.CurrentHost, d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, true, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed));
 									break;
 							}
 						}
@@ -833,9 +834,9 @@ namespace CsvRwRouteParser
 							}
 
 							// sounds
-							if (railKey == 0)
+							for (int k = 0; k < Data.Blocks[i].SoundEvents.Length; k++)
 							{
-								for (int k = 0; k < Data.Blocks[i].SoundEvents.Length; k++)
+								if (railKey == Data.Blocks[i].SoundEvents[k].RailIndex)
 								{
 									Data.Blocks[i].SoundEvents[k].Create(pos, StartingDistance, Direction, planar, updown);
 								}
@@ -905,7 +906,7 @@ namespace CsvRwRouteParser
 							{
 								for (int k = 0; k < Data.Blocks[i].Transponders.Length; k++)
 								{
-									double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Transponders[k].TrackPosition);
+									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].Transponders[k].TrackPosition);
 									Data.Blocks[i].Transponders[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.Structure.Beacon);
 								}
 
@@ -926,7 +927,7 @@ namespace CsvRwRouteParser
 								// signals
 								for (int k = 0; k < Data.Blocks[i].Signals.Length; k++)
 								{
-									Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.27 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Signals[k].TrackPosition));
+									Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, 0.27 + 0.75 * Data.GetBrightness(Data.Blocks[i].Signals[k].TrackPosition));
 								}
 
 								// sections
@@ -952,7 +953,7 @@ namespace CsvRwRouteParser
 							{
 								if (railKey == Data.Blocks[i].Limits[k].RailIndex)
 								{
-									double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Limits[k].TrackPosition);
+									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].Limits[k].TrackPosition);
 									Data.Blocks[i].Limits[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.UnitOfSpeed);
 								}
 							}
@@ -962,7 +963,7 @@ namespace CsvRwRouteParser
 							{
 								for (int k = 0; k < Data.Blocks[i].StopPositions.Length; k++)
 								{
-									double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].StopPositions[k].TrackPosition);
+									double b = 0.25 + 0.75 * Data.GetBrightness(Data.Blocks[i].StopPositions[k].TrackPosition);
 									Data.Blocks[i].StopPositions[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b);
 								}
 							}

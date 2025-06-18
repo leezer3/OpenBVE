@@ -8,38 +8,20 @@
 
 		internal string Filter
 		{
-			get
-			{
-				return filter;
-			}
-			set
-			{
-				SetProperty(ref filter, value);
-			}
+			get => filter;
+			set => SetProperty(ref filter, value);
 		}
 
 		internal bool OverwritePrompt
 		{
-			get
-			{
-				return overwritePrompt;
-			}
-			set
-			{
-				SetProperty(ref overwritePrompt, value);
-			}
+			get => overwritePrompt;
+			set => SetProperty(ref overwritePrompt, value);
 		}
 
 		internal string FileName
 		{
-			get
-			{
-				return fileName;
-			}
-			set
-			{
-				SetProperty(ref fileName, value);
-			}
+			get => fileName;
+			set => SetProperty(ref fileName, value);
 		}
 	}
 }

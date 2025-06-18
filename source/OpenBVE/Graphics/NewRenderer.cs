@@ -87,14 +87,14 @@ namespace OpenBve.Graphics
 			Program.FileSystem.AppendToLogFile("Renderer initialised successfully.");
 		}
 		
-		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
 		{
 			if (!(Prototype is StaticObject obj))
 			{
 				Interface.AddMessage(MessageType.Error, false, "Attempted to use an animated object where only static objects are allowed.");
 				return -1;
 			}
-			return base.CreateStaticObject(obj, Position, WorldTransformation, LocalTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return base.CreateStaticObject(obj, Position, WorldTransformation, LocalTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition);
 		}
 
 		public override void UpdateViewport(int Width, int Height)
@@ -337,7 +337,20 @@ namespace OpenBve.Graphics
 				}
 				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
-			// overlay layer
+
+			// particle sources
+			SetBlendFunc();
+			SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+			{
+				for (int j = 0; j < TrainManager.PlayerTrain.Cars[i].ParticleSources.Count; j++)
+				{
+					TrainManager.PlayerTrain.Cars[i].ParticleSources[j].Update(TimeElapsed);
+				}
+			}
+
+
+			// overlay (cab / interior) layer
 			OptionFog = false;
 			UpdateViewport(ViewportChangeMode.ChangeToCab);
 			

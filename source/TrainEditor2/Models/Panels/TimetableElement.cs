@@ -1,6 +1,6 @@
-﻿using System.Text;
+﻿using OpenBveApi.Colors;
+using System.Text;
 using System.Xml.Linq;
-using OpenBveApi.Colors;
 using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Panels
@@ -13,38 +13,20 @@ namespace TrainEditor2.Models.Panels
 
 		internal double Width
 		{
-			get
-			{
-				return width;
-			}
-			set
-			{
-				SetProperty(ref width, value);
-			}
+			get => width;
+			set => SetProperty(ref width, value);
 		}
 
 		internal double Height
 		{
-			get
-			{
-				return height;
-			}
-			set
-			{
-				SetProperty(ref height, value);
-			}
+			get => height;
+			set => SetProperty(ref height, value);
 		}
 
 		internal Color24 TransparentColor
 		{
-			get
-			{
-				return transparentColor;
-			}
-			set
-			{
-				SetProperty(ref transparentColor, value);
-			}
+			get => transparentColor;
+			set => SetProperty(ref transparentColor, value);
 		}
 
 		internal TimetableElement()
@@ -73,6 +55,17 @@ namespace TrainEditor2.Models.Panels
 				new XElement("Height", Height),
 				new XElement("TransparentColor", TransparentColor)
 			));
+		}
+
+		public override void WriteIntermediate(XElement parent)
+		{
+			parent.Add(new XElement("Timetable",
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
+				new XElement("Layer", Layer),
+				new XElement("Width", Width),
+				new XElement("Height", Height),
+				new XElement("TransparentColor", TransparentColor)
+				));
 		}
 	}
 }

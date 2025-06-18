@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
-using Prism.Mvvm;
+using OpenBveApi.Math;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -9,57 +10,31 @@ namespace TrainEditor2.Models.Trains
 	/// </summary>
 	internal class Cab : BindableBase, ICloneable
 	{
-		private double positionX;
-		private double positionY;
-		private double positionZ;
+		private Vector3 position;
 		private int driverCar;
 
 		internal double PositionX
 		{
-			get
-			{
-				return positionX;
-			}
-			set
-			{
-				SetProperty(ref positionX, value);
-			}
+			get => position.X;
+			set => SetProperty(ref position.X, value);
 		}
 
 		internal double PositionY
 		{
-			get
-			{
-				return positionY;
-			}
-			set
-			{
-				SetProperty(ref positionY, value);
-			}
+			get => position.Y;
+			set => SetProperty(ref position.Y, value);
 		}
 
 		internal double PositionZ
 		{
-			get
-			{
-				return positionZ;
-			}
-			set
-			{
-				SetProperty(ref positionZ, value);
-			}
+			get => position.Z;
+			set => SetProperty(ref position.Z, value);
 		}
 
 		internal int DriverCar
 		{
-			get
-			{
-				return driverCar;
-			}
-			set
-			{
-				SetProperty(ref driverCar, value);
-			}
+			get => driverCar;
+			set => SetProperty(ref driverCar, value);
 		}
 
 		internal Cab()
@@ -70,7 +45,7 @@ namespace TrainEditor2.Models.Trains
 
 		public void WriteXML(string fileName, XElement carNode)
 		{
-			carNode.Add(new XElement("DriverPosition", PositionX + "," + PositionY + "," + PositionZ));
+			carNode.Add(new XElement("DriverPosition", position));
 			carNode.Add(new XElement("InteriorView", "panel.xml"));
 		}
 

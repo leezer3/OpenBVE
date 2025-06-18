@@ -123,6 +123,7 @@ namespace LibRender2
 		public TextureManager TextureManager;
 		public Cube Cube;
 		public Rectangle Rectangle;
+		public Particle Particle;
 		public Loading Loading;
 		public Keys Keys;
 		public MotionBlur MotionBlur;
@@ -244,15 +245,15 @@ namespace LibRender2
 				{
 					if (Screen.Width > 1024)
 					{
-						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_1024.png"), new TextureParameters(null, null), out _programLogo, true);
+						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_1024.png"), TextureParameters.NoChange, out _programLogo, true);
 					}
 					else if (Screen.Width > 512)
 					{
-						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_512.png"), new TextureParameters(null, null), out _programLogo, true);
+						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_512.png"), TextureParameters.NoChange, out _programLogo, true);
 					}
 					else
 					{
-						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_256.png"), new TextureParameters(null, null), out _programLogo, true);
+						currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("In-game"), "logo_256.png"), TextureParameters.NoChange, out _programLogo, true);
 					}
 				}
 				catch
@@ -311,12 +312,12 @@ namespace LibRender2
 			}
 			Camera = new CameraProperties(this);
 			Lighting = new Lighting(this);
-			Marker = new Marker();
+			Marker = new Marker(this);
 
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
 			Fonts = new Fonts(currentHost, currentOptions.Font);
-			VisibilityThread = new Thread(vt);
+			VisibilityThread = new Thread(RunVisibiliityThread);
 			VisibilityThread.Start();
 			RenderThreadJobs = new ConcurrentQueue<ThreadStart>();
 		}
@@ -383,6 +384,7 @@ namespace LibRender2
 			TextureManager = new TextureManager(currentHost, this);
 			Cube = new Cube(this);
 			Rectangle = new Rectangle(this);
+			Particle = new Particle(this);
 			Loading = new Loading(this);
 			Keys = new Keys(this);
 			MotionBlur = new MotionBlur(this);
@@ -425,12 +427,12 @@ namespace LibRender2
 				}
 			}
 			// icons for use in GL menus
-			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "keyboard.png"), new TextureParameters(null, null), out KeyboardTexture);
-			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "gamepad.png"), new TextureParameters(null, null), out GamepadTexture);
-			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "xbox.png"), new TextureParameters(null, null), out XInputTexture);
-			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "zuki.png"), new TextureParameters(null, null), out MasconTeture);
-			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "joystick.png"), new TextureParameters(null, null), out JoystickTexture);
-			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "raildriver.png"), new TextureParameters(null, null), out RailDriverTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "keyboard.png"), TextureParameters.NoChange, out KeyboardTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "gamepad.png"), TextureParameters.NoChange, out GamepadTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "xbox.png"), TextureParameters.NoChange, out XInputTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "zuki.png"), TextureParameters.NoChange, out MasconTeture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "joystick.png"), TextureParameters.NoChange, out JoystickTexture);
+			currentHost.RegisterTexture(Path.CombineFile(fileSystem.GetDataFolder("Menu"), "raildriver.png"), TextureParameters.NoChange, out RailDriverTexture);
 		}
 
 		/// <summary>Deinitializes the renderer</summary>
@@ -438,7 +440,7 @@ namespace LibRender2
 		{
 			this.GameWindow?.Dispose();
 			// terminate spinning thread
-			visibilityThread = false;
+			VisibilityThreadShouldRun = false;
 		}
 
 		/// <summary>Should be called when the OpenGL version is switched mid-game</summary>
@@ -554,14 +556,14 @@ namespace LibRender2
 			VisibleObjects.Clear();
 		}
 
-		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
 		{
 			Matrix4D Translate = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			Matrix4D Rotate = (Matrix4D)new Transformation(LocalTransformation, WorldTransformation);
-			return CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return CreateStaticObject(Position, Prototype, LocalTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition);
 		}
 
-		public int CreateStaticObject(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public int CreateStaticObject(Vector3 Position, StaticObject Prototype, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, ObjectDisposalMode AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
 		{
 			if (Prototype == null)
 			{
@@ -635,7 +637,6 @@ namespace LibRender2
 				Prototype = Prototype,
 				Translation = Translate,
 				Rotate = Rotate,
-				Brightness = Brightness,
 				StartingDistance = startingDistance,
 				EndingDistance = endingDistance,
 				WorldPosition = Position
@@ -727,23 +728,28 @@ namespace LibRender2
 		}
 
 		private VisibilityUpdate updateVisibility;
+		/// <summary>The lock to be held whilst visibility updates or loading operations are in progress</summary>
+		public object VisibilityUpdateLock = new object();
 		
-		public bool visibilityThread = true;
+		public bool VisibilityThreadShouldRun = true;
 
 		public Thread VisibilityThread;
 
-		private void vt()
+		private void RunVisibiliityThread()
 		{
-			while (visibilityThread)
+			while (VisibilityThreadShouldRun)
 			{
-				if (updateVisibility != VisibilityUpdate.None && CameraTrackFollower != null)
+				lock (VisibilityUpdateLock)
 				{
-					UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);
-					updateVisibility = VisibilityUpdate.None;
-				}
-				else
-				{
-					Thread.Sleep(100);
+					if (updateVisibility != VisibilityUpdate.None && CameraTrackFollower != null)
+					{
+						UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);
+						updateVisibility = VisibilityUpdate.None;
+					}
+					else
+					{
+						Thread.Sleep(100);
+					}
 				}
 			}
 		}
@@ -753,7 +759,7 @@ namespace LibRender2
 			updateVisibility = force ? VisibilityUpdate.Force : VisibilityUpdate.None;
 		}
 
-		private void UpdateVisibility(double TrackPosition)
+		private void UpdateVisibility(double trackPosition)
 		{
 			if (currentOptions.ObjectDisposalMode == ObjectDisposalMode.QuadTree)
 			{
@@ -763,7 +769,7 @@ namespace LibRender2
 			{
 				if (updateVisibility == VisibilityUpdate.Normal)
 				{
-					UpdateLegacyVisibility(TrackPosition);
+					UpdateLegacyVisibility(trackPosition);
 				}
 				else
 				{
@@ -773,8 +779,8 @@ namespace LibRender2
 					 *
 					 * Horrible kludge...
 					 */
-					UpdateLegacyVisibility(TrackPosition + 0.01);
-					UpdateLegacyVisibility(TrackPosition - 0.01);
+					UpdateLegacyVisibility(trackPosition + 0.01);
+					UpdateLegacyVisibility(trackPosition - 0.01);
 				}
 				
 			}

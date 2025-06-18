@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
 using System.Xml.Linq;
-using Prism.Mvvm;
 using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Trains
@@ -22,62 +22,32 @@ namespace TrainEditor2.Models.Trains
 
 			internal bool DefinedAxles
 			{
-				get
-				{
-					return definedAxles;
-				}
-				set
-				{
-					SetProperty(ref definedAxles, value);
-				}
+				get => definedAxles;
+				set => SetProperty(ref definedAxles, value);
 			}
 
 			internal double FrontAxle
 			{
-				get
-				{
-					return frontAxle;
-				}
-				set
-				{
-					SetProperty(ref frontAxle, value);
-				}
+				get => frontAxle;
+				set => SetProperty(ref frontAxle, value);
 			}
 
 			internal double RearAxle
 			{
-				get
-				{
-					return rearAxle;
-				}
-				set
-				{
-					SetProperty(ref rearAxle, value);
-				}
+				get => rearAxle;
+				set => SetProperty(ref rearAxle, value);
 			}
 
 			internal bool Reversed
 			{
-				get
-				{
-					return reversed;
-				}
-				set
-				{
-					SetProperty(ref reversed, value);
-				}
+				get => reversed;
+				set => SetProperty(ref reversed, value);
 			}
 
 			internal string Object
 			{
-				get
-				{
-					return _object;
-				}
-				set
-				{
-					SetProperty(ref _object, value);
-				}
+				get => _object;
+				set => SetProperty(ref _object, value);
 			}
 
 			public object Clone()
@@ -130,244 +100,126 @@ namespace TrainEditor2.Models.Trains
 		private string _object;
 		private bool loadingSway;
 
+		internal ObservableCollection<ParticleSource> particleSources = new ObservableCollection<ParticleSource>();
+
 		internal double Mass
 		{
-			get
-			{
-				return mass;
-			}
-			set
-			{
-				SetProperty(ref mass, value);
-			}
+			get => mass;
+			set => SetProperty(ref mass, value);
 		}
 
 		internal double Length
 		{
-			get
-			{
-				return length;
-			}
-			set
-			{
-				SetProperty(ref length, value);
-			}
+			get => length;
+			set => SetProperty(ref length, value);
 		}
 
 		internal double Width
 		{
-			get
-			{
-				return width;
-			}
-			set
-			{
-				SetProperty(ref width, value);
-			}
+			get => width;
+			set => SetProperty(ref width, value);
 		}
 
 		internal double Height
 		{
-			get
-			{
-				return height;
-			}
-			set
-			{
-				SetProperty(ref height, value);
-			}
+			get => height;
+			set => SetProperty(ref height, value);
 		}
 
 		internal double CenterOfGravityHeight
 		{
-			get
-			{
-				return centerOfGravityHeight;
-			}
-			set
-			{
-				SetProperty(ref centerOfGravityHeight, value);
-			}
+			get => centerOfGravityHeight;
+			set => SetProperty(ref centerOfGravityHeight, value);
 		}
 
 		internal bool DefinedAxles
 		{
-			get
-			{
-				return definedAxles;
-			}
-			set
-			{
-				SetProperty(ref definedAxles, value);
-			}
+			get => definedAxles;
+			set => SetProperty(ref definedAxles, value);
 		}
 
 		internal double FrontAxle
 		{
-			get
-			{
-				return frontAxle;
-			}
-			set
-			{
-				SetProperty(ref frontAxle, value);
-			}
+			get => frontAxle;
+			set => SetProperty(ref frontAxle, value);
 		}
 
 		internal double RearAxle
 		{
-			get
-			{
-				return rearAxle;
-			}
-			set
-			{
-				SetProperty(ref rearAxle, value);
-			}
+			get => rearAxle;
+			set => SetProperty(ref rearAxle, value);
 		}
 
 		internal Bogie FrontBogie
 		{
-			get
-			{
-				return frontBogie;
-			}
-			set
-			{
-				SetProperty(ref frontBogie, value);
-			}
+			get => frontBogie;
+			set => SetProperty(ref frontBogie, value);
 		}
 
 		internal Bogie RearBogie
 		{
-			get
-			{
-				return rearBogie;
-			}
-			set
-			{
-				SetProperty(ref rearBogie, value);
-			}
+			get => rearBogie;
+			set => SetProperty(ref rearBogie, value);
 		}
 
 		internal double ExposedFrontalArea
 		{
-			get
-			{
-				return exposedFrontalArea;
-			}
-			set
-			{
-				SetProperty(ref exposedFrontalArea, value);
-			}
+			get => exposedFrontalArea;
+			set => SetProperty(ref exposedFrontalArea, value);
 		}
 
 		internal double UnexposedFrontalArea
 		{
-			get
-			{
-				return unexposedFrontalArea;
-			}
-			set
-			{
-				SetProperty(ref unexposedFrontalArea, value);
-			}
+			get => unexposedFrontalArea;
+			set => SetProperty(ref unexposedFrontalArea, value);
 		}
 
 		internal Performance Performance
 		{
-			get
-			{
-				return performance;
-			}
-			set
-			{
-				SetProperty(ref performance, value);
-			}
+			get => performance;
+			set => SetProperty(ref performance, value);
 		}
 
 		internal Delay Delay
 		{
-			get
-			{
-				return delay;
-			}
-			set
-			{
-				SetProperty(ref delay, value);
-			}
+			get => delay;
+			set => SetProperty(ref delay, value);
 		}
 
 		internal Move Move
 		{
-			get
-			{
-				return move;
-			}
-			set
-			{
-				SetProperty(ref move, value);
-			}
+			get => move;
+			set => SetProperty(ref move, value);
 		}
 
 		internal Brake Brake
 		{
-			get
-			{
-				return brake;
-			}
-			set
-			{
-				SetProperty(ref brake, value);
-			}
+			get => brake;
+			set => SetProperty(ref brake, value);
 		}
 
 		internal Pressure Pressure
 		{
-			get
-			{
-				return pressure;
-			}
-			set
-			{
-				SetProperty(ref pressure, value);
-			}
+			get => pressure;
+			set => SetProperty(ref pressure, value);
 		}
 
 		internal bool Reversed
 		{
-			get
-			{
-				return reversed;
-			}
-			set
-			{
-				SetProperty(ref reversed, value);
-			}
+			get => reversed;
+			set => SetProperty(ref reversed, value);
 		}
 
 		internal string Object
 		{
-			get
-			{
-				return _object;
-			}
-			set
-			{
-				SetProperty(ref _object, value);
-			}
+			get => _object;
+			set => SetProperty(ref _object, value);
 		}
 
 		internal bool LoadingSway
 		{
-			get
-			{
-				return loadingSway;
-			}
-			set
-			{
-				SetProperty(ref loadingSway, value);
-			}
+			get => loadingSway;
+			set => SetProperty(ref loadingSway, value);
 		}
 
 		internal Car()
@@ -434,26 +286,14 @@ namespace TrainEditor2.Models.Trains
 
 		internal Acceleration Acceleration
 		{
-			get
-			{
-				return acceleration;
-			}
-			set
-			{
-				SetProperty(ref acceleration, value);
-			}
+			get => acceleration;
+			set => SetProperty(ref acceleration, value);
 		}
 
 		internal Motor Motor
 		{
-			get
-			{
-				return motor;
-			}
-			set
-			{
-				SetProperty(ref motor, value);
-			}
+			get => motor;
+			set => SetProperty(ref motor, value);
 		}
 
 		internal MotorCar()
@@ -520,6 +360,11 @@ namespace TrainEditor2.Models.Trains
 			{
 				train.Cab.WriteXML(fileName, carElement);
 			}
+
+			for (int p = 0; p < particleSources.Count; p++)
+			{
+				particleSources[p].WriteXML(fileName, carElement);
+			}
 			trainNode.Add(carElement);
 		}
 	}
@@ -576,6 +421,11 @@ namespace TrainEditor2.Models.Trains
 			if (i == train.Cab.DriverCar)
 			{
 				train.Cab.WriteXML(fileName, carElement);
+			}
+
+			for (int p = 0; p < particleSources.Count; p++)
+			{
+				particleSources[p].WriteXML(fileName, carElement);
 			}
 			trainNode.Add(carElement);
 		}

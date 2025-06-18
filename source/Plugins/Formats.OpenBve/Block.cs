@@ -162,19 +162,39 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
-	    /// <summary>Reads the specified string array from the block, preserving the prior value if not present</summary>
+		/// <summary>Reads the specified Color24 from the block, preserving the prior value if not present</summary>
+		public virtual bool TryGetColor32(T2 key, ref Color32 value)
+		{
+			return false;
+		}
+
+		/// <summary>Reads the specified string array from the block, preserving the prior value if not present</summary>
 		public virtual bool TryGetStringArray(T2 key, char separator, ref string[] values)
 	    {
 		    values = new string[0];
 		    return false;
 	    }
 
-	    /// <summary>Reads the specified path array from the block</summary>
-	    public virtual bool GetPathArray(T2 key, char separator, string absolutePath, ref string[] values)
+		/// <summary>Reads the specified path array from the block</summary>
+		public virtual bool TryGetPathArray(T2 key, char separator, string absolutePath, ref string[] values)
+		{
+			values = new string[0];
+			return false;
+		}
+
+		/// <summary>Reads the specified path array from the block</summary>
+		public virtual bool GetPathArray(T2 key, char separator, string absolutePath, ref string[] values)
 	    {
 		    values = new string[0];
 		    return false;
 	    }
+
+		/// <summary>Reads the specified double array from the block</summary>
+		public virtual bool TryGetDoubleArray(T2 key, char separator, ref double[] values)
+		{
+			values = new double[0];
+			return false;
+		}
 
 		/// <summary>Reads the specified FunctionScript from the block, preserving the prior value if not present</summary>
 		public virtual bool GetFunctionScript(T2 key, out AnimationScript function)
@@ -198,19 +218,19 @@ namespace Formats.OpenBve
 	    }
 
 		/// <summary>Reads the specified Enum value from the block</summary>
-		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue, out int index, out string Suffix) where T3 : struct, Enum
+		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue, out int index, out string suffix) where T3 : struct, Enum
 		{
 		    enumValue = default;
 		    index = 0;
-		    Suffix = string.Empty;
+		    suffix = string.Empty;
 		    return false;
 	    }
 
 		/// <summary>Reads the specified Enum value from the block</summary>
-		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue, out Color32 Color) where T3 : struct, Enum
+		public virtual bool GetEnumValue<T3>(T2 key, out T3 enumValue, out Color32 color) where T3 : struct, Enum
 		{
 			enumValue = default;
-			Color = Color32.Black;
+			color = Color32.Black;
 			return false;
 		}
 

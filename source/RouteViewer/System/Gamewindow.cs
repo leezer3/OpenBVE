@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Threading;
 using OpenBveApi;
@@ -143,13 +142,21 @@ namespace RouteViewer
 			{
 				return;
 			}
-			Program.Renderer.visibilityThread = false;
+			Program.Renderer.VisibilityThreadShouldRun = false;
 			if (!Loading.Complete && Program.CurrentRouteFile != null)
 			{
 				e.Cancel = true;
 				Loading.Cancel = true;
 			}
-	    }
+			if (Program.CurrentHost.MonoRuntime)
+			{
+				// Mono often fails to close the main window properly
+				// give it a brief pause (to the visibility thread terminate cleanly)
+				// then issue forceful closeure
+				Thread.Sleep(100);
+				Environment.Exit(0);
+			}
+		}
 
 		public static void LoadingScreenLoop()
 		{

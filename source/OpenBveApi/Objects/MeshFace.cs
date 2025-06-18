@@ -81,15 +81,15 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Appends an array of verticies to the MeshFace</summary>
-		/// <param name="Vertices">The verticies to append</param>
+		/// <param name="additionalVerticies">The verticies to append</param>
 		/// <remarks>This does not check the MeshFace for duplicates</remarks>
-		public void AppendVerticies(int[] Vertices)
+		public void AppendVerticies(int[] additionalVerticies)
 		{
-			int oldLength = this.Vertices.Length;
-			Array.Resize(ref this.Vertices, oldLength + Vertices.Length);
-			for (int i = 0; i < Vertices.Length; i++)
+			int oldLength = Vertices.Length;
+			Array.Resize(ref Vertices, oldLength + additionalVerticies.Length);
+			for (int i = 0; i < additionalVerticies.Length; i++)
 			{
-				this.Vertices[oldLength + i] = new MeshFaceVertex(Vertices[i]);
+				Vertices[oldLength + i] = new MeshFaceVertex(additionalVerticies[i]);
 			}
 		}
 

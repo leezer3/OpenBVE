@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Hosts;
@@ -56,6 +57,12 @@ namespace LibRender2.Textures
 		/// <returns>Whether registering the texture was successful.</returns>
 		public bool RegisterTexture(string path, TextureParameters parameters, out Texture handle)
 		{
+			if (!File.Exists(path))
+			{
+				// shouldn't happen, but handle gracefully
+				handle = null;
+				return false;
+			}
 			/* BUG:
 			 * Attempt to delete null texture handles from the end of the array
 			 * These sometimes seem to end up there
@@ -480,7 +487,7 @@ namespace LibRender2.Textures
 				}
 			}
 			handle.Ignore = false;
-			if (handle.Origin != null && textureCache.ContainsKey(handle.Origin))
+			if (handle.Origin != null)
 			{
 				textureCache.Remove(handle.Origin);
 			}
@@ -499,7 +506,7 @@ namespace LibRender2.Textures
 				{
 					if (origin is PathOrigin pathOrigin)
 					{
-						if (!System.IO.File.Exists(pathOrigin.Path) || pathOrigin.FileSize != new System.IO.FileInfo(pathOrigin.Path).Length || pathOrigin.LastModificationTime != System.IO.File.GetLastWriteTime(pathOrigin.Path))
+						if (!File.Exists(pathOrigin.Path) || pathOrigin.FileSize != new FileInfo(pathOrigin.Path).Length || pathOrigin.LastModificationTime != File.GetLastWriteTime(pathOrigin.Path))
 						{
 							textureCache.Remove(origin);
 						}

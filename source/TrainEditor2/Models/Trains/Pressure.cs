@@ -1,5 +1,5 @@
 ﻿using System;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -16,62 +16,32 @@ namespace TrainEditor2.Models.Trains
 
 		internal double BrakeCylinderServiceMaximumPressure
 		{
-			get
-			{
-				return brakeCylinderServiceMaximumPressure;
-			}
-			set
-			{
-				SetProperty(ref brakeCylinderServiceMaximumPressure, value);
-			}
+			get => brakeCylinderServiceMaximumPressure;
+			set => SetProperty(ref brakeCylinderServiceMaximumPressure, value);
 		}
 
 		internal double BrakeCylinderEmergencyMaximumPressure
 		{
-			get
-			{
-				return brakeCylinderEmergencyMaximumPressure;
-			}
-			set
-			{
-				SetProperty(ref brakeCylinderEmergencyMaximumPressure, value);
-			}
+			get => brakeCylinderEmergencyMaximumPressure;
+			set => SetProperty(ref brakeCylinderEmergencyMaximumPressure, value);
 		}
 
 		internal double MainReservoirMinimumPressure
 		{
-			get
-			{
-				return mainReservoirMinimumPressure;
-			}
-			set
-			{
-				SetProperty(ref mainReservoirMinimumPressure, value);
-			}
+			get => mainReservoirMinimumPressure;
+			set => SetProperty(ref mainReservoirMinimumPressure, value);
 		}
 
 		internal double MainReservoirMaximumPressure
 		{
-			get
-			{
-				return mainReservoirMaximumPressure;
-			}
-			set
-			{
-				SetProperty(ref mainReservoirMaximumPressure, value);
-			}
+			get => mainReservoirMaximumPressure;
+			set => SetProperty(ref mainReservoirMaximumPressure, value);
 		}
 
 		internal double BrakePipeNormalPressure
 		{
-			get
-			{
-				return brakePipeNormalPressure;
-			}
-			set
-			{
-				SetProperty(ref brakePipeNormalPressure, value);
-			}
+			get => brakePipeNormalPressure;
+			set => SetProperty(ref brakePipeNormalPressure, value);
 		}
 
 		internal Pressure()

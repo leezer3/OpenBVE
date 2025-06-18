@@ -109,7 +109,7 @@ namespace OpenBveApi.Objects
 							}
 							else
 							{
-								currentHost.RegisterTexture(Materials[i].DaytimeTexture, new TextureParameters(null, null), out tday);
+								currentHost.RegisterTexture(Materials[i].DaytimeTexture, TextureParameters.NoChange, out tday);
 							}
 						}
 
@@ -130,7 +130,7 @@ namespace OpenBveApi.Objects
 						}
 						else
 						{
-							currentHost.RegisterTexture(Materials[i].NighttimeTexture, new TextureParameters(null, null), out tnight);
+							currentHost.RegisterTexture(Materials[i].NighttimeTexture, TextureParameters.NoChange, out tnight);
 						}
 
 						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;

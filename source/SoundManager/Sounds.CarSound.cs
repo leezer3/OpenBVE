@@ -52,6 +52,10 @@ namespace SoundManager
 
 		public CarSound(HostInterface currentHost, string soundFile, double radius, Vector3 position)
 		{
+			if (string.IsNullOrEmpty(soundFile))
+			{
+				return;
+			}
 			currentHost.RegisterSound(soundFile, radius, out SoundHandle handle);
 			Buffer = handle as SoundBuffer;
 			this.Position = position;

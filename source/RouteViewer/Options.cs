@@ -5,8 +5,6 @@ using System.Reflection;
 using System.Windows.Forms;
 using Formats.OpenBve;
 using OpenBveApi;
-using OpenBveApi.Graphics;
-using OpenBveApi.Objects;
 using Path = OpenBveApi.Path;
 
 namespace RouteViewer

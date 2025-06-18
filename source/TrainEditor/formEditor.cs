@@ -20,7 +20,7 @@ namespace TrainEditor {
 		}
 
 		// members
-		private TrainEditor.TrainDat.Train Train = new TrainDat.Train();
+		private TrainDat.Train Train = new TrainDat.Train();
 		private string FileName = null;
 
 		private string CurrentLanguageCode = "en-US";
@@ -558,14 +558,14 @@ namespace TrainEditor {
 			// horizontal grid
 			for (float y = 0.0f; y <= AccelerationMaximumY; y += 1.0f) {
 				float yf = (1.0f - y / AccelerationMaximumY) * (float)height;
-				int yi = (int)Math.Round((double)yf);
+				int yi = (int)Math.Round(yf);
 				e.Graphics.DrawLine(grayPen, new Point(0, yi), new Point(width, yi));
 				e.Graphics.DrawString(y.ToString("0", culture), font, grayBrush, new PointF(1.0f, yf));
 			}
 			// vertical grid
 			for (float x = 0.0f; x <= AccelerationMaximumX; x += 10.0f) {
 				float xf = x / AccelerationMaximumX * (float)width;
-				int xi = (int)Math.Round((double)xf);
+				int xi = (int)Math.Round(xf);
 				e.Graphics.DrawLine(grayPen, new Point(xi, 0), new Point(xi, height));
 				if (x != 0.0f) {
 					e.Graphics.DrawString(x.ToString("0", culture), font, grayBrush, new PointF(xf, 1.0f));
@@ -769,7 +769,7 @@ namespace TrainEditor {
 		private float MotorHoverYPitch = 0.0f;
 		private float MotorHoverYVolume = 0.0f;
 		private class PictureBoxUpdateQueue {
-			private PictureBox[] Boxes = new PictureBox[4];
+			private readonly PictureBox[] Boxes = new PictureBox[4];
 			internal void Add(PictureBox Box) {
 				int i;
 				for (i = 0; i < 4; i++) {
@@ -791,7 +791,7 @@ namespace TrainEditor {
 				return this.Boxes[0];
 			}
 		}
-		private TrainEditor.formEditor.PictureBoxUpdateQueue MotorUpdateQueue = new PictureBoxUpdateQueue();
+		private readonly PictureBoxUpdateQueue MotorUpdateQueue = new PictureBoxUpdateQueue();
 		
 		// motor p1
 		private void PictureboxMotorP1Paint(object sender, PaintEventArgs e) {
@@ -1215,7 +1215,7 @@ namespace TrainEditor {
 			e.Graphics.DrawRectangle(new Pen(SystemColors.ButtonShadow), new Rectangle(0, 0, width - 1, height - 1));
 			// queue
 			PictureBox b = MotorUpdateQueue.Next();
-			if (b != null) b.Invalidate();
+			b?.Invalidate();
 		}
 		
 		// mouse

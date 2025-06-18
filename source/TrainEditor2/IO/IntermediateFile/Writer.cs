@@ -48,7 +48,7 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			foreach (Coupler coupler in train.Couplers)
 			{
-				WriteCouplerNode(couplersNode, coupler);
+				coupler.WriteIntermediate(couplersNode);
 			}
 		}
 
@@ -271,28 +271,19 @@ namespace TrainEditor2.IO.IntermediateFile
 				));
 		}
 
-		private static void WriteCouplerNode(XElement parent, Coupler coupler)
-		{
-			parent.Add(new XElement("Coupler",
-				new XElement("Min", coupler.Min),
-				new XElement("Max", coupler.Max),
-			new XElement("Object", coupler.Object)
-				));
-		}
-
 		private static void WritePanelNode(XElement parent, Panel panel)
 		{
 			XElement panelNode = new XElement("Panel");
 			parent.Add(panelNode);
 
-			WriteThisNode(panelNode, panel.This);
+			panel.This.WriteIntermediate(panelNode);
 
 			XElement screensNode = new XElement("Screens");
 			panelNode.Add(screensNode);
 
 			foreach (Screen screen in panel.Screens)
 			{
-				WriteScreenNode(screensNode, screen);
+				screen.WriteIntermediate(screensNode);
 			}
 
 			XElement panelElementsNode = new XElement("PanelElements");
@@ -300,214 +291,8 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			foreach (PanelElement element in panel.PanelElements)
 			{
-				WritePanelElementNode(panelElementsNode, element);
+				element.WriteIntermediate(panelElementsNode);
 			}
-		}
-
-		private static void WriteThisNode(XElement parent, This This)
-		{
-			parent.Add(new XElement("This",
-				new XElement("Resolution", This.Resolution),
-				new XElement("Left", This.Left),
-				new XElement("Right", This.Right),
-				new XElement("Top", This.Top),
-				new XElement("Bottom", This.Bottom),
-				new XElement("DaytimeImage", This.DaytimeImage),
-				new XElement("NighttimeImage", This.NighttimeImage),
-				new XElement("TransparentColor", This.TransparentColor),
-				new XElement("Center", $"{This.Center.X}, {This.Center.Y}"),
-				new XElement("Origin", $"{This.Origin.X}, {This.Origin.Y}")
-				));
-		}
-
-		private static void WriteScreenNode(XElement parent, Screen screen)
-		{
-			XElement screenNode = new XElement("Screen",
-				new XElement("Number", screen.Number),
-				new XElement("Layer", screen.Layer)
-				);
-			parent.Add(screenNode);
-
-			XElement panelElementsNode = new XElement("PanelElements");
-			screenNode.Add(panelElementsNode);
-
-			foreach (PanelElement element in screen.PanelElements)
-			{
-				WritePanelElementNode(panelElementsNode, element);
-			}
-
-			XElement touchElementsNode = new XElement("TouchElements");
-			screenNode.Add(touchElementsNode);
-
-			foreach (Models.Panels.TouchElement element in screen.TouchElements)
-			{
-				WriteTouchElementNode(touchElementsNode, element);
-			}
-		}
-
-		private static void WritePanelElementNode(XElement parent, PanelElement element)
-		{
-			if (element is Models.Panels.PilotLampElement)
-			{
-				WritePilotLampElementNode(parent, (Models.Panels.PilotLampElement)element);
-			}
-
-			if (element is NeedleElement)
-			{
-				WriteNeedleElementNode(parent, (NeedleElement)element);
-			}
-
-			if (element is DigitalNumberElement)
-			{
-				WriteDigitalNumberElementNode(parent, (DigitalNumberElement)element);
-			}
-
-			if (element is DigitalGaugeElement)
-			{
-				WriteDigitalGaugeElementNode(parent, (DigitalGaugeElement)element);
-			}
-
-			if (element is LinearGaugeElement)
-			{
-				WriteLinearGaugeElementNode(parent, (LinearGaugeElement)element);
-			}
-
-			if (element is TimetableElement)
-			{
-				WriteTimetableElementNode(parent, (TimetableElement)element);
-			}
-		}
-
-		private static void WritePilotLampElementNode(XElement parent, Models.Panels.PilotLampElement element)
-		{
-			parent.Add(new XElement("PilotLamp",
-				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
-				new XElement("Layer", element.Layer),
-				WriteSubjectNode(element.Subject),
-				new XElement("DaytimeImage", element.DaytimeImage),
-				new XElement("NighttimeImage", element.NighttimeImage),
-				new XElement("TransparentColor", element.TransparentColor)
-				));
-		}
-
-		private static void WriteNeedleElementNode(XElement parent, NeedleElement element)
-		{
-			parent.Add(new XElement("Needle",
-				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
-				new XElement("Layer", element.Layer),
-				WriteSubjectNode(element.Subject),
-				new XElement("DaytimeImage", element.DaytimeImage),
-				new XElement("NighttimeImage", element.NighttimeImage),
-				new XElement("TransparentColor", element.TransparentColor),
-				new XElement("DefinedRadius", element.DefinedRadius),
-				new XElement("Radius", element.Radius),
-				new XElement("Color", element.Color),
-				new XElement("DefinedOrigin", element.DefinedOrigin),
-				new XElement("Origin", $"{element.Origin.X}, {element.Origin.Y}"),
-				new XElement("InitialAngle", element.InitialAngle),
-				new XElement("LastAngle", element.LastAngle),
-				new XElement("Minimum", element.Minimum),
-				new XElement("Maximum", element.Maximum),
-				new XElement("DefinedNaturalFreq", element.DefinedNaturalFreq),
-				new XElement("NaturalFreq", element.NaturalFreq),
-				new XElement("DefinedDampingRatio", element.DefinedDampingRatio),
-				new XElement("DampingRatio", element.DampingRatio),
-				new XElement("Backstop", element.Backstop),
-				new XElement("Smoothed", element.Smoothed)
-				));
-		}
-
-		private static void WriteDigitalNumberElementNode(XElement parent, DigitalNumberElement element)
-		{
-			parent.Add(new XElement("DigitalNumber",
-				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
-				new XElement("Layer", element.Layer),
-				WriteSubjectNode(element.Subject),
-				new XElement("DaytimeImage", element.DaytimeImage),
-				new XElement("NighttimeImage", element.NighttimeImage),
-				new XElement("TransparentColor", element.TransparentColor),
-				new XElement("Interval", element.Interval)
-				));
-		}
-
-		private static void WriteDigitalGaugeElementNode(XElement parent, DigitalGaugeElement element)
-		{
-			parent.Add(new XElement("DigitalGauge",
-				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
-				new XElement("Layer", element.Layer),
-				WriteSubjectNode(element.Subject),
-				new XElement("Radius", element.Radius),
-				new XElement("Color", element.Color),
-				new XElement("InitialAngle", element.InitialAngle),
-				new XElement("LastAngle", element.LastAngle),
-				new XElement("Minimum", element.Minimum),
-				new XElement("Maximum", element.Maximum),
-				new XElement("Step", element.Step)
-				));
-		}
-
-		private static void WriteLinearGaugeElementNode(XElement parent, LinearGaugeElement element)
-		{
-			parent.Add(new XElement("LinearGauge",
-				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
-				new XElement("Layer", element.Layer),
-				WriteSubjectNode(element.Subject),
-				new XElement("DaytimeImage", element.DaytimeImage),
-				new XElement("NighttimeImage", element.NighttimeImage),
-				new XElement("TransparentColor", element.TransparentColor),
-				new XElement("Minimum", element.Minimum),
-				new XElement("Maximum", element.Maximum),
-				new XElement("Direction", $"{element.Direction.X}, {element.Direction.Y}"),
-				new XElement("Width", element.Width)
-				));
-		}
-
-		private static void WriteTimetableElementNode(XElement parent, TimetableElement element)
-		{
-			parent.Add(new XElement("Timetable",
-				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
-				new XElement("Layer", element.Layer),
-				new XElement("Width", element.Width),
-				new XElement("Height", element.Height),
-				new XElement("TransparentColor", element.TransparentColor)
-				));
-		}
-
-		private static XElement WriteSubjectNode(Subject subject)
-		{
-			return new XElement("Subject",
-				new XElement("Base", subject.Base),
-				new XElement("BaseOption", subject.BaseOption),
-				new XElement("Suffix", subject.Suffix),
-				new XElement("SuffixOption", subject.SuffixOption)
-				);
-		}
-
-		private static void WriteTouchElementNode(XElement parent, Models.Panels.TouchElement element)
-		{
-			parent.Add(new XElement("Touch",
-				new XElement("Location", $"{element.Location.X}, {element.Location.Y}"),
-				new XElement("Size", $"{element.Size.X}, {element.Size.Y}"),
-				new XElement("JumpScreen", element.JumpScreen),
-				new XElement("SoundEntries", element.SoundEntries.Select(WriteTouchElementSoundEntryNode)),
-				new XElement("CommandEntries", element.CommandEntries.Select(WriteTouchElementCommandEntryNode)),
-				new XElement("Layer", element.Layer)
-				));
-		}
-
-		private static XElement WriteTouchElementSoundEntryNode(Models.Panels.TouchElement.SoundEntry entry)
-		{
-			return new XElement("Entry",
-				new XElement("Index", entry.Index)
-			);
-		}
-
-		private static XElement WriteTouchElementCommandEntryNode(Models.Panels.TouchElement.CommandEntry entry)
-		{
-			return new XElement("Entry",
-				new XElement("Info", entry.Info.Command),
-				new XElement("Option", entry.Option)
-				);
 		}
 
 		private static void WriteSoundsNode(XElement parent, Sound sound)
