@@ -3,7 +3,7 @@ using TrainEditor2.Models.Trains;
 
 namespace TrainEditor2.IO.Trains.XML
 {
-  internal static partial class TrainXML
+  internal static class TrainXML
   {
 		internal static void Write(string fileName, Train train)
 		{

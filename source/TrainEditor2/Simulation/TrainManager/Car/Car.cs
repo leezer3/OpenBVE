@@ -30,13 +30,7 @@ namespace TrainEditor2.Simulation.TrainManager
 			{
 				throw new NotSupportedException("Should not be called in TrainEditor2");
 			}
-
-			/// <summary>Initializes a train with the default (empty) set of car sounds</summary>
-			internal void InitializeCarSounds()
-			{
-				Flange.Sounds = new Dictionary<int, CarSound>();
-			}
-
+			
 			internal void ApplySounds()
 			{
 				//Default sound positions and radii

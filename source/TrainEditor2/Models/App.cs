@@ -7,7 +7,6 @@ using System.Linq;
 using System.Media;
 using System.Text;
 using System.Xml;
-using LibRender2.Trains;
 using OpenBveApi.Interface;
 using TrainEditor2.Extensions;
 using TrainEditor2.IO.IntermediateFile;
@@ -25,7 +24,6 @@ using TrainEditor2.Models.Panels;
 using TrainEditor2.Models.Sounds;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
-using TrainEditor2.Views;
 
 namespace TrainEditor2.Models
 {

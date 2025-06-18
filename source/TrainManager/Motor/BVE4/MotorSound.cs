@@ -50,7 +50,7 @@ namespace TrainManager.Motor
 			}
 		}
 
-		public override void Update(double TimeElapsed)
+		public override void Update(double timeElapsed)
 		{
 			if (!Car.TractionModel.ProvidesPower)
 			{

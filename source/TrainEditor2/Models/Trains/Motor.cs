@@ -223,7 +223,7 @@ namespace TrainEditor2.Models.Trains
 
 					if (track.PitchVertices.Count >= 2)
 					{
-						KeyValuePair<int, Vertex>[] leftVertices = new KeyValuePair<int, Vertex>[] { track.PitchVertices.ElementAt(track.PitchVertices.Count - 2), track.PitchVertices.Last() };
+						KeyValuePair<int, Vertex>[] leftVertices = { track.PitchVertices.ElementAt(track.PitchVertices.Count - 2), track.PitchVertices.Last() };
 						Func<double, double> f = x => leftVertices[0].Value.Y + (leftVertices[1].Value.Y - leftVertices[0].Value.Y) / (leftVertices[1].Value.X - leftVertices[0].Value.X) * (x - leftVertices[0].Value.X);
 
 						if (f(velocity) == entries[i].Pitch)
@@ -236,7 +236,7 @@ namespace TrainEditor2.Models.Trains
 
 					if (track.VolumeVertices.Count >= 2)
 					{
-						KeyValuePair<int, Vertex>[] leftVertices = new KeyValuePair<int, Vertex>[] { track.VolumeVertices.ElementAt(track.VolumeVertices.Count - 2), track.VolumeVertices.Last() };
+						KeyValuePair<int, Vertex>[] leftVertices = { track.VolumeVertices.ElementAt(track.VolumeVertices.Count - 2), track.VolumeVertices.Last() };
 						Func<double, double> f = x => leftVertices[0].Value.Y + (leftVertices[1].Value.Y - leftVertices[0].Value.Y) / (leftVertices[1].Value.X - leftVertices[0].Value.X) * (x - leftVertices[0].Value.X);
 
 						if (f(velocity) == entries[i].Gain)

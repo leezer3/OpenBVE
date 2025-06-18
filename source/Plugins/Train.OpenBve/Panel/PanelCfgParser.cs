@@ -46,7 +46,7 @@ namespace Train.OpenBve
 		{
 			// read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			string FileName = Path.CombineFile(TrainPath, "panel.cfg");
+			string fileName = Path.CombineFile(TrainPath, "panel.cfg");
 			// initialize
 			
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
@@ -69,7 +69,7 @@ namespace Train.OpenBve
 			// default background
 			string PanelBackground = Path.CombineFile(TrainPath, "panel.bmp");
 
-			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(FileName, Plugin.CurrentHost);
+			ConfigFile<PanelSections, PanelKey> cfg = new ConfigFile<PanelSections, PanelKey>(fileName, Plugin.CurrentHost);
 
 			cfg.ReadBlock(PanelSections.Panel, out var Block);
 			if (Block != null && Block.GetPath(PanelKey.Background, TrainPath, out var panelBackground))
@@ -111,7 +111,7 @@ namespace Train.OpenBve
 
 						if (Type != 0 & Type != 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type must be either 0 or 1 in " + Block.Key + " in " + FileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type must be either 0 or 1 in " + Block.Key + " in " + fileName);
 							Type = 0;
 						}
 
@@ -147,7 +147,7 @@ namespace Train.OpenBve
 									UnitFactor = 98066.5;
 									break;
 								default:
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Units are invalid in " + Block.Key + " in " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Units are invalid in " + Block.Key + " in " + fileName);
 									break;
 							}
 						}
@@ -300,7 +300,7 @@ namespace Train.OpenBve
 
 						if (Type != 0 & Type != 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type must be either 0 or 1 in " + Block.Key + " in " + FileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Type must be either 0 or 1 in " + Block.Key + " in " + fileName);
 							Type = 0;
 						}
 
@@ -513,7 +513,7 @@ namespace Train.OpenBve
 								default:
 									if (!NumberFormats.TryParseIntVb6(Unit, out Units))
 									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Units are invalid in " + Block.Key + " in " + FileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Units are invalid in " + Block.Key + " in " + fileName);
 										Units = 0;
 									}
 									break;
@@ -522,7 +522,7 @@ namespace Train.OpenBve
 
 						if (Units < 0 | Units > 2)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value must be between 0 and 2 in " + Block.Key + " in " + FileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Value must be between 0 and 2 in " + Block.Key + " in " + fileName);
 							Units = 0;
 						}
 
@@ -541,13 +541,13 @@ namespace Train.OpenBve
 
 						if (Size.X <= 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Width is required to be specified in " + Block.Key + " in " + FileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Width is required to be specified in " + Block.Key + " in " + fileName);
 							break;
 						}
 
 						if (Size.Y <= 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Height is required to be specified in " + Block.Key + " in " + FileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Height is required to be specified in " + Block.Key + " in " + fileName);
 							break;
 						}
 
@@ -558,13 +558,13 @@ namespace Train.OpenBve
 							if (Size.X > digitalNumberWidth)
 							{
 								Size.X = digitalNumberWidth;
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Clip region width was greater than the texture width " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Clip region width was greater than the texture width " + Block.Key + " in " + fileName);
 							}
 
 							if (Size.Y > digitalNumberHeight)
 							{
 								Size.X = digitalNumberHeight;
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Clip region height was greater than the texture height " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Clip region height was greater than the texture height " + Block.Key + " in " + fileName);
 							}
 
 							int n = digitalNumberHeight / (int)Size.Y;
@@ -697,7 +697,7 @@ namespace Train.OpenBve
 						if (indicatorWidth <= 0)
 						{
 							indicatorWidth = 1;
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Width is expected to be positive in " + Block.Key + " in " + FileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Width is expected to be positive in " + Block.Key + " in " + fileName);
 						}
 
 						Plugin.CurrentHost.QueryTextureDimensions(brakeIndicatorPath, out var w, out var h);
