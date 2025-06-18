@@ -745,8 +745,7 @@ namespace OpenBveApi.Objects
 		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
 		/// <param name="sectionIndex">The index of the section if placed using a SigF command</param>
 		/// <param name="TrackPosition">The absolute track position</param>
-		/// <param name="Brightness">The brightness value at the track position</param>
-		public void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, int sectionIndex, double TrackPosition, double Brightness)
+		public void CreateObject(Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, int sectionIndex, double TrackPosition)
 		{
 
 			int a = currentHost.AnimatedWorldObjectsUsed;
@@ -781,7 +780,6 @@ namespace OpenBveApi.Objects
 					}
 				}
 
-				currentObject.Object.internalObject.Brightness = Brightness;
 
 				double r = 0.0;
 				for (int i = 0; i < currentObject.Object.States.Length; i++)
@@ -821,7 +819,6 @@ namespace OpenBveApi.Objects
 					}
 				}
 
-				currentObject.Object.internalObject.Brightness = Brightness;
 
 				double r = 0.0;
 				for (int i = 0; i < currentObject.Object.States.Length; i++)

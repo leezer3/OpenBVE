@@ -798,7 +798,7 @@ namespace MechanikRouteParser
 							nextHeldAtRed = true;
 						}
 						
-						signal.Object().CreateObject(worldPosition + eyePosition, t, Transformation.NullTransformation, s + 1, StartingDistance, 1.0);
+						signal.Object().CreateObject(worldPosition + eyePosition, t, Transformation.NullTransformation, s + 1, StartingDistance);
 					}
 
 					if (currentRouteData.Blocks[i].HornBlow)

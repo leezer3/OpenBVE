@@ -2,7 +2,7 @@
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using System;
-using System.Drawing;
+using System.Collections.Generic;
 
 namespace LibRender2.Overlays
 {
@@ -11,49 +11,38 @@ namespace LibRender2.Overlays
 
 		private readonly BaseRenderer Renderer;
 		/// <summary>Holds the array of marker textures currently displayed in-game</summary>
-		public MarkerTexture[] MarkerTextures = { };
+		public List<MarkerTexture> MarkerTextures;
 
 		internal Marker(BaseRenderer renderer)
 		{
 			Renderer = renderer;
+			MarkerTextures = new List<MarkerTexture>();
 		}
 
 		/// <summary>Adds a marker to be displayed</summary>
-		/// <param name="renderer">The base renderer</param>
 		/// <param name="texture">The texture</param>
 		/// <param name="size">The size to draw</param>
 		public void AddMarker(Texture texture, Vector2 size)
 		{
-			int n = MarkerTextures.Length;
-			Array.Resize(ref MarkerTextures, n + 1);
-			MarkerTextures[n] = new MarkerTexture(texture, size);
+			MarkerTextures.Add(new MarkerTexture(texture, size));
 		}
 
 		/// <summary>Removes a marker</summary>
-		/// <param name="Texture">The texture</param>
-		public void RemoveMarker(Texture Texture)
+		/// <param name="markerTexture">The texture</param>
+		public void RemoveMarker(Texture markerTexture)
 		{
-			int n = MarkerTextures.Length;
-
-			for (int i = 0; i < n; i++)
+			for (int i = MarkerTextures.Count - 1; i > 0; i--)
 			{
-				if (MarkerTextures[i].Texture == Texture)
+				if (MarkerTextures[i].Texture == markerTexture)
 				{
-					for (int j = i; j < n - 1; j++)
-					{
-						MarkerTextures[j] = MarkerTextures[j + 1];
-					}
-
-					n--;
-					Array.Resize(ref MarkerTextures, n);
-					break;
+					MarkerTextures.RemoveAt(i);
 				}
 			}
 		}
 
 		public void Draw(int yCoordinate)
 		{
-			for (int i = 0; i < MarkerTextures.Length; i++)
+			for (int i = 0; i < MarkerTextures.Count; i++)
 			{
 				if (Renderer.currentHost.LoadTexture(ref MarkerTextures[i].Texture, OpenGlTextureWrapMode.ClampClamp))
 				{

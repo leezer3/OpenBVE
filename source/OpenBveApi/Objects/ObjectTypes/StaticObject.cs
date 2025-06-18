@@ -599,7 +599,7 @@ namespace OpenBveApi.Objects
 			int SectionIndex, double StartingDistance, double EndingDistance,
 			double TrackPosition, double Brightness, bool DuplicateMaterials = false)
 		{
-			currentHost.CreateStaticObject(this, Position, WorldTransformation, LocalTransformation, 0.0, StartingDistance, EndingDistance, TrackPosition, Brightness);
+			currentHost.CreateStaticObject(this, Position, WorldTransformation, LocalTransformation, 0.0, StartingDistance, EndingDistance, TrackPosition);
 		}
 
 		/// <inheritdoc />
