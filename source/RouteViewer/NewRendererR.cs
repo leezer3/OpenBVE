@@ -560,7 +560,7 @@ namespace RouteViewer
 					totalObjects += ObjectManager.AnimatedWorldObjectsUsed;
 				}
 
-				double scaleFactor = BaseRenderer.ScaleFactor.X;
+				double scaleFactor = Program.Renderer.ScaleFactor.X;
 
 				if (totalObjects == 0)
 				{
