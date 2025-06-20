@@ -1,11 +1,12 @@
-using System;
-using System.Reactive.Concurrency;
-using System.Windows.Forms;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenTK;
 using Reactive.Bindings;
 using SoundManager;
+using System;
+using System.Reactive.Concurrency;
+using System.Windows.Forms;
 using TrainEditor2.Audio;
 using TrainEditor2.Graphics;
 using TrainEditor2.Systems;
@@ -47,6 +48,21 @@ namespace TrainEditor2
 				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"errors","filesystem_invalid"}) + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString(HostApplication.TrainEditor2, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
+
+			//Switch between SDL2 and native backends; use native backend by default
+			var options = new ToolkitOptions();
+
+			if (CurrentHost.Platform == HostPlatform.FreeBSD)
+			{
+				// The OpenTK X11 backend is broken on FreeBSD, so force SDL2
+				options.Backend = PlatformBackend.Default;
+			}
+			else if (CurrentHost.Platform == HostPlatform.GNULinux)
+			{
+				// https://github.com/leezer3/OpenBVE/issues/1159
+				options.Backend = PlatformBackend.PreferNative;
+			}
+			Toolkit.Init(options);
 
 			Interface.LoadOptions();
 
