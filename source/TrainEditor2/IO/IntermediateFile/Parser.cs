@@ -127,7 +127,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			car.Move = ParseMoveNode(parent.Element("Move"));
 			car.Brake = ParseBrakeNode(parent.Element("Brake"));
 			car.Pressure = ParsePressureNode(parent.Element("Pressure"));
-			car.particleSources = new ObservableCollection<ParticleSource>(parent.Elements("Entry").Select(ParseParticleSourceNode));
+			car.particleSources = new ObservableCollection<ParticleSource>(parent.Elements("ParticleSource").Select(ParseParticleSourceNode));
 
 			if (car is MotorCar motorCar)
 			{
@@ -257,7 +257,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			string s = (string)parent.Element("InitialDirection");
 			Vector3.TryParse(s.Split(','), out Vector3 initialDirection);
-			s = (string)parent.Element("SourceLocation");
+			s = (string)parent.Element("Location");
 			Vector3.TryParse(s.Split(','), out Vector3 sourceLocation);
 			return new ParticleSource()
 			{
@@ -267,7 +267,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				LocationX = sourceLocation.X,
 				LocationY = sourceLocation.Y,
 				LocationZ = sourceLocation.Z,
-				InitialSize = (double)parent.Element("InitialSize"),
+				InitialSize = (double)parent.Element("MaximumSize"),
 				MaximiumSize = (double)parent.Element("MaximumGrownSize"),
 				TextureFile = (string)parent.Element("Texture")
 			};

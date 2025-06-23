@@ -123,7 +123,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			WritePressureNode(carNode, car.Pressure);
 			for (int i = 0; i < car.particleSources.Count; i++)
 			{
-				car.particleSources[i].WriteXML(string.Empty, parent);
+				car.particleSources[i].WriteXML(string.Empty, carNode);
 			}
 			
 			if (car is MotorCar motorCar)
