@@ -127,6 +127,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			car.Move = ParseMoveNode(parent.Element("Move"));
 			car.Brake = ParseBrakeNode(parent.Element("Brake"));
 			car.Pressure = ParsePressureNode(parent.Element("Pressure"));
+			car.particleSources = new ObservableCollection<ParticleSource>(parent.Elements("Entry").Select(ParseParticleSourceNode));
 
 			if (car is MotorCar motorCar)
 			{
@@ -250,6 +251,26 @@ namespace TrainEditor2.IO.IntermediateFile
 			ParseAreaNode(parent.Element("SoundIndex"), out track.SoundIndices);
 
 			return track;
+		}
+
+		private static ParticleSource ParseParticleSourceNode(XElement parent)
+		{
+			string s = (string)parent.Element("InitialDirection");
+			Vector3.TryParse(s.Split(','), out Vector3 initialDirection);
+			s = (string)parent.Element("SourceLocation");
+			Vector3.TryParse(s.Split(','), out Vector3 sourceLocation);
+			return new ParticleSource()
+			{
+				InitialDirectionX = initialDirection.X,
+				InitialDirectionY = initialDirection.Y,
+				InitialDirectionZ = initialDirection.Z,
+				LocationX = sourceLocation.X,
+				LocationY = sourceLocation.Y,
+				LocationZ = sourceLocation.Z,
+				InitialSize = (double)parent.Element("InitialSize"),
+				MaximiumSize = (double)parent.Element("MaximumGrownSize"),
+				TextureFile = (string)parent.Element("Texture")
+			};
 		}
 
 		private static void ParseVertexLineNode(XElement parent, out Motor.VertexLibrary vertices, out ObservableCollection<Motor.Line> lines)
