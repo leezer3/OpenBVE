@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 using TrainManager.BrakeSystems;
 
 namespace TrainEditor2.Models.Trains
@@ -24,50 +24,26 @@ namespace TrainEditor2.Models.Trains
 
 		internal BrakeSystemType BrakeType
 		{
-			get
-			{
-				return brakeType;
-			}
-			set
-			{
-				SetProperty(ref brakeType, value);
-			}
+			get => brakeType;
+			set => SetProperty(ref brakeType, value);
 		}
 
 		internal LocoBrakeTypes LocoBrakeType
 		{
-			get
-			{
-				return locoBrakeType;
-			}
-			set
-			{
-				SetProperty(ref locoBrakeType, value);
-			}
+			get => locoBrakeType;
+			set => SetProperty(ref locoBrakeType, value);
 		}
 
 		internal EletropneumaticBrakeType BrakeControlSystem
 		{
-			get
-			{
-				return brakeControlSystem;
-			}
-			set
-			{
-				SetProperty(ref brakeControlSystem, value);
-			}
+			get => brakeControlSystem;
+			set => SetProperty(ref brakeControlSystem, value);
 		}
 
 		internal double BrakeControlSpeed
 		{
-			get
-			{
-				return brakeControlSpeed;
-			}
-			set
-			{
-				SetProperty(ref brakeControlSpeed, value);
-			}
+			get => brakeControlSpeed;
+			set => SetProperty(ref brakeControlSpeed, value);
 		}
 
 		internal Brake()

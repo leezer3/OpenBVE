@@ -278,22 +278,22 @@ namespace OpenBveApi.Math
 			//https://www.cs.rit.edu/usr/local/pub/wrc/graphics/doc/opengl/books/blue/gluPerspective.html
 			if (fieldOfViewY <= 0 || fieldOfViewY > System.Math.PI)
 			{
-				throw new ArgumentOutOfRangeException("fieldOfViewY", @"fieldOfViewY must be positive and less than Pi");
+				throw new ArgumentOutOfRangeException(nameof(fieldOfViewY), @"fieldOfViewY must be positive and less than Pi");
 			}
 
 			if (aspectRatio <= 0)
 			{
-				throw new ArgumentOutOfRangeException("aspectRatio", @"aspectRatio must be positive");
+				throw new ArgumentOutOfRangeException(nameof(aspectRatio), @"aspectRatio must be positive");
 			}
 
 			if (zNear <= 0)
 			{
-				throw new ArgumentOutOfRangeException("zNear", @"zNear must be positive");
+				throw new ArgumentOutOfRangeException(nameof(zNear), @"zNear must be positive");
 			}
 
 			if (zFar <= 0)
 			{
-				throw new ArgumentOutOfRangeException("zFar", @"zFar must be positive");
+				throw new ArgumentOutOfRangeException(nameof(zFar), @"zFar must be positive");
 			}
 
 			double yMax = zNear * System.Math.Tan(fieldOfViewY * System.Math.PI / 6.28319); //360 degrees in radians
@@ -317,17 +317,17 @@ namespace OpenBveApi.Math
 			//https://www.cs.rit.edu/usr/local/pub/wrc/graphics/doc/opengl/books/blue/glFrustum.html
 			if (zNear <= 0)
 			{
-				throw new ArgumentOutOfRangeException("zNear", @"zNear must be positive");
+				throw new ArgumentOutOfRangeException(nameof(zNear), @"zNear must be positive");
 			}
 
 			if (zFar <= 0)
 			{
-				throw new ArgumentOutOfRangeException("zFar", @"zFar must be positive");
+				throw new ArgumentOutOfRangeException(nameof(zFar), @"zFar must be positive");
 			}
 
 			if (zNear >= zFar)
 			{
-				throw new ArgumentOutOfRangeException("zNear", @"zNear must be less than or equal to zFar");
+				throw new ArgumentOutOfRangeException(nameof(zNear), @"zNear must be less than or equal to zFar");
 			}
 
 			double x = (2.0 * zNear) / (right - left);

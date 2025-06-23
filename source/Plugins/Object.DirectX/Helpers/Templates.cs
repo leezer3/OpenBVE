@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
@@ -55,6 +55,8 @@ namespace OpenBve.Formats.DirectX
 		Template,
 		// https://learn.microsoft.com/en-us/windows/win32/direct3d9/fvfdata
 		FVFData,
+		// https://learn.microsoft.com/en-us/windows/win32/direct3d9/decldata
+		DeclData,
 
 		//Templates below this are not in the Microsoft DirectX specification
 		//However, the X file format is extensible by declaring the template structure at the top

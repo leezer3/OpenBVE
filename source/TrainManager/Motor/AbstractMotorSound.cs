@@ -17,7 +17,7 @@ namespace TrainManager.Motor
 		}
 
 		/// <summary>Updates the motor sounds</summary>
-		public virtual void Update(double TimeElapsed)
+		public virtual void Update(double timeElapsed)
 		{
 
 		}

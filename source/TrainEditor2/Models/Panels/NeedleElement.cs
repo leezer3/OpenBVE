@@ -30,231 +30,117 @@ namespace TrainEditor2.Models.Panels
 
 		internal Subject Subject
 		{
-			get
-			{
-				return subject;
-			}
-			set
-			{
-				SetProperty(ref subject, value);
-			}
+			get => subject;
+			set => SetProperty(ref subject, value);
 		}
 
 		internal string DaytimeImage
 		{
-			get
-			{
-				return daytimeImage;
-			}
-			set
-			{
-				SetProperty(ref daytimeImage, value);
-			}
+			get => daytimeImage;
+			set => SetProperty(ref daytimeImage, value);
 		}
 
 		internal string NighttimeImage
 		{
-			get
-			{
-				return nighttimeImage;
-			}
-			set
-			{
-				SetProperty(ref nighttimeImage, value);
-			}
+			get => nighttimeImage;
+			set => SetProperty(ref nighttimeImage, value);
 		}
 
 		internal Color24 TransparentColor
 		{
-			get
-			{
-				return transparentColor;
-			}
-			set
-			{
-				SetProperty(ref transparentColor, value);
-			}
+			get => transparentColor;
+			set => SetProperty(ref transparentColor, value);
 		}
 
 		internal bool DefinedRadius
 		{
-			get
-			{
-				return definedRadius;
-			}
-			set
-			{
-				SetProperty(ref definedRadius, value);
-			}
+			get => definedRadius;
+			set => SetProperty(ref definedRadius, value);
 		}
 
 		internal double Radius
 		{
-			get
-			{
-				return radius;
-			}
-			set
-			{
-				SetProperty(ref radius, value);
-			}
+			get => radius;
+			set => SetProperty(ref radius, value);
 		}
 
 		internal Color24 Color
 		{
-			get
-			{
-				return color;
-			}
-			set
-			{
-				SetProperty(ref color, value);
-			}
+			get => color;
+			set => SetProperty(ref color, value);
 		}
 
 		internal bool DefinedOrigin
 		{
-			get
-			{
-				return definedOrigin;
-			}
-			set
-			{
-				SetProperty(ref definedOrigin, value);
-			}
+			get => definedOrigin;
+			set => SetProperty(ref definedOrigin, value);
 		}
 
 		internal Vector2 Origin
 		{
-			get
-			{
-				return origin;
-			}
-			set
-			{
-				SetProperty(ref origin, value);
-			}
+			get => origin;
+			set => SetProperty(ref origin, value);
 		}
 
 		internal double InitialAngle
 		{
-			get
-			{
-				return initialAngle;
-			}
-			set
-			{
-				SetProperty(ref initialAngle, value);
-			}
+			get => initialAngle;
+			set => SetProperty(ref initialAngle, value);
 		}
 
 		internal double LastAngle
 		{
-			get
-			{
-				return lastAngle;
-			}
-			set
-			{
-				SetProperty(ref lastAngle, value);
-			}
+			get => lastAngle;
+			set => SetProperty(ref lastAngle, value);
 		}
 
 		internal double Minimum
 		{
-			get
-			{
-				return minimum;
-			}
-			set
-			{
-				SetProperty(ref minimum, value);
-			}
+			get => minimum;
+			set => SetProperty(ref minimum, value);
 		}
 
 		internal double Maximum
 		{
-			get
-			{
-				return maximum;
-			}
-			set
-			{
-				SetProperty(ref maximum, value);
-			}
+			get => maximum;
+			set => SetProperty(ref maximum, value);
 		}
 
 		internal bool DefinedNaturalFreq
 		{
-			get
-			{
-				return definedNaturalFreq;
-			}
-			set
-			{
-				SetProperty(ref definedNaturalFreq, value);
-			}
+			get => definedNaturalFreq;
+			set => SetProperty(ref definedNaturalFreq, value);
 		}
 
 		internal double NaturalFreq
 		{
 
-			get
-			{
-				return naturalFreq;
-			}
-			set
-			{
-				SetProperty(ref naturalFreq, value);
-			}
+			get => naturalFreq;
+			set => SetProperty(ref naturalFreq, value);
 		}
 
 		internal bool DefinedDampingRatio
 		{
-			get
-			{
-				return definedDampingRatio;
-			}
-			set
-			{
-				SetProperty(ref definedDampingRatio, value);
-			}
+			get => definedDampingRatio;
+			set => SetProperty(ref definedDampingRatio, value);
 		}
 
 		internal double DampingRatio
 		{
-			get
-			{
-				return dampingRatio;
-			}
-			set
-			{
-				SetProperty(ref dampingRatio, value);
-			}
+			get => dampingRatio;
+			set => SetProperty(ref dampingRatio, value);
 		}
 
 		internal bool Backstop
 		{
-			get
-			{
-				return backstop;
-			}
-			set
-			{
-				SetProperty(ref backstop, value);
-			}
+			get => backstop;
+			set => SetProperty(ref backstop, value);
 		}
 
 		internal bool Smoothed
 		{
-			get
-			{
-				return smoothed;
-			}
-			set
-			{
-				SetProperty(ref smoothed, value);
-			}
+			get => smoothed;
+			set => SetProperty(ref smoothed, value);
 		}
 
 		internal NeedleElement()
@@ -378,6 +264,33 @@ namespace TrainEditor2.Models.Panels
 			}
 
 			parent.Add(needleNode);
+		}
+
+		public override void WriteIntermediate(XElement parent)
+		{
+			parent.Add(new XElement("Needle",
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
+				new XElement("Layer", Layer),
+				WriteSubjectNode(Subject),
+				new XElement("DaytimeImage", DaytimeImage),
+				new XElement("NighttimeImage", NighttimeImage),
+				new XElement("TransparentColor", TransparentColor),
+				new XElement("DefinedRadius", DefinedRadius),
+				new XElement("Radius", Radius),
+				new XElement("Color", Color),
+				new XElement("DefinedOrigin", DefinedOrigin),
+				new XElement("Origin", $"{Origin.X}, {Origin.Y}"),
+				new XElement("InitialAngle", InitialAngle),
+				new XElement("LastAngle", LastAngle),
+				new XElement("Minimum", Minimum),
+				new XElement("Maximum", Maximum),
+				new XElement("DefinedNaturalFreq", DefinedNaturalFreq),
+				new XElement("NaturalFreq", NaturalFreq),
+				new XElement("DefinedDampingRatio", DefinedDampingRatio),
+				new XElement("DampingRatio", DampingRatio),
+				new XElement("Backstop", Backstop),
+				new XElement("Smoothed", Smoothed)
+				));
 		}
 	}
 }

@@ -47,7 +47,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// GUID of the active controller
 		/// </summary>
-		private static Guid activeControllerGuid = new Guid();
+		private static Guid activeControllerGuid = Guid.Empty;
 
 		/// <summary>
 		/// The thread which spins to poll for LibUsb input
@@ -197,6 +197,7 @@ namespace DenshaDeGoInput
 		/// <param name="guid">The GUID of the controller</param>
 		/// <param name="read">An array containing the previous read buffer</param>
 		/// <param name="write">The bytes to be sent to the controller</param>
+		/// <param name="setup">The LibUsb setup packet</param>
 		/// <returns>The bytes read from the controller.</returns>
 		internal static byte[] SyncController(Guid guid, byte[] read, byte[] write, UsbSetupPacket setup)
 		{

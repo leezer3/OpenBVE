@@ -79,7 +79,7 @@ namespace CsvRwRouteParser
 												}
 												if (System.IO.File.Exists(f))
 												{
-													if (!Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out EarlyTexture))
+													if (!Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out EarlyTexture))
 													{
 														Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Loading MessageEarlyTexture " + f + " failed.");
 													}
@@ -129,7 +129,7 @@ namespace CsvRwRouteParser
 												}
 												if (System.IO.File.Exists(f))
 												{
-													if (!Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out Texture))
+													if (!Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out Texture))
 													{
 														Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Loading MessageTexture " + f + " failed.");
 													}
@@ -176,7 +176,7 @@ namespace CsvRwRouteParser
 												}
 												if (System.IO.File.Exists(f))
 												{
-													if (!Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out LateTexture))
+													if (!Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out LateTexture))
 													{
 														Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Loading MessageLateTexture " + f + " failed.");
 													}

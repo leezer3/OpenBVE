@@ -338,25 +338,12 @@ namespace SoundManager
 
 		// --- unloading buffers ---
 
-		/// <summary>Unloads the specified sound buffer.</summary>
-		/// <param name="buffer"></param>
-		protected void UnloadBuffer(SoundBuffer buffer)
-		{
-			if (buffer.Loaded == SoundBufferState.Loaded)
-			{
-				AL.DeleteBuffers(1, ref buffer.OpenAlBufferName);
-				buffer.OpenAlBufferName = 0;
-				buffer.Loaded = SoundBufferState.NotLoaded;
-				buffer.Ignore = false;
-			}
-		}
-
 		/// <summary>Unloads all sound buffers immediately.</summary>
 		internal void UnloadAllBuffers()
 		{
 			for (int i = 0; i < BufferCount; i++)
 			{
-				UnloadBuffer(Buffers[i]);
+				Buffers[i].Unload();
 			}
 		}
 

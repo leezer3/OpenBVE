@@ -19,7 +19,9 @@ namespace OpenBveApi.Textures
 		/// <summary>Gets the color in the texture that should become transparent, or a null reference for no transparent color.</summary>
 		public Color24? TransparentColor => MyTransparentColor;
 
-		// --- constructors ---
+		/// <summary>Texture paramters, which apply no changes.</summary>
+		public static TextureParameters NoChange = new TextureParameters(null, null);
+
 		/// <summary>Creates new texture parameters.</summary>
 		/// <param name="clipRegion">The region in the texture to be extracted, or a null reference for the entire texture.</param>
 		/// <param name="transparentColor">The color in the texture that should become transparent, or a null reference for no transparent color.</param>

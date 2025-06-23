@@ -145,5 +145,17 @@ namespace SoundManager
 			}
 			Ignore = true;
 		}
+
+		/// <summary>Unloads the buffer if loaded by OpenAL</summary>
+		public void Unload()
+		{
+			if (Loaded == SoundBufferState.Loaded)
+			{
+				AL.DeleteBuffers(1, ref OpenAlBufferName);
+				OpenAlBufferName = 0;
+				Loaded = SoundBufferState.NotLoaded;
+				Ignore = false;
+			}
+		}
 	}
 }

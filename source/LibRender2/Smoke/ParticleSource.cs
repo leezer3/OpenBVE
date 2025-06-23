@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, The OpenBVE Project
 //
@@ -40,18 +40,20 @@ namespace LibRender2.Smoke
 		internal readonly List<Particle> Particles;
 
 		internal const int MaximumParticles = 200;
-		
+
 		internal readonly Random Random;
 
 		internal const double MaximumLifeSpan = 15;
-		
+
 		internal readonly double MaximumSize;
 
 		internal readonly double MaximumGrownSize;
 
 		internal readonly BaseRenderer Renderer;
 
-		internal Texture ParticleTexture;
+		/// <summary>The texture used for drawing particles</summary>
+		/// <remarks>Must be a 4x4 texture atlas</remarks>
+		public Texture ParticleTexture;
 
 		internal Vector3 MovementSpeed;
 
@@ -63,7 +65,7 @@ namespace LibRender2.Smoke
 
 		private double previousUpdatePosition;
 
-		
+
 
 
 		public ParticleSource(BaseRenderer renderer, AbstractCar car, Vector3 offset, double maximumSize, double maximumGrownSize, Vector3 movementSpeed)

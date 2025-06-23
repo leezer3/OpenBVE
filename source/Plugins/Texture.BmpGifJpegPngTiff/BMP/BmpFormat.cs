@@ -1,4 +1,5 @@
-﻿namespace Plugin.BMP
+﻿// ReSharper disable InconsistentNaming
+namespace Plugin.BMP
 {
 	internal enum BmpFormat
 	{

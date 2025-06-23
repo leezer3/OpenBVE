@@ -1,5 +1,5 @@
 ﻿using System;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 using TrainManager.Handles;
 
 namespace TrainEditor2.Models.Trains
@@ -21,110 +21,56 @@ namespace TrainEditor2.Models.Trains
 
 		internal HandleType HandleType
 		{
-			get
-			{
-				return handleType;
-			}
-			set
-			{
-				SetProperty(ref handleType, value);
-			}
+			get => handleType;
+			set => SetProperty(ref handleType, value);
 		}
 
 		internal int PowerNotches
 		{
-			get
-			{
-				return powerNotches;
-			}
-			set
-			{
-				SetProperty(ref powerNotches, value);
-			}
+			get => powerNotches;
+			set => SetProperty(ref powerNotches, value);
 		}
 
 		internal int BrakeNotches
 		{
-			get
-			{
-				return brakeNotches;
-			}
-			set
-			{
-				SetProperty(ref brakeNotches, value);
-			}
+			get => brakeNotches;
+			set => SetProperty(ref brakeNotches, value);
 		}
 
 		internal int PowerNotchReduceSteps
 		{
-			get
-			{
-				return powerNotchReduceSteps;
-			}
-			set
-			{
-				SetProperty(ref powerNotchReduceSteps, value);
-			}
+			get => powerNotchReduceSteps;
+			set => SetProperty(ref powerNotchReduceSteps, value);
 		}
 
 		internal EbHandleBehaviour HandleBehaviour
 		{
-			get
-			{
-				return handleBehaviour;
-			}
-			set
-			{
-				SetProperty(ref handleBehaviour, value);
-			}
+			get => handleBehaviour;
+			set => SetProperty(ref handleBehaviour, value);
 		}
 
 		internal LocoBrakeType LocoBrake
 		{
-			get
-			{
-				return locoBrake;
-			}
-			set
-			{
-				SetProperty(ref locoBrake, value);
-			}
+			get => locoBrake;
+			set => SetProperty(ref locoBrake, value);
 		}
 
 		internal int LocoBrakeNotches
 		{
-			get
-			{
-				return locoBrakeNotches;
-			}
-			set
-			{
-				SetProperty(ref locoBrakeNotches, value);
-			}
+			get => locoBrakeNotches;
+			set => SetProperty(ref locoBrakeNotches, value);
 		}
 
 		internal int DriverPowerNotches
 		{
-			get
-			{
-				return driverPowerNotches;
-			}
-			set
-			{
-				SetProperty(ref driverPowerNotches, value);
-			}
+			get => driverPowerNotches;
+			set => SetProperty(ref driverPowerNotches, value);
 		}
 
 		internal int DriverBrakeNotches
 		{
-			get
-			{
-				return driverBrakeNotches;
-			}
-			set
-			{
-				SetProperty(ref driverBrakeNotches, value);
-			}
+			get => driverBrakeNotches;
+			set => SetProperty(ref driverBrakeNotches, value);
 		}
 
 		internal Handle()

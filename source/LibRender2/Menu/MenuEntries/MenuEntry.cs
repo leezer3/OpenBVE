@@ -70,10 +70,7 @@ namespace LibRender2.Menu
 		/// <summary>The length to display</summary>
 		public int DisplayLength
 		{
-			get
-			{
-				return _displayLength;
-			}
+			get => _displayLength;
 			set
 			{
 				_displayLength = value;

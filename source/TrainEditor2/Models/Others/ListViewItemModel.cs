@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Others
 {
@@ -12,26 +12,14 @@ namespace TrainEditor2.Models.Others
 
 		internal object Tag
 		{
-			get
-			{
-				return tag;
-			}
-			set
-			{
-				SetProperty(ref tag, value);
-			}
+			get => tag;
+			set => SetProperty(ref tag, value);
 		}
 
 		internal int ImageIndex
 		{
-			get
-			{
-				return imageIndex;
-			}
-			set
-			{
-				SetProperty(ref imageIndex, value);
-			}
+			get => imageIndex;
+			set => SetProperty(ref imageIndex, value);
 		}
 
 		internal ListViewItemModel()

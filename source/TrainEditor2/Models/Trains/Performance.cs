@@ -1,5 +1,5 @@
 ﻿using System;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -15,50 +15,26 @@ namespace TrainEditor2.Models.Trains
 
 		internal double Deceleration
 		{
-			get
-			{
-				return deceleration;
-			}
-			set
-			{
-				SetProperty(ref deceleration, value);
-			}
+			get => deceleration;
+			set => SetProperty(ref deceleration, value);
 		}
 
 		internal double CoefficientOfStaticFriction
 		{
-			get
-			{
-				return coefficientOfStaticFriction;
-			}
-			set
-			{
-				SetProperty(ref coefficientOfStaticFriction, value);
-			}
+			get => coefficientOfStaticFriction;
+			set => SetProperty(ref coefficientOfStaticFriction, value);
 		}
 
 		internal double CoefficientOfRollingResistance
 		{
-			get
-			{
-				return coefficientOfRollingResistance;
-			}
-			set
-			{
-				SetProperty(ref coefficientOfRollingResistance, value);
-			}
+			get => coefficientOfRollingResistance;
+			set => SetProperty(ref coefficientOfRollingResistance, value);
 		}
 
 		internal double AerodynamicDragCoefficient
 		{
-			get
-			{
-				return aerodynamicDragCoefficient;
-			}
-			set
-			{
-				SetProperty(ref aerodynamicDragCoefficient, value);
-			}
+			get => aerodynamicDragCoefficient;
+			set => SetProperty(ref aerodynamicDragCoefficient, value);
 		}
 
 		internal Performance()

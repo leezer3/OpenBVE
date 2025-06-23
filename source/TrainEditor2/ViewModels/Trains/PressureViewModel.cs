@@ -67,7 +67,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.SetValidateNotifyError(x =>
 				{
 
-					Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
+					Utilities.TryParse(x, NumberRange.Positive, out double _, out string message);
 
 					return message;
 				})
@@ -82,7 +82,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
+					Utilities.TryParse(x, NumberRange.Positive, out double _, out string message);
 
 					return message;
 				})
@@ -97,7 +97,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.SetValidateNotifyError(x =>
 				{
-					Utilities.TryParse(x, NumberRange.Positive, out double result, out string message);
+					Utilities.TryParse(x, NumberRange.Positive, out double _, out string message);
 
 					return message;
 				})

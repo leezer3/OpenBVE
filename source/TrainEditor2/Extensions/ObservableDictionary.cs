@@ -29,14 +29,8 @@ namespace TrainEditor2.Extensions
 
 		event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
 		{
-			add
-			{
-				PropertyChanged += value;
-			}
-			remove
-			{
-				PropertyChanged -= value;
-			}
+			add => PropertyChanged += value;
+			remove => PropertyChanged -= value;
 		}
 
 		private void OnPropertyChanged(string propertyName)

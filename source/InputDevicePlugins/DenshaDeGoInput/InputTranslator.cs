@@ -188,7 +188,7 @@ namespace DenshaDeGoInput
 		/// <summary>
 		/// The GUID of the active controller.
 		/// </summary>
-		internal static Guid ActiveControllerGuid = new Guid();
+		internal static Guid ActiveControllerGuid = Guid.Empty;
 
 		/// <summary>
 		/// Whether the active controller is connected or not.

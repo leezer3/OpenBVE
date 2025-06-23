@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reactive.Disposables;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.ViewModels
 {

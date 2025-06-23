@@ -367,6 +367,9 @@ namespace AssimpNET.X
 						// whatever?
 						Debug.WriteLine("} found in dataObject");
 						break;
+					case "header":
+						ParseUnknownDataObject();
+						break;
 					default:
 						// unknown format
 						Debug.WriteLine("Unknown data object in animation of .x file");

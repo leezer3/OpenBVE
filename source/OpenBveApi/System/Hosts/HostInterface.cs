@@ -403,9 +403,8 @@ namespace OpenBveApi.Hosts {
 		/// <param name="StartingDistance">The absolute route based starting distance for the object</param>
 		/// <param name="EndingDistance">The absolute route based ending distance for the object</param>
 		/// <param name="TrackPosition">The absolute route based track position</param>
-		/// <param name="Brightness">The brightness value at this track position</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
-		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
+		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation WorldTransformation, Transformation LocalTransformation, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition)
 		{
 			return -1;
 		}
@@ -423,9 +422,8 @@ namespace OpenBveApi.Hosts {
 		/// <param name="StartingDistance">The absolute route based starting distance for the object</param>
 		/// <param name="EndingDistance">The absolute route based ending distance for the object</param>
 		/// <param name="TrackPosition">The absolute route based track position</param>
-		/// <param name="Brightness">The brightness value at this track position</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
-		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition, double Brightness)
+		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation LocalTransformation, Matrix4D Rotate, Matrix4D Translate, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double TrackPosition)
 		{
 			return -1;
 		}

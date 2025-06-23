@@ -60,9 +60,9 @@ namespace OpenBveApi.World
 		protected static void RegisterConversion(TUnitType convertToUnit, Func<TValueType, TValueType> conversionTo, Func<TValueType, TValueType> conversionFrom)
 		{
 			if (!ConversionsTo.TryAdd(convertToUnit, conversionTo))
-				throw new ArgumentException(@"Already exists", "convertToUnit");
+				throw new ArgumentException(@"Already exists", nameof(convertToUnit));
 			if (!ConversionsFrom.TryAdd(convertToUnit, conversionFrom))
-				throw new ArgumentException(@"Already exists", "convertToUnit");
+				throw new ArgumentException(@"Already exists", nameof(convertToUnit));
 		}
 	}
 }

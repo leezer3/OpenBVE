@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Others
 {
@@ -7,6 +7,7 @@ namespace TrainEditor2.Models.Others
 	{
 		private string title;
 		private object tag;
+		private object secondaryTag;
 
 		internal TreeViewItemModel Parent
 		{
@@ -15,27 +16,23 @@ namespace TrainEditor2.Models.Others
 
 		internal string Title
 		{
-			get
-			{
-				return title;
-			}
-			set
-			{
-				SetProperty(ref title, value);
-			}
+			get => title;
+			set => SetProperty(ref title, value);
 		}
 
 		internal object Tag
 		{
-			get
-			{
-				return tag;
-			}
-			set
-			{
-				SetProperty(ref tag, value);
-			}
+			get => tag;
+			set => SetProperty(ref tag, value);
 		}
+
+		internal object SecondaryTag
+		{
+			get => secondaryTag;
+			set => SetProperty(ref secondaryTag, value);
+		}
+
+
 
 		internal ObservableCollection<TreeViewItemModel> Children;
 

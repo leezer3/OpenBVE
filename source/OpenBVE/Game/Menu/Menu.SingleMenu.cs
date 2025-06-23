@@ -67,7 +67,7 @@ namespace OpenBve
 							Manipulation.ProblemReport += OnWorkerReportsProblem;
 							Manipulation.OperationCompleted += OnPackageOperationCompleted;
 							//Load texture
-							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 							// n.b. only cycling between two images at the minute, so use the same method
 							nextImageButton.OnClick += nextImageButton_Click;
 							previousImageButton.OnClick += nextImageButton_Click;
@@ -176,11 +176,11 @@ namespace OpenBve
 							Items[totalEntries] = new MenuCommand(menu, directoryInfo.Name, MenuTag.Directory, 0);
 							if (drives)
 							{
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 							}
 							else
 							{
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);	
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);	
 							}
 							
 							totalEntries++;
@@ -204,7 +204,7 @@ namespace OpenBve
 									Icon icon = Icon.ExtractAssociatedIcon(potentialFiles[j]);
 									if (icon != null)
 									{
-										Program.CurrentHost.RegisterTexture(icon.ToBitmap(), new TextureParameters(null, null), out Texture t);
+										Program.CurrentHost.RegisterTexture(icon.ToBitmap(), TextureParameters.NoChange, out Texture t);
 										iconCache.Add(ext, t);
 										Items[totalEntries].Icon = t;
 									}
@@ -316,11 +316,11 @@ namespace OpenBve
 							Items[totalEntries] = new MenuCommand(menu, directoryInfo.Name, MenuTag.Directory, 0);
 							if (drives)
 							{
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 							}
 							else
 							{
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);	
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);	
 							}
 							
 							totalEntries++;
@@ -347,7 +347,7 @@ namespace OpenBve
 									if (Program.CurrentHost.Plugins[k].Route != null && Program.CurrentHost.Plugins[k].Route.CanLoadRoute(potentialFiles[j]))
 									{
 										Items[totalEntries] = new MenuCommand(menu, fileName, MenuTag.RouteFile, 0);
-										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_route.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
+										Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_route.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 										totalEntries++;
 										break;
 									}
@@ -409,17 +409,17 @@ namespace OpenBve
 								Items[totalEntries] = new MenuCommand(menu, directoryInfo.Name, MenuTag.Directory, 0);
 								if (drives)
 								{
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_disk.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);
 								}
 								else
 								{
-									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);	
+									Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_folder.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);	
 								}
 							}
 							else
 							{
 								Items[totalEntries] = new MenuCommand(menu, directoryInfo.Name, MenuTag.TrainDirectory, 0);
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_train.png"), new TextureParameters(null, null), out Items[totalEntries].Icon);	
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\icon_train.png"), TextureParameters.NoChange, out Items[totalEntries].Icon);	
 							}
 							totalEntries++;
 						}

@@ -191,7 +191,7 @@ namespace RouteViewer
 							case MenuTag.RouteList:             // TO ROUTE LIST MENU
 								Instance.PushMenu(MenuType.RouteList);
 								routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "errors", "route_please_select" });
-								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+								Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\please_select.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 								break;
 							case MenuTag.RouteFile:
 								RoutefileState = RouteState.Loading;
@@ -442,7 +442,7 @@ namespace RouteViewer
 				return;
 			}
 			RouteEncoding = TextEncoding.GetSystemEncodingFromFile(currentFile);
-			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 			routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "start", "route_processing" });
 			Game.Reset(false);
 			bool loaded = false;
@@ -484,7 +484,7 @@ namespace RouteViewer
 			RoutefileState = RouteState.Processed;
 			if (e.Error != null || Program.CurrentRoute == null)
 			{
-				Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_error.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+				Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_error.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 				if (e.Error != null)
 				{
 					routeDescriptionBox.Text = e.Error.Message;
@@ -503,11 +503,11 @@ namespace RouteViewer
 					{
 						if (File.Exists(Program.CurrentRoute.Image))
 						{
-							Program.CurrentHost.RegisterTexture(Program.CurrentRoute.Image, new TextureParameters(null, null), out routePictureBox.Texture);
+							Program.CurrentHost.RegisterTexture(Program.CurrentRoute.Image, TextureParameters.NoChange, out routePictureBox.Texture);
 						}
 						else
 						{
-							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_unknown.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_unknown.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 						}
 
 					}
@@ -525,12 +525,12 @@ namespace RouteViewer
 						string g = Path.CombineFile(Path.GetDirectoryName(currentFile),
 							System.IO.Path.GetFileNameWithoutExtension(currentFile) + f[i]);
 						if (!File.Exists(g)) continue;
-						Program.CurrentHost.RegisterTexture(g, new TextureParameters(null, null), out routePictureBox.Texture);
+						Program.CurrentHost.RegisterTexture(g, TextureParameters.NoChange, out routePictureBox.Texture);
 						break;
 					}
 					if (i == f.Length)
 					{
-						Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_unknown.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+						Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_unknown.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 					}
 				}
 
@@ -540,7 +540,7 @@ namespace RouteViewer
 			}
 			catch (Exception ex)
 			{
-				Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_error.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+				Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_error.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 				routeDescriptionBox.Text = ex.Message;
 				currentFile = null;
 			}

@@ -94,7 +94,7 @@ namespace OpenBve
 			nextImageButton.IsVisible = false;
 			previousImageButton.IsVisible = false;
 			RouteEncoding = TextEncoding.GetSystemEncodingFromFile(currentFile);
-			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+			Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\loading.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 			routeDescriptionBox.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_processing"});
 			Game.Reset(false);
 			bool loaded = false;
@@ -136,7 +136,7 @@ namespace OpenBve
 			RoutefileState = RouteState.Processed;
 			if (e.Error != null || Program.CurrentRoute == null)
 			{
-				Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_error.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+				Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_error.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 				if (e.Error != null)
 				{
 					routeDescriptionBox.Text = e.Error.Message;
@@ -155,11 +155,11 @@ namespace OpenBve
 					{
 						if (File.Exists(Program.CurrentRoute.Image))
 						{
-							Program.CurrentHost.RegisterTexture(Program.CurrentRoute.Image, new TextureParameters(null, null), out routeImageTexture);
+							Program.CurrentHost.RegisterTexture(Program.CurrentRoute.Image, TextureParameters.NoChange, out routeImageTexture);
 						}
 						else
 						{
-							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_unknown.png"), new TextureParameters(null, null), out routeImageTexture);
+							Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_unknown.png"), TextureParameters.NoChange, out routeImageTexture);
 						}
 
 						
@@ -178,12 +178,12 @@ namespace OpenBve
 						string g = Path.CombineFile(Path.GetDirectoryName(currentFile),
 							System.IO.Path.GetFileNameWithoutExtension(currentFile) + f[i]);
 						if (!File.Exists(g)) continue;
-						Program.CurrentHost.RegisterTexture(g, new TextureParameters(null, null), out routeImageTexture);
+						Program.CurrentHost.RegisterTexture(g, TextureParameters.NoChange, out routeImageTexture);
 						break;
 					}
 					if (i == f.Length)
 					{
-						Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_unknown.png"), new TextureParameters(null, null), out routeImageTexture);
+						Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_unknown.png"), TextureParameters.NoChange, out routeImageTexture);
 					}
 				}
 
@@ -198,7 +198,7 @@ namespace OpenBve
 			}
 			catch (Exception ex)
 			{
-				Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_error.png"), new TextureParameters(null, null), out routePictureBox.Texture);
+				Program.CurrentHost.RegisterTexture(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\route_error.png"), TextureParameters.NoChange, out routePictureBox.Texture);
 				routeDescriptionBox.Text = ex.Message;
 				currentFile = null;
 			}

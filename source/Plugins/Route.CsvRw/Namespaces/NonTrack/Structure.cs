@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Xml;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -899,16 +900,24 @@ namespace CsvRwRouteParser
 											BackgroundHandle h = DynamicBackgroundParser.ReadBackgroundXML(f);
 											Data.Backgrounds[commandIndices[0]] = h;
 										}
-										catch
+										catch(Exception ex)
 										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, true, f + " is not a valid background XML in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+											if (ex is XmlException)
+											{
+												Plugin.CurrentHost.AddMessage(MessageType.Error, true, f + " contains malformed XML in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+											}
+											else
+											{
+												Plugin.CurrentHost.AddMessage(MessageType.Error, true, f + " is not a valid background XML in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+											}
+													
 										}
 									}
 									else
 									{
 										if (Data.Backgrounds[commandIndices[0]] is StaticBackground b)
 										{
-											Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out b.Texture);
+											Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out b.Texture);
 										}
 									}
 								}

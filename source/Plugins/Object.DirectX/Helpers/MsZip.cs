@@ -90,11 +90,17 @@ namespace Plugin
 				// Decompress the compressed block
 				byte[] blockBytes = new byte[compressedBlockSize];
 				int numBytesRead = inputStream.Read(blockBytes, 0, compressedBlockSize);
-				
+
+				// NOTE: Some MSZip objects have a truncated final block
+				//		 To decode these correctly, the block byte array must be zero-padded to compressedBlockSize
+				//		 The compiler warning is incorrect in this case (YUCK)- Don't message except in debug builds
+				//		 https://github.com/leezer3/OpenBVE/issues/1150
+#if DEBUG
 				if (numBytesRead != compressedBlockSize)
 				{
-					throw new Exception("Insufficient number of bytes read from the compressed stream.");
+					Plugin.currentHost.AddMessage(OpenBveApi.Interface.MessageType.Warning, false, "MSZip: Potentially truncated final block. ");
 				}
+#endif
 
 				byte[] decompressedBytes = ZlibDecompressWithDictionary(blockBytes, currentBlock == 0 ? null : previousBlockBytes);
 

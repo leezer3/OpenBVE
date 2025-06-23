@@ -1,5 +1,5 @@
 ﻿using System;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -17,74 +17,38 @@ namespace TrainEditor2.Models.Trains
 
 		internal double JerkPowerUp
 		{
-			get
-			{
-				return jerkPowerUp;
-			}
-			set
-			{
-				SetProperty(ref jerkPowerUp, value);
-			}
+			get => jerkPowerUp;
+			set => SetProperty(ref jerkPowerUp, value);
 		}
 
 		internal double JerkPowerDown
 		{
-			get
-			{
-				return jerkPowerDown;
-			}
-			set
-			{
-				SetProperty(ref jerkPowerDown, value);
-			}
+			get => jerkPowerDown;
+			set => SetProperty(ref jerkPowerDown, value);
 		}
 
 		internal double JerkBrakeUp
 		{
-			get
-			{
-				return jerkBrakeUp;
-			}
-			set
-			{
-				SetProperty(ref jerkBrakeUp, value);
-			}
+			get => jerkBrakeUp;
+			set => SetProperty(ref jerkBrakeUp, value);
 		}
 
 		internal double JerkBrakeDown
 		{
-			get
-			{
-				return jerkBrakeDown;
-			}
-			set
-			{
-				SetProperty(ref jerkBrakeDown, value);
-			}
+			get => jerkBrakeDown;
+			set => SetProperty(ref jerkBrakeDown, value);
 		}
 
 		internal double BrakeCylinderUp
 		{
-			get
-			{
-				return brakeCylinderUp;
-			}
-			set
-			{
-				SetProperty(ref brakeCylinderUp, value);
-			}
+			get => brakeCylinderUp;
+			set => SetProperty(ref brakeCylinderUp, value);
 		}
 
 		internal double BrakeCylinderDown
 		{
-			get
-			{
-				return brakeCylinderDown;
-			}
-			set
-			{
-				SetProperty(ref brakeCylinderDown, value);
-			}
+			get => brakeCylinderDown;
+			set => SetProperty(ref brakeCylinderDown, value);
 		}
 
 		internal Move()

@@ -10,7 +10,6 @@ namespace Texture.Dds {
 		/// <summary>Called when the plugin is loaded.</summary>
 		/// <param name="host">The host that loaded the plugin.</param>
 		public override void Load(HostInterface host) {
-			// CurrentHost = host;
 		}
 		
 		/// <summary>Queries the dimensions of a texture.</summary>
@@ -57,8 +56,7 @@ namespace Texture.Dds {
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool LoadTexture(string path, out OpenBveApi.Textures.Texture texture)
 		{
-			byte[] b = System.IO.File.ReadAllBytes(path);
-			DDSImage d = new DDSImage(b);
+			DDSImage d = new DDSImage(File.ReadAllBytes(path));
 			texture = d.myTexture;
 			return true;
 		}

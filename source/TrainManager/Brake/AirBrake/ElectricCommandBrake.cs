@@ -153,20 +153,20 @@ namespace TrainManager.BrakeSystems
 			deceleration = pressureratio * DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed);
 		}
 		
-		public override double CurrentMotorDeceleration(double TimeElapsed, AbstractHandle BrakeHandle)
+		public override double CurrentMotorDeceleration(double timeElapsed, AbstractHandle brakeHandle)
 		{
 			double actualDeceleration = 0;
-			if (lastHandlePosition != BrakeHandle.Actual)
+			if (lastHandlePosition != brakeHandle.Actual)
 			{
-				motorDecelerationDelayTimer = BrakeHandle.Actual > lastHandlePosition ? motorDecelerationDelayUp : motorDecelerationDelayDown;
-				lastHandlePosition = BrakeHandle.Actual;
+				motorDecelerationDelayTimer = brakeHandle.Actual > lastHandlePosition ? motorDecelerationDelayUp : motorDecelerationDelayDown;
+				lastHandlePosition = brakeHandle.Actual;
 			}
-			if (BrakeHandle.Actual != 0)
+			if (brakeHandle.Actual != 0)
 			{
-				motorDecelerationDelayTimer -= TimeElapsed;
+				motorDecelerationDelayTimer -= timeElapsed;
 				if (motorDecelerationDelayTimer < 0)
 				{
-					actualDeceleration = (BrakeHandle.Actual / (double)BrakeHandle.MaximumNotch) * motorDeceleration;
+					actualDeceleration = (brakeHandle.Actual / (double)brakeHandle.MaximumNotch) * motorDeceleration;
 					lastMotorDeceleration = actualDeceleration;
 				}
 				else if (lastHandlePosition != 0)

@@ -239,27 +239,24 @@ namespace OpenBve.Graphics.Renderers
 								if (PlayerTrain.StationState != TrainStopState.Pending || beepSpeed == 0)
 								{
 									// We're stopped or beep is not required
-									HUD.stationAdjustBeepSource?.Stop();
+									HUD.StationAdjustBeepSource?.Stop();
 								}
 								else
 								{
 									if (Element.TransitionState == 0.0)
 									{
-										if (HUD.stationAdjustBeepSource != null)
-										{
-											HUD.stationAdjustBeepSource.Stop();
-										}
+										HUD.StationAdjustBeepSource?.Stop();
 									}
 									else
 									{
-										if (HUD.stationAdjustBeepSource != null && HUD.stationAdjustBeepSource.IsPlaying())
+										if (HUD.StationAdjustBeepSource != null && HUD.StationAdjustBeepSource.IsPlaying())
 										{
-											HUD.stationAdjustBeepSource.Volume = beepSpeed * 0.25;
-											HUD.stationAdjustBeepSource.Position = Program.Renderer.Camera.AbsolutePosition;
+											HUD.StationAdjustBeepSource.Volume = beepSpeed * 0.25;
+											HUD.StationAdjustBeepSource.Position = Program.Renderer.Camera.AbsolutePosition;
 										}
 										else
 										{
-											HUD.stationAdjustBeepSource = (SoundSource)Program.CurrentHost.PlaySound(HUD.stationAdjustBeep, 2.0, beepSpeed * 0.25, Program.Renderer.Camera.AbsolutePosition, null, true);
+											HUD.StationAdjustBeepSource = (SoundSource)Program.CurrentHost.PlaySound(HUD.StationAdjustBeep, 2.0, beepSpeed * 0.25, Program.Renderer.Camera.AbsolutePosition, null, true);
 										}	
 									}
 									

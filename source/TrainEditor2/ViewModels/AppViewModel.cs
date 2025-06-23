@@ -7,6 +7,7 @@ using OpenBveApi.Interface;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using Reactive.Bindings.Notifiers;
+using TrainEditor2.Extensions;
 using TrainEditor2.Models;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
@@ -235,6 +236,16 @@ namespace TrainEditor2.ViewModels
 			get;
 		}
 
+		internal ReactiveCommand AddParticleSource
+		{
+			get;
+		}
+
+		internal ReactiveCommand RemoveParticleSource
+		{
+			get;
+		}
+
 		internal ReactiveCommand CopyCar
 		{
 			get;
@@ -320,7 +331,7 @@ namespace TrainEditor2.ViewModels
 					x => x.TrainDatImportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? @"指定されたファイルは存在しません。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? Utilities.GetInterfaceString("message", "file_not_exist") : null)
 				.AddTo(disposable);
 
 			TrainDatExportLocation = app
@@ -328,7 +339,7 @@ namespace TrainEditor2.ViewModels
 					x => x.TrainDatExportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? Utilities.GetInterfaceString("message", "filename_invalid_chars") : null)
 				.AddTo(disposable);
 
 			ExtensionsCfgImportLocation = app
@@ -336,7 +347,7 @@ namespace TrainEditor2.ViewModels
 					x => x.ExtensionsCfgImportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? @"指定されたファイルは存在しません。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? Utilities.GetInterfaceString("message", "file_not_exist") : null)
 				.AddTo(disposable);
 
 			ExtensionsCfgExportLocation = app
@@ -344,7 +355,7 @@ namespace TrainEditor2.ViewModels
 					x => x.ExtensionsCfgExportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? Utilities.GetInterfaceString("message", "filename_invalid_chars") : null)
 				.AddTo(disposable);
 
 			Panel2CfgImportLocation = app
@@ -352,7 +363,7 @@ namespace TrainEditor2.ViewModels
 					x => x.Panel2CfgImportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? @"指定されたファイルは存在しません。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? Utilities.GetInterfaceString("message", "file_not_exist") : null)
 				.AddTo(disposable);
 
 			Panel2CfgExportLocation = app
@@ -360,7 +371,7 @@ namespace TrainEditor2.ViewModels
 					x => x.Panel2CfgExportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? Utilities.GetInterfaceString("message", "filename_invalid_chars") : null)
 				.AddTo(disposable);
 
 			PanelXmlImportLocation = app
@@ -368,7 +379,7 @@ namespace TrainEditor2.ViewModels
 					x => x.PanelXmlImportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? @"指定されたファイルは存在しません。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? Utilities.GetInterfaceString("message", "file_not_exist") : null)
 				.AddTo(disposable);
 
 			PanelXmlExportLocation = app
@@ -376,7 +387,7 @@ namespace TrainEditor2.ViewModels
 					x => x.PanelXmlExportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? Utilities.GetInterfaceString("message", "filename_invalid_chars") : null)
 				.AddTo(disposable);
 
 			TrainFolderImportLocation = app
@@ -384,7 +395,7 @@ namespace TrainEditor2.ViewModels
 					x => x.TrainFolderImportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !Directory.Exists(x) ? @"指定されたフォルダは存在しません。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !Directory.Exists(x) ? Utilities.GetInterfaceString("message", "folder_not_exist") : null)
 				.AddTo(disposable);
 
 			SoundCfgImportLocation = app
@@ -392,7 +403,7 @@ namespace TrainEditor2.ViewModels
 					x => x.SoundCfgImportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? @"指定されたファイルは存在しません。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? Utilities.GetInterfaceString("message", "file_not_exist") : null)
 				.AddTo(disposable);
 
 			SoundCfgExportLocation = app
@@ -400,7 +411,7 @@ namespace TrainEditor2.ViewModels
 					x => x.SoundCfgExportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? Utilities.GetInterfaceString("message", "filename_invalid_chars") : null)
 				.AddTo(disposable);
 
 			SoundXmlImportLocation = app
@@ -408,7 +419,7 @@ namespace TrainEditor2.ViewModels
 					x => x.SoundXmlImportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? @"指定されたファイルは存在しません。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? Utilities.GetInterfaceString("message", "file_not_exist") : null)
 				.AddTo(disposable);
 
 			SoundXmlExportLocation = app
@@ -416,7 +427,7 @@ namespace TrainEditor2.ViewModels
 					x => x.SoundXmlExportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? Utilities.GetInterfaceString("message", "filename_invalid_chars") : null)
 				.AddTo(disposable);
 
 			TrainXmlExportLocation = app
@@ -424,7 +435,7 @@ namespace TrainEditor2.ViewModels
 					x => x.TrainXmlExportLocation,
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? Utilities.GetInterfaceString("message", "filename_invalid_chars") : null)
 				.AddTo(disposable);
 
 			Train = app
@@ -600,6 +611,19 @@ namespace TrainEditor2.ViewModels
 				.Select(x => Item.Value.Children[1].Children.Contains(x) && Item.Value.Children[1].Children.Where(y => y != x).Any(y => y.Tag.Value is MotorCar))
 				.ToReactiveCommand()
 				.WithSubscribe(app.RemoveCar)
+				.AddTo(disposable);
+
+			AddParticleSource = SelectedItem
+				.Select(x => x == Item.Value.Children[1].Children[1] || SelectedItem.Value.Children.Contains(x))
+				.ToReactiveCommand()
+				.WithSubscribe(app.AddParticleSource)
+				.AddTo(disposable);
+
+			
+			RemoveParticleSource = SelectedItem
+				.Select(x => SelectedItem.Value.Children.Contains(x) && SelectedItem.Value.Children.Where(y => y != x).Any(y => y.Tag.Value is ParticleSource))
+				.ToReactiveCommand()
+				.WithSubscribe(app.RemoveParticleSource)
 				.AddTo(disposable);
 
 			CopyCar = SelectedItem

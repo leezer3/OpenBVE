@@ -84,7 +84,7 @@ namespace CsvRwRouteParser
 						StaticObject o = (StaticObject) CompatibilityObjects.LimitOneDigit.Clone();
 						if (o.Mesh.Materials.Length >= 1)
 						{
-							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[0].DaytimeTexture);
+							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d0 + ".png"), TextureParameters.NoChange, out o.Mesh.Materials[0].DaytimeTexture);
 						}
 
 						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
@@ -109,12 +109,12 @@ namespace CsvRwRouteParser
 						StaticObject o = (StaticObject) CompatibilityObjects.LimitTwoDigits.Clone();
 						if (o.Mesh.Materials.Length >= 1)
 						{
-							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[0].DaytimeTexture);
+							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d1 + ".png"), TextureParameters.NoChange, out o.Mesh.Materials[0].DaytimeTexture);
 						}
 
 						if (o.Mesh.Materials.Length >= 2)
 						{
-							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[1].DaytimeTexture);
+							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d0 + ".png"), TextureParameters.NoChange, out o.Mesh.Materials[1].DaytimeTexture);
 						}
 
 						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
@@ -139,17 +139,17 @@ namespace CsvRwRouteParser
 						StaticObject o = (StaticObject) CompatibilityObjects.LimitThreeDigits.Clone();
 						if (o.Mesh.Materials.Length >= 1)
 						{
-							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d2 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[0].DaytimeTexture);
+							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d2 + ".png"), TextureParameters.NoChange, out o.Mesh.Materials[0].DaytimeTexture);
 						}
 
 						if (o.Mesh.Materials.Length >= 2)
 						{
-							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[1].DaytimeTexture);
+							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d1 + ".png"), TextureParameters.NoChange, out o.Mesh.Materials[1].DaytimeTexture);
 						}
 
 						if (o.Mesh.Materials.Length >= 3)
 						{
-							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[2].DaytimeTexture);
+							Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(CompatibilityObjects.LimitGraphicsPath, "limit_" + d0 + ".png"), TextureParameters.NoChange, out o.Mesh.Materials[2].DaytimeTexture);
 						}
 
 						o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);

@@ -75,9 +75,6 @@ namespace OpenBveApi.Objects
 		private bool updateModelMatrix;
 		/// <summary>The texture translation matrix to be applied</summary>
 		public Matrix4D TextureTranslation;
-		/// <summary>The brightness value at this object's track position</summary>
-		public double Brightness;
-
 		/// <summary>The starting track position, for static objects only.</summary>
 		public float StartingDistance;
 		/// <summary>The ending track position, for static objects only.</summary>
@@ -91,7 +88,6 @@ namespace OpenBveApi.Objects
 			_scale = Matrix4D.Identity;
 			_rotate = Matrix4D.Identity;
 			TextureTranslation = Matrix4D.Identity;
-			Brightness = 0.0;
 			StartingDistance = 0.0f;
 			EndingDistance = 0.0f;
 			updateModelMatrix = false;

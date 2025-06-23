@@ -78,7 +78,7 @@ namespace OpenBveApi.Textures {
 		{
 			if (bytes == null)
 			{
-				throw new ArgumentNullException("bytes");
+				throw new ArgumentNullException(nameof(bytes));
 			}
 
 			if (bytes.Length != width * height * (int)pixelFormat)
@@ -109,7 +109,7 @@ namespace OpenBveApi.Textures {
 		{
 			if (bytes == null)
 			{
-				throw new ArgumentNullException("bytes");
+				throw new ArgumentNullException(nameof(bytes));
 			}
 
 			if (bytes[0].Length != width * height * (int)pixelFormat)

@@ -12,7 +12,7 @@ namespace OpenBveApi.Hosts
 	{
 		/// <summary>Loads all non-runtime plugins.</summary>
 		/// <returns>Whether loading all plugins was successful.</returns>
-		public bool LoadPlugins(FileSystem.FileSystem fileSystem, BaseOptions currentOptions, out string errorMessage, object TrainManagerReference = null, object RendererReference = null)
+		public bool LoadPlugins(FileSystem.FileSystem fileSystem, BaseOptions currentOptions, out string errorMessage, object trainManagerReference = null, object rendererReference = null)
 		{
 			if (Plugins != null && Plugins.Length != 0)
 			{
@@ -105,7 +105,7 @@ namespace OpenBveApi.Hosts
 
 						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null | plugin.Route != null | plugin.Train != null)
 						{
-							plugin.Load(this, fileSystem, currentOptions, TrainManagerReference, RendererReference);
+							plugin.Load(this, fileSystem, currentOptions, trainManagerReference, rendererReference);
 							list.Add(plugin);
 						}
 						else if (!iruntime)

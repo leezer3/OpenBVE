@@ -1,6 +1,6 @@
-﻿using System.Text;
+﻿using OpenBveApi.Colors;
+using System.Text;
 using System.Xml.Linq;
-using OpenBveApi.Colors;
 using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Panels
@@ -14,50 +14,26 @@ namespace TrainEditor2.Models.Panels
 
 		internal Subject Subject
 		{
-			get
-			{
-				return subject;
-			}
-			set
-			{
-				SetProperty(ref subject, value);
-			}
+			get => subject;
+			set => SetProperty(ref subject, value);
 		}
 
 		internal string DaytimeImage
 		{
-			get
-			{
-				return daytimeImage;
-			}
-			set
-			{
-				SetProperty(ref daytimeImage, value);
-			}
+			get => daytimeImage;
+			set => SetProperty(ref daytimeImage, value);
 		}
 
 		internal string NighttimeImage
 		{
-			get
-			{
-				return nighttimeImage;
-			}
-			set
-			{
-				SetProperty(ref nighttimeImage, value);
-			}
+			get => nighttimeImage;
+			set => SetProperty(ref nighttimeImage, value);
 		}
 
 		internal Color24 TransparentColor
 		{
-			get
-			{
-				return transparentColor;
-			}
-			set
-			{
-				SetProperty(ref transparentColor, value);
-			}
+			get => transparentColor;
+			set => SetProperty(ref transparentColor, value);
 		}
 
 		internal PilotLampElement()
@@ -107,6 +83,18 @@ namespace TrainEditor2.Models.Panels
 			pilotLampNode.Add(new XElement("TransparentColor", TransparentColor));
 
 			parent.Add(pilotLampNode);
+		}
+
+		public override void WriteIntermediate(XElement parent)
+		{
+			parent.Add(new XElement("PilotLamp",
+				new XElement("Location", $"{Location.X}, {Location.Y}"),
+				new XElement("Layer",Layer),
+				WriteSubjectNode(Subject),
+				new XElement("DaytimeImage", DaytimeImage),
+				new XElement("NighttimeImage", NighttimeImage),
+				new XElement("TransparentColor", TransparentColor)
+				));
 		}
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Prism.Mvvm;
+using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -17,26 +17,14 @@ namespace TrainEditor2.Models.Trains
 
 			internal double Up
 			{
-				get
-				{
-					return up;
-				}
-				set
-				{
-					SetProperty(ref up, value);
-				}
+				get => up;
+				set => SetProperty(ref up, value);
 			}
 
 			internal double Down
 			{
-				get
-				{
-					return down;
-				}
-				set
-				{
-					SetProperty(ref down, value);
-				}
+				get => down;
+				set => SetProperty(ref down, value);
 			}
 
 			public object Clone()

@@ -7,9 +7,9 @@ namespace TrainEditor2.Systems
 	{
 		internal static ObservableCollection<LogMessage> LogMessages = new ObservableCollection<LogMessage>();
 
-		internal static void AddMessage(MessageType Type, bool FileNotFound, string Text)
+		internal static void AddMessage(MessageType messageType, bool fileNotFound, string messageText)
 		{
-			LogMessages.Add(new LogMessage(Type, FileNotFound, Text));
+			LogMessages.Add(new LogMessage(messageType, fileNotFound, messageText));
 		}
 	}
 }

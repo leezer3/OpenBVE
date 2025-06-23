@@ -84,11 +84,11 @@ namespace LibRender2.Primitives
 							particlesVAO[i * 4 + j].SetAttributes(renderer.DefaultShader.VertexLayout);
 							particlesVAO[i * 4 + j].UnBind();
 						}
-						
-						
-						
+
+
+
 					}
-					
+
 				}
 				catch
 				{

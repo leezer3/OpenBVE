@@ -76,7 +76,6 @@ Please also see the following issue for further discussion on the topic: https:/
 - OpenBVE uses [**NLayer**](https://github.com/naudio/NLayer) for decoding MP3 file. This is licensed under the *MIT License*, which may be found in [here](licenses/NLayer.txt).
 - OpenBVE uses [**NVorbis**](https://github.com/NVorbis/NVorbis) for decoding Vorbis file. This is licensed under the *Microsoft Public License*, which may be found in [here](licenses/NVorbis.txt).
 - OpenBVE uses [**OpenTK**](https://github.com/opentk/opentk) library for windowing and input handling. This is licensed under the _Open Toolkit Library License_, which may be found in [here](licenses/OpenTK.txt).
-- OpenBVE uses [**Prism**](https://github.com/PrismLibrary/Prism). This is licensed under the *MIT License*, which may be found in [here](licenses/Prism.txt).
 - OpenBVE uses [**ReactiveProperty**](https://github.com/runceel/ReactiveProperty) This is licensed under the *MIT License*, which may be found in [here](licenses/ReactiveProperty.txt).
 - OpenBVE uses [**SharpCompress**](https://github.com/adamhathcock/sharpcompress) for archive handling. This is licensed under the _MIT License_, which may be found in [here](licenses/SharpCompress.txt).
 - OpenBVE uses [**Reactive Extensions**](https://github.com/dotnet/reactive) This is licensed under the *Apache License, Version 2.0*, which may be found in [here](licenses/ReactiveExtensions.txt).

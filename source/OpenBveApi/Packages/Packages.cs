@@ -644,7 +644,7 @@ namespace OpenBveApi.Packages
 				//Check GUID
 				if (currentPackage.GUID == Package.GUID)
 				{
-					oldPackage = currentPackage;
+					oldPackage = Package;
 					//GUID found, check versions
 					if (currentPackage.PackageVersion == Package.PackageVersion)
 					{

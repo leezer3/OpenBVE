@@ -24,7 +24,7 @@ namespace LibRender2.Overlays
 		{
 			int py = Top;
 
-			Width = (int)System.Math.Ceiling(BaseRenderer.ScaleFactor.X * Width);
+			Width = (int)System.Math.Ceiling(renderer.ScaleFactor.X * Width);
 
 			foreach (string[] key in Keys)
 			{

@@ -8,12 +8,12 @@ namespace TrainEditor2.IO.Sounds.Bve4
 {
 	internal static partial class SoundCfgBve4
 	{
-		internal static void Parse(string FileName, out Sound sound)
+		internal static void Parse(string soundCfgFile, out Sound sound)
 		{
 			sound = new Sound();
-			string trainFolder = Path.GetDirectoryName(FileName);
+			string trainFolder = Path.GetDirectoryName(soundCfgFile);
 
-			ConfigFile<SoundCfgSection, SoundCfgKey> cfg = new ConfigFile<SoundCfgSection, SoundCfgKey>(FileName, Program.CurrentHost, "Version 1.0");
+			ConfigFile<SoundCfgSection, SoundCfgKey> cfg = new ConfigFile<SoundCfgSection, SoundCfgKey>(soundCfgFile, Program.CurrentHost, "Version 1.0");
 			while (cfg.RemainingSubBlocks > 0)
 			{
 				Block<SoundCfgSection, SoundCfgKey> block = cfg.ReadNextBlock();

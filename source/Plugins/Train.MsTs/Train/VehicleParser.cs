@@ -167,7 +167,7 @@ namespace Train.MsTs
 				if (Exhaust.Size > 0)
 				{
 					Exhaust.Offset.Z -= 0.5 * Car.Length;
-					Car.ParticleSource = new ParticleSource(Plugin.Renderer, Car, Exhaust.Offset, Exhaust.Size, Exhaust.SmokeMaxMagnitude, Exhaust.Direction);
+					Car.ParticleSources.Add(new ParticleSource(Plugin.Renderer, Car, Exhaust.Offset, Exhaust.Size, Exhaust.SmokeMaxMagnitude, Exhaust.Direction));
 				}
 			}
 

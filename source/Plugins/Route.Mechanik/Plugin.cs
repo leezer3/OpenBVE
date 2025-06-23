@@ -60,9 +60,9 @@ namespace MechanikRouteParser
 		    CurrentHost = host;
 		    FileSystem = fileSystem;
 		    CurrentOptions = Options;
-		    Parser.knownRoutes = new Dictionary<string, RouteProperties>();
-		    Parser.knownModules = new List<string>();
-			RoutePropertiesDatabaseParser.LoadRoutePropertyDatabase(ref Parser.knownRoutes, ref Parser.knownModules);
+		    Parser.KnownRoutes = new Dictionary<string, RouteProperties>();
+		    Parser.KnownModules = new List<string>();
+			RoutePropertiesDatabaseParser.LoadRoutePropertyDatabase(ref Parser.KnownRoutes, ref Parser.KnownModules);
 	    }
 
 	    public override void Unload()
@@ -87,7 +87,7 @@ namespace MechanikRouteParser
 		    {
 			    try
 			    {
-					if (Parser.knownModules.Contains(Path.GetChecksum(path)) || File.ReadLines(path).Count() < 800)
+					if (Parser.KnownModules.Contains(Path.GetChecksum(path)) || File.ReadLines(path).Count() < 800)
 				    {
 					    /*
 					     * Slightly hacky check if not found in the known modules list:

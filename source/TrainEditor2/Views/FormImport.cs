@@ -351,7 +351,7 @@ namespace TrainEditor2.Views
 		{
 			using (FolderBrowserDialog dialog = new FolderBrowserDialog())
 			{
-				dialog.Description = @"車両フォルダを指定してください。";
+				dialog.Description = Utilities.GetInterfaceString("message", "select_train_folder");
 				dialog.ShowNewFolderButton = false;
 
 				if (dialog.ShowDialog(this) == DialogResult.OK)

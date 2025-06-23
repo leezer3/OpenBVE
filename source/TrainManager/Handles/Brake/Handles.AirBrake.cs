@@ -1,5 +1,4 @@
 using OpenBveApi;
-using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using RouteManager2.MessageManager;

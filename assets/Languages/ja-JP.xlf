@@ -5867,6 +5867,22 @@
 						<source>Min must be less than the Max.</source>
 						<target>MinはMax未満でなければなりません。</target>
 					</trans-unit>
+					<trans-unit id="file_not_exist">
+						<source>The specified file does not exist.</source>
+						<target>指定されたファイルは存在しません。</target>
+					</trans-unit>
+					<trans-unit id="folder_not_exist">
+						<source>The specified folder does not exist.</source>
+						<target>指定されたフォルダは存在しません。</target>
+					</trans-unit>
+					<trans-unit id="filename_invalid_chars">
+						<source>The file name contains invalid characters.</source>
+						<target>ファイル名に使用できない文字が使われています。</target>
+					</trans-unit>
+					<trans-unit id="select_train_folder">
+						<source>Select the train folder...</source>
+						<target>車両フォルダを指定してください。</target>
+					</trans-unit>
 				</group>
 				<group id="items">
 					<trans-unit id="filename">

@@ -340,12 +340,12 @@ namespace OpenBveApi.Interface {
 		public static VirtualKeys SecurityToVirtualKey(Command cmd)
 		{
 			string cmdname = Enum.GetName(typeof(Command), cmd);
-			if (cmdname == null) throw new ArgumentNullException("cmd");
+			if (cmdname == null) throw new ArgumentNullException(nameof(cmd));
 			if (cmdname.StartsWith("Security", StringComparison.Ordinal))
 				cmdname = cmdname.Substring(8).ToUpperInvariant();
 			if (!Enum.TryParse(cmdname, out VirtualKeys key))
 				throw new ArgumentException(@"VirtualKeys does not contain the following key: " +
-					cmdname, "cmd");
+					cmdname, nameof(cmd));
 			return key;
 		}
 	}

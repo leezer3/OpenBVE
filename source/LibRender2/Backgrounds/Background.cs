@@ -312,6 +312,9 @@ namespace LibRender2.Backgrounds
 		/// <param name="data">The background object</param>
 		private void RenderBackgroundObject(BackgroundObject data)
 		{
+			GL.Enable(EnableCap.Blend);
+			// alpha test
+			renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 			if (renderer.AvailableNewRenderer)
 			{
 				renderer.DefaultShader.Activate();
@@ -350,11 +353,11 @@ namespace LibRender2.Backgrounds
 				GL.Enable(EnableCap.DepthClamp);
 				if (renderer.AvailableNewRenderer)
 				{
-					renderer.RenderFace(renderer.DefaultShader, new ObjectState(data.Object), face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
+					renderer.RenderFace(renderer.DefaultShader, data.ObjectState, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
 				}
 				else
 				{
-					renderer.RenderFaceImmediateMode(new ObjectState(data.Object), face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
+					renderer.RenderFaceImmediateMode(data.ObjectState, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
 				}
 				GL.Disable(EnableCap.DepthClamp);
 			}

@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using OpenTK;
-using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
@@ -16,57 +15,32 @@ namespace TrainEditor2.Models.Trains
 	{
 		internal class Vertex : BindableBase, ICloneable
 		{
-			private double x;
-			private double y;
+			private OpenBveApi.Math.Vector2 position;
 			private bool selected;
 			private bool isOrigin;
 
 			internal double X
 			{
-				get
-				{
-					return x;
-				}
-				set
-				{
-					SetProperty(ref x, value);
-				}
+				get => position.X;
+				set => SetProperty(ref position.X, value);
 			}
 
 			internal double Y
 			{
-				get
-				{
-					return y;
-				}
-				set
-				{
-					SetProperty(ref y, value);
-				}
+				get => position.Y;
+				set => SetProperty(ref position.Y, value);
 			}
 
 			internal bool Selected
 			{
-				get
-				{
-					return selected;
-				}
-				set
-				{
-					SetProperty(ref selected, value);
-				}
+				get => selected;
+				set => SetProperty(ref selected, value);
 			}
 
 			internal bool IsOrigin
 			{
-				get
-				{
-					return isOrigin;
-				}
-				set
-				{
-					SetProperty(ref isOrigin, value);
-				}
+				get => isOrigin;
+				set => SetProperty(ref isOrigin, value);
 			}
 
 			internal Vertex(double x, double y)
@@ -91,38 +65,20 @@ namespace TrainEditor2.Models.Trains
 
 			internal int LeftID
 			{
-				get
-				{
-					return leftID;
-				}
-				private set
-				{
-					SetProperty(ref leftID, value);
-				}
+				get => leftID;
+				private set => SetProperty(ref leftID, value);
 			}
 
 			internal int RightID
 			{
-				get
-				{
-					return rightID;
-				}
-				private set
-				{
-					SetProperty(ref rightID, value);
-				}
+				get => rightID;
+				private set => SetProperty(ref rightID, value);
 			}
 
 			internal bool Selected
 			{
-				get
-				{
-					return selected;
-				}
-				set
-				{
-					SetProperty(ref selected, value);
-				}
+				get => selected;
+				set => SetProperty(ref selected, value);
 			}
 
 			internal Line(int leftID, int rightID)
@@ -147,50 +103,26 @@ namespace TrainEditor2.Models.Trains
 
 			internal double LeftX
 			{
-				get
-				{
-					return leftX;
-				}
-				set
-				{
-					SetProperty(ref leftX, value);
-				}
+				get => leftX;
+				set => SetProperty(ref leftX, value);
 			}
 
 			internal double RightX
 			{
-				get
-				{
-					return rightX;
-				}
-				set
-				{
-					SetProperty(ref rightX, value);
-				}
+				get => rightX;
+				set => SetProperty(ref rightX, value);
 			}
 
 			internal int Index
 			{
-				get
-				{
-					return index;
-				}
-				private set
-				{
-					SetProperty(ref index, value);
-				}
+				get => index;
+				private set => SetProperty(ref index, value);
 			}
 
 			internal bool TBD
 			{
-				get
-				{
-					return tbd;
-				}
-				set
-				{
-					SetProperty(ref tbd, value);
-				}
+				get => tbd;
+				set => SetProperty(ref tbd, value);
 			}
 
 			internal Area(double leftX, double rightX, int index)
@@ -291,7 +223,7 @@ namespace TrainEditor2.Models.Trains
 
 					if (track.PitchVertices.Count >= 2)
 					{
-						KeyValuePair<int, Vertex>[] leftVertices = new KeyValuePair<int, Vertex>[] { track.PitchVertices.ElementAt(track.PitchVertices.Count - 2), track.PitchVertices.Last() };
+						KeyValuePair<int, Vertex>[] leftVertices = { track.PitchVertices.ElementAt(track.PitchVertices.Count - 2), track.PitchVertices.Last() };
 						Func<double, double> f = x => leftVertices[0].Value.Y + (leftVertices[1].Value.Y - leftVertices[0].Value.Y) / (leftVertices[1].Value.X - leftVertices[0].Value.X) * (x - leftVertices[0].Value.X);
 
 						if (f(velocity) == entries[i].Pitch)
@@ -304,7 +236,7 @@ namespace TrainEditor2.Models.Trains
 
 					if (track.VolumeVertices.Count >= 2)
 					{
-						KeyValuePair<int, Vertex>[] leftVertices = new KeyValuePair<int, Vertex>[] { track.VolumeVertices.ElementAt(track.VolumeVertices.Count - 2), track.VolumeVertices.Last() };
+						KeyValuePair<int, Vertex>[] leftVertices = { track.VolumeVertices.ElementAt(track.VolumeVertices.Count - 2), track.VolumeVertices.Last() };
 						Func<double, double> f = x => leftVertices[0].Value.Y + (leftVertices[1].Value.Y - leftVertices[0].Value.Y) / (leftVertices[1].Value.X - leftVertices[0].Value.X) * (x - leftVertices[0].Value.X);
 
 						if (f(velocity) == entries[i].Gain)
@@ -585,386 +517,194 @@ namespace TrainEditor2.Models.Trains
 
 		internal MessageBox MessageBox
 		{
-			get
-			{
-				return messageBox;
-			}
-			set
-			{
-				SetProperty(ref messageBox, value);
-			}
+			get => messageBox;
+			set => SetProperty(ref messageBox, value);
 		}
 
 		internal ToolTipModel ToolTipVertexPitch
 		{
-			get
-			{
-				return toolTipVertexPitch;
-			}
-			set
-			{
-				SetProperty(ref toolTipVertexPitch, value);
-			}
+			get => toolTipVertexPitch;
+			set => SetProperty(ref toolTipVertexPitch, value);
 		}
 
 		internal ToolTipModel ToolTipVertexVolume
 		{
-			get
-			{
-				return toolTipVertexVolume;
-			}
-			set
-			{
-				SetProperty(ref toolTipVertexVolume, value);
-			}
+			get => toolTipVertexVolume;
+			set => SetProperty(ref toolTipVertexVolume, value);
 		}
 
 		internal InputEventModel.ModifierKeys CurrentModifierKeys
 		{
-			get
-			{
-				return currentModifierKeys;
-			}
-			set
-			{
-				SetProperty(ref currentModifierKeys, value);
-			}
+			get => currentModifierKeys;
+			set => SetProperty(ref currentModifierKeys, value);
 		}
 
 		internal InputEventModel.CursorType CurrentCursorType
 		{
-			get
-			{
-				return currentCursorType;
-			}
-			set
-			{
-				SetProperty(ref currentCursorType, value);
-			}
+			get => currentCursorType;
+			set => SetProperty(ref currentCursorType, value);
 		}
 
 		internal TrackInfo SelectedTrackInfo
 		{
-			get
-			{
-				return selectedTrackInfo;
-			}
-			set
-			{
-				SetProperty(ref selectedTrackInfo, value);
-			}
+			get => selectedTrackInfo;
+			set => SetProperty(ref selectedTrackInfo, value);
 		}
 
 		internal Track SelectedTrack
 		{
-			get
-			{
-				return Tracks[(int)SelectedTrackInfo];
-			}
-			set
-			{
-				Tracks[(int)SelectedTrackInfo] = value;
-			}
+			get => Tracks[(int)SelectedTrackInfo];
+			set => Tracks[(int)SelectedTrackInfo] = value;
 		}
 
 		internal int SelectedSoundIndex
 		{
-			get
-			{
-				return selectedSoundIndex;
-			}
-			set
-			{
-				SetProperty(ref selectedSoundIndex, value);
-			}
+			get => selectedSoundIndex;
+			set => SetProperty(ref selectedSoundIndex, value);
 		}
 
 		internal Track CopyTrack
 		{
-			get
-			{
-				return copyTrack;
-			}
-			set
-			{
-				SetProperty(ref copyTrack, value);
-			}
+			get => copyTrack;
+			set => SetProperty(ref copyTrack, value);
 		}
 
 		internal double MinVelocity
 		{
-			get
-			{
-				return minVelocity;
-			}
-			set
-			{
-				SetProperty(ref minVelocity, value);
-			}
+			get => minVelocity;
+			set => SetProperty(ref minVelocity, value);
 		}
 
 		internal double MaxVelocity
 		{
-			get
-			{
-				return maxVelocity;
-			}
-			set
-			{
-				SetProperty(ref maxVelocity, value);
-			}
+			get => maxVelocity;
+			set => SetProperty(ref maxVelocity, value);
 		}
 
 		internal double MinPitch
 		{
-			get
-			{
-				return minPitch;
-			}
-			set
-			{
-				SetProperty(ref minPitch, value);
-			}
+			get => minPitch;
+			set => SetProperty(ref minPitch, value);
 		}
 
 		internal double MaxPitch
 		{
-			get
-			{
-				return maxPitch;
-			}
-			set
-			{
-				SetProperty(ref maxPitch, value);
-			}
+			get => maxPitch;
+			set => SetProperty(ref maxPitch, value);
 		}
 
 		internal double MinVolume
 		{
-			get
-			{
-				return minVolume;
-			}
-			set
-			{
-				SetProperty(ref minVolume, value);
-			}
+			get => minVolume;
+			set => SetProperty(ref minVolume, value);
 		}
 
 		internal double MaxVolume
 		{
-			get
-			{
-				return maxVolume;
-			}
-			set
-			{
-				SetProperty(ref maxVolume, value);
-			}
+			get => maxVolume;
+			set => SetProperty(ref maxVolume, value);
 		}
 
 		internal double NowVelocity
 		{
-			get
-			{
-				return nowVelocity;
-			}
-			set
-			{
-				SetProperty(ref nowVelocity, value);
-			}
+			get => nowVelocity;
+			set => SetProperty(ref nowVelocity, value);
 		}
 
 		internal double NowPitch
 		{
-			get
-			{
-				return nowPitch;
-			}
-			set
-			{
-				SetProperty(ref nowPitch, value);
-			}
+			get => nowPitch;
+			set => SetProperty(ref nowPitch, value);
 		}
 
 		internal double NowVolume
 		{
-			get
-			{
-				return nowVolume;
-			}
-			set
-			{
-				SetProperty(ref nowVolume, value);
-			}
+			get => nowVolume;
+			set => SetProperty(ref nowVolume, value);
 		}
 
 		internal InputMode CurrentInputMode
 		{
-			get
-			{
-				return currentInputMode;
-			}
-			set
-			{
-				SetProperty(ref currentInputMode, value);
-			}
+			get => currentInputMode;
+			set => SetProperty(ref currentInputMode, value);
 		}
 
 		internal ToolMode CurrentToolMode
 		{
-			get
-			{
-				return currentToolMode;
-			}
-			set
-			{
-				SetProperty(ref currentToolMode, value);
-			}
+			get => currentToolMode;
+			set => SetProperty(ref currentToolMode, value);
 		}
 
 		internal SimulationState CurrentSimState
 		{
-			get
-			{
-				return currentSimState;
-			}
-			set
-			{
-				SetProperty(ref currentSimState, value);
-			}
+			get => currentSimState;
+			set => SetProperty(ref currentSimState, value);
 		}
 
 		internal int RunIndex
 		{
-			get
-			{
-				return runIndex;
-			}
-			set
-			{
-				SetProperty(ref runIndex, value);
-			}
+			get => runIndex;
+			set => SetProperty(ref runIndex, value);
 		}
 
 		internal bool IsPlayTrack1
 		{
-			get
-			{
-				return isPlayTrack1;
-			}
-			set
-			{
-				SetProperty(ref isPlayTrack1, value);
-			}
+			get => isPlayTrack1;
+			set => SetProperty(ref isPlayTrack1, value);
 		}
 
 		internal bool IsPlayTrack2
 		{
-			get
-			{
-				return isPlayTrack2;
-			}
-			set
-			{
-				SetProperty(ref isPlayTrack2, value);
-			}
+			get => isPlayTrack2;
+			set => SetProperty(ref isPlayTrack2, value);
 		}
 
 		internal bool IsLoop
 		{
-			get
-			{
-				return isLoop;
-			}
-			set
-			{
-				SetProperty(ref isLoop, value);
-			}
+			get => isLoop;
+			set => SetProperty(ref isLoop, value);
 		}
 
 		internal bool IsConstant
 		{
-			get
-			{
-				return isConstant;
-			}
-			set
-			{
-				SetProperty(ref isConstant, value);
-			}
+			get => isConstant;
+			set => SetProperty(ref isConstant, value);
 		}
 
 		internal double Acceleration
 		{
-			get
-			{
-				return acceleration;
-			}
-			set
-			{
-				SetProperty(ref acceleration, value);
-			}
+			get => acceleration;
+			set => SetProperty(ref acceleration, value);
 		}
 
 		internal double StartSpeed
 		{
-			get
-			{
-				return startSpeed;
-			}
-			set
-			{
-				SetProperty(ref startSpeed, value);
-			}
+			get => startSpeed;
+			set => SetProperty(ref startSpeed, value);
 		}
 
 		internal double EndSpeed
 		{
-			get
-			{
-				return endSpeed;
-			}
-			set
-			{
-				SetProperty(ref endSpeed, value);
-			}
+			get => endSpeed;
+			set => SetProperty(ref endSpeed, value);
 		}
 
 		internal int GlControlWidth
 		{
-			get
-			{
-				return glControlWidth;
-			}
-			set
-			{
-				SetProperty(ref glControlWidth, value);
-			}
+			get => glControlWidth;
+			set => SetProperty(ref glControlWidth, value);
 		}
 
 		internal int GlControlHeight
 		{
-			get
-			{
-				return glControlHeight;
-			}
-			set
-			{
-				SetProperty(ref glControlHeight, value);
-			}
+			get => glControlHeight;
+			set => SetProperty(ref glControlHeight, value);
 		}
 
 		internal bool IsRefreshGlControl
 		{
-			get
-			{
-				return isRefreshGlControl;
-			}
-			set
-			{
-				SetProperty(ref isRefreshGlControl, value);
-			}
+			get => isRefreshGlControl;
+			set => SetProperty(ref isRefreshGlControl, value);
 		}
 
 		internal Motor()

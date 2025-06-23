@@ -18,6 +18,7 @@ namespace TrainEditor2.Views
 			CompositeDisposable deviceDisposable = new CompositeDisposable().AddTo(trainDisposable);
 			CompositeDisposable cabDisposable = new CompositeDisposable().AddTo(trainDisposable);
 			CompositeDisposable carDisposable = new CompositeDisposable().AddTo(trainDisposable);
+			CompositeDisposable particleSourceDisposable = new CompositeDisposable().AddTo(trainDisposable);
 			CompositeDisposable couplerDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
 			x.Cars
@@ -90,6 +91,19 @@ namespace TrainEditor2.Views
 					y => y.Checked,
 					y => y is MotorCarViewModel
 				)
+				.AddTo(trainDisposable);
+
+			x.SelectedParticleSource
+				.Subscribe(y =>
+				{
+					particleSourceDisposable.Dispose();
+					particleSourceDisposable = new CompositeDisposable().AddTo(trainDisposable);
+
+					if (y != null)
+					{
+						BindToParticleSource(y).AddTo(particleSourceDisposable);
+					}
+				})
 				.AddTo(trainDisposable);
 
 			x.SelectedCoupler

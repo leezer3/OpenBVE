@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 // ReSharper disable MergeCastWithTypeCheck
+// ReSharper disable InconsistentNaming
 
 namespace OpenBveApi.Math {
 	/// <summary>Represents a three-dimensional vector.</summary>
@@ -436,10 +437,10 @@ namespace OpenBveApi.Math {
 			double norm = vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z;
 			if (norm == 0.0) {
 				throw new DivideByZeroException();
-			} else {
-				double factor = 1.0 / System.Math.Sqrt(norm);
-				return new Vector3f(vector.X * factor, vector.Y * factor, vector.Z * factor);
 			}
+
+			double factor = 1.0 / System.Math.Sqrt(norm);
+			return new Vector3f(vector.X * factor, vector.Y * factor, vector.Z * factor);
 		}
 		
 		/// <summary>Translates a vector by a specified offset.</summary>
@@ -515,10 +516,10 @@ namespace OpenBveApi.Math {
 			if (norm != 0.0) {
 				normal *= 1.0 / System.Math.Sqrt(norm);
 				return true;
-			} else {
-				normal = Vector3f.Up;
-				return false;
 			}
+
+			normal = Vector3f.Up;
+			return false;
 		}
 		
 		/// <summary>Checks whether three spatial coordinates are colinear.</summary>

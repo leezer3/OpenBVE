@@ -244,7 +244,7 @@ namespace CsvRwRouteParser
 
 								if (System.IO.File.Exists(f))
 								{
-									Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out Data.TimetableDaytime[Index]);
+									Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out Data.TimetableDaytime[Index]);
 								}
 								else
 								{
@@ -298,7 +298,7 @@ namespace CsvRwRouteParser
 
 								if (System.IO.File.Exists(f))
 								{
-									Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out Data.TimetableNighttime[Index]);
+									Plugin.CurrentHost.RegisterTexture(f, TextureParameters.NoChange, out Data.TimetableNighttime[Index]);
 								}
 								else
 								{

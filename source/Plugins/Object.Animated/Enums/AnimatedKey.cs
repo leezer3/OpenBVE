@@ -1,4 +1,5 @@
-﻿namespace Plugin
+﻿// ReSharper disable InconsistentNaming
+namespace Plugin
 {
 	/// <summary>The available keys found in an animated file</summary>
 	internal enum AnimatedKey

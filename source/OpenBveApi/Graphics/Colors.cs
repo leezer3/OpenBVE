@@ -137,7 +137,6 @@ namespace OpenBveApi.Colors {
 						return true;
 					}
 				}
-				return false;
 			}
 			return false;
 		}
@@ -408,11 +407,7 @@ namespace OpenBveApi.Colors {
 						Color = new Color32((byte)r, (byte)g, (byte)b, 255);
 						return true;
 					}
-					Color = Blue;
-					return false;
 				}
-				Color = Blue;
-				return false;
 			}
 			Color = Blue;
 			return false;

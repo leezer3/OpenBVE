@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml;
+using Formats.OpenBve;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using TrainManager.Handles;
@@ -16,9 +17,10 @@ namespace Train.OpenBve
 			{
 				foreach (XmlNode cc in c.ChildNodes)
 				{
-					switch (cc.Name.ToLowerInvariant())
+					Enum.TryParse(cc.Name, true, out HandleXMLKey key);
+					switch (key)
 					{
-						case "notches":
+						case HandleXMLKey.Notches:
 							if (Car != Train.DriverCar)
 							{
 								// only valid on driver car
@@ -40,7 +42,7 @@ namespace Train.OpenBve
 							Handle.MaximumDriverNotch += numberOfNotches - Handle.MaximumNotch;
 							Handle.MaximumNotch = numberOfNotches;
 							break;
-						case "springtime":
+						case HandleXMLKey.SpringTime:
 							if (Car != Train.DriverCar)
 							{
 								// only valid on driver car
@@ -55,7 +57,7 @@ namespace Train.OpenBve
 							}
 
 							break;
-						case "springtype":
+						case HandleXMLKey.SpringType:
 							if (!Enum.TryParse(cc.InnerText, true, out Handle.SpringType))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid handle spring type defined for Car " + Car + " in XML file " + fileName);
@@ -64,7 +66,7 @@ namespace Train.OpenBve
 							}
 
 							break;
-						case "maxsprungnotch":
+						case HandleXMLKey.MaxSprungNotch:
 							if (Car != Train.DriverCar)
 							{
 								// only valid on driver car

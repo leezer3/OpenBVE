@@ -180,8 +180,7 @@ namespace Plugin
 														}
 														break;
 													case "Rotation":
-														Vector3 r;
-														if (!Vector3.TryParse(attribute.Value, ';', out r))
+														if (!Vector3.TryParse(attribute.Value, ';', out Vector3 r))
 														{
 															Plugin.currentHost.AddMessage(MessageType.Warning, true, "Invalid rotation vector " + attribute.Value + " supplied in Ls3d object file.");
 														}

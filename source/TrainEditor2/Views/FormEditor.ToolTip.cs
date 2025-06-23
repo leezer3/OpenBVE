@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reactive.Disposables;
 using System.Windows.Forms;
 using Reactive.Bindings.Extensions;
@@ -11,6 +11,11 @@ namespace TrainEditor2.Views
 		private IDisposable BindToToolTip(ToolTipViewModel x, IWin32Window window)
 		{
 			CompositeDisposable toolTipDisposable = new CompositeDisposable();
+
+			if (window == null)
+			{
+				return toolTipDisposable;
+			}
 
 			ToolTip toolTip = new ToolTip();
 
