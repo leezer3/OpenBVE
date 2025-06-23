@@ -475,7 +475,7 @@ namespace Route.Bve5
 						}
 
 						Vector3 position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
-						Blocks[BlockIndex].FreeObjects[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, position, RY * 0.0174532925199433, -RX * 0.0174532925199433, RZtoRoll(RY, RZ) * 0.0174532925199433, (ObjectTransformType)Tilt, Span));
+						Blocks[BlockIndex].FreeObjects[TrackKey].Add(new FreeObj(Statement.Distance, Statement.Key, position, RY.ToRadians(), -RX.ToRadians(), RZtoRoll(RY, RZ).ToRadians(), (ObjectTransformType)Tilt, Span));
 						}
 						break;
 					case MapFunctionName.PutBetween:
@@ -575,9 +575,9 @@ namespace Route.Bve5
 								Repeater.StartingDistance = Statement.Distance;
 								Repeater.TrackKey = Convert.ToString(TrackKey);
 								Repeater.Position = new Vector3(Statement.GetArgumentValueAsDouble(ArgumentName.X), Statement.GetArgumentValueAsDouble(ArgumentName.Y), Statement.GetArgumentValueAsDouble(ArgumentName.Z));
-								Repeater.Yaw = RY * 0.0174532925199433;
-								Repeater.Pitch = -RX * 0.0174532925199433;
-								Repeater.Roll = RZtoRoll(RY, RZ) * 0.0174532925199433;
+								Repeater.Yaw = RY.ToRadians();
+								Repeater.Pitch = -RX.ToRadians();
+								Repeater.Roll = RZtoRoll(RY, RZ).ToRadians();
 								Repeater.Type = (ObjectTransformType)Tilt;
 								Repeater.Span = Span;
 								Repeater.Interval = Interval;
@@ -778,9 +778,9 @@ namespace Route.Bve5
 					RouteData.Blocks[BlockIndex].Signals[RailIndex].Add(new Signal(Statement.Key, Statement.Distance, Tilt, Span, Position)
 					{
 						SectionIndex = CurrentSection + Convert.ToInt32(Section),
-						Yaw = Convert.ToDouble(RY) * 0.0174532925199433,
-						Pitch = -Convert.ToDouble(RX) * 0.0174532925199433,
-						Roll = RZtoRoll(Convert.ToDouble(RY), Convert.ToDouble(RZ)) * 0.0174532925199433,
+						Yaw = Convert.ToDouble(RY).ToRadians(),
+						Pitch = -Convert.ToDouble(RX).ToRadians(),
+						Roll = RZtoRoll(Convert.ToDouble(RY), Convert.ToDouble(RZ)).ToRadians(),
 					});
 				}
 			}
@@ -938,8 +938,8 @@ namespace Route.Bve5
 						Yaw = -26.565051177078;
 					}
 
-					double Theta = Convert.ToDouble(Pitch) * 0.0174532925199433;
-					double Phi = Convert.ToDouble(Yaw) * 0.0174532925199433;
+					double Theta = Pitch.ToRadians();
+					double Phi = Yaw.ToRadians();
 					double dx = Math.Cos(Theta) * Math.Sin(Phi);
 					double dy = -Math.Sin(Theta);
 					double dz = Math.Cos(Theta) * Math.Cos(Phi);

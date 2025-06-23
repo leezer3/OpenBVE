@@ -98,35 +98,32 @@ namespace Plugin
 				fb.Read(buffer, 0, 16);
 				subHeader = Encoding.ASCII.GetString(buffer, 0, 8);
 			}
-			if (subHeader[7] == 't')
-			{
-				using (BinaryReader reader = new BinaryReader(fb))
-				{
-					byte[] newBytes = reader.ReadBytes((int)(fb.Length - fb.Position));
-					string s = unicode ? Encoding.Unicode.GetString(newBytes) : Encoding.ASCII.GetString(newBytes);
 
-					s = s.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
-					if (s.StartsWith("shape", StringComparison.InvariantCultureIgnoreCase))
-					{
-						return true;
-					}
-				}
-					
-			}
-			else if (subHeader[7] != 'b')
+			switch (subHeader[7])
 			{
-				return false;
-			}
-			else
-			{
-				using (BinaryReader reader = new BinaryReader(fb))
-				{
-					KujuTokenID currentToken = (KujuTokenID) reader.ReadUInt16();
-					if (currentToken == KujuTokenID.shape)
+				case 't':
+					using (BinaryReader reader = new BinaryReader(fb))
 					{
-						return true; //Shape definition
+						byte[] newBytes = reader.ReadBytes((int)(fb.Length - fb.Position));
+						string s = unicode ? Encoding.Unicode.GetString(newBytes) : Encoding.ASCII.GetString(newBytes);
+
+						s = s.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
+						if (s.StartsWith("shape", StringComparison.InvariantCultureIgnoreCase))
+						{
+							return true;
+						}
 					}
-				}
+					break;
+				case 'b':
+					using (BinaryReader reader = new BinaryReader(fb))
+					{
+						KujuTokenID currentToken = (KujuTokenID)reader.ReadUInt16();
+						if (currentToken == KujuTokenID.shape)
+						{
+							return true; //Shape definition
+						}
+					}
+					break;
 			}
 			return false;
 		}

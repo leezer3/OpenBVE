@@ -651,8 +651,8 @@ namespace TrainEditor {
 			x = AccelerationMaximumX * x;
 			y = AccelerationMaximumY * y;
 			labelAccelerationInfo.Text =
-				"X: " + x.ToString("0.00", Culture) + " km/h\n" +
-				"Y: " + y.ToString("0.00", Culture) + " km/h/s";
+				@"X: " + x.ToString("0.00", Culture) + @" km/h\n" +
+				@"Y: " + y.ToString("0.00", Culture) + @" km/h/s";
 		}
 
 		// notch selected
@@ -1255,9 +1255,9 @@ namespace TrainEditor {
 			}
 			CultureInfo culture = CultureInfo.InvariantCulture;
 			labelMotorInfo.Text =
-				"X = #" + ((int)Math.Floor(5.0 * (double)MotorHoverX)).ToString(culture) + " (" + MotorHoverX.ToString("0.00", culture) + " km/h)\n\n" +
-				Translations.GetInterfaceString(HostApplication.TrainEditor, new []{"motor","y_pitch"}) + " = " + MotorHoverYPitch.ToString("0.00", culture) + "\n" +
-				Translations.GetInterfaceString(HostApplication.TrainEditor, new []{"motor","y_volume"}) + " = " + MotorHoverYVolume.ToString("0.00", culture) + " (" + (0.78125 * MotorHoverYVolume).ToString("0", culture) + "%)";
+				@"X = #" + ((int)Math.Floor(5.0 * (double)MotorHoverX)).ToString(culture) + @" (" + MotorHoverX.ToString("0.00", culture) + @" km/h)\n\n" +
+				Translations.GetInterfaceString(HostApplication.TrainEditor, new []{"motor","y_pitch"}) + @" = " + MotorHoverYPitch.ToString("0.00", culture) + @"\n" +
+				Translations.GetInterfaceString(HostApplication.TrainEditor, new []{"motor","y_volume"}) + @" = " + MotorHoverYVolume.ToString("0.00", culture) + @" (" + (0.78125 * MotorHoverYVolume).ToString("0", culture) + @"%)";
 		}
 		private void MotorMouseUp(MouseEventArgs e, TrainDat.Motor Motor, PictureBox Box) {
 			if (MotorSelectionBox != null) {
@@ -1663,7 +1663,7 @@ namespace TrainEditor {
 					Label l = new Label
 					{
 						Location = new Point(140, currentPosition + 3),
-						Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"delay","notch"}) + " " + (object)index
+						Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"delay","notch"}) + @" " + (object)index
 					};
 					formDelay.Controls.Add(l);
 					currentPosition += 25;

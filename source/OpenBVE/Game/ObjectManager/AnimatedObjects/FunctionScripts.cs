@@ -154,10 +154,10 @@ namespace OpenBve {
 						Function.Stack[s - 1] = Math.Exp(Function.Stack[s - 1]);
 						break;
 					case Instructions.MathLog:
-						Function.Stack[s - 1] = Log(Function.Stack[s - 1]);
+						Function.Stack[s - 1] = OpenBveApi.Math.Extensions.LogC(Function.Stack[s - 1]);
 						break;
 					case Instructions.MathSqrt:
-						Function.Stack[s - 1] = Sqrt(Function.Stack[s - 1]);
+						Function.Stack[s - 1] = OpenBveApi.Math.Extensions.SqrtC(Function.Stack[s - 1]);
 						break;
 					case Instructions.MathSin:
 						Function.Stack[s - 1] = Math.Sin(Function.Stack[s - 1]);
@@ -166,7 +166,7 @@ namespace OpenBve {
 						Function.Stack[s - 1] = Math.Cos(Function.Stack[s - 1]);
 						break;
 					case Instructions.MathTan:
-						Function.Stack[s - 1] = Tan(Function.Stack[s - 1]);
+						Function.Stack[s - 1] = OpenBveApi.Math.Extensions.TanC(Function.Stack[s - 1]);
 						break;
 					case Instructions.MathArcTan:
 						Function.Stack[s - 1] = Math.Atan(Function.Stack[s - 1]);
@@ -1942,40 +1942,5 @@ namespace OpenBve {
 			}
 			Function.LastResult = Function.Stack[s - 1];
 		}
-
-		// mathematical functions
-		private static double Log(double X)
-		{
-			if (X <= 0.0) {
-				//If X is less than or equal to 0.0 Log will return ComplexInfinity/ NonReal
-				//Therefore, return 0.0
-				return 0.0;
-			}
-
-			return Math.Log(X);
-		}
-		private static double Sqrt(double X)
-		{
-			if (X < 0.0) {
-				//If X is less than or equal to 0.0 Sqrt will return NonReal
-				//Therefore, return 0.0
-				return 0.0;
-			}
-
-			return Math.Sqrt(X);
-		}
-		private static double Tan(double X) {
-			double c = X / Math.PI;
-			double d = c - Math.Floor(c) - 0.5;
-			double e = Math.Floor(X >= 0.0 ? X : -X) * 1.38462643383279E-16;
-			if (d >= -e & d <= e) {
-				//If X is less than or equal to 0.0 Tan will return NonReal
-				//Therefore, return 0.0
-				return 0.0;
-			}
-
-			return Math.Tan(X);
-		}
-
 	}
 }
