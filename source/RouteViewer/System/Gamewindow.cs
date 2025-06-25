@@ -101,8 +101,8 @@ namespace RouteViewer
 
         protected override void OnLoad(EventArgs e)
         {
-            KeyDown += Program.keyDownEvent;
-            KeyUp += Program.keyUpEvent;
+            KeyDown += Program.KeyDownEvent;
+            KeyUp += Program.KeyUpEvent;
 			MouseDown += Program.MouseEvent;
 			MouseUp += Program.MouseEvent;
 	        FileDrop += Program.FileDrop;

@@ -15,7 +15,7 @@ namespace OpenBve {
 
 		// language
 		private void comboboxLanguages_SelectedIndexChanged(object sender, EventArgs e) {
-			if (this.Tag != null) return;
+			if (Tag != null) return;
 			string flagFolder = Program.FileSystem.GetDataFolder("Flags");
 			if (Translations.SelectedLanguage(flagFolder, ref Interface.CurrentOptions.LanguageCode, comboboxLanguages, out string newImage))
 			{
@@ -55,37 +55,36 @@ namespace OpenBve {
 		
 		
 		private void ListInputDevicePlugins() {
-			ListViewItem[] Items = new ListViewItem[InputDevicePlugin.AvailablePluginInfos.Count];
-			for (int i = 0; i < Items.Length; i++) {
-				InputDevicePlugin.PluginInfo Info = InputDevicePlugin.AvailablePluginInfos[i];
-				if (Array.Exists(Interface.CurrentOptions.EnableInputDevicePlugins, element => element.Equals(Info.FileName))) {
+			ListViewItem[] listItems = new ListViewItem[InputDevicePlugin.AvailablePluginInfos.Count];
+			for (int i = 0; i < listItems.Length; i++) {
+				if (Array.Exists(Interface.CurrentOptions.EnableInputDevicePlugins, element => element.Equals(InputDevicePlugin.AvailablePluginInfos[i].FileName))) {
 					InputDevicePlugin.CallPluginLoad(i, Program.CurrentHost);
 				}
-				Items[i] = new ListViewItem(new[] { "", "", "", "", "" });
-				UpdateInputDeviceListViewItem(Items[i], i, false);
+				listItems[i] = new ListViewItem(new[] { "", "", "", "", "" });
+				UpdateInputDeviceListViewItem(listItems[i], i, false);
 			}
-			listviewInputDevice.Items.AddRange(Items);
-			listviewInputDevice.AutoResizeColumns(Items.Length != 0 ? ColumnHeaderAutoResizeStyle.ColumnContent : ColumnHeaderAutoResizeStyle.None);
+			listviewInputDevice.Items.AddRange(listItems);
+			listviewInputDevice.AutoResizeColumns(listItems.Length != 0 ? ColumnHeaderAutoResizeStyle.ColumnContent : ColumnHeaderAutoResizeStyle.None);
 		}
 
-		private void UpdateInputDeviceListViewItem(ListViewItem Item, int Index, bool ResizeColumns) {
-			Item.SubItems[0].Text = InputDevicePlugin.AvailablePluginInfos[Index].Name.Title;
-			switch (InputDevicePlugin.AvailablePluginInfos[Index].Status)
+		private void UpdateInputDeviceListViewItem(ListViewItem listItem, int pluginIndex, bool resizeColumns) {
+			listItem.SubItems[0].Text = InputDevicePlugin.AvailablePluginInfos[pluginIndex].Name.Title;
+			switch (InputDevicePlugin.AvailablePluginInfos[pluginIndex].Status)
 			{
 				case InputDevicePlugin.PluginInfo.PluginStatus.Failure:
-					Item.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_status_failure"});
+					listItem.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_status_failure"});
 					break;
 				case InputDevicePlugin.PluginInfo.PluginStatus.Disable:
-					Item.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_status_disable"});
+					listItem.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_status_disable"});
 					break;
 				case InputDevicePlugin.PluginInfo.PluginStatus.Enable:
-					Item.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_status_enable"});
+					listItem.SubItems[1].Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","input_device_plugin_status_enable"});
 					break;
 			}
-			Item.SubItems[2].Text = InputDevicePlugin.AvailablePluginInfos[Index].Version.Version;
-			Item.SubItems[3].Text = InputDevicePlugin.AvailablePluginInfos[Index].Provider.Copyright;
-			Item.SubItems[4].Text = InputDevicePlugin.AvailablePluginInfos[Index].FileName;
-			if (ResizeColumns) {
+			listItem.SubItems[2].Text = InputDevicePlugin.AvailablePluginInfos[pluginIndex].Version.Version;
+			listItem.SubItems[3].Text = InputDevicePlugin.AvailablePluginInfos[pluginIndex].Provider.Copyright;
+			listItem.SubItems[4].Text = InputDevicePlugin.AvailablePluginInfos[pluginIndex].FileName;
+			if (resizeColumns) {
 				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 			}
 		}
@@ -114,21 +113,21 @@ namespace OpenBve {
 		private void listviewInputDevice_SelectedIndexChanged(object sender, EventArgs e) {
 			if (listviewInputDevice.SelectedIndices.Count == 1) {
 				int index = listviewInputDevice.SelectedIndices[0];
-				this.Tag = new object();
+				Tag = new object();
 				UpdateInputDeviceComponent(InputDevicePlugin.AvailablePluginInfos[index].Status);
 				// finalize
-				this.Tag = null;
+				Tag = null;
 			} else {
-				this.Tag = new object();
+				Tag = new object();
 				checkBoxInputDeviceEnable.Enabled = false;
 				checkBoxInputDeviceEnable.Checked = false;
 				buttonInputDeviceConfig.Enabled = false;
-				this.Tag = null;
+				Tag = null;
 			}
 		}
 
 		private void checkBoxInputDeviceEnable_CheckedChanged(object sender, EventArgs e) {
-			if (this.Tag ==  null && listviewInputDevice.SelectedIndices.Count == 1) {
+			if (Tag ==  null && listviewInputDevice.SelectedIndices.Count == 1) {
 				int index = listviewInputDevice.SelectedIndices[0];
 				if (checkBoxInputDeviceEnable.Checked) {
 					InputDevicePlugin.CallPluginLoad(index, Program.CurrentHost);
@@ -157,7 +156,7 @@ namespace OpenBve {
 
 		private void comboboxCursor_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (this.Tag != null) return;
+			if (Tag != null) return;
 			Cursors.SelectedCursor(comboboxCursor, pictureboxCursor);
 		}
 	}

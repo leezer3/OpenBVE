@@ -53,7 +53,7 @@ namespace RouteViewer {
 		internal static bool JobAvailable;
 
 		// load
-		internal static void Load(string RouteFile, Encoding RouteEncoding, byte[] textureBytes)
+		internal static void Load(string routeFile, Encoding routeEncoding, byte[] textureBytes)
 		{
 			Program.Renderer.GameWindow.TargetRenderFrequency = 0;
 			// reset
@@ -67,8 +67,8 @@ namespace RouteViewer {
 			// members
 			Cancel = false;
 			Complete = false;
-			CurrentRouteFile = RouteFile;
-			CurrentRouteEncoding = RouteEncoding;
+			CurrentRouteFile = routeFile;
+			CurrentRouteEncoding = routeEncoding;
 			// thread
 			Loading.LoadAsynchronously(CurrentRouteFile, CurrentRouteEncoding);
 			RouteViewer.LoadingScreenLoop();

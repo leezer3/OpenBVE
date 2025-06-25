@@ -46,9 +46,9 @@ namespace OpenBve {
 			}
 		}
 
-		public override void AddMessage(MessageType type, bool FileNotFound, string text)
+		public override void AddMessage(MessageType type, bool fileNotFound, string messageText)
 		{
-			Interface.AddMessage(type, FileNotFound, text);
+			Interface.AddMessage(type, fileNotFound, messageText);
 		}
 
 		public override void AddMessage(object Message)

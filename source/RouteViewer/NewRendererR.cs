@@ -610,7 +610,7 @@ namespace RouteViewer
 					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Vector2(Screen.Width - 32, 104), TextAlignment.TopRight, Color128.White, true);
 					if (!ForceLegacyOpenGL)
 					{
-						OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Vector2(Screen.Width - (32 * scaleFactor), 124), TextAlignment.TopRight, Color128.White, true);
+						OpenGlString.Draw(Fonts.SmallFont, "Switch renderer type:", new Vector2(Screen.Width - (32 * scaleFactor), 124), TextAlignment.TopRight, Color128.White, true);
 						keys = new[] { new[] { "R" } };
 						Keys.Render(Screen.Width - (int)(20 * scaleFactor), 124, 16, Fonts.SmallFont, keys);
 						if (Program.CurrentHost.Platform != HostPlatform.AppleOSX || IntPtr.Size == 4)
