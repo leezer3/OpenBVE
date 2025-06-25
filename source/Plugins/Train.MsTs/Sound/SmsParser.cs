@@ -329,16 +329,16 @@ namespace Train.MsTs
 								switch (currentSoundSet.variableTriggerType)
 								{
 									case KujuTokenID.Speed_Inc_Past:
-										currentSoundStream.Triggers.Add(new SpeedIncPast(car, soundHandle as SoundBuffer, currentSoundSet.variableValue, true));
+										currentSoundStream.Triggers.Add(new SpeedIncPast(car, soundHandle as SoundBuffer, currentSoundSet.variableValue, currentSoundSet.currentSoundType != KujuTokenID.PlayOneShot));
 										break;
 									case KujuTokenID.Speed_Dec_Past:
-										currentSoundStream.Triggers.Add(new SpeedDecPast(car, soundHandle as SoundBuffer, currentSoundSet.variableValue, true));
+										currentSoundStream.Triggers.Add(new SpeedDecPast(car, soundHandle as SoundBuffer, currentSoundSet.variableValue, currentSoundSet.currentSoundType != KujuTokenID.PlayOneShot));
 										break;
 									case KujuTokenID.Variable2_Inc_Past:
-										currentSoundStream.Triggers.Add(new Variable2IncPast(car, soundHandle as SoundBuffer, currentSoundSet.variableValue, true));
+										currentSoundStream.Triggers.Add(new Variable2IncPast(car, soundHandle as SoundBuffer, currentSoundSet.variableValue, currentSoundSet.currentSoundType != KujuTokenID.PlayOneShot));
 										break;
 									case KujuTokenID.Variable2_Dec_Past:
-										currentSoundStream.Triggers.Add(new Variable2DecPast(car, soundHandle as SoundBuffer, currentSoundSet.variableValue, true));
+										currentSoundStream.Triggers.Add(new Variable2DecPast(car, soundHandle as SoundBuffer, currentSoundSet.variableValue, currentSoundSet.currentSoundType != KujuTokenID.PlayOneShot));
 										break;
 
 								}
