@@ -500,6 +500,8 @@ namespace RouteViewer
 					{
 						break;
 					}
+
+					string previousRoute = CurrentRouteFile;
 					OpenFileDialog Dialog = new OpenFileDialog();
 					Dialog.CheckFileExists = true;
 					Dialog.Filter = @"All Supported Routes|*.csv;*.rw;*.dat;*.txt|CSV/RW files|*.csv;*.rw|Mechanik Routes|*.dat|BVE5 Routes|*.txt|All files|*";
@@ -555,7 +557,7 @@ namespace RouteViewer
 									MessageBox.Show("No plugins found capable of loading routefile: " + Environment.NewLine + CurrentRouteFile);
 								}
 
-								CurrentRoute = null;
+								CurrentRouteFile = previousRoute;
 							}
 
 							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
