@@ -118,7 +118,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReactivePropertyAsSynchronized(
 					x => x.DoorWidth,
 					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Parse(),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -132,7 +132,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReactivePropertyAsSynchronized(
 					x => x.DoorMaxTolerance,
 					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Parse(),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>

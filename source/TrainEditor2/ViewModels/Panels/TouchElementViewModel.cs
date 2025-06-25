@@ -171,7 +171,7 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactivePropertyAsSynchronized(
 					x => x.Location,
 					x => x.X.ToString(culture),
-					x => new Vector2(double.Parse(x, NumberStyles.Float, culture), touch.Location.Y),
+					x => new Vector2(x.Parse(), touch.Location.Y),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -185,7 +185,7 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactivePropertyAsSynchronized(
 					x => x.Location,
 					x => x.Y.ToString(culture),
-					x => new Vector2(touch.Location.X, double.Parse(x, NumberStyles.Float, culture)),
+					x => new Vector2(touch.Location.X, x.Parse()),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -199,7 +199,7 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactivePropertyAsSynchronized(
 					x => x.Size.X,
 					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Parse(),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -213,7 +213,7 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactivePropertyAsSynchronized(
 					x => x.Size.Y,
 					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Parse(),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>

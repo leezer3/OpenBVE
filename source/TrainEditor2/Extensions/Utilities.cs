@@ -305,5 +305,15 @@ namespace TrainEditor2.Extensions
 		{
 			WriteKey(builder, key, values.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToArray());
 		}
+
+		internal static double Parse(this string x)
+		{
+			// helper method used to stop exceptions being thrown when editing numbers in textboxes
+			if (string.IsNullOrEmpty(x))
+			{
+				return 0;
+			}
+			return double.Parse(x, NumberStyles.Float, CultureInfo.InvariantCulture);
+		}
 	}
 }
