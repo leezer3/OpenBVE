@@ -312,6 +312,9 @@ namespace LibRender2.Backgrounds
 		/// <param name="data">The background object</param>
 		private void RenderBackgroundObject(BackgroundObject data)
 		{
+			GL.Enable(EnableCap.Blend);
+			// alpha test
+			renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 			if (renderer.AvailableNewRenderer)
 			{
 				renderer.DefaultShader.Activate();

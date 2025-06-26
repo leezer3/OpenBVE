@@ -70,7 +70,7 @@ namespace TrainEditor2.ViewModels.Sounds
 				.ToReactivePropertyAsSynchronized(
 					x => x.PositionX,
 					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Parse(),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -84,7 +84,7 @@ namespace TrainEditor2.ViewModels.Sounds
 				.ToReactivePropertyAsSynchronized(
 					x => x.PositionY,
 					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Parse(),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -98,7 +98,7 @@ namespace TrainEditor2.ViewModels.Sounds
 				.ToReactivePropertyAsSynchronized(
 					x => x.PositionZ,
 					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Parse(),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -116,7 +116,7 @@ namespace TrainEditor2.ViewModels.Sounds
 				.ToReactivePropertyAsSynchronized(
 					x => x.Radius,
 					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Parse(),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>

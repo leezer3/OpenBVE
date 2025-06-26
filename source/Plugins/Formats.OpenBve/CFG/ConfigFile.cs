@@ -532,9 +532,6 @@ namespace Formats.OpenBve
 				}
 
 				currentHost.AddMessage(MessageType.Warning, false, "Path contains invalid characters for " + key + " in Section " + Key + " at line " + value.Key);
-				finalPath = string.Empty;
-				return false;
-
 			}
 			finalPath = string.Empty;
 			return false;
@@ -631,8 +628,6 @@ namespace Formats.OpenBve
 					return true;
 				}
 				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid double in Key " + key + " in Section " + Key + " at line " + s.Key);
-				return false;
-
 			}
 			return false;
 		}
@@ -671,8 +666,6 @@ namespace Formats.OpenBve
 					return true;
 				}
 				currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is not a valid integer in Key " + key + " in Section " + Key + " at line " + s.Key);
-				return false;
-
 			}
 			return false;
 		}
@@ -921,10 +914,7 @@ namespace Formats.OpenBve
 				}
 
 				currentHost.AddMessage(MessageType.Warning, false, "Path contains invalid characters for " + fileName + " at line " + fileName.Key + " in Section " + Key);
-				finalPath = string.Empty;
-				return false;
 			}
-
 			finalPath = string.Empty;
 			return false;
 		}

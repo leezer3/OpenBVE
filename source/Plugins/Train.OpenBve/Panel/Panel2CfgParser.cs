@@ -42,29 +42,29 @@ namespace Train.OpenBve
 
 		/// <summary>Parses a BVE2 / openBVE panel.cfg file</summary>
 		/// <param name="panelFile">The relative path of the panel configuration file from the train</param>
-		/// <param name="TrainPath">The on-disk path to the train</param>
+		/// <param name="trainPath">The on-disk path to the train</param>
 		/// <param name="Car">The car to add the panel to</param>
-		internal void ParsePanel2Config(string panelFile, string TrainPath, CarBase Car)
+		internal void ParsePanel2Config(string panelFile, string trainPath, CarBase Car)
 		{
 			//Train name, used for hacks detection
-			trainName = new DirectoryInfo(TrainPath).Name.ToUpperInvariant();
+			trainName = new DirectoryInfo(trainPath).Name.ToUpperInvariant();
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			string FileName = Path.CombineFile(TrainPath, panelFile);
-			ConfigFile<Panel2Sections, Panel2Key> cfg = new ConfigFile<Panel2Sections, Panel2Key>(FileName, Plugin.CurrentHost);
+			string fileName = Path.CombineFile(trainPath, panelFile);
+			ConfigFile<Panel2Sections, Panel2Key> cfg = new ConfigFile<Panel2Sections, Panel2Key>(fileName, Plugin.CurrentHost);
 
 			if (cfg.ReadBlock(Panel2Sections.This, out var Block))
 			{
 				// NOTE: We should only be able to create a panel with main image available, however some trains seem to use a PilotLamp as the main panel image, with no texture defined in the [This] section
 				// e.g. trta9000_6r
 				// Many panel properties are calculated with the size of this element, so only accept this with hacks on
-				if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out PanelDaytimeImage) || Plugin.CurrentOptions.EnableBveTsHacks)
+				if (Block.GetPath(Panel2Key.DaytimeImage, trainPath, out PanelDaytimeImage) || Plugin.CurrentOptions.EnableBveTsHacks)
 				{
 					Block.GetValue(Panel2Key.Resolution, out PanelResolution);
 					if (PanelResolution < 100)
 					{
 						//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
 						//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given in " + FileName);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given in " + fileName);
 					}
 
 					Block.GetValue(Panel2Key.Left, out PanelLeft);
@@ -96,7 +96,7 @@ namespace Train.OpenBve
 					Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
 					Plugin.CurrentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true, 20000);
 					Texture tnight = null;
-					if (Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out PanelNighttimeImage))
+					if (Block.GetPath(Panel2Key.NighttimeImage, trainPath, out PanelNighttimeImage))
 					{
 						Plugin.CurrentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out tnight, true, 20000);
 					}
@@ -104,14 +104,14 @@ namespace Train.OpenBve
 				}
 				else
 				{
-					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A [This] section was present, but the main panel image was missing or invalid in " + FileName);
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A [This] section was present, but the main panel image was missing or invalid in " + fileName);
 					return;
 				}
 			}
 			else
 			{
 				// no main panel image, so invalid
-				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Panel2.cfg file " + FileName + " does not contain a [This] section.");
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Panel2.cfg file " + fileName + " does not contain a [This] section.");
 				return;
 			}
 
@@ -138,12 +138,12 @@ namespace Train.OpenBve
 				switch (Block.Key)
 				{
 					case Panel2Sections.PilotLamp:
-						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
+						if (Block.GetPath(Panel2Key.DaytimeImage, trainPath, out DaytimeImage))
 						{
 							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
 							Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 							Texture tnight = null;
-							if (Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage))
+							if (Block.GetPath(Panel2Key.NighttimeImage, trainPath, out string NighttimeImage))
 							{
 								Plugin.CurrentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
 							}
@@ -157,12 +157,12 @@ namespace Train.OpenBve
 							}
 							catch
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
 							}
 						}
 						break;
 					case Panel2Sections.Needle:
-						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
+						if (Block.GetPath(Panel2Key.DaytimeImage, trainPath, out DaytimeImage))
 						{
 							double InitialAngle = -120, LastAngle = 120;
 							double Minimum = 0.0, Maximum = 1000.0;
@@ -194,7 +194,7 @@ namespace Train.OpenBve
 							
 							Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 							Texture tnight = null;
-							if (Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage))
+							if (Block.GetPath(Panel2Key.NighttimeImage, trainPath, out string NighttimeImage))
 							{
 								Plugin.CurrentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
 							}
@@ -242,7 +242,7 @@ namespace Train.OpenBve
 							}
 							catch
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
 								break;
 							}
 							if (Backstop)
@@ -253,7 +253,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case Panel2Sections.LinearGauge:
-						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
+						if (Block.GetPath(Panel2Key.DaytimeImage, trainPath, out DaytimeImage))
 						{
 							Vector2 Direction = new Vector2(1, 0);
 							double Minimum = 0, Maximum = 0;
@@ -267,14 +267,14 @@ namespace Train.OpenBve
 
 							Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out var tday, true, 20000);
 							Texture tnight = null;
-							if (Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage))
+							if (Block.GetPath(Panel2Key.NighttimeImage, trainPath, out string NighttimeImage))
 							{
 								Plugin.CurrentHost.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
 							}
 							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, tday.Width, tday.Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight, Color32.White);
 							if (Maximum < Minimum)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Block.Key + " in " + fileName);
 								break;
 							}
 							string tf = GetInfixFunction(Car.baseTrain, Subject, subjectIndex, subjectSuffix, Minimum, Maximum, Width, tday.Width);
@@ -294,13 +294,13 @@ namespace Train.OpenBve
 								}
 								catch
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
 								}
 							}
 						}
 						break;
 					case Panel2Sections.DigitalNumber:
-						if (Block.GetPath(Panel2Key.DaytimeImage, TrainPath, out DaytimeImage))
+						if (Block.GetPath(Panel2Key.DaytimeImage, trainPath, out DaytimeImage))
 						{
 							Block.TryGetValue(Panel2Key.Function, ref Function);
 							Block.GetVector2(Panel2Key.Location, ',', out Vector2 Location);
@@ -356,7 +356,7 @@ namespace Train.OpenBve
 										Plugin.CurrentHost.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), TransparentColor), out tday[k]);
 									}
 								}
-								if (Block.GetPath(Panel2Key.NighttimeImage, TrainPath, out string NighttimeImage))
+								if (Block.GetPath(Panel2Key.NighttimeImage, trainPath, out string NighttimeImage))
 								{
 									Plugin.CurrentHost.QueryTextureDimensions(NighttimeImage, out var wnight, out var hnight);
 									tnight = new Texture[numFrames];
@@ -406,7 +406,7 @@ namespace Train.OpenBve
 								}
 								catch
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
 								}
 
 								if (Plugin.CurrentOptions.Panel2ExtendedMode)
@@ -467,16 +467,16 @@ namespace Train.OpenBve
 
 							if (Radius == 0.0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Radius is required to be non-zero in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Radius is required to be non-zero in " + Block.Key + " in " + fileName);
 							}
 							if (Minimum == Maximum)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Minimum and Maximum must not be equal in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Minimum and Maximum must not be equal in " + Block.Key + " in " + fileName);
 								Radius = 0.0;
 							}
 							if (Math.Abs(InitialAngle - LastAngle) > 6.28318531)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The absolute difference between InitialAngle and LastAngle exceeds 360 degrees in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The absolute difference between InitialAngle and LastAngle exceeds 360 degrees in " + Block.Key + " in " + fileName);
 							}
 							// create element
 							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X - Radius, Location.Y - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color);
@@ -549,7 +549,7 @@ namespace Train.OpenBve
 							}
 							catch
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
 							}
 						}
 						break;
@@ -560,7 +560,7 @@ namespace Train.OpenBve
 							Block.GetValue(Panel2Key.Height, out double Height);
 							if (Width <= 0 || Height <= 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Width and Height are required to be positive in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Width and Height are required to be positive in " + Block.Key + " in " + fileName);
 								break;
 							}
 
@@ -568,7 +568,7 @@ namespace Train.OpenBve
 							{
 								// The original code read this, but never used it
 								// Deliberately deprecate.
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TransparentColor is not supported in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "TransparentColor is not supported in " + Block.Key + " in " + fileName);
 							}
 
 							int j = CreateElement(ref Car.CarSections[0].Groups[GroupIndex], Location.X, Location.Y, Width, Height, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Car.Driver, null, null, Color32.White);
@@ -578,7 +578,7 @@ namespace Train.OpenBve
 							}
 							catch
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
 							}
 
 							Plugin.CurrentHost.AddObjectForCustomTimeTable(Car.CarSections[0].Groups[GroupIndex].Elements[j]);
@@ -627,7 +627,7 @@ namespace Train.OpenBve
 									restPosition = WiperPosition.Right;
 									break;
 								default:
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + fileName);
 									break;
 							}
 						}
@@ -644,7 +644,7 @@ namespace Train.OpenBve
 									restPosition = WiperPosition.Right;
 									break;
 								default:
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + FileName);
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid in " + Block.Key + " in " + fileName);
 									break;
 							}
 						}
@@ -678,10 +678,10 @@ namespace Train.OpenBve
 							Array.Resize(ref nighttimeFlakeFiles, MD);
 						}
 
-						List<Texture> daytimeDrops = LoadDrops(TrainPath, daytimeDropFiles, TransparentColor, "drop");
-						List<Texture> daytimeFlakes = LoadDrops(TrainPath, daytimeFlakeFiles, TransparentColor, "flake");
-						List<Texture> nighttimeDrops = LoadDrops(TrainPath, nighttimeDropFiles, TransparentColor, "drop");
-						List<Texture> nighttimeFlakes = LoadDrops(TrainPath, nighttimeFlakeFiles, TransparentColor, "flake");
+						List<Texture> daytimeDrops = LoadDrops(trainPath, daytimeDropFiles, TransparentColor, "drop");
+						List<Texture> daytimeFlakes = LoadDrops(trainPath, daytimeFlakeFiles, TransparentColor, "flake");
+						List<Texture> nighttimeDrops = LoadDrops(trainPath, nighttimeDropFiles, TransparentColor, "drop");
+						List<Texture> nighttimeFlakes = LoadDrops(trainPath, nighttimeFlakeFiles, TransparentColor, "flake");
 
 						double dropInterval = (bottomRight.X - topLeft.X) / numberOfDrops;
 						double currentDropX = topLeft.X;
@@ -704,7 +704,7 @@ namespace Train.OpenBve
 							}
 							catch
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + FileName);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Block.Key + " in " + fileName);
 							}
 
 							currentDropX += dropInterval;

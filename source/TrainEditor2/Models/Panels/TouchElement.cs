@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Windows;
 using System.Xml.Linq;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Others;

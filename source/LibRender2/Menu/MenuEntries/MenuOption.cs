@@ -169,15 +169,15 @@ namespace LibRender2.Menu
 					{
 						return;
 					}
-					BaseMenu.Renderer.SetWindowSize((int)(res.Width * BaseRenderer.ScaleFactor.X), (int)(res.Height * BaseRenderer.ScaleFactor.Y));
+					BaseMenu.Renderer.SetWindowSize((int)(res.Width * BaseMenu.Renderer.ScaleFactor.X), (int)(res.Height * BaseMenu.Renderer.ScaleFactor.Y));
 					if (BaseMenu.CurrentOptions.FullscreenMode)
 					{
 						IList<DisplayResolution> resolutions = DisplayDevice.Default.AvailableResolutions;
 						foreach (DisplayResolution currentResolution in resolutions)
 						{
 							//Test resolution
-							if (currentResolution.Width == BaseMenu.Renderer.Screen.Width / BaseRenderer.ScaleFactor.X &&
-								currentResolution.Height == BaseMenu.Renderer.Screen.Height / BaseRenderer.ScaleFactor.Y)
+							if (currentResolution.Width == BaseMenu.Renderer.Screen.Width / BaseMenu.Renderer.ScaleFactor.X &&
+								currentResolution.Height == BaseMenu.Renderer.Screen.Height / BaseMenu.Renderer.ScaleFactor.Y)
 							{
 								try
 								{
@@ -185,7 +185,7 @@ namespace LibRender2.Menu
 									DisplayDevice.Default.RestoreResolution();
 									DisplayDevice.Default.ChangeResolution(currentResolution);
 									BaseMenu.Renderer.SetWindowState(WindowState.Fullscreen);
-									BaseMenu.Renderer.SetWindowSize((int)(currentResolution.Width * BaseRenderer.ScaleFactor.X), (int)(currentResolution.Height * BaseRenderer.ScaleFactor.Y));
+									BaseMenu.Renderer.SetWindowSize((int)(currentResolution.Width * BaseMenu.Renderer.ScaleFactor.X), (int)(currentResolution.Height * BaseMenu.Renderer.ScaleFactor.Y));
 									BaseMenu.CurrentOptions.FullscreenWidth = currentResolution.Width;
 									BaseMenu.CurrentOptions.FullscreenHeight = currentResolution.Height;
 									return;
@@ -217,8 +217,8 @@ namespace LibRender2.Menu
 						foreach (DisplayResolution currentResolution in resolutions)
 						{
 							//Test resolution
-							if (currentResolution.Width == BaseMenu.Renderer.Screen.Width / BaseRenderer.ScaleFactor.X &&
-								currentResolution.Height == BaseMenu.Renderer.Screen.Height / BaseRenderer.ScaleFactor.Y)
+							if (currentResolution.Width == BaseMenu.Renderer.Screen.Width / BaseMenu.Renderer.ScaleFactor.X &&
+								currentResolution.Height == BaseMenu.Renderer.Screen.Height / BaseMenu.Renderer.ScaleFactor.Y)
 							{
 								try
 								{
@@ -226,7 +226,7 @@ namespace LibRender2.Menu
 									DisplayDevice.Default.RestoreResolution();
 									DisplayDevice.Default.ChangeResolution(currentResolution);
 									BaseMenu.Renderer.SetWindowState(WindowState.Fullscreen);
-									BaseMenu.Renderer.SetWindowSize((int)(currentResolution.Width * BaseRenderer.ScaleFactor.X), (int)(currentResolution.Height * BaseRenderer.ScaleFactor.Y));
+									BaseMenu.Renderer.SetWindowSize((int)(currentResolution.Width * BaseMenu.Renderer.ScaleFactor.X), (int)(currentResolution.Height * BaseMenu.Renderer.ScaleFactor.Y));
 									return;
 								}
 								catch

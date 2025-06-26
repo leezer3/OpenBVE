@@ -217,6 +217,8 @@ namespace OpenBveApi.Math {
 				Builder.Append(c);
 			} return Builder.ToString();
 		}
+
+		
 	}
 	
 }

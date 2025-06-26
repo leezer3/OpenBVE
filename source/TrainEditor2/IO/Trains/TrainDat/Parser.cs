@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Interface;
+using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
 using TrainManager.BrakeSystems;
@@ -329,35 +330,35 @@ namespace TrainEditor2.IO.Trains.TrainDat
 								switch (n)
 								{
 									case 0:
-										delayPowerUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
+										delayPowerUp = lines[i].Split(',').Select(x => x.Parse()).ToArray();
 										break;
 									case 1:
-										delayPowerDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
+										delayPowerDown = lines[i].Split(',').Select(x => x.Parse()).ToArray();
 										break;
 									case 2:
-										delayBrakeUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
+										delayBrakeUp = lines[i].Split(',').Select(x => x.Parse()).ToArray();
 										break;
 									case 3:
-										delayBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
+										delayBrakeDown = lines[i].Split(',').Select(x => x.Parse()).ToArray();
 										break;
 									case 4:
 										if (version >= 18320)
 										{
-											delayElectricBrakeUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
+											delayElectricBrakeUp = lines[i].Split(',').Select(x => x.Parse()).ToArray();
 										}
 										else
 										{
-											delayLocoBrakeUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
+											delayLocoBrakeUp = lines[i].Split(',').Select(x => x.Parse()).ToArray();
 										}
 										break;
 									case 5:
 										if (version >= 18320)
 										{
-											delayElectricBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
+											delayElectricBrakeDown = lines[i].Split(',').Select(x => x.Parse()).ToArray();
 										}
 										else
 										{
-											delayLocoBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).ToArray();
+											delayLocoBrakeDown = lines[i].Split(',').Select(x => x.Parse()).ToArray();
 										}
 										break;
 								}

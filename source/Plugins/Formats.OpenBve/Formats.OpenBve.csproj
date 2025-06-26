@@ -60,6 +60,9 @@
     <Compile Include="Enums\HUD\HUDSection.cs" />
     <Compile Include="Enums\SoundCfg\SoundCfgKey.cs" />
     <Compile Include="Enums\SoundCfg\SoundCfgSection.cs" />
+    <Compile Include="Enums\TrainXML\Brake.cs" />
+    <Compile Include="Enums\TrainXML\Handle.cs" />
+    <Compile Include="Enums\TrainXML\Train.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="Panel\Panel2\Panel2Key.cs" />

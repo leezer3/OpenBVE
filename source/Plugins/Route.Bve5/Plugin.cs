@@ -70,7 +70,7 @@ namespace Route.Bve5
 		    return Bve5ScenarioParser.IsBve5(path);
 	    }
 		
-	    public override bool LoadRoute(string path, Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route)
+	    public override bool LoadRoute(string path, Encoding textEncoding, string trainPath, string objectPath, string soundPath, bool previewOnly, ref object route)
 	    {
 		    LastException = null;
 		    Cancel = false;
@@ -81,7 +81,7 @@ namespace Route.Bve5
 		    CurrentRoute = (CurrentRoute)route;
 		    try
 		    {
-			    Bve5ScenarioParser.ParseScenario(path, PreviewOnly);
+			    Bve5ScenarioParser.ParseScenario(path, previewOnly);
 			    route = CurrentRoute;
 		    }
 		    catch(Exception ex)

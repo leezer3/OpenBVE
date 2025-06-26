@@ -138,7 +138,7 @@ namespace TrainManager.SafetySystems
 				Api.Initialize(mode);
 #if !DEBUG
 				} catch (Exception ex) {
-					base.LastException = ex;
+					LastException = ex;
 					throw;
 				}
 #endif
@@ -165,7 +165,7 @@ namespace TrainManager.SafetySystems
 			Api.Unload();
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -179,7 +179,7 @@ namespace TrainManager.SafetySystems
 			Api.Initialize(mode);
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -212,7 +212,7 @@ namespace TrainManager.SafetySystems
 			}
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -226,7 +226,7 @@ namespace TrainManager.SafetySystems
 			Api.SetReverser(reverser);
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -240,7 +240,7 @@ namespace TrainManager.SafetySystems
 			Api.SetPower(powerNotch);
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -254,7 +254,7 @@ namespace TrainManager.SafetySystems
 			Api.SetBrake(brakeNotch);
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -268,7 +268,7 @@ namespace TrainManager.SafetySystems
 			Api.KeyDown(key);
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -282,7 +282,7 @@ namespace TrainManager.SafetySystems
 			Api.KeyUp(key);
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -296,7 +296,7 @@ namespace TrainManager.SafetySystems
 			Api.HornBlow(type);
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -310,7 +310,7 @@ namespace TrainManager.SafetySystems
 			Api.DoorChange(oldState, newState);
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -324,7 +324,7 @@ namespace TrainManager.SafetySystems
 			Api.SetSignal(signal);
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -338,7 +338,7 @@ namespace TrainManager.SafetySystems
 			Api.SetBeacon(beacon);
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -352,7 +352,7 @@ namespace TrainManager.SafetySystems
 			Api.PerformAI(data);
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -367,7 +367,7 @@ namespace TrainManager.SafetySystems
 			
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -382,7 +382,7 @@ namespace TrainManager.SafetySystems
 			
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif
@@ -397,7 +397,7 @@ namespace TrainManager.SafetySystems
 			
 #if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
+				LastException = ex;
 				throw;
 			}
 #endif

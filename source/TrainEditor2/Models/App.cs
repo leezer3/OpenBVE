@@ -7,7 +7,6 @@ using System.Linq;
 using System.Media;
 using System.Text;
 using System.Xml;
-using LibRender2.Trains;
 using OpenBveApi.Interface;
 using TrainEditor2.Extensions;
 using TrainEditor2.IO.IntermediateFile;
@@ -25,7 +24,6 @@ using TrainEditor2.Models.Panels;
 using TrainEditor2.Models.Sounds;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
-using TrainEditor2.Views;
 
 namespace TrainEditor2.Models
 {
@@ -274,8 +272,8 @@ namespace TrainEditor2.Models
 			
 			for (int i = 0; i < item.Children[1].Children.Count; i++)
 			{
-				item.Children[1].Children[i].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = "Particle Sources", Tag = Train.Cars.Last() });
-				item.Children[1].Children[i].Children[0].Children = new ObservableCollection<TreeViewItemModel>(Train.Cars[i].particleSources.Select((x, j) => new TreeViewItemModel(Item.Children[1].Children[0]) { Title = j.ToString(culture), Tag = x }));
+				item.Children[1].Children[i].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = "Particle Sources", Tag = Train.Cars[i] });
+				item.Children[1].Children[i].Children[0].Children = new ObservableCollection<TreeViewItemModel>(Train.Cars[i].particleSources.Select((x, j) => new TreeViewItemModel(Item.Children[1].Children[0]) { Title = j.ToString(culture), Tag = x, SecondaryTag = Train.Cars[i]}));
 			}
 			item.Children[2].Children = new ObservableCollection<TreeViewItemModel>(Train.Couplers.Select((x, i) => new TreeViewItemModel(Item.Children[2]) { Title = i.ToString(culture), Tag = x }));
 			OnPropertyChanged(new PropertyChangedEventArgs(nameof(Item)));

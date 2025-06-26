@@ -91,10 +91,15 @@ namespace LibRender2
 		}
 
 		/// <summary>Gets the scale factor for the current display</summary>
-		public static Vector2 ScaleFactor
+		public Vector2 ScaleFactor
 		{
 			get
 			{
+				if (currentHost.Application == HostApplication.TrainEditor || currentHost.Application == HostApplication.TrainEditor2)
+				{
+					// accessing display device under SDL2 GLControl fails, scale not supported here anyways
+					return Vector2.One;
+				}
 				if (_scaleFactor.X > 0)
 				{
 					return _scaleFactor;
@@ -301,7 +306,7 @@ namespace LibRender2
 			currentHost = CurrentHost;
 			currentOptions = CurrentOptions;
 			fileSystem = FileSystem;
-			if (CurrentHost.Application != HostApplication.TrainEditor)
+			if (CurrentHost.Application != HostApplication.TrainEditor && CurrentHost.Application != HostApplication.TrainEditor2)
 			{
 				/*
 				 * TrainEditor2 uses a GLControl
@@ -316,7 +321,7 @@ namespace LibRender2
 
 			projectionMatrixList = new List<Matrix4D>();
 			viewMatrixList = new List<Matrix4D>();
-			Fonts = new Fonts(currentHost, currentOptions.Font);
+			Fonts = new Fonts(currentHost, this, currentOptions.Font);
 			VisibilityThread = new Thread(RunVisibiliityThread);
 			VisibilityThread.Start();
 			RenderThreadJobs = new ConcurrentQueue<ThreadStart>();

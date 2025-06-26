@@ -838,15 +838,15 @@ namespace Train.OpenBve
 										break;
 									case "initialdirection":
 										splitText = cc.InnerText.Split(',');
-										if (!NumberFormats.TryParseDoubleVb6(splitText[0], out emitterLocation.X))
+										if (!NumberFormats.TryParseDoubleVb6(splitText[0], out initialMotion.X))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location X was invalid for Car " + Car + " in XML file " + fileName);
 										}
-										if (!NumberFormats.TryParseDoubleVb6(splitText[1], out emitterLocation.Y))
+										if (!NumberFormats.TryParseDoubleVb6(splitText[1], out initialMotion.Y))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location Y was invalid for Car " + Car + " in XML file " + fileName);
 										}
-										if (!NumberFormats.TryParseDoubleVb6(splitText[2], out emitterLocation.Z))
+										if (!NumberFormats.TryParseDoubleVb6(splitText[2], out initialMotion.Z))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location Z was invalid for Car " + Car + " in XML file " + fileName);
 										}

@@ -413,7 +413,7 @@ namespace RouteViewer
 			UpdateCaption();
 		}
 
-		internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
+		internal static void KeyDownEvent(object sender, KeyboardKeyEventArgs e)
 		{
 			double speedModified = (ShiftPressed ? 2.0 : 1.0) * (ControlPressed ? 4.0 : 1.0) * (AltPressed ? 8.0 : 1.0);
 			switch (e.Key)
@@ -448,7 +448,7 @@ namespace RouteViewer
 								Renderer.RenderScene(0.0);
 								Renderer.GameWindow.SwapBuffers();
 								textureBytes = new byte[Renderer.Screen.Width * Renderer.Screen.Height * 4];
-								GL.ReadPixels(0, 0, Renderer.Screen.Width, Renderer.Screen.Height, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, textureBytes);
+								GL.ReadPixels(0, 0, Renderer.Screen.Width, Renderer.Screen.Height, PixelFormat.Rgba, PixelType.UnsignedByte, textureBytes);
 								// GL.ReadPixels is reversed for what it wants as a texture, so we've got to flip it
 								byte[] tmp = new byte[Renderer.Screen.Width * 4]; // temp row
 								int currentLine = 0;
@@ -500,6 +500,8 @@ namespace RouteViewer
 					{
 						break;
 					}
+
+					string previousRoute = CurrentRouteFile;
 					OpenFileDialog Dialog = new OpenFileDialog();
 					Dialog.CheckFileExists = true;
 					Dialog.Filter = @"All Supported Routes|*.csv;*.rw;*.dat;*.txt|CSV/RW files|*.csv;*.rw|Mechanik Routes|*.dat|BVE5 Routes|*.txt|All files|*";
@@ -555,7 +557,7 @@ namespace RouteViewer
 									MessageBox.Show("No plugins found capable of loading routefile: " + Environment.NewLine + CurrentRouteFile);
 								}
 
-								CurrentRoute = null;
+								CurrentRouteFile = previousRoute;
 							}
 
 							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
@@ -857,7 +859,7 @@ namespace RouteViewer
 			}
 		}
 
-		internal static void keyUpEvent(object sender, KeyboardKeyEventArgs e)
+		internal static void KeyUpEvent(object sender, KeyboardKeyEventArgs e)
 		{
 			switch (e.Key)
 			{

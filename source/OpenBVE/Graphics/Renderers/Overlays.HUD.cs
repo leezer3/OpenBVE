@@ -7,7 +7,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using SoundManager;
-using TrainManager;
 using TrainManager.Car;
 using TrainManager.Handles;
 using static TrainManager.TrainManagerBase;

@@ -21,14 +21,14 @@ namespace OpenBveApi.Routes
 
 		/// <summary>Loads the specified route.</summary>
 		/// <param name="path">The path to the file or folder that contains the route.</param>
-		/// <param name="Encoding">The user-selected encoding (if appropriate)</param>
+		/// <param name="textEncoding">The user-selected encoding (if appropriate)</param>
 		/// <param name="trainPath">The path to the selected train</param>
 		/// <param name="objectPath">The base object folder path</param>
 		/// <param name="soundPath">The base sound folder path</param>
 		/// <param name="PreviewOnly">Whether this is a preview</param>
 		/// <param name="route">Receives the route.</param>
 		/// <returns>Whether loading the route was successful.</returns>
-		public abstract bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route);
+		public abstract bool LoadRoute(string path, System.Text.Encoding textEncoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route);
 
 		/// <summary>Holds whether loading is currently in progress</summary>
 		public bool IsLoading;

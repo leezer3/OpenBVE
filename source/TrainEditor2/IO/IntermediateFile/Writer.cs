@@ -121,6 +121,10 @@ namespace TrainEditor2.IO.IntermediateFile
 			WriteMoveNode(carNode, car.Move);
 			WriteBrakeNode(carNode, car.Brake);
 			WritePressureNode(carNode, car.Pressure);
+			for (int i = 0; i < car.particleSources.Count; i++)
+			{
+				car.particleSources[i].WriteXML(string.Empty, carNode);
+			}
 			
 			if (car is MotorCar motorCar)
 			{
