@@ -72,6 +72,7 @@ namespace OpenBve
 						Train = new ScriptedTrain(TrainState.Pending);
 						ParseDefinitionNode(FileName, KeyNode, Train as ScriptedTrain);
 						break;
+					case "runinterval":
 					case "pretrain":
 						Train = new TrainBase(TrainState.Pending, TrainType.PreTrain);
 						NumberFormats.TryParseDoubleVb6(KeyNode.Value, out Train.TimetableDelta);
