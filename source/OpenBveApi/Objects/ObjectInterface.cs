@@ -48,6 +48,19 @@
 		/// <param name="Encoding">The encoding for the object</param>
 		/// <returns>Whether loading the object was successful.</returns>
 		public abstract bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject unifiedObject);
+
+		/// <summary>Loads the specified object.</summary>
+		/// <param name="path">The path to the file or folder that contains the object.</param>
+		/// <param name="unifiedObject">Receives the object.</param>
+		/// <param name="wagonFileDirectory">The path to the wagon file</param>
+		/// <param name="Encoding">The encoding for the object</param>
+		/// <returns>Whether loading the object was successful.</returns>
+		/// <remarks>Useful for loading MSTS content only</remarks>
+		public virtual bool LoadObject(string path, string wagonFileDirectory, System.Text.Encoding Encoding, out UnifiedObject unifiedObject)
+		{
+			unifiedObject = null;
+			return false;
+		}
 	}
 
 	/// <summary>Controls various hacks used with older content</summary>
