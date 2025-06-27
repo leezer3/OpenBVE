@@ -437,7 +437,7 @@ namespace OpenBve
 				}
 			});
 
-			System.Threading.Tasks.Parallel.For(0, TFOs.Length, i =>
+			System.Threading.Tasks.Parallel.For(0, TFOs.Count, i =>
 			{
 				if (TFOs[i].State < TrainState.DisposePending)
 				{

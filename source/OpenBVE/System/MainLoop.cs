@@ -118,17 +118,6 @@ namespace OpenBve
 			Program.Renderer.GameWindow.Run();
 		}
 
-		// --------------------------------
-
-		// repeats
-
-
-		//		private static void ThreadProc()
-		//		{
-		//			RouteInformationForm = new formRouteInformation();
-		//			Application.Run(RouteInformationForm);
-		//		}
-
 		private static void OpenTKQuit(object sender, CancelEventArgs e)
 		{
 			Quit = QuitMode.QuitProgram;

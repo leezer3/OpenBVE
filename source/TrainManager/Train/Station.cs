@@ -92,7 +92,7 @@ namespace TrainManager.Trains
 
 		/// <summary>Is called once a frame to update the station state for the train</summary>
 		/// <param name="TimeElapsed">The frame time elapsed</param>
-		private void UpdateStation(double TimeElapsed)
+		internal void UpdateStation(double TimeElapsed)
 		{
 			if (Station >= 0)
 			{
@@ -114,6 +114,11 @@ namespace TrainManager.Trains
 					StationDistanceToStopPoint = 0.0;
 					tf = 5.0;
 					tb = 5.0;
+				}
+
+				if (IsPlayerTrain)
+				{
+					int b = 0;
 				}
 
 				if (StationState == TrainStopState.Pending)

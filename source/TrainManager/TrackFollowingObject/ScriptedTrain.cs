@@ -138,6 +138,10 @@ namespace TrainManager.Trains
 				return;
 			}
 
+			if (Type == TrainType.PreTrain)
+			{
+				UpdateStation(TimeElapsed);
+			}
 			// update station and doors
 			UpdateDoors(TimeElapsed);
 

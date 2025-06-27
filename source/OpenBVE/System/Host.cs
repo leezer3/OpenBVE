@@ -740,7 +740,7 @@ namespace OpenBve {
 				}
 			}
 
-			for (int j = 0; j < Program.TrainManager.TFOs.Length; j++)
+			for (int j = 0; j < Program.TrainManager.TFOs.Count; j++)
 			{
 				if (Program.TrainManager.TFOs[j] is ScriptedTrain scriptedTrain && scriptedTrain.State == TrainState.Available && scriptedTrain.Cars.Length > 0)
 				{

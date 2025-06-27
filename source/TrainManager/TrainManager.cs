@@ -27,7 +27,7 @@ namespace TrainManager
 		/// <summary>A reference to the train of the Trains element that corresponds to the player's train.</summary>
 		public static TrainBase PlayerTrain = null;
 		/// <summary>The list of TrackFollowingObject available on other tracks in the simulation.</summary>
-		public AbstractTrain[] TFOs = { };
+		public List<AbstractTrain> TFOs = new List<AbstractTrain>();
 		/// <summary>Stores a reference to the current options</summary>
 		internal static BaseOptions CurrentOptions;
 		/// <summary>Stores the plugin error message string, or a null reference if no error encountered</summary>
