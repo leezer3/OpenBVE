@@ -1,5 +1,9 @@
-﻿using System;
+﻿using OpenBveApi.Interface;
+using OpenBveApi.Math;
+using OpenBveApi.Trains;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -7,10 +11,9 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using OpenBveApi.Interface;
-using OpenBveApi.Math;
-using OpenBveApi.Trains;
+using TrainManager.Car;
 using TrainManager.Trains;
+using static OpenBve.Scripting;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve
@@ -19,10 +22,12 @@ namespace OpenBve
 	{
 		private static readonly CultureInfo culture = CultureInfo.InvariantCulture;
 
+		private static TrainBase Train;
+
 		/// <summary>Parses a track following object</summary>
 		/// <param name="ObjectPath">Absolute path to the object folder of route data</param>
 		/// <param name="FileName">The XML file to parse</param>
-		internal static ScriptedTrain ParseTrackFollowingObject(string ObjectPath, string FileName)
+		internal static TrainBase ParseTrackFollowingObject(string ObjectPath, string FileName)
 		{
 			// The current XML file to load
 			XDocument CurrentXML = XDocument.Load(FileName, LoadOptions.SetLineInfo);
@@ -34,12 +39,10 @@ namespace OpenBve
 				// We couldn't find any valid XML, so return false
 				throw new InvalidDataException();
 			}
-
-			ScriptedTrain Train = new ScriptedTrain(TrainState.Pending);
-
+			
 			foreach (XElement Element in ScriptedTrainElements)
 			{
-				ParseScriptedTrainNode(ObjectPath, FileName, Element, Train);
+				ParseScriptedTrainNode(ObjectPath, FileName, Element);
 			}
 
 			return Train;
@@ -49,14 +52,14 @@ namespace OpenBve
 		/// <param name="ObjectPath">Absolute path to the object folder of route data</param>
 		/// <param name="FileName">The filename of the containing XML file</param>
 		/// <param name="SectionElement">The XElement to parse</param>
-		/// <param name="Train">The track following object to parse this node into</param>
-		private static void ParseScriptedTrainNode(string ObjectPath, string FileName, XElement SectionElement, ScriptedTrain Train)
+		private static void ParseScriptedTrainNode(string ObjectPath, string FileName, XElement SectionElement)
 		{
 			string Section = SectionElement.Name.LocalName;
 
 			string TrainDirectory = string.Empty;
 			bool ConsistReversed = false;
 			List<TravelData> Data = new List<TravelData>();
+			XElement trainNode = null;
 
 			foreach (XElement KeyNode in SectionElement.Elements())
 			{
@@ -66,10 +69,16 @@ namespace OpenBve
 				switch (Key.ToLowerInvariant())
 				{
 					case "definition":
-						ParseDefinitionNode(FileName, KeyNode, Train);
+						Train = new ScriptedTrain(TrainState.Pending);
+						ParseDefinitionNode(FileName, KeyNode, Train as ScriptedTrain);
+						break;
+					case "runinterval":
+					case "pretrain":
+						Train = new TrainBase(TrainState.Pending, TrainType.PreTrain);
+						NumberFormats.TryParseDoubleVb6(KeyNode.Value, out Train.TimetableDelta);
 						break;
 					case "train":
-						ParseTrainNode(ObjectPath, FileName, KeyNode, ref TrainDirectory, ref ConsistReversed);
+						trainNode = KeyNode;
 						break;
 					case "points":
 					case "stops":
@@ -81,16 +90,29 @@ namespace OpenBve
 				}
 			}
 
-			if (Data.Count < 2)
+			if (trainNode != null)
 			{
-				Interface.AddMessage(MessageType.Error, false, $"There must be at least two points to go through in {FileName}");
-				return;
+				ParseTrainNode(ObjectPath, FileName, trainNode, ref TrainDirectory, ref ConsistReversed);
+			}
+			else
+			{
+				throw new InvalidDataException("No train node specified for scripted train");
 			}
 
-			if (!(Data.First() is TravelStopData) || !(Data.Last() is TravelStopData))
+			if (Train is ScriptedTrain)
 			{
-				Interface.AddMessage(MessageType.Error, false, $"The first and the last point to go through must be the \"Stop\" node in {FileName}");
-				return;
+
+				if (Data.Count < 2)
+				{
+					Interface.AddMessage(MessageType.Error, false, $"There must be at least two points to go through in {FileName}");
+					return;
+				}
+
+				if (!(Data.First() is TravelStopData) || !(Data.Last() is TravelStopData))
+				{
+					Interface.AddMessage(MessageType.Error, false, $"The first and the last point to go through must be the \"Stop\" node in {FileName}");
+					return;
+				}
 			}
 
 			if (string.IsNullOrEmpty(TrainDirectory))
@@ -130,22 +152,33 @@ namespace OpenBve
 				return;
 			}
 
-			Train.AI = new TrackFollowingObjectAI(Train, Data.ToArray());
-			foreach (var Car in Train.Cars)
+			if (Train is ScriptedTrain st)
 			{
-				Car.FrontAxle.Follower.TrackIndex = Data[0].RailIndex;
-				Car.RearAxle.Follower.TrackIndex = Data[0].RailIndex;
-				Car.FrontBogie.FrontAxle.Follower.TrackIndex = Data[0].RailIndex;
-				Car.FrontBogie.RearAxle.Follower.TrackIndex = Data[0].RailIndex;
-				Car.RearBogie.FrontAxle.Follower.TrackIndex = Data[0].RailIndex;
-				Car.RearBogie.RearAxle.Follower.TrackIndex = Data[0].RailIndex;
+				Train.AI = new TrackFollowingObjectAI(st, Data.ToArray());
+				foreach (var Car in Train.Cars)
+				{
+					Car.FrontAxle.Follower.TrackIndex = Data[0].RailIndex;
+					Car.RearAxle.Follower.TrackIndex = Data[0].RailIndex;
+					Car.FrontBogie.FrontAxle.Follower.TrackIndex = Data[0].RailIndex;
+					Car.FrontBogie.RearAxle.Follower.TrackIndex = Data[0].RailIndex;
+					Car.RearBogie.FrontAxle.Follower.TrackIndex = Data[0].RailIndex;
+					Car.RearBogie.RearAxle.Follower.TrackIndex = Data[0].RailIndex;
+					Train.PlaceCars(Data[0].Position);
+				}
 			}
+			else
+			{
+				Train.AI = new Game.SimpleHumanDriverAI(Train, Interface.CurrentOptions.PrecedingTrainSpeedLimit);
+				Train.Specs.DoorOpenMode = DoorMode.Manual;
+				Train.Specs.DoorCloseMode = DoorMode.Manual;
+			}
+
 
 			if (ConsistReversed)
 			{
 				Train.Reverse();
 			}
-			Train.PlaceCars(Data[0].Position);
+			
 		}
 
 		/// <summary>

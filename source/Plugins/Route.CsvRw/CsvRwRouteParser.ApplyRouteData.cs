@@ -1271,13 +1271,11 @@ namespace CsvRwRouteParser
 				// Create and place all scripted trains *last* to ensure that all required rails etc. are present
 				if (Plugin.TrainManager.TFOs == null)
 				{
-					Plugin.TrainManager.TFOs = new AbstractTrain[] { };
+					Plugin.TrainManager.TFOs = new List<AbstractTrain>();
 				}
 				for (int i = 0; i < Data.ScriptedTrainFiles.Count; i++)
 				{
-					int n = Plugin.TrainManager.TFOs.Length;
-					Array.Resize(ref Plugin.TrainManager.TFOs, n + 1);
-					Plugin.TrainManager.TFOs[n] = Plugin.CurrentHost.ParseTrackFollowingObject(ObjectPath, Data.ScriptedTrainFiles[i]);
+					Plugin.TrainManager.TFOs.Add(Plugin.CurrentHost.ParseTrackFollowingObject(ObjectPath, Data.ScriptedTrainFiles[i]));
 				}
 			}
 			

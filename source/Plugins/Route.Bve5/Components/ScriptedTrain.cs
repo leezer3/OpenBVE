@@ -309,10 +309,7 @@ namespace Route.Bve5
 				}
 
 				Train.PlaceCars(Data[0].Position);
-
-				int n = Plugin.TrainManager.TFOs.Length;
-				Array.Resize(ref Plugin.TrainManager.TFOs, n + 1);
-				Plugin.TrainManager.TFOs[n] = Train;
+				Plugin.TrainManager.TFOs.Add(Train);
 			}
 		}
 

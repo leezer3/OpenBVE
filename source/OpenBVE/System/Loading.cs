@@ -10,6 +10,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.Routes;
+using OpenTK.Graphics.ES20;
 using RouteManager2;
 using TrainManager;
 using TrainManager.Car;
@@ -439,6 +440,17 @@ namespace OpenBve {
 					train.Specs.DoorCloseMode = DoorMode.Manual;
 				}
 			}
+			for (int i = Program.TrainManager.TFOs.Count - 1; i >= 0; i--)
+			{
+				// HACK: Copy PreTrain type TFOs back into the main array so they affect signalling
+				if (Program.TrainManager.TFOs[i].Type == TrainType.PreTrain)
+				{
+					Program.TrainManager.Trains.Add(Program.TrainManager.TFOs[i] as TrainBase);
+					Array.Resize(ref Program.CurrentRoute.PrecedingTrainTimeDeltas, Program.CurrentRoute.PrecedingTrainTimeDeltas.Length + 1);
+					Program.CurrentRoute.PrecedingTrainTimeDeltas[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length - 1] = Program.TrainManager.TFOs[i].TimetableDelta;
+					Program.TrainManager.TFOs.RemoveAt(i);
+				}
+			}
 			// finished created objects
 			Thread.Sleep(1); if (Cancel) return;
 			Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjectsUsed);
@@ -468,6 +480,8 @@ namespace OpenBve {
 					}
 				}
 			}
+
+			
 		}
 
 	}

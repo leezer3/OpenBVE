@@ -85,7 +85,7 @@ namespace LibRender2.Textures
 			{
 				try
 				{
-					for (int i = RegisteredTexturesCount - 1; i > 0; i--)
+					for (int i = RegisteredTexturesCount - 1; i >= 0; i--)
 					{
 						if (RegisteredTextures[i] != null)
 						{
