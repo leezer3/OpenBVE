@@ -652,6 +652,11 @@ namespace OpenBveApi.Colors {
 		{
 			return new Color32(c.R, c.G, c.B, c.A);
 		}
+
+		public static implicit operator Color32(Color128 c)
+		{
+			return new Color32((byte)(255 * c.R), (byte)(255 * c.G), (byte)(255 * c.B), (byte)(255 * c.A));
+		}
 	}
 	
 	
