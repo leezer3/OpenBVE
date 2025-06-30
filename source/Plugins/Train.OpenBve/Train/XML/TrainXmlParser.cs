@@ -280,7 +280,7 @@ namespace Train.OpenBve
 									break;
 								}
 
-								Train.SafetySystems.Headlights = new LightSource(numStates);
+								Train.SafetySystems.Headlights = new LightSource(Train, numStates);
 								break;
 						}
 					}
