@@ -44,13 +44,13 @@ namespace LibRender2.Text
 			vao.Bind();
 
 			var location = shader.GetAttribLocation("a_position");
-			vao.VertexAttribPointer(location, 3, VertexAttribPointerType.Float, false, 0);
+			vao.VertexAttribPointer(location, 3, VertexAttribPointerType.Double, false, 0);
 
 			location = shader.GetAttribLocation("a_color");
-			vao.VertexAttribPointer(location, 4, VertexAttribPointerType.UnsignedByte, true, 12);
+			vao.VertexAttribPointer(location, 4, VertexAttribPointerType.UnsignedByte, true, 24);
 
 			location = shader.GetAttribLocation("a_texCoords0");
-			vao.VertexAttribPointer(location, 2, VertexAttribPointerType.Float, false, 16);
+			vao.VertexAttribPointer(location, 2, VertexAttribPointerType.Double, false, 28);
 		}
 
 		~FontStashRenderer() => Dispose(false);
