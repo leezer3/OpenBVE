@@ -58,7 +58,7 @@ namespace LibRender2.Text
 			var fontStashFont = FontSystem.GetFont(font.FontSize);
 			var size = fontStashFont.MeasureString(text);
 			renderer.FontStashRenderer.Begin();
-			fontStashFont.DrawText(renderer.FontStashRenderer, text, new System.Numerics.Vector2((float)location.X,(float)location.Y), color);
+			fontStashFont.DrawText(renderer.FontStashRenderer, text, location, color);
 			renderer.FontStashRenderer.End();
 			return;
 			renderer.LastBoundTexture = null;

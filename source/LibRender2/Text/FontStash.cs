@@ -81,7 +81,7 @@ namespace LibRender2.Text
 			shader.Activate();
 			shader.SetUniform("TextureSampler", 0);
 
-			var transform = Matrix4x4.CreateOrthographicOffCenter(0, 1200, 800, 0, 0, -1);
+			var transform = Matrix4x4.CreateOrthographicOffCenter(0, renderer.Screen.Width, renderer.Screen.Height, 0, 0, -1);
 			shader.SetUniform("MatrixTransform", transform);
 
 			vao.Bind();
