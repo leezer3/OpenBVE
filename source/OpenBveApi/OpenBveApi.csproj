@@ -128,7 +128,7 @@
     <Compile Include="Interface\Translations\Language\TranslationString.cs" />
     <Compile Include="Math\Endianness.cs" />
     <Compile Include="Math\Extensions.cs" />
-    <Compile Include="Math\Matrix4.cs" />
+    <Compile Include="Math\Matrix4x4.cs" />
     <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Vectors\Vector2f.cs" />
     <Compile Include="Math\Vectors\Vector3f.cs" />
