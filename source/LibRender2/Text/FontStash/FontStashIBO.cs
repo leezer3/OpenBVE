@@ -12,11 +12,6 @@ namespace LibRender2
 
 		public unsafe BufferObject(int size, BufferTarget bufferType, bool isDynamic)
 		{
-			ErrorCode e = GL.GetError();
-			if (e != ErrorCode.NoError)
-			{
-				int b = 0;
-			}
 			_bufferType = bufferType;
 			_size = size;
 
@@ -26,11 +21,6 @@ namespace LibRender2
 
 			var elementSizeInBytes = Marshal.SizeOf<T>();
 			GL.BufferData(bufferType, size * elementSizeInBytes, IntPtr.Zero, isDynamic ? BufferUsageHint.StreamDraw : BufferUsageHint.StaticDraw);
-			e = GL.GetError();
-			if (e != ErrorCode.NoError)
-			{
-				int b = 0;
-			}
 		}
 
 		public void Bind()
@@ -46,24 +36,12 @@ namespace LibRender2
 
 		public unsafe void SetData(T[] data, int startIndex, int elementCount)
 		{
-			ErrorCode e = GL.GetError();
-			if (e != ErrorCode.NoError)
-			{
-				int b = 0;
-			}
 			Bind();
-
 			fixed (T* dataPtr = &data[startIndex])
 			{
 				var elementSizeInBytes = sizeof(T);
 
 				GL.BufferSubData(_bufferType, IntPtr.Zero, elementCount * elementSizeInBytes, new IntPtr(dataPtr));
-			}
-
-			e = GL.GetError();
-			if (e != ErrorCode.NoError)
-			{
-				int b = 0;
 			}
 		}
 	}

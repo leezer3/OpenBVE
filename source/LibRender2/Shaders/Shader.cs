@@ -83,7 +83,6 @@ namespace LibRender2.Shaders
 
 			if (status == 0)
 			{
-				string s = GL.GetProgramInfoLog(handle);
 				throw new ApplicationException(GL.GetProgramInfoLog(handle));
 			}
 
@@ -490,7 +489,7 @@ namespace LibRender2.Shaders
 			GL.ProgramUniform1(handle, location, value);
 		}
 
-		public unsafe void SetUniform(string name, Matrix4x4 value)
+		public unsafe void SetUniform(string name, Matrix4D value)
 		{
 			int location = GL.GetUniformLocation(handle, name);
 			if (location == -1)
@@ -498,7 +497,8 @@ namespace LibRender2.Shaders
 				throw new Exception($"{name} uniform not found on shader.");
 			}
 
-			GL.UniformMatrix4(location, 1, false, (float*)&value);
+			Matrix4 matrix = ConvertToMatrix4(value);
+			GL.ProgramUniformMatrix4(handle, location, false, ref matrix);
 		}
 	}
 }

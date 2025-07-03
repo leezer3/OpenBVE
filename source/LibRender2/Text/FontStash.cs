@@ -5,6 +5,7 @@ using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Numerics;
+using OpenBveApi.Math;
 
 namespace LibRender2.Text
 {
@@ -81,7 +82,7 @@ namespace LibRender2.Text
 			shader.Activate();
 			shader.SetUniform("TextureSampler", 0);
 
-			var transform = Matrix4x4.CreateOrthographicOffCenter(0, renderer.Screen.Width, renderer.Screen.Height, 0, 0, -1);
+			Matrix4D.CreateOrthographicOffCenter(0, renderer.Screen.Width, renderer.Screen.Height, 0, 0, -1, out var transform);
 			shader.SetUniform("MatrixTransform", transform);
 
 			vao.Bind();

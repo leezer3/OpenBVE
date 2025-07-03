@@ -54,13 +54,7 @@ namespace LibRender2.Text
 			{
 				return;
 			}
-
-			var fontStashFont = FontSystem.GetFont(font.FontSize);
-			var size = fontStashFont.MeasureString(text);
-			renderer.FontStashRenderer.Begin();
-			fontStashFont.DrawText(renderer.FontStashRenderer, text, location, color);
-			renderer.FontStashRenderer.End();
-			return;
+			
 			renderer.LastBoundTexture = null;
 			/*
 			 * Prepare the top-left coordinates for rendering, incorporating the
@@ -215,41 +209,11 @@ namespace LibRender2.Text
 
 		private void DrawWithShader(string text, OpenGlFont font, double left, double top, Color128 color)
 		{
-			Shader.Activate();
-			renderer.CurrentShader = Shader;
-			Shader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
-			Shader.SetCurrentModelViewMatrix(renderer.CurrentViewMatrix);
-
-			for (int i = 0; i < text.Length; i++)
-			{
-				i += font.GetCharacterData(text, i, out Texture texture, out OpenGlFontChar data) - 1;
-				if (renderer.currentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp))
-				{
-					GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
-					Shader.SetAtlasLocation(data.TextureCoordinates);
-					double x = left - (data.PhysicalSize.X - data.TypographicSize.X) / 2;
-					double y = top - (data.PhysicalSize.Y - data.TypographicSize.Y) / 2;
-
-					/*
-					 * In the first pass, mask off the background with pure black.
-					 */
-					GL.BlendFunc(BlendingFactor.Zero, BlendingFactor.OneMinusSrcColor);
-					Shader.SetColor(new Color128(color.A, color.A, color.A, 1.0f));
-					Shader.SetPoint(new Vector2(x, y));
-					Shader.SetSize(data.PhysicalSize);
-					/*
-					 * In order to call GL.DrawArrays with procedural data within the shader,
-					 * we first need to bind a dummy VAO
-					* If this is not done, it will generate an InvalidOperation error code
-					*/
-					renderer.dummyVao.Bind();
-					GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 6);
-					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
-					Shader.SetColor(color);
-					GL.DrawArrays(PrimitiveType.TriangleStrip, 0, 6);
-				}
-				left += data.TypographicSize.X;
-			}
+			renderer.FontStashRenderer.Begin();
+			var fontStashFont = FontSystem.GetFont(font.FontSize / 0.75f); // convert px to points
+			var size = fontStashFont.MeasureString(text);
+			fontStashFont.DrawText(renderer.FontStashRenderer, text, new Vector2f(left, top), color);
+			renderer.FontStashRenderer.End();
 			renderer.RestoreBlendFunc();
 		}
 
