@@ -162,11 +162,7 @@ namespace OpenBve.Graphics
 			}
 			TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
 			TransformedLightPosition.Transform(CurrentViewMatrix);
-			if (!AvailableNewRenderer)
-			{
-				GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)TransformedLightPosition.X, (float)TransformedLightPosition.Y, (float)TransformedLightPosition.Z, 0.0f });
-			}
-
+			
 			Lighting.OptionLightingResultingAmount = (Lighting.OptionAmbientColor.R + Lighting.OptionAmbientColor.G + Lighting.OptionAmbientColor.B) / 480.0f;
 
 			if (Lighting.OptionLightingResultingAmount > 1.0f)
@@ -213,10 +209,6 @@ namespace OpenBve.Graphics
 				Fog.Color = Program.CurrentRoute.CurrentFog.Color;
 				Fog.Density = Program.CurrentRoute.CurrentFog.Density;
 				Fog.IsLinear = Program.CurrentRoute.CurrentFog.IsLinear;
-				if (!AvailableNewRenderer)
-				{
-					Fog.SetForImmediateMode();
-				}
 				
 			}
 			else
@@ -226,27 +218,24 @@ namespace OpenBve.Graphics
 
 			// world layer
 			// opaque face
-			if (AvailableNewRenderer)
+			//Setup the shader for rendering the scene
+			DefaultShader.Activate();
+			if (OptionLighting)
 			{
-				//Setup the shader for rendering the scene
-				DefaultShader.Activate();
-				if (OptionLighting)
-				{
-					DefaultShader.SetIsLight(true);
-					DefaultShader.SetLightPosition(TransformedLightPosition);
-					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
-					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
-					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
-					DefaultShader.SetLightModel(Lighting.LightModel);
-				}
-				if (OptionFog)
-				{
-					DefaultShader.SetIsFog(true);
-					DefaultShader.SetFog(Fog);
-				}
-				DefaultShader.SetTexture(0);
-				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
+				DefaultShader.SetIsLight(true);
+				DefaultShader.SetLightPosition(TransformedLightPosition);
+				DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
+				DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+				DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+				DefaultShader.SetLightModel(Lighting.LightModel);
 			}
+			if (OptionFog)
+			{
+				DefaultShader.SetIsFog(true);
+				DefaultShader.SetFog(Fog);
+			}
+			DefaultShader.SetTexture(0);
+			DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			ResetOpenGlState();
 			List<FaceState> opaqueFaces, alphaFaces, overlayOpaqueFaces, overlayAlphaFaces;
 			lock (VisibleObjects.LockObject)
@@ -331,10 +320,7 @@ namespace OpenBve.Graphics
 
 			if (Interface.CurrentOptions.MotionBlur != MotionBlurMode.None)
 			{
-				if (AvailableNewRenderer)
-				{
-					DefaultShader.Deactivate();
-				}
+				DefaultShader.Deactivate();
 				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
 
@@ -357,17 +343,14 @@ namespace OpenBve.Graphics
 			// overlay (cab / interior) layer
 			OptionFog = false;
 			UpdateViewport(ViewportChangeMode.ChangeToCab);
-			
-			if (AvailableNewRenderer)
-			{
-				/*
-				 * We must reset the shader between overlay and world layers for correct lighting results.
-				 * Additionally, the viewport change updates the projection matrix
-				 */
-				DefaultShader.Activate();
-				ResetShader(DefaultShader);
-				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
-			}
+
+			/*
+			 * We must reset the shader between overlay and world layers for correct lighting results.
+			 * Additionally, the viewport change updates the projection matrix
+			 */
+			DefaultShader.Activate();
+			ResetShader(DefaultShader);
+			DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
 			
 			if (Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D)
@@ -379,22 +362,14 @@ namespace OpenBve.Graphics
 				Color24 prevOptionDiffuseColor = Lighting.OptionDiffuseColor;
 				Lighting.OptionAmbientColor = Color24.LightGrey;
 				Lighting.OptionDiffuseColor = Color24.LightGrey;
-				if (AvailableNewRenderer)
-				{
-					DefaultShader.SetIsLight(true);
-					TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
-					DefaultShader.SetLightPosition(TransformedLightPosition);
-					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
-					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
-					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
-					DefaultShader.SetLightModel(Lighting.LightModel);
-				}
-				else
-				{
-					GL.Light(LightName.Light0, LightParameter.Ambient, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });
-					GL.Light(LightName.Light0, LightParameter.Diffuse, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });	
-				}
-				
+				DefaultShader.SetIsLight(true);
+				TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
+				DefaultShader.SetLightPosition(TransformedLightPosition);
+				DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
+				DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+				DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+				DefaultShader.SetLightModel(Lighting.LightModel);
+
 
 				// overlay opaque face
 				foreach (FaceState face in overlayOpaqueFaces)
@@ -474,11 +449,8 @@ namespace OpenBve.Graphics
                  */
 				ResetOpenGlState();
 				OptionLighting = false;
-				if (AvailableNewRenderer)
-				{
-					DefaultShader.SetIsLight(false);
-				}
-				
+				DefaultShader.SetIsLight(false);
+
 				SetBlendFunc();
 				UnsetAlphaFunc();
 				GL.Disable(EnableCap.DepthTest);
