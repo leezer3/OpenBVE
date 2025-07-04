@@ -432,10 +432,19 @@ namespace OpenBveApi.Math {
 		public static double NormSquared(Vector2 vector) {
 			return vector.X * vector.X + vector.Y * vector.Y;
 		}
-		
-		
+
+		/// <summary>Transforms the Vector based upon the given transform matrix</summary>
+		/// <param name="transformMatrix">The matrix by which to transform the Vector</param>
+		public void Transform(Matrix4D transformMatrix)
+		{
+			double x = X * transformMatrix.Row0.X + Y * transformMatrix.Row1.X + transformMatrix.Row3.X;
+			double y = X * transformMatrix.Row0.Y + Y * transformMatrix.Row1.Y + transformMatrix.Row3.Y;
+			X = x;
+			Y = y;
+		}
+
 		// --- read-only fields ---
-		
+
 		/// <summary>Represents a null vector.</summary>
 		public static readonly Vector2 Null = new Vector2(0.0, 0.0);
 		

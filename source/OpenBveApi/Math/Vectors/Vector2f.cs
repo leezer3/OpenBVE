@@ -1,4 +1,4 @@
-﻿#pragma warning disable IDE0064
+#pragma warning disable IDE0064
 using System;
 using System.Globalization;
 // ReSharper disable MergeCastWithTypeCheck
@@ -372,10 +372,13 @@ namespace OpenBveApi.Math {
 		public static double NormSquared(Vector2f vector) {
 			return vector.X * vector.X + vector.Y * vector.Y;
 		}
-		
-		
+
+
 		// --- read-only fields ---
-		
+
+		/// <summary>Represents a null vector.</summary>
+		public static readonly Vector2f Zero = new Vector2f(0.0, 0.0);
+
 		/// <summary>Represents a null vector.</summary>
 		public static readonly Vector2f Null = new Vector2f(0.0, 0.0);
 		

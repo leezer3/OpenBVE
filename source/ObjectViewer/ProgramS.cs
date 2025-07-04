@@ -598,9 +598,6 @@ namespace ObjectViewer {
 	                    Renderer.ApplyBackgroundColor();
 	                }
 	                break;
-				case Key.R:
-					Renderer.SwitchOpenGLVersion();
-					break;
 				case Key.F11:
 					Renderer.RenderStatsOverlay = !Renderer.RenderStatsOverlay;
 					break;

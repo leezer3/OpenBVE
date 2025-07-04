@@ -25,14 +25,7 @@ namespace LibRender2.Objects
 
 		public void Draw()
 		{
-			if (Renderer.AvailableNewRenderer)
-			{
-				Renderer.RenderFace(this);
-			}
-			else
-			{
-				Renderer.RenderFaceImmediateMode(this);
-			}
+			Renderer.RenderFace(this);
 		}
 	}
 }

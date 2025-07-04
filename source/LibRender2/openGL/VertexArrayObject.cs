@@ -6,6 +6,7 @@ using OpenBveApi.Routes;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace LibRender2
@@ -157,6 +158,12 @@ namespace LibRender2
 			{
 				BaseRenderer.vaoToDelete.Add(handle);
 			}
+		}
+
+		public unsafe void SetVertexAttribPointer(int location, int size, VertexAttribPointerType type, bool normalized, int offset)
+		{
+			GL.EnableVertexAttribArray(handle);
+			GL.VertexAttribPointer(handle, size, type, normalized, sizeof(ColoredVertex), new IntPtr(offset));
 		}
 	}
 

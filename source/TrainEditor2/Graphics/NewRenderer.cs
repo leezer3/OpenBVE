@@ -1,4 +1,6 @@
-﻿using LibRender2;
+﻿using System;
+using LibRender2;
+using LibRender2.Text;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
@@ -17,6 +19,7 @@ namespace TrainEditor2.Graphics
 
 		public NewRenderer(HostInterface currentHost, BaseOptions currentOptions, FileSystem fileSystem) : base(currentHost, currentOptions, fileSystem)
 		{
+			Fonts = new Fonts(currentHost, this, String.Empty);
 		}
 	}
 }
