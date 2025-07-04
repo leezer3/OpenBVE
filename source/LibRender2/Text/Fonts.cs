@@ -1,6 +1,7 @@
-﻿using System.Drawing;
-using System.IO;
+﻿using FontStashSharp;
 using OpenBveApi.Hosts;
+using System.Drawing;
+using System.IO;
 
 namespace LibRender2.Text
 {
@@ -92,14 +93,23 @@ namespace LibRender2.Text
 				
 			}
 
+			var settings = new FontSystemSettings
+			{
+				FontResolutionFactor = 2,
+				KernelWidth = 2,
+				KernelHeight = 2
+			};
+			FontSystem fontSystem = new FontSystem(settings);
+			fontSystem.AddFont(File.ReadAllBytes(@"DroidSans.ttf"));
+
 			float scaleFactor = (float)renderer.ScaleFactor.X;
 			
-			VerySmallFont = new OpenGlFont(uiFont, 9.0f * scaleFactor);
-			SmallFont = new OpenGlFont(uiFont, 12.0f * scaleFactor);
-			NormalFont = new OpenGlFont(uiFont, 16.0f * scaleFactor);
-			LargeFont = new OpenGlFont(uiFont, 21.0f * scaleFactor);
-			VeryLargeFont = new OpenGlFont(uiFont, 27.0f * scaleFactor);
-			EvenLargerFont = new OpenGlFont(uiFont, 34.0f * scaleFactor);
+			VerySmallFont = new OpenGlFont(renderer, fontSystem.GetFont(9.0f * scaleFactor / 0.75f), 9.0f * scaleFactor);
+			SmallFont = new OpenGlFont(renderer, fontSystem.GetFont(12.0f * scaleFactor / 0.75f), 12.0f * scaleFactor);
+			NormalFont = new OpenGlFont(renderer, fontSystem.GetFont(16.0f * scaleFactor / 0.75f), 16.0f * scaleFactor);
+			LargeFont = new OpenGlFont(renderer, fontSystem.GetFont(21.0f * scaleFactor / 0.75f), 21.0f * scaleFactor);
+			VeryLargeFont = new OpenGlFont(renderer, fontSystem.GetFont(27.0f * scaleFactor / 0.75f), 27.0f * scaleFactor);
+			EvenLargerFont = new OpenGlFont(renderer, fontSystem.GetFont(34.0f * scaleFactor / 0.75f), 34.0f * scaleFactor);
 		}
 	}
 }

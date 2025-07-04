@@ -1,11 +1,8 @@
-using System.IO;
 using FontStashSharp;
 using LibRender2.Shaders;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
-using OpenBveApi.Textures;
-using OpenTK.Graphics.OpenGL;
 
 namespace LibRender2.Text
 {
@@ -26,20 +23,7 @@ namespace LibRender2.Text
 			{
 				renderer.ForceLegacyOpenGL = true;
 			}
-
-			var settings = new FontSystemSettings
-			{
-				FontResolutionFactor = 2,
-				KernelWidth = 2,
-				KernelHeight = 2
-			};
-			FontSystem = new FontSystem(settings);
-			// TODO : Use font in settings
-			FontSystem.AddFont(File.ReadAllBytes(@"DroidSans.ttf"));
 		}
-
-		private FontSystem FontSystem;
-
 		
 		/// <summary>Renders a string to the screen.</summary>
 		/// <param name="font">The font to use.</param>
@@ -62,15 +46,11 @@ namespace LibRender2.Text
 			 * */
 			double left;
 
+			Vector2f size = font.MeasureString(text);
+
 			if ((alignment & TextAlignment.Left) == 0)
 			{
-				double width = 0;
-
-				for (int i = 0; i < text.Length; i++)
-				{
-					i += font.GetCharacterData(text, i, out _, out OpenGlFontChar data) - 1;
-					width += data.TypographicSize.X;
-				}
+				double width = size.X;
 
 				if ((alignment & TextAlignment.Right) != 0)
 				{
@@ -90,17 +70,7 @@ namespace LibRender2.Text
 
 			if ((alignment & TextAlignment.Top) == 0)
 			{
-				double height = 0;
-
-				for (int i = 0; i < text.Length; i++)
-				{
-					i += font.GetCharacterData(text, i, out _, out OpenGlFontChar data) - 1;
-
-					if (data.TypographicSize.Y > height)
-					{
-						height = data.TypographicSize.Y;
-					}
-				}
+				double height = size.Y;
 
 				if ((alignment & TextAlignment.Bottom) != 0)
 				{
@@ -116,107 +86,11 @@ namespace LibRender2.Text
 				top = location.Y;
 			}
 
-			if (renderer.AvailableNewRenderer && Shader != null)
-			{
-				DrawWithShader(text, font, left, top, color);
-			}
-			else
-			{
-				DrawImmediate(text, font, left, top, color);
-			}
-
+			font.DrawString(text, left, top, color);
 		}
 
-		private void DrawImmediate(string text, OpenGlFont font, double left, double top, Color128 color)
-		{
-			/*
-			 * Render the string.
-			 * */
-			GL.Enable(EnableCap.Texture2D);
 
-			GL.MatrixMode(MatrixMode.Projection);
-			GL.PushMatrix();
-			unsafe
-			{
-				fixed (double* matrixPointer = &renderer.CurrentProjectionMatrix.Row0.X)
-				{
-					GL.LoadMatrix(matrixPointer);
-				}
-				GL.MatrixMode(MatrixMode.Modelview);
-				GL.PushMatrix();
-				fixed (double* matrixPointer = &renderer.CurrentViewMatrix.Row0.X)
-				{
-					GL.LoadMatrix(matrixPointer);
-				}
-			}
-			
-
-			for (int i = 0; i < text.Length; i++)
-			{
-				i += font.GetCharacterData(text, i, out Texture texture, out OpenGlFontChar data) - 1;
-
-				if (renderer.currentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp))
-				{
-					GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
-
-					double x = left - (data.PhysicalSize.X - data.TypographicSize.X) / 2;
-					double y = top - (data.PhysicalSize.Y - data.TypographicSize.Y) / 2;
-
-					/*
-					 * In the first pass, mask off the background with pure black.
-					 * */
-					GL.BlendFunc(BlendingFactor.Zero, BlendingFactor.OneMinusSrcColor);
-					GL.Begin(PrimitiveType.Quads);
-					GL.Color4(color.A, color.A, color.A, 1.0f);
-					GL.TexCoord2(data.TextureCoordinates.X, data.TextureCoordinates.Y);
-					GL.Vertex2(x, y);
-					GL.TexCoord2(data.TextureCoordinates.X + data.TextureCoordinates.Z, data.TextureCoordinates.Y);
-					GL.Vertex2(x + data.PhysicalSize.X, y);
-					GL.TexCoord2(data.TextureCoordinates.X + data.TextureCoordinates.Z, data.TextureCoordinates.Y + data.TextureCoordinates.W);
-					GL.Vertex2(x + data.PhysicalSize.X, y + data.PhysicalSize.Y);
-					GL.TexCoord2(data.TextureCoordinates.X, data.TextureCoordinates.Y + data.TextureCoordinates.W);
-					GL.Vertex2(x, y + data.PhysicalSize.Y);
-					GL.End();
-
-					/*
-					 * In the second pass, add the character onto the background.
-					 * */
-					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
-					GL.Begin(PrimitiveType.Quads);
-					GL.Color4(color.R, color.G, color.B, color.A);
-					GL.TexCoord2(data.TextureCoordinates.X, data.TextureCoordinates.Y);
-					GL.Vertex2(x, y);
-					GL.TexCoord2(data.TextureCoordinates.X + data.TextureCoordinates.Z, data.TextureCoordinates.Y);
-					GL.Vertex2(x + data.PhysicalSize.X, y);
-					GL.TexCoord2(data.TextureCoordinates.X + data.TextureCoordinates.Z, data.TextureCoordinates.Y + data.TextureCoordinates.W);
-					GL.Vertex2(x + data.PhysicalSize.X, y + data.PhysicalSize.Y);
-					GL.TexCoord2(data.TextureCoordinates.X, data.TextureCoordinates.Y + data.TextureCoordinates.W);
-					GL.Vertex2(x, y + data.PhysicalSize.Y);
-					GL.End();
-				}
-
-				left += data.TypographicSize.X;
-			}
-
-			renderer.RestoreBlendFunc();
-			GL.Disable(EnableCap.Texture2D);
-
-			GL.PopMatrix();
-
-			GL.MatrixMode(MatrixMode.Projection);
-			GL.PopMatrix();
-		}
-
-		private void DrawWithShader(string text, OpenGlFont font, double left, double top, Color128 color)
-		{
-			renderer.FontStashRenderer.Begin();
-			var fontStashFont = FontSystem.GetFont(font.FontSize / 0.75f); // convert px to points
-			var size = fontStashFont.MeasureString(text);
-			fontStashFont.DrawText(renderer.FontStashRenderer, text, new Vector2f(left, top), color);
-			renderer.FontStashRenderer.End();
-			renderer.RestoreBlendFunc();
-		}
-
+	
 		/// <summary>Renders a string to the screen.</summary>
 		/// <param name="font">The font to use.</param>
 		/// <param name="text">The string to render.</param>

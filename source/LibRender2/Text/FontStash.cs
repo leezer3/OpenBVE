@@ -1,10 +1,7 @@
 ﻿using FontStashSharp.Interfaces;
 using LibRender2.Shaders;
-using OpenBveApi.Objects;
-using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using System;
-using System.Numerics;
 using OpenBveApi.Math;
 
 namespace LibRender2.Text
