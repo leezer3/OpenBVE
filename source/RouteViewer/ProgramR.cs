@@ -822,9 +822,6 @@ namespace RouteViewer
 						}
 					}
 					break;
-				case Key.R:
-					Renderer.SwitchOpenGLVersion();
-					break;
 				case Key.P:
 					if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
 					{

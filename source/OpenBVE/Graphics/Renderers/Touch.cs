@@ -32,36 +32,25 @@ namespace OpenBve.Graphics.Renderers
 		{
 			this.renderer = renderer;
 			touchableObject = new List<ObjectState>();
-
-			if (!renderer.ForceLegacyOpenGL)
-			{
-				fbo = new FrameBufferObject();
-				fbo.Bind();
-				fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
-				fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
-				fbo.UnBind();
-			}
+			fbo = new FrameBufferObject();
+			fbo.Bind();
+			fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
+			fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
+			fbo.UnBind();
 		}
 
 		internal void UpdateViewport()
 		{
-			if (renderer.AvailableNewRenderer)
-			{
-				fbo.Bind();
-				fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
-				fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
-				fbo.UnBind();
-			}
+			fbo.Bind();
+			fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
+			fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
+			fbo.UnBind();
 		}
 
 		private void ShowObject(ObjectState state)
 		{
 			touchableObject.Add(state);
-
-			if (renderer.AvailableNewRenderer && state.Prototype.Mesh.VAO == null)
-			{
-				VAOExtensions.CreateVAO(state.Prototype.Mesh, state.Prototype.Dynamic, renderer.pickingShader.VertexLayout, renderer);
-			}
+			VAOExtensions.CreateVAO(state.Prototype.Mesh, state.Prototype.Dynamic, renderer.pickingShader.VertexLayout, renderer);
 		}
 
 		private void PreRender()
@@ -111,28 +100,25 @@ namespace OpenBve.Graphics.Renderers
 
 			renderer.ResetOpenGlState();
 
-			if (renderer.AvailableNewRenderer)
+			fbo.Bind();
+			GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+			renderer.pickingShader.Activate();
+			renderer.pickingShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
+
+			for (int i = 0; i < touchableObject.Count; i++)
 			{
-				fbo.Bind();
-				GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-				renderer.pickingShader.Activate();
-				renderer.pickingShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
+				renderer.pickingShader.SetObjectIndex(i + 1);
 
-				for (int i = 0; i < touchableObject.Count; i++)
+				foreach (MeshFace face in touchableObject[i].Prototype.Mesh.Faces)
 				{
-					renderer.pickingShader.SetObjectIndex(i + 1);
-
-					foreach (MeshFace face in touchableObject[i].Prototype.Mesh.Faces)
-					{
-						renderer.RenderFace(renderer.pickingShader, touchableObject[i], face);
-					}
+					renderer.RenderFace(renderer.pickingShader, touchableObject[i], face);
 				}
-
-				//Must deactivate and unbind here
-				renderer.pickingShader.Deactivate();
-				fbo.UnBind();
 			}
+
+			//Must deactivate and unbind here
+			renderer.pickingShader.Deactivate();
+			fbo.UnBind();
 
 			// for debug
 			if (renderer.DebugTouchMode)
@@ -140,32 +126,18 @@ namespace OpenBve.Graphics.Renderers
 				GL.DepthMask(false);
 				GL.Disable(EnableCap.DepthTest);
 
-				if (renderer.AvailableNewRenderer)
-				{
-					renderer.DefaultShader.Activate();
-					renderer.ResetShader(renderer.DefaultShader);
-					renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
+				renderer.DefaultShader.Activate();
+				renderer.ResetShader(renderer.DefaultShader);
+				renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 
-					foreach (ObjectState objectState in touchableObject)
-					{
-						foreach (MeshFace face in objectState.Prototype.Mesh.Faces)
-						{
-							renderer.RenderFace(renderer.DefaultShader, objectState, face, true);
-						}
-					}
-
-					renderer.DefaultShader.Deactivate();
-				}
-				else
+				foreach (ObjectState objectState in touchableObject)
 				{
-					foreach (ObjectState objectState in touchableObject)
+					foreach (MeshFace face in objectState.Prototype.Mesh.Faces)
 					{
-						foreach (MeshFace face in objectState.Prototype.Mesh.Faces)
-						{
-							renderer.RenderFaceImmediateMode(objectState, face, true);
-						}
+						renderer.RenderFace(renderer.DefaultShader, objectState, face, true);
 					}
 				}
+				renderer.DefaultShader.Deactivate();
 			}
 		}
 
@@ -252,47 +224,6 @@ namespace OpenBve.Graphics.Renderers
 			}
 		}
 
-		private ObjectState RenderSceneSelection(Vector2 point, Vector2 delta)
-		{
-			// Pre
-			PreRender();
-			renderer.ResetOpenGlState();
-			int[] selectBuffer = new int[2048];
-			GL.SelectBuffer(selectBuffer.Length, selectBuffer);
-			GL.RenderMode(RenderingMode.Select);
-			renderer.PushMatrix(MatrixMode.Projection);
-			renderer.CurrentProjectionMatrix = CreatePickMatrix(point, delta);
-			int partID = 0;
-			GL.InitNames();
-			GL.PushName(0);
-
-			// Rendering
-			foreach (ObjectState objectState in touchableObject)
-			{
-				GL.LoadName(partID);
-
-				foreach (MeshFace face in objectState.Prototype.Mesh.Faces)
-				{
-					renderer.RenderFaceImmediateMode(objectState, face);
-				}
-
-				partID++;
-			}
-
-			// Post
-			GL.PopName();
-			renderer.PopMatrix(MatrixMode.Projection);
-			int hits = GL.RenderMode(RenderingMode.Render);
-
-			if (hits <= 0)
-			{
-				return null;
-			}
-
-			List<PickedObject> pickedObjects = ParseSelectBuffer(selectBuffer);
-			return pickedObjects.Any() ? touchableObject[pickedObjects.OrderBy(x => x.MinDepth).First().Names[0]] : null;
-		}
-
 		internal bool MoveCheck(Vector2 Point, out MouseCursor.Status Status, out MouseCursor NewCursor)
 		{
 			NewCursor = null;
@@ -326,7 +257,7 @@ namespace OpenBve.Graphics.Renderers
 				return false;
 			}
 
-			ObjectState pickedObject = renderer.AvailableNewRenderer ? ParseFBO(Point, 5, 5) : RenderSceneSelection(Point, new Vector2(5.0f));
+			ObjectState pickedObject = ParseFBO(Point, 5, 5);
 
 			foreach (TouchElement TouchElement in TouchElements.Where(x => x.Element.internalObject == pickedObject))
 			{
@@ -383,7 +314,7 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			ObjectState pickedObject = renderer.AvailableNewRenderer ? ParseFBO(Point, 5, 5) : RenderSceneSelection(Point, new Vector2(5.0f));
+			ObjectState pickedObject = ParseFBO(Point, 5, 5);
 
 			foreach (TouchElement TouchElement in TouchElements.Where(x => x.Element.internalObject == pickedObject))
 			{
@@ -428,7 +359,7 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			ObjectState pickedObject = renderer.AvailableNewRenderer ? ParseFBO(Point, 5, 5) : RenderSceneSelection(Point, new Vector2(5.0f));
+			ObjectState pickedObject = ParseFBO(Point, 5, 5);
 
 			foreach (TouchElement TouchElement in TouchElements)
 			{

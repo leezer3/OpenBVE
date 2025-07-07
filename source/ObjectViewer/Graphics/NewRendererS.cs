@@ -44,13 +44,9 @@ namespace ObjectViewer.Graphics
 		public override void Initialize()
 		{
 			base.Initialize();
-
-			if (!ForceLegacyOpenGL)
-			{
-				redAxisVAO = new Cube(this, Color128.Red);
-				greenAxisVAO = new Cube(this, Color128.Green);
-				blueAxisVAO = new Cube(this, Color128.Blue);
-			}
+			redAxisVAO = new Cube(this, Color128.Red);
+			greenAxisVAO = new Cube(this, Color128.Green);
+			blueAxisVAO = new Cube(this, Color128.Blue);
 		}
 
 		internal string GetBackgroundColorName()
@@ -97,10 +93,7 @@ namespace ObjectViewer.Graphics
 		internal void RenderScene(double timeElapsed)
 		{
 			lastObjectState = null;
-			if (AvailableNewRenderer)
-			{
-				CurrentShader.Deactivate();
-			}
+			CurrentShader.Deactivate();
 			ReleaseResources();
 			// initialize
 			ResetOpenGlState();
@@ -110,11 +103,7 @@ namespace ObjectViewer.Graphics
 			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
 			TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
 			TransformedLightPosition.Transform(CurrentViewMatrix);
-			if (!AvailableNewRenderer)
-			{
-				GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)TransformedLightPosition.X, (float)TransformedLightPosition.Y, (float)TransformedLightPosition.Z, 0.0f });
-			}
-
+			
 			Lighting.OptionLightingResultingAmount = (Lighting.OptionAmbientColor.R + Lighting.OptionAmbientColor.G + Lighting.OptionAmbientColor.B) / 480.0f;
 
 			if (Lighting.OptionLightingResultingAmount > 1.0f)
@@ -127,41 +116,25 @@ namespace ObjectViewer.Graphics
 			if (OptionCoordinateSystem)
 			{
 				UnsetAlphaFunc();
-
-				if (AvailableNewRenderer)
-				{
-					redAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
-					greenAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
-					blueAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
-				}
-				else
-				{
-					GL.Color4(1.0, 0.0, 0.0, 0.2);
-					Cube.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
-					GL.Color4(0.0, 1.0, 0.0, 0.2);
-					Cube.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
-					GL.Color4(0.0, 0.0, 1.0, 0.2);
-					Cube.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
-				}
+				redAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
+				greenAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
+				blueAxisVAO.Draw(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
 			}
 			GL.Disable(EnableCap.DepthTest);
 			// opaque face
-			if (AvailableNewRenderer)
+			//Setup the shader for rendering the scene
+			DefaultShader.Activate();
+			if (OptionLighting)
 			{
-				//Setup the shader for rendering the scene
-				DefaultShader.Activate();
-				if (OptionLighting)
-				{
-					DefaultShader.SetIsLight(true);
-					DefaultShader.SetLightPosition(TransformedLightPosition);
-					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
-					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
-					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
-					DefaultShader.SetLightModel(Lighting.LightModel);
-				}
-				DefaultShader.SetTexture(0);
-				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
+				DefaultShader.SetIsLight(true);
+				DefaultShader.SetLightPosition(TransformedLightPosition);
+				DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
+				DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+				DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+				DefaultShader.SetLightModel(Lighting.LightModel);
 			}
+			DefaultShader.SetTexture(0);
+			DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			ResetOpenGlState();
 			List<FaceState> opaqueFaces, alphaFaces;
 			lock (VisibleObjects.LockObject)
@@ -236,11 +209,8 @@ namespace ObjectViewer.Graphics
 				}
 			}
 
-			if (AvailableNewRenderer)
-			{
-				DefaultShader.Deactivate();
-				lastVAO = -1;
-			}
+			DefaultShader.Deactivate();
+			lastVAO = -1;
 
 			// render overlays
 			ResetOpenGlState();
@@ -322,7 +292,7 @@ namespace ObjectViewer.Graphics
 				else
 				{
 					OpenGlString.Draw(Fonts.SmallFont, $"Position: {Camera.AbsolutePosition.X.ToString("0.00", culture)}, {Camera.AbsolutePosition.Y.ToString("0.00", culture)}, {Camera.AbsolutePosition.Z.ToString("0.00", culture)}", new Vector2((int)(0.5 * Screen.Width - 88), 4), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, ForceLegacyOpenGL ? $"Renderer: Old (GL 1.2)- GL 3.0 not available" : $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
+					OpenGlString.Draw(Fonts.SmallFont, $"Renderer: New (GL 3.0)", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
 
 					int errorPos;
 					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
@@ -337,7 +307,7 @@ namespace ObjectViewer.Graphics
 					else
 					{
 						OpenGlString.Draw(Fonts.SmallFont, $"Position: {Camera.AbsolutePosition.X.ToString("0.00", culture)}, {Camera.AbsolutePosition.Y.ToString("0.00", culture)}, {Camera.AbsolutePosition.Z.ToString("0.00", culture)}", new Vector2((int)(0.5 * Screen.Width - 88), 4), TextAlignment.TopLeft, TextColor);
-						OpenGlString.Draw(Fonts.SmallFont, ForceLegacyOpenGL ? $"Renderer: Old (GL 1.2)- GL 3.0 not available" : $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
+						OpenGlString.Draw(Fonts.SmallFont, $"Renderer: New (GL 3.0)", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
 						keys = new[] { new[] { "F5" }, new[] { "F7" }, new[] { "del" }, new[] { "F8" }, new[] { "F10" } };
 						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
 						OpenGlString.Draw(Fonts.SmallFont, "Reload the currently open objects", new Vector2(32 * scaleFactor, 4), TextAlignment.TopLeft, TextColor);
@@ -361,12 +331,6 @@ namespace ObjectViewer.Graphics
 					OpenGlString.Draw(Fonts.SmallFont, $"Background: {GetBackgroundColorName()}", new Vector2(Screen.Width - (28 * scaleFactor), 84), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Vector2(Screen.Width - (28 * scaleFactor), 104), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Vector2(Screen.Width - (44 * scaleFactor), 124), TextAlignment.TopRight, TextColor);
-					if (!ForceLegacyOpenGL)
-					{
-						OpenGlString.Draw(Fonts.SmallFont, "Switch renderer type:", new Vector2(Screen.Width - (28 * scaleFactor), 144), TextAlignment.TopRight, TextColor);
-						keys = new[] { new[] { "R" } };
-						Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
-					}
 					
 					keys = new[] { new[] { null, "W", null }, new[] { "A", "S", "D" } };
 					Keys.Render(4, Screen.Height - 40, 16, Fonts.SmallFont, keys);

@@ -116,11 +116,6 @@ namespace TrainManager.Trains
 					tb = 5.0;
 				}
 
-				if (IsPlayerTrain)
-				{
-					int b = 0;
-				}
-
 				if (StationState == TrainStopState.Pending)
 				{
 					StationDepartureSoundPlayed = false;
