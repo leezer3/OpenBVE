@@ -22,7 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#version 430 core
+#version 410 core
 precision highp int;
 precision highp float;
 
@@ -59,8 +59,8 @@ uniform Light uLight;
 uniform MaterialColor uMaterial;
 uniform int uMaterialFlags;
 
-layout(binding = 12, std430) buffer AnimationMatricies {
-    mat4 modelMatricies[];
+layout (std140) uniform uAnimationMatricies {
+    mat4 modelMatricies[64];
 };
 
 out vec4 oViewPos;

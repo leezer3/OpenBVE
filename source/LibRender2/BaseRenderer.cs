@@ -1198,7 +1198,7 @@ namespace LibRender2
 				// n.b. if buffer has no data in it (matricies are of zero length), attempting to bind generates an InvalidValue
 				shader.SetCurrentAnimationMatricies(state);
 #pragma warning disable CS0618
-				GL.BindBufferBase(BufferTarget.ShaderStorageBuffer, 12, state.MatrixBufferIndex);
+				GL.BindBufferBase(BufferTarget.UniformBuffer, 0, state.MatrixBufferIndex);
 #pragma warning restore CS0618
 			}
 
