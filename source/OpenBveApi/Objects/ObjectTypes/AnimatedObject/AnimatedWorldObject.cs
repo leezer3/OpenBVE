@@ -39,7 +39,10 @@ namespace OpenBveApi.Objects
 				}
 				if (!Visible)
 				{
-					currentHost.ShowObject(Object.internalObject, ObjectType.Dynamic);
+					if (Object.CurrentState != -1)
+					{
+						currentHost.ShowObject(Object.internalObject, ObjectType.Dynamic);
+					}
 					Visible = true;
 				}
 			}
