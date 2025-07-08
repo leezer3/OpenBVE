@@ -70,7 +70,6 @@ namespace OpenBve.Graphics
 			catch
 			{
 				Interface.AddMessage(MessageType.Error, false, "Initializing the touch shader failed.");
-				Interface.CurrentOptions.IsUseNewRenderer = false;
 			}
 
 			events = new Events(this);

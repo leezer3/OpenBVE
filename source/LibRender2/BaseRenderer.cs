@@ -345,8 +345,8 @@ namespace LibRender2
 			}
 			catch
 			{
-				currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
-				currentOptions.IsUseNewRenderer = false;
+				currentHost.AddMessage(MessageType.Error, false,
+					"Initializing the default shaders failed- This is a critical error.");
 				try
 				{
 					/*
@@ -367,7 +367,6 @@ namespace LibRender2
 			{
 				// Shader failed to load, but no exception
 				currentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- This is a critical error.");
-				currentOptions.IsUseNewRenderer = false;
 			}
 
 			Background = new Background(this);
