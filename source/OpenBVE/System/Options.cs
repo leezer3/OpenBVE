@@ -174,7 +174,6 @@ namespace OpenBve
 				Accessibility = false;
 				ScreenReaderAvailable = false;
 				ForceForwardsCompatibleContext = false;
-				IsUseNewRenderer = true;
 				DailyBuildUpdates = false;
 				UseGDIDecoders = false;
 				EnableBve5ScriptedTrain = true;
@@ -289,7 +288,6 @@ namespace OpenBve
 				Builder.AppendLine("mainmenuHeight = " + MainMenuHeight.ToString(Culture));
 				Builder.AppendLine("loadInAdvance = " + (LoadInAdvance ? "true" : "false"));
 				Builder.AppendLine("unloadtextures = " + (UnloadUnusedTextures ? "true" : "false"));
-				Builder.AppendLine("isUseNewRenderer = " + (IsUseNewRenderer ? "true" : "false"));
 				Builder.AppendLine("forwardsCompatibleContext = " + (ForceForwardsCompatibleContext ? "true" : "false"));
 				Builder.AppendLine("uiscalefactor = " + UserInterfaceScaleFactor);
 				Builder.AppendLine();
@@ -459,7 +457,6 @@ namespace OpenBve
 							block.TryGetValue(OptionsKey.MainMenuHeight, ref CurrentOptions.MainMenuHeight);
 							block.GetValue(OptionsKey.LoadInAdvance, out Interface.CurrentOptions.LoadInAdvance);
 							block.GetValue(OptionsKey.UnloadTextures, out CurrentOptions.UnloadUnusedTextures);
-							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
 							block.GetValue(OptionsKey.ForwardsCompatibleContext, out CurrentOptions.ForceForwardsCompatibleContext);
 							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance);
 							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize);

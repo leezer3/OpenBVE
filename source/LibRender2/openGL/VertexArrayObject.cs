@@ -258,7 +258,6 @@ namespace LibRender2
 			}
 			catch (Exception e)
 			{
-				renderer.ForceLegacyOpenGL = true;
 				renderer.currentHost.AddMessage(MessageType.Error, false, $"Creating VAO failed with the following error: {e}");
 			}
 		}
@@ -387,7 +386,6 @@ namespace LibRender2
 			}
 			catch (Exception e)
 			{
-				renderer.ForceLegacyOpenGL = true;
 				renderer.currentHost.AddMessage(MessageType.Error, false, $"Creating VAO failed with the following error: {e}");
 			}
 		}

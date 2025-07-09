@@ -316,18 +316,6 @@ namespace LibRender2.Textures
 						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.ClampToEdge);
 					}
 
-					if (renderer.ForceLegacyOpenGL)
-					{
-						if (Interpolation == InterpolationMode.NearestNeighbor || Interpolation == InterpolationMode.Bilinear)
-						{
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 0);
-						}
-						else
-						{
-							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
-						}
-					}
-
 					if (Interpolation == InterpolationMode.AnisotropicFiltering && AnisotropicFilteringLevel > 0)
 					{
 						GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, AnisotropicFilteringLevel);
@@ -426,10 +414,7 @@ namespace LibRender2.Textures
 						}
 						
 					}
-					if (renderer.ForceLegacyOpenGL == false)
-					{
-						GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-					}
+					GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 					handle.OpenGlTextures[(int)wrap].Valid = true;
 					if (texture.MultipleFrames)
 					{

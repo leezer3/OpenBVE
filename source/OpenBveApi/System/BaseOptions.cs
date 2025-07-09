@@ -78,8 +78,6 @@ namespace OpenBveApi
 		public int ObjectOptimizationFullThreshold;
 		/// <summary>The maximum number of sounds playing at any one time</summary>
 		public int SoundNumber;
-		/// <summary>Whether to use the new rendering method.</summary>
-		public bool IsUseNewRenderer;
 		/// <summary>Whether debug logs should be generated</summary>
 		public bool GenerateDebugLogging;
 		/// <summary>Whether loading sway is added</summary>

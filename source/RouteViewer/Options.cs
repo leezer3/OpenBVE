@@ -38,7 +38,6 @@ namespace RouteViewer
 				Builder.AppendLine("vsync = " + (VerticalSynchronization ? "true" : "false"));
 				Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
 				Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
-				Builder.AppendLine("isUseNewRenderer = " + (IsUseNewRenderer ? "true" : "false"));
 				Builder.AppendLine("viewingdistance = " + ViewingDistance);
 				Builder.AppendLine("quadleafsize = " + QuadTreeLeafSize);
 				Builder.AppendLine();
@@ -102,7 +101,6 @@ namespace RouteViewer
 						case OptionsSection.Display:
 							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth);
 							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight);
-							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
 							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance);
 							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize);
 							break;
