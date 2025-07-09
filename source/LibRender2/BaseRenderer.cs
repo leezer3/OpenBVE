@@ -693,7 +693,7 @@ namespace LibRender2
 			{
 				for (int i = 0; i < StaticObjectStates.Count; i++)
 				{
-					VAOExtensions.CreateVAO(StaticObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+					VAOExtensions.CreateVAO(StaticObjectStates[i].Prototype?.Mesh, false, DefaultShader.VertexLayout, this);
 					if (StaticObjectStates[i].Matricies != null)
 					{
 						GL.CreateBuffers(1, out StaticObjectStates[i].MatrixBufferIndex);
@@ -701,7 +701,7 @@ namespace LibRender2
 				}
 				for (int i = 0; i < DynamicObjectStates.Count; i++)
 				{
-					VAOExtensions.CreateVAO(DynamicObjectStates[i].Prototype.Mesh, false, DefaultShader.VertexLayout, this);
+					VAOExtensions.CreateVAO(DynamicObjectStates[i].Prototype?.Mesh, false, DefaultShader.VertexLayout, this);
 					if (DynamicObjectStates[i].Matricies != null)
 					{
 						GL.CreateBuffers(1, out DynamicObjectStates[i].MatrixBufferIndex);
