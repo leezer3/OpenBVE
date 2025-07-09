@@ -1,6 +1,7 @@
 ﻿using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
+using System;
 
 namespace LibRender2.Trains
 {
@@ -18,6 +19,12 @@ namespace LibRender2.Trains
 		/// <summary>Whether this is to be shown in overlay mode (e.g. panel)</summary>
 		public readonly ObjectType Type;
 
+		/// <summary>Creates a new CarSection</summary>
+		/// <param name="Host">The host</param>
+		/// <param name="ObjectType">The object type</param>
+		/// <param name="visibleFromInterior">Whether the object is visible from the interior</param>
+		/// <param name="baseCar">The base car</param>
+		/// <param name="Object">The object</param>
 		public CarSection(HostInterface Host, ObjectType ObjectType, bool visibleFromInterior, AbstractCar baseCar = null, UnifiedObject Object = null)
 		{
 			currentHost = Host;
@@ -57,6 +64,49 @@ namespace LibRender2.Trains
 			Type = ObjectType;
 		}
 
+		/// <summary>Appends an object to the CarSection</summary>
+		/// <param name="Host">The host</param>
+		/// <param name="baseCar">The base car</param>
+		/// <param name="Object">The object</param>
+		public void AppendObject(HostInterface Host, AbstractCar baseCar = null, UnifiedObject Object = null)
+		{
+			int gl = Groups.Length;
+			Array.Resize(ref Groups, gl + 1);
+			Groups[gl] = new ElementsGroup();
+			if (Object is StaticObject s)
+			{
+				Groups[gl].Elements = new AnimatedObject[1];
+				Groups[gl].Elements[0] = new AnimatedObject(Host)
+				{
+					States = new[] { new ObjectState(s) },
+					CurrentState = 0,
+					IsPartOfTrain = true
+				};
+				currentHost.CreateDynamicObject(ref Groups[gl].Elements[0].internalObject);
+			}
+			else if (Object is AnimatedObjectCollection a)
+			{
+				Groups[gl].Elements = new AnimatedObject[a.Objects.Length];
+				for (int h = 0; h < a.Objects.Length; h++)
+				{
+					Groups[gl].Elements[h] = a.Objects[h].Clone();
+					Groups[gl].Elements[h].IsPartOfTrain = true;
+					currentHost.CreateDynamicObject(ref Groups[gl].Elements[h].internalObject);
+				}
+			}
+			else if (Object is KeyframeAnimatedObject k)
+			{
+				k.BaseCar = baseCar;
+				Groups[gl].Keyframes = k;
+				for (int h = 0; h < Groups[gl].Keyframes.Objects.Length; h++)
+				{
+					currentHost.CreateDynamicObject(ref Groups[gl].Keyframes.Objects[h]);
+				}
+			}
+
+			CurrentAdditionalGroup = gl -1;
+		}
+
 		/// <summary>Initalizes the CarSection</summary>
 		/// <param name="CurrentlyVisible">Whether visible at the time of this call</param>
 		public void Initialize(bool CurrentlyVisible)
@@ -93,6 +143,14 @@ namespace LibRender2.Trains
 				{
 					currentHost.ShowObject(Groups[add].Elements[i].internalObject, Type);
 					
+				}
+
+				if (Groups[add].Keyframes != null)
+				{
+					for (int i = 0; i < Groups[add].Keyframes.Objects.Length; i++)
+					{
+						currentHost.ShowObject(Groups[add].Keyframes.Objects[i], Type);
+					}
 				}
 			}
 		}

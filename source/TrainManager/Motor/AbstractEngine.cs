@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System.Collections.Generic;
+using OpenBveApi.Motor;
 using TrainManager.Car;
 using TrainManager.Power;
 
