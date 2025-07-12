@@ -322,7 +322,7 @@ namespace ObjectViewer.Graphics
 				else
 				{
 					OpenGlString.Draw(Fonts.SmallFont, $"Position: {Camera.AbsolutePosition.X.ToString("0.00", culture)}, {Camera.AbsolutePosition.Y.ToString("0.00", culture)}, {Camera.AbsolutePosition.Z.ToString("0.00", culture)}", new Vector2((int)(0.5 * Screen.Width - 88), 4), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, ForceLegacyOpenGL ? $"Renderer: Old (GL 1.2)- GL 3.0 not available" : $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
+					OpenGlString.Draw(Fonts.SmallFont, ForceLegacyOpenGL ? $"Renderer: Old (GL 1.2)- GL 4 not available" : $"Renderer: {(AvailableNewRenderer ? "New (GL 4)" : "Old (GL 1.2)")}", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
 
 					int errorPos;
 					if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
@@ -337,7 +337,7 @@ namespace ObjectViewer.Graphics
 					else
 					{
 						OpenGlString.Draw(Fonts.SmallFont, $"Position: {Camera.AbsolutePosition.X.ToString("0.00", culture)}, {Camera.AbsolutePosition.Y.ToString("0.00", culture)}, {Camera.AbsolutePosition.Z.ToString("0.00", culture)}", new Vector2((int)(0.5 * Screen.Width - 88), 4), TextAlignment.TopLeft, TextColor);
-						OpenGlString.Draw(Fonts.SmallFont, ForceLegacyOpenGL ? $"Renderer: Old (GL 1.2)- GL 3.0 not available" : $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
+						OpenGlString.Draw(Fonts.SmallFont, ForceLegacyOpenGL ? $"Renderer: Old (GL 1.2)- GL 4 not available" : $"Renderer: {(AvailableNewRenderer ? "New (GL 4)" : "Old (GL 1.2)")}", new Vector2((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, Color128.White);
 						keys = new[] { new[] { "F5" }, new[] { "F7" }, new[] { "del" }, new[] { "F8" }, new[] { "F10" } };
 						Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
 						OpenGlString.Draw(Fonts.SmallFont, "Reload the currently open objects", new Vector2(32 * scaleFactor, 4), TextAlignment.TopLeft, TextColor);
