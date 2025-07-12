@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-using System.Reflection;
-using System.Text;
 using LibRender2.Fogs;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -9,6 +5,11 @@ using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using System;
+using System.IO;
+using System.Numerics;
+using System.Reflection;
+using System.Text;
 using Vector2 = OpenBveApi.Math.Vector2;
 using Vector3 = OpenBveApi.Math.Vector3;
 using Vector4 = OpenBveApi.Math.Vector4;
@@ -476,5 +477,28 @@ namespace LibRender2.Shaders
 		}
 
 		#endregion
+
+		public int GetAttribLocation(string attribName)
+		{
+			return GL.GetAttribLocation(handle, attribName);
+		}
+
+		public void SetUniform(string name, int value)
+		{
+			int location = GL.GetUniformLocation(handle, name);
+			GL.ProgramUniform1(handle, location, value);
+		}
+
+		public unsafe void SetUniform(string name, Matrix4D value)
+		{
+			int location = GL.GetUniformLocation(handle, name);
+			if (location == -1)
+			{
+				throw new Exception($"{name} uniform not found on shader.");
+			}
+
+			Matrix4 matrix = ConvertToMatrix4(value);
+			GL.ProgramUniformMatrix4(handle, location, false, ref matrix);
+		}
 	}
 }

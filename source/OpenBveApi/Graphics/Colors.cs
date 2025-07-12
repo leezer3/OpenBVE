@@ -652,6 +652,14 @@ namespace OpenBveApi.Colors {
 		{
 			return new Color32(c.R, c.G, c.B, c.A);
 		}
+
+		/// <summary>Casts a Color128 to a Color32, performing narrowing</summary>
+		/// <param name="c">The Color128</param>
+		/// <returns>The new Color32</returns>
+		public static implicit operator Color32(Color128 c)
+		{
+			return new Color32((byte)(255 * c.R), (byte)(255 * c.G), (byte)(255 * c.B), (byte)(255 * c.A));
+		}
 	}
 	
 	

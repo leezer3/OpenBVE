@@ -41,7 +41,7 @@ namespace RouteManager2.MessageManager.MessageTypes
 			MessageColor = MessageColor.White;
 			MessageEarlyColor = MessageColor.White;
 			MessageLateColor = MessageColor.White;
-			Font = new OpenGlFont(FontFamily.GenericSansSerif, 12.0f);
+			//Font = new OpenGlFont(FontFamily.GenericSansSerif, 12.0f);
 		}
 
 		public override void AddMessage(double currentTime)
@@ -102,16 +102,6 @@ namespace RouteManager2.MessageManager.MessageTypes
 
 		public void Dispose()
 		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		private void Dispose(bool currentlyDisposing)
-		{
-			if (currentlyDisposing)
-			{
-				Font.Dispose();
-			}
 		}
 	}
 }

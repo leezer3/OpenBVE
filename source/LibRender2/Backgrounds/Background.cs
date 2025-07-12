@@ -1,4 +1,3 @@
-using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -102,14 +101,7 @@ namespace LibRender2.Backgrounds
 		/// <param name="scale">The scale</param>
 		private void RenderStaticBackground(StaticBackground data, float alpha, float scale)
 		{
-			if (renderer.AvailableNewRenderer)
-			{
-				RenderStaticBackgroundRetained(data, alpha, scale);
-			}
-			else
-			{
-				RenderStaticBackgroundImmediate(data, alpha, scale);
-			}
+			RenderStaticBackgroundRetained(data, alpha, scale);
 		}
 
 		/// <summary>Renders a static frustrum based background</summary>
@@ -177,137 +169,6 @@ namespace LibRender2.Backgrounds
 			}
 		}
 
-		/// <summary>Renders a static frustrum based background</summary>
-		/// <param name="data">The background to render</param>
-		/// <param name="alpha">The alpha level</param>
-		/// <param name="scale">The scale</param>
-		private void RenderStaticBackgroundImmediate(StaticBackground data, float alpha, float scale)
-		{
-			Texture t = data.Texture;
-			if (data.Texture != null && renderer.currentHost.LoadTexture(ref t, OpenGlTextureWrapMode.RepeatClamp))
-			{
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.PushMatrix();
-				GL.LoadIdentity();
-				OpenTK.Matrix4d perspective = OpenTK.Matrix4d.Perspective(renderer.Camera.VerticalViewingAngle, -renderer.Screen.AspectRatio, 0.2, 1000.0);
-				GL.MultMatrix(ref perspective);
-				double dx = renderer.Camera.AbsoluteDirection.X;
-				double dy = renderer.Camera.AbsoluteDirection.Y;
-				double dz = renderer.Camera.AbsoluteDirection.Z;
-				double ux = renderer.Camera.AbsoluteUp.X;
-				double uy = renderer.Camera.AbsoluteUp.Y;
-				double uz = renderer.Camera.AbsoluteUp.Z;
-				OpenTK.Matrix4d lookat = OpenTK.Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
-				GL.MatrixMode(MatrixMode.Modelview);
-				GL.PushMatrix();
-				GL.LoadMatrix(ref lookat);
-				GL.Disable(EnableCap.Lighting);
-				GL.Enable(EnableCap.Texture2D);
-				if (alpha == 1.0f)
-				{
-					GL.Disable(EnableCap.Blend);
-				}
-				else
-				{
-					GL.Enable(EnableCap.Blend);
-					renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-				}
-				GL.BindTexture(TextureTarget.Texture2D, t.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
-				renderer.LastBoundTexture = t.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
-				GL.Color4(1.0f, 1.0f, 1.0f, alpha);
-				if (renderer.OptionFog)
-				{
-					GL.Enable(EnableCap.Fog);
-				}
-				if (data.DisplayList > 0)
-				{
-					GL.CallList(data.DisplayList);
-					GL.Disable(EnableCap.Texture2D);
-					GL.Enable(EnableCap.Blend);
-					GL.PopMatrix();
-					GL.MatrixMode(MatrixMode.Projection);
-					GL.PopMatrix();
-					return;
-				}
-
-				data.DisplayList = GL.GenLists(1);
-				GL.NewList(data.DisplayList, ListMode.Compile);
-				float y0, y1;
-				if (data.KeepAspectRatio)
-				{
-					double hh = Math.PI * data.BackgroundImageDistance * data.Texture.Height / (data.Texture.Width * data.Repetition);
-					y0 = (float)(-0.5 * hh);
-					y1 = (float)(1.5 * hh);
-				}
-				else
-				{
-					y0 = (float)(-0.125 * data.BackgroundImageDistance);
-					y1 = (float)(0.375 * data.BackgroundImageDistance);
-				}
-				const int n = 32;
-				Vector3[] bottom = new Vector3[n];
-				Vector3[] top = new Vector3[n];
-				double angleValue = 2.61799387799149 - 3.14159265358979 / n;
-				const double angleIncrement = 6.28318530717958 / n;
-				/*
-				 * To ensure that the whole background cylinder is rendered inside the viewing frustum,
-				 * the background is rendered before the scene with z-buffer writes disabled. Then,
-				 * the actual distance from the camera is irrelevant as long as it is inside the frustum.
-				 * */
-				for (int i = 0; i < n; i++)
-				{
-					float x = (float)(data.BackgroundImageDistance * Math.Cos(angleValue));
-					float z = (float)(data.BackgroundImageDistance * Math.Sin(angleValue));
-					bottom[i] = new Vector3(scale * x, scale * y0, scale * z);
-					top[i] = new Vector3(scale * x, scale * y1, scale * z);
-					angleValue += angleIncrement;
-				}
-				float textureStart = 0.5f * (float)data.Repetition / n;
-				float textureIncrement = -(float)data.Repetition / n;
-				double textureX = textureStart;
-				for (int i = 0; i < n; i++)
-				{
-					int j = (i + 1) % n;
-					// side wall
-					GL.Begin(PrimitiveType.Quads);
-					GL.TexCoord2(textureX, 0.005f);
-					GL.Vertex3(top[i].X, top[i].Y, top[i].Z);
-					GL.TexCoord2(textureX, 0.995f);
-					GL.Vertex3(bottom[i].X, bottom[i].Y, bottom[i].Z);
-					GL.TexCoord2(textureX + textureIncrement, 0.995f);
-					GL.Vertex3(bottom[j].X, bottom[j].Y, bottom[j].Z);
-					GL.TexCoord2(textureX + textureIncrement, 0.005f);
-					GL.Vertex3(top[j].X, top[j].Y, top[j].Z);
-					GL.End();
-					// top cap
-					GL.Begin(PrimitiveType.Triangles);
-					GL.TexCoord2(textureX, 0.005f);
-					GL.Vertex3(top[i].X, top[i].Y, top[i].Z);
-					GL.TexCoord2(textureX + textureIncrement, 0.005f);
-					GL.Vertex3(top[j].X, top[j].Y, top[j].Z);
-					GL.TexCoord2(textureX + 0.5 * textureIncrement, 0.1f);
-					GL.Vertex3(0.0f, top[i].Y, 0.0f);
-					// bottom cap
-					GL.TexCoord2(textureX + 0.5 * textureIncrement, 0.9f);
-					GL.Vertex3(0.0f, bottom[i].Y, 0.0f);
-					GL.TexCoord2(textureX + textureIncrement, 0.995f);
-					GL.Vertex3(bottom[j].X, bottom[j].Y, bottom[j].Z);
-					GL.TexCoord2(textureX, 0.995f);
-					GL.Vertex3(bottom[i].X, bottom[i].Y, bottom[i].Z);
-					GL.End();
-					// finish
-					textureX += textureIncrement;
-				}
-				GL.EndList();
-				GL.CallList(data.DisplayList);
-				GL.Disable(EnableCap.Texture2D);
-				GL.Enable(EnableCap.Blend);
-				GL.PopMatrix();
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.PopMatrix();
-			}
-		}
-
 		/// <summary>Renders an object based background</summary>
 		/// <param name="data">The background object</param>
 		private void RenderBackgroundObject(BackgroundObject data)
@@ -315,15 +176,12 @@ namespace LibRender2.Backgrounds
 			GL.Enable(EnableCap.Blend);
 			// alpha test
 			renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-			if (renderer.AvailableNewRenderer)
-			{
-				renderer.DefaultShader.Activate();
-				renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
+			renderer.DefaultShader.Activate();
+			renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 
-				if (data.Object.Mesh.VAO == null)
-				{
-					VAOExtensions.CreateVAO(data.Object.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
-				}
+			if (data.Object.Mesh.VAO == null)
+			{
+				VAOExtensions.CreateVAO(data.Object.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
 			}
 
 			foreach (MeshFace face in data.Object.Mesh.Faces)
@@ -351,14 +209,7 @@ namespace LibRender2.Backgrounds
 					}
 				}
 				GL.Enable(EnableCap.DepthClamp);
-				if (renderer.AvailableNewRenderer)
-				{
-					renderer.RenderFace(renderer.DefaultShader, data.ObjectState, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
-				}
-				else
-				{
-					renderer.RenderFaceImmediateMode(data.ObjectState, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
-				}
+				renderer.RenderFace(renderer.DefaultShader, data.ObjectState, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
 				GL.Disable(EnableCap.DepthClamp);
 			}
 		}

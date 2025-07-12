@@ -1,4 +1,6 @@
 using System;
+using FontStashSharp.Interfaces;
+using OpenBveApi.Objects;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -51,6 +53,20 @@ namespace LibRender2
 		internal void BufferSubData(LibRenderVertex[] VertexData, int Offset = 0)
 		{
 			GL.BufferSubData(BufferTarget.ArrayBuffer, new IntPtr(Offset * vertexSize), new IntPtr(VertexData.Length * vertexSize), VertexData);
+		}
+
+		internal void BufferSubData(ColoredVertex[] vertexData, int startIndex, int elementCount)
+		{
+			unsafe
+			{
+				fixed (ColoredVertex* dataPtr = &vertexData[startIndex])
+				{
+					var elementSizeInBytes = sizeof(ColoredVertex);
+
+					GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, elementCount * elementSizeInBytes, new IntPtr(dataPtr));
+				}
+			}
+			
 		}
 
 		/// <summary>Enables a specific vertex attribute array</summary>

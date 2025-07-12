@@ -101,20 +101,13 @@ namespace LibRender2.Primitives
 		/// <param name="wrapMode">A wrap mode if overriding that of the texture</param>
 		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color = null, Vector2? textureCoordinates = null, OpenGlTextureWrapMode? wrapMode = null)
 		{
-			if (renderer.AvailableNewRenderer && Shader != null)
+			if (textureCoordinates == null)
 			{
-				if (textureCoordinates == null)
-				{
-					DrawWithShader(texture, point, size, color, Vector2.One, wrapMode);
-				}
-				else
-				{
-					DrawWithShader(texture, point, size, color, (Vector2)textureCoordinates, wrapMode);
-				}
+				DrawWithShader(texture, point, size, color, Vector2.One, wrapMode);
 			}
 			else
 			{
-				DrawImmediate(texture, point, size, color, textureCoordinates, wrapMode);	
+				DrawWithShader(texture, point, size, color, (Vector2)textureCoordinates, wrapMode);
 			}
 		}
 
@@ -125,112 +118,20 @@ namespace LibRender2.Primitives
 		/// <param name="textureCoordinates">The texture coordinates to be applied</param>
 		public void Draw(Texture texture, Vector2 point, Color128? color = null, Vector2? textureCoordinates = null)
 		{
-			if (texture == null)
+			if (texture == null || Shader == null)
 			{
 				return;
 			}
-			if (renderer.AvailableNewRenderer && Shader != null)
+			if (textureCoordinates == null)
 			{
-				if (textureCoordinates == null)
-				{
-					DrawWithShader(texture, point, texture.Size, color, Vector2.One);
-				}
-				else
-				{
-					DrawWithShader(texture, point, texture.Size, color, (Vector2)textureCoordinates);
-				}
+				DrawWithShader(texture, point, texture.Size, color, Vector2.One);
 			}
 			else
 			{
-				DrawImmediate(texture, point, texture.Size, color, textureCoordinates);	
+				DrawWithShader(texture, point, texture.Size, color, (Vector2)textureCoordinates);
 			}
 		}
-
-		private void DrawImmediate(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2? textureCoordinates = null, OpenGlTextureWrapMode? wrapMode = null)
-		{
-			renderer.LastBoundTexture = null;
-			// TODO: Remove Nullable<T> from color once RenderOverlayTexture and RenderOverlaySolid are fully replaced.
-			GL.MatrixMode(MatrixMode.Projection);
-			GL.PushMatrix();
-			unsafe
-			{
-				fixed (double* matrixPointer = &renderer.CurrentProjectionMatrix.Row0.X)
-				{
-					GL.LoadMatrix(matrixPointer);
-				}
-				GL.MatrixMode(MatrixMode.Modelview);
-				GL.PushMatrix();
-				fixed (double* matrixPointer = &renderer.CurrentViewMatrix.Row0.X)
-				{
-					GL.LoadMatrix(matrixPointer);
-				}
-
-			}
-
-			if (wrapMode == null)
-			{
-				wrapMode = OpenGlTextureWrapMode.ClampClamp;
-			}
-			if (texture == null || !renderer.currentHost.LoadTexture(ref texture, (OpenGlTextureWrapMode)wrapMode))
-			{
-				GL.Disable(EnableCap.Texture2D);
-
-				if (color.HasValue)
-				{
-					GL.Color4(color.Value.R, color.Value.G, color.Value.B, color.Value.A);
-				}
-
-				GL.Begin(PrimitiveType.Quads);
-				GL.Vertex2(point.X, point.Y);
-				GL.Vertex2(point.X + size.X, point.Y);
-				GL.Vertex2(point.X + size.X, point.Y + size.Y);
-				GL.Vertex2(point.X, point.Y + size.Y);
-				GL.End();
-			}
-			else
-			{
-				GL.Enable(EnableCap.Texture2D);
-				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)wrapMode].Name);
-
-				if (color.HasValue)
-				{
-					GL.Color4(color.Value.R, color.Value.G, color.Value.B, color.Value.A);
-				}
-
-				GL.Begin(PrimitiveType.Quads);
-				if (textureCoordinates == null)
-				{
-					GL.TexCoord2(0,0);
-					GL.Vertex2(point.X, point.Y);
-					GL.TexCoord2(1,0);
-					GL.Vertex2(point.X + size.X, point.Y);
-					GL.TexCoord2(1,1);
-					GL.Vertex2(point.X + size.X, point.Y + size.Y);
-					GL.TexCoord2(0,1);
-					GL.Vertex2(point.X, point.Y + size.Y);
-				}
-				else
-				{
-					Vector2 v = (Vector2) textureCoordinates;
-					GL.TexCoord2(0,0);
-					GL.Vertex2(point.X, point.Y);
-					GL.TexCoord2(v.X, 0);
-					GL.Vertex2(point.X + size.X, point.Y);
-					GL.TexCoord2(v.X, v.Y);
-					GL.Vertex2(point.X + size.X, point.Y + size.Y);
-					GL.TexCoord2(0, v.Y);
-					GL.Vertex2(point.X, point.Y + size.Y);
-				}
-				GL.End();
-				GL.Disable(EnableCap.Texture2D);
-			}
-
-			GL.PopMatrix();
-
-			GL.MatrixMode(MatrixMode.Projection);
-			GL.PopMatrix();
-		}
-
+		
 		private void DrawWithShader(Texture texture, Vector2 point, Vector2 size, Color128? color, Vector2 coordinates, OpenGlTextureWrapMode? wrapMode = null)
 		{
 			Shader.Activate();
