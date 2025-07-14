@@ -101,7 +101,7 @@ namespace TrainManager.Car
 		/// <summary>The traction model</summary>
 		public TractionModel TractionModel;
 
-		public ParticleSource ParticleSource;
+		public List<ParticleSource> ParticleSources;
 
 		private int trainCarIndex;
 
@@ -1166,7 +1166,7 @@ namespace TrainManager.Car
 					{
 						// target acceleration
 						a = TractionModel.TargetAcceleration;
-						
+
 						// readhesion device
 						if (ReAdhesionDevice is BveReAdhesionDevice device)
 						{

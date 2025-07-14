@@ -40,18 +40,20 @@ namespace LibRender2.Smoke
 		internal readonly List<Particle> Particles;
 
 		internal const int MaximumParticles = 200;
-		
+
 		internal readonly Random Random;
 
 		internal const double MaximumLifeSpan = 15;
-		
+
 		internal readonly double MaximumSize;
 
 		internal readonly double MaximumGrownSize;
 
 		internal readonly BaseRenderer Renderer;
 
-		internal Texture ParticleTexture;
+		/// <summary>The texture used for drawing particles</summary>
+		/// <remarks>Must be a 4x4 texture atlas</remarks>
+		public Texture ParticleTexture;
 
 		internal Vector3 MovementSpeed;
 
@@ -82,7 +84,7 @@ namespace LibRender2.Smoke
 		{
 			dynamic dynamicCar = Car;
 			Transformation directionalTransform = new Transformation(Car.FrontAxle.Follower.WorldDirection, Car.FrontAxle.Follower.WorldUp, Car.FrontAxle.Follower.WorldSide); // to correct for rotation of car
-			for (int i = Particles.Count - 1; i > 0; i--)
+			for (int i = Particles.Count - 1; i >= 0; i--)
 			{
 				Particles[i].RemainingLifeSpan -= timeElapsed;
 				if (Particles[i].RemainingLifeSpan <= 0)

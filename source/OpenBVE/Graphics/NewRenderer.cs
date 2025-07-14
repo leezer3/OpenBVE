@@ -345,14 +345,20 @@ namespace OpenBve.Graphics
 				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
 
-			ResetOpenGlState();
 			// particle sources
 			SetBlendFunc();
 			SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+			if(CurrentInterface != InterfaceType.GLMainMenu)
 			{
-				TrainManager.PlayerTrain.Cars[i].ParticleSource?.Update(TimeElapsed);
+				for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+				{
+					for (int j = 0; j < TrainManager.PlayerTrain.Cars[i].ParticleSources.Count; j++)
+					{
+						TrainManager.PlayerTrain.Cars[i].ParticleSources[j].Update(TimeElapsed);
+					}
+				}
 			}
+			
 
 
 			// overlay (cab / interior) layer
