@@ -12,6 +12,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
+using OpenBveApi.World;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
@@ -29,6 +30,7 @@ namespace Train.OpenBve
 		private void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainBase Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref bool visibleFromInterior)
 		{
 			string interiorFile = string.Empty;
+			Vector3 interiorDirection = Vector3.Zero;
 			ReadhesionDeviceType readhesionDevice = ReadhesionDeviceType.NotFitted;
 			if (Train.Cars[0].ReAdhesionDevice is BveReAdhesionDevice device)
 			{
@@ -340,7 +342,7 @@ namespace Train.OpenBve
 						}
 						if (!NumberFormats.TryParseDoubleVb6(splitText[2], out double driverZ))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Driver position X was invalid for Car " + Car + " in XML file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Driver position Z was invalid for Car " + Car + " in XML file " + fileName);
 						}
 						Train.Cars[Car].Driver.Z = 0.5 * Train.Cars[Car].Length + driverZ;
 						break;
@@ -360,6 +362,26 @@ namespace Train.OpenBve
 							break;
 						}
 						interiorFile = cv;
+						break;
+					case "interiordirection":
+						splitText = c.InnerText.Split(',');
+						if (splitText.Length != 3)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Interior direction must have three arguments for Car " + Car + " in XML file " + fileName);
+							break;
+						}
+						if (!NumberFormats.TryParseDoubleVb6(splitText[0], out interiorDirection.X))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Interior direction X was invalid for Car " + Car + " in XML file " + fileName);
+						}
+						if (!NumberFormats.TryParseDoubleVb6(splitText[1], out interiorDirection.Y))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Interior direction Y was invalid for Car " + Car + " in XML file " + fileName);
+						}
+						if (!NumberFormats.TryParseDoubleVb6(splitText[2], out interiorDirection.Z))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Interior direction Z was invalid for Car " + Car + " in XML file " + fileName);
+						}
 						break;
 					case "readhesiondevice":
 						switch (c.InnerText.ToLowerInvariant())
@@ -879,6 +901,8 @@ namespace Train.OpenBve
 			//Assign interior view
 			if (interiorFile != String.Empty)
 			{
+				Transformation viewTransformation = new Transformation(interiorDirection.X.ToRadians(), interiorDirection.Y.ToRadians(), interiorDirection.Z.ToRadians());
+				Train.Cars[Car].CarSections[0].ViewDirection = viewTransformation;
 				if (interiorFile.ToLowerInvariant().EndsWith(".xml"))
 				{
 					XDocument CurrentXML = XDocument.Load(interiorFile, LoadOptions.SetLineInfo);

@@ -349,6 +349,17 @@ namespace OpenBve {
 						sF.Rotate(dF, -totalRoll);
 					}
 				}
+
+				if (Program.Renderer.Camera.CurrentMode < CameraViewMode.Exterior)
+				{
+					if (TrainManager.PlayerTrain.DriverCar >= 0 && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections[0].ViewDirection != null)
+					{
+						dF.Rotate(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections[0].ViewDirection);
+						uF.Rotate(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections[0].ViewDirection);
+						sF.Rotate(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections[0].ViewDirection);
+					}
+				}
+
 				// finish
 				Program.Renderer.Camera.AbsolutePosition = cF;
 				Program.Renderer.Camera.AbsoluteDirection = dF;

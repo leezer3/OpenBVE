@@ -1,6 +1,7 @@
 ﻿using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
+using OpenBveApi.World;
 
 namespace LibRender2.Trains
 {
@@ -17,6 +18,9 @@ namespace LibRender2.Trains
 		public readonly bool VisibleFromInterior;
 		/// <summary>Whether this is to be shown in overlay mode (e.g. panel)</summary>
 		public readonly ObjectType Type;
+		/// <summary>If an interior view, the transformation to be used</summary>
+		/// <remarks>Allows rotation of a 2D panel etc.</remarks>
+		public Transformation ViewDirection;
 
 		public CarSection(HostInterface Host, ObjectType ObjectType, bool visibleFromInterior, AbstractCar baseCar = null, UnifiedObject Object = null)
 		{
