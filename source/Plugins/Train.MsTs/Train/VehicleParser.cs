@@ -54,7 +54,7 @@ namespace Train.MsTs
 
 		private readonly Dictionary<string, string> wagonCache;
 		private readonly Dictionary<string, string> engineCache;
-		private List<string> soundFiles;
+		private readonly List<string> soundFiles;
 		private string[] wagonFiles;
 		private int wheelRadiusNum;
 		private double wheelRadius;

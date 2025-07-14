@@ -27,14 +27,12 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Motor;
 using OpenBveApi.Runtime;
-using OpenBveApi.Sounds;
 using OpenBveApi.World;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
 using SoundManager;
 using System;
 using System.IO;
-using System.Runtime.ConstrainedExecution;
 using System.Text;
 using TrainManager.Car;
 using TrainManager.Motor;
@@ -119,7 +117,6 @@ namespace Train.MsTs
 			else if (subHeader[7] != 'b')
 			{
 				Plugin.currentHost.AddMessage(MessageType.Error, false, "Unrecognized subHeader " + subHeader + " in " + fileName);
-				return false;
 			}
 			else
 			{
