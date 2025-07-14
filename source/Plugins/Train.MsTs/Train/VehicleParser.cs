@@ -515,11 +515,13 @@ namespace Train.MsTs
 							Plugin.currentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject carObject);
 							if (exteriorLoaded)
 							{
-								car.CarSections[car.CarSections.Length -1].AppendObject(Plugin.currentHost, car, carObject);
+								CarSection exteriorCarSection = car.CarSections[CarSectionType.Exterior];
+								exteriorCarSection.AppendObject(Plugin.currentHost, car, carObject);
+								car.CarSections[CarSectionType.Exterior] = exteriorCarSection;
 							}
 							else
 							{
-								car.LoadCarSections(carObject, false);
+								car.CarSections.Add(CarSectionType.Exterior, new CarSection(Plugin.currentHost, ObjectType.Dynamic, false, car, carObject));
 							}
 							break;
 						}
@@ -572,22 +574,7 @@ namespace Train.MsTs
 						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Cab view file " + cabViewFile + " was not found");
 						return true;
 					}
-
-					if (car.CarSections.Length == 0)
-					{
-						car.CarSections = new CarSection[1];
-					}
-					else if (car.CarSections.Length > 0)
-					{
-						// Cab View must always be at CarSection zero, but the order is not guaranteed within an eng / wag
-						CarSection[] move = new CarSection[car.CarSections.Length + 1];
-						for (int i = 0; i < car.CarSections.Length; i++)
-						{
-							move[i + 1] = car.CarSections[i];
-						}
-						car.CarSections = move;
-					}
-					car.CarSections[0] = new CarSection(Plugin.currentHost, ObjectType.Overlay, true, car);
+					car.CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.currentHost, ObjectType.Overlay, true, car));
 					car.CameraRestrictionMode = CameraRestrictionMode.On;
 					Plugin.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 					CabviewFileParser.ParseCabViewFile(cabViewFile, ref car);
@@ -783,11 +770,13 @@ namespace Train.MsTs
 							Plugin.currentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject freightObject);
 							if (exteriorLoaded)
 							{
-								car.CarSections[car.CarSections.Length - 1].AppendObject(Plugin.currentHost, car, freightObject);
+								CarSection exteriorCarSection = car.CarSections[CarSectionType.Exterior];
+								exteriorCarSection.AppendObject(Plugin.currentHost, car, freightObject);
+								car.CarSections[CarSectionType.Exterior] = exteriorCarSection;
 							}
 							else
 							{
-								car.LoadCarSections(freightObject, false);	
+								car.CarSections.Add(CarSectionType.Exterior, new CarSection(Plugin.currentHost, ObjectType.Dynamic, false, car, freightObject));
 							}
 							break;
 						}

@@ -138,7 +138,7 @@ namespace Train.MsTs
 			for (int i = 0; i < train.Cars.Length; i++)
 			{
 				train.Cars[i].Coupler = new Coupler(0.9 * 0.3, 1.1 * 0.3, train.Cars[i / 2], train.Cars.Length > 1 ? train.Cars[i / 2 + 1] : null);
-				train.Cars[i].CurrentCarSection = -1;
+				train.Cars[i].CurrentCarSection = CarSectionType.NotVisible;
 				train.Cars[i].ChangeCarSection(CarSectionType.NotVisible);
 				train.Cars[i].FrontBogie.ChangeSection(-1);
 				train.Cars[i].RearBogie.ChangeSection(-1);
