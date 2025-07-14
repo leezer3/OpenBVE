@@ -204,7 +204,7 @@ namespace OpenBve
 				// do the ai
 				Train.Specs.CurrentConstSpeed = false;
 				Train.Handles.HoldBrake.ApplyState(false);
-				if (Train.Cars[Train.DriverCar].TractionModel.Components[EngineComponent.Pantograph] is Pantograph pantograph && pantograph.State == PantographState.Lowered)
+				if (Train.Cars[Train.DriverCar].TractionModel.Components.TryGetValue(EngineComponent.Pantograph, out AbstractComponent component) && component is Pantograph pantograph && pantograph.State == PantographState.Lowered)
 				{
 					pantograph.Raise();
 				}
