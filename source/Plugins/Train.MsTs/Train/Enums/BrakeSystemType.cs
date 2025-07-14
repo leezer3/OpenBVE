@@ -1,4 +1,5 @@
-﻿namespace Train.MsTs
+﻿// ReSharper disable InconsistentNaming
+namespace Train.MsTs
 {
 	enum BrakeSystemType
 	{
