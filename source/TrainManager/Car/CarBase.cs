@@ -600,11 +600,11 @@ namespace TrainManager.Car
 					}
 				}
 
-				if (CarSections[i].Groups[0].Keyframes != null)
+				if (currentCarSection.Groups[0].Keyframes != null)
 				{
-					for (int j = 0; j < CarSections[i].Groups[0].Keyframes.Objects.Length; j++)
+					for (int j = 0; j < currentCarSection.Groups[0].Keyframes.Objects.Length; j++)
 					{
-						TrainManagerBase.currentHost.HideObject(CarSections[i].Groups[0].Keyframes.Objects[j]);
+						TrainManagerBase.currentHost.HideObject(currentCarSection.Groups[0].Keyframes.Objects[j]);
 					}
 				}
 			}

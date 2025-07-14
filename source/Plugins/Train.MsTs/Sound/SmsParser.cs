@@ -186,7 +186,7 @@ namespace Train.MsTs
 					// file root
 					while (block.Position() < block.Length() - 3)
 					{
-						newBlock = block.ReadSubBlock();
+						newBlock = block.ReadSubBlock(true);
 						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 					}
 					break;
@@ -418,21 +418,24 @@ namespace Train.MsTs
 								}
 								break;
 							case SoundTrigger.Pantograph1Up:
-								Pantograph pantograph = car.TractionModel.Components[EngineComponent.Pantograph] as Pantograph;
+								car.TractionModel.Components.TryGetValue(EngineComponent.Pantograph, out AbstractComponent abstractComponent);
+								Pantograph pantograph = abstractComponent as Pantograph;
 								if (pantograph != null)
 								{
 									pantograph.RaiseSound = new CarSound(Plugin.currentHost, soundFile, 100, Vector3.Zero);
 								}
 								break;
 							case SoundTrigger.Pantograph1Down:
-								pantograph = car.TractionModel.Components[EngineComponent.Pantograph] as Pantograph;
+								car.TractionModel.Components.TryGetValue(EngineComponent.Pantograph, out abstractComponent);
+								pantograph = abstractComponent as Pantograph;
 								if (pantograph != null)
 								{
 									pantograph.LowerSound = new CarSound(Plugin.currentHost, soundFile, 100, Vector3.Zero);
 								}
 								break;
 							case SoundTrigger.Pantograph1Toggle:
-								pantograph = car.TractionModel.Components[EngineComponent.Pantograph] as Pantograph;
+								car.TractionModel.Components.TryGetValue(EngineComponent.Pantograph, out abstractComponent);
+								pantograph = abstractComponent as Pantograph;
 								if (pantograph != null)
 								{
 									pantograph.SwitchToggle = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
