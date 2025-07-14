@@ -164,10 +164,10 @@ namespace Train.MsTs
 			Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
 			Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
 
-			if (File.Exists(CabViews[0].fileName))
+			if (File.Exists(CabViews[0].FileName))
 			{
-				Car.Driver = CabViews[0].position;
-				Plugin.currentHost.RegisterTexture(CabViews[0].fileName, new TextureParameters(null, null), out Texture tday, true);
+				Car.Driver = CabViews[0].Position;
+				Plugin.currentHost.RegisterTexture(CabViews[0].FileName, new TextureParameters(null, null), out Texture tday, true);
 				CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, 1024, 768, new Vector2(0.5, 0.5), 0.0, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
 			}
 			else
@@ -185,25 +185,10 @@ namespace Train.MsTs
 
 			return true;
 		}
-
-		internal struct CabView
-		{
-			internal string fileName;
-			internal Vector2 topLeft;
-			internal Vector2 panelSize;
-			internal Vector3 position;
-			internal Vector3 direction;
-
-			internal void setCabView(string cabViewFile)
-			{
-				cabViewFile = cabViewFile.Replace(@"\\", @"\");
-				fileName = OpenBveApi.Path.CombineFile(currentFolder, cabViewFile);
-			}
-		}
-
+		
 		private static CabView currentCabView;
 
-		private static List<CabView> CabViews = new List<CabView>();
+		private static readonly List<CabView> CabViews = new List<CabView>();
 
 		private static void ParseBlock(Block block)
 		{
@@ -223,26 +208,26 @@ namespace Train.MsTs
 
 					break;
 				case KujuTokenID.Direction:
-					currentCabView.direction.X = block.ReadSingle();
-					currentCabView.direction.Y = block.ReadSingle();
-					currentCabView.direction.Z = block.ReadSingle();
+					currentCabView.Direction.X = block.ReadSingle();
+					currentCabView.Direction.Y = block.ReadSingle();
+					currentCabView.Direction.Z = block.ReadSingle();
 					break;
 				case KujuTokenID.Position:
-					currentCabView.position.X = block.ReadSingle();
-					currentCabView.position.Y = block.ReadSingle();
-					currentCabView.position.Z = block.ReadSingle();
+					currentCabView.Position.X = block.ReadSingle();
+					currentCabView.Position.Y = block.ReadSingle();
+					currentCabView.Position.Z = block.ReadSingle();
 					break;
 				case KujuTokenID.CabViewWindow:
-					currentCabView.topLeft.X = block.ReadInt16();
-					currentCabView.topLeft.Y = block.ReadInt16();
-					currentCabView.panelSize.X = block.ReadInt16();
-					currentCabView.panelSize.Y = block.ReadInt16();
+					currentCabView.TopLeft.X = block.ReadInt16();
+					currentCabView.TopLeft.Y = block.ReadInt16();
+					currentCabView.PanelSize.X = block.ReadInt16();
+					currentCabView.PanelSize.Y = block.ReadInt16();
 					break;
 				case KujuTokenID.CabViewFile:
 				case KujuTokenID.CabViewWindowFile:
-					if (string.IsNullOrEmpty(currentCabView.fileName))
+					if (string.IsNullOrEmpty(currentCabView.FileName))
 					{
-						currentCabView.setCabView(block.ReadString());
+						currentCabView.SetCabView(currentFolder, block.ReadString());
 					}
 
 					break;
@@ -299,9 +284,9 @@ namespace Train.MsTs
 			}
 		}
 
-		static double PanelResolution = 1024.0;
-		static double PanelLeft = 0.0, PanelRight = 1024.0;
-		static double PanelTop = 0.0, PanelBottom = 768.0;
+		const double PanelResolution = 1024.0;
+		const double PanelLeft = 0.0, PanelRight = 1024.0;
+		const double PanelTop = 0.0, PanelBottom = 768.0;
 		static Vector2 PanelCenter = new Vector2(0, 240);
 		private static Vector2 PanelOrigin = new Vector2(0, 240);
 
@@ -327,9 +312,7 @@ namespace Train.MsTs
 			private FrameMapping[] FrameMappings = new FrameMapping[0];
 
 			private Tuple<double, Color24>[] PositiveColors;
-			private bool HasPositiveColor = false;
 			private Tuple<double, Color24>[] NegativeColors;
-			private bool HasNegativeColor = false;
 
 			internal void Parse()
 			{
@@ -705,12 +688,10 @@ namespace Train.MsTs
 							{
 								var subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
 								PositiveColors[0] = new Tuple<double, Color24>(0, new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16()));
-								HasPositiveColor = true;
 							}
 						}
 						else
 						{
-							HasPositiveColor = true;
 							PositiveColors = new Tuple<double, Color24>[numColors];
 							double value = 0;
 							for (int i = 0; i < numColors; i++)
@@ -739,7 +720,6 @@ namespace Train.MsTs
 							{
 								var subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
 								NegativeColors[0] = new Tuple<double, Color24>(double.NegativeInfinity, new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16()));
-								HasNegativeColor = true;
 							}
 						}
 						else

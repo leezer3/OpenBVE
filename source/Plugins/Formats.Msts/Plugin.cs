@@ -885,7 +885,7 @@ namespace OpenBve.Formats.MsTs
 			}
 
 
-			string Unit = s.Substring(c).ToLowerInvariant().Replace("//", string.Empty);
+			string Unit = s.Substring(c).ToLowerInvariant().Replace("/", string.Empty);
 
 			if (string.IsNullOrEmpty(Unit))
 			{
