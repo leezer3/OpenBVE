@@ -26,6 +26,7 @@
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using System.Linq;
+using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using OpenBveApi.World;
@@ -126,6 +127,7 @@ namespace LibRender2.Primitives
 			modelViewMatrix.Row2.Xyz = new Vector3(0, 0, 1);
 			Matrix4D scale = Matrix4D.Scale(size.X, size.Y, size.X);
 			modelViewMatrix = scale * modelViewMatrix;
+			renderer.DefaultShader.SetMaterialFlags(MaterialFlags.None);
 			renderer.DefaultShader.SetCurrentModelViewMatrix(modelViewMatrix);
 			renderer.DefaultShader.SetOpacity(opacity);
 			renderer.DefaultShader.SetIsLight(false);

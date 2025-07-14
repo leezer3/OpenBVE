@@ -37,7 +37,7 @@ namespace TrainManager.Motor
 		/// <summary>The sound played when the switch is toggled</summary>
 		public CarSound SwitchToggle;
 
-		public Pantograph(AbstractEngine engine) : base(engine)
+		public Pantograph(TractionModel engine) : base(engine)
 		{
 		}
 
