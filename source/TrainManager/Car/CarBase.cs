@@ -635,6 +635,22 @@ namespace TrainManager.Car
 						CurrentCarSection = CarSectionType.NotVisible;
 					}
 					break;
+				case CarSectionType.HeadOutLeft:
+					if (CarSections.TryGetValue(CarSectionType.HeadOutLeft, out CarSection headOutLeftCarSection))
+					{
+						CurrentCarSection = CarSectionType.HeadOutLeft;
+						headOutLeftCarSection.Initialize(false);
+						headOutLeftCarSection.Show();
+					}
+					break;
+				case CarSectionType.HeadOutRight:
+					if (CarSections.TryGetValue(CarSectionType.HeadOutRight, out CarSection headOutRightCarSection))
+					{
+						CurrentCarSection = CarSectionType.HeadOutRight;
+						headOutRightCarSection.Initialize(false);
+						headOutRightCarSection.Show();
+					}
+					break;
 			}
 
 			//When changing car section, do not apply damping

@@ -22,23 +22,26 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Text;
 using LibRender2.Trains;
 using OpenBve.Formats.MsTs;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
+using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Text;
+using OpenBveApi.World;
 using TrainManager.Car;
 using TrainManager.Trains;
+using static System.Net.WebRequestMethods;
 
 namespace Train.MsTs
 {
@@ -164,18 +167,37 @@ namespace Train.MsTs
 			Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
 			Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
 
-			if (File.Exists(CabViews[0].FileName))
+			if(CabViews.Count == 0 || !System.IO.File.Exists(CabViews[0].FileName))
 			{
-				Car.Driver = CabViews[0].Position;
-				Plugin.currentHost.RegisterTexture(CabViews[0].FileName, new TextureParameters(null, null), out Texture tday, true);
-				CreateElement(ref Car.CarSections[0].Groups[0], 0.0, 0.0, 1024, 768, new Vector2(0.5, 0.5), 0.0, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
-			}
-			else
-			{
-				//Main panel image doesn't exist
 				return false;
 			}
-
+			Car.CameraRestrictionMode = CameraRestrictionMode.On;
+			Plugin.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
+			Car.Driver = CabViews[0].Position;
+			for (int i = 0; i < CabViews.Count; i++)
+			{
+				
+				Plugin.currentHost.RegisterTexture(CabViews[i].FileName, new TextureParameters(null, null), out Texture tday, true);
+				switch (i)
+				{
+					case 0:
+						Car.CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.currentHost, ObjectType.Overlay, true, Car));
+						CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], 0.0, 0.0, 1024, 768, new Vector2(0.5, 0.5), 0.0, CabViews[0].Position, tday, null, new Color32(255, 255, 255, 255));
+						Car.CarSections[CarSectionType.Interior].ViewDirection = new Transformation(CabViews[0].Direction.Y.ToRadians(), CabViews[0].Direction.X.ToRadians(), -CabViews[0].Direction.Z.ToRadians());
+						break;
+					case 1:
+						Car.CarSections.Add(CarSectionType.HeadOutLeft, new CarSection(Plugin.currentHost, ObjectType.Overlay, true, Car));
+						CreateElement(ref Car.CarSections[CarSectionType.HeadOutLeft].Groups[0], 0.0, 0.0, 1024, 768, new Vector2(0.5, 0.5), 0.0, CabViews[1].Position, tday, null, new Color32(255, 255, 255, 255));
+						Car.CarSections[CarSectionType.HeadOutLeft].ViewDirection = new Transformation(CabViews[1].Direction.Y.ToRadians(), CabViews[1].Direction.X.ToRadians(), -CabViews[1].Direction.Z.ToRadians());
+						break;
+					case 2:
+						Car.CarSections.Add(CarSectionType.HeadOutRight, new CarSection(Plugin.currentHost, ObjectType.Overlay, true, Car));
+						CreateElement(ref Car.CarSections[CarSectionType.HeadOutRight].Groups[0], 0.0, 0.0, 1024, 768, new Vector2(0.5, 0.5), 0.0, CabViews[2].Position, tday, null, new Color32(255, 255, 255, 255));
+						Car.CarSections[CarSectionType.HeadOutRight].ViewDirection = new Transformation(CabViews[2].Direction.Y.ToRadians(), CabViews[2].Direction.X.ToRadians(), -CabViews[2].Direction.Z.ToRadians());
+						break;
+				}
+			}
+			
 			int currentLayer = 1;
 			for (int i = 0; i < cabComponents.Count; i++)
 			{
@@ -247,7 +269,7 @@ namespace Train.MsTs
 					ParseBlock(newBlock);
 					newBlock = block.ReadSubBlock(KujuTokenID.Position); //Position within loco X,Y,Z
 					ParseBlock(newBlock);
-					newBlock = block.ReadSubBlock(KujuTokenID.Direction); // ?? CAMERA DIRECTION ==> ROT X, ROT Y, ROT Z ??
+					newBlock = block.ReadSubBlock(KujuTokenID.Direction); // ?? CAMERA DIRECTION ==> ROT Y, ROT X, ROT Z
 					ParseBlock(newBlock);
 					CabViews.Add(currentCabView);
 					currentCabView = new CabView();
@@ -260,7 +282,7 @@ namespace Train.MsTs
 					ParseBlock(newBlock);
 					newBlock = block.ReadSubBlock(KujuTokenID.Position); //Position within loco X,Y,Z
 					ParseBlock(newBlock);
-					newBlock = block.ReadSubBlock(KujuTokenID.Direction); // ?? CAMERA DIRECTION ==> ROT X, ROT Y, ROT Z ??
+					newBlock = block.ReadSubBlock(KujuTokenID.Direction); // ?? CAMERA DIRECTION ==> ROT Y, ROT X, ROT Z
 					ParseBlock(newBlock);
 					CabViews.Add(currentCabView);
 					currentCabView = new CabView();
@@ -273,7 +295,7 @@ namespace Train.MsTs
 					ParseBlock(newBlock);
 					newBlock = block.ReadSubBlock(KujuTokenID.Position); //Position within loco X,Y,Z
 					ParseBlock(newBlock);
-					newBlock = block.ReadSubBlock(KujuTokenID.Direction); // ?? CAMERA DIRECTION ==> ROT X, ROT Y, ROT Z ??
+					newBlock = block.ReadSubBlock(KujuTokenID.Direction); // ?? CAMERA DIRECTION ==> ROT Y, ROT X, ROT Z
 					ParseBlock(newBlock);
 					CabViews.Add(currentCabView);
 					newBlock = block.ReadSubBlock(KujuTokenID.EngineData);
@@ -340,7 +362,7 @@ namespace Train.MsTs
 
 			internal void Create(ref CarBase Car, int Layer)
 			{
-				if (File.Exists(TexturePath) || Type == CabComponentType.Digital)
+				if (System.IO.File.Exists(TexturePath) || Type == CabComponentType.Digital)
 				{
 					if (FrameMappings.Length == 0 && TotalFrames > 1)
 					{
@@ -376,17 +398,17 @@ namespace Train.MsTs
 							Size.X *= rW;
 							Size.Y *= rH;
 							PivotPoint *= rH;
-							j = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X, Size.Y, new Vector2((0.5 * Size.X) / (tday.Width * rW), PivotPoint / (tday.Height * rH)), Layer * stackDistance, Car.Driver, tday, null, new Color32(255, 255, 255, 255));
-							Car.CarSections[0].Groups[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
-							Car.CarSections[0].Groups[0].Elements[j].RotateXDirection = DirIncrease ? new Vector3(1.0, 0.0, 0.0) : new Vector3(-1.0, 0.0, 0.0);
-							Car.CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[0].Groups[0].Elements[j].RotateZDirection, Car.CarSections[0].Groups[0].Elements[j].RotateXDirection);
+							j = CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position.X, Position.Y, Size.X, Size.Y, new Vector2((0.5 * Size.X) / (tday.Width * rW), PivotPoint / (tday.Height * rH)), Layer * stackDistance, CabViews[0].Position, tday, null, new Color32(255, 255, 255, 255));
+							Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
+							Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateXDirection = DirIncrease ? new Vector3(1.0, 0.0, 0.0) : new Vector3(-1.0, 0.0, 0.0);
+							Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZDirection, Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateXDirection);
 							f = GetStackLanguageFromSubject(Car.baseTrain, panelSubject, Units);
 							InitialAngle = InitialAngle.ToRadians();
 							LastAngle = LastAngle.ToRadians();
 							double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 							double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 							f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
-							Car.CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
+							Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
 							break;
 						case CabComponentType.Lever:
 							/*
@@ -427,7 +449,7 @@ namespace Train.MsTs
 								j = -1;
 								for (int k = 0; k < textures.Length; k++)
 								{
-									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+									int l = CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, CabViews[0].Position, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
 									if (k == 0) j = l;
 								}
 
@@ -436,10 +458,10 @@ namespace Train.MsTs
 								{
 									case PanelSubject.Throttle:
 									case PanelSubject.Train_Brake:
-										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
+										Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
 										break;
 									default:
-										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+										Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
 										break;
 								}
 								
@@ -476,7 +498,7 @@ namespace Train.MsTs
 								j = -1;
 								for (int k = 0; k < textures.Length; k++)
 								{
-									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+									int l = CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
 									if (k == 0) j = l;
 								}
 
@@ -486,10 +508,10 @@ namespace Train.MsTs
 									case PanelSubject.Direction:
 									case PanelSubject.Direction_Display:
 									case PanelSubject.Overspeed:
-										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
+										Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
 										break;
 									default:
-										Car.CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+										Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
 										break;
 								}
 								
@@ -526,30 +548,30 @@ namespace Train.MsTs
 							{
 								for (int k = 0; k < frameTextures.Length; k++)
 								{
-									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X + Size.X - (digitWidth * (currentDigit + 1)), Position.Y, digitWidth * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, frameTextures[k], null, textColor, k != 0);
+									int l = CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position.X + Size.X - (digitWidth * (currentDigit + 1)), Position.Y, digitWidth * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, frameTextures[k], null, textColor, k != 0);
 									if (k == 0) j = l;
 								}
 
 								// build color arrays and mappings
-								Car.CarSections[0].Groups[0].Elements[j].Colors = new Color24[NegativeColors.Length + PositiveColors.Length];
+								Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].Colors = new Color24[NegativeColors.Length + PositiveColors.Length];
 								FrameMappings = new FrameMapping[PositiveColors.Length + NegativeColors.Length];
 								for (int i = 0; i < NegativeColors.Length; i++)
 								{
 									FrameMappings[i].MappingValue = NegativeColors[i].Item1;
 									FrameMappings[i].FrameKey = i;
-									Car.CarSections[0].Groups[0].Elements[j].Colors[i] = NegativeColors[i].Item2;
+									Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].Colors[i] = NegativeColors[i].Item2;
 								}
 
 								for (int i = 0; i < PositiveColors.Length; i++)
 								{
 									FrameMappings[i + NegativeColors.Length].MappingValue = PositiveColors[i].Item1;
 									FrameMappings[i + NegativeColors.Length].FrameKey = i + NegativeColors.Length;
-									Car.CarSections[0].Groups[0].Elements[j].Colors[i + NegativeColors.Length] = PositiveColors[i].Item2;
+									Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].Colors[i + NegativeColors.Length] = PositiveColors[i].Item2;
 								}
 
 								// create color and digit functions
-								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, Units, currentDigit);
-								Car.CarSections[0].Groups[0].Elements[j].ColorFunction = new CvfAnimation(panelSubject, Units, FrameMappings);
+								Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, Units, currentDigit);
+								Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].ColorFunction = new CvfAnimation(panelSubject, Units, FrameMappings);
 							}
 							break;
 						case CabComponentType.CabSignalDisplay:
@@ -584,11 +606,11 @@ namespace Train.MsTs
 								j = -1;
 								for (int k = 0; k < textures.Length; k++)
 								{
-									int l = CreateElement(ref Car.CarSections[0].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+									int l = CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * stackDistance, Car.Driver, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
 									if (k == 0) j = l;
 								}
 
-								Car.CarSections[0].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject);
+								Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject);
 
 							}
 							break;
