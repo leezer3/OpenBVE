@@ -1,5 +1,5 @@
-using System;
 using LibRender2.Cameras;
+using LibRender2.Trains;
 using LibRender2.Viewports;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
@@ -7,6 +7,8 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
+using OpenBveApi.World;
+using System;
 using TrainManager.Trains;
 
 namespace OpenBve {
@@ -352,11 +354,15 @@ namespace OpenBve {
 
 				if (Program.Renderer.Camera.CurrentMode < CameraViewMode.Exterior)
 				{
-					if (TrainManager.PlayerTrain.DriverCar >= 0 && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections[0].ViewDirection != null)
+					if (TrainManager.PlayerTrain.DriverCar >= 0 && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections.TryGetValue(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CurrentCarSection, out CarSection driverCarSection))
 					{
-						dF.Rotate(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections[0].ViewDirection);
-						uF.Rotate(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections[0].ViewDirection);
-						sF.Rotate(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections[0].ViewDirection);
+						if (driverCarSection.ViewDirection != null)
+						{
+							dF.Rotate(driverCarSection.ViewDirection);
+							uF.Rotate(driverCarSection.ViewDirection);
+							sF.Rotate(driverCarSection.ViewDirection);
+						}
+						
 					}
 				}
 
