@@ -41,7 +41,6 @@ using System.Text;
 using OpenBveApi.World;
 using TrainManager.Car;
 using TrainManager.Trains;
-using static System.Net.WebRequestMethods;
 
 namespace Train.MsTs
 {
@@ -94,7 +93,7 @@ namespace Train.MsTs
 			}
 			else if (!headerString.StartsWith("SIMISA@@"))
 			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "Unrecognized cabview file header " + headerString + " in " + fileName);
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognized cabview file header " + headerString + " in " + fileName);
 				return false;
 			}
 
@@ -123,7 +122,7 @@ namespace Train.MsTs
 			}
 			else if (subHeader[7] != 'b')
 			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "Unrecognized subHeader " + subHeader + " in " + fileName);
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognized subHeader " + subHeader + " in " + fileName);
 				return false;
 			}
 			else
@@ -167,7 +166,7 @@ namespace Train.MsTs
 			Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
 			Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
 
-			if(CabViews.Count == 0 || !System.IO.File.Exists(CabViews[0].FileName))
+			if(CabViews.Count == 0 || !File.Exists(CabViews[0].FileName))
 			{
 				return false;
 			}
@@ -177,21 +176,21 @@ namespace Train.MsTs
 			for (int i = 0; i < CabViews.Count; i++)
 			{
 				
-				Plugin.currentHost.RegisterTexture(CabViews[i].FileName, new TextureParameters(null, null), out Texture tday, true);
+				Plugin.CurrentHost.RegisterTexture(CabViews[i].FileName, new TextureParameters(null, null), out Texture tday, true);
 				switch (i)
 				{
 					case 0:
-						Car.CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.currentHost, ObjectType.Overlay, true, Car));
+						Car.CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, Car));
 						CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], 0.0, 0.0, 1024, 768, new Vector2(0.5, 0.5), 0.0, CabViews[0].Position, tday, null, new Color32(255, 255, 255, 255));
 						Car.CarSections[CarSectionType.Interior].ViewDirection = new Transformation(CabViews[0].Direction.Y.ToRadians(), CabViews[0].Direction.X.ToRadians(), -CabViews[0].Direction.Z.ToRadians());
 						break;
 					case 1:
-						Car.CarSections.Add(CarSectionType.HeadOutLeft, new CarSection(Plugin.currentHost, ObjectType.Overlay, true, Car));
+						Car.CarSections.Add(CarSectionType.HeadOutLeft, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, Car));
 						CreateElement(ref Car.CarSections[CarSectionType.HeadOutLeft].Groups[0], 0.0, 0.0, 1024, 768, new Vector2(0.5, 0.5), 0.0, CabViews[1].Position, tday, null, new Color32(255, 255, 255, 255));
 						Car.CarSections[CarSectionType.HeadOutLeft].ViewDirection = new Transformation(CabViews[1].Direction.Y.ToRadians(), CabViews[1].Direction.X.ToRadians(), -CabViews[1].Direction.Z.ToRadians());
 						break;
 					case 2:
-						Car.CarSections.Add(CarSectionType.HeadOutRight, new CarSection(Plugin.currentHost, ObjectType.Overlay, true, Car));
+						Car.CarSections.Add(CarSectionType.HeadOutRight, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, Car));
 						CreateElement(ref Car.CarSections[CarSectionType.HeadOutRight].Groups[0], 0.0, 0.0, 1024, 768, new Vector2(0.5, 0.5), 0.0, CabViews[2].Position, tday, null, new Color32(255, 255, 255, 255));
 						Car.CarSections[CarSectionType.HeadOutRight].ViewDirection = new Transformation(CabViews[2].Direction.Y.ToRadians(), CabViews[2].Direction.X.ToRadians(), -CabViews[2].Direction.Z.ToRadians());
 						break;
@@ -340,7 +339,7 @@ namespace Train.MsTs
 			{
 				if (!Enum.TryParse(myBlock.Token.ToString(), true, out Type))
 				{
-					Plugin.currentHost.AddMessage(MessageType.Error, false, "Unrecognised CabViewComponent type.");
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognised CabViewComponent type.");
 					return;
 				}
 
@@ -362,7 +361,7 @@ namespace Train.MsTs
 
 			internal void Create(ref CarBase Car, int Layer)
 			{
-				if (System.IO.File.Exists(TexturePath) || Type == CabComponentType.Digital)
+				if (File.Exists(TexturePath) || Type == CabComponentType.Digital)
 				{
 					if (FrameMappings.Length == 0 && TotalFrames > 1)
 					{
@@ -386,7 +385,7 @@ namespace Train.MsTs
 					switch (Type)
 					{
 						case CabComponentType.Dial:
-							Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(null, null), out Texture tday, true);
+							Plugin.CurrentHost.RegisterTexture(TexturePath, new TextureParameters(null, null), out Texture tday, true);
 							// correct angle position if appropriate
 							if (!DirIncrease && InitialAngle > LastAngle)
 							{
@@ -408,7 +407,7 @@ namespace Train.MsTs
 							double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 							double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 							f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
-							Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.currentHost, f, false);
+							Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.CurrentHost, f, false);
 							break;
 						case CabComponentType.Lever:
 							/*
@@ -424,7 +423,7 @@ namespace Train.MsTs
 							 */
 							Position.X *= rW;
 							Position.Y *= rH;
-							Plugin.currentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
+							Plugin.CurrentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
 							if (wday > 0 & hday > 0)
 							{
 								Texture[] textures = new Texture[TotalFrames];
@@ -434,7 +433,7 @@ namespace Train.MsTs
 								int frameHeight = hday / VerticalFrames;
 								for (int k = 0; k < TotalFrames; k++)
 								{
-									Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out textures[k]);
+									Plugin.CurrentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out textures[k]);
 									if (column < HorizontalFrames - 1)
 									{
 										column++;
@@ -461,7 +460,7 @@ namespace Train.MsTs
 										Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
 										break;
 									default:
-										Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+										Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.CurrentHost, f, false);
 										break;
 								}
 								
@@ -473,7 +472,7 @@ namespace Train.MsTs
 						case CabComponentType.MultiStateDisplay:
 							Position.X *= rW;
 							Position.Y *= rH;
-							Plugin.currentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
+							Plugin.CurrentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
 							if (wday > 0 & hday > 0)
 							{
 								Texture[] textures = new Texture[TotalFrames];
@@ -483,7 +482,7 @@ namespace Train.MsTs
 								int frameHeight = hday / VerticalFrames;
 								for (int k = 0; k < TotalFrames; k++)
 								{
-									Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out textures[k]);
+									Plugin.CurrentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out textures[k]);
 									if (column < HorizontalFrames - 1)
 									{
 										column++;
@@ -511,7 +510,7 @@ namespace Train.MsTs
 										Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
 										break;
 									default:
-										Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.currentHost, f, false);
+										Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.CurrentHost, f, false);
 										break;
 								}
 								
@@ -530,13 +529,13 @@ namespace Train.MsTs
 
 							Texture[] frameTextures = new Texture[11];
 							TexturePath = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility"), "numbers.png"); // arial 9.5pt
-							Plugin.currentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
+							Plugin.CurrentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
 							
 							for (int i = 0; i < 10; i++)
 							{
-								Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(0, i * 24, 16, 24), null), out frameTextures[i], true);
+								Plugin.CurrentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(0, i * 24, 16, 24), null), out frameTextures[i], true);
 							}
-							Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(0, 0, 16, 24), null), out frameTextures[10], true); // repeated zero [check vice MSTS]
+							Plugin.CurrentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(0, 0, 16, 24), null), out frameTextures[10], true); // repeated zero [check vice MSTS]
 
 							int numMaxDigits = (int)Math.Floor(Math.Log10(Maximum) + 1);
 							int numMinDigits = (int)Math.Floor(Math.Log10(Minimum) + 1);
@@ -580,7 +579,7 @@ namespace Train.MsTs
 							VerticalFrames = 2;
 							Position.X *= rW;
 							Position.Y *= rH;
-							Plugin.currentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
+							Plugin.CurrentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
 							if (wday > 0 & hday > 0)
 							{
 								Texture[] textures = new Texture[8];
@@ -591,7 +590,7 @@ namespace Train.MsTs
 								int frameHeight = hday / VerticalFrames;
 								for (int k = 0; k < TotalFrames; k++)
 								{
-									Plugin.currentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out textures[k]);
+									Plugin.CurrentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(column * frameWidth, row * frameHeight, frameWidth, frameHeight), null), out textures[k]);
 									if (column < HorizontalFrames - 1)
 									{
 										column++;
@@ -876,7 +875,7 @@ namespace Train.MsTs
 		{
 			if (Width == 0 || Height == 0)
 			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "Attempted to create an invalid size element");
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Attempted to create an invalid size element");
 			}
 
 			double WorldWidth, WorldHeight;
@@ -917,7 +916,7 @@ namespace Train.MsTs
 			Vertex t1 = new Vertex(v[1], new Vector2(0.0f, 0.0f));
 			Vertex t2 = new Vertex(v[2], new Vector2(1.0f, 0.0f));
 			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
-			StaticObject Object = new StaticObject(Plugin.currentHost);
+			StaticObject Object = new StaticObject(Plugin.CurrentHost);
 			Object.Mesh.Vertices = new VertexTemplate[] {t0, t1, t2, t3};
 			Object.Mesh.Faces = new[] {new MeshFace(new[] {0, 1, 2, 0, 2, 3}, FaceFlags.Triangles)}; //Must create as a single face like this to avoid Z-sort issues with overlapping bits
 			Object.Mesh.Materials = new MeshMaterial[1];
@@ -954,13 +953,13 @@ namespace Train.MsTs
 			{
 				int n = Group.Elements.Length;
 				Array.Resize(ref Group.Elements, n + 1);
-				Group.Elements[n] = new AnimatedObject(Plugin.currentHost);
+				Group.Elements[n] = new AnimatedObject(Plugin.CurrentHost);
 				Group.Elements[n].States = new[] {new ObjectState()};
 				Group.Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
 				Group.Elements[n].States[0].Prototype = Object;
 				Group.Elements[n].CurrentState = 0;
 				Group.Elements[n].internalObject = new ObjectState {Prototype = Object};
-				Plugin.currentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
+				Plugin.CurrentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
 				return n;
 			}
 		}

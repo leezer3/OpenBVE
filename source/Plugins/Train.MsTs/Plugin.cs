@@ -15,7 +15,7 @@ namespace Train.MsTs
 
 		internal static WagonParser WagonParser;
 
-		internal static HostInterface currentHost;
+		internal static HostInterface CurrentHost;
 
 		internal static BaseRenderer Renderer;
 
@@ -28,9 +28,9 @@ namespace Train.MsTs
 			WagonParser = new WagonParser(this);
 		}
 
-		public override void Load(HostInterface host, FileSystem fileSystem, BaseOptions Options, object rendererReference)
+		public override void Load(HostInterface host, FileSystem fileSystem, BaseOptions options, object rendererReference)
 		{
-			currentHost = host;
+			CurrentHost = host;
 			FileSystem = fileSystem;
 			Renderer = (BaseRenderer) rendererReference;
 		}
@@ -44,7 +44,7 @@ namespace Train.MsTs
 			return false;
 		}
 
-		public override bool LoadTrain(Encoding Encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls)
+		public override bool LoadTrain(Encoding encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls)
 		{
 			PreviewOnly = false;
 			try

@@ -85,7 +85,7 @@ namespace Train.MsTs
 			}
 			else if (!headerString.StartsWith("SIMISA@@"))
 			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "Unrecognized SMS file header " + headerString + " in " + fileName);
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognized SMS file header " + headerString + " in " + fileName);
 				return false;
 			}
 
@@ -116,7 +116,7 @@ namespace Train.MsTs
 			}
 			else if (subHeader[7] != 'b')
 			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, "Unrecognized subHeader " + subHeader + " in " + fileName);
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognized subHeader " + subHeader + " in " + fileName);
 			}
 			else
 			{
@@ -353,67 +353,67 @@ namespace Train.MsTs
 						{
 							case SoundTrigger.VariableControlled:
 								// hack
-								Plugin.currentHost.RegisterSound(soundFile, currentSoundSet.ActivationDistance, out var soundHandle);
+								Plugin.CurrentHost.RegisterSound(soundFile, currentSoundSet.ActivationDistance, out var soundHandle);
 								currentSoundSet.soundBuffers[currentSoundSet.currentBuffer] = soundHandle as SoundBuffer;
 								break;
 							case SoundTrigger.ReverserChange:
 								if (currentSoundSet.currentSoundType == KujuTokenID.PlayOneShot)
 								{
-									car.baseTrain.Handles.Reverser.EngageSound = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.Reverser.ReleaseSound = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Reverser.EngageSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Reverser.ReleaseSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
 							case SoundTrigger.ThrottleChange:
 								if (currentSoundSet.currentSoundType == KujuTokenID.PlayOneShot)
 								{
-									car.baseTrain.Handles.Power.Decrease = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.Power.DecreaseFast = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.Power.Increase = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.Power.IncreaseFast = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.Power.Min = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.Power.Max = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Power.Decrease = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Power.DecreaseFast = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Power.Increase = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Power.IncreaseFast = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Power.Min = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Power.Max = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
 							case SoundTrigger.TrainBrakeChange:
 								if (currentSoundSet.currentSoundType == KujuTokenID.PlayOneShot)
 								{
-									car.baseTrain.Handles.Brake.Decrease = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.Brake.DecreaseFast = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.Brake.Increase = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.Brake.IncreaseFast = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.Brake.Min = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.Brake.Max = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Brake.Decrease = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Brake.DecreaseFast = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Brake.Increase = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Brake.IncreaseFast = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Brake.Min = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.Brake.Max = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
 							case SoundTrigger.EngineBrakeChange:
 								if (currentSoundSet.currentSoundType == KujuTokenID.PlayOneShot && car.baseTrain.Handles.LocoBrake != null)
 								{
-									car.baseTrain.Handles.LocoBrake.Decrease = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.LocoBrake.DecreaseFast = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.LocoBrake.Increase = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.LocoBrake.IncreaseFast = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.LocoBrake.Min = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
-									car.baseTrain.Handles.LocoBrake.Max = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.LocoBrake.Decrease = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.LocoBrake.DecreaseFast = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.LocoBrake.Increase = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.LocoBrake.IncreaseFast = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.LocoBrake.Min = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.baseTrain.Handles.LocoBrake.Max = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
 							case SoundTrigger.LightSwitchToggle:
 								if (currentSoundSet.currentSoundType == KujuTokenID.PlayOneShot && car.baseTrain.SafetySystems.Headlights != null)
 								{
-									Plugin.currentHost.RegisterSound(soundFile, 2.0, out soundHandle);
+									Plugin.CurrentHost.RegisterSound(soundFile, 2.0, out soundHandle);
 									car.baseTrain.SafetySystems.Headlights.SwitchSoundBuffer = soundHandle as SoundBuffer;
 								}
 								break;
 							case SoundTrigger.HornOn:
 								if (currentSoundSet.currentSoundType == KujuTokenID.StartLoopRelease && car.Horns[0] != null)
 								{
-									Plugin.currentHost.RegisterSound(soundFile, 2.0, out soundHandle);
+									Plugin.CurrentHost.RegisterSound(soundFile, 2.0, out soundHandle);
 									car.Horns[0].LoopSound = soundHandle as SoundBuffer;
 								}
 								break;
 							case SoundTrigger.BellOn:
 								if (currentSoundSet.currentSoundType == KujuTokenID.StartLoopRelease && car.Horns[2] != null)
 								{
-									Plugin.currentHost.RegisterSound(soundFile, 2.0, out soundHandle);
+									Plugin.CurrentHost.RegisterSound(soundFile, 2.0, out soundHandle);
 									car.Horns[0].LoopSound = soundHandle as SoundBuffer;
 								}
 								break;
@@ -422,7 +422,7 @@ namespace Train.MsTs
 								Pantograph pantograph = abstractComponent as Pantograph;
 								if (pantograph != null)
 								{
-									pantograph.RaiseSound = new CarSound(Plugin.currentHost, soundFile, 100, Vector3.Zero);
+									pantograph.RaiseSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
 								}
 								break;
 							case SoundTrigger.Pantograph1Down:
@@ -430,7 +430,7 @@ namespace Train.MsTs
 								pantograph = abstractComponent as Pantograph;
 								if (pantograph != null)
 								{
-									pantograph.LowerSound = new CarSound(Plugin.currentHost, soundFile, 100, Vector3.Zero);
+									pantograph.LowerSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
 								}
 								break;
 							case SoundTrigger.Pantograph1Toggle:
@@ -438,12 +438,12 @@ namespace Train.MsTs
 								pantograph = abstractComponent as Pantograph;
 								if (pantograph != null)
 								{
-									pantograph.SwitchToggle = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+									pantograph.SwitchToggle = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
 							case SoundTrigger.WiperOn:
 							case SoundTrigger.WiperOff:
-								car.Windscreen.Wipers.SwitchSound = new CarSound(Plugin.currentHost, soundFile, 2.0, car.Driver);
+								car.Windscreen.Wipers.SwitchSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								break;
 						}
 					}
@@ -451,7 +451,7 @@ namespace Train.MsTs
 					{
 						if (currentSoundSet.currentTrigger != SoundTrigger.Skip)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Error, true, "MSTS Sound File " + soundFile + " was not found in SMS " + currentFile);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS Sound File " + soundFile + " was not found in SMS " + currentFile);
 						}
 					}
 					int checkDigit = block.ReadInt32();
