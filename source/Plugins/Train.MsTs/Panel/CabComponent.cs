@@ -125,7 +125,7 @@ namespace Train.MsTs
 						Size.X *= rW;
 						Size.Y *= rH;
 						PivotPoint *= rH;
-						j = CabviewFileParser.CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position.X, Position.Y, Size.X, Size.Y, new Vector2((0.5 * Size.X) / (tday.Width * rW), PivotPoint / (tday.Height * rH)), Layer * CabviewFileParser.StackDistance, PanelPosition, tday, null, new Color32(255, 255, 255, 255));
+						j = CabviewFileParser.CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2((0.5 * Size.X) / (tday.Width * rW), PivotPoint / (tday.Height * rH)), Layer * CabviewFileParser.StackDistance, PanelPosition, tday, null, new Color32(255, 255, 255, 255));
 						Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
 						Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateXDirection = DirIncrease ? new Vector3(1.0, 0.0, 0.0) : new Vector3(-1.0, 0.0, 0.0);
 						Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZDirection, Car.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateXDirection);
@@ -151,6 +151,8 @@ namespace Train.MsTs
 						 */
 						Position.X *= rW;
 						Position.Y *= rH;
+						Size.X *= rW;
+						Size.Y *= rH;
 						Plugin.CurrentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
 						if (wday > 0 & hday > 0)
 						{
@@ -176,7 +178,8 @@ namespace Train.MsTs
 							j = -1;
 							for (int k = 0; k < textures.Length; k++)
 							{
-								int l = CabviewFileParser.CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * CabviewFileParser.StackDistance, PanelPosition, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+								
+								int l = CabviewFileParser.CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2(0.5, 0.5), Layer * CabviewFileParser.StackDistance, PanelPosition, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
 								if (k == 0) j = l;
 							}
 
@@ -200,6 +203,8 @@ namespace Train.MsTs
 					case CabComponentType.MultiStateDisplay:
 						Position.X *= rW;
 						Position.Y *= rH;
+						Size.X *= rW;
+						Size.Y *= rH;
 						Plugin.CurrentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
 						if (wday > 0 & hday > 0)
 						{
@@ -225,7 +230,7 @@ namespace Train.MsTs
 							j = -1;
 							for (int k = 0; k < textures.Length; k++)
 							{
-								int l = CabviewFileParser.CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * CabviewFileParser.StackDistance, PanelPosition, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+								int l = CabviewFileParser.CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2(0.5, 0.5), Layer * CabviewFileParser.StackDistance, PanelPosition, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
 								if (k == 0) j = l;
 							}
 
@@ -278,7 +283,7 @@ namespace Train.MsTs
 						{
 							for (int k = 0; k < frameTextures.Length; k++)
 							{
-								int l = CabviewFileParser.CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position.X + Size.X - (digitWidth * (currentDigit + 1)), Position.Y, digitWidth * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * CabviewFileParser.StackDistance, PanelPosition, frameTextures[k], null, textColor, k != 0);
+								int l = CabviewFileParser.CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], new Vector2(Position.X + Size.X - (digitWidth * (currentDigit + 1)), Position.Y), new Vector2(digitWidth * rW, Size.Y * rH), new Vector2(0.5, 0.5), Layer * CabviewFileParser.StackDistance, PanelPosition, frameTextures[k], null, textColor, k != 0);
 								if (k == 0) j = l;
 							}
 
@@ -311,6 +316,8 @@ namespace Train.MsTs
 						VerticalFrames = 2;
 						Position.X *= rW;
 						Position.Y *= rH;
+						Size.X *= rW;
+						Size.Y *= rH;
 						Plugin.CurrentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
 						if (wday > 0 & hday > 0)
 						{
@@ -337,7 +344,7 @@ namespace Train.MsTs
 							j = -1;
 							for (int k = 0; k < textures.Length; k++)
 							{
-								int l = CabviewFileParser.CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position.X, Position.Y, Size.X * rW, Size.Y * rH, new Vector2(0.5, 0.5), Layer * CabviewFileParser.StackDistance, PanelPosition, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+								int l = CabviewFileParser.CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2(0.5, 0.5), Layer * CabviewFileParser.StackDistance, PanelPosition, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
 								if (k == 0) j = l;
 							}
 

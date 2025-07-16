@@ -43,11 +43,15 @@ namespace Train.MsTs
 			train.Specs.AveragesPressureDistribution = true;
 			train.SafetySystems.Headlights = new LightSource(train, 2);
 			CurrentFolder = Path.GetDirectoryName(fileName);
+			if (CurrentFolder == null)
+			{
+				throw new Exception("Unable to determine the MSTS consist working directory.");
+			}
 			DirectoryInfo d = Directory.GetParent(CurrentFolder);
-			if(!d.Name.Equals("TRAINS", StringComparison.InvariantCultureIgnoreCase))
+			if(d == null || !d.Name.Equals("TRAINS", StringComparison.InvariantCultureIgnoreCase))
 			{
 				//FIXME: Better finding of the trainset folder (set in options?)
-				throw new Exception("Unable to find the TRAINS folder");
+				throw new Exception("Unable to find the MSTS TRAINS folder.");
 			}
 
 			CurrentFolder = d.FullName;
