@@ -352,8 +352,8 @@ namespace Train.OpenBve
 							break;
 						}
 						Train.Cars[Car].HasInteriorView = true;
-						Train.Cars[Car].CarSections = new CarSection[1];
-						Train.Cars[Car].CarSections[0] = new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true);
+						Train.Cars[Car].CarSections = new Dictionary<CarSectionType, CarSection>();
+						Train.Cars[Car].CarSections.Add(CarSectionType.Interior,new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true));
 
 						string cv = Path.CombineFile(currentPath, c.InnerText);
 						if (!System.IO.File.Exists(cv))

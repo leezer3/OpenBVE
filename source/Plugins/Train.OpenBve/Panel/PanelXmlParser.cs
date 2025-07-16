@@ -68,7 +68,9 @@ namespace Train.OpenBve
 
 			foreach (XElement element in DocumentElements)
 			{
-				ParsePanelNode(element, FileName, Train, Car, ref Train.Cars[Car].CarSections[0], 0, 0);
+				CarSection c = Train.Cars[Car].CarSections[CarSectionType.Interior];
+				ParsePanelNode(element, FileName, Train, Car, ref c, 0, 0);
+				Train.Cars[Car].CarSections[CarSectionType.Interior] = c;
 			}
 		}
 

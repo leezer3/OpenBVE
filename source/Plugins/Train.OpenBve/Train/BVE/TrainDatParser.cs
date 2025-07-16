@@ -1382,7 +1382,7 @@ namespace Train.OpenBve
 				{
 					Train.Cars[i].Breaker = new Breaker(Train.Cars[i]);
 				}
-				Train.Cars[i].CurrentCarSection = -1;
+				Train.Cars[i].CurrentCarSection = CarSectionType.NotVisible;
 				Train.Cars[i].ChangeCarSection(CarSectionType.NotVisible);
 				Train.Cars[i].FrontBogie.ChangeSection(-1);
 				Train.Cars[i].RearBogie.ChangeSection(-1);

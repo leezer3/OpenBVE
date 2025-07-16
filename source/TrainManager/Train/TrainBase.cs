@@ -168,11 +168,12 @@ namespace TrainManager.Trains
 		{
 			for (int i = 0; i < Cars.Length; i++)
 			{
-				for (int j = 0; j < Cars[i].CarSections.Length; j++)
+				for (int j = 0; j < Cars[i].CarSections.Count; j++)
 				{
-					for (int k = 0; k < Cars[i].CarSections[j].Groups.Length; k++)
+					CarSectionType key = Cars[i].CarSections.ElementAt(j).Key;
+					for (int k = 0; k < Cars[i].CarSections[key].Groups.Length; k++)
 					{
-						Cars[i].CarSections[j].Groups[k].PreloadTextures();
+						Cars[i].CarSections[key].Groups[k].PreloadTextures();
 					}
 					
 				}
@@ -301,28 +302,24 @@ namespace TrainManager.Trains
 							State = TrainState.Available;
 							for (int j = 0; j < Cars.Length; j++)
 							{
-								if (Cars[j].CarSections.Length != 0)
+								if (j == DriverCar && IsPlayerTrain && TrainManagerBase.CurrentOptions.InitialViewpoint == 0)
 								{
-									if (j == DriverCar && IsPlayerTrain && TrainManagerBase.CurrentOptions.InitialViewpoint == 0)
+									Cars[j].ChangeCarSection(CarSectionType.Interior);
+								}
+								else
+								{
+									/*
+									 * HACK: Load in exterior mode first to ensure everything is cached
+									 * before switching immediately to not visible
+									 * https://github.com/leezer3/OpenBVE/issues/226
+									 * Stuff like the R142A really needs to downsize the textures supplied,
+									 * but we have no control over external factors....
+									 */
+									Cars[j].ChangeCarSection(CarSectionType.Exterior);
+									if (IsPlayerTrain && TrainManagerBase.CurrentOptions.InitialViewpoint == 0)
 									{
-										Cars[j].ChangeCarSection(CarSectionType.Interior);
+										Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
 									}
-									else
-									{
-										/*
-										 * HACK: Load in exterior mode first to ensure everything is cached
-										 * before switching immediately to not visible
-										 * https://github.com/leezer3/OpenBVE/issues/226
-										 * Stuff like the R142A really needs to downsize the textures supplied,
-										 * but we have no control over external factors....
-										 */
-										Cars[j].ChangeCarSection(CarSectionType.Exterior);
-										if (IsPlayerTrain && TrainManagerBase.CurrentOptions.InitialViewpoint == 0)
-										{
-											Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
-										}
-									}
-
 								}
 
 								Cars[j].FrontBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);

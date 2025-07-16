@@ -56,10 +56,7 @@ namespace TrainManager.Trains
 					State = TrainState.Available;
 					for (int i = 0; i < Cars.Length; i++)
 					{
-						if (Cars[i].CarSections.Length != 0)
-						{
-							Cars[i].ChangeCarSection(CarSectionType.Exterior);
-						}
+						Cars[i].ChangeCarSection(CarSectionType.Exterior);
 						Cars[i].FrontBogie.ChangeSection(0);
 						Cars[i].RearBogie.ChangeSection(0);
 						Cars[i].Coupler.ChangeSection(0);
@@ -101,16 +98,16 @@ namespace TrainManager.Trains
 						//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
 						dnb = (byte)Math.Min(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, ccb);
 					}
-					int cs = Cars[i].CurrentCarSection;
-					if (cs >= 0 && cs < Cars[i].CarSections.Length)
+					
+					if (Cars[i].CarSections.TryGetValue(Cars[i].CurrentCarSection, out CarSection currentCarSection))
 					{
-						if (Cars[i].CarSections[cs].Groups.Length > 0)
+						if (currentCarSection.Groups.Length > 0)
 						{
-							for (int k = 0; k < Cars[i].CarSections[cs].Groups[0].Elements.Length; k++)
+							for (int k = 0; k < currentCarSection.Groups[0].Elements.Length; k++)
 							{
-								if (Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject != null)
+								if (currentCarSection.Groups[0].Elements[k].internalObject != null)
 								{
-									Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject.DaytimeNighttimeBlend = dnb;
+									currentCarSection.Groups[0].Elements[k].internalObject.DaytimeNighttimeBlend = dnb;
 								}
 							}
 						}
