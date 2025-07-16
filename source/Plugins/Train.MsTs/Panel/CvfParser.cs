@@ -155,10 +155,10 @@ namespace Train.MsTs
 				worldWidth = worldHeight * Plugin.Renderer.Screen.AspectRatio;
 			}
 
-			double x0 = (PanelLeft - PanelCenter.X) / PanelResolution;
-			double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
-			double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-			double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
+			double x0 = -PanelCenter.X / PanelResolution;
+			double x1 = (PanelSize.X - PanelCenter.X) / PanelResolution;
+			double y0 = (PanelCenter.Y - PanelSize.Y) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
+			double y1 = (PanelCenter.Y) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
 			Car.CameraRestriction.BottomLeft = new Vector3(x0 * worldWidth, y0 * worldHeight, eyeDistance);
 			Car.CameraRestriction.TopRight = new Vector3(x1 * worldWidth, y1 * worldHeight, eyeDistance);
 			Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * worldWidth / PanelResolution);
@@ -179,18 +179,18 @@ namespace Train.MsTs
 				{
 					case 0:
 						Car.CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, Car));
-						CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], 0.0, 0.0, 1024, 768, new Vector2(0.5, 0.5), 0.0, CabViews[0].Position, tday, null, new Color32(255, 255, 255, 255));
-						Car.CarSections[CarSectionType.Interior].ViewDirection = new Transformation(CabViews[0].Direction.Y.ToRadians(), CabViews[0].Direction.X.ToRadians(), -CabViews[0].Direction.Z.ToRadians());
+						CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Vector2.Null, PanelSize, new Vector2(0.5, 0.5), 0.0, CabViews[0].Position, tday, null, new Color32(255, 255, 255, 255));
+						Car.CarSections[CarSectionType.Interior].ViewDirection = new Transformation(CabViews[0].Direction.Y.ToRadians(), -CabViews[0].Direction.X.ToRadians(), -CabViews[0].Direction.Z.ToRadians());
 						break;
 					case 1:
 						Car.CarSections.Add(CarSectionType.HeadOutLeft, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, Car));
-						CreateElement(ref Car.CarSections[CarSectionType.HeadOutLeft].Groups[0], 0.0, 0.0, 1024, 768, new Vector2(0.5, 0.5), 0.0, CabViews[1].Position, tday, null, new Color32(255, 255, 255, 255));
-						Car.CarSections[CarSectionType.HeadOutLeft].ViewDirection = new Transformation(CabViews[1].Direction.Y.ToRadians(), CabViews[1].Direction.X.ToRadians(), -CabViews[1].Direction.Z.ToRadians());
+						CreateElement(ref Car.CarSections[CarSectionType.HeadOutLeft].Groups[0], Vector2.Null, PanelSize, new Vector2(0.5, 0.5), 0.0, CabViews[1].Position, tday, null, new Color32(255, 255, 255, 255));
+						Car.CarSections[CarSectionType.HeadOutLeft].ViewDirection = new Transformation(CabViews[1].Direction.Y.ToRadians(), -CabViews[1].Direction.X.ToRadians(), -CabViews[1].Direction.Z.ToRadians());
 						break;
 					case 2:
 						Car.CarSections.Add(CarSectionType.HeadOutRight, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, Car));
-						CreateElement(ref Car.CarSections[CarSectionType.HeadOutRight].Groups[0], 0.0, 0.0, 1024, 768, new Vector2(0.5, 0.5), 0.0, CabViews[2].Position, tday, null, new Color32(255, 255, 255, 255));
-						Car.CarSections[CarSectionType.HeadOutRight].ViewDirection = new Transformation(CabViews[2].Direction.Y.ToRadians(), CabViews[2].Direction.X.ToRadians(), -CabViews[2].Direction.Z.ToRadians());
+						CreateElement(ref Car.CarSections[CarSectionType.HeadOutRight].Groups[0], Vector2.Null, PanelSize, new Vector2(0.5, 0.5), 0.0, CabViews[2].Position, tday, null, new Color32(255, 255, 255, 255));
+						Car.CarSections[CarSectionType.HeadOutRight].ViewDirection = new Transformation(CabViews[2].Direction.Y.ToRadians(), -CabViews[2].Direction.X.ToRadians(), -CabViews[2].Direction.Z.ToRadians());
 						break;
 				}
 			}
@@ -304,8 +304,7 @@ namespace Train.MsTs
 		}
 
 		const double PanelResolution = 1024.0;
-		const double PanelLeft = 0.0, PanelRight = 1024.0;
-		const double PanelTop = 0.0, PanelBottom = 768.0;
+		private static readonly Vector2 PanelSize = new Vector2(1024, 768);
 		private static readonly Vector2 PanelCenter = new Vector2(0, 240);
 		private static readonly Vector2 PanelOrigin = new Vector2(0, 240);
 		
@@ -409,9 +408,9 @@ namespace Train.MsTs
 			return Code + suffix;
 		}
 
-		internal static int CreateElement(ref ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
+		internal static int CreateElement(ref ElementsGroup Group, Vector2 TopLeft, Vector2 Size, Vector2 RelativeRotationCenter, double Distance, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
 		{
-			if (Width == 0 || Height == 0)
+			if (Size.X == 0 || Size.Y == 0)
 			{
 				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Attempted to create an invalid size element");
 			}
@@ -428,15 +427,15 @@ namespace Train.MsTs
 				WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
 			}
 
-			double x0 = Left / PanelResolution;
-			double x1 = (Left + Width) / PanelResolution;
-			double y0 = (PanelBottom - Top) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-			double y1 = (PanelBottom - (Top + Height)) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
+			double x0 = TopLeft.X / PanelResolution;
+			double x1 = (TopLeft.X + Size.X) / PanelResolution;
+			double y0 = (PanelSize.Y - TopLeft.Y) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
+			double y1 = (PanelSize.Y - (TopLeft.Y + Size.Y)) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
 			double xd = 0.5 - PanelCenter.X / PanelResolution;
 			x0 += xd;
 			x1 += xd;
-			double yt = PanelBottom - PanelResolution / Plugin.Renderer.Screen.AspectRatio;
-			double yd = (PanelCenter.Y - yt) / (PanelBottom - yt) - 0.5;
+			double yt = PanelSize.Y - PanelResolution / Plugin.Renderer.Screen.AspectRatio;
+			double yd = (PanelCenter.Y - yt) / (PanelSize.Y - yt) - 0.5;
 			y0 += yd;
 			y1 += yd;
 			x0 = (x0 - 0.5) * WorldWidth;
