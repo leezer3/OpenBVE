@@ -574,9 +574,7 @@ namespace Train.MsTs
 						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Cab view file " + cabViewFile + " was not found");
 						return true;
 					}
-					car.CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.currentHost, ObjectType.Overlay, true, car));
-					car.CameraRestrictionMode = CameraRestrictionMode.On;
-					Plugin.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
+					
 					CabviewFileParser.ParseCabViewFile(cabViewFile, ref car);
 					car.HasInteriorView = true;
 					break;

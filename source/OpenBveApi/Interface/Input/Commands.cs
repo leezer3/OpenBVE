@@ -78,6 +78,10 @@ namespace OpenBveApi.Interface {
 			CameraInteriorNoPanel,
 			/// <summary>Change to the exterior (Attached to train) camera mode</summary>
 			CameraExterior,
+			/// <summary>Change to the head out (left) camera mode</summary>
+			CameraHeadOutLeft,
+			/// <summary>Change to the head out (right) camera mode</summary>
+			CameraHeadOutRight,
 			/// <summary>Change to the track based camera mode</summary>
 			CameraTrack,
 			/// <summary>Change to fly-by camera mode</summary>
