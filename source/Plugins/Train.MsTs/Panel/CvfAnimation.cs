@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020, Christopher Lees, The OpenBVE Project
+//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -100,9 +100,9 @@ namespace Train.MsTs
 			FrameMapping = frameMapping;
 		}
 
-		public double ExecuteScript(AbstractTrain Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
+		public double ExecuteScript(AbstractTrain train, int carIndex, Vector3 position, double trackPosition, int sectionIndex, bool isPartOfTrain, double timeElapsed, int currentState)
 		{
-			dynamic dynamicTrain = Train;
+			dynamic dynamicTrain = train;
 			switch (Subject)
 			{
 				case PanelSubject.Throttle:
@@ -129,7 +129,7 @@ namespace Train.MsTs
 					lastResult = (int)dynamicTrain.Handles.Reverser.Actual + 1;
 					break;
 				case PanelSubject.Speedlim_Display:
-					double speedLim = Math.Min(Train.CurrentRouteLimit, Train.CurrentSectionLimit) * UnitConversionFactor;
+					double speedLim = Math.Min(train.CurrentRouteLimit, train.CurrentSectionLimit) * UnitConversionFactor;
 					if (Digit == -1)
 					{
 						// color
@@ -156,7 +156,7 @@ namespace Train.MsTs
 					}
 					break;
 				case PanelSubject.Speedometer:
-					double currentSpeed = Math.Abs(Train.CurrentSpeed) * UnitConversionFactor;
+					double currentSpeed = Math.Abs(train.CurrentSpeed) * UnitConversionFactor;
 					if (Digit == -1)
 					{
 						// color
@@ -176,11 +176,11 @@ namespace Train.MsTs
 					}
 					break;
 				case PanelSubject.Aspect_Display:
-					lastResult = Train.CurrentSignalAspect;
+					lastResult = train.CurrentSignalAspect;
 					break;
 				case PanelSubject.Overspeed:
-					double currentLimit = Math.Min(Train.CurrentRouteLimit, Train.CurrentSectionLimit);
-					lastResult = Math.Abs(Train.CurrentSpeed) > currentLimit ? 1 : 0;
+					double currentLimit = Math.Min(train.CurrentRouteLimit, train.CurrentSectionLimit);
+					lastResult = Math.Abs(train.CurrentSpeed) > currentLimit ? 1 : 0;
 					break;
 			}
 

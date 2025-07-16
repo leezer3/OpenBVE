@@ -2056,6 +2056,12 @@
 					<trans-unit id="camera_exterior">
 						<source>Switches to the train&apos;s exterior view</source>
 					</trans-unit>
+					<trans-unit id="camera_headout_left">
+						<source>Switches to the train&apos;s head-out (left) view</source>
+					</trans-unit>
+					<trans-unit id="camera_headout_right">
+						<source>Switches to the train&apos;s head-out (right) view</source>
+					</trans-unit>
 					<trans-unit id="camera_track">
 						<source>Switches to the track view</source>
 					</trans-unit>
