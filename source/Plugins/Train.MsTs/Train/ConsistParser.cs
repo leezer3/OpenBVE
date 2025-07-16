@@ -311,10 +311,5 @@ namespace Train.MsTs
 			}
 
 		}
-
-		internal string GetDescription(string fileName)
-		{
-			return string.Empty;
-		}
 	}
 }
