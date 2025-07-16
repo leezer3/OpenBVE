@@ -30,13 +30,15 @@ namespace TrainManager.MsTsSounds
 {
 	public abstract class SoundTrigger
 	{
+		/// <summary>Holds the list of possible sound buffers to be selected from</summary>
 		internal readonly SoundBuffer[] Buffers;
-
+		/// <summary>The selection method used to determine the buffer to play</summary>
 		private readonly KujuTokenID bufferSelectionMethod;
-
-
+		/// <summary>Timer used in derived updates</summary>
+		internal double Timer;
+		/// <summary>The previously selected buffer index</summary>
 		private int bufferIndex;
-
+		/// <summary>Gets the actual sound buffer to be played</summary>
 		internal SoundBuffer Buffer
 		{
 			get
@@ -57,11 +59,11 @@ namespace TrainManager.MsTsSounds
 				return Buffers[bufferIndex];
 			}
 		}
-
+		/// <summary>The sound source for this trigger</summary>
 		internal SoundSource Source;
-
+		/// <summary>Holds a reference to the parent car</summary>
 		internal readonly CarBase Car;
-
+		/// <summary>Whether this sound triger has already been triggered</summary>
 		internal bool Triggered;
 
 		internal SoundTrigger(CarBase car, SoundBuffer buffer)
@@ -84,8 +86,12 @@ namespace TrainManager.MsTsSounds
 
 		internal void Stop()
 		{
-			Source?.Stop();
-			Triggered = false;
+			if (Triggered)
+			{
+				Source?.Stop();
+				Triggered = false;
+			}
+			
 		}
 	}
 }

@@ -12,7 +12,6 @@ using SharpCompress.Compressors.Deflate;
 using SoundManager;
 using TrainManager.Car;
 using TrainManager.Handles;
-using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
 
@@ -20,13 +19,13 @@ namespace Train.MsTs
 {
 	internal class ConsistParser
 	{
-		internal readonly Plugin plugin;
+		internal readonly Plugin Plugin;
 
-		internal string currentFolder;
+		internal string CurrentFolder;
 
-		internal ConsistParser(Plugin Plugin)
+		internal ConsistParser(Plugin plugin)
 		{
-			plugin = Plugin;
+			Plugin = plugin;
 		}
 
 		internal void ReadConsist(string fileName, ref AbstractTrain Train)
@@ -43,15 +42,15 @@ namespace Train.MsTs
 			train.Handles.HoldBrake = new HoldBrakeHandle(train);
 			train.Specs.AveragesPressureDistribution = true;
 			train.SafetySystems.Headlights = new LightSource(train, 2);
-			currentFolder = Path.GetDirectoryName(fileName);
-			DirectoryInfo d = Directory.GetParent(currentFolder);
+			CurrentFolder = Path.GetDirectoryName(fileName);
+			DirectoryInfo d = Directory.GetParent(CurrentFolder);
 			if(!d.Name.Equals("TRAINS", StringComparison.InvariantCultureIgnoreCase))
 			{
 				//FIXME: Better finding of the trainset folder (set in options?)
 				throw new Exception("Unable to find the TRAINS folder");
 			}
 
-			currentFolder = d.FullName;
+			CurrentFolder = d.FullName;
 
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
@@ -286,19 +285,19 @@ namespace Train.MsTs
 					switch (wagonFiles.Length)
 					{
 						case 0:
-							Plugin.currentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: Unable to determine WagonFile to load.");
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: Unable to determine WagonFile to load.");
 							break;
 						case 1:
 							//Just a WagonName- This is likely invalid, but let's ignore
-							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(currentFolder, "trainset"), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref Train);
-							Plugin.currentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: No WagonFolder supplied, searching entire trainset folder.");
+							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset"), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref Train);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: No WagonFolder supplied, searching entire trainset folder.");
 							break;
 						case 2:
-							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(currentFolder, "trainset\\" + wagonFiles[1]), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref Train);
+							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset\\" + wagonFiles[1]), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref Train);
 							break;
 						default:
-							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(currentFolder, "trainset"), wagonFiles[1], block.Token == KujuTokenID.EngineData, ref currentCar, ref Train);
-							Plugin.currentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: Two parameters were expected- Check for correct escaping of strings.");
+							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset"), wagonFiles[1], block.Token == KujuTokenID.EngineData, ref currentCar, ref Train);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: Two parameters were expected- Check for correct escaping of strings.");
 							break;
 					}
 					break;
@@ -311,11 +310,6 @@ namespace Train.MsTs
 					break;
 			}
 
-		}
-
-		internal string GetDescription(string fileName)
-		{
-			return string.Empty;
 		}
 	}
 }
