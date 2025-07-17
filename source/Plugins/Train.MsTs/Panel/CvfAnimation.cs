@@ -22,10 +22,13 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
+using OpenBveApi.Motor;
 using OpenBveApi.Trains;
+using System;
+using OpenBveApi;
+using TrainManager.Motor;
 
 namespace Train.MsTs
 {
@@ -181,6 +184,23 @@ namespace Train.MsTs
 				case PanelSubject.Overspeed:
 					double currentLimit = Math.Min(train.CurrentRouteLimit, train.CurrentSectionLimit);
 					lastResult = Math.Abs(train.CurrentSpeed) > currentLimit ? 1 : 0;
+					break;
+				case PanelSubject.Front_Hlight:
+					lastResult = dynamicTrain.SafetySystems.Headlights.CurrentState;
+					break;
+				case PanelSubject.Pantograph:
+				case PanelSubject.Panto_Display:
+					int pantographState = 0;
+					for (int k = 0; k < dynamicTrain.Cars.Length; k++)
+					{
+						if (dynamicTrain.Cars[k].TractionModel is ElectricEngine electricEngine && 
+						    electricEngine.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph))
+						{
+							pantographState = (int)pantograph.State;
+							break;
+						}
+					}
+					lastResult = pantographState;
 					break;
 			}
 
