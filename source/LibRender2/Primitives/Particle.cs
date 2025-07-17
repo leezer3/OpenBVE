@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, The OpenBVE Project
 //
@@ -85,11 +85,11 @@ namespace LibRender2.Primitives
 							particlesVAO[i * 4 + j].SetAttributes(renderer.DefaultShader.VertexLayout);
 							particlesVAO[i * 4 + j].UnBind();
 						}
-
-
-
+						
+						
+						
 					}
-
+					
 				}
 				catch
 				{
