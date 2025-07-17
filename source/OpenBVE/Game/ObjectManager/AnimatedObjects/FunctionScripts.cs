@@ -1,5 +1,6 @@
 using System;
 using LibRender2.Overlays;
+using OpenBveApi;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Motor;
@@ -1920,9 +1921,8 @@ namespace OpenBve {
 							int pantographState = 0;
 							for (int k = 0; k < Train.Cars.Length; k++)
 							{
-								if (Train.Cars[k].TractionModel is ElectricEngine electricEngine)
+								if (Train.Cars[k].TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph))
 								{
-									Pantograph pantograph = electricEngine.Components[EngineComponent.Pantograph] as Pantograph;
 									pantographState = (int)pantograph.State;
 									break;
 								}
