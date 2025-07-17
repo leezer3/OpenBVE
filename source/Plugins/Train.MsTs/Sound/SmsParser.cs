@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenBve.Formats.MsTs;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Motor;
@@ -51,7 +52,7 @@ namespace Train.MsTs
 		internal static bool ParseSoundFile(string fileName, ref CarBase Car)
 		{
 			currentFile = fileName;
-			currentFolder = Path.GetDirectoryName(fileName);
+			currentFolder = System.IO.Path.GetDirectoryName(fileName);
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read);
 
 			byte[] buffer = new byte[34];
@@ -418,27 +419,41 @@ namespace Train.MsTs
 								}
 								break;
 							case SoundTrigger.Pantograph1Up:
-								car.TractionModel.Components.TryGetValue(EngineComponent.Pantograph, out AbstractComponent abstractComponent);
-								Pantograph pantograph = abstractComponent as Pantograph;
-								if (pantograph != null)
-								{
-									pantograph.RaiseSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
-								}
-								break;
 							case SoundTrigger.Pantograph1Down:
-								car.TractionModel.Components.TryGetValue(EngineComponent.Pantograph, out abstractComponent);
-								pantograph = abstractComponent as Pantograph;
-								if (pantograph != null)
-								{
-									pantograph.LowerSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
-								}
-								break;
 							case SoundTrigger.Pantograph1Toggle:
-								car.TractionModel.Components.TryGetValue(EngineComponent.Pantograph, out abstractComponent);
-								pantograph = abstractComponent as Pantograph;
-								if (pantograph != null)
+								if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph))
 								{
-									pantograph.SwitchToggle = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									if (currentSoundSet.CurrentTrigger == SoundTrigger.Pantograph1Up)
+									{
+										pantograph.RaiseSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
+									}
+									else if(currentSoundSet.CurrentTrigger == SoundTrigger.Pantograph1Down)
+									{
+										pantograph.LowerSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
+									}
+									else
+									{
+										pantograph.SwitchToggle = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									}
+								}
+								else
+								{
+									// n.b. A WAG file may link to a model containing pantograph animations, or a SMS with pantograph sounds, but does not need to mention
+									//		that it exists, so we may need to add it here.
+									Pantograph newPantograph = new Pantograph(car.TractionModel);
+									if (currentSoundSet.CurrentTrigger == SoundTrigger.Pantograph1Up)
+									{
+										newPantograph.RaiseSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
+									}
+									else if (currentSoundSet.CurrentTrigger == SoundTrigger.Pantograph1Down)
+									{
+										newPantograph.LowerSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
+									}
+									else
+									{
+										newPantograph.SwitchToggle = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									}
+									car.TractionModel.Components.Add(EngineComponent.Pantograph, newPantograph);
 								}
 								break;
 							case SoundTrigger.WiperOn:
