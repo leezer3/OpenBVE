@@ -1,4 +1,3 @@
-using System;
 using LibRender2.Cameras;
 using LibRender2.Menu;
 using LibRender2.Overlays;
@@ -16,6 +15,7 @@ using OpenBveApi.Runtime;
 using RouteManager2.MessageManager;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
+using System;
 using TrainManager;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
@@ -648,9 +648,8 @@ namespace OpenBve
 					case Translations.Command.RaisePantograph:
 						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
 						{
-							if (TrainManager.PlayerTrain.Cars[i].TractionModel is ElectricEngine)
+							if (TrainManager.PlayerTrain.Cars[i].TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph))
 							{
-								Pantograph pantograph = TrainManager.PlayerTrain.Cars[i].TractionModel.Components[EngineComponent.Pantograph] as Pantograph;
 								pantograph.Raise();
 							}
 						}
@@ -659,9 +658,8 @@ namespace OpenBve
 					case Translations.Command.LowerPantograph:
 						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
 						{
-							if (TrainManager.PlayerTrain.Cars[i].TractionModel is ElectricEngine)
+							if (TrainManager.PlayerTrain.Cars[i].TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph))
 							{
-								Pantograph pantograph = TrainManager.PlayerTrain.Cars[i].TractionModel.Components[EngineComponent.Pantograph] as Pantograph;
 								pantograph.Lower();
 							}
 						}
