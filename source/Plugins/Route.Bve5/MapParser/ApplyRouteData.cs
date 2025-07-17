@@ -329,10 +329,9 @@ namespace Route.Bve5
 									GetSecondaryRailTransformation(Position, Direction, Data.Blocks, i, railKey, Data.Blocks[i].FreeObjects[railKey][k], out wpos, out Transformation);
 								}
 								wpos += dx * Transformation.X + dy * Transformation.Y + dz * Transformation.Z;
-								Data.Objects.TryGetValue(key, out UnifiedObject obj);
-								if (obj != null)
+								if (Data.Objects.TryGetValue(key, out UnifiedObject obj))
 								{
-									obj.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObjects[railKey][k].Yaw, Data.Blocks[i].FreeObjects[railKey][k].Pitch, Data.Blocks[i].FreeObjects[railKey][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
+									obj?.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObjects[railKey][k].Yaw, Data.Blocks[i].FreeObjects[railKey][k].Pitch, Data.Blocks[i].FreeObjects[railKey][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
 								}
 							}
 						}
@@ -372,8 +371,7 @@ namespace Route.Bve5
 								double d0 = sInterpolateX0 - pInterpolateX0;
 								double d1 = sInterpolateX1 - pInterpolateX1;
 
-								Data.Objects.TryGetValue(key, out UnifiedObject obj);
-								if (obj != null)
+								if(Data.Objects.TryGetValue(key, out UnifiedObject obj) && obj != null)
 								{
 									UnifiedObject crack = d0 < 0.0 ? obj.TransformRight(d0, d1) : obj.TransformLeft(d0, d1);
 									crack.CreateObject(wpos, Transformation, new Transformation(0.0, 0.0, 0.0), -1, StartingDistance, EndingDistance, tpos, 1.0);
