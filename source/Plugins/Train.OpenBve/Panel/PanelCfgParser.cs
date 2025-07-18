@@ -161,7 +161,7 @@ namespace Train.OpenBve
 						Minimum *= UnitFactor;
 						Maximum *= UnitFactor;
 						// background
-						if (Background != null)
+						if (!string.IsNullOrEmpty(Background))
 						{
 							Plugin.CurrentHost.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out var pressureBackgroundTexture, true);
 							CreateElement(Car, Center.X - 0.5 * pressureBackgroundTexture.Width, Center.Y + SemiHeight - 0.5 * pressureBackgroundTexture.Height, WorldZ + EyeDistance - 3.0 * StackDistance, pressureBackgroundTexture);
