@@ -363,7 +363,7 @@ namespace Train.MsTs
 							{
 								// Combined air brakes and control signals
 								// Assume equivilant to ElectromagneticStraightAirBrake
-								car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, car);
+								car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
 							}
 							else if (brakeSystemTypes.Contains(BrakeSystemType.ECP))
 							{
