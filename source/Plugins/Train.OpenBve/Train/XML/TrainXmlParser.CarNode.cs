@@ -902,7 +902,7 @@ namespace Train.OpenBve
 			if (interiorFile != String.Empty)
 			{
 				Transformation viewTransformation = new Transformation(interiorDirection.X.ToRadians(), interiorDirection.Y.ToRadians(), interiorDirection.Z.ToRadians());
-				Train.Cars[Car].CarSections[0].ViewDirection = viewTransformation;
+				Train.Cars[Car].CarSections[CarSectionType.Interior].ViewDirection = viewTransformation;
 				if (interiorFile.ToLowerInvariant().EndsWith(".xml"))
 				{
 					XDocument CurrentXML = XDocument.Load(interiorFile, LoadOptions.SetLineInfo);
@@ -955,7 +955,7 @@ namespace Train.OpenBve
 							{
 								Plugin.CurrentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
 							}
-							Train.Cars[Car].CarSections[0].Groups[0].Elements = a.Objects;
+							Train.Cars[Car].CarSections[CarSectionType.Interior].Groups[0].Elements = a.Objects;
 							if (Train.Cars[Car].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
 							{
 								Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;

@@ -575,7 +575,7 @@ namespace Train.OpenBve
 							    CurrentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
 						    }
 
-						    train.Cars[train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
+						    train.Cars[train.DriverCar].CarSections[CarSectionType.Interior].Groups[0].Elements = a.Objects;
 						    if (train.Cars[train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
 						    {
 							    train.Cars[train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
