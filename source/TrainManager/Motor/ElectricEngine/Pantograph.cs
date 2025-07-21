@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBveApi.Motor;
 using SoundManager;
 
 namespace TrainManager.Motor
@@ -68,16 +69,5 @@ namespace TrainManager.Motor
 				}
 			}
 		}
-	}
-
-	/// <summary>The possible states of a pantograph</summary>
-	public enum PantographState
-	{
-		/// <summary>The pantograph is lowered</summary>
-		Lowered = 0,
-		/// <summary>The pantograph is raised</summary>
-		Raised = 1,
-		/// <summary>The pantograph is raised, but no wire is present</summary>
-		Dewired = 2
 	}
 }
