@@ -101,15 +101,19 @@ namespace TrainManager.Motor
 				CurrentRPM = Math.Max(CurrentRPM, targetRPM);
 			}
 
+			Message = @"Current RPM " + Math.Round(CurrentRPM);
+
 			if (FuelTank != null)
 			{
 				if (currentRPM <= IdleRPM)
 				{
 					FuelTank.CurrentLevel -= IdleFuelUse * timeElapsed;
+					Message += " Fuel Use " + Math.Round(IdleFuelUse * timeElapsed, 5);
 				}
 				else
 				{
 					FuelTank.CurrentLevel -= (MaxPowerFuelUse - IdleFuelUse) / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch * BaseCar.baseTrain.Handles.Power.Actual * timeElapsed;
+					Message += " Fuel Use " + Math.Round((MaxPowerFuelUse - IdleFuelUse) / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch * BaseCar.baseTrain.Handles.Power.Actual * timeElapsed, 5);
 				}
 			}
 
