@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using LibRender2.Trains;
+using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.Routes;
-using OpenTK.Graphics.ES20;
 using RouteManager2;
 using TrainManager;
 using TrainManager.Car;
@@ -319,7 +320,6 @@ namespace OpenBve {
 			Game.Reset(true);
 			Game.MinimalisticSimulation = true;
 			// screen
-			Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
 
 			bool loaded = false;
 			Program.FileSystem.AppendToLogFile("INFO: " + Program.CurrentHost.AvailableRoutePluginCount + " Route loading plugins available.");
@@ -451,6 +451,17 @@ namespace OpenBve {
 					Program.TrainManager.TFOs.RemoveAt(i);
 				}
 			}
+
+			if(TrainManagerBase.PlayerTrain.Cars[TrainManagerBase.PlayerTrain.DriverCar].CarSections.ContainsKey(CarSectionType.Interior))
+			{
+				Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
+			}
+			else
+			{
+				Program.Renderer.Camera.CurrentMode = CameraViewMode.Exterior;
+				Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.Off;
+			}
+			
 			// finished created objects
 			Thread.Sleep(1); if (Cancel) return;
 			Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjectsUsed);
