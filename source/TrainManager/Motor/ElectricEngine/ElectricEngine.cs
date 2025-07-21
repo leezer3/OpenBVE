@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBveApi;
 using OpenBveApi.Motor;
 using TrainManager.Car;
 using TrainManager.Handles;
@@ -38,6 +39,14 @@ namespace TrainManager.Motor
 
 		public override void Update(double timeElapsed)
 		{
+			if (Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph) && pantograph.State != PantographState.Raised)
+			{
+				Message = @"Pantograph not raised";
+			}
+			else
+			{
+				Message = @"n/a";
+			}
 		}
 
 		public override double CurrentPower
@@ -52,8 +61,11 @@ namespace TrainManager.Motor
 
 				if (BaseCar.baseTrain.Handles.Power is VariableHandle variableHandle)
 				{
+					Message = @"Power " + variableHandle.GetPowerModifier;
 					return variableHandle.GetPowerModifier;
 				}
+
+				Message = @"Power " + (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 			}
 		}

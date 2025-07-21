@@ -8,6 +8,7 @@ namespace TrainManager.Motor
 		public BVEMotorCar(CarBase car, AccelerationCurve[] accelerationCurves) : base(car, accelerationCurves, true)
 		{
 			IsRunning = true;
+			Message = @"n/a";
 		}
 
 		public override void Update(double timeElapsed)
