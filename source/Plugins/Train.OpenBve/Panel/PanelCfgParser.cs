@@ -1,5 +1,6 @@
 using System;
 using Formats.OpenBve;
+using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
