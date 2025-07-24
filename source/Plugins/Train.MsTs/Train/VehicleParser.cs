@@ -676,10 +676,10 @@ namespace Train.MsTs
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: A throttle is not valid for a Steam Locomotive.");
 						break;
 					}
-					train.Handles.Power = ParseHandle(block, train);
+					train.Handles.Power = ParseHandle(block, train, true);
 					break;
 				case KujuTokenID.Brake_Train:
-					train.Handles.Brake = ParseHandle(block, train);
+					train.Handles.Brake = ParseHandle(block, train, false);
 					break;
 				case KujuTokenID.DieselEngineIdleRPM:
 					dieselIdleRPM = block.ReadSingle();
