@@ -34,11 +34,6 @@ jobs:
       command: 'install'
       installPackageId: 'netfx-4.6.2-devpack'
       
-  - task: ChocolateyCommand@0
-    inputs:
-      command: 'install'
-      installPackageId: 'netfx-4.6.2-devpack'
-      
   - task: NuGetToolInstaller@1
 
   - task: NuGetCommand@2
