@@ -17,7 +17,7 @@ namespace Train.MsTs
 
 		internal Tuple<double, string>[] NotchDescriptions;
 
-		internal AbstractHandle ParseHandle(Block block, TrainBase train)
+		internal AbstractHandle ParseHandle(Block block, TrainBase train, bool isPower)
 		{
 			HandleMinimum = (int)(block.ReadSingle() * 100);
 			HandleMaximum = (int)(block.ReadSingle() * 100);
@@ -25,34 +25,50 @@ namespace Train.MsTs
 			HandleStartingPosition = (int)(block.ReadSingle() * 100);
 			// some handles seem to have extra numbers here, I believe ignored by the MSTS parser
 			Block notchDescriptions = block.GetSubBlock(KujuTokenID.NumNotches);
-			ParseNotchDescriptionBlock(notchDescriptions);
+			ParseNotchDescriptionBlock(notchDescriptions, isPower);
 			return new VariableHandle(train, NotchDescriptions);
 		}
 		
-		private void ParseNotchDescriptionBlock(Block block)
+		private void ParseNotchDescriptionBlock(Block block, bool isPower)
 		{
 			int numNotches = block.ReadInt32();
-			NotchDescriptions = new Tuple<double, string>[numNotches];
-			for (int i = 0; i < numNotches; i++)
+			if (numNotches < 2)
 			{
-				Block descriptionBlock = block.ReadSubBlock(KujuTokenID.Notch);
-				double notchPower = descriptionBlock.ReadSingle();
-				descriptionBlock.ReadSingle(); // ??
-				string notchDescription = descriptionBlock.ReadString();
-				if (notchDescription.Equals("dummy", StringComparison.InvariantCultureIgnoreCase))
+				/*
+				 * Some AI ENG files seem to use a single dummy notch
+				 * Interpret this as a single actual power notch
+				 */
+				NotchDescriptions = new[]
 				{
-					if (i == 0)
-					{
-						notchDescription = "N";
-					}
-					else
-					{
-						notchDescription = "P" + i;
-					}
-						
-				}
-				NotchDescriptions[i] = new Tuple<double, string>(notchPower, notchDescription);
+					new Tuple<double, string>(0, "N"),
+					new Tuple<double, string>(1, isPower ? "P1" :"B1"),
+				};
 			}
+			else
+			{
+				NotchDescriptions = new Tuple<double, string>[numNotches];
+				for (int i = 0; i < numNotches; i++)
+				{
+					Block descriptionBlock = block.ReadSubBlock(KujuTokenID.Notch);
+					double notchPower = descriptionBlock.ReadSingle();
+					descriptionBlock.ReadSingle(); // ??
+					string notchDescription = descriptionBlock.ReadString();
+					if (notchDescription.Equals("dummy", StringComparison.InvariantCultureIgnoreCase))
+					{
+						if (i == 0)
+						{
+							notchDescription = "N";
+						}
+						else
+						{
+							notchDescription = isPower ? "P" + i : "B" + i;
+						}
+
+					}
+					NotchDescriptions[i] = new Tuple<double, string>(notchPower, notchDescription);
+				}
+			}
+			
 		}
 	}
 }
