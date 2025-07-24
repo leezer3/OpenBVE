@@ -518,7 +518,7 @@ namespace Train.MsTs
 						case KujuTokenID.Variable2_Inc_Past:
 						case KujuTokenID.Variable2_Dec_Past:
 							currentSoundSet.VariableValue = block.ReadSingle(); // power value
-							newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump });
+							newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump, KujuTokenID.EnableTrigger, KujuTokenID.DisableTrigger });
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;
 						case KujuTokenID.Variable2Controlled:
