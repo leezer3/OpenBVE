@@ -325,7 +325,7 @@ namespace Train.MsTs
 							Code = "brakecylinder 0.000145038 *";
 							break;
 						case Units.Inches_Of_Mercury:
-							Code = "0";
+							Code = "brakecylinder 0.0002953 *";
 							break;
 					}
 					break;
@@ -336,7 +336,7 @@ namespace Train.MsTs
 							Code = "brakepipe 0.000145038 *";
 							break;
 						case Units.Inches_Of_Mercury:
-							Code = "0";
+							Code = "brakepipe 0.0002953 *";
 							break;
 					}
 					break;
@@ -347,7 +347,7 @@ namespace Train.MsTs
 							Code = "mainreservoir 0.000145038 *";
 							break;
 						case Units.Inches_Of_Mercury:
-							Code = "0";
+							Code = "mainreservoir 0.0002953 *";
 							break;
 					}
 					break;
