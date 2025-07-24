@@ -11,14 +11,18 @@ jobs:
 - job: WindowsBuild
   displayName: 'Build on Windows (sln)'
   pool:
-    vmImage: 'windows-2019'
+    vmImage: 'windows-2022'
 
   variables:
     solution: 'OpenBVE.sln'
     buildPlatform: 'Any CPU'
-    buildConfiguration: 'Release'
-
+    buildConfiguration: 'Release'  
   steps:
+  - task: ChocolateyCommand@0
+    inputs:
+      command: 'install'
+      installPackageId: 'dotnet4.6-targetpack'
+      
   - task: NuGetToolInstaller@1
 
   - task: NuGetCommand@2
