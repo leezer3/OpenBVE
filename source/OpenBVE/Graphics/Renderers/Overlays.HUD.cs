@@ -1,4 +1,5 @@
 using System;
+using LibRender2.Overlays;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -295,7 +296,7 @@ namespace OpenBve.Graphics.Renderers
 					}
 				} break;
 				case HUDSubject.Gradient:
-					if (renderer.OptionGradient == NewRenderer.GradientDisplayMode.Percentage)
+					if (renderer.OptionGradient == GradientDisplayMode.Percentage)
 					{
 						if (Program.Renderer.CameraTrackFollower.Pitch != 0)
 						{
@@ -309,7 +310,7 @@ namespace OpenBve.Graphics.Renderers
 						Element.TransitionState -= speed * TimeElapsed;
 						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
 					}
-					else if (renderer.OptionGradient == NewRenderer.GradientDisplayMode.UnitOfChange)
+					else if (renderer.OptionGradient == GradientDisplayMode.UnitOfChange)
 					{
 						if (Program.Renderer.CameraTrackFollower.Pitch != 0)
 						{
@@ -323,11 +324,11 @@ namespace OpenBve.Graphics.Renderers
 						Element.TransitionState -= speed * TimeElapsed;
 						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
 					}
-					else if (renderer.OptionGradient == NewRenderer.GradientDisplayMode.Permil)
+					else if (renderer.OptionGradient == GradientDisplayMode.Permil)
 					{
 						if (Program.Renderer.CameraTrackFollower.Pitch != 0)
 						{
-							double pm = Program.Renderer.CameraTrackFollower.Pitch;
+							double pm = Program.Renderer.CameraTrackFollower.Pitch * 10;
 							t = Math.Abs(pm).ToString("0.00", Culture) + "‰" + (Math.Abs(pm) == pm ? " ↗" : " ↘");
 						}
 						else

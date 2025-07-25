@@ -4,6 +4,7 @@ using System.Linq;
 using LibRender2;
 using LibRender2.MotionBlurs;
 using LibRender2.Objects;
+using LibRender2.Overlays;
 using LibRender2.Screens;
 using LibRender2.Shaders;
 using LibRender2.Viewports;
@@ -26,10 +27,7 @@ namespace OpenBve.Graphics
 	internal class NewRenderer : BaseRenderer
 	{
 		// interface options
-		internal enum GradientDisplayMode
-		{
-			Percentage, UnitOfChange, Permil, None
-		}
+		
 
 		internal enum SpeedDisplayMode
 		{
