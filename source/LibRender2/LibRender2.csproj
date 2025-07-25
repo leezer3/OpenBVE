@@ -90,10 +90,12 @@
     <Compile Include="openGL\VertexArrayObject.cs" />
     <Compile Include="openGL\VertexBufferObject.cs" />
     <Compile Include="Overlays\DisplayedTimetable.cs" />
+    <Compile Include="Overlays\DistanceToNextStationDisplayMode.cs" />
     <Compile Include="Overlays\GradientDisplayMode.cs" />
     <Compile Include="Overlays\Keys.cs" />
     <Compile Include="Overlays\Marker.cs" />
     <Compile Include="Overlays\RailPath.cs" />
+    <Compile Include="Overlays\SpeedDisplayMode.cs" />
     <Compile Include="Overlays\TimeTableMode.cs" />
     <Compile Include="Primitives\Button.cs" />
     <Compile Include="Primitives\Cube.cs" />

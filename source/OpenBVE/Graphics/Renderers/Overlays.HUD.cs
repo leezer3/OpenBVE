@@ -353,14 +353,14 @@ namespace OpenBve.Graphics.Renderers
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
 				case HUDSubject.Speed:
-					if (renderer.OptionSpeed == NewRenderer.SpeedDisplayMode.Kmph)
+					if (renderer.OptionSpeed == SpeedDisplayMode.Kmph)
 					{
 						double kmph = Math.Abs(PlayerTrain.CurrentSpeed) * 3.6;
 						t = kmph.ToString("0.00", Culture) + " km/h";
 						Element.TransitionState -= speed * TimeElapsed;
 						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
 					}
-					else if (renderer.OptionSpeed == NewRenderer.SpeedDisplayMode.Mph)
+					else if (renderer.OptionSpeed == SpeedDisplayMode.Mph)
 					{
 						double mph = Math.Abs(PlayerTrain.CurrentSpeed) * 2.2369362920544;
 						t = mph.ToString("0.00", Culture) + " mph";
@@ -385,14 +385,14 @@ namespace OpenBve.Graphics.Renderers
 						{
 							m = 0.0; //Don't display negative numbers when passing (stop zone goes beyond the absolute station limit)
 						}
-						if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Km)
+						if (renderer.OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Km)
 						{
 							m /= 1000.0;
 							t = "Pass: " + m.ToString("0.000", Culture) + " km";
 							Element.TransitionState -= speed * TimeElapsed;
 							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
 						}
-						else if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Mile)
+						else if (renderer.OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Mile)
 						{
 							m /= 1609.34;
 							t = "Pass: " + m.ToString("0.0000", Culture) + " miles";
@@ -429,14 +429,14 @@ namespace OpenBve.Graphics.Renderers
 						}
 						
 						double m = p1 - p0;
-						if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Km)
+						if (renderer.OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Km)
 						{
 							m /= 1000.0;
 							t = "Next Stop: " + m.ToString("0.000", Culture) + " km";
 							Element.TransitionState -= speed * TimeElapsed;
 							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
 						}
-						else if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Mile)
+						else if (renderer.OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Mile)
 						{
 							m /= 1609.34;
 							t = "Next Stop: " + m.ToString("0.0000", Culture) + " miles";
@@ -457,7 +457,7 @@ namespace OpenBve.Graphics.Renderers
 						double p0 = PlayerTrain.FrontCarTrackPosition;
 						double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[n].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;
 						double m = p1 - p0;
-						if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Km)
+						if (renderer.OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Km)
 						{
 							if (Math.Abs(m) <= 10.0)
 							{
@@ -471,7 +471,7 @@ namespace OpenBve.Graphics.Renderers
 							Element.TransitionState -= speed * TimeElapsed;
 							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
 						}
-						else if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Mile)
+						else if (renderer.OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Mile)
 						{
 							m /= 1609.34;
 							t = "Stop: " + m.ToString("0.0000", Culture) + " miles";

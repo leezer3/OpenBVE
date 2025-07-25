@@ -26,19 +26,6 @@ namespace OpenBve.Graphics
 {
 	internal class NewRenderer : BaseRenderer
 	{
-		// interface options
-		
-
-		internal enum SpeedDisplayMode
-		{
-			None, Kmph, Mph
-		}
-
-		internal enum DistanceToNextStationDisplayMode
-		{
-			None, Km, Mile
-		}
-
 		internal bool OptionClock = false;
 		internal GradientDisplayMode OptionGradient = GradientDisplayMode.None;
 		internal SpeedDisplayMode OptionSpeed = SpeedDisplayMode.None;
