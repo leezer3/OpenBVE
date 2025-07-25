@@ -641,7 +641,7 @@ namespace OpenBve
 					case Translations.Command.Blowers:
 					case Translations.Command.EngineStart:
 					case Translations.Command.EngineStop:
-						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
+						TrainManager.PlayerTrain.Plugin?.KeyDown(key);
 						break;
 					case Translations.Command.GearUp:
 						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
@@ -651,7 +651,7 @@ namespace OpenBve
 								gearbox.GearUp();
 							}
 						}
-						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
+						TrainManager.PlayerTrain.Plugin?.KeyDown(key);
 						break;
 					case Translations.Command.GearDown:
 						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
@@ -661,7 +661,7 @@ namespace OpenBve
 								gearbox.GearDown();
 							}
 						}
-						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
+						TrainManager.PlayerTrain.Plugin?.KeyDown(key);
 						break;
 					case Translations.Command.RaisePantograph:
 						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
@@ -671,7 +671,7 @@ namespace OpenBve
 								pantograph.Raise();
 							}
 						}
-						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
+						TrainManager.PlayerTrain.Plugin?.KeyDown(key);
 						break;
 					case Translations.Command.LowerPantograph:
 						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
@@ -681,7 +681,7 @@ namespace OpenBve
 								pantograph.Lower();
 							}
 						}
-						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
+						TrainManager.PlayerTrain.Plugin?.KeyDown(key);
 						break;
 					case Translations.Command.Headlights:
 						TrainManager.PlayerTrain.SafetySystems.Headlights.ChangeState();
