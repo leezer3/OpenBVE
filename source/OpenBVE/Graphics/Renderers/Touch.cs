@@ -297,13 +297,7 @@ namespace OpenBve.Graphics.Renderers
 		{
 			NewCursor = null;
 			
-			if (!Loading.SimulationSetup)
-			{
-				Status = MouseCursor.Status.Default;
-				return false;
-			}
-
-			if (renderer.Camera.CurrentMode != CameraViewMode.Interior && renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
+			if (!Loading.SimulationSetup || renderer.Camera.CurrentMode != CameraViewMode.Interior && renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
 				Status = MouseCursor.Status.Default;
 				return false;
@@ -311,15 +305,20 @@ namespace OpenBve.Graphics.Renderers
 
 			Status = MouseCursor.Status.Default;
 
-			CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
-			int add = Car.CarSections[CarSectionType.Interior].CurrentAdditionalGroup + 1;
+			if (!TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections.TryGetValue(CarSectionType.Interior, out CarSection interCarSection))
+			{
+				Status = MouseCursor.Status.Default;
+				return false;
+			}
+
+			int add = interCarSection.CurrentAdditionalGroup + 1;
 			
-			if (!Car.CarSections.ContainsKey(CarSectionType.Interior) || add >= Car.CarSections[CarSectionType.Interior].Groups.Length)
+			if (add >= interCarSection.Groups.Length)
 			{
 				return false;
 			}
 			
-			TouchElement[] TouchElements = Car.CarSections[CarSectionType.Interior].Groups[add].TouchElements;
+			TouchElement[] TouchElements = interCarSection.Groups[add].TouchElements;
 
 			if (TouchElements == null)
 			{
