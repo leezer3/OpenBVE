@@ -22,13 +22,15 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using Microsoft.Win32;
+using OpenBveApi.Interface;
+using OpenBveApi.World;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using OpenBveApi.World;
 
 // ReSharper disable UnusedMember.Global
 
@@ -995,6 +997,46 @@ namespace OpenBve.Formats.MsTs
 				return false;
 			}
 			
+			if (File.Exists(finalPath))
+			{
+				return true;
+			}
+
+			// n.b. Sound files may also be loaded from the global SOUND directory
+
+			// ReSharper disable once InconsistentNaming
+			string MSTSInstallDirectory = string.Empty;
+
+			try
+			{
+				object o = Registry.GetValue("HKEY_LOCAL_MACHINE\\Software\\Microsoft Games\\Train Simulator\\1.0", "Path", null);
+				if (o is string msts)
+				{
+					MSTSInstallDirectory = msts;
+					
+				}
+				o = Registry.GetValue("HKEY_CURRENT_USER\\Software\\OpenRails\\ORTS\\Folders", "Train Simulator", null);
+				if (o is string orts)
+				{
+					MSTSInstallDirectory = orts;
+				}
+			}
+			catch
+			{
+				// ignored
+			}
+
+			absolute = OpenBveApi.Path.CombineDirectory(MSTSInstallDirectory, "SOUND");
+			try
+			{
+				finalPath = OpenBveApi.Path.CombineFile(absolute, relative);
+			}
+			catch
+			{
+				finalPath = relative;
+				return false;
+			}
+
 			if (File.Exists(finalPath))
 			{
 				return true;
