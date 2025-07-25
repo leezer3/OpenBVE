@@ -749,12 +749,16 @@ namespace LibRender2
 					if (updateVisibility != VisibilityUpdate.None && CameraTrackFollower != null)
 					{
 						UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);
-						updateVisibility = VisibilityUpdate.None;
 					}
-					else
-					{
-						Thread.Sleep(100);
-					}
+				}
+
+				if (updateVisibility == VisibilityUpdate.None)
+				{
+					Thread.Sleep(100);
+				}
+				else
+				{
+					updateVisibility = VisibilityUpdate.None;
 				}
 			}
 		}
