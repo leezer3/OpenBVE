@@ -388,5 +388,20 @@ namespace OpenBveApi {
 		{
 			return System.IO.Path.GetFileNameWithoutExtension(path);
 		}
+
+		/// <summary>Determines whether a path contains a filename extension</summary>
+		/// <param name="path">The path string</param>
+		public static bool HasExtension(string path)
+		{
+			return System.IO.Path.HasExtension(path);
+		}
+
+		/// <summary>Gets a value containing whether the specified path string contains a root</summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		public static bool IsPathRooted(string path)
+		{
+			return System.IO.Path.IsPathRooted(path);
+		}
 	}
 }

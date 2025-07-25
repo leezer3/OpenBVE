@@ -196,7 +196,7 @@ namespace OpenBve {
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
 			{
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedRoutes[i])) continue;
-				string routeFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
+				string routeFileName = Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
 				string routePath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
 				if (string.IsNullOrEmpty(routeFileName) || string.IsNullOrEmpty(routePath)) continue;
 				ListViewItem listItem = listviewRouteRecently.Items.Add(routeFileName);
@@ -248,7 +248,7 @@ namespace OpenBve {
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
 			{
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedTrains[i])) continue;
-				string TrainFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
+				string TrainFileName = Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
 				string TrainPath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
 				if (!Directory.Exists(TrainPath))
 				{

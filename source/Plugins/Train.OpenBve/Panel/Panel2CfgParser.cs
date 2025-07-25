@@ -719,7 +719,7 @@ namespace Train.OpenBve
 			List<Texture> drops = new List<Texture>();
 			for (int l = 0; l < dropFiles.Length; l++)
 			{
-				string currentDropFile = !System.IO.Path.IsPathRooted(dropFiles[l]) ? Path.CombineFile(TrainPath, dropFiles[l]) : dropFiles[l];
+				string currentDropFile = !Path.IsPathRooted(dropFiles[l]) ? Path.CombineFile(TrainPath, dropFiles[l]) : dropFiles[l];
 				if (string.IsNullOrEmpty(currentDropFile) || !File.Exists(currentDropFile))
 				{
 					currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\" + compatabilityString + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");

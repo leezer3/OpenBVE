@@ -160,7 +160,7 @@ namespace TrainEditor2.IO.Panels.Xml
 						}
 						break;
 					case Panel2Key.DaytimeImage:
-						if (!System.IO.Path.HasExtension(value))
+						if (!Path.HasExtension(value))
 						{
 							value += ".bmp";
 						}
@@ -181,7 +181,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 						break;
 					case Panel2Key.NighttimeImage:
-						if (!System.IO.Path.HasExtension(value))
+						if (!Path.HasExtension(value))
 						{
 							value += ".bmp";
 						}
@@ -427,7 +427,7 @@ namespace TrainEditor2.IO.Panels.Xml
 						}
 						break;
 					case Panel2Key.DaytimeImage:
-						if (!System.IO.Path.HasExtension(value))
+						if (!Path.HasExtension(value))
 						{
 							value += ".bmp";
 						}
@@ -447,7 +447,7 @@ namespace TrainEditor2.IO.Panels.Xml
 						}
 						break;
 					case Panel2Key.NighttimeImage:
-						if (!System.IO.Path.HasExtension(value))
+						if (!Path.HasExtension(value))
 						{
 							value += ".bmp";
 						}
@@ -574,7 +574,7 @@ namespace TrainEditor2.IO.Panels.Xml
 						}
 						break;
 					case Panel2Key.DaytimeImage:
-						if (!System.IO.Path.HasExtension(value))
+						if (!Path.HasExtension(value))
 						{
 							value += ".bmp";
 						}
@@ -594,7 +594,7 @@ namespace TrainEditor2.IO.Panels.Xml
 						}
 						break;
 					case Panel2Key.NighttimeImage:
-						if (!System.IO.Path.HasExtension(value))
+						if (!Path.HasExtension(value))
 						{
 							value += ".bmp";
 						}
@@ -853,7 +853,7 @@ namespace TrainEditor2.IO.Panels.Xml
 						}
 						break;
 					case Panel2Key.DaytimeImage:
-						if (!System.IO.Path.HasExtension(value))
+						if (!Path.HasExtension(value))
 						{
 							value += ".bmp";
 						}
@@ -873,7 +873,7 @@ namespace TrainEditor2.IO.Panels.Xml
 						}
 						break;
 					case Panel2Key.NighttimeImage:
-						if (!System.IO.Path.HasExtension(value))
+						if (!Path.HasExtension(value))
 						{
 							value += ".bmp";
 						}
@@ -1235,7 +1235,7 @@ namespace TrainEditor2.IO.Panels.Xml
 						}
 						break;
 					case Panel2Key.DaytimeImage:
-						if (!System.IO.Path.HasExtension(value))
+						if (!Path.HasExtension(value))
 						{
 							value += ".bmp";
 						}
@@ -1255,7 +1255,7 @@ namespace TrainEditor2.IO.Panels.Xml
 						}
 						break;
 					case Panel2Key.NighttimeImage:
-						if (!System.IO.Path.HasExtension(value))
+						if (!Path.HasExtension(value))
 						{
 							value += ".bmp";
 						}

@@ -388,11 +388,7 @@ namespace Formats.OpenBve
 					}
 					return true;
 				}
-				else
-				{
-					currentHost.AddMessage(MessageType.Warning, false, "An empty path list was provided for " + key + " in Section " + Key + " at line " + value.Key);
-					return false;
-				}
+				currentHost.AddMessage(MessageType.Warning, false, "An empty path list was provided for " + key + " in Section " + Key + " at line " + value.Key);
 			}
 			return false;
 		}
@@ -504,7 +500,7 @@ namespace Formats.OpenBve
 					{
 						return true;
 					}
-					if (!System.IO.Path.HasExtension(relativePath))
+					if (!Path.HasExtension(relativePath))
 					{
 						// HACK: BVE allows bmp without extension
 						relativePath += ".bmp";
@@ -951,12 +947,9 @@ namespace Formats.OpenBve
 					}
 
 					damping = new Damping(nf, dr);
-
+					return true;
 				}
-				else
-				{
-					currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + key + " at line " + value.Key + " in the Section " + Key);
-				}
+				currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + key + " at line " + value.Key + " in the Section " + Key);
 			}
 			return false;
 		}

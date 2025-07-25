@@ -486,7 +486,7 @@ namespace AssimpNET.Obj
 				result = texture;
 			}
 
-			if (System.IO.Path.IsPathRooted(result))
+			if (Path.IsPathRooted(result))
 			{
 				// rooted path- try looking beside the object instead
 				result = Path.GetFileName(result);

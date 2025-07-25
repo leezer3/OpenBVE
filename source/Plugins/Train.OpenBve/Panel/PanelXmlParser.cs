@@ -1710,7 +1710,7 @@ namespace Train.OpenBve
 
 						for (int l = 0; l < daytimeDropFiles.Count; l++)
 						{
-							string currentDropFile = !System.IO.Path.IsPathRooted(daytimeDropFiles[l]) ? Path.CombineFile(Train.TrainFolder, daytimeDropFiles[l]) : daytimeDropFiles[l];
+							string currentDropFile = !Path.IsPathRooted(daytimeDropFiles[l]) ? Path.CombineFile(Train.TrainFolder, daytimeDropFiles[l]) : daytimeDropFiles[l];
 							if (!File.Exists(currentDropFile))
 							{
 								currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\Drop" + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
@@ -1724,7 +1724,7 @@ namespace Train.OpenBve
 
 						for (int l = 0; l < nighttimeDropFiles.Count; l++)
 						{
-							string currentDropFile = !System.IO.Path.IsPathRooted(nighttimeDropFiles[l]) ? Path.CombineFile(Train.TrainFolder, nighttimeDropFiles[l]) : nighttimeDropFiles[l];
+							string currentDropFile = !Path.IsPathRooted(nighttimeDropFiles[l]) ? Path.CombineFile(Train.TrainFolder, nighttimeDropFiles[l]) : nighttimeDropFiles[l];
 							if (!File.Exists(currentDropFile))
 							{
 								currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Night\\Drop" + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");

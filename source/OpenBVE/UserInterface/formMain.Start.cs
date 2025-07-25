@@ -67,7 +67,7 @@ namespace OpenBve
 				return;
 			}
 			string Folder = textboxRouteFolder.Text;
-			while (!Directory.Exists(Folder) && System.IO.Path.IsPathRooted(Folder))
+			while (!Directory.Exists(Folder) && Path.IsPathRooted(Folder))
 			{
 				try
 				{
@@ -589,7 +589,7 @@ namespace OpenBve
 				return;
 			}
 			string Folder = textboxTrainFolder.Text;
-			while (!Directory.Exists(Folder) && System.IO.Path.IsPathRooted(Folder) && Folder.Length > 2)
+			while (!Directory.Exists(Folder) && Path.IsPathRooted(Folder) && Folder.Length > 2)
 			{
 				try
 				{

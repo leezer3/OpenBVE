@@ -454,7 +454,7 @@ namespace OpenBveApi.FileSystem {
 			folder = folder.Replace("$[ApplicationData]", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
 			folder = folder.Replace("$[CommonApplicationData]", Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
 			folder = folder.Replace("$[Personal]", Environment.GetFolderPath(Environment.SpecialFolder.Personal));
-			if (checkIfRooted && !System.IO.Path.IsPathRooted(folder)) {
+			if (checkIfRooted && !Path.IsPathRooted(folder)) {
 				throw new InvalidDataException("The folder " + originalFolder + " does not produce an absolute path.");
 			}
 			return folder;
