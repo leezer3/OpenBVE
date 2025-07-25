@@ -97,11 +97,11 @@ namespace OpenBve.Graphics
 			return base.CreateStaticObject(obj, Position, WorldTransformation, LocalTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition);
 		}
 
-		public override void UpdateViewport(int Width, int Height)
+		protected override void UpdateViewport(int width, int height)
 		{
 			_programLogo = null;
-			Screen.Width = Width;
-			Screen.Height = Height;
+			Screen.Width = width;
+			Screen.Height = height;
 			GL.Viewport(0, 0, Screen.Width, Screen.Height);
 
 			Screen.AspectRatio = Screen.Width / (double)Screen.Height;

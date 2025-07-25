@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Threading;
+﻿using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
@@ -8,6 +6,9 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using SoundManager;
+using System;
+using System.ComponentModel;
+using System.Threading;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace RouteViewer
@@ -96,7 +97,7 @@ namespace RouteViewer
         {
 	        Program.Renderer.Screen.Width = Width;
 	        Program.Renderer.Screen.Height = Height;
-	        Program.Renderer.UpdateViewport();
+	        Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -117,7 +118,7 @@ namespace RouteViewer
             Program.Renderer.Initialize();
             Program.Renderer.Lighting.Initialize();
 			Program.Sounds.Initialize(SoundRange.Low);
-			Program.Renderer.UpdateViewport();
+			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
             if (Program.processCommandLineArgs)
             {
                 Program.processCommandLineArgs = false;

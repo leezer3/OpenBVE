@@ -6,9 +6,16 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using LibRender2.Cameras;
+using LibRender2.Menu;
+using LibRender2.Overlays;
+using LibRender2.Screens;
+using LibRender2.Viewports;
 using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenTK;
 using OpenTK.Graphics;
@@ -21,14 +28,8 @@ using System.Linq;
 using System.Runtime;
 using System.Text;
 using System.Windows.Forms;
-using LibRender2.Overlays;
-using OpenBveApi.Colors;
-using OpenBveApi.Hosts;
-using OpenBveApi.Objects;
 using Buffer = System.Buffer;
 using ButtonState = OpenTK.Input.ButtonState;
-using LibRender2.Menu;
-using LibRender2.Screens;
 
 namespace RouteViewer
 {
@@ -201,7 +202,7 @@ namespace RouteViewer
 			{
 				return false;
 			}
-			Renderer.UpdateViewport();
+			Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 			bool result;
 			try
 			{
@@ -476,7 +477,7 @@ namespace RouteViewer
 							else
 							{
 								Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
-								Renderer.UpdateViewport();
+								Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 								World.UpdateAbsoluteCamera(0.0);
 								Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							}
@@ -527,7 +528,7 @@ namespace RouteViewer
 							{
 								ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 								Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
-								Renderer.UpdateViewport();
+								Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 								World.UpdateAbsoluteCamera(0.0);
 								Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							}
@@ -561,7 +562,7 @@ namespace RouteViewer
 							}
 
 							Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
-							Renderer.UpdateViewport();
+							Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 							World.UpdateAbsoluteCamera(0.0);
 							Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 						}
@@ -693,7 +694,7 @@ namespace RouteViewer
 					break;
 				case Key.Keypad5:
 					Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
-					Renderer.UpdateViewport();
+					Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;

@@ -805,13 +805,13 @@ namespace LibRender2
 			Camera.UpdateQuadTreeLeaf();
 		}
 
-		private void UpdateLegacyVisibility(double TrackPosition)
+		private void UpdateLegacyVisibility(double trackPosition)
 		{
 			if (ObjectsSortedByStart == null || ObjectsSortedByStart.Length == 0 || StaticObjectStates.Count == 0)
 			{
 				return;
 			}
-			double d = TrackPosition - LastUpdatedTrackPosition;
+			double d = trackPosition - LastUpdatedTrackPosition;
 			int n = ObjectsSortedByStart.Length;
 			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 
@@ -913,10 +913,10 @@ namespace LibRender2
 				}
 			}
 
-			LastUpdatedTrackPosition = TrackPosition;
+			LastUpdatedTrackPosition = trackPosition;
 		}
 
-		public void UpdateViewingDistances(double BackgroundImageDistance)
+		public void UpdateViewingDistances(double backgroundImageDistance)
 		{
 			double f = Math.Atan2(CameraTrackFollower.WorldDirection.Z, CameraTrackFollower.WorldDirection.X);
 			double c = Math.Atan2(Camera.AbsoluteDirection.Z, Camera.AbsoluteDirection.X) - f;
@@ -957,7 +957,7 @@ namespace LibRender2
 				if (min > 0.0) min = 0.0;
 			}
 
-			double d = BackgroundImageDistance + Camera.ExtraViewingDistance;
+			double d = backgroundImageDistance + Camera.ExtraViewingDistance;
 			Camera.ForwardViewingDistance = d * max;
 			Camera.BackwardViewingDistance = -d * min;
 			updateVisibility = VisibilityUpdate.Force;
@@ -1023,17 +1023,12 @@ namespace LibRender2
 				currentOptions.AnisotropicFilteringLevel = currentOptions.AnisotropicFilteringMaximum;
 			}
 		}
-
-		public void UpdateViewport()
-		{
-			UpdateViewport(Screen.Width, Screen.Height);
-		}
-
+		
 		/// <summary>Updates the openGL viewport</summary>
-		/// <param name="Mode">The viewport change mode</param>
-		public void UpdateViewport(ViewportChangeMode Mode)
+		/// <param name="mode">The viewport change mode</param>
+		public void UpdateViewport(ViewportChangeMode mode)
 		{
-			switch (Mode)
+			switch (mode)
 			{
 				case ViewportChangeMode.ChangeToScenery:
 					CurrentViewportMode = ViewportMode.Scenery;
@@ -1043,10 +1038,10 @@ namespace LibRender2
 					break;
 			}
 
-			UpdateViewport();
+			UpdateViewport(Screen.Width, Screen.Height);
 		}
 
-		public virtual void UpdateViewport(int Width, int Height)
+		protected virtual void UpdateViewport(int Width, int Height)
 		{
 			Screen.Width = Width;
 			Screen.Height = Height;

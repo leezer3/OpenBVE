@@ -1,10 +1,11 @@
-﻿using System;
-using System.ComponentModel;
-using System.Threading;
+﻿using LibRender2.Viewports;
 using ObjectViewer.Trains;
 using OpenBveApi;
 using OpenTK;
 using OpenTK.Graphics;
+using System;
+using System.ComponentModel;
+using System.Threading;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace ObjectViewer
@@ -292,7 +293,7 @@ namespace ObjectViewer
         {
 	        Program.Renderer.Screen.Width = Width;
 	        Program.Renderer.Screen.Height = Height;
-            Program.Renderer.UpdateViewport();
+            Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -307,7 +308,7 @@ namespace ObjectViewer
 	        Program.Renderer.Camera.Reset(new Vector3(-5.0, 2.5, -25.0));
             Program.Renderer.Initialize();
             Program.Renderer.Lighting.Initialize();
-            Program.Renderer.UpdateViewport();
+            Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 			Program.Renderer.InitializeVisibility();
 			Program.Renderer.UpdateVisibility(true);
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
