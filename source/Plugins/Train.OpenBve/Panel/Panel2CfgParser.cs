@@ -35,9 +35,7 @@ namespace Train.OpenBve
 		double PanelTop = 0.0, PanelBottom = 1024.0;
 		Vector2 PanelCenter = new Vector2(0, 512);
 		Vector2 PanelOrigin = new Vector2(0, 512);
-		string PanelDaytimeImage = null;
-		string PanelNighttimeImage = null;
-		Color24 PanelTransparentColor = Color24.Blue;
+		
 		private string trainName;
 
 		/// <summary>Parses a BVE2 / openBVE panel.cfg file</summary>
@@ -57,9 +55,9 @@ namespace Train.OpenBve
 				// NOTE: We should only be able to create a panel with main image available, however some trains seem to use a PilotLamp as the main panel image, with no texture defined in the [This] section
 				// e.g. trta9000_6r
 				// Many panel properties are calculated with the size of this element, so only accept this with hacks on
-				if (Block.GetPath(Panel2Key.DaytimeImage, trainPath, out PanelDaytimeImage) || Plugin.CurrentOptions.EnableBveTsHacks)
+				if (Block.GetPath(Panel2Key.DaytimeImage, trainPath, out string panelDaytimeImage) || Plugin.CurrentOptions.EnableBveTsHacks)
 				{
-					Block.GetValue(Panel2Key.Resolution, out PanelResolution);
+					Block.TryGetValue(Panel2Key.Resolution, ref PanelResolution);
 					if (PanelResolution < 100)
 					{
 						//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
@@ -67,13 +65,14 @@ namespace Train.OpenBve
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A panel resolution of less than 100px was given in " + fileName);
 					}
 
-					Block.GetValue(Panel2Key.Left, out PanelLeft);
-					Block.GetValue(Panel2Key.Right, out PanelRight);
-					Block.GetValue(Panel2Key.Top, out PanelTop);
-					Block.GetValue(Panel2Key.Bottom, out PanelBottom);
-					Block.TryGetColor24(Panel2Key.TransparentColor, ref PanelTransparentColor);
-					Block.GetVector2(Panel2Key.Center, ',', out PanelCenter);
-					Block.GetVector2(Panel2Key.Origin, ',', out PanelOrigin);
+					Block.TryGetValue(Panel2Key.Left, ref PanelLeft);
+					Block.TryGetValue(Panel2Key.Right, ref PanelRight);
+					Block.TryGetValue(Panel2Key.Top, ref PanelTop);
+					Block.TryGetValue(Panel2Key.Bottom, ref PanelBottom);
+					Color24 panelTransparentColor = Color24.Blue;
+					Block.TryGetColor24(Panel2Key.TransparentColor, ref panelTransparentColor);
+					Block.TryGetVector2(Panel2Key.Center, ',', ref PanelCenter);
+					Block.TryGetVector2(Panel2Key.Origin, ',', ref PanelOrigin);
 					ApplyGlobalHacks();
 					double WorldWidth, WorldHeight;
 					if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
@@ -94,11 +93,11 @@ namespace Train.OpenBve
 					Car.CameraRestriction.TopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
 					Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
 					Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
-					Plugin.CurrentHost.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out var tday, true, 20000);
+					Plugin.CurrentHost.RegisterTexture(panelDaytimeImage, new TextureParameters(null, panelTransparentColor), out var tday, true, 20000);
 					Texture tnight = null;
-					if (Block.GetPath(Panel2Key.NighttimeImage, trainPath, out PanelNighttimeImage))
+					if (Block.GetPath(Panel2Key.NighttimeImage, trainPath, out string panelNighttimeImage))
 					{
-						Plugin.CurrentHost.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out tnight, true, 20000);
+						Plugin.CurrentHost.RegisterTexture(panelNighttimeImage, new TextureParameters(null, panelTransparentColor), out tnight, true, 20000);
 					}
 					CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], 0.0, 0.0, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelBottom, PanelCenter, Car.Driver, tday, tnight);
 				}
