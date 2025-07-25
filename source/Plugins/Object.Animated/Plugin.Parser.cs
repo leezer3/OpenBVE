@@ -331,8 +331,8 @@ namespace Plugin
 									}
 								}
 
-								snd.currentPitch = pitch;
-								snd.currentVolume = volume;
+								snd.CurrentPitch = pitch;
+								snd.CurrentVolume = volume;
 								snd.SoundPosition = Position;
 								snd.SingleBuffer = fileNames.Length != 1;
 								snd.PlayOnShow = playOnShow;

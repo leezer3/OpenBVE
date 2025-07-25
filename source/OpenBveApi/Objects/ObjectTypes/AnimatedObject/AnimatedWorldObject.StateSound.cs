@@ -15,9 +15,9 @@ namespace OpenBveApi.Objects
 		/// <summary>The sound source for this file</summary>
 		public object Source;
 		/// <summary>The pitch to play the sound at</summary>
-		public double currentPitch = 1.0;
+		public double CurrentPitch = 1.0;
 		/// <summary>The volume to play the sound at it's origin</summary>
-		public double currentVolume = 1.0;
+		public double CurrentVolume = 1.0;
 		/// <summary>Whether the sound should be played on showing a new state</summary>
 		public bool PlayOnShow = true;
 		/// <summary>Whether the sound should be played on hiding a new state</summary>
@@ -46,15 +46,15 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <inheritdoc/>
-		public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool CurrentlyVisible)
+		public override void Update(AbstractTrain nearestTrain, double timeElapsed, bool forceUpdate, bool currentlyVisible)
 		{
-			if (CurrentlyVisible | ForceUpdate)
+			if (currentlyVisible | forceUpdate)
 			{
-				if (Object.SecondsSinceLastUpdate >= Object.RefreshRate | ForceUpdate)
+				if (Object.SecondsSinceLastUpdate >= Object.RefreshRate | forceUpdate)
 				{
-					double timeDelta = Object.SecondsSinceLastUpdate + TimeElapsed;
+					double timeDelta = Object.SecondsSinceLastUpdate + timeElapsed;
 					Object.SecondsSinceLastUpdate = 0.0;
-					Object.Update(NearestTrain, NearestTrain?.DriverCar ?? 0, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
+					Object.Update(nearestTrain, nearestTrain?.DriverCar ?? 0, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
 					if (Object.CurrentState != lastState && currentHost.SimulationState != SimulationState.Loading)
 					{
 						if (SingleBuffer)
@@ -80,7 +80,7 @@ namespace OpenBveApi.Objects
 
 								if (isToBePlayed)
 								{
-									Source = currentHost.PlaySound(Buffers[0], currentPitch, currentVolume, Position + SoundPosition, null, false);
+									Source = currentHost.PlaySound(Buffers[0], CurrentPitch, CurrentVolume, Position + SoundPosition, null, false);
 								}
 							}
 						}
@@ -90,14 +90,14 @@ namespace OpenBveApi.Objects
 
 							if (bufferIndex >= 0 && bufferIndex < Buffers.Length && Buffers[bufferIndex] != null)
 							{
-								Source = currentHost.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position + SoundPosition, null, false);
+								Source = currentHost.PlaySound(Buffers[bufferIndex], CurrentPitch, CurrentVolume, Position + SoundPosition, null, false);
 							}
 						}
 					}
 				}
 				else
 				{
-					Object.SecondsSinceLastUpdate += TimeElapsed;
+					Object.SecondsSinceLastUpdate += timeElapsed;
 				}
 
 				if (!Visible)
@@ -111,7 +111,7 @@ namespace OpenBveApi.Objects
 			}
 			else
 			{
-				Object.SecondsSinceLastUpdate += TimeElapsed;
+				Object.SecondsSinceLastUpdate += timeElapsed;
 				if (Visible)
 				{
 					currentHost.HideObject(Object.internalObject);
@@ -123,7 +123,7 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <inheritdoc/>
-		public override bool IsVisible(Vector3 CameraPosition, double BackgroundImageDistance, double ExtraViewingDistance)
+		public override bool IsVisible(Vector3 cameraPosition, double backgroundImageDistance, double extraViewingDistance)
 		{
 			double z = 0;
 			if (Object != null && Object.TranslateZFunction != null)
@@ -132,30 +132,30 @@ namespace OpenBveApi.Objects
 			}
 			double pa = TrackPosition + z - Radius - 10.0;
 			double pb = TrackPosition + z + Radius + 10.0;
-			double ta = CameraPosition.Z - BackgroundImageDistance - ExtraViewingDistance;
-			double tb = CameraPosition.Z + BackgroundImageDistance + ExtraViewingDistance;
+			double ta = cameraPosition.Z - backgroundImageDistance - extraViewingDistance;
+			double tb = cameraPosition.Z + backgroundImageDistance + extraViewingDistance;
 			return pb >= ta & pa <= tb;
 		}
 
 		/// <summary>Creates the animated object within the game world</summary>
-		/// <param name="WorldPosition">The absolute position</param>
-		/// <param name="WorldTransformation">The world transformation to apply (e.g. ground, rail)</param>
-		/// <param name="LocalTransformation">The local transformation to apply in order to rotate the model</param>
-		/// <param name="FinalSectionIndex">The index of the section if placed using a SigF command</param>
-		/// <param name="FinalTrackPosition">The absolute track position</param>
-		/// <param name="Brightness">The brightness value at the track position</param>
-		public void Create(Vector3 WorldPosition, Transformation WorldTransformation, Transformation LocalTransformation, int FinalSectionIndex, double FinalTrackPosition, double Brightness)
+		/// <param name="worldPosition">The absolute position</param>
+		/// <param name="worldTransformation">The world transformation to apply (e.g. ground, rail)</param>
+		/// <param name="localTransformation">The local transformation to apply in order to rotate the model</param>
+		/// <param name="finalSectionIndex">The index of the section if placed using a SigF command</param>
+		/// <param name="finalTrackPosition">The absolute track position</param>
+		/// <param name="brightness">The brightness value at the track position</param>
+		public void Create(Vector3 worldPosition, Transformation worldTransformation, Transformation localTransformation, int finalSectionIndex, double finalTrackPosition, double brightness)
 		{
 			int a = currentHost.AnimatedWorldObjectsUsed;
-			Transformation FinalTransformation = new Transformation(LocalTransformation, WorldTransformation);
+			Transformation finalTransformation = new Transformation(localTransformation, worldTransformation);
 
 			AnimatedWorldObjectStateSound currentObject = (AnimatedWorldObjectStateSound)Clone();
-			currentObject.Position = WorldPosition;
-			currentObject.Direction = FinalTransformation.Z;
-			currentObject.Up = FinalTransformation.Y;
-			currentObject.Side = FinalTransformation.X;
-			currentObject.Object.SectionIndex = FinalSectionIndex;
-			currentObject.TrackPosition = FinalTrackPosition;
+			currentObject.Position = worldPosition;
+			currentObject.Direction = finalTransformation.Z;
+			currentObject.Up = finalTransformation.Y;
+			currentObject.Side = finalTransformation.X;
+			currentObject.Object.SectionIndex = finalSectionIndex;
+			currentObject.TrackPosition = finalTrackPosition;
 			for (int i = 0; i < currentObject.Object.States.Length; i++)
 			{
 				if (currentObject.Object.States[i].Prototype == null)
