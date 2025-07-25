@@ -587,6 +587,8 @@ namespace Formats.OpenBve
 					boolValue = true;
 					return true;
 				}
+				boolValue = false;
+				return true;
 			}
 			return false;
 		}
