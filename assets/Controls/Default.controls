@@ -55,6 +55,8 @@ SECURITY_J, keyboard, Number8, 0
 SECURITY_K, keyboard, Number9, 0
 SECURITY_L, keyboard, Number0, 0
 CAMERA_INTERIOR, keyboard, F1, 0
+CAMERA_HEADOUT_LEFT, keyboard, Left, 2
+CAMERA_HEADOUT_RIGHT, keyboard, Right, 2
 CAMERA_EXTERIOR, keyboard, F2, 0
 CAMERA_TRACK, keyboard, F3, 0
 CAMERA_FLYBY, keyboard, F4, 0

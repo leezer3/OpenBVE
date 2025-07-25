@@ -20,7 +20,7 @@ namespace OpenBveApi.World
 		{
 			BaseUnit = UnitOfForce.Newton;
 			RegisterConversion(UnitOfForce.KiloNewton, v => v / 1000.0, v => v * 1000.0);
-			RegisterConversion(UnitOfForce.PoundsOfForce, v => v * 4.44822, v => v / 4.44822);
+			RegisterConversion(UnitOfForce.PoundsOfForce, v => v / 4.44822, v => v * 4.44822);
 			KnownUnits = new Dictionary<string, UnitOfForce>
 			{
 				{"n", UnitOfForce.Newton}, {"newton", UnitOfForce.Newton}, {"kn", UnitOfForce.KiloNewton}, {"kilonewton", UnitOfForce.KiloNewton}, {"lbf", UnitOfForce.PoundsOfForce}
