@@ -4,6 +4,7 @@
     {
 		NoEngine = 0,
 		Diesel,
+		DieselHydraulic,
 		Steam,
 		Electric
     }
