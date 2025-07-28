@@ -35,6 +35,12 @@ namespace OpenBve
 				Control.DigitalState =
 					DigitalControlState.PressedAcknowledged;
 				TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DSD?.ControlDown(Control.Command);
+
+				if (Translations.SecurityToVirtualKey(Control.Command, out VirtualKeys key))
+				{
+					TrainManager.PlayerTrain.Plugin?.KeyDown(key);
+				}
+
 				switch (Control.Command)
 				{
 					case Translations.Command.MiscQuit:
@@ -848,9 +854,6 @@ namespace OpenBve
 								TrainManager.PlayerTrain.CloseDoors(true, false);
 							}
 						}
-
-						TrainManager.PlayerTrain.Plugin?.KeyDown(VirtualKeys.LeftDoors);
-
 						//Set door button to pressed in the driver's car
 						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[0].ButtonPressed = true;
 						break;
@@ -876,69 +879,21 @@ namespace OpenBve
 							}
 						}
 
-						TrainManager.PlayerTrain.Plugin?.KeyDown(VirtualKeys.RightDoors);
-
 						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[1].ButtonPressed = true;
 						break;
 					case Translations.Command.PlayMicSounds:
 						Program.Sounds.IsPlayingMicSounds = !Program.Sounds.IsPlayingMicSounds;
 						break;
-//We only want to mark these as obsolete for new users of the API
-#pragma warning disable 618
-					case Translations.Command.SecurityS:
-					case Translations.Command.SecurityA1:
-					case Translations.Command.SecurityA2:
-					case Translations.Command.SecurityB1:
-					case Translations.Command.SecurityB2:
-					case Translations.Command.SecurityC1:
-					case Translations.Command.SecurityC2:
-					case Translations.Command.SecurityD:
-					case Translations.Command.SecurityE:
-					case Translations.Command.SecurityF:
-					case Translations.Command.SecurityG:
-					case Translations.Command.SecurityH:
-					case Translations.Command.SecurityI:
-					case Translations.Command.SecurityJ:
-					case Translations.Command.SecurityK:
-					case Translations.Command.SecurityL:
-					case Translations.Command.SecurityM:
-					case Translations.Command.SecurityN:
-					case Translations.Command.SecurityO:
-					case Translations.Command.SecurityP:
-#pragma warning restore 618
-					case Translations.Command.FillFuel:
-					case Translations.Command.LiveSteamInjector:
-					case Translations.Command.ExhaustSteamInjector:
-					case Translations.Command.IncreaseCutoff:
-					case Translations.Command.DecreaseCutoff:
-					case Translations.Command.Blowers:
-					case Translations.Command.EngineStart:
-					case Translations.Command.EngineStop:
-					case Translations.Command.GearUp:
-					case Translations.Command.GearDown:
-					case Translations.Command.RaisePantograph:
-					case Translations.Command.LowerPantograph:
-						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
-						break;
 					case Translations.Command.Headlights:
-						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
 						TrainManager.PlayerTrain.SafetySystems.Headlights.ChangeState();
 						break;
 					case Translations.Command.MainBreaker:
-						TrainManager.PlayerTrain.Plugin?.KeyDown(Translations.SecurityToVirtualKey(Control.Command));
 						break;
 					case Translations.Command.WiperSpeedUp:
 					case Translations.Command.WiperSpeedDown:
 						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Windscreen?.Wipers.ChangeSpeed(Control.Command);
-
-						//Also inform the plugin that these keys have been pressed
-						TrainManager.PlayerTrain.Plugin?.KeyDown(
-							Translations.SecurityToVirtualKey(Control.Command));
 						break;
 					case Translations.Command.Sanders:
-						TrainManager.PlayerTrain.Plugin?.KeyDown(
-								Translations.SecurityToVirtualKey(Control.Command));
-
 						for (int c = 0; c < TrainManager.PlayerTrain.Cars.Length; c++)
 						{
 							if (TrainManager.PlayerTrain.Cars[c].ReAdhesionDevice is Sanders sanders)
@@ -1334,6 +1289,11 @@ namespace OpenBve
 				Control.DigitalState =
 					DigitalControlState.ReleasedAcknowledged;
 				TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DSD?.ControlUp(Control.Command);
+
+				if (Translations.SecurityToVirtualKey(Control.Command, out VirtualKeys key))
+				{
+					TrainManager.PlayerTrain.Plugin?.KeyUp(key);
+				}
 				switch (Control.Command)
 				{
 					case Translations.Command.SingleBrake:
@@ -1349,51 +1309,6 @@ namespace OpenBve
 					case Translations.Command.SingleNeutral:
 						TrainManager.PlayerTrain.Handles.Brake.ContinuousMovement = false;
 						TrainManager.PlayerTrain.Handles.Power.ContinuousMovement = false;
-						break;
-
-					/*
-					 * Keys after this point are used by the plugin API
-					 *
-					 */
-//We only want to mark these as obsolete for new users of the API
-#pragma warning disable 618
-					case Translations.Command.SecurityS:
-					case Translations.Command.SecurityA1:
-					case Translations.Command.SecurityA2:
-					case Translations.Command.SecurityB1:
-					case Translations.Command.SecurityB2:
-					case Translations.Command.SecurityC1:
-					case Translations.Command.SecurityC2:
-					case Translations.Command.SecurityD:
-					case Translations.Command.SecurityE:
-					case Translations.Command.SecurityF:
-					case Translations.Command.SecurityG:
-					case Translations.Command.SecurityH:
-					case Translations.Command.SecurityI:
-					case Translations.Command.SecurityJ:
-					case Translations.Command.SecurityK:
-					case Translations.Command.SecurityL:
-					case Translations.Command.SecurityM:
-					case Translations.Command.SecurityN:
-					case Translations.Command.SecurityO:
-					case Translations.Command.SecurityP:
-#pragma warning restore 618
-					case Translations.Command.WiperSpeedUp:
-					case Translations.Command.WiperSpeedDown:
-					case Translations.Command.FillFuel:
-					case Translations.Command.LiveSteamInjector:
-					case Translations.Command.ExhaustSteamInjector:
-					case Translations.Command.IncreaseCutoff:
-					case Translations.Command.DecreaseCutoff:
-					case Translations.Command.Blowers:
-					case Translations.Command.EngineStart:
-					case Translations.Command.EngineStop:
-					case Translations.Command.GearUp:
-					case Translations.Command.GearDown:
-					case Translations.Command.RaisePantograph:
-					case Translations.Command.LowerPantograph:
-					case Translations.Command.MainBreaker:
-						TrainManager.PlayerTrain.Plugin?.KeyUp(Translations.SecurityToVirtualKey(Control.Command));
 						break;
 					case Translations.Command.HornPrimary:
 					case Translations.Command.HornSecondary:
@@ -1413,11 +1328,9 @@ namespace OpenBve
 						break;
 					case Translations.Command.DoorsLeft:
 						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[0].ButtonPressed = false;
-						TrainManager.PlayerTrain.Plugin?.KeyUp(VirtualKeys.LeftDoors);
 						break;
 					case Translations.Command.DoorsRight:
 						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[1].ButtonPressed = false;
-						TrainManager.PlayerTrain.Plugin?.KeyUp(VirtualKeys.RightDoors);
 						break;
 					case Translations.Command.RailDriverSpeedUnits:
 						Interface.CurrentOptions.RailDriverMPH = !Interface.CurrentOptions.RailDriverMPH;
@@ -1435,8 +1348,6 @@ namespace OpenBve
 								}
 							}
 						}
-
-						TrainManager.PlayerTrain.Plugin?.KeyUp(VirtualKeys.Sanders);
 						break;
 				}
 			}
