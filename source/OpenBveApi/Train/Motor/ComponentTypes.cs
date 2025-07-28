@@ -32,6 +32,8 @@ namespace OpenBveApi.Motor
 		/// <summary>A regenerative traction motor</summary>
 		RegenerativeTractionMotor,
 		/// <summary>A pantograph</summary>
-		Pantograph
+		Pantograph,
+		/// <summary>A gearbox</summary>
+		Gearbox,
 	}
 }
