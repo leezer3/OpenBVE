@@ -1,4 +1,3 @@
-using System;
 using LibRender2;
 using OpenBveApi;
 using OpenBveApi.FileSystem;

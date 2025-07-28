@@ -88,7 +88,7 @@ namespace OpenBve
         }
 
         /// <summary>This function logs an unhandled crash to disk</summary>
-        internal static void LogCrash(string ExceptionText)
+        internal static void LogCrash(string exceptionText)
         {
 			Program.FileSystem.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
 			using (StreamWriter outputFile = new StreamWriter(CrashLog))
@@ -156,7 +156,7 @@ namespace OpenBve
                 }
                 
                 outputFile.WriteLine("The exception caught was as follows: ");
-                outputFile.WriteLine(ExceptionText);
+                outputFile.WriteLine(exceptionText);
                 try
                 {
 	                double MemoryUsed;

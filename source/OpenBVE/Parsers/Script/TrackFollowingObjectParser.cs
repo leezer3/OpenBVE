@@ -3,7 +3,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -13,7 +12,6 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using TrainManager.Car;
 using TrainManager.Trains;
-using static OpenBve.Scripting;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve
@@ -25,24 +23,24 @@ namespace OpenBve
 		private static TrainBase Train;
 
 		/// <summary>Parses a track following object</summary>
-		/// <param name="ObjectPath">Absolute path to the object folder of route data</param>
-		/// <param name="FileName">The XML file to parse</param>
-		internal static TrainBase ParseTrackFollowingObject(string ObjectPath, string FileName)
+		/// <param name="objectPath">Absolute path to the object folder of route data</param>
+		/// <param name="fileName">The XML file to parse</param>
+		internal static TrainBase ParseTrackFollowingObject(string objectPath, string fileName)
 		{
 			// The current XML file to load
-			XDocument CurrentXML = XDocument.Load(FileName, LoadOptions.SetLineInfo);
-			List<XElement> ScriptedTrainElements = CurrentXML.XPathSelectElements("/openBVE/TrackFollowingObject").ToList();
+			XDocument currentXML = XDocument.Load(fileName, LoadOptions.SetLineInfo);
+			List<XElement> scriptedTrainElements = currentXML.XPathSelectElements("/openBVE/TrackFollowingObject").ToList();
 
 			// Check this file actually contains OpenBVE other train definition elements
-			if (!ScriptedTrainElements.Any())
+			if (!scriptedTrainElements.Any())
 			{
 				// We couldn't find any valid XML, so return false
 				throw new InvalidDataException();
 			}
 			
-			foreach (XElement Element in ScriptedTrainElements)
+			foreach (XElement element in scriptedTrainElements)
 			{
-				ParseScriptedTrainNode(ObjectPath, FileName, Element);
+				ParseScriptedTrainNode(objectPath, fileName, element);
 			}
 
 			return Train;

@@ -79,8 +79,8 @@ namespace OpenBve
 			internal bool PreferNativeBackend = true;
 			/// <summary>Stores whether the RailDriver speed display is in MPH (true) or KPH (false)</summary>
 			internal bool RailDriverMPH;
-			/// <summary>The list of enable Input Device Plugins</summary>
-			internal string[] EnableInputDevicePlugins;
+			/// <summary>The list of enabled Input Device Plugins</summary>
+			internal string[] EnabledInputDevicePlugins;
 			/// <summary>The time in seconds after which the mouse cursor is hidden</summary>
 			/// <remarks>Set to zero to never hide the cursor</remarks>
 			internal double CursorHideDelay;
@@ -164,7 +164,7 @@ namespace OpenBve
 				OldTransparencyMode = true;
 				KioskMode = false;
 				KioskModeTimer = 300;
-				EnableInputDevicePlugins = new string[] { };
+				EnabledInputDevicePlugins = new string[] { };
 				CursorFileName = "nk.png";
 				Panel2ExtendedMode = false;
 				Panel2ExtendedMinSize = 128;
@@ -375,9 +375,9 @@ namespace OpenBve
 
 				Builder.AppendLine();
 				Builder.AppendLine("[enableInputDevicePlugins]");
-				for (int i = 0; i < EnableInputDevicePlugins.Length; i++)
+				for (int i = 0; i < EnabledInputDevicePlugins.Length; i++)
 				{
-					Builder.AppendLine(EnableInputDevicePlugins[i]);
+					Builder.AppendLine(EnabledInputDevicePlugins[i]);
 				}
 
 				Builder.AppendLine();
@@ -575,11 +575,11 @@ namespace OpenBve
 
 							break;
 						case OptionsSection.EnableInputDevicePlugins:
-							Array.Resize(ref CurrentOptions.EnableInputDevicePlugins, block.RemainingDataValues);
+							Array.Resize(ref CurrentOptions.EnabledInputDevicePlugins, block.RemainingDataValues);
 							num = 0;
-							while (num < CurrentOptions.EnableInputDevicePlugins.Length)
+							while (num < CurrentOptions.EnabledInputDevicePlugins.Length)
 							{
-								block.GetNextRawValue(out CurrentOptions.EnableInputDevicePlugins[num]);
+								block.GetNextRawValue(out CurrentOptions.EnabledInputDevicePlugins[num]);
 								num++;
 							}
 

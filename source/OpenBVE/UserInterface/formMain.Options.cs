@@ -57,7 +57,7 @@ namespace OpenBve {
 		private void ListInputDevicePlugins() {
 			ListViewItem[] listItems = new ListViewItem[InputDevicePlugin.AvailablePluginInfos.Count];
 			for (int i = 0; i < listItems.Length; i++) {
-				if (Array.Exists(Interface.CurrentOptions.EnableInputDevicePlugins, element => element.Equals(InputDevicePlugin.AvailablePluginInfos[i].FileName))) {
+				if (Array.Exists(Interface.CurrentOptions.EnabledInputDevicePlugins, element => element.Equals(InputDevicePlugin.AvailablePluginInfos[i].FileName))) {
 					InputDevicePlugin.CallPluginLoad(i, Program.CurrentHost);
 				}
 				listItems[i] = new ListViewItem(new[] { "", "", "", "", "" });
