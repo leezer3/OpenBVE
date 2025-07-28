@@ -186,6 +186,13 @@ namespace OpenBve.Graphics
 
 			events.Render(Camera.AbsolutePosition);
 
+			GL.Enable(EnableCap.CullFace);
+			GL.Enable(EnableCap.DepthTest);
+			GL.DepthMask(true);
+			OptionLighting = false;
+
+			OptionLighting = true;
+
 			// fog
 			float aa = Program.CurrentRoute.CurrentFog.Start;
 			float bb = Program.CurrentRoute.CurrentFog.End;
