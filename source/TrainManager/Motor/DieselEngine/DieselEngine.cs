@@ -24,6 +24,8 @@
 
 using System;
 using System.Linq;
+using OpenBveApi;
+using OpenBveApi.Motor;
 using TrainManager.Car;
 using TrainManager.Power;
 
@@ -103,6 +105,11 @@ namespace TrainManager.Motor
 
 			Message = @"Current RPM " + Math.Round(CurrentRPM);
 
+			if(Components.TryGetTypedValue(EngineComponent.Gearbox, out Gearbox gearbox))
+			{
+				Message += " Current Gear " + gearbox.CurrentGear;
+			}
+
 			if (FuelTank != null)
 			{
 				if (currentRPM <= IdleRPM)
@@ -125,6 +132,23 @@ namespace TrainManager.Motor
 
 		public override double CurrentPower => (currentRPM - MinRPM) / (MaxRPM - MinRPM);
 
-		public override double TargetAcceleration => AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed);
-	}
+		public override double TargetAcceleration
+		{
+			get
+			{
+				if (Components.TryGetTypedValue(EngineComponent.Gearbox, out Gearbox gearbox))
+				{
+					if (gearbox.CurrentGear == 0)
+					{
+						return 0;
+					}
+
+					return AccelerationCurves[gearbox.CurrentGear - 1].GetAccelerationOutput(BaseCar.CurrentSpeed);
+
+				}
+				return AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed);
+
+			}
+		}
+    }
 }
