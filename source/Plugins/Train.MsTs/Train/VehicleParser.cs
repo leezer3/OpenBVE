@@ -846,7 +846,7 @@ namespace Train.MsTs
 
 					for (int i = 0; i < Gears.Length; i++)
 					{
-						Gears[i].MaximumSpeed = block.ReadSingle();
+						Gears[i].MaximumSpeed = block.ReadSingle(UnitOfVelocity.MetersPerSecond, UnitOfVelocity.MilesPerHour);
 					}
 					break;
 				case KujuTokenID.GearBoxMaxTractiveForceForGears:
