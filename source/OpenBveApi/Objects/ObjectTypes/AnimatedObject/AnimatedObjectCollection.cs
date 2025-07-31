@@ -75,7 +75,7 @@ namespace OpenBveApi.Objects
 						}
 						else
 						{
-							Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
+							Objects[i].Clone().CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
 						}
 					}
 				}
@@ -86,7 +86,7 @@ namespace OpenBveApi.Objects
 				{
 					if (Objects[i].States.Length != 0)
 					{
-						Objects[i].CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
+						Objects[i].Clone().CreateObject(Position, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
 					}
 				}
 			}
