@@ -115,6 +115,11 @@ namespace OpenBveApi.Objects
 			//Get vectors
 			Direction = new Vector3(FrontAxleFollower.WorldPosition - RearAxleFollower.WorldPosition);
 			{
+				if (Direction == Vector3.Zero)
+				{
+					// Both axles are in the same location (bug, or end of track) so just use the direction vector for the world piece
+					Direction = FrontAxleFollower.WorldDirection;
+				}
 				double t = 1.0 / Direction.Norm();
 				Direction *= t;
 				t = 1.0 / System.Math.Sqrt(Direction.X * Direction.X + Direction.Z * Direction.Z);
