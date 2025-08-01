@@ -1,5 +1,32 @@
-﻿using OpenBveApi.Runtime;
+﻿//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+using OpenBveApi.Runtime;
 using System.Collections.Generic;
+using OpenBveApi.Math;
+using SoundManager;
+using TrainManager.Car;
 
 namespace TrainManager.MsTsSounds
 {
@@ -16,11 +43,16 @@ namespace TrainManager.MsTsSounds
 		/// <summary>The modes in which this sound stream is not active</summary>
 		public CameraViewMode DeactivationCameraModes;
 
-		public SoundStream()
+		private SoundSource soundSource;
+
+		private CarBase car;
+
+		public SoundStream(CarBase baseCar)
 		{
 			Triggers = new List<SoundTrigger>();
 			ActivationCameraModes = CameraViewMode.NotDefined;
 			DeactivationCameraModes = CameraViewMode.NotDefined;
+			car = baseCar;
 		}
 
 		public void Update(double timeElapsed)
@@ -50,18 +82,43 @@ namespace TrainManager.MsTsSounds
 				}
 			}
 
-			
+			/*
+			 * To get the playing buffer and loop state, we itinerate through all sound triggers in a stream
+			 * in order. If the conditions for a trigger are met, the buffer ref and loop status are updated
+			 *
+			 * At the end of our loop, if the buffer is not null, either adjust the pitch / gain (if currently
+			 * playing) or replace the playing buffer with it
+			 * Otherwise, stop the playing buffer.
+			 */
+			SoundBuffer soundBuffer = null;
+			bool loops = false;
+
 			for (int i = 0; i < Triggers.Count; i++)
 			{
 				if (canActivate)
 				{
-					Triggers[i].Update(timeElapsed, pitch, volume);
+					Triggers[i].Update(timeElapsed, car, ref soundBuffer, ref loops);
+				}
+			}
+
+			if (soundBuffer != null)
+			{
+				if (soundSource != null && soundSource.Buffer == soundBuffer)
+				{
+					soundSource.Volume = volume;
+					soundSource.Pitch = pitch;
 				}
 				else
 				{
-					Triggers[i].Stop();
+					soundSource = (SoundSource)TrainManagerBase.currentHost.PlaySound(soundBuffer, pitch, volume, Vector3.Zero, car, loops);
 				}
-				
+			}
+			else
+			{
+				if (soundSource != null && soundSource.IsPlaying())
+				{
+					soundSource.Stop();
+				}
 			}
 		}
 	}
