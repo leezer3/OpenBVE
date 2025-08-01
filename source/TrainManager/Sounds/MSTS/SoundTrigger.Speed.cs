@@ -24,7 +24,6 @@
 
 using System;
 using OpenBve.Formats.MsTs;
-using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.Car;
 
@@ -35,42 +34,24 @@ namespace TrainManager.MsTsSounds
 	{
 		private readonly double speedValue;
 
-		private readonly bool soundLoops;
 		
-		public SpeedIncPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double speedValue, bool soundLoops) : base(car, buffers, selectionMethod)
+		public SpeedIncPast(SoundBuffer[] buffers, KujuTokenID selectionMethod, double speedValue, bool soundLoops) : base(buffers, selectionMethod, soundLoops)
 		{
 			this.speedValue = speedValue;
-			this.soundLoops = soundLoops;
 		}
 
-		public SpeedIncPast(CarBase car, SoundBuffer buffer, double speedValue, bool soundLoops) : base(car, buffer)
+		public SpeedIncPast(CarBase car, SoundBuffer buffer, double speedValue, bool soundLoops) : base(buffer, soundLoops)
 		{
 			this.speedValue = speedValue;
-			this.soundLoops = soundLoops;
 		}
 
-		public override void Update(double timeElapsed, double pitchValue, double volumeValue)
+		public override void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
 		{
-			double speed = Math.Abs(Car.CurrentSpeed);
+			double speed = Math.Abs(car.CurrentSpeed);
 			if (speed >= speedValue)
 			{
-				if (Buffer != null)
-				{
-					if (Triggered == false)
-					{
-						this.Source = TrainManagerBase.currentHost.PlaySound(Buffer, pitchValue, volumeValue, Vector3.Zero, Car, soundLoops) as SoundSource;
-					}
-				}
-				Triggered = true;
-				Timer = 0;
-			}
-			else
-			{
-				Timer += timeElapsed;
-				if (Timer > 1.0)
-				{
-					Stop();
-				}
+				soundBuffer = Buffer;
+				soundLoops = SoundLoops;
 			}
 		}
 	}
@@ -82,40 +63,25 @@ namespace TrainManager.MsTsSounds
 
 		private readonly bool soundLoops;
 		
-		public SpeedDecPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double speedValue, bool soundLoops) : base(car, buffers, selectionMethod)
+		public SpeedDecPast(SoundBuffer[] buffers, KujuTokenID selectionMethod, double speedValue, bool soundLoops) : base(buffers, selectionMethod, soundLoops)
 		{
 			this.speedValue = speedValue;
 			this.soundLoops = soundLoops;
 		}
 
-		public SpeedDecPast(CarBase car, SoundBuffer buffer, double speedValue, bool soundLoops) : base(car, buffer)
+		public SpeedDecPast(SoundBuffer buffer, double speedValue, bool soundLoops) : base(buffer, soundLoops)
 		{
 			this.speedValue = speedValue;
 			this.soundLoops = soundLoops;
 		}
 
-		public override void Update(double timeElapsed, double pitchValue, double volumeValue)
+		public override void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
 		{
-			double speed = Math.Abs(Car.CurrentSpeed);
+			double speed = Math.Abs(car.CurrentSpeed);
 			if (speed <= speedValue)
 			{
-				if (Buffer != null)
-				{
-					if (Triggered == false)
-					{
-						this.Source = TrainManagerBase.currentHost.PlaySound(Buffer, pitchValue, volumeValue, Vector3.Zero, Car, soundLoops) as SoundSource;
-					}
-				}
-				Triggered = true;
-				Timer = 0;
-			}
-			else
-			{
-				Timer += timeElapsed;
-				if (Timer > 1.0)
-				{
-					Stop();
-				}
+				soundBuffer = Buffer;
+				soundLoops = SoundLoops;
 			}
 		}
 	}

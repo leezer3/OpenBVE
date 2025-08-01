@@ -23,7 +23,6 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenBve.Formats.MsTs;
-using OpenBveApi.Math;
 using SoundManager;
 using TrainManager.Car;
 
@@ -37,42 +36,23 @@ namespace TrainManager.MsTsSounds
 	public class Variable2IncPast : SoundTrigger
 	{
 		private readonly double variableValue;
-
-		private readonly bool soundLoops;
-
-		public Variable2IncPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double variableValue, bool soundLoops) : base(car, buffers, selectionMethod)
+		
+		public Variable2IncPast(SoundBuffer[] buffers, KujuTokenID selectionMethod, double variableValue, bool soundLoops) : base(buffers, selectionMethod, soundLoops)
 		{
 			this.variableValue = variableValue;
-			this.soundLoops = soundLoops;
 		}
 
-		public Variable2IncPast(CarBase car, SoundBuffer buffer, double variableValue, bool soundLoops) : base(car, buffer)
+		public Variable2IncPast(SoundBuffer buffer, double variableValue, bool soundLoops) : base(buffer, soundLoops)
 		{
 			this.variableValue = variableValue;
-			this.soundLoops = soundLoops;
 		}
 
-		public override void Update(double timeElapsed, double pitchValue, double volumeValue)
+		public override void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
 		{
-			if (Car.TractionModel.CurrentPower >= variableValue)
+			if (car.TractionModel.CurrentPower >= variableValue)
 			{
-				if (Buffer != null)
-				{
-					if (Triggered == false)
-					{
-						this.Source = TrainManagerBase.currentHost.PlaySound(Buffer, pitchValue, volumeValue, Vector3.Zero, Car, soundLoops) as SoundSource;
-					}
-					else
-					{
-						this.Source.Pitch = pitchValue;
-						this.Source.Volume = volumeValue;
-					}
-				}
-				Triggered = true;
-			}
-			else
-			{
-				Stop();
+				soundBuffer = Buffer;
+				soundLoops = SoundLoops;
 			}
 		}
 	}
@@ -86,40 +66,21 @@ namespace TrainManager.MsTsSounds
 	{
 		private readonly double variableValue;
 
-		private readonly bool soundLoops;
-
-		public Variable2DecPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double variableValue, bool soundLoops) : base(car, buffers, selectionMethod)
+		public Variable2DecPast(SoundBuffer[] buffers, KujuTokenID selectionMethod, double variableValue, bool soundLoops) : base(buffers, selectionMethod, soundLoops)
 		{
 			this.variableValue = variableValue;
-			this.soundLoops = soundLoops;
 		}
-		public Variable2DecPast(CarBase car, SoundBuffer buffer, double variableValue, bool soundLoops) : base(car, buffer)
+		public Variable2DecPast(SoundBuffer buffer, double variableValue, bool soundLoops) : base(buffer, soundLoops)
 		{
 			this.variableValue = variableValue;
-			this.soundLoops = soundLoops;
 		}
 
-		public override void Update(double timeElapsed, double pitchValue, double volumeValue)
+		public override void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
 		{
-			if (Car.TractionModel.CurrentPower <= variableValue)
+			if (car.TractionModel.CurrentPower <= variableValue)
 			{
-				if (Buffer != null)
-				{
-					if (Triggered == false)
-					{
-						this.Source = TrainManagerBase.currentHost.PlaySound(Buffer, pitchValue, volumeValue, Vector3.Zero, Car, soundLoops) as SoundSource;
-					}
-					else
-					{
-						this.Source.Pitch = pitchValue;
-						this.Source.Volume = volumeValue;
-					}
-				}
-				Triggered = true;
-			}
-			else
-			{
-				Stop();
+				soundBuffer = Buffer;
+				soundLoops = SoundLoops;
 			}
 		}
 	}
