@@ -172,6 +172,7 @@
     <Compile Include="Sounds\MSTS\FrequencyCurve.cs" />
     <Compile Include="Sounds\MSTS\SoundStream.cs" />
     <Compile Include="Sounds\MSTS\SoundTrigger.cs" />
+    <Compile Include="Sounds\MSTS\SoundTrigger.Initial.cs" />
     <Compile Include="Sounds\MSTS\SoundTrigger.Speed.cs" />
     <Compile Include="Sounds\MSTS\SoundTrigger.VariableControlled.cs" />
     <Compile Include="Sounds\MSTS\VolumeCurve.cs" />
