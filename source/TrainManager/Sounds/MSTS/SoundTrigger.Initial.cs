@@ -28,56 +28,27 @@ using TrainManager.Car;
 
 namespace TrainManager.MsTsSounds
 {
-	public abstract class SoundTrigger
+	/// <summary>A trigger which is activated when the car is introduced</summary>
+	public class InitialTrigger:  SoundTrigger
 	{
-		/// <summary>Holds the list of possible sound buffers to be selected from</summary>
-		internal readonly SoundBuffer[] Buffers;
-		/// <summary>The selection method used to determine the buffer to play</summary>
-		private readonly KujuTokenID bufferSelectionMethod;
-		/// <summary>Whether the sound loops</summary>
-		internal readonly bool SoundLoops;
-		/// <summary>Timer used in derived updates</summary>
-		internal double Timer;
-		/// <summary>The previously selected buffer index</summary>
-		internal int BufferIndex;
-		/// <summary>Gets the actual sound buffer to be played</summary>
-		internal SoundBuffer Buffer
+		public InitialTrigger(SoundBuffer buffer, bool soundLoops) : base(buffer, soundLoops)
 		{
-			get
+		}
+
+		public InitialTrigger(SoundBuffer[] buffers, KujuTokenID selectionMethod, bool soundLoops) : base(buffers, selectionMethod, soundLoops)
+		{
+		}
+
+		private bool triggered;
+
+		public override void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
+		{
+			if (triggered == false)
 			{
-				switch (bufferSelectionMethod)
-				{
-					case KujuTokenID.SequentialSelection:
-						BufferIndex++;
-						if (BufferIndex > Buffers.Length - 1)
-						{
-							BufferIndex = 0;
-						}
-						break;
-					case KujuTokenID.RandomSelection:
-						BufferIndex = TrainManagerBase.RandomNumberGenerator.Next(0, Buffers.Length - 1);
-						break;
-				}
-				return Buffers[BufferIndex];
+				soundBuffer = Buffer;
+				soundLoops = SoundLoops;
+				triggered = true;
 			}
-		}
-
-		internal SoundTrigger(SoundBuffer buffer, bool soundLoops)
-		{
-			Buffers = new[] { buffer };
-			SoundLoops = soundLoops;
-		}
-
-		internal SoundTrigger(SoundBuffer[] buffers, KujuTokenID selectionMethod, bool soundLoops)
-		{
-			Buffers = buffers;
-			bufferSelectionMethod = selectionMethod;
-			SoundLoops = soundLoops;
-		}
-
-		public virtual void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
-		{
-
 		}
 	}
 }
