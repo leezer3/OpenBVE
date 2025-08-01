@@ -35,24 +35,28 @@ namespace TrainManager.MsTsSounds
 	{
 		private readonly double speedValue;
 
+		private readonly double maximumSpeedValue;
+
 		private readonly bool soundLoops;
 		
-		public SpeedIncPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double speedValue, bool soundLoops) : base(car, buffers, selectionMethod)
+		public SpeedIncPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double speedValue, double maximumSpeedValue, bool soundLoops) : base(car, buffers, selectionMethod)
 		{
 			this.speedValue = speedValue;
+			this.maximumSpeedValue = maximumSpeedValue;
 			this.soundLoops = soundLoops;
 		}
 
 		public SpeedIncPast(CarBase car, SoundBuffer buffer, double speedValue, bool soundLoops) : base(car, buffer)
 		{
 			this.speedValue = speedValue;
+			this.maximumSpeedValue = double.MaxValue;
 			this.soundLoops = soundLoops;
 		}
 
 		public override void Update(double timeElapsed, double pitchValue, double volumeValue)
 		{
 			double speed = Math.Abs(Car.CurrentSpeed);
-			if (speed >= speedValue)
+			if (speed >= speedValue && speed < maximumSpeedValue)
 			{
 				if (Buffer != null)
 				{
@@ -80,24 +84,28 @@ namespace TrainManager.MsTsSounds
 	{
 		private readonly double speedValue;
 
+		private readonly double minimumSpeedValue;
+
 		private readonly bool soundLoops;
 		
-		public SpeedDecPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double speedValue, bool soundLoops) : base(car, buffers, selectionMethod)
+		public SpeedDecPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double speedValue, double minimumSpeedValue, bool soundLoops) : base(car, buffers, selectionMethod)
 		{
 			this.speedValue = speedValue;
+			this.minimumSpeedValue = minimumSpeedValue;
 			this.soundLoops = soundLoops;
 		}
 
 		public SpeedDecPast(CarBase car, SoundBuffer buffer, double speedValue, bool soundLoops) : base(car, buffer)
 		{
 			this.speedValue = speedValue;
+			this.minimumSpeedValue = double.MinValue;
 			this.soundLoops = soundLoops;
 		}
 
 		public override void Update(double timeElapsed, double pitchValue, double volumeValue)
 		{
 			double speed = Math.Abs(Car.CurrentSpeed);
-			if (speed <= speedValue)
+			if (speed <= speedValue && speed > minimumSpeedValue)
 			{
 				if (Buffer != null)
 				{

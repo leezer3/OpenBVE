@@ -38,23 +38,27 @@ namespace TrainManager.MsTsSounds
 	{
 		private readonly double variableValue;
 
+		private readonly double maximumVariableValue;
+
 		private readonly bool soundLoops;
 
-		public Variable2IncPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double variableValue, bool soundLoops) : base(car, buffers, selectionMethod)
+		public Variable2IncPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double variableValue, double maximumVariableValue, bool soundLoops) : base(car, buffers, selectionMethod)
 		{
 			this.variableValue = variableValue;
+			this.maximumVariableValue = maximumVariableValue;
 			this.soundLoops = soundLoops;
 		}
 
 		public Variable2IncPast(CarBase car, SoundBuffer buffer, double variableValue, bool soundLoops) : base(car, buffer)
 		{
 			this.variableValue = variableValue;
+			this.maximumVariableValue = double.MaxValue;
 			this.soundLoops = soundLoops;
 		}
 
 		public override void Update(double timeElapsed, double pitchValue, double volumeValue)
 		{
-			if (Car.TractionModel.CurrentPower >= variableValue)
+			if (Car.TractionModel.CurrentPower >= variableValue && Car.TractionModel.CurrentPower < maximumVariableValue)
 			{
 				if (Buffer != null)
 				{
@@ -86,22 +90,26 @@ namespace TrainManager.MsTsSounds
 	{
 		private readonly double variableValue;
 
+		private readonly double minimumVariableValue;
+
 		private readonly bool soundLoops;
 
-		public Variable2DecPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double variableValue, bool soundLoops) : base(car, buffers, selectionMethod)
+		public Variable2DecPast(CarBase car, SoundBuffer[] buffers, KujuTokenID selectionMethod, double variableValue, double minimumVariableValue, bool soundLoops) : base(car, buffers, selectionMethod)
 		{
 			this.variableValue = variableValue;
+			this.minimumVariableValue = minimumVariableValue;
 			this.soundLoops = soundLoops;
 		}
 		public Variable2DecPast(CarBase car, SoundBuffer buffer, double variableValue, bool soundLoops) : base(car, buffer)
 		{
 			this.variableValue = variableValue;
+			this.minimumVariableValue = double.MinValue;
 			this.soundLoops = soundLoops;
 		}
 
 		public override void Update(double timeElapsed, double pitchValue, double volumeValue)
 		{
-			if (Car.TractionModel.CurrentPower <= variableValue)
+			if (Car.TractionModel.CurrentPower <= variableValue && Car.TractionModel.CurrentPower > minimumVariableValue)
 			{
 				if (Buffer != null)
 				{

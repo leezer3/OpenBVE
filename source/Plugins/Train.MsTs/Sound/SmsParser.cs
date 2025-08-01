@@ -151,25 +151,32 @@ namespace Train.MsTs
 			internal SoundTrigger CurrentTrigger;
 			internal KujuTokenID CurrentSoundType;
 			internal KujuTokenID VariableTriggerType;
-			internal double VariableValue;
+			internal double VariableStartValue;
+			internal double VariableEndValue;
+			internal int NumParsedTriggers;
 			internal SoundBuffer[] SoundBuffers;
 			internal int CurrentBuffer;
+			internal KujuTokenID SelectionMethod;
 
-			internal void Create(CarBase car, SoundStream currentSoundStream, KujuTokenID selectionMethod)
+			internal void Create(CarBase car, SoundStream currentSoundStream)
 			{
 				switch (VariableTriggerType)
 				{
 					case KujuTokenID.Speed_Inc_Past:
-						currentSoundStream.Triggers.Add(new SpeedIncPast(car, SoundBuffers, selectionMethod, VariableValue, CurrentSoundType != KujuTokenID.PlayOneShot));
+						currentSoundStream.Triggers.Add(new SpeedIncPast(car, SoundBuffers, SelectionMethod, VariableStartValue, VariableEndValue > VariableStartValue ? VariableEndValue : double.MaxValue, CurrentSoundType != KujuTokenID.PlayOneShot));
+						NumParsedTriggers = 0;
 						break;
 					case KujuTokenID.Speed_Dec_Past:
-						currentSoundStream.Triggers.Add(new SpeedDecPast(car, SoundBuffers, selectionMethod, VariableValue, CurrentSoundType != KujuTokenID.PlayOneShot));
+						currentSoundStream.Triggers.Add(new SpeedDecPast(car, SoundBuffers, SelectionMethod, VariableStartValue, VariableEndValue < VariableStartValue ? VariableEndValue : double.MinValue, CurrentSoundType != KujuTokenID.PlayOneShot));
+						NumParsedTriggers = 0;
 						break;
 					case KujuTokenID.Variable2_Inc_Past:
-						currentSoundStream.Triggers.Add(new Variable2IncPast(car, SoundBuffers, selectionMethod, VariableValue, CurrentSoundType != KujuTokenID.PlayOneShot));
+						currentSoundStream.Triggers.Add(new Variable2IncPast(car, SoundBuffers, SelectionMethod, VariableStartValue, VariableEndValue > VariableStartValue ? VariableEndValue : double.MaxValue, CurrentSoundType != KujuTokenID.PlayOneShot));
+						NumParsedTriggers = 0;
 						break;
 					case KujuTokenID.Variable2_Dec_Past:
-						currentSoundStream.Triggers.Add(new Variable2DecPast(car, SoundBuffers, selectionMethod, VariableValue, CurrentSoundType != KujuTokenID.PlayOneShot));
+						currentSoundStream.Triggers.Add(new Variable2DecPast(car, SoundBuffers, SelectionMethod, VariableStartValue, VariableEndValue < VariableStartValue ? VariableEndValue : double.MinValue, CurrentSoundType != KujuTokenID.PlayOneShot));
+						NumParsedTriggers = 0;
 						break;
 
 				}
@@ -337,13 +344,13 @@ namespace Train.MsTs
 					if (numSounds > 1 && block.Position() < block.Length() - 4)
 					{
 						Block subBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
-						selectionMethod = subBlock.ReadEnumValue(default(KujuTokenID));
+						currentSoundSet.SelectionMethod = subBlock.ReadEnumValue(default(KujuTokenID));
 					}
-					currentSoundSet.Create(car, currentSoundStream, selectionMethod);
 					break;
 				case KujuTokenID.ReleaseLoopRelease:
 					// empty block expected
-					// appear to be paired with StartLoopRelease
+					// paired with StartLoopRelease
+					currentSoundSet.Create(car, currentSoundStream);
 					break;
 				case KujuTokenID.File:
 					if (block.ReadPath(currentFolder, out string soundFile))
@@ -500,7 +507,16 @@ namespace Train.MsTs
 							break;
 						case KujuTokenID.Speed_Inc_Past:
 						case KujuTokenID.Speed_Dec_Past:
-							currentSoundSet.VariableValue = block.ReadSingle(UnitOfVelocity.KilometersPerHour, UnitOfVelocity.MetersPerSecond); // speed in m/s
+							if (currentSoundSet.NumParsedTriggers == 0)
+							{
+								currentSoundSet.VariableStartValue = block.ReadSingle(UnitOfVelocity.KilometersPerHour, UnitOfVelocity.MetersPerSecond); // speed in m/s
+							}
+							else
+							{
+								currentSoundSet.VariableEndValue = block.ReadSingle(UnitOfVelocity.KilometersPerHour, UnitOfVelocity.MetersPerSecond); // speed in m/s
+							}
+							currentSoundSet.NumParsedTriggers++;
+
 							newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump, KujuTokenID.PlayOneShot, KujuTokenID.EnableTrigger, KujuTokenID.DisableTrigger });
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;
@@ -517,7 +533,16 @@ namespace Train.MsTs
 							break;
 						case KujuTokenID.Variable2_Inc_Past:
 						case KujuTokenID.Variable2_Dec_Past:
-							currentSoundSet.VariableValue = block.ReadSingle(); // power value
+							if (currentSoundSet.NumParsedTriggers == 0)
+							{
+								currentSoundSet.VariableStartValue = block.ReadSingle(); // power value
+							}
+							else
+							{
+								currentSoundSet.VariableEndValue = block.ReadSingle(); // power value
+							}
+							currentSoundSet.NumParsedTriggers++;
+
 							newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump, KujuTokenID.EnableTrigger, KujuTokenID.DisableTrigger });
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;
@@ -541,14 +566,14 @@ namespace Train.MsTs
 						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 					}
 
-					selectionMethod = KujuTokenID.SequentialSelection;
+					currentSoundSet.SelectionMethod = KujuTokenID.SequentialSelection;
 					// Attempt to read selection method if at least one sound file, and some data remaining in the block
 					if (numSounds > 1 && block.Position() < block.Length() - 4)
 					{
 						Block subBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
-						selectionMethod = subBlock.ReadEnumValue(default(KujuTokenID));
+						currentSoundSet.SelectionMethod = subBlock.ReadEnumValue(default(KujuTokenID));
 					}
-					currentSoundSet.Create(car, currentSoundStream, selectionMethod);
+					currentSoundSet.Create(car, currentSoundStream);
 					break;
 				case KujuTokenID.Volume:
 					double volume = block.ReadSingle();
