@@ -198,6 +198,10 @@ namespace OpenBve
 						break;
 					case Translations.Command.CameraExterior:
 						// camera: exterior
+						SaveCameraSettings();
+						Program.Renderer.Camera.CurrentMode = CameraViewMode.Exterior;
+						RestoreCameraSettings();
+
 						if (TrainManager.PlayerTrain.CurrentDirection == TrackDirection.Reverse)
 						{
 							MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","exterior"}) + " " + (TrainManager.PlayerTrain.Cars.Length - TrainManager.PlayerTrain.CameraCar), MessageDependency.CameraView, GameMode.Expert,
@@ -208,10 +212,7 @@ namespace OpenBve
 							MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","exterior"}) + " " + (TrainManager.PlayerTrain.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
 								MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 						}
-
-						SaveCameraSettings();
-						Program.Renderer.Camera.CurrentMode = CameraViewMode.Exterior;
-						RestoreCameraSettings();
+						
 						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 						{
 							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);

@@ -522,6 +522,7 @@ namespace OpenBve
 					break;
 				case CameraViewMode.Exterior:
 					Program.Renderer.Camera.SavedExterior = Program.Renderer.Camera.Alignment;
+					Program.Renderer.Camera.SavedExterior.CameraCar = TrainManagerBase.PlayerTrain.CameraCar;
 					break;
 				case CameraViewMode.Track:
 				case CameraViewMode.FlyBy:
@@ -542,6 +543,7 @@ namespace OpenBve
 					break;
 				case CameraViewMode.Exterior:
 					Program.Renderer.Camera.Alignment = Program.Renderer.Camera.SavedExterior;
+					TrainManagerBase.PlayerTrain.CameraCar = Program.Renderer.Camera.SavedExterior.CameraCar;
 					break;
 				case CameraViewMode.Track:
 				case CameraViewMode.FlyBy:

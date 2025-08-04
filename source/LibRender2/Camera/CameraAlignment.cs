@@ -17,6 +17,8 @@ namespace LibRender2.Cameras
 		public double TrackPosition;
 		/// <summary>The zoom value</summary>
 		public double Zoom;
+		/// <summary>The camera car, if attached to a train</summary>
+		public int CameraCar;
 
 		public CameraAlignment(Vector3 Position, double Yaw, double Pitch, double Roll, double TrackPosition, double Zoom)
 		{
