@@ -25,6 +25,7 @@
 using System;
 using System.IO;
 using System.IO.Compression;
+using System.Runtime.CompilerServices;
 using System.Text;
 using OpenBveApi;
 using OpenBveApi.Hosts;
@@ -592,6 +593,7 @@ namespace Plugin.PNG
 		/// <param name="a">The left byte</param>
 		/// <param name="b">The upper byte</param>
 		/// <param name="c">The upper left byte</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private int PaethPredictor(int a, int b, int c)
 		{
 			int p = a + b - c;
