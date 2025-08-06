@@ -68,7 +68,9 @@ namespace Train.OpenBve
 
 			foreach (XElement element in DocumentElements)
 			{
-				ParsePanelNode(element, FileName, Train, Car, ref Train.Cars[Car].CarSections[0], 0, 0);
+				CarSection c = Train.Cars[Car].CarSections[CarSectionType.Interior];
+				ParsePanelNode(element, FileName, Train, Car, ref c, 0, 0);
+				Train.Cars[Car].CarSections[CarSectionType.Interior] = c;
 			}
 		}
 
@@ -1708,7 +1710,7 @@ namespace Train.OpenBve
 
 						for (int l = 0; l < daytimeDropFiles.Count; l++)
 						{
-							string currentDropFile = !System.IO.Path.IsPathRooted(daytimeDropFiles[l]) ? Path.CombineFile(Train.TrainFolder, daytimeDropFiles[l]) : daytimeDropFiles[l];
+							string currentDropFile = !Path.IsPathRooted(daytimeDropFiles[l]) ? Path.CombineFile(Train.TrainFolder, daytimeDropFiles[l]) : daytimeDropFiles[l];
 							if (!File.Exists(currentDropFile))
 							{
 								currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Day\\Drop" + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
@@ -1722,7 +1724,7 @@ namespace Train.OpenBve
 
 						for (int l = 0; l < nighttimeDropFiles.Count; l++)
 						{
-							string currentDropFile = !System.IO.Path.IsPathRooted(nighttimeDropFiles[l]) ? Path.CombineFile(Train.TrainFolder, nighttimeDropFiles[l]) : nighttimeDropFiles[l];
+							string currentDropFile = !Path.IsPathRooted(nighttimeDropFiles[l]) ? Path.CombineFile(Train.TrainFolder, nighttimeDropFiles[l]) : nighttimeDropFiles[l];
 							if (!File.Exists(currentDropFile))
 							{
 								currentDropFile = Path.CombineFile(Plugin.FileSystem.DataFolder, "Compatability\\Windscreen\\Night\\Drop" + Plugin.RandomNumberGenerator.Next(1, 4) + ".png");
@@ -1742,11 +1744,11 @@ namespace Train.OpenBve
 						{
 							int DropTexture = Plugin.RandomNumberGenerator.Next(daytimeDrops.Count);
 							double currentDropY = Plugin.RandomNumberGenerator.NextDouble() * (bottomRight.Y - topLeft.Y) + topLeft.Y;
-							int panelDropIndex = Plugin.Panel2CfgParser.CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
+							int panelDropIndex = Plugin.Panel2CfgParser.CreateElement(ref Train.Cars[Car].CarSections[CarSectionType.Interior].Groups[0], currentDropX, currentDropY, dropSize, dropSize, new Vector2(0.5, 0.5), Layer * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver, daytimeDrops[DropTexture], nighttimeDrops[DropTexture], Color32.White);
 							string f = drop + " raindrop";
 							try
 							{
-								Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Plugin.CurrentHost, f + " 1 == --", false);
+								Train.Cars[Car].CarSections[CarSectionType.Interior].Groups[GroupIndex].Elements[panelDropIndex].StateFunction = new FunctionScript(Plugin.CurrentHost, f + " 1 == --", false);
 							}
 							catch
 							{

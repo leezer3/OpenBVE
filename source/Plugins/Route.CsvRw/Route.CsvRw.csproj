@@ -58,6 +58,7 @@
     <Compile Include="CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="CsvRwRouteParser.cs" />
+    <Compile Include="DuplicateKeyComparer.cs" />
     <Compile Include="Namespaces\NonTrack\Cycle.Commands.cs" />
     <Compile Include="Namespaces\NonTrack\Options.Commands.cs" />
     <Compile Include="Namespaces\NonTrack\Route.Commands.cs" />
@@ -83,7 +84,6 @@
     <Compile Include="Namespaces\Track\Track.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Structures\Expression.PositionedExpression.cs" />
     <Compile Include="Structures\Miscellaneous\PointOfInterest.cs" />
     <Compile Include="Structures\Miscellaneous\Sound.cs" />
     <Compile Include="Structures\Route\Crack.cs" />

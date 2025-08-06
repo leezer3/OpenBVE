@@ -115,7 +115,7 @@ namespace Train.OpenBve
 			{
 				return false;
 			}
-			if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
+			if (Directory.Exists(path))
 			{
 				string vehicleTxt;
 				try {
@@ -336,7 +336,7 @@ namespace Train.OpenBve
 					if (carObjects[i] != null)
 					{
 						// add object
-						currentTrain.Cars[i].LoadCarSections(carObjects[i], visibleFromInterior[i]);
+						currentTrain.Cars[i].CarSections.Add(CarSectionType.Exterior, new CarSection(CurrentHost, ObjectType.Dynamic, visibleFromInterior[i], currentTrain.Cars[i], carObjects[i]));
 					}
 
 					if (couplerObjects[i] != null)
@@ -496,8 +496,8 @@ namespace Train.OpenBve
 	    /// <param name="encoding">The selected train encoding</param>
 	    internal void ParsePanelConfig(TrainBase train, Encoding encoding)
 	    {
-		    train.Cars[train.DriverCar].CarSections = new CarSection[1];
-		    train.Cars[train.DriverCar].CarSections[0] = new CarSection(CurrentHost, ObjectType.Overlay, true);
+		    train.Cars[train.DriverCar].CarSections = new Dictionary<CarSectionType, CarSection>();
+		    train.Cars[train.DriverCar].CarSections.Add(CarSectionType.Interior, new CarSection(CurrentHost, ObjectType.Overlay, true));
 		    string panelFile = Path.CombineFile(train.TrainFolder, "panel.xml");
 		    if (!File.Exists(panelFile))
 		    {
@@ -575,7 +575,7 @@ namespace Train.OpenBve
 							    CurrentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
 						    }
 
-						    train.Cars[train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
+						    train.Cars[train.DriverCar].CarSections[CarSectionType.Interior].Groups[0].Elements = a.Objects;
 						    if (train.Cars[train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
 						    {
 							    train.Cars[train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;

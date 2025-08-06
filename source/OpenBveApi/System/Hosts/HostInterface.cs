@@ -282,7 +282,7 @@ namespace OpenBveApi.Hosts {
 		/// <returns>Whether the extension could be determined</returns>
 		public bool DetermineObjectExtension(ref string FilePath)
 		{
-			if (System.IO.File.Exists(FilePath) || System.IO.Path.HasExtension(FilePath))
+			if (System.IO.File.Exists(FilePath) || Path.HasExtension(FilePath))
 			{
 				return true;
 			}
@@ -294,7 +294,7 @@ namespace OpenBveApi.Hosts {
 
 			foreach (string extension in SupportedAnimatedObjectExtensions)
 			{
-				string testPath = Path.CombineFile(Path.GetDirectoryName(FilePath), $"{System.IO.Path.GetFileName(FilePath)}{extension}");
+				string testPath = Path.CombineFile(Path.GetDirectoryName(FilePath), $"{Path.GetFileName(FilePath)}{extension}");
 
 				if (System.IO.File.Exists(testPath))
 				{
@@ -313,7 +313,7 @@ namespace OpenBveApi.Hosts {
 		/// <returns>Whether the extension could be determined</returns>
 		public bool DetermineStaticObjectExtension(ref string FilePath)
 		{
-			if (System.IO.File.Exists(FilePath) || System.IO.Path.HasExtension(FilePath))
+			if (System.IO.File.Exists(FilePath) || Path.HasExtension(FilePath))
 			{
 				return true;
 			}
@@ -321,7 +321,7 @@ namespace OpenBveApi.Hosts {
 			// Search in the order of .x, .csv, .b3d, etc.
 			foreach (string extension in SupportedStaticObjectExtensions.OrderByDescending(x => Array.IndexOf(new[] { ".b3d", ".csv", ".x" }, x)))
 			{
-				string testPath = Path.CombineFile(Path.GetDirectoryName(FilePath), $"{System.IO.Path.GetFileName(FilePath)}{extension}");
+				string testPath = Path.CombineFile(Path.GetDirectoryName(FilePath), $"{Path.GetFileName(FilePath)}{extension}");
 
 				if (System.IO.File.Exists(testPath))
 				{

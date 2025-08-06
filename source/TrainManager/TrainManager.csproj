@@ -90,6 +90,7 @@
     <Compile Include="Car\Windscreen\Wiper.cs" />
     <Compile Include="Car\Windscreen\WiperPosition.cs" />
     <Compile Include="Car\Windscreen\WiperSpeed.cs" />
+    <Compile Include="Collision\Collision.cs" />
     <Compile Include="Handles\AbstractHandle.cs" />
     <Compile Include="Handles\CabHandles.cs" />
     <Compile Include="Handles\HandleChange.cs" />
@@ -192,5 +193,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

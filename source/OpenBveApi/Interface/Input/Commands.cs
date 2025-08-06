@@ -331,22 +331,20 @@ namespace OpenBveApi.Interface {
 			/// <summary>A full analog joystick or gamepad axis</summary>
 			AnalogFull
 		}
-
 		
-
 		/// <summary>Converts the specified security command to a virtual key.</summary>
 		/// <returns>Virtual key for plugins.</returns>
-		/// <param name="cmd">The security command. If this isn't a recognized security command, ArgumentException will be thrown.</param>
-		public static VirtualKeys SecurityToVirtualKey(Command cmd)
+		/// <param name="cmd">The security command</param>
+		/// <param name="key">The returned key</param>
+		public static bool SecurityToVirtualKey(Command cmd, out VirtualKeys key)
 		{
 			string cmdname = Enum.GetName(typeof(Command), cmd);
 			if (cmdname == null) throw new ArgumentNullException(nameof(cmd));
 			if (cmdname.StartsWith("Security", StringComparison.Ordinal))
 				cmdname = cmdname.Substring(8).ToUpperInvariant();
-			if (!Enum.TryParse(cmdname, out VirtualKeys key))
-				throw new ArgumentException(@"VirtualKeys does not contain the following key: " +
-					cmdname, nameof(cmd));
-			return key;
+			if (!Enum.TryParse(cmdname, out key))
+				return false;
+			return true;
 		}
 	}
 }

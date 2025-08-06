@@ -1430,14 +1430,14 @@ namespace OpenBve
 			{
 				//Mono doesn't like our fancy folder selector
 				//Some versions of OS-X crash, and Linux just falls back- Safer to specifically use the old version on these...
-				var MonoDialog = new FolderBrowserDialog();
-				MonoDialog.RootFolder = Environment.SpecialFolder.MyComputer;
-				if (lastSelectedFolder != null) MonoDialog.SelectedPath = lastSelectedFolder;
-				if (MonoDialog.ShowDialog() == DialogResult.OK)
+				var monoDialog = new FolderBrowserDialog();
+				monoDialog.RootFolder = Environment.SpecialFolder.MyComputer;
+				if (lastSelectedFolder != null) monoDialog.SelectedPath = lastSelectedFolder;
+				if (monoDialog.ShowDialog() == DialogResult.OK)
 				{
-					lastSelectedFolder = MonoDialog.SelectedPath;
-					folder = Directory.GetParent(MonoDialog.SelectedPath)?.ToString();
-					folderDisplay = MonoDialog.SelectedPath;
+					lastSelectedFolder = monoDialog.SelectedPath;
+					folder = Directory.GetParent(monoDialog.SelectedPath)?.ToString();
+					folderDisplay = monoDialog.SelectedPath;
 					files = Directory.GetFiles(folderDisplay, "*.*", SearchOption.AllDirectories);
 					DialogOK = true;
 				}
@@ -1465,12 +1465,12 @@ namespace OpenBve
 				var tempList = new List<PackageFile>();
 				for (int i = 0; i < files.Length; i++)
 				{
-					var File = new PackageFile
+					var tempFile = new PackageFile
 					{
 						absolutePath = files[i],
 						relativePath = files[i].Replace(folder, ""),
 					};
-					tempList.Add(File);
+					tempList.Add(tempFile);
 				}
 				if (filesToPackage == null)
 				{

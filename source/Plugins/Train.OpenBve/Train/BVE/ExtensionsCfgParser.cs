@@ -123,6 +123,11 @@ namespace Train.OpenBve
 							}
 							break;
 						case ExtensionCfgSection.Coupler:
+							if (block.Index == -1 || block.Index >= Train.Cars.Length)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid or missing CouplerIndex in file " + FileName);
+								break;
+							}
 							if (block.GetVector2(ExtensionCfgKey.Distances, ',', out Vector2 distances))
 							{
 								if (distances.X > distances.Y)

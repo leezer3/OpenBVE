@@ -13,7 +13,15 @@ namespace OpenBve.Graphics
 		{
 			for (int i = 0; i < Program.Renderer.TextureManager.RegisteredTexturesCount; i++)
 			{
-				Program.Renderer.TextureManager.LoadTexture(ref TextureManager.RegisteredTextures[i], OpenGlTextureWrapMode.ClampClamp, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
+				for (int j = 0; j < 4; j++)
+				{
+					if (TextureManager.RegisteredTextures[i].OpenGlTextures[j].Used)
+					{
+						Program.Renderer.TextureManager.LoadTexture(ref TextureManager.RegisteredTextures[i], (OpenGlTextureWrapMode)j, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
+					}
+					
+				}
+				
 			}
 		}
 

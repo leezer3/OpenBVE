@@ -1,12 +1,15 @@
-using System;
-using System.IO;
 using Formats.OpenBve;
 using OpenBveApi.FunctionScripting;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
+using System;
+using System.IO;
+using System.Text.RegularExpressions;
+using OpenBveApi.Trains;
 using Path = OpenBveApi.Path;
 
 namespace Plugin
@@ -155,7 +158,15 @@ namespace Plugin
 							Block.TryGetVector3(AnimatedKey.RotateZDirection, ',', ref Result.Objects[ObjectCount].RotateZDirection);
 							Block.TryGetVector2(AnimatedKey.TextureShiftXDirection, ',', ref Result.Objects[ObjectCount].TextureShiftXDirection);
 							Block.TryGetVector2(AnimatedKey.TextureShiftYDirection, ',', ref Result.Objects[ObjectCount].TextureShiftYDirection);
-							Block.GetVector2(AnimatedKey.Axles, ',', out Vector2 axleLocations);
+							Vector2 axleLocations = new Vector2(-0.5, 0.5);
+							if (Block.TryGetVector2(AnimatedKey.Axles, ',', ref axleLocations))
+							{
+								if (axleLocations.X <= axleLocations.Y)
+								{
+									currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + AnimatedKey.Axles + " in file " + FileName);
+									axleLocations = new Vector2(-0.5, 0.5);
+								}
+							}
 							Result.Objects[ObjectCount].FrontAxlePosition = axleLocations.X;
 							Result.Objects[ObjectCount].RearAxlePosition = axleLocations.Y;
 							Block.GetFunctionScript(new[] { AnimatedKey.TrackFollowerFunction, AnimatedKey.TrackFollowerScript }, Folder, out Result.Objects[ObjectCount].TrackFollowerFunction);
@@ -284,6 +295,17 @@ namespace Plugin
 							Block.GetFunctionScript(new[] { AnimatedKey.VolumeFunction }, Folder, out AnimationScript volumeFunction);
 							Block.TryGetValue(AnimatedKey.Volume, ref volume);
 							Block.GetFunctionScript(new[] { AnimatedKey.TranslateZFunction, AnimatedKey.TranslateZFunctionRPN, AnimatedKey.TranslateZScript }, Folder, out AnimationScript trackFollowerFunction);
+							Vector2 axleLocations = new Vector2(-0.5, 0.5);
+							if (Block.TryGetVector2(AnimatedKey.Axles, ',', ref axleLocations))
+							{
+								if (axleLocations.X <= axleLocations.Y)
+								{
+									currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + AnimatedKey.Axles + " in file " + FileName);
+									axleLocations = new Vector2(-0.5, 0.5);
+								}
+							}
+							Result.Objects[ObjectCount].FrontAxlePosition = axleLocations.X;
+							Result.Objects[ObjectCount].RearAxlePosition = axleLocations.Y;
 							currentHost.RegisterSound(soundPath, radius, out SoundHandle currentSound);
 							WorldSound snd = new WorldSound(currentHost, currentSound)
 							{
@@ -331,8 +353,8 @@ namespace Plugin
 									}
 								}
 
-								snd.currentPitch = pitch;
-								snd.currentVolume = volume;
+								snd.CurrentPitch = pitch;
+								snd.CurrentVolume = volume;
 								snd.SoundPosition = Position;
 								snd.SingleBuffer = fileNames.Length != 1;
 								snd.PlayOnShow = playOnShow;

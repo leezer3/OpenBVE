@@ -498,11 +498,7 @@ namespace CsvRwRouteParser
 				{
 					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid trailing semicolon encountered in " + Command + " at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 				}
-
-				while (Command.EndsWith(";"))
-				{
-					Command = Command.Substring(0, Command.Length - 1);
-				}
+				Command = Command.TrimEnd(';');
 			}
 		}
 	}

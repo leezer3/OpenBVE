@@ -25,6 +25,7 @@
 using System;
 using System.IO;
 using System.IO.Compression;
+using System.Runtime.CompilerServices;
 using System.Text;
 using OpenBveApi;
 using OpenBveApi.Hosts;
@@ -91,15 +92,14 @@ namespace Plugin.PNG
 					int currentChunk = 0;
 					while (true)
 					{
-						byte[] chunkHeader = new byte[8];
-						if (fileReader.Read(chunkHeader, 0, chunkHeader.Length) != 8)
+						if (fileReader.Read(buffer, 0,8) != 8)
 						{
 							Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Insufficient Header data for Chunk " + currentChunk + " in PNG file " + fileName);
 							return false;
 						}
 
-						int chunkSize = (int)BinaryExtensions.GetUInt32(chunkHeader, 0, Endianness.Big);
-						ChunkType chunkType = ReadChunkType(chunkHeader);
+						int chunkSize = (int)BinaryExtensions.GetUInt32(buffer, 0, Endianness.Big);
+						ChunkType chunkType = ReadChunkType(buffer);
 
 						if (chunkType == ChunkType.IEND)
 						{
@@ -592,6 +592,7 @@ namespace Plugin.PNG
 		/// <param name="a">The left byte</param>
 		/// <param name="b">The upper byte</param>
 		/// <param name="c">The upper left byte</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private int PaethPredictor(int a, int b, int c)
 		{
 			int p = a + b - c;

@@ -21,6 +21,10 @@ namespace OpenBve
 
 			public override void Trigger(double timeElapsed)
 			{
+				if (Train.Cars.Length == 0)
+				{
+					return;
+				}
 				if (Program.CurrentRoute.SecondsSinceMidnight - TimeLastProcessed >= CurrentInterval)
 				{
 					TimeLastProcessed = Program.CurrentRoute.SecondsSinceMidnight;

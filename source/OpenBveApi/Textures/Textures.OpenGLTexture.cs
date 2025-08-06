@@ -7,5 +7,7 @@
 		public bool Valid;
 		/// <summary>The OpenGL texture name.</summary>
 		public int Name;
+		/// <summary>Whether the texture has been used</summary>
+		public bool Used;
 	}
 }

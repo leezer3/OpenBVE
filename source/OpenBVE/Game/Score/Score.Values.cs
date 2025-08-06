@@ -1,4 +1,5 @@
-﻿namespace OpenBve
+﻿// ReSharper disable InconsistentNaming
+namespace OpenBve
 {
 	internal static partial class Game
 	{

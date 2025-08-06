@@ -1,5 +1,6 @@
 using System;
 using LibRender2.Cameras;
+using LibRender2.Trains;
 using LibRender2.Viewports;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
@@ -246,7 +247,7 @@ namespace OpenBve {
 					if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
 						int c = TrainManager.PlayerTrain.DriverCar;
 						if (c >= 0) {
-							if (TrainManager.PlayerTrain.Cars[c].CarSections.Length == 0 || TrainManager.PlayerTrain.Cars[c].CarSections[0].Type != ObjectType.Overlay) {
+							if (TrainManager.PlayerTrain.Cars[c].CarSections.ContainsKey(CarSectionType.Interior)) {
 								d2.Rotate(sF, -TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch);
 								u2.Rotate(sF, -TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch);
 							}
@@ -349,6 +350,17 @@ namespace OpenBve {
 						sF.Rotate(dF, -totalRoll);
 					}
 				}
+
+				if (Program.Renderer.Camera.CurrentMode < CameraViewMode.Exterior)
+				{
+					if (TrainManager.PlayerTrain.DriverCar >= 0 && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections[0].ViewDirection != null)
+					{
+						dF.Rotate(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections[0].ViewDirection);
+						uF.Rotate(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections[0].ViewDirection);
+						sF.Rotate(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections[0].ViewDirection);
+					}
+				}
+
 				// finish
 				Program.Renderer.Camera.AbsolutePosition = cF;
 				Program.Renderer.Camera.AbsoluteDirection = dF;

@@ -113,7 +113,6 @@ namespace Plugin.BMP
 				dataOffset = ToInt32(buffer, 10);
 
 				// INFO HEADER
-				buffer = new byte[4];
 				if (fileReader.Read(buffer, 0, 4) != 4)
 				{
 					Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Insufficient InfoHeader data in Bitmap file " + fileName);

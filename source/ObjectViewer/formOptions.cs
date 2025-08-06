@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using LibRender2.Viewports;
 using ObjectViewer.Graphics;
 using OpenBveApi;
 using OpenBveApi.Graphics;
@@ -104,7 +105,7 @@ namespace ObjectViewer
 				if (width.Value > 300 && height.Value > 300)
 				{
 					Program.Renderer.SetWindowSize((int)width.Value, (int)height.Value);
-					Program.Renderer.UpdateViewport();
+					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 				}
 			}
 

@@ -26,7 +26,7 @@ namespace OpenBve.Graphics.Renderers
 				MessageManager.TextualMessages[j].Width = size.X;
 				MessageManager.TextualMessages[j].Height = size.Y;
 				//Run through the list of current messages
-				double a = MessageManager.TextualMessages[j].Width - j * (double)Element.Value1;
+				double a = MessageManager.TextualMessages[j].Width - j * Element.Value1;
 				//If our width is wider than the old, use this as the NEW viewing plane width
 				if (a > totalwidth)
 				{
@@ -149,7 +149,7 @@ namespace OpenBve.Graphics.Renderers
 					m++;
 				}
 
-				double px = mm.RendererPosition.X + j * (double)Element.Value1;
+				double px = mm.RendererPosition.X + j * Element.Value1;
 				double py = mm.RendererPosition.Y;
 				float alpha = (float)(mm.RendererAlpha * mm.RendererAlpha);
 				// graphics

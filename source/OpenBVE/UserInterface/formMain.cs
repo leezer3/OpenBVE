@@ -196,7 +196,7 @@ namespace OpenBve {
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
 			{
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedRoutes[i])) continue;
-				string routeFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
+				string routeFileName = Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
 				string routePath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
 				if (string.IsNullOrEmpty(routeFileName) || string.IsNullOrEmpty(routePath)) continue;
 				ListViewItem listItem = listviewRouteRecently.Items.Add(routeFileName);
@@ -248,7 +248,7 @@ namespace OpenBve {
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
 			{
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedTrains[i])) continue;
-				string TrainFileName = System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
+				string TrainFileName = Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
 				string TrainPath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
 				if (!Directory.Exists(TrainPath))
 				{
@@ -914,13 +914,13 @@ namespace OpenBve {
 				comboboxKeyboardKey.DisplayMember = "Value";
 				comboboxKeyboardKey.ValueMember = "Key";
 				
-				ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
+				ListViewItem[] listItems = new ListViewItem[Interface.CurrentControls.Length];
 				for (int i = 0; i < Interface.CurrentControls.Length; i++)
 				{
-					Items[i] = new ListViewItem(new[] { "", "", "", "", "" });
-					UpdateControlListElement(Items[i], i, false);
+					listItems[i] = new ListViewItem(new[] { "", "", "", "", "" });
+					UpdateControlListElement(listItems[i], i, false);
 				}
-				listviewControls.Items.AddRange(Items);
+				listviewControls.Items.AddRange(listItems);
 				listviewControls.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 			}
 			/*
@@ -1239,23 +1239,19 @@ namespace OpenBve {
 			}
 			// Remember enabled input device plugins
 			{
-				int n = 0;
-				string[] a = new string[InputDevicePlugin.AvailablePluginInfos.Count];
+				List<string> a = new List<string>();
 				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 				{
-					InputDevicePlugin.PluginInfo Info = InputDevicePlugin.AvailablePluginInfos[i];
-					if (Info.Status != InputDevicePlugin.PluginInfo.PluginStatus.Enable) {
+					if (InputDevicePlugin.AvailablePluginInfos[i].Status != InputDevicePlugin.PluginInfo.PluginStatus.Enable) {
 						continue;
 					}
-					string pluginPath = Path.CombineFile(Program.FileSystem.GetDataFolder("InputDevicePlugins"), Info.FileName);
+					string pluginPath = Path.CombineFile(Program.FileSystem.GetDataFolder("InputDevicePlugins"), InputDevicePlugin.AvailablePluginInfos[i].FileName);
 					if (File.Exists(pluginPath))
 					{
-						a[n] = Info.FileName;
-						n++;
+						a.Add(InputDevicePlugin.AvailablePluginInfos[i].FileName);
 					}
 				}
-				Array.Resize(ref a, n);
-				Interface.CurrentOptions.EnableInputDevicePlugins = a;
+				Interface.CurrentOptions.EnabledInputDevicePlugins = a.ToArray();
 			}
 			// Unload input device plugins if we're closing the program
 			if (!Result.Start)

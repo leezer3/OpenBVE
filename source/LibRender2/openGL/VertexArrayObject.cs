@@ -185,6 +185,10 @@ namespace LibRender2
 		
 		private static void createVAO(Mesh mesh, bool isDynamic, VertexLayout vertexLayout, BaseRenderer renderer)
 		{
+			if (mesh == null)
+			{
+				return;
+			}
 			try
 			{
 				var hint = isDynamic ? BufferUsageHint.DynamicDraw : BufferUsageHint.StaticDraw;

@@ -1,10 +1,11 @@
-using System;
-using System.ComponentModel;
-using System.Windows.Forms;
+using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenTK.Graphics;
+using System;
+using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace RouteViewer
 {
@@ -101,7 +102,7 @@ namespace RouteViewer
 				if (width.Value > 300 && height.Value > 300)
 				{
 					Program.Renderer.SetWindowSize((int)width.Value, (int)height.Value);
-					Program.Renderer.UpdateViewport();
+					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 				}
 			}
 			Interface.CurrentOptions.LoadingLogo = checkBoxLogo.Checked;

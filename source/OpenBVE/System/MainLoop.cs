@@ -103,7 +103,7 @@ namespace OpenBve
 				}
 			}
 
-			Program.FileSystem.AppendToLogFile(Interface.CurrentOptions.IsUseNewRenderer ? "Using openGL 3.0 (new) renderer" : "Using openGL 1.2 (old) renderer");
+			Program.FileSystem.AppendToLogFile(Interface.CurrentOptions.IsUseNewRenderer ? "Using openGL 4 (new) renderer" : "Using openGL 1.2 (old) renderer");
 			if (Interface.CurrentOptions.FullscreenMode)
 			{
 				Program.FileSystem.AppendToLogFile("Initialising full-screen game window of size " + Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight);
@@ -522,6 +522,7 @@ namespace OpenBve
 					break;
 				case CameraViewMode.Exterior:
 					Program.Renderer.Camera.SavedExterior = Program.Renderer.Camera.Alignment;
+					Program.Renderer.Camera.SavedExterior.CameraCar = TrainManagerBase.PlayerTrain.CameraCar;
 					break;
 				case CameraViewMode.Track:
 				case CameraViewMode.FlyBy:
@@ -542,6 +543,7 @@ namespace OpenBve
 					break;
 				case CameraViewMode.Exterior:
 					Program.Renderer.Camera.Alignment = Program.Renderer.Camera.SavedExterior;
+					TrainManagerBase.PlayerTrain.CameraCar = Program.Renderer.Camera.SavedExterior.CameraCar;
 					break;
 				case CameraViewMode.Track:
 				case CameraViewMode.FlyBy:

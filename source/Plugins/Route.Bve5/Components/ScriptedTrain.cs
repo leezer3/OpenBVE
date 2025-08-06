@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using Bve5_Parsing.MapGrammar;
 using Bve5_Parsing.MapGrammar.EvaluateData;
+using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -218,7 +219,7 @@ namespace Route.Bve5
 					RouteData.Objects.TryGetValue(OtherTrain.CarObjects[i].Key, out UnifiedObject CarObject);
 					if (CarObject != null)
 					{
-						Train.Cars[i].LoadCarSections(CarObject, false);
+						Train.Cars[i].CarSections.Add(CarSectionType.Exterior, new CarSection(Plugin.CurrentHost, ObjectType.Dynamic, false, Train.Cars[i]));
 					}
 				}
 

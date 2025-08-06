@@ -4,6 +4,7 @@ using System.Linq;
 using LibRender2;
 using LibRender2.MotionBlurs;
 using LibRender2.Objects;
+using LibRender2.Overlays;
 using LibRender2.Screens;
 using LibRender2.Shaders;
 using LibRender2.Viewports;
@@ -25,22 +26,6 @@ namespace OpenBve.Graphics
 {
 	internal class NewRenderer : BaseRenderer
 	{
-		// interface options
-		internal enum GradientDisplayMode
-		{
-			Percentage, UnitOfChange, Permil, None
-		}
-
-		internal enum SpeedDisplayMode
-		{
-			None, Kmph, Mph
-		}
-
-		internal enum DistanceToNextStationDisplayMode
-		{
-			None, Km, Mile
-		}
-
 		internal bool OptionClock = false;
 		internal GradientDisplayMode OptionGradient = GradientDisplayMode.None;
 		internal SpeedDisplayMode OptionSpeed = SpeedDisplayMode.None;
@@ -97,11 +82,11 @@ namespace OpenBve.Graphics
 			return base.CreateStaticObject(obj, Position, WorldTransformation, LocalTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition);
 		}
 
-		public override void UpdateViewport(int Width, int Height)
+		protected override void UpdateViewport(int width, int height)
 		{
 			_programLogo = null;
-			Screen.Width = Width;
-			Screen.Height = Height;
+			Screen.Width = width;
+			Screen.Height = height;
 			GL.Viewport(0, 0, Screen.Width, Screen.Height);
 
 			Screen.AspectRatio = Screen.Width / (double)Screen.Height;

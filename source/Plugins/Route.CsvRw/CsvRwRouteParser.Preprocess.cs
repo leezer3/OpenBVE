@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using Route.CsvRw;
 
 namespace CsvRwRouteParser
 {
@@ -630,9 +631,8 @@ namespace CsvRwRouteParser
 		}
 
 		private void PreprocessSortByTrackPosition(double[] unitFactors, ref Expression[] Expressions) {
-			PositionedExpression[] p = new PositionedExpression[Expressions.Length];
-			int n = 0;
-			double a = -1.0;
+			SortedList<double, Expression> positionedExpressions = new SortedList<double, Expression>(new DuplicateLessThanKeyComparer<double>());
+			double a = -1.0, pa = -1.0;
 			bool numberCheck = !IsRW;
 			for (int i = 0; i < Expressions.Length; i++) {
 				if (IsRW) {
@@ -672,34 +672,15 @@ namespace CsvRwRouteParser
 						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Negative track position encountered at line " + Expressions[i].Line.ToString(Culture) + ", column " + Expressions[i].Column.ToString(Culture) + " in file " + Expressions[i].File);
 					}
 				} else {
-					p[n].TrackPosition = a;
-					p[n].Expression = Expressions[i];
-					int j = n;
-					n++;
-					while (j > 0) {
-						if (p[j].TrackPosition < p[j - 1].TrackPosition) {
-							(p[j - 1], p[j]) = (p[j], p[j - 1]);
-							j--;
-						} else {
-							break;
-						}
+					if (pa != a)
+					{
+						positionedExpressions.Add(a, new Expression(string.Empty, (a / unitFactors[unitFactors.Length - 1]).ToString(Culture), -1, -1, -1));
+						pa = a;
 					}
+					positionedExpressions.Add(a, Expressions[i]);
 				}
 			}
-			a = -1.0;
-			Expression[] e = new Expression[Expressions.Length];
-			int m = 0;
-			for (int i = 0; i < n; i++) {
-				if (p[i].TrackPosition != a) {
-					a = p[i].TrackPosition;
-					e[m] = new Expression(string.Empty, (a / unitFactors[unitFactors.Length - 1]).ToString(Culture), -1, -1, -1);
-					m++;
-				}
-				e[m] = p[i].Expression;
-				m++;
-			}
-			Array.Resize(ref e, m);
-			Expressions = e;
+			Expressions = positionedExpressions.Values.ToArray();
 		}
 	}
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
@@ -610,7 +611,6 @@ namespace OpenBveApi.Objects
 				return;
 			}
 			IsOptimized = true;
-			int v = Mesh.Vertices.Length;
 			int m = Mesh.Materials.Length;
 			int f = Mesh.Faces.Length;
 			
@@ -628,7 +628,7 @@ namespace OpenBveApi.Objects
 				return;
 			}
 
-			if (v > 10000)
+			if (Mesh.Vertices.Length > 10000)
 			{
 				// Don't attempt to de-duplicate where over 10k vertices
 				PreserveVerticies = true;
@@ -765,89 +765,29 @@ namespace OpenBveApi.Objects
 				}
 			}
 
-			/* TODO:
-			 * Use a hash based technique
-			 */
 			// Cull vertices based on hidden option.
 			// This is disabled by default because it adds a lot of time to the loading process.
 			if (!PreserveVerticies && VertexCulling)
 			{
-				// eliminate unused vertices
-				for (int i = 0; i < v; i++)
+				OrderedDictionary newVertices = new OrderedDictionary();
+				for (int i = 0; i < Mesh.Vertices.Length; i++)
 				{
-					bool keep = false;
-					for (int j = 0; j < f; j++)
+					if (!newVertices.Contains(Mesh.Vertices[i]))
 					{
-						for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
-						{
-							if (Mesh.Faces[j].Vertices[k].Index == i)
-							{
-								keep = true;
-								break;
-							}
-						}
-
-						if (keep)
-						{
-							break;
-						}
-					}
-
-					if (!keep)
-					{
-						for (int j = 0; j < f; j++)
-						{
-							for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
-							{
-								if (Mesh.Faces[j].Vertices[k].Index > i)
-								{
-									Mesh.Faces[j].Vertices[k].Index--;
-								}
-							}
-						}
-
-						for (int j = i; j < v - 1; j++)
-						{
-							Mesh.Vertices[j] = Mesh.Vertices[j + 1];
-						}
-
-						v--;
-						i--;
+						newVertices.Add(Mesh.Vertices[i], newVertices.Count);
 					}
 				}
 
-				// eliminate duplicate vertices
-				for (int i = 0; i < v - 1; i++)
+				for (int i = 0; i < Mesh.Faces.Length; i++)
 				{
-					for (int j = i + 1; j < v; j++)
+					for (int j = 0; j < Mesh.Faces[i].Vertices.Length; j++)
 					{
-						if (Mesh.Vertices[i] == Mesh.Vertices[j])
-						{
-							for (int k = 0; k < f; k++)
-							{
-								for (int h = 0; h < Mesh.Faces[k].Vertices.Length; h++)
-								{
-									if (Mesh.Faces[k].Vertices[h].Index == j)
-									{
-										Mesh.Faces[k].Vertices[h].Index = i;
-									}
-									else if (Mesh.Faces[k].Vertices[h].Index > j)
-									{
-										Mesh.Faces[k].Vertices[h].Index--;
-									}
-								}
-							}
-
-							for (int k = j; k < v - 1; k++)
-							{
-								Mesh.Vertices[k] = Mesh.Vertices[k + 1];
-							}
-
-							v--;
-							j--;
-						}
+						Mesh.Faces[i].Vertices[j].Index = (int)newVertices[Mesh.Vertices[Mesh.Faces[i].Vertices[j].Index]];
 					}
 				}
+
+				newVertices.Keys.CopyTo(Mesh.Vertices, 0);
+				Array.Resize(ref Mesh.Vertices, newVertices.Count);
 			}
 
 			// structure optimization
@@ -1014,10 +954,6 @@ namespace OpenBveApi.Objects
 				}
 			}
 			// finalize arrays
-			if (v != Mesh.Vertices.Length)
-			{
-				Array.Resize(ref Mesh.Vertices, v);
-			}
 
 			if (m != Mesh.Materials.Length)
 			{

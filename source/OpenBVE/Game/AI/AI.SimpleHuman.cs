@@ -1376,7 +1376,7 @@ namespace OpenBve
 				}
 				
 			}
-			public override void Trigger(double TimeElapsed)
+			public override void Trigger(double timeElapsed)
 			{
 				if (TimeLastProcessed > Program.CurrentRoute.SecondsSinceMidnight)
 				{
@@ -1389,7 +1389,7 @@ namespace OpenBve
 					TimeLastProcessed = Program.CurrentRoute.SecondsSinceMidnight;
 					if (Train.Plugin != null && Train.Plugin.SupportsAI != AISupport.None)
 					{
-						if (PerformPlugin(TimeElapsed) != AIResponse.None)
+						if (PerformPlugin(timeElapsed) != AIResponse.None)
 						{
 							return;
 						}
