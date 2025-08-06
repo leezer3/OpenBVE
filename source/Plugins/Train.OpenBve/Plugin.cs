@@ -115,7 +115,7 @@ namespace Train.OpenBve
 			{
 				return false;
 			}
-			if (File.GetAttributes(path).HasFlag(FileAttributes.Directory))
+			if (Directory.Exists(path))
 			{
 				string vehicleTxt;
 				try {
