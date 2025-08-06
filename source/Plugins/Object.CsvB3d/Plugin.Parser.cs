@@ -1461,6 +1461,7 @@ namespace Object.CsvB3d
 							}
 						}
 						Object.Mesh.Materials[k].WrapMode = wrap;
+						Object.Mesh.Materials[k].DaytimeTexture.OpenGlTextures[(int)wrap].Used = true;
 					}
 				}
 			}
