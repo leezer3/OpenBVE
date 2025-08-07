@@ -86,6 +86,11 @@ namespace CsvRwRouteParser
 					//Heavy Coal original RW- Fix starting station
 					Text = Text.Substring(0, Text.Length - 9);
 				}
+				else if (Text.StartsWith(".Sta (貨)", StringComparison.OrdinalIgnoreCase))
+				{
+					// 普通播州赤穂行 - brackets in station name
+					Text = ".Sta [貨]"+ Text.Substring(8);
+				}
 
 				if (IsRw && CurrentSection.ToLowerInvariant() == "track")
 				{
