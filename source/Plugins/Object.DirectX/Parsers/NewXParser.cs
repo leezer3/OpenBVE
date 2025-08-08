@@ -619,6 +619,26 @@ namespace Plugin
 									}
 									numRemainingDwords -= 2;
 									break;
+								case D3DDeclUsage.D3DDECLUSAGE_COLOR:
+									uint usageIndex = block.ReadDword();
+									uint r = block.ReadDword();
+									uint g = block.ReadDword();
+									uint b = block.ReadDword();
+									uint a = block.ReadDword();
+									if (usageIndex == 0)
+									{
+										// diffuse color
+										ColoredVertex c = builder.Vertices[currentVertex] as ColoredVertex;
+										if (c != null)
+										{
+											c.Color = new Color128(*(float*)&r, *(float*)&g, *(float*)&b, *(float*)&a);
+										}
+										else
+										{
+											builder.Vertices[currentVertex] = new ColoredVertex((Vertex)builder.Vertices[currentVertex], new Color128(*(float*)&r, *(float*)&g, *(float*)&b, *(float*)&a));
+										}
+									}
+									break;
 							}
 							
 							currentElement++;
