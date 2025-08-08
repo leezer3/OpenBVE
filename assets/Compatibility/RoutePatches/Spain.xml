@@ -51,5 +51,30 @@
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 	</Patch>
+	<!-- Nuria -->
+	<Patch>
+		<Hash>F42522A43176EED594B835B14A2B90113774D633DF83B53FB2739D9C5238DF7C</Hash>
+		<FileName>nuria_boira.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>1DBC46F646F5C3B85F3FB0E3BD824077EEB3BC86E4A59E066EBB7508BDEF5A72</Hash>
+		<FileName>nuria_estiu.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>0E6F2B924DD14FE84316A0D19DA608C112916239E4A0EA4B66147BADE4CB941C</Hash>
+		<FileName>nuria_hivern.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>5905495E4263170D586B7EA7B01B3B30BBA773CBF7A246767416253632C58FA7</Hash>
+		<FileName>nurianou.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
   </RoutePatches>
 </openBVE>
