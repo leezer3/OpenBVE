@@ -111,11 +111,11 @@ namespace Object.CsvB3d
 			return false;
 	    }
 
-	    public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject unifiedObject)
+	    public override bool LoadObject(string path, System.Text.Encoding textEncoding, out UnifiedObject unifiedObject)
 	    {
 		    try
 		    {
-			    unifiedObject = ReadObject(path, Encoding);
+			    unifiedObject = ReadObject(path, textEncoding);
 			    return true;
 		    }
 		    catch

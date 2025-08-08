@@ -57,14 +57,14 @@ namespace Plugin
 			}
 
 			// floating-point format
-			int FloatingPointSize;
+			int floatingPointSize;
 			if (Data[12] == 48 & Data[13] == 48 & Data[14] == 51 & Data[15] == 50)
 			{
-				FloatingPointSize = 32;
+				floatingPointSize = 32;
 			}
 			else if (Data[12] == 48 & Data[13] == 48 & Data[14] == 54 & Data[15] == 52)
 			{
-				FloatingPointSize = 64;
+				floatingPointSize = 64;
 			}
 			else
 			{
@@ -108,7 +108,7 @@ namespace Plugin
 				//Uncompressed binary, so skip the header
 				newData = new byte[Data.Length - 16];
 				Array.Copy(Data, 16, newData, 0, Data.Length - 16);
-				return LoadBinaryX(newData, FloatingPointSize);
+				return LoadBinaryX(newData, floatingPointSize);
 			}
 
 			if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112)
@@ -123,20 +123,20 @@ namespace Plugin
 			{
 				//Compressed binary
 				//16 bytes of header, then 8 bytes of padding, followed by the actual compressed data
-				byte[] Uncompressed = MSZip.Decompress(Data);
-				return LoadBinaryX(Uncompressed, FloatingPointSize);
+				byte[] uncompressedData = MSZip.Decompress(Data);
+				return LoadBinaryX(uncompressedData, floatingPointSize);
 			}
 
 			// unsupported flavor
-			Plugin.currentHost.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + fileName);
+			Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + fileName);
 			return null;
 		}
 		
 		private static StaticObject LoadTextualX(string Text)
 		{
 			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
-			StaticObject obj = new StaticObject(Plugin.currentHost);
-			MeshBuilder builder = new MeshBuilder(Plugin.currentHost);
+			StaticObject obj = new StaticObject(Plugin.CurrentHost);
+			MeshBuilder builder = new MeshBuilder(Plugin.CurrentHost);
 			Material material = new Material();
 			Block block = new TextualBlock(Text);
 			while (block.Position() < block.Length() - 5)
@@ -234,7 +234,7 @@ namespace Plugin
 						}
 						transformStart = obj.Mesh.Vertices.Length;
 						rootMatrix = Matrix4D.NoTransformation;
-						builder = new MeshBuilder(Plugin.currentHost);
+						builder = new MeshBuilder(Plugin.CurrentHost);
 					}
 					while (block.Position() < block.Length() - 5)
 					{
@@ -276,13 +276,13 @@ namespace Plugin
 					if (builder.Vertices.Count != 0)
 					{
 						builder.Apply(ref obj, false, false);
-						builder = new MeshBuilder(Plugin.currentHost);
+						builder = new MeshBuilder(Plugin.CurrentHost);
 					}
 					int nVerts = block.ReadInt();
 					if (nVerts == 0)
 					{
 						//Some null objects contain an empty mesh
-						Plugin.currentHost.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + block.Label);
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + block.Label);
 					}
 					for (int i = 0; i < nVerts; i++)
 					{
@@ -323,7 +323,7 @@ namespace Plugin
 						if (fVerts == 0)
 						{
 							// Assuming here that a face must contain vertices
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "fVerts was declared as zero");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "fVerts was declared as zero");
 							break;
 						}
 						MeshFace f = new MeshFace(fVerts);
@@ -385,7 +385,7 @@ namespace Plugin
 							}
 							else
 							{
-								Plugin.currentHost.AddMessage(MessageType.Information, false, "Material "+ materialName  + " was not found in DirectX binary file " + currentFile);
+								Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"Material { materialName } was not found in DirectX binary file { currentFile }");
 								builder.Materials[i + 1] = new Material();
 							}
 							
@@ -410,7 +410,7 @@ namespace Plugin
 							{
 								if (ex is EndOfStreamException)
 								{
-									Plugin.currentHost.AddMessage(MessageType.Information, false, nMaterials + $" materials expected, but " + i + " found in DirectX binary file " + currentFile);
+									Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"{ nMaterials } materials expected, but { i } found in DirectX binary file { currentFile }");
 								}
 								break;
 							}
@@ -455,7 +455,7 @@ namespace Plugin
 					string texturePath = block.ReadString();
 					if (string.IsNullOrEmpty(texturePath))
 					{
-						Plugin.currentHost.AddMessage(MessageType.Information, false, $"An empty texture was specified for material " + material.Key);
+						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"An empty texture was specified for material { material.Key }");
 						material.DaytimeTexture = null;
 						break;
 					}
@@ -473,13 +473,13 @@ namespace Plugin
 					}
 					catch (Exception e)
 					{
-						Plugin.currentHost.AddMessage(MessageType.Error, false, $"Texture file path {texturePath} in file {currentFile} has the problem: {e.Message}");
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"Texture file path { texturePath } in file { currentFile } has the problem: { e.Message }");
 						material.DaytimeTexture = null;
 					}
 
 					if (!File.Exists(material.DaytimeTexture) && material.DaytimeTexture != null)
 					{
-						Plugin.currentHost.AddMessage(MessageType.Error, true, "Texure " + material.DaytimeTexture + " was not found in file " + currentFile);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, true, $"Texure { material.DaytimeTexture } was not found in file { currentFile }");
 						material.DaytimeTexture = null;
 					}
 					break;
@@ -528,7 +528,7 @@ namespace Plugin
 						int idx = block.ReadInt();
 						if (idx >= builder.Vertices.Count)
 						{
-							Plugin.currentHost.AddMessage(MessageType.Warning, false, "MeshVertexColors index " + idx +  " should be less than nVertices in Mesh " + block.Label);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, $"MeshVertexColors index { idx } should be less than nVertices in Mesh { block.Label }");
 							continue;
 						}
 						ColoredVertex c = builder.Vertices[idx] as ColoredVertex;
@@ -659,8 +659,8 @@ namespace Plugin
 		private static StaticObject LoadBinaryX(byte[] objectBytes, int floatingPointSize)
 		{
 			Block block = new BinaryBlock(objectBytes, floatingPointSize);
-			StaticObject obj = new StaticObject(Plugin.currentHost);
-			MeshBuilder builder = new MeshBuilder(Plugin.currentHost);
+			StaticObject obj = new StaticObject(Plugin.CurrentHost);
+			MeshBuilder builder = new MeshBuilder(Plugin.CurrentHost);
 			Material material = new Material();
 			while (block.Position() < block.Length())
 			{

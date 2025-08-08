@@ -98,7 +98,7 @@ namespace Plugin
 #if DEBUG
 				if (numBytesRead != compressedBlockSize)
 				{
-					Plugin.currentHost.AddMessage(OpenBveApi.Interface.MessageType.Warning, false, "MSZip: Potentially truncated final block. ");
+					Plugin.CurrentHost.AddMessage(OpenBveApi.Interface.MessageType.Warning, false, "MSZip: Potentially truncated final block. ");
 				}
 #endif
 
@@ -165,10 +165,10 @@ namespace Plugin
             }
         }
 
-        internal static void AssertOk(this ZlibCodec codec, string Message, int errorCode)
+        internal static void AssertOk(this ZlibCodec codec, string errorLocation, int errorCode)
         {
             if (errorCode != 0) {
-                throw new InvalidOperationException("Failed with " + errorCode + "; " + Message + "; " + codec.Message);
+                throw new InvalidOperationException("Failed with " + errorCode + "; " + errorLocation + "; " + codec.Message);
             }
         }
     }

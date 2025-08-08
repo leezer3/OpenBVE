@@ -39,17 +39,17 @@ namespace Plugin
 		private static string currentFile;
 		private static Matrix4D rootMatrix;
 
-		internal static StaticObject ReadObject(string FileName)
+		internal static StaticObject ReadObject(string fileName)
 		{
-			currentFolder = Path.GetDirectoryName(FileName);
-			currentFile = FileName;
+			currentFolder = Path.GetDirectoryName(fileName);
+			currentFile = fileName;
 			rootMatrix = Matrix4D.NoTransformation;
 
 #if !DEBUG
 			try
 			{
 #endif
-			byte[] buffer = File.ReadAllBytes(FileName);
+			byte[] buffer = File.ReadAllBytes(fileName);
 				if (buffer.Length < 16 || buffer[0] != 120 | buffer[1] != 111 | buffer[2] != 102 | buffer[3] != 32)
 				{
 					// Object is actually a single line text file containing relative path to the 'real' X
@@ -57,14 +57,14 @@ namespace Plugin
 					string relativePath = System.Text.Encoding.ASCII.GetString(buffer);
 					if (!OpenBveApi.Path.ContainsInvalidChars(relativePath))
 					{
-						return ReadObject(OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), relativePath));
+						return ReadObject(OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), relativePath));
 					}
 				}
 				XFileParser parser = new XFileParser(buffer);
 				Scene scene = parser.GetImportedData();
 
-				StaticObject obj = new StaticObject(Plugin.currentHost);
-				MeshBuilder builder = new MeshBuilder(Plugin.currentHost);
+				StaticObject obj = new StaticObject(Plugin.CurrentHost);
+				MeshBuilder builder = new MeshBuilder(Plugin.CurrentHost);
 
 				if (scene.GlobalMaterials.Count != 0)
 				{
@@ -165,14 +165,14 @@ namespace Plugin
 			if (builder.Vertices.Count != 0)
 			{
 				builder.Apply(ref obj, false, false);
-				builder = new MeshBuilder(Plugin.currentHost);
+				builder = new MeshBuilder(Plugin.CurrentHost);
 			}
 
 			int nVerts = mesh.Positions.Count;
 			if (nVerts == 0)
 			{
 				//Some null objects contain an empty mesh
-				Plugin.currentHost.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + mesh.Name);
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + mesh.Name);
 				return;
 			}
 			for (int i = 0; i < nVerts; i++)
@@ -183,7 +183,7 @@ namespace Plugin
 			int nFaces = mesh.PosFaces.Count;
 			if (nFaces == 0)
 			{
-				Plugin.currentHost.AddMessage(MessageType.Warning, false, "nFaces should be greater than zero in Mesh " + mesh.Name);
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "nFaces should be greater than zero in Mesh " + mesh.Name);
 				return;
 			}
 			for (int i = 0; i < nFaces; i++)
@@ -227,7 +227,7 @@ namespace Plugin
 					string texturePath = mesh.Materials[i].Textures[0].Name;
 					if (string.IsNullOrEmpty(texturePath))
 					{
-						Plugin.currentHost.AddMessage(MessageType.Information, false, $"An empty texture was specified for material " + mesh.Materials[i].Name);
+						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"An empty texture was specified for material { mesh.Materials[i].Name }");
 						builder.Materials[m].DaytimeTexture = null;
 						break;
 					}
@@ -245,13 +245,13 @@ namespace Plugin
 					}
 					catch (Exception e)
 					{
-						Plugin.currentHost.AddMessage(MessageType.Error, false, $"Texture file path {texturePath} in file {currentFile} has the problem: {e.Message}");
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, $"Texture file path {texturePath} in file {currentFile} has the problem: {e.Message}");
 						builder.Materials[m].DaytimeTexture = null;
 					}
 
 					if (builder.Materials[m].DaytimeTexture != null && !File.Exists(builder.Materials[m].DaytimeTexture))
 					{
-						Plugin.currentHost.AddMessage(MessageType.Error, true, "Texture " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Texture " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);
 						builder.Materials[m].DaytimeTexture = null;
 					}
 				}
@@ -311,7 +311,7 @@ namespace Plugin
 				if (builder.Vertices.Count != 0)
 				{
 					builder.Apply(ref obj, false, false);
-					builder = new MeshBuilder(Plugin.currentHost);
+					builder = new MeshBuilder(Plugin.CurrentHost);
 				}
 			}
 			foreach (var grandchild in child.Children)
