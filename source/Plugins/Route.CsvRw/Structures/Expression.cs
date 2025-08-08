@@ -168,7 +168,7 @@ namespace CsvRwRouteParser
 								switch (argumentIndex)
 								{
 									case 0:
-										if (Text.StartsWith("sta"))
+										if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase))
 										{
 											Text = Text.Remove(i, 1).Insert(i, "[");
 											break;
@@ -221,7 +221,7 @@ namespace CsvRwRouteParser
 							switch (argumentIndex)
 							{
 								case 0:
-									if (Text.StartsWith("sta") && i != Text.Length)
+									if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase) && i != Text.Length)
 									{
 										Text = Text.Remove(i, 1).Insert(i, "]");
 										continue;
