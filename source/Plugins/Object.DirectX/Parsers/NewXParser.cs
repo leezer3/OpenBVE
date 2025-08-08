@@ -479,7 +479,7 @@ namespace Plugin
 
 					if (!File.Exists(material.DaytimeTexture) && material.DaytimeTexture != null)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, true, $"Texure { material.DaytimeTexture } was not found in file { currentFile }");
+						Plugin.CurrentHost.AddMessage(MessageType.Error, true, $"Tetxure { material.DaytimeTexture } was not found in file { currentFile }");
 						material.DaytimeTexture = null;
 					}
 					break;

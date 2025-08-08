@@ -132,7 +132,7 @@ namespace Plugin
 			}
 			catch (Exception e)
 			{
-				Plugin.currentHost.AddMessage(MessageType.Error, false, e.Message + " in " + FileName);
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, e.Message + " in " + fileName);
 				return null;
 			}
 #endif
