@@ -31,7 +31,7 @@ namespace LibRender2.Overlays
 		/// <param name="markerTexture">The texture</param>
 		public void RemoveMarker(Texture markerTexture)
 		{
-			for (int i = MarkerTextures.Count - 1; i > 0; i--)
+			for (int i = MarkerTextures.Count - 1; i >= 0; i--)
 			{
 				if (MarkerTextures[i].Texture == markerTexture)
 				{
