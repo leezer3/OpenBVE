@@ -150,6 +150,11 @@ namespace OpenBve
 				return;
 			}
 
+			if (ConsistReversed)
+			{
+				Train.Reverse();
+			}
+
 			if (Train is ScriptedTrain st)
 			{
 				Train.AI = new TrackFollowingObjectAI(st, Data.ToArray());
@@ -170,13 +175,6 @@ namespace OpenBve
 				Train.Specs.DoorOpenMode = DoorMode.Manual;
 				Train.Specs.DoorCloseMode = DoorMode.Manual;
 			}
-
-
-			if (ConsistReversed)
-			{
-				Train.Reverse();
-			}
-			
 		}
 
 		/// <summary>
