@@ -166,9 +166,10 @@ namespace Plugin
 									currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + AnimatedKey.Axles + " in file " + FileName);
 									axleLocations = new Vector2(-0.5, 0.5);
 								}
+								Result.Objects[ObjectCount].FrontAxlePosition = axleLocations.X;
+								Result.Objects[ObjectCount].RearAxlePosition = axleLocations.Y;
 							}
-							Result.Objects[ObjectCount].FrontAxlePosition = axleLocations.X;
-							Result.Objects[ObjectCount].RearAxlePosition = axleLocations.Y;
+							
 							Block.GetFunctionScript(new[] { AnimatedKey.TrackFollowerFunction, AnimatedKey.TrackFollowerScript }, Folder, out Result.Objects[ObjectCount].TrackFollowerFunction);
 							Block.GetDamping(AnimatedKey.RotateXDamping, ',', out Result.Objects[ObjectCount].RotateXDamping);
 							Block.GetDamping(AnimatedKey.RotateYDamping, ',', out Result.Objects[ObjectCount].RotateYDamping);
@@ -294,18 +295,7 @@ namespace Plugin
 							Block.TryGetValue(AnimatedKey.Pitch, ref pitch);
 							Block.GetFunctionScript(new[] { AnimatedKey.VolumeFunction }, Folder, out AnimationScript volumeFunction);
 							Block.TryGetValue(AnimatedKey.Volume, ref volume);
-							Block.GetFunctionScript(new[] { AnimatedKey.TranslateZFunction, AnimatedKey.TranslateZFunctionRPN, AnimatedKey.TranslateZScript }, Folder, out AnimationScript trackFollowerFunction);
-							Vector2 axleLocations = new Vector2(-0.5, 0.5);
-							if (Block.TryGetVector2(AnimatedKey.Axles, ',', ref axleLocations))
-							{
-								if (axleLocations.X <= axleLocations.Y)
-								{
-									currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + AnimatedKey.Axles + " in file " + FileName);
-									axleLocations = new Vector2(-0.5, 0.5);
-								}
-							}
-							Result.Objects[ObjectCount].FrontAxlePosition = axleLocations.X;
-							Result.Objects[ObjectCount].RearAxlePosition = axleLocations.Y;
+							Block.GetFunctionScript(new[] { AnimatedKey.TrackFollowerFunction }, Folder, out AnimationScript trackFollowerFunction);
 							currentHost.RegisterSound(soundPath, radius, out SoundHandle currentSound);
 							WorldSound snd = new WorldSound(currentHost, currentSound)
 							{
@@ -319,7 +309,6 @@ namespace Plugin
 							Result.Sounds[SoundCount] = snd;
 							SoundCount++;
 						}
-
 						break;
 					case AnimatedSection.StateChangeSound:
 						if (Result.Sounds.Length == SoundCount)
