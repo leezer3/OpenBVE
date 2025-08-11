@@ -5,6 +5,25 @@
 		<FileName>S75 daytime.csv</FileName>
 		<SignalSet>SV.xml</SignalSet>
 	</Patch>
+	<!-- Neustadt routes -->
+	<Patch>
+		<Hash>BFE058A272202EB5BA3D815C21CB1EC0F9C40B4E35742E443FC68EFA93BACC44</Hash>
+		<FileName>Tram_NeustadtL1_v2.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>2AA34E5E13E4EA6D2D85D50013B4B7BC9241556E0B8F798C7C6C46A805ECE4DE</Hash>
+		<FileName>Tram_NeustadtL3.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>1BEA0B21A9ABA828B276D1A3A1EDF4D61B2A37656F07D14C47E2D9E8587C8996</Hash>
+		<FileName>Tram_NeustadtL3E.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
 	<Patch>
 		<Hash>BB3EC7F141DB94660E96F52D654CD7163D8F69451376F09CBF956535729C0798</Hash>
 		<FileName>Tram_NeustadtL4_v2.rw</FileName>
