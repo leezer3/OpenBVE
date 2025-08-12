@@ -457,6 +457,7 @@ namespace OpenBve
 							block.TryGetValue(OptionsKey.FullScreenBits, ref CurrentOptions.FullscreenBits);
 							block.TryGetValue(OptionsKey.MainMenuWidth, ref CurrentOptions.MainMenuWidth);
 							block.TryGetValue(OptionsKey.MainMenuHeight, ref CurrentOptions.MainMenuHeight);
+							block.GetValue(OptionsKey.VSync, out Interface.CurrentOptions.VerticalSynchronization);
 							block.GetValue(OptionsKey.LoadInAdvance, out Interface.CurrentOptions.LoadInAdvance);
 							block.GetValue(OptionsKey.UnloadTextures, out CurrentOptions.UnloadUnusedTextures);
 							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
