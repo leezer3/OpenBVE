@@ -145,5 +145,38 @@
 		<FileName>4005M繝ｻSol・ｦ5Zc繝ｻ.csv</FileName>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 	</Patch>
+	<!-- Tokyo Monorail Haneda Line -->
+	<!-- BVE2 routefiles -->
+	<Patch>
+		<Hash>CB439820AB9669B13957E103A3ABE14CD32A81A179A48C77D4C4CD15CBDFF22F</Hash>
+		<FileName>F1407.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>06A63505848716C9D943FA7884DC2B4667348E62B3BC4DF701F5DDE9ADFDB1C2</Hash>
+		<FileName>G1617.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>53BDBE8A11CB8296AFAD06C324DCF4CFC2BA54469A85B8C97371DEE24210D374</Hash>
+		<FileName>1327H.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<!-- BVE4 routefiles -->
+	<Patch>
+		<Hash>F9E332C908A8BDAAB73B5D3ED246CAF4BFF04EB3308AB80ABC9FE1C0860C5D50</Hash>
+		<FileName>F1407.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>8A761C18EE3B3041FFDAC68267FECEF55A80BADD8007C8B839EEE992EDEBEC90</Hash>
+		<FileName>G1617.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>C292164821AA50539466F8C5F2C460B09F105E6085AC68D9D2B27CB65A6E4779</Hash>
+		<FileName>1327H.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
   </RoutePatches>
 </openBVE>
