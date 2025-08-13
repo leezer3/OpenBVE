@@ -145,7 +145,18 @@ namespace OpenBve {
 								{
 									if (Program.CurrentHost.Plugins[i].Texture.LoadTexture(path, out texture))
 									{
-										texture.CompatibleTransparencyMode = Interface.CurrentOptions.OldTransparencyMode;
+										bool oldTransparencyMode = Interface.CurrentOptions.OldTransparencyMode;
+										if (oldTransparencyMode)
+										{
+											string textureFolder = Path.GetDirectoryName(path);
+											if (textureFolder.EndsWith("2kObj\\StaName1") || textureFolder.EndsWith("2kObj\\00X\\StaName1"))
+											{
+												// Kurumigasaki Railway: Station signs don't play nice with old transparency mode
+												oldTransparencyMode = false;
+											}
+										}
+										
+										texture.CompatibleTransparencyMode = oldTransparencyMode;
 										texture = texture.ApplyParameters(parameters);
 										return true;
 									}
