@@ -231,5 +231,26 @@ namespace OpenBveApi.Objects
 				state.Translation = t;
 			}
 		}
+
+		public static implicit operator StaticObject(KeyframeAnimatedObject keyframeAnimatedObject)
+		{
+			Matrix4D[] matricies = new Matrix4D[keyframeAnimatedObject.Matricies.Length];
+			for (int i = 0; i < keyframeAnimatedObject.Animations.Count; i++)
+			{
+				string key = keyframeAnimatedObject.Animations.ElementAt(i).Key;
+				keyframeAnimatedObject.Animations[key].Update(null, Vector3.Zero, 0, -1, false, 0.0); // current state not applicable, no hand-crafted functions
+			}
+
+			for (int i = 0; i < matricies.Length; i++)
+			{
+				matricies[i] = keyframeAnimatedObject.Matricies[i].Matrix;
+			}
+			StaticObject staticObject = new StaticObject(keyframeAnimatedObject.currentHost);
+			for (int i = 0; i < keyframeAnimatedObject.Objects.Length; i++)
+			{
+				staticObject.JoinObjects(keyframeAnimatedObject.Objects[i].Prototype, matricies);
+			}
+			return staticObject;
+		}
 	}
 }

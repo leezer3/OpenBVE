@@ -219,6 +219,11 @@ namespace Plugin
 									{
 										Result.Objects[ObjectCount].States[k].Prototype = staticObject;
 									}
+									else if (currentObject is KeyframeAnimatedObject keyframeObject)
+									{
+										currentHost.AddMessage(MessageType.Warning, false, "Using MSTS Shape " + stateFiles[k] + " as an AnimatedObject State- Contained animations may be lost. In the Section " + Block.Key + " in file " + FileName);
+										Result.Objects[ObjectCount].States[k].Prototype = keyframeObject;
+									}
 									else if (currentObject is AnimatedObjectCollection)
 									{
 										currentHost.AddMessage(MessageType.Error, false, "Attempted to load the animated object " + stateFiles[k] + " where only static objects are allowed in the Section " + Block.Key + " in file " + FileName);

@@ -352,7 +352,7 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Joins two static objects</summary>
 		/// <param name="Add">The static object to join</param>
-		public void JoinObjects(StaticObject Add)
+		public void JoinObjects(StaticObject Add, Matrix4D[] AnimationMatrices = null)
 		{
 			if (Add == null)
 			{
@@ -386,6 +386,18 @@ namespace OpenBveApi.Objects
 				if (Add.Mesh.Vertices[i] is ColoredVertex)
 				{
 					Mesh.Vertices[mv + i] = new ColoredVertex((ColoredVertex) Add.Mesh.Vertices[i]);
+				}
+				else if (Add.Mesh.Vertices[i] is AnimatedVertex av)
+				{
+					Vector3 transformedCoordinates = new Vector3(av.Coordinates);
+					for (int j = 0; j < av.MatrixChain.Length; j++)
+					{
+						if (AnimationMatrices != null && av.MatrixChain[j] >= 0 && av.MatrixChain[j] < 255)
+						{
+							transformedCoordinates.Transform(AnimationMatrices[av.MatrixChain[j]], false); // use the static matrix, not the animated one
+						}
+					}
+					Mesh.Vertices[mv + i] = new Vertex(transformedCoordinates, av.TextureCoordinates);
 				}
 				else
 				{
