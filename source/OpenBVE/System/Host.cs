@@ -92,8 +92,7 @@ namespace OpenBve {
 										return true;
 									}
 									Interface.AddMessage(MessageType.Error, false,
-									                     "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at QueryTextureDimensions"
-									                    );
+									                     "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at QueryTextureDimensions for file " + path);
 								} catch (Exception ex) {
 									Interface.AddMessage(MessageType.Error, false,
 									                     "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at QueryTextureDimensions:" + ex.Message
@@ -163,7 +162,7 @@ namespace OpenBve {
 									if (!FailedTextures.Contains(path))
 									{
 										FailedTextures.Add(path);
-										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadTexture");
+										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadTexture for file " + path);
 									}
 
 								}
@@ -272,7 +271,7 @@ namespace OpenBve {
 									if (Program.CurrentHost.Plugins[i].Sound.LoadSound(path, out sound)) {
 										return true;
 									}
-									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadSound");
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadSound for file " + path);
 								} catch (Exception ex) {
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at LoadSound:" + ex.Message);
 								}
@@ -365,7 +364,7 @@ namespace OpenBve {
 									if(!FailedObjects.Contains(path))
 									{
 										FailedObjects.Add(path);
-										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
+										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject for file " + path);
 									}
 									
 								} catch (Exception ex) {
@@ -436,7 +435,7 @@ namespace OpenBve {
 									if (!FailedObjects.Contains(path))
 									{
 										FailedObjects.Add(path);
-										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
+										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject for file " + path);
 									}
 
 								}
