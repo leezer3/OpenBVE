@@ -26,5 +26,55 @@
 		<FileName>S1_V3.csv</FileName>
 		<ColonFix>true</ColonFix>
 	</Patch>
+	<!-- Costa Brava -->
+	<Patch>
+		<Hash>A228BD2CDFE1669971065245664CD28C375BA89C40A3B4661D4D106E607E11D9</Hash>
+		<FileName>costa.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>F2F48671B3A61F8099435AC4746B63ADBDABE140EDA1CF0375A5AB109CA10F48</Hash>
+		<FileName>costaaccident.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>E5C31FFD063D5496703E26D3035A375AE201EFF4FCA00A58D7DF539BB2AF226E</Hash>
+		<FileName>costaboira.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>56924AD8539C4819382ED5AAE6F9679F9268DC9BB3FDC5E6C830F8DAAAF14DD5</Hash>
+		<FileName>costanit.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<!-- Nuria -->
+	<Patch>
+		<Hash>F42522A43176EED594B835B14A2B90113774D633DF83B53FB2739D9C5238DF7C</Hash>
+		<FileName>nuria_boira.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>1DBC46F646F5C3B85F3FB0E3BD824077EEB3BC86E4A59E066EBB7508BDEF5A72</Hash>
+		<FileName>nuria_estiu.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>0E6F2B924DD14FE84316A0D19DA608C112916239E4A0EA4B66147BADE4CB941C</Hash>
+		<FileName>nuria_hivern.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>5905495E4263170D586B7EA7B01B3B30BBA773CBF7A246767416253632C58FA7</Hash>
+		<FileName>nurianou.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
   </RoutePatches>
 </openBVE>

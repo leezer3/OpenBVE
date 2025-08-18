@@ -614,7 +614,7 @@ namespace OpenBve.Formats.DirectX
 			while (myStream.Position < myStream.Length)
 			{
 				long startPosition = myStream.Position;
-				string currentToken = getNextToken();
+				string currentToken = GetNextToken();
 				switch (currentToken)
 				{
 					case "int_list":
@@ -658,15 +658,16 @@ namespace OpenBve.Formats.DirectX
 			}
 		}
 
-		private BinaryBlock(byte[] bytes, TemplateID token, int floatingPointSize) : base(floatingPointSize)
+		private BinaryBlock(byte[] bytes, string label, TemplateID token, int floatingPointSize) : base(floatingPointSize)
 		{
 			myStream = new MemoryStream(bytes);
 			myReader = new BinaryReader(myStream);
+			Label = label;
 			Token = token;
 			while (myStream.Position < myStream.Length)
 			{
 				long startPosition = myStream.Position;
-				string currentToken = getNextToken();
+				string currentToken = GetNextToken();
 				switch (currentToken)
 				{
 					case "int_list":
@@ -707,8 +708,9 @@ namespace OpenBve.Formats.DirectX
 						break;
 					default:
 						cachedStrings.Add(currentToken);
-						if (Enum.TryParse(currentToken, true, out TemplateID newBlockToken))
+						if (Enum.TryParse(currentToken, true, out TemplateID _))
 						{
+							// Block encloses another block, nothing further to add to the cache
 							myStream.Position = startPosition;
 							return;
 						}
@@ -796,7 +798,7 @@ namespace OpenBve.Formats.DirectX
 
 		public override Block ReadSubBlock()
 		{
-			string blockName = getNextToken();
+			string blockName = GetNextToken();
 
 			if (!Enum.TryParse(blockName, true, out TemplateID newToken))
 			{
@@ -806,7 +808,7 @@ namespace OpenBve.Formats.DirectX
 			long blockStart = 0;
 			while (myStream.Position < myStream.Length)
 			{
-				string currentToken = getNextToken();
+				string currentToken = GetNextToken();
 				
 				switch (currentToken)
 				{
@@ -824,8 +826,7 @@ namespace OpenBve.Formats.DirectX
 							long newBlockLength = myStream.Position - blockStart;
 							myStream.Position -= newBlockLength;
 							byte[] newBlockBytes = myReader.ReadBytes((int)newBlockLength);
-							BinaryBlock b = new BinaryBlock(newBlockBytes, newToken, FloatingPointSize);
-							b.Label = Label;
+							BinaryBlock b = new BinaryBlock(newBlockBytes, Label, newToken, FloatingPointSize);
 							return b;
 						}
 						break;
@@ -858,7 +859,7 @@ namespace OpenBve.Formats.DirectX
 			throw new Exception("Reached the end of the binary block, but did not find the block terminator.");
 		}
 
-		private string getNextToken()
+		private string GetNextToken()
 		{
 			TokenID token = (TokenID)myReader.ReadInt16();
 			int byteCount;

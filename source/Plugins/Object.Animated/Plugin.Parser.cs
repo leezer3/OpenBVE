@@ -158,17 +158,17 @@ namespace Plugin
 							Block.TryGetVector3(AnimatedKey.RotateZDirection, ',', ref Result.Objects[ObjectCount].RotateZDirection);
 							Block.TryGetVector2(AnimatedKey.TextureShiftXDirection, ',', ref Result.Objects[ObjectCount].TextureShiftXDirection);
 							Block.TryGetVector2(AnimatedKey.TextureShiftYDirection, ',', ref Result.Objects[ObjectCount].TextureShiftYDirection);
-							Vector2 axleLocations = new Vector2(-0.5, 0.5);
-							if (Block.TryGetVector2(AnimatedKey.Axles, ',', ref axleLocations))
+							if (Block.GetVector2(AnimatedKey.Axles, ',', out Vector2 axleLocations))
 							{
 								if (axleLocations.X <= axleLocations.Y)
 								{
 									currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + AnimatedKey.Axles + " in file " + FileName);
-									axleLocations = new Vector2(-0.5, 0.5);
+									axleLocations = new Vector2(0.5, -0.5);
 								}
+								Result.Objects[ObjectCount].FrontAxlePosition = axleLocations.X;
+								Result.Objects[ObjectCount].RearAxlePosition = axleLocations.Y;
 							}
-							Result.Objects[ObjectCount].FrontAxlePosition = axleLocations.X;
-							Result.Objects[ObjectCount].RearAxlePosition = axleLocations.Y;
+							
 							Block.GetFunctionScript(new[] { AnimatedKey.TrackFollowerFunction, AnimatedKey.TrackFollowerScript }, Folder, out Result.Objects[ObjectCount].TrackFollowerFunction);
 							Block.GetDamping(AnimatedKey.RotateXDamping, ',', out Result.Objects[ObjectCount].RotateXDamping);
 							Block.GetDamping(AnimatedKey.RotateYDamping, ',', out Result.Objects[ObjectCount].RotateYDamping);
@@ -217,6 +217,11 @@ namespace Plugin
 									if (currentObject is StaticObject staticObject)
 									{
 										Result.Objects[ObjectCount].States[k].Prototype = staticObject;
+									}
+									else if (currentObject is KeyframeAnimatedObject keyframeObject)
+									{
+										currentHost.AddMessage(MessageType.Warning, false, "Using MSTS Shape " + stateFiles[k] + " as an AnimatedObject State- Contained animations may be lost. In the Section " + Block.Key + " in file " + FileName);
+										Result.Objects[ObjectCount].States[k].Prototype = keyframeObject;
 									}
 									else if (currentObject is AnimatedObjectCollection)
 									{
@@ -294,18 +299,7 @@ namespace Plugin
 							Block.TryGetValue(AnimatedKey.Pitch, ref pitch);
 							Block.GetFunctionScript(new[] { AnimatedKey.VolumeFunction }, Folder, out AnimationScript volumeFunction);
 							Block.TryGetValue(AnimatedKey.Volume, ref volume);
-							Block.GetFunctionScript(new[] { AnimatedKey.TranslateZFunction, AnimatedKey.TranslateZFunctionRPN, AnimatedKey.TranslateZScript }, Folder, out AnimationScript trackFollowerFunction);
-							Vector2 axleLocations = new Vector2(-0.5, 0.5);
-							if (Block.TryGetVector2(AnimatedKey.Axles, ',', ref axleLocations))
-							{
-								if (axleLocations.X <= axleLocations.Y)
-								{
-									currentHost.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + AnimatedKey.Axles + " in file " + FileName);
-									axleLocations = new Vector2(-0.5, 0.5);
-								}
-							}
-							Result.Objects[ObjectCount].FrontAxlePosition = axleLocations.X;
-							Result.Objects[ObjectCount].RearAxlePosition = axleLocations.Y;
+							Block.GetFunctionScript(new[] { AnimatedKey.TrackFollowerFunction }, Folder, out AnimationScript trackFollowerFunction);
 							currentHost.RegisterSound(soundPath, radius, out SoundHandle currentSound);
 							WorldSound snd = new WorldSound(currentHost, currentSound)
 							{
@@ -319,7 +313,6 @@ namespace Plugin
 							Result.Sounds[SoundCount] = snd;
 							SoundCount++;
 						}
-
 						break;
 					case AnimatedSection.StateChangeSound:
 						if (Result.Sounds.Length == SoundCount)

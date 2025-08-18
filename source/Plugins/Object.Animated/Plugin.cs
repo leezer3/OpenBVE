@@ -42,11 +42,11 @@ namespace Plugin
 			return false;
 		}
 
-		public override bool LoadObject(string path, Encoding Encoding, out UnifiedObject unifiedObject)
+		public override bool LoadObject(string path, Encoding textEncoding, out UnifiedObject unifiedObject)
 		{
 			try
 			{
-				unifiedObject = ReadObject(path, Encoding);
+				unifiedObject = ReadObject(path, textEncoding);
 				if (unifiedObject == null)
 				{
 					return false;

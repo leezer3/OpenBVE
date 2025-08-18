@@ -92,8 +92,7 @@ namespace OpenBve {
 										return true;
 									}
 									Interface.AddMessage(MessageType.Error, false,
-									                     "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at QueryTextureDimensions"
-									                    );
+									                     "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at QueryTextureDimensions for file " + path);
 								} catch (Exception ex) {
 									Interface.AddMessage(MessageType.Error, false,
 									                     "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at QueryTextureDimensions:" + ex.Message
@@ -145,14 +144,25 @@ namespace OpenBve {
 								{
 									if (Program.CurrentHost.Plugins[i].Texture.LoadTexture(path, out texture))
 									{
-										texture.CompatibleTransparencyMode = Interface.CurrentOptions.OldTransparencyMode;
+										bool oldTransparencyMode = Interface.CurrentOptions.OldTransparencyMode;
+										if (oldTransparencyMode)
+										{
+											string textureFolder = Path.GetDirectoryName(path);
+											if (textureFolder.EndsWith("2kObj\\StaName1") || textureFolder.EndsWith("2kObj\\00X\\StaName1"))
+											{
+												// Kurumigasaki Railway: Station signs don't play nice with old transparency mode
+												oldTransparencyMode = false;
+											}
+										}
+										
+										texture.CompatibleTransparencyMode = oldTransparencyMode;
 										texture = texture.ApplyParameters(parameters);
 										return true;
 									}
 									if (!FailedTextures.Contains(path))
 									{
 										FailedTextures.Add(path);
-										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadTexture");
+										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadTexture for file " + path);
 									}
 
 								}
@@ -261,7 +271,7 @@ namespace OpenBve {
 									if (Program.CurrentHost.Plugins[i].Sound.LoadSound(path, out sound)) {
 										return true;
 									}
-									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadSound");
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadSound for file " + path);
 								} catch (Exception ex) {
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at LoadSound:" + ex.Message);
 								}
@@ -354,7 +364,7 @@ namespace OpenBve {
 									if(!FailedObjects.Contains(path))
 									{
 										FailedObjects.Add(path);
-										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
+										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject for file " + path);
 									}
 									
 								} catch (Exception ex) {
@@ -425,7 +435,7 @@ namespace OpenBve {
 									if (!FailedObjects.Contains(path))
 									{
 										FailedObjects.Add(path);
-										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
+										Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject for file " + path);
 									}
 
 								}

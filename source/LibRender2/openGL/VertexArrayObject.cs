@@ -90,7 +90,7 @@ namespace LibRender2
 		}
 
 		/// <summary>
-		/// Update the VertexData into the the VBO
+		/// Updates the VertexData in the the VBO
 		/// </summary>
 		public void UpdateVBO(LibRenderVertex[] VertexData, int Offset = 0)
 		{

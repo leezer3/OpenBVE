@@ -86,6 +86,11 @@ namespace CsvRwRouteParser
 					//Heavy Coal original RW- Fix starting station
 					Text = Text.Substring(0, Text.Length - 9);
 				}
+				else if (Text.StartsWith(".Sta (貨)", StringComparison.OrdinalIgnoreCase))
+				{
+					// 普通播州赤穂行 - brackets in station name
+					Text = ".Sta [貨]"+ Text.Substring(8);
+				}
 
 				if (IsRw && CurrentSection.ToLowerInvariant() == "track")
 				{
@@ -163,7 +168,7 @@ namespace CsvRwRouteParser
 								switch (argumentIndex)
 								{
 									case 0:
-										if (Text.StartsWith("sta"))
+										if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase))
 										{
 											Text = Text.Remove(i, 1).Insert(i, "[");
 											break;
@@ -216,7 +221,7 @@ namespace CsvRwRouteParser
 							switch (argumentIndex)
 							{
 								case 0:
-									if (Text.StartsWith("sta") && i != Text.Length)
+									if (Text.StartsWith("sta", StringComparison.InvariantCultureIgnoreCase) && i != Text.Length)
 									{
 										Text = Text.Remove(i, 1).Insert(i, "]");
 										continue;

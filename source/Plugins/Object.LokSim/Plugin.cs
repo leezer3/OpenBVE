@@ -61,7 +61,7 @@ namespace Plugin
 			return false;
 		}
 
-		public override bool LoadObject(string path, Encoding Encoding, out UnifiedObject unifiedObject)
+		public override bool LoadObject(string path, Encoding textEncoding, out UnifiedObject unifiedObject)
 		{
 			try
 			{
@@ -71,7 +71,7 @@ namespace Plugin
 				}
 				else
 				{
-					unifiedObject = Ls3DGrpParser.ReadObject(path, Encoding, Vector3.Zero);
+					unifiedObject = Ls3DGrpParser.ReadObject(path, textEncoding, Vector3.Zero);
 				}
 			}
 			catch

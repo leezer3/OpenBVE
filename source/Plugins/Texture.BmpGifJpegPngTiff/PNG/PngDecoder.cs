@@ -355,7 +355,8 @@ namespace Plugin.PNG
                                                                 pixelBuffer[pixelsOffset++] = colorPalette.Colors[fourthNibblet].G;
                                                                 pixelBuffer[pixelsOffset++] = colorPalette.Colors[fourthNibblet].B;
                                                                 pixelBuffer[pixelsOffset++] = colorPalette.Colors[fourthNibblet].A;
-                                                            }
+                                                                pixelIndex++;
+															}
                                                             break;
                                                         case 4:
                                                             for (int px = 0; px < scanline.Length; px++)
@@ -376,7 +377,8 @@ namespace Plugin.PNG
                                                                 pixelBuffer[pixelsOffset++] = colorPalette.Colors[rightNibble].G;
                                                                 pixelBuffer[pixelsOffset++] = colorPalette.Colors[rightNibble].B;
                                                                 pixelBuffer[pixelsOffset++] = colorPalette.Colors[rightNibble].A;
-                                                            }
+                                                                pixelIndex++;
+															}
                                                             break;
                                                         case 8:
                                                             for (int px = 0; px < scanline.Length; px++)

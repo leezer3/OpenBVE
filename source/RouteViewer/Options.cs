@@ -102,6 +102,7 @@ namespace RouteViewer
 						case OptionsSection.Display:
 							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth);
 							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight);
+							block.GetValue(OptionsKey.VSync, out Interface.CurrentOptions.VerticalSynchronization);
 							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
 							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance);
 							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize);

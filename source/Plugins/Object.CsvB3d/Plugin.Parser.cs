@@ -403,12 +403,30 @@ namespace Object.CsvB3d
 
 									if (enabledHacks.BveTsHacks)
 									{
-										if ((FileName.ToLowerInvariant().Contains("hira2\\car") || FileName.ToLowerInvariant().Contains("hira2/car")) && a.SequenceEqual(new[] {0, 1, 4, 5}))
+										if (FileName.FileNameContains(new [] {"hira2\\car" }) && a.SequenceEqual(new[] {0, 1, 4, 5}))
 										{
 											/*
 											* Fix glitchy Hirakami railway stock
 											*/
 											a = new[] {0, 1, 5, 4};
+										}
+
+										if (FileName.FileNameEndsWith(new[] { "Ryouso\\BlackRoof.csv"}) && a.SequenceEqual(new[] { 0, 1, 2, 3}))
+										{
+											// broken roof
+											a = new[] { 0, 2, 1, 3 };
+										}
+
+										if (FileName.FileNameEndsWith(new[] { "Ryouso\\wall\\wall_ugL.csv", "Ryouso\\wall\\wall_ugR.csv", "Ryouso\\wall\\wall_ug-staL.csv", "Ryouso\\wall\\wall_ug-staR.csv"}) && a.SequenceEqual(new[] { 0, 1, 2, 3 }) && Object.Mesh.Vertices.Length >= 8)
+										{
+											// broken roof (first face is OK though....)
+											a = new[] { 0, 2, 3, 1 };
+										}
+
+										if (FileName.FileNameEndsWith(new[] { "Ryouso\\wall\\wall_ug-staL_.csv", "Ryouso\\wall\\wall_ug-staR_.csv" }) && a.SequenceEqual(new[] { 0, 1, 2, 3 }) && (Object.Mesh.Vertices.Length == 4 || Object.Mesh.Vertices.Length == 12))
+										{
+											// broken roof (first face is OK though....)
+											a = new[] { 0, 2, 3, 1 };
 										}
 
 										int[] vertexIndices = (int[])a.Clone();

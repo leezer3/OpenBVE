@@ -129,7 +129,7 @@ namespace Plugin
 		}
 	
 
-		public override bool LoadObject(string path, Encoding Encoding, out UnifiedObject unifiedObject)
+		public override bool LoadObject(string path, Encoding textEncoding, out UnifiedObject unifiedObject)
 		{
 			try
 			{

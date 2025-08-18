@@ -32,7 +32,7 @@ namespace Plugin
 {
     public class Plugin : ObjectInterface
     {
-	    internal static HostInterface currentHost;
+	    internal static HostInterface CurrentHost;
 	    private static XParsers currentXParser = XParsers.Original;
 	    internal static CompatabilityHacks EnabledHacks;
 
@@ -40,7 +40,7 @@ namespace Plugin
 
 	    public override void Load(HostInterface host, FileSystem fileSystem) 
 	    {
-		    currentHost = host;
+		    CurrentHost = host;
 	    }
 
 	    public override void SetCompatibilityHacks(CompatabilityHacks enabledHacks)
@@ -55,7 +55,7 @@ namespace Plugin
 			    currentXParser = (XParsers) parserType;
 			    if (currentXParser == XParsers.Original)
 			    {
-				    currentHost.AddMessage(MessageType.Information, false, "The original X Parser has been deprecated- Using the NewXParser");
+				    CurrentHost.AddMessage(MessageType.Information, false, "The original X Parser has been deprecated- Using the NewXParser");
 			    }
 		    }
 	    }
@@ -107,7 +107,7 @@ namespace Plugin
 		    return true;
 	    }
 
-	    public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject unifiedObject)
+	    public override bool LoadObject(string path, System.Text.Encoding textEncoding, out UnifiedObject unifiedObject)
 	    {
 		    switch (currentXParser)
 		    {
@@ -115,7 +115,7 @@ namespace Plugin
 			    case XParsers.NewXParser:
 				    try
 				    {
-					    unifiedObject = NewXParser.ReadObject(path, Encoding);
+					    unifiedObject = NewXParser.ReadObject(path, textEncoding);
 					    return true;
 				    }
 				    catch

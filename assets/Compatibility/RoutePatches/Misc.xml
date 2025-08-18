@@ -222,5 +222,36 @@
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 	</Patch>
+	<!-- NE Tram -->
+	<!-- NOTE: This route uses the block animation trick for some people on the track.	-->
+	<!-- 	   However remove this, as otherwise we've got a *lot* of glitchy scenery.-->
+	<Patch>
+		<Hash>75D8D828DE031D4977C841DB95D9A7D4B23B45120E9C426713C83AADE326E227</Hash>
+		<FileName>NETram-Day(Car).rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<Expression Number="637"></Expression>
+	</Patch>
+	<Patch>
+		<Hash>C1E320D90149F2DFEABAAA792B9CCE059956E6C3EAFE9DE49E9E24435A4824F5</Hash>
+		<FileName>NETram-Day.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<Expression Number="637"></Expression>
+	</Patch>
+	<Patch>
+		<Hash>82D6D4DFA10648CA3D8789A7FC534224D7FF25775F47B745ED10C7C2F944A34F</Hash>
+		<FileName>NETram-EarlyMorning.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<Expression Number="637"></Expression>
+	</Patch>
+	<Patch>
+		<Hash>6CC3DD85EC7B8C4328C912A7EA264823AEEBAD0BC5B5004B273BAC5FEBD112C4</Hash>
+		<FileName>NETram-Evening.rw</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<Expression Number="638"></Expression>
+	</Patch>
   </RoutePatches>
 </openBVE>

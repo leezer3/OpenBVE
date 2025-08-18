@@ -27,5 +27,10 @@
 		<FileName>kcrc east extension(manual ver.1).rw</FileName>
 		<SignalSet>KCR.xml</SignalSet>
 	</Patch>
+	<Patch>
+		<Hash>A510ED854003B764F317E33DA1C6ACC65905675A1748BAC013151AF5454F7E72</Hash>
+		<FileName>Hong Kong Tramways.rw</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
   </RoutePatches>
 </openBVE>

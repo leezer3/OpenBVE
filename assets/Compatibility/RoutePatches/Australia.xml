@@ -18,5 +18,23 @@
 		<IgnorePitchRoll>true</IgnorePitchRoll>
 		<Message>Campbelltown- Camden routefile detected- Applying fix to yaw / roll.</Message>
 	</Patch>
+	<!-- Snowy Mountains -->
+	<Patch>
+		<Hash>190374ED86D392B2A1AD47440A36ED04F7217D8DF8FB8EA16973612AAEC5A326</Hash>
+		<FileName>SnowyMts_Freight.rw</FileName>
+		<!-- Missing track pieces -->
+		<Expression Number="298">.freeobj 0;47;0;0</Expression>
+		<Expression Number="301">.freeobj 0;47;0;0</Expression>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	<Patch>
+		<Hash>64A20D1E8A55B9F54F4AE3C948B3E0F4E1B3701D94A551B27947834868ED799E</Hash>
+		<FileName>SnowyMts_Pass.rw</FileName>
+		<!-- Missing track pieces -->
+		<Expression Number="298">.freeobj 0;47;0;0</Expression>
+		<Expression Number="301">.freeobj 0;47;0;0</Expression>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+	
   </RoutePatches>
 </openBVE>
