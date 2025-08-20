@@ -59,13 +59,13 @@ namespace OpenBveApi.Math {
 				switch (i)
 				{
 					case 0:
-						if (!double.TryParse(arguments[i], out v.X))
+						if (!double.TryParse(arguments[i], NumberStyles.Float, CultureInfo.InvariantCulture, out v.X))
 						{
 							success = false;
 						}
 						break;
 					case 1:
-						if (!double.TryParse(arguments[i], out v.Y))
+						if (!double.TryParse(arguments[i], NumberStyles.Float, CultureInfo.InvariantCulture, out v.Y))
 						{
 							success = false;
 						}

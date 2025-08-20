@@ -58,19 +58,19 @@ namespace OpenBveApi.Math {
 				switch (i)
 				{
 					case 0:
-						if (!double.TryParse(splitString[i], out v.X))
+						if (!double.TryParse(splitString[i], NumberStyles.Float, CultureInfo.InvariantCulture, out v.X))
 						{
 							success = false;
 						}
 						break;
 					case 1:
-						if (!double.TryParse(splitString[i], out v.Y))
+						if (!double.TryParse(splitString[i], NumberStyles.Float, CultureInfo.InvariantCulture, out v.Y))
 						{
 							success = false;
 						}
 						break;
 					case 2:
-						if (!double.TryParse(splitString[i], out v.Z))
+						if (!double.TryParse(splitString[i], NumberStyles.Float, CultureInfo.InvariantCulture, out v.Z))
 						{
 							success = false;
 						}
@@ -100,19 +100,19 @@ namespace OpenBveApi.Math {
 				switch (i)
 				{
 					case 0:
-						if (!double.TryParse(arguments[i], out v.X))
+						if (!double.TryParse(arguments[i], NumberStyles.Float, CultureInfo.InvariantCulture, out v.X))
 						{
 							success = false;
 						}
 						break;
 					case 1:
-						if (!double.TryParse(arguments[i], out v.Y))
+						if (!double.TryParse(arguments[i], NumberStyles.Float, CultureInfo.InvariantCulture, out v.Y))
 						{
 							success = false;
 						}
 						break;
 					case 2:
-						if (!double.TryParse(arguments[i], out v.Z))
+						if (!double.TryParse(arguments[i], NumberStyles.Float, CultureInfo.InvariantCulture, out v.Z))
 						{
 							success = false;
 						}
