@@ -8,10 +8,13 @@ namespace Object.DirectX
 
 		internal readonly D3DDeclUsage Usage;
 
+		internal readonly D3DDeclMethod Method;
+
 		internal readonly uint UsageIndex;
 
 		internal VertexElement(uint type, uint method, uint usage, uint usageIndex)
 		{
+			Method = (D3DDeclMethod)method;
 			Type = (D3DDeclType)type;
 			Usage = (D3DDeclUsage)usage;
 			UsageIndex = usageIndex;
@@ -59,5 +62,17 @@ namespace Object.DirectX
 		D3DDECLUSAGE_FOG = 11,
 		D3DDECLUSAGE_DEPTH = 12,
 		D3DDECLUSAGE_SAMPLE = 13
+	}
+
+	// https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3ddeclmethod
+	internal enum D3DDeclMethod
+	{
+		D3DDECLMETHOD_DEFAULT = 0,
+		D3DDECLMETHOD_PARTIALU = 1,
+		D3DDECLMETHOD_PARTIALV = 2,
+		D3DDECLMETHOD_CROSSUV = 3,
+		D3DDECLMETHOD_UV = 4,
+		D3DDECLMETHOD_LOOKUP = 5,
+		D3DDECLMETHOD_LOOKUPPRESAMPLED = 6
 	}
 }

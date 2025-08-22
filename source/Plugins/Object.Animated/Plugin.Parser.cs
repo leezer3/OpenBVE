@@ -1,6 +1,5 @@
 using Formats.OpenBve;
 using OpenBveApi.FunctionScripting;
-using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -8,8 +7,6 @@ using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
-using OpenBveApi.Trains;
 using Path = OpenBveApi.Path;
 
 namespace Plugin

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
@@ -42,12 +42,9 @@ namespace ObjectBender {
 		/// <param name="e">The event arguments.</param>
 		private void ButtonOutputClick(object sender, EventArgs e) {
 			SaveFileDialog dialog = new SaveFileDialog();
-			if (InputFile != null) {
-				if (InputFile.EndsWith(".b3d", StringComparison.OrdinalIgnoreCase)) {
-					dialog.Filter = @"B3D files|*.b3d|All files|*";
-				} else {
-					dialog.Filter = @"CSV files|*.csv|All files|*";
-				}
+			if (InputFile != null)
+			{
+				dialog.Filter = InputFile.EndsWith(".b3d", StringComparison.OrdinalIgnoreCase) ? @"B3D files|*.b3d|All files|*" : @"CSV files|*.csv|All files|*";
 			} else {
 				dialog.Filter = @"B3D/CSV files|*.b3d;*.csv|All files|*";
 			}

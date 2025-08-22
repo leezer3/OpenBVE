@@ -156,14 +156,7 @@ namespace Plugin.PNG
 										BytesPerPixel = 3;
 										break;
 									case ColorType.Rgba:
-										if (BitDepth == 8)
-										{
-											BytesPerPixel = 4;
-										}
-										else
-										{
-											BytesPerPixel = 8;
-										}
+										BytesPerPixel = BitDepth == 8 ? 4 : 8;
 										break;
 									case ColorType.GrayscaleAlpha:
 										BytesPerPixel = 2;
