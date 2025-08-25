@@ -36,6 +36,7 @@ namespace CarXmlConvertor
 		internal static double CenterOfGravityHeight = 1.6;
 		internal static double ExposedFrontalArea = -1;
 		internal static double UnexposedFrontalArea = -1;
+		internal static Vector3 DriverPosition = Vector3.Zero;
 		private static MainForm mainForm;
 		internal static List<AccelerationCurve> AccelerationCurves = new List<AccelerationCurve>();
 
@@ -68,13 +69,13 @@ namespace CarXmlConvertor
 								switch (n)
 								{
 									case 0:
-										ConvertSoundCfg.DriverPosition.X = 0.001 * a;
+										DriverPosition.X = 0.001 * a;
 										break;
 									case 1:
-										ConvertSoundCfg.DriverPosition.Y = 0.001 * a;
+										DriverPosition.Y = 0.001 * a;
 										break;
 									case 2:
-										ConvertSoundCfg.DriverPosition.Z = 0.001 * a;
+										DriverPosition.Z = 0.001 * a;
 										break;
 									case 3:
 										DriverCar = (int)Math.Round(a);
@@ -437,6 +438,7 @@ namespace CarXmlConvertor
 					}
 				}
 			}
+			ConvertSoundCfg.DriverPosition = DriverPosition;
 			ConvertSoundCfg.DriverPosition.Z = 0.5 * CarLength + ConvertSoundCfg.DriverPosition.Z;
 			for (int i = 0; i < AccelerationCurves.Count; i++)
 			{

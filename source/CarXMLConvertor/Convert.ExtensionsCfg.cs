@@ -523,12 +523,12 @@ namespace CarXmlConvertor
 				if(File.Exists(Path.CombineFile(Path.GetDirectoryName(FileName), "panel.animated")))
 				{
 					newLines.Add("<InteriorView>panel.animated</InteriorView>" );
-					newLines.Add("<DriverPosition>" + ConvertSoundCfg.DriverPosition.X + "," + ConvertSoundCfg.DriverPosition.Y + "," + ConvertSoundCfg.DriverPosition.Z + "</DriverPosition>");
+					newLines.Add("<DriverPosition>" + ConvertTrainDat.DriverPosition + "</DriverPosition>");
 				}
 				else if (File.Exists(Path.CombineFile(Path.GetDirectoryName(FileName), "panel2.cfg")))
 				{
 					newLines.Add("<InteriorView>panel.xml</InteriorView>");
-					newLines.Add("<DriverPosition>" + ConvertSoundCfg.DriverPosition.X + "," + ConvertSoundCfg.DriverPosition.Y + "," + ConvertSoundCfg.DriverPosition.Z + "</DriverPosition>");
+					newLines.Add("<DriverPosition>" + ConvertTrainDat.DriverPosition + "</DriverPosition>");
 				}
 			}
 			newLines.Add("<Brake>");
@@ -641,7 +641,10 @@ namespace CarXmlConvertor
 			string pluginFile = ConvertAts.DllPath(Path.GetDirectoryName(FileName));
 			if (!string.IsNullOrEmpty(pluginFile))
 			{
-				newLines.Add("<Plugin>" + pluginFile + "</Plugin>");
+				newLines.Add("<Plugin>");
+				newLines.Add("<File>" + pluginFile + "</File>");
+				newLines.Add("<LoadForAI>false</LoadForAI>");
+				newLines.Add("</Plugin>");
 			}
 			newLines.Add("<HeadlightStates>1</HeadlightStates>");
 			string trainTxt = Path.CombineFile(Path.GetDirectoryName(FileName), "train.txt");
