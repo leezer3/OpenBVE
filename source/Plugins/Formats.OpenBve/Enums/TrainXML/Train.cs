@@ -14,6 +14,8 @@
 		LocoBrake,
 		Reverser,
 		Plugin,
+		LoadForAI,
+		File,
 		HeadlightStates,
 	}
 }

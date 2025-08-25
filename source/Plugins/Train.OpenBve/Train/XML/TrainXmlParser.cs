@@ -262,16 +262,54 @@ namespace Train.OpenBve
 						switch (key)
 						{
 							case TrainXMLKey.Plugin:
-								currentPath = Path.GetDirectoryName(fileName); // reset to base path
-								string pluginFile = DocumentNodes[i].InnerText;
-								pluginFile = Path.CombineFile(currentPath, pluginFile);
-								if (File.Exists(pluginFile))
+								if (DocumentNodes[i].HasChildNodes)
 								{
-									if (!Train.LoadPlugin(pluginFile, currentPath))
+									bool loadForAI = false;
+									string pluginFile = string.Empty;
+									for (int j = 0; j < DocumentNodes[i].ChildNodes.Count; j++)
 									{
-										Train.Plugin = null;
+										Enum.TryParse(DocumentNodes[i].ChildNodes[j].Name, true, out TrainXMLKey pluginKey);
+										switch (pluginKey)
+										{
+											case TrainXMLKey.File:
+												pluginFile = DocumentNodes[i].ChildNodes[j].InnerText;
+												break;
+											case TrainXMLKey.LoadForAI:
+												if (DocumentNodes[i].ChildNodes[j].InnerText.ToLowerInvariant() == "true" || DocumentNodes[i].InnerText == "1")
+												{
+													loadForAI = true;
+												}
+												break;
+										}
+									}
+									pluginFile = Path.CombineFile(currentPath, pluginFile);
+									if (File.Exists(pluginFile) && (loadForAI || Train.IsPlayerTrain))
+									{
+										if (!Train.LoadPlugin(pluginFile, currentPath))
+										{
+											Train.Plugin = null;
+										}
+									}
+
+								}
+								else
+								{
+									if (!Train.IsPlayerTrain)
+									{
+										break;
+									}
+									currentPath = Path.GetDirectoryName(fileName); // reset to base path
+									string pluginFile = DocumentNodes[i].InnerText;
+									pluginFile = Path.CombineFile(currentPath, pluginFile);
+									if (File.Exists(pluginFile))
+									{
+										if (!Train.LoadPlugin(pluginFile, currentPath))
+										{
+											Train.Plugin = null;
+										}
 									}
 								}
+									
 								break;
 							case TrainXMLKey.HeadlightStates:
 								if (!NumberFormats.TryParseIntVb6(DocumentNodes[i].InnerText, out int numStates))
