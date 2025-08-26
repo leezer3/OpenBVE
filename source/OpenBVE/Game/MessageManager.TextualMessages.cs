@@ -45,10 +45,12 @@ namespace OpenBve
 					{
 						double spd = Math.Abs(TrainManager.PlayerTrain.CurrentSpeed);
 						double lim = TrainManager.PlayerTrain.CurrentRouteLimit;
-						//Get the speed and limit in km/h
+						
+						remove = spd < lim;
+						
+						// Convert the speed and limit into km/h for display purposes
 						spd = Math.Round(spd * 3.6);
 						lim = Math.Round(lim * 3.6);
-						remove = spd < lim;
 						string s = InternalText;
 						if (lim == double.PositiveInfinity)
 						{
