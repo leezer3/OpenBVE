@@ -343,7 +343,7 @@ namespace OpenBve
 				}
 				Game.CurrentScore.Update(TimeElapsed);
 				MessageManager.UpdateMessages(Program.Renderer.CurrentInterface != InterfaceType.Menu ? RealTimeElapsed : 0); // n.b. don't update message timeouts when in menu
-				Game.UpdateScoreMessages();
+				Game.UpdateScoreMessages(Program.Renderer.CurrentInterface != InterfaceType.Menu ? RealTimeElapsed : 0);
 
 				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 				{
