@@ -107,6 +107,26 @@ namespace Plugin
 										SoundCount++;
 									}
 								}
+								else if (obj[j] is KeyframeAnimatedObject k)
+								{
+									currentHost.AddMessage(MessageType.Warning, false, "Including MSTS Shape in an AnimatedObject- Contained animations may be lost. In the Section " + Block.Key + " in file " + FileName);
+									StaticObject so = (StaticObject)k;
+									so.Dynamic = true;
+									if (ObjectCount >= Result.Objects.Length)
+									{
+										Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
+									}
+
+									AnimatedObject a = new AnimatedObject(currentHost, FileName);
+									ObjectState aos = new ObjectState
+									{
+										Prototype = so,
+										Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z)
+									};
+									a.States = new[] { aos };
+									Result.Objects[ObjectCount] = a;
+									ObjectCount++;
+								}
 							}
 						}
 
