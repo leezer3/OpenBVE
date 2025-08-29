@@ -33,10 +33,11 @@ namespace OpenBve
 				ScreenReaderAnnounced = false;
 			}
 
-			public override void Update()
+			public override void Update(double timeElapsed)
 			{
-				//If our message timeout is greater than or equal to the current time, queue it for removal
-				bool remove = Program.CurrentRoute.SecondsSinceMidnight >= Timeout;
+				Timeout -= timeElapsed;
+				// If our message timeout has elapsed, queue it for removal
+				bool remove = Timeout <= 0;
 
 				switch (Depencency)
 				{

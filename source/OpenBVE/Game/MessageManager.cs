@@ -144,11 +144,11 @@ namespace OpenBve
 		}
 
 		/// <summary>Updates all current messages</summary>
-		internal static void UpdateMessages()
+		internal static void UpdateMessages(double timeElapsed)
 		{
 			for (int i = TextualMessages.Count -1; i >= 0; i--)
 			{
-				TextualMessages[i].Update();
+				TextualMessages[i].Update(timeElapsed);
 				if (TextualMessages[i].QueueForRemoval)
 				{
 					TextualMessages.RemoveAt(i);
@@ -156,7 +156,7 @@ namespace OpenBve
 			}
 			for (int i = ImageMessages.Count - 1; i >= 0; i--)
 			{
-				ImageMessages[i].Update();
+				ImageMessages[i].Update(timeElapsed);
 				if (ImageMessages[i].QueueForRemoval)
 				{
 					ImageMessages.RemoveAt(i);

@@ -91,12 +91,7 @@ namespace RouteManager2.MessageManager.MessageTypes
 				Color = MessageColor;
 
 			}
-
-			if (Timeout != double.PositiveInfinity)
-			{
-				Timeout += currentTime;
-			}
-
+			
 			QueueForRemoval = false;
 		}
 

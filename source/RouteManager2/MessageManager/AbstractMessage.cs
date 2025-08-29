@@ -59,8 +59,9 @@ namespace RouteManager2.MessageManager
 		public abstract void AddMessage(double currentTime);
 
 		/// <summary>Called once a frame to update the message</summary>
-		public virtual void Update()
+		public virtual void Update(double timeElapsed)
 		{
+			Timeout -= timeElapsed;
 		}
 	}
 }

@@ -375,7 +375,7 @@ namespace OpenBve
 					Array.Resize(ref ScoreMessages, n + 1);
 					ScoreMessages[n].Value = Value;
 					ScoreMessages[n].Text = Interface.GetScoreText(TextToken) + ": " + Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
-					ScoreMessages[n].Timeout = Program.CurrentRoute.SecondsSinceMidnight + Duration;
+					ScoreMessages[n].Timeout = Duration;
 					ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
 					ScoreMessages[n].RendererAlpha = 0.0;
 					if (Value < 0.0)
@@ -416,7 +416,7 @@ namespace OpenBve
 					Array.Resize(ref ScoreMessages, n + 1);
 					ScoreMessages[n].Value = 0;
 					ScoreMessages[n].Text = Text.Length != 0 ? Text : "══════════";
-					ScoreMessages[n].Timeout = Program.CurrentRoute.SecondsSinceMidnight + Duration;
+					ScoreMessages[n].Timeout = Duration;
 					ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
 					ScoreMessages[n].RendererAlpha = 0.0;
 					ScoreMessages[n].Color = MessageColor.White;
@@ -425,13 +425,14 @@ namespace OpenBve
 		}
 
 		/// <summary>Updates all score messages displayed by the renderer</summary>
-		internal static void UpdateScoreMessages()
+		internal static void UpdateScoreMessages(double timeElapsed)
 		{
 			if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 			{
 				for (int i = 0; i < ScoreMessages.Length; i++)
 				{
-					if (Program.CurrentRoute.SecondsSinceMidnight >= ScoreMessages[i].Timeout & ScoreMessages[i].RendererAlpha == 0.0)
+					ScoreMessages[i].Timeout -= timeElapsed;
+					if (ScoreMessages[i].Timeout <= 0 & ScoreMessages[i].RendererAlpha == 0.0)
 					{
 						for (int j = i; j < ScoreMessages.Length - 1; j++)
 						{

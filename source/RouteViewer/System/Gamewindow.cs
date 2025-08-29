@@ -88,7 +88,7 @@ namespace RouteViewer
             }
             Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
             Program.Renderer.RenderScene(TimeElapsed);
-            MessageManager.UpdateMessages();
+            MessageManager.UpdateMessages(TimeElapsed);
             SwapBuffers();
             
         }

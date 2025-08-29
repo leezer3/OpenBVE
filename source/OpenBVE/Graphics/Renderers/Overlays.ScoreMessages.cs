@@ -49,7 +49,7 @@ namespace OpenBve.Graphics.Renderers
 				bool preserve = false;
 				if ((element.Transition & HUD.Transition.Move) != 0)
 				{
-					if (Program.CurrentRoute.SecondsSinceMidnight < Game.ScoreMessages[j].Timeout)
+					if (Game.ScoreMessages[j].Timeout >= 0)
 					{
 						if (Game.ScoreMessages[j].RendererAlpha == 0.0)
 						{
@@ -110,7 +110,7 @@ namespace OpenBve.Graphics.Renderers
 				}
 				if ((element.Transition & HUD.Transition.Fade) != 0)
 				{
-					if (Program.CurrentRoute.SecondsSinceMidnight >= Game.ScoreMessages[j].Timeout)
+					if (Game.ScoreMessages[j].Timeout <= 0)
 					{
 						Game.ScoreMessages[j].RendererAlpha -= timeElapsed;
 						if (Game.ScoreMessages[j].RendererAlpha < 0.0)
@@ -129,7 +129,7 @@ namespace OpenBve.Graphics.Renderers
 						preserve = true;
 					}
 				}
-				else if (Program.CurrentRoute.SecondsSinceMidnight > Game.ScoreMessages[j].Timeout)
+				else if (Game.ScoreMessages[j].Timeout < 0)
 				{
 					if (Math.Abs(Game.ScoreMessages[j].RendererPosition.X - tx) < 0.1 & Math.Abs(Game.ScoreMessages[j].RendererPosition.Y - ty) < 0.1)
 					{
