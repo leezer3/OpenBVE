@@ -75,6 +75,12 @@ namespace OpenBveApi.Objects
 		/// <inheritdoc />
 		public override void CreateObject(Vector3 position, Transformation worldTransformation, Transformation localTransformation, int sectionIndex, double startingDistance, double endingDistance, double trackPosition, double brightness, bool duplicateMaterials = false)
 		{
+			// Update animations
+			for (int i = 0; i < Animations.Count; i++)
+			{
+				string key = Animations.ElementAt(i).Key;
+				Animations[key].Update(null, position, trackPosition, 0); // current state not applicable, no hand-crafted functions
+			}
 			Transformation finalTransformation = new Transformation(localTransformation, worldTransformation);
 			Matrix4D[] matriciesToShader = new Matrix4D[Matricies.Length];
 			for (int i = 0; i < matriciesToShader.Length; i++)
@@ -194,7 +200,7 @@ namespace OpenBveApi.Objects
 			for (int i = 0; i < Animations.Count; i++)
 			{
 				string key = Animations.ElementAt(i).Key;
-				Animations[key].Update(BaseCar, position, trackPosition, -1, BaseCar != null, timeElapsed); // current state not applicable, no hand-crafted functions
+				Animations[key].Update(BaseCar, position, trackPosition, timeElapsed); // current state not applicable, no hand-crafted functions
 			}
 			Matrix4D[] matriciesToShader = new Matrix4D[Matricies.Length];
 			for (int i = 0; i < matriciesToShader.Length; i++)
@@ -238,7 +244,7 @@ namespace OpenBveApi.Objects
 			for (int i = 0; i < keyframeAnimatedObject.Animations.Count; i++)
 			{
 				string key = keyframeAnimatedObject.Animations.ElementAt(i).Key;
-				keyframeAnimatedObject.Animations[key].Update(null, Vector3.Zero, 0, -1, false, 0.0); // current state not applicable, no hand-crafted functions
+				keyframeAnimatedObject.Animations[key].Update(null, Vector3.Zero, 0, 0.0); // current state not applicable, no hand-crafted functions
 			}
 
 			for (int i = 0; i < matricies.Length; i++)

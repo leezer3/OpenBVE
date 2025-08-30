@@ -98,7 +98,7 @@ namespace OpenBveApi.Objects
 	    }
 
 	    /// <summary>Updates the animation</summary>
-		public void Update(AbstractCar baseCar, Vector3 position, double trackPosition, int sectionIndex, bool isPartOfTrain, double timeElapsed)
+		public void Update(AbstractCar baseCar, Vector3 position, double trackPosition, double timeElapsed)
 		{
 			if (!string.IsNullOrEmpty(ParentAnimation) && ParentObject.Animations.ContainsKey(ParentAnimation))
 			{
@@ -109,12 +109,12 @@ namespace OpenBveApi.Objects
 			else
 			{
 				// calculate the current keyframe for the animation
-				if (isPartOfTrain)
+				if (baseCar != null)
 				{
 					// HACK: use the train as a dynamic to allow us to pull out the car reference
-					double wheelRadius;
 					if (baseCar.Wheels != null && baseCar.Wheels.ContainsKey(Name))
 					{
+						double wheelRadius;
 						if (baseCar.Wheels.ContainsKey(Name))
 						{
 							wheelRadius = baseCar.Wheels[Name].Radius;
@@ -130,23 +130,22 @@ namespace OpenBveApi.Objects
 							}
 							wheelRadius = baseCar.Wheels[baseName].Radius;
 						}
+
+						double distanceTravelled = baseCar.FrontAxle.Follower.TrackPosition - lastDistance;
+						double wheelCircumference = 2 * System.Math.PI * wheelRadius;
+						lastDistance = baseCar.FrontAxle.Follower.TrackPosition;
+						AnimationKey += (distanceTravelled / wheelCircumference) * FrameCount;
+						AnimationKey %= FrameCount;
 					}
 					else
 					{
-						// unknown animation key- for the minute, we'll stick to the MSTS keys
-						return;
+						// unknown animation key- for the minute, we'll stick to the MSTS keys, but return frame 0 to show object
+						AnimationKey = 0;
 					}
-
-					double distanceTravelled = baseCar.FrontAxle.Follower.TrackPosition - lastDistance;
-					double wheelCircumference = 2 * System.Math.PI * wheelRadius;
-					lastDistance = baseCar.FrontAxle.Follower.TrackPosition;
-					AnimationKey += (distanceTravelled / wheelCircumference) * FrameCount;
-					AnimationKey %= FrameCount;
 				}
 				else
 				{
-					AnimationKey += timeElapsed * FrameRate;
-					AnimationKey %= FrameCount;
+					AnimationKey = 0;
 				}
 				
 			}
