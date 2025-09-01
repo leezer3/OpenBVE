@@ -154,12 +154,8 @@ namespace OpenBveApi.Objects
 			Matrix = new Matrix4D(baseMatrix);
 			for (int i = 0; i < AnimationControllers.Length; i++)
 			{
-				if (AnimationControllers[i] != null)
-				{
-					// for each of the valid controllers within the animation, perform an update
-					AnimationControllers[i].Update(AnimationKey, timeElapsed, ref Matrix);
-				}
-				
+				// for each of the valid controllers within the animation, perform an update
+				AnimationControllers[i]?.Update(AnimationKey, timeElapsed, ref Matrix);
 			}
 		}
 

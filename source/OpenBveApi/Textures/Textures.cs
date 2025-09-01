@@ -337,7 +337,7 @@ namespace OpenBveApi.Textures {
 			{
 				case PixelFormat.RGB:
 					transparencyType = TextureTransparencyType.Opaque;
-					return TextureTransparencyType.Opaque;
+					break;
 				case PixelFormat.RGBAlpha:
 					for (int i = 3; i < this.MyBytes[CurrentFrame].Length; i += 4)
 					{

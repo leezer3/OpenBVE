@@ -626,8 +626,8 @@ namespace Plugin
 						if (shape.Matricies[j].Name.Length == 8 && shape.Matricies[j].Name.StartsWith("WHEELS" + bogieIndex))
 						{
 							double z = shape.Matricies[j].Matrix.ExtractTranslation().Z;
-							minWheel = Math.Min(shape.Matricies[j].Matrix.ExtractTranslation().Z, minWheel);
-							maxWheel = Math.Max(shape.Matricies[j].Matrix.ExtractTranslation().Z, maxWheel);
+							minWheel = Math.Min(z, minWheel);
+							maxWheel = Math.Max(z, maxWheel);
 						}
 					}
 
