@@ -1,5 +1,6 @@
 ﻿namespace OpenBveApi.Math
 {
+    /// <summary>Provides extension methods for some System.Math functions</summary>
     public static class Extensions
     {
 	    /// <summary>Returns the natural (base e) logarithm of a number</summary>

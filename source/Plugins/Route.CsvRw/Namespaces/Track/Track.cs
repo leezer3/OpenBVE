@@ -2780,13 +2780,13 @@ namespace CsvRwRouteParser
 									}
 									int n = Data.Blocks[BlockIndex].SoundEvents.Length;
 									Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
-									if (Command == TrackCommand.AnnounceAll)
+									if (Command == TrackCommand.RailAnnounceAll)
 									{
 										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed, new Vector2(), 0, 0, true, railIndex);
 									}
 									else
 									{
-										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed, new Vector2(), 0, 0, true, railIndex);
+										Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed, new Vector2(), 0, 0, false, railIndex);
 									}
 								}
 							}

@@ -69,14 +69,14 @@ namespace OpenBve
 					{
 						MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","interior_lookahead"}),
 							MessageDependency.CameraView, GameMode.Expert,
-							MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+							MessageColor.White, 2, null);
 						lookahead = true;
 					}
 					else
 					{
 						MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","interior"}),
 							MessageDependency.CameraView, GameMode.Expert,
-							MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+							MessageColor.White, 2, null);
 					}
 
 					Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
@@ -139,7 +139,7 @@ namespace OpenBve
 					TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
 					if (TrainManager.PlayerTrain.Plugin != null && TrainManager.PlayerTrain.Plugin.SupportsAI == AISupport.None)
 					{
-						MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","aiunable"}), MessageDependency.None, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+						MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","aiunable"}), MessageDependency.None, GameMode.Expert, MessageColor.White, 10, null);
 					}
 
 				}

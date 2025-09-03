@@ -1,6 +1,6 @@
 //Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2023, Christopher Lees, The OpenBVE Project
+//Copyright (c) 2023- 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -133,11 +133,9 @@ namespace Plugin.PNG
 										ScanlineLength = 2;
 										break;
 									case 8:
+									case 16:
 										ScanlineLength = 1;
 										break;
-									case 16:
-										Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "16-bit PNG files are not currently supported by this decoder in file " + fileName);
-										return false;
 									default:
 										Plugin.CurrentHost.ReportProblem(ProblemType.InvalidData, "Invalid or unsupported BitDepth in PNG file " + fileName);
 										return false;
@@ -158,7 +156,7 @@ namespace Plugin.PNG
 										BytesPerPixel = 3;
 										break;
 									case ColorType.Rgba:
-										BytesPerPixel = 4;
+										BytesPerPixel = BitDepth == 8 ? 4 : 8;
 										break;
 									case ColorType.GrayscaleAlpha:
 										BytesPerPixel = 2;
@@ -170,7 +168,7 @@ namespace Plugin.PNG
 
 								ScanlineLength = Math.Max(1, (int)Math.Ceiling((Width * BytesPerPixel) / (double)ScanlineLength)); // scanline must be a minumum of 1 byte in length. Always round up
 
-								pixelBuffer = ColorType != ColorType.Palleted && ColorType != ColorType.GrayscaleAlpha ? new byte[Width * Height * BytesPerPixel] : new byte[Width * Height * 4];
+								pixelBuffer = ColorType != ColorType.Palleted && ColorType != ColorType.GrayscaleAlpha && BytesPerPixel != 8 ? new byte[Width * Height * BytesPerPixel] : new byte[Width * Height * 4];
 								break;
 							case ChunkType.PLTE:
 								colorPalette = new Palette(chunkBuffer);
@@ -414,10 +412,22 @@ namespace Plugin.PNG
 												}
 												break;
                                             default:
-                                                // just copy raw data into the pixel buffer
-                                                Buffer.BlockCopy(scanline, 0, pixelBuffer, pixelsOffset, scanline.Length);
-                                                pixelsOffset += scanline.Length;
-                                                break;
+												if (BytesPerPixel == 8)
+												{
+													for (int px = 0; px < scanline.Length; px+= 2)
+													{
+														// HACK: This discards the upper byte
+														//		 Dynamic range may be lost, but otherwise we've got to play with endinan bitshifting and range checking, which is sloow....
+														pixelBuffer[pixelsOffset++] = scanline[px];
+													}
+												}
+												else
+												{
+													// just copy raw data into the pixel buffer
+													Buffer.BlockCopy(scanline, 0, pixelBuffer, pixelsOffset, scanline.Length);
+													pixelsOffset += scanline.Length;
+												}
+												break;
                                         }
 
                                         Buffer.BlockCopy(scanline, 0, previousScanline, 0, scanline.Length);
@@ -580,7 +590,7 @@ namespace Plugin.PNG
 						}
 					}
 
-					if (ColorType == ColorType.Palleted || ColorType == ColorType.GrayscaleAlpha)
+					if (ColorType == ColorType.Palleted || ColorType == ColorType.GrayscaleAlpha || BytesPerPixel == 8)
 					{
 						// need the final bpp to reflect what we've converted the image to, not the bpp in the file used whilst loading
 						BytesPerPixel = 4;

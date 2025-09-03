@@ -154,10 +154,10 @@ namespace OpenBve {
 						Function.Stack[s - 1] = Math.Exp(Function.Stack[s - 1]);
 						break;
 					case Instructions.MathLog:
-						Function.Stack[s - 1] = OpenBveApi.Math.Extensions.LogC(Function.Stack[s - 1]);
+						Function.Stack[s - 1] = Extensions.LogC(Function.Stack[s - 1]);
 						break;
 					case Instructions.MathSqrt:
-						Function.Stack[s - 1] = OpenBveApi.Math.Extensions.SqrtC(Function.Stack[s - 1]);
+						Function.Stack[s - 1] = Extensions.SqrtC(Function.Stack[s - 1]);
 						break;
 					case Instructions.MathSin:
 						Function.Stack[s - 1] = Math.Sin(Function.Stack[s - 1]);
@@ -166,7 +166,7 @@ namespace OpenBve {
 						Function.Stack[s - 1] = Math.Cos(Function.Stack[s - 1]);
 						break;
 					case Instructions.MathTan:
-						Function.Stack[s - 1] = OpenBveApi.Math.Extensions.TanC(Function.Stack[s - 1]);
+						Function.Stack[s - 1] = Extensions.TanC(Function.Stack[s - 1]);
 						break;
 					case Instructions.MathArcTan:
 						Function.Stack[s - 1] = Math.Atan(Function.Stack[s - 1]);

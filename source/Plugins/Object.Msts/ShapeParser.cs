@@ -171,6 +171,7 @@ namespace Plugin
 				Matricies = new List<KeyframeMatrix>();
 				MatrixParents = new Dictionary<string, string>();
 				ShaderNames = new List<ShaderNames>();
+				colors = new List<Color32>();
 			}
 
 			// Global variables used by all LODs
@@ -186,6 +187,8 @@ namespace Plugin
 			/// <summary>The textures used, with associated parameters</summary>
 			/// <remarks>Allows the alpha testing mode to be set etc. so that the same image file can be reused</remarks>
 			internal readonly List<Texture> textures;
+			/// <summary>The list of colors available to be applied to verticies</summary>
+			internal readonly List<Color32> colors;
 			/// <summary>Contains the shader, texture etc. used by the primitive</summary>
 			/// <remarks>Largely unsupported other than the texture name at the minute</remarks>
 			internal readonly List<PrimitiveState> prim_states;
@@ -626,8 +629,8 @@ namespace Plugin
 						if (shape.Matricies[j].Name.Length == 8 && shape.Matricies[j].Name.StartsWith("WHEELS" + bogieIndex))
 						{
 							double z = shape.Matricies[j].Matrix.ExtractTranslation().Z;
-							minWheel = Math.Min(shape.Matricies[j].Matrix.ExtractTranslation().Z, minWheel);
-							maxWheel = Math.Max(shape.Matricies[j].Matrix.ExtractTranslation().Z, maxWheel);
+							minWheel = Math.Min(z, minWheel);
+							maxWheel = Math.Max(z, maxWheel);
 						}
 					}
 
@@ -702,6 +705,10 @@ namespace Plugin
 			Block newBlock;
 			uint flags;
 
+			float a;
+			float r;
+			float g;
+			float b;
 			switch (block.Token)
 			{
 				case KujuTokenID.shape:
@@ -757,11 +764,26 @@ namespace Plugin
 				case KujuTokenID.volumes:
 				case KujuTokenID.texture_filter_names:
 				case KujuTokenID.sort_vectors:
-				case KujuTokenID.colours:
 				case KujuTokenID.light_materials:
 				case KujuTokenID.light_model_cfgs:
 					//Unsupported stuff, so just read to the end at the minute
 					block.Skip((int)block.Length());
+					break;
+				case KujuTokenID.colours:
+					int numColors = block.ReadInt32();
+					while (numColors > 0)
+					{
+						block.ReadSubBlock(KujuTokenID.colour);
+						numColors--;
+					}
+					break;
+				case KujuTokenID.colour:
+					// ARGB
+					a = block.ReadSingle();
+					r = block.ReadSingle();
+					g = block.ReadSingle();
+					b = block.ReadSingle();
+					shape.colors.Add(new Color32((byte)(255 * r), (byte)(255 * g),(byte)(255 *b),(byte)(255 *a)));
 					break;
 				case KujuTokenID.shader_names:
 					int numShaders = block.ReadInt32();
@@ -871,7 +893,6 @@ namespace Plugin
 					}
 
 					//Unpack border color
-					float r, g, b, a;
 					r = borderColor % 256;
 					g = (borderColor / 256) % 256;
 					b = (borderColor / 256 / 256) % 256;
@@ -1271,7 +1292,11 @@ namespace Plugin
 					int myNormal = block.ReadInt32(); //Index to normals array
 
 					Vertex v = new Vertex(shape.points[myPoint], shape.normals[myNormal]);
-
+					/*
+					 * colors used in lighting (integer representation of color)
+					 * Color1 fades to Color2 with distance
+					 * TODO: not yet implemented
+					 */
 					uint Color1 = block.ReadUInt32();
 					uint Color2 = block.ReadUInt32();
 					newBlock = block.ReadSubBlock(KujuTokenID.vertex_uvs);

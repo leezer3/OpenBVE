@@ -115,7 +115,7 @@ namespace OpenBve
 				{
 					//Windowed mode failed to launch
 					MessageBox.Show("An error occured whilst trying to launch in windowed mode at resolution:" + Environment.NewLine +
-									Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight + " " +
+									Interface.CurrentOptions.WindowWidth + @" x " + Interface.CurrentOptions.WindowHeight + @" " +
 									Environment.NewLine +
 									"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK,
 						MessageBoxIcon.Hand);

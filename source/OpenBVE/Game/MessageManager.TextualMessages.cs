@@ -33,10 +33,11 @@ namespace OpenBve
 				ScreenReaderAnnounced = false;
 			}
 
-			public override void Update()
+			public override void Update(double timeElapsed)
 			{
-				//If our message timeout is greater than or equal to the current time, queue it for removal
-				bool remove = Program.CurrentRoute.SecondsSinceMidnight >= Timeout;
+				Timeout -= timeElapsed;
+				// If our message timeout has elapsed, queue it for removal
+				bool remove = Timeout <= 0;
 
 				switch (Depencency)
 				{
@@ -45,10 +46,12 @@ namespace OpenBve
 					{
 						double spd = Math.Abs(TrainManager.PlayerTrain.CurrentSpeed);
 						double lim = TrainManager.PlayerTrain.CurrentRouteLimit;
-						//Get the speed and limit in km/h
+						
+						remove = spd < lim;
+						
+						// Convert the speed and limit into km/h for display purposes
 						spd = Math.Round(spd * 3.6);
 						lim = Math.Round(lim * 3.6);
-						remove = spd < lim;
 						string s = InternalText;
 						if (lim == double.PositiveInfinity)
 						{

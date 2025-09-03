@@ -156,11 +156,7 @@ namespace TrainManager.Car.Systems
 
 		public void Toggle()
 		{
-			if(Active) {
-				SetActive(false);
-			} else {
-				SetActive(true);
-			}
+			SetActive(!Active);
 		}
 	}
 }

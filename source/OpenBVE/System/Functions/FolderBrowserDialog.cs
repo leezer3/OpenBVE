@@ -112,15 +112,5 @@ namespace OpenBve
 				}
 			}
 		}
-
-		// Wrap an IWin32Window around an IntPtr
-		private class WindowWrapper : IWin32Window
-		{
-			public WindowWrapper(IntPtr handle) { Handle = handle; }
-			public IntPtr Handle
-			{
-				get;
-			}
-		}
 	}
 }

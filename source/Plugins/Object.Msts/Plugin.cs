@@ -28,6 +28,7 @@ using System.Text;
 using OpenBve.Formats.MsTs;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
+using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
@@ -135,8 +136,9 @@ namespace Plugin
 			{
 				unifiedObject = MsTsShapeParser.ReadObject(path);
 			}
-			catch
+			catch(Exception ex)
 			{
+				CurrentHost.AddMessage(MessageType.Error, false, "Object.MsTs: Caught the following exception:- "+ ex.Message);
 				unifiedObject = null;
 				return false;
 			}

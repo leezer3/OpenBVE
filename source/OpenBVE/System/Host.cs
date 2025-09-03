@@ -55,7 +55,7 @@ namespace OpenBve {
 		{
 			if (Message is string message)
 			{
-				MessageManager.AddMessage(message, MessageDependency.None, GameMode.Expert, MessageColor.Black, InGameTime + 10, null);
+				MessageManager.AddMessage(message, MessageDependency.None, GameMode.Expert, MessageColor.Black, 10, null);
 			}
 			else if(Message is AbstractMessage abstractMessage)
 			{

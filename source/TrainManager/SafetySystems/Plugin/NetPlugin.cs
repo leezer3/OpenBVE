@@ -409,7 +409,7 @@ namespace TrainManager.SafetySystems
 		/// <param name="Time">The time in seconds for which to display the message</param>
 		internal void AddInterfaceMessage(string Message, MessageColor Color, double Time)
 		{
-			TrainManagerBase.currentHost.AddMessage(Message, MessageDependency.Plugin, GameMode.Expert, Color, TrainManagerBase.currentHost.InGameTime + Time, null);
+			TrainManagerBase.currentHost.AddMessage(Message, MessageDependency.Plugin, GameMode.Expert, Color, Time, null);
 		}
 
 		/// <summary>May be called from a .Net plugin, in order to add a score to the post-game log</summary>

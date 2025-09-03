@@ -352,6 +352,7 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Joins two static objects</summary>
 		/// <param name="Add">The static object to join</param>
+		/// <param name="AnimationMatrices">The animation matricies for the object</param>
 		public void JoinObjects(StaticObject Add, Matrix4D[] AnimationMatrices = null)
 		{
 			if (Add == null)

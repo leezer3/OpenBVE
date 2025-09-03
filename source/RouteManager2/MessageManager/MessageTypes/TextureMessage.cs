@@ -68,8 +68,9 @@ namespace RouteManager2.MessageManager.MessageTypes
 			}
 		}
 
-		public override void Update()
+		public override void Update(double timeElapsed)
 		{
+			Timeout -= timeElapsed;
 			if (QueueForRemoval)
 			{
 				switch (currentTexture)

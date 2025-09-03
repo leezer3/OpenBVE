@@ -25,8 +25,9 @@ namespace RouteManager2.MessageManager.MessageTypes
 			currentHost.AddMarker(texture, Vector2.Null);
 		}
 
-		public override void Update()
+		public override void Update(double timeElapsed)
 		{
+			Timeout -= timeElapsed;
 			if (QueueForRemoval)
 			{
 				currentHost.RemoveMarker(texture);
