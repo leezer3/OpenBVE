@@ -622,6 +622,11 @@ namespace Object.CsvB3d
 									a = 0.0;
 								}
 
+								if (Math.Abs(r.X) > 1 || Math.Abs(r.Y) > 1 || Math.Abs(r.Z) > 1)
+								{
+									currentHost.AddMessage(MessageType.Warning, false, "Potentially incorrect rotational direction vector in " + cmd + "- Angle should be the *last* argument at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+
 								double t = r.NormSquared();
 								if (t == 0.0) {
 									r = Vector3.Right;
