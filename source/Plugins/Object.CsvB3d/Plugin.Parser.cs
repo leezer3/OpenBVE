@@ -1450,12 +1450,9 @@ namespace Object.CsvB3d
 										Object = ReadObject(FileName, Encoding.Default);
 										return Object;
 									}
-									else
-									{
-										//Don't log the error message if we figure out it's misdetected
-										currentHost.AddMessage(MessageType.Error, false, "The command " + cmd + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									}
 								}
+								//Don't log the error message if we figure out it's misdetected
+								currentHost.AddMessage(MessageType.Error, false, "The command " + Command + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 							}
 							break;
 					}
