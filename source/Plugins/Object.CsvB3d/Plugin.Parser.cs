@@ -1451,8 +1451,27 @@ namespace Object.CsvB3d
 										return Object;
 									}
 								}
-								//Don't log the error message if we figure out it's misdetected
-								currentHost.AddMessage(MessageType.Error, false, "The command " + Command + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+
+								
+								if (!IsB3D)
+								{
+									int firstSpace = Command.IndexOf(' ');
+									if(Enum.TryParse(Command.Substring(0, firstSpace), true, out cmd))
+									{
+										currentHost.AddMessage(MessageType.Error, false, "Incorrect argument separator used for CSV format in command " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									}
+									else
+									{
+										currentHost.AddMessage(MessageType.Error, false, "The command " + Command + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									}
+
+				
+								}
+								else
+								{
+									currentHost.AddMessage(MessageType.Error, false, "The command " + Command + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+									
 							}
 							break;
 					}
