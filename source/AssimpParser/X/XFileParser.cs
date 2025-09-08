@@ -1666,13 +1666,12 @@ namespace AssimpNET.X
 			return color;
 		}
 
-		protected Color128 ReadRGB()
+		protected Color96 ReadRGB()
 		{
-			Color128 color;
+			Color96 color;
 			color.R = ReadFloat();
 			color.G = ReadFloat();
 			color.B = ReadFloat();
-			color.A = 1.0f;
 			TestForSeparator();
 
 			return color;

@@ -22,7 +22,7 @@ namespace OpenBveApi.Colors {
 		public byte G;
 		/// <summary>The blue component.</summary>
 		public byte B;
-		// --- constructors ---
+
 		/// <summary>Creates a new color.</summary>
 		/// <param name="r">The red component.</param>
 		/// <param name="g">The green component.</param>
@@ -31,6 +31,15 @@ namespace OpenBveApi.Colors {
 			this.R = r;
 			this.G = g;
 			this.B = b;
+		}
+
+		/// <summary>Creates a new color from a Color96</summary>
+		///<param name="color">The Color96</param>
+		public Color24(Color96 color)
+		{
+			this.R = (byte)(255 * color.R);
+			this.G = (byte)(255 * color.G);
+			this.B = (byte)(255 * color.B);
 		}
 
 		/// <summary>Interpolates between two Color24 values using a simple Cosine algorithm</summary>
@@ -43,7 +52,7 @@ namespace OpenBveApi.Colors {
 			var mu2 = (1 - System.Math.Cos(mu * System.Math.PI)) / 2;
 			return new Color24((byte)(Color1.R * (1 - mu2) + Color2.R * mu2), (byte)(Color1.G * (1 - mu2) + Color2.G * mu2), (byte)(Color1.B * (1 - mu2) + Color2.B * mu2));
 		}
-		// --- operators ---
+		
 		/// <summary>Checks whether two colors are equal.</summary>
 		/// <param name="a">The first color.</param>
 		/// <param name="b">The second color.</param>
@@ -248,7 +257,7 @@ namespace OpenBveApi.Colors {
 		public byte B;
 		/// <summary>The alpha component.</summary>
 		public byte A;
-		// --- constructors ---
+
 		/// <summary>Creates a new color.</summary>
 		/// <param name="r">The red component.</param>
 		/// <param name="g">The green component.</param>
@@ -289,6 +298,17 @@ namespace OpenBveApi.Colors {
 			this.B = color.B;
 			this.A = 255;
 		}
+
+		/// <summary>Creates a new color from a Color128</summary>
+		///<param name="color">The Color128</param>
+		public Color32(Color128 color)
+		{
+			this.R = (byte)(255 * (byte)color.R);
+			this.G = (byte)(255 * (byte)color.G);
+			this.B = (byte)(255 * (byte)color.B);
+			this.A = (byte)(255 * (byte)color.A);
+		}
+
 		// --- operators ---
 		/// <summary>Checks whether two colors are equal.</summary>
 		/// <param name="a">The first color.</param>

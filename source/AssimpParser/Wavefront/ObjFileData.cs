@@ -181,13 +181,13 @@ namespace AssimpNET.Obj
 		public bool[] Clamp = Enumerable.Repeat(false, (int)TextureType.TextureTypeCount).ToArray();
 
 		//! Ambient color
-		public Color128 Ambient;
+		public Color96 Ambient;
 		//! Diffuse color
 		public Color128 Diffuse = Color128.White;
 		//! Specular color
-		public Color128 Specular;
+		public Color96 Specular;
 		//! Emissive color
-		public Color128 Emissive;
+		public Color96 Emissive;
 		//! Alpha value
 		public float Alpha = 1.0f;
 		//! Shineness factor
@@ -197,7 +197,7 @@ namespace AssimpNET.Obj
 		//! Index of refraction
 		public float Ior = 1.0f;
 		//! Transparency color
-		public Color128 Transparent = Color128.White;
+		public Color96 Transparent = Color96.White;
 
 		public bool TransparentUsed = false;
 

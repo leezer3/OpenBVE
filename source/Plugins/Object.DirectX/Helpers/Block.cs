@@ -28,6 +28,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using OpenBveApi.Colors;
 
 namespace OpenBve.Formats.DirectX
 {
@@ -61,6 +62,12 @@ namespace OpenBve.Formats.DirectX
 
 		/// <summary>Reads a string from the block</summary>
 		public abstract string ReadString();
+
+		/// <summary>Reads a Color128 from the block</summary>
+		public Color128 ReadColor128 => new Color128(ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle());
+
+		/// <summary>Reads a Color96 from the block</summary>
+		public Color96 ReadColor96 => new Color96(ReadSingle(), ReadSingle(), ReadSingle());
 
 		/// <summary>Returns the length of the block</summary>
 		public abstract long Length();

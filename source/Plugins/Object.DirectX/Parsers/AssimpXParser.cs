@@ -211,10 +211,10 @@ namespace Plugin
 				int m = builder.Materials.Length;
 				Array.Resize(ref builder.Materials, m + 1);
 				builder.Materials[m] = new OpenBveApi.Objects.Material();
-				builder.Materials[m].Color = new Color32((byte)(255 * mesh.Materials[i].Diffuse.R), (byte)(255 * mesh.Materials[i].Diffuse.G), (byte)(255 * mesh.Materials[i].Diffuse.B), (byte)(255 * mesh.Materials[i].Diffuse.A));
+				builder.Materials[m].Color = new Color32(mesh.Materials[i].Diffuse);
 				double mPower = mesh.Materials[i].SpecularExponent; //TODO: Unsure what this does...
-				Color24 mSpecular = new Color24((byte)mesh.Materials[i].Specular.R, (byte)mesh.Materials[i].Specular.G, (byte)mesh.Materials[i].Specular.B);
-				builder.Materials[m].EmissiveColor = new Color24((byte)(255 * mesh.Materials[i].Emissive.R), (byte)(255 * mesh.Materials[i].Emissive.G), (byte)(255 * mesh.Materials[i].Emissive.B));
+				Color24 mSpecular = new Color24(mesh.Materials[i].Specular);
+				builder.Materials[m].EmissiveColor = new Color24(mesh.Materials[i].Emissive);
 				builder.Materials[m].Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
 				if (Plugin.EnabledHacks.BlackTransparency)
 				{

@@ -420,10 +420,10 @@ namespace Plugin
 					break;
 				case TemplateID.Material:
 					Material newMaterial = new Material();
-					newMaterial.Color = new Color32((byte)(255 * block.ReadSingle()), (byte)(255 * block.ReadSingle()), (byte)(255 * block.ReadSingle()),(byte)(255 * block.ReadSingle()));
+					newMaterial.Color = new Color32(block.ReadColor128);
 					double mPower = block.ReadSingle(); //TODO: Unsure what this does...
-					Color24 mSpecular = new Color24((byte)block.ReadSingle(), (byte)block.ReadSingle(), (byte)block.ReadSingle());
-					newMaterial.EmissiveColor = new Color24((byte)(255 *block.ReadSingle()), (byte)(255 * block.ReadSingle()), (byte)(255 * block.ReadSingle()));
+					Color24 mSpecular = new Color24(block.ReadColor96);
+					newMaterial.EmissiveColor = new Color24(block.ReadColor96);
 					newMaterial.Flags |= MaterialFlags.Emissive; //TODO: Check exact behaviour
 					if (Plugin.EnabledHacks.BlackTransparency)
 					{
