@@ -1,3 +1,30 @@
+//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2025, Christopher Lees, Kevin Weiner, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// LZW decoder adapted from John Cristy's ImageMagick
+// https://imagemagick.org/script/license.php
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -5,17 +32,6 @@ using OpenBveApi.Math;
 
 namespace Plugin.GIF
 { 
-	/*
-	* No copyright asserted on the source code of this class.  May be used for
-	* any purpose, however, refer to the Unisys LZW patent for any additional
-	* restrictions.  Please forward any corrections to kweiner@fmsware.com.
-	*
-	* author Kevin Weiner, FM Software; LZW decoder adapted from John Cristy's ImageMagick.
-	* https://imagemagick.org/script/license.php
-	* version 1.03 November 2003
-	*
-	* Modifications & bugfixes for OpenBVE and general cleanup by Christopher Lees
-	*/
 	internal partial class GifDecoder : IDisposable
 	{
 		internal static byte[] GIF87Header = { 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 };     // "GIF87a"
