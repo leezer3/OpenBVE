@@ -89,6 +89,14 @@ namespace RouteManager2.Stations
 			return Stops.Length -1;
 		}
 
+		/// <summary>Gets the stop position corresponding to the train's number of cars</summary>
+		/// <param name="Cars">The number of cars the train has</param>
+		public double GetStopPosition(int Cars)
+		{
+			int n = GetStopIndex(Cars);
+			return Stops.Length > 0 ? Stops[n].TrackPosition : DefaultTrackPosition;
+		}
+
 		/// <summary>Indicates whether the specified train stops at this station.</summary>
 		public bool StopsHere(AbstractTrain Train)
 		{
