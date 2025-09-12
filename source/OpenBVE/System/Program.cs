@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -11,6 +12,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using RouteManager2;
+using System.Diagnostics;
 using Control = OpenBveApi.Interface.Control;
 
 namespace OpenBve {
@@ -127,7 +129,7 @@ namespace OpenBve {
 				FileSystem = FileSystem.FromCommandLineArgs(args, CurrentHost);
 				FileSystem.CreateFileSystem();
 			} catch (Exception ex) {
-				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","filesystem_invalid"}) + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				Program.ShowMessageBox(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","filesystem_invalid"}) + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}));
 				return;
 			}
 
@@ -139,9 +141,9 @@ namespace OpenBve {
 			// --- Check if we're running as root, and prompt not to ---
 			if ((CurrentHost.Platform == HostPlatform.GNULinux || CurrentHost.Platform == HostPlatform.FreeBSD) && (getuid() == 0 || geteuid() == 0))
 			{
-				MessageBox.Show(
+				Program.ShowMessageBox(
 					@"You are currently running as the root user, or via the sudo command." + Environment.NewLine +
-					@"This is a bad idea, please dont!", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					@"This is a bad idea, please dont!", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}));
 			}
 
 
@@ -182,7 +184,7 @@ namespace OpenBve {
 			{
 				if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer))
 				{
-					MessageBox.Show(error, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Error);
+					Program.ShowMessageBox(error, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 				}
 				Game.Reset(false);
@@ -204,7 +206,7 @@ namespace OpenBve {
 
 				if (!CurrentHost.UnloadPlugins(out error))
 				{
-					MessageBox.Show(error, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Error);
+					Program.ShowMessageBox(error, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));
 				}
 				if (!loaded)
 				{
@@ -303,7 +305,7 @@ namespace OpenBve {
 							if (TrainManager.Trains[i] != null && TrainManager.Trains[i].Plugin != null) {
 								if (TrainManager.Trains[i].Plugin.LastException != null) {
 									CrashHandler.LoadingCrash(ex.Message, true);
-									MessageBox.Show(@"The train plugin " + TrainManager.Trains[i].Plugin.PluginTitle + @" caused a runtime exception: " + TrainManager.Trains[i].Plugin.LastException.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+									Program.ShowMessageBox(@"The train plugin " + TrainManager.Trains[i].Plugin.PluginTitle + @" caused a runtime exception: " + TrainManager.Trains[i].Plugin.LastException.Message, Application.ProductName);
 									found = true;
 									RestartArguments = "";
 									break;
@@ -318,10 +320,10 @@ namespace OpenBve {
 								switch (ex.Message)
 								{
 									case "libopenal.so.1":
-										MessageBox.Show(@"openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+										Program.ShowMessageBox(@"openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));
 										break;
 									default:
-										MessageBox.Show(@"The required system library " + ex.Message + @" was not found on this system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+										Program.ShowMessageBox(@"The required system library " + ex.Message + @" was not found on this system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));
 										break;
 								}
 							}
@@ -352,7 +354,7 @@ namespace OpenBve {
 						Environment.Exit(0);
 					}
 				} catch (Exception ex) {
-					MessageBox.Show(ex.Message + @"\n\nProcess = " + FileSystem.RestartProcess + @"\nArguments = " + arguments, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+					Program.ShowMessageBox(ex.Message + @"\n\nProcess = " + FileSystem.RestartProcess + @"\nArguments = " + arguments, Application.ProductName);
 				}
 			}
 			else
@@ -367,7 +369,7 @@ namespace OpenBve {
 		private static bool Initialize()
 		{
 			if (!CurrentHost.LoadPlugins(FileSystem, Interface.CurrentOptions, out string error, TrainManager, Renderer)) {
-				MessageBox.Show(error, @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				Program.ShowMessageBox(error, @"OpenBVE");
 				return false;
 			}
 			
@@ -392,6 +394,32 @@ namespace OpenBve {
 			Program.CurrentHost.UnloadPlugins(out _);
 			Sounds.DeInitialize();
 			Renderer.DeInitialize();
+		}
+
+		internal static void ShowMessageBox(string messageText, string captionText)
+		{
+			if (CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size != 4)
+			{
+				// MessageBox.Show does not work on OS-X 64-bit, so let's bodge the System Events dialog
+				var proc = new Process
+				{
+					StartInfo = new ProcessStartInfo
+					{
+						FileName = "/usr/bin/osascript",
+						Arguments = $"-e 'tell app \"System Events\" to display dialog \"{messageText}\"'",
+						UseShellExecute = false,
+						RedirectStandardOutput = true,
+						CreateNoWindow = true
+					}
+				};
+
+				proc.Start();
+				proc.WaitForExit();
+			}
+			else
+			{
+				MessageBox.Show(messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+			}
 		}
 
 	}
