@@ -61,7 +61,7 @@ namespace Train.MsTs
 						}
 						else
 						{
-							notchDescription = isPower ? "P" : "B" + i;
+							notchDescription = isPower ? "P" + i : "B" + i;
 						}
 
 					}
