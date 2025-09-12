@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenBveApi.Math;
+using OpenBveApi.Motor;
 using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
@@ -111,24 +112,39 @@ namespace OpenBveApi.Objects
 				// calculate the current keyframe for the animation
 				if (baseCar != null)
 				{
-					// HACK: use the train as a dynamic to allow us to pull out the car reference
-					if (baseCar.Wheels != null && baseCar.Wheels.ContainsKey(Name))
+					if (Name.StartsWith("WHEELS") || Name.StartsWith("ROD") || Name.StartsWith("PISTON"))
 					{
+						// HACK: use the train as a dynamic to allow us to pull out the car reference
 						double wheelRadius;
-						if (baseCar.Wheels.ContainsKey(Name))
+						if (baseCar.Wheels != null)
 						{
-							wheelRadius = baseCar.Wheels[Name].Radius;
+							if (baseCar.Wheels.ContainsKey(Name))
+							{
+								wheelRadius = baseCar.Wheels[Name].Radius;
+							}
+							else
+							{
+								// if controllers are not defined for WHEELSN-N, it appears that those for the base WHEELSN are used
+								// otherwise, controlled by the position of WHEELS1
+								// RODN and PISTONN animations link to WHEELS1
+								string baseName = "WHEELS1";
+								if (Name.StartsWith("WHEELS"))
+								{
+									string wheelName = Name.Substring(0, 7);
+									if (baseCar.Wheels.ContainsKey(wheelName))
+									{
+										baseName = wheelName;
+									}
+								}
+								
+								wheelRadius = baseCar.Wheels[baseName].Radius;
+							}
 						}
 						else
 						{
-							// if controllers are not defined for WHEELSN-N, it appears that those for the base WHEELSN are used
-							// otherwise, controlled by the position of WHEELS1
-							string baseName = Name.Substring(0, 7);
-							if (!baseCar.Wheels.ContainsKey(baseName))
-							{
-								baseName = "WHEELS1";
-							}
-							wheelRadius = baseCar.Wheels[baseName].Radius;
+							// no wheels defined
+							AnimationKey = 0;
+							return;
 						}
 
 						double distanceTravelled = baseCar.FrontAxle.Follower.TrackPosition - lastDistance;
@@ -137,9 +153,43 @@ namespace OpenBveApi.Objects
 						AnimationKey += (distanceTravelled / wheelCircumference) * FrameCount;
 						AnimationKey %= FrameCount;
 					}
+					else if (Name == "PANTOGRAPHBOTTOM1" || Name == "PANTOGRAPHTOP1")
+					{
+						dynamic d = baseCar;
+						dynamic pantograph = d.TractionModel.Components[EngineComponent.Pantograph];
+						if (pantograph == null)
+						{
+							AnimationKey = 0;
+							return;
+						}
+
+						switch ((PantographState)pantograph.State)
+						{
+							case PantographState.Dewired: // assume that the ADD has activated and dropped it
+							case PantographState.Lowered:
+								// n.b. AnimationKey is reversed versus the actual state
+								if (AnimationKey < 1)
+								{
+									AnimationKey += timeElapsed * FrameRate;
+									AnimationKey = System.Math.Min(1, AnimationKey);
+								}
+								break;
+							case PantographState.Raised:
+								if (AnimationKey > 0)
+								{
+									AnimationKey -= timeElapsed * FrameRate;
+									AnimationKey = System.Math.Max(0, AnimationKey);
+								}
+								break;
+						}
+					}
+					else if (Name == "PANTOGRAPHBOTTOM2" || Name == "PANTOGRAPHTOP2")
+					{
+						AnimationKey = 0;
+					}
 					else
 					{
-						// unknown animation key- for the minute, we'll stick to the MSTS keys, but return frame 0 to show object
+						// unknown animation key- for the minute, we'll stick to the MSTS keys
 						AnimationKey = 0;
 					}
 				}

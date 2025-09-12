@@ -258,7 +258,7 @@ namespace TrainManager.BrakeSystems
 				brakeCylinder.SoundPlayedForPressure = brakeCylinder.EmergencyMaximumPressure;
 			}
 			double pressureratio = brakeCylinder.CurrentPressure / brakeCylinder.ServiceMaximumPressure;
-			deceleration = pressureratio * DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed);
+			deceleration = pressureratio != 0 ? pressureratio * DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed) : 0;
 		}
 	}
 }
