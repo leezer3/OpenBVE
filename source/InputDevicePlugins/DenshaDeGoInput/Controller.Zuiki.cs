@@ -131,7 +131,7 @@ namespace DenshaDeGoInput
 				{
 					JoystickCapabilities capabilities = Joystick.GetCapabilities(i);
 					// ZKNS-001
-					if (id.Type == ControllerType.Zuiki && capabilities.ButtonCount == 14 && capabilities.AxisCount == 4 && capabilities.HatCount >= 1)
+					if (id.Type == ControllerType.Zuiki && capabilities.ButtonCount >= 12 && capabilities.AxisCount >= 2 && capabilities.HatCount >= 1)
 					{
 						ControllerButtons buttons = ControllerButtons.Select | ControllerButtons.Start | ControllerButtons.A | ControllerButtons.B | ControllerButtons.C | ControllerButtons.D | ControllerButtons.LDoor | ControllerButtons.RDoor | ControllerButtons.DPad;
 						int[] buttonIndices = { 8, 9, 0, 1, 2, 3, 4, 5 };
