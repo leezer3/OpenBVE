@@ -1421,7 +1421,15 @@ namespace Plugin
 					ParseBlock(newBlock, ref shape, ref currentNode);
 					if (currentNode.AnimationControllers.Length != 0)
 					{
-						newResult.Animations.Add(block.Label, currentNode);
+						if (!newResult.Animations.ContainsKey(block.Label))
+						{
+							newResult.Animations.Add(block.Label, currentNode);
+						}
+						else
+						{
+							// Duplicate 'real' animation frame encountered- see note about single identity quaternion below
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Duplicate animation key " + block.Label + " encountered in MSTS Object file.");
+						}
 					}
 					else
 					{
@@ -1441,12 +1449,13 @@ namespace Plugin
 				case KujuTokenID.controllers:
 					int numControllers = block.ReadInt32();
 					animationNode.AnimationControllers = new AbstractAnimation[numControllers];
+					controllerIndex = 0;
 					for (int i = 0; i < numControllers; i++)
 					{
-						controllerIndex = i;
 						newBlock = block.ReadSubBlock(new[] { KujuTokenID.tcb_rot, KujuTokenID.linear_pos });
 						ParseBlock(newBlock, ref shape, ref animationNode);
 					}
+					Array.Resize(ref animationNode.AnimationControllers, controllerIndex);
 					break;
 				case KujuTokenID.tcb_rot:
 					NumFrames = block.ReadInt32();
@@ -1468,8 +1477,18 @@ namespace Plugin
 					}
 					else
 					{
+						if (quaternionFrames.Length == 1 && quaternionFrames[0].Quaternion == Quaternion.DirectXIdentity)
+						{
+							// If we contain a single frame containing the Identity quaternion, this isn't actually an animation
+							// but is just a frame allowing sub-parts of the object to be grouped
+							// Don't add it to the list of animations in this case
+							// Found in BR_9f_92150.s stated to be built with TSM / polymaster
+							break;
+						}
 						animationNode.AnimationControllers[controllerIndex] = new TcbKey(animationNode.Name, quaternionFrames);
 					}
+
+					controllerIndex++;
 					break;
 				case KujuTokenID.tcb_key:
 					// Frame index
@@ -1499,6 +1518,7 @@ namespace Plugin
 						ParseBlock(newBlock, ref shape, ref animationNode);
 					}
 					animationNode.AnimationControllers[controllerIndex] = new LinearKey(animationNode.Name, vectorFrames);
+					controllerIndex++;
 					break;
 				case KujuTokenID.linear_key:
 					// Frame index

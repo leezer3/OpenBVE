@@ -383,6 +383,9 @@ namespace OpenBveApi.Math
 		/// <summary>A quaterion representing an identity matrix.</summary>
 		public static readonly Quaternion Identity = new Quaternion(0, 0, 0, 1);
 
+		/// <summary>A quaterion representing an identity matrix in DirectX format.</summary>
+		public static readonly Quaternion DirectXIdentity = new Quaternion(0, 0, 0, -1);
+
 		/// <summary>
 		/// Do Spherical linear interpolation between two quaternions 
 		/// </summary>
