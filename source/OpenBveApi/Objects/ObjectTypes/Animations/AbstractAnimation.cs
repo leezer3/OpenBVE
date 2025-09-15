@@ -48,5 +48,11 @@ namespace OpenBveApi.Objects
 		/// <summary>Clones the animation</summary>
         public abstract AbstractAnimation Clone();
 
+		/// <summary>Reverses the animation</summary>
+        public virtual void Reverse()
+        {
+
+        }
+
     }
 }

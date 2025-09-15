@@ -267,7 +267,7 @@
     <Compile Include="Train\TrainStopState.cs" />
     <Compile Include="Train\TrainType.cs" />
     <Compile Include="Train\TravelDirection.cs" />
-    <Compile Include="Train\Wheels.cs" />
+    <Compile Include="Train\Wheels\Wheels.cs" />
     <Compile Include="World\Orientation3.cs" />
     <Compile Include="Packages\Packages.cs" />
     <Compile Include="Packages\Packages.Database.cs" />

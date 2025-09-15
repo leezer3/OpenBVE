@@ -52,5 +52,14 @@ namespace OpenBveApi.Objects
 	    {
 		    return new LinearKey(Name, animationFrames);
 	    }
+
+	    public override void Reverse()
+	    {
+		    for (int i = 0; i < animationFrames.Length; i++)
+		    {
+				animationFrames[i].Vector.Z = -animationFrames[i].Vector.Z;
+				animationFrames[i].Vector.X = -animationFrames[i].Vector.X;
+			}
+	    }
     }
 }

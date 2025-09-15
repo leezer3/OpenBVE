@@ -236,6 +236,26 @@ namespace OpenBveApi.Objects
 				t.Row3.Z *= -1.0f;
 				state.Translation = t;
 			}
+			
+			for (int i = 0; i < Animations.Count; i++)
+			{
+				string animationKey = Animations.ElementAt(i).Key;
+				Animations[animationKey].baseMatrix.Row3.X = -Animations[animationKey].baseMatrix.Row3.X;
+				Animations[animationKey].baseMatrix.Row3.Z = -Animations[animationKey].baseMatrix.Row3.Z;
+
+				for (int j = 0; j < Animations[animationKey].AnimationControllers.Length; j++)
+				{
+					Animations[animationKey].AnimationControllers[j].Reverse();
+				}
+			}
+			
+			for (int i = 0; i < Matricies.Length; i++)
+			{
+				Matricies[i]._matrix.Row3.X = -Matricies[i]._matrix.Row3.X;
+				Matricies[i]._matrix.Row3.Z = -Matricies[i]._matrix.Row3.Z;
+			}
+
+			
 		}
 
 		public static implicit operator StaticObject(KeyframeAnimatedObject keyframeAnimatedObject)
