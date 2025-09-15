@@ -28,6 +28,7 @@ using OpenBveApi.Motor;
 using OpenBveApi.Trains;
 using System;
 using OpenBveApi;
+using TrainManager.Car.Systems;
 using TrainManager.Motor;
 
 namespace Train.MsTs
@@ -215,8 +216,19 @@ namespace Train.MsTs
 					}
 					lastResult = gearState;
 					break;
+				case PanelSubject.Sanders:
+					int sandState = 0;
+					for (int k = 0; k < dynamicTrain.Cars.Length; k++)
+					{
+						if (dynamicTrain.Cars[k].ReAdhesionDevice is Sanders sanders)
+						{
+							sandState = sanders.Active ? 1 :0;
+							break;
+						}
+					}
+					lastResult = sandState;
+					break;
 			}
-
 			return lastResult;
 		}
 
