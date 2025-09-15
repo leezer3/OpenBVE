@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.IO;
+using System.Text;
 using LibRender2;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
@@ -37,7 +39,7 @@ namespace Train.MsTs
 
 		public override bool CanLoadTrain(string path)
 		{
-			if (path.ToLowerInvariant().EndsWith(".con"))
+			if (File.Exists(path) && path.ToLowerInvariant().EndsWith(".con"))
 			{
 				return true;
 			}
@@ -63,7 +65,15 @@ namespace Train.MsTs
 		{
 			PreviewOnly = true;
 			AbstractTrain train = new TrainBase(TrainState.Pending, TrainType.LocalPlayerTrain);
-			ConsistParser.ReadConsist(trainPath, ref train);
+			try
+			{
+				ConsistParser.ReadConsist(trainPath, ref train);
+			}
+			catch
+			{
+				return string.Empty;
+			}
+			
 			if(train is TrainBase trainBase && trainBase.Cars.Length != 0)
 			{
 				return trainBase.Cars[train.DriverCar].Description;
