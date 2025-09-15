@@ -41,6 +41,7 @@ using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
+using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
@@ -165,7 +166,12 @@ namespace Train.MsTs
 						currentCar.TractionModel = new BVEMotorCar(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) });
 						break;
 				}
-				currentCar.ReAdhesionDevice = new BveReAdhesionDevice(currentCar, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
+
+				if (currentCar.ReAdhesionDevice == null)
+				{
+					currentCar.ReAdhesionDevice = new BveReAdhesionDevice(currentCar, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
+				}
+				
 				currentCar.Windscreen = new Windscreen(0, 0, currentCar);
 				currentCar.Windscreen.Wipers = new WindscreenWiper(currentCar.Windscreen, WiperPosition.Left, WiperPosition.Left, 1.0, 1.0);
 
@@ -318,6 +324,7 @@ namespace Train.MsTs
 		private List<VigilanceDevice> vigilanceDevices;
 		private Exhaust Exhaust;
 		private Gear[] Gears;
+		private double maxSandingSpeed;
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
@@ -706,6 +713,23 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Brake_Train:
 					train.Handles.Brake = ParseHandle(block, train, false);
+					break;
+				case KujuTokenID.Sanding:
+					switch (block.ParentBlock.Token)
+					{
+						case KujuTokenID.Engine:
+							maxSandingSpeed = block.ReadSingle(UnitOfVelocity.MetersPerSecond, UnitOfVelocity.MilesPerHour);
+							break;
+						case KujuTokenID.EngineControllers:
+							int p1 = block.ReadInt16();
+							int p2 = block.ReadInt16();
+							int p3 = block.ReadInt16();
+							if (p1 == 0 && p2 == 1 && p3 == 0)
+							{
+								car.ReAdhesionDevice = new Sanders(car, SandersType.PressAndHold, maxSandingSpeed);
+							}
+							break;
+					}
 					break;
 				case KujuTokenID.DieselEngineIdleRPM:
 					dieselIdleRPM = block.ReadSingle();

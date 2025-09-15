@@ -36,6 +36,7 @@ using System;
 using System.IO;
 using System.Text;
 using TrainManager.Car;
+using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.MsTsSounds;
 
@@ -463,6 +464,12 @@ namespace Train.MsTs
 							case SoundTrigger.WiperOn:
 							case SoundTrigger.WiperOff:
 								car.Windscreen.Wipers.SwitchSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+								break;
+							case SoundTrigger.SanderOn:
+								if (car.ReAdhesionDevice is Sanders sanders)
+								{
+									sanders.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+								}
 								break;
 						}
 					}
