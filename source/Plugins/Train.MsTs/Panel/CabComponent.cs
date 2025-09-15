@@ -188,6 +188,7 @@ namespace Train.MsTs
 							{
 								case PanelSubject.Throttle:
 								case PanelSubject.Train_Brake:
+								case PanelSubject.Gears:
 									currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
 									break;
 								default:
