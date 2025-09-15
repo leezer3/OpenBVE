@@ -710,6 +710,10 @@ namespace TrainManager.Car
 				{
 					currentCarSection.Groups[0].Keyframes.Update(TrackPosition, p, d, Up, s, true, TimeElapsed, true);
 				}
+				if (currentCarSection.CurrentAdditionalGroup + 1 < currentCarSection.Groups.Length)
+				{
+					currentCarSection.Groups[currentCarSection.CurrentAdditionalGroup + 1].Keyframes?.Update(TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+				}
 			}
 			//Update camera restriction
 
