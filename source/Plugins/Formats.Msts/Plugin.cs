@@ -797,7 +797,7 @@ namespace OpenBve.Formats.MsTs
 			int c;
 			for (c = 0; c < s.Length; c++)
 			{
-				if (!char.IsNumber(s[c]) && s[c] != '.')
+				if (!char.IsNumber(s[c]) && s[c] != '.' && s[c] != 'e')
 				{
 					break;
 				}
