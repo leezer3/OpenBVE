@@ -1158,12 +1158,15 @@ namespace TrainManager.Car
 								a = device.MaximumAccelerationOutput;
 							}
 						}
-						else if (ReAdhesionDevice is Sanders)
+						else if (ReAdhesionDevice is Sanders sanders)
 						{
-							wheelSlipAccelerationMotorFront *= 2.0;
-							wheelSlipAccelerationMotorRear *= 2.0;
-							wheelSlipAccelerationBrakeFront *= 2.0;
-							wheelSlipAccelerationBrakeRear *= 2.0;
+							if (sanders.Active && CurrentSpeed < sanders.MaximumSpeed)
+							{
+								wheelSlipAccelerationMotorFront *= 2.0;
+								wheelSlipAccelerationMotorRear *= 2.0;
+								wheelSlipAccelerationBrakeFront *= 2.0;
+								wheelSlipAccelerationBrakeRear *= 2.0;
+							}
 						}
 
 
