@@ -4,6 +4,7 @@ namespace Train.MsTs
 {
 	internal enum PanelSubject
 	{
+		Accelerometer,
 		Alerter_Display,
 		Ammeter,
 		Aspect_Display,
@@ -17,10 +18,14 @@ namespace Train.MsTs
 		CPH_Display,
 		Cutoff,
 		Cyl_Cocks,
+		Dampers_Back,
 		Dampers_Front,
 		Direction,
 		Direction_Display,
+		Dynamic_Brake,
+		Dynamic_Brake_Display,
 		Engine_Brake,
+		Engine_Braking_Button,
 		Emergency_Brake,
 		Eq_Res,
 		Firebox,
@@ -51,6 +56,7 @@ namespace Train.MsTs
 		Tender_Water,
 		Boiler_Water,
 		Throttle,
+		Throttle_Display,
 		Traction_Braking,
 		Train_Brake,
 		Vacuum_Reservoir_Pressure,

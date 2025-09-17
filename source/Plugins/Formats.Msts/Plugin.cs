@@ -1088,11 +1088,41 @@ namespace OpenBve.Formats.MsTs
 		public override TEnumType ReadEnumValue<TEnumType>(TEnumType desiredEnumType)
 		{
 			string s = ReadString();
+			s = s.Replace("/", "_");
+			s = Replace(s, "METRES", "METERS"); // accept both spellings of meter
+			s = Replace(s, "SEC_SEC", "SEC"); // 3DTS Class 108
 			if (!Enum.TryParse(s, true, out TEnumType e))
 			{
 				throw new InvalidDataException("Expected " + s + " to be a value member of the specified enum.");
 			}
 			return e;
+		}
+
+		private static string Replace(string str, string oldValue, string newValue)
+		{
+			// Helper method to case invariant replace string within a string
+			// This isn't available before .Net Core
+			if(string.IsNullOrEmpty(oldValue))
+			{
+				return str;
+			}
+			
+			StringBuilder sb = new StringBuilder();
+
+			int previousIndex = 0;
+			int index = str.IndexOf(oldValue, StringComparison.InvariantCultureIgnoreCase);
+			while (index != -1)
+			{
+				sb.Append(str.Substring(previousIndex, index - previousIndex));
+				sb.Append(newValue);
+				index += oldValue.Length;
+
+				previousIndex = index;
+				index = str.IndexOf(oldValue, index, StringComparison.InvariantCultureIgnoreCase);
+			}
+			sb.Append(str.Substring(previousIndex));
+
+			return sb.ToString();
 		}
 
 		public override long Length()
