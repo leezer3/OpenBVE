@@ -364,13 +364,14 @@ namespace Train.MsTs
 					Code = "horn";
 					break;
 				case PanelSubject.Speedometer:
+					// use speed not speedometer at the minute as wheelslip isn't right
 					switch (subjectUnits)
 					{
 						case Units.Miles_Per_Hour:
-							Code = "speedometer abs 2.2369362920544 *";
+							Code = "speed abs 2.2369362920544 *";
 							break;
 						case Units.Kilometers_Per_Hour:
-							Code = "speedometer abs 3.6 *";
+							Code = "speed abs 3.6 *";
 							break;
 					}
 					break;

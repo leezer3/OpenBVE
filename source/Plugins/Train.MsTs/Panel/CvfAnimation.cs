@@ -129,6 +129,7 @@ namespace Train.MsTs
 						}
 					}
 					break;
+				case PanelSubject.Direction_Display:
 				case PanelSubject.Direction:
 					lastResult = (int)dynamicTrain.Handles.Reverser.Actual + 1;
 					break;

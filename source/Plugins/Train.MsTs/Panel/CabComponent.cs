@@ -383,6 +383,23 @@ namespace Train.MsTs
 					TotalFrames = block.ReadInt16();
 					HorizontalFrames = block.ReadInt16();
 					VerticalFrames = block.ReadInt16();
+					FrameMappings = new FrameMapping[TotalFrames];
+					for (int i = 0; i < TotalFrames; i++)
+					{
+						FrameMappings[i].FrameKey = i;
+						var stateBlock = block.ReadSubBlock(KujuTokenID.State);
+						while (stateBlock.Length() - stateBlock.Position() > 3)
+						{
+							Block subBlock = stateBlock.ReadSubBlock(new[] { KujuTokenID.Style, KujuTokenID.SwitchVal });
+							if (subBlock.Token == KujuTokenID.SwitchVal)
+							{
+								FrameMappings[i].MappingValue = subBlock.ReadSingle();
+								break;
+							}
+						}
+						
+
+					}
 					break;
 				case KujuTokenID.DirIncrease:
 					// rotates Clockwise (0) or AntiClockwise (1)
