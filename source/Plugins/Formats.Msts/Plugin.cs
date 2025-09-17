@@ -678,6 +678,11 @@ namespace OpenBve.Formats.MsTs
 				currentPosition++;
 			}
 
+			if (currentPosition == myText.Length)
+			{
+				// Missing one or more block terminators- PadRight with appropriate number
+				return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }).PadRight(currentPosition - startPosition + level, ')'), currentToken, true, this);
+			}
 			throw new InvalidDataException("Unexpected end of block in " + Token);
 		}
 
@@ -797,7 +802,7 @@ namespace OpenBve.Formats.MsTs
 			int c;
 			for (c = 0; c < s.Length; c++)
 			{
-				if (!char.IsNumber(s[c]) && s[c] != '.' && s[c] != 'e')
+				if (!char.IsNumber(s[c]) && s[c] != '.' && s[c] != 'e' && s[c] != '-')
 				{
 					break;
 				}
