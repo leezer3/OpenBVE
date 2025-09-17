@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -89,7 +89,7 @@ namespace Train.MsTs
 		{
 			if (File.Exists(TexturePath) || Type == CabComponentType.Digital)
 			{
-				if (FrameMappings.Length == 0 && TotalFrames > 1)
+				if (FrameMappings.Length < 2 && TotalFrames > 1)
 				{
 					// e.g. Acela power handle has 25 frames for total power value of 100% but no mappings specified
 					FrameMappings = new FrameMapping[TotalFrames];
@@ -186,6 +186,7 @@ namespace Train.MsTs
 							f = CabviewFileParser.GetStackLanguageFromSubject(currentCar.baseTrain, panelSubject, Units);
 							switch (panelSubject)
 							{
+								case PanelSubject.Engine_Brake:
 								case PanelSubject.Throttle:
 								case PanelSubject.Train_Brake:
 								case PanelSubject.Gears:
