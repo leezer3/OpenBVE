@@ -512,7 +512,7 @@ namespace Train.MsTs
 						case KujuTokenID.Speed_Inc_Past:
 						case KujuTokenID.Speed_Dec_Past:
 							currentSoundSet.VariableValue = block.ReadSingle(UnitOfVelocity.KilometersPerHour, UnitOfVelocity.MetersPerSecond); // speed in m/s
-							newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump, KujuTokenID.PlayOneShot, KujuTokenID.EnableTrigger, KujuTokenID.DisableTrigger });
+							newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump, KujuTokenID.PlayOneShot, KujuTokenID.EnableTrigger, KujuTokenID.DisableTrigger, KujuTokenID.SetStreamVolume });
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;
 						case KujuTokenID.SpeedControlled:
