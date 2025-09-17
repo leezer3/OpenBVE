@@ -26,7 +26,7 @@ namespace Train.MsTs
 			// some handles seem to have extra numbers here, I believe ignored by the MSTS parser
 			Block notchDescriptions = block.GetSubBlock(KujuTokenID.NumNotches);
 			ParseNotchDescriptionBlock(notchDescriptions, isPower);
-			return new VariableHandle(train, NotchDescriptions);
+			return new VariableHandle(train, isPower, NotchDescriptions);
 		}
 		
 		private void ParseNotchDescriptionBlock(Block block, bool isPower)
@@ -34,41 +34,33 @@ namespace Train.MsTs
 			int numNotches = block.ReadInt32();
 			if (numNotches < 2)
 			{
-				/*
-				 * Some AI ENG files seem to use a single dummy notch
-				 * Interpret this as a single actual power notch
-				 */
-				NotchDescriptions = new[]
-				{
-					new Tuple<double, string>(0, "N"),
-					new Tuple<double, string>(1, isPower ? "P1" :"B1"),
-				};
+				// percentage based notch
+				NotchDescriptions = null;
+				return;
 			}
-			else
-			{
-				NotchDescriptions = new Tuple<double, string>[numNotches];
-				for (int i = 0; i < numNotches; i++)
-				{
-					Block descriptionBlock = block.ReadSubBlock(KujuTokenID.Notch);
-					double notchPower = descriptionBlock.ReadSingle();
-					descriptionBlock.ReadSingle(); // ??
-					string notchDescription = descriptionBlock.ReadString();
-					if (notchDescription.Equals("dummy", StringComparison.InvariantCultureIgnoreCase))
-					{
-						if (i == 0)
-						{
-							notchDescription = "N";
-						}
-						else
-						{
-							notchDescription = isPower ? "P" + i : "B" + i;
-						}
 
+			NotchDescriptions = new Tuple<double, string>[numNotches];
+			for (int i = 0; i < numNotches; i++)
+			{
+				Block descriptionBlock = block.ReadSubBlock(KujuTokenID.Notch);
+				double notchPower = descriptionBlock.ReadSingle();
+				descriptionBlock.ReadSingle(); // ??
+				string notchDescription = descriptionBlock.ReadString();
+				if (notchDescription.Equals("dummy", StringComparison.InvariantCultureIgnoreCase))
+				{
+					if (i == 0)
+					{
+						notchDescription = "N";
 					}
-					NotchDescriptions[i] = new Tuple<double, string>(notchPower, notchDescription);
+					else
+					{
+						notchDescription = isPower ? "P" + i : "B" + i;
+					}
+
 				}
+				NotchDescriptions[i] = new Tuple<double, string>(notchPower, notchDescription);
 			}
-			
+
 		}
 	}
 }
