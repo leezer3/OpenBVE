@@ -24,6 +24,8 @@ namespace Train.MsTs
 		/// <summary>A digital display</summary>
 		Digital = 9,
 		/// <summary>A digital clock</summary>
-		DigitalClock = 10
+		DigitalClock = 10,
+		/// <summary>A combined power + brake controller</summary>
+		CombinedControl = 11
 	}
 }

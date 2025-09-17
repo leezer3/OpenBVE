@@ -42,6 +42,7 @@ using SharpCompress.Compressors.Deflate;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
+using TrainManager.Handles;
 using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
@@ -713,6 +714,24 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Brake_Train:
 					train.Handles.Brake = ParseHandle(block, train, false);
+					break;
+				case KujuTokenID.Brake_Engine:
+					train.Handles.HasLocoBrake = true;
+					train.Handles.LocoBrake = ParseHandle(block, train, false);
+					break;
+				case KujuTokenID.Combined_Control:
+					block.ReadSingle();
+					block.ReadSingle();
+					block.ReadSingle();
+					block.ReadSingle();
+
+					CombinedControlType firstCombinedControl = block.ReadEnumValue(default(CombinedControlType));
+					CombinedControlType secondCombinedControl = block.ReadEnumValue(default(CombinedControlType));
+
+					if (firstCombinedControl == CombinedControlType.Throttle && secondCombinedControl == CombinedControlType.Dynamic)
+					{
+						train.Handles.HandleType = HandleType.SingleHandle;
+					}
 					break;
 				case KujuTokenID.Sanding:
 					switch (block.ParentBlock.Token)

@@ -228,6 +228,21 @@ namespace Train.MsTs
 					}
 					lastResult = sandState;
 					break;
+				case PanelSubject.Engine_Brake:
+					if (!dynamicTrain.Handles.HasLocoBrake)
+					{
+						lastResult = 0;
+						break;
+					}
+					for (int i = 0; i < FrameMapping.Length; i++)
+					{
+						if (FrameMapping[i].MappingValue >= (double)dynamicTrain.Handles.LocoBrake.Actual / dynamicTrain.Handles.LocoBrake.MaximumNotch)
+						{
+							lastResult = FrameMapping[i].FrameKey;
+							break;
+						}
+					}
+					break;
 			}
 			return lastResult;
 		}
