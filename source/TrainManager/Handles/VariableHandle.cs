@@ -8,8 +8,9 @@ namespace TrainManager.Handles
 	/// <summary>A handle with variable properties per notch</summary>
 	public class VariableHandle : AbstractHandle
 	{
-		public VariableHandle(TrainBase train, Tuple<double, string>[] notches = null) : base(train)
+		public VariableHandle(TrainBase train, bool isPower, Tuple<double, string>[] notches = null) : base(train)
 		{
+			powerHandle = isPower;
 			if (notches?.Length > 0)
 			{
 				MaximumDriverNotch = notches.Length - 1;
@@ -34,10 +35,11 @@ namespace TrainManager.Handles
 
 		private readonly Tuple<double, string>[] _notches;
 
+		private readonly bool powerHandle;
+
 		private double timer;
 
 		private bool isIncreasing;
-
 		
 		public override void Update(double timeElapsed)
 		{
@@ -102,7 +104,7 @@ namespace TrainManager.Handles
 				{
 					return "N";
 				}
-				return "P" + Actual + "%";
+				return (powerHandle ? "P" : "B") + Actual + "%";
 			}
 
 			return _notches[Actual].Item2;

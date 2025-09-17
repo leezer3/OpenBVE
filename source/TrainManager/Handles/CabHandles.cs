@@ -275,6 +275,7 @@ namespace TrainManager.Handles
 					{
 						LocoBrake.ApplyState(1, true);
 					}
+					LocoBrake.ContinuousMovement = true;
 					break;
 				case Translations.Command.LocoBrakeDecrease:
 					if (LocoBrake is LocoAirBrakeHandle)
@@ -292,6 +293,7 @@ namespace TrainManager.Handles
 					{
 						LocoBrake.ApplyState(-1, true);
 					}
+					LocoBrake.ContinuousMovement = true;
 					break;
 				case Translations.Command.BrakeEmergency:
 					// brake emergency
@@ -384,6 +386,10 @@ namespace TrainManager.Handles
 				case Translations.Command.SingleNeutral:
 					Brake.ContinuousMovement = false;
 					Power.ContinuousMovement = false;
+					break;
+				case Translations.Command.LocoBrakeIncrease:
+				case Translations.Command.LocoBrakeDecrease:
+					LocoBrake.ContinuousMovement = false;
 					break;
 			}
 		}
