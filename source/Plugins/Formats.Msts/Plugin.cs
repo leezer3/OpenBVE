@@ -31,6 +31,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using OpenBveApi.Math;
 
 // ReSharper disable UnusedMember.Global
 
@@ -509,16 +510,16 @@ namespace OpenBve.Formats.MsTs
 			return readBlocks;
 		}
 
-		public static Dictionary<KujuTokenID, Block> ReadBlocks(string text)
+		public static List<Block> ReadBlocks(string text)
 		{
 			Block b = new TextualBlock(text, false);
-			Dictionary<KujuTokenID, Block> readBlocks = new Dictionary<KujuTokenID, Block>();
+			List<Block> readBlocks = new List<Block>();
 			while (b.Position() < b.Length() - 1)
 			{
 				try
 				{
 					Block sb = b.ReadSubBlock(true);
-					readBlocks.Add(sb.Token, sb);
+					readBlocks.Add(sb);
 				}
 				catch
 				{
@@ -807,7 +808,7 @@ namespace OpenBve.Formats.MsTs
 
 
 			string s = getNextValue();
-			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out int val))
+			if (NumberFormats.TryParseIntVb6(s, out int val))
 			{
 				return val;
 			}
