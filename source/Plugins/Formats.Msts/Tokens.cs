@@ -1364,7 +1364,8 @@ namespace OpenBve.Formats.MsTs
 		Train = uint.MinValue,
 
 		/*
-		 * Incorrect spellings etc.
+		 * Stuff not listed in MSTS editor header files, also includes incorrect spellings
+		 * It's not clear where some of these come from, possibly MSTSBin or simply 'working' but not in the actual MSTS header file
 		 *
 		 */
 		AirBrakeHasLowPressureTest = AirBrakesHasLowPressureTest, // MT Class 86
@@ -1373,5 +1374,10 @@ namespace OpenBve.Formats.MsTs
 		RegulatorPilotValveFullOpening, // Adams B4, UKTS2910
 		Exhaust3, // UK_Diesel_BR_Class50_D400
 		Exhaust4, // UK_Diesel_BR_Class50_D400
+		TrainBrakesControllerHasProportionalBrake, // SL_D6517
+		TrainBrakesProportionalBrakeLag, // SL_D6517
+		Injector1WaterValveVarience, // SL_BR_E2
+		Injector2WaterValveVarience, // SL_BR_E2
+		TrainBrakesControllerMaxApplyRate, // SL_BR_E2
 	}
 }
