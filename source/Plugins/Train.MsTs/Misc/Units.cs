@@ -7,14 +7,16 @@ namespace Train.MsTs
     {
 		Unknown = 0,
 		Amps =1,
-		Gallons = 2,
-		Inches_Of_Mercury = 3,
-		Kilometers_Per_Hour = 4,
-		Km_Per_Hour = 4,
-		Miles_Per_Hour = 5,
-		Meters_Sec = 6,
-		PSI = 7,
-		Kilo_Lbs = 8,
-		Kilopascals = 9
+		Kilovolts = 2,
+		Gallons = 3,
+		Inches_Of_Mercury = 4,
+		Kilometers_Per_Hour = 5,
+		Km_Per_Hour = 5,
+		Miles_Per_Hour = 6,
+		Meters_Sec = 7,
+		PSI = 8,
+		Kilo_Lbs = 9,
+		Kilopascals = 10,
+		Bar = 11
     }
 }
