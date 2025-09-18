@@ -35,6 +35,7 @@ namespace Train.MsTs
 		Gears,
 		Horn,
 		Load_Meter,
+		Line_Voltage,
 		Main_Res,
 		Overspeed,
 		Pantograph,

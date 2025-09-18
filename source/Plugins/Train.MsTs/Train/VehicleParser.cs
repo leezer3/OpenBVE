@@ -253,19 +253,31 @@ namespace Train.MsTs
 					 * Engine files contain two blocks, not in an enclosing block
 					 * Assume that these can be of arbritrary order, so read using a dictionary
 					 */
-					Dictionary<KujuTokenID, Block> blocks = TextualBlock.ReadBlocks(s);
-					if (!blocks.ContainsKey(KujuTokenID.Wagon))
+					List<Block> blocks = TextualBlock.ReadBlocks(s);
+
+					List<Block> wagonBlocks = blocks.Where(b => b.Token == KujuTokenID.Wagon).ToList();
+					List<Block> engineBlocks = blocks.Where(b => b.Token == KujuTokenID.Engine).ToList();
+
+					if (wagonBlocks.Count == 0)
 					{
 						//Not found any wagon data in this file
 						return false;
 					}
-					if (isEngine && blocks.ContainsKey(KujuTokenID.Engine))
+					if (isEngine && engineBlocks.Count > 0)
 					{
-						return ParseBlock(blocks[KujuTokenID.Engine], fileName, ref wagonName, true, ref car, ref train);
+						if (engineBlocks.Count > 1)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Multiple engine blocks encounted in MSTS ENG file "+ fileName);
+						}
+						return ParseBlock(engineBlocks[0], fileName, ref wagonName, true, ref car, ref train);
 					}
-					if (!isEngine && blocks.ContainsKey(KujuTokenID.Wagon))
+					if (!isEngine && wagonBlocks.Count > 0)
 					{
-						return ParseBlock(blocks[KujuTokenID.Wagon], fileName, ref wagonName, false, ref car, ref train);
+						if (wagonBlocks.Count > 1)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Multiple wagon blocks encounted in MSTS ENG file " + fileName);
+						}
+						return ParseBlock(wagonBlocks[0], fileName, ref wagonName, false, ref car, ref train);
 					}
 					return false;
 				}

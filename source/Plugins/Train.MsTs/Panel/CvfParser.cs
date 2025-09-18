@@ -330,6 +330,9 @@ namespace Train.MsTs
 						case Units.Kilopascals:
 							Code = "brakecylinder 0.001 *";
 							break;
+						case Units.Bar:
+							Code = "brakecylinder 0.00001 *";
+							break;
 					}
 					break;
 				case PanelSubject.Brake_Pipe:
@@ -344,6 +347,9 @@ namespace Train.MsTs
 						case Units.Kilopascals:
 							Code = "brakepipe 0.001 *";
 							break;
+						case Units.Bar:
+							Code = "brakepipe 0.00001 *";
+							break;
 					}
 					break;
 				case PanelSubject.Main_Res:
@@ -357,6 +363,9 @@ namespace Train.MsTs
 							break;
 						case Units.Kilopascals:
 							Code = "mainreservoir 0.001 *";
+							break;
+						case Units.Bar:
+							Code = "mainreservoir 0.00001 *";
 							break;
 					}
 					break;
