@@ -59,6 +59,8 @@ namespace OpenBveApi.Objects
 		internal Vector3 rearAxlePosition;
 		/// <summary>The current absolute track position of the car</summary>
 		internal double currentTrackPosition;
+		/// <summary>Whether the object is reversed</summary>
+		internal bool IsReversed;
 
 		/// <summary>Creates an empty KeyFrameAnimatedObject</summary>
 		/// <param name="currentHost">The host application interface</param>
@@ -79,7 +81,7 @@ namespace OpenBveApi.Objects
 			for (int i = 0; i < Animations.Count; i++)
 			{
 				string key = Animations.ElementAt(i).Key;
-				Animations[key].Update(null, position, trackPosition, 0); // current state not applicable, no hand-crafted functions
+				Animations[key].Update(null, IsReversed, position, trackPosition, 0); // current state not applicable, no hand-crafted functions
 			}
 			Transformation finalTransformation = new Transformation(localTransformation, worldTransformation);
 			Matrix4D[] matriciesToShader = new Matrix4D[Matricies.Length];
@@ -200,7 +202,7 @@ namespace OpenBveApi.Objects
 			for (int i = 0; i < Animations.Count; i++)
 			{
 				string key = Animations.ElementAt(i).Key;
-				Animations[key].Update(BaseCar, position, trackPosition, timeElapsed); // current state not applicable, no hand-crafted functions
+				Animations[key].Update(BaseCar, IsReversed, position, trackPosition, timeElapsed); // current state not applicable, no hand-crafted functions
 			}
 			Matrix4D[] matriciesToShader = new Matrix4D[Matricies.Length];
 			for (int i = 0; i < matriciesToShader.Length; i++)
@@ -215,7 +217,13 @@ namespace OpenBveApi.Objects
 				}
 				Objects[i].Matricies = matriciesToShader;
 				Objects[i].Translation = Matrix4D.CreateTranslation(position.X, position.Y, -position.Z);
+				Matrix4D flipMatrix = Matrix4D.NoTransformation;
+				if (IsReversed)
+				{
+					flipMatrix = Matrix4D.CreateFromAxisAngle(Vector3.Down, 3.14159);
+				}
 				Objects[i].Rotate = (Matrix4D)new Transformation(direction, up, side);
+				Objects[i].Rotate *= flipMatrix;
 				currentHost.ShowObject(Objects[i], ObjectType.Dynamic);
 			}
 		}
@@ -223,39 +231,8 @@ namespace OpenBveApi.Objects
 		/// <summary>Reverses the object</summary>
 		public void Reverse()
 		{
-			foreach (ObjectState state in Objects)
-			{
-				if (state.Prototype == null)
-				{
-					continue;
-				}
-				state.Prototype = (StaticObject)state.Prototype.Clone();
-				state.Prototype.ApplyScale(-1.0, 1.0, -1.0);
-				Matrix4D t = state.Translation;
-				t.Row3.X *= -1.0f;
-				t.Row3.Z *= -1.0f;
-				state.Translation = t;
-			}
-			
-			for (int i = 0; i < Animations.Count; i++)
-			{
-				string animationKey = Animations.ElementAt(i).Key;
-				Animations[animationKey].baseMatrix.Row3.X = -Animations[animationKey].baseMatrix.Row3.X;
-				Animations[animationKey].baseMatrix.Row3.Z = -Animations[animationKey].baseMatrix.Row3.Z;
+			IsReversed = true;
 
-				for (int j = 0; j < Animations[animationKey].AnimationControllers.Length; j++)
-				{
-					Animations[animationKey].AnimationControllers[j].Reverse();
-				}
-			}
-			
-			for (int i = 0; i < Matricies.Length; i++)
-			{
-				Matricies[i]._matrix.Row3.X = -Matricies[i]._matrix.Row3.X;
-				Matricies[i]._matrix.Row3.Z = -Matricies[i]._matrix.Row3.Z;
-			}
-
-			
 		}
 
 		public static implicit operator StaticObject(KeyframeAnimatedObject keyframeAnimatedObject)
@@ -264,7 +241,7 @@ namespace OpenBveApi.Objects
 			for (int i = 0; i < keyframeAnimatedObject.Animations.Count; i++)
 			{
 				string key = keyframeAnimatedObject.Animations.ElementAt(i).Key;
-				keyframeAnimatedObject.Animations[key].Update(null, Vector3.Zero, 0, 0.0); // current state not applicable, no hand-crafted functions
+				keyframeAnimatedObject.Animations[key].Update(null, keyframeAnimatedObject.IsReversed, Vector3.Zero, 0, 0.0); // current state not applicable, no hand-crafted functions
 			}
 
 			for (int i = 0; i < matricies.Length; i++)

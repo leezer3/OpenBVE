@@ -98,7 +98,7 @@ namespace OpenBveApi.Objects
 	    }
 
 	    /// <summary>Updates the animation</summary>
-		public void Update(AbstractCar baseCar, Vector3 position, double trackPosition, double timeElapsed)
+		public void Update(AbstractCar baseCar, bool isReversed, Vector3 position, double trackPosition, double timeElapsed)
 		{
 			if (!string.IsNullOrEmpty(ParentAnimation) && ParentObject.Animations.ContainsKey(ParentAnimation))
 			{
@@ -168,9 +168,17 @@ namespace OpenBveApi.Objects
 						}
 
 						double distanceTravelled = baseCar.FrontAxle.Follower.TrackPosition - lastDistance;
+						if (isReversed)
+						{
+							distanceTravelled = -distanceTravelled;
+						}
 						double wheelCircumference = 2 * System.Math.PI * wheelRadius;
 						lastDistance = baseCar.FrontAxle.Follower.TrackPosition;
 						AnimationKey += (distanceTravelled / wheelCircumference) * FrameCount;
+						if (AnimationKey < 0)
+						{
+							AnimationKey = FrameCount + AnimationKey;
+						}
 						AnimationKey %= FrameCount;
 					}
 					else
