@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using OpenBve.Formats.MsTs;
+using OpenBveApi.World;
 
 namespace Train.MsTs
 {
@@ -58,10 +59,26 @@ namespace Train.MsTs
 					PenaltyTimeLimit = block.ReadSingle();
 					break;
 				case KujuTokenID.MonitoringDeviceCriticalLevel:
-					CriticalLevel = block.ReadSingle();
+					if (block.ParentBlock.Token == KujuTokenID.EmergencyStopMonitor)
+					{
+						// Check exact behaviour
+						CriticalLevel = block.ReadSingle(UnitOfVelocity.MetersPerSecond);
+					}
+					else
+					{
+						CriticalLevel = block.ReadSingle();
+					}
 					break;
 				case KujuTokenID.MonitoringDeviceResetLevel:
-					ResetLevel = block.ReadSingle();
+					if (block.ParentBlock.Token == KujuTokenID.EmergencyStopMonitor)
+					{
+						// Check exact behaviour
+						CriticalLevel = block.ReadSingle(UnitOfVelocity.MetersPerSecond);
+					}
+					else
+					{
+						CriticalLevel = block.ReadSingle();
+					}
 					break;
 				case KujuTokenID.MonitoringDeviceAppliesFullBrake:
 					AppliesFullBrake = block.ReadInt32() == 1;
