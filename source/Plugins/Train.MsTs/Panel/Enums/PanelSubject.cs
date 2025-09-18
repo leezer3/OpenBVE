@@ -13,6 +13,7 @@ namespace Train.MsTs
 		Blower,
 		Brake_Cyl,
 		Brake_Pipe,
+		Cab_Radio,
 		Clock,
 		CP_Handle,
 		CPH_Display,

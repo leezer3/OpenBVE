@@ -333,6 +333,9 @@ namespace Train.MsTs
 						case Units.Bar:
 							Code = "brakecylinder 0.00001 *";
 							break;
+						case Units.Kgs_Per_Square_Cm:
+							Code = "brakecylinder 98066.5 *";
+							break;
 					}
 					break;
 				case PanelSubject.Brake_Pipe:
@@ -350,6 +353,9 @@ namespace Train.MsTs
 						case Units.Bar:
 							Code = "brakepipe 0.00001 *";
 							break;
+						case Units.Kgs_Per_Square_Cm:
+							Code = "brakepipe 98066.5 *";
+							break;
 					}
 					break;
 				case PanelSubject.Main_Res:
@@ -366,6 +372,9 @@ namespace Train.MsTs
 							break;
 						case Units.Bar:
 							Code = "mainreservoir 0.00001 *";
+							break;
+						case Units.Kgs_Per_Square_Cm:
+							Code = "mainreservoir 98066.5 *";
 							break;
 					}
 					break;

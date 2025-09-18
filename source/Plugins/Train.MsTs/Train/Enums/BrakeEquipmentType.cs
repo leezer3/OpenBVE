@@ -13,8 +13,10 @@ namespace Train.MsTs
 		/// <summary>4 position retaining valve is fitted</summary>
 		/// <remarks>This is meant for freight wagons only</remarks>
 		Retainer_4_Position,
-		/// <summary>Vacuum brake is fitted.</summary>
+		/// <summary>Twin-pipe vacuum brake is fitted.</summary>
 		Vacuum_Brake,
+		/// <summary>Single-pipe vacuum brake is fitted.</summary>
+		Vacuum_Single_Pipe,
 		/// <summary>Standard triple valve is fitted.</summary>
 		Triple_Valve,
 		/// <summary>Triple valve that permits partial releasing of the brakes.</summary>
