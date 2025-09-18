@@ -7,6 +7,12 @@
 		/// <summary>Throttle handle</summary>
 		Throttle = 1,
 		/// <summary>Dynamic brake handle</summary>
-		Dynamic = 2
+		Dynamic = 2,
+		/// <summary>Independant brake handle</summary>
+		Independent = 3,
+		/// <summary>Independant brake handle</summary>
+		Independant = 3,
+		/// <summary>Train brake handle</summary>
+		Train = 4
 	}
 }
