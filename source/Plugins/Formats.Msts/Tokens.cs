@@ -1364,10 +1364,14 @@ namespace OpenBve.Formats.MsTs
 		Train = uint.MinValue,
 
 		/*
-		 * Incorrect spellings
+		 * Incorrect spellings etc.
 		 *
 		 */
 		AirBrakeHasLowPressureTest = AirBrakesHasLowPressureTest, // MT Class 86
-		TrainBrakesControllerMaxPressureDropInNormalAppication = TrainBrakesControllerMaxPressureDropInNormalApplication // MT Class 86
+		TrainBrakesControllerMaxPressureDropInNormalAppication = TrainBrakesControllerMaxPressureDropInNormalApplication, // MT Class 86
+		RegulatorPilotValveInitialOpening, // Adams B4, UKTS2910
+		RegulatorPilotValveFullOpening, // Adams B4, UKTS2910
+		Exhaust3, // UK_Diesel_BR_Class50_D400
+		Exhaust4, // UK_Diesel_BR_Class50_D400
 	}
 }
