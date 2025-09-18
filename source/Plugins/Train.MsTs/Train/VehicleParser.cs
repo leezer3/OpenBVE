@@ -379,7 +379,7 @@ namespace Train.MsTs
 							break;
 						}
 						// Add brakes last, as we need the acceleration values
-						if (brakeSystemTypes.Contains(BrakeSystemType.Vacuum_Piped) || brakeSystemTypes.Contains(BrakeSystemType.Air_Piped))
+						if (brakeSystemTypes.Contains(BrakeSystemType.Vacuum_Piped) || brakeSystemTypes.Contains(BrakeSystemType.Air_Piped) || (brakeSystemTypes.Length == 1 && brakeSystemTypes[0] == BrakeSystemType.Handbrake))
 						{
 							/*
 							 * FIXME: Need to implement vac braked / air piped and vice-versa, but for the minute, we'll assume that if one or the other is present
@@ -406,7 +406,7 @@ namespace Train.MsTs
 								// The car contains no control gear, but is air / vac braked
 								// Assume equivilant to AutomaticAirBrake
 								// NOTE: This must be last in the else-if chain to enure that a vehicle with EP / ECP and these declared is setup correctly
-								car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0,0,0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
+								car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
 							}
 
 							car.CarBrake.mainReservoir = new MainReservoir(690000.0, 780000.0, 0.01, 0.075 / train.Cars.Length);
@@ -442,7 +442,7 @@ namespace Train.MsTs
 					{
 						try
 						{
-							newBlock = block.ReadSubBlock();
+							newBlock = block.ReadSubBlock(true);
 							ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
 						}
 						catch
