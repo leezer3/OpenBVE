@@ -1079,6 +1079,7 @@ namespace OpenBve.Formats.MsTs
 			TEnumType[] returnArray = new TEnumType[strings.Length];
 			for (int i = 0; i < strings.Length; i++)
 			{
+				strings[i] = strings[i].Replace("Handbrake Only", "Handbrake"); // UKTS BR_Bolster_D
 				if (!Enum.TryParse(strings[i], true, out returnArray[i]))
 				{
 					throw new InvalidDataException("Expected " + strings[i] + " to be a value member of the specified enum.");

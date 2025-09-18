@@ -23,6 +23,8 @@ namespace Train.MsTs
 		Air_Piped,
 		/// <summary>The vehicle has no brakes</summary>
 		/// <remarks>Vacuum pipe pressure will be passed through this vehicle</remarks>
-		Vacuum_Piped
+		Vacuum_Piped,
+		/// <summary>The vehicle has a handbrake</summary>
+		Handbrake
 	}
 }
