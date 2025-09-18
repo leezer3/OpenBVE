@@ -115,7 +115,7 @@ namespace LibRender2
 			if (VertexLayout.MatrixChain >= 0)
 			{
 				// NOTE: Must use VertexAttribIPointer here, as VertexAttribPointer actually converts to float and normalizes.....
-				GL.VertexAttribIPointer(VertexLayout.MatrixChain, 1, VertexAttribIntegerType.Int, 48 + sizeof(int), (IntPtr)offset);
+				GL.VertexAttribIPointer(VertexLayout.MatrixChain, 3, VertexAttribIntegerType.Int, vertexSize, (IntPtr)offset);
 			}
 		}
 

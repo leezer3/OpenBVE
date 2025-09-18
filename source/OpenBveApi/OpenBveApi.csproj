@@ -132,6 +132,7 @@
     <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Vectors\Vector2f.cs" />
     <Compile Include="Math\Vectors\Vector3f.cs" />
+    <Compile Include="Math\Vectors\Vector3i.cs" />
     <Compile Include="Math\Vectors\Vector4.cs" />
     <Compile Include="Objects\FaceType.cs" />
     <Compile Include="Objects\Glow.cs" />
