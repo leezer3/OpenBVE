@@ -243,6 +243,7 @@ namespace Train.MsTs
 								case PanelSubject.Direction_Display:
 								case PanelSubject.Overspeed:
 								case PanelSubject.Sanders:
+								case PanelSubject.Wheelslip:
 									currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
 									break;
 								default:

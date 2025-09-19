@@ -244,6 +244,18 @@ namespace Train.MsTs
 						}
 					}
 					break;
+				case PanelSubject.Wheelslip:
+					int wheelSlip = 0;
+					for (int k = 0; k < dynamicTrain.Cars.Length; k++)
+					{
+						if (dynamicTrain.Cars[k].FrontAxle.CurrentWheelSlip || dynamicTrain.Cars[k].RearAxle.CurrentWheelSlip)
+						{
+							wheelSlip = 1;
+							break;
+						}
+					}
+					lastResult = wheelSlip;
+					break;
 			}
 			return lastResult;
 		}
