@@ -694,10 +694,19 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Sound:
 					// parse the sounds *after* we've loaded the traction model though
-					string soundFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Path.GetDirectoryName(fileName), "SOUND"), block.ReadString());
+					string sF = block.ReadString();
+					string soundFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Path.GetDirectoryName(fileName), "SOUND"), sF);
 					if (!File.Exists(soundFile))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: SMS file " + soundFile + " was not found.");
+						if (Directory.Exists(Plugin.MsTsPath))
+						{
+							// If sound file is not relative to the ENG / WAG, try in the MSTS common sound directory (most generic wagons + coaches)
+							soundFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Plugin.MsTsPath, "SOUND"), sF);
+						}
+						if (!File.Exists(soundFile))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: SMS file " + soundFile + " was not found.");
+						}
 						break;
 					}
 					soundFiles.Add(soundFile);
