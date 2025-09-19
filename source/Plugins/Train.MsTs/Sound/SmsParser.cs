@@ -316,7 +316,7 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Initial_Trigger:
 					// when initially appears, hence nothing other than StartLoop should be valid
-					newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.EnableTrigger, KujuTokenID.DisableTrigger });
+					newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.EnableTrigger, KujuTokenID.DisableTrigger, KujuTokenID.PlayOneShot, KujuTokenID.SetStreamVolume });
 					ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 					break;
 				case KujuTokenID.StartLoopRelease:
@@ -529,7 +529,7 @@ namespace Train.MsTs
 						case KujuTokenID.Variable2_Inc_Past:
 						case KujuTokenID.Variable2_Dec_Past:
 							currentSoundSet.VariableValue = block.ReadSingle(); // power value
-							newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump, KujuTokenID.EnableTrigger, KujuTokenID.DisableTrigger });
+							newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump, KujuTokenID.EnableTrigger, KujuTokenID.DisableTrigger, KujuTokenID.PlayOneShot, KujuTokenID.SetStreamVolume });
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;
 						case KujuTokenID.Variable2Controlled:

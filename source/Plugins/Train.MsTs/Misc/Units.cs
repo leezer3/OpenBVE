@@ -14,11 +14,12 @@ namespace Train.MsTs
 		Kilometers_Per_Hour = 6,
 		Km_Per_Hour = 6,
 		Miles_Per_Hour = 7,
-		Meters_Sec = 8,
-		PSI = 9,
-		Kilo_Lbs = 10,
-		Kilopascals = 11,
-		Bar = 12,
-		Kgs_Per_Square_Cm = 13
+		Miles_Hour_Min = 8,
+		Meters_Sec = 9,
+		PSI = 10,
+		Kilo_Lbs = 11,
+		Kilopascals = 12,
+		Bar = 13,
+		Kgs_Per_Square_Cm = 14
     }
 }

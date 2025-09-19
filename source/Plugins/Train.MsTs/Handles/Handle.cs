@@ -44,23 +44,29 @@ namespace Train.MsTs
 			{
 				Block descriptionBlock = block.ReadSubBlock(KujuTokenID.Notch);
 				double notchPower = descriptionBlock.ReadSingle();
-				descriptionBlock.ReadSingle(); // ??
-				string notchDescription = descriptionBlock.ReadString();
-				if (notchDescription.Equals("dummy", StringComparison.InvariantCultureIgnoreCase))
+				try
 				{
-					if (i == 0)
+					descriptionBlock.ReadSingle(); // ??
+					string notchDescription = descriptionBlock.ReadString();
+					if (notchDescription.Equals("dummy", StringComparison.InvariantCultureIgnoreCase))
 					{
-						notchDescription = "N";
-					}
-					else
-					{
-						notchDescription = isPower ? "P" + i : "B" + i;
-					}
+						if (i == 0)
+						{
+							notchDescription = "N";
+						}
+						else
+						{
+							notchDescription = isPower ? "P" + i : "B" + i;
+						}
 
+					}
+					NotchDescriptions[i] = new Tuple<double, string>(notchPower, notchDescription);
 				}
-				NotchDescriptions[i] = new Tuple<double, string>(notchPower, notchDescription);
+				catch
+				{
+					// ignore
+				}
 			}
-
 		}
 	}
 }

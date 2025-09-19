@@ -33,6 +33,7 @@ namespace Train.MsTs
 		Firehole,
 		Friction_Braking,
 		Front_Hlight,
+		Fuel_Gauge,
 		Gears,
 		Horn,
 		Load_Meter,
