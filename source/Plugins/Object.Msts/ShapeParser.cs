@@ -650,11 +650,6 @@ namespace Plugin
 					
 				}
 			}
-
-
-
-
-			Matrix4D matrix = Matrix4D.Identity;
 			return newResult;
 		}
 
