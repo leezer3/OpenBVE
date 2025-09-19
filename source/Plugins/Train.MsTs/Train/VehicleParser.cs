@@ -322,6 +322,7 @@ namespace Train.MsTs
 		private double maxBrakeForce = 0;
 		private BrakeSystemType[] brakeSystemTypes;
 		private EngineType currentEngineType;
+		private WagonType currentWagonType;
 		private double dieselIdleRPM;
 		private double dieselMaxRPM;
 		private double dieselRPMChangeRate;
@@ -373,7 +374,7 @@ namespace Train.MsTs
 						{
 							try
 							{
-								newBlock = block.ReadSubBlock();
+								newBlock = block.ReadSubBlock(true);
 								ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
 							}
 							catch
@@ -523,7 +524,7 @@ namespace Train.MsTs
 							{
 								try
 								{
-									WagonType type = block.ReadEnumValue(default(WagonType));
+									currentWagonType = block.ReadEnumValue(default(WagonType));
 								}
 								catch
 								{
@@ -574,7 +575,7 @@ namespace Train.MsTs
 							if (exteriorLoaded)
 							{
 								CarSection exteriorCarSection = car.CarSections[CarSectionType.Exterior];
-								exteriorCarSection.AppendObject(Plugin.CurrentHost, car, carObject);
+								exteriorCarSection.AppendObject(Plugin.CurrentHost, Vector3.Zero, car, carObject);
 								car.CarSections[CarSectionType.Exterior] = exteriorCarSection;
 							}
 							else
@@ -854,12 +855,60 @@ namespace Train.MsTs
 						break;
 					}
 					objectFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), block.ReadString());
+					
 					if (!File.Exists(objectFile))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle object file " + objectFile + " was not found");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: FreightAnim object file " + objectFile + " was not found");
 						break;
 					}
 
+					/*
+					 *
+					 * https://tsforum.forumotion.net/t655-freight-animation
+					 * FreightAnim are a total mess...
+					 * Whilst it appears they were intended to work with all cars, the positioning logic only works correctly
+					 * with tenders.
+					 *
+					 * TENDERS:
+					 * --------
+					 * First value: Starting Y position (full)
+					 * Second value: Ending Y position (empty)
+					 * Third value: Must be positive or omitted for animation to work. If negative, animation stays at full.
+					 *
+					 * OTHER CARS:
+					 * ----------
+					 * First value: Ignored
+					 * Second value: Must be any positive number.
+					 *
+					 * However, this is actually done by directly replacing the Y translation component of Matrix[0] within the shape
+					 * This means that if our shape actually has a value here, things can get really messy.
+					 *
+					 * The UKTS RCH wagon loads contain a Y value of approx 2.53, which when loaded in this way actually gets discarded
+					 * 
+					 */
+
+					double loadPosition = 0;
+					double emptyPosition = 0;
+					try
+					{
+						loadPosition = block.ReadSingle();
+						emptyPosition = block.ReadSingle();
+						// may also be one more number, but this appears unused
+					}
+					catch
+					{
+						// ignore
+					}
+
+					if (isEngine == false && currentWagonType != WagonType.Tender)
+					{
+						if (emptyPosition == 0)
+						{
+							break;
+						}
+						loadPosition = 0;
+					}
+					
 					for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
 					{
 
@@ -868,8 +917,9 @@ namespace Train.MsTs
 							Plugin.CurrentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject freightObject);
 							if (exteriorLoaded)
 							{
+								
 								CarSection exteriorCarSection = car.CarSections[CarSectionType.Exterior];
-								exteriorCarSection.AppendObject(Plugin.CurrentHost, car, freightObject);
+								exteriorCarSection.AppendObject(Plugin.CurrentHost, new Vector3(0, loadPosition, 0), car, freightObject);
 								car.CarSections[CarSectionType.Exterior] = exteriorCarSection;
 							}
 							else
