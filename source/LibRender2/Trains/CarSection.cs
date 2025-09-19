@@ -2,6 +2,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using System;
+using OpenBveApi.Math;
 using OpenBveApi.World;
 
 namespace LibRender2.Trains
@@ -70,9 +71,10 @@ namespace LibRender2.Trains
 
 		/// <summary>Appends an object to the CarSection</summary>
 		/// <param name="Host">The host</param>
+		/// <param name="objectPosition">The relative position of the object to add</param>
 		/// <param name="baseCar">The base car</param>
 		/// <param name="Object">The object</param>
-		public void AppendObject(HostInterface Host, AbstractCar baseCar = null, UnifiedObject Object = null)
+		public void AppendObject(HostInterface Host, Vector3 objectPosition, AbstractCar baseCar = null, UnifiedObject Object = null)
 		{
 			int gl = Groups.Length;
 			Array.Resize(ref Groups, gl + 1);
@@ -100,6 +102,11 @@ namespace LibRender2.Trains
 			}
 			else if (Object is KeyframeAnimatedObject k)
 			{
+				for (int i = 0; i < k.Objects.Length; i++)
+				{
+					k.Objects[i].Prototype = (StaticObject)k.Objects[i].Prototype.Clone();
+					k.ApplyTranslation(objectPosition.X, objectPosition.Y, objectPosition.Z, true);
+				}
 				k.BaseCar = baseCar;
 				Groups[gl].Keyframes = k;
 				for (int h = 0; h < Groups[gl].Keyframes.Objects.Length; h++)

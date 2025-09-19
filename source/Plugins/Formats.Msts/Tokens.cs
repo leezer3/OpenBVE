@@ -1379,5 +1379,6 @@ namespace OpenBve.Formats.MsTs
 		Injector1WaterValveVarience, // SL_BR_E2
 		Injector2WaterValveVarience, // SL_BR_E2
 		TrainBrakesControllerMaxApplyRate, // SL_BR_E2
+		RunUpTimeToMaxPower, // UK_Electric_VT_Class390
 	}
 }
