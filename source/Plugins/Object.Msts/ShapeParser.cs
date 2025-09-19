@@ -33,6 +33,7 @@ using SharpCompress.Compressors.Deflate;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 
 
@@ -274,11 +275,11 @@ namespace Plugin
 										break;
 									}
 									
-									if (hi == matrixChain[0])
+									if (hi == matrixChain[matrixChain.Count - 1])
 									{
 										continue;
 									}
-									matrixChain.Insert(0, hi);
+									matrixChain.Add(hi);
 									if (IsAnimated(shape.Matricies[hi].Name))
 									{
 										staticTransform = false;
@@ -294,7 +295,7 @@ namespace Plugin
 
 							if (staticTransform)
 							{
-								for (int k = 0; k < matrixChain.Count; k++)
+								for (int k = 0;k < matrixChain.Count; k++)
 								{
 									transformedVertices[i].Coordinates.Transform(shape.Matricies[matrixChain[k]].Matrix, false);
 								}
@@ -334,13 +335,14 @@ namespace Plugin
 										matrixChain[k] = matrixIndex;
 									}
 								}
-
-								// Note: transforming verticies must be done in reverse if the model is in motion
-								matrixChain.Reverse();
 								
 								// used to pack 4 x matrix indicies into a int
 								int[] transformChain = new int[] { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 };
 								matrixChain.CopyTo(transformChain);
+								if (matrixChain.Count > 4)
+								{
+									int b = 0;
+								}
 								transformedVertices[i].matrixChain = transformChain;
 							}
 							break;
