@@ -710,10 +710,26 @@ namespace OpenBve.Formats.MsTs
 			{
 				//The block has the optional label
 				Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
+				if (Label[0] == ')')
+				{
+					if (allowEmptyBlock)
+					{
+						TextualBlock t = new TextualBlock("", true);
+						t.Token = KujuTokenID.Skip;
+						return t;
+					}
+					throw new InvalidDataException("Unexpected extra closing bracket encountered.");
+				}
 				s = s.Substring(0, ws);
 			}
 
-			if (!Enum.TryParse(s, true, out KujuTokenID currentToken))
+			KujuTokenID currentToken;
+			if (s[0] == '#' || s.StartsWith("_#"))
+			{
+				// Commented block, e.g. Pendennis luggage car
+				currentToken = KujuTokenID.Skip;
+			}
+			else if (!Enum.TryParse(s, true, out currentToken))
 			{
 				throw new InvalidDataException("Unrecognised token " + s);
 			}
@@ -731,13 +747,14 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
+						if (currentToken == KujuTokenID.Skip)
+						{
+							return new TextualBlock(string.Empty, true);
+						}
 						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true, this);
 					}
-
 					level--;
-
 				}
-
 				currentPosition++;
 			}
 
