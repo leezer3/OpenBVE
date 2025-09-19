@@ -837,7 +837,7 @@ namespace Train.MsTs
 					objectFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), block.ReadString());
 					if (!File.Exists(objectFile))
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle object file " + objectFile + " was not found");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: FreightAnim object file " + objectFile + " was not found");
 						break;
 					}
 
