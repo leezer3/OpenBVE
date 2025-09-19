@@ -558,7 +558,7 @@ namespace Train.MsTs
 							if (exteriorLoaded)
 							{
 								CarSection exteriorCarSection = car.CarSections[CarSectionType.Exterior];
-								exteriorCarSection.AppendObject(Plugin.CurrentHost, car, carObject);
+								exteriorCarSection.AppendObject(Plugin.CurrentHost, Vector3.Zero, car, carObject);
 								car.CarSections[CarSectionType.Exterior] = exteriorCarSection;
 							}
 							else
@@ -832,6 +832,24 @@ namespace Train.MsTs
 						break;
 					}
 
+					double loadPosition = 0;
+					double emptyPosition = 0;
+					try
+					{
+						loadPosition = block.ReadSingle();
+						emptyPosition = block.ReadSingle();
+						// may also be one more number, but this appears unused
+					}
+					catch
+					{
+						// ignore
+					}
+
+					// empty position must be less than the loaded position
+					// MSTS seems to use the smaller of the two values for the position (e.g. UKTS RCH Loads)
+					// NOTE: This is actually broken in MSTS, fixed in BIN patch / ORTS
+					loadPosition = Math.Min(loadPosition, emptyPosition);
+					
 					for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
 					{
 
@@ -840,8 +858,9 @@ namespace Train.MsTs
 							Plugin.CurrentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject freightObject);
 							if (exteriorLoaded)
 							{
+								
 								CarSection exteriorCarSection = car.CarSections[CarSectionType.Exterior];
-								exteriorCarSection.AppendObject(Plugin.CurrentHost, car, freightObject);
+								exteriorCarSection.AppendObject(Plugin.CurrentHost, new Vector3(0, loadPosition, 0), car, freightObject);
 								car.CarSections[CarSectionType.Exterior] = exteriorCarSection;
 							}
 							else
