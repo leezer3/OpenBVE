@@ -33,7 +33,6 @@ using SharpCompress.Compressors.Deflate;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 
 
@@ -650,11 +649,6 @@ namespace Plugin
 					
 				}
 			}
-
-
-
-
-			Matrix4D matrix = Matrix4D.Identity;
 			return newResult;
 		}
 
@@ -781,12 +775,8 @@ namespace Plugin
 					}
 					break;
 				case KujuTokenID.colour:
-					// ARGB
-					a = block.ReadSingle();
-					r = block.ReadSingle();
-					g = block.ReadSingle();
-					b = block.ReadSingle();
-					shape.colors.Add(new Color32((byte)(255 * r), (byte)(255 * g), (byte)(255 * b), (byte)(255 * a)));
+					// NOTE: ARGB
+					shape.colors.Add(block.ReadColorArgb());
 					break;
 				case KujuTokenID.shader_names:
 					int numShaders = block.ReadInt32();
@@ -895,7 +885,8 @@ namespace Plugin
 						borderColor = block.ReadUInt32();
 					}
 
-					//Unpack border color
+					// Unpack border color
+					// NOTE: RGBA
 					r = borderColor % 256;
 					g = (borderColor / 256) % 256;
 					b = (borderColor / 256 / 256) % 256;

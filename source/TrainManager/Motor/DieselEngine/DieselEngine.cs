@@ -24,6 +24,8 @@
 
 using System;
 using System.Linq;
+using OpenBveApi;
+using OpenBveApi.Motor;
 using TrainManager.Car;
 using TrainManager.Power;
 
@@ -51,6 +53,7 @@ namespace TrainManager.Motor
 			get => currentRPM;
 			private set => currentRPM = value;
 		}
+
 
 		private double currentRPM;
 		private double targetRPM;
@@ -100,15 +103,24 @@ namespace TrainManager.Motor
 				CurrentRPM = Math.Max(CurrentRPM, targetRPM);
 			}
 
+			Message = @"Current RPM " + Math.Round(CurrentRPM);
+
+			if(Components.TryGetTypedValue(EngineComponent.Gearbox, out Gearbox gearbox))
+			{
+				Message += " Current Gear " + gearbox.CurrentGear;
+			}
+
 			if (FuelTank != null)
 			{
 				if (currentRPM <= IdleRPM)
 				{
 					FuelTank.CurrentLevel -= IdleFuelUse * timeElapsed;
+					Message += " Fuel Use " + Math.Round(IdleFuelUse * timeElapsed, 5);
 				}
 				else
 				{
 					FuelTank.CurrentLevel -= (MaxPowerFuelUse - IdleFuelUse) / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch * BaseCar.baseTrain.Handles.Power.Actual * timeElapsed;
+					Message += " Fuel Use " + Math.Round((MaxPowerFuelUse - IdleFuelUse) / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch * BaseCar.baseTrain.Handles.Power.Actual * timeElapsed, 5);
 				}
 			}
 
@@ -120,6 +132,23 @@ namespace TrainManager.Motor
 
 		public override double CurrentPower => (currentRPM - MinRPM) / (MaxRPM - MinRPM);
 
-		public override double TargetAcceleration => AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed, 1.0);
-	}
+		public override double TargetAcceleration
+		{
+			get
+			{
+				if (Components.TryGetTypedValue(EngineComponent.Gearbox, out Gearbox gearbox))
+				{
+					if (gearbox.CurrentGear == 0)
+					{
+						return 0;
+					}
+
+					return AccelerationCurves[gearbox.CurrentGear - 1].GetAccelerationOutput(BaseCar.CurrentSpeed);
+
+				}
+				return AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed);
+
+			}
+		}
+    }
 }

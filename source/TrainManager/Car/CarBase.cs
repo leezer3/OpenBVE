@@ -318,9 +318,12 @@ namespace TrainManager.Car
 						animatedObject.Reverse();
 					}
 
-					if (sectionToReverse.Groups[0].Keyframes != null)
+					for (int i = 0; i < sectionToReverse.Groups.Length; i++)
 					{
-						sectionToReverse.Groups[0].Keyframes.Reverse();
+						if (sectionToReverse.Groups[i].Keyframes != null)
+						{
+							sectionToReverse.Groups[i].Keyframes.Reverse();
+						}
 					}
 				}	
 			}
@@ -599,6 +602,14 @@ namespace TrainManager.Car
 						TrainManagerBase.currentHost.HideObject(currentCarSection.Groups[j].Elements[k].internalObject);
 					}
 				}
+
+				if (currentCarSection.Groups[0].Keyframes != null)
+				{
+					for (int j = 0; j < currentCarSection.Groups[0].Keyframes.Objects.Length; j++)
+					{
+						TrainManagerBase.currentHost.HideObject(currentCarSection.Groups[0].Keyframes.Objects[j]);
+					}
+				}
 			}
 			
 
@@ -625,6 +636,22 @@ namespace TrainManager.Car
 					else
 					{
 						CurrentCarSection = CarSectionType.NotVisible;
+					}
+					break;
+				case CarSectionType.HeadOutLeft:
+					if (CarSections.TryGetValue(CarSectionType.HeadOutLeft, out CarSection headOutLeftCarSection))
+					{
+						CurrentCarSection = CarSectionType.HeadOutLeft;
+						headOutLeftCarSection.Initialize(false);
+						headOutLeftCarSection.Show();
+					}
+					break;
+				case CarSectionType.HeadOutRight:
+					if (CarSections.TryGetValue(CarSectionType.HeadOutRight, out CarSection headOutRightCarSection))
+					{
+						CurrentCarSection = CarSectionType.HeadOutRight;
+						headOutRightCarSection.Initialize(false);
+						headOutRightCarSection.Show();
 					}
 					break;
 			}
@@ -839,7 +866,16 @@ namespace TrainManager.Car
 		public void UpdateTopplingCantAndSpring(double TimeElapsed)
 		{
 			// get direction, up and side vectors
-			Vector3 d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+			Vector3 d;
+			if (FrontAxle.Follower.WorldPosition == RearAxle.Follower.WorldPosition)
+			{
+				d = FrontAxle.Follower.WorldPosition;
+			}
+			else
+			{
+				d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+			}
+				
 			Vector3 s;
 			{
 				double t = 1.0 / d.Norm();
@@ -1197,7 +1233,7 @@ namespace TrainManager.Car
 
 						TractionModel.MaximumCurrentAcceleration = a;
 						// Update constant speed device
-						this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
+						this.ConstSpeed?.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
 
 						// finalize
 						if (wheelspin != 0.0) a = 0.0;
@@ -1252,7 +1288,7 @@ namespace TrainManager.Car
 				}
 			}
 
-			ReAdhesionDevice.Update(TimeElapsed);
+			ReAdhesionDevice?.Update(TimeElapsed);
 			// brake
 			bool wheellock = wheelspin == 0.0 & Derailed;
 			if (!Derailed & wheelspin == 0.0)

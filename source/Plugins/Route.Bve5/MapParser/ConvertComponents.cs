@@ -923,11 +923,9 @@ namespace Route.Bve5
 
 				if (!RouteData.Backgrounds.ContainsKey(BackgroundKey))
 				{
-					RouteData.Objects.TryGetValue(Convert.ToString(BackgroundKey), out UnifiedObject Object);
-
-					if (Object != null)
+					if(RouteData.Objects.TryGetValue(Convert.ToString(BackgroundKey), out UnifiedObject unifiedObject) && unifiedObject != null)
 					{
-						RouteData.Backgrounds.Add(Convert.ToString(BackgroundKey), Object);
+						RouteData.Backgrounds.Add(Convert.ToString(BackgroundKey), unifiedObject);
 					}
 				}
 
