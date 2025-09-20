@@ -73,7 +73,7 @@ namespace TrainManager.Handles
 			if (a == (int)Driver) return;
 
 			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
-			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+			TrainManagerBase.currentHost.AddMessage(GetNotchDescription(out _), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 		}
 
 		/// <summary>Gets the description string for this notch</summary>

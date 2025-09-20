@@ -131,11 +131,11 @@ namespace OpenBve
 				{
 					if (Timeout == double.PositiveInfinity)
 					{
-						Timeout = Program.CurrentRoute.SecondsSinceMidnight - 1.0;
+						Timeout = -1.0;
 					}
 					//Remove the message if it has completely faded out
 					//NOTE: The fadeout is done in the renderer itself...
-					if (Program.CurrentRoute.SecondsSinceMidnight >= Timeout & RendererAlpha == 0.0)
+					if (Timeout <= 0 & RendererAlpha == 0.0)
 					{
 						QueueForRemoval = true;
 					}

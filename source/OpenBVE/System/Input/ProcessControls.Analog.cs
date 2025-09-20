@@ -219,6 +219,11 @@ namespace OpenBve
 						Program.Renderer.Camera.Move(Control.Command, Control.AnalogState);
 						break;
 					case Translations.Command.CameraRotateLeft:
+					case Translations.Command.CameraRotateRight:
+					case Translations.Command.CameraRotateUp:
+					case Translations.Command.CameraRotateDown:
+					case Translations.Command.CameraRotateCCW:
+					case Translations.Command.CameraRotateCW:
 						Program.Renderer.Camera.Rotate(Control.Command, Control.AnalogState);
 						break;
 					case Translations.Command.CameraZoomIn:

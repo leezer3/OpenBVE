@@ -45,7 +45,7 @@ namespace TrainManager.SafetySystems
 				if (previousRouteLimit != baseTrain.CurrentRouteLimit)
 				{
 					//Show for 10s and announce the current speed limit if screen reader present
-					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","route_newlimit"}), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","route_newlimit"}), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 				}
 			}
 
