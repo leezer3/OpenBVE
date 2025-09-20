@@ -102,7 +102,7 @@ namespace TrainManager.Handles
 			if (!TrainManagerBase.CurrentOptions.Accessibility) return;
 			if (Driver)
 			{
-				TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleEmergency, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);	
+				TrainManagerBase.currentHost.AddMessage(Translations.QuickReferences.HandleEmergency, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);	
 			}
 		}
 

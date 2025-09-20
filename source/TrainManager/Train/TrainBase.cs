@@ -351,7 +351,7 @@ namespace TrainManager.Trains
 							if (!nextSection.AccessibilityAnnounced && tPos < 500)
 							{
 								string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "route_nextsection" }).Replace("[distance]", $"{tPos:0.0}") + "m";
-								TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+								TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 								nextSection.AccessibilityAnnounced = true;
 							}
 						}
@@ -365,7 +365,7 @@ namespace TrainManager.Trains
 							if (!nextStation.AccessibilityAnnounced && tPos < 500)
 							{
 								string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "route_nextstation" }).Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[name]", nextStation.Name);
-								TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+								TrainManagerBase.currentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 								nextStation.AccessibilityAnnounced = true;
 							}
 						}
@@ -514,7 +514,7 @@ namespace TrainManager.Trains
 						double a = (3.6 * CurrentSectionLimit) * TrainManagerBase.CurrentOptions.SpeedConversionFactor;
 						s = s.Replace("[speed]", a.ToString("0", CultureInfo.InvariantCulture));
 						s = s.Replace("[unit]", TrainManagerBase.CurrentOptions.UnitOfSpeed);
-						TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, TrainManagerBase.currentHost.InGameTime + 5.0, null);
+						TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, 5.0, null);
 					}
 				}
 			}
@@ -1056,7 +1056,7 @@ namespace TrainManager.Trains
 				{
 					CameraCar++;
 					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"notification","exterior"}) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
-						MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+						MessageColor.White, 2.0, null);
 				}
 			}
 			else
@@ -1064,7 +1064,7 @@ namespace TrainManager.Trains
 				if (CameraCar > 0)
 				{
 					CameraCar--;
-					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"notification","exterior"}) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"notification","exterior"}) + " " + (CurrentDirection == TrackDirection.Reverse ? Cars.Length - CameraCar : CameraCar + 1), MessageDependency.CameraView, GameMode.Expert, MessageColor.White, 2.0, null);
 				}
 			}
 
@@ -1148,7 +1148,7 @@ namespace TrainManager.Trains
 			Cars[DriverCar].Sounds.CoupleCab?.Play(1.0, 1.0, Cars[DriverCar], false);
 
 			string message = Translations.GetInterfaceString(HostApplication.OpenBve, front ? new[] { "notification", "couple_front" } : new[] { "notification", "couple_rear" }).Replace("[number]", trainBase.Cars.Length.ToString());
-			TrainManagerBase.currentHost.AddMessage(message, MessageDependency.None, GameMode.Normal, MessageColor.White, TrainManagerBase.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+			TrainManagerBase.currentHost.AddMessage(message, MessageDependency.None, GameMode.Normal, MessageColor.White, 5.0, null);
 		}
 
 		public void ContactSignaller()
@@ -1158,7 +1158,7 @@ namespace TrainManager.Trains
 			{
 				// not a valid section to access
 				string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_access_invalid" });
-				TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Expert, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+				TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Expert, MessageColor.White, 10.0, null);
 			}
 			else
 			{
@@ -1166,14 +1166,14 @@ namespace TrainManager.Trains
 				{
 					// section is free of trains, so can be permissively accessed
 					string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_access_granted" });
-					TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Expert, MessageColor.White, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+					TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Expert, MessageColor.White, 10.0, null);
 					sct.SignallerPermission = true;
 				}
 				else
 				{
 					// not free, access denied
 					string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_access_denied" });
-					TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Expert, MessageColor.Red, TrainManagerBase.currentHost.InGameTime + 10.0, null);
+					TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Expert, MessageColor.Red, 10.0, null);
 					sct.SignallerPermission = false;
 				}
 			}

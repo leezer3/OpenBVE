@@ -894,7 +894,7 @@ namespace OpenBve
 						break;
 					case Translations.Command.AccessibilityCurrentSpeed:
 						string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","train_currentspeed"}).Replace("[speed]", $"{TrainManagerBase.PlayerTrain.CurrentSpeed * 3.6:0.0}") + "km/h";
-						Program.CurrentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, Program.CurrentHost.InGameTime + 10.0, null);
+						Program.CurrentHost.AddMessage(s, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 						break;
 					case Translations.Command.AccessibilityNextSignal:
 						Section nextSection = TrainManagerBase.CurrentRoute.NextSection(TrainManagerBase.PlayerTrain.FrontCarTrackPosition);
@@ -902,7 +902,7 @@ namespace OpenBve
 						{
 							double tPos = nextSection.TrackPosition - TrainManagerBase.PlayerTrain.FrontCarTrackPosition;
 							string st = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","route_nextsection_aspect"}).Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[aspect]", nextSection.CurrentAspect.ToString());
-							Program.CurrentHost.AddMessage(st, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, Program.CurrentHost.InGameTime + 10.0, null);
+							Program.CurrentHost.AddMessage(st, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 						}
 						break;
 					case Translations.Command.AccessibilityNextStation:
@@ -913,7 +913,7 @@ namespace OpenBve
 							//Aspect announce to be triggered via a separate keybind
 							double tPos = nextStation.DefaultTrackPosition - TrainManagerBase.PlayerTrain.FrontCarTrackPosition;
 							string stt = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","route_nextstation"}).Replace("[distance]", $"{tPos:0.0}") + "m".Replace("[name]", nextStation.Name);
-							Program.CurrentHost.AddMessage(stt, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, Program.CurrentHost.InGameTime + 10.0, null);
+							Program.CurrentHost.AddMessage(stt, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 							nextStation.AccessibilityAnnounced = true;
 						}
 						break;

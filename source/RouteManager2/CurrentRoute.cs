@@ -575,7 +575,7 @@ namespace RouteManager2
 			if (PointsOfInterest[j].Text != null)
 			{
 				double n = 3.0 + 0.5 * Math.Sqrt(PointsOfInterest[j].Text.Length);
-				currentHost.AddMessage(PointsOfInterest[j].Text, MessageDependency.PointOfInterest, GameMode.Expert, MessageColor.White, SecondsSinceMidnight + n, null);
+				currentHost.AddMessage(PointsOfInterest[j].Text, MessageDependency.PointOfInterest, GameMode.Expert, MessageColor.White, n, null);
 			}
 
 			return true;
