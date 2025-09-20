@@ -17,7 +17,7 @@ namespace RouteViewer {
 				bool visible = AnimatedWorldObjects[i].IsVisible(cameraPos, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, Program.Renderer.Camera.ExtraViewingDistance);
 				if (visible | forceUpdate)
 				{
-					train = Program.CurrentHost.ClosestTrain(AnimatedWorldObjects[i].RelativeTrackPosition);
+					train = Program.CurrentHost.ClosestTrain(AnimatedWorldObjects[i].Position);
 				}
 				AnimatedWorldObjects[i].Update(train, timeElapsed, forceUpdate, visible);
 			}

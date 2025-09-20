@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using LibRender2.Screens;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -18,6 +12,13 @@ using OpenBveApi.Trains;
 using OpenBveApi.World;
 using RouteManager2.MessageManager;
 using SoundManager;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 
@@ -719,7 +720,7 @@ namespace OpenBve {
 			return closestTrain;
 		}
 
-		public override AbstractTrain ClosestTrain(double trackPosition)
+		public override AbstractTrain ClosestTrain(Vector3 worldPosition)
 		{
 			// NOTE: It appears to be possible to produce zero-length trains via poorly written XML
 			//		 Add appropriate guards against this here
@@ -729,19 +730,12 @@ namespace OpenBve {
 			{
 				if (Program.TrainManager.Trains[j].State == TrainState.Available && Program.TrainManager.Trains[j].Cars.Length > 0)
 				{
-					double distance;
-					if (Program.TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < trackPosition)
-					{
-						distance = trackPosition - Program.TrainManager.Trains[j].Cars[0].TrackPosition;
-					}
-					else if (Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > trackPosition)
-					{
-						distance = Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - trackPosition;
-					}
-					else
-					{
-						distance = 0;
-					}
+					Vector3 frontAxlePosition = Program.TrainManager.Trains[j].Cars[0].FrontAxle.Follower.WorldPosition;
+					Vector3 rearAxlePosition = Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.WorldPosition;
+					double frontAxleDistance = Math.Abs(Math.Sqrt(((worldPosition.X - frontAxlePosition.X) * (worldPosition.X - frontAxlePosition.X)) + ((worldPosition.Y - frontAxlePosition.Y) * (worldPosition.Y - frontAxlePosition.Y))));
+					double rearAxleDistance = Math.Abs(Math.Sqrt(((worldPosition.X - rearAxlePosition.X) * (worldPosition.X - rearAxlePosition.X)) + ((worldPosition.Y - rearAxlePosition.Y) * (worldPosition.Y - rearAxlePosition.Y))));
+					double distance = Math.Min(frontAxleDistance, rearAxleDistance);
+					
 					if (distance < trainDistance)
 					{
 						closestTrain = Program.TrainManager.Trains[j];
@@ -754,19 +748,12 @@ namespace OpenBve {
 			{
 				if (Program.TrainManager.TFOs[j] is ScriptedTrain scriptedTrain && scriptedTrain.State == TrainState.Available && scriptedTrain.Cars.Length > 0)
 				{
-					double distance;
-					if (scriptedTrain.Cars[0].FrontAxle.Follower.TrackPosition < trackPosition)
-					{
-						distance = trackPosition - scriptedTrain.Cars[0].TrackPosition;
-					}
-					else if (scriptedTrain.Cars[scriptedTrain.Cars.Length - 1].RearAxle.Follower.TrackPosition > trackPosition)
-					{
-						distance = scriptedTrain.Cars[scriptedTrain.Cars.Length - 1].RearAxle.Follower.TrackPosition - trackPosition;
-					}
-					else
-					{
-						distance = 0;
-					}
+					Vector3 frontAxlePosition = scriptedTrain.Cars[0].FrontAxle.Follower.WorldPosition;
+					Vector3 rearAxlePosition = scriptedTrain.Cars[scriptedTrain.Cars.Length - 1].RearAxle.Follower.WorldPosition;
+					double frontAxleDistance = Math.Abs(Math.Sqrt(((worldPosition.X - frontAxlePosition.X) * (worldPosition.X - frontAxlePosition.X)) + ((worldPosition.Y - frontAxlePosition.Y) * (worldPosition.Y - frontAxlePosition.Y))));
+					double rearAxleDistance = Math.Abs(Math.Sqrt(((worldPosition.X - rearAxlePosition.X) * (worldPosition.X - rearAxlePosition.X)) + ((worldPosition.Y - rearAxlePosition.Y) * (worldPosition.Y - rearAxlePosition.Y))));
+					double distance = Math.Min(frontAxleDistance, rearAxleDistance);
+					
 					if (distance < trainDistance)
 					{
 						closestTrain = scriptedTrain;

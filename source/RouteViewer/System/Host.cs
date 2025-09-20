@@ -592,27 +592,20 @@ namespace RouteViewer
 			return closestTrain;
 		}
 
-		public override AbstractTrain ClosestTrain(double TrackPosition)
+		public override AbstractTrain ClosestTrain(Vector3 worldPosition)
 		{
 			AbstractTrain closestTrain = null;
 			double trainDistance = double.MaxValue;
 			for (int j = 0; j < Program.TrainManager.Trains.Count; j++)
 			{
-				if (Program.TrainManager.Trains[j].State == TrainState.Available)
+				if (Program.TrainManager.Trains[j].State == TrainState.Available && Program.TrainManager.Trains[j].Cars.Length > 0)
 				{
-					double distance;
-					if (Program.TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
-					{
-						distance = TrackPosition - Program.TrainManager.Trains[j].Cars[0].TrackPosition;
-					}
-					else if (Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > TrackPosition)
-					{
-						distance = Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - TrackPosition;
-					}
-					else
-					{
-						distance = 0;
-					}
+					Vector3 frontAxlePosition = Program.TrainManager.Trains[j].Cars[0].FrontAxle.Follower.WorldPosition;
+					Vector3 rearAxlePosition = Program.TrainManager.Trains[j].Cars[Program.TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.WorldPosition;
+					double frontAxleDistance = Math.Abs(Math.Sqrt(((worldPosition.X - frontAxlePosition.X) * (worldPosition.X - frontAxlePosition.X)) + ((worldPosition.Y - frontAxlePosition.Y) * (worldPosition.Y - frontAxlePosition.Y))));
+					double rearAxleDistance = Math.Abs(Math.Sqrt(((worldPosition.X - rearAxlePosition.X) * (worldPosition.X - rearAxlePosition.X)) + ((worldPosition.Y - rearAxlePosition.Y) * (worldPosition.Y - rearAxlePosition.Y))));
+					double distance = Math.Min(frontAxleDistance, rearAxleDistance);
+
 					if (distance < trainDistance)
 					{
 						closestTrain = Program.TrainManager.Trains[j];

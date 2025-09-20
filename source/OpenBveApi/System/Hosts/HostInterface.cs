@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using OpenBveApi.Colors;
@@ -673,10 +674,10 @@ namespace OpenBveApi.Hosts {
 			return null;
 		}
 
-		/// <summary>Gets the closest train to the specified track location</summary>
-		/// <param name="TrackPosition">The specified track position</param>
+		/// <summary>Gets the closest train to the world location</summary>
+		/// <param name="worldPosition">The specified track position</param>
 		/// <returns>The closest train, or null if no other trains</returns>
-		public virtual AbstractTrain ClosestTrain(double TrackPosition)
+		public virtual AbstractTrain ClosestTrain(Vector3 worldPosition)
 		{
 			// NOTE: This copy of the method is used by animated objects
 			return null;
