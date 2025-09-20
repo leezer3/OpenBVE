@@ -303,10 +303,10 @@ namespace OpenBveApi.Colors {
 		///<param name="color">The Color128</param>
 		public Color32(Color128 color)
 		{
-			this.R = (byte)(255 * (byte)color.R);
-			this.G = (byte)(255 * (byte)color.G);
-			this.B = (byte)(255 * (byte)color.B);
-			this.A = (byte)(255 * (byte)color.A);
+			this.R = (byte)(255 * color.R);
+			this.G = (byte)(255 * color.G);
+			this.B = (byte)(255 * color.B);
+			this.A = (byte)(255 * color.A);
 		}
 
 		// --- operators ---
