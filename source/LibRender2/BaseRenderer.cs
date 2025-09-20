@@ -299,6 +299,8 @@ namespace LibRender2
 		internal static readonly List<int> vboToDelete = new List<int>();
 		internal static readonly List<int> iboToDelete = new List<int>();
 
+		public Dictionary<Texture, HashSet<Vector3>> CubesToDraw = new Dictionary<Texture, HashSet<Vector3>>();
+
 		public bool AvailableNewRenderer => currentOptions != null && currentOptions.IsUseNewRenderer && !ForceLegacyOpenGL;
 
 		protected BaseRenderer(HostInterface CurrentHost, BaseOptions CurrentOptions, FileSystem FileSystem)
