@@ -285,7 +285,7 @@
 		};
 
 		/// <summary>Standard Windows monochrome pallette</summary>
-		public static Color24[] MonochromePalette =
+		public static readonly Color24[] MonochromePalette =
 		{
 			Color24.Black,
 			Color24.White

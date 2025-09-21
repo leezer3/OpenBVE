@@ -718,7 +718,7 @@ namespace OpenBveApi.Hosts {
 
 		/// <summary>Contains the list of commonly used 'empty' files</summary>
 		/// <remarks>These generally aren't a valid object, and should be ignored for errors</remarks>
-		public static string[] NullFiles =
+		public static readonly string[] NullFiles =
 		{
 			"empty",
 			"null",

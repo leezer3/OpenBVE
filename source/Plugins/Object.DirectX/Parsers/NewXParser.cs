@@ -95,10 +95,10 @@ namespace Plugin
 				StringBuilder Builder = new StringBuilder();
 				for (int i = 0; i < Lines.Length; i++) {
 					Builder.Append(Lines[i]);
-					Builder.Append(" ");
+					Builder.Append(' ');
 				}
 				string Content = Builder.ToString();
-				Content = Content.Substring(17).Trim(new char[] { });
+				Content = Content.Substring(17).Trim();
 				return LoadTextualX(Content);
 			}
 

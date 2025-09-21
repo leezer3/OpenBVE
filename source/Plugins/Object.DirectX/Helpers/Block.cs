@@ -973,6 +973,7 @@ namespace OpenBve.Formats.DirectX
 
 		public void Dispose()
 		{
+			GC.SuppressFinalize(this);
 			Dispose(true);
 		}
 

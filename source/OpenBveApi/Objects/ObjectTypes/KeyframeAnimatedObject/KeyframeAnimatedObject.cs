@@ -235,7 +235,9 @@ namespace OpenBveApi.Objects
 
 		}
 
-		public static implicit operator StaticObject(KeyframeAnimatedObject keyframeAnimatedObject)
+		/// <summary>Converts the KeyframeAnimatedObject to a static object</summary>
+		/// <remarks>This will set all animation positions to Frame 0</remarks>
+        public static implicit operator StaticObject(KeyframeAnimatedObject keyframeAnimatedObject)
 		{
 			Matrix4D[] matricies = new Matrix4D[keyframeAnimatedObject.Matricies.Length];
 			for (int i = 0; i < keyframeAnimatedObject.Animations.Count; i++)

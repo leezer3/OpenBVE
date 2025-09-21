@@ -75,17 +75,14 @@ namespace TrainEditor2.ViewModels.Trains
 			Cars = train.Cars
 				.ToReadOnlyReactiveCollection(x =>
 				{
-					MotorCar motorCar = x as MotorCar;
-					TrailerCar trailerCar = x as TrailerCar;
-
 					CarViewModel viewModel = null;
 
-					if (motorCar != null)
+					if (x is MotorCar motorCar)
 					{
 						viewModel = new MotorCarViewModel(motorCar, train);
 					}
 
-					if (trailerCar != null)
+					if (x is TrailerCar trailerCar)
 					{
 						viewModel = new TrailerCarViewModel(trailerCar);
 					}

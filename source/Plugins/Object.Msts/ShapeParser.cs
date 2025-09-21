@@ -33,7 +33,6 @@ using SharpCompress.Compressors.Deflate;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 
 
@@ -46,7 +45,7 @@ using System.Text;
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable
 // ReSharper disable InconsistentNaming
-#pragma warning disable 0219
+#pragma warning disable 0219, IDE0059
 namespace Plugin
 {
 	partial class MsTsShapeParser

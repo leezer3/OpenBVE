@@ -508,7 +508,6 @@ namespace OpenBveApi.Math
 		/// 1. Around X, 2. Around Y, 3. Around Z.
 		/// </summary>
 		/// <param name="eulerAngles">The counterclockwise euler angles a vector.</param>
-		/// <param name="result">The equivalent Quaternion.</param>
 		public static Quaternion FromEulerAngles(Vector3 eulerAngles)
 		{
 			var c1 = System.Math.Cos(eulerAngles.X * 0.5f);

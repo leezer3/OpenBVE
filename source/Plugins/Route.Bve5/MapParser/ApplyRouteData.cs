@@ -330,10 +330,7 @@ namespace Route.Bve5
 								}
 								wpos += dx * Transformation.X + dy * Transformation.Y + dz * Transformation.Z;
 								Data.Objects.TryGetValue(key, out UnifiedObject obj);
-								if (obj != null)
-								{
-									obj.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObjects[railKey][k].Yaw, Data.Blocks[i].FreeObjects[railKey][k].Pitch, Data.Blocks[i].FreeObjects[railKey][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
-								}
+								obj?.CreateObject(wpos, Transformation, new Transformation(Data.Blocks[i].FreeObjects[railKey][k].Yaw, Data.Blocks[i].FreeObjects[railKey][k].Pitch, Data.Blocks[i].FreeObjects[railKey][k].Roll), -1, StartingDistance, EndingDistance, tpos, 1.0);
 							}
 						}
 

@@ -426,10 +426,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void AddPilotLamp()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			PilotLampElement pilotLamp = new PilotLampElement();
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Add(pilotLamp);
 			}
@@ -447,10 +446,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void AddNeedle()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			NeedleElement needle = new NeedleElement();
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag  is Screen screen)
 			{
 				screen.PanelElements.Add(needle);
 			}
@@ -468,10 +466,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void AddDigitalNumber()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			DigitalNumberElement digitalNumber = new DigitalNumberElement();
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Add(digitalNumber);
 			}
@@ -489,10 +486,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void AddDigitalGauge()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			DigitalGaugeElement digitalGauge = new DigitalGaugeElement();
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Add(digitalGauge);
 			}
@@ -510,10 +506,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void AddLinearGauge()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			LinearGaugeElement linearGauge = new LinearGaugeElement();
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Add(linearGauge);
 			}
@@ -531,10 +526,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void AddTimetable()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			TimetableElement timetable = new TimetableElement();
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Add(timetable);
 			}
@@ -582,10 +576,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void CopyPilotLamp()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			PilotLampElement pilotLamp = (PilotLampElement)((PilotLampElement)SelectedListItem.Tag).Clone();
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Add(pilotLamp);
 			}
@@ -603,10 +596,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void CopyNeedle()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			NeedleElement needle = (NeedleElement)((NeedleElement)SelectedListItem.Tag).Clone();
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Add(needle);
 			}
@@ -624,10 +616,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void CopyDigitalNumber()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			DigitalNumberElement digitalNumber = (DigitalNumberElement)((DigitalNumberElement)SelectedListItem.Tag).Clone();
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Add(digitalNumber);
 			}
@@ -645,10 +636,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void CopyDigitalGauge()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			DigitalGaugeElement digitalGauge = (DigitalGaugeElement)((DigitalGaugeElement)SelectedListItem.Tag).Clone();
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Add(digitalGauge);
 			}
@@ -666,10 +656,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void CopyLinearGauge()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			LinearGaugeElement linearGauge = (LinearGaugeElement)((LinearGaugeElement)SelectedListItem.Tag).Clone();
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Add(linearGauge);
 			}
@@ -687,10 +676,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void CopyTimetable()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			TimetableElement timetable = (TimetableElement)((TimetableElement)SelectedListItem.Tag).Clone();
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Add(timetable);
 			}
@@ -733,10 +721,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void RemovePilotLamp()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			PilotLampElement pilotLamp = (PilotLampElement)SelectedListItem.Tag;
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Remove(pilotLamp);
 			}
@@ -752,10 +739,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void RemoveNeedle()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			NeedleElement needle = (NeedleElement)SelectedListItem.Tag;
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Remove(needle);
 			}
@@ -771,10 +757,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void RemoveDigitalNumber()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			DigitalNumberElement digitalNumber = (DigitalNumberElement)SelectedListItem.Tag;
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Remove(digitalNumber);
 			}
@@ -790,10 +775,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void RemoveDigitalGauge()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			DigitalGaugeElement digitalGauge = (DigitalGaugeElement)SelectedListItem.Tag;
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Remove(digitalGauge);
 			}
@@ -809,10 +793,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void RemoveLinearGauge()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			LinearGaugeElement linearGauge = (LinearGaugeElement)SelectedListItem.Tag;
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Remove(linearGauge);
 			}
@@ -828,10 +811,9 @@ namespace TrainEditor2.Models.Panels
 
 		internal void RemoveTimetable()
 		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 			TimetableElement timetable = (TimetableElement)SelectedListItem.Tag;
 
-			if (screen != null)
+			if (SelectedTreeItem.Parent.Parent.Tag is Screen screen)
 			{
 				screen.PanelElements.Remove(timetable);
 			}

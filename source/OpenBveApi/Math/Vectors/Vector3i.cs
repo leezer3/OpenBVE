@@ -24,6 +24,6 @@
 	    }
 
 	    /// <summary>Represents a null vector.</summary>
-		public static Vector3i Zero = new Vector3i(0, 0, 0);
+		public static readonly Vector3i Zero = new Vector3i(0, 0, 0);
 	}
 }
