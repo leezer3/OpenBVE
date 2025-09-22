@@ -29,16 +29,13 @@ namespace OpenBveApi.Trains
     {
 	    /// <summary>The total number of wheels</summary>
 	    public readonly int TotalNumber;
-		/// <summary>The name of the wheels</summary>
-	    public readonly string Name;
 		/// <summary>The radius of the wheels</summary>
 	    public readonly double Radius;
 
 		/// <summary>Creates a new set of wheels</summary>
-		public Wheels(int totalNumber, string name, double radius)
+		public Wheels(int totalNumber, double radius)
         {
             TotalNumber = totalNumber;
-            Name = name;
             Radius = radius;
         }
     }

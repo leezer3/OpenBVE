@@ -132,6 +132,7 @@
     <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Vectors\Vector2f.cs" />
     <Compile Include="Math\Vectors\Vector3f.cs" />
+    <Compile Include="Math\Vectors\Vector3i.cs" />
     <Compile Include="Math\Vectors\Vector4.cs" />
     <Compile Include="Objects\FaceType.cs" />
     <Compile Include="Objects\Glow.cs" />
@@ -267,7 +268,7 @@
     <Compile Include="Train\TrainStopState.cs" />
     <Compile Include="Train\TrainType.cs" />
     <Compile Include="Train\TravelDirection.cs" />
-    <Compile Include="Train\Wheels.cs" />
+    <Compile Include="Train\Wheels\Wheels.cs" />
     <Compile Include="World\Orientation3.cs" />
     <Compile Include="Packages\Packages.cs" />
     <Compile Include="Packages\Packages.Database.cs" />

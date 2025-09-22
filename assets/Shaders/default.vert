@@ -48,7 +48,7 @@ layout(location = 0) in vec3 iPosition;
 layout(location = 1) in vec3 iNormal;
 layout(location = 2) in vec2 iUv;
 layout(location = 3) in vec4 iColor;
-layout(location = 4) in int iMatrixChain;
+layout(location = 4) in ivec3 iMatrixChain;
 
 uniform mat4 uCurrentProjectionMatrix;
 uniform mat4 uCurrentModelViewMatrix;
@@ -60,7 +60,7 @@ uniform MaterialColor uMaterial;
 uniform int uMaterialFlags;
 
 layout (std140) uniform uAnimationMatricies {
-    mat4 modelMatricies[64];
+    mat4 modelMatricies[128];
 };
 
 out vec4 oViewPos;
@@ -102,13 +102,71 @@ void main()
 	vec3 pos = vec3(iPosition);
 	oColor = iColor;
 
-	if(iMatrixChain != 0)
+	if(iMatrixChain.x != 0)
 	{	
 		// unpack packed matrix indicies
-		int m0 = (iMatrixChain & (0xff << 24)) >> 24;
-		int m1 = (iMatrixChain >> 16) & 0xff;
-		int m2 = (iMatrixChain & 0xff00) >> 8;
-		int m3 = (iMatrixChain & 0xff);
+		int m0 = (iMatrixChain.x & (0xff << 24)) >> 24;
+		int m1 = (iMatrixChain.x >> 16) & 0xff;
+		int m2 = (iMatrixChain.x & 0xff00) >> 8;
+		int m3 = (iMatrixChain.x & 0xff);
+        
+		if(m0 >=0 && m0 < 255)
+		{	
+			pos = transformVector(pos, m0);
+		}
+		
+		if(m1 >=0 && m1 < 255)
+		{
+			pos = transformVector(pos, m1);
+		}
+		
+		if(m2 >=0 && m2 < 255)
+		{
+			pos = transformVector(pos, m2);
+		}
+
+		if(m3 >=0 && m3 < 255)
+		{
+			pos = transformVector(pos, m3);
+		}		
+	}
+	
+	if(iMatrixChain.y != 0)
+	{	
+		// unpack packed matrix indicies
+		int m0 = (iMatrixChain.y & (0xff << 24)) >> 24;
+		int m1 = (iMatrixChain.y >> 16) & 0xff;
+		int m2 = (iMatrixChain.y & 0xff00) >> 8;
+		int m3 = (iMatrixChain.y & 0xff);
+        
+		if(m0 >=0 && m0 < 255)
+		{	
+			pos = transformVector(pos, m0);
+		}
+		
+		if(m1 >=0 && m1 < 255)
+		{
+			pos = transformVector(pos, m1);
+		}
+		
+		if(m2 >=0 && m2 < 255)
+		{
+			pos = transformVector(pos, m2);
+		}
+
+		if(m3 >=0 && m3 < 255)
+		{
+			pos = transformVector(pos, m3);
+		}		
+	}
+
+	if(iMatrixChain.z != 0)
+	{	
+		// unpack packed matrix indicies
+		int m0 = (iMatrixChain.z & (0xff << 24)) >> 24;
+		int m1 = (iMatrixChain.z >> 16) & 0xff;
+		int m2 = (iMatrixChain.z & 0xff00) >> 8;
+		int m3 = (iMatrixChain.z & 0xff);
         
 		if(m0 >=0 && m0 < 255)
 		{	

@@ -44,8 +44,11 @@ namespace OpenBveApi.Trains
 		/// <summary>Contains the current brightness values</summary>
 		public Brightness Brightness;
 
-		/// <summary>The wheels sets on the car</summary>
-		public Dictionary<string, Wheels> Wheels;
+		/// <summary>The driving wheel sets on the car</summary>
+		public List<Wheels> DrivingWheels = new List<Wheels>();
+
+		/// <summary>The trailing wheel sets on the car</summary>
+		public List<Wheels> TrailingWheels = new List<Wheels>();
 
 		/// <summary>Creates the in-world co-ordinates for a sound attached to this car</summary>
 		public virtual void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)

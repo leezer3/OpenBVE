@@ -383,6 +383,9 @@ namespace OpenBveApi.Math
 		/// <summary>A quaterion representing an identity matrix.</summary>
 		public static readonly Quaternion Identity = new Quaternion(0, 0, 0, 1);
 
+		/// <summary>A quaterion representing an identity matrix in DirectX format.</summary>
+		public static readonly Quaternion DirectXIdentity = new Quaternion(0, 0, 0, -1);
+
 		/// <summary>
 		/// Do Spherical linear interpolation between two quaternions 
 		/// </summary>
@@ -446,6 +449,75 @@ namespace OpenBveApi.Math
 				return result;
 			}
 			return Identity;
+		}
+
+
+		/// <summary>
+		/// Convert this instance to an Euler angle representation.
+		/// </summary>
+		/// <returns>The Euler angles in radians.</returns>
+		public Vector3 ToEulerAngles()
+		{
+			/*
+            reference
+            http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+            http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/
+            */
+
+			var q = this;
+
+			Vector3 eulerAngles;
+
+			// Threshold for the singularities found at the north/south poles.
+			const float SINGULARITY_THRESHOLD = 0.4999995f;
+
+			var sqw = q.W * q.W;
+			var sqx = q.X * q.X;
+			var sqy = q.Y * q.Y;
+			var sqz = q.Z * q.Z;
+			var unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+			var singularityTest = (q.X * q.Z) + (q.W * q.Y);
+
+			double PiOver2 = System.Math.PI / 2;
+
+			if (singularityTest > SINGULARITY_THRESHOLD * unit)
+			{
+				eulerAngles.Z = 2 * System.Math.Atan2(q.X, q.W);
+				eulerAngles.Y = PiOver2;
+				eulerAngles.X = 0;
+			}
+			else if (singularityTest < -SINGULARITY_THRESHOLD * unit)
+			{
+				eulerAngles.Z = -2 * System.Math.Atan2(q.X, q.W);
+				eulerAngles.Y = -PiOver2;
+				eulerAngles.X = 0;
+			}
+			else
+			{
+				eulerAngles.Z = System.Math.Atan2(2 * ((q.W * q.Z) - (q.X * q.Y)), sqw + sqx - sqy - sqz);
+				eulerAngles.Y = System.Math.Asin(2 * singularityTest / unit);
+				eulerAngles.X = System.Math.Atan2(2 * ((q.W * q.X) - (q.Y * q.Z)), sqw - sqx - sqy + sqz);
+			}
+
+			return eulerAngles;
+		}
+
+		/// <summary>
+		/// Builds a Quaternion from the given euler angles in radians.
+		/// The rotations will get applied in following order:
+		/// 1. Around X, 2. Around Y, 3. Around Z.
+		/// </summary>
+		/// <param name="eulerAngles">The counterclockwise euler angles a vector.</param>
+		public static Quaternion FromEulerAngles(Vector3 eulerAngles)
+		{
+			var c1 = System.Math.Cos(eulerAngles.X * 0.5f);
+			var c2 = System.Math.Cos(eulerAngles.Y * 0.5f);
+			var c3 = System.Math.Cos(eulerAngles.Z * 0.5f);
+			var s1 = System.Math.Sin(eulerAngles.X * 0.5f);
+			var s2 = System.Math.Sin(eulerAngles.Y * 0.5f);
+			var s3 = System.Math.Sin(eulerAngles.Z * 0.5f);
+			Quaternion q = new Quaternion((s1 * c2 * c3) + (c1 * s2 * s3), (c1 * s2 * c3) - (s1 * c2 * s3), (c1 * c2 * s3) + (s1 * s2 * c3), (c1 * c2 * c3) - (s1 * s2 * s3));
+			return q;
 		}
 
 		/// <summary>Tests whether this Quaternion is equal to another</summary>

@@ -384,9 +384,9 @@ namespace OpenBveApi.Objects
 
 			for (int i = 0; i < Add.Mesh.Vertices.Length; i++)
 			{
-				if (Add.Mesh.Vertices[i] is ColoredVertex)
+				if (Add.Mesh.Vertices[i] is ColoredVertex cv)
 				{
-					Mesh.Vertices[mv + i] = new ColoredVertex((ColoredVertex) Add.Mesh.Vertices[i]);
+					Mesh.Vertices[mv + i] = new ColoredVertex(cv);
 				}
 				else if (Add.Mesh.Vertices[i] is AnimatedVertex av)
 				{

@@ -46,7 +46,7 @@ namespace OpenBveApi.Objects
 		/// <summary>The matrix name</summary>
 		public readonly string Name;
 		/// <summary>The base matrix before transformations</summary>
-		internal readonly Matrix4D _matrix;
+		internal Matrix4D _matrix;
 		/// <summary>Gets the final transformed matrix</summary>
 		public Matrix4D Matrix
 		{

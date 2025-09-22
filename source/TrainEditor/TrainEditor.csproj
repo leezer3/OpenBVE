@@ -145,6 +145,10 @@
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Plugins\Formats.OpenBve\Formats.OpenBve.csproj">
+      <Project>{7ed7b285-fae6-4b34-acc5-87399f27c8bc}</Project>
+      <Name>Formats.OpenBve</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TrainManager\TrainManager.csproj">
       <Project>{D0FCA2C5-FF75-42D8-AE80-310280A61FB1}</Project>
       <Name>TrainManager</Name>

@@ -797,11 +797,9 @@ namespace TrainEditor2.Views
 
 		private void GlControlMotor_Paint(object sender, PaintEventArgs e)
 		{
-			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
-
 			glControlMotor.MakeCurrent();
 
-			if (car != null)
+			if (app.Train.Value.SelectedCar.Value is MotorCarViewModel car)
 			{
 				car.Motor.Value.DrawGlControl.Execute();
 			}

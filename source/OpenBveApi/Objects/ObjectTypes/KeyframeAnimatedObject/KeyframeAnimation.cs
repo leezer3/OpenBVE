@@ -37,7 +37,7 @@ namespace OpenBveApi.Objects
 		/// <summary>The animation name</summary>
 	    public readonly string Name;
 		/// <summary>The base matrix before transforms are performed</summary>
-	    private readonly Matrix4D baseMatrix;
+		internal Matrix4D baseMatrix;
 
 		/*
 	     * FRAMERATE
@@ -98,7 +98,7 @@ namespace OpenBveApi.Objects
 	    }
 
 	    /// <summary>Updates the animation</summary>
-		public void Update(AbstractCar baseCar, Vector3 position, double trackPosition, double timeElapsed)
+		public void Update(AbstractCar baseCar, bool isReversed, Vector3 position, double trackPosition, double timeElapsed)
 		{
 			if (!string.IsNullOrEmpty(ParentAnimation) && ParentObject.Animations.ContainsKey(ParentAnimation))
 			{
@@ -112,29 +112,73 @@ namespace OpenBveApi.Objects
 				if (baseCar != null)
 				{
 					// HACK: use the train as a dynamic to allow us to pull out the car reference
-					if (baseCar.Wheels != null && baseCar.Wheels.ContainsKey(Name))
+					if (Name.StartsWith("WHEELS") || Name.StartsWith("ROD") || Name.StartsWith("PISTON"))
 					{
-						double wheelRadius;
-						if (baseCar.Wheels.ContainsKey(Name))
+						// HACK: use the train as a dynamic to allow us to pull out the car reference
+						double wheelRadius = 0;
+
+						if (Name.StartsWith("ROD") || Name.StartsWith("PISTON"))
 						{
-							wheelRadius = baseCar.Wheels[Name].Radius;
+							if (baseCar.DrivingWheels.Count > 0)
+							{
+								wheelRadius = baseCar.DrivingWheels[0].Radius;
+							}
+							else
+							{
+								AnimationKey = 0;
+								return;
+							}
 						}
 						else
 						{
-							// if controllers are not defined for WHEELSN-N, it appears that those for the base WHEELSN are used
-							// otherwise, controlled by the position of WHEELS1
-							string baseName = Name.Substring(0, 7);
-							if (!baseCar.Wheels.ContainsKey(baseName))
+							char wheel1 = Name[Name.Length - 1];
+							char wheel2 = Name[Name.Length - 2];
+							if (char.IsDigit(wheel1) && char.IsDigit(wheel2))
 							{
-								baseName = "WHEELS1";
+								// bogie wheelset
+								int wheel = wheel1;
+								int wheelset = 0;
+								while (wheelset < baseCar.TrailingWheels.Count)
+								{
+									wheel -= baseCar.TrailingWheels[wheelset].TotalNumber;
+									wheelRadius = baseCar.TrailingWheels[wheelset].Radius;
+									if (wheel <= 0)
+									{
+										break;
+									}
+									wheelset++;
+								}
 							}
-							wheelRadius = baseCar.Wheels[baseName].Radius;
+							else
+							{
+								// driving wheelset
+								int wheel = wheel1;
+								int wheelset = 0;
+								while (wheelset < baseCar.DrivingWheels.Count)
+								{
+									wheel -= baseCar.DrivingWheels[wheelset].TotalNumber;
+									wheelRadius = baseCar.DrivingWheels[wheelset].Radius;
+									if (wheel <= 0)
+									{
+										break;
+									}
+									wheelset++;
+								}
+							}
 						}
 
 						double distanceTravelled = baseCar.FrontAxle.Follower.TrackPosition - lastDistance;
+						if (isReversed)
+						{
+							distanceTravelled = -distanceTravelled;
+						}
 						double wheelCircumference = 2 * System.Math.PI * wheelRadius;
 						lastDistance = baseCar.FrontAxle.Follower.TrackPosition;
 						AnimationKey += (distanceTravelled / wheelCircumference) * FrameCount;
+						if (AnimationKey < 0)
+						{
+							AnimationKey = FrameCount + AnimationKey;
+						}
 						AnimationKey %= FrameCount;
 					}
 					else

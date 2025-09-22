@@ -28,7 +28,7 @@ namespace OpenBve
 				if (visible | forceUpdate)
 				{
 					//Find the closest train
-					train = Program.CurrentHost.ClosestTrain(AnimatedWorldObjects[i].RelativeTrackPosition);
+					train = Program.CurrentHost.ClosestTrain(AnimatedWorldObjects[i].Position);
 				}
 
 				if (forceUpdate)

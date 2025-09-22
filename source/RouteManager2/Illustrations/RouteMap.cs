@@ -638,8 +638,8 @@ namespace RouteManager2
 				
 				for (int i = firstUsedElement; i <= lastUsedElement; i += k)
 				{
-					double x = ox + (double)(i - firstUsedElement) * nd;
-					double y = (double)(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd;
+					double x = ox + (i - firstUsedElement) * nd;
+					double y = (CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd;
 					// track offset label
 					if (x < w)
 					{
@@ -651,7 +651,7 @@ namespace RouteManager2
 						y = oy + (h - 0.5 * y) + 2.0f;
 						string t = ((int)Math.Round(CurrentRoute.Atmosphere.InitialElevation + CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y)).ToString(Culture);
 						SizeF s = g.MeasureString(t, fs);
-						if (y < oy + h - (double)s.Width - 10.0)
+						if (y < oy + h - s.Width - 10.0)
 						{
 							g.RotateTransform(-90.0f);
 							g.TranslateTransform((float)x, (float)y + 4.0f, System.Drawing.Drawing2D.MatrixOrder.Append);

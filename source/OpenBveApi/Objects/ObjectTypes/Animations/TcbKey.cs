@@ -23,6 +23,8 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // ReSharper disable CoVariantArrayConversion
+
+using System.ServiceModel.Dispatcher;
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Objects

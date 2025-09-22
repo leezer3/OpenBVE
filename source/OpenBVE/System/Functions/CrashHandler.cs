@@ -29,7 +29,7 @@ namespace OpenBve
                 if (ex is ArgumentOutOfRangeException && ex.Message == "Specified argument was out of the range of valid values.\r\nParameter name: button")
                 {
                     //If a joystick with an excessive number of axis or buttons is connected, at the least show a nice error message, rather than simply dissapearing
-                    MessageBox.Show("An unsupported joystick is connected: \n \n Too many buttons. \n \n Please unplug all USB joysticks & gamepads and try again.");
+                    Program.ShowMessageBox("An unsupported joystick is connected: \n \n Too many buttons. \n \n Please unplug all USB joysticks & gamepads and try again.", Application.ProductName);
                     Environment.Exit(0);
                 }
                 if (ex is ArgumentOutOfRangeException && ex.Message == "Specified argument was out of the range of valid values.\r\nParameter name: axis")
@@ -38,7 +38,7 @@ namespace OpenBve
                     MessageBox.Show("An unsupported joystick is connected: \n \n Too many axis. \n \n Please unplug all USB joysticks & gamepads and try again.");
                     Environment.Exit(0);
                 }
-                MessageBox.Show("Unhandled exception:\n\n" + ex.Message, "OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                Program.ShowMessageBox("Unhandled exception:\n\n" + ex.Message, Application.ProductName);
                 LogCrash(ex + Environment.StackTrace);
 
             }
@@ -46,8 +46,8 @@ namespace OpenBve
             {
                 try
                 {
-                    MessageBox.Show("A fatal exception occured inside the UnhandledExceptionHandler:" + Environment.NewLine + Environment.NewLine
-                        + exc.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    Program.ShowMessageBox("A fatal exception occured inside the UnhandledExceptionHandler:" + Environment.NewLine + Environment.NewLine
+                        + exc.Message, Application.ProductName);
                         LogCrash(exc + Environment.StackTrace);
                 }
                 finally

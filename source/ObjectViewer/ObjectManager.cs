@@ -16,7 +16,7 @@ namespace ObjectViewer
 				bool visible = AnimatedWorldObjects[i].IsVisible(Program.Renderer.Camera.Alignment.Position, Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, Program.Renderer.Camera.ExtraViewingDistance);
 				if (visible | ForceUpdate)
 				{
-					train = Program.CurrentHost.ClosestTrain(AnimatedWorldObjects[i].RelativeTrackPosition);
+					train = Program.CurrentHost.ClosestTrain(AnimatedWorldObjects[i].Position);
 				}
 				AnimatedWorldObjects[i].Update(train, TimeElapsed, ForceUpdate, visible);
 			}

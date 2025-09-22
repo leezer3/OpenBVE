@@ -211,155 +211,20 @@ namespace OpenBve
 						TrainManager.PlayerTrain.Handles.Reverser.ApplyState((ReverserPosition)(int)Math.Round(Control.AnalogState));
 						break;
 					case Translations.Command.CameraMoveForward:
-						// camera move forward
-						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-						    Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead |
-						    Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
-						{
-							double s = Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-							           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-								? CameraProperties.InteriorTopSpeed
-								: CameraProperties.ExteriorTopSpeed;
-							Program.Renderer.Camera.AlignmentDirection.Position.Z = s * Control.AnalogState;
-						}
-						else
-						{
-							if (Program.Renderer.Camera.AtWorldEnd)
-							{
-								//Don't let the camera run off the end of the worldspace
-								break;
-							}
-
-							Program.Renderer.Camera.AlignmentDirection.TrackPosition = CameraProperties.ExteriorTopSpeed * Control.AnalogState;
-						}
-
-						break;
 					case Translations.Command.CameraMoveBackward:
-						// camera move backward
-						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-						    Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead |
-						    Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
-						{
-							double s = Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-							           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-								? CameraProperties.InteriorTopSpeed
-								: CameraProperties.ExteriorTopSpeed;
-							Program.Renderer.Camera.AlignmentDirection.Position.Z = -s * Control.AnalogState;
-						}
-						else
-						{
-							Program.Renderer.Camera.AlignmentDirection.TrackPosition =
-								-CameraProperties.ExteriorTopSpeed * Control.AnalogState;
-						}
-
-						break;
 					case Translations.Command.CameraMoveLeft:
-						// camera move left
-					{
-						double s = Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-							? CameraProperties.InteriorTopSpeed
-							: CameraProperties.ExteriorTopSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Position.X = -s * Control.AnalogState;
-					}
-						break;
 					case Translations.Command.CameraMoveRight:
-						// camera move right
-					{
-						double s = Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-							? CameraProperties.InteriorTopSpeed
-							: CameraProperties.ExteriorTopSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Position.X = s * Control.AnalogState;
-					}
-						break;
 					case Translations.Command.CameraMoveUp:
-						// camera move up
-					{
-						double s = Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-							? CameraProperties.InteriorTopSpeed
-							: CameraProperties.ExteriorTopSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Position.Y = s * Control.AnalogState;
-					}
-						break;
 					case Translations.Command.CameraMoveDown:
-						// camera move down
-					{
-						double s = Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-							? CameraProperties.InteriorTopSpeed
-							: CameraProperties.ExteriorTopSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Position.Y = -s * Control.AnalogState;
-					}
+						Program.Renderer.Camera.Move(Control.Command, Control.AnalogState);
 						break;
 					case Translations.Command.CameraRotateLeft:
-						// camera rotate left
-					{
-						double s = Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-							? CameraProperties.InteriorTopAngularSpeed
-							: CameraProperties.ExteriorTopAngularSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Yaw = -s * Control.AnalogState;
-					}
-						break;
 					case Translations.Command.CameraRotateRight:
-						// camera rotate right
-					{
-						double s = Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-							? CameraProperties.InteriorTopAngularSpeed
-							: CameraProperties.ExteriorTopAngularSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Yaw = s * Control.AnalogState;
-					}
-						break;
 					case Translations.Command.CameraRotateUp:
-						// camera rotate up
-					{
-						double s = Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-							? CameraProperties.InteriorTopAngularSpeed
-							: CameraProperties.ExteriorTopAngularSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Pitch = s * Control.AnalogState;
-					}
-						break;
 					case Translations.Command.CameraRotateDown:
-						// camera rotate down
-					{
-						double s = Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-						           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-							? CameraProperties.InteriorTopAngularSpeed
-							: CameraProperties.ExteriorTopAngularSpeed;
-						Program.Renderer.Camera.AlignmentDirection.Pitch = -s * Control.AnalogState;
-					}
-						break;
 					case Translations.Command.CameraRotateCCW:
-						// camera rotate ccw
-						if ((Program.Renderer.Camera.CurrentMode != CameraViewMode.Interior &
-						     Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead) |
-						    Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.On)
-						{
-							double s = Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-							           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-								? CameraProperties.InteriorTopAngularSpeed
-								: CameraProperties.ExteriorTopAngularSpeed;
-							Program.Renderer.Camera.AlignmentDirection.Roll = -s * Control.AnalogState;
-						}
-
-						break;
 					case Translations.Command.CameraRotateCW:
-						// camera rotate cw
-						if ((Program.Renderer.Camera.CurrentMode != CameraViewMode.Interior &
-						     Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead) |
-						    Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.On)
-						{
-							double s = Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
-							           Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-								? CameraProperties.InteriorTopAngularSpeed
-								: CameraProperties.ExteriorTopAngularSpeed;
-							Program.Renderer.Camera.AlignmentDirection.Roll = s * Control.AnalogState;
-						}
-
+						Program.Renderer.Camera.Rotate(Control.Command, Control.AnalogState);
 						break;
 					case Translations.Command.CameraZoomIn:
 						// camera zoom in

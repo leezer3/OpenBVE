@@ -1,7 +1,6 @@
 ﻿using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
-using System;
 using System.Collections.Generic;
 
 namespace LibRender2.Overlays

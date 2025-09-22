@@ -290,10 +290,10 @@ namespace OpenBve {
 					switch (ex.Message)
 					{
 						case "libopenal.so.1":
-							MessageBox.Show("openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							Program.ShowMessageBox("openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}));
 							break;
 						default:
-							MessageBox.Show("The required system library " + ex.Message + " was not found on this system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							Program.ShowMessageBox("The required system library " + ex.Message + " was not found on this system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));
 							break;
 					}
 				}
@@ -342,7 +342,7 @@ namespace OpenBve {
 					}
 					var currentError = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","critical_file"});
 					currentError = currentError.Replace("[file]", System.IO.Path.GetFileName(CurrentRouteFile));
-					MessageBox.Show(currentError, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					Program.ShowMessageBox(currentError, Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"program","title"}));
 					Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + Program.CurrentHost.Plugins[i].Route.LastException.Message);
 					CrashHandler.LoadingCrash(Program.CurrentHost.Plugins[i].Route.LastException.Message, false);
 					Program.RestartArguments = " ";

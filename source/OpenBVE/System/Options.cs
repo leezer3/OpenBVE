@@ -396,7 +396,7 @@ namespace OpenBve
 				}
 				catch
 				{
-					MessageBox.Show(@"Failed to write to the Options folder.", @"OpenBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					Program.ShowMessageBox(@"Failed to write to the Options folder.", Application.ProductName);
 				}
 			}
 		}

@@ -88,8 +88,8 @@ namespace OpenBve
 					File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default.controls");
 					if (!System.IO.File.Exists(File))
 					{
-						MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_missing"}),
-							Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						Program.ShowMessageBox(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_missing"}),
+							Application.ProductName);
 					}
 				}
 			}
@@ -150,8 +150,7 @@ namespace OpenBve
 									//We've discovered a SDL keybinding is present, so reset the loading process with the default keyconfig & show an appropriate error message
 									if (ControlsReset == false)
 									{
-										MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_oldversion"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_reset"}), Application.ProductName,
-											MessageBoxButtons.OK, MessageBoxIcon.Hand);
+										Program.ShowMessageBox(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_oldversion"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_reset"}), Application.ProductName);
 									}
 
 									var DefaultControls = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls");
@@ -164,8 +163,8 @@ namespace OpenBve
 										}
 										else
 										{
-											MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_default_oldversion"}),
-												Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+											Program.ShowMessageBox(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_default_oldversion"}),
+												Application.ProductName);
 											i = 0;
 											Lines = GetLines(Assembly.GetExecutingAssembly().GetManifestResourceStream("OpenBve.Default.controls"));
 											continue;
@@ -174,8 +173,8 @@ namespace OpenBve
 									}
 									else
 									{
-										MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_default_missing"}),
-											Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+										Program.ShowMessageBox(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","warning"}) + Environment.NewLine + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_default_missing"}),
+											Application.ProductName);
 										Controls = new Control[0];
 									}
 

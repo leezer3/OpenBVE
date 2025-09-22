@@ -406,12 +406,17 @@ namespace RouteViewer
 			Application.DoEvents();
 			CurrentlyLoading = true;
 			CurrentRouteFile = e.FileName;
-			UpdateCaption();
-			LoadRoute();
-			ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+			lock (Renderer.VisibilityUpdateLock)
+			{
+				UpdateCaption();
+				LoadRoute();
+				ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+			}
+
 			CurrentlyLoading = false;
 			Renderer.Camera.Reset(Program.CurrentRoute.Tracks[0].Direction == TrackDirection.Reverse);
 			UpdateCaption();
+
 		}
 
 		internal static void KeyDownEvent(object sender, KeyboardKeyEventArgs e)

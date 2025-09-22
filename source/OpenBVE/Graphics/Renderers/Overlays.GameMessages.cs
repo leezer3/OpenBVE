@@ -57,7 +57,7 @@ namespace OpenBve.Graphics.Renderers
 				bool preserve = false;
 				if ((Element.Transition & HUD.Transition.Move) != 0)
 				{
-					if (Program.CurrentRoute.SecondsSinceMidnight < mm.Timeout)
+					if (mm.Timeout > 0)
 					{
 						if (mm.RendererAlpha == 0.0)
 						{
@@ -118,7 +118,7 @@ namespace OpenBve.Graphics.Renderers
 				}
 				if ((Element.Transition & HUD.Transition.Fade) != 0)
 				{
-					if (Program.CurrentRoute.SecondsSinceMidnight >= mm.Timeout)
+					if (mm.Timeout <= 0)
 					{
 						mm.RendererAlpha -= TimeElapsed;
 						if (mm.RendererAlpha < 0.0)
@@ -137,7 +137,7 @@ namespace OpenBve.Graphics.Renderers
 						preserve = true;
 					}
 				}
-				else if (Program.CurrentRoute.SecondsSinceMidnight > mm.Timeout)
+				else if (mm.Timeout < 0)
 				{
 					if (Math.Abs(mm.RendererPosition.X - tx) < 0.1 & Math.Abs(mm.RendererPosition.Y - ty) < 0.1)
 					{

@@ -76,11 +76,11 @@ namespace OpenBve
 				if (resolutionFound == false)
 				{
 					//Our resolution was not found at all
-					MessageBox.Show(
+					Program.ShowMessageBox(
 						"The graphics card driver reported that the selected resolution was not supported:" + Environment.NewLine +
 						Interface.CurrentOptions.FullscreenWidth + @" x " + Interface.CurrentOptions.FullscreenHeight + " " +
 						Interface.CurrentOptions.FullscreenBits + "bit color" + Environment.NewLine +
-						"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						"Please check your resolution settings.", Application.ProductName);
 					Program.RestartArguments = " ";
 					return;
 				}
@@ -114,11 +114,10 @@ namespace OpenBve
 				catch
 				{
 					//Windowed mode failed to launch
-					MessageBox.Show("An error occured whilst trying to launch in windowed mode at resolution:" + Environment.NewLine +
+					Program.ShowMessageBox("An error occured whilst trying to launch in windowed mode at resolution:" + Environment.NewLine +
 									Interface.CurrentOptions.WindowWidth + @" x " + Interface.CurrentOptions.WindowHeight + @" " +
 									Environment.NewLine +
-									"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK,
-						MessageBoxIcon.Hand);
+									"Please check your resolution settings.", Application.ProductName);
 					Program.RestartArguments = " ";
 					return;
 				}
@@ -126,8 +125,8 @@ namespace OpenBve
 			if (Program.Renderer.GameWindow == null)
 			{
 				//We should never really get an unspecified error here, but it's good manners to handle all cases
-				MessageBox.Show("An unspecified error occured whilst attempting to launch the graphics subsystem.",
-					Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				Program.ShowMessageBox("An unspecified error occured whilst attempting to launch the graphics subsystem.",
+					Application.ProductName);
 				Program.RestartArguments = " ";
 				return;
 			}
@@ -200,8 +199,8 @@ namespace OpenBve
 			    System.Threading.Thread.Sleep(20);
 			    if (Program.Renderer.GameWindow.WindowState != WindowState.Fullscreen)
 			    {
-                    MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","fullscreen_switch1"}) + Environment.NewLine +
-                        Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","fullscreen_switch2"}), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    Program.ShowMessageBox(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","fullscreen_switch1"}) + Environment.NewLine +
+                        Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","fullscreen_switch2"}), Application.ProductName);
 					Program.Renderer.SetWindowState(WindowState.Fullscreen);
 				}
 			}

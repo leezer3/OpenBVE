@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using LibRender2;
 using LibRender2.MotionBlurs;
 using LibRender2.Objects;
@@ -18,8 +15,12 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using OpenBveApi.Textures;
 using OpenBveApi.World;
 using OpenTK.Graphics.OpenGL;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve.Graphics
@@ -183,9 +184,7 @@ namespace OpenBve.Graphics
 			// render background
 			GL.Disable(EnableCap.DepthTest);
 			Program.CurrentRoute.UpdateBackground(TimeElapsed, Program.Renderer.CurrentInterface != InterfaceType.Normal);
-
-			events.Render(Camera.AbsolutePosition);
-
+			
 			// fog
 			float aa = Program.CurrentRoute.CurrentFog.Start;
 			float bb = Program.CurrentRoute.CurrentFog.End;
@@ -336,8 +335,29 @@ namespace OpenBve.Graphics
 					}
 				}
 			}
-			
 
+			if (Interface.CurrentOptions.ShowEvents)
+			{
+				if (Math.Abs(CameraTrackFollower.TrackPosition - events.LastTrackPosition) > 50)
+				{
+					events.LastTrackPosition = CameraTrackFollower.TrackPosition;
+					CubesToDraw.Clear();
+					for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
+					{
+						int railIndex = Program.CurrentRoute.Tracks.ElementAt(i).Key;
+						events.FindEvents(railIndex);
+					}
+				}
+
+				for (int i = 0; i < CubesToDraw.Count; i++)
+				{
+					Texture T = CubesToDraw.ElementAt(i).Key;
+					foreach (Vector3 v in CubesToDraw[T])
+					{
+						Cube.Draw(v, Camera.AbsoluteDirection, Camera.AbsoluteUp, Camera.AbsoluteSide, 0.2, Camera.AbsolutePosition, T);
+					}
+				}
+			}
 
 			// overlay (cab / interior) layer
 			OptionFog = false;

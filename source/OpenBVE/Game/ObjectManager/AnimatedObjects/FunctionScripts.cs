@@ -1253,18 +1253,7 @@ namespace OpenBve {
 							{
 								stationIdx = Train.LastStation;
 							}
-							int n = Program.CurrentRoute.Stations[stationIdx].GetStopIndex(Train.NumberOfCars);
-							double p0 = Train.FrontCarTrackPosition;
-							double p1;
-							if (Program.CurrentRoute.Stations[stationIdx].Stops.Length > 0)
-							{
-								p1 = Program.CurrentRoute.Stations[stationIdx].Stops[n].TrackPosition;
-							}
-							else
-							{
-								p1 = Program.CurrentRoute.Stations[stationIdx].DefaultTrackPosition;
-							}
-							Function.Stack[s] = p1 - p0;
+							Function.Stack[s] = Program.CurrentRoute.Stations[stationIdx].GetStopPosition(Train.NumberOfCars) - Train.FrontCarTrackPosition;
 						}
 						s++; break;
 					case Instructions.DistanceLastStation:
@@ -1290,19 +1279,8 @@ namespace OpenBve {
 							{
 								stationIdx = 0;
 							}
-							
-							int n = Program.CurrentRoute.Stations[stationIdx].GetStopIndex(Train.NumberOfCars);
-							double p0 = Train.FrontCarTrackPosition;
-							double p1;
-							if (Program.CurrentRoute.Stations[stationIdx].Stops.Length > 0)
-							{
-								p1 = Program.CurrentRoute.Stations[stationIdx].Stops[n].TrackPosition;
-							}
-							else
-							{
-								p1 = Program.CurrentRoute.Stations[stationIdx].DefaultTrackPosition;
-							}
-							Function.Stack[s] = p1 - p0;
+
+							Function.Stack[s] = Program.CurrentRoute.Stations[stationIdx].GetStopPosition(Train.NumberOfCars) - Train.FrontCarTrackPosition;
 						}
 						s++; break;
 					case Instructions.StopsNextStation:
@@ -1341,18 +1319,7 @@ namespace OpenBve {
 							}
 							else
 							{
-								int n = Program.CurrentRoute.Stations[stationIdx].GetStopIndex(Train.NumberOfCars);
-								double p0 = Train.FrontCarTrackPosition;
-								double p1;
-								if (Program.CurrentRoute.Stations[stationIdx].Stops.Length > 0)
-								{
-									p1 = Program.CurrentRoute.Stations[stationIdx].Stops[n].TrackPosition;
-								}
-								else
-								{
-									p1 = Program.CurrentRoute.Stations[stationIdx].DefaultTrackPosition;
-								}
-								Function.Stack[s - 1] = p1 - p0;
+								Function.Stack[s - 1] = Program.CurrentRoute.Stations[stationIdx].GetStopPosition(Train.NumberOfCars) - Train.FrontCarTrackPosition;
 							}
 						}
 						else

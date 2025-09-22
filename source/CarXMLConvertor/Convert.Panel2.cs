@@ -57,8 +57,8 @@ namespace CarXmlConvertor
 	            }
 				else if (Lines[i].IndexOf('=') != -1)
 	            {
-		            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
-		            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+		            string a = Lines[i].Substring(0, j).TrimEnd();
+		            string b = Lines[i].Substring(j + 1).TrimStart();
 					newLines.Add("<" + a + ">" + b.Escape() + "</"+ a + ">");
 	            }
             }

@@ -159,7 +159,7 @@ namespace AssimpNET.Obj
 							if (Buffer[DataIt] == 'a')  // Ambient color
 							{
 								++DataIt;
-								GetColorRGBA(ref Model.CurrentMaterial.Ambient);
+								GetColorRGB(ref Model.CurrentMaterial.Ambient);
 							}
 							else if (Buffer[DataIt] == 'd')    // Diffuse color
 							{
@@ -169,12 +169,12 @@ namespace AssimpNET.Obj
 							else if (Buffer[DataIt] == 's')
 							{
 								++DataIt;
-								GetColorRGBA(ref Model.CurrentMaterial.Specular);
+								GetColorRGB(ref Model.CurrentMaterial.Specular);
 							}
 							else if (Buffer[DataIt] == 'e')
 							{
 								++DataIt;
-								GetColorRGBA(ref Model.CurrentMaterial.Emissive);
+								GetColorRGB(ref Model.CurrentMaterial.Emissive);
 							}
 							DataIt = SkipLine(DataIt, DataEnd, ref Line);
 						}
@@ -185,7 +185,7 @@ namespace AssimpNET.Obj
 							if (Buffer[DataIt] == 'f')  // Material transmission
 							{
 								++DataIt;
-								GetColorRGBA(ref Model.CurrentMaterial.Transparent);
+								GetColorRGB(ref Model.CurrentMaterial.Transparent);
 								Model.CurrentMaterial.TransparentUsed = true;
 							}
 							DataIt = SkipLine(DataIt, DataEnd, ref Line);
@@ -250,8 +250,33 @@ namespace AssimpNET.Obj
 			}
 		}
 
-		//  Loads a color definition
 		private void GetColorRGBA(ref Color128 color)
+		{
+			GetFloat(out color.R);
+
+			// we have to check if color is default 0 with only one token
+			if (!IsLineEnd(DataIt))
+			{
+				try
+				{
+					GetFloat(out color.G);
+					GetFloat(out color.B);
+					GetFloat(out color.A);
+				}
+				catch
+				{
+					/*
+					 * HACK:
+					 * Using a try/ catch block here so that we don't blow up
+					 * if our color is missing a component or ends with whitespace
+					 * unexpectedly
+					 */
+				}
+			}
+		}
+
+		//  Loads a color definition
+		private void GetColorRGB(ref Color96 color)
 		{
 			GetFloat(out color.R);
 

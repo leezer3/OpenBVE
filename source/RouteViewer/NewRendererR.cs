@@ -151,16 +151,6 @@ namespace RouteViewer
 			GL.Disable(EnableCap.DepthTest);
 			Program.CurrentRoute.UpdateBackground(timeElapsed, false);
 
-			if (OptionEvents)
-			{
-				for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
-				{
-					int railIndex = Program.CurrentRoute.Tracks.ElementAt(i).Key;
-					RenderEvents(railIndex);
-				}
-				
-			}
-
 			// fog
 			float aa = Program.CurrentRoute.CurrentFog.Start;
 			float bb = Program.CurrentRoute.CurrentFog.End;
@@ -325,6 +315,30 @@ namespace RouteViewer
 				GL.PopMatrix();
 			}
 
+			if (OptionEvents)
+			{
+				if (Math.Abs(CameraTrackFollower.TrackPosition - lastTrackPosition) > 50)
+				{
+					lastTrackPosition = CameraTrackFollower.TrackPosition;
+					CubesToDraw.Clear();
+					for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
+					{
+						int railIndex = Program.CurrentRoute.Tracks.ElementAt(i).Key;
+						FindEvents(railIndex);
+					}
+				}
+				
+
+				for (int i = 0; i < CubesToDraw.Count; i++)
+				{
+					Texture T = CubesToDraw.ElementAt(i).Key;
+					foreach (Vector3 v in CubesToDraw[T])
+					{
+						Cube.Draw(v, Camera.AbsoluteDirection, Camera.AbsoluteUp, Camera.AbsoluteSide, 0.2, Camera.AbsolutePosition, T);
+					}
+				}
+
+			}
 
 			// render overlays
 			if (AvailableNewRenderer)
@@ -341,7 +355,11 @@ namespace RouteViewer
 			OptionLighting = true;
 		}
 
-		private void RenderEvents(int railIndex)
+		private double lastTrackPosition;
+
+		/// <summary>Finds visible events on a rail index</summary>
+		/// <param name="railIndex">The rail index</param>
+		internal void FindEvents(int railIndex)
 		{
 			if (Program.CurrentRoute.Tracks[railIndex].Elements == null)
 			{
@@ -361,57 +379,49 @@ namespace RouteViewer
 			for (int i = 0; i < Program.CurrentRoute.Tracks[railIndex].Elements.Length; i++)
 			{
 				double p = Program.CurrentRoute.Tracks[railIndex].Elements[i].StartingTrackPosition;
-				double d = p - CameraTrackFollower.TrackPosition;
+				double d = p -CameraTrackFollower.TrackPosition;
 
 				if (d >= da & d <= db)
 				{
 					foreach (GeneralEvent e in Program.CurrentRoute.Tracks[railIndex].Elements[i].Events)
 					{
 						double dy, dx = 0.0, dz = 0.0;
-						double s;
 						Texture t;
 
 						if (e is BrightnessChangeEvent)
 						{
-							s = 0.15;
 							dy = 4.0;
 							t = BrightnessChangeTexture;
 						}
 						else if (e is BackgroundChangeEvent)
 						{
-							s = 0.25;
 							dy = 3.5;
 							t = BackgroundChangeTexture;
 						}
 						else if (e is StationStartEvent startEvent)
 						{
-							s = 0.25;
 							dy = 1.6;
 							t = StationStartTexture;
 							sta[startEvent.StationIndex] = true;
 						}
 						else if (e is StationEndEvent endEvent)
 						{
-							s = 0.25;
 							dy = 1.6;
 							t = StationEndTexture;
 							sta[endEvent.StationIndex] = true;
 						}
 						else if (e is LimitChangeEvent)
 						{
-							s = 0.2;
 							dy = 1.1;
 							t = LimitTexture;
 						}
 						else if (e is SectionChangeEvent)
 						{
-							s = 0.2;
 							dy = 0.8;
 							t = SectionTexture;
 						}
 						else if (e is TransponderEvent transponderEvent)
 						{
-							s = 0.15;
 							dy = 0.4;
 							// beacon type 21 is reserved for legacy weather events
 							t = transponderEvent.Type == 21 ? WeatherEventTexture : TransponderTexture;
@@ -419,7 +429,6 @@ namespace RouteViewer
 						}
 						else if (e is SoundEvent soundEvent)
 						{
-							s = 0.2;
 							dx = soundEvent.Position.X;
 							dy = soundEvent.Position.Y < 0.1 ? 0.1 : soundEvent.Position.Y;
 							dz = soundEvent.Position.Z;
@@ -427,7 +436,6 @@ namespace RouteViewer
 						}
 						else if (e is PointSoundEvent)
 						{
-							s = 0.2;
 							dx = 0;
 							dy = 0.2;
 							dz = 0;
@@ -435,19 +443,16 @@ namespace RouteViewer
 						}
 						else if (e is RailSoundsChangeEvent)
 						{
-							s = 0.2;
 							dy = 0.8;
 							t = RunSoundTexture;
 						}
 						else if (e is LightingChangeEvent)
 						{
-							s = 0.2;
 							dy = 1.5;
 							t = LightingEventTexture;
 						}
 						else
 						{
-							s = 0.2;
 							dy = 1.0;
 							t = null;
 						}
@@ -460,12 +465,22 @@ namespace RouteViewer
 								TrackPosition = p,
 								TrackIndex = railIndex
 							};
-							f.UpdateAbsolute(p + e.TrackPositionDelta, true, false);
-							f.WorldPosition.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
-							f.WorldPosition.Y += dx * f.WorldSide.Y + dy * f.WorldUp.Y + dz * f.WorldDirection.Y;
-							f.WorldPosition.Z += dx * f.WorldSide.Z + dy * f.WorldUp.Z + dz * f.WorldDirection.Z;
 
-							Cube.Draw(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera.AbsolutePosition, t);
+							f.UpdateAbsolute(p + e.TrackPositionDelta, true, false);
+							Vector3 cubePos = new Vector3(f.WorldPosition);
+							cubePos.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
+							cubePos.Y += dx * f.WorldSide.Y + dy * f.WorldUp.Y + dz * f.WorldDirection.Y;
+							cubePos.Z += dx * f.WorldSide.Z + dy * f.WorldUp.Z + dz * f.WorldDirection.Z;
+
+							if (CubesToDraw.ContainsKey(t))
+							{
+								CubesToDraw[t].Add(cubePos);
+							}
+							else
+							{
+								CubesToDraw.Add(t, new HashSet<Vector3>());
+								CubesToDraw[t].Add(cubePos);
+							}
 						}
 					}
 				}
@@ -529,9 +544,8 @@ namespace RouteViewer
 					Cube.Draw(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera.AbsolutePosition, BufferTexture);
 				}
 			}
-
-			OptionLighting = true;
 		}
+	
 
 		private void RenderOverlays(double timeElapsed)
 		{

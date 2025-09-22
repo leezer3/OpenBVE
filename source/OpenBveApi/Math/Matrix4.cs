@@ -788,6 +788,6 @@ namespace OpenBveApi.Math
 		public static readonly Matrix4D NoTransformation = new Matrix4D(Vector4.UnitX, Vector4.UnitY, Vector4.UnitZ, Vector4.UnitW);
 
 		/// <summary>Represents an identity matrix</summary>
-		public static Matrix4D Identity = new Matrix4D(Vector4.UnitX, Vector4.UnitY, Vector4.UnitZ, Vector4.UnitW);
+		public static readonly Matrix4D Identity = new Matrix4D(Vector4.UnitX, Vector4.UnitY, Vector4.UnitZ, Vector4.UnitW);
 	}
 }

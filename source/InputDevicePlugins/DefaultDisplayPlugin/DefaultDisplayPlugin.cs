@@ -214,7 +214,7 @@ namespace DefaultDisplayPlugin
 					{
 						if (Lines[i].StartsWith("[", StringComparison.Ordinal) &
 							Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { }).ToLowerInvariant();
+							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim().ToLowerInvariant();
 						}
 						else
 						{
@@ -223,7 +223,7 @@ namespace DefaultDisplayPlugin
 							if (j >= 0)
 							{
 								Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-								Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
+								Value = Lines[i].Substring(j + 1).TrimStart();
 							}
 							else
 							{

@@ -424,7 +424,7 @@ namespace ObjectViewer {
 			return TrainManagerBase.PlayerTrain;
 		}
 
-		public override AbstractTrain ClosestTrain(double TrackPosition)
+		public override AbstractTrain ClosestTrain(Vector3 worldPosition)
 		{
 			return TrainManagerBase.PlayerTrain;
 		}
