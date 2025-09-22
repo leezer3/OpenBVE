@@ -367,6 +367,7 @@ namespace OpenBve.Formats.MsTs
 		private readonly CurrentConverter currentConverter = new CurrentConverter();
 		private readonly PressureConverter pressureConverter = new PressureConverter();
 		private readonly VelocityConverter velocityConvertor = new VelocityConverter();
+		private readonly TorqueConverter torqueConvertor = new TorqueConverter();
 
 		private TextualBlock(string text, bool textIsClean)
 		{
@@ -1011,6 +1012,15 @@ namespace OpenBve.Formats.MsTs
 				}
 
 				parsedNumber = (float)velocityConvertor.Convert(parsedNumber, VelocityConverter.KnownUnits[Unit], (UnitOfVelocity)(object)desiredUnit);
+			}
+			else if (desiredUnit is UnitOfTorque)
+			{
+				if (!TorqueConverter.KnownUnits.ContainsKey(Unit))
+				{
+					throw new InvalidDataException("Unknown or unexpected torque unit " + Unit + " encountered in block " + Token);
+				}
+
+				parsedNumber = (float)torqueConvertor.Convert(parsedNumber, TorqueConverter.KnownUnits[Unit], (UnitOfTorque)(object)desiredUnit);
 			}
 			return parsedNumber;
 		}

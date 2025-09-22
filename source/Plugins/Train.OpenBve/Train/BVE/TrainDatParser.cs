@@ -1087,7 +1087,7 @@ namespace Train.OpenBve
 			Train.Cars = new CarBase[Cars];
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				Train.Cars[i] = new CarBase(Train, i, CoefficientOfStaticFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
+				Train.Cars[i] = new CarBase(Train, i);
 			}
 			double DistanceBetweenTheCars = 0.3;
 			
