@@ -86,6 +86,7 @@ namespace TrainEditor {
 				string folder = Program.FileSystem.GetDataFolder("Languages");
 				Translations.LoadLanguageFiles(folder);
 				Translations.ListLanguages(comboboxLanguages);
+				Translations.SelectedLanguage(ref CurrentLanguageCode, comboboxLanguages);
 				ApplyLanguage();
 			}
 		}
@@ -392,9 +393,8 @@ namespace TrainEditor {
 				Box.SelectAll();
 				Box.Focus();
 				return false;
-			} else {
-				return true;
 			}
+			return true;
 		}
 
 		
@@ -429,7 +429,7 @@ namespace TrainEditor {
 		
 		// open
 		private void ButtonOpenClick(object sender, EventArgs e) {
-			switch (MessageBox.Show(Translations.GetInterfaceString(HostApplication.TrainEditor, new [] {"general","open_message"}), "Open", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+			switch (MessageBox.Show(Translations.GetInterfaceString(HostApplication.TrainEditor, new [] {"general","open_message"}), Translations.GetInterfaceString(HostApplication.TrainEditor, new[] { "general", "open" }), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
 			{
 				case DialogResult.Yes:
 					if (buttonSave.Enabled) {
@@ -442,7 +442,7 @@ namespace TrainEditor {
 					return;
 			}
 			using (OpenFileDialog Dialog = new OpenFileDialog()) {
-				Dialog.Filter = "train.dat files|train.dat|All files|*";
+				Dialog.Filter = @"train.dat files|train.dat|All files|*";
 				Dialog.CheckFileExists = true;
 				if (Dialog.ShowDialog() == DialogResult.OK) {
 					try {
@@ -451,7 +451,7 @@ namespace TrainEditor {
 						this.Text = System.IO.Path.GetFileName(Path.GetDirectoryName(FileName)) + @" - " + Application.ProductName;
 						buttonSave.Enabled = true;
 					} catch (Exception ex) {
-						MessageBox.Show(ex.Message, "Open", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						MessageBox.Show(ex.Message, Translations.GetInterfaceString(HostApplication.TrainEditor, new[] { "general", "open" }), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 						FileName = null;
 						Train = new TrainDat.Train();
 						this.Text = Application.ProductName;
@@ -475,7 +475,7 @@ namespace TrainEditor {
 						TrainDat.Save(FileName, Train);
 						System.Media.SystemSounds.Asterisk.Play();
 					} catch (Exception ex) {
-						MessageBox.Show(ex.Message, "Save", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						MessageBox.Show(ex.Message, Translations.GetInterfaceString(HostApplication.TrainEditor, new[] { "general", "save" }), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					}
 				} else {
 					System.Media.SystemSounds.Hand.Play();
@@ -495,7 +495,7 @@ namespace TrainEditor {
 							TrainDat.Save(FileName, Train);
 							this.Text = System.IO.Path.GetFileName(Path.GetDirectoryName(FileName)) + @" - " + Application.ProductName;
 						} catch (Exception ex) {
-							MessageBox.Show(ex.Message, "Save as", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							MessageBox.Show(ex.Message, Translations.GetInterfaceString(HostApplication.TrainEditor, new[] { "general", "save_as" }), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 						}
 						LoadControlContent();
 					}
@@ -557,14 +557,14 @@ namespace TrainEditor {
 			int height = pictureboxAcceleration.ClientRectangle.Height;
 			// horizontal grid
 			for (float y = 0.0f; y <= AccelerationMaximumY; y += 1.0f) {
-				float yf = (1.0f - y / AccelerationMaximumY) * (float)height;
+				float yf = (1.0f - y / AccelerationMaximumY) * height;
 				int yi = (int)Math.Round(yf);
 				e.Graphics.DrawLine(grayPen, new Point(0, yi), new Point(width, yi));
 				e.Graphics.DrawString(y.ToString("0", culture), font, grayBrush, new PointF(1.0f, yf));
 			}
 			// vertical grid
 			for (float x = 0.0f; x <= AccelerationMaximumX; x += 10.0f) {
-				float xf = x / AccelerationMaximumX * (float)width;
+				float xf = x / AccelerationMaximumX * width;
 				int xi = (int)Math.Round(xf);
 				e.Graphics.DrawLine(grayPen, new Point(xi, 0), new Point(xi, height));
 				if (x != 0.0f) {
@@ -590,10 +590,10 @@ namespace TrainEditor {
 			Point[] points = new Point[pictureboxAcceleration.ClientRectangle.Width];
 			double factorX = AccelerationMaximumX / (double)pictureboxAcceleration.ClientRectangle.Width;
 			double factorY = -(double)pictureboxAcceleration.ClientRectangle.Height / AccelerationMaximumY;
-			double offsetY = (double)pictureboxAcceleration.ClientRectangle.Height;
+			double offsetY = pictureboxAcceleration.ClientRectangle.Height;
 			bool resistance = checkboxAccelerationSubtractDeceleration.Checked;
 			for (int x = 0; x < pictureboxAcceleration.ClientRectangle.Width; x++) {
-				double speed = (double)x * factorX;
+				double speed = x * factorX;
 				double a;
 				if (resistance) {
 					a = Math.Max(GetAcceleration(Index, speed) - GetDeceleration(speed), 0.0);
@@ -645,7 +645,7 @@ namespace TrainEditor {
 
 		// mouse move
 		private void PictureboxAccelerationMouseMove(object sender, MouseEventArgs e) {
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+			CultureInfo Culture = CultureInfo.InvariantCulture;
 			double x = (double)e.X / (double)(pictureboxAcceleration.ClientRectangle.Width - 1);
 			double y = (1.0 - (double)e.Y / (double)(pictureboxAcceleration.ClientRectangle.Height - 1));
 			x = AccelerationMaximumX * x;
@@ -1261,9 +1261,9 @@ namespace TrainEditor {
 		}
 		private void MotorMouseUp(MouseEventArgs e, TrainDat.Motor Motor, PictureBox Box) {
 			if (MotorSelectionBox != null) {
-				float width = (float)Box.ClientRectangle.Width;
-				float height = (float)Box.ClientRectangle.Height;
-				float x = MotorMinimumX + (MotorMaximumX - MotorMinimumX) * (float)e.X / (float)width;
+				float width = Box.ClientRectangle.Width;
+				float height = Box.ClientRectangle.Height;
+				float x = MotorMinimumX + (MotorMaximumX - MotorMinimumX) * (float)e.X / width;
 				x = 0.2f * (float)Math.Round(5.0 * (double)x);
 				int ia = (int)Math.Round((double)(5.0 * MotorSelectionStartX));
 				int ib = (int)Math.Round((double)(5.0 * x));
@@ -1663,7 +1663,7 @@ namespace TrainEditor {
 					Label l = new Label
 					{
 						Location = new Point(140, currentPosition + 3),
-						Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"delay","notch"}) + @" " + (object)index
+						Text = Translations.GetInterfaceString(HostApplication.TrainEditor, new[] {"delay","notch"}) + @" " + index
 					};
 					formDelay.Controls.Add(l);
 					currentPosition += 25;
@@ -1691,7 +1691,7 @@ namespace TrainEditor {
 				{
 					if (formDelay.Controls[i] is TextBox)
 					{
-						if (this.SaveControlContent((TextBox)formDelay.Controls[i], delayType + (object)i, this.tabpagePropertiesOne, formEditor.NumberRange.NonNegative, out delayValues[arrayIndex]))
+						if (this.SaveControlContent((TextBox)formDelay.Controls[i], delayType + i, this.tabpagePropertiesOne, formEditor.NumberRange.NonNegative, out delayValues[arrayIndex]))
 						{
 							arrayIndex++;
 						}

@@ -900,10 +900,9 @@ namespace OpenBve.Formats.MsTs
 		public override string[] ReadStringArray()
 		{
 			List<string> strings = new List<string>();
-			string s;
 			while (true)
 			{
-				s = ReadString();
+				string s = ReadString();
 				if (s != string.Empty)
 				{
 					strings.Add(s);
