@@ -183,6 +183,9 @@ namespace Train.MsTs
 				}
 			}
 
+			currentCar.FrontAxle = new MSTSAxle(Plugin.CurrentHost, train, currentCar, friction, adhesion);
+			currentCar.RearAxle = new MSTSAxle(Plugin.CurrentHost, train, currentCar, friction, adhesion);
+
 			if (soundFiles.Count > 0)
 			{
 				for (int i = 0; i < soundFiles.Count; i++)
@@ -340,6 +343,8 @@ namespace Train.MsTs
 		private Gear[] Gears;
 		private double maxSandingSpeed;
 		private CouplingType couplingType;
+		private Friction friction;
+		private Adhesion adhesion;
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
@@ -945,9 +950,10 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Friction:
-					Friction friction = new Friction(block);
-					car.FrontAxle = new MSTSAxle(Plugin.CurrentHost, train, car, friction);
-					car.RearAxle = new MSTSAxle(Plugin.CurrentHost, train, car, friction);
+					friction = new Friction(block);
+					break;
+				case KujuTokenID.Adheasion:
+					adhesion = new Adhesion(block, car, currentEngineType == EngineType.Steam);
 					break;
 				case KujuTokenID.Coupling:
 					while (block.Position() < block.Length() - 2)
