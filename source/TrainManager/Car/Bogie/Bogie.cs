@@ -19,10 +19,10 @@ namespace TrainManager.Car
 		public double Length;
 #pragma warning restore 0649
 		/// <summary>Front axle about which the bogie pivots</summary>
-		public readonly Axle FrontAxle;
+		public readonly AbstractAxle FrontAxle;
 
 		/// <summary>Rear axle about which the bogie pivots</summary>
-		public readonly Axle RearAxle;
+		public readonly AbstractAxle RearAxle;
 
 		internal Vector3 Up;
 
@@ -47,9 +47,9 @@ namespace TrainManager.Car
 			Rear = IsRear;
 			CarSections = new CarSection[] { };
 			CurrentCarSection = -1;
-			FrontAxle = new Axle(TrainManagerBase.currentHost, car.baseTrain, car);
+			FrontAxle = new BVEAxle(TrainManagerBase.currentHost, car.baseTrain, car);
 			FrontAxle.Follower.TriggerType = EventTriggerType.FrontBogieAxle;
-			RearAxle = new Axle(TrainManagerBase.currentHost, car.baseTrain, car);
+			RearAxle = new BVEAxle(TrainManagerBase.currentHost, car.baseTrain, car);
 			RearAxle.Follower.TriggerType = EventTriggerType.RearBogieAxle;
 		}
 
@@ -104,6 +104,10 @@ namespace TrainManager.Car
 				}
 
 				CarSections[cs].Groups[0].Keyframes?.Update(baseCar.TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+				if (CarSections[cs].CurrentAdditionalGroup + 1 < CarSections[cs].Groups.Length)
+				{
+					CarSections[cs].Groups[CarSections[cs].CurrentAdditionalGroup + 1].Keyframes?.Update(baseCar.TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+				}
 			}
 		}
 
@@ -147,6 +151,13 @@ namespace TrainManager.Car
 				for (int j = 0; j < CarSections[i].Groups[0].Elements.Length; j++)
 				{
 					TrainManagerBase.currentHost.HideObject(CarSections[i].Groups[0].Elements[j].internalObject);
+				}
+				if (CarSections[i].Groups[0].Keyframes != null)
+				{
+					for (int j = 0; j < CarSections[i].Groups[0].Keyframes.Objects.Length; j++)
+					{
+						TrainManagerBase.currentHost.HideObject(CarSections[i].Groups[0].Keyframes.Objects[j]);
+					}
 				}
 			}
 
@@ -211,7 +222,15 @@ namespace TrainManager.Car
 				//FRONT BOGIE
 
 				// get direction, up and side vectors
-				Vector3 d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+				Vector3 d;
+				if (FrontAxle.Follower.WorldPosition == RearAxle.Follower.WorldPosition)
+				{
+					d = FrontAxle.Follower.WorldPosition;
+				}
+				else
+				{
+					d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+				}
 				Vector3 s;
 				{
 					double t = 1.0 / d.Norm();

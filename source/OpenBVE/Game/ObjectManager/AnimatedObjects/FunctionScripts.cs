@@ -1,7 +1,9 @@
 using System;
 using LibRender2.Overlays;
+using OpenBveApi;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
+using OpenBveApi.Motor;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using TrainManager.Car.Systems;
@@ -1855,6 +1857,11 @@ namespace OpenBve {
 										totalMotors++;
 										ampsTotal += t.CurrentAmps;
 									}
+									else if (dieselEngine.Components[EngineComponent.RegenerativeTractionMotor] is RegenerativeTractionMotor rt)
+									{
+										totalMotors++;
+										ampsTotal += rt.CurrentAmps;
+									}
 								}
 							}
 
@@ -1886,6 +1893,10 @@ namespace OpenBve {
 										
 										Function.Stack[s - 1] = t.CurrentAmps;
 									}
+									else if (dieselEngine.Components[EngineComponent.RegenerativeTractionMotor] is RegenerativeTractionMotor rt)
+									{
+										Function.Stack[s - 1] = rt.CurrentAmps;
+									}
 								}
 								else
 								{
@@ -1902,6 +1913,26 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.PantographState:
+					{
+						if (Train != null)
+						{
+							int pantographState = 0;
+							for (int k = 0; k < Train.Cars.Length; k++)
+							{
+								if (Train.Cars[k].TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph))
+								{
+									pantographState = (int)pantograph.State;
+									break;
+								}
+							}
+							Function.Stack[s] = pantographState;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+					} s++; break;
 					// default
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");
