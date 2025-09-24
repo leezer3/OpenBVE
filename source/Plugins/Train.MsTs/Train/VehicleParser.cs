@@ -339,6 +339,7 @@ namespace Train.MsTs
 		private Exhaust Exhaust;
 		private Gear[] Gears;
 		private double maxSandingSpeed;
+		private CouplingType couplingType;
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
@@ -505,20 +506,29 @@ namespace Train.MsTs
 					car.CarBrake.JerkDown = 10;
 					break;
 				case KujuTokenID.Type:
-					if (isEngine)
+					switch (block.ParentBlock.Token)
 					{
-						currentEngineType = block.ReadEnumValue(default(EngineType));
-					}
-					else
-					{
-						try
-						{
-							WagonType type = block.ReadEnumValue(default(WagonType));
-						}
-						catch
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Invalid vehicle type specified.");
-						}
+						case KujuTokenID.Engine:
+						case KujuTokenID.Wagon:
+							if (isEngine)
+							{
+								currentEngineType = block.ReadEnumValue(default(EngineType));
+							}
+							else
+							{
+								try
+								{
+									WagonType type = block.ReadEnumValue(default(WagonType));
+								}
+								catch
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Invalid vehicle type specified.");
+								}
+							}
+							break;
+						case KujuTokenID.Coupling:
+							couplingType = block.ReadEnumValue(default(CouplingType));
+							break;
 					}
 					break;
 				case KujuTokenID.DieselEngineType:
@@ -938,6 +948,38 @@ namespace Train.MsTs
 					Friction friction = new Friction(block);
 					car.FrontAxle = new MSTSAxle(Plugin.CurrentHost, train, car, friction);
 					car.RearAxle = new MSTSAxle(Plugin.CurrentHost, train, car, friction);
+					break;
+				case KujuTokenID.Coupling:
+					while (block.Position() < block.Length() - 2)
+					{
+						newBlock = block.ReadSubBlock();
+						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
+					}
+					break;
+				case KujuTokenID.Spring:
+					while (block.Position() < block.Length() - 2)
+					{
+						newBlock = block.ReadSubBlock();
+						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
+					}
+					break;
+				case KujuTokenID.r0:
+					try
+					{
+						car.Coupler.MinimumDistanceBetweenCars = block.ReadSingle(UnitOfLength.Meter);
+						car.Coupler.MaximumDistanceBetweenCars = couplingType != CouplingType.Bar ? block.ReadSingle(UnitOfLength.Meter) : car.Coupler.MinimumDistanceBetweenCars;
+					}
+					catch
+					{
+						// ignored
+					}
+
+					if (car.Coupler.MaximumDistanceBetweenCars > 2)
+					{
+						// some automatic / bar couplers seem to have absurd maximum distances
+						// so let's assume they're no good
+						car.Coupler.MaximumDistanceBetweenCars = car.Coupler.MinimumDistanceBetweenCars;
+					}
 					break;
 			}
 			return true;
