@@ -47,6 +47,8 @@ namespace TrainManager.Motor
 			{
 				Message = @"n/a";
 			}
+
+			MaximumPossibleAcceleration = AccelerationCurves[0].MaximumAcceleration;
 		}
 
 		public override double CurrentPower

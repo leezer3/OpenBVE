@@ -68,6 +68,7 @@
     <Compile Include="Panel\FrameMapping.cs" />
     <Compile Include="Sound\SmsParser.cs" />
     <Compile Include="Sound\TriggerTypes.cs" />
+    <Compile Include="Train\Adhesion.cs" />
     <Compile Include="Train\ConsistParser.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
