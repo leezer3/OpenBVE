@@ -8,10 +8,13 @@ namespace Train.MsTs
 	{
 		/// <summary>The friction properties</summary>
 		private readonly Friction FrictionProperties;
+		/// <summary>The adhesion properties</summary>
+		private readonly Adhesion AdhesionProperties;
 
-		internal MSTSAxle(HostInterface currentHost, AbstractTrain train, AbstractCar car, Friction friction) : base(currentHost, train, car)
+		internal MSTSAxle(HostInterface currentHost, AbstractTrain train, AbstractCar car, Friction friction, Adhesion adhesion) : base(currentHost, train, car)
 		{
 			FrictionProperties = friction;
+			AdhesionProperties = adhesion;
 		}
 
 		public override double GetResistance(double Speed, double FrontalArea, double AirDensity, double AccelerationDueToGravity)
@@ -21,9 +24,7 @@ namespace Train.MsTs
 
 		public override double CriticalWheelSlipAccelerationForElectricMotor(double AccelerationDueToGravity)
 		{
-			// TODO: This is the BVE formula
-			double NormalForceAcceleration = Follower.WorldUp.Y * AccelerationDueToGravity;
-			return 0.35 * Follower.AdhesionMultiplier * NormalForceAcceleration;
+			return AdhesionProperties.GetWheelslipValue();
 		}
 
 		public override double CriticalWheelSlipAccelerationForFrictionBrake(double AccelerationDueToGravity)
