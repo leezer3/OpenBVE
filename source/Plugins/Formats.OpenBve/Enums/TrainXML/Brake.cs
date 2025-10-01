@@ -21,6 +21,7 @@
 		EmergencyRate,
 		ReleaseRate,
 		Handle,
+		Volume,
 		LegacyPressureDistribution
 	}
 }

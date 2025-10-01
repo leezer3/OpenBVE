@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace TrainManager.BrakeSystems
 {
@@ -15,6 +15,8 @@ namespace TrainManager.BrakeSystems
 		internal readonly double BrakePipeCoefficient;
 		/// <summary>The co-efficient used when transferring pressure to the brake cylinder</summary>
 		internal readonly double BrakeCylinderCoefficient;
+		/// <summary>The volume of the reservoir</summary>
+		public double Volume;
 
 		public AuxiliaryReservoir(double maximumPressure, double chargeRate, double brakePipeCoefficient, double brakeCylinderCoefficent)
 		{
@@ -39,6 +41,8 @@ namespace TrainManager.BrakeSystems
 		public double CurrentPressure;
 		/// <summary>The normal pressure</summary>
 		public double NormalPressure;
+		/// <summary>The volume of the reservoir</summary>
+		public double Volume;
 
 		public EqualizingReservoir(double serviceRate, double emergencyRate, double chargeRate)
 		{
@@ -71,6 +75,8 @@ namespace TrainManager.BrakeSystems
 		internal readonly double EqualizingReservoirCoefficient;
 		/// <summary>The co-efficient used when transferring pressure to the brake pipe</summary>
 		internal readonly double BrakePipeCoefficient;
+		/// <summary>The volume of the reservoir</summary>
+		public double Volume;
 
 		/// <summary>Creates a functional main reservoir</summary>
 		public MainReservoir(double minimumPressure, double maximumPressure, double equalizingReservoirCoefficient, double brakePipeCoefficient)
