@@ -337,7 +337,8 @@ namespace Plugin
 							Array.Resize(ref Result.Objects, Result.Sounds.Length << 1);
 						}
 						string[] fileNames = new string[1]; // hack to allow both
-						if (Block.GetPath(AnimatedKey.FileName, Folder, out fileNames[0]) || Block.GetPathArray(AnimatedKey.FileNames, ',', Folder, ref fileNames))
+						bool singleBuffer = Block.GetPath(AnimatedKey.FileName, Folder, out fileNames[0]);
+						if (singleBuffer || Block.GetPathArray(AnimatedKey.FileNames, ',', Folder, ref fileNames))
 						{
 							double pitch = 1.0, volume = 1.0, radius = 30;
 							Block.GetVector3(AnimatedKey.Position, ',', out Position);
@@ -369,6 +370,7 @@ namespace Plugin
 								snd.SingleBuffer = fileNames.Length != 1;
 								snd.PlayOnShow = playOnShow;
 								snd.PlayOnHide = playOnHide;
+								snd.SingleBuffer = singleBuffer;
 								Result.Sounds[SoundCount] = snd;
 								SoundCount++;
 								Result.Objects[ObjectCount - 1] = null;
