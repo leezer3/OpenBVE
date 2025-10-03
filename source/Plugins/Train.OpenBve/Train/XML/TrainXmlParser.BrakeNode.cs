@@ -18,6 +18,11 @@ namespace Train.OpenBve
 			double auxiliaryReservoirChargeRate = 200000.0;
 			double equalizingReservoirChargeRate = 200000.0, equalizingReservoirServiceRate = 50000.0, equalizingReservoirEmergencyRate = 250000.0;
 			double brakePipeNormalPressure = 0.0, brakePipeChargeRate = 10000000.0, brakePipeServiceRate = 1500000.0, brakePipeEmergencyRate = 5000000.0;
+			double brakePipeVolume = Math.Pow(0.0175 * Math.PI, 2) * (Train.Cars.Length * 1.05); // Assuming Railway Group Standards 3.5cm diameter brake pipe, 5% extra length for bends etc.
+			double mainReservoirVolume = 0.5; // Organization for Co-Operation between Railways specifies 340L to 680L main reservoir capacity for EMU, so let's pick something in the middle (in m³)
+			double auxiliaryReservoirVolume = 0.16; // guessed 1/3 of main reservoir volume
+			double equalizingReservoirVolume = 0.015; // very small reservoir for observation, so guess at 15L
+			double brakeCylinderVolume = 0.14; // 35cm diameter, 15cm stroke
 			double straightAirPipeServiceRate = 300000.0, straightAirPipeEmergencyRate = 400000.0, straightAirPipeReleaseRate = 200000.0;
 			double brakeCylinderServiceMaximumPressure = 440000.0, brakeCylinderEmergencyMaximumPressure = 440000.0, brakeCylinderEmergencyRate = 300000.0, brakeCylinderReleaseRate = 200000.0;
 			foreach (XmlNode c in brakeNode.ChildNodes)
@@ -67,6 +72,13 @@ namespace Train.OpenBve
 											compressorMaximumPressure = 780000.0;
 										}
 										break;
+									case BrakeXMLKey.Volume:
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out mainReservoirVolume) | mainReservoirVolume <= 0.0)
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid main reservoir volume defined for Car " + carIndex + " in XML file " + fileName);
+											mainReservoirVolume = 0.5;
+										}
+										break;
 								}
 							}
 						}
@@ -84,6 +96,13 @@ namespace Train.OpenBve
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid auxiliary reservoir charge rate defined for Car " + carIndex + " in XML file " + fileName);
 											auxiliaryReservoirChargeRate = 200000.0;
+										}
+										break;
+									case BrakeXMLKey.Volume:
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out auxiliaryReservoirVolume) | auxiliaryReservoirVolume <= 0.0)
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid auxiliary reservoir volume defined for Car " + carIndex + " in XML file " + fileName);
+											auxiliaryReservoirVolume = 0.5;
 										}
 										break;
 								}
@@ -117,6 +136,13 @@ namespace Train.OpenBve
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid equalizing reservoir emergency rate defined for Car " + carIndex + " in XML file " + fileName);
 											equalizingReservoirEmergencyRate = 50000.0;
+										}
+										break;
+									case BrakeXMLKey.Volume:
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out equalizingReservoirVolume) | equalizingReservoirVolume <= 0.0)
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid equalizing reservoir volume defined for Car " + carIndex + " in XML file " + fileName);
+											equalizingReservoirVolume = 0.015;
 										}
 										break;
 								}
@@ -157,6 +183,13 @@ namespace Train.OpenBve
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid brake pipe emergency rate defined for Car " + carIndex + " in XML file " + fileName);
 											brakePipeEmergencyRate = 400000.0;
+										}
+										break;
+									case BrakeXMLKey.Volume:
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakePipeVolume) | brakePipeVolume <= 0.0)
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid brake pipe volume defined for Car " + carIndex + " in XML file " + fileName);
+											brakePipeVolume = Math.Pow(0.0175 * Math.PI, 2) * Train.Cars.Length;
 										}
 										break;
 								}
@@ -232,6 +265,13 @@ namespace Train.OpenBve
 											brakeCylinderReleaseRate = 200000.0;
 										}
 										break;
+									case BrakeXMLKey.Volume:
+										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakeCylinderVolume) | brakeCylinderVolume <= 0.0)
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid brake cylinder volume defined for Car " + carIndex + " in XML file " + fileName);
+											brakeCylinderVolume = 0.5;
+										}
+										break;
 								}
 							}
 						}
@@ -254,18 +294,23 @@ namespace Train.OpenBve
 			}
 			
 			Train.Cars[carIndex].CarBrake.mainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
+			Train.Cars[carIndex].CarBrake.mainReservoir.Volume = mainReservoirVolume;
 			Train.Cars[carIndex].CarBrake.airCompressor = new Compressor(compressorRate, Train.Cars[carIndex].CarBrake.mainReservoir, Train.Cars[carIndex]);
 			Train.Cars[carIndex].CarBrake.equalizingReservoir = new EqualizingReservoir(equalizingReservoirServiceRate, equalizingReservoirEmergencyRate, equalizingReservoirChargeRate);
 			Train.Cars[carIndex].CarBrake.equalizingReservoir.NormalPressure = 1.005 * brakePipeNormalPressure;
-				
+			Train.Cars[carIndex].CarBrake.equalizingReservoir.Volume = equalizingReservoirVolume;
+
 			Train.Cars[carIndex].CarBrake.brakePipe = new BrakePipe(brakePipeNormalPressure, brakePipeChargeRate, brakePipeServiceRate, brakePipeEmergencyRate, Train.Cars[0].CarBrake is ElectricCommandBrake);
+			Train.Cars[carIndex].CarBrake.brakePipe.Volume = brakePipeVolume;
 			{
 				double r = 200000.0 / brakeCylinderEmergencyMaximumPressure - 1.0;
 				if (r < 0.1) r = 0.1;
 				if (r > 1.0) r = 1.0;
 				Train.Cars[carIndex].CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakePipeNormalPressure, auxiliaryReservoirChargeRate, 0.5, r);
+				Train.Cars[carIndex].CarBrake.auxiliaryReservoir.Volume = auxiliaryReservoirVolume;
 			}
 			Train.Cars[carIndex].CarBrake.brakeCylinder = new BrakeCylinder(brakeCylinderServiceMaximumPressure, brakeCylinderEmergencyMaximumPressure, Train.Handles.Brake is AirBrakeHandle ? brakeCylinderEmergencyRate : 0.3 * brakeCylinderEmergencyRate, brakeCylinderEmergencyRate, brakeCylinderReleaseRate);
+			Train.Cars[carIndex].CarBrake.brakeCylinder.Volume = brakeCylinderVolume;
 			Train.Cars[carIndex].CarBrake.straightAirPipe = new StraightAirPipe(straightAirPipeServiceRate, straightAirPipeEmergencyRate, straightAirPipeReleaseRate);
 		}
 	}

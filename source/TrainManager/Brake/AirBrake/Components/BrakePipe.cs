@@ -15,6 +15,8 @@
 		internal readonly double EmergencyRate;
 		/// <summary>The number of pascals leaked by the brake pipe each second</summary>
 		public readonly double LeakRate = 500000.0;
+		/// <summary>The volume of the brake pipe</summary>
+		public double Volume = 0;
 
 		/// <summary>Creates a functional brake pipe</summary>
 		public BrakePipe(double normalPressure, double chargeRate, double serviceRate, double emergencyRate, bool electricCommand)

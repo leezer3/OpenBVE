@@ -15,6 +15,9 @@
 		internal readonly double ServiceChargeRate;
 		/// <summary>The pressure release rate in Pa/s</summary>
 		internal readonly double ReleaseRate;
+		/// <summary>he brake cylinder volume</summary>
+		public double Volume;
+
 		internal double SoundPlayedForPressure;
 
 		/// <summary>Creates a functional brake cylinder</summary>
