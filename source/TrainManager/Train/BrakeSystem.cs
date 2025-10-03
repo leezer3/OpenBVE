@@ -55,52 +55,25 @@ namespace TrainManager.Trains
 			}
 			else
 			{
-
-				/*
-				 * Notes:
-				 * This algorithm will have a 1 frame (~10ms at 100fps) delay
-				 * in pressure changes rippling down the pipe
-				 *
-				 * For the minute (subject to change), assuming that the charge rate is
-				 * the total from *both* ends of the pipe, so divide by 2
-				 *
-				 */
-
-				int lastMainBrake = 0;
+				double[] tempFlowRates = new double[Cars.Length];
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Cars[i].CarBrake.brakePipe.CurrentPressure -= Cars[i].CarBrake.brakePipe.LeakRate * TimeElapsed;
-					if (Cars[i].CarBrake.brakePipe.CurrentPressure < 0.0) Cars[i].CarBrake.brakePipe.CurrentPressure = 0.0;
-					if (Cars[i].CarBrake.brakeType == BrakeType.Main)
+					if (i > 0)
 					{
-						// If at the end of the train or a compressor we don't need to flow into it
-						bool nextCarIsMainBrake = i == Cars.Length - 1 || Cars[i + 1].CarBrake.brakeType == BrakeType.Main;
-						
-						if (i > 0)
-						{
-							// Back flow
-							for (int j = i; j > lastMainBrake; j--)
-							{
-								double pressureChange = Math.Min(Cars[j].CarBrake.brakePipe.NormalPressure - Cars[j].CarBrake.brakePipe.CurrentPressure, Cars[j].CarBrake.brakePipe.ChargeRate / 2) * TimeElapsed;
-								double pressureDiff = Math.Min(pressureChange, Cars[j].CarBrake.brakePipe.CurrentPressure) * TimeElapsed;
-								Cars[i].CarBrake.brakePipe.CurrentPressure -= pressureDiff;
-								Cars[j].CarBrake.brakePipe.CurrentPressure += pressureDiff;
-							}
-						}
-						// Forwards flow
-						for (int j = i; j < Cars.Length; j++)
-						{
-							double pressureChange = Math.Min(Cars[j].CarBrake.brakePipe.NormalPressure - Cars[j].CarBrake.brakePipe.CurrentPressure, Cars[j].CarBrake.brakePipe.ChargeRate / 2) * TimeElapsed;
-							double pressureDiff = Math.Min(pressureChange, Cars[j].CarBrake.brakePipe.CurrentPressure) * TimeElapsed;
-							Cars[i].CarBrake.brakePipe.CurrentPressure -= pressureDiff;
-							Cars[j].CarBrake.brakePipe.CurrentPressure += pressureDiff;
-							if (nextCarIsMainBrake)
-							{
-								break;
-							}
-						}
-						lastMainBrake = i;
+						// find pressure differential between the two brake pipes
+						// the sign of the number will determine the direction of flow
+						double pressureDifferential = Cars[i].CarBrake.brakePipe.CurrentPressure - Cars[i - 1].CarBrake.brakePipe.CurrentPressure;
+						// two cars, hence pressure equalizes between the two
+						double totalFlow = pressureDifferential / 2.0;
+						tempFlowRates[i] -= totalFlow;
+						tempFlowRates[i - 1] += totalFlow;
 					}
+				}
+
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					Cars[i].CarBrake.brakePipe.CurrentPressure += tempFlowRates[i];
+					Cars[i].CarBrake.brakePipe.CurrentPressure = Math.Max(Cars[i].CarBrake.brakePipe.CurrentPressure, 0);
 				}
 			}
 		}
