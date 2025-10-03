@@ -310,6 +310,7 @@ namespace Train.OpenBve
 				Train.Cars[carIndex].CarBrake.auxiliaryReservoir.Volume = auxiliaryReservoirVolume;
 			}
 			Train.Cars[carIndex].CarBrake.brakeCylinder = new BrakeCylinder(brakeCylinderServiceMaximumPressure, brakeCylinderEmergencyMaximumPressure, Train.Handles.Brake is AirBrakeHandle ? brakeCylinderEmergencyRate : 0.3 * brakeCylinderEmergencyRate, brakeCylinderEmergencyRate, brakeCylinderReleaseRate);
+			Train.Cars[carIndex].CarBrake.brakeCylinder.Volume = brakeCylinderVolume;
 			Train.Cars[carIndex].CarBrake.straightAirPipe = new StraightAirPipe(straightAirPipeServiceRate, straightAirPipeEmergencyRate, straightAirPipeReleaseRate);
 		}
 	}
