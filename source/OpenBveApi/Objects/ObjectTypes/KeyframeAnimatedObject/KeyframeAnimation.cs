@@ -23,6 +23,7 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using OpenBveApi.Math;
+using OpenBveApi.Motor;
 using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
@@ -181,9 +182,36 @@ namespace OpenBveApi.Objects
 						}
 						AnimationKey %= FrameCount;
 					}
+					else if (Name == "PANTOGRAPHBOTTOM1" || Name == "PANTOGRAPHTOP1")
+					{
+						dynamic d = baseCar;
+						// n.b. use pantograph state from the train, as some stuff has pantographs on trailer cars
+						switch (d.baseTrain.Specs.PantographState)
+						{
+							case PantographState.Raised:
+								if (AnimationKey < 1)
+								{
+									AnimationKey += timeElapsed * FrameRate;
+									AnimationKey = System.Math.Min(1, AnimationKey);
+								}
+								break;
+							case PantographState.Lowered:
+							case PantographState.Dewired:// assume that the ADD has activated and dropped it
+								if (AnimationKey > 0)
+								{
+									AnimationKey -= timeElapsed * FrameRate;
+									AnimationKey = System.Math.Max(0, AnimationKey);
+								}
+								break;
+						}
+					}
+					else if (Name == "PANTOGRAPHBOTTOM2" || Name == "PANTOGRAPHTOP2")
+					{
+						AnimationKey = 0;
+					}
 					else
 					{
-						// unknown animation key- for the minute, we'll stick to the MSTS keys, but return frame 0 to show object
+						// unknown animation key- for the minute, we'll stick to the MSTS keys
 						AnimationKey = 0;
 					}
 				}

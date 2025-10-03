@@ -1056,7 +1056,8 @@ namespace Train.OpenBve
 			Train.Handles.Power = new PowerHandle(powerNotches, driverPowerNotches, powerDelayUp, powerDelayDown, Train);
 			if (powerReduceSteps != -1)
 			{
-				Train.Handles.Power.ReduceSteps = powerReduceSteps;
+				PowerHandle powerHandle = Train.Handles.Power as PowerHandle;
+				powerHandle.ReduceSteps = powerReduceSteps;
 			}
 
 			if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
@@ -1086,7 +1087,7 @@ namespace Train.OpenBve
 			Train.Cars = new CarBase[Cars];
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				Train.Cars[i] = new CarBase(Train, i, CoefficientOfStaticFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
+				Train.Cars[i] = new CarBase(Train, i);
 			}
 			double DistanceBetweenTheCars = 0.3;
 			
@@ -1292,7 +1293,7 @@ namespace Train.OpenBve
 			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
 			Train.SafetySystems.OverspeedDevice = new OverspeedDevice(Train);
 			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
-			Train.SafetySystems.Headlights = new LightSource(1);
+			Train.SafetySystems.Headlights = new LightSource(Train, 1);
 			switch (Plugin.CurrentOptions.TrainStart)
 			{
 				// starting mode
