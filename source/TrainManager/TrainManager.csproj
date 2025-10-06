@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Brake\AirBrake\AutomaticAirBrake.cs" />
+    <Compile Include="Brake\AirBrake\Components\AbstractReservior.cs" />
     <Compile Include="Brake\AirBrake\Components\AirCompressor.cs" />
     <Compile Include="Brake\AirBrake\Components\BrakePipe.cs" />
     <Compile Include="Brake\AirBrake\Components\Reservoirs.cs" />
