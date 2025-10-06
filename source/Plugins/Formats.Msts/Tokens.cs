@@ -1362,6 +1362,7 @@ namespace OpenBve.Formats.MsTs
 		// skip is found in SMS files, identical purpose to comment
 		Skip = Comment,
 		Ccomment = Comment, // typo
+		_FCalc = Comment, // ENG files edited with FCalc
 		Train = uint.MinValue,
 
 		/*
@@ -1384,5 +1385,6 @@ namespace OpenBve.Formats.MsTs
 		TrainBrakesControllerMaxAplicationRate, // MT_DD_WD_90433
 		RunUpTimeToMaxPower, // UK_Electric_VT_Class390
 		NumberOfSteamHeatingPressureSteps, // MT_DD_WD_90433
+		BrakeCutsPowerAtBrakeCylinderPrssure, // NWC_08814
 	}
 }
