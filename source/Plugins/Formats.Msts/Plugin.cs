@@ -886,10 +886,20 @@ namespace OpenBve.Formats.MsTs
 				return val;
 			}
 
-			// try ignoring numbers after the second decimal point if applicable
+			// try ignoring numbers after the second comma if applicable
 			if (s.Split(',').Length > 2)
 			{
 				s = s.Substring(0, s.IndexOf(',', 0, 2));
+				if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
+				{
+					return val;
+				}
+			}
+
+			// try ignoring numbers after the second decimal point if applicable
+			if (s.Split('.').Length > 2)
+			{
+				s = s.Substring(0, s.IndexOf('.', s.IndexOf('.') + 1));
 				if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
 				{
 					return val;
@@ -1137,7 +1147,15 @@ namespace OpenBve.Formats.MsTs
 				strings[i] = strings[i].Replace("Handbrake Only", "Handbrake"); // UKTS BR_Bolster_D
 				if (!Enum.TryParse(strings[i], true, out returnArray[i]))
 				{
-					throw new InvalidDataException("Expected " + strings[i] + " to be a value member of the specified enum.");
+					if (string.IsNullOrEmpty(strings[i]))
+					{
+						returnArray[i] = default(TEnumType); // MT Class 101
+					}
+					else
+					{
+						throw new InvalidDataException("Expected " + strings[i] + " to be a value member of the specified enum.");
+					}
+					
 				}
 			}
 			return returnArray;

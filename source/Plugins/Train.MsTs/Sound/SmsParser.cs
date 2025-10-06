@@ -275,7 +275,22 @@ namespace Train.MsTs
 					int numStreams = block.ReadInt32();
 					for (int i = 0; i < numStreams; i++)
 					{
-						newBlock = block.ReadSubBlock(new[] { KujuTokenID.Stream});
+						newBlock = block.ReadSubBlock();
+						if (newBlock.Token != KujuTokenID.Stream)
+						{
+							i--;
+							if (newBlock.Token != KujuTokenID.Skip)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected additional block " + newBlock.Token + " encounted within Stream block in SMS file " + currentFile);
+							}
+							if (block.Length() - block.Position() <= 3)
+							{
+								// WARN: incorrect number of streams supplied
+								break;
+							}
+							continue;
+						}
+						
 						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 						if (block.Length() - block.Position() <= 3)
 						{
@@ -500,7 +515,7 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Discrete_Trigger:
 					currentSoundSet.CurrentTrigger = (SoundTrigger)block.ReadInt32(); // stored as integer
-					newBlock = block.ReadSubBlock(new[] { KujuTokenID.PlayOneShot, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump, KujuTokenID.SetStreamVolume });
+					newBlock = block.ReadSubBlock(new[] { KujuTokenID.PlayOneShot, KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump, KujuTokenID.SetStreamVolume, KujuTokenID.EnableTrigger, KujuTokenID.DisableTrigger });
 					ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 					break;
 				case KujuTokenID.Variable_Trigger:
