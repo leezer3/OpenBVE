@@ -191,8 +191,15 @@ namespace Train.MsTs
 					// file root
 					while (block.Position() < block.Length() - 3)
 					{
-						newBlock = block.ReadSubBlock(true);
-						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
+						try
+						{
+							newBlock = block.ReadSubBlock(true);
+							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
+						}
+						catch
+						{
+							break;
+						}
 					}
 					break;
 				case KujuTokenID.ScalabiltyGroup:
@@ -273,7 +280,7 @@ namespace Train.MsTs
 				case KujuTokenID.Streams:
 					// each stream represents a unique sound
 					int numStreams = block.ReadInt32();
-					for (int i = 0; i < numStreams; i++)
+					for (int i = 0; i < numStreams - 1; i++)
 					{
 						newBlock = block.ReadSubBlock();
 						if (newBlock.Token != KujuTokenID.Stream)
@@ -285,7 +292,7 @@ namespace Train.MsTs
 							}
 							if (block.Length() - block.Position() <= 3)
 							{
-								// WARN: incorrect number of streams supplied
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numStreams + ", but only found " + (i + 1) + " in Stream block in SMS file " + currentFile);
 								break;
 							}
 							continue;
@@ -294,7 +301,7 @@ namespace Train.MsTs
 						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 						if (block.Length() - block.Position() <= 3)
 						{
-							// WARN: incorrect number of streams supplied
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numStreams + ", but only found " + (i + 1) + " in Stream block in SMS file " + currentFile);
 							break;
 						}
 					}
@@ -317,14 +324,14 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Triggers:
 					int numTriggers = block.ReadInt32();
-					for (int i = 0; i < numTriggers; i++)
+					for (int i = 0; i < numTriggers - 1; i++)
 					{
 						// two triggers per sound set  (start + stop)
 						newBlock = block.ReadSubBlock(new [] {KujuTokenID.Variable_Trigger, KujuTokenID.Initial_Trigger, KujuTokenID.Discrete_Trigger, KujuTokenID.Random_Trigger, KujuTokenID.Dist_Travelled_Trigger});
 						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 						if (block.Length() - block.Position() <= 3)
 						{
-							// WARN: incorrect number of triggers supplied
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numTriggers + ", but only found " + (i + 1) + " in Triggers block in SMS file " + currentFile);
 							break;
 						}
 					}
