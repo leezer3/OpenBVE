@@ -1361,6 +1361,8 @@ namespace OpenBve.Formats.MsTs
 		Comment = uint.MinValue + 1,
 		// skip is found in SMS files, identical purpose to comment
 		Skip = Comment,
+		Ccomment = Comment, // typo
+		_FCalc = Comment, // ENG files edited with FCalc
 		Train = uint.MinValue,
 
 		/*
@@ -1371,6 +1373,7 @@ namespace OpenBve.Formats.MsTs
 		AirBrakeHasLowPressureTest = AirBrakesHasLowPressureTest, // MT Class 86
 		TrainBrakesControllerMaxPressureDropInNormalAppication = TrainBrakesControllerMaxPressureDropInNormalApplication, // MT Class 86
 		RegulatorPilotValveInitialOpening, // Adams B4, UKTS2910
+		RegulatorPilotValveInitialOpenning = RegulatorPilotValveInitialOpening, // typo for above
 		RegulatorPilotValveFullOpening, // Adams B4, UKTS2910
 		Exhaust3, // UK_Diesel_BR_Class50_D400
 		Exhaust4, // UK_Diesel_BR_Class50_D400
@@ -1379,6 +1382,9 @@ namespace OpenBve.Formats.MsTs
 		Injector1WaterValveVarience, // SL_BR_E2
 		Injector2WaterValveVarience, // SL_BR_E2
 		TrainBrakesControllerMaxApplyRate, // SL_BR_E2
+		TrainBrakesControllerMaxAplicationRate, // MT_DD_WD_90433
 		RunUpTimeToMaxPower, // UK_Electric_VT_Class390
+		NumberOfSteamHeatingPressureSteps, // MT_DD_WD_90433
+		BrakeCutsPowerAtBrakeCylinderPrssure, // NWC_08814
 	}
 }
