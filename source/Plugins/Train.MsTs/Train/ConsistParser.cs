@@ -34,6 +34,7 @@ using OpenBveApi.Trains;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
 using SoundManager;
+using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
@@ -325,7 +326,14 @@ namespace Train.MsTs
 							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: No WagonFolder supplied, searching entire trainset folder.");
 							break;
 						case 2:
-							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset\\" + wagonFiles[1]), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref currentTrain);
+							string wagonDirectory = OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset\\" + wagonFiles[1]);
+							if (!Directory.Exists(wagonDirectory))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: WagonFolder " + wagonDirectory + " was not found.");
+								currentCar.CarBrake = new ThroughPiped(currentCar); // dummy
+								break;
+							}
+							Plugin.WagonParser.Parse(wagonDirectory, wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref currentTrain);
 							break;
 						default:
 							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset"), wagonFiles[1], block.Token == KujuTokenID.EngineData, ref currentCar, ref currentTrain);
