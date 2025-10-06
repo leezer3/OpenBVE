@@ -15,8 +15,10 @@ namespace Train.MsTs
 		Retainer_4_Position = 4,
 		/// <summary>Twin-pipe vacuum brake is fitted.</summary>
 		Vacuum_Brake = 5,
+		Vaccum_Brake = 5,
 		/// <summary>Single-pipe vacuum brake is fitted.</summary>
 		Vacuum_Single_Pipe = 6,
+		Vaccum_single_pipe = 6,
 		/// <summary>Standard triple valve is fitted.</summary>
 		Triple_Valve = 7,
 		/// <summary>Triple valve that permits partial releasing of the brakes.</summary>
