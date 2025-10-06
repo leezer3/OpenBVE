@@ -17,7 +17,8 @@ public class TorqueConverter : UnitConverter<UnitOfTorque, double>
 		BaseUnit = UnitOfTorque.NewtonMetersPerSecond;
 		KnownUnits = new Dictionary<string, UnitOfTorque>
 			{
-				{"n/m/s", UnitOfTorque.NewtonMetersPerSecond}, {"nms", UnitOfTorque.NewtonMetersPerSecond}, {"newtonmeterspersecond", UnitOfTorque.NewtonMetersPerSecond}
+				// n.b. assume that torque in plain newtons is actually newton meters
+				{"n/m/s", UnitOfTorque.NewtonMetersPerSecond}, {"nms", UnitOfTorque.NewtonMetersPerSecond}, {"newtonmeterspersecond", UnitOfTorque.NewtonMetersPerSecond}, {"n", UnitOfTorque.NewtonMetersPerSecond},
 			};
 	}
 
