@@ -859,7 +859,7 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			string s = getNextValue();
-			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out int val))
+			if (NumberFormats.TryParseIntVb6(s, out int val))
 			{
 				return (ushort) val;
 			}
@@ -1118,6 +1118,10 @@ namespace OpenBve.Formats.MsTs
 			List<string> strings = new List<string>();
 			while (true)
 			{
+				if (Position() == Length())
+				{
+					break;
+				}
 				string s = ReadString();
 				if (s != string.Empty)
 				{
@@ -1228,7 +1232,8 @@ namespace OpenBve.Formats.MsTs
 				//Quote enclosed string
 				currentPosition++;
 				startPosition++;
-				while (myText[currentPosition] != '"')
+				
+				while (myText[currentPosition] != '"' && currentPosition < myText.Length - 1)
 				{
 					currentPosition++;
 				}
