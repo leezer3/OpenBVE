@@ -40,6 +40,8 @@ namespace Train.MsTs
 		Air_Single_Pipe = 14,
 		/// <summary>One pipe for control air, one pipe for supply air</summary>
 		Air_Twin_Pipe = 15,
-		Air_Brake = 15
+		Air_Brake = 15,
+		/// <summary>Graduated triple-release valve</summary>
+		Graduated_Triple_Release_Valve = 16
 	}
 }
