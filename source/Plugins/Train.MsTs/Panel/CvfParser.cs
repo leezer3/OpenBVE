@@ -378,6 +378,26 @@ namespace Train.MsTs
 							break;
 					}
 					break;
+				case PanelSubject.Eq_Res:
+					switch (subjectUnits)
+					{
+						case Units.PSI:
+							Code = "equalizingreservoir 0.000145038 *";
+							break;
+						case Units.Inches_Of_Mercury:
+							Code = "equalizingreservoir 0.0002953 *";
+							break;
+						case Units.Kilopascals:
+							Code = "equalizingreservoir 0.001 *";
+							break;
+						case Units.Bar:
+							Code = "equalizingreservoir 0.00001 *";
+							break;
+						case Units.Kgs_Per_Square_Cm:
+							Code = "equalizingreservoir 98066.5 *";
+							break;
+					}
+					break;
 				case PanelSubject.Direction:
 					Code = "reverserNotch ++";
 					break;
@@ -386,6 +406,9 @@ namespace Train.MsTs
 					break;
 				case PanelSubject.Front_Hlight:
 					Code = "headlights";
+					break;
+				case PanelSubject.Bell:
+					Code = "musichorn";
 					break;
 				case PanelSubject.Horn:
 					Code = "horn";
