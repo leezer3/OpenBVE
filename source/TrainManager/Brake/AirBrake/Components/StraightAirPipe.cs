@@ -3,7 +3,7 @@
 	/// <summary>A straight air pipe</summary>
 	public class StraightAirPipe
 	{
-		/// <summary>The current pressure</summary>
+		/// <summary>The current pressure in Pa</summary>
 		public double CurrentPressure;
 		/// <summary>The rate in Pa/s when making a service brake application</summary>
 		internal readonly double ServiceRate;

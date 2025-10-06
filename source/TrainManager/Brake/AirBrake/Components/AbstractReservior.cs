@@ -27,9 +27,9 @@ namespace TrainManager.BrakeSystems
 	/// <summary>Base class for an abstract air reservior</summary>
 	public abstract class AbstractReservior
 	{
-		/// <summary>The maximum pressure</summary>
+		/// <summary>The maximum pressure in Pa</summary>
 		public readonly double MaximumPressure;
-		/// <summary>The minimum pressure</summary>
+		/// <summary>The minimum pressure in Pa</summary>
 		public readonly double MinimumPressure;
 		/// <summary>The current pressure in Pa</summary>
 		public double CurrentPressure;
