@@ -1455,7 +1455,7 @@ namespace Object.CsvB3d
 								
 								if (!IsB3D)
 								{
-									int firstSpace = Command.IndexOf(' ');
+									int firstSpace = Math.Max(Command.IndexOf(' '), 0);
 									if(Enum.TryParse(Command.Substring(0, firstSpace), true, out cmd))
 									{
 										currentHost.AddMessage(MessageType.Error, false, "Incorrect argument separator used for CSV format in command " + cmd + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
