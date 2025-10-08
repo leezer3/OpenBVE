@@ -322,6 +322,7 @@ namespace Train.MsTs
 		private double maxBrakeForce = 0;
 		private BrakeSystemType[] brakeSystemTypes;
 		private EngineType currentEngineType;
+		private WagonType currentWagonType;
 		private double dieselIdleRPM;
 		private double dieselMaxRPM;
 		private double dieselRPMChangeRate;
@@ -373,7 +374,7 @@ namespace Train.MsTs
 						{
 							try
 							{
-								newBlock = block.ReadSubBlock();
+								newBlock = block.ReadSubBlock(true);
 								ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
 							}
 							catch
@@ -523,7 +524,7 @@ namespace Train.MsTs
 							{
 								try
 								{
-									WagonType type = block.ReadEnumValue(default(WagonType));
+									currentWagonType = block.ReadEnumValue(default(WagonType));
 								}
 								catch
 								{
@@ -854,11 +855,34 @@ namespace Train.MsTs
 						break;
 					}
 					objectFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(fileName), block.ReadString());
+					
 					if (!File.Exists(objectFile))
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: FreightAnim object file " + objectFile + " was not found");
 						break;
 					}
+
+					/*
+					 *
+					 * https://tsforum.forumotion.net/t655-freight-animation
+					 * FreightAnim are a total mess...
+					 * Whilst it appears they were intended to work with all cars, the positioning logic only works correctly
+					 * with tenders.
+					 *
+					 * TENDERS:
+					 * --------
+					 * First value: Starting Y position (full)
+					 * Second value: Ending Y position (empty)
+					 * Third value: Must be positive or omitted for animation to work. If negative, animation stays at full.
+					 *
+					 * OTHER CARS:
+					 * ----------
+					 * First value: Ignored
+					 * Second value: Must be any positive number.
+					 *
+					 * However, if empty is larger than full, then load seems to be *dropped* by the empty value
+					 * (See UKTS RCH wagons)
+					 */
 
 					double loadPosition = 0;
 					double emptyPosition = 0;
@@ -873,10 +897,25 @@ namespace Train.MsTs
 						// ignore
 					}
 
-					// empty position must be less than the loaded position
-					// MSTS seems to use the smaller of the two values for the position (e.g. UKTS RCH Loads)
-					// NOTE: This is actually broken in MSTS, fixed in BIN patch / ORTS
-					loadPosition = Math.Min(loadPosition, emptyPosition);
+					if (isEngine == false && currentWagonType != WagonType.Tender)
+					{
+						if (emptyPosition > loadPosition)
+						{
+							loadPosition = -emptyPosition;
+						}
+						else
+						{
+							if (emptyPosition == 0)
+							{
+								break;
+							}
+							loadPosition = 0;
+						}
+					}
+					else
+					{
+						loadPosition = 0;
+					}
 					
 					for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
 					{
