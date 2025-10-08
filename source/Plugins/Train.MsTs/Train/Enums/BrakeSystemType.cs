@@ -19,6 +19,7 @@ namespace Train.MsTs
 		ECP,
 		/// <summary>The brakes are a combination of standard air brakes and electrical control signals.</summary>
 		EP,
+		EP_Brake = EP,
 		/// <summary>The vehicle has no brakes</summary>
 		/// <remarks>Air pipe pressure will be passed through this vehicle</remarks>
 		Air_Piped,
