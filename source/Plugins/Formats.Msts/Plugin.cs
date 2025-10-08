@@ -1027,7 +1027,19 @@ namespace OpenBve.Formats.MsTs
 			{
 				if (!TorqueConverter.KnownUnits.ContainsKey(Unit))
 				{
-					throw new InvalidDataException("Unknown or unexpected torque unit " + Unit + " encountered in block " + Token);
+					if (VelocityConverter.KnownUnits.ContainsKey(Unit))
+					{
+						/*
+						 * HACK: If we're using a velocity unit here, torque is usually expressed as a units in 1 figure.
+						 *		 Therefore, the velocity to m/s
+						 */
+						parsedNumber = (float)velocityConvertor.Convert(parsedNumber, VelocityConverter.KnownUnits[Unit], UnitOfVelocity.MetersPerSecond);
+						Unit = "nms";
+					}
+					else
+					{
+						throw new InvalidDataException("Unknown or unexpected torque unit " + Unit + " encountered in block " + Token);
+					}
 				}
 
 				parsedNumber = (float)torqueConvertor.Convert(parsedNumber, TorqueConverter.KnownUnits[Unit], (UnitOfTorque)(object)desiredUnit);
