@@ -599,13 +599,13 @@ namespace Train.MsTs
 					car.Height = block.ReadSingle(UnitOfLength.Meter);
 					if (car.Height == 0)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle width is invalid.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle height is invalid.");
 						car.Height = 2;
 					}
 					car.Length = block.ReadSingle(UnitOfLength.Meter);
 					if (car.Length == 0)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle width is invalid.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle length is invalid.");
 						car.Length = 25;
 					}
 					break;
