@@ -338,7 +338,7 @@ namespace ObjectViewer {
 						    TrainManager.PlayerTrain.Initialize();
 						    foreach (var Car in TrainManager.PlayerTrain.Cars)
 						    {
-							    double length = TrainManager.PlayerTrain.Cars[0].Length;
+							    double length = Math.Max(TrainManager.PlayerTrain.Cars[0].Length, 1);
 							    Car.Move(-length);
 							    Car.Move(length);
 						    }
