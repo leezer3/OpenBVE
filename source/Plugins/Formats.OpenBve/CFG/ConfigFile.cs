@@ -84,7 +84,6 @@ namespace Formats.OpenBve
 				}
 				if (lines[i].StartsWith("[") && lines[i].EndsWith("]"))
 				{
-					startingLine = i;
 					if (!headerOK)
 					{
 						currentHost.AddMessage(MessageType.Error, false, "The expected header " + expectedHeader + " was not found.");
@@ -127,6 +126,7 @@ namespace Formats.OpenBve
 						subBlocks.Add(new ConfigSection<T1, T2>(previousIdx, startingLine + 1, previousSection, blockLines.ToArray(), currentHost));
 						blockLines.Clear();
 					}
+					startingLine = i;
 					previousSection = currentSection;
 					previousIdx = idx;
 				}
@@ -239,7 +239,7 @@ namespace Formats.OpenBve
 				{
 					if (!string.IsNullOrEmpty(myLines[i]))
 					{
-						rawValues.Enqueue(new KeyValuePair<int, string>(i, myLines[i]));
+						rawValues.Enqueue(new KeyValuePair<int, string>(i + startingLine, myLines[i]));
 					}
 				}
 			}
