@@ -169,7 +169,7 @@ namespace Plugin
 				Animations = new List<Animation>();
 				AnimatedMatricies = new Dictionary<int, int>();
 				Matricies = new List<KeyframeMatrix>();
-				MatrixParents = new Dictionary<string, string>();
+				MatrixParents = new Dictionary<int, int>();
 				ShaderNames = new List<ShaderNames>();
 				colors = new List<Color32>();
 			}
@@ -202,7 +202,7 @@ namespace Plugin
 			/// <summary>The matricies within the shape</summary>
 			internal readonly List<KeyframeMatrix> Matricies;
 
-			internal readonly Dictionary<string, string> MatrixParents;
+			internal readonly Dictionary<int, int> MatrixParents;
 
 			internal readonly List<ShaderNames> ShaderNames;
 
@@ -302,11 +302,11 @@ namespace Plugin
 							else
 							{
 								// find and store matrix parents for use by the animation function
-								for (int k = 0; k < matrixChain.Count - 1; k++)
+								for (int k = matrixChain.Count - 1; k > 0; k--)
 								{
-									if (!shape.MatrixParents.ContainsKey(shape.Matricies[matrixChain[k + 1]].Name))
+									if (!shape.MatrixParents.ContainsKey(matrixChain[k - 1]))
 									{
-										shape.MatrixParents[shape.Matricies[matrixChain[k + 1]].Name] = shape.Matricies[matrixChain[k]].Name;
+										shape.MatrixParents[matrixChain[k - 1]] = matrixChain[k];
 									}
 								}
 								/*
@@ -597,12 +597,12 @@ namespace Plugin
 
 					if (shape.Matricies[i].Name.StartsWith("WHEELS"))
 					{
-						KeyframeAnimation newAnimation = new KeyframeAnimation(newResult, string.Empty, shape.Matricies[i].Name, 8, 60, shape.Matricies[i].Matrix);
+						KeyframeAnimation newAnimation = new KeyframeAnimation(newResult, -1, shape.Matricies[i].Name, 8, 60, shape.Matricies[i].Matrix);
 						newAnimation.AnimationControllers = new[]
 						{
 							new TcbKey(shape.Matricies[i].Name, defaultWheelRotationFrames)
 						};
-						newResult.Animations.Add(shape.Matricies[i].Name, newAnimation);
+						newResult.Animations.Add(i, newAnimation);
 					}
 				}
 			}
@@ -698,6 +698,8 @@ namespace Plugin
 		private static int controllerIndex;
 
 		private static int currentFrame;
+
+		private static int currentAnimationNode;
 
 		private static void ParseBlock(Block block, ref MsTsShape shape, ref Vertex vertex, ref int[] intArray, ref KeyframeAnimation animationNode)
 		{
@@ -1056,7 +1058,7 @@ namespace Plugin
 						Row2 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0),
 						Row3 = new Vector4(block.ReadSingle(), block.ReadSingle(), block.ReadSingle(), 0)
 					};
-					shape.Matricies.Add(new KeyframeMatrix(newResult, block.Label, currentMatrix));
+					shape.Matricies.Add(new KeyframeMatrix(newResult, shape.Matricies.Count, block.Label, currentMatrix));
 					break;
 				case KujuTokenID.normals:
 					int normalCount = block.ReadUInt16();
@@ -1393,39 +1395,48 @@ namespace Plugin
 					int numNodes = block.ReadInt32();
 					for (int i = 0; i < numNodes; i++)
 					{
+						// index for currentAnimationNode maps to the main shape matricies
+						currentAnimationNode = i;
 						newBlock = block.ReadSubBlock(KujuTokenID.anim_node);
 						ParseBlock(newBlock, ref shape);
 					}
 					break;
 				case KujuTokenID.anim_node:
-					Matrix4D matrix = Matrix4D.Identity;
-					for (int i = 0; i < shape.Matricies.Count; i++)
-					{
-						if (shape.Matricies[i].Name == block.Label)
-						{
-							matrix = shape.Matricies[i].Matrix;
-							break;
-						}
-					}
+					Matrix4D matrix = shape.Matricies[currentAnimationNode].Matrix;
 
-					string parentAnimation = string.Empty;
-					if (shape.MatrixParents.ContainsKey(block.Label))
+					int parentAnimation = -1;
+					if (shape.MatrixParents.ContainsKey(currentAnimationNode))
 					{
-						parentAnimation = shape.MatrixParents[block.Label];
+						if (block.Label.StartsWith("WHEEL", StringComparison.InvariantCultureIgnoreCase))
+						{
+							// WHEELS cannot have a parent animation
+							parentAnimation = -1;
+						}
+						else
+						{
+							parentAnimation = shape.MatrixParents[currentAnimationNode];
+						}
 					}
 					else
 					{
 						if (block.Label != "MAIN")
 						{
-							if (block.Label.StartsWith("ROD") || block.Label.StartsWith("PISTON"))
+							if (block.Label.StartsWith("ROD", StringComparison.InvariantCultureIgnoreCase) || block.Label.StartsWith("PISTON", StringComparison.InvariantCultureIgnoreCase))
 							{
 								// Undocumented 'feature': rod and piston, if not linked to a parent in the shape
 								// file seem to link to WHEELS1 to determine animation key
-								parentAnimation = "WHEELS1";
+								for (int i = 0; i < shape.Matricies.Count; i++)
+								{
+									if (shape.Matricies[i].Name.Equals("WHEELS1", StringComparison.InvariantCultureIgnoreCase))
+									{
+										parentAnimation = i;
+										break;
+									}
+								}
 							}
 							else
 							{
-								parentAnimation = "MAIN";
+								parentAnimation = 0;
 							}
 							
 						}
@@ -1435,9 +1446,9 @@ namespace Plugin
 					ParseBlock(newBlock, ref shape, ref currentNode);
 					if (currentNode.AnimationControllers.Length != 0)
 					{
-						if (!newResult.Animations.ContainsKey(block.Label))
+						if (!newResult.Animations.ContainsKey(currentAnimationNode))
 						{
-							newResult.Animations.Add(block.Label, currentNode);
+							newResult.Animations.Add(currentAnimationNode, currentNode);
 						}
 						else
 						{
@@ -1447,16 +1458,17 @@ namespace Plugin
 					}
 					else
 					{
-						if (currentNode.Name.StartsWith("WHEELS"))
+						if (currentNode.Name.StartsWith("WHEELS", StringComparison.InvariantCultureIgnoreCase))
 						{
 							// some objects, e.g. the default Class 50 provide a wheel animation with no controllers
-							// add a default 8 frame animation
+							// re-create and add a default 8 frame animation (as in some with this 'issue' the frame count / rate is also wrong...)
+							currentNode = new KeyframeAnimation(newResult, parentAnimation, block.Label, 8, 60, matrix);
 							currentNode.AnimationControllers = new AbstractAnimation[]
 							{
 								new TcbKey(currentNode.Name, defaultWheelRotationFrames)
 							};
-
-							newResult.Animations.Add(block.Label, currentNode);
+							
+							newResult.Animations.Add(currentAnimationNode, currentNode);
 						}
 					}
 					break;

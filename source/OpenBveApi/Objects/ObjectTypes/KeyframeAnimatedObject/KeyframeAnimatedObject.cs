@@ -42,7 +42,7 @@ namespace OpenBveApi.Objects
 		/// <summary>The time since the last update of this object</summary>
 		public double SecondsSinceLastUpdate;
 		/// <summary>Contains the list of animations contained within this object</summary>
-		public Dictionary<string, KeyframeAnimation> Animations;
+		public Dictionary<int, KeyframeAnimation> Animations;
 		/// <summary>The objects within this object</summary>
 		public ObjectState[] Objects;
 		/// <summary>The keyframe matricies to be sent to the shader</summary>
@@ -70,7 +70,7 @@ namespace OpenBveApi.Objects
 			RefreshRate = 0;
 			SecondsSinceLastUpdate = 0;
 			Matricies = new KeyframeMatrix[0];
-			Animations = new Dictionary<string, KeyframeAnimation>();
+			Animations = new Dictionary<int, KeyframeAnimation>();
 			trackFollower = new TrackFollower(currentHost);
 		}
 
@@ -80,7 +80,7 @@ namespace OpenBveApi.Objects
 			// Update animations
 			for (int i = 0; i < Animations.Count; i++)
 			{
-				string key = Animations.ElementAt(i).Key;
+				int key = Animations.ElementAt(i).Key;
 				Animations[key].Update(null, IsReversed, position, trackPosition, 0); // current state not applicable, no hand-crafted functions
 			}
 			Transformation finalTransformation = new Transformation(localTransformation, worldTransformation);
@@ -136,7 +136,7 @@ namespace OpenBveApi.Objects
 			clonedObject.Matricies = new KeyframeMatrix[Matricies.Length];
 			for (int i = 0; i < Matricies.Length; i++)
 			{
-				clonedObject.Matricies[i] = new KeyframeMatrix(clonedObject, Matricies[i].Name, Matricies[i]._matrix);
+				clonedObject.Matricies[i] = new KeyframeMatrix(clonedObject, Matricies[i].Index, Matricies[i].Name, Matricies[i]._matrix);
 			}
 
 			for (int i = 0; i < Animations.Count; i++)
@@ -201,7 +201,7 @@ namespace OpenBveApi.Objects
 			// Update animations
 			for (int i = 0; i < Animations.Count; i++)
 			{
-				string key = Animations.ElementAt(i).Key;
+				int key = Animations.ElementAt(i).Key;
 				Animations[key].Update(BaseCar, IsReversed, position, trackPosition, timeElapsed); // current state not applicable, no hand-crafted functions
 			}
 			Matrix4D[] matriciesToShader = new Matrix4D[Matricies.Length];
@@ -242,7 +242,7 @@ namespace OpenBveApi.Objects
 			Matrix4D[] matricies = new Matrix4D[keyframeAnimatedObject.Matricies.Length];
 			for (int i = 0; i < keyframeAnimatedObject.Animations.Count; i++)
 			{
-				string key = keyframeAnimatedObject.Animations.ElementAt(i).Key;
+				int key = keyframeAnimatedObject.Animations.ElementAt(i).Key;
 				keyframeAnimatedObject.Animations[key].Update(null, keyframeAnimatedObject.IsReversed, Vector3.Zero, 0, 0.0); // current state not applicable, no hand-crafted functions
 			}
 

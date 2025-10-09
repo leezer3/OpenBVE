@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
@@ -33,7 +34,7 @@ namespace OpenBveApi.Objects
 		/// <summary>The parent object</summary>
 	    internal readonly KeyframeAnimatedObject ParentObject;
 		/// <summary>The parent animation</summary>
-	    internal readonly string ParentAnimation;
+	    internal readonly int ParentAnimation;
 		/// <summary>The animation name</summary>
 	    public readonly string Name;
 		/// <summary>The base matrix before transforms are performed</summary>
@@ -87,7 +88,7 @@ namespace OpenBveApi.Objects
 		/// <param name="frameCount">The total number of frames in the animation</param>
 		/// <param name="frameRate">The framerate of the animation</param>
 		/// <param name="matrix">The base matrix to be transformed</param>
-		public KeyframeAnimation(KeyframeAnimatedObject parentObject, string parentAnimation, string name, int frameCount, double frameRate, Matrix4D matrix)
+		public KeyframeAnimation(KeyframeAnimatedObject parentObject, int parentAnimation, string name, int frameCount, double frameRate, Matrix4D matrix)
 	    {
 			ParentObject = parentObject;
 			ParentAnimation = parentAnimation;
@@ -100,7 +101,7 @@ namespace OpenBveApi.Objects
 	    /// <summary>Updates the animation</summary>
 		public void Update(AbstractCar baseCar, bool isReversed, Vector3 position, double trackPosition, double timeElapsed)
 		{
-			if (!string.IsNullOrEmpty(ParentAnimation) && ParentObject.Animations.ContainsKey(ParentAnimation))
+			if (ParentAnimation != -1 && ParentObject.Animations.ContainsKey(ParentAnimation))
 			{
 				// we have a parent- calculate our key from the parent key
 				// n.b. ROD animations must have a parent of WHEEL
@@ -112,12 +113,12 @@ namespace OpenBveApi.Objects
 				if (baseCar != null)
 				{
 					// HACK: use the train as a dynamic to allow us to pull out the car reference
-					if (Name.StartsWith("WHEELS") || Name.StartsWith("ROD") || Name.StartsWith("PISTON"))
+					if (Name.StartsWith("WHEEL", StringComparison.InvariantCultureIgnoreCase) || Name.StartsWith("ROD", StringComparison.InvariantCultureIgnoreCase) || Name.StartsWith("PISTON", StringComparison.InvariantCultureIgnoreCase))
 					{
 						// HACK: use the train as a dynamic to allow us to pull out the car reference
 						double wheelRadius = 0;
 
-						if (Name.StartsWith("ROD") || Name.StartsWith("PISTON"))
+						if (Name.StartsWith("ROD", StringComparison.InvariantCultureIgnoreCase) || Name.StartsWith("PISTON", StringComparison.InvariantCultureIgnoreCase))
 						{
 							if (baseCar.DrivingWheels.Count > 0)
 							{
@@ -131,8 +132,18 @@ namespace OpenBveApi.Objects
 						}
 						else
 						{
-							char wheel1 = Name[Name.Length - 1];
-							char wheel2 = Name[Name.Length - 2];
+							// find first digit from the end (to account for stuff like wheel11_tread from MSTSBin)
+							int idx = Name.Length - 1;
+							while (idx > 0)
+							{
+								if (char.IsDigit(Name[idx]))
+								{
+									break;
+								}
+								idx--;
+							}
+							char wheel1 = Name[idx];
+							char wheel2 = Name[idx -1];
 							if (char.IsDigit(wheel1) && char.IsDigit(wheel2))
 							{
 								// bogie wheelset
