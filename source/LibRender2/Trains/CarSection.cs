@@ -105,10 +105,7 @@ namespace LibRender2.Trains
 				for (int i = 0; i < k.Objects.Length; i++)
 				{
 					k.Objects[i].Prototype = (StaticObject)k.Objects[i].Prototype.Clone();
-					for (int j = 0; j < k.Objects[i].Prototype.Mesh.Vertices.Length; j++)
-					{
-						k.Objects[i].Prototype.Mesh.Vertices[j].Coordinates += objectPosition;
-					}
+					k.ApplyTranslation(objectPosition.X, objectPosition.Y, objectPosition.Z, true);
 				}
 				k.BaseCar = baseCar;
 				Groups[gl].Keyframes = k;

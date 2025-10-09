@@ -880,8 +880,11 @@ namespace Train.MsTs
 					 * First value: Ignored
 					 * Second value: Must be any positive number.
 					 *
-					 * However, if empty is larger than full, then load seems to be *dropped* by the empty value
-					 * (See UKTS RCH wagons)
+					 * However, this is actually done by directly replacing the Y translation component of Matrix[0] within the shape
+					 * This means that if our shape actually has a value here, things can get really messy.
+					 *
+					 * The UKTS RCH wagon loads contain a Y value of approx 2.53, which when loaded in this way actually gets discarded
+					 * 
 					 */
 
 					double loadPosition = 0;
@@ -899,21 +902,10 @@ namespace Train.MsTs
 
 					if (isEngine == false && currentWagonType != WagonType.Tender)
 					{
-						if (emptyPosition > loadPosition)
+						if (emptyPosition == 0)
 						{
-							loadPosition = -emptyPosition;
+							break;
 						}
-						else
-						{
-							if (emptyPosition == 0)
-							{
-								break;
-							}
-							loadPosition = 0;
-						}
-					}
-					else
-					{
 						loadPosition = 0;
 					}
 					

@@ -292,7 +292,7 @@ namespace Plugin
 								matrixChain.Clear();
 							}
 
-							if (staticTransform)
+							if (staticTransform && string.IsNullOrEmpty(wagonFileDirectory)) // if part of a MSTS train, we may need to operate on contained matricies when merging shapes
 							{
 								for (int k = 0;k < matrixChain.Count; k++)
 								{
