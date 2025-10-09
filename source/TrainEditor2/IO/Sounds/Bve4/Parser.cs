@@ -18,6 +18,7 @@ namespace TrainEditor2.IO.Sounds.Bve4
 			{
 				Block<SoundCfgSection, SoundCfgKey> block = cfg.ReadNextBlock();
 				switch (block.Key)
+				
 				{
 					case SoundCfgSection.Run:
 						while (block.RemainingDataValues > 0 && block.GetIndexedPath(trainFolder, out var runIndex, out var fileName))
@@ -201,6 +202,7 @@ namespace TrainEditor2.IO.Sounds.Bve4
 						}
 						break;
 				}
+				block.ReportErrors();
 			}
 			sound.SoundElements = new ObservableCollection<SoundElement>(sound.SoundElements.GroupBy(x => new { Type = x.GetType(), x.Key }).Select(x => x.First()));
 		}

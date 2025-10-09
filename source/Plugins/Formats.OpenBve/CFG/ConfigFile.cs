@@ -953,5 +953,20 @@ namespace Formats.OpenBve
 			}
 			return false;
 		}
+
+		public override void ReportErrors()
+		{
+			for (int i = 0; i < keyValuePairs.Count; i++)
+			{
+				T2 key = keyValuePairs.ElementAt(i).Key;
+				currentHost.AddMessage(MessageType.Error, false, key + " is not valid in an " + Key + " section at line " + keyValuePairs[key].Key);
+			}
+
+			for (int i = 0; i < rawValues.Count; i++)
+			{
+				KeyValuePair<int, string> errorValue = rawValues.Dequeue();
+				currentHost.AddMessage(MessageType.Error, false, "Unexpected non key-value-pair encountered in " + Key + " section at line " + errorValue.Key);
+			}
+		}
 	}
 }

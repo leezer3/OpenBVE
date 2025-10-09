@@ -210,7 +210,7 @@ namespace Train.OpenBve
 							}
 							break;
 					}
-
+					block.ReportErrors();
 					readBlocks++;
 				}
 				

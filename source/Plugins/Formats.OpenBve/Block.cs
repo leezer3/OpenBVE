@@ -258,5 +258,10 @@ namespace Formats.OpenBve
 		    Key = myKey;
 		    this.currentHost = currentHost;
 	    }
+
+		public virtual void ReportErrors()
+		{
+
+		}
     }
 }

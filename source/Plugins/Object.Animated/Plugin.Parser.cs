@@ -41,20 +41,16 @@ namespace Plugin
 						UnifiedObject[] obj = new UnifiedObject[4];
 						int objCount = 0;
 						Block.GetVector3(AnimatedKey.Position, ',', out Position);
-						while (Block.RemainingDataValues > 0)
+						while (Block.RemainingDataValues > 0 && Block.GetNextPath(Folder, out string file))
 						{
-							if (Block.GetNextPath(Folder, out string file))
+							if (obj.Length == objCount)
 							{
-								if (obj.Length == objCount)
-								{
-									Array.Resize(ref obj, obj.Length << 1);
-								}
-
-								currentHost.LoadObject(file, Encoding, out obj[objCount]);
-								objCount++;
+								Array.Resize(ref obj, obj.Length << 1);
 							}
-						}
 
+							currentHost.LoadObject(file, Encoding, out obj[objCount]);
+							objCount++;
+						}
 						for (int j = 0; j < objCount; j++)
 						{
 							if (obj[j] != null)
@@ -380,6 +376,7 @@ namespace Plugin
 
 						break;
 				}
+				Block.ReportErrors();
 			}
 
 			Array.Resize(ref Result.Objects, ObjectCount);

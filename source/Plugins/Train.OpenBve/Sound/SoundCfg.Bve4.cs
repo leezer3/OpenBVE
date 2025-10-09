@@ -371,6 +371,7 @@ namespace Train.OpenBve
 						train.Cars[train.DriverCar].Windscreen.Wipers.SwitchSound = new CarSound(Plugin.CurrentHost, wiperSwitch, SoundCfgParser.tinyRadius, panel);
 						break;
 				}
+				block.ReportErrors();
 			}
 			
 			// Assign motor sounds to appropriate cars
