@@ -10,6 +10,7 @@ namespace TrainManager.BrakeSystems
 		{
 			decelerationCurves = new AccelerationCurve[] { };
 			brakeType = BrakeType.None;
+			brakePipe = new BrakePipe(0);
 		}
 
 		public override void Update(double TimeElapsed, double currentSpeed, AbstractHandle brakeHandle, out double Deceleration)

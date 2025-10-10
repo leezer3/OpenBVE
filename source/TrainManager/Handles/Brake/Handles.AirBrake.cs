@@ -18,7 +18,7 @@ namespace TrainManager.Handles
 			this.MaximumDriverNotch = 3;
 		}
 
-		public override void Update()
+		public override void Update(double timeElapsed)
 		{
 			if (DelayedValue != AirBrakeHandleState.Invalid)
 			{

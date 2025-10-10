@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, The OpenBVE Project
 //
@@ -65,7 +65,7 @@ namespace LibRender2.Smoke
 
 		private double previousUpdatePosition;
 
-
+		
 
 
 		public ParticleSource(BaseRenderer renderer, AbstractCar car, Vector3 offset, double maximumSize, double maximumGrownSize, Vector3 movementSpeed)
