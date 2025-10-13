@@ -3,9 +3,9 @@
 	/// <summary>A brake pipe</summary>
 	public class BrakePipe
 	{
-		/// <summary>The current pressure</summary>
+		/// <summary>The current pressure in Pa</summary>
 		public double CurrentPressure;
-		/// <summary>The normal working pressure</summary>
+		/// <summary>The normal working pressure in Pa</summary>
 		public readonly double NormalPressure;
 		/// <summary>The charge rate in Pa/s</summary>
 		internal readonly double ChargeRate;
@@ -15,6 +15,8 @@
 		internal readonly double EmergencyRate;
 		/// <summary>The number of pascals leaked by the brake pipe each second</summary>
 		public readonly double LeakRate = 500000.0;
+		/// <summary>The volume of the brake pipe in m³</summary>
+		public double Volume = 0;
 
 		/// <summary>Creates a functional brake pipe</summary>
 		public BrakePipe(double normalPressure, double chargeRate, double serviceRate, double emergencyRate, bool electricCommand)

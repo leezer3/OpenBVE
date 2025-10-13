@@ -17,9 +17,11 @@ namespace OpenBveApi.Routes
 
 		/// <summary>Creates a new background object</summary>
 		/// <param name="staticObject">The object to use for the background</param>
+		/// <param name="backgroundImageDistance">The user-selected viewing distance</param>
 		/// <param name="createCylinderCaps">Whether to auto-generate cylinder caps</param>
-		public BackgroundObject(StaticObject staticObject, bool createCylinderCaps = false)
+		public BackgroundObject(StaticObject staticObject, double backgroundImageDistance, bool createCylinderCaps = false)
 		{
+			BackgroundImageDistance = backgroundImageDistance;
 			if (createCylinderCaps)
 			{
 				/*

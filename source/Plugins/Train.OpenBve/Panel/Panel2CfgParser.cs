@@ -106,6 +106,7 @@ namespace Train.OpenBve
 					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A [This] section was present, but the main panel image was missing or invalid in " + fileName);
 					return;
 				}
+				Block.ReportErrors();
 			}
 			else
 			{
@@ -710,6 +711,7 @@ namespace Train.OpenBve
 						}
 						break;
 				}
+				Block.ReportErrors();
 			}
 		}
 

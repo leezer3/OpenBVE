@@ -55,7 +55,24 @@ namespace CarXmlConvertor
 			int currentVersion = ParseFormat(Lines);
 
 			for (int i = 0; i < Lines.Length; i++)
+			{
+				int j = Lines[i].IndexOf(';');
+				if (j >= 0)
+				{
+					Lines[i] = Lines[i].Substring(0, j).Trim();
+				}
+				else
+				{
+					Lines[i] = Lines[i].Trim();
+				}
+				if (Lines[i].EndsWith(","))
+				{
+					//File edited with MSExcel may have additional commas at the end of a line
+					Lines[i] = Lines[i].TrimEnd(',');
+				}
+			}
 
+			for (int i = 0; i < Lines.Length; i++)
 			{
 				int n = 0;
 				switch (Lines[i].ToLowerInvariant())

@@ -132,12 +132,14 @@ namespace CsvRwRouteParser
 							if (t != null && o == null)
 							{
 								Backgrounds.Add(new StaticBackground(t, repetitions, false, TransitionTime, mode, DisplayTime));
+								Backgrounds[Backgrounds.Count - 1].BackgroundImageDistance = Plugin.CurrentOptions.ViewingDistance;
 							}
 							if (t == null && o != null)
 							{
 								//All other parameters are ignored if an object has been defined
 								//TODO: Error message stating they have been ignored
-								return new BackgroundObject(o);
+								BackgroundObject bo = new BackgroundObject(o, Plugin.CurrentOptions.ViewingDistance);
+								return bo;
 							}
 							
 						}

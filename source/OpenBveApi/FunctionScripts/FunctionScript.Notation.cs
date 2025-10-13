@@ -297,7 +297,8 @@ namespace OpenBveApi.FunctionScripting
 								t.Append(" " + a[i] + " ^");
 							} return t.ToString();
 					}
-					// train
+				// train
+				case "brightness":
 				case "distance":
 				case "trackdistance":
 				case "curveradius":
