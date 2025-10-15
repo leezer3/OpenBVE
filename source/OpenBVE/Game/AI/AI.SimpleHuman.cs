@@ -243,11 +243,11 @@ namespace OpenBve
 						Train.Handles.Power.ApplyState(-1, true);
 						if (Train.Handles.Brake is AirBrakeHandle)
 						{
-							if (Train.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight > 10 || Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure < 0.3 * Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.ServiceMaximumPressure)
+							if (Train.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight > 10 || Train.Cars[Train.DriverCar].CarBrake.BrakeCylinder.CurrentPressure < 0.3 * Train.Cars[Train.DriverCar].CarBrake.BrakeCylinder.ServiceMaximumPressure)
 							{
 								Train.Handles.Brake.ApplyState(AirBrakeHandleState.Service);
 							}
-							else if (Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure > 0.9 * Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.EmergencyMaximumPressure)
+							else if (Train.Cars[Train.DriverCar].CarBrake.BrakeCylinder.CurrentPressure > 0.9 * Train.Cars[Train.DriverCar].CarBrake.BrakeCylinder.EmergencyMaximumPressure)
 							{
 								Train.Handles.Brake.ApplyState(AirBrakeHandleState.Release);
 							}

@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using TrainManager.BrakeSystems;
 using TrainManager.Handles;
 using TrainManager.Trains;
 
@@ -245,7 +246,7 @@ namespace OpenBve
                 {
                     return 0.0;
                 }
-                return Train.Cars[CarIndex].CarBrake.mainReservoir.CurrentPressure;
+                return Train.Cars[CarIndex].CarBrake.MainReservoir.CurrentPressure;
             }
 
             /// <summary>Returns the brake pipe pressure of the selected car of the selected train</summary>
@@ -259,7 +260,7 @@ namespace OpenBve
                 {
                     return 0.0;
                 }
-                return Train.Cars[CarIndex].CarBrake.brakePipe.CurrentPressure;
+                return Train.Cars[CarIndex].CarBrake.BrakePipe.CurrentPressure;
             }
 
             /// <summary>Returns the brake cylinder pressure of the selected car of the selected train</summary>
@@ -273,7 +274,7 @@ namespace OpenBve
                 {
                     return 0.0;
                 }
-                return Train.Cars[CarIndex].CarBrake.brakeCylinder.CurrentPressure;
+                return Train.Cars[CarIndex].CarBrake.BrakeCylinder.CurrentPressure;
             }
 
             /// <summary>Returns the brake pipe pressure of the selected car of the selected train</summary>
@@ -283,11 +284,11 @@ namespace OpenBve
             public static double straightAirPipe(TrainBase Train, int CarIndex)
             {
                 if (Train == null) return 0.0;
-                if (Train.Cars.Length > CarIndex)
+                if (Train.Cars.Length > CarIndex || !(Train.Cars[CarIndex].CarBrake is AirBrake airBrake))
                 {
                     return 0.0;
                 }
-                return Train.Cars[CarIndex].CarBrake.straightAirPipe.CurrentPressure;
+                return airBrake.StraightAirPipe.CurrentPressure;
             }
 
             /// <summary>Returns the doors state of the selected train</summary>

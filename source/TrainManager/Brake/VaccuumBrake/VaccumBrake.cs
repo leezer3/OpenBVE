@@ -1,27 +1,38 @@
-﻿using System;
+﻿//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+using OpenBveApi.Trains;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
 
 namespace TrainManager.BrakeSystems
 {
-	public class ElectromagneticStraightAirBrake : AirBrake
+	public class VaccumBrake : CarBrake
 	{
-		public ElectromagneticStraightAirBrake(EletropneumaticBrakeType type, CarBase car) : base(car, new AccelerationCurve[] { })
+		public VaccumBrake(CarBase car, AccelerationCurve[] decelerationCurves) : base(car, decelerationCurves)
 		{
-			electropneumaticBrakeType = type;
-			BrakeControlSpeed = 0;
-			motorDeceleration = 0;
-			motorDecelerationDelayUp = 0;
-			motorDecelerationDelayDown = 0;
-		}
-		public ElectromagneticStraightAirBrake(EletropneumaticBrakeType type, CarBase car, double brakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] decelerationCurves) : base(car, decelerationCurves)
-		{
-			electropneumaticBrakeType = type;
-			BrakeControlSpeed = brakeControlSpeed;
-			motorDeceleration = MotorDeceleration;
-			motorDecelerationDelayUp = MotorDecelerationDelayUp;
-			motorDecelerationDelayDown = MotorDecelerationDelayDown;
 		}
 
 		public override void Update(double timeElapsed, double currentSpeed, AbstractHandle brakeHandle, out double deceleration)
@@ -142,43 +153,8 @@ namespace TrainManager.BrakeSystems
 			else
 			{
 				//Otherwise [BVE2 / BVE4 train.dat format] work out target pressure as a proportion of the max notch:
-				targetPressure = brakeHandle.Actual / (double) brakeHandle.MaximumNotch;
+				targetPressure = brakeHandle.Actual / (double)brakeHandle.MaximumNotch;
 				targetPressure *= BrakeCylinder.ServiceMaximumPressure;
-			}
-
-			if (Car.TractionModel.ProvidesPower & !Car.baseTrain.Handles.EmergencyBrake.Actual & Car.baseTrain.Handles.Reverser.Actual != 0)
-			{
-				//If we meet the conditions for brake control system to activate
-				if (Math.Abs(currentSpeed) > BrakeControlSpeed)
-				{
-					if (electropneumaticBrakeType == EletropneumaticBrakeType.ClosingElectromagneticValve)
-					{
-						//When above the brake control speed, pressure to the BC is nil & electric brakes are used
-						//Thus target pressure must be zero
-						targetPressure = 0.0;
-					}
-					else if (electropneumaticBrakeType == EletropneumaticBrakeType.DelayFillingControl)
-					{
-						//Motor is used to brake the train, until not enough deceleration, at which point the air brake is also used
-						double a = motorDeceleration;
-						double pr = targetPressure / BrakeCylinder.ServiceMaximumPressure;
-						double b = pr * DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed);
-
-						double d = b - a;
-						if (d > 0.0)
-						{
-							//Deceleration provided by the motor is not enough, so increase the BC target pressure
-							targetPressure = d / DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed);
-							if (targetPressure > 1.0) targetPressure = 1.0;
-							targetPressure *= BrakeCylinder.ServiceMaximumPressure;
-						}
-						else
-						{
-							//Motor deceleration is enough, BC target pressure to zero
-							targetPressure = 0.0;
-						}
-					}
-				}
 			}
 
 			if (BrakeCylinder.CurrentPressure > targetPressure + Tolerance | targetPressure == 0.0)
@@ -263,25 +239,6 @@ namespace TrainManager.BrakeSystems
 				p *= BrakeCylinder.ServiceMaximumPressure;
 			}
 
-			if (p + Tolerance < StraightAirPipe.CurrentPressure)
-			{
-				double r = Car.baseTrain.Handles.EmergencyBrake.Actual ? StraightAirPipe.EmergencyRate : StraightAirPipe.ReleaseRate;
-				double d = StraightAirPipe.CurrentPressure - p;
-				double m = BrakeCylinder.EmergencyMaximumPressure;
-				r = GetRate(d / m, r * timeElapsed);
-				if (r > d) r = d;
-				StraightAirPipe.CurrentPressure -= r;
-			}
-			else if (p > StraightAirPipe.CurrentPressure + Tolerance)
-			{
-				double r = StraightAirPipe.ServiceRate;
-				double d = p - StraightAirPipe.CurrentPressure;
-				double m = BrakeCylinder.EmergencyMaximumPressure;
-				r = GetRate(d / m, r * timeElapsed);
-				if (r > d) r = d;
-				StraightAirPipe.CurrentPressure += r;
-			}
-
 			double pressureratio = BrakeCylinder.CurrentPressure / BrakeCylinder.ServiceMaximumPressure;
 			if (pressureratio == 0)
 			{
@@ -295,30 +252,26 @@ namespace TrainManager.BrakeSystems
 			}
 		}
 
-		
-
-		public override double CurrentMotorDeceleration(double TimeElapsed, AbstractHandle BrakeHandle)
+		public override void Initialize(TrainStartMode startMode)
 		{
-			double actualDeceleration = 0;
-			if (lastHandlePosition != BrakeHandle.Actual)
+			switch (startMode)
 			{
-				motorDecelerationDelayTimer = BrakeHandle.Actual > lastHandlePosition ? motorDecelerationDelayUp : motorDecelerationDelayDown;
-				lastHandlePosition = BrakeHandle.Actual;
+				case TrainStartMode.ServiceBrakesAts:
+					BrakeCylinder.CurrentPressure = BrakeCylinder.ServiceMaximumPressure;
+					BrakePipe.CurrentPressure = BrakePipe.NormalPressure;
+					EqualizingReservoir.CurrentPressure = EqualizingReservoir.NormalPressure;
+					break;
+				case TrainStartMode.EmergencyBrakesAts:
+					BrakeCylinder.CurrentPressure = BrakeCylinder.EmergencyMaximumPressure;
+					BrakePipe.CurrentPressure = 0.0;
+					EqualizingReservoir.CurrentPressure = 0.0;
+					break;
+				default:
+					BrakeCylinder.CurrentPressure = BrakeCylinder.EmergencyMaximumPressure;
+					BrakePipe.CurrentPressure = 0.0;
+					EqualizingReservoir.CurrentPressure = 0.0;
+					break;
 			}
-			if (BrakeHandle.Actual != 0)
-			{
-				motorDecelerationDelayTimer -= TimeElapsed;
-				if (motorDecelerationDelayTimer < 0)
-				{
-					actualDeceleration = (BrakeHandle.Actual / (double)BrakeHandle.MaximumNotch) * motorDeceleration;
-					lastMotorDeceleration = actualDeceleration;
-				}
-				else if (lastHandlePosition != 0)
-				{
-					actualDeceleration = lastMotorDeceleration;
-				}
-			}
-			return actualDeceleration;
 		}
 	}
 }

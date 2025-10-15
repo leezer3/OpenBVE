@@ -31,7 +31,7 @@ namespace Train.OpenBve
 				switch (key)
 				{
 					case BrakeXMLKey.Compressor:
-						Train.Cars[carIndex].CarBrake.brakeType = BrakeType.Main; //We have a compressor so must be a main brake type
+						Train.Cars[carIndex].CarBrake.BrakeType = BrakeType.Main; //We have a compressor so must be a main brake type
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
 							foreach (XmlNode cc in c.ChildNodes)
@@ -293,25 +293,27 @@ namespace Train.OpenBve
 				}
 			}
 			
-			Train.Cars[carIndex].CarBrake.mainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
-			Train.Cars[carIndex].CarBrake.mainReservoir.Volume = mainReservoirVolume;
-			Train.Cars[carIndex].CarBrake.airCompressor = new Compressor(compressorRate, Train.Cars[carIndex].CarBrake.mainReservoir, Train.Cars[carIndex]);
-			Train.Cars[carIndex].CarBrake.equalizingReservoir = new EqualizingReservoir(equalizingReservoirServiceRate, equalizingReservoirEmergencyRate, equalizingReservoirChargeRate);
-			Train.Cars[carIndex].CarBrake.equalizingReservoir.NormalPressure = 1.005 * brakePipeNormalPressure;
-			Train.Cars[carIndex].CarBrake.equalizingReservoir.Volume = equalizingReservoirVolume;
+			Train.Cars[carIndex].CarBrake.MainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
+			Train.Cars[carIndex].CarBrake.MainReservoir.Volume = mainReservoirVolume;
+			AirBrake airBrake = Train.Cars[carIndex].CarBrake as AirBrake;
+			airBrake.Compressor = new Compressor(5000.0, Train.Cars[carIndex].CarBrake.MainReservoir, Train.Cars[carIndex]);
+			airBrake.StraightAirPipe = new StraightAirPipe(straightAirPipeServiceRate, straightAirPipeEmergencyRate, straightAirPipeReleaseRate);
+			Train.Cars[carIndex].CarBrake.EqualizingReservoir = new EqualizingReservoir(equalizingReservoirServiceRate, equalizingReservoirEmergencyRate, equalizingReservoirChargeRate);
+			Train.Cars[carIndex].CarBrake.EqualizingReservoir.NormalPressure = 1.005 * brakePipeNormalPressure;
+			Train.Cars[carIndex].CarBrake.EqualizingReservoir.Volume = equalizingReservoirVolume;
 
-			Train.Cars[carIndex].CarBrake.brakePipe = new BrakePipe(brakePipeNormalPressure, brakePipeChargeRate, brakePipeServiceRate, brakePipeEmergencyRate, Train.Cars[0].CarBrake is ElectricCommandBrake);
-			Train.Cars[carIndex].CarBrake.brakePipe.Volume = brakePipeVolume;
+			Train.Cars[carIndex].CarBrake.BrakePipe = new BrakePipe(brakePipeNormalPressure, brakePipeChargeRate, brakePipeServiceRate, brakePipeEmergencyRate, Train.Cars[0].CarBrake is ElectricCommandBrake);
+			Train.Cars[carIndex].CarBrake.BrakePipe.Volume = brakePipeVolume;
 			{
 				double r = 200000.0 / brakeCylinderEmergencyMaximumPressure - 1.0;
 				if (r < 0.1) r = 0.1;
 				if (r > 1.0) r = 1.0;
-				Train.Cars[carIndex].CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakePipeNormalPressure, auxiliaryReservoirChargeRate, 0.5, r);
-				Train.Cars[carIndex].CarBrake.auxiliaryReservoir.Volume = auxiliaryReservoirVolume;
+				Train.Cars[carIndex].CarBrake.AuxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakePipeNormalPressure, auxiliaryReservoirChargeRate, 0.5, r);
+				Train.Cars[carIndex].CarBrake.AuxiliaryReservoir.Volume = auxiliaryReservoirVolume;
 			}
-			Train.Cars[carIndex].CarBrake.brakeCylinder = new BrakeCylinder(brakeCylinderServiceMaximumPressure, brakeCylinderEmergencyMaximumPressure, Train.Handles.Brake is AirBrakeHandle ? brakeCylinderEmergencyRate : 0.3 * brakeCylinderEmergencyRate, brakeCylinderEmergencyRate, brakeCylinderReleaseRate);
-			Train.Cars[carIndex].CarBrake.brakeCylinder.Volume = brakeCylinderVolume;
-			Train.Cars[carIndex].CarBrake.straightAirPipe = new StraightAirPipe(straightAirPipeServiceRate, straightAirPipeEmergencyRate, straightAirPipeReleaseRate);
+			Train.Cars[carIndex].CarBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderServiceMaximumPressure, brakeCylinderEmergencyMaximumPressure, Train.Handles.Brake is AirBrakeHandle ? brakeCylinderEmergencyRate : 0.3 * brakeCylinderEmergencyRate, brakeCylinderEmergencyRate, brakeCylinderReleaseRate);
+			Train.Cars[carIndex].CarBrake.BrakeCylinder.Volume = brakeCylinderVolume;
+			
 		}
 	}
 }

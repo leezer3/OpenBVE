@@ -50,10 +50,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Brake\AirBrake\AirBrake.cs" />
     <Compile Include="Brake\AirBrake\AutomaticAirBrake.cs" />
     <Compile Include="Brake\AirBrake\Components\AbstractReservior.cs" />
     <Compile Include="Brake\AirBrake\Components\AirCompressor.cs" />
-    <Compile Include="Brake\AirBrake\Components\BrakePipe.cs" />
+    <Compile Include="Brake\CommmonComponents\BrakeCylinder.cs" />
+    <Compile Include="Brake\CommmonComponents\BrakePipe.cs" />
     <Compile Include="Brake\AirBrake\Components\Reservoirs.cs" />
     <Compile Include="Brake\AirBrake\Components\StraightAirPipe.cs" />
     <Compile Include="Brake\AirBrake\ElectricCommandBrake.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="Brake\CarBrake.cs" />
     <Compile Include="Brake\ElectroPneumaticBrakeType.cs" />
     <Compile Include="Brake\UncouplingBehaviour.cs" />
+    <Compile Include="Brake\VaccuumBrake\VaccumBrake.cs" />
     <Compile Include="Cargo\CargoBase.cs" />
     <Compile Include="Cargo\NoLoad.cs" />
     <Compile Include="Cargo\Passengers.cs" />
@@ -170,9 +173,6 @@
     <Compile Include="Train\TrainSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Brake\AirBrake\Components\BrakeCylinder.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\LibRender2\LibRender2.csproj">
       <Project>{68215476-302C-49F2-9F7E-AAE20A2B6B12}</Project>
       <Name>LibRender2</Name>
@@ -194,6 +194,8 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Brake\VaccuumBrake\Components\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

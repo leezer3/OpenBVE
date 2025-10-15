@@ -30,8 +30,8 @@ namespace TrainManager.Trains
 					{
 						if (Cars[i - 1].Derailed | Cars[i].Derailed)
 						{
-							Cars[i].CarBrake.brakePipe.CurrentPressure -= Cars[i].CarBrake.brakePipe.LeakRate * timeElapsed;
-							if (Cars[i].CarBrake.brakePipe.CurrentPressure < 0.0) Cars[i].CarBrake.brakePipe.CurrentPressure = 0.0;
+							Cars[i].CarBrake.BrakePipe.CurrentPressure -= Cars[i].CarBrake.BrakePipe.LeakRate * timeElapsed;
+							if (Cars[i].CarBrake.BrakePipe.CurrentPressure < 0.0) Cars[i].CarBrake.BrakePipe.CurrentPressure = 0.0;
 						}
 					}
 
@@ -39,18 +39,18 @@ namespace TrainManager.Trains
 					{
 						if (Cars[i].Derailed | Cars[i + 1].Derailed)
 						{
-							Cars[i].CarBrake.brakePipe.CurrentPressure -= Cars[i].CarBrake.brakePipe.LeakRate * timeElapsed;
-							if (Cars[i].CarBrake.brakePipe.CurrentPressure < 0.0) Cars[i].CarBrake.brakePipe.CurrentPressure = 0.0;
+							Cars[i].CarBrake.BrakePipe.CurrentPressure -= Cars[i].CarBrake.BrakePipe.LeakRate * timeElapsed;
+							if (Cars[i].CarBrake.BrakePipe.CurrentPressure < 0.0) Cars[i].CarBrake.BrakePipe.CurrentPressure = 0.0;
 						}
 					}
 
-					totalPressure += Cars[i].CarBrake.brakePipe.CurrentPressure;
+					totalPressure += Cars[i].CarBrake.BrakePipe.CurrentPressure;
 				}
 
 				double averagePressure = totalPressure / Cars.Length;
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Cars[i].CarBrake.brakePipe.CurrentPressure = averagePressure;
+					Cars[i].CarBrake.BrakePipe.CurrentPressure = averagePressure;
 				}
 			}
 			else
@@ -62,7 +62,7 @@ namespace TrainManager.Trains
 					{
 						// find pressure differential between the two brake pipes
 						// the sign of the number will determine the direction of flow
-						double pressureDifferential = Cars[i].CarBrake.brakePipe.CurrentPressure - Cars[i - 1].CarBrake.brakePipe.CurrentPressure;
+						double pressureDifferential = Cars[i].CarBrake.BrakePipe.CurrentPressure - Cars[i - 1].CarBrake.BrakePipe.CurrentPressure;
 						// two cars, hence pressure equalizes between the two
 						double totalFlow = pressureDifferential / 2.0;
 						tempFlowRates[i] -= totalFlow;
@@ -72,8 +72,8 @@ namespace TrainManager.Trains
 
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Cars[i].CarBrake.brakePipe.CurrentPressure += tempFlowRates[i];
-					Cars[i].CarBrake.brakePipe.CurrentPressure = Math.Max(Cars[i].CarBrake.brakePipe.CurrentPressure, 0);
+					Cars[i].CarBrake.BrakePipe.CurrentPressure += tempFlowRates[i];
+					Cars[i].CarBrake.BrakePipe.CurrentPressure = Math.Max(Cars[i].CarBrake.BrakePipe.CurrentPressure, 0);
 				}
 			}
 		}
@@ -89,9 +89,12 @@ namespace TrainManager.Trains
 			decelerationDueToBrake = 0.0;
 			decelerationDueToMotor = 0.0;
 			// air compressor
-			if (Cars[carIndex].CarBrake.brakeType == BrakeType.Main)
+			if (Cars[carIndex].CarBrake.BrakeType == BrakeType.Main)
 			{
-				Cars[carIndex].CarBrake.airCompressor.Update(timeElapsed);
+				if (Cars[carIndex].CarBrake is AirBrake airBrake)
+				{
+					airBrake.Compressor.Update(timeElapsed);
+				}
 			}
 
 			if (carIndex == DriverCar && Handles.HasLocoBrake)
@@ -161,14 +164,14 @@ namespace TrainManager.Trains
 							if (Handles.LocoBrake is LocoAirBrakeHandle)
 							{
 								//Air brake handle
-								p = Cars[carIndex].CarBrake.brakeCylinder.CurrentPressure / Cars[carIndex].CarBrake.brakeCylinder.ServiceMaximumPressure;
-								tp = (Cars[carIndex].CarBrake.brakeCylinder.ServiceMaximumPressure / Handles.Brake.MaximumNotch) * Handles.Brake.Actual;
+								p = Cars[carIndex].CarBrake.BrakeCylinder.CurrentPressure / Cars[carIndex].CarBrake.BrakeCylinder.ServiceMaximumPressure;
+								tp = (Cars[carIndex].CarBrake.BrakeCylinder.ServiceMaximumPressure / Handles.Brake.MaximumNotch) * Handles.Brake.Actual;
 							}
 							else
 							{
 								//Notched handle
-								p = Cars[carIndex].CarBrake.brakeCylinder.CurrentPressure / Cars[carIndex].CarBrake.brakeCylinder.ServiceMaximumPressure;
-								tp = (Cars[carIndex].CarBrake.brakeCylinder.ServiceMaximumPressure / Handles.LocoBrake.MaximumNotch) * Handles.LocoBrake.Actual;
+								p = Cars[carIndex].CarBrake.BrakeCylinder.CurrentPressure / Cars[carIndex].CarBrake.BrakeCylinder.ServiceMaximumPressure;
+								tp = (Cars[carIndex].CarBrake.BrakeCylinder.ServiceMaximumPressure / Handles.LocoBrake.MaximumNotch) * Handles.LocoBrake.Actual;
 							}
 
 							if (p < tp)
@@ -204,7 +207,7 @@ namespace TrainManager.Trains
 			Cars[carIndex].CarBrake.airSound?.Play(Cars[carIndex], false);
 
 			// deceleration provided by motor
-			if (!(Cars[carIndex].CarBrake is AutomaticAirBrake) && Math.Abs(Cars[carIndex].CurrentSpeed) >= Cars[carIndex].CarBrake.brakeControlSpeed & Handles.Reverser.Actual != 0 & !Handles.EmergencyBrake.Actual)
+			if (!(Cars[carIndex].CarBrake is AutomaticAirBrake) && Math.Abs(Cars[carIndex].CurrentSpeed) >= Cars[carIndex].CarBrake.BrakeControlSpeed & Handles.Reverser.Actual != 0 & !Handles.EmergencyBrake.Actual)
 			{
 				if (Handles.LocoBrake.Actual != 0 && carIndex == DriverCar)
 				{
@@ -218,12 +221,12 @@ namespace TrainManager.Trains
 
 			// hold brake
 			Cars[carIndex].HoldBrake.Update(ref decelerationDueToMotor, Handles.HoldBrake.Actual);
-			if(Cars[carIndex].CarBrake.brakeType != BrakeType.None)
+			if(Cars[carIndex].CarBrake.BrakeType != BrakeType.None)
 			{
 				// brake shoe rub sound
 				double spd = Math.Abs(Cars[carIndex].CurrentSpeed);
 				double pitch = 1.0 / (spd + 1.0) + 1.0;
-				double gain = Cars[carIndex].Derailed ? 0.0 : Cars[carIndex].CarBrake.brakeCylinder.CurrentPressure / Cars[carIndex].CarBrake.brakeCylinder.ServiceMaximumPressure;
+				double gain = Cars[carIndex].Derailed ? 0.0 : Cars[carIndex].CarBrake.BrakeCylinder.CurrentPressure / Cars[carIndex].CarBrake.BrakeCylinder.ServiceMaximumPressure;
 				if (spd < 1.38888888888889)
 				{
 					double t = spd * spd;
