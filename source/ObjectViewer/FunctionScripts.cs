@@ -409,6 +409,7 @@ namespace ObjectViewer {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					// OBJECT VIEWER: These instructions are partially working if train simulation is enabled
 					case Instructions.PlayerTrainDistance:
 						double playerDist = double.MaxValue;
 						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
@@ -462,19 +463,10 @@ namespace ObjectViewer {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					// OBJECT VIEWER: Track is not simulated, so distance to train must be zero
 					case Instructions.PlayerTrackDistance:
-						double pt0 = TrainManager.PlayerTrain.FrontCarTrackPosition;
-						double pt1 = TrainManager.PlayerTrain.RearCarTrackPosition;
-						Function.Stack[s] = TrackPosition > pt0 ? TrackPosition - pt0 : TrackPosition < pt1 ? TrackPosition - pt1 : 0.0;
-						s++; break;
 					case Instructions.TrainTrackDistance:
-						if (Train != null) {
-							double t0 = Train.FrontCarTrackPosition;
-							double t1 = Train.RearCarTrackPosition;
-							Function.Stack[s] = TrackPosition > t0 ? TrackPosition - t0 : TrackPosition < t1 ? TrackPosition - t1 : 0.0;
-						} else {
-							Function.Stack[s] = 0.0;
-						}
+						Function.Stack[s] = 0.0; 
 						s++; break;
 					case Instructions.CurveRadius:
 						Function.Stack[s] = 0.0;

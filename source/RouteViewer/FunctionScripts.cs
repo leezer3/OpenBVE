@@ -407,72 +407,15 @@ namespace RouteViewer {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
-					case Instructions.PlayerTrainDistance:
-						double playerDist = double.MaxValue;
-						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
-						{
-							double fx = TrainManager.PlayerTrain.Cars[j].FrontAxle.Follower.WorldPosition.X - Position.X;
-							double fy = TrainManager.PlayerTrain.Cars[j].FrontAxle.Follower.WorldPosition.Y - Position.Y;
-							double fz = TrainManager.PlayerTrain.Cars[j].FrontAxle.Follower.WorldPosition.Z - Position.Z;
-							double f = fx * fx + fy * fy + fz * fz;
-							if (f < playerDist) playerDist = f;
-							double rx = TrainManager.PlayerTrain.Cars[j].RearAxle.Follower.WorldPosition.X - Position.X;
-							double ry = TrainManager.PlayerTrain.Cars[j].RearAxle.Follower.WorldPosition.Y - Position.Y;
-							double rz = TrainManager.PlayerTrain.Cars[j].RearAxle.Follower.WorldPosition.Z - Position.Z;
-							double r = rx * rx + ry * ry + rz * rz;
-							if (r < playerDist) playerDist = r;
-						}
-						Function.Stack[s] = Math.Sqrt(playerDist);
-						s++; break;
-					case Instructions.TrainDistance:
-						if (Train != null) {
-							double dist = double.MaxValue;
-							for (int j = 0; j < Train.Cars.Length; j++) {
-								double fx = Train.Cars[j].FrontAxle.Follower.WorldPosition.X - Position.X;
-								double fy = Train.Cars[j].FrontAxle.Follower.WorldPosition.Y - Position.Y;
-								double fz = Train.Cars[j].FrontAxle.Follower.WorldPosition.Z - Position.Z;
-								double f = fx * fx + fy * fy + fz * fz;
-								if (f < dist) dist = f;
-								double rx = Train.Cars[j].RearAxle.Follower.WorldPosition.X - Position.X;
-								double ry = Train.Cars[j].RearAxle.Follower.WorldPosition.Y - Position.Y;
-								double rz = Train.Cars[j].RearAxle.Follower.WorldPosition.Z - Position.Z;
-								double r = rx * rx + ry * ry + rz * rz;
-								if (r < dist) dist = r;
-							}
-							Function.Stack[s] = Math.Sqrt(dist);
-						} else {
-							Function.Stack[s] = 0.0;
-						}
-						s++; break;
+					// ROUTE VIEWER: No trains are present, so let's use the camera distance to fake this
 					case Instructions.TrainDistanceToCar:
-						if (Train != null) {
-							int j = (int)Math.Round(Function.Stack[s - 1]);
-							if (j < 0) j += Train.Cars.Length;
-							if (j >= 0 & j < Train.Cars.Length) {
-								double x = 0.5 * (Train.Cars[j].FrontAxle.Follower.WorldPosition.X + Train.Cars[j].RearAxle.Follower.WorldPosition.X) - Position.X;
-								double y = 0.5 * (Train.Cars[j].FrontAxle.Follower.WorldPosition.Y + Train.Cars[j].RearAxle.Follower.WorldPosition.Y) - Position.Y;
-								double z = 0.5 * (Train.Cars[j].FrontAxle.Follower.WorldPosition.Z + Train.Cars[j].RearAxle.Follower.WorldPosition.Z) - Position.Z;
-								Function.Stack[s - 1] = Math.Sqrt(x * x + y * y + z * z);
-							} else {
-								Function.Stack[s - 1] = 0.0;
-							}
-						} else {
-							Function.Stack[s - 1] = 0.0;
-						}
+						Function.Stack[s - 1] = TrackPosition - Program.Renderer.CameraTrackFollower.TrackPosition;
 						break;
+					case Instructions.PlayerTrainDistance:
+					case Instructions.TrainDistance:
 					case Instructions.PlayerTrackDistance:
-						double pt0 = TrainManager.PlayerTrain.FrontCarTrackPosition;
-						double pt1 = TrainManager.PlayerTrain.RearCarTrackPosition;
-						Function.Stack[s] = TrackPosition > pt0 ? TrackPosition - pt0 : TrackPosition < pt1 ? TrackPosition - pt1 : 0.0;
-						s++; break;
 					case Instructions.TrainTrackDistance:
-						if (Train != null) {
-							double t0 = Train.FrontCarTrackPosition;
-							double t1 = Train.RearCarTrackPosition;
-							Function.Stack[s] = TrackPosition > t0 ? TrackPosition - t0 : TrackPosition < t1 ? TrackPosition - t1 : 0.0;
-						} else {
-							Function.Stack[s] = 0.0;
-						}
+						Function.Stack[s] = TrackPosition - Program.Renderer.CameraTrackFollower.TrackPosition;
 						s++; break;
 					case Instructions.CurveRadius:
 						Function.Stack[s] = 0.0;
@@ -879,7 +822,10 @@ namespace RouteViewer {
 						}
 						s++; break;
 					case Instructions.Klaxon:
-						//Object Viewer doesn't actually have a sound player, so we can't test against it, thus return zero..
+					case Instructions.PrimaryKlaxon:
+					case Instructions.SecondaryKlaxon:
+					case Instructions.MusicKlaxon:
+						// ROUTE VIEWER: No train simulation, so return zero
 						Function.Stack[s] = 0.0;
 						s++; break;
 					case Instructions.HasAirBrake:
