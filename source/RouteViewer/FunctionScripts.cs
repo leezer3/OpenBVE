@@ -879,8 +879,61 @@ namespace RouteViewer {
 						}
 						s++; break;
 					case Instructions.Klaxon:
-						//Object Viewer doesn't actually have a sound player, so we can't test against it, thus return zero..
-						Function.Stack[s] = 0.0;
+						if (Train != null && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns != null)
+						{
+							for (int j = 0; j < TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns.Length; j++)
+							{
+								/* Return the index of the currently playing horn sound
+								 *
+								 * 1 ==> Primary horn
+								 * 2 ==> Secondary horn
+								 * 3 ==> Music horn
+								 */
+								if (Program.Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[j].Source))
+								{
+									Function.Stack[s] = j + 1;
+									break;
+								}
+								if (j == TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns.Length -1)
+								{
+									Function.Stack[s] = 0.0;
+								}
+							}
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.PrimaryKlaxon:
+						if (Train != null)
+						{
+							Function.Stack[s] = Program.Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[0].Source) ? 1.0 : 0.0;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.SecondaryKlaxon:
+						if (Train != null)
+						{
+							Function.Stack[s] = Program.Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[1].Source) ? 1.0 : 0.0;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.MusicKlaxon:
+						if (Train != null)
+						{
+							Function.Stack[s] = Program.Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[2].Source) ? 1.0 : 0.0;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
 						s++; break;
 					case Instructions.HasAirBrake:
 						if (Train != null) {
