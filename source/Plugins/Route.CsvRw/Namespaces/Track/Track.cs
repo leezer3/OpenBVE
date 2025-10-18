@@ -3545,7 +3545,7 @@ namespace CsvRwRouteParser
 					string switchName = string.Empty;
 					if (Arguments.Length >= 3 && Arguments[2].Length > 0)
 					{
-						switchName = Arguments[4];
+						switchName = Arguments[2];
 					}
 
 					if (idx != 0)
