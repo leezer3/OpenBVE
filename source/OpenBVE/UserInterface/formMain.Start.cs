@@ -757,6 +757,13 @@ namespace OpenBve
 						{
 							for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 							{
+								string fileName = Path.GetFileName(Files[i]);
+								if (fileName[0] == '#' && fileName.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
+								{
+									// MSTS / ORTS use a hash at the start of the filename to deliminate AI consists
+									// These generally have missing cabviews etc- Hide from visibility in the main menu
+									continue;
+								}
 								if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(Files[i]))
 								{
 									ListViewItem Item = listviewTrainFolders.Items.Add(System.IO.Path.GetFileName(Files[i]));

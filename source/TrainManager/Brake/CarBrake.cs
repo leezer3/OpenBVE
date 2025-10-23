@@ -102,7 +102,7 @@ namespace TrainManager.BrakeSystems
 				return 0;
 			}
 
-			if (decelerationCurves[0] is MSTSDecelerationCurve dec)
+			if (DecelerationCurves[0] is MSTSDecelerationCurve dec)
 			{
 				return dec.MaximumAcceleration;
 			}

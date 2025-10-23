@@ -190,9 +190,9 @@ namespace Train.MsTs
 			}
 
 			train.Cars[train.Cars.Length - 1].RearAxle.Follower.TriggerType = EventTriggerType.RearCarRearAxle;
-
 			train.Cars[train.DriverCar].Windscreen = new Windscreen(256, 10.0, train.Cars[train.DriverCar]);
 			train.Cars[train.DriverCar].Windscreen.Wipers = new WindscreenWiper(train.Cars[parsedTrain.DriverCar].Windscreen, WiperPosition.Left, WiperPosition.Left, 1.0, 0.0, true); // hack: zero hold time so they act as fast with two states
+			train.Specs.AveragesPressureDistribution = false;
 			train.PlaceCars(0.0);
 		}
 

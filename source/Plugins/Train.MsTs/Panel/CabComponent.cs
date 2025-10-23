@@ -444,7 +444,26 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Graphic:
 					string s = block.ReadString();
-					TexturePath = OpenBveApi.Path.CombineFile(CabviewFileParser.CurrentFolder, s);
+					if (!string.IsNullOrEmpty(s))
+					{
+						try
+						{
+							TexturePath = OpenBveApi.Path.CombineFile(CabviewFileParser.CurrentFolder, s);
+						}
+						catch
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The texture path contains invalid characters in CabComponent " + Type + " in CVF");
+						}
+
+						if (!File.Exists(TexturePath))
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The texture file " + s + " was not found in CabComponent " + Type + " in CVF");
+						}
+					}
+					else
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, true, "A texture file was not specified in CabComponent " + Type + " in CVF");
+					}
 					break;
 				case KujuTokenID.Position:
 					Position.X = block.ReadSingle();

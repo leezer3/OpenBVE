@@ -332,11 +332,12 @@ namespace Train.MsTs
 		private double dieselMaxTractiveEffortSpeed;
 		private double maxEngineAmps;
 		private double maxBrakeAmps;
-		private double mainReservoirMinimumPressure;
-		private double mainReservoirMaximumPressure;
-		private double brakeCylinderMaximumPressure;
+		private double mainReservoirMinimumPressure = 690000.0;
+		private double mainReservoirMaximumPressure = 780000.0;
+		private double brakeCylinderMaximumPressure = 440000.0;
 		private double emergencyRate;
 		private double releaseRate;
+		private double compressionRate = 3500;
 		private double maxVelocity;
 		private bool hasAntiSlipDevice;
 		private List<VigilanceDevice> vigilanceDevices;
@@ -397,42 +398,59 @@ namespace Train.MsTs
 						}
 						else
 						{
-							if (brakeSystemTypes.Contains(BrakeSystemType.EP))
+							if (brakeSystemTypes.Contains(BrakeSystemType.Air_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Air_twin_pipe) || brakeSystemTypes.Contains(BrakeSystemType.EP) || brakeSystemTypes.Contains(BrakeSystemType.ECP))
 							{
-								// Combined air brakes and control signals
-								// Assume equivilant to ElectromagneticStraightAirBrake
-								car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
-							}
-							else if (brakeSystemTypes.Contains(BrakeSystemType.ECP))
-							{
-								// Complex computer control
-								// Assume equivialant to ElectricCommandBrake at the minute
-								car.CarBrake = new ElectricCommandBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
-							}
-							else if (brakeSystemTypes.Contains(BrakeSystemType.Air_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Air_twin_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_twin_pipe))
-							{
-								// The car contains no control gear, but is air / vac braked
-								// Assume equivilant to AutomaticAirBrake
-								// NOTE: This must be last in the else-if chain to enure that a vehicle with EP / ECP and these declared is setup correctly
-								car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
+								AirBrake airBrake;
+								// FIXME: MR values needs to be (close) in proportion to the BC else the physics bug out
+								double bcVal = brakeCylinderMaximumPressure / 440000;
+								mainReservoirMinimumPressure = 690000.0 * bcVal;
+								mainReservoirMaximumPressure = 780000.0 * bcVal;
+								double operatingPressure = brakeCylinderMaximumPressure + 0.75 * (mainReservoirMinimumPressure - brakeCylinderMaximumPressure);
+
+								if (brakeSystemTypes.Contains(BrakeSystemType.EP) || brakeSystemTypes.Contains(BrakeSystemType.ECP))
+								{
+									// Combined air brakes and control signals
+									// Assume equivilant to ElectromagneticStraightAirBrake
+									airBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
+									airBrake.BrakePipe = new BrakePipe(operatingPressure, 10000000.0, 1500000.0, 5000000.0, true);
+								}
+								else
+								{
+									// Assume equivilant to ElectromagneticStraightAirBrake
+									airBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
+									airBrake.BrakePipe = new BrakePipe(operatingPressure, 10000000.0, 1500000.0, 5000000.0, false);
+								}
+
+								airBrake.MainReservoir = new MainReservoir(mainReservoirMinimumPressure, mainReservoirMaximumPressure, 0.01, 0.075 / train.Cars.Length);
+								airBrake.Compressor = new Compressor(5000.0, airBrake.MainReservoir, car);
+								airBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure * 1.1, 0.3 * 300000.0, 300000.0, 200000.0);
+								double r = 200000.0 / airBrake.BrakeCylinder.EmergencyMaximumPressure - 1.0;
+								if (r < 0.1) r = 0.1;
+								if (r > 1.0) r = 1.0;
+								airBrake.AuxiliaryReservoir = new AuxiliaryReservoir(0.975 * operatingPressure, 200000.0, 0.5, r);
+								airBrake.EqualizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
+								airBrake.EqualizingReservoir.NormalPressure = 1.005 * operatingPressure;
+								airBrake.StraightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
+
+								car.CarBrake = airBrake;
 							}
 
-							car.CarBrake.mainReservoir = new MainReservoir(690000.0, 780000.0, 0.01, 0.075 / train.Cars.Length);
-							car.CarBrake.airCompressor = new Compressor(5000.0, car.CarBrake.mainReservoir, car);
-							car.CarBrake.equalizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
-							car.CarBrake.equalizingReservoir.NormalPressure = 1.005 * 490000.0;
-							double r = 200000.0 / 440000.0 - 1.0;
-							if (r < 0.1) r = 0.1;
-							if (r > 1.0) r = 1.0;
-							car.CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * 490000.0, 200000.0, 0.5, r);
-							car.CarBrake.brakeCylinder = new BrakeCylinder(440000.0, 440000.0, 0.3 * 300000.0, 300000.0, 200000.0);
-							car.CarBrake.straightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
-
+							if (brakeSystemTypes.Contains(BrakeSystemType.Vaccum_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_twin_pipe))
+							{
+								VaccumBrake vaccumBrake = new VaccumBrake(car, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
+								vaccumBrake.MainReservoir = new MainReservoir(71110, 84660, 0.01, 0.075 / train.Cars.Length); // ~21in/hg - ~25in/hg
+								vaccumBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure * 1.1, 0.3 * 300000.0, 300000.0, 200000.0);
+								vaccumBrake.AuxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakeCylinderMaximumPressure, 200000.0, 0.5, 1.0);
+								vaccumBrake.EqualizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
+								vaccumBrake.EqualizingReservoir.NormalPressure = 1.005 * (vaccumBrake.BrakeCylinder.EmergencyMaximumPressure + 0.75 * (vaccumBrake.MainReservoir.MinimumPressure - vaccumBrake.BrakeCylinder.EmergencyMaximumPressure));
+								vaccumBrake.BrakePipe = new BrakePipe(brakeCylinderMaximumPressure, 10000000.0, 1500000.0, 5000000.0, false);
+								car.CarBrake = vaccumBrake;
+							}
+							car.CarBrake.BrakeType = car.Index == train.DriverCar ? BrakeType.Main : BrakeType.Auxiliary;
+							car.CarBrake.JerkUp = 10;
+							car.CarBrake.JerkDown = 10;
 						}
-
-						car.CarBrake.brakePipe = new BrakePipe(490000.0, 10000000.0, 1500000.0, 5000000.0, true);
-						car.CarBrake.JerkUp = 10;
-						car.CarBrake.JerkDown = 10;
+						car.CarBrake.Initialize(TrainStartMode.ServiceBrakesAts);
 					}
 					break;
 				case KujuTokenID.Engine:
@@ -474,42 +492,59 @@ namespace Train.MsTs
 					}
 					else
 					{
-						if (brakeSystemTypes.Contains(BrakeSystemType.EP))
+						if (brakeSystemTypes.Contains(BrakeSystemType.Air_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Air_twin_pipe) || brakeSystemTypes.Contains(BrakeSystemType.EP) || brakeSystemTypes.Contains(BrakeSystemType.ECP))
 						{
-							// Combined air brakes and control signals
-							// Assume equivilant to ElectromagneticStraightAirBrake
-							car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
-						}
-						else if (brakeSystemTypes.Contains(BrakeSystemType.ECP))
-						{
-							// Complex computer control
-							// Assume equivialant to ElectricCommandBrake at the minute
-							car.CarBrake = new ElectricCommandBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
-						}
-						else if (brakeSystemTypes.Contains(BrakeSystemType.Air_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Air_twin_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_twin_pipe))
-						{
-							// The car contains no control gear, but is air / vac braked
-							// Assume equivilant to AutomaticAirBrake
-							// NOTE: This must be last in the else-if chain to enure that a vehicle with EP / ECP and these declared is setup correctly
-							car.CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
+							AirBrake airBrake;
+							// FIXME: MR values needs to be (close) in proportion to the BC else the physics bug out
+							double bcVal = brakeCylinderMaximumPressure / 440000;
+							mainReservoirMinimumPressure = 690000.0 * bcVal;
+							mainReservoirMaximumPressure = 780000.0 * bcVal;
+							double operatingPressure = brakeCylinderMaximumPressure + 0.75 * (mainReservoirMinimumPressure - brakeCylinderMaximumPressure);
+
+							if (brakeSystemTypes.Contains(BrakeSystemType.EP) || brakeSystemTypes.Contains(BrakeSystemType.ECP))
+							{
+								// Combined air brakes and control signals
+								// Assume equivilant to ElectromagneticStraightAirBrake
+								airBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
+								airBrake.BrakePipe = new BrakePipe(operatingPressure, 10000000.0, 1500000.0, 5000000.0, true);
+							}
+							else
+							{
+								// Assume equivilant to ElectromagneticStraightAirBrake
+								airBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, car, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
+								airBrake.BrakePipe = new BrakePipe(operatingPressure, 10000000.0, 1500000.0, 5000000.0, false);
+							}
+
+							airBrake.MainReservoir = new MainReservoir(mainReservoirMinimumPressure, mainReservoirMaximumPressure, 0.01, 0.075 / train.Cars.Length);
+							airBrake.Compressor = new Compressor(compressionRate, airBrake.MainReservoir, car);
+							airBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure * 1.1, 0.3 * 300000.0, 300000.0, 200000.0);
+							double r = 200000.0 / airBrake.BrakeCylinder.EmergencyMaximumPressure - 1.0;
+							if (r < 0.1) r = 0.1;
+							if (r > 1.0) r = 1.0;
+							airBrake.AuxiliaryReservoir = new AuxiliaryReservoir(0.975 * operatingPressure, 200000.0, 0.5, r);
+							airBrake.EqualizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
+							airBrake.EqualizingReservoir.NormalPressure = 1.005 * operatingPressure;
+							airBrake.StraightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
+
+							car.CarBrake = airBrake;
 						}
 
-						car.CarBrake.mainReservoir = new MainReservoir(mainReservoirMinimumPressure, mainReservoirMaximumPressure, 0.01, 0.075 / train.Cars.Length);
-						car.CarBrake.airCompressor = new Compressor(5000.0, car.CarBrake.mainReservoir, car);
-						car.CarBrake.equalizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
-						car.CarBrake.equalizingReservoir.NormalPressure = 1.005 * brakeCylinderMaximumPressure;
-						double r = 200000.0 / 440000.0 - 1.0;
-						if (r < 0.1) r = 0.1;
-						if (r > 1.0) r = 1.0;
-						car.CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakeCylinderMaximumPressure, 200000.0, 0.5, r);
-						car.CarBrake.brakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure, 0.3 * 300000.0, 300000.0, 200000.0);
-						car.CarBrake.straightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
-
+						if (brakeSystemTypes.Contains(BrakeSystemType.Vaccum_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_twin_pipe))
+						{
+							VaccumBrake vaccumBrake = new VaccumBrake(car, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
+							vaccumBrake.MainReservoir = new MainReservoir(71110, 84660, 0.01, 0.075 / train.Cars.Length); // ~21in/hg - ~25in/hg
+							vaccumBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure * 1.1, 0.3 * 300000.0, 300000.0, 200000.0);
+							vaccumBrake.AuxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakeCylinderMaximumPressure, 200000.0, 0.5, 1.0);
+							vaccumBrake.EqualizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
+							vaccumBrake.EqualizingReservoir.NormalPressure = 1.005 * (vaccumBrake.BrakeCylinder.EmergencyMaximumPressure + 0.75 * (vaccumBrake.MainReservoir.MinimumPressure - vaccumBrake.BrakeCylinder.EmergencyMaximumPressure));
+							vaccumBrake.BrakePipe = new BrakePipe(brakeCylinderMaximumPressure, 10000000.0, 1500000.0, 5000000.0, false);
+							car.CarBrake = vaccumBrake;
+						}
+						car.CarBrake.BrakeType = car.Index == car.baseTrain.DriverCar || isEngine ? BrakeType.Main : BrakeType.Auxiliary;
+						car.CarBrake.JerkUp = 10;
+						car.CarBrake.JerkDown = 10;
 					}
-
-					car.CarBrake.brakePipe = new BrakePipe(brakeCylinderMaximumPressure, 10000000.0, 1500000.0, 5000000.0, true);
-					car.CarBrake.JerkUp = 10;
-					car.CarBrake.JerkDown = 10;
+					car.CarBrake.Initialize(TrainStartMode.ServiceBrakesAts);
 					break;
 				case KujuTokenID.Type:
 					switch (block.ParentBlock.Token)
@@ -591,19 +626,19 @@ namespace Train.MsTs
 				case KujuTokenID.Size:
 					// Physical size of the car
 					car.Width = block.ReadSingle(UnitOfLength.Meter);
-					if (car.Width == 0)
+					if (car.Width <= 0.1) // see for example LU1938TS - typo makes the car 2.26mm high
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle width is invalid.");
 						car.Width = 2;
 					}
 					car.Height = block.ReadSingle(UnitOfLength.Meter);
-					if (car.Height == 0)
+					if (car.Height <= 0.1)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle height is invalid.");
 						car.Height = 2;
 					}
 					car.Length = block.ReadSingle(UnitOfLength.Meter);
-					if (car.Length == 0)
+					if (car.Length <= 0.5)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Vehicle length is invalid.");
 						car.Length = 25;
@@ -828,6 +863,13 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.TrainBrakesControllerEmergencyApplicationRate:
 					emergencyRate = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					break;
+				case KujuTokenID.AirBrakesAirCompressorPowerRating:
+					compressionRate = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					if (compressionRate < 3500 || compressionRate > 34475) // assume valid range to be 0.5psi/s to 5psi/s
+					{
+						compressionRate = 3500;
+					}
 					break;
 				case KujuTokenID.TrainBrakesControllerMaxReleaseRate:
 					releaseRate = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
