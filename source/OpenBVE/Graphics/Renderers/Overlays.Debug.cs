@@ -360,10 +360,13 @@ namespace OpenBve.Graphics.Renderers
 						heading[2] = true;
 					}
 
-					renderer.Rectangle.Draw(null, new Vector2((float) x, (float) y), new Vector2(w, h), Color128.Black);
-					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.BrakeCylinder.CurrentPressure;
-					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.BrakeCylinder.EmergencyMaximumPressure;
-					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), new Color128(0.75f, 0.5f, 0.25f, 1.0f));
+					if (!(TrainManager.PlayerTrain.Cars[i].CarBrake is ThroughPiped))
+					{
+						renderer.Rectangle.Draw(null, new Vector2((float)x, (float)y), new Vector2(w, h), Color128.Black);
+						double p = TrainManager.PlayerTrain.Cars[i].CarBrake.BrakeCylinder.CurrentPressure;
+						double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.BrakeCylinder.EmergencyMaximumPressure;
+						renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), new Color128(0.75f, 0.5f, 0.25f, 1.0f));
+					}
 				}
 				x += w + 8.0;
 				// main reservoir
