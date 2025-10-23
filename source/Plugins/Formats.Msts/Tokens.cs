@@ -1387,5 +1387,9 @@ namespace OpenBve.Formats.MsTs
 		NumberOfSteamHeatingPressureSteps, // MT_DD_WD_90433
 		BrakeCutsPowerAtBrakeCylinderPrssure, // NWC_08814
 		MonitoringDeviceAppliesSutsDownEngine, // EB_421_NSE
+		GrateArea,
+		AuxilaryResCapacity, // BR_Green_57XX_4683
+		AuxilaryResMaxPressure, // BR_Green_57XX_4683
+		SSpring = Spring, // Typo
 	}
 }

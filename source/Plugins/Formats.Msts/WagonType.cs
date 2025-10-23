@@ -30,6 +30,7 @@ namespace OpenBve.Formats.Msts
 		Engine,
 		Tender,
 		Carriage,
-		Freight
+		Passenger = Carriage,
+		Freight,
     }
 }

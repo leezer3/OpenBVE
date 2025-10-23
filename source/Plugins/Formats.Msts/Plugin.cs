@@ -26,6 +26,7 @@ using Microsoft.Win32;
 using OpenBveApi.World;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -356,7 +357,7 @@ namespace OpenBve.Formats.MsTs
 	/// <inheritdoc />
 	public class TextualBlock : Block
 	{
-		private readonly string myText;
+		private string myText;
 
 		private int currentPosition;
 
@@ -705,6 +706,11 @@ namespace OpenBve.Formats.MsTs
 				currentPosition++;
 			}
 
+			if (s.Length > 0 && s[0] == ')')
+			{
+				int b = 0;
+			}
+
 			if (string.IsNullOrWhiteSpace(s) || s == ")")
 			{
 				// empty string or 'extra' closing brackets
@@ -718,6 +724,11 @@ namespace OpenBve.Formats.MsTs
 				return t;
 			}
 
+			int sl = s.Length;
+			s = s.TrimStart(')').TrimStart(); // remove all other extraneous brackets + whitespace
+			startPosition += sl - s.Length;
+
+			string ns = s;
 			int ws = s.IndexOf(' ');
 			if (ws != -1)
 			{
@@ -744,9 +755,18 @@ namespace OpenBve.Formats.MsTs
 			}
 			else if (!Enum.TryParse(s, true, out currentToken))
 			{
+				if (Label.Equals("Skip", StringComparison.InvariantCultureIgnoreCase) && s == ")")
+				{
+					return new TextualBlock(String.Empty, true);
+				}
 				throw new InvalidDataException("Unrecognised token " + s);
 			}
-			
+
+			if (currentToken == KujuTokenID.Skip)
+			{
+				int b = 0;
+			}
+
 			int level = 0;
 			while (currentPosition < myText.Length)
 			{
@@ -764,6 +784,7 @@ namespace OpenBve.Formats.MsTs
 						{
 							return new TextualBlock(string.Empty, true);
 						}
+
 						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true, this);
 					}
 					level--;
@@ -1034,6 +1055,11 @@ namespace OpenBve.Formats.MsTs
 						 *		 Therefore, the velocity to m/s
 						 */
 						parsedNumber = (float)velocityConvertor.Convert(parsedNumber, VelocityConverter.KnownUnits[Unit], UnitOfVelocity.MetersPerSecond);
+						Unit = "nms";
+					}
+					else if (Unit == "s")
+					{
+						// ?? assume that plain s is actually newton meters / s ??
 						Unit = "nms";
 					}
 					else
