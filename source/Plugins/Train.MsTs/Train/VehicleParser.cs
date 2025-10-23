@@ -776,7 +776,7 @@ namespace Train.MsTs
 					while (block.Position() < block.Length() - 2)
 					{
 						// large number of potential controls when including diesel + steam, so allow *any* block here
-						newBlock = block.ReadSubBlock();
+						newBlock = block.ReadSubBlock(true);
 						ParseBlock(newBlock, fileName, ref wagonName, true, ref car, ref train);
 					}
 					break;
@@ -889,7 +889,7 @@ namespace Train.MsTs
 					VigilanceDevice device = VigilanceDevice.CreateVigilanceDevice(block.Token);
 					while (block.Position() < block.Length() - 2)
 					{
-						newBlock = block.ReadSubBlock();
+						newBlock = block.ReadSubBlock(true);
 						device.ParseBlock(newBlock);
 					}
 					vigilanceDevices.Add(device);
@@ -978,14 +978,14 @@ namespace Train.MsTs
 				case KujuTokenID.Effects:
 					while (block.Position() < block.Length() - 2)
 					{
-						newBlock = block.ReadSubBlock();
+						newBlock = block.ReadSubBlock(true);
 						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
 					}
 					break;
 				case KujuTokenID.DieselSpecialEffects:
 					while (block.Position() < block.Length() - 2)
 					{
-						newBlock = block.ReadSubBlock();
+						newBlock = block.ReadSubBlock(true);
 						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
 					}
 					break;
@@ -1053,14 +1053,14 @@ namespace Train.MsTs
 				case KujuTokenID.Coupling:
 					while (block.Position() < block.Length() - 2)
 					{
-						newBlock = block.ReadSubBlock();
+						newBlock = block.ReadSubBlock(true);
 						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
 					}
 					break;
 				case KujuTokenID.Spring:
 					while (block.Position() < block.Length() - 2)
 					{
-						newBlock = block.ReadSubBlock();
+						newBlock = block.ReadSubBlock(true);
 						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
 					}
 					break;

@@ -205,9 +205,15 @@ namespace Train.MsTs
 			switch (block.Token)
 			{
 				default:
-					newBlock = block.ReadSubBlock();
-					ParseBlock(newBlock, ref currentTrain);
+					while (block.Length() - block.Position() > 2)
+					{
+						// YUCK: If valid wagon blocks are outside the TrainCfg block (incorrect terminator)
+						// MSTS actually adds them to the end of the train, e.g. see default oenoloco.con
+						newBlock = block.ReadSubBlock(true);
+						ParseBlock(newBlock, ref currentTrain);
+					}
 					break;
+				case KujuTokenID.Comment:
 				case KujuTokenID.Default:
 					// presumably used internally by MSTS, not useful
 					block.Skip((int)block.Length());
@@ -221,7 +227,7 @@ namespace Train.MsTs
 					{
 						try
 						{
-							newBlock = block.ReadSubBlock();
+							newBlock = block.ReadSubBlock(true);
 							ParseBlock(newBlock, ref currentTrain);
 						}
 						catch
