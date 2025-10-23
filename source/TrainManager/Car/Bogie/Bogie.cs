@@ -19,10 +19,10 @@ namespace TrainManager.Car
 		public double Length;
 #pragma warning restore 0649
 		/// <summary>Front axle about which the bogie pivots</summary>
-		public readonly Axle FrontAxle;
+		public readonly AbstractAxle FrontAxle;
 
 		/// <summary>Rear axle about which the bogie pivots</summary>
-		public readonly Axle RearAxle;
+		public readonly AbstractAxle RearAxle;
 
 		internal Vector3 Up;
 
@@ -47,9 +47,9 @@ namespace TrainManager.Car
 			Rear = IsRear;
 			CarSections = new CarSection[] { };
 			CurrentCarSection = -1;
-			FrontAxle = new Axle(TrainManagerBase.currentHost, car.baseTrain, car);
+			FrontAxle = new BVEAxle(TrainManagerBase.currentHost, car.baseTrain, car);
 			FrontAxle.Follower.TriggerType = EventTriggerType.FrontBogieAxle;
-			RearAxle = new Axle(TrainManagerBase.currentHost, car.baseTrain, car);
+			RearAxle = new BVEAxle(TrainManagerBase.currentHost, car.baseTrain, car);
 			RearAxle.Follower.TriggerType = EventTriggerType.RearBogieAxle;
 		}
 

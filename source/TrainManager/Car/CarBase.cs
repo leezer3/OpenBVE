@@ -112,9 +112,9 @@ namespace TrainManager.Car
 			baseTrain = train;
 			trainCarIndex = index;
 			CarSections = new Dictionary<CarSectionType, CarSection>();
-			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this, coefficientOfFriction, coefficientOfRollingResistance, aerodynamicDragCoefficient);
+			FrontAxle = new BVEAxle(TrainManagerBase.currentHost, train, this, coefficientOfFriction, coefficientOfRollingResistance, aerodynamicDragCoefficient);
 			FrontAxle.Follower.TriggerType = index == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
-			RearAxle = new Axle(TrainManagerBase.currentHost, train, this, coefficientOfFriction, coefficientOfRollingResistance, aerodynamicDragCoefficient);
+			RearAxle = new BVEAxle(TrainManagerBase.currentHost, train, this, coefficientOfFriction, coefficientOfRollingResistance, aerodynamicDragCoefficient);
 			RearAxle.Follower.TriggerType = index == baseTrain.Cars.Length - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
 			FrontBogie = new Bogie(this, false);
@@ -144,8 +144,8 @@ namespace TrainManager.Car
 			trainCarIndex = index;
 			CarSections = new Dictionary<CarSectionType, CarSection>();
 			CurrentCarSection = CarSectionType.NotVisible;
-			FrontAxle = new Axle(TrainManagerBase.currentHost, train, this);
-			RearAxle = new Axle(TrainManagerBase.currentHost, train, this);
+			FrontAxle = new BVEAxle(TrainManagerBase.currentHost, train, this);
+			RearAxle = new BVEAxle(TrainManagerBase.currentHost, train, this);
 			BeaconReceiver = new TrackFollower(TrainManagerBase.currentHost, train);
 			FrontBogie = new Bogie(this, false);
 			RearBogie = new Bogie(this, true);
@@ -164,6 +164,7 @@ namespace TrainManager.Car
 			Run = new RunSounds(this);
 			Sounds = new CarSounds();
 			Coupler = new Coupler(0, 0, this, null);
+			ParticleSources = new List<ParticleSource>();
 		}
 
 		/// <summary>Moves the car</summary>
