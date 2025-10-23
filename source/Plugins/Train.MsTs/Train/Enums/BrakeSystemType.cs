@@ -15,6 +15,7 @@ namespace Train.MsTs
 		Vaccum_single_pipe = Vacuum_single_pipe,
 		/// <summary>Two pipes are used. One controls the vacuum brakes, the other supply the vacuum reservior.</summary>
 		Vacuum_twin_pipe,
+		Vaccum_twin_pipe = Vacuum_twin_pipe,
 		/// <summary>The brakes are controlled by a computer or complex electrical control system.</summary>
 		ECP,
 		/// <summary>The brakes are a combination of standard air brakes and electrical control signals.</summary>

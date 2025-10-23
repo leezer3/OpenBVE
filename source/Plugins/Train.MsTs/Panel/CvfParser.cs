@@ -199,7 +199,7 @@ namespace Train.MsTs
 			for (int i = 0; i < cabComponents.Count; i++)
 			{
 				cabComponents[i].Create(ref currentCar, currentLayer);
-
+				currentLayer++; // component layering stacks downwards directly through the cabview
 			}
 
 			return true;
@@ -219,7 +219,7 @@ namespace Train.MsTs
 					while (controlCount > 0)
 					{
 						newBlock = block.ReadSubBlock();
-						CabComponent currentComponent = new CabComponent(newBlock, currentCabView.Position);
+						CabComponent currentComponent = new CabComponent(newBlock, cabViews[0].Position); // cab components can only be applied to CabView #0, others are static views
 						currentComponent.Parse();
 						cabComponents.Add(currentComponent);
 						controlCount--;
@@ -359,6 +359,7 @@ namespace Train.MsTs
 					}
 					break;
 				case PanelSubject.Main_Res:
+				case PanelSubject.Vacuum_Reservoir_Pressure:
 					switch (subjectUnits)
 					{
 						case Units.PSI:
@@ -410,6 +411,7 @@ namespace Train.MsTs
 				case PanelSubject.Bell:
 					Code = "musichorn";
 					break;
+				case PanelSubject.Whistle:
 				case PanelSubject.Horn:
 					Code = "horn";
 					break;
