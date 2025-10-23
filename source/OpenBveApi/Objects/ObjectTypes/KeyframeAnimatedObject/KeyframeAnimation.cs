@@ -194,8 +194,9 @@ namespace OpenBveApi.Objects
 					}
 					else
 					{
-						// unknown animation key- for the minute, we'll stick to the MSTS keys, but return frame 0 to show object
+						// unknown animation key- for the minute, we'll stick to the MSTS keys
 						AnimationKey = 0;
+						return;
 					}
 				}
 				else
