@@ -166,6 +166,9 @@ namespace Train.MsTs
 						// NOT YET IMPLEMENTED
 						currentCar.TractionModel = new BVEMotorCar(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) });
 						break;
+					case EngineType.NoEngine:
+						currentCar.TractionModel = new BVETrailerCar(currentCar);
+						break;
 				}
 
 				if (currentCar.ReAdhesionDevice == null)
