@@ -43,41 +43,35 @@ namespace Train.MsTs
 				}
 			}
 		}
-
 		
-
 		internal double GetWheelslipValue()
 		{
 			double multiplier;
 			// https://www.trainsim.com/forums/forum/general-discussion/traction/68459-msts-diesel-sanding-effective
+			// MSTS uses a per-axle drive force calculation, so our traction model's force is divided by the number of axles
+			// whereas BVE thinks in terms of the whole car, so for a *hacky* version, we don't need the NumWheels divisor or
+			// the mass, as we're not worrying about mass per axle yet...
+			// Unlikely to be perfect, but doing it this way resolves massive wheelslip issues
+
 			if (baseCar.ReAdhesionDevice is Sanders sanders && sanders.Active)
 			{
-				multiplier = 0.95 * WheelSlip * Sanding * baseCar.CurrentMass / baseCar.DrivingWheels[0].TotalNumber / baseCar.CurrentMass;
+				// Per-axle:
+				// multiplier = 0.95 * WheelSlip * Sanding * baseCar.CurrentMass / baseCar.DrivingWheels[0].TotalNumber / baseCar.CurrentMass;
+				multiplier = 0.95 * WheelSlip * Sanding;
 			}
 			else
 			{
 				if (!baseCar.FrontAxle.CurrentWheelSlip)
 				{
-					if (baseCar.DrivingWheels.Count == 0)
-					{
-						multiplier = Normal * Sanding * baseCar.CurrentMass / baseCar.TrailingWheels[0].TotalNumber / baseCar.CurrentMass;
-					}
-					else
-					{
-						multiplier = Normal * Sanding * baseCar.CurrentMass / baseCar.DrivingWheels[0].TotalNumber / baseCar.CurrentMass;
-					}
-
+					// Per-axle:
+					// 	multiplier = Normal * Sanding * baseCar.CurrentMass / baseCar.TrailingWheels[0].TotalNumber / baseCar.CurrentMass;
+					multiplier = Normal * Sanding;
 				}
 				else
 				{
-					if (baseCar.DrivingWheels.Count == 0)
-					{
-						multiplier = WheelSlip * Sanding * baseCar.CurrentMass / baseCar.TrailingWheels[0].TotalNumber / baseCar.CurrentMass;
-					}
-					else
-					{
-						multiplier = WheelSlip * Sanding * baseCar.CurrentMass / baseCar.DrivingWheels[0].TotalNumber / baseCar.CurrentMass;
-					}
+					// Per-axle:
+					// 	multiplier = Normal * Sanding * baseCar.CurrentMass / baseCar.DrivingWheels[0].TotalNumber / baseCar.CurrentMass;
+					multiplier = WheelSlip * Sanding;
 				}
 			}
 
@@ -86,6 +80,7 @@ namespace Train.MsTs
 				// no possible acceleration, so can't wheelslip!
 				return double.MaxValue;
 			}
+
 			return baseCar.TractionModel.MaximumPossibleAcceleration * multiplier;
 		}
 	}
