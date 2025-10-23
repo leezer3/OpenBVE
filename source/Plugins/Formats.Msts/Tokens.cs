@@ -1391,5 +1391,6 @@ namespace OpenBve.Formats.MsTs
 		AuxilaryResCapacity, // BR_Green_57XX_4683
 		AuxilaryResMaxPressure, // BR_Green_57XX_4683
 		SSpring = Spring, // Typo
+		DoesWhistleTriggerBell, // GWRKingV
 	}
 }
