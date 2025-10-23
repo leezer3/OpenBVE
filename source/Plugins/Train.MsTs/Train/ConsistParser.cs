@@ -289,7 +289,7 @@ namespace Train.MsTs
 					/*
 					 * FIXME: All this needs to be pulled from the eng properties, or fixed so it doesn't matter
 					 */
-					currentCar = new CarBase(currentTrain, currentCarIndex, 0.35, 0.0025, 1.1);
+					currentCar = new CarBase(currentTrain, currentCarIndex);
 					currentCar.HoldBrake = new CarHoldBrake(currentCar);
 					//FIXME END
 

@@ -325,6 +325,7 @@ namespace Train.MsTs
 		private double dieselIdleUse;
 		private double dieselMaxUse;
 		private double dieselCapacity;
+		private double dieselMaxTractiveEffortSpeed;
 		private double maxEngineAmps;
 		private double maxBrakeAmps;
 		private double mainReservoirMinimumPressure;
@@ -771,6 +772,9 @@ namespace Train.MsTs
 							break;
 					}
 					break;
+				case KujuTokenID.DieselEngineSpeedOfMaxTractiveEffort:
+					dieselMaxTractiveEffortSpeed = block.ReadSingle(UnitOfVelocity.MetersPerSecond);
+					break;
 				case KujuTokenID.DieselEngineIdleRPM:
 					dieselIdleRPM = block.ReadSingle();
 					break;
@@ -929,6 +933,11 @@ namespace Train.MsTs
 					{
 						Gears[i].OverspeedFailure = Gears[i].MaximumSpeed * perc;
 					}
+					break;
+				case KujuTokenID.Friction:
+					Friction friction = new Friction(block);
+					car.FrontAxle = new MSTSAxle(Plugin.CurrentHost, train, car, friction);
+					car.RearAxle = new MSTSAxle(Plugin.CurrentHost, train, car, friction);
 					break;
 			}
 			return true;
