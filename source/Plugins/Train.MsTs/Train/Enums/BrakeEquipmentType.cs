@@ -16,13 +16,15 @@ namespace Train.MsTs
 		/// <summary>Twin-pipe vacuum brake is fitted.</summary>
 		Vacuum_Brake = 5,
 		Vaccum_Brake = 5,
+		Vacumn_Brake = 5, // typo
 		/// <summary>Single-pipe vacuum brake is fitted.</summary>
 		Vacuum_Single_Pipe = 6,
-		Vaccum_single_pipe = 6,
+		Vaccum_Single_Pipe = 6,
 		/// <summary>Standard triple valve is fitted.</summary>
 		Triple_Valve = 7,
 		/// <summary>Triple valve that permits partial releasing of the brakes.</summary>
 		Graduated_Release_Triple_Valve = 8,
+		Graduate_Release_Triple_valve = 8, // typo
 		/// <summary>Electrically controlled brake system is fitted. Release and application of the brakes are independently controlled.</summary>
 		EP_Brake = 9,
 		EP_Brakes = 9,
@@ -30,7 +32,7 @@ namespace Train.MsTs
 		ECP_Brake = 10,
 		/// <summary>Air tank used for normal service brake applications. This is required for all brake systems.</summary>
 		Auxiliary_Reservoir = 11,
-		Auxilary_Reservoir = 11,
+		Auxilary_Reservoir = 11, // typo
 		/// <summary>Air tank used for emergency applications.</summary>
 		/// <remarks>This is optional.</remarks>
 		Emergency_Brake_Reservoir = 12,
@@ -42,6 +44,10 @@ namespace Train.MsTs
 		Air_Twin_Pipe = 15,
 		Air_Brake = 15,
 		/// <summary>Graduated triple-release valve</summary>
-		Graduated_Triple_Release_Valve = 16
+		Graduated_Triple_Release_Valve = 16,
+		/// <summary>Through piped for vacuum</summary>
+		Vacuum_Piped = 17,
+		/// <summary>Through piped for air</summary>
+		Air_Piped = 18
 	}
 }
