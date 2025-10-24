@@ -68,5 +68,16 @@ namespace Train.MsTs
 		Wheelslip,
 		Whistle,
 		Wipers,
+
+		// From MSTSBin v1.7 documentation
+		Ammeter_Abs,
+		Doors_Display,
+		Pantograph2,    // pantograph2 state [need to dig into this, but I think Pantograph2 was 'broken' until BIN patch, although appears in original GLOBAL folder defines and some default stock]
+		Pantographs_4c, // 4-state combined controller for pantograoh 1+2
+		Pantographs_4,  // with end position
+		Pantographs_5,  // 5-state combined controller for pantograph 1+2
+		RPM,
+		Speed_Projected, // projected speed in one minute
+		SpeedLimit, // signal limit, not track limit
 	}
 }

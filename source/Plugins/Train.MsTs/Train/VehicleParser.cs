@@ -234,7 +234,7 @@ namespace Train.MsTs
 			}
 			else if (!headerString.StartsWith("SIMISA@@"))
 			{
-				throw new Exception("Unrecognized vehicle file header " + headerString + " in " + fileName);
+				throw new Exception("MSTS Vehicle Parser: Unrecognized vehicle file header " + headerString + " in " + fileName);
 			}
 
 			string subHeader;
@@ -273,7 +273,7 @@ namespace Train.MsTs
 					{
 						if (engineBlocks.Count > 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Multiple engine blocks encounted in MSTS ENG file "+ fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Multiple engine blocks encounted in MSTS ENG file "+ fileName);
 						}
 						return ParseBlock(engineBlocks[0], fileName, ref wagonName, true, ref car, ref train);
 					}
@@ -281,7 +281,7 @@ namespace Train.MsTs
 					{
 						if (wagonBlocks.Count > 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Multiple wagon blocks encounted in MSTS ENG file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Multiple wagon blocks encounted in MSTS WAG file " + fileName);
 						}
 						return ParseBlock(wagonBlocks[0], fileName, ref wagonName, false, ref car, ref train);
 					}
@@ -293,29 +293,27 @@ namespace Train.MsTs
 			{
 				throw new Exception("Unrecognized subHeader \"" + subHeader + "\" in " + fileName);
 			}
-			else
+
+			using (BinaryReader reader = new BinaryReader(fb))
 			{
-				using (BinaryReader reader = new BinaryReader(fb))
+				KujuTokenID currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.Wagon)
 				{
-					KujuTokenID currentToken = (KujuTokenID) reader.ReadUInt16();
-					if (currentToken != KujuTokenID.Wagon)
-					{
-						throw new Exception(); //Shape definition
-					}
-					reader.ReadUInt16(); 
-					uint remainingBytes = reader.ReadUInt32();
-					byte[] newBytes = reader.ReadBytes((int) remainingBytes);
-					BinaryBlock block = new BinaryBlock(newBytes, KujuTokenID.Wagon);
-					try
-					{
-						ParseBlock(block, fileName, ref wagonName, isEngine, ref car, ref train);
-					}
-					catch (InvalidDataException)
-					{
-						return false;
-					}
-					
+					throw new Exception(); //Shape definition
 				}
+				reader.ReadUInt16(); 
+				uint remainingBytes = reader.ReadUInt32();
+				byte[] newBytes = reader.ReadBytes((int) remainingBytes);
+				BinaryBlock block = new BinaryBlock(newBytes, KujuTokenID.Wagon);
+				try
+				{
+					ParseBlock(block, fileName, ref wagonName, isEngine, ref car, ref train);
+				}
+				catch (InvalidDataException)
+				{
+					return false;
+				}
+					
 			}
 			return true;
 		}
@@ -350,6 +348,7 @@ namespace Train.MsTs
 		private CouplingType couplingType;
 		private Friction friction;
 		private Adhesion adhesion;
+		private UnitOfPressure brakeSystemDefaultUnits = UnitOfPressure.PoundsPerSquareInch;
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
@@ -658,6 +657,26 @@ namespace Train.MsTs
 				case KujuTokenID.BrakeSystemType:
 					// Determines the brake system types available
 					brakeSystemTypes = block.ReadEnumArray(default(BrakeSystemType));
+					// WARNING: If vehicle only has vac brakes, default parameters for brake system are in/hg
+					//          otherwise, default parameters are psi
+					bool hasAirBrakes = false;
+					for (int i = 0; i < brakeSystemTypes.Length; i++)
+					{
+						switch (brakeSystemTypes[i])
+						{
+							case BrakeSystemType.Air_single_pipe:
+							case BrakeSystemType.Air_twin_pipe:
+							case BrakeSystemType.EP:
+							case BrakeSystemType.ECP:
+								hasAirBrakes = true;
+								break;
+						}
+					}
+
+					if (!hasAirBrakes)
+					{
+						brakeSystemDefaultUnits = UnitOfPressure.InchesOfMercury;
+					}
 					break;
 				case KujuTokenID.CabView:
 					// Loads cab view file
@@ -699,7 +718,7 @@ namespace Train.MsTs
 					// maximum force applied when starting
 					if (!isEngine)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Engine force is not expected to be present in a wagon block.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: MaxForce is not expected to be present in a wagon block.");
 						break;
 					}
 					maxForce = block.ReadSingle(UnitOfForce.Newton);
@@ -714,7 +733,7 @@ namespace Train.MsTs
 					// Maximum continuous force
 					if (!isEngine)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Engine force is not expected to be present in a wagon block.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: MaxContinuousForce is not expected to be present in a wagon block.");
 						break;
 					}
 					maxContinuousForce = block.ReadSingle(UnitOfForce.Newton);
@@ -769,7 +788,7 @@ namespace Train.MsTs
 				case KujuTokenID.EngineControllers:
 					if (!isEngine)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Engine controllers are not expected to be present in a wagon block.");
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: An EngineControllers block is not valid in a wagon block.");
 						break;
 					}
 
@@ -862,10 +881,10 @@ namespace Train.MsTs
 					mainReservoirMaximumPressure = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
 					break;
 				case KujuTokenID.BrakeCylinderPressureForMaxBrakeBrakeForce:
-					brakeCylinderMaximumPressure = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					brakeCylinderMaximumPressure = block.ReadSingle(UnitOfPressure.Pascal, brakeSystemDefaultUnits);
 					break;
 				case KujuTokenID.TrainBrakesControllerEmergencyApplicationRate:
-					emergencyRate = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					emergencyRate = block.ReadSingle(UnitOfPressure.Pascal, brakeSystemDefaultUnits);
 					break;
 				case KujuTokenID.AirBrakesAirCompressorPowerRating:
 					compressionRate = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
@@ -875,7 +894,7 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.TrainBrakesControllerMaxReleaseRate:
-					releaseRate = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					releaseRate = block.ReadSingle(UnitOfPressure.Pascal, brakeSystemDefaultUnits);
 					break;
 				case KujuTokenID.AntiSlip:
 					// if any value in this block, car has wheelslip detection control
@@ -1010,7 +1029,7 @@ namespace Train.MsTs
 				case KujuTokenID.GearBoxMaxSpeedForGears:
 					if (Gears == null)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: Number of gears must be specified.");
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: Gears must be specified when using GearBoxMaxSpeedForGears.");
 						break;
 					}
 
@@ -1022,7 +1041,7 @@ namespace Train.MsTs
 				case KujuTokenID.GearBoxMaxTractiveForceForGears:
 					if (Gears == null)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: Number of gears must be specified.");
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: Gears must be specified when using GearBoxMaxTractiveForceForGears.");
 						break;
 					}
 
@@ -1034,7 +1053,7 @@ namespace Train.MsTs
 				case KujuTokenID.GearBoxOverspeedPercentageForFailure:
 					if (Gears == null)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: Number of gears must be specified.");
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: Gears must be specified when using GearBoxOVerspeedPercentageForFailure.");
 						break;
 					}
 

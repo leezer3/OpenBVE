@@ -48,6 +48,8 @@ namespace Train.MsTs
 		/// <summary>Through piped for vacuum</summary>
 		Vacuum_Piped = 17,
 		/// <summary>Through piped for air</summary>
-		Air_Piped = 18
+		Air_Piped = 18,
+		/// <summary>Brake reservoir for emergency brakes only</summary>
+		Emergency_reservoir = 19
 	}
 }
