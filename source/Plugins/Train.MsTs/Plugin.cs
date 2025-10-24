@@ -23,34 +23,37 @@ namespace Train.MsTs
 
 		internal static FileSystem FileSystem;
 
-		internal static string MsTsPath;
+		internal static BaseOptions CurrentOptions;
 
 		internal static bool PreviewOnly;
 		public Plugin()
 		{
 			ConsistParser = new ConsistParser(this);
 			WagonParser = new WagonParser();
-
-			try
-			{
-				MsTsPath = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft Games\\Train Simulator\\1.0", "Path", string.Empty);
-				string OrTsPath = (string)Registry.GetValue("HKEY_CURRENT_USER\\Software\\OpenRails\\ORTS\\Folders", "Train Simulator", string.Empty);
-				if (!string.IsNullOrEmpty(OrTsPath))
-				{
-					MsTsPath = OrTsPath;
-				}
-			}
-			catch
-			{
-				// ignored
-			}
 		}
 
 		public override void Load(HostInterface host, FileSystem fileSystem, BaseOptions options, object rendererReference)
 		{
 			CurrentHost = host;
 			FileSystem = fileSystem;
+			CurrentOptions = options;
 			Renderer = (BaseRenderer) rendererReference;
+			try
+			{
+				if (string.IsNullOrEmpty(FileSystem.MSTSDirectory))
+				{
+					FileSystem.MSTSDirectory = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft Games\\Train Simulator\\1.0", "Path", string.Empty);
+					string OrTsPath = (string)Registry.GetValue("HKEY_CURRENT_USER\\Software\\OpenRails\\ORTS\\Folders", "Train Simulator", string.Empty);
+					if (!string.IsNullOrEmpty(OrTsPath))
+					{
+						FileSystem.MSTSDirectory = OrTsPath;
+					}
+				}
+			}
+			catch
+			{
+				// ignored
+			}
 		}
 
 		public override bool CanLoadTrain(string path)
