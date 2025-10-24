@@ -65,6 +65,7 @@ namespace Train.MsTs
 				catch
 				{
 					// ignore
+					NotchDescriptions[i] = new Tuple<double, string>(notchPower, i.ToString());
 				}
 			}
 		}

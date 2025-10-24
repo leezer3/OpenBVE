@@ -56,6 +56,9 @@ namespace OpenBveApi.FileSystem {
 		/// <summary>The Loksim3D data directory</summary>
 		public string LoksimDataDirectory;
 
+		/// <summary>The MSTS trainset directory</summary>
+		public string MSTSDirectory;
+
 		/// <summary>Any lines loaded from the filesystem.cfg which were not understood</summary>
 		internal string[] NotUnderstoodLines;
 
@@ -158,7 +161,7 @@ namespace OpenBveApi.FileSystem {
 		{
 			string file = Path.CombineFile(SettingsFolder, "FileSystem.cfg");
 			StringBuilder newLines = new StringBuilder();
-			newLines.AppendLine("Version=1");
+			newLines.AppendLine("Version=2");
 			try
 			{
 				if (File.Exists(file))
@@ -218,6 +221,11 @@ namespace OpenBveApi.FileSystem {
 					Directory.Exists(LoksimPackageInstallationDirectory))
 				{
 					newLines.AppendLine("LoksimPackageInstall=" + ReplacePath(LoksimPackageInstallationDirectory));
+				}
+				if (MSTSDirectory != null &&
+				    Directory.Exists(OtherInstallationDirectory))
+				{
+					newLines.AppendLine("MSTSTrainset=" + ReplacePath(MSTSDirectory));
 				}
 				if (NotUnderstoodLines != null && NotUnderstoodLines.Length != 0)
 				{
@@ -350,14 +358,14 @@ namespace OpenBveApi.FileSystem {
 									system.AppendToLogFile("WARNING: Invalid filesystem.cfg version detected.");
 								}
 
-								if (v <= 1)
+								if (v <= 2)
 								{
 									//Silently upgrade to the current config version
-									system.Version = 1;
+									system.Version = 2;
 									break;
 								}
 
-								system.AppendToLogFile("WARNING: A newer filesystem.cfg version " + v + " was detected. The current version is 1.");
+								system.AppendToLogFile("WARNING: A newer filesystem.cfg version " + v + " was detected. The current version is 2.");
 								system.Version = v;
 
 								break;
@@ -416,6 +424,9 @@ namespace OpenBveApi.FileSystem {
 								break;
 							case "loksimpackageinstall":
 								system.LoksimPackageInstallationDirectory = GetAbsolutePath(value, true);
+								break;
+							case "mststrainset":
+								system.MSTSDirectory = GetAbsolutePath(value, true);
 								break;
 							default:
 								if (system.NotUnderstoodLines == null)

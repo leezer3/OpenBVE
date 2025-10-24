@@ -45,8 +45,7 @@ namespace Train.MsTs
 	internal class ConsistParser
 	{
 		internal readonly Plugin Plugin;
-
-		internal string CurrentFolder;
+		internal string TrainsetDirectory;
 
 		internal ConsistParser(Plugin plugin)
 		{
@@ -71,19 +70,31 @@ namespace Train.MsTs
 			train.Handles.HoldBrake = new HoldBrakeHandle(train);
 			train.Specs.AveragesPressureDistribution = true;
 			train.SafetySystems.Headlights = new LightSource(train, 2);
-			CurrentFolder = Path.GetDirectoryName(fileName);
-			if (CurrentFolder == null)
+			if(Directory.Exists(Plugin.FileSystem.MSTSDirectory))
 			{
-				throw new Exception("Unable to determine the MSTS consist working directory.");
+				TrainsetDirectory = OpenBveApi.Path.CombineDirectory(Plugin.FileSystem.MSTSDirectory, "TRAINS\\trainset");
 			}
-			DirectoryInfo d = Directory.GetParent(CurrentFolder);
-			if(d == null || !d.Name.Equals("TRAINS", StringComparison.InvariantCultureIgnoreCase))
+			else
 			{
-				//FIXME: Better finding of the trainset folder (set in options?)
-				throw new Exception("Unable to find the MSTS TRAINS folder.");
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The MSTS directory has not been set. Attempting to find the trainset directory.");
+				string currentFolder = Path.GetDirectoryName(fileName);
+				if (currentFolder == null)
+				{
+					throw new Exception("MSTS Consist Parser: Unable to determine the consist working directory.");
+				}
+				DirectoryInfo d = Directory.GetParent(currentFolder);
+				if (d == null || !d.Name.Equals("TRAINS", StringComparison.InvariantCultureIgnoreCase))
+				{
+					//FIXME: Better finding of the trainset folder (set in options?)
+					throw new Exception("MSTS Consist Parser: Unable to find the MSTS TRAINS folder.");
+				}
+				TrainsetDirectory = OpenBveApi.Path.CombineDirectory(currentFolder, "trainset");
 			}
 
-			CurrentFolder = d.FullName;
+			if (!Directory.Exists(TrainsetDirectory))
+			{
+				throw new Exception("MSTS Consist Parser: Unable to find the MSTS trainset folder.");
+			}
 
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
@@ -162,6 +173,11 @@ namespace Train.MsTs
 					BinaryBlock block = new BinaryBlock(newBytes, KujuTokenID.Train);
 					ParseBlock(block, ref train);
 				}
+			}
+
+			if (train.Cars.Length == 0)
+			{
+				throw new InvalidDataException("Consist " + fileName + " appears to be invalid or malformed");
 			}
 
 			bool hasCabview = false;
@@ -328,11 +344,11 @@ namespace Train.MsTs
 							break;
 						case 1:
 							//Just a WagonName- This is likely invalid, but let's ignore
-							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset"), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref currentTrain);
+							Plugin.WagonParser.Parse(TrainsetDirectory, wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref currentTrain);
 							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: No WagonFolder supplied, searching entire trainset folder.");
 							break;
 						case 2:
-							string wagonDirectory = OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset\\" + wagonFiles[1]);
+							string wagonDirectory = OpenBveApi.Path.CombineDirectory(TrainsetDirectory, wagonFiles[1]);
 							if (!Directory.Exists(wagonDirectory))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: WagonFolder " + wagonDirectory + " was not found.");
@@ -342,7 +358,7 @@ namespace Train.MsTs
 							Plugin.WagonParser.Parse(wagonDirectory, wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref currentTrain);
 							break;
 						default:
-							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset"), wagonFiles[1], block.Token == KujuTokenID.EngineData, ref currentCar, ref currentTrain);
+							Plugin.WagonParser.Parse(TrainsetDirectory, wagonFiles[1], block.Token == KujuTokenID.EngineData, ref currentCar, ref currentTrain);
 							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: Two parameters were expected- Check for correct escaping of strings.");
 							break;
 					}

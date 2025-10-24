@@ -1636,6 +1636,10 @@
 						<source>Other items installation directory:</source>
 						<target>Carpeta de instalación de otros paquetes:</target>
 					</trans-unit>
+					<trans-unit id="package_msts_directory">
+						<source>MSTS installation directory:</source>
+						<target>Carpeta de instalación de MSTS:</target>
+					</trans-unit>
 					<trans-unit id="package_compression">
 						<source>Package compression format:</source>
 						<target>Formato de compresión de los paquetes:</target>
