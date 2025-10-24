@@ -34,8 +34,7 @@ namespace OpenBveApi.World
 				 *       the T abbreviation refers to a metric ton for convienence.
 				 */
 				{"t", UnitOfWeight.MetricTonnes}, {"tonne", UnitOfWeight.MetricTonnes}, {"tonnes", UnitOfWeight.MetricTonnes},
-				{"ton", UnitOfWeight.ImperialTons}, {"tons", UnitOfWeight.ImperialTons}
-				
+				{"ton", UnitOfWeight.ImperialTons}, {"tons", UnitOfWeight.ImperialTons}, {"t-uk", UnitOfWeight.ImperialTons}
 			};
 		}
 

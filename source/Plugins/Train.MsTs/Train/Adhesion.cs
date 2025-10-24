@@ -1,4 +1,5 @@
 ﻿using OpenBve.Formats.MsTs;
+using OpenBveApi.Interface;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
 
@@ -24,6 +25,18 @@ namespace Train.MsTs
 				Normal = block.ReadSingle();
 				Sanding = block.ReadSingle();
 
+				if (Sanding < 0.75 || Normal < 0.05 || WheelSlip < 0.05)
+				{
+					/*
+					 * e.g. MT Class 47
+					 *		If we don't apply at least 75 percent of rated power when *sanding* let alone normally
+					 *		the ENG file is clearly bugged
+					 */
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Discarding implausible Adheasion values");
+					WheelSlip = 0.2;
+					Normal = 0.4;
+					Sanding = 2.0;
+				}
 			}
 			catch
 			{
