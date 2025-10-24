@@ -753,10 +753,10 @@ namespace Train.MsTs
 					string soundFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Path.GetDirectoryName(fileName), "SOUND"), sF);
 					if (!File.Exists(soundFile))
 					{
-						if (Directory.Exists(Plugin.MsTsPath))
+						if (Directory.Exists(Plugin.FileSystem.MSTSDirectory))
 						{
 							// If sound file is not relative to the ENG / WAG, try in the MSTS common sound directory (most generic wagons + coaches)
-							soundFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Plugin.MsTsPath, "SOUND"), sF);
+							soundFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Plugin.FileSystem.MSTSDirectory, "SOUND"), sF);
 						}
 						if (!File.Exists(soundFile))
 						{
