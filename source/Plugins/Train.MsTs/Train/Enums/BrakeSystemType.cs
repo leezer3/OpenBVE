@@ -13,6 +13,7 @@ namespace Train.MsTs
 		/// <summary>One pipe is used to supply and control the vacuum brakes.</summary>
 		Vacuum_single_pipe,
 		Vaccum_single_pipe = Vacuum_single_pipe,
+		Vacumn_single_pipe = Vaccum_single_pipe,
 		/// <summary>Two pipes are used. One controls the vacuum brakes, the other supply the vacuum reservior.</summary>
 		Vacuum_twin_pipe,
 		Vaccum_twin_pipe = Vacuum_twin_pipe,

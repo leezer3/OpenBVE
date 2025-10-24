@@ -1355,8 +1355,11 @@ namespace OpenBve.Formats.MsTs
 		ORTSSoundFileName, // ORTS specific for individual level crossing sounds
 		ORTSPantographToggle3,
 		ORTSPantographToggle4,
-		
-		
+		ORTSFreightAnims,
+		MSTSFreightAnimEnabled,
+		ORTSDriveWheelWeight,
+		SubType, // in some ORTS stuff
+
 		//needed for our block parser, so let's deliberately use values ORTS will not touch
 		Comment = uint.MinValue + 1,
 		// skip is found in SMS files, identical purpose to comment
@@ -1392,5 +1395,10 @@ namespace OpenBve.Formats.MsTs
 		AuxilaryResMaxPressure, // BR_Green_57XX_4683
 		SSpring = Spring, // Typo
 		DoesWhistleTriggerBell, // GWRKingV
+		BrakePipeVolume, // LU StdTrailer2
+		TrainBrakeControllerMinContinuousService, // BR_HW_5217
+		TrainBrakesPipeLeakRate, // FDB_L1_67708
+		InitialTrigger, // HWH-Manor-Int-80a-01
+		
 	}
 }
