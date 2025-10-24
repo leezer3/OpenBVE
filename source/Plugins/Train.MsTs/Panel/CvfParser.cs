@@ -91,7 +91,7 @@ namespace Train.MsTs
 			}
 			else if (!headerString.StartsWith("SIMISA@@"))
 			{
-				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognized cabview file header " + headerString + " in " + fileName);
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Cabview Parser: Unrecognized cabview file header " + headerString + " in " + fileName);
 				return false;
 			}
 
@@ -120,7 +120,7 @@ namespace Train.MsTs
 			}
 			else if (subHeader[7] != 'b')
 			{
-				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognized subHeader " + subHeader + " in " + fileName);
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Cabview Parser: Unrecognized subHeader " + subHeader + " in " + fileName);
 				return false;
 			}
 			else
@@ -218,7 +218,11 @@ namespace Train.MsTs
 					int controlCount = block.ReadInt16();
 					while (controlCount > 0)
 					{
-						newBlock = block.ReadSubBlock();
+						newBlock = block.ReadSubBlock(true);
+						if (newBlock.Token == KujuTokenID.Skip)
+						{
+							continue;
+						}
 						CabComponent currentComponent = new CabComponent(newBlock, cabViews[0].Position); // cab components can only be applied to CabView #0, others are static views
 						currentComponent.Parse();
 						cabComponents.Add(currentComponent);
@@ -465,7 +469,7 @@ namespace Train.MsTs
 		{
 			if (Size.X == 0 || Size.Y == 0)
 			{
-				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Attempted to create an invalid size element");
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Cabview Parser: Attempted to create an invalid size element");
 			}
 
 			double worldWidth, worldHeight;
