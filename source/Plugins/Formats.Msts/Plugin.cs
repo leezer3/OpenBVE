@@ -26,7 +26,6 @@ using Microsoft.Win32;
 using OpenBveApi.World;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -370,6 +369,34 @@ namespace OpenBve.Formats.MsTs
 		private readonly VelocityConverter velocityConvertor = new VelocityConverter();
 		private readonly TorqueConverter torqueConvertor = new TorqueConverter();
 
+		private KujuTokenID ParseToken(string s)
+		{
+			if (Enum.TryParse(s, out KujuTokenID parsedToken))
+			{
+				return parsedToken;
+			}
+#if DEBUG 
+			// In debug mode, always throw an exception
+			// this way, any new parameters can be added to our list for future
+			// possible usage
+			throw new InvalidDataException("Unrecognised token " + s);
+#else
+			if (s.StartsWith("ORTS", StringComparison.InvariantCultureIgnoreCase))
+			{
+				// This is probably an ORTS token that we haven't encountered
+				// [the ORTS parameters spreadsheet link is broken]
+				// Parse the block, but do nothing at the mminute
+				return KujuTokenID.ORTSUnknown;
+			}
+
+			// Completely unknown token
+			// NOTE: A lot of MSTS stuff contains textually edited typos
+			// At the minute, typos are being added to the token list
+			// Drawback of using an enum method for this :/
+			throw new InvalidDataException("Unrecognised token " + s);
+#endif
+		}
+
 		private TextualBlock(string text, bool textIsClean)
 		{
 			if (!textIsClean)
@@ -491,10 +518,7 @@ namespace OpenBve.Formats.MsTs
 				s = s.Substring(0, ws);
 			}
 
-			if (!Enum.TryParse(s, true, out KujuTokenID currentToken))
-			{
-				throw new InvalidDataException("Invalid token " + s);
-			}
+			KujuTokenID currentToken = ParseToken(s);
 
 			if (currentToken != Token)
 			{
@@ -568,10 +592,7 @@ namespace OpenBve.Formats.MsTs
 				s = s.Substring(0, ws);
 			}
 
-			if (!Enum.TryParse(s, true, out KujuTokenID currentToken))
-			{
-				throw new InvalidDataException("Unrecognised token " + s);
-			}
+			KujuTokenID currentToken = ParseToken(s);
 
 			if (newToken != currentToken)
 			{
@@ -641,10 +662,7 @@ namespace OpenBve.Formats.MsTs
 				s = s.Substring(0, ws);
 			}
 
-			if (!Enum.TryParse(s, true, out KujuTokenID currentToken))
-			{
-				throw new InvalidDataException("Unrecognised token " + s);
-			}
+			KujuTokenID currentToken = ParseToken(s);
 
 			if (!validTokens.Contains(currentToken))
 			{
@@ -673,10 +691,8 @@ namespace OpenBve.Formats.MsTs
 							// found comment block which we don't want to read- retry
 							return ReadSubBlock(validTokens);
 						}
-						else
-						{
-							return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true, this);
-						}
+
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken, true, this);
 					}
 
 					level--;
@@ -747,26 +763,8 @@ namespace OpenBve.Formats.MsTs
 				s = s.Substring(0, ws);
 			}
 
-			KujuTokenID currentToken;
-			if (s[0] == '#' || s.StartsWith("_#"))
-			{
-				// Commented block, e.g. Pendennis luggage car
-				currentToken = KujuTokenID.Skip;
-			}
-			else if (!Enum.TryParse(s, true, out currentToken))
-			{
-				if (Label.Equals("Skip", StringComparison.InvariantCultureIgnoreCase) && s == ")")
-				{
-					return new TextualBlock(String.Empty, true);
-				}
-				throw new InvalidDataException("Unrecognised token " + s);
-			}
-
-			if (currentToken == KujuTokenID.Skip)
-			{
-				int b = 0;
-			}
-
+			KujuTokenID currentToken = ParseToken(s);
+			
 			int level = 0;
 			while (currentPosition < myText.Length)
 			{

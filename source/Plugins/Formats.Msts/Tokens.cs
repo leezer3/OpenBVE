@@ -1351,6 +1351,7 @@ namespace OpenBve.Formats.MsTs
 		Engine,
 
 		// ORTS specific
+		ORTSUnknown, // Not actually a 'real' token, just used to allow us to handle unknown ORTS tokens gracefully
 		ORTSListName, // ORTS specific for multi-carspawnerlists
 		ORTSSoundFileName, // ORTS specific for individual level crossing sounds
 		ORTSPantographToggle3,
