@@ -479,7 +479,7 @@ namespace OpenBveApi.Objects
 		}
 		
 		/// <summary>Applys translation</summary>
-		public void ApplyTranslation(double x, double y, double z)
+		public override void ApplyTranslation(double x, double y, double z, bool absoluteTranslation = false)
 		{
 			for (int i = 0; i < Mesh.Vertices.Length; i++)
 			{

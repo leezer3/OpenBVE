@@ -45,8 +45,10 @@ namespace OpenBveApi.Interface
 		internal string Flag;
 		/// <summary>The list of contributors</summary>
 		internal string Contributors;
+		/*
 		/// <summary>The time this language file was last updated</summary>
 		internal DateTime LastUpdated;
+		*/
 		/// <summary>The translation groups contained within the language</summary>
 		internal Dictionary<string, TranslationGroup> TranslationGroups = new Dictionary<string, TranslationGroup>();
 		/// <summary>The quick references</summary>

@@ -292,7 +292,7 @@ namespace Plugin
 								matrixChain.Clear();
 							}
 
-							if (staticTransform)
+							if (staticTransform && string.IsNullOrEmpty(wagonFileDirectory)) // if part of a MSTS train, we may need to operate on contained matricies when merging shapes
 							{
 								for (int k = 0;k < matrixChain.Count; k++)
 								{
@@ -649,11 +649,6 @@ namespace Plugin
 					
 				}
 			}
-
-
-
-
-			Matrix4D matrix = Matrix4D.Identity;
 			return newResult;
 		}
 
@@ -782,12 +777,8 @@ namespace Plugin
 					}
 					break;
 				case KujuTokenID.colour:
-					// ARGB
-					a = block.ReadSingle();
-					r = block.ReadSingle();
-					g = block.ReadSingle();
-					b = block.ReadSingle();
-					shape.colors.Add(new Color32((byte)(255 * r), (byte)(255 * g), (byte)(255 * b), (byte)(255 * a)));
+					// NOTE: ARGB
+					shape.colors.Add(block.ReadColorArgb());
 					break;
 				case KujuTokenID.shader_names:
 					int numShaders = block.ReadInt32();
@@ -896,7 +887,8 @@ namespace Plugin
 						borderColor = block.ReadUInt32();
 					}
 
-					//Unpack border color
+					// Unpack border color
+					// NOTE: RGBA
 					r = borderColor % 256;
 					g = (borderColor / 256) % 256;
 					b = (borderColor / 256 / 256) % 256;

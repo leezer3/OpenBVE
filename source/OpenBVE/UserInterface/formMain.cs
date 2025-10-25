@@ -739,9 +739,11 @@ namespace OpenBve {
 			textBoxRouteDirectory.Text = Program.FileSystem.RouteInstallationDirectory;
 			textBoxTrainDirectory.Text = Program.FileSystem.TrainInstallationDirectory;
 			textBoxOtherDirectory.Text = Program.FileSystem.OtherInstallationDirectory;
+			textBoxMSTSTrainsetDirectory.Text = Program.FileSystem.MSTSDirectory;
 			labelRouteInstallDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_route_directory"});
 			labelTrainInstallDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_train_directory"});
 			labelOtherInstallDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_other_directory"});
+			labelOtherInstallDirectory.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "options", "package_msts_directory" });
 			labelPackageCompression.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","package_compression"});
 			//Kiosk Mode
 			groupBoxKioskMode.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"options","kiosk_mode"});
@@ -1198,7 +1200,7 @@ namespace OpenBve {
 				string[] a = new string[Interface.CurrentOptions.RecentlyUsedTrains.Length];
 				for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
 				{
-					if (Directory.Exists(Interface.CurrentOptions.RecentlyUsedTrains[i]))
+					if ((Interface.CurrentOptions.RecentlyUsedTrains[i].EndsWith(".con", StringComparison.InvariantCultureIgnoreCase) && File.Exists(Interface.CurrentOptions.RecentlyUsedTrains[i])) || Directory.Exists(Interface.CurrentOptions.RecentlyUsedTrains[i]))
 					{
 						a[n] = Interface.CurrentOptions.RecentlyUsedTrains[i];
 						n++;
@@ -2060,6 +2062,18 @@ namespace OpenBve {
 		private void textboxTrainDescription_LinkClicked(object sender, LinkClickedEventArgs e)
 		{
 			Process.Start(e.LinkText);
+		}
+
+		private void buttonMSTSTrainsetDirectory_Click(object sender, EventArgs e)
+		{
+			using (var folderSelectDialog = new FolderBrowserDialog())
+			{
+				if (folderSelectDialog.ShowDialog() == DialogResult.OK)
+				{
+					Program.FileSystem.MSTSDirectory = folderSelectDialog.SelectedPath;
+					textBoxMSTSTrainsetDirectory.Text = folderSelectDialog.SelectedPath;
+				}
+			}
 		}
 	}
 }

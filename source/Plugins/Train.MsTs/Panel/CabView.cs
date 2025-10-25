@@ -22,10 +22,28 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-namespace TrainManager.Motor
+using OpenBveApi.Math;
+
+namespace Train.MsTs
 {
-    public enum EngineComponent
-    {
-		TractionMotor,
-    }
+	/// <summary>A cab view within a CVF file</summary>
+	internal struct CabView
+	{
+		/// <summary>The base texture</summary>
+		internal string FileName;
+		/// <summary>The top left position within the texture</summary>
+		internal Vector2 TopLeft;
+		/// <summary>The clipped size within the texture</summary>
+		internal Vector2 PanelSize;
+		/// <summary>The position of the driver's eye within the containing car</summary>
+		internal Vector3 Position;
+		/// <summary>The rotated direction of the cab view</summary>
+		internal Vector3 Direction;
+
+		internal void SetCabView(string currentFolder, string cabViewFile)
+		{
+			cabViewFile = cabViewFile.Replace(@"\\", @"\");
+			FileName = OpenBveApi.Path.CombineFile(currentFolder, cabViewFile);
+		}
+	}
 }
