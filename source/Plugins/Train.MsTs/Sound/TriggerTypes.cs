@@ -56,9 +56,11 @@ namespace Train.MsTs
 		VigilanceAlarmReset = 48,
 		// 49 - 53 not listed
 
-		// TODO: CHECK 53 / 54:
+		// 
 		// acelaeng.sms has 53 commented as Brake Normal Apply and 54 as BrakeEmergencyApply
-
+		// 
+		// OpenRails forum suggests that trigger 53 never actually worked
+		// 
 		TrainBrakePressureDecrease = 54,
 		//55 not listed
 		VigilanceAlarmOn = 56,

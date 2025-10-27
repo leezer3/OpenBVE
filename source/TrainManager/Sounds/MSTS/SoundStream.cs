@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -39,19 +39,19 @@ namespace TrainManager.MsTsSounds
 		/// <summary>The frequency curve for the sound stream</summary>
 		public MsTsFrequencyCurve FrequencyCurve;
 		/// <summary>The camera modes in which this sound stream is active</summary>
-		public CameraViewMode ActivationCameraModes;
+		public readonly CameraViewMode ActivationCameraModes;
 		/// <summary>The modes in which this sound stream is not active</summary>
-		public CameraViewMode DeactivationCameraModes;
+		public readonly CameraViewMode DeactivationCameraModes;
 
 		private SoundSource soundSource;
 
 		private CarBase car;
 
-		public SoundStream(CarBase baseCar)
+		public SoundStream(CarBase baseCar, CameraViewMode activationCameraModes, CameraViewMode deactivationCameraModes)
 		{
 			Triggers = new List<SoundTrigger>();
-			ActivationCameraModes = CameraViewMode.NotDefined;
-			DeactivationCameraModes = CameraViewMode.NotDefined;
+			ActivationCameraModes = activationCameraModes;
+			DeactivationCameraModes = deactivationCameraModes;
 			car = baseCar;
 		}
 
@@ -91,6 +91,10 @@ namespace TrainManager.MsTsSounds
 			 * Otherwise, stop the playing buffer.
 			 */
 			SoundBuffer soundBuffer = null;
+			if (soundSource != null)
+			{
+				soundBuffer = soundSource.Buffer;
+			}
 			bool loops = false;
 
 			for (int i = 0; i < Triggers.Count; i++)
@@ -110,6 +114,7 @@ namespace TrainManager.MsTsSounds
 				}
 				else
 				{
+					soundSource?.Stop();
 					soundSource = (SoundSource)TrainManagerBase.currentHost.PlaySound(soundBuffer, pitch, volume, Vector3.Zero, car, loops);
 				}
 			}
