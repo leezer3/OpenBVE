@@ -39,15 +39,14 @@ namespace TrainManager.MsTsSounds
 		{
 		}
 
-		private bool triggered;
 
 		public override void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
 		{
-			if (triggered == false)
+			if (Triggered == false)
 			{
 				soundBuffer = Buffer;
 				soundLoops = SoundLoops;
-				triggered = true;
+				Triggered = true;
 			}
 		}
 	}

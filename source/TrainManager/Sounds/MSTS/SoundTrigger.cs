@@ -40,6 +40,8 @@ namespace TrainManager.MsTsSounds
 		internal double Timer;
 		/// <summary>The previously selected buffer index</summary>
 		internal int BufferIndex;
+		/// <summary>Stores whether the trigger is currently active</summary>
+		internal bool Triggered;
 		/// <summary>Gets the actual sound buffer to be played</summary>
 		internal SoundBuffer Buffer
 		{

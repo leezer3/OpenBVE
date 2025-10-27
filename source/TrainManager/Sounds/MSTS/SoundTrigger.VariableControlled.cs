@@ -49,10 +49,16 @@ namespace TrainManager.MsTsSounds
 
 		public override void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
 		{
-			if (car.TractionModel.CurrentPower >= variableValue)
+			if (car.TractionModel.CurrentPower >= variableValue && Triggered == false)
 			{
 				soundBuffer = Buffer;
 				soundLoops = SoundLoops;
+				Triggered = true;
+			}
+
+			if (car.TractionModel.CurrentPower < variableValue)
+			{
+				Triggered = false;
 			}
 		}
 	}
@@ -77,10 +83,16 @@ namespace TrainManager.MsTsSounds
 
 		public override void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
 		{
-			if (car.TractionModel.CurrentPower <= variableValue)
+			if (car.TractionModel.CurrentPower <= variableValue && Triggered == false)
 			{
 				soundBuffer = Buffer;
 				soundLoops = SoundLoops;
+				Triggered = true;
+			}
+
+			if (car.TractionModel.CurrentPower > variableValue)
+			{
+				Triggered = false;
 			}
 		}
 	}
