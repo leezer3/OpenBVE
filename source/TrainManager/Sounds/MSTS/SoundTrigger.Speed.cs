@@ -52,6 +52,12 @@ namespace TrainManager.MsTsSounds
 			{
 				soundBuffer = Buffer;
 				soundLoops = SoundLoops;
+				Triggered = true;
+			}
+
+			if (speed < speedValue)
+			{
+				Triggered = false;
 			}
 		}
 	}
@@ -60,28 +66,30 @@ namespace TrainManager.MsTsSounds
 	public class SpeedDecPast : SoundTrigger
 	{
 		private readonly double speedValue;
-
-		private readonly bool soundLoops;
 		
 		public SpeedDecPast(SoundBuffer[] buffers, KujuTokenID selectionMethod, double speedValue, bool soundLoops) : base(buffers, selectionMethod, soundLoops)
 		{
 			this.speedValue = speedValue;
-			this.soundLoops = soundLoops;
 		}
 
 		public SpeedDecPast(SoundBuffer buffer, double speedValue, bool soundLoops) : base(buffer, soundLoops)
 		{
 			this.speedValue = speedValue;
-			this.soundLoops = soundLoops;
 		}
 
 		public override void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
 		{
 			double speed = Math.Abs(car.CurrentSpeed);
-			if (speed <= speedValue)
+			if (speed <= speedValue && Triggered == false)
 			{
 				soundBuffer = Buffer;
 				soundLoops = SoundLoops;
+				Triggered = true;
+			}
+
+			if (speed > speedValue)
+			{
+				Triggered = false;
 			}
 		}
 	}
