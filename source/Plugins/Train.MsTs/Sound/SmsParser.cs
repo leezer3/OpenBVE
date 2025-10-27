@@ -103,7 +103,7 @@ namespace Train.MsTs
 				subHeader = Encoding.ASCII.GetString(buffer, 0, 8);
 			}
 			SoundSet soundSet = new SoundSet();
-			SoundStream soundStream = new SoundStream(currentCar);
+			SoundStream soundStream = new SoundStream(currentCar, CameraViewMode.NotDefined, CameraViewMode.NotDefined);
 
 			if (subHeader[7] == 't')
 			{
@@ -156,6 +156,8 @@ namespace Train.MsTs
 			internal SoundBuffer[] SoundBuffers;
 			internal int CurrentBuffer;
 			internal KujuTokenID SelectionMethod;
+			internal CameraViewMode ActivationCameraModes;
+			internal CameraViewMode DeactivationCameraModes;
 
 			internal void Create(CarBase car, SoundStream currentSoundStream)
 			{
@@ -251,27 +253,27 @@ namespace Train.MsTs
 				case KujuTokenID.ExternalCam:
 					if (currentSoundSet.Activation)
 					{
-						currentSoundStream.ActivationCameraModes |= CameraViewMode.Exterior;
-						currentSoundStream.ActivationCameraModes |= CameraViewMode.Track;
-						currentSoundStream.ActivationCameraModes |= CameraViewMode.FlyBy;
-						currentSoundStream.ActivationCameraModes |= CameraViewMode.FlyByZooming;
+						currentSoundSet.ActivationCameraModes |= CameraViewMode.Exterior;
+						currentSoundSet.ActivationCameraModes |= CameraViewMode.Track;
+						currentSoundSet.ActivationCameraModes |= CameraViewMode.FlyBy;
+						currentSoundSet.ActivationCameraModes |= CameraViewMode.FlyByZooming;
 					}
 					else
 					{
-						currentSoundStream.DeactivationCameraModes |= CameraViewMode.Exterior;
-						currentSoundStream.DeactivationCameraModes |= CameraViewMode.Track;
-						currentSoundStream.DeactivationCameraModes |= CameraViewMode.FlyBy;
-						currentSoundStream.DeactivationCameraModes |= CameraViewMode.FlyByZooming;
+						currentSoundSet.DeactivationCameraModes |= CameraViewMode.Exterior;
+						currentSoundSet.DeactivationCameraModes |= CameraViewMode.Track;
+						currentSoundSet.DeactivationCameraModes |= CameraViewMode.FlyBy;
+						currentSoundSet.DeactivationCameraModes |= CameraViewMode.FlyByZooming;
 					}
 					break;
 				case KujuTokenID.CabCam:
 					if (currentSoundSet.Activation)
 					{
-						currentSoundStream.ActivationCameraModes |= CameraViewMode.Interior;
+						currentSoundSet.ActivationCameraModes |= CameraViewMode.Interior;
 					}
 					else
 					{
-						currentSoundStream.DeactivationCameraModes |= CameraViewMode.Interior;
+						currentSoundSet.DeactivationCameraModes |= CameraViewMode.Interior;
 					}
 					break;
 				case KujuTokenID.PassengerCam:
@@ -280,7 +282,7 @@ namespace Train.MsTs
 				case KujuTokenID.Streams:
 					// each stream represents a unique sound
 					int numStreams = block.ReadInt32();
-					for (int i = 0; i < numStreams - 1; i++)
+					for (int i = 0; i < numStreams; i++)
 					{
 						newBlock = block.ReadSubBlock();
 						if (newBlock.Token != KujuTokenID.Stream)
@@ -292,7 +294,7 @@ namespace Train.MsTs
 							}
 							if (block.Length() - block.Position() <= 3)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numStreams + ", but only found " + (i + 1) + " in Stream block in SMS file " + currentFile);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numStreams + ", but only found " + i + " in Stream block in SMS file " + currentFile);
 								break;
 							}
 							continue;
@@ -301,7 +303,7 @@ namespace Train.MsTs
 						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 						if (block.Length() - block.Position() <= 3)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numStreams + ", but only found " + (i + 1) + " in Stream block in SMS file " + currentFile);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numStreams + ", but only found " + i + " in Stream block in SMS file " + currentFile);
 							break;
 						}
 					}
@@ -309,14 +311,20 @@ namespace Train.MsTs
 				case KujuTokenID.Stream:
 					while (block.Position() < block.Length() - 3)
 					{
-						newBlock = block.ReadSubBlock(new[] { KujuTokenID.Priority, KujuTokenID.Triggers, KujuTokenID.Variable_Trigger, KujuTokenID.Volume, KujuTokenID.VolumeCurve, KujuTokenID.FrequencyCurve, KujuTokenID.Granularity });
+						newBlock = block.ReadSubBlock();
+						if (newBlock.Token == KujuTokenID.Stream)
+						{
+							// EBPHNWSE121.sms - Completely bugged, copy + paste error (?)
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected Stream found within a Stream block in SMS file " + currentFile);
+							continue;
+						}
 						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 					}
 
 					if (currentSoundStream.Triggers.Count > 0)
 					{
 						car.Sounds.ControlledSounds.Add(currentSoundStream);
-						currentSoundStream = new SoundStream(car);
+						currentSoundStream = new SoundStream(car, currentSoundSet.ActivationCameraModes, currentSoundSet.DeactivationCameraModes);
 					}
 					break;
 				case KujuTokenID.Priority:
@@ -324,20 +332,21 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Triggers:
 					int numTriggers = block.ReadInt32();
-					for (int i = 0; i < numTriggers - 1; i++)
+					for (int i = 0; i < numTriggers; i++)
 					{
 						// two triggers per sound set  (start + stop)
 						newBlock = block.ReadSubBlock(new [] {KujuTokenID.Variable_Trigger, KujuTokenID.Initial_Trigger, KujuTokenID.Discrete_Trigger, KujuTokenID.Random_Trigger, KujuTokenID.Dist_Travelled_Trigger});
 						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 						if (block.Length() - block.Position() <= 3)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numTriggers + ", but only found " + (i + 1) + " in Triggers block in SMS file " + currentFile);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numTriggers + ", but only found " + i + " in Triggers block in SMS file " + currentFile);
 							break;
 						}
 					}
 					break;
 				case KujuTokenID.Initial_Trigger:
 					// when initially appears, hence nothing other than StartLoop should be valid
+					currentSoundSet.VariableTriggerType = KujuTokenID.Initial_Trigger;
 					newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.EnableTrigger, KujuTokenID.DisableTrigger, KujuTokenID.PlayOneShot, KujuTokenID.SetStreamVolume });
 					ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 					break;
@@ -491,6 +500,12 @@ namespace Train.MsTs
 								if (car.ReAdhesionDevice is Sanders sanders)
 								{
 									sanders.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+								}
+								break;
+							case SoundTrigger.TrainBrakePressureDecrease:
+								if ((currentSoundStream.ActivationCameraModes & CameraViewMode.Interior) != 0)
+								{
+									car.CarBrake.AirZero = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
 						}
