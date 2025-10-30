@@ -1207,6 +1207,8 @@ namespace OpenBve.Formats.MsTs
 			s = s.Replace("/", "_");
 			s = Replace(s, "METRES", "METERS"); // accept both spellings of meter
 			s = Replace(s, "SEC_SEC", "SEC"); // 3DTS Class 108
+			s = Replace(s, "12", "TWELVE"); // can't start an enum value with a number, so replace with textual
+			s = Replace(s, "24", "TWENTYFOUR"); // ditto
 			if (!Enum.TryParse(s, true, out TEnumType e))
 			{
 				throw new InvalidDataException("Expected " + s + " to be a value member of the specified enum.");
