@@ -75,8 +75,6 @@
     <Compile Include="Train\Enums\BrakeEquipmentType.cs" />
     <Compile Include="Train\Enums\BrakeSystemType.cs" />
     <Compile Include="Train\Enums\ControlType.cs" />
-    <Compile Include="Train\Enums\CouplingType.cs" />
-    <Compile Include="Train\Enums\EngineTypes.cs" />
     <Compile Include="Train\Friction.cs" />
     <Compile Include="Train\MSTSAxle.cs" />
     <Compile Include="Train\VehicleParser.cs" />
