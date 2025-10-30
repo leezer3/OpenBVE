@@ -52,11 +52,14 @@ namespace Train.MsTs
 
 		internal static string CurrentFolder;
 
+		internal static string FileName;
+
 		private static readonly List<CabComponent> cabComponents = new List<CabComponent>();
 
 		// parse panel config
 		internal static bool ParseCabViewFile(string fileName, ref CarBase currentCar)
 		{
+			FileName = fileName;
 			CurrentFolder = Path.GetDirectoryName(fileName);
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read);
 
@@ -91,7 +94,7 @@ namespace Train.MsTs
 			}
 			else if (!headerString.StartsWith("SIMISA@@"))
 			{
-				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Cabview Parser: Unrecognized cabview file header " + headerString + " in " + fileName);
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS CVF Parser: Unrecognized cabview file header " + headerString + " in " + FileName);
 				return false;
 			}
 
@@ -120,7 +123,7 @@ namespace Train.MsTs
 			}
 			else if (subHeader[7] != 'b')
 			{
-				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Cabview Parser: Unrecognized subHeader " + subHeader + " in " + fileName);
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS CVF Parser: Unrecognized subHeader " + subHeader + " in " + FileName);
 				return false;
 			}
 			else
@@ -215,8 +218,9 @@ namespace Train.MsTs
 			switch (block.Token)
 			{
 				case KujuTokenID.CabViewControls:
-					int controlCount = block.ReadInt16();
-					while (controlCount > 0)
+					int count = block.ReadInt16();
+					int controlCount = count;
+					while (block.Length() - block.Position() > 5)
 					{
 						newBlock = block.ReadSubBlock(true);
 						if (newBlock.Token == KujuTokenID.Skip)
@@ -227,6 +231,12 @@ namespace Train.MsTs
 						currentComponent.Parse();
 						cabComponents.Add(currentComponent);
 						controlCount--;
+					}
+
+					if (controlCount != 0)
+					{
+						// control count was wrong...
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS CVF Parser: Expected " + count + " controls, but found " + (count - controlCount) + " in file " + FileName);
 					}
 
 					break;

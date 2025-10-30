@@ -57,9 +57,11 @@ namespace Train.MsTs
 		private int LeadingZeros;
 		private FrameMapping[] FrameMappings = new FrameMapping[0];
 		private readonly Vector3 PanelPosition;
-
+		private CabComponentStyle Style;
 		private Tuple<double, Color24>[] PositiveColors;
 		private Tuple<double, Color24>[] NegativeColors;
+		private Color24 ControlColor;
+		private int Accuracy;
 
 		internal void Parse()
 		{
@@ -87,7 +89,7 @@ namespace Train.MsTs
 
 		internal void Create(ref CarBase currentCar, int componentLayer)
 		{
-			if (File.Exists(TexturePath) || Type == CabComponentType.Digital)
+			if (File.Exists(TexturePath) || Type == CabComponentType.Digital || Type == CabComponentType.DigitalClock)
 			{
 				if (FrameMappings.Length < 2 && TotalFrames > 1)
 				{
@@ -190,7 +192,7 @@ namespace Train.MsTs
 								case PanelSubject.Throttle:
 								case PanelSubject.Train_Brake:
 								case PanelSubject.Gears:
-									currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
+									currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 									break;
 								default:
 									currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.CurrentHost, f, false);
@@ -244,7 +246,7 @@ namespace Train.MsTs
 								case PanelSubject.Overspeed:
 								case PanelSubject.Sanders:
 								case PanelSubject.Wheelslip:
-									currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, FrameMappings);
+									currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 									break;
 								default:
 									currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new FunctionScript(Plugin.CurrentHost, f, false);
@@ -309,8 +311,8 @@ namespace Train.MsTs
 							}
 
 							// create color and digit functions
-							currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject, Units, currentDigit);
-							currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].ColorFunction = new CvfAnimation(panelSubject, Units, FrameMappings);
+							currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, Units, currentDigit);
+							currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].ColorFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, Units, FrameMappings);
 						}
 
 						break;
@@ -352,10 +354,39 @@ namespace Train.MsTs
 								if (k == 0) j = l;
 							}
 
-							currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(panelSubject);
+							currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject);
 
 						}
+						break;
+					case CabComponentType.DigitalClock:
+						Position.X *= rW;
+						Position.Y *= rH;
+						totalDigits = Accuracy == 1 ? 8 : 5; // with or without secs
+						j = -1;
+						digitWidth = Size.X / totalDigits;
+						textColor = ControlColor;
 
+						frameTextures = new Texture[12];
+						TexturePath = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Plugin.FileSystem.DataFolder, "Compatibility"), "numbers.png"); // arial 9.5pt
+						Plugin.CurrentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
+
+						for (int i = 0; i < 10; i++)
+						{
+							Plugin.CurrentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(0, i * 24, 16, 24), null), out frameTextures[i], true);
+						}
+						Plugin.CurrentHost.RegisterTexture(TexturePath, new TextureParameters(new TextureClipRegion(0, 240, 16, 16), null), out frameTextures[11], true);
+
+						for (int currentDigit = 0; currentDigit < totalDigits; currentDigit++)
+						{
+							for (int k = 0; k < frameTextures.Length; k++)
+							{
+								int l = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], new Vector2(Position.X + Size.X - (digitWidth * (currentDigit + 1)), Position.Y), new Vector2(digitWidth * rW, Size.Y * rH), new Vector2(0.5, 0.5), componentLayer * CabviewFileParser.StackDistance, PanelPosition, frameTextures[k], null, textColor, k != 0);
+								if (k == 0) j = l;
+							}
+
+							// create digit functions
+							currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, Style, Accuracy == 1 ? currentDigit : currentDigit + 3);
+						}
 						break;
 				}
 			}
@@ -440,7 +471,7 @@ namespace Train.MsTs
 					MouseControl = block.ReadInt16() == 1;
 					break;
 				case KujuTokenID.Style:
-					block.Skip((int)block.Length());
+					Style = block.ReadEnumValue(default(CabComponentStyle));
 					break;
 				case KujuTokenID.Graphic:
 					string s = block.ReadString();
@@ -541,7 +572,12 @@ namespace Train.MsTs
 							}
 						}
 					}
-
+					break;
+				case KujuTokenID.ControlColour:
+					ControlColor = new Color24((byte)block.ReadInt16(), (byte)block.ReadInt16(), (byte)block.ReadInt16());
+					break;
+				case KujuTokenID.Accuracy:
+					Accuracy = block.ReadInt16();
 					break;
 			}
 		}
