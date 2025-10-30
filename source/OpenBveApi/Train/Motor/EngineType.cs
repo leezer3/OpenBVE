@@ -1,6 +1,6 @@
 ﻿//Simplified BSD License (BSD-2-Clause)
 //
-//Copyright (c) 2020, Christopher Lees, The OpenBVE Project
+//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,24 +22,20 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-namespace OpenBve.Formats.MsTs
+namespace OpenBveApi.Motor
 {
-	/// <summary>The types of wagon</summary>
-    public enum WagonType
-    {
-		/// <summary>Engine</summary>
-		Engine,
-		/// <summary>Tender</summary>
-		Tender,
-		/// <summary>Generic rail car</summary>
-		/// <remarks>No cargo specified</remarks>
-		Carriage,
-		/// <summary>Passenger carrying car</summary>
-		Passenger = Carriage,
-		/// <summary>Freight car</summary>
-		Freight,
-		/// <summary>End of train device / tail lamp</summary>
-		/// <remarks>OpenRails</remarks>
-		EOT
-    }
+	/// <summary>Describes the different types of engine</summary>
+	public enum EngineType
+	{
+		/// <summary>No engine</summary>
+		NoEngine = 0,
+		/// <summary>Diesel prime mover, electric transmission</summary>
+		Diesel,
+		/// <summary>Diesel prime mover, hydralic transmission</summary>
+		DieselHydraulic,
+		/// <summary>Steam engine</summary>
+		Steam,
+		/// <summary>Pure electric engine</summary>
+		Electric
+	}
 }
