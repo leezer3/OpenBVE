@@ -30,12 +30,15 @@ using System;
 using OpenBveApi;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
+using OpenBveApi.Hosts;
 
 namespace Train.MsTs
 {
 	/// <summary>Animation class handling CVF elements with keyframe mappings</summary>
 	internal class CvfAnimation : AnimationScript
 	{
+		internal readonly HostInterface CurrentHost;
+
 		internal readonly PanelSubject Subject;
 
 		internal readonly FrameMapping[] FrameMapping;
@@ -46,8 +49,9 @@ namespace Train.MsTs
 
 		private int lastResult;
 
-		internal CvfAnimation(PanelSubject subject)
+		internal CvfAnimation(HostInterface host, PanelSubject subject)
 		{
+			CurrentHost = host;
 			Subject = subject;
 			switch (subject)
 			{
@@ -63,8 +67,9 @@ namespace Train.MsTs
 			Digit = -1;
 		}
 
-		internal CvfAnimation(PanelSubject subject, FrameMapping[] frameMapping)
+		internal CvfAnimation(HostInterface host, PanelSubject subject, FrameMapping[] frameMapping)
 		{
+			CurrentHost = host;
 			Subject = subject;
 			FrameMapping = frameMapping;
 			Minimum = 0;
@@ -72,9 +77,10 @@ namespace Train.MsTs
 			Digit = -1;
 		}
 
-		internal CvfAnimation(PanelSubject subject, Units unit, int digit)
+		internal CvfAnimation(HostInterface host, PanelSubject subject, Units unit, int digit)
 		{
-			Subject= subject;
+			CurrentHost = host;
+			Subject = subject;
 			switch (unit)
 			{
 				case Units.Miles_Per_Hour:
@@ -87,8 +93,9 @@ namespace Train.MsTs
 			Digit = digit;
 		}
 
-		internal CvfAnimation(PanelSubject subject, Units unit, FrameMapping[] frameMapping)
+		internal CvfAnimation(HostInterface host, PanelSubject subject, Units unit, FrameMapping[] frameMapping)
 		{
+			CurrentHost = host;
 			Subject = subject;
 			switch (unit)
 			{
@@ -102,6 +109,22 @@ namespace Train.MsTs
 
 			Digit = -1;
 			FrameMapping = frameMapping;
+		}
+
+		internal CvfAnimation(HostInterface host, PanelSubject subject, CabComponentStyle style, int digit)
+		{
+			CurrentHost = host;
+			Subject = subject;
+			Digit = digit;
+			switch (style)
+			{
+				case CabComponentStyle.TwelveHour:
+					UnitConversionFactor = 1;
+					break;
+				case CabComponentStyle.TwentyFourHour:
+					UnitConversionFactor = 0;
+					break;
+			}
 		}
 
 		public double ExecuteScript(AbstractTrain train, int carIndex, Vector3 position, double trackPosition, int sectionIndex, bool isPartOfTrain, double timeElapsed, int currentState)
@@ -256,13 +279,61 @@ namespace Train.MsTs
 					}
 					lastResult = wheelSlip;
 					break;
+				case PanelSubject.Clock:
+					double hour = Math.Floor(CurrentHost.InGameTime / 3600.0);
+					hour %= 24;
+					if (UnitConversionFactor == 1)
+					{
+						if (hour > 12)
+						{
+							hour -= 12;
+						}
+					}
+					double min = Math.Floor(CurrentHost.InGameTime / 60 % 60);
+					double sec = CurrentHost.InGameTime % 60;
+					switch (Digit)
+					{
+						case 7:
+							// H
+							lastResult = hour >= 10 ? (int)(hour / 10) : 0;
+							break;
+						case 6:
+							// HH
+							lastResult = (int)(hour % 10);
+							break;
+						case 5:
+							// HH:
+							lastResult = 11;
+							break;
+						case 4:
+							// HH:M
+							lastResult = min >= 10 ? (int)(min / 10) : 0;
+							break;
+						case 3:
+							// HH:MM
+							lastResult = (int)(min % 10);
+							break;
+						case 2:
+							// HH:MM:
+							lastResult = 11;
+							break;
+						case 1:
+							// HH:MM:S
+							lastResult = sec >= 10 ? (int)(sec / 10) : 0;
+							break;
+						case 0:
+							// HH:MM:SS
+							lastResult = (int)(sec % 10);
+							break;
+					}
+					break;
 			}
 			return lastResult;
 		}
 
 		public AnimationScript Clone()
 		{
-			return new CvfAnimation(Subject, FrameMapping);
+			return new CvfAnimation(CurrentHost, Subject, FrameMapping);
 		}
 
 		public double LastResult
