@@ -99,7 +99,7 @@ namespace Train.MsTs
 			{
 				Car.Specs.AccelerationCurves = new AccelerationCurve[]
 				{
-					new MSTSAccelerationCurve(Car, maxForce, maxVelocity)
+					new MSTSAccelerationCurve(Car, maxForce, maxContinuousForce, maxVelocity)
 				};
 				// FIXME: Default BVE values
 				Car.Specs.JerkPowerUp = 10.0;
@@ -120,6 +120,10 @@ namespace Train.MsTs
 						{
 							Car.Engine.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Car.Engine, maxEngineAmps));
 						}
+						break;
+					case EngineType.Electric:
+						Car.Engine = new ElectricEngine(Car);
+						Car.Engine.Components.Add(EngineComponent.Pantograph, new Pantograph(Car.Engine));
 						break;
 				}
 			}
@@ -235,6 +239,7 @@ namespace Train.MsTs
 		}
 
 		private double maxForce = 0;
+		private double maxContinuousForce = 0;
 		private double maxBrakeForce = 0;
 		private BrakeSystemType[] brakeSystemTypes;
 		private EngineType currentEngineType;
@@ -563,6 +568,12 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.MaxContinuousForce:
 					// Maximum continuous force
+					if (!isEngine)
+					{
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Engine force is not expected to be present in a wagon block.");
+						break;
+					}
+					maxContinuousForce = block.ReadSingle(UnitOfForce.Newton);
 					break;
 				case KujuTokenID.RunUpTimeToMaxForce:
 					// 

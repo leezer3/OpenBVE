@@ -18,6 +18,8 @@ using RouteManager2.Stations;
 using TrainManager;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
+using TrainManager.Handles;
+using TrainManager.Motor;
 
 namespace OpenBve
 {
@@ -538,6 +540,26 @@ namespace OpenBve
 						break;
 					case Translations.Command.PlayMicSounds:
 						Program.Sounds.IsPlayingMicSounds = !Program.Sounds.IsPlayingMicSounds;
+						break;
+					case Translations.Command.RaisePantograph:
+						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+						{
+							if (TrainManager.PlayerTrain.Cars[i].TractionModel is ElectricEngine)
+							{
+								Pantograph pantograph = TrainManager.PlayerTrain.Cars[i].TractionModel.Components[EngineComponent.Pantograph] as Pantograph;
+								pantograph.Raise();
+							}
+						}
+						break;
+					case Translations.Command.LowerPantograph:
+						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+						{
+							if (TrainManager.PlayerTrain.Cars[i].TractionModel is ElectricEngine)
+							{
+								Pantograph pantograph = TrainManager.PlayerTrain.Cars[i].TractionModel.Components[EngineComponent.Pantograph] as Pantograph;
+								pantograph.Lower();
+							}
+						}
 						break;
 					case Translations.Command.Headlights:
 						TrainManager.PlayerTrain.SafetySystems.Headlights.ChangeState();
