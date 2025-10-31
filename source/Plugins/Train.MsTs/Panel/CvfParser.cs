@@ -55,7 +55,7 @@ namespace Train.MsTs
 		private static readonly List<CabComponent> cabComponents = new List<CabComponent>();
 
 		// parse panel config
-		internal static bool ParseCabViewFile(string fileName, ref CarBase Car)
+		internal static bool ParseCabViewFile(string fileName, ref CarBase currentCar)
 		{
 			CurrentFolder = Path.GetDirectoryName(fileName);
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read);
@@ -155,42 +155,42 @@ namespace Train.MsTs
 				worldWidth = worldHeight * Plugin.Renderer.Screen.AspectRatio;
 			}
 
-			double x0 = -PanelCenter.X / PanelResolution;
-			double x1 = (PanelSize.X - PanelCenter.X) / PanelResolution;
-			double y0 = (PanelCenter.Y - PanelSize.Y) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-			double y1 = (PanelCenter.Y) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-			Car.CameraRestriction.BottomLeft = new Vector3(x0 * worldWidth, y0 * worldHeight, eyeDistance);
-			Car.CameraRestriction.TopRight = new Vector3(x1 * worldWidth, y1 * worldHeight, eyeDistance);
-			Car.DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * worldWidth / PanelResolution);
-			Car.DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * worldWidth / PanelResolution);
+			double x0 = -panelCenter.X / panelResolution;
+			double x1 = (panelSize.X - panelCenter.X) / panelResolution;
+			double y0 = (panelCenter.Y - panelSize.Y) / panelResolution * Plugin.Renderer.Screen.AspectRatio;
+			double y1 = (panelCenter.Y) / panelResolution * Plugin.Renderer.Screen.AspectRatio;
+			currentCar.CameraRestriction.BottomLeft = new Vector3(x0 * worldWidth, y0 * worldHeight, eyeDistance);
+			currentCar.CameraRestriction.TopRight = new Vector3(x1 * worldWidth, y1 * worldHeight, eyeDistance);
+			currentCar.DriverYaw = Math.Atan((panelCenter.X - panelOrigin.X) * worldWidth / panelResolution);
+			currentCar.DriverPitch = Math.Atan((panelOrigin.Y - panelCenter.Y) * worldWidth / panelResolution);
 
-			if(CabViews.Count == 0 || !File.Exists(CabViews[0].FileName))
+			if(cabViews.Count == 0 || !File.Exists(cabViews[0].FileName))
 			{
 				return false;
 			}
-			Car.CameraRestrictionMode = CameraRestrictionMode.On;
+			currentCar.CameraRestrictionMode = CameraRestrictionMode.On;
 			Plugin.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
-			Car.Driver = CabViews[0].Position;
-			for (int i = 0; i < CabViews.Count; i++)
+			currentCar.Driver = cabViews[0].Position;
+			for (int i = 0; i < cabViews.Count; i++)
 			{
 				
-				Plugin.CurrentHost.RegisterTexture(CabViews[i].FileName, new TextureParameters(null, null), out Texture tday, true);
+				Plugin.CurrentHost.RegisterTexture(cabViews[i].FileName, new TextureParameters(null, null), out Texture tday, true);
 				switch (i)
 				{
 					case 0:
-						Car.CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, Car));
-						CreateElement(ref Car.CarSections[CarSectionType.Interior].Groups[0], Vector2.Null, PanelSize, new Vector2(0.5, 0.5), 0.0, CabViews[0].Position, tday, null, new Color32(255, 255, 255, 255));
-						Car.CarSections[CarSectionType.Interior].ViewDirection = new Transformation(CabViews[0].Direction.Y.ToRadians(), -CabViews[0].Direction.X.ToRadians(), -CabViews[0].Direction.Z.ToRadians());
+						currentCar.CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, currentCar));
+						CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[0].Position, tday, null, new Color32(255, 255, 255, 255));
+						currentCar.CarSections[CarSectionType.Interior].ViewDirection = new Transformation(cabViews[0].Direction.Y.ToRadians(), -cabViews[0].Direction.X.ToRadians(), -cabViews[0].Direction.Z.ToRadians());
 						break;
 					case 1:
-						Car.CarSections.Add(CarSectionType.HeadOutLeft, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, Car));
-						CreateElement(ref Car.CarSections[CarSectionType.HeadOutLeft].Groups[0], Vector2.Null, PanelSize, new Vector2(0.5, 0.5), 0.0, CabViews[1].Position, tday, null, new Color32(255, 255, 255, 255));
-						Car.CarSections[CarSectionType.HeadOutLeft].ViewDirection = new Transformation(CabViews[1].Direction.Y.ToRadians(), -CabViews[1].Direction.X.ToRadians(), -CabViews[1].Direction.Z.ToRadians());
+						currentCar.CarSections.Add(CarSectionType.HeadOutLeft, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, currentCar));
+						CreateElement(ref currentCar.CarSections[CarSectionType.HeadOutLeft].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[1].Position, tday, null, new Color32(255, 255, 255, 255));
+						currentCar.CarSections[CarSectionType.HeadOutLeft].ViewDirection = new Transformation(cabViews[1].Direction.Y.ToRadians(), -cabViews[1].Direction.X.ToRadians(), -cabViews[1].Direction.Z.ToRadians());
 						break;
 					case 2:
-						Car.CarSections.Add(CarSectionType.HeadOutRight, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, Car));
-						CreateElement(ref Car.CarSections[CarSectionType.HeadOutRight].Groups[0], Vector2.Null, PanelSize, new Vector2(0.5, 0.5), 0.0, CabViews[2].Position, tday, null, new Color32(255, 255, 255, 255));
-						Car.CarSections[CarSectionType.HeadOutRight].ViewDirection = new Transformation(CabViews[2].Direction.Y.ToRadians(), -CabViews[2].Direction.X.ToRadians(), -CabViews[2].Direction.Z.ToRadians());
+						currentCar.CarSections.Add(CarSectionType.HeadOutRight, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, currentCar));
+						CreateElement(ref currentCar.CarSections[CarSectionType.HeadOutRight].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[2].Position, tday, null, new Color32(255, 255, 255, 255));
+						currentCar.CarSections[CarSectionType.HeadOutRight].ViewDirection = new Transformation(cabViews[2].Direction.Y.ToRadians(), -cabViews[2].Direction.X.ToRadians(), -cabViews[2].Direction.Z.ToRadians());
 						break;
 				}
 			}
@@ -198,7 +198,7 @@ namespace Train.MsTs
 			int currentLayer = 1;
 			for (int i = 0; i < cabComponents.Count; i++)
 			{
-				cabComponents[i].Create(ref Car, currentLayer);
+				cabComponents[i].Create(ref currentCar, currentLayer);
 
 			}
 
@@ -207,7 +207,7 @@ namespace Train.MsTs
 		
 		private static CabView currentCabView;
 
-		private static readonly List<CabView> CabViews = new List<CabView>();
+		private static readonly List<CabView> cabViews = new List<CabView>();
 
 		private static void ParseBlock(Block block)
 		{
@@ -268,7 +268,7 @@ namespace Train.MsTs
 					ParseBlock(newBlock);
 					newBlock = block.ReadSubBlock(KujuTokenID.Direction); // ?? CAMERA DIRECTION ==> ROT Y, ROT X, ROT Z
 					ParseBlock(newBlock);
-					CabViews.Add(currentCabView);
+					cabViews.Add(currentCabView);
 					currentCabView = new CabView();
 					//View #2, normally L
 					newBlock = block.ReadSubBlock(KujuTokenID.CabViewFile);
@@ -281,7 +281,7 @@ namespace Train.MsTs
 					ParseBlock(newBlock);
 					newBlock = block.ReadSubBlock(KujuTokenID.Direction); // ?? CAMERA DIRECTION ==> ROT Y, ROT X, ROT Z
 					ParseBlock(newBlock);
-					CabViews.Add(currentCabView);
+					cabViews.Add(currentCabView);
 					currentCabView = new CabView();
 					//View #3, normally R
 					newBlock = block.ReadSubBlock(KujuTokenID.CabViewFile);
@@ -294,7 +294,7 @@ namespace Train.MsTs
 					ParseBlock(newBlock);
 					newBlock = block.ReadSubBlock(KujuTokenID.Direction); // ?? CAMERA DIRECTION ==> ROT Y, ROT X, ROT Z
 					ParseBlock(newBlock);
-					CabViews.Add(currentCabView);
+					cabViews.Add(currentCabView);
 					newBlock = block.ReadSubBlock(KujuTokenID.EngineData);
 					ParseBlock(newBlock);
 					newBlock = block.ReadSubBlock(KujuTokenID.CabViewControls);
@@ -303,13 +303,13 @@ namespace Train.MsTs
 			}
 		}
 
-		const double PanelResolution = 1024.0;
-		private static readonly Vector2 PanelSize = new Vector2(1024, 768);
-		private static readonly Vector2 PanelCenter = new Vector2(0, 240);
-		private static readonly Vector2 PanelOrigin = new Vector2(0, 240);
+		private const double panelResolution = 1024.0;
+		private static readonly Vector2 panelSize = new Vector2(1024, 768);
+		private static readonly Vector2 panelCenter = new Vector2(0, 240);
+		private static readonly Vector2 panelOrigin = new Vector2(0, 240);
 		
 		// get stack language from subject
-		internal static string GetStackLanguageFromSubject(TrainBase Train, PanelSubject subject, Units subjectUnits, string suffix = "")
+		internal static string GetStackLanguageFromSubject(TrainBase train, PanelSubject subject, Units subjectUnits, string suffix = "")
 		{
 			// transform subject
 			string Code = string.Empty;
@@ -415,33 +415,33 @@ namespace Train.MsTs
 				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Attempted to create an invalid size element");
 			}
 
-			double WorldWidth, WorldHeight;
+			double worldWidth, worldHeight;
 			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
 			{
-				WorldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * eyeDistance;
-				WorldHeight = WorldWidth / Plugin.Renderer.Screen.AspectRatio;
+				worldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * eyeDistance;
+				worldHeight = worldWidth / Plugin.Renderer.Screen.AspectRatio;
 			}
 			else
 			{
-				WorldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * eyeDistance / Plugin.Renderer.Screen.AspectRatio;
-				WorldWidth = WorldHeight * Plugin.Renderer.Screen.AspectRatio;
+				worldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * eyeDistance / Plugin.Renderer.Screen.AspectRatio;
+				worldWidth = worldHeight * Plugin.Renderer.Screen.AspectRatio;
 			}
 
-			double x0 = TopLeft.X / PanelResolution;
-			double x1 = (TopLeft.X + Size.X) / PanelResolution;
-			double y0 = (PanelSize.Y - TopLeft.Y) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-			double y1 = (PanelSize.Y - (TopLeft.Y + Size.Y)) / PanelResolution * Plugin.Renderer.Screen.AspectRatio;
-			double xd = 0.5 - PanelCenter.X / PanelResolution;
+			double x0 = TopLeft.X / panelResolution;
+			double x1 = (TopLeft.X + Size.X) / panelResolution;
+			double y0 = (panelSize.Y - TopLeft.Y) / panelResolution * Plugin.Renderer.Screen.AspectRatio;
+			double y1 = (panelSize.Y - (TopLeft.Y + Size.Y)) / panelResolution * Plugin.Renderer.Screen.AspectRatio;
+			double xd = 0.5 - panelCenter.X / panelResolution;
 			x0 += xd;
 			x1 += xd;
-			double yt = PanelSize.Y - PanelResolution / Plugin.Renderer.Screen.AspectRatio;
-			double yd = (PanelCenter.Y - yt) / (PanelSize.Y - yt) - 0.5;
+			double yt = panelSize.Y - panelResolution / Plugin.Renderer.Screen.AspectRatio;
+			double yd = (panelCenter.Y - yt) / (panelSize.Y - yt) - 0.5;
 			y0 += yd;
 			y1 += yd;
-			x0 = (x0 - 0.5) * WorldWidth;
-			x1 = (x1 - 0.5) * WorldWidth;
-			y0 = (y0 - 0.5) * WorldHeight;
-			y1 = (y1 - 0.5) * WorldHeight;
+			x0 = (x0 - 0.5) * worldWidth;
+			x1 = (x1 - 0.5) * worldWidth;
+			y0 = (y0 - 0.5) * worldHeight;
+			y1 = (y1 - 0.5) * worldHeight;
 			double xm = x0 * (1.0 - RelativeRotationCenter.X) + x1 * RelativeRotationCenter.X;
 			double ym = y0 * (1.0 - RelativeRotationCenter.Y) + y1 * RelativeRotationCenter.Y;
 			Vector3[] v = new Vector3[4];
@@ -453,21 +453,21 @@ namespace Train.MsTs
 			Vertex t1 = new Vertex(v[1], new Vector2(0.0f, 0.0f));
 			Vertex t2 = new Vertex(v[2], new Vector2(1.0f, 0.0f));
 			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
-			StaticObject Object = new StaticObject(Plugin.CurrentHost);
-			Object.Mesh.Vertices = new VertexTemplate[] {t0, t1, t2, t3};
-			Object.Mesh.Faces = new[] {new MeshFace(new[] {0, 1, 2, 0, 2, 3}, FaceFlags.Triangles)}; //Must create as a single face like this to avoid Z-sort issues with overlapping bits
-			Object.Mesh.Materials = new MeshMaterial[1];
-			Object.Mesh.Materials[0].Flags = new MaterialFlags();
+			StaticObject staticObject = new StaticObject(Plugin.CurrentHost);
+			staticObject.Mesh.Vertices = new VertexTemplate[] {t0, t1, t2, t3};
+			staticObject.Mesh.Faces = new[] {new MeshFace(new[] {0, 1, 2, 0, 2, 3}, FaceFlags.Triangles)}; //Must create as a single face like this to avoid Z-sort issues with overlapping bits
+			staticObject.Mesh.Materials = new MeshMaterial[1];
+			staticObject.Mesh.Materials[0].Flags = new MaterialFlags();
 			if (DaytimeTexture != null)
 			{
-				Object.Mesh.Materials[0].Flags |= MaterialFlags.TransparentColor;
+				staticObject.Mesh.Materials[0].Flags |= MaterialFlags.TransparentColor;
 			}
 
-			Object.Mesh.Materials[0].Color = Color;
-			Object.Mesh.Materials[0].TransparentColor = Color24.Blue;
-			Object.Mesh.Materials[0].DaytimeTexture = DaytimeTexture;
-			Object.Mesh.Materials[0].NighttimeTexture = NighttimeTexture;
-			Object.Dynamic = true;
+			staticObject.Mesh.Materials[0].Color = Color;
+			staticObject.Mesh.Materials[0].TransparentColor = Color24.Blue;
+			staticObject.Mesh.Materials[0].DaytimeTexture = DaytimeTexture;
+			staticObject.Mesh.Materials[0].NighttimeTexture = NighttimeTexture;
+			staticObject.Dynamic = true;
 			// calculate offset
 			Vector3 o;
 			o.X = xm + Driver.X;
@@ -482,7 +482,7 @@ namespace Train.MsTs
 				Group.Elements[n].States[j] = new ObjectState
 				{
 					Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z),
-					Prototype = Object
+					Prototype = staticObject
 				};
 				return n;
 			}
@@ -493,9 +493,9 @@ namespace Train.MsTs
 				Group.Elements[n] = new AnimatedObject(Plugin.CurrentHost);
 				Group.Elements[n].States = new[] {new ObjectState()};
 				Group.Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
-				Group.Elements[n].States[0].Prototype = Object;
+				Group.Elements[n].States[0].Prototype = staticObject;
 				Group.Elements[n].CurrentState = 0;
-				Group.Elements[n].internalObject = new ObjectState {Prototype = Object};
+				Group.Elements[n].internalObject = new ObjectState {Prototype = staticObject};
 				Plugin.CurrentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
 				return n;
 			}

@@ -49,8 +49,6 @@ namespace Train.MsTs
 {
 	internal partial class WagonParser
 	{
-		private readonly Plugin plugin;
-
 		private readonly Dictionary<string, string> wagonCache;
 		private readonly Dictionary<string, string> engineCache;
 		private readonly List<string> soundFiles;
@@ -58,15 +56,14 @@ namespace Train.MsTs
 		private double wheelRadius;
 		private bool exteriorLoaded = false;
 
-		internal WagonParser(Plugin Plugin)
+		internal WagonParser()
 		{
-			plugin = Plugin;
 			wagonCache = new Dictionary<string, string>();
 			engineCache = new Dictionary<string, string>();
 			soundFiles = new List<string>();
 		}
 
-		internal void Parse(string trainSetDirectory, string wagonName, bool isEngine, ref CarBase Car, ref TrainBase train)
+		internal void Parse(string trainSetDirectory, string wagonName, bool isEngine, ref CarBase currentCar, ref TrainBase train)
 		{
 			exteriorLoaded = false;
 			wagonFiles = Directory.GetFiles(trainSetDirectory, isEngine ? "*.eng" : "*.wag", SearchOption.AllDirectories);
@@ -87,13 +84,13 @@ namespace Train.MsTs
 			{
 				if (engineCache.ContainsKey(wagonName))
 				{
-					ReadWagonData(engineCache[wagonName], ref wagonName, true, ref Car, ref train);
+					ReadWagonData(engineCache[wagonName], ref wagonName, true, ref currentCar, ref train);
 				}
 				else
 				{
 					for (int i = 0; i < wagonFiles.Length; i++)
 					{
-						if (ReadWagonData(wagonFiles[i], ref wagonName, true, ref Car, ref train))
+						if (ReadWagonData(wagonFiles[i], ref wagonName, true, ref currentCar, ref train))
 						{
 							break;
 						}
@@ -102,7 +99,7 @@ namespace Train.MsTs
 			}
 			else
 			{
-				Car.TractionModel = new BVETrailerCar(Car);
+				currentCar.TractionModel = new BVETrailerCar(currentCar);
 			}
 			/*
 			 * We've now found the engine properties-
@@ -111,13 +108,13 @@ namespace Train.MsTs
 			 */
 			if (wagonCache.ContainsKey(wagonName))
 			{
-				ReadWagonData(wagonCache[wagonName], ref wagonName, false, ref Car, ref train);
+				ReadWagonData(wagonCache[wagonName], ref wagonName, false, ref currentCar, ref train);
 			}
 			else
 			{
 				for (int i = 0; i < wagonFiles.Length; i++)
 				{
-					if (ReadWagonData(wagonFiles[i], ref wagonName, false, ref Car, ref train))
+					if (ReadWagonData(wagonFiles[i], ref wagonName, false, ref currentCar, ref train))
 					{
 						break;
 					}
@@ -128,42 +125,54 @@ namespace Train.MsTs
 			if (isEngine)
 			{
 				// FIXME: Default BVE values
-				Car.Specs.JerkPowerUp = 10.0;
-				Car.Specs.JerkPowerDown = 10.0;
+				currentCar.Specs.JerkPowerUp = 10.0;
+				currentCar.Specs.JerkPowerDown = 10.0;
 				
 				switch (currentEngineType)
 				{
 					case EngineType.Diesel:
-						Car.TractionModel = new DieselEngine(Car, new AccelerationCurve[] { new MSTSAccelerationCurve(Car, maxForce, maxContinuousForce, maxVelocity) }, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
-						Car.TractionModel.FuelTank = new FuelTank(dieselCapacity, 0, dieselCapacity);
-						Car.TractionModel.IsRunning = true;
+						currentCar.TractionModel = new DieselEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) }, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
+						currentCar.TractionModel.FuelTank = new FuelTank(dieselCapacity, 0, dieselCapacity);
+						currentCar.TractionModel.IsRunning = true;
 
 						if (maxBrakeAmps > 0 && maxEngineAmps > 0)
 						{
-							Car.TractionModel.Components.Add(EngineComponent.RegenerativeTractionMotor, new RegenerativeTractionMotor(Car.TractionModel, maxEngineAmps, maxBrakeAmps));
+							currentCar.TractionModel.Components.Add(EngineComponent.RegenerativeTractionMotor, new RegenerativeTractionMotor(currentCar.TractionModel, maxEngineAmps, maxBrakeAmps));
 						}
 						else if (maxEngineAmps > 0)
 						{
-							Car.TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Car.TractionModel, maxEngineAmps));
+							currentCar.TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(currentCar.TractionModel, maxEngineAmps));
 						}
 						break;
+					case EngineType.DieselHydraulic:
+						AccelerationCurve[] accelerationCurves = new AccelerationCurve[Gears.Length];
+						for (int i = 0; i < Gears.Length; i++)
+						{
+							accelerationCurves[i] = new MSTSAccelerationCurve(currentCar, Gears[i].MaxTractiveForce, maxContinuousForce, Gears[i].MaximumSpeed);
+						}
+
+						currentCar.TractionModel = new DieselEngine(currentCar, accelerationCurves, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
+						currentCar.TractionModel.FuelTank = new FuelTank(dieselCapacity, 0, dieselCapacity);
+						currentCar.TractionModel.IsRunning = true;
+						currentCar.TractionModel.Components.Add(EngineComponent.Gearbox, new Gearbox(currentCar.TractionModel, Gears));
+						break;
 					case EngineType.Electric:
-						Car.TractionModel = new ElectricEngine(Car, new AccelerationCurve[] { new MSTSAccelerationCurve(Car, maxForce, maxContinuousForce, maxVelocity) });
-						Car.TractionModel.Components.Add(EngineComponent.Pantograph, new Pantograph(Car.TractionModel));
+						currentCar.TractionModel = new ElectricEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) });
+						currentCar.TractionModel.Components.Add(EngineComponent.Pantograph, new Pantograph(currentCar.TractionModel));
 						break;
 					case EngineType.Steam:
 						// NOT YET IMPLEMENTED
-						Car.TractionModel = new BVEMotorCar(Car, new AccelerationCurve[] { new MSTSAccelerationCurve(Car, maxForce, maxContinuousForce, maxVelocity) });
+						currentCar.TractionModel = new BVEMotorCar(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) });
 						break;
 				}
-				Car.ReAdhesionDevice = new BveReAdhesionDevice(Car, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
-				Car.Windscreen = new Windscreen(0, 0, Car);
-				Car.Windscreen.Wipers = new WindscreenWiper(Car.Windscreen, WiperPosition.Left, WiperPosition.Left, 1.0, 1.0);
+				currentCar.ReAdhesionDevice = new BveReAdhesionDevice(currentCar, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
+				currentCar.Windscreen = new Windscreen(0, 0, currentCar);
+				currentCar.Windscreen.Wipers = new WindscreenWiper(currentCar.Windscreen, WiperPosition.Left, WiperPosition.Left, 1.0, 1.0);
 
 				if (Exhaust.Size > 0)
 				{
-					Exhaust.Offset.Z -= 0.5 * Car.Length;
-					Car.ParticleSources.Add(new ParticleSource(Plugin.Renderer, Car, Exhaust.Offset, Exhaust.Size, Exhaust.SmokeMaxMagnitude, Exhaust.Direction));
+					Exhaust.Offset.Z -= 0.5 * currentCar.Length;
+					currentCar.ParticleSources.Add(new ParticleSource(Plugin.Renderer, currentCar, Exhaust.Offset, Exhaust.Size, Exhaust.SmokeMaxMagnitude, Exhaust.Direction));
 				}
 			}
 
@@ -171,7 +180,7 @@ namespace Train.MsTs
 			{
 				for (int i = 0; i < soundFiles.Count; i++)
 				{
-					SoundModelSystemParser.ParseSoundFile(soundFiles[i], ref Car);
+					SoundModelSystemParser.ParseSoundFile(soundFiles[i], ref currentCar);
 				}
 				soundFiles.Clear();
 			}
@@ -308,6 +317,7 @@ namespace Train.MsTs
 		private bool hasAntiSlipDevice;
 		private List<VigilanceDevice> vigilanceDevices;
 		private Exhaust Exhaust;
+		private Gear[] Gears;
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
@@ -486,8 +496,24 @@ namespace Train.MsTs
 						}
 						catch
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vechicle Parser: Invalid vehicle type specified.");
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Invalid vehicle type specified.");
 						}
+					}
+					break;
+				case KujuTokenID.DieselEngineType:
+					if (currentEngineType == EngineType.Diesel)
+					{
+						string type = block.ReadString();
+						switch (type.ToLowerInvariant())
+						{
+							case "hydraulic":
+								currentEngineType = EngineType.DieselHydraulic;
+								break;
+						}
+					}
+					else
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Invalid vehicle type specified.");
 					}
 					break;
 				case KujuTokenID.WagonShape:
@@ -798,6 +824,47 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.DieselSmokeEffectMaxSmokeRate:
 					Exhaust.SmokeMaxRate = block.ReadSingle();
+					break;
+				case KujuTokenID.GearBoxNumberOfGears:
+					int numGears = block.ReadInt16();
+					Gears = new Gear[numGears];
+					break;
+				case KujuTokenID.GearBoxMaxSpeedForGears:
+					if (Gears == null)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: Number of gears must be specified.");
+						break;
+					}
+
+					for (int i = 0; i < Gears.Length; i++)
+					{
+						Gears[i].MaximumSpeed = block.ReadSingle(UnitOfVelocity.MetersPerSecond, UnitOfVelocity.MilesPerHour);
+					}
+					break;
+				case KujuTokenID.GearBoxMaxTractiveForceForGears:
+					if (Gears == null)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: Number of gears must be specified.");
+						break;
+					}
+
+					for (int i = 0; i < Gears.Length; i++)
+					{
+						Gears[i].MaxTractiveForce = block.ReadSingle(UnitOfForce.Newton);
+					}
+					break;
+				case KujuTokenID.GearBoxOverspeedPercentageForFailure:
+					if (Gears == null)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: Number of gears must be specified.");
+						break;
+					}
+
+					double perc = block.ReadSingle() / 100;
+					for (int i = 0; i < Gears.Length; i++)
+					{
+						Gears[i].OverspeedFailure = Gears[i].MaximumSpeed * perc;
+					}
 					break;
 			}
 			return true;

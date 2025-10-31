@@ -49,7 +49,7 @@ namespace Train.MsTs
 
 		private static Tuple<double, double>[] curvePoints;
 		
-		internal static bool ParseSoundFile(string fileName, ref CarBase Car)
+		internal static bool ParseSoundFile(string fileName, ref CarBase currentCar)
 		{
 			currentFile = fileName;
 			currentFolder = System.IO.Path.GetDirectoryName(fileName);
@@ -111,7 +111,7 @@ namespace Train.MsTs
 					byte[] newBytes = reader.ReadBytes((int)(fb.Length - fb.Position));
 					string s = unicode ? Encoding.Unicode.GetString(newBytes) : Encoding.ASCII.GetString(newBytes);
 					TextualBlock block = new TextualBlock(s, KujuTokenID.Tr_SMS);
-					ParseBlock(block, ref soundSet, ref soundStream, ref Car);
+					ParseBlock(block, ref soundSet, ref soundStream, ref currentCar);
 				}
 
 			}
@@ -133,7 +133,7 @@ namespace Train.MsTs
 					uint remainingBytes = reader.ReadUInt32();
 					byte[] newBytes = reader.ReadBytes((int)remainingBytes);
 					BinaryBlock block = new BinaryBlock(newBytes, KujuTokenID.Tr_SMS);
-					ParseBlock(block, ref soundSet, ref soundStream, ref Car);
+					ParseBlock(block, ref soundSet, ref soundStream, ref currentCar);
 				}
 			}
 

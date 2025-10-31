@@ -202,6 +202,19 @@ namespace Train.MsTs
 					}
 					lastResult = pantographState;
 					break;
+				case PanelSubject.Gears:
+					int gearState = 0;
+					for (int k = 0; k < dynamicTrain.Cars.Length; k++)
+					{
+						if (dynamicTrain.Cars[k].TractionModel is DieselEngine dieselEngine &&
+						    dieselEngine.Components.TryGetTypedValue(EngineComponent.Gearbox, out Gearbox gearbox))
+						{
+							gearState = gearbox.CurrentGear;
+							break;
+						}
+					}
+					lastResult = gearState;
+					break;
 			}
 
 			return lastResult;

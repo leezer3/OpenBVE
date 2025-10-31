@@ -25,7 +25,7 @@ namespace Train.MsTs
 		public Plugin()
 		{
 			ConsistParser = new ConsistParser(this);
-			WagonParser = new WagonParser(this);
+			WagonParser = new WagonParser();
 		}
 
 		public override void Load(HostInterface host, FileSystem fileSystem, BaseOptions options, object rendererReference)
