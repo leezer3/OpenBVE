@@ -1,4 +1,5 @@
-﻿namespace Train.MsTs
+﻿// ReSharper disable UnusedMember.Global
+namespace Train.MsTs
 {
 	internal enum CabComponentStyle
 	{
@@ -12,5 +13,7 @@
 		TwentyFourHour,
 		TwelveHour,
 		While_Pressed,
+		Pressed,
+		Liquid,
 	}
 }

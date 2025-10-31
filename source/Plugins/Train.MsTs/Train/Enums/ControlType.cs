@@ -1,4 +1,5 @@
-﻿namespace Train.MsTs
+﻿// ReSharper disable UnusedMember.Global
+namespace Train.MsTs
 {
 	internal enum CombinedControlType
 	{
