@@ -17,10 +17,14 @@ namespace TrainManager.Power
 		/// <summary>The maximum velocity attainable</summary>
 		private readonly double MaxVelocity;
 
-		public MSTSAccelerationCurve(CarBase car, double maxForce, double maxVelocity)
+		private readonly double MaxContinuousForce;
+
+		public MSTSAccelerationCurve(CarBase car, double maxForce, double maxContinuousForce, double maxVelocity)
 		{
 			baseCar = car;
 			MaxForce = maxForce;
+			MaxContinuousForce = maxContinuousForce;
+			MaxVelocity = maxVelocity;
 		}
 
 		public override double GetAccelerationOutput(double Speed)
@@ -61,7 +65,21 @@ namespace TrainManager.Power
 
 			if (baseCar.Engine is DieselEngine dieselEngine)
 			{
+				// diesel engine uses simulated power level of MaxForce
 				return dieselEngine.CurrentPower * (totalMass / MaxForce);
+			}
+
+			if (baseCar.Engine is ElectricEngine electricEngine)
+			{
+				if (baseCar.Specs.PerceivedSpeed < 3.61111 || baseCar.Specs.PerceivedSpeed > 7.22222)
+				{
+					// for electrics, MaxContinuousForce is used between 13km/h and 26km/h as per original Kuju physics model
+					return electricEngine.CurrentPower * (totalMass / MaxContinuousForce);
+				}
+				else
+				{
+					return electricEngine.CurrentPower * (totalMass / MaxForce);
+				}
 			}
 
 			return ((baseTrain.Handles.Power.Actual / (double)baseTrain.Handles.Power.MaximumNotch) * (totalMass / MaxForce));
@@ -115,7 +133,7 @@ namespace TrainManager.Power
 				totalMass += Train.Cars[i].CurrentMass;
 			}
 
-			return totalMass / MaxForce / 3.6; ;
+			return totalMass / MaxForce / 3.6;
 		}
 
 		public override double MaximumAcceleration
