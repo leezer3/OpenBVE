@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using LibRender2.Smoke;
 using LibRender2.Trains;
 using OpenBve.Formats.Msts;
 using OpenBve.Formats.MsTs;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Motor;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
@@ -130,6 +132,12 @@ namespace Train.MsTs
 						break;
 				}
 				Car.ReAdhesionDevice = new BveReAdhesionDevice(Car, hasAntiSlipDevice ? ReadhesionDeviceType.TypeB : ReadhesionDeviceType.NotFitted);
+
+				if (Exhaust.Size > 0)
+				{
+					Exhaust.Offset.Z -= 0.5 * Car.Length;
+					Car.ParticleSources.Add(new ParticleSource(Plugin.Renderer, Car, Exhaust.Offset, Exhaust.Size, Exhaust.SmokeMaxMagnitude, Exhaust.Direction));
+				}
 			}
 		}
 
@@ -263,7 +271,7 @@ namespace Train.MsTs
 		private double maxVelocity;
 		private bool hasAntiSlipDevice;
 		private List<VigilanceDevice> vigilanceDevices;
-
+		private Exhaust Exhaust;
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
@@ -736,6 +744,34 @@ namespace Train.MsTs
 							break;
 						}
 					}
+					break;
+				case KujuTokenID.Effects:
+					while (block.Position() < block.Length() - 2)
+					{
+						newBlock = block.ReadSubBlock();
+						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
+					}
+					break;
+				case KujuTokenID.DieselSpecialEffects:
+					while (block.Position() < block.Length() - 2)
+					{
+						newBlock = block.ReadSubBlock();
+						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
+					}
+					break;
+				case KujuTokenID.Exhaust1:
+					Exhaust.Offset = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
+					Exhaust.Direction = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
+					Exhaust.Size = block.ReadSingle();
+					break;
+				case KujuTokenID.DieselSmokeEffectMaxMagnitude:
+					Exhaust.SmokeMaxMagnitude = block.ReadSingle();
+					break;
+				case KujuTokenID.DieselSmokeEffectInitialSmokeRate:
+					Exhaust.SmokeInitialRate = block.ReadSingle();
+					break;
+				case KujuTokenID.DieselSmokeEffectMaxSmokeRate:
+					Exhaust.SmokeMaxRate = block.ReadSingle();
 					break;
 			}
 			return true;
