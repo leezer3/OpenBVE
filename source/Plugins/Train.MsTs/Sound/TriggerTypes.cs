@@ -7,6 +7,7 @@ namespace Train.MsTs
 		// unclear as to why it's not just left out, copy + paste or internal MSTS validation?
 		// some of the time, these exist, but a lot of the time the sound file is missing
 		Skip = -1,
+		VariableControlled = 0,
 		DynamicBrakeIncrease = 2,
 		DynamicBrakeOff = 3,
 		SanderOn = 4,
