@@ -359,20 +359,17 @@ namespace Train.MsTs
 					 * map to existing subsystems
 					 */
 					currentSoundSet.CurrentSoundType = block.Token;
-					
-					int numSounds = block.ReadInt32();
+					int numSounds = block.ReadInt16();
 					currentSoundSet.SoundBuffers = new SoundBuffer[numSounds];
-					for (int i = 0; i < numSounds; i++)
+					currentSoundSet.SelectionMethod = KujuTokenID.SequentialSelection;
+					while (numSounds > 0 && block.Position() < block.Length() - 4)
 					{
-						newBlock = block.ReadSubBlock(KujuTokenID.File);
+						newBlock = block.ReadSubBlock();
+						if (newBlock.Token == KujuTokenID.File)
+						{
+							numSounds--;
+						}
 						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
-					}
-					KujuTokenID selectionMethod = KujuTokenID.SequentialSelection;
-					// Attempt to read selection method if at least one sound file, and some data remaining in the block
-					if (numSounds > 1 && block.Position() < block.Length() - 4)
-					{
-						Block subBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
-						currentSoundSet.SelectionMethod = subBlock.ReadEnumValue(default(KujuTokenID));
 					}
 					currentSoundSet.Create(car, currentSoundStream);
 					break;
@@ -583,18 +580,15 @@ namespace Train.MsTs
 					currentSoundSet.CurrentSoundType = block.Token;
 					numSounds = block.ReadInt16();
 					currentSoundSet.SoundBuffers = new SoundBuffer[numSounds];
-					for (int i = 0; i < numSounds; i++)
-					{
-						newBlock = block.ReadSubBlock(KujuTokenID.File);
-						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
-					}
-
 					currentSoundSet.SelectionMethod = KujuTokenID.SequentialSelection;
-					// Attempt to read selection method if at least one sound file, and some data remaining in the block
-					if (numSounds > 1 && block.Position() < block.Length() - 4)
+					while (numSounds > 0 && block.Position() < block.Length() - 4)
 					{
-						Block subBlock = block.ReadSubBlock(KujuTokenID.SelectionMethod);
-						currentSoundSet.SelectionMethod = subBlock.ReadEnumValue(default(KujuTokenID));
+						newBlock = block.ReadSubBlock();
+						if (newBlock.Token == KujuTokenID.File)
+						{
+							numSounds--;
+						}
+						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 					}
 					currentSoundSet.Create(car, currentSoundStream);
 					break;
