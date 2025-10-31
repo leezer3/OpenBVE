@@ -27,7 +27,7 @@ namespace OpenBveApi.World
 
 			KnownUnits = new Dictionary<string, UnitOfPressure>
 			{
-				{"psi", UnitOfPressure.PoundsPerSquareInch}, {"poundspersquareinch", UnitOfPressure.PoundsPerSquareInch}, {"kilopascal", UnitOfPressure.KiloPascal}, {"kpa", UnitOfPressure.KiloPascal}, {"pascal", UnitOfPressure.Pascal}, {"pa", UnitOfPressure.Pascal}, {"inhg", UnitOfPressure.InchesOfMercury}
+				{"psi", UnitOfPressure.PoundsPerSquareInch}, {"poundspersquareinch", UnitOfPressure.PoundsPerSquareInch}, {"kilopascal", UnitOfPressure.KiloPascal}, {"kpa", UnitOfPressure.KiloPascal}, {"pascal", UnitOfPressure.Pascal}, {"pa", UnitOfPressure.Pascal}, {"inhg", UnitOfPressure.InchesOfMercury}, {"inchesofmercury", UnitOfPressure.InchesOfMercury}
 			};
 		}
 
