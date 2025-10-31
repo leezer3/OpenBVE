@@ -97,20 +97,19 @@ namespace TrainManager.BrakeSystems
 		/// <returns>The deceleration in m/s</returns>
 		public double DecelerationAtServiceMaximumPressure(int Notch, double currentSpeed)
 		{
-			if (DecelerationCurves == null || DecelerationCurves.Length == 0)
+			if (decelerationCurves == null || decelerationCurves.Length == 0)
 			{
 				return 0;
 			}
-
 			if (Notch == 0)
 			{
-				return this.DecelerationCurves[0].GetAccelerationOutput(currentSpeed, 1.0);
+				return this.decelerationCurves[0].GetAccelerationOutput(currentSpeed);
 			}
 			if (this.DecelerationCurves.Length >= Notch)
 			{
-				return this.DecelerationCurves[Notch - 1].GetAccelerationOutput(currentSpeed, 1.0);
+				return this.decelerationCurves[Notch - 1].GetAccelerationOutput(currentSpeed);
 			}
-			return this.DecelerationCurves[this.DecelerationCurves.Length - 1].GetAccelerationOutput(currentSpeed, 1.0);
+			return this.decelerationCurves[this.decelerationCurves.Length - 1].GetAccelerationOutput(currentSpeed);
 		}
 
 		/// <summary>Gets the current motor deceleration figure</summary>

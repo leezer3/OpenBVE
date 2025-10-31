@@ -120,6 +120,6 @@ namespace TrainManager.Motor
 
 		public override double CurrentPower => (currentRPM - MinRPM) / (MaxRPM - MinRPM);
 
-		public override double TargetAcceleration => AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed, 1.0);
+		public override double TargetAcceleration => AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed);
 	}
 }
