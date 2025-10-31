@@ -105,7 +105,7 @@ namespace Plugin
 				case 't':
 					using (BinaryReader reader = new BinaryReader(fb))
 					{
-						byte[] newBytes = reader.ReadBytes((int)(fb.Length - fb.Position));
+						byte[] newBytes = reader.ReadBytes((int)(24));
 						string s = unicode ? Encoding.Unicode.GetString(newBytes) : Encoding.ASCII.GetString(newBytes);
 
 						s = s.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();

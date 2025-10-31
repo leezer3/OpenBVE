@@ -536,10 +536,9 @@ namespace Plugin
 			}
 			if (subHeader[7] == 't')
 			{
-				using (BinaryReader reader = new BinaryReader(fb))
+				using (StreamReader reader = new StreamReader(fb, unicode ? Encoding.Unicode : Encoding.ASCII))
 				{
-					byte[] newBytes = reader.ReadBytes((int)(fb.Length - fb.Position));
-					string s = unicode ? Encoding.Unicode.GetString(newBytes) : Encoding.ASCII.GetString(newBytes);
+					string s = reader.ReadToEnd();
 					TextualBlock block = new TextualBlock(s, KujuTokenID.shape);
 					ParseBlock(block, ref shape);
 				}
