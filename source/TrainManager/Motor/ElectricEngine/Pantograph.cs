@@ -29,7 +29,7 @@ namespace TrainManager.Motor
 		/// <summary>Whether the pantograph is currently raised</summary>
 		public PantographState State;
 
-		public Pantograph(AbstractEngine engine) : base(engine)
+		public Pantograph(TractionModel engine) : base(engine)
 		{
 		}
 

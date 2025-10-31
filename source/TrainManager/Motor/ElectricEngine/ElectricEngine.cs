@@ -30,7 +30,7 @@ using TrainManager.Power;
 
 namespace TrainManager.Motor
 {
-	public class ElectricEngine : AbstractEngine
+	public class ElectricEngine : TractionModel
 	{
 		public ElectricEngine(CarBase car, AccelerationCurve[] accelerationCurves) : base(car, accelerationCurves, true)
 		{
