@@ -136,6 +136,9 @@
     <Compile Include="Motor\ElectricEngine\ElectricEngine.cs" />
     <Compile Include="Motor\ElectricEngine\Pantograph.cs" />
     <Compile Include="Motor\Fuel\FuelTank.cs" />
+    <Compile Include="Motor\SteamEngine\TankEngine.cs" />
+    <Compile Include="Motor\SteamEngine\TenderEngine.cs" />
+    <Compile Include="Motor\SteamEngine\Tender.cs" />
     <Compile Include="Power\AccelerationCurve.cs" />
     <Compile Include="Power\Breaker.cs" />
     <Compile Include="Power\BVE\BVEAccelerationCurve.cs" />

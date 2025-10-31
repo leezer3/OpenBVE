@@ -56,6 +56,7 @@ namespace Train.MsTs
 		private string[] wagonFiles;
 		private double wheelRadius;
 		private bool exteriorLoaded = false;
+		private bool RequiresTender = false;
 
 		internal WagonParser()
 		{
@@ -133,7 +134,7 @@ namespace Train.MsTs
 				{
 					case EngineType.Diesel:
 						currentCar.TractionModel = new DieselEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) }, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
-						currentCar.TractionModel.FuelTank = new FuelTank(dieselCapacity, 0, dieselCapacity);
+						currentCar.TractionModel.FuelTank = new FuelTank(GetMaxDieselCapacity(currentCar.Index));
 						currentCar.TractionModel.IsRunning = true;
 
 						if (maxBrakeAmps > 0 && maxEngineAmps > 0)
@@ -153,7 +154,7 @@ namespace Train.MsTs
 						}
 
 						currentCar.TractionModel = new DieselEngine(currentCar, accelerationCurves, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
-						currentCar.TractionModel.FuelTank = new FuelTank(dieselCapacity, 0, dieselCapacity);
+						currentCar.TractionModel.FuelTank = new FuelTank(GetMaxDieselCapacity(currentCar.Index));
 						currentCar.TractionModel.IsRunning = true;
 						currentCar.TractionModel.Components.Add(EngineComponent.Gearbox, new Gearbox(currentCar.TractionModel, Gears));
 						break;
@@ -162,8 +163,24 @@ namespace Train.MsTs
 						currentCar.TractionModel.Components.Add(EngineComponent.Pantograph, new Pantograph(currentCar.TractionModel));
 						break;
 					case EngineType.Steam:
-						// NOT YET IMPLEMENTED
-						currentCar.TractionModel = new BVEMotorCar(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) });
+						// NOT YET IMPLEMENTED FULLY
+						if (RequiresTender)
+						{
+							currentCar.TractionModel = new TenderEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) });
+							if (currentCar.Index > 0)
+							{
+								CarBase previousCar = currentCar.baseTrain.Cars[currentCar.Index - 1];
+								if (previousCar.TractionModel is Tender tender && tender.MaxWaterLevel == -1)
+								{
+									// recreate, as values are stored in the ENG
+									previousCar.TractionModel = new Tender(previousCar, MaxFuelLevel, MaxWaterLevel);
+								}
+							}
+						}
+						else
+						{
+							currentCar.TractionModel = new TankEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) }, MaxFuelLevel, MaxWaterLevel);
+						}
 						break;
 					case EngineType.NoEngine:
 						currentCar.TractionModel = new BVETrailerCar(currentCar);
@@ -182,6 +199,13 @@ namespace Train.MsTs
 				{
 					Exhaust.Offset.Z -= 0.5 * currentCar.Length;
 					currentCar.ParticleSources.Add(new ParticleSource(Plugin.Renderer, currentCar, Exhaust.Offset, Exhaust.Size, Exhaust.SmokeMaxMagnitude, Exhaust.Direction));
+				}
+			}
+			else
+			{
+				if (currentWagonType == WagonType.Tender)
+				{
+					currentCar.TractionModel = new Tender(currentCar, MaxFuelLevel, MaxWaterLevel);
 				}
 			}
 
@@ -423,6 +447,22 @@ namespace Train.MsTs
 		private Friction friction;
 		private Adhesion adhesion;
 		private UnitOfPressure brakeSystemDefaultUnits = UnitOfPressure.PoundsPerSquareInch;
+		private double MaxWaterLevel = -1;
+		private double MaxFuelLevel = -1;
+
+		private double GetMaxDieselCapacity(int carIndex)
+		{
+			if (dieselCapacity <= 0 && MaxFuelLevel > 0)
+			{
+				return MaxFuelLevel; // if zero capacity, try the figure from EngineVariables
+			}
+
+			if (dieselCapacity == 0)
+			{
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Diesel locomotive for car " + carIndex + " appears to have zero fuel capacity.");
+			}
+			return dieselCapacity;
+		}
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
@@ -1037,6 +1077,40 @@ namespace Train.MsTs
 						// so let's assume they're no good
 						car.Coupler.MaximumDistanceBetweenCars = car.Coupler.MinimumDistanceBetweenCars;
 					}
+					break;
+				case KujuTokenID.IsTenderRequired:
+					RequiresTender = block.ReadBool();
+					break;
+				case KujuTokenID.EngineVariables:
+					switch (currentEngineType)
+					{
+						case EngineType.DieselHydraulic:
+						case EngineType.Diesel:
+							// Fuel capacity (L)
+							// NOTE: Max fuel is set by MaxDieselLevel
+							MaxFuelLevel = block.ReadSingle(UnitOfVolume.Litres);
+							break;
+						case EngineType.Steam:
+							// https://tsforum.forumotion.net/t120-msts-helpful-facts-and-links-part-14-enginevariables-for-steam-locomotives-by-slipperman12
+							// Fire temp (deg c)
+							// Fire mass (lbs)
+							// Water mass in boiler (lbs)
+							// Boiler pressure (psi)
+							// Tender water mass (If switched to in ACT mode, so ignore)
+							// Tender coal mass (If switched to in ACT mode, so ignore)
+							// Smoke quantity multiplier
+							// Fire condition
+							// Coal quality
+							// NOTE: Max fuel / water levels are set by MaxTenderCoalMass and MaxTenderWaterMass
+							break;
+					}
+					break;
+				case KujuTokenID.MaxTenderCoalMass:
+					MaxFuelLevel = block.ReadSingle(UnitOfWeight.Kilograms, UnitOfWeight.Pounds);
+					break;
+				case KujuTokenID.MaxTenderWaterMass:
+					// at atmospheric pressure, 1kg of water = 1L
+					MaxWaterLevel = block.ReadSingle(UnitOfWeight.Kilograms, UnitOfWeight.Pounds);
 					break;
 			}
 			return true;
