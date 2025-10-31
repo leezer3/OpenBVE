@@ -97,6 +97,9 @@ namespace OpenBve.Formats.MsTs
 		/// <returns>An enum array</returns>
 		public abstract TEnumType ReadEnumValue<TEnumType>(TEnumType desiredEnumType) where TEnumType : struct;
 
+		/// <summary>Reads a boolean value from the block</summary>
+		public bool ReadBool() => ReadInt16() == 1;
+
 		/// <summary>Returns the length of the block</summary>
 		public abstract long Length();
 

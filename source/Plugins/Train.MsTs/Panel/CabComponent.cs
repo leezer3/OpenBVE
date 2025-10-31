@@ -67,7 +67,7 @@ namespace Train.MsTs
 		{
 			if (!Enum.TryParse(myBlock.Token.ToString(), true, out Type))
 			{
-				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognised CabViewComponent type.");
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS CVF Parser: Unrecognised CabViewComponent type.");
 				return;
 			}
 
@@ -435,7 +435,7 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.DirIncrease:
 					// rotates Clockwise (0) or AntiClockwise (1)
-					DirIncrease = block.ReadInt16() == 1;
+					DirIncrease = block.ReadBool();
 					break;
 				case KujuTokenID.Orientation:
 					//Flip?
@@ -468,7 +468,7 @@ namespace Train.MsTs
 					VerticalFrames = block.ReadInt16();
 					break;
 				case KujuTokenID.MouseControl:
-					MouseControl = block.ReadInt16() == 1;
+					MouseControl = block.ReadBool();
 					break;
 				case KujuTokenID.Style:
 					Style = block.ReadEnumValue(default(CabComponentStyle));
@@ -483,17 +483,17 @@ namespace Train.MsTs
 						}
 						catch
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The texture path contains invalid characters in CabComponent " + Type + " in CVF");
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS CVF Parser: The texture path contains invalid characters in CabComponent " + Type);
 						}
 
 						if (!File.Exists(TexturePath))
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "The texture file " + s + " was not found in CabComponent " + Type + " in CVF");
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS CVF Parser: The texture file " + s + " was not found in CabComponent " + Type);
 						}
 					}
 					else
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, true, "A texture file was not specified in CabComponent " + Type + " in CVF");
+						Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS CVF Parser: A texture file was not specified in CabComponent " + Type);
 					}
 					break;
 				case KujuTokenID.Position:
