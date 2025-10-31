@@ -769,7 +769,7 @@ namespace OpenBve.Formats.MsTs
 			string s = getNextValue();
 			if (int.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out int val))
 			{
-				return (ushort) val;
+				return val;
 			}
 
 			throw new InvalidDataException("Unable to parse " + s + " to a valid integer in block " + Token);
