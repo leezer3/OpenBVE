@@ -6,6 +6,7 @@ using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Motor;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
@@ -94,6 +95,20 @@ namespace TrainManager.Trains
 			}
 		}
 
+		public override int CurrentSignalAspect
+		{
+			get
+			{
+				int nextSectionIndex = CurrentSectionIndex + 1;
+				int a = 0;
+				if (nextSectionIndex >= 0 & nextSectionIndex < TrainManagerBase.CurrentRoute.Sections.Length)
+				{
+					a = TrainManagerBase.CurrentRoute.Sections[nextSectionIndex].CurrentAspect;
+				}
+				return a;
+			}
+		}
+
 		/// <summary>The direction of travel on the current track</summary>
 		public TrackDirection CurrentDirection => TrainManagerBase.CurrentRoute.Tracks[Cars[DriverCar].FrontAxle.Follower.TrackIndex].Direction;
 
@@ -110,6 +125,7 @@ namespace TrainManager.Trains
 				
 			Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 			Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
+			Specs.PantographState = PantographState.Lowered;
 			DriverBody = new DriverBody(this);
 			Handles.Reverser = new ReverserHandle(this);
 			Handles.EmergencyBrake = new EmergencyHandle(this);
@@ -469,9 +485,10 @@ namespace TrainManager.Trains
 				Handles.EmergencyBrake.Safety = Handles.EmergencyBrake.Driver;
 			}
 
-			Handles.Power.Update();
-			Handles.Brake.Update();
-			Handles.Brake.Update();
+			Handles.Power.Update(timeElapsed);
+			Handles.Brake.Update(timeElapsed);
+			Handles.Brake.Update(timeElapsed);
+			Handles.LocoBrake.Update(timeElapsed);
 			Handles.EmergencyBrake.Update();
 			Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
 			Cars[DriverCar].DSD?.Update(timeElapsed);
@@ -481,6 +498,10 @@ namespace TrainManager.Trains
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].Run.Update(timeElapsed);
+				for (int j = 0; j < Cars[i].Sounds.ControlledSounds.Count; j++)
+				{
+					Cars[i].Sounds.ControlledSounds[j].Update(timeElapsed);
+				}
 			}
 
 			// safety system
@@ -559,7 +580,7 @@ namespace TrainManager.Trains
 				CenterOfCarPositions[i] = 0.5 * (pr + pf);
 				CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].CurrentMass;
 				TrainMass += Cars[i].CurrentMass;
-				// update engine
+				// update engine etc.
 				if (Cars[i].TractionModel.ProvidesPower && Cars[i].TractionModel != null)
 				{
 					Cars[i].TractionModel.Update(timeElapsed);
@@ -787,6 +808,10 @@ namespace TrainManager.Trains
 				Plugin.LastSection = CurrentSectionIndex;
 				Plugin.UpdatePlugin();
 			}
+			else
+			{
+				Handles.Reverser.Actual = Handles.Reverser.Driver;
+			}
 		}
 
 		
@@ -909,7 +934,11 @@ namespace TrainManager.Trains
 					TrainManagerBase.CurrentRoute.Sections[i].AccessibilityAnnounced = false;
 				}
 			}
-			SafetySystems.PassAlarm.Halt();
+
+			if (SafetySystems.PassAlarm != null)
+			{
+				SafetySystems.PassAlarm.Halt();
+			}
 			int currentTrackElement = Cars[0].FrontAxle.Follower.LastTrackElement;
 			StationState = TrainStopState.Jumping;
 			int stopIndex = TrainManagerBase.CurrentRoute.Stations[stationIndex].GetStopIndex(NumberOfCars);
@@ -1011,7 +1040,7 @@ namespace TrainManager.Trains
 				{
 					Cars[i].Doors[0].AnticipatedOpen = TrainManagerBase.CurrentRoute.Stations[stationIndex].OpenLeftDoors;
 					Cars[i].Doors[1].AnticipatedOpen = TrainManagerBase.CurrentRoute.Stations[stationIndex].OpenRightDoors;
-					Cars[i].ReAdhesionDevice.Jump();
+					Cars[i].ReAdhesionDevice?.Jump();
 				}
 				if (IsPlayerTrain)
 				{

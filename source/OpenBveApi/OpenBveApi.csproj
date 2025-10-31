@@ -226,6 +226,7 @@
     <Compile Include="System\BaseOptions.OptionsKey.cs" />
     <Compile Include="System\BaseOptions.OptionsSection.cs" />
     <Compile Include="System\BinaryExtensions.cs" />
+    <Compile Include="System\DictionaryExtensions.cs" />
     <Compile Include="System\Files.cs" />
     <Compile Include="System\FileSystem.cs" />
     <Compile Include="Graphics\InterpolationModes.cs" />
@@ -260,6 +261,9 @@
     <Compile Include="Train\CarBrightness.cs" />
     <Compile Include="Train\AbstractCoupler.cs" />
     <Compile Include="Train\GeneralAI.cs" />
+    <Compile Include="Train\Motor\ComponentTypes.cs" />
+    <Compile Include="Train\Motor\EngineType.cs" />
+    <Compile Include="Train\Motor\PantographState.cs" />
     <Compile Include="Train\RequestStop.cs" />
     <Compile Include="Train\StopSkipMode.cs" />
     <Compile Include="Train\TrainInterface.cs" />
@@ -303,6 +307,7 @@
     <Compile Include="World\UnitConversions\Force.cs" />
     <Compile Include="World\UnitConversions\Length.cs" />
     <Compile Include="World\UnitConversions\Pressure.cs" />
+    <Compile Include="World\UnitConversions\Torque.cs" />
     <Compile Include="World\UnitConversions\UnitConvertor.cs" />
     <Compile Include="World\UnitConversions\Velocity.cs" />
     <Compile Include="World\UnitConversions\Volume.cs" />

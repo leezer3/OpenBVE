@@ -22,10 +22,20 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-namespace TrainManager.Motor
+namespace OpenBveApi.Motor
 {
-    public enum EngineComponent
-    {
-		TractionMotor,
-    }
+	/// <summary>Describes the different types of engine</summary>
+	public enum EngineType
+	{
+		/// <summary>No engine</summary>
+		NoEngine = 0,
+		/// <summary>Diesel prime mover, electric transmission</summary>
+		Diesel,
+		/// <summary>Diesel prime mover, hydralic transmission</summary>
+		DieselHydraulic,
+		/// <summary>Steam engine</summary>
+		Steam,
+		/// <summary>Pure electric engine</summary>
+		Electric
+	}
 }

@@ -52,15 +52,12 @@ namespace TrainManager.Car.Systems
 				const double maxDistance = 750.0;
 				if (distance > minDistance)
 				{
-					if (Sounds.TryGetValue(baseCar.FrontAxle.RunIndex, out var runSound))
+					if (Sounds.TryGetValue(baseCar.FrontAxle.RunIndex, out var runSound) && runSound.Buffer != null)
 					{
-						if (runSound.Buffer != null)
+						if (runSound.Buffer.Duration > 0.0)
 						{
-							if (runSound.Buffer.Duration > 0.0)
-							{
-								double offset = distance > maxDistance ? 25.0 : 300.0;
-								NextReasynchronizationPosition = runSound.Buffer.Duration * Math.Ceiling((baseCar.baseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / runSound.Buffer.Duration);
-							}
+							double offset = distance > maxDistance ? 25.0 : 300.0;
+							NextReasynchronizationPosition = runSound.Buffer.Duration * Math.Ceiling((baseCar.baseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / runSound.Buffer.Duration);
 						}
 					}
 				}
