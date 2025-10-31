@@ -152,7 +152,7 @@ namespace Train.OpenBve
 							AccelerationCurve[] finalAccelerationCurves = new AccelerationCurve[Plugin.AccelerationCurves.Length];
 							for (int i = 0; i < Plugin.AccelerationCurves.Length; i++)
 							{
-								finalAccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone();
+								finalAccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone(1.0);
 							}
 
 							Train.Cars[Car].TractionModel = new BVEMotorCar(Train.Cars[Car], finalAccelerationCurves);

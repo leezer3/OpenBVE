@@ -143,8 +143,15 @@ namespace OpenBveApi.Objects
 								}
 								idx--;
 							}
-							char wheel1 = Name[idx];
-							char wheel2 = Name[idx -1];
+
+							// NOTE: Need to account for stuff which doesn't even bother with a number...
+							char wheel1 = '1';
+							char wheel2 = ' ';
+							if (idx > 0)
+							{
+								wheel1 = Name[idx];
+								wheel2 = Name[idx - 1];
+							}
 							if (char.IsDigit(wheel1) && char.IsDigit(wheel2))
 							{
 								// bogie wheelset

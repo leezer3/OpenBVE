@@ -378,6 +378,11 @@ namespace OpenBve.Formats.MsTs
 			{
 				return parsedToken;
 			}
+
+			if (s[0] == '#' || s.StartsWith("_#"))
+			{
+				return KujuTokenID.Skip;
+			}
 #if DEBUG 
 			// In debug mode, always throw an exception
 			// this way, any new parameters can be added to our list for future
