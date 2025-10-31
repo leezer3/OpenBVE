@@ -4,6 +4,8 @@
 	{
 		None = 0,
 		Needle,
+		Pointer,
+		Solid,
 		Sprung,
 		Not_Sprung,
 		OnOff,

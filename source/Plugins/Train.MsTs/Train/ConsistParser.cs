@@ -37,6 +37,7 @@ using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
 
@@ -203,6 +204,17 @@ namespace Train.MsTs
 				}
 
 				train.Cars[train.Cars.Length - 1].RearAxle.Follower.TriggerType = i == train.Cars.Length - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
+
+				if (train.Cars[i].TractionModel is TenderEngine)
+				{
+					bool hasTender = i > 0 && train.Cars[i - 1].TractionModel is Tender || i < train.Cars.Length - 2 && train.Cars[i + 1].TractionModel is Tender;
+
+					if (hasTender == false)
+					{
+						// this is actually harmless at the minute
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Consist Parser: Steam Engine in car " + i + " requires a tender, but none is present.");
+					}
+				}
 			}
 
 			train.Cars[train.Cars.Length - 1].RearAxle.Follower.TriggerType = EventTriggerType.RearCarRearAxle;
