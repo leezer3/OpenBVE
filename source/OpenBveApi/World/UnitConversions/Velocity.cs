@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace OpenBveApi.World
 {
@@ -23,7 +23,7 @@ namespace OpenBveApi.World
 			RegisterConversion(UnitOfVelocity.MilesPerHour, v => v * 2.237, v => v / 2.237);
 			KnownUnits = new Dictionary<string, UnitOfVelocity>
 			{
-				{"m/s", UnitOfVelocity.MetersPerSecond}, {"mph", UnitOfVelocity.MilesPerHour}, {"kmh", UnitOfVelocity.KilometersPerHour}, {"km/h", UnitOfVelocity.KilometersPerHour}
+				{"m/s", UnitOfVelocity.MetersPerSecond}, {"mph", UnitOfVelocity.MilesPerHour}, {"kmh", UnitOfVelocity.KilometersPerHour}, {"km/h", UnitOfVelocity.KilometersPerHour}, {"meterspersecond", UnitOfVelocity.MetersPerSecond}, {"ms", UnitOfVelocity.MetersPerSecond}, {"milesperhour", UnitOfVelocity.MilesPerHour}
 			};
 		}
 
