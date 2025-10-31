@@ -127,6 +127,8 @@
     <Compile Include="Motor\BVE5\MotorSound.cs" />
     <Compile Include="Motor\BVE5\MotorSoundTableEntry.cs" />
     <Compile Include="Motor\BVE5\SoundState.cs" />
+    <Compile Include="Motor\MSTS\MotorSound.cs" />
+    <Compile Include="Motor\ComponentTypes.cs" />
     <Compile Include="Motor\DieselEngine\DieselEngine.cs" />
     <Compile Include="Motor\DieselEngine\GearboxOperation.cs" />
     <Compile Include="Motor\DieselEngine\RegenerativeTractionMotor.cs" />
@@ -136,9 +138,11 @@
     <Compile Include="Motor\ElectricEngine\ElectricEngine.cs" />
     <Compile Include="Motor\ElectricEngine\Pantograph.cs" />
     <Compile Include="Motor\Fuel\FuelTank.cs" />
+    <Compile Include="Motor\MSTS\MotorSound.cs" />
     <Compile Include="Power\AccelerationCurve.cs" />
     <Compile Include="Power\Breaker.cs" />
     <Compile Include="Power\BVE\BVEAccelerationCurve.cs" />
+    <Compile Include="Power\MSTS\MSTSAccelerationCurve.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SafetySystems\AbstractSafetySystem.cs" />
     <Compile Include="SafetySystems\ATC\AtcModes.cs" />

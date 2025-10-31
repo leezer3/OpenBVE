@@ -1198,7 +1198,7 @@ namespace OpenBve {
 				string[] a = new string[Interface.CurrentOptions.RecentlyUsedTrains.Length];
 				for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
 				{
-					if (Directory.Exists(Interface.CurrentOptions.RecentlyUsedTrains[i]))
+					if ((Interface.CurrentOptions.RecentlyUsedTrains[i].EndsWith(".con", StringComparison.InvariantCultureIgnoreCase) && File.Exists(Interface.CurrentOptions.RecentlyUsedTrains[i])) || Directory.Exists(Interface.CurrentOptions.RecentlyUsedTrains[i]))
 					{
 						a[n] = Interface.CurrentOptions.RecentlyUsedTrains[i];
 						n++;
