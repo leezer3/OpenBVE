@@ -19,11 +19,23 @@ namespace Train.MsTs
 
 		internal Friction(Block block)
 		{
-			C1 = block.ReadSingle(UnitOfTorque.NewtonMetersPerSecond);
-			E1 = block.ReadSingle();
-			V2 = block.ReadSingle(UnitOfVelocity.MetersPerSecond);
-			C2 = block.ReadSingle(UnitOfTorque.NewtonMetersPerSecond);
-			E2 = block.ReadSingle();
+			try
+			{
+				C1 = block.ReadSingle(UnitOfTorque.NewtonMetersPerSecond);
+				E1 = block.ReadSingle();
+				V2 = block.ReadSingle(UnitOfVelocity.MetersPerSecond);
+				C2 = block.ReadSingle(UnitOfTorque.NewtonMetersPerSecond);
+				E2 = block.ReadSingle();
+			}
+			catch
+			{
+				C1 = 100;
+				E1 = 1;
+				V2 = -1;
+				C2 = 0;
+				E2 = 1;
+			}
+			
 		}
 
 		internal double GetResistanceValue(double speed)
