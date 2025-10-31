@@ -234,7 +234,6 @@ namespace Train.MsTs
 					}
 					currentCar.Breaker = new Breaker(currentCar);
 					currentCar.Sounds.Plugin = new Dictionary<int, CarSound>();
-					currentCar.Sounds.Motor = new MSTSMotorSound(currentCar);
 					Train.Cars[currentCarIndex] = currentCar;
 					/*
 					 * FIXME: Needs removing or sorting when the car is created

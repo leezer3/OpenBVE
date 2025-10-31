@@ -136,7 +136,6 @@
     <Compile Include="Motor\ElectricEngine\ElectricEngine.cs" />
     <Compile Include="Motor\ElectricEngine\Pantograph.cs" />
     <Compile Include="Motor\Fuel\FuelTank.cs" />
-    <Compile Include="Motor\MSTS\MotorSound.cs" />
     <Compile Include="Power\AccelerationCurve.cs" />
     <Compile Include="Power\Breaker.cs" />
     <Compile Include="Power\BVE\BVEAccelerationCurve.cs" />
@@ -170,6 +169,12 @@
     <Compile Include="SafetySystems\SafetySystems.cs" />
     <Compile Include="SafetySystems\StationAdjustAlarm.cs" />
     <Compile Include="SafetySystems\TrainSafetySystems.cs" />
+    <Compile Include="Sounds\MSTS\FrequencyCurve.cs" />
+    <Compile Include="Sounds\MSTS\SoundStream.cs" />
+    <Compile Include="Sounds\MSTS\SoundTrigger.cs" />
+    <Compile Include="Sounds\MSTS\SoundTrigger.Speed.cs" />
+    <Compile Include="Sounds\MSTS\SoundTrigger.VariableControlled.cs" />
+    <Compile Include="Sounds\MSTS\VolumeCurve.cs" />
     <Compile Include="TrackFollowingObject\AI\TrackFollowingObject.AI.cs" />
     <Compile Include="TrackFollowingObject\AI\TravelData.cs" />
     <Compile Include="TrackFollowingObject\AI\TravelPointData.cs" />
@@ -195,6 +200,10 @@
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
       <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
+      <Project>{e81b7bd8-a326-47d3-b7ee-e9c7d4d119fa}</Project>
+      <Name>Formats.Msts</Name>
     </ProjectReference>
     <ProjectReference Include="..\RouteManager2\RouteManager2.csproj">
       <Project>{4ef680d7-df17-4978-9872-133edc169b4b}</Project>

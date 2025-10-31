@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -32,7 +32,7 @@ namespace TrainManager.Motor
 {
 	public class ElectricEngine : TractionModel
 	{
-		public ElectricEngine(CarBase car) : base(car)
+		public ElectricEngine(CarBase car, AccelerationCurve[] accelerationCurves) : base(car, accelerationCurves, true)
 		{
 		}
 
