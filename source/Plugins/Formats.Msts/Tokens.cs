@@ -1386,5 +1386,6 @@ namespace OpenBve.Formats.MsTs
 		RunUpTimeToMaxPower, // UK_Electric_VT_Class390
 		NumberOfSteamHeatingPressureSteps, // MT_DD_WD_90433
 		BrakeCutsPowerAtBrakeCylinderPrssure, // NWC_08814
+		MonitoringDeviceAppliesSutsDownEngine, // EB_421_NSE
 	}
 }
