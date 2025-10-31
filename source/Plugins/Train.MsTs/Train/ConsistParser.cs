@@ -28,10 +28,14 @@ namespace Train.MsTs
 			Plugin = plugin;
 		}
 
-		internal void ReadConsist(string fileName, ref AbstractTrain Train)
+		internal void ReadConsist(string fileName, ref AbstractTrain parsedTrain)
 		{
 			currentCarIndex = -1;
-			TrainBase train = Train as TrainBase;
+			TrainBase train = parsedTrain as TrainBase;
+			if (train == null)
+			{
+				throw new Exception();
+			}
 			train.Handles.Reverser = new ReverserHandle(train);
 			train.Handles.EmergencyBrake = new EmergencyHandle(train);
 			train.Handles.Power = new PowerHandle(8, 8, new double[] { }, new double[] { }, train);
@@ -163,21 +167,21 @@ namespace Train.MsTs
 			train.Cars[train.Cars.Length - 1].RearAxle.Follower.TriggerType = EventTriggerType.RearCarRearAxle;
 
 			train.Cars[train.DriverCar].Windscreen = new Windscreen(256, 10.0, train.Cars[train.DriverCar]);
-			train.Cars[train.DriverCar].Windscreen.Wipers = new WindscreenWiper(train.Cars[Train.DriverCar].Windscreen, WiperPosition.Left, WiperPosition.Left, 1.0, 0.0, true); // hack: zero hold time so they act as fast with two states
+			train.Cars[train.DriverCar].Windscreen.Wipers = new WindscreenWiper(train.Cars[parsedTrain.DriverCar].Windscreen, WiperPosition.Left, WiperPosition.Left, 1.0, 0.0, true); // hack: zero hold time so they act as fast with two states
 			train.PlaceCars(0.0);
 		}
 
 		private int currentCarIndex = -1;
 		private CarBase currentCar;
 		private bool reverseCurentCar;
-		private void ParseBlock(Block block, ref TrainBase Train)
+		private void ParseBlock(Block block, ref TrainBase currentTrain)
 		{
 			Block newBlock;
 			switch (block.Token)
 			{
 				default:
 					newBlock = block.ReadSubBlock();
-					ParseBlock(newBlock, ref Train);
+					ParseBlock(newBlock, ref currentTrain);
 					break;
 				case KujuTokenID.Default:
 					// presumably used internally by MSTS, not useful
@@ -193,7 +197,7 @@ namespace Train.MsTs
 						try
 						{
 							newBlock = block.ReadSubBlock();
-							ParseBlock(newBlock, ref Train);
+							ParseBlock(newBlock, ref currentTrain);
 						}
 						catch
 						{
@@ -222,12 +226,12 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Engine:
 				case KujuTokenID.Wagon:
-					Array.Resize(ref Train.Cars, Train.Cars.Length + 1);
+					Array.Resize(ref currentTrain.Cars, currentTrain.Cars.Length + 1);
 					currentCarIndex++;
 					while (block.Length() - block.Position() > 2)
 					{
 						newBlock = block.ReadSubBlock(new[] { KujuTokenID.EngineData, KujuTokenID.WagonData, KujuTokenID.UiD, KujuTokenID.Flip, KujuTokenID.EngineVariables });
-						ParseBlock(newBlock, ref Train);
+						ParseBlock(newBlock, ref currentTrain);
 					}
 					currentCar.Doors = new[]
 					{
@@ -241,15 +245,15 @@ namespace Train.MsTs
 					}
 					currentCar.Breaker = new Breaker(currentCar);
 					currentCar.Sounds.Plugin = new Dictionary<int, CarSound>();
-					Train.Cars[currentCarIndex] = currentCar;
+					currentTrain.Cars[currentCarIndex] = currentCar;
 					/*
 					 * FIXME: Needs removing or sorting when the car is created
 					 */
-					Train.Cars[currentCarIndex].FrontAxle.Follower.TriggerType = currentCarIndex == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
-					Train.Cars[currentCarIndex].BeaconReceiver.TriggerType = currentCarIndex == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;
-					Train.Cars[currentCarIndex].BeaconReceiverPosition = 0.5 * Train.Cars[currentCarIndex].Length;
-					Train.Cars[currentCarIndex].FrontAxle.Position = 0.4 * Train.Cars[currentCarIndex].Length;
-					Train.Cars[currentCarIndex].RearAxle.Position = -0.4 * Train.Cars[currentCarIndex].Length;
+					currentTrain.Cars[currentCarIndex].FrontAxle.Follower.TriggerType = currentCarIndex == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
+					currentTrain.Cars[currentCarIndex].BeaconReceiver.TriggerType = currentCarIndex == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;
+					currentTrain.Cars[currentCarIndex].BeaconReceiverPosition = 0.5 * currentTrain.Cars[currentCarIndex].Length;
+					currentTrain.Cars[currentCarIndex].FrontAxle.Position = 0.4 * currentTrain.Cars[currentCarIndex].Length;
+					currentTrain.Cars[currentCarIndex].RearAxle.Position = -0.4 * currentTrain.Cars[currentCarIndex].Length;
 					break;
 				// Engine / wagon block
 				case KujuTokenID.UiD:
@@ -261,7 +265,7 @@ namespace Train.MsTs
 					/*
 					 * FIXME: All this needs to be pulled from the eng properties, or fixed so it doesn't matter
 					 */
-					currentCar = new CarBase(Train, currentCarIndex, 0.35, 0.0025, 1.1);
+					currentCar = new CarBase(currentTrain, currentCarIndex, 0.35, 0.0025, 1.1);
 					currentCar.HoldBrake = new CarHoldBrake(currentCar);
 					//FIXME END
 
@@ -293,14 +297,14 @@ namespace Train.MsTs
 							break;
 						case 1:
 							//Just a WagonName- This is likely invalid, but let's ignore
-							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset"), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref Train);
+							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset"), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref currentTrain);
 							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: No WagonFolder supplied, searching entire trainset folder.");
 							break;
 						case 2:
-							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset\\" + wagonFiles[1]), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref Train);
+							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset\\" + wagonFiles[1]), wagonFiles[0], block.Token == KujuTokenID.EngineData, ref currentCar, ref currentTrain);
 							break;
 						default:
-							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset"), wagonFiles[1], block.Token == KujuTokenID.EngineData, ref currentCar, ref Train);
+							Plugin.WagonParser.Parse(OpenBveApi.Path.CombineDirectory(CurrentFolder, "trainset"), wagonFiles[1], block.Token == KujuTokenID.EngineData, ref currentCar, ref currentTrain);
 							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: Two parameters were expected- Check for correct escaping of strings.");
 							break;
 					}
