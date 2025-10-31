@@ -313,6 +313,7 @@ namespace OpenBve.Formats.MsTs
 		private readonly VolumeConverter volumeConverter = new VolumeConverter();
 		private readonly CurrentConverter currentConverter = new CurrentConverter();
 		private readonly PressureConverter pressureConverter = new PressureConverter();
+		private readonly VelocityConverter velocityConvertor = new VelocityConverter();
 
 		private TextualBlock(string text, bool textIsClean)
 		{
@@ -877,6 +878,15 @@ namespace OpenBve.Formats.MsTs
 
 				parsedNumber = (float)pressureConverter.Convert(parsedNumber, PressureConverter.KnownUnits[Unit], (UnitOfPressure)(object)desiredUnit);
 
+			}
+			else if (desiredUnit is UnitOfVelocity)
+			{
+				if (!VelocityConverter.KnownUnits.ContainsKey(Unit))
+				{
+					throw new InvalidDataException("Unknown or unexpected velocity unit " + Unit + " encountered in block " + Token);
+				}
+
+				parsedNumber = (float)velocityConvertor.Convert(parsedNumber, VelocityConverter.KnownUnits[Unit], (UnitOfVelocity)(object)desiredUnit);
 			}
 			return parsedNumber;
 		}
