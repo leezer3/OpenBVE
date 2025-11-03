@@ -246,6 +246,8 @@ namespace Train.MsTs
 								case PanelSubject.Overspeed:
 								case PanelSubject.Sanders:
 								case PanelSubject.Wheelslip:
+								case PanelSubject.Alerter_Display:
+								case PanelSubject.Penalty_App:
 									currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 									break;
 								default:

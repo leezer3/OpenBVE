@@ -888,6 +888,7 @@ namespace Train.MsTs
 						newBlock = block.ReadSubBlock(true);
 						device.ParseBlock(newBlock);
 					}
+					device.Create(car);
 					vigilanceDevices.Add(device);
 					break;
 				case KujuTokenID.FreightAnim:
