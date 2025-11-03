@@ -505,6 +505,13 @@ namespace Train.MsTs
 									car.CarBrake.AirZero = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
+							case SoundTrigger.VigilanceAlarmOn:
+								if (car.DSD != null)
+								{
+									car.DSD.AlarmSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									car.DSD.AlertSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+								}
+								break;
 						}
 					}
 					else
