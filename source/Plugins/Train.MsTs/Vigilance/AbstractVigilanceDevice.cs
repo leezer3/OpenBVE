@@ -89,10 +89,10 @@ namespace Train.MsTs
 					PenaltyTimeLimit = block.ReadSingle();
 					break;
 				case KujuTokenID.MonitoringDeviceCriticalLevel:
-					if (block.ParentBlock.Token == KujuTokenID.EmergencyStopMonitor)
+					if (block.ParentBlock.Token == KujuTokenID.OverspeedMonitor)
 					{
 						// Check exact behaviour
-						CriticalLevel = block.ReadSingle(UnitOfVelocity.MetersPerSecond);
+						CriticalLevel = block.ReadSingle(UnitOfVelocity.MetersPerSecond, UnitOfVelocity.MilesPerHour);
 					}
 					else
 					{
@@ -100,10 +100,10 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.MonitoringDeviceResetLevel:
-					if (block.ParentBlock.Token == KujuTokenID.EmergencyStopMonitor)
+					if (block.ParentBlock.Token == KujuTokenID.OverspeedMonitor)
 					{
 						// Check exact behaviour
-						ResetLevel = block.ReadSingle(UnitOfVelocity.MetersPerSecond);
+						ResetLevel = block.ReadSingle(UnitOfVelocity.MetersPerSecond, UnitOfVelocity.MilesPerHour);
 					}
 					else
 					{

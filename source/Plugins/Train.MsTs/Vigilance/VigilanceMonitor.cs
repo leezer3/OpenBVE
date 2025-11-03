@@ -31,22 +31,22 @@ namespace Train.MsTs
 	{
 		internal override void Create(CarBase car)
 		{
-			DriverSupervisionDeviceTypes deviceType = DriverSupervisionDeviceTypes.None;
+			SafetySystemType deviceType = SafetySystemType.None;
 
 			if (CutsPower)
 			{
-				deviceType = DriverSupervisionDeviceTypes.CutsPower;
+				deviceType = SafetySystemType.CutsPower;
 			}
 			if (AppliesFullBrake)
 			{
-				deviceType = DriverSupervisionDeviceTypes.ApplyBrake;
+				deviceType = SafetySystemType.ApplyBrake;
 			}
 			if (AppliesEmergencyBrake)
 			{
-				deviceType = DriverSupervisionDeviceTypes.ApplyEmergencyBrake;
+				deviceType = SafetySystemType.ApplyEmergencyBrake;
 			}
 
-			car.DSD = new DriverSupervisionDevice(car, deviceType, DriverSupervisionDeviceMode.AnyHandle, DriverSupervisionDeviceTriggerMode.TrainMoving, AlarmTimeLimit, TimeLimit, PenaltyTimeLimit);
+			car.SafetySystems.Add(SafetySystem.DriverSupervisionDevice, new DriverSupervisionDevice(car, deviceType, DriverSupervisionDeviceMode.AnyHandle, SafetySystemTriggerMode.TrainMoving, AlarmTimeLimit, TimeLimit, PenaltyTimeLimit));
 		}
 	}
 }
