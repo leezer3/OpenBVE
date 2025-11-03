@@ -31,6 +31,7 @@ using OpenBveApi;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using OpenBveApi.Hosts;
+using TrainManager.SafetySystems;
 
 namespace Train.MsTs
 {
@@ -325,6 +326,18 @@ namespace Train.MsTs
 							// HH:MM:SS
 							lastResult = (int)(sec % 10);
 							break;
+					}
+					break;
+				case PanelSubject.Alerter_Display:
+					if (dynamicTrain.Cars[dynamicTrain.DriverCar].DSD != null && dynamicTrain.Cars[dynamicTrain.DriverCar].DSD.CurrentState == DriverSupervisionDeviceState.Alarm)
+					{
+						lastResult = 1;
+					}
+					break;
+				case PanelSubject.Penalty_App:
+					if (dynamicTrain.Cars[dynamicTrain.DriverCar].DSD != null && dynamicTrain.Cars[dynamicTrain.DriverCar].DSD.CurrentState == DriverSupervisionDeviceState.Triggered)
+					{
+						lastResult = 1;
 					}
 					break;
 			}
