@@ -39,6 +39,7 @@ using TrainManager.Car;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.MsTsSounds;
+using TrainManager.SafetySystems;
 
 namespace Train.MsTs
 {
@@ -506,10 +507,11 @@ namespace Train.MsTs
 								}
 								break;
 							case SoundTrigger.VigilanceAlarmOn:
-								if (car.DSD != null)
+								// NOTE: appears to only apply to DSD, not overspeed
+								if (car.SafetySystems.TryGetTypedValue(SafetySystem.DriverSupervisionDevice, out DriverSupervisionDevice dsd))
 								{
-									car.DSD.AlarmSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
-									car.DSD.AlertSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									dsd.AlarmSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									dsd.AlertSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
 						}

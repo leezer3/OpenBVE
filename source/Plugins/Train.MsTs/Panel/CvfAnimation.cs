@@ -27,6 +27,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Motor;
 using OpenBveApi.Trains;
 using System;
+using System.Collections.Generic;
 using OpenBveApi;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
@@ -329,13 +330,24 @@ namespace Train.MsTs
 					}
 					break;
 				case PanelSubject.Alerter_Display:
-					if (dynamicTrain.Cars[dynamicTrain.DriverCar].DSD != null && dynamicTrain.Cars[dynamicTrain.DriverCar].DSD.CurrentState == DriverSupervisionDeviceState.Alarm)
+					// can't use an extension on a dynamic directly, have to get to known type first
+					Dictionary<SafetySystem, AbstractSafetySystem> safetySystems = dynamicTrain.Cars[dynamicTrain.DriverCar].SafetySystems;
+					if (safetySystems.TryGetTypedValue(SafetySystem.DriverSupervisionDevice, out DriverSupervisionDevice dsd) && dsd.CurrentState == SafetySystemState.Alarm)
+					{
+						lastResult = 1;
+					}
+					if (safetySystems.TryGetTypedValue(SafetySystem.OverspeedDevice, out OverspeedDevice osd) && osd.CurrentState == SafetySystemState.Alarm)
 					{
 						lastResult = 1;
 					}
 					break;
 				case PanelSubject.Penalty_App:
-					if (dynamicTrain.Cars[dynamicTrain.DriverCar].DSD != null && dynamicTrain.Cars[dynamicTrain.DriverCar].DSD.CurrentState == DriverSupervisionDeviceState.Triggered)
+					safetySystems = dynamicTrain.Cars[dynamicTrain.DriverCar].SafetySystems;
+					if (safetySystems.TryGetTypedValue(SafetySystem.DriverSupervisionDevice, out dsd) && dsd.CurrentState == SafetySystemState.Triggered)
+					{
+						lastResult = 1;
+					}
+					if (safetySystems.TryGetTypedValue(SafetySystem.OverspeedDevice, out osd) && osd.CurrentState == SafetySystemState.Triggered)
 					{
 						lastResult = 1;
 					}
