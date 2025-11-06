@@ -22,13 +22,14 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBveApi.Motor;
 using TrainManager.Car;
 using TrainManager.Handles;
 
 
 namespace TrainManager.Motor
 {
-	public class ElectricEngine : AbstractEngine
+	public class ElectricEngine : TractionModel
 	{
 		public ElectricEngine(CarBase car) : base(car)
 		{

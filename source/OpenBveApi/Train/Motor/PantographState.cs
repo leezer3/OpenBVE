@@ -22,31 +22,8 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-namespace TrainManager.Motor
+namespace OpenBveApi.Motor
 {
-	public class Pantograph : AbstractComponent
-	{
-		/// <summary>Whether the pantograph is currently raised</summary>
-		public PantographState State;
-
-		public Pantograph(TractionModel engine) : base(engine)
-		{
-		}
-
-		public void Raise()
-		{
-			if (State == PantographState.Lowered)
-			{
-				State = PantographState.Raised;
-			}
-		}
-
-		public void Lower()
-		{
-			State = PantographState.Lowered;
-		}
-	}
-
 	/// <summary>The possible states of a pantograph</summary>
 	public enum PantographState
 	{

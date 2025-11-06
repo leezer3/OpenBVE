@@ -24,6 +24,7 @@
 
 using System;
 using OpenBveApi.Math;
+using OpenBveApi.Motor;
 using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
@@ -191,6 +192,39 @@ namespace OpenBveApi.Objects
 							AnimationKey = FrameCount + AnimationKey;
 						}
 						AnimationKey %= FrameCount;
+					}
+					else if (Name == "PANTOGRAPHBOTTOM1" || Name == "PANTOGRAPHTOP1")
+					{
+						dynamic d = baseCar;
+						dynamic pantograph = d.TractionModel.Components[EngineComponent.Pantograph];
+						if (pantograph == null)
+						{
+							AnimationKey = 0;
+							return;
+						}
+
+						switch ((PantographState)pantograph.State)
+						{
+							case PantographState.Dewired: // assume that the ADD has activated and dropped it
+							case PantographState.Lowered:
+								if (AnimationKey > 0)
+								{
+									AnimationKey -= timeElapsed * FrameRate;
+									AnimationKey = System.Math.Max(0, AnimationKey);
+								}
+								break;
+							case PantographState.Raised:
+								if (AnimationKey < 1)
+								{
+									AnimationKey += timeElapsed * FrameRate;
+									AnimationKey = System.Math.Min(1, AnimationKey);
+								}
+								break;
+						}
+					}
+					else if (Name == "PANTOGRAPHBOTTOM2" || Name == "PANTOGRAPHTOP2")
+					{
+						AnimationKey = 0;
 					}
 					else
 					{

@@ -22,12 +22,16 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-namespace TrainManager.Motor
+namespace OpenBveApi.Motor
 {
-    public enum EngineComponent
-    {
+	/// <summary>The types of engine component</summary>
+	public enum EngineComponent
+	{
+		/// <summary>A traction motor</summary>
 		TractionMotor,
+		/// <summary>A regenerative traction motor</summary>
 		RegenerativeTractionMotor,
+		/// <summary>A pantograph</summary>
 		Pantograph
-    }
+	}
 }
