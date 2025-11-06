@@ -107,6 +107,7 @@
     <Compile Include="Handles\Brake\Handles.HoldBrake.cs" />
     <Compile Include="Handles\Brake\Handles.LocoBrake.cs" />
     <Compile Include="Handles\Brake\Handles.LocoBrake.Types.cs" />
+    <Compile Include="Handles\VariableHandle.cs" />
     <Compile Include="Handles\Power\PowerHandle.cs" />
     <Compile Include="Handles\Reverser\Reverser.cs" />
     <Compile Include="Handles\Reverser\Reverser.Positions.cs" />

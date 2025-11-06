@@ -22,7 +22,7 @@ namespace TrainManager.Handles
 		/// <summary>Provides a reference to the associated EB handle</summary>
 		private readonly EmergencyHandle EmergencyBrake;
 
-		public override void Update()
+		public override void Update(double timeElapsed)
 		{
 			int sec = EmergencyBrake.Safety ? MaximumNotch : Safety;
 			if (DelayedChanges.Length == 0)
@@ -133,7 +133,7 @@ namespace TrainManager.Handles
 			this.MaximumNotch = 3;
 		}
 
-		public override void Update()
+		public override void Update(double timeElapsed)
 		{
 			if (DelayedValue != AirBrakeHandleState.Invalid)
 			{
