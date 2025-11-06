@@ -137,6 +137,28 @@ namespace Train.MsTs
 			dynamic dynamicTrain = train;
 			switch (Subject)
 			{
+				case PanelSubject.CP_Handle:
+				case PanelSubject.CPH_Display:
+					// NOTE: 0.5 mapping == N
+					double mapping = 0.5;
+					if (dynamicTrain.Handles.Brake.Actual > 0)
+					{
+						mapping += (double)dynamicTrain.Handles.Brake.Actual / dynamicTrain.Handles.Brake.MaximumNotch * 0.5;
+					}
+					else
+					{
+						mapping -= (double)dynamicTrain.Handles.Power.Actual / dynamicTrain.Handles.Power.MaximumNotch * 0.5;
+					}
+					for (int i = 0; i < FrameMapping.Length; i++)
+					{
+						
+						if (FrameMapping[i].MappingValue >= mapping)
+						{
+							lastResult = FrameMapping[i].FrameKey;
+							break;
+						}
+					}
+					break;
 				case PanelSubject.Throttle_Display:
 				case PanelSubject.Throttle:
 					for (int i = 0; i < FrameMapping.Length; i++)
@@ -427,11 +449,15 @@ namespace Train.MsTs
 			if (Digit == -1)
 			{
 				// color
+				lastResult = FrameMapping[FrameMapping.Length - 1].FrameKey;
 				for (int i = 0; i < FrameMapping.Length; i++)
 				{
 					if (FrameMapping[i].MappingValue <= val)
 					{
-						lastResult = FrameMapping[i].FrameKey;
+						if (i == FrameMapping.Length - 1 || FrameMapping[i + 1].MappingValue > val)
+						{
+							lastResult = FrameMapping[i].FrameKey;
+						}
 						break;
 					}
 				}
@@ -439,7 +465,8 @@ namespace Train.MsTs
 			else
 			{
 				// digit
-				lastResult = (int)(val / (int)Math.Pow(10, Digit) % 10);
+				double absVal = Math.Abs(val);
+				lastResult = (int)(absVal / (int)Math.Pow(10, Digit) % 10);
 			}
 		}
 

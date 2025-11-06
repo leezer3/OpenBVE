@@ -329,6 +329,7 @@ namespace Train.MsTs
 			string Code = string.Empty;
 			switch (subject)
 			{
+				case PanelSubject.Load_Meter:
 				case PanelSubject.Ammeter:
 					Code = "amps";
 					break;
