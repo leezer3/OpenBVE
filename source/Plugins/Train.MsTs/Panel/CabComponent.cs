@@ -245,9 +245,11 @@ namespace Train.MsTs
 								case PanelSubject.Direction_Display:
 								case PanelSubject.Overspeed:
 								case PanelSubject.Sanders:
+								case PanelSubject.Sanding:
 								case PanelSubject.Wheelslip:
 								case PanelSubject.Alerter_Display:
 								case PanelSubject.Penalty_App:
+								case PanelSubject.Throttle_Display:
 									currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 									break;
 								default:
@@ -260,11 +262,6 @@ namespace Train.MsTs
 
 						break;
 					case CabComponentType.Digital:
-						if (panelSubject != PanelSubject.Speedometer && panelSubject != PanelSubject.Speedlim_Display)
-						{
-							break;
-						}
-
 						Position.X *= rW;
 						Position.Y *= rH;
 
