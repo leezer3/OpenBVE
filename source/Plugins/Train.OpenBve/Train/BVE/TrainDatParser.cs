@@ -1302,7 +1302,7 @@ namespace Train.OpenBve
 			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
 			Train.SafetySystems.OverspeedDevice = new OverspeedDevice(Train);
 			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
-			Train.SafetySystems.Headlights = new LightSource(1);
+			Train.SafetySystems.Headlights = new LightSource(Train, 1);
 			switch (Plugin.CurrentOptions.TrainStart)
 			{
 				// starting mode

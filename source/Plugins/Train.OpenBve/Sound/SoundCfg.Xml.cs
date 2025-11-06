@@ -626,6 +626,28 @@ namespace Train.OpenBve
 										}
 									}
 									break;
+								case SoundCfgSection.Headlights:
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An empty list of headlights sounds was defined in in XML file " + fileName);
+										break;
+									}
+									if (Train.SafetySystems.Headlights == null)
+									{
+										break;
+									}
+
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name.ToLowerInvariant())
+										{
+											case "switch":
+												Vector3 pos = new Vector3(center);
+												ParseNode(cc, out Train.SafetySystems.Headlights.SwitchSoundBuffer, ref pos, SoundCfgParser.smallRadius);
+												break;
+										}
+									}
+									break;
 							}
 						}
 					}

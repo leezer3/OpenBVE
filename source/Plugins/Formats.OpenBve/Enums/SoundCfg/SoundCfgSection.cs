@@ -66,6 +66,8 @@ namespace Formats.OpenBve
 		/// <summary>Coupling sounds</summary>
 		Coupler,
 		/// <summary>Drivers supervision device sounds</summary>
-		DriverSupervisionDevice
+		DriverSupervisionDevice,
+		/// <summary>Headlights sounds</summary>
+		Headlights
 	}
 }
