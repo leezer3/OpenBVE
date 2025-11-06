@@ -207,17 +207,18 @@ namespace OpenBveApi.Objects
 						{
 							case PantographState.Dewired: // assume that the ADD has activated and dropped it
 							case PantographState.Lowered:
-								if (AnimationKey > 0)
-								{
-									AnimationKey -= timeElapsed * FrameRate;
-									AnimationKey = System.Math.Max(0, AnimationKey);
-								}
-								break;
-							case PantographState.Raised:
+								// n.b. AnimationKey is reversed versus the actual state
 								if (AnimationKey < 1)
 								{
 									AnimationKey += timeElapsed * FrameRate;
 									AnimationKey = System.Math.Min(1, AnimationKey);
+								}
+								break;
+							case PantographState.Raised:
+								if (AnimationKey > 0)
+								{
+									AnimationKey -= timeElapsed * FrameRate;
+									AnimationKey = System.Math.Max(0, AnimationKey);
 								}
 								break;
 						}

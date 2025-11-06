@@ -1913,6 +1913,27 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.PantographState:
+					{
+						if (Train != null)
+						{
+							int pantographState = 0;
+							for (int k = 0; k < Train.Cars.Length; k++)
+							{
+								if (Train.Cars[k].TractionModel is ElectricEngine electricEngine)
+								{
+									Pantograph pantograph = electricEngine.Components[EngineComponent.Pantograph] as Pantograph;
+									pantographState = (int)pantograph.State;
+									break;
+								}
+							}
+							Function.Stack[s] = pantographState;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+					} s++; break;
 					// default
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");
