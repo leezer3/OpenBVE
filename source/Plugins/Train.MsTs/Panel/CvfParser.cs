@@ -332,6 +332,9 @@ namespace Train.MsTs
 				case PanelSubject.Ammeter:
 					Code = "amps";
 					break;
+				case PanelSubject.Ammeter_Abs:
+					Code = "amps abs";
+					break;
 				case PanelSubject.Brake_Cyl:
 					switch (subjectUnits)
 					{

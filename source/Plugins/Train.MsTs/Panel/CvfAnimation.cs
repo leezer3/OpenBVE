@@ -49,7 +49,7 @@ namespace Train.MsTs
 
 		internal readonly double UnitConversionFactor;
 
-		private int lastResult;
+		private double lastResult;
 
 		internal CvfAnimation(HostInterface host, PanelSubject subject)
 		{
@@ -90,6 +90,9 @@ namespace Train.MsTs
 					break;
 				case Units.Kilometers_Per_Hour:
 					UnitConversionFactor = 3.6;
+					break;
+				case Units.PSI:
+					UnitConversionFactor = 0.000145038;
 					break;
 			}
 			Digit = digit;
@@ -134,6 +137,7 @@ namespace Train.MsTs
 			dynamic dynamicTrain = train;
 			switch (Subject)
 			{
+				case PanelSubject.Throttle_Display:
 				case PanelSubject.Throttle:
 					for (int i = 0; i < FrameMapping.Length; i++)
 					{
@@ -187,23 +191,7 @@ namespace Train.MsTs
 					break;
 				case PanelSubject.Speedometer:
 					double currentSpeed = Math.Abs(train.CurrentSpeed) * UnitConversionFactor;
-					if (Digit == -1)
-					{
-						// color
-						for (int i = FrameMapping.Length - 1; i > 0; i--)
-						{
-							if (FrameMapping[i].MappingValue <= currentSpeed)
-							{
-								lastResult = FrameMapping[i].FrameKey;
-								break;
-							}
-						}
-					}
-					else
-					{
-						// digit
-						lastResult = (int)(currentSpeed / (int)Math.Pow(10, Digit) % 10);
-					}
+					MapDigitalResult(currentSpeed);
 					break;
 				case PanelSubject.Aspect_Display:
 					lastResult = train.CurrentSignalAspect;
@@ -243,12 +231,26 @@ namespace Train.MsTs
 					lastResult = gearState;
 					break;
 				case PanelSubject.Sanders:
+					// sanders button is pressed
 					int sandState = 0;
 					for (int k = 0; k < dynamicTrain.Cars.Length; k++)
 					{
 						if (dynamicTrain.Cars[k].ReAdhesionDevice is Sanders sanders)
 						{
-							sandState = sanders.Active ? 1 :0;
+							sandState = sanders.State >= SandersState.Active ? 1 :0;
+							break;
+						}
+					}
+					lastResult = sandState;
+					break;
+				case PanelSubject.Sanding:
+					// sand is actually being dispensed / doing something
+					sandState = 0;
+					for (int k = 0; k < dynamicTrain.Cars.Length; k++)
+					{
+						if (dynamicTrain.Cars[k].ReAdhesionDevice is Sanders sanders && train.CurrentSpeed <= sanders.MaximumSpeed)
+						{
+							sandState = sanders.State == SandersState.Active ? 1 : 0;
 							break;
 						}
 					}
@@ -352,8 +354,93 @@ namespace Train.MsTs
 						lastResult = 1;
 					}
 					break;
+				case PanelSubject.Load_Meter:
+				case PanelSubject.Ammeter:
+				case PanelSubject.Ammeter_Abs:
+					double amps = 0;
+					if (dynamicTrain != null)
+					{
+						int totalMotors = 0;
+						double ampsTotal = 0;
+						for (int k = 0; k < dynamicTrain.Cars.Length; k++)
+						{
+							if (dynamicTrain.Cars[k].TractionModel is DieselEngine dieselEngine)
+							{
+								if (dieselEngine.Components.TryGetTypedValue(EngineComponent.TractionMotor, out TractionMotor t))
+								{
+									totalMotors++;
+									ampsTotal += t.CurrentAmps;
+								}
+								else if (dieselEngine.Components.TryGetTypedValue(EngineComponent.RegenerativeTractionMotor, out RegenerativeTractionMotor rt))
+								{
+									totalMotors++;
+									ampsTotal += rt.CurrentAmps;
+								}
+							}
+						}
+
+						if (totalMotors == 0)
+						{
+							amps = 0;
+						}
+						else
+						{
+							amps = ampsTotal / totalMotors;
+							if (Subject == PanelSubject.Ammeter_Abs)
+							{
+								amps = Math.Abs(amps);
+							}
+						}
+					}
+					else
+					{
+						amps = 0;
+					}
+					MapDigitalResult(amps);
+					break;
+				case PanelSubject.Brake_Pipe:
+					double bp = dynamicTrain.Cars[dynamicTrain.DriverCar].CarBrake.BrakePipe.CurrentPressure;
+					bp *= UnitConversionFactor;
+					MapDigitalResult(bp);
+					break;
+				case PanelSubject.Eq_Res:
+					double er = dynamicTrain.Cars[dynamicTrain.DriverCar].CarBrake.EqualizingReservoir.CurrentPressure;
+					er *= UnitConversionFactor;
+					MapDigitalResult(er);
+					break;
+				case PanelSubject.Brake_Cyl:
+					double bc = dynamicTrain.Cars[dynamicTrain.DriverCar].CarBrake.BrakeCylinder.CurrentPressure;
+					bc *= UnitConversionFactor;
+					MapDigitalResult(bc);
+					break;
+				case PanelSubject.Main_Res:
+					double mr = dynamicTrain.Cars[dynamicTrain.DriverCar].CarBrake.MainReservoir.CurrentPressure;
+					mr *= UnitConversionFactor;
+					MapDigitalResult(mr);
+					break;
 			}
 			return lastResult;
+		}
+
+		private void MapDigitalResult(double val)
+		{
+			if (Digit == -1)
+			{
+				// color
+				for (int i = 0; i < FrameMapping.Length; i++)
+				{
+					if (FrameMapping[i].MappingValue <= val)
+					{
+						lastResult = FrameMapping[i].FrameKey;
+						break;
+					}
+				}
+			}
+			else
+			{
+				// digit
+				lastResult = (int)(val / (int)Math.Pow(10, Digit) % 10);
+			}
 		}
 
 		public AnimationScript Clone()

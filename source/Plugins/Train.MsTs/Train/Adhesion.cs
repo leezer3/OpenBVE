@@ -66,7 +66,7 @@ namespace Train.MsTs
 			// the mass, as we're not worrying about mass per axle yet...
 			// Unlikely to be perfect, but doing it this way resolves massive wheelslip issues
 
-			if (baseCar.ReAdhesionDevice is Sanders sanders && sanders.Active)
+			if (baseCar.ReAdhesionDevice is Sanders sanders && sanders.State == SandersState.Active)
 			{
 				// Per-axle:
 				// multiplier = 0.95 * WheelSlip * Sanding * baseCar.CurrentMass / baseCar.DrivingWheels[0].TotalNumber / baseCar.CurrentMass;
