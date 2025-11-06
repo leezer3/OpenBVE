@@ -127,7 +127,7 @@ namespace TrainManager.Handles
 
 		internal NotchedHandle(TrainBase train) : base(train)
 		{
-
+			DelayedChanges = new HandleChange[] { };
 		}
 
 		/// <summary>Adds a delayed handle state change</summary>

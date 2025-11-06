@@ -839,7 +839,16 @@ namespace TrainManager.Car
 		public void UpdateTopplingCantAndSpring(double TimeElapsed)
 		{
 			// get direction, up and side vectors
-			Vector3 d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+			Vector3 d;
+			if (FrontAxle.Follower.WorldPosition == RearAxle.Follower.WorldPosition)
+			{
+				d = FrontAxle.Follower.WorldPosition;
+			}
+			else
+			{
+				d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+			}
+				
 			Vector3 s;
 			{
 				double t = 1.0 / d.Norm();
@@ -1153,7 +1162,7 @@ namespace TrainManager.Car
 					{
 						// target acceleration
 						a = TractionModel.TargetAcceleration;
-
+						
 						// readhesion device
 						if (ReAdhesionDevice is BveReAdhesionDevice device)
 						{
@@ -1197,7 +1206,7 @@ namespace TrainManager.Car
 
 						TractionModel.MaximumCurrentAcceleration = a;
 						// Update constant speed device
-						this.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
+						this.ConstSpeed?.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
 
 						// finalize
 						if (wheelspin != 0.0) a = 0.0;
@@ -1252,7 +1261,7 @@ namespace TrainManager.Car
 				}
 			}
 
-			ReAdhesionDevice.Update(TimeElapsed);
+			ReAdhesionDevice?.Update(TimeElapsed);
 			// brake
 			bool wheellock = wheelspin == 0.0 & Derailed;
 			if (!Derailed & wheelspin == 0.0)

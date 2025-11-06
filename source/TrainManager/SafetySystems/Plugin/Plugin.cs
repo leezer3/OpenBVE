@@ -240,7 +240,15 @@ namespace TrainManager.SafetySystems
 				}
 			}
 
-			return new OpenBveApi.Runtime.Handles(reverser, powerNotch, brakeNotch, this.Train.Handles.LocoBrake.Driver, this.Train.Specs.CurrentConstSpeed, this.Train.Handles.HoldBrake.Driver);
+			if (this.Train.Handles.LocoBrake == null)
+			{
+				return new OpenBveApi.Runtime.Handles(reverser, powerNotch, brakeNotch, 0, this.Train.Specs.CurrentConstSpeed, this.Train.Handles.HoldBrake.Driver);
+			}
+			else
+			{
+				return new OpenBveApi.Runtime.Handles(reverser, powerNotch, brakeNotch, this.Train.Handles.LocoBrake.Driver, this.Train.Specs.CurrentConstSpeed, this.Train.Handles.HoldBrake.Driver);	
+			}
+			
 		}
 
 		/// <summary>Sets the driver handles or the virtual handles.</summary>
