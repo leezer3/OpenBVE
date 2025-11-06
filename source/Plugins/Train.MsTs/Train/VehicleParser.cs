@@ -226,8 +226,10 @@ namespace Train.MsTs
 					if (brakeSystemTypes.Contains(BrakeSystemType.Air_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Air_twin_pipe) || brakeSystemTypes.Contains(BrakeSystemType.EP) || brakeSystemTypes.Contains(BrakeSystemType.ECP))
 					{
 						AirBrake airBrake;
-						// FIXME: MR values needs to be (close) in proportion to the BC else the physics bug out
+						// FIXME: Relationship of brake system values needs to be (close) to original proportions else the physics bug out
 						double bcVal = brakeCylinderMaximumPressure / 440000;
+						double emergencyVal = emergencyRate / 300000.0;
+						double releaseVal = releaseRate / 200000.0;
 						mainReservoirMinimumPressure = 690000.0 * bcVal;
 						mainReservoirMaximumPressure = 780000.0 * bcVal;
 						double operatingPressure = brakeCylinderMaximumPressure + 0.75 * (mainReservoirMinimumPressure - brakeCylinderMaximumPressure);
@@ -248,14 +250,14 @@ namespace Train.MsTs
 
 						airBrake.MainReservoir = new MainReservoir(mainReservoirMinimumPressure, mainReservoirMaximumPressure, 0.01, 0.075 / train.Cars.Length);
 						airBrake.Compressor = new Compressor(5000.0, airBrake.MainReservoir, currentCar);
-						airBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure * 1.1, 0.3 * 300000.0, 300000.0, 200000.0);
+						airBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure * 1.1, 90000.0, emergencyRate, releaseRate);
 						double r = 200000.0 / airBrake.BrakeCylinder.EmergencyMaximumPressure - 1.0;
 						if (r < 0.1) r = 0.1;
 						if (r > 1.0) r = 1.0;
 						airBrake.AuxiliaryReservoir = new AuxiliaryReservoir(0.975 * operatingPressure, 200000.0, 0.5, r);
 						airBrake.EqualizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
 						airBrake.EqualizingReservoir.NormalPressure = 1.005 * operatingPressure;
-						airBrake.StraightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
+						airBrake.StraightAirPipe = new StraightAirPipe(300000.0, emergencyRate * emergencyVal, releaseRate * releaseVal);
 
 						currentCar.CarBrake = airBrake;
 					}
@@ -264,7 +266,7 @@ namespace Train.MsTs
 					{
 						VaccumBrake vaccumBrake = new VaccumBrake(currentCar, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
 						vaccumBrake.MainReservoir = new MainReservoir(71110, 84660, 0.01, 0.075 / train.Cars.Length); // ~21in/hg - ~25in/hg
-						vaccumBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure * 1.1, 0.3 * 300000.0, 300000.0, 200000.0);
+						vaccumBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure * 1.1, 90000.0, 300000.0, 200000.0);
 						vaccumBrake.AuxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakeCylinderMaximumPressure, 200000.0, 0.5, 1.0);
 						vaccumBrake.EqualizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
 						vaccumBrake.EqualizingReservoir.NormalPressure = 1.005 * (vaccumBrake.BrakeCylinder.EmergencyMaximumPressure + 0.75 * (vaccumBrake.MainReservoir.MinimumPressure - vaccumBrake.BrakeCylinder.EmergencyMaximumPressure));
