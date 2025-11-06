@@ -24,10 +24,37 @@
 
 namespace TrainManager.Motor
 {
-    public enum EngineComponent
-    {
-		TractionMotor,
-		RegenerativeTractionMotor,
-		Pantograph
-    }
+	public class Pantograph : AbstractComponent
+	{
+		/// <summary>Whether the pantograph is currently raised</summary>
+		public PantographState State;
+
+		public Pantograph(AbstractEngine engine) : base(engine)
+		{
+		}
+
+		public void Raise()
+		{
+			if (State == PantographState.Lowered)
+			{
+				State = PantographState.Raised;
+			}
+		}
+
+		public void Lower()
+		{
+			State = PantographState.Lowered;
+		}
+	}
+
+	/// <summary>The possible states of a pantograph</summary>
+	public enum PantographState
+	{
+		/// <summary>The pantograph is raised</summary>
+		Raised,
+		/// <summary>The pantograph is lowered</summary>
+		Lowered,
+		/// <summary>The pantograph is raised, but no wire is present</summary>
+		Dewired
+	}
 }
