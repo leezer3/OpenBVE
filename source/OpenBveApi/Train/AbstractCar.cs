@@ -8,10 +8,10 @@ namespace OpenBveApi.Trains
 	public class AbstractCar
 	{
 		/// <summary>Front axle about which the car pivots</summary>
-		public Axle FrontAxle;
+		public AbstractAxle FrontAxle;
 
 		/// <summary>Rear axle about which the car pivots</summary>
-		public Axle RearAxle;
+		public AbstractAxle RearAxle;
 
 		/// <summary>The width of the car in meters</summary>
 		public double Width;
@@ -32,13 +32,13 @@ namespace OpenBveApi.Trains
 		/// <summary>The textual description for this car</summary>
 		public string Description;
 
-		/// <summary>The empty mass of the car</summary>
+		/// <summary>The empty mass of the car in kilograms</summary>
 		public double EmptyMass;
 
-		/// <summary>Returns the current mass of the car including cargo</summary>
+		/// <summary>Returns the current mass of the car including cargo in kilograms</summary>
 		public double CurrentMass => EmptyMass + CargoMass;
 
-		/// <summary>The current mass of any cargo in the car</summary>
+		/// <summary>The current mass of any cargo in the car in kilograms</summary>
 		public double CargoMass;
 
 		/// <summary>Contains the current brightness values</summary>

@@ -47,6 +47,8 @@ namespace TrainManager.Motor
 		public readonly double IdleFuelUse;
 		/// <summary>The fuel used at max power</summary>
 		public readonly double MaxPowerFuelUse;
+
+		public readonly double MaxTractiveEffortSpeed;
 	    /// <summary>Gets or sets the current engine RPM</summary>
 		public double CurrentRPM
 		{
@@ -60,7 +62,7 @@ namespace TrainManager.Motor
 		private readonly double perNotchRPM;
 
 
-		public DieselEngine(CarBase car, AccelerationCurve[] accelerationCurves, double idleRPM, double minRPM, double maxRPM, double rpmChangeUpRate, double rpmChangeDownRate, double idleFuelUse = 0, double maxFuelUse = 0) : base (car, accelerationCurves, true)
+		public DieselEngine(CarBase car, AccelerationCurve[] accelerationCurves, double idleRPM, double minRPM, double maxRPM, double rpmChangeUpRate, double rpmChangeDownRate, double idleFuelUse = 0, double maxFuelUse = 0, double maxTractiveEffortSpeed = 0) : base (car, accelerationCurves, true)
 		{
 			MinRPM = minRPM;
 			MaxRPM = maxRPM;
@@ -70,6 +72,7 @@ namespace TrainManager.Motor
 			RPMChangeDownRate = rpmChangeDownRate;
 			IdleFuelUse = idleFuelUse;
 			MaxPowerFuelUse = maxFuelUse;
+			MaxTractiveEffortSpeed = maxTractiveEffortSpeed;
 		}
 
 		public override void Update(double timeElapsed)
