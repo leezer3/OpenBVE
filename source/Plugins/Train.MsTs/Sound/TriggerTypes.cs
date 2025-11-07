@@ -73,14 +73,26 @@ namespace Train.MsTs
 		UncoupleC = 63,
 		// 64 + 65 not listed
 		Pantograph2Up = 66,
-		Pantograph2Down = 67
+		Pantograph2Down = 67,
 		/*
 		 * NOTE:
 		 * https://open-rails.readthedocs.io/en/latest/sound.html
-		 * Considerably more ORTS specific triggers
+		 * ORTS specific triggers
 		 *
-		 * Not looking to handle these at the minute.
+		 * Not looking to handle most of these at the minute.
 		 */
+		WaterPump1On = 90,
+		WaterPump1Off = 91,
+		WaterPump2On = 92,
+		WaterPump2Off = 93,
+		GearUp = 101,
+		GearDown = 102,
+		ReverserToForwardBackward = 103,
+		ReverserToNeutral = 104,
+		DoorOpen = 105,
+		DoorClose = 106,
+		MirrorOpen = 107,
+		MirrorClose = 108
 
 	}
 }
