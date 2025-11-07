@@ -6,6 +6,7 @@ using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Motor;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
@@ -110,6 +111,7 @@ namespace TrainManager.Trains
 				
 			Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 			Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
+			Specs.PantographState = PantographState.Lowered;
 			DriverBody = new DriverBody(this);
 			Handles.Reverser = new ReverserHandle(this);
 			Handles.EmergencyBrake = new EmergencyHandle(this);

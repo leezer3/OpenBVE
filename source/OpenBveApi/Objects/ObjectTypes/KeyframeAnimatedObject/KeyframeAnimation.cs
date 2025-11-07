@@ -196,25 +196,18 @@ namespace OpenBveApi.Objects
 					else if (Name == "PANTOGRAPHBOTTOM1" || Name == "PANTOGRAPHTOP1")
 					{
 						dynamic d = baseCar;
-						dynamic pantograph = d.TractionModel.Components[EngineComponent.Pantograph];
-						if (pantograph == null)
+						// n.b. use pantograph state from the train, as some stuff has pantographs on trailer cars
+						switch (d.baseTrain.Specs.PantographState)
 						{
-							AnimationKey = 0;
-							return;
-						}
-
-						switch ((PantographState)pantograph.State)
-						{
-							case PantographState.Dewired: // assume that the ADD has activated and dropped it
-							case PantographState.Lowered:
-								// n.b. AnimationKey is reversed versus the actual state
+							case PantographState.Raised:
 								if (AnimationKey < 1)
 								{
 									AnimationKey += timeElapsed * FrameRate;
 									AnimationKey = System.Math.Min(1, AnimationKey);
 								}
 								break;
-							case PantographState.Raised:
+							case PantographState.Lowered:
+							case PantographState.Dewired:// assume that the ADD has activated and dropped it
 								if (AnimationKey > 0)
 								{
 									AnimationKey -= timeElapsed * FrameRate;

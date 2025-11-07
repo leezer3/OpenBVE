@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -22,12 +22,20 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using SoundManager;
+
 namespace TrainManager.Motor
 {
 	public class Pantograph : AbstractComponent
 	{
 		/// <summary>Whether the pantograph is currently raised</summary>
 		public PantographState State;
+		/// <summary>The sound played when the pantograph is lowered</summary>
+		public CarSound LowerSound;
+		/// <summary>The sound played when the pantograph is raised</summary>
+		public CarSound RaiseSound;
+		/// <summary>The sound played when the switch is toggled</summary>
+		public CarSound SwitchToggle;
 
 		public Pantograph(TractionModel engine) : base(engine)
 		{
@@ -38,12 +46,27 @@ namespace TrainManager.Motor
 			if (State == PantographState.Lowered)
 			{
 				State = PantographState.Raised;
+				RaiseSound?.Play(1.0, 1.0, baseEngine.BaseCar, false);
+				SwitchToggle?.Play(1.0,1.0, baseEngine.BaseCar, false);
+				if (baseEngine.BaseCar.baseTrain.Specs.PantographState != OpenBveApi.Motor.PantographState.Dewired)
+				{
+					baseEngine.BaseCar.baseTrain.Specs.PantographState = OpenBveApi.Motor.PantographState.Raised;
+				}
 			}
 		}
 
 		public void Lower()
 		{
-			State = PantographState.Lowered;
+			if (State != PantographState.Lowered)
+			{
+				State = PantographState.Lowered;
+				LowerSound?.Play(1.0,1.0, baseEngine.BaseCar, false);
+				SwitchToggle?.Play(1.0, 1.0, baseEngine.BaseCar, false);
+				if (baseEngine.BaseCar.baseTrain.Specs.PantographState != OpenBveApi.Motor.PantographState.Dewired)
+				{
+					baseEngine.BaseCar.baseTrain.Specs.PantographState = OpenBveApi.Motor.PantographState.Lowered;
+				}
+			}
 		}
 	}
 

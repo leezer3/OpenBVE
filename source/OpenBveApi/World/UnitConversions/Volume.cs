@@ -19,7 +19,7 @@ public class VolumeConverter : UnitConverter<UnitOfVolume, double>
 		RegisterConversion(UnitOfVolume.Gallons, v => v / 3.78541, v => v * 3.78541);
 		KnownUnits = new Dictionary<string, UnitOfVolume>
 		{
-			{"l", UnitOfVolume.Litres}, {"litres", UnitOfVolume.Litres}, {"gal", UnitOfVolume.Gallons}, {"gallons", UnitOfVolume.Gallons}
+			{"l", UnitOfVolume.Litres}, {"litres", UnitOfVolume.Litres}, {"gal", UnitOfVolume.Gallons}, {"gals", UnitOfVolume.Gallons}, {"gallons", UnitOfVolume.Gallons}
 		};
 	}
 

@@ -369,8 +369,7 @@ namespace Route.Bve5
 								double d0 = sInterpolateX0 - pInterpolateX0;
 								double d1 = sInterpolateX1 - pInterpolateX1;
 
-								Data.Objects.TryGetValue(key, out UnifiedObject obj);
-								if (obj != null)
+								if(Data.Objects.TryGetValue(key, out UnifiedObject obj) && obj != null)
 								{
 									UnifiedObject crack = d0 < 0.0 ? obj.TransformRight(d0, d1) : obj.TransformLeft(d0, d1);
 									crack.CreateObject(wpos, Transformation, new Transformation(0.0, 0.0, 0.0), -1, StartingDistance, EndingDistance, tpos, 1.0);

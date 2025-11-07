@@ -215,6 +215,8 @@ namespace OpenBveApi.Interface
 			{ Command.CameraInterior, new CommandInfo(Command.CameraInterior, CommandType.Digital, "CAMERA_INTERIOR") },
 			{ Command.CameraInteriorNoPanel, new CommandInfo(Command.CameraInteriorNoPanel,CommandType.Digital,"CAMERA_INTERIOR_NOPANEL") }, 
 			{ Command.CameraExterior, new CommandInfo(Command.CameraExterior, CommandType.Digital, "CAMERA_EXTERIOR") },
+			{ Command.CameraHeadOutLeft, new CommandInfo(Command.CameraInterior, CommandType.Digital, "CAMERA_HEADOUT_LEFT") },
+			{ Command.CameraHeadOutRight, new CommandInfo(Command.CameraInterior, CommandType.Digital, "CAMERA_HEADOUT_RIGHT") },
 			{ Command.CameraTrack, new CommandInfo(Command.CameraTrack, CommandType.Digital, "CAMERA_TRACK") },
 			{ Command.CameraFlyBy, new CommandInfo(Command.CameraFlyBy, CommandType.Digital, "CAMERA_FLYBY") },
 			{ Command.CameraMoveForward, new CommandInfo(Command.CameraMoveForward, CommandType.AnalogHalf, "CAMERA_MOVE_FORWARD") },

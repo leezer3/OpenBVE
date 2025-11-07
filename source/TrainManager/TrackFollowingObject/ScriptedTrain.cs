@@ -99,16 +99,13 @@ namespace TrainManager.Trains
 						dnb = (byte)Math.Min(TrainManagerBase.Renderer.Lighting.DynamicCabBrightness, ccb);
 					}
 					
-					if (Cars[i].CarSections.TryGetValue(Cars[i].CurrentCarSection, out CarSection currentCarSection))
+					if (Cars[i].CarSections.TryGetValue(Cars[i].CurrentCarSection, out CarSection currentCarSection) && currentCarSection.Groups.Length > 0)
 					{
-						if (currentCarSection.Groups.Length > 0)
+						for (int k = 0; k < currentCarSection.Groups[0].Elements.Length; k++)
 						{
-							for (int k = 0; k < currentCarSection.Groups[0].Elements.Length; k++)
+							if (currentCarSection.Groups[0].Elements[k].internalObject != null)
 							{
-								if (currentCarSection.Groups[0].Elements[k].internalObject != null)
-								{
-									currentCarSection.Groups[0].Elements[k].internalObject.DaytimeNighttimeBlend = dnb;
-								}
+								currentCarSection.Groups[0].Elements[k].internalObject.DaytimeNighttimeBlend = dnb;
 							}
 						}
 					}

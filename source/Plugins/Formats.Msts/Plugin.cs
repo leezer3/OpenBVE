@@ -28,6 +28,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using OpenBveApi.Colors;
+using OpenBveApi.Math;
 using OpenBveApi.World;
 
 // ReSharper disable UnusedMember.Global
@@ -61,6 +63,9 @@ namespace OpenBve.Formats.MsTs
 
 		/// <summary>Reads a single-bit precision floating point number from the block</summary>
 		public abstract float ReadSingle();
+
+		/// <summary>Reads a Color32 from the block</summary>
+		public abstract Color32 ReadColorArgb();
 
 		/// <summary>Reads a single-bit precision floating point number from the block, and converts it to the desired units</summary>
 		public abstract float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnit = null) where TUnitType : struct;
@@ -226,6 +231,15 @@ namespace OpenBve.Formats.MsTs
 		public override float ReadSingle()
 		{
 			return myReader.ReadSingle();
+		}
+
+		public override Color32 ReadColorArgb()
+		{
+			float a = myReader.ReadSingle();
+			float r = myReader.ReadSingle();
+			float g = myReader.ReadSingle();
+			float b = myReader.ReadSingle();
+			return new Color32((byte)(r * 255), (byte)(g * 255), (byte)(b * 255), (byte)(a * 255));
 		}
 
 		public override float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnitType)
@@ -797,6 +811,23 @@ namespace OpenBve.Formats.MsTs
 			throw new InvalidDataException("Unable to parse " + s + " to a valid single in block " + Token);
 		}
 
+		public override Color32 ReadColorArgb()
+		{
+			float a = 1.0f, r = 1.0f, g = 1.0f, b = 1.0f;
+			try
+			{
+				a = ReadSingle();
+				r = ReadSingle();
+				g = ReadSingle();
+				b = ReadSingle();
+			}
+			catch
+			{
+				// ignored
+			}
+			return new Color32((byte)(r * 255), (byte)(g * 255), (byte)(b * 255), (byte)(a * 255));
+		}
+
 		public override float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnits)
 		{
 			string s = ReadString();
@@ -810,7 +841,7 @@ namespace OpenBve.Formats.MsTs
 			}
 
 
-			string Unit = s.Substring(c).ToLowerInvariant().Replace("//", string.Empty);
+			string Unit = s.Substring(c).ToLowerInvariant().Replace("/", string.Empty);
 
 			if (string.IsNullOrEmpty(Unit))
 			{
