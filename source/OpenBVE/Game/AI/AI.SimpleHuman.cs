@@ -201,6 +201,35 @@ namespace OpenBve
 				// do the ai
 				Train.Specs.CurrentConstSpeed = false;
 				Train.Handles.HoldBrake.ApplyState(false);
+				foreach (CarBase car in Train.Cars)
+				{
+					if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph) && pantograph.State == PantographState.Lowered)
+					{
+						pantograph.Raise();
+					}
+					if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.Gearbox, out Gearbox gearbox))
+					{
+						if (Train.CurrentSpeed == 0 && Train.Handles.Power.Actual == 0 && gearbox.CurrentGear > 0)
+						{
+							// we should be in N when at rest
+							gearbox.GearDown();
+						}
+						else
+						{
+							if (Train.CurrentSpeed < gearbox.PreviousMaximumGearSpeed)
+							{
+								// slow enough for previous gear
+								gearbox.GearDown();
+							}
+							else if (Train.CurrentSpeed >= gearbox.MaximumGearSpeed)
+							{
+								// gear change up
+								gearbox.GearUp();
+							}
+						}
+					}
+				}
+				
 				int stopIndex = Train.Station >= 0 ? Program.CurrentRoute.Stations[Train.Station].GetStopIndex(Train.NumberOfCars) : -1;
 				if (Train.CurrentSectionLimit == 0.0)
 				{

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TrainManager.Power
+﻿namespace TrainManager.Power
 {
 	/// <summary>An abstract acceleration curve</summary>
 	public abstract class AccelerationCurve
