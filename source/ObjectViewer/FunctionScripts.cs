@@ -8,6 +8,7 @@ using OpenBveApi.Runtime;
 using TrainManager.Handles;
 using TrainManager.Trains;
 using TrainManager.Car.Systems;
+using TrainManager.SafetySystems;
 
 namespace ObjectViewer {
 	internal static class FunctionScripts {
@@ -1185,7 +1186,7 @@ namespace ObjectViewer {
 						{
 							if (Train != null && Train.Cars[Train.DriverCar].DSD != null)
 							{
-								Function.Stack[s] = Train.Cars[Train.DriverCar].DSD.Triggered ? 1 : 0;
+								Function.Stack[s] = Train.Cars[Train.DriverCar].DSD.CurrentState == DriverSupervisionDeviceState.Triggered ? 1 : 0;
 							}
 							else
 							{

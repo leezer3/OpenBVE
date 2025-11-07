@@ -471,15 +471,22 @@ namespace Train.OpenBve
 						DriverSupervisionDeviceTypes driverSupervisionType = DriverSupervisionDeviceTypes.None;
 						DriverSupervisionDeviceMode driverSupervisionMode = DriverSupervisionDeviceMode.Power;
 						DriverSupervisionDeviceTriggerMode triggerMode = DriverSupervisionDeviceTriggerMode.Always;
+						double alarmTime = 0;
 						double interventionTime = 0;
 						double requiredStopTime = 0;
-						bool loopingAlarm = false;
+						bool loopingAlarm = false, loopingAlert = false;
 						foreach (XmlNode cc in c.ChildNodes)
 						{
 							switch (cc.Name.ToLowerInvariant())
 							{
+								case "alarmtime":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out alarmTime))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice activation time was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
 								case "interventiontime":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out activationTime))
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out interventionTime))
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice activation time was invalid for Car " + Car + " in XML file " + fileName);
 									}
@@ -494,6 +501,12 @@ namespace Train.OpenBve
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out requiredStopTime))
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice required stop time was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "loopingalert":
+									if (cc.InnerText.ToLowerInvariant() == "1" || cc.InnerText.ToLowerInvariant() == "true")
+									{
+										loopingAlert = true;
 									}
 									break;
 								case "loopingalarm":
@@ -516,7 +529,12 @@ namespace Train.OpenBve
 									break;
 							}
 						}
-						Train.Cars[Car].DSD = new DriverSupervisionDevice(Train.Cars[Car], driverSupervisionType, driverSupervisionMode, triggerMode, interventionTime, requiredStopTime, loopingAlarm);
+
+						if (alarmTime == 0)
+						{
+							alarmTime = interventionTime;
+						}
+						Train.Cars[Car].DSD = new DriverSupervisionDevice(Train.Cars[Car], driverSupervisionType, driverSupervisionMode, triggerMode, alarmTime, interventionTime, requiredStopTime, loopingAlert, loopingAlarm);
 						break;
 					case "visiblefrominterior":
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")

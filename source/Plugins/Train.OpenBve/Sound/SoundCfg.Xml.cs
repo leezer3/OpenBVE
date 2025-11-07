@@ -617,8 +617,11 @@ namespace Train.OpenBve
 									{
 										switch (cc.Name.ToLowerInvariant())
 										{
+											case "alert":
+												ParseNode(cc, out car.DSD.AlertSound, center, SoundCfgParser.smallRadius);
+												break;
 											case "alarm":
-												ParseNode(cc, out car.DSD.TriggerSound, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.DSD.AlarmSound, center, SoundCfgParser.smallRadius);
 												break;
 											case "reset":
 												ParseNode(cc, out car.DSD.ResetSound, center, SoundCfgParser.smallRadius);

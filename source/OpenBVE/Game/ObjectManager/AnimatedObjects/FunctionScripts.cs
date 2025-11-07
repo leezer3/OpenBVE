@@ -10,6 +10,7 @@ using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
 using TrainManager.Handles;
 using TrainManager.Motor;
+using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
 namespace OpenBve {
@@ -1581,7 +1582,7 @@ namespace OpenBve {
 						{
 							if (Train != null && Train.Cars[Train.DriverCar].DSD != null)
 							{
-								Function.Stack[s] = Train.Cars[Train.DriverCar].DSD.Triggered ? 1 : 0;
+								Function.Stack[s] = Train.Cars[Train.DriverCar].DSD.CurrentState == DriverSupervisionDeviceState.Triggered ? 1 : 0;
 							}
 							else
 							{

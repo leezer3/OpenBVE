@@ -138,11 +138,13 @@
     <Compile Include="Power\Breaker.cs" />
     <Compile Include="Power\BVE\BVEAccelerationCurve.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SafetySystems\AbstractSafetySystem.cs" />
     <Compile Include="SafetySystems\ATC\AtcModes.cs" />
     <Compile Include="SafetySystems\ATS\AtsModes.cs" />
     <Compile Include="SafetySystems\DefaultSafetySystems.cs" />
     <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.cs" />
     <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.ResetModes.cs" />
+    <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.States.cs" />
     <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.TriggerMode.cs" />
     <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.Types.cs" />
     <Compile Include="SafetySystems\Overspeed.cs" />

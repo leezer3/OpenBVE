@@ -6,6 +6,7 @@ using LibRender2.Overlays;
 using TrainManager.BrakeSystems;
 using TrainManager.Handles;
 using TrainManager.Car.Systems;
+using TrainManager.SafetySystems;
 
 namespace RouteViewer {
 	internal static class FunctionScripts {
@@ -1097,7 +1098,7 @@ namespace RouteViewer {
 						{
 							if (Train != null && Train.Cars[Train.DriverCar].DSD != null)
 							{
-								Function.Stack[s] = Train.Cars[Train.DriverCar].DSD.Triggered ? 1 : 0;
+								Function.Stack[s] = Train.Cars[Train.DriverCar].DSD.CurrentState == DriverSupervisionDeviceState.Triggered ? 1 : 0;
 							}
 							else
 							{

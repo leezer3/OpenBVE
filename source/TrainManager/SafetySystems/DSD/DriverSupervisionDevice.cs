@@ -5,20 +5,24 @@ using TrainManager.Car;
 namespace TrainManager.SafetySystems
 {
 	/// <summary>Represents a driver supervision device</summary>
-	public class DriverSupervisionDevice
+	public class DriverSupervisionDevice : AbstractSafetySystem
 	{
-		/// <summary>Holds a reference to the base car</summary>
-		private readonly CarBase baseCar;
 		/// <summary>The update timer</summary>
 		private double Timer;
+		/// <summary>The time after which the DSD will alert</summary>
+		private readonly double AlertTime;
 		/// <summary>The time after which the DSD will intervene</summary>
 		private readonly double InterventionTime;
 		/// <summary>Whether a DSD intervention has been triggered</summary>
-		public bool Triggered;
+		public DriverSupervisionDeviceState CurrentState;
 		/// <summary>The type of device</summary>
 		private readonly DriverSupervisionDeviceTypes Type;
+		/// <summary>The sound played when an alert is triggered</summary>
+		public CarSound AlertSound;
+		/// <summary>Whether the alert loops</summary>
+		private bool LoopingAlert;
 		/// <summary>The sound played when the device is triggered</summary>
-		public CarSound TriggerSound;
+		public CarSound AlarmSound;
 		/// <summary>Whether the alarm is to loop</summary>
 		private readonly bool LoopingAlarm;
 		/// <summary>The sound played when the device is reset</summary>
@@ -32,30 +36,39 @@ namespace TrainManager.SafetySystems
 
 		private double StopTimer;
 
-		public DriverSupervisionDevice(CarBase Car, DriverSupervisionDeviceTypes type, DriverSupervisionDeviceMode mode, DriverSupervisionDeviceTriggerMode triggerMode, double interventionTime, double requiredStopTime, bool loopingAlarm)
+		public DriverSupervisionDevice(CarBase car, DriverSupervisionDeviceTypes type, DriverSupervisionDeviceMode mode, DriverSupervisionDeviceTriggerMode triggerMode, double alertTime, double interventionTime, double requiredStopTime, bool loopingAlert = true, bool loopingAlarm = true) : base(car)
 		{
-			baseCar = Car;
 			Type = type;
 			Mode = mode;
 			TriggerMode = triggerMode;
+			AlertTime = alertTime;
 			InterventionTime = interventionTime;
-			TriggerSound = new CarSound();
+			AlarmSound = new CarSound();
 			ResetSound = new CarSound();
 			RequiredStopTime = requiredStopTime;
+			LoopingAlert = loopingAlert;
 			LoopingAlarm = loopingAlarm;
 		}
 
-		public void Update(double TimeElapsed)
+		public override void Update(double TimeElapsed)
 		{
 			if (Type == DriverSupervisionDeviceTypes.None)
 			{
 				return;
 			}
 			Timer += TimeElapsed;
-			if (Timer > InterventionTime && !Triggered)
+
+			if (Timer > AlertTime && CurrentState == DriverSupervisionDeviceState.Monitoring)
 			{
-				Triggered = true;
-				TriggerSound.Play(baseCar, LoopingAlarm);
+				AlertSound.Play(baseCar, LoopingAlert);
+				CurrentState = DriverSupervisionDeviceState.Alarm;
+			}
+
+			if (Timer > InterventionTime && CurrentState < DriverSupervisionDeviceState.Triggered)
+			{
+				AlertSound.Stop();
+				AlarmSound.Play(baseCar, LoopingAlarm);
+				CurrentState = DriverSupervisionDeviceState.Triggered;
 			}
 
 			switch (TriggerMode)
@@ -81,7 +94,7 @@ namespace TrainManager.SafetySystems
 					break;
 			}
 
-			if (Triggered)
+			if (CurrentState == DriverSupervisionDeviceState.Triggered)
 			{
 				switch (Type)
 				{
@@ -108,11 +121,11 @@ namespace TrainManager.SafetySystems
 		private void AttemptReset()
 		{
 			Timer = 0;
-			if (Triggered && StopTimer >= RequiredStopTime)
+			if (CurrentState == DriverSupervisionDeviceState.Triggered && StopTimer >= RequiredStopTime)
 			{
-				TriggerSound.Stop();
+				AlarmSound.Stop();
 				Timer = 0.0;
-				Triggered = false;
+				CurrentState = DriverSupervisionDeviceState.Monitoring;
 				StopTimer = 0;
 				ResetSound.Play(baseCar, false);
 			}
