@@ -391,11 +391,31 @@ namespace Train.MsTs
 								Plugin.CurrentHost.RegisterSound(soundFile, currentSoundSet.ActivationDistance, out var soundHandle);
 								currentSoundSet.SoundBuffers[currentSoundSet.CurrentBuffer] = soundHandle as SoundBuffer;
 								break;
-							case SoundTrigger.ReverserChange:
+							case SoundTrigger.ReverserToForwardBackward:
 								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
 								{
 									car.baseTrain.Handles.Reverser.EngageSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+								}
+								break;
+							case SoundTrigger.ReverserToNeutral:
+								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+								{
 									car.baseTrain.Handles.Reverser.ReleaseSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+								}
+								break;
+							case SoundTrigger.ReverserChange:
+								if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+								{
+									// as we don't know the order these may be presented in, check the buffer
+									if (car.baseTrain.Handles.Reverser.EngageSound.Buffer == null)
+									{
+										car.baseTrain.Handles.Reverser.EngageSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									}
+
+									if (car.baseTrain.Handles.Reverser.ReleaseSound.Buffer == null)
+									{
+										car.baseTrain.Handles.Reverser.ReleaseSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									}
 								}
 								break;
 							case SoundTrigger.ThrottleChange:
@@ -521,6 +541,10 @@ namespace Train.MsTs
 									if (currentSoundSet.CurrentTrigger == SoundTrigger.GearUp)
 									{
 										gearbox.GearUpSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									}
+									else
+									{
+										gearbox.GearDownSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 									}
 								}
 								break;
