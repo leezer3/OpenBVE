@@ -5,7 +5,7 @@
 	{
 		/// <summary>Gets the acceleration output for this curve</summary>
 		/// <param name="Speed">The current speed</param>
-		/// <returns>The acceleration output</returns>
+		/// <returns>The acceleration output in km/h/s</returns>
 		public abstract double GetAccelerationOutput(double Speed);
 
 		/// <summary>Gets the maximum possible acceleration output for this curve</summary>

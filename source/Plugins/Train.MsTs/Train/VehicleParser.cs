@@ -16,6 +16,7 @@ using SharpCompress.Compressors.Deflate;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Power;
 using TrainManager.Trains;
 
@@ -42,6 +43,7 @@ namespace Train.MsTs
 		{
 			wheelRadiusNum = 1;
 			wagonFiles = Directory.GetFiles(trainSetDirectory, isEngine ? "*.eng" : "*.wag", SearchOption.AllDirectories);
+			currentEngineType = EngineType.NoEngine;
 			/*
 			 * MSTS maintains an internal database, as opposed to using full paths
 			 * Unfortunately, this means we've got to do an approximation of the same thing!
@@ -89,6 +91,29 @@ namespace Train.MsTs
 						break;
 					}
 				}	
+			}
+
+			Car.Specs.AccelerationCurveMaximum = maxForce / Car.CurrentMass;
+			// as properties may not be in order, set this stuff last
+			if (isEngine)
+			{
+				switch (currentEngineType)
+				{
+					case EngineType.Diesel:
+						Car.Engine = new DieselEngine(Car, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
+						Car.Engine.FuelTank = new FuelTank(dieselCapacity, 0, dieselCapacity);
+						Car.Engine.IsRunning = true;
+
+						if (maxBrakeAmps > 0 && maxEngineAmps > 0)
+						{
+							Car.Engine.Components.Add(EngineComponent.RegenerativeTractionMotor, new RegenerativeTractionMotor(Car.Engine, maxEngineAmps, maxBrakeAmps));
+						}
+						else if (maxEngineAmps > 0)
+						{
+							Car.Engine.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Car.Engine, maxEngineAmps));
+						}
+						break;
+				}
 			}
 		}
 
@@ -204,6 +229,19 @@ namespace Train.MsTs
 		private double maxForce = 0;
 		private double maxBrakeForce = 0;
 		private BrakeSystemType[] brakeSystemTypes;
+		private EngineType currentEngineType;
+		private double dieselIdleRPM;
+		private double dieselMaxRPM;
+		private double dieselRPMChangeRate;
+		private double dieselIdleUse;
+		private double dieselMaxUse;
+		private double dieselCapacity;
+		private double maxEngineAmps;
+		private double maxBrakeAmps;
+		private double mainReservoirMinimumPressure;
+		private double mainReservoirMaximumPressure;
+		private double brakeCylinderMaximumPressure;
+
 
 		private bool ParseBlock(Block block, string fileName, ref string wagonName, bool isEngine, ref CarBase car, ref TrainBase train)
 		{
@@ -245,7 +283,7 @@ namespace Train.MsTs
 							break;
 						}
 						// Add brakes last, as we need the acceleration values
-						if (brakeSystemTypes.Contains(BrakeSystemType.Vacuum_piped) || brakeSystemTypes.Contains(BrakeSystemType.Air_piped))
+						if (brakeSystemTypes.Contains(BrakeSystemType.Vacuum_Piped) || brakeSystemTypes.Contains(BrakeSystemType.Air_Piped))
 						{
 							/*
 							 * FIXME: Need to implement vac braked / air piped and vice-versa, but for the minute, we'll assume that if one or the other is present
@@ -272,7 +310,7 @@ namespace Train.MsTs
 								// The car contains no control gear, but is air / vac braked
 								// Assume equivilant to AutomaticAirBrake
 								// NOTE: This must be last in the else-if chain to enure that a vehicle with EP / ECP and these declared is setup correctly
-								car.CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
+								car.CarBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0,0,0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
 							}
 
 							car.CarBrake.mainReservoir = new MainReservoir(690000.0, 780000.0, 0.01, 0.075 / train.Cars.Length);
@@ -322,7 +360,7 @@ namespace Train.MsTs
 						break;
 					}
 					// Add brakes last, as we need the acceleration values
-					if (brakeSystemTypes.Contains(BrakeSystemType.Vacuum_piped) || brakeSystemTypes.Contains(BrakeSystemType.Air_piped))
+					if (brakeSystemTypes.Contains(BrakeSystemType.Vacuum_Piped) || brakeSystemTypes.Contains(BrakeSystemType.Air_Piped))
 					{
 						/*
 						 * FIXME: Need to implement vac braked / air piped and vice-versa, but for the minute, we'll assume that if one or the other is present
@@ -352,27 +390,27 @@ namespace Train.MsTs
 							car.CarBrake = new AutomaticAirBrake(EletropneumaticBrakeType.DelayFillingControl, car, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
 						}
 
-						car.CarBrake.mainReservoir = new MainReservoir(690000.0, 780000.0, 0.01, 0.075 / train.Cars.Length);
+						car.CarBrake.mainReservoir = new MainReservoir(mainReservoirMinimumPressure, mainReservoirMaximumPressure, 0.01, 0.075 / train.Cars.Length);
 						car.CarBrake.airCompressor = new Compressor(5000.0, car.CarBrake.mainReservoir, car);
 						car.CarBrake.equalizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
-						car.CarBrake.equalizingReservoir.NormalPressure = 1.005 * 490000.0;
+						car.CarBrake.equalizingReservoir.NormalPressure = 1.005 * brakeCylinderMaximumPressure;
 						double r = 200000.0 / 440000.0 - 1.0;
 						if (r < 0.1) r = 0.1;
 						if (r > 1.0) r = 1.0;
-						car.CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * 490000.0, 200000.0, 0.5, r);
-						car.CarBrake.brakeCylinder = new BrakeCylinder(440000.0, 440000.0, 0.3 * 300000.0, 300000.0, 200000.0);
+						car.CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakeCylinderMaximumPressure, 200000.0, 0.5, r);
+						car.CarBrake.brakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure, 0.3 * 300000.0, 300000.0, 200000.0);
 						car.CarBrake.straightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
 
 					}
 
-					car.CarBrake.brakePipe = new BrakePipe(490000.0, 10000000.0, 1500000.0, 5000000.0, true);
+					car.CarBrake.brakePipe = new BrakePipe(brakeCylinderMaximumPressure, 10000000.0, 1500000.0, 5000000.0, true);
 					car.CarBrake.JerkUp = 10;
 					car.CarBrake.JerkDown = 10;
 					break;
 				case KujuTokenID.Type:
 					if (isEngine)
 					{
-						//Will load engine type
+						currentEngineType = block.ReadEnumValue(default(EngineType));
 					}
 					else
 					{
@@ -604,6 +642,41 @@ namespace Train.MsTs
 					double powerValue = block.ReadSingle();
 					double graduationValue = block.ReadSingle();
 					string notchToken = block.ReadString();
+					break;
+				case KujuTokenID.DieselEngineIdleRPM:
+					dieselIdleRPM = block.ReadSingle();
+					break;
+				case KujuTokenID.DieselEngineMaxRPM:
+					dieselMaxRPM = block.ReadSingle();
+					break;
+				case KujuTokenID.DieselEngineMaxRPMChangeRate:
+					dieselRPMChangeRate = block.ReadSingle();
+					break;
+				case KujuTokenID.DieselUsedPerHourAtIdle:
+					dieselIdleUse = block.ReadSingle(UnitOfVolume.Litres);
+					dieselIdleUse /= 3600;
+					break;
+				case KujuTokenID.DieselUsedPerHourAtMaxPower:
+					dieselMaxUse = block.ReadSingle(UnitOfVolume.Litres);
+					dieselMaxUse /= 3600;
+					break;
+				case KujuTokenID.MaxDieselLevel:
+					dieselCapacity = block.ReadSingle(UnitOfVolume.Litres);
+					break;
+				case KujuTokenID.MaxCurrent:
+					maxEngineAmps = block.ReadSingle(UnitOfCurrent.Amps);
+					break;
+				case KujuTokenID.DynamicBrakesResistorCurrentLimit:
+					maxBrakeAmps = block.ReadSingle(UnitOfCurrent.Amps);
+					break;
+				case KujuTokenID.AirBrakesMainMinResAirPressure:
+					mainReservoirMinimumPressure = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					break;
+				case KujuTokenID.AirBrakesMainMaxAirPressure:
+					mainReservoirMaximumPressure = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
+					break;
+				case KujuTokenID.BrakeCylinderPressureForMaxBrakeBrakeForce:
+					brakeCylinderMaximumPressure = block.ReadSingle(UnitOfPressure.Pascal, UnitOfPressure.PoundsPerSquareInch);
 					break;
 			}
 			return true;
