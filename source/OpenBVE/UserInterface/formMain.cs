@@ -153,6 +153,7 @@ namespace OpenBve {
 			Image MechanikRouteIcon = LoadImage(MenuFolder, "icon_mechanik.png");
 			Image Bve5Icon = LoadImage(MenuFolder, "icon_bve5.png");
 			Image TrainIcon = LoadImage(MenuFolder, "icon_train.png");
+			Image MSTSIcon = LoadImage(MenuFolder, "icon_msts.png");
 			Image KeyboardIcon = LoadImage(MenuFolder, "icon_keyboard.png");
 			Image MouseIcon = LoadImage(MenuFolder, "icon_mouse.png");
 			Image JoystickIcon = LoadImage(MenuFolder, "icon_joystick.png");
@@ -233,6 +234,7 @@ namespace OpenBve {
 			if (ParentIcon != null) listviewTrainFolders.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewTrainFolders.SmallImageList.Images.Add("folder", FolderIcon);
 			if (TrainIcon != null) listviewTrainFolders.SmallImageList.Images.Add("train", TrainIcon);
+			if (MSTSIcon != null) listviewTrainFolders.SmallImageList.Images.Add("msts", MSTSIcon);
 			if (DiskIcon != null) listviewTrainFolders.SmallImageList.Images.Add("disk", DiskIcon);
 			if (ParentIcon != null) listViewTrainPackages.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listViewTrainPackages.SmallImageList.Images.Add("folder", FolderIcon);
@@ -245,6 +247,7 @@ namespace OpenBve {
 			listviewTrainRecently.Columns.Add("");
 			listviewTrainRecently.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (TrainIcon != null) listviewTrainRecently.SmallImageList.Images.Add("train", TrainIcon);
+			if (MSTSIcon != null) listviewTrainRecently.SmallImageList.Images.Add("msts", MSTSIcon);
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
 			{
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedTrains[i])) continue;
@@ -255,7 +258,7 @@ namespace OpenBve {
 					continue;
 				}
 				ListViewItem Item = listviewTrainRecently.Items.Add(trainFileName);
-				Item.ImageKey = @"train";
+				Item.ImageKey = TrainFileName.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase) ? @"msts" : @"train";
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedTrains[i];
 				if (textboxTrainFolder.Items.Count == 0 || !textboxTrainFolder.Items.Contains(trainPath))
 				{
