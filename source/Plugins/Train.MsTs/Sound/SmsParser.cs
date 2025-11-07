@@ -514,6 +514,16 @@ namespace Train.MsTs
 									dsd.AlertSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
 								}
 								break;
+							case SoundTrigger.GearUp:
+							case SoundTrigger.GearDown:
+								if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.Gearbox, out Gearbox gearbox))
+								{
+									if (currentSoundSet.CurrentTrigger == SoundTrigger.GearUp)
+									{
+										gearbox.GearUpSound = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+									}
+								}
+								break;
 						}
 					}
 					else
