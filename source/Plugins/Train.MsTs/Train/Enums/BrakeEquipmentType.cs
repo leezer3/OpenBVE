@@ -29,6 +29,8 @@ namespace Train.MsTs
 		/// <remarks>This is optional.</remarks>
 		Emergency_Brake_Reservoir,
 		/// <summary>Electronic or computer controller on the vehicle that can be set to independently control any parameter of the braking system.</summary>
-		Distributor
+		Distributor,
+		/// <summary>One pipe controls and supplies the air brakes.</summary>
+		Air_Single_Pipe
 	}
 }
