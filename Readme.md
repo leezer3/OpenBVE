@@ -6,10 +6,14 @@
 
 This repository contains the source code for the Train Simulator OpenBVE, a 3D cab based simulator.
 
-The simulator supports the following route formats:
+Supported route formats:
 * Native CSV / RW.
 * BVE5 TXT format.
 * Mechanik DAT format.
+
+Supported train formats:
+* BVE2 / BVE4, with native OpenBVE extensions.
+* Microsoft Train Simulator (MSTS)
 
 OpenBVE is built in OpenGL, using the OpenTK framework for windowing.
 

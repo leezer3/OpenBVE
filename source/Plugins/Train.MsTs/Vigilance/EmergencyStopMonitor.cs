@@ -2,5 +2,6 @@
 {
 	internal class EmergencyStopMonitor : VigilanceDevice
 	{
+		// NOT YET IMPLEMENTED
 	}
 }
