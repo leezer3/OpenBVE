@@ -767,7 +767,7 @@ namespace OpenBve
 								if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(Files[i]))
 								{
 									ListViewItem Item = listviewTrainFolders.Items.Add(System.IO.Path.GetFileName(Files[i]));
-									Item.ImageKey = "train";
+									Item.ImageKey = @"msts";
 									Item.Tag = Files[i];
 								}
 							}
