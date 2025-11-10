@@ -103,7 +103,7 @@ namespace TrainManager.Car
 					}
 				}
 
-				CarSections[cs].Groups[0].Keyframes?.Update(baseCar.TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+				CarSections[cs].Groups[0].Keyframes?.Update(baseCar.TrackPosition, p, d, Up, s, TimeElapsed);
 			}
 		}
 

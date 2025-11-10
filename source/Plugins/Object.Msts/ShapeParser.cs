@@ -142,7 +142,7 @@ namespace Plugin
 			}
 		}
 
-		private struct Face
+		private readonly struct Face
 		{
 			internal readonly int[] Vertices;
 			internal readonly int Material;

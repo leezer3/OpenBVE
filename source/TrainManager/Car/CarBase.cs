@@ -733,11 +733,11 @@ namespace TrainManager.Car
 				}
 				if (currentCarSection.Groups[0].Keyframes != null)
 				{
-					currentCarSection.Groups[0].Keyframes.Update(TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+					currentCarSection.Groups[0].Keyframes.Update(TrackPosition, p, d, Up, s, TimeElapsed);
 				}
 				if (currentCarSection.CurrentAdditionalGroup + 1 < currentCarSection.Groups.Length)
 				{
-					currentCarSection.Groups[currentCarSection.CurrentAdditionalGroup + 1].Keyframes?.Update(TrackPosition, p, d, Up, s, true, TimeElapsed, true);
+					currentCarSection.Groups[currentCarSection.CurrentAdditionalGroup + 1].Keyframes?.Update(TrackPosition, p, d, Up, s, TimeElapsed);
 				}
 			}
 			//Update camera restriction

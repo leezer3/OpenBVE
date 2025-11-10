@@ -605,7 +605,7 @@ namespace Plugin.PNG
 		/// <param name="b">The upper byte</param>
 		/// <param name="c">The upper left byte</param>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private int PaethPredictor(int a, int b, int c)
+		private static int PaethPredictor(int a, int b, int c)
 		{
 			int p = a + b - c;
 			int pa = Math.Abs(p - a);
