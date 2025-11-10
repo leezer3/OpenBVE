@@ -6,6 +6,7 @@ using Formats.OpenBve;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Motor;
 using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
@@ -648,6 +649,36 @@ namespace Train.OpenBve
 												Vector3 pos = new Vector3(center);
 												ParseNode(cc, out Train.SafetySystems.Headlights.SwitchSoundBuffer, ref pos, SoundCfgParser.smallRadius);
 												break;
+										}
+									}
+									break;
+								case SoundCfgSection.Pantograph:
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An empty list of headlights sounds was defined in in XML file " + fileName);
+										break;
+									}
+
+									CarSound raiseSound = null, lowerSound = null;
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name.ToLowerInvariant())
+										{
+											case "raise":
+												ParseNode(cc, out raiseSound, center, SoundCfgParser.mediumRadius);
+												break;
+											case "lower":
+												ParseNode(cc, out lowerSound, center, SoundCfgParser.mediumRadius);
+												break;
+										}
+									}
+
+									for (int i = 0; i < Train.Cars.Length; i++)
+									{
+										if (Train.Cars[i].TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph p))
+										{
+											p.RaiseSound = raiseSound.Clone();
+											p.LowerSound = lowerSound.Clone();
 										}
 									}
 									break;

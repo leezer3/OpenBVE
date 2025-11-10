@@ -43,7 +43,7 @@ namespace TrainManager.Motor
 
 		public override void Update(double timeElapsed)
 		{
-			if (Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph) && pantograph.State != PantographState.Raised)
+			if (BaseCar.baseTrain.Specs.PantographState != PantographState.Raised)
 			{
 				Message = @"Pantograph not raised";
 			}
@@ -57,8 +57,7 @@ namespace TrainManager.Motor
 		{
 			get
 			{
-				Pantograph pantograph = Components[EngineComponent.Pantograph] as Pantograph;
-				if (pantograph == null || pantograph.State != PantographState.Raised)
+				if (BaseCar.baseTrain.Specs.PantographState != PantographState.Raised)
 				{
 					return 0;
 				}

@@ -68,6 +68,8 @@ namespace Formats.OpenBve
 		/// <summary>Drivers supervision device sounds</summary>
 		DriverSupervisionDevice,
 		/// <summary>Headlights sounds</summary>
-		Headlights
+		Headlights,
+		/// <summary>Pantograph sounds</summary>
+		Pantograph
 	}
 }
