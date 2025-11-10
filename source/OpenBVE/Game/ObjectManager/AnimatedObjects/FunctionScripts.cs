@@ -1854,12 +1854,12 @@ namespace OpenBve {
 							{
 								if (Train.Cars[k].TractionModel is DieselEngine dieselEngine)
 								{
-									if (dieselEngine.Components[EngineComponent.TractionMotor] is TractionMotor t)
+									if (dieselEngine.Components.TryGetTypedValue(EngineComponent.TractionMotor, out TractionMotor t))
 									{
 										totalMotors++;
 										ampsTotal += t.CurrentAmps;
 									}
-									else if (dieselEngine.Components[EngineComponent.RegenerativeTractionMotor] is RegenerativeTractionMotor rt)
+									else if (dieselEngine.Components.TryGetTypedValue(EngineComponent.RegenerativeTractionMotor, out RegenerativeTractionMotor rt))
 									{
 										totalMotors++;
 										ampsTotal += rt.CurrentAmps;
@@ -1890,12 +1890,12 @@ namespace OpenBve {
 							{
 								if (Train.Cars[j].TractionModel is DieselEngine dieselEngine)
 								{
-									if (dieselEngine.Components[EngineComponent.TractionMotor] is TractionMotor t)
+									if (dieselEngine.Components.TryGetTypedValue(EngineComponent.TractionMotor, out TractionMotor t))
 									{
-										
+
 										Function.Stack[s - 1] = t.CurrentAmps;
 									}
-									else if (dieselEngine.Components[EngineComponent.RegenerativeTractionMotor] is RegenerativeTractionMotor rt)
+									else if (dieselEngine.Components.TryGetTypedValue(EngineComponent.RegenerativeTractionMotor, out RegenerativeTractionMotor rt))
 									{
 										Function.Stack[s - 1] = rt.CurrentAmps;
 									}
@@ -1935,6 +1935,32 @@ namespace OpenBve {
 							Function.Stack[s] = 0.0;
 						}
 					} s++; break;
+					case Instructions.PantographStateOfCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								if (Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph p))
+								{
+									Function.Stack[s - 1] = (int)p.State;
+								}
+								else
+								{
+									Function.Stack[s - 1] = 0.0;
+								}
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
 					// default
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");

@@ -1295,8 +1295,13 @@ namespace ObjectViewer {
 						}
 						break;
 					case Instructions.WheelRadiusOfCar:
-						Function.Stack[s - 1] = 1.0;
-						break;
+					case Instructions.EngineRPM:
+					case Instructions.EngineRPMCar:
+					case Instructions.EngineRunning:
+					case Instructions.EngineRunningCar:
+					case Instructions.PantographState:
+					case Instructions.PantographStateOfCar:
+						throw new NotImplementedException(Function.InstructionSet[i] + " is not currently supported in Object Viewer. Please test using the main game.");
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");
 				}

@@ -26,6 +26,7 @@ using OpenBveApi;
 using OpenBveApi.Motor;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Power;
 
 
 namespace TrainManager.Motor
@@ -33,6 +34,10 @@ namespace TrainManager.Motor
 	public class ElectricEngine : TractionModel
 	{
 		public ElectricEngine(CarBase car) : base(car)
+		{
+		}
+
+		public ElectricEngine(CarBase car, AccelerationCurve[] accelerationCurves) : base(car, accelerationCurves, true)
 		{
 		}
 
@@ -53,7 +58,7 @@ namespace TrainManager.Motor
 			get
 			{
 				Pantograph pantograph = Components[EngineComponent.Pantograph] as Pantograph;
-				if (pantograph?.State != PantographState.Raised)
+				if (pantograph == null || pantograph.State != PantographState.Raised)
 				{
 					return 0;
 				}
@@ -66,6 +71,32 @@ namespace TrainManager.Motor
 
 				Message = @"Power " + (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
 				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
+			}
+		}
+
+		public override double TargetAcceleration
+		{
+			get
+			{
+				if (AccelerationCurves.Length == 1)
+				{
+					// MSTS content
+					return AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed);
+				}
+
+				// NOTE: LoadFactor is constant 1.0 for BVE2 / BVE4
+				if (BaseCar.baseTrain.Handles.Power.Actual - 1 < AccelerationCurves.Length)
+				{
+					return AccelerationCurves[BaseCar.baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)BaseCar.baseTrain.Handles.Reverser.Actual * BaseCar.CurrentSpeed);
+				}
+
+				// acceleration curve per power notch
+				if (BaseCar.baseTrain.Handles.Power.Actual - 1 < AccelerationCurves.Length)
+				{
+					return AccelerationCurves[BaseCar.baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double)BaseCar.baseTrain.Handles.Reverser.Actual * BaseCar.CurrentSpeed);
+				}
+
+				return 0.0;
 			}
 		}
 	}

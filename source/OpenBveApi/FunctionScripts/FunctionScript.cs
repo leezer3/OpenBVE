@@ -40,7 +40,8 @@ namespace OpenBveApi.FunctionScripting
 			{
 				if (!exceptionCaught)
 				{
-					currentHost.AddMessage(MessageType.Error, false, ex.Message);
+					// use different exception types to show warning vs error for stuff deliberately not implemented in viewers
+					currentHost.AddMessage(ex is NotImplementedException ? MessageType.Warning : MessageType.Error, false, ex.Message);
 					exceptionCaught = true;
 				}
 				
@@ -904,7 +905,7 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.EngineRunning;
 							n++; s++; if (s >= m) m = s; break;
-						case "enginerunningcar":
+						case "enginerunningindex":
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.EngineRunningCar;
@@ -913,7 +914,7 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.EngineRPM;
 							n++; s++; if (s >= m) m = s; break;
-						case "enginerpmcar":
+						case "enginerpmindex":
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.EngineRPMCar;
@@ -922,7 +923,7 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.FuelLevel;
 							n++; s++; if (s >= m) m = s; break;
-						case "fuellevelcar":
+						case "fuellevelindex":
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.FuelLevelCar;
@@ -931,7 +932,7 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.Amps;
 							n++; s++; if (s >= m) m = s; break;
-						case "ampscar":
+						case "ampsindex":
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.AmpsCar;
@@ -940,6 +941,11 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.PantographState;
 							n++; s++; if (s >= m) m = s; break;
+						case "pantographstateindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.PantographStateOfCar;
+							n++; break;
 						// default
 						default:
 							throw new System.IO.InvalidDataException("Unknown command " + Arguments[i] + " encountered in function script " + Expression);

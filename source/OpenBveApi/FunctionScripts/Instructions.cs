@@ -34,7 +34,7 @@
 		RouteLimit, SectionLimit,
 		SectionAspectNumber, CurrentObjectState,
 		RainDrop, SnowFlake, WiperPosition, WiperState,
-		PantographState,
+		PantographState, PantographStateOfCar,
 		WheelRadius, WheelRadiusOfCar,
 		WheelSlip, WheelSlipCar,
 		Sanders, SandLevel, SandShots, DSD,

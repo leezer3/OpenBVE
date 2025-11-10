@@ -1204,6 +1204,13 @@ namespace RouteViewer {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.EngineRPM:
+					case Instructions.EngineRPMCar:
+					case Instructions.EngineRunning:
+					case Instructions.EngineRunningCar:
+					case Instructions.PantographState:
+					case Instructions.PantographStateOfCar:
+						throw new NotImplementedException(Function.InstructionSet[i] + " is not currently supported in Route Viewer. Please test using the main game.");
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
 				}

@@ -10,6 +10,7 @@ using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Motor;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
@@ -835,6 +836,26 @@ namespace Train.OpenBve
 
 							Train.Cars[Car].TractionModel = new DieselEngine(Train.Cars[Car], Plugin.AccelerationCurves, idleRPM, minRPM, maxRPM, rpmChangeUpRate, rpmChangeDownRate, idleFuelUse, maxPowerFuelUse);
 							Train.Cars[Car].TractionModel.FuelTank = new FuelTank(fuelCapacity, 0, fuelCapacity);
+						}
+						break;
+					case "electricengine":
+						foreach (XmlNode cc in c.ChildNodes)
+						{
+							bool hasPantograph = false;
+							switch (cc.Name.ToLowerInvariant())
+							{
+								case "pantograph":
+									if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
+									{
+										hasPantograph = true;
+									}
+									break;
+							}
+							Train.Cars[Car].TractionModel = new ElectricEngine(Train.Cars[Car], Plugin.AccelerationCurves);
+							if (hasPantograph)
+							{
+								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.Pantograph, new Pantograph(Train.Cars[Car].TractionModel));
+							}
 						}
 						break;
 					case "particlesource":
