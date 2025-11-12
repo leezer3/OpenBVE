@@ -49,9 +49,9 @@ namespace TrainManager.Motor
 				State = PantographState.Raised;
 				RaiseSound?.Play(1.0, 1.0, baseEngine.BaseCar, false);
 				SwitchToggle?.Play(1.0,1.0, baseEngine.BaseCar, false);
-				if (baseEngine.BaseCar.baseTrain.Specs.PantographState != OpenBveApi.Motor.PantographState.Dewired)
+				if (baseEngine.BaseCar.baseTrain.Specs.PantographState != PantographState.Dewired)
 				{
-					baseEngine.BaseCar.baseTrain.Specs.PantographState = OpenBveApi.Motor.PantographState.Raised;
+					baseEngine.BaseCar.baseTrain.Specs.PantographState = PantographState.Raised;
 				}
 			}
 		}
@@ -63,9 +63,9 @@ namespace TrainManager.Motor
 				State = PantographState.Lowered;
 				LowerSound?.Play(1.0,1.0, baseEngine.BaseCar, false);
 				SwitchToggle?.Play(1.0, 1.0, baseEngine.BaseCar, false);
-				if (baseEngine.BaseCar.baseTrain.Specs.PantographState != OpenBveApi.Motor.PantographState.Dewired)
+				if (baseEngine.BaseCar.baseTrain.Specs.PantographState != PantographState.Dewired)
 				{
-					baseEngine.BaseCar.baseTrain.Specs.PantographState = OpenBveApi.Motor.PantographState.Lowered;
+					baseEngine.BaseCar.baseTrain.Specs.PantographState = PantographState.Lowered;
 				}
 			}
 		}

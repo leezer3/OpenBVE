@@ -7,7 +7,7 @@ namespace TrainManager.SafetySystems
 		/// <summary>The base car</summary>
 		internal readonly CarBase baseCar;
 
-		public AbstractSafetySystem(CarBase car)
+		protected AbstractSafetySystem(CarBase car)
 		{
 			baseCar = car;
 		}

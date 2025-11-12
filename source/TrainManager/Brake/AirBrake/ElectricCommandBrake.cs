@@ -10,11 +10,11 @@ namespace TrainManager.BrakeSystems
 		public ElectricCommandBrake(EletropneumaticBrakeType type, CarBase car, double BrakeControlSpeed, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, AccelerationCurve[] DecelerationCurves) : base(car, DecelerationCurves)
 		{
 			electropneumaticBrakeType = type;
-			((CarBrake)this).BrakeControlSpeed = BrakeControlSpeed;
+			this.BrakeControlSpeed = BrakeControlSpeed;
 			motorDeceleration = MotorDeceleration;
 			motorDecelerationDelayUp = MotorDecelerationDelayUp;
 			motorDecelerationDelayDown = MotorDecelerationDelayDown;
-			((CarBrake)this).DecelerationCurves = DecelerationCurves;
+			this.DecelerationCurves = DecelerationCurves;
 		}
 
 		public override void Update(double timeElapsed, double currentSpeed, AbstractHandle brakeHandle, out double deceleration)
