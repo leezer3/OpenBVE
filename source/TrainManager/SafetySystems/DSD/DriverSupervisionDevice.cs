@@ -50,13 +50,13 @@ namespace TrainManager.SafetySystems
 			LoopingAlarm = loopingAlarm;
 		}
 
-		public override void Update(double TimeElapsed)
+		public override void Update(double timeElapsed)
 		{
 			if (Type == DriverSupervisionDeviceTypes.None)
 			{
 				return;
 			}
-			Timer += TimeElapsed;
+			Timer += timeElapsed;
 
 			if (Timer > AlertTime && CurrentState == DriverSupervisionDeviceState.Monitoring)
 			{
@@ -113,15 +113,15 @@ namespace TrainManager.SafetySystems
 
 				if (RequiredStopTime != 0 && baseCar.Specs.PerceivedSpeed == 0)
 				{
-					StopTimer += TimeElapsed;
+					StopTimer += timeElapsed;
 				}
 			}
 		}
 
-		private void AttemptReset()
+		private void AttemptReset(Translations.Command control)
 		{
 			Timer = 0;
-			if (CurrentState == DriverSupervisionDeviceState.Triggered && StopTimer >= RequiredStopTime)
+			if (CurrentState == DriverSupervisionDeviceState.Triggered && StopTimer >= RequiredStopTime && control == Translations.Command.DriverSupervisionDevice)
 			{
 				AlarmSound.Stop();
 				Timer = 0.0;
@@ -131,64 +131,65 @@ namespace TrainManager.SafetySystems
 			}
 		}
 
-		public void ControlDown(Translations.Command Control)
+		public void ControlDown(Translations.Command controlDown)
 		{
 			switch (Mode)
 			{
 				case DriverSupervisionDeviceMode.Power:
-					if (Control >= Translations.Command.PowerIncrease && Control <= Translations.Command.PowerFullAxis)
+					if (controlDown >= Translations.Command.PowerIncrease && controlDown <= Translations.Command.PowerFullAxis)
 					{
-						AttemptReset();
+						AttemptReset(controlDown);
 					}
 					break;
 				case DriverSupervisionDeviceMode.Brake:
-					if (Control >= Translations.Command.BrakeIncrease && Control <= Translations.Command.BrakeFullAxis)
+					if (controlDown >= Translations.Command.BrakeIncrease && controlDown <= Translations.Command.BrakeFullAxis)
 					{
-						AttemptReset();
+						AttemptReset(controlDown);
 					}
 					break;
 				case DriverSupervisionDeviceMode.AnyHandle:
-					if ((Control >= Translations.Command.PowerIncrease && Control <= Translations.Command.PowerFullAxis) || (Control >= Translations.Command.BrakeIncrease && Control <= Translations.Command.BrakeFullAxis))
+					if ((controlDown >= Translations.Command.PowerIncrease && controlDown <= Translations.Command.PowerFullAxis) || (controlDown >= Translations.Command.BrakeIncrease && controlDown <= Translations.Command.BrakeFullAxis))
 					{
-						AttemptReset();
+						AttemptReset(controlDown);
 					}
 					break;
 				case DriverSupervisionDeviceMode.HeldKey:
 				case DriverSupervisionDeviceMode.Independant:
-					if (Control == Translations.Command.DriverSupervisionDevice)
+					if (controlDown == Translations.Command.DriverSupervisionDevice)
 					{
-						AttemptReset();
+						AttemptReset(controlDown);
 					}
 					break;
 			}
 		}
 
-		public void ControlUp(Translations.Command Control)
+		public void ControlUp(Translations.Command controlUp)
 		{
 			switch (Mode)
 			{
 				case DriverSupervisionDeviceMode.Power:
-					if (Control >= Translations.Command.PowerIncrease && Control <= Translations.Command.PowerFullAxis)
+					if (controlUp >= Translations.Command.PowerIncrease && controlUp <= Translations.Command.PowerFullAxis)
 					{
-						AttemptReset();
+						AttemptReset(controlUp);
 					}
 					break;
 				case DriverSupervisionDeviceMode.Brake:
-					if (Control >= Translations.Command.BrakeIncrease && Control <= Translations.Command.BrakeFullAxis)
+					if (controlUp >= Translations.Command.BrakeIncrease && controlUp <= Translations.Command.BrakeFullAxis)
 					{
-						AttemptReset();
+						AttemptReset(controlUp);
 					}
 					break;
 				case DriverSupervisionDeviceMode.AnyHandle:
-					if ((Control >= Translations.Command.PowerIncrease && Control <= Translations.Command.PowerFullAxis) || (Control >= Translations.Command.BrakeIncrease && Control <= Translations.Command.BrakeFullAxis))
+					if ((controlUp >= Translations.Command.PowerIncrease && controlUp <= Translations.Command.PowerFullAxis) || (controlUp >= Translations.Command.BrakeIncrease && controlUp <= Translations.Command.BrakeFullAxis))
 					{
-						AttemptReset();
+						AttemptReset(controlUp);
 					}
 					break;
 				case DriverSupervisionDeviceMode.Independant:
-					if (Control == Translations.Command.DriverSupervisionDevice)
+					// don't attempt to reset on key-up (as otherwise we can hold the key through a new trigger cycle)
+					if (controlUp == Translations.Command.DriverSupervisionDevice && CurrentState != DriverSupervisionDeviceState.Triggered)
 					{
-						AttemptReset();
+						AttemptReset(controlUp);
 					}
 					break;
 			}
