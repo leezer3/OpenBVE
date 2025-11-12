@@ -36,10 +36,6 @@ namespace TrainManager.Motor
 		{
 		}
 
-		public ElectricEngine(CarBase car, AccelerationCurve[] accelerationCurves) : base(car, accelerationCurves, true)
-		{
-		}
-
 		public override void Update(double timeElapsed)
 		{
 			if (BaseCar.baseTrain.Specs.PantographState != PantographState.Raised)

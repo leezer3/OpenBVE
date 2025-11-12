@@ -57,6 +57,7 @@ namespace Train.MsTs
 		private double wheelRadius;
 		private bool exteriorLoaded = false;
 		private bool RequiresTender = false;
+		private bool EngineAlreadyParsed = false;
 
 		internal WagonParser()
 		{
@@ -126,9 +127,14 @@ namespace Train.MsTs
 			// as properties may not be in order, set this stuff last
 			if (isEngine)
 			{
+				EngineAlreadyParsed = true;
 				// FIXME: Default BVE values
 				currentCar.Specs.JerkPowerUp = 10.0;
 				currentCar.Specs.JerkPowerDown = 10.0;
+				// NOTE: Amps figure appears to need to be divided by the total wheels (to give a per-axle figure)
+				// see NWC_40138.eng for example- This is an issue where higher amps figures are in play
+				maxEngineAmps /= currentCar.DrivingWheels[0].TotalNumber;
+				maxBrakeAmps /= currentCar.DrivingWheels[0].TotalNumber;
 				
 				switch (currentEngineType)
 				{
@@ -161,6 +167,15 @@ namespace Train.MsTs
 					case EngineType.Electric:
 						currentCar.TractionModel = new ElectricEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) });
 						currentCar.TractionModel.Components.Add(EngineComponent.Pantograph, new Pantograph(currentCar.TractionModel));
+
+						if (maxBrakeAmps > 0 && maxEngineAmps > 0)
+						{
+							currentCar.TractionModel.Components.Add(EngineComponent.RegenerativeTractionMotor, new RegenerativeTractionMotor(currentCar.TractionModel, maxEngineAmps, maxBrakeAmps));
+						}
+						else if (maxEngineAmps > 0)
+						{
+							currentCar.TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(currentCar.TractionModel, maxEngineAmps));
+						}
 						break;
 					case EngineType.Steam:
 						// NOT YET IMPLEMENTED FULLY
@@ -779,6 +794,12 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.Throttle:
+					if (EngineAlreadyParsed)
+					{
+						// NOTE: Per-car handles not yet supported, so take the handles from the first engine in the train
+						// otherwise, if we've got a VariableHandle (0-100) followed by notched, we'll be stuck at basically zero power
+						break;
+					}
 					if (currentEngineType == EngineType.Steam)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: A throttle is not valid for a Steam Locomotive.");
@@ -787,13 +808,25 @@ namespace Train.MsTs
 					train.Handles.Power = ParseHandle(block, train, true);
 					break;
 				case KujuTokenID.Brake_Train:
+					if (EngineAlreadyParsed)
+					{
+						break;
+					}
 					train.Handles.Brake = ParseHandle(block, train, false);
 					break;
 				case KujuTokenID.Brake_Engine:
+					if (EngineAlreadyParsed)
+					{
+						break;
+					}
 					train.Handles.HasLocoBrake = true;
 					train.Handles.LocoBrake = ParseHandle(block, train, false);
 					break;
 				case KujuTokenID.Combined_Control:
+					if (EngineAlreadyParsed)
+					{
+						break;
+					}
 					block.ReadSingle();
 					block.ReadSingle();
 					block.ReadSingle();
