@@ -54,6 +54,7 @@ SECURITY_I, keyboard, Number7, 0
 SECURITY_J, keyboard, Number8, 0
 SECURITY_K, keyboard, Number9, 0
 SECURITY_L, keyboard, Number0, 0
+DRIVER_SUPERVISION, Keyboard, Plus, 0, 0
 CAMERA_INTERIOR, keyboard, F1, 0
 CAMERA_HEADOUT_LEFT, keyboard, Left, 2
 CAMERA_HEADOUT_RIGHT, keyboard, Right, 2

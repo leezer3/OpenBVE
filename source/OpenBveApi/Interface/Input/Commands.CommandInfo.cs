@@ -188,7 +188,8 @@ namespace OpenBveApi.Interface
 			{ Command.SecurityO, new CommandInfo(Command.SecurityO, CommandType.Digital, "SECURITY_O") },
 			{ Command.SecurityP, new CommandInfo(Command.SecurityP, CommandType.Digital, "SECURITY_P") },
 #pragma warning restore 618			
-			
+			{ Command.DriverSupervisionDevice, new CommandInfo(Command.DriverSupervisionDevice, CommandType.Digital, "DRIVER_SUPERVISION") },
+
 			//Common Keys
 			{ Command.WiperSpeedUp, new CommandInfo(Command.WiperSpeedUp, CommandType.Digital, "WIPER_SPEED_UP") },
 			{ Command.WiperSpeedDown, new CommandInfo(Command.WiperSpeedDown, CommandType.Digital, "WIPER_SPEED_DOWN") },

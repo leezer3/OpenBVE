@@ -2807,6 +2807,9 @@
 					<trans-unit id="switch_menu">
 						<source>Shows the change switch menu</source>
 					</trans-unit>
+					<trans-unit id="driver_supervision">
+						<source>Operates the drivers supervision device.</source>
+					</trans-unit>
 				</group>
 				<group id="keys">
 					<trans-unit id="0">
