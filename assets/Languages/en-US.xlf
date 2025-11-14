@@ -1499,6 +1499,9 @@
 					<trans-unit id="route_nextstation">
 						<source>Next station is [name] in [distance]</source>
 					</trans-unit>
+					<trans-unit id="route_nextlimit">
+						<source>The current speed limit is [limit] [limitunit]. The next speed limit is [nextlimit] [limitunit] in [limitdistance] m</source>
+					</trans-unit>
 					<trans-unit id="station_arrival">
 						<source>You have arrived at [name].</source>
 					</trans-unit>
@@ -2271,6 +2274,9 @@
 					</trans-unit>
 					<trans-unit id="accessibility_next_station">
 						<source>Accessibility: Audibly announces the the next station name and distance.</source>
+					</trans-unit>
+					<trans-unit id="accessibility_next_limit">
+						<source>Accessibility: Audibly announces the the current and next speed limits.</source>
 					</trans-unit>
 					<trans-unit id="uncouple_front">
 						<source>Uncouples the front coupler for the selected car.</source>

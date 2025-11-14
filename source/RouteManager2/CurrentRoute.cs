@@ -9,6 +9,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.Climate;
+using RouteManager2.Events;
 using RouteManager2.MessageManager;
 using RouteManager2.SignalManager;
 using RouteManager2.SignalManager.PreTrain;
@@ -439,6 +440,25 @@ namespace RouteManager2
 				}
 			}
 			return null;
+		}
+
+		/// <summary>Gets the next speed limit, starting from the specified track element</summary>
+		/// <param name="trackPosition">The next limit's track position</param>
+		public double NextLimit(int trackElement, out double trackPosition)
+		{
+			for (int i = trackElement + 1; i < Tracks[0].Elements.Length; i++)
+			{
+				trackPosition = Tracks[0].Elements[i].StartingTrackPosition;
+				for (int j = 0; j < Tracks[0].Elements[i].Events.Count; j++)
+				{
+					if (Tracks[0].Elements[i].Events[j] is LimitChangeEvent lim)
+					{
+						return lim.NextSpeedLimit;
+					}
+				}
+			}
+			trackPosition = double.PositiveInfinity;
+			return double.PositiveInfinity;
 		}
 
 		/// <summary>Updates the currently displayed background</summary>

@@ -273,6 +273,7 @@ namespace OpenBveApi.Interface
 			{ Command.AccessibilityCurrentSpeed, new CommandInfo(Command.AccessibilityCurrentSpeed, CommandType.Digital, "ACCESSIBILITY_CURRENT_SPEED") },
 			{ Command.AccessibilityNextSignal, new CommandInfo(Command.AccessibilityNextSignal, CommandType.Digital, "ACCESSIBILITY_NEXT_SIGNAL") },
 			{ Command.AccessibilityNextStation, new CommandInfo(Command.AccessibilityNextStation, CommandType.Digital, "ACCESSIBILITY_NEXT_STATION") },
+			{ Command.AccessibilityNextLimit, new CommandInfo(Command.AccessibilityNextLimit, CommandType.Digital, "ACCESSIBILITY_NEXT_LIMIT") },
 			// Coupling
 			{ Command.UncoupleFront, new CommandInfo(Command.UncoupleFront, CommandType.Digital, "UNCOUPLE_FRONT") },
 			{ Command.UncoupleRear, new CommandInfo(Command.UncoupleRear, CommandType.Digital, "UNCOUPLE_REAR") },

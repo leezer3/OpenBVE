@@ -1006,6 +1006,9 @@ namespace OpenBve
 							nextStation.AccessibilityAnnounced = true;
 						}
 						break;
+					case Translations.Command.AccessibilityNextLimit:
+						Program.CurrentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "route_nextlimit" }), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
+						break;
 					case Translations.Command.SwitchMenu:
 						switch (Program.Renderer.CurrentInterface)
 						{

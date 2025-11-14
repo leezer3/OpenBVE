@@ -305,8 +305,13 @@ namespace OpenBveApi.Interface {
 			AccessibilityCurrentSpeed,
 			/// <summary>Triggers a screen reader message with the distance and aspect to the next signal</summary>
 			AccessibilityNextSignal,
-			/// <summary>Triggers a screen reader message with the distance and aspect to the next station</summary>
+			/// <summary>Triggers a screen reader message with the distance to the next station</summary>
 			AccessibilityNextStation,
+			/*
+			 * Added in 1.11.2.8
+			 */
+			/// <summary>Triggers a screen reader message with the current limit, next limit and distance</summary>
+			AccessibilityNextLimit,
 			/// <summary>Shows the change switch menu</summary>
 			SwitchMenu,
 			/*
