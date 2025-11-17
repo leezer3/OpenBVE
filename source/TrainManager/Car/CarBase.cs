@@ -1245,7 +1245,7 @@ namespace TrainManager.Car
 
 						TractionModel.MaximumCurrentAcceleration = a;
 						// Update constant speed device
-						this.ConstSpeed?.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
+						ConstSpeed?.Update(ref a);
 
 						// finalize
 						if (wheelspin != 0.0) a = 0.0;

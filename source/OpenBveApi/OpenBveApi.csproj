@@ -314,7 +314,11 @@
     <Compile Include="World\UnitConversions\Velocity.cs" />
     <Compile Include="World\UnitConversions\Volume.cs" />
     <Compile Include="World\UnitConversions\Weight.cs" />
-    <Compile Include="World\LightMappedVertex.cs" />
+    <Compile Include="World\Verticies\AnimatedVertex.cs" />
+    <Compile Include="World\Verticies\ColoredVertex.cs" />
+    <Compile Include="World\Verticies\LightMappedVertex.cs" />
+    <Compile Include="World\Verticies\Vertex.cs" />
+    <Compile Include="World\Verticies\VertexTemplate.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">
