@@ -1,4 +1,6 @@
-﻿using OpenBveApi.Math;
+using OpenBveApi.Math;
+using OpenBveApi.Routes;
+using System.Collections.Generic;
 
 namespace CsvRwRouteParser
 {
@@ -25,6 +27,8 @@ namespace CsvRwRouteParser
 		internal double AdhesionMultiplier;
 		/// <summary>The starting track position</summary>
 		internal double StartingTrackPosition;
+		/// <summary>The power supplies available</summary>
+		internal Dictionary<PowerSupplyTypes, PowerSupply> PowerSupplies;
 
 		/// <summary>Gets the mid point of the rail</summary>
 		internal Vector2 MidPoint => new Vector2(RailEnd - RailStart);
@@ -33,6 +37,7 @@ namespace CsvRwRouteParser
 		{
 			Accuracy = accuracy;
 			AdhesionMultiplier = adhesionMultiplier;
+			PowerSupplies = new Dictionary<PowerSupplyTypes, PowerSupply>();
 		}
 	}
 }

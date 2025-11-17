@@ -149,7 +149,10 @@
 		RailAnnounceAll,
 		/// <summary>Changes the player path</summary>
 		PlayerPath,
-
+		/// <summary>Adds or changes the properties of a power supply</summary>
+		PowerSupply,
+		/// <summary>Ends a power supply</summary>
+		PowerSupplyEnd,
 		/*
 		 * HMMSIM
 		 */

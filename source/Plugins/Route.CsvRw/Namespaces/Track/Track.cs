@@ -3704,6 +3704,162 @@ namespace CsvRwRouteParser
 					Data.Blocks[BlockIndex].Rails[railIndex].AdhesionMultiplier = 0.01 * a;
 				}
 					break;
+				case TrackCommand.PowerSupply:
+					{
+						if (!PreviewOnly)
+						{
+							int idx = 0;
+							if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								idx = 0;
+							}
+
+							if (idx < 0)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be a non-negative integer in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								idx = 0;
+							}
+
+							PowerSupplyTypes type = PowerSupplyTypes.None;
+							PowerSupplyVoltageTypes voltageType = PowerSupplyVoltageTypes.AC;
+							double voltage = 25000.0;
+							double amps = 1000;
+							double contactHeight = 5.3;
+							if (Arguments.Length >= 2 && Arguments[1].Length > 0)
+							{
+								switch (Arguments[1].ToUpperInvariant().Trim(new char[] { }))
+								{
+									case "OHLE":
+									case "1":
+										type = PowerSupplyTypes.OverheadLine;
+										break;
+									case "THIRDRAIL":
+									case "2":
+										type = PowerSupplyTypes.ThirdRail;
+										voltageType = PowerSupplyVoltageTypes.DC;
+										voltage = 750;
+										contactHeight = 0;
+										amps = 3000;
+										break;
+									case "FOURTHRAIL":
+									case "3":
+										type = PowerSupplyTypes.FourthRail;
+										voltageType = PowerSupplyVoltageTypes.DC;
+										voltage = 750;
+										contactHeight = 0;
+										amps = 3000;
+										break;
+									default:
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid type in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										break;
+								}
+							}
+
+							if (Arguments.Length >= 3 && Arguments[2].Length > 0)
+							{
+								switch (Arguments[2].ToUpperInvariant().Trim(new char[] { }))
+								{
+									case "AC":
+									case "0":
+										voltageType = PowerSupplyVoltageTypes.AC;
+										break;
+									case "DC":
+									case "1":
+										voltageType = PowerSupplyVoltageTypes.DC;
+										break;
+									default:
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid voltage type in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										break;
+								}
+							}
+
+							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out voltage))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Voltage is invalid in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+
+							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out amps))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Amperage is invalid in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+
+							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out contactHeight))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Contact height is invalid in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+
+							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.PowerSupply at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							}
+
+							
+							if (type != PowerSupplyTypes.None)
+							{
+								PowerSupply p = new PowerSupply(voltageType, voltage, amps, contactHeight);
+								if (Data.Blocks[BlockIndex].Rails[idx].PowerSupplies.ContainsKey(type))
+								{
+									Data.Blocks[BlockIndex].Rails[idx].PowerSupplies[type] = p;
+								}
+								else
+								{
+									Data.Blocks[BlockIndex].Rails[idx].PowerSupplies.Add(type, p);
+								}
+							}
+						}
+					}
+					break;
+				case TrackCommand.PowerSupplyEnd:
+					{
+						if (!PreviewOnly)
+						{
+							int idx = 0;
+							if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.PowerSupplyEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								idx = 0;
+							}
+
+							if (idx < 0)
+							{
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be a non-negative integer in Track.PowerSupplyEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								idx = 0;
+							}
+
+							PowerSupplyTypes type = PowerSupplyTypes.None;
+							if (Arguments.Length >= 2 && Arguments[1].Length > 0)
+							{
+								switch (Arguments[1].ToUpperInvariant().Trim(new char[] { }))
+								{
+									case "OHLE":
+									case "1":
+										type = PowerSupplyTypes.OverheadLine;
+										break;
+									case "THIRDRAIL":
+									case "2":
+										type = PowerSupplyTypes.ThirdRail;
+										break;
+									case "FOURTHRAIL":
+									case "3":
+										type = PowerSupplyTypes.FourthRail;
+										break;
+									default:
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid type in Track.PowerSupplyEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+										break;
+								}
+							}
+
+							if (type != PowerSupplyTypes.None)
+							{
+								if (Data.Blocks[BlockIndex].Rails[idx].PowerSupplies.ContainsKey(type))
+								{
+									Data.Blocks[BlockIndex].Rails[idx].PowerSupplies.Remove(type);
+								}
+							}
+						}
+					}
+					break;
 			}
 		}
 
