@@ -1,14 +1,15 @@
-using System;
 using LibRender2.Overlays;
 using ObjectViewer.Trains;
-using TrainManager.BrakeSystems;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
-using TrainManager.Handles;
-using TrainManager.Trains;
+using System;
+using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
+using TrainManager.Handles;
 using TrainManager.SafetySystems;
+using TrainManager.Trains;
 
 namespace ObjectViewer {
 	internal static class FunctionScripts {
@@ -1301,6 +1302,27 @@ namespace ObjectViewer {
 					case Instructions.EngineRunningCar:
 					case Instructions.PantographState:
 					case Instructions.PantographStateOfCar:
+					case Instructions.OverheadVolts:
+					case Instructions.OverheadVoltsTarget:
+					case Instructions.ThirdRailVolts:
+					case Instructions.ThirdRailVoltsTarget:
+					case Instructions.FourthRailVolts:
+					case Instructions.FourthRailVoltsTarget:
+					case Instructions.OverheadHeight:
+					case Instructions.OverheadHeightTarget:
+					case Instructions.ThirdRailHeight:
+					case Instructions.ThirdRailHeightTarget:
+					case Instructions.FourthRailHeight:
+					case Instructions.FourthRailHeightTarget:
+					case Instructions.OverheadAC:
+					case Instructions.ThirdRailAC:
+					case Instructions.FourthRailAC:
+					case Instructions.OverheadAmps:
+					case Instructions.OverheadAmpsTarget:
+					case Instructions.ThirdRailAmps:
+					case Instructions.ThirdRailAmpsTarget:
+					case Instructions.FourthRailAmps:
+					case Instructions.FourthRailAmpsTarget:
 						throw new NotImplementedException(Function.InstructionSet[i] + " is not currently supported in Object Viewer. Please test using the main game.");
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");

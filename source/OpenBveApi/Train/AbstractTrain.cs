@@ -1,4 +1,6 @@
+using OpenBveApi.Routes;
 using System;
+using System.Collections.Generic;
 
 namespace OpenBveApi.Trains
 {
@@ -60,6 +62,9 @@ namespace OpenBveApi.Trains
 
 		/// <summary>Gets the length of the train</summary>
 		public virtual double Length => 0;
+
+		/// <summary>Returns the available power supplies to this train</summary>
+		public virtual Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies => new Dictionary<PowerSupplyTypes, PowerSupply>();
 
 		/// <summary>Updates the train</summary>
 		/// <param name="TimeElapsed">The time elapsed since the last call to update</param>

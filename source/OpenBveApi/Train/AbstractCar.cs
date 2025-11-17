@@ -1,6 +1,7 @@
+using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using System;
 using System.Collections.Generic;
-using OpenBveApi.Math;
 
 namespace OpenBveApi.Trains
 {
@@ -49,6 +50,9 @@ namespace OpenBveApi.Trains
 
 		/// <summary>The trailing wheel sets on the car</summary>
 		public List<Wheels> TrailingWheels = new List<Wheels>();
+
+		/// <summary>Returns the available power supplies to this car</summary>
+		public virtual Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies => new Dictionary<PowerSupplyTypes, PowerSupply>();
 
 		/// <summary>Creates the in-world co-ordinates for a sound attached to this car</summary>
 		public virtual void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)

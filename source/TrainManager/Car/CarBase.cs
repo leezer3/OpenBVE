@@ -6,8 +6,10 @@ using LibRender2.Camera;
 using LibRender2.Cameras;
 using LibRender2.Smoke;
 using LibRender2.Trains;
+using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
+using OpenBveApi.Motor;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
@@ -102,6 +104,18 @@ namespace TrainManager.Car
 		public TractionModel TractionModel;
 
 		public List<ParticleSource> ParticleSources;
+
+		public override Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies
+		{
+			get
+			{
+				if (TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph))
+				{
+					return pantograph.AvailablePowerSupplies;
+				}
+				return base.AvailablePowerSupplies;
+			}
+		}
 
 		private int trainCarIndex;
 

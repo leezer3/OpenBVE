@@ -22,7 +22,9 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System.Collections.Generic;
 using OpenBveApi.Motor;
+using OpenBveApi.Routes;
 using SoundManager;
 
 namespace TrainManager.Motor
@@ -37,6 +39,8 @@ namespace TrainManager.Motor
 		public CarSound RaiseSound;
 		/// <summary>The sound played when the switch is toggled</summary>
 		public CarSound SwitchToggle;
+		/// <summary>The power supplies available to this pantograph</summary>
+		public Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies => baseEngine.BaseCar.FrontAxle.Follower.AvailablePowerSupplies;
 
 		public Pantograph(TractionModel engine) : base(engine)
 		{

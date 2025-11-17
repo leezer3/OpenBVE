@@ -1204,12 +1204,34 @@ namespace RouteViewer {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.WheelRadiusOfCar:
 					case Instructions.EngineRPM:
 					case Instructions.EngineRPMCar:
 					case Instructions.EngineRunning:
 					case Instructions.EngineRunningCar:
 					case Instructions.PantographState:
 					case Instructions.PantographStateOfCar:
+					case Instructions.OverheadVolts:
+					case Instructions.OverheadVoltsTarget:
+					case Instructions.ThirdRailVolts:
+					case Instructions.ThirdRailVoltsTarget:
+					case Instructions.FourthRailVolts:
+					case Instructions.FourthRailVoltsTarget:
+					case Instructions.OverheadHeight:
+					case Instructions.OverheadHeightTarget:
+					case Instructions.ThirdRailHeight:
+					case Instructions.ThirdRailHeightTarget:
+					case Instructions.FourthRailHeight:
+					case Instructions.FourthRailHeightTarget:
+					case Instructions.OverheadAC:
+					case Instructions.ThirdRailAC:
+					case Instructions.FourthRailAC:
+					case Instructions.OverheadAmps:
+					case Instructions.OverheadAmpsTarget:
+					case Instructions.ThirdRailAmps:
+					case Instructions.ThirdRailAmpsTarget:
+					case Instructions.FourthRailAmps:
+					case Instructions.FourthRailAmpsTarget:
 						throw new NotImplementedException(Function.InstructionSet[i] + " is not currently supported in Route Viewer. Please test using the main game.");
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");
