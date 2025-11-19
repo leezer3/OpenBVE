@@ -24,6 +24,7 @@
 
 using System;
 using OpenBve.Formats.MsTs;
+using OpenBveApi.Interface;
 using OpenBveApi.World;
 
 namespace Train.MsTs
@@ -50,9 +51,20 @@ namespace Train.MsTs
 				V2 = block.ReadSingle(UnitOfVelocity.MetersPerSecond);
 				C2 = block.ReadSingle(UnitOfTorque.NewtonMetersPerSecond);
 				E2 = block.ReadSingle();
+
+				if (E1 <= 0 || E2 <= 0 || V2 < 0)
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: The Friction properties contain nonsensical data.");
+					C1 = 100;
+					E1 = 1;
+					V2 = -1;
+					C2 = 0;
+					E2 = 1;
+				}
 			}
 			catch
 			{
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: The Friction properties contain invalid data.");
 				C1 = 100;
 				E1 = 1;
 				V2 = -1;
