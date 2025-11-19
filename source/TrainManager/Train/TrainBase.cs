@@ -365,7 +365,7 @@ namespace TrainManager.Trains
 								Cars[j].RearBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
 								Cars[j].Coupler.ChangeSection(!IsPlayerTrain ? 0 : -1);
 
-								if (Cars[j].TractionModel.ProvidesPower && Cars[j].Sounds.Loop != null)
+								if (Cars[j].TractionModel !=  null && Cars[j].TractionModel.ProvidesPower && Cars[j].Sounds.Loop != null)
 								{
 									Cars[j].Sounds.Loop.Play(Cars[j], true);
 								}

@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Hosts;
+﻿using System;
+using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
 
 namespace TrainManager.Car
@@ -21,7 +22,7 @@ namespace TrainManager.Car
 
 		public override double GetResistance(double Speed, double FrontalArea, double AirDensity, double AccelerationDueToGravity)
 		{
-			double f = FrontalArea * aerodynamicDragCoefficient * AirDensity / (2.0 * baseCar.CurrentMass);
+			double f = FrontalArea * aerodynamicDragCoefficient * AirDensity / (2.0 * Math.Max(1.0, baseCar.CurrentMass));
 			double a = AccelerationDueToGravity * coefficientOfRollingResistance + f * Speed * Speed;
 			return a;
 		}

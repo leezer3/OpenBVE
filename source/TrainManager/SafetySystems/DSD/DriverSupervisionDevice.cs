@@ -124,7 +124,7 @@ namespace TrainManager.SafetySystems
 			}
 		}
 
-		public void ControlDown(Translations.Command controlDown)
+		public override void ControlDown(Translations.Command controlDown)
 		{
 			switch (Mode)
 			{
@@ -156,7 +156,7 @@ namespace TrainManager.SafetySystems
 			}
 		}
 
-		public void ControlUp(Translations.Command controlUp)
+		public override void ControlUp(Translations.Command controlUp)
 		{
 			switch (Mode)
 			{

@@ -1146,6 +1146,11 @@ namespace TrainManager.Car
 			TrainManagerBase.Renderer.CameraTrackFollower.WorldUp = new Vector3(Up);
 			TrainManagerBase.Renderer.CameraTrackFollower.WorldSide = new Vector3(sx, sy, sz);
 			double f = (Driver.Z - RearAxle.Position) / (FrontAxle.Position - RearAxle.Position);
+			if (double.IsNaN(f))
+			{
+				// car with both axles at zero and a driver position of zero creates NaN (guarded against in original BVE parser)
+				f = 0;
+			}
 			double tp = (1.0 - f) * RearAxle.Follower.TrackPosition + f * FrontAxle.Follower.TrackPosition;
 			TrainManagerBase.Renderer.CameraTrackFollower.UpdateAbsolute(tp, false, false);
 		}
@@ -1165,6 +1170,13 @@ namespace TrainManager.Car
 			{
 				double v = Math.Abs(CurrentSpeed);
 				double t = Index == 0 & CurrentSpeed >= 0.0 || Index == baseTrain.NumberOfCars - 1 & CurrentSpeed <= 0.0 ? Specs.ExposedFrontalArea : Specs.UnexposedFrontalArea;
+
+				if (t == 0)
+				{
+					// if frontal area is zero, multiplication creates NaN so use default BVE value (guarded against in original BVE parser)
+					t = 5.616;
+				}
+
 				double a = FrontAxle.GetResistance(v, t, TrainManagerBase.CurrentRoute.Atmosphere.GetAirDensity(FrontAxle.Follower.WorldPosition.Y), TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 				double b = RearAxle.GetResistance(v, t, TrainManagerBase.CurrentRoute.Atmosphere.GetAirDensity(RearAxle.Follower.WorldPosition.Y), TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 				FrictionBrakeAcceleration = 0.5 * (a + b);
@@ -1340,7 +1352,12 @@ namespace TrainManager.Car
 					if (a > ra) a = ra;
 				}
 
-				double factor = EmptyMass / CurrentMass;
+				double factor = 1.0;
+				if (EmptyMass != 0 && CurrentMass != 0)
+				{
+					// zero weight bugs out the factor
+					factor = EmptyMass / CurrentMass;
+				}
 				if (a >= wheelSlipAccelerationBrakeFront)
 				{
 					wheellock = true;
