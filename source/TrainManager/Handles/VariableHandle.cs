@@ -96,7 +96,19 @@ namespace TrainManager.Handles
 
 		public override string GetNotchDescription(out MessageColor color)
 		{
-			color = Actual == 0 ? MessageColor.Gray : MessageColor.Blue;
+			if (this == baseTrain.Handles.Power && baseTrain.Handles.HandleType == HandleType.SingleHandle && (baseTrain.Handles.Brake.Driver != 0 || baseTrain.Handles.EmergencyBrake.Driver))
+			{
+				return baseTrain.Handles.Brake.GetNotchDescription(out color);
+			}
+
+			if (this == baseTrain.Handles.Power)
+			{
+				color = Actual == 0 ? MessageColor.Gray : MessageColor.Blue;
+			}
+			else
+			{
+				color = Actual == 0 ? MessageColor.Gray : MessageColor.Orange;
+			}
 
 			if (_notches == null)
 			{
