@@ -144,5 +144,20 @@ namespace Plugin
 			}
 			return true;
 		}
+
+		public override bool LoadObject(string path, string wagonFilePath, Encoding Encoding, out UnifiedObject unifiedObject)
+		{
+			MsTsShapeParser.wagonFileDirectory = wagonFilePath;
+			try
+			{
+				unifiedObject = MsTsShapeParser.ReadObject(path);
+			}
+			catch
+			{
+				unifiedObject = null;
+				return false;
+			}
+			return true;
+		}
 	}
 }
