@@ -79,5 +79,8 @@ namespace Train.MsTs
 		RPM,
 		Speed_Projected, // projected speed in one minute
 		SpeedLimit, // signal limit, not track limit
+
+		// probably MSTSBin
+		Dynamic_Brake_Force,
 	}
 }

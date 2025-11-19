@@ -27,10 +27,10 @@ namespace OpenBveApi.Motor
 	/// <summary>The possible states of a pantograph</summary>
 	public enum PantographState
 	{
-		/// <summary>The pantograph is raised</summary>
-		Raised,
 		/// <summary>The pantograph is lowered</summary>
 		Lowered,
+		/// <summary>The pantograph is raised</summary>
+		Raised,
 		/// <summary>The pantograph is raised, but no wire is present</summary>
 		Dewired
 	}
