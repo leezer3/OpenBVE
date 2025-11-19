@@ -66,6 +66,9 @@ namespace OpenBveApi.Trains
 		/// <summary>Returns the available power supplies to this train</summary>
 		public virtual Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies => new Dictionary<PowerSupplyTypes, PowerSupply>();
 
+		/// <summary>Gets the current signal aspect applicable to the train</summary>
+		public virtual int CurrentSignalAspect => 0;
+
 		/// <summary>Updates the train</summary>
 		/// <param name="TimeElapsed">The time elapsed since the last call to update</param>
 		public virtual void Update(double TimeElapsed)

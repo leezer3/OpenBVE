@@ -117,6 +117,20 @@ namespace TrainManager.Trains
 			}
 		}
 
+		public override int CurrentSignalAspect
+		{
+			get
+			{
+				int nextSectionIndex = CurrentSectionIndex + 1;
+				int a = 0;
+				if (nextSectionIndex >= 0 & nextSectionIndex < TrainManagerBase.CurrentRoute.Sections.Length)
+				{
+					a = TrainManagerBase.CurrentRoute.Sections[nextSectionIndex].CurrentAspect;
+				}
+				return a;
+			}
+		}
+
 		/// <summary>The direction of travel on the current track</summary>
 		public TrackDirection CurrentDirection => TrainManagerBase.CurrentRoute.Tracks[Cars[DriverCar].FrontAxle.Follower.TrackIndex].Direction;
 
