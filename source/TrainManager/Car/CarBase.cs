@@ -1202,7 +1202,7 @@ namespace TrainManager.Car
 						}
 						else if (ReAdhesionDevice is Sanders sanders)
 						{
-							if (sanders.Active && CurrentSpeed < sanders.MaximumSpeed)
+							if (sanders.State == SandersState.Active && CurrentSpeed < sanders.MaximumSpeed)
 							{
 								wheelSlipAccelerationMotorFront *= 2.0;
 								wheelSlipAccelerationMotorRear *= 2.0;

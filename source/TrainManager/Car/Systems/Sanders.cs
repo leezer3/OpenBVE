@@ -38,8 +38,8 @@ namespace TrainManager.Car.Systems
 		public double ActivationTime;
 		/// <summary>If a number of shots is available, the number remaining</summary>
 		public int NumberOfShots;
-		/// <summary>Whether the sanders are currently active</summary>
-		public bool Active;
+		/// <summary>The current state</summary>
+		public SandersState State;
 		/// <summary>The type of sanders</summary>
 		public readonly SandersType Type;
 		/// <summary>The sound played when the sanders are activated</summary>
@@ -71,7 +71,7 @@ namespace TrainManager.Car.Systems
 				return;
 			}
 
-			if (Active)
+			if (State != SandersState.Inactive)
 			{
 				if ((ActivationSound != null && !ActivationSound.IsPlaying) || ActivationSound == null)
 				{
@@ -88,7 +88,7 @@ namespace TrainManager.Car.Systems
 				SandLevel = 0;
 				if (SandingRate != 0)
 				{
-					Active = false;
+					State = SandersState.ActiveEmpty;
 					if (!emptied)
 					{
 						EmptySound?.Play(Car, false);
@@ -110,7 +110,7 @@ namespace TrainManager.Car.Systems
 					if (Car.FrontAxle.CurrentWheelSlip)
 					{
 						timer += timeElapsed;
-						if (timer > ActivationTime && !Active)
+						if (timer > ActivationTime && State == SandersState.Inactive && !emptied)
 						{
 							SetActive(true);
 						}
@@ -118,14 +118,14 @@ namespace TrainManager.Car.Systems
 					else
 					{
 						timer = 0;
-						if (Active)
+						if (State != SandersState.Inactive)
 						{
 							SetActive(false);
 						}
 					}
 					break;
 				case SandersType.NumberOfShots:
-					if (Active)
+					if (State == SandersState.Inactive)
 					{
 						timer -= timeElapsed;
 						if (timer <= 0)
@@ -157,7 +157,7 @@ namespace TrainManager.Car.Systems
 			}
 
 			// Deactivate
-			if(Active && !willBeActive) {
+			if(State != SandersState.Inactive && !willBeActive) {
 				if (Type == SandersType.NumberOfShots && timer > 0)
 				{
 					// Can't cancel shot based
@@ -165,7 +165,7 @@ namespace TrainManager.Car.Systems
 				}
 
 				DeActivationSound?.Play(Car, false);
-			} else if(!Active && willBeActive) {
+			} else if(State == SandersState.Inactive && willBeActive) {
 				if (Type == SandersType.NumberOfShots)
 				{
 					if (NumberOfShots <= 0)
@@ -179,12 +179,15 @@ namespace TrainManager.Car.Systems
 				ActivationSound?.Play(Car, false);
 			}
 
-			Active = willBeActive;
+			if (willBeActive)
+			{
+				State = SandersState.Active;
+			}
 		}
 
 		public void Toggle()
 		{
-			SetActive(!Active);
+			SetActive(State != SandersState.Inactive);
 		}
 	}
 }

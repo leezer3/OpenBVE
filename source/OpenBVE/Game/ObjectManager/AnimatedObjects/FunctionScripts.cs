@@ -1555,7 +1555,7 @@ namespace OpenBve {
 					case Instructions.Sanders:
 						{
 							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders) {
-								Function.Stack[s] = sanders.Active ? 1 : 0;
+								Function.Stack[s] = sanders.State == SandersState.Active ? 1 : 0;
 							} else {
 								Function.Stack[s] = 0.0;
 							}

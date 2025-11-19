@@ -1154,7 +1154,7 @@ namespace ObjectViewer {
 						{
 							if (Train != null && Train.Cars[CarIndex].ReAdhesionDevice is Sanders sanders)
 							{
-								Function.Stack[s] = sanders.Active ? 1 : 0;
+								Function.Stack[s] = sanders.State == SandersState.Active ? 1 : 0;
 							}
 							else
 							{
