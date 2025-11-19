@@ -131,9 +131,11 @@ namespace TrainManager.Motor
 			{
 				Components.ElementAt(i).Value.Update(timeElapsed);
 			}
+
+			MaximumPossibleAcceleration = AccelerationCurves[0].MaximumAcceleration;
 		}
 
-		public override double CurrentPower => (currentRPM - MinRPM) / (MaxRPM - MinRPM);
+		public override double CurrentPower => Math.Max(0, currentRPM - MinRPM) / (MaxRPM - MinRPM);
 
 		public override double TargetAcceleration
 		{
