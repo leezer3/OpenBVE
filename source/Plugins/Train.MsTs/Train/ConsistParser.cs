@@ -364,6 +364,11 @@ namespace Train.MsTs
 							if (!Directory.Exists(wagonDirectory))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS Consist Parser: WagonFolder " + wagonDirectory + " was not found.");
+								currentCar.Width = 2.6;
+								currentCar.Height = 3.6;
+								currentCar.Length = 25;
+								currentCar.EmptyMass = 1000;
+								currentCar.TractionModel = new BVETrailerCar(currentCar);
 								currentCar.CarBrake = new ThroughPiped(currentCar); // dummy
 								break;
 							}
