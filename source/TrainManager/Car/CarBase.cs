@@ -74,7 +74,6 @@ namespace TrainManager.Car
 		public CarConstSpeed ConstSpeed;
 		/// <summary>The readhesion device for this car</summary>
 		public AbstractReAdhesionDevice ReAdhesionDevice;
-		public DriverSupervisionDevice DSD;
 		/// <summary>The DriverSupervisionDevice for this car</summary>
 		/// <summary>The position of the beacon reciever within the car</summary>
 		public double BeaconReceiverPosition;
@@ -104,6 +103,8 @@ namespace TrainManager.Car
 		public TractionModel TractionModel;
 
 		public List<ParticleSource> ParticleSources;
+
+		public Dictionary<SafetySystem, AbstractSafetySystem> SafetySystems;
 
 		public override Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies
 		{
@@ -150,6 +151,7 @@ namespace TrainManager.Car
 			Flange = new Flange(this);
 			Run = new RunSounds(this);
 			ParticleSources = new List<ParticleSource>();
+			SafetySystems = new Dictionary<SafetySystem, AbstractSafetySystem>();
 		}
 
 		public CarBase(TrainBase train, int index)
@@ -179,6 +181,7 @@ namespace TrainManager.Car
 			Sounds = new CarSounds();
 			Coupler = new Coupler(0, 0, this, null);
 			ParticleSources = new List<ParticleSource>();
+			SafetySystems = new Dictionary<SafetySystem, AbstractSafetySystem>();
 		}
 
 		/// <summary>Moves the car</summary>

@@ -13,6 +13,7 @@ using TrainManager.Car;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.Power;
+using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -609,26 +610,26 @@ namespace Train.OpenBve
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An empty list of driver supervision device sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (car.DSD == null)
+									if (car.SafetySystems.TryGetTypedValue(SafetySystem.DriverSupervisionDevice, out DriverSupervisionDevice dsd))
 									{
-										break;
-									}
-
-									foreach (XmlNode cc in c.ChildNodes)
-									{
-										switch (cc.Name.ToLowerInvariant())
+										foreach (XmlNode cc in c.ChildNodes)
 										{
-											case "alert":
-												ParseNode(cc, out car.DSD.AlertSound, center, SoundCfgParser.smallRadius);
-												break;
-											case "alarm":
-												ParseNode(cc, out car.DSD.AlarmSound, center, SoundCfgParser.smallRadius);
-												break;
-											case "reset":
-												ParseNode(cc, out car.DSD.ResetSound, center, SoundCfgParser.smallRadius);
-												break;
+											switch (cc.Name.ToLowerInvariant())
+											{
+												case "alert":
+													ParseNode(cc, out dsd.AlertSound, center, SoundCfgParser.smallRadius);
+													break;
+												case "alarm":
+													ParseNode(cc, out dsd.AlarmSound, center, SoundCfgParser.smallRadius);
+													break;
+												case "reset":
+													ParseNode(cc, out dsd.ResetSound, center, SoundCfgParser.smallRadius);
+													break;
+											}
 										}
 									}
+
+									
 									break;
 								case SoundCfgSection.Headlights:
 									if (!c.ChildNodes.OfType<XmlElement>().Any())

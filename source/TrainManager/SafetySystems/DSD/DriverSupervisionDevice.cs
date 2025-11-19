@@ -1,5 +1,28 @@
-﻿using OpenBveApi.Interface;
-using SoundManager;
+//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+using OpenBveApi.Interface;
 using TrainManager.Car;
 
 namespace TrainManager.SafetySystems
@@ -7,76 +30,46 @@ namespace TrainManager.SafetySystems
 	/// <summary>Represents a driver supervision device</summary>
 	public class DriverSupervisionDevice : AbstractSafetySystem
 	{
-		/// <summary>The update timer</summary>
-		private double Timer;
-		/// <summary>The time after which the DSD will alert</summary>
-		private readonly double AlertTime;
-		/// <summary>The time after which the DSD will intervene</summary>
-		private readonly double InterventionTime;
-		/// <summary>Whether a DSD intervention has been triggered</summary>
-		public DriverSupervisionDeviceState CurrentState;
-		/// <summary>The type of device</summary>
-		private readonly DriverSupervisionDeviceTypes Type;
-		/// <summary>The sound played when an alert is triggered</summary>
-		public CarSound AlertSound;
-		/// <summary>Whether the alert loops</summary>
-		private bool LoopingAlert;
-		/// <summary>The sound played when the device is triggered</summary>
-		public CarSound AlarmSound;
-		/// <summary>Whether the alarm is to loop</summary>
-		private readonly bool LoopingAlarm;
-		/// <summary>The sound played when the device is reset</summary>
-		public CarSound ResetSound;
-		/// <summary>The required stop time to reset the DSD</summary>
-		private readonly double RequiredStopTime;
 		/// <summary>The mode of the DSD</summary>
 		private readonly DriverSupervisionDeviceMode Mode;
 		/// <summary>The trigger mode of the DSD</summary>
-		private readonly DriverSupervisionDeviceTriggerMode TriggerMode;
+		private readonly SafetySystemTriggerMode TriggerMode;
+		
 
-		private double StopTimer;
-
-		public DriverSupervisionDevice(CarBase car, DriverSupervisionDeviceTypes type, DriverSupervisionDeviceMode mode, DriverSupervisionDeviceTriggerMode triggerMode, double alertTime, double interventionTime, double requiredStopTime, bool loopingAlert = true, bool loopingAlarm = true) : base(car)
+		public DriverSupervisionDevice(CarBase car, SafetySystemType type, DriverSupervisionDeviceMode mode, SafetySystemTriggerMode triggerMode, double alertTime, double interventionTime, double requiredStopTime) 
+			: base(car, type, alertTime, interventionTime, requiredStopTime)
 		{
-			Type = type;
 			Mode = mode;
 			TriggerMode = triggerMode;
-			AlertTime = alertTime;
-			InterventionTime = interventionTime;
-			AlarmSound = new CarSound();
-			ResetSound = new CarSound();
-			RequiredStopTime = requiredStopTime;
-			LoopingAlert = loopingAlert;
-			LoopingAlarm = loopingAlarm;
 		}
 
 		public override void Update(double timeElapsed)
 		{
-			if (Type == DriverSupervisionDeviceTypes.None)
+			if (Type == SafetySystemType.None)
 			{
 				return;
 			}
 			Timer += timeElapsed;
 
-			if (Timer > AlertTime && CurrentState == DriverSupervisionDeviceState.Monitoring)
+			if (Timer > AlertTime && CurrentState == SafetySystemState.Monitoring)
 			{
 				AlertSound.Play(baseCar, LoopingAlert);
-				CurrentState = DriverSupervisionDeviceState.Alarm;
+				CurrentState = SafetySystemState.Alarm;
 			}
 
-			if (Timer > InterventionTime && CurrentState < DriverSupervisionDeviceState.Triggered)
+			if (Timer > InterventionTime && CurrentState < SafetySystemState.Triggered)
 			{
 				AlertSound.Stop();
 				AlarmSound.Play(baseCar, LoopingAlarm);
-				CurrentState = DriverSupervisionDeviceState.Triggered;
+				CurrentState = SafetySystemState.Triggered;
 			}
 
 			switch (TriggerMode)
 			{
-				case DriverSupervisionDeviceTriggerMode.Always:
+				case SafetySystemTriggerMode.Always:
 					// nothing to do
 					break;
-				case DriverSupervisionDeviceTriggerMode.TrainMoving:
+				case SafetySystemTriggerMode.TrainMoving:
 					if (baseCar.CurrentSpeed == 0)
 					{
 						// not moving, so reset our timer and return
@@ -84,7 +77,7 @@ namespace TrainManager.SafetySystems
 						return;
 					}
 					break;
-				case DriverSupervisionDeviceTriggerMode.DirectionSet:
+				case SafetySystemTriggerMode.DirectionSet:
 					if (baseCar.baseTrain.Handles.Reverser.Actual == 0 && baseCar.CurrentSpeed == 0)
 					{
 						// no direction set, not moving
@@ -94,18 +87,18 @@ namespace TrainManager.SafetySystems
 					break;
 			}
 
-			if (CurrentState == DriverSupervisionDeviceState.Triggered)
+			if (CurrentState == SafetySystemState.Triggered)
 			{
 				switch (Type)
 				{
-					case DriverSupervisionDeviceTypes.CutsPower:
+					case SafetySystemType.CutsPower:
 						baseCar.baseTrain.Handles.Power.ApplySafetyState(0);
 						break;
-					case DriverSupervisionDeviceTypes.ApplyBrake:
+					case SafetySystemType.ApplyBrake:
 						baseCar.baseTrain.Handles.Power.ApplySafetyState(0);
 						baseCar.baseTrain.Handles.Brake.ApplySafetyState(baseCar.baseTrain.Handles.Brake.MaximumNotch);
 						break;
-					case DriverSupervisionDeviceTypes.ApplyEmergencyBrake:
+					case SafetySystemType.ApplyEmergencyBrake:
 						baseCar.baseTrain.Handles.Power.ApplySafetyState(0);
 						baseCar.baseTrain.Handles.Brake.ApplySafetyState(baseCar.baseTrain.Handles.Brake.MaximumNotch + 1);
 						break;
@@ -121,11 +114,11 @@ namespace TrainManager.SafetySystems
 		private void AttemptReset(Translations.Command control)
 		{
 			Timer = 0;
-			if (CurrentState == DriverSupervisionDeviceState.Triggered && StopTimer >= RequiredStopTime && control == Translations.Command.DriverSupervisionDevice)
+			if (CurrentState == SafetySystemState.Triggered && StopTimer >= RequiredStopTime && control == Translations.Command.DriverSupervisionDevice)
 			{
 				AlarmSound.Stop();
 				Timer = 0.0;
-				CurrentState = DriverSupervisionDeviceState.Monitoring;
+				CurrentState = SafetySystemState.Monitoring;
 				StopTimer = 0;
 				ResetSound.Play(baseCar, false);
 			}
@@ -187,7 +180,7 @@ namespace TrainManager.SafetySystems
 					break;
 				case DriverSupervisionDeviceMode.Independant:
 					// don't attempt to reset on key-up (as otherwise we can hold the key through a new trigger cycle)
-					if (controlUp == Translations.Command.DriverSupervisionDevice && CurrentState != DriverSupervisionDeviceState.Triggered)
+					if (controlUp == Translations.Command.DriverSupervisionDevice && CurrentState != SafetySystemState.Triggered)
 					{
 						AttemptReset(controlUp);
 					}

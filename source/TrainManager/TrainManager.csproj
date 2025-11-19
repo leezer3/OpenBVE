@@ -145,10 +145,11 @@
     <Compile Include="SafetySystems\DefaultSafetySystems.cs" />
     <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.cs" />
     <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.ResetModes.cs" />
-    <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.States.cs" />
-    <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.TriggerMode.cs" />
-    <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.Types.cs" />
-    <Compile Include="SafetySystems\Overspeed.cs" />
+    <Compile Include="SafetySystems\SafetySystem.State.cs" />
+    <Compile Include="SafetySystems\SafetySystem.TriggerMode.cs" />
+    <Compile Include="SafetySystems\SafetySystem.Type.cs" />
+    <Compile Include="SafetySystems\Overspeed\OverspeedDevice.cs" />
+    <Compile Include="SafetySystems\Overspeed\OverspeedMessage.cs" />
     <Compile Include="SafetySystems\PassAlarm.cs" />
     <Compile Include="SafetySystems\PilotLamp.cs" />
     <Compile Include="SafetySystems\Plugin\AI\PluginAI.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="SafetySystems\Plugin\Plugin.Functions.cs" />
     <Compile Include="SafetySystems\Plugin\Plugin.SoundInstructions.cs" />
     <Compile Include="SafetySystems\Plugin\ProxyPlugin.cs" />
+    <Compile Include="SafetySystems\SafetySystems.cs" />
     <Compile Include="SafetySystems\StationAdjustAlarm.cs" />
     <Compile Include="SafetySystems\TrainSafetySystems.cs" />
     <Compile Include="TrackFollowingObject\AI\TrackFollowingObject.AI.cs" />

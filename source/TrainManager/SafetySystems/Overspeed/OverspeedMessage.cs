@@ -3,29 +3,31 @@ using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using RouteManager2.MessageManager;
-using TrainManager.Trains;
+using TrainManager.Car;
 
 namespace TrainManager.SafetySystems
 {
-	public class OverspeedDevice
+	/// <summary>SafetySystem providing the default overspeed message</summary>
+	public class OverspeedMessage : AbstractSafetySystem
 	{
-		/// <summary>Holds a reference to the base train</summary>
-		private readonly TrainBase baseTrain;
 		/// <summary>Stores the previous route speed limit</summary>
 		private double previousRouteLimit;
 
 		private bool currentlyOverspeed;
 
-		public OverspeedDevice(TrainBase train)
+		public OverspeedMessage(CarBase car) : base(car)
 		{
-			baseTrain = train;
 		}
 
 		public void Update()
 		{
-			if (baseTrain.CurrentSpeed > baseTrain.CurrentRouteLimit)
+			if (!baseCar.baseTrain.IsPlayerTrain)
 			{
-				if (!currentlyOverspeed || previousRouteLimit != baseTrain.CurrentRouteLimit || TrainManagerBase.CurrentOptions.GameMode == GameMode.Arcade)
+				return;
+			}
+			if (baseCar.CurrentSpeed > baseCar.baseTrain.CurrentRouteLimit)
+			{
+				if (!currentlyOverspeed || previousRouteLimit != baseCar.baseTrain.CurrentRouteLimit || TrainManagerBase.CurrentOptions.GameMode == GameMode.Arcade)
 				{
 					/*
 					 * HACK: If the limit has changed, or we are in arcade mode, notify the player
@@ -42,14 +44,14 @@ namespace TrainManager.SafetySystems
 
 			if (TrainManagerBase.CurrentOptions.Accessibility)
 			{
-				if (previousRouteLimit != baseTrain.CurrentRouteLimit)
+				if (previousRouteLimit != baseCar.baseTrain.CurrentRouteLimit)
 				{
 					//Show for 10s and announce the current speed limit if screen reader present
 					TrainManagerBase.currentHost.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"message","route_newlimit"}), MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
 				}
 			}
 
-			previousRouteLimit = baseTrain.CurrentRouteLimit;
+			previousRouteLimit = baseCar.baseTrain.CurrentRouteLimit;
 		}
 	}
 }

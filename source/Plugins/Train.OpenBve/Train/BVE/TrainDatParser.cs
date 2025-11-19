@@ -1299,9 +1299,9 @@ namespace Train.OpenBve
 				Train.Handles.HandleType = HandleType.TwinHandle;
 				Train.Handles.HasHoldBrake = false;
 			}
+			Train.Cars[Train.DriverCar].SafetySystems.Add(SafetySystem.OverspeedMessage, new OverspeedMessage(Train.Cars[Train.DriverCar]));
 			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm, Train.Cars[DriverCar]);
 			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
-			Train.SafetySystems.OverspeedDevice = new OverspeedDevice(Train);
 			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
 			Train.SafetySystems.Headlights = new LightSource(Train, 1);
 			switch (Plugin.CurrentOptions.TrainStart)

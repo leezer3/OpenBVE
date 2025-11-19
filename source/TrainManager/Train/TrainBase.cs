@@ -19,6 +19,7 @@ using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.SafetySystems;
+using SafetySystem = TrainManager.SafetySystems.SafetySystem;
 
 namespace TrainManager.Trains
 {
@@ -376,8 +377,6 @@ namespace TrainManager.Trains
 				{
 					// available train
 					UpdatePhysicsAndControls(timeElapsed);
-					SafetySystems.OverspeedDevice?.Update();
-
 					if (TrainManagerBase.CurrentOptions.Accessibility)
 					{
 						Section nextSection = TrainManagerBase.CurrentRoute.NextSection(FrontCarTrackPosition);
@@ -512,7 +511,11 @@ namespace TrainManager.Trains
 			Handles.LocoBrake.Update(timeElapsed);
 			Handles.EmergencyBrake.Update();
 			Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
-			Cars[DriverCar].DSD?.Update(timeElapsed);
+			for(int i = 0; i < Cars[DriverCar].SafetySystems.Count; i++)
+			{
+				SafetySystem system = Cars[DriverCar].SafetySystems.ElementAt(i).Key;
+				Cars[DriverCar].SafetySystems[system].Update(timeElapsed);
+			}
 			// update speeds
 			UpdateSpeeds(timeElapsed);
 			// Update Run and Motor sounds

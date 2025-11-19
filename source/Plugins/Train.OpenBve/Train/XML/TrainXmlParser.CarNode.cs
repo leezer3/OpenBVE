@@ -469,9 +469,9 @@ namespace Train.OpenBve
 						break;
 					case "driversupervisiondevice":
 					case "dsd":
-						DriverSupervisionDeviceTypes driverSupervisionType = DriverSupervisionDeviceTypes.None;
+						SafetySystemType driverSupervisionType = SafetySystemType.None;
 						DriverSupervisionDeviceMode driverSupervisionMode = DriverSupervisionDeviceMode.Power;
-						DriverSupervisionDeviceTriggerMode triggerMode = DriverSupervisionDeviceTriggerMode.Always;
+						SafetySystemTriggerMode triggerMode = SafetySystemTriggerMode.Always;
 						double alarmTime = 0;
 						double interventionTime = 0;
 						double requiredStopTime = 0;
@@ -535,7 +535,13 @@ namespace Train.OpenBve
 						{
 							alarmTime = interventionTime;
 						}
-						Train.Cars[Car].DSD = new DriverSupervisionDevice(Train.Cars[Car], driverSupervisionType, driverSupervisionMode, triggerMode, alarmTime, interventionTime, requiredStopTime, loopingAlert, loopingAlarm);
+
+						DriverSupervisionDevice dsd = new DriverSupervisionDevice(Train.Cars[Car], driverSupervisionType, driverSupervisionMode, triggerMode, alarmTime, interventionTime, requiredStopTime)
+						{
+							LoopingAlarm = loopingAlarm,
+							LoopingAlert = loopingAlert
+						};
+						Train.Cars[Car].SafetySystems.Add(SafetySystem.DriverSupervisionDevice, dsd);
 						break;
 					case "visiblefrominterior":
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")

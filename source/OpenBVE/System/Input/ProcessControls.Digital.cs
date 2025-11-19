@@ -16,11 +16,13 @@ using RouteManager2.MessageManager;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
 using System;
+using System.Linq;
 using TrainManager;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
 using TrainManager.Handles;
 using TrainManager.Motor;
+using SafetySystem = TrainManager.SafetySystems.SafetySystem;
 
 namespace OpenBve
 {
@@ -34,9 +36,12 @@ namespace OpenBve
 			if (Control.DigitalState == DigitalControlState.Pressed)
 			{
 				// pressed
-				Control.DigitalState =
-					DigitalControlState.PressedAcknowledged;
-				TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DSD?.ControlDown(Control.Command);
+				Control.DigitalState = DigitalControlState.PressedAcknowledged;
+				for (int i = 0; i < TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems.Count; i++)
+				{
+					SafetySystem system = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems.ElementAt(i).Key;
+					TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems[system].ControlDown(Control.Command);
+				}
 				TrainManager.PlayerTrain.Handles.ControlDown(Control);
 
 				if (Translations.SecurityToVirtualKey(Control.Command, out VirtualKeys key))
@@ -1030,7 +1035,11 @@ namespace OpenBve
 			{
 				// released
 				Control.DigitalState = DigitalControlState.ReleasedAcknowledged;
-				TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DSD?.ControlUp(Control.Command);
+				for (int i = 0; i < TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems.Count; i++)
+				{
+					SafetySystem system = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems.ElementAt(i).Key;
+					TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems[system].ControlUp(Control.Command);
+				}
 				TrainManager.PlayerTrain.Handles.ControlUp(Control);
 
 				if (Translations.SecurityToVirtualKey(Control.Command, out VirtualKeys key))

@@ -1,5 +1,7 @@
 using LibRender2.Overlays;
 using ObjectViewer.Trains;
+using OpenBveApi;
+using TrainManager.BrakeSystems;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
@@ -1185,9 +1187,9 @@ namespace ObjectViewer {
 						s++; break;
 					case Instructions.DSD:
 						{
-							if (Train != null && Train.Cars[Train.DriverCar].DSD != null)
+							if (Train != null && Train.Cars[Train.DriverCar].SafetySystems.TryGetTypedValue(SafetySystem.DriverSupervisionDevice, out DriverSupervisionDevice dsd))
 							{
-								Function.Stack[s] = Train.Cars[Train.DriverCar].DSD.CurrentState == DriverSupervisionDeviceState.Triggered ? 1 : 0;
+								Function.Stack[s] = dsd.CurrentState == SafetySystemState.Triggered ? 1 : 0;
 							}
 							else
 							{
