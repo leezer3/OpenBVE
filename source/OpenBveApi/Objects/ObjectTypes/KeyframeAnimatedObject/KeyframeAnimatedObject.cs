@@ -255,5 +255,22 @@ namespace OpenBveApi.Objects
 			}
 			return staticObject;
 		}
+
+		/// <inheritdoc />
+		public override void ApplyTranslation(double x, double y, double z, bool absoluteTranslation = false)
+		{
+			if (absoluteTranslation)
+			{
+				Matricies[0]._matrix.Row3.X = x;
+				Matricies[0]._matrix.Row3.Y = y;
+				Matricies[0]._matrix.Row3.Z = z;
+			}
+			else
+			{
+				Matricies[0]._matrix.Row3.X += x;
+				Matricies[0]._matrix.Row3.Y += y;
+				Matricies[0]._matrix.Row3.Z += z;
+			}
+		}
 	}
 }

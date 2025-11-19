@@ -1,4 +1,5 @@
 using System.Linq;
+using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
@@ -108,6 +109,10 @@ namespace OpenBveApi.Objects
 		/// <summary>The signalling section the object refers to</summary>
 		/// <remarks>This only applies to objects placed using the Track.Sig command</remarks>
 		public int SectionIndex;
+		/// <summary>Function used to change the colors of an object</summary>
+		public AnimationScript ColorFunction;
+		/// <summary>Array of colors for ColorFunction</summary>
+		public Color24[] Colors;
 
 		/// <summary>Creates a new animated object</summary>
 		public AnimatedObject(HostInterface host, string fileName = "")
@@ -724,6 +729,15 @@ namespace OpenBveApi.Objects
 				internalObject.Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			}
 
+			if (ColorFunction != null)
+			{
+				int color = (int)ColorFunction.LastResult;
+				if (UpdateFunctions)
+				{
+					color = (int)ColorFunction.ExecuteScript(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+				}
+				internalObject.Prototype.Mesh.Materials[0].Color = Colors[color];
+			}
 			// visibility changed
 			// TouchElement is handled by another function.
 			if (!IsTouch)

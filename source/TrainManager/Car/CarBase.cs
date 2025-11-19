@@ -333,9 +333,12 @@ namespace TrainManager.Car
 						animatedObject.Reverse();
 					}
 
-					if (sectionToReverse.Groups[0].Keyframes != null)
+					for (int i = 0; i < sectionToReverse.Groups.Length; i++)
 					{
-						sectionToReverse.Groups[0].Keyframes.Reverse();
+						if (sectionToReverse.Groups[i].Keyframes != null)
+						{
+							sectionToReverse.Groups[i].Keyframes.Reverse();
+						}
 					}
 				}	
 			}

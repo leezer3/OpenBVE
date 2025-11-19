@@ -195,5 +195,11 @@ namespace OpenBveApi.Objects
 		{
 			throw new NotSupportedException();
 		}
+
+		/// <inheritdoc/>
+		public override void ApplyTranslation(double x, double y, double z, bool absoluteTranslation = false)
+		{
+			throw new NotSupportedException();
+		}
 	}
 }
