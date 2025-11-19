@@ -292,30 +292,6 @@ namespace SoundManager
 			return Buffers[BufferCount - 1];
 		}
 
-		/// <summary>Attempts to load a new sound buffer</summary>
-		/// <param name="FileName">The on-disk path to the sound</param>
-		/// <param name="radius">The radius of the sound</param>
-		/// <returns>The new sound buffer OR null if the call does not succeed</returns>
-		public SoundBuffer TryToLoad(string FileName, double radius)
-		{
-			if (FileName != null)
-			{
-				if (File.Exists(FileName))
-				{
-					try
-					{
-						return RegisterBuffer(FileName, radius);
-					}
-					catch
-					{
-						return null;
-					}
-				}
-			}
-			return null;
-		}
-
-
 		// --- loading buffers ---
 
 		/// <summary>Loads the specified sound buffer.</summary>
@@ -325,16 +301,6 @@ namespace SoundManager
 		{
 			SoundLoaderQueue.Enqueue(buffer.Load);
 		}
-
-		/// <summary>Loads all sound buffers immediately.</summary>
-		internal void LoadAllBuffers()
-		{
-			for (int i = 0; i < BufferCount; i++)
-			{
-				LoadBuffer(Buffers[i]);
-			}
-		}
-
 
 		// --- unloading buffers ---
 

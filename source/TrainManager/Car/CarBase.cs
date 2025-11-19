@@ -878,27 +878,14 @@ namespace TrainManager.Car
 		public void UpdateTopplingCantAndSpring(double TimeElapsed)
 		{
 			// get direction, up and side vectors
-			Vector3 d;
-			if (FrontAxle.Follower.WorldPosition == RearAxle.Follower.WorldPosition)
-			{
-				d = FrontAxle.Follower.WorldPosition;
-			}
-			else
-			{
-				d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
-			}
-				
-			Vector3 s;
-			{
-				double t = 1.0 / d.Norm();
-				d *= t;
-				t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
-				double ex = d.X * t;
-				double ez = d.Z * t;
-				s = new Vector3(ez, 0.0, -ex);
-				Up = Vector3.Cross(d, s);
-			}
-
+			Vector3 d = FrontAxle.Follower.WorldPosition == RearAxle.Follower.WorldPosition ? FrontAxle.Follower.WorldPosition : new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+			double t = 1.0 / d.Norm();
+			d *= t;
+			t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
+			double ex = d.X * t;
+			double ez = d.Z * t;
+			Vector3 s = new Vector3(ez, 0.0, -ex);
+			Up = Vector3.Cross(d, s);
 			double r = 0.0, rs = 0.0;
 			if (FrontAxle.Follower.CurveRadius != 0.0 & RearAxle.Follower.CurveRadius != 0.0)
 			{

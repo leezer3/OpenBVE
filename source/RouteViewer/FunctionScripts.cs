@@ -375,7 +375,7 @@ namespace RouteViewer {
 								if (Train.Cars[j].TractionModel.ProvidesPower) {
 									// hack: MotorAcceleration does not distinguish between forward/backward
 									if (Train.Cars[j].TractionModel.CurrentAcceleration < 0.0) {
-										Function.Stack[s] = Train.Cars[j].TractionModel.CurrentAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
+										Function.Stack[s] = Train.Cars[j].TractionModel.CurrentAcceleration * Math.Sign(Train.Cars[j].CurrentSpeed);
 									} else if (Train.Cars[j].TractionModel.CurrentAcceleration > 0.0) {
 										Function.Stack[s] = Train.Cars[j].TractionModel.CurrentAcceleration * (double)Train.Handles.Reverser.Actual;
 									} else {
@@ -395,7 +395,7 @@ namespace RouteViewer {
 							if (j >= 0 & j < Train.Cars.Length) {
 								// hack: MotorAcceleration does not distinguish between forward/backward
 								if (Train.Cars[j].TractionModel.CurrentAcceleration < 0.0) {
-									Function.Stack[s - 1] = Train.Cars[j].TractionModel.CurrentAcceleration * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
+									Function.Stack[s - 1] = Train.Cars[j].TractionModel.CurrentAcceleration * Math.Sign(Train.Cars[j].CurrentSpeed);
 								} else if (Train.Cars[j].TractionModel.CurrentAcceleration > 0.0) {
 									Function.Stack[s - 1] = Train.Cars[j].TractionModel.CurrentAcceleration * (double)Train.Handles.Reverser.Actual;
 								} else {
@@ -745,21 +745,21 @@ namespace RouteViewer {
 						s++; break;
 					case Instructions.PowerNotch:
 						if (Train != null) {
-							Function.Stack[s] = (double)Train.Handles.Power.Driver;
+							Function.Stack[s] = Train.Handles.Power.Driver;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
 					case Instructions.PowerNotches:
 						if (Train != null) {
-							Function.Stack[s] = (double)Train.Handles.Power.MaximumNotch;
+							Function.Stack[s] = Train.Handles.Power.MaximumNotch;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
 					case Instructions.BrakeNotch:
 						if (Train != null) {
-							Function.Stack[s] = (double)Train.Handles.Brake.Driver;
+							Function.Stack[s] = Train.Handles.Brake.Driver;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -769,7 +769,7 @@ namespace RouteViewer {
 							if (Train.Handles.Brake is AirBrakeHandle) {
 								Function.Stack[s] = 2.0;
 							} else {
-								Function.Stack[s] = (double)Train.Handles.Brake.MaximumNotch;
+								Function.Stack[s] = Train.Handles.Brake.MaximumNotch;
 							}
 						} else {
 							Function.Stack[s] = 0.0;
@@ -781,21 +781,21 @@ namespace RouteViewer {
 								if (Train.Handles.EmergencyBrake.Driver) {
 									Function.Stack[s] = 3.0;
 								} else {
-									Function.Stack[s] = (double)Train.Handles.Brake.Driver;
+									Function.Stack[s] = Train.Handles.Brake.Driver;
 								}
 							} else if (Train.Handles.HasHoldBrake) {
 								if (Train.Handles.EmergencyBrake.Driver) {
-									Function.Stack[s] = (double)Train.Handles.Brake.MaximumNotch + 2.0;
+									Function.Stack[s] = Train.Handles.Brake.MaximumNotch + 2.0;
 								} else if (Train.Handles.Brake.Driver > 0) {
-									Function.Stack[s] = (double)Train.Handles.Brake.Driver + 1.0;
+									Function.Stack[s] = Train.Handles.Brake.Driver + 1.0;
 								} else {
 									Function.Stack[s] = Train.Handles.HoldBrake.Driver ? 1.0 : 0.0;
 								}
 							} else {
 								if (Train.Handles.EmergencyBrake.Driver) {
-									Function.Stack[s] = (double)Train.Handles.Brake.MaximumNotch + 1.0;
+									Function.Stack[s] = Train.Handles.Brake.MaximumNotch + 1.0;
 								} else {
-									Function.Stack[s] = (double)Train.Handles.Brake.Driver;
+									Function.Stack[s] = Train.Handles.Brake.Driver;
 								}
 							}
 						} else {

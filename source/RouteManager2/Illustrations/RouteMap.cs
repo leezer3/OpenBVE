@@ -6,13 +6,12 @@ using System.IO;
 using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Hosts;
-using OpenBveApi.Input;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
-using RouteManager2.Tracks;
+
 
 namespace RouteManager2
 {
@@ -501,11 +500,11 @@ namespace RouteManager2
 
 			// allow for some padding around actual data
 			double ox = LeftPad, oy = TopPad;
-			double w = (double)(Width - (LeftPad+RightPad));
-			double h = (double)(Height - (TopPad+BottomPad+TrackOffsPad));
+			double w = Width - (LeftPad+RightPad);
+			double h = Height - (TopPad+BottomPad+TrackOffsPad);
 			// horizontal and vertical scale
-			double nd = w / (double)(lastUsedElement - firstUsedElement);
-			double yd = h / (double)(y1 - y0);
+			double nd = w / (lastUsedElement - firstUsedElement);
+			double yd = h / (y1 - y0);
 			// set total bitmap track position range; used by in-game profile to place
 			// the current position of the trains; as the train positions are known as track positions,
 			// actual track positions are needed here, rather than indices into the track element array.
@@ -527,9 +526,9 @@ namespace RouteManager2
 
 			// BELOW SEA LEVEL
 			{
-				double y = oy + (h - 0.5 * (double)(-CurrentRoute.Atmosphere.InitialElevation - y0) * yd);
-				double x0 = ox - (double)(0) * nd;
-				double x1 = ox + (double)(lastUsedElement - firstUsedElement) * nd;
+				double y = oy + (h - 0.5 * (-CurrentRoute.Atmosphere.InitialElevation - y0) * yd);
+				double x0 = ox;
+				double x1 = ox + (lastUsedElement - firstUsedElement) * nd;
 				g.FillRectangle(mapColors[mode].belowSeaFill, (float)x0, (float)y, (float)x1, (float)(oy + h) - (float)y);
 				g.DrawLine(mapColors[mode].belowSeaBrdr, (float)x0, (float)y, (float)x1, (float)y);
 			}
@@ -540,12 +539,12 @@ namespace RouteManager2
 				p[0] = new PointF((float)ox, (float)(oy + h));
 				for (int i = firstUsedElement; i <= lastUsedElement; i++)
 				{
-					double x = ox + (double)(i - firstUsedElement) * nd;
+					double x = ox + (i - firstUsedElement) * nd;
 					double y = oy + (h - 0.5 *
-						(double)(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
+						(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
 					p[i -firstUsedElement + 1] = new PointF((float)x, (float)y);
 				}
-				p[totalElements + 1] = new PointF((float)(ox + (double)(totalElements - 1) * nd), (float)(oy + h));
+				p[totalElements + 1] = new PointF((float)(ox + (totalElements - 1) * nd), (float)(oy + h));
 				g.FillPolygon(mapColors[mode].elevFill, p);
 				for (int i = 1; i < totalElements; i++)
 					g.DrawLine(mapColors[mode].elevBrdr, p[i], p[i + 1]);
@@ -568,9 +567,9 @@ namespace RouteManager2
 								{
 									m.Alignment = StringAlignment.Near;
 									m.LineAlignment = StringAlignment.Near;
-									double x = ox + (double)(i - firstUsedElement) * nd;
+									double x = ox + (i - firstUsedElement) * nd;
 									double y = oy + (h - 0.5 *
-										(double)(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
+										(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
 									string t = CurrentRoute.Stations[e.StationIndex].Name;
 									float tx = 0.0f, ty = (float)oy;
 									for (int k = 0; k < t.Length; k++)
@@ -592,9 +591,9 @@ namespace RouteManager2
 								{
 									m.Alignment = StringAlignment.Far;
 									m.LineAlignment = StringAlignment.Near;
-									double x = ox + (double)(i - firstUsedElement) * nd;
+									double x = ox + (i - firstUsedElement) * nd;
 									double y = oy + (h - 0.5 *
-										(double)(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
+										(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
 									g.RotateTransform(-90.0f);
 									g.TranslateTransform((float)x, (float)oy, System.Drawing.Drawing2D.MatrixOrder.Append);
 									g.DrawString(CurrentRoute.Stations[e.StationIndex].Name, f,

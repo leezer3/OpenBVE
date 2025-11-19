@@ -218,43 +218,27 @@ namespace TrainManager.Car
 				//FRONT BOGIE
 
 				// get direction, up and side vectors
-				Vector3 d;
-				if (FrontAxle.Follower.WorldPosition == RearAxle.Follower.WorldPosition)
-				{
-					d = FrontAxle.Follower.WorldPosition;
-				}
-				else
-				{
-					d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
-				}
-				Vector3 s;
-				{
-					double t = 1.0 / d.Norm();
-					d *= t;
-					t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
-					double ex = d.X * t;
-					double ez = d.Z * t;
-					s = new Vector3(ez, 0.0, -ex);
-					Up = Vector3.Cross(d, s);
-				}
+				Vector3 d = FrontAxle.Follower.WorldPosition == RearAxle.Follower.WorldPosition ? FrontAxle.Follower.WorldPosition : new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+				double t = 1.0 / d.Norm();
+				d *= t;
+				t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
+				double ex = d.X * t;
+				double ez = d.Z * t;
+				Vector3 s = new Vector3(ez, 0.0, -ex);
+				Up = Vector3.Cross(d, s);
 				// cant and radius
 
 				//TODO: This currently uses the figures from the base car
 				// apply position due to cant/toppling
-				{
-					double a = baseCar.Specs.RollDueToTopplingAngle +
-					           baseCar.Specs.RollDueToCantAngle;
-					double x = Math.Sign(a) * 0.5 * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
-					double y = Math.Abs(0.5 * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
-					Vector3 c = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
-					FrontAxle.Follower.WorldPosition += c;
-					RearAxle.Follower.WorldPosition += c;
-				}
+				double a = baseCar.Specs.RollDueToTopplingAngle + baseCar.Specs.RollDueToCantAngle;
+				double x = Math.Sign(a) * 0.5 * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
+				double y = Math.Abs(0.5 * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
+				Vector3 c = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
+				FrontAxle.Follower.WorldPosition += c;
+				RearAxle.Follower.WorldPosition += c;
 				// apply rolling
-				{
-					s.Rotate(d, -baseCar.Specs.RollDueToTopplingAngle - baseCar.Specs.RollDueToCantAngle);
-					Up.Rotate(d, -baseCar.Specs.RollDueToTopplingAngle - baseCar.Specs.RollDueToCantAngle);
-				}
+				s.Rotate(d, -baseCar.Specs.RollDueToTopplingAngle - baseCar.Specs.RollDueToCantAngle);
+				Up.Rotate(d, -baseCar.Specs.RollDueToTopplingAngle - baseCar.Specs.RollDueToCantAngle);
 				// apply pitching
 				if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Type == ObjectType.Overlay)
 				{
