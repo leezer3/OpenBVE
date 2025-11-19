@@ -323,7 +323,7 @@ namespace Train.MsTs
 		private static readonly Vector2 panelOrigin = new Vector2(0, 240);
 		
 		// get stack language from subject
-		internal static string GetStackLanguageFromSubject(TrainBase train, PanelSubject subject, Units subjectUnits, string suffix = "")
+		internal static string GetStackLanguageFromSubject(TrainBase train, PanelSubject subject, Units subjectUnits)
 		{
 			// transform subject
 			string Code = string.Empty;
@@ -476,7 +476,7 @@ namespace Train.MsTs
 					Code = "0";
 					break;
 			}
-			return Code + suffix;
+			return Code;
 		}
 
 		internal static int CreateElement(ref ElementsGroup Group, Vector2 TopLeft, Vector2 Size, Vector2 RelativeRotationCenter, double Distance, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)

@@ -138,6 +138,9 @@ namespace Train.MsTs
 						double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 						f += " " + a1.ToString(culture) + " * " + a0.ToString(culture) + " +";
 						currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Plugin.CurrentHost, f, false);
+						// backstop by default e.g. ammeter when using dynamic brakes
+						currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZFunction.Minimum = InitialAngle;
+						currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[j].RotateZFunction.Maximum = LastAngle;
 						break;
 					case CabComponentType.Lever:
 						/*
