@@ -633,6 +633,24 @@ namespace OpenBve
 							}
 						}
 						break;
+					case Translations.Command.GearUp:
+						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+						{
+							if (TrainManager.PlayerTrain.Cars[i].TractionModel.Components.TryGetTypedValue(EngineComponent.Gearbox, out Gearbox gearbox))
+							{
+								gearbox.GearUp();
+							}
+						}
+						break;
+					case Translations.Command.GearDown:
+						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+						{
+							if (TrainManager.PlayerTrain.Cars[i].TractionModel.Components.TryGetTypedValue(EngineComponent.Gearbox, out Gearbox gearbox))
+							{
+								gearbox.GearDown();
+							}
+						}
+						break;
 					case Translations.Command.Headlights:
 						TrainManager.PlayerTrain.SafetySystems.Headlights.ChangeState();
 						break;
