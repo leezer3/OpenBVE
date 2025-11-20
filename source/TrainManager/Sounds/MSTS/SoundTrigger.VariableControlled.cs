@@ -28,6 +28,76 @@ using TrainManager.Car;
 
 namespace TrainManager.MsTsSounds
 {
+	/// <summary>A sound trigger controlled by Variable1 increasing past the setpoint</summary>
+	/// <remarks>Variable1 represents the current wheel rotation speed</remarks>
+	/// Diesel- EngineRPM
+	/// Electric- TractiveForce
+	/// Steam- CylinderPressure
+	public class Variable1IncPast : SoundTrigger
+	{
+		private readonly double variableValue;
+
+		public Variable1IncPast(SoundBuffer[] buffers, KujuTokenID selectionMethod, double variableValue, bool soundLoops) : base(buffers, selectionMethod, soundLoops)
+		{
+			this.variableValue = variableValue;
+		}
+
+		public Variable1IncPast(SoundBuffer buffer, double variableValue, bool soundLoops) : base(buffer, soundLoops)
+		{
+			this.variableValue = variableValue;
+		}
+
+		public override void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
+		{
+			if (car.baseTrain.Handles.Power.Actual > 0 && car.CurrentSpeed / 1000 / car.DrivingWheels[0].Radius / System.Math.PI * 5 > variableValue)
+			{
+				soundBuffer = Buffer;
+				soundLoops = SoundLoops;
+				Triggered = true;
+			}
+
+			if (car.baseTrain.Handles.Power.Actual == 0 || car.TractionModel.CurrentPower < variableValue)
+			{
+				Triggered = false;
+			}
+		}
+	}
+
+	/// <summary>A sound trigger controlled by Variable1 increasing past the setpoint</summary>
+	/// <remarks>Variable1 represents the current wheel rotation speed</remarks>
+	/// Diesel- EngineRPM
+	/// Electric- TractiveForce
+	/// Steam- CylinderPressure
+	public class Variable1DecPast : SoundTrigger
+	{
+		private readonly double variableValue;
+
+		public Variable1DecPast(SoundBuffer[] buffers, KujuTokenID selectionMethod, double variableValue, bool soundLoops) : base(buffers, selectionMethod, soundLoops)
+		{
+			this.variableValue = variableValue;
+		}
+
+		public Variable1DecPast(SoundBuffer buffer, double variableValue, bool soundLoops) : base(buffer, soundLoops)
+		{
+			this.variableValue = variableValue;
+		}
+
+		public override void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
+		{
+			if (car.baseTrain.Handles.Power.Actual > 0 && car.CurrentSpeed / 1000 / car.DrivingWheels[0].Radius / System.Math.PI * 5 < variableValue)
+			{
+				soundBuffer = Buffer;
+				soundLoops = SoundLoops;
+				Triggered = true;
+			}
+
+			if (car.baseTrain.Handles.Power.Actual == 0 || car.TractionModel.CurrentPower > variableValue)
+			{
+				Triggered = false;
+			}
+		}
+	}
+
 	/// <summary>A sound trigger controlled by Variable2 increasing past the setpoint</summary>
 	/// <remarks>Variable2 represents the proportion of power the car's TractionModel is currently generating</remarks>
 	/// Diesel- EngineRPM
