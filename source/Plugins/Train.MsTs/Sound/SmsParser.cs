@@ -173,6 +173,12 @@ namespace Train.MsTs
 					case KujuTokenID.Speed_Dec_Past:
 						currentSoundStream.Triggers.Add(new SpeedDecPast(SoundBuffers, SelectionMethod, VariableValue, CurrentSoundType != KujuTokenID.PlayOneShot));
 						break;
+					case KujuTokenID.Variable1_Inc_Past:
+						currentSoundStream.Triggers.Add(new Variable1IncPast(SoundBuffers, SelectionMethod, VariableValue, CurrentSoundType != KujuTokenID.PlayOneShot));
+						break;
+					case KujuTokenID.Variable1_Dec_Past:
+						currentSoundStream.Triggers.Add(new Variable1DecPast(SoundBuffers, SelectionMethod, VariableValue, CurrentSoundType != KujuTokenID.PlayOneShot));
+						break;
 					case KujuTokenID.Variable2_Inc_Past:
 						currentSoundStream.Triggers.Add(new Variable2IncPast(SoundBuffers, SelectionMethod, VariableValue, CurrentSoundType != KujuTokenID.PlayOneShot));
 						break;
@@ -599,13 +605,13 @@ namespace Train.MsTs
 						case KujuTokenID.Distance_Inc_Past:
 						case KujuTokenID.Distance_Dec_Past:
 							break;
-						case KujuTokenID.Variable1_Inc_Past:
-						case KujuTokenID.Variable1_Dec_Past:
 						case KujuTokenID.Variable1Controlled:
 							break;
+						case KujuTokenID.Variable1_Inc_Past:
+						case KujuTokenID.Variable1_Dec_Past:
 						case KujuTokenID.Variable2_Inc_Past:
 						case KujuTokenID.Variable2_Dec_Past:
-							currentSoundSet.VariableValue = block.ReadSingle(); // power value
+							currentSoundSet.VariableValue = block.ReadSingle(); // variable value
 							newBlock = block.ReadSubBlock(new[] { KujuTokenID.StartLoop, KujuTokenID.StartLoopRelease, KujuTokenID.ReleaseLoopRelease, KujuTokenID.ReleaseLoopReleaseWithJump, KujuTokenID.EnableTrigger, KujuTokenID.DisableTrigger, KujuTokenID.PlayOneShot, KujuTokenID.SetStreamVolume });
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;
