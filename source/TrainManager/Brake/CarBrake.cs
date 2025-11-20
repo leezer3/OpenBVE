@@ -101,6 +101,11 @@ namespace TrainManager.BrakeSystems
 			{
 				return 0;
 			}
+
+			if (DecelerationCurves[0] is MSTSDecelerationCurve dec)
+			{
+				return dec.MaximumAcceleration;
+			}
 			if (Notch == 0)
 			{
 				return this.DecelerationCurves[0].GetAccelerationOutput(currentSpeed);

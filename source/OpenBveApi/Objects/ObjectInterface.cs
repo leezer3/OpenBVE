@@ -47,7 +47,7 @@ namespace OpenBveApi.Objects
 		/// <param name="unifiedObject">Receives the object.</param>
 		/// <param name="textEncoding">The encoding for the object</param>
 		/// <returns>Whether loading the object was successful.</returns>
-		public abstract bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject unifiedObject);
+		public abstract bool LoadObject(string path, System.Text.Encoding textEncoding, out UnifiedObject unifiedObject);
 
 		/// <summary>Loads the specified object.</summary>
 		/// <param name="path">The path to the file or folder that contains the object.</param>
