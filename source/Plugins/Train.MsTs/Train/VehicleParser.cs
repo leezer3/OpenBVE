@@ -68,6 +68,19 @@ namespace Train.MsTs
 
 		internal void Parse(string trainSetDirectory, string wagonName, bool isEngine, ref CarBase currentCar, ref TrainBase train)
 		{
+			/*
+			 * Reset to 'sensible' defaults for required parameters
+			 * => International Union of Railways figure for 'standard' wheel size
+			 * => Default BVE brake system parameters (we know these work correctly)
+			 * => Reset gearbox parameters
+			 *
+			 */
+			wheelRadius = 0.92;
+			mainReservoirMinimumPressure = 690000;
+			mainReservoirMaximumPressure = 780000;
+			brakeCylinderMaximumPressure = 440000;
+			compressionRate = 3500;
+			Gears = null;
 			exteriorLoaded = false;
 			wagonFiles = Directory.GetFiles(trainSetDirectory, isEngine ? "*.eng" : "*.wag", SearchOption.AllDirectories);
 			currentEngineType = EngineType.NoEngine;
@@ -131,6 +144,11 @@ namespace Train.MsTs
 				// FIXME: Default BVE values
 				currentCar.Specs.JerkPowerUp = 10.0;
 				currentCar.Specs.JerkPowerDown = 10.0;
+				if (currentCar.DrivingWheels.Count == 0)
+				{
+					// An engine must implicity have at least one set of driving wheels
+					currentCar.DrivingWheels.Add(new Wheels(1, wheelRadius));
+				}
 				// NOTE: Amps figure appears to need to be divided by the total wheels (to give a per-axle figure)
 				// see NWC_40138.eng for example- This is an issue where higher amps figures are in play
 				maxEngineAmps /= currentCar.DrivingWheels[0].TotalNumber;
@@ -222,6 +240,12 @@ namespace Train.MsTs
 				{
 					currentCar.TractionModel = new Tender(currentCar, MaxFuelLevel, MaxWaterLevel);
 				}
+
+				if (currentCar.TrailingWheels.Count == 0)
+				{
+					// non-engine must implicitly have at least one set of trailing wheels
+					currentCar.TrailingWheels.Add(new Wheels(1, wheelRadius));
+				}
 			}
 
 			if (brakeSystemTypes != null)
@@ -301,8 +325,8 @@ namespace Train.MsTs
 				currentCar.CarBrake = new ThroughPiped(currentCar);
 			}
 
-			currentCar.FrontAxle = new MSTSAxle(Plugin.CurrentHost, train, currentCar, friction, adhesion);
-			currentCar.RearAxle = new MSTSAxle(Plugin.CurrentHost, train, currentCar, friction, adhesion);
+			currentCar.FrontAxle = new MSTSAxle(Plugin.CurrentHost, train, currentCar, friction ?? new Friction(), adhesion ?? new Adhesion(currentCar, currentEngineType == EngineType.Steam));
+			currentCar.RearAxle = new MSTSAxle(Plugin.CurrentHost, train, currentCar, friction ?? new Friction(), adhesion ?? new Adhesion(currentCar, currentEngineType == EngineType.Steam));
 
 			if (soundFiles.Count > 0)
 			{
