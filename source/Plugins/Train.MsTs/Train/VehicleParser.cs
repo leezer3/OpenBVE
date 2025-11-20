@@ -162,7 +162,7 @@ namespace Train.MsTs
 						currentCar.TractionModel = new DieselEngine(currentCar, accelerationCurves, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
 						currentCar.TractionModel.FuelTank = new FuelTank(GetMaxDieselCapacity(currentCar.Index));
 						currentCar.TractionModel.IsRunning = true;
-						currentCar.TractionModel.Components.Add(EngineComponent.Gearbox, new Gearbox(currentCar.TractionModel, Gears));
+						currentCar.TractionModel.Components.Add(EngineComponent.Gearbox, new Gearbox(currentCar.TractionModel, Gears, gearboxOperationMode));
 						break;
 					case EngineType.Electric:
 						currentCar.TractionModel = new ElectricEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) });
@@ -459,6 +459,7 @@ namespace Train.MsTs
 		private List<VigilanceDevice> vigilanceDevices;
 		private Exhaust Exhaust;
 		private Gear[] Gears;
+		private GearboxOperation gearboxOperationMode = GearboxOperation.Manual;
 		private double maxSandingSpeed;
 		private CouplingType couplingType;
 		private Friction friction;
@@ -1075,6 +1076,9 @@ namespace Train.MsTs
 					{
 						Gears[i].OverspeedFailure = Gears[i].MaximumSpeed * perc;
 					}
+					break;
+				case KujuTokenID.GearBoxOperation:
+					gearboxOperationMode = block.ReadEnumValue(default(GearboxOperation));
 					break;
 				case KujuTokenID.Friction:
 					friction = new Friction(block);
