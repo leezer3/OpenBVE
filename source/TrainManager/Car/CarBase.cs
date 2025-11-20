@@ -1385,7 +1385,12 @@ namespace TrainManager.Car
 			// motor
 			if (baseTrain.Handles.Reverser.Actual != 0)
 			{
-				double factor = EmptyMass / CurrentMass;
+				double factor = 1.0;
+				if (EmptyMass != 0 && CurrentMass != 0)
+				{
+					// zero weight bugs out the factor
+					factor = EmptyMass / CurrentMass;
+				}
 				if (TractionModel.CurrentAcceleration > 0.0)
 				{
 					PowerRollingCouplerAcceleration +=

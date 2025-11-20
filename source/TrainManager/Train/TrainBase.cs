@@ -486,7 +486,8 @@ namespace TrainManager.Trains
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				// move cars
-				Cars[i].Move(Cars[i].CurrentSpeed * timeElapsed);
+				
+				Cars[i].Move((double.IsNaN(Cars[i].CurrentSpeed) ? 0 : Cars[i].CurrentSpeed) * timeElapsed);
 				if (State >= TrainState.DisposePending)
 				{
 					return;
