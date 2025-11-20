@@ -467,14 +467,14 @@ namespace Train.MsTs
 							case SoundTrigger.HornOn:
 								if (currentSoundSet.CurrentSoundType == KujuTokenID.StartLoopRelease && car.Horns[0] != null)
 								{
-									Plugin.CurrentHost.RegisterSound(soundFile, 2.0, out soundHandle);
+									Plugin.CurrentHost.RegisterSound(soundFile, 30.0, out soundHandle);
 									car.Horns[0].LoopSound = soundHandle as SoundBuffer;
 								}
 								break;
 							case SoundTrigger.BellOn:
 								if (currentSoundSet.CurrentSoundType == KujuTokenID.StartLoopRelease && car.Horns[2] != null)
 								{
-									Plugin.CurrentHost.RegisterSound(soundFile, 2.0, out soundHandle);
+									Plugin.CurrentHost.RegisterSound(soundFile, 30.0, out soundHandle);
 									car.Horns[0].LoopSound = soundHandle as SoundBuffer;
 								}
 								break;
