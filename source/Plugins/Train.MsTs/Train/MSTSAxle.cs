@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
 
@@ -43,7 +44,7 @@ namespace Train.MsTs
 
 		public override double GetResistance(double Speed, double FrontalArea, double AirDensity, double AccelerationDueToGravity)
 		{
-			return FrictionProperties.GetResistanceValue(Speed) / baseCar.CurrentMass;
+			return FrictionProperties.GetResistanceValue(Speed) / Math.Max(1.0, baseCar.CurrentMass);
 		}
 
 		public override double CriticalWheelSlipAccelerationForElectricMotor(double AccelerationDueToGravity)

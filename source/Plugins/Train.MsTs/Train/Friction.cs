@@ -42,6 +42,15 @@ namespace Train.MsTs
 		/// <summary>The second friction exponent</summary>
 		internal double E2;
 
+		internal Friction()
+		{
+			C1 = 100;
+			E1 = 1;
+			V2 = -1;
+			C2 = 0;
+			E2 = 1;
+		}
+
 		internal Friction(Block block)
 		{
 			try
