@@ -40,6 +40,25 @@ namespace Train.MsTs
 		/// <summary>The value used in sanding conditions</summary>
 		private readonly double Sanding;
 
+		internal Adhesion(CarBase car, bool isSteamEngine)
+		{
+			baseCar = car;
+			// Kuju suggested default values
+			// see Eng_and_wag_file_reference_guideV2.doc
+			if (isSteamEngine)
+			{
+				WheelSlip = 0.15;
+				Normal = 0.3;
+				Sanding = 2.0;
+			}
+			else
+			{
+				WheelSlip = 0.2;
+				Normal = 0.4;
+				Sanding = 2.0;
+			}
+		}
+
 		internal Adhesion(Block block, CarBase car, bool isSteamEngine)
 		{
 			baseCar = car;
