@@ -638,6 +638,10 @@ namespace OpenBve
 						{
 							if (TrainManager.PlayerTrain.Cars[i].TractionModel.Components.TryGetTypedValue(EngineComponent.Gearbox, out Gearbox gearbox))
 							{
+								if (gearbox.OperationMode == GearboxOperation.Automatic)
+								{
+									break;
+								}
 								gearbox.GearUp();
 							}
 						}
@@ -647,6 +651,10 @@ namespace OpenBve
 						{
 							if (TrainManager.PlayerTrain.Cars[i].TractionModel.Components.TryGetTypedValue(EngineComponent.Gearbox, out Gearbox gearbox))
 							{
+								if (gearbox.OperationMode == GearboxOperation.Automatic)
+								{
+									break;
+								}
 								gearbox.GearDown();
 							}
 						}

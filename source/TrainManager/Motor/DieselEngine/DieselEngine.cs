@@ -143,6 +143,39 @@ namespace TrainManager.Motor
 			{
 				if (Components.TryGetTypedValue(EngineComponent.Gearbox, out Gearbox gearbox))
 				{
+					if (gearbox.OperationMode > GearboxOperation.Manual)
+					{
+						if (BaseCar.CurrentSpeed == 0)
+						{
+							if (BaseCar.baseTrain.Handles.Power.Actual == 0)
+							{
+								if (gearbox.CurrentGear > 0)
+								{
+									gearbox.GearDown();
+								}
+							}
+							else
+							{
+								if (gearbox.CurrentGear == 0)
+								{
+									gearbox.GearUp();
+								}
+							}
+						}
+						else
+						{
+							if (BaseCar.CurrentSpeed < gearbox.PreviousMaximumGearSpeed)
+							{
+								// slow enough for previous gear
+								gearbox.GearDown();
+							}
+							else if (BaseCar.CurrentSpeed >= gearbox.MaximumGearSpeed)
+							{
+								// gear change up
+								gearbox.GearUp();
+							}
+						}
+					}
 					if (gearbox.CurrentGear == 0)
 					{
 						return 0;

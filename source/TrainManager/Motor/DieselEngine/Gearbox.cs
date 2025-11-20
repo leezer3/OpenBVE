@@ -4,6 +4,8 @@ namespace TrainManager.Motor
 {
 	public class Gearbox : AbstractComponent
 	{
+		/// <summary>The operation mode of the gearbox</summary>
+		public GearboxOperation OperationMode;
 		/// <summary>The list of available gears</summary>
 		internal readonly Gear[] Gears;
 		/// <summary>The current gear</summary>
@@ -41,10 +43,11 @@ namespace TrainManager.Motor
 				return Gears[CurrentGear - 2].MaximumSpeed;
 			}
 		}
-		public Gearbox(TractionModel engine, Gear[] gears) : base(engine)
+		public Gearbox(TractionModel engine, Gear[] gears, GearboxOperation operation) : base(engine)
 		{
 			Gears = gears;
 			CurrentGear = 0;
+			OperationMode = operation;
 		}
 
 		public void GearUp()
