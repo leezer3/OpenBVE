@@ -73,13 +73,15 @@ namespace Train.MsTs
 			 * => International Union of Railways figure for 'standard' wheel size
 			 * => Default BVE brake system parameters (we know these work correctly)
 			 * => Reset gearbox parameters
-			 *
+			 * => Set max force figures to zero
 			 */
 			wheelRadius = 0.92;
 			mainReservoirMinimumPressure = 690000;
 			mainReservoirMaximumPressure = 780000;
 			brakeCylinderMaximumPressure = 440000;
 			compressionRate = 3500;
+			maxForce = 0;
+			maxBrakeForce = 0;
 			Gears = null;
 			exteriorLoaded = false;
 			wagonFiles = Directory.GetFiles(trainSetDirectory, isEngine ? "*.eng" : "*.wag", SearchOption.AllDirectories);
@@ -303,7 +305,7 @@ namespace Train.MsTs
 
 					if (brakeSystemTypes.Contains(BrakeSystemType.Vaccum_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_twin_pipe))
 					{
-						VaccumBrake vaccumBrake = new VaccumBrake(currentCar, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxForce) });
+						VaccumBrake vaccumBrake = new VaccumBrake(currentCar, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
 						vaccumBrake.MainReservoir = new MainReservoir(71110, 84660, 0.01, 0.075 / train.Cars.Length); // ~21in/hg - ~25in/hg
 						vaccumBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure * 1.1, 90000.0, 300000.0, 200000.0);
 						vaccumBrake.AuxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakeCylinderMaximumPressure, 200000.0, 0.5, 1.0);
