@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using OpenBveApi;
@@ -41,21 +42,11 @@ namespace OpenBve
 							Game.LogTrainName = Reader.ReadString();
 							Game.LogDateTime = DateTime.FromBinary(Reader.ReadInt64());
 							Interface.CurrentOptions.PreviousGameMode = (GameMode) Reader.ReadInt16();
-							Game.BlackBoxEntryCount = Reader.ReadInt32();
-							Game.BlackBoxEntries = new Game.BlackBoxEntry[Game.BlackBoxEntryCount];
-							for (int i = 0; i < Game.BlackBoxEntryCount; i++)
+							int entryCount = Reader.ReadInt32();
+							Game.BlackBoxEntries = new List<BlackBoxEntry>();
+							for (int i = 0; i < entryCount; i++)
 							{
-								Game.BlackBoxEntries[i].Time = Reader.ReadDouble();
-								Game.BlackBoxEntries[i].Position = Reader.ReadDouble();
-								Game.BlackBoxEntries[i].Speed = Reader.ReadSingle();
-								Game.BlackBoxEntries[i].Acceleration = Reader.ReadSingle();
-								Game.BlackBoxEntries[i].ReverserDriver = Reader.ReadInt16();
-								Game.BlackBoxEntries[i].ReverserSafety = Reader.ReadInt16();
-								Game.BlackBoxEntries[i].PowerDriver = (Game.BlackBoxPower) Reader.ReadInt16();
-								Game.BlackBoxEntries[i].PowerSafety = (Game.BlackBoxPower) Reader.ReadInt16();
-								Game.BlackBoxEntries[i].BrakeDriver = (Game.BlackBoxBrake) Reader.ReadInt16();
-								Game.BlackBoxEntries[i].BrakeSafety = (Game.BlackBoxBrake) Reader.ReadInt16();
-								Game.BlackBoxEntries[i].EventToken = (Game.BlackBoxEventToken) Reader.ReadInt16();
+								Game.BlackBoxEntries.Add(new BlackBoxEntry(Reader));
 							}
 
 							Game.ScoreLogCount = Reader.ReadInt32();
@@ -92,8 +83,7 @@ namespace OpenBve
 			Game.LogRouteName = "";
 			Game.LogTrainName = "";
 			Game.LogDateTime = DateTime.Now;
-			Game.BlackBoxEntries = new Game.BlackBoxEntry[256];
-			Game.BlackBoxEntryCount = 0;
+			Game.BlackBoxEntries = new List<BlackBoxEntry>();
 			Game.ScoreLogs = new Game.ScoreLog[64];
 			Game.ScoreLogCount = 0;
 		}
@@ -130,8 +120,8 @@ namespace OpenBve
 						Writer.Write(Game.LogTrainName);
 						Writer.Write(Game.LogDateTime.ToBinary());
 						Writer.Write((short) Interface.CurrentOptions.GameMode);
-						Writer.Write(Game.BlackBoxEntryCount);
-						for (int i = 0; i < Game.BlackBoxEntryCount; i++)
+						Writer.Write(Game.BlackBoxEntries.Count);
+						for (int i = 0; i < Game.BlackBoxEntries.Count; i++)
 						{
 							Writer.Write(Game.BlackBoxEntries[i].Time);
 							Writer.Write(Game.BlackBoxEntries[i].Position);
@@ -143,7 +133,7 @@ namespace OpenBve
 							Writer.Write((short) Game.BlackBoxEntries[i].PowerSafety);
 							Writer.Write((short) Game.BlackBoxEntries[i].BrakeDriver);
 							Writer.Write((short) Game.BlackBoxEntries[i].BrakeSafety);
-							Writer.Write((short) Game.BlackBoxEntries[i].EventToken);
+							Writer.Write((short)0);
 						}
 
 						Writer.Write(Game.ScoreLogCount);
@@ -176,17 +166,7 @@ namespace OpenBve
 			CommaSeparatedValue = 0,
 			FormattedText = 1
 		}
-		/// <summary>Gets the formatted output text for a black box event token</summary>
-		/// <param name="EventToken">The event token for which to get the text</param>
-		internal static string GetBlackBoxText(Game.BlackBoxEventToken EventToken)
-		{
-			//TODO: Only returns a blank string, what was intended here???
-			switch (EventToken)
-			{
-				default: return "";
-			}
-		}
-
+		
 		/// <summary>Exports the current black box data to a file</summary>
 		/// <param name="File">The file to write</param>
 		/// <param name="Format">The format in which to write the data</param>
@@ -199,7 +179,7 @@ namespace OpenBve
 					{
 						CultureInfo Culture = CultureInfo.InvariantCulture;
 						System.Text.StringBuilder Builder = new System.Text.StringBuilder();
-						for (int i = 0; i < Game.BlackBoxEntryCount; i++)
+						for (int i = 0; i < Game.BlackBoxEntries.Count; i++)
 						{
 							Builder.Append(Game.BlackBoxEntries[i].Time.ToString(Culture) + ",");
 							Builder.Append(Game.BlackBoxEntries[i].Position.ToString(Culture) + ",");
@@ -211,7 +191,6 @@ namespace OpenBve
 							Builder.Append(((short)Game.BlackBoxEntries[i].PowerSafety).ToString(Culture) + ",");
 							Builder.Append(((short)Game.BlackBoxEntries[i].BrakeDriver).ToString(Culture) + ",");
 							Builder.Append(((short)Game.BlackBoxEntries[i].BrakeSafety).ToString(Culture) + ",");
-							Builder.Append(((short)Game.BlackBoxEntries[i].EventToken).ToString(Culture));
 							Builder.Append("\r\n");
 						}
 						System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
@@ -221,7 +200,7 @@ namespace OpenBve
 					{
 						CultureInfo Culture = CultureInfo.InvariantCulture;
 						System.Text.StringBuilder Builder = new System.Text.StringBuilder();
-						string[][] Lines = new string[Game.BlackBoxEntryCount + 1][];
+						string[][] Lines = new string[Game.BlackBoxEntries.Count + 1][];
 						Lines[0] = new[] {
 							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","time"}),
 							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","position"}),
@@ -233,7 +212,7 @@ namespace OpenBve
 							Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","event"}),
 						};
 						int Columns = Lines[0].Length;
-						for (int i = 0; i < Game.BlackBoxEntryCount; i++)
+						for (int i = 0; i < Game.BlackBoxEntries.Count; i++)
 						{
 							int j = i + 1;
 							Lines[j] = new string[Columns];
@@ -278,10 +257,10 @@ namespace OpenBve
 								string[] power = new string[2];
 								for (int k = 0; k < 2; k++)
 								{
-									Game.BlackBoxPower p = k == 0 ? Game.BlackBoxEntries[i].PowerDriver : Game.BlackBoxEntries[i].PowerSafety;
+									BlackBoxPower p = k == 0 ? Game.BlackBoxEntries[i].PowerDriver : Game.BlackBoxEntries[i].PowerSafety;
 									switch (p)
 									{
-										case Game.BlackBoxPower.PowerNull:
+										case BlackBoxPower.PowerNull:
 											power[k] = Translations.QuickReferences.HandlePowerNull;
 											break;
 										default:
@@ -295,25 +274,25 @@ namespace OpenBve
 								string[] brake = new string[2];
 								for (int k = 0; k < 2; k++)
 								{
-									Game.BlackBoxBrake b = k == 0 ? Game.BlackBoxEntries[i].BrakeDriver : Game.BlackBoxEntries[i].BrakeSafety;
+									BlackBoxBrake b = k == 0 ? Game.BlackBoxEntries[i].BrakeDriver : Game.BlackBoxEntries[i].BrakeSafety;
 									switch (b)
 									{
-										case Game.BlackBoxBrake.BrakeNull:
+										case BlackBoxBrake.BrakeNull:
 											brake[k] = Translations.QuickReferences.HandleBrakeNull;
 											break;
-										case Game.BlackBoxBrake.Emergency:
+										case BlackBoxBrake.Emergency:
 											brake[k] = Translations.QuickReferences.HandleEmergency;
 											break;
-										case Game.BlackBoxBrake.HoldBrake:
+										case BlackBoxBrake.HoldBrake:
 											brake[k] = Translations.QuickReferences.HandleHoldBrake;
 											break;
-										case Game.BlackBoxBrake.Release:
+										case BlackBoxBrake.Release:
 											brake[k] = Translations.QuickReferences.HandleRelease;
 											break;
-										case Game.BlackBoxBrake.Lap:
+										case BlackBoxBrake.Lap:
 											brake[k] = Translations.QuickReferences.HandleLap;
 											break;
-										case Game.BlackBoxBrake.Service:
+										case BlackBoxBrake.Service:
 											brake[k] = Translations.QuickReferences.HandleService;
 											break;
 										default:
@@ -323,7 +302,7 @@ namespace OpenBve
 								}
 								Lines[j][6] = brake[0] + " → " + brake[1];
 							}
-							Lines[j][7] = GetBlackBoxText(Game.BlackBoxEntries[i].EventToken);
+							Lines[j][7] = string.Empty;
 						}
 						int[] Widths = new int[Columns];
 						for (int i = 0; i < Lines.Length; i++)

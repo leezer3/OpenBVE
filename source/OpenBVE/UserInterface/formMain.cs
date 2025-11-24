@@ -357,7 +357,7 @@ namespace OpenBve {
 			comboboxBlackBoxFormat.Items.Clear();
 			comboboxBlackBoxFormat.Items.AddRange(new object[] { "", "" });
 			comboboxBlackBoxFormat.SelectedIndex = 1;
-			if (Game.BlackBoxEntryCount == 0)
+			if (Game.BlackBoxEntries.Count == 0)
 			{
 				labelBlackBox.Enabled = false;
 				labelBlackBoxFormat.Enabled = false;

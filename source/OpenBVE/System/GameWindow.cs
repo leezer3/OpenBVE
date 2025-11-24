@@ -128,10 +128,10 @@ namespace OpenBve
 				}
 				Program.Renderer.RenderScene(TimeElapsed, RealTimeElapsed);
 				SwapBuffers();
-				if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
+				if (MainLoop.Quit != QuitMode.ContinueGame)
 				{
 					Close();
-					if (Program.CurrentHost.MonoRuntime && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
+					if (Program.CurrentHost.MonoRuntime && MainLoop.Quit == QuitMode.QuitProgram)
 					{
 						Environment.Exit(0);
 					}
@@ -196,10 +196,10 @@ namespace OpenBve
 			}
 
 			Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
-			if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
+			if (MainLoop.Quit != QuitMode.ContinueGame)
 			{
 				Exit();
-				if (Program.CurrentHost.MonoRuntime && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
+				if (Program.CurrentHost.MonoRuntime && MainLoop.Quit == QuitMode.QuitProgram)
 				{
 					Environment.Exit(0);
 				}				
@@ -503,7 +503,7 @@ namespace OpenBve
 			{
 				InputDevicePlugin.CallPluginUnload(i);
 			}
-			if (MainLoop.Quit == MainLoop.QuitMode.ContinueGame && Program.CurrentHost.MonoRuntime)
+			if (MainLoop.Quit == QuitMode.ContinueGame && Program.CurrentHost.MonoRuntime)
 			{
 				//More forcefully close under Mono, stuff *still* hanging around....
 				Environment.Exit(0);

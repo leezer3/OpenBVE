@@ -19,12 +19,7 @@ namespace OpenBve
 {
 	internal static partial class MainLoop
 	{
-		internal enum QuitMode
-		{
-			ContinueGame = 0,
-			QuitProgram = 1,
-			ExitToMenu = 2
-		}
+		
 		// declarations
 		internal static bool LimitFramerate = false;
 		internal static QuitMode Quit = QuitMode.ContinueGame;
