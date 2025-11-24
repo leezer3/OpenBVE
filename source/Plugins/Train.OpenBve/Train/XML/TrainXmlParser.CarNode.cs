@@ -781,6 +781,8 @@ namespace Train.OpenBve
 						foreach (XmlNode cc in c.ChildNodes)
 						{
 							double idleRPM = 0, minRPM = 0, maxRPM = 0, rpmChangeUpRate = 0, rpmChangeDownRate = 0, idleFuelUse = 0, maxPowerFuelUse = 0, fuelCapacity = 0;
+							double maxAmps = 0, maxRegenAmps = 0;
+							bool isRegenerative = false;
 							switch (cc.Name.ToLowerInvariant())
 							{
 								case "idlerpm":
@@ -838,22 +840,85 @@ namespace Train.OpenBve
 										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
 									}
 									break;
+								case "tractionmotor":
+								case "regenerativetractionmotor":
+									foreach (XmlNode ccc in cc.ChildNodes)
+									{
+										switch (ccc.Name.ToLowerInvariant())
+										{
+											case "maxamps":
+												if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxAmps))
+												{
+													Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+												}
+												break;
+											case "maxregenerativeamps":
+												if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxAmps))
+												{
+													Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+												}
+												break;
+										}
+									}
+
+									if (cc.Name.ToLowerInvariant() == "regenerativetractionmotor")
+									{
+										isRegenerative = true;
+									}
+									break;
 							}
 
 							Train.Cars[Car].TractionModel = new DieselEngine(Train.Cars[Car], Plugin.AccelerationCurves, idleRPM, minRPM, maxRPM, rpmChangeUpRate, rpmChangeDownRate, idleFuelUse, maxPowerFuelUse);
 							Train.Cars[Car].TractionModel.FuelTank = new FuelTank(fuelCapacity, 0, fuelCapacity);
+							if (isRegenerative)
+							{
+								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Train.Cars[Car].TractionModel, maxAmps));
+							}
+							else
+							{
+								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.RegenerativeTractionMotor, new RegenerativeTractionMotor(Train.Cars[Car].TractionModel, maxAmps, maxRegenAmps));
+							}
 						}
 						break;
 					case "electricengine":
 						foreach (XmlNode cc in c.ChildNodes)
 						{
 							bool hasPantograph = false;
+							double maxAmps = 0, maxRegenAmps = 0;
+							bool isRegenerative = false;
 							switch (cc.Name.ToLowerInvariant())
 							{
+								case "collectorshoe":
 								case "pantograph":
 									if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
 									{
 										hasPantograph = true;
+									}
+									break;
+								case "tractionmotor":
+								case "regenerativetractionmotor":
+									foreach (XmlNode ccc in cc.ChildNodes)
+									{
+										switch (ccc.Name.ToLowerInvariant())
+										{
+											case "maxamps":
+												if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxAmps))
+												{
+													Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+												}
+												break;
+											case "maxregenerativeamps":
+												if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxAmps))
+												{
+													Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+												}
+												break;
+										}
+									}
+
+									if (cc.Name.ToLowerInvariant() == "regenerativetractionmotor")
+									{
+										isRegenerative = true;
 									}
 									break;
 							}
@@ -861,6 +926,15 @@ namespace Train.OpenBve
 							if (hasPantograph)
 							{
 								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.Pantograph, new Pantograph(Train.Cars[Car].TractionModel));
+							}
+
+							if (isRegenerative)
+							{
+								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Train.Cars[Car].TractionModel, maxAmps));
+							}
+							else
+							{
+								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.RegenerativeTractionMotor, new RegenerativeTractionMotor(Train.Cars[Car].TractionModel, maxAmps, maxRegenAmps));
 							}
 						}
 						break;
