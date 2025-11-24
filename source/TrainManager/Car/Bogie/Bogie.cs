@@ -223,7 +223,7 @@ namespace TrainManager.Car
 
 				// get direction, up and side vectors
 				Vector3 d = FrontAxle.Follower.WorldPosition == RearAxle.Follower.WorldPosition ? FrontAxle.Follower.WorldPosition : new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
-				double t = 1.0 / d.Norm();
+				double t = d.Magnitude();
 				d *= t;
 				t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
 				double ex = d.X * t;

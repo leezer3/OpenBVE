@@ -149,8 +149,7 @@ namespace OpenBve {
 					Program.Renderer.Camera.AbsolutePosition = Program.Renderer.CameraTrackFollower.WorldPosition + Program.Renderer.CameraTrackFollower.WorldSide * Program.Renderer.Camera.Alignment.Position.X + Program.Renderer.CameraTrackFollower.WorldUp * Program.Renderer.Camera.Alignment.Position.Y + Program.Renderer.Camera.AbsoluteDirection * Program.Renderer.Camera.Alignment.Position.Z;
 					Program.Renderer.Camera.AbsoluteDirection = focusPosition - Program.Renderer.Camera.AbsolutePosition;
 					double t = Program.Renderer.Camera.AbsoluteDirection.Norm();
-					double ti = 1.0 / t;
-					Program.Renderer.Camera.AbsoluteDirection *= ti;
+					Program.Renderer.Camera.AbsoluteDirection *= Program.Renderer.Camera.AbsoluteDirection.Magnitude();
 
 					Program.Renderer.Camera.AbsoluteSide = new Vector3(Program.Renderer.Camera.AbsoluteDirection.Z, 0.0, -Program.Renderer.Camera.AbsoluteDirection.X);
 					Program.Renderer.Camera.AbsoluteSide.Normalize();

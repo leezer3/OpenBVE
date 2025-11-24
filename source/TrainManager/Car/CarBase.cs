@@ -897,7 +897,7 @@ namespace TrainManager.Car
 		{
 			// get direction, up and side vectors
 			Vector3 d = FrontAxle.Follower.WorldPosition == RearAxle.Follower.WorldPosition ? FrontAxle.Follower.WorldPosition : new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
-			double t = 1.0 / d.Norm();
+			double t = d.Magnitude();
 			d *= t;
 			t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
 			double ex = d.X * t;
@@ -1126,7 +1126,7 @@ namespace TrainManager.Car
 		public void UpdateCamera()
 		{
 			Vector3 direction = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
-			direction *= 1.0 / direction.Norm();
+			direction *= direction.Magnitude();
 			double sx = direction.Z * Up.Y - direction.Y * Up.Z;
 			double sy = direction.X * Up.Z - direction.Z * Up.X;
 			double sz = direction.Y * Up.X - direction.X * Up.Y;

@@ -518,6 +518,13 @@ namespace OpenBveApi.Math {
 			if (this.Z > tolerance) return false;
 			return true;
 		}
+
+		/// <summary>Gets the magnitude of the vector</summary>
+		/// <returns>The magnitude</returns>
+		public double Magnitude()
+		{
+			return 1.0 / Norm();
+		}
 		
 		/// <summary>Gets the euclidean norm.</summary>
 		/// <returns>The euclidean norm.</returns>
