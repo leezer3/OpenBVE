@@ -206,6 +206,18 @@ namespace TrainManager.Car
 			}
 		}
 
+		/// <summary>Moves the car as a result of a collision</summary>
+		/// <param name="Delta">The delta to move</param>
+		public void MoveDueToCollision(double Delta)
+		{
+			FrontAxle.Follower.UpdateRelative(Delta, false, false);
+			RearAxle.Follower.UpdateRelative(Delta, false, false);
+			FrontBogie.FrontAxle.Follower.UpdateRelative(Delta, false, false);
+			FrontBogie.RearAxle.Follower.UpdateRelative(Delta, false, false);
+			RearBogie.FrontAxle.Follower.UpdateRelative(Delta, false, false);
+			RearBogie.RearAxle.Follower.UpdateRelative(Delta, false, false);
+		}
+
 		/// <summary>Call this method to update all track followers attached to the car</summary>
 		/// <param name="NewTrackPosition">The track position change</param>
 		/// <param name="UpdateWorldCoordinates">Whether to update the world co-ordinates</param>

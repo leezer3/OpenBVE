@@ -45,11 +45,9 @@ namespace TrainManager.Trains
 							Cars[k].CurrentSpeed = s;
 							Trains[j].Cars[0].CurrentSpeed = s;
 							double e = 0.5 * (c - b) + 0.0001;
-							Cars[k].FrontAxle.Follower.UpdateRelative(e, false, false);
-							Cars[k].RearAxle.Follower.UpdateRelative(e, false, false);
 							
-							Trains[j].Cars[0].FrontAxle.Follower.UpdateRelative(-e, false, false);
-							Trains[j].Cars[0].RearAxle.Follower.UpdateRelative(-e, false, false);
+							Cars[k].MoveDueToCollision(e);
+							Trains[j].Cars[0].MoveDueToCollision(-e);
 
 							double f = 2.0 / (Cars[k].CurrentMass + Trains[j].Cars[0].CurrentMass);
 							double fi = Trains[j].Cars[0].CurrentMass * f;
@@ -92,8 +90,7 @@ namespace TrainManager.Trains
 								if (d < 0.0)
 								{
 									d -= 0.0001;
-									Cars[h].FrontAxle.Follower.UpdateRelative(-d, false, false);
-									Cars[h].RearAxle.Follower.UpdateRelative(-d, false, false);
+									Cars[h].MoveDueToCollision(-d);
 									if (TrainManagerBase.CurrentOptions.Derailments)
 									{
 										f = 2.0 / (Cars[h + 1].CurrentMass + Cars[h].CurrentMass);
@@ -123,8 +120,7 @@ namespace TrainManager.Trains
 								if (d < 0.0)
 								{
 									d -= 0.0001;
-									Trains[j].Cars[h].FrontAxle.Follower.UpdateRelative(d, false, false);
-									Trains[j].Cars[h].RearAxle.Follower.UpdateRelative(d, false, false);
+									Trains[j].Cars[h].MoveDueToCollision(d);
 									if (TrainManagerBase.CurrentOptions.Derailments)
 									{
 										f = 2.0 / (Trains[j].Cars[h - 1].CurrentMass + Trains[j].Cars[h].CurrentMass);
@@ -161,11 +157,9 @@ namespace TrainManager.Trains
 							Cars[0].CurrentSpeed = s;
 							Trains[j].Cars[k].CurrentSpeed = s;
 							double e = 0.5 * (a - d) + 0.0001;
-							Cars[0].FrontAxle.Follower.UpdateRelative(-e, false, false);
-							Cars[0].RearAxle.Follower.UpdateRelative(-e, false, false);
 							
-							Trains[j].Cars[k].FrontAxle.Follower.UpdateRelative(e, false, false);
-							Trains[j].Cars[k].RearAxle.Follower.UpdateRelative(e, false, false);
+							Cars[0].MoveDueToCollision(-e);
+							Trains[j].Cars[k].MoveDueToCollision(e);
 
 							double f = 2.0 / (Cars[0].CurrentMass + Trains[j].Cars[k].CurrentMass);
 							double fi = Trains[j].Cars[k].CurrentMass * f;
@@ -207,8 +201,7 @@ namespace TrainManager.Trains
 								if (d < 0.0)
 								{
 									d -= 0.0001;
-									Cars[h].FrontAxle.Follower.UpdateRelative(d, false, false);
-									Cars[h].RearAxle.Follower.UpdateRelative(d, false, false);
+									Cars[h].MoveDueToCollision(d);
 									if (TrainManagerBase.CurrentOptions.Derailments)
 									{
 										f = 2.0 / (Cars[h - 1].CurrentMass + Cars[h].CurrentMass);
@@ -237,8 +230,7 @@ namespace TrainManager.Trains
 								if (d < 0.0)
 								{
 									d -= 0.0001;
-									Trains[j].Cars[h].FrontAxle.Follower.UpdateRelative(-d, false, false);
-									Trains[j].Cars[h].RearAxle.Follower.UpdateRelative(-d, false, false);
+									Trains[j].Cars[h].MoveDueToCollision(-d);
 									if (TrainManagerBase.CurrentOptions.Derailments)
 									{
 										f = 2.0 / (Trains[j].Cars[h + 1].CurrentMass + Trains[j].Cars[h].CurrentMass);
