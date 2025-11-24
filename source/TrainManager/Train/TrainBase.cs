@@ -613,174 +613,172 @@ namespace TrainManager.Trains
 				CenterOfMassPosition /= TrainMass;
 			}
 
+			// coupler
+			// determine closest cars
+			int p = -1; // primary car index
+			int s = -1; // secondary car index
 			{
-				// coupler
-				// determine closest cars
-				int p = -1; // primary car index
-				int s = -1; // secondary car index
+				double PrimaryDistance = double.MaxValue;
+				for (int i = 0; i < Cars.Length; i++)
 				{
-					double PrimaryDistance = double.MaxValue;
-					for (int i = 0; i < Cars.Length; i++)
+					double d = Math.Abs(CenterOfCarPositions[i] - CenterOfMassPosition);
+					if (d < PrimaryDistance)
+					{
+						PrimaryDistance = d;
+						p = i;
+					}
+				}
+
+				double SecondDistance = Double.MaxValue;
+				for (int i = p - 1; i <= p + 1; i++)
+				{
+					if (i >= 0 & i < Cars.Length & i != p)
 					{
 						double d = Math.Abs(CenterOfCarPositions[i] - CenterOfMassPosition);
-						if (d < PrimaryDistance)
+						if (d < SecondDistance)
 						{
-							PrimaryDistance = d;
-							p = i;
+							SecondDistance = d;
+							s = i;
 						}
-					}
-
-					double SecondDistance = Double.MaxValue;
-					for (int i = p - 1; i <= p + 1; i++)
-					{
-						if (i >= 0 & i < Cars.Length & i != p)
-						{
-							double d = Math.Abs(CenterOfCarPositions[i] - CenterOfMassPosition);
-							if (d < SecondDistance)
-							{
-								SecondDistance = d;
-								s = i;
-							}
-						}
-					}
-
-					if (s >= 0 && PrimaryDistance <= 0.25 * (PrimaryDistance + SecondDistance))
-					{
-						s = -1;
-					}
-				}
-				// coupler
-				bool[] CouplerCollision = new bool[Cars.Length - 1];
-				int cf, cr;
-				if (s >= 0)
-				{
-					// use two cars as center of mass
-					if (p > s)
-					{
-						(s, p) = (p, s);
-					}
-
-					double min = Cars[p].Coupler.MinimumDistanceBetweenCars;
-					double max = Cars[p].Coupler.MaximumDistanceBetweenCars;
-					double d = CenterOfCarPositions[p] - CenterOfCarPositions[s] - 0.5 * (Cars[p].Length + Cars[s].Length);
-					if (d < min)
-					{
-						double t = (min - d) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
-						double tp = t * Cars[s].CurrentMass;
-						double ts = t * Cars[p].CurrentMass;
-						Cars[p].UpdateTrackFollowers(tp, false, false);
-						Cars[s].UpdateTrackFollowers(-ts, false, false);
-						CenterOfCarPositions[p] += tp;
-						CenterOfCarPositions[s] -= ts;
-						CouplerCollision[p] = true;
-					}
-					else if (d > max & !Cars[p].Derailed & !Cars[s].Derailed)
-					{
-						double t = (d - max) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
-						double tp = t * Cars[s].CurrentMass;
-						double ts = t * Cars[p].CurrentMass;
-
-						Cars[p].UpdateTrackFollowers(-tp, false, false);
-						Cars[s].UpdateTrackFollowers(ts, false, false);
-						CenterOfCarPositions[p] -= tp;
-						CenterOfCarPositions[s] += ts;
-						CouplerCollision[p] = true;
-					}
-
-					cf = p;
-					cr = s;
-				}
-				else
-				{
-					// use one car as center of mass
-					cf = p;
-					cr = p;
-				}
-
-				// front cars
-				for (int i = cf - 1; i >= 0; i--)
-				{
-					double min = Cars[i].Coupler.MinimumDistanceBetweenCars;
-					double max = Cars[i].Coupler.MaximumDistanceBetweenCars;
-					double d = CenterOfCarPositions[i] - CenterOfCarPositions[i + 1] - 0.5 * (Cars[i].Length + Cars[i + 1].Length);
-					if (d < min)
-					{
-						double t = min - d + 0.0001;
-						Cars[i].UpdateTrackFollowers(t, false, false);
-						CenterOfCarPositions[i] += t;
-						CouplerCollision[i] = true;
-					}
-					else if (d > max & !Cars[i].Derailed & !Cars[i + 1].Derailed)
-					{
-						double t = d - max + 0.0001;
-						Cars[i].UpdateTrackFollowers(-t, false, false);
-						CenterOfCarPositions[i] -= t;
-						CouplerCollision[i] = true;
 					}
 				}
 
-				// rear cars
-				for (int i = cr + 1; i < Cars.Length; i++)
+				if (s >= 0 && PrimaryDistance <= 0.25 * (PrimaryDistance + SecondDistance))
 				{
-					double min = Cars[i - 1].Coupler.MinimumDistanceBetweenCars;
-					double max = Cars[i - 1].Coupler.MaximumDistanceBetweenCars;
-					double d = CenterOfCarPositions[i - 1] - CenterOfCarPositions[i] - 0.5 * (Cars[i].Length + Cars[i - 1].Length);
-					if (d < min)
-					{
-						double t = min - d + 0.0001;
-						Cars[i].UpdateTrackFollowers(-t, false, false);
-						CenterOfCarPositions[i] -= t;
-						CouplerCollision[i - 1] = true;
-					}
-					else if (d > max & !Cars[i].Derailed & !Cars[i - 1].Derailed)
-					{
-						double t = d - max + 0.0001;
-						Cars[i].UpdateTrackFollowers(t, false, false);
-
-						CenterOfCarPositions[i] += t;
-						CouplerCollision[i - 1] = true;
-					}
+					s = -1;
+				}
+			}
+			// coupler
+			bool[] CouplerCollision = new bool[Cars.Length - 1];
+			int cf, cr;
+			if (s >= 0)
+			{
+				// use two cars as center of mass
+				if (p > s)
+				{
+					(s, p) = (p, s);
 				}
 
-				// update speeds
-				for (int i = 0; i < Cars.Length - 1; i++)
+				double min = Cars[p].Coupler.MinimumDistanceBetweenCars;
+				double max = Cars[p].Coupler.MaximumDistanceBetweenCars;
+				double d = CenterOfCarPositions[p] - CenterOfCarPositions[s] - 0.5 * (Cars[p].Length + Cars[s].Length);
+				if (d < min)
 				{
-					if (CouplerCollision[i])
+					double t = (min - d) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
+					double tp = t * Cars[s].CurrentMass;
+					double ts = t * Cars[p].CurrentMass;
+					Cars[p].UpdateTrackFollowers(tp, false, false);
+					Cars[s].UpdateTrackFollowers(-ts, false, false);
+					CenterOfCarPositions[p] += tp;
+					CenterOfCarPositions[s] -= ts;
+					CouplerCollision[p] = true;
+				}
+				else if (d > max & !Cars[p].Derailed & !Cars[s].Derailed)
+				{
+					double t = (d - max) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
+					double tp = t * Cars[s].CurrentMass;
+					double ts = t * Cars[p].CurrentMass;
+
+					Cars[p].UpdateTrackFollowers(-tp, false, false);
+					Cars[s].UpdateTrackFollowers(ts, false, false);
+					CenterOfCarPositions[p] -= tp;
+					CenterOfCarPositions[s] += ts;
+					CouplerCollision[p] = true;
+				}
+
+				cf = p;
+				cr = s;
+			}
+			else
+			{
+				// use one car as center of mass
+				cf = p;
+				cr = p;
+			}
+
+			// front cars
+			for (int i = cf - 1; i >= 0; i--)
+			{
+				double min = Cars[i].Coupler.MinimumDistanceBetweenCars;
+				double max = Cars[i].Coupler.MaximumDistanceBetweenCars;
+				double d = CenterOfCarPositions[i] - CenterOfCarPositions[i + 1] - 0.5 * (Cars[i].Length + Cars[i + 1].Length);
+				if (d < min)
+				{
+					double t = min - d + 0.0001;
+					Cars[i].UpdateTrackFollowers(t, false, false);
+					CenterOfCarPositions[i] += t;
+					CouplerCollision[i] = true;
+				}
+				else if (d > max & !Cars[i].Derailed & !Cars[i + 1].Derailed)
+				{
+					double t = d - max + 0.0001;
+					Cars[i].UpdateTrackFollowers(-t, false, false);
+					CenterOfCarPositions[i] -= t;
+					CouplerCollision[i] = true;
+				}
+			}
+
+			// rear cars
+			for (int i = cr + 1; i < Cars.Length; i++)
+			{
+				double min = Cars[i - 1].Coupler.MinimumDistanceBetweenCars;
+				double max = Cars[i - 1].Coupler.MaximumDistanceBetweenCars;
+				double d = CenterOfCarPositions[i - 1] - CenterOfCarPositions[i] - 0.5 * (Cars[i].Length + Cars[i - 1].Length);
+				if (d < min)
+				{
+					double t = min - d + 0.0001;
+					Cars[i].UpdateTrackFollowers(-t, false, false);
+					CenterOfCarPositions[i] -= t;
+					CouplerCollision[i - 1] = true;
+				}
+				else if (d > max & !Cars[i].Derailed & !Cars[i - 1].Derailed)
+				{
+					double t = d - max + 0.0001;
+					Cars[i].UpdateTrackFollowers(t, false, false);
+
+					CenterOfCarPositions[i] += t;
+					CouplerCollision[i - 1] = true;
+				}
+			}
+
+			// update speeds
+			for (int i = 0; i < Cars.Length - 1; i++)
+			{
+				if (CouplerCollision[i])
+				{
+					int j;
+					for (j = i + 1; j < Cars.Length - 1; j++)
 					{
-						int j;
-						for (j = i + 1; j < Cars.Length - 1; j++)
+						if (!CouplerCollision[j])
 						{
-							if (!CouplerCollision[j])
-							{
-								break;
-							}
+							break;
 						}
-
-						double v = 0.0;
-						double m = 0.0;
-						for (int k = i; k <= j; k++)
-						{
-							v += NewSpeeds[k] * Cars[k].CurrentMass;
-							m += Cars[k].CurrentMass;
-						}
-
-						if (m != 0.0)
-						{
-							v /= m;
-						}
-
-						for (int k = i; k <= j; k++)
-						{
-							if (TrainManagerBase.CurrentOptions.Derailments && Math.Abs(v - NewSpeeds[k]) > 0.5 * CriticalCollisionSpeedDifference)
-							{
-								Derail(k, timeElapsed);
-							}
-
-							NewSpeeds[k] = v;
-						}
-
-						i = j - 1;
 					}
+
+					double v = 0.0;
+					double m = 0.0;
+					for (int k = i; k <= j; k++)
+					{
+						v += NewSpeeds[k] * Cars[k].CurrentMass;
+						m += Cars[k].CurrentMass;
+					}
+
+					if (m != 0.0)
+					{
+						v /= m;
+					}
+
+					for (int k = i; k <= j; k++)
+					{
+						if (TrainManagerBase.CurrentOptions.Derailments && Math.Abs(v - NewSpeeds[k]) > 0.5 * CriticalCollisionSpeedDifference)
+						{
+							Derail(k, timeElapsed);
+						}
+
+						NewSpeeds[k] = v;
+					}
+
+					i = j - 1;
 				}
 			}
 			// update average data

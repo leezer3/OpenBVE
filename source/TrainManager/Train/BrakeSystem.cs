@@ -221,40 +221,41 @@ namespace TrainManager.Trains
 
 			// hold brake
 			Cars[carIndex].HoldBrake.Update(ref decelerationDueToMotor, Handles.HoldBrake.Actual);
-			if(Cars[carIndex].CarBrake.BrakeType != BrakeType.None)
+			if (Cars[carIndex].CarBrake.BrakeType == BrakeType.None)
 			{
-				// brake shoe rub sound
-				double spd = Math.Abs(Cars[carIndex].CurrentSpeed);
-				double pitch = 1.0 / (spd + 1.0) + 1.0;
-				double gain = Cars[carIndex].Derailed ? 0.0 : Cars[carIndex].CarBrake.BrakeCylinder.CurrentPressure / Cars[carIndex].CarBrake.BrakeCylinder.ServiceMaximumPressure;
-				if (spd < 1.38888888888889)
-				{
-					double t = spd * spd;
-					gain *= 1.5552 * t - 0.746496 * spd * t;
-				}
-				else if (spd > 12.5)
-				{
-					double t = spd - 12.5;
-					const double fadefactor = 0.1;
-					gain *= 1.0 / (fadefactor * t * t + 1.0);
-				}
+				return;
+			}
+			// brake shoe rub sound
+			double spd = Math.Abs(Cars[carIndex].CurrentSpeed);
+			double pitch = 1.0 / (spd + 1.0) + 1.0;
+			double gain = Cars[carIndex].Derailed ? 0.0 : Cars[carIndex].CarBrake.BrakeCylinder.CurrentPressure / Cars[carIndex].CarBrake.BrakeCylinder.ServiceMaximumPressure;
+			if (spd < 1.38888888888889)
+			{
+				double t = spd * spd;
+				gain *= 1.5552 * t - 0.746496 * spd * t;
+			}
+			else if (spd > 12.5)
+			{
+				double t = spd - 12.5;
+				const double fadefactor = 0.1;
+				gain *= 1.0 / (fadefactor * t * t + 1.0);
+			}
 
-				if (Cars[carIndex].CarBrake.Rub.IsPlaying)
+			if (Cars[carIndex].CarBrake.Rub.IsPlaying)
+			{
+				if (pitch > 0.01 & gain > 0.001)
 				{
-					if (pitch > 0.01 & gain > 0.001)
-					{
-						Cars[carIndex].CarBrake.Rub.Source.Pitch = pitch;
-						Cars[carIndex].CarBrake.Rub.Source.Volume = gain;
-					}
-					else
-					{
-						Cars[carIndex].CarBrake.Rub.Stop();
-					}
+					Cars[carIndex].CarBrake.Rub.Source.Pitch = pitch;
+					Cars[carIndex].CarBrake.Rub.Source.Volume = gain;
 				}
-				else if (pitch > 0.02 & gain > 0.01)
+				else
 				{
-					Cars[carIndex].CarBrake.Rub.Play(pitch, gain, Cars[carIndex], true);
+					Cars[carIndex].CarBrake.Rub.Stop();
 				}
+			}
+			else if (pitch > 0.02 & gain > 0.01)
+			{
+				Cars[carIndex].CarBrake.Rub.Play(pitch, gain, Cars[carIndex], true);
 			}
 		}
 	}
