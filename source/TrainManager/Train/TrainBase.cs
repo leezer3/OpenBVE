@@ -53,7 +53,7 @@ namespace TrainManager.Trains
 		/// <summary>The plugin used by this train.</summary>
 		public Plugin Plugin;
 		/// <summary>The driver body</summary>
-		public readonly DriverBody DriverBody;
+		public DriverBody DriverBody;
 		/// <summary>Whether the train has currently derailed</summary>
 		public bool Derailed;
 		/// <summary>Internal timer used for updates</summary>

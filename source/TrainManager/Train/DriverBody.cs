@@ -22,12 +22,27 @@ namespace TrainManager.Trains
 		private readonly Damping PitchDamping;
 		/// <summary>Contains a reference to the base train</summary>
 		private readonly TrainBase Train;
+		/// <summary>The height of the driver's shoulders from the seat base / floor</summary>
+		public readonly double ShoulderHeight;
+		/// <summary>The height of the center of the driver's head from the shoulders</summary>
+		public readonly double HeadHeight;
 
 		public DriverBody(TrainBase train)
 		{
 			Train = train;
 			PitchDamping = new Damping(6.0, 0.3);
 			RollDamping = new Damping(6.0, 0.3);
+			ShoulderHeight = 0.6;
+			HeadHeight = 0.1;
+		}
+
+		public DriverBody(TrainBase train, double shoulderHeight, double headHeight)
+		{
+			Train = train;
+			PitchDamping = new Damping(6.0, 0.3);
+			RollDamping = new Damping(6.0, 0.3);
+			ShoulderHeight = shoulderHeight;
+			HeadHeight = headHeight;
 		}
 
 		public void Update(double TimeElapsed)

@@ -358,6 +358,10 @@ namespace CarXmlConvertor
 				// Ignore- Most likely the convertor has been copied elsewhere
 			}
 			newLines.Add("<DriverCar>" + ConvertTrainDat.DriverCar + "</DriverCar>");
+			newLines.Add("<DriverBody>");
+			newLines.Add("<ShoulderHeight>0.6</ShoulderHeight>");
+			newLines.Add("<HeadHeight>0.1</HeadHeight>");
+			newLines.Add("</DriverBody>");
 			for (int i = 0; i < ConvertTrainDat.NumberOfCars; i++)
 			{
 				if (SingleFile)

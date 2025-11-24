@@ -17,5 +17,6 @@
 		LoadForAI,
 		File,
 		HeadlightStates,
+		DriverBody
 	}
 }

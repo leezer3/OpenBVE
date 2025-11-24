@@ -270,73 +270,67 @@ namespace OpenBve {
 						headPitch += TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch;
 					}
 				}
-				double bodyPitch = 0.0;
-				double bodyRoll = 0.0;
+				
 				double headRoll = Program.Renderer.Camera.Alignment.Roll;
 				// rotation
 				if ((Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D)  & (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)) {
+					double bodyPitch = 0.0;
+					double bodyRoll = 0.0;
 					// with body and head
 					bodyPitch += TrainManager.PlayerTrain.DriverBody.Pitch;
 					headPitch -= 0.2 * TrainManager.PlayerTrain.DriverBody.Pitch;
 					bodyRoll += TrainManager.PlayerTrain.DriverBody.Roll;
 					headRoll += 0.2 * TrainManager.PlayerTrain.DriverBody.Roll;
-					const double bodyHeight = 0.6;
-					const double headHeight = 0.1;
+					// body pitch
+					double bpy = (Math.Cos(-bodyPitch) - 1.0) * TrainManager.PlayerTrain.DriverBody.ShoulderHeight;
+					double bpz = Math.Sin(-bodyPitch) * TrainManager.PlayerTrain.DriverBody.ShoulderHeight;
+					cF += dF * bpz + uF * bpy;
+					if (bodyPitch != 0.0)
 					{
-						// body pitch
-						double ry = (Math.Cos(-bodyPitch) - 1.0) * bodyHeight;
-						double rz = Math.Sin(-bodyPitch) * bodyHeight;
-						cF += dF * rz + uF * ry;
-						if (bodyPitch != 0.0) {
-							dF.Rotate(sF, -bodyPitch);
-							uF.Rotate(sF, -bodyPitch);
-						}
+						dF.Rotate(sF, -bodyPitch);
+						uF.Rotate(sF, -bodyPitch);
 					}
+					// body roll
+					double brx = Math.Sin(bodyRoll) * TrainManager.PlayerTrain.DriverBody.ShoulderHeight;
+					double bry = (Math.Cos(bodyRoll) - 1.0) * TrainManager.PlayerTrain.DriverBody.ShoulderHeight;
+					cF += sF * brx + uF * bry;
+					if (bodyRoll != 0.0)
 					{
-						// body roll
-						double rx = Math.Sin(bodyRoll) * bodyHeight;
-						double ry = (Math.Cos(bodyRoll) - 1.0) * bodyHeight;
-						cF += sF * rx + uF * ry;
-						if (bodyRoll != 0.0) {
-							uF.Rotate(dF, -bodyRoll);
-							sF.Rotate(dF, -bodyRoll);
-						}
+						uF.Rotate(dF, -bodyRoll);
+						sF.Rotate(dF, -bodyRoll);
 					}
+					// head yaw
+					double yx = Math.Sin(headYaw) * TrainManager.PlayerTrain.DriverBody.HeadHeight;
+					double yz = (Math.Cos(headYaw) - 1.0) * TrainManager.PlayerTrain.DriverBody.HeadHeight;
+					cF += sF * yx + dF * yz;
+					if (headYaw != 0.0)
 					{
-						// head yaw
-						double rx = Math.Sin(headYaw) * headHeight;
-						double rz = (Math.Cos(headYaw) - 1.0) * headHeight;
-						cF += sF * rx + dF * rz;
-						if (headYaw != 0.0) {
-							dF.Rotate(uF, headYaw);
-							sF.Rotate(uF, headYaw);
-						}
+						dF.Rotate(uF, headYaw);
+						sF.Rotate(uF, headYaw);
 					}
+					// head pitch
+					double py = (Math.Cos(-headPitch) - 1.0) * TrainManager.PlayerTrain.DriverBody.HeadHeight;
+					double pz = Math.Sin(-headPitch) * TrainManager.PlayerTrain.DriverBody.HeadHeight;
+					cF += dF * pz + uF * py;
+					if (headPitch != 0.0)
 					{
-						// head pitch
-						double ry = (Math.Cos(-headPitch) - 1.0) * headHeight;
-						double rz = Math.Sin(-headPitch) * headHeight;
-						cF += dF * rz + uF * ry;
-						if (headPitch != 0.0) {
-							dF.Rotate(sF, -headPitch);
-							uF.Rotate(sF, -headPitch);
-						}
+						dF.Rotate(sF, -headPitch);
+						uF.Rotate(sF, -headPitch);
 					}
+					// head roll
+					double rx = Math.Sin(headRoll) * TrainManager.PlayerTrain.DriverBody.HeadHeight;
+					double ry = (Math.Cos(headRoll) - 1.0) * TrainManager.PlayerTrain.DriverBody.HeadHeight;
+					cF += sF * rx + uF * ry;
+					if (headRoll != 0.0)
 					{
-						// head roll
-						double rx = Math.Sin(headRoll) * headHeight;
-						double ry = (Math.Cos(headRoll) - 1.0) * headHeight;
-						cF += sF * rx + uF * ry;
-						if (headRoll != 0.0) {
-							uF.Rotate(dF, -headRoll);
-							sF.Rotate(dF, -headRoll);
-						}
+						uF.Rotate(dF, -headRoll);
+						sF.Rotate(dF, -headRoll);
 					}
 				} else {
 					// without body or head
 					double totalYaw = headYaw;
-					double totalPitch = headPitch + bodyPitch;
-					double totalRoll = bodyRoll + headRoll;
+					double totalPitch = headPitch;
+					double totalRoll = headRoll;
 					if (totalYaw != 0.0) {
 						dF.Rotate(uF, totalYaw);
 						sF.Rotate(uF, totalYaw);
