@@ -910,116 +910,104 @@ namespace TrainManager.Car
 			}
 
 			// roll due to shaking
+			double a0 = Specs.RollDueToShakingAngle;
+			double a1 = 0.0;
+			if (Specs.RollShakeDirection != 0.0)
 			{
-
-				double a0 = Specs.RollDueToShakingAngle;
-				double a1 = 0.0;
-				if (Specs.RollShakeDirection != 0.0)
+				const double c0 = 0.03;
+				const double c1 = 0.15;
+				a1 = c1 * Math.Atan(c0 * Specs.RollShakeDirection);
+				double dr = 0.5 + Specs.RollShakeDirection * Specs.RollShakeDirection;
+				if (Specs.RollShakeDirection < 0.0)
 				{
-					const double c0 = 0.03;
-					const double c1 = 0.15;
-					a1 = c1 * Math.Atan(c0 * Specs.RollShakeDirection);
-					double dr = 0.5 + Specs.RollShakeDirection * Specs.RollShakeDirection;
-					if (Specs.RollShakeDirection < 0.0)
-					{
-						Specs.RollShakeDirection += dr * TimeElapsed;
-						if (Specs.RollShakeDirection > 0.0) Specs.RollShakeDirection = 0.0;
-					}
-					else
-					{
-						Specs.RollShakeDirection -= dr * TimeElapsed;
-						if (Specs.RollShakeDirection < 0.0) Specs.RollShakeDirection = 0.0;
-					}
-				}
-
-				double springAcceleration = Derailed ? 15.0 : 1.5 * Math.Abs(a1 - a0);
-				double springDeceleration = 0.25 * springAcceleration;
-
-				Specs.RollDueToShakingAngularSpeed += Math.Sign(a1 - a0) * springAcceleration * TimeElapsed;
-				double x = Math.Sign(Specs.RollDueToShakingAngularSpeed) * springDeceleration * TimeElapsed;
-				if (Math.Abs(x) < Math.Abs(Specs.RollDueToShakingAngularSpeed))
-				{
-					Specs.RollDueToShakingAngularSpeed -= x;
+					Specs.RollShakeDirection += dr * TimeElapsed;
+					if (Specs.RollShakeDirection > 0.0) Specs.RollShakeDirection = 0.0;
 				}
 				else
 				{
-					Specs.RollDueToShakingAngularSpeed = 0.0;
+					Specs.RollShakeDirection -= dr * TimeElapsed;
+					if (Specs.RollShakeDirection < 0.0) Specs.RollShakeDirection = 0.0;
 				}
-
-				a0 += Specs.RollDueToShakingAngularSpeed * TimeElapsed;
-				Specs.RollDueToShakingAngle = a0;
 			}
+
+			double springAcceleration = Derailed ? 15.0 : 1.5 * Math.Abs(a1 - a0);
+			double springDeceleration = 0.25 * springAcceleration;
+
+			Specs.RollDueToShakingAngularSpeed += Math.Sign(a1 - a0) * springAcceleration * TimeElapsed;
+			double x = Math.Sign(Specs.RollDueToShakingAngularSpeed) * springDeceleration * TimeElapsed;
+			if (Math.Abs(x) < Math.Abs(Specs.RollDueToShakingAngularSpeed))
+			{
+				Specs.RollDueToShakingAngularSpeed -= x;
+			}
+			else
+			{
+				Specs.RollDueToShakingAngularSpeed = 0.0;
+			}
+
+			a0 += Specs.RollDueToShakingAngularSpeed * TimeElapsed;
+			Specs.RollDueToShakingAngle = a0;
 			// roll due to cant (incorporates shaking)
-			{
-				double cantAngle = Math.Atan(Math.Tan(0.5 * (Math.Atan(FrontAxle.Follower.CurveCant) + Math.Atan(RearAxle.Follower.CurveCant))) / TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
-				Specs.RollDueToCantAngle = cantAngle + Specs.RollDueToShakingAngle;
-			}
+			double cantAngle = Math.Atan(Math.Tan(0.5 * (Math.Atan(FrontAxle.Follower.CurveCant) + Math.Atan(RearAxle.Follower.CurveCant))) / TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
+			Specs.RollDueToCantAngle = cantAngle + Specs.RollDueToShakingAngle;
 			// pitch due to acceleration
+			for (int i = 0; i < 3; i++)
 			{
-				for (int i = 0; i < 3; i++)
+				double a, v, j;
+				switch (i)
 				{
-					double a, v, j;
-					switch (i)
-					{
-						case 0:
-							a = Specs.Acceleration;
-							v = Specs.PitchDueToAccelerationFastValue;
-							j = 1.8;
-							break;
-						case 1:
-							a = Specs.PitchDueToAccelerationFastValue;
-							v = Specs.PitchDueToAccelerationMediumValue;
-							j = 1.2;
-							break;
-						default:
-							a = Specs.PitchDueToAccelerationFastValue;
-							v = Specs.PitchDueToAccelerationSlowValue;
-							j = 1.0;
-							break;
-					}
-
-					double da = a - v;
-					if (da < 0.0)
-					{
-						v -= j * TimeElapsed;
-						if (v < a) v = a;
-					}
-					else
-					{
-						v += j * TimeElapsed;
-						if (v > a) v = a;
-					}
-
-					switch (i)
-					{
-						case 0:
-							Specs.PitchDueToAccelerationFastValue = v;
-							break;
-						case 1:
-							Specs.PitchDueToAccelerationMediumValue = v;
-							break;
-						default:
-							Specs.PitchDueToAccelerationSlowValue = v;
-							break;
-					}
+					case 0:
+						a = Specs.Acceleration;
+						v = Specs.PitchDueToAccelerationFastValue;
+						j = 1.8;
+						break;
+					case 1:
+						a = Specs.PitchDueToAccelerationFastValue;
+						v = Specs.PitchDueToAccelerationMediumValue;
+						j = 1.2;
+						break;
+					default:
+						a = Specs.PitchDueToAccelerationFastValue;
+						v = Specs.PitchDueToAccelerationSlowValue;
+						j = 1.0;
+						break;
 				}
 
+				double da = a - v;
+				if (da < 0.0)
 				{
-					double da = Specs.PitchDueToAccelerationSlowValue - Specs.PitchDueToAccelerationFastValue;
-					Specs.PitchDueToAccelerationTargetAngle = 0.03 * Math.Atan(da);
+					v -= j * TimeElapsed;
+					if (v < a) v = a;
 				}
+				else
 				{
-					double a = 3.0 * Math.Sign(Specs.PitchDueToAccelerationTargetAngle - Specs.PitchDueToAccelerationAngle);
-					Specs.PitchDueToAccelerationAngularSpeed += a * TimeElapsed;
-					double ds = Math.Abs(Specs.PitchDueToAccelerationTargetAngle - Specs.PitchDueToAccelerationAngle);
-					if (Math.Abs(Specs.PitchDueToAccelerationAngularSpeed) > ds)
-					{
-						Specs.PitchDueToAccelerationAngularSpeed = ds * Math.Sign(Specs.PitchDueToAccelerationAngularSpeed);
-					}
+					v += j * TimeElapsed;
+					if (v > a) v = a;
+				}
 
-					Specs.PitchDueToAccelerationAngle += Specs.PitchDueToAccelerationAngularSpeed * TimeElapsed;
+				switch (i)
+				{
+					case 0:
+						Specs.PitchDueToAccelerationFastValue = v;
+						break;
+					case 1:
+						Specs.PitchDueToAccelerationMediumValue = v;
+						break;
+					default:
+						Specs.PitchDueToAccelerationSlowValue = v;
+						break;
 				}
 			}
+
+			Specs.PitchDueToAccelerationTargetAngle = 0.03 * Math.Atan(Specs.PitchDueToAccelerationSlowValue - Specs.PitchDueToAccelerationFastValue);
+			double aa = 3.0 * Math.Sign(Specs.PitchDueToAccelerationTargetAngle - Specs.PitchDueToAccelerationAngle);
+			Specs.PitchDueToAccelerationAngularSpeed += aa * TimeElapsed;
+			double ds = Math.Abs(Specs.PitchDueToAccelerationTargetAngle - Specs.PitchDueToAccelerationAngle);
+			if (Math.Abs(Specs.PitchDueToAccelerationAngularSpeed) > ds)
+			{
+				Specs.PitchDueToAccelerationAngularSpeed = ds * Math.Sign(Specs.PitchDueToAccelerationAngularSpeed);
+			}
+
+			Specs.PitchDueToAccelerationAngle += Specs.PitchDueToAccelerationAngularSpeed * TimeElapsed;
 			// derailment
 			if (TrainManagerBase.Derailments & !Derailed)
 			{
@@ -1095,14 +1083,12 @@ namespace TrainManager.Car
 			}
 
 			// apply position due to cant/toppling
-			{
-				double a = Specs.RollDueToTopplingAngle + Specs.RollDueToCantAngle;
-				double x = Math.Sign(a) * 0.5 * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
-				double y = Math.Abs(0.5 * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
-				Vector3 cc = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
-				FrontAxle.Follower.WorldPosition += cc;
-				RearAxle.Follower.WorldPosition += cc;
-			}
+			double ca = Specs.RollDueToTopplingAngle + Specs.RollDueToCantAngle;
+			double cx = Math.Sign(ca) * 0.5 * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(ca));
+			double cy = Math.Abs(0.5 * TrainManagerBase.currentHost.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(ca));
+			Vector3 cc = new Vector3(s.X * cx + Up.X * cy, s.Y * cx + Up.Y * cy, s.Z * cx + Up.Z * cy);
+			FrontAxle.Follower.WorldPosition += cc;
+			RearAxle.Follower.WorldPosition += cc;
 			// apply rolling
 			s.Rotate(d, -Specs.RollDueToTopplingAngle - Specs.RollDueToCantAngle);
 			Up.Rotate(d, -Specs.RollDueToTopplingAngle - Specs.RollDueToCantAngle);
@@ -1111,13 +1097,13 @@ namespace TrainManager.Car
 			{
 				d.Rotate(s, Specs.PitchDueToAccelerationAngle);
 				Up.Rotate(s, Specs.PitchDueToAccelerationAngle);
-				Vector3 cc = new Vector3(0.5 * (FrontAxle.Follower.WorldPosition + RearAxle.Follower.WorldPosition));
-				FrontAxle.Follower.WorldPosition -= cc;
-				RearAxle.Follower.WorldPosition -= cc;
+				Vector3 pc = new Vector3(0.5 * (FrontAxle.Follower.WorldPosition + RearAxle.Follower.WorldPosition));
+				FrontAxle.Follower.WorldPosition -= pc;
+				RearAxle.Follower.WorldPosition -= pc;
 				FrontAxle.Follower.WorldPosition.Rotate(s, Specs.PitchDueToAccelerationAngle);
 				RearAxle.Follower.WorldPosition.Rotate(s, Specs.PitchDueToAccelerationAngle);
-				FrontAxle.Follower.WorldPosition += cc;
-				RearAxle.Follower.WorldPosition += cc;
+				FrontAxle.Follower.WorldPosition += pc;
+				RearAxle.Follower.WorldPosition += pc;
 			}
 
 			Suspension.Update(TimeElapsed);
@@ -1136,7 +1122,7 @@ namespace TrainManager.Car
 			double ry = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
 			double rz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
 			Vector3 cameraPosition;
-			Vector3 driverPosition = this.HasInteriorView ? Driver : this.baseTrain.Cars[this.baseTrain.DriverCar].Driver;
+			Vector3 driverPosition = HasInteriorView ? Driver : baseTrain.Cars[baseTrain.DriverCar].Driver;
 			cameraPosition.X = rx + sx * driverPosition.X + Up.X * driverPosition.Y + direction.X * driverPosition.Z;
 			cameraPosition.Y = ry + sy * driverPosition.X + Up.Y * driverPosition.Y + direction.Y * driverPosition.Z;
 			cameraPosition.Z = rz + sz * driverPosition.X + Up.Z * driverPosition.Y + direction.Z * driverPosition.Z;
@@ -1377,8 +1363,7 @@ namespace TrainManager.Car
 			}
 			else if (Derailed)
 			{
-				FrictionBrakeAcceleration += TrainBase.CoefficientOfGroundFriction *
-				                             TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity;
+				FrictionBrakeAcceleration += TrainBase.CoefficientOfGroundFriction * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 			}
 
 			// motor
@@ -1392,8 +1377,7 @@ namespace TrainManager.Car
 				}
 				if (TractionModel.CurrentAcceleration > 0.0)
 				{
-					PowerRollingCouplerAcceleration +=
-						(double) baseTrain.Handles.Reverser.Actual * TractionModel.CurrentAcceleration * factor;
+					PowerRollingCouplerAcceleration += (double) baseTrain.Handles.Reverser.Actual * TractionModel.CurrentAcceleration * factor;
 				}
 				else
 				{
