@@ -1347,9 +1347,8 @@ namespace TrainManager.Car
 				{
 					double rf = FrontAxle.Follower.WorldDirection.Y;
 					double rr = RearAxle.Follower.WorldDirection.Y;
-					double ra = Math.Abs(0.5 * (rf + rr) *
-					                     TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
-					if (a > ra) a = ra;
+					double ra = Math.Abs(0.5 * (rf + rr) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+					if (ra != 0 && a > ra) a = ra;
 				}
 
 				double factor = 1.0;
