@@ -149,36 +149,19 @@ namespace Train.MsTs
 					{
 						mapping -= (double)dynamicTrain.Handles.Power.Actual / dynamicTrain.Handles.Power.MaximumNotch * 0.5;
 					}
-					for (int i = 0; i < FrameMapping.Length; i++)
-					{
-						
-						if (FrameMapping[i].MappingValue >= mapping)
-						{
-							lastResult = FrameMapping[i].FrameKey;
-							break;
-						}
-					}
+					MapResult(mapping);
 					break;
 				case PanelSubject.Throttle_Display:
 				case PanelSubject.Throttle:
-					for (int i = 0; i < FrameMapping.Length; i++)
-					{
-						if (FrameMapping[i].MappingValue >= (double)dynamicTrain.Handles.Power.Actual / dynamicTrain.Handles.Power.MaximumNotch)
-						{
-							lastResult = FrameMapping[i].FrameKey;
-							break;
-						}
-					}
+					MapResult((double)dynamicTrain.Handles.Power.Actual / dynamicTrain.Handles.Power.MaximumNotch);
 					break;
 				case PanelSubject.Train_Brake:
-					for (int i = 0; i < FrameMapping.Length; i++)
-					{
-						if (FrameMapping[i].MappingValue  >= (double)dynamicTrain.Handles.Brake.Actual / dynamicTrain.Handles.Brake.MaximumNotch)
-						{
-							lastResult = FrameMapping[i].FrameKey;
-							break;
-						}
-					}
+					MapResult((double)dynamicTrain.Handles.Brake.Actual / dynamicTrain.Handles.Brake.MaximumNotch);
+					break;
+				case PanelSubject.Friction_Braking:
+					// NOTE: Assumed at the minute this goes out at speed zero
+					bool isBraking = Math.Abs(train.CurrentSpeed) > 0 && (dynamicTrain.Handles.Brake.Actual > 0 || (dynamicTrain.Handles.HasLocoBrake && dynamicTrain.Handles.LocoBrake.Actual > 0));
+					MapResult(isBraking ? 1 : 0);
 					break;
 				case PanelSubject.Direction_Display:
 				case PanelSubject.Direction:
@@ -442,6 +425,18 @@ namespace Train.MsTs
 					break;
 			}
 			return lastResult;
+		}
+
+		private void MapResult(double val)
+		{
+			for (int i = 0; i < FrameMapping.Length; i++)
+			{
+				if (FrameMapping[i].MappingValue >= val)
+				{
+					lastResult = FrameMapping[i].FrameKey;
+					break;
+				}
+			}
 		}
 
 		private void MapDigitalResult(double val)
