@@ -12,6 +12,8 @@
 		/// <summary>Train Editor</summary>
 		TrainEditor = 3,
 		/// <summary>Train Editor 2</summary>
-		TrainEditor2 = 4
+		TrainEditor2 = 4,
+		/// <summary>CarXML Convertor</summary>
+		CarXMLConvertor = 5
 	}
 }
