@@ -250,7 +250,7 @@ namespace OpenBve
 #endif
 			if (Interface.CurrentOptions.UnloadUnusedTextures)
 			{
-				Textures.UnloadUnusedTextures(TimeElapsed);
+				Program.Renderer.TextureManager.UnloadUnusedTextures(TimeElapsed);
 			}
 			// finish
 			try
@@ -594,7 +594,7 @@ namespace OpenBve
 
 			if (Interface.CurrentOptions.LoadInAdvance)
 			{
-				Textures.LoadAllTextures();
+				Program.Renderer.TextureManager.LoadAllTextures();
 			}
 			else
 			{

@@ -206,7 +206,6 @@
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderers\Touch.cs" />
-    <Compile Include="Graphics\Textures.cs" />
     <Compile Include="Parsers\Script\TrackFollowingObjectParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <AutoGen>True</AutoGen>
