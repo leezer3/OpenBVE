@@ -149,7 +149,7 @@ namespace LibRender2.Backgrounds
 				renderer.DefaultShader.SetCurrentModelViewMatrix(Matrix4D.Scale(scale) * renderer.CurrentViewMatrix);
 
 				// fog
-				if (renderer.OptionFog)
+				if (renderer.Fog.Enabled)
 				{
 					renderer.DefaultShader.SetIsFog(true);
 					renderer.DefaultShader.SetFog(renderer.Fog);
@@ -215,7 +215,7 @@ namespace LibRender2.Backgrounds
 				GL.BindTexture(TextureTarget.Texture2D, t.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
 				renderer.LastBoundTexture = t.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
 				GL.Color4(1.0f, 1.0f, 1.0f, alpha);
-				if (renderer.OptionFog)
+				if (renderer.Fog.Enabled)
 				{
 					GL.Enable(EnableCap.Fog);
 				}

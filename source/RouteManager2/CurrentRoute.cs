@@ -481,20 +481,17 @@ namespace RouteManager2
 			{
 				float ratio = (float)CurrentBackground.BackgroundImageDistance / fogDistance;
 
-				renderer.OptionFog = true;
+				renderer.Fog.Enabled = true;
 				renderer.Fog.Start = CurrentFog.Start * ratio * scale;
 				renderer.Fog.End = CurrentFog.End * ratio * scale;
 				renderer.Fog.Color = CurrentFog.Color;
 				renderer.Fog.Density = CurrentFog.Density;
 				renderer.Fog.IsLinear = CurrentFog.IsLinear;
-				if (!renderer.AvailableNewRenderer)
-				{
-					renderer.Fog.SetForImmediateMode();
-				}
+				renderer.Fog.Set();
 			}
 			else
 			{
-				renderer.OptionFog = false;
+				renderer.Fog.Enabled = false;
 			}
 
 			//Update the currently displayed background

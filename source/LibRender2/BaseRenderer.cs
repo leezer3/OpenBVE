@@ -156,9 +156,6 @@ namespace LibRender2
 
 		public Shader DefaultShader;
 
-		/// <summary>Whether fog is enabled in the debug options</summary>
-		public bool OptionFog = true;
-
 		/// <summary>Whether lighting is enabled in the debug options</summary>
 		public bool OptionLighting = true;
 
@@ -386,7 +383,7 @@ namespace LibRender2
 			}
 
 			Background = new Background(this);
-			Fog = new Fog();
+			Fog = new Fog(this);
 			OpenGlString = new OpenGlString(this); //text shader shares the rectangle fragment shader
 			TextureManager = new TextureManager(currentHost, this);
 			Cube = new Cube(this);
@@ -1451,7 +1448,7 @@ namespace LibRender2
 			if (material.BlendMode == MeshMaterialBlendMode.Additive)
 			{
 				RestoreBlendFunc();
-				shader.SetIsFog(OptionFog);
+				shader.SetIsFog(Fog.Enabled);
 			}
 			if (OptionWireFrame || debugTouchMode)
 			{
@@ -1541,7 +1538,7 @@ namespace LibRender2
 			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, (material.Flags & MaterialFlags.Emissive) != 0 ? new Color4(material.EmissiveColor.R, material.EmissiveColor.G, material.EmissiveColor.B, 255) : Color4.Black);
 
 			// fog
-			if (OptionFog)
+			if (Fog.Enabled)
 			{
 				GL.Enable(EnableCap.Fog);
 			}

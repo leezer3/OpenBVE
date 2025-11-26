@@ -122,7 +122,7 @@ namespace ObjectViewer.Graphics
 				Lighting.OptionLightingResultingAmount = 1.0f;
 			}
 
-			OptionFog = false;
+			Fog.Enabled = false;
 
 			if (OptionCoordinateSystem)
 			{

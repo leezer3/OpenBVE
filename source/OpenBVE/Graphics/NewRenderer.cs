@@ -180,7 +180,9 @@ namespace OpenBve.Graphics
 			{
 				Program.CurrentRoute.CurrentFog = Program.CurrentRoute.PreviousFog;
 			}
-			
+
+			DefaultShader.Activate();
+
 			// render background
 			GL.Disable(EnableCap.DepthTest);
 			Program.CurrentRoute.UpdateBackground(TimeElapsed, Program.Renderer.CurrentInterface != InterfaceType.Normal);
@@ -191,21 +193,17 @@ namespace OpenBve.Graphics
 
 			if (aa < bb & aa < Program.CurrentRoute.CurrentBackground.BackgroundImageDistance)
 			{
-				OptionFog = true;
+				Fog.Enabled = true;
 				Fog.Start = aa;
 				Fog.End = bb;
 				Fog.Color = Program.CurrentRoute.CurrentFog.Color;
 				Fog.Density = Program.CurrentRoute.CurrentFog.Density;
 				Fog.IsLinear = Program.CurrentRoute.CurrentFog.IsLinear;
-				if (!AvailableNewRenderer)
-				{
-					Fog.SetForImmediateMode();
-				}
-				
+				Fog.Set();
 			}
 			else
 			{
-				OptionFog = false;
+				Fog.Enabled = false;
 			}
 
 			// world layer
@@ -213,7 +211,6 @@ namespace OpenBve.Graphics
 			if (AvailableNewRenderer)
 			{
 				//Setup the shader for rendering the scene
-				DefaultShader.Activate();
 				if (OptionLighting)
 				{
 					DefaultShader.SetIsLight(true);
@@ -223,11 +220,7 @@ namespace OpenBve.Graphics
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
 					DefaultShader.SetLightModel(Lighting.LightModel);
 				}
-				if (OptionFog)
-				{
-					DefaultShader.SetIsFog(true);
-					DefaultShader.SetFog(Fog);
-				}
+				Fog.Set();
 				DefaultShader.SetTexture(0);
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
@@ -360,7 +353,7 @@ namespace OpenBve.Graphics
 			}
 
 			// overlay (cab / interior) layer
-			OptionFog = false;
+			Fog.Enabled = false;
 			UpdateViewport(ViewportChangeMode.ChangeToCab);
 			
 			if (AvailableNewRenderer)

@@ -173,7 +173,7 @@ namespace OpenBve
 			Program.Renderer.Screen.Fullscreen = !Program.Renderer.Screen.Fullscreen;
 
 			// begin HACK //
-			Program.Renderer.OptionFog = false;
+			Program.Renderer.Fog.Enabled = false;
 			Program.Renderer.OptionLighting = false;
 
 			if (Program.Renderer.Screen.Fullscreen)
