@@ -409,11 +409,8 @@ namespace ObjectViewer {
 			throw new NotImplementedException();
 		}
 
-		public override IEnumerable<AbstractTrain> Trains
-		{
-			// ReSharper disable once CoVariantArrayConversion
-			get => Program.TrainManager.Trains;
-		}
+		// ReSharper disable once CoVariantArrayConversion
+		public override IEnumerable<AbstractTrain> Trains => Program.TrainManager.Trains;
 
 		public override AbstractTrain ClosestTrain(AbstractTrain Train)
 		{
