@@ -1853,29 +1853,19 @@ namespace OpenBve {
 							double ampsTotal = 0;
 							for (int k = 0; k < Train.Cars.Length; k++)
 							{
-								if (Train.Cars[k].TractionModel is DieselEngine dieselEngine)
+								if (Train.Cars[k].TractionModel.Components.TryGetTypedValue(EngineComponent.TractionMotor, out TractionMotor t))
 								{
-									if (dieselEngine.Components.TryGetTypedValue(EngineComponent.TractionMotor, out TractionMotor t))
-									{
-										totalMotors++;
-										ampsTotal += t.CurrentAmps;
-									}
-									else if (dieselEngine.Components.TryGetTypedValue(EngineComponent.RegenerativeTractionMotor, out RegenerativeTractionMotor rt))
-									{
-										totalMotors++;
-										ampsTotal += rt.CurrentAmps;
-									}
+									totalMotors++;
+									ampsTotal += t.CurrentAmps;
+								}
+								else if (Train.Cars[k].TractionModel.Components.TryGetTypedValue(EngineComponent.RegenerativeTractionMotor, out RegenerativeTractionMotor rt))
+								{
+									totalMotors++;
+									ampsTotal += rt.CurrentAmps;
 								}
 							}
 
-							if (totalMotors == 0)
-							{
-								Function.Stack[s] = 0;
-							}
-							else
-							{
-								Function.Stack[s] = ampsTotal / totalMotors;
-							}
+							Function.Stack[s] = ampsTotal;
 						}
 						else
 						{
@@ -1889,17 +1879,14 @@ namespace OpenBve {
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length)
 							{
-								if (Train.Cars[j].TractionModel is DieselEngine dieselEngine)
+								if (Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.TractionMotor, out TractionMotor t))
 								{
-									if (dieselEngine.Components.TryGetTypedValue(EngineComponent.TractionMotor, out TractionMotor t))
-									{
 
-										Function.Stack[s - 1] = t.CurrentAmps;
-									}
-									else if (dieselEngine.Components.TryGetTypedValue(EngineComponent.RegenerativeTractionMotor, out RegenerativeTractionMotor rt))
-									{
-										Function.Stack[s - 1] = rt.CurrentAmps;
-									}
+									Function.Stack[s - 1] = t.CurrentAmps;
+								}
+								else if (Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.RegenerativeTractionMotor, out RegenerativeTractionMotor rt))
+								{
+									Function.Stack[s - 1] = rt.CurrentAmps;
 								}
 								else
 								{

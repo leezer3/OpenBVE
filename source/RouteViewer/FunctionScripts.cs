@@ -1233,6 +1233,8 @@ namespace RouteViewer {
 					case Instructions.ThirdRailAmpsTarget:
 					case Instructions.FourthRailAmps:
 					case Instructions.FourthRailAmpsTarget:
+					case Instructions.Amps:
+					case Instructions.AmpsCar:
 						throw new NotImplementedException(Function.InstructionSet[i] + " is not currently supported in Route Viewer. Please test using the main game.");
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i].ToString() + " was encountered in ExecuteFunctionScript.");

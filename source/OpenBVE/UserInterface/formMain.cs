@@ -248,18 +248,18 @@ namespace OpenBve {
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
 			{
 				if (string.IsNullOrEmpty(Interface.CurrentOptions.RecentlyUsedTrains[i])) continue;
-				string TrainFileName = Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
-				string TrainPath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
-				if (!Directory.Exists(TrainPath))
+				string trainFileName = Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
+				string trainPath = Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
+				if (!Directory.Exists(trainPath))
 				{
 					continue;
 				}
-				ListViewItem Item = listviewTrainRecently.Items.Add(TrainFileName);
+				ListViewItem Item = listviewTrainRecently.Items.Add(trainFileName);
 				Item.ImageKey = @"train";
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedTrains[i];
-				if (textboxTrainFolder.Items.Count == 0 || !textboxTrainFolder.Items.Contains(TrainPath))
+				if (textboxTrainFolder.Items.Count == 0 || !textboxTrainFolder.Items.Contains(trainPath))
 				{
-					textboxTrainFolder.Items.Add(TrainPath);
+					textboxTrainFolder.Items.Add(trainPath);
 				}
 			}
 			listviewTrainRecently.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -1809,7 +1809,7 @@ namespace OpenBve {
 			}
 		}
 
-		private void checkForUpdate()
+		private void CheckForUpdate()
 		{
 			string xmlUrl = Interface.CurrentOptions.DailyBuildUpdates ? "https://vps.bvecornwall.co.uk/OpenBVE/Builds/version.xml" : "http://openbve-project.net/version.xml";
 			HttpWebRequest hwRequest = (HttpWebRequest)WebRequest.Create(xmlUrl);
@@ -1913,7 +1913,7 @@ namespace OpenBve {
 
 		private void linkLabelCheckUpdates_Click(object sender, EventArgs e)
 		{
-			checkForUpdate();
+			CheckForUpdate();
 		}
 
 		private void buttonOptionsPrevious_Click(object sender, EventArgs e)
