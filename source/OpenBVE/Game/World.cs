@@ -7,7 +7,6 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
-using OpenBveApi.World;
 using System;
 using TrainManager.Trains;
 

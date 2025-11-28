@@ -401,37 +401,39 @@ namespace OpenBve
 			/// <param name="Duration">The duration of the score event (e.g. overspeed)</param>
 			private void AddScore(string Text, double Duration)
 			{
-				if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
+				if (Interface.CurrentOptions.GameMode != GameMode.Arcade)
 				{
-					int n = ScoreMessages.Length;
-					Array.Resize(ref ScoreMessages, n + 1);
-					ScoreMessages[n].Value = 0;
-					ScoreMessages[n].Text = Text.Length != 0 ? Text : "══════════";
-					ScoreMessages[n].Timeout = Duration;
-					ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
-					ScoreMessages[n].RendererAlpha = 0.0;
-					ScoreMessages[n].Color = MessageColor.White;
+					return;
 				}
+				int n = ScoreMessages.Length;
+				Array.Resize(ref ScoreMessages, n + 1);
+				ScoreMessages[n].Value = 0;
+				ScoreMessages[n].Text = Text.Length != 0 ? Text : "══════════";
+				ScoreMessages[n].Timeout = Duration;
+				ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
+				ScoreMessages[n].RendererAlpha = 0.0;
+				ScoreMessages[n].Color = MessageColor.White;
 			}
 		}
 
 		/// <summary>Updates all score messages displayed by the renderer</summary>
 		internal static void UpdateScoreMessages(double timeElapsed)
 		{
-			if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
+			if (Interface.CurrentOptions.GameMode != GameMode.Arcade)
 			{
-				for (int i = 0; i < ScoreMessages.Length; i++)
+				return;
+			}
+			for (int i = 0; i < ScoreMessages.Length; i++)
+			{
+				ScoreMessages[i].Timeout -= timeElapsed;
+				if (ScoreMessages[i].Timeout <= 0 & ScoreMessages[i].RendererAlpha == 0.0)
 				{
-					ScoreMessages[i].Timeout -= timeElapsed;
-					if (ScoreMessages[i].Timeout <= 0 & ScoreMessages[i].RendererAlpha == 0.0)
+					for (int j = i; j < ScoreMessages.Length - 1; j++)
 					{
-						for (int j = i; j < ScoreMessages.Length - 1; j++)
-						{
-							ScoreMessages[j] = ScoreMessages[j + 1];
-						}
-						Array.Resize(ref ScoreMessages, ScoreMessages.Length - 1);
-						i--;
+						ScoreMessages[j] = ScoreMessages[j + 1];
 					}
+					Array.Resize(ref ScoreMessages, ScoreMessages.Length - 1);
+					i--;
 				}
 			}
 		}

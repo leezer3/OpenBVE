@@ -1,5 +1,4 @@
 using LibRender2;
-using LibRender2.Primitives;
 using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
@@ -9,7 +8,6 @@ using RouteManager2.Events;
 using RouteManager2.Tracks;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenBve.Graphics.Renderers
 {
@@ -34,13 +32,12 @@ namespace OpenBve.Graphics.Renderers
 		private Texture SwitchEventTexture;
 		private readonly List<Guid> renderedSwitches = new List<Guid>();
 
-		private bool Initialized;
-
 		internal double LastTrackPosition;
 
 		internal Events(BaseRenderer renderer)
 		{
 			this.renderer = renderer;
+			Init();
 		}
 
 		private void Init()
@@ -61,7 +58,6 @@ namespace OpenBve.Graphics.Renderers
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "lighting.png"), out LightingEventTexture);
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "weather.png"), out WeatherEventTexture);
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "switchevent.png"), out SwitchEventTexture);
-			Initialized = true;
 		}
 
 		/// <summary>Finds visible events on a rail index</summary>

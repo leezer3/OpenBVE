@@ -176,6 +176,9 @@
 					</trans-unit>
 				</group>
 				<group id="errors">
+					<trans-unit id="critical_loading">
+						<source>A critical error occured: \n\n [error] \n\n Please inspect the error log file for further information.</source>
+					</trans-unit>
 					<trans-unit id="critical_file">
 						<source>A critical error occured whilst parsing the [file] file</source>
 						<target>Errore critico nella scansione del file [file]</target>

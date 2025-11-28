@@ -18,7 +18,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
 

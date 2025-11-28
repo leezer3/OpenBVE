@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using static OpenBve.Game;
 
 namespace OpenBve
 {
