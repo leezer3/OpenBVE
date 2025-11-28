@@ -262,20 +262,20 @@ namespace TrainEditor {
 			internal Motor MotorB1;
 			internal Motor MotorB2;
 			internal Train () {
-				this.Acceleration = new Acceleration();
-				this.Performance = new Performance();
-				this.Delay = new Delay();
-				this.Move = new Move();
-				this.Brake = new Brake();
-				this.Pressure = new Pressure();
-				this.Handle = new Handle();
-				this.Cab = new Cab();
-				this.Car = new Car();
-				this.Device = new Device();
-				this.MotorP1 = new Motor();
-				this.MotorP2 = new Motor();
-				this.MotorB1 = new Motor();
-				this.MotorB2 = new Motor();
+				Acceleration = new Acceleration();
+				Performance = new Performance();
+				Delay = new Delay();
+				Move = new Move();
+				Brake = new Brake();
+				Pressure = new Pressure();
+				Handle = new Handle();
+				Cab = new Cab();
+				Car = new Car();
+				Device = new Device();
+				MotorP1 = new Motor();
+				MotorP2 = new Motor();
+				MotorB1 = new Motor();
+				MotorB2 = new Motor();
 			}
 		}
 
@@ -287,7 +287,6 @@ namespace TrainEditor {
 		/// <returns>An instance of the Train class.</returns>
 		internal static Train Load(string FileName) {
 			Train t = new Train();
-			t.Pressure.BrakePipeNormalPressure = 0.0;
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string[] Lines = System.IO.File.ReadAllLines(FileName, new System.Text.UTF8Encoding());
 			for (int i = 0; i < Lines.Length; i++) {

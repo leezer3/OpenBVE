@@ -106,8 +106,8 @@ namespace OpenBveApi.Objects
 				Vector3 v = Sounds[i].Position;
 				v.Rotate(LocalTransformation);
 				v.Rotate(WorldTransformation);
-				(Sounds[i] as WorldSound)?.CreateSound(Position + v, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
-				(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position + v, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition, Brightness);
+				(Sounds[i] as WorldSound)?.CreateSound(Position + v, SectionIndex, TrackPosition);
+				(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position + v, WorldTransformation, LocalTransformation, SectionIndex, TrackPosition);
 			}
 		}
 
@@ -192,6 +192,12 @@ namespace OpenBveApi.Objects
 
 		/// <inheritdoc/>
 		public override UnifiedObject TransformRight(double NearDistance, double FarDistance)
+		{
+			throw new NotSupportedException();
+		}
+
+		/// <inheritdoc/>
+		public override void ApplyTranslation(double x, double y, double z, bool absoluteTranslation = false)
 		{
 			throw new NotSupportedException();
 		}

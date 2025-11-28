@@ -50,10 +50,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Brake\AirBrake\AirBrake.cs" />
     <Compile Include="Brake\AirBrake\AutomaticAirBrake.cs" />
     <Compile Include="Brake\AirBrake\Components\AbstractReservior.cs" />
     <Compile Include="Brake\AirBrake\Components\AirCompressor.cs" />
-    <Compile Include="Brake\AirBrake\Components\BrakePipe.cs" />
+    <Compile Include="Brake\CommmonComponents\BrakeCylinder.cs" />
+    <Compile Include="Brake\CommmonComponents\BrakePipe.cs" />
     <Compile Include="Brake\AirBrake\Components\Reservoirs.cs" />
     <Compile Include="Brake\AirBrake\Components\StraightAirPipe.cs" />
     <Compile Include="Brake\AirBrake\ElectricCommandBrake.cs" />
@@ -64,10 +66,12 @@
     <Compile Include="Brake\CarBrake.cs" />
     <Compile Include="Brake\ElectroPneumaticBrakeType.cs" />
     <Compile Include="Brake\UncouplingBehaviour.cs" />
+    <Compile Include="Brake\VaccuumBrake\VaccumBrake.cs" />
     <Compile Include="Cargo\CargoBase.cs" />
     <Compile Include="Cargo\NoLoad.cs" />
     <Compile Include="Cargo\Passengers.cs" />
     <Compile Include="Cargo\RobustFreight.cs" />
+    <Compile Include="Car\Axle\BVEAxle.cs" />
     <Compile Include="Car\Bogie\Bogie.cs" />
     <Compile Include="Car\CarBase.cs" />
     <Compile Include="Car\CarSounds.cs" />
@@ -84,6 +88,7 @@
     <Compile Include="Car\Systems\ReadhesionDevice.Types.cs" />
     <Compile Include="Car\Systems\RunSounds.cs" />
     <Compile Include="Car\Systems\Sanders.cs" />
+    <Compile Include="Car\Systems\Sanders.State.cs" />
     <Compile Include="Car\Systems\Sanders.Types.cs" />
     <Compile Include="Car\Systems\Suspension.cs" />
     <Compile Include="Car\Windscreen\Raindrop.cs" />
@@ -95,18 +100,19 @@
     <Compile Include="Handles\AbstractHandle.cs" />
     <Compile Include="Handles\CabHandles.cs" />
     <Compile Include="Handles\HandleChange.cs" />
-    <Compile Include="Handles\Handles.AirBrake.cs" />
-    <Compile Include="Handles\Handles.AirBrake.States.cs" />
-    <Compile Include="Handles\Handles.Brake.cs" />
-    <Compile Include="Handles\Handles.Eb.Behaviour.cs" />
-    <Compile Include="Handles\Handles.EmergencyBrake.cs" />
+    <Compile Include="Handles\Brake\Handles.AirBrake.cs" />
+    <Compile Include="Handles\Brake\Handles.AirBrake.States.cs" />
+    <Compile Include="Handles\Brake\Handles.Brake.cs" />
+    <Compile Include="Handles\Brake\Handles.Eb.Behaviour.cs" />
+    <Compile Include="Handles\Brake\Handles.EmergencyBrake.cs" />
     <Compile Include="Handles\Handles.HandleType.cs" />
-    <Compile Include="Handles\Handles.HoldBrake.cs" />
-    <Compile Include="Handles\Handles.LocoBrake.cs" />
-    <Compile Include="Handles\Handles.LocoBrake.Types.cs" />
-    <Compile Include="Handles\Handles.Power.cs" />
-    <Compile Include="Handles\Handles.Reverser.cs" />
-    <Compile Include="Handles\Handles.Reverser.Positions.cs" />
+    <Compile Include="Handles\Brake\Handles.HoldBrake.cs" />
+    <Compile Include="Handles\Brake\Handles.LocoBrake.cs" />
+    <Compile Include="Handles\Brake\Handles.LocoBrake.Types.cs" />
+    <Compile Include="Handles\VariableHandle.cs" />
+    <Compile Include="Handles\Power\PowerHandle.cs" />
+    <Compile Include="Handles\Reverser\Reverser.cs" />
+    <Compile Include="Handles\Reverser\Reverser.Positions.cs" />
     <Compile Include="Handles\Handles.SpringTypes.cs" />
     <Compile Include="Motor\AbstractComponent.cs" />
     <Compile Include="Motor\AbstractEngine.cs" />
@@ -121,21 +127,30 @@
     <Compile Include="Motor\BVE5\MotorSound.cs" />
     <Compile Include="Motor\BVE5\MotorSoundTableEntry.cs" />
     <Compile Include="Motor\BVE5\SoundState.cs" />
-    <Compile Include="Motor\ComponentTypes.cs" />
     <Compile Include="Motor\DieselEngine\DieselEngine.cs" />
+    <Compile Include="Motor\DieselEngine\GearboxOperation.cs" />
+    <Compile Include="Motor\DieselEngine\RegenerativeTractionMotor.cs" />
     <Compile Include="Motor\DieselEngine\TractionMotor.cs" />
+    <Compile Include="Motor\DieselEngine\Gear.cs" />
+    <Compile Include="Motor\DieselEngine\Gearbox.cs" />
+    <Compile Include="Motor\ElectricEngine\ElectricEngine.cs" />
+    <Compile Include="Motor\ElectricEngine\Pantograph.cs" />
     <Compile Include="Motor\Fuel\FuelTank.cs" />
     <Compile Include="Power\AccelerationCurve.cs" />
     <Compile Include="Power\Breaker.cs" />
+    <Compile Include="Power\BVE\BVEAccelerationCurve.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SafetySystems\AbstractSafetySystem.cs" />
     <Compile Include="SafetySystems\ATC\AtcModes.cs" />
     <Compile Include="SafetySystems\ATS\AtsModes.cs" />
     <Compile Include="SafetySystems\DefaultSafetySystems.cs" />
     <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.cs" />
     <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.ResetModes.cs" />
-    <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.TriggerMode.cs" />
-    <Compile Include="SafetySystems\DSD\DriverSupervisionDevice.Types.cs" />
-    <Compile Include="SafetySystems\Overspeed.cs" />
+    <Compile Include="SafetySystems\SafetySystem.State.cs" />
+    <Compile Include="SafetySystems\SafetySystem.TriggerMode.cs" />
+    <Compile Include="SafetySystems\SafetySystem.Type.cs" />
+    <Compile Include="SafetySystems\Overspeed\OverspeedDevice.cs" />
+    <Compile Include="SafetySystems\Overspeed\OverspeedMessage.cs" />
     <Compile Include="SafetySystems\PassAlarm.cs" />
     <Compile Include="SafetySystems\PilotLamp.cs" />
     <Compile Include="SafetySystems\Plugin\AI\PluginAI.cs" />
@@ -150,6 +165,7 @@
     <Compile Include="SafetySystems\Plugin\Plugin.Functions.cs" />
     <Compile Include="SafetySystems\Plugin\Plugin.SoundInstructions.cs" />
     <Compile Include="SafetySystems\Plugin\ProxyPlugin.cs" />
+    <Compile Include="SafetySystems\SafetySystems.cs" />
     <Compile Include="SafetySystems\StationAdjustAlarm.cs" />
     <Compile Include="SafetySystems\TrainSafetySystems.cs" />
     <Compile Include="TrackFollowingObject\AI\TrackFollowingObject.AI.cs" />
@@ -168,9 +184,6 @@
     <Compile Include="Train\Station.cs" />
     <Compile Include="Train\TrainBase.cs" />
     <Compile Include="Train\TrainSpecs.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Brake\AirBrake\Components\BrakeCylinder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibRender2\LibRender2.csproj">
@@ -194,6 +207,8 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Brake\VaccuumBrake\Components\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

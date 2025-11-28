@@ -2,8 +2,6 @@
 {
     internal static partial class Game
     {
-        /// <summary>The current plugin debug message to be displayed</summary>
-        internal static string InfoDebugString = "";
         /// <summary>The in-game menu system</summary>
 		internal static readonly GameMenu Menu = GameMenu.Instance;
 		/// <summary>The in-game overlay with route info drawings</summary>

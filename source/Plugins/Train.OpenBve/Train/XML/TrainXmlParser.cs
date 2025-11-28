@@ -137,6 +137,29 @@ namespace Train.OpenBve
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid uncoupling behaviour " + c.InnerText + " in " + c.Name + " node.");
 										}
 										break;
+									case TrainXMLKey.DriverBody:
+										double shoulderHeight = 0.6;
+										double headHeight = 0.1;
+										foreach (XmlNode cc in c.ChildNodes)
+										{
+											switch (cc.Name.ToLowerInvariant())
+											{
+												case "shoulderheight":
+													if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out shoulderHeight))
+													{
+														Plugin.CurrentHost.AddMessage(MessageType.Error, false, "ShoulderHeight is invalid for DriverBody in XML file " + fileName);
+													}
+													break;
+												case "headheight":
+													if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out headHeight))
+													{
+														Plugin.CurrentHost.AddMessage(MessageType.Error, false, "HeadHeight is invalid for DriverBody in XML file " + fileName);
+													}
+													break;
+											}
+										}
+										Train.DriverBody = new DriverBody(Train, shoulderHeight, headHeight);
+										break;
 								}
 							}
 						}
@@ -318,7 +341,7 @@ namespace Train.OpenBve
 									break;
 								}
 
-								Train.SafetySystems.Headlights = new LightSource(numStates);
+								Train.SafetySystems.Headlights = new LightSource(Train, numStates);
 								break;
 						}
 					}

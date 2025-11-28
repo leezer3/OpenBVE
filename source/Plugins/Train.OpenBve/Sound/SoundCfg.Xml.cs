@@ -6,12 +6,14 @@ using Formats.OpenBve;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Motor;
 using SoundManager;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.Power;
+using TrainManager.SafetySystems;
 using TrainManager.Trains;
 
 namespace Train.OpenBve
@@ -214,7 +216,8 @@ namespace Train.OpenBve
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An empty list of compressor sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (car.CarBrake.brakeType != BrakeType.Main)
+
+									if (!(car.CarBrake is AirBrake airBrake) || airBrake.BrakeType != BrakeType.Main)
 									{
 										break;
 									}
@@ -225,17 +228,17 @@ namespace Train.OpenBve
 											case "attack":
 											case "start":
 												//Compressor starting sound
-												ParseNode(cc, out car.CarBrake.airCompressor.StartSound, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out airBrake.Compressor.StartSound, center, SoundCfgParser.mediumRadius);
 												break;
 											case "loop":
 												//Compressor loop sound
-												ParseNode(cc, out car.CarBrake.airCompressor.LoopSound, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out airBrake.Compressor.LoopSound, center, SoundCfgParser.mediumRadius);
 												break;
 											case "release":
 											case "stop":
 											case "end":
 												//Compressor end sound
-												ParseNode(cc, out car.CarBrake.airCompressor.EndSound, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out airBrake.Compressor.EndSound, center, SoundCfgParser.mediumRadius);
 												break;
 											default:
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -607,7 +610,34 @@ namespace Train.OpenBve
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An empty list of driver supervision device sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (car.DSD == null)
+									if (car.SafetySystems.TryGetTypedValue(SafetySystem.DriverSupervisionDevice, out DriverSupervisionDevice dsd))
+									{
+										foreach (XmlNode cc in c.ChildNodes)
+										{
+											switch (cc.Name.ToLowerInvariant())
+											{
+												case "alert":
+													ParseNode(cc, out dsd.AlertSound, center, SoundCfgParser.smallRadius);
+													break;
+												case "alarm":
+													ParseNode(cc, out dsd.AlarmSound, center, SoundCfgParser.smallRadius);
+													break;
+												case "reset":
+													ParseNode(cc, out dsd.ResetSound, center, SoundCfgParser.smallRadius);
+													break;
+											}
+										}
+									}
+
+									
+									break;
+								case SoundCfgSection.Headlights:
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An empty list of headlights sounds was defined in in XML file " + fileName);
+										break;
+									}
+									if (Train.SafetySystems.Headlights == null)
 									{
 										break;
 									}
@@ -616,12 +646,40 @@ namespace Train.OpenBve
 									{
 										switch (cc.Name.ToLowerInvariant())
 										{
-											case "alarm":
-												ParseNode(cc, out car.DSD.TriggerSound, center, SoundCfgParser.smallRadius);
+											case "switch":
+												Vector3 pos = new Vector3(center);
+												ParseNode(cc, out Train.SafetySystems.Headlights.SwitchSoundBuffer, ref pos, SoundCfgParser.smallRadius);
 												break;
-											case "reset":
-												ParseNode(cc, out car.DSD.ResetSound, center, SoundCfgParser.smallRadius);
+										}
+									}
+									break;
+								case SoundCfgSection.Pantograph:
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "An empty list of headlights sounds was defined in in XML file " + fileName);
+										break;
+									}
+
+									CarSound raiseSound = null, lowerSound = null;
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name.ToLowerInvariant())
+										{
+											case "raise":
+												ParseNode(cc, out raiseSound, center, SoundCfgParser.mediumRadius);
 												break;
+											case "lower":
+												ParseNode(cc, out lowerSound, center, SoundCfgParser.mediumRadius);
+												break;
+										}
+									}
+
+									for (int i = 0; i < Train.Cars.Length; i++)
+									{
+										if (Train.Cars[i].TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph p))
+										{
+											p.RaiseSound = raiseSound.Clone();
+											p.LowerSound = lowerSound.Clone();
 										}
 									}
 									break;

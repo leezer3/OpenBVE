@@ -1,9 +1,7 @@
 ﻿using System;
 using LibRender2.Cameras;
 using LibRender2.Overlays;
-using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
-using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using TrainManager.Handles;
 

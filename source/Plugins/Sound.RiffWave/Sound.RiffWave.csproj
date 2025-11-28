@@ -76,6 +76,17 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChunkID.cs" />
+    <Compile Include="Chunks\Chunk.cs" />
+    <Compile Include="Chunks\CuePoint.cs" />
+    <Compile Include="Chunks\DataChunk.cs" />
+    <Compile Include="Chunks\SilentChunk.cs" />
+    <Compile Include="Formats\WaveFormatAdPcm.cs" />
+    <Compile Include="Formats\WaveFormatEx.cs" />
+    <Compile Include="Formats\WaveFormatExtensible.cs" />
+    <Compile Include="Formats\WaveFormatMp3.cs" />
+    <Compile Include="Formats\WaveFormatPcm.cs" />
+    <Compile Include="Formats\WFormatTag.cs" />
     <Compile Include="Plugin.Parser.cs">
       <DependentUpon>Plugin.cs</DependentUpon>
     </Compile>
@@ -93,6 +104,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Target Name="AfterBuild">
     <ItemGroup>
       <OutputFiles Include="$(TargetDir)$(TargetName).*" />

@@ -45,14 +45,26 @@ namespace OpenBve
 					case MessageDependency.RouteLimit:
 					{
 						double spd = Math.Abs(TrainManager.PlayerTrain.CurrentSpeed);
+						double nextLim = TrainManager.CurrentRoute.NextLimit(TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.LastTrackElement, out double nextLimPos);
 						double lim = TrainManager.PlayerTrain.CurrentRouteLimit;
-						
+						nextLimPos -= TrainManager.PlayerTrain.FrontCarTrackPosition;
+						nextLimPos = Math.Round(nextLimPos);
+
 						remove = spd < lim;
 						
 						// Convert the speed and limit into km/h for display purposes
 						spd = Math.Round(spd * 3.6);
 						lim = Math.Round(lim * 3.6);
+						nextLim = Math.Round(nextLim * 3.6);
 						string s = InternalText;
+
+						if (Interface.CurrentOptions.SpeedConversionFactor != 0.0)
+						{
+							spd = Math.Round(spd * Interface.CurrentOptions.SpeedConversionFactor);
+							lim = Math.Round(lim * Interface.CurrentOptions.SpeedConversionFactor);	
+							nextLim = Math.Round(nextLim * Interface.CurrentOptions.SpeedConversionFactor);
+						}
+
 						if (lim == double.PositiveInfinity)
 						{
 							s = s.Replace("[limit]", "unlimited");
@@ -60,17 +72,28 @@ namespace OpenBve
 						}
 						else
 						{
-							if (Interface.CurrentOptions.SpeedConversionFactor != 0.0)
-							{
-								spd = Math.Round(spd * Interface.CurrentOptions.SpeedConversionFactor);
-								lim = Math.Round(lim * Interface.CurrentOptions.SpeedConversionFactor);
-							}
 							string t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
 							s = s.Replace("[speed]", t);
 							t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
 							s = s.Replace("[limit]", t);
 							s = s.Replace("[unit]", Interface.CurrentOptions.UnitOfSpeed);
 						}
+
+						if (nextLim == double.PositiveInfinity)
+						{
+							s = s.Replace("[nextlimit]", "n/a");
+							s = s.Replace("[limitdistance]", "n/a");
+							s = s.Replace("[limitunit]", string.Empty);
+						}
+						else
+						{
+							string t = nextLim.ToString(System.Globalization.CultureInfo.InvariantCulture);
+							s = s.Replace("[nextlimit]", t);
+							t = nextLimPos.ToString(System.Globalization.CultureInfo.InvariantCulture);
+							s = s.Replace("[limitdistance]", t);
+							s = s.Replace("[limitunit]", Interface.CurrentOptions.UnitOfSpeed);
+						}
+						
 						MessageToDisplay = s;
 					} break;
 					case MessageDependency.PassedRedSignal:

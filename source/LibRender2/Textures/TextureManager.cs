@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using LibRender2.Screens;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
@@ -493,6 +494,23 @@ namespace LibRender2.Textures
 			}
 		}
 
+		/// <summary>Loads all registered textures.</summary>
+		public void LoadAllTextures()
+		{
+			for (int i = 0; i < RegisteredTexturesCount; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					if (RegisteredTextures[i].OpenGlTextures[j].Used)
+					{
+						LoadTexture(ref RegisteredTextures[i], (OpenGlTextureWrapMode)j, CPreciseTimer.GetClockTicks(), renderer.currentOptions.Interpolation, renderer.currentOptions.AnisotropicFilteringLevel);
+					}
+
+				}
+
+			}
+		}
+
 		/// <summary>Unloads all registered textures.</summary>
 		public void UnloadAllTextures(bool currentlyReloading)
 		{
@@ -520,6 +538,48 @@ namespace LibRender2.Textures
 			
 			GC.Collect(); //Speculative- https://bveworldwide.forumotion.com/t1873-object-routeviewer-out-of-memory#19423
 			
+		}
+
+		/// <summary>Unloads any textures which have not been accessed</summary>
+		/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
+		public void UnloadUnusedTextures(double TimeElapsed)
+		{
+#if DEBUG
+			//HACK: If when running in debug mode the frame time exceeds 1s, we can assume VS has hit a breakpoint
+			//Don't unload textures in this case, as it just causes texture bugs
+			if (TimeElapsed > 1000)
+			{
+				foreach (var Texture in RegisteredTextures)
+				{
+					if (Texture != null)
+					{
+						Texture.LastAccess = CPreciseTimer.GetClockTicks();
+					}
+				}
+			}
+#endif
+			if (renderer.CurrentInterface == InterfaceType.Normal)
+			{
+				for (int i = 0; i < RegisteredTextures.Length; i++)
+				{
+					if (RegisteredTextures[i] != null && RegisteredTextures[i].AvailableToUnload && (CPreciseTimer.GetClockTicks() - RegisteredTextures[i].LastAccess) > 20000)
+					{
+						UnloadTexture(ref RegisteredTextures[i]);
+					}
+				}
+			}
+			else
+			{
+				//Don't unload textures if we are in a menu/ paused, as they may be required immediately after unpause
+				foreach (var Texture in TextureManager.RegisteredTextures)
+				{
+					//Texture can be null in certain cases....
+					if (Texture != null)
+					{
+						Texture.LastAccess = CPreciseTimer.GetClockTicks();
+					}
+				}
+			}
 		}
 
 

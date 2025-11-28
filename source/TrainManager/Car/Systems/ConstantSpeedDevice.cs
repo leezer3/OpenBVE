@@ -1,8 +1,8 @@
-﻿using TrainManager.Handles;
+﻿using TrainManager.SafetySystems;
 
 namespace TrainManager.Car
 {
-	public class CarConstSpeed
+	public class CarConstSpeed : AbstractSafetySystem
 	{
 		/// <summary>The current acceleration output this device is providing</summary>
 		private double CurrentAccelerationOutput;
@@ -10,32 +10,27 @@ namespace TrainManager.Car
 		private double NextUpdateTime;
 		/// <summary>The update interval (Constant 0.5 for BVE2 / BVE4 trains)</summary>
 		private const double UpdateInterval = 0.5;
-		/// <summary>Holds a reference to the base car</summary>
-		private readonly CarBase Car;
 
-		public CarConstSpeed(CarBase car)
+		public CarConstSpeed(CarBase car) : base(car)
 		{
-			this.Car = car;
 		}
 
 		/// <summary>Called once a frame to update the constant speed device</summary>
 		/// <param name="Acceleration">The current acceleration output of the train</param>
-		/// <param name="Enabled">Whether the constant speed device is enabled (As this refers to the whole train)</param>
-		/// <param name="ReverserPosition">The current position of the reverser handle</param>
-		public void Update(ref double Acceleration, bool Enabled, ReverserPosition ReverserPosition)
+		public void Update(ref double Acceleration)
 		{
-			if (!Enabled)
+			if (!baseCar.baseTrain.Specs.CurrentConstSpeed)
 			{
-				this.CurrentAccelerationOutput = Acceleration;
+				CurrentAccelerationOutput = Acceleration;
 				return;
 			}
-			if (TrainManagerBase.currentHost.InGameTime >= this.NextUpdateTime)
+			if (TrainManagerBase.currentHost.InGameTime >= NextUpdateTime)
 			{
-				this.NextUpdateTime = TrainManagerBase.currentHost.InGameTime + UpdateInterval;
-				this.CurrentAccelerationOutput -= 0.8 * this.Car.Specs.Acceleration * (double)ReverserPosition;
-				if (this.CurrentAccelerationOutput < 0.0)
+				NextUpdateTime = TrainManagerBase.currentHost.InGameTime + UpdateInterval;
+				CurrentAccelerationOutput -= 0.8 * baseCar.Specs.Acceleration * (double)baseCar.baseTrain.Handles.Reverser.Actual;
+				if (CurrentAccelerationOutput < 0.0)
 				{
-					this.CurrentAccelerationOutput = 0.0;
+					CurrentAccelerationOutput = 0.0;
 				}
 			}
 			if (Acceleration > CurrentAccelerationOutput)

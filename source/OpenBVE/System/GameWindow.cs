@@ -128,10 +128,10 @@ namespace OpenBve
 				}
 				Program.Renderer.RenderScene(TimeElapsed, RealTimeElapsed);
 				SwapBuffers();
-				if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
+				if (MainLoop.Quit != QuitMode.ContinueGame)
 				{
 					Close();
-					if (Program.CurrentHost.MonoRuntime && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
+					if (Program.CurrentHost.MonoRuntime && MainLoop.Quit == QuitMode.QuitProgram)
 					{
 						Environment.Exit(0);
 					}
@@ -196,10 +196,10 @@ namespace OpenBve
 			}
 
 			Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
-			if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
+			if (MainLoop.Quit != QuitMode.ContinueGame)
 			{
 				Exit();
-				if (Program.CurrentHost.MonoRuntime && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
+				if (Program.CurrentHost.MonoRuntime && MainLoop.Quit == QuitMode.QuitProgram)
 				{
 					Environment.Exit(0);
 				}				
@@ -250,7 +250,7 @@ namespace OpenBve
 #endif
 			if (Interface.CurrentOptions.UnloadUnusedTextures)
 			{
-				Textures.UnloadUnusedTextures(TimeElapsed);
+				Program.Renderer.TextureManager.UnloadUnusedTextures(TimeElapsed);
 			}
 			// finish
 			try
@@ -503,7 +503,7 @@ namespace OpenBve
 			{
 				InputDevicePlugin.CallPluginUnload(i);
 			}
-			if (MainLoop.Quit == MainLoop.QuitMode.ContinueGame && Program.CurrentHost.MonoRuntime)
+			if (MainLoop.Quit == QuitMode.ContinueGame && Program.CurrentHost.MonoRuntime)
 			{
 				//More forcefully close under Mono, stuff *still* hanging around....
 				Environment.Exit(0);
@@ -583,7 +583,9 @@ namespace OpenBve
 			{
 				if (Interface.LogMessages[i].Type == MessageType.Critical)
 				{
-					MessageBox.Show("A critical error has occured:\n\n" + Interface.LogMessages[i].Text + "\n\nPlease inspect the error log file for further information.", "Load", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					string currentError = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "errors", "critical_loading" });
+					currentError = currentError.Replace("[error]", Interface.LogMessages[i].Text);
+					MessageBox.Show(currentError, Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Close();
 				}
 			}
@@ -594,7 +596,7 @@ namespace OpenBve
 
 			if (Interface.CurrentOptions.LoadInAdvance)
 			{
-				Textures.LoadAllTextures();
+				Program.Renderer.TextureManager.LoadAllTextures();
 			}
 			else
 			{
@@ -613,7 +615,7 @@ namespace OpenBve
 			double PlayerFirstStationPosition;
 			
 			{
-				int s = Program.CurrentRoute.Stations[PlayerFirstStationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
+				int s = Program.CurrentRoute.Stations[PlayerFirstStationIndex].GetStopIndex(TrainManager.PlayerTrain);
 				if (s >= 0)
 				{
 					PlayerFirstStationPosition = Program.CurrentRoute.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition;
@@ -687,7 +689,7 @@ namespace OpenBve
 				if (Program.CurrentRoute.Stations[i].StopMode == StationStopMode.AllStop | Program.CurrentRoute.Stations[i].StopMode == StationStopMode.PlayerPass & Program.CurrentRoute.Stations[i].Stops.Length != 0)
 				{
 					OtherFirstStationIndex = i;
-					int s = Program.CurrentRoute.Stations[i].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
+					int s = Program.CurrentRoute.Stations[i].GetStopIndex(TrainManager.PlayerTrain);
 					OtherFirstStationPosition = s >= 0 ? Program.CurrentRoute.Stations[i].Stops[s].TrackPosition : Program.CurrentRoute.Stations[i].DefaultTrackPosition;
 					if (Program.CurrentRoute.Stations[i].ArrivalTime < 0.0)
 					{

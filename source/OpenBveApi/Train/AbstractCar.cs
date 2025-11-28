@@ -1,6 +1,7 @@
+using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using System;
 using System.Collections.Generic;
-using OpenBveApi.Math;
 
 namespace OpenBveApi.Trains
 {
@@ -8,10 +9,10 @@ namespace OpenBveApi.Trains
 	public class AbstractCar
 	{
 		/// <summary>Front axle about which the car pivots</summary>
-		public Axle FrontAxle;
+		public AbstractAxle FrontAxle;
 
 		/// <summary>Rear axle about which the car pivots</summary>
-		public Axle RearAxle;
+		public AbstractAxle RearAxle;
 
 		/// <summary>The width of the car in meters</summary>
 		public double Width;
@@ -32,13 +33,13 @@ namespace OpenBveApi.Trains
 		/// <summary>The textual description for this car</summary>
 		public string Description;
 
-		/// <summary>The empty mass of the car</summary>
+		/// <summary>The empty mass of the car in kilograms</summary>
 		public double EmptyMass;
 
-		/// <summary>Returns the current mass of the car including cargo</summary>
+		/// <summary>Returns the current mass of the car including cargo in kilograms</summary>
 		public double CurrentMass => EmptyMass + CargoMass;
 
-		/// <summary>The current mass of any cargo in the car</summary>
+		/// <summary>The current mass of any cargo in the car in kilograms</summary>
 		public double CargoMass;
 
 		/// <summary>Contains the current brightness values</summary>
@@ -49,6 +50,9 @@ namespace OpenBveApi.Trains
 
 		/// <summary>The trailing wheel sets on the car</summary>
 		public List<Wheels> TrailingWheels = new List<Wheels>();
+
+		/// <summary>Returns the available power supplies to this car</summary>
+		public virtual Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies => new Dictionary<PowerSupplyTypes, PowerSupply>();
 
 		/// <summary>Creates the in-world co-ordinates for a sound attached to this car</summary>
 		public virtual void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)

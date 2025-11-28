@@ -456,14 +456,7 @@ namespace TrainEditor2.Models.Trains
 							MouseDrag(SelectedTrack.VolumeVertices, SelectedTrack.VolumeLines, NowVelocity, NowVolume, deltaVelocity, deltaVolume);
 							break;
 						case InputMode.SoundIndex:
-							if (deltaVelocity != 0.0)
-							{
-								previewArea = new Area(Math.Min(NowVelocity - deltaVelocity, NowVelocity), Math.Max(NowVelocity - deltaVelocity, NowVelocity), SelectedSoundIndex);
-							}
-							else
-							{
-								previewArea = null;
-							}
+							previewArea = deltaVelocity != 0.0 ? new Area(Math.Min(NowVelocity - deltaVelocity, NowVelocity), Math.Max(NowVelocity - deltaVelocity, NowVelocity), SelectedSoundIndex) : null;
 							break;
 					}
 
@@ -1289,22 +1282,9 @@ namespace TrainEditor2.Models.Trains
 					Vertex right = SelectedTrack.PitchVertices[line.RightID];
 
 					Func<double, double> f = x => left.Y + (right.Y - left.Y) / (right.X - left.X) * (x - left.X);
-
-					{
-						Color c;
-
-						if (line.Selected)
-						{
-							c = Color.Silver;
-						}
-						else
-						{
-							c = Color.FromArgb((int)Math.Round(Color.Silver.R * 0.6), (int)Math.Round(Color.Silver.G * 0.6), (int)Math.Round(Color.Silver.B * 0.6));
-						}
-
-						DrawPolyLine(projPitch, lookPitch, new Vector2(left.X, left.Y), new Vector2(right.X, right.Y), 1.5, c);
-					}
-
+					Color c = line.Selected ? Color.Silver : Color.FromArgb((int)Math.Round(Color.Silver.R * 0.6), (int)Math.Round(Color.Silver.G * 0.6), (int)Math.Round(Color.Silver.B * 0.6));
+					DrawPolyLine(projPitch, lookPitch, new Vector2(left.X, left.Y), new Vector2(right.X, right.Y), 1.5, c);
+					
 					foreach (Area area in SelectedTrack.SoundIndices)
 					{
 						if (right.X < area.LeftX || left.X > area.RightX || area.Index < 0)
@@ -1341,22 +1321,9 @@ namespace TrainEditor2.Models.Trains
 					Vertex right = SelectedTrack.VolumeVertices[line.RightID];
 
 					Func<double, double> f = x => left.Y + (right.Y - left.Y) / (right.X - left.X) * (x - left.X);
-
-					{
-						Color c;
-
-						if (line.Selected)
-						{
-							c = Color.Silver;
-						}
-						else
-						{
-							c = Color.FromArgb((int)Math.Round(Color.Silver.R * 0.6), (int)Math.Round(Color.Silver.G * 0.6), (int)Math.Round(Color.Silver.B * 0.6));
-						}
-
-						DrawPolyLine(projVolume, lookVolume, new Vector2(left.X, left.Y), new Vector2(right.X, right.Y), 1.0, c);
-					}
-
+					Color c = line.Selected ? Color.Silver : Color.FromArgb((int)Math.Round(Color.Silver.R * 0.6), (int)Math.Round(Color.Silver.G * 0.6), (int)Math.Round(Color.Silver.B * 0.6));
+					DrawPolyLine(projVolume, lookVolume, new Vector2(left.X, left.Y), new Vector2(right.X, right.Y), 1.0, c);
+					
 					foreach (Area area in SelectedTrack.SoundIndices)
 					{
 						if (right.X < area.LeftX || left.X > area.RightX || area.Index < 0)
@@ -1378,16 +1345,7 @@ namespace TrainEditor2.Models.Trains
 			// area
 			if (CurrentInputMode == InputMode.SoundIndex)
 			{
-				IEnumerable<Area> areas;
-
-				if (previewArea != null)
-				{
-					areas = SelectedTrack.SoundIndices.Concat(new[] { previewArea });
-				}
-				else
-				{
-					areas = SelectedTrack.SoundIndices;
-				}
+				IEnumerable<Area> areas = previewArea != null ? SelectedTrack.SoundIndices.Concat(new[] { previewArea }) : SelectedTrack.SoundIndices;
 
 				unsafe
 				{

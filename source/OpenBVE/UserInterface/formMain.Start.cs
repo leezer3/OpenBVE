@@ -85,7 +85,7 @@ namespace OpenBve
 
 			if (currentRouteFolder != Folder)
 			{
-				populateRouteList(Folder, listviewRouteFiles, false);
+				PopulateRouteList(Folder, listviewRouteFiles, false);
 			}
 			currentRouteFolder = Folder;
 			try
@@ -100,7 +100,7 @@ namespace OpenBve
 						NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName, 
 						Filter = "*.*"
 					};
-					routeWatcher.Changed += onRouteFolderChanged;
+					routeWatcher.Changed += OnRouteFolderChanged;
 					routeWatcher.EnableRaisingEvents = true;
 				}
 			}
@@ -114,14 +114,14 @@ namespace OpenBve
 			}
 		}
 		
-		private void onRouteFolderChanged(object sender, EventArgs e)
+		private void OnRouteFolderChanged(object sender, EventArgs e)
 		{
 			//We need to invoke the control so we don't get a cross thread exception
-			if (this.InvokeRequired)
+			if (InvokeRequired)
 			{
-				this.BeginInvoke((MethodInvoker) delegate
+				BeginInvoke((MethodInvoker) delegate
 				{
-					onRouteFolderChanged(this, e);
+					OnRouteFolderChanged(this, e);
 				});
 				return;
 			}
@@ -136,7 +136,7 @@ namespace OpenBve
 					return;
 				}
 			}
-			populateRouteList(currentRouteFolder, listviewRouteFiles, false);
+			PopulateRouteList(currentRouteFolder, listviewRouteFiles, false);
 			populateRouteOnce = currentRouteFolder == System.IO.Path.GetTempPath();
 		}
 
@@ -144,7 +144,7 @@ namespace OpenBve
 		/// <param name="routeFolder">The folder containing route files</param>
 		/// <param name="listView">The list view to populate</param>
 		/// <param name="packages">Whether this is a packaged content folder</param>
-		private void populateRouteList(string routeFolder, ListView listView, bool packages)
+		private void PopulateRouteList(string routeFolder, ListView listView, bool packages)
 		{
 			try
 			{
@@ -404,7 +404,7 @@ namespace OpenBve
 					if (t.Length == 0 || Directory.Exists(t))
 					{
 						currentRoutePackageFolder = t;
-						populateRouteList(currentRoutePackageFolder, listViewRoutePackages, true);
+						PopulateRouteList(currentRoutePackageFolder, listViewRoutePackages, true);
 					}
 				}
 			}
@@ -445,7 +445,7 @@ namespace OpenBve
 		{
 			if (tabcontrolRouteSelection.SelectedIndex == 2)
 			{
-				populateRouteList(currentRoutePackageFolder, listViewRoutePackages, true);
+				PopulateRouteList(currentRoutePackageFolder, listViewRoutePackages, true);
 			}
 		}
 
@@ -453,7 +453,7 @@ namespace OpenBve
 		{
 			if (tabcontrolTrainSelection.SelectedIndex == 3)
 			{
-				populateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
+				PopulateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
 			}
 		}
 
@@ -605,7 +605,7 @@ namespace OpenBve
 			}
 			if (currentTrainFolder != Folder)
 			{
-				populateTrainList(Folder, listviewTrainFolders, false);
+				PopulateTrainList(Folder, listviewTrainFolders, false);
 			}
 			currentTrainFolder = Folder;
 			try
@@ -618,7 +618,7 @@ namespace OpenBve
 						NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName, 
 						Filter = "*.*"
 					};
-					trainWatcher.Changed += onTrainFolderChanged;
+					trainWatcher.Changed += OnTrainFolderChanged;
 					trainWatcher.EnableRaisingEvents = true;
 				}
 			}
@@ -628,14 +628,14 @@ namespace OpenBve
 			}
 		}
 
-		private void onTrainFolderChanged(object sender, EventArgs e)
+		private void OnTrainFolderChanged(object sender, EventArgs e)
 		{
 			//We need to invoke the control so we don't get a cross thread exception
-			if (this.InvokeRequired)
+			if (InvokeRequired)
 			{
-				this.BeginInvoke((MethodInvoker) delegate
+				BeginInvoke((MethodInvoker) delegate
 				{
-					onTrainFolderChanged(this, e);
+					OnTrainFolderChanged(this, e);
 				});
 				return;
 			}
@@ -650,19 +650,19 @@ namespace OpenBve
 					return;
 				}
 			}
-			populateTrainList(currentTrainFolder, listviewTrainFolders, false);
+			PopulateTrainList(currentTrainFolder, listviewTrainFolders, false);
 			populateTrainOnce = currentTrainFolder == System.IO.Path.GetTempPath();
 		}
 
 		/// <summary>Populates the train display list from the selected folder</summary>
-		/// <param name="Folder">The folder containing train folders</param>
+		/// <param name="selectedFolder">The folder containing train folders</param>
 		/// <param name="listView">The list view to populate</param>
 		/// <param name="packages">Whether this is a packaged content folder</param>
-		private void populateTrainList(string Folder, ListView listView, bool packages)
+		private void PopulateTrainList(string selectedFolder, ListView listView, bool packages)
 		{
 			try
 			{
-				if (Folder.Length == 0)
+				if (selectedFolder.Length == 0)
 				{
 					// drives
 					listView.Items.Clear();
@@ -683,15 +683,15 @@ namespace OpenBve
 						//Unable to get list of drives
 					}
 				}
-				else if (Directory.Exists(Folder))
+				else if (Directory.Exists(selectedFolder))
 				{
 					listView.Items.Clear();
-					if (!packages || Folder != Program.FileSystem.TrainInstallationDirectory)
+					if (!packages || selectedFolder != Program.FileSystem.TrainInstallationDirectory)
 					{
 						// parent
 						try
 						{
-							DirectoryInfo Info = Directory.GetParent(Folder);
+							DirectoryInfo Info = Directory.GetParent(selectedFolder);
 							if (Info != null)
 							{
 								ListViewItem Item = listView.Items.Add("..");
@@ -716,7 +716,7 @@ namespace OpenBve
 					// folders
 					try
 					{
-						string[] Folders = Directory.GetDirectories(Folder);
+						string[] Folders = Directory.GetDirectories(selectedFolder);
 						Array.Sort(Folders);
 						for (int i = 0; i < Folders.Length; i++)
 						{
@@ -878,7 +878,7 @@ namespace OpenBve
 					{
 						//Pop up to parent directory
 						currentTrainPackageFolder = t;
-						populateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
+						PopulateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
 						return;
 					}
 					if (Directory.Exists(t))
@@ -900,7 +900,7 @@ namespace OpenBve
 							 * Or a plain folder
 							 */
 							currentTrainPackageFolder = t;
-							populateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
+							PopulateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
 							return;
 						}
 
@@ -911,7 +911,7 @@ namespace OpenBve
 								if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(dir))
 								{
 									currentTrainPackageFolder = t;
-									populateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
+									PopulateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
 									return;
 								}
 							}
@@ -921,7 +921,7 @@ namespace OpenBve
 						{
 							//If we're on less than the 3rd level subdir assume it may be a false positive
 							currentTrainPackageFolder = t;
-							populateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
+							PopulateTrainList(currentTrainPackageFolder, listViewTrainPackages, true);
 						}
 					}
 				}

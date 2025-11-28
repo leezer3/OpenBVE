@@ -54,7 +54,10 @@ SECURITY_I, keyboard, Number7, 0
 SECURITY_J, keyboard, Number8, 0
 SECURITY_K, keyboard, Number9, 0
 SECURITY_L, keyboard, Number0, 0
+DRIVER_SUPERVISION, Keyboard, Plus, 0, 0
 CAMERA_INTERIOR, keyboard, F1, 0
+CAMERA_HEADOUT_LEFT, keyboard, Left, 2
+CAMERA_HEADOUT_RIGHT, keyboard, Right, 2
 CAMERA_EXTERIOR, keyboard, F2, 0
 CAMERA_TRACK, keyboard, F3, 0
 CAMERA_FLYBY, keyboard, F4, 0
@@ -109,6 +112,7 @@ DEBUG_ATS, keyboard, F10, 2
 ACCESSIBILITY_CURRENT_SPEED, keyboard, S, 3
 ACCESSIBILITY_NEXT_SIGNAL, keyboard, A, 3
 ACCESSIBILITY_NEXT_STATION, keyboard, T, 3
+ACCESSIBILITY_NEXT_LIMIT, keyboard, L, 3
 UNCOUPLE_REAR, keyboard, Semicolon, 2
 UNCOUPLE_FRONT, keyboard, Semicolon, 3
 SWITCH_MENU, Keyboard, F9, 2, 0

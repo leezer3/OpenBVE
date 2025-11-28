@@ -155,6 +155,9 @@
     <Compile Include="Game\AI\AI.SimpleHuman.cs">
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
+    <Compile Include="System\Logging\BlackBox\BlackBox.Brake.cs" />
+    <Compile Include="System\Logging\BlackBox\BlackBox.Entry.cs" />
+    <Compile Include="System\Logging\BlackBox\BlackBox.Power.cs" />
     <Compile Include="Game\Menu\Menu.Controls.cs" />
     <Compile Include="Game\Menu\Menu.Route.cs" />
     <Compile Include="Game\Menu\Menu.SingleMenu.cs" />
@@ -203,7 +206,6 @@
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderers\Touch.cs" />
-    <Compile Include="Graphics\Textures.cs" />
     <Compile Include="Parsers\Script\TrackFollowingObjectParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <AutoGen>True</AutoGen>
@@ -229,10 +231,11 @@
     <Compile Include="System\Input\JoystickManager\StandardJoystick.cs" />
     <Compile Include="System\Input\ProcessControls.Analog.cs" />
     <Compile Include="System\Input\ProcessControls.Digital.cs" />
-    <Compile Include="System\Logging\BlackBox.cs" />
+    <Compile Include="System\Logging\BlackBox\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
     <Compile Include="System\Program\CommandLine.cs" />
+    <Compile Include="System\QuitMode.cs" />
     <Compile Include="UserInterface\formViewLog.cs">
       <SubType>Form</SubType>
     </Compile>

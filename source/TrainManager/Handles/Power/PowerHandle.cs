@@ -19,7 +19,7 @@ namespace TrainManager.Handles
 			DelayedChanges = new HandleChange[] { };
 		}
 
-		public PowerHandle(int max, TrainBase Train) : base(Train)
+		public PowerHandle(int max, TrainBase train) : base(train)
 		{
 			MaximumNotch = max;
 			MaximumDriverNotch = max;
@@ -28,7 +28,7 @@ namespace TrainManager.Handles
 			DelayedChanges = new HandleChange[] { };
 		}
 
-		public override void Update()
+		public override void Update(double timeElapsed)
 		{
 			if (DelayedChanges.Length == 0)
 			{

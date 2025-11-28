@@ -387,6 +387,15 @@ namespace ObjectViewer {
 		    ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 		    Program.TrainManager.UpdateTrainObjects(0.0, true);
 		    Renderer.ApplyBackgroundColor();
+
+		    if (Files.Count == 1)
+		    {
+			    Renderer.GameWindow.Title = "Object Viewer - " + Path.GetFileName(Files[0]);
+		    }
+		    else
+		    {
+			    Renderer.GameWindow.Title = "Object Viewer";
+		    }
 	    }
 
 

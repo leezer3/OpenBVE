@@ -140,20 +140,12 @@ namespace SoundManager
 		/// <summary>Unconditionally stops the playing sound</summary>
 		public void Stop()
 		{
-			if (Source == null)
-			{
-				return;
-			}
-			Source.Stop();
+			Source?.Stop();
 		}
 
 		public void Pause()
 		{
-			if (Source == null)
-			{
-				return;
-			}
-			Source.Pause();
+			Source?.Pause();
 		}
 
 		/// <summary>Whether the sound is currently playing</summary>

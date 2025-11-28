@@ -5,6 +5,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.Stations;
+using TrainManager.BrakeSystems;
 using TrainManager.Handles;
 using TrainManager.Trains;
 
@@ -110,7 +111,7 @@ namespace TrainManager.SafetySystems
 					double stopPosition = -1;
 					double forwardTolerance = -1;
 					double backwardTolerance = -1;
-					int stopIdx = TrainManagerBase.CurrentRoute.Stations[s].GetStopIndex(Train.NumberOfCars);
+					int stopIdx = TrainManagerBase.CurrentRoute.Stations[s].GetStopIndex(Train);
 					if (selectedStation.Stops.Length != 0)
 					{
 						stopPosition = selectedStation.Stops[stopIdx].TrackPosition;
@@ -127,13 +128,26 @@ namespace TrainManager.SafetySystems
 
 			}
 
+			double bcPressure = 0;
+			double mrPressure = 0;
+			double erPressure = 0;
+			double bpPressure = 0;
+			double sapPressure = 0;
 			//End of additions
 			double speed = this.Train.Cars[this.Train.DriverCar].Specs.PerceivedSpeed;
-			double bcPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure;
-			double mrPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.mainReservoir.CurrentPressure;
-			double erPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.equalizingReservoir.CurrentPressure;
-			double bpPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.brakePipe.CurrentPressure;
-			double sapPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.straightAirPipe.CurrentPressure;
+			if (this.Train.Cars[this.Train.DriverCar].CarBrake is AirBrake airBrake)
+			{
+				bcPressure = airBrake.BrakeCylinder.CurrentPressure;
+				mrPressure = airBrake.MainReservoir.CurrentPressure;
+				erPressure = airBrake.EqualizingReservoir.CurrentPressure;
+				bpPressure = airBrake.BrakePipe.CurrentPressure;
+				sapPressure = airBrake.StraightAirPipe.CurrentPressure;
+			}
+			else if (this.Train.Cars[this.Train.DriverCar].CarBrake is VaccumBrake vacuumBrake)
+			{
+				// TODO: Plugin interface assumes that brake system is air brakes...
+			}
+
 			bool wheelSlip = false;
 			for (int i = 0; i < this.Train.Cars.Length; i++)
 			{
@@ -226,7 +240,15 @@ namespace TrainManager.SafetySystems
 				}
 			}
 
-			return new OpenBveApi.Runtime.Handles(reverser, powerNotch, brakeNotch, this.Train.Handles.LocoBrake.Driver, this.Train.Specs.CurrentConstSpeed, this.Train.Handles.HoldBrake.Driver);
+			if (this.Train.Handles.LocoBrake == null)
+			{
+				return new OpenBveApi.Runtime.Handles(reverser, powerNotch, brakeNotch, 0, this.Train.Specs.CurrentConstSpeed, this.Train.Handles.HoldBrake.Driver);
+			}
+			else
+			{
+				return new OpenBveApi.Runtime.Handles(reverser, powerNotch, brakeNotch, this.Train.Handles.LocoBrake.Driver, this.Train.Specs.CurrentConstSpeed, this.Train.Handles.HoldBrake.Driver);	
+			}
+			
 		}
 
 		/// <summary>Sets the driver handles or the virtual handles.</summary>

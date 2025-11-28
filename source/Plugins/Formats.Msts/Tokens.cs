@@ -1351,14 +1351,55 @@ namespace OpenBve.Formats.MsTs
 		Engine,
 
 		// ORTS specific
+		ORTSUnknown, // Not actually a 'real' token, just used to allow us to handle unknown ORTS tokens gracefully
 		ORTSListName, // ORTS specific for multi-carspawnerlists
 		ORTSSoundFileName, // ORTS specific for individual level crossing sounds
 		ORTSPantographToggle3,
 		ORTSPantographToggle4,
+		ORTSFreightAnims,
+		MSTSFreightAnimEnabled,
+		ORTSDriveWheelWeight,
+		SubType, // in some ORTS stuff
+
 		//needed for our block parser, so let's deliberately use values ORTS will not touch
 		Comment = uint.MinValue + 1,
 		// skip is found in SMS files, identical purpose to comment
 		Skip = Comment,
-		Train = uint.MinValue, 
-    }
+		Ccomment = Comment, // typo
+		_FCalc = Comment, // ENG files edited with FCalc
+		Train = uint.MinValue,
+
+		/*
+		 * Stuff not listed in MSTS editor header files, also includes incorrect spellings
+		 * It's not clear where some of these come from, possibly MSTSBin or simply 'working' but not in the actual MSTS header file
+		 *
+		 */
+		AirBrakeHasLowPressureTest = AirBrakesHasLowPressureTest, // MT Class 86
+		TrainBrakesControllerMaxPressureDropInNormalAppication = TrainBrakesControllerMaxPressureDropInNormalApplication, // MT Class 86
+		RegulatorPilotValveInitialOpening, // Adams B4, UKTS2910
+		RegulatorPilotValveInitialOpenning = RegulatorPilotValveInitialOpening, // typo for above
+		RegulatorPilotValveFullOpening, // Adams B4, UKTS2910
+		Exhaust3, // UK_Diesel_BR_Class50_D400
+		Exhaust4, // UK_Diesel_BR_Class50_D400
+		TrainBrakesControllerHasProportionalBrake, // SL_D6517
+		TrainBrakesProportionalBrakeLag, // SL_D6517
+		Injector1WaterValveVarience, // SL_BR_E2
+		Injector2WaterValveVarience, // SL_BR_E2
+		TrainBrakesControllerMaxApplyRate, // SL_BR_E2
+		TrainBrakesControllerMaxAplicationRate, // MT_DD_WD_90433
+		RunUpTimeToMaxPower, // UK_Electric_VT_Class390
+		NumberOfSteamHeatingPressureSteps, // MT_DD_WD_90433
+		BrakeCutsPowerAtBrakeCylinderPrssure, // NWC_08814
+		MonitoringDeviceAppliesSutsDownEngine, // EB_421_NSE
+		GrateArea,
+		AuxilaryResCapacity, // BR_Green_57XX_4683
+		AuxilaryResMaxPressure, // BR_Green_57XX_4683
+		SSpring = Spring, // Typo
+		DoesWhistleTriggerBell, // GWRKingV
+		BrakePipeVolume, // LU StdTrailer2
+		TrainBrakeControllerMinContinuousService, // BR_HW_5217
+		TrainBrakesPipeLeakRate, // FDB_L1_67708
+		InitialTrigger, // HWH-Manor-Int-80a-01
+		
+	}
 }

@@ -1,7 +1,8 @@
-﻿using System.Linq;
-using OpenBveApi.Hosts;
+﻿using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenBveApi.Routes
 {
@@ -46,6 +47,8 @@ namespace OpenBveApi.Routes
 		public int TrackIndex;
 		/// <summary>The station index at the current location</summary>
 		public int StationIndex;
+		/// <summary>Returns the available power supplies at this track followers location</summary>
+		public Dictionary<PowerSupplyTypes, PowerSupply> AvailablePowerSupplies => currentHost.Tracks[TrackIndex].Elements[LastTrackElement].PowerSupplies;
 
 		private readonly HostInterface currentHost;
 

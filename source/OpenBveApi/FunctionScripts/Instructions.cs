@@ -34,13 +34,18 @@
 		RouteLimit, SectionLimit,
 		SectionAspectNumber, CurrentObjectState,
 		RainDrop, SnowFlake, WiperPosition, WiperState,
+		PantographState, PantographStateOfCar,
 		WheelRadius, WheelRadiusOfCar,
 		WheelSlip, WheelSlipCar,
 		Sanders, SandLevel, SandShots, DSD,
 		AmbientTemperature,
 		BillboardX, BillboardY,
-		EngineRunning, EngineRunningCar, EngineRPM, EngineRPMCar, FuelLevel, FuelLevelCar, Amps, AmpsCar
+		EngineRunning, EngineRunningCar, EngineRPM, EngineRPMCar, FuelLevel, FuelLevelCar, Amps, AmpsCar,
+		OverheadVolts, OverheadVoltsTarget, ThirdRailVolts, ThirdRailVoltsTarget, FourthRailVolts, FourthRailVoltsTarget,
+		OverheadAC, ThirdRailAC, FourthRailAC,
+		OverheadHeight, OverheadHeightTarget, ThirdRailHeight, ThirdRailHeightTarget, FourthRailHeight, FourthRailHeightTarget,
+		OverheadAmps, OverheadAmpsTarget, ThirdRailAmps, ThirdRailAmpsTarget, FourthRailAmps, FourthRailAmpsTarget
 #pragma warning restore CS1591
-			
-		}
+
+	}
 }

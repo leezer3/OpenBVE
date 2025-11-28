@@ -61,4 +61,58 @@ namespace OpenBveApi
 			return BitConverter.ToUInt32(newBytes, 0);
 		}
 	}
+
+	/// <summary>Provides extension methods for working with little-endian binary data</summary>
+	public static class LittleEndianBinaryExtensions
+	{
+		/*
+		 * Couple of little helper methods
+		 * This is faster than using the BitConvertor as we don't have to init a new class every time we call it
+		 */
+
+		/// <summary>Gets a short from the specified offset in a byte array</summary>
+		/// <remarks>Little-endian</remarks>
+		/// <param name="byteArray">The byte array</param>
+		/// <param name="offset">The starting offset of the short</param>
+		public static short ToShort(byte[] byteArray, int offset)
+		{
+			short number = byteArray[offset + 1];
+			number <<= 4;
+			number += byteArray[offset];
+			return number;
+		}
+
+		/// <summary>Gets an Int16 from the specified offset in a byte array</summary>
+		/// <remarks>Little-endian</remarks>
+		/// <param name="byteArray">The byte array</param>
+		/// <param name="offset">The starting offset of the Int16</param>
+		public static int ToInt16(byte[] byteArray, int offset)
+		{
+			return byteArray[offset] | (byteArray[offset + 1] << 8);
+		}
+
+		/// <summary>Gets an Int32 from the specified offset in a byte array</summary>
+		/// <remarks>Little-endian</remarks>
+		/// <param name="byteArray">The byte array</param>
+		/// <param name="offset">The starting offset of the Int32</param>
+		public static int ToInt32(byte[] byteArray, int offset)
+		{
+			return (byteArray[offset] & 0xFF) | ((byteArray[offset + 1] & 0xFF) << 8) | ((byteArray[offset + 2] & 0xFF) << 16) | ((byteArray[offset + 3] & 0xFF) << 24);
+		}
+
+		/// <summary>Gets a little-endian UInt64 from the specified offset in a byte array</summary>
+		/// <param name="buffer">The byte array</param>
+		/// <param name="startIndex">The starting offset of the UInt6</param>
+		/// <returns></returns>
+		public static ulong ToUInt64(byte[] buffer, int startIndex)
+		{
+			ulong ret = 0;
+			for (int i = 0; i < 8; i++)
+			{
+				ret = unchecked((ret << 8) | buffer[startIndex + 8 - 1 - i]);
+			}
+
+			return ret;
+		}
+	}
 }

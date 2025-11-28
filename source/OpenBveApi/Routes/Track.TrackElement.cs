@@ -40,6 +40,8 @@ namespace OpenBveApi.Routes
 		public bool IsDriveable;
 		/// <summary>Whether the element contains a switch</summary>
 		public bool ContainsSwitch;
+		/// <summary>Holds the properties for all available power supplies</summary>
+		public Dictionary<PowerSupplyTypes, PowerSupply> PowerSupplies;
 
 		/// <summary>Creates a new track element</summary>
 		/// <param name="startingTrackPosition">The starting position (relative to zero)</param>
@@ -62,6 +64,7 @@ namespace OpenBveApi.Routes
 			Events = new List<GeneralEvent>();
 			IsDriveable = false;
 			ContainsSwitch = false;
+			PowerSupplies = new Dictionary<PowerSupplyTypes, PowerSupply>();
 		}
 	}
 }

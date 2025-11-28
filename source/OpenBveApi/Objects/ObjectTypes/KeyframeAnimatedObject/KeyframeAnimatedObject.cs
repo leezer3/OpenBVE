@@ -182,12 +182,10 @@ namespace OpenBveApi.Objects
 		/// <param name="direction"></param>
 		/// <param name="up"></param>
 		/// <param name="side"></param>
-		/// <param name="show"></param>
 		/// <param name="timeElapsed">The time elapsed since this object was last updated</param>
-		/// <param name="enableDamping">Whether damping is to be applied for this call</param>
 		/// <param name="isTouch">Whether Animated Object belonging to TouchElement class.</param>
 		/// <param name="camera"></param>
-		public void Update(double trackPosition, Vector3 position, Vector3 direction, Vector3 up, Vector3 side, bool show, double timeElapsed, bool enableDamping, bool isTouch = false, dynamic camera = null)
+		public void Update(double trackPosition, Vector3 position, Vector3 direction, Vector3 up, Vector3 side, double timeElapsed, bool isTouch = false, dynamic camera = null)
 		{
 			if (BaseCar != null)
 			{
@@ -256,6 +254,23 @@ namespace OpenBveApi.Objects
 				staticObject.JoinObjects(keyframeAnimatedObject.Objects[i].Prototype, matricies);
 			}
 			return staticObject;
+		}
+
+		/// <inheritdoc />
+		public override void ApplyTranslation(double x, double y, double z, bool absoluteTranslation = false)
+		{
+			if (absoluteTranslation)
+			{
+				Matricies[0]._matrix.Row3.X = x;
+				Matricies[0]._matrix.Row3.Y = y;
+				Matricies[0]._matrix.Row3.Z = z;
+			}
+			else
+			{
+				Matricies[0]._matrix.Row3.X += x;
+				Matricies[0]._matrix.Row3.Y += y;
+				Matricies[0]._matrix.Row3.Z += z;
+			}
 		}
 	}
 }

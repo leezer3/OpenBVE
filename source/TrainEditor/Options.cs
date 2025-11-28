@@ -92,7 +92,7 @@ namespace TrainEditor
 		{
 			try
 			{
-				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+				StringBuilder builder = new StringBuilder();
 				builder.AppendLine("; Options");
 				builder.AppendLine("; =======");
 				builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
@@ -101,11 +101,11 @@ namespace TrainEditor
 				builder.AppendLine("[language]");
 				builder.AppendLine("code = " + CurrentOptions.LanguageCode);
 				string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_te.cfg");
-				System.IO.File.WriteAllText(configFile, builder.ToString(), new System.Text.UTF8Encoding(true));
+				File.WriteAllText(configFile, builder.ToString(), new UTF8Encoding(true));
 			}
 			catch
 			{
-				MessageBox.Show("An error occured whilst saving the options to disk." + System.Environment.NewLine +
+				MessageBox.Show("An error occured whilst saving the options to disk." + Environment.NewLine +
 								"Please check you have write permission.");
 			}
 		}

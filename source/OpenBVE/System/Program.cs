@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -347,14 +346,14 @@ namespace OpenBve {
 					arguments = FileSystem.RestartArguments + RestartArguments;
 				}
 				try {
-					System.Diagnostics.Process.Start(System.IO.File.Exists(FileSystem.RestartProcess) ? FileSystem.RestartProcess : Application.ExecutablePath, arguments);
+					Process.Start(System.IO.File.Exists(FileSystem.RestartProcess) ? FileSystem.RestartProcess : Application.ExecutablePath, arguments);
 					if (CurrentHost.MonoRuntime)
 					{
 						// Forcefully terminate the original process once the new one has triggered, otherwise we hang around...
 						Environment.Exit(0);
 					}
 				} catch (Exception ex) {
-					Program.ShowMessageBox(ex.Message + @"\n\nProcess = " + FileSystem.RestartProcess + @"\nArguments = " + arguments, Application.ProductName);
+					ShowMessageBox(ex.Message + @"\n\nProcess = " + FileSystem.RestartProcess + @"\nArguments = " + arguments, Application.ProductName);
 				}
 			}
 			else

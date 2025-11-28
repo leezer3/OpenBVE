@@ -1056,7 +1056,8 @@ namespace Train.OpenBve
 			Train.Handles.Power = new PowerHandle(powerNotches, driverPowerNotches, powerDelayUp, powerDelayDown, Train);
 			if (powerReduceSteps != -1)
 			{
-				Train.Handles.Power.ReduceSteps = powerReduceSteps;
+				PowerHandle powerHandle = Train.Handles.Power as PowerHandle;
+				powerHandle.ReduceSteps = powerReduceSteps;
 			}
 
 			if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
@@ -1255,35 +1256,40 @@ namespace Train.OpenBve
 				{
 					Train.Cars[i].TractionModel = new BVETrailerCar(Train.Cars[i]);
 				}
+
+				Train.Cars[i].CarBrake.MainReservoir = new MainReservoir(MainReservoirMinimumPressure, MainReservoirMaximumPressure, 0.01, (trainBrakeType == BrakeSystemType.AutomaticAirBrake ? 0.25 : 0.075) / Cars);
+				Train.Cars[i].CarBrake.MainReservoir.Volume = 0.5; // Organization for Co-Operation between Railways specifies 340L to 680L main reservoir capacity for EMU, so let's pick something in the middle (in m³)
+
+				Train.Cars[i].CarBrake.EqualizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
+				Train.Cars[i].CarBrake.EqualizingReservoir.NormalPressure = 1.005 * OperatingPressure;
+				Train.Cars[i].CarBrake.EqualizingReservoir.Volume = 0.015; // very small reservoir for observation, so guess at 15L
+
+				Train.Cars[i].CarBrake.BrakePipe = new BrakePipe(OperatingPressure, 10000000.0, 1500000.0, 5000000.0, trainBrakeType == BrakeSystemType.ElectricCommandBrake);
+				Train.Cars[i].CarBrake.BrakePipe.Volume = Math.Pow(0.0175 * Math.PI, 2) * (Train.Cars.Length * 1.05); // Assuming Railway Group Standards 3.5cm diameter brake pipe, 5% extra length for bends etc.
+
+				AirBrake airBrake = Train.Cars[i].CarBrake as AirBrake;
 				if (Train.Cars[i].TractionModel.ProvidesPower || Train.IsPlayerTrain && i == Train.DriverCar || trainBrakeType == BrakeSystemType.ElectricCommandBrake)
 				{
-					Train.Cars[i].CarBrake.brakeType = BrakeType.Main;
+					Train.Cars[i].CarBrake.BrakeType = BrakeType.Main;
+					airBrake.Compressor = new Compressor(5000.0, Train.Cars[i].CarBrake.MainReservoir, Train.Cars[i]);
 				}
 				else
 				{
-					Train.Cars[i].CarBrake.brakeType = BrakeType.Auxiliary;
+					Train.Cars[i].CarBrake.BrakeType = BrakeType.Auxiliary;
 				}
-				Train.Cars[i].CarBrake.mainReservoir = new MainReservoir(MainReservoirMinimumPressure, MainReservoirMaximumPressure, 0.01, (trainBrakeType == BrakeSystemType.AutomaticAirBrake ? 0.25 : 0.075) / Cars);
-				Train.Cars[i].CarBrake.mainReservoir.Volume = 0.5; // Organization for Co-Operation between Railways specifies 340L to 680L main reservoir capacity for EMU, so let's pick something in the middle (in m³)
-				Train.Cars[i].CarBrake.airCompressor = new Compressor(5000.0, Train.Cars[i].CarBrake.mainReservoir, Train.Cars[i]);
-				Train.Cars[i].CarBrake.equalizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
-				Train.Cars[i].CarBrake.equalizingReservoir.NormalPressure = 1.005 * OperatingPressure;
-				Train.Cars[i].CarBrake.equalizingReservoir.Volume = 0.015; // very small reservoir for observation, so guess at 15L
-				
-				Train.Cars[i].CarBrake.brakePipe = new BrakePipe(OperatingPressure, 10000000.0, 1500000.0, 5000000.0, trainBrakeType == BrakeSystemType.ElectricCommandBrake);
-				Train.Cars[i].CarBrake.brakePipe.Volume = Math.Pow(0.0175 * Math.PI, 2) * (Train.Cars.Length * 1.05); // Assuming Railway Group Standards 3.5cm diameter brake pipe, 5% extra length for bends etc.
+				airBrake.StraightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
 				{
 					double r = 200000.0 / BrakeCylinderEmergencyMaximumPressure - 1.0;
 					if (r < 0.1) r = 0.1;
 					if (r > 1.0) r = 1.0;
-					Train.Cars[i].CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * OperatingPressure, 200000.0, 0.5, r);
-					Train.Cars[i].CarBrake.auxiliaryReservoir.Volume = 0.16; // guessed 1/3 of main reservoir volume
+					Train.Cars[i].CarBrake.AuxiliaryReservoir = new AuxiliaryReservoir(0.975 * OperatingPressure, 200000.0, 0.5, r);
+					Train.Cars[i].CarBrake.AuxiliaryReservoir.Volume = 0.16; // guessed 1/3 of main reservoir volume
 				}
-				Train.Cars[i].CarBrake.brakeCylinder = new BrakeCylinder(BrakeCylinderServiceMaximumPressure, BrakeCylinderEmergencyMaximumPressure, trainBrakeType == BrakeSystemType.AutomaticAirBrake ? BrakeCylinderUp : 0.3 * BrakeCylinderUp, BrakeCylinderUp, BrakeCylinderDown);
-				Train.Cars[i].CarBrake.brakeCylinder.Volume = 0.14; // 35cm diameter, 15cm stroke
-				Train.Cars[i].CarBrake.straightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
+				Train.Cars[i].CarBrake.BrakeCylinder = new BrakeCylinder(BrakeCylinderServiceMaximumPressure, BrakeCylinderEmergencyMaximumPressure, trainBrakeType == BrakeSystemType.AutomaticAirBrake ? BrakeCylinderUp : 0.3 * BrakeCylinderUp, BrakeCylinderUp, BrakeCylinderDown);
+				Train.Cars[i].CarBrake.BrakeCylinder.Volume = 0.14; // 35cm diameter, 15cm stroke
 				Train.Cars[i].CarBrake.JerkUp = JerkBrakeUp;
 				Train.Cars[i].CarBrake.JerkDown = JerkBrakeDown;
+				Train.Cars[i].CarBrake.Initialize(Plugin.CurrentOptions.TrainStart);
 			}
 			if (Train.Handles.HasHoldBrake & Train.Handles.Brake.MaximumNotch > 1) {
 				Train.Handles.Brake.MaximumNotch--;
@@ -1293,22 +1299,15 @@ namespace Train.OpenBve
 				Train.Handles.HandleType = HandleType.TwinHandle;
 				Train.Handles.HasHoldBrake = false;
 			}
+			Train.Cars[Train.DriverCar].SafetySystems.Add(SafetySystem.OverspeedMessage, new OverspeedMessage(Train.Cars[Train.DriverCar]));
 			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm, Train.Cars[DriverCar]);
 			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
-			Train.SafetySystems.OverspeedDevice = new OverspeedDevice(Train);
 			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
-			Train.SafetySystems.Headlights = new LightSource(1);
+			Train.SafetySystems.Headlights = new LightSource(Train, 1);
 			switch (Plugin.CurrentOptions.TrainStart)
 			{
 				// starting mode
 				case TrainStartMode.ServiceBrakesAts:
-					for (int i = 0; i < Cars; i++) {
-						Train.Cars[i].CarBrake.brakeCylinder.CurrentPressure = Train.Cars[i].CarBrake.brakeCylinder.ServiceMaximumPressure;
-						Train.Cars[i].CarBrake.brakePipe.CurrentPressure = Train.Cars[i].CarBrake.brakePipe.NormalPressure;
-						Train.Cars[i].CarBrake.straightAirPipe.CurrentPressure = Train.Cars[i].CarBrake.brakeCylinder.ServiceMaximumPressure;
-						Train.Cars[i].CarBrake.equalizingReservoir.CurrentPressure = Train.Cars[i].CarBrake.equalizingReservoir.NormalPressure;
-					}
-
 					if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
 					{
 						Train.Handles.Brake.Driver = (int)AirBrakeHandleState.Service;
@@ -1327,13 +1326,6 @@ namespace Train.OpenBve
 					Train.Handles.Reverser.Actual = ReverserPosition.Forwards;
 					break;
 				case TrainStartMode.EmergencyBrakesAts:
-					for (int i = 0; i < Cars; i++) {
-						Train.Cars[i].CarBrake.brakeCylinder.CurrentPressure = Train.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
-						Train.Cars[i].CarBrake.brakePipe.CurrentPressure = 0.0;
-						Train.Cars[i].CarBrake.straightAirPipe.CurrentPressure = 0.0;
-						Train.Cars[i].CarBrake.equalizingReservoir.CurrentPressure = 0.0;
-					}
-
 					if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
 					{
 						Train.Handles.Brake.Driver = (int)AirBrakeHandleState.Service;
@@ -1350,13 +1342,6 @@ namespace Train.OpenBve
 					Train.Handles.EmergencyBrake.Actual = true;
 					break;
 				default:
-					for (int i = 0; i < Cars; i++) {
-						Train.Cars[i].CarBrake.brakeCylinder.CurrentPressure = Train.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
-						Train.Cars[i].CarBrake.brakePipe.CurrentPressure = 0.0;
-						Train.Cars[i].CarBrake.straightAirPipe.CurrentPressure = 0.0;
-						Train.Cars[i].CarBrake.equalizingReservoir.CurrentPressure = 0.0;
-					}
-
 					if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
 					{
 						Train.Handles.Brake.Driver = (int)AirBrakeHandleState.Service;

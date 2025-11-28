@@ -83,5 +83,11 @@ namespace OpenBveApi.Objects
 		/// <returns>The transformed clone</returns>
 		public abstract UnifiedObject TransformRight(double NearDistance, double FarDistance);
 
+		/// <summary>Applies translation</summary>
+		/// <param name="x">The X value</param>
+		/// <param name="y">The Y value</param>
+		/// <param name="z">The Z value</param>
+		public abstract void ApplyTranslation(double x, double y, double z, bool absoluteTranslation = false);
+
 	}
 }

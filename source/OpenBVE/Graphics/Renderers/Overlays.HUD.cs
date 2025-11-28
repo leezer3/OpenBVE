@@ -184,7 +184,7 @@ namespace OpenBve.Graphics.Renderers
 					int s = PlayerTrain.Station;
 					if (s >= 0 && Program.CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != GameMode.Expert && !Program.CurrentRoute.Stations[s].Dummy)
 					{
-						int c = Program.CurrentRoute.Stations[s].GetStopIndex(PlayerTrain.Cars.Length);
+						int c = Program.CurrentRoute.Stations[s].GetStopIndex(PlayerTrain);
 						if (c >= 0)
 						{
 							bool cond;
@@ -377,7 +377,7 @@ namespace OpenBve.Graphics.Renderers
 				case HUDSubject.DistNextStation:
 					if (!Program.CurrentRoute.Stations[stationIndex].PlayerStops())
 					{
-						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(PlayerTrain.NumberOfCars);
+						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(PlayerTrain);
 						double p0 = PlayerTrain.FrontCarTrackPosition;
 						double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[n].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;
 						double m = p1 - p0;
@@ -422,7 +422,7 @@ namespace OpenBve.Graphics.Renderers
 						{
 							if (Program.CurrentRoute.Stations[i].PlayerStops())
 							{
-								int n = Program.CurrentRoute.Stations[i].GetStopIndex(PlayerTrain.NumberOfCars);
+								int n = Program.CurrentRoute.Stations[i].GetStopIndex(PlayerTrain);
 								p1 = Program.CurrentRoute.Stations[i].Stops.Length > 0 ? Program.CurrentRoute.Stations[i].Stops[n].TrackPosition : Program.CurrentRoute.Stations[i].DefaultTrackPosition;
 								break;
 							}
@@ -453,7 +453,7 @@ namespace OpenBve.Graphics.Renderers
 					}
 					else
 					{
-						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(PlayerTrain.NumberOfCars);
+						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(PlayerTrain);
 						double p0 = PlayerTrain.FrontCarTrackPosition;
 						double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[n].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;
 						double m = p1 - p0;

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using DavyKager;
@@ -41,6 +42,7 @@ namespace OpenBve
 				}
 			}
 			
+			[SuppressMessage("ReSharper", "CoVariantArrayConversion")]
 			public SingleMenu(AbstractMenu menu, MenuType menuType, int data = 0, double MaxWidth = 0) : base(menuType)
 			{
 				nextImageButton.IsVisible = false;

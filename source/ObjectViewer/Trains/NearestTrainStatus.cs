@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Trains;
@@ -55,13 +56,13 @@ namespace ObjectViewer.Trains
 				car.Specs.PerceivedSpeed = Speed / 3.6;
 				car.Specs.Acceleration = Acceleration / 3.6;
 
-				if (!NearestTrain.IsExtensionsCfg)
+				if (!NearestTrain.IsExtensionsCfg && car.CarBrake is AirBrake airBrake)
 				{
-					car.CarBrake.mainReservoir.CurrentPressure = MainReservoirPressure * 1000.0;
-					car.CarBrake.equalizingReservoir.CurrentPressure = EqualizingReservoirPressure * 1000.0;
-					car.CarBrake.brakePipe.CurrentPressure = BrakePipePressure * 1000.0;
-					car.CarBrake.brakeCylinder.CurrentPressure = BrakeCylinderPressure * 1000.0;
-					car.CarBrake.straightAirPipe.CurrentPressure = StraightAirPipePressure * 1000.0;
+					car.CarBrake.MainReservoir.CurrentPressure = MainReservoirPressure * 1000.0;
+					car.CarBrake.EqualizingReservoir.CurrentPressure = EqualizingReservoirPressure * 1000.0;
+					car.CarBrake.BrakePipe.CurrentPressure = BrakePipePressure * 1000.0;
+					car.CarBrake.BrakeCylinder.CurrentPressure = BrakeCylinderPressure * 1000.0;
+					airBrake.StraightAirPipe.CurrentPressure = StraightAirPipePressure * 1000.0;
 				}
 
 				car.Doors[0].State = LeftDoorState;

@@ -216,7 +216,7 @@ namespace OpenBveApi.Packages
 		 */
 
 		/// <summary>Checks a list of dependancies or reccomendations to see if they are installed</summary>
-		public static List<Package> checkDependsReccomends(List<Package> currentList)
+		public static List<Package> CheckDependsReccomends(List<Package> currentList)
 		{
 			if (currentList == null)
 			{

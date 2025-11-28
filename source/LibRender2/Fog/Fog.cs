@@ -5,6 +5,11 @@ namespace LibRender2.Fogs
 {
 	public class Fog
 	{
+		/// <summary>Holds a reference to the base renderer</summary>
+		private readonly BaseRenderer Renderer;
+
+		public bool Enabled;
+
 		/// <summary>The offset at which the fog starts</summary>
 		public float Start;
 
@@ -20,7 +25,29 @@ namespace LibRender2.Fogs
 		/// <summary>The color of the fog</summary>
 		public Color24 Color;
 
-		public void SetForImmediateMode()
+		public Fog(BaseRenderer renderer)
+		{
+			Renderer = renderer;
+		}
+
+		public void Set()
+		{
+			if (!Enabled)
+			{
+				return;
+			}
+			if (Renderer.AvailableNewRenderer)
+			{
+				Renderer.CurrentShader.SetIsFog(true);
+				Renderer.CurrentShader.SetFog(this);
+			}
+			else
+			{
+				SetForImmediateMode();
+			}
+		}
+
+		private void SetForImmediateMode()
 		{
 			const float inv255 = 1.0f / 255.0f;
 			if (IsLinear)

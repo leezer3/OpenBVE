@@ -1,4 +1,5 @@
-﻿using SoundManager;
+using OpenBveApi.Trains;
+using SoundManager;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
@@ -14,26 +15,20 @@ namespace TrainManager.BrakeSystems
 		internal readonly CarBase Car;
 
 		/// <summary>Whether this is a main or auxiliary brake system</summary>
-		public BrakeType brakeType;
+		public BrakeType BrakeType;
 
-		public EqualizingReservoir equalizingReservoir;
+		public EqualizingReservoir EqualizingReservoir;
 
-		public MainReservoir mainReservoir;
+		public MainReservoir MainReservoir;
 
-		public AuxiliaryReservoir auxiliaryReservoir;
+		public AuxiliaryReservoir AuxiliaryReservoir;
 
-		public BrakePipe brakePipe;
+		public BrakePipe BrakePipe;
 
-		public BrakeCylinder brakeCylinder;
-
-		public Compressor airCompressor;
-
-		internal EletropneumaticBrakeType electropneumaticBrakeType;
-
-		public StraightAirPipe straightAirPipe;
+		public BrakeCylinder BrakeCylinder;
 		
 		/// <summary>The speed at which the brake control system activates in m/s</summary>
-		public double brakeControlSpeed;
+		public double BrakeControlSpeed;
 
 		/// <summary>The current deceleration provided by the electric motor</summary>
 		public double motorDeceleration;
@@ -66,23 +61,28 @@ namespace TrainManager.BrakeSystems
 		/// <summary>The sound played when the brakes are released</summary>
 		public CarSound Release = new CarSound();
 
-		internal AccelerationCurve[] decelerationCurves;
+		internal AccelerationCurve[] DecelerationCurves;
 		/// <summary>A non-negative floating point number representing the jerk in m/s when the deceleration produced by the electric brake is increased.</summary>
 		public double JerkUp;
 		/// <summary>A non-negative floating point number representing the jerk in m/s when the deceleration produced by the electric brake is decreased.</summary>
 		public double JerkDown;
 
-		protected CarBrake(CarBase car)
+		protected CarBrake(CarBase car, AccelerationCurve[] decelerationCurves)
 		{
 			Car = car;
+			this.DecelerationCurves = decelerationCurves;
 		}
 		
 		/// <summary>Updates the brake system</summary>
-		/// <param name="TimeElapsed">The frame time elapsed</param>
+		/// <param name="timeElapsed">The frame time elapsed</param>
 		/// <param name="currentSpeed">The current speed of the train</param>
 		/// <param name="brakeHandle">The controlling brake handle (NOTE: May either be the loco brake if fitted or the train brake)</param>
 		/// <param name="Deceleration">The deceleration output provided</param>
-		public abstract void Update(double TimeElapsed, double currentSpeed, AbstractHandle brakeHandle, out double Deceleration);
+		public abstract void Update(double timeElapsed, double currentSpeed, AbstractHandle brakeHandle, out double Deceleration);
+
+		/// <summary>Call once on startup to initialize the brake system</summary>
+		/// <param name="startMode">The starting mode of the train, as set by the routefile</param>
+		public abstract void Initialize(TrainStartMode startMode);
 
 		internal double GetRate(double Ratio, double Factor)
 		{
@@ -97,15 +97,19 @@ namespace TrainManager.BrakeSystems
 		/// <returns>The deceleration in m/s</returns>
 		public double DecelerationAtServiceMaximumPressure(int Notch, double currentSpeed)
 		{
+			if (DecelerationCurves == null || DecelerationCurves.Length == 0)
+			{
+				return 0;
+			}
 			if (Notch == 0)
 			{
-				return this.decelerationCurves[0].GetAccelerationOutput(currentSpeed, 1.0);
+				return this.DecelerationCurves[0].GetAccelerationOutput(currentSpeed);
 			}
-			if (this.decelerationCurves.Length >= Notch)
+			if (this.DecelerationCurves.Length >= Notch)
 			{
-				return this.decelerationCurves[Notch - 1].GetAccelerationOutput(currentSpeed, 1.0);
+				return this.DecelerationCurves[Notch - 1].GetAccelerationOutput(currentSpeed);
 			}
-			return this.decelerationCurves[this.decelerationCurves.Length - 1].GetAccelerationOutput(currentSpeed, 1.0);
+			return this.DecelerationCurves[this.DecelerationCurves.Length - 1].GetAccelerationOutput(currentSpeed);
 		}
 
 		/// <summary>Gets the current motor deceleration figure</summary>

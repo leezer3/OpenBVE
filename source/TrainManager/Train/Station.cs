@@ -85,7 +85,7 @@ namespace TrainManager.Trains
 						StationState = TrainStopState.Pending;
 					}
 
-					SafetySystems.PassAlarm.Halt();
+					SafetySystems.PassAlarm?.Halt();
 				}
 			}
 		}
@@ -97,7 +97,7 @@ namespace TrainManager.Trains
 			if (Station >= 0)
 			{
 				int i = Station;
-				int n = TrainManagerBase.CurrentRoute.Stations[Station].GetStopIndex(NumberOfCars);
+				int n = TrainManagerBase.CurrentRoute.Stations[Station].GetStopIndex(this);
 				double tf, tb;
 				if (n >= 0)
 				{
@@ -175,9 +175,12 @@ namespace TrainManager.Trains
 							{
 								// arrival
 								StationState = TrainStopState.Boarding;
-								SafetySystems.StationAdjust.Lit = false;
+								if (SafetySystems.StationAdjust != null)
+								{
+									SafetySystems.StationAdjust.Lit = false;
+								}
 								Specs.DoorClosureAttempted = false;
-								SafetySystems.PassAlarm.Halt();
+								SafetySystems.PassAlarm?.Halt();
 								SoundBuffer buffer = (SoundBuffer) TrainManagerBase.CurrentRoute.Stations[i].ArrivalSoundBuffer;
 								if (buffer != null)
 								{

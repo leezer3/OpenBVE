@@ -10,6 +10,7 @@ using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Motor;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
@@ -91,7 +92,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case "brake":
-						Train.Cars[Car].CarBrake.brakeType = BrakeType.Auxiliary;
+						Train.Cars[Car].CarBrake.BrakeType = BrakeType.Auxiliary;
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
 							ParseBrakeNode(c, fileName, Car, ref Train);
@@ -152,7 +153,7 @@ namespace Train.OpenBve
 							AccelerationCurve[] finalAccelerationCurves = new AccelerationCurve[Plugin.AccelerationCurves.Length];
 							for (int i = 0; i < Plugin.AccelerationCurves.Length; i++)
 							{
-								finalAccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone();
+								finalAccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone(1.0);
 							}
 
 							Train.Cars[Car].TractionModel = new BVEMotorCar(Train.Cars[Car], finalAccelerationCurves);
@@ -468,18 +469,25 @@ namespace Train.OpenBve
 						break;
 					case "driversupervisiondevice":
 					case "dsd":
-						DriverSupervisionDeviceTypes driverSupervisionType = DriverSupervisionDeviceTypes.None;
+						SafetySystemType driverSupervisionType = SafetySystemType.None;
 						DriverSupervisionDeviceMode driverSupervisionMode = DriverSupervisionDeviceMode.Power;
-						DriverSupervisionDeviceTriggerMode triggerMode = DriverSupervisionDeviceTriggerMode.Always;
+						SafetySystemTriggerMode triggerMode = SafetySystemTriggerMode.Always;
+						double alarmTime = 0;
 						double interventionTime = 0;
 						double requiredStopTime = 0;
-						bool loopingAlarm = false;
+						bool loopingAlarm = false, loopingAlert = false;
 						foreach (XmlNode cc in c.ChildNodes)
 						{
 							switch (cc.Name.ToLowerInvariant())
 							{
+								case "alarmtime":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out alarmTime))
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice activation time was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
 								case "interventiontime":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out activationTime))
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out interventionTime))
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice activation time was invalid for Car " + Car + " in XML file " + fileName);
 									}
@@ -494,6 +502,12 @@ namespace Train.OpenBve
 									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out requiredStopTime))
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice required stop time was invalid for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "loopingalert":
+									if (cc.InnerText.ToLowerInvariant() == "1" || cc.InnerText.ToLowerInvariant() == "true")
+									{
+										loopingAlert = true;
 									}
 									break;
 								case "loopingalarm":
@@ -516,7 +530,18 @@ namespace Train.OpenBve
 									break;
 							}
 						}
-						Train.Cars[Car].DSD = new DriverSupervisionDevice(Train.Cars[Car], driverSupervisionType, driverSupervisionMode, triggerMode, interventionTime, requiredStopTime, loopingAlarm);
+
+						if (alarmTime == 0)
+						{
+							alarmTime = interventionTime;
+						}
+
+						DriverSupervisionDevice dsd = new DriverSupervisionDevice(Train.Cars[Car], driverSupervisionType, driverSupervisionMode, triggerMode, alarmTime, interventionTime, requiredStopTime)
+						{
+							LoopingAlarm = loopingAlarm,
+							LoopingAlert = loopingAlert
+						};
+						Train.Cars[Car].SafetySystems.Add(SafetySystem.DriverSupervisionDevice, dsd);
 						break;
 					case "visiblefrominterior":
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
@@ -756,6 +781,8 @@ namespace Train.OpenBve
 						foreach (XmlNode cc in c.ChildNodes)
 						{
 							double idleRPM = 0, minRPM = 0, maxRPM = 0, rpmChangeUpRate = 0, rpmChangeDownRate = 0, idleFuelUse = 0, maxPowerFuelUse = 0, fuelCapacity = 0;
+							double maxAmps = 0, maxRegenAmps = 0;
+							bool isRegenerative = false;
 							switch (cc.Name.ToLowerInvariant())
 							{
 								case "idlerpm":
@@ -813,10 +840,102 @@ namespace Train.OpenBve
 										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
 									}
 									break;
+								case "tractionmotor":
+								case "regenerativetractionmotor":
+									foreach (XmlNode ccc in cc.ChildNodes)
+									{
+										switch (ccc.Name.ToLowerInvariant())
+										{
+											case "maxamps":
+												if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxAmps))
+												{
+													Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+												}
+												break;
+											case "maxregenerativeamps":
+												if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxAmps))
+												{
+													Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+												}
+												break;
+										}
+									}
+
+									if (cc.Name.ToLowerInvariant() == "regenerativetractionmotor")
+									{
+										isRegenerative = true;
+									}
+									break;
 							}
 
 							Train.Cars[Car].TractionModel = new DieselEngine(Train.Cars[Car], Plugin.AccelerationCurves, idleRPM, minRPM, maxRPM, rpmChangeUpRate, rpmChangeDownRate, idleFuelUse, maxPowerFuelUse);
 							Train.Cars[Car].TractionModel.FuelTank = new FuelTank(fuelCapacity, 0, fuelCapacity);
+							if (isRegenerative)
+							{
+								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Train.Cars[Car].TractionModel, maxAmps));
+							}
+							else
+							{
+								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.RegenerativeTractionMotor, new RegenerativeTractionMotor(Train.Cars[Car].TractionModel, maxAmps, maxRegenAmps));
+							}
+						}
+						break;
+					case "electricengine":
+						foreach (XmlNode cc in c.ChildNodes)
+						{
+							bool hasPantograph = false;
+							double maxAmps = 0, maxRegenAmps = 0;
+							bool isRegenerative = false;
+							switch (cc.Name.ToLowerInvariant())
+							{
+								case "collectorshoe":
+								case "pantograph":
+									if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
+									{
+										hasPantograph = true;
+									}
+									break;
+								case "tractionmotor":
+								case "regenerativetractionmotor":
+									foreach (XmlNode ccc in cc.ChildNodes)
+									{
+										switch (ccc.Name.ToLowerInvariant())
+										{
+											case "maxamps":
+												if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxAmps))
+												{
+													Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+												}
+												break;
+											case "maxregenerativeamps":
+												if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxAmps))
+												{
+													Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
+												}
+												break;
+										}
+									}
+
+									if (cc.Name.ToLowerInvariant() == "regenerativetractionmotor")
+									{
+										isRegenerative = true;
+									}
+									break;
+							}
+							Train.Cars[Car].TractionModel = new ElectricEngine(Train.Cars[Car], Plugin.AccelerationCurves);
+							if (hasPantograph)
+							{
+								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.Pantograph, new Pantograph(Train.Cars[Car].TractionModel));
+							}
+
+							if (isRegenerative)
+							{
+								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Train.Cars[Car].TractionModel, maxAmps));
+							}
+							else
+							{
+								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.RegenerativeTractionMotor, new RegenerativeTractionMotor(Train.Cars[Car].TractionModel, maxAmps, maxRegenAmps));
+							}
 						}
 						break;
 					case "particlesource":

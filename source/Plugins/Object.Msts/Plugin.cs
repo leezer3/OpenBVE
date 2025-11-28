@@ -105,7 +105,7 @@ namespace Plugin
 				case 't':
 					using (BinaryReader reader = new BinaryReader(fb))
 					{
-						byte[] newBytes = reader.ReadBytes((int)(fb.Length - fb.Position));
+						byte[] newBytes = reader.ReadBytes((int)(24));
 						string s = unicode ? Encoding.Unicode.GetString(newBytes) : Encoding.ASCII.GetString(newBytes);
 
 						s = s.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
@@ -139,6 +139,21 @@ namespace Plugin
 			catch(Exception ex)
 			{
 				CurrentHost.AddMessage(MessageType.Error, false, "Object.MsTs: Caught the following exception:- "+ ex.Message);
+				unifiedObject = null;
+				return false;
+			}
+			return true;
+		}
+
+		public override bool LoadObject(string path, string wagonFilePath, Encoding Encoding, out UnifiedObject unifiedObject)
+		{
+			MsTsShapeParser.wagonFileDirectory = wagonFilePath;
+			try
+			{
+				unifiedObject = MsTsShapeParser.ReadObject(path);
+			}
+			catch
+			{
 				unifiedObject = null;
 				return false;
 			}
