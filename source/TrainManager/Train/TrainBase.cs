@@ -957,7 +957,7 @@ namespace TrainManager.Trains
 			SafetySystems.PassAlarm?.Halt();
 			int currentTrackElement = Cars[0].FrontAxle.Follower.LastTrackElement;
 			StationState = TrainStopState.Jumping;
-			int stopIndex = TrainManagerBase.CurrentRoute.Stations[stationIndex].GetStopIndex(NumberOfCars);
+			int stopIndex = TrainManagerBase.CurrentRoute.Stations[stationIndex].GetStopIndex(this);
 			if (stopIndex >= 0)
 			{
 				if (IsPlayerTrain)

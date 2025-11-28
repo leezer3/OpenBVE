@@ -71,8 +71,7 @@ namespace OpenBve
 						int j = TrainManager.PlayerTrain.Station;
 						if (j >= 0)
 						{
-							int p = Program.CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
-							if (p >= 0)
+							if (Program.CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain) >= 0)
 							{
 								if (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) < 0.1)
 								{
@@ -104,9 +103,7 @@ namespace OpenBve
 					}
 				}
 				// overspeed
-				double nr = TrainManager.PlayerTrain.CurrentRouteLimit;
-				double ns = TrainManager.PlayerTrain.CurrentSectionLimit;
-				double n = nr < ns ? nr : ns;
+				double n = Math.Min(TrainManager.PlayerTrain.CurrentRouteLimit, TrainManager.PlayerTrain.CurrentSectionLimit);
 				double a = Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) - 0.277777777777778;
 				if (a > n)
 				{
@@ -173,21 +170,19 @@ namespace OpenBve
 					}
 				}
 				// red signal
+				if (TrainManager.PlayerTrain.CurrentSectionLimit == 0.0)
 				{
-					if (TrainManager.PlayerTrain.CurrentSectionLimit == 0.0)
+					if (!RedSignal)
 					{
-						if (!RedSignal)
-						{
-							int x = ScoreValueRedSignal;
-							CurrentValue += x;
-							AddScore(x, ScoreTextToken.PassedRedSignal, 5.0);
-							RedSignal = true;
-						}
+						int x = ScoreValueRedSignal;
+						CurrentValue += x;
+						AddScore(x, ScoreTextToken.PassedRedSignal, 5.0);
+						RedSignal = true;
 					}
-					else
-					{
-						RedSignal = false;
-					}
+				}
+				else
+				{
+					RedSignal = false;
 				}
 				// arrival
 				{
@@ -233,7 +228,7 @@ namespace OpenBve
 								}
 								// position
 								int xc;
-								int p = Program.CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
+								int p = Program.CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain);
 								if (p >= 0)
 								{
 									double d = TrainManager.PlayerTrain.StationDistanceToStopPoint;
@@ -301,33 +296,30 @@ namespace OpenBve
 					}
 				}
 				// departure
+				if (TrainManager.PlayerTrain.Station >= 0 & TrainManager.PlayerTrain.Station < Program.CurrentRoute.Stations.Length & TrainManager.PlayerTrain.Station == DepartureStation)
 				{
-					int j = TrainManager.PlayerTrain.Station;
-					if (j >= 0 & j < Program.CurrentRoute.Stations.Length & j == DepartureStation)
+					bool q;
+					if (Program.CurrentRoute.Stations[TrainManager.PlayerTrain.Station].OpenLeftDoors | Program.CurrentRoute.Stations[TrainManager.PlayerTrain.Station].OpenRightDoors)
 					{
-						bool q;
-						if (Program.CurrentRoute.Stations[j].OpenLeftDoors | Program.CurrentRoute.Stations[j].OpenRightDoors)
+						q = TrainManager.PlayerTrain.StationState == TrainStopState.Completed;
+					}
+					else
+					{
+						q = TrainManager.PlayerTrain.StationState != TrainStopState.Pending & (TrainManager.PlayerTrain.CurrentSpeed < -1.5 | TrainManager.PlayerTrain.CurrentSpeed > 1.5);
+					}
+					if (q)
+					{
+						double r = TrainManager.PlayerTrain.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight;
+						if (r > 0.0)
 						{
-							q = TrainManager.PlayerTrain.StationState == TrainStopState.Completed;
-						}
-						else
-						{
-							q = TrainManager.PlayerTrain.StationState != TrainStopState.Pending & (TrainManager.PlayerTrain.CurrentSpeed < -1.5 | TrainManager.PlayerTrain.CurrentSpeed > 1.5);
-						}
-						if (q)
-						{
-							double r = TrainManager.PlayerTrain.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight;
-							if (r > 0.0)
+							int x = (int)Math.Ceiling(ScoreFactorStationDeparture * r);
+							CurrentValue += x;
+							if (x != 0)
 							{
-								int x = (int)Math.Ceiling(ScoreFactorStationDeparture * r);
-								CurrentValue += x;
-								if (x != 0)
-								{
-									AddScore(x, ScoreTextToken.PrematureDeparture, 5.0);
-								}
+								AddScore(x, ScoreTextToken.PrematureDeparture, 5.0);
 							}
-							DepartureStation = -1;
 						}
+						DepartureStation = -1;
 					}
 				}
 				// passengers
@@ -347,9 +339,8 @@ namespace OpenBve
 				}
 				if (fallenOver & PassengerTimer == 0.0)
 				{
-					int x = ScoreValuePassengerDiscomfort;
-					CurrentValue += x;
-					AddScore(x, ScoreTextToken.PassengerDiscomfort, 5.0);
+					CurrentValue += ScoreValuePassengerDiscomfort;
+					AddScore(ScoreValuePassengerDiscomfort, ScoreTextToken.PassengerDiscomfort, 5.0);
 					PassengerTimer = 5.0;
 				}
 				else

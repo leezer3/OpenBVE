@@ -111,7 +111,7 @@ namespace TrainManager.SafetySystems
 					double stopPosition = -1;
 					double forwardTolerance = -1;
 					double backwardTolerance = -1;
-					int stopIdx = TrainManagerBase.CurrentRoute.Stations[s].GetStopIndex(Train.NumberOfCars);
+					int stopIdx = TrainManagerBase.CurrentRoute.Stations[s].GetStopIndex(Train);
 					if (selectedStation.Stops.Length != 0)
 					{
 						stopPosition = selectedStation.Stops[stopIdx].TrackPosition;

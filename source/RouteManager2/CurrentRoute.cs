@@ -239,7 +239,7 @@ namespace RouteManager2
 					{
 						if (train.Station == d)
 						{
-							int c = Stations[d].GetStopIndex(train.NumberOfCars);
+							int c = Stations[d].GetStopIndex(train);
 
 							if (c >= 0)
 							{

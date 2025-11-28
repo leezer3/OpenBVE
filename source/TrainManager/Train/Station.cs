@@ -97,7 +97,7 @@ namespace TrainManager.Trains
 			if (Station >= 0)
 			{
 				int i = Station;
-				int n = TrainManagerBase.CurrentRoute.Stations[Station].GetStopIndex(NumberOfCars);
+				int n = TrainManagerBase.CurrentRoute.Stations[Station].GetStopIndex(this);
 				double tf, tb;
 				if (n >= 0)
 				{

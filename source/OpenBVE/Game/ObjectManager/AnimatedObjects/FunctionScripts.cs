@@ -1258,7 +1258,7 @@ namespace OpenBve {
 							{
 								stationIdx = Train.LastStation;
 							}
-							Function.Stack[s] = Program.CurrentRoute.Stations[stationIdx].GetStopPosition(Train.NumberOfCars) - Train.FrontCarTrackPosition;
+							Function.Stack[s] = Program.CurrentRoute.Stations[stationIdx].GetStopPosition(Train) - Train.FrontCarTrackPosition;
 						}
 						s++; break;
 					case Instructions.DistanceLastStation:
@@ -1285,7 +1285,7 @@ namespace OpenBve {
 								stationIdx = 0;
 							}
 
-							Function.Stack[s] = Program.CurrentRoute.Stations[stationIdx].GetStopPosition(Train.NumberOfCars) - Train.FrontCarTrackPosition;
+							Function.Stack[s] = Program.CurrentRoute.Stations[stationIdx].GetStopPosition(Train) - Train.FrontCarTrackPosition;
 						}
 						s++; break;
 					case Instructions.StopsNextStation:
@@ -1324,7 +1324,7 @@ namespace OpenBve {
 							}
 							else
 							{
-								Function.Stack[s - 1] = Program.CurrentRoute.Stations[stationIdx].GetStopPosition(Train.NumberOfCars) - Train.FrontCarTrackPosition;
+								Function.Stack[s - 1] = Program.CurrentRoute.Stations[stationIdx].GetStopPosition(Train) - Train.FrontCarTrackPosition;
 							}
 						}
 						else
