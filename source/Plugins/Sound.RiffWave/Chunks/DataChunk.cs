@@ -7,42 +7,40 @@ namespace Plugin
     {
 	    public DataChunk(byte[] dataBytes, WaveFormatEx format) : base(format.Channels)
 	    {
-		    int bytesPerSample;
-
 		    if (!(format is WaveFormatAdPcm))
 		    {
-			    bytesPerSample = format.BitsPerSample / 8;
+			    BytesPerSample = format.BitsPerSample / 8;
 		    }
 		    else
 		    {
-			    bytesPerSample = 2;
+			    BytesPerSample = 2;
 		    }
 
 		    // The size of the data chunk may not be correct, so we use sampleCount as the standard thereafter.
-		    int sampleCount = dataBytes.Length / (format.Channels * bytesPerSample);
+		    int sampleCount = dataBytes.Length / (format.Channels * BytesPerSample);
 
 		    byte[][] buffers = new byte[format.Channels][];
 
 		    for (int i = 0; i < format.Channels; i++)
 		    {
-			    buffers[i] = new byte[sampleCount * bytesPerSample];
+			    buffers[i] = new byte[sampleCount * BytesPerSample];
 		    }
 
 		    for (int i = 0; i < sampleCount; i++)
 		    {
 			    for (int j = 0; j < format.Channels; j++)
 			    {
-				    for (int k = 0; k < bytesPerSample; k++)
+				    for (int k = 0; k < BytesPerSample; k++)
 				    {
-					    buffers[j][i * bytesPerSample + k] = dataBytes[i * bytesPerSample * format.Channels + bytesPerSample * j + k];
+					    buffers[j][i * BytesPerSample + k] = dataBytes[i * BytesPerSample * format.Channels + BytesPerSample * j + k];
 				    }
 			    }
 		    }
 
-		    Buffers = ChangeBitDepth(format.FormatTag, bytesPerSample, sampleCount, buffers);
+		    Buffers = ChangeBitDepth(format.FormatTag, ref BytesPerSample, sampleCount, buffers);
 	    }
 
-		private static byte[][] ChangeBitDepth(WFormatTag formatTag, int bytesPerSample, int sampleCount, byte[][] buffers)
+		private static byte[][] ChangeBitDepth(WFormatTag formatTag, ref int bytesPerSample, int sampleCount, byte[][] buffers)
 		{
 			byte[][] newBuffers = new byte[buffers.Length][];
 
