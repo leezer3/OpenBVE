@@ -410,23 +410,21 @@ namespace Plugin
 				}
 			}
 
-			int bytesPerSample;
-
-			if (!(format is WaveFormatAdPcm))
-			{
-				bytesPerSample = format.BitsPerSample / 8;
-			}
-			else
-			{
-				bytesPerSample = 2;
-			}
-
-
 			byte[][] buffers = new byte[format.Channels][];
 			int startPosition = 0;
 
+			int bytesPerSample = -1;
+
 			for (int i = 0; i < chunks.Count; i++)
 			{
+				if (bytesPerSample == -1)
+				{
+					bytesPerSample = chunks[i].BytesPerSample;
+				}
+				else if (bytesPerSample != chunks[i].BytesPerSample)
+				{
+					throw new InvalidDataException("All chunks must have the same number of bytes per sample.");
+				}
 				for (int j = 0; j < buffers.Length; j++)
 				{
 					if (buffers[j] == null)
@@ -437,7 +435,7 @@ namespace Plugin
 					{
 						Array.Resize(ref buffers[j], buffers[j].Length + chunks[i].Buffers[j].Length);
 					}
-					Array.Copy(chunks[i].Buffers[j], 0, buffers[j],startPosition, chunks[i].Buffers[j].Length);
+					Array.Copy(chunks[i].Buffers[j], 0, buffers[j], startPosition, chunks[i].Buffers[j].Length);
 				}
 				startPosition += buffers[0].Length;
 			}
