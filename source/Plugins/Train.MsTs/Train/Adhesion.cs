@@ -49,14 +49,14 @@ namespace Train.MsTs
 			{
 				WheelSlip = 0.15;
 				Normal = 0.3;
-				Sanding = 2.0;
 			}
 			else
 			{
 				WheelSlip = 0.2;
 				Normal = 0.4;
-				Sanding = 2.0;
 			}
+
+			Sanding = 2.0;
 		}
 
 		internal Adhesion(Block block, CarBase car, bool isSteamEngine)
@@ -89,14 +89,14 @@ namespace Train.MsTs
 				{
 					WheelSlip = 0.15;
 					Normal = 0.3;
-					Sanding = 2.0;
 				}
 				else
 				{
 					WheelSlip = 0.2;
 					Normal = 0.4;
-					Sanding = 2.0;
 				}
+
+				Sanding = 2.0;
 			}
 		}
 		

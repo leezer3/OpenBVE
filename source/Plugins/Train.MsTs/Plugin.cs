@@ -40,14 +40,15 @@ namespace Train.MsTs
 			Renderer = (BaseRenderer) rendererReference;
 			try
 			{
-				if (string.IsNullOrEmpty(FileSystem.MSTSDirectory))
+				if (!string.IsNullOrEmpty(FileSystem.MSTSDirectory))
 				{
-					FileSystem.MSTSDirectory = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft Games\\Train Simulator\\1.0", "Path", string.Empty);
-					string OrTsPath = (string)Registry.GetValue("HKEY_CURRENT_USER\\Software\\OpenRails\\ORTS\\Folders", "Train Simulator", string.Empty);
-					if (!string.IsNullOrEmpty(OrTsPath))
-					{
-						FileSystem.MSTSDirectory = OrTsPath;
-					}
+					return;
+				}
+				FileSystem.MSTSDirectory = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft Games\\Train Simulator\\1.0", "Path", string.Empty);
+				string OrTsPath = (string)Registry.GetValue("HKEY_CURRENT_USER\\Software\\OpenRails\\ORTS\\Folders", "Train Simulator", string.Empty);
+				if (!string.IsNullOrEmpty(OrTsPath))
+				{
+					FileSystem.MSTSDirectory = OrTsPath;
 				}
 			}
 			catch
@@ -58,11 +59,7 @@ namespace Train.MsTs
 
 		public override bool CanLoadTrain(string path)
 		{
-			if (File.Exists(path) && path.ToLowerInvariant().EndsWith(".con"))
-			{
-				return true;
-			}
-			return false;
+			return File.Exists(path) && path.ToLowerInvariant().EndsWith(".con");
 		}
 
 		public override bool LoadTrain(Encoding encoding, string trainPath, ref AbstractTrain train, ref Control[] currentControls)

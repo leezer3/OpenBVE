@@ -43,7 +43,7 @@ using TrainManager.SafetySystems;
 
 namespace Train.MsTs
 {
-	class SoundModelSystemParser
+	internal class SoundModelSystemParser
 	{
 		private static string currentFolder;
 
@@ -60,7 +60,7 @@ namespace Train.MsTs
 			byte[] buffer = new byte[34];
 			fb.Read(buffer, 0, 2);
 
-			bool unicode = (buffer[0] == 0xFF && buffer[1] == 0xFE);
+			bool unicode = buffer[0] == 0xFF && buffer[1] == 0xFE;
 
 			string headerString;
 			if (unicode)

@@ -258,7 +258,7 @@ namespace OpenBve {
 					continue;
 				}
 				ListViewItem Item = listviewTrainRecently.Items.Add(trainFileName);
-				Item.ImageKey = TrainFileName.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase) ? @"msts" : @"train";
+				Item.ImageKey = trainFileName.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase) ? @"msts" : @"train";
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedTrains[i];
 				if (textboxTrainFolder.Items.Count == 0 || !textboxTrainFolder.Items.Contains(trainPath))
 				{

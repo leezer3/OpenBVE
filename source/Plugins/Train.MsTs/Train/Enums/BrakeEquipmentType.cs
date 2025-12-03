@@ -2,7 +2,7 @@
 // ReSharper disable UnusedMember.Global
 namespace Train.MsTs
 {
-	enum BrakeEquipmentType
+	internal enum BrakeEquipmentType
 	{
 		/// <summary>Handbrake is fitted</summary>
 		Handbrake = 1,

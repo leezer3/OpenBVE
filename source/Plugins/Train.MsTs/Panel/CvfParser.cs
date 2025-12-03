@@ -42,7 +42,7 @@ using TrainManager.Trains;
 
 namespace Train.MsTs
 {
-	class CabviewFileParser
+	internal class CabviewFileParser
 	{
 		// constants
 		internal const double StackDistance = 0.000001;
@@ -66,7 +66,7 @@ namespace Train.MsTs
 			byte[] buffer = new byte[34];
 			fb.Read(buffer, 0, 2);
 
-			bool unicode = (buffer[0] == 0xFF && buffer[1] == 0xFE);
+			bool unicode = buffer[0] == 0xFF && buffer[1] == 0xFE;
 
 			string headerString;
 			if (unicode)
@@ -161,7 +161,7 @@ namespace Train.MsTs
 			double x0 = -panelCenter.X / panelResolution;
 			double x1 = (panelSize.X - panelCenter.X) / panelResolution;
 			double y0 = (panelCenter.Y - panelSize.Y) / panelResolution * Plugin.Renderer.Screen.AspectRatio;
-			double y1 = (panelCenter.Y) / panelResolution * Plugin.Renderer.Screen.AspectRatio;
+			double y1 = panelCenter.Y / panelResolution * Plugin.Renderer.Screen.AspectRatio;
 			currentCar.CameraRestriction.BottomLeft = new Vector3(x0 * worldWidth, y0 * worldHeight, eyeDistance);
 			currentCar.CameraRestriction.TopRight = new Vector3(x1 * worldWidth, y1 * worldHeight, eyeDistance);
 			currentCar.DriverYaw = Math.Atan((panelCenter.X - panelOrigin.X) * worldWidth / panelResolution);

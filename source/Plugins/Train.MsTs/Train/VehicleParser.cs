@@ -347,7 +347,7 @@ namespace Train.MsTs
 			byte[] buffer = new byte[34];
 			fb.Read(buffer, 0, 2);
 
-			bool unicode = (buffer[0] == 0xFF && buffer[1] == 0xFE);
+			bool unicode = buffer[0] == 0xFF && buffer[1] == 0xFE;
 
 			string headerString;
 			if (unicode)
@@ -536,7 +536,7 @@ namespace Train.MsTs
 							try
 							{
 								newBlock = block.ReadSubBlock(true);
-								ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
+								ParseBlock(newBlock, fileName, ref wagonName, false, ref car, ref train);
 							}
 							catch
 							{
@@ -1015,23 +1015,23 @@ namespace Train.MsTs
 					
 					for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
 					{
-
-						if (Plugin.CurrentHost.Plugins[i].Object != null && Plugin.CurrentHost.Plugins[i].Object.CanLoadObject(objectFile))
+						if (Plugin.CurrentHost.Plugins[i].Object == null || !Plugin.CurrentHost.Plugins[i].Object.CanLoadObject(objectFile))
 						{
-							Plugin.CurrentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject freightObject);
-							if (exteriorLoaded)
-							{
-								
-								CarSection exteriorCarSection = car.CarSections[CarSectionType.Exterior];
-								exteriorCarSection.AppendObject(Plugin.CurrentHost, new Vector3(0, loadPosition, 0), car, freightObject);
-								car.CarSections[CarSectionType.Exterior] = exteriorCarSection;
-							}
-							else
-							{
-								car.CarSections.Add(CarSectionType.Exterior, new CarSection(Plugin.CurrentHost, ObjectType.Dynamic, false, car, freightObject));
-							}
-							break;
+							continue;
 						}
+						Plugin.CurrentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject freightObject);
+						if (exteriorLoaded)
+						{
+								
+							CarSection exteriorCarSection = car.CarSections[CarSectionType.Exterior];
+							exteriorCarSection.AppendObject(Plugin.CurrentHost, new Vector3(0, loadPosition, 0), car, freightObject);
+							car.CarSections[CarSectionType.Exterior] = exteriorCarSection;
+						}
+						else
+						{
+							car.CarSections.Add(CarSectionType.Exterior, new CarSection(Plugin.CurrentHost, ObjectType.Dynamic, false, car, freightObject));
+						}
+						break;
 					}
 					break;
 				case KujuTokenID.Effects:

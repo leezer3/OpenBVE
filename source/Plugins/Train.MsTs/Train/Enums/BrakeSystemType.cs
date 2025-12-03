@@ -2,7 +2,7 @@
 // ReSharper disable UnusedMember.Global
 namespace Train.MsTs
 {
-    enum BrakeSystemType
+    internal enum BrakeSystemType
     {
         /// <summary>One pipe controls and supplies the air brakes.</summary>
         Air_single_pipe,

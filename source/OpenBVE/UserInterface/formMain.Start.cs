@@ -723,7 +723,7 @@ namespace OpenBve
 					try
 					{
 						string[] Folders = Directory.GetDirectories(selectedFolder);
-						string[] Files = Directory.GetFiles(Folder);
+						string[] Files = Directory.GetFiles(selectedFolder);
 						Array.Sort(Folders);
 						Array.Sort(Files);
 						for (int i = 0; i < Folders.Length; i++)
