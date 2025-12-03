@@ -210,6 +210,7 @@ namespace Train.MsTs
 				case CabComponentType.TriState:
 				case CabComponentType.TwoState:
 				case CabComponentType.MultiStateDisplay:
+				case CabComponentType.CombinedControl:
 					Position.X *= rW;
 					Position.Y *= rH;
 					Size.X *= rW;
@@ -255,6 +256,7 @@ namespace Train.MsTs
 							case PanelSubject.Alerter_Display:
 							case PanelSubject.Penalty_App:
 							case PanelSubject.Throttle_Display:
+							case PanelSubject.CP_Handle:
 							case PanelSubject.CPH_Display:
 							case PanelSubject.Friction_Braking:
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);

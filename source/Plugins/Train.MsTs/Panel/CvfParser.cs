@@ -60,6 +60,7 @@ namespace Train.MsTs
 		internal static bool ParseCabViewFile(string fileName, ref CarBase currentCar)
 		{
 			FileName = fileName;
+			cabComponents.Clear();
 			CurrentFolder = Path.GetDirectoryName(fileName);
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read);
 
