@@ -981,18 +981,10 @@ namespace Plugin
 
 					break;
 				case KujuTokenID.point:
-					x = block.ReadSingle();
-					y = block.ReadSingle();
-					z = block.ReadSingle();
-					point = new Vector3(x, y, z);
-					shape.points.Add(point);
+					shape.points.Add(block.ReadVector3());
 					break;
 				case KujuTokenID.vector:
-					x = block.ReadSingle();
-					y = block.ReadSingle();
-					z = block.ReadSingle();
-					point = new Vector3(x, y, z);
-					shape.normals.Add(point);
+					shape.normals.Add(block.ReadVector3());
 					break;
 				case KujuTokenID.points:
 					int pointCount = block.ReadUInt16();
@@ -1009,10 +1001,7 @@ namespace Plugin
 
 					break;
 				case KujuTokenID.uv_point:
-					x = block.ReadSingle();
-					y = block.ReadSingle();
-					var uv_point = new Vector2(x, y);
-					shape.uv_points.Add(uv_point);
+					shape.uv_points.Add(block.ReadVector2());
 					break;
 				case KujuTokenID.uv_points:
 					int uvPointCount = block.ReadUInt16();
@@ -1540,8 +1529,7 @@ namespace Plugin
 				case KujuTokenID.linear_key:
 					// Frame index
 					frameIndex = block.ReadInt32();
-					Vector3 translation = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
-					vectorFrames[currentFrame] = new VectorFrame(frameIndex, translation);
+					vectorFrames[currentFrame] = new VectorFrame(frameIndex, block.ReadVector3());
 					break;
 			}
 		}

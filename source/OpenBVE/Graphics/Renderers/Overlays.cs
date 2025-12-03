@@ -168,23 +168,12 @@ namespace OpenBve.Graphics.Renderers
 			}
 
 			//Fade to black on change ends
-			if (TrainManager.PlayerTrain != null)
+			if (TrainManager.PlayerTrain.Station >= 0 && Program.CurrentRoute.Stations[TrainManager.PlayerTrain.Station].Type == StationType.ChangeEnds && TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
 			{
-				if (TrainManager.PlayerTrain.Station >= 0 && Program.CurrentRoute.Stations[TrainManager.PlayerTrain.Station].Type == StationType.ChangeEnds && TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
+				double time = TrainManager.PlayerTrain.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight;
+				if (time < 1.0)
 				{
-					double time = TrainManager.PlayerTrain.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight;
-					if (time < 1.0)
-					{
-						FadeToBlackDueToChangeEnds = Math.Max(0.0, 1.0 - time);
-					}
-					else if (FadeToBlackDueToChangeEnds > 0.0)
-					{
-						FadeToBlackDueToChangeEnds -= TimeElapsed;
-						if (FadeToBlackDueToChangeEnds < 0.0)
-						{
-							FadeToBlackDueToChangeEnds = 0.0;
-						}
-					}
+					FadeToBlackDueToChangeEnds = Math.Max(0.0, 1.0 - time);
 				}
 				else if (FadeToBlackDueToChangeEnds > 0.0)
 				{
@@ -194,10 +183,18 @@ namespace OpenBve.Graphics.Renderers
 						FadeToBlackDueToChangeEnds = 0.0;
 					}
 				}
-				if (FadeToBlackDueToChangeEnds > 0.0 & (renderer.Camera.CurrentMode == CameraViewMode.Interior | renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead))
+			}
+			else if (FadeToBlackDueToChangeEnds > 0.0)
+			{
+				FadeToBlackDueToChangeEnds -= TimeElapsed;
+				if (FadeToBlackDueToChangeEnds < 0.0)
 				{
-					renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.0f, 0.0f, 0.0f, (float)FadeToBlackDueToChangeEnds));
+					FadeToBlackDueToChangeEnds = 0.0;
 				}
+			}
+			if (FadeToBlackDueToChangeEnds > 0.0 & (renderer.Camera.CurrentMode == CameraViewMode.Interior | renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead))
+			{
+				renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.0f, 0.0f, 0.0f, (float)FadeToBlackDueToChangeEnds));
 			}
 
 			// finalize

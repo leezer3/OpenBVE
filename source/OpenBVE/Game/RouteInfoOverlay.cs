@@ -85,7 +85,7 @@ namespace OpenBve
 			case OverlayState.Gradient:
 				Program.Renderer.Rectangle.Draw(gradientImage, origin, gradientSize);
 				// get current train position in track
-				int trackPos	= (int)(TrainManager.PlayerTrain.FrontCarTrackPosition);
+				int trackPos = (int)(TrainManager.PlayerTrain.FrontCarTrackPosition);
 				// convert to gradient profile offset
 				Pos.X = gradientSize.Y * (trackPos - Program.CurrentRoute.Information.GradientMinTrack) /
 						(Program.CurrentRoute.Information.GradientMaxTrack - Program.CurrentRoute.Information.GradientMinTrack);
@@ -105,15 +105,15 @@ namespace OpenBve
 			case OverlayState.Map:
 				if (mapImage == null)
 				{
-					mapImage	= new Texture(Program.CurrentRoute.Information.RouteMap);
-					mapSize		= new Vector2(Program.CurrentRoute.Information.RouteMap.Width, Program.CurrentRoute.Information.RouteMap.Height);
+					mapImage = new Texture(Program.CurrentRoute.Information.RouteMap);
+					mapSize	= new Vector2(Program.CurrentRoute.Information.RouteMap.Width, Program.CurrentRoute.Information.RouteMap.Height);
 				}
 				break;
 			case OverlayState.Gradient:
 				if (gradientImage == null)
 				{
-					gradientImage	= new Texture(Program.CurrentRoute.Information.GradientProfile);
-					gradientSize	= new Vector2(Program.CurrentRoute.Information.GradientProfile.Width, Program.CurrentRoute.Information.GradientProfile.Height);
+					gradientImage = new Texture(Program.CurrentRoute.Information.GradientProfile);
+					gradientSize = new Vector2(Program.CurrentRoute.Information.GradientProfile.Width, Program.CurrentRoute.Information.GradientProfile.Height);
 				}
 				break;
 			}
