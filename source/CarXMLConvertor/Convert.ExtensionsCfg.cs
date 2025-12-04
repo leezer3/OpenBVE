@@ -330,7 +330,7 @@ namespace CarXmlConvertor
 					newLines.Add("<StageTwoSpeed>" + curve.StageTwoSpeed + "</StageTwoSpeed>");
 					newLines.Add("<StageTwoExponent>" + curve.StageTwoExponent + "</StageTwoExponent>");
 					newLines.Add("<!-- If manually setting the acceleration figures per motor car, you will normally want a multiplier of 1.0 -->");
-					newLines.Add("<Multiplier>" + curve.StageTwoExponent + "</Multiplier>");
+					newLines.Add("<Multiplier>" + curve.Multiplier + "</Multiplier>");
 					newLines.Add("</OpenBVE>");
 				}
 				newLines.Add("</AccelerationCurves>");
