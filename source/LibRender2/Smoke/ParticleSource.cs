@@ -82,6 +82,10 @@ namespace LibRender2.Smoke
 
 		public void Update(double timeElapsed)
 		{
+			if (!Renderer.AvailableNewRenderer)
+			{
+				return;
+			}
 			dynamic dynamicCar = Car;
 			Transformation directionalTransform = new Transformation(Car.FrontAxle.Follower.WorldDirection, Car.FrontAxle.Follower.WorldUp, Car.FrontAxle.Follower.WorldSide); // to correct for rotation of car
 			for (int i = Particles.Count - 1; i >= 0; i--)
