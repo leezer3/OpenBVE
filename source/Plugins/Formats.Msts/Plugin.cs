@@ -68,6 +68,12 @@ namespace OpenBve.Formats.MsTs
 		/// <summary>Reads a Color32 from the block</summary>
 		public abstract Color32 ReadColorArgb();
 
+		/// <summary>Reads a Vector2 from the block</summary>
+		public Vector2 ReadVector2() => new Vector2(ReadSingle(), ReadSingle());
+
+		/// <summary>Reads a Vector3 from the block</summary>
+		public Vector3 ReadVector3() => new Vector3(ReadSingle(), ReadSingle(), ReadSingle());
+
 		/// <summary>Reads a single-bit precision floating point number from the block, and converts it to the desired units</summary>
 		public abstract float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnit = null) where TUnitType : struct;
 		

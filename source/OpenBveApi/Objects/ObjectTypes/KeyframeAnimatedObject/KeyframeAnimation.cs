@@ -81,15 +81,18 @@ namespace OpenBveApi.Objects
 	    internal double AnimationKey;
 
 	    private double lastDistance;
+		/// <summary>Whether the animation is linked to wheel rotation</summary>
+	    private readonly bool IsWheelLinked;
 
-		/// <summary>Creates a new keyframe animation</summary>
-		/// <param name="parentObject">The parent object</param>
-		/// <param name="parentAnimation">The parent animation</param>
-		/// <param name="name">The animation name</param>
-		/// <param name="frameCount">The total number of frames in the animation</param>
-		/// <param name="frameRate">The framerate of the animation</param>
-		/// <param name="matrix">The base matrix to be transformed</param>
-		public KeyframeAnimation(KeyframeAnimatedObject parentObject, int parentAnimation, string name, int frameCount, double frameRate, Matrix4D matrix)
+	    /// <summary>Creates a new keyframe animation</summary>
+	    /// <param name="parentObject">The parent object</param>
+	    /// <param name="parentAnimation">The parent animation</param>
+	    /// <param name="name">The animation name</param>
+	    /// <param name="frameCount">The total number of frames in the animation</param>
+	    /// <param name="frameRate">The framerate of the animation</param>
+	    /// <param name="matrix">The base matrix to be transformed</param>
+	    /// <param name="wheeLinked">Whether the animation is linked to wheel rotation</param>
+	    public KeyframeAnimation(KeyframeAnimatedObject parentObject, int parentAnimation, string name, int frameCount, double frameRate, Matrix4D matrix, bool wheeLinked)
 	    {
 			ParentObject = parentObject;
 			ParentAnimation = parentAnimation;
@@ -97,6 +100,7 @@ namespace OpenBveApi.Objects
 		    baseMatrix = matrix;
 			FrameCount = frameCount;
 			FrameRate = frameRate / 100;
+			IsWheelLinked = wheeLinked;
 	    }
 
 	    /// <summary>Updates the animation</summary>
@@ -114,25 +118,13 @@ namespace OpenBveApi.Objects
 				if (baseCar != null)
 				{
 					// HACK: use the train as a dynamic to allow us to pull out the car reference
-					if (Name.StartsWith("WHEEL", StringComparison.InvariantCultureIgnoreCase) || Name.StartsWith("ROD", StringComparison.InvariantCultureIgnoreCase) || Name.StartsWith("PISTON", StringComparison.InvariantCultureIgnoreCase))
+					if (IsWheelLinked)
 					{
-						// HACK: use the train as a dynamic to allow us to pull out the car reference
 						double wheelRadius = 0;
 
-						if (Name.StartsWith("ROD", StringComparison.InvariantCultureIgnoreCase) || Name.StartsWith("PISTON", StringComparison.InvariantCultureIgnoreCase))
+						if (Name.StartsWith("WHEEL", StringComparison.InvariantCultureIgnoreCase))
 						{
-							if (baseCar.DrivingWheels.Count > 0)
-							{
-								wheelRadius = baseCar.DrivingWheels[0].Radius;
-							}
-							else
-							{
-								AnimationKey = 0;
-								return;
-							}
-						}
-						else
-						{
+							// Animations starting with WHEEL are linked to the wheel index
 							// find first digit from the end (to account for stuff like wheel11_tread from MSTSBin)
 							int idx = Name.Length - 1;
 							while (idx > 0)
@@ -183,6 +175,20 @@ namespace OpenBveApi.Objects
 									}
 									wheelset++;
 								}
+							}
+							
+						}
+						else
+						{
+							// Other wheel linked animations link to the first driving wheel
+							if (baseCar.DrivingWheels.Count > 0)
+							{
+								wheelRadius = baseCar.DrivingWheels[0].Radius;
+							}
+							else
+							{
+								AnimationKey = 0;
+								return;
 							}
 						}
 
@@ -254,7 +260,7 @@ namespace OpenBveApi.Objects
 	    /// <returns>The cloned animation</returns>
 	    public KeyframeAnimation Clone(KeyframeAnimatedObject parentObject)
 	    {
-		    KeyframeAnimation kf = new KeyframeAnimation(parentObject, ParentAnimation, Name, FrameCount, FrameRate, Matrix);
+		    KeyframeAnimation kf = new KeyframeAnimation(parentObject, ParentAnimation, Name, FrameCount, FrameRate, Matrix, IsWheelLinked);
 		    kf.AnimationControllers = new AbstractAnimation[AnimationControllers.Length];
 		    for (int i = 0; i < AnimationControllers.Length; i++)
 		    {

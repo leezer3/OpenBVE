@@ -33,6 +33,7 @@ using SharpCompress.Compressors.Deflate;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 
@@ -471,9 +472,21 @@ namespace Plugin
 		private static KeyframeAnimatedObject newResult;
 		internal static string wagonFileDirectory;
 
+		private static readonly string[] wheelsLinkedNodes = { "CON_ROD", "DRIVER_CONROD", "ECCENTRIC_ROD", "PISTON_ROD", "EXPANSION_LINK", "XHEAD_LINK", "COMBINATION_LEVER", "RADIUS_ARM", "EXPANSION_LINK", "W1_ECC", "W2_ECC", "W3_ECC", "W4_ECC" };
+
 		private static bool IsAnimated(string matrixName)
 		{
-			if (matrixName.StartsWith("WHEELS") || matrixName.StartsWith("ROD") || matrixName.StartsWith("BOGIE") || matrixName.StartsWith("PISTON") || matrixName.StartsWith("PANTOGRAPH"))
+			if (matrixName.StartsWith("WHEELS", StringComparison.InvariantCultureIgnoreCase) || matrixName.StartsWith("ROD", StringComparison.InvariantCultureIgnoreCase) || matrixName.StartsWith("BOGIE", StringComparison.InvariantCultureIgnoreCase) || matrixName.StartsWith("PISTON", StringComparison.InvariantCultureIgnoreCase) || matrixName.StartsWith("PANTOGRAPH", StringComparison.InvariantCultureIgnoreCase) || wheelsLinkedNodes.Contains(matrixName, StringComparer.InvariantCultureIgnoreCase))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		private static bool IsWheelLinked(string matrixName)
+		{
+			if (matrixName.StartsWith("WHEEL", StringComparison.InvariantCultureIgnoreCase) || matrixName.StartsWith("ROD", StringComparison.InvariantCultureIgnoreCase) || matrixName.StartsWith("PISTON", StringComparison.InvariantCultureIgnoreCase) || wheelsLinkedNodes.Contains(matrixName, StringComparer.InvariantCultureIgnoreCase))
 			{
 				return true;
 			}
@@ -596,7 +609,7 @@ namespace Plugin
 
 					if (shape.Matricies[i].Name.StartsWith("WHEELS"))
 					{
-						KeyframeAnimation newAnimation = new KeyframeAnimation(newResult, -1, shape.Matricies[i].Name, 8, 60, shape.Matricies[i].Matrix);
+						KeyframeAnimation newAnimation = new KeyframeAnimation(newResult, -1, shape.Matricies[i].Name, 8, 60, shape.Matricies[i].Matrix, true);
 						newAnimation.AnimationControllers = new[]
 						{
 							new TcbKey(shape.Matricies[i].Name, defaultWheelRotationFrames)
@@ -981,18 +994,10 @@ namespace Plugin
 
 					break;
 				case KujuTokenID.point:
-					x = block.ReadSingle();
-					y = block.ReadSingle();
-					z = block.ReadSingle();
-					point = new Vector3(x, y, z);
-					shape.points.Add(point);
+					shape.points.Add(block.ReadVector3());
 					break;
 				case KujuTokenID.vector:
-					x = block.ReadSingle();
-					y = block.ReadSingle();
-					z = block.ReadSingle();
-					point = new Vector3(x, y, z);
-					shape.normals.Add(point);
+					shape.normals.Add(block.ReadVector3());
 					break;
 				case KujuTokenID.points:
 					int pointCount = block.ReadUInt16();
@@ -1009,10 +1014,7 @@ namespace Plugin
 
 					break;
 				case KujuTokenID.uv_point:
-					x = block.ReadSingle();
-					y = block.ReadSingle();
-					var uv_point = new Vector2(x, y);
-					shape.uv_points.Add(uv_point);
+					shape.uv_points.Add(block.ReadVector2());
 					break;
 				case KujuTokenID.uv_points:
 					int uvPointCount = block.ReadUInt16();
@@ -1412,10 +1414,11 @@ namespace Plugin
 					{
 						if (block.Label != "MAIN")
 						{
-							if (block.Label.StartsWith("ROD", StringComparison.InvariantCultureIgnoreCase) || block.Label.StartsWith("PISTON", StringComparison.InvariantCultureIgnoreCase))
+							if (block.Label.StartsWith("ROD", StringComparison.InvariantCultureIgnoreCase) || block.Label.StartsWith("PISTON", StringComparison.InvariantCultureIgnoreCase) || wheelsLinkedNodes.Contains(block.Label, StringComparer.InvariantCultureIgnoreCase))
 							{
 								// Undocumented 'feature': rod and piston, if not linked to a parent in the shape
 								// file seem to link to WHEELS1 to determine animation key
+								// see also the list in wheelsLinkedNodes (OR + MSTSBin)
 								for (int i = 0; i < shape.Matricies.Count; i++)
 								{
 									if (shape.Matricies[i].Name.Equals("WHEELS1", StringComparison.InvariantCultureIgnoreCase))
@@ -1432,7 +1435,7 @@ namespace Plugin
 							
 						}
 					}
-					KeyframeAnimation currentNode = new KeyframeAnimation(newResult, parentAnimation, block.Label, shape.Animations[shape.Animations.Count - 1].FrameCount, shape.Animations[shape.Animations.Count - 1].FrameRate, matrix);
+					KeyframeAnimation currentNode = new KeyframeAnimation(newResult, parentAnimation, block.Label, shape.Animations[shape.Animations.Count - 1].FrameCount, shape.Animations[shape.Animations.Count - 1].FrameRate, matrix, IsWheelLinked(block.Label));
 					newBlock = block.ReadSubBlock(KujuTokenID.controllers);
 					ParseBlock(newBlock, ref shape, ref currentNode);
 					if (currentNode.AnimationControllers.Length != 0)
@@ -1453,7 +1456,7 @@ namespace Plugin
 						{
 							// some objects, e.g. the default Class 50 provide a wheel animation with no controllers
 							// re-create and add a default 8 frame animation (as in some with this 'issue' the frame count / rate is also wrong...)
-							currentNode = new KeyframeAnimation(newResult, parentAnimation, block.Label, 8, 60, matrix);
+							currentNode = new KeyframeAnimation(newResult, parentAnimation, block.Label, 8, 60, matrix, true);
 							currentNode.AnimationControllers = new AbstractAnimation[]
 							{
 								new TcbKey(currentNode.Name, defaultWheelRotationFrames)
@@ -1540,8 +1543,7 @@ namespace Plugin
 				case KujuTokenID.linear_key:
 					// Frame index
 					frameIndex = block.ReadInt32();
-					Vector3 translation = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
-					vectorFrames[currentFrame] = new VectorFrame(frameIndex, translation);
+					vectorFrames[currentFrame] = new VectorFrame(frameIndex, block.ReadVector3());
 					break;
 			}
 		}

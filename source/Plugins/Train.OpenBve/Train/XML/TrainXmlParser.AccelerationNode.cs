@@ -61,7 +61,14 @@ namespace Train.OpenBve
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Stage two exponent was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
 										}
-
+										break;
+									case "multiplier":
+										if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out double multiplier) || multiplier <= 0 || multiplier > 50)
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Multiplier was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
+											multiplier = Plugin.AccelerationCurves[0].Multiplier;
+										}
+										curve.Multiplier = multiplier;
 										break;
 								}
 							}
