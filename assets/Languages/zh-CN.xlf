@@ -1576,7 +1576,7 @@
 					</trans-unit>
 					<trans-unit id="advanced_load_advance">
 						<source>Load in advance</source>
-						<target>提前加载</target>
+						<target>预先加载</target>
 					</trans-unit>
 					<trans-unit id="advanced_is_use_new_renderer">
 						<source>Enable the new renderer</source>
@@ -1588,7 +1588,7 @@
 					</trans-unit>
 					<trans-unit id="advanced_unload_textures">
 						<source>Unload unused textures</source>
-						<target>卸载未使用的材质</target>
+						<target>不加载未使用的材质</target>
 					</trans-unit>
 					<trans-unit id="advanced_cursor">
 						<source>Cursor</source>
