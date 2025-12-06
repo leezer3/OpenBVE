@@ -1620,6 +1620,10 @@
 						<source>Other items installation directory:</source>
 						<target>Carpeta d&apos;instal·lació d&apos;altres paquets:</target>
 					</trans-unit>
+					<trans-unit id="package_msts_directory">
+						<source>MSTS installation directory:</source>
+						<target>Carpeta d&apos;instal·lació de MSTS:</target>
+					</trans-unit>
 					<trans-unit id="package_compression">
 						<source>Package compression format:</source>
 						<target>Format de compressió dels paquets:</target>
