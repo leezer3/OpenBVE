@@ -327,7 +327,7 @@ namespace OpenBve.Graphics
 				{
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars[i].ParticleSources?.Count; j++)
 					{
-						TrainManager.PlayerTrain.Cars[i].ParticleSources[j]?.Update(TimeElapsed);
+						TrainManager.PlayerTrain.Cars[i].ParticleSources[j]?.Update(CurrentInterface == InterfaceType.Normal ? TimeElapsed : 0);
 					}
 				}
 			}
