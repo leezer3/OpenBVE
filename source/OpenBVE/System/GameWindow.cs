@@ -39,12 +39,12 @@ using MouseCursor = LibRender2.MouseCursor;
 
 namespace OpenBve
 {
-	class OpenBVEGame: GameWindow
+	internal class OpenBVEGame: GameWindow
 	{
 		/// <summary>The current time acceleration factor</summary>
-		int TimeFactor = 1;
-		double TotalTimeElapsedForInfo;
-		double TotalTimeElapsedForSectionUpdate;
+		private int TimeFactor = 1;
+		private double TotalTimeElapsedForInfo;
+		private double TotalTimeElapsedForSectionUpdate;
 		private bool loadComplete;
 		private bool firstFrame;
 		private double RenderTimeElapsed;
@@ -916,7 +916,7 @@ namespace OpenBve
 			//Create AI driver for the player train if specified via the commmand line
 			if (Game.InitialAIDriver)
 			{
-				TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
+				TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, double.PositiveInfinity);
 				if (TrainManager.PlayerTrain.Plugin != null && TrainManager.PlayerTrain.Plugin.SupportsAI == AISupport.None)
 				{
 					MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","aiunable"}),MessageDependency.None, GameMode.Expert,

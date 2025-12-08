@@ -10,11 +10,11 @@ using OpenBveApi.Hosts;
 namespace OpenBve
 {
     /// <summary>Provides functions for handling crashes, and producing an appropriate error log</summary>
-    class CrashHandler
+    internal class CrashHandler
     {
-        static readonly string CrashLog = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder,"OpenBVE Crash- " + DateTime.Now.ToString("yyyy.M.dd[HH.mm]") + ".log");
+        private static readonly string CrashLog = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder,"OpenBVE Crash- " + DateTime.Now.ToString("yyyy.M.dd[HH.mm]") + ".log");
         /// <summary>Catches all unhandled exceptions within the current appdomain</summary>
-        internal static void CurrentDomain_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
+        internal static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
 	        if (Program.CurrentHost.Platform == HostPlatform.AppleOSX && IntPtr.Size !=4)
 	        {

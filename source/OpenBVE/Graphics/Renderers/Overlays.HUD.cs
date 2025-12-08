@@ -409,7 +409,7 @@ namespace OpenBve.Graphics.Renderers
 					}
 					else
 					{
-						t = String.Empty;
+						t = string.Empty;
 					}
 					break;
 				case HUDSubject.DistNextStation2:

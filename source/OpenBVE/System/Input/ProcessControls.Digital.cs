@@ -835,7 +835,7 @@ namespace OpenBve
 							if (TrainManager.PlayerTrain.AI == null)
 							{
 								TrainManager.PlayerTrain.AI =
-									new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
+									new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, double.PositiveInfinity);
 								if (TrainManager.PlayerTrain.Plugin != null && TrainManager.PlayerTrain.Plugin.SupportsAI == AISupport.None)
 								{
 									MessageManager.AddMessage(

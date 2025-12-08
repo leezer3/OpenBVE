@@ -136,7 +136,7 @@ namespace OpenBve
 					{
 						Program.Renderer.Camera.CurrentMode = CameraViewMode.InteriorLookAhead;
 					}
-					TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
+					TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, double.PositiveInfinity);
 					if (TrainManager.PlayerTrain.Plugin != null && TrainManager.PlayerTrain.Plugin.SupportsAI == AISupport.None)
 					{
 						MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","aiunable"}), MessageDependency.None, GameMode.Expert, MessageColor.White, 10, null);
