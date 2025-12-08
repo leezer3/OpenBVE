@@ -1093,6 +1093,11 @@ namespace Train.OpenBve
 				}
 			}
 
+			if (!Train.Cars[Car].TractionModel.ProvidesPower && Train.Cars[Car].ParticleSources.Count > 0)
+			{
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Car " + Car + " has a particle source assigned, but is not a motor car in XML file " + fileName);
+			}
+
 			if (Train.Cars[Car].ReAdhesionDevice == null)
 			{
 				// if required create default train readhesion device- May have already been setup earlier in the XML
