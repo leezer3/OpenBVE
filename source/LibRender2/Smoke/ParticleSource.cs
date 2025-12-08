@@ -114,7 +114,7 @@ namespace LibRender2.Smoke
 						movementDirection = new Vector3(0, 0, -1);
 					}
 					movementDirection.Rotate(directionalTransform);
-					Vector3 vehicleMovement = (Car.CurrentSpeed / MaxSpeed) * movementDirection * timeElapsed;
+					Vector3 vehicleMovement = (Math.Abs(Car.CurrentSpeed) / MaxSpeed) * movementDirection * timeElapsed;
 
 					if (dynamicCar.TractionModel.CurrentPower > 0)
 					{
