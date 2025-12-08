@@ -174,9 +174,8 @@ namespace OpenBve
 				{
 					if (!RedSignal)
 					{
-						int x = ScoreValueRedSignal;
-						CurrentValue += x;
-						AddScore(x, ScoreTextToken.PassedRedSignal, 5.0);
+						CurrentValue += ScoreValueRedSignal;
+						AddScore(ScoreValueRedSignal, ScoreTextToken.PassedRedSignal, 5.0);
 						RedSignal = true;
 					}
 				}

@@ -287,8 +287,6 @@ namespace OpenBve.Graphics
 							UnsetAlphaFunc();
 							additive = true;
 						}
-
-						face.Draw();
 					}
 					else
 					{
@@ -297,8 +295,8 @@ namespace OpenBve.Graphics
 							SetAlphaFunc();
 							additive = false;
 						}
-						face.Draw();
 					}
+					face.Draw();
 				}
 			}
 
@@ -447,8 +445,6 @@ namespace OpenBve.Graphics
 								UnsetAlphaFunc();
 								additive = true;
 							}
-
-							face.Draw();
 						}
 						else
 						{
@@ -457,9 +453,8 @@ namespace OpenBve.Graphics
 								SetAlphaFunc();
 								additive = false;
 							}
-
-							face.Draw();
 						}
+						face.Draw();
 					}
 				}
 

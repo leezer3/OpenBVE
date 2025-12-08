@@ -547,11 +547,7 @@ namespace OpenBve.Graphics.Renderers
 				x += Element.TransitionVector.X * s * s;
 				y += Element.TransitionVector.Y * s * s;
 			}
-			if ((Element.Transition & HUD.Transition.Fade) != 0)
-			{
-				alpha = (float)(1.0 - Element.TransitionState);
-			}
-			else if (Element.Transition == HUD.Transition.None)
+			if ((Element.Transition & HUD.Transition.Fade) != 0 || Element.Transition == HUD.Transition.None)
 			{
 				alpha = (float)(1.0 - Element.TransitionState);
 			}

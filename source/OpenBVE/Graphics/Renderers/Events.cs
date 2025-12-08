@@ -181,15 +181,12 @@ namespace OpenBve.Graphics.Renderers
 							cubePos.Y += dx * f.WorldSide.Y + dy * f.WorldUp.Y + dz * f.WorldDirection.Y;
 							cubePos.Z += dx * f.WorldSide.Z + dy * f.WorldUp.Z + dz * f.WorldDirection.Z;
 
-							if (renderer.CubesToDraw.ContainsKey(t))
-							{
-								renderer.CubesToDraw[t].Add(cubePos);
-							}
-							else
+							if (!renderer.CubesToDraw.ContainsKey(t))
 							{
 								renderer.CubesToDraw.Add(t, new HashSet<Vector3>());
-								renderer.CubesToDraw[t].Add(cubePos);
 							}
+
+							renderer.CubesToDraw[t].Add(cubePos);
 						}
 					}
 				}

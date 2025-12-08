@@ -327,20 +327,17 @@ namespace OpenBve {
 					}
 				} else {
 					// without body or head
-					double totalYaw = headYaw;
-					double totalPitch = headPitch;
-					double totalRoll = headRoll;
-					if (totalYaw != 0.0) {
-						dF.Rotate(uF, totalYaw);
-						sF.Rotate(uF, totalYaw);
+					if (headYaw != 0.0) {
+						dF.Rotate(uF, headYaw);
+						sF.Rotate(uF, headYaw);
 					}
-					if (totalPitch != 0.0) {
-						dF.Rotate(sF, -totalPitch);
-						uF.Rotate(sF, -totalPitch);
+					if (headPitch != 0.0) {
+						dF.Rotate(sF, -headPitch);
+						uF.Rotate(sF, -headPitch);
 					}
-					if (totalRoll != 0.0) {
-						uF.Rotate(dF, -totalRoll);
-						sF.Rotate(dF, -totalRoll);
+					if (headRoll != 0.0) {
+						uF.Rotate(dF, -headRoll);
+						sF.Rotate(dF, -headRoll);
 					}
 				}
 

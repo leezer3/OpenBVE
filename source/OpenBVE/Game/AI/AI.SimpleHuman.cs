@@ -1278,24 +1278,21 @@ namespace OpenBve
 									}
 								}
 							}
-							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is TrackEndEvent trackEndEvent)
+							else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is TrackEndEvent trackEndEvent && Train.IsPlayerTrain)
 							{
-								// track end
-								if (Train.IsPlayerTrain)
+								// track end (AI trains will simply carry on and disappear)
+								double dist = stp + Train.FrontCarTrackPosition - trackEndEvent.TrackPositionDelta;
+								double edec;
+								if (dist >= 15.0)
 								{
-									double dist = stp + Train.FrontCarTrackPosition - trackEndEvent.TrackPositionDelta;
-									double edec;
-									if (dist >= 15.0)
-									{
-										edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
-									}
-									else
-									{
-										edec = brakeDeceleration;
-									}
-
-									if (edec > dec) dec = edec;
+									edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
 								}
+								else
+								{
+									edec = brakeDeceleration;
+								}
+
+								if (edec > dec) dec = edec;
 							}
 						}
 					}

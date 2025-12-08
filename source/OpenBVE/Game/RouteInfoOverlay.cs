@@ -20,7 +20,7 @@ namespace OpenBve
 			Map,
 			Gradient,
 			NumOf
-		};
+		}
 
 		/// <summary>The width of the gradient position bar in pixels</summary>
 		private const int gradientPosWidth= 2;

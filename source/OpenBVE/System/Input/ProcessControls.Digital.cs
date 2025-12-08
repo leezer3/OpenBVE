@@ -15,7 +15,6 @@ using OpenBveApi.Runtime;
 using RouteManager2.MessageManager;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
-using System;
 using System.Linq;
 using TrainManager;
 using TrainManager.Car;

@@ -111,23 +111,21 @@ namespace OpenBve {
 		}
 
 		private void listviewInputDevice_SelectedIndexChanged(object sender, EventArgs e) {
+			Tag = new object();
 			if (listviewInputDevice.SelectedIndices.Count == 1) {
 				int index = listviewInputDevice.SelectedIndices[0];
-				Tag = new object();
 				UpdateInputDeviceComponent(InputDevicePlugin.AvailablePluginInfos[index].Status);
-				// finalize
-				Tag = null;
 			} else {
-				Tag = new object();
 				checkBoxInputDeviceEnable.Enabled = false;
 				checkBoxInputDeviceEnable.Checked = false;
 				buttonInputDeviceConfig.Enabled = false;
-				Tag = null;
 			}
+			// finalize
+			Tag = null;
 		}
 
 		private void checkBoxInputDeviceEnable_CheckedChanged(object sender, EventArgs e) {
-			if (Tag ==  null && listviewInputDevice.SelectedIndices.Count == 1) {
+			if (Tag == null && listviewInputDevice.SelectedIndices.Count == 1) {
 				int index = listviewInputDevice.SelectedIndices[0];
 				if (checkBoxInputDeviceEnable.Checked) {
 					InputDevicePlugin.CallPluginLoad(index, Program.CurrentHost);

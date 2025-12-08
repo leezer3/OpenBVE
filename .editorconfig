@@ -12,6 +12,7 @@ tab_width = 4
 [*.cs]
 csharp_preserve_single_line_blocks = false
 dotnet_diagnostic.IDE1006.severity = none
+dotnet_diagnostic.IDE0130.severity = none
 
 [*.yml]
 indent_style = space

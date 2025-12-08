@@ -1357,19 +1357,12 @@ namespace OpenBve {
 						}
 						else
 						{
-							if (Train == null)
+							int stationIdx = Train.LastStation + 1;
+							if (stationIdx > Program.CurrentRoute.Stations.Length - 1)
 							{
-								Function.Stack[s] = 0.0; //Not part of a train, so distance is irrelevant
+								stationIdx = Train.LastStation;
 							}
-							else
-							{
-								int stationIdx = Train.LastStation + 1;
-								if (stationIdx > Program.CurrentRoute.Stations.Length - 1)
-								{
-									stationIdx = Train.LastStation;
-								}
-								Function.Stack[s] = stationIdx;
-							}
+							Function.Stack[s] = stationIdx;
 						}
 						s++; break;
 					case Instructions.NextStationStop:
