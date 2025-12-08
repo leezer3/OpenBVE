@@ -43,7 +43,7 @@ namespace LibRender2.Smoke
 
 		internal readonly Random Random;
 
-		internal const double MaximumLifeSpan = 15;
+		internal readonly double MaximumLifeSpan;
 
 		internal readonly double MaximumSize;
 
@@ -68,7 +68,7 @@ namespace LibRender2.Smoke
 
 
 
-		public ParticleSource(BaseRenderer renderer, AbstractCar car, Vector3 offset, double maximumSize, double maximumGrownSize, Vector3 movementSpeed)
+		public ParticleSource(BaseRenderer renderer, AbstractCar car, Vector3 offset, double maximumSize, double maximumGrownSize, Vector3 movementSpeed, double maximumLifeSpan)
 		{
 			Renderer = renderer;
 			Random = new Random();
@@ -77,6 +77,7 @@ namespace LibRender2.Smoke
 			Particles = new List<Particle>();
 			MovementSpeed = movementSpeed;
 			Offset = offset;
+			MaximumLifeSpan = maximumLifeSpan;
 			Car = car;
 		}
 
