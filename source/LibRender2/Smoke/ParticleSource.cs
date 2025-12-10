@@ -187,9 +187,10 @@ namespace LibRender2.Smoke
 			Renderer.DefaultShader.SetMaterialSpecular(Color32.White);
 			Renderer.DefaultShader.SetBrightness(1.0f);
 			Renderer.DefaultShader.SetAlphaTest(true);
+			Vector3 carCenter = 0.5 * (Car.FrontAxle.Follower.WorldPosition + Car.RearAxle.Follower.WorldPosition);
 			for (int i = 0; i < Particles.Count; i++)
 			{
-				Renderer.Particle.Draw(Particles[i].Texture, Car.FrontAxle.Follower.WorldPosition + Particles[i].Position, Car.FrontAxle.Follower.WorldDirection, Car.FrontAxle.Follower.WorldUp, Car.FrontAxle.Follower.WorldSide, Particles[i].Size, ParticleTexture, (float)(Particles[i].RemainingLifeSpan / Particles[i].LifeSpan));
+				Renderer.Particle.Draw(Particles[i].Texture, carCenter + Particles[i].Position, Car.FrontAxle.Follower.WorldDirection, Car.FrontAxle.Follower.WorldUp, Car.FrontAxle.Follower.WorldSide, Particles[i].Size, ParticleTexture, (float)(Particles[i].RemainingLifeSpan / Particles[i].LifeSpan));
 			}
 		}
 	}
