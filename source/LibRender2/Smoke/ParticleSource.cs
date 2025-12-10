@@ -118,33 +118,69 @@ namespace LibRender2.Smoke
 
 					if (dynamicCar.TractionModel.CurrentPower > 0)
 					{
-						if (Particles[i].Size.X < MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
+						if (MaximumGrownSize < MaximumSize)
 						{
-							if (Random.NextDouble() < 0.3)
+							// particles shrink
+							if (Particles[i].Size.X > MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
 							{
-								Particles[i].Size.X -= Random.NextDouble() * timeElapsed;
-							}
-							else
-							{
-								Particles[i].Size.X += Random.NextDouble() * timeElapsed;
+								if (Random.NextDouble() < 0.3)
+								{
+									Particles[i].Size.X -= Random.NextDouble() * timeElapsed;
+								}
+								else
+								{
+									Particles[i].Size.X += Random.NextDouble() * timeElapsed;
+								}
+
+								Particles[i].Size.X = Math.Max(0, Math.Max(Particles[i].Size.X, MaximumGrownSize));
 							}
 
-							Particles[i].Size.X = Math.Max(0, Math.Min(Particles[i].Size.X, MaximumGrownSize));
+							if (Particles[i].Size.Y < MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
+							{
+								if (Random.NextDouble() < 0.3)
+								{
+									Particles[i].Size.Y -= Random.NextDouble() * timeElapsed;
+								}
+								else
+								{
+									Particles[i].Size.Y += Random.NextDouble() * timeElapsed;
+								}
+
+								Particles[i].Size.Y = Math.Max(0, Math.Max(Particles[i].Size.Y, MaximumGrownSize));
+							}
 						}
-
-						if (Particles[i].Size.Y < MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
+						else
 						{
-							if (Random.NextDouble() < 0.3)
+							// particles grow (or do nothing)
+							if (Particles[i].Size.X < MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
 							{
-								Particles[i].Size.Y -= Random.NextDouble() * timeElapsed;
-							}
-							else
-							{
-								Particles[i].Size.Y += Random.NextDouble() * timeElapsed;
+								if (Random.NextDouble() < 0.3)
+								{
+									Particles[i].Size.X -= Random.NextDouble() * timeElapsed;
+								}
+								else
+								{
+									Particles[i].Size.X += Random.NextDouble() * timeElapsed;
+								}
+
+								Particles[i].Size.X = Math.Max(0, Math.Min(Particles[i].Size.X, MaximumGrownSize));
 							}
 
-							Particles[i].Size.Y = Math.Max(0, Math.Min(Particles[i].Size.Y, MaximumGrownSize));
+							if (Particles[i].Size.Y < MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
+							{
+								if (Random.NextDouble() < 0.3)
+								{
+									Particles[i].Size.Y -= Random.NextDouble() * timeElapsed;
+								}
+								else
+								{
+									Particles[i].Size.Y += Random.NextDouble() * timeElapsed;
+								}
+
+								Particles[i].Size.Y = Math.Max(0, Math.Min(Particles[i].Size.Y, MaximumGrownSize));
+							}
 						}
+						
 					}
 					Particles[i].Position += vehicleMovement;
 				}
