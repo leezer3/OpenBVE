@@ -280,7 +280,7 @@ namespace Train.OpenBve
 						}
 						break;
 					case BrakeXMLKey.Handle:
-						ParseHandleNode(c, ref Train.Handles.Brake, carIndex, Train, fileName);
+						ParseHandleNode(block, ref Train.Handles.Brake, carIndex, Train, fileName);
 						break;
 					case BrakeXMLKey.LegacyPressureDistribution:
 						if (c.InnerText == "1" || c.InnerText.ToLowerInvariant() == "true")

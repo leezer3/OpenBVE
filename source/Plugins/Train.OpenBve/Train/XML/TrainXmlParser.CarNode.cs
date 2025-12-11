@@ -36,9 +36,7 @@ using OpenBveApi.World;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
-using System.Xml;
 using System.Xml.Linq;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
@@ -277,23 +275,23 @@ namespace Train.OpenBve
 			if (block.ReadBlock(TrainXMLSection.DieselEngine, out Block<TrainXMLSection, TrainXMLKey> dieselEngineBlock))
 			{
 				double rpmChangeUpRate = 0, rpmChangeDownRate = 0;
-				block.GetValue(TrainXMLKey.IdleRPM, out double idleRPM, NumberRange.NonNegative);
-				block.GetValue(TrainXMLKey.MinRPM, out double minRPM, NumberRange.NonNegative);
-				block.GetValue(TrainXMLKey.MaxRPM, out double maxRPM, NumberRange.NonNegative);
-				if (block.GetValue(TrainXMLKey.RPMChangeRate, out double rpmChangeRate, NumberRange.NonNegative))
+				dieselEngineBlock.GetValue(TrainXMLKey.IdleRPM, out double idleRPM, NumberRange.NonNegative);
+				dieselEngineBlock.GetValue(TrainXMLKey.MinRPM, out double minRPM, NumberRange.NonNegative);
+				dieselEngineBlock.GetValue(TrainXMLKey.MaxRPM, out double maxRPM, NumberRange.NonNegative);
+				if (dieselEngineBlock.GetValue(TrainXMLKey.RPMChangeRate, out double rpmChangeRate, NumberRange.NonNegative))
 				{
 					rpmChangeUpRate = rpmChangeRate;
 					rpmChangeDownRate = rpmChangeRate;
 				}
 
-				block.TryGetValue(TrainXMLKey.RPMChangeUpRate, ref rpmChangeUpRate, NumberRange.NonNegative);
-				block.TryGetValue(TrainXMLKey.RPMChangeDownRate, ref rpmChangeDownRate, NumberRange.NonNegative);
-				block.GetValue(TrainXMLKey.IdleFuelUse, out double idleFuelUse, NumberRange.NonNegative);
-				block.GetValue(TrainXMLKey.MaxPowerFuelUse, out double maxPowerFuelUse, NumberRange.NonNegative);
-				block.GetValue(TrainXMLKey.FuelCapacity, out double fuelCapacity, NumberRange.NonNegative);
+				dieselEngineBlock.TryGetValue(TrainXMLKey.RPMChangeUpRate, ref rpmChangeUpRate, NumberRange.NonNegative);
+				dieselEngineBlock.TryGetValue(TrainXMLKey.RPMChangeDownRate, ref rpmChangeDownRate, NumberRange.NonNegative);
+				dieselEngineBlock.GetValue(TrainXMLKey.IdleFuelUse, out double idleFuelUse, NumberRange.NonNegative);
+				dieselEngineBlock.GetValue(TrainXMLKey.MaxPowerFuelUse, out double maxPowerFuelUse, NumberRange.NonNegative);
+				dieselEngineBlock.GetValue(TrainXMLKey.FuelCapacity, out double fuelCapacity, NumberRange.NonNegative);
 				Train.Cars[Car].TractionModel = new DieselEngine(Train.Cars[Car], Plugin.AccelerationCurves, idleRPM, minRPM, maxRPM, rpmChangeUpRate, rpmChangeDownRate, idleFuelUse, maxPowerFuelUse);
 				Train.Cars[Car].TractionModel.FuelTank = new FuelTank(fuelCapacity, 0, fuelCapacity);
-				if (block.ReadBlock(new[] { TrainXMLSection.TractionMotor, TrainXMLSection.RegenerativeTractionMotor }, out Block<TrainXMLSection, TrainXMLKey> tractionMotorBlock))
+				if (dieselEngineBlock.ReadBlock(new[] { TrainXMLSection.TractionMotor, TrainXMLSection.RegenerativeTractionMotor }, out Block<TrainXMLSection, TrainXMLKey> tractionMotorBlock))
 				{
 					tractionMotorBlock.GetValue(TrainXMLKey.MaxAmps, out double maxAmps, NumberRange.NonNegative);
 					tractionMotorBlock.GetValue(TrainXMLKey.MaxRegenAmps, out double maxRegenAmps, NumberRange.NonNegative);
@@ -315,7 +313,7 @@ namespace Train.OpenBve
 				{
 					Train.Cars[Car].TractionModel.Components.Add(EngineComponent.Pantograph, new Pantograph(Train.Cars[Car].TractionModel));
 				}
-				if (block.ReadBlock(new[] { TrainXMLSection.TractionMotor, TrainXMLSection.RegenerativeTractionMotor }, out Block<TrainXMLSection, TrainXMLKey> tractionMotorBlock))
+				if (electricEngineBlock.ReadBlock(new[] { TrainXMLSection.TractionMotor, TrainXMLSection.RegenerativeTractionMotor }, out Block<TrainXMLSection, TrainXMLKey> tractionMotorBlock))
 				{
 					tractionMotorBlock.GetValue(TrainXMLKey.MaxAmps, out double maxAmps, NumberRange.NonNegative);
 					tractionMotorBlock.GetValue(TrainXMLKey.MaxRegenAmps, out double maxRegenAmps, NumberRange.NonNegative);
