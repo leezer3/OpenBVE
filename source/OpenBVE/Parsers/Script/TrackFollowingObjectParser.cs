@@ -23,18 +23,15 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using Formats.OpenBve;
+using Formats.OpenBve.XML;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.XPath;
 using TrainManager.Car;
 using TrainManager.Trains;
 using Path = OpenBveApi.Path;
@@ -43,8 +40,6 @@ namespace OpenBve
 {
 	internal static class TrackFollowingObjectParser
 	{
-		private static readonly CultureInfo culture = CultureInfo.InvariantCulture;
-
 		private static TrainBase Train;
 
 		/// <summary>Parses a track following object</summary>
@@ -52,74 +47,36 @@ namespace OpenBve
 		/// <param name="fileName">The XML file to parse</param>
 		internal static TrainBase ParseTrackFollowingObject(string objectPath, string fileName)
 		{
-			// The current XML file to load
-			XDocument currentXML = XDocument.Load(fileName, LoadOptions.SetLineInfo);
-			List<XElement> scriptedTrainElements = currentXML.XPathSelectElements("/openBVE/TrackFollowingObject").ToList();
-
-			// Check this file actually contains OpenBVE other train definition elements
-			if (!scriptedTrainElements.Any())
+			XMLFile<TrackFollowingObjectSection, TrackFollowingObjectKey> xmlFile = new XMLFile<TrackFollowingObjectSection, TrackFollowingObjectKey>(fileName, "/openBVE/TrackFollowingObject", Program.CurrentHost);
+			if (xmlFile.GetValue(TrackFollowingObjectKey.RunInterval, out double interval) || xmlFile.GetValue(TrackFollowingObjectKey.PreTrain, out interval))
 			{
-				// We couldn't find any valid XML, so return false
-				throw new InvalidDataException();
+				Train = new TrainBase(TrainState.Pending, TrainType.PreTrain);
+				Train.TimetableDelta = interval;
 			}
 
-			try
-			{
-				foreach (XElement element in scriptedTrainElements)
-				{
-					ParseScriptedTrainNode(objectPath, fileName, element);
-				}
-			}
-			catch
-			{
-				return null;
-			}
-			return Train;
-		}
-
-		/// <summary>Parses a base track following object node</summary>
-		/// <param name="objectPath">Absolute path to the object folder of route data</param>
-		/// <param name="fileName">The filename of the containing XML file</param>
-		/// <param name="sectionElement">The XElement to parse</param>
-		private static void ParseScriptedTrainNode(string objectPath, string fileName, XElement sectionElement)
-		{
+			xmlFile.ReadBlock(TrackFollowingObjectSection.Train, out Block<TrackFollowingObjectSection, TrackFollowingObjectKey> trainBlock);
 			string trainDirectory = string.Empty;
 			bool consistReversed = false;
 			List<TravelData> travelData = new List<TravelData>();
-			XElement trainNode = null;
-
-			foreach (XElement keyNode in sectionElement.Elements())
+			while (xmlFile.RemainingSubBlocks > 0)
 			{
-				Enum.TryParse(keyNode.Name.LocalName, true, out TrackFollowingObjectKey key);
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key)
+				Block<TrackFollowingObjectSection, TrackFollowingObjectKey> subBlock = xmlFile.ReadNextBlock();
+				switch (subBlock.Key)
 				{
-					case TrackFollowingObjectKey.Definition:
+					case TrackFollowingObjectSection.Definition:
 						Train = new ScriptedTrain(TrainState.Pending);
-						ParseDefinitionNode(fileName, keyNode, Train as ScriptedTrain);
+						ParseDefinitionNode(subBlock, Train as ScriptedTrain);
 						break;
-					case TrackFollowingObjectKey.RunInterval:
-					case TrackFollowingObjectKey.PreTrain:
-						Train = new TrainBase(TrainState.Pending, TrainType.PreTrain);
-						NumberFormats.TryParseDoubleVb6(keyNode.Value, out Train.TimetableDelta);
-						break;
-					case TrackFollowingObjectKey.Train:
-						trainNode = keyNode;
-						break;
-					case TrackFollowingObjectKey.Points:
-					case TrackFollowingObjectKey.Stops:
-						ParseTravelDataNodes(fileName, keyNode, travelData);
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
+					case TrackFollowingObjectSection.Points:
+					case TrackFollowingObjectSection.Stops:
+						ParseTravelDataNodes(subBlock, travelData);
 						break;
 				}
 			}
 
-			if (trainNode != null)
+			if (trainBlock != null)
 			{
-				ParseTrainNode(objectPath, fileName, trainNode, ref trainDirectory, ref consistReversed);
+				ParseTrainNode(objectPath, fileName, trainBlock, ref trainDirectory, ref consistReversed);
 			}
 			else
 			{
@@ -128,24 +85,23 @@ namespace OpenBve
 
 			if (Train is ScriptedTrain)
 			{
-
 				if (travelData.Count < 2)
 				{
 					Interface.AddMessage(MessageType.Error, false, $"There must be at least two points to go through in {fileName}");
-					return;
+					return null;
 				}
 
 				if (!(travelData.First() is TravelStopData) || !(travelData.Last() is TravelStopData))
 				{
 					Interface.AddMessage(MessageType.Error, false, $"The first and the last point to go through must be the \"Stop\" node in {fileName}");
-					return;
+					return null;
 				}
 			}
 
 			if (string.IsNullOrEmpty(trainDirectory))
 			{
 				Interface.AddMessage(MessageType.Error, false, $"No train has been specified in {fileName}");
-				return;
+				return null;
 			}
 
 			string trainData;
@@ -167,7 +123,6 @@ namespace OpenBve
 				{
 					Interface.AddMessage(MessageType.Error, true,
 						$"The supplied train folder in TrackFollowingObject {fileName} does not contain an exterior model.");
-					return;
 				}
 			}
 			else
@@ -189,7 +144,6 @@ namespace OpenBve
 			if (!Train.Cars.Any())
 			{
 				Interface.AddMessage(MessageType.Error, false, $"Failed to load the specified train in {fileName}");
-				return;
 			}
 
 			if (consistReversed)
@@ -217,255 +171,144 @@ namespace OpenBve
 				Train.Specs.DoorOpenMode = DoorMode.Manual;
 				Train.Specs.DoorCloseMode = DoorMode.Manual;
 			}
+
+			return Train;
 		}
 
 		/// <summary>
 		/// Function to parse TFO definition
 		/// </summary>
-		/// <param name="fileName">The filename of the containing XML file</param>
-		/// <param name="sectionElement">The XElement to parse</param>
+		/// <param name="definitionBlock">The definition to parse</param>
 		/// <param name="scriptedTrain">The track following object to parse this node into</param>
-		private static void ParseDefinitionNode(string fileName, XElement sectionElement, ScriptedTrain scriptedTrain)
+		private static void ParseDefinitionNode(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> definitionBlock, ScriptedTrain scriptedTrain)
 		{
-			foreach (XElement keyNode in sectionElement.Elements())
-			{
-				Enum.TryParse(keyNode.Name.LocalName, true, out TrackFollowingObjectKey key);
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key)
-				{
-					case TrackFollowingObjectKey.AppearanceTime:
-						if (value.Any() && !Interface.TryParseTime(value, out scriptedTrain.AppearanceTime))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						break;
-					case TrackFollowingObjectKey.AppearanceStartPosition:
-						if (value.Any() && !NumberFormats.TryParseDoubleVb6(value, out scriptedTrain.AppearanceStartPosition))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						break;
-					case TrackFollowingObjectKey.AppearanceEndPosition:
-						if (value.Any() && !NumberFormats.TryParseDoubleVb6(value, out scriptedTrain.AppearanceEndPosition))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						break;
-					case TrackFollowingObjectKey.LeaveTime:
-						if (value.Any() && !Interface.TryParseTime(value, out scriptedTrain.LeaveTime))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-						break;
-				}
-			}
+			definitionBlock.TryGetTime(TrackFollowingObjectKey.AppearanceTime, ref scriptedTrain.AppearanceTime);
+			definitionBlock.TryGetValue(TrackFollowingObjectKey.AppearanceStartPosition, ref scriptedTrain.AppearanceStartPosition);
+			definitionBlock.TryGetValue(TrackFollowingObjectKey.AppearanceEndPosition, ref scriptedTrain.AppearanceEndPosition);
+			definitionBlock.TryGetTime(TrackFollowingObjectKey.LeaveTime, ref scriptedTrain.LeaveTime);
+			definitionBlock.ReportErrors();
 		}
 
 		/// <summary>
 		/// Function to parse train definition
 		/// </summary>
 		/// <param name="objectPath">Absolute path to the object folder of route data</param>
-		/// <param name="FileName">The filename of the containing XML file</param>
-		/// <param name="sectionElement">The XElement to parse</param>
+		/// <param name="fileName">The filename of the containing XML file</param>
+		/// <param name="definitionBlock">The definition to parse</param>
 		/// <param name="trainDirectory">Absolute path to the train directory</param>
 		/// <param name="consistReversed">Whether to reverse the train composition.</param>
-		private static void ParseTrainNode(string objectPath, string FileName, XElement sectionElement, ref string trainDirectory, ref bool consistReversed)
+		private static void ParseTrainNode(string objectPath, string fileName, Block<TrackFollowingObjectSection, TrackFollowingObjectKey> definitionBlock, ref string trainDirectory, ref bool consistReversed)
 		{
-	
-			foreach (XElement keyNode in sectionElement.Elements())
+			if (definitionBlock.GetValue(TrackFollowingObjectKey.Directory, out string value))
 			{
-				Enum.TryParse(keyNode.Name.LocalName, true, out TrackFollowingObjectKey key);
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key)
+				string tmpPath = string.Empty;
+				try
 				{
-					case TrackFollowingObjectKey.Directory:
-						string TmpPath;
-						try
+					tmpPath = Path.CombineDirectory(Path.GetDirectoryName(fileName), value);
+
+					if (!Directory.Exists(tmpPath) && value.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
+					{
+						// potential MSTS consist
+						string consistDirectory = Path.CombineDirectory(Program.FileSystem.MSTSDirectory, "TRAINS\\Consists");
+						string consistFile = Path.CombineFile(consistDirectory, value);
+						if (File.Exists(consistFile))
 						{
-							TmpPath = Path.CombineDirectory(Path.GetDirectoryName(FileName), value);
-
-							if (!Directory.Exists(TmpPath) && value.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
-							{
-								// potential MSTS consist
-								string consistDirectory = Path.CombineDirectory(Program.FileSystem.MSTSDirectory, "TRAINS\\Consists");
-								string consistFile = Path.CombineFile(consistDirectory, value);
-								if (File.Exists(consistFile))
-								{
-									trainDirectory = consistFile;
-									break;
-								}
-
-							}
-
-							if (!Directory.Exists(TmpPath))
-							{
-								TmpPath = Path.CombineFile(Program.FileSystem.InitialTrainFolder, value);
-							}
-
-							if (!Directory.Exists(TmpPath))
-							{
-								TmpPath = Path.CombineFile(Program.FileSystem.TrainInstallationDirectory, value);
-							}
-
-							if (!Directory.Exists(TmpPath))
-							{
-								TmpPath = Path.CombineFile(objectPath, value);
-							}
-
-							if (!Directory.Exists(TmpPath))
-							{
-								// very fuzzy match attempt- step backwards one level from the current train folder
-								TmpPath = Path.CombineDirectory(Loading.CurrentTrainFolder, "..");
-								TmpPath = Path.CombineFile(TmpPath, value);
-							}
-						}
-						catch
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Directory was invalid in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {FileName}");
-							break;
+							trainDirectory = consistFile;
 						}
 
-						if (!Directory.Exists(TmpPath))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Directory was not found in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {FileName}");
-						}
-						else
-						{
-							trainDirectory = TmpPath;
-						}
-						break;
-					case TrackFollowingObjectKey.Reversed:
-						if (value.Any())
-						{
-							switch (value.ToLowerInvariant())
-							{
-								case "true":
-									consistReversed = true;
-									break;
-								case "false":
-									consistReversed = false;
-									break;
-								default:
-									{
-										if (!NumberFormats.TryParseIntVb6(value, out int n))
-										{
-											Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {FileName}");
-										}
-										else
-										{
-											consistReversed = Convert.ToBoolean(n);
-										}
-									}
-									break;
-							}
-						}
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {FileName}");
-						break;
+					}
+
+					if (string.IsNullOrEmpty(trainDirectory) && !Directory.Exists(tmpPath))
+					{
+						tmpPath = Path.CombineFile(Program.FileSystem.InitialTrainFolder, value);
+					}
+
+					if (string.IsNullOrEmpty(trainDirectory) && !Directory.Exists(tmpPath))
+					{
+						tmpPath = Path.CombineFile(Program.FileSystem.TrainInstallationDirectory, value);
+					}
+
+					if (string.IsNullOrEmpty(trainDirectory) && !Directory.Exists(tmpPath))
+					{
+						tmpPath = Path.CombineFile(objectPath, value);
+					}
+
+					if (string.IsNullOrEmpty(trainDirectory) && !Directory.Exists(tmpPath))
+					{
+						// very fuzzy match attempt- step backwards one level from the current train folder
+						tmpPath = Path.CombineDirectory(Loading.CurrentTrainFolder, "..");
+						tmpPath = Path.CombineFile(tmpPath, value);
+					}
+				}
+				catch
+				{
+					Interface.AddMessage(MessageType.Error, false, $"Directory was invalid in in {definitionBlock.Key} in {fileName}");
+				}
+
+				if (string.IsNullOrEmpty(trainDirectory))
+				{
+					if (!Directory.Exists(tmpPath))
+					{
+						Interface.AddMessage(MessageType.Error, false, $"Directory was not found in in  {definitionBlock.Key} in {fileName}");
+					}
+					else
+					{
+						trainDirectory = tmpPath;
+					}
 				}
 			}
+
+			definitionBlock.TryGetValue(TrackFollowingObjectKey.Reversed, ref consistReversed);
 		}
 
 		/// <summary>Parses a train travel data node</summary>
-		/// <param name="fileName">The filename of the containing XML file</param>
-		/// <param name="sectionElement">The XElement to parse</param>
+		/// <param name="travelDataBlock">The travel data to parse</param>
 		/// <param name="travelData">The list of travel data to add this to</param>
-		private static void ParseTravelDataNodes(string fileName, XElement sectionElement, ICollection<TravelData> travelData)
+		private static void ParseTravelDataNodes(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> travelDataBlock, ICollection<TravelData> travelData)
 		{
-			foreach (XElement keyNode in sectionElement.Elements())
+			while (travelDataBlock.RemainingSubBlocks > 0)
 			{
-				Enum.TryParse(keyNode.Name.LocalName, true, out TrackFollowingObjectKey key);
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key)
+				Block<TrackFollowingObjectSection, TrackFollowingObjectKey> subBlock = travelDataBlock.ReadNextBlock();
+				switch (subBlock.Key)
 				{
-					case TrackFollowingObjectKey.Stop:
-						travelData.Add(ParseTravelStopNode(fileName, keyNode));
+					case TrackFollowingObjectSection.Stop:
+						travelData.Add(ParseTravelStopNode(subBlock));
 						break;
-					case TrackFollowingObjectKey.Point:
-						travelData.Add(ParseTravelPointNode(fileName, keyNode));
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
+					case TrackFollowingObjectSection.Point:
+						travelData.Add(ParseTravelPointNode(subBlock));
 						break;
 				}
 			}
+			travelDataBlock.ReportErrors();
 		}
 
 		/// <summary>
 		/// Function to parse the contents of TravelData class
 		/// </summary>
 		/// <param name="fileName">The filename of the containing XML file</param>
-		/// <param name="sectionElement">The XElement to parse</param>
+		/// <param name="travelDataBlock">The travel data to parse</param>
 		/// <param name="travelData">Travel data to which the parse results apply</param>
-		private static void ParseTravelDataNode(string fileName, XElement sectionElement, TravelData travelData)
+		private static void ParseTravelDataNode(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> travelDataBlock, TravelData travelData)
 		{
 			double decelerate = 0.0;
 			double accelerate = 0.0;
 			double targetSpeed = 0.0;
-			bool targetSpeedSet = false;
-
-			foreach (XElement keyNode in sectionElement.Elements())
+			
+			travelDataBlock.TryGetValue(TrackFollowingObjectKey.Decelerate, ref decelerate, NumberRange.NonNegative);
+			travelDataBlock.TryGetValue(TrackFollowingObjectKey.Position, ref travelData.Position);
+			travelDataBlock.TryGetValue(TrackFollowingObjectKey.StopPosition, ref travelData.Position);
+			travelDataBlock.TryGetValue(TrackFollowingObjectKey.Accelerate, ref accelerate, NumberRange.NonNegative);
+			bool targetSpeedSet = travelDataBlock.TryGetValue(TrackFollowingObjectKey.TargetSpeed, ref targetSpeed, NumberRange.NonNegative);
+			travelDataBlock.TryGetValue(TrackFollowingObjectKey.Rail, ref travelData.RailIndex, NumberRange.NonNegative);
+			if (!Program.CurrentRoute.Tracks.ContainsKey(travelData.RailIndex) || Program.CurrentRoute.Tracks[travelData.RailIndex].Elements.Length == 0)
 			{
-				Enum.TryParse(keyNode.Name.LocalName, true, out TrackFollowingObjectKey key);
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key)
-				{
-					case TrackFollowingObjectKey.Decelerate:
-						if (value.Any() && !NumberFormats.TryParseDoubleVb6(value, out decelerate) || decelerate < 0.0)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is expected to be a non-negative floating-point number in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						break;
-					case TrackFollowingObjectKey.Position:
-					case TrackFollowingObjectKey.StopPosition:
-						if (value.Any() && !NumberFormats.TryParseDoubleVb6(value, out travelData.Position))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						break;
-					case TrackFollowingObjectKey.Accelerate:
-						if (value.Any() && !NumberFormats.TryParseDoubleVb6(value, out accelerate) || accelerate < 0.0)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is expected to be a non-negative floating-point number in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						break;
-					case TrackFollowingObjectKey.TargetSpeed:
-						if (value.Any() && !NumberFormats.TryParseDoubleVb6(value, out targetSpeed) || targetSpeed < 0.0)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is expected to be a non-negative floating-point number in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						targetSpeedSet = true;
-						break;
-					case TrackFollowingObjectKey.Rail:
-						if (value.Any() && !NumberFormats.TryParseIntVb6(value, out travelData.RailIndex) || travelData.RailIndex < 0)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is expected to be a non-negative integer number in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-							travelData.RailIndex = 0;
-						}
-
-						if (!Program.CurrentRoute.Tracks.ContainsKey(travelData.RailIndex) || Program.CurrentRoute.Tracks[travelData.RailIndex].Elements.Length == 0)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"RailIndex is invalid in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-							travelData.RailIndex = 0;
-						}
-						break;
-				}
+				Interface.AddMessage(MessageType.Error, false, $"RailIndex {travelData.RailIndex} is invalid in {travelDataBlock.Key} in {travelDataBlock.FileName}");
+				travelData.RailIndex = 0;
 			}
-
+			
 			if (!targetSpeedSet)
 			{
-				Interface.AddMessage(MessageType.Warning, false, $"A TargetSpeed was not set in {sectionElement.Name.LocalName}. This may cause unexpected results.");
+				Interface.AddMessage(MessageType.Warning, false, $"A TargetSpeed was not set in {travelDataBlock.Key}. This may cause unexpected results.");
 			}
 			travelData.Decelerate = -decelerate / 3.6;
 			travelData.Accelerate = accelerate / 3.6;
@@ -478,99 +321,70 @@ namespace OpenBve
 		/// <param name="fileName">The filename of the containing XML file</param>
 		/// <param name="sectionElement">The XElement to parse</param>
 		/// <returns>An instance of the new TravelStopData class with the parse result applied</returns>
-		private static TravelStopData ParseTravelStopNode(string fileName, XElement sectionElement)
+		private static TravelStopData ParseTravelStopNode(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> sectionElement)
 		{
 			TravelStopData travelStopData = new TravelStopData();
 
-			ParseTravelDataNode(fileName, sectionElement, travelStopData);
-
-			foreach (XElement keyNode in sectionElement.Elements())
+			ParseTravelDataNode(sectionElement, travelStopData);
+			sectionElement.TryGetTime(TrackFollowingObjectKey.StopTime, ref travelStopData.StopTime);
+			if (sectionElement.GetValue(TrackFollowingObjectKey.Doors, out string doorDirection))
 			{
-				Enum.TryParse(keyNode.Name.LocalName, true, out TrackFollowingObjectKey key);
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+				int doorSide = 0;
+				bool doorBoth = false;
 
-				switch (key)
+				switch (doorDirection.ToLowerInvariant())
 				{
-					case TrackFollowingObjectKey.StopTime:
-						if (value.Any() && !Interface.TryParseTime(value, out travelStopData.StopTime))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
+					case "l":
+					case "left":
+						doorSide = -1;
 						break;
-					case TrackFollowingObjectKey.Doors:
-						{
-							int doorSide = 0;
-							bool doorBoth = false;
-
-							switch (value.ToLowerInvariant())
-							{
-								case "l":
-								case "left":
-									doorSide = -1;
-									break;
-								case "r":
-								case "right":
-									doorSide = 1;
-									break;
-								case "n":
-								case "none":
-								case "neither":
-									doorSide = 0;
-									break;
-								case "b":
-								case "both":
-									doorBoth = true;
-									break;
-								default:
-									if (value.Any() && !NumberFormats.TryParseIntVb6(value, out doorSide))
-									{
-										Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-									}
-									break;
-							}
-
-							travelStopData.OpenLeftDoors = doorSide < 0.0 | doorBoth;
-							travelStopData.OpenRightDoors = doorSide > 0.0 | doorBoth;
-						}
+					case "r":
+					case "right":
+						doorSide = 1;
 						break;
-					case TrackFollowingObjectKey.Direction:
-						{
-							int d = 0;
-							switch (value.ToLowerInvariant())
-							{
-								case "f":
-									d = 1;
-									break;
-								case "r":
-									d = -1;
-									break;
-								default:
-									if (value.Any() && (!NumberFormats.TryParseIntVb6(value, out d) || !Enum.IsDefined(typeof(TravelDirection), d)))
-									{
-										Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-										d = 1;
-									}
-									break;
-							}
-
-							travelStopData.Direction = (TravelDirection)d;
-						}
+					case "n":
+					case "none":
+					case "neither":
+						doorSide = 0;
 						break;
-					case TrackFollowingObjectKey.Decelerate:
-					case TrackFollowingObjectKey.Position:
-					case TrackFollowingObjectKey.StopPosition:
-					case TrackFollowingObjectKey.Accelerate:
-					case TrackFollowingObjectKey.TargetSpeed:
-					case TrackFollowingObjectKey.Rail:
-						// Already parsed
+					case "b":
+					case "both":
+						doorBoth = true;
 						break;
 					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
+						if (!NumberFormats.TryParseIntVb6(doorDirection, out doorSide))
+						{
+							Interface.AddMessage(MessageType.Error, false, $"Door direction is invalid in in {sectionElement.Key} in {sectionElement.FileName}");
+						}
 						break;
 				}
-			}
 
+				if (sectionElement.GetValue(TrackFollowingObjectKey.Direction, out string travelDirection))
+				{
+					int d;
+					switch (travelDirection.ToLowerInvariant())
+					{
+						case "f":
+							d = 1;
+							break;
+						case "r":
+							d = -1;
+							break;
+						default:
+							if (!NumberFormats.TryParseIntVb6(travelDirection, out d) || !Enum.IsDefined(typeof(TravelDirection), d))
+							{
+								Interface.AddMessage(MessageType.Error, false, $"TravelDirection is invalid in {sectionElement.Key} in {sectionElement.FileName}");
+								d = 1;
+							}
+							break;
+					}
+
+					travelStopData.Direction = (TravelDirection)d;
+				}
+
+				travelStopData.OpenLeftDoors = doorSide < 0.0 | doorBoth;
+				travelStopData.OpenRightDoors = doorSide > 0.0 | doorBoth;
+			}
 			return travelStopData;
 		}
 
@@ -580,42 +394,16 @@ namespace OpenBve
 		/// <param name="fileName">The filename of the containing XML file</param>
 		/// <param name="sectionElement">The XElement to parse</param>
 		/// <returns>An instance of the new TravelPointData class with the parse result applied</returns>
-		private static TravelPointData ParseTravelPointNode(string fileName, XElement sectionElement)
+		private static TravelPointData ParseTravelPointNode(Block<TrackFollowingObjectSection, TrackFollowingObjectKey> sectionElement)
 		{
 			TravelPointData travelPointData = new TravelPointData();
 
-			ParseTravelDataNode(fileName, sectionElement, travelPointData);
+			ParseTravelDataNode(sectionElement, travelPointData);
 
 			double passingSpeed = 0.0;
 
-			foreach (XElement keyNode in sectionElement.Elements())
-			{
-				Enum.TryParse(keyNode.Name.LocalName, true, out TrackFollowingObjectKey key);
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key)
-				{
-					case TrackFollowingObjectKey.PassingSpeed:
-						if (value.Any() && !NumberFormats.TryParseDoubleVb6(value, out passingSpeed) || passingSpeed < 0.0)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Value is expected to be a non-negative floating-point number in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						break;
-					case TrackFollowingObjectKey.Decelerate:
-					case TrackFollowingObjectKey.Position:
-					case TrackFollowingObjectKey.StopPosition:
-					case TrackFollowingObjectKey.Accelerate:
-					case TrackFollowingObjectKey.TargetSpeed:
-					case TrackFollowingObjectKey.Rail:
-						// Already parsed
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {fileName}");
-						break;
-				}
-			}
-
+			sectionElement.TryGetValue(TrackFollowingObjectKey.PassingSpeed, ref passingSpeed);
+			
 			travelPointData.PassingSpeed = passingSpeed / 3.6;
 
 			return travelPointData;

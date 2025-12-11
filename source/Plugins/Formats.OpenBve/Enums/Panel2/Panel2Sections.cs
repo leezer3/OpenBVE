@@ -15,6 +15,9 @@
 		Screen,
 		Touch,
 		Group,
-		Include
+		Include,
+		CommandEntries,
+		SoundEntries,
+		Entry
 	}
 }

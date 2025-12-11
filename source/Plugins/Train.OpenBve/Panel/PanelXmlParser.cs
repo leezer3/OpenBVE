@@ -2146,12 +2146,8 @@ namespace Train.OpenBve
 				commandIndicies[i] = m + i;
 			}
 
-			Group.TouchElements[n] = new TouchElement(new AnimatedObject(Plugin.CurrentHost), ScreenIndex, SoundIndices, commandIndicies);
-			Group.TouchElements[n].Element.States = new[] { new ObjectState() };
+			Group.TouchElements[n] = new TouchElement(new AnimatedObject(Plugin.CurrentHost, Object), ScreenIndex, SoundIndices, commandIndicies);
 			Group.TouchElements[n].Element.States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
-			Group.TouchElements[n].Element.States[0].Prototype = Object;
-			Group.TouchElements[n].Element.CurrentState = 0;
-			Group.TouchElements[n].Element.internalObject = new ObjectState(Object);
 			Plugin.CurrentHost.CreateDynamicObject(ref Group.TouchElements[n].Element.internalObject);
 			
 		}

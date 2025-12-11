@@ -135,9 +135,9 @@ namespace CsvRwRouteParser
 		/// <summary>Whether toppling is enabled</summary>
 		internal bool Toppling = false;
 		/// <summary>Dummy railtypes to be added to fix broken cycles</summary>
-		internal List<int> DummyRailTypes = new List<int>();
+		internal int[] DummyRailTypes = Array.Empty<int>();
 		/// <summary>Dummy ground types to be added to fix broken cycles</summary>
-		internal List<int> DummyGroundTypes = new List<int>();
+		internal int[] DummyGroundTypes = Array.Empty<int>();
 		/// <summary>The compatability signal file to use</summary>
 		internal string CompatibilitySignalSet;
 		/// <summary>Forces accurate object disposal on or off</summary>
