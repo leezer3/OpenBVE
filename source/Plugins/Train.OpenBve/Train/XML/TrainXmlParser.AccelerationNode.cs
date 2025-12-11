@@ -1,85 +1,71 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
+﻿//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+using Formats.OpenBve;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
+using System.Collections.Generic;
 using TrainManager.Power;
 
 namespace Train.OpenBve
 {
 	partial class TrainXmlParser
 	{
-		private AccelerationCurve[] ParseAccelerationNode(XmlNode c, string fileName)
+		private AccelerationCurve[] ParseAccelerationBlock(Block<TrainXMLSection, TrainXMLKey> block, string fileName)
 		{
-			if (c.ChildNodes.OfType<XmlElement>().Any())
+			List<AccelerationCurve> accelerationCurves = new List<AccelerationCurve>();
+			while (block.RemainingSubBlocks > 0)
 			{
-				List<AccelerationCurve> accelerationCurves = new List<AccelerationCurve>();
-				foreach (XmlNode cc in c.ChildNodes)
+				if (block.ReadBlock(TrainXMLSection.openBVE, out Block<TrainXMLSection, TrainXMLKey> curveBlock))
 				{
-					switch (cc.Name.ToLowerInvariant())
+					BveAccelerationCurve curve = new BveAccelerationCurve();
+					curveBlock.GetValue(TrainXMLKey.StageZeroAcceleration, out curve.StageZeroAcceleration);
+					curve.StageZeroAcceleration *= 0.277777777777778;
+					curveBlock.GetValue(TrainXMLKey.StageOneAcceleration, out curve.StageOneAcceleration);
+					curve.StageOneAcceleration *= 0.277777777777778;
+					curveBlock.GetValue(TrainXMLKey.StageOneSpeed, out curve.StageOneSpeed);
+					curve.StageOneSpeed *= 0.277777777777778;
+					curveBlock.GetValue(TrainXMLKey.StageTwoSpeed, out curve.StageTwoSpeed);
+					curve.StageTwoSpeed *= 0.277777777777778;
+					curveBlock.GetValue(TrainXMLKey.StageTwoExponent, out curve.StageTwoExponent);
+					block.GetValue(TrainXMLKey.Multiplier, out double multiplier);
+					if (multiplier <= 0 || multiplier > 50)
 					{
-						case "openbve": // don't support legacy BVE2 curves in XML, but at the same time specify that this is deliberately BVE4 / OpenBVE format
-							BveAccelerationCurve curve = new BveAccelerationCurve();
-							foreach (XmlNode sc in cc.ChildNodes)
-							{
-								switch (sc.Name.ToLowerInvariant())
-								{
-									case "stagezeroacceleration":
-										if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageZeroAcceleration))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Stage zero acceleration was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
-										}
-
-										curve.StageZeroAcceleration *= 0.277777777777778;
-										break;
-									case "stageoneacceleration":
-										if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageOneAcceleration))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Stage one acceleration was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
-										}
-
-										curve.StageOneAcceleration *= 0.277777777777778;
-										break;
-									case "stageonespeed":
-										if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageOneSpeed))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Stage one speed was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
-										}
-
-										curve.StageOneSpeed *= 0.277777777777778;
-										break;
-									case "stagetwospeed":
-										if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageTwoSpeed))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Stage two speed was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
-										}
-
-										curve.StageTwoSpeed *= 0.277777777777778;
-										break;
-									case "stagetwoexponent":
-										if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out curve.StageTwoExponent))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Stage two exponent was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
-										}
-										break;
-									case "multiplier":
-										if (!NumberFormats.TryParseDoubleVb6(sc.InnerText, out double multiplier) || multiplier <= 0 || multiplier > 50)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Multiplier was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
-											multiplier = Plugin.AccelerationCurves[0].Multiplier;
-										}
-										curve.Multiplier = multiplier;
-										break;
-								}
-							}
-							accelerationCurves.Add(curve);
-							break;
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Multiplier was invalid for curve " + accelerationCurves.Count + " in XML file " + fileName);
+						multiplier = Plugin.AccelerationCurves[0].Multiplier;
 					}
+					curve.Multiplier = multiplier;
+					accelerationCurves.Add(curve);
+
 				}
-				return accelerationCurves.ToArray();
+				else
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected extra block(s) in AccelerationCurves in XML file " + fileName);
+					break;
+				}
 			}
-			Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "An empty list of acceleration curves was provided in XML file " + fileName);
-			return new AccelerationCurve[] { };
+			
+			return accelerationCurves.ToArray();
 		}
 	}
 }

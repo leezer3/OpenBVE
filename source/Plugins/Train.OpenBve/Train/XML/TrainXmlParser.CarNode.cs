@@ -1,13 +1,31 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using LibRender2.Trains;
+//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+using Formats.OpenBve;
 using LibRender2.Smoke;
+using LibRender2.Trains;
 using OpenBveApi;
-using OpenBveApi.FunctionScripting;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -15,7 +33,11 @@ using OpenBveApi.Motor;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
-using TrainManager.BrakeSystems;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml.Linq;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
 using TrainManager.Cargo;
@@ -29,1021 +51,95 @@ namespace Train.OpenBve
 {
 	partial class TrainXmlParser
 	{
-		private void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainBase Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref bool visibleFromInterior)
+		private void ParseCarBlock(Block<TrainXMLSection, TrainXMLKey> block, string fileName, int Car, ref TrainBase Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref bool visibleFromInterior)
 		{
-			string interiorFile = string.Empty;
+			string currentXMLPath = Path.GetDirectoryName(fileName);
 			Vector3 interiorDirection = Vector3.Zero;
-			ReadhesionDeviceType readhesionDevice = ReadhesionDeviceType.NotFitted;
-			if (Train.Cars[0].ReAdhesionDevice is BveReAdhesionDevice device)
+			block.TryGetValue(TrainXMLKey.Length, ref Train.Cars[Car].Length);
+			block.TryGetValue(TrainXMLKey.Width, ref Train.Cars[Car].Width);
+			block.TryGetValue(TrainXMLKey.Height, ref Train.Cars[Car].Height);
+			block.TryGetValue(TrainXMLKey.CenterOfGravityHeight, ref Train.Cars[Car].Specs.CenterOfGravityHeight);
+			if (block.GetValue(TrainXMLKey.Mass, out double carMass) && carMass > 0)
 			{
-				readhesionDevice = device.DeviceType;
+				Train.Cars[Car].EmptyMass = carMass;
+				Train.Cars[Car].CargoMass = 0;
+			}
+			if (block.GetValue(TrainXMLKey.ExposedFrontalArea, out double ef) && ef > 0)
+			{
+				Train.Cars[Car].Specs.ExposedFrontalArea = ef;
+			}
+			else
+			{
+				// BVE default
+				Train.Cars[Car].Specs.ExposedFrontalArea = 0.65 * Train.Cars[Car].Width * Train.Cars[Car].Height;
+			}
+			if (block.GetValue(TrainXMLKey.UnexposedFrontalArea, out double uf) && uf > 0)
+			{
+				Train.Cars[Car].Specs.UnexposedFrontalArea = uf;
+			}
+			else
+			{
+				// BVE default
+				Train.Cars[Car].Specs.UnexposedFrontalArea = 0.2 * Train.Cars[Car].Width * Train.Cars[Car].Height;
+			}
+			block.TryGetValue(TrainXMLKey.FrontAxle, ref Train.Cars[Car].FrontAxle.Position);
+			block.TryGetValue(TrainXMLKey.RearAxle, ref Train.Cars[Car].RearAxle.Position);
+			if (block.GetPath(TrainXMLKey.Object, currentXMLPath, out string carObject))
+			{
+				Plugin.CurrentHost.LoadObject(carObject, Encoding.Default, out CarObjects[Car]);
 			}
 
-			bool copyAccelerationCurves = true;
-			bool exposedFrontalAreaSet = false;
-			bool unexposedFrontalAreaSet = false;
-			foreach (XmlNode c in Node.ChildNodes)
+			block.TryGetValue(TrainXMLKey.VisibleFromInterior, ref visibleFromInterior);
+			block.GetValue(TrainXMLKey.Reversed, out CarObjectsReversed[Car]);
+			block.TryGetValue(TrainXMLKey.LoadingSway, ref Train.Cars[Car].EnableLoadingSway);
+			if(block.GetVector3(TrainXMLKey.DriverPosition, ',', out Vector3 driverPosition))
 			{
-				//Note: Don't use the short-circuiting operator, as otherwise we need another if
-				switch (c.Name.ToLowerInvariant())
+				driverPosition.Z += 0.5 * Train.Cars[Car].Length;
+				Train.Cars[Car].Driver = driverPosition;
+			}
+
+			if (block.ReadBlock(TrainXMLSection.CameraRestriction, out Block<TrainXMLSection, TrainXMLKey> cameraRestrictionBlock))
+			{
+				cameraRestrictionBlock.TryGetValue(TrainXMLKey.Backwards, ref Train.Cars[Car].CameraRestriction.BottomLeft.Z);
+				cameraRestrictionBlock.TryGetValue(TrainXMLKey.Forwards, ref Train.Cars[Car].CameraRestriction.TopRight.Z);
+				cameraRestrictionBlock.TryGetValue(TrainXMLKey.Left, ref Train.Cars[Car].CameraRestriction.BottomLeft.X);
+				cameraRestrictionBlock.TryGetValue(TrainXMLKey.Right, ref Train.Cars[Car].CameraRestriction.TopRight.X);
+				cameraRestrictionBlock.TryGetValue(TrainXMLKey.Up, ref Train.Cars[Car].CameraRestriction.BottomLeft.Y);
+				cameraRestrictionBlock.TryGetValue(TrainXMLKey.Down, ref Train.Cars[Car].CameraRestriction.TopRight.Y);
+			}
+
+			if (block.ReadBlock(TrainXMLSection.FrontBogie, out Block<TrainXMLSection, TrainXMLKey> frontBogieBlock))
+			{
+				frontBogieBlock.TryGetValue(TrainXMLKey.FrontAxle, ref Train.Cars[Car].FrontBogie.FrontAxle.Position);
+				frontBogieBlock.TryGetValue(TrainXMLKey.RearAxle, ref Train.Cars[Car].FrontBogie.RearAxle.Position);
+				if (frontBogieBlock.GetPath(TrainXMLKey.Object, currentXMLPath, out string frontBogieObject))
 				{
-					case "camerarestriction":
-						Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.Restricted3D;
-						foreach (XmlNode cc in c.ChildNodes)
-						{
-							switch (cc.Name.ToLowerInvariant())
-							{
-								case "backwards":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.BottomLeft.Z))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid backwards camera restriction defined for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "forwards":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.TopRight.Z))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid forwards camera restriction defined for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "left":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.BottomLeft.X))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid left camera restriction defined for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "right":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.TopRight.X))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid right camera restriction defined for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "down":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.BottomLeft.Y))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid down camera restriction defined for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "up":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.TopRight.Y))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid up camera restriction defined for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-							}
-						}
-						break;
-					case "brake":
-						Train.Cars[Car].CarBrake.BrakeType = BrakeType.Auxiliary;
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							ParseBrakeNode(c, fileName, Car, ref Train);
-						}
-						else if (!String.IsNullOrEmpty(c.InnerText))
-						{
-							try
-							{
-								string childFile = Path.CombineFile(currentPath, c.InnerText);
-								XmlDocument childXML = new XmlDocument();
-								childXML.Load(childFile);
-								XmlNodeList childNodes = childXML.DocumentElement.SelectNodes("/openBVE/Brake");
-								//We need to save and restore the current path to make relative paths within the child file work correctly
-								string savedPath = currentPath;
-								currentPath = Path.GetDirectoryName(childFile);
-								ParseBrakeNode(childNodes[0], fileName, Car, ref Train);
-								currentPath = savedPath;
-							}
-							catch(Exception ex)
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Failed to load the child Brake XML file specified in " +c.InnerText);
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The error encountered was " + ex);
-							}
-						}
-						break;
-					case "length":
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double l) | l <= 0.0)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid length defined for Car " + Car + " in XML file " + fileName);
-							break;
-						}
-						Train.Cars[Car].Length = l;
-						break;
-					case "width":
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double w) | w <= 0.0)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid width defined for Car " + Car + " in XML file " + fileName);
-							break;
-						}
-						Train.Cars[Car].Width = w;
-						break;
-					case "height":
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double h) | h <= 0.0)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid height defined for Car " + Car + " in XML file " + fileName);
-							break;
-						}
-						Train.Cars[Car].Height = h;
-						break;
-					case "motorcar":
-						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
-						{
-							if (!copyAccelerationCurves)
-							{
-								//We've already set the acceleration curves elsewhere in the XML, so don't copy the default ones
-								break;
-							}
-							AccelerationCurve[] finalAccelerationCurves = new AccelerationCurve[Plugin.AccelerationCurves.Length];
-							for (int i = 0; i < Plugin.AccelerationCurves.Length; i++)
-							{
-								finalAccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone(1.0);
-							}
-
-							Train.Cars[Car].TractionModel = new BVEMotorCar(Train.Cars[Car], finalAccelerationCurves);
-							Train.Cars[Car].TractionModel.MaximumPossibleAcceleration = Plugin.MaximumAcceleration;
-						}
-						else
-						{
-							Train.Cars[Car].TractionModel = new BVETrailerCar(Train.Cars[Car]);
-						}
-						break;
-					case "mass":
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double m) | m <= 0.0)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid mass defined for Car " + Car + " in XML file " + fileName);
-							break;
-						}
-						Train.Cars[Car].EmptyMass = m;
-						Train.Cars[Car].CargoMass = 0;
-						break;
-					case "centerofgravityheight":
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double cg) | cg <= 0.0)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid CenterOfGravityHeight defined for Car " + Car + " in XML file " + fileName);
-							break;
-						}
-						Train.Cars[Car].Specs.CenterOfGravityHeight = cg;
-						break;
-					case "exposedfrontalarea":
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double ef) | ef <= 0.0)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid ExposedFrontalArea defined for Car " + Car + " in XML file " + fileName);
-							break;
-						}
-						Train.Cars[Car].Specs.ExposedFrontalArea = ef;
-						exposedFrontalAreaSet = true;
-						break;
-					case "unexposedfrontalarea":
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out double uf) | uf <= 0.0)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid UnexposedFrontalArea defined for Car " + Car + " in XML file " + fileName);
-							break;
-						}
-						Train.Cars[Car].Specs.UnexposedFrontalArea = uf;
-						unexposedFrontalAreaSet = true;
-						break;
-					case "frontaxle":
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[Car].FrontAxle.Position))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid front axle position defined for Car " + Car + " in XML file " + fileName);
-						}
-						break;
-					case "rearaxle":
-						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[Car].RearAxle.Position))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid rear axle position defined for Car " + Car + " in XML file " + fileName);
-						}
-						break;
-					case "object":
-						if (string.IsNullOrEmpty(c.InnerText))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid object path for Car " + Car + " in XML file " + fileName);
-							break;
-						}
-						string f = Path.CombineFile(currentPath, c.InnerText);
-						if (System.IO.File.Exists(f))
-						{
-							Plugin.CurrentHost.LoadObject(f, Encoding.Default, out CarObjects[Car]);
-						}
-						break;
-					case "reversed":
-						NumberFormats.TryParseIntVb6(c.InnerText, out int n);
-						if (n == 1 || c.InnerText.ToLowerInvariant() == "true")
-						{
-							CarObjectsReversed[Car] = true;
-						}
-						break;
-					case "loadingsway":
-						NumberFormats.TryParseIntVb6(c.InnerText, out int nm);
-						if (nm == 1 || c.InnerText.ToLowerInvariant() == "true")
-						{
-							Train.Cars[Car].EnableLoadingSway = true;
-						}
-						else
-						{
-							Train.Cars[Car].EnableLoadingSway = false;
-						}
-						break;
-					case "frontbogie":
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								switch (cc.Name.ToLowerInvariant())
-								{
-									case "frontaxle":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].FrontBogie.FrontAxle.Position))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid front bogie, front axle position defined for Car " + Car + " in XML file " + fileName);
-										}
-										break;
-									case "rearaxle":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].FrontBogie.RearAxle.Position))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid front bogie, rear axle position defined for Car " + Car + " in XML file " + fileName);
-										}
-										break;
-									case "object":
-										if (string.IsNullOrEmpty(cc.InnerText))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid front bogie object path for Car " + Car + " in XML file " + fileName);
-											break;
-										}
-										string fb = Path.CombineFile(currentPath, cc.InnerText);
-										if (System.IO.File.Exists(fb))
-										{
-											Plugin.CurrentHost.LoadObject(fb, Encoding.Default, out BogieObjects[Car * 2]);
-										}
-										break;
-									case "reversed":
-										NumberFormats.TryParseIntVb6(cc.InnerText, out int nn);
-										if (cc.InnerText.ToLowerInvariant() == "true" || nn == 1)
-										{
-											BogieObjectsReversed[Car * 2] = true;
-										}
-										break;
-								}
-							}
-						}
-						break;
-					case "rearbogie":
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								switch (cc.Name.ToLowerInvariant())
-								{
-									case "frontaxle":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].RearBogie.FrontAxle.Position))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid rear bogie, front axle position defined for Car " + Car + " in XML file " + fileName);
-										}
-										break;
-									case "rearaxle":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].RearBogie.RearAxle.Position))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid rear bogie, rear axle position defined for Car " + Car + " in XML file " + fileName);
-										}
-										break;
-									case "object":
-										if (string.IsNullOrEmpty(cc.InnerText))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid rear bogie object path for Car " + Car + " in XML file " + fileName);
-											break;
-										}
-										string fb = Path.CombineFile(currentPath, cc.InnerText);
-										if (System.IO.File.Exists(fb))
-										{
-											Plugin.CurrentHost.LoadObject(fb, Encoding.Default, out BogieObjects[Car * 2 + 1]);
-										}
-										break;
-									case "reversed":
-										NumberFormats.TryParseIntVb6(cc.InnerText, out int nn);
-										if (cc.InnerText.ToLowerInvariant() == "true" || nn == 1)
-										{
-											BogieObjectsReversed[Car * 2 + 1] = true;
-										}
-										break;
-								}
-							}
-						}
-						break;
-					case "driverposition":
-						string[] splitText = c.InnerText.Split(',');
-						if (splitText.Length != 3)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Driver position must have three arguments for Car " + Car + " in XML file " + fileName);
-							break;
-						}
-						Train.Cars[Car].Driver = new Vector3();
-						if (!NumberFormats.TryParseDoubleVb6(splitText[0], out Train.Cars[Car].Driver.X))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Driver position X was invalid for Car " + Car + " in XML file " + fileName);
-						}
-						if (!NumberFormats.TryParseDoubleVb6(splitText[1], out Train.Cars[Car].Driver.Y))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Driver position Y was invalid for Car " + Car + " in XML file " + fileName);
-						}
-						if (!NumberFormats.TryParseDoubleVb6(splitText[2], out double driverZ))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Driver position Z was invalid for Car " + Car + " in XML file " + fileName);
-						}
-						Train.Cars[Car].Driver.Z = 0.5 * Train.Cars[Car].Length + driverZ;
-						break;
-					case "interiorview":
-						if (!Train.IsPlayerTrain)
-						{
-							break;
-						}
-						Train.Cars[Car].HasInteriorView = true;
-						Train.Cars[Car].CarSections = new Dictionary<CarSectionType, CarSection>();
-						Train.Cars[Car].CarSections.Add(CarSectionType.Interior,new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true));
-
-						string cv = Path.CombineFile(currentPath, c.InnerText);
-						if (!System.IO.File.Exists(cv))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Interior view file was invalid for Car " + Car + " in XML file " + fileName);
-							break;
-						}
-						interiorFile = cv;
-						break;
-					case "interiordirection":
-						splitText = c.InnerText.Split(',');
-						if (splitText.Length != 3)
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Interior direction must have three arguments for Car " + Car + " in XML file " + fileName);
-							break;
-						}
-						if (!NumberFormats.TryParseDoubleVb6(splitText[0], out interiorDirection.X))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Interior direction X was invalid for Car " + Car + " in XML file " + fileName);
-						}
-						if (!NumberFormats.TryParseDoubleVb6(splitText[1], out interiorDirection.Y))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Interior direction Y was invalid for Car " + Car + " in XML file " + fileName);
-						}
-						if (!NumberFormats.TryParseDoubleVb6(splitText[2], out interiorDirection.Z))
-						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Interior direction Z was invalid for Car " + Car + " in XML file " + fileName);
-						}
-						break;
-					case "readhesiondevice":
-						switch (c.InnerText.ToLowerInvariant())
-						{
-							case "typea":
-							case "a":
-								readhesionDevice = ReadhesionDeviceType.TypeA;
-								break;
-							case "typeb":
-							case "b":
-								readhesionDevice = ReadhesionDeviceType.TypeB;
-								break;
-							case "typec":
-							case "c":
-								readhesionDevice = ReadhesionDeviceType.TypeC;
-								break;
-							case "typed":
-							case "d":
-								readhesionDevice = ReadhesionDeviceType.TypeD;
-								break;
-							default:
-								readhesionDevice = ReadhesionDeviceType.NotFitted;
-								break;
-						}
-						break;
-					case "sanders":
-						SandersType type = SandersType.NotFitted;
-						double rate = double.MaxValue;
-						double level = 0;
-						double applicationTime = 10.0;
-						double activationTime = 5.0;
-						int shots = int.MaxValue;
-						foreach (XmlNode cc in c.ChildNodes)
-						{
-							switch (cc.Name.ToLowerInvariant())
-							{
-								case "type":
-									if (!Enum.TryParse(cc.InnerText, true, out type))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sanders type was invalid for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "rate":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out rate))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sanders application rate was invalid for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "sandlevel":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out level))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sand level was invalid for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "numberofshots":
-									if (!NumberFormats.TryParseIntVb6(cc.InnerText, out shots))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sand level was invalid for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "applicationtime":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out applicationTime))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sanders application time was invalid for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "activationtime":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out activationTime))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sanders activation time was invalid for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-							}
-
-							Train.Cars[Car].ReAdhesionDevice = new Sanders(Train.Cars[Car], type)
-							{
-								ApplicationTime = applicationTime,
-								ActivationTime = activationTime,
-								SandLevel = level,
-								SandingRate = rate,
-								NumberOfShots = shots
-							};
-						}
-						break;
-					case "driversupervisiondevice":
-					case "dsd":
-						SafetySystemType driverSupervisionType = SafetySystemType.None;
-						DriverSupervisionDeviceMode driverSupervisionMode = DriverSupervisionDeviceMode.Power;
-						SafetySystemTriggerMode triggerMode = SafetySystemTriggerMode.Always;
-						double alarmTime = 0;
-						double interventionTime = 0;
-						double requiredStopTime = 0;
-						bool loopingAlarm = false, loopingAlert = false;
-						foreach (XmlNode cc in c.ChildNodes)
-						{
-							switch (cc.Name.ToLowerInvariant())
-							{
-								case "alarmtime":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out alarmTime))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice activation time was invalid for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "interventiontime":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out interventionTime))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice activation time was invalid for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "type":
-									if (!Enum.TryParse(cc.InnerText, true, out driverSupervisionType))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice type was invalid for Car " + Car + " in XML file " + fileName);
-									} 
-									break; 
-								case "requiredstoptime":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out requiredStopTime))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice required stop time was invalid for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "loopingalert":
-									if (cc.InnerText.ToLowerInvariant() == "1" || cc.InnerText.ToLowerInvariant() == "true")
-									{
-										loopingAlert = true;
-									}
-									break;
-								case "loopingalarm":
-									if (cc.InnerText.ToLowerInvariant() == "1" || cc.InnerText.ToLowerInvariant() == "true")
-									{
-										loopingAlarm = true;
-									}
-									break;
-								case "mode":
-									if (!Enum.TryParse(cc.InnerText, true, out driverSupervisionMode))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice mode was invalid for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "triggermode":
-									if (!Enum.TryParse(cc.InnerText, true, out triggerMode))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "DriverSupervisionDevice trigger mode was invalid for Car " + Car + " in XML file " + fileName);
-									}
-									break;
-							}
-						}
-
-						if (alarmTime == 0)
-						{
-							alarmTime = interventionTime;
-						}
-
-						DriverSupervisionDevice dsd = new DriverSupervisionDevice(Train.Cars[Car], driverSupervisionType, driverSupervisionMode, triggerMode, alarmTime, interventionTime, requiredStopTime)
-						{
-							LoopingAlarm = loopingAlarm,
-							LoopingAlert = loopingAlert
-						};
-						Train.Cars[Car].SafetySystems.Add(SafetySystem.DriverSupervisionDevice, dsd);
-						break;
-					case "visiblefrominterior":
-						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
-						{
-							visibleFromInterior = true;
-						}
-						break;
-					case "soundtable":
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								switch (cc.Name.ToLowerInvariant())
-								{
-									case "bve5":
-										string powerFreq = string.Empty, powerVol = string.Empty;
-										string brakeFreq = string.Empty, brakeVol = string.Empty;
-										foreach (XmlNode sc in cc.ChildNodes)
-										{
-											switch (sc.Name.ToLowerInvariant())
-											{
-												case "powerfreq":
-													powerFreq = Path.CombineFile(currentPath, sc.InnerText);
-													break;
-												case "powervol":
-													powerVol = Path.CombineFile(currentPath, sc.InnerText);
-													break;
-												case "brakefreq":
-													brakeFreq = Path.CombineFile(currentPath, sc.InnerText);
-													break;
-												case "brakevol":
-													brakeVol = Path.CombineFile(currentPath, sc.InnerText);
-													break;
-											}
-										}
-										Train.Cars[Car].TractionModel.MotorSounds = Bve5MotorSoundTableParser.Parse(Train.Cars[Car], powerFreq, powerVol, brakeFreq, brakeVol);
-										break;
-								}
-							}
-						}
-						break;
-					case "accelerationcurves":
-						/*
-						 * NOTE: This was initially implemented here.
-						 * It has moved to being a child-node of the power node
-						 * Retain this for the minute in case someone has actually used the thing (although the format is an ongoing WIP)....
-						 */
-						copyAccelerationCurves = false;
-						AccelerationCurve[] curves = ParseAccelerationNode(c, fileName);
-						if (Train.Cars[Car].TractionModel is BVEMotorCar || Train.Cars[Car].TractionModel is BVETrailerCar)
-						{
-							AbstractMotorSound motor = Train.Cars[Car].TractionModel.MotorSounds;
-							Train.Cars[Car].TractionModel = new BVEMotorCar(Train.Cars[Car], curves);
-							Train.Cars[Car].TractionModel.MotorSounds = motor;
-						}
-						break;
-					case "power":
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								switch (cc.Name.ToLowerInvariant())
-								{
-									case "handle":
-										AbstractHandle p = Train.Handles.Power; // yuck, but we can't store this as the base type due to constraints elsewhere
-										ParseHandleNode(cc, ref p, Car, Train, fileName);
-										break;
-									case "accelerationcurves":
-										copyAccelerationCurves = false;
-										curves = ParseAccelerationNode(cc, fileName);
-										if (Train.Cars[Car].TractionModel is BVEMotorCar || Train.Cars[Car].TractionModel is BVETrailerCar)
-										{
-											AbstractMotorSound motor = Train.Cars[Car].TractionModel.MotorSounds;
-											Train.Cars[Car].TractionModel = new BVEMotorCar(Train.Cars[Car], curves);
-											Train.Cars[Car].TractionModel.MotorSounds = motor;
-										}
-										break;
-								}
-							}
-
-						}
-						break;
-					case "doors":
-						double doorWidth = 1.0;
-						double doorTolerance = 0.0;
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								switch (cc.Name.ToLowerInvariant())
-								{
-									case "openspeed":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out double os))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
-										}
-										else
-										{
-											Train.Cars[Car].Specs.DoorOpenFrequency = 1.0 / os;
-										}
-										break;
-									case "closespeed":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out double cs))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid door opening speed defined for Car " + Car + " in XML file " + fileName);
-										}
-										else
-										{
-											Train.Cars[Car].Specs.DoorCloseFrequency = 1.0 / cs;
-										}
-										break;
-									case "width":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out doorWidth))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid door width defined for Car " + Car + " in XML file " + fileName);
-										}
-										break;
-									case "tolerance":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out doorWidth))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid door closing tolerance defined for Car " + Car + " in XML file " + fileName);
-										}
-										break;
-								}
-							}
-						}
-						// XML uses meters for all units to be consistant, so convert to mm for door usage
-						doorWidth *= 1000.0;
-						doorTolerance *= 1000.0;
-						Train.Cars[Car].Doors[0] = new Door(-1, doorWidth, doorTolerance);
-						Train.Cars[Car].Doors[1] = new Door(1, doorWidth, doorTolerance);
-						break;
-					case "cargo":
-						switch (c.InnerText.ToLowerInvariant())
-						{
-							case "passengers":
-								Train.Cars[Car].Cargo = new Passengers(Train.Cars[Car]);
-								break;
-							case "freight":
-								Train.Cars[Car].Cargo = new RobustFreight(Train.Cars[Car]);
-								break;
-							case "none":
-								Train.Cars[Car].Cargo = new EmptyLoad();
-								break;
-						}
-						break;
-					case "windscreen":
-						if (!Train.IsPlayerTrain)
-						{
-							break;
-						}
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							int numDrops = 0;
-							double wipeSpeed = 1.0, holdTime = 1.0, dropLife = 10.0;
-							WiperPosition restPosition = WiperPosition.Left, holdPosition = WiperPosition.Left;
-
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								switch (cc.Name.ToLowerInvariant())
-								{
-									case "numberofdrops":
-										if (!NumberFormats.TryParseIntVb6(cc.InnerText, out numDrops))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid number of drops defined for Windscreen in Car " + Car + " in XML file " + fileName);
-										}
-
-										break;
-									case "wipespeed":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out wipeSpeed))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid wipe speed defined for Windscreen in Car " + Car + " in XML file " + fileName);
-										}
-
-										break;
-									case "holdtime":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out holdTime))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid wiper hold time defined for Windscreen in Car " + Car + " in XML file " + fileName);
-										}
-
-										break;
-									case "droplife":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out dropLife))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid drop life defined for Windscreen in Car " + Car + " in XML file " + fileName);
-										}
-
-										break;
-									case "restposition":
-									case "wiperrestposition":
-										switch (cc.InnerText.ToLowerInvariant())
-										{
-											case "0":
-											case "left":
-												restPosition = WiperPosition.Left;
-												break;
-											case "1":
-											case "right":
-												restPosition = WiperPosition.Right;
-												break;
-											default:
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperRestPosition is invalid for Windscreen in Car " + Car + " in XML file " + fileName);
-												break;
-										}
-
-										break;
-									case "holdposition":
-									case "wiperholdposition":
-										switch (cc.InnerText.ToLowerInvariant())
-										{
-											case "0":
-											case "left":
-												holdPosition = WiperPosition.Left;
-												break;
-											case "1":
-											case "right":
-												holdPosition = WiperPosition.Right;
-												break;
-											default:
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "WiperHoldPosition is invalid for Windscreen in Car " + Car + " in XML file " + fileName);
-												break;
-										}
-
-										break;
-								}
-							}
-
-							if (numDrops > 0)
-							{
-								Train.Cars[Car].Windscreen = new Windscreen(numDrops, dropLife, Train.Cars[Car]);
-								Train.Cars[Car].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Car].Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
-							}
-						}
-						break;
-					case "dieselengine":
-						foreach (XmlNode cc in c.ChildNodes)
-						{
-							double idleRPM = 0, minRPM = 0, maxRPM = 0, rpmChangeUpRate = 0, rpmChangeDownRate = 0, idleFuelUse = 0, maxPowerFuelUse = 0, fuelCapacity = 0;
-							double maxAmps = 0, maxRegenAmps = 0;
-							bool isRegenerative = false;
-							switch (cc.Name.ToLowerInvariant())
-							{
-								case "idlerpm":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out idleRPM))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid idle RPM defined for DieselEngine in Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "minrpm":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out minRPM))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid minimum RPM defined for DieselEngine in Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "maxrpm":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxRPM))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid maximum RPM defined for DieselEngine in Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "rpmchangerate":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out rpmChangeUpRate))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid RPM change rate defined for DieselEngine in Car " + Car + " in XML file " + fileName);
-									}
-									rpmChangeDownRate = rpmChangeUpRate;
-									break;
-								case "rpmchangeuprate":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out rpmChangeUpRate))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid RPM change Up rate defined for DieselEngine in Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "rpmchangedownrate":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out rpmChangeDownRate))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid RPM change Down rate defined for DieselEngine in Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "idlefueluse":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out idleFuelUse))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid idle fuel use rate defined for DieselEngine in Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "maxpowerfueluse":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxPowerFuelUse))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid max power fuel use rate defined for DieselEngine in Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "fuelcapacity":
-									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out fuelCapacity))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
-									}
-									break;
-								case "tractionmotor":
-								case "regenerativetractionmotor":
-									foreach (XmlNode ccc in cc.ChildNodes)
-									{
-										switch (ccc.Name.ToLowerInvariant())
-										{
-											case "maxamps":
-												if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxAmps))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
-												}
-												break;
-											case "maxregenerativeamps":
-												if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxAmps))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
-												}
-												break;
-										}
-									}
-
-									if (cc.Name.ToLowerInvariant() == "regenerativetractionmotor")
-									{
-										isRegenerative = true;
-									}
-									break;
-							}
-
-							Train.Cars[Car].TractionModel = new DieselEngine(Train.Cars[Car], Plugin.AccelerationCurves, idleRPM, minRPM, maxRPM, rpmChangeUpRate, rpmChangeDownRate, idleFuelUse, maxPowerFuelUse);
-							Train.Cars[Car].TractionModel.FuelTank = new FuelTank(fuelCapacity, 0, fuelCapacity);
-							if (isRegenerative)
-							{
-								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Train.Cars[Car].TractionModel, maxAmps));
-							}
-							else
-							{
-								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.RegenerativeTractionMotor, new RegenerativeTractionMotor(Train.Cars[Car].TractionModel, maxAmps, maxRegenAmps));
-							}
-						}
-						break;
-					case "electricengine":
-						foreach (XmlNode cc in c.ChildNodes)
-						{
-							bool hasPantograph = false;
-							double maxAmps = 0, maxRegenAmps = 0;
-							bool isRegenerative = false;
-							switch (cc.Name.ToLowerInvariant())
-							{
-								case "collectorshoe":
-								case "pantograph":
-									if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
-									{
-										hasPantograph = true;
-									}
-									break;
-								case "tractionmotor":
-								case "regenerativetractionmotor":
-									foreach (XmlNode ccc in cc.ChildNodes)
-									{
-										switch (ccc.Name.ToLowerInvariant())
-										{
-											case "maxamps":
-												if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxAmps))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
-												}
-												break;
-											case "maxregenerativeamps":
-												if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maxAmps))
-												{
-													Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid fuel capacity defined for DieselEngine in Car " + Car + " in XML file " + fileName);
-												}
-												break;
-										}
-									}
-
-									if (cc.Name.ToLowerInvariant() == "regenerativetractionmotor")
-									{
-										isRegenerative = true;
-									}
-									break;
-							}
-							Train.Cars[Car].TractionModel = new ElectricEngine(Train.Cars[Car], Plugin.AccelerationCurves);
-							if (hasPantograph)
-							{
-								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.Pantograph, new Pantograph(Train.Cars[Car].TractionModel));
-							}
-
-							if (isRegenerative)
-							{
-								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Train.Cars[Car].TractionModel, maxAmps));
-							}
-							else
-							{
-								Train.Cars[Car].TractionModel.Components.Add(EngineComponent.RegenerativeTractionMotor, new RegenerativeTractionMotor(Train.Cars[Car].TractionModel, maxAmps, maxRegenAmps));
-							}
-						}
-						break;
-					case "particlesource":
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							Vector3 emitterLocation = Vector3.Zero;
-							Vector3 initialMotion = Vector3.Down;
-							string expression = "enginepower[" + Car + "]";
-							double maximumSize = 0.2;
-							double maximumGrownSize = 1.0;
-							double maximumLifeSpan = 15;
-							Texture particleTexture = null;
-							bool emitsAtIdle = true;
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								switch (cc.Name.ToLowerInvariant())
-								{
-									case "location":
-										splitText = cc.InnerText.Split(',');
-										if (!NumberFormats.TryParseDoubleVb6(splitText[0], out emitterLocation.X))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location X was invalid for Car " + Car + " in XML file " + fileName);
-										}
-										if (!NumberFormats.TryParseDoubleVb6(splitText[1], out emitterLocation.Y))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location Y was invalid for Car " + Car + " in XML file " + fileName);
-										}
-										if (!NumberFormats.TryParseDoubleVb6(splitText[2], out emitterLocation.Z))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location Z was invalid for Car " + Car + " in XML file " + fileName);
-										}
-										break;
-									case "maximumsize":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maximumSize))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid initial maximum size defined for particle emitter in Car " + Car + " in XML file " + fileName);
-										}
-										break;
-									case "maximumgrownsize":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maximumGrownSize))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid maximum grown size defined for particle emitter in Car " + Car + " in XML file " + fileName);
-										}
-										break;
-									case "initialdirection":
-										splitText = cc.InnerText.Split(',');
-										if (!NumberFormats.TryParseDoubleVb6(splitText[0], out initialMotion.X))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location X was invalid for Car " + Car + " in XML file " + fileName);
-										}
-										if (!NumberFormats.TryParseDoubleVb6(splitText[1], out initialMotion.Y))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location Y was invalid for Car " + Car + " in XML file " + fileName);
-										}
-										if (!NumberFormats.TryParseDoubleVb6(splitText[2], out initialMotion.Z))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Particle emitter location Z was invalid for Car " + Car + " in XML file " + fileName);
-										}
-										break;
-									case "texture":
-										if (string.IsNullOrEmpty(cc.InnerText))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid particle emitter texture for Car " + Car + " in XML file " + fileName);
-											break;
-										}
-										string st = Path.CombineFile(currentPath, cc.InnerText);
-										if (System.IO.File.Exists(st))
-										{
-											Plugin.CurrentHost.RegisterTexture(st, TextureParameters.NoChange, out particleTexture);
-										}
-										break;
-									case "maximumlifespan":
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out maximumLifeSpan))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid initial maximum lifespan defined for particle emitter in Car " + Car + " in XML file " + fileName);
-										}
-										break;
-									case "function":
-										if (!string.IsNullOrEmpty(cc.InnerText))
-										{
-											expression = cc.InnerText;
-										}
-										break;
-									case "emitsatidle":
-										if (c.InnerText.ToLowerInvariant() == "0" || c.InnerText.ToLowerInvariant() == "false")
-										{
-											emitsAtIdle = false;
-										}
-										break;
-								}
-							}
-							ParticleSource particleSource = new ParticleSource(Plugin.Renderer, Train.Cars[Car], emitterLocation, maximumSize, maximumGrownSize, initialMotion, maximumLifeSpan);
-							particleSource.EmitsAtIdle = emitsAtIdle;
-							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, expression, true);
-							particleSource.ParticleTexture = particleTexture;
-							Train.Cars[Car].ParticleSources.Add(particleSource);
-						}
-						break;
+					Plugin.CurrentHost.LoadObject(frontBogieObject, Encoding.Default, out BogieObjects[Car * 2]);
 				}
+
+				frontBogieBlock.GetValue(TrainXMLKey.Reversed, out BogieObjectsReversed[Car * 2]);
 			}
-			/*
-			 * As there is no set order for XML tags to be presented in, these must be
-			 * done after the end of the loop			 *
-			 */
-			//Assign interior view
-			if (interiorFile != String.Empty)
+
+			if (block.ReadBlock(TrainXMLSection.RearBogie, out Block<TrainXMLSection, TrainXMLKey> rearBogieBlock))
 			{
+				rearBogieBlock.TryGetValue(TrainXMLKey.FrontAxle, ref Train.Cars[Car].RearBogie.FrontAxle.Position);
+				rearBogieBlock.TryGetValue(TrainXMLKey.RearAxle, ref Train.Cars[Car].RearBogie.RearAxle.Position);
+				if (rearBogieBlock.GetPath(TrainXMLKey.Object, currentXMLPath, out string rearBogieObject))
+				{
+					Plugin.CurrentHost.LoadObject(rearBogieObject, Encoding.Default, out BogieObjects[Car * 2 + 1]);
+				}
+
+				rearBogieBlock.GetValue(TrainXMLKey.Reversed, out BogieObjectsReversed[Car * 2 + 1]);
+			}
+
+			block.TryGetVector3(TrainXMLKey.InteriorDirection, ',', ref interiorDirection);
+
+			if (block.GetPath(TrainXMLKey.InteriorView, currentXMLPath, out string interiorFile) && Train.IsPlayerTrain)
+			{
+				if (!Train.Cars[Car].CarSections.ContainsKey(CarSectionType.Interior))
+				{
+					Train.Cars[Car].CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, false, Train.Cars[Car]));
+				}
 				Transformation viewTransformation = new Transformation(interiorDirection.X.ToRadians(), interiorDirection.Y.ToRadians(), interiorDirection.Z.ToRadians());
 				Train.Cars[Car].CarSections[CarSectionType.Interior].ViewDirection = viewTransformation;
 				if (interiorFile.ToLowerInvariant().EndsWith(".xml"))
@@ -1060,7 +156,7 @@ namespace Train.OpenBve
 					if (DocumentElements != null && DocumentElements.Count != 0)
 					{
 						string t = Train.TrainFolder;
-						Train.TrainFolder = currentPath;
+						Train.TrainFolder = currentXMLPath;
 						Plugin.PanelAnimatedXmlParser.ParsePanelAnimatedXml(interiorFile, Train, Car);
 						Train.TrainFolder = t;
 						if (Train.Cars[Car].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
@@ -1073,7 +169,7 @@ namespace Train.OpenBve
 					if (DocumentElements != null && DocumentElements.Count != 0)
 					{
 						string t = Train.TrainFolder;
-						Train.TrainFolder = currentPath;
+						Train.TrainFolder = currentXMLPath;
 						Plugin.PanelXmlParser.ParsePanelXml(interiorFile, Train, Car);
 						Train.TrainFolder = t;
 						Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.On;
@@ -1117,27 +213,257 @@ namespace Train.OpenBve
 				}
 			}
 
+			if (block.ReadBlock(TrainXMLSection.Sanders, out Block<TrainXMLSection, TrainXMLKey> sandersBlock))
+			{
+				double rate = double.MaxValue;
+				double level = 0;
+				double applicationTime = 10.0;
+				double activationTime = 5.0;
+				int shots = int.MaxValue;
+				sandersBlock.GetEnumValue(TrainXMLKey.Type, out SandersType type);
+				sandersBlock.TryGetValue(TrainXMLKey.Rate, ref rate);
+				sandersBlock.TryGetValue(TrainXMLKey.SandLevel, ref level);
+				sandersBlock.TryGetValue(TrainXMLKey.ApplicationTime, ref applicationTime);
+				sandersBlock.TryGetValue(TrainXMLKey.ActivationTime, ref activationTime);
+				sandersBlock.TryGetValue(TrainXMLKey.NumberOfShots, ref shots);
+				Train.Cars[Car].ReAdhesionDevice = new Sanders(Train.Cars[Car], type)
+				{
+					ApplicationTime = applicationTime,
+					ActivationTime = activationTime,
+					SandLevel = level,
+					SandingRate = rate,
+					NumberOfShots = shots
+				};
+			}
+			else
+			{
+				if (block.GetEnumValue(TrainXMLKey.ReadhesionDevice, out ReadhesionDeviceType readhesionDevice) || Train.Cars[Car].ReAdhesionDevice == null)
+				{
+					Train.Cars[Car].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[Car], readhesionDevice);
+				}
+			}
+
+			if (block.ReadBlock(TrainXMLSection.DriverSupervisionDevice, out Block<TrainXMLSection, TrainXMLKey> driverSupervisionDeviceBlock))
+			{
+				double alarmTime = 0;
+				double interventionTime = 0;
+				double requiredStopTime = 0;
+				bool loopingAlarm = false, loopingAlert = false;
+				driverSupervisionDeviceBlock.TryGetValue(TrainXMLKey.AlarmTime, ref alarmTime);
+				driverSupervisionDeviceBlock.TryGetValue(TrainXMLKey.InterventionTime, ref interventionTime);
+				driverSupervisionDeviceBlock.GetEnumValue(TrainXMLKey.Type, out SafetySystemType driverSupervisionType);
+				driverSupervisionDeviceBlock.TryGetValue(TrainXMLKey.RequiredStopTime, ref requiredStopTime);
+				driverSupervisionDeviceBlock.TryGetValue(TrainXMLKey.LoopingAlert, ref loopingAlert);
+				driverSupervisionDeviceBlock.TryGetValue(TrainXMLKey.LoopingAlarm, ref loopingAlarm);
+				driverSupervisionDeviceBlock.GetEnumValue(TrainXMLKey.Mode, out DriverSupervisionDeviceMode driverSupervisionMode);
+				driverSupervisionDeviceBlock.GetEnumValue(TrainXMLKey.TriggerMode, out SafetySystemTriggerMode triggerMode);
+				if (alarmTime == 0)
+				{
+					alarmTime = interventionTime;
+				}
+
+				DriverSupervisionDevice dsd = new DriverSupervisionDevice(Train.Cars[Car], driverSupervisionType, driverSupervisionMode, triggerMode, alarmTime, interventionTime, requiredStopTime)
+				{
+					LoopingAlarm = loopingAlarm,
+					LoopingAlert = loopingAlert
+				};
+				Train.Cars[Car].SafetySystems.Add(SafetySystem.DriverSupervisionDevice, dsd);
+			}
+			
+
+			if (block.ReadBlock(TrainXMLSection.Brake, out Block<TrainXMLSection, TrainXMLKey> brakeBlock))
+			{
+				ParseBrakeNode(brakeBlock, fileName, Car, ref Train);
+			}
+
+			if (block.ReadBlock(TrainXMLSection.DieselEngine, out Block<TrainXMLSection, TrainXMLKey> dieselEngineBlock))
+			{
+				double rpmChangeUpRate = 0, rpmChangeDownRate = 0;
+				dieselEngineBlock.GetValue(TrainXMLKey.IdleRPM, out double idleRPM, NumberRange.NonNegative);
+				dieselEngineBlock.GetValue(TrainXMLKey.MinRPM, out double minRPM, NumberRange.NonNegative);
+				dieselEngineBlock.GetValue(TrainXMLKey.MaxRPM, out double maxRPM, NumberRange.NonNegative);
+				if (dieselEngineBlock.GetValue(TrainXMLKey.RPMChangeRate, out double rpmChangeRate, NumberRange.NonNegative))
+				{
+					rpmChangeUpRate = rpmChangeRate;
+					rpmChangeDownRate = rpmChangeRate;
+				}
+
+				dieselEngineBlock.TryGetValue(TrainXMLKey.RPMChangeUpRate, ref rpmChangeUpRate, NumberRange.NonNegative);
+				dieselEngineBlock.TryGetValue(TrainXMLKey.RPMChangeDownRate, ref rpmChangeDownRate, NumberRange.NonNegative);
+				dieselEngineBlock.GetValue(TrainXMLKey.IdleFuelUse, out double idleFuelUse, NumberRange.NonNegative);
+				dieselEngineBlock.GetValue(TrainXMLKey.MaxPowerFuelUse, out double maxPowerFuelUse, NumberRange.NonNegative);
+				dieselEngineBlock.GetValue(TrainXMLKey.FuelCapacity, out double fuelCapacity, NumberRange.NonNegative);
+				Train.Cars[Car].TractionModel = new DieselEngine(Train.Cars[Car], Plugin.AccelerationCurves, idleRPM, minRPM, maxRPM, rpmChangeUpRate, rpmChangeDownRate, idleFuelUse, maxPowerFuelUse);
+				Train.Cars[Car].TractionModel.FuelTank = new FuelTank(fuelCapacity, 0, fuelCapacity);
+				if (dieselEngineBlock.ReadBlock(new[] { TrainXMLSection.TractionMotor, TrainXMLSection.RegenerativeTractionMotor }, out Block<TrainXMLSection, TrainXMLKey> tractionMotorBlock))
+				{
+					tractionMotorBlock.GetValue(TrainXMLKey.MaxAmps, out double maxAmps, NumberRange.NonNegative);
+					tractionMotorBlock.GetValue(TrainXMLKey.MaxRegenAmps, out double maxRegenAmps, NumberRange.NonNegative);
+					if (tractionMotorBlock.Key == TrainXMLSection.TractionMotor)
+					{
+						Train.Cars[Car].TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Train.Cars[Car].TractionModel, maxAmps));
+					}
+					else
+					{
+						Train.Cars[Car].TractionModel.Components.Add(EngineComponent.TractionMotor, new RegenerativeTractionMotor(Train.Cars[Car].TractionModel, maxAmps, maxRegenAmps));
+					}
+				}
+
+			}
+			else if (block.ReadBlock(TrainXMLSection.ElectricEngine, out Block<TrainXMLSection, TrainXMLKey> electricEngineBlock))
+			{
+				Train.Cars[Car].TractionModel = new ElectricEngine(Train.Cars[Car], Plugin.AccelerationCurves);
+				if (electricEngineBlock.GetValue(TrainXMLKey.Pantograph, out bool hasPantograph) && hasPantograph)
+				{
+					Train.Cars[Car].TractionModel.Components.Add(EngineComponent.Pantograph, new Pantograph(Train.Cars[Car].TractionModel));
+				}
+				if (electricEngineBlock.ReadBlock(new[] { TrainXMLSection.TractionMotor, TrainXMLSection.RegenerativeTractionMotor }, out Block<TrainXMLSection, TrainXMLKey> tractionMotorBlock))
+				{
+					tractionMotorBlock.GetValue(TrainXMLKey.MaxAmps, out double maxAmps, NumberRange.NonNegative);
+					tractionMotorBlock.GetValue(TrainXMLKey.MaxRegenAmps, out double maxRegenAmps, NumberRange.NonNegative);
+					if (tractionMotorBlock.Key == TrainXMLSection.TractionMotor)
+					{
+						Train.Cars[Car].TractionModel.Components.Add(EngineComponent.TractionMotor, new TractionMotor(Train.Cars[Car].TractionModel, maxAmps));
+					}
+					else
+					{
+						Train.Cars[Car].TractionModel.Components.Add(EngineComponent.TractionMotor, new RegenerativeTractionMotor(Train.Cars[Car].TractionModel, maxAmps, maxRegenAmps));
+					}
+				}
+			}
+			else if (block.GetValue(TrainXMLKey.MotorCar, out bool motorCar) && motorCar == true)
+			{
+				// initial cloned curves from train.dat, may be overwritten
+				AccelerationCurve[] finalAccelerationCurves = new AccelerationCurve[Plugin.AccelerationCurves.Length];
+				for (int i = 0; i < Plugin.AccelerationCurves.Length; i++)
+				{
+					finalAccelerationCurves[i] = Plugin.AccelerationCurves[i].Clone(1.0);
+				}
+				
+				AbstractMotorSound motor = Train.Cars[Car].TractionModel.MotorSounds;
+				if (block.ReadBlock(TrainXMLSection.Power, out Block<TrainXMLSection, TrainXMLKey> powerBlock))
+				{
+					if (powerBlock.ReadBlock(TrainXMLSection.Handle, out Block<TrainXMLSection, TrainXMLKey> powerHandleBlock))
+					{
+						AbstractHandle p = Train.Handles.Power; // yuck, but we can't store this as the base type due to constraints elsewhere
+						ParseHandleNode(powerHandleBlock, ref p, Car, Train, fileName);
+					}
+					if (powerBlock.ReadBlock(TrainXMLSection.AccelerationCurves, out Block<TrainXMLSection, TrainXMLKey> powerCurvesBlock))
+					{
+						finalAccelerationCurves = ParseAccelerationBlock(powerCurvesBlock, fileName);
+					}
+				}
+
+				if (block.ReadBlock(TrainXMLSection.AccelerationCurves, out Block<TrainXMLSection, TrainXMLKey> accelerationCurvesBlock))
+				{
+					// NOTE: AccelerationCurves were originally at /openBVE/Train/Car/AccelerationCurves. Moved to be a child of the Power node, but retaining this for backwards compatability
+					finalAccelerationCurves = ParseAccelerationBlock(accelerationCurvesBlock, fileName);
+				}
+				
+				Train.Cars[Car].TractionModel = new BVEMotorCar(Train.Cars[Car], finalAccelerationCurves);
+				Train.Cars[Car].TractionModel.MaximumPossibleAcceleration = Plugin.MaximumAcceleration;
+				Train.Cars[Car].TractionModel.MotorSounds = motor;
+			}
+			else
+			{
+				Train.Cars[Car].TractionModel = new BVETrailerCar(Train.Cars[Car]);
+			}
+
+			if (block.ReadBlock(TrainXMLSection.Doors, out Block<TrainXMLSection, TrainXMLKey> doorsBlock))
+			{
+				double doorWidth = 1.0;
+				double doorTolerance = 0.0;
+				if (doorsBlock.GetValue(TrainXMLKey.OpenSpeed, out double openSpeed, NumberRange.Positive))
+				{
+					Train.Cars[Car].Specs.DoorOpenFrequency = 1.0 / openSpeed;
+				}
+				if (doorsBlock.GetValue(TrainXMLKey.CloseSpeed, out double closeSpeed, NumberRange.Positive))
+				{
+					Train.Cars[Car].Specs.DoorCloseFrequency = 1.0 / closeSpeed;
+				}
+
+				doorsBlock.TryGetValue(TrainXMLKey.Width, ref doorWidth, NumberRange.Positive);
+				doorsBlock.TryGetValue(TrainXMLKey.Tolerance, ref doorTolerance, NumberRange.Positive);
+				// XML uses meters for all units to be consistant, so convert to mm for door usage
+				doorWidth *= 1000.0;
+				doorTolerance *= 1000.0;
+				Train.Cars[Car].Doors[0] = new Door(-1, doorWidth, doorTolerance);
+				Train.Cars[Car].Doors[1] = new Door(1, doorWidth, doorTolerance);
+			}
+
+			block.GetEnumValue(TrainXMLKey.Cargo, out CargoType cargoType);
+			switch (cargoType)
+			{
+				case CargoType.Passengers:
+					Train.Cars[Car].Cargo = new Passengers(Train.Cars[Car]);
+					break;
+				case CargoType.Freight:
+					Train.Cars[Car].Cargo = new RobustFreight(Train.Cars[Car]);
+					break;
+				case CargoType.None:
+					Train.Cars[Car].Cargo = new EmptyLoad();
+					break;
+
+			}
+
+			if (block.ReadBlock(TrainXMLSection.Windscreen, out Block<TrainXMLSection, TrainXMLKey> windscreenBlock) && Train.IsPlayerTrain)
+			{
+				if (windscreenBlock.GetValue(TrainXMLKey.NumberOfDrops, out int numDrops, NumberRange.NonNegative))
+				{
+					double wipeSpeed = 1.0, holdTime = 1.0, dropLife = 10.0;
+					windscreenBlock.TryGetValue(TrainXMLKey.WipeSpeed, ref wipeSpeed, NumberRange.Positive);
+					windscreenBlock.TryGetValue(TrainXMLKey.HoldTime, ref holdTime, NumberRange.NonNegative);
+					windscreenBlock.TryGetValue(TrainXMLKey.DropLife, ref dropLife, NumberRange.Positive);
+					windscreenBlock.GetEnumValue(TrainXMLKey.RestPosition, out WiperPosition restPosition);
+					windscreenBlock.GetEnumValue(TrainXMLKey.HoldPosition, out WiperPosition holdPosition);
+					Train.Cars[Car].Windscreen = new Windscreen(numDrops, dropLife, Train.Cars[Car]);
+					Train.Cars[Car].Windscreen.Wipers = new WindscreenWiper(Train.Cars[Car].Windscreen, restPosition, holdPosition, wipeSpeed, holdTime);
+				}
+				
+			}
+
+			if(block.ReadBlock(TrainXMLSection.ParticleSource, out Block<TrainXMLSection, TrainXMLKey> particleSourceBlock))
+			{
+				Vector3 initialMotion = Vector3.Down;
+				Texture particleTexture = null;
+				double maximumSize = 0.2;
+				double maximumGrownSize = 1.0;
+				double maximumLifeSpan = 15;
+				particleSourceBlock.GetVector3(TrainXMLKey.Location, ',', out Vector3 emitterLocation);
+				particleSourceBlock.TryGetValue(TrainXMLKey.MaximumSize, ref maximumSize, NumberRange.NonNegative);
+				particleSourceBlock.TryGetValue(TrainXMLKey.MaximumGrownSize, ref maximumGrownSize, NumberRange.NonZero);
+				particleSourceBlock.TryGetValue(TrainXMLKey.MaximumLifespan, ref maximumLifeSpan, NumberRange.Positive);
+				particleSourceBlock.TryGetVector3(TrainXMLKey.InitialDirection, ',', ref initialMotion);
+				if (particleSourceBlock.GetPath(TrainXMLKey.Texture, currentXMLPath, out string texturePath))
+				{
+					Plugin.CurrentHost.RegisterTexture(texturePath, TextureParameters.NoChange, out particleTexture);
+				}
+				ParticleSource particleSource = new ParticleSource(Plugin.Renderer, Train.Cars[Car], emitterLocation, maximumSize, maximumGrownSize, initialMotion, maximumLifeSpan);
+				particleSourceBlock.TryGetValue(TrainXMLKey.EmitsAtIdle, ref particleSource.EmitsAtIdle);
+				particleSource.ParticleTexture = particleTexture;
+				Train.Cars[Car].ParticleSources.Add(particleSource);
+			}
+
+			if (block.ReadBlock(TrainXMLSection.SoundTable, out Block<TrainXMLSection, TrainXMLKey> soundTableBlock))
+			{
+				if (soundTableBlock.ReadBlock(TrainXMLSection.BVE5, out Block<TrainXMLSection, TrainXMLKey> bve5Block))
+				{
+					bve5Block.GetPath(TrainXMLKey.PowerFreq, currentXMLPath, out string powerFreq);
+					bve5Block.GetPath(TrainXMLKey.PowerVol, currentXMLPath, out string powerVol);
+					bve5Block.GetPath(TrainXMLKey.BrakeFreq, currentXMLPath, out string brakeFreq);
+					bve5Block.GetPath(TrainXMLKey.BrakeVol, currentXMLPath, out string brakeVol);
+					Train.Cars[Car].TractionModel.MotorSounds = Bve5MotorSoundTableParser.Parse(Train.Cars[Car], powerFreq, powerVol, brakeFreq, brakeVol);
+				}
+			}
+			
 			if (!Train.Cars[Car].TractionModel.ProvidesPower && Train.Cars[Car].ParticleSources.Count > 0)
 			{
 				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Car " + Car + " has a particle source assigned, but is not a motor car in XML file " + fileName);
 			}
 
-			if (Train.Cars[Car].ReAdhesionDevice == null)
-			{
-				// if required create default train readhesion device- May have already been setup earlier in the XML
-				Train.Cars[Car].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[Car], readhesionDevice);
-			}
-
 			//Set toppling angle and exposed areas
 			Train.Cars[Car].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * Train.Cars[Car].Specs.CenterOfGravityHeight / Train.Cars[Car].Width);
-			if (!exposedFrontalAreaSet)
-			{
-				Train.Cars[Car].Specs.ExposedFrontalArea = 0.65 * Train.Cars[Car].Width * Train.Cars[Car].Height;
-			}
-			if (!unexposedFrontalAreaSet)
-			{
-				Train.Cars[Car].Specs.UnexposedFrontalArea = 0.2 * Train.Cars[Car].Width * Train.Cars[Car].Height;
-			}
+			
 		}
 	}
 }

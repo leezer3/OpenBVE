@@ -1,9 +1,30 @@
-﻿using System;
-using System.Linq;
-using System.Xml;
+//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 using Formats.OpenBve;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
+using System;
 using TrainManager.Handles;
 using TrainManager.Trains;
 
@@ -11,84 +32,45 @@ namespace Train.OpenBve
 {
 	partial class TrainXmlParser
 	{
-		private void ParseHandleNode(XmlNode c, ref AbstractHandle Handle, int Car, TrainBase Train, string fileName)
+		private void ParseHandleNode(Block<TrainXMLSection, TrainXMLKey> block, ref AbstractHandle Handle, int Car, TrainBase Train, string fileName)
 		{
-			if (c.ChildNodes.OfType<XmlElement>().Any())
+			if (Car != Train.DriverCar)
 			{
-				foreach (XmlNode cc in c.ChildNodes)
+				// only valid on driver car at the minute, need to implement car based handles
+				return;
+			}
+
+			if (block.GetValue(TrainXMLKey.Notches, out int numberOfNotches))
+			{
+				if (Handle is AirBrakeHandle)
 				{
-					Enum.TryParse(cc.Name, true, out HandleXMLKey key);
-					switch (key)
-					{
-						case HandleXMLKey.Notches:
-							if (Car != Train.DriverCar)
-							{
-								// only valid on driver car
-								break;
-							}
-
-							if (Handle is AirBrakeHandle)
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unable to define a number of notches for an AirBrake handle for Car " + Car + " in XML file " + fileName);
-								break;
-							}
-							
-							if (!NumberFormats.TryParseIntVb6(cc.InnerText, out int numberOfNotches) | numberOfNotches < 0)
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid number of handle notches defined for Car " + Car + " in XML file " + fileName);
-							}
-
-							// remember to increase the max driver notch too
-							Handle.MaximumDriverNotch += numberOfNotches - Handle.MaximumNotch;
-							Handle.MaximumNotch = numberOfNotches;
-							break;
-						case HandleXMLKey.SpringTime:
-							if (Car != Train.DriverCar)
-							{
-								// only valid on driver car
-								break;
-							}
-
-							if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Handle.SpringTime) | Handle.SpringTime <= 0)
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid handle spring time defined for Car " + Car + " in XML file " + fileName);
-								Handle.SpringTime = 0;
-								Handle.SpringType = SpringType.Unsprung;
-							}
-
-							break;
-						case HandleXMLKey.SpringType:
-							if (!Enum.TryParse(cc.InnerText, true, out Handle.SpringType))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid handle spring type defined for Car " + Car + " in XML file " + fileName);
-								Handle.SpringTime = 0;
-								Handle.SpringType = SpringType.Unsprung;
-							}
-
-							break;
-						case HandleXMLKey.MaxSprungNotch:
-							if (Car != Train.DriverCar)
-							{
-								// only valid on driver car
-								break;
-							}
-
-							if (!NumberFormats.TryParseIntVb6(cc.InnerText, out int maxSpring) | maxSpring > Handle.MaximumNotch)
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid maximum handle spring value defined for Car " + Car + " in XML file " + fileName);
-							}
-
-							Handle.MaxSpring = maxSpring;
-							break;
-						case HandleXMLKey.MotorBrakeNotch:
-							if (!NumberFormats.TryParseIntVb6(cc.InnerText, out Train.Cars[Car].CarBrake.MotorBrakeNotch))
-							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid MotorBrakeNotch defined for Car " + Car + " in XML file " + fileName);
-							}
-							break;
-					}
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unable to define a number of notches for an AirBrake handle for Car " + Car + " in XML file " + fileName);
+				}
+				else
+				{
+					// remember to increase the max driver notch too
+					Handle.MaximumDriverNotch += numberOfNotches - Handle.MaximumNotch;
+					Handle.MaximumNotch = numberOfNotches;
 				}
 			}
+
+			block.GetEnumValue(TrainXMLKey.SpringType, out Handle.SpringType);
+			if (!block.GetValue(TrainXMLKey.SpringTime, out Handle.SpringTime, NumberRange.Positive))
+			{
+				Handle.SpringType = SpringType.Unsprung;
+			}
+
+			if (block.GetValue(TrainXMLKey.MaxSprungNotch, out int maxSpring, NumberRange.Positive))
+			{
+				if (maxSpring > Handle.MaximumNotch)
+				{
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid maximum handle spring value defined for Car " + Car + " in XML file " + fileName);
+				}
+
+				Handle.MaxSpring = Math.Min(maxSpring, Handle.MaximumNotch);
+			}
+
+			block.TryGetValue(TrainXMLKey.MotorBrakeNotch, ref Train.Cars[Car].CarBrake.MotorBrakeNotch, NumberRange.NonNegative);
 		}
 	}
 }
