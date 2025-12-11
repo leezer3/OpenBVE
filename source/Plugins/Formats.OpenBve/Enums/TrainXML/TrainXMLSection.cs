@@ -1,0 +1,31 @@
+﻿namespace Formats.OpenBve
+{
+	public enum TrainXMLSection
+	{
+		Train,
+		Car,
+		Coupler,
+		Power,
+		Handle,
+		Brake,
+		DieselEngine,
+		ElectricEngine,
+		Doors,
+		Sanders,
+		Windscreen,
+		DriverBody,
+		NotchDescriptions,
+		Plugin,
+		AccelerationCurves,
+		CameraRestriction,
+		FrontBogie,
+		RearBogie,
+		DriverSupervisionDevice,
+		DSD = DriverSupervisionDevice,
+		SoundTable,
+		BVE5,
+		TractionMotor,
+		RegenerativeTractionMotor,
+		ParticleSource
+	}
+}

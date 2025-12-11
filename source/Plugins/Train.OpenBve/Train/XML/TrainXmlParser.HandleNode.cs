@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Xml;
-using Formats.OpenBve;
+﻿using Formats.OpenBve;
+using Formats.OpenBve.XML;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using System;
+using System.Linq;
+using System.Xml;
 using TrainManager.Handles;
 using TrainManager.Trains;
 
@@ -11,8 +12,10 @@ namespace Train.OpenBve
 {
 	partial class TrainXmlParser
 	{
-		private void ParseHandleNode(XmlNode c, ref AbstractHandle Handle, int Car, TrainBase Train, string fileName)
+		private void ParseHandleNode(Block<TrainXMLSection, TrainXMLKey> block, ref AbstractHandle Handle, int Car, TrainBase Train, string fileName)
 		{
+			XMLSection<TrainXMLSection, TrainXMLKey> handleBlock = block as XMLSection<TrainXMLSection, TrainXMLKey>;
+			XmlNode c = handleBlock.Node;
 			if (c.ChildNodes.OfType<XmlElement>().Any())
 			{
 				foreach (XmlNode cc in c.ChildNodes)

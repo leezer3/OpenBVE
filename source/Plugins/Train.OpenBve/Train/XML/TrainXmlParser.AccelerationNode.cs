@@ -1,16 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
+﻿using Formats.OpenBve;
+using Formats.OpenBve.XML;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
 using TrainManager.Power;
 
 namespace Train.OpenBve
 {
 	partial class TrainXmlParser
 	{
-		private AccelerationCurve[] ParseAccelerationNode(XmlNode c, string fileName)
+		private AccelerationCurve[] ParseAccelerationNode(Block<TrainXMLSection, TrainXMLKey> block, string fileName)
 		{
+			XMLSection<TrainXMLSection, TrainXMLKey> accelerationBlock = block as XMLSection<TrainXMLSection, TrainXMLKey>;
+			XmlNode c = accelerationBlock.Node;
 			if (c.ChildNodes.OfType<XmlElement>().Any())
 			{
 				List<AccelerationCurve> accelerationCurves = new List<AccelerationCurve>();

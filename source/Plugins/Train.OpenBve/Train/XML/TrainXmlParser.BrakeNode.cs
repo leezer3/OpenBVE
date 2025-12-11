@@ -1,9 +1,10 @@
+using Formats.OpenBve;
+using Formats.OpenBve.XML;
+using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using System;
 using System.Linq;
 using System.Xml;
-using Formats.OpenBve;
-using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using TrainManager.BrakeSystems;
 using TrainManager.Handles;
 using TrainManager.Trains;
@@ -12,8 +13,10 @@ namespace Train.OpenBve
 {
 	partial class TrainXmlParser
 	{
-		private void ParseBrakeNode(XmlNode brakeNode, string fileName, int carIndex, ref TrainBase Train)
+		private void ParseBrakeNode(Block<TrainXMLSection, TrainXMLKey> block, string fileName, int carIndex, ref TrainBase Train)
 		{
+			XMLSection<TrainXMLSection, TrainXMLKey> brakeBlock = block as XMLSection<TrainXMLSection, TrainXMLKey>;
+			XmlNode brakeNode = brakeBlock.Node;
 			double compressorRate = 5000.0, compressorMinimumPressure = 690000.0, compressorMaximumPressure = 780000.0;
 			double auxiliaryReservoirChargeRate = 200000.0;
 			double equalizingReservoirChargeRate = 200000.0, equalizingReservoirServiceRate = 50000.0, equalizingReservoirEmergencyRate = 250000.0;

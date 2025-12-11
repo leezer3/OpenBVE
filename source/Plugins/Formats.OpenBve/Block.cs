@@ -31,6 +31,7 @@ using OpenBveApi.Objects;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Formats.OpenBve
@@ -80,6 +81,25 @@ namespace Formats.OpenBve
 			}
 
 			return returnedBlocks;
+		}
+
+		public virtual bool ReadBlock(T1[] validBlocks, out Block<T1, T2> block)
+		{
+			for (int i = 0; i < subBlocks.Count; i++)
+			{
+				for(int j = 0; j < validBlocks.Length; j++)
+				{
+					if (EqualityComparer<T1>.Default.Equals(subBlocks[i].Key, validBlocks[j]))
+					{
+						block = subBlocks[i];
+						subBlocks.RemoveAt(i);
+						return true;
+					}
+				}
+			}
+
+			block = null;
+			return false;
 		}
 
 		public virtual int RemainingSubBlocks => subBlocks.Count;
