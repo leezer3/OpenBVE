@@ -42,15 +42,12 @@ namespace Formats.OpenBve
 	/// <summary>Root block for a .CFG type file</summary>
 	public class ConfigFile<T1, T2> : Block<T1, T2> where T1 : struct, Enum where T2 : struct, Enum
 	{
-		private readonly List<Block<T1, T2>> subBlocks;
-
 		public ConfigFile(string fileName, HostInterface currentHost, string expectedHeader = null) : this(File.ReadAllLines(fileName, TextEncoding.GetSystemEncodingFromFile(fileName)), currentHost, expectedHeader)
 		{
 		}
 
 		public ConfigFile(string[] lines, HostInterface currentHost, string expectedHeader = null) : base(-1, default, currentHost)
 		{
-			subBlocks = new List<Block<T1, T2>>();
 			List<string> blockLines = new List<string>();
 			bool addToBlock = false;
 			int idx = -1;
@@ -144,37 +141,10 @@ namespace Formats.OpenBve
 				subBlocks.Add(new ConfigSection<T1, T2>(idx, startingLine + 1, previousSection, blockLines.ToArray(), currentHost));
 			}
 		}
-
-		public override Block<T1, T2> ReadNextBlock()
-		{
-			Block<T1, T2> b = subBlocks.First();
-			subBlocks.RemoveAt(0);
-			return b;
-		}
-
-		public override bool ReadBlock(T1 blockToRead, out Block<T1, T2> block)
-		{
-			for (int i = 0; i < subBlocks.Count; i++)
-			{
-				if (EqualityComparer<T1>.Default.Equals(subBlocks[i].Key, blockToRead))
-				{
-					block = subBlocks[i];
-					subBlocks.RemoveAt(i);
-					return true;
-				}
-			}
-
-			block = null;
-			return false;
-		}
-
-		public override int RemainingSubBlocks => subBlocks.Count;
 	}
 
 	public class ConfigSection<T1, T2> : Block<T1, T2> where T1 : struct, Enum where T2 : struct, Enum
 	{
-		private readonly ConcurrentDictionary<T2, KeyValuePair<int, string>> keyValuePairs;
-
 		private readonly ConcurrentDictionary<int, KeyValuePair<int, string>> indexedValues;
 
 		private readonly Queue<KeyValuePair<int, string>> rawValues;
@@ -191,11 +161,16 @@ namespace Formats.OpenBve
 			return false;
 		}
 
+		public override List<Block<T1, T2>> ReadBlocks(T1[] blocks)
+		{
+			currentHost.AddMessage(MessageType.Error, false, "A section in a CFG file cannot contain sub-blocks.");
+			return null;
+		}
+
 		public override int RemainingDataValues => keyValuePairs.Count + indexedValues.Count + rawValues.Count;
 
 		internal ConfigSection(int myIndex, int startingLine, T1 myKey, string[] myLines, HostInterface currentHost) : base(myIndex, myKey, currentHost)
 		{
-			keyValuePairs = new ConcurrentDictionary<T2, KeyValuePair<int, string>>();
 			indexedValues = new ConcurrentDictionary<int, KeyValuePair<int, string>>();
 			rawValues = new Queue<KeyValuePair<int, string>>();
 			for (int i = 0; i < myLines.Length; i++)

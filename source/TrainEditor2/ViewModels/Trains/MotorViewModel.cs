@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Reactive.Linq;
+using Formats.OpenBve;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;

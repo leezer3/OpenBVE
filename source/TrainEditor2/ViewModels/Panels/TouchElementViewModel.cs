@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Formats.OpenBve;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using Reactive.Bindings;
