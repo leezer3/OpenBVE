@@ -152,8 +152,8 @@ namespace ObjectViewer
 					switch (block.Key)
 					{
 						case OptionsSection.Display:
-							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth);
-							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight);
+							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight, NumberRange.Positive);
 							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
 							break;
 						case OptionsSection.Quality:

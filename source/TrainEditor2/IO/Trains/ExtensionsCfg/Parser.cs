@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Formats.OpenBve;
 using OpenBveApi;
 using OpenBveApi.Interface;
@@ -59,7 +59,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 							train.Cars[block.Index].Object = objectPath;
 						}
 
-						if (block.GetValue(ExtensionCfgKey.Length, out double carLength) && carLength > 0)
+						if (block.GetValue(ExtensionCfgKey.Length, out double carLength, NumberRange.Positive))
 						{
 							train.Cars[block.Index].Length = carLength;
 						}

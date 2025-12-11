@@ -575,57 +575,49 @@ namespace Formats.OpenBve
 			return false;
 		}
 
-		public override bool GetValue(T2 key, out double value)
-		{
-			if (keyValuePairs.TryRemove(key, out var s))
-			{
-				if (NumberFormats.TryParseDoubleVb6(s.Value, out value))
-				{
-					return true;
-				}
-				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid double in Key " + key + " in Section " + Key + " at line " + s.Key);
-				return false;
-
-			}
-			value = 0;
-			return false;
-		}
-
-		public override bool TryGetValue(T2 key, ref double value)
+		public override bool TryGetValue(T2 key, ref double value, NumberRange range = NumberRange.Any)
 		{
 			if (keyValuePairs.TryRemove(key, out var s))
 			{
 				if (NumberFormats.TryParseDoubleVb6(s.Value, out double newValue))
 				{
-					value = newValue;
-					return true;
+					switch (range)
+					{
+						case NumberRange.Any:
+							value = newValue;
+							return true;
+						case NumberRange.Positive:
+							if (newValue > 0)
+							{
+								value = newValue;
+								return true;
+							}
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a positive double in Key " + key + " in Section " + Key + " at line " + s.Key);
+							return false;
+						case NumberRange.NonNegative:
+							if (newValue >= 0)
+							{
+								value = newValue;
+								return true;
+							}
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a non-negative double in Key " + key + " in Section " + Key + " at line " + s.Key);
+							return false;
+						case NumberRange.NonZero:
+							if (newValue != 0)
+							{
+								value = newValue;
+								return true;
+							}
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a non-zero double in Key " + key + " in Section " + Key + " at line " + s.Key);
+							return false;
+					}
 				}
 				currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a valid double in Key " + key + " in Section " + Key + " at line " + s.Key);
 			}
 			return false;
 		}
-
-		public override bool GetValue(T2 key, out int value)
-		{
-			if (keyValuePairs.TryRemove(key, out var s))
-			{
-				if (NumberFormats.TryParseIntVb6(s.Value, out value))
-				{
-					if (!int.TryParse(s.Value, out _))
-					{
-						currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is a double, not an integer and precision will be lost in Key " + key + " in Section " + Key + " at line " + s.Key);
-					}
-					return true;
-				}
-				
-				currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is not a valid integer in Key " + key + " in Section " + Key + " at line " + s.Key);
-				return false;
-			}
-			value = 0;
-			return false;
-		}
-
-		public override bool TryGetValue(T2 key, ref int value)
+		
+		public override bool TryGetValue(T2 key, ref int value, NumberRange range = NumberRange.Any)
 		{
 			if (keyValuePairs.TryRemove(key, out var s))
 			{
@@ -635,8 +627,37 @@ namespace Formats.OpenBve
 					{
 						currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is a double, not an integer and precision will be lost in Key " + key + " in Section " + Key + " at line " + s.Key);
 					}
-					value = newValue;
-					return true;
+
+					switch (range)
+					{
+						case NumberRange.Any:
+							value = newValue;
+							return true;
+						case NumberRange.Positive:
+							if (newValue > 0)
+							{
+								value = newValue;
+								return true;
+							}
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a positive integer in Key " + key + " in Section " + Key + " at line " + s.Key);
+							return false;
+						case NumberRange.NonNegative:
+							if (newValue >= 0)
+							{
+								value = newValue;
+								return true;
+							}
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a non-negative integer in Key " + key + " in Section " + Key + " at line " + s.Key);
+							return false;
+						case NumberRange.NonZero:
+							if (newValue != 0)
+							{
+								value = newValue;
+								return true;
+							}
+							currentHost.AddMessage(MessageType.Warning, false, "Value " + s + " is not a non-zero integer in Key " + key + " in Section " + Key + " at line " + s.Key);
+							return false;
+					}
 				}
 				currentHost.AddMessage(MessageType.Warning, false, "Value " + s.Value + " is not a valid integer in Key " + key + " in Section " + Key + " at line " + s.Key);
 			}

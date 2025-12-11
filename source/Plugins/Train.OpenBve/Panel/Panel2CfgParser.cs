@@ -57,7 +57,7 @@ namespace Train.OpenBve
 				// Many panel properties are calculated with the size of this element, so only accept this with hacks on
 				if (Block.GetPath(Panel2Key.DaytimeImage, trainPath, out string panelDaytimeImage) || Plugin.CurrentOptions.EnableBveTsHacks)
 				{
-					Block.TryGetValue(Panel2Key.Resolution, ref PanelResolution);
+					Block.TryGetValue(Panel2Key.Resolution, ref PanelResolution, NumberRange.Positive);
 					if (PanelResolution < 100)
 					{
 						//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
@@ -605,9 +605,9 @@ namespace Train.OpenBve
 
 						Block.TryGetVector2(Panel2Key.TopLeft, ',', ref topLeft);
 						Block.TryGetVector2(Panel2Key.BottomRight, ',', ref bottomRight);
-						Block.TryGetValue(Panel2Key.NumberOfDrops, ref numberOfDrops);
-						Block.TryGetValue(Panel2Key.DropSize, ref dropSize);
-						Block.TryGetValue(Panel2Key.DropLife, ref dropLife);
+						Block.TryGetValue(Panel2Key.NumberOfDrops, ref numberOfDrops, NumberRange.NonNegative);
+						Block.TryGetValue(Panel2Key.DropSize, ref dropSize, NumberRange.Positive);
+						Block.TryGetValue(Panel2Key.DropLife, ref dropLife, NumberRange.Positive);
 						Block.TryGetStringArray(Panel2Key.DaytimeDrops, ',', ref daytimeDropFiles);
 						Block.TryGetStringArray(Panel2Key.NighttimeDrops, ',', ref nighttimeDropFiles);
 						Block.TryGetStringArray(Panel2Key.DaytimeFlakes, ',', ref daytimeFlakeFiles);

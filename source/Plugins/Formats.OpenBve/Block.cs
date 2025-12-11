@@ -107,27 +107,27 @@ namespace Formats.OpenBve
 	    }
 
         /// <summary>Unconditionally reads the specified double from the block</summary>
-	    public virtual bool GetValue(T2 key, out double value)
+	    public bool GetValue(T2 key, out double value, NumberRange range = NumberRange.Any)
 	    {
-		    value = 0;
-		    return false;
+			value = 0;
+			return TryGetValue(key, ref value, range);
 	    }
 
         /// <summary>Reads the specified double from the block if it exists, preserving the prior value if not present</summary>
-	    public virtual bool TryGetValue(T2 key, ref double value)
+	    public virtual bool TryGetValue(T2 key, ref double value, NumberRange range = NumberRange.Any)
 	    {
 		    return false;
 	    }
 
 	    /// <summary>Unconditionally reads the specified integer from the block</summary>
-		public virtual bool GetValue(T2 key, out int value)
+		public bool GetValue(T2 key, out int value, NumberRange range = NumberRange.Any)
 	    {
 		    value = 0;
-		    return false;
+		    return TryGetValue(key, ref value, range);
 	    }
 
 	    /// <summary>Reads the specified integer from the block if it exists, preserving the prior value if not present</summary>
-	    public virtual bool TryGetValue(T2 key, ref int value)
+	    public virtual bool TryGetValue(T2 key, ref int value, NumberRange range = NumberRange.Any)
 	    {
 		    return false;
 	    }

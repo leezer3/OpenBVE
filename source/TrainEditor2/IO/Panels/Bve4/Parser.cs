@@ -203,9 +203,9 @@ namespace TrainEditor2.IO.Panels.Bve4
 						TimetableElement timetable = new TimetableElement();
 						block.GetVector2(Panel2Key.Location, ',', out location);
 						timetable.Location = location;
-						block.GetValue(Panel2Key.Width, out width);
+						block.GetValue(Panel2Key.Width, out width, NumberRange.Positive);
 						timetable.Width = width;
-						block.GetValue(Panel2Key.Height, out double height);
+						block.GetValue(Panel2Key.Height, out double height, NumberRange.Positive);
 						timetable.Height = height;
 						block.GetColor24(Panel2Key.TransparentColor, out transparentColor);
 						timetable.TransparentColor = transparentColor;

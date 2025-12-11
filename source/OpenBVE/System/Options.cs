@@ -436,7 +436,7 @@ namespace OpenBve
 							block.TryGetValue(OptionsKey.Folder, ref CurrentOptions.UserInterfaceFolder);
 							block.GetEnumValue(OptionsKey.TimetableMode, out CurrentOptions.TimeTableStyle);
 							block.GetValue(OptionsKey.KioskMode, out Interface.CurrentOptions.KioskMode);
-							block.TryGetValue(OptionsKey.KioskModeTimer, ref CurrentOptions.KioskModeTimer);
+							block.TryGetValue(OptionsKey.KioskModeTimer, ref CurrentOptions.KioskModeTimer, NumberRange.NonNegative);
 							if (CurrentOptions.KioskModeTimer > 1000 || CurrentOptions.KioskModeTimer == 0)
 							{
 								CurrentOptions.KioskModeTimer = 300;
@@ -450,20 +450,20 @@ namespace OpenBve
 							block.GetValue(OptionsKey.PreferNativeBackend, out CurrentOptions.PreferNativeBackend);
 							block.GetValue(OptionsKey.Mode, out string m);
 							CurrentOptions.FullscreenMode = string.Compare(m, "fullscreen", StringComparison.OrdinalIgnoreCase) == 0;
-							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth);
-							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight);
-							block.TryGetValue(OptionsKey.FullScreenWidth, ref Interface.CurrentOptions.FullscreenWidth);
-							block.TryGetValue(OptionsKey.FullScreenHeight, ref CurrentOptions.FullscreenHeight);
-							block.TryGetValue(OptionsKey.FullScreenBits, ref CurrentOptions.FullscreenBits);
-							block.TryGetValue(OptionsKey.MainMenuWidth, ref CurrentOptions.MainMenuWidth);
-							block.TryGetValue(OptionsKey.MainMenuHeight, ref CurrentOptions.MainMenuHeight);
+							block.TryGetValue(OptionsKey.WindowWidth, ref Interface.CurrentOptions.WindowWidth, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.WindowHeight, ref Interface.CurrentOptions.WindowHeight, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.FullScreenWidth, ref Interface.CurrentOptions.FullscreenWidth, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.FullScreenHeight, ref CurrentOptions.FullscreenHeight, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.FullScreenBits, ref CurrentOptions.FullscreenBits, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.MainMenuWidth, ref CurrentOptions.MainMenuWidth, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.MainMenuHeight, ref CurrentOptions.MainMenuHeight, NumberRange.Positive);
 							block.GetValue(OptionsKey.VSync, out Interface.CurrentOptions.VerticalSynchronization);
 							block.GetValue(OptionsKey.LoadInAdvance, out Interface.CurrentOptions.LoadInAdvance);
 							block.GetValue(OptionsKey.UnloadTextures, out CurrentOptions.UnloadUnusedTextures);
 							block.GetValue(OptionsKey.IsUseNewRenderer, out Interface.CurrentOptions.IsUseNewRenderer);
 							block.GetValue(OptionsKey.ForwardsCompatibleContext, out CurrentOptions.ForceForwardsCompatibleContext);
-							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance);
-							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize);
+							block.TryGetValue(OptionsKey.ViewingDistance, ref Interface.CurrentOptions.ViewingDistance, NumberRange.Positive);
+							block.TryGetValue(OptionsKey.QuadLeafSize, ref Interface.CurrentOptions.QuadTreeLeafSize, NumberRange.Positive);
 							block.TryGetValue(OptionsKey.UIScaleFactor, ref CurrentOptions.UserInterfaceScaleFactor);
 							break;
 						case OptionsSection.Quality:
