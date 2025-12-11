@@ -729,7 +729,7 @@ namespace OpenBveApi.Objects
 				internalObject.Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			}
 
-			if (ColorFunction != null)
+			if (ColorFunction != null && Colors != null)
 			{
 				int color = (int)ColorFunction.LastResult;
 				if (UpdateFunctions)

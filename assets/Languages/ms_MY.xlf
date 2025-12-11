@@ -1604,6 +1604,10 @@
 						<source>Other items installation directory:</source>
 						<target>Direktori pemasangan iitem lain-lain:</target>
 					</trans-unit>
+					<trans-unit id="package_msts_directory">
+						<source>MSTS installation directory:</source>
+						<target>Direktori pemasangan MSTS:</target>
+					</trans-unit>
 					<trans-unit id="package_compression">
 						<source>Package compression format:</source>
 						<target>Format mampatan pakej:</target>
