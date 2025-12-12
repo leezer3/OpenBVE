@@ -106,6 +106,12 @@
 		Notches,
 		MaxSprungNotch,
 		SpringType,
-		SpringTime
+		SpringTime,
+		StageZeroAcceleration,
+		StageOneAcceleration,
+		StageOneSpeed,
+		StageTwoSpeed,
+		StageTwoExponent,
+		Multiplier
 	}
 }

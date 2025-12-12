@@ -2,6 +2,7 @@
 {
 	public enum TrainXMLSection
 	{
+		openBVE,
 		Train,
 		Car,
 		Coupler,
@@ -34,7 +35,5 @@
 		BrakePipe,
 		StraightAirPipe,
 		BrakeCylinder,
-
-
 	}
 }
