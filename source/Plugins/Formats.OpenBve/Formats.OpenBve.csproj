@@ -61,7 +61,6 @@
     <Compile Include="Enums\SoundCfg\SoundCfgKey.cs" />
     <Compile Include="Enums\SoundCfg\SoundCfgSection.cs" />
     <Compile Include="Enums\TrackFollowingObjectXML\TrackFollowingObject.cs" />
-    <Compile Include="Enums\TrainXML\Brake.cs" />
     <Compile Include="Enums\TrainXML\CargoType.cs" />
     <Compile Include="Enums\TrainXML\Handle.cs" />
     <Compile Include="Enums\TrainXML\TrainXMLKey.cs" />

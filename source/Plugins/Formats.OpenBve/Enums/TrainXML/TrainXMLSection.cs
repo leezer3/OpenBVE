@@ -26,6 +26,15 @@
 		BVE5,
 		TractionMotor,
 		RegenerativeTractionMotor,
-		ParticleSource
+		ParticleSource,
+		Compressor,
+		MainReservoir,
+		AuxiliaryReservoir,
+		EqualizingReservoir,
+		BrakePipe,
+		StraightAirPipe,
+		BrakeCylinder,
+
+
 	}
 }

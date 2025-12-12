@@ -91,6 +91,17 @@
 		InitialDirection,
 		Texture,
 		MaximumLifespan,
-
+		MinimumPressure,
+		MaximumPressure,
+		Volume,
+		ChargeRate,
+		ServiceRate,
+		EmergencyRate,
+		ReleaseRate,
+		NormalPressure,
+		ServiceMaximumPressure,
+		EmergencyMaximumPressure,
+		Handle,
+		LegacyPressureDistribution
 	}
 }
