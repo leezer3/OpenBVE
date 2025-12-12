@@ -31,7 +31,6 @@ using OpenBveApi.Objects;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace Formats.OpenBve

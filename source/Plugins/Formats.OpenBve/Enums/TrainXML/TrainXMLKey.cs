@@ -102,6 +102,10 @@
 		ServiceMaximumPressure,
 		EmergencyMaximumPressure,
 		Handle,
-		LegacyPressureDistribution
+		LegacyPressureDistribution,
+		Notches,
+		MaxSprungNotch,
+		SpringType,
+		SpringTime
 	}
 }
