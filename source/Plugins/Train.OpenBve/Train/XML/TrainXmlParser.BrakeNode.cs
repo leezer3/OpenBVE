@@ -1,9 +1,29 @@
-using System;
-using System.Linq;
-using System.Xml;
+//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2020, Christopher Lees, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 using Formats.OpenBve;
-using OpenBveApi.Interface;
-using OpenBveApi.Math;
+using System;
 using TrainManager.BrakeSystems;
 using TrainManager.Handles;
 using TrainManager.Trains;
@@ -12,7 +32,7 @@ namespace Train.OpenBve
 {
 	partial class TrainXmlParser
 	{
-		private void ParseBrakeNode(XmlNode brakeNode, string fileName, int carIndex, ref TrainBase Train)
+		private void ParseBrakeNode(Block<TrainXMLSection, TrainXMLKey> block, string fileName, int carIndex, ref TrainBase Train)
 		{
 			double compressorRate = 5000.0, compressorMinimumPressure = 690000.0, compressorMaximumPressure = 780000.0;
 			double auxiliaryReservoirChargeRate = 200000.0;
@@ -25,273 +45,63 @@ namespace Train.OpenBve
 			double brakeCylinderVolume = 0.14; // 35cm diameter, 15cm stroke
 			double straightAirPipeServiceRate = 300000.0, straightAirPipeEmergencyRate = 400000.0, straightAirPipeReleaseRate = 200000.0;
 			double brakeCylinderServiceMaximumPressure = 440000.0, brakeCylinderEmergencyMaximumPressure = 440000.0, brakeCylinderEmergencyRate = 300000.0, brakeCylinderReleaseRate = 200000.0;
-			foreach (XmlNode c in brakeNode.ChildNodes)
+			if (block.ReadBlock(TrainXMLSection.Compressor, out Block<TrainXMLSection, TrainXMLKey> compressorBlock))
 			{
-				Enum.TryParse(c.Name, true, out BrakeXMLKey key);
-				switch (key)
-				{
-					case BrakeXMLKey.Compressor:
-						Train.Cars[carIndex].CarBrake.BrakeType = BrakeType.Main; //We have a compressor so must be a main brake type
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								Enum.TryParse(cc.Name, true, out key);
-								switch (key)
-								{
-									case BrakeXMLKey.Rate:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out compressorRate) | compressorRate <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid compression rate defined for Car " + carIndex + " in XML file " + fileName);
-											compressorRate = 5000.0;
-										}
-										break;
-								}
-							}
-						}
-						break;
-					case BrakeXMLKey.MainReservoir:
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								Enum.TryParse(cc.Name, true, out key);
-								switch (key)
-								{
-									case BrakeXMLKey.MinimumPressure:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out compressorMinimumPressure) | compressorMinimumPressure <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid main reservoir minumum pressure defined for Car " + carIndex + " in XML file " + fileName);
-											compressorMinimumPressure = 690000.0;
-										}
-										break;
-									case BrakeXMLKey.MaximumPressure:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out compressorMaximumPressure) | compressorMaximumPressure <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid main reservoir maximum pressure defined for Car " + carIndex + " in XML file " + fileName);
-											compressorMaximumPressure = 780000.0;
-										}
-										break;
-									case BrakeXMLKey.Volume:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out mainReservoirVolume) | mainReservoirVolume <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid main reservoir volume defined for Car " + carIndex + " in XML file " + fileName);
-											mainReservoirVolume = 0.5;
-										}
-										break;
-								}
-							}
-						}
-						break;
-					case BrakeXMLKey.AuxiliaryReservoir:
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								Enum.TryParse(cc.Name, true, out key);
-								switch (key)
-								{
-									case BrakeXMLKey.ChargeRate:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out auxiliaryReservoirChargeRate) | auxiliaryReservoirChargeRate <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid auxiliary reservoir charge rate defined for Car " + carIndex + " in XML file " + fileName);
-											auxiliaryReservoirChargeRate = 200000.0;
-										}
-										break;
-									case BrakeXMLKey.Volume:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out auxiliaryReservoirVolume) | auxiliaryReservoirVolume <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid auxiliary reservoir volume defined for Car " + carIndex + " in XML file " + fileName);
-											auxiliaryReservoirVolume = 0.5;
-										}
-										break;
-								}
-							}
-						}
-						break;
-					case BrakeXMLKey.EqualizingReservoir:
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								Enum.TryParse(cc.Name, true, out key);
-								switch (key)
-								{
-									case BrakeXMLKey.ChargeRate:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out equalizingReservoirChargeRate) | equalizingReservoirChargeRate <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid equalizing reservoir charge rate defined for Car " + carIndex + " in XML file " + fileName);
-											equalizingReservoirChargeRate = 50000.0;
-										}
-										break;
-									case BrakeXMLKey.ServiceRate:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out equalizingReservoirServiceRate) | equalizingReservoirServiceRate <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid equalizing reservoir service rate defined for Car " + carIndex + " in XML file " + fileName);
-											equalizingReservoirServiceRate = 50000.0;
-										}
-										break;
-									case BrakeXMLKey.EmergencyRate:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out equalizingReservoirEmergencyRate) | equalizingReservoirEmergencyRate <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid equalizing reservoir emergency rate defined for Car " + carIndex + " in XML file " + fileName);
-											equalizingReservoirEmergencyRate = 50000.0;
-										}
-										break;
-									case BrakeXMLKey.Volume:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out equalizingReservoirVolume) | equalizingReservoirVolume <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid equalizing reservoir volume defined for Car " + carIndex + " in XML file " + fileName);
-											equalizingReservoirVolume = 0.015;
-										}
-										break;
-								}
-							}
-						}
-						break;
-					case BrakeXMLKey.BrakePipe:
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								Enum.TryParse(cc.Name, true, out key);
-								switch (key)
-								{
-									case BrakeXMLKey.NormalPressure:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakePipeNormalPressure) | brakePipeNormalPressure <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid brake pipe normal pressure defined for Car " + carIndex + " in XML file " + fileName);
-											brakePipeNormalPressure = 0.0;
-										}
-										break;
-									case BrakeXMLKey.ChargeRate:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakePipeChargeRate) | brakePipeChargeRate <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid brake pipe charge rate defined for Car " + carIndex + " in XML file " + fileName);
-											brakePipeChargeRate = 10000000.0;
-										}
-										break;
-									case BrakeXMLKey.ServiceRate:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakePipeServiceRate) | brakePipeServiceRate <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid brake pipe service rate defined for Car " + carIndex + " in XML file " + fileName);
-											brakePipeServiceRate = 1500000.0;
-										}
-										break;
-									case BrakeXMLKey.EmergencyRate:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakePipeEmergencyRate) | brakePipeEmergencyRate <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid brake pipe emergency rate defined for Car " + carIndex + " in XML file " + fileName);
-											brakePipeEmergencyRate = 400000.0;
-										}
-										break;
-									case BrakeXMLKey.Volume:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakePipeVolume) | brakePipeVolume <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid brake pipe volume defined for Car " + carIndex + " in XML file " + fileName);
-											brakePipeVolume = Math.Pow(0.0175 * Math.PI, 2) * Train.Cars.Length;
-										}
-										break;
-								}
-							}
-						}
-						break;
-					case BrakeXMLKey.StraightAirPipe:
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								Enum.TryParse(cc.Name, true, out key);
-								switch (key)
-								{
-									case BrakeXMLKey.ServiceRate:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out straightAirPipeServiceRate) | straightAirPipeServiceRate <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid straight air pipe service rate defined for Car " + carIndex + " in XML file " + fileName);
-											 straightAirPipeServiceRate = 300000.0;
-										}
-										break;
-									case BrakeXMLKey.EmergencyRate:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out straightAirPipeEmergencyRate) | straightAirPipeEmergencyRate <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid straight air pipe emergency rate defined for Car " + carIndex + " in XML file " + fileName);
-											straightAirPipeEmergencyRate = 400000.0;
-										}
-										break;
-									case BrakeXMLKey.ReleaseRate:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out straightAirPipeReleaseRate) | straightAirPipeReleaseRate <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid straight air pipe emergency rate defined for Car " + carIndex + " in XML file " + fileName);
-											straightAirPipeReleaseRate = 200000.0;
-										}
-										break;
-								}
-							}
-						}
-						break;
-					case BrakeXMLKey.BrakeCylinder:
-						if (c.ChildNodes.OfType<XmlElement>().Any())
-						{
-							foreach (XmlNode cc in c.ChildNodes)
-							{
-								Enum.TryParse(cc.Name, true, out key);
-								switch (key)
-								{
-									case BrakeXMLKey.ServiceMaximumPressure:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakeCylinderServiceMaximumPressure) | brakeCylinderServiceMaximumPressure <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid brake cylinder service pressure defined for Car " + carIndex + " in XML file " + fileName);
-											brakeCylinderServiceMaximumPressure = 440000.0;
-										}
-										break;
-									case BrakeXMLKey.EmergencyMaximumPressure:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakeCylinderEmergencyMaximumPressure) | brakeCylinderEmergencyMaximumPressure <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid brake cylinder emergency pressure defined for Car " + carIndex + " in XML file " + fileName);
-											brakeCylinderEmergencyMaximumPressure = 440000.0;
-										}
-										break;
-									case BrakeXMLKey.EmergencyRate:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakeCylinderEmergencyRate) | brakeCylinderEmergencyRate <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid brake cylinder emergency pressure defined for Car " + carIndex + " in XML file " + fileName);
-											brakeCylinderEmergencyRate = 300000.0;
-										}
-										break;
-									case BrakeXMLKey.ReleaseRate:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakeCylinderReleaseRate) | brakeCylinderReleaseRate <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid brake cylinder emergency pressure defined for Car " + carIndex + " in XML file " + fileName);
-											brakeCylinderReleaseRate = 200000.0;
-										}
-										break;
-									case BrakeXMLKey.Volume:
-										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakeCylinderVolume) | brakeCylinderVolume <= 0.0)
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid brake cylinder volume defined for Car " + carIndex + " in XML file " + fileName);
-											brakeCylinderVolume = 0.5;
-										}
-										break;
-								}
-							}
-						}
-						break;
-					case BrakeXMLKey.Handle:
-						ParseHandleNode(c, ref Train.Handles.Brake, carIndex, Train, fileName);
-						break;
-					case BrakeXMLKey.LegacyPressureDistribution:
-						if (c.InnerText == "1" || c.InnerText.ToLowerInvariant() == "true")
-						{
-							Train.Specs.AveragesPressureDistribution = true;
-						}
-						else
-						{
-							Train.Specs.AveragesPressureDistribution = false;
-						}
-						break;
-					
-				}
+				Train.Cars[carIndex].CarBrake.BrakeType = BrakeType.Main; //We have a compressor so must be a main brake type
+				compressorBlock.TryGetValue(TrainXMLKey.Rate, ref compressorRate, NumberRange.Positive);
 			}
+
+			if (block.ReadBlock(TrainXMLSection.MainReservoir, out Block<TrainXMLSection, TrainXMLKey> mainReservoirBlock))
+			{
+				mainReservoirBlock.TryGetValue(TrainXMLKey.MinimumPressure, ref compressorMinimumPressure, NumberRange.Positive);
+				mainReservoirBlock.TryGetValue(TrainXMLKey.MaximumPressure, ref compressorMaximumPressure, NumberRange.Positive);
+				mainReservoirBlock.TryGetValue(TrainXMLKey.Volume, ref mainReservoirVolume, NumberRange.Positive);
+			}
+
+			if (block.ReadBlock(TrainXMLSection.AuxiliaryReservoir, out Block<TrainXMLSection, TrainXMLKey> auxiliaryReservoirBlock))
+			{
+				auxiliaryReservoirBlock.TryGetValue(TrainXMLKey.ChargeRate, ref auxiliaryReservoirChargeRate, NumberRange.Positive);
+				auxiliaryReservoirBlock.TryGetValue(TrainXMLKey.Volume, ref auxiliaryReservoirVolume, NumberRange.Positive);
+			}
+
+			if (block.ReadBlock(TrainXMLSection.EqualizingReservoir, out Block<TrainXMLSection, TrainXMLKey> equalizingReservoirBlock))
+			{
+				equalizingReservoirBlock.TryGetValue(TrainXMLKey.ChargeRate, ref equalizingReservoirChargeRate, NumberRange.Positive);
+				equalizingReservoirBlock.TryGetValue(TrainXMLKey.ServiceRate, ref equalizingReservoirServiceRate, NumberRange.Positive);
+				equalizingReservoirBlock.TryGetValue(TrainXMLKey.EmergencyRate, ref equalizingReservoirEmergencyRate, NumberRange.Positive);
+				equalizingReservoirBlock.TryGetValue(TrainXMLKey.Volume, ref equalizingReservoirVolume, NumberRange.Positive);
+			}
+
+			if (block.ReadBlock(TrainXMLSection.BrakePipe, out Block<TrainXMLSection, TrainXMLKey> brakePipeBlock))
+			{
+				brakePipeBlock.TryGetValue(TrainXMLKey.NormalPressure, ref brakePipeNormalPressure, NumberRange.Positive);
+				brakePipeBlock.TryGetValue(TrainXMLKey.ChargeRate, ref brakePipeChargeRate, NumberRange.Positive);
+				brakePipeBlock.TryGetValue(TrainXMLKey.ServiceRate, ref brakePipeServiceRate, NumberRange.Positive);
+				brakePipeBlock.TryGetValue(TrainXMLKey.EmergencyRate, ref brakePipeEmergencyRate, NumberRange.Positive);
+				brakePipeBlock.TryGetValue(TrainXMLKey.Volume, ref brakePipeVolume, NumberRange.Positive);
+			}
+
+			if (block.ReadBlock(TrainXMLSection.StraightAirPipe, out Block<TrainXMLSection, TrainXMLKey> straightAirPipeBlock))
+			{
+				straightAirPipeBlock.TryGetValue(TrainXMLKey.ServiceRate, ref straightAirPipeServiceRate, NumberRange.Positive);
+				straightAirPipeBlock.TryGetValue(TrainXMLKey.EmergencyRate, ref straightAirPipeEmergencyRate, NumberRange.Positive);
+				straightAirPipeBlock.TryGetValue(TrainXMLKey.ReleaseRate, ref straightAirPipeReleaseRate, NumberRange.Positive);
+			}
+
+			if (block.ReadBlock(TrainXMLSection.BrakeCylinder, out Block<TrainXMLSection, TrainXMLKey> brakeCylinderBlock))
+			{
+				brakeCylinderBlock.TryGetValue(TrainXMLKey.ServiceMaximumPressure, ref brakeCylinderServiceMaximumPressure, NumberRange.Positive);
+				brakeCylinderBlock.TryGetValue(TrainXMLKey.EmergencyMaximumPressure, ref brakeCylinderEmergencyMaximumPressure, NumberRange.Positive);
+				brakeCylinderBlock.TryGetValue(TrainXMLKey.ReleaseRate, ref brakeCylinderReleaseRate, NumberRange.Positive);
+				brakeCylinderBlock.TryGetValue(TrainXMLKey.Volume, ref brakeCylinderVolume, NumberRange.Positive);
+			}
+
+			if (block.ReadBlock(TrainXMLSection.Handle, out Block<TrainXMLSection, TrainXMLKey> handleBlock))
+			{
+				ParseHandleNode(handleBlock, ref Train.Handles.Brake, carIndex, Train, fileName);
+			}
+
+			block.TryGetValue(TrainXMLKey.LegacyPressureDistribution, ref Train.Specs.AveragesPressureDistribution);
 			
 			Train.Cars[carIndex].CarBrake.MainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
 			Train.Cars[carIndex].CarBrake.MainReservoir.Volume = mainReservoirVolume;
