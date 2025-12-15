@@ -100,7 +100,10 @@ namespace Formats.OpenBve.XML
 								}
 								else
 								{
-									currentHost.AddMessage(MessageType.Warning, false, "Unexpected value " + node.LocalName + " encountered in XML file ");
+									if (!(node is XmlComment))
+									{
+										currentHost.AddMessage(MessageType.Warning, false, "Unexpected value " + node.LocalName + " encountered in XML file ");
+									}
 								}
 							}
 						}
@@ -147,11 +150,14 @@ namespace Formats.OpenBve.XML
 					{
 						if (childNode.HasChildNodes)
 						{
-							currentHost.AddMessage(MessageType.Warning, false, "Unexpected node " + node.LocalName + " encountered in XML file ");
+							currentHost.AddMessage(MessageType.Warning, false, "Unexpected node " + childNode.LocalName + " encountered in XML file ");
 						}
 						else
 						{
-							currentHost.AddMessage(MessageType.Warning, false, "Unexpected value " + node.LocalName + " encountered in XML file ");
+							if (!(childNode is XmlComment))
+							{
+								currentHost.AddMessage(MessageType.Warning, false, "Unexpected value " + childNode.LocalName + " encountered in XML file ");
+							}
 						}
 					}
 				}

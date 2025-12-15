@@ -3,6 +3,9 @@
 	public enum TrainXMLKey
 	{
 		Unknown = 0,
+		ConvertorVersion,
+		Comment,
+		Description,
 		DriverCar,
 		Minimum,
 		Maximum,
