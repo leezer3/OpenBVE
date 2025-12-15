@@ -65,6 +65,10 @@ namespace LibRender2.Smoke
 
 		private double previousUpdatePosition;
 
+		private double particleAdditionTimer;
+
+		private double particleSizeTimer;
+
 
 
 
@@ -88,6 +92,8 @@ namespace LibRender2.Smoke
 				return;
 			}
 			dynamic dynamicCar = Car;
+			particleAdditionTimer += timeElapsed;
+			particleSizeTimer += timeElapsed;
 			Transformation directionalTransform = new Transformation(Car.FrontAxle.Follower.WorldDirection, Car.FrontAxle.Follower.WorldUp, Car.FrontAxle.Follower.WorldSide); // to correct for rotation of car
 			for (int i = Particles.Count - 1; i >= 0; i--)
 			{
@@ -121,32 +127,34 @@ namespace LibRender2.Smoke
 						if (MaximumGrownSize < MaximumSize)
 						{
 							// particles shrink
-							if (Particles[i].Size.X > MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
+							if (Particles[i].Size.X > MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5 && particleSizeTimer > 0.05)
 							{
 								if (Random.NextDouble() < 0.3)
-								{
-									Particles[i].Size.X -= Random.NextDouble() * timeElapsed;
-								}
-								else
 								{
 									Particles[i].Size.X += Random.NextDouble() * timeElapsed;
 								}
+								else
+								{
+									Particles[i].Size.X -= Random.NextDouble() * timeElapsed;
+								}
 
 								Particles[i].Size.X = Math.Max(0, Math.Max(Particles[i].Size.X, MaximumGrownSize));
+								particleSizeTimer = 0;
 							}
 
-							if (Particles[i].Size.Y < MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
+							if (Particles[i].Size.Y > MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5 && particleSizeTimer > 0.05)
 							{
 								if (Random.NextDouble() < 0.3)
 								{
-									Particles[i].Size.Y -= Random.NextDouble() * timeElapsed;
+									Particles[i].Size.Y += Random.NextDouble() * timeElapsed;
 								}
 								else
 								{
-									Particles[i].Size.Y += Random.NextDouble() * timeElapsed;
+									Particles[i].Size.Y -= Random.NextDouble() * timeElapsed;
 								}
 
 								Particles[i].Size.Y = Math.Max(0, Math.Max(Particles[i].Size.Y, MaximumGrownSize));
+								particleSizeTimer = 0;
 							}
 						}
 						else
@@ -188,13 +196,14 @@ namespace LibRender2.Smoke
 
 			if (Particles.Count < MaximumParticles)
 			{
-				if (dynamicCar.TractionModel.IsRunning)
+				if (dynamicCar.TractionModel.IsRunning && timeElapsed > 0)
 				{
-					if (Random.NextDouble() >= 0.5)
+					if (particleAdditionTimer > 0.05 && Random.NextDouble() >= 0.5)
 					{
 						Vector3 startingPosition = new Vector3(Offset);
 						startingPosition.Rotate(directionalTransform);
 						Particles.Add(new Particle(startingPosition, new Vector2(Random.NextDouble() * MaximumSize, Random.NextDouble() * MaximumSize), Random.NextDouble() * MaximumLifeSpan, Random.Next(0, 11)));
+						particleAdditionTimer = 0;
 					}
 				}
 			}
