@@ -68,9 +68,9 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="NumberRange.cs" />
-    <Compile Include="Panel\Panel2\Panel2Key.cs" />
-    <Compile Include="Panel\Panel2\Panel2Sections.cs" />
-    <Compile Include="Panel\Panel2\Panel2Subject.cs" />
+    <Compile Include="Enums\Panel2\Panel2Key.cs" />
+    <Compile Include="Enums\Panel2\Panel2Sections.cs" />
+    <Compile Include="Enums\Panel2\Panel2Subject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XML\XMLFile.cs" />
   </ItemGroup>
