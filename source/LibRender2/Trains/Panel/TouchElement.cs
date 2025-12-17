@@ -6,14 +6,22 @@ namespace LibRender2.Trains
 	public class TouchElement
 	{
 		/// <summary>The animated object</summary>
-		public AnimatedObject Element;
+		public readonly AnimatedObject Element;
 		/// <summary>The index of the screen to jump to (if applicable)</summary>
-		public int JumpScreenIndex;
+		public readonly int JumpScreenIndex;
 		/// <summary>The sound indicies associated with the object</summary>
-		public int[] SoundIndices;
+		public readonly int[] SoundIndices;
 		/// <summary>The control indicies associated with the object</summary>
-		public int[] ControlIndices;
+		public readonly int[] ControlIndices;
 		/// <summary>The cursor texture</summary>
 		public MouseCursor MouseCursor;
+
+		public TouchElement(AnimatedObject element, int jumpScreenIndex, int[] soundIndices, int[] controlIndices)
+		{
+			Element = element;
+			JumpScreenIndex = jumpScreenIndex;
+			SoundIndices = soundIndices;
+			ControlIndices = controlIndices;
+		}
 	}
 }
