@@ -264,6 +264,13 @@ namespace LibRender2.Cameras
 			return q;
 		}
 
+		public void AdjustAlignment(ref Vector3 Source, Vector3 Direction, ref Vector3 Speed, double TimeElapsed, bool Zoom = false, CameraRestriction? Restriction = null)
+		{
+			AdjustAlignment(ref Source.X, Direction.X, ref Speed.X, TimeElapsed, Zoom, Restriction);
+			AdjustAlignment(ref Source.Y, Direction.Y, ref Speed.Y, TimeElapsed, Zoom, Restriction);
+			AdjustAlignment(ref Source.Z, Direction.Z, ref Speed.Z, TimeElapsed, Zoom, Restriction);
+		}
+
 		/// <summary>Adjusts the camera alignment based upon the specified parameters</summary>
 		public void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed, bool Zoom = false, CameraRestriction? Restriction = null) {
 			if (Direction != 0.0 | Speed != 0.0) {

@@ -453,33 +453,33 @@ namespace OpenBve.Graphics.Renderers
 						double p0 = PlayerTrain.FrontCarTrackPosition;
 						double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[n].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;
 						double m = p1 - p0;
-						if (renderer.OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Km)
+						switch (renderer.OptionDistanceToNextStation)
 						{
-							if (Math.Abs(m) <= 10.0)
-							{
-								t = "Stop: " + m.ToString("0.00", Culture) + " m";
-							}
-							else
-							{
-								m /= 1000.0;
-								t = "Stop: " + m.ToString("0.000", Culture) + " km";
-							}
-							Element.TransitionState -= speed * TimeElapsed;
-							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
-						}
-						else if (renderer.OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Mile)
-						{
-							m /= 1609.34;
-							t = "Stop: " + m.ToString("0.0000", Culture) + " miles";
-							Element.TransitionState -= speed * TimeElapsed;
-							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
-						}
-						else
-						{
-							m /= 1609.34;
-							t = "Stop: " + m.ToString("0.0000", Culture) + " miles";
-							Element.TransitionState += speed * TimeElapsed;
-							if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
+							case DistanceToNextStationDisplayMode.Km:
+								if (Math.Abs(m) <= 10.0)
+								{
+									t = "Stop: " + m.ToString("0.00", Culture) + " m";
+								}
+								else
+								{
+									m /= 1000.0;
+									t = "Stop: " + m.ToString("0.000", Culture) + " km";
+								}
+								Element.TransitionState -= speed * TimeElapsed;
+								if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+								break;
+							case DistanceToNextStationDisplayMode.Mile:
+								m /= 1609.34;
+								t = "Stop: " + m.ToString("0.0000", Culture) + " miles";
+								Element.TransitionState -= speed * TimeElapsed;
+								if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+								break;
+							default:
+								m /= 1609.34;
+								t = "Stop: " + m.ToString("0.0000", Culture) + " miles";
+								Element.TransitionState += speed * TimeElapsed;
+								if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
+								break;
 						}
 					}
 					break;
