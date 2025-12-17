@@ -83,27 +83,30 @@ namespace OpenBve {
 		/// <returns>Whether querying the dimensions was successful.</returns>
 		public override bool QueryTextureDimensions(string path, out int width, out int height) {
 			if (File.Exists(path) || Directory.Exists(path)) {
-				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
-					if (Program.CurrentHost.Plugins[i].Texture != null) {
-						try {
-							if (Program.CurrentHost.Plugins[i].Texture.CanLoadTexture(path)) {
-								try {
-									if (Program.CurrentHost.Plugins[i].Texture.QueryTextureDimensions(path, out width, out height)) {
-										return true;
-									}
-									Interface.AddMessage(MessageType.Error, false,
-									                     "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at QueryTextureDimensions for file " + path);
-								} catch (Exception ex) {
-									Interface.AddMessage(MessageType.Error, false,
-									                     "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at QueryTextureDimensions:" + ex.Message
-									                    );
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Texture == null)
+					{
+						continue;
+					}
+					try {
+						if (Program.CurrentHost.Plugins[i].Texture.CanLoadTexture(path)) {
+							try {
+								if (Program.CurrentHost.Plugins[i].Texture.QueryTextureDimensions(path, out width, out height)) {
+									return true;
 								}
+								Interface.AddMessage(MessageType.Error, false,
+									"Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at QueryTextureDimensions for file " + path);
+							} catch (Exception ex) {
+								Interface.AddMessage(MessageType.Error, false,
+									"Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at QueryTextureDimensions:" + ex.Message
+								);
 							}
-						} catch (Exception ex) {
-							Interface.AddMessage(MessageType.Error, false,
-							                     "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at CanLoadTexture:" + ex.Message
-							                    );
 						}
+					} catch (Exception ex) {
+						Interface.AddMessage(MessageType.Error, false,
+							"Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at CanLoadTexture:" + ex.Message
+						);
 					}
 				}
 				FileInfo f = new FileInfo(path);

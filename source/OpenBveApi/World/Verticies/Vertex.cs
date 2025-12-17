@@ -71,8 +71,8 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Tests if two verticies are equal</summary>
-		/// <param name="A">The first vertex</param>
-		/// <param name="B">The second vertex</param>
+		/// <param name="a">The first vertex</param>
+		/// <param name="b">The second vertex</param>
 		/// <returns>True if they are equal, false otherwise</returns>
 		public static bool Equals(Vertex a, Vertex b)
 		{

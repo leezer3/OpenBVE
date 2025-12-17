@@ -29,22 +29,20 @@ namespace OpenBve {
 				int i = listviewControls.SelectedIndices[0];
 				{
 					this.Tag = new object();
-					{ // command
-
-						if (Translations.CommandInfos.ContainsKey(Interface.CurrentControls[i].Command))
-						{
-							comboboxCommand.SelectedValue = Interface.CurrentControls[i].Command;
-							updownCommandOption.Value = Interface.CurrentControls[i].Option;
-							labelCommandOption.Enabled = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
-							updownCommandOption.Enabled = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
-						}
-						else
-						{
-							comboboxCommand.SelectedIndex = -1;
-							updownCommandOption.Value = 0;
-							labelCommandOption.Enabled = false;
-							updownCommandOption.Enabled = false;
-						}
+					// command
+					if (Translations.CommandInfos.ContainsKey(Interface.CurrentControls[i].Command))
+					{
+						comboboxCommand.SelectedValue = Interface.CurrentControls[i].Command;
+						updownCommandOption.Value = Interface.CurrentControls[i].Option;
+						labelCommandOption.Enabled = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
+						updownCommandOption.Enabled = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
+					}
+					else
+					{
+						comboboxCommand.SelectedIndex = -1;
+						updownCommandOption.Value = 0;
+						labelCommandOption.Enabled = false;
+						updownCommandOption.Enabled = false;
 					}
 					// data
 					switch (Interface.CurrentControls[i].Method)
@@ -187,24 +185,35 @@ namespace OpenBve {
 						break;
 					case JoystickComponent.Hat:
 						t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat"}).Replace("[index]", (Interface.CurrentControls[Index].Element + 1).ToString(Culture));
-						if (Interface.CurrentControls[Index].Direction == (int)HatPosition.Left) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_left"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.UpLeft) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_upleft"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.Up) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_up"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.UpRight) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_upright"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.Right) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_right"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.DownRight) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_downright"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.Down) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_down"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.DownLeft) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_downleft"});
-						} else {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_invalid"});
+						switch (Interface.CurrentControls[Index].Direction)
+						{
+							case (int)HatPosition.Left:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_left"});
+								break;
+							case (int)HatPosition.UpLeft:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_upleft"});
+								break;
+							case (int)HatPosition.Up:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_up"});
+								break;
+							case (int)HatPosition.UpRight:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_upright"});
+								break;
+							case (int)HatPosition.Right:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_right"});
+								break;
+							case (int)HatPosition.DownRight:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_downright"});
+								break;
+							case (int)HatPosition.Down:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_down"});
+								break;
+							case (int)HatPosition.DownLeft:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_downleft"});
+								break;
+							default:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_invalid"});
+								break;
 						} break;
 				}
 				return t;
@@ -239,12 +248,17 @@ namespace OpenBve {
 								break;
 						}
 						
-						if (Interface.CurrentControls[Index].Direction == -1) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_negative"});
-						} else if (Interface.CurrentControls[Index].Direction == 1) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_positive"});
-						} else {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_invalid"});
+						switch (Interface.CurrentControls[Index].Direction)
+						{
+							case -1:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_negative"});
+								break;
+							case 1:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_positive"});
+								break;
+							default:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_invalid"});
+								break;
 						} break;
 					case JoystickComponent.Button:
 						t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_button"}).Replace("[index]", (Interface.CurrentControls[Index].Element + 1).ToString(Culture));
@@ -344,14 +358,7 @@ namespace OpenBve {
 
 		// keyboard
 		private void radiobuttonKeyboard_CheckedChanged(object sender, EventArgs e) {
-			if (radiobuttonJoystick.Checked || radiobuttonKeyboard.Checked)
-			{
-				textboxJoystickGrab.Enabled = true;
-			}
-			else
-			{
-				textboxJoystickGrab.Enabled = false;
-			}
+			textboxJoystickGrab.Enabled = radiobuttonJoystick.Checked || radiobuttonKeyboard.Checked;
 			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				Interface.CurrentControls[i].Method = ControlMethod.Keyboard;

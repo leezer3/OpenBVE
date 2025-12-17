@@ -296,85 +296,85 @@ namespace OpenBve.Graphics.Renderers
 					}
 				} break;
 				case HUDSubject.Gradient:
-					if (renderer.OptionGradient == GradientDisplayMode.Percentage)
+					switch (renderer.OptionGradient)
 					{
-						if (Program.Renderer.CameraTrackFollower.Pitch != 0)
-						{
-							double pc = Program.Renderer.CameraTrackFollower.Pitch;
-							t = Math.Abs(pc).ToString("0.00", Culture) + "%" + (Math.Abs(pc) == pc ? " ↗" : " ↘");
-						}
-						else
-						{
-							t = "Level";
-						}
-						Element.TransitionState -= speed * TimeElapsed;
-						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
-					}
-					else if (renderer.OptionGradient == GradientDisplayMode.UnitOfChange)
-					{
-						if (Program.Renderer.CameraTrackFollower.Pitch != 0)
-						{
-							double gr = 1000 / Program.Renderer.CameraTrackFollower.Pitch;
-							t = "1 in " + Math.Abs(gr).ToString("0", Culture) + (Math.Abs(gr) == gr ? " ↗" : " ↘");
-						}
-						else
-						{
-							t = "Level";
-						}
-						Element.TransitionState -= speed * TimeElapsed;
-						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
-					}
-					else if (renderer.OptionGradient == GradientDisplayMode.Permil)
-					{
-						if (Program.Renderer.CameraTrackFollower.Pitch != 0)
-						{
-							double pm = Program.Renderer.CameraTrackFollower.Pitch * 10;
-							t = Math.Abs(pm).ToString("0.00", Culture) + "‰" + (Math.Abs(pm) == pm ? " ↗" : " ↘");
-						}
-						else
-						{
-							t = "Level";
-						}
-						Element.TransitionState -= speed * TimeElapsed;
-						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
-					}
-					else
-					{
-						if (Program.Renderer.CameraTrackFollower.Pitch != 0)
-						{
-							double gr = 1000 / Program.Renderer.CameraTrackFollower.Pitch;
-							t = "1 in " + Math.Abs(gr).ToString("0", Culture) + (Math.Abs(gr) == gr ? " ↗" : " ↘");
-						}
-						else
-						{
-							t = "Level";
-						}
-						Element.TransitionState += speed * TimeElapsed;
-						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
+						case GradientDisplayMode.Percentage:
+							if (Program.Renderer.CameraTrackFollower.Pitch != 0)
+							{
+								double pc = Program.Renderer.CameraTrackFollower.Pitch;
+								t = Math.Abs(pc).ToString("0.00", Culture) + "%" + (Math.Abs(pc) == pc ? " ↗" : " ↘");
+							}
+							else
+							{
+								t = "Level";
+							}
+							Element.TransitionState -= speed * TimeElapsed;
+							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+							break;
+						case GradientDisplayMode.UnitOfChange:
+							if (Program.Renderer.CameraTrackFollower.Pitch != 0)
+							{
+								double gr = 1000 / Program.Renderer.CameraTrackFollower.Pitch;
+								t = "1 in " + Math.Abs(gr).ToString("0", Culture) + (Math.Abs(gr) == gr ? " ↗" : " ↘");
+							}
+							else
+							{
+								t = "Level";
+							}
+							Element.TransitionState -= speed * TimeElapsed;
+							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+							break;
+						case GradientDisplayMode.Permil:
+							if (Program.Renderer.CameraTrackFollower.Pitch != 0)
+							{
+								double pm = Program.Renderer.CameraTrackFollower.Pitch * 10;
+								t = Math.Abs(pm).ToString("0.00", Culture) + "‰" + (Math.Abs(pm) == pm ? " ↗" : " ↘");
+							}
+							else
+							{
+								t = "Level";
+							}
+							Element.TransitionState -= speed * TimeElapsed;
+							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+							break;
+						default:
+							if (Program.Renderer.CameraTrackFollower.Pitch != 0)
+							{
+								double gr = 1000 / Program.Renderer.CameraTrackFollower.Pitch;
+								t = "1 in " + Math.Abs(gr).ToString("0", Culture) + (Math.Abs(gr) == gr ? " ↗" : " ↘");
+							}
+							else
+							{
+								t = "Level";
+							}
+							Element.TransitionState += speed * TimeElapsed;
+							if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
+							break;
 					} break;
 				case HUDSubject.Speed:
-					if (renderer.OptionSpeed == SpeedDisplayMode.Kmph)
+					switch (renderer.OptionSpeed)
 					{
-						double kmph = Math.Abs(PlayerTrain.CurrentSpeed) * 3.6;
-						t = kmph.ToString("0.00", Culture) + " km/h";
-						Element.TransitionState -= speed * TimeElapsed;
-						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
-					}
-					else if (renderer.OptionSpeed == SpeedDisplayMode.Mph)
-					{
-						double mph = Math.Abs(PlayerTrain.CurrentSpeed) * 2.2369362920544;
-						t = mph.ToString("0.00", Culture) + " mph";
-						Element.TransitionState -= speed * TimeElapsed;
-						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
-					}
-					else
-					{
-						double mph = Math.Abs(PlayerTrain.CurrentSpeed) * 2.2369362920544;
-						t = mph.ToString("0.00", Culture) + " mph";
-						Element.TransitionState += speed * TimeElapsed;
-						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
+						case SpeedDisplayMode.Kmph:
+							double kmph = Math.Abs(PlayerTrain.CurrentSpeed) * 3.6;
+							t = kmph.ToString("0.00", Culture) + " km/h";
+							Element.TransitionState -= speed * TimeElapsed;
+							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+							break;
+						case SpeedDisplayMode.Mph:
+							double mph = Math.Abs(PlayerTrain.CurrentSpeed) * 2.2369362920544;
+							t = mph.ToString("0.00", Culture) + " mph";
+							Element.TransitionState -= speed * TimeElapsed;
+							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+							break;
+						default:
+							mph = Math.Abs(PlayerTrain.CurrentSpeed) * 2.2369362920544;
+							t = mph.ToString("0.00", Culture) + " mph";
+							Element.TransitionState += speed * TimeElapsed;
+							if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
+							break;
 					} break;
 				case HUDSubject.DistNextStation:
+					t = string.Empty;
 					if (!Program.CurrentRoute.Stations[stationIndex].PlayerStops())
 					{
 						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(PlayerTrain);
@@ -406,10 +406,6 @@ namespace OpenBve.Graphics.Renderers
 							Element.TransitionState += speed * TimeElapsed;
 							if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 						}
-					}
-					else
-					{
-						t = string.Empty;
 					}
 					break;
 				case HUDSubject.DistNextStation2:
@@ -513,6 +509,8 @@ namespace OpenBve.Graphics.Renderers
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
 				case HUDSubject.Score:
+					Element.TransitionState = 1.0;
+					t = string.Empty;
 					if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 					{
 						t = Game.CurrentScore.CurrentValue.ToString(Culture) + " / " + Game.CurrentScore.Maximum.ToString(Culture);
@@ -529,11 +527,6 @@ namespace OpenBve.Graphics.Renderers
 							sc = MessageColor.Gray;
 						}
 						Element.TransitionState = 0.0;
-					}
-					else
-					{
-						Element.TransitionState = 1.0;
-						t = "";
 					} break;
 				default:
 					t = Element.Text;

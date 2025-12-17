@@ -18,36 +18,39 @@ namespace OpenBve {
 			if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.On) {
 				Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 				UpdateAbsoluteCamera();
+
+				if (Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
+				{
+					return;
+				}
+				Program.Renderer.Camera.Alignment = new CameraAlignment();
+				Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
+				Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
+				UpdateAbsoluteCamera();
+				Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 				if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
-					Program.Renderer.Camera.Alignment = new CameraAlignment();
-					Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
-					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
+					Program.Renderer.Camera.Alignment.Position.Z = 0.8;
 					UpdateAbsoluteCamera();
-					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
+					Program.Renderer.Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Z, 0.0, true, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
 					if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
-						Program.Renderer.Camera.Alignment.Position.Z = 0.8;
+						Program.Renderer.Camera.Alignment.Position.X = 0.5 * (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.BottomLeft.X + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.TopRight.X);
+						Program.Renderer.Camera.Alignment.Position.Y = 0.5 * (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.BottomLeft.Y + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.TopRight.Y);
+						Program.Renderer.Camera.Alignment.Position.Z = 0.0;
 						UpdateAbsoluteCamera();
-						Program.Renderer.Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Z, 0.0, true, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
-						if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
-							Program.Renderer.Camera.Alignment.Position.X = 0.5 * (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.BottomLeft.X + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.TopRight.X);
-							Program.Renderer.Camera.Alignment.Position.Y = 0.5 * (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.BottomLeft.Y + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.TopRight.Y);
-							Program.Renderer.Camera.Alignment.Position.Z = 0.0;
+						if (Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
+							Program.Renderer.Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.X, 0.0, true, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
+							Program.Renderer.Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Y, 0.0, true, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
+						} else {
+							Program.Renderer.Camera.Alignment.Position.Z = 0.8;
 							UpdateAbsoluteCamera();
-							if (Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
-								Program.Renderer.Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.X, 0.0, true, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
-								Program.Renderer.Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Y, 0.0, true, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
-							} else {
-								Program.Renderer.Camera.Alignment.Position.Z = 0.8;
-								UpdateAbsoluteCamera();
-								Program.Renderer.Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Z, 0.0, true, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
-								if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
-									Program.Renderer.Camera.Alignment = new CameraAlignment();
-								}
+							Program.Renderer.Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Z, 0.0, true, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
+							if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
+								Program.Renderer.Camera.Alignment = new CameraAlignment();
 							}
 						}
 					}
-					UpdateAbsoluteCamera();
 				}
+				UpdateAbsoluteCamera();
 			}
 		}
 		

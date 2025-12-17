@@ -33,25 +33,28 @@ namespace OpenBve.Graphics.Renderers
 			this.renderer = renderer;
 			touchableObject = new List<ObjectState>();
 
-			if (!renderer.ForceLegacyOpenGL)
+			if (renderer.ForceLegacyOpenGL)
 			{
-				fbo = new FrameBufferObject();
-				fbo.Bind();
-				fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
-				fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
-				fbo.UnBind();
+				// touch not supported when GL4 is not available
+				return;
 			}
+			fbo = new FrameBufferObject();
+			fbo.Bind();
+			fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
+			fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
+			fbo.UnBind();
 		}
 
 		internal void UpdateViewport()
 		{
-			if (renderer.AvailableNewRenderer)
+			if (!renderer.AvailableNewRenderer)
 			{
-				fbo.Bind();
-				fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
-				fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
-				fbo.UnBind();
+				return;
 			}
+			fbo.Bind();
+			fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
+			fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
+			fbo.UnBind();
 		}
 
 		private void ShowObject(ObjectState state)

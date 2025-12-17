@@ -30,40 +30,41 @@ namespace OpenBve.UserInterface
 
 		private void formRaildriverCalibration_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
+			if (!Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
 			{
-				if (!(Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] is AbstractRailDriver j))
+				return;
+			}
+			if (!(Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] is AbstractRailDriver j))
+			{
+				return;
+			}
+			for (int i = 0; i < j.Calibration.Length; i++)
+			{
+				if (j.Calibration[i].Maximum < j.Calibration[i].Minimum)
 				{
-					return;
+					//If calibration min and max are reversed flip them
+					(j.Calibration[i].Maximum, j.Calibration[i].Minimum) = (j.Calibration[i].Minimum, j.Calibration[i].Maximum);
 				}
-				for (int i = 0; i < j.Calibration.Length; i++)
+				if (j.Calibration[i].Maximum == j.Calibration[i].Minimum)
 				{
-					if (j.Calibration[i].Maximum < j.Calibration[i].Minimum)
-					{
-						//If calibration min and max are reversed flip them
-						(j.Calibration[i].Maximum, j.Calibration[i].Minimum) = (j.Calibration[i].Minimum, j.Calibration[i].Maximum);
-					}
-					if (j.Calibration[i].Maximum == j.Calibration[i].Minimum)
-					{
-						//If calibration values are identical, reset to defaults
-						j.Calibration[i].Minimum = 0;
-						j.Calibration[i].Maximum = 255;
-					}
-					//Bounds check values (This should never happen, but check anyways)
-					if (j.Calibration[i].Minimum < 0)
-					{
-						j.Calibration[i].Minimum = 0;
-					}
-					if (j.Calibration[i].Maximum > 255)
-					{
-						j.Calibration[i].Maximum = 255;
-					}
-					if (j.Calibration[i].Maximum - j.Calibration[i].Minimum < 10)
-					{
-						//If calibration values are within 10 of each other, something is not right....
-						j.Calibration[i].Minimum = 0;
-						j.Calibration[i].Maximum = 255;
-					}
+					//If calibration values are identical, reset to defaults
+					j.Calibration[i].Minimum = 0;
+					j.Calibration[i].Maximum = 255;
+				}
+				//Bounds check values (This should never happen, but check anyways)
+				if (j.Calibration[i].Minimum < 0)
+				{
+					j.Calibration[i].Minimum = 0;
+				}
+				if (j.Calibration[i].Maximum > 255)
+				{
+					j.Calibration[i].Maximum = 255;
+				}
+				if (j.Calibration[i].Maximum - j.Calibration[i].Minimum < 10)
+				{
+					//If calibration values are within 10 of each other, something is not right....
+					j.Calibration[i].Minimum = 0;
+					j.Calibration[i].Maximum = 255;
 				}
 			}
 		}
