@@ -315,18 +315,22 @@ namespace ObjectViewer {
 		    {
 			    try
 			    {
-				    if(Files[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase))
+				    if(Files[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase) || Files[i].EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
 				    {
-					    string currentTrainFolder = Path.GetDirectoryName(Files[i]);
+					    string currentTrain = Files[i];
+						if (currentTrain.EndsWith("extensions.cfg", StringComparison.InvariantCultureIgnoreCase))
+					    {
+						    currentTrain = System.IO.Path.GetDirectoryName(currentTrain);
+					    }
 					    bool canLoad = false;
 					    for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					    {
-						    if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
+						    if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrain))
 						    {
 							    Control[] dummyControls = new Control[0];
 								TrainManager.Trains = new List<TrainBase> { new TrainBase(TrainState.Available, TrainType.LocalPlayerTrain) };
 								AbstractTrain playerTrain = TrainManager.Trains[0];
-								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrainFolder, ref playerTrain, ref dummyControls);
+								Program.CurrentHost.Plugins[j].Train.LoadTrain(Encoding.UTF8, currentTrain, ref playerTrain, ref dummyControls);
 								TrainManager.PlayerTrain = TrainManager.Trains[0];
 								canLoad = true;
 								break;
@@ -423,7 +427,7 @@ namespace ObjectViewer {
 					    {
 				            CheckFileExists = true,
 				            Multiselect = true,
-				            Filter = @"All supported object files|*.csv;*.b3d;*.x;*.animated;extensions.cfg;*.l3dobj;*.l3dgrp;*.obj;*.s;train.xml|openBVE Objects|*.csv;*.b3d;*.x;*.animated;extensions.cfg;train.xml|LokSim 3D Objects|*.l3dobj;*.l3dgrp|Wavefront Objects|*.obj|Microsoft Train Simulator Objects|*.s|All files|*"
+				            Filter = @"All supported object files|*.csv;*.b3d;*.x;*.animated;extensions.cfg;*.l3dobj;*.l3dgrp;*.obj;*.s;train.xml;*.con|openBVE Objects|*.csv;*.b3d;*.x;*.animated;extensions.cfg;train.xml|LokSim 3D Objects|*.l3dobj;*.l3dgrp|Wavefront Objects|*.obj|Microsoft Train Simulator Files|*.s;*.con|All files|*"
 			            };
 						if (Dialog.ShowDialog() == DialogResult.OK)
 						{
@@ -431,11 +435,11 @@ namespace ObjectViewer {
 							string[] f = Dialog.FileNames;
 							for (int i = 0; i < f.Length; i++)
 				            {
-								string currentTrainFolder = string.Empty;
-								if(f[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase))
+								string currentTrain = string.Empty;
+								if(f[i].EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".cfg", StringComparison.InvariantCultureIgnoreCase) || f[i].EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
 								{
 									// only check to see if it's a train if this is a specified filetype, else we'll start loading the full train from an object in it's folder
-									currentTrainFolder = Path.GetDirectoryName(f[i]);
+									currentTrain = f[i].EndsWith(".con", StringComparison.InvariantCultureIgnoreCase) ? f[i] : Path.GetDirectoryName(f[i]);
 								}
 								for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
 					            {
@@ -453,7 +457,7 @@ namespace ObjectViewer {
 						            {
 							            Files.Add(f[i]);
 						            }
-						            if (!string.IsNullOrEmpty(currentTrainFolder) && Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrainFolder))
+						            if (!string.IsNullOrEmpty(currentTrain) && Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(currentTrain))
 						            {
 							            Files.Add(f[i]);
 						            }

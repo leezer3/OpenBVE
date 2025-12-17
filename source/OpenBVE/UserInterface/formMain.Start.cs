@@ -15,6 +15,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using RouteManager2;
+using TrainManager.SafetySystems;
 using Path = OpenBveApi.Path;
 
 namespace OpenBve
@@ -660,6 +661,11 @@ namespace OpenBve
 		/// <param name="packages">Whether this is a packaged content folder</param>
 		private void PopulateTrainList(string selectedFolder, ListView listView, bool packages)
 		{
+			string error; //ignored in this case, background thread
+			if (Program.CurrentHost.Plugins == null && !Program.CurrentHost.LoadPlugins(Program.FileSystem, Interface.CurrentOptions, out error, Program.TrainManager, Program.Renderer))
+			{
+				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+			}
 			try
 			{
 				if (selectedFolder.Length == 0)
@@ -717,7 +723,9 @@ namespace OpenBve
 					try
 					{
 						string[] Folders = Directory.GetDirectories(selectedFolder);
+						string[] Files = Directory.GetFiles(selectedFolder);
 						Array.Sort(Folders);
+						Array.Sort(Files);
 						for (int i = 0; i < Folders.Length; i++)
 						{
 							try
@@ -742,6 +750,26 @@ namespace OpenBve
 							catch
 							{
 								//Most likely permissions
+							}
+						}
+
+						for (int i = 0; i < Files.Length; i++)
+						{
+							for (int j = 0; j < Program.CurrentHost.Plugins.Length; j++)
+							{
+								string fileName = Path.GetFileName(Files[i]);
+								if (fileName[0] == '#' && fileName.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
+								{
+									// MSTS / ORTS use a hash at the start of the filename to deliminate AI consists
+									// These generally have missing cabviews etc- Hide from visibility in the main menu
+									continue;
+								}
+								if (Program.CurrentHost.Plugins[j].Train != null && Program.CurrentHost.Plugins[j].Train.CanLoadTrain(Files[i]))
+								{
+									ListViewItem Item = listviewTrainFolders.Items.Add(System.IO.Path.GetFileName(Files[i]));
+									Item.ImageKey = @"msts";
+									Item.Tag = Files[i];
+								}
 							}
 						}
 					}
@@ -776,7 +804,13 @@ namespace OpenBve
 					return;
 				}
 				if (t != null) {
-					if (Directory.Exists(t)) {
+					if (t.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
+					{
+						Result.TrainFolder = t;
+						ShowTrain(false);
+					}
+					else if (Directory.Exists(t)) 
+					{
 						try
 						{
 							string File = Path.CombineFile(t, "train.dat");
@@ -1106,8 +1140,29 @@ namespace OpenBve
 		private readonly object StartGame = new object();
 
 		private void buttonStart_Click(object sender, EventArgs e) {
-			if (Result.RouteFile != null & Result.TrainFolder != null) {
-				if (File.Exists(Result.RouteFile) & Directory.Exists(Result.TrainFolder)) {
+			if (Result.RouteFile != null & Result.TrainFolder != null)
+			{
+				bool canLoadRoute = false, canLoadTrain = false;
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (canLoadRoute == false)
+					{
+						if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(Result.RouteFile))
+						{
+							canLoadRoute = true;
+						}
+					}
+					if (canLoadTrain == false)
+					{
+						if (Program.CurrentHost.Plugins[i].Train != null && Program.CurrentHost.Plugins[i].Train.CanLoadTrain(Result.TrainFolder))
+						{
+							canLoadTrain = true;
+						}
+					}
+				}
+
+				if (canLoadRoute && canLoadTrain)
+				{
 					Result.Start = true;
 					buttonClose_Click(StartGame, e);
 					//HACK: Call Application.DoEvents() to force the message pump to process all pending messages when the form closes
