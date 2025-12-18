@@ -224,18 +224,15 @@ namespace OpenBve
 			MainLoop.ProcessKeyboard();
 			MainLoop.UpdateMouse(RealTimeElapsed);
 			MainLoop.ProcessControls(TimeElapsed);
-			if (Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
+			if (Program.Joysticks.AttachedJoysticks.TryGetTypedValue(AbstractRailDriver.Guid, out AbstractRailDriver railDriver))
 			{
-				if (Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] is AbstractRailDriver railDriver)
+				if (Interface.CurrentOptions.RailDriverMPH)
 				{
-					if (Interface.CurrentOptions.RailDriverMPH)
-					{
-						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.PerceivedSpeed * 2.23694));
-					}
-					else
-					{
-						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.PerceivedSpeed * 3.6));
-					}
+					railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.PerceivedSpeed * 2.23694));
+				}
+				else
+				{
+					railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.PerceivedSpeed * 3.6));
 				}
 			}
 			

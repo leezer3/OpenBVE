@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using OpenBve.Input;
+using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 
@@ -30,11 +31,11 @@ namespace OpenBve.UserInterface
 
 		private void formRaildriverCalibration_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (!Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
+			if (!Program.Joysticks.AttachedJoysticks.TryGetValue(AbstractRailDriver.Guid, out AbstractJoystick joystick))
 			{
 				return;
 			}
-			if (!(Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] is AbstractRailDriver j))
+			if (!(joystick is AbstractRailDriver j))
 			{
 				return;
 			}
@@ -78,14 +79,11 @@ namespace OpenBve.UserInterface
 
 		private void buttonCalibrationNext_Click(object sender, EventArgs e)
 		{
-			if (!Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
+			if (!Program.Joysticks.AttachedJoysticks.TryGetTypedValue(AbstractRailDriver.Guid, out AbstractRailDriver j))
 			{
 				return;
 			}
-			if (!(Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] is AbstractRailDriver j))
-			{
-				return;
-			}
+			
 			if (calibrationStage > 14)
 			{
 				j.SaveCalibration(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "RailDriver.xml"));

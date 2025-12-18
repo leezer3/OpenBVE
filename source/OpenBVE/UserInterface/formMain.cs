@@ -58,7 +58,7 @@ namespace OpenBve {
 
 		// members
 		private LaunchParameters Result;
-		private int[] EncodingCodepages = new int[0];
+		private int[] EncodingCodepages;
 		private Image JoystickImage;
 		private Image RailDriverImage;
 		private Image GamepadImage;

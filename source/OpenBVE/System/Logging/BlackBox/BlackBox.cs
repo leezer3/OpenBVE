@@ -41,7 +41,7 @@ namespace OpenBve
 							Game.LogRouteName = Reader.ReadString();
 							Game.LogTrainName = Reader.ReadString();
 							Game.LogDateTime = DateTime.FromBinary(Reader.ReadInt64());
-							Interface.CurrentOptions.PreviousGameMode = (GameMode) Reader.ReadInt16();
+							CurrentOptions.PreviousGameMode = (GameMode) Reader.ReadInt16();
 							int entryCount = Reader.ReadInt32();
 							Game.BlackBoxEntries = new List<BlackBoxEntry>();
 							for (int i = 0; i < entryCount; i++)
@@ -185,8 +185,8 @@ namespace OpenBve
 							Builder.Append(Game.BlackBoxEntries[i].Position.ToString(Culture) + ",");
 							Builder.Append(Game.BlackBoxEntries[i].Speed.ToString(Culture) + ",");
 							Builder.Append(Game.BlackBoxEntries[i].Acceleration.ToString(Culture) + ",");
-							Builder.Append((Game.BlackBoxEntries[i].ReverserDriver).ToString(Culture) + ",");
-							Builder.Append((Game.BlackBoxEntries[i].ReverserSafety).ToString(Culture) + ",");
+							Builder.Append(Game.BlackBoxEntries[i].ReverserDriver.ToString(Culture) + ",");
+							Builder.Append(Game.BlackBoxEntries[i].ReverserSafety.ToString(Culture) + ",");
 							Builder.Append(((short)Game.BlackBoxEntries[i].PowerDriver).ToString(Culture) + ",");
 							Builder.Append(((short)Game.BlackBoxEntries[i].PowerSafety).ToString(Culture) + ",");
 							Builder.Append(((short)Game.BlackBoxEntries[i].BrakeDriver).ToString(Culture) + ",");

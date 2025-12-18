@@ -77,19 +77,19 @@ namespace OpenBve.Graphics.Renderers
 			}
 
 			CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
-			if (renderer.Camera.CurrentMode > CameraViewMode.InteriorLookAhead || !Car.CarSections.ContainsKey(CarSectionType.Interior))
+			if (renderer.Camera.CurrentMode > CameraViewMode.InteriorLookAhead || !Car.CarSections.TryGetValue(CarSectionType.Interior, out CarSection interiorSection))
 			{
 				return;
 			}
 
-			int add = Car.CarSections[CarSectionType.Interior].CurrentAdditionalGroup + 1;
+			int add = interiorSection.CurrentAdditionalGroup + 1;
 
-			if (add >= Car.CarSections[CarSectionType.Interior].Groups.Length)
+			if (add >= interiorSection.Groups.Length)
 			{
 				return;
 			}
 
-			TouchElement[] TouchElements = Car.CarSections[CarSectionType.Interior].Groups[add].TouchElements;
+			TouchElement[] TouchElements = interiorSection.Groups[add].TouchElements;
 
 			if (TouchElements == null)
 			{

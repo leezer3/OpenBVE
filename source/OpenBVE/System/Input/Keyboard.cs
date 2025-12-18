@@ -14,7 +14,7 @@ namespace OpenBve
 			if (Interface.CurrentOptions.KioskMode && Program.Renderer.CurrentInterface != InterfaceType.GLMainMenu)
 			{
 				//If in kiosk mode, reset the timer and disable AI on keypress
-				MainLoop.kioskModeTimer = 0;
+				kioskModeTimer = 0;
 				TrainManager.PlayerTrain.AI = null;
 			}
 			if (Loading.Complete && e.Key == Key.F4 && e.Alt)
@@ -90,7 +90,7 @@ namespace OpenBve
 			if (Interface.CurrentOptions.KioskMode && Program.Renderer.CurrentInterface != InterfaceType.GLMainMenu)
 			{
 				//If in kiosk mode, reset the timer and disable AI on keypress
-				MainLoop.kioskModeTimer = 0;
+				kioskModeTimer = 0;
 				TrainManager.PlayerTrain.AI = null;
 			}
 			if (Program.Renderer.PreviousInterface >= InterfaceType.Menu & Program.Renderer.CurrentInterface == InterfaceType.Normal)

@@ -9,7 +9,6 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using System;
 using TrainManager.Trains;
-using static OpenBve.Scripting;
 
 namespace OpenBve {
 	internal static class World {
