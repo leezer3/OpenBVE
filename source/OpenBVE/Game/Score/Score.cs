@@ -361,25 +361,7 @@ namespace OpenBve
 			{
 				if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 				{
-					int n = ScoreMessages.Length;
-					Array.Resize(ref ScoreMessages, n + 1);
-					ScoreMessages[n].Value = Value;
-					ScoreMessages[n].Text = Interface.GetScoreText(TextToken) + ": " + Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
-					ScoreMessages[n].Timeout = Duration;
-					ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
-					ScoreMessages[n].RendererAlpha = 0.0;
-					if (Value < 0.0)
-					{
-						ScoreMessages[n].Color = MessageColor.Red;
-					}
-					else if (Value > 0.0)
-					{
-						ScoreMessages[n].Color = MessageColor.Green;
-					}
-					else
-					{
-						ScoreMessages[n].Color = MessageColor.White;
-					}
+					ScoreMessages.Add(new ScoreMessage(Value, TextToken, Duration));
 				}
 				if (Value != 0 & Count)
 				{
@@ -404,14 +386,7 @@ namespace OpenBve
 				{
 					return;
 				}
-				int n = ScoreMessages.Length;
-				Array.Resize(ref ScoreMessages, n + 1);
-				ScoreMessages[n].Value = 0;
-				ScoreMessages[n].Text = Text.Length != 0 ? Text : "══════════";
-				ScoreMessages[n].Timeout = Duration;
-				ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
-				ScoreMessages[n].RendererAlpha = 0.0;
-				ScoreMessages[n].Color = MessageColor.White;
+				ScoreMessages.Add(new ScoreMessage(0, Text, MessageColor.White, Duration));
 			}
 		}
 
@@ -422,17 +397,12 @@ namespace OpenBve
 			{
 				return;
 			}
-			for (int i = 0; i < ScoreMessages.Length; i++)
+			for (int i = ScoreMessages.Count; i > 0; i--)
 			{
 				ScoreMessages[i].Timeout -= timeElapsed;
 				if (ScoreMessages[i].Timeout <= 0 & ScoreMessages[i].RendererAlpha == 0.0)
 				{
-					for (int j = i; j < ScoreMessages.Length - 1; j++)
-					{
-						ScoreMessages[j] = ScoreMessages[j + 1];
-					}
-					Array.Resize(ref ScoreMessages, ScoreMessages.Length - 1);
-					i--;
+					ScoreMessages.RemoveAt(i);
 				}
 			}
 		}

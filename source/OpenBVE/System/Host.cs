@@ -638,18 +638,7 @@ namespace OpenBve {
 
 		public override void AddScore(int Score, string Message, MessageColor Color, double Timeout)
 		{
-			Game.CurrentScore.CurrentValue += Score;
-			int n = Game.ScoreMessages.Length;
-			Array.Resize(ref Game.ScoreMessages, n + 1);
-			Game.ScoreMessages[n] = new Game.ScoreMessage
-			{
-				Value = Score,
-				Color = Color,
-				RendererPosition = Vector2.Null,
-				RendererAlpha = 0.0,
-				Text = Message,
-				Timeout = Timeout
-			};
+			Game.ScoreMessages.Add(new ScoreMessage(Score, Message, Color, Timeout));
 		}
 
 		// ReSharper disable once CoVariantArrayConversion

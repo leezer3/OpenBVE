@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LibRender2.Screens;
 using OpenBveApi.Colors;
+using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using OpenBveApi.Routes;
 using RouteManager2;
@@ -23,7 +24,12 @@ namespace OpenBve
 		/// Train and time movements are processed, but no graphical processing is done
 		/// </summary>
 		internal static bool MinimalisticSimulation = false;
-		
+
+		/// <summary>Holds all current score messages to be rendered</summary>
+		internal static List<ScoreMessage> ScoreMessages = new List<ScoreMessage>();
+		/// <summary>Holds the current on-screen size in px of the area occupied by score messages</summary>
+		internal static Vector2 ScoreMessagesRendererSize = new Vector2(16.0, 16.0);
+
 		/// <summary>Call this function to reset the game</summary>
 		/// <param name="resetLogs">Whether the logs should be reset</param>
 		internal static void Reset(bool resetLogs) {
@@ -64,7 +70,7 @@ namespace OpenBve
 				LogTrainName = string.Empty;
 				LogDateTime = DateTime.Now;
 				CurrentScore = new Score();
-				ScoreMessages = new ScoreMessage[] { };
+				ScoreMessages.Clear();
 				ScoreLogs = new ScoreLog[64];
 				ScoreLogCount = 0;
 				BlackBoxEntries = new List<BlackBoxEntry>();

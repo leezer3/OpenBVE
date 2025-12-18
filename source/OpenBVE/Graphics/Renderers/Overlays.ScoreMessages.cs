@@ -14,7 +14,7 @@ namespace OpenBve.Graphics.Renderers
 		private void RenderScoreMessages(HUD.Element element, double timeElapsed)
 		{
 			// score messages
-			int n = Game.ScoreMessages.Length;
+			int n = Game.ScoreMessages.Count;
 			double totalwidth = 16.0f;
 			double[] widths = new double[n];
 			double[] heights = new double[n];
