@@ -1095,6 +1095,9 @@ namespace OpenBve
 			}
 
 			simulationSetup = true;
+			Program.FileSystem.AppendToLogFile(@"--------------------", false);
+			Program.FileSystem.AppendToLogFile(@"Loading complete, starting simulation.");
+			Program.FileSystem.AppendToLogFile(@"--------------------", false);
 		}
 
 		private bool simulationSetup = false;
