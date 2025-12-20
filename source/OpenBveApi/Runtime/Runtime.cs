@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Input;
+using System;
 
 namespace OpenBveApi.Runtime {
 	
@@ -134,10 +135,16 @@ namespace OpenBveApi.Runtime {
 		/// <param name="key">The key</param>
 		void RawKeyUp(Key key);
 
+		[Obsolete("This method should not be used, as the index returned by this command is not fixed between installations.")]
 		/// <summary>Called when the host generates a touch event</summary>
 		/// <param name="groupIndex">The group index of the touch event</param>
 		/// <param name="commandIndex">The command index of the touch event</param>
 		void TouchEvent(int groupIndex, int commandIndex);
+
+		/// <summary>Called when the host generates a touch event</summary>
+		/// <param name="groupIndex">The group index of the touch event</param>
+		/// <param name="command>The command index of the touch event</param>
+		void TouchEvent(int groupIndex, Interface.Translations.Command command);
 	}
 
 }

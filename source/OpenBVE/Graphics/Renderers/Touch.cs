@@ -396,6 +396,7 @@ namespace OpenBve.Graphics.Renderers
 					if (Interface.CurrentControls[index].DigitalState != DigitalControlState.Pressed && TrainManager.PlayerTrain.Plugin != null)
 					{
 						TrainManager.PlayerTrain.Plugin.TouchEvent(add, index);
+						TrainManager.PlayerTrain.Plugin.TouchEvent(add, Interface.CurrentControls[index].Command);
 					}
 					Interface.CurrentControls[index].AnalogState = 1.0;
 					Interface.CurrentControls[index].DigitalState = DigitalControlState.Pressed;

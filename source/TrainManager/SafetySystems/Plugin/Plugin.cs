@@ -591,6 +591,12 @@ namespace TrainManager.SafetySystems
 			// Ignored other than by .Net plugins
 		}
 
+		/// <summary>Called when a touch event occurs.</summary>
+		public virtual void TouchEvent(int groupIndex, Translations.Command command)
+		{
+			// Ignored other than by .Net plugins
+		}
+
 		/// <summary>Called when a horn is played or stopped.</summary>
 		public abstract void HornBlow(HornTypes type);
 
