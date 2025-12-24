@@ -63,7 +63,7 @@ namespace OpenBve
 					 * ==> Enable AI
 					 */
 					TrainManager.PlayerTrain.CameraCar = TrainManager.PlayerTrain.DriverCar;
-					MainLoop.SaveCameraSettings();
+					SaveCameraSettings();
 					bool lookahead = false;
 					if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D))
 					{
@@ -80,7 +80,7 @@ namespace OpenBve
 					}
 
 					Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
-					MainLoop.RestoreCameraSettings();
+					RestoreCameraSettings();
 					bool returnToCab = false;
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{

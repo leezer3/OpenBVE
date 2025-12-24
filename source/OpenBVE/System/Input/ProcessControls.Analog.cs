@@ -247,17 +247,18 @@ namespace OpenBve
 					if (TimeElapsed > 0.0)
 					{
 						const double scrollSpeed = 250.0;
-						if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Default)
+						switch (Program.Renderer.CurrentTimetable)
 						{
-							Timetable.DefaultTimetablePosition += scrollSpeed * Control.AnalogState * TimeElapsed;
-							if (Timetable.DefaultTimetablePosition > 0.0)
-								Timetable.DefaultTimetablePosition = 0.0;
-						}
-						else if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Custom)
-						{
-							Timetable.CustomTimetablePosition += scrollSpeed * Control.AnalogState * TimeElapsed;
-							if (Timetable.CustomTimetablePosition > 0.0)
-								Timetable.CustomTimetablePosition = 0.0;
+							case DisplayedTimetable.Default:
+								Timetable.DefaultTimetablePosition += scrollSpeed * Control.AnalogState * TimeElapsed;
+								if (Timetable.DefaultTimetablePosition > 0.0)
+									Timetable.DefaultTimetablePosition = 0.0;
+								break;
+							case DisplayedTimetable.Custom:
+								Timetable.CustomTimetablePosition += scrollSpeed * Control.AnalogState * TimeElapsed;
+								if (Timetable.CustomTimetablePosition > 0.0)
+									Timetable.CustomTimetablePosition = 0.0;
+								break;
 						}
 					}
 
@@ -267,44 +268,45 @@ namespace OpenBve
 					if (TimeElapsed > 0.0)
 					{
 						const double scrollSpeed = 250.0;
-						if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Default)
+						switch (Program.Renderer.CurrentTimetable)
 						{
-							Timetable.DefaultTimetablePosition -= scrollSpeed * Control.AnalogState * TimeElapsed;
-							double max;
-							if (Timetable.DefaultTimetableTexture != null)
-							{
-								Program.CurrentHost.LoadTexture(ref Timetable.DefaultTimetableTexture, OpenGlTextureWrapMode.ClampClamp);
-								max = Math.Min(Program.Renderer.Screen.Height - Timetable.DefaultTimetableTexture.Height, 0.0);
-							}
-							else
-							{
-								max = 0.0;
-							}
+							case DisplayedTimetable.Default:
+								Timetable.DefaultTimetablePosition -= scrollSpeed * Control.AnalogState * TimeElapsed;
+								double max;
+								if (Timetable.DefaultTimetableTexture != null)
+								{
+									Program.CurrentHost.LoadTexture(ref Timetable.DefaultTimetableTexture, OpenGlTextureWrapMode.ClampClamp);
+									max = Math.Min(Program.Renderer.Screen.Height - Timetable.DefaultTimetableTexture.Height, 0.0);
+								}
+								else
+								{
+									max = 0.0;
+								}
 
-							if (Timetable.DefaultTimetablePosition < max)
-							{
-								Timetable.DefaultTimetablePosition = max;
-							}
-						}
-						else if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Custom)
-						{
-							Timetable.CustomTimetablePosition -= scrollSpeed * Control.AnalogState * TimeElapsed;
-							Texture texture = Timetable.CurrentCustomTimetableDaytimeTexture ?? Timetable.CurrentCustomTimetableNighttimeTexture;
-							double max;
-							if (texture != null)
-							{
-								Program.CurrentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp);
-								max = Math.Min(Program.Renderer.Screen.Height - texture.Height, 0.0);
-							}
-							else
-							{
-								max = 0.0;
-							}
+								if (Timetable.DefaultTimetablePosition < max)
+								{
+									Timetable.DefaultTimetablePosition = max;
+								}
 
-							if (Timetable.CustomTimetablePosition < max)
-							{
-								Timetable.CustomTimetablePosition = max;
-							}
+								break;
+							case DisplayedTimetable.Custom:
+								Timetable.CustomTimetablePosition -= scrollSpeed * Control.AnalogState * TimeElapsed;
+								Texture texture = Timetable.CurrentCustomTimetableDaytimeTexture ?? Timetable.CurrentCustomTimetableNighttimeTexture;
+								if (texture != null)
+								{
+									Program.CurrentHost.LoadTexture(ref texture, OpenGlTextureWrapMode.ClampClamp);
+									max = Math.Min(Program.Renderer.Screen.Height - texture.Height, 0.0);
+								}
+								else
+								{
+									max = 0.0;
+								}
+
+								if (Timetable.CustomTimetablePosition < max)
+								{
+									Timetable.CustomTimetablePosition = max;
+								}
+								break;
 						}
 					}
 					break;

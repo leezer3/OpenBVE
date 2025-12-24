@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Trains;
+using OpenBveApi.Trains;
 using TrainManager.Trains;
 
 namespace OpenBve
@@ -14,9 +14,9 @@ namespace OpenBve
 
 			internal BogusPretrainAI(TrainBase train)
 			{
-				this.TimeLastProcessed = 0.0;
-				this.CurrentInterval = 1.0;
-				this.Train = train;
+				TimeLastProcessed = 0.0;
+				CurrentInterval = 1.0;
+				Train = train;
 			}
 
 			public override void Trigger(double timeElapsed)

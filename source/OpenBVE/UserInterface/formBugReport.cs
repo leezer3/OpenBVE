@@ -21,7 +21,7 @@ namespace OpenBve
 			try
 			{
 				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
-				this.Icon = new Icon(File);
+				Icon = new Icon(File);
 			}
 			catch
 			{
@@ -31,7 +31,7 @@ namespace OpenBve
 		}
 
 		private void ApplyLanguage() {
-			this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","title"});
+			Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","title"});
 			textBoxReportLabel.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "bug_report", "description"});
 			labelViewLog.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "bug_report", "view_log"});
 			labelViewCrash.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "bug_report", "view_crash_log"});

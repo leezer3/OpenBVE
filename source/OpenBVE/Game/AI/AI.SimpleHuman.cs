@@ -42,22 +42,22 @@ namespace OpenBve
 			// functions
 			internal SimpleHumanDriverAI(TrainBase train, double Limit)
 			{
-				this.Train = train;
-				this.TimeLastProcessed = 0.0;
-				this.CurrentInterval = 1.0;
-				this.BrakeMode = false;
-				this.PersonalitySpeedFactor = 0.90 + 0.10 * Program.RandomNumberGenerator.NextDouble();
-				this.CurrentSpeedFactor = this.PersonalitySpeedFactor;
-				this.PowerNotchAtWhichWheelSlipIsObserved = Train.Handles.Power.MaximumNotch + 1;
+				Train = train;
+				TimeLastProcessed = 0.0;
+				CurrentInterval = 1.0;
+				BrakeMode = false;
+				PersonalitySpeedFactor = 0.90 + 0.10 * Program.RandomNumberGenerator.NextDouble();
+				CurrentSpeedFactor = PersonalitySpeedFactor;
+				PowerNotchAtWhichWheelSlipIsObserved = Train.Handles.Power.MaximumNotch + 1;
 				if (Train.Station >= 0 & Train.StationState == TrainStopState.Boarding)
 				{
-					this.LastStation = Train.Station;
+					LastStation = Train.Station;
 				}
 				else
 				{
-					this.LastStation = -1;
+					LastStation = -1;
 				}
-				this.SpeedLimit = Limit;
+				SpeedLimit = Limit;
 				MotorCar = train.DriverCar;
 				if (!train.Cars[train.DriverCar].TractionModel.ProvidesPower)
 				{

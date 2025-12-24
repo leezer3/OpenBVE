@@ -2,7 +2,6 @@
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
-using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
@@ -19,7 +18,7 @@ namespace OpenBve
 		{
 			/// <summary>The current total score</summary>
 			internal int CurrentValue;
-			/// <summary>The maxium available score</summary>
+			/// <summary>The maximum available score</summary>
 			internal int Maximum;
 			/// <summary>The number of times the doors have been opened incorrectly</summary>
 			internal double OpenedDoorsCounter;
@@ -44,63 +43,61 @@ namespace OpenBve
 					return;
 				}
 				// doors
+				bool leftopen = false;
+				bool rightopen = false;
+				for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 				{
-					bool leftopen = false;
-					bool rightopen = false;
-					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					for (int k = 0; k < TrainManager.PlayerTrain.Cars[j].Doors.Length; k++)
 					{
-						for (int k = 0; k < TrainManager.PlayerTrain.Cars[j].Doors.Length; k++)
+						if (TrainManager.PlayerTrain.Cars[j].Doors[k].State != 0.0)
 						{
-							if (TrainManager.PlayerTrain.Cars[j].Doors[k].State != 0.0)
+							if (TrainManager.PlayerTrain.Cars[j].Doors[k].Direction == -1)
 							{
-								if (TrainManager.PlayerTrain.Cars[j].Doors[k].Direction == -1)
+								leftopen = true;
+							}
+							else if (TrainManager.PlayerTrain.Cars[j].Doors[k].Direction == 1)
+							{
+								rightopen = true;
+							}
+						}
+					}
+				}
+				bool bad;
+				if (leftopen | rightopen)
+				{
+					bad = true;
+					int j = TrainManager.PlayerTrain.Station;
+					if (j >= 0)
+					{
+						if (Program.CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain) >= 0)
+						{
+							if (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) < 0.1)
+							{
+								if (leftopen == Program.CurrentRoute.Stations[j].OpenLeftDoors & rightopen == Program.CurrentRoute.Stations[j].OpenRightDoors)
 								{
-									leftopen = true;
-								}
-								else if (TrainManager.PlayerTrain.Cars[j].Doors[k].Direction == 1)
-								{
-									rightopen = true;
+									bad = false;
 								}
 							}
 						}
 					}
-					bool bad;
-					if (leftopen | rightopen)
+				}
+				else
+				{
+					bad = false;
+				}
+				if (bad)
+				{
+					OpenedDoorsCounter += (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) + 0.25) * TimeElapsed;
+				}
+				else if (OpenedDoorsCounter != 0.0)
+				{
+					int x = (int)Math.Ceiling(ScoreFactorOpenedDoors * OpenedDoorsCounter);
+					CurrentValue += x;
+					if (x != 0)
 					{
-						bad = true;
-						int j = TrainManager.PlayerTrain.Station;
-						if (j >= 0)
-						{
-							if (Program.CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain) >= 0)
-							{
-								if (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) < 0.1)
-								{
-									if (leftopen == Program.CurrentRoute.Stations[j].OpenLeftDoors & rightopen == Program.CurrentRoute.Stations[j].OpenRightDoors)
-									{
-										bad = false;
-									}
-								}
-							}
-						}
+						AddScore(x, ScoreTextToken.DoorsOpened, 5.0);
 					}
-					else
-					{
-						bad = false;
-					}
-					if (bad)
-					{
-						OpenedDoorsCounter += (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) + 0.25) * TimeElapsed;
-					}
-					else if (OpenedDoorsCounter != 0.0)
-					{
-						int x = (int)Math.Ceiling(ScoreFactorOpenedDoors * OpenedDoorsCounter);
-						CurrentValue += x;
-						if (x != 0)
-						{
-							AddScore(x, ScoreTextToken.DoorsOpened, 5.0);
-						}
-						OpenedDoorsCounter = 0.0;
-					}
+					OpenedDoorsCounter = 0.0;
 				}
 				// overspeed
 				double n = Math.Min(TrainManager.PlayerTrain.CurrentRouteLimit, TrainManager.PlayerTrain.CurrentSectionLimit);

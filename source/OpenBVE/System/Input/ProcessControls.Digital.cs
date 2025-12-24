@@ -55,7 +55,7 @@ namespace OpenBve
 						break;
 					case Translations.Command.CameraInterior:
 						// camera: interior
-						MainLoop.SaveCameraSettings();
+						SaveCameraSettings();
 						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 						{
 							MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","interior_lookahead"}),
@@ -71,7 +71,7 @@ namespace OpenBve
 						}
 
 						Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
-						MainLoop.RestoreCameraSettings();
+						RestoreCameraSettings();
 						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 						{
 							if (j == TrainManager.PlayerTrain.CameraCar)
@@ -129,9 +129,9 @@ namespace OpenBve
 						break;
 					case Translations.Command.CameraHeadOutLeft:
 					case Translations.Command.CameraHeadOutRight:
-						MainLoop.SaveCameraSettings();
+						SaveCameraSettings();
 						Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
-						MainLoop.RestoreCameraSettings();
+						RestoreCameraSettings();
 						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 						{
 							if (j == TrainManager.PlayerTrain.CameraCar)
@@ -197,7 +197,7 @@ namespace OpenBve
 						break;
 					case Translations.Command.CameraInteriorNoPanel:
 						// camera: interior
-						MainLoop.SaveCameraSettings();
+						SaveCameraSettings();
 						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 						{
 							MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","interior_lookahead"}),
@@ -213,7 +213,7 @@ namespace OpenBve
 						}
 
 						Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
-						MainLoop.RestoreCameraSettings();
+						RestoreCameraSettings();
 						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 						{
 							if (j == TrainManager.PlayerTrain.CameraCar)

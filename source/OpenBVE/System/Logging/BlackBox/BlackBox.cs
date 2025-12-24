@@ -119,7 +119,7 @@ namespace OpenBve
 						Writer.Write(Game.LogRouteName);
 						Writer.Write(Game.LogTrainName);
 						Writer.Write(Game.LogDateTime.ToBinary());
-						Writer.Write((short) Interface.CurrentOptions.GameMode);
+						Writer.Write((short) CurrentOptions.GameMode);
 						Writer.Write(Game.BlackBoxEntries.Count);
 						for (int i = 0; i < Game.BlackBoxEntries.Count; i++)
 						{
@@ -155,8 +155,8 @@ namespace OpenBve
 			}
 			catch
 			{
-				Interface.CurrentOptions.BlackBox = false;
-				Interface.AddMessage(MessageType.Error, false, "An unexpected error occurred whilst attempting to write to the black box log- Black box has been disabled.");
+				CurrentOptions.BlackBox = false;
+				AddMessage(MessageType.Error, false, "An unexpected error occurred whilst attempting to write to the black box log- Black box has been disabled.");
 			}
 		}
 

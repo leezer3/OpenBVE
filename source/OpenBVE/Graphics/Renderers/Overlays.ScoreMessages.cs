@@ -9,7 +9,7 @@ namespace OpenBve.Graphics.Renderers
 	internal partial class Overlays
 	{
 		/// <summary>Renders the list of score messages</summary>
-		/// <param name="element">The HUD element these are to be rendererd onto</param>
+		/// <param name="element">The HUD element these are to be rendered onto</param>
 		/// <param name="timeElapsed">The time elapsed</param>
 		private void RenderScoreMessages(HUD.Element element, double timeElapsed)
 		{
@@ -151,32 +151,24 @@ namespace OpenBve.Graphics.Renderers
 				// left background
 				if (Program.CurrentHost.LoadTexture(ref Left.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
-					double u = Left.BackgroundTexture.Width;
-					double v = Left.BackgroundTexture.Height;
-					renderer.Rectangle.Draw(Left.BackgroundTexture, new Vector2(px, py), new Vector2(u, v), new Color128(bc.R, bc.G, bc.B, bc.A * alpha));
+					renderer.Rectangle.Draw(Left.BackgroundTexture, new Vector2(px, py), Left.BackgroundTexture.Size, new Color128(bc.R, bc.G, bc.B, bc.A * alpha));
 				}
 				// right background
 				if (Program.CurrentHost.LoadTexture(ref Right.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
-					double u = Right.BackgroundTexture.Width;
-					double v = Right.BackgroundTexture.Height;
-					renderer.Rectangle.Draw(Right.BackgroundTexture, new Vector2(px + w - u, py), new Vector2(u, v), new Color128(bc.R, bc.G, bc.B, bc.A * alpha));
+					renderer.Rectangle.Draw(Right.BackgroundTexture, new Vector2(px + w - Right.BackgroundTexture.Width, py), Right.BackgroundTexture.Size, new Color128(bc.R, bc.G, bc.B, bc.A * alpha));
 				}
 				// middle background
 				if (Program.CurrentHost.LoadTexture(ref Middle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
-					double v = Middle.BackgroundTexture.Height;
-					renderer.Rectangle.Draw(Middle.BackgroundTexture, new Vector2(px + lw, py), new Vector2(w - lw - rw, v), new Color128(bc.R, bc.G, bc.B, bc.A * alpha));
+					renderer.Rectangle.Draw(Middle.BackgroundTexture, new Vector2(px + lw, py), new Vector2(w - lw - rw, Middle.BackgroundTexture.Height), new Color128(bc.R, bc.G, bc.B, bc.A * alpha));
 				}
-				{ // text
-					double u = widths[j];
-					double v = heights[j];
-					double p = Math.Round((element.TextAlignment.X < 0 ? px : element.TextAlignment.X > 0 ? px + w - u : px + 0.5 * (w - u)) - j * element.Value1);
-					double q = Math.Round(element.TextAlignment.Y < 0 ? py : element.TextAlignment.Y > 0 ? py + lcrh - v : py + 0.5 * (lcrh - v));
-					p += element.TextPosition.X;
-					q += element.TextPosition.Y;
-					renderer.OpenGlString.Draw(element.Font, Game.ScoreMessages[j].Text, new Vector2(p, q), TextAlignment.TopLeft, new Color128(tc.R, tc.G, tc.B, tc.A * alpha), element.TextShadow);
-				}
+				// text
+				double p = Math.Round((element.TextAlignment.X < 0 ? px : element.TextAlignment.X > 0 ? px + w - widths[j] : px + 0.5 * (w - widths[j])) - j * element.Value1);
+				double q = Math.Round(element.TextAlignment.Y < 0 ? py : element.TextAlignment.Y > 0 ? py + lcrh - heights[j] : py + 0.5 * (lcrh - heights[j]));
+				p += element.TextPosition.X;
+				q += element.TextPosition.Y;
+				renderer.OpenGlString.Draw(element.Font, Game.ScoreMessages[j].Text, new Vector2(p, q), TextAlignment.TopLeft, new Color128(tc.R, tc.G, tc.B, tc.A * alpha), element.TextShadow);
 				// left overlay
 				if (Program.CurrentHost.LoadTexture(ref Left.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
@@ -185,15 +177,12 @@ namespace OpenBve.Graphics.Renderers
 				// right overlay
 				if (Program.CurrentHost.LoadTexture(ref Right.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
-					double u = Right.OverlayTexture.Width;
-					double v = Right.OverlayTexture.Height;
-					renderer.Rectangle.Draw(Right.OverlayTexture, new Vector2(px + w - u, py), new Vector2(u, v), new Color128(oc.R, oc.G, oc.B, oc.A * alpha));
+					renderer.Rectangle.Draw(Right.OverlayTexture, new Vector2(px + w - Right.OverlayTexture.Width, py), Right.OverlayTexture.Size, new Color128(oc.R, oc.G, oc.B, oc.A * alpha));
 				}
 				// middle overlay
 				if (Program.CurrentHost.LoadTexture(ref Middle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
-					double v = Middle.OverlayTexture.Height;
-					renderer.Rectangle.Draw(Middle.OverlayTexture, new Vector2(px + lw, py), new Vector2(w - lw - rw, v), new Color128(oc.R, oc.G, oc.B, oc.A * alpha));
+					renderer.Rectangle.Draw(Middle.OverlayTexture, new Vector2(px + lw, py), new Vector2(w - lw - rw, Middle.OverlayTexture.Height), new Color128(oc.R, oc.G, oc.B, oc.A * alpha));
 				}
 			}
 		}

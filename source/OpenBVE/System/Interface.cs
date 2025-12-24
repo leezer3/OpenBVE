@@ -44,7 +44,7 @@ namespace OpenBve {
 							}
 							if (uint.TryParse(Expression.Substring(i + 1, 2), NumberStyles.None, Culture, out uint m)) {
 								string ss = Expression.Substring(i + 3, n - 2);
-								if (Interface.CurrentOptions.EnableBveTsHacks)
+								if (CurrentOptions.EnableBveTsHacks)
 								{
 									/*
 									 * Handles values in the following format:

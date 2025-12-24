@@ -9,7 +9,7 @@ namespace OpenBve.Input
 		/// <summary>Holds all joysticks currently attached to the computer.</summary>
 		internal Dictionary<Guid, AbstractJoystick> AttachedJoysticks = new Dictionary<Guid, AbstractJoystick>();
 
-		/// <returns>Call this function to refresh the list of available joysticks and thier capabilities</returns>
+		/// <returns>Call this function to refresh the list of available joysticks and their capabilities</returns>
 		internal abstract void RefreshJoysticks();
 
 		internal bool RailDriverInit;

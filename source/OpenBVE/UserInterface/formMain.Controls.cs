@@ -28,7 +28,7 @@ namespace OpenBve {
 			if (listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				{
-					this.Tag = new object();
+					Tag = new object();
 					// command
 					if (Translations.CommandInfos.ContainsKey(Interface.CurrentControls[i].Command))
 					{
@@ -173,12 +173,17 @@ namespace OpenBve {
 				switch (Interface.CurrentControls[Index].Component) {
 					case JoystickComponent.Axis:
 						t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis"}).Replace("[index]", (Interface.CurrentControls[Index].Element + 1).ToString(Culture));
-						if (Interface.CurrentControls[Index].Direction == -1) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_negative"});
-						} else if (Interface.CurrentControls[Index].Direction == 1) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_positive"});
-						} else {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_invalid"});
+						switch (Interface.CurrentControls[Index].Direction)
+						{
+							case -1:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_negative"});
+								break;
+							case 1:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_positive"});
+								break;
+							default:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_invalid"});
+								break;
 						} break;
 					case JoystickComponent.Button:
 						t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_button"}).Replace("[index]", (Interface.CurrentControls[Index].Element + 1).ToString(Culture));
