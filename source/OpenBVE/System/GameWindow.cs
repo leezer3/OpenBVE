@@ -1006,10 +1006,6 @@ namespace OpenBve
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
 						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-						//Make bogies visible
-						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 					}
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
@@ -1025,9 +1021,6 @@ namespace OpenBve
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
 						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 					}
 
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
@@ -1044,9 +1037,6 @@ namespace OpenBve
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
 						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 					}
 
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
@@ -1063,9 +1053,6 @@ namespace OpenBve
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
 						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 					}
 
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();

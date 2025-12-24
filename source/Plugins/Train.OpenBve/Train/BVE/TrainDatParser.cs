@@ -1372,11 +1372,7 @@ namespace Train.OpenBve
 				{
 					Train.Cars[i].Breaker = new Breaker(Train.Cars[i]);
 				}
-				Train.Cars[i].CurrentCarSection = CarSectionType.NotVisible;
 				Train.Cars[i].ChangeCarSection(CarSectionType.NotVisible);
-				Train.Cars[i].FrontBogie.ChangeSection(-1);
-				Train.Cars[i].RearBogie.ChangeSection(-1);
-				Train.Cars[i].Coupler.ChangeSection(-1);
 				Train.Cars[i].FrontAxle.Follower.TriggerType = i == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
 				Train.Cars[i].RearAxle.Follower.TriggerType = i == Cars - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 				Train.Cars[i].BeaconReceiver.TriggerType = i == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;

@@ -30,9 +30,6 @@ namespace TrainManager.Trains
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].ChangeCarSection(CarSectionType.NotVisible);
-				Cars[i].FrontBogie.ChangeSection(-1);
-				Cars[i].RearBogie.ChangeSection(-1);
-				Cars[i].Coupler.ChangeSection(-1);
 			}
 			TrainManagerBase.currentHost.StopAllSounds(this);
 		}
@@ -57,9 +54,6 @@ namespace TrainManager.Trains
 					for (int i = 0; i < Cars.Length; i++)
 					{
 						Cars[i].ChangeCarSection(CarSectionType.Exterior);
-						Cars[i].FrontBogie.ChangeSection(0);
-						Cars[i].RearBogie.ChangeSection(0);
-						Cars[i].Coupler.ChangeSection(0);
 
 						if (Cars[i].TractionModel.ProvidesPower && Cars[i].Sounds.Loop != null)
 						{

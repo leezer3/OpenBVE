@@ -142,10 +142,7 @@ namespace TrainManager.Car
 				new Horn(this)
 			};
 			Sounds = new CarSounds();
-			CurrentCarSection = CarSectionType.NotVisible;
 			ChangeCarSection(CarSectionType.NotVisible);
-			FrontBogie.ChangeSection(-1);
-			RearBogie.ChangeSection(-1);
 			Cargo = new Passengers(this);
 			Suspension = new Suspension(this);
 			Flange = new Flange(this);
@@ -493,9 +490,6 @@ namespace TrainManager.Car
 					 * Need to do this after everything has been done in case objects refer to other bits
 					 */
 					newTrain.Cars[i].ChangeCarSection(CarSectionType.Exterior);
-					newTrain.Cars[i].FrontBogie.ChangeSection(0);
-					newTrain.Cars[i].RearBogie.ChangeSection(0);
-					newTrain.Cars[i].Coupler.ChangeSection(0);
 				}
 
 				if (baseTrain.DriverCar >= baseTrain.Cars.Length)
@@ -641,8 +635,11 @@ namespace TrainManager.Car
 					}
 				}
 			}
-			
 
+			// HACK: Bogies are only visible in exterior views, hidden in all others, so do it once here to avoid duplication
+			FrontBogie.ChangeSection(-1);
+			RearBogie.ChangeSection(-1);
+			Coupler.ChangeSection(-1);
 			switch (newCarSection)
 			{
 				case CarSectionType.NotVisible:
@@ -654,6 +651,7 @@ namespace TrainManager.Car
 						CurrentCarSection = CarSectionType.Interior;
 						interiorCarSection.Initialize(false);
 						interiorCarSection.Show();
+						TrainManagerBase.Renderer.Camera.CurrentRestriction = CameraRestrictionMode;
 					}
 					break;
 				case CarSectionType.Exterior:
@@ -667,6 +665,9 @@ namespace TrainManager.Car
 					{
 						CurrentCarSection = CarSectionType.NotVisible;
 					}
+					FrontBogie.ChangeSection(0);
+					RearBogie.ChangeSection(0);
+					Coupler.ChangeSection(0);
 					break;
 				case CarSectionType.HeadOutLeft:
 					if (CarSections.TryGetValue(CarSectionType.HeadOutLeft, out CarSection headOutLeftCarSection))
