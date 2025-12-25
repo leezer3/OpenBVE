@@ -639,7 +639,7 @@ namespace TrainManager.Car
 			// HACK: Bogies are only visible in exterior views, hidden in all others, so do it once here to avoid duplication
 			FrontBogie.ChangeSection(-1);
 			RearBogie.ChangeSection(-1);
-			Coupler.ChangeSection(-1);
+			Coupler?.ChangeSection(-1);
 			switch (newCarSection)
 			{
 				case CarSectionType.NotVisible:
@@ -667,7 +667,7 @@ namespace TrainManager.Car
 					}
 					FrontBogie.ChangeSection(0);
 					RearBogie.ChangeSection(0);
-					Coupler.ChangeSection(0);
+					Coupler?.ChangeSection(0);
 					break;
 				case CarSectionType.HeadOutLeft:
 					if (CarSections.TryGetValue(CarSectionType.HeadOutLeft, out CarSection headOutLeftCarSection))
