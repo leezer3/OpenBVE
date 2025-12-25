@@ -164,7 +164,7 @@ namespace OpenBve.Graphics.Renderers
 
 			string[] Lines = {
 				"=system",
-				"fps: " + Program.Renderer.FrameRate.ToString("0.0", Culture) + (MainLoop.LimitFramerate ? " (low cpu)" : ""),
+				"fps: " + Program.Renderer.FrameRate.ToString("0.0", Culture),
 				"time:" + hours.ToString("00") +  ":" + minutes.ToString("00") + ":" + seconds.ToString("00"),
 				"score: " + Game.CurrentScore.CurrentValue.ToString(Culture),
 				"",

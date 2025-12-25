@@ -215,11 +215,6 @@ namespace OpenBve
 			Game.UpdateBlackBox();
 			// pause/menu
 			
-			// limit framerate
-			if (MainLoop.LimitFramerate)
-			{
-				Thread.Sleep(10);
-			}
 			MainLoop.UpdateControlRepeats(RealTimeElapsed);
 			MainLoop.ProcessKeyboard();
 			MainLoop.UpdateMouse(RealTimeElapsed);

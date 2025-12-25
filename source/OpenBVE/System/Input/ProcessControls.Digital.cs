@@ -861,15 +861,6 @@ namespace OpenBve
 								: new[] {"notification","backfaceculling_off"}), MessageDependency.None,
 							GameMode.Expert, MessageColor.White, 2, null);
 						break;
-					case Translations.Command.MiscCPUMode:
-						// option: limit frame rate
-						LimitFramerate = !LimitFramerate;
-						MessageManager.AddMessage(
-							Translations.GetInterfaceString(HostApplication.OpenBve, LimitFramerate
-								? new[] {"notification","cpu_low"}
-								: new[] {"notification","cpu_normal"}), MessageDependency.None,
-							GameMode.Expert, MessageColor.White, 2, null);
-						break;
 					case Translations.Command.DebugBrakeSystems:
 						// option: brake systems
 						if (Interface.CurrentOptions.GameMode == GameMode.Expert)

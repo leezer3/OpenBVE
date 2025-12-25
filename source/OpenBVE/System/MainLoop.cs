@@ -19,9 +19,6 @@ namespace OpenBve
 {
 	internal static partial class MainLoop
 	{
-		
-		// declarations
-		internal static bool LimitFramerate = false;
 		internal static QuitMode Quit = QuitMode.ContinueGame;
 		/// <summary>BlockKeyRepeat should be set to 'true' whilst processing a KeyUp or KeyDown event.</summary>
 		internal static bool BlockKeyRepeat;
