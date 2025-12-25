@@ -147,7 +147,7 @@ namespace OpenBve
 				MessageBox.Show(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","save_failed"}), Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"bug_report","title"}), MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 
-			this.Close();
+			Close();
 		}
 	}
 }

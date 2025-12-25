@@ -61,7 +61,7 @@ namespace OpenBve
 			{
 				var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 				Icon ico = new Icon(OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data"), "icon.ico"));
-				this.Icon = ico;
+				Icon = ico;
 			}
 			catch
 			{
@@ -80,7 +80,7 @@ namespace OpenBve
 			{
 				var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 				Icon ico = new Icon(OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data"), "icon.ico"));
-				this.Icon = ico;
+				Icon = ico;
 			}
 			catch
 			{

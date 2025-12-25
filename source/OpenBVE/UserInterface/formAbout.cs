@@ -105,11 +105,11 @@ namespace OpenBve
 			builder.AppendLine("XamlBehaviors for WPF:");
 			builder.AppendLine(OpenBveApi.Resource.XamlBehaviorsForWPF);
 
-			this.Shown += (sender, e) => textBoxOpenSourceLicences.Text = builder.ToString();
+			Shown += (sender, e) => textBoxOpenSourceLicences.Text = builder.ToString();
 		}
 
 		private void ApplyLanguage() {
-			this.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","title"});
+			Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","title"});
 			textBoxMain.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","description"});
 			label1.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","open_source_licenses"});
 			labelOpenSourceHeader.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"about","open_source_licenses_header"});
