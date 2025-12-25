@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -141,24 +141,18 @@ namespace OpenBve {
 				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Shift) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_shift"});
 				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Ctrl) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_ctrl"});
 				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Alt) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_alt"});
-				
-				
-				int j; 
-				for (j = 0; j < 133; j++) {
-					//OpenTK key description
-					if (Interface.CurrentControls[Index].Key != Key.Unknown)
+
+				if (Interface.CurrentControls[Index].Key != Key.Unknown)
+				{
+					if (Translations.TranslatedKeys.ContainsKey(Interface.CurrentControls[Index].Key))
 					{
-						if (Translations.TranslatedKeys.ContainsKey(Interface.CurrentControls[Index].Key))
-						{
-							t += Translations.TranslatedKeys[Interface.CurrentControls[Index].Key].Description;
-							return t;
-						}
-						t += Interface.CurrentControls[Index].Key;
+						t += Translations.TranslatedKeys[Interface.CurrentControls[Index].Key].Description;
 						return t;
 					}
-				} if (j == 133) {
-					t += "{" + Interface.CurrentControls[Index].Element.ToString(Culture) + "}";
+					t += Interface.CurrentControls[Index].Key;
+					return t;
 				}
+				t += "{" + Interface.CurrentControls[Index].Element.ToString(Culture) + "}";
 				return t;
 			} 
 			
