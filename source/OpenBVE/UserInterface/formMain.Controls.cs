@@ -586,7 +586,7 @@ namespace OpenBve {
 		// attached joysticks
 		private void pictureboxJoysticks_Paint(object sender, PaintEventArgs e)
 		{
-			this.DoubleBuffered = true;
+			DoubleBuffered = true;
 			int device = -1;
 			JoystickComponent component = JoystickComponent.Invalid;
 			int element = -1;
@@ -606,7 +606,7 @@ namespace OpenBve {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 			e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-			Font f = new Font(this.Font.Name, 0.875f * this.Font.Size);
+			Font f = new Font(Font.Name, 0.875f * Font.Size);
 			float x = 2.0f, y = 2.0f;
 			float threshold = (trackbarJoystickAxisThreshold.Value - (float)trackbarJoystickAxisThreshold.Minimum) / (trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
 			configureLinkLocations = new Vector2[Program.Joysticks.AttachedJoysticks.Count][];
@@ -624,7 +624,7 @@ namespace OpenBve {
 				{
 					image = GamepadImage;
 				}
-				else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("xinput", StringComparison.InvariantCultureIgnoreCase) != -1 && GamepadImage != null)
+				else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("xinput", StringComparison.InvariantCultureIgnoreCase) != -1 && XboxImage != null)
 				{
 					image = XboxImage;
 				}
@@ -649,12 +649,12 @@ namespace OpenBve {
 				SizeF numberSize = e.Graphics.MeasureString(joystickNumber, f);
 				e.Graphics.DrawString(joystickNumber, f, Brushes.Black, x + w - 8.0f - 0.5f * numberSize.Width, y + 8.0f - 0.5f * numberSize.Height);
 				// joystick name
-				e.Graphics.DrawString(Program.Joysticks.AttachedJoysticks[guid].Name, this.Font, Brushes.Black, x + w + 8.0f, y);
+				e.Graphics.DrawString(Program.Joysticks.AttachedJoysticks[guid].Name, Font, Brushes.Black, x + w + 8.0f, y);
 				// Configure Link
 				if(Program.Joysticks.AttachedJoysticks[guid].ConfigurationLink != ConfigurationLink.None)
 				{
-					Font underlinedFont = new Font(this.Font, FontStyle.Underline);
-					SizeF joystickSize = e.Graphics.MeasureString(Program.Joysticks.AttachedJoysticks[guid].Name, this.Font);
+					Font underlinedFont = new Font(Font, FontStyle.Underline);
+					SizeF joystickSize = e.Graphics.MeasureString(Program.Joysticks.AttachedJoysticks[guid].Name, Font);
 					SizeF configureSize = e.Graphics.MeasureString("Configure", underlinedFont);
 					e.Graphics.DrawString("Configure", underlinedFont, Brushes.Blue, x + w + 8.0f + joystickSize.Width - configureSize.Width, y + numberSize.Height);
 					configureLinkLocations[i] = new[] {new Vector2(x + w + 8.0f + joystickSize.Width - configureSize.Width, y + numberSize.Height), new Vector2(x + w + 8.0f + joystickSize.Width + configureSize.Width, y + numberSize.Height + configureSize.Height)};
@@ -664,11 +664,8 @@ namespace OpenBve {
 				{
 					//HACK: Control configuration doesn't work in-form on SDL2
 					string error = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_ingame"});
-					if (OpenTK.Configuration.RunningOnSdl2)
-					{
-						error = error.Replace("[platform]", "SDL2");
-					}
-					e.Graphics.DrawString(error, this.Font, Brushes.Black, x + w + 8.0f, y + 30.0f);
+					error = error.Replace("[platform]", "SDL2");
+					e.Graphics.DrawString(error, Font, Brushes.Black, x + w + 8.0f, y + 30.0f);
 					return;
 				}
 				float m;
@@ -676,151 +673,149 @@ namespace OpenBve {
 					m = x;
 					Pen p = new Pen(Color.DarkGoldenrod, 2.0f);
 					Pen ps = new Pen(Color.Firebrick, 2.0f);
-					{ // first row
-						float u = x + w + 8.0f;
-						float v = y + 24.0f;
-						float g = h - 24.0f;
-						{ // hats
-							int n = Program.Joysticks.AttachedJoysticks[guid].HatCount();
-							for (int j = 0; j < n; j++) {
-								if (device == i & component == JoystickComponent.Hat & element == j) {
-									e.Graphics.DrawEllipse(ps, u, v, g, g);
-								} else {
-									e.Graphics.DrawEllipse(p, u, v, g, g);
-								}
-								string t = "H" + (j + 1).ToString(Culture);
-								SizeF s = e.Graphics.MeasureString(t, f);
-								e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (g - s.Width), v + 0.5f * (g - s.Height));
-								JoystickHatState aa = Program.Joysticks.AttachedJoysticks[guid].GetHat(j);
-								HatPosition a = aa.Position;
-								if (a != HatPosition.Centered)
-								{
-									double rx = 0.0;
-									double ry = 0.0;
-									switch (a)
-									{
-										case HatPosition.Up:
-											rx = 0.0;
-											ry = -1.0;
-											break;
-										case HatPosition.Down:
-											rx = 0.0;
-											ry = 1.0;
-											break;
-										case HatPosition.Left:
-											rx = -1.0;
-											ry = 0.0;
-											break;
-										case HatPosition.Right:
-											rx = 1.0;
-											ry = 0.0;
-											break;
-										case HatPosition.UpLeft:
-											rx = -1.0;
-											ry = -1.0;
-											break;
-										case HatPosition.UpRight:
-											rx = 1.0;
-											ry = -1.0;
-											break;
-										case HatPosition.DownLeft:
-											rx = -1.0;
-											ry = 1.0;
-											break;
-										case HatPosition.DownRight:
-											rx = 1.0;
-											ry = 1.0;
-											break;
-									}
-									
-									double rt = rx * rx + ry * ry;
-									rt = 1.0 / Math.Sqrt(rt);
-									rx *= rt; ry *= rt;
-									float dx = (float)(0.5 * rx * (g - 8.0));
-									float dy = (float)(0.5 * ry * (g - 8.0));
-									e.Graphics.FillEllipse(Brushes.White, u + 0.5f * g + dx - 4.0f, v + 0.5f * g + dy - 4.0f, 8.0f, 8.0f);
-									e.Graphics.DrawEllipse(new Pen(Color.Firebrick, 2.0f), u + 0.5f * g + dx - 4.0f, v + 0.5f * g + dy - 4.0f, 8.0f, 8.0f);
-								}
-								if (device == i & component == JoystickComponent.Hat & element == j) {
-									double rx = ((HatPosition)direction & HatPosition.Left) != 0 ? -1.0 : ((HatPosition)direction & HatPosition.Right) != 0 ? 1.0 : 0.0;
-									double ry = ((HatPosition)direction & HatPosition.Up) != 0 ? -1.0 : ((HatPosition)direction & HatPosition.Down) != 0 ? 1.0 : 0.0;
-									double rt = rx * rx + ry * ry;
-									rt = 1.0 / Math.Sqrt(rt);
-									rx *= rt; ry *= rt;
-									float dx = (float)(0.5 * rx * (g - 8.0));
-									float dy = (float)(0.5 * ry * (g - 8.0));
-									e.Graphics.FillEllipse(Brushes.Firebrick, u + 0.5f * g + dx - 2.0f, v + 0.5f * g + dy - 2.0f, 4.0f, 4.0f);
-								}
-								u += g + 8.0f;
-							}
-						}
-						if (u > m) m = u;
-					}
-					
-					{ // second row
-						float u = x;
-						float v = y + h + 8.0f;
-						// axes
-						float g = pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
-						for (int j = 0; j < Program.Joysticks.AttachedJoysticks[guid].AxisCount(); j++)
+					// first row
+					float u = x + w + 8.0f;
+					float v = y + 24.0f;
+					float g = h - 24.0f;
+					// hats
+					for (int j = 0; j < Program.Joysticks.AttachedJoysticks[guid].HatCount(); j++)
+					{
+						if (device == i & component == JoystickComponent.Hat & element == j)
 						{
-							float r = (float)Program.Joysticks.AttachedJoysticks[guid].GetAxis(j);
-							float r0 = r < 0.0f ? r : 0.0f;
-							float r1 = r > 0.0f ? r : 0.0f;
-							e.Graphics.FillRectangle((float)Math.Abs((double)r) < threshold ? Brushes.RosyBrown : Brushes.Firebrick, u, v + 0.5f * g - 0.5f * r1 * g, 16.0f, 0.5f * g * (r1 - r0));
-							if (device == i & component == JoystickComponent.Axis & element == j)
+							e.Graphics.DrawEllipse(ps, u, v, g, g);
+						}
+						else
+						{
+							e.Graphics.DrawEllipse(p, u, v, g, g);
+						}
+						string t = "H" + (j + 1).ToString(Culture);
+						SizeF s = e.Graphics.MeasureString(t, f);
+						e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (g - s.Width), v + 0.5f * (g - s.Height));
+						JoystickHatState aa = Program.Joysticks.AttachedJoysticks[guid].GetHat(j);
+						if (aa.Position != HatPosition.Centered)
+						{
+							double rx = 0.0;
+							double ry = 0.0;
+							switch (aa.Position)
 							{
-								if (direction == -1 & type != Translations.CommandType.AnalogFull)
-								{
-									e.Graphics.DrawRectangle(p, u, v, 16.0f, g);
-									e.Graphics.DrawRectangle(ps, u, v + 0.5f * g, 16.0f, 0.5f * g);
-								}
-								else if (direction == 1 & type != Translations.CommandType.AnalogFull)
-								{
-									e.Graphics.DrawRectangle(p, u, v, 16.0f, g);
-									e.Graphics.DrawRectangle(ps, u, v, 16.0f, 0.5f * g);
-								}
-								else
-								{
-									e.Graphics.DrawRectangle(ps, u, v, 16.0f, g);
-								}
+								case HatPosition.Up:
+									rx = 0.0;
+									ry = -1.0;
+									break;
+								case HatPosition.Down:
+									rx = 0.0;
+									ry = 1.0;
+									break;
+								case HatPosition.Left:
+									rx = -1.0;
+									ry = 0.0;
+									break;
+								case HatPosition.Right:
+									rx = 1.0;
+									ry = 0.0;
+									break;
+								case HatPosition.UpLeft:
+									rx = -1.0;
+									ry = -1.0;
+									break;
+								case HatPosition.UpRight:
+									rx = 1.0;
+									ry = -1.0;
+									break;
+								case HatPosition.DownLeft:
+									rx = -1.0;
+									ry = 1.0;
+									break;
+								case HatPosition.DownRight:
+									rx = 1.0;
+									ry = 1.0;
+									break;
 							}
-							else
+
+							double rt = rx * rx + ry * ry;
+							rt = 1.0 / Math.Sqrt(rt);
+							rx *= rt; ry *= rt;
+							float dx = (float)(0.5 * rx * (g - 8.0));
+							float dy = (float)(0.5 * ry * (g - 8.0));
+							e.Graphics.FillEllipse(Brushes.White, u + 0.5f * g + dx - 4.0f, v + 0.5f * g + dy - 4.0f, 8.0f, 8.0f);
+							e.Graphics.DrawEllipse(new Pen(Color.Firebrick, 2.0f), u + 0.5f * g + dx - 4.0f, v + 0.5f * g + dy - 4.0f, 8.0f, 8.0f);
+						}
+						if (device == i & component == JoystickComponent.Hat & element == j)
+						{
+							double rx = ((HatPosition)direction & HatPosition.Left) != 0 ? -1.0 : ((HatPosition)direction & HatPosition.Right) != 0 ? 1.0 : 0.0;
+							double ry = ((HatPosition)direction & HatPosition.Up) != 0 ? -1.0 : ((HatPosition)direction & HatPosition.Down) != 0 ? 1.0 : 0.0;
+							double rt = rx * rx + ry * ry;
+							rt = 1.0 / Math.Sqrt(rt);
+							rx *= rt; ry *= rt;
+							float dx = (float)(0.5 * rx * (g - 8.0));
+							float dy = (float)(0.5 * ry * (g - 8.0));
+							e.Graphics.FillEllipse(Brushes.Firebrick, u + 0.5f * g + dx - 2.0f, v + 0.5f * g + dy - 2.0f, 4.0f, 4.0f);
+						}
+						u += g + 8.0f;
+					}
+					if (u > m) m = u;
+
+					// second row
+					u = x;
+					v = y + h + 8.0f;
+					// axes
+					g = pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
+					for (int j = 0; j < Program.Joysticks.AttachedJoysticks[guid].AxisCount(); j++)
+					{
+						float r = (float)Program.Joysticks.AttachedJoysticks[guid].GetAxis(j);
+						float r0 = r < 0.0f ? r : 0.0f;
+						float r1 = r > 0.0f ? r : 0.0f;
+						e.Graphics.FillRectangle((float)Math.Abs((double)r) < threshold ? Brushes.RosyBrown : Brushes.Firebrick, u, v + 0.5f * g - 0.5f * r1 * g, 16.0f, 0.5f * g * (r1 - r0));
+						if (device == i & component == JoystickComponent.Axis & element == j)
+						{
+							if (direction == -1 & type != Translations.CommandType.AnalogFull)
 							{
 								e.Graphics.DrawRectangle(p, u, v, 16.0f, g);
+								e.Graphics.DrawRectangle(ps, u, v + 0.5f * g, 16.0f, 0.5f * g);
 							}
-							e.Graphics.DrawLine(p, u, v + (0.5f - 0.5f * threshold) * g, u + 16.0f, v + (0.5f - 0.5f * threshold) * g);
-							e.Graphics.DrawLine(p, u, v + (0.5f + 0.5f * threshold) * g, u + 16.0f, v + (0.5f + 0.5f * threshold) * g);
-							string t = "A" + (j + 1).ToString(Culture);
-							SizeF s = e.Graphics.MeasureString(t, f);
-							e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (16.0f - s.Width), v + g - s.Height - 2.0f);
-							u += 24.0f;
-						}
-
-						// buttons
-						g = 0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
-						for (int j = 0; j < Program.Joysticks.AttachedJoysticks[guid].ButtonCount(); j++)
-						{
-							bool q = Program.Joysticks.AttachedJoysticks[guid].GetButton(j) != 0;
-							float dv = (j & 1) * (g + 8.0f);
-							if (q) e.Graphics.FillRectangle(Brushes.Firebrick, u, v + dv, g, g);
-							if (device == i & component == JoystickComponent.Button & element == j)
+							else if (direction == 1 & type != Translations.CommandType.AnalogFull)
 							{
-								e.Graphics.DrawRectangle(ps, u, v + dv, g, g);
+								e.Graphics.DrawRectangle(p, u, v, 16.0f, g);
+								e.Graphics.DrawRectangle(ps, u, v, 16.0f, 0.5f * g);
 							}
 							else
 							{
-								e.Graphics.DrawRectangle(p, u, v + dv, g, g);
+								e.Graphics.DrawRectangle(ps, u, v, 16.0f, g);
 							}
-							string t = "B" + (j + 1).ToString(Culture);
-							SizeF s = e.Graphics.MeasureString(t, f);
-							e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (g - s.Width), v + dv + 0.5f * (g - s.Height));
-							if ((j & 1) != 0 | j == Program.Joysticks.AttachedJoysticks[guid].ButtonCount() - 1) u += g + 8.0f;
 						}
-
-						if (u > m) m = u;
+						else
+						{
+							e.Graphics.DrawRectangle(p, u, v, 16.0f, g);
+						}
+						e.Graphics.DrawLine(p, u, v + (0.5f - 0.5f * threshold) * g, u + 16.0f, v + (0.5f - 0.5f * threshold) * g);
+						e.Graphics.DrawLine(p, u, v + (0.5f + 0.5f * threshold) * g, u + 16.0f, v + (0.5f + 0.5f * threshold) * g);
+						string t = "A" + (j + 1).ToString(Culture);
+						SizeF s = e.Graphics.MeasureString(t, f);
+						e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (16.0f - s.Width), v + g - s.Height - 2.0f);
+						u += 24.0f;
 					}
-					 
+
+					// buttons
+					g = 0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
+					for (int j = 0; j < Program.Joysticks.AttachedJoysticks[guid].ButtonCount(); j++)
+					{
+						bool q = Program.Joysticks.AttachedJoysticks[guid].GetButton(j) != 0;
+						float dv = (j & 1) * (g + 8.0f);
+						if (q) e.Graphics.FillRectangle(Brushes.Firebrick, u, v + dv, g, g);
+						if (device == i & component == JoystickComponent.Button & element == j)
+						{
+							e.Graphics.DrawRectangle(ps, u, v + dv, g, g);
+						}
+						else
+						{
+							e.Graphics.DrawRectangle(p, u, v + dv, g, g);
+						}
+						string t = "B" + (j + 1).ToString(Culture);
+						SizeF s = e.Graphics.MeasureString(t, f);
+						e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (g - s.Width), v + dv + 0.5f * (g - s.Height));
+						if ((j & 1) != 0 | j == Program.Joysticks.AttachedJoysticks[guid].ButtonCount() - 1) u += g + 8.0f;
+					}
+					if (u > m) m = u;
 				} else {
 					m = x + w + 64.0f;
 				}

@@ -1091,9 +1091,11 @@ namespace OpenBve
 			while (!Loading.Complete && !Loading.Cancel && !simulationSetup)
 			{
 				CPreciseTimer.GetElapsedTime();
-				this.ProcessEvents();
-				if (this.IsExiting)
+				ProcessEvents();
+				if (IsExiting)
+				{
 					Loading.Cancel = true;
+				}
 				double routeProgress = 1.0, trainProgress = 0.0;
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
@@ -1144,16 +1146,13 @@ namespace OpenBve
 				if (wait > 0)
 					Thread.Sleep((int)(wait));
 			}
-			if(!Loading.Cancel)
+			if(Loading.Cancel)
 			{
-				Program.Renderer.PopMatrix(MatrixMode.Modelview);
-				Program.Renderer.PopMatrix(MatrixMode.Projection);
-				SetupSimulation();
-			} else {
-				this.Exit();
+				Exit();
 			}
+			Program.Renderer.PopMatrix(MatrixMode.Modelview);
+			Program.Renderer.PopMatrix(MatrixMode.Projection);
+			SetupSimulation();
 		}
-
-		
 	}
 }

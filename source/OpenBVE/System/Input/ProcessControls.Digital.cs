@@ -47,6 +47,7 @@ namespace OpenBve
 					TrainManager.PlayerTrain.Plugin?.KeyDown(key);
 				}
 
+				// ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault : Axis based controls not handled in this method
 				switch (Control.Command)
 				{
 					case Translations.Command.MiscQuit:

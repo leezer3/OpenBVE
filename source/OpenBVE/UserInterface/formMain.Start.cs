@@ -1362,7 +1362,7 @@ namespace OpenBve
 		// show route
 		private void ShowRoute(bool UserSelectedEncoding)
 		{
-			this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+			Cursor = System.Windows.Forms.Cursors.WaitCursor;
 			TryLoadImage(pictureboxRouteImage, "loading.png");
 			groupboxRouteDetails.Visible = true;
 			textboxRouteDescription.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_processing"});

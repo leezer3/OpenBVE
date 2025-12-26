@@ -16,6 +16,7 @@ namespace OpenBve
 			{
 				return;
 			}
+			// ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault : Many controls can't be assigned to an axis
 			switch (Control.Command)
 			{
 				case Translations.Command.PowerHalfAxis:
