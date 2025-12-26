@@ -167,6 +167,13 @@ namespace Formats.OpenBve
 			return null;
 		}
 
+		public override bool ReadBlock(T1[] validBlocks, out Block<T1, T2> block)
+		{
+			currentHost.AddMessage(MessageType.Error, false, "A section in a CFG file cannot contain sub-blocks.");
+			block = null;
+			return false;
+		}
+
 		public override int RemainingDataValues => keyValuePairs.Count + indexedValues.Count + rawValues.Count;
 
 		internal ConfigSection(int myIndex, int startingLine, T1 myKey, string[] myLines, HostInterface currentHost) : base(myIndex, myKey, currentHost)
