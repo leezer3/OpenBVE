@@ -13,7 +13,7 @@ Supported route formats:
 
 Supported train formats:
 * BVE2 / BVE4, with native OpenBVE extensions.
-* Microsoft Train Simulator (MSTS)
+* Microsoft Train Simulator (MSTS) - Partial support, work in progress.
 
 OpenBVE is built in OpenGL, using the OpenTK framework for windowing.
 
