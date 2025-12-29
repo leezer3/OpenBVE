@@ -28,23 +28,21 @@ namespace OpenBve {
 			if (listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				{
-					this.Tag = new object();
-					{ // command
-
-						if (Translations.CommandInfos.ContainsKey(Interface.CurrentControls[i].Command))
-						{
-							comboboxCommand.SelectedValue = Interface.CurrentControls[i].Command;
-							updownCommandOption.Value = Interface.CurrentControls[i].Option;
-							labelCommandOption.Enabled = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
-							updownCommandOption.Enabled = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
-						}
-						else
-						{
-							comboboxCommand.SelectedIndex = -1;
-							updownCommandOption.Value = 0;
-							labelCommandOption.Enabled = false;
-							updownCommandOption.Enabled = false;
-						}
+					Tag = new object();
+					// command
+					if (Translations.CommandInfos.ContainsKey(Interface.CurrentControls[i].Command))
+					{
+						comboboxCommand.SelectedValue = Interface.CurrentControls[i].Command;
+						updownCommandOption.Value = Interface.CurrentControls[i].Option;
+						labelCommandOption.Enabled = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
+						updownCommandOption.Enabled = Translations.CommandInfos[Interface.CurrentControls[i].Command].EnableOption;
+					}
+					else
+					{
+						comboboxCommand.SelectedIndex = -1;
+						updownCommandOption.Value = 0;
+						labelCommandOption.Enabled = false;
+						updownCommandOption.Enabled = false;
 					}
 					// data
 					switch (Interface.CurrentControls[i].Method)
@@ -82,14 +80,14 @@ namespace OpenBve {
 					}
 					panelJoystick.Enabled = radiobuttonJoystick.Checked;
 					// finalize
-					this.Tag = null;
+					Tag = null;
 				}
 				buttonControlRemove.Enabled = true;
 				buttonControlUp.Enabled = i > 0;
 				buttonControlDown.Enabled = i < Interface.CurrentControls.Length - 1;
 				groupboxControl.Enabled = true;
 			} else {
-				this.Tag = new object();
+				Tag = new object();
 				comboboxCommand.SelectedIndex = -1;
 				radiobuttonKeyboard.Checked = false;
 				radiobuttonJoystick.Checked = false;
@@ -99,7 +97,7 @@ namespace OpenBve {
 				checkboxKeyboardCtrl.Checked = false;
 				checkboxKeyboardAlt.Checked = false;
 				labelJoystickAssignmentValue.Text = "";
-				this.Tag = null;
+				Tag = null;
 				buttonControlRemove.Enabled = false;
 				buttonControlUp.Enabled = false;
 				buttonControlDown.Enabled = false;
@@ -116,16 +114,17 @@ namespace OpenBve {
 					default: Item.SubItems[1].Text = Info.Type.ToString(); break;
 			}
 			Item.SubItems[2].Text = Info.Description;
-			if (Interface.CurrentControls[Index].Method == ControlMethod.Keyboard) {
-				Item.ImageKey = @"keyboard";
-			} else if (Interface.CurrentControls[Index].Method == ControlMethod.Joystick) {
-				if (Info.Type == Translations.CommandType.AnalogHalf | Info.Type == Translations.CommandType.AnalogFull) {
-					Item.ImageKey = @"joystick";
-				} else {
-					Item.ImageKey = @"gamepad";
-				}
-			} else {
-				Item.ImageKey = null;
+			switch (Interface.CurrentControls[Index].Method)
+			{
+				case ControlMethod.Keyboard:
+					Item.ImageKey = @"keyboard";
+					break;
+				case ControlMethod.Joystick:
+					Item.ImageKey = Info.Type == Translations.CommandType.AnalogHalf || Info.Type == Translations.CommandType.AnalogFull ? @"joystick" : @"gamepad";
+					break;
+				default:
+					Item.ImageKey = null;
+					break;
 			}
 			Item.SubItems[3].Text = GetControlDetails(Index);
 			Item.SubItems[4].Text = Interface.CurrentControls[Index].Option.ToString(System.Globalization.CultureInfo.InvariantCulture);
@@ -143,24 +142,18 @@ namespace OpenBve {
 				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Shift) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_shift"});
 				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Ctrl) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_ctrl"});
 				if ((Interface.CurrentControls[Index].Modifier & KeyboardModifier.Alt) != 0) t += Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_keyboard_alt"});
-				
-				
-				int j; 
-				for (j = 0; j < 133; j++) {
-					//OpenTK key description
-					if (Interface.CurrentControls[Index].Key != Key.Unknown)
+
+				if (Interface.CurrentControls[Index].Key != Key.Unknown)
+				{
+					if (Translations.TranslatedKeys.ContainsKey(Interface.CurrentControls[Index].Key))
 					{
-						if (Translations.TranslatedKeys.ContainsKey(Interface.CurrentControls[Index].Key))
-						{
-							t += Translations.TranslatedKeys[Interface.CurrentControls[Index].Key].Description;
-							return t;
-						}
-						t += Interface.CurrentControls[Index].Key;
+						t += Translations.TranslatedKeys[Interface.CurrentControls[Index].Key].Description;
 						return t;
 					}
-				} if (j == 133) {
-					t += "{" + Interface.CurrentControls[Index].Element.ToString(Culture) + "}";
+					t += Interface.CurrentControls[Index].Key;
+					return t;
 				}
+				t += "{" + Interface.CurrentControls[Index].Element.ToString(Culture) + "}";
 				return t;
 			} 
 			
@@ -175,36 +168,52 @@ namespace OpenBve {
 				switch (Interface.CurrentControls[Index].Component) {
 					case JoystickComponent.Axis:
 						t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis"}).Replace("[index]", (Interface.CurrentControls[Index].Element + 1).ToString(Culture));
-						if (Interface.CurrentControls[Index].Direction == -1) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_negative"});
-						} else if (Interface.CurrentControls[Index].Direction == 1) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_positive"});
-						} else {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_invalid"});
+						switch (Interface.CurrentControls[Index].Direction)
+						{
+							case -1:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_negative"});
+								break;
+							case 1:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_positive"});
+								break;
+							default:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_invalid"});
+								break;
 						} break;
 					case JoystickComponent.Button:
 						t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_button"}).Replace("[index]", (Interface.CurrentControls[Index].Element + 1).ToString(Culture));
 						break;
 					case JoystickComponent.Hat:
 						t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat"}).Replace("[index]", (Interface.CurrentControls[Index].Element + 1).ToString(Culture));
-						if (Interface.CurrentControls[Index].Direction == (int)HatPosition.Left) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_left"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.UpLeft) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_upleft"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.Up) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_up"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.UpRight) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_upright"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.Right) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_right"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.DownRight) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_downright"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.Down) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_down"});
-						} else if (Interface.CurrentControls[Index].Direction == (int)HatPosition.DownLeft) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_downleft"});
-						} else {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_invalid"});
+						switch (Interface.CurrentControls[Index].Direction)
+						{
+							case (int)HatPosition.Left:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_left"});
+								break;
+							case (int)HatPosition.UpLeft:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_upleft"});
+								break;
+							case (int)HatPosition.Up:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_up"});
+								break;
+							case (int)HatPosition.UpRight:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_upright"});
+								break;
+							case (int)HatPosition.Right:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_right"});
+								break;
+							case (int)HatPosition.DownRight:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_downright"});
+								break;
+							case (int)HatPosition.Down:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_down"});
+								break;
+							case (int)HatPosition.DownLeft:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_downleft"});
+								break;
+							default:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_hat_invalid"});
+								break;
 						} break;
 				}
 				return t;
@@ -226,7 +235,7 @@ namespace OpenBve {
 								t += Separator + "Auto-Brake";
 								break;
 							case 3:
-								t += Separator + "Independant Brake";
+								t += Separator + "Independent Brake";
 								break;
 							case 4:
 								t += Separator + "Bail-Off";
@@ -239,12 +248,17 @@ namespace OpenBve {
 								break;
 						}
 						
-						if (Interface.CurrentControls[Index].Direction == -1) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_negative"});
-						} else if (Interface.CurrentControls[Index].Direction == 1) {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_positive"});
-						} else {
-							t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_invalid"});
+						switch (Interface.CurrentControls[Index].Direction)
+						{
+							case -1:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_negative"});
+								break;
+							case 1:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_positive"});
+								break;
+							default:
+								t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_axis_invalid"});
+								break;
 						} break;
 					case JoystickComponent.Button:
 						t += Separator + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"controls","assignment_joystick_button"}).Replace("[index]", (Interface.CurrentControls[Index].Element + 1).ToString(Culture));
@@ -310,7 +324,7 @@ namespace OpenBve {
 
 		// command
 		private void comboboxCommand_SelectedIndexChanged(object sender, EventArgs e) {
-			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				int j = comboboxCommand.SelectedIndex;
 				if (j >= 0)
@@ -328,7 +342,7 @@ namespace OpenBve {
 
 		// command option
 		private void updownCommandOption_ValueChanged(object sender, EventArgs e) {
-			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				int j = comboboxCommand.SelectedIndex;
 				if (j >= 0) {
@@ -344,15 +358,8 @@ namespace OpenBve {
 
 		// keyboard
 		private void radiobuttonKeyboard_CheckedChanged(object sender, EventArgs e) {
-			if (radiobuttonJoystick.Checked || radiobuttonKeyboard.Checked)
-			{
-				textboxJoystickGrab.Enabled = true;
-			}
-			else
-			{
-				textboxJoystickGrab.Enabled = false;
-			}
-			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
+			textboxJoystickGrab.Enabled = radiobuttonJoystick.Checked || radiobuttonKeyboard.Checked;
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				Interface.CurrentControls[i].Method = ControlMethod.Keyboard;
 				UpdateControlListElement(listviewControls.Items[i], i, true);
@@ -368,7 +375,7 @@ namespace OpenBve {
 				blockComboBoxIndexEvent = false;
 				return;
 			}
-			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				Key selectedKey = (Key)comboboxKeyboardKey.SelectedValue;
 				Interface.CurrentControls[i].Key = selectedKey;
@@ -378,7 +385,7 @@ namespace OpenBve {
 
 		// modifiers
 		private void checkboxKeyboardShift_CheckedChanged(object sender, EventArgs e) {
-			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				Interface.CurrentControls[i].Modifier = (checkboxKeyboardShift.Checked ? KeyboardModifier.Shift : KeyboardModifier.None) |
 					(checkboxKeyboardCtrl.Checked ? KeyboardModifier.Ctrl : KeyboardModifier.None) |
@@ -387,7 +394,7 @@ namespace OpenBve {
 			}
 		}
 		private void checkboxKeyboardCtrl_CheckedChanged(object sender, EventArgs e) {
-			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				Interface.CurrentControls[i].Modifier = (checkboxKeyboardShift.Checked ? KeyboardModifier.Shift : KeyboardModifier.None) |
 					(checkboxKeyboardCtrl.Checked ? KeyboardModifier.Ctrl : KeyboardModifier.None) |
@@ -396,7 +403,7 @@ namespace OpenBve {
 			}
 		}
 		private void checkboxKeyboardAlt_CheckedChanged(object sender, EventArgs e) {
-			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				Interface.CurrentControls[i].Modifier = (checkboxKeyboardShift.Checked ? KeyboardModifier.Shift : KeyboardModifier.None) |
 					(checkboxKeyboardCtrl.Checked ? KeyboardModifier.Ctrl : KeyboardModifier.None) |
@@ -413,7 +420,7 @@ namespace OpenBve {
 
 		// joystick
 		private void radiobuttonJoystick_CheckedChanged(object sender, EventArgs e) {
-			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				Interface.CurrentControls[i].Method = ControlMethod.Joystick;
 				UpdateControlListElement(listviewControls.Items[i], i, true);
@@ -433,7 +440,7 @@ namespace OpenBve {
 
 		// details
 		private void UpdateJoystickDetails() {
-			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int j = listviewControls.SelectedIndices[0];
 				labelJoystickAssignmentValue.Text = GetControlDetails(j);
 
@@ -528,7 +535,7 @@ namespace OpenBve {
 
 			}
 			bool FullAxis = false;
-			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int j = listviewControls.SelectedIndices[0];
 				if (Interface.CurrentControls[j].InheritedType == Translations.CommandType.AnalogFull) {
 					FullAxis = true;
@@ -579,13 +586,13 @@ namespace OpenBve {
 		// attached joysticks
 		private void pictureboxJoysticks_Paint(object sender, PaintEventArgs e)
 		{
-			this.DoubleBuffered = true;
+			DoubleBuffered = true;
 			int device = -1;
 			JoystickComponent component = JoystickComponent.Invalid;
 			int element = -1;
 			int direction = -1;
 			Translations.CommandType type = Translations.CommandType.Digital;
-			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
+			if (Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int j = listviewControls.SelectedIndices[0];
 				if (Interface.CurrentControls[j].Method == ControlMethod.Joystick && Program.Joysticks.AttachedJoysticks.ContainsKey(Interface.CurrentControls[j].Device)) {
 					device = Program.Joysticks.AttachedJoysticks[Interface.CurrentControls[j].Device].Handle;
@@ -599,7 +606,7 @@ namespace OpenBve {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 			e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-			Font f = new Font(this.Font.Name, 0.875f * this.Font.Size);
+			Font f = new Font(Font.Name, 0.875f * Font.Size);
 			float x = 2.0f, y = 2.0f;
 			float threshold = (trackbarJoystickAxisThreshold.Value - (float)trackbarJoystickAxisThreshold.Minimum) / (trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
 			configureLinkLocations = new Vector2[Program.Joysticks.AttachedJoysticks.Count][];
@@ -617,7 +624,7 @@ namespace OpenBve {
 				{
 					image = GamepadImage;
 				}
-				else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("xinput", StringComparison.InvariantCultureIgnoreCase) != -1 && GamepadImage != null)
+				else if (Program.Joysticks.AttachedJoysticks[guid].Name.IndexOf("xinput", StringComparison.InvariantCultureIgnoreCase) != -1 && XboxImage != null)
 				{
 					image = XboxImage;
 				}
@@ -642,12 +649,12 @@ namespace OpenBve {
 				SizeF numberSize = e.Graphics.MeasureString(joystickNumber, f);
 				e.Graphics.DrawString(joystickNumber, f, Brushes.Black, x + w - 8.0f - 0.5f * numberSize.Width, y + 8.0f - 0.5f * numberSize.Height);
 				// joystick name
-				e.Graphics.DrawString(Program.Joysticks.AttachedJoysticks[guid].Name, this.Font, Brushes.Black, x + w + 8.0f, y);
+				e.Graphics.DrawString(Program.Joysticks.AttachedJoysticks[guid].Name, Font, Brushes.Black, x + w + 8.0f, y);
 				// Configure Link
 				if(Program.Joysticks.AttachedJoysticks[guid].ConfigurationLink != ConfigurationLink.None)
 				{
-					Font underlinedFont = new Font(this.Font, FontStyle.Underline);
-					SizeF joystickSize = e.Graphics.MeasureString(Program.Joysticks.AttachedJoysticks[guid].Name, this.Font);
+					Font underlinedFont = new Font(Font, FontStyle.Underline);
+					SizeF joystickSize = e.Graphics.MeasureString(Program.Joysticks.AttachedJoysticks[guid].Name, Font);
 					SizeF configureSize = e.Graphics.MeasureString("Configure", underlinedFont);
 					e.Graphics.DrawString("Configure", underlinedFont, Brushes.Blue, x + w + 8.0f + joystickSize.Width - configureSize.Width, y + numberSize.Height);
 					configureLinkLocations[i] = new[] {new Vector2(x + w + 8.0f + joystickSize.Width - configureSize.Width, y + numberSize.Height), new Vector2(x + w + 8.0f + joystickSize.Width + configureSize.Width, y + numberSize.Height + configureSize.Height)};
@@ -657,11 +664,8 @@ namespace OpenBve {
 				{
 					//HACK: Control configuration doesn't work in-form on SDL2
 					string error = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"errors","controls_ingame"});
-					if (OpenTK.Configuration.RunningOnSdl2)
-					{
-						error = error.Replace("[platform]", "SDL2");
-					}
-					e.Graphics.DrawString(error, this.Font, Brushes.Black, x + w + 8.0f, y + 30.0f);
+					error = error.Replace("[platform]", "SDL2");
+					e.Graphics.DrawString(error, Font, Brushes.Black, x + w + 8.0f, y + 30.0f);
 					return;
 				}
 				float m;
@@ -669,142 +673,149 @@ namespace OpenBve {
 					m = x;
 					Pen p = new Pen(Color.DarkGoldenrod, 2.0f);
 					Pen ps = new Pen(Color.Firebrick, 2.0f);
-					{ // first row
-						float u = x + w + 8.0f;
-						float v = y + 24.0f;
-						float g = h - 24.0f;
-						{ // hats
-							int n = Program.Joysticks.AttachedJoysticks[guid].HatCount();
-							for (int j = 0; j < n; j++) {
-								if (device == i & component == JoystickComponent.Hat & element == j) {
-									e.Graphics.DrawEllipse(ps, u, v, g, g);
-								} else {
-									e.Graphics.DrawEllipse(p, u, v, g, g);
-								}
-								string t = "H" + (j + 1).ToString(Culture);
-								SizeF s = e.Graphics.MeasureString(t, f);
-								e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (g - s.Width), v + 0.5f * (g - s.Height));
-								JoystickHatState aa = Program.Joysticks.AttachedJoysticks[guid].GetHat(j);
-								HatPosition a = aa.Position;
-								if (a != HatPosition.Centered)
-								{
-									double rx = 0.0;
-									double ry = 0.0;
-									switch (a)
-									{
-										case HatPosition.Up:
-											rx = 0.0;
-											ry = -1.0;
-											break;
-										case HatPosition.Down:
-											rx = 0.0;
-											ry = 1.0;
-											break;
-										case HatPosition.Left:
-											rx = -1.0;
-											ry = 0.0;
-											break;
-										case HatPosition.Right:
-											rx = 1.0;
-											ry = 0.0;
-											break;
-										case HatPosition.UpLeft:
-											rx = -1.0;
-											ry = -1.0;
-											break;
-										case HatPosition.UpRight:
-											rx = 1.0;
-											ry = -1.0;
-											break;
-										case HatPosition.DownLeft:
-											rx = -1.0;
-											ry = 1.0;
-											break;
-										case HatPosition.DownRight:
-											rx = 1.0;
-											ry = 1.0;
-											break;
-									}
-									
-									double rt = rx * rx + ry * ry;
-									rt = 1.0 / Math.Sqrt(rt);
-									rx *= rt; ry *= rt;
-									float dx = (float)(0.5 * rx * (g - 8.0));
-									float dy = (float)(0.5 * ry * (g - 8.0));
-									e.Graphics.FillEllipse(Brushes.White, u + 0.5f * g + dx - 4.0f, v + 0.5f * g + dy - 4.0f, 8.0f, 8.0f);
-									e.Graphics.DrawEllipse(new Pen(Color.Firebrick, 2.0f), u + 0.5f * g + dx - 4.0f, v + 0.5f * g + dy - 4.0f, 8.0f, 8.0f);
-								}
-								if (device == i & component == JoystickComponent.Hat & element == j) {
-									double rx = ((HatPosition)direction & HatPosition.Left) != 0 ? -1.0 : ((HatPosition)direction & HatPosition.Right) != 0 ? 1.0 : 0.0;
-									double ry = ((HatPosition)direction & HatPosition.Up) != 0 ? -1.0 : ((HatPosition)direction & HatPosition.Down) != 0 ? 1.0 : 0.0;
-									double rt = rx * rx + ry * ry;
-									rt = 1.0 / Math.Sqrt(rt);
-									rx *= rt; ry *= rt;
-									float dx = (float)(0.5 * rx * (g - 8.0));
-									float dy = (float)(0.5 * ry * (g - 8.0));
-									e.Graphics.FillEllipse(Brushes.Firebrick, u + 0.5f * g + dx - 2.0f, v + 0.5f * g + dy - 2.0f, 4.0f, 4.0f);
-								}
-								u += g + 8.0f;
-							}
+					// first row
+					float u = x + w + 8.0f;
+					float v = y + 24.0f;
+					float g = h - 24.0f;
+					// hats
+					for (int j = 0; j < Program.Joysticks.AttachedJoysticks[guid].HatCount(); j++)
+					{
+						if (device == i & component == JoystickComponent.Hat & element == j)
+						{
+							e.Graphics.DrawEllipse(ps, u, v, g, g);
 						}
-						if (u > m) m = u;
+						else
+						{
+							e.Graphics.DrawEllipse(p, u, v, g, g);
+						}
+						string t = "H" + (j + 1).ToString(Culture);
+						SizeF s = e.Graphics.MeasureString(t, f);
+						e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (g - s.Width), v + 0.5f * (g - s.Height));
+						JoystickHatState aa = Program.Joysticks.AttachedJoysticks[guid].GetHat(j);
+						if (aa.Position != HatPosition.Centered)
+						{
+							double rx = 0.0;
+							double ry = 0.0;
+							switch (aa.Position)
+							{
+								case HatPosition.Up:
+									rx = 0.0;
+									ry = -1.0;
+									break;
+								case HatPosition.Down:
+									rx = 0.0;
+									ry = 1.0;
+									break;
+								case HatPosition.Left:
+									rx = -1.0;
+									ry = 0.0;
+									break;
+								case HatPosition.Right:
+									rx = 1.0;
+									ry = 0.0;
+									break;
+								case HatPosition.UpLeft:
+									rx = -1.0;
+									ry = -1.0;
+									break;
+								case HatPosition.UpRight:
+									rx = 1.0;
+									ry = -1.0;
+									break;
+								case HatPosition.DownLeft:
+									rx = -1.0;
+									ry = 1.0;
+									break;
+								case HatPosition.DownRight:
+									rx = 1.0;
+									ry = 1.0;
+									break;
+							}
+
+							double rt = rx * rx + ry * ry;
+							rt = 1.0 / Math.Sqrt(rt);
+							rx *= rt; ry *= rt;
+							float dx = (float)(0.5 * rx * (g - 8.0));
+							float dy = (float)(0.5 * ry * (g - 8.0));
+							e.Graphics.FillEllipse(Brushes.White, u + 0.5f * g + dx - 4.0f, v + 0.5f * g + dy - 4.0f, 8.0f, 8.0f);
+							e.Graphics.DrawEllipse(new Pen(Color.Firebrick, 2.0f), u + 0.5f * g + dx - 4.0f, v + 0.5f * g + dy - 4.0f, 8.0f, 8.0f);
+						}
+						if (device == i & component == JoystickComponent.Hat & element == j)
+						{
+							double rx = ((HatPosition)direction & HatPosition.Left) != 0 ? -1.0 : ((HatPosition)direction & HatPosition.Right) != 0 ? 1.0 : 0.0;
+							double ry = ((HatPosition)direction & HatPosition.Up) != 0 ? -1.0 : ((HatPosition)direction & HatPosition.Down) != 0 ? 1.0 : 0.0;
+							double rt = rx * rx + ry * ry;
+							rt = 1.0 / Math.Sqrt(rt);
+							rx *= rt; ry *= rt;
+							float dx = (float)(0.5 * rx * (g - 8.0));
+							float dy = (float)(0.5 * ry * (g - 8.0));
+							e.Graphics.FillEllipse(Brushes.Firebrick, u + 0.5f * g + dx - 2.0f, v + 0.5f * g + dy - 2.0f, 4.0f, 4.0f);
+						}
+						u += g + 8.0f;
 					}
-					
-					{ // second row
-						float u = x;
-						float v = y + h + 8.0f;
-						{ // axes
-							int n = Program.Joysticks.AttachedJoysticks[guid].AxisCount();
-							float g = pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
-							for (int j = 0; j < n; j++) {
-								float r = (float)Program.Joysticks.AttachedJoysticks[guid].GetAxis(j);
-								float r0 = r < 0.0f ? r : 0.0f;
-								float r1 = r > 0.0f ? r : 0.0f;
-								e.Graphics.FillRectangle((float)Math.Abs((double)r) < threshold ? Brushes.RosyBrown : Brushes.Firebrick, u, v + 0.5f * g - 0.5f * r1 * g, 16.0f, 0.5f * g * (r1 - r0));
-								if (device == i & component == JoystickComponent.Axis & element == j) {
-									if (direction == -1 & type != Translations.CommandType.AnalogFull) {
-										e.Graphics.DrawRectangle(p, u, v, 16.0f, g);
-										e.Graphics.DrawRectangle(ps, u, v + 0.5f * g, 16.0f, 0.5f * g);
-									} else if (direction == 1 & type != Translations.CommandType.AnalogFull) {
-										e.Graphics.DrawRectangle(p, u, v, 16.0f, g);
-										e.Graphics.DrawRectangle(ps, u, v, 16.0f, 0.5f * g);
-									} else {
-										e.Graphics.DrawRectangle(ps, u, v, 16.0f, g);
-									}
-								} else {
-									e.Graphics.DrawRectangle(p, u, v, 16.0f, g);
-								}
-								e.Graphics.DrawLine(p, u, v + (0.5f - 0.5f * threshold) * g, u + 16.0f, v + (0.5f - 0.5f * threshold) * g);
-								e.Graphics.DrawLine(p, u, v + (0.5f + 0.5f * threshold) * g, u + 16.0f, v + (0.5f + 0.5f * threshold) * g);
-								string t = "A" + (j + 1).ToString(Culture);
-								SizeF s = e.Graphics.MeasureString(t, f);
-								e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (16.0f - s.Width), v + g - s.Height - 2.0f);
-								u += 24.0f;
+					if (u > m) m = u;
+
+					// second row
+					u = x;
+					v = y + h + 8.0f;
+					// axes
+					g = pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
+					for (int j = 0; j < Program.Joysticks.AttachedJoysticks[guid].AxisCount(); j++)
+					{
+						float r = (float)Program.Joysticks.AttachedJoysticks[guid].GetAxis(j);
+						float r0 = r < 0.0f ? r : 0.0f;
+						float r1 = r > 0.0f ? r : 0.0f;
+						e.Graphics.FillRectangle((float)Math.Abs((double)r) < threshold ? Brushes.RosyBrown : Brushes.Firebrick, u, v + 0.5f * g - 0.5f * r1 * g, 16.0f, 0.5f * g * (r1 - r0));
+						if (device == i & component == JoystickComponent.Axis & element == j)
+						{
+							if (direction == -1 & type != Translations.CommandType.AnalogFull)
+							{
+								e.Graphics.DrawRectangle(p, u, v, 16.0f, g);
+								e.Graphics.DrawRectangle(ps, u, v + 0.5f * g, 16.0f, 0.5f * g);
+							}
+							else if (direction == 1 & type != Translations.CommandType.AnalogFull)
+							{
+								e.Graphics.DrawRectangle(p, u, v, 16.0f, g);
+								e.Graphics.DrawRectangle(ps, u, v, 16.0f, 0.5f * g);
+							}
+							else
+							{
+								e.Graphics.DrawRectangle(ps, u, v, 16.0f, g);
 							}
 						}
-						
-						{ // buttons
-							int n = Program.Joysticks.AttachedJoysticks[guid].ButtonCount();
-							float g = 0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
-							for (int j = 0; j < n; j++) {
-								bool q = Program.Joysticks.AttachedJoysticks[guid].GetButton(j) != 0;
-								float dv = (j & 1) * (g + 8.0f);
-								if (q) e.Graphics.FillRectangle(Brushes.Firebrick, u, v + dv, g, g);
-								if (device == i & component == JoystickComponent.Button & element == j) {
-									e.Graphics.DrawRectangle(ps, u, v + dv, g, g);
-								} else {
-									e.Graphics.DrawRectangle(p, u, v + dv, g, g);
-								}
-								string t = "B" + (j + 1).ToString(Culture);
-								SizeF s = e.Graphics.MeasureString(t, f);
-								e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (g - s.Width), v + dv + 0.5f * (g - s.Height));
-								if ((j & 1) != 0 | j == n - 1) u += g + 8.0f;
-							}
+						else
+						{
+							e.Graphics.DrawRectangle(p, u, v, 16.0f, g);
 						}
-						 
-						if (u > m) m = u;
+						e.Graphics.DrawLine(p, u, v + (0.5f - 0.5f * threshold) * g, u + 16.0f, v + (0.5f - 0.5f * threshold) * g);
+						e.Graphics.DrawLine(p, u, v + (0.5f + 0.5f * threshold) * g, u + 16.0f, v + (0.5f + 0.5f * threshold) * g);
+						string t = "A" + (j + 1).ToString(Culture);
+						SizeF s = e.Graphics.MeasureString(t, f);
+						e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (16.0f - s.Width), v + g - s.Height - 2.0f);
+						u += 24.0f;
 					}
-					 
+
+					// buttons
+					g = 0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
+					for (int j = 0; j < Program.Joysticks.AttachedJoysticks[guid].ButtonCount(); j++)
+					{
+						bool q = Program.Joysticks.AttachedJoysticks[guid].GetButton(j) != 0;
+						float dv = (j & 1) * (g + 8.0f);
+						if (q) e.Graphics.FillRectangle(Brushes.Firebrick, u, v + dv, g, g);
+						if (device == i & component == JoystickComponent.Button & element == j)
+						{
+							e.Graphics.DrawRectangle(ps, u, v + dv, g, g);
+						}
+						else
+						{
+							e.Graphics.DrawRectangle(p, u, v + dv, g, g);
+						}
+						string t = "B" + (j + 1).ToString(Culture);
+						SizeF s = e.Graphics.MeasureString(t, f);
+						e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (g - s.Width), v + dv + 0.5f * (g - s.Height));
+						if ((j & 1) != 0 | j == Program.Joysticks.AttachedJoysticks[guid].ButtonCount() - 1) u += g + 8.0f;
+					}
+					if (u > m) m = u;
 				} else {
 					m = x + w + 64.0f;
 				}

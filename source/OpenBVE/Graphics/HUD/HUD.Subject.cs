@@ -29,9 +29,6 @@
 		DistNextStation2,
 		FPS,
 		AI,
-		
-		Messages,
-		
-
+		Messages
 	}
 }

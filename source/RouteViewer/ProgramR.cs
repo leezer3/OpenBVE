@@ -441,6 +441,12 @@ namespace RouteViewer
 					{
 						return;
 					}
+
+					if (JumpToPositionEnabled)
+					{
+						JumpToPositionEnabled = false;
+						JumpToPositionValue = string.Empty;
+					}
 					byte[] textureBytes = {};
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
@@ -505,6 +511,12 @@ namespace RouteViewer
 					if (CurrentlyLoading)
 					{
 						break;
+					}
+
+					if (JumpToPositionEnabled)
+					{
+						JumpToPositionEnabled = false;
+						JumpToPositionValue = string.Empty;
 					}
 
 					string previousRoute = CurrentRouteFile;

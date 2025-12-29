@@ -181,7 +181,10 @@ namespace OpenBve.Graphics
 				Program.CurrentRoute.CurrentFog = Program.CurrentRoute.PreviousFog;
 			}
 
-			DefaultShader.Activate();
+			if (AvailableNewRenderer)
+			{
+				DefaultShader.Activate();
+			}
 
 			// render background
 			GL.Disable(EnableCap.DepthTest);
@@ -284,8 +287,6 @@ namespace OpenBve.Graphics
 							UnsetAlphaFunc();
 							additive = true;
 						}
-
-						face.Draw();
 					}
 					else
 					{
@@ -294,8 +295,8 @@ namespace OpenBve.Graphics
 							SetAlphaFunc();
 							additive = false;
 						}
-						face.Draw();
 					}
+					face.Draw();
 				}
 			}
 
@@ -324,7 +325,7 @@ namespace OpenBve.Graphics
 				{
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars[i].ParticleSources?.Count; j++)
 					{
-						TrainManager.PlayerTrain.Cars[i].ParticleSources[j]?.Update(TimeElapsed);
+						TrainManager.PlayerTrain.Cars[i].ParticleSources[j]?.Update(CurrentInterface == InterfaceType.Normal ? TimeElapsed : 0);
 					}
 				}
 			}
@@ -444,8 +445,6 @@ namespace OpenBve.Graphics
 								UnsetAlphaFunc();
 								additive = true;
 							}
-
-							face.Draw();
 						}
 						else
 						{
@@ -454,9 +453,8 @@ namespace OpenBve.Graphics
 								SetAlphaFunc();
 								additive = false;
 							}
-
-							face.Draw();
 						}
+						face.Draw();
 					}
 				}
 
@@ -496,6 +494,10 @@ namespace OpenBve.Graphics
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			GL.Disable(EnableCap.DepthTest);
 			overlays.Render(RealTimeElapsed);
+			if (CurrentInterface == InterfaceType.Menu || CurrentInterface == InterfaceType.GLMainMenu)
+			{
+				Game.Menu.Draw(TimeElapsed);
+			}
 			OptionLighting = true;
 		}
 

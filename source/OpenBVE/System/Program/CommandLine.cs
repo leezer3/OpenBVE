@@ -4,7 +4,7 @@ using OpenBveApi.Math;
 namespace OpenBve
 {
 	/// <summary>Contains methods used to parse command-line arguments</summary>
-	class CommandLine
+	internal class CommandLine
 	{
 		/// <summary>Parses any command-line arguments passed to the main program</summary>
 		/// <param name="Arguments">A string array of arguments</param>

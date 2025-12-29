@@ -15,7 +15,6 @@ using OpenBveApi.Runtime;
 using RouteManager2.MessageManager;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
-using System;
 using System.Linq;
 using TrainManager;
 using TrainManager.Car;
@@ -48,6 +47,7 @@ namespace OpenBve
 					TrainManager.PlayerTrain.Plugin?.KeyDown(key);
 				}
 
+				// ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault : Axis based controls not handled in this method
 				switch (Control.Command)
 				{
 					case Translations.Command.MiscQuit:
@@ -56,7 +56,7 @@ namespace OpenBve
 						break;
 					case Translations.Command.CameraInterior:
 						// camera: interior
-						MainLoop.SaveCameraSettings();
+						SaveCameraSettings();
 						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 						{
 							MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","interior_lookahead"}),
@@ -72,7 +72,7 @@ namespace OpenBve
 						}
 
 						Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
-						MainLoop.RestoreCameraSettings();
+						RestoreCameraSettings();
 						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 						{
 							if (j == TrainManager.PlayerTrain.CameraCar)
@@ -80,7 +80,6 @@ namespace OpenBve
 								if (TrainManager.PlayerTrain.Cars[j].CarSections.ContainsKey(CarSectionType.Interior))
 								{
 									TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Interior);
-									Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
 								}
 								else
 								{
@@ -99,17 +98,8 @@ namespace OpenBve
 							//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
 							TrainManager.PlayerTrain.CameraCar = TrainManager.PlayerTrain.DriverCar;
 							TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(CarSectionType.Interior);
-							Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 						}
-
-						//Hide bogies
-						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
-						{
-							TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(-1);
-							TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
-							TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(-1);
-						}
-
+						
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 						Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
@@ -130,9 +120,10 @@ namespace OpenBve
 						break;
 					case Translations.Command.CameraHeadOutLeft:
 					case Translations.Command.CameraHeadOutRight:
-						MainLoop.SaveCameraSettings();
+						SaveCameraSettings();
 						Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
-						MainLoop.RestoreCameraSettings();
+						RestoreCameraSettings();
+						// Change to appropriate CarSection
 						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 						{
 							if (j == TrainManager.PlayerTrain.CameraCar)
@@ -167,17 +158,8 @@ namespace OpenBve
 							//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
 							TrainManager.PlayerTrain.CameraCar = TrainManager.PlayerTrain.DriverCar;
 							TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(CarSectionType.Interior);
-							Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 						}
-
-						//Hide bogies
-						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
-						{
-							TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(-1);
-							TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
-							TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(-1);
-						}
-
+						
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 						Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
@@ -198,7 +180,7 @@ namespace OpenBve
 						break;
 					case Translations.Command.CameraInteriorNoPanel:
 						// camera: interior
-						MainLoop.SaveCameraSettings();
+						SaveCameraSettings();
 						if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 						{
 							MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","interior_lookahead"}),
@@ -214,7 +196,7 @@ namespace OpenBve
 						}
 
 						Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
-						MainLoop.RestoreCameraSettings();
+						RestoreCameraSettings();
 						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 						{
 							if (j == TrainManager.PlayerTrain.CameraCar)
@@ -241,16 +223,12 @@ namespace OpenBve
 							//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
 							TrainManager.PlayerTrain.CameraCar = TrainManager.PlayerTrain.DriverCar;
 							TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(CarSectionType.Interior);
-							Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 						}
 
 						//Hide interior and bogies
 						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 						{
 							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible, true);
-							TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(-1);
-							TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
-							TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(-1);
 						}
 
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
@@ -291,9 +269,6 @@ namespace OpenBve
 						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 						{
 							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-							TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-							TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
-							TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 						}
 
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
@@ -338,9 +313,6 @@ namespace OpenBve
 						for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 						{
 							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-							TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-							TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
-							TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 						}
 
 						Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
@@ -381,9 +353,7 @@ namespace OpenBve
 							for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 							{
 								TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-								TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-								TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
-								TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
+								
 							}
 
 							Program.Renderer.CameraTrackFollower.UpdateRelative(z, true, false);
@@ -835,7 +805,7 @@ namespace OpenBve
 							if (TrainManager.PlayerTrain.AI == null)
 							{
 								TrainManager.PlayerTrain.AI =
-									new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
+									new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, double.PositiveInfinity);
 								if (TrainManager.PlayerTrain.Plugin != null && TrainManager.PlayerTrain.Plugin.SupportsAI == AISupport.None)
 								{
 									MessageManager.AddMessage(
@@ -890,15 +860,6 @@ namespace OpenBve
 							Translations.GetInterfaceString(HostApplication.OpenBve, Program.Renderer.OptionBackFaceCulling
 								? new[] {"notification","backfaceculling_on"}
 								: new[] {"notification","backfaceculling_off"}), MessageDependency.None,
-							GameMode.Expert, MessageColor.White, 2, null);
-						break;
-					case Translations.Command.MiscCPUMode:
-						// option: limit frame rate
-						LimitFramerate = !LimitFramerate;
-						MessageManager.AddMessage(
-							Translations.GetInterfaceString(HostApplication.OpenBve, LimitFramerate
-								? new[] {"notification","cpu_low"}
-								: new[] {"notification","cpu_normal"}), MessageDependency.None,
 							GameMode.Expert, MessageColor.White, 2, null);
 						break;
 					case Translations.Command.DebugBrakeSystems:

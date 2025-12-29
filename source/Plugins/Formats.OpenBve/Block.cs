@@ -22,23 +22,67 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Formats.OpenBve
 {
 	public abstract class Block <T1, T2> where T1 : struct, Enum where T2 : struct, Enum
 	{
-		public abstract Block<T1, T2> ReadNextBlock();
+		internal readonly List<Block<T1, T2>> subBlocks;
 
-		public abstract bool ReadBlock(T1 blockToRead, out Block<T1, T2> block);
+		internal readonly ConcurrentDictionary<T2, KeyValuePair<int, string>> keyValuePairs;
 
-	    public virtual int RemainingSubBlocks => 0;
+		public virtual Block<T1, T2> ReadNextBlock()
+		{
+			Block<T1, T2> b = subBlocks.First();
+			subBlocks.RemoveAt(0);
+			return b;
+		}
+
+		public virtual bool ReadBlock(T1 blockToRead, out Block<T1, T2> block)
+		{
+			for (int i = 0; i < subBlocks.Count; i++)
+			{
+				if (EqualityComparer<T1>.Default.Equals(subBlocks[i].Key, blockToRead))
+				{
+					block = subBlocks[i];
+					subBlocks.RemoveAt(i);
+					return true;
+				}
+			}
+
+			block = null;
+			return false;
+		}
+
+		public virtual List<Block<T1, T2>> ReadBlocks(T1[] blocks)
+		{
+			List<Block<T1, T2>> returnedBlocks = new List<Block<T1, T2>>();
+			for (int i = 0; i < subBlocks.Count; i++)
+			{
+				for (int j = 0; j < blocks.Length; j++)
+				{
+					if (EqualityComparer<T1>.Default.Equals(subBlocks[i].Key, blocks[j]))
+					{
+						returnedBlocks.Add(subBlocks[i]);
+						subBlocks.RemoveAt(i);
+					}
+				}
+			}
+
+			return returnedBlocks;
+		}
+
+		public virtual int RemainingSubBlocks => subBlocks.Count;
 
 	    public virtual int RemainingDataValues => 0;
 
@@ -63,27 +107,27 @@ namespace Formats.OpenBve
 	    }
 
         /// <summary>Unconditionally reads the specified double from the block</summary>
-	    public virtual bool GetValue(T2 key, out double value)
+	    public bool GetValue(T2 key, out double value, NumberRange range = NumberRange.Any)
 	    {
-		    value = 0;
-		    return false;
+			value = 0;
+			return TryGetValue(key, ref value, range);
 	    }
 
         /// <summary>Reads the specified double from the block if it exists, preserving the prior value if not present</summary>
-	    public virtual bool TryGetValue(T2 key, ref double value)
+	    public virtual bool TryGetValue(T2 key, ref double value, NumberRange range = NumberRange.Any)
 	    {
 		    return false;
 	    }
 
-        /// <summary>Unconditionally reads the specified integer from the block</summary>
-		public virtual bool GetValue(T2 key, out int value)
+	    /// <summary>Unconditionally reads the specified integer from the block</summary>
+		public bool GetValue(T2 key, out int value, NumberRange range = NumberRange.Any)
 	    {
 		    value = 0;
-		    return false;
+		    return TryGetValue(key, ref value, range);
 	    }
 
 	    /// <summary>Reads the specified integer from the block if it exists, preserving the prior value if not present</summary>
-	    public virtual bool TryGetValue(T2 key, ref int value)
+	    public virtual bool TryGetValue(T2 key, ref int value, NumberRange range = NumberRange.Any)
 	    {
 		    return false;
 	    }
@@ -257,7 +301,9 @@ namespace Formats.OpenBve
 			Index = myIndex;
 		    Key = myKey;
 		    this.currentHost = currentHost;
-	    }
+		    subBlocks = new List<Block<T1, T2>>();
+		    keyValuePairs = new ConcurrentDictionary<T2, KeyValuePair<int, string>>();
+		}
 
 		public virtual void ReportErrors()
 		{

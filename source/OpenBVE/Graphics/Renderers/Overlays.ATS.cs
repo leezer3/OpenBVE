@@ -9,7 +9,7 @@ namespace OpenBve.Graphics.Renderers
 	internal partial class Overlays
 	{
 		/// <summary>Renders the ATS lamp overlay</summary>
-		/// <param name="Element">The HUD element these are to be rendererd onto</param>
+		/// <param name="Element">The HUD element these are to be rendered onto</param>
 		private void RenderATSLamps(HUD.Element Element)
 		{
 			if (TrainManager.PlayerTrain == null)

@@ -319,7 +319,7 @@ namespace OpenBve {
 								switch (ex.Message)
 								{
 									case "libopenal.so.1":
-										Program.ShowMessageBox(@"openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));
+										Program.ShowMessageBox(@"openAL was not found on this system. \n Please install libopenal1 via your distribution's package management system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));
 										break;
 									default:
 										Program.ShowMessageBox(@"The required system library " + ex.Message + @" was not found on this system.", Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "program", "title" }));

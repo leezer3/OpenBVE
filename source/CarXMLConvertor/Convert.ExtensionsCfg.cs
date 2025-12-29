@@ -107,7 +107,7 @@ namespace CarXmlConvertor
 							CarInfos[block.Index].Object = carObject;
 						}
 
-						if (block.GetValue(ExtensionCfgKey.Length, out double carLength) && carLength > 0)
+						if (block.GetValue(ExtensionCfgKey.Length, out double carLength, NumberRange.Positive))
 						{
 							CarInfos[block.Index].Length = carLength;
 						}

@@ -4,7 +4,7 @@ using PIEHid64Net;
 
 namespace OpenBve.Input
 {
-	class JoystickManager64 : JoystickManager
+	internal class JoystickManager64 : JoystickManager
 	{
 		private readonly PIEDevice[] devices;
 

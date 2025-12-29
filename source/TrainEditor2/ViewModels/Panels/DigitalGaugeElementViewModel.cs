@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Reactive.Linq;
+using Formats.OpenBve;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using Reactive.Bindings;

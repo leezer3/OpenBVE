@@ -20,9 +20,9 @@ namespace OpenBve
 			{
 				case ControlMethod.Keyboard:
 					string keyName = loadedControl.Key.ToString();
-					if (Translations.TranslatedKeys.ContainsKey(loadedControl.Key))
+					if (Translations.TranslatedKeys.TryGetValue(loadedControl.Key, out Translations.KeyInfo key))
 					{
-						keyName = Translations.TranslatedKeys[loadedControl.Key].Description;
+						keyName = key.Description;
 					}
 
 					if (loadedControl.Modifier != KeyboardModifier.None)

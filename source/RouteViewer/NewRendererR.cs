@@ -658,17 +658,19 @@ namespace RouteViewer
 
 					if (Program.JumpToPositionEnabled)
 					{
-						OpenGlString.Draw(Fonts.SmallFont, "Jump to track position:", new Vector2(4, 80), TextAlignment.TopLeft, Color128.White, true);
+						Vector2 jumpToPositionPos = new Vector2(4, Interface.LogMessages.Count == 0 ? 80 : 100);
+						OpenGlString.Draw(Fonts.SmallFont, "Jump to track position:", jumpToPositionPos, TextAlignment.TopLeft, Color128.White, true);
+						jumpToPositionPos.Y += 20;
 
 						if (double.TryParse(Program.JumpToPositionValue, out double distance))
 						{
 							if (distance < Program.MinimumJumpToPositionValue - 100)
 							{
-								OpenGlString.Draw(Fonts.SmallFont, (Environment.TickCount % 1000 <= 500 ? $"{Program.JumpToPositionValue}_" : Program.JumpToPositionValue), new Vector2(4, 100), TextAlignment.TopLeft, Color128.Red, true);
+								OpenGlString.Draw(Fonts.SmallFont, (Environment.TickCount % 1000 <= 500 ? $"{Program.JumpToPositionValue}_" : Program.JumpToPositionValue), jumpToPositionPos, TextAlignment.TopLeft, Color128.Red, true);
 							}
 							else
 							{
-								OpenGlString.Draw(Fonts.SmallFont, (Environment.TickCount % 1000 <= 500 ? $"{Program.JumpToPositionValue}_" : Program.JumpToPositionValue), new Vector2(4, 100), TextAlignment.TopLeft, distance > Program.CurrentRoute.Tracks[0].Elements[Program.CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition + 100 ? Color128.Red : Color128.Yellow, true);
+								OpenGlString.Draw(Fonts.SmallFont, (Environment.TickCount % 1000 <= 500 ? $"{Program.JumpToPositionValue}_" : Program.JumpToPositionValue), jumpToPositionPos, TextAlignment.TopLeft, distance > Program.CurrentRoute.Tracks[0].Elements[Program.CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition + 100 ? Color128.Red : Color128.Yellow, true);
 							}
 
 						}

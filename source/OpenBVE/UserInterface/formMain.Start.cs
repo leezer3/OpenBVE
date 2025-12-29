@@ -610,7 +610,7 @@ namespace OpenBve
 			currentTrainFolder = Folder;
 			try
 			{
-				if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && !String.IsNullOrEmpty(Folder) && Folder.Length > 2)
+				if (Program.CurrentHost.Platform != HostPlatform.AppleOSX && !string.IsNullOrEmpty(Folder) && Folder.Length > 2)
 				{
 					trainWatcher = new FileSystemWatcher
 					{
@@ -1013,7 +1013,7 @@ namespace OpenBve
 		}
 
 		// train default
-		void CheckboxTrainDefaultCheckedChanged(object sender, EventArgs e) {
+		private void CheckboxTrainDefaultCheckedChanged(object sender, EventArgs e) {
 			if (checkboxTrainDefault.Checked) {
 				if (listviewTrainFolders.SelectedItems.Count == 1) {
 					listviewTrainFolders.SelectedItems[0].Selected = false;
@@ -1103,7 +1103,7 @@ namespace OpenBve
 		// =====
 
 		// start
-		private readonly object StartGame = new Object();
+		private readonly object StartGame = new object();
 
 		private void buttonStart_Click(object sender, EventArgs e) {
 			if (Result.RouteFile != null & Result.TrainFolder != null) {
@@ -1362,7 +1362,7 @@ namespace OpenBve
 		// show route
 		private void ShowRoute(bool UserSelectedEncoding)
 		{
-			this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+			Cursor = System.Windows.Forms.Cursors.WaitCursor;
 			TryLoadImage(pictureboxRouteImage, "loading.png");
 			groupboxRouteDetails.Visible = true;
 			textboxRouteDescription.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"start","route_processing"});

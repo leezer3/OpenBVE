@@ -58,7 +58,6 @@ namespace OpenBve
 			}
 
 			// compute final angles and positions
-			//for (int i = 0; i < Trains.Length; i++) {
 			System.Threading.Tasks.Parallel.For(0, Trains.Count, i =>
 			{
 				if (Trains[i].State < TrainState.DisposePending) 

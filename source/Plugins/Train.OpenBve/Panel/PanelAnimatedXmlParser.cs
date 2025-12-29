@@ -396,29 +396,25 @@ namespace Train.OpenBve
 				Group.TouchElements = new TouchElement[0];
 			}
 			int n = Group.TouchElements.Length;
-			Array.Resize(ref Group.TouchElements, n + 1);
-			Group.TouchElements[n] = new TouchElement
+			int m = Plugin.CurrentControls.Length;
+			Array.Resize(ref Plugin.CurrentControls, m + CommandEntries.Length);
+			int[] controlIndicies = new int[CommandEntries.Length];
+			for (int i = 0; i < CommandEntries.Length; i++)
 			{
-				Element = new AnimatedObject(Plugin.CurrentHost),
-				JumpScreenIndex = ScreenIndex,
-				SoundIndices = SoundIndices,
-				ControlIndices = new int[CommandEntries.Length]
-			};
+				Plugin.CurrentControls[m + i].Command = CommandEntries[i].Command;
+				Plugin.CurrentControls[m + i].Method = ControlMethod.Touch;
+				Plugin.CurrentControls[m + i].Option = CommandEntries[i].Option;
+				controlIndicies[i] = m + i;
+			}
+			Array.Resize(ref Group.TouchElements, n + 1);
+			Group.TouchElements[n] = new TouchElement(new AnimatedObject(Plugin.CurrentHost), ScreenIndex, SoundIndices, controlIndicies);
 			Group.TouchElements[n].Element.States = new [] { new ObjectState() };
 			Group.TouchElements[n].Element.States[0].Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			Group.TouchElements[n].Element.States[0].Prototype = Object;
 			Group.TouchElements[n].Element.CurrentState = 0;
 			Group.TouchElements[n].Element.internalObject = new ObjectState(Object);
 			Plugin.CurrentHost.CreateDynamicObject(ref Group.TouchElements[n].Element.internalObject);
-			int m = Plugin.CurrentControls.Length;
-			Array.Resize(ref Plugin.CurrentControls, m + CommandEntries.Length);
-			for (int i = 0; i < CommandEntries.Length; i++)
-			{
-				Plugin.CurrentControls[m + i].Command = CommandEntries[i].Command;
-				Plugin.CurrentControls[m + i].Method = ControlMethod.Touch;
-				Plugin.CurrentControls[m + i].Option = CommandEntries[i].Option;
-				Group.TouchElements[n].ControlIndices[i] = m + i;
-			}
+			
 		}
 	}
 }

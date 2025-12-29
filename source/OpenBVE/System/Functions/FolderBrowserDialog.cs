@@ -14,7 +14,7 @@ namespace OpenBve
 		private string _fileName = "";
 
 		/// <summary>
-		/// Gets or sets the initial directory for the folderbrowser dialog to show
+		/// Gets or sets the initial directory for the folder browser dialog to show
 		/// </summary>
 		public string InitialDirectory
 		{

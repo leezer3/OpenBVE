@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using OpenBve.Input;
+using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 
@@ -14,7 +15,7 @@ namespace OpenBve.UserInterface
 		public FormRaildriverCalibration()
 		{
 			InitializeComponent();
-			main = (Bitmap)ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\raildriver.png"));
+			main = (Bitmap)ImageExtensions.FromFile(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\raildriver.png"));
 			pictureBox1.Image = main;
 			buttonCalibrationPrevious.Enabled = false;
 			labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_start"});
@@ -30,40 +31,41 @@ namespace OpenBve.UserInterface
 
 		private void formRaildriverCalibration_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
+			if (!Program.Joysticks.AttachedJoysticks.TryGetValue(AbstractRailDriver.Guid, out AbstractJoystick joystick))
 			{
-				if (!(Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] is AbstractRailDriver j))
+				return;
+			}
+			if (!(joystick is AbstractRailDriver j))
+			{
+				return;
+			}
+			for (int i = 0; i < j.Calibration.Length; i++)
+			{
+				if (j.Calibration[i].Maximum < j.Calibration[i].Minimum)
 				{
-					return;
+					//If calibration min and max are reversed flip them
+					(j.Calibration[i].Maximum, j.Calibration[i].Minimum) = (j.Calibration[i].Minimum, j.Calibration[i].Maximum);
 				}
-				for (int i = 0; i < j.Calibration.Length; i++)
+				if (j.Calibration[i].Maximum == j.Calibration[i].Minimum)
 				{
-					if (j.Calibration[i].Maximum < j.Calibration[i].Minimum)
-					{
-						//If calibration min and max are reversed flip them
-						(j.Calibration[i].Maximum, j.Calibration[i].Minimum) = (j.Calibration[i].Minimum, j.Calibration[i].Maximum);
-					}
-					if (j.Calibration[i].Maximum == j.Calibration[i].Minimum)
-					{
-						//If calibration values are identical, reset to defaults
-						j.Calibration[i].Minimum = 0;
-						j.Calibration[i].Maximum = 255;
-					}
-					//Bounds check values (This should never happen, but check anyways)
-					if (j.Calibration[i].Minimum < 0)
-					{
-						j.Calibration[i].Minimum = 0;
-					}
-					if (j.Calibration[i].Maximum > 255)
-					{
-						j.Calibration[i].Maximum = 255;
-					}
-					if (j.Calibration[i].Maximum - j.Calibration[i].Minimum < 10)
-					{
-						//If calibration values are within 10 of each other, something is not right....
-						j.Calibration[i].Minimum = 0;
-						j.Calibration[i].Maximum = 255;
-					}
+					//If calibration values are identical, reset to defaults
+					j.Calibration[i].Minimum = 0;
+					j.Calibration[i].Maximum = 255;
+				}
+				//Bounds check values (This should never happen, but check anyways)
+				if (j.Calibration[i].Minimum < 0)
+				{
+					j.Calibration[i].Minimum = 0;
+				}
+				if (j.Calibration[i].Maximum > 255)
+				{
+					j.Calibration[i].Maximum = 255;
+				}
+				if (j.Calibration[i].Maximum - j.Calibration[i].Minimum < 10)
+				{
+					//If calibration values are within 10 of each other, something is not right....
+					j.Calibration[i].Minimum = 0;
+					j.Calibration[i].Maximum = 255;
 				}
 			}
 		}
@@ -77,17 +79,14 @@ namespace OpenBve.UserInterface
 
 		private void buttonCalibrationNext_Click(object sender, EventArgs e)
 		{
-			if (!Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
+			if (!Program.Joysticks.AttachedJoysticks.TryGetTypedValue(AbstractRailDriver.Guid, out AbstractRailDriver j))
 			{
 				return;
 			}
-			if (!(Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] is AbstractRailDriver j))
-			{
-				return;
-			}
+			
 			if (calibrationStage > 14)
 			{
-				j.SaveCalibration(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "RailDriver.xml"));
+				j.SaveCalibration(Path.CombineFile(Program.FileSystem.SettingsFolder, "RailDriver.xml"));
 				Close();
 				return;
 			}
@@ -147,7 +146,7 @@ namespace OpenBve.UserInterface
 					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(210, 130, 80, 145));
-						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 234, 284);
+						graphics.DrawImage(ImageExtensions.FromFile(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 234, 284);
 					}
 					pictureBox1.Image = Modified;
 					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_a"});
@@ -157,7 +156,7 @@ namespace OpenBve.UserInterface
 					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(210, 130, 80, 145));
-						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 234, 84);
+						graphics.DrawImage(ImageExtensions.FromFile(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 234, 84);
 					}
 					pictureBox1.Image = Modified;
 					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_b"});
@@ -167,7 +166,7 @@ namespace OpenBve.UserInterface
 					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(290, 130, 90, 145));
-						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 314, 284);
+						graphics.DrawImage(ImageExtensions.FromFile(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 314, 284);
 					}
 					pictureBox1.Image = Modified;
 					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_c"});
@@ -177,7 +176,7 @@ namespace OpenBve.UserInterface
 					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(290, 130, 90, 145));
-						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 314, 84);
+						graphics.DrawImage(ImageExtensions.FromFile(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 314, 84);
 					}
 					pictureBox1.Image = Modified;
 					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_d"});
@@ -187,7 +186,7 @@ namespace OpenBve.UserInterface
 					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(450, 130, 80, 165));
-						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 470, 304);
+						graphics.DrawImage(ImageExtensions.FromFile(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 470, 304);
 					}
 					pictureBox1.Image = Modified;
 					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_e"});
@@ -197,7 +196,7 @@ namespace OpenBve.UserInterface
 					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(450, 130, 80, 165));
-						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 470, 79);
+						graphics.DrawImage(ImageExtensions.FromFile(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 470, 79);
 					}
 					pictureBox1.Image = Modified;
 					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_f"});
@@ -207,7 +206,7 @@ namespace OpenBve.UserInterface
 					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(610, 130, 75, 165));
-						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 630, 304);
+						graphics.DrawImage(ImageExtensions.FromFile(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 630, 304);
 					}
 					pictureBox1.Image = Modified;
 					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_g"});
@@ -217,7 +216,7 @@ namespace OpenBve.UserInterface
 					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(610, 130, 75, 165));
-						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 630, 79);
+						graphics.DrawImage(ImageExtensions.FromFile(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 630, 79);
 					}
 					pictureBox1.Image = Modified;
 					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_h"});
@@ -227,7 +226,7 @@ namespace OpenBve.UserInterface
 					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(610, 130, 75, 165));
-						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_left.png")), 560, 175);
+						graphics.DrawImage(ImageExtensions.FromFile(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_left.png")), 560, 175);
 					}
 					pictureBox1.Image = Modified;
 					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_i"});
@@ -237,7 +236,7 @@ namespace OpenBve.UserInterface
 					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(610, 130, 75, 165));
-						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_right.png")), 690, 175);
+						graphics.DrawImage(ImageExtensions.FromFile(Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_right.png")), 690, 175);
 					}
 					pictureBox1.Image = Modified;
 					labelCalibrationText.Text = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"raildriver","calibration_j"});

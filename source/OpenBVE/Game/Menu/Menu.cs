@@ -15,9 +15,11 @@ using OpenBve.Input;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Input;
+using OpenBveApi.Math;
 using OpenBveApi.Packages;
 using OpenBveApi.Textures;
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using TrainManager;
 using Path = OpenBveApi.Path;
 using Vector2 = OpenBveApi.Math.Vector2;
@@ -808,6 +810,10 @@ namespace OpenBve
 
 		public override void Draw(double RealTimeElapsed)
 		{
+			Renderer.PushMatrix(MatrixMode.Projection);
+			Matrix4D.CreateOrthographicOffCenter(0.0f, Renderer.Screen.Width, Renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out Renderer.CurrentProjectionMatrix);
+			Renderer.PushMatrix(MatrixMode.Modelview);
+			Renderer.CurrentViewMatrix = Matrix4D.Identity;
 			pluginKeepAliveTimer += RealTimeElapsed;
 			if (pluginKeepAliveTimer > 100000 && TrainManagerBase.PlayerTrain != null && TrainManagerBase.PlayerTrain.Plugin != null)
 			{
@@ -1092,7 +1098,8 @@ namespace OpenBve
 					switchMapPictureBox.Draw();
 					break;
 			}
-			
+			Renderer.PopMatrix(MatrixMode.Modelview);
+			Renderer.PopMatrix(MatrixMode.Projection);
 		}
 	}
 

@@ -58,7 +58,7 @@ namespace OpenBve {
 
 		// members
 		private LaunchParameters Result;
-		private int[] EncodingCodepages = new int[0];
+		private int[] EncodingCodepages;
 		private Image JoystickImage;
 		private Image RailDriverImage;
 		private Image GamepadImage;
@@ -1630,91 +1630,86 @@ namespace OpenBve {
 					Program.Joysticks.AttachedJoysticks[guid].Poll();
 					bool railDriver = Program.Joysticks.AttachedJoysticks[guid] is AbstractRailDriver;
 					int axes = Program.Joysticks.AttachedJoysticks[guid].AxisCount();
-						for (int i = 0; i < axes; i++)
+					for (int i = 0; i < axes; i++)
+					{
+						double a = Program.Joysticks.AttachedJoysticks[guid].GetAxis(i);
+						if (a < -0.75)
 						{
-							double a = Program.Joysticks.AttachedJoysticks[guid].GetAxis(i);
-							if (a < -0.75)
+							if (railDriver)
 							{
-								if (railDriver)
+								if (i == 4)
 								{
-									if (i == 4)
-									{
-										//Bail-off lever, starts at negative
-										continue;
-									}
+									//Bail-off lever, starts at negative
+									continue;
+								}
 								Interface.CurrentControls[j].Method = ControlMethod.RailDriver;
-								}
-								Interface.CurrentControls[j].Device = guid;
-								Interface.CurrentControls[j].Component = JoystickComponent.Axis;
-								Interface.CurrentControls[j].Element = i;
-								Interface.CurrentControls[j].Direction = -1;
-								radiobuttonJoystick.Focus();
-								UpdateJoystickDetails();
-								UpdateControlListElement(listviewControls.Items[j], j, true);
-								return;
 							}
-							if (a > 0.75)
-							{
-								if (railDriver)
-								{
-									Interface.CurrentControls[j].Method = ControlMethod.RailDriver;
-								}
-								Interface.CurrentControls[j].Device = guid;
-								Interface.CurrentControls[j].Component = JoystickComponent.Axis;
-								Interface.CurrentControls[j].Element = i;
-								Interface.CurrentControls[j].Direction = 1;
-								radiobuttonJoystick.Focus();
-								UpdateJoystickDetails();
-								UpdateControlListElement(listviewControls.Items[j], j, true);
-								return;
-							}
+							Interface.CurrentControls[j].Device = guid;
+							Interface.CurrentControls[j].Component = JoystickComponent.Axis;
+							Interface.CurrentControls[j].Element = i;
+							Interface.CurrentControls[j].Direction = -1;
+							radiobuttonJoystick.Focus();
+							UpdateJoystickDetails();
+							UpdateControlListElement(listviewControls.Items[j], j, true);
+							return;
 						}
-						int buttons = Program.Joysticks.AttachedJoysticks[guid].ButtonCount();
-						for (int i = 0; i < buttons; i++)
+						if (a > 0.75)
 						{
-							if (Program.Joysticks.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
+							if (railDriver)
 							{
-								if (railDriver)
-								{
-									Interface.CurrentControls[j].Method = ControlMethod.RailDriver;
-								}
-								Interface.CurrentControls[j].Device = guid;
-								Interface.CurrentControls[j].Component = JoystickComponent.Button;
-								Interface.CurrentControls[j].Element = i;
-								Interface.CurrentControls[j].Direction = 1;
-								radiobuttonJoystick.Focus();
-								UpdateJoystickDetails();
-								UpdateControlListElement(listviewControls.Items[j], j, true);
-								return;
+								Interface.CurrentControls[j].Method = ControlMethod.RailDriver;
 							}
+							Interface.CurrentControls[j].Device = guid;
+							Interface.CurrentControls[j].Component = JoystickComponent.Axis;
+							Interface.CurrentControls[j].Element = i;
+							Interface.CurrentControls[j].Direction = 1;
+							radiobuttonJoystick.Focus();
+							UpdateJoystickDetails();
+							UpdateControlListElement(listviewControls.Items[j], j, true);
+							return;
 						}
-						int hats = Program.Joysticks.AttachedJoysticks[guid].HatCount();
-						for (int i = 0; i < hats; i++)
+					}
+					int buttons = Program.Joysticks.AttachedJoysticks[guid].ButtonCount();
+					for (int i = 0; i < buttons; i++)
+					{
+						if (Program.Joysticks.AttachedJoysticks[guid].GetButton(i) == ButtonState.Pressed)
 						{
-							JoystickHatState hat = Program.Joysticks.AttachedJoysticks[guid].GetHat(i);
-							if (hat.Position != HatPosition.Centered)
+							if (railDriver)
 							{
-								Interface.CurrentControls[j].Device = guid;
-								Interface.CurrentControls[j].Component = JoystickComponent.Hat;
-								Interface.CurrentControls[j].Element = i;
-								Interface.CurrentControls[j].Direction = (int)hat.Position;
-								radiobuttonJoystick.Focus();
-								UpdateJoystickDetails();
-								UpdateControlListElement(listviewControls.Items[j], j, true);
-								return;
+								Interface.CurrentControls[j].Method = ControlMethod.RailDriver;
 							}
+							Interface.CurrentControls[j].Device = guid;
+							Interface.CurrentControls[j].Component = JoystickComponent.Button;
+							Interface.CurrentControls[j].Element = i;
+							Interface.CurrentControls[j].Direction = 1;
+							radiobuttonJoystick.Focus();
+							UpdateJoystickDetails();
+							UpdateControlListElement(listviewControls.Items[j], j, true);
+							return;
 						}
-					
-					
+					}
+					int hats = Program.Joysticks.AttachedJoysticks[guid].HatCount();
+					for (int i = 0; i < hats; i++)
+					{
+						JoystickHatState hat = Program.Joysticks.AttachedJoysticks[guid].GetHat(i);
+						if (hat.Position != HatPosition.Centered)
+						{
+							Interface.CurrentControls[j].Device = guid;
+							Interface.CurrentControls[j].Component = JoystickComponent.Hat;
+							Interface.CurrentControls[j].Element = i;
+							Interface.CurrentControls[j].Direction = (int)hat.Position;
+							radiobuttonJoystick.Focus();
+							UpdateJoystickDetails();
+							UpdateControlListElement(listviewControls.Items[j], j, true);
+							return;
+						}
+					}
 				}
 			}
-
 			pictureboxJoysticks.Invalidate();
 
 		}
-
-
-
+		
 		// =========
 		// functions
 		// =========

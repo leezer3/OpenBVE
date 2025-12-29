@@ -39,12 +39,12 @@ using MouseCursor = LibRender2.MouseCursor;
 
 namespace OpenBve
 {
-	class OpenBVEGame: GameWindow
+	internal class OpenBVEGame: GameWindow
 	{
 		/// <summary>The current time acceleration factor</summary>
-		int TimeFactor = 1;
-		double TotalTimeElapsedForInfo;
-		double TotalTimeElapsedForSectionUpdate;
+		private int TimeFactor = 1;
+		private double TotalTimeElapsedForInfo;
+		private double TotalTimeElapsedForSectionUpdate;
 		private bool loadComplete;
 		private bool firstFrame;
 		private double RenderTimeElapsed;
@@ -61,7 +61,7 @@ namespace OpenBve
 			{
 				var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 				Icon ico = new Icon(OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data"), "icon.ico"));
-				this.Icon = ico;
+				Icon = ico;
 			}
 			catch
 			{
@@ -80,7 +80,7 @@ namespace OpenBve
 			{
 				var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 				Icon ico = new Icon(OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data"), "icon.ico"));
-				this.Icon = ico;
+				Icon = ico;
 			}
 			catch
 			{
@@ -215,27 +215,19 @@ namespace OpenBve
 			Game.UpdateBlackBox();
 			// pause/menu
 			
-			// limit framerate
-			if (MainLoop.LimitFramerate)
-			{
-				Thread.Sleep(10);
-			}
 			MainLoop.UpdateControlRepeats(RealTimeElapsed);
 			MainLoop.ProcessKeyboard();
 			MainLoop.UpdateMouse(RealTimeElapsed);
 			MainLoop.ProcessControls(TimeElapsed);
-			if (Program.Joysticks.AttachedJoysticks.ContainsKey(AbstractRailDriver.Guid))
+			if (Program.Joysticks.AttachedJoysticks.TryGetTypedValue(AbstractRailDriver.Guid, out AbstractRailDriver railDriver))
 			{
-				if (Program.Joysticks.AttachedJoysticks[AbstractRailDriver.Guid] is AbstractRailDriver railDriver)
+				if (Interface.CurrentOptions.RailDriverMPH)
 				{
-					if (Interface.CurrentOptions.RailDriverMPH)
-					{
-						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.PerceivedSpeed * 2.23694));
-					}
-					else
-					{
-						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.PerceivedSpeed * 3.6));
-					}
+					railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.PerceivedSpeed * 2.23694));
+				}
+				else
+				{
+					railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.PerceivedSpeed * 3.6));
 				}
 			}
 			
@@ -916,7 +908,7 @@ namespace OpenBve
 			//Create AI driver for the player train if specified via the commmand line
 			if (Game.InitialAIDriver)
 			{
-				TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
+				TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, double.PositiveInfinity);
 				if (TrainManager.PlayerTrain.Plugin != null && TrainManager.PlayerTrain.Plugin.SupportsAI == AISupport.None)
 				{
 					MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","aiunable"}),MessageDependency.None, GameMode.Expert,
@@ -1009,10 +1001,6 @@ namespace OpenBve
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
 						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-						//Make bogies visible
-						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 					}
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
@@ -1028,9 +1016,6 @@ namespace OpenBve
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
 						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 					}
 
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
@@ -1047,9 +1032,6 @@ namespace OpenBve
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
 						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 					}
 
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
@@ -1066,9 +1048,6 @@ namespace OpenBve
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
 						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
-						TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 					}
 
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
@@ -1095,6 +1074,9 @@ namespace OpenBve
 			}
 
 			simulationSetup = true;
+			Program.FileSystem.AppendToLogFile(@"--------------------", false);
+			Program.FileSystem.AppendToLogFile(@"Loading complete, starting simulation.");
+			Program.FileSystem.AppendToLogFile(@"--------------------", false);
 		}
 
 		private bool simulationSetup = false;
@@ -1109,9 +1091,11 @@ namespace OpenBve
 			while (!Loading.Complete && !Loading.Cancel && !simulationSetup)
 			{
 				CPreciseTimer.GetElapsedTime();
-				this.ProcessEvents();
-				if (this.IsExiting)
+				ProcessEvents();
+				if (IsExiting)
+				{
 					Loading.Cancel = true;
+				}
 				double routeProgress = 1.0, trainProgress = 0.0;
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
@@ -1162,16 +1146,13 @@ namespace OpenBve
 				if (wait > 0)
 					Thread.Sleep((int)(wait));
 			}
-			if(!Loading.Cancel)
+			if(Loading.Cancel)
 			{
-				Program.Renderer.PopMatrix(MatrixMode.Modelview);
-				Program.Renderer.PopMatrix(MatrixMode.Projection);
-				SetupSimulation();
-			} else {
-				this.Exit();
+				Exit();
 			}
+			Program.Renderer.PopMatrix(MatrixMode.Modelview);
+			Program.Renderer.PopMatrix(MatrixMode.Projection);
+			SetupSimulation();
 		}
-
-		
 	}
 }

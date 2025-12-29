@@ -70,57 +70,59 @@ namespace OpenBve
 					}
 				}
 			}
-			{ // header rows
-				int TotalWidth = 0;
-				for (int j = 0; j < Columns; j++) {
-					TotalWidth += Widths[j] + 2;
-				}
-				TotalWidth += Columns - 1;
-				Builder.Append('╔');
-				Builder.Append('═', TotalWidth);
-				Builder.Append("╗\n");
-				{
-					Builder.Append('║');
-					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","route"}) + " " + Game.LogRouteName).PadRight(TotalWidth, ' '));
-					Builder.Append("║\n║");
-					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","train"}) + " " + Game.LogTrainName).PadRight(TotalWidth, ' '));
-					Builder.Append("║\n║");
-					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","date"}) + " " + Game.LogDateTime.ToString("yyyy-MM-dd HH:mm:ss", Culture)).PadRight(TotalWidth, ' '));
-					Builder.Append("║\n");
-				}
-				Builder.Append('╠');
-				Builder.Append('═', TotalWidth);
-				Builder.Append("╣\n");
-				{
-					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
-					if (ratio < 0.0) ratio = 0.0;
-					if (ratio > 1.0) ratio = 1.0;
-					int index = (int)Math.Floor(ratio * Translations.RatingsCount);
-					if (index >= Translations.RatingsCount) index = Translations.RatingsCount - 1;
-					string s;
-					switch (Interface.CurrentOptions.PreviousGameMode) {
-							case GameMode.Arcade: s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","arcade"}); break;
-							case GameMode.Normal: s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","normal"}); break;
-							case GameMode.Expert: s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","expert"}); break;
-							default: s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"mode","unknown"}); break;
-					}
-					Builder.Append('║');
-					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","mode"}) + " " + s).PadRight(TotalWidth, ' '));
-					Builder.Append("║\n║");
-					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"log","score"}) + " " + Game.CurrentScore.CurrentValue.ToString(Culture) + " / " + Game.CurrentScore.Maximum.ToString(Culture)).PadRight(TotalWidth, ' '));
-					Builder.Append("║\n║");
-					Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"log","rating"}) + " " + Translations.GetInterfaceString(HostApplication.OpenBve, new [] {"rating" , index.ToString(Culture)}) + " (" + (100.0 * ratio).ToString("0.00") + "%)").PadRight(TotalWidth, ' '));
-					Builder.Append("║\n");
-				}
+			// header rows
+			int TotalWidth = 0;
+			for (int j = 0; j < Columns; j++)
+			{
+				TotalWidth += Widths[j] + 2;
 			}
-			{ // top border row
-				Builder.Append('╠');
-				for (int j = 0; j < Columns; j++) {
-					if (j != 0) {
-						Builder.Append('╤');
-					} Builder.Append('═', Widths[j] + 2);
-				} Builder.Append("╣\n");
+			TotalWidth += Columns - 1;
+			Builder.Append('╔');
+			Builder.Append('═', TotalWidth);
+			Builder.Append("╗\n");
+			{
+				Builder.Append('║');
+				Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "log", "route" }) + " " + Game.LogRouteName).PadRight(TotalWidth, ' '));
+				Builder.Append("║\n║");
+				Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "log", "train" }) + " " + Game.LogTrainName).PadRight(TotalWidth, ' '));
+				Builder.Append("║\n║");
+				Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "log", "date" }) + " " + Game.LogDateTime.ToString("yyyy-MM-dd HH:mm:ss", Culture)).PadRight(TotalWidth, ' '));
+				Builder.Append("║\n");
 			}
+			Builder.Append('╠');
+			Builder.Append('═', TotalWidth);
+			Builder.Append("╣\n");
+			double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
+			if (ratio < 0.0) ratio = 0.0;
+			if (ratio > 1.0) ratio = 1.0;
+			int index = (int)Math.Floor(ratio * Translations.RatingsCount);
+			if (index >= Translations.RatingsCount) index = Translations.RatingsCount - 1;
+			string st;
+			switch (CurrentOptions.PreviousGameMode)
+			{
+				case GameMode.Arcade: st = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "mode", "arcade" }); break;
+				case GameMode.Normal: st = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "mode", "normal" }); break;
+				case GameMode.Expert: st = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "mode", "expert" }); break;
+				default: st = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "mode", "unknown" }); break;
+			}
+			Builder.Append('║');
+			Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "log", "mode" }) + " " + st).PadRight(TotalWidth, ' '));
+			Builder.Append("║\n║");
+			Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "log", "score" }) + " " + Game.CurrentScore.CurrentValue.ToString(Culture) + " / " + Game.CurrentScore.Maximum.ToString(Culture)).PadRight(TotalWidth, ' '));
+			Builder.Append("║\n║");
+			Builder.Append((" " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "log", "rating" }) + " " + Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "rating", index.ToString(Culture) }) + " (" + (100.0 * ratio).ToString("0.00") + "%)").PadRight(TotalWidth, ' '));
+			Builder.Append("║\n");
+			// top border row
+			Builder.Append('╠');
+			for (int j = 0; j < Columns; j++)
+			{
+				if (j != 0)
+				{
+					Builder.Append('╤');
+				}
+				Builder.Append('═', Widths[j] + 2);
+			}
+			Builder.Append("╣\n");
 			for (int i = 0; i < Lines.Length; i++) {
 				// center border row
 				if (i != 0) {
@@ -144,14 +146,17 @@ namespace OpenBve
 					Builder.Append(' ');
 				} Builder.Append("║\n");
 			}
-			{ // bottom border row
-				Builder.Append('╚');
-				for (int j = 0; j < Columns; j++) {
-					if (j != 0) {
-						Builder.Append('╧');
-					} Builder.Append('═', Widths[j] + 2);
-				} Builder.Append('╝');
+			// bottom border row
+			Builder.Append('╚');
+			for (int j = 0; j < Columns; j++)
+			{
+				if (j != 0)
+				{
+					Builder.Append('╧');
+				}
+				Builder.Append('═', Widths[j] + 2);
 			}
+			Builder.Append('╝');
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
 		}
 	}

@@ -63,7 +63,7 @@ namespace OpenBve
 					 * ==> Enable AI
 					 */
 					TrainManager.PlayerTrain.CameraCar = TrainManager.PlayerTrain.DriverCar;
-					MainLoop.SaveCameraSettings();
+					SaveCameraSettings();
 					bool lookahead = false;
 					if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D))
 					{
@@ -80,8 +80,9 @@ namespace OpenBve
 					}
 
 					Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
-					MainLoop.RestoreCameraSettings();
+					RestoreCameraSettings();
 					bool returnToCab = false;
+					// Change to appropriate CarSection
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
 						if (j == TrainManager.PlayerTrain.CameraCar)
@@ -89,7 +90,6 @@ namespace OpenBve
 							if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
 							{
 								TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Interior);
-								Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
 							}
 							else
 							{
@@ -108,15 +108,6 @@ namespace OpenBve
 						//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
 						TrainManager.PlayerTrain.CameraCar = TrainManager.PlayerTrain.DriverCar;
 						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(CarSectionType.Interior);
-						Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
-					}
-
-					//Hide bogies
-					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
-					{
-						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(-1);
-						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
-						TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(-1);
 					}
 
 					Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
@@ -136,7 +127,7 @@ namespace OpenBve
 					{
 						Program.Renderer.Camera.CurrentMode = CameraViewMode.InteriorLookAhead;
 					}
-					TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
+					TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, double.PositiveInfinity);
 					if (TrainManager.PlayerTrain.Plugin != null && TrainManager.PlayerTrain.Plugin.SupportsAI == AISupport.None)
 					{
 						MessageManager.AddMessage(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"notification","aiunable"}), MessageDependency.None, GameMode.Expert, MessageColor.White, 10, null);
@@ -164,8 +155,7 @@ namespace OpenBve
 						{
 							if (Interface.CurrentControls[i].DigitalState == DigitalControlState.Pressed)
 							{
-								Interface.CurrentControls[i].DigitalState =
-									DigitalControlState.PressedAcknowledged;
+								Interface.CurrentControls[i].DigitalState = DigitalControlState.PressedAcknowledged;
 								switch (Interface.CurrentControls[i].Command)
 								{
 									case Translations.Command.MiscPause:
@@ -196,10 +186,6 @@ namespace OpenBve
 						}
 					}
 					break;
-/*
-				case InterfaceType.CustomiseControl:
-					break;
-*/
 				case InterfaceType.Menu:			// MENU
 				case InterfaceType.GLMainMenu:
 					kioskModeTimer = 0;
@@ -208,13 +194,11 @@ namespace OpenBve
 						if (Interface.CurrentControls[i].InheritedType == Translations.CommandType.Digital
 								&& Interface.CurrentControls[i].DigitalState == DigitalControlState.Pressed)
 						{
-							Interface.CurrentControls[i].DigitalState =
-									DigitalControlState.PressedAcknowledged;
+							Interface.CurrentControls[i].DigitalState = DigitalControlState.PressedAcknowledged;
 							Game.Menu.ProcessCommand(Interface.CurrentControls[i].Command, TimeElapsed);
 						}
 					}
 					break;
-
 				case InterfaceType.Normal:
 				case InterfaceType.SwitchChangeMap:
 					// normal

@@ -19,9 +19,6 @@ namespace OpenBve
 {
 	internal static partial class MainLoop
 	{
-		
-		// declarations
-		internal static bool LimitFramerate = false;
 		internal static QuitMode Quit = QuitMode.ContinueGame;
 		/// <summary>BlockKeyRepeat should be set to 'true' whilst processing a KeyUp or KeyDown event.</summary>
 		internal static bool BlockKeyRepeat;
@@ -371,78 +368,78 @@ namespace OpenBve
 						if (axisState.ToString(CultureInfo.InvariantCulture) != Interface.CurrentControls[i].LastState)
 						{
 							Interface.CurrentControls[i].LastState = axisState.ToString(CultureInfo.InvariantCulture);
-							if (Interface.CurrentControls[i].InheritedType == Translations.CommandType.AnalogHalf)
+							switch (Interface.CurrentControls[i].InheritedType)
 							{
-								if (Math.Sign(axisState) == Math.Sign(Interface.CurrentControls[i].Direction))
-								{
-									axisState = Math.Abs(axisState);
-									if (axisState < Interface.CurrentOptions.JoystickAxisThreshold)
+								case Translations.CommandType.AnalogHalf:
+									if (Math.Sign(axisState) == Math.Sign(Interface.CurrentControls[i].Direction))
+									{
+										axisState = Math.Abs(axisState);
+										if (axisState < Interface.CurrentOptions.JoystickAxisThreshold)
+										{
+											Interface.CurrentControls[i].AnalogState = 0.0;
+										}
+										else if (Interface.CurrentOptions.JoystickAxisThreshold != 1.0)
+										{
+											Interface.CurrentControls[i].AnalogState = (axisState - Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold);
+										}
+										else
+										{
+											Interface.CurrentControls[i].AnalogState = 1.0;
+										}
+									}
+									break;
+								case Translations.CommandType.AnalogFull:
+									axisState *= (float)Interface.CurrentControls[i].Direction;
+									if (axisState > -Interface.CurrentOptions.JoystickAxisThreshold & axisState < Interface.CurrentOptions.JoystickAxisThreshold)
 									{
 										Interface.CurrentControls[i].AnalogState = 0.0;
 									}
 									else if (Interface.CurrentOptions.JoystickAxisThreshold != 1.0)
 									{
-										Interface.CurrentControls[i].AnalogState = (axisState - Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold);
+										if (axisState < 0.0)
+										{
+											Interface.CurrentControls[i].AnalogState = (axisState + Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold);
+										}
+										else if (axisState > 0.0)
+										{
+											Interface.CurrentControls[i].AnalogState = (axisState - Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold);
+										}
+										else
+										{
+											Interface.CurrentControls[i].AnalogState = 0.0;
+										}
 									}
 									else
 									{
-										Interface.CurrentControls[i].AnalogState = 1.0;
+										Interface.CurrentControls[i].AnalogState = Math.Sign(axisState);
 									}
-								}
-							}
-							else if (Interface.CurrentControls[i].InheritedType == Translations.CommandType.AnalogFull)
-							{
-								axisState *= (float)Interface.CurrentControls[i].Direction;
-								if (axisState > -Interface.CurrentOptions.JoystickAxisThreshold & axisState < Interface.CurrentOptions.JoystickAxisThreshold)
-								{
-									Interface.CurrentControls[i].AnalogState = 0.0;
-								}
-								else if (Interface.CurrentOptions.JoystickAxisThreshold != 1.0)
-								{
-									if (axisState < 0.0)
+									break;
+								default:
+									if (Math.Sign(axisState) == Math.Sign(Interface.CurrentControls[i].Direction))
 									{
-										Interface.CurrentControls[i].AnalogState = (axisState + Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold);
+										axisState = Math.Abs(axisState);
+										if (axisState < Interface.CurrentOptions.JoystickAxisThreshold)
+										{
+											axisState = 0.0f;
+										}
+										else if (Interface.CurrentOptions.JoystickAxisThreshold != 1.0)
+										{
+											axisState = (float)((axisState - Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold));
+										}
+										else
+										{
+											axisState = 1.0f;
+										}
+										if (Interface.CurrentControls[i].DigitalState == DigitalControlState.Released | Interface.CurrentControls[i].DigitalState == DigitalControlState.ReleasedAcknowledged)
+										{
+											if (axisState > 0.67) Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
+										}
+										else
+										{
+											if (axisState < 0.33) Interface.CurrentControls[i].DigitalState = DigitalControlState.Released;
+										}
 									}
-									else if (axisState > 0.0)
-									{
-										Interface.CurrentControls[i].AnalogState = (axisState - Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold);
-									}
-									else
-									{
-										Interface.CurrentControls[i].AnalogState = 0.0;
-									}
-								}
-								else
-								{
-									Interface.CurrentControls[i].AnalogState = Math.Sign(axisState);
-								}
-							}
-							else
-							{
-								if (Math.Sign(axisState) == Math.Sign(Interface.CurrentControls[i].Direction))
-								{
-									axisState = Math.Abs(axisState);
-									if (axisState < Interface.CurrentOptions.JoystickAxisThreshold)
-									{
-										axisState = 0.0f;
-									}
-									else if (Interface.CurrentOptions.JoystickAxisThreshold != 1.0)
-									{
-										axisState = (float)((axisState - Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold));
-									}
-									else
-									{
-										axisState = 1.0f;
-									}
-									if (Interface.CurrentControls[i].DigitalState == DigitalControlState.Released | Interface.CurrentControls[i].DigitalState == DigitalControlState.ReleasedAcknowledged)
-									{
-										if (axisState > 0.67) Interface.CurrentControls[i].DigitalState = DigitalControlState.Pressed;
-									}
-									else
-									{
-										if (axisState < 0.33) Interface.CurrentControls[i].DigitalState = DigitalControlState.Released;
-									}
-								}
+									break;
 							}
 						}
 						break;

@@ -5,19 +5,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Formats.OpenBve;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 
 namespace TrainEditor2.Extensions
 {
-	internal enum NumberRange
-	{
-		Any,
-		Positive,
-		NonNegative,
-		NonZero
-	}
+	
 
 	internal static class Utilities
 	{

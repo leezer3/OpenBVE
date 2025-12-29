@@ -203,16 +203,9 @@ namespace Plugin
 								}
 							}
 
-							if (Block.GetValue(AnimatedKey.RefreshRate, out double refreshRate))
+							if (Block.GetValue(AnimatedKey.RefreshRate, out double refreshRate, NumberRange.NonNegative))
 							{
-								if (refreshRate < 0)
-								{
-									currentHost.AddMessage(MessageType.Error, false, "RefreshRate is expected to be non-negative in Section " + Block.Key + " in File " + FileName);
-								}
-								else
-								{
-									Result.Objects[ObjectCount].RefreshRate = refreshRate;
-								}
+								Result.Objects[ObjectCount].RefreshRate = refreshRate;
 							}
 
 							Result.Objects[ObjectCount].States = new ObjectState[stateFiles.Length];
@@ -307,11 +300,11 @@ namespace Plugin
 						{
 							double pitch = 1.0, volume = 1.0, radius = 30;
 							Block.GetVector3(AnimatedKey.Position, ',', out Position);
-							Block.TryGetValue(AnimatedKey.Radius, ref radius);
+							Block.TryGetValue(AnimatedKey.Radius, ref radius, NumberRange.NonNegative);
 							Block.GetFunctionScript(new[] { AnimatedKey.Pitch, AnimatedKey.PitchFunction }, Folder, out AnimationScript pitchFunction);
-							Block.TryGetValue(AnimatedKey.Pitch, ref pitch);
+							Block.TryGetValue(AnimatedKey.Pitch, ref pitch, NumberRange.NonNegative);
 							Block.GetFunctionScript(new[] { AnimatedKey.VolumeFunction }, Folder, out AnimationScript volumeFunction);
-							Block.TryGetValue(AnimatedKey.Volume, ref volume);
+							Block.TryGetValue(AnimatedKey.Volume, ref volume, NumberRange.NonNegative);
 							Block.GetFunctionScript(new[] { AnimatedKey.TrackFollowerFunction }, Folder, out AnimationScript trackFollowerFunction);
 							currentHost.RegisterSound(soundPath, radius, out SoundHandle currentSound);
 							WorldSound snd = new WorldSound(currentHost, currentSound)
@@ -338,9 +331,9 @@ namespace Plugin
 						{
 							double pitch = 1.0, volume = 1.0, radius = 30;
 							Block.GetVector3(AnimatedKey.Position, ',', out Position);
-							Block.TryGetValue(AnimatedKey.Pitch, ref pitch);
-							Block.TryGetValue(AnimatedKey.Volume, ref volume);
-							Block.TryGetValue(AnimatedKey.Radius, ref radius);
+							Block.TryGetValue(AnimatedKey.Pitch, ref pitch, NumberRange.NonNegative);
+							Block.TryGetValue(AnimatedKey.Volume, ref volume, NumberRange.NonNegative);
+							Block.TryGetValue(AnimatedKey.Radius, ref radius, NumberRange.NonNegative);
 							bool playOnShow = true, playOnHide = true;
 							Block.TryGetValue(AnimatedKey.PlayOnShow, ref playOnShow);
 							Block.TryGetValue(AnimatedKey.PlayOnHide, ref playOnHide);

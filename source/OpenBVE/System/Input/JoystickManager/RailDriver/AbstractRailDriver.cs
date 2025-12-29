@@ -231,7 +231,7 @@ namespace OpenBve.Input
 		private static int ScaleValue(int value, int value_min, int value_max)
 		{
 			long temp = (value - value_min) * 65535;
-			return (int) (temp / (value_max - value_min) + Int16.MinValue);
+			return (int) (temp / (value_max - value_min) + short.MinValue);
 		}
 
 		internal byte[] wData;

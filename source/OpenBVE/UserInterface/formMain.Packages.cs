@@ -1375,7 +1375,7 @@ namespace OpenBve
 			DialogResult result = inputBox.ShowDialog();
 			try
 			{
-				if (textBox.Text == String.Empty || textBox.Text == @"0")
+				if (string.IsNullOrEmpty(textBox.Text) || textBox.Text == @"0")
 				{
 					minimumVersion = null;
 				}
@@ -1383,7 +1383,7 @@ namespace OpenBve
 				{
 					minimumVersion = Version.Parse(textBox.Text);	
 				}
-				if (textBox2.Text == String.Empty || textBox2.Text == @"0")
+				if (string.IsNullOrEmpty(textBox2.Text) || textBox2.Text == @"0")
 				{
 					maximumVersion = null;
 				}
@@ -1563,7 +1563,7 @@ namespace OpenBve
 			else if (radioButtonReplace.Checked)
 			{
 				//Reinstall
-				string result = String.Empty;
+				string result = string.Empty;
 				Manipulation.UninstallPackage(currentPackage, Program.FileSystem.PackageDatabaseFolder, ref result);
 				switch (currentPackage.PackageType)
 				{

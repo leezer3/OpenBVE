@@ -1,4 +1,5 @@
-﻿using TrainManager.SafetySystems;
+﻿using System;
+using TrainManager.SafetySystems;
 
 namespace TrainManager.Car
 {
@@ -24,6 +25,13 @@ namespace TrainManager.Car
 				CurrentAccelerationOutput = Acceleration;
 				return;
 			}
+
+			if (Math.Abs(TrainManagerBase.currentHost.InGameTime - NextUpdateTime) > 10)
+			{
+				// If next update time is not within 10s, reset (jumping train etc.)
+				NextUpdateTime = TrainManagerBase.currentHost.InGameTime + 0.5;
+			}
+
 			if (TrainManagerBase.currentHost.InGameTime >= NextUpdateTime)
 			{
 				NextUpdateTime = TrainManagerBase.currentHost.InGameTime + UpdateInterval;

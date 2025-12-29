@@ -373,6 +373,21 @@ namespace TrainManager.SafetySystems
 #endif
 		}
 
+		public override void TouchEvent(int groupIndex, Translations.Command command)
+		{
+#if !DEBUG
+			try {
+#endif
+			RawApi?.TouchEvent(groupIndex, command);
+
+#if !DEBUG
+			} catch (Exception ex) {
+				LastException = ex;
+				throw;
+			}
+#endif
+		}
+
 		public override void RawKeyDown(Key key)
 		{
 #if !DEBUG

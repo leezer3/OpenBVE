@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Trains;
@@ -9,7 +8,7 @@ using TrainManager;
 
 namespace OpenBve
 {
-	partial class MessageManager
+	internal partial class MessageManager
 	{
 		/// <summary>Contains the current textual messages</summary>
 		internal static readonly List<AbstractMessage> TextualMessages = new List<AbstractMessage>();
@@ -35,7 +34,7 @@ namespace OpenBve
 				GameMessage message = new GameMessage
 				{
 					InternalText = Text,
-					MessageToDisplay = String.Empty,
+					MessageToDisplay = string.Empty,
 					Depencency = Depencency,
 					Color = Color,
 					Timeout = Timeout,

@@ -35,9 +35,13 @@ namespace OpenBve.Graphics.Renderers
 		}
 
 		/// <summary>Is called once by the main renderer loop, in order to render all overlays shown on the screen</summary>
-		/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
-		internal void Render(double TimeElapsed)
+		/// <param name="timeElapsed">The time elapsed since the last call to this function</param>
+		internal void Render(double timeElapsed)
 		{
+			if (Program.Renderer.CurrentInterface >= InterfaceType.Menu)
+			{
+				return;
+			}
 			//Initialize openGL
 			renderer.SetBlendFunc();
 			GL.Enable(EnableCap.Blend);
@@ -60,16 +64,16 @@ namespace OpenBve.Graphics.Renderers
 						switch (element.Subject)
 						{
 							case HUDSubject.Messages:
-								RenderGameMessages(element, TimeElapsed);
+								RenderGameMessages(element, timeElapsed);
 								break;
 							case HUDSubject.ScoreMessages:
-								RenderScoreMessages(element, TimeElapsed);
+								RenderScoreMessages(element, timeElapsed);
 								break;
 							case HUDSubject.ATS:
 								RenderATSLamps(element);
 								break;
 							default:
-								RenderHUDElement(element, TimeElapsed);
+								RenderHUDElement(element, timeElapsed);
 								break;
 						}
 					}
@@ -153,11 +157,6 @@ namespace OpenBve.Graphics.Renderers
 					}
 					break;
 				}
-				case InterfaceType.Menu:
-				case InterfaceType.GLMainMenu:
-					Game.Menu.Draw(TimeElapsed);
-					PauseAnnounced = false;
-					break;
 				case InterfaceType.SwitchChangeMap:
 					Game.SwitchChangeDialog.Draw();
 					break;
@@ -177,7 +176,7 @@ namespace OpenBve.Graphics.Renderers
 				}
 				else if (FadeToBlackDueToChangeEnds > 0.0)
 				{
-					FadeToBlackDueToChangeEnds -= TimeElapsed;
+					FadeToBlackDueToChangeEnds -= timeElapsed;
 					if (FadeToBlackDueToChangeEnds < 0.0)
 					{
 						FadeToBlackDueToChangeEnds = 0.0;
@@ -186,7 +185,7 @@ namespace OpenBve.Graphics.Renderers
 			}
 			else if (FadeToBlackDueToChangeEnds > 0.0)
 			{
-				FadeToBlackDueToChangeEnds -= TimeElapsed;
+				FadeToBlackDueToChangeEnds -= timeElapsed;
 				if (FadeToBlackDueToChangeEnds < 0.0)
 				{
 					FadeToBlackDueToChangeEnds = 0.0;

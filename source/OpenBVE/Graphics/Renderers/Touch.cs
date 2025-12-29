@@ -33,25 +33,28 @@ namespace OpenBve.Graphics.Renderers
 			this.renderer = renderer;
 			touchableObject = new List<ObjectState>();
 
-			if (!renderer.ForceLegacyOpenGL)
+			if (renderer.ForceLegacyOpenGL)
 			{
-				fbo = new FrameBufferObject();
-				fbo.Bind();
-				fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
-				fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
-				fbo.UnBind();
+				// touch not supported when GL4 is not available
+				return;
 			}
+			fbo = new FrameBufferObject();
+			fbo.Bind();
+			fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
+			fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
+			fbo.UnBind();
 		}
 
 		internal void UpdateViewport()
 		{
-			if (renderer.AvailableNewRenderer)
+			if (!renderer.AvailableNewRenderer)
 			{
-				fbo.Bind();
-				fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
-				fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
-				fbo.UnBind();
+				return;
 			}
+			fbo.Bind();
+			fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
+			fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
+			fbo.UnBind();
 		}
 
 		private void ShowObject(ObjectState state)
@@ -74,19 +77,19 @@ namespace OpenBve.Graphics.Renderers
 			}
 
 			CarBase Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
-			if (renderer.Camera.CurrentMode > CameraViewMode.InteriorLookAhead || !Car.CarSections.ContainsKey(CarSectionType.Interior))
+			if (renderer.Camera.CurrentMode > CameraViewMode.InteriorLookAhead || !Car.CarSections.TryGetValue(CarSectionType.Interior, out CarSection interiorSection))
 			{
 				return;
 			}
 
-			int add = Car.CarSections[CarSectionType.Interior].CurrentAdditionalGroup + 1;
+			int add = interiorSection.CurrentAdditionalGroup + 1;
 
-			if (add >= Car.CarSections[CarSectionType.Interior].Groups.Length)
+			if (add >= interiorSection.Groups.Length)
 			{
 				return;
 			}
 
-			TouchElement[] TouchElements = Car.CarSections[CarSectionType.Interior].Groups[add].TouchElements;
+			TouchElement[] TouchElements = interiorSection.Groups[add].TouchElements;
 
 			if (TouchElements == null)
 			{
@@ -393,6 +396,7 @@ namespace OpenBve.Graphics.Renderers
 					if (Interface.CurrentControls[index].DigitalState != DigitalControlState.Pressed && TrainManager.PlayerTrain.Plugin != null)
 					{
 						TrainManager.PlayerTrain.Plugin.TouchEvent(add, index);
+						TrainManager.PlayerTrain.Plugin.TouchEvent(add, Interface.CurrentControls[index].Command);
 					}
 					Interface.CurrentControls[index].AnalogState = 1.0;
 					Interface.CurrentControls[index].DigitalState = DigitalControlState.Pressed;

@@ -14,14 +14,14 @@ namespace OpenBve
             internal double Countdown;
             internal ControlRepeat(int controlIndex, double countdown)
             {
-                this.ControlIndex = controlIndex;
-                this.Countdown = countdown;
+                ControlIndex = controlIndex;
+                Countdown = countdown;
             }
         }
 
         /// <summary>Stores the currently repeating controls</summary>
         private static ControlRepeat[] RepeatControls = new ControlRepeat[16];
-        /// <summary>The nuber of repeating controls in use (Maximum 16)</summary>
+        /// <summary>The number of repeating controls in use (Maximum 16)</summary>
         private static int RepeatControlsUsed = 0;
 
         /// <summary>Adds a control to be repeated</summary>
