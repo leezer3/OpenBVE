@@ -16,6 +16,7 @@ using RouteManager2.SignalManager;
 using RouteManager2.Tracks;
 using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
+using TrainManager.Trains;
 
 namespace CsvRwRouteParser
 {
@@ -1284,7 +1285,13 @@ namespace CsvRwRouteParser
 				}
 				for (int i = 0; i < Data.ScriptedTrainFiles.Count; i++)
 				{
-					Plugin.TrainManager.TFOs.Add(Plugin.CurrentHost.ParseTrackFollowingObject(ObjectPath, Data.ScriptedTrainFiles[i]));
+					AbstractTrain train = Plugin.CurrentHost.ParseTrackFollowingObject(ObjectPath, Data.ScriptedTrainFiles[i]);
+					if (train != null)
+					{
+						// loading the train may fail
+						Plugin.TrainManager.TFOs.Add(train);
+					}
+					
 				}
 			}
 			

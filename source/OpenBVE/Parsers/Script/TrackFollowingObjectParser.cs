@@ -38,12 +38,18 @@ namespace OpenBve
 				// We couldn't find any valid XML, so return false
 				throw new InvalidDataException();
 			}
-			
-			foreach (XElement element in scriptedTrainElements)
-			{
-				ParseScriptedTrainNode(objectPath, fileName, element);
-			}
 
+			try
+			{
+				foreach (XElement element in scriptedTrainElements)
+				{
+					ParseScriptedTrainNode(objectPath, fileName, element);
+				}
+			}
+			catch
+			{
+				return null;
+			}
 			return Train;
 		}
 
@@ -243,29 +249,38 @@ namespace OpenBve
 				switch (key)
 				{
 					case TrackFollowingObjectKey.Directory:
+						string TmpPath;
+						try
 						{
-							string TmpPath = Path.CombineDirectory(Path.GetDirectoryName(FileName), value);
+							TmpPath = Path.CombineDirectory(Path.GetDirectoryName(FileName), value);
 							if (!Directory.Exists(TmpPath))
 							{
 								TmpPath = Path.CombineFile(Program.FileSystem.InitialTrainFolder, value);
 							}
+
 							if (!Directory.Exists(TmpPath))
 							{
 								TmpPath = Path.CombineFile(Program.FileSystem.TrainInstallationDirectory, value);
 							}
+
 							if (!Directory.Exists(TmpPath))
 							{
 								TmpPath = Path.CombineFile(objectPath, value);
 							}
+						}
+						catch
+						{
+							Interface.AddMessage(MessageType.Error, false, $"Directory was invalid in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {FileName}");
+							break;
+						}
 
-							if (!Directory.Exists(TmpPath))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Directory was not found in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {FileName}");
-							}
-							else
-							{
-								trainDirectory = TmpPath;
-							}
+						if (!Directory.Exists(TmpPath))
+						{
+							Interface.AddMessage(MessageType.Error, false, $"Directory was not found in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {FileName}");
+						}
+						else
+						{
+							trainDirectory = TmpPath;
 						}
 						break;
 					case TrackFollowingObjectKey.Reversed:
