@@ -1149,6 +1149,7 @@ namespace OpenBve
 			if(Loading.Cancel)
 			{
 				Exit();
+				return;
 			}
 			Program.Renderer.PopMatrix(MatrixMode.Modelview);
 			Program.Renderer.PopMatrix(MatrixMode.Projection);
