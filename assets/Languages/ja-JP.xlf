@@ -1636,6 +1636,9 @@
 						<source>Other items installation directory:</source>
 						<target>その他のアイテムのインストール場所:</target>
 					</trans-unit>
+					<trans-unit id="package_msts_directory">
+						<source>MSTS installation directory:</source>
+					</trans-unit>
 					<trans-unit id="package_compression">
 						<source>Package compression format:</source>
 						<target>パッケージの圧縮形式:</target>

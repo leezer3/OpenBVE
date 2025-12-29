@@ -1616,6 +1616,10 @@
 						<source>Other items installation directory:</source>
 						<target>Mappe for installasjon av andre ting:</target>
 					</trans-unit>
+					<trans-unit id="package_msts_directory">
+						<source>MSTS installation directory:</source>
+						<target>Mappe for installasjon MSTS:</target>
+					</trans-unit>
 					<trans-unit id="package_compression">
 						<source>Package compression format:</source>
 						<target>Pakke kompresjonsformat:</target>

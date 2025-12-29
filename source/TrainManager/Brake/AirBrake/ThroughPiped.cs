@@ -33,7 +33,6 @@ namespace TrainManager.BrakeSystems
 	{
 		public ThroughPiped(CarBase car) : base(car, new AccelerationCurve[] {})
 		{
-			DecelerationCurves = new AccelerationCurve[] { };
 			BrakeType = BrakeType.None;
 			BrakePipe = new BrakePipe(0);
 		}

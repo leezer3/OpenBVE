@@ -519,6 +519,10 @@ namespace TrainManager.Trains
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].Run.Update(timeElapsed);
+				for (int j = 0; j < Cars[i].Sounds.ControlledSounds.Count; j++)
+				{
+					Cars[i].Sounds.ControlledSounds[j].Update(timeElapsed);
+				}
 			}
 
 			// safety system
@@ -597,7 +601,7 @@ namespace TrainManager.Trains
 				CenterOfCarPositions[i] = 0.5 * (pr + pf);
 				CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].CurrentMass;
 				TrainMass += Cars[i].CurrentMass;
-				// update engine
+				// update engine etc.
 				if (Cars[i].TractionModel.ProvidesPower && Cars[i].TractionModel != null)
 				{
 					Cars[i].TractionModel.Update(timeElapsed);

@@ -25,5 +25,12 @@ namespace TrainManager.Motor
 			MinLevel = minLevel;
 			CurrentLevel = currentLevel;
 		}
+
+		public FuelTank(double currentLevel)
+		{
+			MaxLevel = currentLevel;
+			MinLevel = 0;
+			CurrentLevel = currentLevel;
+		}
 	}
 }

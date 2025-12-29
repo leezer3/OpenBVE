@@ -1639,6 +1639,9 @@
 						<source>Other items installation directory:</source>
 						<target>其他項目安裝資料夾：</target>
 					</trans-unit>
+					<trans-unit id="package_msts_directory">
+						<source>MSTS installation directory:</source>
+					</trans-unit>
 					<trans-unit id="package_compression">
 						<source>Package compression format:</source>
 						<target>擴展包壓縮格式:</target>

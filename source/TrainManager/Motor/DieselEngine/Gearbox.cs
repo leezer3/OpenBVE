@@ -11,9 +11,9 @@ namespace TrainManager.Motor
 		/// <summary>The current gear</summary>
 		public int CurrentGear;
 		/// <summary>The sound played when the gear is increased</summary>
-		internal CarSound GearUpSound;
+		public CarSound GearUpSound;
 		/// <summary>The sound played when the gear is decreased</summary>
-		internal CarSound GearDownSound;
+		public CarSound GearDownSound;
 		/// <summary>The sound played when the gearbox returns to neutral</summary>
 		internal CarSound NeutralSound;
 		/// <summary>The maximum speed attainable in the current gear</summary>
