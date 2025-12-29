@@ -47,19 +47,7 @@ namespace TrainManager.SafetySystems
 
 		private readonly IRuntime BaseApi;
 
-		private IRuntime Api
-		{
-			get
-			{
-				if (RawApi != null)
-				{
-					return RawApi;
-				}
-				return BaseApi;
-			}
-		}
-
-		private readonly IRawRuntime RawApi;
+		private IRuntime Api => BaseApi;
 
 		/// <summary>An array containing all of the plugin's current sound handles</summary>
 		private SoundHandleEx[] SoundHandles;
@@ -90,14 +78,7 @@ namespace TrainManager.SafetySystems
 			LastException = null;
 			PluginFolder = Path.GetDirectoryName(pluginFile);
 			TrainFolder = trainFolder;
-			if (api is IRawRuntime rawRuntime)
-			{
-				RawApi = rawRuntime;
-			}
-			else if(api is IRuntime runtime)
-			{
-				BaseApi = runtime;
-			}
+			BaseApi = (IRuntime)api;
 			
 			SoundHandles = new SoundHandleEx[16];
 			SoundHandlesCount = 0;
@@ -363,8 +344,11 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			RawApi?.TouchEvent(groupIndex, commandIndex);
-			
+			if (BaseApi is IRawRuntime rawRuntime)
+			{
+				rawRuntime.TouchEvent(groupIndex, commandIndex);
+				
+			}
 #if !DEBUG
 			} catch (Exception ex) {
 				LastException = ex;
@@ -378,7 +362,11 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			RawApi?.TouchEvent(groupIndex, command);
+			if (BaseApi is IRawRuntime2 rawRuntime2)
+			{
+				rawRuntime2.TouchEvent(groupIndex, command);
+			}
+				
 
 #if !DEBUG
 			} catch (Exception ex) {
@@ -393,7 +381,10 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			RawApi?.RawKeyDown(key);
+			if (BaseApi is IRawRuntime rawRuntime)
+			{
+				rawRuntime.RawKeyDown(key);
+			}
 			
 #if !DEBUG
 			} catch (Exception ex) {
@@ -408,8 +399,11 @@ namespace TrainManager.SafetySystems
 #if !DEBUG
 			try {
 #endif
-			RawApi?.RawKeyUp(key);
-			
+			if (BaseApi is IRawRuntime rawRuntime)
+			{
+				rawRuntime.RawKeyUp(key);
+			}
+
 #if !DEBUG
 			} catch (Exception ex) {
 				LastException = ex;
