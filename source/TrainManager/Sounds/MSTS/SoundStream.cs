@@ -42,6 +42,8 @@ namespace TrainManager.MsTsSounds
 		public readonly CameraViewMode ActivationCameraModes;
 		/// <summary>The modes in which this sound stream is not active</summary>
 		public readonly CameraViewMode DeactivationCameraModes;
+		/// <summary>The base volume</summary>
+		public double BaseVolume;
 
 		private SoundSource soundSource;
 
@@ -53,11 +55,12 @@ namespace TrainManager.MsTsSounds
 			ActivationCameraModes = activationCameraModes;
 			DeactivationCameraModes = deactivationCameraModes;
 			car = baseCar;
+			BaseVolume = 1.0;
 		}
 
 		public void Update(double timeElapsed)
 		{
-			double volume = 1.0, pitch = 1.0;
+			double volume = BaseVolume, pitch = 1.0;
 			if (VolumeCurve != null)
 			{
 				volume = VolumeCurve.Volume;

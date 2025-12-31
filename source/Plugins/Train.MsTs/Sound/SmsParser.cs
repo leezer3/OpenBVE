@@ -653,7 +653,7 @@ namespace Train.MsTs
 					currentSoundSet.Create(car, currentSoundStream);
 					break;
 				case KujuTokenID.Volume:
-					double volume = block.ReadSingle();
+					currentSoundStream.BaseVolume = block.ReadSingle();
 					break;
 				case KujuTokenID.VolumeCurve:
 					token = block.ReadEnumValue(default(KujuTokenID));
@@ -668,7 +668,7 @@ namespace Train.MsTs
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;
 						default:
-							throw new Exception("Unexpected enum value " + token + " encounted in SMS file " + currentFile);
+							throw new Exception("Unexpected enum value " + token + " encountered in SMS file " + currentFile);
 					}
 
 					currentSoundStream.VolumeCurve = new MsTsVolumeCurve(car, token, curvePoints);
