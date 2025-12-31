@@ -1,12 +1,13 @@
 ﻿// ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
+// ReSharper disable IdentifierTypo
 namespace Train.MsTs
 {
     internal enum BrakeSystemType
     {
         /// <summary>One pipe controls and supplies the air brakes.</summary>
         Air_single_pipe,
-        /// <summary>Two pipes are used. One to control the brakes, the other to charge the reserviors.</summary>
+        /// <summary>Two pipes are used. One to control the brakes, the other to charge the reservoirs.</summary>
         Air_twin_pipe,
         /// <summary>The car uses a manual braking system.</summary>
         Manual_Braking,
@@ -14,7 +15,7 @@ namespace Train.MsTs
         Vacuum_single_pipe,
         Vaccum_single_pipe = Vacuum_single_pipe,
         Vacumn_single_pipe = Vaccum_single_pipe,
-        /// <summary>Two pipes are used. One controls the vacuum brakes, the other supply the vacuum reservior.</summary>
+        /// <summary>Two pipes are used. One controls the vacuum brakes, the other supply the vacuum reservoir.</summary>
         Vacuum_twin_pipe,
         Vaccum_twin_pipe = Vacuum_twin_pipe,
         /// <summary>The brakes are controlled by a computer or complex electrical control system.</summary>

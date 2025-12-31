@@ -802,7 +802,7 @@ namespace OpenBve
 					 * Flip the train if running in reverse direction
 					 * We also need to add the length of the train so that the driver car is actually positioned on the platform
 					 *
-					 * Position on routes not specificially designed for reverse running may well be wrong, but that's life
+					 * Position on routes not specifically designed for reverse running may well be wrong, but that's life
 					 *
 					 * We should also suppress any sound events triggered by moving the train into the 'new' position
 					 */

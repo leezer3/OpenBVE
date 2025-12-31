@@ -143,7 +143,7 @@ namespace TrainManager.SafetySystems
 				bpPressure = airBrake.BrakePipe.CurrentPressure;
 				sapPressure = airBrake.StraightAirPipe.CurrentPressure;
 			}
-			else if (this.Train.Cars[this.Train.DriverCar].CarBrake is VaccumBrake vacuumBrake)
+			else if (this.Train.Cars[this.Train.DriverCar].CarBrake is VacuumBrake vacuumBrake)
 			{
 				// TODO: Plugin interface assumes that brake system is air brakes...
 			}

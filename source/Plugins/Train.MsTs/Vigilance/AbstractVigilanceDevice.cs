@@ -46,7 +46,7 @@ namespace Train.MsTs
 		internal bool AppliesFullBrake;
 		/// <summary>Whether emergency brake is applied on intervention</summary>
 		internal bool AppliesEmergencyBrake;
-		/// <summary>Whether power is cut on invervention</summary>
+		/// <summary>Whether power is cut on intervention</summary>
 		internal bool CutsPower;
 		/// <summary>Whether the engine is shut down on intervention</summary>
 		internal bool ShutsDownEngine;

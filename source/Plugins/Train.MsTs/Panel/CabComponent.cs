@@ -161,7 +161,7 @@ namespace Train.MsTs
 					Size.X *= rW;
 					Size.Y *= rH;
 					Plugin.CurrentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
-					if (wday > 0 & hday > 0)
+					if (wday > 0 && hday > 0)
 					{
 						Texture[] textures = new Texture[TotalFrames];
 						int row = 0;
@@ -205,7 +205,6 @@ namespace Train.MsTs
 						}
 
 					}
-
 					break;
 				case CabComponentType.TriState:
 				case CabComponentType.TwoState:
@@ -216,7 +215,7 @@ namespace Train.MsTs
 					Size.X *= rW;
 					Size.Y *= rH;
 					Plugin.CurrentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
-					if (wday > 0 & hday > 0)
+					if (wday > 0 && hday > 0)
 					{
 						Texture[] textures = new Texture[TotalFrames];
 						int row = 0;
@@ -268,7 +267,6 @@ namespace Train.MsTs
 
 
 					}
-
 					break;
 				case CabComponentType.Digital:
 					Position.X *= rW;
@@ -322,7 +320,6 @@ namespace Train.MsTs
 						currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, Units, currentDigit);
 						currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].ColorFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, Units, FrameMappings);
 					}
-
 					break;
 				case CabComponentType.CabSignalDisplay:
 					TotalFrames = 8;
@@ -333,7 +330,7 @@ namespace Train.MsTs
 					Size.X *= rW;
 					Size.Y *= rH;
 					Plugin.CurrentHost.QueryTextureDimensions(TexturePath, out wday, out hday);
-					if (wday > 0 & hday > 0)
+					if (wday > 0 && hday > 0)
 					{
 						Texture[] textures = new Texture[8];
 						// 4 h-frames, 2 v-frames
@@ -363,7 +360,6 @@ namespace Train.MsTs
 						}
 
 						currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject);
-
 					}
 					break;
 				case CabComponentType.DigitalClock:

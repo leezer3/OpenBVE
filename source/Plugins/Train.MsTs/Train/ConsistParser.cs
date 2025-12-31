@@ -201,6 +201,7 @@ namespace Train.MsTs
 					// For the minute at least, let's set our driver car to be the first car which has an interior view
 					hasCabview = true;
 					train.DriverCar = i;
+					train.CameraCar = i;
 				}
 
 				train.Cars[train.Cars.Length - 1].RearAxle.Follower.TriggerType = i == train.Cars.Length - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
@@ -226,7 +227,7 @@ namespace Train.MsTs
 
 		private int currentCarIndex = -1;
 		private CarBase currentCar;
-		private bool reverseCurentCar;
+		private bool reverseCurrentCar;
 		private void ParseBlock(Block block, ref TrainBase currentTrain)
 		{
 			Block newBlock;
@@ -297,10 +298,10 @@ namespace Train.MsTs
 						new Door(-1, 1000.0, 0),
 						new Door(1, 1000.0, 0)
 					};
-					if (reverseCurentCar)
+					if (reverseCurrentCar)
 					{
 						currentCar.Reverse();
-						reverseCurentCar = false;
+						reverseCurrentCar = false;
 					}
 					currentCar.Breaker = new Breaker(currentCar);
 					currentCar.Sounds.Plugin = new Dictionary<int, CarSound>();
@@ -341,7 +342,7 @@ namespace Train.MsTs
 					 * HOWEVER:
 					 * http://www.elvastower.com/forums/index.php?/topic/34187-or-consist-format/
 					 * OpenRails seems to treat these as:
-					 * [0] - WagonFileName => Must add approprite eng / wag extension
+					 * [0] - WagonFileName => Must add appropriate eng / wag extension
 					 * [1] - Search path relative to the TRAINS\trainset directory
 					 *
 					 * Going to match MSTS for the minute, but possibly needs an OpenRails detection mechanism(?)
@@ -382,7 +383,7 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Flip:
 					// Allows a car to be reversed within a consist
-					reverseCurentCar = true;
+					reverseCurrentCar = true;
 					break;
 				case KujuTokenID.EngineVariables:
 					// Sets properties of the train when loaded, ignore for the minute

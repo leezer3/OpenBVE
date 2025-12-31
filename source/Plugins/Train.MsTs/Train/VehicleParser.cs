@@ -100,9 +100,9 @@ namespace Train.MsTs
 			 */
 			if (isEngine)
 			{
-				if (engineCache.ContainsKey(wagonName))
+				if (engineCache.TryGetValue(wagonName, out string engineFile))
 				{
-					ReadWagonData(engineCache[wagonName], ref wagonName, true, ref currentCar, ref train);
+					ReadWagonData(engineFile, ref wagonName, true, ref currentCar, ref train);
 				}
 				else
 				{
@@ -124,9 +124,9 @@ namespace Train.MsTs
 			 * Now, we need to read the wagon properties to find the visual wagon to display
 			 * (The Engine only holds the physics data)
 			 */
-			if (wagonCache.ContainsKey(wagonName))
+			if (wagonCache.TryGetValue(wagonName, out string wagonFile))
 			{
-				ReadWagonData(wagonCache[wagonName], ref wagonName, false, ref currentCar, ref train);
+				ReadWagonData(wagonFile, ref wagonName, false, ref currentCar, ref train);
 			}
 			else
 			{
@@ -148,7 +148,7 @@ namespace Train.MsTs
 				currentCar.Specs.JerkPowerDown = 10.0;
 				if (currentCar.DrivingWheels.Count == 0)
 				{
-					// An engine must implicity have at least one set of driving wheels
+					// An engine must implicitly have at least one set of driving wheels
 					currentCar.DrivingWheels.Add(new Wheels(1, wheelRadius));
 				}
 				// NOTE: Amps figure appears to need to be divided by the total wheels (to give a per-axle figure)
@@ -173,10 +173,18 @@ namespace Train.MsTs
 						}
 						break;
 					case EngineType.DieselHydraulic:
-						AccelerationCurve[] accelerationCurves = new AccelerationCurve[Gears.Length];
-						for (int i = 0; i < Gears.Length; i++)
+						AccelerationCurve[] accelerationCurves;
+						if (Gears == null)
 						{
-							accelerationCurves[i] = new MSTSAccelerationCurve(currentCar, Gears[i].MaxTractiveForce, maxContinuousForce, Gears[i].MaximumSpeed);
+							accelerationCurves = new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) };
+						}
+						else
+						{
+							accelerationCurves = new AccelerationCurve[Gears.Length];
+							for (int i = 0; i < Gears.Length; i++)
+							{
+								accelerationCurves[i] = new MSTSAccelerationCurve(currentCar, Gears[i].MaxTractiveForce, maxContinuousForce, Gears[i].MaximumSpeed);
+							}
 						}
 
 						currentCar.TractionModel = new DieselEngine(currentCar, accelerationCurves, dieselIdleRPM, dieselIdleRPM, dieselMaxRPM, dieselRPMChangeRate, dieselRPMChangeRate, dieselIdleUse, dieselMaxUse);
@@ -278,13 +286,13 @@ namespace Train.MsTs
 						if (brakeSystemTypes.Contains(BrakeSystemType.EP) || brakeSystemTypes.Contains(BrakeSystemType.ECP))
 						{
 							// Combined air brakes and control signals
-							// Assume equivilant to ElectromagneticStraightAirBrake
+							// Assume equivalent to ElectromagneticStraightAirBrake
 							airBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, currentCar, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
 							airBrake.BrakePipe = new BrakePipe(operatingPressure, 10000000.0, 1500000.0, 5000000.0, true);
 						}
 						else
 						{
-							// Assume equivilant to ElectromagneticStraightAirBrake
+							// Assume equivalent to ElectromagneticStraightAirBrake
 							airBrake = new ElectromagneticStraightAirBrake(EletropneumaticBrakeType.None, currentCar, 0, 0, 0, 0, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
 							airBrake.BrakePipe = new BrakePipe(operatingPressure, 10000000.0, 1500000.0, 5000000.0, false);
 						}
@@ -305,14 +313,14 @@ namespace Train.MsTs
 
 					if (brakeSystemTypes.Contains(BrakeSystemType.Vaccum_single_pipe) || brakeSystemTypes.Contains(BrakeSystemType.Vacuum_twin_pipe))
 					{
-						VaccumBrake vaccumBrake = new VaccumBrake(currentCar, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
-						vaccumBrake.MainReservoir = new MainReservoir(71110, 84660, 0.01, 0.075 / train.Cars.Length); // ~21in/hg - ~25in/hg
-						vaccumBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure * 1.1, 90000.0, 300000.0, 200000.0);
-						vaccumBrake.AuxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakeCylinderMaximumPressure, 200000.0, 0.5, 1.0);
-						vaccumBrake.EqualizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
-						vaccumBrake.EqualizingReservoir.NormalPressure = 1.005 * (vaccumBrake.BrakeCylinder.EmergencyMaximumPressure + 0.75 * (vaccumBrake.MainReservoir.MinimumPressure - vaccumBrake.BrakeCylinder.EmergencyMaximumPressure));
-						vaccumBrake.BrakePipe = new BrakePipe(brakeCylinderMaximumPressure, 10000000.0, 1500000.0, 5000000.0, false);
-						currentCar.CarBrake = vaccumBrake;
+						VacuumBrake vacuumBrake = new VacuumBrake(currentCar, new AccelerationCurve[] { new MSTSDecelerationCurve(train, maxBrakeForce == 0 ? maxForce : maxBrakeForce) });
+						vacuumBrake.MainReservoir = new MainReservoir(71110, 84660, 0.01, 0.075 / train.Cars.Length); // ~21in/hg - ~25in/hg
+						vacuumBrake.BrakeCylinder = new BrakeCylinder(brakeCylinderMaximumPressure, brakeCylinderMaximumPressure * 1.1, 90000.0, 300000.0, 200000.0);
+						vacuumBrake.AuxiliaryReservoir = new AuxiliaryReservoir(0.975 * brakeCylinderMaximumPressure, 200000.0, 0.5, 1.0);
+						vacuumBrake.EqualizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
+						vacuumBrake.EqualizingReservoir.NormalPressure = 1.005 * (vacuumBrake.BrakeCylinder.EmergencyMaximumPressure + 0.75 * (vacuumBrake.MainReservoir.MinimumPressure - vacuumBrake.BrakeCylinder.EmergencyMaximumPressure));
+						vacuumBrake.BrakePipe = new BrakePipe(brakeCylinderMaximumPressure, 10000000.0, 1500000.0, 5000000.0, false);
+						currentCar.CarBrake = vacuumBrake;
 					}
 
 					currentCar.CarBrake.BrakeType = currentCar.Index == train.DriverCar || isEngine ? BrakeType.Main : BrakeType.Auxiliary;
@@ -398,7 +406,7 @@ namespace Train.MsTs
 
 					/*
 					 * Engine files contain two blocks, not in an enclosing block
-					 * Assume that these can be of arbritrary order, so read using a dictionary
+					 * Assume that these can be of arbitrary order, so read using a dictionary
 					 */
 					List<Block> blocks = TextualBlock.ReadBlocks(s);
 
@@ -626,7 +634,6 @@ namespace Train.MsTs
 
 					for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
 					{
-						
 						if (Plugin.CurrentHost.Plugins[i].Object != null && Plugin.CurrentHost.Plugins[i].Object.CanLoadObject(objectFile))
 						{
 							Plugin.CurrentHost.Plugins[i].Object.LoadObject(objectFile, Path.GetDirectoryName(fileName), Encoding.Default, out UnifiedObject carObject);
@@ -733,7 +740,7 @@ namespace Train.MsTs
 					}
 					break;
 				case KujuTokenID.MaxPower:
-					// maximum continous power at the rails provided to the wheels
+					// maximum continuous power at the rails provided to the wheels
 					break;
 				case KujuTokenID.MaxForce:
 					// maximum force applied when starting
@@ -1093,7 +1100,7 @@ namespace Train.MsTs
 				case KujuTokenID.GearBoxOverspeedPercentageForFailure:
 					if (Gears == null)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: Gears must be specified when using GearBoxOVerspeedPercentageForFailure.");
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Vehicle Parser: Gears must be specified when using GearBoxOverspeedPercentageForFailure.");
 						break;
 					}
 

@@ -33,6 +33,7 @@ using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using OpenBveApi.Hosts;
 using TrainManager.SafetySystems;
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
 namespace Train.MsTs
 {
@@ -184,7 +185,7 @@ namespace Train.MsTs
 					else
 					{
 						// digit
-						if (speedLim == double.PositiveInfinity)
+						if (double.IsPositiveInfinity(speedLim))
 						{
 							lastResult = -1; // cheat to hide
 						}

@@ -297,7 +297,7 @@ namespace Train.MsTs
 							i--;
 							if (newBlock.Token != KujuTokenID.Skip)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected additional block " + newBlock.Token + " encounted within Stream block in SMS file " + currentFile);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected additional block " + newBlock.Token + " encountered within Stream block in SMS file " + currentFile);
 							}
 							if (block.Length() - block.Position() <= 3)
 							{
@@ -483,17 +483,17 @@ namespace Train.MsTs
 							case SoundTrigger.Pantograph1Toggle:
 								if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.Pantograph, out Pantograph pantograph))
 								{
-									if (currentSoundSet.CurrentTrigger == SoundTrigger.Pantograph1Up)
+									switch (currentSoundSet.CurrentTrigger)
 									{
-										pantograph.RaiseSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
-									}
-									else if(currentSoundSet.CurrentTrigger == SoundTrigger.Pantograph1Down)
-									{
-										pantograph.LowerSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
-									}
-									else
-									{
-										pantograph.SwitchToggle = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+										case SoundTrigger.Pantograph1Up:
+											pantograph.RaiseSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
+											break;
+										case SoundTrigger.Pantograph1Down:
+											pantograph.LowerSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
+											break;
+										default:
+											pantograph.SwitchToggle = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+											break;
 									}
 								}
 								else
@@ -501,17 +501,17 @@ namespace Train.MsTs
 									// n.b. A WAG file may link to a model containing pantograph animations, or a SMS with pantograph sounds, but does not need to mention
 									//		that it exists, so we may need to add it here.
 									Pantograph newPantograph = new Pantograph(car.TractionModel);
-									if (currentSoundSet.CurrentTrigger == SoundTrigger.Pantograph1Up)
+									switch (currentSoundSet.CurrentTrigger)
 									{
-										newPantograph.RaiseSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
-									}
-									else if (currentSoundSet.CurrentTrigger == SoundTrigger.Pantograph1Down)
-									{
-										newPantograph.LowerSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
-									}
-									else
-									{
-										newPantograph.SwitchToggle = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+										case SoundTrigger.Pantograph1Up:
+											newPantograph.RaiseSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
+											break;
+										case SoundTrigger.Pantograph1Down:
+											newPantograph.LowerSound = new CarSound(Plugin.CurrentHost, soundFile, 100, Vector3.Zero);
+											break;
+										default:
+											newPantograph.SwitchToggle = new CarSound(Plugin.CurrentHost, soundFile, 2.0, car.Driver);
+											break;
 									}
 									car.TractionModel.Components.Add(EngineComponent.Pantograph, newPantograph);
 								}
@@ -675,7 +675,7 @@ namespace Train.MsTs
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;
 						default:
-							throw new Exception("Unexpected enum value " + token + " encounted in SMS file " + currentFile);
+							throw new Exception("Unexpected enum value " + token + " encountered in SMS file " + currentFile);
 					}
 
 					currentSoundStream.FrequencyCurve = new MsTsFrequencyCurve(car, token, curvePoints);
@@ -685,7 +685,7 @@ namespace Train.MsTs
 					curvePoints = new Tuple<double, double>[numPoints];
 					for (int i = 0; i < numPoints; i++)
 					{
-						// Normalise Variable2 values to be consistant across traction models
+						// Normalise Variable2 values to be consistent across traction models
 						// MSTS yuck...
 						if (car.TractionModel is ElectricEngine)
 						{
