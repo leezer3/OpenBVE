@@ -849,7 +849,8 @@ namespace OpenBve
 				Program.Renderer.Camera.SavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
 				Program.Renderer.Camera.SavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].TrackPosition - 10.0, 1.0);
 			}
-			
+			Program.Renderer.Camera.SavedExterior.CameraCar = TrainManager.PlayerTrain.DriverCar; // otherwise non-default driver car jumps to Car0 when first switching to exterior
+
 			// signalling sections
 			for (int i = 0; i < Program.TrainManager.Trains.Count; i++)
 			{
