@@ -422,7 +422,7 @@ namespace Train.MsTs
 					{
 						if (engineBlocks.Count > 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Multiple engine blocks encounted in MSTS ENG file "+ fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Multiple engine blocks encountered in MSTS ENG file "+ fileName);
 						}
 						return ParseBlock(engineBlocks[0], fileName, ref wagonName, true, ref car, ref train);
 					}
@@ -430,7 +430,7 @@ namespace Train.MsTs
 					{
 						if (wagonBlocks.Count > 1)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Multiple wagon blocks encounted in MSTS WAG file " + fileName);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "MSTS Vehicle Parser: Multiple wagon blocks encountered in MSTS WAG file " + fileName);
 						}
 						return ParseBlock(wagonBlocks[0], fileName, ref wagonName, false, ref car, ref train);
 					}
@@ -1175,6 +1175,9 @@ namespace Train.MsTs
 							// Fire condition
 							// Coal quality
 							// NOTE: Max fuel / water levels are set by MaxTenderCoalMass and MaxTenderWaterMass
+							break;
+						case EngineType.Electric:
+							// Not present
 							break;
 					}
 					break;

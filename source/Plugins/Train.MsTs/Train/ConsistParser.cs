@@ -63,9 +63,9 @@ namespace Train.MsTs
 			}
 			train.Handles.Reverser = new ReverserHandle(train);
 			train.Handles.EmergencyBrake = new EmergencyHandle(train);
-			train.Handles.Power = new PowerHandle(8, 8, new double[] { }, new double[] { }, train);
-			train.Handles.Brake = new BrakeHandle(8, 8, train.Handles.EmergencyBrake, new double[] { }, new double[] { }, train);
-			train.Handles.LocoBrake = new LocoBrakeHandle(0, train.Handles.EmergencyBrake, new double[] {}, new double[] {}, train);
+			train.Handles.Power = new PowerHandle(8, train);
+			train.Handles.Brake = new BrakeHandle(8, train.Handles.EmergencyBrake, train);
+			train.Handles.LocoBrake = new LocoBrakeHandle(0, train.Handles.EmergencyBrake, train);
 			train.Handles.LocoBrakeType = LocoBrakeType.Independant;
 			train.Handles.HasLocoBrake = false;
 			train.Handles.HoldBrake = new HoldBrakeHandle(train);

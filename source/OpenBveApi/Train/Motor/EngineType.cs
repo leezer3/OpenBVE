@@ -31,7 +31,7 @@ namespace OpenBveApi.Motor
 		NoEngine = 0,
 		/// <summary>Diesel prime mover, electric transmission</summary>
 		Diesel,
-		/// <summary>Diesel prime mover, hydralic transmission</summary>
+		/// <summary>Diesel prime mover, hydraulic transmission</summary>
 		DieselHydraulic,
 		/// <summary>Steam engine</summary>
 		Steam,

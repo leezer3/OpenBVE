@@ -20,6 +20,16 @@ namespace TrainManager.Handles
 			DelayedChanges = new HandleChange[] { };
 		}
 
+		public BrakeHandle(int max, EmergencyHandle eb, TrainBase Train) : base(Train)
+		{
+			MaximumNotch = max;
+			MaximumDriverNotch = max;
+			EmergencyBrake = eb;
+			DelayUp = null;
+			DelayDown = null;
+			DelayedChanges = new HandleChange[] { };
+		}
+
 		/// <summary>Provides a reference to the associated EB handle</summary>
 		private readonly EmergencyHandle EmergencyBrake;
 

@@ -13,10 +13,18 @@ namespace TrainManager.Handles
 	{
 		public LocoBrakeHandle(int max, EmergencyHandle eb, double[] delayUp, double[] delayDown, TrainBase Train) : base (Train)
 		{
-			this.MaximumNotch = max;
-			this.EmergencyBrake = eb;
-			this.DelayUp = delayUp;
-			this.DelayDown = delayDown;
+			MaximumNotch = max;
+			EmergencyBrake = eb;
+			DelayUp = delayUp;
+			DelayDown = delayDown;
+		}
+
+		public LocoBrakeHandle(int max, EmergencyHandle eb, TrainBase Train) : base(Train)
+		{
+			MaximumNotch = max;
+			EmergencyBrake = eb;
+			DelayUp = null;
+			DelayDown = null;
 		}
 
 		/// <summary>Provides a reference to the associated EB handle</summary>

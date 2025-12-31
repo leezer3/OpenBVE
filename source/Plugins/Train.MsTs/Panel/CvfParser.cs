@@ -355,6 +355,8 @@ namespace Train.MsTs
 						case Units.Kgs_Per_Square_Cm:
 							Code = "brakecylinder 98066.5 *";
 							break;
+						default:
+							throw new Exception(subjectUnits + " is not a valid unit for " + subject);
 					}
 					break;
 				case PanelSubject.Brake_Pipe:
@@ -375,6 +377,8 @@ namespace Train.MsTs
 						case Units.Kgs_Per_Square_Cm:
 							Code = "brakepipe 98066.5 *";
 							break;
+						default:
+							throw new Exception(subjectUnits + " is not a valid unit for " + subject);
 					}
 					break;
 				case PanelSubject.Main_Res:
@@ -396,6 +400,8 @@ namespace Train.MsTs
 						case Units.Kgs_Per_Square_Cm:
 							Code = "mainreservoir 98066.5 *";
 							break;
+						default:
+							throw new Exception(subjectUnits + " is not a valid unit for " + subject);
 					}
 					break;
 				case PanelSubject.Eq_Res:
@@ -416,6 +422,8 @@ namespace Train.MsTs
 						case Units.Kgs_Per_Square_Cm:
 							Code = "equalizingreservoir 98066.5 *";
 							break;
+						default:
+							throw new Exception(subjectUnits + " is not a valid unit for " + subject);
 					}
 					break;
 				case PanelSubject.Direction:
@@ -444,6 +452,8 @@ namespace Train.MsTs
 						case Units.Kilometers_Per_Hour:
 							Code = "speed abs 3.6 *";
 							break;
+						default:
+							throw new Exception(subjectUnits + " is not a valid unit for " + subject);
 					}
 					break;
 				case PanelSubject.Throttle:
@@ -468,6 +478,8 @@ namespace Train.MsTs
 						case Units.Kilometers_Per_Hour:
 							Code = "routelimit sectionlimit max 1 Minus == 1 Minus routelimit sectionlimit max 3.6 * ?";
 							break;
+						default:
+							throw new Exception(subjectUnits + " is not a valid unit for " + subject);
 					}
 					break;
 				case PanelSubject.Emergency_Brake:

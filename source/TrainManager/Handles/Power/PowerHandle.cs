@@ -23,8 +23,8 @@ namespace TrainManager.Handles
 		{
 			MaximumNotch = max;
 			MaximumDriverNotch = max;
-			DelayUp = new double[0];
-			DelayDown = new double[0];
+			DelayUp = null;
+			DelayDown = null;
 			DelayedChanges = new HandleChange[] { };
 		}
 
