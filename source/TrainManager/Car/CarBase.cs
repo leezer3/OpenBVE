@@ -625,13 +625,13 @@ namespace TrainManager.Car
 					{
 						TrainManagerBase.currentHost.HideObject(currentCarSection.Groups[j].Elements[k].internalObject);
 					}
-				}
 
-				if (currentCarSection.Groups[0].Keyframes != null)
-				{
-					for (int j = 0; j < currentCarSection.Groups[0].Keyframes.Objects.Length; j++)
+					if (currentCarSection.Groups[j].Keyframes != null)
 					{
-						TrainManagerBase.currentHost.HideObject(currentCarSection.Groups[0].Keyframes.Objects[j]);
+						for (int k = 0; k < currentCarSection.Groups[0].Keyframes.Objects.Length; k++)
+						{
+							TrainManagerBase.currentHost.HideObject(currentCarSection.Groups[j].Keyframes.Objects[k]);
+						}
 					}
 				}
 			}
