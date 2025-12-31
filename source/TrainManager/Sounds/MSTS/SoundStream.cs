@@ -45,7 +45,7 @@ namespace TrainManager.MsTsSounds
 
 		private SoundSource soundSource;
 
-		private CarBase car;
+		private readonly CarBase car;
 
 		public SoundStream(CarBase baseCar, CameraViewMode activationCameraModes, CameraViewMode deactivationCameraModes)
 		{

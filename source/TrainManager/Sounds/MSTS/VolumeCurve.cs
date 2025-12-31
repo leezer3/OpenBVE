@@ -57,6 +57,16 @@ namespace TrainManager.MsTsSounds
 							}
 						}
 						break;
+					case KujuTokenID.Variable1Controlled:
+						double value = Math.Abs(car.CurrentSpeed / 1000 / car.DrivingWheels[0].Radius / Math.PI * 5);
+						for (int i = volumePoints.Length - 1; i >= 0; i--)
+						{
+							if (value >= volumePoints[i].Item1)
+							{
+								return volumePoints[i].Item2;
+							}
+						}
+						break;
 					case KujuTokenID.Variable2Controlled:
 						for (int i = volumePoints.Length - 1; i >= 0; i--)
 						{

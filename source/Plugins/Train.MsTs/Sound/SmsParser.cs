@@ -174,9 +174,20 @@ namespace Train.MsTs
 						currentSoundStream.Triggers.Add(new SpeedDecPast(SoundBuffers, SelectionMethod, VariableValue, CurrentSoundType != KujuTokenID.PlayOneShot));
 						break;
 					case KujuTokenID.Variable1_Inc_Past:
+						if (VariableValue > 0)
+						{
+							// https://www.elvastower.com/forums/index.php?/topic/34789-volumecurve-variable1controlled-in-a-chuff-stream/#entry267315
+							// should be positive (Check if this is actually an OR bug; e.g. GWR81xx\sound\fscotcab.sms uses negative Variable1 values)
+							break;
+						}
 						currentSoundStream.Triggers.Add(new Variable1IncPast(SoundBuffers, SelectionMethod, VariableValue, CurrentSoundType != KujuTokenID.PlayOneShot));
 						break;
 					case KujuTokenID.Variable1_Dec_Past:
+						if (VariableValue > 0)
+						{
+							// see above
+							break;
+						}
 						currentSoundStream.Triggers.Add(new Variable1DecPast(SoundBuffers, SelectionMethod, VariableValue, CurrentSoundType != KujuTokenID.PlayOneShot));
 						break;
 					case KujuTokenID.Variable2_Inc_Past:

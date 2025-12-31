@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using OpenBve.Formats.MsTs;
 using SoundManager;
 using TrainManager.Car;
@@ -30,9 +31,6 @@ namespace TrainManager.MsTsSounds
 {
 	/// <summary>A sound trigger controlled by Variable1 increasing past the setpoint</summary>
 	/// <remarks>Variable1 represents the current wheel rotation speed</remarks>
-	/// Diesel- EngineRPM
-	/// Electric- TractiveForce
-	/// Steam- CylinderPressure
 	public class Variable1IncPast : SoundTrigger
 	{
 		private readonly double variableValue;
@@ -49,14 +47,15 @@ namespace TrainManager.MsTsSounds
 
 		public override void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
 		{
-			if (car.baseTrain.Handles.Power.Actual > 0 && car.CurrentSpeed / 1000 / car.DrivingWheels[0].Radius / System.Math.PI * 5 > variableValue)
+			double value = Math.Abs(car.CurrentSpeed / 1000 / car.DrivingWheels[0].Radius / Math.PI * 5);
+			if (car.baseTrain.Handles.Power.Actual > 0 && value > variableValue && Triggered == false)
 			{
 				soundBuffer = Buffer;
 				soundLoops = SoundLoops;
 				Triggered = true;
 			}
 
-			if (car.baseTrain.Handles.Power.Actual == 0 || car.TractionModel.CurrentPower < variableValue)
+			if (value < variableValue)
 			{
 				Triggered = false;
 			}
@@ -84,14 +83,15 @@ namespace TrainManager.MsTsSounds
 
 		public override void Update(double timeElapsed, CarBase car, ref SoundBuffer soundBuffer, ref bool soundLoops)
 		{
-			if (car.baseTrain.Handles.Power.Actual > 0 && car.CurrentSpeed / 1000 / car.DrivingWheels[0].Radius / System.Math.PI * 5 < variableValue)
+			double value = Math.Abs(car.CurrentSpeed / 1000 / car.DrivingWheels[0].Radius / Math.PI * 5);
+			if (car.baseTrain.Handles.Power.Actual > 0 && value < variableValue && Triggered == false)
 			{
 				soundBuffer = Buffer;
 				soundLoops = SoundLoops;
 				Triggered = true;
 			}
 
-			if (car.baseTrain.Handles.Power.Actual == 0 || car.TractionModel.CurrentPower > variableValue)
+			if (value > variableValue)
 			{
 				Triggered = false;
 			}
