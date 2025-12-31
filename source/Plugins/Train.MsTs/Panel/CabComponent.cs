@@ -55,7 +55,7 @@ namespace Train.MsTs
 		private bool MouseControl;
 		private bool DirIncrease;
 		private int LeadingZeros;
-		private FrameMapping[] FrameMappings = new FrameMapping[0];
+		private FrameMapping[] FrameMappings = Array.Empty<FrameMapping>();
 		private readonly Vector3 PanelPosition;
 		private CabComponentStyle Style;
 		private Tuple<double, Color24>[] PositiveColors;
@@ -422,7 +422,7 @@ namespace Train.MsTs
 					for (int i = 0; i < TotalFrames; i++)
 					{
 						FrameMappings[i].FrameKey = i;
-						var stateBlock = block.ReadSubBlock(KujuTokenID.State);
+						Block stateBlock = block.ReadSubBlock(KujuTokenID.State);
 						while (stateBlock.Length() - stateBlock.Position() > 3)
 						{
 							Block subBlock = stateBlock.ReadSubBlock(new[] { KujuTokenID.Style, KujuTokenID.SwitchVal });
@@ -522,7 +522,7 @@ namespace Train.MsTs
 						};
 						if (block.Length() - block.Position() > 3)
 						{
-							var subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
+							Block subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
 							PositiveColors[0] = new Tuple<double, Color24>(0, new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16()));
 						}
 					}
@@ -532,7 +532,7 @@ namespace Train.MsTs
 						double value = 0;
 						for (int i = 0; i < numColors; i++)
 						{
-							var subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
+							Block subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
 							Color24 color = new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16());
 							PositiveColors[i] = new Tuple<double, Color24>(value, color);
 							if (i < numColors - 1)
@@ -555,7 +555,7 @@ namespace Train.MsTs
 						};
 						if (block.Length() - block.Position() > 3)
 						{
-							var subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
+							Block subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
 							NegativeColors[0] = new Tuple<double, Color24>(double.NegativeInfinity, new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16()));
 						}
 					}
@@ -565,7 +565,7 @@ namespace Train.MsTs
 						double value = double.NegativeInfinity;
 						for (int i = 0; i < numColors; i++)
 						{
-							var subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
+							Block subBlock = block.ReadSubBlock(KujuTokenID.ControlColour);
 							Color24 color = new Color24((byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16(), (byte)subBlock.ReadInt16());
 							NegativeColors[i] = new Tuple<double, Color24>(value, color);
 							if (i < numColors - 1)

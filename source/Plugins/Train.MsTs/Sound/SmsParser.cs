@@ -40,6 +40,7 @@ using TrainManager.Car.Systems;
 using TrainManager.Motor;
 using TrainManager.MsTsSounds;
 using TrainManager.SafetySystems;
+using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace Train.MsTs
 {
@@ -74,8 +75,8 @@ namespace Train.MsTs
 				headerString = Encoding.ASCII.GetString(buffer, 0, 8);
 			}
 
-			// SIMISA@F  means compressed
-			// SIMISA@@  means uncompressed
+			// SIMISA@F means compressed
+			// SIMISA@@ means uncompressed
 			if (headerString.StartsWith("SIMISA@F"))
 			{
 				fb = new ZlibStream(fb, CompressionMode.Decompress);
@@ -88,7 +89,7 @@ namespace Train.MsTs
 			}
 			else if (!headerString.StartsWith("SIMISA@@"))
 			{
-				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognized SMS file header " + headerString + " in " + fileName);
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unrecognized SMS header " + headerString + " in " + fileName);
 				return false;
 			}
 
@@ -308,11 +309,11 @@ namespace Train.MsTs
 							i--;
 							if (newBlock.Token != KujuTokenID.Skip)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected additional block " + newBlock.Token + " encountered within Stream block in SMS file " + currentFile);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected additional block " + newBlock.Token + " encountered within Streams block in SMS " + currentFile);
 							}
 							if (block.Length() - block.Position() <= 3)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numStreams + ", but only found " + i + " in Stream block in SMS file " + currentFile);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numStreams + ", but only found " + i + " in Streams block in SMS " + currentFile);
 								break;
 							}
 							continue;
@@ -321,7 +322,7 @@ namespace Train.MsTs
 						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 						if (block.Length() - block.Position() <= 3)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numStreams + ", but only found " + i + " in Stream block in SMS file " + currentFile);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numStreams + ", but only found " + i + " in Streams block in SMS " + currentFile);
 							break;
 						}
 					}
@@ -333,7 +334,7 @@ namespace Train.MsTs
 						if (newBlock.Token == KujuTokenID.Stream)
 						{
 							// EBPHNWSE121.sms - Completely bugged, copy + paste error (?)
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected Stream found within a Stream block in SMS file " + currentFile);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected Stream found within a Stream block in SMS " + currentFile);
 							continue;
 						}
 						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
@@ -352,12 +353,12 @@ namespace Train.MsTs
 					int numTriggers = block.ReadInt32();
 					for (int i = 0; i < numTriggers; i++)
 					{
-						// two triggers per sound set  (start + stop)
+						// two triggers per sound set (start + stop)
 						newBlock = block.ReadSubBlock(new [] {KujuTokenID.Variable_Trigger, KujuTokenID.Initial_Trigger, KujuTokenID.Discrete_Trigger, KujuTokenID.Random_Trigger, KujuTokenID.Dist_Travelled_Trigger});
 						ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 						if (block.Length() - block.Position() <= 3)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numTriggers + ", but only found " + i + " in Triggers block in SMS file " + currentFile);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Expected " + numTriggers + ", but only found " + i + " in Triggers block in SMS " + currentFile);
 							break;
 						}
 					}
@@ -405,7 +406,7 @@ namespace Train.MsTs
 						{
 							case SoundTrigger.VariableControlled:
 								// hack
-								Plugin.CurrentHost.RegisterSound(soundFile, currentSoundSet.ActivationDistance, out var soundHandle);
+								Plugin.CurrentHost.RegisterSound(soundFile, currentSoundSet.ActivationDistance, out SoundHandle soundHandle);
 								currentSoundSet.SoundBuffers[currentSoundSet.CurrentBuffer] = soundHandle as SoundBuffer;
 								break;
 							case SoundTrigger.ReverserToForwardBackward:
@@ -571,26 +572,25 @@ namespace Train.MsTs
 					{
 						if (currentSoundSet.CurrentTrigger != SoundTrigger.Skip)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "MSTS Sound File " + soundFile + " was not found in SMS " + currentFile);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "Sound File " + soundFile + " was not found in SMS " + currentFile);
 						}
 					}
 					int checkDigit = block.ReadInt32();
 					if (checkDigit != -1)
 					{
 						// Unknown purpose at the minute- set to -1 everywhere
-						throw new Exception();
+						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sound Stream check digit was incorrect in SMS " + currentFile);
 					}
 					
 					break;
 				case KujuTokenID.SelectionMethod:
 					KujuTokenID token = block.ReadEnumValue(default(KujuTokenID));
-					switch (token)
+					if (token != KujuTokenID.SequentialSelection && token != KujuTokenID.RandomSelection)
 					{
-						case KujuTokenID.SequentialSelection:
-							break;
-						case KujuTokenID.RandomSelection:
-							break;
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Unexpected enum value " + token + " for SoundStream Selection Method in SMS " + currentFile);
+						break;
 					}
+					currentSoundSet.SelectionMethod = token;
 					break;
 				case KujuTokenID.Discrete_Trigger:
 					currentSoundSet.CurrentTrigger = (SoundTrigger)block.ReadInt32(); // stored as integer
@@ -633,7 +633,7 @@ namespace Train.MsTs
 						case KujuTokenID.Variable3Controlled:
 							break;
 						default:
-							throw new Exception("Unexpected enum value " + currentSoundSet.VariableTriggerType + " encounted in SMS file " + currentFile);
+							throw new Exception("Unexpected enum value " + currentSoundSet.VariableTriggerType + " encountered in SMS " + currentFile);
 					}
 					break;
 				case KujuTokenID.PlayOneShot:
@@ -668,7 +668,7 @@ namespace Train.MsTs
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;
 						default:
-							throw new Exception("Unexpected enum value " + token + " encountered in SMS file " + currentFile);
+							throw new Exception("Unexpected enum value " + token + " encountered in SMS " + currentFile);
 					}
 
 					currentSoundStream.VolumeCurve = new MsTsVolumeCurve(car, token, curvePoints);
@@ -686,7 +686,7 @@ namespace Train.MsTs
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;
 						default:
-							throw new Exception("Unexpected enum value " + token + " encountered in SMS file " + currentFile);
+							throw new Exception("Unexpected enum value " + token + " encountered in SMS " + currentFile);
 					}
 
 					currentSoundStream.FrequencyCurve = new MsTsFrequencyCurve(car, token, curvePoints);
