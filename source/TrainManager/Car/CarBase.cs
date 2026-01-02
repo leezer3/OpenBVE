@@ -74,10 +74,9 @@ namespace TrainManager.Car
 		public CarConstSpeed ConstSpeed;
 		/// <summary>The readhesion device for this car</summary>
 		public AbstractReAdhesionDevice ReAdhesionDevice;
-		/// <summary>The DriverSupervisionDevice for this car</summary>
-		/// <summary>The position of the beacon reciever within the car</summary>
+		/// <summary>The position of the beacon receiver within the car</summary>
 		public double BeaconReceiverPosition;
-		/// <summary>The beacon reciever</summary>
+		/// <summary>The beacon receiver</summary>
 		public TrackFollower BeaconReceiver;
 		/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
 		public CameraRestrictionMode CameraRestrictionMode = CameraRestrictionMode.NotSpecified;
