@@ -124,22 +124,35 @@ namespace OpenBve
 				return;
 			}
 
-			/*
-			 * First check for a train.ai file- Functionally identical, but allows for differently configured AI
-			 * trains not to show up as drivable
-			 */
-			string trainData = Path.CombineFile(trainDirectory, "train.ai");
-			if (!File.Exists(trainData))
+			string trainData;
+			if (!trainDirectory.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase) || !File.Exists(trainDirectory))
 			{
-				// Check for the standard drivable train.dat
-				trainData = Path.CombineFile(trainDirectory, "train.dat");
+				/*
+				 * First check for a train.ai file- Functionally identical, but allows for differently configured AI
+				 * trains not to show up as drivable
+				 */
+				trainData = Path.CombineFile(trainDirectory, "train.ai");
+				if (!File.Exists(trainData))
+				{
+					// Check for the standard drivable train.dat
+					trainData = Path.CombineFile(trainDirectory, "train.dat");
+				}
+
+				string exteriorFile = Path.CombineFile(trainDirectory, "extensions.cfg");
+				if (!File.Exists(trainData) || !File.Exists(exteriorFile))
+				{
+					Interface.AddMessage(MessageType.Error, true,
+						$"The supplied train folder in TrackFollowingObject {fileName} does not contain an exterior model.");
+					return;
+				}
 			}
-			string exteriorFile = Path.CombineFile(trainDirectory, "extensions.cfg");
-			if (!File.Exists(trainData) || !File.Exists(exteriorFile))
+			else
 			{
-				Interface.AddMessage(MessageType.Error, true, $"The supplied train folder in TrackFollowingObject {fileName} does not contain an exterior model.");
-				return;
+				// MSTS consist
+				trainData = trainDirectory;
 			}
+
+
 			AbstractTrain currentTrain = Train;
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
@@ -253,6 +266,19 @@ namespace OpenBve
 						try
 						{
 							TmpPath = Path.CombineDirectory(Path.GetDirectoryName(FileName), value);
+
+							if (value.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
+							{
+								// potential MSTS consist
+								string consistDirectory = Path.CombineDirectory(Program.FileSystem.MSTSDirectory, "TRAINS\\Consists");
+								string consistFile = Path.CombineFile(consistDirectory, value);
+								if (File.Exists(consistFile))
+								{
+									trainDirectory = consistFile;
+									break;
+								}
+
+							}
 							if (!Directory.Exists(TmpPath))
 							{
 								TmpPath = Path.CombineFile(Program.FileSystem.InitialTrainFolder, value);
