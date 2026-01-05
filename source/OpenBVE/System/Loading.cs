@@ -173,7 +173,18 @@ namespace OpenBve {
 			if (string.IsNullOrEmpty(routeFile) || string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
 				return string.Empty;
 			}
-			
+
+			if (Directory.Exists(Program.FileSystem.MSTSDirectory) && Interface.CurrentOptions.TrainName.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
+			{
+				// potential MSTS consist
+				string consistDirectory = Path.CombineDirectory(Program.FileSystem.MSTSDirectory, "TRAINS\\Consists");
+				string consistFile = Path.CombineFile(consistDirectory, Interface.CurrentOptions.TrainName);
+				if (File.Exists(consistFile))
+				{
+					return consistFile;
+				}
+			}
+
 			string currentFolder;
 			try {
 				currentFolder = Path.GetDirectoryName(routeFile);
