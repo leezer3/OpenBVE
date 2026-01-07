@@ -5,7 +5,7 @@
 			<group id="language">
 				<trans-unit id="name">
 					<source>English (United States)</source>
-					<target state="translated">Svensk (Sverige)</target>
+					<target state="translated">Svenska (Sverige)</target>
 				</trans-unit>
 				<trans-unit id="flag">
 					<source>SE.png</source>
