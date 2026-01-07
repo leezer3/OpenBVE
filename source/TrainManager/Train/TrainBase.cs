@@ -602,10 +602,7 @@ namespace TrainManager.Trains
 				CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].CurrentMass;
 				TrainMass += Cars[i].CurrentMass;
 				// update engine etc.
-				if (Cars[i].TractionModel.ProvidesPower && Cars[i].TractionModel != null)
-				{
-					Cars[i].TractionModel.Update(timeElapsed);
-				}
+				Cars[i].TractionModel?.Update(timeElapsed);
 			}
 
 			if (TrainMass != 0.0)

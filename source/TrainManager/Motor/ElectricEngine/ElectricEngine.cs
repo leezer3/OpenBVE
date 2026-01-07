@@ -22,10 +22,12 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System.ServiceModel;
 using OpenBveApi.Motor;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
+using TrainManager.Trains;
 
 
 namespace TrainManager.Motor
@@ -57,6 +59,12 @@ namespace TrainManager.Motor
 				if (BaseCar.baseTrain.Specs.PantographState != PantographState.Raised)
 				{
 					return 0;
+				}
+
+				if (BaseCar.baseTrain.AI is TrackFollowingObjectAI)
+				{
+					// HACK: TFO AI doesn't update power properly
+					return BaseCar.CurrentSpeed == 0 ? 0 : 1;
 				}
 
 				if (BaseCar.baseTrain.Handles.Power is VariableHandle variableHandle)
