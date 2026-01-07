@@ -24,8 +24,8 @@
 
 namespace TrainManager.BrakeSystems
 {
-	/// <summary>Base class for an abstract air reservior</summary>
-	public abstract class AbstractReservior
+	/// <summary>Base class for an abstract air reservoir</summary>
+	public abstract class AbstractReservoir
 	{
 		/// <summary>The maximum pressure in Pa</summary>
 		public readonly double MaximumPressure;
@@ -40,7 +40,7 @@ namespace TrainManager.BrakeSystems
 		/// <summary>The total volume of air contained in the reservoir (at atmospheric pressure) in m³</summary>
 		public double AirVolume => Volume / 101325 * CurrentPressure;
 
-		protected AbstractReservior(double chargeRate, double minimumPressure, double maximumPressure)
+		protected AbstractReservoir(double chargeRate, double minimumPressure, double maximumPressure)
 		{
 			ChargeRate = chargeRate;
 			MinimumPressure = minimumPressure;
@@ -48,7 +48,7 @@ namespace TrainManager.BrakeSystems
 			CurrentPressure = maximumPressure;
 		}
 
-		protected AbstractReservior(double chargeRate, double currentPressure)
+		protected AbstractReservoir(double chargeRate, double currentPressure)
 		{
 			ChargeRate = chargeRate;
 			MinimumPressure = 0;

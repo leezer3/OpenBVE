@@ -1435,8 +1435,7 @@ namespace TrainManager.Car
 				}
 
 				double diff = target - Specs.PerceivedSpeed;
-				double rate = (diff < 0.0 ? 5.0 : 1.0) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity *
-				              TimeElapsed;
+				double rate = (diff < 0.0 ? 5.0 : 1.0) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity * TimeElapsed;
 				rate *= 1.0 - 0.7 / (diff * diff + 1.0);
 				double factor = rate * rate;
 				factor = 1.0 - factor / (factor + 1000.0);
@@ -1451,37 +1450,20 @@ namespace TrainManager.Car
 				}
 			}
 			// calculate new speed
+			if (Math.Abs(PowerRollingCouplerAcceleration) < FrictionBrakeAcceleration)
 			{
-				int d = Math.Sign(CurrentSpeed);
-				double a = PowerRollingCouplerAcceleration;
-				double b = FrictionBrakeAcceleration;
-				if (Math.Abs(a) < b)
+				if (Math.Sign(PowerRollingCouplerAcceleration) == Math.Sign(CurrentSpeed))
 				{
-					if (Math.Sign(a) == d)
+					if (CurrentSpeed == 0)
 					{
-						if (d == 0)
-						{
-							Speed = 0.0;
-						}
-						else
-						{
-							double c = (b - Math.Abs(a)) * TimeElapsed;
-							if (Math.Abs(CurrentSpeed) > c)
-							{
-								Speed = CurrentSpeed - d * c;
-							}
-							else
-							{
-								Speed = 0.0;
-							}
-						}
+						Speed = 0.0;
 					}
 					else
 					{
-						double c = (Math.Abs(a) + b) * TimeElapsed;
+						double c = (FrictionBrakeAcceleration - Math.Abs(PowerRollingCouplerAcceleration)) * TimeElapsed;
 						if (Math.Abs(CurrentSpeed) > c)
 						{
-							Speed = CurrentSpeed - d * c;
+							Speed = CurrentSpeed - Math.Sign(CurrentSpeed) * c;
 						}
 						else
 						{
@@ -1491,8 +1473,20 @@ namespace TrainManager.Car
 				}
 				else
 				{
-					Speed = CurrentSpeed + (a - b * d) * TimeElapsed;
+					double c = (Math.Abs(PowerRollingCouplerAcceleration) + FrictionBrakeAcceleration) * TimeElapsed;
+					if (Math.Abs(CurrentSpeed) > c)
+					{
+						Speed = CurrentSpeed - Math.Sign(CurrentSpeed) * c;
+					}
+					else
+					{
+						Speed = 0.0;
+					}
 				}
+			}
+			else
+			{
+				Speed = CurrentSpeed + (PowerRollingCouplerAcceleration - FrictionBrakeAcceleration * Math.Sign(CurrentSpeed)) * TimeElapsed;
 			}
 		}
 

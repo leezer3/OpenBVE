@@ -11,7 +11,7 @@ namespace TrainManager.Handles
 		/// <summary>The notch set by the driver</summary>
 		public int Driver;
 
-		/// <summary>The notch set by the safety sytem</summary>
+		/// <summary>The notch set by the safety system</summary>
 		public int Safety => safetyState;
 
 		/// <summary>Backing property for the safety state</summary>

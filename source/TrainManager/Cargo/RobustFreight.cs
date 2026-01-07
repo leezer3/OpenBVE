@@ -20,7 +20,7 @@ namespace TrainManager.Cargo
 		
 		public override void UpdateLoading(double ratio)
 		{
-			// NOTE: This is the same calculation as the passenger mass at present for backwards compatability
+			// NOTE: This is the same calculation as the passenger mass at present for backwards compatibility
 			Ratio = ratio;
 			double area = baseCar.Width * baseCar.Length;
 			const double freightPerArea = 1.0; //Nominal 1 freight unit per meter of interior space

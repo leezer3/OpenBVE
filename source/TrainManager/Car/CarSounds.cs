@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using SoundManager;
-using TrainManager.Motor;
 using TrainManager.MsTsSounds;
 
 namespace TrainManager.Car

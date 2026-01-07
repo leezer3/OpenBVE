@@ -497,7 +497,7 @@ namespace TrainManager.Trains
 										Jump(i + 1, 0);
 										break;
 									case StationType.Jump:
-										// Jumps to an arbritrary station as defined in the routefile
+										// Jumps to an arbitrary station as defined in the routefile
 										Jump(TrainManagerBase.CurrentRoute.Stations[i].JumpIndex, 0);
 										break;
 								}

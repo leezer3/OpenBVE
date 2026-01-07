@@ -177,42 +177,39 @@ namespace TrainManager.Car
 		private void UpdateSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
 		{
 			//TODO: Check whether the UP and SIDE vectors should actually be recalculated, as this just uses that of the root car
-			{
-				Vector3 p = Position;
-				double timeDelta;
-				bool updatefunctions;
+			double timeDelta;
+			bool updatefunctions;
 
-				if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate != 0.0)
+			if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate != 0.0)
+			{
+				if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate >= CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate)
 				{
-					if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate >= CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate)
-					{
-						timeDelta =
-							CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
-						CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate =
-							TimeElapsed;
-						updatefunctions = true;
-					}
-					else
-					{
-						timeDelta = TimeElapsed;
-						CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate += TimeElapsed;
-						updatefunctions = false;
-					}
+					timeDelta =
+						CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
+					CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate =
+						TimeElapsed;
+					updatefunctions = true;
 				}
 				else
 				{
-					timeDelta = CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
-					CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate = TimeElapsed;
-					updatefunctions = true;
+					timeDelta = TimeElapsed;
+					CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate += TimeElapsed;
+					updatefunctions = false;
 				}
-
-				if (ForceUpdate)
-				{
-					updatefunctions = true;
-				}
-
-				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(baseCar.baseTrain, baseCar.Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
 			}
+			else
+			{
+				timeDelta = CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
+				CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate = TimeElapsed;
+				updatefunctions = true;
+			}
+
+			if (ForceUpdate)
+			{
+				updatefunctions = true;
+			}
+
+			CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(baseCar.baseTrain, baseCar.Index, FrontAxle.Follower.TrackPosition - FrontAxle.Position, Position, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
 		}
 
 		public void UpdateTopplingCantAndSpring()

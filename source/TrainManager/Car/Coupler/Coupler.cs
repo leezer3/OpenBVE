@@ -132,42 +132,39 @@ namespace TrainManager.Car
 
 		private void UpdateSectionElement(int sectionIndex, int elementIndex, Vector3 position, Vector3 direction, Vector3 up, Vector3 side, bool show, double timeElapsed, bool forceUpdate)
 		{
-			{
-				Vector3 p = position;
-				double timeDelta;
-				bool updatefunctions;
+			double timeDelta;
+			bool updatefunctions;
 
-				if (CarSections[sectionIndex].Groups[0].Elements[elementIndex].RefreshRate != 0.0)
+			if (CarSections[sectionIndex].Groups[0].Elements[elementIndex].RefreshRate != 0.0)
+			{
+				if (CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate >= CarSections[sectionIndex].Groups[0].Elements[elementIndex].RefreshRate)
 				{
-					if (CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate >= CarSections[sectionIndex].Groups[0].Elements[elementIndex].RefreshRate)
-					{
-						timeDelta =
-							CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate;
-						CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate =
-							timeElapsed;
-						updatefunctions = true;
-					}
-					else
-					{
-						timeDelta = timeElapsed;
-						CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate += timeElapsed;
-						updatefunctions = false;
-					}
+					timeDelta =
+						CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate;
+					CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate =
+						timeElapsed;
+					updatefunctions = true;
 				}
 				else
 				{
-					timeDelta = CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate;
-					CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate = timeElapsed;
-					updatefunctions = true;
+					timeDelta = timeElapsed;
+					CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate += timeElapsed;
+					updatefunctions = false;
 				}
-
-				if (forceUpdate)
-				{
-					updatefunctions = true;
-				}
-
-				CarSections[sectionIndex].Groups[0].Elements[elementIndex].Update(BaseCar.baseTrain, BaseCar.Index, (BaseCar.RearAxle.Follower.TrackPosition + ConnectedCar.FrontAxle.Follower.TrackPosition) * 0.5, p, direction, up, side, updatefunctions, show, timeDelta, true);
 			}
+			else
+			{
+				timeDelta = CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate;
+				CarSections[sectionIndex].Groups[0].Elements[elementIndex].SecondsSinceLastUpdate = timeElapsed;
+				updatefunctions = true;
+			}
+
+			if (forceUpdate)
+			{
+				updatefunctions = true;
+			}
+
+			CarSections[sectionIndex].Groups[0].Elements[elementIndex].Update(BaseCar.baseTrain, BaseCar.Index, (BaseCar.RearAxle.Follower.TrackPosition + ConnectedCar.FrontAxle.Follower.TrackPosition) * 0.5, position, direction, up, side, updatefunctions, show, timeDelta, true);
 		}
 
 		public void LoadCarSections(UnifiedObject currentObject, bool visibleFromInterior)

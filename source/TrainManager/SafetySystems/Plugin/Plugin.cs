@@ -154,7 +154,7 @@ namespace TrainManager.SafetySystems
 				if (this.Train.Cars[i].FrontAxle.CurrentWheelSlip)
 				{
 					/*
-					 * Find out if any car in the train is experincing wheelslip
+					 * Find out if any car in the train is experiencing wheelslip
 					 * Remember that only motor cars may experience wheelslip, and there is no
 					 * set position of these within the train, hence it's easier to just check all
 					 */
@@ -172,7 +172,7 @@ namespace TrainManager.SafetySystems
 			try
 			{
 				AbstractTrain closestTrain = TrainManagerBase.currentHost.ClosestTrain(this.Train);
-				precedingVehicle = closestTrain != null ? new PrecedingVehicleState(closestTrain.RearCarTrackPosition, closestTrain.RearCarTrackPosition - location, new Speed(closestTrain.CurrentSpeed)) : new PrecedingVehicleState(Double.MaxValue, Double.MaxValue - location, new Speed(0.0));
+				precedingVehicle = closestTrain != null ? new PrecedingVehicleState(closestTrain.RearCarTrackPosition, closestTrain.RearCarTrackPosition - location, new Speed(closestTrain.CurrentSpeed)) : new PrecedingVehicleState(double.MaxValue, double.MaxValue - location, new Speed(0.0));
 			}
 			catch
 			{
@@ -610,11 +610,7 @@ namespace TrainManager.SafetySystems
 			if (data.Length != 0)
 			{
 				bool update;
-				if (this.Train.CurrentSectionIndex != this.LastSection)
-				{
-					update = true;
-				}
-				else if (data.Length != this.LastAspects.Length)
+				if (this.Train.CurrentSectionIndex != this.LastSection || data.Length != this.LastAspects.Length)
 				{
 					update = true;
 				}

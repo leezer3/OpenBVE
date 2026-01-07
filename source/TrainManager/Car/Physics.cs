@@ -3,7 +3,7 @@
 	/// <summary>Contains the physics related properties for the car</summary>
 	public class CarPhysics
 	{
-		/// <summary>The current percieved speed of the car</summary>
+		/// <summary>The current perceived speed of the car</summary>
 		/// <remarks>Appears as if on a speedometer, accounting for wheel lock etc.</remarks>
 		public double PerceivedSpeed;
 		/// <summary>The current total acceleration output supplied by the car from all sources</summary>

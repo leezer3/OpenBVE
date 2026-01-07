@@ -475,7 +475,7 @@ namespace TrainManager.Trains
 				return;
 			}
 
-			// Car level inital processing
+			// Car level initial processing
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				// move cars
@@ -626,7 +626,7 @@ namespace TrainManager.Trains
 					}
 				}
 
-				double SecondDistance = Double.MaxValue;
+				double SecondDistance = double.MaxValue;
 				for (int i = p - 1; i <= p + 1; i++)
 				{
 					if (i >= 0 & i < Cars.Length & i != p)
