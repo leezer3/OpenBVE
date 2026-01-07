@@ -5,11 +5,11 @@
 			<group id="language">
 				<trans-unit id="name">
 					<source>English (United States)</source>
-					<target state="translated">Engelska (USA)</target>
+					<target state="translated">Svensk (Sverige)</target>
 				</trans-unit>
 				<trans-unit id="flag">
-					<source>US.png</source>
-					<target state="translated">USA.png</target>
+					<source>SE.png</source>
+					<target state="translated">SE.png</target>
 				</trans-unit>
 				<trans-unit id="contributors">
 					<source>Unknown</source>
