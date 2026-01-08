@@ -479,7 +479,7 @@ namespace RouteManager2
 
 			if (CurrentFog.Start < CurrentFog.End & CurrentFog.Start < fogDistance)
 			{
-				float ratio = (float)CurrentBackground.BackgroundImageDistance / fogDistance;
+				float ratio = (float)CurrentBackground.FogDistance / fogDistance;
 
 				renderer.Fog.Enabled = true;
 				renderer.Fog.Start = CurrentFog.Start * ratio * scale;
