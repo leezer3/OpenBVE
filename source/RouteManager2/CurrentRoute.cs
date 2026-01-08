@@ -472,14 +472,14 @@ namespace RouteManager2
 				TimeElapsed = 0.0;
 			}
 
-			const float scale = 0.5f;
-
+			// scale value is used to update the size of the fog region relative to the actual background object
+			float scale = 0.5f * (float)(CurrentBackground.BackgroundImageDistance / CurrentBackground.FogDistance);
 			// fog
 			const float fogDistance = 600.0f;
 
 			if (CurrentFog.Start < CurrentFog.End & CurrentFog.Start < fogDistance)
 			{
-				float ratio = (float)CurrentBackground.FogDistance / fogDistance;
+				float ratio = (float)CurrentBackground.BackgroundImageDistance / fogDistance;
 
 				renderer.Fog.Enabled = true;
 				renderer.Fog.Start = CurrentFog.Start * ratio * scale;
