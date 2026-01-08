@@ -50,7 +50,7 @@ namespace RouteManager2
 		/// <remarks>Must be in distance and time ascending order</remarks>
 		public BogusPreTrainInstruction[] BogusPreTrainInstructions;
 
-		public double[] PrecedingTrainTimeDeltas = new double[] { };
+		public double[] PrecedingTrainTimeDeltas = { };
 
 		/// <summary>Holds all points of interest within the game world</summary>
 		public PointOfInterest[] PointsOfInterest;
@@ -217,7 +217,7 @@ namespace RouteManager2
 
 				if (train == null)
 				{
-					double b = -Double.MaxValue;
+					double b = -double.MaxValue;
 
 					foreach (AbstractTrain t in currentHost.Trains)
 					{
@@ -443,6 +443,7 @@ namespace RouteManager2
 		}
 
 		/// <summary>Gets the next speed limit, starting from the specified track element</summary>
+		/// <param name="trackElement">The specified track element</param>
 		/// <param name="trackPosition">The next limit's track position</param>
 		public double NextLimit(int trackElement, out double trackPosition)
 		{
@@ -622,7 +623,7 @@ namespace RouteManager2
 					{
 						if (!string.IsNullOrEmpty(InitialStationName))
 						{
-							if (InitialStationName.ToLowerInvariant() == Stations[i].Name.ToLowerInvariant())
+							if (string.Equals(InitialStationName, Stations[i].Name, StringComparison.InvariantCultureIgnoreCase))
 							{
 								return i;
 							}
@@ -643,7 +644,7 @@ namespace RouteManager2
 					{
 						if (!string.IsNullOrEmpty(InitialStationName))
 						{
-							if (InitialStationName.ToLowerInvariant() == Stations[i].Name.ToLowerInvariant())
+							if (string.Equals(InitialStationName, Stations[i].Name, StringComparison.InvariantCultureIgnoreCase))
 							{
 								return i;
 							}

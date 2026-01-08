@@ -18,9 +18,8 @@ namespace RouteManager2
 	/// <summary>Used for creating illustrations</summary>
 	public static class Illustrations
 	{
-		//GDI Plus is not thread-safe
-		//This object should be locked on when drawing a route illustration / gradient profile
 		/// <summary>Holds the current lock for the illustrations drawing functions</summary>
+		/// <remarks>GDI Plus is not thread-safe- This object should be locked on when drawing a route illustration / gradient profile</remarks>
 		public static readonly object Locker =  new object();
 
 		internal static CurrentRoute CurrentRoute;
@@ -112,7 +111,7 @@ namespace RouteManager2
 		/// <param name="Height">The height of the bitmap to create.</param>
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
 		/// <param name="switchPositions">The list of switch positions on the map</param>
-		/// <param name="follower">The trackfollower used for drawing</param>
+		/// <param name="follower">The TrackFollower used for drawing</param>
 		/// <param name="drawRadius">The draw radius</param>
 		public static Bitmap CreateRouteMap(int Width, int Height, bool inGame, out Dictionary<Guid, Vector2> switchPositions, TrackFollower follower = null, int drawRadius = 500)
 		{
@@ -499,7 +498,6 @@ namespace RouteManager2
 				y0 = y1 - 1.0;
 
 			// allow for some padding around actual data
-			double ox = LeftPad, oy = TopPad;
 			double w = Width - (LeftPad+RightPad);
 			double h = Height - (TopPad+BottomPad+TrackOffsPad);
 			// horizontal and vertical scale
@@ -510,7 +508,7 @@ namespace RouteManager2
 			// actual track positions are needed here, rather than indices into the track element array.
 			double minX = CurrentRoute.Tracks[0].Elements[firstUsedElement].StartingTrackPosition;
 			double maxX = CurrentRoute.Tracks[0].Elements[lastUsedElement].StartingTrackPosition;
-			double offX = ox * (maxX - minX) / w;
+			double offX = LeftPad * (maxX - minX) / w;
 			lastGradientMinTrack = (int)(minX - offX);
 			lastGradientMaxTrack = (int)(maxX + offX);
 
@@ -526,29 +524,28 @@ namespace RouteManager2
 
 			// BELOW SEA LEVEL
 			{
-				double y = oy + (h - 0.5 * (-CurrentRoute.Atmosphere.InitialElevation - y0) * yd);
-				double x0 = ox;
-				double x1 = ox + (lastUsedElement - firstUsedElement) * nd;
-				g.FillRectangle(mapColors[mode].belowSeaFill, (float)x0, (float)y, (float)x1, (float)(oy + h) - (float)y);
-				g.DrawLine(mapColors[mode].belowSeaBrdr, (float)x0, (float)y, (float)x1, (float)y);
+				double y = TopPad + (h - 0.5 * (-CurrentRoute.Atmosphere.InitialElevation - y0) * yd);
+				double x1 = LeftPad + (lastUsedElement - firstUsedElement) * nd;
+				g.FillRectangle(mapColors[mode].belowSeaFill, (float)LeftPad, (float)y, (float)x1, (float)(TopPad + h) - (float)y);
+				g.DrawLine(mapColors[mode].belowSeaBrdr, (float)LeftPad, (float)y, (float)x1, (float)y);
 			}
 			// GRADIENT PROFILE
 			{
 				totalElements = lastUsedElement - firstUsedElement + 1;
 				PointF[] p = new PointF[totalElements + 2];
-				p[0] = new PointF((float)ox, (float)(oy + h));
+				p[0] = new PointF((float)LeftPad, (float)(TopPad + h));
 				for (int i = firstUsedElement; i <= lastUsedElement; i++)
 				{
-					double x = ox + (i - firstUsedElement) * nd;
-					double y = oy + (h - 0.5 *
+					double x = LeftPad + (i - firstUsedElement) * nd;
+					double y = TopPad + (h - 0.5 *
 						(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
 					p[i -firstUsedElement + 1] = new PointF((float)x, (float)y);
 				}
-				p[totalElements + 1] = new PointF((float)(ox + (totalElements - 1) * nd), (float)(oy + h));
+				p[totalElements + 1] = new PointF((float)(LeftPad + (totalElements - 1) * nd), (float)(TopPad + h));
 				g.FillPolygon(mapColors[mode].elevFill, p);
 				for (int i = 1; i < totalElements; i++)
 					g.DrawLine(mapColors[mode].elevBrdr, p[i], p[i + 1]);
-				g.DrawLine(mapColors[mode].elevBrdr, 0.0f, (float)(oy + h), (float)Width, (float)(oy + h));
+				g.DrawLine(mapColors[mode].elevBrdr, 0.0f, (float)(TopPad + h), (float)Width, (float)(TopPad + h));
 			}
 			// STATION NAMES
 			{
@@ -567,11 +564,11 @@ namespace RouteManager2
 								{
 									m.Alignment = StringAlignment.Near;
 									m.LineAlignment = StringAlignment.Near;
-									double x = ox + (i - firstUsedElement) * nd;
-									double y = oy + (h - 0.5 *
+									double x = LeftPad + (i - firstUsedElement) * nd;
+									double y = TopPad + (h - 0.5 *
 										(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
 									string t = CurrentRoute.Stations[e.StationIndex].Name;
-									float tx = 0.0f, ty = (float)oy;
+									float tx = 0.0f, ty = (float)TopPad;
 									for (int k = 0; k < t.Length; k++)
 									{
 										SizeF s = g.MeasureString(t.Substring(k, 1), f, 65536, StringFormat.GenericTypographic);
@@ -591,18 +588,18 @@ namespace RouteManager2
 								{
 									m.Alignment = StringAlignment.Far;
 									m.LineAlignment = StringAlignment.Near;
-									double x = ox + (i - firstUsedElement) * nd;
-									double y = oy + (h - 0.5 *
+									double x = LeftPad + (i - firstUsedElement) * nd;
+									double y = TopPad + (h - 0.5 *
 										(CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
 									g.RotateTransform(-90.0f);
-									g.TranslateTransform((float)x, (float)oy, System.Drawing.Drawing2D.MatrixOrder.Append);
+									g.TranslateTransform((float)x, (float)TopPad, System.Drawing.Drawing2D.MatrixOrder.Append);
 									g.DrawString(CurrentRoute.Stations[e.StationIndex].Name, f,
 										stop ? mapColors[mode].actNameText : mapColors[mode].inactNameText,
 										new PointF(0.0f, -5.0f), m);
 									g.ResetTransform();
 									SizeF s = g.MeasureString(CurrentRoute.Stations[e.StationIndex].Name, f);
 									g.DrawLine(stop ? mapColors[mode].actNameBrdr : mapColors[mode].inactNameBrdr,
-										new PointF((float)x, (float)(oy + s.Width + 4)), new PointF((float)x, (float)y));
+										new PointF((float)x, (float)(TopPad + s.Width + 4)), new PointF((float)x, (float)y));
 								}
 							}
 						}
@@ -618,7 +615,6 @@ namespace RouteManager2
 					Alignment = StringAlignment.Far,
 					LineAlignment = StringAlignment.Center
 				};
-				System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 				int k = TrackOffDist * totalElements / Width;
 				if (k == 0)
 				{
@@ -637,27 +633,27 @@ namespace RouteManager2
 				
 				for (int i = firstUsedElement; i <= lastUsedElement; i += k)
 				{
-					double x = ox + (i - firstUsedElement) * nd;
+					double x = LeftPad + (i - firstUsedElement) * nd;
 					double y = (CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd;
 					// track offset label
 					if (x < w)
 					{
-						string t = ((int)Math.Round(CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition)).ToString(Culture);
-						g.DrawString(t + "m", f, mapColors[mode].actNameText, (float)x, (float)(oy + h + TrackOffY));
+						string t = ((int)Math.Round(CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition)).ToString(CultureInfo.InvariantCulture);
+						g.DrawString(t + "m", f, mapColors[mode].actNameText, (float)x, (float)(TopPad + h + TrackOffY));
 					}
 					// route height at track offset (with measure and vertical line)
 					{
-						y = oy + (h - 0.5 * y) + 2.0f;
-						string t = ((int)Math.Round(CurrentRoute.Atmosphere.InitialElevation + CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y)).ToString(Culture);
+						y = TopPad + (h - 0.5 * y) + 2.0f;
+						string t = ((int)Math.Round(CurrentRoute.Atmosphere.InitialElevation + CurrentRoute.Tracks[0].Elements[i].WorldPosition.Y)).ToString(CultureInfo.InvariantCulture);
 						SizeF s = g.MeasureString(t, fs);
-						if (y < oy + h - s.Width - 10.0)
+						if (y < TopPad + h - s.Width - 10.0)
 						{
 							g.RotateTransform(-90.0f);
 							g.TranslateTransform((float)x, (float)y + 4.0f, System.Drawing.Drawing2D.MatrixOrder.Append);
 							g.DrawString(t + "m", fs, mapColors[mode].actNameText, 0.0f, 0.0f, m);
 							g.ResetTransform();
 							g.DrawLine(mapColors[mode].inactNameBrdr,
-								(float)x, (float)(y + s.Width + 12.0), (float)x, (float)(oy + h));
+								(float)x, (float)(y + s.Width + 12.0), (float)x, (float)(TopPad + h));
 						}
 					}
 				}

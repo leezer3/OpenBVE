@@ -12,7 +12,7 @@ namespace RouteManager2.Events
 		/// <summary>The brightness to be applied prior to this point</summary>
 		public readonly float PreviousBrightness;
 
-		/// <summary>The distance to the preceeding brightness change (Used in interpolation)</summary>
+		/// <summary>The distance to the preceding brightness change (Used in interpolation)</summary>
 		public readonly double PreviousDistance;
 
 		/// <summary>The next brightness to be applied</summary>

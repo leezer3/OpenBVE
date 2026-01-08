@@ -132,17 +132,11 @@ namespace RouteManager2.SignalManager
 		{
 			for (int i = 0; i < Trains.Length; i++)
 			{
-				if (Trains[i].State == TrainState.Available)
+				if (Trains[i].State == TrainState.Available || (allowBogusTrain && Trains[i].State == TrainState.Bogus))
 				{
 					return Trains[i];
 				}
-
-				if (allowBogusTrain & Trains[i].State == TrainState.Bogus)
-				{
-					return Trains[i];
-				}
-			}
-
+			}	
 			return null;
 		}
 
