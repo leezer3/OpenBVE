@@ -474,12 +474,22 @@ namespace RouteManager2
 
 			// scale value is used to update the size of the fog region relative to the actual background object
 			float scale = 0.5f * (float)(CurrentBackground.BackgroundImageDistance / CurrentBackground.FogDistance);
+			float clipAdjustment = 1.0f;
+
+			if (CurrentBackground.BackgroundImageDistance > 1100)
+			{
+				// HACK: BackgroundImageDistance above ~1100 can cause things to go out
+				// of the viewing plane, which then bugs out OpenGL clipping, so clamp the scale
+				// downwards to compensate
+				clipAdjustment = 1100f/ (float)CurrentBackground.BackgroundImageDistance;
+			}
+
 			// fog
 			const float fogDistance = 600.0f;
 
 			if (CurrentFog.Start < CurrentFog.End & CurrentFog.Start < fogDistance)
 			{
-				float ratio = (float)CurrentBackground.BackgroundImageDistance / fogDistance;
+				float ratio = (float)(CurrentBackground.BackgroundImageDistance / fogDistance) * clipAdjustment;
 
 				renderer.Fog.Enabled = true;
 				renderer.Fog.Start = CurrentFog.Start * ratio * scale;
@@ -493,14 +503,14 @@ namespace RouteManager2
 			{
 				renderer.Fog.Enabled = false;
 			}
-
-			//Update the currently displayed background
-			CurrentBackground.UpdateBackground(SecondsSinceMidnight, TimeElapsed, false);
+			
+            //Update the currently displayed background
+            CurrentBackground.UpdateBackground(SecondsSinceMidnight, TimeElapsed, false);
 
 			if (TargetBackground == null || TargetBackground == CurrentBackground)
 			{
 				//No target background, so call the render function
-				renderer.Background.Render(CurrentBackground, scale);
+				renderer.Background.Render(CurrentBackground, scale * clipAdjustment);
 				return;
 			}
 
@@ -516,12 +526,12 @@ namespace RouteManager2
 			{
 				//Render, switching on the transition mode
 				case BackgroundTransitionMode.FadeIn:
-					renderer.Background.Render(CurrentBackground, 1.0f, scale);
-					renderer.Background.Render(TargetBackground, TargetBackground.CurrentAlpha, scale);
+					renderer.Background.Render(CurrentBackground, 1.0f, scale * clipAdjustment);
+					renderer.Background.Render(TargetBackground, TargetBackground.CurrentAlpha, scale * clipAdjustment);
 					break;
 				case BackgroundTransitionMode.FadeOut:
-					renderer.Background.Render(TargetBackground, 1.0f, scale);
-					renderer.Background.Render(CurrentBackground, TargetBackground.CurrentAlpha, scale);
+					renderer.Background.Render(TargetBackground, 1.0f, scale * clipAdjustment);
+					renderer.Background.Render(CurrentBackground, TargetBackground.CurrentAlpha, scale * clipAdjustment);
 					break;
 			}
 

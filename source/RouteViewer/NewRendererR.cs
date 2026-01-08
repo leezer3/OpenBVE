@@ -147,7 +147,11 @@ namespace RouteViewer
 				Program.CurrentRoute.CurrentFog = Program.CurrentRoute.PreviousFog;
 			}
 
-			DefaultShader.Activate();
+			if (AvailableNewRenderer)
+			{
+				DefaultShader.Activate();
+            }
+			
 
 			// render background
 			GL.Disable(EnableCap.DepthTest);
