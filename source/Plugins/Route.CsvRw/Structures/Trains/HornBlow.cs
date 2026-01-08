@@ -28,11 +28,7 @@ namespace CsvRwRouteParser
 
 		internal void Create(Vector3 wpos, Transformation RailTransformation, double StartingDistance, double EndingDistance, ObjectDictionary Beacon)
 		{
-			UnifiedObject obj = null;
-			if (Beacon.ContainsKey(BeaconStructureIndex))
-			{
-				obj = Beacon[BeaconStructureIndex];
-			}
+			Beacon.TryGetValue(BeaconStructureIndex, out UnifiedObject obj);
 			if (obj != null)
 			{
 				double dx = Position.X;

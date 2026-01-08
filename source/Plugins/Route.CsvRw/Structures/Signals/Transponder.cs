@@ -13,10 +13,10 @@ namespace CsvRwRouteParser
 		internal int Type; //Unable to set as readonly as may be changed in postprocessing
 		/// <summary>The index of the beacon object to display</summary>
 		/// <remarks>Special values:
-		/// -2 : Display compatability object for beacon type
+		/// -2 : Display compatibility object for beacon type
 		/// -1 : Display no object</remarks>
 		internal readonly int BeaconStructureIndex;
-		/// <summary>An optional data value to be transmitted by the beacon to any recievers passing over it</summary>
+		/// <summary>An optional data value to be transmitted by the beacon to any receivers passing over it</summary>
 		internal readonly int Data;
 		/// <summary>The index of the section to which the beacon refers</summary>
 		internal readonly int SectionIndex;
@@ -73,11 +73,7 @@ namespace CsvRwRouteParser
 			}
 			else
 			{
-				int b = BeaconStructureIndex;
-				if (Beacon.ContainsKey(b))
-				{
-					obj = Beacon[b];
-				}
+				Beacon.TryGetValue(BeaconStructureIndex, out obj);
 			}
 			if (obj != null)
 			{
@@ -85,14 +81,13 @@ namespace CsvRwRouteParser
 				double dy = Position.Y;
 				double dz = TrackPosition - StartingDistance;
 				wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
-				double tpos = TrackPosition;
 				if (BeaconStructureIndex == -2)
 				{
-					obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), -1, StartingDistance, EndingDistance, tpos, Brightness);
+					obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), -1, StartingDistance, EndingDistance, TrackPosition, Brightness);
 				}
 				else
 				{
-					obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, tpos);
+					obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, TrackPosition);
 				}
 			}
 		}
@@ -101,11 +96,10 @@ namespace CsvRwRouteParser
 		{
 			if (Type != -1)
 			{
-				int t = SectionIndex;
-				if (t >= 0 && t < Plugin.CurrentRoute.Sections.Length)
+				if (SectionIndex >= 0 && SectionIndex < Plugin.CurrentRoute.Sections.Length)
 				{
 					double dt = TrackPosition - StartingDistance;
-					Element.Events.Add(new TransponderEvent(Plugin.CurrentRoute, dt, Type, Data, t, ClipToFirstRedSection));
+					Element.Events.Add(new TransponderEvent(Plugin.CurrentRoute, dt, Type, Data, SectionIndex, ClipToFirstRedSection));
 					Type = -1;
 				}
 			}

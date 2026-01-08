@@ -10,7 +10,7 @@ using OpenBveApi.Textures;
 
 namespace CsvRwRouteParser
 {
-	class DynamicBackgroundParser
+	internal class DynamicBackgroundParser
 	{
 		//Parses an XML background definition
 		public static BackgroundHandle ReadBackgroundXML(string fileName)

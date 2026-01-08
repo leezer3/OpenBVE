@@ -10,7 +10,7 @@ using XmlElement = System.Xml.XmlElement;
 
 namespace CsvRwRouteParser
 {
-	class RoutePatchDatabaseParser
+	internal class RoutePatchDatabaseParser
 	{
 		internal static void LoadRoutePatchDatabase(ref Dictionary<string, RoutefilePatch> routePatches, string databaseFile = "")
 		{
@@ -182,11 +182,11 @@ namespace CsvRwRouteParser
 						t = childNode.InnerText.Trim().ToLowerInvariant();
 						if (t == "0" || t == "false")
 						{
-							currentPatch.Derailments = false;
+							currentPatch.Toppling = false;
 						}
 						else
 						{
-							currentPatch.Derailments = true;
+							currentPatch.Toppling = true;
 						}
 						break;
 					case "SignalSet":

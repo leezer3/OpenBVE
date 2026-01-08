@@ -1,6 +1,6 @@
 ﻿namespace CsvRwRouteParser
 {
-	enum StructureCommand
+	internal enum StructureCommand
 	{
 		/// <summary>The object used for RailType N</summary>
 		Rail,
