@@ -23,7 +23,9 @@
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using TrainManager.Car;
+using TrainManager.Handles;
 using TrainManager.Power;
+using TrainManager.Trains;
 
 namespace TrainManager.Motor
 {
@@ -38,11 +40,31 @@ namespace TrainManager.Motor
 
 		public override void Update(double timeElapsed)
 		{
+			IsRunning = true;
 		}
 
 		// TODO: PLACEHOLDER VALUES
 
-		public override double CurrentPower => 1.0;
+		public override double CurrentPower
+		{
+			get
+			{
+				if (BaseCar.baseTrain.AI is TrackFollowingObjectAI)
+				{
+					// HACK: TFO AI doesn't update power properly
+					return BaseCar.CurrentSpeed == 0 ? 0 : 1;
+				}
+
+				if (BaseCar.baseTrain.Handles.Power is VariableHandle variableHandle)
+				{
+					Message = @"Power " + variableHandle.GetPowerModifier;
+					return variableHandle.GetPowerModifier;
+				}
+
+				Message = @"Power " + (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
+				return (double)BaseCar.baseTrain.Handles.Power.Actual / BaseCar.baseTrain.Handles.Power.MaximumDriverNotch;
+			}
+		}
 
 		public override double TargetAcceleration => AccelerationCurves[0].GetAccelerationOutput(BaseCar.CurrentSpeed);
 	}

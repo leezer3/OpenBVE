@@ -240,8 +240,24 @@ namespace Train.MsTs
 
 				if (Exhaust.Size > 0)
 				{
-					Exhaust.Offset.Z -= 0.5 * currentCar.Length;
-					currentCar.ParticleSources.Add(new ParticleSource(Plugin.Renderer, currentCar, Exhaust.Offset, Exhaust.Size, Exhaust.SmokeMaxMagnitude, Exhaust.Direction, 15.0));
+					if (Exhaust.SmokeMaxMagnitude == 0)
+					{
+						if (currentEngineType == EngineType.Steam)
+						{
+							// Steam locomotives don't seem to have a max particle size setting
+							// this is a fudge to something that looks reasonable
+							Exhaust.SmokeMaxMagnitude = 40 * Exhaust.Size;
+						}
+						else
+						{
+							// also handle any diesels which don't set it
+							// again, fudge to something that looks OK
+							Exhaust.SmokeMaxMagnitude = 10 * Exhaust.Size;
+						}	
+					}
+					// NOTES: particle life is just a fudge at the minute
+					// assumed a much longer life for our steam engines
+					currentCar.ParticleSources.Add(new ParticleSource(Plugin.Renderer, currentCar, Exhaust.Offset, Exhaust.Size, Exhaust.SmokeMaxMagnitude, Exhaust.Direction, currentEngineType == EngineType.Diesel ? 15.0 : 40.0, currentEngineType == EngineType.Diesel ? ParticleType.Smoke : ParticleType.Steam));
 				}
 			}
 			else
@@ -1048,6 +1064,7 @@ namespace Train.MsTs
 						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
 					}
 					break;
+				case KujuTokenID.SteamSpecialEffects:
 				case KujuTokenID.DieselSpecialEffects:
 					while (block.Position() < block.Length() - 2)
 					{
@@ -1055,7 +1072,8 @@ namespace Train.MsTs
 						ParseBlock(newBlock, fileName, ref wagonName, isEngine, ref car, ref train);
 					}
 					break;
-				case KujuTokenID.Exhaust1:
+				case KujuTokenID.StackFX: // steam loco
+				case KujuTokenID.Exhaust1: // diesel loco
 					Exhaust.Offset = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
 					Exhaust.Direction = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
 					Exhaust.Size = block.ReadSingle();

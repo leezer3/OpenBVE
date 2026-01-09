@@ -55,13 +55,15 @@ namespace LibRender2.Smoke
 		/// <remarks>Must be a 4x4 texture atlas</remarks>
 		public Texture ParticleTexture;
 
+		public ParticleType ParticleType;
+
 		internal Vector3 MovementSpeed;
 
 		internal readonly Vector3 Offset;
 
 		internal readonly AbstractCar Car;
 
-		internal const double MaxSpeed = 100;
+		internal double MaxSpeed;
 
 		private double previousUpdatePosition;
 
@@ -71,8 +73,15 @@ namespace LibRender2.Smoke
 
 
 
-
-		public ParticleSource(BaseRenderer renderer, AbstractCar car, Vector3 offset, double maximumSize, double maximumGrownSize, Vector3 movementSpeed, double maximumLifeSpan)
+		/// <summary>Creates a new particle source</summary>
+		/// <param name="renderer">A reference to the base renderer</param>
+		/// <param name="car">The containing car</param>
+		/// <param name="offset">The offset position relative to the car</param>
+		/// <param name="maximumSize">The initial maximum size of a particle</param>
+		/// <param name="maximumGrownSize">The maximum size a particle may grow to</param>
+		/// <param name="movementSpeed">The initial movement vector for a particle (exhaust direction)</param>
+		/// <param name="maximumLifeSpan">The maximum lifespan of a particle</param>
+		public ParticleSource(BaseRenderer renderer, AbstractCar car, Vector3 offset, double maximumSize, double maximumGrownSize, Vector3 movementSpeed, double maximumLifeSpan, ParticleType type = ParticleType.Smoke)
 		{
 			Renderer = renderer;
 			Random = new Random();
@@ -83,6 +92,17 @@ namespace LibRender2.Smoke
 			Offset = offset;
 			MaximumLifeSpan = maximumLifeSpan;
 			Car = car;
+			ParticleType = type;
+			if (type == ParticleType.Smoke)
+			{
+				MaxSpeed = 100;
+			}
+			else
+			{
+				// steam assumed to flow more than smoke
+				MaxSpeed = 25;
+			}
+
 		}
 
 		public void Update(double timeElapsed)
@@ -218,7 +238,15 @@ namespace LibRender2.Smoke
 			if (ParticleTexture == null)
 			{
 				string compatibilityFolder = Path.CombineDirectory(Renderer.fileSystem.GetDataFolder(), "Compatibility");
-				Renderer.TextureManager.RegisterTexture(Path.CombineFile(compatibilityFolder, "smoke.png"), out ParticleTexture);
+				if (ParticleType == ParticleType.Smoke)
+				{
+					Renderer.TextureManager.RegisterTexture(Path.CombineFile(compatibilityFolder, "smoke.png"), out ParticleTexture);
+				}
+				else
+				{
+					Renderer.TextureManager.RegisterTexture(Path.CombineFile(compatibilityFolder, "steam.png"), out ParticleTexture);
+				}
+				
 			}
 			// EMITTER POSITION for debugging
 			// Vector3 emitterPosition = new Vector3(Offset);
