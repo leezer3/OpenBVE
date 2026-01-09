@@ -1,8 +1,10 @@
+using LibRender2.Screens;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Motor;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
@@ -13,6 +15,7 @@ using RouteManager2.Stations;
 using SoundManager;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using TrainManager.BrakeSystems;
@@ -890,6 +893,10 @@ namespace TrainManager.Trains
 					}
 
 					Cars[i].Coupler = new Coupler(minDistance, maxDistance, Cars[i], i < Cars.Length - 1 ? Cars[i + 1] : null);
+					for (int j = 0; j < Cars[i].ParticleSources.Count; j++)
+					{
+						Cars[i].ParticleSources[j].Offset.Z = -Cars[i].ParticleSources[j].Offset.Z;
+					}
 				}
 
 				PlaceCars(trackPosition);
@@ -1217,6 +1224,26 @@ namespace TrainManager.Trains
 					string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_access_denied" });
 					TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Expert, MessageColor.Red, 10.0, null);
 					sct.SignallerPermission = false;
+				}
+			}
+		}
+
+		public void UpdateParticleSources(double timeElapsed)
+		{
+			for (int i = 0; i < Cars.Length; i++)
+			{
+				if (Cars[i].ParticleSources.Count == 0)
+				{
+					continue;
+				}
+				Cars[i].CreateWorldCoordinates(Vector3.Zero, out Vector3 p, out _);
+				Vector3 cd = new Vector3(p - TrainManagerBase.Renderer.Camera.AbsolutePosition);
+				double dist = cd.NormSquared();
+				double bid = TrainManagerBase.Renderer.Camera.ViewingDistance + 30;
+				bool currentlyVisible = dist < bid * bid;
+				for (int j = 0; j < Cars[i].ParticleSources?.Count; j++)
+				{
+					Cars[i].ParticleSources[j]?.Update(TrainManagerBase.Renderer.CurrentInterface == InterfaceType.Normal ? timeElapsed : 0, currentlyVisible);
 				}
 			}
 		}

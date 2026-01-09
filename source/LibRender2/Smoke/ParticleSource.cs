@@ -59,7 +59,7 @@ namespace LibRender2.Smoke
 
 		internal Vector3 MovementSpeed;
 
-		internal readonly Vector3 Offset;
+		public Vector3 Offset;
 
 		internal readonly AbstractCar Car;
 
@@ -105,7 +105,7 @@ namespace LibRender2.Smoke
 
 		}
 
-		public void Update(double timeElapsed)
+		public void Update(double timeElapsed, bool currentlyVisible)
 		{
 			if (!Renderer.AvailableNewRenderer)
 			{
@@ -230,6 +230,10 @@ namespace LibRender2.Smoke
 
 			previousUpdatePosition = Car.FrontAxle.Follower.TrackPosition;
 
+			if (!currentlyVisible)
+			{
+				return;
+			}
 
 			GL.Enable(EnableCap.CullFace);
 			GL.Enable(EnableCap.DepthTest);
