@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using LibRender2.Trains;
 using LibRender2.Smoke;
 using OpenBveApi;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -1014,6 +1015,7 @@ namespace Train.OpenBve
 								}
 							}
 							ParticleSource particleSource = new ParticleSource(Plugin.Renderer, Train.Cars[Car], emitterLocation, maximumSize, maximumGrownSize, initialMotion, maximumLifeSpan);
+							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, Train.Cars[Car].Index + " enginepowerindex", true);
 							particleSource.ParticleTexture = particleTexture;
 							Train.Cars[Car].ParticleSources.Add(particleSource);
 						}

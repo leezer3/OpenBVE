@@ -1,4 +1,5 @@
-﻿namespace OpenBveApi.FunctionScripting
+﻿// ReSharper disable InconsistentNaming
+namespace OpenBveApi.FunctionScripting
 {
 	/// <summary>The available instructions for use in a function script</summary>
 	public enum Instructions {
@@ -40,7 +41,7 @@
 		Sanders, SandLevel, SandShots, DSD,
 		AmbientTemperature,
 		BillboardX, BillboardY,
-		EngineRunning, EngineRunningCar, EngineRPM, EngineRPMCar, FuelLevel, FuelLevelCar, Amps, AmpsCar,
+		EngineRunning, EngineRunningCar, EngineRPM, EngineRPMCar, EnginePowerCar, FuelLevel, FuelLevelCar, Amps, AmpsCar,
 		OverheadVolts, OverheadVoltsTarget, ThirdRailVolts, ThirdRailVoltsTarget, FourthRailVolts, FourthRailVoltsTarget,
 		OverheadAC, ThirdRailAC, FourthRailAC,
 		OverheadHeight, OverheadHeightTarget, ThirdRailHeight, ThirdRailHeightTarget, FourthRailHeight, FourthRailHeightTarget,
