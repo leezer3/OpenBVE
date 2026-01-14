@@ -355,12 +355,10 @@ namespace Train.OpenBve
 					{
 						if (CarObjectsReversed[i])
 						{
-							{
-								// reverse axle positions
-								double temp = Train.Cars[i].FrontAxle.Position;
-								Train.Cars[i].FrontAxle.Position = -Train.Cars[i].RearAxle.Position;
-								Train.Cars[i].RearAxle.Position = -temp;
-							}
+							// reverse axle positions
+							double temp = Train.Cars[i].FrontAxle.Position;
+							Train.Cars[i].FrontAxle.Position = -Train.Cars[i].RearAxle.Position;
+							Train.Cars[i].RearAxle.Position = -temp;
 							if (CarObjects[i] is StaticObject)
 							{
 								StaticObject obj = (StaticObject)CarObjects[i].Clone();

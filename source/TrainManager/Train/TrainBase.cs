@@ -883,6 +883,7 @@ namespace TrainManager.Trains
 				Cars = Cars.Reverse().ToArray();
 				for (int i = 0; i < Cars.Length; i++)
 				{
+					Cars[i].Index = i;
 					Cars[i].Reverse(flipInterior);
 					// Re-create the coupler with appropriate distances between the cars
 					double minDistance = 0, maxDistance = 0;

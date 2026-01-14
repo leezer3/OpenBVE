@@ -297,7 +297,23 @@ namespace TrainManager.Car
 		public override int Index
 		{
 			get => trainCarIndex;
-			set => trainCarIndex = value;
+			set
+			{
+				if (CarSections.TryGetTypedValue(CarSectionType.Interior, out CarSection interiorSection))
+				{
+					interiorSection.CorrectCarIndices(value - trainCarIndex);
+				}
+				if (CarSections.TryGetTypedValue(CarSectionType.Exterior, out CarSection exteriorSection))
+				{
+					exteriorSection.CorrectCarIndices(value - trainCarIndex);
+				}
+
+				for (int i = 0; i < ParticleSources.Count; i++)
+				{
+					ParticleSources[i].Controller.CorrectCarIndices(value - trainCarIndex);
+				}
+				trainCarIndex = value;
+			}
 		}
 
 		public override void Reverse(bool flipInterior = false)
