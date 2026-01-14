@@ -944,6 +944,7 @@ namespace Train.OpenBve
 						{
 							Vector3 emitterLocation = Vector3.Zero;
 							Vector3 initialMotion = Vector3.Down;
+							string expression = "enginepower[" + Car + "]";
 							double maximumSize = 0.2;
 							double maximumGrownSize = 1.0;
 							double maximumLifeSpan = 15;
@@ -1012,10 +1013,16 @@ namespace Train.OpenBve
 											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid initial maximum lifespan defined for particle emitter in Car " + Car + " in XML file " + fileName);
 										}
 										break;
+									case "function":
+										if (!string.IsNullOrEmpty(cc.InnerText))
+										{
+											expression = cc.InnerText;
+										}
+										break;
 								}
 							}
 							ParticleSource particleSource = new ParticleSource(Plugin.Renderer, Train.Cars[Car], emitterLocation, maximumSize, maximumGrownSize, initialMotion, maximumLifeSpan);
-							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, Train.Cars[Car].Index + " enginepowerindex", true);
+							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, expression, true);
 							particleSource.ParticleTexture = particleTexture;
 							Train.Cars[Car].ParticleSources.Add(particleSource);
 						}

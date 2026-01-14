@@ -59,7 +59,7 @@ namespace OpenBve {
 		/// <summary>The character encoding of this route file</summary>
 		private static Encoding CurrentRouteEncoding;
 		/// <summary>The current train folder</summary>
-		private static string CurrentTrainFolder;
+		internal static string CurrentTrainFolder;
 		/// <summary>The character encoding of this train</summary>
 		private static Encoding CurrentTrainEncoding;
 		

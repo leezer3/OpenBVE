@@ -1,4 +1,4 @@
-﻿using Formats.OpenBve;
+using Formats.OpenBve;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
@@ -267,7 +267,7 @@ namespace OpenBve
 						{
 							TmpPath = Path.CombineDirectory(Path.GetDirectoryName(FileName), value);
 
-							if (value.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
+							if (!Directory.Exists(TmpPath) && value.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
 							{
 								// potential MSTS consist
 								string consistDirectory = Path.CombineDirectory(Program.FileSystem.MSTSDirectory, "TRAINS\\Consists");
@@ -279,6 +279,7 @@ namespace OpenBve
 								}
 
 							}
+
 							if (!Directory.Exists(TmpPath))
 							{
 								TmpPath = Path.CombineFile(Program.FileSystem.InitialTrainFolder, value);
@@ -292,6 +293,13 @@ namespace OpenBve
 							if (!Directory.Exists(TmpPath))
 							{
 								TmpPath = Path.CombineFile(objectPath, value);
+							}
+
+							if (!Directory.Exists(TmpPath))
+							{
+								// very fuzzy match attempt- step backwards one level from the current train folder
+								TmpPath = Path.CombineDirectory(Loading.CurrentTrainFolder, "..");
+								TmpPath = Path.CombineFile(TmpPath, value);
 							}
 						}
 						catch
