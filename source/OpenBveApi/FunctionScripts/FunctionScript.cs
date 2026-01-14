@@ -1,8 +1,8 @@
-using System;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
+using System;
 
 namespace OpenBveApi.FunctionScripting
 {
@@ -77,6 +77,31 @@ namespace OpenBveApi.FunctionScripting
 				}
 			}
 			return true;
+		}
+
+		/// <summary>Called when the underlying object is reversed</summary>
+		public void CorrectCarIndices(int offset)
+		{
+			int c = 0;
+			for (int i = 0; i < InstructionSet.Length - 1; i++)
+			{
+				if (InstructionSet[i] == Instructions.SystemConstant)
+				{
+					// must have at least one instruction on the stack afterwards
+					if (InstructionSet[i + 1] > Instructions.CarIndexDependant)
+					{
+						Constants[c] += offset;
+					}
+					c++;
+				}
+
+				if (InstructionSet[i] == Instructions.SystemConstantArray)
+				{
+					int n = (int)InstructionSet[i + 1];
+					c += n;
+				}
+				
+			}
 		}
 
 		/// <summary>Creates a new empty function script</summary>
@@ -918,6 +943,11 @@ namespace OpenBveApi.FunctionScripting
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.EngineRPMCar;
+							n++; break;
+						case "enginepowerindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.EnginePowerCar;
 							n++; break;
 						case "fuellevel":
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);

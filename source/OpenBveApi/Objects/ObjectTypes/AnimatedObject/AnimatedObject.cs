@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
@@ -885,6 +886,63 @@ namespace OpenBveApi.Objects
 				RotateYDirection.Z *= -1.0;
 				RotateZDirection.X *= -1.0;
 				RotateZDirection.Z *= -1.0;
+			}
+		}
+
+		/// <summary>Corrects the car indices in any function scripts in use</summary>
+		public void CorrectCarIndices(int offset)
+		{
+			if (RotateXFunction is FunctionScript rx)
+			{
+				rx.CorrectCarIndices(offset);
+			}
+			if (RotateYFunction is FunctionScript ry)
+			{
+				ry.CorrectCarIndices(offset);
+			}
+			if (RotateZFunction is FunctionScript rz)
+			{
+				rz.CorrectCarIndices(offset);
+			}
+			if (TranslateXFunction is FunctionScript tx)
+			{
+				tx.CorrectCarIndices(offset);
+			}
+			if (TranslateYFunction is FunctionScript ty)
+			{
+				ty.CorrectCarIndices(offset);
+			}
+			if (TranslateZFunction is FunctionScript tz)
+			{
+				tz.CorrectCarIndices(offset);
+			}
+			if (ScaleXFunction is FunctionScript sx)
+			{
+				sx.CorrectCarIndices(offset);
+			}
+			if (ScaleYFunction is FunctionScript sy)
+			{
+				sy.CorrectCarIndices(offset);
+			}
+			if (ScaleZFunction is FunctionScript sz)
+			{
+				sz.CorrectCarIndices(offset);
+			}
+			if (TextureShiftXFunction is FunctionScript tsx)
+			{
+				tsx.CorrectCarIndices(offset);
+			}
+			if (TextureShiftYFunction is FunctionScript tsy)
+			{
+				tsy.CorrectCarIndices(offset);
+			}
+			if (StateFunction is FunctionScript s)
+			{
+				s.CorrectCarIndices(offset);
+			}
+			if (ColorFunction is FunctionScript c)
+			{
+				c.CorrectCarIndices(offset);
 			}
 		}
 

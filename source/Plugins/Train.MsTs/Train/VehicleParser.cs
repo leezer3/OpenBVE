@@ -25,6 +25,7 @@
 using LibRender2.Smoke;
 using LibRender2.Trains;
 using OpenBve.Formats.MsTs;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Motor;
@@ -86,6 +87,10 @@ namespace Train.MsTs
 			exteriorLoaded = false;
 			wagonFiles = Directory.GetFiles(trainSetDirectory, isEngine ? "*.eng" : "*.wag", SearchOption.AllDirectories);
 			currentEngineType = EngineType.NoEngine;
+			ParticleSources = new Dictionary<KujuTokenID, ParticleSource>();
+			//ExhaustMaxMagnitude = 0;
+			//ExhaustInitialRate = 0;
+			//ExhaustMaxRate = 0;
 			/*
 			 * MSTS maintains an internal database, as opposed to using full paths
 			 * Unfortunately, this means we've got to do an approximation of the same thing!
@@ -238,26 +243,30 @@ namespace Train.MsTs
 				currentCar.Windscreen = new Windscreen(0, 0, currentCar);
 				currentCar.Windscreen.Wipers = new WindscreenWiper(currentCar.Windscreen, WiperPosition.Left, WiperPosition.Left, 1.0, 1.0);
 
-				if (Exhaust.Size > 0)
+				for (int i = 0; i < ParticleSources.Count; i++)
 				{
-					if (Exhaust.SmokeMaxMagnitude == 0)
+					KujuTokenID token = ParticleSources.ElementAt(i).Key;
+					if (ExhaustMaxMagnitude == 0)
 					{
 						if (currentEngineType == EngineType.Steam)
 						{
 							// Steam locomotives don't seem to have a max particle size setting
 							// this is a fudge to something that looks reasonable
-							Exhaust.SmokeMaxMagnitude = 40 * Exhaust.Size;
+							ExhaustMaxMagnitude = 40 * ParticleSources[token].Size;
 						}
 						else
 						{
 							// also handle any diesels which don't set it
 							// again, fudge to something that looks OK
-							Exhaust.SmokeMaxMagnitude = 10 * Exhaust.Size;
-						}	
+							ExhaustMaxMagnitude = 10 * ParticleSources[token].Size;
+						}
 					}
 					// NOTES: particle life is just a fudge at the minute
 					// assumed a much longer life for our steam engines
-					currentCar.ParticleSources.Add(new ParticleSource(Plugin.Renderer, currentCar, Exhaust.Offset, Exhaust.Size, Exhaust.SmokeMaxMagnitude, Exhaust.Direction, currentEngineType == EngineType.Diesel ? 15.0 : 40.0, currentEngineType == EngineType.Diesel ? ParticleType.Smoke : ParticleType.Steam));
+					LibRender2.Smoke.ParticleSource particleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, currentCar, ParticleSources[token].Offset, ParticleSources[token].Size, ExhaustMaxMagnitude, ParticleSources[token].Direction, currentEngineType == EngineType.Diesel ? 15.0 : 40.0, currentEngineType == EngineType.Diesel ? ParticleType.Smoke : ParticleType.Steam);
+					particleSource.Controller = new FunctionScript(Plugin.CurrentHost, currentCar.Index + " enginepowerindex", false);
+					currentCar.ParticleSources.Add(particleSource);
+
 				}
 			}
 			else
@@ -507,7 +516,7 @@ namespace Train.MsTs
 		private double maxVelocity;
 		private bool hasAntiSlipDevice;
 		private List<VigilanceDevice> vigilanceDevices;
-		private Exhaust Exhaust;
+		private Dictionary<KujuTokenID, ParticleSource> ParticleSources;
 		private Gear[] Gears;
 		private GearboxOperation gearboxOperationMode = GearboxOperation.Manual;
 		private double maxSandingSpeed;
@@ -517,6 +526,12 @@ namespace Train.MsTs
 		private UnitOfPressure brakeSystemDefaultUnits = UnitOfPressure.PoundsPerSquareInch;
 		private double MaxWaterLevel = -1;
 		private double MaxFuelLevel = -1;
+		/// <summary>The maximum expanded size of a particle</summary>
+		internal double ExhaustMaxMagnitude;
+		/// <summary>The rate of particle emissions at idle</summary>
+		internal double ExhaustInitialRate;
+		/// <summary>The rate of particle emissions at maximum power</summary>SmokeMaxMagnitude`
+		internal double ExhaustMaxRate;
 
 		private double GetMaxDieselCapacity(int carIndex)
 		{
@@ -1074,18 +1089,22 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.StackFX: // steam loco
 				case KujuTokenID.Exhaust1: // diesel loco
-					Exhaust.Offset = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
-					Exhaust.Direction = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
-					Exhaust.Size = block.ReadSingle();
+				case KujuTokenID.Exhaust2:
+				case KujuTokenID.Exhaust3:
+					ParticleSource particleSource = new ParticleSource();
+					particleSource.Offset = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
+					particleSource.Direction = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
+					particleSource.Size = block.ReadSingle();
+					ParticleSources.Add(block.Token, particleSource);
 					break;
 				case KujuTokenID.DieselSmokeEffectMaxMagnitude:
-					Exhaust.SmokeMaxMagnitude = block.ReadSingle();
+					ExhaustMaxMagnitude = block.ReadSingle();
 					break;
 				case KujuTokenID.DieselSmokeEffectInitialSmokeRate:
-					Exhaust.SmokeInitialRate = block.ReadSingle();
+					ExhaustInitialRate = block.ReadSingle();
 					break;
 				case KujuTokenID.DieselSmokeEffectMaxSmokeRate:
-					Exhaust.SmokeMaxRate = block.ReadSingle();
+					ExhaustMaxRate = block.ReadSingle();
 					break;
 				case KujuTokenID.GearBoxNumberOfGears:
 					int numGears = block.ReadInt16();

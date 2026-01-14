@@ -1,4 +1,5 @@
-﻿namespace OpenBveApi.FunctionScripting
+﻿// ReSharper disable InconsistentNaming
+namespace OpenBveApi.FunctionScripting
 {
 	/// <summary>The available instructions for use in a function script</summary>
 	public enum Instructions {
@@ -19,32 +20,50 @@
 		TimeSecondsSinceMidnight, TimeHourDigit, TimeMinuteDigit, TimeSecondDigit, CameraDistance, CameraXDistance, CameraYDistance, CameraZDistance,CameraView,
 		TrainCars, TrainCarNumber, TrainDestination, PlayerTrain, TrainLength,
 		TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
-		TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
-		PlayerTrainDistance, TrainDistance, TrainDistanceToCar, PlayerTrackDistance, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, CurveRadiusOfCar, FrontAxleCurveRadius, FrontAxleCurveRadiusOfCar, RearAxleCurveRadius, RearAxleCurveRadiusOfCar, CurveCant, CurveCantOfCar, Pitch, PitchOfCar, Odometer, OdometerOfCar, BrightnessOfCar,
-		Doors, DoorsIndex, FrontCoupler, FrontCouplerIndex, RearCoupler, RearCouplerIndex,
-		LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
-		LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
+		
+		PlayerTrainDistance, TrainDistance,PlayerTrackDistance, TrainTrackDistance, CurveRadius, FrontAxleCurveRadius, RearAxleCurveRadius, CurveCant, Pitch, Odometer,
+		Doors, DoorsIndex, FrontCoupler, RearCoupler, 
+		LeftDoors,  RightDoors,
+		LeftDoorsTarget,  RightDoorsTarget,
 		LeftDoorButton, RightDoorButton, PilotLamp, Headlights,
 		ReverserNotch, PowerNotch, PowerNotches, LocoBrakeNotch, LocoBrakeNotches, BrakeNotch, BrakeNotches, BrakeNotchLinear, BrakeNotchesLinear, EmergencyBrake, Klaxon, PrimaryKlaxon, SecondaryKlaxon, MusicKlaxon,
 		HasAirBrake, HoldBrake, HasHoldBrake, ConstSpeed, HasConstSpeed,
 		BrakeMainReservoir, BrakeEqualizingReservoir, BrakeBrakePipe, BrakeBrakeCylinder, BrakeStraightAirPipe,
-		BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,
 		SafetyPluginAvailable, SafetyPluginState, PassAlarm, StationAdjustAlarm,
 		TimetableVisible, Panel2Timetable, DistanceNextStation, DistanceLastStation, StopsNextStation, DistanceStation, StopsStation, NextStation, NextStationStop, TerminalStation,
 		RouteLimit, SectionLimit,
 		SectionAspectNumber, CurrentObjectState,
 		RainDrop, SnowFlake, WiperPosition, WiperState,
-		PantographState, PantographStateOfCar,
-		WheelRadius, WheelRadiusOfCar,
-		WheelSlip, WheelSlipCar,
+		PantographState, 
+		WheelRadius, 
+		WheelSlip, 
 		Sanders, SandLevel, SandShots, DSD,
 		AmbientTemperature,
 		BillboardX, BillboardY,
-		EngineRunning, EngineRunningCar, EngineRPM, EngineRPMCar, FuelLevel, FuelLevelCar, Amps, AmpsCar,
-		OverheadVolts, OverheadVoltsTarget, ThirdRailVolts, ThirdRailVoltsTarget, FourthRailVolts, FourthRailVoltsTarget,
+		EngineRunning, EngineRPM, FuelLevel, FuelLevelCar, Amps, AmpsCar,
+		OverheadVolts,ThirdRailVolts,  FourthRailVolts, 
 		OverheadAC, ThirdRailAC, FourthRailAC,
-		OverheadHeight, OverheadHeightTarget, ThirdRailHeight, ThirdRailHeightTarget, FourthRailHeight, FourthRailHeightTarget,
-		OverheadAmps, OverheadAmpsTarget, ThirdRailAmps, ThirdRailAmpsTarget, FourthRailAmps, FourthRailAmpsTarget
+		OverheadHeight, ThirdRailHeight,  FourthRailHeight, 
+		OverheadAmps, ThirdRailAmps, FourthRailAmps, 
+
+		/// <summary>DUMMY</summary>
+		/// <remarks>Used when correcting index dependant functions</remarks>
+		CarIndexDependant = 1000,
+		TrainDistanceToCar, TrainTrackDistanceToCar, CurveRadiusOfCar, FrontAxleCurveRadiusOfCar, RearAxleCurveRadiusOfCar, CurveCantOfCar, PitchOfCar, OdometerOfCar, BrightnessOfCar,
+		FrontCouplerIndex, RearCouplerIndex,
+		TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
+		LeftDoorsIndex, RightDoorsIndex,
+		LeftDoorsTargetIndex, RightDoorsTargetIndex,
+		BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,
+		PantographStateOfCar,
+		WheelRadiusOfCar,
+		WheelSlipCar,
+		EngineRunningCar,
+		EngineRPMCar, EnginePowerCar,
+		OverheadVoltsTarget, ThirdRailVoltsTarget, FourthRailVoltsTarget,
+		OverheadHeightTarget, ThirdRailHeightTarget, FourthRailHeightTarget,
+		OverheadAmpsTarget, ThirdRailAmpsTarget, FourthRailAmpsTarget,
+
 #pragma warning restore CS1591
 
 	}

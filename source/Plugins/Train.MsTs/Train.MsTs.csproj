@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Panel\CabComponent.cs" />
-    <Compile Include="Effects\Exhaust.cs" />
+    <Compile Include="Effects\ParticleSource.cs" />
     <Compile Include="Handles\Handle.cs" />
     <Compile Include="Misc\Units.cs" />
     <Compile Include="Panel\CabView.cs" />

@@ -323,6 +323,7 @@ namespace OpenBveApi.FunctionScripting
 				case "straightairpipe":
 				case "enginerunning":
 				case "enginerpm":
+				case "enginepower":
 				case "fuellevel":
 				case "pantographstate":
 				// station index functions
