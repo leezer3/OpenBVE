@@ -949,6 +949,7 @@ namespace Train.OpenBve
 							double maximumGrownSize = 1.0;
 							double maximumLifeSpan = 15;
 							Texture particleTexture = null;
+							bool emitsAtIdle = true;
 							foreach (XmlNode cc in c.ChildNodes)
 							{
 								switch (cc.Name.ToLowerInvariant())
@@ -1019,9 +1020,16 @@ namespace Train.OpenBve
 											expression = cc.InnerText;
 										}
 										break;
+									case "emitsatidle":
+										if (c.InnerText.ToLowerInvariant() == "0" || c.InnerText.ToLowerInvariant() == "false")
+										{
+											emitsAtIdle = false;
+										}
+										break;
 								}
 							}
 							ParticleSource particleSource = new ParticleSource(Plugin.Renderer, Train.Cars[Car], emitterLocation, maximumSize, maximumGrownSize, initialMotion, maximumLifeSpan);
+							particleSource.EmitsAtIdle = emitsAtIdle;
 							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, expression, true);
 							particleSource.ParticleTexture = particleTexture;
 							Train.Cars[Car].ParticleSources.Add(particleSource);

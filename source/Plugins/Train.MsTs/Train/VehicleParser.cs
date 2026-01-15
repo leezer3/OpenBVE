@@ -261,12 +261,37 @@ namespace Train.MsTs
 							ExhaustMaxMagnitude = 10 * ParticleSources[token].Size;
 						}
 					}
-					// NOTES: particle life is just a fudge at the minute
-					// assumed a much longer life for our steam engines
-					LibRender2.Smoke.ParticleSource particleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, currentCar, ParticleSources[token].Offset, ParticleSources[token].Size, ExhaustMaxMagnitude, ParticleSources[token].Direction, currentEngineType == EngineType.Diesel ? 15.0 : 40.0, currentEngineType == EngineType.Diesel ? ParticleType.Smoke : ParticleType.Steam);
-					particleSource.Controller = new FunctionScript(Plugin.CurrentHost, currentCar.Index + " enginepowerindex", false);
-					currentCar.ParticleSources.Add(particleSource);
 
+					// NOTES: particle life / sizes is just a fudge at the minute
+					// * Diesel exhaust actually specifies max size, if missing assumed to spread a bit, but not too much, much shorter life
+					// * Funnel steam assumed to spread lots, long lasting to give a nice trail
+					// * WhistleFX short life, smaller spread
+
+					LibRender2.Smoke.ParticleSource particleSource = null;
+					switch (token)
+					{
+						case KujuTokenID.Exhaust1:
+						case KujuTokenID.Exhaust2:
+						case KujuTokenID.Exhaust3:
+						case KujuTokenID.Exhaust4:
+						case KujuTokenID.StackFX:
+							particleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, currentCar, ParticleSources[token].Offset, ParticleSources[token].Size, ExhaustMaxMagnitude, ParticleSources[token].Direction, currentEngineType == EngineType.Diesel ? 15.0 : 40.0, currentEngineType == EngineType.Diesel ? ParticleType.Smoke : ParticleType.Steam);
+							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, currentCar.Index + " enginepowerindex", false);
+							break;
+						case KujuTokenID.WhistleFX:
+							// NOTES: particle life is just a fudge at the minute
+							// assumed a much longer life for our steam engines
+							particleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, currentCar, ParticleSources[token].Offset, ParticleSources[token].Size, ParticleSources[token].Size * 15, ParticleSources[token].Direction, 5.0, ParticleType.Steam);
+							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, "primaryklaxon", false);
+							particleSource.EmitsAtIdle = false;
+							break;
+
+					}
+
+					if (particleSource != null)
+					{
+						currentCar.ParticleSources.Add(particleSource);
+					}
 				}
 			}
 			else
@@ -1091,6 +1116,7 @@ namespace Train.MsTs
 				case KujuTokenID.Exhaust1: // diesel loco
 				case KujuTokenID.Exhaust2:
 				case KujuTokenID.Exhaust3:
+				case KujuTokenID.WhistleFX:
 					ParticleSource particleSource = new ParticleSource();
 					particleSource.Offset = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
 					particleSource.Direction = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());

@@ -73,6 +73,8 @@ namespace LibRender2.Smoke
 		private double particleSizeTimer;
 
 		public FunctionScript Controller;
+		/// <summary>Whether particles are emitted at idle</summary>
+		public bool EmitsAtIdle;
 
 
 		/// <summary>Creates a new particle source</summary>
@@ -105,6 +107,7 @@ namespace LibRender2.Smoke
 				// steam assumed to flow more than smoke
 				MaxSpeed = 25;
 			}
+			EmitsAtIdle = true;
 		}
 
 		public void Update(double timeElapsed, bool currentlyVisible)
@@ -223,7 +226,7 @@ namespace LibRender2.Smoke
 			{
 				if (dynamicCar.TractionModel.IsRunning && timeElapsed > 0)
 				{
-					if (particleAdditionTimer > 0.05 && Random.NextDouble() >= 0.5)
+					if ((EmitsAtIdle || Controller.LastResult > 0) && particleAdditionTimer > 0.05 && Random.NextDouble() >= 0.5)
 					{
 						Vector3 startingPosition = new Vector3(Offset);
 						startingPosition.Rotate(directionalTransform);
@@ -255,7 +258,6 @@ namespace LibRender2.Smoke
 				{
 					Renderer.TextureManager.RegisterTexture(Path.CombineFile(compatibilityFolder, "steam.png"), out ParticleTexture);
 				}
-				
 			}
 			// EMITTER POSITION for debugging
 			// Vector3 emitterPosition = new Vector3(Offset);
