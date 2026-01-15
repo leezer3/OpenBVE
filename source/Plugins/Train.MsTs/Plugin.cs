@@ -7,6 +7,7 @@ using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
+using TrainManager.Motor;
 using TrainManager.Trains;
 
 namespace Train.MsTs
@@ -92,6 +93,18 @@ namespace Train.MsTs
 			
 			if(train is TrainBase trainBase && trainBase.Cars.Length != 0)
 			{
+				if (string.IsNullOrEmpty(trainBase.Cars[train.DriverCar].Description))
+				{
+					// attempt to find description of at least an engine
+					for (int i = 0; i < trainBase.Cars.Length; i++)
+					{
+						if(!string.IsNullOrEmpty(trainBase.Cars[i].Description) && trainBase.Cars[i].TractionModel.ProvidesPower)
+						{
+							// return description of first engine which has one
+							return trainBase.Cars[i].Description;
+						}
+					}
+				}
 				return trainBase.Cars[train.DriverCar].Description;
 			}
 			return string.Empty;

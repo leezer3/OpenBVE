@@ -279,8 +279,6 @@ namespace Train.MsTs
 							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, currentCar.Index + " enginepowerindex", false);
 							break;
 						case KujuTokenID.WhistleFX:
-							// NOTES: particle life is just a fudge at the minute
-							// assumed a much longer life for our steam engines
 							particleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, currentCar, ParticleSources[token].Offset, ParticleSources[token].Size, ParticleSources[token].Size * 15, ParticleSources[token].Direction, 5.0, ParticleType.Steam);
 							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, "primaryklaxon", false);
 							particleSource.EmitsAtIdle = false;
