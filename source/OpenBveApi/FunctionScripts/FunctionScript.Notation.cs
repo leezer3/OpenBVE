@@ -326,6 +326,7 @@ namespace OpenBveApi.FunctionScripting
 				case "enginepower":
 				case "fuellevel":
 				case "pantographstate":
+				case "cylindercocksstate":
 				// station index functions
 				case "distancestation":
 				case "stopsstation":

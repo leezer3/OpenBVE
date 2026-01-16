@@ -2876,6 +2876,9 @@
 						<source>Activates or deactivates the blowers</source>
 						<target>Activa o desactiva los sopladores</target>
 					</trans-unit>
+					<trans-unit id="cylinder_cocks">
+						<source>Activates or deactivates the cylinder cocks</source>
+					</trans-unit>
 					<trans-unit id="engine_start">
 						<source>Starts the engine</source>
 						<target>Arranca el motor</target>

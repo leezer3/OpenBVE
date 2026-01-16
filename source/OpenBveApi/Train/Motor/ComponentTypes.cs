@@ -35,5 +35,7 @@ namespace OpenBveApi.Motor
 		Pantograph,
 		/// <summary>A gearbox</summary>
 		Gearbox,
+		/// <summary>Steam engine cylinder cocks</summary>
+		CylinderCocks,
 	}
 }

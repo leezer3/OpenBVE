@@ -276,6 +276,8 @@ namespace OpenBveApi.Interface {
 			DecreaseCutoff,
 			/// <summary>The blowers</summary>
 			Blowers,
+			/// <summary>The cylinder cocks</summary>
+			CylinderCocks,
 			//Diesel Locomotive
 			/// <summary>Start the engine</summary>
 			EngineStart,

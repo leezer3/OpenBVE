@@ -566,6 +566,20 @@ namespace Train.MsTs
 									}
 								}
 								break;
+							case SoundTrigger.CylinderCocksToggle:
+								if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks cylinderCocks))
+								{
+									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+									{
+										cylinderCocks.OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+										cylinderCocks.CloseSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+									else
+									{
+										cylinderCocks.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+								}
+								break;
 						}
 					}
 					else

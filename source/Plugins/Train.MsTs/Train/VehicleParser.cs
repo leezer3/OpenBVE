@@ -87,7 +87,7 @@ namespace Train.MsTs
 			exteriorLoaded = false;
 			wagonFiles = Directory.GetFiles(trainSetDirectory, isEngine ? "*.eng" : "*.wag", SearchOption.AllDirectories);
 			currentEngineType = EngineType.NoEngine;
-			ParticleSources = new Dictionary<KujuTokenID, ParticleSource>();
+			ParticleSources = new List<ParticleSource>();
 			//ExhaustMaxMagnitude = 0;
 			//ExhaustInitialRate = 0;
 			//ExhaustMaxRate = 0;
@@ -229,6 +229,8 @@ namespace Train.MsTs
 						{
 							currentCar.TractionModel = new TankEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) }, MaxFuelLevel, MaxWaterLevel);
 						}
+
+						currentCar.TractionModel.Components.Add(EngineComponent.CylinderCocks, new CylinderCocks(currentCar.TractionModel));
 						break;
 					case EngineType.NoEngine:
 						currentCar.TractionModel = new BVETrailerCar(currentCar);
@@ -245,20 +247,19 @@ namespace Train.MsTs
 
 				for (int i = 0; i < ParticleSources.Count; i++)
 				{
-					KujuTokenID token = ParticleSources.ElementAt(i).Key;
 					if (ExhaustMaxMagnitude == 0)
 					{
 						if (currentEngineType == EngineType.Steam)
 						{
 							// Steam locomotives don't seem to have a max particle size setting
 							// this is a fudge to something that looks reasonable
-							ExhaustMaxMagnitude = 40 * ParticleSources[token].Size;
+							ExhaustMaxMagnitude = 40 * ParticleSources[i].Size;
 						}
 						else
 						{
 							// also handle any diesels which don't set it
 							// again, fudge to something that looks OK
-							ExhaustMaxMagnitude = 10 * ParticleSources[token].Size;
+							ExhaustMaxMagnitude = 10 * ParticleSources[i].Size;
 						}
 					}
 
@@ -268,19 +269,24 @@ namespace Train.MsTs
 					// * WhistleFX short life, smaller spread
 
 					LibRender2.Smoke.ParticleSource particleSource = null;
-					switch (token)
+					switch (ParticleSources[i].Token)
 					{
 						case KujuTokenID.Exhaust1:
 						case KujuTokenID.Exhaust2:
 						case KujuTokenID.Exhaust3:
 						case KujuTokenID.Exhaust4:
 						case KujuTokenID.StackFX:
-							particleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, currentCar, ParticleSources[token].Offset, ParticleSources[token].Size, ExhaustMaxMagnitude, ParticleSources[token].Direction, currentEngineType == EngineType.Diesel ? 15.0 : 40.0, currentEngineType == EngineType.Diesel ? ParticleType.Smoke : ParticleType.Steam);
+							particleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, currentCar, ParticleSources[i].Offset, ParticleSources[i].Size, ExhaustMaxMagnitude, ParticleSources[i].Direction, currentEngineType == EngineType.Diesel ? 15.0 : 40.0, currentEngineType == EngineType.Diesel ? ParticleType.Smoke : ParticleType.Steam);
 							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, currentCar.Index + " enginepowerindex", false);
 							break;
 						case KujuTokenID.WhistleFX:
-							particleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, currentCar, ParticleSources[token].Offset, ParticleSources[token].Size, ParticleSources[token].Size * 15, ParticleSources[token].Direction, 5.0, ParticleType.Steam);
+							particleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, currentCar, ParticleSources[i].Offset, ParticleSources[i].Size, ParticleSources[i].Size * 15, ParticleSources[i].Direction, 5.0, ParticleType.Steam);
 							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, "primaryklaxon", false);
+							particleSource.EmitsAtIdle = false;
+							break;
+						case KujuTokenID.CylindersFX:
+							particleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, currentCar, ParticleSources[i].Offset, ParticleSources[i].Size, ParticleSources[i].Size * 25, ParticleSources[i].Direction, 10.0, ParticleType.Steam);
+							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, currentCar.Index + " enginepowerindex " + currentCar.Index + " cylindercocksstateindex *", false);
 							particleSource.EmitsAtIdle = false;
 							break;
 
@@ -539,7 +545,7 @@ namespace Train.MsTs
 		private double maxVelocity;
 		private bool hasAntiSlipDevice;
 		private List<VigilanceDevice> vigilanceDevices;
-		private Dictionary<KujuTokenID, ParticleSource> ParticleSources;
+		private List<ParticleSource> ParticleSources;
 		private Gear[] Gears;
 		private GearboxOperation gearboxOperationMode = GearboxOperation.Manual;
 		private double maxSandingSpeed;
@@ -1115,11 +1121,12 @@ namespace Train.MsTs
 				case KujuTokenID.Exhaust2:
 				case KujuTokenID.Exhaust3:
 				case KujuTokenID.WhistleFX:
-					ParticleSource particleSource = new ParticleSource();
+				case KujuTokenID.CylindersFX:
+					ParticleSource particleSource = new ParticleSource(block.Token);
 					particleSource.Offset = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
 					particleSource.Direction = new Vector3(block.ReadSingle(), block.ReadSingle(), block.ReadSingle());
 					particleSource.Size = block.ReadSingle();
-					ParticleSources.Add(block.Token, particleSource);
+					ParticleSources.Add(particleSource);
 					break;
 				case KujuTokenID.DieselSmokeEffectMaxMagnitude:
 					ExhaustMaxMagnitude = block.ReadSingle();

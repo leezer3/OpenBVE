@@ -22,26 +22,47 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using OpenBve.Formats.MsTs;
-using OpenBveApi.Math;
+using SoundManager;
 
-namespace Train.MsTs
+namespace TrainManager.Motor
 {
-	/// <summary>Describes the properties of an particle animation for a MSTS model</summary>
-	internal class ParticleSource
+	public class CylinderCocks : AbstractComponent
 	{
-		/// <summary>The offset from the center of the model</summary>
-		internal Vector3 Offset;
-		/// <summary>The direction of the particle emissions</summary>
-		internal Vector3 Direction;
-		/// <summary>The size of the exhaust outlet (controls initial particle size)</summary>
-		internal double Size;
-		/// <summary>The token</summary>
-		internal readonly KujuTokenID Token;
+		public bool Opened;
 
-		internal ParticleSource(KujuTokenID token)
+		public CarSound OpenSound;
+
+		public CarSound CloseSound;
+
+		public CarSound LoopSound;
+
+		public CylinderCocks(TractionModel engine) : base(engine)
 		{
-			Token = token;
+		}
+
+		public void Toggle()
+		{
+			if (Opened)
+			{
+				CloseSound?.Play(baseEngine.BaseCar, false);
+			}
+			else
+			{
+				OpenSound?.Play(baseEngine.BaseCar, false);
+			}
+
+			Opened = !Opened;
+		}
+
+		public override void Update(double timeElapsed)
+		{
+			if (!Opened)
+			{
+				LoopSound?.Stop();
+				return;
+			}
+
+			LoopSound?.Play(1.0, baseEngine.CurrentPower, baseEngine.BaseCar, true);
 		}
 	}
 }

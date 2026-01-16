@@ -2902,6 +2902,9 @@
 						<source>Activates or deactivates the blowers</source>
 						<target>啟動或關閉鼓風機</target>
 					</trans-unit>
+					<trans-unit id="cylinder_cocks">
+						<source>Activates or deactivates the cylinder cocks</source>
+					</trans-unit>
 					<trans-unit id="engine_start">
 						<source>Starts the engine</source>
 						<target>啟動引擎</target>

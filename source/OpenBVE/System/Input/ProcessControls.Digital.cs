@@ -631,6 +631,15 @@ namespace OpenBve
 					case Translations.Command.Headlights:
 						TrainManager.PlayerTrain.SafetySystems.Headlights.ChangeState();
 						break;
+					case Translations.Command.CylinderCocks:
+						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+						{
+							if (TrainManager.PlayerTrain.Cars[i].TractionModel.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks cylinderCocks))
+							{
+								cylinderCocks.Toggle();
+							}
+						}
+						break;
 					case Translations.Command.MainBreaker:
 						break;
 					case Translations.Command.WiperSpeedUp:

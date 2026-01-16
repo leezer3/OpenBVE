@@ -2880,6 +2880,9 @@
 						<source>Activates or deactivates the blowers</source>
 						<target>Ráfogja vagy lezárja a segédfúvót</target>
 					</trans-unit>
+					<trans-unit id="cylinder_cocks">
+						<source>Activates or deactivates the cylinder cocks</source>
+					</trans-unit>
 					<trans-unit id="engine_start">
 						<source>Starts the engine</source>
 						<target>Beindítja a dízelmotort</target>

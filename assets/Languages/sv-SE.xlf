@@ -2978,6 +2978,9 @@
 						<source>Activates or deactivates the blowers</source>
 						<target state="translated">Aktiverar eller inaktiverar fläktarna</target>
 					</trans-unit>
+					<trans-unit id="cylinder_cocks">
+						<source>Activates or deactivates the cylinder cocks</source>
+					</trans-unit>
 					<trans-unit id="engine_start">
 						<source>Starts the engine</source>
 						<target state="translated">Startar motorn</target>

@@ -2252,6 +2252,32 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						}
 						s++; break;
+					case Instructions.CylinderCocksStateOfCar:
+						if (Train != null)
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								if (Train.Cars[j].TractionModel.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks cc))
+								{
+									Function.Stack[s - 1] = cc.Opened ? 1 : 0;
+								}
+								else
+								{
+									Function.Stack[s - 1] = 0.0;
+								}
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
 					// default
 					default:
 						throw new InvalidOperationException("The unknown instruction " + Function.InstructionSet[i] + " was encountered in ExecuteFunctionScript.");
