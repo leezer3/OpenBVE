@@ -258,6 +258,7 @@ namespace Train.MsTs
 							case PanelSubject.CP_Handle:
 							case PanelSubject.CPH_Display:
 							case PanelSubject.Friction_Braking:
+							case PanelSubject.Cyl_Cocks:
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 								break;
 							default:

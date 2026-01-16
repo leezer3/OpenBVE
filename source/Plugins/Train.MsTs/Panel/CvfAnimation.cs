@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -423,6 +423,15 @@ namespace Train.MsTs
 					double mr = dynamicTrain.Cars[dynamicTrain.DriverCar].CarBrake.MainReservoir.CurrentPressure;
 					mr *= UnitConversionFactor;
 					MapDigitalResult(mr);
+					break;
+				case PanelSubject.Cyl_Cocks:
+					TractionModel tractionModel = dynamicTrain.Cars[carIndex].TractionModel;
+					int cylinderCocksState = 0;
+					if (tractionModel.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks cylinderCocks))
+					{
+						cylinderCocksState = cylinderCocks.Opened ? 1 : 0;
+					}
+					lastResult = cylinderCocksState;
 					break;
 			}
 			return lastResult;
