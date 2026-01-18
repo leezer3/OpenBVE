@@ -231,6 +231,7 @@ namespace Train.MsTs
 						}
 
 						currentCar.TractionModel.Components.Add(EngineComponent.CylinderCocks, new CylinderCocks(currentCar.TractionModel));
+						currentCar.TractionModel.Components.Add(EngineComponent.Blowers, new Blowers(currentCar.TractionModel));
 						break;
 					case EngineType.NoEngine:
 						currentCar.TractionModel = new BVETrailerCar(currentCar);

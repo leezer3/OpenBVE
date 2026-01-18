@@ -345,7 +345,6 @@ namespace OpenBve
 				Builder.AppendLine("[folders]");
 				Builder.AppendLine("route = " + RouteFolder);
 				Builder.AppendLine("train = " + TrainFolder);
-				Builder.AppendLine("MSTSTrainset = " + Program.FileSystem.MSTSDirectory);
 				Builder.AppendLine();
 				Builder.AppendLine("[recentlyUsedRoutes]");
 				for (int i = 0; i < RecentlyUsedRoutes.Length; i++)

@@ -1,4 +1,4 @@
-//Simplified BSD License (BSD-2-Clause)
+﻿//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -432,6 +432,15 @@ namespace Train.MsTs
 						cylinderCocksState = cylinderCocks.Opened ? 1 : 0;
 					}
 					lastResult = cylinderCocksState;
+					break;
+				case PanelSubject.Blower:
+					tractionModel = dynamicTrain.Cars[carIndex].TractionModel;
+					int blowersState = 0;
+					if (tractionModel.Components.TryGetTypedValue(EngineComponent.Blowers, out Blowers blowers))
+					{
+						blowersState = blowers.Active ? 1 : 0;
+					}
+					MapResult(blowersState);
 					break;
 			}
 			return lastResult;

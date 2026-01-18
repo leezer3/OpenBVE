@@ -640,6 +640,15 @@ namespace OpenBve
 							}
 						}
 						break;
+					case Translations.Command.Blowers:
+						for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+						{
+							if (TrainManager.PlayerTrain.Cars[i].TractionModel.Components.TryGetTypedValue(EngineComponent.Blowers, out Blowers blowers))
+							{
+								blowers.Toggle();
+							}
+						}
+						break;
 					case Translations.Command.MainBreaker:
 						break;
 					case Translations.Command.WiperSpeedUp:

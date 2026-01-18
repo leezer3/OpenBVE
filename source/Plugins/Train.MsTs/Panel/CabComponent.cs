@@ -100,7 +100,7 @@ namespace Train.MsTs
 				// frame 0 is always mapping value 0
 				for (int i = 1; i < TotalFrames; i++)
 				{
-					FrameMappings[i].MappingValue = (double)i / TotalFrames;
+					FrameMappings[i].MappingValue = (i + 1.0) / TotalFrames;
 					FrameMappings[i].FrameKey = i;
 				}
 
@@ -146,16 +146,20 @@ namespace Train.MsTs
 					break;
 				case CabComponentType.Lever:
 					/*
-						 * TODO:
-						 * Need to revisit the actual position versus frame with MSTS content.
-						 *
-						 * Take the example of the stock Class 50
-						 * This has a notched brake handle, with 5 physical notches
-						 *
-						 * The cabview has 12 frames for these 5 notches, which appear to be mapped using NumPositions
-						 * Oddly, all frames appear to be distinct. Need to check OR + MSTS handling
-						 * Suspect there's a notch delay or something that should use these.
-						 */
+					 * TODO:
+					 * Need to revisit the actual position versus frame with MSTS content.
+					 *
+					 * How this works is that MSTS *only* has percentage based handles
+					 * However, it's entirely possible to assign a notch set in the ENG file
+					 *
+					 * Our displayed notch value is >= the appropriate percentage
+					 * For a lot of stuff, notched is 'better' but similarly, percentage based is
+					 * 'better' for other stuff
+					 *
+					 * Need to figure out if there's a way to determine which to use.
+					 * Check ORTS too...
+					 *
+					 */
 					Position.X *= rW;
 					Position.Y *= rH;
 					Size.X *= rW;
@@ -197,6 +201,7 @@ namespace Train.MsTs
 							case PanelSubject.Throttle:
 							case PanelSubject.Train_Brake:
 							case PanelSubject.Gears:
+							case PanelSubject.Blower:
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 								break;
 							default:
@@ -259,6 +264,7 @@ namespace Train.MsTs
 							case PanelSubject.CPH_Display:
 							case PanelSubject.Friction_Braking:
 							case PanelSubject.Cyl_Cocks:
+							case PanelSubject.Blower:
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 								break;
 							default:

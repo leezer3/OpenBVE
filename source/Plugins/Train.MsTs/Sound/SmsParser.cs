@@ -580,6 +580,20 @@ namespace Train.MsTs
 									}
 								}
 								break;
+							case SoundTrigger.BlowerChange:
+								if (car.TractionModel.Components.TryGetTypedValue(EngineComponent.Blowers, out Blowers blowers))
+								{
+									if (currentSoundSet.CurrentSoundType == KujuTokenID.PlayOneShot)
+									{
+										blowers.ActivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+										blowers.DeactivationSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+									else
+									{
+										blowers.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
+									}
+								}
+								break;
 						}
 					}
 					else

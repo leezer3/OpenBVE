@@ -136,6 +136,7 @@
     <Compile Include="Motor\ElectricEngine\ElectricEngine.cs" />
     <Compile Include="Motor\ElectricEngine\Pantograph.cs" />
     <Compile Include="Motor\Fuel\FuelTank.cs" />
+    <Compile Include="Motor\SteamEngine\Blowers.cs" />
     <Compile Include="Motor\SteamEngine\CylinderCocks.cs" />
     <Compile Include="Motor\SteamEngine\TankEngine.cs" />
     <Compile Include="Motor\SteamEngine\TenderEngine.cs" />

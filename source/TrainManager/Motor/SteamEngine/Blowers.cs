@@ -1,6 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
-//
-//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+﻿//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,22 +20,44 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-namespace OpenBveApi.Motor
+using SoundManager;
+
+namespace TrainManager.Motor
 {
-	/// <summary>The types of engine component</summary>
-	public enum EngineComponent
+	public class Blowers : AbstractComponent
 	{
-		/// <summary>A traction motor</summary>
-		TractionMotor,
-		/// <summary>A regenerative traction motor</summary>
-		RegenerativeTractionMotor,
-		/// <summary>A pantograph</summary>
-		Pantograph,
-		/// <summary>A gearbox</summary>
-		Gearbox,
-		/// <summary>Steam engine cylinder cocks</summary>
-		CylinderCocks,
-		/// <summary>Steam engine blowers</summary>
-		Blowers,
+		public bool Active;
+
+		public CarSound ActivationSound;
+
+		public CarSound DeactivationSound;
+
+		public CarSound LoopSound;
+
+		public Blowers(TractionModel engine) : base(engine)
+		{
+		}
+
+		public void Toggle()
+		{
+			if (Active)
+			{
+				DeactivationSound?.Play(baseEngine.BaseCar, false);
+			}
+			else
+			{
+				ActivationSound?.Play(baseEngine.BaseCar, false);
+			}
+
+			Active = !Active;
+		}
+
+		public override void Update(double timeElapsed)
+		{
+			if (Active && !ActivationSound.IsPlaying)
+			{
+				LoopSound?.Play(baseEngine.BaseCar, true);
+			}
+		}
 	}
 }

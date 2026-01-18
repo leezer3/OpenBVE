@@ -54,12 +54,17 @@ namespace Train.MsTs
 
 		internal static string FileName;
 
+		private static CabView currentCabView;
+
+		private static readonly List<CabView> cabViews = new List<CabView>();
+
 		private static readonly List<CabComponent> cabComponents = new List<CabComponent>();
 
 		// parse panel config
 		internal static bool ParseCabViewFile(string fileName, ref CarBase currentCar)
 		{
 			FileName = fileName;
+			cabViews.Clear();
 			cabComponents.Clear();
 			CurrentFolder = Path.GetDirectoryName(fileName);
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read);
@@ -209,10 +214,6 @@ namespace Train.MsTs
 			return true;
 		}
 		
-		private static CabView currentCabView;
-
-		private static readonly List<CabView> cabViews = new List<CabView>();
-
 		private static void ParseBlock(Block block)
 		{
 			Block newBlock;
@@ -270,6 +271,7 @@ namespace Train.MsTs
 					block.Skip((int) block.Length());
 					break;
 				case KujuTokenID.Tr_CabViewFile:
+					currentCabView = new CabView();
 					newBlock = block.ReadSubBlock(KujuTokenID.CabViewType);
 					ParseBlock(newBlock);
 					//The main front cabview
