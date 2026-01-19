@@ -214,16 +214,20 @@ namespace Train.MsTs
 						// NOT YET IMPLEMENTED FULLY
 						if (RequiresTender)
 						{
-							currentCar.TractionModel = new TenderEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) });
+							TenderEngine tenderEngine = new TenderEngine(currentCar, new AccelerationCurve[] { new MSTSAccelerationCurve(currentCar, maxForce, maxContinuousForce, maxVelocity) });
+							currentCar.TractionModel = tenderEngine;
 							if (currentCar.Index > 0)
 							{
 								CarBase previousCar = currentCar.baseTrain.Cars[currentCar.Index - 1];
-								if (previousCar.TractionModel is Tender tender && tender.MaxWaterLevel == -1)
+								if (previousCar.TractionModel is Tender previousTender && previousTender.MaxWaterLevel == -1)
 								{
 									// recreate, as values are stored in the ENG
-									previousCar.TractionModel = new Tender(previousCar, MaxFuelLevel, MaxWaterLevel);
+									previousTender = new Tender(previousCar, MaxFuelLevel, MaxWaterLevel);
+									tenderEngine.Tender = previousTender;
+									previousCar.TractionModel = previousTender;
 								}
 							}
+							
 						}
 						else
 						{
@@ -232,6 +236,7 @@ namespace Train.MsTs
 
 						currentCar.TractionModel.Components.Add(EngineComponent.CylinderCocks, new CylinderCocks(currentCar.TractionModel));
 						currentCar.TractionModel.Components.Add(EngineComponent.Blowers, new Blowers(currentCar.TractionModel));
+						currentCar.TractionModel.Components.Add(EngineComponent.Boiler, new Boiler(currentCar.TractionModel, BoilerLength));
 						break;
 					case EngineType.NoEngine:
 						currentCar.TractionModel = new BVETrailerCar(currentCar);
@@ -303,7 +308,13 @@ namespace Train.MsTs
 			{
 				if (currentWagonType == WagonType.Tender)
 				{
-					currentCar.TractionModel = new Tender(currentCar, MaxFuelLevel, MaxWaterLevel);
+					Tender tender = new Tender(currentCar, MaxFuelLevel, MaxWaterLevel);
+					currentCar.TractionModel = tender;
+					CarBase previousCar = currentCar.baseTrain.Cars[currentCar.Index - 1];
+					if (previousCar.TractionModel is TenderEngine tenderEngine)
+					{
+						tenderEngine.Tender = tender;
+					}
 				}
 
 				if (currentCar.TrailingWheels.Count == 0)
@@ -556,6 +567,7 @@ namespace Train.MsTs
 		private UnitOfPressure brakeSystemDefaultUnits = UnitOfPressure.PoundsPerSquareInch;
 		private double MaxWaterLevel = -1;
 		private double MaxFuelLevel = -1;
+		private double BoilerLength = 0;
 		/// <summary>The maximum expanded size of a particle</summary>
 		internal double ExhaustMaxMagnitude;
 		/// <summary>The rate of particle emissions at idle</summary>
@@ -1256,6 +1268,9 @@ namespace Train.MsTs
 				case KujuTokenID.MaxTenderWaterMass:
 					// at atmospheric pressure, 1kg of water = 1L
 					MaxWaterLevel = block.ReadSingle(UnitOfWeight.Kilograms, UnitOfWeight.Pounds);
+					break;
+				case KujuTokenID.BoilerLength:
+					BoilerLength = block.ReadSingle(UnitOfLength.Meter);
 					break;
 			}
 			return true;

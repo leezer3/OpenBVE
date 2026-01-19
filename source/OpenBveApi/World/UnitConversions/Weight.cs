@@ -50,7 +50,7 @@ namespace OpenBveApi.World
 			RegisterConversion(UnitOfWeight.Grams, v => v * 100.0, v => v / 100.0);
 			RegisterConversion(UnitOfWeight.MetricTonnes, v => v / 1000.0, v => v * 1000.0);
 			RegisterConversion(UnitOfWeight.ImperialTons, v => v / 1016.05, v => v * 1016.05);
-			RegisterConversion(UnitOfWeight.Pounds, v => v/ 2.205, v => v * 2.205);
+			RegisterConversion(UnitOfWeight.Pounds, v => v * 2.205, v => v / 2.205);
 			KnownUnits = new Dictionary<string, UnitOfWeight>
 			{
 				{"g", UnitOfWeight.Grams}, {"gram", UnitOfWeight.Grams}, {"grams", UnitOfWeight.Grams},

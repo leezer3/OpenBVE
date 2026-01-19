@@ -1,6 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
-//
-//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+﻿//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,35 +20,17 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using TrainManager.Car;
-
 namespace TrainManager.Motor
 {
-	public class Tender : TractionModel
+	public class Boiler : AbstractComponent
 	{
-		/// <summary>The maximum water level</summary>
-		public readonly double MaxWaterLevel;
-		/// <summary>The current water level</summary>
+		public readonly double Length;
+		
 		public double WaterLevel;
 
-		public Tender(CarBase car, double maxFuelLevel, double maxWaterLevel) : base(car, null, false)
+		public Boiler(TractionModel engine, double length) : base(engine)
 		{
-			FuelTank = new FuelTank(maxFuelLevel, 0, maxFuelLevel);
-			// TODO: This just gives us a marginally sensible (fixed) reading on gauges
-			MaxWaterLevel = maxWaterLevel * 0.8;
-			WaterLevel = maxWaterLevel * 0.8;
-		}
-
-		public Tender(CarBase car, double maxFuelLevel, double fuelLevel, double maxWaterLevel, double waterLevel) : base(car, null, false)
-		{
-			FuelTank = new FuelTank(maxFuelLevel, 0, fuelLevel);
-			MaxWaterLevel = maxWaterLevel;
-			WaterLevel = waterLevel;
-		}
-
-		public override void Update(double timeElapsed)
-		{
-
+			Length = length;
 		}
 	}
 }

@@ -1078,7 +1078,12 @@ namespace OpenBveApi.FunctionScripting
 						case "blowerssstateindex":
 							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
-							InstructionSet[n] = Instructions.CylinderCocksStateOfCar;
+							InstructionSet[n] = Instructions.BlowersStateOfCar;
+							n++; break;
+						case "tenderwaterstateindex":
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.TenderWaterOfCar;
 							n++; break;
 						// default
 						default:

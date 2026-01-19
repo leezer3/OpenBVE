@@ -44,6 +44,8 @@ namespace Train.MsTs
 		private Units Units;
 		private Vector2 Position = new Vector2(0, 0);
 		private Vector2 Size = new Vector2(0, 0);
+		private Vector2 AreaPosition = new Vector2(0, 0);
+		private Vector2 AreaSize = new Vector2(0, 0);
 		private double PivotPoint;
 		private double InitialAngle;
 		private double LastAngle;
@@ -62,6 +64,7 @@ namespace Train.MsTs
 		private Tuple<double, Color24>[] NegativeColors;
 		private Color24 ControlColor;
 		private int Accuracy;
+		private int Orientation;
 
 		internal void Parse()
 		{
@@ -129,11 +132,11 @@ namespace Train.MsTs
 					Size.X *= rW;
 					Size.Y *= rH;
 					PivotPoint *= rH;
-					elementIndex = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2((0.5 * Size.X) / (tday.Width * rW), PivotPoint / (tday.Height * rH)), componentLayer * CabviewFileParser.StackDistance, PanelPosition, tday, null, new Color32(255, 255, 255, 255));
+					elementIndex = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2((0.5 * Size.X) / (tday.Width * rW), PivotPoint / (tday.Height * rH)), componentLayer * CabviewFileParser.StackDistance, PanelPosition, tday, new Color32(255, 255, 255, 255));
 					currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
 					currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].RotateXDirection = DirIncrease ? new Vector3(1.0, 0.0, 0.0) : new Vector3(-1.0, 0.0, 0.0);
 					currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].RotateYDirection = Vector3.Cross(currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].RotateZDirection, currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].RotateXDirection);
-					f = CabviewFileParser.GetStackLanguageFromSubject(currentCar.baseTrain, panelSubject, Units);
+					f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
 					InitialAngle = InitialAngle.ToRadians();
 					LastAngle = LastAngle.ToRadians();
 					double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
@@ -190,11 +193,11 @@ namespace Train.MsTs
 						for (int k = 0; k < textures.Length; k++)
 						{
 								
-							int l = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2(0.5, 0.5), componentLayer * CabviewFileParser.StackDistance, PanelPosition, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+							int l = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2(0.5, 0.5), componentLayer * CabviewFileParser.StackDistance, PanelPosition, textures[k], new Color32(255, 255, 255, 255), k != 0);
 							if (k == 0) elementIndex = l;
 						}
 
-						f = CabviewFileParser.GetStackLanguageFromSubject(currentCar.baseTrain, panelSubject, Units);
+						f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
 						switch (panelSubject)
 						{
 							case PanelSubject.Engine_Brake:
@@ -202,6 +205,7 @@ namespace Train.MsTs
 							case PanelSubject.Train_Brake:
 							case PanelSubject.Gears:
 							case PanelSubject.Blower:
+							case PanelSubject.Cutoff:
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 								break;
 							default:
@@ -244,11 +248,11 @@ namespace Train.MsTs
 						elementIndex = -1;
 						for (int k = 0; k < textures.Length; k++)
 						{
-							int l = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2(0.5, 0.5), componentLayer * CabviewFileParser.StackDistance, PanelPosition, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+							int l = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2(0.5, 0.5), componentLayer * CabviewFileParser.StackDistance, PanelPosition, textures[k], new Color32(255, 255, 255, 255), k != 0);
 							if (k == 0) elementIndex = l;
 						}
 
-						f = CabviewFileParser.GetStackLanguageFromSubject(currentCar.baseTrain, panelSubject, Units);
+						f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
 						switch (panelSubject)
 						{
 							case PanelSubject.Direction:
@@ -302,7 +306,7 @@ namespace Train.MsTs
 					{
 						for (int k = 0; k < frameTextures.Length; k++)
 						{
-							int l = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], new Vector2(Position.X + Size.X - (digitWidth * (currentDigit + 1)), Position.Y), new Vector2(digitWidth * rW, Size.Y * rH), new Vector2(0.5, 0.5), componentLayer * CabviewFileParser.StackDistance, PanelPosition, frameTextures[k], null, textColor, k != 0);
+							int l = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], new Vector2(Position.X + Size.X - (digitWidth * (currentDigit + 1)), Position.Y), new Vector2(digitWidth * rW, Size.Y * rH), new Vector2(0.5, 0.5), componentLayer * CabviewFileParser.StackDistance, PanelPosition, frameTextures[k], textColor, k != 0);
 							if (k == 0) elementIndex = l;
 						}
 
@@ -362,7 +366,7 @@ namespace Train.MsTs
 						elementIndex = -1;
 						for (int k = 0; k < textures.Length; k++)
 						{
-							int l = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2(0.5, 0.5), componentLayer * CabviewFileParser.StackDistance, PanelPosition, textures[k], null, new Color32(255, 255, 255, 255), k != 0);
+							int l = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position, Size, new Vector2(0.5, 0.5), componentLayer * CabviewFileParser.StackDistance, PanelPosition, textures[k], new Color32(255, 255, 255, 255), k != 0);
 							if (k == 0) elementIndex = l;
 						}
 
@@ -391,13 +395,103 @@ namespace Train.MsTs
 					{
 						for (int k = 0; k < frameTextures.Length; k++)
 						{
-							int l = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], new Vector2(Position.X + Size.X - (digitWidth * (currentDigit + 1)), Position.Y), new Vector2(digitWidth * rW, Size.Y * rH), new Vector2(0.5, 0.5), componentLayer * CabviewFileParser.StackDistance, PanelPosition, frameTextures[k], null, textColor, k != 0);
+							int l = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], new Vector2(Position.X + Size.X - (digitWidth * (currentDigit + 1)), Position.Y), new Vector2(digitWidth * rW, Size.Y * rH), new Vector2(0.5, 0.5), componentLayer * CabviewFileParser.StackDistance, PanelPosition, frameTextures[k], textColor, k != 0);
 							if (k == 0) elementIndex = l;
 						}
 
 						// create digit functions
 						currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, Style, Accuracy == 1 ? currentDigit : currentDigit + 3);
 					}
+					break;
+				case CabComponentType.Gauge:
+					Position.X *= rW;
+					Position.Y *= rH;
+					Size.X *= rW;
+					Size.Y *= rH;
+					/* SIZE: Area of motion of the gauge within the CVF bounds
+					 * AREA POSITION: Relative position of the pointer start within size bounds
+					 * AREA SIZE: Relative size of the pointer
+					 *
+					 */
+					if (Style == CabComponentStyle.Pointer && AreaSize == Vector2.Null)
+					{
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS CVF Parser: Gauge pointer cannot be of zero size.");
+						break;
+					}
+					Plugin.CurrentHost.RegisterTexture(TexturePath, new TextureParameters(null, null), out tday, true);
+					
+
+					double worldWidth, worldHeight;
+					if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
+					{
+						worldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * 1.0;
+						worldHeight = worldWidth / Plugin.Renderer.Screen.AspectRatio;
+					}
+					else
+					{
+						worldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * 1.0 / Plugin.Renderer.Screen.AspectRatio;
+						worldWidth = worldHeight * Plugin.Renderer.Screen.AspectRatio;
+					}
+					if (Orientation == 1)
+					{
+						
+						AreaSize.Y = Math.Max(1, AreaSize.Y); // minimum 1px size for scaling to work
+						// vertical
+						double y0 = (Position.Y / 240) - 0.5 * worldHeight; // half of reference 480px panel height...
+						double y1 = ((Position.Y + Size.Y) / 240) - 0.5 * worldHeight;
+						double translationTotal = y1 - y0;
+						double minSizeMultiplier = 1.0;
+						double maxSizeMultiplier = (Size.Y / AreaSize.Y) * 0.9;
+						double areaSize = AreaSize.Y / 240;
+						
+						switch(Style)
+						{
+							case CabComponentStyle.Pointer:
+								int e = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position + AreaPosition, AreaSize, Vector2.Null, componentLayer * CabviewFileParser.StackDistance, PanelPosition, tday, new Color32(255, 255, 255, 255));
+								f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
+								f += " " + translationTotal.ToString(culture) + " * 0.2 *";
+								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].TranslateYFunction = new FunctionScript(Plugin.CurrentHost, f, false);
+								// FIXME: Panel overall direction seems to be slightly off from vertical (so element 'drops' under the panel on down translation if we don't pull forwards)
+								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].TranslateYDirection = new Vector3(0, 1, 0.1);
+								break;                       
+							case CabComponentStyle.Solid:
+								Vector2 v = new Vector2(Position);
+								// ignore area position for the minute, move Y
+								v.Y += Size.Y - AreaSize.Y;
+								e = CabviewFileParser.CreateScalableYElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], v, Size, AreaSize, (componentLayer + 200) * CabviewFileParser.StackDistance, PanelPosition, tday, null, new Color32(255, 255, 255, 255), DirIncrease);
+								f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
+								double s0 = (minSizeMultiplier * Maximum - maxSizeMultiplier * Minimum) / (Maximum - Minimum);
+								double s1 = (maxSizeMultiplier - minSizeMultiplier) / (Maximum - Minimum);
+								f += " " + s1.ToString(culture) + " * " + s0.ToString(culture) + " +";
+
+								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].ScaleYFunction = new FunctionScript(Plugin.CurrentHost, f, false);
+								
+								if (Maximum == 1)
+								{
+									currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].internalObject.Prototype.Mesh.Materials[0].Color = new Color32(255, 0, 0);
+								}
+								break;
+						}
+						
+					}
+					else
+					{
+						// horizontal
+						double x0 = (Position.X / 320 - 0.5) * worldWidth; // half of reference 640px panel width...
+						double x1 = ((Position.X + Size.Y) / 320 - 0.5) * worldWidth;
+						double translationTotal = x1 - x0;
+						switch (Style)
+						{
+							case CabComponentStyle.Pointer:
+								int e = CabviewFileParser.CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Position + AreaPosition, AreaSize, Vector2.Null, componentLayer * CabviewFileParser.StackDistance, PanelPosition, tday, new Color32(255, 255, 255, 255));
+								f = CabviewFileParser.GetStackLanguageFromSubject(currentCar, panelSubject, Units);
+								f += " " + translationTotal.ToString(culture) + " * 0.5 *";
+								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].TranslateXFunction = new FunctionScript(Plugin.CurrentHost, f, false);
+								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[e].TranslateXDirection = new Vector3(1, 0, 0);
+								break;
+						}
+					}
+
 					break;
 			}
 		}
@@ -448,8 +542,8 @@ namespace Train.MsTs
 					DirIncrease = block.ReadBool();
 					break;
 				case KujuTokenID.Orientation:
-					//Flip?
-					block.Skip((int)block.Length());
+					// Horizontal movement (0) or Vertical (1)
+					Orientation = block.ReadInt16();
 					break;
 				case KujuTokenID.NumValues:
 				case KujuTokenID.NumPositions:
@@ -588,6 +682,12 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.Accuracy:
 					Accuracy = block.ReadInt16();
+					break;
+				case KujuTokenID.Area:
+					AreaPosition.X = block.ReadInt16();
+					AreaPosition.Y = block.ReadInt16();
+					AreaSize.X = block.ReadInt16();
+					AreaSize.Y = block.ReadInt16();
 					break;
 			}
 		}

@@ -39,5 +39,7 @@ namespace OpenBveApi.Motor
 		CylinderCocks,
 		/// <summary>Steam engine blowers</summary>
 		Blowers,
+		/// <summary>Steam engine boiler</summary>
+		Boiler,
 	}
 }

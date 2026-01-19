@@ -11,6 +11,8 @@ namespace Train.MsTs
 		Volts,
 		Kilovolts,
 		Gallons,
+		Litres,
+		Liters = Litres,
 		Inches_Of_Mercury,
 		Kilometers_Per_Hour,
 		Km_Per_Hour = Kilometers_Per_Hour,

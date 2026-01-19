@@ -136,6 +136,7 @@ namespace Train.MsTs
 		public double ExecuteScript(AbstractTrain train, int carIndex, Vector3 position, double trackPosition, int sectionIndex, bool isPartOfTrain, double timeElapsed, int currentState)
 		{
 			dynamic dynamicTrain = train;
+			TractionModel tractionModel = dynamicTrain.Cars[carIndex].TractionModel;
 			switch (Subject)
 			{
 				case PanelSubject.CP_Handle:
@@ -166,6 +167,10 @@ namespace Train.MsTs
 					break;
 				case PanelSubject.Direction_Display:
 				case PanelSubject.Direction:
+					lastResult = (int)dynamicTrain.Handles.Reverser.Actual + 1;
+					break;
+				case PanelSubject.Cutoff:
+					// TODO: Implement properly
 					lastResult = (int)dynamicTrain.Handles.Reverser.Actual + 1;
 					break;
 				case PanelSubject.Speedlim_Display:
@@ -364,43 +369,32 @@ namespace Train.MsTs
 				case PanelSubject.Ammeter:
 				case PanelSubject.Ammeter_Abs:
 					double amps = 0;
-					if (dynamicTrain != null)
+					int totalMotors = 0;
+					double ampsTotal = 0;
+					for (int k = 0; k < dynamicTrain.Cars.Length; k++)
 					{
-						int totalMotors = 0;
-						double ampsTotal = 0;
-						for (int k = 0; k < dynamicTrain.Cars.Length; k++)
+						if (dynamicTrain.Cars[k].TractionModel is DieselEngine dieselEngine)
 						{
-							if (dynamicTrain.Cars[k].TractionModel is DieselEngine dieselEngine)
+							if (dieselEngine.Components.TryGetTypedValue(EngineComponent.TractionMotor, out TractionMotor t))
 							{
-								if (dieselEngine.Components.TryGetTypedValue(EngineComponent.TractionMotor, out TractionMotor t))
-								{
-									totalMotors++;
-									ampsTotal += t.CurrentAmps;
-								}
-								else if (dieselEngine.Components.TryGetTypedValue(EngineComponent.RegenerativeTractionMotor, out RegenerativeTractionMotor rt))
-								{
-									totalMotors++;
-									ampsTotal += rt.CurrentAmps;
-								}
+								totalMotors++;
+								ampsTotal += t.CurrentAmps;
 							}
-						}
-
-						if (totalMotors == 0)
-						{
-							amps = 0;
-						}
-						else
-						{
-							amps = ampsTotal / totalMotors;
-							if (Subject == PanelSubject.Ammeter_Abs)
+							else if (dieselEngine.Components.TryGetTypedValue(EngineComponent.RegenerativeTractionMotor, out RegenerativeTractionMotor rt))
 							{
-								amps = Math.Abs(amps);
+								totalMotors++;
+								ampsTotal += rt.CurrentAmps;
 							}
 						}
 					}
-					else
+
+					if (totalMotors != 0)
 					{
-						amps = 0;
+						amps = ampsTotal / totalMotors;
+						if (Subject == PanelSubject.Ammeter_Abs)
+						{
+							amps = Math.Abs(amps);
+						}
 					}
 					MapDigitalResult(amps);
 					break;
@@ -425,7 +419,6 @@ namespace Train.MsTs
 					MapDigitalResult(mr);
 					break;
 				case PanelSubject.Cyl_Cocks:
-					TractionModel tractionModel = dynamicTrain.Cars[carIndex].TractionModel;
 					int cylinderCocksState = 0;
 					if (tractionModel.Components.TryGetTypedValue(EngineComponent.CylinderCocks, out CylinderCocks cylinderCocks))
 					{
@@ -434,13 +427,23 @@ namespace Train.MsTs
 					lastResult = cylinderCocksState;
 					break;
 				case PanelSubject.Blower:
-					tractionModel = dynamicTrain.Cars[carIndex].TractionModel;
 					int blowersState = 0;
 					if (tractionModel.Components.TryGetTypedValue(EngineComponent.Blowers, out Blowers blowers))
 					{
 						blowersState = blowers.Active ? 1 : 0;
 					}
 					MapResult(blowersState);
+					break;
+				case PanelSubject.Tender_Water:
+					if (tractionModel is TenderEngine tE)
+					{
+						lastResult = tE.Tender.WaterLevel;
+					}
+					else if (tractionModel is TankEngine tA)
+					{
+						// CHECK: Assume that tender water will also map to tank water
+						lastResult = tA.TankWaterLevel;
+					}
 					break;
 			}
 			return lastResult;

@@ -188,17 +188,17 @@ namespace Train.MsTs
 				{
 					case 0:
 						currentCar.CarSections.Add(CarSectionType.Interior, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, currentCar));
-						CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[0].Position, tday, null, new Color32(255, 255, 255, 255));
+						CreateElement(ref currentCar.CarSections[CarSectionType.Interior].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[0].Position, tday, new Color32(255, 255, 255, 255));
 						currentCar.CarSections[CarSectionType.Interior].ViewDirection = new Transformation(cabViews[0].Direction.Y.ToRadians(), -cabViews[0].Direction.X.ToRadians(), -cabViews[0].Direction.Z.ToRadians());
 						break;
 					case 1:
 						currentCar.CarSections.Add(CarSectionType.HeadOutLeft, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, currentCar));
-						CreateElement(ref currentCar.CarSections[CarSectionType.HeadOutLeft].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[1].Position, tday, null, new Color32(255, 255, 255, 255));
+						CreateElement(ref currentCar.CarSections[CarSectionType.HeadOutLeft].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[1].Position, tday, new Color32(255, 255, 255, 255));
 						currentCar.CarSections[CarSectionType.HeadOutLeft].ViewDirection = new Transformation(cabViews[1].Direction.Y.ToRadians(), -cabViews[1].Direction.X.ToRadians(), -cabViews[1].Direction.Z.ToRadians());
 						break;
 					case 2:
 						currentCar.CarSections.Add(CarSectionType.HeadOutRight, new CarSection(Plugin.CurrentHost, ObjectType.Overlay, true, currentCar));
-						CreateElement(ref currentCar.CarSections[CarSectionType.HeadOutRight].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[2].Position, tday, null, new Color32(255, 255, 255, 255));
+						CreateElement(ref currentCar.CarSections[CarSectionType.HeadOutRight].Groups[0], Vector2.Null, panelSize, new Vector2(0.5, 0.5), 0.0, cabViews[2].Position, tday, new Color32(255, 255, 255, 255));
 						currentCar.CarSections[CarSectionType.HeadOutRight].ViewDirection = new Transformation(cabViews[2].Direction.Y.ToRadians(), -cabViews[2].Direction.X.ToRadians(), -cabViews[2].Direction.Z.ToRadians());
 						break;
 				}
@@ -326,7 +326,7 @@ namespace Train.MsTs
 		private static readonly Vector2 panelOrigin = new Vector2(0, 240);
 		
 		// get stack language from subject
-		internal static string GetStackLanguageFromSubject(TrainBase train, PanelSubject subject, Units subjectUnits)
+		internal static string GetStackLanguageFromSubject(CarBase car, PanelSubject subject, Units subjectUnits)
 		{
 			// transform subject
 			string Code = string.Empty;
@@ -428,6 +428,7 @@ namespace Train.MsTs
 							throw new Exception(subjectUnits + " is not a valid unit for " + subject);
 					}
 					break;
+				case PanelSubject.Reverser_Plate:
 				case PanelSubject.Direction:
 					Code = "reverserNotch ++";
 					break;
@@ -487,6 +488,25 @@ namespace Train.MsTs
 				case PanelSubject.Emergency_Brake:
 					Code = "emergencybrake";
 					break;
+				case PanelSubject.Tender_Water:
+					// Tender_Water (or tanks) returns a value in gallons / liters
+					Code = car.Index + " tenderwaterstateindex";
+					switch (subjectUnits)
+					{
+						case Units.Gallons:
+							Code = car.Index + " tenderwaterstateindex 3.785 /";
+							break;
+						case Units.Liters:
+							Code = car.Index + " tenderwaterstateindex";
+							break;
+					}
+					break;
+				case PanelSubject.Boiler_Water:
+					// However, just to be difficult, the boiler water returns a value between 0 and 1
+					// Presumably this has to do with the steam circuit calculations
+					// https://openrails.org/files/OR_Steam%20Model_03_02_2014.pdf
+					Code = "1";
+					break;
 				default:
 					Code = "0";
 					break;
@@ -494,7 +514,7 @@ namespace Train.MsTs
 			return Code;
 		}
 
-		internal static int CreateElement(ref ElementsGroup Group, Vector2 TopLeft, Vector2 Size, Vector2 RelativeRotationCenter, double Distance, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement = false)
+		internal static int CreateElement(ref ElementsGroup Group, Vector2 TopLeft, Vector2 Size, Vector2 RelativeRotationCenter, double Distance, Vector3 Driver, Texture DaytimeTexture, Color32 Color, bool AddStateToLastElement = false)
 		{
 			if (Size.X == 0 || Size.Y == 0)
 			{
@@ -552,7 +572,7 @@ namespace Train.MsTs
 			staticObject.Mesh.Materials[0].Color = Color;
 			staticObject.Mesh.Materials[0].TransparentColor = Color24.Blue;
 			staticObject.Mesh.Materials[0].DaytimeTexture = DaytimeTexture;
-			staticObject.Mesh.Materials[0].NighttimeTexture = NighttimeTexture;
+			staticObject.Mesh.Materials[0].NighttimeTexture = null;
 			staticObject.Dynamic = true;
 			// calculate offset
 			Vector3 o;
@@ -585,6 +605,111 @@ namespace Train.MsTs
 				Plugin.CurrentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
 				return n;
 			}
+		}
+
+		internal static int CreateScalableYElement(ref ElementsGroup Group, Vector2 TopLeft, Vector2 Size, Vector2 InitialSize, double Distance, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool DirIncrease)
+		{
+			if (InitialSize.X == 0 || InitialSize.Y == 0)
+			{
+				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MSTS Cabview Parser: Attempted to create an invalid size element");
+			}
+
+			double worldWidth, worldHeight;
+			if (Plugin.Renderer.Screen.Width >= Plugin.Renderer.Screen.Height)
+			{
+				worldWidth = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.HorizontalViewingAngle) * eyeDistance;
+				worldHeight = worldWidth / Plugin.Renderer.Screen.AspectRatio;
+			}
+			else
+			{
+				worldHeight = 2.0 * Math.Tan(0.5 * Plugin.Renderer.Camera.VerticalViewingAngle) * eyeDistance / Plugin.Renderer.Screen.AspectRatio;
+				worldWidth = worldHeight * Plugin.Renderer.Screen.AspectRatio;
+			}
+
+
+
+			double x0 = TopLeft.X / panelResolution;
+			double x1 = (TopLeft.X + Size.X) / panelResolution;
+
+			double y0, y1;
+			if (DirIncrease)
+			{
+				y0 = (panelSize.Y - TopLeft.Y) / panelResolution * Plugin.Renderer.Screen.AspectRatio;
+				y1 = (panelSize.Y - (TopLeft.Y + InitialSize.Y)) / panelResolution * Plugin.Renderer.Screen.AspectRatio;
+			}
+			else
+			{
+				// TODO
+				y0 = (panelSize.Y - TopLeft.Y) / panelResolution * Plugin.Renderer.Screen.AspectRatio;
+				y1 = (panelSize.Y - (TopLeft.Y + InitialSize.Y)) / panelResolution * Plugin.Renderer.Screen.AspectRatio;
+			}
+			double xd = 0.5 - panelCenter.X / panelResolution;
+			x0 += xd;
+			x1 += xd;
+			double yt = panelSize.Y - panelResolution / Plugin.Renderer.Screen.AspectRatio;
+			double yd = (panelCenter.Y - yt) / (panelSize.Y - yt) - 0.5;
+			y0 += yd;
+			y1 += yd;
+			x0 = (x0 - 0.5) * worldWidth;
+			x1 = (x1 - 0.5) * worldWidth;
+			y0 = (y0 - 0.5) * worldHeight;
+			y1 = (y1 - 0.5) * worldHeight;
+			double xm = x0 + x1;
+			double ym = y0 + y1;
+			y0 -= ym;
+			y1 -= ym;
+			double initialTranslation = 0;
+			if (DirIncrease)
+			{
+				initialTranslation = Math.Min(y0, y1);
+			}
+			else
+			{
+				// TODO
+			}
+			y0 -= initialTranslation;
+			y1 -= initialTranslation;
+			Vector3[] v = new Vector3[4];
+			v[0] = new Vector3(x0 - xm, y1, 0);
+			v[1] = new Vector3(x0 - xm, y0, 0);
+			v[2] = new Vector3(x1 - xm, y0, 0);
+			v[3] = new Vector3(x1 - xm, y1, 0);
+			Vertex t0 = new Vertex(v[0], new Vector2(0.0f, 1.0f));
+			Vertex t1 = new Vertex(v[1], new Vector2(0.0f, 0.0f));
+			Vertex t2 = new Vertex(v[2], new Vector2(1.0f, 0.0f));
+			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
+			StaticObject staticObject = new StaticObject(Plugin.CurrentHost);
+			staticObject.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
+			staticObject.Mesh.Faces = new[] { new MeshFace(new[] { 0, 1, 2, 0, 2, 3, 3, 2,0, 2,1,0 }, FaceFlags.Triangles) }; //Must create as a single face like this to avoid Z-sort issues with overlapping bits
+			staticObject.Mesh.Materials = new MeshMaterial[1];
+			staticObject.Mesh.Materials[0].Flags = new MaterialFlags();
+			if (DaytimeTexture != null)
+			{
+				staticObject.Mesh.Materials[0].Flags |= MaterialFlags.TransparentColor;
+			}
+
+			staticObject.Mesh.Materials[0].Color = Color;
+			staticObject.Mesh.Materials[0].TransparentColor = Color24.Blue;
+			staticObject.Mesh.Materials[0].DaytimeTexture = DaytimeTexture;
+			staticObject.Mesh.Materials[0].NighttimeTexture = null;
+			staticObject.Dynamic = true;
+			// calculate offset
+			Vector3 o;
+			o.X = xm + Driver.X;
+			o.Y = ym + Driver.Y;
+			o.Z = eyeDistance - Distance + Driver.Z;
+			o.Y += initialTranslation;
+			// add object (Can't add to last element)
+			int n = Group.Elements.Length;
+			Array.Resize(ref Group.Elements, n + 1);
+			Group.Elements[n] = new AnimatedObject(Plugin.CurrentHost);
+			Group.Elements[n].States = new[] { new ObjectState() };
+			Group.Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
+			Group.Elements[n].States[0].Prototype = staticObject;
+			Group.Elements[n].CurrentState = 0;
+			Group.Elements[n].internalObject = new ObjectState { Prototype = staticObject };
+			Plugin.CurrentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
+			return n;
 		}
 	}
 }
