@@ -380,6 +380,8 @@ namespace Plugin
 							currentMaterial = string.Empty;
 							Plugin.currentHost.AddMessage(MessageType.Error, true, "Material " + arguments[1] + " was not found.");
 						}
+						meshBuilder.Apply(ref parsedObject); 
+						meshBuilder = new MeshBuilder(Plugin.currentHost); 
 						break;
 					default:
 						Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unrecognised command " + arguments[0]);
