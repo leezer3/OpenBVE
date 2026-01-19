@@ -285,7 +285,7 @@ namespace Train.OpenBve
 						switch (key)
 						{
 							case TrainXMLKey.Plugin:
-								if (DocumentNodes[i].HasChildNodes)
+								if (DocumentNodes[i].ChildNodes.OfType<XmlElement>().Any())
 								{
 									bool loadForAI = false;
 									string pluginFile = string.Empty;
