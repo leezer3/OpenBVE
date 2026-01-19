@@ -219,7 +219,7 @@ namespace Route.Bve5
 					RouteData.Objects.TryGetValue(OtherTrain.CarObjects[i].Key, out UnifiedObject CarObject);
 					if (CarObject != null)
 					{
-						Train.Cars[i].CarSections.Add(CarSectionType.Exterior, new CarSection(Plugin.CurrentHost, ObjectType.Dynamic, false, Train.Cars[i]));
+						Train.Cars[i].CarSections.Add(CarSectionType.Exterior, new CarSection(Plugin.CurrentHost, ObjectType.Dynamic, false, Train.Cars[i], CarObject));
 					}
 				}
 
