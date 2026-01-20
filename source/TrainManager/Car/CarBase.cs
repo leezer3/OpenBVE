@@ -643,7 +643,7 @@ namespace TrainManager.Car
 
 					if (currentCarSection.Groups[j].Keyframes != null)
 					{
-						for (int k = 0; k < currentCarSection.Groups[0].Keyframes.Objects.Length; k++)
+						for (int k = 0; k < currentCarSection.Groups[j].Keyframes.Objects.Length; k++)
 						{
 							TrainManagerBase.currentHost.HideObject(currentCarSection.Groups[j].Keyframes.Objects[k]);
 						}

@@ -97,7 +97,7 @@ namespace TrainManager.Power
 
 			if (baseCar.TractionModel is ElectricEngine electricEngine)
 			{
-				if (baseCar.Specs.PerceivedSpeed < 3.61111 || baseCar.Specs.PerceivedSpeed > 7.22222)
+				if (baseCar.Specs.PerceivedSpeed > 3.61111 && baseCar.Specs.PerceivedSpeed < 7.22222)
 				{
 					// for electrics, MaxContinuousForce is used between 13km/h and 26km/h as per original Kuju physics model
 					return electricEngine.CurrentPower * (totalMass / MaxContinuousForce);

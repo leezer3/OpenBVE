@@ -282,7 +282,7 @@ namespace Train.MsTs
 						case KujuTokenID.Exhaust3:
 						case KujuTokenID.Exhaust4:
 						case KujuTokenID.StackFX:
-							particleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, currentCar, ParticleSources[i].Offset, ParticleSources[i].Size, ExhaustMaxMagnitude, ParticleSources[i].Direction, currentEngineType == EngineType.Diesel ? 15.0 : 40.0, currentEngineType == EngineType.Diesel ? ParticleType.Smoke : ParticleType.Steam);
+							particleSource = new LibRender2.Smoke.ParticleSource(Plugin.Renderer, currentCar, ParticleSources[i].Offset, ParticleSources[i].Size, ExhaustMaxMagnitude, ParticleSources[i].Direction, currentEngineType == EngineType.Diesel ? 15.0 : 40.0, currentEngineType == EngineType.Steam ? ParticleType.Steam : ParticleType.Smoke);
 							particleSource.Controller = new FunctionScript(Plugin.CurrentHost, currentCar.Index + " enginepowerindex", false);
 							break;
 						case KujuTokenID.WhistleFX:
