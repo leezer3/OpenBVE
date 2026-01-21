@@ -259,11 +259,6 @@ namespace Route.Bve5
 
 				for (int i = 1; i < Blocks.Count; i++)
 				{
-					if (!Blocks[i].Rails[railKey].InterpolateX)
-					{
-						continue;
-					}
-
 					if (Blocks[i].Rails[railKey].InterpolateX)
 					{
 						double StartDistance = Blocks[lastInterpolateX].StartingDistance;
