@@ -106,7 +106,21 @@ namespace Train.MsTs
 					FrameMappings[i].MappingValue = (i + 1.0) / TotalFrames;
 					FrameMappings[i].FrameKey = i;
 				}
+			}
 
+			if (FrameMappings.Length == 3)
+			{
+				if (FrameMappings[0].FrameKey == 0 && FrameMappings[1].FrameKey == 0 && FrameMappings[2].FrameKey == 0)
+				{
+					// An air-brake handle may have 3 mapping values with key of zero, so we need to create manually
+					FrameMappings = new FrameMapping[TotalFrames];
+					// frame 0 is always mapping value 0
+					for (int i = 1; i < TotalFrames; i++)
+					{
+						FrameMappings[i].MappingValue = (i + 1.0) / TotalFrames;
+						FrameMappings[i].FrameKey = i;
+					}
+				}
 			}
 
 			//Create element
@@ -206,6 +220,7 @@ namespace Train.MsTs
 							case PanelSubject.Gears:
 							case PanelSubject.Blower:
 							case PanelSubject.Cutoff:
+							case PanelSubject.Regulator:
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 								break;
 							default:

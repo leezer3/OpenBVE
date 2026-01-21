@@ -153,6 +153,7 @@ namespace Train.MsTs
 					}
 					MapResult(mapping);
 					break;
+				case PanelSubject.Regulator:
 				case PanelSubject.Throttle_Display:
 				case PanelSubject.Throttle:
 					MapResult((double)dynamicTrain.Handles.Power.Actual / dynamicTrain.Handles.Power.MaximumNotch);
