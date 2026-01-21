@@ -284,6 +284,10 @@ namespace Train.MsTs
 							case PanelSubject.Friction_Braking:
 							case PanelSubject.Cyl_Cocks:
 							case PanelSubject.Blower:
+							case PanelSubject.Steam_Inj1:
+							case PanelSubject.Water_Injector1:
+							case PanelSubject.Steam_Inj2:
+							case PanelSubject.Water_Injector2:
 								currentCar.CarSections[CarSectionType.Interior].Groups[0].Elements[elementIndex].StateFunction = new CvfAnimation(Plugin.CurrentHost, panelSubject, FrameMappings);
 								break;
 							default:

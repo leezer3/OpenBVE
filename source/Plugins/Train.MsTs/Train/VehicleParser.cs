@@ -237,6 +237,8 @@ namespace Train.MsTs
 						currentCar.TractionModel.Components.Add(EngineComponent.CylinderCocks, new CylinderCocks(currentCar.TractionModel));
 						currentCar.TractionModel.Components.Add(EngineComponent.Blowers, new Blowers(currentCar.TractionModel));
 						currentCar.TractionModel.Components.Add(EngineComponent.Boiler, new Boiler(currentCar.TractionModel, BoilerLength));
+						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector1, injectorType1 == 0 ? (AbstractComponent)new LiveSteamInjector(currentCar.TractionModel, injectorDiameter1) : new ExhaustSteamInjector(currentCar.TractionModel, injectorDiameter1));
+						currentCar.TractionModel.Components.Add(EngineComponent.SteamInjector2, injectorType2 == 0 ? (AbstractComponent)new LiveSteamInjector(currentCar.TractionModel, injectorDiameter1) : new ExhaustSteamInjector(currentCar.TractionModel, injectorDiameter1));
 						break;
 					case EngineType.NoEngine:
 						currentCar.TractionModel = new BVETrailerCar(currentCar);
@@ -568,6 +570,10 @@ namespace Train.MsTs
 		private double MaxWaterLevel = -1;
 		private double MaxFuelLevel = -1;
 		private double BoilerLength = 0;
+		private int injectorType1;
+		private double injectorDiameter1;
+		private int injectorType2;
+		private double injectorDiameter2;
 		/// <summary>The maximum expanded size of a particle</summary>
 		internal double ExhaustMaxMagnitude;
 		/// <summary>The rate of particle emissions at idle</summary>
@@ -1271,6 +1277,45 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.BoilerLength:
 					BoilerLength = block.ReadSingle(UnitOfLength.Meter);
+					break;
+				case KujuTokenID.InjectorTypes:
+					try
+					{
+						injectorType1 = block.ReadInt16();
+						injectorType2 = block.ReadInt16();
+					}
+					catch
+					{
+						// ignored
+					}
+					break;
+				case KujuTokenID.InjectorSizes:
+					try
+					{
+						injectorDiameter1 = block.ReadSingle(UnitOfLength.Millimeter);
+						injectorDiameter2 = block.ReadSingle(UnitOfLength.Millimeter);
+					}
+					catch
+					{
+						// ignored
+					}
+					// clamp at original MSTS values of 5 - 15
+					if (injectorDiameter1 < 5)
+					{
+						injectorDiameter1 = 5;
+					}
+					if (injectorDiameter1 > 15)
+					{
+						injectorDiameter1 = 15;
+					}
+					if (injectorDiameter2 < 5)
+					{
+						injectorDiameter2 = 5;
+					}
+					if (injectorDiameter2 > 15)
+					{
+						injectorDiameter2 = 15;
+					}
 					break;
 			}
 			return true;

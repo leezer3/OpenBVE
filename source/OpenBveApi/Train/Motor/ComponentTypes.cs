@@ -41,5 +41,9 @@ namespace OpenBveApi.Motor
 		Blowers,
 		/// <summary>Steam engine boiler</summary>
 		Boiler,
+		/// <summary>Steam engine first injector</summary>
+		SteamInjector1,
+		/// <summary>Steam engine second injector</summary>
+		SteamInjector2
 	}
 }

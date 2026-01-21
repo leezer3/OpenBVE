@@ -28,6 +28,8 @@ namespace TrainManager.Motor
 		
 		public double WaterLevel;
 
+		public double CurrentPressure;
+
 		public Boiler(TractionModel engine, double length) : base(engine)
 		{
 			Length = length;

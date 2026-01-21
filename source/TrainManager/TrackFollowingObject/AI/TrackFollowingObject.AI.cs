@@ -25,6 +25,7 @@
 using System;
 using System.Linq;
 using OpenBveApi;
+using OpenBveApi.Interface;
 using OpenBveApi.Motor;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
@@ -154,12 +155,12 @@ namespace TrainManager.Trains
 				{
 					if (Car.CurrentSpeed == 0 && c.Opened == false)
 					{
-						c.Toggle();
+						c.ControlDown(Translations.Command.CylinderCocks);
 					}
 
 					if (Car.CurrentSpeed > 5 && c.Opened)
 					{
-						c.Toggle();
+						c.ControlDown(Translations.Command.CylinderCocks);
 					}
 				}
 			}

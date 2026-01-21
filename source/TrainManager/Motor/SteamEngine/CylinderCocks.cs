@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBveApi.Interface;
 using SoundManager;
 
 namespace TrainManager.Motor
@@ -40,20 +41,23 @@ namespace TrainManager.Motor
 		{
 		}
 
-		public void Toggle()
+		public override void ControlDown(Translations.Command command)
 		{
-			if (Opened)
+			if (command == Translations.Command.CylinderCocks)
 			{
-				CloseSound?.Play(baseEngine.BaseCar, false);
-			}
-			else
-			{
-				OpenSound?.Play(baseEngine.BaseCar, false);
-			}
+				if (Opened)
+				{
+					CloseSound?.Play(baseEngine.BaseCar, false);
+				}
+				else
+				{
+					OpenSound?.Play(baseEngine.BaseCar, false);
+				}
 
-			Opened = !Opened;
+				Opened = !Opened;
+			}
 		}
-
+		
 		public override void Update(double timeElapsed)
 		{
 			if (!Opened)

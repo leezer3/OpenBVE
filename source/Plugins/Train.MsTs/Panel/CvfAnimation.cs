@@ -435,6 +435,38 @@ namespace Train.MsTs
 					}
 					MapResult(blowersState);
 					break;
+				case PanelSubject.Steam_Inj1:
+				case PanelSubject.Water_Injector1:
+					int injector1State = 0;
+					if (tractionModel.Components.TryGetTypedValue(EngineComponent.SteamInjector1, out AbstractComponent injector1))
+					{
+						if (injector1 is LiveSteamInjector lsi)
+						{
+							injector1State = lsi.Active ? 1 : 0;
+						}
+						else if (injector1 is ExhaustSteamInjector esi)
+						{
+							injector1State = esi.Active ? 1 : 0;
+						}
+					}
+					MapResult(injector1State);
+					break;
+				case PanelSubject.Steam_Inj2:
+				case PanelSubject.Water_Injector2:
+					int injector2State = 0;
+					if (tractionModel.Components.TryGetTypedValue(EngineComponent.SteamInjector2, out AbstractComponent injector2))
+					{
+						if (injector2 is LiveSteamInjector lsi)
+						{
+							injector2State = lsi.Active ? 1 : 0;
+						}
+						else if (injector2 is ExhaustSteamInjector esi)
+						{
+							injector2State = esi.Active ? 1 : 0;
+						}
+					}
+					MapResult(injector2State);
+					break;
 				case PanelSubject.Tender_Water:
 					if (tractionModel is TenderEngine tE)
 					{
