@@ -35,7 +35,7 @@ using RouteManager2.Stations;
 
 namespace Route.Bve5
 {
-	static partial class Bve5ScenarioParser
+	internal static partial class Bve5ScenarioParser
 	{
 		private static double lastLegacyCurvePosition = double.MinValue;
 		private static double lastLegacyGradientPosition = double.MinValue;
@@ -946,16 +946,15 @@ namespace Route.Bve5
 						{
 							double Start = Statement.GetArgumentValueAsDouble(ArgumentName.Start);
 							double End = Statement.GetArgumentValueAsDouble(ArgumentName.End);
-							double TempRed, TempGreen, TempBlue;
-							if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
+							if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out double TempRed))
 							{
 								TempRed = 128;
 							}
-							if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
+							if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out double TempGreen))
 							{
 								TempGreen = 128;
 							}
-							if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
+							if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out double TempBlue))
 							{
 								TempBlue = 128;
 							}
@@ -1093,7 +1092,7 @@ namespace Route.Bve5
 							}
 							
 							int BlockIndex = RouteData.FindOrAddBlock(Statement.Distance);
-							//Presumably this is just the adhesion coefficent at 0km/h
+							//Presumably this is just the adhesion coefficient at 0km/h
 							RouteData.Blocks[BlockIndex].AdhesionMultiplier = (int)(Statement.GetArgumentValueAsDouble(ArgumentName.A) * 100 / 0.26) / 100.0;
 							RouteData.Blocks[BlockIndex].AdhesionMultiplierDefined = true;
 						}

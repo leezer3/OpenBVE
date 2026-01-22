@@ -35,7 +35,7 @@ using static Bve5_Parsing.MapGrammar.MapGrammarParser;
 
 namespace Route.Bve5
 {
-	static partial class Bve5ScenarioParser
+	internal static partial class Bve5ScenarioParser
 	{
 		private const int InterpolateInterval = 5;
 		private const double StationNoticeDistance = -200.0;

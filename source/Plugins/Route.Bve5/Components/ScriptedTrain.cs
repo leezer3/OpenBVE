@@ -35,7 +35,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
-using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using SoundManager;
 using TrainManager.Car;
@@ -46,7 +45,7 @@ using Path = OpenBveApi.Path;
 
 namespace Route.Bve5
 {
-	static partial class Bve5ScenarioParser
+	internal static partial class Bve5ScenarioParser
 	{
 		private static void LoadScriptedTrain(string FileName, bool PreviewOnly, MapData ParseData, RouteData RouteData)
 		{

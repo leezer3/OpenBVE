@@ -34,7 +34,7 @@ using OpenBveApi.Sounds;
 
 namespace Route.Bve5
 {
-	static partial class Bve5ScenarioParser
+	internal static partial class Bve5ScenarioParser
 	{
 		private static void ConfirmCurve(IList<Block> Blocks)
 		{
@@ -775,7 +775,7 @@ namespace Route.Bve5
 						SectionIndex = CurrentSection + Convert.ToInt32(Section),
 						Yaw = Convert.ToDouble(RY).ToRadians(),
 						Pitch = -Convert.ToDouble(RX).ToRadians(),
-						Roll = RZtoRoll(Convert.ToDouble(RY), Convert.ToDouble(RZ)).ToRadians(),
+						Roll = RZtoRoll(Convert.ToDouble(RY), Convert.ToDouble(RZ)).ToRadians()
 					});
 				}
 			}
@@ -844,25 +844,21 @@ namespace Route.Bve5
 			{
 				case MapFunctionName.Ambient:
 				{
-					double TempRed, TempGreen, TempBlue;
-					if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
+					if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out double Red))
 					{
-						TempRed = 1.0;
+						Red = 1.0;
 					}
 
-					if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
+					if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out double Green))
 					{
-						TempGreen = 1.0;
+						Green = 1.0;
 					}
 
-					if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
+					if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out double Blue))
 					{
-						TempBlue = 1.0;
+						Blue = 1.0;
 					}
 
-					double Red = Convert.ToDouble(TempRed);
-					double Green = Convert.ToDouble(TempGreen);
-					double Blue = Convert.ToDouble(TempBlue);
 					if (Red < 0.0 || Red > 1.0)
 					{
 						Red = Red < 0.0 ? 0.0 : 1.0;
@@ -883,25 +879,21 @@ namespace Route.Bve5
 					break;
 				case MapFunctionName.Diffuse:
 				{
-					double TempRed, TempGreen, TempBlue;
-					if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out TempRed))
+					if (!Statement.HasArgument(ArgumentName.Red) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Red), out double Red))
 					{
-						TempRed = 1.0;
+						Red = 1.0;
 					}
 
-					if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out TempGreen))
+					if (!Statement.HasArgument(ArgumentName.Green) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Green), out double Green))
 					{
-						TempGreen = 1.0;
+						Green = 1.0;
 					}
 
-					if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out TempBlue))
+					if (!Statement.HasArgument(ArgumentName.Blue) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Blue), out double Blue))
 					{
-						TempBlue = 1.0;
+						Blue = 1.0;
 					}
 
-					double Red = Convert.ToDouble(TempRed);
-					double Green = Convert.ToDouble(TempGreen);
-					double Blue = Convert.ToDouble(TempBlue);
 					if (Red < 0.0 || Red > 1.0)
 					{
 						Red = Red < 0.0 ? 0.0 : 1.0;
@@ -922,13 +914,12 @@ namespace Route.Bve5
 					break;
 				case MapFunctionName.Direction:
 				{
-					double Pitch, Yaw;
-					if (!Statement.HasArgument(ArgumentName.Pitch) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Pitch), out Pitch))
+					if (!Statement.HasArgument(ArgumentName.Pitch) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Pitch), out double Pitch))
 					{
 						Pitch = 60.0;
 					}
 
-					if (!Statement.HasArgument(ArgumentName.Yaw) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Yaw), out Yaw))
+					if (!Statement.HasArgument(ArgumentName.Yaw) || !NumberFormats.TryParseDoubleVb6(Statement.GetArgumentValueAsString(ArgumentName.Yaw), out double Yaw))
 					{
 						Yaw = -26.565051177078;
 					}

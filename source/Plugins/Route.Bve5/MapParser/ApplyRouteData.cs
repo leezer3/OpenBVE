@@ -40,7 +40,7 @@ using RouteManager2.SignalManager;
 
 namespace Route.Bve5
 {
-	static partial class Bve5ScenarioParser
+	internal static partial class Bve5ScenarioParser
 	{
 		internal static Plugin plugin;
 		private static void ApplyRouteData(string FileName, bool PreviewOnly, RouteData Data)
@@ -537,14 +537,13 @@ namespace Route.Bve5
 					{
 						if (Data.Blocks[i].Transponders[k].Type != -1)
 						{
-							int n = i;
-							double d = Data.Blocks[i].Transponders[k].TrackPosition - Plugin.CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
+							double d = Data.Blocks[i].Transponders[k].TrackPosition - Plugin.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
 							int s = Data.Blocks[i].Transponders[k].SectionIndex;
 							if (s < 0 || s >= Plugin.CurrentRoute.Sections.Length)
 							{
 								s = -1;
 							}
-							Plugin.CurrentRoute.Tracks[0].Elements[n].Events.Add(new TransponderEvent(Plugin.CurrentRoute, d, Data.Blocks[i].Transponders[k].Type, Data.Blocks[i].Transponders[k].Data, s, false));
+							Plugin.CurrentRoute.Tracks[0].Elements[i].Events.Add(new TransponderEvent(Plugin.CurrentRoute, d, Data.Blocks[i].Transponders[k].Type, Data.Blocks[i].Transponders[k].Data, s, false));
 							Data.Blocks[i].Transponders[k].Type = -1;
 						}
 					}

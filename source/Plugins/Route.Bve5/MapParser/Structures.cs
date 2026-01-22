@@ -31,7 +31,7 @@ using TrainManager.Motor;
 
 namespace Route.Bve5
 {
-	static partial class Bve5ScenarioParser
+	internal static partial class Bve5ScenarioParser
 	{
 		internal class Block
 		{

@@ -35,7 +35,7 @@ using Path = OpenBveApi.Path;
 
 namespace Route.Bve5
 {
-	static partial class Bve5ScenarioParser
+	internal static partial class Bve5ScenarioParser
 	{
 		private static void LoadStationList(string FileName, MapData ParseData, RouteData RouteData)
 		{
