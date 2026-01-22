@@ -54,6 +54,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CFG\ConfigFile.cs" />
+    <Compile Include="Enums\BVE5\MotorNoiseTxtKey.cs" />
+    <Compile Include="Enums\BVE5\MotorNoiseTxtSection.cs" />
+    <Compile Include="Enums\BVE5\PerformanceCurveTxtKey.cs" />
+    <Compile Include="Enums\BVE5\PerformanceCurveTxtSection.cs" />
+    <Compile Include="Enums\BVE5\ParametersTxtKey.cs" />
+    <Compile Include="Enums\BVE5\ParametersTxtSection.cs" />
     <Compile Include="Enums\ExtensionsCfg\ExtensionsCfgKey.cs" />
     <Compile Include="Enums\ExtensionsCfg\ExtensionsCfgSection.cs" />
     <Compile Include="Enums\HUD\HUDKey.cs" />
@@ -64,6 +70,8 @@
     <Compile Include="Enums\TrainXML\Brake.cs" />
     <Compile Include="Enums\TrainXML\Handle.cs" />
     <Compile Include="Enums\TrainXML\Train.cs" />
+    <Compile Include="Enums\BVE5\VehicleTxtKey.cs" />
+    <Compile Include="Enums\BVE5\VehicleTxtSection.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="NumberRange.cs" />

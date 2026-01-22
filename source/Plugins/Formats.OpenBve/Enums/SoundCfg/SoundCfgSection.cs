@@ -12,7 +12,8 @@ namespace Formats.OpenBve
 		/// <summary>Motor sounds</summary>
 		Motor,
 		/// <summary>Switch sounds</summary>
-		Switch,
+		Switch = 4,
+		Joint = 4,
 		/// <summary>Brake sounds</summary>
 		Brake,
 		/// <summary>Compressor sounds</summary>
@@ -20,6 +21,7 @@ namespace Formats.OpenBve
 		/// <summary>Air suspension sounds</summary>
 		Suspension = 7,
 		Spring = 7,
+		AirSpring = 7,
 		/// <summary>Horn sounds</summary>
 		Horn,
 		/// <summary>Door open / close sounds</summary>
@@ -36,7 +38,7 @@ namespace Formats.OpenBve
 		/// <summary>Sounds played when the power handle is moved</summary>
 		MasterController = 14,
 		PowerHandle = 14,
-		/// <summary>Sounds played when the reverseer is moved</summary>
+		/// <summary>Sounds played when the reverser is moved</summary>
 		Reverser = 15,
 		ReverserHandle = 15,
 		/// <summary>Breaker sounds</summary>

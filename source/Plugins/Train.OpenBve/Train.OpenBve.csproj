@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\TrainFormat.cs" />
     <Compile Include="Panel\Enums\PanelKey.cs" />
     <Compile Include="Panel\Enums\PanelSections.cs" />
     <Compile Include="Panel\Enums\PanelSubject.cs" />
@@ -67,6 +68,9 @@
     <Compile Include="Sound\SoundCfg.Bve4.cs" />
     <Compile Include="Sound\SoundCfg.Xml.cs" />
     <Compile Include="Train\BVE5\MotorSoundTable.cs" />
+    <Compile Include="Train\BVE5\PerformanceData.cs" />
+    <Compile Include="Train\BVE5\PerformanceTable.cs" />
+    <Compile Include="Train\BVE5\VehicleTxt.cs" />
     <Compile Include="Train\BVE\ExtensionsCfgParser.cs" />
     <Compile Include="Train\BVE\TrainDatParser.cs" />
     <Compile Include="Train\BVE\TrainDatparser.Formats.cs" />

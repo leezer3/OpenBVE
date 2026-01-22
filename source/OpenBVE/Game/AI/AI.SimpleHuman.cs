@@ -40,7 +40,7 @@ namespace OpenBve
 			/// <summary>The index to the first motor car, if the driver car is not a motor car</summary>
 			private readonly int MotorCar;
 			// functions
-			internal SimpleHumanDriverAI(TrainBase train, double Limit)
+			internal SimpleHumanDriverAI(TrainBase train, double speedLimit)
 			{
 				Train = train;
 				TimeLastProcessed = 0.0;
@@ -57,7 +57,7 @@ namespace OpenBve
 				{
 					LastStation = -1;
 				}
-				SpeedLimit = Limit;
+				SpeedLimit = speedLimit;
 				MotorCar = train.DriverCar;
 				if (!train.Cars[train.DriverCar].TractionModel.ProvidesPower)
 				{
@@ -921,7 +921,7 @@ namespace OpenBve
 
 												if (dist > 25)
 												{
-													var edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
+													double edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
 													if (edec > dec) dec = edec;
 												}
 
@@ -952,7 +952,7 @@ namespace OpenBve
 													dist -= 5.0;
 												}
 
-												var edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
+												double edec = Train.CurrentSpeed * Train.CurrentSpeed / (2.0 * dist);
 												if (edec > dec) dec = edec;
 											}
 										}

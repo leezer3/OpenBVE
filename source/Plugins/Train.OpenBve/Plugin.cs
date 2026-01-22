@@ -36,6 +36,8 @@ namespace Train.OpenBve
 
 	    internal TrainDatParser TrainDatParser;
 
+		internal VehicleTxtParser VehicleTxtParser;
+
 	    internal ExtensionsCfgParser ExtensionsCfgParser;
 
 	    internal SoundCfgParser SoundCfgParser;
@@ -69,6 +71,7 @@ namespace Train.OpenBve
 		public Plugin()
 	    {
 		    TrainDatParser = new TrainDatParser(this);
+		    VehicleTxtParser = new VehicleTxtParser(this);
 
 		    if (ExtensionsCfgParser == null)
 		    {
@@ -128,15 +131,9 @@ namespace Train.OpenBve
 					string[] lines = File.ReadAllLines(vehicleTxt);
 					for (int i = 10; i < lines.Length; i++)
 					{
-						if (lines[i].StartsWith(@"bvets vehicle ", StringComparison.InvariantCultureIgnoreCase))
+						if (VehicleTxtParser.CanLoad(vehicleTxt))
 						{
-							/*
-							 * BVE5 format train
-							 * When the BVE5 plugin is implemented, this should return false, as BVE5 trains
-							 * often seem to keep the train.dat lying around and we need to use the right plugin
-							 *
-							 * For the moment however, this is ignored....
-							 */
+							return true;
 						}
 					}
 				}
@@ -174,6 +171,10 @@ namespace Train.OpenBve
 					 *
 					 * For the moment however, this is ignored....
 					 */
+					if (VehicleTxtParser.CanLoad(path))
+					{
+						return true;
+					}
 				}
 
 				if (path.EndsWith("train.dat", StringComparison.InvariantCultureIgnoreCase) || path.EndsWith("train.ai", StringComparison.InvariantCultureIgnoreCase))
@@ -203,6 +204,8 @@ namespace Train.OpenBve
 		    IsLoading = true;
 		    CurrentControls = currentControls;
 		    TrainBase currentTrain = train as TrainBase;
+		    TrainFormat trainFormat = TrainFormat.OpenBVE;
+			
 		    if (currentTrain == null)
 		    {
 				CurrentHost.ReportProblem(ProblemType.InvalidData, "Train was not valid");
@@ -210,7 +213,17 @@ namespace Train.OpenBve
 				return false;
 		    }
 
-		    if (currentTrain.State == TrainState.Bogus)
+		    // determine format
+		    if (!currentTrain.IsPlayerTrain && File.Exists(Path.CombineFile(trainPath, "train.ai")))
+		    {
+			    trainFormat = TrainFormat.TrainAI;
+		    }
+			else if (File.Exists(Path.CombineFile(trainPath, "vehicle.txt")))
+			{
+				trainFormat = TrainFormat.BVE5;
+			}
+
+            if (currentTrain.State == TrainState.Bogus)
 		    {
 			    // bogus train
 			    string trainData = Path.CombineFile(FileSystem.GetDataFolder("Compatibility", "PreTrain"), "train.dat");
@@ -245,7 +258,21 @@ namespace Train.OpenBve
 				{
 					trainData = Path.CombineFile(currentTrain.TrainFolder, "train.dat");
 				}
-				TrainDatParser.Parse(trainData, encoding, currentTrain);
+                if (!File.Exists(trainData))
+				{
+					trainData = Path.CombineFile(currentTrain.TrainFolder, "vehicle.txt");
+                }
+				
+
+				if (trainFormat == TrainFormat.BVE5)
+				{
+					VehicleTxtParser.Parse(trainData, currentTrain);
+                }
+				else
+				{
+					TrainDatParser.Parse(trainData, encoding, currentTrain);
+                }
+					
 			    LastProgress = 0.1;
 			    Thread.Sleep(1);
 			    if (Cancel)
@@ -255,7 +282,7 @@ namespace Train.OpenBve
 			    }
 		    }
 		    // add panel section
-		    if (currentTrain.IsPlayerTrain) {	
+		    if (currentTrain.IsPlayerTrain && trainFormat != TrainFormat.BVE5) {	
 			    ParsePanelConfig(currentTrain, encoding);
 			    Thread.Sleep(1);
 			    if (Cancel)
@@ -263,7 +290,7 @@ namespace Train.OpenBve
 				    IsLoading = false;
 				    return false;
 			    }
-			    FileSystem.AppendToLogFile("Train panel loaded sucessfully.");
+			    FileSystem.AppendToLogFile("Train panel loaded successfully.");
 		    }
 
 		    CurrentProgress = 0.5;
@@ -360,7 +387,7 @@ namespace Train.OpenBve
 				}
 			}
 
-			if (currentTrain.State != TrainState.Bogus)
+			if (currentTrain.State != TrainState.Bogus && trainFormat != TrainFormat.BVE5)
 			{
 				if (Cancel) return false;
 				SoundCfgParser.ParseSoundConfig(currentTrain);
@@ -435,6 +462,13 @@ namespace Train.OpenBve
 					    }
 				    }
 			    }
+
+			    string vehicleTxt = Path.CombineFile(trainPath, "vehicle.txt");
+			    if (File.Exists(vehicleTxt))
+			    {
+				    return VehicleTxtParser.GetDescription(vehicleTxt);
+			    }
+
 				string descriptionFile = Path.CombineFile(trainPath, "train.txt");
 			    if (!File.Exists(descriptionFile))
 			    {
@@ -458,7 +492,7 @@ namespace Train.OpenBve
 		    }
 		    catch(Exception ex)
 		    {
-				CurrentHost.ReportProblem(ProblemType.UnexpectedException, "Unable to get the description for train " + trainPath + " due to the exeception: " + ex.Message);
+				CurrentHost.ReportProblem(ProblemType.UnexpectedException, "Unable to get the description for train " + trainPath + " due to the exception: " + ex.Message);
 		    }
 		    return string.Empty;
 	    }

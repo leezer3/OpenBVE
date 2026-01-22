@@ -1,7 +1,9 @@
+using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using SoundManager;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Power;
 
 namespace TrainManager.BrakeSystems
@@ -62,6 +64,8 @@ namespace TrainManager.BrakeSystems
 		public CarSound Release = new CarSound();
 
 		internal AccelerationCurve[] DecelerationCurves;
+
+		internal Bve5PerformanceData BrakePerformanceData;
 		/// <summary>A non-negative floating point number representing the jerk in m/s when the deceleration produced by the electric brake is increased.</summary>
 		public double JerkUp;
 		/// <summary>A non-negative floating point number representing the jerk in m/s when the deceleration produced by the electric brake is decreased.</summary>
@@ -72,7 +76,13 @@ namespace TrainManager.BrakeSystems
 			Car = car;
 			this.DecelerationCurves = decelerationCurves;
 		}
-		
+
+		protected CarBrake(CarBase car, Bve5PerformanceData performanceData)
+		{
+			Car = car;
+			this.BrakePerformanceData = performanceData;
+		}
+
 		/// <summary>Updates the brake system</summary>
 		/// <param name="timeElapsed">The frame time elapsed</param>
 		/// <param name="currentSpeed">The current speed of the train</param>
@@ -97,6 +107,25 @@ namespace TrainManager.BrakeSystems
 		/// <returns>The deceleration in m/s</returns>
 		public double DecelerationAtServiceMaximumPressure(int Notch, double currentSpeed)
 		{
+			if (BrakePerformanceData != null)
+			{
+				// first find the load proportion
+				// this is used to interpolate between Load and MaxLoad
+				double loadingRatio = Car.Cargo.Ratio / 250;
+				double noLoad = BrakePerformanceData.ForceTable.GetValue(currentSpeed, Notch);
+				double maxLoad = BrakePerformanceData.MaxForceTable.GetValue(currentSpeed, Notch);
+				double newtons = Extensions.LinearInterpolation(noLoad, 0, maxLoad, 1, loadingRatio);
+
+				/*
+				 * According to Newton's second law, Acceleration = Force / Mass
+				 * Load factor has already been taken into account above, so this *should* just be a simple
+				 * calculation
+				 *
+				 * See also note in motor car properties.
+				 */
+				return Car.CurrentMass / newtons;
+			}
+		
 			if (DecelerationCurves == null || DecelerationCurves.Length == 0)
 			{
 				return 0;

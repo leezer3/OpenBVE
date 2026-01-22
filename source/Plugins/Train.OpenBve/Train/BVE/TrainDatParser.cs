@@ -1159,57 +1159,8 @@ namespace Train.OpenBve
 				}
 			}
 
-			bool[] motorCars = new bool[Train.Cars.Length];
+			bool[] motorCars = AssignMotorCars(MotorCars, TrailerCars, FrontCarIsMotorCar);
 
-			// assign motor cars
-			if (MotorCars == 1) {
-				if (FrontCarIsMotorCar | TrailerCars == 0) {
-					motorCars[0] = true;
-				} else {
-					motorCars[Cars - 1] = true;
-				}
-			} else if (MotorCars == 2) {
-				if (FrontCarIsMotorCar | TrailerCars == 0) {
-					motorCars[0] = true;
-					motorCars[Cars - 1] = true;
-				} else if (TrailerCars == 1) {
-					motorCars[1] = true;
-					motorCars[2] = true;
-				} else {
-					int i = (int)Math.Ceiling(0.25 * (Cars - 1));
-					int j = (int)Math.Floor(0.75 * (Cars - 1));
-					motorCars[i] = true;
-					motorCars[j] = true;
-				}
-			} else if (MotorCars > 0) {
-				if (FrontCarIsMotorCar) {
-					motorCars[0] = true;
-					double t = 1.0 + TrailerCars / (double)(MotorCars - 1);
-					double r = 0.0;
-					double x = 0.0;
-					while (true) {
-						double y = x + t - r;
-						x = Math.Ceiling(y);
-						r = x - y;
-						int i = (int)x;
-						if (i >= Cars) break;
-						motorCars[i] = true;
-					}
-				} else {
-					motorCars[1] = true;
-					double t = 1.0 + (TrailerCars - 1) / (double)(MotorCars - 1);
-					double r = 0.0;
-					double x = 1.0;
-					while (true) {
-						double y = x + t - r;
-						x = Math.Ceiling(y);
-						r = x - y;
-						int i = (int)x;
-						if (i >= Cars) break;
-						motorCars[i] = true;
-					}
-				}
-			}
 			double MotorDeceleration = Math.Sqrt(MaximumAcceleration * BrakeDeceleration);
 			// apply brake-specific attributes for all cars
 			for (int i = 0; i < Cars; i++) {
@@ -1392,6 +1343,29 @@ namespace Train.OpenBve
 				Train.Cars[i].Height = CarHeight;
 				Train.Cars[i].Length = CarLength;
 				Train.Cars[i].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * Train.Cars[i].Specs.CenterOfGravityHeight / Train.Cars[i].Width);
+
+				// assign motor/trailer-specific settings
+				Train.Cars[i].ConstSpeed = new CarConstSpeed(Train.Cars[i]);
+				Train.Cars[i].HoldBrake = new CarHoldBrake(Train.Cars[i]);
+				Train.Cars[i].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
+				if (Train.Cars[i].TractionModel.ProvidesPower)
+				{
+					// motor car
+					Train.Cars[i].EmptyMass = MotorCarMass;
+					Train.Cars[i].CargoMass = 0;
+					Array.Resize(ref Train.Cars[i].TractionModel.AccelerationCurves, AccelerationCurves.Length);
+					for (int j = 0; j < AccelerationCurves.Length; j++)
+					{
+						Train.Cars[i].TractionModel.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
+					}
+					Train.Cars[i].TractionModel.MaximumPossibleAcceleration = MaximumAcceleration;
+				}
+				else
+				{
+					// trailer car
+					Train.Cars[i].EmptyMass = TrailerCarMass;
+					Train.Cars[i].CargoMass = 0;
+				}
 			}
 
 			if (Cars == 1)
@@ -1408,27 +1382,6 @@ namespace Train.OpenBve
 			Plugin.AccelerationCurves = AccelerationCurves;
 			Plugin.MaximumAcceleration = MaximumAcceleration;
 
-			// assign motor/trailer-specific settings
-			for (int i = 0; i < Cars; i++) {
-				Train.Cars[i].ConstSpeed = new CarConstSpeed(Train.Cars[i]);
-				Train.Cars[i].HoldBrake = new CarHoldBrake(Train.Cars[i]);
-				Train.Cars[i].ReAdhesionDevice = new BveReAdhesionDevice(Train.Cars[i], ReAdhesionDevice);
-				if (Train.Cars[i].TractionModel.ProvidesPower) {
-					// motor car
-					Train.Cars[i].EmptyMass = MotorCarMass;
-					Train.Cars[i].CargoMass = 0;
-					Array.Resize(ref Train.Cars[i].TractionModel.AccelerationCurves, AccelerationCurves.Length);
-					for (int j = 0; j < AccelerationCurves.Length; j++)
-					{
-						Train.Cars[i].TractionModel.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
-					}
-					Train.Cars[i].TractionModel.MaximumPossibleAcceleration = MaximumAcceleration;
-				} else {
-					// trailer car
-					Train.Cars[i].EmptyMass = TrailerCarMass;
-					Train.Cars[i].CargoMass = 0;
-				}
-			}
 			// driver
 			
 			Train.Cars[Train.DriverCar].Driver.X = Driver.X;
@@ -1438,10 +1391,85 @@ namespace Train.OpenBve
 			{
 				Train.Cars[DriverCar].HasInteriorView = true;
 			}
-			
-			// finish
-			
 		}
 
+
+		internal static bool[] AssignMotorCars(int MotorCars, int TrailerCars, bool FrontCarIsMotorCar)
+		{
+			int Cars = MotorCars + TrailerCars;
+			bool[] motorCars = new bool[Cars];
+
+			// assign motor cars
+			if (MotorCars == 1)
+			{
+				if (FrontCarIsMotorCar | TrailerCars == 0)
+				{
+					motorCars[0] = true;
+				}
+				else
+				{
+					motorCars[Cars - 1] = true;
+				}
+			}
+			else if (MotorCars == 2)
+			{
+				if (FrontCarIsMotorCar | TrailerCars == 0)
+				{
+					motorCars[0] = true;
+					motorCars[Cars - 1] = true;
+				}
+				else if (TrailerCars == 1)
+				{
+					motorCars[1] = true;
+					motorCars[2] = true;
+				}
+				else
+				{
+					int i = (int)Math.Ceiling(0.25 * (Cars - 1));
+					int j = (int)Math.Floor(0.75 * (Cars - 1));
+					motorCars[i] = true;
+					motorCars[j] = true;
+				}
+			}
+			else if (MotorCars > 0)
+			{
+				if (FrontCarIsMotorCar)
+				{
+					motorCars[0] = true;
+					double t = 1.0 + TrailerCars / (double)(MotorCars - 1);
+					double r = 0.0;
+					double x = 0.0;
+					while (true)
+					{
+						double y = x + t - r;
+						x = Math.Ceiling(y);
+						r = x - y;
+						int i = (int)x;
+						if (i >= Cars) break;
+						motorCars[i] = true;
+					}
+				}
+				else
+				{
+					motorCars[1] = true;
+					double t = 1.0 + (TrailerCars - 1) / (double)(MotorCars - 1);
+					double r = 0.0;
+					double x = 1.0;
+					while (true)
+					{
+						double y = x + t - r;
+						x = Math.Ceiling(y);
+						r = x - y;
+						int i = (int)x;
+						if (i >= Cars) break;
+						motorCars[i] = true;
+					}
+				}
+			}
+
+			return motorCars;
+		}
 	}
+
+
 }
