@@ -76,11 +76,6 @@ namespace Route.Bve5
 			return x % y == 0 ? x : x + (y - x % y);
 		}
 
-		private static double LinearInterpolation(double x0, double y0, double x1, double y1, double x)
-		{
-			return x0 == x1 ? y0 : y0 + (y1 - y0) * (x - x0) / (x1 - x0);
-		}
-
 		private static void SineHalfWavelengthDiminishingTangentCurve(double Length, double TargetRadius, double TargetCant, double CurrentPosition, out double CurrentRadius, out double CurrentCant)
 		{
 			// Sine Half-Wavelength Diminishing Tangent Curve
@@ -191,7 +186,7 @@ namespace Route.Bve5
 				return center.Y + Math.Sqrt(squaring);
 			}
 
-			return LinearInterpolation(distance0, xy0, distance1, xy1, distance);
+			return Extensions.LinearInterpolation(distance0, xy0, distance1, xy1, distance);
 		}
 
 		private static double RZtoRoll(double RY, double RZ)

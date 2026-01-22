@@ -1,6 +1,7 @@
 ﻿using System;
 using TrainManager.Car;
 using TrainManager.Handles;
+using TrainManager.Motor;
 using TrainManager.Power;
 
 namespace TrainManager.BrakeSystems
@@ -15,6 +16,16 @@ namespace TrainManager.BrakeSystems
 			motorDecelerationDelayUp = MotorDecelerationDelayUp;
 			motorDecelerationDelayDown = MotorDecelerationDelayDown;
 			this.DecelerationCurves = DecelerationCurves;
+		}
+
+		public ElectricCommandBrake(EletropneumaticBrakeType type, CarBase car, double MotorDeceleration, double MotorDecelerationDelayUp, double MotorDecelerationDelayDown, Bve5PerformanceData PerformanceData) : base(car, PerformanceData)
+		{
+			electropneumaticBrakeType = type;
+			this.BrakeControlSpeed = 0;
+			motorDeceleration = MotorDeceleration;
+			motorDecelerationDelayUp = MotorDecelerationDelayUp;
+			motorDecelerationDelayDown = MotorDecelerationDelayDown;
+			this.DecelerationCurves = null;
 		}
 
 		public override void Update(double timeElapsed, double currentSpeed, AbstractHandle brakeHandle, out double deceleration)

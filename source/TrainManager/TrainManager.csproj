@@ -124,6 +124,9 @@
     <Compile Include="Motor\BVE4\MotorSoundTable.Entry.cs" />
     <Compile Include="Motor\BVE5\AISoundEntry.cs" />
     <Compile Include="Motor\BVE5\AITrainSound.cs" />
+    <Compile Include="Motor\BVE5\Bve5MotorCar.cs" />
+    <Compile Include="Motor\BVE5\Bve5PerformanceTable.cs" />
+    <Compile Include="Motor\BVE5\Bve5TrailerCar.cs" />
     <Compile Include="Motor\BVE5\MotorSound.cs" />
     <Compile Include="Motor\BVE5\MotorSoundTableEntry.cs" />
     <Compile Include="Motor\BVE5\SoundState.cs" />
@@ -224,6 +227,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="Motor\BVE5\Bve5PerformanceData.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
