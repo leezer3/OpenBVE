@@ -104,11 +104,12 @@ namespace SoundManager
 
 		/// <summary>Creates a clone of this sound buffer</summary>
 		/// <returns>The new buffer</returns>
-		public SoundBuffer Clone()
+		public SoundBuffer Clone(double radius = 0)
 		{
+			double r = radius > 0 ? radius : Radius;
 			return new SoundBuffer(this.Origin)
 			{
-				Radius = this.Radius,
+				Radius = r,
 				Loaded = SoundBufferState.NotLoaded,
 				OpenAlBufferName = 0,
 				_duration = 0.0,

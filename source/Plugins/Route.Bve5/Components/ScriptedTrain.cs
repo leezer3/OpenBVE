@@ -229,8 +229,8 @@ namespace Route.Bve5
 					BVE5AITrainSounds carSounds = new BVE5AITrainSounds(Train.Cars[i], new BVE5AISoundEntry[OtherTrain.CarSounds.Count]);
 					for (int j = 0; j < carSounds.SoundEntries.Length; j++)
 					{
-						RouteData.Sound3Ds.TryGetValue(OtherTrain.CarSounds[j].Key, out SoundHandle soundHandle);
-						carSounds.SoundEntries[j] = new BVE5AISoundEntry(soundHandle as SoundBuffer, OtherTrain.CarSounds[j].Function);
+						RouteData.Sound3Ds.TryGetTypedValue(OtherTrain.CarSounds[j].Key, out SoundBuffer soundBuffer);
+						carSounds.SoundEntries[j] = new BVE5AISoundEntry(soundBuffer.Clone(OtherTrain.CarSounds[j].Radius), OtherTrain.CarSounds[j].Function);
 					}
 
 					Train.Cars[i].TractionModel.MotorSounds = carSounds;

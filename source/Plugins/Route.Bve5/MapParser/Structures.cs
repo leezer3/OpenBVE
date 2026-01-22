@@ -22,6 +22,7 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using System;
 using System.Collections.Generic;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -105,6 +106,8 @@ namespace Route.Bve5
 			internal readonly double Distance1;
 			internal readonly double Distance2;
 			internal readonly BVE5AISoundControl Function;
+
+			internal double Radius => Math.Abs(Distance2 - Distance1);
 
 			internal CarSound(string key, double distance1, double distance2, BVE5AISoundControl function)
 			{
