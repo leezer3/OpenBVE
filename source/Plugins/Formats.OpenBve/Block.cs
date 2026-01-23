@@ -64,6 +64,26 @@ namespace Formats.OpenBve
 			return false;
 		}
 
+		public virtual bool ReadBlock(T1[] validBlocks, out Block<T1, T2> block)
+		{
+			for (int i = 0; i < subBlocks.Count; i++)
+			{
+				for (int j = 0; j < validBlocks.Length; j++)
+				{
+					if (EqualityComparer<T1>.Default.Equals(subBlocks[i].Key, validBlocks[j]))
+					{
+						block = subBlocks[i];
+						subBlocks.RemoveAt(i);
+						return true;
+					}
+				}
+				
+			}
+
+			block = null;
+			return false;
+		}
+
 		public virtual List<Block<T1, T2>> ReadBlocks(T1[] blocks)
 		{
 			List<Block<T1, T2>> returnedBlocks = new List<Block<T1, T2>>();
