@@ -157,9 +157,6 @@ namespace OpenBve.Graphics.Renderers
 					}
 					break;
 				}
-				case InterfaceType.SwitchChangeMap:
-					Game.SwitchChangeDialog.Draw();
-					break;
 				default:
 					PauseAnnounced = false;
 					break;

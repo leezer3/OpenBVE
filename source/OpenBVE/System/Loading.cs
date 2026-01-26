@@ -59,7 +59,7 @@ namespace OpenBve {
 		/// <summary>The character encoding of this route file</summary>
 		private static Encoding CurrentRouteEncoding;
 		/// <summary>The current train folder</summary>
-		private static string CurrentTrainFolder;
+		internal static string CurrentTrainFolder;
 		/// <summary>The character encoding of this train</summary>
 		private static Encoding CurrentTrainEncoding;
 		
@@ -173,7 +173,18 @@ namespace OpenBve {
 			if (string.IsNullOrEmpty(routeFile) || string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
 				return string.Empty;
 			}
-			
+
+			if (Directory.Exists(Program.FileSystem.MSTSDirectory) && Interface.CurrentOptions.TrainName.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
+			{
+				// potential MSTS consist
+				string consistDirectory = Path.CombineDirectory(Program.FileSystem.MSTSDirectory, "TRAINS\\Consists");
+				string consistFile = Path.CombineFile(consistDirectory, Interface.CurrentOptions.TrainName);
+				if (File.Exists(consistFile))
+				{
+					return consistFile;
+				}
+			}
+
 			string currentFolder;
 			try {
 				currentFolder = Path.GetDirectoryName(routeFile);
@@ -472,7 +483,7 @@ namespace OpenBve {
 			// load plugin
 			for (int i = 0; i < Program.TrainManager.Trains.Count; i++) {
 				if ( Program.TrainManager.Trains[i].State != TrainState.Bogus) {
-					if ( Program.TrainManager.Trains[i].IsPlayerTrain) {
+					if (Program.TrainManager.Trains[i].IsPlayerTrain && !string.IsNullOrEmpty(Program.TrainManager.Trains[i].TrainFolder)) {
 						if (Program.TrainManager.Trains[i].Plugin == null && !Program.TrainManager.Trains[i].LoadCustomPlugin(Program.TrainManager.Trains[i].TrainFolder, CurrentTrainEncoding)) {
 							Program.TrainManager.Trains[i].LoadDefaultPlugin(Program.TrainManager.Trains[i].TrainFolder);
 						}

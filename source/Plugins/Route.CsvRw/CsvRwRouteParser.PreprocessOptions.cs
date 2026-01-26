@@ -49,11 +49,7 @@ namespace CsvRwRouteParser
 							int n = 0;
 							for (int k = 0; k < ArgumentSequence.Length; k++)
 							{
-								if (IsRW && ArgumentSequence[k] == ',')
-								{
-									n++;
-								}
-								else if (ArgumentSequence[k] == ';')
+								if ((IsRW && ArgumentSequence[k] == ',') || ArgumentSequence[k] == ';')
 								{
 									n++;
 								}
@@ -62,12 +58,7 @@ namespace CsvRwRouteParser
 							int a = 0, h = 0;
 							for (int k = 0; k < ArgumentSequence.Length; k++)
 							{
-								if (IsRW && ArgumentSequence[k] == ',')
-								{
-									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim();
-									a = k + 1; h++;
-								}
-								else if (ArgumentSequence[k] == ';')
+								if ((IsRW && ArgumentSequence[k] == ',') || ArgumentSequence[k] == ';')
 								{
 									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim();
 									a = k + 1; h++;
@@ -83,16 +74,8 @@ namespace CsvRwRouteParser
 						// preprocess command
 						if (Command.ToLowerInvariant() == "with")
 						{
-							if (Arguments.Length >= 1)
-							{
-								Section = Arguments[0];
-								SectionAlwaysPrefix = false;
-							}
-							else
-							{
-								Section = "";
-								SectionAlwaysPrefix = false;
-							}
+							SectionAlwaysPrefix = false;
+							Section = Arguments.Length >= 1 ? Arguments[0] : string.Empty;
 							Command = null;
 						}
 						else

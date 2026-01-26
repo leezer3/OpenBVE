@@ -24,6 +24,7 @@
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
+// ReSharper disable IdentifierTypo
 
 namespace OpenBve.Formats.MsTs
 {
@@ -1361,24 +1362,11 @@ namespace OpenBve.Formats.MsTs
 		ORTSDriveWheelWeight,
 		SubType, // in some ORTS stuff
 
-		//needed for our block parser, so let's deliberately use values ORTS will not touch
-		Comment = uint.MinValue + 1,
-		// skip is found in SMS files, identical purpose to comment
-		Skip = Comment,
-		Ccomment = Comment, // typo
-		_FCalc = Comment, // ENG files edited with FCalc
-		Train = uint.MinValue,
-
 		/*
 		 * Stuff not listed in MSTS editor header files, also includes incorrect spellings
 		 * It's not clear where some of these come from, possibly MSTSBin or simply 'working' but not in the actual MSTS header file
 		 *
 		 */
-		AirBrakeHasLowPressureTest = AirBrakesHasLowPressureTest, // MT Class 86
-		TrainBrakesControllerMaxPressureDropInNormalAppication = TrainBrakesControllerMaxPressureDropInNormalApplication, // MT Class 86
-		RegulatorPilotValveInitialOpening, // Adams B4, UKTS2910
-		RegulatorPilotValveInitialOpenning = RegulatorPilotValveInitialOpening, // typo for above
-		RegulatorPilotValveFullOpening, // Adams B4, UKTS2910
 		Exhaust3, // UK_Diesel_BR_Class50_D400
 		Exhaust4, // UK_Diesel_BR_Class50_D400
 		TrainBrakesControllerHasProportionalBrake, // SL_D6517
@@ -1394,12 +1382,30 @@ namespace OpenBve.Formats.MsTs
 		GrateArea,
 		AuxilaryResCapacity, // BR_Green_57XX_4683
 		AuxilaryResMaxPressure, // BR_Green_57XX_4683
-		SSpring = Spring, // Typo
+		
 		DoesWhistleTriggerBell, // GWRKingV
 		BrakePipeVolume, // LU StdTrailer2
 		TrainBrakeControllerMinContinuousService, // BR_HW_5217
 		TrainBrakesPipeLeakRate, // FDB_L1_67708
 		InitialTrigger, // HWH-Manor-Int-80a-01
-		
+
+		// NEED TO KEEP DUPLICATE FIXES ETC. AT THE END OF THE LIST
+
+		AirBrakeHasLowPressureTest = AirBrakesHasLowPressureTest, // MT Class 86
+		TrainBrakesControllerMaxPressureDropInNormalAppication = TrainBrakesControllerMaxPressureDropInNormalApplication, // MT Class 86
+		RegulatorPilotValveInitialOpening, // Adams B4, UKTS2910
+		RegulatorPilotValveInitialOpenning = RegulatorPilotValveInitialOpening, // typo for above
+		RegulatorPilotValveFullOpening, // Adams B4, UKTS2910
+		SSpring = Spring, // Typo
+
+		//needed for our block parser, so let's deliberately use values ORTS will not touch
+		Comment = comment,
+		// skip is found in SMS files, identical purpose to comment
+		Skip = comment,
+		Ccomment = comment, // typo
+		_FCalc = Comment, // ENG files edited with FCalc
+		Train = uint.MinValue,
+
+
 	}
 }

@@ -1,8 +1,10 @@
+using LibRender2.Screens;
 using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Motor;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
@@ -13,6 +15,7 @@ using RouteManager2.Stations;
 using SoundManager;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using TrainManager.BrakeSystems;
@@ -475,7 +478,7 @@ namespace TrainManager.Trains
 				return;
 			}
 
-			// Car level inital processing
+			// Car level initial processing
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				// move cars
@@ -519,6 +522,10 @@ namespace TrainManager.Trains
 			for (int i = 0; i < Cars.Length; i++)
 			{
 				Cars[i].Run.Update(timeElapsed);
+				for (int j = 0; j < Cars[i].Sounds.ControlledSounds.Count; j++)
+				{
+					Cars[i].Sounds.ControlledSounds[j].Update(timeElapsed);
+				}
 			}
 
 			// safety system
@@ -597,11 +604,8 @@ namespace TrainManager.Trains
 				CenterOfCarPositions[i] = 0.5 * (pr + pf);
 				CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].CurrentMass;
 				TrainMass += Cars[i].CurrentMass;
-				// update engine
-				if (Cars[i].TractionModel.ProvidesPower && Cars[i].TractionModel != null)
-				{
-					Cars[i].TractionModel.Update(timeElapsed);
-				}
+				// update engine etc.
+				Cars[i].TractionModel?.Update(timeElapsed);
 			}
 
 			if (TrainMass != 0.0)
@@ -625,7 +629,7 @@ namespace TrainManager.Trains
 					}
 				}
 
-				double SecondDistance = Double.MaxValue;
+				double SecondDistance = double.MaxValue;
 				for (int i = p - 1; i <= p + 1; i++)
 				{
 					if (i >= 0 & i < Cars.Length & i != p)
@@ -879,6 +883,7 @@ namespace TrainManager.Trains
 				Cars = Cars.Reverse().ToArray();
 				for (int i = 0; i < Cars.Length; i++)
 				{
+					Cars[i].Index = i;
 					Cars[i].Reverse(flipInterior);
 					// Re-create the coupler with appropriate distances between the cars
 					double minDistance = 0, maxDistance = 0;
@@ -889,6 +894,10 @@ namespace TrainManager.Trains
 					}
 
 					Cars[i].Coupler = new Coupler(minDistance, maxDistance, Cars[i], i < Cars.Length - 1 ? Cars[i + 1] : null);
+					for (int j = 0; j < Cars[i].ParticleSources.Count; j++)
+					{
+						Cars[i].ParticleSources[j].Offset.Z = -Cars[i].ParticleSources[j].Offset.Z;
+					}
 				}
 
 				PlaceCars(trackPosition);
@@ -1216,6 +1225,26 @@ namespace TrainManager.Trains
 					string s = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "signal_access_denied" });
 					TrainManagerBase.currentHost.AddMessage(s, MessageDependency.None, GameMode.Expert, MessageColor.Red, 10.0, null);
 					sct.SignallerPermission = false;
+				}
+			}
+		}
+
+		public void UpdateParticleSources(double timeElapsed)
+		{
+			for (int i = 0; i < Cars.Length; i++)
+			{
+				if (Cars[i].ParticleSources.Count == 0)
+				{
+					continue;
+				}
+				Cars[i].CreateWorldCoordinates(Vector3.Zero, out Vector3 p, out _);
+				Vector3 cd = new Vector3(p - TrainManagerBase.Renderer.Camera.AbsolutePosition);
+				double dist = cd.NormSquared();
+				double bid = TrainManagerBase.Renderer.Camera.ViewingDistance + 30;
+				bool currentlyVisible = dist < bid * bid;
+				for (int j = 0; j < Cars[i].ParticleSources?.Count; j++)
+				{
+					Cars[i].ParticleSources[j]?.Update(TrainManagerBase.Renderer.CurrentInterface == InterfaceType.Normal ? timeElapsed : 0, currentlyVisible);
 				}
 			}
 		}

@@ -102,7 +102,7 @@ namespace TrainManager.Trains
 				switch (Handles.LocoBrakeType)
 				{
 					case LocoBrakeType.Independant:
-						//With an independant Loco brake, we always want to use this handle
+						//With an independent Loco brake, we always want to use this handle
 						Cars[carIndex].CarBrake.Update(timeElapsed, Cars[DriverCar].CurrentSpeed, Handles.LocoBrake, out decelerationDueToBrake);
 						break;
 					case LocoBrakeType.Combined:

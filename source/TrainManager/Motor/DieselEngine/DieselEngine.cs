@@ -28,6 +28,7 @@ using OpenBveApi;
 using OpenBveApi.Motor;
 using TrainManager.Car;
 using TrainManager.Power;
+using TrainManager.Trains;
 
 namespace TrainManager.Motor
 {
@@ -79,13 +80,21 @@ namespace TrainManager.Motor
 		{
 			if (IsRunning)
 			{
-				if (BaseCar.baseTrain.Handles.Power.Actual == 0)
+				if (BaseCar.baseTrain.AI is TrackFollowingObjectAI)
 				{
-					targetRPM = IdleRPM;
+					// HACK: TFO AI doesn't update power properly
+					targetRPM = BaseCar.CurrentSpeed == 0 ? IdleRPM : MaxRPM;
 				}
 				else
 				{
-					targetRPM = MinRPM + BaseCar.baseTrain.Handles.Power.Actual * perNotchRPM;
+					if (BaseCar.baseTrain.Handles.Power.Actual == 0)
+					{
+						targetRPM = IdleRPM;
+					}
+					else
+					{
+						targetRPM = MinRPM + BaseCar.baseTrain.Handles.Power.Actual * perNotchRPM;
+					}
 				}
 			}
 			else

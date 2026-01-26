@@ -276,6 +276,8 @@ namespace OpenBveApi.Interface {
 			DecreaseCutoff,
 			/// <summary>The blowers</summary>
 			Blowers,
+			/// <summary>The cylinder cocks</summary>
+			CylinderCocks,
 			//Diesel Locomotive
 			/// <summary>Start the engine</summary>
 			EngineStart,
@@ -324,7 +326,7 @@ namespace OpenBveApi.Interface {
 			/// <summary>Uncouples the rear coupling of a car</summary>
 			UncoupleRear,
 			/// <summary>Controls the DSD</summary>
-			DriverSupervisionDevice,
+			DriverSupervision,
 			// Added in 1.11.2.0
 			/// <summary>Press to request permission from the signaller to access a permissive section</summary>
 			AccessPermissiveSection

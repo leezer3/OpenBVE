@@ -33,9 +33,11 @@ using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
+using OpenTK.Graphics.OpenGL;
 using RouteManager2;
 using TrainManager;
 using MouseCursor = OpenTK.MouseCursor;
@@ -93,6 +95,10 @@ namespace OpenBve
 
 		internal void Draw()
 		{
+			Program.Renderer.PushMatrix(MatrixMode.Projection);
+			Matrix4D.CreateOrthographicOffCenter(0.0f, Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out Program.Renderer.CurrentProjectionMatrix);
+			Program.Renderer.PushMatrix(MatrixMode.Modelview);
+			Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
 			MapPicturebox.Draw();
 			if (selectedSwitch != Guid.Empty)
 			{
@@ -114,6 +120,8 @@ namespace OpenBve
 			ZoomOutButton.Draw();
 			CloseButton.Draw();
 			TitleLabel.Draw();
+			Program.Renderer.PopMatrix(MatrixMode.Modelview);
+			Program.Renderer.PopMatrix(MatrixMode.Projection);
 		}
 
 		/// <summary>Processes a mouse move event</summary>

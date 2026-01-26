@@ -27,7 +27,7 @@ namespace TrainManager.Car
 		public BveReAdhesionDevice(CarBase car, ReadhesionDeviceType type) : base(car)
 		{
 			this.DeviceType = type;
-			this.MaximumAccelerationOutput = Double.PositiveInfinity;
+			this.MaximumAccelerationOutput = double.PositiveInfinity;
 			this.ApplicationFactor = 0.0;
 			if (Car.TractionModel.ProvidesPower)
 			{

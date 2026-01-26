@@ -188,7 +188,7 @@ namespace OpenBveApi.Interface
 			{ Command.SecurityO, new CommandInfo(Command.SecurityO, CommandType.Digital, "SECURITY_O") },
 			{ Command.SecurityP, new CommandInfo(Command.SecurityP, CommandType.Digital, "SECURITY_P") },
 #pragma warning restore 618			
-			{ Command.DriverSupervisionDevice, new CommandInfo(Command.DriverSupervisionDevice, CommandType.Digital, "DRIVER_SUPERVISION") },
+			{ Command.DriverSupervision, new CommandInfo(Command.DriverSupervision, CommandType.Digital, "DRIVER_SUPERVISION") },
 
 			//Common Keys
 			{ Command.WiperSpeedUp, new CommandInfo(Command.WiperSpeedUp, CommandType.Digital, "WIPER_SPEED_UP") },
@@ -201,6 +201,7 @@ namespace OpenBveApi.Interface
 			{ Command.IncreaseCutoff, new CommandInfo(Command.IncreaseCutoff, CommandType.Digital, "INCREASE_CUTOFF") },
 			{ Command.DecreaseCutoff, new CommandInfo(Command.DecreaseCutoff, CommandType.Digital, "DECREASE_CUTOFF") },
 			{ Command.Blowers, new CommandInfo(Command.Blowers, CommandType.Digital, "BLOWERS") },
+			{ Command.CylinderCocks, new CommandInfo(Command.CylinderCocks, CommandType.Digital, "CYLINDER_COCKS") },
 			//Diesel Locomotive
 			{ Command.EngineStart, new CommandInfo(Command.EngineStart, CommandType.Digital, "ENGINE_START") },
 			{ Command.EngineStop, new CommandInfo(Command.EngineStop, CommandType.Digital, "ENGINE_STOP") },

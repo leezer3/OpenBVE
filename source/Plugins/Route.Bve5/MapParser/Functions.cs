@@ -32,7 +32,7 @@ using OpenBveApi.World;
 
 namespace Route.Bve5
 {
-	static partial class Bve5ScenarioParser
+	internal static partial class Bve5ScenarioParser
 	{
 		/// <summary>Parses a BVE5 format time into OpenBVE's internal time representation</summary>
 		/// <param name="Expression">The time to parse</param>
@@ -218,33 +218,24 @@ namespace Route.Bve5
 			h = 0.0;
 			if (CurveRadius != 0.0 & Pitch != 0.0)
 			{
-				double d = BlockInterval;
-				double p = Pitch;
-				double r = CurveRadius;
-				double s = d / Math.Sqrt(1.0 + p * p);
-				h = s * p;
-				double b = s / Math.Abs(r);
-				//c = Math.Sqrt(2.0 * r * r * (1.0 - Math.Cos(b)));
-				c = 2.0 * Math.Abs(r) * Math.Sin(b / 2.0);
-				a = 0.5 * Math.Sign(r) * b;
+				double s = BlockInterval / Math.Sqrt(1.0 + Pitch * Pitch);
+				h = s * Pitch;
+				double b = s / Math.Abs(CurveRadius);
+				c = 2.0 * Math.Abs(CurveRadius) * Math.Sin(b / 2.0);
+				a = 0.5 * Math.Sign(CurveRadius) * b;
 				Direction.Rotate(-a);
 			}
 			else if (CurveRadius != 0.0)
 			{
-				double d = BlockInterval;
-				double r = CurveRadius;
-				double b = d / Math.Abs(r);
-				//c = Math.Sqrt(2.0 * r * r * (1.0 - Math.Cos(b)));
-				c = 2.0 * Math.Abs(r) * Math.Sin(b / 2.0);
-				a = 0.5 * Math.Sign(r) * b;
+				double b = BlockInterval / Math.Abs(CurveRadius);
+				c = 2.0 * Math.Abs(CurveRadius) * Math.Sin(b / 2.0);
+				a = 0.5 * Math.Sign(CurveRadius) * b;
 				Direction.Rotate(-a);
 			}
 			else if (Pitch != 0.0)
 			{
-				double p = Pitch;
-				double d = BlockInterval;
-				c = d / Math.Sqrt(1.0 + p * p);
-				h = c * p;
+				c = BlockInterval / Math.Sqrt(1.0 + Pitch * Pitch);
+				h = c * Pitch;
 			}
 		}
 

@@ -32,7 +32,7 @@ namespace TrainManager.Handles
 		public EmergencyHandle(TrainBase train)
 		{
 			ApplicationSound = new CarSound();
-			ApplicationTime = Double.MaxValue;
+			ApplicationTime = double.MaxValue;
 			baseTrain = train;
 		}
 

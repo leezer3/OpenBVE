@@ -22,6 +22,8 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+using OpenBveApi.Interface;
+
 namespace TrainManager.Motor
 {
     public abstract class AbstractComponent
@@ -36,7 +38,18 @@ namespace TrainManager.Motor
 
 	    public virtual void Update(double timeElapsed)
 	    {
-
 	    }
-    }
+
+	    /// <summary>Called when a control is raised</summary>
+	    /// <param name="Control">The control</param>
+	    public virtual void ControlUp(Translations.Command Control)
+	    {
+	    }
+
+	    /// <summary>Called when a control is pressed</summary>
+	    /// <param name="Control">The control</param>
+	    public virtual void ControlDown(Translations.Command Control)
+	    {
+	    }
+	}
 }

@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Math;
+using OpenBveApi.Math;
 using OpenBveApi.World;
 
 namespace OpenBveApi.Objects

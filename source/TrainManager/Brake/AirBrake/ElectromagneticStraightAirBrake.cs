@@ -97,7 +97,7 @@ namespace TrainManager.BrakeSystems
 				}
 			}
 
-			// refill auxillary reservoir from brake pipe
+			// refill auxiliary reservoir from brake pipe
 			if (BrakePipe.CurrentPressure > AuxiliaryReservoir.CurrentPressure + Tolerance)
 			{
 				double r = 2.0 * AuxiliaryReservoir.ChargeRate;

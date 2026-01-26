@@ -365,7 +365,7 @@ namespace OpenBve.Formats.MsTs
 	/// <inheritdoc />
 	public class TextualBlock : Block
 	{
-		private string myText;
+		private readonly string myText;
 
 		private int currentPosition;
 
@@ -399,7 +399,7 @@ namespace OpenBve.Formats.MsTs
 			{
 				// This is probably an ORTS token that we haven't encountered
 				// [the ORTS parameters spreadsheet link is broken]
-				// Parse the block, but do nothing at the mminute
+				// Parse the block, but do nothing at the minute
 				return KujuTokenID.ORTSUnknown;
 			}
 

@@ -9,7 +9,7 @@ namespace TrainManager.Power
 		/// <summary>Played once when power application is resumed</summary>
 		/// <remarks>May be triggered either by driver actions (power, reverser, brake) or similar from a safety system</remarks>
 		public CarSound Resume;
-		/// <summary>Played once when power application is resumed or interrrupted</summary>
+		/// <summary>Played once when power application is resumed or interrupted</summary>
 		/// <remarks>May be triggered either by driver actions (power, reverser, brake) or similar from a safety system</remarks>
 		public CarSound ResumeOrInterrupt;
 		/// <summary>Whether the last action of the breaker was to resume power</summary>

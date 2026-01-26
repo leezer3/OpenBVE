@@ -137,8 +137,11 @@ namespace TrainManager.Trains
 			foreach (var Car in Cars)
 			{
 				Car.Run.Update(TimeElapsed);
-				Car.TractionModel.MotorSounds?.Update(TimeElapsed);
-				
+				Car.TractionModel?.Update(TimeElapsed);
+				for (int j = 0; j < Car.Sounds.ControlledSounds.Count; j++)
+				{
+					Car.Sounds.ControlledSounds[j].Update(TimeElapsed);
+				}
 			}
 
 			// infrequent updates

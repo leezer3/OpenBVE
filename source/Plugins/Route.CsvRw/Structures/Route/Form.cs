@@ -145,18 +145,16 @@ namespace CsvRwRouteParser
 			}
 			else if (SecondaryRail > 0)
 			{
-				int p = PrimaryRail;
-				double px0 = p > 0 ? currentBlock.Rails[p].RailStart.X : 0.0;
-				double px1 = p > 0 ? nextBlock.Rails[p].RailEnd.X : 0.0;
-				int s = SecondaryRail;
-				if (s < 0 || !currentBlock.Rails.ContainsKey(s) || !currentBlock.Rails[s].RailStarted)
+				double px0 = PrimaryRail > 0 ? currentBlock.Rails[PrimaryRail].RailStart.X : 0.0;
+				double px1 = PrimaryRail > 0 ? nextBlock.Rails[PrimaryRail].RailEnd.X : 0.0;
+				if (SecondaryRail < 0 || !currentBlock.Rails.ContainsKey(SecondaryRail) || !currentBlock.Rails[SecondaryRail].RailStarted)
 				{
 					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is out of range in Track.Form at track position " + startingDistance.ToString(Culture) + " in file " + FileName);
 				}
 				else
 				{
-					double d0 = currentBlock.Rails[s].RailStart.X - px0;
-					double d1 = nextBlock.Rails[s].RailEnd.X - px1;
+					double d0 = currentBlock.Rails[SecondaryRail].RailStart.X - px0;
+					double d1 = nextBlock.Rails[SecondaryRail].RailEnd.X - px1;
 					if (d0 < 0.0)
 					{
 						if (!Structure.FormL.ContainsKey(FormType))

@@ -114,6 +114,7 @@
     <Compile Include="Shaders\Shader.cs" />
     <Compile Include="Smoke\Particle.cs" />
     <Compile Include="Smoke\ParticleSource.cs" />
+    <Compile Include="Smoke\ParticleType.cs" />
     <Compile Include="Textures\TextureManager.cs" />
     <Compile Include="Text\Fonts.BlockedFonts.cs" />
     <Compile Include="Text\Fonts.cs" />

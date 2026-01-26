@@ -49,6 +49,19 @@ namespace TrainManager.SafetySystems
 			{
 				return;
 			}
+
+			if (baseCar.baseTrain.AI != null)
+			{
+				if (CurrentState == SafetySystemState.Triggered && baseCar.CurrentSpeed == 0)
+				{
+					AttemptReset(Translations.Command.DriverSupervision);
+				}
+				else
+				{
+					Timer = 0;
+				}
+			}
+
 			Timer += timeElapsed;
 
 			if (Timer > AlertTime && CurrentState == SafetySystemState.Monitoring)
@@ -114,7 +127,7 @@ namespace TrainManager.SafetySystems
 		private void AttemptReset(Translations.Command control)
 		{
 			Timer = 0;
-			if (CurrentState == SafetySystemState.Triggered && StopTimer >= RequiredStopTime && control == Translations.Command.DriverSupervisionDevice)
+			if (CurrentState == SafetySystemState.Triggered && StopTimer >= RequiredStopTime && control == Translations.Command.DriverSupervision)
 			{
 				AlarmSound.Stop();
 				Timer = 0.0;
@@ -148,7 +161,7 @@ namespace TrainManager.SafetySystems
 					break;
 				case DriverSupervisionDeviceMode.HeldKey:
 				case DriverSupervisionDeviceMode.Independant:
-					if (controlDown == Translations.Command.DriverSupervisionDevice)
+					if (controlDown == Translations.Command.DriverSupervision)
 					{
 						AttemptReset(controlDown);
 					}
@@ -180,7 +193,7 @@ namespace TrainManager.SafetySystems
 					break;
 				case DriverSupervisionDeviceMode.Independant:
 					// don't attempt to reset on key-up (as otherwise we can hold the key through a new trigger cycle)
-					if (controlUp == Translations.Command.DriverSupervisionDevice && CurrentState != SafetySystemState.Triggered)
+					if (controlUp == Translations.Command.DriverSupervision && CurrentState != SafetySystemState.Triggered)
 					{
 						AttemptReset(controlUp);
 					}

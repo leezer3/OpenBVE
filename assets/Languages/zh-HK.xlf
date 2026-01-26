@@ -1639,6 +1639,9 @@
 						<source>Other items installation directory:</source>
 						<target>其他項目安裝資料夾：</target>
 					</trans-unit>
+					<trans-unit id="package_msts_directory">
+						<source>MSTS installation directory:</source>
+					</trans-unit>
 					<trans-unit id="package_compression">
 						<source>Package compression format:</source>
 						<target>擴展包壓縮格式:</target>
@@ -2898,6 +2901,9 @@
 					<trans-unit id="blowers">
 						<source>Activates or deactivates the blowers</source>
 						<target>啟動或關閉鼓風機</target>
+					</trans-unit>
+					<trans-unit id="cylinder_cocks">
+						<source>Activates or deactivates the cylinder cocks</source>
 					</trans-unit>
 					<trans-unit id="engine_start">
 						<source>Starts the engine</source>

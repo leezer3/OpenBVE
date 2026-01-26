@@ -1616,6 +1616,10 @@
 						<source>Other items installation directory:</source>
 						<target>Mappe for installasjon av andre ting:</target>
 					</trans-unit>
+					<trans-unit id="package_msts_directory">
+						<source>MSTS installation directory:</source>
+						<target>Mappe for installasjon MSTS:</target>
+					</trans-unit>
 					<trans-unit id="package_compression">
 						<source>Package compression format:</source>
 						<target>Pakke kompresjonsformat:</target>
@@ -2822,6 +2826,9 @@
 					<trans-unit id="blowers">
 						<source>Activates or deactivates the blowers</source>
 						<target>Aktiverer eller deaktiverer blåsere</target>
+					</trans-unit>
+					<trans-unit id="cylinder_cocks">
+						<source>Activates or deactivates the cylinder cocks</source>
 					</trans-unit>
 					<trans-unit id="engine_start">
 						<source>Starts the engine</source>

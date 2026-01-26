@@ -42,7 +42,10 @@ namespace LibRender2.Primitives
 			this.renderer = renderer;
 			try
 			{
-				Shader = new Shader(renderer, "rectangle", "rectangle", true);
+				if (!renderer.ForceLegacyOpenGL)
+				{
+					Shader = new Shader(renderer, "rectangle", "rectangle", true);
+				}
 			}
 			catch
 			{

@@ -222,13 +222,8 @@ namespace CsvRwRouteParser {
 
 						// preprocess command
 						if (Command.ToLowerInvariant() == "with") {
-							if (Arguments.Length >= 1) {
-								Section = Arguments[0];
-								SectionAlwaysPrefix = false;
-							} else {
-								Section = "";
-								SectionAlwaysPrefix = false;
-							}
+							SectionAlwaysPrefix = false;
+							Section = Arguments.Length >= 1 ? Arguments[0] : string.Empty;
 							Command = null;
 						} else {
 							if (Command.StartsWith(".")) {
@@ -441,13 +436,8 @@ namespace CsvRwRouteParser {
 						
 						// preprocess command
 						if (Command.ToLowerInvariant() == "with") {
-							if (Arguments.Length >= 1) {
-								Section = Arguments[0];
-								SectionAlwaysPrefix = false;
-							} else {
-								Section = "";
-								SectionAlwaysPrefix = false;
-							}
+							SectionAlwaysPrefix = false;
+							Section = Arguments.Length >= 1 ? Arguments[0] : string.Empty;
 							Command = null;
 						} else {
 							if (Command.StartsWith(".")) {

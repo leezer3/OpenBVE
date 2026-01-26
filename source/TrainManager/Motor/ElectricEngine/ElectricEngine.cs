@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -26,16 +26,13 @@ using OpenBveApi.Motor;
 using TrainManager.Car;
 using TrainManager.Handles;
 using TrainManager.Power;
+using TrainManager.Trains;
 
 
 namespace TrainManager.Motor
 {
 	public class ElectricEngine : TractionModel
 	{
-		public ElectricEngine(CarBase car) : base(car)
-		{
-		}
-
 		public ElectricEngine(CarBase car, AccelerationCurve[] accelerationCurves) : base(car, accelerationCurves, true)
 		{
 		}
@@ -61,6 +58,12 @@ namespace TrainManager.Motor
 				if (BaseCar.baseTrain.Specs.PantographState != PantographState.Raised)
 				{
 					return 0;
+				}
+
+				if (BaseCar.baseTrain.AI is TrackFollowingObjectAI)
+				{
+					// HACK: TFO AI doesn't update power properly
+					return BaseCar.CurrentSpeed == 0 ? 0 : 1;
 				}
 
 				if (BaseCar.baseTrain.Handles.Power is VariableHandle variableHandle)

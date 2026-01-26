@@ -6,7 +6,7 @@ using RouteManager2.MessageManager;
 
 namespace RouteManager2.Events
 {
-	/// <summary>Is calld when a marker or message is removed from the in-game display</summary>
+	/// <summary>Is called when a marker or message is removed from the in-game display</summary>
 	public class MarkerEndEvent : GeneralEvent
 	{
 		private readonly HostInterface currentHost;

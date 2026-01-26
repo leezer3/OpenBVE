@@ -26,7 +26,11 @@ namespace OpenBve.Graphics.Renderers
 		private readonly NewRenderer renderer;
 		private readonly List<ObjectState> touchableObject;
 		private readonly FrameBufferObject fbo;
-		private ObjectState prePickedObject;
+		
+		/// <summary>Stores whether the mouse is currently down</summary>
+		private bool mouseCurrentlyDown;
+		/// <summary>The object picked on the last touch down event</summary>
+		private ObjectState previouslyPickedObject;
 
 		internal Touch(NewRenderer renderer)
 		{
@@ -332,6 +336,13 @@ namespace OpenBve.Graphics.Renderers
 
 			ObjectState pickedObject = renderer.AvailableNewRenderer ? ParseFBO(Point, 5, 5) : RenderSceneSelection(Point, new Vector2(5.0f));
 
+			if (mouseCurrentlyDown && pickedObject != previouslyPickedObject)
+			{
+				// picked object has changed on move, so issue mouse up event (to clear old), then mouse down (for new)
+				LeaveCheck(Point);
+				TouchCheck(Point);
+			}
+
 			foreach (TouchElement TouchElement in TouchElements.Where(x => x.Element.internalObject == pickedObject))
 			{
 				if (TouchElement.MouseCursor != null)
@@ -366,6 +377,8 @@ namespace OpenBve.Graphics.Renderers
 			{
 				return;
 			}
+
+			mouseCurrentlyDown = true;
 
 			if (renderer.Camera.CurrentMode != CameraViewMode.Interior && renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
@@ -403,8 +416,7 @@ namespace OpenBve.Graphics.Renderers
 					MainLoop.AddControlRepeat(index);
 				}
 			}
-
-			prePickedObject = pickedObject;
+			previouslyPickedObject = pickedObject;
 		}
 
 		internal void LeaveCheck(Vector2 Point)
@@ -413,6 +425,8 @@ namespace OpenBve.Graphics.Renderers
 			{
 				return;
 			}
+
+			mouseCurrentlyDown = false;
 
 			if (renderer.Camera.CurrentMode != CameraViewMode.Interior && renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
@@ -453,7 +467,7 @@ namespace OpenBve.Graphics.Renderers
 				}
 
 				// HACK: Normally terminate the command issued once.
-				if (TouchElement.Element.internalObject == pickedObject || (pickedObject != prePickedObject && TouchElement.Element.internalObject == prePickedObject))
+				if (TouchElement.Element.internalObject == pickedObject || (pickedObject != previouslyPickedObject && TouchElement.Element.internalObject == previouslyPickedObject))
 				{
 					foreach (int index in TouchElement.ControlIndices)
 					{

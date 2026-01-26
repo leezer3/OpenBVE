@@ -4,7 +4,7 @@ using OpenBveApi.World;
 
 namespace CsvRwRouteParser
 {
-	class PatternObj
+	internal class PatternObj
 	{
 		/// <summary>The *last* placement position of the object</summary>
 		internal double LastPlacement;
@@ -14,7 +14,7 @@ namespace CsvRwRouteParser
 		internal double Interval;
 		/// <summary>The last type of object placed</summary>
 		internal int LastType;
-		/// <summary>The routefile indicies of the objects to be repeated</summary>
+		/// <summary>The routefile indices of the objects to be repeated</summary>
 		internal int[] Types;
 		/// <summary>The position of the object</summary>
 		internal Vector2 Position;

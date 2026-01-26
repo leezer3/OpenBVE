@@ -13,13 +13,13 @@ namespace CsvRwRouteParser
 		/// <summary>Adds a new Unified Object to the dictionary</summary>
 		/// <param name="key">The object index</param>
 		/// <param name="unifiedObject">The object</param>
-		/// <param name="Type">The object type</param>
-		internal void Add(int key, UnifiedObject unifiedObject, string Type)
+		/// <param name="type">The object type</param>
+		internal void Add(int key, UnifiedObject unifiedObject, string type)
 		{
 			if (this.ContainsKey(key))
 			{
 				this[key] = unifiedObject;
-				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The " + Type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The " + type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
 			}
 			else
 			{
@@ -30,13 +30,13 @@ namespace CsvRwRouteParser
 		/// <summary>Adds a new Static Object to the dictionary</summary>
 		/// <param name="key">The object index</param>
 		/// <param name="staticObject">The object</param>
-		/// <param name="Type">The object type</param>
-		internal void Add(int key, StaticObject staticObject, string Type)
+		/// <param name="type">The object type</param>
+		internal void Add(int key, StaticObject staticObject, string type)
 		{
 			if (this.ContainsKey(key))
 			{
 				this[key] = staticObject;
-				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The " + Type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The " + type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
 			}
 			else
 			{

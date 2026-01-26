@@ -8,7 +8,7 @@ using OpenBveApi.Routes;
 
 namespace CsvRwRouteParser
 {
-	class DynamicLightParser
+	internal class DynamicLightParser
 	{
 		//Parses an XML dynamic lighting definition
 		public static bool ReadLightingXML(string fileName, out LightDefinition[] LightDefinitions)
@@ -94,7 +94,7 @@ namespace CsvRwRouteParser
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
 												break;
 											default:
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " must be either a hexadeciamal or RGB color in file  " + fileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " must be either a hexadecimal or RGB color in file  " + fileName);
 												break;
 										}
 										break;
@@ -104,7 +104,7 @@ namespace CsvRwRouteParser
 											case 1:
 												if (Color24.TryParseHexColor(Arguments[0], out currentLight.DiffuseColor))
 												{
-													al = true;
+													dl = true;
 													break;
 												}
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
@@ -113,13 +113,13 @@ namespace CsvRwRouteParser
 												if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out var R) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(), out var G) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(), out var B))
 												{
 													currentLight.DiffuseColor = new Color24((byte)R,(byte)G,(byte)B);
-													al = true;
+													dl = true;
 													break;
 												}
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
 												break;
 											default:
-												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " must be either a hexadeciamal or RGB color in file  " + fileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " must be either a hexadecimal or RGB color in file  " + fileName);
 												break;
 										}
 										break;

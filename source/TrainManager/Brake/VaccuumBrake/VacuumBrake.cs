@@ -29,9 +29,9 @@ using TrainManager.Power;
 
 namespace TrainManager.BrakeSystems
 {
-	public class VaccumBrake : CarBrake
+	public class VacuumBrake : CarBrake
 	{
-		public VaccumBrake(CarBase car, AccelerationCurve[] decelerationCurves) : base(car, decelerationCurves)
+		public VacuumBrake(CarBase car, AccelerationCurve[] decelerationCurves) : base(car, decelerationCurves)
 		{
 		}
 

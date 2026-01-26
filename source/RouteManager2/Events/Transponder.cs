@@ -11,7 +11,7 @@ namespace RouteManager2.Events
 		/// <summary>The type of transponder</summary>
 		public readonly int Type;
 
-		/// <summary>An optional data parameter passed to plugins recieving this event</summary>
+		/// <summary>An optional data parameter passed to plugins receiving this event</summary>
 		public readonly int Data;
 
 		/// <summary>The index of the section this is attached to</summary>

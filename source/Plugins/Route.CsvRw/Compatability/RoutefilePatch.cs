@@ -22,9 +22,8 @@ namespace CsvRwRouteParser
 			}
 
 			string fileHash = Path.GetChecksum(FileName);
-			if (availableRoutefilePatches.ContainsKey(fileHash))
+			if (availableRoutefilePatches.TryGetValue(fileHash, out RoutefilePatch patch))
 			{
-				RoutefilePatch patch = availableRoutefilePatches[fileHash];
 				if (patch.Incompatible)
 				{
 					throw new Exception("This routefile is incompatible with OpenBVE: " + Environment.NewLine + Environment.NewLine + patch.LogMessage);

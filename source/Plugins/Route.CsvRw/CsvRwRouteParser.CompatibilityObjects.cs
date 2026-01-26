@@ -147,7 +147,7 @@ namespace CsvRwRouteParser
 				}
 				for (int j = 0; j < CompatibilityObjects.AvailableReplacements[i].ObjectNames.Length; j++)
 				{
-					if (CompatibilityObjects.AvailableReplacements[i].ObjectNames[j].ToLowerInvariant() == fileName.ToLowerInvariant())
+					if (string.Equals(CompatibilityObjects.AvailableReplacements[i].ObjectNames[j], fileName, StringComparison.InvariantCultureIgnoreCase))
 					{
 						//Available replacement found
 						fileName = CompatibilityObjects.AvailableReplacements[i].ReplacementPath;
@@ -238,7 +238,7 @@ namespace CsvRwRouteParser
 				}
 				for (int j = 0; j < CompatibilityObjects.AvailableSounds[i].ObjectNames.Length; j++)
 				{
-					if (CompatibilityObjects.AvailableSounds[i].ObjectNames[j].ToLowerInvariant() == fileName.ToLowerInvariant())
+					if (string.Equals(CompatibilityObjects.AvailableSounds[i].ObjectNames[j], fileName, StringComparison.InvariantCultureIgnoreCase))
 					{
 						//Available replacement found
 						fileName = CompatibilityObjects.AvailableSounds[i].ReplacementPath;

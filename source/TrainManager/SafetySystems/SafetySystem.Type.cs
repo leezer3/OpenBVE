@@ -9,7 +9,7 @@
 		CutsPower,
 		/// <summary>The SafetySystem applies the service brakes</summary>
 		ApplyBrake,
-		/// <summary>The SafetySystem applys the service brakes</summary>
+		/// <summary>The SafetySystem applies the service brakes</summary>
 		ApplyEmergencyBrake
 	}
 }

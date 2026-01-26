@@ -3,8 +3,23 @@
 	/// <summary>Represents a handle to an abstract background.</summary>
 	public abstract class BackgroundHandle
 	{
+		private double backgroundImageDistance = 600;
+
 		/// <summary>The user-selected viewing distance.</summary>
-		public double BackgroundImageDistance = 600;
+		public virtual double BackgroundImageDistance
+		{
+			get => backgroundImageDistance;
+			set => backgroundImageDistance = value;
+		}
+
+		private double fogDistance = 600;
+
+		/// <summary>The nominal distance at which the background is placed, in relation to the fog calculation</summary>
+		public virtual double FogDistance
+		{
+			get => fogDistance;
+			set => fogDistance = value;
+		}
 
 		/// <summary>The current transition mode between backgrounds</summary>
 		public BackgroundTransitionMode Mode;

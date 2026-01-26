@@ -21,7 +21,7 @@ namespace OpenBveApi.Objects
 		public Texture DaytimeTexture;
 		/// <summary>The night-time texture</summary>
 		public Texture NighttimeTexture;
-		/// <summary>The night-time texture</summary>
+		/// <summary>The lightmap texture</summary>
 		public Texture LightMapTexture;
 		/// <summary>The blend mode for this material</summary>
 		public MeshMaterialBlendMode BlendMode;

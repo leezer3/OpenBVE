@@ -34,7 +34,7 @@ using Path = OpenBveApi.Path;
 
 namespace Route.Bve5
 {
-	static partial class Bve5ScenarioParser
+	internal static partial class Bve5ScenarioParser
 	{
 		/// <summary>Checks whether the given file is a BVE5 scenario</summary>
 		/// <param name="fileName">The filename to check</param>
@@ -45,14 +45,14 @@ namespace Route.Bve5
 				using (StreamReader reader = new StreamReader(fileName))
 				{
 					var firstLine = reader.ReadLine() ?? "";
-					string b = String.Empty;
+					string b = string.Empty;
 					if (!firstLine.ToLowerInvariant().StartsWith("bvets scenario"))
 					{
 						return false;
 					}
 					for (int i = 15; i < firstLine.Length; i++)
 					{
-						if (Char.IsDigit(firstLine[i]) || firstLine[i] == '.')
+						if (char.IsDigit(firstLine[i]) || firstLine[i] == '.')
 						{
 							b += firstLine[i];
 						}
@@ -97,7 +97,7 @@ namespace Route.Bve5
 			{
 				Plugin.CurrentRoute.Image = Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), Data.Image);
 			}
-			string RouteFile = String.Empty;
+			string RouteFile = string.Empty;
 
 			if (!Data.Route.Any())
 			{

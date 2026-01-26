@@ -497,12 +497,7 @@ namespace CsvRwRouteParser
 
 							for (int i = 0; i < Arguments.Length; i++)
 							{
-								if (string.IsNullOrEmpty(Arguments[i]))
-								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Aspect" + i.ToString(Culture) + " is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-									aspects[i] = -1;
-								}
-								else if (!NumberFormats.TryParseIntVb6(Arguments[i], out aspects[i]))
+								if (string.IsNullOrEmpty(Arguments[i]) || !NumberFormats.TryParseIntVb6(Arguments[i], out aspects[i]))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Aspect" + i.ToString(Culture) + " is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									aspects[i] = -1;
@@ -3798,14 +3793,7 @@ namespace CsvRwRouteParser
 							if (type != PowerSupplyTypes.None)
 							{
 								PowerSupply p = new PowerSupply(voltageType, voltage, amps, contactHeight);
-								if (Data.Blocks[BlockIndex].Rails[idx].PowerSupplies.ContainsKey(type))
-								{
-									Data.Blocks[BlockIndex].Rails[idx].PowerSupplies[type] = p;
-								}
-								else
-								{
-									Data.Blocks[BlockIndex].Rails[idx].PowerSupplies.Add(type, p);
-								}
+								Data.Blocks[BlockIndex].Rails[idx].PowerSupplies[type] = p;
 							}
 						}
 					}
@@ -3852,10 +3840,7 @@ namespace CsvRwRouteParser
 
 							if (type != PowerSupplyTypes.None)
 							{
-								if (Data.Blocks[BlockIndex].Rails[idx].PowerSupplies.ContainsKey(type))
-								{
-									Data.Blocks[BlockIndex].Rails[idx].PowerSupplies.Remove(type);
-								}
+								Data.Blocks[BlockIndex].Rails[idx].PowerSupplies.Remove(type);
 							}
 						}
 					}

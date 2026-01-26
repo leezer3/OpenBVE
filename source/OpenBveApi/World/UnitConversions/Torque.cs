@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -31,6 +31,8 @@ namespace OpenBveApi.World
 	{
 		/// <summary>Newton-meters per second</summary>
 		NewtonMetersPerSecond,
+	/// <summary>Kilo-newton-meters per second</summary>
+	KiloNewtonMetersPerSecond,
 
 		/// <summary>Foot pounds</summary>
 		FootPound
@@ -42,11 +44,12 @@ namespace OpenBveApi.World
 		static TorqueConverter()
 		{
 			BaseUnit = UnitOfTorque.NewtonMetersPerSecond;
-			RegisterConversion(UnitOfTorque.FootPound, v => v * 0.7375621493, v => v / 1.3558179483);
-			KnownUnits = new Dictionary<string, UnitOfTorque>
+		RegisterConversion(UnitOfTorque.KiloNewtonMetersPerSecond, v => v / 1000, v => v * 1000);
+		RegisterConversion(UnitOfTorque.FootPound, v => v * 0.7375621493, v => v / 1.3558179483);
+		KnownUnits = new Dictionary<string, UnitOfTorque>
 			{
 				// n.b. assume that torque in plain newtons is actually newton meters
-				{ "n/m/s", UnitOfTorque.NewtonMetersPerSecond }, { "nms", UnitOfTorque.NewtonMetersPerSecond }, { "newtonmeterspersecond", UnitOfTorque.NewtonMetersPerSecond }, { "n", UnitOfTorque.NewtonMetersPerSecond }, { "lb/ft", UnitOfTorque.FootPound }
+				{"n/m/s", UnitOfTorque.NewtonMetersPerSecond}, {"nms", UnitOfTorque.NewtonMetersPerSecond}, {"newtonmeterspersecond", UnitOfTorque.NewtonMetersPerSecond}, {"n", UnitOfTorque.NewtonMetersPerSecond}, {"knms", UnitOfTorque.KiloNewtonMetersPerSecond}, {"lb/ft", UnitOfTorque.FootPound}
 			};
 		}
 

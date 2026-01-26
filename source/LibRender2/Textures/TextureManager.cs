@@ -501,7 +501,7 @@ namespace LibRender2.Textures
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					if (RegisteredTextures[i].OpenGlTextures[j].Used)
+					if (RegisteredTextures[i] != null && RegisteredTextures[i].OpenGlTextures[j].Used)
 					{
 						LoadTexture(ref RegisteredTextures[i], (OpenGlTextureWrapMode)j, CPreciseTimer.GetClockTicks(), renderer.currentOptions.Interpolation, renderer.currentOptions.AnisotropicFilteringLevel);
 					}

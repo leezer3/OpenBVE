@@ -46,14 +46,14 @@ namespace ObjectViewer.Trains
 		private static TrainBase CreateDummyTrain()
 		{
 			TrainBase train = new TrainBase(TrainState.Available, TrainType.LocalPlayerTrain);
-			train.Handles.Power = new PowerHandle(Specs.PowerNotches, Specs.PowerNotches, new double[] { }, new double[] { }, train);
+			train.Handles.Power = new PowerHandle(Specs.PowerNotches, train);
 			if (Specs.IsAirBrake)
 			{
 				train.Handles.Brake = new AirBrakeHandle(train);
 			}
 			else
 			{
-				train.Handles.Brake = new BrakeHandle(Specs.BrakeNotches, Specs.BrakeNotches, null, new double[] { }, new double[] { }, train);
+				train.Handles.Brake = new BrakeHandle(Specs.BrakeNotches, null, train);
 				train.Handles.HasHoldBrake = Specs.HasHoldBrake;
 			}
 			train.Handles.HoldBrake = new HoldBrakeHandle(train);

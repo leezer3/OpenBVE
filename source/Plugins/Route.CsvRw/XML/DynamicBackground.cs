@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -10,7 +10,7 @@ using OpenBveApi.Textures;
 
 namespace CsvRwRouteParser
 {
-	class DynamicBackgroundParser
+	internal class DynamicBackgroundParser
 	{
 		//Parses an XML background definition
 		public static BackgroundHandle ReadBackgroundXML(string fileName)
@@ -36,6 +36,7 @@ namespace CsvRwRouteParser
 							double DisplayTime = -1;
 							//The time to transition between backgrounds in seconds
 							double TransitionTime = 0.8;
+							double FogDistance = Plugin.CurrentOptions.ViewingDistance;
 							//The texture to use (if static)
 							Texture t = null;
 							//The object to use (if object based)
@@ -126,12 +127,19 @@ namespace CsvRwRouteParser
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " is not a valid background transition time in " + fileName);
 										}
 										break;
+									case "fogdistance":
+										if (!NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out FogDistance))
+										{
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " is not a valid background fog distance in " + fileName);
+										}
+										break;
 								}
 							}
 							//Create background if texture is not null
 							if (t != null && o == null)
 							{
 								Backgrounds.Add(new StaticBackground(t, repetitions, false, TransitionTime, mode, DisplayTime));
+								Backgrounds[Backgrounds.Count - 1].FogDistance = FogDistance;
 								Backgrounds[Backgrounds.Count - 1].BackgroundImageDistance = Plugin.CurrentOptions.ViewingDistance;
 							}
 							if (t == null && o != null)
@@ -139,6 +147,7 @@ namespace CsvRwRouteParser
 								//All other parameters are ignored if an object has been defined
 								//TODO: Error message stating they have been ignored
 								BackgroundObject bo = new BackgroundObject(o, Plugin.CurrentOptions.ViewingDistance);
+								bo.FogDistance = FogDistance;
 								return bo;
 							}
 							

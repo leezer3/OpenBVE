@@ -1638,6 +1638,10 @@
 						<source>Other items installation directory:</source>
 						<target>Egyebek telepítési könyvtára:</target>
 					</trans-unit>
+					<trans-unit id="package_msts_directory">
+						<source>MSTS installation directory:</source>
+						<target>MSTS telepítési könyvtára:</target>
+					</trans-unit>
 					<trans-unit id="package_compression">
 						<source>Package compression format:</source>
 						<target>Csomag tömörítésének formátuma:</target>
@@ -2875,6 +2879,9 @@
 					<trans-unit id="blowers">
 						<source>Activates or deactivates the blowers</source>
 						<target>Ráfogja vagy lezárja a segédfúvót</target>
+					</trans-unit>
+					<trans-unit id="cylinder_cocks">
+						<source>Activates or deactivates the cylinder cocks</source>
 					</trans-unit>
 					<trans-unit id="engine_start">
 						<source>Starts the engine</source>

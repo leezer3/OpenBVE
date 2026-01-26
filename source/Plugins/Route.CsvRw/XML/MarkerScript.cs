@@ -11,7 +11,7 @@ using RouteManager2.MessageManager.MessageTypes;
 
 namespace CsvRwRouteParser
 {
-	class MarkerScriptParser
+	internal class MarkerScriptParser
 	{
 		public static bool ReadMarkerXML(string fileName, double StartingPosition, out Marker Marker)
 		{
@@ -46,7 +46,7 @@ namespace CsvRwRouteParser
 						string EarlyText = null, Text = null, LateText = null;
 						string[] Trains = null;
 						Texture EarlyTexture = null, Texture = null, LateTexture = null;
-						double EarlyTime = 0.0, LateTime = 0.0, TimeOut = Double.PositiveInfinity;
+						double EarlyTime = 0.0, LateTime = 0.0, TimeOut = double.PositiveInfinity;
 						MessageColor EarlyColor = MessageColor.White, OnTimeColor = MessageColor.White, LateColor = MessageColor.White;
 						Vector2 messageSize = Vector2.Null;
 						foreach (XmlNode c in n.ChildNodes)

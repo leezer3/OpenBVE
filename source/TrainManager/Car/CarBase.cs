@@ -74,10 +74,9 @@ namespace TrainManager.Car
 		public CarConstSpeed ConstSpeed;
 		/// <summary>The readhesion device for this car</summary>
 		public AbstractReAdhesionDevice ReAdhesionDevice;
-		/// <summary>The DriverSupervisionDevice for this car</summary>
-		/// <summary>The position of the beacon reciever within the car</summary>
+		/// <summary>The position of the beacon receiver within the car</summary>
 		public double BeaconReceiverPosition;
-		/// <summary>The beacon reciever</summary>
+		/// <summary>The beacon receiver</summary>
 		public TrackFollower BeaconReceiver;
 		/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
 		public CameraRestrictionMode CameraRestrictionMode = CameraRestrictionMode.NotSpecified;
@@ -298,7 +297,23 @@ namespace TrainManager.Car
 		public override int Index
 		{
 			get => trainCarIndex;
-			set => trainCarIndex = value;
+			set
+			{
+				if (CarSections.TryGetTypedValue(CarSectionType.Interior, out CarSection interiorSection))
+				{
+					interiorSection.CorrectCarIndices(value - trainCarIndex);
+				}
+				if (CarSections.TryGetTypedValue(CarSectionType.Exterior, out CarSection exteriorSection))
+				{
+					exteriorSection.CorrectCarIndices(value - trainCarIndex);
+				}
+
+				for (int i = 0; i < ParticleSources.Count; i++)
+				{
+					ParticleSources[i].Controller.CorrectCarIndices(value - trainCarIndex);
+				}
+				trainCarIndex = value;
+			}
 		}
 
 		public override void Reverse(bool flipInterior = false)
@@ -425,7 +440,7 @@ namespace TrainManager.Car
 				TrainBase newTrain = new TrainBase(TrainState.Available, TrainType.StaticCars);
 				UncouplingBehaviour uncouplingBehaviour = UncouplingBehaviour.Emergency;
 				newTrain.Handles.Power = new PowerHandle(0, newTrain);
-				newTrain.Handles.Brake = new BrakeHandle(0, 0, newTrain.Handles.EmergencyBrake, new double[0], new double[0], newTrain);
+				newTrain.Handles.Brake = new BrakeHandle(0, newTrain.Handles.EmergencyBrake, newTrain);
 				newTrain.Handles.HoldBrake = new HoldBrakeHandle(newTrain);
 				if (Front)
 				{
@@ -625,13 +640,13 @@ namespace TrainManager.Car
 					{
 						TrainManagerBase.currentHost.HideObject(currentCarSection.Groups[j].Elements[k].internalObject);
 					}
-				}
 
-				if (currentCarSection.Groups[0].Keyframes != null)
-				{
-					for (int j = 0; j < currentCarSection.Groups[0].Keyframes.Objects.Length; j++)
+					if (currentCarSection.Groups[j].Keyframes != null)
 					{
-						TrainManagerBase.currentHost.HideObject(currentCarSection.Groups[0].Keyframes.Objects[j]);
+						for (int k = 0; k < currentCarSection.Groups[j].Keyframes.Objects.Length; k++)
+						{
+							TrainManagerBase.currentHost.HideObject(currentCarSection.Groups[j].Keyframes.Objects[k]);
+						}
 					}
 				}
 			}
@@ -1436,8 +1451,7 @@ namespace TrainManager.Car
 				}
 
 				double diff = target - Specs.PerceivedSpeed;
-				double rate = (diff < 0.0 ? 5.0 : 1.0) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity *
-				              TimeElapsed;
+				double rate = (diff < 0.0 ? 5.0 : 1.0) * TrainManagerBase.CurrentRoute.Atmosphere.AccelerationDueToGravity * TimeElapsed;
 				rate *= 1.0 - 0.7 / (diff * diff + 1.0);
 				double factor = rate * rate;
 				factor = 1.0 - factor / (factor + 1000.0);
@@ -1452,37 +1466,20 @@ namespace TrainManager.Car
 				}
 			}
 			// calculate new speed
+			if (Math.Abs(PowerRollingCouplerAcceleration) < FrictionBrakeAcceleration)
 			{
-				int d = Math.Sign(CurrentSpeed);
-				double a = PowerRollingCouplerAcceleration;
-				double b = FrictionBrakeAcceleration;
-				if (Math.Abs(a) < b)
+				if (Math.Sign(PowerRollingCouplerAcceleration) == Math.Sign(CurrentSpeed))
 				{
-					if (Math.Sign(a) == d)
+					if (CurrentSpeed == 0)
 					{
-						if (d == 0)
-						{
-							Speed = 0.0;
-						}
-						else
-						{
-							double c = (b - Math.Abs(a)) * TimeElapsed;
-							if (Math.Abs(CurrentSpeed) > c)
-							{
-								Speed = CurrentSpeed - d * c;
-							}
-							else
-							{
-								Speed = 0.0;
-							}
-						}
+						Speed = 0.0;
 					}
 					else
 					{
-						double c = (Math.Abs(a) + b) * TimeElapsed;
+						double c = (FrictionBrakeAcceleration - Math.Abs(PowerRollingCouplerAcceleration)) * TimeElapsed;
 						if (Math.Abs(CurrentSpeed) > c)
 						{
-							Speed = CurrentSpeed - d * c;
+							Speed = CurrentSpeed - Math.Sign(CurrentSpeed) * c;
 						}
 						else
 						{
@@ -1492,8 +1489,20 @@ namespace TrainManager.Car
 				}
 				else
 				{
-					Speed = CurrentSpeed + (a - b * d) * TimeElapsed;
+					double c = (Math.Abs(PowerRollingCouplerAcceleration) + FrictionBrakeAcceleration) * TimeElapsed;
+					if (Math.Abs(CurrentSpeed) > c)
+					{
+						Speed = CurrentSpeed - Math.Sign(CurrentSpeed) * c;
+					}
+					else
+					{
+						Speed = 0.0;
+					}
 				}
+			}
+			else
+			{
+				Speed = CurrentSpeed + (PowerRollingCouplerAcceleration - FrictionBrakeAcceleration * Math.Sign(CurrentSpeed)) * TimeElapsed;
 			}
 		}
 

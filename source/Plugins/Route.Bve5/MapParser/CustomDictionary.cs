@@ -30,7 +30,7 @@ using OpenBveApi.Sounds;
 
 namespace Route.Bve5
 {
-	static partial class Bve5ScenarioParser
+	internal static partial class Bve5ScenarioParser
 	{
 		/// <summary>Defines a dictionary of objects</summary>
 		internal class ObjectDictionary : Dictionary<string, UnifiedObject>

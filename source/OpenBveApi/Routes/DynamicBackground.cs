@@ -10,6 +10,12 @@
 		/// <summary>The previous background in use</summary>
 		public int PreviousBackgroundIndex = 0;
 
+		/// <inheritdoc/>
+		public override double FogDistance => StaticBackgrounds[CurrentBackgroundIndex].FogDistance;
+
+		/// <inheritdoc/>
+		public override double BackgroundImageDistance => StaticBackgrounds[CurrentBackgroundIndex].BackgroundImageDistance;
+
 		/// <summary>Creates a new dynamic background</summary>
 		/// <param name="staticBackgrounds">The list of static backgrounds which make up the dynamic background</param>
 		public DynamicBackground(StaticBackground[] staticBackgrounds)

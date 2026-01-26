@@ -8,7 +8,7 @@ using TrainManager.Trains;
 
 namespace TrainManager.Handles
 {
-	/// <summary>Represnts a reverser handle</summary>
+	/// <summary>Represents a reverser handle</summary>
 	public class ReverserHandle
 	{
 		/// <summary>The notch set by the driver</summary>

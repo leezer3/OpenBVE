@@ -1,6 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
-//
-//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
+﻿//Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
 //Redistribution and use in source and binary forms, with or without
 //modification, are permitted provided that the following conditions are met:
@@ -22,38 +20,48 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-namespace TrainManager.BrakeSystems
-{
-	/// <summary>Base class for an abstract air reservior</summary>
-	public abstract class AbstractReservior
-	{
-		/// <summary>The maximum pressure in Pa</summary>
-		public readonly double MaximumPressure;
-		/// <summary>The minimum pressure in Pa</summary>
-		public readonly double MinimumPressure;
-		/// <summary>The current pressure in Pa</summary>
-		public double CurrentPressure;
-		/// <summary>The charge rate in Pa/s</summary>
-		internal readonly double ChargeRate;
-		/// <summary>The base volume of the reservoir in m³</summary>
-		public double Volume;
-		/// <summary>The total volume of air contained in the reservoir (at atmospheric pressure) in m³</summary>
-		public double AirVolume => Volume / 101325 * CurrentPressure;
+using OpenBveApi.Interface;
+using SoundManager;
 
-		protected AbstractReservior(double chargeRate, double minimumPressure, double maximumPressure)
+namespace TrainManager.Motor
+{
+	public class Blowers : AbstractComponent
+	{
+		public bool Active;
+
+		public CarSound ActivationSound;
+
+		public CarSound DeactivationSound;
+
+		public CarSound LoopSound;
+
+		public Blowers(TractionModel engine) : base(engine)
 		{
-			ChargeRate = chargeRate;
-			MinimumPressure = minimumPressure;
-			MaximumPressure = maximumPressure;
-			CurrentPressure = maximumPressure;
 		}
 
-		protected AbstractReservior(double chargeRate, double currentPressure)
+		public override void ControlDown(Translations.Command command)
 		{
-			ChargeRate = chargeRate;
-			MinimumPressure = 0;
-			MaximumPressure = double.MaxValue;
-			CurrentPressure = currentPressure;
+			if (command == Translations.Command.Blowers)
+			{
+				if (Active)
+				{
+					DeactivationSound?.Play(baseEngine.BaseCar, false);
+				}
+				else
+				{
+					ActivationSound?.Play(baseEngine.BaseCar, false);
+				}
+
+				Active = !Active;
+			}
+		}
+		
+		public override void Update(double timeElapsed)
+		{
+			if (Active && !ActivationSound.IsPlaying)
+			{
+				LoopSound?.Play(baseEngine.BaseCar, true);
+			}
 		}
 	}
 }

@@ -40,7 +40,7 @@
 		LightDirection,
 		/// <summary>Adds dynamic lighting</summary>
 		DynamicLight,
-		/// <summary>Sets the inital viewpoint for the camera</summary>
+		/// <summary>Sets the initial viewpoint for the camera</summary>
 		InitialViewPoint,
 		/// <summary>Adds AI trains</summary>
 		TfoXML

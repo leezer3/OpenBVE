@@ -40,6 +40,12 @@ namespace OpenBve
 					SafetySystem system = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems.ElementAt(i).Key;
 					TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].SafetySystems[system].ControlDown(Control.Command);
 				}
+
+				for (int i = 0; i < TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Components.Count; i++)
+				{
+					EngineComponent component = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Components.ElementAt(i).Key;
+					TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TractionModel.Components[component].ControlDown(Control.Command);
+				}
 				TrainManager.PlayerTrain.Handles.ControlDown(Control);
 
 				if (Translations.SecurityToVirtualKey(Control.Command, out VirtualKeys key))

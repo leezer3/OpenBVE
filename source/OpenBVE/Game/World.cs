@@ -344,12 +344,13 @@ namespace OpenBve {
 
 				if (Program.Renderer.Camera.CurrentMode < CameraViewMode.Exterior)
 				{
-					if (TrainManager.PlayerTrain.DriverCar >= 0 && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections.TryGetValue(CarSectionType.Interior, out CarSection interiorSection) && interiorSection.ViewDirection != null)
+					if (TrainManager.PlayerTrain.DriverCar >= 0 && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections.TryGetValue(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CurrentCarSection, out CarSection interiorSection) && interiorSection.ViewDirection != null)
 					{
 						dF.Rotate(interiorSection.ViewDirection);
 						uF.Rotate(interiorSection.ViewDirection);
 						sF.Rotate(interiorSection.ViewDirection);
 					}
+					
 				}
 
 				// finish

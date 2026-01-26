@@ -376,7 +376,8 @@ namespace SoundManager
 				SourceCount++;
 				return Sources[SourceCount - 1];
 			}
-			throw new NotSupportedException();
+
+			return null;
 		}
 
 		/// <summary>Plays a sound.</summary>
@@ -398,7 +399,8 @@ namespace SoundManager
 				SourceCount++;
 				return Sources[SourceCount - 1];
 			}
-			throw new NotSupportedException();
+
+			return null;
 		}
 
 		/// <summary>Register the position to play microphone input.</summary>

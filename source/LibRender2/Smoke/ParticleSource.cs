@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -55,13 +56,15 @@ namespace LibRender2.Smoke
 		/// <remarks>Must be a 4x4 texture atlas</remarks>
 		public Texture ParticleTexture;
 
+		public ParticleType ParticleType;
+
 		internal Vector3 MovementSpeed;
 
-		internal readonly Vector3 Offset;
+		public Vector3 Offset;
 
 		internal readonly AbstractCar Car;
 
-		internal const double MaxSpeed = 100;
+		internal double MaxSpeed;
 
 		private double previousUpdatePosition;
 
@@ -69,10 +72,21 @@ namespace LibRender2.Smoke
 
 		private double particleSizeTimer;
 
+		public FunctionScript Controller;
+		/// <summary>Whether particles are emitted at idle</summary>
+		public bool EmitsAtIdle;
 
 
-
-		public ParticleSource(BaseRenderer renderer, AbstractCar car, Vector3 offset, double maximumSize, double maximumGrownSize, Vector3 movementSpeed, double maximumLifeSpan)
+		/// <summary>Creates a new particle source</summary>
+		/// <param name="renderer">A reference to the base renderer</param>
+		/// <param name="car">The containing car</param>
+		/// <param name="offset">The offset position relative to the car</param>
+		/// <param name="maximumSize">The initial maximum size of a particle</param>
+		/// <param name="maximumGrownSize">The maximum size a particle may grow to</param>
+		/// <param name="movementSpeed">The initial movement vector for a particle (exhaust direction)</param>
+		/// <param name="maximumLifeSpan">The maximum lifespan of a particle</param>
+		/// <param name="type">The type of particles</param>
+		public ParticleSource(BaseRenderer renderer, AbstractCar car, Vector3 offset, double maximumSize, double maximumGrownSize, Vector3 movementSpeed, double maximumLifeSpan, ParticleType type = ParticleType.Smoke)
 		{
 			Renderer = renderer;
 			Random = new Random();
@@ -83,15 +97,29 @@ namespace LibRender2.Smoke
 			Offset = offset;
 			MaximumLifeSpan = maximumLifeSpan;
 			Car = car;
+			ParticleType = type;
+			if (type == ParticleType.Smoke)
+			{
+				MaxSpeed = 100;
+			}
+			else
+			{
+				// steam assumed to flow more than smoke
+				MaxSpeed = 25;
+			}
+			EmitsAtIdle = true;
 		}
 
-		public void Update(double timeElapsed)
+		public void Update(double timeElapsed, bool currentlyVisible)
 		{
 			if (!Renderer.AvailableNewRenderer)
 			{
 				return;
 			}
+
 			dynamic dynamicCar = Car;
+			Controller.ExecuteScript(dynamicCar.baseTrain, Car.Index, Car.FrontAxle.Follower.WorldPosition, Car.FrontAxle.Follower.TrackPosition, -1, true, timeElapsed, -1);
+			double d = dynamicCar.TractionModel.CurrentPower;
 			particleAdditionTimer += timeElapsed;
 			particleSizeTimer += timeElapsed;
 			Transformation directionalTransform = new Transformation(Car.FrontAxle.Follower.WorldDirection, Car.FrontAxle.Follower.WorldUp, Car.FrontAxle.Follower.WorldSide); // to correct for rotation of car
@@ -122,12 +150,12 @@ namespace LibRender2.Smoke
 					movementDirection.Rotate(directionalTransform);
 					Vector3 vehicleMovement = (Math.Abs(Car.CurrentSpeed) / MaxSpeed) * movementDirection * timeElapsed;
 
-					if (dynamicCar.TractionModel.CurrentPower > 0)
+					if (Controller.LastResult > 0)
 					{
 						if (MaximumGrownSize < MaximumSize)
 						{
 							// particles shrink
-							if (Particles[i].Size.X > MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5 && particleSizeTimer > 0.05)
+							if (Particles[i].Size.X > MaximumGrownSize && Random.NextDouble() < Controller.LastResult * 0.5 && particleSizeTimer > 0.05)
 							{
 								if (Random.NextDouble() < 0.3)
 								{
@@ -142,7 +170,7 @@ namespace LibRender2.Smoke
 								particleSizeTimer = 0;
 							}
 
-							if (Particles[i].Size.Y > MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5 && particleSizeTimer > 0.05)
+							if (Particles[i].Size.Y > MaximumGrownSize && Random.NextDouble() < Controller.LastResult * 0.5 && particleSizeTimer > 0.05)
 							{
 								if (Random.NextDouble() < 0.3)
 								{
@@ -160,7 +188,7 @@ namespace LibRender2.Smoke
 						else
 						{
 							// particles grow (or do nothing)
-							if (Particles[i].Size.X < MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
+							if (Particles[i].Size.X < MaximumGrownSize && Random.NextDouble() < Controller.LastResult * 0.5)
 							{
 								if (Random.NextDouble() < 0.3)
 								{
@@ -174,7 +202,7 @@ namespace LibRender2.Smoke
 								Particles[i].Size.X = Math.Max(0, Math.Min(Particles[i].Size.X, MaximumGrownSize));
 							}
 
-							if (Particles[i].Size.Y < MaximumGrownSize && Random.NextDouble() < dynamicCar.TractionModel.CurrentPower * 0.5)
+							if (Particles[i].Size.Y < MaximumGrownSize && Random.NextDouble() < Controller.LastResult * 0.5)
 							{
 								if (Random.NextDouble() < 0.3)
 								{
@@ -198,7 +226,7 @@ namespace LibRender2.Smoke
 			{
 				if (dynamicCar.TractionModel.IsRunning && timeElapsed > 0)
 				{
-					if (particleAdditionTimer > 0.05 && Random.NextDouble() >= 0.5)
+					if ((EmitsAtIdle || Controller.LastResult > 0) && particleAdditionTimer > 0.05 && Random.NextDouble() >= 0.5)
 					{
 						Vector3 startingPosition = new Vector3(Offset);
 						startingPosition.Rotate(directionalTransform);
@@ -210,6 +238,10 @@ namespace LibRender2.Smoke
 
 			previousUpdatePosition = Car.FrontAxle.Follower.TrackPosition;
 
+			if (!currentlyVisible)
+			{
+				return;
+			}
 
 			GL.Enable(EnableCap.CullFace);
 			GL.Enable(EnableCap.DepthTest);
@@ -218,7 +250,14 @@ namespace LibRender2.Smoke
 			if (ParticleTexture == null)
 			{
 				string compatibilityFolder = Path.CombineDirectory(Renderer.fileSystem.GetDataFolder(), "Compatibility");
-				Renderer.TextureManager.RegisterTexture(Path.CombineFile(compatibilityFolder, "smoke.png"), out ParticleTexture);
+				if (ParticleType == ParticleType.Smoke)
+				{
+					Renderer.TextureManager.RegisterTexture(Path.CombineFile(compatibilityFolder, "smoke.png"), out ParticleTexture);
+				}
+				else
+				{
+					Renderer.TextureManager.RegisterTexture(Path.CombineFile(compatibilityFolder, "steam.png"), out ParticleTexture);
+				}
 			}
 			// EMITTER POSITION for debugging
 			// Vector3 emitterPosition = new Vector3(Offset);

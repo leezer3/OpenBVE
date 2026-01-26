@@ -21,6 +21,8 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TrainManager;
+using TrainManager.Trains;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve.Graphics
@@ -321,13 +323,17 @@ namespace OpenBve.Graphics
 			SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 			if(CurrentInterface != InterfaceType.GLMainMenu)
 			{
-				for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
+				foreach (TrainBase train in Program.TrainManager.Trains)
 				{
-					for (int j = 0; j < TrainManager.PlayerTrain.Cars[i].ParticleSources?.Count; j++)
-					{
-						TrainManager.PlayerTrain.Cars[i].ParticleSources[j]?.Update(CurrentInterface == InterfaceType.Normal ? TimeElapsed : 0);
-					}
+					train.UpdateParticleSources(TimeElapsed);
 				}
+
+				// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
+				foreach (ScriptedTrain scriptedTrain in Program.TrainManager.TFOs)
+				{
+					scriptedTrain.UpdateParticleSources(TimeElapsed);
+				}
+				
 			}
 
 			if (Interface.CurrentOptions.ShowEvents)
@@ -494,9 +500,15 @@ namespace OpenBve.Graphics
 			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			GL.Disable(EnableCap.DepthTest);
 			overlays.Render(RealTimeElapsed);
-			if (CurrentInterface == InterfaceType.Menu || CurrentInterface == InterfaceType.GLMainMenu)
+			switch (CurrentInterface)
 			{
-				Game.Menu.Draw(TimeElapsed);
+				case InterfaceType.Menu:
+				case InterfaceType.GLMainMenu:
+					Game.Menu.Draw(TimeElapsed);
+					break;
+				case InterfaceType.SwitchChangeMap:
+					Game.SwitchChangeDialog.Draw();
+					break;
 			}
 			OptionLighting = true;
 		}

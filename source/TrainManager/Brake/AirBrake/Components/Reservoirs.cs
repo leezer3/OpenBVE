@@ -3,7 +3,7 @@ using System;
 namespace TrainManager.BrakeSystems
 {
 	/// <summary>An auxiliary reservoir</summary>
-	public class AuxiliaryReservoir : AbstractReservior
+	public class AuxiliaryReservoir : AbstractReservoir
 	{
 		/// <summary>The co-efficient used when transferring pressure to the brake pipe</summary>
 		internal readonly double BrakePipeCoefficient;
@@ -19,7 +19,7 @@ namespace TrainManager.BrakeSystems
 	}
 
 	/// <summary>An equalising reservoir</summary>
-	public class EqualizingReservoir : AbstractReservior
+	public class EqualizingReservoir : AbstractReservoir
 	{
 		/// <summary>The rate when service brakes are applied in Pa/s</summary>
 		internal readonly double ServiceRate;
@@ -44,7 +44,7 @@ namespace TrainManager.BrakeSystems
 	}
 
 	/// <summary>A main reservoir</summary>
-	public class MainReservoir : AbstractReservior
+	public class MainReservoir : AbstractReservoir
 	{
 		/// <summary>The co-efficient used when transferring pressure to the equalizing reservoir</summary>
 		internal readonly double EqualizingReservoirCoefficient;

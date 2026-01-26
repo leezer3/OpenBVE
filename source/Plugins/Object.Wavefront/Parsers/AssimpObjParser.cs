@@ -24,12 +24,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using AssimpNET.Obj;
 using OpenBveApi;
+using Material = AssimpNET.Obj.Material;
 
 namespace Plugin
 {
@@ -79,11 +81,14 @@ namespace Plugin
 					allNormals.Add(new Vector3(normal.X, normal.Y, normal.Z));
 				}
 
+				Material lastMaterial = null;
+
 				foreach (AssimpNET.Obj.Mesh mesh in model.Meshes)
 				{
 					foreach (Face face in mesh.Faces)
 					{
 						int nVerts = face.Vertices.Count;
+						int bVerts = builder.Vertices.Count;
 						if (nVerts == 0)
 						{
 							throw new Exception("nVertices must be greater than zero");
@@ -102,7 +107,7 @@ namespace Plugin
 						MeshFace f = new MeshFace(nVerts);
 						for (int i = 0; i < nVerts; i++)
 						{
-							f.Vertices[i].Index = i;
+							f.Vertices[i].Index = bVerts + i;
 							if (face.Normals.Count > i)
 							{
 								f.Vertices[i].Normal = allNormals[(int)face.Normals[i]];
@@ -148,10 +153,16 @@ namespace Plugin
 						{
 							Array.Reverse(builder.Faces[builder.Faces.Count -1].Vertices, 0, builder.Faces[builder.Faces.Count -1].Vertices.Length);
 						}
-						builder.Apply(ref obj);
-						builder = new MeshBuilder(Plugin.currentHost);
+
+						if (face.Material != lastMaterial)
+						{
+							builder.Apply(ref obj);
+							builder = new MeshBuilder(Plugin.currentHost);
+						}
+						lastMaterial = face.Material;
 					}
 				}
+				builder.Apply(ref obj);
 				obj.Mesh.CreateNormals();
 				return obj;
 			}

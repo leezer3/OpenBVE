@@ -28,18 +28,16 @@ namespace CsvRwRouteParser
 				return;
 			}
 			CultureInfo Culture = CultureInfo.InvariantCulture;
-			int p = PrimaryRail;
-			double px0 = p > 0 ? CurrentBlock.Rails[p].RailStart.X : 0.0;
-			double px1 = p > 0 ? NextBlock.Rails[p].RailEnd.X : 0.0;
-			int s = SecondaryRail;
-			if (s < 0 || !CurrentBlock.Rails.ContainsKey(s) || !CurrentBlock.Rails[s].RailStarted)
+			double px0 = PrimaryRail > 0 ? CurrentBlock.Rails[PrimaryRail].RailStart.X : 0.0;
+			double px1 = PrimaryRail > 0 ? NextBlock.Rails[PrimaryRail].RailEnd.X : 0.0;
+			if (SecondaryRail < 0 || !CurrentBlock.Rails.ContainsKey(SecondaryRail) || !CurrentBlock.Rails[SecondaryRail].RailStarted)
 			{
 				Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is out of range in Track.Crack at track position " + StartingDistance.ToString(Culture) + " in file " + FileName);
 			}
 			else
 			{
-				double sx0 = CurrentBlock.Rails[s].RailStart.X;
-				double sx1 = NextBlock.Rails[s].RailEnd.X;
+				double sx0 = CurrentBlock.Rails[SecondaryRail].RailStart.X;
+				double sx1 = NextBlock.Rails[SecondaryRail].RailEnd.X;
 				double d0 = sx0 - px0;
 				double d1 = sx1 - px1;
 				if (d0 < 0.0)

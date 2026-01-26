@@ -1,4 +1,28 @@
-﻿using Formats.OpenBve;
+//Simplified BSD License (BSD-2-Clause)
+//
+//Copyright (c) 2025, S520, The OpenBVE Project
+//
+//Redistribution and use in source and binary forms, with or without
+//modification, are permitted provided that the following conditions are met:
+//
+//1. Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//2. Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+using Formats.OpenBve;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
@@ -38,12 +62,18 @@ namespace OpenBve
 				// We couldn't find any valid XML, so return false
 				throw new InvalidDataException();
 			}
-			
-			foreach (XElement element in scriptedTrainElements)
-			{
-				ParseScriptedTrainNode(objectPath, fileName, element);
-			}
 
+			try
+			{
+				foreach (XElement element in scriptedTrainElements)
+				{
+					ParseScriptedTrainNode(objectPath, fileName, element);
+				}
+			}
+			catch
+			{
+				return null;
+			}
 			return Train;
 		}
 
@@ -118,22 +148,35 @@ namespace OpenBve
 				return;
 			}
 
-			/*
-			 * First check for a train.ai file- Functionally identical, but allows for differently configured AI
-			 * trains not to show up as drivable
-			 */
-			string trainData = Path.CombineFile(trainDirectory, "train.ai");
-			if (!File.Exists(trainData))
+			string trainData;
+			if (!trainDirectory.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase) || !File.Exists(trainDirectory))
 			{
-				// Check for the standard drivable train.dat
-				trainData = Path.CombineFile(trainDirectory, "train.dat");
+				/*
+				 * First check for a train.ai file- Functionally identical, but allows for differently configured AI
+				 * trains not to show up as drivable
+				 */
+				trainData = Path.CombineFile(trainDirectory, "train.ai");
+				if (!File.Exists(trainData))
+				{
+					// Check for the standard drivable train.dat
+					trainData = Path.CombineFile(trainDirectory, "train.dat");
+				}
+
+				string exteriorFile = Path.CombineFile(trainDirectory, "extensions.cfg");
+				if (!File.Exists(trainData) || !File.Exists(exteriorFile))
+				{
+					Interface.AddMessage(MessageType.Error, true,
+						$"The supplied train folder in TrackFollowingObject {fileName} does not contain an exterior model.");
+					return;
+				}
 			}
-			string exteriorFile = Path.CombineFile(trainDirectory, "extensions.cfg");
-			if (!File.Exists(trainData) || !File.Exists(exteriorFile))
+			else
 			{
-				Interface.AddMessage(MessageType.Error, true, $"The supplied train folder in TrackFollowingObject {fileName} does not contain an exterior model.");
-				return;
+				// MSTS consist
+				trainData = trainDirectory;
 			}
+
+
 			AbstractTrain currentTrain = Train;
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
@@ -243,16 +286,34 @@ namespace OpenBve
 				switch (key)
 				{
 					case TrackFollowingObjectKey.Directory:
+						string TmpPath;
+						try
 						{
-							string TmpPath = Path.CombineDirectory(Path.GetDirectoryName(FileName), value);
+							TmpPath = Path.CombineDirectory(Path.GetDirectoryName(FileName), value);
+
+							if (!Directory.Exists(TmpPath) && value.EndsWith(".con", StringComparison.InvariantCultureIgnoreCase))
+							{
+								// potential MSTS consist
+								string consistDirectory = Path.CombineDirectory(Program.FileSystem.MSTSDirectory, "TRAINS\\Consists");
+								string consistFile = Path.CombineFile(consistDirectory, value);
+								if (File.Exists(consistFile))
+								{
+									trainDirectory = consistFile;
+									break;
+								}
+
+							}
+
 							if (!Directory.Exists(TmpPath))
 							{
 								TmpPath = Path.CombineFile(Program.FileSystem.InitialTrainFolder, value);
 							}
+
 							if (!Directory.Exists(TmpPath))
 							{
 								TmpPath = Path.CombineFile(Program.FileSystem.TrainInstallationDirectory, value);
 							}
+
 							if (!Directory.Exists(TmpPath))
 							{
 								TmpPath = Path.CombineFile(objectPath, value);
@@ -260,12 +321,24 @@ namespace OpenBve
 
 							if (!Directory.Exists(TmpPath))
 							{
-								Interface.AddMessage(MessageType.Error, false, $"Directory was not found in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {FileName}");
+								// very fuzzy match attempt- step backwards one level from the current train folder
+								TmpPath = Path.CombineDirectory(Loading.CurrentTrainFolder, "..");
+								TmpPath = Path.CombineFile(TmpPath, value);
 							}
-							else
-							{
-								trainDirectory = TmpPath;
-							}
+						}
+						catch
+						{
+							Interface.AddMessage(MessageType.Error, false, $"Directory was invalid in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {FileName}");
+							break;
+						}
+
+						if (!Directory.Exists(TmpPath))
+						{
+							Interface.AddMessage(MessageType.Error, false, $"Directory was not found in {key} in {sectionElement.Name.LocalName} at line {lineNumber.ToString(culture)} in {FileName}");
+						}
+						else
+						{
+							trainDirectory = TmpPath;
 						}
 						break;
 					case TrackFollowingObjectKey.Reversed:

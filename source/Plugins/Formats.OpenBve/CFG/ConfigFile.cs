@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2020, Christopher Lees, The OpenBVE Project
 //
@@ -42,14 +42,17 @@ namespace Formats.OpenBve
 	/// <summary>Root block for a .CFG type file</summary>
 	public class ConfigFile<T1, T2> : Block<T1, T2> where T1 : struct, Enum where T2 : struct, Enum
 	{
-		public ConfigFile(string fileName, HostInterface currentHost, string expectedHeader = null) : this(File.ReadAllLines(fileName, TextEncoding.GetSystemEncodingFromFile(fileName)), currentHost, expectedHeader)
+		/// <summary>The version of the file (if set)</summary>
+		public readonly double Version;
+		public ConfigFile(string fileName, HostInterface currentHost, string expectedHeader = null, double minVersion = 0, double maxVersion = 0, bool defaultFirstBlock = false) 
+			: this(File.ReadAllLines(fileName, TextEncoding.GetSystemEncodingFromFile(fileName)), currentHost, expectedHeader, minVersion, maxVersion, defaultFirstBlock)
 		{
 		}
 
-		public ConfigFile(string[] lines, HostInterface currentHost, string expectedHeader = null) : base(-1, default, currentHost)
+		public ConfigFile(string[] lines, HostInterface currentHost, string expectedHeader = null, double minVersion = 0, double maxVersion = 0, bool defaultFirstBlock = false) : base(-1, default, currentHost)
 		{
 			List<string> blockLines = new List<string>();
-			bool addToBlock = false;
+			bool addToBlock = defaultFirstBlock;
 			int idx = -1;
 			int previousIdx = -1;
 			T1 previousSection = default(T1);
@@ -74,11 +77,28 @@ namespace Formats.OpenBve
 				}
 				if (headerOK == false)
 				{
+					int vi = lines[i].Length - 1;
+					if (minVersion > 0 || maxVersion > 0)
+					{
+						while (char.IsDigit(lines[i][vi]) || lines[i][vi] == '.')
+						{
+							vi--;
+						}
+
+						Version = double.Parse(lines[i].Substring(vi));
+						lines[i] = lines[i].Substring(0, vi);
+						if (Version < minVersion || Version > maxVersion)
+						{
+							currentHost.AddMessage(MessageType.Error, false, "Expected a version between " + minVersion + " and " + maxVersion + " , found " + Version);
+                        }
+					}
+					
 					if (!string.IsNullOrEmpty(lines[i]) && string.Compare(lines[i], expectedHeader, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						headerOK = true;
 					}
 				}
+
 				if (lines[i].StartsWith("[") && lines[i].EndsWith("]"))
 				{
 					if (!headerOK)
@@ -145,6 +165,8 @@ namespace Formats.OpenBve
 
 	public class ConfigSection<T1, T2> : Block<T1, T2> where T1 : struct, Enum where T2 : struct, Enum
 	{
+		public readonly T1 Token;
+
 		private readonly ConcurrentDictionary<int, KeyValuePair<int, string>> indexedValues;
 
 		private readonly Queue<KeyValuePair<int, string>> rawValues;
@@ -155,6 +177,13 @@ namespace Formats.OpenBve
 		}
 
 		public override bool ReadBlock(T1 blockToRead, out Block<T1, T2> block)
+		{
+			currentHost.AddMessage(MessageType.Error, false, "A section in a CFG file cannot contain sub-blocks.");
+			block = null;
+			return false;
+		}
+
+		public override bool ReadBlock(T1[] validBlocks, out Block<T1, T2> block)
 		{
 			currentHost.AddMessage(MessageType.Error, false, "A section in a CFG file cannot contain sub-blocks.");
 			block = null;

@@ -69,6 +69,17 @@ namespace LibRender2.Trains
 			Type = ObjectType;
 		}
 
+		public void CorrectCarIndices(int offset)
+		{
+			foreach (ElementsGroup e in Groups)
+			{
+				foreach (AnimatedObject a in e.Elements)
+				{
+					a.CorrectCarIndices(offset);
+				}
+			}
+		}
+
 		/// <summary>Appends an object to the CarSection</summary>
 		/// <param name="Host">The host</param>
 		/// <param name="objectPosition">The relative position of the object to add</param>

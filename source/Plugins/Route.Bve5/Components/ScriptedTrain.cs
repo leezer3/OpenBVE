@@ -35,7 +35,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
-using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using SoundManager;
 using TrainManager.Car;
@@ -46,7 +45,7 @@ using Path = OpenBveApi.Path;
 
 namespace Route.Bve5
 {
-	static partial class Bve5ScenarioParser
+	internal static partial class Bve5ScenarioParser
 	{
 		private static void LoadScriptedTrain(string FileName, bool PreviewOnly, MapData ParseData, RouteData RouteData)
 		{
@@ -219,7 +218,7 @@ namespace Route.Bve5
 					RouteData.Objects.TryGetValue(OtherTrain.CarObjects[i].Key, out UnifiedObject CarObject);
 					if (CarObject != null)
 					{
-						Train.Cars[i].CarSections.Add(CarSectionType.Exterior, new CarSection(Plugin.CurrentHost, ObjectType.Dynamic, false, Train.Cars[i]));
+						Train.Cars[i].CarSections.Add(CarSectionType.Exterior, new CarSection(Plugin.CurrentHost, ObjectType.Dynamic, false, Train.Cars[i], CarObject));
 					}
 				}
 
@@ -229,8 +228,8 @@ namespace Route.Bve5
 					BVE5AITrainSounds carSounds = new BVE5AITrainSounds(Train.Cars[i], new BVE5AISoundEntry[OtherTrain.CarSounds.Count]);
 					for (int j = 0; j < carSounds.SoundEntries.Length; j++)
 					{
-						RouteData.Sound3Ds.TryGetValue(OtherTrain.CarSounds[j].Key, out SoundHandle soundHandle);
-						carSounds.SoundEntries[j] = new BVE5AISoundEntry(soundHandle as SoundBuffer, OtherTrain.CarSounds[j].Function);
+						RouteData.Sound3Ds.TryGetTypedValue(OtherTrain.CarSounds[j].Key, out SoundBuffer soundBuffer);
+						carSounds.SoundEntries[j] = new BVE5AISoundEntry(soundBuffer.Clone(OtherTrain.CarSounds[j].Radius), OtherTrain.CarSounds[j].Function);
 					}
 
 					Train.Cars[i].TractionModel.MotorSounds = carSounds;
