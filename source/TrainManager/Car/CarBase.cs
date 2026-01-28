@@ -1292,11 +1292,11 @@ namespace TrainManager.Car
 					{
 						if (TractionModel.CurrentAcceleration < 0.0)
 						{
-							TractionModel.CurrentAcceleration += CarBrake.JerkDown * TimeElapsed;
+							TractionModel.CurrentAcceleration += Math.Max(CarBrake.JerkDown, 10) * TimeElapsed;
 						}
 						else
 						{
-							TractionModel.CurrentAcceleration += Specs.JerkPowerUp * TimeElapsed;
+							TractionModel.CurrentAcceleration += Math.Max(Specs.JerkPowerUp, 10) * TimeElapsed;
 						}
 
 						if (TractionModel.CurrentAcceleration > a)
@@ -1306,7 +1306,7 @@ namespace TrainManager.Car
 					}
 					else
 					{
-						TractionModel.CurrentAcceleration -= Specs.JerkPowerDown * TimeElapsed;
+						TractionModel.CurrentAcceleration -= Math.Max(Specs.JerkPowerDown, 10) * TimeElapsed;
 						if (TractionModel.CurrentAcceleration < a)
 						{
 							TractionModel.CurrentAcceleration = a;
@@ -1333,11 +1333,11 @@ namespace TrainManager.Car
 					{
 						if (TractionModel.CurrentAcceleration > 0.0)
 						{
-							TractionModel.CurrentAcceleration -= Specs.JerkPowerDown * TimeElapsed;
+							TractionModel.CurrentAcceleration -= Math.Max(Specs.JerkPowerDown, 10) * TimeElapsed;
 						}
 						else
 						{
-							TractionModel.CurrentAcceleration -= CarBrake.JerkUp * TimeElapsed;
+							TractionModel.CurrentAcceleration -= Math.Max(CarBrake.JerkUp, 10) * TimeElapsed;
 						}
 
 						if (TractionModel.CurrentAcceleration < a)
@@ -1347,7 +1347,7 @@ namespace TrainManager.Car
 					}
 					else
 					{
-						TractionModel.CurrentAcceleration += CarBrake.JerkDown * TimeElapsed;
+						TractionModel.CurrentAcceleration += Math.Max(CarBrake.JerkDown, 10) * TimeElapsed;
 						if (TractionModel.CurrentAcceleration > a)
 						{
 							TractionModel.CurrentAcceleration = a;
