@@ -1,11 +1,11 @@
 using LibRender2.Overlays;
 using ObjectViewer.Trains;
 using OpenBveApi;
-using TrainManager.BrakeSystems;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using System;
+using TrainManager.BrakeSystems;
 using TrainManager.Car.Systems;
 using TrainManager.Handles;
 using TrainManager.SafetySystems;
@@ -66,38 +66,22 @@ namespace ObjectViewer {
 						Function.Stack[s - 1] = Function.Stack[s - 1] == 0.0 ? 0.0 : 1.0 / Function.Stack[s - 1];
 						break;
 					case Instructions.MathPower:
+						double num = Function.Stack[s - 2];
+						double pow = Function.Stack[s - 1];
+						if (pow == 0.0)
 						{
-							double a = Function.Stack[s - 2];
-							double b = Function.Stack[s - 1];
-							if (b == 2.0) {
-								Function.Stack[s - 2] = a * a;
-							} else if (b == 3.0) {
-								Function.Stack[s - 2] = a * a * a;
-							} else if (b == 4.0) {
-								double t = a * a;
-								Function.Stack[s - 2] = t * t;
-							} else if (b == 5.0) {
-								double t = a * a;
-								Function.Stack[s - 2] = t * t * a;
-							} else if (b == 6.0) {
-								double t = a * a * a;
-								Function.Stack[s - 2] = t * t;
-							} else if (b == 7.0) {
-								double t = a * a * a;
-								Function.Stack[s - 2] = t * t * a;
-							} else if (b == 8.0) {
-								double t = a * a; t *= t;
-								Function.Stack[s - 2] = t * t;
-							} else if (b == 0.0) {
-								Function.Stack[s - 2] = 1.0;
-							} else if (b < 0.0) {
-								Function.Stack[s - 2] = 0.0;
-							} else {
-								Function.Stack[s - 2] = Math.Pow(a, b);
-							}
-							s--; break;
+							Function.Stack[s - 2] = 1.0;
 						}
-                    case Instructions.MathRandom:
+						else if (pow < 0.0)
+						{
+							Function.Stack[s - 2] = 0.0;
+						}
+						else
+						{
+							Function.Stack[s - 2] = Math.Pow(num, pow);
+						}
+						s--; break;
+					case Instructions.MathRandom:
                         {
                             //Generates a random number between two given doubles
                             double min = Function.Stack[s - 2];
@@ -1105,7 +1089,7 @@ namespace ObjectViewer {
 						}
 						s++; break;
 					case Instructions.Panel2Timetable:
-						throw new InvalidOperationException("The instruction " + Function.InstructionSet[i].ToString() + " is for internal use only, and should not be added to objects.");
+						throw new InvalidOperationException("The instruction " + Function.InstructionSet[i] + " is for internal use only, and should not be added to objects.");
 					case Instructions.BrightnessOfCar:
 						if (Train == null) {
 							Function.Stack[s - 1] = 0.0;
