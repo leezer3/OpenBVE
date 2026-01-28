@@ -64,7 +64,7 @@ namespace LibRender2.Primitives
 					Renderer.Rectangle.DrawAlpha(Texture, Location + new Vector2(newSize - Size) / 2, newSize, Color128.White, new Vector2(newSize / Size));
 					break;
 				case ImageSizeMode.Stretch:
-					//No neeed to draw a backing color box as texture covers the whole thing
+					//No need to draw a backing color box as texture covers the whole thing
 					Renderer.Rectangle.Draw(Texture, Location, Size, BackgroundColor);
 					break;
 				case ImageSizeMode.Zoom:

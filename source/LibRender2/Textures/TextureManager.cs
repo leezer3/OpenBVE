@@ -42,7 +42,7 @@ namespace LibRender2.Textures
 
 		// --- register texture ---
 
-		/// <summary>Registeres a texture and returns a handle to the texture.</summary>
+		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="path">The path to the file or directory that contains the texture.</param>
 		/// <param name="handle">Receives a handle to the texture.</param>
 		/// <returns>Whether registering the texture was successful.</returns>
@@ -51,7 +51,7 @@ namespace LibRender2.Textures
 			return RegisterTexture(path, null, out handle);
 		}
 
-		/// <summary>Registeres a texture and returns a handle to the texture.</summary>
+		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="path">The path to the texture.</param>
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives a handle to the texture.</param>
@@ -71,12 +71,12 @@ namespace LibRender2.Textures
 			 * Have also seen a registered textures count of 72 and an array length of 64
 			 * Is it possible for a texture to fail to register, but still increment the registered textures count?
 			 * 
-			 * There appears to be a timing issue somewhere whilst loading, as this only happens intermittantly
+			 * There appears to be a timing issue somewhere whilst loading, as this only happens intermittently
 			 */
 			if (RegisteredTexturesCount > RegisteredTextures.Length)
 			{
 				/* BUG:
-				 * The registered textures count very occasional becomes greater than the array length (Texture loader crashses possibly?)
+				 * The registered textures count very occasional becomes greater than the array length (Texture loader crashes possibly?)
 				 * This then crashes when we attempt to itinerate the array, so reset it...
 				 */
 				RegisteredTexturesCount = RegisteredTextures.Length;

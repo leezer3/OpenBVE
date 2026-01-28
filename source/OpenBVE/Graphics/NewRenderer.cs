@@ -21,7 +21,6 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TrainManager;
 using TrainManager.Trains;
 using Vector3 = OpenBveApi.Math.Vector3;
 
@@ -45,7 +44,7 @@ namespace OpenBve.Graphics
 		public override void Initialize()
 		{
 			base.Initialize();
-			if (!ForceLegacyOpenGL && Interface.CurrentOptions.IsUseNewRenderer) // GL3 has already failed. Don't trigger unneccessary exceptions
+			if (!ForceLegacyOpenGL && Interface.CurrentOptions.IsUseNewRenderer) // GL3 has already failed. Don't trigger unnecessary exceptions
 			{
 				try
 				{
@@ -109,7 +108,6 @@ namespace OpenBve.Graphics
 			Touch.UpdateViewport();
 		}
 		
-		// render scene
 		internal void RenderScene(double TimeElapsed, double RealTimeElapsed)
 		{
 			ReleaseResources();

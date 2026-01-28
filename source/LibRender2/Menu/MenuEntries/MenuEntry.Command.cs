@@ -34,20 +34,20 @@ namespace LibRender2.Menu
 		/// <summary>The optional data to be passed with the command</summary>
 		public readonly object Data;
 
-		public MenuCommand(AbstractMenu menu, string Text, MenuTag Tag, object Data) : base(menu)
+		public MenuCommand(AbstractMenu menu, string text, MenuTag tag, object data) : base(menu)
 		{
-			this.Text = Text;
-			this.Tag = Tag;
-			this.Data = Data;
-			this.Icon = null;
+			Text = text;
+			Tag = tag;
+			Data = data;
+			Icon = null;
 		}
 
-		public MenuCommand(AbstractMenu menu, string Text, MenuTag Tag, object Data, Texture Icon) : base(menu)
+		public MenuCommand(AbstractMenu menu, string text, MenuTag tag, object data, Texture icon) : base(menu)
 		{
-			this.Text = Text;
-			this.Tag = Tag;
-			this.Data = Data;
-			this.Icon = Icon;
+			Text = text;
+			Tag = tag;
+			Data = data;
+			Icon = icon;
 		}
 	}
 }

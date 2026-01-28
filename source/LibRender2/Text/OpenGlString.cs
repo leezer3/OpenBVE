@@ -20,7 +20,7 @@ namespace LibRender2.Text
 			{
 				if (!renderer.ForceLegacyOpenGL)
 				{
-					this.Shader = new Shader(renderer, "text", "rectangle", true);
+					Shader = new Shader(renderer, "text", "rectangle", true);
 				}
 			}
 			catch

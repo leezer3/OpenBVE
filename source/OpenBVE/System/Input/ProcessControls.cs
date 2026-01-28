@@ -25,7 +25,7 @@ namespace OpenBve
 			for (int i = 0; i < Program.Joysticks.AttachedJoysticks.Count; i++)
 			{
 				/*
-				 * Prequisite checks:
+				 * Perquisite checks:
 				 * Is our joystick connected?
 				 * Have we already detected the disconnection?
 				 */

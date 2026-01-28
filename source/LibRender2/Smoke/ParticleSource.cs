@@ -119,7 +119,6 @@ namespace LibRender2.Smoke
 
 			dynamic dynamicCar = Car;
 			Controller.ExecuteScript(dynamicCar.baseTrain, Car.Index, Car.FrontAxle.Follower.WorldPosition, Car.FrontAxle.Follower.TrackPosition, -1, true, timeElapsed, -1);
-			double d = dynamicCar.TractionModel.CurrentPower;
 			particleAdditionTimer += timeElapsed;
 			particleSizeTimer += timeElapsed;
 			Transformation directionalTransform = new Transformation(Car.FrontAxle.Follower.WorldDirection, Car.FrontAxle.Follower.WorldUp, Car.FrontAxle.Follower.WorldSide); // to correct for rotation of car

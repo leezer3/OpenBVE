@@ -55,7 +55,7 @@ namespace LibRender2.Backgrounds
 			}
 		}
 
-		/// <summary>Renders a dynamic frustrum based background</summary>
+		/// <summary>Renders a dynamic frustum based background</summary>
 		/// <param name="data">The background to render</param>
 		/// <param name="scale">The scale</param>
 		private void RenderDynamicBackground(DynamicBackground data, float scale)
@@ -79,7 +79,7 @@ namespace LibRender2.Backgrounds
 			}
 		}
 
-		/// <summary>Renders a dynamic frustrum based background</summary>
+		/// <summary>Renders a dynamic frustum based background</summary>
 		/// <param name="data">The background to render</param>
 		/// <param name="alpha">The alpha level</param>
 		/// <param name="scale">The scale</param>
@@ -88,7 +88,7 @@ namespace LibRender2.Backgrounds
 			RenderStaticBackground(data.StaticBackgrounds[data.CurrentBackgroundIndex], alpha, scale);
 		}
 
-		/// <summary>Renders a static frustrum based background</summary>
+		/// <summary>Renders a static frustum based background</summary>
 		/// <param name="data">The background to render</param>
 		/// <param name="scale">The scale</param>
 		private void RenderStaticBackground(StaticBackground data, float scale)
@@ -96,7 +96,7 @@ namespace LibRender2.Backgrounds
 			RenderStaticBackground(data, 1.0f, scale);
 		}
 
-		/// <summary>Renders a static frustrum based background</summary>
+		/// <summary>Renders a static frustum based background</summary>
 		/// <param name="data">The background to render</param>
 		/// <param name="alpha">The alpha level</param>
 		/// <param name="scale">The scale</param>
@@ -112,7 +112,7 @@ namespace LibRender2.Backgrounds
 			}
 		}
 
-		/// <summary>Renders a static frustrum based background</summary>
+		/// <summary>Renders a static frustum based background</summary>
 		/// <param name="data">The background to render</param>
 		/// <param name="alpha">The alpha level</param>
 		/// <param name="scale">The scale</param>

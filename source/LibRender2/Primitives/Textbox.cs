@@ -32,7 +32,7 @@ namespace LibRender2.Primitives
 
 		/// <summary>The border width of the textbox </summary>
 		public readonly int Border;
-		/// <summary>The top line to be renderered</summary>
+		/// <summary>The top line to be rendered</summary>
 		private int topLine;
 		/// <summary>Whether the textbox can scroll</summary>
 		public bool CanScroll;

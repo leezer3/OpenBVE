@@ -8,7 +8,7 @@ using TrainManager.Trains;
 
 namespace OpenBve
 {
-    /// <summary>This is a proxy class, which provides read-only access to variables, in a manner analagous to that found in .animated files </summary>
+    /// <summary>This is a proxy class, which provides read-only access to variables, in a manner analogous to that found in .animated files </summary>
     /// Notes:
     /// A proxy class is required, as otherwise we start making a horrendous amount of stuff public which shouldn't be, when working with cross-assembly access.
     /// Doing it this way, also allows for sensible scripting access, rather than climbing through multiple levels.

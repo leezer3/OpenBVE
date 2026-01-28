@@ -1,3 +1,5 @@
+// ReSharper disable StringLiteralTypo
+
 using System.Collections.Generic;
 using OpenBveApi.Hosts;
 
