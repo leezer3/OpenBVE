@@ -107,7 +107,7 @@ namespace Route.Bve5
 			internal readonly double Distance2;
 			internal readonly BVE5AISoundControl Function;
 
-			internal double Radius => Math.Abs(Distance2 - Distance1);
+			internal double Radius => Distance1 > 0 && Distance2 > 0 ? Math.Abs(Distance2 - Distance1) / 2 : 4;
 
 			internal CarSound(string key, double distance1, double distance2, BVE5AISoundControl function)
 			{
