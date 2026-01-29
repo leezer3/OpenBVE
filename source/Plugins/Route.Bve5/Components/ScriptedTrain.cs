@@ -403,7 +403,6 @@ namespace Route.Bve5
 			{
 				Sound3d.TryGetValue("key", out string Key);
 			
-
 				CarSound existingSound = scriptedTrain.CarSounds.Find(carsound => carsound.Key == Key);
 				if (existingSound != null && existingSound.Distance1 > 0 && existingSound.Distance2 > 0) {
 					continue;
@@ -422,7 +421,7 @@ namespace Route.Bve5
 				if (string.IsNullOrEmpty(TempDistance2) || !NumberFormats.TryParseDoubleVb6(TempDistance2, out double Distance2))
 				{
 					Distance2 = 0.0;
-				} 
+				}
 
 				scriptedTrain.CarSounds.Add(new CarSound(Key, Distance1, Distance2, function));
 				scriptedTrain.CarSounds.Remove(existingSound);
