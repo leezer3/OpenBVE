@@ -402,22 +402,32 @@ namespace Route.Bve5
 			foreach (var Sound3d in Sound3ds)
 			{
 				Sound3d.TryGetValue("key", out string Key);
+			
+				CarSound existingSound = scriptedTrain.CarSounds.Find(carsound => carsound.Key == Key);
+				if (existingSound != null && existingSound.Distance1 != null && existingSound.Distance2 != null) {
+					continue;
+				}
+
 				Sound3d.TryGetValue("distance1", out string TempDistance1);
 				Sound3d.TryGetValue("distance2", out string TempDistance2);
 				Sound3d.TryGetValue("function", out string Function);
 
 				Enum.TryParse(Function, true, out BVE5AISoundControl function);
 
-				if (string.IsNullOrEmpty(TempDistance1) || !NumberFormats.TryParseDoubleVb6(TempDistance1, out double Distance1))
-				{
-					Distance1 = 0.0;
+				double? Distance1 = null;
+				double? Distance2 = null;
+				double Distance1Parsed = 0;
+				double Distance2Parsed = 0;
+				
+				if (!string.IsNullOrEmpty(TempDistance1) && NumberFormats.TryParseDoubleVb6(TempDistance1, out Distance1Parsed)) {
+					Distance1 = Distance1Parsed;
 				}
-				if (string.IsNullOrEmpty(TempDistance2) || !NumberFormats.TryParseDoubleVb6(TempDistance2, out double Distance2))
-				{
-					Distance2 = 0.0;
+				if (!string.IsNullOrEmpty(TempDistance2) && NumberFormats.TryParseDoubleVb6(TempDistance2, out Distance2Parsed)) {
+					Distance2 = Distance2Parsed;
 				}
 
 				scriptedTrain.CarSounds.Add(new CarSound(Key, Distance1, Distance2, function));
+				scriptedTrain.CarSounds.Remove(existingSound);
 			}
 		}
 	}
