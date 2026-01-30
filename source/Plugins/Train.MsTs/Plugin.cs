@@ -7,7 +7,6 @@ using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
-using TrainManager.Motor;
 using TrainManager.Trains;
 
 namespace Train.MsTs

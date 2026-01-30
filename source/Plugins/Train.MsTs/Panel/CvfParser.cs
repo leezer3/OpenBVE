@@ -38,7 +38,6 @@ using System.IO;
 using System.Text;
 using OpenBveApi.World;
 using TrainManager.Car;
-using TrainManager.Trains;
 
 namespace Train.MsTs
 {

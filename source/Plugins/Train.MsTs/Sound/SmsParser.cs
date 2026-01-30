@@ -201,8 +201,6 @@ namespace Train.MsTs
 			}
 		}
 		
-		
-
 		private static void ParseBlock(Block block, ref SoundSet currentSoundSet, ref SoundStream currentSoundStream, ref CarBase car)
 		{
 			Block newBlock;
@@ -593,6 +591,14 @@ namespace Train.MsTs
 										blowers.LoopSound = new CarSound(Plugin.CurrentHost, soundFile, 20.0, car.Driver);
 									}
 								}
+								break;
+							case SoundTrigger.DoorOpen:
+								car.Doors[0].OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(-1.3, 0.0, 0.0));
+								car.Doors[1].OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(1.3, 0.0, 0.0));
+								break;
+							case SoundTrigger.DoorClose:
+								car.Doors[0].CloseSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(-1.3, 0.0, 0.0));
+								car.Doors[1].CloseSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(1.3, 0.0, 0.0));
 								break;
 						}
 					}
