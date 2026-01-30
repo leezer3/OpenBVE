@@ -287,16 +287,17 @@ namespace Route.Bve5
 
 				Train.AI = new TrackFollowingObjectAI(Train, Data.ToArray());
 
-				// For debug
-				Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"[{OtherTrain.Key}] 走行軌道: {OtherTrain.TrackKey}, 進行方向: {OtherTrain.Direction}, 有効開始位置: {Train.AppearanceStartPosition}m, 有効開始時刻: {Train.AppearanceTime}s");
+#if DEBUG
+				Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"BVE5: Adding Scripted Train [{OtherTrain.Key}] Rail Index: {OtherTrain.TrackKey}, Direction of Travel: {OtherTrain.Direction}, Starting Position: {Train.AppearanceStartPosition}m, Appearance Time: {Train.AppearanceTime}s");
 
 				for (int i = 0; i < Data.Count; i++)
 				{
 					if (Data[i] is TravelStopData d)
 					{
-						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"[{OtherTrain.Key}] 停車位置: {d.Position}m, 減速度: {d.Decelerate * 3.6}km/h/s, 停車時間: {d.StopTime}s, 加速度: {d.Accelerate * 3.6}km/h/s, 加速後の走行速度: {d.TargetSpeed * 3.6}km/h");
+						Plugin.CurrentHost.AddMessage(MessageType.Information, false, $"BVE5: Scripted Train [{OtherTrain.Key}] Travel Point: {d.Position}m, Deceleration: {d.Decelerate * 3.6}km/h/s, Stop Time: {d.StopTime}s, Acceleration: {d.Accelerate * 3.6}km/h/s, Target Speed: {d.TargetSpeed * 3.6}km/h");
 					}
 				}
+#endif
 
 				foreach (var Car in Train.Cars)
 				{
