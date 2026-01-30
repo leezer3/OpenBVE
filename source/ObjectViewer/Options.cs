@@ -136,8 +136,8 @@ namespace ObjectViewer
 
 				if (!File.Exists(configFile))
 				{
-					//If no route viewer specific configuration file exists, then try the main OpenBVE configuration file
-					//Write out to a new routeviewer specific file though
+					//If no object viewer specific configuration file exists, then try the main OpenBVE configuration file
+					//Write out to a new viewer specific file though
 					configFile = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
 				}
 			}

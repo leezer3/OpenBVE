@@ -13,13 +13,13 @@ namespace ObjectViewer
     class ObjectViewer : GameWindow
     {
         //Deliberately specify the default constructor with various overrides
-        public ObjectViewer(int width, int height, GraphicsMode currentGraphicsMode, string openbve,
-            GameWindowFlags @default) : base(width, height, currentGraphicsMode, openbve, @default)
+        public ObjectViewer(int width, int height, GraphicsMode currentGraphicsMode, string windowTitle,
+            GameWindowFlags @default) : base(width, height, currentGraphicsMode, windowTitle, @default)
         {
             try
             {
                 System.Drawing.Icon ico = new System.Drawing.Icon("data\\icon.ico");
-                this.Icon = ico;
+                Icon = ico;
             }
             catch
             {
@@ -71,7 +71,6 @@ namespace ObjectViewer
 				Program.TrainManager.Trains[0].UpdateObjects(timeElapsed, false);
 			}
 
-            bool updatelight = false;
             // rotate x
             if (Program.RotateX == 0)
             {
@@ -88,15 +87,14 @@ namespace ObjectViewer
             else
             {
                 double d = (1.0 + 1.0 - 1.0 / (1.0 + RotateXSpeed * RotateXSpeed)) * timeElapsed;
-                double m = 1.0;
                 RotateXSpeed += Program.RotateX * d;
-                if (RotateXSpeed < -m)
+                if (RotateXSpeed < -1.0)
                 {
-                    RotateXSpeed = -m;
+                    RotateXSpeed = -1.0;
                 }
-                else if (RotateXSpeed > m)
+                else if (RotateXSpeed > 1.0)
                 {
-                    RotateXSpeed = m;
+                    RotateXSpeed = 1.0;
                 }
             }
             if (RotateXSpeed != 0.0)
@@ -121,15 +119,14 @@ namespace ObjectViewer
             else
             {
                 double d = (1.0 + 1.0 - 1.0 / (1.0 + RotateYSpeed * RotateYSpeed)) * timeElapsed;
-                double m = 1.0;
                 RotateYSpeed += Program.RotateY * d;
-                if (RotateYSpeed < -m)
+                if (RotateYSpeed < -1.0)
                 {
-                    RotateYSpeed = -m;
+                    RotateYSpeed = -1.0;
                 }
-                else if (RotateYSpeed > m)
+                else if (RotateYSpeed > 1.0)
                 {
-                    RotateYSpeed = m;
+                    RotateYSpeed = 1.0;
                 }
             }
             if (RotateYSpeed != 0.0)
@@ -153,15 +150,14 @@ namespace ObjectViewer
             else
             {
                 double d = (5.0 + 10.0 - 10.0 / (1.0 + MoveXSpeed * MoveXSpeed)) * timeElapsed;
-                double m = 25.0;
                 MoveXSpeed += Program.MoveX * d;
-                if (MoveXSpeed < -m)
+                if (MoveXSpeed < -25.0)
                 {
-                    MoveXSpeed = -m;
+                    MoveXSpeed = -25.0;
                 }
-                else if (MoveXSpeed > m)
+                else if (MoveXSpeed > 25.0)
                 {
-                    MoveXSpeed = m;
+                    MoveXSpeed = 25.0;
                 }
             }
             if (MoveXSpeed != 0.0)
@@ -184,15 +180,14 @@ namespace ObjectViewer
             else
             {
                 double d = (5.0 + 10.0 - 10.0 / (1.0 + MoveYSpeed * MoveYSpeed)) * timeElapsed;
-                double m = 25.0;
                 MoveYSpeed += Program.MoveY * d;
-                if (MoveYSpeed < -m)
+                if (MoveYSpeed < -25.0)
                 {
-                    MoveYSpeed = -m;
+                    MoveYSpeed = -25.0;
                 }
-                else if (MoveYSpeed > m)
+                else if (MoveYSpeed > 25.0)
                 {
-                    MoveYSpeed = m;
+                    MoveYSpeed = 25.0;
                 }
             }
             if (MoveYSpeed != 0.0)
@@ -215,26 +210,26 @@ namespace ObjectViewer
             else
             {
                 double d = (5.0 + 10.0 - 10.0 / (1.0 + MoveZSpeed * MoveZSpeed)) * timeElapsed;
-                double m = 25.0;
                 MoveZSpeed += Program.MoveZ * d;
-                if (MoveZSpeed < -m)
+                if (MoveZSpeed < -25.0)
                 {
-                    MoveZSpeed = -m;
+                    MoveZSpeed = -25.0;
                 }
-                else if (MoveZSpeed > m)
+                else if (MoveZSpeed > 25.0)
                 {
-                    MoveZSpeed = m;
+                    MoveZSpeed = 25.0;
                 }
             }
             if (MoveZSpeed != 0.0)
             {
 	            Program.Renderer.Camera.AbsolutePosition += MoveZSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteDirection;
             }
-            // lighting
-            if (Program.LightingRelative == -1)
+            bool updateLight = false;
+			// lighting
+			if (Program.LightingRelative == -1)
             {
                 Program.LightingRelative = Program.LightingTarget;
-                updatelight = true;
+                updateLight = true;
             }
             if (Program.LightingTarget == 0)
             {
@@ -242,7 +237,7 @@ namespace ObjectViewer
                 {
                     Program.LightingRelative -= 0.5 * timeElapsed;
                     if (Program.LightingRelative < 0.0) Program.LightingRelative = 0.0;
-                    updatelight = true;
+                    updateLight = true;
                 }
             }
             else
@@ -251,11 +246,11 @@ namespace ObjectViewer
                 {
                     Program.LightingRelative += 0.5 * timeElapsed;
                     if (Program.LightingRelative > 1.0) Program.LightingRelative = 1.0;
-                    updatelight = true;
+                    updateLight = true;
                 }
             }
             // continue
-            if (updatelight)
+            if (updateLight)
             {
 				Program.Renderer.Lighting.OptionAmbientColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative * (2.0 - Program.LightingRelative));
 				Program.Renderer.Lighting.OptionAmbientColor.G = (byte)Math.Round(32.0 + 128.0 * 0.5 * (Program.LightingRelative + Program.LightingRelative * (2.0 - Program.LightingRelative)));

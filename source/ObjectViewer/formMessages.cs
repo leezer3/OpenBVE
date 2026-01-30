@@ -89,7 +89,7 @@ namespace ObjectViewer
 		// cancel
 		private void buttonCancel_Click(object sender, EventArgs e)
 		{
-			this.DialogResult = DialogResult.Cancel;
+			DialogResult = DialogResult.Cancel;
 		}
 
 		// save
