@@ -103,13 +103,13 @@ namespace Route.Bve5
 		private class CarSound
 		{
 			internal readonly string Key;
-			internal readonly double Distance1;
-			internal readonly double Distance2;
+			internal readonly double? Distance1;
+			internal readonly double? Distance2;
 			internal readonly BVE5AISoundControl Function;
 
-			internal double Radius => Distance1 > 0 && Distance2 > 0 ? Math.Abs(Distance2 - Distance1) / 2 : 4;
+			internal double Radius => Distance1.HasValue && Distance2.HasValue ? Math.Abs(Distance2.Value - Distance1.Value) / 2 : 4;
 
-			internal CarSound(string key, double distance1, double distance2, BVE5AISoundControl function)
+			internal CarSound(string key, double? distance1, double? distance2, BVE5AISoundControl function)
 			{
 				Key = key;
 				Distance1 = distance1;
