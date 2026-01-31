@@ -57,10 +57,15 @@ namespace Train.MsTs
 		// 49 - 53 not listed
 
 		// 
-		// acelaeng.sms has 53 commented as Brake Normal Apply and 54 as BrakeEmergencyApply
-		// 
+		// acelaeng.sms has 53 commented as BrakeNormalApply and 54 as BrakeEmergencyApply
+		// some eng files (e.g. 3DTS_101_BLUE\Sound\DMUcab.sms) suggest
+		// that trigger 51 was intended to be BrakeEngineApply
+		//
+		// https://bugs.launchpad.net/or/+bug/1244471
+		//
 		// OpenRails forum suggests that trigger 53 never actually worked
 		// 
+
 		TrainBrakePressureDecrease = 54,
 		//55 not listed
 		VigilanceAlarmOn = 56,

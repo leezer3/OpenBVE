@@ -39,7 +39,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using OpenBveApi.Runtime;
 using TrainManager.BrakeSystems;
 using TrainManager.Car;
 using TrainManager.Car.Systems;
@@ -60,7 +59,7 @@ namespace Train.MsTs
 		private bool exteriorLoaded = false;
 		private bool RequiresTender = false;
 		private bool EngineAlreadyParsed = false;
-
+		
 		internal WagonParser()
 		{
 			wagonCache = new Dictionary<string, string>();
@@ -404,6 +403,11 @@ namespace Train.MsTs
 				currentCar.CarBrake = new ThroughPiped(currentCar);
 			}
 
+			if (BrakeEquipmentTypes != null && BrakeEquipmentTypes.Contains(BrakeEquipmentType.Handbrake))
+			{
+				currentCar.CarBrake.HandBrake = new HandBrake(currentCar, HandbrakeForce);
+			}
+
 			currentCar.FrontAxle = new MSTSAxle(Plugin.CurrentHost, train, currentCar, friction ?? new Friction(), adhesion ?? new Adhesion(currentCar, currentEngineType == EngineType.Steam));
 			currentCar.RearAxle = new MSTSAxle(Plugin.CurrentHost, train, currentCar, friction ?? new Friction(), adhesion ?? new Adhesion(currentCar, currentEngineType == EngineType.Steam));
 
@@ -581,6 +585,8 @@ namespace Train.MsTs
 		internal double ExhaustInitialRate;
 		/// <summary>The rate of particle emissions at maximum power</summary>SmokeMaxMagnitude`
 		internal double ExhaustMaxRate;
+		private BrakeEquipmentType[] BrakeEquipmentTypes;
+		private double HandbrakeForce = 8000;
 
 		private double GetMaxDieselCapacity(int carIndex)
 		{
@@ -760,7 +766,7 @@ namespace Train.MsTs
 					break;
 				case KujuTokenID.BrakeEquipmentType:
 					// Determines the brake equipment types available
-					BrakeEquipmentType[] brakeEquipmentTypes = block.ReadEnumArray(default(BrakeEquipmentType));
+					BrakeEquipmentTypes = block.ReadEnumArray(default(BrakeEquipmentType));
 					break;
 				case KujuTokenID.BrakeSystemType:
 					// Determines the brake system types available
@@ -1330,6 +1336,9 @@ namespace Train.MsTs
 						};
 						car.DetermineDoorClosingSpeed();
 					}
+					break;
+				case KujuTokenID.MaxHandbrakeForce:
+					HandbrakeForce = block.ReadSingle(UnitOfForce.Newton);
 					break;
 			}
 			return true;

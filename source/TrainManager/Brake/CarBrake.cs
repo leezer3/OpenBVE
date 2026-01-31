@@ -14,6 +14,8 @@ namespace TrainManager.BrakeSystems
 		/// <remarks>Train data should be accessed via this reference</remarks>
 		internal readonly CarBase Car;
 
+		public HandBrake HandBrake;
+
 		/// <summary>Whether this is a main or auxiliary brake system</summary>
 		public BrakeType BrakeType;
 

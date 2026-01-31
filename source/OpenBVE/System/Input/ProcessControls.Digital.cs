@@ -1021,6 +1021,38 @@ namespace OpenBve
 					case Translations.Command.AccessPermissiveSection:
 						TrainManager.PlayerTrain.ContactSignaller();
 						break;
+					case Translations.Command.HandBrake:
+						switch (Program.Renderer.Camera.CurrentMode)
+						{
+							case CameraViewMode.Interior:
+							case CameraViewMode.InteriorLookAhead:
+								// set handbrakes for all of train (key off the driver car status)
+								if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarBrake.HandBrake != null)
+								{
+									bool currentlyApplied = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarBrake.HandBrake.Applied;
+									foreach (CarBase car in TrainManager.PlayerTrain.Cars)
+									{
+										if (car.CarBrake.HandBrake != null)
+										{
+											car.CarBrake.HandBrake.Set(currentlyApplied);
+										}
+									}
+									//string stt = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "route_nextstation" });
+									//Program.CurrentHost.AddMessage(stt, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
+								}
+								break;
+							case CameraViewMode.Exterior:
+								// set handbrake for current car
+								if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].CarBrake.HandBrake != null)
+								{
+									TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].CarBrake.HandBrake.Set(!TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].CarBrake.HandBrake.Applied);
+									//string stt = Translations.GetInterfaceString(HostApplication.OpenBve, new[] { "message", "route_nextstation" }).Replace("[index]", TrainManager.PlayerTrain.CameraCar.ToString());
+									//Program.CurrentHost.AddMessage(stt, MessageDependency.AccessibilityHelper, GameMode.Normal, MessageColor.White, 10.0, null);
+
+								}
+								break;
+						}
+						break;
 				}
 			}
 			else if (Control.DigitalState == DigitalControlState.Released)

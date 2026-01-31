@@ -204,6 +204,12 @@ namespace TrainManager.Trains
 				Cars[carIndex].CarBrake.Update(timeElapsed, Cars[DriverCar].CurrentSpeed, Handles.Brake, out decelerationDueToBrake);
 			}
 
+			if (Cars[carIndex].CarBrake.HandBrake != null && Cars[carIndex].CarBrake.HandBrake.Applied)
+			{
+				// handbrake for a car overrides all other brake systems
+				decelerationDueToBrake = Cars[carIndex].CarBrake.HandBrake.Deceleration;
+			}
+
 			Cars[carIndex].CarBrake.airSound?.Play(Cars[carIndex], false);
 
 			// deceleration provided by motor

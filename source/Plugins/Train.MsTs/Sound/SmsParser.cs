@@ -593,13 +593,20 @@ namespace Train.MsTs
 								}
 								break;
 							case SoundTrigger.DoorOpen:
-								car.Doors[0].OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(-1.3, 0.0, 0.0));
-								car.Doors[1].OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(1.3, 0.0, 0.0));
+								if (car.Doors.Length == 2)
+								{
+									car.Doors[0].OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(-1.3, 0.0, 0.0));
+									car.Doors[1].OpenSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(1.3, 0.0, 0.0));
+								}
 								break;
 							case SoundTrigger.DoorClose:
-								car.Doors[0].CloseSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(-1.3, 0.0, 0.0));
-								car.Doors[1].CloseSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(1.3, 0.0, 0.0));
+								if (car.Doors.Length == 2)
+								{
+									car.Doors[0].CloseSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(-1.3, 0.0, 0.0));
+									car.Doors[1].CloseSound = new CarSound(Plugin.CurrentHost, soundFile, 5.0, new Vector3(1.3, 0.0, 0.0));
+								}
 								break;
+							
 						}
 					}
 					else

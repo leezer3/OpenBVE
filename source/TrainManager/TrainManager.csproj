@@ -83,6 +83,7 @@
     <Compile Include="Car\Physics.cs" />
     <Compile Include="Car\Systems\AbstractReAdhesionDevice.cs" />
     <Compile Include="Car\Systems\ConstantSpeedDevice.cs" />
+    <Compile Include="Brake\HandBrake.cs" />
     <Compile Include="Car\Systems\HoldBrake.cs" />
     <Compile Include="Car\Systems\ReadhesionDevice.cs" />
     <Compile Include="Car\Systems\ReadhesionDevice.Types.cs" />

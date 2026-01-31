@@ -5,5 +5,6 @@
 		DriverSupervisionDevice,
 		OverspeedMessage,
 		OverspeedDevice,
+		HandBrake,
 	}
 }
