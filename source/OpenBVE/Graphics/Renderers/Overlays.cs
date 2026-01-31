@@ -85,7 +85,7 @@ namespace OpenBve.Graphics.Renderers
 					}
 
 					//Timetable overlay
-					//NOTE: Only affects auto-generated timetable, possibly change this inconsistant behaviour
+					//NOTE: Only affects auto-generated timetable, possibly change this inconsistent behaviour
 					if (Program.Renderer.CurrentTimetable == DisplayedTimetable.Default)
 					{
 						// default

@@ -63,12 +63,9 @@ namespace OpenBve
 			}
 			if (message is MarkerImage || message is TextureMessage)
 			{
-				for (int i = 0; i < ImageMessages.Count; i++)
+				if (ImageMessages.Contains(message))
 				{
-					if (ImageMessages[i] == message)
-					{
-						return;
-					}
+					return;
 				}
 				message.AddMessage(Program.CurrentRoute.SecondsSinceMidnight);
 				ImageMessages.Add(message);

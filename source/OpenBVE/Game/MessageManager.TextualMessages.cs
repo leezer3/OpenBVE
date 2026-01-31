@@ -133,7 +133,7 @@ namespace OpenBve
 						}
 						else
 						{
-							//Queue the mesasge for removal if we have completed the station stop for this message
+							//Queue the message for removal if we have completed the station stop for this message
 							remove = true;
 						}
 					} break;

@@ -1,10 +1,11 @@
-﻿using System;
-using OpenBveApi;
+﻿using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
-using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
+using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
+using System;
+using System.Globalization;
 
 namespace OpenBve
 {
@@ -145,25 +146,20 @@ namespace OpenBve
 				// derailment
 				if (!Derailed)
 				{
-					bool q = false;
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
 						if (TrainManager.PlayerTrain.Cars[j].Derailed)
 						{
-							q = true;
+							int x = ScoreValueDerailment;
+							if (CurrentValue > 0) x -= CurrentValue;
+							CurrentValue += x;
+							if (x != 0)
+							{
+								AddScore(x, ScoreTextToken.Derailed, 5.0);
+							}
+							Derailed = true;
 							break;
 						}
-					}
-					if (q)
-					{
-						int x = ScoreValueDerailment;
-						if (CurrentValue > 0) x -= CurrentValue;
-						CurrentValue += x;
-						if (x != 0)
-						{
-							AddScore(x, ScoreTextToken.Derailed, 5.0);
-						}
-						Derailed = true;
 					}
 				}
 				// red signal
@@ -190,9 +186,8 @@ namespace OpenBve
 							if (j == 0 || Program.CurrentRoute.Stations[j - 1].Type != StationType.ChangeEnds && Program.CurrentRoute.Stations[j - 1].Type != StationType.Jump)
 							{
 								// arrival
-								int xa = ScoreValueStationArrival;
-								CurrentValue += xa;
-								AddScore(xa, ScoreTextToken.ArrivedAtStation, 10.0);
+								CurrentValue += ScoreValueStationArrival;
+								AddScore(ScoreValueStationArrival, ScoreTextToken.ArrivedAtStation, 10.0);
 								// early/late
 								int xb;
 								if (Program.CurrentRoute.Stations[j].ArrivalTime >= 0)
@@ -264,7 +259,7 @@ namespace OpenBve
 								// sum
 								if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 								{
-									int xs = xa + xb + xc;
+									int xs = ScoreValueStationArrival + xb + xc;
 									AddScore("", 10.0);
 									AddScore(xs, ScoreTextToken.Total, 10.0, false);
 									AddScore(" ", 10.0);
@@ -279,9 +274,8 @@ namespace OpenBve
 										if (y > 1.0) y = 1.0;
 										int k = (int)Math.Floor(y * Translations.RatingsCount);
 										if (k >= Translations.RatingsCount) k = Translations.RatingsCount - 1;
-										System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 										AddScore(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"score","rating"}), 20.0);
-										AddScore(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"rating" , k.ToString(Culture)}) + " (" + (100.0 * y).ToString("0.00", Culture) + "%)", 20.0);
+										AddScore(Translations.GetInterfaceString(HostApplication.OpenBve, new[] {"rating" , k.ToString(CultureInfo.InvariantCulture) }) + " (" + (100.0 * y).ToString("0.00", CultureInfo.InvariantCulture) + "%)", 20.0);
 									}
 								}
 							}

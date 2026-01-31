@@ -28,13 +28,13 @@ namespace OpenBve
                 Exception ex = (Exception)e.ExceptionObject;
                 if (ex is ArgumentOutOfRangeException && ex.Message == "Specified argument was out of the range of valid values.\r\nParameter name: button")
                 {
-                    //If a joystick with an excessive number of axis or buttons is connected, at the least show a nice error message, rather than simply dissapearing
+                    //If a joystick with an excessive number of axis or buttons is connected, at the least show a nice error message, rather than simply disappearing
                     Program.ShowMessageBox("An unsupported joystick is connected: \n \n Too many buttons. \n \n Please unplug all USB joysticks & gamepads and try again.", Application.ProductName);
                     Environment.Exit(0);
                 }
                 if (ex is ArgumentOutOfRangeException && ex.Message == "Specified argument was out of the range of valid values.\r\nParameter name: axis")
                 {
-                    //If a joystick with an excessive number of axis or buttons is connected, at the least show a nice error message, rather than simply dissapearing
+                    //If a joystick with an excessive number of axis or buttons is connected, at the least show a nice error message, rather than simply disappearing
                     MessageBox.Show("An unsupported joystick is connected: \n \n Too many axis. \n \n Please unplug all USB joysticks & gamepads and try again.");
                     Environment.Exit(0);
                 }
