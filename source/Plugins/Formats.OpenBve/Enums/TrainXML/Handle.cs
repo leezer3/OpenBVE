@@ -6,6 +6,7 @@
 		Notches,
 		SpringType,
 		SpringTime,
-		MaxSprungNotch
+		MaxSprungNotch,
+		MotorBrakeNotch
 	}
 }

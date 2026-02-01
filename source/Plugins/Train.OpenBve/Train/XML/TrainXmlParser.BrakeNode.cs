@@ -296,7 +296,7 @@ namespace Train.OpenBve
 			Train.Cars[carIndex].CarBrake.MainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
 			Train.Cars[carIndex].CarBrake.MainReservoir.Volume = mainReservoirVolume;
 			AirBrake airBrake = Train.Cars[carIndex].CarBrake as AirBrake;
-			airBrake.Compressor = new Compressor(5000.0, Train.Cars[carIndex].CarBrake.MainReservoir, Train.Cars[carIndex]);
+			airBrake.Compressor = new Compressor(compressorRate, Train.Cars[carIndex].CarBrake.MainReservoir, Train.Cars[carIndex]);
 			airBrake.StraightAirPipe = new StraightAirPipe(straightAirPipeServiceRate, straightAirPipeEmergencyRate, straightAirPipeReleaseRate);
 			Train.Cars[carIndex].CarBrake.EqualizingReservoir = new EqualizingReservoir(equalizingReservoirServiceRate, equalizingReservoirEmergencyRate, equalizingReservoirChargeRate);
 			Train.Cars[carIndex].CarBrake.EqualizingReservoir.NormalPressure = 1.005 * brakePipeNormalPressure;

@@ -66,11 +66,14 @@ namespace TrainManager.BrakeSystems
 		public double JerkUp;
 		/// <summary>A non-negative floating point number representing the jerk in m/s when the deceleration produced by the electric brake is decreased.</summary>
 		public double JerkDown;
+		/// <summary>The notch above which motor braking is not available</summary>
+		public int MotorBrakeNotch;
 
 		protected CarBrake(CarBase car, AccelerationCurve[] decelerationCurves)
 		{
 			Car = car;
 			this.DecelerationCurves = decelerationCurves;
+			MotorBrakeNotch = int.MaxValue;
 		}
 		
 		/// <summary>Updates the brake system</summary>
@@ -118,10 +121,14 @@ namespace TrainManager.BrakeSystems
 		}
 
 		/// <summary>Gets the current motor deceleration figure</summary>
-		/// <param name="TimeElapsed">The time elapsed since the last time this was updated</param>
-		/// <param name="BrakeHandle">The controlling brake handle</param>
-		public virtual double CurrentMotorDeceleration(double TimeElapsed, AbstractHandle BrakeHandle)
+		/// <param name="timeElapsed">The time elapsed since the last time this was updated</param>
+		/// <param name="brakeHandle">The controlling brake handle</param>
+		public virtual double CurrentMotorDeceleration(double timeElapsed, AbstractHandle brakeHandle)
 		{
+			if (brakeHandle.Actual > MotorBrakeNotch)
+			{
+				return 0;
+			}
 			return motorDeceleration;
 		}
 	}
