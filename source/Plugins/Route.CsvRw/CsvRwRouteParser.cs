@@ -161,7 +161,8 @@ namespace CsvRwRouteParser {
 			CurrentStop = -1;
 			CurrentSection = 0;
 			
-			string Section = ""; bool SectionAlwaysPrefix = false;
+			string Section = string.Empty; 
+			bool SectionAlwaysPrefix = false;
 			int BlockIndex = 0;
 			CurrentRoute.Tracks[0].Direction = TrackDirection.Forwards;
 			CurrentRoute.Stations = new RouteStation[] { };
@@ -231,7 +232,7 @@ namespace CsvRwRouteParser {
 							} else if (SectionAlwaysPrefix) {
 								Command = Section + "." + Command;
 							}
-							Command = Command.Replace(".Void", "");
+							Command = Command.Replace(".Void", string.Empty);
 							
 							if (Command.StartsWith("structure", StringComparison.OrdinalIgnoreCase) && Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
@@ -445,7 +446,7 @@ namespace CsvRwRouteParser {
 							} else if (SectionAlwaysPrefix) {
 								Command = Section + "." + Command;
 							}
-							Command = Command.Replace(".Void", "");
+							Command = Command.Replace(".Void", string.Empty);
 						}
 						
 						// process command
@@ -459,7 +460,7 @@ namespace CsvRwRouteParser {
 							}
 							if (nameSpace.StartsWith("signal", StringComparison.InvariantCultureIgnoreCase))
 							{
-								nameSpace = "";
+								nameSpace = string.Empty;
 							}
 							Command = Command.ToLowerInvariant();
 

@@ -88,7 +88,7 @@ namespace CsvRwRouteParser
 							{
 								Command = Section + "." + Command;
 							}
-							Command = Command.Replace(".Void", "");
+							Command = Command.Replace(".Void", string.Empty);
 						}
 						// handle indices
 						if (Command != null && Command.EndsWith(")"))

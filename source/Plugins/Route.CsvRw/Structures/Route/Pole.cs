@@ -26,7 +26,7 @@ namespace CsvRwRouteParser
 			}
 			double dz = StartingDistance / Interval;
 			dz -= Math.Floor(dz + 0.5);
-			if (dz >= -0.01 & dz <= 0.01)
+			if (dz >= -0.01 && dz <= 0.01)
 			{
 				if (Mode == 0)
 				{

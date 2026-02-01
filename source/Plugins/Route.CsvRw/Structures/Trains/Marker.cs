@@ -23,7 +23,7 @@ namespace CsvRwRouteParser
 
 		internal void CreateEvent(double StartingDistance, double EndingDistance, ref TrackElement Element)
 		{
-			if (StartingPosition >= StartingDistance & StartingPosition < EndingDistance)
+			if (StartingPosition >= StartingDistance && StartingPosition < EndingDistance)
 			{
 				double d = StartingPosition - StartingDistance;
 				if (Message != null)
@@ -31,7 +31,7 @@ namespace CsvRwRouteParser
 					Element.Events.Add(new MarkerStartEvent(Plugin.CurrentHost, d, Message));
 				}
 			}
-			if (EndingPosition >= StartingDistance & EndingPosition < EndingDistance)
+			if (EndingPosition >= StartingDistance && EndingPosition < EndingDistance)
 			{
 				double d = EndingPosition - StartingDistance;
 				if (Message != null)

@@ -1262,7 +1262,7 @@ namespace CsvRwRouteParser
 						}
 					}
 
-					if (Arguments.Length >= 3 && (Arguments[2].Length > 0))
+					if (Arguments.Length >= 3 && Arguments[2].Length > 0)
 					{
 						if (string.Equals(Arguments[2], "T", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[2], "=", StringComparison.OrdinalIgnoreCase))
 						{
@@ -3414,7 +3414,7 @@ namespace CsvRwRouteParser
 						}
 
 						string switchName = string.Empty;
-						string[] trackNames = new string[]
+						string[] trackNames =
 						{
 							string.Empty,
 							string.Empty

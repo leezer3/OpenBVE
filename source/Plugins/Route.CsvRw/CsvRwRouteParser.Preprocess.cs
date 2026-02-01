@@ -48,7 +48,7 @@ namespace CsvRwRouteParser
 				//Remove empty null characters
 				//Found these in a couple of older routes, harmless but generate errors
 				//Possibly caused by BVE-RR (DOS version)
-				Lines[i] = Lines[i].Replace("\0", "");
+				Lines[i] = Lines[i].Replace("\0", string.Empty);
 				if (IsRW & AllowRwRouteDescription) {
 					// ignore rw route description
 					if (
@@ -77,10 +77,10 @@ namespace CsvRwRouteParser
 								Level--;
 								break;
 							case ',':
-								if (!IsRW & Level == 0) n++;
+								if (!IsRW && Level == 0) n++;
 								break;
 							case '@':
-								if (IsRW & Level == 0) n++;
+								if (IsRW && Level == 0) n++;
 								break;
 						}
 					}
@@ -134,7 +134,7 @@ namespace CsvRwRouteParser
 								}
 								break;
 							case ',':
-								if (Level == 0 & !IsRW) {
+								if (Level == 0 && !IsRW) {
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";"))
 									{
@@ -584,12 +584,12 @@ namespace CsvRwRouteParser
 												} else {
 													continueWithNextExpression = true;
 													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is out of range in " + t + Epilog);
-													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + "" + Expressions[i].Text.Substring(h + 1);
+													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + Expressions[i].Text.Substring(h + 1);
 												}
 											} else {
 												continueWithNextExpression = true;
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
-												Expressions[i].Text = Expressions[i].Text.Substring(0, j) + "" + Expressions[i].Text.Substring(h + 1);
+												Expressions[i].Text = Expressions[i].Text.Substring(0, j) + Expressions[i].Text.Substring(h + 1);
 											}
 										}
 										

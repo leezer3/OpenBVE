@@ -9,7 +9,7 @@ namespace OpenBveApi.Math {
 		/// <summary>Parses a double formatted as a Visual Basic 6 string</summary>
 		/// <param name="Expression">The expression to parse</param>
 		/// <param name="Value">The value to return (Default 0.0)</param>
-		/// <returns>True if parsing succeds, false otherwise</returns>
+		/// <returns>True if parsing succeeds, false otherwise</returns>
 		public static bool TryParseDoubleVb6(string Expression, out double Value)
 		{
 			if (Expression.Length == 0)
@@ -44,7 +44,7 @@ namespace OpenBveApi.Math {
 		/// <summary>Parses a float formatted as a Visual Basic 6 string</summary>
 		/// <param name="Expression">The expression to parse</param>
 		/// <param name="Value">The value to return (Default 0.0)</param>
-		/// <returns>True if parsing succeds, false otherwise</returns>
+		/// <returns>True if parsing succeeds, false otherwise</returns>
 		public static bool TryParseFloatVb6(string Expression, out float Value)
 		{
 			Expression = TrimInside(Expression);
@@ -64,7 +64,7 @@ namespace OpenBveApi.Math {
 		/// <summary>Parses an integer formatted as a Visual Basic 6 string</summary>
 		/// <param name="Expression">The expression to parse</param>
 		/// <param name="Value">The value to return (Default 0.0)</param>
-		/// <returns>True if parsing succeds, false otherwise</returns>
+		/// <returns>True if parsing succeeds, false otherwise</returns>
 		public static bool TryParseIntVb6(string Expression, out int Value)
 		{
 			Expression = TrimInside(Expression);
@@ -88,7 +88,7 @@ namespace OpenBveApi.Math {
 		/// <summary>Parses a byte bounded number formatted as a Visual Basic 6 string</summary>
 		/// <param name="Expression">The expression to parse</param>
 		/// <param name="Value">The value to return (Default 0.0)</param>
-		/// <returns>True if parsing succeds, false otherwise</returns>
+		/// <returns>True if parsing succeeds, false otherwise</returns>
 		public static bool TryParseByteVb6(string Expression, out int Value)
 		{
 			if (Expression.IndexOf(',') != -1)
@@ -118,7 +118,7 @@ namespace OpenBveApi.Math {
 		/// <summary>Returns whether a string contains a valid double, using the supplied unit conversion factor(s)</summary>
 		/// <param name="Expression">The expression to parse</param>
 		/// <param name="UnitFactors">An array of unit conversion factors</param>
-		/// <returns>True if parsing succeds, false otherwise</returns>
+		/// <returns>True if parsing succeeds, false otherwise</returns>
 		public static bool IsValidDouble(string Expression, double[] UnitFactors)
 		{
 			return TryParseDouble(Expression, UnitFactors, out _);
@@ -128,7 +128,7 @@ namespace OpenBveApi.Math {
 		/// <param name="Expression">The expression to parse</param>
 		/// <param name="UnitFactors">An array of unit conversion factors</param>
 		/// <param name="Value">The value to return (Default 0.0)</param>
-		/// <returns>True if parsing succeds, false otherwise</returns>
+		/// <returns>True if parsing succeeds, false otherwise</returns>
 		public static bool TryParseDouble(string Expression, double[] UnitFactors, out double Value)
 		{
 			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out double a))
@@ -168,7 +168,7 @@ namespace OpenBveApi.Math {
 		/// <param name="Expression">The expression to parse</param>
 		/// <param name="UnitFactors">An array of unit conversion factors</param>
 		/// <param name="Value">The value to return (Default 0.0)</param>
-		/// <returns>True if parsing succeds, false otherwise</returns>
+		/// <returns>True if parsing succeeds, false otherwise</returns>
 		public static bool TryParseDoubleVb6(string Expression, double[] UnitFactors, out double Value)
 		{
 			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out double a))

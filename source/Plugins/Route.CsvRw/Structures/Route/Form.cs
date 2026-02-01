@@ -39,7 +39,7 @@ namespace CsvRwRouteParser
 		internal void CreatePrimaryRail(Block currentBlock, Block nextBlock, Vector3 pos, Transformation railTransformation, double startingDistance, double endingDistance)
 		{
 			
-			if (SecondaryRail == Form.SecondaryRailStub)
+			if (SecondaryRail == SecondaryRailStub)
 			{
 				if (!Structure.FormL.ContainsKey(FormType))
 				{
@@ -61,7 +61,7 @@ namespace CsvRwRouteParser
 					}
 				}
 			}
-			else if (SecondaryRail == Form.SecondaryRailL)
+			else if (SecondaryRail == SecondaryRailL)
 			{
 				if (!Structure.FormL.ContainsKey(FormType))
 				{
@@ -102,7 +102,7 @@ namespace CsvRwRouteParser
 					}
 				}
 			}
-			else if (SecondaryRail == Form.SecondaryRailR)
+			else if (SecondaryRail == SecondaryRailR)
 			{
 				if (!Structure.FormR.ContainsKey(FormType))
 				{

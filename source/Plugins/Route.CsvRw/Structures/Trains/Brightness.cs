@@ -26,7 +26,7 @@ namespace CsvRwRouteParser
 
 				if (t == 0)
 				{
-					if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
+					if (CurrentBrightnessElement >= 0 && CurrentBrightnessEvent >= 0)
 					{
 						BrightnessChangeEvent bce = (BrightnessChangeEvent) CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
 						bce.NextBrightness = Value;
@@ -38,7 +38,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
+					if (CurrentBrightnessElement >= 0 && CurrentBrightnessEvent >= 0)
 					{
 						for (int e = 0; e < CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events.Count; e++)
 						{

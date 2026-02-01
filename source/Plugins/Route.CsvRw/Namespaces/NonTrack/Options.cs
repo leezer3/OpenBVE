@@ -100,7 +100,7 @@ namespace CsvRwRouteParser
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
-						else if (a != 0 & a != 1)
+						else if (a != 0 && a != 1)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is expected to be either 0 or 1 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -122,7 +122,7 @@ namespace CsvRwRouteParser
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
-						else if (a != 0 & a != 1)
+						else if (a != 0 && a != 1)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is expected to be either 0 or 1 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -144,7 +144,7 @@ namespace CsvRwRouteParser
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
-						else if (a != 0 & a != 1)
+						else if (a != 0 && a != 1)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is expected to be either 0 or 1 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -165,7 +165,7 @@ namespace CsvRwRouteParser
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
-						else if (a != 0 & a != 1)
+						else if (a != 0 && a != 1)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is expected to be either 0 or 1 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -186,7 +186,7 @@ namespace CsvRwRouteParser
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
-						else if (a != 0 & a != 1)
+						else if (a != 0 && a != 1)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is expected to be either 0 or 1 in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}

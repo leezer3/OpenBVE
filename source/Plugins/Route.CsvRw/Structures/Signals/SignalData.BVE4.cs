@@ -46,7 +46,7 @@ namespace CsvRwRouteParser
 				};
 
 				int zi = 0;
-				string expr = "";
+				string expr = string.Empty;
 				for (int l = 0; l < m; l++)
 				{
 					bool qs = l < SignalTextures.Length && SignalTextures[l] != null;

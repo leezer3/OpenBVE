@@ -16,7 +16,7 @@ namespace CsvRwRouteParser
 
 		internal void CreateEvent(double StartingDistance, double EndingDistance, ref TrackElement Element)
 		{
-			if (TrackPosition >= StartingDistance & TrackPosition < EndingDistance)
+			if (TrackPosition >= StartingDistance && TrackPosition < EndingDistance)
 			{
 				Element.Events.Add(new RequestStopEvent(Plugin.CurrentRoute, StationIndex, MaxNumberOfCars, FullSpeed, OnTime, Early, Late));
 			}
