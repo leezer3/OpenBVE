@@ -253,5 +253,61 @@
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 		<Expression Number="638"></Expression>
 	</Patch>
+	<!-- Lartigue Monorail -->
+	<!-- Another Sanford Mace little demo thing -->
+	<Patch>
+		<Hash>3855027ADA4E116C9A58983E17285E5B800DE3494F2D319EE95E53E73EFB4D5D</Hash>
+		<FileName>1 TODAY 1-TURNBABLE 2.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>0C923F5FD308292F147953EFCCAB80EC688765B6AD6B7EB987EC5F3A52573B68</Hash>
+		<FileName>2 TURNTABLE 2 - REVERSE 3.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>F576A1346CCA34A49773CBB12163266FAEE8AB1245E0FF31C81F612161294547</Hash>
+		<FileName>3 TODAY 3 - TURNTABLE 1.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>DACF7658EB38673D54F0DE71A6A327E37F35316019631F7346A0ABAE8B4931E6</Hash>
+		<FileName>4 TODAY TURNTABLE 1 - REVERSE 2.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>DACF7658EB38673D54F0DE71A6A327E37F35316019631F7346A0ABAE8B4931E6</Hash>
+		<FileName>5 TODAY 1 - TRAIN SHED.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+		<Patch>
+		<Hash>9769BBB646422C9104BE7DCE89B6AB47B95DEC28F13FC1B93B3900070E0B536F</Hash>
+		<FileName>OLD 1-2.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>EE3E2766DAEC9BD7D7CF0DEAC5EBBE7E805D0B053C89A00902D184C1284194A7</Hash>
+		<FileName>OLD 2-1.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>545B254A1F39684F9AE926B0EB9533DE408A3121CA12F4EB65C27B9CE8A76D9C</Hash>
+		<FileName>1 TO 3.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>19F006E106C6688CB8FAB15CD87D6306F480458F72799054C5D0B10BFC315030</Hash>
+		<FileName>3 TO 2.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
   </RoutePatches>
 </openBVE>
