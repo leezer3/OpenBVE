@@ -22,7 +22,6 @@
 //(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -55,8 +54,8 @@ namespace Plugin
 			List<Vector3> Normals = new List<Vector3>();
 			bool PropertiesFound = false;
 
-			VertexTemplate[] tempVertices = new VertexTemplate[0];
-			Vector3[] tempNormals = new Vector3[0];
+			List<VertexTemplate> tempVertices = new List<VertexTemplate>();
+			List<Vector3> tempNormals = new List<Vector3>();
 			Color24 transparentColor = new Color24();
 			string tday = null;
 			string tnight = null;
@@ -257,18 +256,16 @@ namespace Plugin
 														break;
 												}
 											}
-											//Resize temp arrays
-											Array.Resize(ref tempVertices, tempVertices.Length + 1);
-											Array.Resize(ref tempNormals, tempNormals.Length + 1);
+											
 											//Add vertex and normals to temp array
 											if (vF == false)
 											{
 												Plugin.currentHost.AddMessage(MessageType.Warning, true, "Vertex with no co-ordinates supplied encountered in Ls3d object file.");
 												continue;
 											}
-											tempVertices[tempVertices.Length - 1] = new Vertex(v);
-											tempNormals[tempNormals.Length - 1] = new Vector3(n);
-											tempNormals[tempNormals.Length - 1].Normalize();
+											tempVertices.Add(new Vertex(v));
+											tempNormals.Add(new Vector3(n));
+											tempNormals[tempNormals.Count - 1].Normalize();
 											Builder.Vertices.Add(new Vertex(new Vector3(v)));
 											Normals.Add(new Vector3(n));
 										}

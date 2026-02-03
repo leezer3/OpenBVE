@@ -44,7 +44,7 @@ namespace Texture.Dds
             if (header.depth == 0) header.depth = 1;
 
             int blocksize;
-            PixelFormat pixelFormat = this.GetFormat(header, out blocksize);
+            PixelFormat pixelFormat = GetFormat(header, out blocksize);
             byte[] data = this.ReadData(reader, header);
             if (data != null)
             {
@@ -86,7 +86,7 @@ namespace Texture.Dds
 	        myTexture = new OpenBveApi.Textures.Texture(width, height, OpenBveApi.Textures.PixelFormat.RGBAlpha, textureData, null);
         }
 
-        private PixelFormat GetFormat(DdsHeader header, out int blocksize)
+        private static PixelFormat GetFormat(DdsHeader header, out int blocksize)
         {
             PixelFormat format;
             if ((header.pixelFormat.flags & DDPF_FOURCC) == DDPF_FOURCC)
@@ -174,7 +174,7 @@ namespace Texture.Dds
             return format;
         }
 
-        private int PixelFormatToBpp(PixelFormat pf, int rgbbitcount)
+        private static int PixelFormatToBpp(PixelFormat pf, int rgbbitcount)
         {
             switch (pf)
             {
@@ -207,7 +207,7 @@ namespace Texture.Dds
             }
         }
 
-        private int PixelFormatToBpc(PixelFormat pf)
+        private static int PixelFormatToBpc(PixelFormat pf)
         {
             switch (pf)
             {
@@ -229,7 +229,7 @@ namespace Texture.Dds
             }
         }
 
-        private void CorrectPremult(uint pixnum, ref byte[] buffer)
+        private static void CorrectPremult(uint pixnum, ref byte[] buffer)
         {
             for (uint i = 0; i < pixnum; i++)
             {
@@ -245,7 +245,7 @@ namespace Texture.Dds
             }
         }
 
-        private void ComputeMaskParams(uint mask, out int shift1, out int mul, out int shift2)
+        private static void ComputeMaskParams(uint mask, out int shift1, out int mul, out int shift2)
         {
             shift1 = 0; mul = 1; shift2 = 0;
             while ((mask & 1) == 0)
@@ -285,7 +285,7 @@ namespace Texture.Dds
             op[1].B = (byte)(b1 << 3 | b1 >> 2);
         }
 
-        private void DxtcReadColor(ushort data, ref Color32 op)
+        private static void DxtcReadColor(ushort data, ref Color32 op)
         {
             byte b = (byte)(data & 0x1f);
             byte g = (byte)((data & 0x7E0) >> 5);
@@ -307,7 +307,7 @@ namespace Texture.Dds
             color_1.R = (byte)((data[3] & 0xF8) >> 3);
         }
 
-        private void GetBitsFromMask(uint mask, out uint shiftLeft, out uint shiftRight)
+        private static void GetBitsFromMask(uint mask, out uint shiftLeft, out uint shiftRight)
         {
             uint i;
 
@@ -335,7 +335,7 @@ namespace Texture.Dds
         }
 
         // This function simply counts how many contiguous bits are in the mask.
-        private uint CountBitsFromMask(uint mask)
+        private static uint CountBitsFromMask(uint mask)
         {
             uint i, testBit = 0x01, count = 0;
             bool foundBit = false;
@@ -355,7 +355,7 @@ namespace Texture.Dds
             return count;
         }
 
-        private uint HalfToFloat(ushort y)
+        private static uint HalfToFloat(ushort y)
         {
             int s = (y >> 15) & 0x00000001;
             int e = (y >> 10) & 0x0000001f;

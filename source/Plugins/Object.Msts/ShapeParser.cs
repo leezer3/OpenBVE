@@ -710,8 +710,6 @@ namespace Plugin
 
 		private static void ParseBlock(Block block, ref MsTsShape shape, ref Vertex vertex, ref int[] intArray, ref KeyframeAnimation animationNode)
 		{
-			float x, y, z;
-			Vector3 point;
 			KujuTokenID currentToken = KujuTokenID.error;
 			Block newBlock;
 			uint flags;

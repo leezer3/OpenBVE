@@ -209,7 +209,7 @@ namespace Object.CsvB3d
 				// collect arguments
 				string[] Arguments = Lines[i].Split(new[] { ',' }, StringSplitOptions.None);
 				for (int j = 0; j < Arguments.Length; j++) {
-					Arguments[j] = Arguments[j].Trim(new char[] { });
+					Arguments[j] = Arguments[j].Trim();
 				}
 				{
 					// remove unused arguments at the end of the chain
