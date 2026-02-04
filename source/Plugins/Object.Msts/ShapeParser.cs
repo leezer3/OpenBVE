@@ -51,41 +51,6 @@ namespace Plugin
 {
 	partial class MsTsShapeParser
 	{
-		class Texture
-		{
-			internal readonly string fileName;
-			internal int filterMode;
-			internal int mipmapLODBias;
-			internal Color32 borderColor;
-
-			internal Texture(string file)
-			{
-				fileName = file;
-			}
-		}
-
-		class PrimitiveState
-		{
-			internal readonly string Name;
-			internal UInt32 Flags;
-			internal int Shader;
-			internal int[] Textures;
-			/*
-			 * Unlikely to be able to support these at present
-			 * However, read and see if we can hack common ones
-			 */
-			internal float ZBias;
-			internal int vertexStates;
-			internal int alphaTestMode;
-			internal int lightCfgIdx;
-			internal int zBufferMode;
-
-			internal PrimitiveState(string name)
-			{
-				Name = name;
-			}
-		}
-
 		class VertexStates
 		{
 			internal uint flags; //Describes specular and some other stuff, unlikely to be supported
@@ -127,7 +92,6 @@ namespace Plugin
 			 */
 			internal double FrameRate;
 		}
-
 		
 		class Vertex
 		{
@@ -353,109 +317,98 @@ namespace Plugin
 
 			internal void Apply(out StaticObject Object, bool useTransformedVertics)
 			{
-				Object = new StaticObject(Plugin.CurrentHost)
+				Object = new StaticObject(Plugin.CurrentHost);
+				if (faces.Count == 0)
 				{
-					Mesh =
-					{
-						Faces = new MeshFace[] { },
-						Materials = new MeshMaterial[] { },
-						Vertices = new VertexTemplate[] { }
-					}
-				};
-				if (faces.Count != 0)
+					return;
+				}
+				//int mf = Object.Mesh.Faces.Length;
+				//int mm = Object.Mesh.Materials.Length;
+				//int mv = Object.Mesh.Vertices.Length;
+				Array.Resize(ref Object.Mesh.Faces, faces.Count);
+				Array.Resize(ref Object.Mesh.Materials, materials.Count);
+				Array.Resize(ref Object.Mesh.Vertices, verticies.Count);
+				for (int i = 0; i < verticies.Count; i++)
 				{
-					int mf = Object.Mesh.Faces.Length;
-					int mm = Object.Mesh.Materials.Length;
-					int mv = Object.Mesh.Vertices.Length;
-					Array.Resize(ref Object.Mesh.Faces, mf + faces.Count);
-					Array.Resize(ref Object.Mesh.Materials, mm + materials.Count);
-					Array.Resize(ref Object.Mesh.Vertices, mv + verticies.Count);
-					for (int i = 0; i < verticies.Count; i++)
+					if (useTransformedVertics)
 					{
-						if (useTransformedVertics)
+						//Use transformed vertices if we are not animated as will be faster
+						if (transformedVertices[i].matrixChain != null)
 						{
-							//Use transformed vertices if we are not animated as will be faster
-							if (transformedVertices[i].matrixChain != null)
-							{
-								Object.Mesh.Vertices[mv + i] = new AnimatedVertex(transformedVertices[i].Coordinates, verticies[i].TextureCoordinates, transformedVertices[i].matrixChain);
-							}
-							else
-							{
-								Object.Mesh.Vertices[mv + i] = new OpenBveApi.Objects.Vertex(transformedVertices[i].Coordinates, verticies[i].TextureCoordinates);
-							}
-							
+							Object.Mesh.Vertices[i] = new AnimatedVertex(transformedVertices[i].Coordinates, verticies[i].TextureCoordinates, transformedVertices[i].matrixChain);
 						}
 						else
 						{
-							Object.Mesh.Vertices[mv + i] = new OpenBveApi.Objects.Vertex(verticies[i].Coordinates, verticies[i].TextureCoordinates);
+							Object.Mesh.Vertices[i] = new OpenBveApi.Objects.Vertex(transformedVertices[i].Coordinates, verticies[i].TextureCoordinates);
 						}
 
 					}
-
-					int usedFaces = 0;
-					for (int i = 0; i < faces.Count; i++)
+					else
 					{
-						bool canSquashFace = false;
-						if (i > 0)
-						{
-							if (verticies[faces[i].Vertices[0]].matrixChain == verticies[faces[i - 1].Vertices[0]].matrixChain && faces[i].Material == faces[i - 1].Material)
-							{
-								// check the matrix chain of the first vertex of each face, and te 
-								canSquashFace = true;
-							}
-						}
-
-						if (canSquashFace)
-						{
-							int squashID = mf + usedFaces - 1;
-							int oldLength = Object.Mesh.Faces[squashID].Vertices.Length;
-							Object.Mesh.Faces[squashID].AppendVerticies(faces[i].Vertices);
-							for (int k = 0; k < faces[i].Vertices.Length; k++)
-							{
-								Object.Mesh.Faces[squashID].Vertices[k + oldLength].Normal = verticies[faces[i].Vertices[k]].Normal;
-								Object.Mesh.Faces[squashID].Vertices[k + oldLength].Index += (ushort)mv;
-							}
-						}
-						else
-						{
-							Object.Mesh.Faces[mf + usedFaces] = new MeshFace(faces[i].Vertices, (ushort)faces[i].Material, FaceFlags.Triangles);
-							for (int k = 0; k < faces[i].Vertices.Length; k++)
-							{
-								Object.Mesh.Faces[mf + usedFaces].Vertices[k].Normal = verticies[faces[i].Vertices[k]].Normal;
-								Object.Mesh.Faces[mf + usedFaces].Vertices[k].Index += (ushort)mv;
-							}
-							
-							Object.Mesh.Faces[mf + usedFaces].Material += (ushort)mm;
-							usedFaces++;
-						}
-						
+						Object.Mesh.Vertices[i] = new OpenBveApi.Objects.Vertex(verticies[i].Coordinates, verticies[i].TextureCoordinates);
 					}
 
-					
+				}
 
-					Array.Resize(ref Object.Mesh.Faces, mf + usedFaces);
-
-					for (int i = 0; i < materials.Count; i++)
+				int usedFaces = 0;
+				for (int i = 0; i < faces.Count; i++)
+				{
+					bool canSquashFace = false;
+					if (i > 0)
 					{
-						Object.Mesh.Materials[mm + i].Flags = materials[i].Flags;
-						Object.Mesh.Materials[mm + i].Color = materials[i].Color;
-						Object.Mesh.Materials[mm + i].TransparentColor = Color24.Black;
-						Object.Mesh.Materials[mm + i].BlendMode = MeshMaterialBlendMode.Normal;
-						if (materials[i].DaytimeTexture != null)
+						if (verticies[faces[i].Vertices[0]].matrixChain == verticies[faces[i - 1].Vertices[0]].matrixChain && faces[i].Material == faces[i - 1].Material)
 						{
-							Plugin.CurrentHost.RegisterTexture(materials[i].DaytimeTexture, TextureParameters.NoChange, out OpenBveApi.Textures.Texture tday);
-							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
+							// check the matrix chain of the first vertex of each face, and te 
+							canSquashFace = true;
 						}
-						else
-						{
-							Object.Mesh.Materials[mm + i].DaytimeTexture = null;
-						}
-
-						Object.Mesh.Materials[mm + i].EmissiveColor = materials[i].EmissiveColor;
-						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
-						Object.Mesh.Materials[mm + i].GlowAttenuationData = materials[i].GlowAttenuationData;
-						Object.Mesh.Materials[mm + i].WrapMode = materials[i].WrapMode;
 					}
+
+					if (canSquashFace)
+					{
+						int squashID = usedFaces - 1;
+						int oldLength = Object.Mesh.Faces[squashID].Vertices.Length;
+						Object.Mesh.Faces[squashID].AppendVerticies(faces[i].Vertices);
+						for (int k = 0; k < faces[i].Vertices.Length; k++)
+						{
+							Object.Mesh.Faces[squashID].Vertices[k + oldLength].Normal = verticies[faces[i].Vertices[k]].Normal;
+						}
+					}
+					else
+					{
+						Object.Mesh.Faces[usedFaces] = new MeshFace(faces[i].Vertices, (ushort)faces[i].Material, FaceFlags.Triangles);
+						for (int k = 0; k < faces[i].Vertices.Length; k++)
+						{
+							Object.Mesh.Faces[usedFaces].Vertices[k].Normal = verticies[faces[i].Vertices[k]].Normal;
+						}
+						usedFaces++;
+					}
+
+				}
+
+
+
+				Array.Resize(ref Object.Mesh.Faces, usedFaces);
+
+				for (int i = 0; i < materials.Count; i++)
+				{
+					Object.Mesh.Materials[i].Flags = materials[i].Flags;
+					Object.Mesh.Materials[i].Color = materials[i].Color;
+					Object.Mesh.Materials[i].TransparentColor = Color24.Black;
+					Object.Mesh.Materials[i].BlendMode = MeshMaterialBlendMode.Normal;
+					if (materials[i].DaytimeTexture != null)
+					{
+						Plugin.CurrentHost.RegisterTexture(materials[i].DaytimeTexture, TextureParameters.NoChange, out OpenBveApi.Textures.Texture tday);
+						Object.Mesh.Materials[i].DaytimeTexture = tday;
+					}
+					else
+					{
+						Object.Mesh.Materials[i].DaytimeTexture = null;
+					}
+
+					Object.Mesh.Materials[i].EmissiveColor = materials[i].EmissiveColor;
+					Object.Mesh.Materials[i].NighttimeTexture = null;
+					Object.Mesh.Materials[i].GlowAttenuationData = materials[i].GlowAttenuationData;
+					Object.Mesh.Materials[i].WrapMode = materials[i].WrapMode;
 				}
 			}
 

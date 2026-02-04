@@ -1388,14 +1388,16 @@ namespace OpenBve.Formats.MsTs
 		TrainBrakeControllerMinContinuousService, // BR_HW_5217
 		TrainBrakesPipeLeakRate, // FDB_L1_67708
 		InitialTrigger, // HWH-Manor-Int-80a-01
-
+		RegulatorPilotValveInitialOpening, // Adams B4, UKTS2910
+		RegulatorPilotValveFullOpening, // Adams B4, UKTS2910
+		
 		// NEED TO KEEP DUPLICATE FIXES ETC. AT THE END OF THE LIST
 
 		AirBrakeHasLowPressureTest = AirBrakesHasLowPressureTest, // MT Class 86
 		TrainBrakesControllerMaxPressureDropInNormalAppication = TrainBrakesControllerMaxPressureDropInNormalApplication, // MT Class 86
-		RegulatorPilotValveInitialOpening, // Adams B4, UKTS2910
+		
 		RegulatorPilotValveInitialOpenning = RegulatorPilotValveInitialOpening, // typo for above
-		RegulatorPilotValveFullOpening, // Adams B4, UKTS2910
+		
 		SSpring = Spring, // Typo
 
 		//needed for our block parser, so let's deliberately use values ORTS will not touch
