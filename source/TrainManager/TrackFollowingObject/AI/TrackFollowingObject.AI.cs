@@ -121,7 +121,23 @@ namespace TrainManager.Trains
 			{
 				double oldSpeed = Train.CurrentSpeed;
 				Train.CurrentSpeed = DeltaPosition / TimeElapsed;
-				Train.Specs.CurrentAverageAcceleration = (int)NewDirection * (Train.CurrentSpeed - oldSpeed) / TimeElapsed;
+				if (Math.Abs(Train.CurrentSpeed - oldSpeed) < 0.0001)
+				{
+					/*
+					 * The TFO model sets the current speed directly
+					 * However, the physics engine alters it via resistance
+					 * etc. - This causes the sounds to bug out with constant
+					 * acceleration / deceleration by a tiny fraction
+					 * 
+					 * So, if our speed delta is very minimal here, let's assume
+					 * we're not actually doing anything....
+					 */
+					Train.Specs.CurrentAverageAcceleration = 0;
+				}
+				else
+				{
+					Train.Specs.CurrentAverageAcceleration = (int)NewDirection * (Train.CurrentSpeed - oldSpeed) / TimeElapsed;
+				}
 			}
 			else
 			{
