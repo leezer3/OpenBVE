@@ -471,6 +471,10 @@ namespace Train.MsTs
 				case PanelSubject.Pantograph:
 					Code = "pantographstate";
 					break;
+				case PanelSubject.Line_Voltage:
+					// reversed relative to pantograph state
+					Code = "pantographstate 1 == 0 1 ?";
+					break;
 				case PanelSubject.Speedlim_Display:
 					switch (subjectUnits)
 					{
