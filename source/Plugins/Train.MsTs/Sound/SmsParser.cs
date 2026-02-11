@@ -666,6 +666,9 @@ namespace Train.MsTs
 						case KujuTokenID.Variable3_Dec_Past:
 						case KujuTokenID.Variable3Controlled:
 							break;
+						case KujuTokenID.BrakeCyl_Inc_Past:
+						case KujuTokenID.BrakeCyl_Dec_Past:
+							break;
 						default:
 							throw new Exception("Unexpected enum value " + currentSoundSet.VariableTriggerType + " encountered in SMS " + currentFile);
 					}
@@ -698,6 +701,7 @@ namespace Train.MsTs
 						case KujuTokenID.Variable1Controlled:
 						case KujuTokenID.Variable2Controlled:
 						case KujuTokenID.Variable3Controlled:
+						case KujuTokenID.BrakeCylControlled:
 							newBlock = block.ReadSubBlock(KujuTokenID.CurvePoints);
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;
@@ -716,6 +720,7 @@ namespace Train.MsTs
 						case KujuTokenID.Variable1Controlled:
 						case KujuTokenID.Variable2Controlled:
 						case KujuTokenID.Variable3Controlled:
+						case KujuTokenID.BrakeCylControlled:
 							newBlock = block.ReadSubBlock(KujuTokenID.CurvePoints);
 							ParseBlock(newBlock, ref currentSoundSet, ref currentSoundStream, ref car);
 							break;
