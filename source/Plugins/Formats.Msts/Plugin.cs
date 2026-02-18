@@ -937,6 +937,28 @@ namespace OpenBve.Formats.MsTs
 				}
 			}
 
+			if (s.IndexOf('/') != -1)
+			{
+				string[] splitS = s.Split('/');
+				if (splitS.Length == 2 && NumberFormats.TryParseDoubleVb6(splitS[1], out double s2) && s2 == 1)
+				{
+					// Friction and adheasion blocks seem to often use the format 0.05/1 (no idea why it accepts this...)
+					if (float.TryParse(splitS[0], NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
+					{
+						return val;
+					}
+				}
+			}
+			if (s.Split('/').Length > 2)
+			{
+
+				s = s.Substring(0, s.IndexOf('/', s.IndexOf('/') + 1));
+				if (float.TryParse(s, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out val))
+				{
+					return val;
+				}
+			}
+
 			throw new InvalidDataException("Unable to parse " + s + " to a valid single in block " + Token);
 		}
 
@@ -960,6 +982,14 @@ namespace OpenBve.Formats.MsTs
 		public override float ReadSingle<TUnitType>(TUnitType desiredUnit, TUnitType? defaultUnits)
 		{
 			string s = ReadString();
+
+			string st = s.Trim();
+			if (st == "(")
+			{
+				// additional invalid opening bracket
+				s = ReadString();
+			}
+			
 			int hash = s.IndexOf('#');
 			if (hash != -1)
 			{
