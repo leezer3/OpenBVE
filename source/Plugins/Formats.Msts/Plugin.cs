@@ -389,6 +389,12 @@ namespace OpenBve.Formats.MsTs
 			{
 				return KujuTokenID.Skip;
 			}
+
+			if (s == "\"MTWW")
+			{
+				// A lot of MakingTracks stuff seems to have the same C+P error
+				return KujuTokenID.Skip;
+			}
 #if DEBUG 
 			// In debug mode, always throw an exception
 			// this way, any new parameters can be added to our list for future

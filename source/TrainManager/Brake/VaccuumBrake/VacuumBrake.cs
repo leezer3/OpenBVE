@@ -1,4 +1,4 @@
-﻿//Simplified BSD License (BSD-2-Clause)
+//Simplified BSD License (BSD-2-Clause)
 //
 //Copyright (c) 2025, Christopher Lees, The OpenBVE Project
 //
@@ -108,7 +108,7 @@ namespace TrainManager.BrakeSystems
 				}
 			}
 
-			// refill auxillary reservoir from brake pipe
+			// refill auxiliary reservoir from brake pipe
 			if (BrakePipe.CurrentPressure > AuxiliaryReservoir.CurrentPressure + Tolerance)
 			{
 				double r = 2.0 * AuxiliaryReservoir.ChargeRate;
@@ -141,11 +141,8 @@ namespace TrainManager.BrakeSystems
 				BrakePipe.CurrentPressure -= 0.5 * s;
 			}
 
-			// electric command
-			bool emergency = BrakePipe.CurrentPressure + Tolerance < AuxiliaryReservoir.CurrentPressure || Car.baseTrain.Handles.EmergencyBrake.Actual;
-
 			double targetPressure;
-			if (emergency)
+			if (Car.baseTrain.Handles.EmergencyBrake.Actual)
 			{
 				//If EB is selected, then target pressure must be that required for EB
 				targetPressure = BrakeCylinder.EmergencyMaximumPressure;
@@ -181,7 +178,7 @@ namespace TrainManager.BrakeSystems
 				//BC pressure is less than target pressure, so increase pressure
 				double f = AuxiliaryReservoir.BrakeCylinderCoefficient;
 				double r;
-				if (emergency)
+				if (Car.baseTrain.Handles.EmergencyBrake.Actual)
 				{
 					r = 2.0 * BrakeCylinder.EmergencyChargeRate * f;
 				}

@@ -313,11 +313,15 @@ namespace Train.MsTs
 				{
 					Tender tender = new Tender(currentCar, MaxFuelLevel, MaxWaterLevel);
 					currentCar.TractionModel = tender;
-					CarBase previousCar = currentCar.baseTrain.Cars[currentCar.Index - 1];
-					if (previousCar.TractionModel is TenderEngine tenderEngine)
+					if (currentCar.Index > 0)
 					{
-						tenderEngine.Tender = tender;
+						CarBase previousCar = currentCar.baseTrain.Cars[currentCar.Index - 1];
+						if (previousCar.TractionModel is TenderEngine tenderEngine)
+						{
+							tenderEngine.Tender = tender;
+						}
 					}
+					
 				}
 
 				if (currentCar.TrailingWheels.Count == 0)

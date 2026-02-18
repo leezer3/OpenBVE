@@ -256,7 +256,7 @@ namespace TrainManager.Car
 		}
 
 		/// <summary>Synchronizes the car after a period of infrequent updates</summary>
-		public void Syncronize()
+		public void Synchronize()
 		{
 			double s = 0.5 * (FrontAxle.Follower.TrackPosition + RearAxle.Follower.TrackPosition);
 			double d = 0.5 * (FrontAxle.Follower.TrackPosition - RearAxle.Follower.TrackPosition);
@@ -370,6 +370,10 @@ namespace TrainManager.Car
 				}	
 			}
 
+			for (int i = 0; i < ParticleSources.Count; i++)
+			{
+				ParticleSources[i].Offset.Z = -ParticleSources[i].Offset.Z;
+			}
 
 			(FrontBogie, RearBogie) = (RearBogie, FrontBogie);
 			FrontBogie.Reverse();
@@ -589,17 +593,17 @@ namespace TrainManager.Car
 			{
 				if (Left & Doors[i].Direction == -1 | Right & Doors[i].Direction == 1)
 				{
-					if (Doors[i].State == 0.0)
+					switch (Doors[i].State)
 					{
-						closed = true;
-					}
-					else if (Doors[i].State == 1.0)
-					{
-						opened = true;
-					}
-					else
-					{
-						mixed = true;
+						case 0.0:
+							closed = true;
+							break;
+						case 1.0:
+							opened = true;
+							break;
+						default:
+							mixed = true;
+							break;
 					}
 				}
 			}
