@@ -388,7 +388,7 @@ namespace OpenBve
 			{
 				return;
 			}
-			for (int i = ScoreMessages.Count; i > 0; i--)
+			for (int i = ScoreMessages.Count - 1; i > 0; i--)
 			{
 				ScoreMessages[i].Timeout -= timeElapsed;
 				if (ScoreMessages[i].Timeout <= 0 & ScoreMessages[i].RendererAlpha == 0.0)
