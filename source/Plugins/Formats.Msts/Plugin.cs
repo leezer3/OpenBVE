@@ -456,6 +456,10 @@ namespace OpenBve.Formats.MsTs
 			{
 				myText = text;
 			}
+			if (string.IsNullOrEmpty(myText))
+			{
+				Token = KujuTokenID.Skip;
+			}
 			currentPosition = 0;
 		}
 
