@@ -20,6 +20,7 @@ namespace OpenBveApi.Textures {
 			if (parameters != null) {
 				if (parameters.ClipRegion != null) {
 					result = ExtractClipRegion(result, parameters.ClipRegion);
+					result.CompatibleTransparencyMode = texture.CompatibleTransparencyMode;
 				}
 				if (parameters.TransparentColor != null) {
 					result = ApplyTransparentColor(result, parameters.TransparentColor);
