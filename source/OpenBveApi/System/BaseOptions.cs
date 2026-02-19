@@ -12,7 +12,7 @@ namespace OpenBveApi
 		public string LanguageCode;
 		/// <summary>Whether the program is to be run in full-screen mode</summary>
 		public bool FullscreenMode;
-		/// <summary>Whether the program is to be rendered using vertical syncronisation</summary>
+		/// <summary>Whether the program is to be rendered using vertical synchronisation</summary>
 		public bool VerticalSynchronization;
 		/// <summary>The screen width (Windowed Mode)</summary>
 		public int WindowWidth;
@@ -60,7 +60,7 @@ namespace OpenBveApi
 		public int InitialDestination = -1;
 		/// <summary>The initial camera viewpoint</summary>
 		public int InitialViewpoint = 0;
-		/// <summary>The speed limit for any preceeding AI trains</summary>
+		/// <summary>The speed limit for any preceding AI trains</summary>
 		public double PrecedingTrainSpeedLimit = double.PositiveInfinity;
 		/// <summary>The name of the current train</summary>
 		public string TrainName = "";
@@ -106,6 +106,9 @@ namespace OpenBveApi
 		/// <summary>Whether delayed animated updates based upon track position are used</summary>
 		/// <remarks>Not saved</remarks>
 		public bool DelayedAnimatedUpdates;
+		/// <summary>Whether the adhesion hack is enabled</summary>
+		/// <remarks>Not saved</remarks>
+		public bool AdhesionHack;
 		/// <summary>Enables scripted trains on BVE5 routes</summary>
 		public bool EnableBve5ScriptedTrain;
 		/// <summary>The scale factor for the user interface</summary>

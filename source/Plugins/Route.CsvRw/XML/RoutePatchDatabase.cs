@@ -290,6 +290,17 @@ namespace CsvRwRouteParser
 							currentPatch.DelayedAnimatedUpdates = false;
 						}
 						break;
+					case "AdhesionHack":
+						t = childNode.InnerText.Trim().ToLowerInvariant();
+						if (t == "1" || t == "true")
+						{
+							currentPatch.AdhesionHack = true;
+						}
+						else
+						{
+							currentPatch.AdhesionHack = false;
+						}
+						break;
 				}
 			}
 

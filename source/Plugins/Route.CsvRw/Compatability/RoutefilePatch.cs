@@ -52,6 +52,7 @@ namespace CsvRwRouteParser
 				Plugin.CurrentOptions.Derailments = patch.Derailments;
 				Plugin.CurrentOptions.Toppling = patch.Toppling;
 				Plugin.CurrentOptions.DelayedAnimatedUpdates = patch.DelayedAnimatedUpdates;
+				Plugin.CurrentOptions.AdhesionHack = patch.AdhesionHack;
 				SplitLineHack = patch.SplitLineHack;
 				AllowTrackPositionArguments = patch.AllowTrackPositionArguments;
 				foreach (int i in patch.DummyRailTypes)
@@ -154,5 +155,7 @@ namespace CsvRwRouteParser
 		internal bool AggressiveRwBrackets = false;
 		/// <summary>Whether animated object updates are delayed based upon distance</summary>
 		internal bool DelayedAnimatedUpdates = false;
+		/// <summary>Whether adhesion is infinite (no wheelslip)</summary>
+		internal bool AdhesionHack = false;
 	}
 }
