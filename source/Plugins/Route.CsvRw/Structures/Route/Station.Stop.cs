@@ -57,7 +57,7 @@ namespace CsvRwRouteParser
 			}
 			
 			Stations[StationIndex].Stops[t].Cars = Cars;
-			double dx, dy = 2.0;
+			double dx = 0.0;
 			if (Stations[StationIndex].OpenLeftDoors & !Stations[StationIndex].OpenRightDoors)
 			{
 				dx = -5.0;
@@ -66,12 +66,8 @@ namespace CsvRwRouteParser
 			{
 				dx = 5.0;
 			}
-			else
-			{
-				dx = 0.0;
-			}
 
-			Stations[StationIndex].SoundOrigin = Position + dx * Side + dy * Up;
+			Stations[StationIndex].SoundOrigin = Position + dx * Side + 2.0 * Up;
 		}
 	}
 }

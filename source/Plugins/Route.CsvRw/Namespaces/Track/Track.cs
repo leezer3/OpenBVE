@@ -1772,7 +1772,7 @@ namespace CsvRwRouteParser
 					CurrentStop = -1;
 					DepartureSignalUsed = false;
 					//Detect common BVE2 / BVE4 dummy stations, missing names etc.
-					if (CurrentRoute.Stations[CurrentStation].Name.Length == 0 & (CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.AllStop))
+					if (CurrentRoute.Stations[CurrentStation].Name.Length == 0 && (CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.AllStop))
 					{
 						//Set default name
 						CurrentRoute.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture);
@@ -1783,7 +1783,7 @@ namespace CsvRwRouteParser
 								/*
 								 * NOTE: The Track.Sta command is not valid in RW format routes (and this is what allows the
 								 * door direction to be set). Let's assume that no name and a forced red signal
-								 * is actualy a signalling control station
+								 * is actually a signalling control station
 								 * e.g. Rocky Mountains Express
 								 *
 								 * However, the Station format command can *also* be used in a CSV route,
@@ -2276,7 +2276,7 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || (!Data.Blocks[BlockIndex].Rails[idx].RailStarted & !Data.Blocks[BlockIndex].Rails[idx].RailEnded))
+							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || (!Data.Blocks[BlockIndex].Rails[idx].RailStarted && !Data.Blocks[BlockIndex].Rails[idx].RailEnded))
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.DikeEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}

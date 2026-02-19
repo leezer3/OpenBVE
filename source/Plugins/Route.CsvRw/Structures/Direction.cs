@@ -31,7 +31,7 @@ namespace CsvRwRouteParser
 				case "RIGHT":
 					return CsvRwRouteParser.Direction.Right;
 				case "0":
-					// BVE is inconsistant: Walls / Dikes use 0 for *both* sides, stations use 0 for none....
+					// BVE is inconsistent: Walls / Dikes use 0 for *both* sides, stations use 0 for none....
 					return IsWallDike ? CsvRwRouteParser.Direction.Both : CsvRwRouteParser.Direction.None;
 				case "N":
 				case "NONE":

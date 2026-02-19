@@ -171,7 +171,7 @@ namespace CsvRwRouteParser
 										}
 									}
 								}
-								if (Level == 0 & IsRW) {
+								if (Level == 0 && IsRW) {
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";"))
 									{

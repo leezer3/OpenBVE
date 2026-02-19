@@ -444,8 +444,8 @@ namespace CsvRwRouteParser
 					{
 							CurrentRoute.Tracks[0].Elements[n].Events.Add(new StationStartEvent(CurrentRoute, 0.0, s));
 					}
-					
-					double dx, dy = 3.0;
+
+					double dx = 0.0;
 					if (CurrentRoute.Stations[s].OpenLeftDoors && !CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						dx = -5.0;
@@ -454,11 +454,8 @@ namespace CsvRwRouteParser
 					{
 						dx = 5.0;
 					}
-					else
-					{
-						dx = 0.0;
-					}
-					CurrentRoute.Stations[s].SoundOrigin = Position + dx * CurrentRoute.Tracks[0].Elements[n].WorldSide + dy * CurrentRoute.Tracks[0].Elements[n].WorldUp;
+					
+					CurrentRoute.Stations[s].SoundOrigin = Position + dx * CurrentRoute.Tracks[0].Elements[n].WorldSide + 3.0 * CurrentRoute.Tracks[0].Elements[n].WorldUp;
 					// passalarm
 					if (!PreviewOnly)
 					{
@@ -734,7 +731,7 @@ namespace CsvRwRouteParser
 
 								//These generate a compiler warning, as secondary tracks do not generate yaw, as they have no
 								//concept of a curve, but rather are a straight line between two points
-								//TODO: Revist the handling of secondary tracks ==> !!BACKWARDS INCOMPATIBLE!!
+								//TODO: Revisit the handling of secondary tracks ==> !!BACKWARDS INCOMPATIBLE!!
 								/*
 								double TrackYaw2 = Math.Atan2(Direction2.X, Direction2.Y);
 								double TrackPitch2 = Math.Atan(Data.Blocks[i + 1].Pitch);

@@ -236,7 +236,7 @@ namespace CsvRwRouteParser
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											mode = 0;
 										}
-										else if (mode != 0 & mode != 1)
+										else if (mode != 0 && mode != 1)
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The specified Mode is not supported in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											mode = 0;
@@ -271,7 +271,7 @@ namespace CsvRwRouteParser
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											mode = 0;
 										}
-										else if (mode != 0 & mode != 1)
+										else if (mode != 0 && mode != 1)
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The specified Mode is not supported in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											mode = 0;

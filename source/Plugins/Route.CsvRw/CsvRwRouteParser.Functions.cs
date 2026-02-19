@@ -114,7 +114,7 @@ namespace CsvRwRouteParser
 				if (i >= 1) {
 					if (int.TryParse(Expression.Substring(0, i), NumberStyles.Integer, Culture, out int h)) {
 						int n = Expression.Length - i - 1;
-						if (n == 1 | n == 2) {
+						if (n == 1 || n == 2) {
 							if (uint.TryParse(Expression.Substring(i + 1, n), NumberStyles.None, Culture, out uint m)) {
 								Value = 3600.0 * h + 60.0 * m;
 								return true;
