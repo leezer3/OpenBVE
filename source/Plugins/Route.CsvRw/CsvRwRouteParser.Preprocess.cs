@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -247,8 +247,9 @@ namespace CsvRwRouteParser
 							string s = Expressions[i].Text.Substring(k + 1, h - k - 1).Trim();
 							switch (t.ToLowerInvariant()) {
 								case "$if":
+								case "$elseif":
 									if (j != 0) {
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $If directive must not appear within another statement" + Epilog);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $If and $ElseIf directives must not appear within another statement" + Epilog);
 									} else
 									{
 										if (double.TryParse(s, NumberStyles.Float, Culture, out double num)) {
@@ -256,7 +257,7 @@ namespace CsvRwRouteParser
 											Expressions[i].Text = string.Empty;
 											if (num == 0.0) {
 												/*
-												 * Blank every expression until the matching $Else or $EndIf
+												 * Blank every expression until the matching $Else, $ElseIf or $EndIf
 												 * */
 												i++;
 												int level = 1;
@@ -264,7 +265,15 @@ namespace CsvRwRouteParser
 													if (Expressions[i].Text.StartsWith("$if", StringComparison.OrdinalIgnoreCase)) {
 														Expressions[i].Text = string.Empty;
 														level++;
-													} else if (Expressions[i].Text.StartsWith("$else", StringComparison.OrdinalIgnoreCase)) {
+													} else if (Expressions[i].Text.StartsWith("$else", StringComparison.OrdinalIgnoreCase))
+													{
+														if (Expressions[i].Text.StartsWith("$elseif", StringComparison.OrdinalIgnoreCase))
+														{
+															i--;
+															level--;
+															break;
+														}
+
 														Expressions[i].Text = string.Empty;
 														if (level == 1) {
 															level--;
