@@ -281,7 +281,7 @@
 		<ReducedColorTransparency>true</ReducedColorTransparency>
 	</Patch>
 	<Patch>
-		<Hash>DACF7658EB38673D54F0DE71A6A327E37F35316019631F7346A0ABAE8B4931E6</Hash>
+		<Hash>90CB94DF66EACC9856FAD8EE353C831336239FAE3EC1C28DDC724FB55B678E0A</Hash>
 		<FileName>5 TODAY 1 - TRAIN SHED.csv</FileName>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
@@ -309,6 +309,14 @@
 		<FileName>3 TO 2.csv</FileName>
 		<AccurateObjectDisposal>true</AccurateObjectDisposal>
 		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<!-- Mars route-->
+	<Patch>
+		<Hash>0A7808AE6C6CB7602B7113DE31046808D32EE9554FA602E64DD71AD3E9200E2A</Hash>
+		<FileName>mars3.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+		<CylinderHack>true</CylinderHack>
 	</Patch>
   </RoutePatches>
 </openBVE>

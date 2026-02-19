@@ -148,7 +148,7 @@ namespace CsvRwRouteParser
 						double cant = 0.0;
 						if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out cant))
 						{
-							if (Arguments[4] != "id 0") //RouteBuilder inserts these, harmless so let's ignore
+							if (Arguments[4] != "id 0" && Arguments[4] != "id=0") //RouteBuilder inserts these, harmless so let's ignore
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CantInMillimeters is invalid in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
@@ -1394,7 +1394,10 @@ namespace CsvRwRouteParser
 								string f = Path.CombineFile(SoundPath, Arguments[7]);
 								if (!System.IO.File.Exists(f))
 								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "ArrivalSound " + f + " not found in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									if (Arguments[7] != "0") // RouteBuilder...
+									{
+										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "ArrivalSound " + f + " not found in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									}
 								}
 								else
 								{

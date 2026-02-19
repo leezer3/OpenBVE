@@ -408,5 +408,31 @@
 		<FileName>Cl73Electric SemiFast.csv</FileName>
 		<SignalSet>BritishRail.xml</SignalSet>
 	</Patch>
+	<!-- Ongar LU BVE4 -->
+	<Patch>
+		<Hash>4A917D25C9D416EA1F65E026783AF6563BF70253917F3E3750F653D9148A00AE</Hash>
+		<FileName>Diagram. 1 - Ongar BVE4.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>E624C8B80BE05B1448A5CA0DA4581F70F4469A088331845C00C60064568862C8</Hash>
+		<FileName>Diagram. 2 - Ongar BVE4- light rain.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>26185814FCC01F7583914F2A228F17A48258466C24A71F4F10D9F6437B1D812B</Hash>
+		<FileName>Diagram. 3 - Ongar BVE4- heavy rain.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>08C6EA0D2E57296D7211891DE26DCF2C4FFA1E33BBA3DA669673FDDD4A849BBC</Hash>
+		<FileName>Diagram. 4 - Ongar BVE4- thunderstorm.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
+	<Patch>
+		<Hash>38852CD885E4B85692A799B0D1CA6045C59E10F87166413F8CC601F51CB5C5E3</Hash>
+		<FileName>Diagram. 5 - Ongar BVE4- heavy rain with 3D raindrops.csv</FileName>
+		<ReducedColorTransparency>true</ReducedColorTransparency>
+	</Patch>
   </RoutePatches>
 </openBVE>
