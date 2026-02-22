@@ -88,6 +88,7 @@ namespace CarXmlConvertor
 					case ExtensionCfgSection.Exterior:
 						while (block.RemainingDataValues > 0 && block.GetIndexedPath(Path.GetDirectoryName(FileName), out var carIndex, out carObject) && carIndex < ConvertTrainDat.NumberOfCars)
 						{
+							carObject = carObject.Replace(Path.GetDirectoryName(FileName), string.Empty);
 							CarInfos[carIndex].Object = carObject;
 						}
 						break;
@@ -104,6 +105,7 @@ namespace CarXmlConvertor
 						
 						if (block.GetPath(ExtensionCfgKey.Object, Path.GetDirectoryName(FileName), out carObject))
 						{
+							carObject = carObject.Replace(Path.GetDirectoryName(FileName), string.Empty);
 							CarInfos[block.Index].Object = carObject;
 						}
 
@@ -159,6 +161,7 @@ namespace CarXmlConvertor
 
 						if (block.GetPath(ExtensionCfgKey.Object, Path.GetDirectoryName(FileName), out string bogieObject))
 						{
+							bogieObject = bogieObject.Replace(Path.GetDirectoryName(FileName), string.Empty);
 							if (IsOdd)
 							{
 								CarInfos[CarIndex].RearBogie.Object = bogieObject;
