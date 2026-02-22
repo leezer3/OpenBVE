@@ -118,7 +118,7 @@ namespace CarXmlConvertor
 						block.GetValue(ExtensionCfgKey.LoadingSway, out CarInfos[block.Index].LoadingSway);
 						if (block.GetVector2(ExtensionCfgKey.Axles, ',', out Vector2 carAxles))
 						{
-							if (carAxles.X >= carAxles.Y)
+							if (carAxles.X <= carAxles.Y)
 							{
 								CarInfos[block.Index].RearAxle = carAxles.X;
 								CarInfos[block.Index].FrontAxle = carAxles.Y;
@@ -182,7 +182,7 @@ namespace CarXmlConvertor
 						}
 						if (block.GetVector2(ExtensionCfgKey.Axles, ',', out Vector2 bogieAxles))
 						{
-							if (bogieAxles.X >= bogieAxles.Y)
+							if (bogieAxles.X <= bogieAxles.Y)
 							{
 								if (IsOdd)
 								{
