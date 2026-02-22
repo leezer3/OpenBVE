@@ -182,7 +182,7 @@ namespace CarXmlConvertor
 						}
 						if (block.GetVector2(ExtensionCfgKey.Axles, ',', out Vector2 bogieAxles))
 						{
-							if (bogieAxles.X >= bogieAxles.Y)
+							if (bogieAxles.X <= bogieAxles.Y)
 							{
 								if (IsOdd)
 								{
