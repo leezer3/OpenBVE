@@ -87,14 +87,15 @@ namespace Formats.OpenBve
 		public virtual List<Block<T1, T2>> ReadBlocks(T1[] blocks)
 		{
 			List<Block<T1, T2>> returnedBlocks = new List<Block<T1, T2>>();
-			for (int i = 0; i < subBlocks.Count; i++)
+			for (int i = subBlocks.Count - 1; i > 0; i--)
 			{
 				for (int j = 0; j < blocks.Length; j++)
 				{
 					if (EqualityComparer<T1>.Default.Equals(subBlocks[i].Key, blocks[j]))
 					{
-						returnedBlocks.Add(subBlocks[i]);
+						returnedBlocks.Insert(0, subBlocks[i]);
 						subBlocks.RemoveAt(i);
+						break;
 					}
 				}
 			}
@@ -159,7 +160,7 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
-	    /// <summary>Uncondtionally reads the next indexed path from the block</summary>
+	    /// <summary>Unconditionally reads the next indexed path from the block</summary>
 	    public virtual bool GetIndexedPath(string absolutePath, out int index, out string finalPath)
 	    {
 		    index = -1;
@@ -167,7 +168,7 @@ namespace Formats.OpenBve
 		    return false;
 	    }
 
-	    /// <summary>Uncondtionally reads the next indexed encoding from the block</summary>
+	    /// <summary>Unconditionally reads the next indexed encoding from the block</summary>
 	    public virtual bool GetIndexedEncoding(out TextEncoding.Encoding e, out string path)
 	    {
 		    e = TextEncoding.Encoding.Unknown;
