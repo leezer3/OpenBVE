@@ -103,7 +103,7 @@ namespace LibRender2
 			if (VertexLayout.UV >= 0)
 			{
 				GL.VertexAttribPointer(VertexLayout.UV, 2, VertexAttribPointerType.Float, false, vertexSize, offset);
-				offset += Vector2.SizeInBytes; //equivialant to API Vector2
+				offset += Vector2.SizeInBytes; //equivalent to API Vector2
 			}
 
 			if (VertexLayout.Color >= 0)

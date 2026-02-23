@@ -9,14 +9,14 @@
 		/// <summary>Creates a new raw data origin.</summary>
 		/// <param name="sound">The sound raw data.</param>
 		public RawOrigin(Sound sound) {
-			this.Sound = sound;
+			Sound = sound;
 		}
 		
 		/// <summary>Gets the sound from this origin.</summary>
 		/// <param name="sound">Receives the sound.</param>
 		/// <returns>Whether the sound could be obtained successfully.</returns>
 		public override bool GetSound(out Sound sound) {
-			sound = this.Sound;
+			sound = Sound;
 			return true;
 		}
 	}

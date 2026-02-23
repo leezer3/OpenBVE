@@ -10,7 +10,7 @@ using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace ObjectViewer
 {
-    class ObjectViewer : GameWindow
+    internal class ObjectViewer : GameWindow
     {
         //Deliberately specify the default constructor with various overrides
         public ObjectViewer(int width, int height, GraphicsMode currentGraphicsMode, string windowTitle,

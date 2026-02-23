@@ -571,7 +571,7 @@ namespace LibRender2.Textures
 			else
 			{
 				//Don't unload textures if we are in a menu/ paused, as they may be required immediately after unpause
-				foreach (var Texture in TextureManager.RegisteredTextures)
+				foreach (Texture Texture in RegisteredTextures)
 				{
 					//Texture can be null in certain cases....
 					if (Texture != null)

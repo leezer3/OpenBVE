@@ -906,7 +906,7 @@ namespace OpenBve
 					Program.Renderer.CurrentTimetable = DisplayedTimetable.Custom;
 				}
 			}
-			//Create AI driver for the player train if specified via the commmand line
+			//Create AI driver for the player train if specified via the command line
 			if (Game.InitialAIDriver)
 			{
 				TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, double.PositiveInfinity);

@@ -65,9 +65,8 @@ namespace OpenBveApi.Objects
 		/// <inheritdoc/>
 		public override bool IsVisible(Vector3 CameraPosition, double BackgroundImageDistance, double ExtraViewingDistance)
 		{
-			double z = 0;
-			double pa = TrackPosition + z - Radius - 10.0;
-			double pb = TrackPosition + z + Radius + 10.0;
+			double pa = TrackPosition - Radius - 10.0;
+			double pb = TrackPosition + Radius + 10.0;
 			double ta = CameraPosition.Z - BackgroundImageDistance - ExtraViewingDistance;
 			double tb = CameraPosition.Z + BackgroundImageDistance + ExtraViewingDistance;
 			return pb >= ta & pa <= tb;

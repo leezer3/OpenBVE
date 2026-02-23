@@ -42,12 +42,12 @@ namespace OpenBveApi.World
 		/// <summary>
 		/// Dictionary of functions to convert from the base unit type into a specific type.
 		/// </summary>
-		static readonly ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>> ConversionsTo = new ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>>();
+		private static readonly ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>> ConversionsTo = new ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>>();
 
 		/// <summary>
 		/// Dictionary of functions to convert from the specified type into the base unit type.
 		/// </summary>
-		static readonly ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>> ConversionsFrom = new ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>>();
+		private static readonly ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>> ConversionsFrom = new ConcurrentDictionary<TUnitType, Func<TValueType, TValueType>>();
 
 		/// <summary>
 		/// Converts a value from one unit type to another.

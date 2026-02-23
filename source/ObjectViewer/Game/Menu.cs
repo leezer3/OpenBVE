@@ -258,7 +258,7 @@ namespace ObjectViewer
 			{
 				if (item < visibleItems + menu.TopItem + 1)
 				{
-					//Item is a standard menu entry or the scroll down elipsis
+					//Item is a standard menu entry or the scroll down ellipsis
 					menu.Selection = item;
 					return true;
 				}

@@ -626,7 +626,7 @@ namespace OpenBve
                 return Train.Handles.HasHoldBrake;
             }
 
-            /// <summary>Whether the constant speed devicee is currently active for the selected train</summary>
+            /// <summary>Whether the constant speed device is currently active for the selected train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>Whether the constant speed device is currently active</returns>
             public static bool constantSpeed(TrainBase Train)

@@ -24,7 +24,6 @@
 
 // ReSharper disable CoVariantArrayConversion
 
-using System.ServiceModel.Dispatcher;
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Objects
