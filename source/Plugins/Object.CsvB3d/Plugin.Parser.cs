@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using OpenBveApi;
@@ -427,6 +428,85 @@ namespace Object.CsvB3d
 										{
 											// broken roof (first face is OK though....)
 											a = new[] { 0, 2, 3, 1 };
+										}
+
+										if (FileName.IndexOf("sanaro", StringComparison.OrdinalIgnoreCase) != -1)
+										{
+											/*
+											 * A bunch of objects with the glitched face issue in this one
+											 * Unfortunately, we can't just check the face windings, as there
+											 * seem to be 'correct' faces with an identical winding to the broken
+											 * ones
+											 *
+											 * At some point, possibly need to consider writing an algorithm to sort
+											 * points in clockwise order rather than special-casing each one...
+											 */
+											if (FileName.FileNameEndsWith(new[] { "sanaro\\edifici\\casello1.csv" }))
+											{
+												switch (Object.Mesh.Faces.Length)
+												{
+													case 9:
+														a = new[] { 0, 1, 3, 2 };
+														break;
+													case 15:
+													case 16:
+													case 17:
+													case 18:
+													case 19:
+														a = new[] { 0, 1, 2, 3 };
+														break;
+												}
+											}
+
+											if (FileName.FileNameEndsWith(new[] { "sanaro\\edifici\\casello2.csv" }))
+											{
+												switch (Object.Mesh.Faces.Length)
+												{
+													case 10:
+													case 11:
+														a = new[] { 0, 1, 3, 2 };
+														break;
+												}
+											}
+											if (FileName.FileNameEndsWith(new[] { "sanaro\\edifici\\casello3.csv" }))
+											{
+												switch (Object.Mesh.Faces.Length)
+												{
+													case 9:
+														a = new[] { 0, 1, 2, 3 };
+														break;
+												}
+											}
+											if (FileName.FileNameEndsWith(new[] { "sanaro\\edifici\\carisio.csv" }))
+											{
+												switch (Object.Mesh.Faces.Length)
+												{
+													case 9:
+														a = new[] { 0, 1, 2, 3 };
+														break;
+												}
+											}
+											if (FileName.FileNameEndsWith(new[] { "sanaro\\edifici\\carisio.csv" }))
+											{
+												switch (Object.Mesh.Faces.Length)
+												{
+													case 27:
+													case 28:
+														a = new[] { 0, 1, 2, 3 };
+														break;
+												}
+											}
+											if (FileName.FileNameEndsWith(new[] { "sanaro\\edifici\\tettoia.csv" }))
+											{
+												switch (Object.Mesh.Faces.Length)
+												{
+													case 8:
+													case 9:
+													case 10:
+														a = new[] { 0, 1, 2, 3 };
+														break;
+												}
+											}
 										}
 
 										int[] vertexIndices = (int[])a.Clone();

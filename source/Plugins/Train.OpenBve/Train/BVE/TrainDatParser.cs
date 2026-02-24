@@ -391,7 +391,7 @@ namespace Train.OpenBve
 									case 0:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											powerDelayUp = Lines[i].Split( ',').Select(x => Double.Parse(x, Culture)).ToArray();
+											powerDelayUp = Lines[i].Split( ',').Select(x => double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -405,7 +405,7 @@ namespace Train.OpenBve
 									case 1:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											powerDelayDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											powerDelayDown = Lines[i].Split(',').Select(x => double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -419,7 +419,7 @@ namespace Train.OpenBve
 									case 2:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											brakeDelayUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											brakeDelayUp = Lines[i].Split(',').Select(x => double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -433,7 +433,7 @@ namespace Train.OpenBve
 									case 3:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											brakeDelayDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											brakeDelayDown = Lines[i].Split(',').Select(x => double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -464,7 +464,7 @@ namespace Train.OpenBve
 												}
 												else if (myVersion >= 1534)
 												{
-													locoBrakeDelayUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+													locoBrakeDelayUp = Lines[i].Split(',').Select(x => double.Parse(x, Culture)).ToArray();
 												}
 												else
 												{
@@ -491,7 +491,7 @@ namespace Train.OpenBve
 												}
 												else if(myVersion >= 1534)
 												{
-													locoBrakeDelayDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+													locoBrakeDelayDown = Lines[i].Split(',').Select(x => double.Parse(x, Culture)).ToArray();
 												}
 												else
 												{

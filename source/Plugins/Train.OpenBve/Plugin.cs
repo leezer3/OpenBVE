@@ -458,7 +458,7 @@ namespace Train.OpenBve
 		    }
 		    catch(Exception ex)
 		    {
-				CurrentHost.ReportProblem(ProblemType.UnexpectedException, "Unable to get the description for train " + trainPath + " due to the exeception: " + ex.Message);
+				CurrentHost.ReportProblem(ProblemType.UnexpectedException, "Unable to get the description for train " + trainPath + " due to the exception: " + ex.Message);
 		    }
 		    return string.Empty;
 	    }
@@ -468,24 +468,24 @@ namespace Train.OpenBve
 		    try
 		    {
 			    string imageFile = Path.CombineFile(trainPath, "train.png");
-			    if (File.Exists(imageFile))
+			    if (File.Exists(imageFile) && new FileInfo(imageFile).Length != 0)
 			    {
 				    return imageFile;
 			    }
 			    imageFile  = Path.CombineFile(trainPath, "train.gif");
-			    if (File.Exists(imageFile))
+			    if (File.Exists(imageFile) && new FileInfo(imageFile).Length != 0)
 			    {
 				    return imageFile;
 			    }
 			    imageFile  = Path.CombineFile(trainPath, "train.bmp");
-			    if (File.Exists(imageFile))
+			    if (File.Exists(imageFile) && new FileInfo(imageFile).Length != 0)
 			    {
 				    return imageFile;
 			    }
 		    }
 		    catch (Exception ex)
 		    {
-			    CurrentHost.ReportProblem(ProblemType.UnexpectedException, "Unable to get the image for train " + trainPath + " due to the exeception: " + ex.Message);
+			    CurrentHost.ReportProblem(ProblemType.UnexpectedException, "Unable to get the image for train " + trainPath + " due to the exception: " + ex.Message);
 		    }
 		    return null;
 	    }

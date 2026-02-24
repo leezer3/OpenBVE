@@ -1,0 +1,10 @@
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RoutePatches>
+  <!-- Yongin Line Local -->
+	<Patch>
+		<Hash>59A4090DCC343866CC15406C3BC3EEF9CE956258ED84A3132FE7ED79DB424EBF</Hash>
+		<FileName>Yongin Line Local.csv</FileName>
+		<AccurateObjectDisposal>true</AccurateObjectDisposal>
+	</Patch>
+  </RoutePatches>
+</openBVE>

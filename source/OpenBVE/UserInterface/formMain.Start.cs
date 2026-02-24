@@ -1547,11 +1547,20 @@ namespace OpenBve
 					return;
 				}
 
+				
 				if (!string.IsNullOrEmpty(trainImage))
 				{
-					Image image = Image.FromFile(trainImage);
-					pictureboxTrainImage.Image = image;
-					pictureboxTrainImage.Enabled = true;
+					try
+					{
+						Image image = Image.FromFile(trainImage);
+						pictureboxTrainImage.Image = image;
+						pictureboxTrainImage.Enabled = true;
+					}
+					catch
+					{
+						TryLoadImage(pictureboxTrainImage, "train_unknown.png");
+						pictureboxTrainImage.Enabled = false;
+					}
 				}
 				else
 				{
